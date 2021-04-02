@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Alert, Modal } from "react-bootstrap";
 import Form from "@rjsf/bootstrap-4";
-import login from "../../schemas/login.json";
+import login from "./login.json";
 
 export default function Login() {
   const [alert, setAlert] = useState(null);
@@ -11,7 +11,7 @@ export default function Login() {
   };
 
   return (
-    <Modal centered show={true}>
+    <Modal.Dialog>
       <Modal.Header>
         <Modal.Title>Sapien Systems</Modal.Title>
       </Modal.Header>
@@ -34,6 +34,6 @@ export default function Login() {
           - Partner Dashboard
         </p>{" "}
       </Modal.Footer>
-    </Modal>
+    </Modal.Dialog>
   );
 }

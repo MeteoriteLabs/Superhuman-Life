@@ -1,0 +1,58 @@
+{
+    "title": "Add Article",
+    "description": " ",
+    "type": "object",
+    "properties": {
+        "name": {
+            "type": "string",
+            "title": "Title of Article"
+        },
+        "category": {
+            "type": "string",
+            "title": "Category",
+            "enum": [
+                "Fitness",
+                "Mindset",
+                "Nutrition",
+                "Other"
+            ]
+        },
+        "source": {
+            "type": "string",
+            "title": "Source",
+            "enum": [
+                "Blogger",
+                "Medium",
+                "Quora",
+                "Reddit",
+                "Wikipedia",
+                "Other"
+            ]
+        },
+        "desc": {
+            "type": "string",
+            "format": "textarea",
+            "title": "Mini Description"
+        },
+        "message": {
+            "type": "string",
+            "format": "textarea",
+            "title": "Main Message"
+        },
+        "tags": {
+            "type": "string",
+            "title": "Tags"
+        },
+        "video": {
+            "type": "string",
+            "format": "uri",
+            "title": "Intro Video Link"
+        },
+        "thumbnail": {
+            "type": "string",
+            "format": "data-url",
+            "title": "Thumbnail Picture",
+            "accept": ".jpg"
+        }
+    }
+}

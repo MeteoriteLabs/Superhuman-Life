@@ -1,0 +1,74 @@
+{
+    "title": "Add Recipe",
+    "description": " ",
+    "type": "object",
+    "properties": {
+        "name": {
+            "type": "string",
+            "title": "Name of Recipe"
+        },
+        "about": {
+            "type": "string",
+            "format": "textarea",
+            "title": "About"
+        },
+        "cuisine": {
+            "type": "string",
+            "title": "Cuisine",
+            "enum": [
+                "Chinese",
+                "Indian",
+                "Italian",
+                "Mexican",
+                "Thai"
+            ]
+        },
+        "time": {
+            "type": "string",
+            "format": "time",
+            "title": "Preparation Time"
+        },
+        "type": {
+            "type": "string",
+            "title": "Type",
+            "enum": [
+                "Veg",
+                "Non-Veg"
+            ]
+        },
+        "level": {
+            "type": "string",
+            "title": "Level",
+            "enum": [
+                "Easy",
+                "Medium",
+                "Hard"
+            ]
+        },
+        "equipment": {
+            "type": "array",
+            "title": "List of Equipments",
+            "items": {
+                "type": "string",
+                "enum": [
+                    "Equipment-One",
+                    "Equipment-Two",
+                    "Equipment-Three",
+                    "Equipment-Four"
+                ]
+            },
+            "uniqueItems": true
+        },
+        "video": {
+            "type": "string",
+            "format": "uri",
+            "title": "Exercise Video Link"
+        },
+        "thumbnail": {
+            "type": "string",
+            "format": "data-url",
+            "title": "Exercise Picture",
+            "accept": ".jpg"
+        }
+    }
+}

@@ -18,7 +18,7 @@ export default function ResFitnessPage() {
                     <Bread mod="Resources" page="Fitness" />
                 </Col>
             </Row>
-            <CardColumns>
+            <CardColumns className="mt-3">
                 <Card>
                     <Card.Img variant="top" src="/assets/exercise-1.jpg" />
                     <Card.Body>

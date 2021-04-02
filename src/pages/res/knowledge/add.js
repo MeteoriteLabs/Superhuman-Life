@@ -1,8 +1,8 @@
 import Form from "@rjsf/bootstrap-4";
 import { Card } from "react-bootstrap";
-import fitness from "./fitness.json";
+import knowledge from "./knowledge.json";
 
-export default function ResAddFitnessPage() {
+export default function AddKnowledgePage() {
     const onSubmit = ({ formData }) => {
         console.log("Data submitted: ", formData);
     };
@@ -10,7 +10,7 @@ export default function ResAddFitnessPage() {
     return (
         <Card>
             <Card.Body>
-                <Form schema={fitness} onSubmit={onSubmit} />
+                <Form schema={knowledge} onSubmit={onSubmit} />
             </Card.Body>
         </Card>
     );

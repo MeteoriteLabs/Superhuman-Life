@@ -1,4 +1,4 @@
-import { Card, Row } from "react-bootstrap";
+import { Alert, Card, CardColumns } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 export default function HomePage() {
@@ -35,8 +35,11 @@ export default function HomePage() {
 
   return (
     <>
-      <Card.Title>Dashboard</Card.Title>
-      <Row>
+      <h4>Dashboard</h4>
+      <Alert variant="primary" className="mt-5">
+        This website is under active development!
+      </Alert>
+      <CardColumns>
         {shortcuts &&
           shortcuts.map((shortcut, id) => (
             <Card key={id} className="text-center mx-2 my-2">
@@ -47,7 +50,7 @@ export default function HomePage() {
               </Card.Body>
             </Card>
           ))}
-      </Row>
+      </CardColumns>
     </>
   );
 }

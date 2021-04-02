@@ -19,17 +19,28 @@ const ProfilePage = React.lazy(() => import("./pages/profile"));
 const SchedulePage = React.lazy(() => import("./pages/schedule"));
 
 const EventsPage = React.lazy(() => import("./pages/pack/events"));
+const AddEventPage = React.lazy(() => import("./pages/pack/events/add"));
+
 const PackFitnessPage = React.lazy(() => import("./pages/pack/fitness"));
 const JourneyPage = React.lazy(() => import("./pages/pack/journey"));
+const AddJourneyPage = React.lazy(() => import("./pages/pack/journey/add"));
+
 const PackNutritionPage = React.lazy(() => import("./pages/pack/nutrition"));
 
 const ResFitnessPage = React.lazy(() => import("./pages/res/fitness"));
 const ResAddFitnessPage = React.lazy(() => import("./pages/res/fitness/add"));
 
 const KnowledgePage = React.lazy(() => import("./pages/res/knowledge"));
-const MentalPage = React.lazy(() => import("./pages/res/mental"));
+const AddKnowledgePage = React.lazy(() => import("./pages/res/knowledge/add"));
+
+const MindsetPage = React.lazy(() => import("./pages/res/mindset"));
+const AddMindsetPage = React.lazy(() => import("./pages/res/mindset/add"));
+
 const MessagePage = React.lazy(() => import("./pages/res/message"));
+const AddMessagePage = React.lazy(() => import("./pages/res/message/add"));
+
 const ResNutritionPage = React.lazy(() => import("./pages/res/nutrition"));
+const ResAddNutritionPage = React.lazy(() => import("./pages/res/nutrition/add"));
 
 function NoMatch() {
   const location = useLocation();
@@ -62,16 +73,23 @@ export default function Routes({ isAuthenticated }) {
               <Route path="/schedule" component={SchedulePage} />
 
               <Route exact path="/packages/events" component={EventsPage} />
+              <Route exact path="/packages/events/add" component={AddEventPage} />
               <Route exact path="/packages/fitness" component={PackFitnessPage} />
               <Route exact path="/packages/journey" component={JourneyPage} />
+              <Route exact path="/packages/journey/add" component={AddJourneyPage} />
               <Route exact path="/packages/nutrition" component={PackNutritionPage} />
 
               <Route exact path="/resources/fitness" component={ResFitnessPage} />
               <Route exact path="/resources/fitness/add" component={ResAddFitnessPage} />
               <Route exact path="/resources/knowledge" component={KnowledgePage} />
-              <Route exact path="/resources/mental" component={MentalPage} />
+              <Route exact path="/resources/knowledge/add" component={AddKnowledgePage} />
+              <Route exact path="/resources/mindset" component={MindsetPage} />
+              <Route exact path="/resources/mindset/add" component={AddMindsetPage} />
               <Route exact path="/resources/messages" component={MessagePage} />
+              <Route exact path="/resources/messages/add" component={AddMessagePage} />
               <Route exact path="/resources/nutrition" component={ResNutritionPage} />
+              <Route exact path="/resources/nutrition/add" component={ResAddNutritionPage} />
+
               <Route path="*" component={NoMatch} />
             </Switch>
           </Layout>

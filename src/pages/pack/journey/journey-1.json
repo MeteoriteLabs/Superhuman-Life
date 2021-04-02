@@ -1,0 +1,60 @@
+{
+    "title": "Create Journey",
+    "description": "Basic Details",
+    "type": "object",
+    "properties": {
+        "name": {
+            "type": "string",
+            "title": "Custom Journey Title"
+        },
+        "type": {
+            "type": "string",
+            "title": "Type of Exercise"
+        },
+        "level": {
+            "type": "string",
+            "title": "Level",
+            "enum": [
+                "Beginner",
+                "Basic",
+                "Difficult",
+                "Expert",
+                "Challenge"
+            ]
+        },
+        "tags": {
+            "type": "string",
+            "title": "Tags"
+        },
+        "mode": {
+            "type": "string",
+            "title": "Mode",
+            "enum": [
+                "Offline",
+                "Online",
+                "Mixed"
+            ]
+        },
+        "about": {
+            "type": "string",
+            "format": "textarea",
+            "title": "About"
+        },
+        "benefit": {
+            "type": "string",
+            "format": "textarea",
+            "title": "Good For"
+        },
+        "video": {
+            "type": "string",
+            "format": "uri",
+            "title": "Exercise Video Link"
+        },
+        "thumbnail": {
+            "type": "string",
+            "format": "data-url",
+            "title": "Exercise Picture",
+            "accept": ".jpg"
+        }
+    }
+}

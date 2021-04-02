@@ -1,0 +1,15 @@
+{
+    "title": "Add Event",
+    "description": "Pricing",
+    "type": "object",
+    "properties": {
+        "voucher": {
+            "type": "string",
+            "title": "Additional Voucher"
+        },
+        "price": {
+            "type": "string",
+            "title": "Set Pricing"
+        }
+    }
+}

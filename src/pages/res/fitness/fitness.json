@@ -61,7 +61,7 @@
             "format": "uri",
             "title": "Exercise Video Link"
         },
-        "picture": {
+        "thumbnail": {
             "type": "string",
             "format": "data-url",
             "title": "Exercise Picture",

@@ -96,7 +96,7 @@ export default function SideNav() {
             <NavLink className="nav-link ml-sm-4" to="/resources/knowledge">
               Knowledge Bank
             </NavLink>
-            <NavLink className="nav-link ml-sm-4" to="/resources/mental">
+            <NavLink className="nav-link ml-sm-4" to="/resources/mindset">
               Mental Health
             </NavLink>
             <NavLink className="nav-link ml-sm-4" to="/resources/messages">

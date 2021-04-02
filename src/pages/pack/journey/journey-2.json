@@ -1,0 +1,99 @@
+{
+    "title": "Custom Journey",
+    "description": "Agenda",
+    "type": "object",
+    "properties": {
+        "based": {
+            "type": "string",
+            "title": "Based On",
+            "default": "After the purchase has been done"
+        },
+        "weeks": {
+            "type": "number",
+            "title": "Set For"
+        },
+        "days": {
+            "type": "number",
+            "title": "Days"
+        },
+        "fitness": {
+            "type": "object",
+            "title": "Fitness",
+            "properties": {
+                "pton": {
+                    "type": "number",
+                    "title": "No. of PT Online"
+                },
+                "ptoff": {
+                    "type": "number",
+                    "title": "No. of PT Offline"
+                },
+                "videos": {
+                    "type": "number",
+                    "title": "No. of Pre-Recorded Videos"
+                },
+                "classoff": {
+                    "type": "number",
+                    "title": "No. of Group Class Online"
+                },
+                "classon": {
+                    "type": "number",
+                    "title": "No. of Group Class Offline"
+                },
+                "restdays": {
+                    "type": "number",
+                    "title": "No. of Rest Days"
+                }
+            }
+        },
+        "total": {
+            "type": "string",
+            "title": "Total",
+            "default": "30 Days"
+        },
+        "nutrition": {
+            "type": "object",
+            "title": "Nutrition",
+            "properties": {
+                "consult": {
+                    "type": "number",
+                    "title": "Consultation"
+                },
+                "recipe": {
+                    "type": "number",
+                    "title": "Recipe Plan"
+                }
+            }
+        },
+        "mental": {
+            "type": "object",
+            "title": "Mental Health",
+            "properties": {
+                "mindset": {
+                    "type": "string",
+                    "title": "Mindset",
+                    "enum": [
+                        "Yes",
+                        "No"
+                    ]
+                },
+                "motivation": {
+                    "type": "string",
+                    "title": "Motivation",
+                    "enum": [
+                        "Yes",
+                        "No"
+                    ]
+                },
+                "mindfull": {
+                    "type": "string",
+                    "title": "Mindfullness",
+                    "enum": [
+                        "Yes",
+                        "No"
+                    ]
+                }
+            }
+        }
+    }
+}

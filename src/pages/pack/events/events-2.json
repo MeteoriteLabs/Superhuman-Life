@@ -1,0 +1,29 @@
+{
+    "title": "Add Event",
+    "description": "Agenda",
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "start": {
+                "type": "string",
+                "format": "time",
+                "title": "Start Time"
+            },
+            "end": {
+                "type": "string",
+                "format": "time",
+                "title": "End Time"
+            },
+            "title": {
+                "type": "string",
+                "title": "Title"
+            },
+            "session": {
+                "type": "string",
+                "format": "textarea",
+                "title": "Session"
+            }
+        }
+    }
+}
