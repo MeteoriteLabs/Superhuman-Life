@@ -4,11 +4,11 @@ import { NavLink } from "react-router-dom";
 export default function TopNav() {
   return (
     <Navbar bg="dark" className="shadow-sm" expand="lg">
-      <Container>
+      <Container fluid>
         <Navbar.Brand href="/" className="text-muted">
           <strong>SAPIEN SYSTEMS</strong>
         </Navbar.Brand>
-        <Navbar.Text className="ml-2 text-white">Welcome, John Doe</Navbar.Text>
+        <Navbar.Text className="ml-5 text-white">Welcome, John Doe</Navbar.Text>
         <Navbar.Toggle aria-controls="navbar" />
         <Navbar.Collapse className="justify-content-end" id="navbar">
           <Nav className="d-lg-none">

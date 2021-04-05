@@ -9,7 +9,7 @@ export default function Layout({ children }) {
         <TopNav />
       </header>
       <main className="bg-light py-4">
-        <Container>
+        <Container fluid>
           <Row>
             <Col xs lg="3" className="d-none d-lg-block">
               <SideNav />
@@ -20,7 +20,7 @@ export default function Layout({ children }) {
           </Row>
         </Container>
       </main>
-      <footer className="py-2 float-right">
+      <footer className="py-2 mt-5 float-right">
         <Container>
           <p className="text-muted">
             2021 ©{" "}
