@@ -1,4 +1,4 @@
-import { Alert, Card, CardColumns } from "react-bootstrap";
+import { Alert, Card, CardDeck } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 export default function HomePage() {
@@ -25,8 +25,8 @@ export default function HomePage() {
     },
     {
       icon: <i className="fas fa-tools"></i>,
-      link: "/packages/events",
-      text: "Services/Packages",
+      link: "/packages",
+      text: "Packages",
     },
     {
       icon: <i className="fas fa-inbox"></i>,
@@ -46,7 +46,7 @@ export default function HomePage() {
       <Alert variant="primary" className="mt-5">
         This website is under active development!
       </Alert>
-      <CardColumns>
+      <CardDeck>
         {shortcuts &&
           shortcuts.map((shortcut, id) => (
             <Card key={id} className="text-center">
@@ -57,7 +57,7 @@ export default function HomePage() {
               </Card.Body>
             </Card>
           ))}
-      </CardColumns>
+      </CardDeck>
     </>
   );
 }

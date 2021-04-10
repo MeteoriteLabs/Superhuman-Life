@@ -1,9 +1,7 @@
-import { Card } from "react-bootstrap";
-
 export default function ProfilePage() {
   return (
     <>
-      <Card.Title>My Profile</Card.Title>
+      <h4>My Profile</h4>
     </>
   );
 }

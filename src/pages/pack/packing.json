@@ -1,0 +1,64 @@
+{
+    "title": "Create Package",
+    "description": " ",
+    "type": "object",
+    "properties": {
+        "name": {
+            "type": "string",
+            "title": "Name of Package"
+        },
+        "type": {
+            "type": "string",
+            "title": "Type of Package",
+            "enum": [
+                "PT",
+                "Group",
+                "Custom",
+                "Classic"
+            ]
+        },
+        "dspln": {
+            "type": "string",
+            "title": "Discipline",
+            "enum": [
+                "Basic",
+                "Calsc",
+                "Yoga",
+                "Zumba"
+            ]
+        },
+        "tags": {
+            "type": "string",
+            "title": "Tags"
+        },
+        "mode": {
+            "type": "string",
+            "title": "Level",
+            "enum": [
+                "Online",
+                "Offline",
+                "Hybrid"
+            ]
+        },
+        "level": {
+            "type": "string",
+            "title": "Level",
+            "enum": [
+                "Beginner",
+                "Basic",
+                "Difficult",
+                "Expert",
+                "Challenge"
+            ]
+        },
+        "status": {
+            "type": "string",
+            "title": "Level",
+            "enum": [
+                "Active",
+                "Inactive",
+                "Pending"
+            ]
+        }
+    }
+}

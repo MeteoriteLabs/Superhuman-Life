@@ -15,8 +15,10 @@ const ClientPage = React.lazy(() => import("./pages/client"));
 const CommunityPage = React.lazy(() => import("./pages/community"));
 const HomePage = React.lazy(() => import("./pages/home"));
 const LoginPage = React.lazy(() => import("./pages/login"));
+const PackagePage = React.lazy(() => import("./pages/pack"));
 const ProfilePage = React.lazy(() => import("./pages/profile"));
 const SchedulePage = React.lazy(() => import("./pages/schedule"));
+const SettingsPage = React.lazy(() => import("./pages/settings"));
 
 const EventsPage = React.lazy(() => import("./pages/pack/events"));
 const AddEventPage = React.lazy(() => import("./pages/pack/events/add"));
@@ -69,8 +71,10 @@ export default function Routes({ isAuthenticated }) {
               <Route path="/clients" component={ClientPage} />
               <Route path="/community" component={CommunityPage} />
               <Route path="/home" component={HomePage} />
+              <Route path="/packages" component={PackagePage} />
               <Route path="/profile" component={ProfilePage} />
               <Route path="/schedule" component={SchedulePage} />
+              <Route path="/settings" component={SettingsPage} />
 
               <Route exact path="/packages/events" component={EventsPage} />
               <Route exact path="/packages/events/add" component={AddEventPage} />

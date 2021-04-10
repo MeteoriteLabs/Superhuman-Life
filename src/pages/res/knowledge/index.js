@@ -1,24 +1,12 @@
 import { Card, Col, Row } from "react-bootstrap";
-import { Link } from "react-router-dom";
 import Bread from "../../../components/bread";
 
 export default function KnowledgePage() {
     return (
         <>
-            <Row>
-                <Col lg="3">
-                    <h4>Knowledge Bank</h4>
-                </Col>
-                <Col lg="3">
-                    <Link className="btn btn-info btn-sm" to="/resources/knowledge/add">
-                        Add Fact
-                    </Link>
-                </Col>
-                <Col>
-                    <Bread mod="Resources" page="Knowledge" />
-                </Col>
-            </Row>
-            <div className="pt-3">
+            <Card.Title>Knowledge Bank</Card.Title>
+            <Bread mod="Resources" page="Knowledge" />
+            <div>
                 <Card className="mb-3">
                     <Card.Body>
                         <Row>

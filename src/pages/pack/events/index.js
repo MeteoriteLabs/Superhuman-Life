@@ -1,24 +1,12 @@
 import { Badge, Card, Col, Row } from "react-bootstrap";
-import { Link } from "react-router-dom";
 import Bread from "../../../components/bread";
 
 export default function EventsPage() {
     return (
         <>
-            <Row>
-                <Col lg="2">
-                    <h4>Events</h4>
-                </Col>
-                <Col lg="3">
-                    <Link className="btn btn-info btn-sm" to="/packages/events/add">
-                        Add Event
-                    </Link>
-                </Col>
-                <Col>
-                    <Bread mod="Packages" page="Events" />
-                </Col>
-            </Row>
-            <div className="pt-3">
+            <h4>Events</h4>
+            <Bread mod="Packages" page="Events" />
+            <div>
                 <Card className="mb-3">
                     <Card.Body>
                         <Row>

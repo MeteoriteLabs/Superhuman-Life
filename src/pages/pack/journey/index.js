@@ -1,24 +1,12 @@
 import { Badge, Card, Col, Row } from "react-bootstrap";
-import { Link } from "react-router-dom";
 import Bread from "../../../components/bread";
 
 export default function JourneyPage() {
     return (
         <>
-            <Row>
-                <Col lg="3">
-                    <h4>Custom Journey</h4>
-                </Col>
-                <Col lg="3">
-                    <Link className="btn btn-info btn-sm" to="/packages/journey/add">
-                        Create New
-                    </Link>
-                </Col>
-                <Col>
-                    <Bread mod="Packages" page="Journey" />
-                </Col>
-            </Row>
-            <div className="pt-3">
+            <h4>Custom Journey</h4>
+            <Bread mod="Packages" page="Journey" />
+            <div>
                 <Card className="mb-3">
                     <Card.Body>
                         <Row>

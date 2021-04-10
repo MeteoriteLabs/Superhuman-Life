@@ -1,25 +1,56 @@
-import { Badge, Card, CardColumns, Col, Row } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { useMemo } from "react";
+import { Badge, Button, Card, CardColumns } from "react-bootstrap";
 import Bread from "../../../components/bread";
+import Table from "../../../components/table";
 
 export default function ResNutritionPage() {
+    const columns = useMemo(() => [
+        { accessor: "id", Header: "#" },
+        {
+            id: "image",
+            Header: "Thumbnail",
+            Cell: ({ row }) => (
+                <img alt="thumbnail" height="42" src="/assets/recipe-1.jpg" />
+            ),
+        },
+        { accessor: "name", Header: "Name" },
+        { accessor: "details", Header: "Details" },
+        { accessor: "cuisine", Header: "Cuisine" },
+        { accessor: "calorie", Header: "K/Cal Details" },
+        { accessor: "veg", Header: "Veg/Non-Veg" },
+        {
+            id: "edit",
+            Header: "Actions",
+            Cell: ({ row }) => (
+                <Button variant="info">
+                    <i className="far fa-edit"></i>
+                </Button>
+            ),
+        }
+    ], []);
+    const data = useMemo(() => [
+        {
+            "id": 1,
+            "name": "Recipe Name",
+            "details": "Recipe Details",
+            "cuisine": "Chinese",
+            "calorie": 100, "veg": "Veg"
+        },
+        {
+            "id": 2,
+            "name": "Recipe Name",
+            "details": "Recipe Details",
+            "cuisine": "Mexican",
+            "calorie": 120, "veg": "Non-Veg"
+        }
+    ], []);
+
     return (
         <>
-            <Row>
-                <Col lg="2">
-                    <h4>Recipes</h4>
-                </Col>
-                <Col lg="3">
-                    <Link className="btn btn-info btn-sm" to="/resources/nutrition/add">
-                        Add Recipe
-                    </Link>
-                </Col>
-                <Col>
-                    <Bread mod="Resources" page="Nutrition" />
-                </Col>
-            </Row>
-            <CardColumns className="mt-3">
-                <Card>
+            <h4>Recipes</h4>
+            <Bread mod="Resources" page="Nutrition" />
+            <CardColumns>
+                <Card style={{ width: '18rem' }}>
                     <Card.Img variant="top" src="/assets/recipe-1.jpg" />
                     <Card.Body>
                         <Card.Title>
@@ -33,7 +64,7 @@ export default function ResNutritionPage() {
                         <Card.Text><small>K/CAL Details</small></Card.Text>
                     </Card.Body>
                 </Card>
-                <Card>
+                <Card style={{ width: '18rem' }}>
                     <Card.Img variant="top" src="/assets/recipe-1.jpg" />
                     <Card.Body>
                         <Card.Title>
@@ -47,7 +78,7 @@ export default function ResNutritionPage() {
                         <Card.Text><small>K/CAL Details</small></Card.Text>
                     </Card.Body>
                 </Card>
-                <Card>
+                <Card style={{ width: '18rem' }}>
                     <Card.Img variant="top" src="/assets/recipe-1.jpg" />
                     <Card.Body>
                         <Card.Title>
@@ -62,6 +93,12 @@ export default function ResNutritionPage() {
                     </Card.Body>
                 </Card>
             </CardColumns>
+            <hr />
+            <Card>
+                <Card.Body>
+                    <Table columns={columns} data={data} />
+                </Card.Body>
+            </Card>
         </>
     );
 }

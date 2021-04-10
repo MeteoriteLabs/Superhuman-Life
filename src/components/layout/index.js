@@ -8,13 +8,13 @@ export default function Layout({ children }) {
       <header>
         <TopNav />
       </header>
-      <main className="bg-light py-4">
+      <main className="bg-light min-vh-100 py-4">
         <Container fluid>
           <Row>
-            <Col xs lg="3" className="d-none d-lg-block">
+            <Col xs lg="2" className="d-none d-lg-block">
               <SideNav />
             </Col>
-            <Col xs lg="9">
+            <Col xs lg="10">
               {children}
             </Col>
           </Row>

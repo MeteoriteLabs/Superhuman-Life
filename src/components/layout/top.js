@@ -1,4 +1,4 @@
-import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
+import { Button, Container, Nav, Navbar, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
 
 export default function TopNav() {
@@ -8,7 +8,7 @@ export default function TopNav() {
         <Navbar.Brand href="/" className="text-muted">
           <strong>SAPIEN SYSTEMS</strong>
         </Navbar.Brand>
-        <Navbar.Text className="ml-5 text-white">Welcome, John Doe</Navbar.Text>
+        <Navbar.Text className="ml-4 text-white">Welcome, John Doe</Navbar.Text>
         <Navbar.Toggle aria-controls="navbar" />
         <Navbar.Collapse className="justify-content-end" id="navbar">
           <Nav className="d-lg-none">
@@ -30,18 +30,20 @@ export default function TopNav() {
             <Nav.Link>Logout</Nav.Link>
           </Nav>
         </Navbar.Collapse>
-        <Nav.Item className="d-none d-lg-block text-white mr-2">
-          <i className="far fa-bell"></i>
+        <Nav.Item className="d-none d-lg-block">
+          <OverlayTrigger placement="bottom" overlay={<Tooltip id="tooltip-disabled">Notifications</Tooltip>}>
+            <Button variant="dark">
+              <i className="far fa-bell"></i>
+            </Button>
+          </OverlayTrigger>
         </Nav.Item>
-        <NavDropdown
-          className="d-none d-lg-block"
-          title={<i className="fas fa-user-circle"></i>}
-        >
-          <NavLink className="dropdown-item" to="/settings">
-            Settings
-          </NavLink>
-          <NavDropdown.Item>Logout</NavDropdown.Item>
-        </NavDropdown>
+        <Nav.Item className="d-none d-lg-block">
+          <OverlayTrigger placement="bottom" overlay={<Tooltip id="tooltip-disabled">Sign Out</Tooltip>}>
+            <Button variant="dark">
+              <i className="fas fa-sign-out-alt"></i>
+            </Button>
+          </OverlayTrigger>
+        </Nav.Item>
       </Container>
     </Navbar>
   );

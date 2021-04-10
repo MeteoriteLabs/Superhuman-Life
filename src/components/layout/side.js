@@ -3,11 +3,13 @@ import { NavLink } from "react-router-dom";
 
 export default function SideNav() {
   return (
-    <aside className="bg-white px-3 py-3" style={{ minWidth: "260px" }}>
-      <NavLink className="navbar-brand" to="/profile">
-        <img src="/assets/avatar-1.jpg" height="42" className="rounded-circle" alt="profile" />
-      </NavLink>
-      <span>John Doe</span>
+    <aside className="bg-white p-3">
+      <div className="text-center">
+        <NavLink className="navbar-brand" to="/profile">
+          <img src="/assets/avatar-1.jpg" height="42" className="rounded-circle" alt="profile" />
+        </NavLink>
+        <p>John Doe<br /><small className="text-muted">Fitness Coach</small></p>
+      </div>
       <hr />
       <Nav className="flex-column">
         <NavLink className="nav-link" to="/home">
@@ -33,6 +35,9 @@ export default function SideNav() {
         </NavLink>
         <NavLink className="nav-link" to="/schedule">
           <i className="far fa-calendar-alt mr-sm-2"></i> Schedule
+        </NavLink>
+        <NavLink className="nav-link" to="/settings">
+          <i className="fas fa-cog mr-sm-2"></i> Settings
         </NavLink>
         <NavLink className="nav-link" to="/tasks">
           <i className="fas fa-tasks mr-sm-2"></i> Tasks
