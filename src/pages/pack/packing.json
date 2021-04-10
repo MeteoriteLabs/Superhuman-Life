@@ -1,6 +1,6 @@
 {
-    "title": "Create Package",
-    "description": " ",
+    "title": "",
+    "description": "",
     "type": "object",
     "properties": {
         "name": {
@@ -33,7 +33,7 @@
         },
         "mode": {
             "type": "string",
-            "title": "Level",
+            "title": "Mode",
             "enum": [
                 "Online",
                 "Offline",
@@ -53,7 +53,7 @@
         },
         "status": {
             "type": "string",
-            "title": "Level",
+            "title": "Status",
             "enum": [
                 "Active",
                 "Inactive",

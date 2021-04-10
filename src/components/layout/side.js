@@ -22,7 +22,7 @@ export default function SideNav() {
           <i className="far fa-calendar-check mr-sm-2"></i> Bookings
         </NavLink>
         <NavLink className="nav-link" to="/chats">
-          <i className="far fa-comment-alt mr-sm-1"></i> Chats
+          <i className="far fa-comment-alt mr-sm-2"></i> Chats
         </NavLink>
         <NavLink className="nav-link" to="/clients">
           <i className="fas fa-users mr-sm-1"></i> Clients

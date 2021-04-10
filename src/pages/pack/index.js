@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import Form from "@rjsf/bootstrap-4";
 import { Badge, Button, Card, Modal } from "react-bootstrap";
 import Table from "../../components/table";
@@ -6,6 +6,7 @@ import packing from "./packing.json";
 
 export default function PackagePage() {
     const [show, setShow] = useState(false);
+    const formRef = useRef();
     const columns = useMemo(() => [
         { accessor: "id", Header: "#" },
         {
@@ -54,10 +55,24 @@ export default function PackagePage() {
                     <i className="fas fa-plus-circle mr-sm-2"></i>
                     Package
                 </Button>
-                <Modal size="lg" show={show} onHide={() => setShow(false)} centered>
-                    <Modal.Body>
-                        <Form schema={packing} onSubmit={({ formData }) => console.log("Data submitted: ", formData)} />
+                <Modal show={show} onHide={() => setShow(false)}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Create Package</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body style={{ maxHeight: 'calc(100vh - 210px)', overflowY: 'auto' }}>
+                        <Form
+                            schema={packing}
+                            ref={formRef}
+                            onSubmit={({ formData }) => console.log("Data submitted: ", formData)}
+                        >
+                            <div></div>
+                        </Form>
                     </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="primary" onClick={(event) => formRef.current.onSubmit(event)}>
+                            Create
+                        </Button>
+                    </Modal.Footer>
                 </Modal>
             </Card.Header>
             <Card.Body>
