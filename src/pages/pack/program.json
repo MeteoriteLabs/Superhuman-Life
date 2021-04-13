@@ -1,6 +1,6 @@
 {
-    "title": "Add Event",
-    "description": "Agenda",
+    "title": "",
+    "description": "Program has to be assigned to Group package",
     "type": "array",
     "items": {
         "type": "object",

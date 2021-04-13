@@ -1,4 +1,4 @@
-import { Button, Container, DropdownButton, Dropdown, Nav, Navbar, OverlayTrigger, Tooltip } from "react-bootstrap";
+import { Button, Container, DropdownButton, Dropdown, Nav, Navbar } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
 
 export default function TopNav() {
@@ -39,11 +39,11 @@ export default function TopNav() {
           </DropdownButton>
         </Nav.Item>
         <Nav.Item className="d-none d-lg-block">
-          <OverlayTrigger placement="bottom" overlay={<Tooltip id="tooltip-disabled">Sign Out</Tooltip>}>
+          <abbr title="Sign Out">
             <Button variant="dark">
               <i className="fas fa-sign-out-alt"></i>
             </Button>
-          </OverlayTrigger>
+          </abbr>
         </Nav.Item>
       </Container>
     </Navbar>

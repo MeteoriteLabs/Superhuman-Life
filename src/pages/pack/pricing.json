@@ -1,6 +1,6 @@
 {
-    "title": "Add Event",
-    "description": "Pricing",
+    "title": "",
+    "description": "",
     "type": "object",
     "properties": {
         "voucher": {

@@ -20,15 +20,6 @@ const ProfilePage = React.lazy(() => import("./pages/profile"));
 const SchedulePage = React.lazy(() => import("./pages/schedule"));
 const SettingsPage = React.lazy(() => import("./pages/settings"));
 
-const EventsPage = React.lazy(() => import("./pages/pack/events"));
-const AddEventPage = React.lazy(() => import("./pages/pack/events/add"));
-
-const PackFitnessPage = React.lazy(() => import("./pages/pack/fitness"));
-const JourneyPage = React.lazy(() => import("./pages/pack/journey"));
-const AddJourneyPage = React.lazy(() => import("./pages/pack/journey/add"));
-
-const PackNutritionPage = React.lazy(() => import("./pages/pack/nutrition"));
-
 const ResFitnessPage = React.lazy(() => import("./pages/res/fitness"));
 const ResAddFitnessPage = React.lazy(() => import("./pages/res/fitness/add"));
 
@@ -75,13 +66,6 @@ export default function Routes({ isAuthenticated }) {
               <Route path="/profile" component={ProfilePage} />
               <Route path="/schedule" component={SchedulePage} />
               <Route path="/settings" component={SettingsPage} />
-
-              <Route exact path="/packages/events" component={EventsPage} />
-              <Route exact path="/packages/events/add" component={AddEventPage} />
-              <Route exact path="/packages/fitness" component={PackFitnessPage} />
-              <Route exact path="/packages/journey" component={JourneyPage} />
-              <Route exact path="/packages/journey/add" component={AddJourneyPage} />
-              <Route exact path="/packages/nutrition" component={PackNutritionPage} />
 
               <Route exact path="/resources/fitness" component={ResFitnessPage} />
               <Route exact path="/resources/fitness/add" component={ResAddFitnessPage} />

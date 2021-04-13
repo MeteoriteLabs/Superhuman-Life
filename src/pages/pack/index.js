@@ -1,11 +1,19 @@
 import { useMemo, useRef, useState } from "react";
 import Form from "@rjsf/bootstrap-4";
-import { Badge, Button, Card, Modal } from "react-bootstrap";
+import { Badge, Button, Card, Container, Col, Modal, ProgressBar, Row } from "react-bootstrap";
 import Table from "../../components/table";
-import packing from "./packing.json";
+import step1 from "./creator.json";
+import step2 from "./details.json";
+import step3 from "./program.json";
+import step4 from "./schedule.json";
+import step5 from "./pricing.json";
 
 export default function PackagePage() {
+    const steps = [step1, step2, step3, step4, step5];
+    const [step, setStep] = useState(0);
     const [show, setShow] = useState(false);
+    const [now, setNow] = useState(0);
+    const [formValues, setFormValues] = useState({});
     const formRef = useRef();
     const columns = useMemo(() => [
         { accessor: "id", Header: "#" },
@@ -44,8 +52,29 @@ export default function PackagePage() {
             "clients": "",
             "program": "",
             "status": "Active"
+        },
+        {
+            "id": 2,
+            "image": "/assets/exercise-1.jpg",
+            "name": "Fitness",
+            "type": "Classic",
+            "mode": "Offline",
+            "clients": "",
+            "program": "",
+            "status": "Active"
         }
     ], []);
+
+    function onSubmit({ formData }) {
+        if (step < 4) {
+            console.log("Data submitted: ", formData);
+            setStep(step + 1);
+            setNow(now + 20);
+            setFormValues({ ...formValues, ...formData });
+        } else {
+            alert("Values submitted: " + JSON.stringify(formValues, null, 2));
+        }
+    }
 
     return (
         <Card>
@@ -55,22 +84,62 @@ export default function PackagePage() {
                     <i className="fas fa-plus-circle mr-sm-2"></i>
                     Package
                 </Button>
-                <Modal show={show} onHide={() => setShow(false)}>
+                <Modal size="xl" show={show} scrollable={true} onHide={() => setShow(false)}>
                     <Modal.Header closeButton>
                         <Modal.Title>Create Package</Modal.Title>
                     </Modal.Header>
-                    <Modal.Body style={{ maxHeight: 'calc(100vh - 210px)', overflowY: 'auto' }}>
-                        <Form
-                            schema={packing}
-                            ref={formRef}
-                            onSubmit={({ formData }) => console.log("Data submitted: ", formData)}
-                        >
-                            <div></div>
-                        </Form>
+                    <Modal.Body className="show-grid">
+                        <Container>
+                            <Row>
+                                <Col xs={6} md={6} lg={6} className="border-right">
+                                    <Form
+                                        schema={steps[step]}
+                                        ref={formRef}
+                                        onSubmit={({ formData }) => onSubmit(formData)}
+                                    >
+                                        <div></div>
+                                    </Form>
+                                </Col>
+                                <Col xs={6} md={6} lg={6}>
+                                    <ProgressBar now={now} />
+                                    <Row>
+                                        <Col xs={2} md={2} lg={2}>
+                                            <small>1. Creator</small>
+                                        </Col>
+                                        <Col xs={2} md={2} lg={2}>
+                                            <small>2. Details</small>
+                                        </Col>
+                                        <Col xs={3} md={3} lg={3}>
+                                            <small>3. Program</small>
+                                        </Col>
+                                        <Col xs={3} md={3} lg={3}>
+                                            <small>4. Schedule</small>
+                                        </Col>
+                                        <Col xs={2} md={2} lg={2}>
+                                            <small>5. Pricing</small>
+                                        </Col>
+                                    </Row>
+                                    <br />
+                                    <Card>
+                                        <Card.Body>This is some text for card preview.</Card.Body>
+                                    </Card>
+                                </Col>
+                            </Row>
+                        </Container>
                     </Modal.Body>
                     <Modal.Footer>
+                        <Button
+                            variant="secondary"
+                            onClick={() => {
+                                setStep(step - 1);
+                                setNow(now - 20);
+                            }}
+                            disabled={step === 0 ? true : false}
+                        >
+                            Back
+                        </Button>
                         <Button variant="primary" onClick={(event) => formRef.current.onSubmit(event)}>
-                            Create
+                            {step < 4 ? "Next" : "Create"}
                         </Button>
                     </Modal.Footer>
                 </Modal>

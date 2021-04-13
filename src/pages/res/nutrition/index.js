@@ -1,50 +1,7 @@
-import { useMemo } from "react";
-import { Badge, Button, Card, CardColumns } from "react-bootstrap";
+import { Badge, Card, CardColumns } from "react-bootstrap";
 import Bread from "../../../components/bread";
-import Table from "../../../components/table";
 
 export default function ResNutritionPage() {
-    const columns = useMemo(() => [
-        { accessor: "id", Header: "#" },
-        {
-            id: "image",
-            Header: "Thumbnail",
-            Cell: ({ row }) => (
-                <img alt="thumbnail" height="42" src="/assets/recipe-1.jpg" />
-            ),
-        },
-        { accessor: "name", Header: "Name" },
-        { accessor: "details", Header: "Details" },
-        { accessor: "cuisine", Header: "Cuisine" },
-        { accessor: "calorie", Header: "K/Cal Details" },
-        { accessor: "veg", Header: "Veg/Non-Veg" },
-        {
-            id: "edit",
-            Header: "Actions",
-            Cell: ({ row }) => (
-                <Button variant="info">
-                    <i className="far fa-edit"></i>
-                </Button>
-            ),
-        }
-    ], []);
-    const data = useMemo(() => [
-        {
-            "id": 1,
-            "name": "Recipe Name",
-            "details": "Recipe Details",
-            "cuisine": "Chinese",
-            "calorie": 100, "veg": "Veg"
-        },
-        {
-            "id": 2,
-            "name": "Recipe Name",
-            "details": "Recipe Details",
-            "cuisine": "Mexican",
-            "calorie": 120, "veg": "Non-Veg"
-        }
-    ], []);
-
     return (
         <>
             <h4>Recipes</h4>
@@ -93,12 +50,6 @@ export default function ResNutritionPage() {
                     </Card.Body>
                 </Card>
             </CardColumns>
-            <hr />
-            <Card>
-                <Card.Body>
-                    <Table columns={columns} data={data} />
-                </Card.Body>
-            </Card>
         </>
     );
 }
