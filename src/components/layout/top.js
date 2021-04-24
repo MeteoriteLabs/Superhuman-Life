@@ -14,17 +14,23 @@ export default function TopNav() {
             <NavLink className="nav-link" to="/home">
               Home
             </NavLink>
+            <NavLink className="nav-link" to="/chats">
+              Chats
+            </NavLink>
             <NavLink className="nav-link" to="/clients">
               Clients
+            </NavLink>
+            <NavLink className="nav-link" to="/packages">
+              Packages
+            </NavLink>
+            <NavLink className="nav-link" to="/profile">
+              Profile
             </NavLink>
             <NavLink className="nav-link" to="/schedule">
               Schedule
             </NavLink>
-            <NavLink className="nav-link" to="/chats">
-              Chats
-            </NavLink>
-            <NavLink className="nav-link" to="/profile">
-              Profile
+            <NavLink className="nav-link" to="/settings">
+              Settings
             </NavLink>
             <Nav.Link>Logout</Nav.Link>
           </Nav>

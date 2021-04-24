@@ -42,9 +42,6 @@ export default function SideNav() {
         <NavLink className="nav-link" to="/settings">
           <i className="fas fa-cog mr-sm-2"></i> Settings
         </NavLink>
-        <NavLink className="nav-link" to="/tasks">
-          <i className="fas fa-tasks mr-sm-2"></i> Tasks
-        </NavLink>
       </Nav>
       <hr />
       <Accordion>

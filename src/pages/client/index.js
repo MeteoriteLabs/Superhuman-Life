@@ -1,7 +1,10 @@
-export default function ClientPage() {
+import { Card } from "react-bootstrap";
+
+export default function ClientsPage() {
   return (
-    <>
-      <h4>Clients</h4>
-    </>
+    <Card>
+      <Card.Header as="h4">Clientss</Card.Header>
+      <Card.Body>This is some text within a card body.</Card.Body>
+    </Card>
   );
 }

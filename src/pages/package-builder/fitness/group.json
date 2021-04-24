@@ -1,0 +1,224 @@
+{
+    "1": {
+        "title": "",
+        "type": "object",
+        "required": [
+            "name",
+            "discipline",
+            "mode",
+            "level",
+            "status"
+        ],
+        "properties": {
+            "name": {
+                "type": "string",
+                "title": "Name of Package"
+            },
+            "discipline": {
+                "type": "string",
+                "title": "Discipline",
+                "enum": [
+                    "Basic",
+                    "Calsc",
+                    "Yoga",
+                    "Zumba"
+                ]
+            },
+            "tags": {
+                "type": "string",
+                "title": "Tags"
+            },
+            "mode": {
+                "type": "string",
+                "title": "Mode",
+                "enum": [
+                    "Online",
+                    "Offline",
+                    "Hybrid"
+                ]
+            },
+            "level": {
+                "type": "string",
+                "title": "Level",
+                "enum": [
+                    "Beginner",
+                    "Basic",
+                    "Difficult",
+                    "Expert",
+                    "Challenge"
+                ]
+            },
+            "status": {
+                "type": "string",
+                "title": "Status",
+                "enum": [
+                    "Active",
+                    "Inactive",
+                    "Pending"
+                ]
+            }
+        }
+    },
+    "2": {
+        "title": "",
+        "type": "object",
+        "required": [
+            "about",
+            "benefits",
+            "location",
+            "size"
+        ],
+        "properties": {
+            "about": {
+                "type": "string",
+                "title": "About"
+            },
+            "benefits": {
+                "type": "string",
+                "title": "Benefits"
+            },
+            "location": {
+                "type": "string",
+                "title": "Location"
+            },
+            "size": {
+                "type": "number",
+                "title": "Class Size"
+            },
+            "video": {
+                "type": "string",
+                "format": "uri",
+                "title": "Exercise Video Link"
+            },
+            "thumbnail": {
+                "type": "string",
+                "format": "data-url",
+                "title": "Exercise Picture",
+                "accept": ".jpg"
+            }
+        }
+    },
+    "3": {
+        "title": "",
+        "description": "Program has to be assigned to Group package",
+        "type": "object",
+        "required": [
+            "package"
+        ],
+        "properties": {
+            "package": {
+                "type": "string",
+                "title": "Assign Package Now",
+                "description": "Package won't be active till the program is assigned.",
+                "enum": [
+                    "Yes",
+                    "Later"
+                ]
+            },
+            "program": {
+                "title": "",
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "start": {
+                            "type": "string",
+                            "format": "time",
+                            "title": "Start Time"
+                        },
+                        "end": {
+                            "type": "string",
+                            "format": "time",
+                            "title": "End Time"
+                        },
+                        "title": {
+                            "type": "string",
+                            "title": "Title"
+                        },
+                        "session": {
+                            "type": "string",
+                            "title": "Session"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "4": {
+        "title": "",
+        "type": "object",
+        "required": [
+            "start",
+            "end",
+            "days",
+            "duration"
+        ],
+        "properties": {
+            "start": {
+                "type": "string",
+                "format": "date",
+                "title": "Start Date"
+            },
+            "end": {
+                "type": "string",
+                "format": "date",
+                "title": "End Date"
+            },
+            "days": {
+                "type": "array",
+                "title": "Select the days",
+                "items": {
+                    "type": "string",
+                    "enum": [
+                        "Sunday",
+                        "Monday",
+                        "Tuesday",
+                        "Wednesday",
+                        "Thursday",
+                        "Friday",
+                        "Saturday"
+                    ]
+                },
+                "uniqueItems": true
+            },
+            "duration": {
+                "type": "number",
+                "title": "Duration of Class"
+            },
+            "startTime": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Start Time"
+            },
+            "endTime": {
+                "type": "string",
+                "format": "date-time",
+                "title": "End Time"
+            }
+        }
+    },
+    "5": {
+        "title": "",
+        "type": "object",
+        "properties": {
+            "voucher": {
+                "type": "string",
+                "title": "Additional Voucher"
+            },
+            "plan": {
+                "type": "string",
+                "title": "Workout Plan",
+                "enum": [
+                    "Monthly",
+                    "Quaterly",
+                    "Half Yearly",
+                    "Yearly"
+                ]
+            },
+            "price": {
+                "type": "number",
+                "title": "Set Pricing"
+            }
+        }
+    }
+}

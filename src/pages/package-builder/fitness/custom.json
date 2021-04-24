@@ -1,0 +1,127 @@
+{
+    "1": {
+        "title": "",
+        "type": "object",
+        "required": [
+            "name",
+            "discipline",
+            "mode",
+            "level",
+            "status"
+        ],
+        "properties": {
+            "name": {
+                "type": "string",
+                "title": "Name of Package"
+            },
+            "discipline": {
+                "type": "string",
+                "title": "Discipline",
+                "enum": [
+                    "Basic",
+                    "Calsc",
+                    "Yoga",
+                    "Zumba"
+                ]
+            },
+            "tags": {
+                "type": "string",
+                "title": "Tags"
+            },
+            "mode": {
+                "type": "string",
+                "title": "Mode",
+                "enum": [
+                    "Online",
+                    "Offline",
+                    "Hybrid"
+                ]
+            },
+            "level": {
+                "type": "string",
+                "title": "Level",
+                "enum": [
+                    "Beginner",
+                    "Basic",
+                    "Difficult",
+                    "Expert",
+                    "Challenge"
+                ]
+            },
+            "status": {
+                "type": "string",
+                "title": "Status",
+                "enum": [
+                    "Active",
+                    "Inactive",
+                    "Pending"
+                ]
+            }
+        }
+    },
+    "2": {
+        "title": "",
+        "type": "object",
+        "required": [
+            "about",
+            "benefits",
+            "location",
+            "size"
+        ],
+        "properties": {
+            "about": {
+                "type": "string",
+                "title": "About"
+            },
+            "benefits": {
+                "type": "string",
+                "title": "Benefits"
+            },
+            "location": {
+                "type": "string",
+                "title": "Location"
+            },
+            "size": {
+                "type": "number",
+                "title": "Class Size"
+            },
+            "video": {
+                "type": "string",
+                "format": "uri",
+                "title": "Exercise Video Link"
+            },
+            "thumbnail": {
+                "type": "string",
+                "format": "data-url",
+                "title": "Exercise Picture",
+                "accept": ".jpg"
+            }
+        }
+    },
+    "3": {},
+    "4": {},
+    "5": {
+        "title": "",
+        "type": "object",
+        "properties": {
+            "voucher": {
+                "type": "string",
+                "title": "Additional Voucher"
+            },
+            "plan": {
+                "type": "string",
+                "title": "Workout Plan",
+                "enum": [
+                    "Monthly",
+                    "Quaterly",
+                    "Half Yearly",
+                    "Yearly"
+                ]
+            },
+            "price": {
+                "type": "number",
+                "title": "Set Pricing"
+            }
+        }
+    }
+}

@@ -15,7 +15,7 @@ const ClientPage = React.lazy(() => import("./pages/client"));
 const CommunityPage = React.lazy(() => import("./pages/community"));
 const HomePage = React.lazy(() => import("./pages/home"));
 const LoginPage = React.lazy(() => import("./pages/login"));
-const PackagePage = React.lazy(() => import("./pages/pack"));
+const PackagePage = React.lazy(() => import("./pages/package-builder"));
 const ProfilePage = React.lazy(() => import("./pages/profile"));
 const SchedulePage = React.lazy(() => import("./pages/schedule"));
 const SettingsPage = React.lazy(() => import("./pages/settings"));
