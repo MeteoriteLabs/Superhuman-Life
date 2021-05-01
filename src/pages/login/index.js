@@ -28,7 +28,11 @@ export default function Login() {
 
   return (
     <div>
-      <div className="bg-custom-2 box rounded-bottom"></div>
+      <div className="bg-custom-2 ">
+        <div className="header">
+          <h1>#BeAChangemaker</h1>
+        </div>
+      </div>
       <Modal.Dialog className="box stack-top ">
         <Modal.Header>
           <Modal.Title>Sapien Systems</Modal.Title>
