@@ -33,7 +33,9 @@ const MessagePage = React.lazy(() => import("./pages/res/message"));
 const AddMessagePage = React.lazy(() => import("./pages/res/message/add"));
 
 const ResNutritionPage = React.lazy(() => import("./pages/res/nutrition"));
-const ResAddNutritionPage = React.lazy(() => import("./pages/res/nutrition/add"));
+const ResAddNutritionPage = React.lazy(() =>
+  import("./pages/res/nutrition/add")
+);
 
 function NoMatch() {
   const location = useLocation();
@@ -55,8 +57,9 @@ export default function Routes({ isAuthenticated }) {
         <Suspense fallback={<code>Loading...</code>}>
           <Layout>
             <Switch>
-              <Redirect exact from="/" to="/home" />
-              <Redirect exact from="/login" to="/home" />
+              {/* <Redirect exact from="/" to="/home" />
+              <Redirect exact from="/login" to="/home" /> */}
+              <Route path="/home" component={LoginPage} />
               <Route path="/bookings" component={BookingPage} />
               <Route path="/chats" component={ChatPage} />
               <Route path="/clients" component={ClientPage} />
@@ -67,16 +70,48 @@ export default function Routes({ isAuthenticated }) {
               <Route path="/schedule" component={SchedulePage} />
               <Route path="/settings" component={SettingsPage} />
 
-              <Route exact path="/resources/fitness" component={ResFitnessPage} />
-              <Route exact path="/resources/fitness/add" component={ResAddFitnessPage} />
-              <Route exact path="/resources/knowledge" component={KnowledgePage} />
-              <Route exact path="/resources/knowledge/add" component={AddKnowledgePage} />
+              <Route
+                exact
+                path="/resources/fitness"
+                component={ResFitnessPage}
+              />
+              <Route
+                exact
+                path="/resources/fitness/add"
+                component={ResAddFitnessPage}
+              />
+              <Route
+                exact
+                path="/resources/knowledge"
+                component={KnowledgePage}
+              />
+              <Route
+                exact
+                path="/resources/knowledge/add"
+                component={AddKnowledgePage}
+              />
               <Route exact path="/resources/mindset" component={MindsetPage} />
-              <Route exact path="/resources/mindset/add" component={AddMindsetPage} />
+              <Route
+                exact
+                path="/resources/mindset/add"
+                component={AddMindsetPage}
+              />
               <Route exact path="/resources/messages" component={MessagePage} />
-              <Route exact path="/resources/messages/add" component={AddMessagePage} />
-              <Route exact path="/resources/nutrition" component={ResNutritionPage} />
-              <Route exact path="/resources/nutrition/add" component={ResAddNutritionPage} />
+              <Route
+                exact
+                path="/resources/messages/add"
+                component={AddMessagePage}
+              />
+              <Route
+                exact
+                path="/resources/nutrition"
+                component={ResNutritionPage}
+              />
+              <Route
+                exact
+                path="/resources/nutrition/add"
+                component={ResAddNutritionPage}
+              />
 
               <Route path="*" component={NoMatch} />
             </Switch>
