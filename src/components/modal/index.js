@@ -1,21 +1,17 @@
 import { useRef, useState } from "react";
 import Form from "@rjsf/bootstrap-4";
-import { Button, Card, Col, Container, Modal, ProgressBar, Row } from "react-bootstrap";
+import { Button, Card, Col, Modal, ProgressBar, Row } from "react-bootstrap";
 
 export default function ModalView({ name, formUISchema, formSubmit, formSchema, formData }) {
     const formRef = useRef();
-    const [now, setNow] = useState([0, 0, 0, 0]);
     const [step, setStep] = useState(1);
     const [show, setShow] = useState(false);
     const [formValues, setFormValues] = useState(formData);
 
     function submitHandler(formData) {
         if (step < 5) {
-            let temp = [...now];
             console.log("Data submitted: ", formData);
             setStep(step + 1);
-            temp[step - 1] = 1;
-            setNow(temp);
             setFormValues({ ...formValues, ...formData });
         } else {
             formSubmit(formValues);
@@ -29,62 +25,90 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
             </Button>
             <Modal size="lg" show={show} scrollable={true} onHide={() => setShow(false)}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Create {name} Package</Modal.Title>
+                    <Modal.Title as={Row}>
+                        <Col xs={2} md={2} lg={2}>
+                            <mark>New {name} Package</mark>
+                        </Col>
+                        <Col xs={2} md={2} lg={2}>
+                            <ProgressBar
+                                max={1}
+                                now={step - 1}
+                                style={{ height: "5px" }}
+                                variant="success"
+                            />
+                            <small className="text-muted">1. Creator</small>
+                        </Col>
+                        <Col xs={2} md={2} lg={2}>
+                            <ProgressBar
+                                max={1}
+                                now={step - 2}
+                                style={{ height: "5px" }}
+                                variant="success"
+                            />
+                            <small className="text-muted">2. Details</small>
+                        </Col>
+                        <Col xs={2} md={2} lg={2}>
+                            <ProgressBar
+                                max={1}
+                                now={step - 3}
+                                style={{ height: "5px" }}
+                                variant="success"
+                            />
+                            <small className="text-muted">3. Program</small>
+                        </Col>
+                        <Col xs={2} md={2} lg={2}>
+                            <ProgressBar
+                                max={1}
+                                now={step - 4}
+                                style={{ height: "5px" }}
+                                variant="success"
+                            />
+                            <small className="text-muted">4. Schedule</small>
+                        </Col>
+                        <Col xs={2} md={2} lg={2}>
+                            <ProgressBar
+                                max={1}
+                                now={step - 5}
+                                style={{ height: "5px" }}
+                                variant="success"
+                            />
+                            <small className="text-muted">5. Pricing</small>
+                        </Col>
+                    </Modal.Title>
                 </Modal.Header>
                 <Modal.Body className="show-grid">
-                    <Container>
-                        <Row noGutters>
-                            <Col xs={3} md={3} lg={3}>
-                                <ProgressBar max={1} now={now[0]} />
-                                <small className="text-muted">1. Creator</small>
-                            </Col>
-                            <Col xs={3} md={3} lg={3}>
-                                <ProgressBar max={1} now={now[1]} />
-                                <small className="text-muted">2. Details</small>
-                            </Col>
-                            <Col xs={3} md={3} lg={3}>
-                                <ProgressBar max={1} now={now[2]} />
-                                <small className="text-muted">3. Program</small>
-                            </Col>
-                            <Col xs={3} md={3} lg={3}>
-                                <ProgressBar max={1} now={now[3]} />
-                                <small className="text-muted">4. Pricing</small>
-                            </Col>
-                        </Row>
-                        <hr />
-                        <Row>
-                            <Col md={8} lg={8} className="border-right">
-                                <Form
-                                    uiSchema={formUISchema}
-                                    schema={formSchema[step.toString()]}
-                                    ref={formRef}
-                                    onSubmit={({ formData }) => submitHandler(formData)}
-                                    formData={formValues}
-                                >
-                                    <div></div>
-                                </Form>
-                            </Col>
-                            <Col md={4} lg={4}>
-                                <Card>
-                                    <Card.Body>This is some text for card preview.</Card.Body>
-                                </Card>
-                            </Col>
-                        </Row>
-                    </Container>
+                    <Row>
+                        <Col md={8} lg={8} className="border-right">
+                            <Form
+                                uiSchema={formUISchema}
+                                schema={formSchema[step.toString()]}
+                                ref={formRef}
+                                onSubmit={({ formData }) => submitHandler(formData)}
+                                formData={formValues}
+                            >
+                                <div></div>
+                            </Form>
+                        </Col>
+                        <Col md={4} lg={4}>
+                            <Card>
+                                <Card.Body>This is some text for card preview.</Card.Body>
+                            </Card>
+                        </Col>
+                    </Row>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button
                         variant="secondary"
-                        onClick={() => {
-                            setStep(step - 1);
-                            setNow(now - 20);
-                        }}
+                        onClick={() => setStep(step - 1)}
                         disabled={step === 1 ? true : false}
                     >
-                        Back
+                        <><i className="mr-2 fas fa-arrow-left"></i>Back</>
                     </Button>
-                    <Button variant="primary" onClick={(event) => formRef.current.onSubmit(event)}>
-                        {step < 5 ? "Next" : "Create"}
+                    <Button variant="danger" onClick={(event) => formRef.current.onSubmit(event)}>
+                        {step < 5
+                            ? <>Next<i className="ml-2 fas fa-arrow-right"></i></>
+                            : <>Create<i className="ml-2 fas fa-check"></i></>
+                        }
                     </Button>
                 </Modal.Footer>
             </Modal>

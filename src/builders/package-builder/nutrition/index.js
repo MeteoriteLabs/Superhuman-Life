@@ -2,6 +2,10 @@ import { useMemo } from "react";
 import { Badge, Button, ButtonGroup, Card, TabContent } from "react-bootstrap";
 import ModalView from "../../../components/modal";
 import Table from "../../../components/table";
+import ClassicMeal from "./classic-meal.json";
+import Consultation from "./consultation.json";
+import CustomMeal from "./custom-meal.json";
+import Custom from "./custom.json";
 
 export default function NutritionTab() {
     const columns = useMemo(() => [
@@ -53,8 +57,25 @@ export default function NutritionTab() {
             "status": "Active"
         }
     ], []);
+    const uiSchema = {
+        "about": {
+            "ui:widget": "textarea",
+            "ui:options": {
+                "rows": 3
+            }
+        },
+        "benefits": {
+            "ui:widget": "textarea",
+            "ui:options": {
+                "rows": 3
+            }
+        },
+        "schedule": {
+            "ui:placeholder": "Number of days",
+        }
+    }
 
-    function onSubmit({ formData }) {
+    function onSubmit(formData) {
         alert("Values submitted: " + JSON.stringify(formData, null, 2));
     }
 
@@ -62,10 +83,34 @@ export default function NutritionTab() {
         <TabContent>
             <hr />
             <Card.Title className="text-center">
-                <ModalView name="Classic Meal" formSchema={{}} formSubmit={onSubmit} />{" "}
-                <ModalView name="Consultation" formSchema={{}} formSubmit={onSubmit} />{" "}
-                <ModalView name="Custom Meal" formSchema={{}} formSubmit={onSubmit} />{" "}
-                <ModalView name="Custom" formSchema={{}} formSubmit={onSubmit} />
+                <ModalView
+                    name="Classic Meal"
+                    formUISchema={uiSchema}
+                    formSchema={ClassicMeal}
+                    formSubmit={onSubmit}
+                    formData={{}}
+                />{" "}
+                <ModalView
+                    name="Consultation"
+                    formUISchema={uiSchema}
+                    formSchema={Consultation}
+                    formSubmit={onSubmit}
+                    formData={{}}
+                />{" "}
+                <ModalView
+                    name="Custom Meal"
+                    formUISchema={uiSchema}
+                    formSchema={CustomMeal}
+                    formSubmit={onSubmit}
+                    formData={{}}
+                />{" "}
+                <ModalView
+                    name="Custom"
+                    formUISchema={uiSchema}
+                    formSchema={Custom}
+                    formSubmit={onSubmit}
+                    formData={{}}
+                />
             </Card.Title>
             <Table columns={columns} data={data} />
         </TabContent>

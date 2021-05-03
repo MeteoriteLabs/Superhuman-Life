@@ -4,9 +4,8 @@
         "type": "object",
         "required": [
             "name",
-            "discipline",
+            "cuisine",
             "mode",
-            "level",
             "status"
         ],
         "properties": {
@@ -14,14 +13,14 @@
                 "type": "string",
                 "title": "Name of Package"
             },
-            "discipline": {
+            "cuisine": {
                 "type": "string",
-                "title": "Discipline",
+                "title": "Cuisine",
                 "enum": [
-                    "Basic",
-                    "Calsc",
-                    "Yoga",
-                    "Zumba"
+                    "Chinese",
+                    "Italian",
+                    "Mexican",
+                    "Thai"
                 ]
             },
             "tags": {
@@ -31,21 +30,11 @@
             "mode": {
                 "type": "string",
                 "title": "Mode",
+                "description": "Meal Plans can be given only through mobile application",
                 "enum": [
                     "Online",
                     "Offline",
                     "Hybrid"
-                ]
-            },
-            "level": {
-                "type": "string",
-                "title": "Level",
-                "enum": [
-                    "Beginner",
-                    "Basic",
-                    "Difficult",
-                    "Expert",
-                    "Challenge"
                 ]
             },
             "status": {
@@ -64,9 +53,7 @@
         "type": "object",
         "required": [
             "about",
-            "benefits",
-            "location",
-            "size"
+            "benefits"
         ],
         "properties": {
             "about": {
@@ -77,30 +64,22 @@
                 "type": "string",
                 "title": "Benefits"
             },
-            "location": {
-                "type": "string",
-                "title": "Location"
-            },
-            "size": {
-                "type": "number",
-                "title": "Class Size"
-            },
             "video": {
                 "type": "string",
                 "format": "uri",
-                "title": "Exercise Video Link"
+                "title": "Recipe Video Link"
             },
             "thumbnail": {
                 "type": "string",
                 "format": "data-url",
-                "title": "Exercise Picture",
+                "title": "Recipe Picture",
                 "accept": ".jpg"
             }
         }
     },
     "3": {
         "title": "",
-        "description": "Program has to be assigned to Group package",
+        "description": "Custom Meal Program has to be assigned after the package is purchased",
         "type": "object",
         "required": [
             "package"
@@ -121,23 +100,9 @@
                 "items": {
                     "type": "object",
                     "properties": {
-                        "start": {
-                            "type": "string",
-                            "format": "time",
-                            "title": "Start Time"
-                        },
-                        "end": {
-                            "type": "string",
-                            "format": "time",
-                            "title": "End Time"
-                        },
                         "title": {
                             "type": "string",
                             "title": "Title"
-                        },
-                        "session": {
-                            "type": "string",
-                            "title": "Session"
                         }
                     }
                 }
@@ -145,55 +110,13 @@
         }
     },
     "4": {
-        "title": "",
+        "title": "For Classic Meal Package",
         "type": "object",
-        "required": [
-            "start",
-            "end",
-            "days",
-            "duration"
-        ],
         "properties": {
-            "start": {
-                "type": "string",
-                "format": "date",
-                "title": "Start Date"
-            },
-            "end": {
-                "type": "string",
-                "format": "date",
-                "title": "End Date"
-            },
-            "days": {
-                "type": "array",
-                "title": "Select the days",
-                "items": {
-                    "type": "string",
-                    "enum": [
-                        "Sunday",
-                        "Monday",
-                        "Tuesday",
-                        "Wednesday",
-                        "Thursday",
-                        "Friday",
-                        "Saturday"
-                    ]
-                },
-                "uniqueItems": true
-            },
-            "duration": {
+            "schedule": {
                 "type": "number",
-                "title": "Duration of Class"
-            },
-            "startTime": {
-                "type": "string",
-                "format": "date-time",
-                "title": "Start Time"
-            },
-            "endTime": {
-                "type": "string",
-                "format": "date-time",
-                "title": "End Time"
+                "title": "Consumer can choose start date after",
+                "description": "This lead time will help you discuss, understand, request data and then build a custom program for the client."
             }
         }
     },
@@ -207,7 +130,7 @@
             },
             "plan": {
                 "type": "string",
-                "title": "Workout Plan",
+                "title": "Nutrition Plan",
                 "enum": [
                     "Monthly",
                     "Quaterly",

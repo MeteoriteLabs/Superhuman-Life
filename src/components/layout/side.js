@@ -36,6 +36,9 @@ export default function SideNav() {
         <NavLink className="nav-link" to="/packages">
           <i className="fas fa-tools mr-sm-2"></i> Packages
         </NavLink>
+        <NavLink className="nav-link" to="/resources">
+          <i className="fas fa-layer-group mr-sm-2"></i> Resources
+        </NavLink>
         <NavLink className="nav-link" to="/schedule">
           <i className="far fa-calendar-alt mr-sm-2"></i> Schedule
         </NavLink>
@@ -64,30 +67,6 @@ export default function SideNav() {
             </NavLink>
             <NavLink className="nav-link ml-sm-4" to="/">
               Sapien Partnership
-            </NavLink>
-          </Nav>
-        </Accordion.Collapse>
-      </Accordion>
-      <Accordion>
-        <Accordion.Toggle as={Button} variant="link" eventKey="0">
-          <i className="fas fa-angle-right mr-sm-2"></i> Resources
-        </Accordion.Toggle>
-        <Accordion.Collapse eventKey="0">
-          <Nav className="flex-column">
-            <NavLink className="nav-link ml-sm-4" to="/resources/fitness">
-              Fitness
-            </NavLink>
-            <NavLink className="nav-link ml-sm-4" to="/resources/knowledge">
-              Knowledge Bank
-            </NavLink>
-            <NavLink className="nav-link ml-sm-4" to="/resources/mindset">
-              Mental Health
-            </NavLink>
-            <NavLink className="nav-link ml-sm-4" to="/resources/messages">
-              Messages
-            </NavLink>
-            <NavLink className="nav-link ml-sm-4" to="/resources/nutrition">
-              Nutrition
             </NavLink>
           </Nav>
         </Accordion.Collapse>

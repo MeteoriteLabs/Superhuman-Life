@@ -26,6 +26,9 @@ export default function TopNav() {
             <NavLink className="nav-link" to="/profile">
               Profile
             </NavLink>
+            <NavLink className="nav-link" to="/resources">
+              Resources
+            </NavLink>
             <NavLink className="nav-link" to="/schedule">
               Schedule
             </NavLink>

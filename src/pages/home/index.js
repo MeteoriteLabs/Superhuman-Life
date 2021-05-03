@@ -15,7 +15,7 @@ export default function HomePage() {
     },
     {
       icon: <i className="fas fa-rocket"></i>,
-      link: "/resources/fitness",
+      link: "/resources",
       text: "My Resources",
     },
     {

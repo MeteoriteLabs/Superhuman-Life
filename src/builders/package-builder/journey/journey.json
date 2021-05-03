@@ -1,0 +1,202 @@
+{
+    "1": {
+        "title": "",
+        "type": "object",
+        "required": [
+            "name",
+            "discipline",
+            "mode",
+            "level",
+            "status"
+        ],
+        "properties": {
+            "name": {
+                "type": "string",
+                "title": "Name of Journey"
+            },
+            "discipline": {
+                "type": "string",
+                "title": "Discipline",
+                "enum": [
+                    "Basic",
+                    "Calisthenics",
+                    "Yoga",
+                    "Zumba"
+                ]
+            },
+            "tags": {
+                "type": "string",
+                "title": "Tags"
+            },
+            "mode": {
+                "type": "string",
+                "title": "Mode",
+                "enum": [
+                    "Online",
+                    "Offline",
+                    "Hybrid"
+                ]
+            },
+            "level": {
+                "type": "string",
+                "title": "Level",
+                "enum": [
+                    "Beginner",
+                    "Basic",
+                    "Difficult",
+                    "Expert",
+                    "Challenge"
+                ]
+            },
+            "status": {
+                "type": "string",
+                "title": "Status",
+                "enum": [
+                    "Active",
+                    "Inactive",
+                    "Pending"
+                ]
+            }
+        }
+    },
+    "2": {
+        "title": "",
+        "type": "object",
+        "required": [
+            "about",
+            "benefits",
+            "location"
+        ],
+        "properties": {
+            "about": {
+                "type": "string",
+                "title": "About"
+            },
+            "benefits": {
+                "type": "string",
+                "title": "Benefits"
+            },
+            "location": {
+                "type": "string",
+                "title": "Location"
+            },
+            "video": {
+                "type": "string",
+                "format": "uri",
+                "title": "Exercise Video Link"
+            },
+            "thumbnail": {
+                "type": "string",
+                "format": "data-url",
+                "title": "Exercise Picture",
+                "accept": ".jpg"
+            }
+        }
+    },
+    "3": {
+        "title": "Program Details",
+        "description": "Program to be assigned after package purchase",
+        "type": "object",
+        "properties": {
+            "set": {
+                "type": "number",
+                "title": "Set for 1 month i.e. 30 days",
+                "minimum": 30,
+                "default": 0
+            },
+            "fitness": {
+                "type": "object",
+                "title": "Fitness",
+                "properties": {
+                    "pt": {
+                        "type": "object",
+                        "title": "",
+                        "description": "Number of Personal Training Classes",
+                        "properties": {
+                            "online": {
+                                "type": "number",
+                                "title": "Online"
+                            },
+                            "offline": {
+                                "type": "number",
+                                "title": "Offline"
+                            }
+                        }
+                    },
+                    "group": {
+                        "type": "object",
+                        "title": "",
+                        "description": "Number of Group Classes",
+                        "properties": {
+                            "online": {
+                                "type": "number",
+                                "title": "Online"
+                            },
+                            "offline": {
+                                "type": "number",
+                                "title": "Offline"
+                            }
+                        }
+                    },
+                    "record": {
+                        "type": "number",
+                        "title": "Number of Recorded Classes"
+                    },
+                    "rest": {
+                        "type": "number",
+                        "title": "Number of Rest Classes"
+                    }
+                }
+            },
+            "nutrition": {
+                "type": "object",
+                "title": "Nutrition",
+                "properties": {
+                    "online": {
+                        "type": "number",
+                        "title": "Online"
+                    },
+                    "offline": {
+                        "type": "number",
+                        "title": "Offline"
+                    }
+                }
+            }
+        }
+    },
+    "4": {
+        "title": "For Programs",
+        "type": "object",
+        "properties": {
+            "schedule": {
+                "type": "number",
+                "title": "Consumer can choose start date after",
+                "description": "This lead time will allow you to discuss, understand, request data and then build a custom journey for the client"
+            }
+        }
+    },
+    "5": {
+        "title": "",
+        "type": "object",
+        "properties": {
+            "voucher": {
+                "type": "string",
+                "title": "Additional Voucher"
+            },
+            "plan": {
+                "type": "string",
+                "title": "Workout Plan",
+                "enum": [
+                    "Monthly",
+                    "Quaterly",
+                    "Half Yearly",
+                    "Yearly"
+                ]
+            },
+            "price": {
+                "type": "number",
+                "title": "Set Pricing"
+            }
+        }
+    }
+}

@@ -98,8 +98,75 @@
             }
         }
     },
-    "3": {},
+    "3": {
+        "title": "Program Details",
+        "type": "object",
+        "properties": {
+            "set": {
+                "type": "number",
+                "title": "Set for 1 month i.e. 30 days",
+                "description": "Program to be assigned after package purchase",
+                "minimum": 30,
+                "default": 0
+            },
+            "fitness": {
+                "type": "object",
+                "title": "",
+                "properties": {
+                    "pt": {
+                        "type": "object",
+                        "title": "",
+                        "description": "Number of Personal Training Classes",
+                        "properties": {
+                            "online": {
+                                "type": "number",
+                                "title": "Online"
+                            },
+                            "offline": {
+                                "type": "number",
+                                "title": "Offline"
+                            }
+                        }
+                    },
+                    "group": {
+                        "type": "object",
+                        "title": "",
+                        "description": "Number of Group Classes",
+                        "properties": {
+                            "online": {
+                                "type": "number",
+                                "title": "Online"
+                            },
+                            "offline": {
+                                "type": "number",
+                                "title": "Offline"
+                            }
+                        }
+                    },
+                    "record": {
+                        "type": "number",
+                        "title": "Number of Recorded Classes"
+                    },
+                    "rest": {
+                        "type": "number",
+                        "title": "Number of Rest Classes"
+                    }
+                }
+            }
+        }
+    },
     "4": {
+        "title": "For Programs",
+        "type": "object",
+        "properties": {
+            "custom-schedule": {
+                "type": "number",
+                "title": "Consumer can choose start date after",
+                "description": "This lead time will help you discuss, understand, request data and then build a custom program for the client"
+            }
+        }
+    },
+    "5": {
         "title": "",
         "type": "object",
         "properties": {

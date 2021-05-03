@@ -1,0 +1,30 @@
+{
+    "title": "",
+    "description": "Take a moment to fill these details",
+    "type": "object",
+    "required": [
+        "name",
+        "dob",
+        "contact"
+    ],
+    "properties": {
+        "name": {
+            "type": "string",
+            "title": "Full Name"
+        },
+        "dob": {
+            "type": "string",
+            "title": "Date of Birth",
+            "format": "date"
+        },
+        "contact": {
+            "type": "string",
+            "title": "Contact",
+            "minLength": 10
+        },
+        "location": {
+            "type": "string",
+            "title": "Location"
+        }
+    }
+}

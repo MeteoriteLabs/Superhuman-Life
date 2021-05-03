@@ -4,9 +4,8 @@
         "type": "object",
         "required": [
             "name",
-            "discipline",
+            "cuisine",
             "mode",
-            "level",
             "status"
         ],
         "properties": {
@@ -14,14 +13,14 @@
                 "type": "string",
                 "title": "Name of Package"
             },
-            "discipline": {
+            "cuisine": {
                 "type": "string",
-                "title": "Discipline",
+                "title": "Cuisine",
                 "enum": [
-                    "Basic",
-                    "Calsc",
-                    "Yoga",
-                    "Zumba"
+                    "Chinese",
+                    "Italian",
+                    "Mexican",
+                    "Thai"
                 ]
             },
             "tags": {
@@ -31,21 +30,11 @@
             "mode": {
                 "type": "string",
                 "title": "Mode",
+                "description": "Meal Plans can be given only through mobile application",
                 "enum": [
                     "Online",
                     "Offline",
                     "Hybrid"
-                ]
-            },
-            "level": {
-                "type": "string",
-                "title": "Level",
-                "enum": [
-                    "Beginner",
-                    "Basic",
-                    "Difficult",
-                    "Expert",
-                    "Challenge"
                 ]
             },
             "status": {
@@ -64,9 +53,7 @@
         "type": "object",
         "required": [
             "about",
-            "benefits",
-            "location",
-            "size"
+            "benefits"
         ],
         "properties": {
             "about": {
@@ -77,29 +64,62 @@
                 "type": "string",
                 "title": "Benefits"
             },
-            "location": {
-                "type": "string",
-                "title": "Location"
-            },
-            "size": {
-                "type": "number",
-                "title": "Class Size"
-            },
             "video": {
                 "type": "string",
                 "format": "uri",
-                "title": "Exercise Video Link"
+                "title": "Recipe Video Link"
             },
             "thumbnail": {
                 "type": "string",
                 "format": "data-url",
-                "title": "Exercise Picture",
+                "title": "Recipe Picture",
                 "accept": ".jpg"
             }
         }
     },
-    "3": {},
-    "4": {},
+    "3": {
+        "title": "",
+        "description": "Program has to be assigned to Classic package",
+        "type": "object",
+        "required": [
+            "package"
+        ],
+        "properties": {
+            "package": {
+                "type": "string",
+                "title": "Assign Package Now",
+                "description": "Package won't be active till the program is assigned.",
+                "enum": [
+                    "Yes",
+                    "Later"
+                ]
+            },
+            "program": {
+                "title": "",
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "title": {
+                            "type": "string",
+                            "title": "Title"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "4": {
+        "title": "For Classic Meal Package",
+        "type": "object",
+        "properties": {
+            "classic-meal-schedule": {
+                "type": "number",
+                "title": "Consumer can choose start date after",
+                "description": "This lead time will help you discuss, understand, request data and then build a custom program for the client."
+            }
+        }
+    },
     "5": {
         "title": "",
         "type": "object",
@@ -110,7 +130,7 @@
             },
             "plan": {
                 "type": "string",
-                "title": "Workout Plan",
+                "title": "Nutrition Plan",
                 "enum": [
                     "Monthly",
                     "Quaterly",

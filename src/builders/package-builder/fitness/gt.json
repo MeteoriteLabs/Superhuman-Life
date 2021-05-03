@@ -1,0 +1,219 @@
+{
+    "1": {
+        "title": "",
+        "type": "object",
+        "required": [
+            "name",
+            "discipline",
+            "mode",
+            "level",
+            "status"
+        ],
+        "properties": {
+            "name": {
+                "type": "string",
+                "title": "Name of Package"
+            },
+            "discipline": {
+                "type": "string",
+                "title": "Discipline",
+                "enum": [
+                    "Basic",
+                    "Calsc",
+                    "Yoga",
+                    "Zumba"
+                ]
+            },
+            "tags": {
+                "type": "string",
+                "title": "Tags"
+            },
+            "mode": {
+                "type": "string",
+                "title": "Mode",
+                "enum": [
+                    "Online",
+                    "Offline",
+                    "Hybrid"
+                ]
+            },
+            "level": {
+                "type": "string",
+                "title": "Level",
+                "enum": [
+                    "Beginner",
+                    "Basic",
+                    "Difficult",
+                    "Expert",
+                    "Challenge"
+                ]
+            },
+            "status": {
+                "type": "string",
+                "title": "Status",
+                "enum": [
+                    "Active",
+                    "Inactive",
+                    "Pending"
+                ]
+            }
+        }
+    },
+    "2": {
+        "title": "",
+        "type": "object",
+        "required": [
+            "about",
+            "benefits",
+            "location",
+            "size"
+        ],
+        "properties": {
+            "about": {
+                "type": "string",
+                "title": "About"
+            },
+            "benefits": {
+                "type": "string",
+                "title": "Benefits"
+            },
+            "location": {
+                "type": "string",
+                "title": "Location"
+            },
+            "size": {
+                "type": "string",
+                "title": "Class Size",
+                "enum": [
+                    "Couple",
+                    "Family",
+                    "Solo"
+                ]
+            },
+            "video": {
+                "type": "string",
+                "format": "uri",
+                "title": "Exercise Video Link"
+            },
+            "thumbnail": {
+                "type": "string",
+                "format": "data-url",
+                "title": "Exercise Picture",
+                "accept": ".jpg"
+            }
+        }
+    },
+    "3": {
+        "title": "Program Details",
+        "type": "object",
+        "required": [
+            "typo"
+        ],
+        "properties": {
+            "typo": {
+                "type": "string",
+                "title": "Type of Package",
+                "enum": [
+                    "Program",
+                    "Workout"
+                ]
+            }
+        },
+        "dependencies": {
+            "typo": {
+                "oneOf": [
+                    {
+                        "properties": {
+                            "typo": {
+                                "enum": [
+                                    "Program"
+                                ]
+                            },
+                            "set": {
+                                "type": "number",
+                                "title": "Set for 1 month i.e. 30 days",
+                                "description": "Program to be assigned after package purchase",
+                                "minimum": 30,
+                                "default": 0
+                            },
+                            "fitness": {
+                                "type": "object",
+                                "title": "",
+                                "properties": {
+                                    "pt": {
+                                        "type": "object",
+                                        "title": "",
+                                        "description": "Number of Personal Training Classes",
+                                        "properties": {
+                                            "online": {
+                                                "type": "number",
+                                                "title": "Online"
+                                            },
+                                            "offline": {
+                                                "type": "number",
+                                                "title": "Offline"
+                                            }
+                                        }
+                                    },
+                                    "rest": {
+                                        "type": "number",
+                                        "title": "Number of Rest Classes"
+                                    },
+                                    "schedule": {
+                                        "type": "number",
+                                        "title": "Consumer can choose start date after",
+                                        "description": "This lead time will help you discuss, understand, request data and then build a custom program for the client."
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "properties": {
+                            "typo": {
+                                "enum": [
+                                    "Workout"
+                                ]
+                            },
+                            "label": {
+                                "title": "",
+                                "description": "Program can be assigned after purchase of workout package",
+                                "type": "string"
+                            },
+                            "schedule": {
+                                "type": "number",
+                                "title": "Consumer can choose start time before",
+                                "description": "This will give you lead time to prepare yourself for the class. This type of booking is generally on the same day."
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    },
+    "4": {},
+    "5": {
+        "title": "",
+        "type": "object",
+        "properties": {
+            "voucher": {
+                "type": "string",
+                "title": "Additional Voucher"
+            },
+            "plan": {
+                "type": "string",
+                "title": "Workout Plan",
+                "enum": [
+                    "Monthly",
+                    "Quaterly",
+                    "Half Yearly",
+                    "Yearly"
+                ]
+            },
+            "price": {
+                "type": "number",
+                "title": "Set Pricing"
+            }
+        }
+    }
+}

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Alert, Modal } from "react-bootstrap";
+import { Alert, Button, Modal } from "react-bootstrap";
 import Form from "@rjsf/bootstrap-4";
 import login from "./login.json";
 
@@ -23,7 +23,11 @@ export default function Login() {
             {alert.msg}
           </Alert>
         )}
-        <Form schema={login} onSubmit={onSubmit} />
+        <Form schema={login} onSubmit={onSubmit}>
+          <Button variant="danger">
+            Sign In<i className="ml-2 fas fa-sign-in-alt"></i>
+          </Button>
+        </Form>
       </Modal.Body>
       <Modal.Footer>
         <p className="text-muted">
