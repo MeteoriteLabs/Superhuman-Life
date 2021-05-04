@@ -1,14 +1,21 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import Form from "@rjsf/bootstrap-4";
 import { Button, Card, Col, Modal, ProgressBar, Row } from "react-bootstrap";
 
-export default function ModalView({ name, formUISchema, formSubmit, formSchema, formData }) {
-    const formRef = useRef();
-    const [step, setStep] = useState(1);
-    const [show, setShow] = useState(false);
-    const [formValues, setFormValues] = useState(formData);
+type AppProps = {
+    name: string,
+    formUISchema: any,
+    formSubmit: any,
+    formSchema: any,
+    formData: any
+}
 
-    function submitHandler(formData) {
+export default function ModalView({ name, formUISchema, formSubmit, formSchema, formData }: AppProps) {
+    const [step, setStep] = useState<number>(1);
+    const [show, setShow] = useState<boolean>(false);
+    const [formValues, setFormValues] = useState<any>(formData);
+
+    function submitHandler({ formData }: AppProps) {
         if (step < 5) {
             console.log("Data submitted: ", formData);
             setStep(step + 1);
@@ -82,7 +89,7 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
                             <Form
                                 uiSchema={formUISchema}
                                 schema={formSchema[step.toString()]}
-                                ref={formRef}
+                                // ref={(form: any) => modalForm = form}
                                 onSubmit={({ formData }) => submitHandler(formData)}
                                 formData={formValues}
                             >
@@ -104,10 +111,10 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
                     >
                         <><i className="mr-2 fas fa-arrow-left"></i>Back</>
                     </Button>
-                    <Button variant="danger" onClick={(event) => formRef.current.onSubmit(event)}>
-                        {step < 5
-                            ? <>Next<i className="ml-2 fas fa-arrow-right"></i></>
-                            : <>Create<i className="ml-2 fas fa-check"></i></>
+                    <Button variant="danger">
+                        {(step < 5)
+                            ? <>Next <i className="ml-2 fas fa-arrow-right"></i></>
+                            : <>Create <i className="ml-2 fas fa-check"></i></>
                         }
                     </Button>
                 </Modal.Footer>

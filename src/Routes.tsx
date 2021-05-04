@@ -1,5 +1,4 @@
 import React, { Suspense } from "react";
-import { Jumbotron } from "react-bootstrap";
 import {
   BrowserRouter as Router,
   Redirect,
@@ -8,6 +7,10 @@ import {
   useLocation,
 } from "react-router-dom";
 import Layout from "./components/layout";
+
+type AppProps = {
+  isAuthenticated: boolean
+}
 
 const BookingPage = React.lazy(() => import("./pages/booking"));
 const ChatPage = React.lazy(() => import("./pages/chat"));
@@ -27,16 +30,16 @@ function NoMatch() {
   const location = useLocation();
 
   return (
-    <Jumbotron>
+    <div>
       <h3>Error 404</h3>
       <p>
         No match for <code>{location.pathname}</code>
       </p>
-    </Jumbotron>
+    </div>
   );
 }
 
-export default function Routes({ isAuthenticated }) {
+export default function Routes({ isAuthenticated }: AppProps) {
   return (
     <Router>
       {isAuthenticated ? (

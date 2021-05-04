@@ -1,10 +1,10 @@
 {
     "title": "",
-    "description": "Take a moment to fill these details",
     "type": "object",
     "required": [
         "name",
         "dob",
+        "gender",
         "contact"
     ],
     "properties": {
@@ -16,6 +16,15 @@
             "type": "string",
             "title": "Date of Birth",
             "format": "date"
+        },
+        "gender": {
+            "type": "string",
+            "title": "Gender",
+            "enum": [
+                "Female",
+                "Male",
+                "Other"
+            ]
         },
         "contact": {
             "type": "string",

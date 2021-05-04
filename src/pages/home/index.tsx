@@ -42,7 +42,7 @@ export default function HomePage() {
 
   return (
     <>
-      <h4>Dashboard</h4>
+      <h3>Dashboard</h3>
       <Alert variant="primary" className="mt-5">
         This website is under active development!
       </Alert>

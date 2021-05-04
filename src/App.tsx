@@ -1,7 +1,7 @@
 import Routes from "./Routes";
 
 function App() {
-  const isAuthenticated = true;
+  const isAuthenticated: boolean = true;
 
   return <Routes isAuthenticated={isAuthenticated} />;
 }

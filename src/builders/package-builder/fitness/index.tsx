@@ -2,18 +2,14 @@ import { useMemo } from "react";
 import { Badge, Button, ButtonGroup, Card, TabContent } from "react-bootstrap";
 import ModalView from "../../../components/modal";
 import Table from "../../../components/table";
-import Classic from "./classic.json";
-import Custom from "./custom.json";
-import Group from "./group.json";
-import GT from "./gt.json";
 
 export default function FitnessTab() {
-    const columns = useMemo(() => [
+    const columns = useMemo<any>(() => [
         { accessor: "id", Header: "#" },
         {
             accessor: "image",
             Header: "-",
-            Cell: v => <img src={v.value} height="32" alt="thumbnail" />
+            Cell: (v: any) => <img src={v.value} height="32" alt="thumbnail" />
         },
         { accessor: "name", Header: "Name" },
         { accessor: "type", Header: "Type" },
@@ -24,12 +20,12 @@ export default function FitnessTab() {
         {
             accessor: "status",
             Header: "Status",
-            Cell: v => <Badge variant="success">{v.value}</Badge>
+            Cell: (v: any) => <Badge variant="success">{v.value}</Badge>
         },
         {
             id: "edit",
             Header: "Actions",
-            Cell: ({ row }) => (
+            Cell: ({ row }: any) => (
                 <ButtonGroup>
                     <Button variant="white">
                         <i className="far fa-edit"></i>
@@ -41,7 +37,7 @@ export default function FitnessTab() {
             ),
         }
     ], []);
-    const data = useMemo(() => [
+    const data = useMemo<any>(() => [
         {
             "id": 1,
             "image": "/assets/exercise-1.jpg",
@@ -54,7 +50,11 @@ export default function FitnessTab() {
             "status": "Active"
         }
     ], []);
-    const uiSchema = {
+    const classicSchema: any = require("./classic.json");
+    const customSchema: any = require("./custom.json");
+    const groupSchema: any = require("./group.json");
+    const ptSchema: any = require("./gt.json");
+    const uiSchema: any = {
         "about": {
             "ui:widget": "textarea",
             "ui:options": {
@@ -78,7 +78,7 @@ export default function FitnessTab() {
         }
     }
 
-    function onSubmit(formData) {
+    function onSubmit(formData: any) {
         setTimeout(() => {
             alert("Values submitted: " + JSON.stringify(formData, null, 2));
         }, 1000);
@@ -91,14 +91,14 @@ export default function FitnessTab() {
                 <ModalView
                     name="Classic"
                     formUISchema={uiSchema}
-                    formSchema={Classic}
+                    formSchema={classicSchema}
                     formSubmit={onSubmit}
                     formData={{}}
                 />{" "}
                 <ModalView
                     name="Custom"
                     formUISchema={uiSchema}
-                    formSchema={Custom}
+                    formSchema={customSchema}
                     formSubmit={onSubmit}
                     formData={{}}
                 />{" "}
@@ -106,13 +106,13 @@ export default function FitnessTab() {
                     name="Group"
                     formUISchema={uiSchema}
                     formSubmit={onSubmit}
-                    formSchema={Group}
+                    formSchema={groupSchema}
                     formData={{}}
                 />{" "}
                 <ModalView
                     name="PT"
                     formUISchema={uiSchema}
-                    formSchema={GT}
+                    formSchema={ptSchema}
                     formSubmit={onSubmit}
                     formData={{}}
                 />
