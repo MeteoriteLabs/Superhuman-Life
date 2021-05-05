@@ -1,5 +1,6 @@
-import { useState } from "react";
-import Form from "@rjsf/bootstrap-4";
+import { useRef, useState } from "react";
+import { withTheme } from "@rjsf/core";
+import { Theme as Bootstrap4Theme } from '@rjsf/bootstrap-4';
 import { Button, Card, Col, Modal, ProgressBar, Row } from "react-bootstrap";
 
 type AppProps = {
@@ -11,11 +12,13 @@ type AppProps = {
 }
 
 export default function ModalView({ name, formUISchema, formSubmit, formSchema, formData }: AppProps) {
+    const Form: any = withTheme(Bootstrap4Theme);
+    const formRef = useRef<any>(null);
     const [step, setStep] = useState<number>(1);
     const [show, setShow] = useState<boolean>(false);
     const [formValues, setFormValues] = useState<any>(formData);
 
-    function submitHandler({ formData }: AppProps) {
+    function submitHandler(formData: any) {
         if (step < 5) {
             console.log("Data submitted: ", formData);
             setStep(step + 1);
@@ -89,8 +92,8 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
                             <Form
                                 uiSchema={formUISchema}
                                 schema={formSchema[step.toString()]}
-                                // ref={(form: any) => modalForm = form}
-                                onSubmit={({ formData }) => submitHandler(formData)}
+                                ref={formRef}
+                                onSubmit={({ formData }: any) => submitHandler(formData)}
                                 formData={formValues}
                             >
                                 <div></div>
@@ -111,7 +114,7 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
                     >
                         <><i className="mr-2 fas fa-arrow-left"></i>Back</>
                     </Button>
-                    <Button variant="danger">
+                    <Button variant="danger" onClick={(event) => formRef.current.onSubmit(event)}>
                         {(step < 5)
                             ? <>Next <i className="ml-2 fas fa-arrow-right"></i></>
                             : <>Create <i className="ml-2 fas fa-check"></i></>
