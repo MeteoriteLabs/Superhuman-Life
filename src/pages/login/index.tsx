@@ -14,7 +14,8 @@ export default function Login() {
   const uiSchema: any = {
     "password": {
       "ui:widget": "password",
-      "ui:help": "Hint: Make it strong!"
+      "ui:help": "Hint: Make it strong!",
+      classNames: "test"
     }
   }
 
