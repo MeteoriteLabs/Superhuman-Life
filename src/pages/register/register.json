@@ -1,30 +1,155 @@
 {
-    "title": "",
-    "description": "Take a moment to fill these details",
-    "type": "object",
-    "required": [
-        "name",
-        "dob",
-        "contact"
-    ],
-    "properties": {
-        "name": {
-            "type": "string",
-            "title": "Full Name"
-        },
-        "dob": {
-            "type": "string",
-            "title": "Date of Birth",
-            "format": "date"
-        },
-        "contact": {
-            "type": "string",
-            "title": "Contact",
-            "minLength": 10
-        },
-        "location": {
-            "type": "string",
-            "title": "Location"
+    "1": {
+        "title": "",
+        "type": "object",
+        "required": [
+            "email",
+            "password",
+            "confirm"
+        ],
+        "properties": {
+            "email": {
+                "type": "string",
+                "title": "Email",
+                "format": "email"
+            },
+            "password": {
+                "type": "string",
+                "title": "Password"
+            },
+            "confirm": {
+                "type": "string",
+                "title": "Confirm Password"
+            }
+        }
+    },
+    "2": {
+        "title": "",
+        "type": "object",
+        "required": [
+            "name",
+            "dob",
+            "gender",
+            "contact"
+        ],
+        "properties": {
+            "name": {
+                "type": "string",
+                "title": "Full Name"
+            },
+            "dob": {
+                "type": "string",
+                "title": "Date of Birth",
+                "format": "date"
+            },
+            "gender": {
+                "type": "string",
+                "title": "Gender",
+                "enum": [
+                    "Female",
+                    "Male",
+                    "Other"
+                ]
+            },
+            "contact": {
+                "type": "string",
+                "title": "Contact",
+                "minLength": 10
+            },
+            "location": {
+                "type": "string",
+                "title": "Location"
+            }
+        }
+    },
+    "3": {
+        "title": "",
+        "type": "object",
+        "required": [
+            "specification",
+            "education",
+            "language"
+        ],
+        "properties": {
+            "changemaker": {
+                "title": "",
+                "description": "Type of Changemaker",
+                "type": "object",
+                "required": [
+                    "specialist",
+                    "business"
+                ],
+                "properties": {
+                    "specialist": {
+                        "type": "string",
+                        "title": "Specialist",
+                        "enum": [
+                            "Fitness Coach",
+                            "Sports Coach",
+                            "Nutritionist",
+                            "Dietician",
+                            "Doctor",
+                            "Dentist",
+                            "Physiotherapist",
+                            "Psychiatrist",
+                            "Psychologist",
+                            "Chriopractor",
+                            "Activity Leader",
+                            "Chef",
+                            "Therapist"
+                        ]
+                    },
+                    "business": {
+                        "type": "string",
+                        "title": "Business",
+                        "enum": [
+                            "Fitness Center",
+                            "Gym",
+                            "Fitness Studio",
+                            "Nutrition Clinic",
+                            "Primary Care Clinic",
+                            "Rehabilitation Center",
+                            "Sports Complex",
+                            "Academy",
+                            "Pharmacy",
+                            "Diagnostic Center",
+                            "Activity Center/Club",
+                            "Community Center",
+                            "Store"
+                        ]
+                    }
+                }
+            },
+            "specification": {
+                "type": "string",
+                "title": "Specifications"
+            },
+            "education": {
+                "type": "string",
+                "title": "Educational Qualifications"
+            },
+            "language": {
+                "type": "string",
+                "title": "Language Spoken"
+            }
+        }
+    },
+    "4": {
+        "title": "",
+        "type": "object",
+        "properties": {
+            "about": {
+                "type": "string",
+                "title": "About Me"
+            },
+            "challenge": {
+                "type": "string",
+                "title": "Most Common Challenges Faced"
+            },
+            "message": {
+                "type": "string",
+                "title": "Any other message?"
+            }
         }
     }
 }

@@ -1,14 +1,13 @@
 import { Fragment } from "react";
 import { useTable, useExpanded } from "react-table";
 
-function Table({ renderRowSubComponent, data, columns }) {
+function Table({ data, columns }: any) {
     const {
         getTableProps,
         getTableBodyProps,
         headerGroups,
         rows,
         prepareRow,
-        visibleColumns,
     } = useTable({ columns, data }, useExpanded);
 
     return (
@@ -38,8 +37,6 @@ function Table({ renderRowSubComponent, data, columns }) {
                                         </td>
                                     ))}
                                 </tr>
-                                {row.isExpanded &&
-                                    renderRowSubComponent({ row, rowProps, visibleColumns })}
                             </Fragment>
                         );
                     })}

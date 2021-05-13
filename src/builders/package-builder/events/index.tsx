@@ -2,15 +2,14 @@ import { useMemo } from "react";
 import { Badge, Button, Card, TabContent } from "react-bootstrap";
 import ModalView from "../../../components/modal";
 import Table from "../../../components/table";
-import Event from "./event.json";
 
 export default function EventsTab() {
-    const columns = useMemo(() => [
+    const columns = useMemo<any>(() => [
         { accessor: "id", Header: "#" },
         {
             accessor: "image",
             Header: "-",
-            Cell: v => <img src={v.value} height="32" alt="thumbnail" />
+            Cell: (v: any) => <img src={v.value} height="32" alt="thumbnail" />
         },
         { accessor: "name", Header: "Name" },
         { accessor: "type", Header: "Type" },
@@ -22,12 +21,12 @@ export default function EventsTab() {
         {
             accessor: "status",
             Header: "Status",
-            Cell: v => <Badge variant="success">{v.value}</Badge>
+            Cell: (v: any) => <Badge variant="success">{v.value}</Badge>
         },
         {
             id: "edit",
             Header: "Actions",
-            Cell: ({ row }) => (
+            Cell: ({ row }: any) => (
                 <>
                     <Button variant="white">
                         <i className="far fa-edit"></i>
@@ -39,7 +38,7 @@ export default function EventsTab() {
             ),
         }
     ], []);
-    const data = useMemo(() => [
+    const data = useMemo<any>(() => [
         {
             "id": 1,
             "image": "/assets/event-1.jpeg",
@@ -53,7 +52,8 @@ export default function EventsTab() {
             "status": "Active"
         }
     ], []);
-    const uiSchema = {
+    const eventSchema: any = require("./event.json");
+    const uiSchema: any = {
         "summary": {
             "ui:widget": "textarea",
             "ui:options": {
@@ -76,7 +76,7 @@ export default function EventsTab() {
         }
     }
 
-    function onSubmit(formData) {
+    function onSubmit(formData: any) {
         alert("Values submitted: " + JSON.stringify(formData, null, 2));
     }
 
@@ -87,7 +87,7 @@ export default function EventsTab() {
                 <ModalView
                     name="Event"
                     formUISchema={uiSchema}
-                    formSchema={Event}
+                    formSchema={eventSchema}
                     formSubmit={onSubmit}
                     formData={{}}
                 />

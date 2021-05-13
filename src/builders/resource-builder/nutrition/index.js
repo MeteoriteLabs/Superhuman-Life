@@ -12,7 +12,6 @@ export default function ResNutritionPage() {
                     <Card.Body>
                         <Card.Title>
                             Recipe Name
-                            <img alt="non-veg" className="float-right" src="/assets/non-veg.png" />
                         </Card.Title>
                         <Card.Subtitle className="text-muted">Details - Lorem Ipsum</Card.Subtitle>
                         <Card.Text>
@@ -26,7 +25,6 @@ export default function ResNutritionPage() {
                     <Card.Body>
                         <Card.Title>
                             Recipe Name
-                            <img alt="veg" className="float-right" src="/assets/veg.png" />
                         </Card.Title>
                         <Card.Subtitle className="text-muted">Details - Lorem Ipsum</Card.Subtitle>
                         <Card.Text>
@@ -40,7 +38,6 @@ export default function ResNutritionPage() {
                     <Card.Body>
                         <Card.Title>
                             Recipe Name
-                            <img alt="veg" className="float-right" src="/assets/veg.png" />
                         </Card.Title>
                         <Card.Subtitle className="text-muted">Details - Lorem Ipsum</Card.Subtitle>
                         <Card.Text>

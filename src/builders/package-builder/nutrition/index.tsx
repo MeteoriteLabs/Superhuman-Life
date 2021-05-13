@@ -2,18 +2,14 @@ import { useMemo } from "react";
 import { Badge, Button, ButtonGroup, Card, TabContent } from "react-bootstrap";
 import ModalView from "../../../components/modal";
 import Table from "../../../components/table";
-import ClassicMeal from "./classic-meal.json";
-import Consultation from "./consultation.json";
-import CustomMeal from "./custom-meal.json";
-import Custom from "./custom.json";
 
 export default function NutritionTab() {
-    const columns = useMemo(() => [
+    const columns = useMemo<any>(() => [
         { accessor: "id", Header: "#" },
         {
             accessor: "image",
             Header: "",
-            Cell: v => <img src={v.value} height="32" alt="thumbnail" />
+            Cell: (v: any) => <img src={v.value} height="32" alt="thumbnail" />
         },
         { accessor: "name", Header: "Name" },
         { accessor: "type", Header: "Type" },
@@ -24,12 +20,12 @@ export default function NutritionTab() {
         {
             accessor: "status",
             Header: "Status",
-            Cell: v => <Badge variant="success">{v.value}</Badge>
+            Cell: (v: any) => <Badge variant="success">{v.value}</Badge>
         },
         {
             id: "edit",
             Header: "Actions",
-            Cell: ({ row }) => (
+            Cell: ({ row }: any) => (
                 <ButtonGroup>
                     <Button variant="white">
                         <i className="far fa-edit"></i>
@@ -44,7 +40,7 @@ export default function NutritionTab() {
             ),
         }
     ], []);
-    const data = useMemo(() => [
+    const data = useMemo<any>(() => [
         {
             "id": 1,
             "image": "/assets/recipe-1.jpg",
@@ -57,7 +53,11 @@ export default function NutritionTab() {
             "status": "Active"
         }
     ], []);
-    const uiSchema = {
+    const classicMealSchema: any = require("./classic-meal.json");
+    const consultSchema: any = require("./consultation.json");
+    const customMealSchema: any = require("./custom-meal.json");
+    const customSchema: any = require("./custom.json");
+    const uiSchema: any = {
         "about": {
             "ui:widget": "textarea",
             "ui:options": {
@@ -75,7 +75,7 @@ export default function NutritionTab() {
         }
     }
 
-    function onSubmit(formData) {
+    function onSubmit(formData: any) {
         alert("Values submitted: " + JSON.stringify(formData, null, 2));
     }
 
@@ -86,28 +86,28 @@ export default function NutritionTab() {
                 <ModalView
                     name="Classic Meal"
                     formUISchema={uiSchema}
-                    formSchema={ClassicMeal}
+                    formSchema={classicMealSchema}
                     formSubmit={onSubmit}
                     formData={{}}
                 />{" "}
                 <ModalView
                     name="Consultation"
                     formUISchema={uiSchema}
-                    formSchema={Consultation}
+                    formSchema={consultSchema}
                     formSubmit={onSubmit}
                     formData={{}}
                 />{" "}
                 <ModalView
                     name="Custom Meal"
                     formUISchema={uiSchema}
-                    formSchema={CustomMeal}
+                    formSchema={customMealSchema}
                     formSubmit={onSubmit}
                     formData={{}}
                 />{" "}
                 <ModalView
                     name="Custom"
                     formUISchema={uiSchema}
-                    formSchema={Custom}
+                    formSchema={customSchema}
                     formSubmit={onSubmit}
                     formData={{}}
                 />

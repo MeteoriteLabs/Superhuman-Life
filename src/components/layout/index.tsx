@@ -2,7 +2,7 @@ import { Col, Container, Row } from "react-bootstrap";
 import SideNav from "./side";
 import TopNav from "./top";
 
-export default function Layout({ children }) {
+export default function Layout(props: any) {
   return (
     <>
       <header>
@@ -15,7 +15,7 @@ export default function Layout({ children }) {
               <SideNav />
             </Col>
             <Col xs lg="10">
-              {children}
+              {props.children}
             </Col>
           </Row>
         </Container>

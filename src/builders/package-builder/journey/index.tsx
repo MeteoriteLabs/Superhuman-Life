@@ -2,15 +2,14 @@ import { useMemo } from "react";
 import { Badge, Button, Card, TabContent } from "react-bootstrap";
 import ModalView from "../../../components/modal";
 import Table from "../../../components/table";
-import Journey from "./journey.json";
 
 export default function JourneyTab() {
-    const columns = useMemo(() => [
+    const columns = useMemo<any>(() => [
         { accessor: "id", Header: "#" },
         {
             accessor: "image",
             Header: "-",
-            Cell: v => <img src={v.value} height="32" alt="thumbnail" />
+            Cell: (v: any) => <img src={v.value} height="32" alt="thumbnail" />
         },
         { accessor: "name", Header: "Name" },
         { accessor: "type", Header: "Type" },
@@ -21,12 +20,12 @@ export default function JourneyTab() {
         {
             accessor: "status",
             Header: "Status",
-            Cell: v => <Badge variant="success">{v.value}</Badge>
+            Cell: (v: any) => <Badge variant="success">{v.value}</Badge>
         },
         {
             id: "edit",
             Header: "Actions",
-            Cell: ({ row }) => (
+            Cell: ({ row }: any) => (
                 <>
                     <Button variant="white">
                         <i className="far fa-edit"></i>
@@ -38,7 +37,7 @@ export default function JourneyTab() {
             ),
         }
     ], []);
-    const data = useMemo(() => [
+    const data = useMemo<any>(() => [
         {
             "id": 1,
             "image": "/assets/journey-1.jpeg",
@@ -51,7 +50,8 @@ export default function JourneyTab() {
             "status": "Active"
         }
     ], []);
-    const uiSchema = {
+    const journeySchema: any = require("./journey.json");
+    const uiSchema: any = {
         "about": {
             "ui:widget": "textarea",
             "ui:options": {
@@ -69,7 +69,7 @@ export default function JourneyTab() {
         }
     }
 
-    function onSubmit(formData) {
+    function onSubmit(formData: any) {
         alert("Values submitted: " + JSON.stringify(formData, null, 2));
     }
 
@@ -80,7 +80,7 @@ export default function JourneyTab() {
                 <ModalView
                     name="Journey"
                     formUISchema={uiSchema}
-                    formSchema={Journey}
+                    formSchema={journeySchema}
                     formSubmit={onSubmit}
                     formData={{}}
                 />
