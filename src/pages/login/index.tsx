@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Form from "@rjsf/bootstrap-4";
+import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
 import { Alert, Button, Modal } from "react-bootstrap";
 
@@ -26,9 +27,11 @@ export default function Login() {
 
   return (
     <Modal.Dialog>
-      <Modal.Header>
-        <Modal.Title>Sapien Systems</Modal.Title>
-      </Modal.Header>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>Sapien Dashboard | Login</title>
+        <link rel="canonical" href="https://sapien.systems/" />
+      </Helmet>
       <Modal.Body>
         <h4>Sign In</h4>
         <hr />
@@ -38,23 +41,14 @@ export default function Login() {
           </Alert>
         )}
         <Form uiSchema={uiSchema} schema={loginSchema} onSubmit={({ formData }) => onSubmit(formData)}>
-          <Button type="submit" variant="danger">
-            Sign In<i className="ml-2 fas fa-sign-in-alt"></i>
+          <Button type="submit" size="sm" variant="danger">
+            Sign In<i className="ml-4 fas fa-arrow-right"></i>
           </Button>
           <Link className="float-right" to="/register">
             Don't have an account? Sign Up
           </Link>
         </Form>
       </Modal.Body>
-      <Modal.Footer>
-        <p className="text-muted">
-          2021 ©{" "}
-          <a href="https://sapien.systems/" target="_blank" rel="noreferrer">
-            Sapien
-          </a>{" "}
-          - Partner Dashboard
-        </p>{" "}
-      </Modal.Footer>
     </Modal.Dialog>
   );
 }

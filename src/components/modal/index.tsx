@@ -3,15 +3,7 @@ import { withTheme } from "@rjsf/core";
 import { Theme as Bootstrap4Theme } from '@rjsf/bootstrap-4';
 import { Button, Card, Col, Modal, ProgressBar, Row } from "react-bootstrap";
 
-type AppProps = {
-    name: string,
-    formUISchema: any,
-    formSubmit: any,
-    formSchema: any,
-    formData: any
-}
-
-export default function ModalView({ name, formUISchema, formSubmit, formSchema, formData }: AppProps) {
+export default function ModalView({ name, formUISchema, formSubmit, formSchema, formData }: any) {
     const Form: any = withTheme(Bootstrap4Theme);
     const formRef = useRef<any>(null);
     const [step, setStep] = useState<number>(1);
@@ -44,7 +36,7 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
                                 max={1}
                                 now={step - 1}
                                 style={{ height: "5px" }}
-                                variant="success"
+                                variant="danger"
                             />
                             <small className="text-muted">1. Creator</small>
                         </Col>
@@ -53,7 +45,7 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
                                 max={1}
                                 now={step - 2}
                                 style={{ height: "5px" }}
-                                variant="success"
+                                variant="danger"
                             />
                             <small className="text-muted">2. Details</small>
                         </Col>
@@ -62,7 +54,7 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
                                 max={1}
                                 now={step - 3}
                                 style={{ height: "5px" }}
-                                variant="success"
+                                variant="danger"
                             />
                             <small className="text-muted">3. Program</small>
                         </Col>
@@ -71,7 +63,7 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
                                 max={1}
                                 now={step - 4}
                                 style={{ height: "5px" }}
-                                variant="success"
+                                variant="danger"
                             />
                             <small className="text-muted">4. Schedule</small>
                         </Col>
@@ -80,7 +72,7 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
                                 max={1}
                                 now={step - 5}
                                 style={{ height: "5px" }}
-                                variant="success"
+                                variant="danger"
                             />
                             <small className="text-muted">5. Pricing</small>
                         </Col>
@@ -108,16 +100,17 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
                 </Modal.Body>
                 <Modal.Footer>
                     <Button
-                        variant="secondary"
+                        variant="light"
+                        size="sm"
                         onClick={() => setStep(step - 1)}
                         disabled={step === 1 ? true : false}
                     >
-                        <><i className="mr-2 fas fa-arrow-left"></i>Back</>
+                        <i className="mr-2 fas fa-arrow-left"></i>
                     </Button>
-                    <Button variant="danger" onClick={(event) => formRef.current.onSubmit(event)}>
+                    <Button variant="danger" size="sm" onClick={(event) => formRef.current.onSubmit(event)}>
                         {(step < 5)
-                            ? <>Next <i className="ml-2 fas fa-arrow-right"></i></>
-                            : <>Create <i className="ml-2 fas fa-check"></i></>
+                            ? <>Next<i className="ml-4 fas fa-arrow-right"></i></>
+                            : <>Create<i className="ml-4 fas fa-check"></i></>
                         }
                     </Button>
                 </Modal.Footer>
