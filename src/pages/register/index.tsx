@@ -2,23 +2,19 @@ import { useRef, useState } from "react";
 import { Helmet } from "react-helmet";
 import { withTheme } from "@rjsf/core";
 import { Theme as Bootstrap4Theme } from '@rjsf/bootstrap-4';
-import { Button, Col, Modal, ProgressBar, Row } from "react-bootstrap";
+import { Button, Carousel, Col, Container, Modal, ProgressBar, Row } from "react-bootstrap";
 
 export default function Register() {
+    const registerSchema: any = require("./register.json");
     const Form: any = withTheme(Bootstrap4Theme);
     const formRef = useRef<any>(null);
+    const carouselRef = useRef<any>(null);
     const [step, setStep] = useState<number>(1);
     const [formValues, setFormValues] = useState<any>({});
-    const registerSchema: any = require("./register.json");
-    const subtitles = [
-        " Take a moment to fill in the details",
-        " Fill your qualification details",
-        " Tell us more about yourself"
-    ];
     const uiSchema: any = {
         "password": {
             "ui:widget": "password",
-            "ui:help": "Hint: Make it strong!"
+            "ui:help": "Hint: Make it strong! minimum password length should be 8."
         },
         "confirm": {
             "ui:widget": "password"
@@ -63,9 +59,10 @@ export default function Register() {
     }
 
     function submitHandler(formData: any) {
-        if (step < 3) {
+        if (step < 4) {
             console.log("Data submitted: ", formData);
             setStep(step + 1);
+            carouselRef.current.next();
             setFormValues({ ...formValues, ...formData });
         } else {
             console.log("Values submitted: " + JSON.stringify(formValues, null, 2));
@@ -73,90 +70,149 @@ export default function Register() {
     }
 
     return (
-        <Modal.Dialog size="xl" scrollable={true}>
+        <Row noGutters>
             <Helmet>
                 <meta charSet="utf-8" />
                 <title>Sapien Dashboard | Register</title>
                 <link rel="canonical" href="https://sapien.systems/" />
             </Helmet>
-            <Modal.Body className="show-grid">
-                <Row noGutters>
-                    <Col xs={12} md={8}>
-                        <img src="/assets/exercise-1.jpg" alt="sapien-exercise" />
-                    </Col>
-                    <Col xs={6} md={4}>
-                        <Row>
-                            <Col xs={3} md={3} lg={3}>
-                                <ProgressBar
-                                    max={1}
-                                    now={step - 1}
-                                    style={{ height: "5px" }}
-                                    variant="danger"
-                                />
-                                <small className="text-muted">Step 1</small>
-                            </Col>
-                            <Col xs={3} md={3} lg={3}>
-                                <ProgressBar
-                                    max={1}
-                                    now={step - 2}
-                                    style={{ height: "5px" }}
-                                    variant="danger"
-                                />
-                                <small className="text-muted">Step 2</small>
-                            </Col>
-                            <Col xs={3} md={3} lg={3}>
-                                <ProgressBar
-                                    max={1}
-                                    now={step - 3}
-                                    style={{ height: "5px" }}
-                                    variant="danger"
-                                />
-                                <small className="text-muted">Step 3</small>
-                            </Col>
-                            <Col xs={3} md={3} lg={3}>
-                                <ProgressBar
-                                    max={1}
-                                    now={step - 4}
-                                    style={{ height: "5px" }}
-                                    variant="danger"
-                                />
-                                <small className="text-muted">Step 4</small>
-                            </Col>
-                        </Row>
-                        <h4 className="mt-5">Registration</h4>
-                        <p className="text-danger blockquote-footer">{subtitles[step - 1]}</p>
-                        <Form
-                            uiSchema={uiSchema}
-                            schema={registerSchema[step]}
-                            ref={formRef}
-                            onSubmit={({ formData }: any) => submitHandler(formData)}
-                            formData={formValues}
-                        >
-                            <div></div>
-                        </Form>
-                    </Col>
-                </Row>
-            </Modal.Body>
-            <Modal.Footer>
-                <Button
-                    variant="light"
-                    size="sm"
-                    onClick={() => setStep(step - 1)}
-                    disabled={step === 1 ? true : false}
-                >
-                    <i className="mr-2 fas fa-arrow-left"></i>
-                </Button>
-                <Button
-                    variant="danger"
-                    size="sm"
-                    onClick={(event) => formRef.current.onSubmit(event)}
-                >
-                    {(step < 3)
-                        ? <>Next<i className="ml-4 fas fa-arrow-right"></i></>
-                        : <>Complete<i className="ml-4 fas fa-check"></i></>
-                    }
-                </Button>
-            </Modal.Footer>
-        </Modal.Dialog>
+            <Col>
+                <Container>
+                    <Row>
+                        <Col xs={3} md={3} lg={3}>
+                            <ProgressBar
+                                max={1}
+                                now={step - 1}
+                                style={{ height: "5px" }}
+                                variant="danger"
+                            />
+                            <small className="text-muted">Step 1</small>
+                        </Col>
+                        <Col xs={3} md={3} lg={3}>
+                            <ProgressBar
+                                max={1}
+                                now={step - 2}
+                                style={{ height: "5px" }}
+                                variant="danger"
+                            />
+                            <small className="text-muted">Step 2</small>
+                        </Col>
+                        <Col xs={3} md={3} lg={3}>
+                            <ProgressBar
+                                max={1}
+                                now={step - 3}
+                                style={{ height: "5px" }}
+                                variant="danger"
+                            />
+                            <small className="text-muted">Step 3</small>
+                        </Col>
+                        <Col xs={3} md={3} lg={3}>
+                            <ProgressBar
+                                max={1}
+                                now={step - 4}
+                                style={{ height: "5px" }}
+                                variant="danger"
+                            />
+                            <small className="text-muted">Step 4</small>
+                        </Col>
+                    </Row>
+                    <Modal.Dialog scrollable>
+                        <Modal.Body className="bg-light">
+                            <Form
+                                uiSchema={uiSchema}
+                                schema={registerSchema[step]}
+                                ref={formRef}
+                                onSubmit={({ formData }: any) => submitHandler(formData)}
+                                formData={formValues}
+                            >
+                                <div></div>
+                            </Form>
+                        </Modal.Body>
+                        <Modal.Footer className="bg-light">
+                            <Button
+                                variant="light"
+                                size="sm"
+                                onClick={() => setStep(step - 1)}
+                                disabled={step === 1 ? true : false}
+                            >
+                                <i className="mr-2 fas fa-arrow-left"></i>
+                            </Button>
+                            <Button
+                                variant="danger"
+                                size="sm"
+                                onClick={(event) => formRef.current.onSubmit(event)}
+                            >
+                                {(step < 4)
+                                    ? <>Next<i className="ml-4 fas fa-arrow-right"></i></>
+                                    : <>Complete<i className="ml-4 fas fa-check"></i></>
+                                }
+                            </Button>
+                        </Modal.Footer>
+                    </Modal.Dialog>
+                </Container>
+            </Col>
+            <Col className="d-none d-lg-block">
+                <Carousel ref={carouselRef} interval={600000} indicators={false} fade={true} controls={false}>
+                    <Carousel.Item>
+                        <img
+                            src="/assets/register-1.png"
+                            height="545px"
+                            className="d-block w-100"
+                            alt="sapien-exercise"
+                        />
+                        <Carousel.Caption>
+                            <h3>Get Early Access</h3>
+                            <p>
+                                You will be able to try the BETA, get our constant support and
+                                guidance on your journey.
+                            </p>
+                            <p className="text-white blockquote-footer">No String Attached</p>
+                        </Carousel.Caption>
+                    </Carousel.Item>
+                    <Carousel.Item>
+                        <img
+                            src="/assets/register-1.png"
+                            height="545px"
+                            className="d-block w-100"
+                            alt="sapien-exercise"
+                        />
+                        <Carousel.Caption>
+                            <h3>Embark on your journey</h3>
+                            <p>In a gentle way, you can shake the world.</p>
+                            <p className="text-white blockquote-footer">Mahatma Gandhi</p>
+                        </Carousel.Caption>
+                    </Carousel.Item>
+                    <Carousel.Item>
+                        <img
+                            src="/assets/register-1.png"
+                            height="545px"
+                            className="d-block w-100"
+                            alt="sapien-exercise"
+                        />
+                        <Carousel.Caption>
+                            <h3>We got your back</h3>
+                            <p>
+                                The greatest glory in living lies not in never falling,
+                                but in rising every time we fall.
+                            </p>
+                            <p className="text-white blockquote-footer">Nelson Mandela</p>
+                        </Carousel.Caption>
+                    </Carousel.Item>
+                    <Carousel.Item>
+                        <img
+                            src="/assets/register-1.png"
+                            height="545px"
+                            className="d-block w-100"
+                            alt="sapien-exercise"
+                        />
+                        <Carousel.Caption>
+                            <h3>#BeAChangemaker</h3>
+                            <p>You must be the change you wish to see in the world.</p>
+                            <p className="text-white blockquote-footer">Mahatma Gandhi</p>
+                        </Carousel.Caption>
+                    </Carousel.Item>
+                </Carousel>
+            </Col>
+        </Row>
     );
 }

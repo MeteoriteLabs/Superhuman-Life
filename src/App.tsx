@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { ApolloClient, ApolloProvider, createHttpLink, InMemoryCache } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
-
 import AuthContext from "./context/auth-context";
 import Routes from "./Routes";
 
@@ -25,7 +24,6 @@ const client = new ApolloClient({
 });
 
 function App() {
-  const isAuthenticated: boolean = false;
   const [token, setToken] = useState<any>(localStorage.getItem("token"));
   const [username, setUsername] = useState<any>(localStorage.getItem("username"));
 
@@ -47,7 +45,7 @@ function App() {
           },
         }}
       >
-        <Routes isAuthenticated={isAuthenticated} />
+        <Routes token={token} />
       </AuthContext.Provider>
     </ApolloProvider>
   );

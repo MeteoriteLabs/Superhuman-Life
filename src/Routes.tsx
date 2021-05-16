@@ -8,10 +8,6 @@ import {
 } from "react-router-dom";
 import Layout from "./components/layout";
 
-type AppProps = {
-  isAuthenticated: boolean
-}
-
 const BookingPage = React.lazy(() => import("./pages/booking"));
 const ChatPage = React.lazy(() => import("./pages/chat"));
 const ClientPage = React.lazy(() => import("./pages/client"));
@@ -39,12 +35,12 @@ function NoMatch() {
   );
 }
 
-export default function Routes({ isAuthenticated }: AppProps) {
+export default function Routes({ token }: any) {
   return (
     <Router>
-      {isAuthenticated ? (
-        <Suspense fallback={<code>Loading...</code>}>
-          <Layout>
+      <Layout token={token}>
+        {token ? (
+          <Suspense fallback={<code>Loading...</code>}>
             <Switch>
               <Redirect exact from="/" to="/home" />
               <Redirect exact from="/login" to="/home" />
@@ -61,19 +57,19 @@ export default function Routes({ isAuthenticated }: AppProps) {
 
               <Route path="*" component={NoMatch} />
             </Switch>
-          </Layout>
-        </Suspense>
-      ) : (
-        <Suspense fallback={<code>Loading...</code>}>
-          <Switch>
-            <Redirect exact from="/" to="/login" />
-            <Redirect exact from="/home" to="/login" />
-            <Route path="/login" component={LoginPage} />
-            <Route path="/register" component={RegisterPage} />
-            <Route path="*" component={NoMatch} />
-          </Switch>
-        </Suspense>
-      )}
+          </Suspense>
+        ) : (
+          <Suspense fallback={<code>Loading...</code>}>
+            <Switch>
+              <Redirect exact from="/" to="/login" />
+              <Redirect exact from="/home" to="/login" />
+              <Route path="/login" component={LoginPage} />
+              <Route path="/register" component={RegisterPage} />
+              <Route path="*" component={NoMatch} />
+            </Switch>
+          </Suspense>
+        )}
+      </Layout>
     </Router>
   );
 }
