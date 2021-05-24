@@ -20,6 +20,7 @@ const SchedulePage = React.lazy(() => import("./pages/schedule"));
 const SettingsPage = React.lazy(() => import("./pages/settings"));
 
 const PackagePage = React.lazy(() => import("./builders/package-builder"));
+const PackageEventsPage = React.lazy(() => import("./builders/package-builder/events/add"));
 const ResourcePage = React.lazy(() => import("./builders/resource-builder"));
 
 function NoMatch() {
@@ -49,7 +50,8 @@ export default function Routes({ token }: any) {
               <Route path="/clients" component={ClientPage} />
               <Route path="/community" component={CommunityPage} />
               <Route path="/home" component={HomePage} />
-              <Route path="/packages" component={PackagePage} />
+              <Route exact path="/packages" component={PackagePage} />
+              <Route exact path="/packages/events/add" component={PackageEventsPage} />
               <Route path="/profile" component={ProfilePage} />
               <Route path="/resources" component={ResourcePage} />
               <Route path="/schedule" component={SchedulePage} />

@@ -132,7 +132,10 @@ export default function Register() {
                             <Button
                                 variant="light"
                                 size="sm"
-                                onClick={() => setStep(step - 1)}
+                                onClick={() => {
+                                    setStep(step - 1);
+                                    carouselRef.current.prev();
+                                }}
                                 disabled={step === 1 ? true : false}
                             >
                                 <i className="mr-2 fas fa-arrow-left"></i>

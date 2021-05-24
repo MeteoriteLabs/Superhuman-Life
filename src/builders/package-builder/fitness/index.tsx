@@ -55,6 +55,12 @@ export default function FitnessTab() {
     const groupSchema: any = require("./group.json");
     const ptSchema: any = require("./gt.json");
     const uiSchema: any = {
+        "level": {
+            "ui:widget": "radio",
+            "ui:options": {
+                "inline": true
+            }
+        },
         "about": {
             "ui:widget": "textarea",
             "ui:options": {
