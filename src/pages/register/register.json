@@ -1,6 +1,6 @@
 {
     "1": {
-        "title": "",
+        "title": "Sign Up",
         "type": "object",
         "required": [
             "email",
@@ -15,16 +15,18 @@
             },
             "password": {
                 "type": "string",
-                "title": "Password"
+                "title": "Password",
+                "minLength": 8
             },
             "confirm": {
                 "type": "string",
-                "title": "Confirm Password"
+                "title": "Confirm Password",
+                "minLength": 8
             }
         }
     },
     "2": {
-        "title": "",
+        "title": "Sign Up",
         "type": "object",
         "required": [
             "name",
@@ -63,7 +65,7 @@
         }
     },
     "3": {
-        "title": "",
+        "title": "Sign Up",
         "type": "object",
         "required": [
             "specification",
@@ -135,7 +137,7 @@
         }
     },
     "4": {
-        "title": "",
+        "title": "Sign Up",
         "type": "object",
         "properties": {
             "about": {

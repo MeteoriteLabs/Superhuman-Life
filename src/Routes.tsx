@@ -8,10 +8,6 @@ import {
 } from "react-router-dom";
 import Layout from "./components/layout";
 
-type AppProps = {
-  isAuthenticated: boolean
-}
-
 const BookingPage = React.lazy(() => import("./pages/booking"));
 const ChatPage = React.lazy(() => import("./pages/chat"));
 const ClientPage = React.lazy(() => import("./pages/client"));
@@ -24,6 +20,7 @@ const SchedulePage = React.lazy(() => import("./pages/schedule"));
 const SettingsPage = React.lazy(() => import("./pages/settings"));
 
 const PackagePage = React.lazy(() => import("./builders/package-builder"));
+const PackageEventsPage = React.lazy(() => import("./builders/package-builder/events/add"));
 const ResourcePage = React.lazy(() => import("./builders/resource-builder"));
 
 function NoMatch() {
@@ -39,12 +36,12 @@ function NoMatch() {
   );
 }
 
-export default function Routes({ isAuthenticated }: AppProps) {
+export default function Routes({ token }: any) {
   return (
     <Router>
-      {isAuthenticated ? (
-        <Suspense fallback={<code>Loading...</code>}>
-          <Layout>
+      <Layout token={token}>
+        {token ? (
+          <Suspense fallback={<code>Loading...</code>}>
             <Switch>
               <Redirect exact from="/" to="/home" />
               <Redirect exact from="/login" to="/home" />
@@ -53,7 +50,8 @@ export default function Routes({ isAuthenticated }: AppProps) {
               <Route path="/clients" component={ClientPage} />
               <Route path="/community" component={CommunityPage} />
               <Route path="/home" component={HomePage} />
-              <Route path="/packages" component={PackagePage} />
+              <Route exact path="/packages" component={PackagePage} />
+              <Route exact path="/packages/events/add" component={PackageEventsPage} />
               <Route path="/profile" component={ProfilePage} />
               <Route path="/resources" component={ResourcePage} />
               <Route path="/schedule" component={SchedulePage} />
@@ -61,19 +59,19 @@ export default function Routes({ isAuthenticated }: AppProps) {
 
               <Route path="*" component={NoMatch} />
             </Switch>
-          </Layout>
-        </Suspense>
-      ) : (
-        <Suspense fallback={<code>Loading...</code>}>
-          <Switch>
-            <Redirect exact from="/" to="/login" />
-            <Redirect exact from="/home" to="/login" />
-            <Route path="/login" component={LoginPage} />
-            <Route path="/register" component={RegisterPage} />
-            <Route path="*" component={NoMatch} />
-          </Switch>
-        </Suspense>
-      )}
+          </Suspense>
+        ) : (
+          <Suspense fallback={<code>Loading...</code>}>
+            <Switch>
+              <Redirect exact from="/" to="/login" />
+              <Redirect exact from="/home" to="/login" />
+              <Route path="/login" component={LoginPage} />
+              <Route path="/register" component={RegisterPage} />
+              <Route path="*" component={NoMatch} />
+            </Switch>
+          </Suspense>
+        )}
+      </Layout>
     </Router>
   );
 }

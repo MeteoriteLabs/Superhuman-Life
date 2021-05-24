@@ -9,6 +9,7 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
     const [step, setStep] = useState<number>(1);
     const [show, setShow] = useState<boolean>(false);
     const [formValues, setFormValues] = useState<any>(formData);
+    const stepper: string[] = ["Creator", "Details", "Program", "Schedule", "Pricing"];
 
     function submitHandler(formData: any) {
         if (step < 5) {
@@ -25,62 +26,28 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
             <Button variant="secondary" size="sm" onClick={() => setShow(true)}>
                 <i className="fas fa-plus-circle"></i>{" "}{name}
             </Button>
-            <Modal size="lg" show={show} scrollable={true} onHide={() => setShow(false)}>
+            <Modal size="xl" show={show} scrollable={true} onHide={() => setShow(false)}>
                 <Modal.Header closeButton>
                     <Modal.Title as={Row}>
                         <Col xs={2} md={2} lg={2}>
                             <mark>New {name} Package</mark>
                         </Col>
-                        <Col xs={2} md={2} lg={2}>
-                            <ProgressBar
-                                max={1}
-                                now={step - 1}
-                                style={{ height: "5px" }}
-                                variant="danger"
-                            />
-                            <small className="text-muted">1. Creator</small>
-                        </Col>
-                        <Col xs={2} md={2} lg={2}>
-                            <ProgressBar
-                                max={1}
-                                now={step - 2}
-                                style={{ height: "5px" }}
-                                variant="danger"
-                            />
-                            <small className="text-muted">2. Details</small>
-                        </Col>
-                        <Col xs={2} md={2} lg={2}>
-                            <ProgressBar
-                                max={1}
-                                now={step - 3}
-                                style={{ height: "5px" }}
-                                variant="danger"
-                            />
-                            <small className="text-muted">3. Program</small>
-                        </Col>
-                        <Col xs={2} md={2} lg={2}>
-                            <ProgressBar
-                                max={1}
-                                now={step - 4}
-                                style={{ height: "5px" }}
-                                variant="danger"
-                            />
-                            <small className="text-muted">4. Schedule</small>
-                        </Col>
-                        <Col xs={2} md={2} lg={2}>
-                            <ProgressBar
-                                max={1}
-                                now={step - 5}
-                                style={{ height: "5px" }}
-                                variant="danger"
-                            />
-                            <small className="text-muted">5. Pricing</small>
-                        </Col>
+                        {stepper.map((item: string, idx: number) =>
+                            <Col xs={2} md={2} lg={2}>
+                                <ProgressBar
+                                    max={1}
+                                    now={step - (idx + 1)}
+                                    style={{ height: "5px" }}
+                                    variant="danger"
+                                />
+                                <small className="text-muted">{`${idx + 1}. ${item}`}</small>
+                            </Col>
+                        )}
                     </Modal.Title>
                 </Modal.Header>
-                <Modal.Body className="show-grid">
+                <Modal.Body style={{ minHeight: '25.5rem' }} className="show-grid bg-light">
                     <Row>
-                        <Col md={8} lg={8} className="border-right">
+                        <Col xs={6} md={6} lg={6} className="border-right">
                             <Form
                                 uiSchema={formUISchema}
                                 schema={formSchema[step.toString()]}
@@ -91,8 +58,8 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
                                 <div></div>
                             </Form>
                         </Col>
-                        <Col md={4} lg={4}>
-                            <Card>
+                        <Col xs={6} md={6} lg={6}>
+                            <Card className="shadow-sm" border="light">
                                 <Card.Body>This is some text for card preview.</Card.Body>
                             </Card>
                         </Col>

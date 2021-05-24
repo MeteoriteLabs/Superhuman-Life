@@ -54,6 +54,12 @@ export default function EventsTab() {
     ], []);
     const eventSchema: any = require("./event.json");
     const uiSchema: any = {
+        "level": {
+            "ui:widget": "radio",
+            "ui:options": {
+                "inline": true
+            }
+        },
         "summary": {
             "ui:widget": "textarea",
             "ui:options": {

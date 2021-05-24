@@ -1,7 +1,11 @@
-import { Button, Container, DropdownButton, Dropdown, Nav, Navbar } from "react-bootstrap";
+import { useContext } from "react";
 import { NavLink } from "react-router-dom";
+import { Button, Container, DropdownButton, Dropdown, Nav, Navbar } from "react-bootstrap";
+import authContext from "../../context/auth-context";
 
-export default function TopNav() {
+function AuthenticatedNav() {
+  const auth = useContext(authContext);
+
   return (
     <Navbar bg="dark" className="shadow-sm" expand="lg">
       <Container fluid>
@@ -11,30 +15,14 @@ export default function TopNav() {
         <Navbar.Toggle aria-controls="navbar" />
         <Navbar.Collapse className="justify-content-end" id="navbar">
           <Nav className="d-lg-none">
-            <NavLink className="nav-link" to="/home">
-              Home
-            </NavLink>
-            <NavLink className="nav-link" to="/chats">
-              Chats
-            </NavLink>
-            <NavLink className="nav-link" to="/clients">
-              Clients
-            </NavLink>
-            <NavLink className="nav-link" to="/packages">
-              Packages
-            </NavLink>
-            <NavLink className="nav-link" to="/profile">
-              Profile
-            </NavLink>
-            <NavLink className="nav-link" to="/resources">
-              Resources
-            </NavLink>
-            <NavLink className="nav-link" to="/schedule">
-              Schedule
-            </NavLink>
-            <NavLink className="nav-link" to="/settings">
-              Settings
-            </NavLink>
+            <NavLink className="nav-link" to="/home">Home</NavLink>
+            <NavLink className="nav-link" to="/chats">Chats</NavLink>
+            <NavLink className="nav-link" to="/clients">Clients</NavLink>
+            <NavLink className="nav-link" to="/packages">Packages</NavLink>
+            <NavLink className="nav-link" to="/profile">Profile</NavLink>
+            <NavLink className="nav-link" to="/resources">Resources</NavLink>
+            <NavLink className="nav-link" to="/schedule">Schedule</NavLink>
+            <NavLink className="nav-link" to="/settings">Settings</NavLink>
             <Nav.Link>Logout</Nav.Link>
           </Nav>
         </Navbar.Collapse>
@@ -49,12 +37,40 @@ export default function TopNav() {
         </Nav.Item>
         <Nav.Item className="d-none d-lg-block">
           <abbr title="Sign Out">
-            <Button variant="dark">
+            <Button variant="dark" onClick={() => auth.logout()}>
               <i className="fas fa-sign-out-alt"></i>
             </Button>
           </abbr>
         </Nav.Item>
       </Container>
     </Navbar>
+  );
+}
+
+function UnauthenticatedNav() {
+  return (
+    <Navbar bg="light" className="shadow-sm" expand="lg">
+      <Container fluid>
+        <Navbar.Brand href="/" className="text-muted">
+          <strong>SAPIEN SYSTEMS</strong>
+        </Navbar.Brand>
+        <Navbar.Toggle aria-controls="navbar" />
+        <Navbar.Collapse className="justify-content-end" id="navbar">
+          <Nav>
+            <NavLink className="nav-link" to="/home">Home</NavLink>
+            <NavLink className="nav-link" to="/about">About</NavLink>
+            <NavLink className="nav-link" to="/faq">FAQs</NavLink>
+            <NavLink className="nav-link" to="/contact">Contact</NavLink>
+            <NavLink className="btn btn-danger" to="/login">Login</NavLink>
+          </Nav>
+        </Navbar.Collapse>
+      </Container>
+    </Navbar>
+  );
+}
+
+export default function TopNav({ token }: any) {
+  return (
+    token ? <AuthenticatedNav /> : <UnauthenticatedNav />
   );
 }

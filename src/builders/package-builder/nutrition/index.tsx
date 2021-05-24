@@ -1,5 +1,5 @@
-import { useMemo } from "react";
-import { Badge, Button, ButtonGroup, Card, TabContent } from "react-bootstrap";
+import { useMemo, useState } from "react";
+import { Badge, Button, ButtonGroup, Card, Modal, TabContent } from "react-bootstrap";
 import ModalView from "../../../components/modal";
 import Table from "../../../components/table";
 
@@ -53,6 +53,7 @@ export default function NutritionTab() {
             "status": "Active"
         }
     ], []);
+    const [customShow, setCustomShow] = useState(false);
     const classicMealSchema: any = require("./classic-meal.json");
     const consultSchema: any = require("./consultation.json");
     const customMealSchema: any = require("./custom-meal.json");
@@ -68,6 +69,12 @@ export default function NutritionTab() {
             "ui:widget": "textarea",
             "ui:options": {
                 "rows": 3
+            }
+        },
+        "consult": {
+            "ui:widget": "radio",
+            "ui:options": {
+                "inline": true
             }
         },
         "schedule": {
@@ -104,13 +111,32 @@ export default function NutritionTab() {
                     formSubmit={onSubmit}
                     formData={{}}
                 />{" "}
-                <ModalView
-                    name="Custom"
-                    formUISchema={uiSchema}
-                    formSchema={customSchema}
-                    formSubmit={onSubmit}
-                    formData={{}}
-                />
+                <Button variant="secondary" size="sm" onClick={() => setCustomShow(true)}>
+                    <i className="fas fa-plus-circle"></i>{" "}Custom
+                </Button>
+                <Modal size="sm" show={customShow} onHide={() => setCustomShow(false)}>
+                    <Modal.Header closeButton>
+                        <Modal.Title as="p">
+                            <mark>New Custom Nutrition Package</mark>
+                        </Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <ModalView
+                            name="Package"
+                            formUISchema={uiSchema}
+                            formSchema={customSchema}
+                            formSubmit={onSubmit}
+                            formData={{}}
+                        />{" "}
+                        <ModalView
+                            name="Program"
+                            formUISchema={uiSchema}
+                            formSchema={customSchema}
+                            formSubmit={onSubmit}
+                            formData={{}}
+                        />
+                    </Modal.Body>
+                </Modal>
             </Card.Title>
             <Table columns={columns} data={data} />
         </TabContent>

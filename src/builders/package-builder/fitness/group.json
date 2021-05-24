@@ -5,9 +5,7 @@
         "required": [
             "name",
             "discipline",
-            "mode",
-            "level",
-            "status"
+            "level"
         ],
         "properties": {
             "name": {
@@ -28,33 +26,13 @@
                 "type": "string",
                 "title": "Tags"
             },
-            "mode": {
-                "type": "string",
-                "title": "Mode",
-                "enum": [
-                    "Online",
-                    "Offline",
-                    "Hybrid"
-                ]
-            },
             "level": {
                 "type": "string",
                 "title": "Level",
                 "enum": [
                     "Beginner",
-                    "Basic",
-                    "Difficult",
-                    "Expert",
-                    "Challenge"
-                ]
-            },
-            "status": {
-                "type": "string",
-                "title": "Status",
-                "enum": [
-                    "Active",
-                    "Inactive",
-                    "Pending"
+                    "Intermediate",
+                    "Advance"
                 ]
             }
         }
@@ -65,7 +43,6 @@
         "required": [
             "about",
             "benefits",
-            "location",
             "size"
         ],
         "properties": {
@@ -76,10 +53,6 @@
             "benefits": {
                 "type": "string",
                 "title": "Benefits"
-            },
-            "location": {
-                "type": "string",
-                "title": "Location"
             },
             "size": {
                 "type": "number",
@@ -115,47 +88,136 @@
                     "Later"
                 ]
             },
-            "program": {
-                "title": "",
-                "type": "array",
-                "items": {
-                    "type": "object",
-                    "properties": {
-                        "title": {
-                            "type": "string",
-                            "title": "Title"
-                        },
-                        "session": {
-                            "type": "string",
-                            "title": "Session"
-                        }
-                    }
-                }
+            "mode": {
+                "type": "string",
+                "title": "Mode",
+                "enum": [
+                    "Online",
+                    "Offline",
+                    "Hybrid"
+                ]
+            },
+            "location": {
+                "type": "string",
+                "title": "Location",
+                "enum": [
+                    "Others",
+                    "At My Address",
+                    "At Client Address"
+                ]
+            },
+            "pin": {
+                "type": "string",
+                "title": ""
             },
             "set": {
                 "type": "number",
                 "title": "Set for 1 month i.e. 30 days",
                 "minimum": 30,
                 "default": 0
-            },
-            "group": {
-                "type": "object",
-                "title": "",
-                "description": "Number of Group Classes",
-                "properties": {
-                    "online": {
-                        "type": "number",
-                        "title": "Online"
+            }
+        },
+        "dependencies": {
+            "package": [
+                "mode"
+            ],
+            "mode": {
+                "oneOf": [
+                    {
+                        "properties": {
+                            "mode": {
+                                "enum": [
+                                    "Online"
+                                ]
+                            },
+                            "fitness": {
+                                "type": "object",
+                                "title": "",
+                                "properties": {
+                                    "group": {
+                                        "type": "object",
+                                        "title": "",
+                                        "description": "Number of Group Classes",
+                                        "properties": {
+                                            "online": {
+                                                "type": "number",
+                                                "title": "Online"
+                                            }
+                                        }
+                                    },
+                                    "rest": {
+                                        "type": "number",
+                                        "title": "Number of Rest Classes"
+                                    }
+                                }
+                            }
+                        }
                     },
-                    "offline": {
-                        "type": "number",
-                        "title": "Offline"
+                    {
+                        "properties": {
+                            "mode": {
+                                "enum": [
+                                    "Offline"
+                                ]
+                            },
+                            "fitness": {
+                                "type": "object",
+                                "title": "",
+                                "properties": {
+                                    "group": {
+                                        "type": "object",
+                                        "title": "",
+                                        "description": "Number of Group Classes",
+                                        "properties": {
+                                            "offline": {
+                                                "type": "number",
+                                                "title": "Offline"
+                                            }
+                                        }
+                                    },
+                                    "rest": {
+                                        "type": "number",
+                                        "title": "Number of Rest Classes"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "properties": {
+                            "mode": {
+                                "enum": [
+                                    "Hybrid"
+                                ]
+                            },
+                            "fitness": {
+                                "type": "object",
+                                "title": "",
+                                "properties": {
+                                    "group": {
+                                        "type": "object",
+                                        "title": "",
+                                        "description": "Number of Group Classes",
+                                        "properties": {
+                                            "online": {
+                                                "type": "number",
+                                                "title": "Online"
+                                            },
+                                            "offline": {
+                                                "type": "number",
+                                                "title": "Offline"
+                                            }
+                                        }
+                                    },
+                                    "rest": {
+                                        "type": "number",
+                                        "title": "Number of Rest Classes"
+                                    }
+                                }
+                            }
+                        }
                     }
-                }
-            },
-            "rest": {
-                "type": "number",
-                "title": "Number of Rest Classes"
+                ]
             }
         }
     },
@@ -185,12 +247,12 @@
             },
             "startTime": {
                 "type": "string",
-                "format": "date-time",
+                "format": "time",
                 "title": "Start Time"
             },
             "endTime": {
                 "type": "string",
-                "format": "date-time",
+                "format": "time",
                 "title": "End Time"
             },
             "days": {

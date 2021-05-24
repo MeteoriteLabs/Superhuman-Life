@@ -52,6 +52,12 @@ export default function JourneyTab() {
     ], []);
     const journeySchema: any = require("./journey.json");
     const uiSchema: any = {
+        "level": {
+            "ui:widget": "radio",
+            "ui:options": {
+                "inline": true
+            }
+        },
         "about": {
             "ui:widget": "textarea",
             "ui:options": {
@@ -62,6 +68,12 @@ export default function JourneyTab() {
             "ui:widget": "textarea",
             "ui:options": {
                 "rows": 3
+            }
+        },
+        "mode": {
+            "ui:widget": "radio",
+            "ui:options": {
+                "inline": true
             }
         },
         "schedule": {
