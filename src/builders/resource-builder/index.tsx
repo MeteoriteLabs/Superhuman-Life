@@ -7,34 +7,22 @@ export default function ResourcePage() {
             <Card className="mt-3">
                 <Card.Body>
                     <Tabs variant="pills" transition={false} defaultActiveKey="fitness">
-                        <Tab eventKey="fitness" title="Fitness">
+                        <Tab eventKey="message" title="Messages">
                             <TabContent>
                                 <hr />
-                                Fitness Tab
-                            </TabContent>
-                        </Tab>
-                        <Tab eventKey="knowledge" title="Knowledge">
-                            <TabContent>
-                                <hr />
-                                Knowledge Tab
+                                Messages
                             </TabContent>
                         </Tab>
                         <Tab eventKey="mindset" title="Mindset">
                             <TabContent>
                                 <hr />
-                                Mindset Tab
+                                Mindset
                             </TabContent>
                         </Tab>
-                        <Tab eventKey="message" title="Message">
+                        <Tab eventKey="information" title="Information Bank">
                             <TabContent>
                                 <hr />
-                                Message Tab
-                            </TabContent>
-                        </Tab>
-                        <Tab eventKey="nutrition" title="Nutrition">
-                            <TabContent>
-                                <hr />
-                                Nutrition Tab
+                                Information Bank
                             </TabContent>
                         </Tab>
                     </Tabs>
