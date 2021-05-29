@@ -23,24 +23,24 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
 
     return (
         <>
-            <Button variant="secondary" size="sm" onClick={() => setShow(true)}>
+            <Button variant="outline-secondary" size="sm" onClick={() => setShow(true)}>
                 <i className="fas fa-plus-circle"></i>{" "}{name}
             </Button>
-            <Modal size="xl" show={show} scrollable={true} onHide={() => setShow(false)}>
+            <Modal size="xl" show={show} scrollable onHide={() => setShow(false)} centered>
                 <Modal.Header closeButton>
                     <Modal.Title as={Row}>
-                        <Col xs={2} md={2} lg={2}>
-                            <mark>New {name} Package</mark>
+                        <Col xs={12} md={12} lg={12}>
+                            <p className="lead">New {name} Package</p>
                         </Col>
-                        {stepper.map((item: string, idx: number) =>
-                            <Col xs={2} md={2} lg={2}>
+                        {stepper.map((item: string, id: number) =>
+                            <Col xs={2} md={2} lg={2} key={id}>
                                 <ProgressBar
                                     max={1}
-                                    now={step - (idx + 1)}
+                                    now={step - (id + 1)}
                                     style={{ height: "5px" }}
                                     variant="danger"
                                 />
-                                <small className="text-muted">{`${idx + 1}. ${item}`}</small>
+                                <small className="text-muted">{`${id + 1}. ${item}`}</small>
                             </Col>
                         )}
                     </Modal.Title>

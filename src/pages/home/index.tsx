@@ -1,6 +1,6 @@
 import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
-import { Alert, Card, CardDeck } from "react-bootstrap";
+import { Card, CardDeck } from "react-bootstrap";
 
 export default function HomePage() {
   const shortcuts = [
@@ -49,13 +49,11 @@ export default function HomePage() {
         <title>Sapien Dashboard | Dashboard</title>
         <link rel="canonical" href="https://sapien.systems/" />
       </Helmet>
-      <Alert variant="primary" className="mt-5">
-        This website is under active development!
-      </Alert>
+      <hr />
       <CardDeck>
         {shortcuts &&
           shortcuts.map((shortcut, id) => (
-            <Card key={id} className="text-center">
+            <Card key={id} className="shadow-sm text-center" border="light">
               <Card.Body>
                 <Link to={shortcut.link}>{shortcut.icon}</Link>
                 <hr />

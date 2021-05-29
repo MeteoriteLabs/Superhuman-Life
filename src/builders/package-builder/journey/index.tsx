@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Badge, Button, Card, TabContent } from "react-bootstrap";
+import { Badge, Button, Card, Dropdown, OverlayTrigger, Popover, TabContent } from "react-bootstrap";
 import ModalView from "../../../components/modal";
 import Table from "../../../components/table";
 
@@ -13,7 +13,6 @@ export default function JourneyTab() {
         },
         { accessor: "name", Header: "Name" },
         { accessor: "type", Header: "Type" },
-        { accessor: "mode", Header: "Mode" },
         { accessor: "details", Header: "Details" },
         { accessor: "duration", Header: "Duration" },
         { accessor: "price", Header: "Price" },
@@ -26,14 +25,24 @@ export default function JourneyTab() {
             id: "edit",
             Header: "Actions",
             Cell: ({ row }: any) => (
-                <>
+                <OverlayTrigger
+                    trigger="click"
+                    placement="right"
+                    overlay={
+                        <Popover id="action-popover">
+                            <Popover.Content>
+                                <Dropdown.Item>View</Dropdown.Item>
+                                <Dropdown.Item>Status</Dropdown.Item>
+                                <Dropdown.Item>Edit</Dropdown.Item>
+                                <Dropdown.Item>Delete</Dropdown.Item>
+                            </Popover.Content>
+                        </Popover>
+                    }
+                >
                     <Button variant="white">
-                        <i className="far fa-edit"></i>
+                        <i className="fas fa-ellipsis-v"></i>
                     </Button>
-                    <Button variant="white">
-                        <i className="far fa-trash-alt"></i>
-                    </Button>
-                </>
+                </OverlayTrigger>
             ),
         }
     ], []);
@@ -43,7 +52,16 @@ export default function JourneyTab() {
             "image": "/assets/journey-1.jpeg",
             "name": "Journey-1",
             "type": "Marathon",
-            "mode": "Offline",
+            "details": "Marathon Details",
+            "duration": "4 Hours",
+            "price": "Free",
+            "status": "Active"
+        },
+        {
+            "id": 2,
+            "image": "/assets/journey-1.jpeg",
+            "name": "Journey-2",
+            "type": "Marathon",
             "details": "Marathon Details",
             "duration": "4 Hours",
             "price": "Free",

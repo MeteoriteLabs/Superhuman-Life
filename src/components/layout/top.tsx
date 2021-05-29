@@ -1,16 +1,16 @@
 import { useContext } from "react";
 import { NavLink } from "react-router-dom";
-import { Button, Container, DropdownButton, Dropdown, Nav, Navbar } from "react-bootstrap";
+import { Container, DropdownButton, Dropdown, Nav, Navbar } from "react-bootstrap";
 import authContext from "../../context/auth-context";
 
-function AuthenticatedNav() {
+export function AuthenticatedNav() {
   const auth = useContext(authContext);
 
   return (
     <Navbar bg="dark" className="shadow-sm" expand="lg">
       <Container fluid>
-        <Navbar.Brand href="/" className="text-muted">
-          <strong>SAPIEN SYSTEMS</strong>
+        <Navbar.Brand href="/" className="text-white">
+          <img width="100%" src="/logo.svg" alt="brand" />
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="navbar" />
         <Navbar.Collapse className="justify-content-end" id="navbar">
@@ -27,27 +27,35 @@ function AuthenticatedNav() {
           </Nav>
         </Navbar.Collapse>
         <Nav.Item className="d-none d-lg-block">
-          <DropdownButton variant="dark" title={<i className="fas fa-bell"></i>} drop="left">
+          <DropdownButton variant="dark" title={<i className="fas fa-bell"></i>}>
             <Dropdown.Header>Notifications</Dropdown.Header>
             <Dropdown.Divider />
-            <Dropdown.Item eventKey="1">PT #18 has been created</Dropdown.Item>
+            <Dropdown.Item>PT #18 has been created</Dropdown.Item>
             <Dropdown.Divider />
-            <Dropdown.Item eventKey="4" as="small">More Notifications</Dropdown.Item>
+            <Dropdown.Item as="small">More Notifications</Dropdown.Item>
           </DropdownButton>
         </Nav.Item>
         <Nav.Item className="d-none d-lg-block">
-          <abbr title="Sign Out">
-            <Button variant="dark" onClick={() => auth.logout()}>
-              <i className="fas fa-sign-out-alt"></i>
-            </Button>
-          </abbr>
+          <DropdownButton variant="dark" title={<i className="fas fa-th"></i>}>
+            <Dropdown.Header>Other Apps</Dropdown.Header>
+          </DropdownButton>
+        </Nav.Item>
+        <Nav.Item className="d-none d-lg-block">
+          <DropdownButton
+            variant="dark"
+            title={<img src="/assets/avatar-1.jpg" height="42" className="rounded-circle" alt="avatar" />}
+            drop="left"
+          >
+            <NavLink to="/profile" className="dropdown-item">Profile</NavLink>
+            <Dropdown.Item onClick={() => auth.logout()}>Sign Out</Dropdown.Item>
+          </DropdownButton>
         </Nav.Item>
       </Container>
     </Navbar>
   );
 }
 
-function UnauthenticatedNav() {
+export function UnauthenticatedNav() {
   return (
     <Navbar bg="light" className="shadow-sm" expand="lg">
       <Container fluid>
@@ -66,11 +74,5 @@ function UnauthenticatedNav() {
         </Navbar.Collapse>
       </Container>
     </Navbar>
-  );
-}
-
-export default function TopNav({ token }: any) {
-  return (
-    token ? <AuthenticatedNav /> : <UnauthenticatedNav />
   );
 }

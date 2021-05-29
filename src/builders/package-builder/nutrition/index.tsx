@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Badge, Button, ButtonGroup, Card, Modal, TabContent } from "react-bootstrap";
+import { Badge, Button, Card, Dropdown, Modal, OverlayTrigger, Popover, TabContent } from "react-bootstrap";
 import ModalView from "../../../components/modal";
 import Table from "../../../components/table";
 
@@ -13,7 +13,6 @@ export default function NutritionTab() {
         },
         { accessor: "name", Header: "Name" },
         { accessor: "type", Header: "Type" },
-        { accessor: "mode", Header: "Mode" },
         { accessor: "details", Header: "Details" },
         { accessor: "duration", Header: "Duration" },
         { accessor: "price", Header: "Price" },
@@ -26,17 +25,24 @@ export default function NutritionTab() {
             id: "edit",
             Header: "Actions",
             Cell: ({ row }: any) => (
-                <ButtonGroup>
+                <OverlayTrigger
+                    trigger="click"
+                    placement="right"
+                    overlay={
+                        <Popover id="action-popover">
+                            <Popover.Content>
+                                <Dropdown.Item>View</Dropdown.Item>
+                                <Dropdown.Item>Status</Dropdown.Item>
+                                <Dropdown.Item>Edit</Dropdown.Item>
+                                <Dropdown.Item>Delete</Dropdown.Item>
+                            </Popover.Content>
+                        </Popover>
+                    }
+                >
                     <Button variant="white">
-                        <i className="far fa-edit"></i>
+                        <i className="fas fa-ellipsis-v"></i>
                     </Button>
-                    <Button variant="white">
-                        <i className="far fa-trash-alt"></i>
-                    </Button>
-                    <Button variant="white">
-                        <i className="far fa-copy"></i>
-                    </Button>
-                </ButtonGroup>
+                </OverlayTrigger>
             ),
         }
     ], []);
@@ -46,7 +52,16 @@ export default function NutritionTab() {
             "image": "/assets/recipe-1.jpg",
             "name": "Recipe-1",
             "type": "Veg",
-            "mode": "Offline",
+            "details": "Recipe Details",
+            "duration": "2 Hours",
+            "price": "50 INR",
+            "status": "Active"
+        },
+        {
+            "id": 2,
+            "image": "/assets/recipe-1.jpg",
+            "name": "Recipe-2",
+            "type": "Non-Veg",
             "details": "Recipe Details",
             "duration": "2 Hours",
             "price": "50 INR",
