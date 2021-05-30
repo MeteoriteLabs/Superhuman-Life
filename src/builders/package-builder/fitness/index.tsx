@@ -114,6 +114,7 @@ export default function FitnessTab() {
             <Card.Title className="text-center">
                 <ModalView
                     name="Classic"
+                    isStepper={true}
                     formUISchema={uiSchema}
                     formSchema={classicSchema}
                     formSubmit={onSubmit}
@@ -121,6 +122,7 @@ export default function FitnessTab() {
                 />{" "}
                 <ModalView
                     name="Custom"
+                    isStepper={true}
                     formUISchema={uiSchema}
                     formSchema={customSchema}
                     formSubmit={onSubmit}
@@ -128,6 +130,7 @@ export default function FitnessTab() {
                 />{" "}
                 <ModalView
                     name="Group"
+                    isStepper={true}
                     formUISchema={uiSchema}
                     formSubmit={onSubmit}
                     formSchema={groupSchema}
@@ -135,6 +138,7 @@ export default function FitnessTab() {
                 />{" "}
                 <ModalView
                     name="PT"
+                    isStepper={true}
                     formUISchema={uiSchema}
                     formSchema={ptSchema}
                     formSubmit={onSubmit}

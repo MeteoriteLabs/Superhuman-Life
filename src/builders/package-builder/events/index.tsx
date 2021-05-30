@@ -111,6 +111,7 @@ export default function EventsTab() {
             <Card.Title className="text-center">
                 <ModalView
                     name="Event"
+                    isStepper={true}
                     formUISchema={uiSchema}
                     formSchema={eventSchema}
                     formSubmit={onSubmit}

@@ -1,4 +1,3 @@
-import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
 import { Card, CardDeck } from "react-bootstrap";
 
@@ -44,11 +43,6 @@ export default function HomePage() {
   return (
     <>
       <h3>Dashboard</h3>
-      <Helmet>
-        <meta charSet="utf-8" />
-        <title>Sapien Dashboard | Dashboard</title>
-        <link rel="canonical" href="https://sapien.systems/" />
-      </Helmet>
       <hr />
       <CardDeck>
         {shortcuts &&

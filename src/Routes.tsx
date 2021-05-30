@@ -1,4 +1,5 @@
 import React, { Suspense } from "react";
+import { Helmet } from "react-helmet";
 import {
   BrowserRouter as Router,
   Redirect,
@@ -40,6 +41,12 @@ export default function Routes({ token }: any) {
       <Layout token={token}>
         {token ? (
           <Suspense fallback={<code>Loading...</code>}>
+            <Helmet>
+              <meta charSet="utf-8" />
+              <title>Sapien Dashboard | Dashboard</title>
+              <link rel="canonical" href="https://sapien.systems/" />
+            </Helmet>
+
             <Switch>
               <Redirect exact from="/" to="/home" />
               <Redirect exact from="/login" to="/home" />

@@ -1,5 +1,5 @@
-import { useMemo, useState } from "react";
-import { Badge, Button, Card, Dropdown, Modal, OverlayTrigger, Popover, TabContent } from "react-bootstrap";
+import { useMemo } from "react";
+import { Badge, Button, Card, Dropdown, OverlayTrigger, Popover, TabContent } from "react-bootstrap";
 import ModalView from "../../../components/modal";
 import Table from "../../../components/table";
 
@@ -68,7 +68,6 @@ export default function NutritionTab() {
             "status": "Active"
         }
     ], []);
-    const [customShow, setCustomShow] = useState(false);
     const classicMealSchema: any = require("./classic-meal.json");
     const consultSchema: any = require("./consultation.json");
     const customMealSchema: any = require("./custom-meal.json");
@@ -107,6 +106,7 @@ export default function NutritionTab() {
             <Card.Title className="text-center">
                 <ModalView
                     name="Classic Meal"
+                    isStepper={true}
                     formUISchema={uiSchema}
                     formSchema={classicMealSchema}
                     formSubmit={onSubmit}
@@ -114,6 +114,7 @@ export default function NutritionTab() {
                 />{" "}
                 <ModalView
                     name="Consultation"
+                    isStepper={true}
                     formUISchema={uiSchema}
                     formSchema={consultSchema}
                     formSubmit={onSubmit}
@@ -121,37 +122,20 @@ export default function NutritionTab() {
                 />{" "}
                 <ModalView
                     name="Custom Meal"
+                    isStepper={true}
+                    formUISchema={uiSchema}
+                    formSchema={customSchema}
+                    formSubmit={onSubmit}
+                    formData={{}}
+                />{" "}
+                <ModalView
+                    name="Custom"
+                    isStepper={true}
                     formUISchema={uiSchema}
                     formSchema={customMealSchema}
                     formSubmit={onSubmit}
                     formData={{}}
-                />{" "}
-                <Button variant="secondary" size="sm" onClick={() => setCustomShow(true)}>
-                    <i className="fas fa-plus-circle"></i>{" "}Custom
-                </Button>
-                <Modal size="sm" show={customShow} onHide={() => setCustomShow(false)}>
-                    <Modal.Header closeButton>
-                        <Modal.Title as="p">
-                            <mark>New Custom Nutrition Package</mark>
-                        </Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <ModalView
-                            name="Package"
-                            formUISchema={uiSchema}
-                            formSchema={customSchema}
-                            formSubmit={onSubmit}
-                            formData={{}}
-                        />{" "}
-                        <ModalView
-                            name="Program"
-                            formUISchema={uiSchema}
-                            formSchema={customSchema}
-                            formSubmit={onSubmit}
-                            formData={{}}
-                        />
-                    </Modal.Body>
-                </Modal>
+                />
             </Card.Title>
             <Table columns={columns} data={data} />
         </TabContent>

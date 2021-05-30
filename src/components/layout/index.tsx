@@ -4,7 +4,7 @@ import { SideNav } from "./side";
 import { AuthenticatedNav, UnauthenticatedNav } from "./top";
 
 export default function Layout({ token, children }: any) {
-  const [collapse, setCollapse] = useState<boolean>(false);
+  const [collapse, setCollapse] = useState<boolean>(true);
 
   return (
     <>
@@ -13,11 +13,12 @@ export default function Layout({ token, children }: any) {
       </header>
       <main>
         {token ?
-          <Row noGutters className="bg-light">
+          <Row noGutters className="bg-light mt-5 pt-4  min-vh-100">
             <Col lg={collapse ? "1" : "2"} className="d-none d-lg-block">
               <SideNav collapse={collapse} setCollapse={setCollapse} />
             </Col>
-            <Col lg={collapse ? "11" : "10"} className="px-4 py-2">
+            <Col lg={collapse ? "11" : "10"} className="pr-2">
+              <hr />
               {children}
             </Col>
           </Row> :

@@ -3,14 +3,14 @@ import { NavLink } from "react-router-dom";
 
 export function SideNav({ collapse, setCollapse }: any) {
   return (
-    <aside className="bg-dark min-vh-100">
+    <aside style={{ position: 'fixed', height: '100%' }} className="bg-dark">
       {/* <div className="text-center">
         <NavLink className="navbar-brand" to="/profile">
           <img src="/assets/avatar-1.jpg" height="42" className="rounded-circle" alt="profile" />
         </NavLink>
         <p>John Doe<br /><small className="text-muted">Fitness Coach</small></p>
-      </div>
-      <hr /> */}
+      </div> */}
+      <hr />
       <Nav className="flex-column">
         <NavLink className="nav-link text-white" to="/home">
           <i className="fas fa-home mr-sm-2"></i>{!collapse && "Home"}

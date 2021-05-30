@@ -109,6 +109,7 @@ export default function JourneyTab() {
             <Card.Title className="text-center">
                 <ModalView
                     name="Journey"
+                    isStepper={true}
                     formUISchema={uiSchema}
                     formSchema={journeySchema}
                     formSubmit={onSubmit}
