@@ -1,0 +1,9 @@
+.rowCard {
+  text-align: center;
+}
+.rowCard:hover {
+  background-color: lightgray;
+}
+.headerCard {
+  text-align: center;
+}

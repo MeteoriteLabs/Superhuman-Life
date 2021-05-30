@@ -1,4 +1,5 @@
 import { Card, Tab, Tabs, TabContent } from "react-bootstrap";
+import MessagePage from "./message";
 
 export default function ResourcePage() {
     return (
@@ -6,11 +7,11 @@ export default function ResourcePage() {
             <h3>Resources</h3>
             <Card className="mt-3">
                 <Card.Body>
-                    <Tabs variant="pills" transition={false} defaultActiveKey="fitness">
+                    <Tabs variant="pills" transition={false} defaultActiveKey="message">
                         <Tab eventKey="message" title="Messages">
                             <TabContent>
                                 <hr />
-                                Messages
+                                <MessagePage/>
                             </TabContent>
                         </Tab>
                         <Tab eventKey="mindset" title="Mindset">

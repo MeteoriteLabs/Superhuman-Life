@@ -1,6 +1,6 @@
 import { Fragment } from "react";
 import { useTable, useExpanded } from "react-table";
-
+import "./table.css";
 function Table({ data, columns }: any) {
     const {
         getTableProps,
@@ -15,7 +15,7 @@ function Table({ data, columns }: any) {
             <table {...getTableProps()} className="table">
                 <thead>
                     {headerGroups.map(headerGroup => (
-                        <tr {...headerGroup.getHeaderGroupProps()}>
+                        <tr className="headerCard" {...headerGroup.getHeaderGroupProps()}>
                             {headerGroup.headers.map(column => (
                                 <th {...column.getHeaderProps()}>
                                     {column.render("Header")}
@@ -30,7 +30,7 @@ function Table({ data, columns }: any) {
                         const rowProps = row.getRowProps();
                         return (
                             <Fragment key={rowProps.key}>
-                                <tr {...row.getRowProps()}>
+                                <tr className="rowCard" {...row.getRowProps()}>
                                     {row.cells.map(cell => (
                                         <td {...cell.getCellProps()}>
                                             {cell.render("Cell")}
