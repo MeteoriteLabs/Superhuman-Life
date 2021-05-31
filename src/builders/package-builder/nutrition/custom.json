@@ -4,9 +4,7 @@
         "type": "object",
         "required": [
             "name",
-            "cuisine",
-            "mode",
-            "status"
+            "cuisine"
         ],
         "properties": {
             "name": {
@@ -27,23 +25,12 @@
                 "type": "string",
                 "title": "Tags"
             },
-            "mode": {
+            "chat": {
                 "type": "string",
-                "title": "Mode",
-                "description": "Meal Plans can be given only through mobile application",
+                "title": "Chat Access",
                 "enum": [
-                    "Online",
-                    "Offline",
-                    "Hybrid"
-                ]
-            },
-            "status": {
-                "type": "string",
-                "title": "Status",
-                "enum": [
-                    "Active",
-                    "Inactive",
-                    "Pending"
+                    "Yes",
+                    "No"
                 ]
             }
         }
@@ -53,7 +40,8 @@
         "type": "object",
         "required": [
             "about",
-            "benefits"
+            "benefits",
+            "consult"
         ],
         "properties": {
             "about": {
@@ -63,10 +51,6 @@
             "benefits": {
                 "type": "string",
                 "title": "Benefits"
-            },
-            "size": {
-                "type": "number",
-                "title": "Class Size"
             },
             "consult": {
                 "type": "string",
@@ -92,74 +76,94 @@
     },
     "3": {
         "title": "Program Details",
+        "description": "Program to be Assigned after package purchase",
         "type": "object",
         "required": [
-            "typo"
+            "mode"
         ],
         "properties": {
-            "typo": {
+            "mode": {
                 "type": "string",
-                "title": "Type of Package",
+                "title": "Mode",
                 "enum": [
-                    "Instant",
-                    "Program"
+                    "Online",
+                    "Offline",
+                    "Hybrid"
                 ]
+            },
+            "location": {
+                "type": "string",
+                "title": "Location",
+                "enum": [
+                    "Others",
+                    "At My Address",
+                    "At Client Address"
+                ]
+            },
+            "pin": {
+                "type": "string",
+                "title": ""
             }
         },
         "dependencies": {
-            "typo": {
+            "mode": {
                 "oneOf": [
                     {
                         "properties": {
-                            "typo": {
+                            "mode": {
                                 "enum": [
-                                    "Instant"
+                                    "Online"
                                 ]
                             },
-                            "schedule": {
-                                "type": "number",
-                                "title": "Consumer can choose start time before",
-                                "description": "This will give you lead time to prepare yourself for the class. This type of booking is generally on the same day."
+                            "consult": {
+                                "type": "object",
+                                "title": "No of Consultations",
+                                "properties": {
+                                    "online": {
+                                        "type": "number",
+                                        "title": "Online"
+                                    }
+                                }
                             }
                         }
                     },
                     {
                         "properties": {
-                            "typo": {
+                            "mode": {
                                 "enum": [
-                                    "Program"
+                                    "Offline"
                                 ]
                             },
-                            "set": {
-                                "type": "number",
-                                "title": "Set for 1 week i.e. 7 days",
-                                "description": "Program to be assigned after package purchase",
-                                "minimum": 1,
-                                "default": 0
-                            },
-                            "fitness": {
+                            "consult": {
                                 "type": "object",
-                                "title": "",
+                                "title": "No of Consultations",
                                 "properties": {
-                                    "consult": {
-                                        "type": "object",
-                                        "title": "",
-                                        "description": "Number of Consultations",
-                                        "properties": {
-                                            "online": {
-                                                "type": "number",
-                                                "title": "Online"
-                                            },
-                                            "offline": {
-                                                "type": "number",
-                                                "title": "Offline"
-                                            }
-                                        }
-                                    },
-                                    "schedule": {
+                                    "online": {
                                         "type": "number",
-                                        "title": "Consumer can choose start date after",
-                                        "description": "This lead time will help you discuss, understand, request data and then build a custom program for the client."
+                                        "title": "Offline"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "properties": {
+                            "mode": {
+                                "enum": [
+                                    "Hybrid"
+                                ]
+                            },
+                            "consult": {
+                                "type": "object",
+                                "title": "No of Consultations",
+                                "properties": {
+                                    "online": {
+                                        "type": "number",
+                                        "title": "Online"
+                                    },
+                                    "offline": {
+                                        "type": "number",
+                                        "title": "Offline"
                                     }
                                 }
                             }
@@ -169,8 +173,7 @@
             }
         }
     },
-    "4": {},
-    "5": {
+    "4": {
         "title": "",
         "type": "object",
         "properties": {

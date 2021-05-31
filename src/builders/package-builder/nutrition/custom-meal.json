@@ -4,9 +4,7 @@
         "type": "object",
         "required": [
             "name",
-            "cuisine",
-            "mode",
-            "status"
+            "cuisine"
         ],
         "properties": {
             "name": {
@@ -27,23 +25,12 @@
                 "type": "string",
                 "title": "Tags"
             },
-            "mode": {
+            "chat": {
                 "type": "string",
-                "title": "Mode",
-                "description": "Meal Plans can be given only through mobile application",
+                "title": "Chat Access",
                 "enum": [
-                    "Online",
-                    "Offline",
-                    "Hybrid"
-                ]
-            },
-            "status": {
-                "type": "string",
-                "title": "Status",
-                "enum": [
-                    "Active",
-                    "Inactive",
-                    "Pending"
+                    "Yes",
+                    "No"
                 ]
             }
         }
@@ -78,39 +65,7 @@
         }
     },
     "3": {
-        "title": "",
-        "description": "Custom Meal Program has to be assigned after the package is purchased",
-        "type": "object",
-        "required": [
-            "package"
-        ],
-        "properties": {
-            "package": {
-                "type": "string",
-                "title": "Assign Package Now",
-                "description": "Package won't be active till the program is assigned.",
-                "enum": [
-                    "Yes",
-                    "Later"
-                ]
-            },
-            "program": {
-                "title": "",
-                "type": "array",
-                "items": {
-                    "type": "object",
-                    "properties": {
-                        "title": {
-                            "type": "string",
-                            "title": "Title"
-                        }
-                    }
-                }
-            }
-        }
-    },
-    "4": {
-        "title": "For Classic Meal Package",
+        "title": "For Custom Meal Package",
         "type": "object",
         "properties": {
             "schedule": {
@@ -120,7 +75,7 @@
             }
         }
     },
-    "5": {
+    "4": {
         "title": "",
         "type": "object",
         "properties": {

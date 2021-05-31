@@ -4,7 +4,7 @@ export default function ResourcePage() {
     return (
         <>
             <h3>Resources</h3>
-            <Card className="mt-3">
+            <Card className="shadow-sm mt-3" border="light">
                 <Card.Body>
                     <Tabs variant="pills" transition={false} defaultActiveKey="fitness">
                         <Tab eventKey="fitness" title="Fitness">

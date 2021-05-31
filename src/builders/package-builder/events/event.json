@@ -12,7 +12,7 @@
         "properties": {
             "name": {
                 "type": "string",
-                "title": "Name of Event"
+                "title": "Event Name"
             },
             "typo": {
                 "type": "string",
@@ -41,8 +41,7 @@
                 "title": "Mode",
                 "enum": [
                     "Online",
-                    "Offline",
-                    "Hybrid"
+                    "Offline"
                 ]
             },
             "level": {
@@ -50,10 +49,8 @@
                 "title": "Level",
                 "enum": [
                     "Beginner",
-                    "Basic",
-                    "Difficult",
-                    "Expert",
-                    "Challenge"
+                    "Intermediate",
+                    "Advance"
                 ]
             },
             "status": {
@@ -75,7 +72,7 @@
             "location",
             "size",
             "start",
-            "end"
+            "days"
         ],
         "properties": {
             "summary": {
@@ -92,27 +89,26 @@
             },
             "size": {
                 "type": "number",
-                "title": "Participants Number"
+                "title": "No. of Participants"
+            },
+            "days": {
+                "type": "number",
+                "title": "No. of Days"
             },
             "start": {
                 "type": "string",
                 "format": "date",
                 "title": "Start Date"
             },
-            "end": {
-                "type": "string",
-                "format": "date",
-                "title": "End Date"
-            },
             "video": {
                 "type": "string",
                 "format": "uri",
-                "title": "Exercise Video Link"
+                "title": "Event Video Link"
             },
             "thumbnail": {
                 "type": "string",
                 "format": "data-url",
-                "title": "Exercise Picture",
+                "title": "Intro Picture",
                 "accept": ".jpg"
             }
         }
@@ -125,12 +121,12 @@
             "properties": {
                 "start": {
                     "type": "string",
-                    "format": "date-time",
+                    "format": "time",
                     "title": "Start Time"
                 },
                 "end": {
                     "type": "string",
-                    "format": "date-time",
+                    "format": "time",
                     "title": "End Time"
                 },
                 "title": {

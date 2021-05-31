@@ -1,16 +1,12 @@
-import { useState } from "react";
+import { useContext } from "react";
 import Form from "@rjsf/bootstrap-4";
 import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
-import { Alert, Button, Modal } from "react-bootstrap";
-
-type StateProps = {
-  response: number,
-  msg: string | null
-}
+import { Button, Modal } from "react-bootstrap";
+import authContext from "../../context/auth-context";
 
 export default function Login() {
-  const [alert, setAlert] = useState<StateProps>({ response: 0, msg: null });
+  const auth = useContext(authContext);
   const loginSchema: any = require("./login.json");
   const uiSchema: any = {
     "password": {
@@ -22,8 +18,8 @@ export default function Login() {
 
   function onSubmit(formData: any) {
     console.log("Data submitted: ", formData);
-    setAlert({ response: 200, msg: "Sign In Success!" });
-  };
+    auth.login("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9", formData.email);
+  }
 
   return (
     <Modal.Dialog>
@@ -33,13 +29,9 @@ export default function Login() {
         <link rel="canonical" href="https://sapien.systems/" />
       </Helmet>
       <Modal.Body>
-        <h4>Sign In</h4>
+        <h4>Welcome Back!</h4>
+        <p className="text-danger blockquote-footer">Sign In Using</p>
         <hr />
-        {(alert.msg) && (
-          <Alert variant={alert.response === 200 ? "success" : "danger"}>
-            {alert.msg}
-          </Alert>
-        )}
         <Form uiSchema={uiSchema} schema={loginSchema} onSubmit={({ formData }) => onSubmit(formData)}>
           <Button type="submit" size="sm" variant="danger">
             Sign In<i className="ml-4 fas fa-arrow-right"></i>

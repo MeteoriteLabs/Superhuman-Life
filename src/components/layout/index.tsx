@@ -1,36 +1,39 @@
-import { Col, Container, Row } from "react-bootstrap";
-import SideNav from "./side";
-import TopNav from "./top";
+import { useState } from "react";
+import { Col, Row } from "react-bootstrap";
+import { SideNav } from "./side";
+import { AuthenticatedNav, UnauthenticatedNav } from "./top";
 
-export default function Layout(props: any) {
+export default function Layout({ token, children }: any) {
+  const [collapse, setCollapse] = useState<boolean>(true);
+
   return (
     <>
       <header>
-        <TopNav />
+        {token ? <AuthenticatedNav /> : <UnauthenticatedNav />}
       </header>
-      <main className="bg-light min-vh-100 py-4">
-        <Container fluid>
-          <Row>
-            <Col xs lg="2" className="d-none d-lg-block">
-              <SideNav />
+      <main>
+        {token ?
+          <Row noGutters className="bg-light mt-5 pt-4  min-vh-100">
+            <Col lg={collapse ? "1" : "2"} className="d-none d-lg-block">
+              <SideNav collapse={collapse} setCollapse={setCollapse} />
             </Col>
-            <Col xs lg="10">
-              {props.children}
+            <Col lg={collapse ? "11" : "10"} className="pr-2">
+              <hr />
+              {children}
             </Col>
-          </Row>
-        </Container>
+          </Row> :
+          <>{children}</>
+        }
       </main>
-      <footer className="py-2 mt-5 float-right">
-        <Container>
-          <p className="text-muted">
-            2021 ©{" "}
-            <a href="https://sapien.systems/" target="_blank" rel="noreferrer">
-              Sapien
+      {/* <footer className="float-right p-2">
+        <p className="text-muted">
+          2021 ©{" "}
+          <a href="https://sapien.systems/" target="_blank" rel="noreferrer">
+            Sapien
             </a>{" "}
             - Partner Dashboard
           </p>
-        </Container>
-      </footer>
+      </footer> */}
     </>
   );
 }
