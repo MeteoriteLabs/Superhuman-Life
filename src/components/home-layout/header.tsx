@@ -1,9 +1,14 @@
-import { Button, Container, DropdownButton, Dropdown, Nav, Navbar } from "react-bootstrap";
+import { Nav, Navbar } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
+
+const headerStyle = {
+    backgroundImage: "linear-gradient(15deg, #4568dc 0%, #b06ab3 100%)",
+    color: "#FFF"
+}
 
 export default function HomeTopNav() {
     return (
-        <Navbar fixed="top" className="shadow-sm" expand="lg">
+        <Navbar fixed="top" className="shadow-sm" expand="lg" style={headerStyle}>
                 <Navbar.Brand href="/" className="text-muted">
                     <img
                         src="/assets/sapien-logo.svg"

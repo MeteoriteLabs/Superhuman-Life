@@ -1,7 +1,4 @@
-import {
-    Button, Row, Container, DropdownButton, Dropdown, Nav, Navbar, Col,
-    ListGroup
-} from "react-bootstrap";
+import { Row, Container, Col, ListGroup } from "react-bootstrap";
 
 export default function HomeFooter() {
     return (
