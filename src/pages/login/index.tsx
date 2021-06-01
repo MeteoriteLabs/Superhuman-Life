@@ -4,6 +4,7 @@ import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
 import { Button, Modal } from "react-bootstrap";
 import authContext from "../../context/auth-context";
+import { useMutation, gql } from '@apollo/client';
 
 export default function Login() {
   const auth = useContext(authContext);
@@ -11,13 +12,41 @@ export default function Login() {
   const uiSchema: any = {
     "password": {
       "ui:widget": "password",
-      "ui:help": "Hint: Make it strong!"
+      "ui:help": "Hint: Make it strong!",
+      classNames: "test"
     }
   }
 
+  const LOGIN = gql`
+  mutation UserAuth($identifier: String!, $password: String!) {
+    login(input: {
+      identifier: $identifier,
+      password: $password,
+      provider: "local"
+    }){
+      jwt
+      user{
+        username
+        email
+      }
+    }
+  }
+`;
+
+  const [login, { error }] = useMutation(LOGIN, { onCompleted: loginSuccess });
+  
   function onSubmit(formData: any) {
-    console.log("Data submitted: ", formData);
-    auth.login("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9", formData.email);
+    login(
+      {
+        variables: {
+          identifier: formData.email, password: formData.password
+        }
+      }
+    );
+  }
+
+  function loginSuccess(d: any) {
+    auth.login(d.login.jwt, d.login.user.username);
   }
 
   return (
@@ -32,6 +61,9 @@ export default function Login() {
         <p className="text-danger blockquote-footer">Sign In Using</p>
         <hr />
         <Form uiSchema={uiSchema} schema={loginSchema} onSubmit={({ formData }) => onSubmit(formData)}>
+          { error &&
+            <p className="text-danger">Incorrect email or password</p>
+          }
           <Button type="submit" size="sm" variant="danger">
             Sign In<i className="ml-4 fas fa-arrow-right"></i>
           </Button>

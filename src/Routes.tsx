@@ -18,6 +18,9 @@ const ProfilePage = React.lazy(() => import("./pages/profile"));
 const RegisterPage = React.lazy(() => import("./pages/register"));
 const SchedulePage = React.lazy(() => import("./pages/schedule"));
 const SettingsPage = React.lazy(() => import("./pages/settings"));
+const AboutPage = React.lazy(() => import("./pages/about"));
+const ContactPage = React.lazy(() => import("./pages/contact"));
+const FQAsPage = React.lazy(() => import("./pages/faqs"));
 
 const PackagePage = React.lazy(() => import("./builders/package-builder"));
 const ResourcePage = React.lazy(() => import("./builders/resource-builder"));
@@ -70,6 +73,9 @@ export default function Routes({ token }: any) {
               <Redirect exact from="/home" to="/login" />
               <Route path="/login" component={LoginPage} />
               <Route path="/register" component={RegisterPage} />
+              <Route path="/about" component={AboutPage} />
+              <Route path="/contact" component={ContactPage} />
+              <Route path="/faqs" component={FQAsPage} />
               <Route path="*" component={NoMatch} />
             </Switch>
           </Suspense>
