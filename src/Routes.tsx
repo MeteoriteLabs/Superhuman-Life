@@ -73,6 +73,9 @@ export default function Routes({ token }: any) {
               <Redirect exact from="/home" to="/login" />
               <Route path="/login" component={LoginPage} />
               <Route path="/register" component={RegisterPage} />
+              <Route path="/about" component={AboutPage} />
+              <Route path="/contact" component={ContactPage} />
+              <Route path="/faqs" component={FQAsPage} />
               <Route path="*" component={NoMatch} />
             </Switch>
           </Suspense>

@@ -64,7 +64,7 @@ export function UnauthenticatedNav() {
           <Nav>
             <NavLink className="nav-link" to="/home">Home</NavLink>
             <NavLink className="nav-link" to="/about">About</NavLink>
-            <NavLink className="nav-link" to="/faq">FAQs</NavLink>
+            <NavLink className="nav-link" to="/faqs">FAQs</NavLink>
             <NavLink className="nav-link" to="/contact">Contact</NavLink>
             <NavLink className="btn btn-danger" to="/login">Login</NavLink>
           </Nav>
