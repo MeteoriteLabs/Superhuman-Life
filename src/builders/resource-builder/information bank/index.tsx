@@ -1,38 +1,17 @@
-import {useMemo,useContext} from 'react'
-import {Badge,Button,TabContent,InputGroup,FormControl,OverlayTrigger,Popover,Dropdown,Card,Container,Row,Col} from "react-bootstrap";
+import {useMemo} from 'react'
+import {Button,TabContent,InputGroup,FormControl,OverlayTrigger,Popover,Dropdown,Card,Container,Row,Col} from "react-bootstrap";
 import Table from "../../../components/table";
 import ModalView from "../../../components/modal";
-import {gql,useQuery} from "@apollo/client"
 
 
-export default function MessagePage() {
-    
-    const GET_TRIGGERS = gql`
-    {
-        prerecordedmessages {
-          _id
-          title
-          prerecordedtype {
-            _id
-            name
-          }
-          prerecordedtrigger {
-            _id
-            name
-          }
-        }
-      }
-      
-    `
-    const {loading,error,data } = useQuery(GET_TRIGGERS);
-   
+export default function InformationPage() {
+
     const columns = useMemo<any>(() => [
         { accessor: "title", Header: "Title" },
         {
-            accessor: "trigger",Header: "Trigger",
+            accessor: "type",Header: "Type",
         },
-        { accessor: "minidesc", Header: "Mini Description" },
-        { accessor: "status", Header: "Status",Cell: (v: any) => <Badge variant="success">{v.value}</Badge> },
+        { accessor: "desc", Header: "Description" },
         { accessor: "updatedon", Header: "Updated On" },
         
         {
@@ -61,33 +40,31 @@ export default function MessagePage() {
         }
     ], []);
 
-    const data1 = useMemo<any>(() => [
+    const data = useMemo<any>(() => [
         {
             "title": "Embark on your journey",
-            "trigger": "Welcome Message",
-            "minidesc": "mini description mini description mini description",
-            "status": "Active",
+            "type": "Fitness",
+            "desc": "description description description",
             "updatedon": "22/02/20",
             
         },
         {
             "title": "Embark on your journey",
-            "trigger": "Welcome Message",
-            "minidesc": "mini description mini description mini description",
-            "status": "Active",
+            "type": "Fitness",
+            "desc": "description description description",
             "updatedon": "22/02/20",
+            
         },
         {
             "title": "Embark on your journey",
-            "trigger": "Welcome Message",
-            "minidesc": "mini description mini description mini description",
-            "status": "Active",
+            "type": "Fitness",
+            "desc": "description description description",
             "updatedon": "22/02/20",
+            
         }
 
     ], []);
-    // messageSchema."1"."properties"."mode"."enum" = updated_array_made_from_array_response;
-    const messageSchema: any = require("./message.json");
+    const messageSchema: any = require("./informationbank.json");
     const uiSchema: any = {
         
         "level": {
@@ -121,12 +98,7 @@ export default function MessagePage() {
     function onSubmit(formData: any) {
         alert("Values submitted: " + JSON.stringify(formData, null, 2));
     }
-    if (loading) return <span>'Loading.'</span>;
-    if (error) return <span>{`Error! ${error.message}`}</span>;
-    console.log(data);
-
     return (
-
         <TabContent>
             <Container>
             <Row>   
@@ -152,7 +124,7 @@ export default function MessagePage() {
             </Col>
             </Row>
             </Container>
-            <Table columns={columns} data={data1} />
+            <Table columns={columns} data={data} />
         </TabContent>
     );
 }

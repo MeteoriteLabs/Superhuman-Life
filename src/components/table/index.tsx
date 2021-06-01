@@ -13,18 +13,18 @@ function Table({ data, columns }: any) {
     return (
         <div className="table-responsive">
             <table {...getTableProps()} className="table">
-                <thead>
+                <thead >
                     {headerGroups.map(headerGroup => (
-                        <tr className="headerCard" {...headerGroup.getHeaderGroupProps()}>
+                        <tr {...headerGroup.getHeaderGroupProps()}>
                             {headerGroup.headers.map(column => (
-                                <th {...column.getHeaderProps()}>
+                                <th className="tableHeader" {...column.getHeaderProps()}>
                                     {column.render("Header")}
                                 </th>
                             ))}
                         </tr>
                     ))}
                 </thead>
-                <tbody {...getTableBodyProps()}>
+                <tbody  {...getTableBodyProps()}>
                     {rows.map(row => {
                         prepareRow(row);
                         const rowProps = row.getRowProps();

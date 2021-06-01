@@ -1,46 +1,61 @@
 {
-    "title": "Add Message",
-    "description": " ",
-    "type": "object",
-    "properties": {
-        "name": {
-            "type": "string",
-            "title": "Title of Message"
-        },
-        "category": {
-            "type": "string",
-            "title": "Category",
-            "enum": [
-                "Fitness",
-                "Mindset",
-                "Nutrition",
-                "Other"
-            ]
-        },
-        "desc": {
-            "type": "string",
-            "format": "textarea",
-            "title": "Mini Description"
-        },
-        "message": {
-            "type": "string",
-            "format": "textarea",
-            "title": "Main Message"
-        },
-        "tags": {
-            "type": "string",
-            "title": "Tags"
-        },
-        "video": {
-            "type": "string",
-            "format": "uri",
-            "title": "Intro Video Link"
-        },
-        "thumbnail": {
-            "type": "string",
-            "format": "data-url",
-            "title": "Thumbnail Picture",
-            "accept": ".jpg"
+    "1": {
+        "title": "",
+        "type": "object",
+        "required": [
+            "name",
+            "typo",
+            "mode",
+            "level",
+            "status"
+        ],
+        "properties": {
+            "name": {
+                "type": "string",
+                "title": "Message Title"
+            },
+            "typo": {
+                "type": "string",
+                "title": "Type",
+                "enum": [
+                    "New Client",
+                    "Reminder",
+                    "Motivation",
+                    "Renewal",
+                    "Payments",
+                    "Packages",
+                    "Other" 
+                ]
+            },
+            "mode": {
+                "type": "string",
+                "title": "Trigger for message",
+                "enum": [
+                    "Session Reminder (1 Hour Prior)",
+                    "Session Reminder (30 Mins Prior)",
+                    "Session Reminder (02 hours Prior)",
+                    "Payment Failed",
+                    "Payment Pending",
+                    "Payment Successful",
+                    "Package Purchased-Confirmation",
+                    "Package Purchased-Failed",
+                    "Package Renewal (1 Day prior to expiry)",
+                    "Package Renewal (2 Day prior to expiry)",
+                    "Package Renewal (3 Day prior to expiry)",
+                    "Welcome Message(Afyer package purchased - Success)",
+                    "Task Completion(Streak of 7 days)",
+                    "Task Completion(Streak of 21 days)",
+                    "Task Completion(Streak of 30 days)",
+                    "Task Completion(Streak of 60 days)",
+                    "Task Completion(Streak of 90 days)",
+                    "Other-Manual"
+                ]
+            },
+            "description": {
+                "type": "string",
+                "title": "Description"
+            }
         }
     }
 }
+    

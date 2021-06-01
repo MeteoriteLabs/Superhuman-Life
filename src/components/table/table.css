@@ -1,9 +1,9 @@
 .rowCard {
-  text-align: center;
+  text-align: left;
 }
 .rowCard:hover {
   background-color: lightgray;
 }
 .headerCard {
-  text-align: center;
+  text-align: left;
 }

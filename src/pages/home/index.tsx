@@ -1,6 +1,6 @@
-import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
-import { Alert, Card, CardDeck } from "react-bootstrap";
+import { Card, CardDeck } from "react-bootstrap";
+
 
 export default function HomePage() {
   const shortcuts = [
@@ -40,22 +40,15 @@ export default function HomePage() {
       text: "Network Community",
     },
   ];
-
+//eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwYjBjMjg2MjBjZDVkZWE1NzU5MWU0YSIsImlhdCI6MTYyMjQ1OTAxMiwiZXhwIjoxNjI1MDUxMDEyfQ.XV4vYaPW9QpuNhjqlYx0gT2gDXTzxhbtXv7BbVpl9QY
   return (
     <>
       <h3>Dashboard</h3>
-      <Helmet>
-        <meta charSet="utf-8" />
-        <title>Sapien Dashboard | Dashboard</title>
-        <link rel="canonical" href="https://sapien.systems/" />
-      </Helmet>
-      <Alert variant="primary" className="mt-5">
-        This website is under active development!
-      </Alert>
+      <hr />
       <CardDeck>
         {shortcuts &&
           shortcuts.map((shortcut, id) => (
-            <Card key={id} className="text-center">
+            <Card key={id} className="shadow-sm text-center" border="light">
               <Card.Body>
                 <Link to={shortcut.link}>{shortcut.icon}</Link>
                 <hr />
