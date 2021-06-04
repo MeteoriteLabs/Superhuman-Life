@@ -1,13 +1,12 @@
 {
     "1": {
-        "title": "",
+        "title": "Message",
         "type": "object",
         "required": [
             "name",
             "typo",
             "mode",
-            "level",
-            "status"
+            "description"
         ],
         "properties": {
             "name": {
@@ -17,43 +16,35 @@
             "typo": {
                 "type": "string",
                 "title": "Type",
-                "enum": [
-                    "New Client",
-                    "Reminder",
-                    "Motivation",
-                    "Renewal",
-                    "Payments",
-                    "Packages",
-                    "Other" 
-                ]
+                "enum": []
             },
             "mode": {
                 "type": "string",
                 "title": "Trigger for message",
-                "enum": [
-                    "Session Reminder (1 Hour Prior)",
-                    "Session Reminder (30 Mins Prior)",
-                    "Session Reminder (02 hours Prior)",
-                    "Payment Failed",
-                    "Payment Pending",
-                    "Payment Successful",
-                    "Package Purchased-Confirmation",
-                    "Package Purchased-Failed",
-                    "Package Renewal (1 Day prior to expiry)",
-                    "Package Renewal (2 Day prior to expiry)",
-                    "Package Renewal (3 Day prior to expiry)",
-                    "Welcome Message(Afyer package purchased - Success)",
-                    "Task Completion(Streak of 7 days)",
-                    "Task Completion(Streak of 21 days)",
-                    "Task Completion(Streak of 30 days)",
-                    "Task Completion(Streak of 60 days)",
-                    "Task Completion(Streak of 90 days)",
-                    "Other-Manual"
-                ]
+                "enum": []
             },
             "description": {
                 "type": "string",
                 "title": "Description"
+            },
+            "minidescription": {
+                "type": "string",
+                "title": "Mini Description"
+            },
+            "Url": {
+                "type": "string",
+                "title": "Url (Picture or Video)"
+            },
+            "Or": {
+                "title": "OR",
+                "description": "OR",
+                "type": "null"
+              },
+            "file": {
+                "type": "string",
+                "format": "data-url",
+                "title": "Upload (Picture or Video)"
+                
             }
         }
     }

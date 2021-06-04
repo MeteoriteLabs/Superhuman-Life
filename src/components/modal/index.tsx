@@ -30,7 +30,7 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
                 <Modal.Header closeButton>
                     <Modal.Title as={Row}>
                         <Col xs={12} md={12} lg={12}>
-                            <p className="lead">New {name} Package</p>
+                            <p className="lead">{name}</p>
                         </Col>
                         {isStepper && stepper.map((item: string, id: number) => (
                             <Col xs={2} md={2} lg={2} key={id}>

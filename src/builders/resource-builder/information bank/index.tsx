@@ -2,9 +2,18 @@ import {useMemo} from 'react'
 import {Button,TabContent,InputGroup,FormControl,OverlayTrigger,Popover,Dropdown,Card,Container,Row,Col} from "react-bootstrap";
 import Table from "../../../components/table";
 import ModalView from "../../../components/modal";
-
+import {gql,useQuery} from "@apollo/client";
 
 export default function InformationPage() {
+    const GET_TRIGGERS = gql`
+    {
+        prerecordedtypes{
+            name
+          }
+      }
+      
+    `
+    const {loading,error,data } = useQuery(GET_TRIGGERS);
 
     const columns = useMemo<any>(() => [
         { accessor: "title", Header: "Title" },
@@ -40,7 +49,7 @@ export default function InformationPage() {
         }
     ], []);
 
-    const data = useMemo<any>(() => [
+    const data1 = useMemo<any>(() => [
         {
             "title": "Embark on your journey",
             "type": "Fitness",
@@ -64,7 +73,12 @@ export default function InformationPage() {
         }
 
     ], []);
-    const messageSchema: any = require("./informationbank.json");
+    const infoSchema: any = require("./informationbank.json");
+    let preRecordedMessageTypes: any;
+    if(data){
+      preRecordedMessageTypes =[...data.prerecordedtypes].map(n => (n.name));
+    }
+    infoSchema["1"].properties.typo.enum = preRecordedMessageTypes;
     const uiSchema: any = {
         
         "level": {
@@ -98,6 +112,8 @@ export default function InformationPage() {
     function onSubmit(formData: any) {
         alert("Values submitted: " + JSON.stringify(formData, null, 2));
     }
+    if (loading) return <span>'Loading...'</span>;
+    if (error) return <span>{`Error! ${error.message}`}</span>;
     return (
         <TabContent>
             <Container>
@@ -116,7 +132,7 @@ export default function InformationPage() {
                     name="Create New"
                     isStepper={false}
                     formUISchema={uiSchema}
-                    formSchema={messageSchema}
+                    formSchema={infoSchema}
                     formSubmit={onSubmit}
                     formData={{}}
                 />
@@ -124,7 +140,7 @@ export default function InformationPage() {
             </Col>
             </Row>
             </Container>
-            <Table columns={columns} data={data} />
+            <Table columns={columns} data={data1} />
         </TabContent>
     );
 }

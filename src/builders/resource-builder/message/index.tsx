@@ -1,4 +1,4 @@
-import {useMemo,useContext} from 'react'
+import {useMemo,useState} from 'react'
 import {Badge,Button,TabContent,InputGroup,FormControl,OverlayTrigger,Popover,Dropdown,Card,Container,Row,Col} from "react-bootstrap";
 import Table from "../../../components/table";
 import ModalView from "../../../components/modal";
@@ -6,21 +6,27 @@ import {gql,useQuery} from "@apollo/client"
 
 
 export default function MessagePage() {
+    const [searchFilter,setSearchFilter]=useState('');
     
     const GET_TRIGGERS = gql`
     {
-        prerecordedmessages {
-          _id
-          title
-          prerecordedtype {
-            _id
+    
+        prerecordedmessages(sort: "prerecordedtrigger.name:asc",where: { title_contains: "" }){
+            title
+            minidescription
+            prerecordedtrigger{
+              id
+              name
+            }
+            status
+            updatedAt
+          }
+        prerecordedtypes{
             name
           }
-          prerecordedtrigger {
-            _id
+          prerecordedtriggers{
             name
           }
-        }
       }
       
     `
@@ -32,8 +38,8 @@ export default function MessagePage() {
             accessor: "trigger",Header: "Trigger",
         },
         { accessor: "minidesc", Header: "Mini Description" },
-        { accessor: "status", Header: "Status",Cell: (v: any) => <Badge variant="success">{v.value}</Badge> },
-        { accessor: "updatedon", Header: "Updated On" },
+        { accessor: "status", Header: "Status",Cell: (v: any) => <Badge variant={v.value==="Active"?"success":"danger"}>{v.value}</Badge> },
+        { accessor: "updatedon", Header: "Updated On"},
         
         {
             id: "edit",
@@ -60,60 +66,51 @@ export default function MessagePage() {
             ),
         }
     ], []);
+    let datatable: any;
 
-    const data1 = useMemo<any>(() => [
-        {
-            "title": "Embark on your journey",
-            "trigger": "Welcome Message",
-            "minidesc": "mini description mini description mini description",
-            "status": "Active",
-            "updatedon": "22/02/20",
-            
-        },
-        {
-            "title": "Embark on your journey",
-            "trigger": "Welcome Message",
-            "minidesc": "mini description mini description mini description",
-            "status": "Active",
-            "updatedon": "22/02/20",
-        },
-        {
-            "title": "Embark on your journey",
-            "trigger": "Welcome Message",
-            "minidesc": "mini description mini description mini description",
-            "status": "Active",
-            "updatedon": "22/02/20",
-        }
+    function getDate(time: any) {
+        let dateObj = new Date(time);
+        let month = dateObj.getMonth()+1;
+        let year = dateObj.getFullYear();
+        let date = dateObj.getDate();
 
-    ], []);
-    // messageSchema."1"."properties"."mode"."enum" = updated_array_made_from_array_response;
+      return(`${date}/${month}/${year}`);
+    }
+    if(data){
+        datatable = [...data.prerecordedmessages].map((Detail) => {
+            return{
+                title : Detail.title,
+                trigger: Detail.prerecordedtrigger.name,
+                minidesc: Detail.minidescription,
+                status: Detail.status?"Active":"Inactive",
+                updatedon: getDate(Date.parse(Detail.updatedAt))
+            }    
+    }); 
+    }
+    
     const messageSchema: any = require("./message.json");
+    let preRecordedMessageTypes: any;
+    let preRecordedMessageTriggers: any;
+    if(data){
+      preRecordedMessageTypes =[...data.prerecordedtypes].map(n => (n.name));
+      preRecordedMessageTriggers =[...data.prerecordedtriggers].map(n => (n.name));
+    }
+     
+    messageSchema["1"].properties.typo.enum = preRecordedMessageTypes;
+    messageSchema["1"].properties.mode.enum = preRecordedMessageTriggers;
     const uiSchema: any = {
+    
         
-        "level": {
-            "ui:widget": "radio",
-            "ui:options": {
-                "inline": true
-            }
-        },
-        "summary": {
-            "ui:widget": "textarea",
-            "ui:options": {
-                "rows": 3
-            }
-        },
         "description": {
             "ui:widget": "textarea",
             "ui:options": {
-                "rows": 3
+                "rows": 4
             }
         },
-        "items": {
-            "about": {
-                "ui:widget": "textarea",
-                "ui:options": {
-                    "rows": 3
-                }
+        "minidescription": {
+            "ui:widget": "textarea",
+            "ui:options": {
+                "rows": 3
             }
         }
           
@@ -121,9 +118,9 @@ export default function MessagePage() {
     function onSubmit(formData: any) {
         alert("Values submitted: " + JSON.stringify(formData, null, 2));
     }
-    if (loading) return <span>'Loading.'</span>;
+    if (loading) return <span>'Loading...'</span>;
     if (error) return <span>{`Error! ${error.message}`}</span>;
-    console.log(data);
+    
 
     return (
 
@@ -131,9 +128,9 @@ export default function MessagePage() {
             <Container>
             <Row>   
             <Col>     
-            <InputGroup className="mb-3">
+            <InputGroup className="mb-3" onChange={(e:any) => {setSearchFilter(e.target.value)}}>
                 <InputGroup.Prepend>
-                <Button variant="outline-secondary"><i className="fas fa-search"></i></Button>
+                <Button variant="outline-secondary" ><i className="fas fa-search"></i></Button>
                 </InputGroup.Prepend>
                     <FormControl aria-describedby="basic-addon1" placeholder="Search" />
             </InputGroup>
@@ -152,7 +149,7 @@ export default function MessagePage() {
             </Col>
             </Row>
             </Container>
-            <Table columns={columns} data={data1} />
+            <Table columns={columns} data={datatable} />
         </TabContent>
     );
 }
