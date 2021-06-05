@@ -7,8 +7,8 @@ import {gql,useQuery} from "@apollo/client";
 export default function MindsetPage() {
     const GET_TRIGGERS = gql`
     {
-        prerecordedtypes{
-            name
+        mindsetmessagetypes{
+            type
           }
       }
       
@@ -50,37 +50,31 @@ export default function MindsetPage() {
         }
     ], []);
 
-    const data1 = useMemo<any>(() => [
-        {
-            "title": "Embark on your journey",
-            "type": "Fitness",
-            "tags": " ",
-            "desc": "description description description",
-            "updatedon": "22/02/20",
-            
-        },
-        {
-            "title": "Embark on your journey",
-            "type": "Fitness",
-            "tags": " ",
-            "desc": "description description description",
-            "updatedon": "22/02/20",
-            
-        },
-        {
-            "title": "Embark on your journey",
-            "type": "Fitness",
-            "tags": " ",
-            "desc": "description description description",
-            "updatedon": "22/02/20",
-            
-        }
+    let datatable: any;
 
-    ], []);
+    function getDate(time: any) {
+        let dateObj = new Date(time);
+        let month = dateObj.getMonth()+1;
+        let year = dateObj.getFullYear();
+        let date = dateObj.getDate();
+
+      return(`${date}/${month}/${year}`);
+    }
+    if(data){
+        datatable = [...data.mindsetmessages].map((Detail) => {
+            return{
+                title : Detail.title,
+                trigger: Detail.prerecordedtrigger.name,
+                minidesc: Detail.minidescription,
+                status: Detail.status?"Active":"Inactive",
+                updatedon: getDate(Date.parse(Detail.updatedAt))
+            }    
+    }); 
+    }
     const mindsetSchema: any = require("./mindset.json");
     let preRecordedMessageTypes: any;
     if(data){
-      preRecordedMessageTypes =[...data.prerecordedtypes].map(n => (n.name));
+      preRecordedMessageTypes =[...data.mindsetmessagetypes].map(n => (n.type));
     }
     mindsetSchema["1"].properties.typo.enum = preRecordedMessageTypes;
     const uiSchema: any = {
@@ -145,7 +139,7 @@ export default function MindsetPage() {
             </Col>
             </Row>
             </Container>
-            <Table columns={columns} data={data1} />
+            <Table columns={columns} data={datatable} />
         </TabContent>
     );
 }

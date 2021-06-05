@@ -7,9 +7,15 @@ import {gql,useQuery} from "@apollo/client";
 export default function InformationPage() {
     const GET_TRIGGERS = gql`
     {
-        prerecordedtypes{
-            name
-          }
+        Informationbankmessagestype{
+            type
+        }
+        Informationbankmessages{
+            id
+            updatedAt
+            informationbankmessages
+
+        }
       }
       
     `
@@ -49,30 +55,49 @@ export default function InformationPage() {
         }
     ], []);
 
-    const data1 = useMemo<any>(() => [
-        {
-            "title": "Embark on your journey",
-            "type": "Fitness",
-            "desc": "description description description",
-            "updatedon": "22/02/20",
+    // const data1 = useMemo<any>(() => [
+    //     {
+    //         "title": "Embark on your journey",
+    //         "type": "Fitness",
+    //         "desc": "description description description",
+    //         "updatedon": "22/02/20",
             
-        },
-        {
-            "title": "Embark on your journey",
-            "type": "Fitness",
-            "desc": "description description description",
-            "updatedon": "22/02/20",
+    //     },
+    //     {
+    //         "title": "Embark on your journey",
+    //         "type": "Fitness",
+    //         "desc": "description description description",
+    //         "updatedon": "22/02/20",
             
-        },
-        {
-            "title": "Embark on your journey",
-            "type": "Fitness",
-            "desc": "description description description",
-            "updatedon": "22/02/20",
+    //     },
+    //     {
+    //         "title": "Embark on your journey",
+    //         "type": "Fitness",
+    //         "desc": "description description description",
+    //         "updatedon": "22/02/20",
             
-        }
+    //     }
 
-    ], []);
+    // ], []);
+    let datatable: any;
+
+    function getDate(time: any) {
+        let dateObj = new Date(time);
+        let month = dateObj.getMonth()+1;
+        let year = dateObj.getFullYear();
+        let date = dateObj.getDate();
+
+      return(`${date}/${month}/${year}`);
+    }
+    if(data){
+        datatable = [...data.Informationbankmessages].map((Detail) => {
+            return{
+                title : Detail.title,
+                trigger: Detail.prerecordedtrigger.name,
+                updatedon: getDate(Date.parse(Detail.updatedAt))
+            }    
+    }); 
+    }
     const infoSchema: any = require("./informationbank.json");
     let preRecordedMessageTypes: any;
     if(data){
@@ -140,7 +165,7 @@ export default function InformationPage() {
             </Col>
             </Row>
             </Container>
-            <Table columns={columns} data={data1} />
+            <Table columns={columns} data={datatable} />
         </TabContent>
     );
 }

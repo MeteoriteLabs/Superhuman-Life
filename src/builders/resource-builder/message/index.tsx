@@ -2,16 +2,15 @@ import {useMemo,useState} from 'react'
 import {Badge,Button,TabContent,InputGroup,FormControl,OverlayTrigger,Popover,Dropdown,Card,Container,Row,Col} from "react-bootstrap";
 import Table from "../../../components/table";
 import ModalView from "../../../components/modal";
-import {gql,useQuery} from "@apollo/client"
+import {gql,useLazyQuery} from "@apollo/client"
 
 
 export default function MessagePage() {
     const [searchFilter,setSearchFilter]=useState('');
     
     const GET_TRIGGERS = gql`
-    {
-    
-        prerecordedmessages(sort: "prerecordedtrigger.name:asc",where: { title_contains: "" }){
+    query FeedSearchQuery($filter: String!){
+        prerecordedmessages(sort: "prerecordedtrigger.name:asc",where: { title_contains: $filter }){
             title
             minidescription
             prerecordedtrigger{
@@ -30,7 +29,7 @@ export default function MessagePage() {
       }
       
     `
-    const {loading,error,data } = useQuery(GET_TRIGGERS);
+    const [executeSearch,{data,loading,error}] = useLazyQuery(GET_TRIGGERS);
    
     const columns = useMemo<any>(() => [
         { accessor: "title", Header: "Title" },
@@ -76,7 +75,9 @@ export default function MessagePage() {
 
       return(`${date}/${month}/${year}`);
     }
+    executeSearch({variables: {filter: " "}});
     if(data){
+        console.log(data);
         datatable = [...data.prerecordedmessages].map((Detail) => {
             return{
                 title : Detail.title,
@@ -130,7 +131,7 @@ export default function MessagePage() {
             <Col>     
             <InputGroup className="mb-3" onChange={(e:any) => {setSearchFilter(e.target.value)}}>
                 <InputGroup.Prepend>
-                <Button variant="outline-secondary" ><i className="fas fa-search"></i></Button>
+                <Button variant="outline-secondary" onClick={() => executeSearch({variables: {filter: searchFilter}})} ><i className="fas fa-search"></i></Button>
                 </InputGroup.Prepend>
                     <FormControl aria-describedby="basic-addon1" placeholder="Search" />
             </InputGroup>
