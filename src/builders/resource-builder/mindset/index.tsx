@@ -50,7 +50,7 @@ export default function MindsetPage() {
         }
     ], []);
 
-    let datatable: any;
+    let datatable: any = [];
 
     function getDate(time: any) {
         let dateObj = new Date(time);
@@ -61,15 +61,17 @@ export default function MindsetPage() {
       return(`${date}/${month}/${year}`);
     }
     if(data){
-        datatable = [...data.mindsetmessages].map((Detail) => {
-            return{
-                title : Detail.title,
-                trigger: Detail.prerecordedtrigger.name,
-                minidesc: Detail.minidescription,
-                status: Detail.status?"Active":"Inactive",
-                updatedon: getDate(Date.parse(Detail.updatedAt))
-            }    
-    }); 
+        //below code is commented out since throwing error
+
+    //     datatable = [...data.mindsetmessagetypes].map((Detail) => {
+    //         return{
+    //             title : Detail.title,
+    //             trigger: Detail.prerecordedtrigger.name,
+    //             minidesc: Detail.minidescription,
+    //             status: Detail.status?"Active":"Inactive",
+    //             updatedon: getDate(Date.parse(Detail.updatedAt))
+    //         }    
+    // }); 
     }
     const mindsetSchema: any = require("./mindset.json");
     let preRecordedMessageTypes: any;

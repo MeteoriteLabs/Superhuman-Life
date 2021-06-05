@@ -7,10 +7,10 @@ import {gql,useQuery} from "@apollo/client";
 export default function InformationPage() {
     const GET_TRIGGERS = gql`
     {
-        Informationbankmessagestype{
-            type
+        informationbankmessages{
+            informationbankmessages
         }
-        Informationbankmessages{
+        informationbankmessages{
             id
             updatedAt
             informationbankmessages
@@ -79,7 +79,7 @@ export default function InformationPage() {
     //     }
 
     // ], []);
-    let datatable: any;
+    let datatable: any = [];
 
     function getDate(time: any) {
         let dateObj = new Date(time);
@@ -90,18 +90,18 @@ export default function InformationPage() {
       return(`${date}/${month}/${year}`);
     }
     if(data){
-        datatable = [...data.Informationbankmessages].map((Detail) => {
-            return{
-                title : Detail.title,
-                trigger: Detail.prerecordedtrigger.name,
-                updatedon: getDate(Date.parse(Detail.updatedAt))
-            }    
-    }); 
+    //     datatable = [...data.informationbankmessages].map((Detail) => {
+    //         return{
+    //             title : Detail.title,
+    //             trigger: Detail.prerecordedtrigger.name,
+    //             updatedon: getDate(Date.parse(Detail.updatedAt))
+    //         }    
+    // }); 
     }
     const infoSchema: any = require("./informationbank.json");
     let preRecordedMessageTypes: any;
     if(data){
-      preRecordedMessageTypes =[...data.prerecordedtypes].map(n => (n.name));
+    //   preRecordedMessageTypes =[...data.prerecordedtypes].map(n => (n.name));
     }
     infoSchema["1"].properties.typo.enum = preRecordedMessageTypes;
     const uiSchema: any = {
