@@ -1,13 +1,13 @@
-import { useMemo, useState } from 'react'
-import { Badge, Button, TabContent, InputGroup, FormControl, OverlayTrigger, Popover, Dropdown, Card, Container, Row, Col } from "react-bootstrap";
+import { useMemo, useState,useRef } from 'react'
+import { Badge, Button, TabContent, InputGroup, FormControl, OverlayTrigger, Popover, Dropdown, Card, Container, Row, Col} from "react-bootstrap";
 import Table from "../../../components/table";
 import ModalView from "../../../components/modal";
-import { gql, useQuery } from "@apollo/client";
+import { gql, useQuery,useMutation } from "@apollo/client";
 
 export default function MessagePage() {
     const [searchFilter, setSearchFilter] = useState('');
+    const searchInput = useRef<any>();
 
-    //prerecordedtrigger.name:asc
     //sort by updatedAt to ensure newly created messages show up
     const GET_TRIGGERS = gql`
     query FeedSearchQuery($filter: String!){
@@ -30,6 +30,41 @@ export default function MessagePage() {
           }
       }
     `;
+    const ADD_MESSAGE = gql`
+            mutation msg(
+                $title: String
+                $description: String
+                $minidesc: String
+                $prerecordedtype: ID
+                $prerecordedtrigger: ID
+                $mediaupload: [ID]
+                $mediaurl: String
+            ) {
+                createPrerecordedmessage(
+                input: {
+                    data: {
+                    title: $title
+                    description: $description
+                    minidescription: $minidesc
+                    prerecordedtype: $prerecordedtype
+                    prerecordedtrigger: $prerecordedtrigger
+                    mediaurl: $mediaurl
+                    mediaupload: $mediaupload
+                    }
+                }
+                ) {
+                prerecordedmessage {
+                    id
+                    createdAt
+                    updatedAt
+                    title
+                    description
+                    minidescription
+                }
+                }
+            }
+      
+    `
 
     const columns = useMemo<any>(() => [
         { accessor: "title", Header: "Title" },
@@ -93,8 +128,6 @@ export default function MessagePage() {
             })
         );
 
-        // preRecordedMessageTypes = [...data.prerecordedtypes].map(n => (n.name));
-        // preRecordedMessageTriggers = [...data.prerecordedtriggers].map(n => (n.name));
         messageSchema["1"].properties.typo.enum = [...data.prerecordedtypes].map(n => (n.name));
         messageSchema["1"].properties.mode.enum = [...data.prerecordedtriggers].map(n => (n.name));
     }
@@ -113,26 +146,40 @@ export default function MessagePage() {
             }
         }
     }
+    const [createmessage, { error }] = useMutation(ADD_MESSAGE);
     function onSubmit(formData: any) {
-        alert("Values submitted: " + JSON.stringify(formData, null, 2));
+        console.log(formData);
+        // createmessage(
+        //     {
+        //         variables: {
+        //             title: formData.name,
+        //             description: formData.description,
+        //             minidesc: formData.minidescription,
+        //             prerecordedtype: formData.typo,
+        //             prerecordedtrigger: formData.mode,
+        //             mediaupload: formData.url,
+        //             mediaurl: formData.file
+        //         }
+        //     }
+        // );
     }
     // if (loading) return <span>'Loading...'</span>;
-    // if (error) return <span>{`Error! ${error.message}`}</span>;
+     if (error) return <span>{`Error! ${error.message}`}</span>;
 
     FetchData({ filter: searchFilter });
+    
 
     return (
         <TabContent>
             <Container>
                 <Row>
                     <Col>
-                        <InputGroup className="mb-3">
+                             <InputGroup className="mb-3" >
+                            <FormControl aria-describedby="basic-addon1" placeholder="Search" id="searchInput" ref={searchInput}/>
                             <InputGroup.Prepend>
-                                {/* onClick={() => (FetchData({variables: {filter: searchFilter}}))}  */}
-                                <Button variant="outline-secondary"><i className="fas fa-search"></i></Button>
+                                <Button variant="outline-secondary" onClick={(e:any) => {e.preventDefault(); setSearchFilter(searchInput.current.value)}} ><i className="fas fa-search"></i></Button>
                             </InputGroup.Prepend>
-                            <FormControl aria-describedby="basic-addon1" placeholder="Search" onChange={(e) => setSearchFilter(e.target.value)} />
-                        </InputGroup>
+                        </InputGroup> 
                     </Col>
                     <Col>
                         <Card.Title className="text-center">

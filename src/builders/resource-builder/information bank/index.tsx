@@ -7,14 +7,19 @@ import {gql,useQuery} from "@apollo/client";
 export default function InformationPage() {
     const GET_TRIGGERS = gql`
     {
-        informationbankmessages{
-            informationbankmessages
-        }
-        informationbankmessages{
+        informationbankmessages {
+          id
+          title
+          description
+          updatedAt
+          informationbankmessagestype {
             id
-            updatedAt
-            informationbankmessages
-
+            type
+          }
+        }
+        informationbankmessagestypes {
+          id
+          type
         }
       }
       
@@ -55,30 +60,7 @@ export default function InformationPage() {
         }
     ], []);
 
-    // const data1 = useMemo<any>(() => [
-    //     {
-    //         "title": "Embark on your journey",
-    //         "type": "Fitness",
-    //         "desc": "description description description",
-    //         "updatedon": "22/02/20",
-            
-    //     },
-    //     {
-    //         "title": "Embark on your journey",
-    //         "type": "Fitness",
-    //         "desc": "description description description",
-    //         "updatedon": "22/02/20",
-            
-    //     },
-    //     {
-    //         "title": "Embark on your journey",
-    //         "type": "Fitness",
-    //         "desc": "description description description",
-    //         "updatedon": "22/02/20",
-            
-    //     }
-
-    // ], []);
+    
     let datatable: any = [];
 
     function getDate(time: any) {
@@ -90,18 +72,19 @@ export default function InformationPage() {
       return(`${date}/${month}/${year}`);
     }
     if(data){
-    //     datatable = [...data.informationbankmessages].map((Detail) => {
-    //         return{
-    //             title : Detail.title,
-    //             trigger: Detail.prerecordedtrigger.name,
-    //             updatedon: getDate(Date.parse(Detail.updatedAt))
-    //         }    
-    // }); 
+        datatable = [...data.informationbankmessages].map((Detail) => {
+            return{
+                title : Detail.title,
+                type: Detail.informationbankmessagestype.type,
+                desc : Detail.description,
+                updatedon: getDate(Date.parse(Detail.updatedAt))
+            }    
+    }); 
     }
     const infoSchema: any = require("./informationbank.json");
     let preRecordedMessageTypes: any;
     if(data){
-    //   preRecordedMessageTypes =[...data.prerecordedtypes].map(n => (n.name));
+      preRecordedMessageTypes =[...data.informationbankmessagestypes].map(n => (n.name));
     }
     infoSchema["1"].properties.typo.enum = preRecordedMessageTypes;
     const uiSchema: any = {

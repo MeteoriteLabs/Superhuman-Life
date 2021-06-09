@@ -22,10 +22,6 @@
                 "type": "string",
                 "title": "Tags"
             },
-            "description": {
-                "type": "string",
-                "title": "Description"
-            },
             "minidescription": {
                 "type": "string",
                 "title": "Mini Description"

@@ -6,7 +6,18 @@ import {gql,useQuery} from "@apollo/client";
 
 export default function MindsetPage() {
     const GET_TRIGGERS = gql`
-    {
+    {   mindsetmessages{
+            id
+            title
+            description
+            minidescription
+            tags
+            updatedAt
+            mindsetmessagetype{
+                id
+                type
+            }
+        }
         mindsetmessagetypes{
             type
           }
@@ -61,17 +72,16 @@ export default function MindsetPage() {
       return(`${date}/${month}/${year}`);
     }
     if(data){
-        //below code is commented out since throwing error
 
-    //     datatable = [...data.mindsetmessagetypes].map((Detail) => {
-    //         return{
-    //             title : Detail.title,
-    //             trigger: Detail.prerecordedtrigger.name,
-    //             minidesc: Detail.minidescription,
-    //             status: Detail.status?"Active":"Inactive",
-    //             updatedon: getDate(Date.parse(Detail.updatedAt))
-    //         }    
-    // }); 
+        datatable = [...data.mindsetmessages].map((Detail) => {
+            return{
+                title : Detail.title,
+                tags : Detail.tags,
+                type: Detail.mindsetmessagetype.type,
+                desc: Detail.description,
+                updatedon: getDate(Date.parse(Detail.updatedAt))
+            }    
+    }); 
     }
     const mindsetSchema: any = require("./mindset.json");
     let preRecordedMessageTypes: any;

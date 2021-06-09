@@ -31,11 +31,11 @@
                 "type": "string",
                 "title": "Mini Description"
             },
-            "Url": {
+            "url": {
                 "type": "string",
                 "title": "Url (Picture or Video)"
             },
-            "Or": {
+            "or": {
                 "title": "OR",
                 "description": "OR",
                 "type": "null"
