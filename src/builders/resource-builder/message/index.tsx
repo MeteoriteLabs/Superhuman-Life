@@ -1,17 +1,21 @@
-import { useMemo, useState,useRef } from 'react'
+import { useMemo, useState,useRef,useContext } from 'react'
 import { Badge, Button, TabContent, InputGroup, FormControl, OverlayTrigger, Popover, Dropdown, Card, Container, Row, Col} from "react-bootstrap";
 import Table from "../../../components/table";
 import ModalView from "../../../components/modal";
 import { gql, useQuery,useMutation } from "@apollo/client";
+import AuthContext from "../../../context/auth-context";
 
 export default function MessagePage() {
+    const auth = useContext(AuthContext);
     const [searchFilter, setSearchFilter] = useState('');
     const searchInput = useRef<any>();
+    
+    //  console.log(auth.userid);
 
     //sort by updatedAt to ensure newly created messages show up
     const GET_TRIGGERS = gql`
-    query FeedSearchQuery($filter: String!){
-        prerecordedmessages(sort: "updatedAt",where: { title_contains: $filter }){
+    query FeedSearchQuery($filter: String!,$id: String){
+        prerecordedmessages(sort: "updatedAt",where: { title_contains: $filter , users_permissions_user: { id: $id}}){
             id
             title
             minidescription
@@ -21,11 +25,16 @@ export default function MessagePage() {
             }
             status
             updatedAt
+            users_permissions_user{
+                id
+            }
           }
           prerecordedtypes{
+            id  
             name
           }
           prerecordedtriggers{
+            id  
             name
           }
       }
@@ -111,7 +120,7 @@ export default function MessagePage() {
     const messageSchema: any = require("./message.json");
     const [datatable, setDataTable] = useState([{}]);
 
-    function FetchData(_variables: {} = { filter: " " }) {
+    function FetchData(_variables: {} = { filter: " " ,id : auth.userid }) {
         useQuery(GET_TRIGGERS, { variables: _variables, onCompleted: loadData })
     }
 
@@ -128,8 +137,10 @@ export default function MessagePage() {
             })
         );
 
-        messageSchema["1"].properties.typo.enum = [...data.prerecordedtypes].map(n => (n.name));
-        messageSchema["1"].properties.mode.enum = [...data.prerecordedtriggers].map(n => (n.name));
+        messageSchema["1"].properties.typo.enum = [...data.prerecordedtypes].map(n => (n.id));
+        messageSchema["1"].properties.typo.enumNames = [...data.prerecordedtypes].map(n => (n.name));
+        messageSchema["1"].properties.mode.enum = [...data.prerecordedtriggers].map(n => (n.id));
+        messageSchema["1"].properties.mode.enumNames = [...data.prerecordedtriggers].map(n => (n.name));
     }
 
     const uiSchema: any = {
@@ -148,25 +159,25 @@ export default function MessagePage() {
     }
     const [createmessage, { error }] = useMutation(ADD_MESSAGE);
     function onSubmit(formData: any) {
-        console.log(formData);
-        // createmessage(
-        //     {
-        //         variables: {
-        //             title: formData.name,
-        //             description: formData.description,
-        //             minidesc: formData.minidescription,
-        //             prerecordedtype: formData.typo,
-        //             prerecordedtrigger: formData.mode,
-        //             mediaupload: formData.url,
-        //             mediaurl: formData.file
-        //         }
-        //     }
-        // );
+        //console.log(formData);
+        createmessage(
+            {
+                variables: {
+                    title: formData.name,
+                    description: formData.description,
+                    minidesc: formData.minidescription,
+                    prerecordedtype: formData.typo,
+                    prerecordedtrigger: formData.mode,
+                    mediaupload: formData.url,
+                    mediaurl: formData.file
+                }
+            }
+        );
     }
     // if (loading) return <span>'Loading...'</span>;
      if (error) return <span>{`Error! ${error.message}`}</span>;
 
-    FetchData({ filter: searchFilter });
+    FetchData({ filter: searchFilter , id: auth.userid });
     
 
     return (

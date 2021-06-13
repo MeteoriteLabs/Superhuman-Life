@@ -17,7 +17,7 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
             setStep(step + 1);
             setFormValues({ ...formValues, ...formData });
         } else {
-            formSubmit(formValues);
+            formSubmit(formData);
         }
     }
 

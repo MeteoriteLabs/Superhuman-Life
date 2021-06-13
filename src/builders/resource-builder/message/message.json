@@ -16,12 +16,14 @@
             "typo": {
                 "type": "string",
                 "title": "Type",
-                "enum": []
+                "enum": [],
+                "enumNames": []
             },
             "mode": {
                 "type": "string",
                 "title": "Trigger for message",
-                "enum": []
+                "enum": [],
+                "enumNames": []
             },
             "description": {
                 "type": "string",
