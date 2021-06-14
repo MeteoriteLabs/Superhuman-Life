@@ -75,6 +75,7 @@ export default function NutritionTab() {
     const uiSchema: any = {
         "about": {
             "ui:widget": "textarea",
+            "ui:autofocus": true,
             "ui:options": {
                 "rows": 3
             }
@@ -105,32 +106,36 @@ export default function NutritionTab() {
             <hr />
             <Card.Title className="text-center">
                 <ModalView
-                    name="Classic Meal"
+                    name="New Classic Meal Package"
                     isStepper={true}
+                    isPreview={true}
                     formUISchema={uiSchema}
                     formSchema={classicMealSchema}
                     formSubmit={onSubmit}
                     formData={{}}
                 />{" "}
                 <ModalView
-                    name="Consultation"
+                    name="New Consultation Package"
                     isStepper={true}
+                    isPreview={true}
                     formUISchema={uiSchema}
                     formSchema={consultSchema}
                     formSubmit={onSubmit}
                     formData={{}}
                 />{" "}
                 <ModalView
-                    name="Custom Meal"
+                    name="New Custom Meal Package"
                     isStepper={true}
+                    isPreview={true}
                     formUISchema={uiSchema}
                     formSchema={customSchema}
                     formSubmit={onSubmit}
                     formData={{}}
                 />{" "}
                 <ModalView
-                    name="Custom"
+                    name="New Custom Package"
                     isStepper={true}
+                    isPreview={true}
                     formUISchema={uiSchema}
                     formSchema={customMealSchema}
                     formSubmit={onSubmit}

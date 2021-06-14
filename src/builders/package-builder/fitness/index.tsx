@@ -1,25 +1,56 @@
 import { useMemo } from "react";
+import { gql, useQuery } from "@apollo/client";
 import { Badge, Button, Card, Dropdown, OverlayTrigger, Popover, TabContent } from "react-bootstrap";
 import ModalView from "../../../components/modal";
 import Table from "../../../components/table";
 
+const GET_FITNESS = gql`{
+    fitnesspackages {
+      packagename
+      intropicture {
+        url
+      }
+      packagetype
+      ptoffline
+      ptonline
+      groupoffline
+      grouponline
+      recordedclasses
+      discipline {
+        disciplinename
+      }
+      fitnesspackagepricing {
+        packagepricing
+      }
+      duration
+    }
+  }
+  `;
+
 export default function FitnessTab() {
     const columns = useMemo<any>(() => [
-        { accessor: "id", Header: "#" },
         {
-            accessor: "image",
+            accessor: "intropicture",
             Header: "-",
-            Cell: (v: any) => <img src={v.value} height="32" alt="thumbnail" />
+            Cell: (v: any) => <img src={v.url} height="32" alt="thumbnail" />
         },
-        { accessor: "name", Header: "Name" },
-        { accessor: "type", Header: "Type" },
-        { accessor: "details", Header: "Details" },
-        { accessor: "duration", Header: "Duration" },
-        { accessor: "price", Header: "Price" },
+        { accessor: "packagename", Header: "Name" },
+        { accessor: "packagetype", Header: "Type" },
         {
-            accessor: "status",
+            accessor: "discipline",
+            Header: "Details",
+            Cell: (v: any) => <>{v.value.disciplinename}</>
+        },
+        { accessor: "duration", Header: "Duration" },
+        {
+            accessor: "fitnesspackagepricing",
+            Header: "Price",
+            Cell: (v: any) => <>{v.value[0].packagepricing[0].mrp}</>
+        },
+        {
+            id: "status",
             Header: "Status",
-            Cell: (v: any) => <Badge variant="success">{v.value}</Badge>
+            Cell: (v: any) => <Badge variant="success">Active</Badge>
         },
         {
             id: "edit",
@@ -46,28 +77,7 @@ export default function FitnessTab() {
             ),
         }
     ], []);
-    const data = useMemo<any>(() => [
-        {
-            "id": 1,
-            "image": "/assets/exercise-1.jpg",
-            "name": "Exercise-1",
-            "type": "PT",
-            "details": "Exercise Details",
-            "duration": "6 Months",
-            "price": "5000 INR",
-            "status": "Active"
-        },
-        {
-            "id": 2,
-            "image": "/assets/exercise-1.jpg",
-            "name": "Exercise-2",
-            "type": "PT",
-            "details": "Exercise Details",
-            "duration": "6 Months",
-            "price": "5000 INR",
-            "status": "Active"
-        }
-    ], []);
+    const { loading, error, data } = useQuery(GET_FITNESS);
     const classicSchema: any = require("./classic.json");
     const customSchema: any = require("./custom.json");
     const groupSchema: any = require("./group.json");
@@ -81,6 +91,7 @@ export default function FitnessTab() {
         },
         "about": {
             "ui:widget": "textarea",
+            "ui:autofocus": true,
             "ui:options": {
                 "rows": 3
             }
@@ -101,6 +112,7 @@ export default function FitnessTab() {
             "ui:placeholder": "Number of days",
         }
     }
+    let fitnessData: String[] = [];
 
     function onSubmit(formData: any) {
         setTimeout(() => {
@@ -108,44 +120,53 @@ export default function FitnessTab() {
         }, 1000);
     }
 
+    if (!loading && !error) {
+        fitnessData = data.fitnesspackages;
+    }
+
+
     return (
         <TabContent>
             <hr />
             <Card.Title className="text-center">
                 <ModalView
-                    name="Classic"
+                    name="Classic Package"
                     isStepper={true}
+                    isPreview={true}
                     formUISchema={uiSchema}
                     formSchema={classicSchema}
                     formSubmit={onSubmit}
                     formData={{}}
                 />{" "}
                 <ModalView
-                    name="Custom"
+                    name="Custom Package"
                     isStepper={true}
+                    isPreview={true}
                     formUISchema={uiSchema}
                     formSchema={customSchema}
                     formSubmit={onSubmit}
                     formData={{}}
                 />{" "}
                 <ModalView
-                    name="Group"
+                    name="Group Package"
                     isStepper={true}
+                    isPreview={true}
                     formUISchema={uiSchema}
                     formSubmit={onSubmit}
                     formSchema={groupSchema}
                     formData={{}}
                 />{" "}
                 <ModalView
-                    name="PT"
+                    name="PT Package"
                     isStepper={true}
+                    isPreview={true}
                     formUISchema={uiSchema}
                     formSchema={ptSchema}
                     formSubmit={onSubmit}
                     formData={{}}
                 />
             </Card.Title>
-            <Table columns={columns} data={data} />
+            {loading ? <code>Loading...</code> : <Table columns={columns} data={fitnessData} />}
         </TabContent>
     );
 }
