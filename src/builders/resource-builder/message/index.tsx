@@ -39,6 +39,7 @@ export default function MessagePage() {
           }
       }
     `;
+    //60b35fdfe8d836ed2601ae78
     const ADD_MESSAGE = gql`
             mutation msg(
                 $title: String
@@ -48,6 +49,7 @@ export default function MessagePage() {
                 $prerecordedtrigger: ID
                 $mediaupload: [ID]
                 $mediaurl: String
+                $user_permissions_user: ID
             ) {
                 createPrerecordedmessage(
                 input: {
@@ -59,6 +61,7 @@ export default function MessagePage() {
                     prerecordedtrigger: $prerecordedtrigger
                     mediaurl: $mediaurl
                     mediaupload: $mediaupload
+                    user_permissions_user: $user_permissions_user
                     }
                 }
                 ) {
@@ -158,8 +161,11 @@ export default function MessagePage() {
         }
     }
     const [createmessage, { error }] = useMutation(ADD_MESSAGE);
-    function onSubmit(formData: any) {
-        //console.log(formData);
+    let authid = auth.userid;
+
+    
+    function onSubmit(formData: any ) {
+       console.log(authid);
         createmessage(
             {
                 variables: {
@@ -169,7 +175,9 @@ export default function MessagePage() {
                     prerecordedtype: formData.typo,
                     prerecordedtrigger: formData.mode,
                     mediaupload: formData.url,
-                    mediaurl: formData.file
+                    mediaurl: formData.file,
+                    user_permissions_user: authid
+                    
                 }
             }
         );

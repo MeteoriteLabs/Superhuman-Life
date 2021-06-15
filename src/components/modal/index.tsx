@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { withTheme } from "@rjsf/core";
 import { Theme as Bootstrap4Theme } from '@rjsf/bootstrap-4';
-import { Button, Card, Col, Modal, ProgressBar, Row } from "react-bootstrap";
+import { Button, Col, Modal, ProgressBar, Row } from "react-bootstrap";
 
 export default function ModalView({ name, formUISchema, formSubmit, formSchema, formData, isStepper }: any) {
     const Form: any = withTheme(Bootstrap4Theme);
@@ -47,7 +47,7 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
                 </Modal.Header>
                 <Modal.Body className="show-grid bg-light">
                     <Row>
-                        <Col xs={6} md={6} lg={6}>
+                        <Col  lg={12}>
                             <div style={{ height: '400px', overflowX: 'hidden', overflowY: 'auto' }}>
                                 <Form
                                     uiSchema={formUISchema}
@@ -59,11 +59,6 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
                                     <div></div>
                                 </Form>
                             </div>
-                        </Col>
-                        <Col xs={6} md={6} lg={6}>
-                            <Card className="shadow-sm" border="light">
-                                <Card.Body>This is some text for card preview.</Card.Body>
-                            </Card>
                         </Col>
                     </Row>
                 </Modal.Body>
