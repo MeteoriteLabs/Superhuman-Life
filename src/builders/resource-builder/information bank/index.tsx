@@ -1,17 +1,25 @@
-import {useMemo} from 'react'
+import {useMemo,useState,useRef,useContext} from 'react'
 import {Button,TabContent,InputGroup,FormControl,OverlayTrigger,Popover,Dropdown,Card,Container,Row,Col} from "react-bootstrap";
 import Table from "../../../components/table";
 import ModalView from "../../../components/modal";
-import {gql,useQuery} from "@apollo/client";
+import {gql,useQuery,useMutation} from "@apollo/client";
+import AuthContext from "../../../context/auth-context";
+
 
 export default function InformationPage() {
+    const [searchFilter, setSearchFilter] = useState('');
+    const searchInput = useRef<any>();
+    const auth = useContext(AuthContext);
     const GET_TRIGGERS = gql`
-    {
-        informationbankmessages {
+    query FeedSearchQuery($filter: String!,$id: String){
+        informationbankmessages(sort: "updatedAt",where: { title_contains: $filter, users_permissions_user: { id: $id}}) {
           id
           title
           description
           updatedAt
+          users_permissions_user{
+            id
+        }
           informationbankmessagestype {
             id
             type
@@ -24,8 +32,41 @@ export default function InformationPage() {
       }
       
     `
-    const {loading,error,data } = useQuery(GET_TRIGGERS);
-
+    const ADD_MESSAGE = gql`
+            mutation msg(
+                $title: String
+                $tags: String
+                $minidesc: String
+                $infomessagetype: ID
+                $mediaurl: String
+                $user_permissions_user: ID
+            ) {
+                createInformationbankmessage(
+                input: {
+                    data: {
+                    title: $title
+                    tags: $tags
+                    informationbankmessagestype: $infomessagetype
+                    description: $minidesc
+                    mediaurl: $mediaurl
+                    users_permissions_user: $user_permissions_user
+                
+                    }
+                }
+                ) {
+                    informationbankmessage {
+                    id
+                    createdAt
+                    updatedAt
+                    title
+                    tags
+                    minidescription
+                }
+                }
+            }
+      
+    `
+   
     const columns = useMemo<any>(() => [
         { accessor: "title", Header: "Title" },
         {
@@ -61,7 +102,6 @@ export default function InformationPage() {
     ], []);
 
     
-    let datatable: any = [];
 
     function getDate(time: any) {
         let dateObj = new Date(time);
@@ -71,67 +111,72 @@ export default function InformationPage() {
 
       return(`${date}/${month}/${year}`);
     }
-    if(data){
-        datatable = [...data.informationbankmessages].map((Detail) => {
-            return{
+    const infoSchema: any = require("./informationbank.json");
+    const [datatable, setDataTable] = useState<{}[]>([]);
+
+    function FetchData(_variables: {} = { filter: " ",id : auth.userid }) {
+        useQuery(GET_TRIGGERS, { variables: _variables, onCompleted: loadData })
+    }
+
+    function loadData(data: any) {
+        setDataTable(
+            [...data.informationbankmessages].map((Detail) => {
+                return {
                 title : Detail.title,
                 type: Detail.informationbankmessagestype.type,
                 desc : Detail.description,
                 updatedon: getDate(Date.parse(Detail.updatedAt))
-            }    
-    }); 
+                }
+            })
+        );
+        infoSchema["1"].properties.typo.enum =[...data.informationbankmessagestypes].map(n => (n.id));
+        infoSchema["1"].properties.typo.enumNames = [...data.informationbankmessagestypes].map(n => (n.type));
     }
-    const infoSchema: any = require("./informationbank.json");
-    let preRecordedMessageTypes: any;
-    if(data){
-      preRecordedMessageTypes =[...data.informationbankmessagestypes].map(n => (n.name));
-    }
-    infoSchema["1"].properties.typo.enum = preRecordedMessageTypes;
+
+
     const uiSchema: any = {
         
-        "level": {
-            "ui:widget": "radio",
-            "ui:options": {
-                "inline": true
-            }
-        },
-        "summary": {
-            "ui:widget": "textarea",
-            "ui:options": {
-                "rows": 3
-            }
-        },
         "description": {
             "ui:widget": "textarea",
             "ui:options": {
                 "rows": 3
             }
-        },
-        "items": {
-            "about": {
-                "ui:widget": "textarea",
-                "ui:options": {
-                    "rows": 3
-                }
-            }
         }
           
     }
-    function onSubmit(formData: any) {
-        alert("Values submitted: " + JSON.stringify(formData, null, 2));
+    const [createmessage, { error }] = useMutation(ADD_MESSAGE);
+
+
+    function onSubmit(formData: any ) {
+        let authid = auth.userid;
+      
+        createmessage(
+            {
+                variables: {
+                    title: formData.name,
+                    tags: formData.tags,
+                    minidesc: formData.minidescription,
+                    infomessagetype: formData.typo,
+                    mediaurl: formData.file, 
+                    user_permissions_user: authid
+                }
+            }
+        );
     }
-    if (loading) return <span>'Loading...'</span>;
-    if (error) return <span>{`Error! ${error.message}`}</span>;
+    // if (loading) return <span>'Loading...'</span>;
+     if (error) return <span>{`Error! ${error.message}`}</span>;
+    
+    FetchData({ filter: searchFilter, id: auth.userid  });
     return (
         <TabContent>
             <Container>
             <Row>   
             <Col>     
-            <InputGroup className="mb-3">
-                <InputGroup.Prepend>
-                <Button variant="outline-secondary"><i className="fas fa-search"></i></Button>
-                </InputGroup.Prepend>
-                    <FormControl aria-describedby="basic-addon1" placeholder="Search" />
+            <InputGroup className="mb-3" >
+                <FormControl aria-describedby="basic-addon1" placeholder="Search" id="searchInput" ref={searchInput}/>
+                    <InputGroup.Prepend>
+                        <Button variant="outline-secondary" onClick={(e:any) => {e.preventDefault(); setSearchFilter(searchInput.current.value)}} ><i className="fas fa-search"></i></Button>
+                    </InputGroup.Prepend>
             </InputGroup>
             </Col>
             <Col>  

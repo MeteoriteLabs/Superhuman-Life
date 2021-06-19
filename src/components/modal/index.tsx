@@ -1,15 +1,20 @@
 import { useRef, useState } from "react";
-import { withTheme } from "@rjsf/core";
+import { withTheme, utils } from "@rjsf/core";
 import { Theme as Bootstrap4Theme } from '@rjsf/bootstrap-4';
 import { Button, Col, Modal, ProgressBar, Row } from "react-bootstrap";
 
 export default function ModalView({ name, formUISchema, formSubmit, formSchema, formData, isStepper }: any) {
+    const registry = utils.getDefaultRegistry();
+    const defaultFileWidget = registry.widgets["FileWidget"];
+    (Bootstrap4Theme as any).widgets["FileWidget"] = defaultFileWidget;
+
     const Form: any = withTheme(Bootstrap4Theme);
     const formRef = useRef<any>(null);
     const [step, setStep] = useState<number>(1);
     const [show, setShow] = useState<boolean>(false);
     const [formValues, setFormValues] = useState<any>(formData);
     const stepper: string[] = ["Creator", "Details", "Program", "Schedule", "Pricing"];
+    
 
     function submitHandler(formData: any) {
         if (isStepper && step < 5) {
@@ -26,7 +31,7 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
             <Button variant="outline-secondary" size="sm" onClick={() => setShow(true)}>
                 <i className="fas fa-plus-circle"></i>{" "}{name}
             </Button>
-            <Modal size="xl" show={show} onHide={() => setShow(false)} centered>
+            <Modal size="xl" show={show} onHide={() => setShow(false)} centered >
                 <Modal.Header closeButton>
                     <Modal.Title as={Row}>
                         <Col xs={12} md={12} lg={12}>
@@ -87,7 +92,7 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
                         <Button
                             variant="danger"
                             size="sm"
-                            onClick={(event) => formRef.current.onSubmit(event)}
+                            onClick={(event) => {formRef.current.onSubmit(event)}}
                         >
                             Submit<i className="ml-4 fas fa-arrow-right"></i>
                         </Button>

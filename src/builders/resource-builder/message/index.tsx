@@ -39,7 +39,7 @@ export default function MessagePage() {
           }
       }
     `;
-    //60b35fdfe8d836ed2601ae78
+    
     const ADD_MESSAGE = gql`
             mutation msg(
                 $title: String
@@ -61,7 +61,7 @@ export default function MessagePage() {
                     prerecordedtrigger: $prerecordedtrigger
                     mediaurl: $mediaurl
                     mediaupload: $mediaupload
-                    user_permissions_user: $user_permissions_user
+                    users_permissions_user: $user_permissions_user
                     }
                 }
                 ) {
@@ -121,7 +121,7 @@ export default function MessagePage() {
     }
 
     const messageSchema: any = require("./message.json");
-    const [datatable, setDataTable] = useState([{}]);
+    const [datatable, setDataTable] = useState<{}[]>([]);
 
     function FetchData(_variables: {} = { filter: " " ,id : auth.userid }) {
         useQuery(GET_TRIGGERS, { variables: _variables, onCompleted: loadData })
@@ -163,9 +163,8 @@ export default function MessagePage() {
     const [createmessage, { error }] = useMutation(ADD_MESSAGE);
     let authid = auth.userid;
 
-    
     function onSubmit(formData: any ) {
-       console.log(authid);
+    //   console.log(formData);
         createmessage(
             {
                 variables: {
@@ -174,8 +173,8 @@ export default function MessagePage() {
                     minidesc: formData.minidescription,
                     prerecordedtype: formData.typo,
                     prerecordedtrigger: formData.mode,
-                    mediaupload: formData.url,
-                    mediaurl: formData.file,
+                    mediaupload: formData.file,
+                    mediaurl: formData.url,
                     user_permissions_user: authid
                     
                 }
@@ -193,7 +192,7 @@ export default function MessagePage() {
             <Container>
                 <Row>
                     <Col>
-                             <InputGroup className="mb-3" >
+                        <InputGroup className="mb-3" >
                             <FormControl aria-describedby="basic-addon1" placeholder="Search" id="searchInput" ref={searchInput}/>
                             <InputGroup.Prepend>
                                 <Button variant="outline-secondary" onClick={(e:any) => {e.preventDefault(); setSearchFilter(searchInput.current.value)}} ><i className="fas fa-search"></i></Button>

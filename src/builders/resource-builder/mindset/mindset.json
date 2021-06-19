@@ -5,8 +5,7 @@
         "required": [
             "name",
             "typo",
-            "mode",
-            "description"
+            "minidescription"
         ],
         "properties": {
             "name": {
@@ -16,7 +15,8 @@
             "typo": {
                 "type": "string",
                 "title": "Type",
-                "enum": []
+                "enum": [],
+                "enumNames": []
             },
             "tags": {
                 "type": "string",
