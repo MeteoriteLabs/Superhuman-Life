@@ -67,27 +67,53 @@
              "miniDescription": {
                 "type": "string",
                 "title": "Mini Description"
-            },"addExercise": {
+            },"addWorkout": {
                 "type": "string",
-                "title": "Add Exercise",
+                "title": "Add Workout",
                 "enum": [
+                    "Build",
                     "Add Url",
-                    "Text",
+                    "Written Plan",
                     "Upload"
                 ]
             },
             "calories": {
                 "type": "number",
                 "title": "Total Calories"
-            }, 
-            "equipment": {
-                "type": "string",
-                "title": "Equipment"
             },
-            "muscleGroup": {
-                "type": "string",
-                "title": "Muscle Group"
-            }
+            "warmUp": {
+               "title": "Warm Up",
+               "type": "array",
+               "items": {
+                   "type": "object",
+                   "properties": {
+                       "start": {
+                           "type": "string",
+                           "title": "Add from Exercise"
+                       },
+                       "end": {
+                           "type": "string",
+                           "title": "Add Rest time"
+                       },
+                       "title": {
+                           "type": "string",
+                           "title": "Add as text"
+                       },
+                       "about": {
+                           "type": "string",
+                           "title": "Add URL"
+                       }
+                   }
+               }
+            },
+            "equipment": {
+               "type": "string",
+               "title": "Equipment"
+           },
+           "muscleGroup": {
+               "type": "string",
+               "title": "Muscle Group"
+           }
          }
      }
  }

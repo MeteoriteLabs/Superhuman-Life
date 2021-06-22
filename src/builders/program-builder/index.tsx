@@ -1,4 +1,3 @@
-import react from 'react';
 import { Card, Tab, Tabs } from "react-bootstrap";
 import FitnessTab from './fitness/index';
 

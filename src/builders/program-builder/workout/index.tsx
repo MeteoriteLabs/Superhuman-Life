@@ -5,11 +5,12 @@ import Table from "../../../components/table";
 
 export default function EventsTab() {
     const columns = useMemo<any>(() => [
-        { accessor: "exerciseName", Header: "Exercise Name" },
+        { accessor: "workoutName", Header: "Workout Name" },
         { accessor: "discipline", Header: "Discipline" },
         { accessor: "duration", Header: "Duration" },
         { accessor: "level", Header: "Level" },
         { accessor: "intensity", Header: "Intensity" },
+        { accessor: "calories", Header: "Calories" },
         { accessor: "muscleGroup", Header: "Muscle group" },
         { accessor: "equipment", Header: "Equipment" },
         { accessor: "updatedOn", Header: "Updated On" },
@@ -39,27 +40,29 @@ export default function EventsTab() {
     ], []);
     const data = useMemo<any>(() => [
         {
-            "exerciseName": "Upward dog",
+            "workoutName": "Surya namaskar",
             "discipline": "Yoga",
             "level": "Beginner",
             "intensity": "Low",
-            "duration": "1 mins",
+            "calories": "2000 Kcal",
+            "duration": "60 mins",
             "muscleGroup": "Biceps",
             "equipment": "Workout Mat",
             "updatedOn": "22/02/20"
         },
         {
-            "exerciseName": "Push up",
+            "workoutName": "Upper body",
             "discipline": "Calesthenics",
             "level": "Beginner",
             "intensity": "Low",
-            "duration": "1 mins",
+            "calories": "2000 Kcal",
+            "duration": "10 mins",
             "muscleGroup": "Biceps",
             "equipment": "Workout Mat",
             "updatedOn": "22/02/20"
         }
     ], []);
-    const eventSchema: any = require("./exercises.json");
+    const eventSchema: any = require("./workout.json");
     const uiSchema: any = {
         "level": {
             "ui:widget": "radio",
