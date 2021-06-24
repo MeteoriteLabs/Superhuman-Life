@@ -1,6 +1,7 @@
 import { Card, Tab, Tabs } from "react-bootstrap";
 import ExercisesTab from '../exercises';
 import WorkoutTab from '../workout';
+import ProgramTab from '../program';
 
 export default function FitnessTab(){
      return(
@@ -14,6 +15,7 @@ export default function FitnessTab(){
                                 <WorkoutTab />
                           </Tab>
                           <Tab eventKey="program" title="Program">
+                              <ProgramTab />
                           </Tab>
                       </Tabs>
                   </Card.Body>

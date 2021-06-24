@@ -25,7 +25,8 @@
                  "enum": [
                      "Beginner",
                      "Intermediate",
-                     "Advance"
+                     "Advance",
+                     "No level"
                  ]
              },
              "discipline": {
@@ -60,26 +61,14 @@
                      "Kalaripayat"
                  ]
              },
-             "description": {
-                 "type": "string",
-                 "title": "Description"
-             },
              "miniDescription": {
                 "type": "string",
                 "title": "Mini Description"
-            },"addExercise": {
-                "type": "string",
-                "title": "Add Exercise",
-                "enum": [
-                    "Add Url",
-                    "Text",
-                    "Upload"
-                ]
             },
-            "calories": {
-                "type": "number",
-                "title": "Total Calories"
-            }, 
+            "addExercise": {
+                "title": "Add Exercise",
+                "$ref": "#/definitions/addexercise"
+              },
             "equipment": {
                 "type": "string",
                 "title": "Equipment"
@@ -88,6 +77,79 @@
                 "type": "string",
                 "title": "Muscle Group"
             }
-         }
+         },
+         "definitions": {
+            "addexercise": {
+                "title": "Add Exercise",
+                "type": "object",
+                "properties": {
+                    "Add Exercise": {
+                        "type": "string",
+                        "enum": [
+                            "Add URL",
+                            "Text",
+                            "Upload"
+                        ],
+                        "default": "Add URL"
+                    }
+                },
+                "required": [
+                    "Add Exercise"
+                ],
+                "dependencies": {
+                    "Add Exercise": {
+                        "oneOf": [
+                            {
+                                "properties": {
+                                    "Add Exercise": {
+                                        "enum": [
+                                            "Add URL"
+                                        ]
+                                    },
+                                    "Add URL": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "Add URL"
+                                ]
+                            },
+                            {
+                                "properties": {
+                                    "Add Exercise": {
+                                        "enum": [
+                                            "Text"
+                                        ]
+                                    },
+                                    "Add Text": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "Add Text"
+                                ]
+                            },
+                            {
+                                "properties": {
+                                    "Add Exercise": {
+                                        "enum": [
+                                            "Upload"
+                                        ]
+                                    },
+                                    "Upload": {
+                                        "type": "string",
+                                        "format": "data-url",
+                                        "title": "Upload a Video file"
+                                    }
+                                },
+                                "required": [
+                                    "Upload"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            }
+        }
      }
  }

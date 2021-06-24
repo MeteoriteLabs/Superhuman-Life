@@ -1,18 +1,15 @@
 import { useMemo } from "react";
-import { Button, Card, Dropdown, OverlayTrigger, Popover, TabContent, Accordion } from "react-bootstrap";
-import BuildWorkout from './buildWorkout';
+import { Button, Card, Dropdown, OverlayTrigger, Popover, TabContent } from "react-bootstrap";
 import ModalView from "../../../components/modal";
 import Table from "../../../components/table";
 
 export default function EventsTab() {
     const columns = useMemo<any>(() => [
-        { accessor: "workoutName", Header: "Workout Name" },
+        { accessor: "programName", Header: "Program Name" },
         { accessor: "discipline", Header: "Discipline" },
         { accessor: "duration", Header: "Duration" },
         { accessor: "level", Header: "Level" },
-        { accessor: "intensity", Header: "Intensity" },
-        { accessor: "calories", Header: "Calories" },
-        { accessor: "muscleGroup", Header: "Muscle group" },
+        { accessor: "details", Header: "Details" },
         { accessor: "equipment", Header: "Equipment" },
         { accessor: "updatedOn", Header: "Updated On" },
         {
@@ -41,29 +38,25 @@ export default function EventsTab() {
     ], []);
     const data = useMemo<any>(() => [
         {
-            "workoutName": "Surya namaskar",
+            "programName": "HIIT Session",
             "discipline": "Yoga",
             "level": "Beginner",
-            "intensity": "Low",
-            "calories": "2000 Kcal",
-            "duration": "60 mins",
-            "muscleGroup": "Biceps",
+            "duration": "01 Month",
+            "details": "Mini descriton lorem parsem lorem parsem",
             "equipment": "Workout Mat",
             "updatedOn": "22/02/20"
         },
         {
-            "workoutName": "Upper body",
+            "programName": "HIIT Session",
             "discipline": "Calesthenics",
             "level": "Beginner",
-            "intensity": "Low",
-            "calories": "2000 Kcal",
-            "duration": "10 mins",
-            "muscleGroup": "Biceps",
+            "duration": "01 Month",
+            "details": "Mini descriton lorem parsem lorem parsem",
             "equipment": "Workout Mat",
             "updatedOn": "22/02/20"
         }
     ], []);
-    const eventSchema: any = require("./workout.json");
+    const eventSchema: any = require("./program.json");
     const uiSchema: any = {
         "level": {
             "ui:widget": "radio",
@@ -71,46 +64,21 @@ export default function EventsTab() {
                 "inline": true
             }
         },
-        "about": {
+        "description": {
             "ui:widget": "textarea",
             "ui:options": {
                 "rows": 3
             }
         },
-        "benefits": {
+        "miniDescription": {
             "ui:widget": "textarea",
             "ui:options": {
-                "rows": 1
+                "rows": 3
             }
         },
         "equipment": {
             "ui:placeholder": "Search"
-        },
-        "muscleGroup": {
-            "ui:placeholder": "Search"
-        },
-        "addWorkout": {
-            "Add Text": {
-                "ui:widget": "textarea",
-                "ui:options": {
-                    "rows": 3
-                }
-            },
-            "Upload": {
-                "ui:options": {
-                    "accept": ".mp4"
-                }
-            },
-            "build": {
-                "ui:widget": (props: any) => {
-                    return (
-                        <div>
-                            {BuildWorkout(props)}
-                        </div>
-                    )
-                }
-            }
-       }
+        }
     }
 
     function onSubmit(formData: any) {

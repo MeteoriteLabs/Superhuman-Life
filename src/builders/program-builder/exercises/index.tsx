@@ -84,7 +84,20 @@ export default function EventsTab() {
         },
         "muscleGroup": {
             "ui:placeholder": "Search"
-        }
+        },
+        "addExercise": {
+            "Add Text": {
+                "ui:widget": "textarea",
+                "ui:options": {
+                    "rows": 3
+                }
+            },
+            "Upload": {
+                "ui:options": {
+                    "accept": ".mp4"
+                }
+            }
+       }
     }
 
     function onSubmit(formData: any) {
