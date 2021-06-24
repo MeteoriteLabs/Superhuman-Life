@@ -26,22 +26,27 @@ const client = new ApolloClient({
 function App() {
   const [token, setToken] = useState<any>(localStorage.getItem("token"));
   const [username, setUsername] = useState<any>(localStorage.getItem("username"));
-
+  const [userid, setUserid] = useState<any>(localStorage.getItem("userid"));
   return (
     <ApolloProvider client={client}>
       <AuthContext.Provider
         value={{
           token: token,
           username: username,
-          login: (token: any, username: any) => {
+          userid: userid,
+          login: (token: any, username: any,userid: any) => {
+            console.log(userid);
             localStorage.setItem("token", token);
             localStorage.setItem("username", username);
+            localStorage.setItem("userid", userid);
             setToken(token);
             setUsername(username);
+            setUserid(userid);
           },
           logout: () => {
             localStorage.removeItem("token");
             localStorage.removeItem("username");
+            localStorage.removeItem("userid");
           },
         }}
       >
