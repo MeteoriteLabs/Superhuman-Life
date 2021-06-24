@@ -1,5 +1,5 @@
 import react from 'react';
-import { Row, Col, Accordion, Card } from 'react-bootstrap';
+import { Row, Col, Accordion, Card, Dropdown } from 'react-bootstrap';
 
 const BuildWorkout = (props: any) => {
      return (
@@ -10,23 +10,23 @@ const BuildWorkout = (props: any) => {
                     </Accordion.Toggle>
                     <Accordion.Collapse eventKey="0">
                          <Card.Body>
-                              <Col>
-                                   <Row lg={12}>
-                                        <input type="number" placeholder="add rest time"/>
-                                   </Row>
-                                   <Row className="mt-2">
-                                        <input type="number" placeholder="add rest time"/>
-                                   </Row>
-                                   <Row className="mt-2">
-                                        <input type="text" placeholder="add URL" />
-                                   </Row>
-                              </Col>
+                         <Dropdown>
+                              <Dropdown.Toggle variant="success" id="dropdown-basic">
+                              Dropdown Button
+                              </Dropdown.Toggle>
+
+                              <Dropdown.Menu>
+                                   <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
+                                   <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
+                                   <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
+                              </Dropdown.Menu>
+                         </Dropdown>
                          </Card.Body>
                     </Accordion.Collapse>
                </Card>
                <Card>
                     <Accordion.Toggle as={Card.Header} eventKey="1">
-                    Click me!
+                    Main Movement
                     </Accordion.Toggle>
                     <Accordion.Collapse eventKey="1">
                     <Card.Body>Hello! I'm another body</Card.Body>
@@ -34,7 +34,7 @@ const BuildWorkout = (props: any) => {
                </Card>
                <Card>
                     <Accordion.Toggle as={Card.Header} eventKey="2">
-                    Click me!
+                    Cool Down
                     </Accordion.Toggle>
                     <Accordion.Collapse eventKey="2">
                     <Card.Body>Hello! I'm another body</Card.Body>
