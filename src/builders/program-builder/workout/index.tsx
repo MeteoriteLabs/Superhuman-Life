@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Button, Card, Dropdown, OverlayTrigger, Popover, TabContent, Accordion } from "react-bootstrap";
+import { Button, Card, Dropdown, OverlayTrigger, Popover, TabContent } from "react-bootstrap";
 import BuildWorkout from './buildWorkout';
 import ModalView from "../../../components/modal";
 import Table from "../../../components/table";

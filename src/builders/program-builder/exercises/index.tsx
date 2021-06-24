@@ -1,9 +1,16 @@
-import { useMemo } from "react";
+import { useContext, useMemo } from "react";
 import { Button, Card, Dropdown, OverlayTrigger, Popover, TabContent } from "react-bootstrap";
 import ModalView from "../../../components/modal";
 import Table from "../../../components/table";
+import { gql, useQuery,useMutation } from "@apollo/client";
+import AuthContext from "../../../context/auth-context";
 
 export default function EventsTab() {
+
+    const auth = useContext(AuthContext);
+
+    console.log(auth.userid);
+
     const columns = useMemo<any>(() => [
         { accessor: "exerciseName", Header: "Exercise Name" },
         { accessor: "discipline", Header: "Discipline" },

@@ -1,18 +1,26 @@
 import react from 'react';
-import { Row, Accordion, Card } from 'react-bootstrap';
+import { Row, Col, Accordion, Card } from 'react-bootstrap';
 
 const BuildWorkout = (props: any) => {
      return (
           <Accordion defaultActiveKey="0">
                <Card>
-                    <Accordion.Toggle as={Card.Header} eventKey="0" style={{ backgroundColor: 'blue', color: 'white'}}>
+                    <Accordion.Toggle as={Card.Header} eventKey="0" style={{ backgroundColor: 'grey', color: 'white'}}>
                     Warm Up
                     </Accordion.Toggle>
                     <Accordion.Collapse eventKey="0">
                          <Card.Body>
-                              <input type="text" placeholder="Search from exercise"/>
-                              <input type="number" placeholder="add rest time"/>
-                              <input type="text" placeholder="add URL" />
+                              <Col>
+                                   <Row lg={12}>
+                                        <input type="number" placeholder="add rest time"/>
+                                   </Row>
+                                   <Row className="mt-2">
+                                        <input type="number" placeholder="add rest time"/>
+                                   </Row>
+                                   <Row className="mt-2">
+                                        <input type="text" placeholder="add URL" />
+                                   </Row>
+                              </Col>
                          </Card.Body>
                     </Accordion.Collapse>
                </Card>
