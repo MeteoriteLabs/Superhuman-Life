@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { Row, Col, Accordion, Card, Dropdown } from 'react-bootstrap';
+import { Button, Row, Col, Accordion, Card, Dropdown, InputGroup, FormControl } from 'react-bootstrap';
 
 const BuildWorkout = (props: any) => {
 
      const [exerciseFields, setExerciseFields] = useState<any[]>([]);
      const [textFields, setTextFields] = useState<any[]>([]);
+     const [urlFields, setUrlFields] = useState<any[]>([]);
 
      function handleExerciseFieldChange(i: any, event: any){
           const values = [...exerciseFields];
@@ -15,8 +16,14 @@ const BuildWorkout = (props: any) => {
      function handleTextFieldChange(i: any, event: any){
           const values = [...textFields];
           values[i].value = event.target.value;
-          setExerciseFields(values);
+          setTextFields(values);
      }
+     function handleUrlFieldChange(i: any, event: any){
+          const values = [...urlFields];
+          values[i].value = event.target.value;
+          setUrlFields(values);
+     }
+
 
      function handleExerciseFieldAdd(){
           const values = [...exerciseFields];
@@ -27,6 +34,11 @@ const BuildWorkout = (props: any) => {
           const values = [...textFields];
           values.push({ value: null});
           setTextFields(values);
+     }
+     function handleUrlFieldAdd(){
+          const values = [...urlFields];
+          values.push({ value: null});
+          setUrlFields(values);
      }
 
      function handleExerciseFieldRemove(i: any){
@@ -41,6 +53,13 @@ const BuildWorkout = (props: any) => {
           setTextFields(values);
      }
 
+     function handleUrlFieldRemove(i: any){
+          const values = [...urlFields];
+          values.splice(i, 1);
+          setUrlFields(values);
+     }
+
+
      return (
           <Accordion defaultActiveKey="0">
                <Card>
@@ -49,25 +68,31 @@ const BuildWorkout = (props: any) => {
                     </Accordion.Toggle>
                     <Accordion.Collapse eventKey="0">
                          <Card.Body>
-                         <button type="button" onClick={() => handleExerciseFieldAdd()}>
-                              add from exercise
-                         </button>
-                         <button type="button" onClick={() => handleTextFieldAdd()}>
-                              add Text
-                         </button>
+                         <Button className="m-2" variant="outline-secondary" type="button" onClick={() => handleExerciseFieldAdd()}>
+                              add from exercise +
+                         </Button>
+                         <Button className="m-2" type="button" variant="outline-secondary" onClick={() => handleTextFieldAdd()}>
+                              add Text +
+                         </Button>
+                         <Button className="m-2" type="button" variant="outline-secondary" onClick={() => handleUrlFieldAdd()}>
+                              add URL +
+                         </Button>
 
                               {exerciseFields.map((field, idx) => {
                                    return (
                                         <div key={`${field}-${idx}`}>
-                                        <input
-                                        type="text"
-                                        placeholder="Search From exercise"
-                                        value={field.value || ""}
-                                        onChange={e => handleExerciseFieldChange(idx, e)}
-                                        />
-                                        <button type="button" onClick={() => handleExerciseFieldRemove(idx)}>
-                                        X
-                                        </button>
+                                        <InputGroup className="mb-3">
+                                             <FormControl
+                                                  placeholder="Search From exercise"
+                                                  value={field.value || ""}
+                                                  onChange={e => handleExerciseFieldChange(idx, e)}
+                                             />
+                                             <InputGroup.Append>
+                                                  <Button variant="outline-danger" onClick={() => handleExerciseFieldRemove(idx)}>
+                                                       <i className="far fa-trash-alt"></i>
+                                                  </Button>
+                                             </InputGroup.Append>
+                                             </InputGroup>
                                         </div>
                                    );
                                    })}
@@ -75,15 +100,39 @@ const BuildWorkout = (props: any) => {
                               {textFields.map((field, idx) => {
                                    return (
                                         <div key={`${field}-${idx}`}>
-                                        <input
-                                        type="text"
-                                        placeholder="Enter Text"
-                                        value={field.value || ""}
-                                        onChange={e => handleTextFieldChange(idx, e)}
-                                        />
-                                        <button type="button" onClick={() => handleTextFieldRemove(idx)}>
-                                        X
-                                        </button>
+                                        <InputGroup className="mb-3">
+                                             <FormControl
+                                                  type="textarea"
+                                                  placeholder="Add Text"
+                                                  value={field.value || ""}
+                                                  onChange={e => handleTextFieldChange(idx, e)}
+                                             />
+                                             <InputGroup.Append>
+                                                  <Button variant="outline-danger" onClick={() => handleTextFieldRemove(idx)}>
+                                                       <i className="far fa-trash-alt"></i>
+                                                  </Button>
+                                             </InputGroup.Append>
+                                             </InputGroup>
+                                        </div>
+                                   );
+                                   })}
+
+                              {urlFields.map((field, idx) => {
+                                   return (
+                                        <div key={`${field}-${idx}`}>
+                                        <InputGroup className="mb-3">
+                                             <FormControl
+                                                  type="text"
+                                                  placeholder="Add URL"
+                                                  value={field.value || ""}
+                                                  onChange={e => handleUrlFieldChange(idx, e)}
+                                             />
+                                             <InputGroup.Append>
+                                                  <Button variant="outline-danger" onClick={() => handleUrlFieldRemove(idx)}>
+                                                       <i className="far fa-trash-alt"></i>
+                                                  </Button>
+                                             </InputGroup.Append>
+                                             </InputGroup>
                                         </div>
                                    );
                                    })}
