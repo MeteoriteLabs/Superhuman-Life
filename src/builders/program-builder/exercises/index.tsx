@@ -4,11 +4,12 @@ import ModalView from "../../../components/modal";
 import Table from "../../../components/table";
 import { gql, useQuery,useMutation } from "@apollo/client";
 import AuthContext from "../../../context/auth-context";
+import { getAllJSDocTags } from "typescript";
 
 export default function EventsTab() {
 
     const auth = useContext(AuthContext);
-    const [tableData, setTableData] = useState<{}[]>([]);
+    const [tableData, setTableData] = useState<any[]>([]);
 
     // console.log(auth.userid);
 
@@ -29,8 +30,11 @@ export default function EventsTab() {
                 image{
                     id
                     updatedAt
+                    }
                 }
-                }
+                exercisemusclegroups {
+                    name
+                  }
             }
         }
     `
@@ -39,24 +43,35 @@ export default function EventsTab() {
         onCompleted: loadData
     })
     
+    function getDate(time: any) {
+        let dateObj = new Date(time);
+        let month = dateObj.getMonth() + 1;
+        let year = dateObj.getFullYear();
+        let date = dateObj.getDate();
+
+        return (`${date}/${month}/${year}`);
+    }
+
     function loadData(data: any) {
         setTableData(
             [...data.exercises].map((detail) => {
+                console.log(detail);
                 return {
                     exerciseName: detail.exercisename,
-                    fitnessDiscipline: detail.fitnessdiscipline.disciplinename
+                    discipline: detail.fitnessdiscipline.disciplinename,
+                    muscleGroup: detail.exercisemusclegroups[0].name,
+                    equipment: detail.equipment_lists[0].name,
+                    updatedOn: getDate(Date.parse(detail.updatedAt))
                 }
             })
         );
-        console.log(tableData);
     }
 
     const columns = useMemo<any>(() => [
         { accessor: "exerciseName", Header: "Exercise Name" },
         { accessor: "discipline", Header: "Discipline" },
-        { accessor: "duration", Header: "Duration" },
         { accessor: "level", Header: "Level" },
-        { accessor: "intensity", Header: "Intensity" },
+        { accessor: "type", Header: "Type" },
         { accessor: "muscleGroup", Header: "Muscle group" },
         { accessor: "equipment", Header: "Equipment" },
         { accessor: "updatedOn", Header: "Updated On" },
@@ -82,28 +97,6 @@ export default function EventsTab() {
                     </Button>
                 </OverlayTrigger>
             ),
-        }
-    ], []);
-    const data = useMemo<any>(() => [
-        {
-            "exerciseName": "Upward dog",
-            "discipline": "Yoga",
-            "level": "Beginner",
-            "intensity": "Low",
-            "duration": "1 mins",
-            "muscleGroup": "Biceps",
-            "equipment": "Workout Mat",
-            "updatedOn": "22/02/20"
-        },
-        {
-            "exerciseName": "Push up",
-            "discipline": "Calesthenics",
-            "level": "Beginner",
-            "intensity": "Low",
-            "duration": "1 mins",
-            "muscleGroup": "Biceps",
-            "equipment": "Workout Mat",
-            "updatedOn": "22/02/20"
         }
     ], []);
     const eventSchema: any = require("./exercises.json");
@@ -164,7 +157,7 @@ export default function EventsTab() {
                     formData={{}}
                 />
             </Card.Title>
-            <Table columns={columns} data={data} />
+            <Table columns={columns} data={tableData} />
         </TabContent>
     );
 }
