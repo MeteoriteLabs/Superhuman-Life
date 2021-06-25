@@ -1,10 +1,66 @@
-import { useMemo } from "react";
+import { useMemo, useContext, useState } from "react";
 import { Button, Card, Dropdown, OverlayTrigger, Popover, TabContent } from "react-bootstrap";
 import BuildWorkout from './buildWorkout';
 import ModalView from "../../../components/modal";
 import Table from "../../../components/table";
+import { gql, useQuery,useMutation } from "@apollo/client";
+import AuthContext from "../../../context/auth-context";
 
 export default function EventsTab() {
+
+    const auth = useContext(AuthContext);
+    const [tableData, setTableData] = useState<any[]>([]);
+
+    const GET_TABLEDATA = gql`
+        query WorkoutQuery {
+            workouts {
+                id
+                workouttitle
+                intensity
+                level
+                updatedAt
+                calories
+                fitnessdisciplines{
+                    disciplinename
+                }
+                muscle_groups {
+                    name
+                }
+            }
+        }
+    `
+
+    useQuery(GET_TABLEDATA, {
+        onCompleted: loadData
+    })
+    
+    function getDate(time: any) {
+        let dateObj = new Date(time);
+        let month = dateObj.getMonth() + 1;
+        let year = dateObj.getFullYear();
+        let date = dateObj.getDate();
+
+        return (`${date}/${month}/${year}`);
+    }
+
+    function loadData(data: any) {
+        setTableData(
+            [...data.workouts].map((detail) => {
+                console.log(detail);
+                return {
+                    workoutName: detail.workouttitle,
+                    discipline: detail.fitnessdisciplines.disciplinename,
+                    level: detail.level,
+                    intensity: detail.intensity,
+                    calories: detail.calories,
+                    muscleGroup: detail.muscle_groups.name,
+                    equipment: detail.equipment_lists[0].name,
+                    updatedOn: getDate(Date.parse(detail.updatedAt))
+                }
+            })
+        );
+    }
+
     const columns = useMemo<any>(() => [
         { accessor: "workoutName", Header: "Workout Name" },
         { accessor: "discipline", Header: "Discipline" },
@@ -37,30 +93,6 @@ export default function EventsTab() {
                     </Button>
                 </OverlayTrigger>
             ),
-        }
-    ], []);
-    const data = useMemo<any>(() => [
-        {
-            "workoutName": "Surya namaskar",
-            "discipline": "Yoga",
-            "level": "Beginner",
-            "intensity": "Low",
-            "calories": "2000 Kcal",
-            "duration": "60 mins",
-            "muscleGroup": "Biceps",
-            "equipment": "Workout Mat",
-            "updatedOn": "22/02/20"
-        },
-        {
-            "workoutName": "Upper body",
-            "discipline": "Calesthenics",
-            "level": "Beginner",
-            "intensity": "Low",
-            "calories": "2000 Kcal",
-            "duration": "10 mins",
-            "muscleGroup": "Biceps",
-            "equipment": "Workout Mat",
-            "updatedOn": "22/02/20"
         }
     ], []);
     const eventSchema: any = require("./workout.json");
@@ -130,7 +162,7 @@ export default function EventsTab() {
                     formData={{}}
                 />
             </Card.Title>
-            <Table columns={columns} data={data} />
+            <Table columns={columns} data={tableData} />
         </TabContent>
     );
 }

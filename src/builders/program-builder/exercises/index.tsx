@@ -4,7 +4,6 @@ import ModalView from "../../../components/modal";
 import Table from "../../../components/table";
 import { gql, useQuery,useMutation } from "@apollo/client";
 import AuthContext from "../../../context/auth-context";
-import { getAllJSDocTags } from "typescript";
 
 export default function EventsTab() {
 
@@ -14,8 +13,8 @@ export default function EventsTab() {
     // console.log(auth.userid);
 
     const GET_TABLEDATA = gql`
-        query ExercisesQuery($id: String) {
-            exercises(sort: "updatedAt", where: {users_permissions_user: {id: $id}}){
+        query ExercisesQuery {
+            exercises{
                 id
                 updatedAt
                 exercisename
