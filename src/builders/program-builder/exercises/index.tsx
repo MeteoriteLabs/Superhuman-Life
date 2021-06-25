@@ -1,4 +1,4 @@
-import { useContext, useMemo } from "react";
+import { useContext, useMemo, useState } from "react";
 import { Button, Card, Dropdown, OverlayTrigger, Popover, TabContent } from "react-bootstrap";
 import ModalView from "../../../components/modal";
 import Table from "../../../components/table";
@@ -8,8 +8,48 @@ import AuthContext from "../../../context/auth-context";
 export default function EventsTab() {
 
     const auth = useContext(AuthContext);
+    const [tableData, setTableData] = useState<{}[]>([]);
 
-    console.log(auth.userid);
+    // console.log(auth.userid);
+
+    const GET_TABLEDATA = gql`
+        query ExercisesQuery($id: String) {
+            exercises(sort: "updatedAt", where: {users_permissions_user: {id: $id}}){
+                id
+                updatedAt
+                exercisename
+                fitnessdiscipline {
+                id
+                disciplinename
+                }
+                equipment_lists {
+                id
+                updatedAt
+                name
+                image{
+                    id
+                    updatedAt
+                }
+                }
+            }
+        }
+    `
+
+    useQuery(GET_TABLEDATA, {
+        onCompleted: loadData
+    })
+    
+    function loadData(data: any) {
+        setTableData(
+            [...data.exercises].map((detail) => {
+                return {
+                    exerciseName: detail.exercisename,
+                    fitnessDiscipline: detail.fitnessdiscipline.disciplinename
+                }
+            })
+        );
+        console.log(tableData);
+    }
 
     const columns = useMemo<any>(() => [
         { accessor: "exerciseName", Header: "Exercise Name" },

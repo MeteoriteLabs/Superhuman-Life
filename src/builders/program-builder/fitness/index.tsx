@@ -7,7 +7,7 @@ export default function FitnessTab(){
      return(
           <Card className="shadow-sm mt-3" border="light">
                   <Card.Body>
-                      <Tabs transition={false} defaultActiveKey="workout" >
+                      <Tabs transition={false} defaultActiveKey="exercises" >
                           <Tab eventKey="exercises" title="Exercises">
                                <ExercisesTab />
                           </Tab>
