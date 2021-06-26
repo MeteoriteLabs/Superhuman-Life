@@ -44,7 +44,6 @@
               },
             "file": {
                 "type": "string",
-                "format": "data-url",
                 "title": "Upload (Picture or Video)"
                 
             }

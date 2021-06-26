@@ -27,9 +27,9 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
     }
 
     return (
-        <>
-            <Button variant="outline-secondary" size="sm" onClick={() => setShow(true)}>
-                <i className="fas fa-plus-circle"></i>{" "}{name}
+        <>  
+            <Button variant={name === "Create New"?"outline-secondary":"light"}  size="sm" onClick={() => setShow(true)}>
+                {name === "Create New"?<i className="fas fa-plus-circle"></i>:" "}{" "}{name}
             </Button>
             <Modal size="xl" show={show} onHide={() => setShow(false)} centered >
                 <Modal.Header closeButton>

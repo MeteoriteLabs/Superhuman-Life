@@ -8,6 +8,7 @@ import AuthContext from "../../../context/auth-context";
 export default function MessagePage() {
     const auth = useContext(AuthContext);
     const [searchFilter, setSearchFilter] = useState('');
+    //const [uploadFile, setUploadFile] = useState();
     const searchInput = useRef<any>();
     
     //  console.log(auth.userid);
@@ -77,6 +78,56 @@ export default function MessagePage() {
             }
       
     `
+        const UPLOAD =gql`
+            mutation upload(
+                $file: Upload!
+            ) {
+                upload(
+                file: $file
+                ){
+                id  
+                }
+            }
+            
+            `
+
+    const UPDATE_MESSAGE = gql`
+        mutation updatemsg(
+            $title: String
+            $description: String
+            $minidesc: String
+            $prerecordedtype: ID
+            $prerecordedtrigger: ID
+            $mediaurl: String
+            $userpermission: ID
+            $messageid: ID!
+        ) {
+            updatePrerecordedmessage(
+            input: {
+                data: {
+                title: $title
+                description: $description
+                minidescription: $minidesc
+                mediaurl: $mediaurl
+                prerecordedtype: $prerecordedtype
+                prerecordedtrigger: $prerecordedtrigger
+                users_permissions_user: $userpermission
+                }
+                where: { id: $messageid }
+            }
+            ) {
+            prerecordedmessage {
+                id
+                title
+                description
+                minidescription
+                mediaurl
+            }
+            }
+        }
+      
+    `
+    
 
     const columns = useMemo<any>(() => [
         { accessor: "title", Header: "Title" },
@@ -95,7 +146,7 @@ export default function MessagePage() {
                     overlay={
                         <Popover id="action-popover">
                             <Popover.Content>
-                                <Dropdown.Item>Edit</Dropdown.Item>
+                                <Dropdown.Item >Edit</Dropdown.Item>
                                 <Dropdown.Item>View</Dropdown.Item>
                                 <Dropdown.Item>Status</Dropdown.Item>
                                 <Dropdown.Item>Delete</Dropdown.Item>
@@ -144,6 +195,8 @@ export default function MessagePage() {
         messageSchema["1"].properties.typo.enumNames = [...data.prerecordedtypes].map(n => (n.name));
         messageSchema["1"].properties.mode.enum = [...data.prerecordedtriggers].map(n => (n.id));
         messageSchema["1"].properties.mode.enumNames = [...data.prerecordedtriggers].map(n => (n.name));
+        //messageSchema["1"].properties.file=Data.data;
+        //console.log(Data.data);
     }
 
     const uiSchema: any = {
@@ -158,28 +211,39 @@ export default function MessagePage() {
             "ui:options": {
                 "rows": 3
             }
+        },
+        "file": {
+            "ui:widget": (props: any) => {return(
+                <input value={props.value} onChange={(event) => {console.log(event);props.onChange(event.target.value)}} type="file" name="fileToUpload" id="fileToUpload"></input> 
+            );} 
         }
     }
-    const [createmessage, { error }] = useMutation(ADD_MESSAGE);
+    const [createmessage] = useMutation(ADD_MESSAGE);
+    const [createfile,{error}] = useMutation(UPLOAD);
     let authid = auth.userid;
 
     function onSubmit(formData: any ) {
-    //   console.log(formData);
-        createmessage(
-            {
-                variables: {
-                    title: formData.name,
-                    description: formData.description,
-                    minidesc: formData.minidescription,
-                    prerecordedtype: formData.typo,
-                    prerecordedtrigger: formData.mode,
-                    mediaupload: formData.file,
-                    mediaurl: formData.url,
-                    user_permissions_user: authid
+       console.log(formData);
+       createfile({
+           variables: {
+            file: formData.file
+           }
+       })
+        // createmessage(
+        //     {
+        //         variables: {
+        //             title: formData.name,
+        //             description: formData.description,
+        //             minidesc: formData.minidescription,
+        //             prerecordedtype: formData.typo,
+        //             prerecordedtrigger: formData.mode,
+        //             mediaupload: formData.file,
+        //             mediaurl: formData.url,
+        //             user_permissions_user: authid
                     
-                }
-            }
-        );
+        //         }
+        //     }
+        // );
     }
     // if (loading) return <span>'Loading...'</span>;
      if (error) return <span>{`Error! ${error.message}`}</span>;
