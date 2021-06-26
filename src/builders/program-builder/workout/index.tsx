@@ -54,7 +54,6 @@ export default function EventsTab() {
                     intensity: detail.intensity,
                     calories: detail.calories,
                     muscleGroup: detail.muscle_groups.name,
-                    equipment: detail.equipment_lists[0].name,
                     updatedOn: getDate(Date.parse(detail.updatedAt))
                 }
             })
@@ -134,10 +133,10 @@ export default function EventsTab() {
                 }
             },
             "build": {
-                "ui:widget": (props: any) => {
+                "ui:widget": () => {
                     return (
                         <div>
-                            {BuildWorkout(props)}
+                            <BuildWorkout/>
                         </div>
                     )
                 }

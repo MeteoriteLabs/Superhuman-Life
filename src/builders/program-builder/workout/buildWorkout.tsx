@@ -6,6 +6,7 @@ const BuildWorkout = (props: any) => {
      const [exerciseFields, setExerciseFields] = useState<any[]>([]);
      const [textFields, setTextFields] = useState<any[]>([]);
      const [urlFields, setUrlFields] = useState<any[]>([]);
+     const [restTimeFields, setRestTimeFields] = useState<any[]>([]);
 
      function handleExerciseFieldChange(i: any, event: any){
           const values = [...exerciseFields];
@@ -23,7 +24,11 @@ const BuildWorkout = (props: any) => {
           values[i].value = event.target.value;
           setUrlFields(values);
      }
-
+     function handleRestTimeFieldChange(i: any, event: any){
+          const values = [...restTimeFields];
+          values[i].value = event.target.value;
+          setRestTimeFields(values);
+     }
 
      function handleExerciseFieldAdd(){
           const values = [...exerciseFields];
@@ -39,6 +44,11 @@ const BuildWorkout = (props: any) => {
           const values = [...urlFields];
           values.push({ value: null});
           setUrlFields(values);
+     }
+     function handleRestTimeFieldAdd(){
+          const values = [...restTimeFields];
+          values.push({ value: null});
+          setRestTimeFields(values);
      }
 
      function handleExerciseFieldRemove(i: any){
@@ -58,6 +68,11 @@ const BuildWorkout = (props: any) => {
           values.splice(i, 1);
           setUrlFields(values);
      }
+     function handleRestTimeFieldRemove(i: any){
+          const values = [...restTimeFields];
+          values.splice(i, 1);
+          setRestTimeFields(values);
+     }
 
 
      return (
@@ -68,20 +83,24 @@ const BuildWorkout = (props: any) => {
                     </Accordion.Toggle>
                     <Accordion.Collapse eventKey="0">
                          <Card.Body>
-                         <Button className="m-2" variant="outline-secondary" type="button" onClick={() => handleExerciseFieldAdd()}>
-                              add from exercise +
+                         <Button size="sm" className="m-1" variant="outline-secondary" type="button" onClick={() => handleExerciseFieldAdd()}>
+                              Exercise <i style={{ fontSize: 12}} className="fas fa-plus"></i>
                          </Button>
-                         <Button className="m-2" type="button" variant="outline-secondary" onClick={() => handleTextFieldAdd()}>
-                              add Text +
+                         <Button size="sm" className="m-1" type="button" variant="outline-secondary" onClick={() => handleTextFieldAdd()}>
+                              Text <i style={{ fontSize: 12}} className="fas fa-plus"></i>
                          </Button>
-                         <Button className="m-2" type="button" variant="outline-secondary" onClick={() => handleUrlFieldAdd()}>
-                              add URL +
+                         <Button size="sm" className="m-1" type="button" variant="outline-secondary" onClick={() => handleUrlFieldAdd()}>
+                              URL <i style={{ fontSize: 12}} className="fas fa-plus"></i>
+                         </Button>
+                         <Button size="sm" className="m-1" type="button" variant="outline-secondary" onClick={() => handleRestTimeFieldAdd()}>
+                              Rest Time <i style={{ fontSize: 12}} className="fas fa-plus"></i>
                          </Button>
 
                               {exerciseFields.map((field, idx) => {
+                                   console.log(field);
                                    return (
                                         <div key={`${field}-${idx}`}>
-                                        <InputGroup className="mb-3">
+                                        <InputGroup className="mb-3 mt-2">
                                              <FormControl
                                                   placeholder="Search From exercise"
                                                   value={field.value || ""}
@@ -129,6 +148,25 @@ const BuildWorkout = (props: any) => {
                                              />
                                              <InputGroup.Append>
                                                   <Button variant="outline-danger" onClick={() => handleUrlFieldRemove(idx)}>
+                                                       <i className="far fa-trash-alt"></i>
+                                                  </Button>
+                                             </InputGroup.Append>
+                                             </InputGroup>
+                                        </div>
+                                   );
+                                   })}
+                                   {restTimeFields.map((field, idx) => {
+                                   return (
+                                        <div key={`${field}-${idx}`}>
+                                        <InputGroup className="mb-3">
+                                             <FormControl
+                                                  type="number"
+                                                  placeholder="Add Rest Time"
+                                                  value={field.value || ""}
+                                                  onChange={e => handleRestTimeFieldChange(idx, e)}
+                                             />
+                                             <InputGroup.Append>
+                                                  <Button variant="outline-danger" onClick={() => handleRestTimeFieldRemove(idx)}>
                                                        <i className="far fa-trash-alt"></i>
                                                   </Button>
                                              </InputGroup.Append>

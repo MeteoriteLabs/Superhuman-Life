@@ -3,12 +3,12 @@
          "title": "",
          "type": "object",
          "required": [
-             "exercise"
+             "workout"
          ],
          "properties": {
-             "exercise": {
+             "workout": {
                  "type": "string",
-                 "title": "Name Exercise"
+                 "title": "Name Workout"
              },
              "intensity": {
                  "type": "string",
@@ -90,7 +90,7 @@
                 "title": "Add Workout",
                 "type": "object",
                 "properties": {
-                    "add Workout": {
+                    "addWorkout": {
                         "type": "string",
                         "enum": [
                             "Build",
@@ -101,45 +101,36 @@
                         "default": "Add URL"
                     }
                 },
-                "required": [
-                    "Add Workout"
-                ],
                 "dependencies": {
-                    "add Workout": {
+                    "addWorkout": {
                         "oneOf": [
                             {
                                 "properties": {
-                                    "add Workout": {
+                                    "addWorkout": {
                                         "enum": [
                                             "Add URL"
                                         ]
                                     },
-                                    "Add URL": {
+                                    "AddURL": {
                                         "type": "string"
                                     }
-                                },
-                                "required": [
-                                    "Add URL"
-                                ]
+                                }
                             },
                             {
                                 "properties": {
-                                    "add Workout": {
+                                    "addWorkout": {
                                         "enum": [
                                             "Text"
                                         ]
                                     },
-                                    "Add Text": {
+                                    "AddText": {
                                         "type": "string"
                                     }
-                                },
-                                "required": [
-                                    "Add Text"
-                                ]
+                                }
                             },
                             {
                                 "properties": {
-                                    "add Workout": {
+                                    "addWorkout": {
                                         "enum": [
                                             "Upload"
                                         ]
@@ -149,14 +140,11 @@
                                         "format": "data-url",
                                         "title": "Upload a Video file"
                                     }
-                                },
-                                "required": [
-                                    "Upload"
-                                ]
+                                }
                             },
                             {
                                 "properties": {
-                                    "add Workout": {
+                                    "addWorkout": {
                                         "enum": [
                                             "Build"
                                         ]
@@ -165,10 +153,7 @@
                                         "title": "Build Workout",
                                         "type": "string"
                                     }
-                                },
-                                "required": [
-                                    "build"
-                                ]
+                                }
                             }
                         ]
                     }

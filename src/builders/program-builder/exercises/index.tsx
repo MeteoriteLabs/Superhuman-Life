@@ -13,11 +13,12 @@ export default function EventsTab() {
     // console.log(auth.userid);
 
     const GET_TABLEDATA = gql`
-        query ExercisesQuery {
-            exercises{
+        query ExercisesQuery($id: String) {
+            exercises(where: {users_permissions_user: { id: $id}}) {
                 id
                 updatedAt
                 exercisename
+                exerciselevel
                 fitnessdiscipline {
                 id
                 disciplinename
@@ -38,9 +39,36 @@ export default function EventsTab() {
         }
     `
 
-    useQuery(GET_TABLEDATA, {
-        onCompleted: loadData
-    })
+    const CREATE_EXERCISE = gql`
+        mutation createexercise(
+            $exercisename: String
+            $exerciselevel: enum
+            $exerciseminidescription: String
+            $exercisetext: String
+            $user_permissions_user: ID
+        ){
+            createExercise (
+                input: {
+                    data: {
+                        exercisename: $exercisename
+                        exerciselevel: $exerciselevel
+                        exerciseminidescription: $exerciseminidescription
+                        exercisetext: $exercisetext
+                    }
+                }
+            ){
+                exercise {
+                    id
+                    _id
+                    exercisename
+                }
+            }
+        }
+    `
+
+    function FetchData(_variables: {} = {id: auth.userid}){
+        useQuery(GET_TABLEDATA, {variables: _variables, onCompleted: loadData})
+    }
     
     function getDate(time: any) {
         let dateObj = new Date(time);
@@ -58,6 +86,7 @@ export default function EventsTab() {
                 return {
                     exerciseName: detail.exercisename,
                     discipline: detail.fitnessdiscipline.disciplinename,
+                    level: detail.exerciselevel,
                     muscleGroup: detail.exercisemusclegroups[0].name,
                     equipment: detail.equipment_lists[0].name,
                     updatedOn: getDate(Date.parse(detail.updatedAt))
@@ -139,9 +168,25 @@ export default function EventsTab() {
        }
     }
 
+    const [createExercise, { error }] = useMutation(CREATE_EXERCISE);
+    let authid = auth.userid;
+
     function onSubmit(formData: any) {
-        alert("Values submitted: " + JSON.stringify(formData, null, 2));
+        // console.log(formData);
+        createExercise(
+            {
+                variables: {
+                    exercisename: formData.exercise,
+                    exerciselevel: formData.level,
+                    exerciseminidescription: formData.miniDescription,
+                    exercisetext: formData.addExercise.addText,
+                    user_permissions_user: authid
+                }
+            }
+        )
     }
+
+    FetchData({id: auth.userid});
 
     return (
         <TabContent>
