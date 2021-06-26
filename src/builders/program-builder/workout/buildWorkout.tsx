@@ -34,6 +34,7 @@ const BuildWorkout = (props: any) => {
           const values = [...exerciseFields];
           values.push({ value: null});
           setExerciseFields(values);
+          console.log(exerciseFields);
      }
      function handleTextFieldAdd(){
           const values = [...textFields];

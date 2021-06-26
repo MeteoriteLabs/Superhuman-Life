@@ -19,6 +19,9 @@ export default function EventsTab() {
                 updatedAt
                 exercisename
                 exerciselevel
+                users_permissions_user {
+                    id
+                }
                 fitnessdiscipline {
                 id
                 disciplinename

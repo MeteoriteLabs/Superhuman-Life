@@ -26,6 +26,10 @@ export default function EventsTab() {
                 muscle_groups {
                     name
                 }
+                equipment_lists {
+                    id
+                    name
+                }
             }
         }
     `
@@ -54,6 +58,9 @@ export default function EventsTab() {
                     intensity: detail.intensity,
                     calories: detail.calories,
                     muscleGroup: detail.muscle_groups.name,
+                    equipment: detail.equipment_lists.map((equipment: any) => {
+                        return equipment.name
+                    }).join(", "),
                     updatedOn: getDate(Date.parse(detail.updatedAt))
                 }
             })
