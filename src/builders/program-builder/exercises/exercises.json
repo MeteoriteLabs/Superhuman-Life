@@ -10,56 +10,20 @@
                  "type": "string",
                  "title": "Name Exercise"
              },
-             "intensity": {
-                 "type": "string",
-                 "title": "Intensity",
-                 "enum": [
-                     "Low",
-                     "Medium",
-                     "High"
-                 ]
-             },
              "level": {
-                 "type": "string",
+                 "type": "number",
                  "title": "Level",
-                 "enum": [
+                 "enum": [0, 1, 2, 3],
+                 "enumNames": [
                      "Beginner",
                      "Intermediate",
-                     "Advance",
+                     "Advance", 
                      "No level"
                  ]
              },
              "discipline": {
                  "type": "string",
-                 "title": "Discipline",
-                 "enum": [
-                     "Yoga",
-                     "Calesthenics",
-                     "Body Building",
-                     "Cross Fit",
-                     "Weight lifting",
-                     "Gymnastics",
-                     "Parkour",
-                     "Climbing",
-                     "Pilates",
-                     "Barre",
-                     "Zumba",
-                     "Dance",
-                     "Isometrics",
-                     "Boxing",
-                     "Kickboxing",
-                     "Karate",
-                     "Taekwondo",
-                     "Karv Maga",
-                     "JiuJitsu",
-                     "Tai Chi",
-                     "Judo",
-                     "Kung FU",
-                     "Muay Thai",
-                     "MMA",
-                     "Wrestling",
-                     "Kalaripayat"
-                 ]
+                 "title": "Discipline"
              },
              "miniDescription": {
                 "type": "string",
@@ -86,7 +50,7 @@
                     "AddExercise": {
                         "type": "string",
                         "enum": [
-                            "Add URL",
+                            "AddURL",
                             "Text",
                             "Upload"
                         ],
@@ -109,10 +73,7 @@
                                     "AddURL": {
                                         "type": "string"
                                     }
-                                },
-                                "required": [
-                                    "AddURL"
-                                ]
+                                }
                             },
                             {
                                 "properties": {
@@ -124,10 +85,7 @@
                                     "AddText": {
                                         "type": "string"
                                     }
-                                },
-                                "required": [
-                                    "AddText"
-                                ]
+                                }
                             },
                             {
                                 "properties": {
@@ -141,10 +99,7 @@
                                         "format": "data-url",
                                         "title": "Upload a Video file"
                                     }
-                                },
-                                "required": [
-                                    "Upload"
-                                ]
+                                }
                             }
                         ]
                     }

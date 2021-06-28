@@ -1,4 +1,4 @@
-import { useMemo, useContext, useState } from "react";
+import { useMemo, useContext, useState, useRef } from "react";
 import { Button, Card, Dropdown, OverlayTrigger, Popover, TabContent } from "react-bootstrap";
 import BuildWorkout from './buildWorkout';
 import ModalView from "../../../components/modal";
@@ -39,18 +39,21 @@ export default function EventsTab() {
     })
     
     function getDate(time: any) {
+        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+            "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"
+        ];
         let dateObj = new Date(time);
-        let month = dateObj.getMonth() + 1;
+        let month = monthNames[dateObj.getMonth()];
         let year = dateObj.getFullYear();
         let date = dateObj.getDate();
 
-        return (`${date}/${month}/${year}`);
+        return (`${date}-${month}-${year}`);
     }
 
     function loadData(data: any) {
         setTableData(
             [...data.workouts].map((detail) => {
-                console.log(detail);
+                // console.log(detail);
                 return {
                     workoutName: detail.workouttitle,
                     discipline: detail.fitnessdisciplines.disciplinename,

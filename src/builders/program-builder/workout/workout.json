@@ -101,6 +101,9 @@
                         "default": "Add URL"
                     }
                 },
+                "required": [
+                    "addWorkout"
+                ],
                 "dependencies": {
                     "addWorkout": {
                         "oneOf": [

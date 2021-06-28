@@ -8,6 +8,17 @@ const BuildWorkout = (props: any) => {
      const [urlFields, setUrlFields] = useState<any[]>([]);
      const [restTimeFields, setRestTimeFields] = useState<any[]>([]);
 
+
+     // const exerciseFieldJson = {
+     //      warmUp : {
+     //           exercise: [...exerciseFields].map((detail) => {
+     //                return {
+     //                     value: detail.value.join(", "),
+     //                }
+     //           })
+     //      }
+     // }
+
      function handleExerciseFieldChange(i: any, event: any){
           const values = [...exerciseFields];
           values[i].value = event.target.value;
@@ -184,17 +195,97 @@ const BuildWorkout = (props: any) => {
                     </Accordion.Toggle>
                     <Accordion.Collapse eventKey="1">
                     <Card.Body>
-                    <Dropdown>
-                              <Dropdown.Toggle variant="success" id="dropdown-basic">
-                              Dropdown Button
-                              </Dropdown.Toggle>
+                    <Button size="sm" className="m-1" variant="outline-secondary" type="button" onClick={() => handleExerciseFieldAdd()}>
+                              Exercise <i style={{ fontSize: 12}} className="fas fa-plus"></i>
+                         </Button>
+                         <Button size="sm" className="m-1" type="button" variant="outline-secondary" onClick={() => handleTextFieldAdd()}>
+                              Text <i style={{ fontSize: 12}} className="fas fa-plus"></i>
+                         </Button>
+                         <Button size="sm" className="m-1" type="button" variant="outline-secondary" onClick={() => handleUrlFieldAdd()}>
+                              URL <i style={{ fontSize: 12}} className="fas fa-plus"></i>
+                         </Button>
+                         <Button size="sm" className="m-1" type="button" variant="outline-secondary" onClick={() => handleRestTimeFieldAdd()}>
+                              Rest Time <i style={{ fontSize: 12}} className="fas fa-plus"></i>
+                         </Button>
 
-                              <Dropdown.Menu>
-                                   <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-                                   <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
-                                   <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
-                              </Dropdown.Menu>
-                         </Dropdown>
+                              {exerciseFields.map((field, idx) => {
+                                   console.log(field);
+                                   return (
+                                        <div key={`${field}-${idx}`}>
+                                        <InputGroup className="mb-3 mt-2">
+                                             <FormControl
+                                                  placeholder="Search From exercise"
+                                                  value={field.value || ""}
+                                                  onChange={e => handleExerciseFieldChange(idx, e)}
+                                             />
+                                             <InputGroup.Append>
+                                                  <Button variant="outline-danger" onClick={() => handleExerciseFieldRemove(idx)}>
+                                                       <i className="far fa-trash-alt"></i>
+                                                  </Button>
+                                             </InputGroup.Append>
+                                             </InputGroup>
+                                        </div>
+                                   );
+                                   })}
+
+                              {textFields.map((field, idx) => {
+                                   return (
+                                        <div key={`${field}-${idx}`}>
+                                        <InputGroup className="mb-3">
+                                             <FormControl
+                                                  type="textarea"
+                                                  placeholder="Add Text"
+                                                  value={field.value || ""}
+                                                  onChange={e => handleTextFieldChange(idx, e)}
+                                             />
+                                             <InputGroup.Append>
+                                                  <Button variant="outline-danger" onClick={() => handleTextFieldRemove(idx)}>
+                                                       <i className="far fa-trash-alt"></i>
+                                                  </Button>
+                                             </InputGroup.Append>
+                                             </InputGroup>
+                                        </div>
+                                   );
+                                   })}
+
+                              {urlFields.map((field, idx) => {
+                                   return (
+                                        <div key={`${field}-${idx}`}>
+                                        <InputGroup className="mb-3">
+                                             <FormControl
+                                                  type="text"
+                                                  placeholder="Add URL"
+                                                  value={field.value || ""}
+                                                  onChange={e => handleUrlFieldChange(idx, e)}
+                                             />
+                                             <InputGroup.Append>
+                                                  <Button variant="outline-danger" onClick={() => handleUrlFieldRemove(idx)}>
+                                                       <i className="far fa-trash-alt"></i>
+                                                  </Button>
+                                             </InputGroup.Append>
+                                             </InputGroup>
+                                        </div>
+                                   );
+                                   })}
+                                   {restTimeFields.map((field, idx) => {
+                                   return (
+                                        <div key={`${field}-${idx}`}>
+                                        <InputGroup className="mb-3">
+                                             <FormControl
+                                                  type="number"
+                                                  placeholder="Add Rest Time"
+                                                  value={field.value || ""}
+                                                  onChange={e => handleRestTimeFieldChange(idx, e)}
+                                             />
+                                             <InputGroup.Append>
+                                                  <Button variant="outline-danger" onClick={() => handleRestTimeFieldRemove(idx)}>
+                                                       <i className="far fa-trash-alt"></i>
+                                                  </Button>
+                                             </InputGroup.Append>
+                                             </InputGroup>
+                                        </div>
+                                   );
+                                   })}
                     </Card.Body>
                     </Accordion.Collapse>
                </Card>
@@ -203,7 +294,9 @@ const BuildWorkout = (props: any) => {
                     Cool Down
                     </Accordion.Toggle>
                     <Accordion.Collapse eventKey="2">
-                    <Card.Body>Hello! I'm another body</Card.Body>
+                    <Card.Body>
+                         
+                    </Card.Body>
                     </Accordion.Collapse>
                </Card>
           </Accordion>
