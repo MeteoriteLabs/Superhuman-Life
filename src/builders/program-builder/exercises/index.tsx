@@ -4,6 +4,7 @@ import ModalView from "../../../components/modal";
 import Table from "../../../components/table";
 import { gql, useQuery,useMutation } from "@apollo/client";
 import AuthContext from "../../../context/auth-context";
+import { createNumericLiteral } from "typescript";
 
 export default function EventsTab() {
 
@@ -11,11 +12,12 @@ export default function EventsTab() {
     const [tableData, setTableData] = useState<any[]>([]);
     const [fitnessdisciplines, setFitnessDisciplines] = useState<any[]>([]);
     const [equipmentList, setEquipmentList] = useState<any[]>([]);
+    const searchInput = useRef<any>();
 
 
     const GET_EQUIPMENTLIST = gql`
-        query equipmentListQuery {
-            equipmentLists(sort: "updatedAt"){
+        query equipmentListQuery($filter: String!) {
+            equipmentLists(sort: "updatedAt", where: { name: $filter}){
                 id
                 name
             }
@@ -70,6 +72,7 @@ export default function EventsTab() {
             $exerciseminidescription: String
             $exercisetext: String
             $exerciseurl: String
+            $fitnessdiscipline: ID
             $users_permissions_user: ID
         ){
             createExercise (
@@ -81,6 +84,7 @@ export default function EventsTab() {
                         exercisetext: $exercisetext
                         exerciseurl: $exerciseurl
                         users_permissions_user: $users_permissions_user
+                        fitnessdiscipline: $fitnessdiscipline
                     }
                 }
             ){
@@ -92,20 +96,19 @@ export default function EventsTab() {
         }
     `
 
-    function FetchEquipmentList(){
-        useQuery(GET_EQUIPMENTLIST, {onCompleted: loadEquipmentList});
+    function FetchEquipmentList(_variable: {} = { filter: " "}){
+        useQuery(GET_EQUIPMENTLIST, { variables: _variable ,onCompleted: loadEquipmentList});
     }
 
     function loadEquipmentList(data: any){
-        setEquipmentList (
-            [...data.equipmentLists].map((equipment) => {
-                return {
-                    id: equipment.id,
-                    name: equipment.name
-                }
-            })
-        );
+        console.log(data);
+        return data.equipmentLists[0].name;
+        // const values = [...equipmentList];
+        // values.push({ name: data.name });
+        // setEquipmentList(values);
     }
+    
+    console.log(equipmentList);
 
     function FetchFitnessDisciplines(){
         useQuery(GET_FITNESSDISCIPLINES, {onCompleted: loadFitnessDisciplines});
@@ -194,6 +197,14 @@ export default function EventsTab() {
         }
     ], []);
 
+    let disc: any;
+
+    function equipmentSearch(data: any) {
+        console.log(data.type);
+        // const name = FetchEquipmentList({ filter: data });
+        // console.log(name);
+    }
+
     const eventSchema: any = require("./exercises.json");
     const uiSchema: any = {
         "level": {
@@ -218,14 +229,19 @@ export default function EventsTab() {
             "ui:widget": () => {
                 return (
                     <div>
-                      <Form.Group controlId="exampleForm.ControlSelect1">
-                        <Form.Label>Equipment</Form.Label>
-                        <Form.Control as="select">
-                            {equipmentList.map((val: any) => {
-                                return <option>{val.name}</option>
-                            })}
-                        </Form.Control>
-                    </Form.Group> 
+                        <label style={{ fontSize: 17}}>Equipment</label>
+                      <InputGroup className="mb-3" >
+                            <FormControl aria-describedby="basic-addon1" placeholder="Search" ref={searchInput} id="searchInput"/>
+                            <InputGroup.Prepend>
+                                <Button variant="outline-secondary" onClick={(e) => {e.preventDefault();
+                                    let search = searchInput.current.value.toString(); 
+                                    equipmentSearch(search);
+                                }}><i className="fas fa-search"></i></Button>
+                            </InputGroup.Prepend>
+                        </InputGroup>
+                        {/* <div>
+                            {equipmentList}
+                        </div>  */}
                     </div>
                 )
             }
@@ -239,9 +255,9 @@ export default function EventsTab() {
                     <div>
                         <Form.Group controlId="exampleForm.SelectCustom">
                             <Form.Label>Fitness Discipline</Form.Label>
-                            <Form.Control as="select" custom>
+                            <Form.Control as="select" custom onChange={(e) => { disc = e.target.value }}>
                                 {fitnessdisciplines.map((val: any) => {
-                                    return <option>{val.disciplineName}</option>
+                                    return <option value={val.id} >{val.disciplineName}</option>
                                 })}
                             </Form.Control>
                         </Form.Group>
@@ -283,8 +299,8 @@ export default function EventsTab() {
         //             exercisename: formData.exercise,
         //             exerciselevel: ENUM_EXERCISES_EXERCISELEVEL[levelIndex],
         //             exerciseminidescription: formData.miniDescription,
-        //             exercisetext: (!formData.addExercise.AddText ? " " : formData.addExercise.AddText),
-
+        //             fitnessdiscipline: disc,
+        //             exercisetext: (!formData.addExercise.AddText ? "" : formData.addExercise.AddText),
         //             exerciseurl: formData.addExercise.AddURL,
         //             users_permissions_user: authid
         //         }
@@ -295,7 +311,6 @@ export default function EventsTab() {
 
     FetchData({id: auth.userid});
     FetchFitnessDisciplines();
-    FetchEquipmentList();
     
     return (
         <TabContent>
