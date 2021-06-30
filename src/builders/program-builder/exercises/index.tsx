@@ -1,28 +1,17 @@
-import { useContext, useMemo, useState, useRef } from "react";
-import { Button, Card, Dropdown, OverlayTrigger, Popover, TabContent, Form, InputGroup, FormControl } from "react-bootstrap";
+import { useContext, useMemo, useState } from "react";
+import { Button, Card, Dropdown, OverlayTrigger, Popover, TabContent, Form } from "react-bootstrap";
 import ModalView from "../../../components/modal";
 import Table from "../../../components/table";
 import { gql, useQuery,useMutation } from "@apollo/client";
 import AuthContext from "../../../context/auth-context";
-import { createNumericLiteral } from "typescript";
+import EquipmentSearch from './equipmentList';
+import MuscleGroupSearch from './muscleGroupList';
 
 export default function EventsTab() {
 
     const auth = useContext(AuthContext);
     const [tableData, setTableData] = useState<any[]>([]);
     const [fitnessdisciplines, setFitnessDisciplines] = useState<any[]>([]);
-    const [equipmentList, setEquipmentList] = useState<any[]>([]);
-    const searchInput = useRef<any>();
-
-
-    const GET_EQUIPMENTLIST = gql`
-        query equipmentListQuery($filter: String!) {
-            equipmentLists(sort: "updatedAt", where: { name: $filter}){
-                id
-                name
-            }
-        }
-    `
 
     const GET_FITNESSDISCIPLINES = gql`
         query fitnessdisciplines{
@@ -41,6 +30,11 @@ export default function EventsTab() {
                 updatedAt
                 exercisename
                 exerciselevel
+                exercisetext
+                exerciseurl
+                exerciseupload {
+                    name
+                }
                 users_permissions_user {
                     id
                 }
@@ -95,20 +89,9 @@ export default function EventsTab() {
             }
         }
     `
-
-    function FetchEquipmentList(_variable: {} = { filter: " "}){
-        useQuery(GET_EQUIPMENTLIST, { variables: _variable ,onCompleted: loadEquipmentList});
-    }
-
-    function loadEquipmentList(data: any){
-        console.log(data);
-        return data.equipmentLists[0].name;
-        // const values = [...equipmentList];
-        // values.push({ name: data.name });
-        // setEquipmentList(values);
-    }
     
-    console.log(equipmentList);
+    
+
 
     function FetchFitnessDisciplines(){
         useQuery(GET_FITNESSDISCIPLINES, {onCompleted: loadFitnessDisciplines});
@@ -117,7 +100,6 @@ export default function EventsTab() {
     function loadFitnessDisciplines(data: any){
         setFitnessDisciplines(
             [...data.fitnessdisciplines].map((discipline) => {
-                console.log(discipline);
                 return {
                     id: discipline.id,
                     disciplineName: discipline.disciplinename,
@@ -146,7 +128,7 @@ export default function EventsTab() {
     function loadData(data: any) {
         setTableData(
             [...data.exercises].map((detail) => {
-                //console.log(detail);
+                console.log(detail);
                 return {
                     exerciseName: detail.exercisename,
                     discipline: detail.fitnessdiscipline.disciplinename,
@@ -158,7 +140,7 @@ export default function EventsTab() {
                         return equipment.name
                     }).join(", "),
                     updatedOn: getDate(Date.parse(detail.updatedAt)),
-                    type: (detail.exerciseText && detail.exerciseText.length) ? "Text": "Video" ,
+                    type: (detail.exercisetext) ? "Text": "Video" ,
                 }
             })
         );
@@ -197,13 +179,9 @@ export default function EventsTab() {
         }
     ], []);
 
-    let disc: any;
+    
 
-    function equipmentSearch(data: any) {
-        console.log(data.type);
-        // const name = FetchEquipmentList({ filter: data });
-        // console.log(name);
-    }
+    let disc: any;
 
     const eventSchema: any = require("./exercises.json");
     const uiSchema: any = {
@@ -229,25 +207,19 @@ export default function EventsTab() {
             "ui:widget": () => {
                 return (
                     <div>
-                        <label style={{ fontSize: 17}}>Equipment</label>
-                      <InputGroup className="mb-3" >
-                            <FormControl aria-describedby="basic-addon1" placeholder="Search" ref={searchInput} id="searchInput"/>
-                            <InputGroup.Prepend>
-                                <Button variant="outline-secondary" onClick={(e) => {e.preventDefault();
-                                    let search = searchInput.current.value.toString(); 
-                                    equipmentSearch(search);
-                                }}><i className="fas fa-search"></i></Button>
-                            </InputGroup.Prepend>
-                        </InputGroup>
-                        {/* <div>
-                            {equipmentList}
-                        </div>  */}
+                        <EquipmentSearch />
                     </div>
                 )
             }
         },
         "muscleGroup": {
-            "ui:placeholder": "Search"
+            "ui:widget": () => {
+                return (
+                    <div>
+                        <MuscleGroupSearch />
+                    </div>
+                )
+            }
         },
         "discipline": {
             "ui:widget": () => {
@@ -282,35 +254,37 @@ export default function EventsTab() {
 
     const [createExercise, { error }] = useMutation(CREATE_EXERCISE);
     let authid = auth.userid;
-    enum ENUM_EXERCISES_EXERCISELEVEL {
-        Beginner,
-        Intermediate,
-        Advance,
-        None
-    }
+    
 
     function onSubmit(formData: any) {
         console.log(formData);
-        let levelIndex = formData.exerciselevel;
+        enum ENUM_EXERCISES_EXERCISELEVEL {
+            Beginner,
+            Intermediate,
+            Advance,
+            None
+        }
+        let levelIndex = formData.level;
         
-        // createExercise(
-        //     {
-        //         variables: {
-        //             exercisename: formData.exercise,
-        //             exerciselevel: ENUM_EXERCISES_EXERCISELEVEL[levelIndex],
-        //             exerciseminidescription: formData.miniDescription,
-        //             fitnessdiscipline: disc,
-        //             exercisetext: (!formData.addExercise.AddText ? "" : formData.addExercise.AddText),
-        //             exerciseurl: formData.addExercise.AddURL,
-        //             users_permissions_user: authid
-        //         }
-        //     }
-        // )
+        createExercise(
+            {
+                variables: {
+                    exercisename: formData.exercise,
+                    exerciselevel: ENUM_EXERCISES_EXERCISELEVEL[levelIndex],
+                    exerciseminidescription: formData.miniDescription,
+                    fitnessdiscipline: disc,
+                    exercisetext: (!formData.addExercise.AddText ? null : formData.addExercise.AddText),
+                    exerciseurl: formData.addExercise.AddURL,
+                    users_permissions_user: authid
+                }
+            }
+        )
     }
     if (error) return <span>{`Error! ${error.message}`}</span>;
 
     FetchData({id: auth.userid});
     FetchFitnessDisciplines();
+    
     
     return (
         <TabContent>
