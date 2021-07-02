@@ -4,6 +4,8 @@ import Table from "../../../components/table";
 import ModalView from "../../../components/modal";
 import { gql, useQuery,useMutation } from "@apollo/client";
 import AuthContext from "../../../context/auth-context";
+import StatusModal from "./StatusModal";
+import ActionButton from "../../../components/actionbutton/index";
 
 export default function MessagePage() {
     const auth = useContext(AuthContext);
@@ -140,27 +142,13 @@ export default function MessagePage() {
             id: "edit",
             Header: "Actions",
             Cell: ({ row }: any) => (
-                <OverlayTrigger
-                    trigger="click"
-                    placement="bottom"
-                    overlay={
-                        <Popover id="action-popover">
-                            <Popover.Content>
-                                <Dropdown.Item >Edit</Dropdown.Item>
-                                <Dropdown.Item>View</Dropdown.Item>
-                                <Dropdown.Item>Status</Dropdown.Item>
-                                <Dropdown.Item>Delete</Dropdown.Item>
-                            </Popover.Content>
-                        </Popover>
-                    }
-                >
-                    <Button variant="white">
-                        <i className="fas fa-ellipsis-v"></i>
-                    </Button>
-                </OverlayTrigger>
+                <ActionButton action1="Status" action2="View" action3="Edit" action4= "Delete" action1Click={StatusModal}/>
             ),
         }
     ], []);
+    
+                    
+  
 
     function getDate(time: any) {
         let dateObj = new Date(time);

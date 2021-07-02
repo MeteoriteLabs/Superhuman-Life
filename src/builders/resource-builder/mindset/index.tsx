@@ -67,6 +67,43 @@ export default function MindsetPage() {
             }
       
     `
+    const UPDATE_MESSAGE = gql`
+        mutation updatemsg(
+            $title: String
+            $description: String
+            $minidesc: String
+            $mindsetmessagetype: ID
+            $tags: String
+            $mediaurl: String
+            $userpermission: ID
+            $messageid: ID!
+        ) {
+            updateMindsetmessage(
+            input: {
+                data: {
+                title: $title
+                description: $description
+                minidescription: $minidesc
+                mediaurl: $mediaurl
+                tags: $tags
+                mindsetmessagetype: $mindsetmessagetype
+                users_permissions_user: $userpermission
+                }
+                where: { id: $messageid }
+            }
+            ) {
+            mindsetmessage {
+                id
+                title
+                tags
+                description
+                minidescription
+                mediaurl
+            }
+            }
+        }
+      
+    `
 
     const columns = useMemo<any>(() => [
         { accessor: "title", Header: "Title" },
