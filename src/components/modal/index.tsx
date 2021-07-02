@@ -11,7 +11,7 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
     const Form: any = withTheme(Bootstrap4Theme);
     const formRef = useRef<any>(null);
     const [step, setStep] = useState<number>(1);
-    const [show, setShow] = useState<boolean>(false);
+    const [show, setShow] = useState<boolean>(true);
     const [formValues, setFormValues] = useState<any>(formData);
     const stepper: string[] = ["Creator", "Details", "Program", "Schedule", "Pricing"];
     
@@ -28,9 +28,9 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
 
     return (
         <>  
-            <Button variant={name === "Create New"?"outline-secondary":"light"}  size="sm" onClick={() => setShow(true)}>
+            {/* <Button variant={name === "Create New"?"outline-secondary":"light"}  size="sm" onClick={() => setShow(true)}>
                 {name === "Create New"?<i className="fas fa-plus-circle"></i>:" "}{" "}{name}
-            </Button>
+            </Button> */}
             <Modal size="xl" show={show} onHide={() => setShow(false)} centered >
                 <Modal.Header closeButton>
                     <Modal.Title as={Row}>

@@ -1,0 +1,14 @@
+{
+    "description": {
+        "ui:widget": "textarea",
+        "ui:options": {
+            "rows": 4
+        }
+    },
+    "minidescription": {
+        "ui:widget": "textarea",
+        "ui:options": {
+            "rows": 3
+        }
+    }
+}
