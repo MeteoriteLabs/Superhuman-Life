@@ -38,14 +38,14 @@ export const ADD_MESSAGE = gql`
             }
         }
         ) {
-        prerecordedmessage {
-            id
-            createdAt
-            updatedAt
-            title
-            description
-            minidescription
-        }
+            prerecordedmessage {
+                id
+                createdAt
+                updatedAt
+                title
+                description
+                minidescription
+            }
         }
     }
 `;
@@ -119,11 +119,12 @@ export const DELETE_MESSAGE = gql`
     mutation deleteMessage($id: ID!) {
         deletePrerecordedmessage(
             input: {
-                where: $id
+                where: { id : $id }
             }
         ) {
             prerecordedmessage {
                 id
+                __typename
             }
         }
     }

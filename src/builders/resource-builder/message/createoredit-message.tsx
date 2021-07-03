@@ -2,6 +2,7 @@ import React, { useMemo, useRef, useContext, useImperativeHandle, useState } fro
 import { useQuery, useMutation } from "@apollo/client";
 import ModalView from "../../../components/modal";
 import { GET_TRIGGERS, ADD_MESSAGE, UPDATE_MESSAGE, GET_MESSAGE, DELETE_MESSAGE } from "./queries";
+import AuthContext from "../../../context/auth-context";
 
 interface Operation {
     id?: string;
@@ -9,13 +10,17 @@ interface Operation {
 }
 
 function CreateEditMessage(props: any, ref: any) {
+    const auth = useContext(AuthContext);
     const messageSchema: { [name: string]: any; } = require("./message.json");
     const uiSchema: {} = require("./schema.json");
     const [messageDetails, setMessageDetails] = useState<any>({});
     const [render, setRender] = useState<boolean>(false);
     const [operation, setOperation] = useState<Operation>({} as Operation);
+    
 
-    const [deleteMessageId, setDeleteMessageId] = useState<null | string>(null);
+    const [createMessage] = useMutation(ADD_MESSAGE, { onCompleted: (r: any) => { console.log(r); setRender(false); } });
+    const [deleteMessage] = useMutation(DELETE_MESSAGE, { onCompleted: (e: any) => console.log(e), refetchQueries: ["GET_TRIGGERS"] });
+    
 
     useImperativeHandle(ref, () => ({
         TriggerForm: (msg: Operation) => {
@@ -28,10 +33,10 @@ function CreateEditMessage(props: any, ref: any) {
     }));
 
     function loadData(data: any) {
-        messageSchema["1"].properties.typo.enum = [...data.prerecordedtypes].map(n => (n.id));
-        messageSchema["1"].properties.typo.enumNames = [...data.prerecordedtypes].map(n => (n.name));
-        messageSchema["1"].properties.mode.enum = [...data.prerecordedtriggers].map(n => (n.id));
-        messageSchema["1"].properties.mode.enumNames = [...data.prerecordedtriggers].map(n => (n.name));
+        messageSchema["1"].properties.prerecordedtype.enum = [...data.prerecordedtypes].map(n => (n.id));
+        messageSchema["1"].properties.prerecordedtype.enumNames = [...data.prerecordedtypes].map(n => (n.name));
+        messageSchema["1"].properties.prerecordedtrigger.enum = [...data.prerecordedtriggers].map(n => (n.id));
+        messageSchema["1"].properties.prerecordedtrigger.enumNames = [...data.prerecordedtriggers].map(n => (n.name));
     }
 
     function FillDetails(data: any) {
@@ -64,7 +69,7 @@ function CreateEditMessage(props: any, ref: any) {
 
     function CreateMessage(frm: any) {
         console.log('create message');
-        useMutation(ADD_MESSAGE, { variables: frm, onCompleted: (r: any) => { console.log(r); setRender(false); } });
+        createMessage({ variables: frm });
     }
 
     function EditMessage(frm: any) {
@@ -85,11 +90,15 @@ function CreateEditMessage(props: any, ref: any) {
 
     function DeleteMessage(id: any) {
         console.log('delete message');
-        useMutation(DELETE_MESSAGE, { variables: { id: id }, onCompleted: (e: any) => console.log(e) });
+        deleteMessage({ variables: { id: id }});
     }
 
     function OnSubmit(frm: any) {
         console.log(frm);
+        //bind user id
+        if(frm)
+        frm.user_permissions_user = auth.userid;
+
         switch (operation.type) {
             case 'create':
                 CreateMessage(frm);
