@@ -6,6 +6,7 @@ import { gql, useQuery,useMutation } from "@apollo/client";
 import AuthContext from "../../../context/auth-context";
 import EquipmentSearch from './equipmentList';
 import MuscleGroupSearch from './muscleGroupList';
+import TextEditor from './textEditor';
 
 export default function EventsTab() {
 
@@ -68,6 +69,8 @@ export default function EventsTab() {
             $exerciseurl: String
             $fitnessdiscipline: ID
             $users_permissions_user: ID
+            $equipment_lists: [ID]
+            $exercisemusclegroups: [ID]
         ){
             createExercise (
                 input: {
@@ -79,6 +82,8 @@ export default function EventsTab() {
                         exerciseurl: $exerciseurl
                         users_permissions_user: $users_permissions_user
                         fitnessdiscipline: $fitnessdiscipline
+                        equipment_lists: $equipment_lists
+                        exercisemusclegroups: $exercisemusclegroups
                     }
                 }
             ){
@@ -128,7 +133,6 @@ export default function EventsTab() {
     function loadData(data: any) {
         setTableData(
             [...data.exercises].map((detail) => {
-                console.log(detail);
                 return {
                     exerciseName: detail.exercisename,
                     discipline: detail.fitnessdiscipline.disciplinename,
@@ -179,10 +183,22 @@ export default function EventsTab() {
         }
     ], []);
 
-    
+    let equipmentListarray: any;
+    function handleEquipmentCallback(data: any) {
+        equipmentListarray = data;
+    }
+
+    let muscleGroupListarray: any;
+    function handleMuscleGroupCallback(data:any){
+        muscleGroupListarray = data;
+    }
+
+    let editorTextString: any;
+    function handleEditorTextCallBack(data:any){
+        editorTextString = data;
+    }
 
     let disc: any;
-
     const eventSchema: any = require("./exercises.json");
     const uiSchema: any = {
         "level": {
@@ -207,7 +223,7 @@ export default function EventsTab() {
             "ui:widget": () => {
                 return (
                     <div>
-                        <EquipmentSearch />
+                        <EquipmentSearch equipmentList={handleEquipmentCallback}/>
                     </div>
                 )
             }
@@ -216,7 +232,7 @@ export default function EventsTab() {
             "ui:widget": () => {
                 return (
                     <div>
-                        <MuscleGroupSearch />
+                        <MuscleGroupSearch muscleGroupList={handleMuscleGroupCallback}/>
                     </div>
                 )
             }
@@ -239,9 +255,10 @@ export default function EventsTab() {
         },
         "addExercise": {
             "Add Text": {
-                "ui:widget": "textarea",
-                "ui:options": {
-                    "rows": 3
+                "ui:widget": () => {
+                    return (
+                        <TextEditor editorText={handleEditorTextCallBack}/>
+                    )
                 }
             },
             "Upload": {
@@ -254,16 +271,16 @@ export default function EventsTab() {
 
     const [createExercise, { error }] = useMutation(CREATE_EXERCISE);
     let authid = auth.userid;
+    enum ENUM_EXERCISES_EXERCISELEVEL {
+        Beginner,
+        Intermediate,
+        Advance,
+        None
+    }
     
 
     function onSubmit(formData: any) {
-        console.log(formData);
-        enum ENUM_EXERCISES_EXERCISELEVEL {
-            Beginner,
-            Intermediate,
-            Advance,
-            None
-        }
+        
         let levelIndex = formData.level;
         
         createExercise(
@@ -273,9 +290,15 @@ export default function EventsTab() {
                     exerciselevel: ENUM_EXERCISES_EXERCISELEVEL[levelIndex],
                     exerciseminidescription: formData.miniDescription,
                     fitnessdiscipline: disc,
-                    exercisetext: (!formData.addExercise.AddText ? null : formData.addExercise.AddText),
+                    exercisetext: (!editorTextString ? null : editorTextString),
                     exerciseurl: formData.addExercise.AddURL,
-                    users_permissions_user: authid
+                    users_permissions_user: authid,
+                    equipment_lists: equipmentListarray.map((val: any) => {
+                        return val.id;
+                    }),
+                    exercisemusclegroups: muscleGroupListarray.map((val: any) => {
+                        return val.id;
+                    })
                 }
             }
         )
@@ -296,7 +319,7 @@ export default function EventsTab() {
                     formUISchema={uiSchema}
                     formSchema={eventSchema}
                     formSubmit={onSubmit}
-                    formData={{}}
+                    formData={{ level: ENUM_EXERCISES_EXERCISELEVEL.Beginner }}
                 />
             </Card.Title>
             <Table columns={columns} data={tableData} />

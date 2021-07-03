@@ -13,7 +13,8 @@
              "intensity": {
                  "type": "string",
                  "title": "Intensity",
-                 "enum": [
+                 "enum": [0, 1, 2],
+                 "enumNames": [
                      "Low",
                      "Medium",
                      "High"
@@ -22,43 +23,16 @@
              "level": {
                  "type": "string",
                  "title": "Level",
-                 "enum": [
+                 "enum": [0, 1, 2, 3],
+                 "enumNames": [
                      "Beginner",
                      "Intermediate",
-                     "Advance"
+                     "Advance", 
+                     "No level"
                  ]
              },
              "discipline": {
-                 "type": "string",
-                 "title": "Discipline",
-                 "enum": [
-                     "Yoga",
-                     "Calesthenics",
-                     "Body Building",
-                     "Cross Fit",
-                     "Weight lifting",
-                     "Gymnastics",
-                     "Parkour",
-                     "Climbing",
-                     "Pilates",
-                     "Barre",
-                     "Zumba",
-                     "Dance",
-                     "Isometrics",
-                     "Boxing",
-                     "Kickboxing",
-                     "Karate",
-                     "Taekwondo",
-                     "Karv Maga",
-                     "JiuJitsu",
-                     "Tai Chi",
-                     "Judo",
-                     "Kung FU",
-                     "Muay Thai",
-                     "MMA",
-                     "Wrestling",
-                     "Kalaripayat"
-                 ]
+                 "type": "string"
              },
              "about": {
                  "type": "string",

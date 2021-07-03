@@ -3,7 +3,9 @@
          "title": "",
          "type": "object",
          "required": [
-             "exercise"
+             "exercise",
+             "level"
+
          ],
          "properties": {
              "exercise": {
@@ -22,15 +24,14 @@
                  ]
              },
              "discipline": {
-                 "type": "string",
-                 "title": "Discipline"
+                 "type": "string"
              },
              "miniDescription": {
                 "type": "string",
                 "title": "Mini Description"
             },
             "addExercise": {
-                "title": "Add Exercise",
+                "title": "",
                 "$ref": "#/definitions/addexercise"
               },
             "equipment": {
@@ -47,49 +48,49 @@
                 "title": "Add Exercise",
                 "type": "object",
                 "properties": {
-                    "AddExercise": {
+                    "Add Exercise": {
                         "type": "string",
                         "enum": [
-                            "AddURL",
+                            "Add URL",
                             "Text",
                             "Upload"
                         ],
-                        "default": "AddURL"
+                        "default": "Add URL"
                     }
                 },
                 "required": [
-                    "AddExercise"
+                    "Add Exercise"
                 ],
                 "dependencies": {
-                    "AddExercise": {
+                    "Add Exercise": {
                         "oneOf": [
                             {
                                 "properties": {
-                                    "AddExercise": {
+                                    "Add Exercise": {
                                         "enum": [
-                                            "AddURL"
+                                            "Add URL"
                                         ]
                                     },
-                                    "AddURL": {
+                                    "Add URL": {
                                         "type": "string"
                                     }
                                 }
                             },
                             {
                                 "properties": {
-                                    "AddExercise": {
+                                    "Add Exercise": {
                                         "enum": [
                                             "Text"
                                         ]
                                     },
-                                    "AddText": {
+                                    "Add Text": {
                                         "type": "string"
                                     }
                                 }
                             },
                             {
                                 "properties": {
-                                    "AddExercise": {
+                                    "Add Exercise": {
                                         "enum": [
                                             "Upload"
                                         ]
