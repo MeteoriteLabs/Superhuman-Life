@@ -1,7 +1,7 @@
 import React, { useMemo, useRef, useContext, useImperativeHandle, useState } from 'react';
 import { useQuery, useMutation } from "@apollo/client";
 import ModalView from "../../../components/modal";
-import { GET_TRIGGERS, ADD_MESSAGE, UPDATE_MESSAGE, GET_MESSAGE, DELETE_MESSAGE } from "./queries";
+import { GET_TRIGGERS, ADD_MESSAGE, UPDATE_MESSAGE, GET_MESSAGE, DELETE_MESSAGE,UPDATE_STATUS } from "./queries";
 import AuthContext from "../../../context/auth-context";
 
 interface Operation {
@@ -19,8 +19,9 @@ function CreateEditMessage(props: any, ref: any) {
     
 
     const [createMessage] = useMutation(ADD_MESSAGE, { onCompleted: (r: any) => { console.log(r); setRender(false); } });
+    const [editMessage] = useMutation(UPDATE_MESSAGE,{variables: {messageid: operation.id}, onCompleted: (r: any) => { console.log(r); setRender(false); } });
     const [deleteMessage] = useMutation(DELETE_MESSAGE, { onCompleted: (e: any) => console.log(e), refetchQueries: ["GET_TRIGGERS"] });
-    
+    const [updateStatus] = useMutation(UPDATE_STATUS,{onCompleted: (d: any) => { console.log(d);}});
 
     useImperativeHandle(ref, () => ({
         TriggerForm: (msg: Operation) => {
@@ -44,12 +45,12 @@ function CreateEditMessage(props: any, ref: any) {
 
         let details: any = {};
         let msg = data.prerecordedmessage;
-        details.name = msg.title;
-        details.typo = msg.prerecordedtype.id;
-        details.mode = msg.prerecordedtrigger.id;
+        details.title = msg.title;
+        details.prerecordedtype = msg.prerecordedtype.id;
+        details.prerecordedtrigger = msg.prerecordedtrigger.id;
         details.description = msg.description;
-        details.minidescription = msg.minidescription;
-        details.url = msg.mediaurl;
+        details.minidesc = msg.minidescription;
+        details.mediaurl = msg.mediaurl;
         details.file = msg.mediaupload.id;
         details.status = msg.status;
         setMessageDetails(details);
@@ -74,7 +75,8 @@ function CreateEditMessage(props: any, ref: any) {
 
     function EditMessage(frm: any) {
         console.log('edit message');
-        useMutation(UPDATE_MESSAGE, { variables: frm, onCompleted: (d: any) => { console.log(d); } });
+        // useMutation(UPDATE_MESSAGE, { variables: frm, onCompleted: (d: any) => { console.log(d); } });
+        editMessage({variables: frm });
     }
 
     function ViewMessage(frm: any) {
@@ -83,10 +85,13 @@ function CreateEditMessage(props: any, ref: any) {
         useMutation(UPDATE_MESSAGE, { variables: frm, onCompleted: (d: any) => { console.log(d); } })
     }
 
-    function ToggleMessageStatus() {
+    function ToggleMessageStatus(id: any) {
         console.log('toggle message status');
-        let newstatus = !messageDetails.status;
+        let newstatus: boolean = !messageDetails.status;
+        console.log(messageDetails);
+        console.log(newstatus);
         //use mutation to just toggle the status of message
+        updateStatus({variables: {status: newstatus, messageid: id}});
     }
 
     function DeleteMessage(id: any) {
@@ -111,7 +116,7 @@ function CreateEditMessage(props: any, ref: any) {
                 ViewMessage(frm);
                 break;
             case 'toggle-status':
-                ToggleMessageStatus();
+                ToggleMessageStatus(operation.id);
                 break;
             case 'delete':
                 DeleteMessage(operation.id);
@@ -138,7 +143,7 @@ function CreateEditMessage(props: any, ref: any) {
                     isStepper={false}
                     formUISchema={uiSchema}
                     formSchema={messageSchema}
-                    formSubmit={name ==="View"? () => { OnSubmit(null);}:(frm: any) => { OnSubmit(frm); }}
+                    formSubmit={name ==="View"? () => {setRender(false)}:(frm: any) => { OnSubmit(frm); }}
                     formData={messageDetails}
                 />
             }

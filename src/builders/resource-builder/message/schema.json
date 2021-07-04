@@ -5,10 +5,10 @@
             "rows": 4
         }
     },
-    "minidescription": {
+    "minidesc": {
         "ui:widget": "textarea",
         "ui:options": {
-            "rows": 3
+            "rows": 2
         }
     }
 }

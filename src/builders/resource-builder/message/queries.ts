@@ -129,3 +129,28 @@ export const DELETE_MESSAGE = gql`
         }
     }
 `;
+
+export const UPDATE_STATUS = gql`
+mutation updatestatus(
+    $status: Boolean
+    $messageid: ID!
+) {
+    updatePrerecordedmessage(
+    input: {
+        data: {
+        status: $status
+        }
+        where: { id: $messageid }
+    }
+    ) {
+    prerecordedmessage {
+        id
+        title
+        description
+        minidescription
+        mediaurl
+          status
+    }
+    }
+}
+`
