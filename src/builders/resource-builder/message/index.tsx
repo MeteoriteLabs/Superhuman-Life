@@ -1,18 +1,20 @@
 import { useMemo, useState,useRef,useContext } from 'react'
 import { Badge, Button, TabContent, InputGroup, FormControl, OverlayTrigger, Popover, Dropdown, Card, Container, Row, Col} from "react-bootstrap";
 import Table from "../../../components/table";
-import ModalView from "../../../components/modal";
+// import ModalView from "../../../components/modal";
 import { gql, useQuery,useMutation } from "@apollo/client";
 import AuthContext from "../../../context/auth-context";
-import StatusModal from "./StatusModal";
-import ActionButton from "../../../components/actionbutton/index";
+// import StatusModal from "./StatusModal";
+// import ActionButton from "../../../components/actionbutton/index";
+import CreateEditMessage from "./createoredit-message";
+
 
 export default function MessagePage() {
     const auth = useContext(AuthContext);
     const [searchFilter, setSearchFilter] = useState('');
     //const [uploadFile, setUploadFile] = useState();
     const searchInput = useRef<any>();
-    
+    const createEditMessageComponent = useRef<any>(null);
     //  console.log(auth.userid);
 
     //sort by updatedAt to ensure newly created messages show up
@@ -137,12 +139,29 @@ export default function MessagePage() {
         { accessor: "minidesc", Header: "Mini Description" },
         { accessor: "status", Header: "Status", Cell: (v: any) => <Badge variant={v.value === "Active" ? "success" : "danger"}>{v.value}</Badge> },
         { accessor: "updatedon", Header: "Updated On" },
-
         {
             id: "edit",
             Header: "Actions",
             Cell: ({ row }: any) => (
-                <ActionButton action1="Status" action2="View" action3="Edit" action4= "Delete" action1Click={StatusModal}/>
+                <OverlayTrigger
+                    trigger="click"
+                    placement="bottom"
+                    overlay={
+                        <Popover id="action-popover">
+                            <Popover.Content>
+                                <Dropdown.Item onClick={() => {createEditMessageComponent.current.TriggerForm({id: row.original.id, type: 'edit'})}}>Edit</Dropdown.Item>
+                                <Dropdown.Item onClick={() => {createEditMessageComponent.current.TriggerForm({id: row.original.id, type: 'view'})}}>View</Dropdown.Item>
+                                <Dropdown.Item onClick={() => {createEditMessageComponent.current.TriggerForm({id: row.original.id, type: 'toggle-status'})}}>Status</Dropdown.Item>
+                                <Dropdown.Item onClick={() => {createEditMessageComponent.current.TriggerForm({id: row.original.id, type: 'delete'})}}>Delete</Dropdown.Item>
+                            </Popover.Content>
+                        </Popover>
+                    }
+                >
+                    <Button variant="white">
+                        <i className="fas fa-ellipsis-v"></i>
+                    </Button>
+                </OverlayTrigger>
+
             ),
         }
     ], []);
@@ -170,6 +189,7 @@ export default function MessagePage() {
         setDataTable(
             [...data.prerecordedmessages].map((Detail) => {
                 return {
+                    id: Detail.id,
                     title: Detail.title,
                     trigger: Detail.prerecordedtrigger.name,
                     minidesc: Detail.minidescription,
@@ -253,14 +273,22 @@ export default function MessagePage() {
                     </Col>
                     <Col>
                         <Card.Title className="text-center">
-                            <ModalView
+                            <Button variant={true ? "outline-secondary" : "light"} size="sm"
+                                onClick={() => {
+                                    createEditMessageComponent.current.TriggerForm({ id: null, type: 'create' });
+                                }}
+                            >
+                                <i className="fas fa-plus-circle"></i>{" "}Create New
+                            </Button>
+                            <CreateEditMessage ref={createEditMessageComponent}></CreateEditMessage>
+                            {/* <ModalView
                                 name="Create New"
                                 isStepper={false}
                                 formUISchema={uiSchema}
                                 formSchema={messageSchema}
                                 formSubmit={onSubmit}
-                                formData={{}}
-                            />
+                                formData={{name: 'Test title', description: "my description", minidescription: "my mini description"}}
+                            /> */}
                         </Card.Title>
                     </Col>
                 </Row>
