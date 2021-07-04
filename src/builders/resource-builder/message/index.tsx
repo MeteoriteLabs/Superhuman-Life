@@ -199,10 +199,10 @@ export default function MessagePage() {
             })
         );
 
-        messageSchema["1"].properties.typo.enum = [...data.prerecordedtypes].map(n => (n.id));
-        messageSchema["1"].properties.typo.enumNames = [...data.prerecordedtypes].map(n => (n.name));
-        messageSchema["1"].properties.mode.enum = [...data.prerecordedtriggers].map(n => (n.id));
-        messageSchema["1"].properties.mode.enumNames = [...data.prerecordedtriggers].map(n => (n.name));
+        messageSchema["1"].properties.prerecordedtype.enum = [...data.prerecordedtypes].map(n => (n.id));
+        messageSchema["1"].properties.prerecordedtype.enumNames = [...data.prerecordedtypes].map(n => (n.name));
+        messageSchema["1"].properties.prerecordedtrigger.enum = [...data.prerecordedtriggers].map(n => (n.id));
+        messageSchema["1"].properties.prerecordedtrigger.enumNames = [...data.prerecordedtriggers].map(n => (n.name));
         //messageSchema["1"].properties.file=Data.data;
         //console.log(Data.data);
     }

@@ -3,23 +3,24 @@
         "title": "Message",
         "type": "object",
         "required": [
-            "name",
-            "typo",
-            "mode",
-            "description"
+            "title",
+            "prerecordedtype",
+            "prerecordedtrigger",
+            "description",
+            "minidesc"
         ],
         "properties": {
-            "name": {
+            "title": {
                 "type": "string",
                 "title": "Message Title"
             },
-            "typo": {
+            "prerecordedtype": {
                 "type": "string",
                 "title": "Type",
                 "enum": [],
                 "enumNames": []
             },
-            "mode": {
+            "prerecordedtrigger": {
                 "type": "string",
                 "title": "Trigger for message",
                 "enum": [],
@@ -29,11 +30,11 @@
                 "type": "string",
                 "title": "Description"
             },
-            "minidescription": {
+            "minidesc": {
                 "type": "string",
                 "title": "Mini Description"
             },
-            "url": {
+            "mediaurl": {
                 "type": "string",
                 "title": "Url (Picture or Video)"
             },
