@@ -69,12 +69,13 @@ function CreateEditMessage(props: any, ref: any) {
 
     function EditMessage(frm: any) {
         console.log('edit message');
-        useMutation(UPDATE_MESSAGE, { variables: frm, onCompleted: (d: any) => { console.log(d); } })
+        useMutation(UPDATE_MESSAGE, { variables: frm, onCompleted: (d: any) => { console.log(d); } });
     }
 
-    function ViewMessage() {
+    function ViewMessage(frm: any) {
         console.log('view message');
         //use a variable to set form to disabled/not editable
+        useMutation(UPDATE_MESSAGE, { variables: frm, onCompleted: (d: any) => { console.log(d); } })
     }
 
     function ToggleMessageStatus() {
@@ -98,7 +99,7 @@ function CreateEditMessage(props: any, ref: any) {
                 EditMessage(frm);
                 break;
             case 'view':
-                ViewMessage();
+                ViewMessage(frm);
                 break;
             case 'toggle-status':
                 ToggleMessageStatus();
@@ -111,15 +112,24 @@ function CreateEditMessage(props: any, ref: any) {
 
     FetchData();
 
+    let name = "";
+    if(operation.type === 'create'){
+        name="Create New";
+    }else if(operation.type === 'edit'){
+        name="Edit";
+    }else if(operation.type === 'view'){
+        name="View";
+    }
+
     return (
         <>
             {render &&
                 <ModalView
-                    name="Create New"
+                    name={name}
                     isStepper={false}
                     formUISchema={uiSchema}
                     formSchema={messageSchema}
-                    formSubmit={(frm: any) => { OnSubmit(frm); }}
+                    formSubmit={name ==="View"? () => { OnSubmit(null);}:(frm: any) => { OnSubmit(frm); }}
                     formData={messageDetails}
                 />
             }

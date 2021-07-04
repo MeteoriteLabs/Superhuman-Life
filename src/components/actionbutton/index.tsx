@@ -3,15 +3,15 @@ import {Dropdown} from "react-bootstrap";
 import "./button.css";
 function ActionButton(props: any) {
 
-   const Wrap = ({action1Click}: any) => { return(<div>{action1Click}</div>)}
+//    const Wrap = ({action1Click}: any) => { return(<div>{action1Click}</div>)}
 
     // function wrapper(x: any){
     //     return(<div>{x}</div>)
     // }
-    function click() {
-      return(<Wrap/>);
+    // function click() {
+    //   return(<Wrap/>);
       
-    }
+    // }
     // const [show,setShow] = usestate(false);
     return (
        
@@ -21,7 +21,7 @@ function ActionButton(props: any) {
                         </Dropdown.Toggle>
 
                     <Dropdown.Menu>
-                    <Dropdown.Item onClick={() => click()}>{props.action1}</Dropdown.Item>
+                    <Dropdown.Item >{props.action1}</Dropdown.Item>
                     <Dropdown.Item href="#/action-2">{props.action2}</Dropdown.Item>
                     <Dropdown.Item href="#/action-3">{props.action3}</Dropdown.Item>
                     <Dropdown.Item href="#/action-4">{props.action4}</Dropdown.Item>

@@ -26,6 +26,7 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
         }
     }
 
+
     return (
         <>  
             {/* <Button variant={name === "Create New"?"outline-secondary":"light"}  size="sm" onClick={() => setShow(true)}>
@@ -89,13 +90,14 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
                                 }
                             </Button>
                         </> :
-                        <Button
-                            variant="danger"
-                            size="sm"
-                            onClick={(event) => {formRef.current.onSubmit(event)}}
-                        >
-                            Submit<i className="ml-4 fas fa-arrow-right"></i>
-                        </Button>
+                    <Button
+                         variant="danger"
+                         size="sm"
+                         onClick={(event) => {formRef.current.onSubmit(event)}}
+                     >
+                        {name === 'View'? "Close": "Submit"} 
+                     </Button>
+                        
                     }
                 </Modal.Footer>
             </Modal>
