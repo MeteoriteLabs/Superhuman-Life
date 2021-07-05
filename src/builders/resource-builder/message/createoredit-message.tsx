@@ -4,6 +4,7 @@ import ModalView from "../../../components/modal";
 import { GET_TRIGGERS, ADD_MESSAGE, UPDATE_MESSAGE, GET_MESSAGE, DELETE_MESSAGE,UPDATE_STATUS } from "./queries";
 import AuthContext from "../../../context/auth-context";
 
+
 interface Operation {
     id?: string;
     type: 'create' | 'edit' | 'view' | 'toggle-status' | 'delete';
@@ -146,7 +147,10 @@ function CreateEditMessage(props: any, ref: any) {
                     formSubmit={name ==="View"? () => {setRender(false)}:(frm: any) => { OnSubmit(frm); }}
                     formData={messageDetails}
                 />
+                
             }
+
+            
         </>
     )
 }

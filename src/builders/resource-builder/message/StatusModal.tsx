@@ -14,24 +14,28 @@ function StatusModal() {
       <Modal show={show} onHide={() => setShow(false)} aria-labelledby="contained-modal-title-vcenter" centered>
         <Modal.Header closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
-            Status
+            Change Status
           </Modal.Title>
         </Modal.Header>
         <Modal.Body className="show-grid">
-          <Container>
+            <div className="p-3">
+            <h5>Do you want to change the Status?</h5   >
+            </div>  
+        </Modal.Body>   
+        <Modal.Footer>
+        <Container>
             <Row>
-              <Col xs={12} md={8}>
-              <Button variant="success" onClick={() => setShow(false)}>Active</Button>
+              <Col xs={6} md={8}>
+              <Button variant="danger" onClick={() => setShow(false)}>Cancel</Button>
               </Col>
               <Col xs={6} md={4}>
-              <Button variant="danger" onClick={() => setShow(false)}>Inactive</Button>
+              <Button variant="success" onClick={() => setShow(false)}>Yes</Button>
               </Col>
             </Row>
           </Container>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShow(false)}>Update Now</Button>
-        </Modal.Footer>
+        </Modal.Footer> 
+          
+        
       </Modal>
     </>
   );
