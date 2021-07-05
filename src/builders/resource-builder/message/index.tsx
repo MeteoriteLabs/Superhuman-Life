@@ -1,11 +1,9 @@
 import { useMemo, useState,useRef,useContext } from 'react'
-import { Badge, Button, TabContent, InputGroup, FormControl, OverlayTrigger, Popover, Dropdown, Card, Container, Row, Col} from "react-bootstrap";
+import { Badge, Button, TabContent, InputGroup, FormControl, Card, Container, Row, Col} from "react-bootstrap";
 import Table from "../../../components/table";
-// import ModalView from "../../../components/modal";
 import { gql, useQuery} from "@apollo/client";
 import AuthContext from "../../../context/auth-context";
-// import StatusModal from "./StatusModal";
-// import ActionButton from "../../../components/actionbutton/index";
+import ActionButton from "../../../components/actionbutton/index";
 import CreateEditMessage from "./createoredit-message";
 // import StatusModal from "./StatusModal";
 
@@ -59,25 +57,16 @@ export default function MessagePage() {
             id: "edit",
             Header: "Actions",
             Cell: ({ row }: any) => (
-                <OverlayTrigger
-                    trigger="click"
-                    placement="bottom"
-                    overlay={
-                        <Popover id="action-popover">
-                            <Popover.Content>
-                                <Dropdown.Item onClick={() => {createEditMessageComponent.current.TriggerForm({id: row.original.id, type: 'edit'})}}>Edit</Dropdown.Item>
-                                <Dropdown.Item onClick={() => {createEditMessageComponent.current.TriggerForm({id: row.original.id, type: 'view'})}}>View</Dropdown.Item>
-                                <Dropdown.Item onClick={() => { createEditMessageComponent.current.TriggerForm({ id: row.original.id, type: 'toggle-status', current_status: (row.original.status === "Active") }) }}>Status</Dropdown.Item>
-                                <Dropdown.Item onClick={() => {createEditMessageComponent.current.TriggerForm({id: row.original.id, type: 'delete'})}}>Delete</Dropdown.Item>
-                            </Popover.Content>
-                        </Popover>
-                    }
-                >
-                    <Button variant="white">
-                        <i className="fas fa-ellipsis-v"></i>
-                    </Button>
-                </OverlayTrigger>
-
+                <ActionButton 
+                action1="Edit"
+                actionClick1={() => {createEditMessageComponent.current.TriggerForm({id: row.original.id, type: 'edit'})}}
+                action2="View"
+                actionClick2={() => {createEditMessageComponent.current.TriggerForm({id: row.original.id, type: 'view'})}}
+                action3="Status"
+                actionClick3={() => { createEditMessageComponent.current.TriggerForm({ id: row.original.id, type: 'toggle-status', current_status: (row.original.status === "Active") }) }}
+                action4="Delete"
+                actionClick4={() => {createEditMessageComponent.current.TriggerForm({id: row.original.id, type: 'delete'})}}
+                 />
             ),
         }
     ], []);
