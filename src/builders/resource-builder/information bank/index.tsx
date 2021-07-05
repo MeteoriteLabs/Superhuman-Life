@@ -66,43 +66,43 @@ export default function InformationPage() {
             }
       
     `
-    const UPDATE_MESSAGE = gql`
-        mutation updatemsg(
-            $title: String
-            $description: String
-            $minidesc: String
-            $informationbankmessagestype: ID
-            $tags: String
-            $mediaurl: String
-            $userpermission: ID
-            $messageid: ID!
-        ) {
-            updateInformationbankmessage(
-            input: {
-                data: {
-                title: $title
-                description: $description
-                minidescription: $minidesc
-                mediaurl: $mediaurl
-                tags: $tags
-                informationbankmessagestype: $informationbankmessagestype
-                users_permissions_user: $userpermission
-                }
-                where: { id: $messageid }
-            }
-            ) {
-            informationbankmessage {
-                id
-                title
-                tags
-                description
-                minidescription
-                mediaurl
-            }
-            }
-        }
+    // const UPDATE_MESSAGE = gql`
+    //     mutation updatemsg(
+    //         $title: String
+    //         $description: String
+    //         $minidesc: String
+    //         $informationbankmessagestype: ID
+    //         $tags: String
+    //         $mediaurl: String
+    //         $userpermission: ID
+    //         $messageid: ID!
+    //     ) {
+    //         updateInformationbankmessage(
+    //         input: {
+    //             data: {
+    //             title: $title
+    //             description: $description
+    //             minidescription: $minidesc
+    //             mediaurl: $mediaurl
+    //             tags: $tags
+    //             informationbankmessagestype: $informationbankmessagestype
+    //             users_permissions_user: $userpermission
+    //             }
+    //             where: { id: $messageid }
+    //         }
+    //         ) {
+    //         informationbankmessage {
+    //             id
+    //             title
+    //             tags
+    //             description
+    //             minidescription
+    //             mediaurl
+    //         }
+    //         }
+    //     }
       
-    `
+    // `
    
     const columns = useMemo<any>(() => [
         { accessor: "title", Header: "Title" },

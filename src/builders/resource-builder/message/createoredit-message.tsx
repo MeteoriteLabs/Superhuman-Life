@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useContext, useImperativeHandle, useState } from 'react';
+import React, { useContext, useImperativeHandle, useState } from 'react';
 import { useQuery, useMutation } from "@apollo/client";
 import ModalView from "../../../components/modal";
 import { GET_TRIGGERS, ADD_MESSAGE, UPDATE_MESSAGE, GET_MESSAGE, DELETE_MESSAGE,UPDATE_STATUS } from "./queries";
@@ -33,7 +33,7 @@ function CreateEditMessage(props: any, ref: any) {
             if (msg && !msg.id) //render form if no message id
                 setRender(true);
 
-            if (msg.type == "toggle-status" && "current_status" in msg)
+            if (msg.type === "toggle-status" && "current_status" in msg)
                 ToggleMessageStatus(msg.id, msg.current_status);
         }
     }));
@@ -71,7 +71,7 @@ function CreateEditMessage(props: any, ref: any) {
         console.log('Fetch data', operation.id);
         useQuery(GET_TRIGGERS, { onCompleted: loadData });
         //skip fetch message if id not set or operation is toggle-status
-        useQuery(GET_MESSAGE, { variables: { id: operation.id }, skip: (!operation.id || operation.type == 'toggle-status'), onCompleted: (e: any) => { FillDetails(e) } });
+        useQuery(GET_MESSAGE, { variables: { id: operation.id }, skip: (!operation.id || operation.type === 'toggle-status'), onCompleted: (e: any) => { FillDetails(e) } });
     }
 
     function CreateMessage(frm: any) {
