@@ -1,0 +1,53 @@
+{
+     "1": {
+         "title": "",
+         "type": "object",
+         "required": [
+             "exercise"
+         ],
+         "properties": {
+             "programName": {
+                 "type": "string",
+                 "title": "Program Template Name"
+             },
+             "duration": {
+                 "type": "string",
+                 "title": "Duration",
+                 "enum": [
+                     "3 Days",
+                     "7 Days (01 week)",
+                     "14 Days (02 Week)",
+                     "30 Days (01 Month)",
+                     "45 Days",
+                     "60 Days (02 Month",
+                     "75 Days",
+                     "90 Days (03 Month)",
+                     "120 Days (04 Month",
+                     "180 Days (06 Month)",
+                     "360 Days (12 Month"
+                 ]
+             },
+             "level": {
+                 "type": "string",
+                 "title": "Level",
+                 "enum": [
+                     "Beginner",
+                     "Intermediate",
+                     "Advance"
+                 ]
+             },
+             "description": {
+                 "type": "string",
+                 "title": "Description"
+             },
+             "miniDescription": {
+                "type": "string",
+                "title": "Mini Description"
+            }, 
+            "equipment": {
+                "type": "string",
+                "title": "Equipment"
+            }
+         }
+     }
+ }
