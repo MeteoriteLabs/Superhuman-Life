@@ -1,41 +1,46 @@
 {
-    "title": "Add Podcast Episode",
-    "description": " ",
-    "type": "object",
-    "properties": {
-        "name": {
-            "type": "string",
-            "title": "Name of Episode"
-        },
-        "category": {
-            "type": "string",
-            "title": "Category",
-            "enum": [
-                "Fitness",
-                "Mindset",
-                "Nutrition",
-                "Other"
-            ]
-        },
-        "about": {
-            "type": "string",
-            "format": "textarea",
-            "title": "About Podcast"
-        },
-        "tags": {
-            "type": "string",
-            "title": "Tags"
-        },
-        "video": {
-            "type": "string",
-            "format": "uri",
-            "title": "Intro Video Link"
-        },
-        "thumbnail": {
-            "type": "string",
-            "format": "data-url",
-            "title": "Thumbnail Picture",
-            "accept": ".jpg"
+    "1": {
+        "title": "Mindset",
+        "type": "object",
+        "required": [
+            "name",
+            "typo",
+            "minidescription"
+        ],
+        "properties": {
+            "name": {
+                "type": "string",
+                "title": "Message Title"
+            },
+            "typo": {
+                "type": "string",
+                "title": "Type",
+                "enum": [],
+                "enumNames": []
+            },
+            "tags": {
+                "type": "string",
+                "title": "Tags"
+            },
+            "minidescription": {
+                "type": "string",
+                "title": "Mini Description"
+            },
+            "Url": {
+                "type": "string",
+                "title": "Url (Picture or Video)"
+            },
+            "Or": {
+                "title": "OR",
+                "description": "OR",
+                "type": "null"
+              },
+            "file": {
+                "type": "string",
+                "format": "data-url",
+                "title": "Upload (Picture or Video)"
+                
+            }
         }
     }
 }

@@ -1,15 +1,20 @@
 import { useRef, useState } from "react";
-import { withTheme } from "@rjsf/core";
+import { withTheme, utils } from "@rjsf/core";
 import { Theme as Bootstrap4Theme } from '@rjsf/bootstrap-4';
 import { Button, Col, Modal, ProgressBar, Row } from "react-bootstrap";
 
 export default function ModalView({ name, formUISchema, formSubmit, formSchema, formData, isStepper }: any) {
+    const registry = utils.getDefaultRegistry();
+    const defaultFileWidget = registry.widgets["FileWidget"];
+    (Bootstrap4Theme as any).widgets["FileWidget"] = defaultFileWidget;
+
     const Form: any = withTheme(Bootstrap4Theme);
     const formRef = useRef<any>(null);
     const [step, setStep] = useState<number>(1);
-    const [show, setShow] = useState<boolean>(false);
+    const [show, setShow] = useState<boolean>(true);
     const [formValues, setFormValues] = useState<any>(formData);
     const stepper: string[] = ["Creator", "Details", "Program", "Schedule", "Pricing"];
+    
 
     function submitHandler(formData: any) {
         if (isStepper && step < 5) {
@@ -17,21 +22,21 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
             setStep(step + 1);
             setFormValues({ ...formValues, ...formData });
         } else {
-            console.log(formData);
             formSubmit(formData);
         }
     }
 
+
     return (
-        <>
-            <Button variant="outline-secondary" size="sm" onClick={() => setShow(true)}>
-                <i className="fas fa-plus-circle"></i>{" "}{name}
-            </Button>
-            <Modal show={show} onHide={() => setShow(false)} centered>
+        <>  
+            {/* <Button variant={name === "Create New"?"outline-secondary":"light"}  size="sm" onClick={() => setShow(true)}>
+                {name === "Create New"?<i className="fas fa-plus-circle"></i>:" "}{" "}{name}
+            </Button> */}
+            <Modal size="xl" show={show} onHide={() => setShow(false)} centered >
                 <Modal.Header closeButton>
                     <Modal.Title as={Row}>
                         <Col xs={12} md={12} lg={12}>
-                            <p className="lead">New {name} Package</p>
+                            <p className="lead">{name}</p>
                         </Col>
                         {isStepper && stepper.map((item: string, id: number) => (
                             <Col xs={2} md={2} lg={2} key={id}>
@@ -46,16 +51,22 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
                         ))}
                     </Modal.Title>
                 </Modal.Header>
-                <Modal.Body className="bg-light">
-                    <Form
-                        uiSchema={formUISchema}
-                        schema={formSchema[step.toString()]}
-                        ref={formRef}
-                        onSubmit={({ formData }: any) => submitHandler(formData)}
-                        formData={formValues}
-                    >
-                        <div></div>
-                    </Form>
+                <Modal.Body className="show-grid bg-light">
+                    <Row>
+                        <Col  lg={12}>
+                            <div style={{ height: '400px', overflowX: 'hidden', overflowY: 'auto' }}>
+                                <Form
+                                    uiSchema={formUISchema}
+                                    schema={formSchema[step.toString()]}
+                                    ref={formRef}
+                                    onSubmit={({ formData }: any) => submitHandler(formData)}
+                                    formData={formValues}
+                                >
+                                    <div></div>
+                                </Form>
+                            </div>
+                        </Col>
+                    </Row>
                 </Modal.Body>
                 <Modal.Footer>
                     {isStepper ?
@@ -79,13 +90,14 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
                                 }
                             </Button>
                         </> :
-                        <Button
-                            variant="danger"
-                            size="sm"
-                            onClick={(event) => formRef.current.onSubmit(event)}
-                        >
-                            Submit<i className="ml-4 fas fa-arrow-right"></i>
-                        </Button>
+                    <Button
+                         variant="danger"
+                         size="sm"
+                         onClick={(event) => {formRef.current.onSubmit(event)}}
+                     >
+                        {name === 'View'? "Close": "Submit"} 
+                     </Button>
+                        
                     }
                 </Modal.Footer>
             </Modal>
