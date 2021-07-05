@@ -6,8 +6,9 @@ import AuthContext from "../../../context/auth-context";
 
 
 interface Operation {
-    id?: string;
+    id: string;
     type: 'create' | 'edit' | 'view' | 'toggle-status' | 'delete';
+    current_status: boolean;
 }
 
 function CreateEditMessage(props: any, ref: any) {
@@ -31,6 +32,9 @@ function CreateEditMessage(props: any, ref: any) {
 
             if (msg && !msg.id) //render form if no message id
                 setRender(true);
+
+            if (msg.type == "toggle-status" && "current_status" in msg)
+                ToggleMessageStatus(msg.id, msg.current_status);
         }
     }));
 
@@ -66,7 +70,8 @@ function CreateEditMessage(props: any, ref: any) {
     function FetchData() {
         console.log('Fetch data', operation.id);
         useQuery(GET_TRIGGERS, { onCompleted: loadData });
-        useQuery(GET_MESSAGE, { variables: { id: operation.id }, skip: !operation.id, onCompleted: (e: any) => { FillDetails(e) } });
+        //skip fetch message if id not set or operation is toggle-status
+        useQuery(GET_MESSAGE, { variables: { id: operation.id }, skip: (!operation.id || operation.type == 'toggle-status'), onCompleted: (e: any) => { FillDetails(e) } });
     }
 
     function CreateMessage(frm: any) {
@@ -86,13 +91,11 @@ function CreateEditMessage(props: any, ref: any) {
         useMutation(UPDATE_MESSAGE, { variables: frm, onCompleted: (d: any) => { console.log(d); } })
     }
 
-    function ToggleMessageStatus(id: any) {
+    function ToggleMessageStatus(id: string, current_status: boolean) {
         console.log('toggle message status');
-        let newstatus: boolean = !messageDetails.status;
-        console.log(messageDetails);
-        console.log(newstatus);
+        console.log(id, current_status);
         //use mutation to just toggle the status of message
-        updateStatus({variables: {status: newstatus, messageid: id}});
+        updateStatus({ variables: { status: !current_status, messageid: id } });
     }
 
     function DeleteMessage(id: any) {
@@ -116,9 +119,9 @@ function CreateEditMessage(props: any, ref: any) {
             case 'view':
                 ViewMessage(frm);
                 break;
-            case 'toggle-status':
-                ToggleMessageStatus(operation.id);
-                break;
+            // case 'toggle-status':
+            //     ToggleMessageStatus();
+            //     break;
             case 'delete':
                 DeleteMessage(operation.id);
                 break;
