@@ -94,7 +94,7 @@ const ExerciseList = (props: any) => {
                               <Container className="pl-0">
                                    <option 
                                         style={{cursor: 'pointer'}}
-                                        className="m-2 p-1 shadow-sm rounded bg-white"
+                                        className="m-2 p-1 shadow-lg rounded bg-white"
                                         value={exercise.id} 
                                         onClick={(e) => {e.preventDefault(); 
                                              handleSelectedExerciseAdd(exercise.name, exercise.id);

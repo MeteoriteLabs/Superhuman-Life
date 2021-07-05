@@ -138,6 +138,7 @@ export default function EventsTab() {
         setFitnessDisciplines(
             discplines
         );
+        disc = discplines[0].id
         
     }
 
@@ -271,6 +272,7 @@ export default function EventsTab() {
         Advance,
         None
     }
+    console.log(disc);
     
     function onSubmit(formData: any) {
         
