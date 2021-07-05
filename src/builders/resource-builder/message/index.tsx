@@ -151,7 +151,7 @@ export default function MessagePage() {
                             <Popover.Content>
                                 <Dropdown.Item onClick={() => {createEditMessageComponent.current.TriggerForm({id: row.original.id, type: 'edit'})}}>Edit</Dropdown.Item>
                                 <Dropdown.Item onClick={() => {createEditMessageComponent.current.TriggerForm({id: row.original.id, type: 'view'})}}>View</Dropdown.Item>
-                                <Dropdown.Item onClick={() => {createEditMessageComponent.current.TriggerForm({id: row.original.id, type: 'toggle-status'})}}>Status</Dropdown.Item>
+                                <Dropdown.Item onClick={() => { createEditMessageComponent.current.TriggerForm({ id: row.original.id, type: 'toggle-status', current_status: (row.original.status == "Active") }) }}>Status</Dropdown.Item>
                                 <Dropdown.Item onClick={() => {createEditMessageComponent.current.TriggerForm({id: row.original.id, type: 'delete'})}}>Delete</Dropdown.Item>
                             </Popover.Content>
                         </Popover>
