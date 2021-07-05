@@ -1,7 +1,7 @@
 import {useMemo,useRef,useState,useContext} from 'react'
 import {Button,TabContent,InputGroup,FormControl,OverlayTrigger,Popover,Dropdown,Card,Container,Row,Col} from "react-bootstrap";
 import Table from "../../../components/table";
-import ModalView from "../../../components/modal";
+//import ModalView from "../../../components/modal";
 import {gql,useQuery,useMutation} from "@apollo/client";
 import AuthContext from "../../../context/auth-context";
 
@@ -173,34 +173,34 @@ export default function MindsetPage() {
     }
 
     
-    const uiSchema: any = {
+    // const uiSchema: any = {
 
-        "minidescription": {
-            "ui:widget": "textarea",
-            "ui:options": {
-                "rows": 3
-            }
-        }
+    //     "minidescription": {
+    //         "ui:widget": "textarea",
+    //         "ui:options": {
+    //             "rows": 3
+    //         }
+    //     }
          
-    }
+    // }
     const [createmessage, { error }] = useMutation(ADD_MESSAGE);
 
-    function onSubmit(formData: any ) {
-        let authid = auth.userid;
+    // function onSubmit(formData: any ) {
+    //     let authid = auth.userid;
 
-        createmessage(
-            {
-                variables: {
-                    title: formData.name,
-                    tags: formData.tags,
-                    minidesc: formData.minidescription,
-                    mindsetmessagetype: formData.typo,
-                    mediaurl: formData.file, 
-                    user_permissions_user: authid
-                }
-            }
-        );
-    }
+    //     createmessage(
+    //         {
+    //             variables: {
+    //                 title: formData.name,
+    //                 tags: formData.tags,
+    //                 minidesc: formData.minidescription,
+    //                 mindsetmessagetype: formData.typo,
+    //                 mediaurl: formData.file, 
+    //                 user_permissions_user: authid
+    //             }
+    //         }
+    //     );
+    // }
     // if (loading) return <span>'Loading...'</span>;
      if (error) return <span>{`Error! ${error.message}`}</span>;
     FetchData({ filter: searchFilter, id: auth.userid});
@@ -218,14 +218,14 @@ export default function MindsetPage() {
             </Col>
             <Col>  
             <Card.Title className="text-center">
-                <ModalView
+                {/* <ModalView
                     name="Create New"
                     isStepper={false}
                     formUISchema={uiSchema}
                     formSchema={mindsetSchema}
                     formSubmit={onSubmit}
                     formData={{}}
-                />
+                /> */}
             </Card.Title>
             </Col>
             </Row>
