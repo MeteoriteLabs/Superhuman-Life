@@ -1,40 +1,39 @@
+
 import { Card, Tab, Tabs, TabContent } from "react-bootstrap";
+import MessagePage from "./message";
+import MindsetPage from "./mindset";
+import InformationPage from "./information bank";
+
 
 export default function ResourcePage() {
+   
     return (
         <>
             <h3>Resources</h3>
             <Card className="shadow-sm mt-3" border="light">
                 <Card.Body>
-                    <Tabs variant="pills" transition={false} defaultActiveKey="fitness">
-                        <Tab eventKey="fitness" title="Fitness">
+                    <Tabs variant="pills" transition={false} defaultActiveKey="message">
+                        <Tab eventKey="message" title="Messages">
                             <TabContent>
-                                <hr />
-                                Fitness Tab
-                            </TabContent>
-                        </Tab>
-                        <Tab eventKey="knowledge" title="Knowledge">
-                            <TabContent>
-                                <hr />
-                                Knowledge Tab
+                                <hr/>
+                                
+                                    
+                                        <MessagePage/>
+
+                                    
+                                
                             </TabContent>
                         </Tab>
                         <Tab eventKey="mindset" title="Mindset">
                             <TabContent>
-                                <hr />
-                                Mindset Tab
+                                <hr/>
+                                <MindsetPage/>
                             </TabContent>
                         </Tab>
-                        <Tab eventKey="message" title="Message">
+                        <Tab eventKey="informationbank" title="Information Bank">
                             <TabContent>
-                                <hr />
-                                Message Tab
-                            </TabContent>
-                        </Tab>
-                        <Tab eventKey="nutrition" title="Nutrition">
-                            <TabContent>
-                                <hr />
-                                Nutrition Tab
+                                <hr/>
+                                <InformationPage/>
                             </TabContent>
                         </Tab>
                     </Tabs>
