@@ -1,28 +1,21 @@
-import { useContext, useMemo, useState } from "react";
+import { useContext, useMemo, useState, useRef } from "react";
 import { Button, Card, Dropdown, OverlayTrigger, Popover, TabContent, Form } from "react-bootstrap";
 import ModalView from "../../../components/modal";
 import Table from "../../../components/table";
 import { gql, useQuery,useMutation } from "@apollo/client";
 import AuthContext from "../../../context/auth-context";
-import EquipmentSearch from './equipmentList';
-import MuscleGroupSearch from './muscleGroupList';
-import TextEditor from './textEditor';
+import EquipmentSearch from '../search-builder/equipmentList';
+import MuscleGroupSearch from '../search-builder/muscleGroupList';
+import TextEditor from '../search-builder/textEditor';
 
 export default function EventsTab() {
 
     const auth = useContext(AuthContext);
     const [tableData, setTableData] = useState<any[]>([]);
     const [fitnessdisciplines, setFitnessDisciplines] = useState<any[]>([]);
+    let disc: any;
 
-    const GET_FITNESSDISCIPLINES = gql`
-        query fitnessdisciplines{
-            fitnessdisciplines(sort: "updatedAt"){
-                id
-                disciplinename
-                updatedAt
-            }
-        }
-    `
+  
 
     const GET_TABLEDATA = gql`
         query ExercisesQuery($id: String) {
@@ -55,6 +48,11 @@ export default function EventsTab() {
                 exercisemusclegroups {
                     name
                   }
+            }
+            fitnessdisciplines(sort: "updatedAt"){
+                id
+                disciplinename
+                updatedAt
             }
         }
     `
@@ -94,25 +92,6 @@ export default function EventsTab() {
             }
         }
     `
-    
-    
-
-
-    function FetchFitnessDisciplines(){
-        useQuery(GET_FITNESSDISCIPLINES, {onCompleted: loadFitnessDisciplines});
-    }
-
-    function loadFitnessDisciplines(data: any){
-        setFitnessDisciplines(
-            [...data.fitnessdisciplines].map((discipline) => {
-                return {
-                    id: discipline.id,
-                    disciplineName: discipline.disciplinename,
-                    updatedAt: discipline.updatedAt
-                }
-            })
-        );
-    }
 
     function FetchData(_variables: {} = {id: auth.userid}){
         useQuery(GET_TABLEDATA, {variables: _variables, onCompleted: loadData})
@@ -131,6 +110,7 @@ export default function EventsTab() {
     }
 
     function loadData(data: any) {
+        console.log(data);
         setTableData(
             [...data.exercises].map((detail) => {
                 return {
@@ -148,7 +128,19 @@ export default function EventsTab() {
                 }
             })
         );
+        let discplines = [...data.fitnessdisciplines].map((discipline) => {
+                    return {
+                        id: discipline.id,
+                        disciplineName: discipline.disciplinename,
+                        updatedAt: discipline.updatedAt
+                    }
+                })
+        setFitnessDisciplines(
+            discplines
+        );
+        
     }
+
 
     const columns = useMemo<any>(() => [
         { accessor: "exerciseName", Header: "Exercise Name" },
@@ -198,7 +190,7 @@ export default function EventsTab() {
         editorTextString = data;
     }
 
-    let disc: any;
+    
     const eventSchema: any = require("./exercises.json");
     const uiSchema: any = {
         "level": {
@@ -245,7 +237,9 @@ export default function EventsTab() {
                             <Form.Label>Fitness Discipline</Form.Label>
                             <Form.Control as="select" custom onChange={(e) => { disc = e.target.value }}>
                                 {fitnessdisciplines.map((val: any) => {
-                                    return <option value={val.id} >{val.disciplineName}</option>
+                                    return (
+                                        <option value={val.id} >{val.disciplineName}</option>
+                                    );
                                 })}
                             </Form.Control>
                         </Form.Group>
@@ -278,35 +272,35 @@ export default function EventsTab() {
         None
     }
     
-
     function onSubmit(formData: any) {
         
         let levelIndex = formData.level;
+        console.log(formData);
         
         createExercise(
-            {
-                variables: {
-                    exercisename: formData.exercise,
-                    exerciselevel: ENUM_EXERCISES_EXERCISELEVEL[levelIndex],
-                    exerciseminidescription: formData.miniDescription,
-                    fitnessdiscipline: disc,
-                    exercisetext: (!editorTextString ? null : editorTextString),
-                    exerciseurl: formData.addExercise.AddURL,
-                    users_permissions_user: authid,
-                    equipment_lists: equipmentListarray.map((val: any) => {
-                        return val.id;
-                    }),
-                    exercisemusclegroups: muscleGroupListarray.map((val: any) => {
-                        return val.id;
-                    })
-                }
-            }
+            // {
+            //     variables: {
+            //         exercisename: formData.exercise,
+            //         exerciselevel: ENUM_EXERCISES_EXERCISELEVEL[levelIndex],
+            //         exerciseminidescription: formData.miniDescription,
+            //         fitnessdiscipline: disc,
+            //         exercisetext: (!editorTextString ? null : editorTextString),
+            //         exerciseurl: formData.addExercise.AddURL,
+            //         users_permissions_user: authid,
+            //         equipment_lists: equipmentListarray.map((val: any) => {
+            //             return val.id;
+            //         }),
+            //         exercisemusclegroups: muscleGroupListarray.map((val: any) => {
+            //             return val.id;
+            //         })
+            //     }
+            // }
         )
     }
     if (error) return <span>{`Error! ${error.message}`}</span>;
 
     FetchData({id: auth.userid});
-    FetchFitnessDisciplines();
+    // FetchFitnessDisciplines();
     
     
     return (

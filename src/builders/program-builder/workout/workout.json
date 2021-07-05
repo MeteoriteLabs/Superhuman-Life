@@ -8,7 +8,7 @@
          "properties": {
              "workout": {
                  "type": "string",
-                 "title": "Name Workout"
+                 "title": "Workout Name"
              },
              "intensity": {
                  "type": "string",
@@ -43,7 +43,7 @@
                 "title": "Benefits"
             },
             "addWorkout": {
-                "title": "Add Workout",
+                "title": "",
                 "$ref": "#/definitions/addWorkout"
             },
             "calories": {
@@ -100,7 +100,7 @@
                                             "Text"
                                         ]
                                     },
-                                    "AddText": {
+                                    "Add Text": {
                                         "type": "string"
                                     }
                                 }

@@ -1,10 +1,13 @@
-import { useState, useRef } from 'react';
-import { InputGroup, FormControl, Container } from 'react-bootstrap';
+import { useState, useRef, useContext } from 'react';
+import { InputGroup, FormControl, Container, Card, Row, Col } from 'react-bootstrap';
 import { gql, useQuery} from "@apollo/client";
+import AuthContext from "../../../context/auth-context";
+import ExerciseBuild from './exercisebuild';
 
-const EquipmentList = (props: any) => {
+const ExerciseList = (props: any) => {
 
-     const [fitnessEquipments, setFitnessEquipments] = useState<any[]>([]);
+     const auth = useContext(AuthContext);
+     const [exerciseList, setExerciseList] = useState<any[]>([]);
      const [searchInput, setSearchInput] = useState(null);
      const [selected, setSelected] = useState<any[]>([]);
      const inputField = useRef<any>();
@@ -12,40 +15,45 @@ const EquipmentList = (props: any) => {
 
      
      
-    const GET_EQUIPMENTLIST = gql`
-     query equipmentListQuery($filter: String!) {
-          equipmentLists(sort: "updatedAt", where: { name_contains: $filter}){
+    const GET_EXERCISELIST = gql`
+     query exercisesList($id: String) {
+          exercises(where: { users_permissions_user: {id: $id}}){
                id
-               name
+               exercisename
+               users_permissions_user {
+                    id
+               }
           }
      }
      `
      
-     function FetchEquipmentList(_variable: {} = { filter: " "}){
-          useQuery(GET_EQUIPMENTLIST, { variables: _variable ,onCompleted: loadEquipmentList, skip: !searchInput});
+     function FetchExerciseList(_variable: {} = {id: auth.userid}){
+          useQuery(GET_EXERCISELIST, { variables: _variable ,onCompleted: loadExerciseList, skip: !searchInput});
      }
 
-     function loadEquipmentList(data: any){
-          setFitnessEquipments(
-          [...data.equipmentLists].map((equipment) => {
+     function loadExerciseList(data: any){
+          setExerciseList(
+          [...data.exercises].map((exercise) => {
                return {
-                    id: equipment.id,
-                    name: equipment.name
+                    id: exercise.id,
+                    name: exercise.exercisename
                }
           })
           );
      }
+
+     console.log(exerciseList);
      
-     function EquipmentSearch(data: any) {
+     function ExerciseSearch(data: any) {
           if(data.length > 0){
                setSearchInput(data);
                skipval = false;
           }else {
-               setFitnessEquipments([]);
+               setExerciseList([]);
           }
      }
 
-     function handleSelectedEquipmentAdd(name: any, id: any) {
+     function handleSelectedExerciseAdd(name: any, id: any) {
           const values = [...selected];
           let a = values.find((e) => e.id == id);
           if (!a){
@@ -53,11 +61,11 @@ const EquipmentList = (props: any) => {
                setSelected(values);
           }
           inputField.current.value = "";
-          setFitnessEquipments([]);
+          setExerciseList([]);
           skipval = true;
      }
 
-     function handleSelectedEquipmentRemove(name: any) {
+     function handleSelectedExerciseRemove(name: any) {
           const values = [...selected];
           values.splice(name, 1);
           setSelected(values);
@@ -66,33 +74,32 @@ const EquipmentList = (props: any) => {
      onTrigger();
 
      function onTrigger() {
-          props.equipmentList(selected);
+          props.exerciseList(selected);
      }
 
-     FetchEquipmentList({filter: searchInput, skip: skipval});
+     FetchExerciseList({filter: searchInput, skip: skipval});
 
      return (
           <>
-          <label style={{ fontSize: 17}}>Equipment</label>
                <InputGroup>
-                    <FormControl aria-describedby="basic-addon1" placeholder="Search For Equipment" id="searchInput" ref={inputField}
+                    <FormControl aria-describedby="basic-addon1" placeholder="Search For Exercises" id="searchInput" ref={inputField}
                               onChange={(e) => {e.preventDefault();
-                                   EquipmentSearch(e.target.value);
+                                   ExerciseSearch(e.target.value);
                          }} autoComplete="off"
                     />
                </InputGroup>
                <>
-                    {fitnessEquipments.slice(0,5).map((equipment) => {
+                    {exerciseList.slice(0,5).map((exercise) => {
                          return (
                               <Container className="pl-0">
                                    <option 
                                         style={{cursor: 'pointer'}}
                                         className="m-2 p-1 shadow-sm rounded bg-white"
-                                        value={equipment.id} 
+                                        value={exercise.id} 
                                         onClick={(e) => {e.preventDefault(); 
-                                             handleSelectedEquipmentAdd(equipment.name, equipment.id);
+                                             handleSelectedExerciseAdd(exercise.name, exercise.id);
                                              }}>
-                                             {equipment.name}
+                                             {exercise.name}
                                    </option>
                               </Container>
                          );
@@ -101,7 +108,23 @@ const EquipmentList = (props: any) => {
                <> 
                     {selected.map((val) => {
                          return (
-                              <div className="text-center mt-2 mr-2" style={{ 
+                              <Container className="mt-2 p-2 shadow-sm rounded bg-white">
+                                   <span style={{fontWeight: 'bold'}}>{val.value}</span>
+                                   <i className="close fas fa-times pr-2" style={{ fontSize: '16px' }} onClick={() => handleSelectedExerciseRemove(val.value)}/>
+                                   <div>
+                                        <ExerciseBuild />
+                                   </div>
+                              </Container>
+                         )
+                    })}
+               </>
+          </>
+     )
+}
+
+export default ExerciseList;
+
+{/* <div className="text-center mt-2 mr-2" style={{ 
                                    display: 'inline-block',
                                    height: '32px',
                                    padding: '0px 12px',
@@ -120,14 +143,5 @@ const EquipmentList = (props: any) => {
                                         lineHeight: '32px',
                                         height: '32px'
                                    }} 
-                                        onClick={() => handleSelectedEquipmentRemove(val.value)}></i>
-                              </div>
-                         )
-                    })}
-               </>
-          </>
-     )
-}
-
-export default EquipmentList;
-
+                                        onClick={() => handleSelectedExerciseRemove(val.value)}></i>
+                              </div> */}

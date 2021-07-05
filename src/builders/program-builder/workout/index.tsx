@@ -5,9 +5,9 @@ import ModalView from "../../../components/modal";
 import Table from "../../../components/table";
 import { gql, useQuery,useMutation } from "@apollo/client";
 import AuthContext from "../../../context/auth-context";
-import EquipmentSearch from './equipmentList';
-import MuscleGroupSearch from './muscleGroupList';
-import TextEditor from './textEditor';
+import EquipmentSearch from '../search-builder/equipmentList';
+import MuscleGroupSearch from '../search-builder/muscleGroupList';
+import TextEditor from '../search-builder/textEditor';
 
 export default function EventsTab() {
 
@@ -220,7 +220,7 @@ export default function EventsTab() {
             }
         },
         "addWorkout": {
-            "AddText": {
+            "Add Text": {
                 "ui:widget": () => {
                     return (
                         <TextEditor editorText={handleEditorTextCallBack}/>
