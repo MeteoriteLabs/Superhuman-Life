@@ -2,7 +2,7 @@ import {useMemo,useState,useRef,useContext} from 'react'
 import {Button,TabContent,InputGroup,FormControl,OverlayTrigger,Popover,Dropdown,Card,Container,Row,Col} from "react-bootstrap";
 import Table from "../../../components/table";
 //import ModalView from "../../../components/modal";
-import {gql,useQuery,useMutation} from "@apollo/client";
+import {gql,useQuery} from "@apollo/client";
 import AuthContext from "../../../context/auth-context";
 
 
@@ -32,40 +32,40 @@ export default function InformationPage() {
       }
       
     `
-    const ADD_MESSAGE = gql`
-            mutation msg(
-                $title: String
-                $tags: String
-                $minidesc: String
-                $infomessagetype: ID
-                $mediaurl: String
-                $user_permissions_user: ID
-            ) {
-                createInformationbankmessage(
-                input: {
-                    data: {
-                    title: $title
-                    tags: $tags
-                    informationbankmessagestype: $infomessagetype
-                    description: $minidesc
-                    mediaurl: $mediaurl
-                    users_permissions_user: $user_permissions_user
+    // const ADD_MESSAGE = gql`
+    //         mutation msg(
+    //             $title: String
+    //             $tags: String
+    //             $minidesc: String
+    //             $infomessagetype: ID
+    //             $mediaurl: String
+    //             $user_permissions_user: ID
+    //         ) {
+    //             createInformationbankmessage(
+    //             input: {
+    //                 data: {
+    //                 title: $title
+    //                 tags: $tags
+    //                 informationbankmessagestype: $infomessagetype
+    //                 description: $minidesc
+    //                 mediaurl: $mediaurl
+    //                 users_permissions_user: $user_permissions_user
                 
-                    }
-                }
-                ) {
-                    informationbankmessage {
-                    id
-                    createdAt
-                    updatedAt
-                    title
-                    tags
-                    minidescription
-                }
-                }
-            }
+    //                 }
+    //             }
+    //             ) {
+    //                 informationbankmessage {
+    //                 id
+    //                 createdAt
+    //                 updatedAt
+    //                 title
+    //                 tags
+    //                 minidescription
+    //             }
+    //             }
+    //         }
       
-    `
+    // `
     // const UPDATE_MESSAGE = gql`
     //     mutation updatemsg(
     //         $title: String
@@ -181,7 +181,7 @@ export default function InformationPage() {
     //     }
           
     // }
-    const [createmessage, { error }] = useMutation(ADD_MESSAGE);
+    //const [createmessage, { error }] = useMutation(ADD_MESSAGE);
 
 
     // function onSubmit(formData: any ) {
@@ -201,7 +201,7 @@ export default function InformationPage() {
     //     );
     // }
     // if (loading) return <span>'Loading...'</span>;
-     if (error) return <span>{`Error! ${error.message}`}</span>;
+     //if (error) return <span>{`Error! ${error.message}`}</span>;
     
     FetchData({ filter: searchFilter, id: auth.userid  });
     return (
