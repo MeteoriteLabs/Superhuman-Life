@@ -1,54 +1,50 @@
 {
     "1": {
-        "title": "Message",
+        "title": "Information Bank",
         "type": "object",
         "required": [
-            "title",
-            "prerecordedtype",
-            "prerecordedtrigger",
-            "description",
-            "minidesc"
+            "name",
+            "typo",
+            "description"
         ],
         "properties": {
-            "title": {
+            "name": {
                 "type": "string",
                 "title": "Message Title"
             },
-            "prerecordedtype": {
+            "typo": {
                 "type": "string",
                 "title": "Type",
                 "enum": [],
                 "enumNames": []
             },
-            "prerecordedtrigger": {
+            "tags": {
                 "type": "string",
-                "title": "Trigger for message",
-                "enum": [],
-                "enumNames": []
+                "title": "Tags"
             },
             "description": {
                 "type": "string",
                 "title": "Description"
             },
-            "minidesc": {
+            "minidescription": {
                 "type": "string",
                 "title": "Mini Description"
             },
-            "mediaurl": {
+            "Url": {
                 "type": "string",
                 "title": "Url (Picture or Video)"
             },
-            "or": {
+            "Or": {
                 "title": "OR",
                 "description": "OR",
                 "type": "null"
               },
             "file": {
                 "type": "string",
+                "format": "data-url",
                 "title": "Upload (Picture or Video)"
                 
             }
         }
     }
 }
-    

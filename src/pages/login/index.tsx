@@ -28,6 +28,7 @@ export default function Login() {
       user{
         username
         email
+        id
       }
     }
   }
@@ -46,7 +47,7 @@ export default function Login() {
   }
 
   function loginSuccess(d: any) {
-    auth.login(d.login.jwt, d.login.user.username);
+    auth.login(d.login.jwt, d.login.user.username,d.login.user.id);
   }
 
   return (
