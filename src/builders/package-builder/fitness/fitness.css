@@ -1,0 +1,10 @@
+.select-basic{
+    background: transparent !important;
+    color:black !important
+}
+
+.select-basic:hover{
+    background-color: transparent !important;
+    background: transparent !important;
+    color:black !important
+}
