@@ -38,3 +38,40 @@ query WorkoutQuery($id: String) {
     }
 }
 `
+
+export const CREATE_WORKOUT = gql`
+    mutation createworkout(
+        $workouttitle: String
+        $intensity: ENUM_WORKOUTS_INTENSITY
+        $level: ENUM_WORKOUTS_LEVEL
+        $About: String
+        $Benefits: String
+        $users_permissions_user: ID
+        $equipment_lists: [ID]
+        $muscle_groups: [ID]
+        $workout_URL: String
+        $workout_text: String
+    ){
+        createWorkout(
+            input: {
+                data: {
+                    workouttitle: $workouttitle
+                    intensity: $intensity
+                    level: $level
+                    About: $About
+                    Benefits: $Benefits
+                    users_permissions_user: $users_permissions_user
+                    equipment_lists: $equipment_lists
+                    muscle_groups: $muscle_groups
+                    workout_URL: String
+                    workout_text: String
+                }
+            }
+        ){
+            workout {
+                id
+                workouttile
+            }
+        }
+    }
+`

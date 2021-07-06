@@ -13,17 +13,17 @@ const Build = () => {
      const [uploadFields, setUploadFields] = useState<any[]>([]);
 
      // These functions handle the change in the input field
-     function handleExerciseFieldChange(i: any, event: any){
-          const values = [...exerciseFields];
-          values[i].value = event.target.value;
-          setExerciseFields(values);
-     }
+     // function handleExerciseFieldChange(i: any, event: any){
+     //      const values = [...exerciseFields];
+     //      values[i].value = event.target.value;
+     //      setExerciseFields(values);
+     // }
 
-     function handleTextFieldChange(i: any, event: any){
-          const values = [...textFields];
-          values[i].value = event.target.value;
-          setTextFields(values);
-     }
+     // function handleTextFieldChange(i: any, event: any){
+     //      const values = [...textFields];
+     //      values[i].value = event.target.value;
+     //      setTextFields(values);
+     // }
      function handleUrlFieldChange(i: any, event: any){
           const values = [...urlFields];
           values[i].value = event.target.value;
@@ -43,7 +43,7 @@ const Build = () => {
      //These functions hanlde the adding of the input field
      function handleExerciseFieldAdd(){
           const values = [...exerciseFields];
-          let a = values.length == 0;
+          let a = values.length === 0;
           if(a){
                values.push({ value: null});
           }
@@ -51,7 +51,7 @@ const Build = () => {
      }
      function handleTextFieldAdd(){
           const values = [...textFields];
-          let a = values.length == 0;
+          let a = values.length === 0;
           if(a){
                values.push({ value: null});
           }
@@ -102,15 +102,15 @@ const Build = () => {
           setUploadFields(values);
      }
 
-     let exerciseListArray: any;
-    function handleEquipmentCallback(data: any) {
-          exerciseListArray = data;
-    }
+//      let exerciseListArray: any;
+//     function handleEquipmentCallback(data: any) {
+//           exerciseListArray = data;
+//     }
 
-    let editorTextString: any;
-    function handleEditorTextCallBack(data:any){
-        editorTextString = data;
-    }
+//     let editorTextString: any;
+//     function handleEditorTextCallBack(data:any){
+//         editorTextString = data;
+//     }
 
     function renderOptions(){
      return (
@@ -144,7 +144,7 @@ const Build = () => {
                                         <span>Exercise <i className="far fa-trash-alt float-right"
                                              style={{ color: 'red', cursor: 'pointer'}}
                                         onClick={() => handleExerciseFieldRemove(idx)}></i></span>
-                                        <ExerciseList exerciseList={handleEquipmentCallback}/>
+                                        <ExerciseList />
                                    </div>
                               );
                               })}
@@ -155,7 +155,7 @@ const Build = () => {
                               <span>Add Text <i className="far fa-trash-alt float-right"
                                    style={{ color: 'red', cursor: 'pointer'}}
                               onClick={() => handleTextFieldRemove(idx)}></i></span>
-                              <TextEditor editorText={handleEditorTextCallBack}/>
+                              <TextEditor />
                          </div>
                     );
                     })}

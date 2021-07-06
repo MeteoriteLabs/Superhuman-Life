@@ -47,7 +47,7 @@ const EquipmentList = (props: any) => {
 
      function handleSelectedEquipmentAdd(name: any, id: any) {
           const values = [...selected];
-          let a = values.find((e) => e.id == id);
+          let a = values.find((e) => e.id === id);
           if (!a){
                values.push({ value: name, id: id}); 
                setSelected(values);

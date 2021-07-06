@@ -1,8 +1,8 @@
-import { useContext, useMemo, useState, useRef } from "react";
+import { useContext, useMemo, useState } from "react";
 import { Button, Card, Dropdown, OverlayTrigger, Popover, TabContent, Form } from "react-bootstrap";
 import ModalView from "../../../components/modal";
 import Table from "../../../components/table";
-import { gql, useQuery,useMutation } from "@apollo/client";
+import { useQuery,useMutation } from "@apollo/client";
 import { GET_TABLEDATA, CREATE_EXERCISE } from './queries';
 import AuthContext from "../../../context/auth-context";
 import EquipmentSearch from '../search-builder/equipmentList';
@@ -203,23 +203,23 @@ export default function EventsTab() {
         console.log(formData);
         
         createExercise(
-            // {
-            //     variables: {
-            //         exercisename: formData.exercise,
-            //         exerciselevel: ENUM_EXERCISES_EXERCISELEVEL[levelIndex],
-            //         exerciseminidescription: formData.miniDescription,
-            //         fitnessdiscipline: disc,
-            //         exercisetext: (!editorTextString ? null : editorTextString),
-            //         exerciseurl: formData.addExercise.AddURL,
-            //         users_permissions_user: authid,
-            //         equipment_lists: equipmentListarray.map((val: any) => {
-            //             return val.id;
-            //         }),
-            //         exercisemusclegroups: muscleGroupListarray.map((val: any) => {
-            //             return val.id;
-            //         })
-            //     }
-            // }
+            {
+                variables: {
+                    exercisename: formData.exercise,
+                    exerciselevel: ENUM_EXERCISES_EXERCISELEVEL[levelIndex],
+                    exerciseminidescription: formData.miniDescription,
+                    fitnessdiscipline: disc,
+                    exercisetext: (!editorTextString ? null : editorTextString),
+                    exerciseurl: formData.addExercise.AddURL,
+                    users_permissions_user: authid,
+                    equipment_lists: equipmentListarray.map((val: any) => {
+                        return val.id;
+                    }),
+                    exercisemusclegroups: muscleGroupListarray.map((val: any) => {
+                        return val.id;
+                    })
+                }
+            }
         )
     }
     if (error) return <span>{`Error! ${error.message}`}</span>;
