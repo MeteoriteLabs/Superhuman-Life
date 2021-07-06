@@ -2,14 +2,14 @@ import {useState} from 'react'
 import { Button, Col, Modal, Container, Row } from "react-bootstrap";
 
 
-function StatusModal() {
-    const [show, setShow] = useState<boolean>(false);
+function StatusModal(props: any) {
+    const [show, setShow] = useState<boolean>(true);
 
   return (
     <>
-      <Button variant="light" onClick={() => setShow(true)}>
+      {/* <Button variant="light" onClick={() => setShow(true)}>
         Status
-      </Button>
+      </Button> */}
 
       <Modal show={show} onHide={() => setShow(false)} aria-labelledby="contained-modal-title-vcenter" centered>
         <Modal.Header closeButton>
@@ -29,7 +29,7 @@ function StatusModal() {
               <Button variant="danger" onClick={() => setShow(false)}>Cancel</Button>
               </Col>
               <Col xs={6} md={4}>
-              <Button variant="success" onClick={() => setShow(false)}>Yes</Button>
+              <Button variant="success" onClick={props.yesClick}>Yes</Button>
               </Col>
             </Row>
           </Container>
