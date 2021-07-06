@@ -1,9 +1,10 @@
-import { useMemo, useContext, useState, useRef } from "react";
-import { Button, Card, Dropdown, OverlayTrigger, Popover, TabContent, FormControl, Form } from "react-bootstrap";
+import { useMemo, useContext, useState } from "react";
+import { Button, Card, Dropdown, OverlayTrigger, Popover, TabContent, Form } from "react-bootstrap";
 import BuildWorkout from './buildWorkout';
 import ModalView from "../../../components/modal";
 import Table from "../../../components/table";
-import { gql, useQuery,useMutation } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client";
+import { GET_FITNESSDISCIPLINES, GET_TABLEDATA, CREATE_WORKOUT } from './queries';
 import AuthContext from "../../../context/auth-context";
 import EquipmentSearch from '../search-builder/equipmentList';
 import MuscleGroupSearch from '../search-builder/muscleGroupList';
@@ -15,46 +16,6 @@ export default function EventsTab() {
     const [tableData, setTableData] = useState<any[]>([]);
     const [fitnessdisciplines, setFitnessDisciplines] = useState<any[]>([]);
 
-
-    const GET_FITNESSDISCIPLINES = gql`
-        query fitnessdisciplines{
-            fitnessdisciplines(sort: "updatedAt"){
-                id
-                disciplinename
-                updatedAt
-            }
-        }
-    `
-
-    const GET_TABLEDATA = gql`
-        query WorkoutQuery($id: String) {
-            workouts(where: {users_permissions_user: {id: $id}}) {
-                id
-                workouttitle
-                intensity
-                level
-                updatedAt
-                calories
-                users_permissions_user
-                fitnessdisciplines{
-                    id
-                    disciplinename
-                }
-                muscle_groups {
-                    name
-                }
-                equipment_lists {
-                    id
-                    updatedAt
-                    name
-                    image{
-                        id
-                        updatedAt
-                    }
-                }
-            }
-        }
-    `
 
     function FetchFitnessDisciplines(){
         useQuery(GET_FITNESSDISCIPLINES, {onCompleted: loadFitnessDisciplines});
@@ -158,7 +119,7 @@ export default function EventsTab() {
         editorTextString = data;
     }
 
-    let disc: any;
+    // let disc: any;
     const eventSchema: any = require("./workout.json");
     const uiSchema: any = {
         "level": {
@@ -209,7 +170,7 @@ export default function EventsTab() {
                     <div>
                         <Form.Group controlId="exampleForm.SelectCustom">
                             <Form.Label>Fitness Discipline</Form.Label>
-                            <Form.Control as="select" custom onChange={(e) => { disc = e.target.value }}>
+                            <Form.Control as="select" custom onChange={(e) => { console.log( e.target.value ) }}>
                                 {fitnessdisciplines.map((val: any) => {
                                     return <option value={val.id} >{val.disciplineName}</option>
                                 })}
@@ -244,6 +205,8 @@ export default function EventsTab() {
        }
     }
 
+    const [createWorkout, { error }] = useMutation(CREATE_WORKOUT);
+
     let authid = auth.userid;
     enum ENUM_EXERCISES_EXERCISELEVEL {
         Beginner,
@@ -259,8 +222,32 @@ export default function EventsTab() {
     }
 
     function onSubmit(formData: any) {
-        alert("Values submitted: " + JSON.stringify(formData, null, 2));
+        let levelIndex = formData.level
+        let intensityIndex = formData.intensity
+        console.log(formData);
+
+        createWorkout (
+            {
+                variables: {
+                    workouttitle: formData.workout,
+                    level: ENUM_EXERCISES_EXERCISELEVEL[levelIndex],
+                    intensity: ENUM_WORKOUTS_INTENSITY[intensityIndex],
+                    About: formData.about,
+                    Benefits: formData.benefits,
+                    users_permissions_user: authid,
+                    workout_text: (!editorTextString ? null : editorTextString),
+                    equipment_lists: equipmentListarray.map((val: any) => {
+                        return val.id;
+                    }),
+                    muscle_groups: muscleGroupListarray.map((val: any) => {
+                        return val.id;
+                    })
+                }
+            }
+        )
     }
+
+    if (error) return <span>{`Error! ${error.message}`}</span>;
 
     FetchData({id: auth.userid});
     FetchFitnessDisciplines();
