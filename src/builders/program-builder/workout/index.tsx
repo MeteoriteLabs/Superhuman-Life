@@ -4,6 +4,7 @@ import BuildWorkout from './buildWorkout';
 import ModalView from "../../../components/modal";
 import Table from "../../../components/table";
 import { gql, useQuery,useMutation } from "@apollo/client";
+import { GET_FITNESSDISCIPLINES, GET_TABLEDATA } from './queries';
 import AuthContext from "../../../context/auth-context";
 import EquipmentSearch from '../search-builder/equipmentList';
 import MuscleGroupSearch from '../search-builder/muscleGroupList';
@@ -15,46 +16,6 @@ export default function EventsTab() {
     const [tableData, setTableData] = useState<any[]>([]);
     const [fitnessdisciplines, setFitnessDisciplines] = useState<any[]>([]);
 
-
-    const GET_FITNESSDISCIPLINES = gql`
-        query fitnessdisciplines{
-            fitnessdisciplines(sort: "updatedAt"){
-                id
-                disciplinename
-                updatedAt
-            }
-        }
-    `
-
-    const GET_TABLEDATA = gql`
-        query WorkoutQuery($id: String) {
-            workouts(where: {users_permissions_user: {id: $id}}) {
-                id
-                workouttitle
-                intensity
-                level
-                updatedAt
-                calories
-                users_permissions_user
-                fitnessdisciplines{
-                    id
-                    disciplinename
-                }
-                muscle_groups {
-                    name
-                }
-                equipment_lists {
-                    id
-                    updatedAt
-                    name
-                    image{
-                        id
-                        updatedAt
-                    }
-                }
-            }
-        }
-    `
 
     function FetchFitnessDisciplines(){
         useQuery(GET_FITNESSDISCIPLINES, {onCompleted: loadFitnessDisciplines});

@@ -3,6 +3,7 @@ import { Button, Card, Dropdown, OverlayTrigger, Popover, TabContent, Form } fro
 import ModalView from "../../../components/modal";
 import Table from "../../../components/table";
 import { gql, useQuery,useMutation } from "@apollo/client";
+import { GET_TABLEDATA, CREATE_EXERCISE } from './queries';
 import AuthContext from "../../../context/auth-context";
 import EquipmentSearch from '../search-builder/equipmentList';
 import MuscleGroupSearch from '../search-builder/muscleGroupList';
@@ -14,84 +15,6 @@ export default function EventsTab() {
     const [tableData, setTableData] = useState<any[]>([]);
     const [fitnessdisciplines, setFitnessDisciplines] = useState<any[]>([]);
     let disc: any;
-
-  
-
-    const GET_TABLEDATA = gql`
-        query ExercisesQuery($id: String) {
-            exercises(where: {users_permissions_user: { id: $id}}) {
-                id
-                updatedAt
-                exercisename
-                exerciselevel
-                exercisetext
-                exerciseurl
-                exerciseupload {
-                    name
-                }
-                users_permissions_user {
-                    id
-                }
-                fitnessdiscipline {
-                id
-                disciplinename
-                }
-                equipment_lists {
-                id
-                updatedAt
-                name
-                image{
-                    id
-                    updatedAt
-                    }
-                }
-                exercisemusclegroups {
-                    name
-                  }
-            }
-            fitnessdisciplines(sort: "updatedAt"){
-                id
-                disciplinename
-                updatedAt
-            }
-        }
-    `
-
-    const CREATE_EXERCISE = gql`
-        
-        mutation createexercise(
-            $exercisename: String
-            $exerciselevel: ENUM_EXERCISES_EXERCISELEVEL
-            $exerciseminidescription: String
-            $exercisetext: String
-            $exerciseurl: String
-            $fitnessdiscipline: ID
-            $users_permissions_user: ID
-            $equipment_lists: [ID]
-            $exercisemusclegroups: [ID]
-        ){
-            createExercise (
-                input: {
-                    data: {
-                        exercisename: $exercisename
-                        exerciselevel: $exerciselevel
-                        exerciseminidescription: $exerciseminidescription
-                        exercisetext: $exercisetext
-                        exerciseurl: $exerciseurl
-                        users_permissions_user: $users_permissions_user
-                        fitnessdiscipline: $fitnessdiscipline
-                        equipment_lists: $equipment_lists
-                        exercisemusclegroups: $exercisemusclegroups
-                    }
-                }
-            ){
-                exercise {
-                    id
-                    exercisename
-                }
-            }
-        }
-    `
 
     function FetchData(_variables: {} = {id: auth.userid}){
         useQuery(GET_TABLEDATA, {variables: _variables, onCompleted: loadData})

@@ -109,8 +109,8 @@ const ExerciseBuild = () => {
                                         onChange={e => handleRepsChange(idx, e)}
                                    />
                                    <InputGroup.Append>
-                                        <Button variant="outline-danger" onClick={() => handleRepsRemove(idx)}>
-                                             <i className="far fa-trash-alt"></i>
+                                        <Button variant="light" onClick={() => handleRepsRemove(idx)}>
+                                             <i style={{fontSize: '14px'}} className="close fas fa-times"></i>
                                         </Button>
                                    </InputGroup.Append>
                                    </InputGroup>
@@ -128,8 +128,8 @@ const ExerciseBuild = () => {
                                         onChange={e => handleSetsChange(idx, e)}
                                    />
                                    <InputGroup.Append>
-                                        <Button variant="outline-danger" onClick={() => handleSetsRemove(idx)}>
-                                             <i className="far fa-trash-alt"></i>
+                                        <Button variant="light" onClick={() => handleSetsRemove(idx)}>
+                                             <i style={{fontSize: '14px'}} className="close fas fa-times"></i>
                                         </Button>
                                    </InputGroup.Append>
                                    </InputGroup>
@@ -147,8 +147,8 @@ const ExerciseBuild = () => {
                                         onChange={e => handleDurationChange(idx, e)}
                                    />
                                    <InputGroup.Append>
-                                        <Button variant="outline-danger" onClick={() => handleDurationRemove(idx)}>
-                                             <i className="far fa-trash-alt"></i>
+                                        <Button variant="light" onClick={() => handleDurationRemove(idx)}>
+                                             <i style={{fontSize: '14px'}} className="close fas fa-times"></i>
                                         </Button>
                                    </InputGroup.Append>
                                    </InputGroup>
@@ -166,8 +166,8 @@ const ExerciseBuild = () => {
                                         onChange={e => handleWeightsChange(idx, e)}
                                    />
                                    <InputGroup.Append>
-                                        <Button variant="outline-danger" onClick={() => handleWeightsRemove(idx)}>
-                                             <i className="far fa-trash-alt"></i>
+                                        <Button variant="light" onClick={() => handleWeightsRemove(idx)}>
+                                             <i style={{fontSize: '14px'}} className="close fas fa-times"></i>
                                         </Button>
                                    </InputGroup.Append>
                                    </InputGroup>

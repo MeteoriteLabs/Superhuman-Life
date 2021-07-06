@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { Button, Accordion, Card, InputGroup, FormControl } from 'react-bootstrap';
+import { Button, InputGroup, FormControl } from 'react-bootstrap';
 import TextEditor from '../search-builder/textEditor';
 import ExerciseList from '../search-builder/exerciseList';
 
