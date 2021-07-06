@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { Button, InputGroup, FormControl, Container } from 'react-bootstrap';
+import { InputGroup, FormControl, Container } from 'react-bootstrap';
 import { gql, useQuery} from "@apollo/client";
 
 const MuscleGroupList = (props: any) => {

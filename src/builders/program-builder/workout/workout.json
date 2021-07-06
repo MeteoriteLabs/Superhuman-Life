@@ -11,7 +11,7 @@
                  "title": "Workout Name"
              },
              "intensity": {
-                 "type": "string",
+                 "type": "number",
                  "title": "Intensity",
                  "enum": [0, 1, 2],
                  "enumNames": [
@@ -21,7 +21,7 @@
                  ]
              },
              "level": {
-                 "type": "string",
+                 "type": "number",
                  "title": "Level",
                  "enum": [0, 1, 2, 3],
                  "enumNames": [

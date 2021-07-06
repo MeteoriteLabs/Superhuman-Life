@@ -1,5 +1,5 @@
 import { useState, useRef, useContext } from 'react';
-import { InputGroup, FormControl, Container, Card, Row, Col } from 'react-bootstrap';
+import { InputGroup, FormControl, Container } from 'react-bootstrap';
 import { gql, useQuery} from "@apollo/client";
 import AuthContext from "../../../context/auth-context";
 import ExerciseBuild from './exercisebuild';
@@ -55,7 +55,7 @@ const ExerciseList = (props: any) => {
 
      function handleSelectedExerciseAdd(name: any, id: any) {
           const values = [...selected];
-          let a = values.find((e) => e.id == id);
+          let a = values.find((e) => e.id === id);
           if (!a){
                values.push({ value: name, id: id}); 
                setSelected(values);
@@ -123,25 +123,3 @@ const ExerciseList = (props: any) => {
 }
 
 export default ExerciseList;
-
-{/* <div className="text-center mt-2 mr-2" style={{ 
-                                   display: 'inline-block',
-                                   height: '32px',
-                                   padding: '0px 12px',
-                                   fontSize: '14px',
-                                   lineHeight: '32px',
-                                   borderRadius: '16px',
-                                   color: 'rgba(0,0,0,0.8)',
-                                   backgroundColor: '#bebdb8',
-                              }}>
-                                   {val.value}
-                                   <i className="close fas fa-times" 
-                                        style={{ fontSize: '14px', 
-                                        cursor: 'pointer', 
-                                        float: 'right', 
-                                        paddingLeft: '8px', 
-                                        lineHeight: '32px',
-                                        height: '32px'
-                                   }} 
-                                        onClick={() => handleSelectedExerciseRemove(val.value)}></i>
-                              </div> */}
