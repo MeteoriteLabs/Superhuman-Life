@@ -2,8 +2,9 @@ import { useRef, useState } from "react";
 import { withTheme, utils } from "@rjsf/core";
 import { Theme as Bootstrap4Theme } from '@rjsf/bootstrap-4';
 import { Button, Col, Modal, ProgressBar, Row } from "react-bootstrap";
+import _ from 'lodash'
 
-export default function ModalView({ name, formUISchema, formSubmit, formSchema, formData, isStepper }: any) {
+export default function ModalView({ name, formUISchema, formSubmit, formSchema, formData, isStepper,arrProps}: any) {
     const registry = utils.getDefaultRegistry();
     const defaultFileWidget = registry.widgets["FileWidget"];
     (Bootstrap4Theme as any).widgets["FileWidget"] = defaultFileWidget;
@@ -15,14 +16,18 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
     const [formValues, setFormValues] = useState<any>(formData);
     const stepper: string[] = ["Creator", "Details", "Program", "Schedule", "Pricing"];
     
+    const lastEleArr =  _.last(arrProps)
+    const lastEleValue = _.map(lastEleArr, "label");
 
     function submitHandler(formData: any) {
         if (isStepper && step < 5) {
             console.log("Data submitted: ", formData);
             setStep(step + 1);
-            setFormValues({ ...formValues, ...formData });
+            setFormValues({ ...formValues, ...formData  });
         } else {
+            Object.assign(formData,{discipline:lastEleValue})
             formSubmit(formData);
+
         }
     }
 

@@ -128,7 +128,7 @@
                                 "title": "Online",
                                 "type": "string",
                                 "enum": [
-                         
+            
                                     "1",
                                     "2",
                                     "3",
@@ -283,6 +283,10 @@
                     "Getfit - 10%",
                     "Getfit - 15%"
                 ]
+            },
+            "pricing_plan":{
+                "type":"string",
+                "title" :"Pricing Plan"
             }
         }
     }

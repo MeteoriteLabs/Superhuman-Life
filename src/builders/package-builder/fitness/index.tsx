@@ -1,41 +1,37 @@
 import { useMemo, useState } from "react";
 import { gql, useQuery } from "@apollo/client";
-import { Badge, Button, Card, Dropdown, OverlayTrigger, Popover, TabContent,Form, Row, Col, DropdownButton } from "react-bootstrap";
+import { Badge, Button, Card, Dropdown, OverlayTrigger, Popover, TabContent, Table } from "react-bootstrap";
 import ModalView from "../../../components/modal";
-import Table from "../../../components/table";
-import { GET_FITNESS } from "../../../graphql/queries";
-import './fitness.css'
+import CustomTable from "../../../components/table";
 import { Typeahead } from 'react-bootstrap-typeahead'
+import { GET_ADDRESS, GET_FITNESS_DISCIPLINES } from "../../../graphQL/queries";
+import './fitness.css'
+import _ from 'lodash'
 
-
-
-
-
-// const GET_FITNESS = gql`{
-//     fitnesspackages {
-//       packagename
-//       intropicture {
-//         url
-//       }
-//       packagetypes
-//       ptoffline
-//       ptonline
-//       groupoffline
-//       grouponline
-//       recordedclasses
-//       discipline {
-//         disciplinename
-//       }
-//       fitnesspackagepricing {
-//         packagepricing
-//       }
-//       duration
-//     }
-//   }
-//   `;
+const GET_FITNESS = gql`{
+    fitnesspackages {
+      packagename
+      intropicture {
+        url
+      }
+      packagetypes
+      ptoffline
+      ptonline
+      groupoffline
+      grouponline
+      recordedclasses
+      discipline {
+        disciplinename
+      }
+      fitnesspackagepricing {
+        packagepricing
+      }
+      duration
+    }
+  }
+  `;
 
 export default function FitnessTab() {
-
 
     const columns = useMemo<any>(() => [
         {
@@ -86,54 +82,65 @@ export default function FitnessTab() {
             ),
         }
     ], []);
-  
+
     const { loading, error, data } = useQuery(GET_FITNESS);
+
+
     const classicSchema: any = require("./classic.json");
     const customSchema: any = require("./custom.json");
     const groupSchema: any = require("./group.json");
     const ptSchema: any = require("./pt.json");
-    const [multiSelections, setMultiSelections] = useState([]);
-    const [singleSelections, setSingleSelections] = useState([]);
+    // const [multiSelections, setMultiSelections] = useState([]);
 
 
-    const address = [
-        {
-            id: '1',
-            address: "303535 libiadren LasVegas"
-        },
-        {
-            id: '2',
-            address: "22425 Buffollo Los Angles"
-        },
-        {
-            id: '3',
-            address: "Client Location"
-        },
-    ]
 
-    const CustomDiscipline =(props:any)=>{
-        console.log(props.options.enumOptions);
-        return <div>
-            <label>{props.label}</label>
-            <Typeahead 
-            options={props.options.enumOptions} 
-            placeholder="Choose your discpline ... "
-            id="basic-typeahead-multiple" selected={multiSelections} onChange={setMultiSelections} multiple/>
-        </div>
+    const arrProps = [] as any;
+    const CustomDiscipline = (props: any) => {
+        const { data, loading, error } = useQuery(GET_FITNESS_DISCIPLINES);
+        const { label } = props;
+        if (loading) return <p>...loading</p>
+        if (!loading && !error) {
+            const serverKeyMap = {
+                __typename: "value",
+                disciplinename: "label"
+            };
+            const resObj = data.fitnessdisciplines.map((item: any) => _.mapKeys(item, (value: any, key: any) => {
+                return serverKeyMap[key]
+            }))
+            return <div>
+                <label>{props.label}</label>
+                <Typeahead
+                    options={resObj}
+                    placeholder="Choose your discpline ... "
+                    id="basic-typeahead-multiple"
+                    onChange={(e) => {
+                        arrProps.push(e);
+                    }}
+                    multiple />
+            </div>
+        }
     }
 
-    const ArrayLocationTemplate = (props: any) => {
-        return <div>
-            <label>{props.label}</label>
-            {address.map((item, index) => {
-                return <div key={index}>
-                    <label className='ml-3'>
-                        <input type="radio" id={item.id} name='address' value={item.address} onChange={(event) => props.onChange(event.target.value)} />
-                        {item.address}
-                    </label>
-                </div>
-            })}
-        </div>
+
+    const ArrayLocationTemplate = ({ onChange, label }: any) => {
+        const { data, loading, error } = useQuery(GET_ADDRESS);
+        if (loading) return <p>...loading</p>
+        if (!loading && !error) {
+            const arrAddresses = data.addresses;
+            return <div>
+                <label>{label}</label>
+                {arrAddresses?.map((item: any, index: any) => {
+                    return <div key={index}>
+                        <label className='ml-3'>
+                            <input type="radio" id={item.id} name='address' value={item.id} onChange={(event) => onChange(event.target.value)} />
+                            <span className='ml-3'>{item.address1} {item.address2} {item.city} {item.state} {item.country}</span>
+                        </label>
+                    </div>
+                })}
+            </div>
+
+        }
+
     };
 
     const CustomTextTitlePackage = () => {
@@ -142,11 +149,12 @@ export default function FitnessTab() {
         </div>
     };
 
-    const CustomNumberPeople = (props: any) => {
-        const { options,schema } = props;
+
+    const CustomNumberPeople = ({ options, schema, value, label, onChange }: any) => {
         return <div className='text-center text-black py-3' style={{ border: '1px solid black', borderRadius: '5px', boxShadow: '0px 7px 15px -11px #000000' }}>
+            {label === 'Online' ? <img src="/assets/PT-Online.svg" alt='123' /> : <img src="/assets/PT-Offline.svg" alt='123' />}
             <label className='d-block'>{schema.title}</label>
-            <select className='px-3 py-2 rounded select-basic' value={props.value} onChange={(event) => props.onChange(event.target.value)} >
+            <select className='px-3 py-2 rounded select-basic' value={value} onChange={(event) => onChange(event.target.value)} >
                 {options.enumOptions.map((item: any, index: number) => {
                     return <option key={index} value={item.value}>{item.value}</option>
                 })}
@@ -155,14 +163,12 @@ export default function FitnessTab() {
     }
 
 
-
-
-    const CustomNumberRestDay = (props: any) => {
+    const CustomNumberRestDay = ({ label, onChange, value }: any) => {
         const arrayOption = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
-        const { label } = props
+
         return <div className='text-center text-black py-3' style={{ border: '1px solid black', borderRadius: '5px', boxShadow: '0px 7px 15px -11px #000000' }}>
             <label className='d-block'>{label}</label>
-            <select className='px-3 py-2 rounded select-basic' value={props.value} onChange={(event) => props.onChange(event.target.value)} >
+            <select className='px-3 py-2 rounded select-basic' value={value} onChange={(event) => onChange(event.target.value)} >
                 {arrayOption.map((item, index) => {
                     return <option key={index} value={item}>{item}</option>
                 })}
@@ -171,11 +177,43 @@ export default function FitnessTab() {
     }
 
 
+    const customPricingTable = (props: any) => {
+        return <div className='text-center mt-3'>
+            <p className=' font-weight-bold' style={{ fontSize: '1.5rem' }}>Pricing Plan</p>
+            <Table striped bordered hover>
+                <thead>
+                    <tr>
+                        <th>Details</th>
+                        <th>Monthly</th>
+                        <th>Quaterly</th>
+                        <th>Half Yearly</th>
+                        <th>Yearly</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Offline</td>
+                        <td>15 Class</td>
+                        <td>36 Class</td>
+                        <td>36 Class</td>
+                        <td>36 Class</td>
+                    </tr>
+                    <tr>
+                        <td>Online</td>
+                        <td>15 Class</td>
+                        <td>36 Class</td>
+                        <td>36 Class</td>
+                        <td>36 Class</td>
+                    </tr>
+                </tbody>
+            </Table>
+        </div>
+    }
 
 
     const uiSchema: any = {
-        "discipline":{
-            'ui:widget':CustomDiscipline
+        "discipline": {
+            'ui:widget': CustomDiscipline
         },
         "location": {
             "ui:widget": ArrayLocationTemplate
@@ -183,12 +221,12 @@ export default function FitnessTab() {
         "title_package": {
             "ui:widget": CustomTextTitlePackage
         },
- 
 
-        "number_training_classes_online":{
+
+        "number_training_classes_online": {
             "ui:widget": CustomNumberPeople
         },
-        "number_training_classes_offline":{
+        "number_training_classes_offline": {
             "ui:widget": CustomNumberPeople
         },
 
@@ -251,6 +289,11 @@ export default function FitnessTab() {
         "days": {
             "ui:widget": "checkboxes"
         },
+
+        "pricing_plan": {
+            "ui:widget": customPricingTable
+        },
+
         "group-schedule": {
             "ui:placeholder": "Number of minutes",
         },
@@ -273,8 +316,8 @@ export default function FitnessTab() {
         console.log('fitnessData', data)
     }
 
-    // fitnessData = data.fitnesspackages;
-    console.log('fitnessData', data);
+    // // fitnessData = data.fitnesspackages;
+    // console.log('fitnessData', data);
 
 
 
@@ -317,10 +360,10 @@ export default function FitnessTab() {
                     formSchema={ptSchema}
                     formSubmit={onSubmit}
                     formData={{}}
-    
+                    arrProps={arrProps}
                 />
             </Card.Title>
-            {loading ? <code>Loading...</code> : <Table columns={columns} data={fitnessData} />}
+            {loading ? <code>Loading...</code> : <CustomTable columns={columns} data={fitnessData} />}
         </TabContent>
     );
 }

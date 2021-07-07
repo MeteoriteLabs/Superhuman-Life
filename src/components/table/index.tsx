@@ -1,7 +1,7 @@
 import { Fragment } from "react";
 import { useTable, useExpanded } from "react-table";
 import "./table.css";
-function Table({ data, columns }: any) {
+function CustomTable({ data, columns }: any) {
     const {
         getTableProps,
         getTableBodyProps,
@@ -46,4 +46,4 @@ function Table({ data, columns }: any) {
     );
 }
 
-export default Table;
+export default CustomTable;
