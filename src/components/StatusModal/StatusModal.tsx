@@ -17,18 +17,18 @@ function StatusModal(props: any) {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body className="show-grid">
-            <div>
-            <h5>{props.modalBody}</h5 >
-            </div>  
+          <div>
+          <h5>{props.modalBody}</h5 >
+          </div>    
         </Modal.Body>   
         <Modal.Footer>
         <div>
             <Row>
-              <Col xs={4} md={4} >
-              <Button className="ml-5" variant="danger" onClick={() => setShow(false)}>{props.buttonLeft}</Button>
+              <Col xs={4} md={4} className="ml-4">
+              <Button  variant="danger" onClick={() => setShow(false)}>{props.buttonLeft}</Button>
               </Col>
-              <Col xs={4} md={4} className="ml-5">
-              <Button className="ml-5" variant="success" onClick={handleClick}>{props.buttonRight}</Button>
+              <Col xs={4} md={5} className="ml-4">
+              <Button  variant="success" onClick={handleClick}>{props.buttonRight}</Button>
               </Col>
             </Row>
           </div>

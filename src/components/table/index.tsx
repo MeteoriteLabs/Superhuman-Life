@@ -23,6 +23,11 @@ function Table({ data, columns }: any) {
                             ))}
                         </tr>
                     ))}
+                    {!rows.length && 
+                        <tr className="rowCard text-center">
+                            <td>No data</td>
+                    </tr>
+                    }
                 </thead>
                 <tbody  {...getTableBodyProps()}>
                     {rows.map(row => {

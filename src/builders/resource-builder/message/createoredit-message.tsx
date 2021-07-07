@@ -125,9 +125,9 @@ function CreateEditMessage(props: any, ref: any) {
             // case 'toggle-status':
             //     ToggleMessageStatus();
             //     break;
-            case 'delete':
-                DeleteMessage(operation.id);
-                break;
+            // case 'delete':
+            //     DeleteMessage(operation.id);
+            //     break;
         }
     }
 
@@ -163,6 +163,14 @@ function CreateEditMessage(props: any, ref: any) {
              onClick={() => {ToggleMessageStatus(operation.id,operation.current_status)}
              
              }/>}
+
+             {operation.type ==="delete" && <StatusModal
+             modalTitle="Delete"
+             modalBody="Do you want to delete this message?"
+             buttonLeft="Cancel"
+             buttonRight="Yes"
+             onClick={() => {DeleteMessage(operation.id)}}
+             />}
         
             
         </>
