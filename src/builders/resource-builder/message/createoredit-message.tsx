@@ -3,7 +3,7 @@ import { useQuery, useMutation } from "@apollo/client";
 import ModalView from "../../../components/modal";
 import { GET_TRIGGERS, ADD_MESSAGE, UPDATE_MESSAGE, GET_MESSAGE, DELETE_MESSAGE,UPDATE_STATUS } from "./queries";
 import AuthContext from "../../../context/auth-context";
-import StatusModal from "./StatusModal";
+import StatusModal from "../../../components/StatusModal/StatusModal";
 
 
 interface Operation {
@@ -125,9 +125,9 @@ function CreateEditMessage(props: any, ref: any) {
             // case 'toggle-status':
             //     ToggleMessageStatus();
             //     break;
-            case 'delete':
-                DeleteMessage(operation.id);
-                break;
+            // case 'delete':
+            //     DeleteMessage(operation.id);
+            //     break;
         }
     }
 
@@ -155,7 +155,22 @@ function CreateEditMessage(props: any, ref: any) {
                 />
                 
             }
-            {operation.type === "toggle-status" && <StatusModal yeshandle={() => ToggleMessageStatus(operation.id,operation.current_status)}/>}
+            {operation.type === "toggle-status" && <StatusModal
+             modalTitle="Change Status"
+             modalBody="Do you want to change the status?"
+             buttonLeft="Cancel"
+             buttonRight="Yes"
+             onClick={() => {ToggleMessageStatus(operation.id,operation.current_status)}
+             
+             }/>}
+
+             {operation.type ==="delete" && <StatusModal
+             modalTitle="Delete"
+             modalBody="Do you want to delete this message?"
+             buttonLeft="Cancel"
+             buttonRight="Yes"
+             onClick={() => {DeleteMessage(operation.id)}}
+             />}
         
             
         </>

@@ -1,38 +1,37 @@
 import {useState} from 'react'
-import { Button, Col, Modal, Container, Row } from "react-bootstrap";
+import { Button, Col, Modal, Row } from "react-bootstrap";
 
 
 function StatusModal(props: any) {
     const [show, setShow] = useState<boolean>(true);
-
+    function handleClick(){
+        props.onClick();
+        setShow(false);
+    }
   return (
     <>
-      {/* <Button variant="light" onClick={() => setShow(true)}>
-        Status
-      </Button> */}
-
       <Modal show={show} onHide={() => setShow(false)} aria-labelledby="contained-modal-title-vcenter" centered>
         <Modal.Header closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
-            Change Status
+            {props.modalTitle}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body className="show-grid">
-            <div className="p-3">
-            <h5>Do you want to change the Status?</h5   >
-            </div>  
+          <div>
+          <h5>{props.modalBody}</h5 >
+          </div>    
         </Modal.Body>   
         <Modal.Footer>
-        <Container>
+        <div>
             <Row>
-              <Col xs={6} md={8}>
-              <Button variant="danger" onClick={() => setShow(false)}>Cancel</Button>
+              <Col xs={4} md={4} className="ml-4">
+              <Button  variant="danger" onClick={() => setShow(false)}>{props.buttonLeft}</Button>
               </Col>
-              <Col xs={6} md={4}>
-              <Button variant="success" onClick={props.yesClick}>Yes</Button>
+              <Col xs={4} md={5} className="ml-4">
+              <Button  variant="success" onClick={handleClick}>{props.buttonRight}</Button>
               </Col>
             </Row>
-          </Container>
+          </div>
         </Modal.Footer> 
           
         
