@@ -1,5 +1,5 @@
-import { useContext, useMemo, useState } from "react";
-import { Button, Card, Dropdown, OverlayTrigger, Popover, TabContent, Form } from "react-bootstrap";
+import { useContext, useMemo, useState, useRef } from "react";
+import { Button, Card, Dropdown, OverlayTrigger, Popover, TabContent } from "react-bootstrap";
 import ModalView from "../../../components/modal";
 import Table from "../../../components/table";
 import { useQuery,useMutation } from "@apollo/client";
@@ -8,13 +8,17 @@ import AuthContext from "../../../context/auth-context";
 import EquipmentSearch from '../search-builder/equipmentList';
 import MuscleGroupSearch from '../search-builder/muscleGroupList';
 import TextEditor from '../search-builder/textEditor';
+import FitnessSelect from './fitnessSelect';
+import ActionButton from "../../../components/actionbutton";
+import CreateEditExercise from "./createoredit-exercise";
+
 
 export default function EventsTab() {
 
     const auth = useContext(AuthContext);
     const [tableData, setTableData] = useState<any[]>([]);
     const [fitnessdisciplines, setFitnessDisciplines] = useState<any[]>([]);
-    let disc: any;
+    const createEditExerciseComponent = useRef<any>(null);
 
     function FetchData(_variables: {} = {id: auth.userid}){
         useQuery(GET_TABLEDATA, {variables: _variables, onCompleted: loadData})
@@ -38,7 +42,9 @@ export default function EventsTab() {
             [...data.exercises].map((detail) => {
                 return {
                     exerciseName: detail.exercisename,
-                    discipline: detail.fitnessdiscipline.disciplinename,
+                    discipline: detail.fitnessdisciplines.map((disc:any) => {
+                        return disc.disciplinename;
+                    }),
                     level: detail.exerciselevel,
                     muscleGroup: detail.exercisemusclegroups.map((muscle: any) => {
                         return muscle.name
@@ -51,17 +57,15 @@ export default function EventsTab() {
                 }
             })
         );
-        let discplines = [...data.fitnessdisciplines].map((discipline) => {
-                    return {
-                        id: discipline.id,
-                        disciplineName: discipline.disciplinename,
-                        updatedAt: discipline.updatedAt
-                    }
-                })
         setFitnessDisciplines(
-            discplines
+            [...data.fitnessdisciplines].map((discipline) => {
+                return {
+                    id: discipline.id,
+                    disciplineName: discipline.disciplinename,
+                    updatedAt: discipline.updatedAt
+                }
+            })
         );
-        disc = discplines[0].id
         
     }
 
@@ -78,23 +82,14 @@ export default function EventsTab() {
             id: "edit",
             Header: "Actions",
             Cell: ({ row }: any) => (
-                <OverlayTrigger
-                    trigger="click"
-                    placement="right"
-                    overlay={
-                        <Popover id="action-popover">
-                            <Popover.Content>
-                                <Dropdown.Item>View</Dropdown.Item>
-                                <Dropdown.Item>Edit</Dropdown.Item>
-                                <Dropdown.Item>Delete</Dropdown.Item>
-                            </Popover.Content>
-                        </Popover>
-                    }
-                >
-                    <Button variant="white">
-                        <i className="fas fa-ellipsis-v"></i>
-                    </Button>
-                </OverlayTrigger>
+                <ActionButton 
+                action1="Edit"
+                actionClick1={() => {createEditExerciseComponent.current.TriggerForm({id: row.original.id, type: 'edit'})}}
+                action2="View"
+                actionClick2={() => {createEditExerciseComponent.current.TriggerForm({id: row.original.id, type: 'view'})}}
+                action3="Delete"
+                actionClick3={() => {createEditExerciseComponent.current.TriggerForm({id: row.original.id, type: 'delete'})}}
+                 />
             ),
         }
     ], []);
@@ -114,7 +109,12 @@ export default function EventsTab() {
         editorTextString = data;
     }
 
-    
+    let fitnessDiscplinesListarray: any;
+    function handleFitnessDiscplinesListCallback(data: any){
+        // console.log(data[0].id);
+        fitnessDiscplinesListarray = data;
+    }
+
     const eventSchema: any = require("./exercises.json");
     const uiSchema: any = {
         "level": {
@@ -157,16 +157,7 @@ export default function EventsTab() {
             "ui:widget": () => {
                 return (
                     <div>
-                        <Form.Group controlId="exampleForm.SelectCustom">
-                            <Form.Label>Fitness Discipline</Form.Label>
-                            <Form.Control as="select" custom onChange={(e) => { disc = e.target.value }}>
-                                {fitnessdisciplines.map((val: any) => {
-                                    return (
-                                        <option value={val.id} >{val.disciplineName}</option>
-                                    );
-                                })}
-                            </Form.Control>
-                        </Form.Group>
+                        <FitnessSelect options={fitnessdisciplines} fitnessdisciplinesList={handleFitnessDiscplinesListCallback}/>
                     </div>
                 );
             }
@@ -195,7 +186,6 @@ export default function EventsTab() {
         Advance,
         None
     }
-    console.log(disc);
     
     function onSubmit(formData: any) {
         
@@ -208,7 +198,9 @@ export default function EventsTab() {
                     exercisename: formData.exercise,
                     exerciselevel: ENUM_EXERCISES_EXERCISELEVEL[levelIndex],
                     exerciseminidescription: formData.miniDescription,
-                    fitnessdiscipline: disc,
+                    fitnessdisciplines: fitnessDiscplinesListarray.map((val: any) => {
+                        return val.id
+                    }),
                     exercisetext: (!editorTextString ? null : editorTextString),
                     exerciseurl: formData.addExercise.AddURL,
                     users_permissions_user: authid,
@@ -224,14 +216,20 @@ export default function EventsTab() {
     }
     if (error) return <span>{`Error! ${error.message}`}</span>;
 
-    FetchData({id: auth.userid});
-    // FetchFitnessDisciplines();
-    
+    FetchData({id: auth.userid});    
     
     return (
         <TabContent>
             <hr />
             <Card.Title className="text-right">
+                <Button variant={true ? "outline-secondary" : "light"} size="sm"
+                    onClick={() => {
+                        createEditExerciseComponent.current.TriggerForm({ id: null, type: 'create' });
+                    }}
+                >
+                    <i className="fas fa-plus-circle"></i>{" "}Create New
+                </Button>
+                <CreateEditExercise ref={createEditExerciseComponent}></CreateEditExercise>
                 <ModalView
                     name="Create Template"
                     isStepper={false}

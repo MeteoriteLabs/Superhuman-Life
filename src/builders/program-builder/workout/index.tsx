@@ -1,37 +1,21 @@
 import { useMemo, useContext, useState } from "react";
-import { Button, Card, Dropdown, OverlayTrigger, Popover, TabContent, Form } from "react-bootstrap";
+import { Button, Card, Dropdown, OverlayTrigger, Popover, TabContent } from "react-bootstrap";
 import BuildWorkout from './buildWorkout';
 import ModalView from "../../../components/modal";
 import Table from "../../../components/table";
 import { useQuery, useMutation } from "@apollo/client";
-import { GET_FITNESSDISCIPLINES, GET_TABLEDATA, CREATE_WORKOUT } from './queries';
+import { GET_TABLEDATA, CREATE_WORKOUT } from './queries';
 import AuthContext from "../../../context/auth-context";
 import EquipmentSearch from '../search-builder/equipmentList';
 import MuscleGroupSearch from '../search-builder/muscleGroupList';
 import TextEditor from '../search-builder/textEditor';
+import MultiSelect from './fitnessMultiSelect';
 
 export default function EventsTab() {
 
     const auth = useContext(AuthContext);
     const [tableData, setTableData] = useState<any[]>([]);
     const [fitnessdisciplines, setFitnessDisciplines] = useState<any[]>([]);
-
-
-    function FetchFitnessDisciplines(){
-        useQuery(GET_FITNESSDISCIPLINES, {onCompleted: loadFitnessDisciplines});
-    }
-
-    function loadFitnessDisciplines(data: any){
-        setFitnessDisciplines(
-            [...data.fitnessdisciplines].map((discipline) => {
-                return {
-                    id: discipline.id,
-                    disciplineName: discipline.disciplinename,
-                    updatedAt: discipline.updatedAt
-                }
-            })
-        );
-    }
 
     function FetchData(_variables: {} = {id: auth.userid}){
         useQuery(GET_TABLEDATA, {variables: _variables, onCompleted: loadData})
@@ -50,9 +34,10 @@ export default function EventsTab() {
     }
 
     function loadData(data: any) {
+        //console.log(data);
         setTableData(
             [...data.workouts].map((detail) => {
-                // console.log(detail);
+                console.log(detail);
                 return {
                     workoutName: detail.workouttitle,
                     discipline: detail.fitnessdisciplines.disciplinename,
@@ -66,13 +51,21 @@ export default function EventsTab() {
                     updatedOn: getDate(Date.parse(detail.updatedAt))
                 }
             })
+        )
+        setFitnessDisciplines(
+            [...data.fitnessdisciplines].map((discipline) => {
+                return {
+                    id: discipline.id,
+                    disciplineName: discipline.disciplinename,
+                    updatedAt: discipline.updatedAt
+                }
+            })
         );
     }
 
     const columns = useMemo<any>(() => [
         { accessor: "workoutName", Header: "Workout Name" },
         { accessor: "discipline", Header: "Discipline" },
-        { accessor: "duration", Header: "Duration" },
         { accessor: "level", Header: "Level" },
         { accessor: "intensity", Header: "Intensity" },
         { accessor: "calories", Header: "Calories" },
@@ -119,7 +112,11 @@ export default function EventsTab() {
         editorTextString = data;
     }
 
-    // let disc: any;
+    let fitnessDiscplinesListarray: any;
+    function handleFitnessDiscplinesListCallback(data: any){
+        fitnessDiscplinesListarray = data;
+    }
+
     const eventSchema: any = require("./workout.json");
     const uiSchema: any = {
         "level": {
@@ -168,14 +165,7 @@ export default function EventsTab() {
             "ui:widget": () => {
                 return (
                     <div>
-                        <Form.Group controlId="exampleForm.SelectCustom">
-                            <Form.Label>Fitness Discipline</Form.Label>
-                            <Form.Control as="select" custom onChange={(e) => { console.log( e.target.value ) }}>
-                                {fitnessdisciplines.map((val: any) => {
-                                    return <option value={val.id} >{val.disciplineName}</option>
-                                })}
-                            </Form.Control>
-                        </Form.Group>
+                        <MultiSelect options={fitnessdisciplines} fitnessdisciplinesList={handleFitnessDiscplinesListCallback}/>
                     </div>
                 )
             }
@@ -232,6 +222,9 @@ export default function EventsTab() {
                     workouttitle: formData.workout,
                     level: ENUM_EXERCISES_EXERCISELEVEL[levelIndex],
                     intensity: ENUM_WORKOUTS_INTENSITY[intensityIndex],
+                    fitnessdisciplines: fitnessDiscplinesListarray.map((val: any) => {
+                        return val.id;
+                    }),
                     About: formData.about,
                     Benefits: formData.benefits,
                     users_permissions_user: authid,
@@ -250,7 +243,6 @@ export default function EventsTab() {
     if (error) return <span>{`Error! ${error.message}`}</span>;
 
     FetchData({id: auth.userid});
-    FetchFitnessDisciplines();
 
 
     return (

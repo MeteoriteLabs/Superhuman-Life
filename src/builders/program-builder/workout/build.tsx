@@ -102,15 +102,15 @@ const Build = () => {
           setUploadFields(values);
      }
 
-//      let exerciseListArray: any;
-//     function handleEquipmentCallback(data: any) {
-//           exerciseListArray = data;
-//     }
+     let exerciseListArray: any;
+    function handleEquipmentCallback(data: any) {
+          exerciseListArray = data;
+    }
 
-//     let editorTextString: any;
-//     function handleEditorTextCallBack(data:any){
-//         editorTextString = data;
-//     }
+    let editorTextString: any;
+    function handleEditorTextCallBack(data:any){
+        editorTextString = data;
+    }
 
     function renderOptions(){
      return (
@@ -144,7 +144,7 @@ const Build = () => {
                                         <span>Exercise <i className="far fa-trash-alt float-right"
                                              style={{ color: 'red', cursor: 'pointer'}}
                                         onClick={() => handleExerciseFieldRemove(idx)}></i></span>
-                                        <ExerciseList />
+                                        <ExerciseList exerciseList={handleEquipmentCallback}/>
                                    </div>
                               );
                               })}
@@ -155,7 +155,7 @@ const Build = () => {
                               <span>Add Text <i className="far fa-trash-alt float-right"
                                    style={{ color: 'red', cursor: 'pointer'}}
                               onClick={() => handleTextFieldRemove(idx)}></i></span>
-                              <TextEditor />
+                              <TextEditor editorText={handleEditorTextCallBack}/>
                          </div>
                     );
                     })}

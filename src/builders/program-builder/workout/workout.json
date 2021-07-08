@@ -43,7 +43,7 @@
                 "title": "Benefits"
             },
             "addWorkout": {
-                "title": "",
+                "title": "Workout Agenda",
                 "$ref": "#/definitions/addWorkout"
             },
             "calories": {
