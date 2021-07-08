@@ -95,13 +95,25 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
                                 }
                             </Button>
                         </> :
-                    <Button
+                        <> 
+                        <Button
                          variant="danger"
                          size="sm"
+                         onClick={() => {setShow(false)}}
+                         className={name === 'View'?"d-none":""}
+                        >
+                        Close
+                       </Button>
+                        <Button
+                         variant="success"
+                         size="sm"
                          onClick={(event) => {formRef.current.onSubmit(event)}}
-                     >
+                        >
                         {name === 'View'? "Close": "Submit"} 
-                     </Button>
+                        </Button>
+                        
+                        </>
+                    
                         
                     }
                 </Modal.Footer>

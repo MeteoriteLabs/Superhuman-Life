@@ -25,7 +25,7 @@ function CustomTable({ data, columns }: any) {
                     ))}
                     {!rows.length && 
                         <tr className="rowCard text-center">
-                            <td>No data</td>
+                            <td colSpan={columns.length}>No data</td>
                     </tr>
                     }
                 </thead>
