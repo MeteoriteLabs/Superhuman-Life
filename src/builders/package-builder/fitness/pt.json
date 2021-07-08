@@ -103,10 +103,6 @@
                     "Hybrid"
                 ]
             },
-            "location": {
-                "title": "Location",
-                "type": "string"
-            },
             "title_package": {
                 "title": "A null field",
                 "type": "string"
@@ -124,31 +120,18 @@
                                     "Online"
                                 ]
                             },
-                            "number_training_classes_online": {
+                            "number_classes_online": {
                                 "title": "Online",
-                                "type": "string",
-                                "enum": [
-            
-                                    "1",
-                                    "2",
-                                    "3",
-                                    "4",
-                                    "5",
-                                    "6",
-                                    "7",
-                                    "8",
-                                    "9",
-                                    "10",
-                                    "11",
-                                    "12",
-                                    "13",
-                                    "14"
-                                ],
-                                "default": "0"
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 31
                             },
                             "number_of_rests": {
-                                "title": "Number of Rest Days",
-                                "type": "string"
+                                "title": "Rest Days",
+                                "type": "number",
+                                "default":"0",
+                                "minimum": 0,
+                                "maximum": 31
                             }
                         }
                     },
@@ -161,31 +144,21 @@
                                     "Offline"
                                 ]
                             },
-                            "number_training_classes_offline": {
+                            "location": {
+                                "title": "Location",
+                                "type": "string"
+                            },
+                            "number_classes_offline": {
                                 "title": "Offline",
-                                "type": "string",
-                                "enum": [
-                             
-                                    "1",
-                                    "2",
-                                    "3",
-                                    "4",
-                                    "5",
-                                    "6",
-                                    "7",
-                                    "8",
-                                    "9",
-                                    "10",
-                                    "11",
-                                    "12",
-                                    "13",
-                                    "14"
-                                ],
-                                "default": "0"
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 31
                             },
                             "number_of_rests": {
-                                "title": "Number of Rest Days",
-                                "type": "string"
+                                "title": "Rest Days",
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 31
                             }
                         }
                     },
@@ -196,55 +169,32 @@
                                 "type": "string",
                                 "enum": [
                                     "Hybrid"
-                                ]
+                                ],
+                                "default":"0"
                             },
-                            "number_training_classes_online": {
+                            "location": {
+                                "title": "Location",
+                                "type": "string"
+                            },
+                            "number_classes_online": {
                                 "title": "Online",
-                                "type": "string",
-                                "enum": [
-                             
-                                    "1",
-                                    "2",
-                                    "3",
-                                    "4",
-                                    "5",
-                                    "6",
-                                    "7",
-                                    "8",
-                                    "9",
-                                    "10",
-                                    "11",
-                                    "12",
-                                    "13",
-                                    "14"
-                                ],
-                                "default": "0"
+                                "type": "number",
+                                "default":"0",
+                                "minimum": 0,
+                                "maximum": 31
                             },
-                            "number_training_classes_offline": {
+                            "number_classes_offline": {
                                 "title": "Offline",
-                                "type": "string",
-                                "enum": [
-
-                                    "1",
-                                    "2",
-                                    "3",
-                                    "4",
-                                    "5",
-                                    "6",
-                                    "7",
-                                    "8",
-                                    "9",
-                                    "10",
-                                    "11",
-                                    "12",
-                                    "13",
-                                    "14"
-                                ],
-                                "default": "0"
+                                "type": "number",
+                                "default":"0",
+                                "minimum": 0,
+                                "maximum": 31
                             },
                             "number_of_rests": {
-                                "title": "Number of Rest Days",
-                                "type": "string"
+                                "title": "Rest Days",
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 31
                             }
                         }
                     }
@@ -275,19 +225,13 @@
         "title": "",
         "type": "object",
         "properties": {
-            "apply_voucher": {
-                "type": "string",
-                "title": "Apply Voucher?",
-                "description": "This voucher can be shared by you",
-                "enum": [
-                    "Getfit - 10%",
-                    "Getfit - 15%"
-                ]
-            },
+           
             "pricing_plan":{
                 "type":"string",
                 "title" :"Pricing Plan"
             }
+          
+         
         }
     }
 }

@@ -7,6 +7,7 @@ import { Typeahead } from 'react-bootstrap-typeahead'
 import { GET_ADDRESS, GET_FITNESS_DISCIPLINES } from "../../../graphQL/queries";
 import './fitness.css'
 import _ from 'lodash'
+import { useRef } from "react";
 
 const GET_FITNESS = gql`{
     fitnesspackages {
@@ -31,8 +32,7 @@ const GET_FITNESS = gql`{
   }
   `;
 
-export default function FitnessTab() {
-
+export default function FitnessTab(props) {
     const columns = useMemo<any>(() => [
         {
             accessor: "intropicture",
@@ -84,6 +84,11 @@ export default function FitnessTab() {
     ], []);
 
     const { loading, error, data } = useQuery(GET_FITNESS);
+    const [userData, setUserData] = useState<any>('');
+    const [restDay, setRestday] = useState("0");
+    const [classSessions, setClassSessions] = useState<number[] | null>(null)
+    const restDayRef = useRef(null)
+
 
 
     const classicSchema: any = require("./classic.json");
@@ -138,46 +143,113 @@ export default function FitnessTab() {
                     </div>
                 })}
             </div>
-
         }
-
     };
 
-    const CustomTextTitlePackage = () => {
+    const customTextTitlePackage = () => {
         return <div className='text-center font-weight-bold mx-auto w-50 py-3 px-2 mt-5' style={{ boxShadow: '0px 7px 15px -5px #000000', borderRadius: '5px' }}>
             <p className='m-0'>Set for One Month (30 days)</p>
         </div>
     };
 
 
-    const CustomNumberPeople = ({ options, schema, value, label, onChange }: any) => {
-        return <div className='text-center text-black py-3' style={{ border: '1px solid black', borderRadius: '5px', boxShadow: '0px 7px 15px -11px #000000' }}>
+    const customNumberClass = ({ options, schema, value, label, onChange }: any) => {
+        return <div className='text-center text-black py-3 w-25 d-flex justify-content-center align-items-center' >
             {label === 'Online' ? <img src="/assets/PT-Online.svg" alt='123' /> : <img src="/assets/PT-Offline.svg" alt='123' />}
-            <label className='d-block'>{schema.title}</label>
-            <select className='px-3 py-2 rounded select-basic' value={value} onChange={(event) => onChange(event.target.value)} >
-                {options.enumOptions.map((item: any, index: number) => {
-                    return <option key={index} value={item.value}>{item.value}</option>
-                })}
-            </select>
+            <label className='d-block font-weight-bold mb-0 mr-5'>{schema.title}</label>
+            <input
+                className="py-2 px-2"
+                value={value}
+                pattern="[0-9]+"
+                onChange={(event: any) => {
+                    onChange(event.target.value)
+                }}
+                type="number"
+                min="0"
+                max="31"
+            />
         </div>
     }
 
 
-    const CustomNumberRestDay = ({ label, onChange, value }: any) => {
-        const arrayOption = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
-
-        return <div className='text-center text-black py-3' style={{ border: '1px solid black', borderRadius: '5px', boxShadow: '0px 7px 15px -11px #000000' }}>
-            <label className='d-block'>{label}</label>
-            <select className='px-3 py-2 rounded select-basic' value={value} onChange={(event) => onChange(event.target.value)} >
-                {arrayOption.map((item, index) => {
-                    return <option key={index} value={item}>{item}</option>
-                })}
-            </select>
+    const customNumberRestDay = ({ label, onChange, value }: any) => {
+        return <div className=' text-center text-black py-3 w-25 d-flex justify-content-center align-items-center' >
+            <img src="/assets/rest-icon.svg" alt='123' />
+            <label className='d-block font-weight-bold mb-0 mr-3'>{label}</label>
+            <input
+                className="py-2 px-2"
+                value={value}
+                // pattern="[0-9]+"
+                onChange={(event: any) => {
+                    onChange(event.target.value)
+                }}
+                type="number"
+                min="0"
+                max="31"
+            />
         </div>
     }
+
+
+    const renderClasses = (numberClass: number) => {
+        let arrayNumberClass: number[] = []
+        for (let i = 0; i < 4; i++) {
+            numberClass *= 2;
+            arrayNumberClass.push(numberClass);
+        }
+        return arrayNumberClass.map((item, index) => {
+            return <>
+                <td key={index}>{item} Class</td>
+            </>
+        })
+
+    }
+
+    const renderVoucher = (props: any) => {
+        console.log(props)
+        return [...Array(4)].map((item, index) => {
+            return <td key={index}>
+                <select   onChange={(event) => props.onChange(event.target.value)}>
+                    <option value='0'></option>
+                    <option value='1'>Getfit - 10%</option>
+                    <option value='2'>Getfit - 20%</option>
+                </select>
+            </td>
+        })
+    }
+
+    const renderClassSessions = (classOnline, classOffline) => {
+        let numberClassSessions = classOnline + classOffline;
+        const arrNumberClass: number[] = [];
+        for (let i = 0; i < 4; i++) {
+            numberClassSessions *= 2;
+            arrNumberClass.push(numberClassSessions);
+        }
+        return arrNumberClass?.map((item, index) => {
+            return <td key={index} className='font-weight-bold'>{item} Class</td>
+        })
+    }
+
+    const renderSuggestedPricing = () => {
+        const arrPrice = [2500, 2500, 2500, 2500];
+        return arrPrice.map((item, index) => {
+            return <td key={index}>Rs {item}</td>
+        })
+    }
+
+    const renderMRPInput = (props: any) => {
+        return [...new Array(4)].map((item, index) => {
+            return <td>
+                <input placeholder='Enter MRP' value={props.value} onChange={(e) => props.onChange(e.target.value)} />
+            </td>
+        })
+    }
+
 
 
     const customPricingTable = (props: any) => {
+        console.log(userData);
+        const { number_classes_online, number_classes_offline } = userData
         return <div className='text-center mt-3'>
             <p className=' font-weight-bold' style={{ fontSize: '1.5rem' }}>Pricing Plan</p>
             <Table striped bordered hover>
@@ -192,18 +264,35 @@ export default function FitnessTab() {
                 </thead>
                 <tbody>
                     <tr>
-                        <td>Offline</td>
-                        <td>15 Class</td>
-                        <td>36 Class</td>
-                        <td>36 Class</td>
-                        <td>36 Class</td>
+                        {number_classes_online !== undefined && number_classes_online !== 0 ?
+                            <>
+                                <td><img src="/assets/PT-Online.svg" alt='123' />Online</td>
+                                {renderClasses(number_classes_online)}
+                            </>
+                            : ''}
                     </tr>
                     <tr>
-                        <td>Online</td>
-                        <td>15 Class</td>
-                        <td>36 Class</td>
-                        <td>36 Class</td>
-                        <td>36 Class</td>
+                        {number_classes_online !== undefined && number_classes_offline !== 0 ? <>
+                            <td><img src="/assets/PT-Offline.svg" alt='123' />Offline</td>
+                            {renderClasses(number_classes_offline)}
+                        </>
+                            : ''}
+                    </tr>
+                    <tr>
+                        <td></td>
+                        {renderVoucher(props)}
+                    </tr>
+                    <tr>
+                        <td className='font-weight-bold'>Total Sessions</td>
+                        {renderClassSessions(number_classes_online, number_classes_offline)}
+                    </tr>
+                    <tr>
+                        <td>Suggested Pricing</td>
+                        {renderSuggestedPricing()}
+                    </tr>
+                    <tr>
+                        <td>Set MRP</td>
+                        {renderMRPInput(props)}
                     </tr>
                 </tbody>
             </Table>
@@ -219,19 +308,19 @@ export default function FitnessTab() {
             "ui:widget": ArrayLocationTemplate
         },
         "title_package": {
-            "ui:widget": CustomTextTitlePackage
+            "ui:widget": customTextTitlePackage
         },
 
 
-        "number_training_classes_online": {
-            "ui:widget": CustomNumberPeople
+        "number_classes_online": {
+            "ui:widget": customNumberClass
         },
-        "number_training_classes_offline": {
-            "ui:widget": CustomNumberPeople
+        "number_classes_offline": {
+            "ui:widget": customNumberClass
         },
 
         "number_of_rests": {
-            "ui:widget": CustomNumberRestDay
+            "ui:widget": customNumberRestDay
         },
         "level": {
             "ui:widget": "radio",
@@ -361,6 +450,8 @@ export default function FitnessTab() {
                     formSubmit={onSubmit}
                     formData={{}}
                     arrProps={arrProps}
+                    setUserData={setUserData}
+
                 />
             </Card.Title>
             {loading ? <code>Loading...</code> : <CustomTable columns={columns} data={fitnessData} />}
