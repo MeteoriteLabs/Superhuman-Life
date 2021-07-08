@@ -209,7 +209,7 @@ export default function FitnessTab(props) {
         console.log(props)
         return [...Array(4)].map((item, index) => {
             return <td key={index}>
-                <select   onChange={(event) => props.onChange(event.target.value)}>
+                <select onChange={(event) => props.onChange(event.target.value)}>
                     <option value='0'></option>
                     <option value='1'>Getfit - 10%</option>
                     <option value='2'>Getfit - 20%</option>
@@ -272,10 +272,11 @@ export default function FitnessTab(props) {
                             : ''}
                     </tr>
                     <tr>
-                        {number_classes_online !== undefined && number_classes_offline !== 0 ? <>
-                            <td><img src="/assets/PT-Offline.svg" alt='123' />Offline</td>
-                            {renderClasses(number_classes_offline)}
-                        </>
+                        {number_classes_offline !== undefined && number_classes_offline !== 0 ?
+                            <>
+                                <td><img src="/assets/PT-Offline.svg" alt='123' />Offline</td>
+                                {renderClasses(number_classes_offline)}
+                            </>
                             : ''}
                     </tr>
                     <tr>

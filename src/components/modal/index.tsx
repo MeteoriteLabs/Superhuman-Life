@@ -4,7 +4,7 @@ import { Theme as Bootstrap4Theme } from '@rjsf/bootstrap-4';
 import { Button, Col, Modal, ProgressBar, Row } from "react-bootstrap";
 import _ from 'lodash'
 
-export default function ModalView({ name, formUISchema, formSubmit, formSchema, formData, isStepper,arrProps}: any) {
+export default function ModalView({ name, formUISchema, formSubmit, formSchema, formData, isStepper,arrProps,setUserData}: any) {
     const registry = utils.getDefaultRegistry();
     const defaultFileWidget = registry.widgets["FileWidget"];
     (Bootstrap4Theme as any).widgets["FileWidget"] = defaultFileWidget;
@@ -24,6 +24,7 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
             console.log("Data submitted: ", formData);
             setStep(step + 1);
             setFormValues({ ...formValues, ...formData  });
+            setUserData({ ...formValues, ...formData  })
         } else {
             Object.assign(formData,{discipline:lastEleValue})
             formSubmit(formData);
