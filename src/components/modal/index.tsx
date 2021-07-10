@@ -1,9 +1,9 @@
-import { useRef, useState } from "react";
+import { useRef, useState} from "react";
 import { withTheme, utils } from "@rjsf/core";
 import { Theme as Bootstrap4Theme } from '@rjsf/bootstrap-4';
 import { Button, Col, Modal, ProgressBar, Row } from "react-bootstrap";
 
-export default function ModalView({ name, formUISchema, formSubmit, formSchema, formData, isStepper }: any) {
+export default function ModalView({ name, formUISchema, formSubmit, formSchema, formData, isStepper,showing }: any) {
     const registry = utils.getDefaultRegistry();
     const defaultFileWidget = registry.widgets["FileWidget"];
     (Bootstrap4Theme as any).widgets["FileWidget"] = defaultFileWidget;
@@ -11,7 +11,7 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
     const Form: any = withTheme(Bootstrap4Theme);
     const formRef = useRef<any>(null);
     const [step, setStep] = useState<number>(1);
-    const [show, setShow] = useState<boolean>(true);
+    const [show, setShow] = useState<boolean>(showing);
     const [formValues, setFormValues] = useState<any>(formData);
     const stepper: string[] = ["Creator", "Details", "Program", "Schedule", "Pricing"];
     
@@ -25,14 +25,24 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
             formSubmit(formData);
         }
     }
-
+    console.log(showing);
+    
+    // const handleShow = useCallback(
+    //     () => {
+    //         setShow(true);
+    //     },
+    //     [show],
+    // )
+    // function handleShow(val: boolean){
+    //     setShow(boolean)
+    // }
 
     return (
         <>  
             {/* <Button variant={name === "Create New"?"outline-secondary":"light"}  size="sm" onClick={() => setShow(true)}>
                 {name === "Create New"?<i className="fas fa-plus-circle"></i>:" "}{" "}{name}
             </Button> */}
-            <Modal size="xl" show={show} onHide={() => setShow(false)} centered >
+            <Modal size="xl" show={show} onHide={() => {setShow(!showing)}} centered >
                 <Modal.Header closeButton>
                     <Modal.Title as={Row}>
                         <Col xs={12} md={12} lg={12}>
@@ -94,7 +104,7 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
                         <Button
                          variant="danger"
                          size="sm"
-                         onClick={() => {setShow(false)}}
+                         onClick={() => {setShow(!showing)}}
                          className={name === 'View'?"d-none":""}
                         >
                         Close

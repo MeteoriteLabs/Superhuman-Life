@@ -131,7 +131,8 @@ export default function MessagePage() {
                         <Card.Title className="text-center">
                             <Button variant={true ? "outline-secondary" : "light"} size="sm"
                                 onClick={() => {
-                                    createEditMessageComponent.current.TriggerForm({ id: null, type: 'create' });
+                                    createEditMessageComponent.current.TriggerForm({ id: null, type: 'create',modal_status: true });
+
                                 }}
                             >
                                 <i className="fas fa-plus-circle"></i>{" "}Create New

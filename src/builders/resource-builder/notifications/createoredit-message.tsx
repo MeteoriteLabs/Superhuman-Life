@@ -8,6 +8,7 @@ import StatusModal from "../../../components/StatusModal/StatusModal";
 
 interface Operation {
     id: string;
+    modal_status: boolean;
     type: 'create' | 'edit' | 'view' | 'toggle-status' | 'delete';
     current_status: boolean;
 }
@@ -144,17 +145,18 @@ function CreateEditMessage(props: any, ref: any) {
 
     return (
         <>
-            {render &&
-                <ModalView
+            {operation.type === "create" && <ModalView
                     name={name}
                     isStepper={false}
                     formUISchema={uiSchema}
                     formSchema={messageSchema}
+                    showing={operation.modal_status}
                     formSubmit={name ==="View"? () => {setRender(false)}:(frm: any) => { OnSubmit(frm); }}
                     formData={messageDetails}
-                />
+            />}
                 
-            }
+                
+            
             {operation.type === "toggle-status" && <StatusModal
              modalTitle="Change Status"
              modalBody="Do you want to change the status?"
