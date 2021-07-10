@@ -1,10 +1,10 @@
 import React, { useContext, useImperativeHandle, useState } from 'react';
 import { useQuery, useMutation } from "@apollo/client";
 import ModalView from "../../../components/modal";
-import { GET_TABLEDATA, CREATE_EXERCISE, UPDATE_EXERCISE, DELETE_EXERCISE } from "./queries";
+import { FETCH_DATA, CREATE_EXERCISE, UPDATE_EXERCISE, DELETE_EXERCISE } from "./queries";
 import AuthContext from "../../../context/auth-context";
 import StatusModal from "../../../components/StatusModal/StatusModal";
-
+import { schema, valuesToCreateOrEdit } from './exerciseSchema';
 
 interface Operation {
     id: string;
@@ -21,7 +21,7 @@ function CreateEditMessage(props: any, ref: any) {
     
 
     const [createExercise] = useMutation(CREATE_EXERCISE, { onCompleted: (r: any) => { console.log(r); setRender(false); } });
-    const [updateExercise] = useMutation(UPDATE_EXERCISE,{variables: {exerciseid: operation.id}, onCompleted: (r: any) => { console.log(r); setRender(false); } });
+    const [editExercise] = useMutation(UPDATE_EXERCISE,{variables: {exerciseid: operation.id}, onCompleted: (r: any) => { console.log(r); setRender(false); } });
     const [deleteExercise] = useMutation(DELETE_EXERCISE, { onCompleted: (e: any) => console.log(e), refetchQueries: ["GET_TABLEDATA"] });
 
     useImperativeHandle(ref, () => ({
@@ -45,19 +45,23 @@ function CreateEditMessage(props: any, ref: any) {
     // }
 
     function FillDetails(data: any) {
-        console.log(data.prerecordedmessage);
-
+        console.log(data);
         let details: any = {};
-        let msg = data.prerecordedmessage;
-        details.title = msg.title;
-        details.prerecordedtype = msg.prerecordedtype.id;
-        details.prerecordedtrigger = msg.prerecordedtrigger.id;
-        details.description = msg.description;
-        details.minidesc = msg.minidescription;
-        details.mediaurl = msg.mediaurl;
-        details.file = msg.mediaupload.id;
-        details.status = msg.status;
-        setMessageDetails(details);
+        let msg = data.exercises;
+        console.log(msg);
+        details.exercise = msg[0].exercisename;
+        details.level = msg.exerciselevel;
+        details.discipline = msg[0].fitnessdisciplines.map((val: any) => {
+            return val.id;
+        });
+        details.miniDescription = msg[0].exerciseminidescription;
+        details.equipment = msg[0].equipment_lists.map((val: any) => {
+            return val.name;
+        });
+        details.muscleGroup = msg[0].exercisemusclegroups.map((val: any) => {
+            return val.name;
+        })
+        setExerciseDetails(details);
 
         //if message exists - show form only for edit and view
         if (['edit', 'view'].indexOf(operation.type) > -1)
@@ -68,40 +72,37 @@ function CreateEditMessage(props: any, ref: any) {
 
     function FetchData() {
         console.log('Fetch data', operation.id);
-        useQuery(GET_TRIGGERS, { onCompleted: loadData });
-        //skip fetch message if id not set or operation is toggle-status
-        useQuery(GET_MESSAGE, { variables: { id: operation.id }, skip: (!operation.id || operation.type === 'toggle-status'), onCompleted: (e: any) => { FillDetails(e) } });
+        useQuery(FETCH_DATA, { variables: { id: operation.id }, skip: (!operation.id || operation.type === 'toggle-status'), onCompleted: (e: any) => { FillDetails(e) } });
     }
 
-    function CreateMessage(frm: any) {
-        console.log('create message');
-        createMessage({ variables: frm });
+    function CreateExercise(frm: any) {
+        console.log('create message', frm);
+        // createExercise({ variables: frm });
     }
 
-    function EditMessage(frm: any) {
+    function EditExercise(frm: any) {
         console.log('edit message');
         // useMutation(UPDATE_MESSAGE, { variables: frm, onCompleted: (d: any) => { console.log(d); } });
-        editMessage({variables: frm });
+        editExercise({variables: frm });
     }
 
-    function ViewMessage(frm: any) {
+    function ViewExercise(frm: any) {
         console.log('view message');
         //use a variable to set form to disabled/not editable
-        useMutation(UPDATE_MESSAGE, { variables: frm, onCompleted: (d: any) => { console.log(d); } })
-    }
-
-    function ToggleMessageStatus(id: string, current_status: boolean) {
-        
-        console.log('toggle message status');
-        console.log(id, current_status);
-        //use mutation to just toggle the status of message
-        updateStatus({ variables: { status: !current_status, messageid: id } });
-        
+        useMutation(UPDATE_EXERCISE, { variables: frm, onCompleted: (d: any) => { console.log(d); } })
     }
 
     function DeleteMessage(id: any) {
         console.log('delete message');
-        deleteMessage({ variables: { id: id }});
+        deleteExercise({ variables: { id: id }});
+    }
+
+    
+    enum ENUM_EXERCISES_EXERCISELEVEL {
+        Beginner,
+        Intermediate,
+        Advance,
+        None
     }
 
     function OnSubmit(frm: any) {
@@ -112,13 +113,13 @@ function CreateEditMessage(props: any, ref: any) {
 
         switch (operation.type) {
             case 'create':
-                CreateMessage(frm);
+                CreateExercise(frm);
                 break;
             case 'edit':
-                EditMessage(frm);
+                EditExercise(frm);
                 break;
             case 'view':
-                ViewMessage(frm);
+                ViewExercise(frm);
                 break;
             // case 'toggle-status':
             //     ToggleMessageStatus();
@@ -139,6 +140,8 @@ function CreateEditMessage(props: any, ref: any) {
     }else if(operation.type === 'view'){
         name="View";
     }
+    
+    // console.log(valuesToCreateOrEdit());
 
     return (
         <>
@@ -146,10 +149,10 @@ function CreateEditMessage(props: any, ref: any) {
                 <ModalView
                     name={name}
                     isStepper={false}
-                    formUISchema={}
+                    formUISchema={schema}
                     formSchema={exerciseSchema}
                     formSubmit={name ==="View"? () => {setRender(false)}:(frm: any) => { OnSubmit(frm); }}
-                    formData={messageDetails}
+                    formData={exerciseDetails}
                 />
                 
             }

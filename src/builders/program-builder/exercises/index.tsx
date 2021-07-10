@@ -1,14 +1,9 @@
 import { useContext, useMemo, useState, useRef } from "react";
-import { Button, Card, Dropdown, OverlayTrigger, Popover, TabContent } from "react-bootstrap";
-import ModalView from "../../../components/modal";
+import { Button, Card, TabContent } from "react-bootstrap";
 import Table from "../../../components/table";
-import { useQuery,useMutation } from "@apollo/client";
-import { GET_TABLEDATA, CREATE_EXERCISE } from './queries';
+import { useQuery } from "@apollo/client";
+import { GET_TABLEDATA} from './queries';
 import AuthContext from "../../../context/auth-context";
-import EquipmentSearch from '../search-builder/equipmentList';
-import MuscleGroupSearch from '../search-builder/muscleGroupList';
-import TextEditor from '../search-builder/textEditor';
-import FitnessSelect from './fitnessSelect';
 import ActionButton from "../../../components/actionbutton";
 import CreateEditExercise from "./createoredit-exercise";
 
@@ -19,56 +14,6 @@ export default function EventsTab() {
     const [tableData, setTableData] = useState<any[]>([]);
     const [fitnessdisciplines, setFitnessDisciplines] = useState<any[]>([]);
     const createEditExerciseComponent = useRef<any>(null);
-
-    function FetchData(_variables: {} = {id: auth.userid}){
-        useQuery(GET_TABLEDATA, {variables: _variables, onCompleted: loadData})
-    }
-    
-    function getDate(time: any) {
-        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
-            "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"
-        ];
-        let dateObj = new Date(time);
-        let month = monthNames[dateObj.getMonth()];
-        let year = dateObj.getFullYear();
-        let date = dateObj.getDate();
-
-        return (`${date}-${month}-${year}`);
-    }
-
-    function loadData(data: any) {
-        console.log(data);
-        setTableData(
-            [...data.exercises].map((detail) => {
-                return {
-                    exerciseName: detail.exercisename,
-                    discipline: detail.fitnessdisciplines.map((disc:any) => {
-                        return disc.disciplinename;
-                    }),
-                    level: detail.exerciselevel,
-                    muscleGroup: detail.exercisemusclegroups.map((muscle: any) => {
-                        return muscle.name
-                    }).join(", "),
-                    equipment: detail.equipment_lists.map((equipment: any) => {
-                        return equipment.name
-                    }).join(", "),
-                    updatedOn: getDate(Date.parse(detail.updatedAt)),
-                    type: (detail.exercisetext) ? "Text": "Video" ,
-                }
-            })
-        );
-        setFitnessDisciplines(
-            [...data.fitnessdisciplines].map((discipline) => {
-                return {
-                    id: discipline.id,
-                    disciplineName: discipline.disciplinename,
-                    updatedAt: discipline.updatedAt
-                }
-            })
-        );
-        
-    }
-
 
     const columns = useMemo<any>(() => [
         { accessor: "exerciseName", Header: "Exercise Name" },
@@ -94,129 +39,58 @@ export default function EventsTab() {
         }
     ], []);
 
-    let equipmentListarray: any;
-    function handleEquipmentCallback(data: any) {
-        equipmentListarray = data;
+    function getDate(time: any) {
+        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+            "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"
+        ];
+        let dateObj = new Date(time);
+        let month = monthNames[dateObj.getMonth()];
+        let year = dateObj.getFullYear();
+        let date = dateObj.getDate();
+
+        return (`${date}-${month}-${year}`);
     }
 
-    let muscleGroupListarray: any;
-    function handleMuscleGroupCallback(data:any){
-        muscleGroupListarray = data;
+    function FetchData(_variables: {} = {id: auth.userid}){
+        useQuery(GET_TABLEDATA, {variables: _variables, onCompleted: loadData})
     }
 
-    let editorTextString: any;
-    function handleEditorTextCallBack(data:any){
-        editorTextString = data;
-    }
-
-    let fitnessDiscplinesListarray: any;
-    function handleFitnessDiscplinesListCallback(data: any){
-        // console.log(data[0].id);
-        fitnessDiscplinesListarray = data;
-    }
-
-    const eventSchema: any = require("./exercises.json");
-    const uiSchema: any = {
-        "level": {
-            "ui:widget": "radio",
-            "ui:options": {
-                "inline": true
-            }
-        },
-        "description": {
-            "ui:widget": "textarea",
-            "ui:options": {
-                "rows": 3
-            }
-        },
-        "miniDescription": {
-            "ui:widget": "textarea",
-            "ui:options": {
-                "rows": 3
-            }
-        },
-        "equipment": {
-            "ui:widget": () => {
-                return (
-                    <div>
-                        <EquipmentSearch equipmentList={handleEquipmentCallback}/>
-                    </div>
-                )
-            }
-        },
-        "muscleGroup": {
-            "ui:widget": () => {
-                return (
-                    <div>
-                        <MuscleGroupSearch muscleGroupList={handleMuscleGroupCallback}/>
-                    </div>
-                )
-            }
-        },
-        "discipline": {
-            "ui:widget": () => {
-                return (
-                    <div>
-                        <FitnessSelect options={fitnessdisciplines} fitnessdisciplinesList={handleFitnessDiscplinesListCallback}/>
-                    </div>
-                );
-            }
-        },
-        "addExercise": {
-            "Add Text": {
-                "ui:widget": () => {
-                    return (
-                        <TextEditor editorText={handleEditorTextCallBack}/>
-                    )
-                }
-            },
-            "Upload": {
-                "ui:options": {
-                    "accept": ".mp4"
-                }
-            }
-       }
-    }
-
-    const [createExercise, { error }] = useMutation(CREATE_EXERCISE);
-    let authid = auth.userid;
-    enum ENUM_EXERCISES_EXERCISELEVEL {
-        Beginner,
-        Intermediate,
-        Advance,
-        None
-    }
-    
-    function onSubmit(formData: any) {
-        
-        let levelIndex = formData.level;
-        console.log(formData);
-        
-        createExercise(
-            {
-                variables: {
-                    exercisename: formData.exercise,
-                    exerciselevel: ENUM_EXERCISES_EXERCISELEVEL[levelIndex],
-                    exerciseminidescription: formData.miniDescription,
-                    fitnessdisciplines: fitnessDiscplinesListarray.map((val: any) => {
-                        return val.id
+    function loadData(data: any) {
+        // console.log(data);
+        setTableData(
+            [...data.exercises].map((detail) => {
+                return {
+                    id: detail.id,
+                    exerciseName: detail.exercisename,
+                    discipline: detail.fitnessdisciplines.map((disc:any) => {
+                        return disc.disciplinename;
                     }),
-                    exercisetext: (!editorTextString ? null : editorTextString),
-                    exerciseurl: formData.addExercise.AddURL,
-                    users_permissions_user: authid,
-                    equipment_lists: equipmentListarray.map((val: any) => {
-                        return val.id;
-                    }),
-                    exercisemusclegroups: muscleGroupListarray.map((val: any) => {
-                        return val.id;
-                    })
+                    level: detail.exerciselevel,
+                    muscleGroup: detail.exercisemusclegroups.map((muscle: any) => {
+                        return muscle.name
+                    }).join(", "),
+                    equipment: detail.equipment_lists.map((equipment: any) => {
+                        return equipment.name
+                    }).join(", "),
+                    updatedOn: getDate(Date.parse(detail.updatedAt)),
+                    type: (detail.exercisetext) ? "Text": "Video" ,
                 }
-            }
-        )
+            })
+        );
+        setFitnessDisciplines(
+            [...data.fitnessdisciplines].map((discipline) => {
+                return {
+                    id: discipline.id,
+                    disciplineName: discipline.disciplinename,
+                    updatedAt: discipline.updatedAt
+                }
+            })
+        );
     }
-    if (error) return <span>{`Error! ${error.message}`}</span>;
+
 
     FetchData({id: auth.userid});    
+    
     
     return (
         <TabContent>
@@ -230,14 +104,6 @@ export default function EventsTab() {
                     <i className="fas fa-plus-circle"></i>{" "}Create New
                 </Button>
                 <CreateEditExercise ref={createEditExerciseComponent}></CreateEditExercise>
-                <ModalView
-                    name="Create Template"
-                    isStepper={false}
-                    formUISchema={uiSchema}
-                    formSchema={eventSchema}
-                    formSubmit={onSubmit}
-                    formData={{ level: ENUM_EXERCISES_EXERCISELEVEL.Beginner }}
-                />
             </Card.Title>
             <Table columns={columns} data={tableData} />
         </TabContent>

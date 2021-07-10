@@ -1,5 +1,40 @@
 import { gql } from "@apollo/client";
 
+export const FETCH_DATA = gql`
+     query fetchdata($id: String){
+          exercises(where: {id: $id}){
+               id
+               exercisename
+               exerciselevel
+               exerciseminidescription
+               exercisetext
+               exerciseurl
+               fitnessdisciplines{
+                    id
+                    disciplinename
+               }
+               equipment_lists{
+                    id
+                    name
+               }
+               exercisemusclegroups {
+                    id
+                    name
+               }
+          }
+     }
+`
+
+export const FETCH_FITNESSDISCPLINES = gql`
+     query fitnessdiscplines{
+          fitnessdisciplines(sort: "updatedAt"){
+               id
+               disciplinename
+               updatedAt
+          }
+     }
+`
+
 export const GET_TABLEDATA = gql`
      query ExercisesQuery($id: String) {
           exercises(where: {users_permissions_user: { id: $id}}) {
