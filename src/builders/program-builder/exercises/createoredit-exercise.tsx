@@ -4,7 +4,8 @@ import ModalView from "../../../components/modal";
 import { FETCH_DATA, CREATE_EXERCISE, UPDATE_EXERCISE, DELETE_EXERCISE } from "./queries";
 import AuthContext from "../../../context/auth-context";
 import StatusModal from "../../../components/StatusModal/StatusModal";
-import { schema, valuesToCreateOrEdit } from './exerciseSchema';
+import { schema, valuesToCreateOrEdit, widgets } from './exerciseSchema';
+import {Subject} from 'rxjs';
 
 interface Operation {
     id: string;
@@ -16,13 +17,15 @@ function CreateEditMessage(props: any, ref: any) {
     const auth = useContext(AuthContext);
     const exerciseSchema: { [name: string]: any; } = require("./exercises.json");
     const [exerciseDetails, setExerciseDetails] = useState<any>({});
-    const [render, setRender] = useState<boolean>(false);
+    // const [render, setRender] = useState<boolean>(false);
     const [operation, setOperation] = useState<Operation>({} as Operation);
     
 
-    const [createExercise] = useMutation(CREATE_EXERCISE, { onCompleted: (r: any) => { console.log(r); setRender(false); } });
-    const [editExercise] = useMutation(UPDATE_EXERCISE,{variables: {exerciseid: operation.id}, onCompleted: (r: any) => { console.log(r); setRender(false); } });
+    const [createExercise] = useMutation(CREATE_EXERCISE, { onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
+    const [editExercise] = useMutation(UPDATE_EXERCISE,{variables: {exerciseid: operation.id}, onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
     const [deleteExercise] = useMutation(DELETE_EXERCISE, { onCompleted: (e: any) => console.log(e), refetchQueries: ["GET_TABLEDATA"] });
+
+    const modalTrigger =  new Subject();
 
     useImperativeHandle(ref, () => ({
         TriggerForm: (msg: Operation) => {
@@ -30,7 +33,7 @@ function CreateEditMessage(props: any, ref: any) {
             setOperation(msg);
 
             if (msg && !msg.id) //render form if no message id
-                setRender(true);
+                modalTrigger.next(true);
 
             // if (msg.type === "toggle-status" && "current_status" in msg)
             //     ToggleMessageStatus(msg.id, msg.current_status);
@@ -65,7 +68,7 @@ function CreateEditMessage(props: any, ref: any) {
 
         //if message exists - show form only for edit and view
         if (['edit', 'view'].indexOf(operation.type) > -1)
-            setRender(true);
+            modalTrigger.next(true);
         else
             OnSubmit(null);
     }
@@ -145,17 +148,19 @@ function CreateEditMessage(props: any, ref: any) {
 
     return (
         <>
-            {render &&
+            {/* {render && */}
                 <ModalView
                     name={name}
                     isStepper={false}
                     formUISchema={schema}
                     formSchema={exerciseSchema}
-                    formSubmit={name ==="View"? () => {setRender(false)}:(frm: any) => { OnSubmit(frm); }}
+                    formSubmit={name === "View" ? () => { modalTrigger.next(false); } : (frm: any) => { OnSubmit(frm); }}
                     formData={exerciseDetails}
+                    widgets={widgets}
+                    modalTrigger={modalTrigger}
                 />
                 
-            }
+            {/* } */}
              {operation.type ==="delete" && <StatusModal
              modalTitle="Delete"
              modalBody="Do you want to delete this message?"

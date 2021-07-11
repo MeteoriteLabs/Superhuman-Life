@@ -25,11 +25,19 @@ const FitnessSelect = (props: any) => {
           );
      }
 
-     onTrigger();
+     function OnChange(e){
+          console.log(e)
+          let id = e.map(d => {return d.id}).join(',');
+          console.log(id);
+          props.onChange(id);
+          setSingleSelections(e);
+     }
 
-    function onTrigger(){
-         props.fitnessdisciplinesList(singleSelections);
-    }
+//      onTrigger();
+
+//     function onTrigger(){
+//          props.fitnessdisciplinesList(singleSelections);
+//     }
 
     FetchData();
 
@@ -40,7 +48,7 @@ const FitnessSelect = (props: any) => {
                <Typeahead
                id="basic-typeahead-multiple"
                labelKey="disciplineName"
-               onChange={setSingleSelections}
+               onChange={OnChange}
                options={fitnessdisciplines}
                placeholder="Choose Discpline..."
                selected={singleSelections}

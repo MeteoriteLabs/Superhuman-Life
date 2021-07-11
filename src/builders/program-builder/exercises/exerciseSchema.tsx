@@ -30,6 +30,10 @@ function handleEditorTextCallBack(data:any){
     editorTextString = data;
 }
 
+export const widgets = {
+    fitnessSelect: FitnessSelect
+  };
+
 export const schema: any = {
           "level": {
               "ui:widget": "radio",
@@ -68,13 +72,7 @@ export const schema: any = {
               }
           },
           "discipline": {
-              "ui:widget": () => {
-                  return (
-                    <div>
-                        <FitnessSelect fitnessdisciplinesList={handleFitnessDiscplinesListCallback}/>
-                    </div>
-                  )
-              }
+            "ui:widget": "fitnessSelect"
           },
           "addExercise": {
               "Add Text": {
