@@ -154,3 +154,29 @@ export const UPDATE_STATUS = gql`
         }
     }
 `
+export const GET_NOTIFICATIONS =gql`
+query FeedSearchQuery($filter: String!,$id: String){
+    prerecordedmessages(sort: "updatedAt",where: { title_contains: $filter , users_permissions_user: { id: $id}}){
+        id
+        title
+        minidescription
+        prerecordedtrigger{
+          id
+          name
+        }
+        status
+        updatedAt
+        users_permissions_user{
+            id
+        }
+      }
+      prerecordedtypes{
+        id  
+        name
+      }
+      prerecordedtriggers{
+        id  
+        name
+      }
+  }
+`

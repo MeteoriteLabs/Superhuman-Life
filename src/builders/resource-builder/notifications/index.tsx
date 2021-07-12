@@ -1,11 +1,12 @@
 import { useMemo, useState,useRef,useContext } from 'react'
 import { Badge, Button, TabContent, InputGroup, FormControl, Card, Container, Row, Col} from "react-bootstrap";
 import Table from "../../../components/table";
-import { gql, useQuery} from "@apollo/client";
+import {useQuery} from "@apollo/client";
 import AuthContext from "../../../context/auth-context";
 import ActionButton from "../../../components/actionbutton/index";
 import CreateEditMessage from "./createoredit-message";
-//import StatusModal from "./StatusModal";
+import { GET_NOTIFICATIONS} from "./queries";
+
 
 
 export default function MessagePage() {
@@ -14,39 +15,6 @@ export default function MessagePage() {
     const searchInput = useRef<any>();
     const createEditMessageComponent = useRef<any>(null);
     
-
-    //sort by updatedAt to ensure newly created messages show up
-    const GET_TRIGGERS = gql`
-    query FeedSearchQuery($filter: String!,$id: String){
-        prerecordedmessages(sort: "updatedAt",where: { title_contains: $filter , users_permissions_user: { id: $id}}){
-            id
-            title
-            minidescription
-            prerecordedtrigger{
-              id
-              name
-            }
-            status
-            updatedAt
-            users_permissions_user{
-                id
-            }
-          }
-          prerecordedtypes{
-            id  
-            name
-          }
-          prerecordedtriggers{
-            id  
-            name
-          }
-      }
-    `;
-    
-    
-
-    
-
     const columns = useMemo<any>(() => [
         { accessor: "title", Header: "Title" },
         { accessor: "trigger", Header: "Trigger" },
@@ -83,11 +51,10 @@ export default function MessagePage() {
         return (`${date}/${month}/${year}`);
     }
 
-    const messageSchema: any = require("./message.json");
     const [datatable, setDataTable] = useState<{}[]>([]);
 
     function FetchData(_variables: {} = { filter: " " ,id : auth.userid }) {
-        useQuery(GET_TRIGGERS, { variables: _variables, onCompleted: loadData })
+        useQuery(GET_NOTIFICATIONS, { variables: _variables, onCompleted: loadData })
     }
 
     function loadData(data: any) {
@@ -102,13 +69,7 @@ export default function MessagePage() {
                     updatedon: getDate(Date.parse(Detail.updatedAt))
                 }
             })
-        );
-
-        messageSchema["1"].properties.prerecordedtype.enum = [...data.prerecordedtypes].map(n => (n.id));
-        messageSchema["1"].properties.prerecordedtype.enumNames = [...data.prerecordedtypes].map(n => (n.name));
-        messageSchema["1"].properties.prerecordedtrigger.enum = [...data.prerecordedtriggers].map(n => (n.id));
-        messageSchema["1"].properties.prerecordedtrigger.enumNames = [...data.prerecordedtriggers].map(n => (n.name));
-        
+        ); 
     }
 
 
@@ -132,7 +93,6 @@ export default function MessagePage() {
                             <Button variant={true ? "outline-secondary" : "light"} size="sm"
                                 onClick={() => {
                                     createEditMessageComponent.current.TriggerForm({ id: null, type: 'create',modal_status: true });
-
                                 }}
                             >
                                 <i className="fas fa-plus-circle"></i>{" "}Create New

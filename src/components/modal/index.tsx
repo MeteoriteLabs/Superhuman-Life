@@ -25,24 +25,15 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
             formSubmit(formData);
         }
     }
-    console.log(showing);
-    
-    // const handleShow = useCallback(
-    //     () => {
-    //         setShow(true);
-    //     },
-    //     [show],
-    // )
-    // function handleShow(val: boolean){
-    //     setShow(boolean)
-    // }
+    console.log(show + " show");
+    console.log(showing + " showing");
 
     return (
         <>  
             {/* <Button variant={name === "Create New"?"outline-secondary":"light"}  size="sm" onClick={() => setShow(true)}>
                 {name === "Create New"?<i className="fas fa-plus-circle"></i>:" "}{" "}{name}
             </Button> */}
-            <Modal size="xl" show={show} onHide={() => {setShow(!showing)}} centered >
+            <Modal size="xl" show={show} onHide={() => {showing=false;setShow(showing)}} centered >
                 <Modal.Header closeButton>
                     <Modal.Title as={Row}>
                         <Col xs={12} md={12} lg={12}>
