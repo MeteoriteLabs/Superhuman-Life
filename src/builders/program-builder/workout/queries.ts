@@ -1,14 +1,5 @@
 import { gql } from "@apollo/client";
 
-export const GET_FITNESSDISCIPLINES = gql`
-     query fitnessdisciplines{
-          fitnessdisciplines(sort: "updatedAt"){
-               id
-               disciplinename
-               updatedAt
-          }
-     }
-`
 export const GET_TABLEDATA = gql`
 query WorkoutQuery($id: String) {
     workouts(where: {users_permissions_user: {id: $id}}) {
@@ -18,7 +9,9 @@ query WorkoutQuery($id: String) {
         level
         updatedAt
         calories
-        users_permissions_user
+        users_permissions_user{
+            id
+        }
         fitnessdisciplines{
             id
             disciplinename
@@ -36,6 +29,12 @@ query WorkoutQuery($id: String) {
             }
         }
     }
+    fitnessdisciplines(sort: "updatedAt"){
+        id
+        disciplinename
+        updatedAt
+   
+}
 }
 `
 
@@ -47,6 +46,8 @@ export const CREATE_WORKOUT = gql`
         $About: String
         $Benefits: String
         $users_permissions_user: ID
+        $calories: Int
+        $fitnessdisciplines: [ID]
         $equipment_lists: [ID]
         $muscle_groups: [ID]
         $workout_URL: String
@@ -62,9 +63,11 @@ export const CREATE_WORKOUT = gql`
                     Benefits: $Benefits
                     users_permissions_user: $users_permissions_user
                     equipment_lists: $equipment_lists
+                    fitnessdisciplines: $fitnessdisciplines
                     muscle_groups: $muscle_groups
-                    workout_URL: String
-                    workout_text: String
+                    workout_URL: $workout_URL
+                    workout_text: $workout_text
+                    calories: $calories
                 }
             }
         ){

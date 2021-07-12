@@ -3,7 +3,7 @@ import { withTheme, utils } from "@rjsf/core";
 import { Theme as Bootstrap4Theme } from '@rjsf/bootstrap-4';
 import { Button, Col, Modal, ProgressBar, Row } from "react-bootstrap";
 
-export default function ModalView({ name, formUISchema, formSubmit, formSchema, formData, isStepper }: any) {
+export default function ModalView({ name, formUISchema, formSubmit, formSchema, formData, isStepper, widgets, modalTrigger }: any) {
     const registry = utils.getDefaultRegistry();
     const defaultFileWidget = registry.widgets["FileWidget"];
     (Bootstrap4Theme as any).widgets["FileWidget"] = defaultFileWidget;
@@ -11,11 +11,14 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
     const Form: any = withTheme(Bootstrap4Theme);
     const formRef = useRef<any>(null);
     const [step, setStep] = useState<number>(1);
-    const [show, setShow] = useState<boolean>(true);
+    const [show, setShow] = useState<boolean>(false);
     const [formValues, setFormValues] = useState<any>(formData);
     const stepper: string[] = ["Creator", "Details", "Program", "Schedule", "Pricing"];
     
-
+    modalTrigger.subscribe((res: boolean) => {
+        setShow(res);
+    });
+    
     function submitHandler(formData: any) {
         if (isStepper && step < 5) {
             console.log("Data submitted: ", formData);
@@ -61,6 +64,7 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
                                     ref={formRef}
                                     onSubmit={({ formData }: any) => submitHandler(formData)}
                                     formData={formValues}
+                                    widgets={widgets}
                                 >
                                     <div></div>
                                 </Form>
