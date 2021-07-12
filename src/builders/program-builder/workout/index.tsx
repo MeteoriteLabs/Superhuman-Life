@@ -1,21 +1,21 @@
 import { useMemo, useContext, useState } from "react";
 import { Button, Card, Dropdown, OverlayTrigger, Popover, TabContent } from "react-bootstrap";
-import BuildWorkout from './buildWorkout';
-import ModalView from "../../../components/modal";
+// import BuildWorkout from './buildWorkout';
+// import ModalView from "../../../components/modal";
 import Table from "../../../components/table";
-import { useQuery, useMutation } from "@apollo/client";
-import { GET_TABLEDATA, CREATE_WORKOUT } from './queries';
+import { useQuery } from "@apollo/client";
+import { GET_TABLEDATA } from './queries';
 import AuthContext from "../../../context/auth-context";
-import EquipmentSearch from '../search-builder/equipmentList';
-import MuscleGroupSearch from '../search-builder/muscleGroupList';
-import TextEditor from '../search-builder/textEditor';
-import MultiSelect from './fitnessMultiSelect';
+// import EquipmentSearch from '../search-builder/equipmentList';
+// import MuscleGroupSearch from '../search-builder/muscleGroupList';
+// import TextEditor from '../search-builder/textEditor';
+// import MultiSelect from './fitnessMultiSelect';
 
 export default function EventsTab() {
 
     const auth = useContext(AuthContext);
     const [tableData, setTableData] = useState<any[]>([]);
-    const [fitnessdisciplines, setFitnessDisciplines] = useState<any[]>([]);
+    // const [fitnessdisciplines, setFitnessDisciplines] = useState<any[]>([]);
 
     function FetchData(_variables: {} = {id: auth.userid}){
         useQuery(GET_TABLEDATA, {variables: _variables, onCompleted: loadData})
@@ -52,15 +52,15 @@ export default function EventsTab() {
                 }
             })
         )
-        setFitnessDisciplines(
-            [...data.fitnessdisciplines].map((discipline) => {
-                return {
-                    id: discipline.id,
-                    disciplineName: discipline.disciplinename,
-                    updatedAt: discipline.updatedAt
-                }
-            })
-        );
+        // setFitnessDisciplines(
+        //     [...data.fitnessdisciplines].map((discipline) => {
+        //         return {
+        //             id: discipline.id,
+        //             disciplineName: discipline.disciplinename,
+        //             updatedAt: discipline.updatedAt
+        //         }
+        //     })
+        // );
     }
 
     const columns = useMemo<any>(() => [
@@ -97,150 +97,150 @@ export default function EventsTab() {
         }
     ], []);
 
-    let equipmentListarray: any;
-    function handleEquipmentCallback(data: any) {
-        equipmentListarray = data;
-    }
+    // let equipmentListarray: any;
+    // function handleEquipmentCallback(data: any) {
+    //     equipmentListarray = data;
+    // }
 
-    let muscleGroupListarray: any;
-    function handleMuscleGroupCallback(data:any){
-        muscleGroupListarray = data;
-    }
+    // let muscleGroupListarray: any;
+    // function handleMuscleGroupCallback(data:any){
+    //     muscleGroupListarray = data;
+    // }
 
-    let editorTextString: any;
-    function handleEditorTextCallBack(data:any){
-        editorTextString = data;
-    }
+    // let editorTextString: any;
+    // function handleEditorTextCallBack(data:any){
+    //     editorTextString = data;
+    // }
 
-    let fitnessDiscplinesListarray: any;
-    function handleFitnessDiscplinesListCallback(data: any){
-        fitnessDiscplinesListarray = data;
-    }
+    // let fitnessDiscplinesListarray: any;
+    // function handleFitnessDiscplinesListCallback(data: any){
+    //     fitnessDiscplinesListarray = data;
+    // }
 
-    const eventSchema: any = require("./workout.json");
-    const uiSchema: any = {
-        "level": {
-            "ui:widget": "radio",
-            "ui:options": {
-                "inline": true
-            }
-        },
-        "intensity": {
-            "ui:widget": "radio",
-            "ui:options": {
-                "inline": true
-            }
-        },
-        "about": {
-            "ui:widget": "textarea",
-            "ui:options": {
-                "rows": 3
-            }
-        },
-        "benefits": {
-            "ui:widget": "textarea",
-            "ui:options": {
-                "rows": 1
-            }
-        },
-        "equipment": {
-            "ui:widget": () => {
-                return (
-                    <div>
-                        <EquipmentSearch equipmentList={handleEquipmentCallback}/>
-                    </div>
-                )
-            }
-        },
-        "muscleGroup": {
-            "ui:widget": () => {
-                return (
-                    <div>
-                        <MuscleGroupSearch muscleGroupList={handleMuscleGroupCallback}/>
-                    </div>
-                )
-            }
-        },
-        "discipline": {
-            "ui:widget": () => {
-                return (
-                    <div>
-                        <MultiSelect options={fitnessdisciplines} fitnessdisciplinesList={handleFitnessDiscplinesListCallback}/>
-                    </div>
-                )
-            }
-        },
-        "addWorkout": {
-            "Add Text": {
-                "ui:widget": () => {
-                    return (
-                        <TextEditor editorText={handleEditorTextCallBack}/>
-                    )
-                }
-            },
-            "Upload": {
-                "ui:options": {
-                    "accept": ".mp4"
-                }
-            },
-            "build": {
-                "ui:widget": () => {
-                    return (
-                        <div>
-                            <BuildWorkout/>
-                        </div>
-                    )
-                }
-            }
-       }
-    }
+    // const eventSchema: any = require("./workout.json");
+    // const uiSchema: any = {
+    //     "level": {
+    //         "ui:widget": "radio",
+    //         "ui:options": {
+    //             "inline": true
+    //         }
+    //     },
+    //     "intensity": {
+    //         "ui:widget": "radio",
+    //         "ui:options": {
+    //             "inline": true
+    //         }
+    //     },
+    //     "about": {
+    //         "ui:widget": "textarea",
+    //         "ui:options": {
+    //             "rows": 3
+    //         }
+    //     },
+    //     "benefits": {
+    //         "ui:widget": "textarea",
+    //         "ui:options": {
+    //             "rows": 1
+    //         }
+    //     },
+    //     "equipment": {
+    //         "ui:widget": () => {
+    //             return (
+    //                 <div>
+    //                     <EquipmentSearch equipmentList={handleEquipmentCallback}/>
+    //                 </div>
+    //             )
+    //         }
+    //     },
+    //     "muscleGroup": {
+    //         "ui:widget": () => {
+    //             return (
+    //                 <div>
+    //                     <MuscleGroupSearch muscleGroupList={handleMuscleGroupCallback}/>
+    //                 </div>
+    //             )
+    //         }
+    //     },
+    //     "discipline": {
+    //         "ui:widget": () => {
+    //             return (
+    //                 <div>
+    //                     <MultiSelect options={fitnessdisciplines} fitnessdisciplinesList={handleFitnessDiscplinesListCallback}/>
+    //                 </div>
+    //             )
+    //         }
+    //     },
+    //     "addWorkout": {
+    //         "Add Text": {
+    //             "ui:widget": () => {
+    //                 return (
+    //                     <TextEditor editorText={handleEditorTextCallBack}/>
+    //                 )
+    //             }
+    //         },
+    //         "Upload": {
+    //             "ui:options": {
+    //                 "accept": ".mp4"
+    //             }
+    //         },
+    //         "build": {
+    //             "ui:widget": () => {
+    //                 return (
+    //                     <div>
+    //                         <BuildWorkout/>
+    //                     </div>
+    //                 )
+    //             }
+    //         }
+    //    }
+    // }
 
-    const [createWorkout, { error }] = useMutation(CREATE_WORKOUT);
+    // const [createWorkout, { error }] = useMutation(CREATE_WORKOUT);
 
-    let authid = auth.userid;
-    enum ENUM_EXERCISES_EXERCISELEVEL {
-        Beginner,
-        Intermediate,
-        Advance,
-        None
-    }
+    // let authid = auth.userid;
+    // enum ENUM_EXERCISES_EXERCISELEVEL {
+    //     Beginner,
+    //     Intermediate,
+    //     Advance,
+    //     None
+    // }
 
-    enum ENUM_WORKOUTS_INTENSITY {
-        Low,
-        Medium,
-        High
-    }
+    // enum ENUM_WORKOUTS_INTENSITY {
+    //     Low,
+    //     Medium,
+    //     High
+    // }
 
-    function onSubmit(formData: any) {
-        let levelIndex = formData.level
-        let intensityIndex = formData.intensity
-        console.log(formData);
+    // function onSubmit(formData: any) {
+    //     let levelIndex = formData.level
+    //     let intensityIndex = formData.intensity
+    //     console.log(formData);
 
-        createWorkout (
-            {
-                variables: {
-                    workouttitle: formData.workout,
-                    level: ENUM_EXERCISES_EXERCISELEVEL[levelIndex],
-                    intensity: ENUM_WORKOUTS_INTENSITY[intensityIndex],
-                    fitnessdisciplines: fitnessDiscplinesListarray.map((val: any) => {
-                        return val.id;
-                    }),
-                    About: formData.about,
-                    Benefits: formData.benefits,
-                    users_permissions_user: authid,
-                    workout_text: (!editorTextString ? null : editorTextString),
-                    equipment_lists: equipmentListarray.map((val: any) => {
-                        return val.id;
-                    }),
-                    muscle_groups: muscleGroupListarray.map((val: any) => {
-                        return val.id;
-                    })
-                }
-            }
-        )
-    }
+    //     createWorkout (
+    //         {
+    //             variables: {
+    //                 workouttitle: formData.workout,
+    //                 level: ENUM_EXERCISES_EXERCISELEVEL[levelIndex],
+    //                 intensity: ENUM_WORKOUTS_INTENSITY[intensityIndex],
+    //                 fitnessdisciplines: fitnessDiscplinesListarray.map((val: any) => {
+    //                     return val.id;
+    //                 }),
+    //                 About: formData.about,
+    //                 Benefits: formData.benefits,
+    //                 users_permissions_user: authid,
+    //                 workout_text: (!editorTextString ? null : editorTextString),
+    //                 equipment_lists: equipmentListarray.map((val: any) => {
+    //                     return val.id;
+    //                 }),
+    //                 muscle_groups: muscleGroupListarray.map((val: any) => {
+    //                     return val.id;
+    //                 })
+    //             }
+    //         }
+    //     )
+    // }
 
-    if (error) return <span>{`Error! ${error.message}`}</span>;
+    // if (error) return <span>{`Error! ${error.message}`}</span>;
 
     FetchData({id: auth.userid});
 
@@ -249,14 +249,14 @@ export default function EventsTab() {
         <TabContent>
             <hr />
             <Card.Title className="text-right">
-                <ModalView
+                {/* <ModalView
                     name="Create Template"
                     isStepper={false}
                     formUISchema={uiSchema}
                     formSchema={eventSchema}
                     formSubmit={onSubmit}
                     formData={{ level: ENUM_EXERCISES_EXERCISELEVEL.Beginner, intensity: ENUM_WORKOUTS_INTENSITY.Low}}
-                />
+                /> */}
             </Card.Title>
             <Table columns={columns} data={tableData} />
         </TabContent>

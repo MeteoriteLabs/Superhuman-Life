@@ -52,6 +52,9 @@ const EquipmentList = (props: any) => {
                values.push({ value: name, id: id}); 
                setSelected(values);
           }
+          props.onChange(values.map((e) => {
+               return e.id;
+          }).join(','))
           inputField.current.value = "";
           setFitnessEquipments([]);
           skipval = true;
@@ -61,13 +64,16 @@ const EquipmentList = (props: any) => {
           const values = [...selected];
           values.splice(name, 1);
           setSelected(values);
+          props.onChange(values.map((e) => {
+               return e.id;
+          }).join(','))
      }
-     
-     onTrigger();
 
-     function onTrigger() {
-          props.equipmentList(selected);
-     }
+     // onTrigger();
+
+     // function onTrigger() {
+     //      props.equipmentList(selected);
+     // }
 
      FetchEquipmentList({filter: searchInput, skip: skipval});
 

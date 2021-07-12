@@ -4,7 +4,7 @@ import ModalView from "../../../components/modal";
 import { FETCH_DATA, CREATE_EXERCISE, UPDATE_EXERCISE, DELETE_EXERCISE } from "./queries";
 import AuthContext from "../../../context/auth-context";
 import StatusModal from "../../../components/StatusModal/StatusModal";
-import { schema, valuesToCreateOrEdit, widgets } from './exerciseSchema';
+import { schema, widgets } from './exerciseSchema';
 import {Subject} from 'rxjs';
 
 interface Operation {
@@ -48,7 +48,6 @@ function CreateEditMessage(props: any, ref: any) {
     // }
 
     function FillDetails(data: any) {
-        console.log(data);
         let details: any = {};
         let msg = data.exercises;
         console.log(msg);
@@ -80,7 +79,7 @@ function CreateEditMessage(props: any, ref: any) {
 
     function CreateExercise(frm: any) {
         console.log('create message', frm);
-        // createExercise({ variables: frm });
+        createExercise({ variables: frm });
     }
 
     function EditExercise(frm: any) {
@@ -101,12 +100,12 @@ function CreateEditMessage(props: any, ref: any) {
     }
 
     
-    enum ENUM_EXERCISES_EXERCISELEVEL {
-        Beginner,
-        Intermediate,
-        Advance,
-        None
-    }
+    // enum ENUM_EXERCISES_EXERCISELEVEL {
+    //     Beginner,
+    //     Intermediate,
+    //     Advance,
+    //     None
+    // }
 
     function OnSubmit(frm: any) {
         console.log(frm);
@@ -143,8 +142,6 @@ function CreateEditMessage(props: any, ref: any) {
     }else if(operation.type === 'view'){
         name="View";
     }
-    
-    // console.log(valuesToCreateOrEdit());
 
     return (
         <>
