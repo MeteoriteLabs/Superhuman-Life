@@ -7,4 +7,17 @@
     background-color: transparent !important;
     background: transparent !important;
     color:black !important
+};
+
+.discipline-tag{
+    padding: 1rem 2rem;
+    background-color: #647A8C;
+}
+
+.carousel-control-prev-icon{
+    background-image: url('https://c8.alamy.com/comp/P2D4A1/arrow-vector-icon-isolated-on-transparent-background-arrow-logo-concept-P2D4A1.jpg');
+}
+
+.carousel-control-next-icon{
+    background-image: url('https://c8.alamy.com/comp/P2D4A1/arrow-vector-icon-isolated-on-transparent-background-arrow-logo-concept-P2D4A1.jpg');
 }

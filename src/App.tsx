@@ -23,6 +23,7 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
+
 function App() {
   const [token, setToken] = useState<any>(localStorage.getItem("token"));
   const [username, setUsername] = useState<any>(localStorage.getItem("username"));

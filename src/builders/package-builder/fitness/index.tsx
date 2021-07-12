@@ -1,38 +1,63 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useContext } from "react";
 import { gql, useQuery } from "@apollo/client";
-import { Badge, Button, Card, Dropdown, OverlayTrigger, Popover, TabContent, Table } from "react-bootstrap";
+import { Badge, Button, Card, Dropdown, OverlayTrigger, Popover, TabContent, Table} from "react-bootstrap";
 import ModalView from "../../../components/modal";
 import CustomTable from "../../../components/table";
 import { Typeahead } from 'react-bootstrap-typeahead'
 import { GET_ADDRESS, GET_FITNESS_DISCIPLINES } from "../../../graphQL/queries";
+import AuthContext from "../../../context/auth-context";
 import './fitness.css'
 import _ from 'lodash'
-import { useRef } from "react";
+import ModalCustomClasses from "./ModalCustom/ModalCustomClasses";
+import ModalCustomRestday from "./ModalCustom/ModalCustomRestday";
+import ModalPreview from "./ModalCustom/ModalPreview";
 
-const GET_FITNESS = gql`{
-    fitnesspackages {
-      packagename
-      intropicture {
-        url
-      }
-      packagetypes
-      ptoffline
-      ptonline
-      groupoffline
-      grouponline
-      recordedclasses
-      discipline {
-        disciplinename
-      }
-      fitnesspackagepricing {
-        packagepricing
-      }
-      duration
-    }
-  }
-  `;
+
+
 
 export default function FitnessTab(props) {
+    const auth = useContext(AuthContext);
+    // console.log({auth})
+    const GET_FITNESS = gql`
+    query fitnesspackages($id:String){
+        fitnesspackages(sort:"updateAt", where: { users_permissions_user: { id: $id}})
+        {
+            packagename
+            ptoffline
+            ptonline
+            groupoffline
+            grouponline
+            recordedclasses
+            users_permissions_user{
+                id
+            }
+            discipline{
+                disciplinename
+           }
+           fitnesspackagepricing{
+             packagepricing
+           }
+           duration
+         }
+        }
+      
+  
+  `;
+
+    // function FetchData(_variables: {} = { id: auth.userid }) {
+    //     useQuery(GET_FITNESS, { variables: _variables, onCompleted: loadData })
+    // }
+    // FetchData({ id: auth.userid });
+
+
+
+    // const loadData = (data: any) => {
+    //     console.log('fitnessData', data);
+    // }
+
+
+
+    // // fitnessData = data.fitnesspackages;
     const columns = useMemo<any>(() => [
         {
             accessor: "intropicture",
@@ -83,12 +108,41 @@ export default function FitnessTab(props) {
         }
     ], []);
 
-    const { loading, error, data } = useQuery(GET_FITNESS);
-    const [userData, setUserData] = useState<any>('');
-    const [restDay, setRestday] = useState("0");
-    const [classSessions, setClassSessions] = useState<number[] | null>(null)
-    const restDayRef = useRef(null)
+    const { loading, error, data } = useQuery(GET_FITNESS, {
+        variables: { id: auth.userid }
+    });
 
+    let fitnessData: String[] = [];
+    if (!loading && !error) {
+        fitnessData = data.fitnesspackages;
+        console.log('fitnessData', data)
+    }
+
+    const [userData, setUserData] = useState<any>('');
+    const [arrPrice, setArrPrice] = useState<any>({
+        arrPlan: [
+            {
+                duration: 30,
+                voucher: "",
+                mrp: "",
+            },
+            {
+                duration: 90,
+                voucher: "",
+                mrp: "",
+            },
+            {
+                duration: 180,
+                voucher: "",
+                mrp: "",
+            },
+            {
+                duration: 360,
+                voucher: "",
+                mrp: "",
+            },
+        ]
+    })
 
 
     const classicSchema: any = require("./classic.json");
@@ -99,7 +153,6 @@ export default function FitnessTab(props) {
 
 
 
-    const arrProps = [] as any;
     const CustomDiscipline = (props: any) => {
         const { data, loading, error } = useQuery(GET_FITNESS_DISCIPLINES);
         const { label } = props;
@@ -118,23 +171,21 @@ export default function FitnessTab(props) {
                     options={resObj}
                     placeholder="Choose your discpline ... "
                     id="basic-typeahead-multiple"
-                    onChange={(e) => {
-                        arrProps.push(e);
-                    }}
+                    onChange={(e) => { props.onChange(JSON.stringify(e)) }}
                     multiple />
             </div>
         }
     }
 
 
+
     const ArrayLocationTemplate = ({ onChange, label }: any) => {
         const { data, loading, error } = useQuery(GET_ADDRESS);
         if (loading) return <p>...loading</p>
         if (!loading && !error) {
-            const arrAddresses = data.addresses;
             return <div>
                 <label>{label}</label>
-                {arrAddresses?.map((item: any, index: any) => {
+                {data.addresses?.map((item: any, index: any) => {
                     return <div key={index}>
                         <label className='ml-3'>
                             <input type="radio" id={item.id} name='address' value={item.id} onChange={(event) => onChange(event.target.value)} />
@@ -146,55 +197,18 @@ export default function FitnessTab(props) {
         }
     };
 
-    const customTextTitlePackage = () => {
+    const customTextTitlePackage = ({ schema }: any) => {
         return <div className='text-center font-weight-bold mx-auto w-50 py-3 px-2 mt-5' style={{ boxShadow: '0px 7px 15px -5px #000000', borderRadius: '5px' }}>
-            <p className='m-0'>Set for One Month (30 days)</p>
+            <p className='m-0'>Set for One Month ({schema.duration} days)</p>
         </div>
     };
 
 
-    const customNumberClass = ({ options, schema, value, label, onChange }: any) => {
-        return <div className='text-center text-black py-3 w-25 d-flex justify-content-center align-items-center' >
-            {label === 'Online' ? <img src="/assets/PT-Online.svg" alt='123' /> : <img src="/assets/PT-Offline.svg" alt='123' />}
-            <label className='d-block font-weight-bold mb-0 mr-5'>{schema.title}</label>
-            <input
-                className="py-2 px-2"
-                value={value}
-                pattern="[0-9]+"
-                onChange={(event: any) => {
-                    onChange(event.target.value)
-                }}
-                type="number"
-                min="0"
-                max="31"
-            />
-        </div>
-    }
-
-
-    const customNumberRestDay = ({ label, onChange, value }: any) => {
-        return <div className=' text-center text-black py-3 w-25 d-flex justify-content-center align-items-center' >
-            <img src="/assets/rest-icon.svg" alt='123' />
-            <label className='d-block font-weight-bold mb-0 mr-3'>{label}</label>
-            <input
-                className="py-2 px-2"
-                value={value}
-                // pattern="[0-9]+"
-                onChange={(event: any) => {
-                    onChange(event.target.value)
-                }}
-                type="number"
-                min="0"
-                max="31"
-            />
-        </div>
-    }
-
-
     const renderClasses = (numberClass: number) => {
         let arrayNumberClass: number[] = []
-        for (let i = 0; i < 4; i++) {
-            numberClass *= 2;
+        arrayNumberClass[0] = numberClass
+        for (let i = 1; i < 4; i++) {
+            i === 1 ? numberClass *= 3 : numberClass *= 2;
             arrayNumberClass.push(numberClass);
         }
         return arrayNumberClass.map((item, index) => {
@@ -205,27 +219,37 @@ export default function FitnessTab(props) {
 
     }
 
-    const renderVoucher = (props: any) => {
-        console.log(props)
-        return [...Array(4)].map((item, index) => {
-            return <td key={index}>
-                <select onChange={(event) => props.onChange(event.target.value)}>
-                    <option value='0'></option>
-                    <option value='1'>Getfit - 10%</option>
-                    <option value='2'>Getfit - 20%</option>
-                </select>
-            </td>
+
+    const renderVoucher = () => {
+        return [...Array(4)].map((item, index: number) => {
+            let updateVouhcer = { ...arrPrice.arrPlan[index].voucher }
+            return <td key={index}><select
+                onChange={(e) => {
+                    updateVouhcer = e.target.value;
+                    arrPrice.arrPlan[index].voucher = updateVouhcer;
+                    setArrPrice(arrPrice)
+                }}
+            >
+                <option value='0'>Choose voucher</option>
+                <option value='10%'>Getfit - 10%</option>
+                <option value='20%'>Getfit - 20%</option>
+            </select></td>
         })
     }
 
-    const renderClassSessions = (classOnline, classOffline) => {
-        let numberClassSessions = classOnline + classOffline;
-        const arrNumberClass: number[] = [];
-        for (let i = 0; i < 4; i++) {
-            numberClassSessions *= 2;
+    const renderClassSessions = (classOnline: number, classOffline: number) => {
+        let numberClassSessions = 0;
+        console.log("classOnline", classOnline, "classOffline", classOffline)
+        let arrNumberClass: number[] = [];
+        if ((classOnline && classOffline) || classOnline !== 0 || classOffline !== 0) {
+            numberClassSessions = classOnline + classOffline;
+        }
+        arrNumberClass[0] = numberClassSessions
+        for (let i = 1; i < 4; i++) {
+            i === 1 ? numberClassSessions *= 3 : numberClassSessions *= 2;
             arrNumberClass.push(numberClassSessions);
         }
-        return arrNumberClass?.map((item, index) => {
+        return arrNumberClass.map((item, index) => {
             return <td key={index} className='font-weight-bold'>{item} Class</td>
         })
     }
@@ -237,19 +261,37 @@ export default function FitnessTab(props) {
         })
     }
 
+
     const renderMRPInput = (props: any) => {
         return [...new Array(4)].map((item, index) => {
-            return <td>
-                <input placeholder='Enter MRP' value={props.value} onChange={(e) => props.onChange(e.target.value)} />
-            </td>
+            let updateMRP = { ...arrPrice.arrPlan[index].mrp }
+            return <td key={index}>
+                <input
+                    className='w-75'
+                    min="0"
+                    max="6000"
+                    type="number"
+                    placeholder='Enter MRP'
+                    onChange={(e) => {
+                        updateMRP = e.target.value;
+                        arrPrice.arrPlan[index].mrp = parseInt(updateMRP)
+                        setArrPrice(arrPrice)
+                    }} /></td>
         })
     }
 
 
 
     const customPricingTable = (props: any) => {
-        console.log(userData);
-        const { number_classes_online, number_classes_offline } = userData
+        // console.log("userData", userData)
+        let { number_classes_online, number_classes_offline, mode } = userData
+        if (mode === "Online" && number_classes_offline > 0) {
+            number_classes_offline = 0;
+            setUserData({ ...userData, number_classes_offline })
+        } else if (mode === "Offline" && number_classes_online > 0) {
+            number_classes_online = 0
+            setUserData({ ...userData, number_classes_online })
+        }
         return <div className='text-center mt-3'>
             <p className=' font-weight-bold' style={{ fontSize: '1.5rem' }}>Pricing Plan</p>
             <Table striped bordered hover>
@@ -264,24 +306,24 @@ export default function FitnessTab(props) {
                 </thead>
                 <tbody>
                     <tr>
-                        {number_classes_online !== undefined && number_classes_online !== 0 ?
+                        {number_classes_online !== undefined && number_classes_online !== 0 &&
                             <>
                                 <td><img src="/assets/PT-Online.svg" alt='123' />Online</td>
                                 {renderClasses(number_classes_online)}
                             </>
-                            : ''}
+                        }
                     </tr>
                     <tr>
-                        {number_classes_offline !== undefined && number_classes_offline !== 0 ?
+                        {number_classes_offline !== undefined && number_classes_offline !== 0 &&
                             <>
                                 <td><img src="/assets/PT-Offline.svg" alt='123' />Offline</td>
                                 {renderClasses(number_classes_offline)}
                             </>
-                            : ''}
+                        }
                     </tr>
                     <tr>
                         <td></td>
-                        {renderVoucher(props)}
+                        {renderVoucher()}
                     </tr>
                     <tr>
                         <td className='font-weight-bold'>Total Sessions</td>
@@ -301,6 +343,12 @@ export default function FitnessTab(props) {
     }
 
 
+    const widgets = {
+        ModalCustomClasses,
+        ModalCustomRestday
+    }
+
+
     const uiSchema: any = {
         "discipline": {
             'ui:widget': CustomDiscipline
@@ -312,17 +360,21 @@ export default function FitnessTab(props) {
             "ui:widget": customTextTitlePackage
         },
 
-
         "number_classes_online": {
-            "ui:widget": customNumberClass
+            "ui:widget": (props) => <ModalCustomClasses PTProps={ptSchema[3]} props={props} />
+      
+            // "ui:widget": ModalCustomClasses
         },
         "number_classes_offline": {
-            "ui:widget": customNumberClass
+            "ui:widget": (props) =>  <ModalCustomClasses PTProps={ptSchema[3]} props={props} />
+          
         },
 
         "number_of_rests": {
-            "ui:widget": customNumberRestDay
+            "ui:widget": (props: any) => <ModalCustomRestday PTProps={ptSchema[3]} props={props} />
+       
         },
+
         "level": {
             "ui:widget": "radio",
             "ui:options": {
@@ -338,8 +390,8 @@ export default function FitnessTab(props) {
         "mode": {
             "ui:widget": "radio",
             "ui:options": {
-                "inline": true,
-            },
+                "inline": true
+            }
         },
         "about": {
             "ui:widget": "textarea",
@@ -391,31 +443,28 @@ export default function FitnessTab(props) {
             "ui:placeholder": "Number of days",
         },
 
-
+        "carousel": {
+            "ui:widget": () =><ModalPreview userData={userData} arrPrice={arrPrice.arrPlan}/>
+        },
     }
-    let fitnessData: String[] = [];
+
 
     function onSubmit(formData: any) {
-        setTimeout(() => {
-            alert("Values submitted: " + JSON.stringify(formData, null, 2));
-        }, 1000);
+        // setTimeout(() => {
+        //     alert("Values submitted: " + JSON.stringify(formData, null, 2));
+        // }, 1000);
     }
 
-    if (!loading && !error) {
-        fitnessData = data.fitnesspackages;
-        console.log('fitnessData', data)
-    }
 
-    // // fitnessData = data.fitnesspackages;
-    // console.log('fitnessData', data);
 
+    // console.log('userData', userData);
 
 
     return (
         <TabContent>
             <hr />
             <Card.Title className="text-center">
-                <ModalView
+                {/* <ModalView
                     name="Classic Package"
                     isStepper={true}
                     isPreview={true}
@@ -423,6 +472,7 @@ export default function FitnessTab(props) {
                     formSchema={classicSchema}
                     formSubmit={onSubmit}
                     formData={{}}
+                    widgets={{}}
                 />{" "}
                 <ModalView
                     name="Custom Package"
@@ -432,16 +482,20 @@ export default function FitnessTab(props) {
                     formSchema={customSchema}
                     formSubmit={onSubmit}
                     formData={{}}
+                    widgets={{}}
                 />{" "}
                 <ModalView
                     name="Group Package"
                     isStepper={true}
                     isPreview={true}
                     formUISchema={uiSchema}
-                    formSubmit={onSubmit}
                     formSchema={groupSchema}
+                    formSubmit={onSubmit}
                     formData={{}}
-                />{" "}
+                    setUserData={setUserData}
+                    arrPlan={arrPrice.arrPlan}
+                    widgets={{}}
+                />{" "} */}
                 <ModalView
                     name="PT Package"
                     isStepper={true}
@@ -450,8 +504,10 @@ export default function FitnessTab(props) {
                     formSchema={ptSchema}
                     formSubmit={onSubmit}
                     formData={{}}
-                    arrProps={arrProps}
+                    userData={userData}
                     setUserData={setUserData}
+                    arrPlan={arrPrice.arrPlan}
+                    widgets={widgets}
 
                 />
             </Card.Title>

@@ -3,7 +3,7 @@
         "title": "",
         "type": "object",
         "required": [
-           
+           "discipline"
         ],
         "properties": {
             "name": {
@@ -12,16 +12,8 @@
             },
             "discipline": {
                 "type": "string",
-                "title": "Discipline",
-                "enum": [
-                    "Yoga",
-                    "Calesthenics",
-                    "Body Building",
-                    "Cross Fit",
-                    "Weight lifting",
-                    "Gymnastics",
-                    "Parkour"
-                ]
+                "title": "Discipline"
+               
             },
             "tags": {
                 "type": "string",
@@ -105,7 +97,33 @@
             },
             "title_package": {
                 "title": "A null field",
-                "type": "string"
+                "type": "string",
+                "duration":30
+            },
+            "onlineClasses":{
+                "title":"onlineClasses",
+                "type": "null",
+                "value":0
+            },
+            "restDay":{
+                "title":"restDay",
+                "type": "null",
+                "value":0
+            },
+            "offlineClasses":{
+                "title":"offlineClasses",
+                "type": "null",
+                "value":0
+            },
+            "dayAvailable":{
+                "title":"dayAvailable",
+                "type": "null",
+                "value":0
+            },
+            "currentMode":{
+                "title": "currentMode",
+                "typeMode":"",
+                "type":"null"
             }
         },
         "dependencies": {
@@ -114,7 +132,7 @@
                     {
                         "properties": {
                             "mode": {
-                                "title": "Mode",
+                                "title": "Online",
                                 "type": "string",
                                 "enum": [
                                     "Online"
@@ -124,21 +142,25 @@
                                 "title": "Online",
                                 "type": "number",
                                 "minimum": 0,
-                                "maximum": 31
+                                "maximum": 30,
+                                "default":"0",
+                                "value":0
                             },
                             "number_of_rests": {
                                 "title": "Rest Days",
                                 "type": "number",
-                                "default":"0",
                                 "minimum": 0,
-                                "maximum": 31
+                                "maximum": 30,
+                                "default":"0",
+                                "value":0
+                                
                             }
                         }
                     },
                     {
                         "properties": {
                             "mode": {
-                                "title": "Mode",
+                                "title": "Offline",
                                 "type": "string",
                                 "enum": [
                                     "Offline"
@@ -152,20 +174,24 @@
                                 "title": "Offline",
                                 "type": "number",
                                 "minimum": 0,
-                                "maximum": 31
+                                "maximum": 30,
+                                "default":"0",
+                                "value":0
                             },
                             "number_of_rests": {
                                 "title": "Rest Days",
                                 "type": "number",
                                 "minimum": 0,
-                                "maximum": 31
+                                "maximum": 30,
+                                "default":"0",
+                                "value":0
                             }
                         }
                     },
                     {
                         "properties": {
                             "mode": {
-                                "title": "Mode",
+                                "title": "Hybrid",
                                 "type": "string",
                                 "enum": [
                                     "Hybrid"
@@ -179,28 +205,33 @@
                             "number_classes_online": {
                                 "title": "Online",
                                 "type": "number",
-                                "default":"0",
                                 "minimum": 0,
-                                "maximum": 31
+                                "maximum": 30,
+                                "default":"0",
+                                "value":0
                             },
                             "number_classes_offline": {
                                 "title": "Offline",
                                 "type": "number",
-                                "default":"0",
                                 "minimum": 0,
-                                "maximum": 31
+                                "maximum": 30,
+                                "default":"0",
+                                "value":0
                             },
                             "number_of_rests": {
                                 "title": "Rest Days",
                                 "type": "number",
                                 "minimum": 0,
-                                "maximum": 31
+                                "maximum": 30,
+                                "default":"0",
+                                  "value":0
                             }
                         }
                     }
                 ]
             }
         }
+        
     },
     "4": {
         "title": "For Programs",
@@ -225,13 +256,24 @@
         "title": "",
         "type": "object",
         "properties": {
-           
             "pricing_plan":{
                 "type":"string",
                 "title" :"Pricing Plan"
             }
-          
-         
+        }
+    },
+    "6":{
+        "title":"Preview",
+        "type":"object",
+        "properties":{
+            "carousel":{
+                "type":"string",
+                "title":"carousel"
+            },
+            "link":{
+                "type":"null",
+                "title":"carousel"
+            }
         }
     }
 }

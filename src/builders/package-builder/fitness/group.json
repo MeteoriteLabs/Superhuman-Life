@@ -3,9 +3,7 @@
         "title": "",
         "type": "object",
         "required": [
-            "name",
-            "discipline",
-            "level"
+           "discipline"
         ],
         "properties": {
             "name": {
@@ -14,13 +12,8 @@
             },
             "discipline": {
                 "type": "string",
-                "title": "Discipline",
-                "enum": [
-                    "Basic",
-                    "Calisthenics",
-                    "Yoga",
-                    "Zumba"
-                ]
+                "title": "Discipline"
+               
             },
             "tags": {
                 "type": "string",
@@ -33,6 +26,14 @@
                     "Beginner",
                     "Intermediate",
                     "Advance"
+                ]
+            },
+            "visiblity": {
+                "type": "string",
+                "title": "Visiblity",
+                "enum": [
+                    "Public",
+                    "Private"
                 ]
             }
         }
