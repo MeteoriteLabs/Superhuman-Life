@@ -1,0 +1,141 @@
+{
+     "1": {
+         "title": "",
+         "type": "object",
+         "required": [
+             "workout"
+         ],
+         "properties": {
+             "workout": {
+                 "type": "string",
+                 "title": "Workout Name"
+             },
+             "intensity": {
+                 "type": "number",
+                 "title": "Intensity",
+                 "enum": [0, 1, 2],
+                 "enumNames": [
+                     "Low",
+                     "Medium",
+                     "High"
+                 ]
+             },
+             "level": {
+                 "type": "number",
+                 "title": "Level",
+                 "enum": [0, 1, 2, 3],
+                 "enumNames": [
+                     "Beginner",
+                     "Intermediate",
+                     "Advance", 
+                     "No level"
+                 ]
+             },
+             "discipline": {
+                 "type": "string"
+             },
+             "about": {
+                 "type": "string",
+                 "title": "About"
+             },
+             "benefits": {
+                "type": "string",
+                "title": "Benefits"
+            },
+            "addWorkout": {
+                "title": "Workout Agenda",
+                "$ref": "#/definitions/addWorkout"
+            },
+            "calories": {
+                "type": "number",
+                "title": "Total Calories"
+            },
+            "equipment": {
+               "type": "string",
+               "title": "Equipment"
+           },
+           "muscleGroup": {
+               "type": "string",
+               "title": "Muscle Group"
+           }
+         },
+         "definitions": {
+            "addWorkout": {
+                "title": "Add Workout",
+                "type": "object",
+                "properties": {
+                    "addWorkout": {
+                        "type": "string",
+                        "enum": [
+                            "Build",
+                            "Add URL",
+                            "Text",
+                            "Upload"
+                        ],
+                        "default": "Add URL"
+                    }
+                },
+                "required": [
+                    "addWorkout"
+                ],
+                "dependencies": {
+                    "addWorkout": {
+                        "oneOf": [
+                            {
+                                "properties": {
+                                    "addWorkout": {
+                                        "enum": [
+                                            "Add URL"
+                                        ]
+                                    },
+                                    "AddURL": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            {
+                                "properties": {
+                                    "addWorkout": {
+                                        "enum": [
+                                            "Text"
+                                        ]
+                                    },
+                                    "Add Text": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            {
+                                "properties": {
+                                    "addWorkout": {
+                                        "enum": [
+                                            "Upload"
+                                        ]
+                                    },
+                                    "Upload": {
+                                        "type": "string",
+                                        "format": "data-url",
+                                        "title": "Upload a Video file"
+                                    }
+                                }
+                            },
+                            {
+                                "properties": {
+                                    "addWorkout": {
+                                        "enum": [
+                                            "Build"
+                                        ]
+                                    },
+                                    "build": {
+                                        "title": "Build Workout",
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                }
+            }
+            }
+        }
+     }

@@ -1,9 +1,9 @@
-import { useRef, useState} from "react";
+import { useRef, useState } from "react";
 import { withTheme, utils } from "@rjsf/core";
 import { Theme as Bootstrap4Theme } from '@rjsf/bootstrap-4';
 import { Button, Col, Modal, ProgressBar, Row } from "react-bootstrap";
 
-export default function ModalView({ name, formUISchema, formSubmit, formSchema, formData, isStepper,showing }: any) {
+export default function ModalView({ name, formUISchema, formSubmit, formSchema, formData, isStepper, widgets, modalTrigger }: any) {
     const registry = utils.getDefaultRegistry();
     const defaultFileWidget = registry.widgets["FileWidget"];
     (Bootstrap4Theme as any).widgets["FileWidget"] = defaultFileWidget;
@@ -11,11 +11,14 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
     const Form: any = withTheme(Bootstrap4Theme);
     const formRef = useRef<any>(null);
     const [step, setStep] = useState<number>(1);
-    const [show, setShow] = useState<boolean>(showing);
+    const [show, setShow] = useState<boolean>(false);
     const [formValues, setFormValues] = useState<any>(formData);
     const stepper: string[] = ["Creator", "Details", "Program", "Schedule", "Pricing"];
     
-
+    modalTrigger.subscribe((res: boolean) => {
+        setShow(res);
+    });
+    
     function submitHandler(formData: any) {
         if (isStepper && step < 5) {
             console.log("Data submitted: ", formData);
@@ -25,15 +28,14 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
             formSubmit(formData);
         }
     }
-    console.log(show + " show");
-    console.log(showing + " showing");
+
 
     return (
         <>  
             {/* <Button variant={name === "Create New"?"outline-secondary":"light"}  size="sm" onClick={() => setShow(true)}>
                 {name === "Create New"?<i className="fas fa-plus-circle"></i>:" "}{" "}{name}
             </Button> */}
-            <Modal size="xl" show={show} onHide={() => {showing=false;setShow(showing)}} centered >
+            <Modal size="xl" show={show} onHide={() => setShow(false)} centered >
                 <Modal.Header closeButton>
                     <Modal.Title as={Row}>
                         <Col xs={12} md={12} lg={12}>
@@ -62,6 +64,7 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
                                     ref={formRef}
                                     onSubmit={({ formData }: any) => submitHandler(formData)}
                                     formData={formValues}
+                                    widgets={widgets}
                                 >
                                     <div></div>
                                 </Form>
@@ -95,7 +98,7 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
                         <Button
                          variant="danger"
                          size="sm"
-                         onClick={() => {setShow(!showing)}}
+                         onClick={() => {setShow(false)}}
                          className={name === 'View'?"d-none":""}
                         >
                         Close
