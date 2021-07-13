@@ -4,6 +4,7 @@ import ModalView from "../../../components/modal";
 import { GET_TRIGGERS, ADD_MESSAGE, UPDATE_MESSAGE, GET_MESSAGE, DELETE_MESSAGE,UPDATE_STATUS } from "./queries";
 import AuthContext from "../../../context/auth-context";
 import StatusModal from "../../../components/StatusModal/StatusModal";
+import {Subject} from 'rxjs';
 
 
 interface Operation {
@@ -18,14 +19,17 @@ function CreateEditMessage(props: any, ref: any) {
     const messageSchema: { [name: string]: any; } = require("./message.json");
     const uiSchema: {} = require("./schema.json");
     const [messageDetails, setMessageDetails] = useState<any>({});
-    const [render, setRender] = useState<boolean>(false);
+    //const [render, setRender] = useState<boolean>(false);
     const [operation, setOperation] = useState<Operation>({} as Operation);
     
+    
 
-    const [createMessage] = useMutation(ADD_MESSAGE, { onCompleted: (r: any) => { console.log(r); setRender(false); } });
-    const [editMessage] = useMutation(UPDATE_MESSAGE,{variables: {messageid: operation.id}, onCompleted: (r: any) => { console.log(r); setRender(false); } });
+    const [createMessage] = useMutation(ADD_MESSAGE, { onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
+    const [editMessage] = useMutation(UPDATE_MESSAGE,{variables: {messageid: operation.id}, onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
     const [deleteMessage] = useMutation(DELETE_MESSAGE, { onCompleted: (e: any) => console.log(e), refetchQueries: ["GET_TRIGGERS"] });
     const [updateStatus] = useMutation(UPDATE_STATUS,{onCompleted: (d: any) => { console.log(d);}});
+
+    const modalTrigger =  new Subject();
 
     useImperativeHandle(ref, () => ({
         TriggerForm: (msg: Operation) => {
@@ -33,7 +37,7 @@ function CreateEditMessage(props: any, ref: any) {
             setOperation(msg);
 
             if (msg && !msg.id) //render form if no message id
-                setRender(true);
+            modalTrigger.next(true);
 
             // if (msg.type === "toggle-status" && "current_status" in msg)
             //     ToggleMessageStatus(msg.id, msg.current_status);
@@ -61,10 +65,10 @@ function CreateEditMessage(props: any, ref: any) {
         details.file = msg.mediaupload.id;
         details.status = msg.status;
         setMessageDetails(details);
-
+        console.log(messageDetails);
         //if message exists - show form only for edit and view
         if (['edit', 'view'].indexOf(operation.type) > -1)
-            setRender(true);
+         modalTrigger.next(true);
         else
             OnSubmit(null);
     }
@@ -145,17 +149,37 @@ function CreateEditMessage(props: any, ref: any) {
 
     return (
         <>
-            {operation.type === "create" && <ModalView
+             <ModalView
                     name={name}
                     isStepper={false}
                     formUISchema={uiSchema}
                     formSchema={messageSchema}
                     showing={operation.modal_status}
-                    formSubmit={name ==="View"? () => {setRender(false)}:(frm: any) => { OnSubmit(frm); }}
+                    formSubmit={name ==="View"? () => { modalTrigger.next(false);}:(frm: any) => { OnSubmit(frm); }}
                     formData={messageDetails}
+                    modalTrigger={modalTrigger}
+            />
+            {/* {operation.type === "edit" && <ModalView
+                    name={name}
+                    isStepper={false}
+                    formUISchema={uiSchema}
+                    formSchema={messageSchema}
+                    showing={operation.modal_status}
+                    formSubmit={name ==="View"? () => { modalTrigger.next(false);}:(frm: any) => { OnSubmit(frm); }}
+                    formData={messageDetails}
+                    modalTrigger={modalTrigger}
             />}
                 
-                
+                {operation.type === "view" && <ModalView
+                    name={name}
+                    isStepper={false}
+                    formUISchema={uiSchema}
+                    formSchema={messageSchema}
+                    showing={operation.modal_status}
+                    formSubmit={name ==="View"? () => { modalTrigger.next(false);}:(frm: any) => { OnSubmit(frm); }}
+                    formData={messageDetails}
+                    modalTrigger={modalTrigger}
+            />}    */}
             
             {operation.type === "toggle-status" && <StatusModal
              modalTitle="Change Status"
