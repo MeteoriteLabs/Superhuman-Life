@@ -21,6 +21,9 @@ export const FETCH_DATA = gql`
                     id
                     name
                }
+               users_permissions_user {
+                    id
+               }
           }
      }
 `
@@ -66,11 +69,6 @@ export const GET_TABLEDATA = gql`
                exercisemusclegroups {
                name
                }
-          }
-          fitnessdisciplines(sort: "updatedAt"){
-               id
-               disciplinename
-               updatedAt
           }
      }
 `

@@ -48,7 +48,7 @@
                 "title": "Add Exercise",
                 "type": "object",
                 "properties": {
-                    "Add Exercise": {
+                    "AddExercise": {
                         "type": "string",
                         "enum": [
                             "Add URL",
@@ -59,38 +59,38 @@
                     }
                 },
                 "required": [
-                    "Add Exercise"
+                    "AddExercise"
                 ],
                 "dependencies": {
-                    "Add Exercise": {
+                    "AddExercise": {
                         "oneOf": [
                             {
                                 "properties": {
-                                    "Add Exercise": {
+                                    "AddExercise": {
                                         "enum": [
                                             "Add URL"
                                         ]
                                     },
-                                    "Add URL": {
+                                    "AddURL": {
                                         "type": "string"
                                     }
                                 }
                             },
                             {
                                 "properties": {
-                                    "Add Exercise": {
+                                    "AddExercise": {
                                         "enum": [
                                             "Text"
                                         ]
                                     },
-                                    "Add Text": {
+                                    "AddText": {
                                         "type": "string"
                                     }
                                 }
                             },
                             {
                                 "properties": {
-                                    "Add Exercise": {
+                                    "AddExercise": {
                                         "enum": [
                                             "Upload"
                                         ]

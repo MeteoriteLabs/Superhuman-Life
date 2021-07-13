@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
-import { FETCH_FITNESSDISCPLINES } from './queries';
+import { FETCH_FITNESSDISCPLINES } from '../exercises/queries';
 import { useQuery } from "@apollo/client";
 
 const FitnessSelect = (props: any) => {

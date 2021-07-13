@@ -12,7 +12,6 @@ export default function EventsTab() {
 
     const auth = useContext(AuthContext);
     const [tableData, setTableData] = useState<any[]>([]);
-    // const [fitnessdisciplines, setFitnessDisciplines] = useState<any[]>([]);
     const createEditExerciseComponent = useRef<any>(null);
 
     const columns = useMemo<any>(() => [
@@ -77,15 +76,6 @@ export default function EventsTab() {
                 }
             })
         );
-        // setFitnessDisciplines(
-        //     [...data.fitnessdisciplines].map((discipline) => {
-        //         return {
-        //             id: discipline.id,
-        //             disciplineName: discipline.disciplinename,
-        //             updatedAt: discipline.updatedAt
-        //         }
-        //     })
-        // );
     }
 
 

@@ -6,11 +6,13 @@ const TextEditor = (props: any) => {
      
     const [value, setValue] = useState("");
 
-    onTrigger();
+    props.onChange(value);
 
-    function onTrigger(){
-         props.editorText(value);
-    }
+//     onTrigger();
+
+//     function onTrigger(){
+//          props.editorText(value);
+//     }
 
      return (
           <div id="editor1">

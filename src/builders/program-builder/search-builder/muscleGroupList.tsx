@@ -45,8 +45,14 @@ const MuscleGroupList = (props: any) => {
 
      function handleSeletedMuscleGroupAdd(name: any, id: any) {
           const values = [...selected];
-          values.push({ value: name, id: id});
-          setSelected(values);
+          let a = values.find((e) => e.id === id);
+          if (!a){
+               values.push({ value: name, id: id}); 
+               setSelected(values);
+          }
+          props.onChange(values.map((e) => {
+               return e.id;
+          }).join(','))
           inputField.current.value = "";
           setMuscleGroup([]);
           skipval = true;
@@ -56,13 +62,16 @@ const MuscleGroupList = (props: any) => {
           const values = [...selected];
           values.splice(name, 1);
           setSelected(values);
+          props.onChange(values.map((e) => {
+               return e.id;
+          }).join(','))
      }
 
-     onTrigger();
+     // onTrigger();
 
-     function onTrigger() {
-          props.muscleGroupList(selected);
-     }
+     // function onTrigger() {
+     //      props.muscleGroupList(selected);
+     // }
 
       FetchMuscleGroupList({ filter: searchInput, skip: skipval});
      // console.log(select);
