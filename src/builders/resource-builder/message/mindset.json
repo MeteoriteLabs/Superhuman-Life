@@ -3,16 +3,16 @@
         "title": "Mindset",
         "type": "object",
         "required": [
-            "name",
-            "typo",
-            "minidescription"
+            "title",
+            "mindsetmessagetype",
+            "minidesc"
         ],
         "properties": {
-            "name": {
+            "title": {
                 "type": "string",
                 "title": "Message Title"
             },
-            "typo": {
+            "mindsetmessagetype": {
                 "type": "string",
                 "title": "Type",
                 "enum": [],
@@ -22,11 +22,15 @@
                 "type": "string",
                 "title": "Tags"
             },
-            "minidescription": {
+            "description": {
+                "type": "string",
+                "title": "Description"
+            },
+            "minidesc": {
                 "type": "string",
                 "title": "Mini Description"
             },
-            "Url": {
+            "mediaurl": {
                 "type": "string",
                 "title": "Url (Picture or Video)"
             },

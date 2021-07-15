@@ -2,55 +2,29 @@ import { gql } from "@apollo/client";
 
 export const GET_TRIGGERS = gql`
     query FetchTypesTriggers {
-        mindsetmessagetypes{
+        informationbankmessagestypes {
             id
             type
           }
       }
     `;
 
- export const GET_MESSAGES = gql`
- query FeedSearchQuery($filter: String!,$id: String){   
-     mindsetmessages(sort: "updatedAt",where: { title_contains: $filter, users_permissions_user: { id: $id}}){
-         id
-         title
-         description
-         minidescription
-         tags
-         status
-         updatedAt
-         users_permissions_user{
-             id
-         }
-         mindsetmessagetype{
-             id
-             type
-         }
-     }
-     mindsetmessagetypes{
-         id
-         type
-       }
-   }
-   
- `  
-
- export const ADD_MESSAGE = gql`
+export const ADD_MESSAGE = gql`
             mutation msg(
                 $title: String
                 $tags: String
-                $description: String
                 $minidesc: String
-                $mindsetmessagetype: ID
+                $description: String
+                $infomessagetype: ID
                 $mediaurl: String
                 $user_permissions_user: ID
             ) {
-                createMindsetmessage(
+                createInformationbankmessage(
                 input: {
                     data: {
                     title: $title
                     tags: $tags
-                    mindsetmessagetype: $mindsetmessagetype
+                    informationbankmessagestype: $infomessagetype
                     description: $description
                     minidescription: $minidesc
                     mediaurl: $mediaurl
@@ -59,7 +33,7 @@ export const GET_TRIGGERS = gql`
                     }
                 }
                 ) {
-                    mindsetmessage {
+                    informationbankmessage {
                     id
                     createdAt
                     updatedAt
@@ -71,18 +45,18 @@ export const GET_TRIGGERS = gql`
             }
       
     `
-   export const UPDATE_MESSAGE = gql`
+    export const UPDATE_MESSAGE = gql`
         mutation updatemsg(
             $title: String
             $description: String
             $minidesc: String
-            $mindsetmessagetype: ID
+            $informationbankmessagestype: ID
             $tags: String
             $mediaurl: String
             $userpermission: ID
             $messageid: ID!
         ) {
-            updateMindsetmessage(
+            updateInformationbankmessage(
             input: {
                 data: {
                 title: $title
@@ -90,13 +64,13 @@ export const GET_TRIGGERS = gql`
                 minidescription: $minidesc
                 mediaurl: $mediaurl
                 tags: $tags
-                mindsetmessagetype: $mindsetmessagetype
+                informationbankmessagestype: $informationbankmessagestype
                 users_permissions_user: $userpermission
                 }
                 where: { id: $messageid }
             }
             ) {
-            mindsetmessage {
+            informationbankmessage {
                 id
                 title
                 tags
@@ -109,66 +83,85 @@ export const GET_TRIGGERS = gql`
       
     `
 
+export const GET_MESSAGES = gql`
+    query FeedSearchQuery($filter: String!,$id: String){
+        informationbankmessages(sort: "updatedAt",where: { title_contains: $filter, users_permissions_user: { id: $id}}) {
+          id
+          title
+          description
+          updatedAt
+          status
+          users_permissions_user{
+            id
+        }
+          informationbankmessagestype {
+            id
+            type
+          }
+        }
+        informationbankmessagestypes {
+          id
+          type
+        }
+      }
+      
+    `
     export const DELETE_MESSAGE = gql`
     mutation deleteMessage($id: ID!) {
-        deleteMindsetmessage(
+        deleteInformationbankmessage(
             input: {
                 where: { id : $id }
             }
         ) {
-            mindsetmessage {
+            informationbankmessage {
                 id
                 __typename
             }
         }
     }
 `;
-
+ 
 export const UPDATE_STATUS = gql`
-    mutation updatestatus(
-        $status: Boolean
-        $messageid: ID!
-    ) {
-        updateMindsetmessage(
-            input: {
-                data: {
-                status: $status
-                }
-                where: { id: $messageid }
+mutation updatestatus(
+    $status: Boolean
+    $messageid: ID!
+) {
+    updateInformationbankmessage(
+        input: {
+            data: {
+            status: $status
             }
-        ) {
-            mindsetmessage {
-                id
-                title
-                description
-                minidescription
-                mediaurl
-                status
-            }
+            where: { id: $messageid }
         }
-    }
-`
-export const GET_MESSAGE = gql`
-    query getmessage($id: ID!) {
-        mindsetmessages(id: $id) {
+    ) {
+        informationbankmessage {
             id
             title
             description
             minidescription
-            tags
+            mediaurl
             status
-            updatedAt
-            users_permissions_user{
+        }
+    }
+}
+`
+export const GET_MESSAGE = gql`
+    query getmessage($id: ID!) {
+        informationbankmessages(id: $id) {
             id
-         }
-         mindsetmessagetype{
-             id
-             type
-         }
-        users_permissions_user {
+          title
+          description
+          updatedAt
+          status
+          users_permissions_user{
             id
         }
+          informationbankmessagestype {
+            id
+            type
+          }
         }
     } 
 
 `;
+

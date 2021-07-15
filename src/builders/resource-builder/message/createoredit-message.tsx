@@ -16,12 +16,14 @@ interface Operation {
 
 function CreateEditMessage(props: any, ref: any) {
     const auth = useContext(AuthContext);
-    const messageSchema: { [name: string]: any; } = require("./message.json");
+    const messageSchema: { [name: string]: any; } = require("./mindset.json");
     const uiSchema: {} = require("./schema.json");
     const [messageDetails, setMessageDetails] = useState<any>({});
     //const [render, setRender] = useState<boolean>(false);
     const [operation, setOperation] = useState<Operation>({} as Operation);
     //let fillingDetails: any = {};
+    console.log(operation.id+ " operationid")
+    
     
 
     const [createMessage] = useMutation(ADD_MESSAGE, { onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
@@ -45,20 +47,18 @@ function CreateEditMessage(props: any, ref: any) {
     }));
 
     function loadData(data: any) {
-        messageSchema["1"].properties.prerecordedtype.enum = [...data.prerecordedtypes].map(n => (n.id));
-        messageSchema["1"].properties.prerecordedtype.enumNames = [...data.prerecordedtypes].map(n => (n.name));
-        messageSchema["1"].properties.prerecordedtrigger.enum = [...data.prerecordedtriggers].map(n => (n.id));
-        messageSchema["1"].properties.prerecordedtrigger.enumNames = [...data.prerecordedtriggers].map(n => (n.name));
+        messageSchema["1"].properties.mindsetmessagetype.enum =[...data.mindsetmessagetypes].map(n => (n.id));
+        messageSchema["1"].properties.mindsetmessagetype.enumNames = [...data.mindsetmessagetypes].map(n => (n.type));
     }
 
     function FillDetails(data: any) {
-        console.log(data.prerecordedmessage);
+        console.log(data.mindsetmessage);
 
         let details: any = {};
-        let msg = data.prerecordedmessage;
+        let msg = data.mindsetmessage;
         details.title = msg.title;
-        details.prerecordedtype = msg.prerecordedtype.id;
-        details.prerecordedtrigger = msg.prerecordedtrigger.id;
+        details.mindsetmessagetype = msg.mindsetmessagetype.id;
+        //details.prerecordedtrigger = msg.prerecordedtrigger.id;
         details.description = msg.description;
         details.minidesc = msg.minidescription;
         details.mediaurl = msg.mediaurl;
@@ -152,7 +152,7 @@ function CreateEditMessage(props: any, ref: any) {
 
     return (
         <>
-        {operation.type==='create' && <ModalView
+             {operation.type==='create' && <ModalView
                     name={name}
                     isStepper={false}
                     formUISchema={uiSchema}
@@ -162,7 +162,6 @@ function CreateEditMessage(props: any, ref: any) {
                     formData={messageDetails}
                     modalTrigger={modalTrigger}
             />}
-             
             {/* {operation.type === "edit" && <ModalView
                     name={name}
                     isStepper={false}
@@ -203,7 +202,7 @@ function CreateEditMessage(props: any, ref: any) {
              />}
         
             
-        </>
+        </> 
     )
 }
 

@@ -3,16 +3,16 @@
         "title": "Information Bank",
         "type": "object",
         "required": [
-            "name",
-            "typo",
+            "title",
+            "infomessagetype",
             "description"
         ],
         "properties": {
-            "name": {
+            "title": {
                 "type": "string",
                 "title": "Message Title"
             },
-            "typo": {
+            "infomessagetype": {
                 "type": "string",
                 "title": "Type",
                 "enum": [],
@@ -26,11 +26,11 @@
                 "type": "string",
                 "title": "Description"
             },
-            "minidescription": {
+            "minidesc": {
                 "type": "string",
                 "title": "Mini Description"
             },
-            "Url": {
+            "mediaurl": {
                 "type": "string",
                 "title": "Url (Picture or Video)"
             },

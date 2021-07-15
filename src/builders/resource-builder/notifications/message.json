@@ -35,8 +35,10 @@
                 "title": "Mini Description"
             },
             "mediaurl": {
+                "title": "Url (Picture or Video)",
                 "type": "string",
-                "title": "Url (Picture or Video)"
+                "format": "data-url"
+                
             },
             "or": {
                 "title": "OR",
@@ -45,6 +47,7 @@
               },
             "file": {
                 "type": "string",
+                "format": "data-url",
                 "title": "Upload (Picture or Video)"
                 
             }
