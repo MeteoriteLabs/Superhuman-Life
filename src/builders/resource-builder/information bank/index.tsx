@@ -51,7 +51,7 @@ export default function InformationPage() {
 
       return(`${date}/${month}/${year}`);
     }
-    //const infoSchema: any = require("./informationbank.json");
+    
     const [datatable, setDataTable] = useState<{}[]>([]);
 
     function FetchData(_variables: {} = { filter: " ",id : auth.userid }) {

@@ -19,15 +19,13 @@ function CreateEditMessage(props: any, ref: any) {
     const messageSchema: { [name: string]: any; } = require("./mindset.json");
     const uiSchema: {} = require("./schema.json");
     const [messageDetails, setMessageDetails] = useState<any>({});
-    //const [render, setRender] = useState<boolean>(false);
     const [operation, setOperation] = useState<Operation>({} as Operation);
-    //let fillingDetails: any = {};
-    console.log(operation.id+ " operationid")
+    
     
     
 
-    const [createMessage] = useMutation(ADD_MESSAGE, { onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
-    const [editMessage] = useMutation(UPDATE_MESSAGE,{variables: {messageid: operation.id}, onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
+    const [createMessage] = useMutation(ADD_MESSAGE, { onCompleted: (r: any) => { modalTrigger.next(false); } });
+    const [editMessage] = useMutation(UPDATE_MESSAGE,{variables: {messageid: operation.id}, onCompleted: (r: any) => { modalTrigger.next(false); } });
     const [deleteMessage] = useMutation(DELETE_MESSAGE, { onCompleted: (e: any) => console.log(e), refetchQueries: ["GET_TRIGGERS"] });
     const [updateStatus] = useMutation(UPDATE_STATUS,{onCompleted: (d: any) => { console.log(d);}});
 
@@ -35,14 +33,11 @@ function CreateEditMessage(props: any, ref: any) {
 
     useImperativeHandle(ref, () => ({
         TriggerForm: (msg: Operation) => {
-            console.log(msg);
+            
             setOperation(msg);
 
-            if (msg && !msg.id) //render form if no message id
+            if (msg && !msg.id) 
             modalTrigger.next(true);
-
-            // if (msg.type === "toggle-status" && "current_status" in msg)
-            //     ToggleMessageStatus(msg.id, msg.current_status);
         }
     }));
 
@@ -52,23 +47,20 @@ function CreateEditMessage(props: any, ref: any) {
     }
 
     function FillDetails(data: any) {
-        console.log(data.mindsetmessage);
+        
 
         let details: any = {};
         let msg = data.mindsetmessage;
         details.title = msg.title;
         details.mindsetmessagetype = msg.mindsetmessagetype.id;
-        //details.prerecordedtrigger = msg.prerecordedtrigger.id;
         details.description = msg.description;
         details.minidesc = msg.minidescription;
         details.mediaurl = msg.mediaurl;
         details.file = msg.mediaupload.id;
         details.status = msg.status;
-        //fillingDetails = details;
+        
         setMessageDetails(details);
-        //console.log(messageDetails);
-        //console.log(fillingDetails);
-        //if message exists - show form only for edit and view
+        
         if (['edit', 'view'].indexOf(operation.type) > -1)
          modalTrigger.next(true);
         else
@@ -76,46 +68,34 @@ function CreateEditMessage(props: any, ref: any) {
     }
 
     function FetchData() {
-        console.log('Fetch data', operation.id);
+       
         useQuery(GET_TRIGGERS, { onCompleted: loadData });
-        //skip fetch message if id not set or operation is toggle-status
         useQuery(GET_MESSAGE, { variables: { id: operation.id }, skip: (!operation.id || operation.type === 'toggle-status'), onCompleted: (e: any) => { FillDetails(e) } });
     }
 
     function CreateMessage(frm: any) {
-        console.log('create message');
         createMessage({ variables: frm });
     }
 
     function EditMessage(frm: any) {
-        console.log('edit message');
-        // useMutation(UPDATE_MESSAGE, { variables: frm, onCompleted: (d: any) => { console.log(d); } });
         editMessage({variables: frm });
     }
 
     function ViewMessage(frm: any) {
-        console.log('view message');
-        //use a variable to set form to disabled/not editable
         useMutation(UPDATE_MESSAGE, { variables: frm, onCompleted: (d: any) => { console.log(d); } })
     }
 
     function ToggleMessageStatus(id: string, current_status: boolean) {
-        
-        console.log('toggle message status');
-        console.log(id, current_status);
-        //use mutation to just toggle the status of message
         updateStatus({ variables: { status: !current_status, messageid: id } });
         
     }
 
     function DeleteMessage(id: any) {
-        console.log('delete message');
         deleteMessage({ variables: { id: id }});
     }
 
     function OnSubmit(frm: any) {
-        console.log(frm);
-        //bind user id
+        
         if(frm)
         frm.user_permissions_user = auth.userid;
 
@@ -129,12 +109,7 @@ function CreateEditMessage(props: any, ref: any) {
             case 'view':
                 ViewMessage(frm);
                 break;
-            // case 'toggle-status':
-            //     ToggleMessageStatus();
-            //     break;
-            // case 'delete':
-            //     DeleteMessage(operation.id);
-            //     break;
+            
         }
     }
 
@@ -148,7 +123,7 @@ function CreateEditMessage(props: any, ref: any) {
     }else if(operation.type === 'view'){
         name="View";
     }
-    //console.log(fillingDetails);
+    
 
     return (
         <>
@@ -162,27 +137,7 @@ function CreateEditMessage(props: any, ref: any) {
                     formData={messageDetails}
                     modalTrigger={modalTrigger}
             />}
-            {/* {operation.type === "edit" && <ModalView
-                    name={name}
-                    isStepper={false}
-                    formUISchema={uiSchema}
-                    formSchema={messageSchema}
-                    showing={operation.modal_status}
-                    formSubmit={name ==="View"? () => { modalTrigger.next(false);}:(frm: any) => { OnSubmit(frm); }}
-                    formData={messageDetails}
-                    modalTrigger={modalTrigger}
-            />}
-                
-                {operation.type === "view" && <ModalView
-                    name={name}
-                    isStepper={false}
-                    formUISchema={uiSchema}
-                    formSchema={messageSchema}
-                    showing={operation.modal_status}
-                    formSubmit={name ==="View"? () => { modalTrigger.next(false);}:(frm: any) => { OnSubmit(frm); }}
-                    formData={messageDetails}
-                    modalTrigger={modalTrigger}
-            />}    */}
+            
             
             {operation.type === "toggle-status" && <StatusModal
              modalTitle="Change Status"

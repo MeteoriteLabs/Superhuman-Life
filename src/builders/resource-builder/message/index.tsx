@@ -51,7 +51,7 @@ export default function MindsetPage() {
 
       return(`${date}/${month}/${year}`);
     }
-    //const mindsetSchema: any = require("./mindset.json");
+    
     const [datatable, setDataTable] = useState<{}[]>([]);
 
     function FetchData(_variables: {} = { filter: " " ,id : auth.userid }) {
