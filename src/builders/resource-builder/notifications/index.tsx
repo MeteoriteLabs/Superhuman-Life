@@ -82,7 +82,7 @@ export default function MessagePage() {
                 <Row>
                     <Col>
                         <InputGroup className="mb-3" >
-                            <FormControl aria-describedby="basic-addon1" placeholder="Search" id="searchInput" ref={searchInput}/>
+                            <FormControl aria-describedby="basic-addon1" placeholder="Search"  ref={searchInput}/>
                             <InputGroup.Prepend>
                                 <Button variant="outline-secondary" onClick={(e:any) => {e.preventDefault(); setSearchFilter(searchInput.current.value)}} ><i className="fas fa-search"></i></Button>
                             </InputGroup.Prepend>
