@@ -1,12 +1,12 @@
 import {useState} from 'react';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
-import { FETCH_FITNESSDISCPLINES } from './queries';
+import { FETCH_FITNESSDISCPLINES } from '../../builders/program-builder/exercises/queries';
 import { useQuery } from "@apollo/client";
 
-const MultiSelect = (props: any) => {
+const FitnessSelect = (props: any) => {
 
-     const [multiSelections, setMultiSelections] = useState([]);
+     const [singleSelections, setSingleSelections] = useState<any[]>([]);
      const [fitnessdisciplines, setFitnessDisciplines] = useState<any[]>([]);
 
      function FetchData(){
@@ -26,29 +26,26 @@ const MultiSelect = (props: any) => {
      }
 
      function OnChange(e){
-          console.log(e)
           let id = e.map(d => {return d.id}).join(',');
-          console.log(id);
           props.onChange(id);
-          setMultiSelections(e);
+          setSingleSelections(e);
      }
 
-     FetchData();
+    FetchData();
 
      return (
           <div>
-               <label>Fitness discplines</label>
+               <label>Fitness Discplines</label>
                <Typeahead
                id="basic-typeahead-multiple"
                labelKey="disciplineName"
                onChange={OnChange}
                options={fitnessdisciplines}
-               placeholder="Choose multiple discplines..."
-               selected={multiSelections}
-               multiple
+               placeholder="Choose Discpline..."
+               selected={singleSelections}
                />
           </div>
      )
 }
 
-export default MultiSelect;
+export default FitnessSelect;

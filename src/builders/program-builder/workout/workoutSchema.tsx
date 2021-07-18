@@ -1,7 +1,7 @@
-import TextEditor from '../search-builder/textEditor';
-import EquipmentSearch from '../search-builder/equipmentList';
-import MuscleGroupSearch from '../search-builder/muscleGroupList';
-import FitnessSelect from './fitnessMultiSelect';
+import TextEditor from '../../../components/customWidgets/textEditor';
+import EquipmentSearch from '../../../components/customWidgets/equipmentList';
+import MuscleGroupSearch from '../../../components/customWidgets/muscleGroupList';
+import FitnessSelect from '../../../components/customWidgets/fitnessMultiSelect';
 import BuildWorkout from './buildWorkout';
 
 
@@ -48,7 +48,7 @@ export const schema: any = {
             "ui:widget": "fitnessSelect"
         },
         "addWorkout": {
-            "Add Text": {
+            "AddText": {
                 "ui:widget": "textEditor"
             },
             "Upload": {

@@ -1,7 +1,7 @@
-import TextEditor from '../search-builder/textEditor';
-import EquipmentSearch from '../search-builder/equipmentList';
-import MuscleGroupSearch from '../search-builder/muscleGroupList';
-import FitnessSelect from '../search-builder/fitnessSelect';
+import TextEditor from '../../../components/customWidgets/textEditor';
+import EquipmentSearch from '../../../components/customWidgets/equipmentList';
+import MuscleGroupSearch from '../../../components/customWidgets/muscleGroupList';
+import FitnessSelect from '../../../components/customWidgets/fitnessSelect';
 
 
 export const widgets = {

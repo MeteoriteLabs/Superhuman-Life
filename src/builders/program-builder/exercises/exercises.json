@@ -4,13 +4,16 @@
          "type": "object",
          "required": [
              "exercise",
-             "level"
-
+             "level",
+             "discipline",
+             "miniDescription",
+             "equipment",
+            "muscleGroup"
          ],
          "properties": {
              "exercise": {
                  "type": "string",
-                 "title": "Name Exercise"
+                 "title": "Name exercise"
              },
              "level": {
                  "type": "number",
@@ -28,19 +31,17 @@
              },
              "miniDescription": {
                 "type": "string",
-                "title": "Mini Description"
+                "title": "Mini description"
             },
             "addExercise": {
                 "title": "",
                 "$ref": "#/definitions/addexercise"
               },
             "equipment": {
-                "type": "string",
-                "title": "Equipment"
+                "type": "string"
             },
             "muscleGroup": {
-                "type": "string",
-                "title": "Muscle Group"
+                "type": "string"
             }
          },
          "definitions": {
@@ -50,6 +51,7 @@
                 "properties": {
                     "AddExercise": {
                         "type": "string",
+                        "title": "Add exercise",
                         "enum": [
                             "Add URL",
                             "Text",
@@ -72,7 +74,8 @@
                                         ]
                                     },
                                     "AddURL": {
-                                        "type": "string"
+                                        "type": "string",
+                                        "title": "Add URL"
                                     }
                                 }
                             },

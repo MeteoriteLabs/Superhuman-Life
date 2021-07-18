@@ -17,7 +17,6 @@ function CreateEditMessage(props: any, ref: any) {
     const auth = useContext(AuthContext);
     const workoutSchema: { [name: string]: any; } = require("./workout.json");
     const [workoutDetails, setWorkoutDetails] = useState<any>({});
-    // const [render, setRender] = useState<boolean>(false);
     const [operation, setOperation] = useState<Operation>({} as Operation);
     
 
@@ -34,21 +33,10 @@ function CreateEditMessage(props: any, ref: any) {
 
             if (msg && !msg.id) //render form if no message id
                 modalTrigger.next(true);
-
-            // if (msg.type === "toggle-status" && "current_status" in msg)
-            //     ToggleMessageStatus(msg.id, msg.current_status);
         }
     }));
 
-    // function loadData(data: any) {
-    //     messageSchema["1"].properties.prerecordedtype.enum = [...data.prerecordedtypes].map(n => (n.id));
-    //     messageSchema["1"].properties.prerecordedtype.enumNames = [...data.prerecordedtypes].map(n => (n.name));
-    //     messageSchema["1"].properties.prerecordedtrigger.enum = [...data.prerecordedtriggers].map(n => (n.id));
-    //     messageSchema["1"].properties.prerecordedtrigger.enumNames = [...data.prerecordedtriggers].map(n => (n.name));
-    // }
-
     function FillDetails(data: any) {
-        console.log(data);
         let details: any = {};
         // let msg = data.workouts;
         // console.log(msg);
@@ -63,24 +51,43 @@ function CreateEditMessage(props: any, ref: any) {
     }
 
     function FetchData() {
-        console.log('Fetch data', operation.id);
         useQuery(FETCH_DATA, { variables: { id: operation.id }, skip: (!operation.id || operation.type === 'toggle-status'), onCompleted: (e: any) => { FillDetails(e) } });
     }
 
-    // enum ENUM_EXERCISES_EXERCISELEVEL {
-    //     Beginner,
-    //     Intermediate,
-    //     Advance,
-    //     None
-    // }
+    enum ENUM_EXERCISES_EXERCISELEVEL {
+        Beginner,
+        Intermediate,
+        Advanced,
+        None
+    }
+
+    enum ENUM_WORKOUTS_INTENSITY {
+        Low,
+        Medium,
+        High
+    }
 
     function CreateWorkout(frm: any) {
-        console.log('create message', frm);
-        // let levelIndex = frm.level;
-        // var equipmentArray = frm.equipment.split(",");
-        // var muscleGroupArray = frm.muscleGroup.split(",");
-        // var fitnessDiscplineArray = frm.discipline.split(",");
-        createWorkout({ variables: frm});
+        if(frm.addWorkout.build){
+            frm.addWorkout.build = JSON.parse(frm.addWorkout.build);
+        }
+        createWorkout({ variables: {
+            workouttitle: frm.workout,
+            intensity: ENUM_WORKOUTS_INTENSITY[frm.intensity],
+            level: ENUM_EXERCISES_EXERCISELEVEL[frm.level],
+            fitnessdisciplines: frm.discipline.split(","),
+            About: frm.about,
+            Benifits: frm.benefits,
+            warmup: (frm.addWorkout.AddWorkout === "Build" ? frm.addWorkout.build.warmup : null),
+            mainmovement: (frm.addWorkout.AddWorkout === "Build" ? frm.addWorkout.build.mainMovement : null),
+            cooldown: (frm.addWorkout.AddWorkout === "Build" ? frm.addWorkout.build.coolDown : null),
+            workout_text: (frm.addWorkout.AddWorkout === "Text" ? frm.addWorkout.AddText : null),
+            workout_URL: (frm.addWorkout.AddWorkout === "Add URL" ? frm.addWorkout.AddURL : null),
+            calories: frm.calories,
+            equipment_lists: frm.equipment.split(","),
+            muscle_groups: frm.muscleGroup.split(","),
+            users_permissions_user: frm.user_permissions_user
+        }});
     }
 
     function EditWorkout(frm: any) {
@@ -122,59 +129,12 @@ function CreateEditMessage(props: any, ref: any) {
 
     let name = "";
     if(operation.type === 'create'){
-        name="Create New";
+        name="Create New Workout";
     }else if(operation.type === 'edit'){
         name="Edit";
     }else if(operation.type === 'view'){
         name="View";
     }
-
-    // const [createWorkout, { error }] = useMutation(CREATE_WORKOUT);
-
-    // let authid = auth.userid;
-    // enum ENUM_EXERCISES_EXERCISELEVEL {
-    //     Beginner,
-    //     Intermediate,
-    //     Advance,
-    //     None
-    // }
-
-    // enum ENUM_WORKOUTS_INTENSITY {
-    //     Low,
-    //     Medium,
-    //     High
-    // }
-
-    // function onSubmit(formData: any) {
-    //     let levelIndex = formData.level
-    //     let intensityIndex = formData.intensity
-    //     console.log(formData);
-
-    //     createWorkout (
-    //         {
-    //             variables: {
-    //                 workouttitle: formData.workout,
-    //                 level: ENUM_EXERCISES_EXERCISELEVEL[levelIndex],
-    //                 intensity: ENUM_WORKOUTS_INTENSITY[intensityIndex],
-    //                 fitnessdisciplines: fitnessDiscplinesListarray.map((val: any) => {
-    //                     return val.id;
-    //                 }),
-    //                 About: formData.about,
-    //                 Benefits: formData.benefits,
-    //                 users_permissions_user: authid,
-    //                 workout_text: (!editorTextString ? null : editorTextString),
-    //                 equipment_lists: equipmentListarray.map((val: any) => {
-    //                     return val.id;
-    //                 }),
-    //                 muscle_groups: muscleGroupListarray.map((val: any) => {
-    //                     return val.id;
-    //                 })
-    //             }
-    //         }
-    //     )
-    // }
-
-    // if (error) return <span>{`Error! ${error.message}`}</span>;
 
     return (
         <>

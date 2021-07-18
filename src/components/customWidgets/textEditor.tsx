@@ -6,13 +6,17 @@ const TextEditor = (props: any) => {
      
     const [value, setValue] = useState("");
 
-    props.onChange(value);
+    if(props.type === "build"){
+         const richTextFields: any = {
+              "richText": {
+                   value
+              }
+         }
+          props.onChangebuild(richTextFields);
+    }else {
+          props.onChange(value);
+    }
 
-//     onTrigger();
-
-//     function onTrigger(){
-//          props.editorText(value);
-//     }
 
      return (
           <div id="editor1">

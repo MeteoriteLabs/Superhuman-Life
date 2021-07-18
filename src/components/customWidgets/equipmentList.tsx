@@ -69,12 +69,6 @@ const EquipmentList = (props: any) => {
           }).join(','))
      }
 
-     // onTrigger();
-
-     // function onTrigger() {
-     //      props.equipmentList(selected);
-     // }
-
      FetchEquipmentList({filter: searchInput, skip: skipval});
 
      return (

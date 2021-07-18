@@ -1,39 +1,18 @@
 import React, {useState} from 'react';
-import { Button, InputGroup, FormControl } from 'react-bootstrap';
-import TextEditor from '../search-builder/textEditor';
-import ExerciseList from '../search-builder/exerciseList';
+import { Button } from 'react-bootstrap';
+import TextEditor from '../../../components/customWidgets/textEditor';
+import ExerciseList from '../../../components/customWidgets/exerciseList';
+import URLlist from '../search-builder/urlList';
 
 
-const Build = () => {
+const Build = (props: any) => {
 
      const [exerciseFields, setExerciseFields] = useState<any[]>([]);
      const [textFields, setTextFields] = useState<any[]>([]);
      const [urlFields, setUrlFields] = useState<any[]>([]);
-     const [restTimeFields, setRestTimeFields] = useState<any[]>([]);
      const [uploadFields, setUploadFields] = useState<any[]>([]);
+     const [currentTab, setCurrentTab] = useState<String | null>(null);
 
-     // These functions handle the change in the input field
-     // function handleExerciseFieldChange(i: any, event: any){
-     //      const values = [...exerciseFields];
-     //      values[i].value = event.target.value;
-     //      setExerciseFields(values);
-     // }
-
-     // function handleTextFieldChange(i: any, event: any){
-     //      const values = [...textFields];
-     //      values[i].value = event.target.value;
-     //      setTextFields(values);
-     // }
-     function handleUrlFieldChange(i: any, event: any){
-          const values = [...urlFields];
-          values[i].value = event.target.value;
-          setUrlFields(values);
-     }
-     function handleRestTimeFieldChange(i: any, event: any){
-          const values = [...restTimeFields];
-          values[i].value = event.target.value;
-          setRestTimeFields(values);
-     }
      function handleUploadFieldChange(i: any, event: any){
           const values = [...uploadFields];
           values[i].value = event.target.value;
@@ -41,11 +20,11 @@ const Build = () => {
      }
 
      //These functions hanlde the adding of the input field
-     function handleExerciseFieldAdd(){
+     function handleExerciseFieldAdd(id: any){
           const values = [...exerciseFields];
           let a = values.length === 0;
           if(a){
-               values.push({ value: null});
+               values.push({ value: null, id: id});
           }
           setExerciseFields(values);
      }
@@ -61,11 +40,6 @@ const Build = () => {
           const values = [...urlFields];
           values.push({ value: null});
           setUrlFields(values);
-     }
-     function handleRestTimeFieldAdd(){
-          const values = [...restTimeFields];
-          values.push({ value: null});
-          setRestTimeFields(values);
      }
      function handleUploadFieldAdd(){
           const values = [...uploadFields];
@@ -91,60 +65,97 @@ const Build = () => {
           values.splice(i, 1);
           setUrlFields(values);
      }
-     function handleRestTimeFieldRemove(i: any){
-          const values = [...restTimeFields];
-          values.splice(i, 1);
-          setRestTimeFields(values);
-     }
      function handleUploadFieldRemove(i: any){
           const values = [...uploadFields];
           values.splice(i, 1);
           setUploadFields(values);
      }
 
-//      let exerciseListArray: any;
-//     function handleEquipmentCallback(data: any) {
-//           exerciseListArray = data;
-//     }
-
-//     let editorTextString: any;
-//     function handleEditorTextCallBack(data:any){
-//         editorTextString = data;
-//     }
-
     function renderOptions(){
      return (
           <div>
-           <Button size="sm" className="m-1" variant="outline-secondary" type="button" onClick={() => handleExerciseFieldAdd()}>
+           <Button size="sm" className="m-1" variant="outline-secondary" type="button" onClick={() => {handleExerciseFieldAdd(props.buildId); setCurrentTab('exercise')}} disabled={currentTab ? (currentTab !== 'exercise'): false}>
                 Exercise <i style={{ fontSize: 12}} className="fas fa-plus"></i>
            </Button>
-           <Button size="sm" className="m-1" type="button" variant="outline-secondary" onClick={() => handleTextFieldAdd()}>
+           <Button size="sm" className="m-1" type="button" variant="outline-secondary" onClick={() => {handleTextFieldAdd(); setCurrentTab('text')}} disabled={currentTab ? (currentTab !== 'text'): false}>
                 Text <i style={{ fontSize: 12}} className="fas fa-plus"></i>
            </Button>
-           <Button size="sm" className="m-1" type="button" variant="outline-secondary" onClick={() => handleUrlFieldAdd()}>
+           <Button size="sm" className="m-1" type="button" variant="outline-secondary" onClick={() => {handleUrlFieldAdd(); setCurrentTab('url')}} disabled={currentTab ? (currentTab !== 'url'): false}>
                 URL <i style={{ fontSize: 12}} className="fas fa-plus"></i>
            </Button>
-           <Button size="sm" className="m-1" type="button" variant="outline-secondary" onClick={() => handleRestTimeFieldAdd()}>
-                Rest Time <i style={{ fontSize: 12}} className="fas fa-plus"></i>
-           </Button>
-           <Button size="sm" className="m-1" type="button" variant="outline-secondary" onClick={() => handleUploadFieldAdd()}>
+           <Button size="sm" className="m-1" type="button" variant="outline-secondary" onClick={() => {handleUploadFieldAdd(); setCurrentTab('upload');}} disabled={currentTab ? (currentTab !== 'upload'): false}>
                 Upload <i style={{ fontSize: 12}} className="fas fa-plus"></i>
            </Button>
       </div>
      )
 }
 
+const warmup: any = {};
+const mainmovement: any = {};
+const cooldown: any = {};
+
+function OnChangeExercise(data: any){
+     if(props.buildId === 1){
+          warmup.warmupExercise = data;
+          props.onChange(warmup);
+     }else if(props.buildId === 2){
+          mainmovement.mainmovementExercise = data;
+          props.onChange(mainmovement);
+     }else if(props.buildId === 3){
+          cooldown.cooldownExercise = data;
+          props.onChange(cooldown);
+     }
+}
+
+function OnChangeText(data: any){
+     if(props.buildId === 1){
+          warmup.warmupText = data;
+          props.onChange(warmup);
+     }else if(props.buildId === 2){
+          mainmovement.mainmovementText = data;
+          props.onChange(mainmovement);
+     }else if(props.buildId === 3){
+          cooldown.cooldownText = data;
+          props.onChange(cooldown);
+     }
+}
+
+function OnChangeURL(data: any){
+     if(props.buildId === 1){
+          warmup.warmupUrl = data;
+          props.onChange(warmup);
+     }else if(props.buildId === 2){
+          mainmovement.mainmovementUrl = data;
+          props.onChange(mainmovement);
+     }else if(props.buildId === 3){
+          cooldown.cooldownUrl = data;
+          props.onChange(cooldown);
+     }
+}
+
+function OnChangeUpload(data: any){
+     if(props.buildId === 1){
+          warmup.warmupUpload = data;
+          props.onChange(warmup);
+     }else if(props.buildId === 2){
+          mainmovement.mainmovementUpload = data;
+          props.onChange(mainmovement);
+     }else if(props.buildId === 3){
+          cooldown.cooldownUpload = data;
+          props.onChange(cooldown);
+     }
+}
+
      return (
           <div>
                {renderOptions()}
                {exerciseFields.map((field, idx) => {
-                              console.log(field);
                               return (
-                                   <div key={`${field}-${idx}`}>
-                                        <span>Exercise <i className="far fa-trash-alt float-right"
+                                   <div key={`${field}-${idx}`} className="mt-2">
+                                        <span className="ml-2" style={{fontSize: '18px'}}>Exercise <i className="far fa-trash-alt float-right"
                                              style={{ color: 'red', cursor: 'pointer'}}
-                                        onClick={() => handleExerciseFieldRemove(idx)}></i></span>
-                                        <ExerciseList />
+                                        onClick={() => {handleExerciseFieldRemove(idx); setCurrentTab(null);}}></i></span>
+                                        <ExerciseList onChange={OnChangeExercise}/>
                                    </div>
                               );
                               })}
@@ -154,8 +165,8 @@ const Build = () => {
                          <div className="mt-4" key={`${field}-${idx}`}>
                               <span>Add Text <i className="far fa-trash-alt float-right"
                                    style={{ color: 'red', cursor: 'pointer'}}
-                              onClick={() => handleTextFieldRemove(idx)}></i></span>
-                              <TextEditor/>
+                              onClick={() => {handleTextFieldRemove(idx); setCurrentTab(null);}}></i></span>
+                              <TextEditor onChangebuild={OnChangeText} type="build"/>
                          </div>
                     );
                     })}
@@ -163,48 +174,20 @@ const Build = () => {
                {urlFields.map((field, idx) => {
                     return (
                          <div key={`${field}-${idx}`}>
-                         <InputGroup className="mb-3">
-                              <FormControl
-                                   type="text"
-                                   placeholder="Add URL"
-                                   value={field.value || ""}
-                                   onChange={e => handleUrlFieldChange(idx, e)}
-                              />
-                              <InputGroup.Append>
-                                   <Button variant="outline-danger" onClick={() => handleUrlFieldRemove(idx)}>
-                                        <i className="far fa-trash-alt"></i>
-                                   </Button>
-                              </InputGroup.Append>
-                              </InputGroup>
-                         </div>
-                    );
-                    })}
-                    {restTimeFields.map((field, idx) => {
-                    return (
-                         <div key={`${field}-${idx}`}>
-                         <InputGroup className="mb-3">
-                              <FormControl
-                                   type="number"
-                                   placeholder="Add Rest Time"
-                                   value={field.value || ""}
-                                   onChange={e => handleRestTimeFieldChange(idx, e)}
-                              />
-                              <InputGroup.Append>
-                                   <Button variant="outline-danger" onClick={() => handleRestTimeFieldRemove(idx)}>
-                                        <i className="far fa-trash-alt"></i>
-                                   </Button>
-                              </InputGroup.Append>
-                              </InputGroup>
+                              <span>Add URL <i className="far fa-trash-alt float-right"
+                                   style={{ color: 'red', cursor: 'pointer'}}
+                              onClick={() => {handleUrlFieldRemove(idx); setCurrentTab(null);}}></i></span>
+                              <URLlist onChange={OnChangeURL}/>
                          </div>
                     );
                     })}
                     {uploadFields.map((field, idx) => {
                     return (
                          <div key={`${field}-${idx}`} className="m-2">
-                              <input type="file" id="myFile" name="filename" onChange={e => handleUploadFieldChange(idx, e)}/>
-                                        
-                                        
-                              <i className="far fa-trash-alt float-right" style={{cursor: 'pointer', color:'red'}} onClick={() => handleUploadFieldRemove(idx)}></i>
+                              <input type="file" id="myFile" name="filename" onChange={e => {handleUploadFieldChange(idx, e);
+                                   OnChangeUpload(uploadFields);
+                              }}/>
+                              <i className="far fa-trash-alt float-right" style={{cursor: 'pointer', color:'red'}} onClick={() => {handleUploadFieldRemove(idx); setCurrentTab(null);}}></i>
                          </div>
                     );
                     })}

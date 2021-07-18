@@ -28,6 +28,18 @@ export const FETCH_DATA = gql`
      }
 `
 
+export const GET_EXERCISELIST = gql`
+     query exercisesList($id: String) {
+          exercises(where: { users_permissions_user: {id: $id}}){
+               id
+               exercisename
+               users_permissions_user {
+                    id
+               }
+          }
+     }
+     `
+
 export const FETCH_FITNESSDISCPLINES = gql`
      query fitnessdiscplines{
           fitnessdisciplines(sort: "updatedAt"){

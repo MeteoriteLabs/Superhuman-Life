@@ -55,7 +55,6 @@ export default function EventsTab() {
     }
 
     function loadData(data: any) {
-        // console.log(data);
         setTableData(
             [...data.exercises].map((detail) => {
                 return {
@@ -91,7 +90,7 @@ export default function EventsTab() {
                         createEditExerciseComponent.current.TriggerForm({ id: null, type: 'create' });
                     }}
                 >
-                    <i className="fas fa-plus-circle"></i>{" "}Create New
+                    <i className="fas fa-plus-circle"></i>{" "}Create Exercise
                 </Button>
                 <CreateEditExercise ref={createEditExerciseComponent}></CreateEditExercise>
             </Card.Title>

@@ -67,17 +67,10 @@ const MuscleGroupList = (props: any) => {
           }).join(','))
      }
 
-     // onTrigger();
-
-     // function onTrigger() {
-     //      props.muscleGroupList(selected);
-     // }
-
-      FetchMuscleGroupList({ filter: searchInput, skip: skipval});
-     // console.log(select);
+     FetchMuscleGroupList({ filter: searchInput, skip: skipval});
      return (
           <>
-               <label style={{ fontSize: 17}}>Muscle Group</label>
+               <label style={{ fontSize: 17}}>Muscle group</label>
                     <InputGroup>
                          <FormControl aria-describedby="basic-addon1" placeholder="Search For Muscle Group"  id="searchInput" ref={inputField}
                          onChange={(e) => {e.preventDefault();

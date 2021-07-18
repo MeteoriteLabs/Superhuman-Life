@@ -55,18 +55,20 @@ export default function EventsTab() {
     }
 
     function loadData(data: any) {
-        //console.log(data);
         setTableData(
             [...data.workouts].map((detail) => {
-                console.log(detail);
                 return {
                     id: detail.id,
                     workoutName: detail.workouttitle,
-                    discipline: detail.fitnessdisciplines.disciplinename,
+                    discipline: detail.fitnessdisciplines.map((val: any) => {
+                        return val.disciplinename;
+                    }).join(", "),
                     level: detail.level,
                     intensity: detail.intensity,
                     calories: detail.calories,
-                    muscleGroup: detail.muscle_groups.name,
+                    muscleGroup: detail.muscle_groups.map((muscle: any) => {
+                        return muscle.name;
+                    }).join(", "),
                     equipment: detail.equipment_lists.map((equipment: any) => {
                         return equipment.name
                     }).join(", "),
@@ -88,7 +90,7 @@ export default function EventsTab() {
                         createEditWorkoutComponent.current.TriggerForm({ id: null, type: 'create' });
                     }}
                 >
-                    <i className="fas fa-plus-circle"></i>{" "}Create New
+                    <i className="fas fa-plus-circle"></i>{" "}Create Workout
                 </Button>
                 <CreateEditWorkout ref={createEditWorkoutComponent}></CreateEditWorkout>
             </Card.Title>

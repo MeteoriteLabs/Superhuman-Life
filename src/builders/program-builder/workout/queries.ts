@@ -85,7 +85,7 @@ export const CREATE_WORKOUT = gql`
         $intensity: ENUM_WORKOUTS_INTENSITY
         $level: ENUM_WORKOUTS_LEVEL
         $About: String
-        $Benefits: String
+        $Benifits: String
         $users_permissions_user: ID
         $calories: Int
         $fitnessdisciplines: [ID]
@@ -93,6 +93,9 @@ export const CREATE_WORKOUT = gql`
         $muscle_groups: [ID]
         $workout_URL: String
         $workout_text: String
+        $warmup: JSON
+        $mainmovement: JSON
+        $cooldown: JSON
     ){
         createWorkout(
             input: {
@@ -101,7 +104,7 @@ export const CREATE_WORKOUT = gql`
                     intensity: $intensity
                     level: $level
                     About: $About
-                    Benefits: $Benefits
+                    Benifits: $Benifits
                     users_permissions_user: $users_permissions_user
                     equipment_lists: $equipment_lists
                     fitnessdisciplines: $fitnessdisciplines
@@ -109,12 +112,15 @@ export const CREATE_WORKOUT = gql`
                     workout_URL: $workout_URL
                     workout_text: $workout_text
                     calories: $calories
+                    warmup: $warmup
+                    mainmovement: $mainmovement
+                    cooldown: $cooldown
                 }
             }
         ){
             workout {
                 id
-                workouttile
+                workouttitle
             }
         }
     }
@@ -126,7 +132,7 @@ export const UPDATE_WORKOUT = gql`
         $intensity: ENUM_WORKOUTS_INTENSITY
         $level: ENUM_WORKOUTS_LEVEL
         $About: String
-        $Benefits: String
+        $Benifits: String
         $users_permissions_user: ID
         $calories: Int
         $fitnessdisciplines: [ID]

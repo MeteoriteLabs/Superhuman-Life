@@ -17,7 +17,6 @@ function CreateEditMessage(props: any, ref: any) {
     const auth = useContext(AuthContext);
     const exerciseSchema: { [name: string]: any; } = require("./exercises.json");
     const [exerciseDetails, setExerciseDetails] = useState<any>({});
-    // const [render, setRender] = useState<boolean>(false);
     const [operation, setOperation] = useState<Operation>({} as Operation);
     
 
@@ -29,28 +28,16 @@ function CreateEditMessage(props: any, ref: any) {
 
     useImperativeHandle(ref, () => ({
         TriggerForm: (msg: Operation) => {
-            console.log(msg);
             setOperation(msg);
 
             if (msg && !msg.id) //render form if no message id
                 modalTrigger.next(true);
-
-            // if (msg.type === "toggle-status" && "current_status" in msg)
-            //     ToggleMessageStatus(msg.id, msg.current_status);
         }
     }));
-
-    // function loadData(data: any) {
-    //     messageSchema["1"].properties.prerecordedtype.enum = [...data.prerecordedtypes].map(n => (n.id));
-    //     messageSchema["1"].properties.prerecordedtype.enumNames = [...data.prerecordedtypes].map(n => (n.name));
-    //     messageSchema["1"].properties.prerecordedtrigger.enum = [...data.prerecordedtriggers].map(n => (n.id));
-    //     messageSchema["1"].properties.prerecordedtrigger.enumNames = [...data.prerecordedtriggers].map(n => (n.name));
-    // }
 
     function FillDetails(data: any) {
         let details: any = {};
         let msg = data.exercises;
-        console.log(msg);
         details.exercise = msg[0].exercisename;
         details.level = msg.exerciselevel;
         details.discipline = msg[0].fitnessdisciplines.map((val: any) => {
@@ -74,7 +61,6 @@ function CreateEditMessage(props: any, ref: any) {
     }
 
     function FetchData() {
-        console.log('Fetch data', operation.id);
         useQuery(FETCH_DATA, { variables: { id: operation.id }, skip: (!operation.id || operation.type === 'toggle-status'), onCompleted: (e: any) => { FillDetails(e) } });
     }
 
@@ -86,11 +72,6 @@ function CreateEditMessage(props: any, ref: any) {
     }
 
     function CreateExercise(frm: any) {
-        console.log('create message', frm);
-        // let levelIndex = frm.level;
-        // var equipmentArray = frm.equipment.split(",");
-        // var muscleGroupArray = frm.muscleGroup.split(",");
-        // var fitnessDiscplineArray = frm.discipline.split(",");
         createExercise({ variables: {
             exercisename: frm.exercise,
             exerciselevel: ENUM_EXERCISES_EXERCISELEVEL[frm.level],
@@ -139,16 +120,17 @@ function CreateEditMessage(props: any, ref: any) {
         }
     }
 
-    FetchData();
-
     let name = "";
     if(operation.type === 'create'){
-        name="Create New";
+        name="Create New Exercise";
     }else if(operation.type === 'edit'){
         name="Edit";
     }else if(operation.type === 'view'){
         name="View";
     }
+
+    FetchData();
+
 
     return (
         <>

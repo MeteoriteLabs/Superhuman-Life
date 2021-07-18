@@ -3,12 +3,20 @@
          "title": "",
          "type": "object",
          "required": [
-             "workout"
+             "workout",
+             "intensity",
+             "level",
+             "discipline",
+             "about",
+            "benefits",
+            "calories",
+            "equipment",
+            "muscleGroup"
          ],
          "properties": {
              "workout": {
                  "type": "string",
-                 "title": "Workout Name"
+                 "title": "Workout name"
              },
              "intensity": {
                  "type": "number",
@@ -27,12 +35,13 @@
                  "enumNames": [
                      "Beginner",
                      "Intermediate",
-                     "Advance", 
+                     "Advanced", 
                      "No level"
                  ]
              },
              "discipline": {
-                 "type": "string"
+                 "type": "string",
+                 "title": "Fitness discplines"
              },
              "about": {
                  "type": "string",
@@ -40,7 +49,7 @@
              },
              "benefits": {
                 "type": "string",
-                "title": "Benefits"
+                "title": "Benifits"
             },
             "addWorkout": {
                 "title": "Workout Agenda",
@@ -48,15 +57,14 @@
             },
             "calories": {
                 "type": "number",
-                "title": "Total Calories"
+                "title": "Total calories",
+                "minimum": 1
             },
             "equipment": {
-               "type": "string",
-               "title": "Equipment"
+               "type": "string"
            },
            "muscleGroup": {
-               "type": "string",
-               "title": "Muscle Group"
+               "type": "string"
            }
          },
          "definitions": {
@@ -64,8 +72,9 @@
                 "title": "Add Workout",
                 "type": "object",
                 "properties": {
-                    "addWorkout": {
+                    "AddWorkout": {
                         "type": "string",
+                        "title": "Add workout",
                         "enum": [
                             "Build",
                             "Add URL",
@@ -76,38 +85,40 @@
                     }
                 },
                 "required": [
-                    "addWorkout"
+                    "AddWorkout"
                 ],
                 "dependencies": {
-                    "addWorkout": {
+                    "AddWorkout": {
                         "oneOf": [
                             {
                                 "properties": {
-                                    "addWorkout": {
+                                    "AddWorkout": {
                                         "enum": [
                                             "Add URL"
                                         ]
                                     },
                                     "AddURL": {
-                                        "type": "string"
+                                        "type": "string",
+                                        "title": "Add URL"
                                     }
                                 }
                             },
                             {
                                 "properties": {
-                                    "addWorkout": {
+                                    "AddWorkout": {
                                         "enum": [
                                             "Text"
                                         ]
                                     },
-                                    "Add Text": {
-                                        "type": "string"
+                                    "AddText": {
+                                        "type": "string",
+                                        "title": "Add Text"
                                     }
                                 }
                             },
                             {
                                 "properties": {
-                                    "addWorkout": {
+                                    "AddWorkout": {
                                         "enum": [
                                             "Upload"
                                         ]
@@ -121,7 +132,7 @@
                             },
                             {
                                 "properties": {
-                                    "addWorkout": {
+                                    "AddWorkout": {
                                         "enum": [
                                             "Build"
                                         ]
