@@ -4,7 +4,6 @@ import React from 'react'
 export default function ModalCustomClasses(PTProps) {
     // console.log(props)
     // const { schema, onChange, label, value } = props
-    // console.log(PTProps)
     const { props } = PTProps;
     const duration = PTProps.PTProps.properties.title_package.duration;
     const offlineClasses = PTProps.PTProps.properties.offlineClasses.value
@@ -12,18 +11,17 @@ export default function ModalCustomClasses(PTProps) {
     const restDay = PTProps.PTProps.properties.restDay.value
 
 
-    PTProps.PTProps.properties.dayAvailable.value = duration - offlineClasses - onlineClasses - restDay
-    props.schema.maximum = PTProps.PTProps.properties.dayAvailable.value
+    PTProps.PTProps.properties.dayAvailable.value = duration - offlineClasses -  onlineClasses - restDay
+    // props.schema.maximum = PTProps.PTProps.properties.dayAvailable.value
 
-    if(PTProps.PTProps.properties.dayAvailable.value  <= 0){
+    if(PTProps.PTProps.properties.dayAvailable.value  === 0){
         props.schema.maximum = 30
+    }else if (PTProps.PTProps.properties.dayAvailable.value  < 0){
+        props.schema.maximum = 0
     }
 
-    if(props.label === "Online"){
-        PTProps.PTProps.properties.offlineClasses.value = 0
-    }else if (props.label === "Offline"){
-        PTProps.PTProps.properties.onlineClasses.value = 0
-    }
+
+
 
     // console.log("dayAvailable", PTProps.PTProps.properties.dayAvailable.value);
     // console.log('mode',PTProps.PTProps.properties.currentMode.typeMode )
@@ -38,20 +36,21 @@ export default function ModalCustomClasses(PTProps) {
                     className="py-2 px-2"
                     // value={props.value}
                     pattern="[0-9]+"
-                    defaultValue="0"
                     onChange={(event: any) => {
+                  
                         if (props.label === 'Offline') {
                             PTProps.PTProps.properties.offlineClasses.value = parseInt(event.target.value)
                         } else if (props.label === 'Online') {
                             PTProps.PTProps.properties.onlineClasses.value = parseInt(event.target.value)
                         }
-                        // schema.maximum -= event.target.value
+
+                        // props.schema.maximum -= event.target.value
                         props.onChange(parseInt(event.target.value))
 
                     }}
                     type="number"
                     min="0"
-                    // max={PTProps.PTProps.properties.dayAvailable.value < 0 ? 30 : PTProps.PTProps.properties.dayAvailable.value}
+                    // max={PTProps.PTProps.properties.dayAvailable.value <= 0 ? 0 : PTProps.PTProps.properties.dayAvailable.value}
                     max="30"
                 />
                 

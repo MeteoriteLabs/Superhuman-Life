@@ -1,32 +1,34 @@
+
 import { Fragment } from "react";
 import { useTable, useExpanded } from "react-table";
 import "./table.css";
-function CustomTable({ data, columns }: any) {
+function Table({ data, columns, selectedDuration }: any) {
     const {
         getTableProps,
         getTableBodyProps,
         headerGroups,
         rows,
         prepareRow,
-    } = useTable({ columns, data }, useExpanded);
+    } = useTable({ columns, data } ,useExpanded);
+
 
     return (
         <div className="table-responsive">
             <table {...getTableProps()} className="table">
                 <thead >
                     {headerGroups.map(headerGroup => (
-                        <tr {...headerGroup.getHeaderGroupProps()}>
+                        <tr  {...headerGroup.getHeaderGroupProps()}>
                             {headerGroup.headers.map(column => (
-                                <th className="tableHeader" {...column.getHeaderProps()}>
+                                <th className="tableHeader border-0 text-center" {...column.getHeaderProps()}>
                                     {column.render("Header")}
                                 </th>
                             ))}
                         </tr>
                     ))}
-                    {!rows.length && 
+                    {!rows.length &&
                         <tr className="rowCard text-center">
                             <td colSpan={columns.length}>No data</td>
-                    </tr>
+                        </tr>
                     }
                 </thead>
                 <tbody  {...getTableBodyProps()}>
@@ -37,10 +39,11 @@ function CustomTable({ data, columns }: any) {
                             <Fragment key={rowProps.key}>
                                 <tr className="rowCard" {...row.getRowProps()}>
                                     {row.cells.map(cell => (
-                                        <td {...cell.getCellProps()}>
+                                        <td className='bodyTd ml-3'{...row.getRowProps()}>
                                             {cell.render("Cell")}
                                         </td>
                                     ))}
+
                                 </tr>
                             </Fragment>
                         );
@@ -51,4 +54,4 @@ function CustomTable({ data, columns }: any) {
     );
 }
 
-export default CustomTable;
+export default Table;

@@ -1,0 +1,16 @@
+.select-basic{
+    background: transparent !important;
+    color:black !important
+}
+
+.select-basic:hover{
+    background-color: transparent !important;
+    background: transparent !important;
+    color:black !important
+};
+
+.discipline-tag{
+    padding: 1rem 2rem;
+    background-color: #647A8C;
+}
+

@@ -1,0 +1,277 @@
+{
+    "1": {
+        "title": "",
+        "type": "object",
+        "required": [
+           "disciplines"
+        ],
+        "properties": {
+            "packagename": {
+                "type": "string",
+                "title": "Name of Package"
+            },
+            "disciplines": {
+                "type": "string",
+                "title": "Disciplines"
+            },
+            "tags": {
+                "type": "string",
+                "title": "Tags"
+            },
+            "level": {
+                "type": "string",
+                "title": "Level",
+                "enum": [
+                    "Beginner",
+                    "Intermediate",
+                    "Advanced"
+                ]
+            },
+            "Status": {
+                "type": "string",
+                "title": "Visiblity",
+                "enum": [
+                    "true",
+                    "false"
+                ]
+            }
+        }
+    },
+    "2": {
+        "title": "",
+        "type": "object",
+        "required": [
+          
+        ],
+        "properties": {
+            "aboutpackage": {
+                "type": "string",
+                "title": "About"
+            },
+            "benefits": {
+                "type": "string",
+                "title": "Benefits"
+            },
+            "ptclasssize": {
+                "type": "string",
+                "title": "Class Size",
+                "enum": [
+                    "Solo",
+                    "Couple",
+                    "Family"
+                ]
+            },
+
+            "intropicture": {
+                "type": "string",
+                "format": "data-url",
+                "title": "Intro Picture"
+            },
+            
+            "video": {
+                "type": "string",
+                "title": "Intro Video",
+                "format": "data-url"
+            },
+            "introvideourl": {
+                "type": "string",
+                "title": "Or add video URL",
+                "format": "uri"
+            }
+        }
+    },
+    "3": {
+        "title": "Program Details",
+        "type": "object",
+        "required": [
+           
+        ],
+        "properties": {
+            "mode": {
+                "title": "Mode",
+                "type": "string",
+                "enum": [
+                    "Online",
+                    "Offline",
+                    "Hybrid"
+                ]
+            },
+            "title_package": {
+                "title": "A null field",
+                "type": "string",
+                "duration":30
+            },
+            "onlineClasses":{
+                "title":"onlineClasses",
+                "type": "null",
+                "value":0
+            },
+            "restDay":{
+                "title":"restDay",
+                "type": "null",
+                "value":0
+            },
+            "offlineClasses":{
+                "title":"offlineClasses",
+                "type": "null",
+                "value":0
+            },
+            "dayAvailable":{
+                "title":"dayAvailable",
+                "type": "null",
+                "value":0
+            }
+        },
+        "dependencies": {
+            "mode": {
+                "oneOf": [
+                    {
+                        "properties": {
+                            "mode": {
+                                "title": "Online",
+                                "type": "string",
+                                "enum": [
+                                    "Online"
+                                ]
+                            },
+                            "ptonline": {
+                                "title": "Online",
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 30,
+                                "default":"0",
+                                "value":0
+                            },
+                            "restdays": {
+                                "title": "Rest Days",
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 30,
+                                "default":"0",
+                                "value":0
+                                
+                            }
+                        }
+                    },
+                    {
+                        "properties": {
+                            "mode": {
+                                "title": "Offline",
+                                "type": "string",
+                                "enum": [
+                                    "Offline"
+                                ]
+                            },
+                            "address": {
+                                "title": "address",
+                                "type": "string",
+                                "enum":[]
+                            },
+                            "ptoffline": {
+                                "title": "Offline",
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 30,
+                                "default":"0",
+                                "value":0
+                            },
+                            "restdays": {
+                                "title": "Rest Days",
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 30,
+                                "default":"0",
+                                "value":0
+                            }
+                        }
+                    },
+                    {
+                        "properties": {
+                            "mode": {
+                                "title": "Hybrid",
+                                "type": "string",
+                                "enum": [
+                                    "Hybrid"
+                                ],
+                                "default":"0"
+                            },
+                            "address": {
+                                "title": "address",
+                                "type": "string",
+                                "enum":[]
+                            },
+                            "ptonline": {
+                                "title": "Online",
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 30,
+                                "default":"0",
+                                "value":0
+                            },
+                            "ptoffline": {
+                                "title": "Offline",
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 30,
+                                "default":"0",
+                                "value":0
+                            },
+                            "restdays": {
+                                "title": "Rest Days",
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 30,
+                                "default":"0",
+                                  "value":0
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+        
+    },
+    "4": {
+        "title": "For Programs",
+        "type": "object",
+        "properties": {
+            "start_day_after": {
+                "type": "string",
+                "title": "Consumer can choose start date, after",
+                "description": "This lead time will help you discuss, understand, request data and then build a custom program for the client.",
+                "enum": [
+                    "1 days",
+                    "2 days",
+                    "3 days",
+                    "4 days",
+                    "5 days",
+                    "6 days"
+                ]
+            }
+        }
+    },
+    "5": {
+        "title": "",
+        "type": "object",
+        "properties": {
+            "pricing_plan":{
+                "type":"string",
+                "title" :"Pricing Plan"
+            }
+        }
+    },
+    "6":{
+        "title":"Preview",
+        "type":"object",
+        "properties":{
+            "carousel":{
+                "type":"string",
+                "title":"carousel"
+            },
+            "link":{
+                "type":"null",
+                "title":"carousel"
+            }
+        }
+    }
+}
