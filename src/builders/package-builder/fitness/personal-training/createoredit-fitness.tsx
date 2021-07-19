@@ -58,7 +58,7 @@ function CreateEditFitness(props: any, ref: any) {
     const ptSchema: {} = require("./pt.json");
 
     const loadData = (data) => {
-        console.log("data address", data)
+        // console.log("data address", data)
         //    ptSchema[3].dependencies.mode.oneOf[1].properties.address.enum = data.addresses.map(item => `${item.address1} ${item.address2} ${item.city} ${item.state} ${item.country}`);
         //    ptSchema[3].dependencies.mode.oneOf[2].properties.address.enum = data.addresses.map(item => `${item.address1} ${item.address2} ${item.city} ${item.state} ${item.country}`); 
         // ptSchema[3].dependencies.mode.oneOf[1].properties.address.enum = data.addresses.map(item => item.id);

@@ -5,7 +5,7 @@ import { Typeahead } from 'react-bootstrap-typeahead';
 import { GET_FITNESS_DISCIPLINES } from '../graphQL/queries';
 
 export default function FitnessMultiSelect(props) {
-    console.log("props disciplines", props.value);
+
 
     let [multiSelections, setMultiSelections] = useState([]);
     const [fitnessdisciplines, setFitnessdisciplines] = useState([]);
@@ -42,7 +42,7 @@ export default function FitnessMultiSelect(props) {
     }, [])
 
 
-    console.log("multiSelections",multiSelections)
+
 
     FetchData()
     return <div>

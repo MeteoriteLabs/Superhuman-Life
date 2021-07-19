@@ -27,12 +27,18 @@
                     "Advanced"
                 ]
             },
-            "Status": {
+            "is_private": {
                 "type": "string",
                 "title": "Visiblity",
-                "enum": [
-                    "true",
-                    "false"
+                "oneOf":[
+                    {
+                        "title":"Public",
+                        "const":true
+                    },
+                    {
+                        "title":"Private",
+                        "const":false
+                    }
                 ]
             }
         }
