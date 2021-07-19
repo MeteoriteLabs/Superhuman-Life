@@ -13,6 +13,7 @@ import './pt.css'
 import * as _ from "lodash";
 import { CREATE_PT_PACKAGE, DELETE_PACKAGE, UPDATE_PACKAGE_STATUS } from '../graphQL/mutations';
 import StatusModal from '../../../../components/StatusModal/StatusModal';
+import FitnessMultiSelect from '../modalCustom/FitnessMultiSelect'
 
 interface Operation {
     id: string;
@@ -54,74 +55,41 @@ function CreateEditFitness(props: any, ref: any) {
     const [formData, setFormData] = useState<any>('')
 
 
-
-
     const ptSchema: {} = require("./pt.json");
-    const loadPTSchema: {} = require("./loadPTSchema.json")
 
-
-    const RenderDiscipline = (props: any) => {
-        const { data, loading, error } = useQuery(GET_FITNESS_DISCIPLINES);
-        const { label, id } = props;
-        if (loading) return <p>...loading</p>
-        if (!loading && !error) {
-            const serverKeyMap = {
-                __typename: "__typename",
-                disciplinename: "label",
-                id: "id"
-            };
-            let resObj = data.fitnessdisciplines.map((item: any) => _.mapKeys(item, (value: any, key: any) => {
-                return serverKeyMap[key]
-            }))
-
-            return <div>
-                <label>{props.label}</label>
-                <Typeahead
-                    id="basic-typeahead-multiple"
-                    options={resObj}
-                    placeholder="Choose your discpline ... "
-                    onChange={(e) => {
-                        props.onChange(JSON.stringify(e))
-                    }}
-                    multiple />
-            </div>
-        }
-    }
-
-    
-    const loadData = (data) =>{
+    const loadData = (data) => {
         console.log("data address", data)
         //    ptSchema[3].dependencies.mode.oneOf[1].properties.address.enum = data.addresses.map(item => `${item.address1} ${item.address2} ${item.city} ${item.state} ${item.country}`);
         //    ptSchema[3].dependencies.mode.oneOf[2].properties.address.enum = data.addresses.map(item => `${item.address1} ${item.address2} ${item.city} ${item.state} ${item.country}`); 
-        ptSchema[3].dependencies.mode.oneOf[1].properties.address.enum = [...data.addresses].map(item => item.id);
-        ptSchema[3].dependencies.mode.oneOf[2].properties.address.enum = data.addresses.map(item =>item.id); 
+        // ptSchema[3].dependencies.mode.oneOf[1].properties.address.enum = data.addresses.map(item => item.id);
+        // ptSchema[3].dependencies.mode.oneOf[2].properties.address.enum = data.addresses.map(item => item.id);
     }
 
     useQuery(GET_ADDRESS, {
-        onCompleted:loadData
+        onCompleted: loadData
     });
 
-    console.log(ptSchema)
 
-    // const RenderLocation = ({ onChange, label }: any) => {
-    //     const { data, loading, error } = useQuery(GET_ADDRESS);
-    //     console.log("data address", data)
-    //     if (loading) return <p>...loading</p>
-    //     if (!loading && !error) {
-    //         ptSchema[3].properties.address.enum = data.address.map(item => item.id)
-    //         return <div>
-    //             <label>{label}</label>
-    //             {data.addresses?.map((item: any, index: any) => {
-    //                 return <div key={index}>
-    //                     <label className='ml-3'>
-    //                         <input type="radio" id={item.id} name='address' value={item.id} onChange={(event) => onChange(event.target.value)} />
-    //                         <span className='ml-3'>{item.address1} {item.address2} {item.city} {item.state} {item.country}</span>
-    //                     </label>
-    //                 </div>
-    //             })}
-    //         </div>
-    //     }
-    // };
+
+    const RenderLocation = (props: any) => {
+        const { data, loading, error } = useQuery(GET_ADDRESS);
+        console.log("data address", data)
+        if (loading) return <p>...loading</p>
+        if (!loading && !error) {
+            // ptSchema[3].properties.address.enum = data.address.map(item => item.id)
+            return <div>
+                <label>{props.label}</label>
+                {data.addresses?.map((item: any, index: any) => {
+                    return <div key={index}>
+                        <label className='ml-3'>
+                            <input type="radio" checked={props.value === item.id} id={item.id} name='address' value={item.id} onChange={(event) => props.onChange(event.target.value)} />
+                            <span className='ml-3'>{item.address1} {item.address2} {item.city} {item.state} {item.country}</span>
+                        </label>
+                    </div>
+                })}
+            </div>
+        }
+    };
 
     const customTextTitlePackage = ({ schema }: any) => {
         return <div className='text-center font-weight-bold mx-auto w-50 py-3 px-2 mt-5' style={{ boxShadow: '0px 7px 15px -5px #000000', borderRadius: '5px' }}>
@@ -279,17 +247,18 @@ function CreateEditFitness(props: any, ref: any) {
 
 
     const widgets = {
-        ModalCustomClasses
+        ModalCustomClasses,
+        FitnessMultiSelect
     }
 
     const uiSchema: any = {
         "disciplines": {
-            'ui:widget': RenderDiscipline
+            'ui:widget': FitnessMultiSelect
         },
         "address": {
-            // "ui:widget": RenderLocation;
-            "ui:widget": "radio",
-            
+            "ui:widget": RenderLocation
+            // "ui:widget": "radio",
+
         },
         "title_package": {
             "ui:widget": customTextTitlePackage
@@ -316,11 +285,12 @@ function CreateEditFitness(props: any, ref: any) {
                 "inline": true,
             },
         },
-        "Status": {
+        "is_private": {
             "ui:widget": "radio",
             "ui:options": {
-                "inline": true
-            }
+                "inline": true,
+            },
+
         },
         "mode": {
             "ui:widget": "radio",
@@ -372,10 +342,15 @@ function CreateEditFitness(props: any, ref: any) {
     }
 
 
+    if (operation.actionType === "edit" || operation.actionType === "view") {
+    }
+
+
     const FetchData = () => {
         useQuery(GET_SINGLE_PACKAGE_BY_ID, {
             variables: {
                 id: operation.id,
+                skip: (!operation.id),
                 users_permissions_user: auth.userid
             },
             onCompleted: (dataPackage: any) => {
@@ -384,17 +359,17 @@ function CreateEditFitness(props: any, ref: any) {
         });
     };
 
-    
-    if (operation.actionType === "edit" || operation.actionType === "view") {
-    }
+
     FetchData()
+
+
 
 
 
     const FillDetails = (dataPackage: any) => {
         console.log('dataPackage', dataPackage.fitnesspackage);
         const packageDetail = dataPackage.fitnesspackage;
-        const { packagename, tags, disciplines, fitness_package_type, aboutpackage, benefits, level, mode, address, ptclasssize, ptoffline, ptonline, restdays, fitnesspackagepricing, is_private, Status, introvideourl } = packageDetail
+        const { packagename, tags, disciplines, fitness_package_type, aboutpackage, benefits, level, mode, address, ptclasssize, ptoffline, ptonline, restdays, fitnesspackagepricing, Status, introvideourl, is_private } = packageDetail
 
         let updateFormData: any = {};
         updateFormData.packagename = packagename;
@@ -412,11 +387,9 @@ function CreateEditFitness(props: any, ref: any) {
         updateFormData.restdays = restdays;
         updateFormData.duration = fitnesspackagepricing[0].packagepricing.map(item => item.duration);
         updateFormData.mrp = fitnesspackagepricing[0].packagepricing.map(item => item.mrp);
-        // updateFormData.Status = is_private
-        updateFormData.Status = Status.toString();
-        updateFormData.introvideourl = introvideourl
+        updateFormData.is_private = is_private;
+        updateFormData.introvideourl = introvideourl;
 
-        console.log('updateFormData', updateFormData);
         setFormData(updateFormData)
 
         //if message exists - show form only for edit and view
@@ -428,7 +401,6 @@ function CreateEditFitness(props: any, ref: any) {
 
 
     console.log('formData', formData)
-
 
 
 
@@ -456,11 +428,13 @@ function CreateEditFitness(props: any, ref: any) {
 
     useImperativeHandle(ref, () => ({
         TriggerForm: (msg: Operation) => {
+            console.log(msg)
             setOperation(msg);
             if (msg && !msg.id) //render form if no message id
                 setRender(true);
             // if (msg.type === "toggle-status" && "current_status" in msg)
             //     ToggleMessageStatus(msg.id, msg.current_status);
+
         }
 
 
@@ -476,14 +450,14 @@ function CreateEditFitness(props: any, ref: any) {
 
     function EditMessage(frm: any) {
         console.log('edit message');
-        // useMutation(UPDATE_MESSAGE, { variables: frm, onCompleted: (d: any) => { console.log(d); } });
-        // editMessage({variables: frm });
+
+
+
     }
 
     function ViewMessage(frm: any) {
         console.log('view message');
-        //use a variable to set form to disabled/not editable
-        // useMutation(UPDATE_MESSAGE, { variables: frm, onCompleted: (d: any) => { console.log(d); } })
+
     }
 
     const DeletePackage = (id: any) => {
@@ -545,7 +519,7 @@ function CreateEditFitness(props: any, ref: any) {
                     formSubmit={(frm: any) => OnSubmit(frm)}
                     setRender={setRender}
                     widgets={widgets}
-                    formData={formData}
+                    formData={operation.id && formData}
                     classesValidation={ptSchema[3]}
                 />
             }
