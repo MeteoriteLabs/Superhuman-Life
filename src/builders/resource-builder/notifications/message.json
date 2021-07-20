@@ -36,8 +36,7 @@
             },
             "mediaurl": {
                 "title": "Url (Picture or Video)",
-                "type": "string",
-                "format": "data-url"
+                "type": "string"
                 
             },
             "or": {
@@ -45,11 +44,8 @@
                 "description": "OR",
                 "type": "null"
               },
-            "file": {
-                "type": "string",
-                "format": "data-url",
-                "title": "Upload (Picture or Video)"
-                
+            "upload": {
+                "type": "string"
             }
         }
     }

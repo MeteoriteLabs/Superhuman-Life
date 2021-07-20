@@ -8,6 +8,7 @@
     "@ckeditor/ckeditor5-react": "^3.0.2",
     "@rjsf/bootstrap-4": "^2.5.1",
     "@rjsf/core": "^2.5.1",
+    "aws-sdk": "^2.948.0",
     "graphql": "^15.5.0",
     "react": "^17.0.2",
     "react-bootstrap": "^1.6.0",
