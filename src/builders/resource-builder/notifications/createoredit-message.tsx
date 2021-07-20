@@ -5,7 +5,7 @@ import { GET_TRIGGERS, ADD_MESSAGE, UPDATE_MESSAGE, GET_MESSAGE, DELETE_MESSAGE,
 import AuthContext from "../../../context/auth-context";
 import StatusModal from "../../../components/StatusModal/StatusModal";
 import {Subject} from 'rxjs';
-
+import {schema, widgets} from "./schema"
 
 interface Operation {
     id: string;
@@ -17,7 +17,7 @@ interface Operation {
 function CreateEditMessage(props: any, ref: any) {
     const auth = useContext(AuthContext);
     const messageSchema: { [name: string]: any; } = require("./message.json");
-    const uiSchema: {} = require("./schema.json");
+    //const uiSchema: {} = require("./schema.tsx");
     const [messageDetails, setMessageDetails] = useState<any>({});
     const [operation, setOperation] = useState<Operation>({} as Operation);
     
@@ -130,11 +130,12 @@ function CreateEditMessage(props: any, ref: any) {
         {operation.type==='create' && <ModalView
                     name={name}
                     isStepper={false}
-                    formUISchema={uiSchema}
+                    formUISchema={schema}
                     formSchema={messageSchema}
                     showing={operation.modal_status}
                     formSubmit={name ==="View"? () => { modalTrigger.next(false);}:(frm: any) => { OnSubmit(frm); }}
                     formData={messageDetails}
+                    widgets={widgets}
                     modalTrigger={modalTrigger}
             />}
              
