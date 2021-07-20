@@ -8,7 +8,7 @@ export default function PackagePage() {
             <h3>Packages</h3>
             <Card className="shadow-sm mt-3" border="light">
                 <Card.Body>
-                    <Tabs variant="pills" transition={false} defaultActiveKey="fitness">
+                    <Tabs variant="pills" transition={false} defaultActiveKey="evfitnessents">
                     
                         <Tab eventKey="fitness" title="Fitness">
                             <FitnessTab />

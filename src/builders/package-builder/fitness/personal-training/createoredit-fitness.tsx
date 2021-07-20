@@ -6,8 +6,7 @@ import { Table } from "react-bootstrap";
 import ModalCustomClasses from '../widgetCustom/FitnessClasses';
 import ModalCustomRestday from '../widgetCustom/FitnessRestday';
 import { useMutation, useQuery } from '@apollo/client';
-import { Typeahead } from 'react-bootstrap-typeahead'
-import { GET_ADDRESS, GET_FITNESS_DISCIPLINES, GET_SINGLE_PACKAGE_BY_ID } from '../graphQL/queries';
+import { GET_SINGLE_PACKAGE_BY_ID } from '../graphQL/queries';
 import ModalPreview from '../widgetCustom/FitnessPreview';
 import './pt.css'
 import * as _ from "lodash";
@@ -57,14 +56,6 @@ function CreateEditFitness(props: any, ref: any) {
 
     const ptSchema: {} = require("./pt.json");
 
-    const loadData = (data) => {
-        // console.log("data address", data)
-        //    ptSchema[3].dependencies.mode.oneOf[1].properties.address.enum = data.addresses.map(item => `${item.address1} ${item.address2} ${item.city} ${item.state} ${item.country}`);
-        //    ptSchema[3].dependencies.mode.oneOf[2].properties.address.enum = data.addresses.map(item => `${item.address1} ${item.address2} ${item.city} ${item.state} ${item.country}`); 
-        // ptSchema[3].dependencies.mode.oneOf[1].properties.address.enum = data.addresses.map(item => item.id);
-        // ptSchema[3].dependencies.mode.oneOf[2].properties.address.enum = data.addresses.map(item => item.id);
-    }
-
 
     const customTextTitlePackage = ({ schema }: any) => {
         return <div className='text-center font-weight-bold mx-auto w-50 py-3 px-2 mt-5' style={{ boxShadow: '0px 7px 15px -5px #000000', borderRadius: '5px' }}>
@@ -105,10 +96,8 @@ function CreateEditFitness(props: any, ref: any) {
                         const updateVoucher = arrPrice.fitnesspackagepricing.map((item) => {
                             return { ...item, voucher: item.voucher }
                         })
-
                         updateVoucher[index].voucher = e.target.value;
                         setArrPrice({ ...arrPrice, fitnesspackagepricing: updateVoucher })
-
                     }}
                 >
                     <option value='0'>Choose voucher</option>
