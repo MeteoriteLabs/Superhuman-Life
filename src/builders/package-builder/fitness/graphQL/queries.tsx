@@ -47,6 +47,7 @@ export const GET_FITNESS = gql`
             groupoffline
             grouponline
             recordedclasses
+            bookingleadday
             fitness_package_type{
               id
               type
@@ -84,6 +85,7 @@ export const GET_SINGLE_PACKAGE_BY_ID = gql`
             groupoffline
             recordedclasses
             restdays
+            bookingleadday
             fitnesspackagepricing{
               id
               packagepricing

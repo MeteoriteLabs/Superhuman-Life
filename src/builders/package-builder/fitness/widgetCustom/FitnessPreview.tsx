@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Carousel, Card, Button } from 'react-bootstrap';
-import './modelPreview.css'
+import './fitnessPreview.css'
 
 
 

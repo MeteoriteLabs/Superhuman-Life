@@ -28,7 +28,7 @@
                 ]
             },
             "is_private": {
-                "type": "string",
+                "type": "boolean",
                 "title": "Visiblity",
                 "oneOf":[
                     {
@@ -170,8 +170,8 @@
                             },
                             "address": {
                                 "title": "address",
-                                "type": "string",
-                                "enum":[]
+                                "type": "string"
+                                
                             },
                             "ptoffline": {
                                 "title": "Offline",
@@ -203,8 +203,7 @@
                             },
                             "address": {
                                 "title": "address",
-                                "type": "string",
-                                "enum":[]
+                                "type": "string"
                             },
                             "ptonline": {
                                 "title": "Online",
@@ -241,17 +240,17 @@
         "title": "For Programs",
         "type": "object",
         "properties": {
-            "start_day_after": {
-                "type": "string",
+            "bookingleadday": {
+                "type": "number",
                 "title": "Consumer can choose start date, after",
                 "description": "This lead time will help you discuss, understand, request data and then build a custom program for the client.",
                 "enum": [
-                    "1 days",
-                    "2 days",
-                    "3 days",
-                    "4 days",
-                    "5 days",
-                    "6 days"
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6
                 ]
             }
         }

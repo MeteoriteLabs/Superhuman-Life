@@ -8,7 +8,7 @@ import _ from 'lodash'
 import ActionButton from "../../../components/actionbutton";
 
 import CreateEditFitness from "./personal-training/createoredit-fitness";
-import { GET_FITNESS } from "./graphQL/queries";
+import { GET_FITNESS, GET_FITNESS_PACKAGE_TYPES } from "./graphQL/queries";
 
 
 export default function FitnessTab(props) {
@@ -18,15 +18,30 @@ export default function FitnessTab(props) {
     const [selectedDuration, setSelectedDuration] = useState<any>('');
     const [currentIndex, setCurrentIndex] = useState<any>('');
 
-    useEffect(() => {
 
-    }, [])
-    console.log('selectedDuration', selectedDuration);
-    console.log('currentIndex', currentIndex)
+    // console.log('selectedDuration', selectedDuration);
+    // console.log('currentIndex', currentIndex)
 
     const columns = useMemo<any>(() => [
         { accessor: "packagename", Header: "Package Name" },
-        { accessor: "type", Header: "Type" },
+        {
+            accessor: "type", Header: "Type", Cell: ({ row }: any) => {
+                return <div >
+                    {row.original.type === "Group Class" ? <div>
+                        <img src='./assets/GroupType.svg' alt="GroupType" />
+                    </div> : ""}
+                    {row.original.type === "Personal Training" ? <div>
+                        <img src='./assets/PTType.svg' alt="PTType" />
+                    </div> : ""}
+                    {row.original.type === "Classic Class" ? <div>
+                        <img src='./assets/ClassicType.svg' alt="ClassicType" />
+                    </div> : ""}
+                    {row.original.type === "Custom Fitness" ? <div>
+                        <img src='./assets/CustomType.svg' alt="CustomType" />
+                    </div> : ""}
+                </div>
+            }
+        },
         {
             accessor: "details", Header: "Details",
             Cell: ({ row }: any) => {
@@ -107,8 +122,9 @@ export default function FitnessTab(props) {
         {
             id: "edit",
             Header: "Actions",
-            Cell: ({ row }: any) => (
-                <ActionButton
+            Cell: ({ row }: any) => {
+
+                return <ActionButton
                     action1="Edit"
                     actionClick1={() => { createEditPackage.current.TriggerForm({ id: row.original.id, actionType: 'edit' }) }}
                     action2="View"
@@ -118,12 +134,14 @@ export default function FitnessTab(props) {
                     action4="Delete"
                     actionClick4={() => { createEditPackage.current.TriggerForm({ id: row.original.id, actionType: 'delete' }) }}
                 />
-            ),
+            }
+
         }
     ], [selectedDuration, currentIndex]);
 
     const [dataTable, setDataTable] = useState<any>([]);
 
+    const { data } = useQuery(GET_FITNESS_PACKAGE_TYPES);
 
     const FetchData = () => {
         useQuery(GET_FITNESS, {
@@ -137,6 +155,7 @@ export default function FitnessTab(props) {
         setDataTable(
             [...data.fitnesspackages].map(item => {
                 return {
+                    id: item.id,
                     packagename: item.packagename,
                     type: item.fitness_package_type.type,
                     details: [item.ptonline, item.ptoffline, item.grouponline, item.groupoffline, item.recordedclasses],
@@ -149,7 +168,6 @@ export default function FitnessTab(props) {
         setSelectedDuration(new Array(data.fitnesspackages.length).fill(0));
         setCurrentIndex(new Array(data.fitnesspackages.length).fill(1))
     }
-    console.log(dataTable)
     FetchData()
 
 
@@ -161,12 +179,12 @@ export default function FitnessTab(props) {
                         <Card.Title className="text-center">
                             <Button variant={true ? "outline-secondary" : "light"} size="sm"
                                 onClick={() => {
-                                    createEditPackage.current.TriggerForm({ id: null, actionType: 'create' });
+                                    createEditPackage.current.TriggerForm({ id: null, actionType: 'create', type: 'Personal Training' });
                                 }}
                             >
-                                <i className="fas fa-plus-circle"></i>{" "}Create PT Package
+                                <i className="fas fa-plus-circle"></i>{" "}Personal Training
                             </Button>
-                            <CreateEditFitness ref={createEditPackage}></CreateEditFitness>
+                            <CreateEditFitness packageType={data} ref={createEditPackage}></CreateEditFitness>
                         </Card.Title>
                     </Col>
                 </Row>

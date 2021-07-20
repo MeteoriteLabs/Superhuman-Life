@@ -5,11 +5,11 @@ import { Typeahead } from 'react-bootstrap-typeahead';
 import { GET_FITNESS_DISCIPLINES } from '../graphQL/queries';
 
 export default function FitnessMultiSelect(props) {
+    const { widgetProps, actionType } = props;
 
 
-    let [multiSelections, setMultiSelections] = useState([]);
+    const [multiSelections, setMultiSelections] = useState([]);
     const [fitnessdisciplines, setFitnessdisciplines] = useState([]);
-
 
 
     const FetchData = () => {
@@ -31,13 +31,17 @@ export default function FitnessMultiSelect(props) {
     }
 
 
+
+
     useEffect(() => {
-        if (props.value) {
-            if(typeof(props.value) === "string"){
-                setMultiSelections(JSON.parse(props.value))
-            }else{
-                setMultiSelections(JSON.stringify(props.value))
+        if (widgetProps.value && typeof (widgetProps.value) !== "object") {
+            if (typeof (widgetProps.value) === "string") {
+                setMultiSelections(JSON.parse(widgetProps.value))
+            } else {
+                setMultiSelections(JSON.stringify(widgetProps.value))
             }
+        } else {
+            setMultiSelections(widgetProps.value);
         }
     }, [])
 
@@ -46,8 +50,9 @@ export default function FitnessMultiSelect(props) {
 
     FetchData()
     return <div>
-        <label>{props.label}</label>
+        <label>{widgetProps.label}</label>
         <Typeahead
+            disabled={actionType === "view" ? true : false}
             selected={multiSelections}
             labelKey="disciplinename"
             id="basic-typeahead-multiple"
@@ -55,7 +60,7 @@ export default function FitnessMultiSelect(props) {
             placeholder="Choose your discpline ... "
             onChange={(e) => {
                 setMultiSelections(e)
-                props.onChange(JSON.stringify(e))
+                widgetProps.onChange(JSON.stringify(e))
             }}
             multiple />
     </div>

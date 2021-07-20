@@ -4,7 +4,7 @@ import { Theme as Bootstrap4Theme } from '@rjsf/bootstrap-4';
 import { Button, Col, Modal, ProgressBar, Row } from "react-bootstrap";
 import _ from "lodash"
 
-export default function ModalView({ name, formUISchema, formSubmit, formSchema, formData, isStepper, userData, setUserData, fitnesspackagepricing, widgets, setRender, fitness_package_type, classesValidation }: any) {
+export default function ModalView({ name, formUISchema, formSubmit, formSchema, formData, isStepper, userData, setUserData, fitnesspackagepricing, widgets, setRender, fitness_package_type, classesValidation, arrPrice, actionType }: any) {
     // console.log(userData)
     const registry = utils.getDefaultRegistry();
     const defaultFileWidget = registry.widgets["FileWidget"];
@@ -21,8 +21,8 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
         if (isStepper && step < 6) {
             console.log('formData before submit', formData);
             setStep(step + 1);
-            setFormValues({ ...formValues, ...formData, fitness_package_type });
-            setUserData({ ...formValues, ...formData, fitness_package_type })
+            setFormValues({ ...formValues, ...formData, fitness_package_type, arrPrice });
+            setUserData({ ...formValues, ...formData, fitness_package_type, arrPrice })
         } else {
             if (typeof formData.disciplines !== "object") {
                 formData.disciplines = JSON.parse(formData.disciplines).map(item => item.id)
@@ -63,6 +63,7 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
                         <Col lg={12}>
                             <div style={{ height: '400px', overflowX: 'hidden', overflowY: 'auto' }}>
                                 <Form
+                                    disabled={actionType === "view" ? true : false}
                                     uiSchema={formUISchema}
                                     schema={formSchema[step.toString()]}
                                     ref={formRef}
@@ -85,16 +86,18 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
                                 onClick={() => {
                                     setStep(step - 1);
                                     if (step === 4) {
-                                        const { properties } = classesValidation;
-                                        let { ptonline, ptoffline, restdays } = userData;
-                                        properties.onlineClasses.value = "";
-                                        properties.offlineClasses.value = "";
-                                        properties.restDay.value = "";
-                                        ptoffline = 0;
-                                        ptonline = 0;
-                                        restdays =0;
-                                        setUserData({ ...userData, ptoffline, ptonline, restdays })
-                                        setFormValues({ ...formValues, ptoffline, ptonline, restdays })
+                                        if (actionType === "create") {
+                                            const { properties } = classesValidation;
+                                            let { ptonline, ptoffline, restdays } = userData;
+                                            properties.onlineClasses.value = "";
+                                            properties.offlineClasses.value = "";
+                                            properties.restDay.value = "";
+                                            ptoffline = 0;
+                                            ptonline = 0;
+                                            restdays = 0;
+                                            setUserData({ ...userData, ptoffline, ptonline, restdays })
+                                            setFormValues({ ...formValues, ptoffline, ptonline, restdays })
+                                        }
                                     }
 
                                     // console.log(`userData ${step}`, userData)

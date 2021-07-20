@@ -3,17 +3,18 @@ import ModalView from '../../../../components/modal';
 import AuthContext from '../../../../context/auth-context';
 import { Table } from "react-bootstrap";
 
-import ModalCustomClasses from '../modalCustom/ModalCustomClasses';
-import ModalCustomRestday from '../modalCustom/ModalCustomRestday';
+import ModalCustomClasses from '../widgetCustom/FitnessClasses';
+import ModalCustomRestday from '../widgetCustom/FitnessRestday';
 import { useMutation, useQuery } from '@apollo/client';
 import { Typeahead } from 'react-bootstrap-typeahead'
 import { GET_ADDRESS, GET_FITNESS_DISCIPLINES, GET_SINGLE_PACKAGE_BY_ID } from '../graphQL/queries';
-import ModalPreview from '../modalCustom/ModalPreview';
+import ModalPreview from '../widgetCustom/FitnessPreview';
 import './pt.css'
 import * as _ from "lodash";
 import { CREATE_PT_PACKAGE, DELETE_PACKAGE, UPDATE_PACKAGE_STATUS } from '../graphQL/mutations';
 import StatusModal from '../../../../components/StatusModal/StatusModal';
-import FitnessMultiSelect from '../modalCustom/FitnessMultiSelect'
+import FitnessMultiSelect from '../widgetCustom/FitnessMultiSelect'
+import FitnessAddress from '../widgetCustom/FitnessAddress';
 
 interface Operation {
     id: string;
@@ -22,7 +23,6 @@ interface Operation {
     current_status: boolean;
 }
 function CreateEditFitness(props: any, ref: any) {
-
     const auth = useContext(AuthContext);
 
     const [render, setRender] = useState<boolean>(false);
@@ -32,23 +32,23 @@ function CreateEditFitness(props: any, ref: any) {
         fitnesspackagepricing: [
             {
                 "duration": 30,
-                "voucher": "",
-                "mrp": "",
+                "voucher": "Choose voucher",
+                "mrp": 0,
             },
             {
                 "duration": 90,
-                "voucher": "",
-                "mrp": "",
+                "voucher": "Choose voucher",
+                "mrp": 0,
             },
             {
                 "duration": 180,
-                "voucher": "",
-                "mrp": "",
+                "voucher": "Choose voucher",
+                "mrp": 0,
             },
             {
                 "duration": 360,
-                "voucher": "",
-                "mrp": "",
+                "voucher": "Choose voucher",
+                "mrp": 0,
             },
         ]
     })
@@ -65,31 +65,6 @@ function CreateEditFitness(props: any, ref: any) {
         // ptSchema[3].dependencies.mode.oneOf[2].properties.address.enum = data.addresses.map(item => item.id);
     }
 
-    useQuery(GET_ADDRESS, {
-        onCompleted: loadData
-    });
-
-
-
-    const RenderLocation = (props: any) => {
-        const { data, loading, error } = useQuery(GET_ADDRESS);
-        console.log("data address", data)
-        if (loading) return <p>...loading</p>
-        if (!loading && !error) {
-            // ptSchema[3].properties.address.enum = data.address.map(item => item.id)
-            return <div>
-                <label>{props.label}</label>
-                {data.addresses?.map((item: any, index: any) => {
-                    return <div key={index}>
-                        <label className='ml-3'>
-                            <input type="radio" checked={props.value === item.id} id={item.id} name='address' value={item.id} onChange={(event) => props.onChange(event.target.value)} />
-                            <span className='ml-3'>{item.address1} {item.address2} {item.city} {item.state} {item.country}</span>
-                        </label>
-                    </div>
-                })}
-            </div>
-        }
-    };
 
     const customTextTitlePackage = ({ schema }: any) => {
         return <div className='text-center font-weight-bold mx-auto w-50 py-3 px-2 mt-5' style={{ boxShadow: '0px 7px 15px -5px #000000', borderRadius: '5px' }}>
@@ -99,7 +74,7 @@ function CreateEditFitness(props: any, ref: any) {
 
 
     const renderClasses = (numberClass: any) => {
-        console.log(numberClass)
+        // console.log(numberClass)
         let arrayNumberClass: string[] = [];
         if (numberClass !== '') {
             arrayNumberClass[0] = numberClass
@@ -118,21 +93,28 @@ function CreateEditFitness(props: any, ref: any) {
     }
 
 
+    console.log('arrPrice', arrPrice)
     const renderVoucher = () => {
-        return [...Array(4)].map((item, index: number) => {
-            return <td key={index}><select
-                value={arrPrice.fitnesspackagepricing[index].voucher}
-                onChange={(e) => {
-                    const updateVouhcer = { ...arrPrice }
-                    updateVouhcer.fitnesspackagepricing[index].voucher = e.target.value;
-                    setArrPrice(updateVouhcer)
-                    console.log(arrPrice.fitnesspackagepricing)
-                }}
-            >
-                <option value='0'>Choose voucher</option>
-                <option value='10%'>Getfit - 10%</option>
-                <option value='20%'>Getfit - 20%</option>
-            </select></td>
+        return arrPrice.fitnesspackagepricing.map((item: any, index: number) => {
+            return <td key={index}>
+                <select
+                    disabled={operation.actionType === "view" ? true : false}
+                    // value={arrPrice.fitnesspackagepricing[i  ndex].voucher}
+                    value={item.voucher}
+                    onChange={(e) => {
+                        const updateVoucher = arrPrice.fitnesspackagepricing.map((item) => {
+                            return { ...item, voucher: item.voucher }
+                        })
+
+                        updateVoucher[index].voucher = e.target.value;
+                        setArrPrice({ ...arrPrice, fitnesspackagepricing: updateVoucher })
+
+                    }}
+                >
+                    <option value='0'>Choose voucher</option>
+                    <option value='10%'>Getfit - 10%</option>
+                    <option value='20%'>Getfit - 20%</option>
+                </select></td>
         })
     }
 
@@ -143,7 +125,7 @@ function CreateEditFitness(props: any, ref: any) {
             classOffline = 0
         }
         let totalClasses = 0;
-        console.log("classOnline", classOnline, "classOffline", classOffline)
+        // console.log("classOnline", classOnline, "classOffline", classOffline)
         let arrNumberClass: number[] = [];
         if ((classOnline && classOffline) || classOnline !== 0 || classOffline !== 0) {
             totalClasses = classOnline + classOffline;
@@ -159,34 +141,42 @@ function CreateEditFitness(props: any, ref: any) {
     }
 
     const renderSuggestedPricing = () => {
-        const arrPrice = [2500, 2500, 2500, 2500];
-        return arrPrice.map((item, index) => {
+        const arrSuggestedPrice = [2500, 2500, 2500, 2500];
+        return arrSuggestedPrice.map((item, index) => {
             return <td key={index}>Rs {item}</td>
         })
     }
 
 
-    const renderMRPInput = (props: any) => {
-        return [...new Array(4)].map((item, index) => {
-            let updateMRP = { ...arrPrice.fitnesspackagepricing[index].mrp }
+    const renderMRPInput = (props) => {
+        console.log(props)
+        return [...Array(4)].map((item, index) => {
             return <td key={index}>
                 <input
+                    disabled={operation.actionType === "view" ? true : false}
+                    value={arrPrice.fitnesspackagepricing[index].mrp}
                     className='w-75'
                     min="0"
                     max="6000"
                     type="number"
                     placeholder='Enter MRP'
                     onChange={(e) => {
-                        updateMRP = e.target.value;
-                        arrPrice.fitnesspackagepricing[index].mrp = parseInt(updateMRP)
-                        setArrPrice(arrPrice)
-                    }} /></td>
+                        props.onChange(e.target.value)
+                        const updateMRP = arrPrice.fitnesspackagepricing.map((item: any) => {
+                            return { ...item, mrp: item.mrp }
+                        })
+                        console.log('updateMRP', updateMRP);
+                        updateMRP[index].mrp = parseInt(e.target.value);
+                        setArrPrice({ ...arrPrice, fitnesspackagepricing: updateMRP })
+                    }} />
+                    </td>
         })
     }
 
+    console.log(arrPrice.fitnesspackagepricing)
 
     const customPricingTable = (props: any) => {
-        // console.log("userData", userData)
+        console.log("userData", userData)
         let { ptonline, ptoffline, mode } = userData
         if (mode === "Online" && ptoffline > 0) {
             ptonline = 0;
@@ -253,11 +243,12 @@ function CreateEditFitness(props: any, ref: any) {
 
     const uiSchema: any = {
         "disciplines": {
-            'ui:widget': FitnessMultiSelect
+            'ui:widget': (props) => <FitnessMultiSelect widgetProps={props} actionType={operation.actionType} />
         },
         "address": {
-            "ui:widget": RenderLocation
+            // "ui:widget": RenderLocation
             // "ui:widget": "radio",
+            "ui:widget": (props) => <FitnessAddress actionType={operation.actionType} widgetProps={props} />
 
         },
         "title_package": {
@@ -265,17 +256,17 @@ function CreateEditFitness(props: any, ref: any) {
         },
 
         "ptonline": {
-            "ui:widget": (props) => <ModalCustomClasses PTProps={ptSchema[3]} props={props} />
+            "ui:widget": (props) => <ModalCustomClasses actionType={operation.actionType} PTProps={ptSchema[3]} widgetProps={props} />
 
             // "ui:widget": ModalCustomClasses
         },
         "ptoffline": {
-            "ui:widget": (props) => <ModalCustomClasses PTProps={ptSchema[3]} props={props} />
+            "ui:widget": (props) => <ModalCustomClasses actionType={operation.actionType} PTProps={ptSchema[3]} widgetProps={props} />
 
         },
 
         "restdays": {
-            "ui:widget": (props: any) => <ModalCustomRestday PTProps={ptSchema[3]} props={props} />
+            "ui:widget": (props: any) => <ModalCustomRestday actionType={operation.actionType} PTProps={ptSchema[3]} widgetProps={props} />
 
         },
 
@@ -359,9 +350,7 @@ function CreateEditFitness(props: any, ref: any) {
         });
     };
 
-
     FetchData()
-
 
 
 
@@ -369,12 +358,12 @@ function CreateEditFitness(props: any, ref: any) {
     const FillDetails = (dataPackage: any) => {
         console.log('dataPackage', dataPackage.fitnesspackage);
         const packageDetail = dataPackage.fitnesspackage;
-        const { packagename, tags, disciplines, fitness_package_type, aboutpackage, benefits, level, mode, address, ptclasssize, ptoffline, ptonline, restdays, fitnesspackagepricing, Status, introvideourl, is_private } = packageDetail
+        const { packagename, tags, disciplines, fitness_package_type, aboutpackage, benefits, level, mode, address, ptclasssize, ptoffline, ptonline, restdays, fitnesspackagepricing, bookingleadday, introvideourl, is_private } = packageDetail
 
         let updateFormData: any = {};
         updateFormData.packagename = packagename;
         updateFormData.tags = tags;
-        updateFormData.disciplines = disciplines;
+        updateFormData.disciplines = JSON.stringify(disciplines);
         updateFormData.type = fitness_package_type;
         updateFormData.aboutpackage = aboutpackage
         updateFormData.benefits = benefits;
@@ -385,12 +374,13 @@ function CreateEditFitness(props: any, ref: any) {
         updateFormData.ptonline = fitness_package_type.type === "Personal Training" && ptonline;
         updateFormData.ptoffline = fitness_package_type.type === "Personal Training" && ptoffline;
         updateFormData.restdays = restdays;
-        updateFormData.duration = fitnesspackagepricing[0].packagepricing.map(item => item.duration);
-        updateFormData.mrp = fitnesspackagepricing[0].packagepricing.map(item => item.mrp);
+        updateFormData.bookingleadday = bookingleadday;
+        updateFormData.fitnesspackagepricing = fitnesspackagepricing[0].packagepricing
         updateFormData.is_private = is_private;
         updateFormData.introvideourl = introvideourl;
 
-        setFormData(updateFormData)
+        setFormData(updateFormData);
+        setArrPrice({ ...arrPrice, fitnesspackagepricing: updateFormData.fitnesspackagepricing })
 
         //if message exists - show form only for edit and view
         if (['edit', 'view'].indexOf(operation.actionType) > -1)
@@ -398,6 +388,7 @@ function CreateEditFitness(props: any, ref: any) {
         else
             OnSubmit(null);
     }
+
 
 
     console.log('formData', formData)
@@ -500,7 +491,7 @@ function CreateEditFitness(props: any, ref: any) {
 
     let fitness_package_type = '';
     if (operation.type === "Personal Training") {
-        fitness_package_type = props.packageType[0].id
+        fitness_package_type = props.packageType.fitnessPackageTypes[0].id
     }
 
     return (
@@ -518,9 +509,12 @@ function CreateEditFitness(props: any, ref: any) {
                     fitnesspackagepricing={arrPrice.fitnesspackagepricing}
                     formSubmit={(frm: any) => OnSubmit(frm)}
                     setRender={setRender}
+                    arrPrice={arrPrice}
                     widgets={widgets}
                     formData={operation.id && formData}
                     classesValidation={ptSchema[3]}
+                    actionType={operation.actionType}
+
                 />
             }
             {operation.actionType === 'delete' && <StatusModal
