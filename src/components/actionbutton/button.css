@@ -1,6 +1,9 @@
 #dropdown-basic::after {
   display: none;
 }
+.dropdown{
+  position: static !important;
+}
 .dropDown {
   border: none;
   padding-top: 5px;
@@ -12,4 +15,9 @@
 }
 .dropDown:hover {
   border: 2px solid black;
+}
+
+button.dropdown-toggle.table-dropdown{
+  border: none;
+  background-color: #FFF;
 }
