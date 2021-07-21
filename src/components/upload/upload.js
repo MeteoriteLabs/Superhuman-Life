@@ -40,7 +40,6 @@ const UploadImageToS3WithNativeSdk = () => {
         var photoKey = albumPhotosKey + file.name;
 
         const params = {
-            ACL: 'public-read',
             Body: file,
             Bucket: S3_BUCKET,
             Key: photoKey
