@@ -1,17 +1,17 @@
 import TextEditor from '../../../components/customWidgets/textEditor';
 import EquipmentSearch from '../../../components/customWidgets/equipmentList';
 import MuscleGroupSearch from '../../../components/customWidgets/muscleGroupList';
-import FitnessSelect from '../../../components/customWidgets/fitnessMultiSelect';
+import FitnessMultiSelect from '../../../components/customWidgets/fitnessMultiSelect';
 import BuildWorkout from './buildWorkout';
 
 
 export const widgets = {
-     fitnessSelect: FitnessSelect,
+     fitnessSelect: FitnessMultiSelect,
      equipmentSearch: EquipmentSearch,
      muscleGroupSearch: MuscleGroupSearch,
      textEditor: TextEditor,
      buildWorkout: BuildWorkout
- };
+};
 
 export const schema: any = {
         "level": {

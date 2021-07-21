@@ -6,13 +6,10 @@ const TextEditor = (props: any) => {
      
     const [value, setValue] = useState("");
 
+    var richText: any = {"type": "text"}
     if(props.type === "build"){
-         const richTextFields: any = {
-              "richText": {
-                   value
-              }
-         }
-          props.onChangebuild(richTextFields);
+          richText.value = value;
+          props.onChangebuild(richText);
     }else {
           props.onChange(value);
     }

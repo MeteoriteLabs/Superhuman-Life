@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { Button } from 'react-bootstrap';
+import { Button, InputGroup, FormControl } from 'react-bootstrap';
 import TextEditor from '../../../components/customWidgets/textEditor';
 import ExerciseList from '../../../components/customWidgets/exerciseList';
 import URLlist from '../search-builder/urlList';
@@ -17,6 +17,13 @@ const Build = (props: any) => {
           const values = [...uploadFields];
           values[i].value = event.target.value;
           setUploadFields(values);
+     }
+
+     function handleUrlFieldChange(i: any, event: any){
+          const values = [...urlFields];
+          values[i].type = "url";
+          values[i].value = event.target.value;
+          setUrlFields(values);
      }
 
      //These functions hanlde the adding of the input field
@@ -90,58 +97,59 @@ const Build = (props: any) => {
      )
 }
 
-const warmup: any = {};
-const mainmovement: any = {};
-const cooldown: any = {};
+var warmup: any = {};
+var mainmovement: any = {};
+var cooldown: any = {};
 
 function OnChangeExercise(data: any){
      if(props.buildId === 1){
-          warmup.warmupExercise = data;
+          warmup = data;
           props.onChange(warmup);
      }else if(props.buildId === 2){
-          mainmovement.mainmovementExercise = data;
+          mainmovement = data;
           props.onChange(mainmovement);
      }else if(props.buildId === 3){
-          cooldown.cooldownExercise = data;
+          cooldown = data;
           props.onChange(cooldown);
      }
 }
 
 function OnChangeText(data: any){
      if(props.buildId === 1){
-          warmup.warmupText = data;
+          warmup = data;
           props.onChange(warmup);
      }else if(props.buildId === 2){
-          mainmovement.mainmovementText = data;
+          mainmovement = data;
           props.onChange(mainmovement);
      }else if(props.buildId === 3){
-          cooldown.cooldownText = data;
+          cooldown = data;
           props.onChange(cooldown);
      }
 }
 
 function OnChangeURL(data: any){
+     console.log(data);
      if(props.buildId === 1){
-          warmup.warmupUrl = data;
+          warmup = data;
           props.onChange(warmup);
      }else if(props.buildId === 2){
-          mainmovement.mainmovementUrl = data;
+          mainmovement = data;
           props.onChange(mainmovement);
      }else if(props.buildId === 3){
-          cooldown.cooldownUrl = data;
+          cooldown = data;
           props.onChange(cooldown);
      }
 }
 
 function OnChangeUpload(data: any){
      if(props.buildId === 1){
-          warmup.warmupUpload = data;
+          warmup = data;
           props.onChange(warmup);
      }else if(props.buildId === 2){
-          mainmovement.mainmovementUpload = data;
+          mainmovement = data;
           props.onChange(mainmovement);
      }else if(props.buildId === 3){
-          cooldown.cooldownUpload = data;
+          cooldown = data;
           props.onChange(cooldown);
      }
 }
@@ -177,7 +185,17 @@ function OnChangeUpload(data: any){
                               <span>Add URL <i className="far fa-trash-alt float-right"
                                    style={{ color: 'red', cursor: 'pointer'}}
                               onClick={() => {handleUrlFieldRemove(idx); setCurrentTab(null);}}></i></span>
-                              <URLlist onChange={OnChangeURL}/>
+                              <InputGroup className="mb-3">
+                                   <FormControl
+                                        type="text"
+                                        placeholder="Add URL"
+                                        onChange={e => {
+                                             handleUrlFieldChange(idx,e);
+                                             OnChangeURL(urlFields);
+                                        }}
+                                   />
+                              </InputGroup>
+                              {/* <URLlist onChange={OnChangeURL} id={idx}/> */}
                          </div>
                     );
                     })}

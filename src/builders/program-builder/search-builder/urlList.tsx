@@ -4,17 +4,15 @@ import {InputGroup, FormControl } from 'react-bootstrap';
 const UrlList = (props: any) => {
 
      const [value, setValue] = useState("");
-     props.onChange(value);
+     var urlField: any = {"type": "url"}
+     urlField.value = value;
+     props.onChange(urlField);
+     console.log(value);
 
      return (
-          <InputGroup className="mb-3">
-               <FormControl
-                    type="text"
-                    placeholder="Add URL"
-                    onChange={e => {
-                         setValue(e.target.value)}}
-               />
-          </InputGroup>
+          <div>
+               hello
+          </div>
      );
 };
 

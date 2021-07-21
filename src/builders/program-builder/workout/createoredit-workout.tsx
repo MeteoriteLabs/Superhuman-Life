@@ -67,27 +67,35 @@ function CreateEditMessage(props: any, ref: any) {
         High
     }
 
+    function handleWarmupDataSubmit(data: any){
+        // if(data.addWorkout.build.warmup[0].type === 'exercise'){
+        //     return data.addWorkout.build.warmup.warmupExercise;
+        // }
+    }
+
     function CreateWorkout(frm: any) {
         if(frm.addWorkout.build){
             frm.addWorkout.build = JSON.parse(frm.addWorkout.build);
         }
-        createWorkout({ variables: {
-            workouttitle: frm.workout,
-            intensity: ENUM_WORKOUTS_INTENSITY[frm.intensity],
-            level: ENUM_EXERCISES_EXERCISELEVEL[frm.level],
-            fitnessdisciplines: frm.discipline.split(","),
-            About: frm.about,
-            Benifits: frm.benefits,
-            warmup: (frm.addWorkout.AddWorkout === "Build" ? frm.addWorkout.build.warmup : null),
-            mainmovement: (frm.addWorkout.AddWorkout === "Build" ? frm.addWorkout.build.mainMovement : null),
-            cooldown: (frm.addWorkout.AddWorkout === "Build" ? frm.addWorkout.build.coolDown : null),
-            workout_text: (frm.addWorkout.AddWorkout === "Text" ? frm.addWorkout.AddText : null),
-            workout_URL: (frm.addWorkout.AddWorkout === "Add URL" ? frm.addWorkout.AddURL : null),
-            calories: frm.calories,
-            equipment_lists: frm.equipment.split(","),
-            muscle_groups: frm.muscleGroup.split(","),
-            users_permissions_user: frm.user_permissions_user
-        }});
+        console.log(frm);
+        // console.log(handleWarmupDataSubmit(frm));
+        // createWorkout({ variables: {
+        //     workouttitle: frm.workout,
+        //     intensity: ENUM_WORKOUTS_INTENSITY[frm.intensity],
+        //     level: ENUM_EXERCISES_EXERCISELEVEL[frm.level],
+        //     fitnessdisciplines: frm.discipline.split(","),
+        //     About: frm.about,
+        //     Benifits: frm.benefits,
+        //     warmup: (frm.addWorkout.AddWorkout === "Build" ? frm.addWorkout.build.warmup : null),
+        //     mainmovement: (frm.addWorkout.AddWorkout === "Build" ? frm.addWorkout.build.mainMovement : null),
+        //     cooldown: (frm.addWorkout.AddWorkout === "Build" ? frm.addWorkout.build.coolDown : null),
+        //     workout_text: (frm.addWorkout.AddWorkout === "Text" ? frm.addWorkout.AddText : null),
+        //     workout_URL: (frm.addWorkout.AddWorkout === "Add URL" ? frm.addWorkout.AddURL : null),
+        //     calories: frm.calories,
+        //     equipment_lists: frm.equipment.split(","),
+        //     muscle_groups: frm.muscleGroup.split(","),
+        //     users_permissions_user: frm.user_permissions_user
+        // }});
     }
 
     function EditWorkout(frm: any) {

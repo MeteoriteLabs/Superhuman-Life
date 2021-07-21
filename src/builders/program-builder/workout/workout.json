@@ -40,8 +40,7 @@
                  ]
              },
              "discipline": {
-                 "type": "string",
-                 "title": "Fitness discplines"
+                 "type": "string"
              },
              "about": {
                  "type": "string",

@@ -14,6 +14,7 @@ const BuildWorkout = (props: any) => {
      const build: any = {};
 
      function OnChangeWarmUp(e: any){
+          console.log(e);     
           build.warmup = e;
           const objectToString = JSON.stringify(build);
           props.onChange(objectToString);

@@ -41,7 +41,7 @@ const ExerciseList = (props: any) => {
           const values = [...selected];
           let a = values.find((e) => e.id === id);
           if (!a){
-               values.push({ value: name, id: id}); 
+               values.push({ value: name, id: id, type: 'exercise'}); 
                setSelected(values);
           }
           inputField.current.value = "";
