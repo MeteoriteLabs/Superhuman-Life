@@ -1,4 +1,5 @@
 import React ,{useState} from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import AWS from 'aws-sdk'
 
 const S3_BUCKET ='sapien.systems';
@@ -37,7 +38,8 @@ const UploadImageToS3WithNativeSdk = () => {
     }
 
     const uploadFile = (file) => {
-        var photoKey = albumPhotosKey + file.name;
+        
+        var photoKey = albumPhotosKey + uuidv4()+ file.name;
 
         const params = {
             Body: file,
