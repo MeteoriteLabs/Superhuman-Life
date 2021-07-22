@@ -8,6 +8,7 @@
     "@ckeditor/ckeditor5-react": "^3.0.2",
     "@rjsf/bootstrap-4": "^2.5.1",
     "@rjsf/core": "^2.5.1",
+    "@types/lodash": "^4.14.171",
     "@types/react-bootstrap-typeahead": "^5.1.5",
     "graphql": "^15.5.0",
     "lodash": "^4.17.21",

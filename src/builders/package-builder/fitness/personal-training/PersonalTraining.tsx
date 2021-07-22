@@ -1,7 +1,6 @@
-import React, { useContext, useEffect, useImperativeHandle, useState } from 'react';
+import React, { useContext, useImperativeHandle, useRef, useState } from 'react';
 import ModalView from '../../../../components/modal';
 import AuthContext from '../../../../context/auth-context';
-import { Table } from "react-bootstrap";
 
 import ModalCustomClasses from '../widgetCustom/FitnessClasses';
 import ModalCustomRestday from '../widgetCustom/FitnessRestday';
@@ -9,11 +8,11 @@ import { useMutation, useQuery } from '@apollo/client';
 import { GET_SINGLE_PACKAGE_BY_ID } from '../graphQL/queries';
 import ModalPreview from '../widgetCustom/FitnessPreview';
 import './pt.css'
-import * as _ from "lodash";
-import { CREATE_PT_PACKAGE, DELETE_PACKAGE, UPDATE_PACKAGE_STATUS } from '../graphQL/mutations';
+import { CREATE_PT_PACKAGE, DELETE_PACKAGE, UPDATE_PACKAGE_PRIVATE } from '../graphQL/mutations';
 import StatusModal from '../../../../components/StatusModal/StatusModal';
 import FitnessMultiSelect from '../widgetCustom/FitnessMultiSelect'
 import FitnessAddress from '../widgetCustom/FitnessAddress';
+import FitnessPricingTable from '../widgetCustom/FitnessPricingTable'
 
 interface Operation {
     id: string;
@@ -21,38 +20,38 @@ interface Operation {
     type: 'Personal Training' | 'Group Class' | 'Custom Fitness' | 'Classic Class';
     current_status: boolean;
 }
-function CreateEditFitness(props: any, ref: any) {
+function PersonalTraining(props: any, ref: any) {
     const auth = useContext(AuthContext);
 
     const [render, setRender] = useState<boolean>(false);
     const [operation, setOperation] = useState<Operation>({} as Operation);
     const [userData, setUserData] = useState<any>('');
-    const [arrPrice, setArrPrice] = useState<any>({
-        fitnesspackagepricing: [
-            {
-                "duration": 30,
-                "voucher": "Choose voucher",
-                "mrp": 0,
-            },
-            {
-                "duration": 90,
-                "voucher": "Choose voucher",
-                "mrp": 0,
-            },
-            {
-                "duration": 180,
-                "voucher": "Choose voucher",
-                "mrp": 0,
-            },
-            {
-                "duration": 360,
-                "voucher": "Choose voucher",
-                "mrp": 0,
-            },
-        ]
-    })
-    const [formData, setFormData] = useState<any>('')
+    const [fitnesspackagepricing, setFitnesspackagepricing] = useState<any>([
+        {
+            "duration": 30,
+            "voucher": "Choose voucher",
+            "mrp": "",
+        },
+        {
+            "duration": 90,
+            "voucher": "Choose voucher",
+            "mrp": "",
+        },
+        {
+            "duration": 180,
+            "voucher": "Choose voucher",
+            "mrp": "",
+        },
+        {
+            "duration": 360,
+            "voucher": "Choose voucher",
+            "mrp": "",
+        },
+    ]
+    )
 
+ 
+    const [formData, setFormData] = useState<{ packagename: string, tags: string, disciplines: { typename: string, id: string, disciplines: string }[], type: string, aboutpackage: string, benefits: string, level: string, mode: string, address: { id: string, __typename: string }, ptclasssize: string, ptonline: number | null, ptoffline: number | null, restdays: number, bookingleadday: number, fitnesspackagepricing: any, is_private: boolean, introvideourl: string }>()
 
     const ptSchema: {} = require("./pt.json");
 
@@ -64,171 +63,14 @@ function CreateEditFitness(props: any, ref: any) {
     };
 
 
-    const renderClasses = (numberClass: any) => {
-        // console.log(numberClass)
-        let arrayNumberClass: string[] = [];
-        if (numberClass !== '') {
-            arrayNumberClass[0] = numberClass
-        }
-
-        for (let i = 1; i < 4; i++) {
-            i === 1 ? numberClass *= 3 : numberClass *= 2;
-            arrayNumberClass.push(numberClass);
-        }
-        return arrayNumberClass.map((item, index) => {
-            return <>
-                <td key={index}>{item} Class</td>
-            </>
-        })
-
-    }
-
-
-    console.log('arrPrice', arrPrice)
-    const renderVoucher = () => {
-        return arrPrice.fitnesspackagepricing.map((item: any, index: number) => {
-            return <td key={index}>
-                <select
-                    disabled={operation.actionType === "view" ? true : false}
-                    // value={arrPrice.fitnesspackagepricing[i  ndex].voucher}
-                    value={item.voucher}
-                    onChange={(e) => {
-                        const updateVoucher = arrPrice.fitnesspackagepricing.map((item) => {
-                            return { ...item, voucher: item.voucher }
-                        })
-                        updateVoucher[index].voucher = e.target.value;
-                        setArrPrice({ ...arrPrice, fitnesspackagepricing: updateVoucher })
-                    }}
-                >
-                    <option value='0'>Choose voucher</option>
-                    <option value='10%'>Getfit - 10%</option>
-                    <option value='20%'>Getfit - 20%</option>
-                </select></td>
-        })
-    }
-
-    const renderClassSessions = (classOnline, classOffline) => {
-        if (classOnline === undefined) {
-            classOnline = 0
-        } else if (classOffline === undefined) {
-            classOffline = 0
-        }
-        let totalClasses = 0;
-        // console.log("classOnline", classOnline, "classOffline", classOffline)
-        let arrNumberClass: number[] = [];
-        if ((classOnline && classOffline) || classOnline !== 0 || classOffline !== 0) {
-            totalClasses = classOnline + classOffline;
-        }
-        arrNumberClass[0] = totalClasses;
-        for (let i = 1; i < 4; i++) {
-            i === 1 ? totalClasses *= 3 : totalClasses *= 2;
-            arrNumberClass.push(totalClasses);
-        }
-        return arrNumberClass.map((item, index) => {
-            return <td key={index} className='font-weight-bold'>{item} Class</td>
-        })
-    }
-
-    const renderSuggestedPricing = () => {
-        const arrSuggestedPrice = [2500, 2500, 2500, 2500];
-        return arrSuggestedPrice.map((item, index) => {
-            return <td key={index}>Rs {item}</td>
-        })
-    }
-
-
-    const renderMRPInput = (props) => {
-        console.log(props)
-        return [...Array(4)].map((item, index) => {
-            return <td key={index}>
-                <input
-                    disabled={operation.actionType === "view" ? true : false}
-                    value={arrPrice.fitnesspackagepricing[index].mrp}
-                    className='w-75'
-                    min="0"
-                    max="6000"
-                    type="number"
-                    placeholder='Enter MRP'
-                    onChange={(e) => {
-                        props.onChange(e.target.value)
-                        const updateMRP = arrPrice.fitnesspackagepricing.map((item: any) => {
-                            return { ...item, mrp: item.mrp }
-                        })
-                        console.log('updateMRP', updateMRP);
-                        updateMRP[index].mrp = parseInt(e.target.value);
-                        setArrPrice({ ...arrPrice, fitnesspackagepricing: updateMRP })
-                    }} />
-                    </td>
-        })
-    }
-
-    console.log(arrPrice.fitnesspackagepricing)
-
-    const customPricingTable = (props: any) => {
-        console.log("userData", userData)
-        let { ptonline, ptoffline, mode } = userData
-        if (mode === "Online" && ptoffline > 0) {
-            ptonline = 0;
-            setUserData({ ...userData, ptoffline })
-        } else if (mode === "Offline" && ptonline > 0) {
-            ptonline = 0
-            setUserData({ ...userData, ptonline })
-        }
-        return <div className='text-center mt-3'>
-            <p className=' font-weight-bold' style={{ fontSize: '1.5rem' }}>Pricing Plan</p>
-            <Table striped bordered hover>
-                <thead>
-                    <tr>
-                        <th>Details</th>
-                        <th>Monthly</th>
-                        <th>Quaterly</th>
-                        <th>Half Yearly</th>
-                        <th>Yearly</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        {ptonline !== undefined && ptonline !== 0 &&
-                            <>
-                                <td><img src="/assets/PT-Online.svg" alt='123' />Online</td>
-                                {renderClasses(ptonline)}
-                            </>
-                        }
-                    </tr>
-                    <tr>
-                        {ptoffline !== undefined && ptoffline !== 0 &&
-                            <>
-                                <td><img src="/assets/PT-Offline.svg" alt='123' />Offline</td>
-                                {renderClasses(ptoffline)}
-                            </>
-                        }
-                    </tr>
-                    <tr>
-                        <td></td>
-                        {renderVoucher()}
-                    </tr>
-                    <tr>
-                        <td className='font-weight-bold'>Total Sessions</td>
-                        {renderClassSessions(ptonline, ptoffline)}
-                    </tr>
-                    <tr>
-                        <td>Suggested Pricing</td>
-                        {renderSuggestedPricing()}
-                    </tr>
-                    <tr>
-                        <td>Set MRP</td>
-                        {renderMRPInput(props)}
-                    </tr>
-                </tbody>
-            </Table>
-        </div>
-    }
-
-
     const widgets = {
         ModalCustomClasses,
         FitnessMultiSelect
     }
+
+
+
+    const pricingDetailRef = useRef<{ getFitnessPackagePricing?: Function }>({});
 
     const uiSchema: any = {
         "disciplines": {
@@ -305,8 +147,15 @@ function CreateEditFitness(props: any, ref: any) {
         },
 
 
-        "pricing_plan": {
-            "ui:widget": customPricingTable
+        "pricingDetail": {
+            "ui:widget": (props) => <FitnessPricingTable
+                userData={userData}
+                setUserData={setUserData}
+                actionType={operation.actionType}
+                pricingDetailRef={pricingDetailRef}
+                widgetProps={props}
+                formData={formData}
+            />,
         },
 
         "group-schedule": {
@@ -317,7 +166,7 @@ function CreateEditFitness(props: any, ref: any) {
         },
 
         "carousel": {
-            "ui:widget": () => <ModalPreview userData={userData} arrPrice={arrPrice.fitnesspackagepricing} />
+            "ui:widget": () => <ModalPreview userData={userData} fitnesspackagepricing={pricingDetailRef.current.getFitnessPackagePricing?.()} />
         },
     }
 
@@ -342,11 +191,9 @@ function CreateEditFitness(props: any, ref: any) {
     FetchData()
 
 
-
-
     const FillDetails = (dataPackage: any) => {
-        console.log('dataPackage', dataPackage.fitnesspackage);
         const packageDetail = dataPackage.fitnesspackage;
+        console.log(packageDetail)
         const { packagename, tags, disciplines, fitness_package_type, aboutpackage, benefits, level, mode, address, ptclasssize, ptoffline, ptonline, restdays, fitnesspackagepricing, bookingleadday, introvideourl, is_private } = packageDetail
 
         let updateFormData: any = {};
@@ -369,7 +216,7 @@ function CreateEditFitness(props: any, ref: any) {
         updateFormData.introvideourl = introvideourl;
 
         setFormData(updateFormData);
-        setArrPrice({ ...arrPrice, fitnesspackagepricing: updateFormData.fitnesspackagepricing })
+        // setFitnesspackagepricing(updateFormData.fitnesspackagepricing)
 
         //if message exists - show form only for edit and view
         if (['edit', 'view'].indexOf(operation.actionType) > -1)
@@ -377,10 +224,6 @@ function CreateEditFitness(props: any, ref: any) {
         else
             OnSubmit(null);
     }
-
-
-
-    console.log('formData', formData)
 
 
 
@@ -394,13 +237,13 @@ function CreateEditFitness(props: any, ref: any) {
 
     const [deletePackage] = useMutation(DELETE_PACKAGE);
 
-    const [updateStatus] = useMutation(UPDATE_PACKAGE_STATUS)
+    const [updateStatus] = useMutation(UPDATE_PACKAGE_PRIVATE)
 
     const TogglePackageStatus = (id: string, currentStatus: boolean) => {
         updateStatus({
             variables: {
                 id,
-                Status: !currentStatus
+                is_private: !currentStatus
             }
         })
     }
@@ -428,7 +271,8 @@ function CreateEditFitness(props: any, ref: any) {
 
     }
 
-    function EditMessage(frm: any) {
+    function EditPackage(frm: any) {
+        
         console.log('edit message');
 
 
@@ -446,9 +290,6 @@ function CreateEditFitness(props: any, ref: any) {
     }
 
 
-
-
-
     function OnSubmit(frm: any) {
         console.log(frm);
         //bind user id
@@ -460,7 +301,7 @@ function CreateEditFitness(props: any, ref: any) {
                 CreatePackage(frm);
                 break;
             case 'edit':
-                EditMessage(frm);
+                EditPackage(frm);
                 break;
             case 'view':
                 ViewMessage(frm);
@@ -483,6 +324,8 @@ function CreateEditFitness(props: any, ref: any) {
         fitness_package_type = props.packageType.fitnessPackageTypes[0].id
     }
 
+    console.log('Rerender createoredit-fitness')
+
     return (
         <>
             {render &&
@@ -495,15 +338,16 @@ function CreateEditFitness(props: any, ref: any) {
                     // formSubmit={name ==="View"? () => {setRender(false)}:(frm: any) => { OnSubmit(frm); }}
                     userData={userData}
                     setUserData={setUserData}
-                    fitnesspackagepricing={arrPrice.fitnesspackagepricing}
+                    pricingDetailRef={pricingDetailRef}
                     formSubmit={(frm: any) => OnSubmit(frm)}
                     setRender={setRender}
-                    arrPrice={arrPrice}
+                    fitnesspackagepricing={fitnesspackagepricing}
                     widgets={widgets}
-                    formData={operation.id && formData}
+                    formData={operation.id && {
+                        ...formData
+                    }}
                     classesValidation={ptSchema[3]}
                     actionType={operation.actionType}
-
                 />
             }
             {operation.actionType === 'delete' && <StatusModal
@@ -524,4 +368,4 @@ function CreateEditFitness(props: any, ref: any) {
     )
 }
 
-export default React.forwardRef(CreateEditFitness);
+export default React.forwardRef(PersonalTraining);

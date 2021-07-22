@@ -5,12 +5,12 @@ import './fitnessPreview.css'
 
 
 export default function ModalPreview(props) {
-
+    console.log(props)
     const [index, setIndex] = useState(0);
     const handleSelect = (selectedIndex, e) => {
         setIndex(selectedIndex);
     };
-    let { userData, arrPrice } = props;
+    let { userData,fitnesspackagepricing } = props;
     let { disciplines,size, number_classes_online, number_classes_offline, URL, level } = userData;
     if (typeof disciplines !== "object") disciplines = JSON.parse(disciplines);
 
@@ -28,7 +28,7 @@ export default function ModalPreview(props) {
 
     return <div>
         <Carousel slide={true} touch={true} activeIndex={index} onSelect={handleSelect}>
-            {arrPrice.map((price, idx) => {
+            {fitnesspackagepricing.map((price, idx) => {
                 return <Carousel.Item key={idx}>
                     <Card className="text-center w-75 mx-auto" style={{ borderRadius: '20px' }}>
                         <Card.Body className='pr-0 py-0'>

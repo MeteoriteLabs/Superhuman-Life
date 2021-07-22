@@ -78,6 +78,7 @@ export const GET_SINGLE_PACKAGE_BY_ID = gql`
             level
             aboutpackage
             benefits
+            introvideourl
             mode
             ptonline
             ptoffline
@@ -90,29 +91,30 @@ export const GET_SINGLE_PACKAGE_BY_ID = gql`
               id
               packagepricing
             }
+            duration
+            groupstarttime
+            groupendtime
+            groupinstantbooking
+            address{
+              id
+            }         
+            ptclasssize
+            classsize
+            groupdays
             fitness_package_type{
               id
               type
             }
-            duration
-            groupstarttime
-            groupendtime
-            address{
-              id
-            }
-            ptclasssize
-            classsize
-            groupdays
-            disciplines{
-              id
-              disciplinename
-            }
+       
             users_permissions_user{
               id
             }
             Status
             is_private
-            introvideourl
+            disciplines{
+              id
+              disciplinename
+            }
         }
 }
 `

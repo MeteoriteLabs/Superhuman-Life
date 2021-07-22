@@ -83,23 +83,101 @@ export const DELETE_PACKAGE = gql`
     }
 `
 
-export const UPDATE_PACKAGE_STATUS = gql`
+export const UPDATE_PACKAGE_PRIVATE = gql`
     mutation updateFitnesspackage(
         $id:ID!  
-        $Status:Boolean
+        $is_private:Boolean
         )
         {
             updateFitnesspackage(
                 input:{
                     where:{id:$id}
                     data:{
-                        Status:$Status
+                        is_private:$is_private
                     }
                 }
             ){
                 fitnesspackage{
-                    Status
+                    is_private
                 }
             }
         }
+`
+
+
+export const EDIT_PACKAGE = gql`
+       mutation updateFitnesspackage(
+           $id:ID!
+           $packagename: String
+           $tags: String
+           $level: ENUM_FITNESSPACKAGES_LEVEL
+           $aboutpackage: String
+           $benefits: String
+           $introvideourl: String
+           $mode: ENUM_FITNESSPACKAGES_MODE
+           $ptoffline: Int
+           $ptonline: Int
+           $grouponline:Int
+           $groupoffline:Int
+           $recordedclasses: Int
+           $restdays: Int
+           $bookingleadday: Int
+           $fitnesspackagepricing:JSON
+           $duration: Int
+           $groupstarttime:String
+           $groupendtime:String
+           $groupinstantbooking:Boolean
+           $address:ID
+           $disciplines: [ID]
+           $ptclasssize:ENUM_FITNESSPACKAGES_PTCLASSSIZE
+           $classsize:Int
+           $groupdays:String
+           $fitness_package_type:ID
+           $users_permissions_user:ID
+           $Status:Boolean
+            $is_private:Boolean
+        )
+        {
+            updateFitnesspackage(
+                input:{
+                     where: {id:$id}
+                     data:{
+                         packagename:$packagename
+                         tags:$tags
+                         level:$level
+                         aboutpackage:$aboutpackage
+                         benefits:$benefits
+                         introvideourl:$introvideourl
+                         mode:$mode
+                         ptoffline:$ptoffline
+                         ptonline:$ptonline
+                         grouponline:$grouponline
+                         groupoffline:$groupoffline
+                         recordedclasses:$recordedclasses
+                         restdays:$restdays
+                         bookingleadday:$bookingleadday
+                         fitnesspackagepricing:$fitnesspackagepricing
+                         duration:$duration
+                         groupstarttime:$groupstarttime
+                         groupendtime:$groupendtime
+                         groupinstantbooking:$groupinstantbooking
+                         address:$address
+                         disciplines:$disciplines
+                         ptclasssize:$ptclasssize
+                         classsize:$classsize
+                         groupdays:$groupdays
+                         fitness_package_type:$fitness_package_type
+                         users_permissions_user:$users_permissions_user
+                         Status:$Status
+                         is_private:$is_private
+                     }
+                 }
+            )
+        }
+        {
+            updateFitnesspackage{
+                id
+            }
+        }
+    
 `

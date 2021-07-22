@@ -3,7 +3,7 @@
         "title": "",
         "type": "object",
         "required": [
-           "disciplines"
+    
         ],
         "properties": {
             "packagename": {
@@ -256,12 +256,13 @@
         }
     },
     "5": {
-        "title": "",
+        "title": "Pricing Plan",
         "type": "object",
         "properties": {
-            "pricing_plan":{
+            "pricingDetail":{
                 "type":"string",
-                "title" :"Pricing Plan"
+                "title" :"Pricing Plan",
+                "value":0
             }
         }
     },

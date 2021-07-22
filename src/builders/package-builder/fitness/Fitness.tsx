@@ -7,7 +7,7 @@ import './fitness.css'
 import _ from 'lodash'
 import ActionButton from "../../../components/actionbutton";
 
-import CreateEditFitness from "./personal-training/createoredit-fitness";
+import PersonalTraining from "./personal-training/PersonalTraining";
 import { GET_FITNESS, GET_FITNESS_PACKAGE_TYPES } from "./graphQL/queries";
 
 
@@ -123,7 +123,6 @@ export default function FitnessTab(props) {
             id: "edit",
             Header: "Actions",
             Cell: ({ row }: any) => {
-
                 return <ActionButton
                     action1="Edit"
                     actionClick1={() => { createEditPackage.current.TriggerForm({ id: row.original.id, actionType: 'edit' }) }}
@@ -184,7 +183,7 @@ export default function FitnessTab(props) {
                             >
                                 <i className="fas fa-plus-circle"></i>{" "}Personal Training
                             </Button>
-                            <CreateEditFitness packageType={data} ref={createEditPackage}></CreateEditFitness>
+                            <PersonalTraining packageType={data} ref={createEditPackage}></PersonalTraining>
                         </Card.Title>
                     </Col>
                 </Row>
