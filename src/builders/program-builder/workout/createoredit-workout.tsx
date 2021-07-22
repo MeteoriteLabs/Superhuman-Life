@@ -74,9 +74,9 @@ function CreateEditMessage(props: any, ref: any) {
     }
 
     function CreateWorkout(frm: any) {
-        if(frm.addWorkout.build){
-            frm.addWorkout.build = JSON.parse(frm.addWorkout.build);
-        }
+        // if(frm.addWorkout.build){
+        //     frm.addWorkout.build = JSON.parse(frm.addWorkout.build);
+        // }
         console.log(frm);
         // console.log(handleWarmupDataSubmit(frm));
         // createWorkout({ variables: {

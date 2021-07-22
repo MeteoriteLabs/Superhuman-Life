@@ -30,7 +30,6 @@ export default function EventsTab() {
             id: "edit",
             Header: "Actions",
             Cell: ({ row }: any) => (
-                console.log(row),
                 <ActionButton 
                 action1="Edit"
                 actionClick1={() => {createEditProgramComponent.current.TriggerForm({id: row.original.id, type: 'edit'})}}

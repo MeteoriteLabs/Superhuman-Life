@@ -35,6 +35,8 @@ function CreateEditMessage(props: any, ref: any) {
         }
     }));
 
+    // console.log(exerciseDetails);
+
     function FillDetails(data: any) {
         let details: any = {};
         let msg = data.exercises;
@@ -52,6 +54,7 @@ function CreateEditMessage(props: any, ref: any) {
         });
         details.user_permissions_user = msg[0].users_permissions_user.id;
         setExerciseDetails(details);
+        // console.log(exerciseDetails);
 
         //if message exists - show form only for edit and view
         if (['edit', 'view'].indexOf(operation.type) > -1)
@@ -61,7 +64,7 @@ function CreateEditMessage(props: any, ref: any) {
     }
 
     function FetchData() {
-        useQuery(FETCH_DATA, { variables: { id: operation.id }, skip: (!operation.id || operation.type === 'toggle-status'), onCompleted: (e: any) => { FillDetails(e) } });
+        useQuery(FETCH_DATA, { variables: { id: operation.id }, onCompleted: (e: any) => { FillDetails(e) } });
     }
 
     enum ENUM_EXERCISES_EXERCISELEVEL {

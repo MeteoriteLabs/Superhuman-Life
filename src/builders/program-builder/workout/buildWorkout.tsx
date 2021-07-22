@@ -11,10 +11,9 @@ const BuildWorkout = (props: any) => {
           setActive( id );
      }
 
-     const build: any = {};
+     var build: any = {};
 
      function OnChangeWarmUp(e: any){
-          console.log(e);     
           build.warmup = e;
           const objectToString = JSON.stringify(build);
           props.onChange(objectToString);
@@ -31,8 +30,6 @@ const BuildWorkout = (props: any) => {
           const objectToString = JSON.stringify(build);
           props.onChange(objectToString);
      }
-
-     
 
      return (
           <Accordion defaultActiveKey="">
