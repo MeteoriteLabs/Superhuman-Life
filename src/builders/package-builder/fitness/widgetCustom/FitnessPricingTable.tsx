@@ -84,7 +84,7 @@ export default function FitnessPricingTable(props) {
                 <tr>
                     {ptonline !== undefined && ptonline !== 0 &&
                         <>
-                            <td><img src="/assets/PT-Online.svg" alt='123' />Online</td>
+                            <td><img src="/assets/personal-training-Online.svg" alt='123' />Online</td>
                             <Classes numberClass={ptonline} />
                         </>
                     }
@@ -92,9 +92,8 @@ export default function FitnessPricingTable(props) {
                 <tr>
                     {ptoffline !== undefined && ptoffline !== 0 &&
                         <>
-                            <td><img src="/assets/PT-Offline.svg" alt='123' />Offline</td>
+                            <td><img src="/assets/personal-training-Offline.svg" alt='123' />Offline</td>
                             <Classes numberClass={ptoffline} />
-
                         </>
                     }
                 </tr>

@@ -104,8 +104,8 @@
             },
             "duration": {
                 "title": "A null field",
-                "type": "string",
-                "value":30
+                "type": "number",
+                "value":"30"
             },
             "onlineClasses":{
                 "title":"onlineClasses",

@@ -3,7 +3,7 @@ import React from 'react'
 
 export default function ModalCustomClasses(props) {
 
-    const { PTProps, widgetProps, actionType, type } = props;
+    const { PTProps, widgetProps, actionType,  name } = props;
     console.log(PTProps)
     const duration = PTProps.properties.duration.value;
     const offlineClasses = PTProps.properties.offlineClasses.value
@@ -20,13 +20,7 @@ export default function ModalCustomClasses(props) {
         widgetProps.schema.maximum = 0
     }
 
-  
-    let name = "";
-    if (type === 'Personal Training') {
-        name = "PT";
-    } else  if (type === 'Group Class') {
-        name = "Group";
-    }
+
 
 
 

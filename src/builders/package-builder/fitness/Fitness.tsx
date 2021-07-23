@@ -7,14 +7,14 @@ import './fitness.css'
 import _ from 'lodash'
 import ActionButton from "../../../components/actionbutton";
 
-import PersonalTraining from "./personal-training/PersonalTraining";
+import CreateEditView from "./CreateEditView";
 import { GET_FITNESS, GET_FITNESS_PACKAGE_TYPES } from "./graphQL/queries";
 
 
 export default function FitnessTab(props) {
     const auth = useContext(AuthContext);
 
-    const createEditPackage = useRef<any>(null);
+    const createEditViewRef = useRef<any>(null);
     const [selectedDuration, setSelectedDuration] = useState<any>('');
     const [currentIndex, setCurrentIndex] = useState<any>('');
 
@@ -48,23 +48,23 @@ export default function FitnessTab(props) {
                 return <div className='d-flex justify-content-center align-items-center'>
                     {row.values.details[0] !== null && row.values.details[0] !== 0 ?
                         <div>
-                            <img src='./assets/PT-Online.svg' alt="PT-Online" />
+                            <img src='./assets/personal-training-Online.svg' alt="PT-Online" />
                             <p>{row.values.details[0] * currentIndex[row.index]}</p>
                         </div>
                         : ""}
                     {row.values.details[1] !== null && row.values.details[1] !== 0 ?
                         <div>
-                            <img src='./assets/PT-Offline.svg' alt="PT-Offline" />
+                            <img src='./assets/personal-training-Offline.svg' alt="PT-Offline" />
                             <p>{row.values.details[1] * currentIndex[row.index]}</p>
                         </div> : ""}
                     {row.values.details[2] !== null && row.values.details[2] !== 0 ?
                         <div>
-                            <img src='./assets/Group-Online.svg' alt="Group-Online" />
+                            <img src='./assets/group-Online.svg' alt="Group-Online" />
                             <p>{row.values.details[2] * currentIndex[row.index]}</p>
                         </div> : ""}
                     {row.values.details[3] !== null && row.values.details[3] !== 0 ?
                         <div>
-                            <img src='./assets/Group-Offline.svg' alt="GRoup-Offline" />
+                            <img src='./assets/group-Offline.svg' alt="GRoup-Offline" />
                             <p>{row.values.details[3] * currentIndex[row.index]}</p>
                         </div> : ""}
                     {row.values.details[4] !== null && row.values.details[4] !== 0 ?
@@ -125,13 +125,13 @@ export default function FitnessTab(props) {
             Cell: ({ row }: any) => {
                 return <ActionButton
                     action1="Edit"
-                    actionClick1={() => { createEditPackage.current.TriggerForm({ id: row.original.id, actionType: 'edit' }) }}
+                    actionClick1={() => { createEditViewRef.current.TriggerForm({ id: row.original.id, actionType: 'edit' }) }}
                     action2="View"
-                    actionClick2={() => { createEditPackage.current.TriggerForm({ id: row.original.id, actionType: 'view' }) }}
+                    actionClick2={() => { createEditViewRef.current.TriggerForm({ id: row.original.id, actionType: 'view' }) }}
                     action3="Status"
-                    actionClick3={() => { createEditPackage.current.TriggerForm({ id: row.original.id, actionType: 'toggle-status', current_status: (row.original.status === "Active") }) }}
+                    actionClick3={() => { createEditViewRef.current.TriggerForm({ id: row.original.id, actionType: 'toggle-status', current_status: (row.original.status === "Active") }) }}
                     action4="Delete"
-                    actionClick4={() => { createEditPackage.current.TriggerForm({ id: row.original.id, actionType: 'delete' }) }}
+                    actionClick4={() => { createEditViewRef.current.TriggerForm({ id: row.original.id, actionType: 'delete' }) }}
                 />
             }
 
@@ -178,19 +178,19 @@ export default function FitnessTab(props) {
                         <Card.Title className="text-center">
                             <Button variant={true ? "outline-secondary" : "light"} size="sm"
                                 onClick={() => {
-                                    createEditPackage.current.TriggerForm({ id: null, actionType: 'create', type: 'Personal Training' });
+                                    createEditViewRef.current.TriggerForm({ id: null, actionType: 'create', type: 'Personal Training' });
                                 }}
                             >
                                 <i className="fas fa-plus-circle"></i>{" "}Personal Training
                             </Button>
-                            <Button className='mx-3' variant={true ? "outline-secondary" : "light"} size="sm"
+                            <Button className='mx-' variant={true ? "outline-secondary" : "light"} size="sm"
                                 onClick={() => {
-                                    createEditPackage.current.TriggerForm({ id: null, actionType: 'create', type: 'Group Class' });
+                                    createEditViewRef.current.TriggerForm({ id: null, actionType: 'create', type: 'Group Class' });
                                 }}
                             >
                                 <i className="fas fa-plus-circle"></i>{" "}Group
                             </Button>
-                            <PersonalTraining packageType={data} ref={createEditPackage}></PersonalTraining>
+                            <CreateEditView packageType={data} ref={createEditViewRef}></CreateEditView>
                         </Card.Title>
                     </Col>
                 </Row>

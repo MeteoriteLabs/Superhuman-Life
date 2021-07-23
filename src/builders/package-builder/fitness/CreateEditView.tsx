@@ -1,18 +1,18 @@
 import React, { useContext, useEffect, useImperativeHandle, useRef, useState } from 'react';
-import ModalView from '../../../../components/modal';
-import AuthContext from '../../../../context/auth-context';
+import ModalView from '../../../components/modal';
+import AuthContext from '../../../context/auth-context';
 
-import ModalCustomClasses from '../widgetCustom/FitnessClasses';
-import ModalCustomRestday from '../widgetCustom/FitnessRestday';
+import ModalCustomClasses from './widgetCustom/FitnessClasses';
+import ModalCustomRestday from './widgetCustom/FitnessRestday';
 import { useMutation, useQuery } from '@apollo/client';
-import { GET_SINGLE_PACKAGE_BY_ID } from '../graphQL/queries';
-import ModalPreview from '../widgetCustom/FitnessPreview';
-import './pt.css'
-import { CREATE_PT_PACKAGE, DELETE_PACKAGE, EDIT_PACKAGE, UPDATE_PACKAGE_PRIVATE } from '../graphQL/mutations';
-import StatusModal from '../../../../components/StatusModal/StatusModal';
-import FitnessMultiSelect from '../widgetCustom/FitnessMultiSelect'
-import FitnessAddress from '../widgetCustom/FitnessAddress';
-import FitnessPricingTable from '../widgetCustom/FitnessPricingTable'
+import { GET_SINGLE_PACKAGE_BY_ID } from './graphQL/queries';
+import ModalPreview from './widgetCustom/FitnessPreview';
+import './CreateEditView.css'
+import { CREATE_PT_PACKAGE, DELETE_PACKAGE, EDIT_PACKAGE, UPDATE_PACKAGE_PRIVATE } from './graphQL/mutations';
+import StatusModal from '../../../components/StatusModal/StatusModal';
+import FitnessMultiSelect from './widgetCustom/FitnessMultiSelect'
+import FitnessAddress from './widgetCustom/FitnessAddress';
+import FitnessPricingTable from './widgetCustom/FitnessPricingTable'
 
 interface Operation {
     id: string;
@@ -20,7 +20,7 @@ interface Operation {
     type: 'Personal Training' | 'Group Class' | 'Custom Fitness' | 'Classic Class';
     current_status: boolean;
 }
-function PersonalTraining(props: any, ref: any) {
+function CreateEditView(props: any, ref: any) {
     const auth = useContext(AuthContext);
 
     const [render, setRender] = useState<boolean>(false);
@@ -49,31 +49,68 @@ function PersonalTraining(props: any, ref: any) {
         },
     ]
     )
+    const [packageTypeName, setPackageTypeName] = useState<string | null>('personal-training')
+    const [formSchemaType, setFormSchemaType]= useState<string | null>('personal-training')
 
 
-    const [formData, setFormData] = useState<{ packagename: string, tags: string, disciplines: { typename: string, id: string, disciplines: string }[], type: string, aboutpackage: string, benefits: string, level: string, mode: string, address: { id: string, __typename: string }, ptclasssize: string, ptonline: number | null, ptoffline: number | null, restdays: number, bookingleadday: number, fitnesspackagepricing: any, is_private: boolean, introvideourl: string, fitness_package_type: { id: string, type: string, __typename: string } }>()
+
+    const [formData, setFormData] = useState<{ packagename: string, tags: string, disciplines: { typename: string, id: string, disciplines: string }[], type: string, aboutpackage: string, benefits: string, level: string, mode: string, address: { id: string, __typename: string }, ptclasssize: string, ptonline: number | null, ptoffline: number | null, restdays: number, bookingleadday: number, fitnesspackagepricing: any, is_private: boolean, introvideourl: string, fitness_package_type: { id: string, type: string, __typename: string },  duration:number }>()
 
 
-    const ptSchema = require("./pt.json")
+    const ptSchema = require("./personal-training/personal-training.json");
+    const jsonSchema = require(`./${packageTypeName}/${packageTypeName}.json`);
 
-    const handlePackageType = (type: string) => {
-        let packageType = '';
-        switch (type) {
-            case 'Personal Training':
-                packageType = require("./pt.json");
-                break;
 
-            case 'Group Class':
-                packageType = require("../group/group.json");
-                break;
+
+    useEffect(() => {
+        if (operation.type === 'Personal Training') {
+            setPackageTypeName("personal-training");
+        } else if (operation.type === 'Group Class') {
+            setPackageTypeName("group");
         }
-        return packageType
+    }, [operation.type])
+    
+
+    // useEffect(() => {
+    //     if (operation.type === 'Personal Training') {
+    //         setPackageTypeName("pt");
+    //     } else if (operation.type === 'Group Class') {
+    //         setPackageTypeName("group");
+    //     }
+    // }, [operation])
+
+
+
+
+    let actionName: string = "";
+    if (operation.actionType === 'create') {
+        actionName = "Create New";
+    } else if (operation.actionType === 'edit') {
+        actionName = "Edit";
+    } else if (operation.actionType === 'view') {
+        actionName = "View";
+    }
+
+    
+    
+    let fitness_package_type: string | undefined = ''
+    if (operation.actionType === "view" || operation.actionType === 'edit') {
+        fitness_package_type = formData?.fitness_package_type.id
+    } else if (operation.actionType === "create") {
+        if (operation.type === "Personal Training") {
+            fitness_package_type = props.packageType.fitnessPackageTypes[0].id
+        } else if (operation.type === "Group Class") {
+            fitness_package_type = props.packageType.fitnessPackageTypes[1].id
+        }
     }
 
 
-    const customTextTitlePackage = ({ schema }: any) => {
+
+
+    const customTextTitlePackage = (props: any) => {
+        console.log(props)
         return <div className='text-center font-weight-bold mx-auto w-50 py-3 px-2 mt-5' style={{ boxShadow: '0px 7px 15px -5px #000000', borderRadius: '5px' }}>
-            <p className='m-0'>Set for One Month ({schema.value} days)</p>
+            <p className='m-0'>Set for One Month ({props.schema.default} days)</p>
         </div>
     };
 
@@ -97,27 +134,27 @@ function PersonalTraining(props: any, ref: any) {
             "ui:widget": (props) => <FitnessAddress actionType={operation.actionType} widgetProps={props} />
 
         },
-        "duration": {
-            "ui:widget": customTextTitlePackage
-        },
+        // "duration": {
+        //     "ui:widget": customTextTitlePackage
+        // },
 
         "ptonline": {
-            "ui:widget": (props) => <ModalCustomClasses type={operation.type} actionType={operation.actionType} PTProps={ptSchema[3]} widgetProps={props} />
+            "ui:widget": (props) => <ModalCustomClasses  name={packageTypeName} actionType={operation.actionType} PTProps={ptSchema[3]} widgetProps={props} />
 
             // "ui:widget": ModalCustomClasses
         },
         "ptoffline": {
-            "ui:widget": (props) => <ModalCustomClasses type={operation.type} actionType={operation.actionType} PTProps={ptSchema[3]} widgetProps={props} />
+            "ui:widget": (props) => <ModalCustomClasses  name={packageTypeName}  actionType={operation.actionType} PTProps={ptSchema[3]} widgetProps={props} />
 
         },
 
         "grouponline": {
-            "ui:widget": (props) => <ModalCustomClasses type={operation.type} actionType={operation.actionType} PTProps={ptSchema[3]} widgetProps={props} />
+            "ui:widget": (props) => <ModalCustomClasses name={packageTypeName}  actionType={operation.actionType} PTProps={ptSchema[3]} widgetProps={props} />
 
         },
 
         "groupoffline": {
-            "ui:widget": (props) => <ModalCustomClasses type={operation.type} actionType={operation.actionType} PTProps={ptSchema[3]} widgetProps={props} />
+            "ui:widget": (props) => <ModalCustomClasses name={packageTypeName} actionType={operation.actionType} PTProps={ptSchema[3]} widgetProps={props} />
 
         },
 
@@ -260,6 +297,7 @@ function PersonalTraining(props: any, ref: any) {
         updateFormData.is_private = is_private;
 
         setFormData(updateFormData);
+       
         // setFitnesspackagepricing(updateFormData.fitnesspackagepricing)
 
         //if message exists - show form only for edit and view
@@ -269,7 +307,7 @@ function PersonalTraining(props: any, ref: any) {
             OnSubmit(null);
     }
 
-    // console.log('form data parent', formData)
+    console.log('form data parent', formData)
 
 
     useImperativeHandle(ref, () => ({
@@ -355,26 +393,7 @@ function PersonalTraining(props: any, ref: any) {
         }
     }
 
-    let name = "";
-    if (operation.actionType === 'create') {
-        name = "Create New";
-    } else if (operation.actionType === 'edit') {
-        name = "Edit";
-    } else if (operation.actionType === 'view') {
-        name = "View";
-    }
 
-    // console.log(props)
-    let fitness_package_type: string | undefined = ''
-    if (operation.actionType === "view" || operation.actionType === 'edit') {
-        fitness_package_type = formData?.fitness_package_type.id
-    } else if (operation.actionType === "create") {
-        if (operation.type === "Personal Training") {
-            fitness_package_type = props.packageType.fitnessPackageTypes[0].id
-        } else if (operation.type === "Group Class") {
-            fitness_package_type = props.packageType.fitnessPackageTypes[1].id
-        }
-    }
 
 
 
@@ -385,11 +404,11 @@ function PersonalTraining(props: any, ref: any) {
             {render &&
                 <ModalView
                     fitness_package_type={fitness_package_type}
-                    name={name}
+                    name={actionName}
                     isStepper={true}
                     formUISchema={uiSchema}
                     // formSchema={ptSchema}
-                    formSchema={handlePackageType(operation.type)}
+                    formSchema={jsonSchema}
                     userData={userData}
                     setUserData={setUserData}
                     pricingDetailRef={pricingDetailRef}
@@ -422,4 +441,4 @@ function PersonalTraining(props: any, ref: any) {
     )
 }
 
-export default React.forwardRef(PersonalTraining);
+export default React.forwardRef(CreateEditView);

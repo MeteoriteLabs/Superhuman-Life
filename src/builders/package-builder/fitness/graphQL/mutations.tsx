@@ -14,6 +14,7 @@ export const CREATE_PT_PACKAGE = gql`
         $mode: ENUM_FITNESSPACKAGES_MODE
         $address:ID
         $disciplines: [ID]
+        $duration: Int
         $ptoffline: Int
         $ptonline: Int
         $restdays: Int
@@ -37,6 +38,7 @@ export const CREATE_PT_PACKAGE = gql`
                         mode:$mode
                         address:$address
                         disciplines: $disciplines
+                        duration:$duration
                         ptoffline:$ptoffline
                         ptonline:$ptonline
                         restdays:$restdays

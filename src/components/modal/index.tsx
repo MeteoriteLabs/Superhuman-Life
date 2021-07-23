@@ -151,7 +151,7 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
                                 variant="danger"
                                 size="sm"
                                 onClick={(event) => {
-                                    actionType === "view" && setRender(false)
+                                    // actionType === "view" && setRender(false)
                                     formRef.current.onSubmit(event)
                                 } }
                             >

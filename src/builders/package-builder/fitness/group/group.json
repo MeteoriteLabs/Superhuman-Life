@@ -260,26 +260,27 @@
         }
     },
     "5": {
-        "title": "",
+        "title": "Pricing Plan",
         "type": "object",
         "properties": {
-            "voucher": {
-                "type": "string",
-                "title": "Additional Voucher"
+            "pricingDetail":{
+                "type":"string",
+                "title" :"Pricing Plan",
+                "value":0
+            }
+        }
+    },
+    "6":{
+        "title":"Preview",
+        "type":"object",
+        "properties":{
+            "carousel":{
+                "type":"string",
+                "title":"carousel"
             },
-            "plan": {
-                "type": "string",
-                "title": "Workout Plan",
-                "enum": [
-                    "Monthly",
-                    "Quaterly",
-                    "Half Yearly",
-                    "Yearly"
-                ]
-            },
-            "price": {
-                "type": "number",
-                "title": "Set Pricing"
+            "link":{
+                "type":"null",
+                "title":"carousel"
             }
         }
     }

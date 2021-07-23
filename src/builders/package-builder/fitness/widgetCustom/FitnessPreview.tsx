@@ -57,11 +57,11 @@ export default function ModalPreview(props) {
                             <Card.Text className='pt-3 d-flex justify-content-between align-items-center '>
                                 <div className='d-flex justify-content-center align-items-center'>
                                     <div>
-                                        <img src="/assets/PT-Offline.svg" alt='123' />
+                                        <img src="/assets/personal-training-Offline.svg" alt='123' />
                                         <p>{number_classes_offline} Offline</p>
                                     </div>
                                     <div className='px-4' style={{ borderRight: '1px solid black' }}>
-                                        <img src="/assets/PT-Online.svg" alt='123' />
+                                        <img src="/assets/personal-training-Online.svg" alt='123' />
                                         <p>{number_classes_online} Online</p>
                                     </div>
                                     <div className='ml-4'>
