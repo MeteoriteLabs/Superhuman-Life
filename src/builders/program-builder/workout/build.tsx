@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { Button, InputGroup, FormControl } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import TextEditor from '../../../components/customWidgets/textEditor';
 import ExerciseList from '../../../components/customWidgets/exerciseList';
 import URLlist from '../search-builder/urlList';
@@ -17,13 +17,6 @@ const Build = (props: any) => {
           const values = [...uploadFields];
           values[i].value = event.target.value;
           setUploadFields(values);
-     }
-
-     function handleUrlFieldChange(i: any, event: any){
-          const values = [...urlFields];
-          values[i].type = "url";
-          values[i].value = event.target.value;
-          setUrlFields(values);
      }
 
      //These functions hanlde the adding of the input field
@@ -128,7 +121,6 @@ function OnChangeText(data: any){
 }
 
 function OnChangeURL(data: any){
-     console.log(data);
      if(props.buildId === 1){
           warmup = data;
           props.onChange(warmup);
@@ -185,17 +177,7 @@ function OnChangeUpload(data: any){
                               <span>Add URL <i className="far fa-trash-alt float-right"
                                    style={{ color: 'red', cursor: 'pointer'}}
                               onClick={() => {handleUrlFieldRemove(idx); setCurrentTab(null);}}></i></span>
-                              <InputGroup className="mb-3">
-                                   <FormControl
-                                        type="text"
-                                        placeholder="Add URL"
-                                        onChange={e => {
-                                             handleUrlFieldChange(idx,e);
-                                             OnChangeURL(urlFields);
-                                        }}
-                                   />
-                              </InputGroup>
-                              {/* <URLlist onChange={OnChangeURL} id={idx}/> */}
+                              <URLlist onChange={OnChangeURL} id={idx} field={urlFields}/>
                          </div>
                     );
                     })}

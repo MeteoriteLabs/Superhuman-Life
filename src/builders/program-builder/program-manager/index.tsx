@@ -1,8 +1,7 @@
 import React, {useState} from 'react';
 import { useQuery } from "@apollo/client";
 import {GET_DATA} from './queries';
-import { Container, Row, Col } from 'react-bootstrap';
-import Scheduler from '../../../components/scheduler';
+import {  Row, Col } from 'react-bootstrap';
 
 const ProgramManager = (props) => {
      const last = window.location.pathname.split('/').pop();
@@ -14,11 +13,6 @@ const ProgramManager = (props) => {
           setShow(true)
      }, 1500)
      }, [show]);
-
-    const SchedularData = [
-        { start_date:'2020-06-10 6:00', end_date:'2020-06-10 8:00', text:'Event 1', id: 1 },
-        { start_date:'2020-06-13 10:00', end_date:'2020-06-13 18:00', text:'Event 2', id: 2 }
-    ];
 
   function FetchData(_variables: {} = {id: last}) {
      useQuery(GET_DATA, {variables: _variables, onCompleted: loadData});
@@ -69,8 +63,7 @@ const ProgramManager = (props) => {
                 </Row>
             </Col>
         </div>
-        <div className="mt-5 scheduler-container mr-5">
-            <Scheduler events={SchedularData}/>
+        <div className="mt-5  mr-5">
         </div>
      </>
   )
