@@ -10,14 +10,14 @@ import MRP from './tableComponent/MRP';
 import * as _ from 'lodash'
 
 interface FintessPackagePricing {
- 
+
 }
 
 export default function FitnessPricingTable(props) {
     const { userData, setUserData, actionType, widgetProps, formData, setFormData, mrpInput, setMrpInput, pricingDetailRef } = props;
 
     const [status, setStatus] = useState(false);
-    const [fitnesspackagepricing, setFitnesspackagepricing] = useState <{duration:number, voucher:string, mrp:number} []> ([
+    const [fitnesspackagepricing, setFitnesspackagepricing] = useState<any>([
         {
             "duration": 30,
             "voucher": "Choose voucher",
@@ -47,22 +47,16 @@ export default function FitnessPricingTable(props) {
                 getFitnessPackagePricing: () => fitnesspackagepricing,
             }
         }
-
-
     }, [pricingDetailRef, fitnesspackagepricing])
 
 
 
-
-    console.log('fitnesspackagepricing', fitnesspackagepricing)
-    // console.log("childFitnesspackagepricing", childFitnesspackagepricing);
-
     useEffect(() => {
         if (formData) {
-            setFitnesspackagepricing(formData.fitnesspackagepricing)
+            setFitnesspackagepricing(formData)
         }
     }, [])
-
+  
 
 
     let { ptonline, ptoffline, mode } = userData
@@ -74,7 +68,7 @@ export default function FitnessPricingTable(props) {
         setUserData({ ...userData, ptonline })
     }
 
-
+    // return null 
     return <>
         <Table striped bordered hover className='text-center'>
             <thead>
@@ -114,8 +108,6 @@ export default function FitnessPricingTable(props) {
                         setFormData={setFormData}
                         fitnesspackagepricing={fitnesspackagepricing}
                         setFitnesspackagepricing={setFitnesspackagepricing}
-                    // childFitnesspackagepricing={childFitnesspackagepricing}
-                    // setChildFitnesspackagepricing={setChildFitnesspackagepricing} 
                     />
                 </tr>
                 <tr>

@@ -106,7 +106,7 @@ export const UPDATE_PACKAGE_PRIVATE = gql`
 
 
 export const EDIT_PACKAGE = gql`
-       mutation updateFitnesspackage(
+       mutation fitnesspackages (
            $id:ID!
            $packagename: String
            $tags: String
@@ -122,7 +122,7 @@ export const EDIT_PACKAGE = gql`
            $recordedclasses: Int
            $restdays: Int
            $bookingleadday: Int
-           $fitnesspackagepricing:JSON
+           $fitnesspackagepricing:[editComponentFitnesspackagepricingFitnesspackagepricingInput]
            $duration: Int
            $groupstarttime:String
            $groupendtime:String
@@ -138,7 +138,7 @@ export const EDIT_PACKAGE = gql`
             $is_private:Boolean
         )
         {
-            updateFitnesspackage(
+            updateFitnesspackage (
                 input:{
                      where: {id:$id}
                      data:{
@@ -173,11 +173,12 @@ export const EDIT_PACKAGE = gql`
                      }
                  }
             )
-        }
-        {
-            updateFitnesspackage{
-                id
+            {
+                fitnesspackage{
+                    id
+                } 
             }
         }
+       
     
 `

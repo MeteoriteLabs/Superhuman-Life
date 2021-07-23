@@ -3,7 +3,7 @@
         "title": "",
         "type": "object",
         "required": [
-    
+           
         ],
         "properties": {
             "packagename": {
@@ -47,7 +47,7 @@
         "title": "",
         "type": "object",
         "required": [
-          
+       
         ],
         "properties": {
             "aboutpackage": {
@@ -102,10 +102,10 @@
                     "Hybrid"
                 ]
             },
-            "title_package": {
+            "duration": {
                 "title": "A null field",
                 "type": "string",
-                "duration":30
+                "value":30
             },
             "onlineClasses":{
                 "title":"onlineClasses",

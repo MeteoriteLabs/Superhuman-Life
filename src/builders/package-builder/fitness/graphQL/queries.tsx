@@ -73,6 +73,7 @@ export const GET_SINGLE_PACKAGE_BY_ID = gql`
       query fitnesspackage($id:ID!){
         fitnesspackage(id:$id)
         {
+            id
             packagename
             tags
             level
@@ -103,9 +104,7 @@ export const GET_SINGLE_PACKAGE_BY_ID = gql`
             groupdays
             fitness_package_type{
               id
-              type
             }
-       
             users_permissions_user{
               id
             }

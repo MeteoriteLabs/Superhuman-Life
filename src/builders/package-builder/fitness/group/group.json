@@ -2,18 +2,15 @@
     "1": {
         "title": "",
         "type": "object",
-        "required": [
-           "discipline"
-        ],
+        "required": [],
         "properties": {
-            "name": {
+            "packagename": {
                 "type": "string",
                 "title": "Name of Package"
             },
-            "discipline": {
+            "disciplines": {
                 "type": "string",
-                "title": "Discipline"
-               
+                "title": "Disciplines"
             },
             "tags": {
                 "type": "string",
@@ -25,15 +22,21 @@
                 "enum": [
                     "Beginner",
                     "Intermediate",
-                    "Advance"
+                    "Advanced"
                 ]
             },
-            "visiblity": {
-                "type": "string",
+            "is_private": {
+                "type": "boolean",
                 "title": "Visiblity",
-                "enum": [
-                    "Public",
-                    "Private"
+                "oneOf": [
+                    {
+                        "title": "Public",
+                        "const": true
+                    },
+                    {
+                        "title": "Private",
+                        "const": false
+                    }
                 ]
             }
         }
@@ -41,13 +44,9 @@
     "2": {
         "title": "",
         "type": "object",
-        "required": [
-            "about",
-            "benefits",
-            "size"
-        ],
+        "required": [],
         "properties": {
-            "about": {
+            "aboutpackage": {
                 "type": "string",
                 "title": "About"
             },
@@ -55,166 +54,165 @@
                 "type": "string",
                 "title": "Benefits"
             },
-            "size": {
-                "type": "number",
+            "classsize": {
+                "type": "string",
                 "title": "Class Size"
+            },
+            "intropicture": {
+                "type": "string",
+                "format": "data-url",
+                "title": "Intro Picture"
             },
             "video": {
                 "type": "string",
-                "format": "uri",
-                "title": "Exercise Video Link"
+                "title": "Intro Video",
+                "format": "data-url"
             },
-            "thumbnail": {
+            "introvideourl": {
                 "type": "string",
-                "format": "data-url",
-                "title": "Exercise Picture",
-                "accept": ".jpg"
+                "title": "Or add video URL",
+                "format": "uri"
             }
         }
     },
     "3": {
-        "title": "",
-        "description": "Program has to be assigned to Group package",
+        "title": "Program Details",
         "type": "object",
-        "required": [
-            "package"
-        ],
+        "required": [],
         "properties": {
-            "package": {
-                "type": "string",
-                "title": "Assign Package Now",
-                "description": "Package won't be active till the program is assigned.",
-                "enum": [
-                    "Yes",
-                    "Later"
-                ]
-            },
             "mode": {
-                "type": "string",
                 "title": "Mode",
+                "type": "string",
                 "enum": [
                     "Online",
                     "Offline",
                     "Hybrid"
                 ]
             },
-            "location": {
+            "duration": {
+                "title": "A null field",
                 "type": "string",
-                "title": "Location",
-                "enum": [
-                    "Others",
-                    "At My Address",
-                    "At Client Address"
-                ]
+                "value": 30
             },
-            "pin": {
-                "type": "string",
-                "title": ""
+            "onlineClasses": {
+                "title": "onlineClasses",
+                "type": "null",
+                "value": 0
             },
-            "set": {
-                "type": "number",
-                "title": "Set for 1 month i.e. 30 days",
-                "minimum": 30,
-                "default": 0
+            "restDay": {
+                "title": "restDay",
+                "type": "null",
+                "value": 0
+            },
+            "offlineClasses": {
+                "title": "offlineClasses",
+                "type": "null",
+                "value": 0
+            },
+            "dayAvailable": {
+                "title": "dayAvailable",
+                "type": "null",
+                "value": 0
             }
         },
         "dependencies": {
-            "package": [
-                "mode"
-            ],
             "mode": {
                 "oneOf": [
                     {
                         "properties": {
                             "mode": {
+                                "title": "Online",
+                                "type": "string",
                                 "enum": [
                                     "Online"
                                 ]
                             },
-                            "fitness": {
-                                "type": "object",
-                                "title": "",
-                                "properties": {
-                                    "group": {
-                                        "type": "object",
-                                        "title": "",
-                                        "description": "Number of Group Classes",
-                                        "properties": {
-                                            "online": {
-                                                "type": "number",
-                                                "title": "Online"
-                                            }
-                                        }
-                                    },
-                                    "rest": {
-                                        "type": "number",
-                                        "title": "Number of Rest Classes"
-                                    }
-                                }
+                            "grouponline": {
+                                "title": "Online",
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 30,
+                                "default": "0",
+                                "value": 0
+                            },
+                            "restdays": {
+                                "title": "Rest Days",
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 30,
+                                "default": "0",
+                                "value": 0
                             }
                         }
                     },
                     {
                         "properties": {
                             "mode": {
+                                "title": "Offline",
+                                "type": "string",
                                 "enum": [
                                     "Offline"
                                 ]
                             },
-                            "fitness": {
-                                "type": "object",
-                                "title": "",
-                                "properties": {
-                                    "group": {
-                                        "type": "object",
-                                        "title": "",
-                                        "description": "Number of Group Classes",
-                                        "properties": {
-                                            "offline": {
-                                                "type": "number",
-                                                "title": "Offline"
-                                            }
-                                        }
-                                    },
-                                    "rest": {
-                                        "type": "number",
-                                        "title": "Number of Rest Classes"
-                                    }
-                                }
+                            "address": {
+                                "title": "address",
+                                "type": "string"
+                            },
+                            "groupoffline": {
+                                "title": "Offline",
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 30,
+                                "default": "0",
+                                "value": 0
+                            },
+                            "restdays": {
+                                "title": "Rest Days",
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 30,
+                                "default": "0",
+                                "value": 0
                             }
                         }
                     },
                     {
                         "properties": {
                             "mode": {
+                                "title": "Hybrid",
+                                "type": "string",
                                 "enum": [
                                     "Hybrid"
-                                ]
+                                ],
+                                "default": "0"
                             },
-                            "fitness": {
-                                "type": "object",
-                                "title": "",
-                                "properties": {
-                                    "group": {
-                                        "type": "object",
-                                        "title": "",
-                                        "description": "Number of Group Classes",
-                                        "properties": {
-                                            "online": {
-                                                "type": "number",
-                                                "title": "Online"
-                                            },
-                                            "offline": {
-                                                "type": "number",
-                                                "title": "Offline"
-                                            }
-                                        }
-                                    },
-                                    "rest": {
-                                        "type": "number",
-                                        "title": "Number of Rest Classes"
-                                    }
-                                }
+                            "address": {
+                                "title": "address",
+                                "type": "string"
+                            },
+                            "grouponline": {
+                                "title": "Online",
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 30,
+                                "default": "0",
+                                "value": 0
+                            },
+                            "groupoffline": {
+                                "title": "Offline",
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 30,
+                                "default": "0",
+                                "value": 0
+                            },
+                            "restdays": {
+                                "title": "Rest Days",
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 30,
+                                "default": "0",
+                                "value": 0
                             }
                         }
                     }
@@ -225,38 +223,9 @@
     "4": {
         "title": "",
         "type": "object",
-        "required": [
-            "start",
-            "end",
-            "days",
-            "duration"
-        ],
+        "required": [],
         "properties": {
-            "start": {
-                "type": "string",
-                "format": "date",
-                "title": "Start Date"
-            },
-            "end": {
-                "type": "string",
-                "format": "date",
-                "title": "End Date"
-            },
-            "duration": {
-                "type": "number",
-                "title": "Duration of Class"
-            },
-            "startTime": {
-                "type": "string",
-                "format": "time",
-                "title": "Start Time"
-            },
-            "endTime": {
-                "type": "string",
-                "format": "time",
-                "title": "End Time"
-            },
-            "days": {
+            "groupdays": {
                 "type": "array",
                 "title": "Select the days",
                 "items": {
@@ -273,11 +242,21 @@
                 },
                 "uniqueItems": true
             },
-            "group-schedule": {
-                "type": "number",
-                "title": "Consumer can choose start time before",
-                "description": "This will give you lead time to prepare yourself for the class. This type of booking is generally on the same day."
-            }
+            "groupstarttime": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Start Time"
+            },
+            "groupendtime": {
+                "type": "string",
+                "format": "date-time",
+                "title": "End Time"
+            },
+            "groupinstantbooking": {
+                "type": "boolean",
+                "title": "Allow Consumers to book instant Workouts",
+                "description": "This will let people join this group class for a day on demand"
+              }
         }
     },
     "5": {

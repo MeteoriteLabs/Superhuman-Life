@@ -5,7 +5,7 @@ import { Button, Col, Modal, ProgressBar, Row } from "react-bootstrap";
 import _ from "lodash"
 
 export default function ModalView({ name, formUISchema, formSubmit, formSchema, formData, isStepper, userData, setUserData, fitnesspackagepricing, widgets, setRender, fitness_package_type, classesValidation, actionType, pricingDetailRef }: any) {
-    // console.log(userData)
+
     const registry = utils.getDefaultRegistry();
     const defaultFileWidget = registry.widgets["FileWidget"];
     (Bootstrap4Theme as any).widgets["FileWidget"] = defaultFileWidget;
@@ -17,42 +17,60 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
     const [formValues, setFormValues] = useState<any>(formData);
     const stepper: string[] = ["Creator", "Details", "Program", "Schedule", "Pricing", "Preview"];
 
+  
+
+
+
+
+    const updatePrice = () => {
+        let updateFinesspackagepricing: any = ''
+        if (formData) {
+            updateFinesspackagepricing = _.cloneDeep(formData?.fitnesspackagepricing);
+            if (pricingDetailRef.current.getFitnessPackagePricing?.()) {
+                updateFinesspackagepricing[0].packagepricing = pricingDetailRef.current.getFitnessPackagePricing?.();
+                delete updateFinesspackagepricing[0].__typename;
+                updateFinesspackagepricing = updateFinesspackagepricing[0]
+            }
+        } else {
+            updateFinesspackagepricing = pricingDetailRef.current.getFitnessPackagePricing?.();
+        }
+        console.log(updateFinesspackagepricing)
+        return updateFinesspackagepricing
+
+    }
+
+
     function submitHandler(formData: any) {
+        const updateFinesspackagepricing = updatePrice()
         if (isStepper && step < 6) {
-            console.log("userData", userData)
-            console.log('formData before submit', formValues);
             setStep(step + 1);
-            setFormValues({ ...formValues, ...formData, fitness_package_type, fitnesspackagepricing: pricingDetailRef.current.getFitnessPackagePricing?.() });
-            setUserData({ ...formValues, ...formData, fitness_package_type, fitnesspackagepricing: pricingDetailRef.current.getFitnessPackagePricing?.() })
+            setFormValues({ ...formValues, ...formData, fitness_package_type, fitnesspackagepricing: updateFinesspackagepricing });
+            setUserData({ ...formValues, ...formData, fitness_package_type, fitnesspackagepricing: updateFinesspackagepricing })
+            console.log('formData before submit', formValues);
+            console.log("userData", userData);
         } else {
             if (typeof formData.disciplines !== "object") {
                 formData.disciplines = JSON.parse(formData.disciplines).map(item => item.id)
             }
-            formData = { ...formData, fitnesspackagepricing: pricingDetailRef.current.getFitnessPackagePricing?.() }
+            formData = { ...formData, fitnesspackagepricing: updateFinesspackagepricing }
             formSubmit(formData);
-            console.log("userData", userData)
+            // console.log("userData", userData)
             console.log("Data submitted: ", formData);
         }
     }
 
-    console.log('Form Values: ', formValues);
-
-
-    const handleFormConfirmationName = (actionType) => {
+    const handleFormConfirmationName = (actionType: string) => {
         let action = ''
         switch (actionType) {
             case 'create':
-                console.log('create')
                 action = "Create"
                 break
 
             case 'edit':
-                console.log('Edit')
                 action = "Update"
                 break
 
             case 'view':
-                console.log('View')
                 action = "Looks Good"
                 break
         }
@@ -132,20 +150,22 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
                             <Button
                                 variant="danger"
                                 size="sm"
-                                onClick={(event) => formRef.current.onSubmit(event)}
+                                onClick={(event) => {
+                                    actionType === "view" && setRender(false)
+                                    formRef.current.onSubmit(event)
+                                } }
                             >
                                 {(step < 6)
                                     ? <>Next<i className="ml-4 fas fa-arrow-right"></i></>
-                                    : <>
-                                        <span onClick={() => setRender(false)}>
-                                            {handleFormConfirmationName(actionType)}
-                                        </span>
+                                    :
+                                    <div className='d-flex align-items-center justify-content-center'>
+                                        {handleFormConfirmationName(actionType)}
                                         <i className="ml-4 fas fa-check"></i>
-                                    </>
+                                    </div>
+
                                 }
                             </Button>
-                        </> 
-
+                        </>
                     }
                 </Modal.Footer>
             </Modal>

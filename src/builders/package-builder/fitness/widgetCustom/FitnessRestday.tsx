@@ -3,7 +3,7 @@ import React from 'react'
 
 export default function ModalCustomRestday(props: any) {
     const { PTProps, widgetProps, actionType } = props;
-    const duration = PTProps.properties.title_package.duration;
+    const duration = PTProps.properties.duration.value;
     const offlineClasses = PTProps.properties.offlineClasses.value
     const onlineClasses = PTProps.properties.onlineClasses.value
     const restDay = PTProps.properties.restDay.value

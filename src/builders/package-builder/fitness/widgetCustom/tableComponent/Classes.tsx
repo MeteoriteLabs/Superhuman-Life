@@ -13,9 +13,8 @@ export default function OnlineClasses(props) {
     }
     return <>
         {arrayNumberClass.map((item, index) => {
-            return <>
-                <td key={index}>{item} Class</td>
-            </>
+            return  <td key={index}>{item} Class</td>
+          
         })}
     </>
 

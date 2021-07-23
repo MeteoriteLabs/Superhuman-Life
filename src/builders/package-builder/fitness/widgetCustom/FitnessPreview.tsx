@@ -5,11 +5,12 @@ import './fitnessPreview.css'
 
 
 export default function ModalPreview(props) {
-    console.log(props)
+
     const [index, setIndex] = useState(0);
     const handleSelect = (selectedIndex, e) => {
         setIndex(selectedIndex);
     };
+    
     let { userData,fitnesspackagepricing } = props;
     let { disciplines,size, number_classes_online, number_classes_offline, URL, level } = userData;
     if (typeof disciplines !== "object") disciplines = JSON.parse(disciplines);

@@ -4,7 +4,7 @@ import _ from 'lodash'
 export default function MRP(props) {
     const {actionType, status, formData,setFormData, childFitnesspackagepricing,setChildFitnesspackagepricing, setStatus,fitnesspackagepricing,setFitnesspackagepricing } = props
 
-    console.log('MRP: ', fitnesspackagepricing)
+    // console.log('MRP: ', fitnesspackagepricing)
 
     return <>
    { [...Array(4)].map((item, index) => {
@@ -21,7 +21,6 @@ export default function MRP(props) {
                 onChange={(e) => {
                     e.preventDefault();
                     setStatus(false)
-              
                     const updateMRP = _.cloneDeep(fitnesspackagepricing)
                     updateMRP[index].mrp = e.target.value;
                     setFitnesspackagepricing(updateMRP);

@@ -183,6 +183,13 @@ export default function FitnessTab(props) {
                             >
                                 <i className="fas fa-plus-circle"></i>{" "}Personal Training
                             </Button>
+                            <Button className='mx-3' variant={true ? "outline-secondary" : "light"} size="sm"
+                                onClick={() => {
+                                    createEditPackage.current.TriggerForm({ id: null, actionType: 'create', type: 'Group Class' });
+                                }}
+                            >
+                                <i className="fas fa-plus-circle"></i>{" "}Group
+                            </Button>
                             <PersonalTraining packageType={data} ref={createEditPackage}></PersonalTraining>
                         </Card.Title>
                     </Col>
