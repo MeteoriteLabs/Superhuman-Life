@@ -50,17 +50,14 @@ function CreateEditView(props: any, ref: any) {
     ]
     )
     const [packageTypeName, setPackageTypeName] = useState<string | null>('personal-training')
-    const [formSchemaType, setFormSchemaType]= useState<string | null>('personal-training')
 
+    const [formData, setFormData] = useState<{ packagename: string, tags: string, disciplines: { typename: string, id: string, disciplines: string }[], type: string, aboutpackage: string, benefits: string, level: string, mode: string, address: { id: string, __typename: string }, ptclasssize: string,classsize:number, ptonline: number | null, ptoffline: number | null, restdays: number, bookingleadday: number, fitnesspackagepricing: any, is_private: boolean, introvideourl: string, fitness_package_type: { id: string, type: string, __typename: string },  duration:number }>()
 
-
-    const [formData, setFormData] = useState<{ packagename: string, tags: string, disciplines: { typename: string, id: string, disciplines: string }[], type: string, aboutpackage: string, benefits: string, level: string, mode: string, address: { id: string, __typename: string }, ptclasssize: string, ptonline: number | null, ptoffline: number | null, restdays: number, bookingleadday: number, fitnesspackagepricing: any, is_private: boolean, introvideourl: string, fitness_package_type: { id: string, type: string, __typename: string },  duration:number }>()
-
-
+   
     const ptSchema = require("./personal-training/personal-training.json");
     const jsonSchema = require(`./${packageTypeName}/${packageTypeName}.json`);
-
-
+    console.log(packageTypeName,jsonSchema )
+ 
 
     useEffect(() => {
         if (operation.type === 'Personal Training') {
@@ -70,15 +67,6 @@ function CreateEditView(props: any, ref: any) {
         }
     }, [operation.type])
     
-
-    // useEffect(() => {
-    //     if (operation.type === 'Personal Training') {
-    //         setPackageTypeName("pt");
-    //     } else if (operation.type === 'Group Class') {
-    //         setPackageTypeName("group");
-    //     }
-    // }, [operation])
-
 
 
 
@@ -104,6 +92,7 @@ function CreateEditView(props: any, ref: any) {
         }
     }
 
+    
 
 
 
@@ -129,8 +118,6 @@ function CreateEditView(props: any, ref: any) {
             'ui:widget': (props) => <FitnessMultiSelect widgetProps={props} actionType={operation.actionType} />
         },
         "address": {
-            // "ui:widget": RenderLocation
-            // "ui:widget": "radio",
             "ui:widget": (props) => <FitnessAddress actionType={operation.actionType} widgetProps={props} />
 
         },
@@ -140,22 +127,18 @@ function CreateEditView(props: any, ref: any) {
 
         "ptonline": {
             "ui:widget": (props) => <ModalCustomClasses  name={packageTypeName} actionType={operation.actionType} PTProps={ptSchema[3]} widgetProps={props} />
-
-            // "ui:widget": ModalCustomClasses
         },
+
         "ptoffline": {
             "ui:widget": (props) => <ModalCustomClasses  name={packageTypeName}  actionType={operation.actionType} PTProps={ptSchema[3]} widgetProps={props} />
-
         },
 
         "grouponline": {
             "ui:widget": (props) => <ModalCustomClasses name={packageTypeName}  actionType={operation.actionType} PTProps={ptSchema[3]} widgetProps={props} />
-
         },
 
         "groupoffline": {
             "ui:widget": (props) => <ModalCustomClasses name={packageTypeName} actionType={operation.actionType} PTProps={ptSchema[3]} widgetProps={props} />
-
         },
 
         "restdays": {
@@ -203,7 +186,7 @@ function CreateEditView(props: any, ref: any) {
             },
         },
 
-
+    
         "introvideourl": {
             "ui:placeholder": "http://"
         },
@@ -237,7 +220,7 @@ function CreateEditView(props: any, ref: any) {
 
 
         "carousel": {
-            "ui:widget": () => <ModalPreview userData={userData} fitnesspackagepricing={pricingDetailRef.current.getFitnessPackagePricing?.()} />
+            "ui:widget": () => <ModalPreview userData={userData} type={packageTypeName} fitnesspackagepricing={pricingDetailRef.current.getFitnessPackagePricing?.()} />
         },
     }
 

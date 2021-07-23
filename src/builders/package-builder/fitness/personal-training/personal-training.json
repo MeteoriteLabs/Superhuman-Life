@@ -60,7 +60,7 @@
             },
             "ptclasssize": {
                 "type": "string",
-                "title": "Class Size",
+                "title": "PT Class Size",
                 "enum": [
                     "Solo",
                     "Couple",

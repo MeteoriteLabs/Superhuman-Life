@@ -5,13 +5,13 @@ import './fitnessPreview.css'
 
 
 export default function ModalPreview(props) {
+    let { userData,fitnesspackagepricing, type } = props;
 
     const [index, setIndex] = useState(0);
     const handleSelect = (selectedIndex, e) => {
         setIndex(selectedIndex);
     };
     
-    let { userData,fitnesspackagepricing } = props;
     let { disciplines,size, number_classes_online, number_classes_offline, URL, level } = userData;
     if (typeof disciplines !== "object") disciplines = JSON.parse(disciplines);
 
@@ -57,11 +57,11 @@ export default function ModalPreview(props) {
                             <Card.Text className='pt-3 d-flex justify-content-between align-items-center '>
                                 <div className='d-flex justify-content-center align-items-center'>
                                     <div>
-                                        <img src="/assets/personal-training-Offline.svg" alt='123' />
+                                        <img src={`/assets/${type}-Offline.svg`} alt='123' />
                                         <p>{number_classes_offline} Offline</p>
                                     </div>
                                     <div className='px-4' style={{ borderRight: '1px solid black' }}>
-                                        <img src="/assets/personal-training-Online.svg" alt='123' />
+                                        <img src={`/assets/${type}-Online.svg`} alt='123' />
                                         <p>{number_classes_online} Online</p>
                                     </div>
                                     <div className='ml-4'>

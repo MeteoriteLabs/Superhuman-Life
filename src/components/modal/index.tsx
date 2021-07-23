@@ -17,8 +17,6 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
     const [formValues, setFormValues] = useState<any>(formData);
     const stepper: string[] = ["Creator", "Details", "Program", "Schedule", "Pricing", "Preview"];
 
-  
-
 
 
 
@@ -55,6 +53,7 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
             formData = { ...formData, fitnesspackagepricing: updateFinesspackagepricing }
             formSubmit(formData);
             // console.log("userData", userData)
+             actionType === "view" && setRender(false)
             console.log("Data submitted: ", formData);
         }
     }
@@ -151,7 +150,7 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
                                 variant="danger"
                                 size="sm"
                                 onClick={(event) => {
-                                    // actionType === "view" && setRender(false)
+                                   
                                     formRef.current.onSubmit(event)
                                 } }
                             >

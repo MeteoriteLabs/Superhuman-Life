@@ -125,9 +125,9 @@ export default function FitnessTab(props) {
             Cell: ({ row }: any) => {
                 return <ActionButton
                     action1="Edit"
-                    actionClick1={() => { createEditViewRef.current.TriggerForm({ id: row.original.id, actionType: 'edit' }) }}
+                    actionClick1={() => { createEditViewRef.current.TriggerForm({ id: row.original.id, actionType: 'edit', type: row.original.type }) }}
                     action2="View"
-                    actionClick2={() => { createEditViewRef.current.TriggerForm({ id: row.original.id, actionType: 'view' }) }}
+                    actionClick2={() => { createEditViewRef.current.TriggerForm({ id: row.original.id, actionType: 'view', type: row.original.type }) }}
                     action3="Status"
                     actionClick3={() => { createEditViewRef.current.TriggerForm({ id: row.original.id, actionType: 'toggle-status', current_status: (row.original.status === "Active") }) }}
                     action4="Delete"

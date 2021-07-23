@@ -55,7 +55,7 @@
                 "title": "Benefits"
             },
             "classsize": {
-                "type": "string",
+                "type": "number",
                 "title": "Class Size"
             },
             "intropicture": {
