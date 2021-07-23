@@ -1,5 +1,6 @@
-import React ,{useState} from 'react';
+import {useState} from 'react';
 import { v4 as uuidv4 } from 'uuid';
+import { Image} from "react-bootstrap";
 import AWS from 'aws-sdk'
 
 const S3_BUCKET ='sapien.systems';
@@ -29,23 +30,50 @@ const UploadImageToS3WithNativeSdk = () => {
 
     const [progress , setProgress] = useState(0);
     const [selectedFile, setSelectedFile] = useState(null);
+    const [render,setRender] = useState(false);
+    const [url,setUrl]= useState(null);
+    // const [loading,setLoading] = useState(false);
 
     var albumPhotosKey = "sapien.partner.qa/";
-    
+   
 
     const handleFileInput = (e) => {
         setSelectedFile(e.target.files[0]);
+
+        if(e.target.files[0].type === "image/png"|| e.target.files[0].type === "image/jpeg"||e.target.files[0].type === "image/jpg"||e.target.files[0].type === "image/svg"){
+            setRender(false);
+        }else{
+            setRender(true);
+        }
+        console.log(e);
     }
 
     const uploadFile = (file) => {
-        
-        var photoKey = albumPhotosKey + uuidv4()+ file.name;
+        //png,jpeg,jpg,svg
+        let fileType =" ";
+
+        if(file.type === "image/png"){
+         fileType=".png";
+        }else if(file.type === "image/jpeg"){
+         fileType=".jpeg";
+        }else if(file.type === "image/jpg"){
+         fileType=".jpg";
+        }else if(file.type === "image/svg"){
+         fileType=".svg";
+        }
+
+        if(file.type === "image/png"|| file.type === "image/jpeg"||file.type === "image/jpg"||file.type === "image/svg"){
+        var photoKey = albumPhotosKey + uuidv4()+fileType;
 
         const params = {
             Body: file,
             Bucket: S3_BUCKET,
             Key: photoKey
         };
+        const paramUrl = {
+            Bucket: S3_BUCKET,
+            Key: photoKey
+        }
         console.log(params);
 
         myBucket.putObject(params)
@@ -55,13 +83,26 @@ const UploadImageToS3WithNativeSdk = () => {
             .send((err) => {
                 if (err) console.log(err)
             })
+
+            var promise = myBucket.getSignedUrlPromise('getObject', paramUrl);
+            promise.then(function(url) {
+            console.log('The URL is', url);
+            setTimeout(() => setUrl(url),1000);
+            }, function(err) { console.log(err) });
+        }
+        
     }
 
 
     return <div>
-        <div>Upload Progress is {progress}%</div>
-        <input type="file" onChange={handleFileInput}/>
-        <button onClick={() => uploadFile(selectedFile)}>Upload</button>
+        <div><p className="text-primary">Upload Progress is {progress}%</p></div>
+        {url?<Image src={url} width="500px" height="500px" className="img-thumbnail" alt=""/>:<p className="font-weight-light">Upload image to see preview</p>}
+        <div>
+        <input type="file" className="pt-2"  onChange={handleFileInput}/>
+        {render?<p className="text-danger">Supported Formats (png/jpeg/jpg/svg)</p>:<button type="button" className="btn-sm btn-secondary" onClick={() => uploadFile(selectedFile)}>Upload</button>}
+        </div>
+        
+
     </div>
 }
 
