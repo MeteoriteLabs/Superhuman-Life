@@ -95,11 +95,21 @@ const UploadImageToS3WithNativeSdk = () => {
 
 
     return <div>
-        <div><p className="text-primary">Upload Progress is {progress}%</p></div>
-        {url?<Image src={url} width="500px" height="500px" className="img-thumbnail" alt=""/>:<p className="font-weight-light">Upload image to see preview</p>}
+        {url? " ":<div><p className="text-primary">Upload Progress is {progress}%</p></div>}
+        {url?<Image src={url} width="500px" height="500px" className="img-thumbnail" alt=""/>:<p className="font-weight-bold">Upload image to see preview</p>}
         <div>
-        <input type="file" className="pt-2"  onChange={handleFileInput}/>
-        {render?<p className="text-danger">Supported Formats (png/jpeg/jpg/svg)</p>:<button type="button" className="btn-sm btn-secondary" onClick={() => uploadFile(selectedFile)}>Upload</button>}
+        {url?" ":
+        <div>
+            {render?<p className="text-danger">Supported Formats (png/jpeg/jpg/svg)</p>:
+            <div>
+            <input type="file" className="pt-2"  onChange={handleFileInput}/>
+            <button type="button" className="btn-sm btn-secondary" onClick={() => uploadFile(selectedFile)}>Upload</button>
+            </div>
+            }
+        
+        </div>
+        }
+        
         </div>
         
 
