@@ -1,9 +1,9 @@
-import { Fragment, useEffect, useRef, useState } from "react";
+import { Fragment, useRef, useState } from "react";
 import { withTheme, utils } from "@rjsf/core";
 import { Theme as Bootstrap4Theme } from '@rjsf/bootstrap-4';
 import { Button, Col, Modal, ProgressBar, Row } from "react-bootstrap";
 import _ from "lodash"
-import { render } from "@testing-library/react";
+
 
 export default function ModalView({ name, formUISchema, formSubmit, formSchema, formData, isStepper, userData, setUserData, fitnesspackagepricing, widgets, setRender, fitness_package_type, classesValidation, actionType, pricingDetailRef }: any) {
 
@@ -93,13 +93,13 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
         return action
     }
 
-    useEffect(() =>{
-        if(show === false){
-            setRender(false)
-        }else{
-            setRender(true)
-        }
-    },[show]);
+    // useEffect(() =>{
+    //     if(show === false){
+    //         setRender(false)
+    //     }else{
+    //         setRender(true)
+    //     }
+    // },[show]);
     // console.log('render child', render)
 
     return (

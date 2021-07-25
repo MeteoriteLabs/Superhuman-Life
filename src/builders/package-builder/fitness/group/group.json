@@ -140,8 +140,8 @@
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 30,
-                                "default": "0",
-                                "value": 0
+                                "default": 0,
+                                "value":""
                             }
                         }
                     },
@@ -171,8 +171,8 @@
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 30,
-                                "default": "0",
-                                "value": 0
+                                "default": 0,
+                                "value":""
                             }
                         }
                     },
@@ -211,8 +211,8 @@
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 30,
-                                "default": "0",
-                                "value": 0
+                                "default": 0,
+                                "value":""
                             }
                         }
                     }

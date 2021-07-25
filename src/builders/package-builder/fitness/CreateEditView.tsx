@@ -13,6 +13,8 @@ import StatusModal from '../../../components/StatusModal/StatusModal';
 import FitnessMultiSelect from './widgetCustom/FitnessMultiSelect'
 import FitnessAddress from './widgetCustom/FitnessAddress';
 import FitnessPricingTable from './widgetCustom/FitnessPricingTable'
+import FitnessDuration from './widgetCustom/FitnessDuration';
+
 
 interface Operation {
     id: string;
@@ -43,9 +45,10 @@ interface UserDataProps {
     fitness_package_type: { id: string, type: string, __typename: string };
     duration: number
 }
+
+
 function CreateEditView(props: any, ref: any) {
     const auth = useContext(AuthContext);
-    // const [render, setRender] = useState<boolean>(false);
     const [operation, setOperation] = useState<Operation>({} as Operation);
     const [userData, setUserData] = useState<any>('');
     const [fitnesspackagepricing, setFitnesspackagepricing] = useState<any>([
@@ -88,6 +91,10 @@ function CreateEditView(props: any, ref: any) {
             setPackageTypeName("personal-training");
         } else if (type === 'Group Class') {
             setPackageTypeName("group");
+        } else if (type === 'Classic Class') {
+            setPackageTypeName("classic");
+        } else if (type === 'Custom Fitness') {
+            setPackageTypeName("custom");
         }
 
         if (actionType === 'create') {
@@ -99,7 +106,7 @@ function CreateEditView(props: any, ref: any) {
         }
 
     }, [operation]);
-    
+
 
     // if (operation.actionType === "edit" || operation.actionType === "view") {
     // }
@@ -123,15 +130,13 @@ function CreateEditView(props: any, ref: any) {
         }
     }
 
+    
+    // const customTextTitlePackage = (props: any) => {
+    //     return <div className='text-center font-weight-bold mx-auto w-50 py-3 px-2 mt-5' style={{ boxShadow: '0px 7px 15px -5px #000000', borderRadius: '5px' }}>
+    //         <p className='m-0'>Set for One Month (30 days)</p>
+    //     </div>
+    // };
 
-
-
-
-    const customTextTitlePackage = (props: any) => {
-        return <div className='text-center font-weight-bold mx-auto w-50 py-3 px-2 mt-5' style={{ boxShadow: '0px 7px 15px -5px #000000', borderRadius: '5px' }}>
-            <p className='m-0'>Set for One Month (30 days)</p>
-        </div>
-    };
 
 
     const widgets = {
@@ -152,7 +157,7 @@ function CreateEditView(props: any, ref: any) {
 
         },
         "days": {
-            "ui:widget": customTextTitlePackage
+            "ui:widget":(props)=><FitnessDuration/>
         },
 
         "ptonline": {
@@ -171,10 +176,15 @@ function CreateEditView(props: any, ref: any) {
             "ui:widget": (props) => <ModalCustomClasses name={packageTypeName} actionType={operation.actionType} PTProps={ptSchema[3]} widgetProps={props} />
         },
 
+        "recordedclasses":{
+            "ui:widget": (props) => <ModalCustomClasses name={packageTypeName} actionType={operation.actionType} PTProps={ptSchema[3]} widgetProps={props} />
+        },
+
         "restdays": {
             "ui:widget": (props: any) => <ModalCustomRestday actionType={operation.actionType} PTProps={ptSchema[3]} widgetProps={props} />
 
         },
+
 
         "level": {
             "ui:widget": "radio",
@@ -223,7 +233,15 @@ function CreateEditView(props: any, ref: any) {
 
 
 
+
         "groupinstantbooking": {
+            "ui:widget": "radio",
+            "ui:options": {
+                "inline": true,
+            },
+        },
+
+        "type":{
             "ui:widget": "radio",
             "ui:options": {
                 "inline": true,
@@ -245,7 +263,7 @@ function CreateEditView(props: any, ref: any) {
 
 
         "carousel": {
-            "ui:widget": () => <ModalPreview userData={userData} type={packageTypeName} fitnesspackagepricing={pricingDetailRef.current.getFitnessPackagePricing?.()} />
+            "ui:widget": () => <ModalPreview userData={userData} type={operation.type} packageType={packageTypeName} fitnesspackagepricing={pricingDetailRef.current.getFitnessPackagePricing?.()} />
         },
     }
 
@@ -414,7 +432,6 @@ function CreateEditView(props: any, ref: any) {
                     name={actionName}
                     isStepper={true}
                     formUISchema={uiSchema}
-                    // formSchema={ptSchema}
                     formSchema={jsonSchema}
                     userData={userData}
                     setUserData={setUserData}

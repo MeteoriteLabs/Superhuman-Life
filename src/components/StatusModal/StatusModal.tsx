@@ -33,8 +33,6 @@ function StatusModal(props: any) {
             </Row>
           </div>
         </Modal.Footer>
-
-
       </Modal>
     </>
   );

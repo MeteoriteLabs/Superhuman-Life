@@ -1,5 +1,4 @@
-import { fireEvent } from '@testing-library/react';
-import React, { useCallback, useRef, useState } from 'react'
+import React, { useState } from 'react'
 import { useEffect } from 'react';
 import { Table } from 'react-bootstrap';
 import Classes from './tableComponent/Classes';
@@ -14,8 +13,8 @@ import * as _ from 'lodash'
 export default function FitnessPricingTable(props) {
     const { userData, setUserData, actionType, type, formData, setFormData, name, pricingDetailRef } = props;
 
-    let { ptonline, ptoffline, mode, grouponline, groupoffline } = userData;
-
+    let { ptonline, ptoffline, mode, grouponline, groupoffline, recordedclasses, duration } = userData;
+    console.log(type)
     const [status, setStatus] = useState(false);
     const [fitnesspackagepricing, setFitnesspackagepricing] = useState<any>([
         {
@@ -41,7 +40,8 @@ export default function FitnessPricingTable(props) {
     ])
 
     const [onlineClassesType, setOnlineClassesType] = useState()
-    const [offlineClassesType, setOffineClassesType] = useState()
+    const [offlineClassesType, setOffineClassesType] = useState();
+    const [classicClasses, setClassicClasses] = useState()
 
 
     useEffect(() => {
@@ -65,6 +65,8 @@ export default function FitnessPricingTable(props) {
         } else if (type === "Group Class") {
             setOnlineClassesType(grouponline);
             setOffineClassesType(groupoffline)
+        } else if (type === "Classic Class") {
+            setClassicClasses(recordedclasses)
         }
     }, [])
 
@@ -79,39 +81,58 @@ export default function FitnessPricingTable(props) {
         setUserData({ ...userData, ptonline })
     }
 
-
-    // return null 
     return <>
         <Table striped bordered hover className='text-center'>
             <thead>
                 <tr>
                     <th>Details</th>
-                    <th>Monthly</th>
-                    <th>Quaterly</th>
-                    <th>Half Yearly</th>
-                    <th>Yearly</th>
+                    {type !== "Classic Class" ? <>
+                        <th>Monthly</th>
+                        <th>Quaterly</th>
+                        <th>Half Yearly</th>
+                        <th>Yearly</th>
+                    </> :
+                        <th>{duration} days</th>
+                    }
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    {onlineClassesType !== undefined && onlineClassesType !== 0 ?
-                        <>
-                            <td><img src={`/assets/${name}-Online.svg`} alt='123' />Online</td>
-                            <Classes numberClass={onlineClassesType} />
-                        </> : ""
-                    }
-                </tr>
-                <tr>
-                    {offlineClassesType !== undefined && offlineClassesType !== 0 ?
-                        <>
-                            <td><img src={`/assets/${name}-Offline.svg `} alt='123' />Offline</td>
-                            <Classes numberClass={offlineClassesType} />
-                        </> : ""
-                    }
-                </tr>
+
+                {type === "Classic Class" ?
+                    <>
+                        <tr>
+                            {recordedclasses !== undefined && recordedclasses !== 0 ?
+                                <>
+                                    <td><img src={`/assets/${name}.svg`} alt='123' />Recorded</td>
+                                    <Classes type={type} numberClass={classicClasses} />
+                                </> : ""
+                            }
+                        </tr>
+                    </> :
+                    <>
+                        <tr>
+                            {onlineClassesType !== undefined && onlineClassesType !== 0 ?
+                                <>
+                                    <td><img src={`/assets/${name}-Online.svg`} alt='123' />Online</td>
+                                    <Classes type numberClass={onlineClassesType} />
+                                </> : ""
+                            }
+                        </tr>
+                        <tr>
+                            {offlineClassesType !== undefined && offlineClassesType !== 0 ?
+                                <>
+                                    <td><img src={`/assets/${name}-Offline.svg `} alt='123' />Offline</td>
+                                    <Classes type numberClass={offlineClassesType} />
+                                </> : ""
+                            }
+                        </tr>
+                    </>
+                }
+
                 <tr>
                     <td></td>
                     <Voucher
+                        type={type}
                         actionType={actionType}
                         status={status}
                         setStatus={setStatus}
@@ -123,15 +144,20 @@ export default function FitnessPricingTable(props) {
                 </tr>
                 <tr>
                     <td className='font-weight-bold'>Total Sessions</td>
-                    <ClassesSessions classOnline={ptonline} classOffline={ptoffline} />
+                    <ClassesSessions
+                        type={type}
+                        classicClasses={classicClasses}
+                        classOnline={offlineClassesType}
+                        classOffline={offlineClassesType} />
                 </tr>
                 <tr>
                     <td>Suggested Pricing</td>
-                    <SuggestedPricing />
+                    <SuggestedPricing type={type} />
                 </tr>
                 <tr>
                     <td>Set MRP</td>
                     <MRP
+                        type={type}
                         actionType={actionType}
                         status={status}
                         // formData={formData}

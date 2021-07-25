@@ -2,10 +2,11 @@ import React from 'react'
 import * as _ from 'lodash'
 
 export default function Voucher(props) {
-    const {actionType, status, formData,setFormData, childFitnesspackagepricing,setChildFitnesspackagepricing, setStatus,setFitnesspackagepricing, fitnesspackagepricing } = props
+    const {actionType, setStatus,setFitnesspackagepricing, fitnesspackagepricing, type } = props
+    let numEle = type === "Classic Class" ? 1 : 4
     return <>
     
-    {[...Array(4)].map((item: any, index: number) => {
+    {[...Array(numEle)].map((item: any, index: number) => {
             return <td key={index}>
             <select
                 disabled={actionType === "view" ? true : false}

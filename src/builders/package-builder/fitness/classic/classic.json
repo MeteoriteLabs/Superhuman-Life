@@ -2,59 +2,41 @@
     "1": {
         "title": "",
         "type": "object",
-        "required": [
-            "name",
-            "discipline",
-            "mode",
-            "level",
-            "status"
-        ],
+        "required": [],
         "properties": {
-            "name": {
+            "packagename": {
                 "type": "string",
                 "title": "Name of Package"
             },
-            "discipline": {
+            "disciplines": {
                 "type": "string",
-                "title": "Discipline",
-                "enum": [
-                    "Basic",
-                    "Calsc",
-                    "Yoga",
-                    "Zumba"
-                ]
+                "title": "Disciplines"
             },
             "tags": {
                 "type": "string",
                 "title": "Tags"
-            },
-            "mode": {
-                "type": "string",
-                "title": "Mode",
-                "enum": [
-                    "Online",
-                    "Offline",
-                    "Hybrid"
-                ]
             },
             "level": {
                 "type": "string",
                 "title": "Level",
                 "enum": [
                     "Beginner",
-                    "Basic",
-                    "Difficult",
-                    "Expert",
-                    "Challenge"
+                    "Intermediate",
+                    "Advanced"
                 ]
             },
-            "status": {
-                "type": "string",
-                "title": "Status",
-                "enum": [
-                    "Active",
-                    "Inactive",
-                    "Pending"
+            "is_private": {
+                "type": "boolean",
+                "title": "Visiblity",
+                "oneOf": [
+                    {
+                        "title": "Public",
+                        "const": true
+                    },
+                    {
+                        "title": "Private",
+                        "const": false
+                    }
                 ]
             }
         }
@@ -62,14 +44,9 @@
     "2": {
         "title": "",
         "type": "object",
-        "required": [
-            "about",
-            "benefits",
-            "location",
-            "size"
-        ],
+        "required": [],
         "properties": {
-            "about": {
+            "aboutpackage": {
                 "type": "string",
                 "title": "About"
             },
@@ -77,109 +54,93 @@
                 "type": "string",
                 "title": "Benefits"
             },
-            "location": {
+            "intropicture": {
                 "type": "string",
-                "title": "Location"
-            },
-            "size": {
-                "type": "number",
-                "title": "Class Size"
+                "format": "data-url",
+                "title": "Intro Picture"
             },
             "video": {
                 "type": "string",
-                "format": "uri",
-                "title": "Exercise Video Link"
+                "title": "Intro Video",
+                "format": "data-url"
             },
-            "thumbnail": {
+            "introvideourl": {
                 "type": "string",
-                "format": "data-url",
-                "title": "Exercise Picture",
-                "accept": ".jpg"
+                "title": "Or add video URL",
+                "format": "uri"
             }
         }
     },
     "3": {
         "title": "Program Details",
         "type": "object",
-        "required": [
-            "package"
-        ],
+        "required": [],
         "properties": {
-            "package": {
+            "type": {
                 "type": "string",
-                "title": "Assign Package Now",
-                "description": "Package won't be active till the program is assigned.",
+                "title": "Duration",
                 "enum": [
-                    "Yes",
-                    "Later"
-                ]
-            },
-            "typo": {
-                "type": "string",
-                "title": "Type of Package",
-                "enum": [
-                    "Program",
-                    "Workout"
+                    "Monthly",
+                    "Quaterly",
+                    "Half Yearly",
+                    "Yearly",
+                    "Other"
                 ]
             }
         },
         "dependencies": {
-            "package": [
-                "typo"
-            ],
-            "typo": {
+            "type": {
                 "oneOf": [
                     {
                         "properties": {
-                            "typo": {
+                            "type": {
+                                "title": "Other",
+                                "type": "string",
                                 "enum": [
-                                    "Program"
+                                    "Other"
                                 ]
                             },
-                            "set": {
+                            "duration": {
                                 "type": "number",
                                 "title": "Set for 1 month i.e. 30 days",
-                                "description": "Program to be assigned after package purchase",
-                                "minimum": 30,
+                                "minimum": 0,
                                 "default": 0
                             },
-                            "fitness": {
-                                "type": "object",
-                                "title": "",
-                                "properties": {
-                                    "record": {
-                                        "type": "number",
-                                        "title": "Number of Recorded Classes"
-                                    },
-                                    "rest": {
-                                        "type": "number",
-                                        "title": "Number of Rest Classes"
-                                    },
-                                    "schedule": {
-                                        "type": "number",
-                                        "title": "Consumer can choose start date after",
-                                        "description": "This lead time will help you discuss, understand, request data and then build a custom program for the client"
-                                    }
-                                }
+                            "days": {
+                                "title": "A null field",
+                                "type": "number",
+                                "value": 30
+                            },
+                            "recordedclasses": {
+                                "title": "Recorded",
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 30,
+                                "default": "0",
+                                "value": 0
+                            },
+                            "restdays": {
+                                "title": "Rest Days",
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 30,
+                                "default": 0,
+                                "value": ""
                             }
                         }
                     },
                     {
                         "properties": {
-                            "typo": {
+                            "type": {
+                                "title": "Monthly",
+                                "type": "string",
                                 "enum": [
-                                    "Workout"
+                                    "Monthly"
                                 ]
                             },
-                            "label": {
-                                "title": "",
-                                "description": "Program can be assigned after purchase of workout package",
-                                "type": "string"
-                            },
-                            "schedule": {
+                            "duration": {
                                 "type": "number",
-                                "title": "Consumer can choose start time before",
-                                "description": "This will give you lead time to prepare yourself for the class. This type of booking is generally on the same day."
+                                "default": 0
                             }
                         }
                     }
@@ -189,26 +150,27 @@
     },
     "4": {},
     "5": {
-        "title": "",
+        "title": "Pricing Plan",
         "type": "object",
         "properties": {
-            "voucher": {
+            "pricingDetail": {
                 "type": "string",
-                "title": "Additional Voucher"
-            },
-            "plan": {
+                "title": "Pricing Plan",
+                "value": 0
+            }
+        }
+    },
+    "6": {
+        "title": "Preview",
+        "type": "object",
+        "properties": {
+            "carousel": {
                 "type": "string",
-                "title": "Workout Plan",
-                "enum": [
-                    "Monthly",
-                    "Quaterly",
-                    "Half Yearly",
-                    "Yearly"
-                ]
+                "title": "carousel"
             },
-            "price": {
-                "type": "number",
-                "title": "Set Pricing"
+            "link": {
+                "type": "null",
+                "title": "carousel"
             }
         }
     }
