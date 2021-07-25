@@ -1,8 +1,9 @@
-import { Fragment, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { withTheme, utils } from "@rjsf/core";
 import { Theme as Bootstrap4Theme } from '@rjsf/bootstrap-4';
 import { Button, Col, Modal, ProgressBar, Row } from "react-bootstrap";
 import _ from "lodash"
+import { render } from "@testing-library/react";
 
 export default function ModalView({ name, formUISchema, formSubmit, formSchema, formData, isStepper, userData, setUserData, fitnesspackagepricing, widgets, setRender, fitness_package_type, classesValidation, actionType, pricingDetailRef }: any) {
 
@@ -14,6 +15,7 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
     const formRef = useRef<any>(null);
     const [step, setStep] = useState<number>(1);
     const [show, setShow] = useState<boolean>(true);
+    
     const [formValues, setFormValues] = useState<any>(formData);
     const stepper: string[] = ["Creator", "Details", "Program", "Schedule", "Pricing", "Preview"];
 
@@ -37,14 +39,29 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
 
     }
 
+    const resetClassesValue = () => {
+        const { properties } = classesValidation;
+        let { ptonline, ptoffline, restdays, grouponline, groupoffline } = userData;
+        properties.onlineClasses.value = "";
+        properties.offlineClasses.value = "";
+        properties.restDay.value = "";
+        ptoffline = 0;
+        ptonline = 0;
+        grouponline = 0;
+        groupoffline = 0;
+        restdays = 0;
+        setUserData({ ...userData, ptoffline, ptonline, grouponline, groupoffline, restdays })
+        setFormValues({ ...formValues, ptoffline, ptonline, grouponline, groupoffline, restdays })
+    }
 
     function submitHandler(formData: any) {
-        const updateFinesspackagepricing = updatePrice()
+        const updateFinesspackagepricing = updatePrice();
         if (isStepper && step < 6) {
             setStep(step + 1);
             setFormValues({ ...formValues, ...formData, fitness_package_type, fitnesspackagepricing: updateFinesspackagepricing });
             setUserData({ ...formValues, ...formData, fitness_package_type, fitnesspackagepricing: updateFinesspackagepricing })
-            console.log('formData before submit', formValues);
+            console.log('formData before submit', formData);
+            // console.log('formValues', formValues)
             console.log("userData", userData);
         } else {
             if (typeof formData.disciplines !== "object") {
@@ -53,7 +70,7 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
             formData = { ...formData, fitnesspackagepricing: updateFinesspackagepricing }
             formSubmit(formData);
             // console.log("userData", userData)
-             actionType === "view" && setRender(false)
+            actionType === "view" && setRender(false)
             console.log("Data submitted: ", formData);
         }
     }
@@ -76,11 +93,17 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
         return action
     }
 
+    useEffect(() =>{
+        if(show === false){
+            setRender(false)
+        }else{
+            setRender(true)
+        }
+    },[show]);
+    // console.log('render child', render)
+
     return (
         <>
-            {/* <Button variant={name === "Create New"?"outline-secondary":"light"}  size="sm" onClick={() => setShow(true)}>
-                {name === "Create New"?<i className="fas fa-plus-circle"></i>:" "}{" "}{name}
-            </Button> */}
             <Modal size="xl" show={show} onHide={() => setShow(false)} centered >
                 <Modal.Header closeButton onClick={() => setRender(false)}>
                     <Modal.Title as={Row}>
@@ -129,16 +152,7 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
                                     setStep(step - 1);
                                     if (step === 4) {
                                         if (actionType === "create") {
-                                            const { properties } = classesValidation;
-                                            let { ptonline, ptoffline, restdays } = userData;
-                                            properties.onlineClasses.value = "";
-                                            properties.offlineClasses.value = "";
-                                            properties.restDay.value = "";
-                                            ptoffline = 0;
-                                            ptonline = 0;
-                                            restdays = 0;
-                                            setUserData({ ...userData, ptoffline, ptonline, restdays })
-                                            setFormValues({ ...formValues, ptoffline, ptonline, restdays })
+                                            resetClassesValue()
                                         }
                                     }
                                 }}
@@ -150,9 +164,9 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
                                 variant="danger"
                                 size="sm"
                                 onClick={(event) => {
-                                   
+
                                     formRef.current.onSubmit(event)
-                                } }
+                                }}
                             >
                                 {(step < 6)
                                     ? <>Next<i className="ml-4 fas fa-arrow-right"></i></>

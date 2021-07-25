@@ -8,7 +8,7 @@ import { useMutation, useQuery } from '@apollo/client';
 import { GET_SINGLE_PACKAGE_BY_ID } from './graphQL/queries';
 import ModalPreview from './widgetCustom/FitnessPreview';
 import './CreateEditView.css'
-import { CREATE_PT_PACKAGE, DELETE_PACKAGE, EDIT_PACKAGE, UPDATE_PACKAGE_PRIVATE } from './graphQL/mutations';
+import { CREATE_PACKAGE, DELETE_PACKAGE, EDIT_PACKAGE, UPDATE_PACKAGE_PRIVATE } from './graphQL/mutations';
 import StatusModal from '../../../components/StatusModal/StatusModal';
 import FitnessMultiSelect from './widgetCustom/FitnessMultiSelect'
 import FitnessAddress from './widgetCustom/FitnessAddress';
@@ -20,10 +20,32 @@ interface Operation {
     type: 'Personal Training' | 'Group Class' | 'Custom Fitness' | 'Classic Class';
     current_status: boolean;
 }
+
+interface UserDataProps {
+    packagename: string;
+    tags: string;
+    disciplines: { typename: string, id: string, disciplines: string }[];
+    type: string;
+    aboutpackage: string;
+    benefits: string;
+    level: string;
+    mode: string;
+    address: { id: string, __typename: string };
+    ptclasssize: string;
+    classsize: number;
+    ptonline: number | null;
+    ptoffline: number | null;
+    restdays: number;
+    bookingleadday: number;
+    fitnesspackagepricing: any;
+    is_private: boolean;
+    introvideourl: string;
+    fitness_package_type: { id: string, type: string, __typename: string };
+    duration: number
+}
 function CreateEditView(props: any, ref: any) {
     const auth = useContext(AuthContext);
-
-    const [render, setRender] = useState<boolean>(false);
+    // const [render, setRender] = useState<boolean>(false);
     const [operation, setOperation] = useState<Operation>({} as Operation);
     const [userData, setUserData] = useState<any>('');
     const [fitnesspackagepricing, setFitnesspackagepricing] = useState<any>([
@@ -49,38 +71,47 @@ function CreateEditView(props: any, ref: any) {
         },
     ]
     )
-    const [packageTypeName, setPackageTypeName] = useState<string | null>('personal-training')
+    const [packageTypeName, setPackageTypeName] = useState<string | null>('personal-training');
+    const [actionName, setActionName] = useState<string>("")
+    const [formData, setFormData] = useState<UserDataProps>();
+    const [render, setRender] = useState<boolean>(false);
 
-    const [formData, setFormData] = useState<{ packagename: string, tags: string, disciplines: { typename: string, id: string, disciplines: string }[], type: string, aboutpackage: string, benefits: string, level: string, mode: string, address: { id: string, __typename: string }, ptclasssize: string,classsize:number, ptonline: number | null, ptoffline: number | null, restdays: number, bookingleadday: number, fitnesspackagepricing: any, is_private: boolean, introvideourl: string, fitness_package_type: { id: string, type: string, __typename: string },  duration:number }>()
 
-   
     const ptSchema = require("./personal-training/personal-training.json");
     const jsonSchema = require(`./${packageTypeName}/${packageTypeName}.json`);
-    console.log(packageTypeName,jsonSchema )
- 
+    // console.log(packageTypeName,jsonSchema )
+
 
     useEffect(() => {
-        if (operation.type === 'Personal Training') {
+        const { actionType, type } = operation
+        if (type === 'Personal Training') {
             setPackageTypeName("personal-training");
-        } else if (operation.type === 'Group Class') {
+        } else if (type === 'Group Class') {
             setPackageTypeName("group");
         }
-    }, [operation.type])
+
+        if (actionType === 'create') {
+            setActionName("Create New");
+        } else if (actionType === 'edit') {
+            setActionName("Edit");
+        } else if (actionType === 'view') {
+            setActionName("View");
+        }
+
+    }, [operation]);
     
 
+    // if (operation.actionType === "edit" || operation.actionType === "view") {
+    // }
 
 
-    let actionName: string = "";
-    if (operation.actionType === 'create') {
-        actionName = "Create New";
-    } else if (operation.actionType === 'edit') {
-        actionName = "Edit";
-    } else if (operation.actionType === 'view') {
-        actionName = "View";
-    }
+    console.log('parent')
 
-    
-    
+
+    // let actionName: string = "";
+
+
+
     let fitness_package_type: string | undefined = ''
     if (operation.actionType === "view" || operation.actionType === 'edit') {
         fitness_package_type = formData?.fitness_package_type.id
@@ -92,14 +123,13 @@ function CreateEditView(props: any, ref: any) {
         }
     }
 
-    
+
 
 
 
     const customTextTitlePackage = (props: any) => {
-        console.log(props)
         return <div className='text-center font-weight-bold mx-auto w-50 py-3 px-2 mt-5' style={{ boxShadow: '0px 7px 15px -5px #000000', borderRadius: '5px' }}>
-            <p className='m-0'>Set for One Month ({props.schema.default} days)</p>
+            <p className='m-0'>Set for One Month (30 days)</p>
         </div>
     };
 
@@ -121,20 +151,20 @@ function CreateEditView(props: any, ref: any) {
             "ui:widget": (props) => <FitnessAddress actionType={operation.actionType} widgetProps={props} />
 
         },
-        // "duration": {
-        //     "ui:widget": customTextTitlePackage
-        // },
+        "days": {
+            "ui:widget": customTextTitlePackage
+        },
 
         "ptonline": {
-            "ui:widget": (props) => <ModalCustomClasses  name={packageTypeName} actionType={operation.actionType} PTProps={ptSchema[3]} widgetProps={props} />
+            "ui:widget": (props) => <ModalCustomClasses name={packageTypeName} actionType={operation.actionType} PTProps={ptSchema[3]} widgetProps={props} />
         },
 
         "ptoffline": {
-            "ui:widget": (props) => <ModalCustomClasses  name={packageTypeName}  actionType={operation.actionType} PTProps={ptSchema[3]} widgetProps={props} />
+            "ui:widget": (props) => <ModalCustomClasses name={packageTypeName} actionType={operation.actionType} PTProps={ptSchema[3]} widgetProps={props} />
         },
 
         "grouponline": {
-            "ui:widget": (props) => <ModalCustomClasses name={packageTypeName}  actionType={operation.actionType} PTProps={ptSchema[3]} widgetProps={props} />
+            "ui:widget": (props) => <ModalCustomClasses name={packageTypeName} actionType={operation.actionType} PTProps={ptSchema[3]} widgetProps={props} />
         },
 
         "groupoffline": {
@@ -186,7 +216,7 @@ function CreateEditView(props: any, ref: any) {
             },
         },
 
-    
+
         "introvideourl": {
             "ui:placeholder": "http://"
         },
@@ -200,17 +230,12 @@ function CreateEditView(props: any, ref: any) {
             },
         },
 
-        // "groupinstantbooking": {
-        //     "type": "boolean",
-        //     "title": "Allow Consumers to book instant Workouts",
-        //     "description": "This will let people join this group class for a day on demand"
-        //   }
-
-
         "pricingDetail": {
             "ui:widget": (props) => <FitnessPricingTable
                 userData={userData}
                 setUserData={setUserData}
+                type={operation.type}
+                name={packageTypeName}
                 actionType={operation.actionType}
                 pricingDetailRef={pricingDetailRef}
                 widgetProps={props}
@@ -225,9 +250,9 @@ function CreateEditView(props: any, ref: any) {
     }
 
 
-    if (operation.actionType === "edit" || operation.actionType === "view") {
-    }
 
+    // if (operation.actionType === "edit" || operation.actionType === "view") {
+    // }
 
     const FetchData = () => {
         useQuery(GET_SINGLE_PACKAGE_BY_ID, {
@@ -240,6 +265,7 @@ function CreateEditView(props: any, ref: any) {
                 FillDetails(dataPackage)
             }
         });
+
     };
 
     FetchData()
@@ -280,32 +306,36 @@ function CreateEditView(props: any, ref: any) {
         updateFormData.is_private = is_private;
 
         setFormData(updateFormData);
-       
+
         // setFitnesspackagepricing(updateFormData.fitnesspackagepricing)
 
-        //if message exists - show form only for edit and view
-        if (['edit', 'view'].indexOf(operation.actionType) > -1)
-            setRender(true);
-        else
+        // if message exists - show form only for edit and view
+        if (['edit', 'view'].indexOf(operation.actionType) > -1) {
+            setRender(true)
+        }
+        else {
             OnSubmit(null);
+        }
     }
 
-    console.log('form data parent', formData)
+    // console.log('form data parent', formData)
+
 
 
     useImperativeHandle(ref, () => ({
         TriggerForm: (msg: Operation) => {
             console.log('msg', msg)
             setOperation(msg);
-            if (msg && !msg.id) //render form if no message id
+
+            //render form if no message id
+            if (msg && !msg.id) {
                 setRender(true);
+            }
         }
-
-
     }));
 
 
-    const [createPackage] = useMutation(CREATE_PT_PACKAGE, {
+    const [createPackage] = useMutation(CREATE_PACKAGE, {
         variables: { users_permissions_user: auth.userid },
         onCompleted: (r: any) => {
             console.log(r);
@@ -376,12 +406,6 @@ function CreateEditView(props: any, ref: any) {
         }
     }
 
-
-
-
-
-    // console.log('Rerender createoredit-fitness')
-
     return (
         <>
             {render &&
@@ -399,11 +423,12 @@ function CreateEditView(props: any, ref: any) {
                     setRender={setRender}
                     fitnesspackagepricing={fitnesspackagepricing}
                     widgets={widgets}
-                    formData={operation.id && {
-                        ...formData
-                    }}
+                    formData={operation.id && formData}
                     classesValidation={ptSchema[3]}
                     actionType={operation.actionType}
+                    operation={operation}
+                    setOperation={setOperation}
+
                 />
             }
             {operation.actionType === 'delete' && <StatusModal

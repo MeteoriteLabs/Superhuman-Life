@@ -89,10 +89,10 @@
                     "Hybrid"
                 ]
             },
-            "duration": {
+            "days": {
                 "title": "A null field",
-                "type": "string",
-                "value": 30
+                "type": "number",
+                "value":30
             },
             "onlineClasses": {
                 "title": "onlineClasses",
@@ -225,33 +225,6 @@
         "type": "object",
         "required": [],
         "properties": {
-            "groupdays": {
-                "type": "array",
-                "title": "Select the days",
-                "items": {
-                    "type": "string",
-                    "enum": [
-                        "Sunday",
-                        "Monday",
-                        "Tuesday",
-                        "Wednesday",
-                        "Thursday",
-                        "Friday",
-                        "Saturday"
-                    ]
-                },
-                "uniqueItems": true
-            },
-            "groupstarttime": {
-                "type": "string",
-                "format": "date-time",
-                "title": "Start Time"
-            },
-            "groupendtime": {
-                "type": "string",
-                "format": "date-time",
-                "title": "End Time"
-            },
             "groupinstantbooking": {
                 "type": "boolean",
                 "title": "Allow Consumers to book instant Workouts",

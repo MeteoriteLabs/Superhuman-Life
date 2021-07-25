@@ -14,6 +14,7 @@ import { GET_FITNESS, GET_FITNESS_PACKAGE_TYPES } from "./graphQL/queries";
 export default function FitnessTab(props) {
     const auth = useContext(AuthContext);
 
+
     const createEditViewRef = useRef<any>(null);
     const [selectedDuration, setSelectedDuration] = useState<any>('');
     const [currentIndex, setCurrentIndex] = useState<any>('');
@@ -125,9 +126,15 @@ export default function FitnessTab(props) {
             Cell: ({ row }: any) => {
                 return <ActionButton
                     action1="Edit"
-                    actionClick1={() => { createEditViewRef.current.TriggerForm({ id: row.original.id, actionType: 'edit', type: row.original.type }) }}
+                    actionClick1={() => {
+                        createEditViewRef.current.TriggerForm({ id: row.original.id, actionType: 'edit', type: row.original.type })
+                        // setRender(true)
+                    }}
                     action2="View"
-                    actionClick2={() => { createEditViewRef.current.TriggerForm({ id: row.original.id, actionType: 'view', type: row.original.type }) }}
+                    actionClick2={() => {
+                        createEditViewRef.current.TriggerForm({ id: row.original.id, actionType: 'view', type: row.original.type })
+                        // setRender(true)
+                    }}
                     action3="Status"
                     actionClick3={() => { createEditViewRef.current.TriggerForm({ id: row.original.id, actionType: 'toggle-status', current_status: (row.original.status === "Active") }) }}
                     action4="Delete"
@@ -169,7 +176,6 @@ export default function FitnessTab(props) {
     }
     FetchData()
 
-
     return (
         <TabContent>
             <Container>
@@ -183,7 +189,7 @@ export default function FitnessTab(props) {
                             >
                                 <i className="fas fa-plus-circle"></i>{" "}Personal Training
                             </Button>
-                            <Button className='mx-' variant={true ? "outline-secondary" : "light"} size="sm"
+                            <Button className='mx-4' variant={true ? "outline-secondary" : "light"} size="sm"
                                 onClick={() => {
                                     createEditViewRef.current.TriggerForm({ id: null, actionType: 'create', type: 'Group Class' });
                                 }}

@@ -9,12 +9,12 @@ import SuggestedPricing from './tableComponent/SuggestedPricing';
 import MRP from './tableComponent/MRP';
 import * as _ from 'lodash'
 
-interface FintessPackagePricing {
 
-}
 
 export default function FitnessPricingTable(props) {
-    const { userData, setUserData, actionType, widgetProps, formData, setFormData, mrpInput, setMrpInput, pricingDetailRef } = props;
+    const { userData, setUserData, actionType, type, formData, setFormData, name, pricingDetailRef } = props;
+
+    let { ptonline, ptoffline, mode, grouponline, groupoffline } = userData;
 
     const [status, setStatus] = useState(false);
     const [fitnesspackagepricing, setFitnesspackagepricing] = useState<any>([
@@ -40,6 +40,9 @@ export default function FitnessPricingTable(props) {
         },
     ])
 
+    const [onlineClassesType, setOnlineClassesType] = useState()
+    const [offlineClassesType, setOffineClassesType] = useState()
+
 
     useEffect(() => {
         if (pricingDetailRef) {
@@ -54,12 +57,20 @@ export default function FitnessPricingTable(props) {
     useEffect(() => {
         if (formData) {
             setFitnesspackagepricing(formData)
+        };
+
+        if (type === "Personal Training") {
+            setOnlineClassesType(ptonline);
+            setOffineClassesType(ptoffline)
+        } else if (type === "Group Class") {
+            setOnlineClassesType(grouponline);
+            setOffineClassesType(groupoffline)
         }
     }, [])
-  
 
 
-    let { ptonline, ptoffline, mode } = userData
+
+
     if (mode === "Online" && ptoffline > 0) {
         ptonline = 0;
         setUserData({ ...userData, ptoffline })
@@ -67,6 +78,7 @@ export default function FitnessPricingTable(props) {
         ptonline = 0
         setUserData({ ...userData, ptonline })
     }
+
 
     // return null 
     return <>
@@ -82,19 +94,19 @@ export default function FitnessPricingTable(props) {
             </thead>
             <tbody>
                 <tr>
-                    {ptonline !== undefined && ptonline !== 0 &&
+                    {onlineClassesType !== undefined && onlineClassesType !== 0 ?
                         <>
-                            <td><img src="/assets/personal-training-Online.svg" alt='123' />Online</td>
-                            <Classes numberClass={ptonline} />
-                        </>
+                            <td><img src={`/assets/${name}-Online.svg`} alt='123' />Online</td>
+                            <Classes numberClass={onlineClassesType} />
+                        </> : ""
                     }
                 </tr>
                 <tr>
-                    {ptoffline !== undefined && ptoffline !== 0 &&
+                    {offlineClassesType !== undefined && offlineClassesType !== 0 ?
                         <>
-                            <td><img src="/assets/personal-training-Offline.svg" alt='123' />Offline</td>
-                            <Classes numberClass={ptoffline} />
-                        </>
+                            <td><img src={`/assets/${name}-Offline.svg `} alt='123' />Offline</td>
+                            <Classes numberClass={offlineClassesType} />
+                        </> : ""
                     }
                 </tr>
                 <tr>

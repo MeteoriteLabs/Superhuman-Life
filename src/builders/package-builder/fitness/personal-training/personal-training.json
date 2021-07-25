@@ -2,9 +2,7 @@
     "1": {
         "title": "",
         "type": "object",
-        "required": [
-           
-        ],
+        "required": [],
         "properties": {
             "packagename": {
                 "type": "string",
@@ -30,14 +28,14 @@
             "is_private": {
                 "type": "boolean",
                 "title": "Visiblity",
-                "oneOf":[
+                "oneOf": [
                     {
-                        "title":"Public",
-                        "const":true
+                        "title": "Public",
+                        "const": true
                     },
                     {
-                        "title":"Private",
-                        "const":false
+                        "title": "Private",
+                        "const": false
                     }
                 ]
             }
@@ -46,9 +44,7 @@
     "2": {
         "title": "",
         "type": "object",
-        "required": [
-       
-        ],
+        "required": [],
         "properties": {
             "aboutpackage": {
                 "type": "string",
@@ -67,13 +63,11 @@
                     "Family"
                 ]
             },
-
             "intropicture": {
                 "type": "string",
                 "format": "data-url",
                 "title": "Intro Picture"
             },
-            
             "video": {
                 "type": "string",
                 "title": "Intro Video",
@@ -89,9 +83,7 @@
     "3": {
         "title": "Program Details",
         "type": "object",
-        "required": [
-           
-        ],
+        "required": [],
         "properties": {
             "mode": {
                 "title": "Mode",
@@ -102,30 +94,30 @@
                     "Hybrid"
                 ]
             },
-            "duration": {
+            "days": {
                 "title": "A null field",
                 "type": "number",
-                "value":"30"
+                "value": 30
             },
-            "onlineClasses":{
-                "title":"onlineClasses",
+            "onlineClasses": {
+                "title": "onlineClasses",
                 "type": "null",
-                "value":0
+                "value": 0
             },
-            "restDay":{
-                "title":"restDay",
+            "restDay": {
+                "title": "restDay",
                 "type": "null",
-                "value":0
+                "value":""
             },
-            "offlineClasses":{
-                "title":"offlineClasses",
+            "offlineClasses": {
+                "title": "offlineClasses",
                 "type": "null",
-                "value":0
+                "value": 0
             },
-            "dayAvailable":{
-                "title":"dayAvailable",
+            "dayAvailable": {
+                "title": "dayAvailable",
                 "type": "null",
-                "value":0
+                "value": 0
             }
         },
         "dependencies": {
@@ -145,17 +137,16 @@
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 30,
-                                "default":"0",
-                                "value":0
+                                "default": "0",
+                                "value": 0
                             },
                             "restdays": {
                                 "title": "Rest Days",
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 30,
-                                "default":"0",
-                                "value":0
-                                
+                                "default": "0",
+                                "value":""
                             }
                         }
                     },
@@ -171,23 +162,22 @@
                             "address": {
                                 "title": "address",
                                 "type": "string"
-                                
                             },
                             "ptoffline": {
                                 "title": "Offline",
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 30,
-                                "default":"0",
-                                "value":0
+                                "default": "0",
+                                "value": 0
                             },
                             "restdays": {
                                 "title": "Rest Days",
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 30,
-                                "default":"0",
-                                "value":0
+                                "default": "0",
+                                "value":""
                             }
                         }
                     },
@@ -199,7 +189,7 @@
                                 "enum": [
                                     "Hybrid"
                                 ],
-                                "default":"0"
+                                "default": "0"
                             },
                             "address": {
                                 "title": "address",
@@ -210,31 +200,30 @@
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 30,
-                                "default":"0",
-                                "value":0
+                                "default": "0",
+                                "value": 0
                             },
                             "ptoffline": {
                                 "title": "Offline",
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 30,
-                                "default":"0",
-                                "value":0
+                                "default": "0",
+                                "value": 0
                             },
                             "restdays": {
                                 "title": "Rest Days",
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 30,
-                                "default":"0",
-                                  "value":0
+                                "default": "0",
+                                "value":""
                             }
                         }
                     }
                 ]
             }
         }
-        
     },
     "4": {
         "title": "For Programs",
@@ -259,24 +248,24 @@
         "title": "Pricing Plan",
         "type": "object",
         "properties": {
-            "pricingDetail":{
-                "type":"string",
-                "title" :"Pricing Plan",
-                "value":0
+            "pricingDetail": {
+                "type": "string",
+                "title": "Pricing Plan",
+                "value": 0
             }
         }
     },
-    "6":{
-        "title":"Preview",
-        "type":"object",
-        "properties":{
-            "carousel":{
-                "type":"string",
-                "title":"carousel"
+    "6": {
+        "title": "Preview",
+        "type": "object",
+        "properties": {
+            "carousel": {
+                "type": "string",
+                "title": "carousel"
             },
-            "link":{
-                "type":"null",
-                "title":"carousel"
+            "link": {
+                "type": "null",
+                "title": "carousel"
             }
         }
     }

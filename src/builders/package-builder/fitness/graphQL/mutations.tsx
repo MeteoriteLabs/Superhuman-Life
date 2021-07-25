@@ -3,7 +3,7 @@ import { gql } from '@apollo/client'
 
 
 
-export const CREATE_PT_PACKAGE = gql`
+export const CREATE_PACKAGE = gql`
     mutation PTPackage(
         $packagename: String
         $tags: String
@@ -17,11 +17,14 @@ export const CREATE_PT_PACKAGE = gql`
         $duration: Int
         $ptoffline: Int
         $ptonline: Int
+        $grouponline:Int
+        $groupoffline:Int
         $restdays: Int
         $bookingleadday: Int
         $fitness_package_type:ID
         $fitnesspackagepricing:JSON
         $ptclasssize:ENUM_FITNESSPACKAGES_PTCLASSSIZE
+        $classsize:Int
         $users_permissions_user:ID
     )
     {
@@ -41,11 +44,14 @@ export const CREATE_PT_PACKAGE = gql`
                         duration:$duration
                         ptoffline:$ptoffline
                         ptonline:$ptonline
+                        grouponline:$grouponline
+                        groupoffline:$groupoffline
                         restdays:$restdays
                         bookingleadday: $bookingleadday
                         fitness_package_type: $fitness_package_type
                         fitnesspackagepricing: { packagepricing : $fitnesspackagepricing }
                         ptclasssize:$ptclasssize
+                        classsize:$classsize
                         users_permissions_user:$users_permissions_user
                     }
                 }
