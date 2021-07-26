@@ -7,17 +7,22 @@ import './fitnessPreview.css'
 export default function ModalPreview(props) {
     let { userData, fitnesspackagepricing, packageType, type } = props;
 
+    let { disciplines, ptclasssize, ptonline, ptoffline, URL, level, grouponline, groupoffline,recordedclasses, duration, classsize } = userData;
 
     const [onlineClassesType, setOnlineClassesType] = useState<string>()
-    const [offlineClassesType, setOffineClassesType] = useState<string>()
+    const [offlineClassesType, setOffineClassesType] = useState<string>();
     const [sizeType, setSizeType] = useState<string | number>()
     const [index, setIndex] = useState(0);
     const handleSelect = (selectedIndex, e) => {
         setIndex(selectedIndex);
     };
 
+    console.log(packageType)
+    console.log(duration)
+    console.log('fitnesspackagepricing', fitnesspackagepricing)
 
-    let { disciplines, ptclasssize, ptonline, ptoffline, URL, level, grouponline, groupoffline, classsize } = userData;
+
+
 
     if (typeof disciplines !== "object") disciplines = JSON.parse(disciplines);
     let beginnerTag = '';
@@ -42,12 +47,15 @@ export default function ModalPreview(props) {
             setOnlineClassesType(grouponline);
             setOffineClassesType(groupoffline);
             setSizeType(classsize)
+        } else if (packageType === "classic") {
+            // setSizeType(userData.recordedclasses)
+
         }
     }, [packageType])
 
     return <div>
         <Carousel slide={true} touch={true} activeIndex={index} onSelect={handleSelect}>
-            {fitnesspackagepricing.map((price, idx) => {
+            {fitnesspackagepricing?.map((price, idx) => {
                 return <Carousel.Item key={idx}>
                     <Card className="text-center w-75 mx-auto" style={{ borderRadius: '20px' }}>
                         <Card.Body className='pr-0 py-0'>
@@ -60,7 +68,7 @@ export default function ModalPreview(props) {
                                     <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Libero non numquam, quos ut placeat quo ducimus facere inventore facilis nostrum dolor amet doloremque molestias quasi ab consectetur, commodi maiores? Doloribus.</p>
                                     <Card.Text>
                                         <div className='d-flex justify-content-start align-items-center'>
-                                            {disciplines.map((item, index) => {
+                                            {disciplines?.map((item, index) => {
                                                 return <div key={index} className='mr-2 my-3' style={{ padding: '0.5rem 1rem', backgroundColor: '#F2E890', borderRadius: '20px' }}>
                                                     <p className='mb-0'>{item.disciplinename}</p>
                                                 </div>
@@ -74,22 +82,31 @@ export default function ModalPreview(props) {
                             </div>
                             <Card.Text className='pt-3 d-flex justify-content-between align-items-center '>
                                 <div className='d-flex justify-content-center align-items-center'>
-                                    <div>
-                                        <img src={`/assets/${packageType}-Offline.svg`} alt='123' />
-                                        <p>{offlineClassesType} Offline</p>
-                                    </div>
-                                    <div className='px-4' style={{ borderRight: '1px solid black' }}>
-                                        <img src={`/assets/${packageType}-Online.svg`} alt='123' />
-                                        <p>{onlineClassesType} Online</p>
-                                    </div>
-                                    <div className='ml-4'>
+                                    {packageType !== "classic" ? <>
+                                        <div>
+                                            <img src={`/assets/${packageType}-Offline.svg`} alt='123' />
+                                            <p>{offlineClassesType} Offline</p>
+                                        </div>
+                                        <div className='px-4' style={{ borderRight: '1px solid black' }}>
+                                            <img src={`/assets/${packageType}-Online.svg`} alt='123' />
+                                            <p>{onlineClassesType} Online</p>
+                                        </div>
+                                    </> :
+                                        <div className='px-4' style={{ borderRight: '1px solid black' }}>
+                                            <img src={`/assets/${packageType}.svg`} alt='123' />
+                                            <p>{recordedclasses}</p>
+                                        </div>
+                                    }
+
+                                    {packageType !== "classic" && <div className='ml-4'>
                                         <h4>Class Size</h4>
                                         <p className='mb-0' style={{ color: 'purple', fontSize: '1.3rem' }}>{sizeType}</p>
-                                    </div>
+                                    </div>}
+
                                 </div>
                                 <div>
                                     <p className='mb-0 mr-3' style={{ color: '#72B54C', fontSize: '2rem' }}>{"\u20B9"} {price.mrp}</p>
-                                    <p>per 30 days</p>
+                                    <p>per {price.duration} days</p>
                                 </div>
                             </Card.Text>
                         </Card.Body>

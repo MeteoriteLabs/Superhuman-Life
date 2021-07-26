@@ -46,6 +46,7 @@ export default function FitnessTab(props) {
         {
             accessor: "details", Header: "Details",
             Cell: ({ row }: any) => {
+                console.log(row.values.details)
                 return <div className='d-flex justify-content-center align-items-center'>
                     {row.values.details[0] !== null && row.values.details[0] !== 0 ?
                         <div>
@@ -70,7 +71,7 @@ export default function FitnessTab(props) {
                         </div> : ""}
                     {row.values.details[4] !== null && row.values.details[4] !== 0 ?
                         <div>
-                            <img src='./assets/Classic.svg' alt="Classic" />
+                            <img src='./assets/classic.svg' alt="Classic" />
                             <p>{row.values.details[4] * currentIndex[row.index]}</p>
                         </div> : ""}
                 </div>

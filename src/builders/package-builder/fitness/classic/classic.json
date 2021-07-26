@@ -74,78 +74,30 @@
     "3": {
         "title": "Program Details",
         "type": "object",
-        "required": [],
+        "required": ["duration"],
         "properties": {
-            "type": {
-                "type": "string",
-                "title": "Duration",
-                "enum": [
-                    "Monthly",
-                    "Quaterly",
-                    "Half Yearly",
-                    "Yearly",
-                    "Other"
-                ]
-            }
+        "duration": {
+            "type": "number",
+            "title": "Duration",
+            "default": 30,
+            "value":0
         },
-        "dependencies": {
-            "type": {
-                "oneOf": [
-                    {
-                        "properties": {
-                            "type": {
-                                "title": "Other",
-                                "type": "string",
-                                "enum": [
-                                    "Other"
-                                ]
-                            },
-                            "duration": {
-                                "type": "number",
-                                "title": "Set for 1 month i.e. 30 days",
-                                "minimum": 0,
-                                "default": 0
-                            },
-                            "days": {
-                                "title": "A null field",
-                                "type": "number",
-                                "value": 30
-                            },
-                            "recordedclasses": {
-                                "title": "Recorded",
-                                "type": "number",
-                                "minimum": 0,
-                                "maximum": 30,
-                                "default": "0",
-                                "value": 0
-                            },
-                            "restdays": {
-                                "title": "Rest Days",
-                                "type": "number",
-                                "minimum": 0,
-                                "maximum": 30,
-                                "default": 0,
-                                "value": ""
-                            }
-                        }
-                    },
-                    {
-                        "properties": {
-                            "type": {
-                                "title": "Monthly",
-                                "type": "string",
-                                "enum": [
-                                    "Monthly"
-                                ]
-                            },
-                            "duration": {
-                                "type": "number",
-                                "default": 0
-                            }
-                        }
-                    }
-                ]
-            }
+        "recordedclasses": {
+            "title": "Recorded",
+            "type": "number",
+            "minimum": 0,
+    
+            "default": "0",
+            "value": 0
+        },
+        "restdays": {
+            "title": "Rest Days",
+            "type": "number",
+            "minimum": 0,
+            "maximum": 30,
+            "default": 0,
+            "value": 0
+        }
         }
     },
     "4": {},

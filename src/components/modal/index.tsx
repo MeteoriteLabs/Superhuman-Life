@@ -5,7 +5,7 @@ import { Button, Col, Modal, ProgressBar, Row } from "react-bootstrap";
 import _ from "lodash"
 
 
-export default function ModalView({ name, formUISchema, formSubmit, formSchema, formData, isStepper, userData, setUserData, fitnesspackagepricing, widgets, setRender, fitness_package_type, classesValidation, actionType, pricingDetailRef }: any) {
+export default function ModalView({ name, formUISchema, formSubmit, formSchema, formData, isStepper, userData, setUserData, fitnesspackagepricing, widgets, setRender, fitness_package_type, classesValidation, actionType, pricingDetailRef, classicProps }: any) {
 
     const registry = utils.getDefaultRegistry();
     const defaultFileWidget = registry.widgets["FileWidget"];
@@ -15,7 +15,7 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
     const formRef = useRef<any>(null);
     const [step, setStep] = useState<number>(1);
     const [show, setShow] = useState<boolean>(true);
-    
+
     const [formValues, setFormValues] = useState<any>(formData);
     const stepper: string[] = ["Creator", "Details", "Program", "Schedule", "Pricing", "Preview"];
 
@@ -40,18 +40,21 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
     }
 
     const resetClassesValue = () => {
-        const { properties } = classesValidation;
-        let { ptonline, ptoffline, restdays, grouponline, groupoffline } = userData;
-        properties.onlineClasses.value = "";
-        properties.offlineClasses.value = "";
-        properties.restDay.value = "";
+
+        let { ptonline, ptoffline, restdays, grouponline, groupoffline, recordedclasses, duration } = userData;
+        classesValidation.properties.onlineClasses.value = "";
+        classesValidation.properties.offlineClasses.value = "";
+        classesValidation.properties.restDay.value = "";
+        classicProps.properties.duration.value = '';
+        classicProps.properties.duration.default = 30;
         ptoffline = 0;
         ptonline = 0;
         grouponline = 0;
         groupoffline = 0;
+        recordedclasses = 0;
         restdays = 0;
-        setUserData({ ...userData, ptoffline, ptonline, grouponline, groupoffline, restdays })
-        setFormValues({ ...formValues, ptoffline, ptonline, grouponline, groupoffline, restdays })
+        setUserData({ ...userData, ptoffline, ptonline, grouponline, groupoffline, recordedclasses, duration, restdays })
+        setFormValues({ ...formValues, ptoffline, ptonline, grouponline, groupoffline, recordedclasses, duration, restdays })
     }
 
     function submitHandler(formData: any) {
@@ -93,14 +96,6 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
         return action
     }
 
-    // useEffect(() =>{
-    //     if(show === false){
-    //         setRender(false)
-    //     }else{
-    //         setRender(true)
-    //     }
-    // },[show]);
-    // console.log('render child', render)
 
     return (
         <>
@@ -175,7 +170,6 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
                                         {handleFormConfirmationName(actionType)}
                                         <i className="ml-4 fas fa-check"></i>
                                     </div>
-
                                 }
                             </Button>
                         </>

@@ -94,9 +94,10 @@
                     "Hybrid"
                 ]
             },
-            "days": {
+            "duration": {
                 "title": "A null field",
-                "type": "string"
+                "type": "number",
+                "default":30
             },
             "onlineClasses": {
                 "title": "onlineClasses",

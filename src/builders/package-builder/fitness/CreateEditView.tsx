@@ -23,6 +23,8 @@ interface Operation {
     current_status: boolean;
 }
 
+
+
 interface UserDataProps {
     packagename: string;
     tags: string;
@@ -81,8 +83,11 @@ function CreateEditView(props: any, ref: any) {
 
 
     const ptSchema = require("./personal-training/personal-training.json");
+    const classicSchema = require("./classic/classic.json");
     const jsonSchema = require(`./${packageTypeName}/${packageTypeName}.json`);
     // console.log(packageTypeName,jsonSchema )
+
+
 
 
     useEffect(() => {
@@ -118,30 +123,44 @@ function CreateEditView(props: any, ref: any) {
     // let actionName: string = "";
 
 
-
     let fitness_package_type: string | undefined = ''
     if (operation.actionType === "view" || operation.actionType === 'edit') {
         fitness_package_type = formData?.fitness_package_type.id
     } else if (operation.actionType === "create") {
         if (operation.type === "Personal Training") {
-            fitness_package_type = props.packageType.fitnessPackageTypes[0].id
+            fitness_package_type = props.packageType.fitnessPackageTypes[0].id;
         } else if (operation.type === "Group Class") {
-            fitness_package_type = props.packageType.fitnessPackageTypes[1].id
+            fitness_package_type = props.packageType.fitnessPackageTypes[1].id;
+        }else if (operation.type === "Custom Fitness") {
+            fitness_package_type = props.packageType.fitnessPackageTypes[2].id;
+        } else if(operation.type === "Classic Class"){
+            fitness_package_type = props.packageType.fitnessPackageTypes[3].id;
         }
     }
 
-    
-    // const customTextTitlePackage = (props: any) => {
-    //     return <div className='text-center font-weight-bold mx-auto w-50 py-3 px-2 mt-5' style={{ boxShadow: '0px 7px 15px -5px #000000', borderRadius: '5px' }}>
-    //         <p className='m-0'>Set for One Month (30 days)</p>
-    //     </div>
-    // };
+
+    const customTextTitlePackage = (props: any) => {
+        console.log(props)
+        return <div className='text-center font-weight-bold mx-auto w-50 py-3 px-2 mt-5' style={{ boxShadow: '0px 7px 15px -5px #000000', borderRadius: '5px' }}>
+            <p className='m-0'>Set for One Month (30 days)</p>
+        </div>
+    };
 
 
 
     const widgets = {
-        ModalCustomClasses,
-        FitnessMultiSelect
+        // ModalCustomClasses,
+        // FitnessMultiSelect
+    }
+
+    const fefef = (props) => {
+        console.log(props)
+        return <div>
+            <input type="text" onChange={(e) => {
+                props.onChange(e.target.value)
+                console.log(e.target.value)
+            }} />
+        </div>
     }
 
 
@@ -156,32 +175,32 @@ function CreateEditView(props: any, ref: any) {
             "ui:widget": (props) => <FitnessAddress actionType={operation.actionType} widgetProps={props} />
 
         },
-        "days": {
-            "ui:widget":(props)=><FitnessDuration/>
+        "duration": {
+            "ui:widget":(props)=><FitnessDuration type={operation.type} actionType={operation.actionType}  widgetProps={props}/>
         },
 
         "ptonline": {
-            "ui:widget": (props) => <ModalCustomClasses name={packageTypeName} actionType={operation.actionType} PTProps={ptSchema[3]} widgetProps={props} />
+            "ui:widget": (props) => <ModalCustomClasses packageTypeName={packageTypeName} actionType={operation.actionType} PTProps={ptSchema[3]} widgetProps={props} />
         },
 
         "ptoffline": {
-            "ui:widget": (props) => <ModalCustomClasses name={packageTypeName} actionType={operation.actionType} PTProps={ptSchema[3]} widgetProps={props} />
+            "ui:widget": (props) => <ModalCustomClasses packageTypeName={packageTypeName} actionType={operation.actionType} PTProps={ptSchema[3]} widgetProps={props} />
         },
 
         "grouponline": {
-            "ui:widget": (props) => <ModalCustomClasses name={packageTypeName} actionType={operation.actionType} PTProps={ptSchema[3]} widgetProps={props} />
+            "ui:widget": (props) => <ModalCustomClasses packageTypeName={packageTypeName} actionType={operation.actionType} PTProps={ptSchema[3]} widgetProps={props} />
         },
 
         "groupoffline": {
-            "ui:widget": (props) => <ModalCustomClasses name={packageTypeName} actionType={operation.actionType} PTProps={ptSchema[3]} widgetProps={props} />
+            "ui:widget": (props) => <ModalCustomClasses packageTypeName={packageTypeName} actionType={operation.actionType} PTProps={ptSchema[3]} widgetProps={props} />
         },
 
-        "recordedclasses":{
-            "ui:widget": (props) => <ModalCustomClasses name={packageTypeName} actionType={operation.actionType} PTProps={ptSchema[3]} widgetProps={props} />
+        "recordedclasses": {
+            "ui:widget": (props) => <ModalCustomClasses  packageTypeName={packageTypeName} actionType={operation.actionType} classicProps={classicSchema[3]} PTProps={ptSchema[3]}  widgetProps={props} />
         },
 
         "restdays": {
-            "ui:widget": (props: any) => <ModalCustomRestday actionType={operation.actionType} PTProps={ptSchema[3]} widgetProps={props} />
+            "ui:widget": (props: any) => <ModalCustomRestday actionType={operation.actionType} classicProps={classicSchema[3]} PTProps={ptSchema[3]} widgetProps={props} />
 
         },
 
@@ -241,7 +260,7 @@ function CreateEditView(props: any, ref: any) {
             },
         },
 
-        "type":{
+        "type": {
             "ui:widget": "radio",
             "ui:options": {
                 "inline": true,
@@ -253,7 +272,7 @@ function CreateEditView(props: any, ref: any) {
                 userData={userData}
                 setUserData={setUserData}
                 type={operation.type}
-                name={packageTypeName}
+                packageTypeName={packageTypeName}
                 actionType={operation.actionType}
                 pricingDetailRef={pricingDetailRef}
                 widgetProps={props}
@@ -442,6 +461,7 @@ function CreateEditView(props: any, ref: any) {
                     widgets={widgets}
                     formData={operation.id && formData}
                     classesValidation={ptSchema[3]}
+                    classicProps ={classicSchema[3]}
                     actionType={operation.actionType}
                     operation={operation}
                     setOperation={setOperation}

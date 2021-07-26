@@ -11,7 +11,7 @@ export default function ModalCustomRestday(props: any) {
 
     PTProps.properties.dayAvailable.value = duration - offlineClasses - onlineClasses - restDay
     // props.schema.maximum = PTProps.PTProps.properties.dayAvailable.value
-    if (PTProps.properties.dayAvailable.value === 0) {
+    if (PTProps.properties.dayAvailable.value === 0 ) {
         widgetProps.schema.maximum = 30
     }else{
         widgetProps.schema.maximum = PTProps.properties.dayAvailable.value 

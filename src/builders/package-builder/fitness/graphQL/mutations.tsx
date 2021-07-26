@@ -19,8 +19,10 @@ export const CREATE_PACKAGE = gql`
         $ptonline: Int
         $grouponline:Int
         $groupoffline:Int
+        $recordedclasses: Int
         $restdays: Int
         $bookingleadday: Int
+        $groupinstantbooking: Boolean
         $fitness_package_type:ID
         $fitnesspackagepricing:JSON
         $ptclasssize:ENUM_FITNESSPACKAGES_PTCLASSSIZE
@@ -46,8 +48,10 @@ export const CREATE_PACKAGE = gql`
                         ptonline:$ptonline
                         grouponline:$grouponline
                         groupoffline:$groupoffline
+                        recordedclasses:$recordedclasses
                         restdays:$restdays
                         bookingleadday: $bookingleadday
+                        groupinstantbooking: $groupinstantbooking
                         fitness_package_type: $fitness_package_type
                         fitnesspackagepricing: { packagepricing : $fitnesspackagepricing }
                         ptclasssize:$ptclasssize

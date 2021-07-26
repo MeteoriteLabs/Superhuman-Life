@@ -11,10 +11,10 @@ import * as _ from 'lodash'
 
 
 export default function FitnessPricingTable(props) {
-    const { userData, setUserData, actionType, type, formData, setFormData, name, pricingDetailRef } = props;
+    const { userData, setUserData, actionType, type, formData, setFormData, packageTypeName, pricingDetailRef } = props;
 
     let { ptonline, ptoffline, mode, grouponline, groupoffline, recordedclasses, duration } = userData;
-    console.log(type)
+
     const [status, setStatus] = useState(false);
     const [fitnesspackagepricing, setFitnesspackagepricing] = useState<any>([
         {
@@ -39,9 +39,9 @@ export default function FitnessPricingTable(props) {
         },
     ])
 
+
     const [onlineClassesType, setOnlineClassesType] = useState()
     const [offlineClassesType, setOffineClassesType] = useState();
-    const [classicClasses, setClassicClasses] = useState()
 
 
     useEffect(() => {
@@ -58,17 +58,18 @@ export default function FitnessPricingTable(props) {
         if (formData) {
             setFitnesspackagepricing(formData)
         };
+    }, [])
 
+
+    useEffect(() => {
         if (type === "Personal Training") {
             setOnlineClassesType(ptonline);
             setOffineClassesType(ptoffline)
         } else if (type === "Group Class") {
             setOnlineClassesType(grouponline);
             setOffineClassesType(groupoffline)
-        } else if (type === "Classic Class") {
-            setClassicClasses(recordedclasses)
         }
-    }, [])
+    }, [type])
 
 
 
@@ -103,8 +104,8 @@ export default function FitnessPricingTable(props) {
                         <tr>
                             {recordedclasses !== undefined && recordedclasses !== 0 ?
                                 <>
-                                    <td><img src={`/assets/${name}.svg`} alt='123' />Recorded</td>
-                                    <Classes type={type} numberClass={classicClasses} />
+                                    <td><img src={`/assets/${packageTypeName}.svg`} alt='123' />Recorded</td>
+                                    <Classes type={type} numberClass={recordedclasses} />
                                 </> : ""
                             }
                         </tr>
@@ -113,16 +114,16 @@ export default function FitnessPricingTable(props) {
                         <tr>
                             {onlineClassesType !== undefined && onlineClassesType !== 0 ?
                                 <>
-                                    <td><img src={`/assets/${name}-Online.svg`} alt='123' />Online</td>
-                                    <Classes type numberClass={onlineClassesType} />
+                                    <td><img src={`/assets/${packageTypeName}-Online.svg`} alt='123' />Online</td>
+                                    <Classes numberClass={onlineClassesType} />
                                 </> : ""
                             }
                         </tr>
                         <tr>
                             {offlineClassesType !== undefined && offlineClassesType !== 0 ?
                                 <>
-                                    <td><img src={`/assets/${name}-Offline.svg `} alt='123' />Offline</td>
-                                    <Classes type numberClass={offlineClassesType} />
+                                    <td><img src={`/assets/${packageTypeName}-Offline.svg `} alt='123' />Offline</td>
+                                    <Classes numberClass={offlineClassesType} />
                                 </> : ""
                             }
                         </tr>
@@ -146,7 +147,7 @@ export default function FitnessPricingTable(props) {
                     <td className='font-weight-bold'>Total Sessions</td>
                     <ClassesSessions
                         type={type}
-                        classicClasses={classicClasses}
+                        classicClasses={recordedclasses}
                         classOnline={offlineClassesType}
                         classOffline={offlineClassesType} />
                 </tr>
