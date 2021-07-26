@@ -26,6 +26,8 @@ const Schedular = (props: any) => {
         console.log(arr);
     }
 
+    const hours: number[] = [0,1,2,3];
+
     useEffect(() => {
         handleRenderTable();
         setTimeout(() => {
@@ -59,7 +61,19 @@ const Schedular = (props: any) => {
                 </tr>
             </thead>
             <tbody>
-                {arr.splice(0, 1).map(row => {
+                {hours.map(h => {
+                    return (<tr>
+                        {arr.map(d => {
+                            if(!d)
+                            return <td>{arr[d][h].timeSlot ? arr[d][h].timeSlot : null}</td>
+                            else
+                            return (
+                                <td key={d.coldId}>{d[0].title}</td>
+                            )
+                        })}
+                    </tr>);
+                })}
+                {/* {arr.splice(0, 1).map(row => {
                     return (
                         row.map(val => {
                             console.log(val);
@@ -71,7 +85,7 @@ const Schedular = (props: any) => {
                         )
                         })
                     )
-                })}
+                })} */}
             </tbody>
         </Table>
     );
