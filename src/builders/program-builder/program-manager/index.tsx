@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import { useQuery } from "@apollo/client";
 import {GET_DATA} from './queries';
 import {  Row, Col } from 'react-bootstrap';
+import Schedular from './schedular';
 
 const ProgramManager = (props) => {
      const last = window.location.pathname.split('/').pop();
@@ -9,9 +10,9 @@ const ProgramManager = (props) => {
      const [show, setShow] = React.useState(false)
 
      React.useEffect(() => {
-     setTimeout(() => {
-          setShow(true)
-     }, 1500)
+        setTimeout(() => {
+            setShow(true)
+       }, 1500)
      }, [show]);
 
   function FetchData(_variables: {} = {id: last}) {
@@ -19,7 +20,6 @@ const ProgramManager = (props) => {
   }
 
   function loadData(data: any) {
-       console.log(data);
        setData(
           [...data.fitnesssProgramTemplates].map((detail) => {
               return {
@@ -40,7 +40,6 @@ const ProgramManager = (props) => {
   }
 
   FetchData({id: last});
-  console.log(data);
   if (!show) return <span style={{ color: 'red' }}>Loading...</span>;
   else return (
       <>
@@ -64,6 +63,7 @@ const ProgramManager = (props) => {
             </Col>
         </div>
         <div className="mt-5  mr-5">
+            <Schedular days={9}/>
         </div>
      </>
   )
