@@ -59,13 +59,13 @@ const Schedular = (props: any) => {
                 </tr>
             </thead>
             <tbody>
-                {arr.splice(0, 1).map(row => {
+                {arr.map(row => {
                     return (
                         row.map(val => {
                             console.log(val);
                         return (
                             <tr key={val.rowId}>
-                                <td>{val.timeSlot ? val.timeSlot : null}</td>
+                                <td >{val.timeSlot ? val.timeSlot : null}</td>
                                 <td onClick={(e) => console.log(val.colId)}></td>
                             </tr>
                         )
