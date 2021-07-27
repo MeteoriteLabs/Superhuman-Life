@@ -32,10 +32,25 @@ const UploadImageToS3WithNativeSdk = () => {
     const [selectedFile, setSelectedFile] = useState(null);
     const [render,setRender] = useState(false);
     const [url,setUrl]= useState(null);
+    const [key,setKey] = useState(null);
     // const [loading,setLoading] = useState(false);
 
     var albumPhotosKey = "sapien.partner.qa/";
+    
    
+    const deleteFile =() => {
+        var deleteparams = {
+            Bucket: S3_BUCKET, 
+            Key: key
+           };
+           myBucket.deleteObject(deleteparams, function(err, data) {
+             if (err) console.log(err); // an error occurred
+             else     console.log(data);           // successful response
+           });
+           setUrl(null);
+           setProgress(0);
+           console.log(key);
+    }
 
     const handleFileInput = (e) => {
         setSelectedFile(e.target.files[0]);
@@ -45,7 +60,7 @@ const UploadImageToS3WithNativeSdk = () => {
         }else{
             setRender(true);
         }
-        console.log(e);
+        //console.log(e);
     }
 
     const uploadFile = (file) => {
@@ -64,6 +79,11 @@ const UploadImageToS3WithNativeSdk = () => {
 
         if(file.type === "image/png"|| file.type === "image/jpeg"||file.type === "image/jpg"||file.type === "image/svg"){
         var photoKey = albumPhotosKey + uuidv4()+fileType;
+        console.log(photoKey.slice(18));
+        // var deletekey = uuidv4()+fileType;
+        // console.log(photoKey);
+        // //console.log(deletekey);
+        setKey(photoKey.slice(18));
 
         const params = {
             Body: file,
@@ -74,7 +94,7 @@ const UploadImageToS3WithNativeSdk = () => {
             Bucket: S3_BUCKET,
             Key: photoKey
         }
-        console.log(params);
+        //console.log(params);
 
         myBucket.putObject(params)
             .on('httpUploadProgress', (evt) => {
@@ -86,7 +106,7 @@ const UploadImageToS3WithNativeSdk = () => {
 
             var promise = myBucket.getSignedUrlPromise('getObject', paramUrl);
             promise.then(function(url) {
-            console.log('The URL is', url);
+            //console.log('The URL is', url);
             setTimeout(() => setUrl(url),1000);
             }, function(err) { console.log(err) });
         }
@@ -96,17 +116,23 @@ const UploadImageToS3WithNativeSdk = () => {
 
     return <div>
         {url? " ":<div><p className="text-primary">Upload Progress is {progress}%</p></div>}
-        {url?<Image src={url} width="500px" height="500px" className="img-thumbnail" alt=""/>:<p className="font-weight-bold">Upload image to see preview</p>}
+        {url?
+        <>
+        <Image src={url} width="500px" height="500px" className="img-thumbnail" alt=""/>
+        <button type="button" className="btn-sm btn-secondary ml-5"  onClick={() => deleteFile()}>Remove</button>
+        </>
+        :
+        <p className="font-weight-bold border border-primary w-25 p-4">Upload image to see preview</p>
+        }
+
         <div>
+        {render?<p className="text-danger">Supported Formats (png/jpeg/jpg/svg)</p>: " "}
         {url?" ":
         <div>
-            {render?<p className="text-danger">Supported Formats (png/jpeg/jpg/svg)</p>:
             <div>
             <input type="file" className="pt-2"  onChange={handleFileInput}/>
-            <button type="button" className="btn-sm btn-secondary" onClick={() => uploadFile(selectedFile)}>Upload</button>
+            <button type="button" className={render?"d-none":"btn-sm btn-secondary"} onClick={() => uploadFile(selectedFile)}>Upload</button>
             </div>
-            }
-        
         </div>
         }
         
