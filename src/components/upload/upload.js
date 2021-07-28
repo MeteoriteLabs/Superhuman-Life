@@ -30,7 +30,7 @@ const UploadImageToS3WithNativeSdk = () => {
 
     const [progress , setProgress] = useState(0);
     const [selectedFile, setSelectedFile] = useState(null);
-    const [render,setRender] = useState(false);
+    const [render,setRender] = useState(null);
     const [url,setUrl]= useState(null);
     const [key,setKey] = useState(null);
     // const [loading,setLoading] = useState(false);
@@ -58,6 +58,7 @@ const UploadImageToS3WithNativeSdk = () => {
         }
            setUrl(null);
            setProgress(0);
+           setRender(null);
            //console.log(key);
     }
 
@@ -65,9 +66,9 @@ const UploadImageToS3WithNativeSdk = () => {
         setSelectedFile(e.target.files[0]);
 
         if(e.target.files[0].type === "image/png"|| e.target.files[0].type === "image/jpeg"||e.target.files[0].type === "image/jpg"||e.target.files[0].type === "image/svg"){
-            setRender(false);
+            setRender(1);
         }else{
-            setRender(true);
+            setRender(0);
         }
         //console.log(e);
     }
@@ -135,12 +136,12 @@ const UploadImageToS3WithNativeSdk = () => {
         }
 
         <div>
-        {render?<p className="text-danger">Supported Formats (png/jpeg/jpg/svg)</p>: " "}
+        {render === 0?<p className="text-danger">Supported Formats (png/jpeg/jpg/svg)</p>:" "}
         {url?" ":
         <div>
             <div>
             <input type="file" className="pt-2"  onChange={handleFileInput}/>
-            <button type="button" className={render?"d-none":"btn-sm btn-success"} onClick={() => uploadFile(selectedFile)}>Upload</button>
+            <button type="button" className={render?"btn-sm btn-success":"d-none"} onClick={() => uploadFile(selectedFile)}>Upload</button>
             </div>
         </div>
         }
