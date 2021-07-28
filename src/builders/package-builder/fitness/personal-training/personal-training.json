@@ -91,13 +91,15 @@
                 "enum": [
                     "Online",
                     "Offline",
-                    "Hybrid"
+                    "Hybrid",
+                    "Workout"
                 ]
             },
             "duration": {
                 "title": "A null field",
                 "type": "number",
-                "default":30
+                "default": 30,
+                "value":""
             },
             "ptonlineClasses": {
                 "title": "ptonlineClasses",
@@ -117,7 +119,7 @@
             "restDay": {
                 "title": "restDay",
                 "type": "null",
-                "value":""
+                "value": ""
             }
         },
         "dependencies": {
@@ -140,14 +142,13 @@
                                 "default": "0",
                                 "value": 0
                             },
-                            
                             "restdays": {
                                 "title": "Rest Days",
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 30,
                                 "default": 0,
-                                "value":""
+                                "value": ""
                             }
                         }
                     },
@@ -178,7 +179,7 @@
                                 "minimum": 0,
                                 "maximum": 30,
                                 "default": 0,
-                                "value":""
+                                "value": ""
                             }
                         }
                     },
@@ -218,7 +219,44 @@
                                 "minimum": 0,
                                 "maximum": 30,
                                 "default": 0,
+                                "value": ""
+                            }
+                        }
+                    },
+                    {
+                        "properties": {
+                            "mode": {
+                                "title": "Workout",
+                                "type": "string",
+                                "enum":[
+                                    "Workout"
+                                ]
+                            },
+                            "duration": {
+                                "title": "A null field",
+                                "type": "number",
+                                "default": 1,
                                 "value":""
+                            },
+                            "address": {
+                                "title": "address",
+                                "type": "string"
+                            },
+                            "ptonline": {
+                                "title": "Online",
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 1,
+                                "default": "0",
+                                "value": 0
+                            },
+                            "ptoffline": {
+                                "title": "Offline",
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 1,
+                                "default": "0",
+                                "value": 0
                             }
                         }
                     }
@@ -232,16 +270,7 @@
         "properties": {
             "bookingleadday": {
                 "type": "number",
-                "title": "Consumer can choose start date, after",
-                "description": "This lead time will help you discuss, understand, request data and then build a custom program for the client.",
-                "enum": [
-                    1,
-                    2,
-                    3,
-                    4,
-                    5,
-                    6
-                ]
+                "title": "Consumer can choose start date, after"
             }
         }
     },

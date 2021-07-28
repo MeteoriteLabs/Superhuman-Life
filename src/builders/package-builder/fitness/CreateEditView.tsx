@@ -6,7 +6,7 @@ import ModalCustomClasses from './widgetCustom/FitnessClasses';
 import ModalCustomRestday from './widgetCustom/FitnessRestday';
 import { useMutation, useQuery } from '@apollo/client';
 import { GET_SINGLE_PACKAGE_BY_ID } from './graphQL/queries';
-import ModalPreview from './widgetCustom/FitnessPreview';
+import ModalPreview from './widgetCustom/Preview/FitnessPreview';
 import './CreateEditView.css'
 import { CREATE_PACKAGE, DELETE_PACKAGE, EDIT_PACKAGE, UPDATE_PACKAGE_PRIVATE } from './graphQL/mutations';
 import StatusModal from '../../../components/StatusModal/StatusModal';
@@ -14,6 +14,7 @@ import FitnessMultiSelect from './widgetCustom/FitnessMultiSelect'
 import FitnessAddress from './widgetCustom/FitnessAddress';
 import FitnessPricingTable from './widgetCustom/FitnessPricingTable'
 import FitnessDuration from './widgetCustom/FitnessDuration';
+import FitnessBookingLeadday from './widgetCustom/FitnessBookingLeadday/FitnessBookingLeadday';
 
 
 interface Operation {
@@ -84,6 +85,8 @@ function CreateEditView(props: any, ref: any) {
     const ptSchema = require("./personal-training/personal-training.json");
     const groupSchema = require("./group/group.json");
     const classicSchema = require("./classic/classic.json");
+    const customSchema = require("./custom/custom.json");
+ 
     const jsonSchema = require(`./${packageTypeName}/${packageTypeName}.json`);
 
 
@@ -158,23 +161,23 @@ function CreateEditView(props: any, ref: any) {
         },
 
         "ptonline": {
-            "ui:widget": (props) => <ModalCustomClasses packageTypeName={packageTypeName} actionType={operation.actionType} PTProps={ptSchema[3]} groupProps={groupSchema[3]} widgetProps={props} />
+            "ui:widget": (props) => <ModalCustomClasses packageTypeName={packageTypeName} actionType={operation.actionType} PTProps={ptSchema[3]} groupProps={groupSchema[3]} recordedProps={classicSchema[3]} customProps= {customSchema[3]} widgetProps={props} />
         },
 
         "ptoffline": {
-            "ui:widget": (props) => <ModalCustomClasses packageTypeName={packageTypeName} actionType={operation.actionType} PTProps={ptSchema[3]} groupProps={groupSchema[3]} widgetProps={props} />
+            "ui:widget": (props) => <ModalCustomClasses packageTypeName={packageTypeName} actionType={operation.actionType} PTProps={ptSchema[3]} groupProps={groupSchema[3]} recordedProps={classicSchema[3]} customProps= {customSchema[3]} widgetProps={props} />
         },
 
         "grouponline": {
-            "ui:widget": (props) => <ModalCustomClasses packageTypeName={packageTypeName} actionType={operation.actionType} PTProps={ptSchema[3]} groupProps={groupSchema[3]} widgetProps={props} />
+            "ui:widget": (props) => <ModalCustomClasses packageTypeName={packageTypeName} actionType={operation.actionType} PTProps={ptSchema[3]} groupProps={groupSchema[3]} recordedProps={classicSchema[3]} customProps= {customSchema[3]} widgetProps={props} />
         },
 
         "groupoffline": {
-            "ui:widget": (props) => <ModalCustomClasses packageTypeName={packageTypeName} actionType={operation.actionType} PTProps={ptSchema[3]} groupProps={groupSchema[3]} widgetProps={props} />
+            "ui:widget": (props) => <ModalCustomClasses packageTypeName={packageTypeName} actionType={operation.actionType} PTProps={ptSchema[3]} groupProps={groupSchema[3]} recordedProps={classicSchema[3]} customProps= {customSchema[3]} widgetProps={props} />
         },
 
         "recordedclasses": {
-            "ui:widget": (props) => <ModalCustomClasses packageTypeName={packageTypeName} actionType={operation.actionType} classicProps={classicSchema[3]} PTProps={ptSchema[3]} groupProps={groupSchema[3]}  widgetProps={props} />
+            "ui:widget": (props) => <ModalCustomClasses packageTypeName={packageTypeName} actionType={operation.actionType} classicProps={classicSchema[3]} PTProps={ptSchema[3]} groupProps={groupSchema[3]} customProps= {customSchema[3]} recordedProps={classicSchema[3]}  widgetProps={props} />
         },
 
         "restdays": {
@@ -182,6 +185,9 @@ function CreateEditView(props: any, ref: any) {
 
         },
 
+        "bookingleadday":{
+            "ui:widget":(props:any) => <FitnessBookingLeadday type={operation.type} userData={userData} widgetProps={props}/>
+        },
 
         "level": {
             "ui:widget": "radio",
@@ -194,7 +200,6 @@ function CreateEditView(props: any, ref: any) {
             "ui:options": {
                 "inline": true,
             },
-
         },
         "mode": {
             "ui:widget": "radio",
@@ -202,6 +207,7 @@ function CreateEditView(props: any, ref: any) {
                 "inline": true
             }
         },
+       
         "aboutpackage": {
             "ui:widget": "textarea",
             "ui:autofocus": true,
@@ -327,8 +333,6 @@ function CreateEditView(props: any, ref: any) {
 
         setFormData(updateFormData);
 
-        // setFitnesspackagepricing(updateFormData.fitnesspackagepricing)
-
         // if message exists - show form only for edit and view
         if (['edit', 'view'].indexOf(operation.actionType) > -1) {
             setRender(true)
@@ -396,10 +400,10 @@ function CreateEditView(props: any, ref: any) {
         editPackage({ variables: frm })
     }
 
-    function ViewMessage() {
-        console.log('view message');
+    // function ViewMessage() {
+    //     console.log('view message');
 
-    }
+    // }
 
     const DeletePackage = (id: any) => {
         console.log('delete package');
@@ -420,9 +424,9 @@ function CreateEditView(props: any, ref: any) {
             case 'edit':
                 EditPackage(frm);
                 break;
-            case 'view':
-                ViewMessage();
-                break;
+            // case 'view':
+            //     ViewMessage();
+            //     break;
         }
     }
 

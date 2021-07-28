@@ -73,7 +73,7 @@ export default function FitnessPricingTable(props) {
             setOnlineClassesType(grouponline);
             setOffineClassesType(groupoffline)
         } else if (type === "Custom Fitness") {
-          
+
         }
     }, [type])
 
@@ -109,7 +109,9 @@ export default function FitnessPricingTable(props) {
                             <tr>
                                 {recordedclasses !== undefined && recordedclasses !== 0 ?
                                     <>
-                                        <td><img src={`/assets/${packageTypeName}.svg`} alt='123' />Recorded</td>
+                                        <td>
+                                            <img src={`/assets/${packageTypeName}.svg`} alt={`${packageTypeName}`} title={`${packageTypeName}`} />
+                                        </td>
                                         <Classes type={type} numberClass={recordedclasses} />
                                     </> : ""
                                 }
@@ -118,60 +120,74 @@ export default function FitnessPricingTable(props) {
                         <Fragment>
                             <tr>
                                 {onlineClassesType !== undefined && onlineClassesType !== 0 ?
-                                    <>
-                                        <td><img src={`/assets/${packageTypeName}-online.svg`} alt='123' />Online</td>
+                                    <Fragment>
+                                        <td>
+                                            <img src={`/assets/${packageTypeName}-online.svg`} alt={`${packageTypeName} online`} title={`${packageTypeName} online`} />
+                                        </td>
                                         <Classes numberClass={onlineClassesType} />
-                                    </> : ""
+                                    </Fragment> : ""
                                 }
                             </tr>
                             <tr>
                                 {offlineClassesType !== undefined && offlineClassesType !== 0 ?
-                                    <>
-                                        <td><img src={`/assets/${packageTypeName}-offline.svg `} alt='123' />Offline</td>
+                                    <Fragment>
+                                        <td>
+                                            <img src={`/assets/${packageTypeName}-offline.svg `} alt={`${packageTypeName} offline`} title={`${packageTypeName} offline`} />
+                                        </td>
                                         <Classes numberClass={offlineClassesType} />
-                                    </> : ""
+                                    </Fragment> : ""
                                 }
                             </tr>
                         </Fragment>
                     : <Fragment>
                         <tr>
                             {ptonline !== undefined && ptonline !== 0 ?
-                                <>
-                                    <td><img src={`/assets/${packageTypeName}personal-training-online.svg`} alt='123' />Online</td>
+                                <Fragment>
+                                    <td>
+                                        <img src={`/assets/${packageTypeName}personal-training-online.svg`} alt={`${packageTypeName} online`} title={`${packageTypeName} personal training online`} />
+                                    </td>
                                     <Classes numberClass={ptonline} />
-                                </> : ""
+                                </Fragment> : ""
                             }
                         </tr>
                         <tr>
                             {ptoffline !== undefined && ptoffline !== 0 ?
-                                <>
-                                    <td><img src={`/assets/${packageTypeName}personal-training-offline.svg`} alt='123' />Online</td>
+                                <Fragment>
+                                    <td>
+                                        <img src={`/assets/${packageTypeName}personal-training-offline.svg`} alt={`${packageTypeName} offline`} title={`${packageTypeName} personal training offline`} />
+                                    </td>
                                     <Classes numberClass={ptoffline} />
-                                </> : ""
+                                </Fragment> : ""
                             }
                         </tr>
                         <tr>
                             {grouponline !== undefined && grouponline !== 0 ?
-                                <>
-                                    <td><img src={`/assets/${packageTypeName}group-online.svg`} alt='123' />Online</td>
+                                <Fragment>
+                                    <td>
+                                        <img src={`/assets/${packageTypeName}group-online.svg`} alt={`${packageTypeName} online`} title={`${packageTypeName} group online`} />
+                                    </td>
                                     <Classes numberClass={grouponline} />
-                                </> : ""
+                                </Fragment> : ""
                             }
                         </tr>
                         <tr>
                             {groupoffline !== undefined && groupoffline !== 0 ?
-                                <>
-                                    <td><img src={`/assets/${packageTypeName}group-offline.svg`} alt='123' />Online</td>
+                                <Fragment>
+                                    <td>
+                                        <img src={`/assets/${packageTypeName}group-offline.svg`} alt={`${packageTypeName} offline`} title={`${packageTypeName} group offline`} />
+                                    </td>
                                     <Classes numberClass={groupoffline} />
-                                </> : ""
+                                </Fragment> : ""
                             }
                         </tr>
                         <tr>
                             {recordedclasses !== undefined && recordedclasses !== 0 ?
-                                <>
-                                    <td><img src={`/assets/${packageTypeName}classic.svg`} alt='123' />Recorded</td>
+                                <Fragment>
+                                    <td>
+                                        <img src={`/assets/${packageTypeName}classic.svg`} alt={`${packageTypeName}`} title={`${packageTypeName}`} />
+                                    </td>
                                     <Classes type={type} numberClass={recordedclasses} />
-                                </> : ""
+                                </Fragment> : ""
                             }
                         </tr>
                     </Fragment>
@@ -198,8 +214,8 @@ export default function FitnessPricingTable(props) {
                         ptonline={ptonline}
                         ptoffline={ptoffline}
                         grouponline={grouponline}
-                        groupoffline= {groupoffline}
-                        recordedclasses= {recordedclasses}
+                        groupoffline={groupoffline}
+                        recordedclasses={recordedclasses}
                         classicClasses={recordedclasses}
                         classOnline={offlineClassesType}
                         classOffline={offlineClassesType} />
@@ -214,13 +230,9 @@ export default function FitnessPricingTable(props) {
                         type={type}
                         actionType={actionType}
                         status={status}
-                        // formData={formData}
                         setStatus={setStatus}
-                        // setFormData={setFormData}
                         fitnesspackagepricing={fitnesspackagepricing}
                         setFitnesspackagepricing={setFitnesspackagepricing}
-                    // childFitnesspackagepricing={childFitnesspackagepricing}
-                    // setChildFitnesspackagepricing={setChildFitnesspackagepricing}
                     />
                 </tr>
             </tbody>

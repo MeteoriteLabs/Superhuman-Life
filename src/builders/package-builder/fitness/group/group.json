@@ -92,7 +92,8 @@
             "duration": {
                 "title": "A null field",
                 "type": "number",
-                "default":30
+                "default":30,
+                "value":""
             },
             "grouponlineClasses": {
                 "title": "grouponlineClasses",

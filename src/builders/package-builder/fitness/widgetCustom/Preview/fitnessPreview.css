@@ -14,11 +14,11 @@
 }
 
 .carousel-control-prev-icon{
-    background-image: url('../../../../img/left.svg');
+    background-image: url('../../../../../img/left.svg');
 }
 
 .carousel-control-next-icon{
-    background-image: url('../../../../img/right.svg');
+    background-image: url('../../../../../img/right.svg');
 }
 
 .beginnerTag {

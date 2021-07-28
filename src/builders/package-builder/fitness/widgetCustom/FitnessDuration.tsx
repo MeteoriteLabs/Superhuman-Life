@@ -3,9 +3,10 @@ import React from 'react'
 import { Form } from 'react-bootstrap';
 
 export default function FitnessDuration(props) {
-    console.log(props)
+    console.log('duration props', props)
     const { widgetProps, type, actionType } = props;
-    console.log('widgetProps.value', widgetProps.value)
+    console.log('widgetProps.value', widgetProps.value);
+
 
     return <>
         {(type === "Classic Class") && actionType !== "view" &&
@@ -17,7 +18,6 @@ export default function FitnessDuration(props) {
                         onChange={(e) => {
                             widgetProps.schema.value = e.target.value
                             widgetProps.onChange(e.target.value)
-
                         }} />
                 </Form.Group>
 

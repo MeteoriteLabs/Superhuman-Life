@@ -38,19 +38,19 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
         return updateFinesspackagepricing
     }
 
-    const updateTimeDuration = (formData) => {
-        let updateFinesspackagepricing: any = '';
-        console.log(pricingDetailRef.current.getFitnessPackagePricing?.())
-        if (formData) {
-            if (pricingDetailRef.current.getFitnessPackagePricing?.()) {
-                updateFinesspackagepricing = pricingDetailRef.current.getFitnessPackagePricing?.();
-                if (fitness_package_type === "60e045867df648b0f5756c32") {
-                    updateFinesspackagepricing[0].duration = formData.duration
-                    console.log(updateFinesspackagepricing)
-                }
-            }
-        }
-    }
+    // const updateTimeDuration = (formData) => {
+    //     let updateFinesspackagepricing: any = '';
+    //     console.log(pricingDetailRef.current.getFitnessPackagePricing?.())
+    //     if (formData) {
+    //         if (pricingDetailRef.current.getFitnessPackagePricing?.()) {
+    //             updateFinesspackagepricing = pricingDetailRef.current.getFitnessPackagePricing?.();
+    //             if (fitness_package_type === "60e045867df648b0f5756c32") {
+    //                 updateFinesspackagepricing[0].duration = formData.duration
+    //                 console.log(updateFinesspackagepricing)
+    //             }
+    //         }
+    //     }
+    // }
 
     const resetClassesValue = () => {
         let { ptonline, ptoffline, restdays, grouponline, groupoffline, recordedclasses, duration } = userData;

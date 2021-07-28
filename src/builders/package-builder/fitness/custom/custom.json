@@ -84,11 +84,36 @@
                     "Hybrid"
                 ]
             },
+            "ptonlineClasses": {
+                "title": "ptonlineClasses",
+                "type": "null",
+                "value": 0
+            },
+            "ptofflineClasses": {
+                "title": "ptofflineClasses",
+                "type": "null",
+                "value": 0
+            },
+            "grouponlineClasses": {
+                "title": "grouponlineClasses",
+                "type": "null",
+                "value": 0
+            },
+            "groupofflineClasses": {
+                "title": "groupofflineClasses",
+                "type": "null",
+                "value": 0
+            },
+            "record": {
+                "title": "recordedclasses",
+                "type": "null",
+                "value": 0
+            },
             "duration": {
                 "type": "number",
                 "title": "Duration",
                 "default": 30,
-                "value":30
+                "value":""
             }
         },
         "dependencies": {
