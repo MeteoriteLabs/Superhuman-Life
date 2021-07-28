@@ -43,13 +43,22 @@ const UploadImageToS3WithNativeSdk = () => {
             Bucket: S3_BUCKET, 
             Key: key
            };
-           myBucket.deleteObject(deleteparams, function(err, data) {
-             if (err) console.log(err); // an error occurred
-             else     console.log(data);           // successful response
-           });
+           try {
+             myBucket.headObject(deleteparams).promise()
+            console.log("File Found in S3")
+            try {
+             myBucket.deleteObject(deleteparams).promise()
+                console.log("file deleted Successfully")
+            }
+            catch (err) {
+                 console.log("ERROR in file Deleting : " + JSON.stringify(err))
+            }
+        } catch (err) {
+                console.log("File not Found ERROR : " + err.code)
+        }
            setUrl(null);
            setProgress(0);
-           console.log(key);
+           //console.log(key);
     }
 
     const handleFileInput = (e) => {
@@ -79,11 +88,7 @@ const UploadImageToS3WithNativeSdk = () => {
 
         if(file.type === "image/png"|| file.type === "image/jpeg"||file.type === "image/jpg"||file.type === "image/svg"){
         var photoKey = albumPhotosKey + uuidv4()+fileType;
-        console.log(photoKey.slice(18));
-        // var deletekey = uuidv4()+fileType;
-        // console.log(photoKey);
-        // //console.log(deletekey);
-        setKey(photoKey.slice(18));
+        setKey(photoKey);
 
         const params = {
             Body: file,
@@ -114,15 +119,19 @@ const UploadImageToS3WithNativeSdk = () => {
     }
 
 
-    return <div>
+    return <div className="border border-dark w-50 p-4 bg-white ml-3">
         {url? " ":<div><p className="text-primary">Upload Progress is {progress}%</p></div>}
         {url?
-        <>
+        <div>
+        <p className="font-weight-bold ml-2 text-success">Image Uploaded Successfully!!</p>
         <Image src={url} width="500px" height="500px" className="img-thumbnail" alt=""/>
-        <button type="button" className="btn-sm btn-secondary ml-5"  onClick={() => deleteFile()}>Remove</button>
-        </>
+        <div className="mt-3 d-flex flex-row-reverse">
+        <button type="button" className="btn-sm btn-danger"  onClick={() => deleteFile()}>Remove</button>
+        </div>
+        
+        </div>
         :
-        <p className="font-weight-bold border border-primary w-25 p-4">Upload image to see preview</p>
+        <p className="font-weight-bold border border-primary w-10 p-4">Upload image to see preview</p>
         }
 
         <div>
@@ -131,7 +140,7 @@ const UploadImageToS3WithNativeSdk = () => {
         <div>
             <div>
             <input type="file" className="pt-2"  onChange={handleFileInput}/>
-            <button type="button" className={render?"d-none":"btn-sm btn-secondary"} onClick={() => uploadFile(selectedFile)}>Upload</button>
+            <button type="button" className={render?"d-none":"btn-sm btn-success"} onClick={() => uploadFile(selectedFile)}>Upload</button>
             </div>
         </div>
         }
