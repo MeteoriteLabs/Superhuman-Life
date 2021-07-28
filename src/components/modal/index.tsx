@@ -5,7 +5,7 @@ import { Button, Col, Modal, ProgressBar, Row } from "react-bootstrap";
 import _ from "lodash"
 
 
-export default function ModalView({ name, formUISchema, formSubmit, formSchema, formData, isStepper, userData, setUserData, fitnesspackagepricing, widgets, setRender, fitness_package_type, classesValidation, actionType, pricingDetailRef, classicProps }: any) {
+export default function ModalView({ name, formUISchema, formSubmit, formSchema, formData, isStepper, userData, setUserData, widgets, setRender, fitness_package_type, PTProps, actionType, pricingDetailRef, classicProps }: any) {
 
     const registry = utils.getDefaultRegistry();
     const defaultFileWidget = registry.widgets["FileWidget"];
@@ -36,16 +36,28 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
         }
         console.log(updateFinesspackagepricing)
         return updateFinesspackagepricing
+    }
 
+    const updateTimeDuration = (formData) => {
+        let updateFinesspackagepricing: any = '';
+        console.log(pricingDetailRef.current.getFitnessPackagePricing?.())
+        if (formData) {
+            if (pricingDetailRef.current.getFitnessPackagePricing?.()) {
+                updateFinesspackagepricing = pricingDetailRef.current.getFitnessPackagePricing?.();
+                if (fitness_package_type === "60e045867df648b0f5756c32") {
+                    updateFinesspackagepricing[0].duration = formData.duration
+                    console.log(updateFinesspackagepricing)
+                }
+            }
+        }
     }
 
     const resetClassesValue = () => {
-
         let { ptonline, ptoffline, restdays, grouponline, groupoffline, recordedclasses, duration } = userData;
-        classesValidation.properties.onlineClasses.value = "";
-        classesValidation.properties.offlineClasses.value = "";
-        classesValidation.properties.restDay.value = "";
-        classicProps.properties.duration.value = '';
+        PTProps.properties.ptonlineClasses.value = 0;
+        PTProps.properties.ptofflineClasses.value = 0;
+        PTProps.properties.restDay.value = 0;
+        PTProps.properties.dayAvailable.value = 30;
         classicProps.properties.duration.default = 30;
         ptoffline = 0;
         ptonline = 0;
@@ -59,6 +71,7 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
 
     function submitHandler(formData: any) {
         const updateFinesspackagepricing = updatePrice();
+        // const updateDuration = updateTimeDuration(formData)
         if (isStepper && step < 6) {
             setStep(step + 1);
             setFormValues({ ...formValues, ...formData, fitness_package_type, fitnesspackagepricing: updateFinesspackagepricing });

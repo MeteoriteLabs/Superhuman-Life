@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { Fragment, useState } from 'react'
 import { useEffect } from 'react';
 import { Table } from 'react-bootstrap';
 import Classes from './tableComponent/Classes';
@@ -40,9 +40,11 @@ export default function FitnessPricingTable(props) {
     ])
 
 
+    // const [updatePricing, setUpdatePricing] = useState()
+
+
     const [onlineClassesType, setOnlineClassesType] = useState()
     const [offlineClassesType, setOffineClassesType] = useState();
-
 
     useEffect(() => {
         if (pricingDetailRef) {
@@ -57,9 +59,11 @@ export default function FitnessPricingTable(props) {
     useEffect(() => {
         if (formData) {
             setFitnesspackagepricing(formData)
-        };
-    }, [])
+            console.log(fitnesspackagepricing)
+        }
+    }, [formData])
 
+    console.log(type, formData)
 
     useEffect(() => {
         if (type === "Personal Training") {
@@ -68,9 +72,10 @@ export default function FitnessPricingTable(props) {
         } else if (type === "Group Class") {
             setOnlineClassesType(grouponline);
             setOffineClassesType(groupoffline)
+        } else if (type === "Custom Fitness") {
+          
         }
     }, [type])
-
 
 
 
@@ -98,37 +103,80 @@ export default function FitnessPricingTable(props) {
                 </tr>
             </thead>
             <tbody>
-
-                {type === "Classic Class" ?
-                    <>
+                {type !== 'Custom Fitness' ?
+                    type === "Classic Class" ?
+                        <Fragment>
+                            <tr>
+                                {recordedclasses !== undefined && recordedclasses !== 0 ?
+                                    <>
+                                        <td><img src={`/assets/${packageTypeName}.svg`} alt='123' />Recorded</td>
+                                        <Classes type={type} numberClass={recordedclasses} />
+                                    </> : ""
+                                }
+                            </tr>
+                        </Fragment> :
+                        <Fragment>
+                            <tr>
+                                {onlineClassesType !== undefined && onlineClassesType !== 0 ?
+                                    <>
+                                        <td><img src={`/assets/${packageTypeName}-online.svg`} alt='123' />Online</td>
+                                        <Classes numberClass={onlineClassesType} />
+                                    </> : ""
+                                }
+                            </tr>
+                            <tr>
+                                {offlineClassesType !== undefined && offlineClassesType !== 0 ?
+                                    <>
+                                        <td><img src={`/assets/${packageTypeName}-offline.svg `} alt='123' />Offline</td>
+                                        <Classes numberClass={offlineClassesType} />
+                                    </> : ""
+                                }
+                            </tr>
+                        </Fragment>
+                    : <Fragment>
+                        <tr>
+                            {ptonline !== undefined && ptonline !== 0 ?
+                                <>
+                                    <td><img src={`/assets/${packageTypeName}personal-training-online.svg`} alt='123' />Online</td>
+                                    <Classes numberClass={ptonline} />
+                                </> : ""
+                            }
+                        </tr>
+                        <tr>
+                            {ptoffline !== undefined && ptoffline !== 0 ?
+                                <>
+                                    <td><img src={`/assets/${packageTypeName}personal-training-offline.svg`} alt='123' />Online</td>
+                                    <Classes numberClass={ptoffline} />
+                                </> : ""
+                            }
+                        </tr>
+                        <tr>
+                            {grouponline !== undefined && grouponline !== 0 ?
+                                <>
+                                    <td><img src={`/assets/${packageTypeName}group-online.svg`} alt='123' />Online</td>
+                                    <Classes numberClass={grouponline} />
+                                </> : ""
+                            }
+                        </tr>
+                        <tr>
+                            {groupoffline !== undefined && groupoffline !== 0 ?
+                                <>
+                                    <td><img src={`/assets/${packageTypeName}group-offline.svg`} alt='123' />Online</td>
+                                    <Classes numberClass={groupoffline} />
+                                </> : ""
+                            }
+                        </tr>
                         <tr>
                             {recordedclasses !== undefined && recordedclasses !== 0 ?
                                 <>
-                                    <td><img src={`/assets/${packageTypeName}.svg`} alt='123' />Recorded</td>
+                                    <td><img src={`/assets/${packageTypeName}classic.svg`} alt='123' />Recorded</td>
                                     <Classes type={type} numberClass={recordedclasses} />
                                 </> : ""
                             }
                         </tr>
-                    </> :
-                    <>
-                        <tr>
-                            {onlineClassesType !== undefined && onlineClassesType !== 0 ?
-                                <>
-                                    <td><img src={`/assets/${packageTypeName}-Online.svg`} alt='123' />Online</td>
-                                    <Classes numberClass={onlineClassesType} />
-                                </> : ""
-                            }
-                        </tr>
-                        <tr>
-                            {offlineClassesType !== undefined && offlineClassesType !== 0 ?
-                                <>
-                                    <td><img src={`/assets/${packageTypeName}-Offline.svg `} alt='123' />Offline</td>
-                                    <Classes numberClass={offlineClassesType} />
-                                </> : ""
-                            }
-                        </tr>
-                    </>
+                    </Fragment>
                 }
+
 
                 <tr>
                     <td></td>
@@ -147,6 +195,11 @@ export default function FitnessPricingTable(props) {
                     <td className='font-weight-bold'>Total Sessions</td>
                     <ClassesSessions
                         type={type}
+                        ptonline={ptonline}
+                        ptoffline={ptoffline}
+                        grouponline={grouponline}
+                        groupoffline= {groupoffline}
+                        recordedclasses= {recordedclasses}
                         classicClasses={recordedclasses}
                         classOnline={offlineClassesType}
                         classOffline={offlineClassesType} />

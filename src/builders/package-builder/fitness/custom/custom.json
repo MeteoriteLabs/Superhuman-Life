@@ -2,25 +2,15 @@
     "1": {
         "title": "",
         "type": "object",
-        "required": [
-            "name",
-            "discipline",
-            "level"
-        ],
+        "required": [],
         "properties": {
-            "name": {
+            "packagename": {
                 "type": "string",
                 "title": "Name of Package"
             },
-            "discipline": {
+            "disciplines": {
                 "type": "string",
-                "title": "Discipline",
-                "enum": [
-                    "Basic",
-                    "Calesthenics",
-                    "Yoga",
-                    "Zumba"
-                ]
+                "title": "Disciplines"
             },
             "tags": {
                 "type": "string",
@@ -32,7 +22,21 @@
                 "enum": [
                     "Beginner",
                     "Intermediate",
-                    "Advance"
+                    "Advanced"
+                ]
+            },
+            "is_private": {
+                "type": "boolean",
+                "title": "Visiblity",
+                "oneOf": [
+                    {
+                        "title": "Public",
+                        "const": true
+                    },
+                    {
+                        "title": "Private",
+                        "const": false
+                    }
                 ]
             }
         }
@@ -40,13 +44,9 @@
     "2": {
         "title": "",
         "type": "object",
-        "required": [
-            "about",
-            "benefits",
-            "size"
-        ],
+        "required": [],
         "properties": {
-            "about": {
+            "aboutpackage": {
                 "type": "string",
                 "title": "About"
             },
@@ -54,26 +54,25 @@
                 "type": "string",
                 "title": "Benefits"
             },
-            "size": {
-                "type": "number",
-                "title": "Class Size"
+            "intropicture": {
+                "type": "string",
+                "format": "data-url",
+                "title": "Intro Picture"
             },
             "video": {
                 "type": "string",
-                "format": "uri",
-                "title": "Exercise Video Link"
+                "title": "Intro Video",
+                "format": "data-url"
             },
-            "thumbnail": {
+            "introvideourl": {
                 "type": "string",
-                "format": "data-url",
-                "title": "Exercise Picture",
-                "accept": ".jpg"
+                "title": "Or add video URL",
+                "format": "uri"
             }
         }
     },
     "3": {
         "title": "Program Details",
-        "description": "Program to be assigned after package purchase",
         "type": "object",
         "properties": {
             "mode": {
@@ -85,220 +84,166 @@
                     "Hybrid"
                 ]
             },
-            "set": {
+            "duration": {
                 "type": "number",
-                "title": "Set for 1 month i.e. 30 days",
-                "description": "Total Days: Online PT + Offline PT + Online Group + Offline Group + Recorded + Rest",
-                "minimum": 30,
-                "default": 0
+                "title": "Duration",
+                "default": 30,
+                "value":30
             }
         },
         "dependencies": {
-            "package": [
-                "mode"
-            ],
             "mode": {
                 "oneOf": [
                     {
                         "properties": {
                             "mode": {
+                                "title": "Online",
+                                "type": "string",
                                 "enum": [
                                     "Online"
                                 ]
                             },
-                            "fitness": {
-                                "type": "object",
-                                "title": "Fitness",
-                                "properties": {
-                                    "pt": {
-                                        "type": "object",
-                                        "title": "",
-                                        "description": "Number of Personal Training Classes",
-                                        "properties": {
-                                            "online": {
-                                                "type": "number",
-                                                "title": "Online"
-                                            }
-                                        }
-                                    },
-                                    "group": {
-                                        "type": "object",
-                                        "title": "",
-                                        "description": "Number of Group Classes",
-                                        "properties": {
-                                            "online": {
-                                                "type": "number",
-                                                "title": "Online"
-                                            }
-                                        }
-                                    },
-                                    "record": {
-                                        "type": "number",
-                                        "title": "Number of Recorded Classes"
-                                    },
-                                    "rest": {
-                                        "type": "number",
-                                        "title": "Number of Rest Classes"
-                                    }
-                                }
+                            "ptonline": {
+                                "title": "Online",
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 30,
+                                "default": "0",
+                                "value": 0
                             },
-                            "nutrition": {
-                                "type": "object",
-                                "title": "Nutrition",
-                                "properties": {
-                                    "online": {
-                                        "type": "number",
-                                        "title": "Online"
-                                    }
-                                }
+                            "grouponline": {
+                                "title": "Online",
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 30,
+                                "default": "0",
+                                "value": 0
+                            },
+                            "recordedclasses": {
+                                "title": "Recorded",
+                                "type": "number",
+                                "minimum": 0,
+                                "default": "0",
+                                "value": 0
+                            },
+                            "restdays": {
+                                "title": "Rest Days",
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 30,
+                                "default": 0,
+                                "value":""
                             }
                         }
                     },
                     {
                         "properties": {
                             "mode": {
+                                "title": "Offline",
+                                "type": "string",
                                 "enum": [
                                     "Offline"
                                 ]
                             },
-                            "fitness": {
-                                "type": "object",
-                                "title": "Fitness",
-                                "properties": {
-                                    "location": {
-                                        "type": "string",
-                                        "title": "Location",
-                                        "enum": [
-                                            "Others",
-                                            "At My Address",
-                                            "At Client Address"
-                                        ]
-                                    },
-                                    "pin": {
-                                        "type": "string",
-                                        "title": ""
-                                    },
-                                    "pt": {
-                                        "type": "object",
-                                        "title": "",
-                                        "description": "Number of Personal Training Classes",
-                                        "properties": {
-                                            "offline": {
-                                                "type": "number",
-                                                "title": "Offline"
-                                            }
-                                        }
-                                    },
-                                    "group": {
-                                        "type": "object",
-                                        "title": "",
-                                        "description": "Number of Group Classes",
-                                        "properties": {
-                                            "offline": {
-                                                "type": "number",
-                                                "title": "Offline"
-                                            }
-                                        }
-                                    },
-                                    "record": {
-                                        "type": "number",
-                                        "title": "Number of Recorded Classes"
-                                    },
-                                    "rest": {
-                                        "type": "number",
-                                        "title": "Number of Rest Classes"
-                                    }
-                                }
+                            "address": {
+                                "title": "address",
+                                "type": "string"
                             },
-                            "nutrition": {
-                                "type": "object",
-                                "title": "Nutrition",
-                                "properties": {
-                                    "offline": {
-                                        "type": "number",
-                                        "title": "Offline"
-                                    }
-                                }
+                            "ptoffline": {
+                                "title": "Offline",
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 30,
+                                "default": "0",
+                                "value": 0
+                            },
+                            "groupoffline": {
+                                "title": "Offline",
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 30,
+                                "default": "0",
+                                "value": 0
+                            },
+                            "recordedclasses": {
+                                "title": "Recorded",
+                                "type": "number",
+                                "minimum": 0,
+                        
+                                "default": "0",
+                                "value": 0
+                            },
+                            "restdays": {
+                                "title": "Rest Days",
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 30,
+                                "default": 0,
+                                "value":""
                             }
                         }
                     },
                     {
                         "properties": {
                             "mode": {
+                                "title": "Hybrid",
+                                "type": "string",
                                 "enum": [
                                     "Hybrid"
-                                ]
+                                ],
+                                "default": "0"
                             },
-                            "fitness": {
-                                "type": "object",
-                                "title": "Fitness",
-                                "properties": {
-                                    "location": {
-                                        "type": "string",
-                                        "title": "Location",
-                                        "enum": [
-                                            "Others",
-                                            "At My Address",
-                                            "At Client Address"
-                                        ]
-                                    },
-                                    "pin": {
-                                        "type": "string",
-                                        "title": ""
-                                    },
-                                    "pt": {
-                                        "type": "object",
-                                        "title": "",
-                                        "description": "Number of Personal Training Classes",
-                                        "properties": {
-                                            "online": {
-                                                "type": "number",
-                                                "title": "Online"
-                                            },
-                                            "offline": {
-                                                "type": "number",
-                                                "title": "Offline"
-                                            }
-                                        }
-                                    },
-                                    "group": {
-                                        "type": "object",
-                                        "title": "",
-                                        "description": "Number of Group Classes",
-                                        "properties": {
-                                            "online": {
-                                                "type": "number",
-                                                "title": "Online"
-                                            },
-                                            "offline": {
-                                                "type": "number",
-                                                "title": "Offline"
-                                            }
-                                        }
-                                    },
-                                    "record": {
-                                        "type": "number",
-                                        "title": "Number of Recorded Classes"
-                                    },
-                                    "rest": {
-                                        "type": "number",
-                                        "title": "Number of Rest Classes"
-                                    }
-                                }
+                            "address": {
+                                "title": "address",
+                                "type": "string"
                             },
-                            "nutrition": {
-                                "type": "object",
-                                "title": "Nutrition",
-                                "properties": {
-                                    "online": {
-                                        "type": "number",
-                                        "title": "Online"
-                                    },
-                                    "offline": {
-                                        "type": "number",
-                                        "title": "Offline"
-                                    }
-                                }
+                            "ptonline": {
+                                "title": "Online",
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 30,
+                                "default": "0",
+                                "value": 0
+                            },
+                            "ptoffline": {
+                                "title": "Offline",
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 30,
+                                "default": "0",
+                                "value": 0
+                            },
+                            "grouponline": {
+                                "title": "Online",
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 30,
+                                "default": "0",
+                                "value": 0
+                            },
+                            "groupoffline": {
+                                "title": "Offline",
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 30,
+                                "default": "0",
+                                "value": 0
+                            },
+                            "recordedclasses": {
+                                "title": "Recorded",
+                                "type": "number",
+                                "minimum": 0,
+                        
+                                "default": "0",
+                                "value": 0
+                            },
+                            "restdays": {
+                                "title": "Rest Days",
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 30,
+                                "default": 0,
+                                "value":""
                             }
                         }
                     }
@@ -310,34 +255,43 @@
         "title": "For Programs",
         "type": "object",
         "properties": {
-            "custom-schedule": {
+            "bookingleadday": {
                 "type": "number",
-                "title": "Consumer can choose start date after",
-                "description": "This lead time will help you discuss, understand, request data and then build a custom program for the client"
+                "title": "Consumer can choose start date, after",
+                "description": "This lead time will help you discuss, understand, request data and then build a custom program for the client.",
+                "enum": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6
+                ]
             }
         }
     },
     "5": {
-        "title": "",
+        "title": "Pricing Plan",
         "type": "object",
         "properties": {
-            "voucher": {
+            "pricingDetail": {
                 "type": "string",
-                "title": "Additional Voucher"
-            },
-            "plan": {
+                "title": "Pricing Plan",
+                "value": 0
+            }
+        }
+    },
+    "6": {
+        "title": "Preview",
+        "type": "object",
+        "properties": {
+            "carousel": {
                 "type": "string",
-                "title": "Workout Plan",
-                "enum": [
-                    "Monthly",
-                    "Quaterly",
-                    "Half Yearly",
-                    "Yearly"
-                ]
+                "title": "carousel"
             },
-            "price": {
-                "type": "number",
-                "title": "Set Pricing"
+            "link": {
+                "type": "null",
+                "title": "carousel"
             }
         }
     }

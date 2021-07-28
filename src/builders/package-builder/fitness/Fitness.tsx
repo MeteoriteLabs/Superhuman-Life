@@ -46,7 +46,6 @@ export default function FitnessTab(props) {
         {
             accessor: "details", Header: "Details",
             Cell: ({ row }: any) => {
-                console.log(row.values.details)
                 return <div className='d-flex justify-content-center align-items-center'>
                     {row.values.details[0] !== null && row.values.details[0] !== 0 ?
                         <div>
@@ -204,6 +203,16 @@ export default function FitnessTab(props) {
                             >
                                 <i className="fas fa-plus-circle"></i>{" "}Classic
                             </Button>
+
+                            
+                            <Button className='mr-4' variant={true ? "outline-secondary" : "light"} size="sm"
+                                onClick={() => {
+                                    createEditViewRef.current.TriggerForm({ id: null, actionType: 'create', type: 'Custom Fitness' });
+                                }}
+                            >
+                                <i className="fas fa-plus-circle"></i>{" "}Custom
+                            </Button>
+
 
                             <CreateEditView packageType={data} ref={createEditViewRef}></CreateEditView>
                         </Card.Title>

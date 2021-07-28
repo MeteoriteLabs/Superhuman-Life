@@ -94,8 +94,13 @@
                 "type": "number",
                 "default":30
             },
-            "onlineClasses": {
-                "title": "onlineClasses",
+            "grouponlineClasses": {
+                "title": "grouponlineClasses",
+                "type": "null",
+                "value": 0
+            },
+            "groupofflineClasses": {
+                "title": "groupofflineClasses",
                 "type": "null",
                 "value": 0
             },
@@ -104,11 +109,7 @@
                 "type": "null",
                 "value": 0
             },
-            "offlineClasses": {
-                "title": "offlineClasses",
-                "type": "null",
-                "value": 0
-            },
+          
             "dayAvailable": {
                 "title": "dayAvailable",
                 "type": "null",

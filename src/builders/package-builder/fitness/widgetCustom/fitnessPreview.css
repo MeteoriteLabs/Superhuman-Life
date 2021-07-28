@@ -9,6 +9,9 @@
 .customButton:focus{
     box-shadow: none;
 }
+.carousel .carousel-indicators{
+    display: none !important;
+}
 
 .carousel-control-prev-icon{
     background-image: url('../../../../img/left.svg');

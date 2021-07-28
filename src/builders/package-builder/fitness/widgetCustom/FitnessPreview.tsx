@@ -1,25 +1,29 @@
 import React, { useEffect, useState } from 'react'
-import { Carousel, Card, Button } from 'react-bootstrap';
+import { Carousel, Card, Button, Row, Col } from 'react-bootstrap';
 import './fitnessPreview.css'
+import * as _ from 'lodash'
 
 
 
 export default function ModalPreview(props) {
-    let { userData, fitnesspackagepricing, packageType, type } = props;
+    let { userData, fitnesspackagepricing, packageType, type, actionType } = props;
 
-    let { disciplines, ptclasssize, ptonline, ptoffline, URL, level, grouponline, groupoffline,recordedclasses, duration, classsize } = userData;
+    let { disciplines, ptclasssize, ptonline, ptoffline, URL, level, grouponline, groupoffline, recordedclasses, duration, classsize } = userData;
 
     const [onlineClassesType, setOnlineClassesType] = useState<string>()
     const [offlineClassesType, setOffineClassesType] = useState<string>();
+    const [updatePricing, setUpdatePricing] = useState(fitnesspackagepricing)
     const [sizeType, setSizeType] = useState<string | number>()
     const [index, setIndex] = useState(0);
     const handleSelect = (selectedIndex, e) => {
         setIndex(selectedIndex);
     };
 
+    // console.log('action type', actionType)
     console.log(packageType)
-    console.log(duration)
-    console.log('fitnesspackagepricing', fitnesspackagepricing)
+    // console.log(duration)
+    // console.log('fitnesspackagepricing', fitnesspackagepricing)
+
 
 
 
@@ -47,15 +51,19 @@ export default function ModalPreview(props) {
             setOnlineClassesType(grouponline);
             setOffineClassesType(groupoffline);
             setSizeType(classsize)
-        } else if (packageType === "classic") {
-            // setSizeType(userData.recordedclasses)
-
         }
-    }, [packageType])
+        else if (packageType === "classic") {
+            let updatePricing = _.cloneDeep(fitnesspackagepricing);
+            updatePricing = updatePricing.splice(0, 1)
+            updatePricing[0].duration = duration;
+            setUpdatePricing(updatePricing)
+        }
+    }, [packageType, actionType])
+
 
     return <div>
         <Carousel slide={true} touch={true} activeIndex={index} onSelect={handleSelect}>
-            {fitnesspackagepricing?.map((price, idx) => {
+            {updatePricing.map((price, idx) => {
                 return <Carousel.Item key={idx}>
                     <Card className="text-center w-75 mx-auto" style={{ borderRadius: '20px' }}>
                         <Card.Body className='pr-0 py-0'>
@@ -82,27 +90,74 @@ export default function ModalPreview(props) {
                             </div>
                             <Card.Text className='pt-3 d-flex justify-content-between align-items-center '>
                                 <div className='d-flex justify-content-center align-items-center'>
-                                    {packageType !== "classic" ? <>
-                                        <div>
-                                            <img src={`/assets/${packageType}-Offline.svg`} alt='123' />
-                                            <p>{offlineClassesType} Offline</p>
-                                        </div>
-                                        <div className='px-4' style={{ borderRight: '1px solid black' }}>
-                                            <img src={`/assets/${packageType}-Online.svg`} alt='123' />
-                                            <p>{onlineClassesType} Online</p>
-                                        </div>
-                                    </> :
-                                        <div className='px-4' style={{ borderRight: '1px solid black' }}>
-                                            <img src={`/assets/${packageType}.svg`} alt='123' />
-                                            <p>{recordedclasses}</p>
-                                        </div>
+                                    {packageType !== "custom" ?
+                                        packageType !== "classic" ? <>
+                                            <div>
+                                                <img src={`/assets/${packageType}-Offline.svg`} alt='123' />
+                                                <p>{offlineClassesType} Offline</p>
+                                            </div>
+                                            <div className='px-4' style={{ borderRight: '1px solid black' }}>
+                                                <img src={`/assets/${packageType}-Online.svg`} alt='123' />
+                                                <p>{onlineClassesType} Online</p>
+                                            </div>
+                                        </> :
+                                            <div className='px-4' style={{ borderRight: '1px solid black' }}>
+                                                <img src={`/assets/${packageType}.svg`} alt='123' />
+                                                <p>{recordedclasses}</p>
+                                            </div>
+                                        :
+
+                                        <Row>
+                                            <Col>
+                                                {ptonline !== undefined && ptonline !== 0 ?
+                                                    <>
+                                                        <img src={`/assets/${packageType}personal-training-online.svg`} alt='123' />
+                                                        <p className='text-nowrap'>{ptonline} Online</p>
+                                                    </> : ""
+                                                }
+                                            </Col>
+                                            <Col>
+                                                {ptoffline !== undefined && ptoffline !== 0 ?
+                                                    <>
+                                                        <img src={`/assets/${packageType}personal-training-offline.svg`} alt='123' />
+                                                        <p className='text-nowrap'>{ptoffline} Offline</p>
+                                                    </> : ""
+                                                }
+                                            </Col>
+                                            <Col>
+                                                {grouponline !== undefined && grouponline !== 0 ?
+                                                    <>
+                                                        <img src={`/assets/${packageType}personal-training-online.svg`} alt='123' />
+                                                        <p className='text-nowrap'>{grouponline} Group</p>
+                                                    </> : ""
+                                                }
+                                            </Col>
+                                            <Col>
+                                                {groupoffline !== undefined && groupoffline !== 0 ?
+                                                    <>
+                                                        <img src={`/assets/${packageType}personal-training-online.svg`} alt='123' />
+                                                        <p className='text-nowrap'>{groupoffline} Group</p>
+                                                    </> : ""
+                                                }
+                                            </Col>
+                                            <Col>
+                                                {recordedclasses !== undefined && recordedclasses !== 0 ?
+                                                    <>
+                                                        <img src={`/assets/${packageType}personal-training-online.svg`} alt='123' />
+                                                        <p className='text-nowrap'>{recordedclasses} Recorded</p>
+                                                    </> : ""
+                                                }
+                                            </Col>
+
+                                        </Row>
+
                                     }
 
-                                    {packageType !== "classic" && <div className='ml-4'>
+
+                                    {(packageType !== "classic" && packageType !== 'custom') ? <div className='ml-4'>
                                         <h4>Class Size</h4>
                                         <p className='mb-0' style={{ color: 'purple', fontSize: '1.3rem' }}>{sizeType}</p>
-                                    </div>}
-
+                                    </div> : ""}
                                 </div>
                                 <div>
                                     <p className='mb-0 mr-3' style={{ color: '#72B54C', fontSize: '2rem' }}>{"\u20B9"} {price.mrp}</p>

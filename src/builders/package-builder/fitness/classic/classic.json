@@ -80,7 +80,7 @@
             "type": "number",
             "title": "Duration",
             "default": 30,
-            "value":0
+            "value":30
         },
         "recordedclasses": {
             "title": "Recorded",

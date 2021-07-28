@@ -99,18 +99,13 @@
                 "type": "number",
                 "default":30
             },
-            "onlineClasses": {
-                "title": "onlineClasses",
+            "ptonlineClasses": {
+                "title": "ptonlineClasses",
                 "type": "null",
                 "value": 0
             },
-            "restDay": {
-                "title": "restDay",
-                "type": "null",
-                "value":""
-            },
-            "offlineClasses": {
-                "title": "offlineClasses",
+            "ptofflineClasses": {
+                "title": "ptofflineClasses",
                 "type": "null",
                 "value": 0
             },
@@ -118,6 +113,11 @@
                 "title": "dayAvailable",
                 "type": "null",
                 "value": 0
+            },
+            "restDay": {
+                "title": "restDay",
+                "type": "null",
+                "value":""
             }
         },
         "dependencies": {
@@ -140,6 +140,7 @@
                                 "default": "0",
                                 "value": 0
                             },
+                            
                             "restdays": {
                                 "title": "Rest Days",
                                 "type": "number",
