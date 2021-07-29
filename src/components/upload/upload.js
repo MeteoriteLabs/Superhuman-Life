@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { Image} from "react-bootstrap";
+import { Image,ProgressBar} from "react-bootstrap";
 import AWS from 'aws-sdk'
 
 const S3_BUCKET ='sapien.systems';
@@ -121,7 +121,7 @@ const UploadImageToS3WithNativeSdk = () => {
 
 
     return <div className="border border-dark w-50 p-4 bg-white ml-3">
-        {url? " ":<div><p className="text-primary">Upload Progress is {progress}%</p></div>}
+        {url? " ":<div><ProgressBar animated now={progress} label={`${progress}%`}/></div>}
         {url?
         <div>
         <p className="font-weight-bold ml-2 text-success">Image Uploaded Successfully!!</p>
@@ -132,7 +132,7 @@ const UploadImageToS3WithNativeSdk = () => {
         
         </div>
         :
-        <p className="font-weight-bold border border-primary w-10 p-4">Upload image to see preview</p>
+        " "
         }
 
         <div>
@@ -141,7 +141,7 @@ const UploadImageToS3WithNativeSdk = () => {
         <div>
             <div>
             <input type="file" className="pt-2"  onChange={handleFileInput}/>
-            <button type="button" className={render?"btn-sm btn-success":"d-none"} onClick={() => uploadFile(selectedFile)}>Upload</button>
+            <button type="button" className={render?"btn-sm btn-success ml-5":"d-none"} onClick={() => uploadFile(selectedFile)}>Upload</button>
             </div>
         </div>
         }
