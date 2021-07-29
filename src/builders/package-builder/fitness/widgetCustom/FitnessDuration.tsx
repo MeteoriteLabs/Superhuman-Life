@@ -5,6 +5,7 @@ import { Form } from 'react-bootstrap';
 export default function FitnessDuration(props) {
     console.log('duration props', props)
     const { widgetProps, type, actionType } = props;
+ 
     console.log('widgetProps.value', widgetProps.value);
 
 

@@ -4,9 +4,7 @@ import './FitnessBookingLeadday.css'
 
 export default function FitnessBookingLeadday(props) {
     const { userData, widgetProps } = props;
-    console.log('widgetProps  ', widgetProps)
-
-
+ 
 
     const renderProgram = () => {
         return <div>

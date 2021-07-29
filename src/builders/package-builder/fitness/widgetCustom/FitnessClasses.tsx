@@ -3,13 +3,12 @@ import { useRef } from 'react';
 import { useState } from 'react';
 
 
-export default function ModalCustomClasses(props) {
+export default function FitnessClasses(props) {
 
     const { PTProps, widgetProps, actionType, packageTypeName, classicProps, groupProps, recordedProps, customProps } = props;
 
     const [dayAvaliable, setDayAvaliable] = useState<number | null>();
     const dayAvailableRef = useRef<any>(null)
-
 
 
     console.log('widgetProps', widgetProps)
@@ -36,6 +35,7 @@ export default function ModalCustomClasses(props) {
     const handlePTGroupInputValue = (e) => {
         console.log('pt props', PTProps);
         console.log('group props', groupProps);
+
         dayAvailableRef.current = PTProps.properties.duration.default
         //    console.log('ref', dayAvailableRef.current);
         if (packageTypeName === "personal-training") {
@@ -61,7 +61,7 @@ export default function ModalCustomClasses(props) {
     }
 
 
-    
+
     // custom
     const handleCustomInputValue = (e) => {
         console.log('custom', customProps)

@@ -1,9 +1,11 @@
 import React from 'react'
 import * as _ from 'lodash'
 
+
+
 export default function Voucher(props) {
-    const {actionType, setStatus,setFitnesspackagepricing, fitnesspackagepricing, type } = props
-    let numEle = type === "Classic Class" ? 1 : 4
+    const {actionType, setStatus,setFitnesspackagepricing, fitnesspackagepricing, type, mode } = props
+    let numEle = (type === "Classic Class" || mode === "Workout") ? 1 : 4
     return <>
     
     {[...Array(numEle)].map((item: any, index: number) => {

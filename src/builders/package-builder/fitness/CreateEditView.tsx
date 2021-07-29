@@ -2,8 +2,8 @@ import React, { useContext, useEffect, useImperativeHandle, useRef, useState } f
 import ModalView from '../../../components/modal';
 import AuthContext from '../../../context/auth-context';
 
-import ModalCustomClasses from './widgetCustom/FitnessClasses';
-import ModalCustomRestday from './widgetCustom/FitnessRestday';
+import FitnessClasses from './widgetCustom/FitnessClasses';
+import FitnessRestday from './widgetCustom/FitnessRestday';
 import { useMutation, useQuery } from '@apollo/client';
 import { GET_SINGLE_PACKAGE_BY_ID } from './graphQL/queries';
 import ModalPreview from './widgetCustom/Preview/FitnessPreview';
@@ -161,27 +161,27 @@ function CreateEditView(props: any, ref: any) {
         },
 
         "ptonline": {
-            "ui:widget": (props) => <ModalCustomClasses packageTypeName={packageTypeName} actionType={operation.actionType} PTProps={ptSchema[3]} groupProps={groupSchema[3]} recordedProps={classicSchema[3]} customProps= {customSchema[3]} widgetProps={props} />
+            "ui:widget": (props) => <FitnessClasses  packageTypeName={packageTypeName} actionType={operation.actionType} PTProps={ptSchema[3]} groupProps={groupSchema[3]} recordedProps={classicSchema[3]} customProps= {customSchema[3]} widgetProps={props} />
         },
 
         "ptoffline": {
-            "ui:widget": (props) => <ModalCustomClasses packageTypeName={packageTypeName} actionType={operation.actionType} PTProps={ptSchema[3]} groupProps={groupSchema[3]} recordedProps={classicSchema[3]} customProps= {customSchema[3]} widgetProps={props} />
+            "ui:widget": (props) => <FitnessClasses  packageTypeName={packageTypeName} actionType={operation.actionType} PTProps={ptSchema[3]} groupProps={groupSchema[3]} recordedProps={classicSchema[3]} customProps= {customSchema[3]} widgetProps={props} />
         },
 
         "grouponline": {
-            "ui:widget": (props) => <ModalCustomClasses packageTypeName={packageTypeName} actionType={operation.actionType} PTProps={ptSchema[3]} groupProps={groupSchema[3]} recordedProps={classicSchema[3]} customProps= {customSchema[3]} widgetProps={props} />
+            "ui:widget": (props) => <FitnessClasses  packageTypeName={packageTypeName} actionType={operation.actionType} PTProps={ptSchema[3]} groupProps={groupSchema[3]} recordedProps={classicSchema[3]} customProps= {customSchema[3]} widgetProps={props} />
         },
 
         "groupoffline": {
-            "ui:widget": (props) => <ModalCustomClasses packageTypeName={packageTypeName} actionType={operation.actionType} PTProps={ptSchema[3]} groupProps={groupSchema[3]} recordedProps={classicSchema[3]} customProps= {customSchema[3]} widgetProps={props} />
+            "ui:widget": (props) => <FitnessClasses  packageTypeName={packageTypeName} actionType={operation.actionType} PTProps={ptSchema[3]} groupProps={groupSchema[3]} recordedProps={classicSchema[3]} customProps= {customSchema[3]} widgetProps={props} />
         },
 
         "recordedclasses": {
-            "ui:widget": (props) => <ModalCustomClasses packageTypeName={packageTypeName} actionType={operation.actionType} classicProps={classicSchema[3]} PTProps={ptSchema[3]} groupProps={groupSchema[3]} customProps= {customSchema[3]} recordedProps={classicSchema[3]}  widgetProps={props} />
+            "ui:widget": (props) => <FitnessClasses  packageTypeName={packageTypeName} actionType={operation.actionType} classicProps={classicSchema[3]} PTProps={ptSchema[3]} groupProps={groupSchema[3]} customProps= {customSchema[3]} recordedProps={classicSchema[3]}  widgetProps={props} />
         },
 
         "restdays": {
-            "ui:widget": (props: any) => <ModalCustomRestday actionType={operation.actionType} classicProps={classicSchema[3]} PTProps={ptSchema[3]} widgetProps={props} />
+            "ui:widget": (props: any) => <FitnessRestday actionType={operation.actionType} classicProps={classicSchema[3]} PTProps={ptSchema[3]} widgetProps={props} />
 
         },
 

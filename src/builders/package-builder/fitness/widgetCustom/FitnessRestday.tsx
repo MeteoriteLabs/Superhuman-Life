@@ -1,7 +1,7 @@
 import React from 'react'
 
 
-export default function ModalCustomRestday(props: any) {
+export default function FitnessRestday(props: any) {
     const { PTProps, widgetProps, actionType, classicProps } = props;
 
 

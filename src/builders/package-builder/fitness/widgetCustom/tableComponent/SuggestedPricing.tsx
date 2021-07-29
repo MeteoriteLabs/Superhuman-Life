@@ -1,7 +1,12 @@
 import React from 'react'
 
-export default function SuggestedPricing(props) {
-    const {type} = props
+
+type Props = {
+    type: string
+}
+
+export default function SuggestedPricing({ type }: Props) {
+
     const arrSuggestedPrice = type === "Classic Class" ? [1000] : [2500, 2500, 2500, 2500];
     return <>
         {arrSuggestedPrice.map((item, index) => {
