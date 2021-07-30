@@ -1,0 +1,7 @@
+.dropzone {
+  border: 2px dashed gray;
+  box-shadow: 6px 5px 5px lightgray;
+}
+.dropArea {
+  width: 70%;
+}

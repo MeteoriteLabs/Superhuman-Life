@@ -1,7 +1,8 @@
 import {useState} from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { Image,ProgressBar} from "react-bootstrap";
-import AWS from 'aws-sdk'
+import AWS from 'aws-sdk';
+import "./upload.css"
 
 const S3_BUCKET ='sapien.systems';
 const REGION ='ap-south-1';
@@ -85,9 +86,12 @@ const UploadImageToS3WithNativeSdk = () => {
          fileType=".jpg";
         }else if(file.type === "image/svg"){
          fileType=".svg";
+        }else{
+            setRender(0);
         }
 
         if(file.type === "image/png"|| file.type === "image/jpeg"||file.type === "image/jpg"||file.type === "image/svg"){
+        setRender(1);
         var photoKey = albumPhotosKey + uuidv4()+fileType;
         setKey(photoKey);
 
@@ -113,19 +117,18 @@ const UploadImageToS3WithNativeSdk = () => {
             var promise = myBucket.getSignedUrlPromise('getObject', paramUrl);
             promise.then(function(url) {
             //console.log('The URL is', url);
-            setTimeout(() => setUrl(url),1000);
+            setTimeout(() => setUrl(url),5000);
             }, function(err) { console.log(err) });
         }
         
     }
 
 
-    return <div className="border border-dark w-50 p-4 bg-white ml-3">
-        {url? " ":<div><ProgressBar animated now={progress} label={`${progress}%`}/></div>}
+    return <div className="dropArea p-4 ml-3">
         {url?
-        <div>
-        <p className="font-weight-bold ml-2 text-success">Image Uploaded Successfully!!</p>
+        <div className="border bg-white border-dark p-4 ">
         <Image src={url} width="500px" height="500px" className="img-thumbnail" alt=""/>
+        <p className="ml-2 mt-3 text-success">Image Uploaded Successfully!!</p>
         <div className="mt-3 d-flex flex-row-reverse">
         <button type="button" className="btn-sm btn-danger"  onClick={() => deleteFile()}>Remove</button>
         </div>
@@ -138,14 +141,18 @@ const UploadImageToS3WithNativeSdk = () => {
         <div>
         {render === 0?<p className="text-danger">Supported Formats (png/jpeg/jpg/svg)</p>:" "}
         {url?" ":
-        <div>
-            <div>
+        <div className="bg-white">
+            <div className="mb-3 p-5 dropzone" onDragOver={(e) => {e.preventDefault();}} onDrop={(e) => {e.preventDefault();uploadFile(e.dataTransfer.files[0])}}>
+            <p className="d-inline">Drag & Drop Image<p className="font-weight-bold d-inline">  (png/jpeg/jpg/svg)</p></p>
+            <p>OR</p>
             <input type="file" className="pt-2"  onChange={handleFileInput}/>
+            <div className="mt-3 d-flex flex-row-reverse">
             <button type="button" className={render?"btn-sm btn-success ml-5":"d-none"} onClick={() => uploadFile(selectedFile)}>Upload</button>
+            </div>
             </div>
         </div>
         }
-        
+        {url? " ":<div className={render?" ":"d-none"}><ProgressBar animated now={progress} label={`${progress}%`}/></div>}
         </div>
         
 
