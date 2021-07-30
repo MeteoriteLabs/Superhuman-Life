@@ -49,28 +49,28 @@ export default function FitnessTab(props) {
                 return <div className='d-flex justify-content-center align-items-center'>
                     {row.values.details[0] !== null && row.values.details[0] !== 0 ?
                         <div>
-                            <img src='./assets/personal-training-Online.svg' alt="PT-Online" />
+                            <img src='./assets/custompersonal-training-Online.svg' alt="PT-Online" />
                             <p>{row.values.details[0] * currentIndex[row.index]}</p>
                         </div>
                         : ""}
                     {row.values.details[1] !== null && row.values.details[1] !== 0 ?
                         <div>
-                            <img src='./assets/personal-training-Offline.svg' alt="PT-Offline" />
+                            <img src='./assets/custompersonal-training-Offline.svg' alt="PT-Offline" />
                             <p>{row.values.details[1] * currentIndex[row.index]}</p>
                         </div> : ""}
                     {row.values.details[2] !== null && row.values.details[2] !== 0 ?
                         <div>
-                            <img src='./assets/group-Online.svg' alt="Group-Online" />
+                            <img src='./assets/customgroup-Online.svg' alt="Group-Online" />
                             <p>{row.values.details[2] * currentIndex[row.index]}</p>
                         </div> : ""}
                     {row.values.details[3] !== null && row.values.details[3] !== 0 ?
                         <div>
-                            <img src='./assets/group-Offline.svg' alt="GRoup-Offline" />
+                            <img src='./assets/customgroup-Offline.svg' alt="GRoup-Offline" />
                             <p>{row.values.details[3] * currentIndex[row.index]}</p>
                         </div> : ""}
                     {row.values.details[4] !== null && row.values.details[4] !== 0 ?
                         <div>
-                            <img src='./assets/classic.svg' alt="Classic" />
+                            <img src='./assets/customclassic.svg' alt="Classic" />
                             <p>{row.values.details[4] * currentIndex[row.index]}</p>
                         </div> : ""}
                 </div>
@@ -212,8 +212,6 @@ export default function FitnessTab(props) {
                             >
                                 <i className="fas fa-plus-circle"></i>{" "}Custom
                             </Button>
-
-
                             <CreateEditView packageType={data} ref={createEditViewRef}></CreateEditView>
                         </Card.Title>
                     </Col>

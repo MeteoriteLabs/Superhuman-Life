@@ -99,7 +99,7 @@
                 "title": "A null field",
                 "type": "number",
                 "default": 30,
-                "value":""
+                "value":30
             },
             "ptonlineClasses": {
                 "title": "ptonlineClasses",
@@ -140,7 +140,7 @@
                                 "minimum": 0,
                                 "maximum": 30,
                                 "default": "0",
-                                "value": 0
+                                "value": ""
                             },
                             "restdays": {
                                 "title": "Rest Days",
@@ -171,7 +171,7 @@
                                 "minimum": 0,
                                 "maximum": 30,
                                 "default": "0",
-                                "value": 0
+                                "value": ""
                             },
                             "restdays": {
                                 "title": "Rest Days",
@@ -190,8 +190,7 @@
                                 "type": "string",
                                 "enum": [
                                     "Hybrid"
-                                ],
-                                "default": "0"
+                                ]
                             },
                             "address": {
                                 "title": "address",
@@ -203,7 +202,7 @@
                                 "minimum": 0,
                                 "maximum": 30,
                                 "default": "0",
-                                "value": 0
+                                "value": ""
                             },
                             "ptoffline": {
                                 "title": "Offline",
@@ -211,7 +210,7 @@
                                 "minimum": 0,
                                 "maximum": 30,
                                 "default": "0",
-                                "value": 0
+                                "value": ""
                             },
                             "restdays": {
                                 "title": "Rest Days",
@@ -232,12 +231,6 @@
                                     "Workout"
                                 ]
                             },
-                            "duration": {
-                                "title": "A null field",
-                                "type": "number",
-                                "default": 1,
-                                "value":""
-                            },
                             "address": {
                                 "title": "address",
                                 "type": "string"
@@ -247,16 +240,16 @@
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 1,
-                                "default": "0",
-                                "value": 0
+                                "default": "",
+                                "value": ""
                             },
                             "ptoffline": {
                                 "title": "Offline",
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 1,
-                                "default": "0",
-                                "value": 0
+                                "default": "",
+                                "value": ""
                             }
                         }
                     }

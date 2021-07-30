@@ -4,19 +4,22 @@ import './fitnessPreview.css'
 import * as _ from 'lodash'
 import ClassicPreview from './ClassicPreview';
 import CustomPreview from './CustomPreview';
+import PTGroupPreview from './PTGroupPreview';
+import RecordedPreview from './RecordedPreview';
+import SocialMediaComponent from './SocialMediaComponent';
 
 
 
 export default function FitnessPreview(props) {
     let { userData, fitnesspackagepricing, packageType, type, actionType } = props;
 
-    let { disciplines, ptclasssize, ptonline, ptoffline, URL, level, grouponline, groupoffline, recordedclasses, duration, classsize } = userData;
+    let { disciplines, ptclasssize, ptonline, ptoffline, URL, level, grouponline, groupoffline, recordedclasses, duration, classsize, mode } = userData;
 
-    const [onlineClassesType, setOnlineClassesType] = useState<string>()
-    const [offlineClassesType, setOffineClassesType] = useState<string>();
+    const [onlineClassesType, setOnlineClassesType] = useState<number>()
+    const [offlineClassesType, setOffineClassesType] = useState<number>();
     const [updatePricing, setUpdatePricing] = useState(fitnesspackagepricing)
     const [sizeType, setSizeType] = useState<string | number>()
-    const [index, setIndex] = useState(0);
+    const [index, setIndex] = useState<number>(0);
     const handleSelect = (selectedIndex, e) => {
         setIndex(selectedIndex);
     };
@@ -64,16 +67,20 @@ export default function FitnessPreview(props) {
 
 
     return <div>
-        {packageType === "classic" ? 
+        {(packageType === "classic" || mode === "Workout") ?
             <ClassicPreview
                 type={type}
+                mode={mode}
                 disciplines={disciplines}
                 beginnerTag={beginnerTag}
                 intermediateTag={intermediateTag}
                 advancedTag={advancedTag}
                 level={level}
                 packageType={packageType}
+                ptonline={ptonline}
+                ptoffline={ptoffline}
                 recordedclasses={recordedclasses}
+                ptclasssize={ptclasssize}
                 sizeType={sizeType}
                 fitnesspackagepricing={fitnesspackagepricing}
             />
@@ -107,22 +114,17 @@ export default function FitnessPreview(props) {
                                 <Card.Text className='pt-3 d-flex justify-content-between align-items-center '>
                                     <div className='d-flex justify-content-center align-items-center'>
                                         {packageType !== "custom" ?
-                                            packageType !== "classic" ? <Fragment>
-                                                <div>
-                                                    <img src={`/assets/${packageType}-Offline.svg`} alt={`${packageType}`} title={`${packageType} offline`} />
-                                                    <p>{offlineClassesType} Offline</p>
-                                                </div>
-                                                <div className='px-4' style={{ borderRight: '1px solid black' }}>
-                                                    <img src={`/assets/${packageType}-Online.svg`} alt={`${packageType}`} title={`${packageType} online`} />
-                                                    <p>{onlineClassesType} Online</p>
-                                                </div>
-                                            </Fragment> :
-                                                <div className='px-4' style={{ borderRight: '1px solid black' }}>
-                                                    <img src={`/assets/${packageType}.svg`} alt={`${packageType}`} title={`${packageType}`} />
-                                                    <p>{recordedclasses}</p>
-                                                </div>
+                                            packageType !== "classic" ?
+                                                <PTGroupPreview
+                                                    packageType={packageType}
+                                                    offlineClassesType={offlineClassesType}
+                                                    onlineClassesType={onlineClassesType}
+                                                /> :
+                                                <RecordedPreview
+                                                    packageType={packageType}
+                                                    recordedclasses={recordedclasses}
+                                                />
                                             :
-
                                             <CustomPreview
                                                 packageType={packageType}
                                                 ptonline={ptonline}
@@ -132,8 +134,6 @@ export default function FitnessPreview(props) {
                                                 recordedclasses={recordedclasses}
                                             />
                                         }
-
-
                                         {(packageType !== "classic" && packageType !== 'custom') ? <div className='ml-4'>
                                             <h4>Class Size</h4>
                                             <p className='mb-0' style={{ color: 'purple', fontSize: '1.3rem' }}>{sizeType}</p>
@@ -150,28 +150,7 @@ export default function FitnessPreview(props) {
                 })}
             </Carousel>
         }
-        <div className='text-center font-weight-bold mt-5'>
-            <a className="text-dark" href={URL}>{URL}</a>
-            <div>
-                <Button className='py-2 my-2 customButton'>Copy link</Button>
-                <p className='d-block mx-auto' style={{ fontSize: '1.2rem' }}><a href="#1" className='text-dark'>Share the package</a></p>
-            </div>
-            <div className='mt-5'>
-                <span className='mr-4'>
-                    <a href="31212"><img src={process.env.PUBLIC_URL + '/assets/instagram.svg'} alt="instagram" /></a>
-                </span>
-                <span className='mr-4'>
-                    <a href="31212"><img src={process.env.PUBLIC_URL + '/assets/facebook.svg'} alt="facebook" /></a>
-                </span>
-                <span className='mr-4'>
-                    <a href="31212"><img src={process.env.PUBLIC_URL + '/assets/whatsapp.svg'} alt="whatsapp" /></a>
-                </span>
-                <span>
-                    <a href="31212"><img src={process.env.PUBLIC_URL + '/assets/telegram.svg'} alt="telegram" /></a>
-                </span>
-            </div>
 
-
-        </div>
+        <SocialMediaComponent URL={URL} />
     </div>
 }

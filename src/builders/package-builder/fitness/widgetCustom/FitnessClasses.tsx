@@ -157,7 +157,7 @@ export default function FitnessClasses(props) {
                 <img src={`/assets/${packageTypeName}classic.svg`} alt='123' />
             </div> */}
 
-            <label className='d-block font-weight-bold mb-0 mr-3' >{widgetProps.schema.title}</label>
+    
             <input
                 className="py-2 px-2"
                 disabled={actionType === "view" ? true : false}

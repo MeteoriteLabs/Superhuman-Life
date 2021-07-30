@@ -87,27 +87,27 @@
             "ptonlineClasses": {
                 "title": "ptonlineClasses",
                 "type": "null",
-                "value": 0
+                "value": ""
             },
             "ptofflineClasses": {
                 "title": "ptofflineClasses",
                 "type": "null",
-                "value": 0
+                "value": ""
             },
             "grouponlineClasses": {
                 "title": "grouponlineClasses",
                 "type": "null",
-                "value": 0
+                "value": ""
             },
             "groupofflineClasses": {
                 "title": "groupofflineClasses",
                 "type": "null",
-                "value": 0
+                "value": ""
             },
             "record": {
                 "title": "recordedclasses",
                 "type": "null",
-                "value": 0
+                "value": ""
             },
             "duration": {
                 "type": "number",

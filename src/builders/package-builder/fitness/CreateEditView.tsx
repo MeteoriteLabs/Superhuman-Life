@@ -15,6 +15,8 @@ import FitnessAddress from './widgetCustom/FitnessAddress';
 import FitnessPricingTable from './widgetCustom/FitnessPricingTable'
 import FitnessDuration from './widgetCustom/FitnessDuration';
 import FitnessBookingLeadday from './widgetCustom/FitnessBookingLeadday/FitnessBookingLeadday';
+import FitnessMode from './widgetCustom/FitnessMode';
+import { updateform } from './widgetCustom/_core/UpdateForm';
 
 
 interface Operation {
@@ -156,6 +158,9 @@ function CreateEditView(props: any, ref: any) {
             "ui:widget": (props) => <FitnessAddress actionType={operation.actionType} widgetProps={props} />
 
         },
+        "mode":{
+            "ui:widget":(props) => <FitnessMode formData={formData} widgetProps={props} PTProps={ptSchema[3]} type={operation.type} actionType ={operation.actionType}/>
+        },
         "duration": {
             "ui:widget": (props) => <FitnessDuration type={operation.type} actionType={operation.actionType} widgetProps={props} />
         },
@@ -186,7 +191,7 @@ function CreateEditView(props: any, ref: any) {
         },
 
         "bookingleadday":{
-            "ui:widget":(props:any) => <FitnessBookingLeadday type={operation.type} userData={userData} widgetProps={props}/>
+            "ui:widget":(props:any) => <FitnessBookingLeadday actionType ={operation.actionType} type={operation.type} userData={userData} widgetProps={props}/>
         },
 
         "level": {
@@ -201,12 +206,7 @@ function CreateEditView(props: any, ref: any) {
                 "inline": true,
             },
         },
-        "mode": {
-            "ui:widget": "radio",
-            "ui:options": {
-                "inline": true
-            }
-        },
+   
        
         "aboutpackage": {
             "ui:widget": "textarea",
@@ -259,7 +259,7 @@ function CreateEditView(props: any, ref: any) {
                 packageTypeName={packageTypeName}
                 actionType={operation.actionType}
                 pricingDetailRef={pricingDetailRef}
-                widgetProps={props}
+                // widgetProps={props}
                 formData={formData && formData.fitnesspackagepricing[0].packagepricing}
             />,
         },
@@ -300,38 +300,13 @@ function CreateEditView(props: any, ref: any) {
     const FillDetails = (dataPackage: any) => {
         const packageDetail = dataPackage.fitnesspackage;
         console.log("packageDetail", packageDetail)
-        const { id, packagename, tags, disciplines, fitness_package_type, aboutpackage, benefits, level, mode, ptoffline, ptonline, grouponline, groupoffline, recordedclasses, restdays, fitnesspackagepricing, bookingleadday, duration, groupstarttime, groupendtime, groupinstantbooking, address, ptclasssize, classsize, groupdays, introvideourl, is_private } = packageDetail
+        const { id, packagename, tags, disciplines, fitness_package_type, aboutpackage, benefits, level, mode, ptoffline, ptonline, grouponline, groupoffline, recordedclasses, restdays, fitnesspackagepricing, bookingleadday, duration, groupstarttime, groupendtime, groupinstantbooking, address, ptclasssize, classsize, groupdays, introvideourl, is_private } = packageDetail;
 
-        let updateFormData: any = {};
-        updateFormData.id = id
-        updateFormData.packagename = packagename;
-        updateFormData.tags = tags;
-        updateFormData.level = level;
-        updateFormData.aboutpackage = aboutpackage
-        updateFormData.disciplines = JSON.stringify(disciplines);
-        updateFormData.fitness_package_type = fitness_package_type;
-        updateFormData.benefits = benefits;
-        updateFormData.mode = mode;
-        updateFormData.address = address?.id;
-        updateFormData.ptclasssize = ptclasssize;
-        updateFormData.ptonline = ptonline;
-        updateFormData.ptoffline = ptoffline;
-        updateFormData.grouponline = grouponline;
-        updateFormData.groupoffline = groupoffline;
-        updateFormData.recordedclasses = recordedclasses;
-        updateFormData.restdays = restdays;
-        updateFormData.bookingleadday = bookingleadday;
-        updateFormData.duration = duration;
-        updateFormData.groupstarttime = groupstarttime;
-        updateFormData.groupendtime = groupendtime;
-        updateFormData.groupinstantbooking = groupinstantbooking;
-        updateFormData.fitnesspackagepricing = fitnesspackagepricing
-        updateFormData.classsize = classsize;
-        updateFormData.groupdays = groupdays;
-        updateFormData.introvideourl = introvideourl;
-        updateFormData.is_private = is_private;
 
+        const updateFormData = updateform.createUpdateForm( id, packagename, tags, disciplines, fitness_package_type, aboutpackage, benefits, level, mode, ptoffline, ptonline, grouponline, groupoffline, recordedclasses, restdays, fitnesspackagepricing, bookingleadday, duration, groupstarttime, groupendtime, groupinstantbooking, address, ptclasssize, classsize, groupdays, introvideourl, is_private );
+        
         setFormData(updateFormData);
+
 
         // if message exists - show form only for edit and view
         if (['edit', 'view'].indexOf(operation.actionType) > -1) {
@@ -342,7 +317,7 @@ function CreateEditView(props: any, ref: any) {
         }
     }
 
-    // console.log('form data parent', formData)
+    console.log('form data parent', formData)
 
 
 

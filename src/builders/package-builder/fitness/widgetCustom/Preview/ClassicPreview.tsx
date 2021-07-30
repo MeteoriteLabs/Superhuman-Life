@@ -1,8 +1,31 @@
 import React from 'react'
 import { Card } from 'react-bootstrap'
+import PTGroupPreview from './PTGroupPreview'
+import RecordedPreview from './RecordedPreview'
 
-export default function ClassicPreview(props) {
-    const { type, disciplines, beginnerTag, intermediateTag, advancedTag, level, packageType, recordedclasses, sizeType, fitnesspackagepricing } = props
+type Props = {
+    type: 'Personal Training' | 'Group Class' | 'Custom Fitness' | 'Classic Class';
+    disciplines: any,
+    beginnerTag: string,
+    intermediateTag: string,
+    advancedTag: string,
+    level: "Beginner" | "Intermediate" | "Advanced",
+    packageType: "personal-training" | "group" | "classic" | "custom",
+    recordedclasses: number,
+    ptonline: string,
+    ptoffline: string,
+    sizeType: any,
+    ptclasssize: "Solo" | "Couple" | "Family",
+    fitnesspackagepricing: any,
+    mode: "Online" | "Offline" | "Hybird" | "Workout"
+}
+
+
+
+export default function ClassicPreview({ type, disciplines, beginnerTag, intermediateTag, advancedTag, level, packageType, recordedclasses, ptonline, ptoffline, sizeType, ptclasssize, fitnesspackagepricing, mode }: Props) {
+
+
+    console.log(type)
     return (
         <Card className="text-center w-75 mx-auto" style={{ borderRadius: '20px' }}>
             <Card.Body className='pr-0 py-0'>
@@ -27,18 +50,30 @@ export default function ClassicPreview(props) {
                         <p className={`py-2 px-4 text-white ${beginnerTag} ${intermediateTag} ${advancedTag}`} style={{ borderTopRightRadius: '20px', borderBottomLeftRadius: '20px' }}>{level}</p>
                     </div>
                 </div>
-                <Card.Text className='pt-3 d-flex justify-content-between align-items-center '>
+                <Card.Text className='py-3 d-flex justify-content-between align-items-center '>
                     <div className='d-flex justify-content-center align-items-center'>
-
-                        <div className='px-4' style={{ borderRight: '1px solid black' }}>
-                            <img src={`/assets/${packageType}.svg`} alt={`${packageType}`} title={`${packageType}`} />
-                            <p>{recordedclasses}</p>
-                        </div>
+                        {mode === "Workout" ?
+                            <PTGroupPreview
+                                packageType={packageType}
+                                offlineClassesType={ptoffline}
+                                onlineClassesType={ptonline}
+                            />
+                            :
+                            <RecordedPreview
+                                packageType={packageType}
+                                recordedclasses={recordedclasses}
+                            />
+                        }
 
 
                         {(packageType !== "classic" && packageType !== 'custom') ? <div className='ml-4'>
                             <h4>Class Size</h4>
-                            <p className='mb-0' style={{ color: 'purple', fontSize: '1.3rem' }}>{sizeType}</p>
+                            {mode === "Workout" ?
+                                <p className='mb-0' style={{ color: 'purple', fontSize: '1.3rem' }}>{ptclasssize}</p>
+                                :
+                                <p className='mb-0' style={{ color: 'purple', fontSize: '1.3rem' }}>{sizeType}</p>
+                            }
+
                         </div> : ""}
                     </div>
                     <div>

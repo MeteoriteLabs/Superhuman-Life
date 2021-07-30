@@ -86,9 +86,8 @@
             "title": "Recorded",
             "type": "number",
             "minimum": 0,
-    
             "default": "0",
-            "value": 0
+            "value": ""
         },
         "restdays": {
             "title": "Rest Days",
@@ -96,7 +95,7 @@
             "minimum": 0,
             "maximum": 30,
             "default": 0,
-            "value": 0
+            "value": ""
         }
         }
     },

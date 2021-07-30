@@ -14,12 +14,18 @@ import PTGroupPricingTable from './tableComponent/PricingTable/PTGroupPricingTab
 type FitnessPricing = {
     duration: number,
     voucher: string,
-    mrp: number
+    mrp: number,
 }
 
+// interface UserData{
+//     mode: "Online" | "Offline" | "Hybird" | "Workout"
+//     type: 'Personal Training' | 'Group Class' | 'Custom Fitness' | 'Classic Class';
 
-export default function FitnessPricingTable(props) {
-    const { userData, setUserData, actionType, type, formData, setFormData, packageTypeName, pricingDetailRef } = props;
+// }
+
+
+
+export default function FitnessPricingTable({ userData, setUserData, actionType, type, formData, packageTypeName, pricingDetailRef }) {
 
     let { ptonline, ptoffline, mode, grouponline, groupoffline, recordedclasses, duration } = userData;
 
@@ -151,7 +157,7 @@ export default function FitnessPricingTable(props) {
                         status={status}
                         setStatus={setStatus}
                         formData={formData}
-                        setFormData={setFormData}
+                        // setFormData={setFormData}
                         fitnesspackagepricing={fitnesspackagepricing}
                         setFitnesspackagepricing={setFitnesspackagepricing}
                     />
@@ -171,12 +177,13 @@ export default function FitnessPricingTable(props) {
                 </tr>
                 <tr>
                     <td>Suggested Pricing</td>
-                    <SuggestedPricing type={type} />
+                    <SuggestedPricing type={type} mode={mode} />
                 </tr>
                 <tr>
                     <td>Set MRP</td>
                     <MRP
                         type={type}
+                        mode={mode}
                         actionType={actionType}
                         status={status}
                         setStatus={setStatus}

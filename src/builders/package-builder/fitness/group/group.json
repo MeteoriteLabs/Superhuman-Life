@@ -98,17 +98,17 @@
             "grouponlineClasses": {
                 "title": "grouponlineClasses",
                 "type": "null",
-                "value": 0
+                "value": ""
             },
             "groupofflineClasses": {
                 "title": "groupofflineClasses",
                 "type": "null",
-                "value": 0
+                "value": ""
             },
             "restDay": {
                 "title": "restDay",
                 "type": "null",
-                "value": 0
+                "value": ""
             },
           
             "dayAvailable": {

@@ -1,13 +1,13 @@
 import React from 'react'
 
 
-type Props = {
-    type:string
-    numberClass:number
-    mode:string
-}
+// type Props = {
+//     type: 'Personal Training' | 'Group Class' | 'Custom Fitness' | 'Classic Class';
+//     numberClass:number
+//     mode: "Online" | "Offline" | "Hybird" | "Workout"
+// }
 
-export default function OnlineClasses({type, numberClass, mode}: Props) {
+export default function OnlineClasses({type, numberClass, mode}) {
 
     let arrayNumberClass: number[] = [];
 

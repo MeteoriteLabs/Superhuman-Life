@@ -1,11 +1,9 @@
 import React from 'react'
 import _ from 'lodash'
-import Form from '@rjsf/bootstrap-4'
-import { FormControl, InputGroup } from 'react-bootstrap'
 
 export default function MRP(props) {
-    const { actionType, setStatus, fitnesspackagepricing, setFitnesspackagepricing, type } = props
-    let numEle = type === "Classic Class" ? 1 : 4
+    const { actionType, setStatus, fitnesspackagepricing, setFitnesspackagepricing, type, mode } = props
+    let numEle = (type === "Classic Class" || mode ==="Workout") ? 1 : 4
     // console.log('MRP: ', fitnesspackagepricing)
 
     return <>
