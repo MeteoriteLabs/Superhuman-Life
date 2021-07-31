@@ -144,7 +144,7 @@ const UploadImageToS3WithNativeSdk = () => {
         <div className="bg-white">
             <div className="mb-3 p-5 dropzone" onDragOver={(e) => {e.preventDefault();}} onDrop={(e) => {e.preventDefault();uploadFile(e.dataTransfer.files[0])}}>
             <p className="d-inline">Drag & Drop Image<p className="font-weight-bold d-inline">  (png/jpeg/jpg/svg)</p></p>
-            <p>OR</p>
+            <p className="mt-3">OR</p>
             <input type="file" className="pt-2"  onChange={handleFileInput}/>
             <div className="mt-3 d-flex flex-row-reverse">
             <button type="button" className={render?"btn-sm btn-success ml-5":"d-none"} onClick={() => uploadFile(selectedFile)}>Upload</button>
