@@ -70,6 +70,7 @@ const UploadImageToS3WithNativeSdk = () => {
             setRender(1);
         }else{
             setRender(0);
+            e.target.value = '';
         }
         //console.log(e);
     }
@@ -124,7 +125,7 @@ const UploadImageToS3WithNativeSdk = () => {
     }
 
 
-    return <div className="dropArea p-4 ml-3">
+    return <div className="dropArea p-1">
         {url?
         <div className="border bg-white border-dark p-4 ">
         <Image src={url} width="500px" height="500px" className="img-thumbnail" alt=""/>
@@ -142,7 +143,7 @@ const UploadImageToS3WithNativeSdk = () => {
         {render === 0?<p className="text-danger">Supported Formats (png/jpeg/jpg/svg)</p>:" "}
         {url?" ":
         <div className="bg-white">
-            <div className="mb-3 p-5 dropzone" onDragOver={(e) => {e.preventDefault();}} onDrop={(e) => {e.preventDefault();uploadFile(e.dataTransfer.files[0])}}>
+            <div className="mb-3 p-4 dropzone" onDragOver={(e) => {e.preventDefault();}} onDrop={(e) => {e.preventDefault();uploadFile(e.dataTransfer.files[0])}}>
             <p className="d-inline">Drag & Drop Image<p className="font-weight-bold d-inline">  (png/jpeg/jpg/svg)</p></p>
             <p className="mt-3">OR</p>
             <input type="file" className="pt-2"  onChange={handleFileInput}/>

@@ -5,3 +5,9 @@
 .dropArea {
   width: 70%;
 }
+
+@media (max-width: 500px) {
+  .dropArea {
+    width: 100%;
+  }
+}
