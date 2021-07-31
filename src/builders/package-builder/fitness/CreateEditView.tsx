@@ -14,8 +14,8 @@ import FitnessMultiSelect from './widgetCustom/FitnessMultiSelect'
 import FitnessAddress from './widgetCustom/FitnessAddress';
 import FitnessPricingTable from './widgetCustom/FitnessPricingTable'
 import FitnessDuration from './widgetCustom/FitnessDuration';
-import FitnessMode from './widgetCustom/FitnessMode';
-import { updateform } from './widgetCustom/_core/UpdateForm';
+import FitnessMode from './widgetCustom/FitnessMode/FitnessMode';
+import { updateform } from './_core/UpdateForm';
 import BookingLeadday from './widgetCustom/FitnessBookingLeadday/BookingLeadday';
 import BookingLeadTime from './widgetCustom/FitnessBookingLeadday/BookingLeadTime';
 

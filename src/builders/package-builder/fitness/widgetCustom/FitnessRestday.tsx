@@ -16,7 +16,7 @@ export default function FitnessRestday(props: any) {
             value={widgetProps.value ? widgetProps.value : ""}
             pattern="[0-9]+"
             onChange={(event: any) => {
-                if (event.target.value >  PTProps.properties.restDay.maximum) {
+                if (event.target.value > PTProps.properties.restDay.maximum) {
                     // widgetProps.schema.maximum = 0
                     event.target.value = 0
                 } else {

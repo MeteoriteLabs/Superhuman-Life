@@ -24,8 +24,6 @@ type Props = {
 
 export default function ClassicPreview({ type, disciplines, beginnerTag, intermediateTag, advancedTag, level, packageType, recordedclasses, ptonline, ptoffline, sizeType, ptclasssize, fitnesspackagepricing, mode }: Props) {
 
-
-    console.log(type)
     return (
         <Card className="text-center w-75 mx-auto" style={{ borderRadius: '20px' }}>
             <Card.Body className='pr-0 py-0'>

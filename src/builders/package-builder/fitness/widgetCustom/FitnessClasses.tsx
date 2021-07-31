@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useRef } from 'react';
 import { useState } from 'react';
 
@@ -16,11 +16,9 @@ export default function FitnessClasses(props) {
     console.log(PTProps.properties.duration.value)
 
 
-    // console.log("dayAvailable", dayAvaliable);
-    // console.log("dayAvailableProps", PTProps.properties.dayAvailable.value);
-
+    
     const countingAvailableDays = (dayAvailableRef: number, ptonlineValue: number, ptofflineValue: number, grouponlineValue: number, groupofflineValue: number, recordValue: number, restdayValue: number) => {
-        
+
         dayAvailableRef -= (ptonlineValue + ptofflineValue + grouponlineValue + groupofflineValue + recordValue + restdayValue);
 
         if (dayAvailableRef === 0) {
@@ -36,8 +34,8 @@ export default function FitnessClasses(props) {
     const handlePTGroupInputValue = (e) => {
         console.log('pt props', PTProps);
         console.log('group props', groupProps);
-        
-        dayAvailableRef.current =  PTProps.properties.duration.value 
+
+        dayAvailableRef.current = PTProps.properties.duration.value
         //    console.log('ref', dayAvailableRef.current);
         if (packageTypeName === "personal-training") {
             if (widgetProps.label === 'Online') {
@@ -121,7 +119,9 @@ export default function FitnessClasses(props) {
                 <div>
                     <div className={packageTypeName !== "classic" ? "d-block" : "d-none"}>
                         {widgetProps.schema.title === 'Online' ?
-                            <img src={`/assets/${packageTypeName}-online.svg`} alt={packageTypeName} title={`${packageTypeName} online`} /> : <img src={`/assets/${packageTypeName}-offline.svg`} alt='123' title={`${packageTypeName} offline`} />
+                            <img src={`/assets/${packageTypeName}-online.svg`} alt={packageTypeName} title={`${packageTypeName} online`} />
+                            :
+                            <img src={`/assets/${packageTypeName}-offline.svg`} alt='123' title={`${packageTypeName} offline`} />
                         }
                     </div>
 
@@ -152,12 +152,6 @@ export default function FitnessClasses(props) {
                     </div>
                 </div>
             }
-
-
-            {/* <div className={packageTypeName === "classic" ? "d-block" : "d-none"}>
-                <img src={`/assets/${packageTypeName}classic.svg`} alt='123' />
-            </div> */}
-
 
             <input
                 className="py-2 px-2"
