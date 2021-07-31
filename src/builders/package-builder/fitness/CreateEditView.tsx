@@ -16,8 +16,8 @@ import FitnessPricingTable from './widgetCustom/FitnessPricingTable'
 import FitnessDuration from './widgetCustom/FitnessDuration';
 import FitnessMode from './widgetCustom/FitnessMode/FitnessMode';
 import { updateform } from './_core/UpdateForm';
-import BookingLeadday from './widgetCustom/FitnessBookingLeadday/BookingLeadday';
-import BookingLeadTime from './widgetCustom/FitnessBookingLeadday/BookingLeadTime';
+import BookingLeadday from './widgetCustom/FitnessBooking/BookingLeadday';
+import BookingLeadTime from './widgetCustom/FitnessBooking/BookingLeadTime';
 
 
 interface Operation {
@@ -157,14 +157,14 @@ function CreateEditView(props: any, ref: any) {
             'ui:widget': (props) => <FitnessMultiSelect widgetProps={props} actionType={operation.actionType} />
         },
         "address": {
-            "ui:widget": (props) => <FitnessAddress actionType={operation.actionType} widgetProps={props} />
+            "ui:widget": (props) => <FitnessAddress actionType={operation.actionType} widgetProps={props} PTProps={ptSchema[3]}  />
 
         },
         "mode":{
-            "ui:widget":(props) => <FitnessMode formData={formData} widgetProps={props} PTProps={ptSchema[3]} type={operation.type} actionType ={operation.actionType}/>
+            "ui:widget":(props) => <FitnessMode formData={formData} widgetProps={props} PTProps={ptSchema[3]} type={operation.type} actionType ={operation.actionType} userData={userData}/>
         },
         "duration": {
-            "ui:widget": (props) => <FitnessDuration type={operation.type} actionType={operation.actionType} widgetProps={props}/>
+            "ui:widget": (props) => <FitnessDuration type={operation.type} actionType={operation.actionType} userData={userData}  widgetProps={props}/>
         },
 
         "ptonline": {
@@ -197,7 +197,7 @@ function CreateEditView(props: any, ref: any) {
         },
 
         "bookingleadtime":{
-            "ui:widget":(props:any) => <BookingLeadTime widgetProps={props} actionType={operation.actionType}  userData={userData}/>
+            "ui:widget":(props:any) => <BookingLeadTime widgetProps={props} actionType={operation.actionType} userData={userData}/>
         },
 
         "level": {
@@ -306,10 +306,23 @@ function CreateEditView(props: any, ref: any) {
     const FillDetails = (dataPackage: any) => {
         const packageDetail = dataPackage.fitnesspackage;
         console.log("packageDetail", packageDetail)
-        const { id, packagename, tags, disciplines, fitness_package_type, aboutpackage, benefits, level, mode, ptoffline, ptonline, grouponline, groupoffline, recordedclasses, restdays, fitnesspackagepricing, bookingleadday, duration, groupstarttime, groupendtime, groupinstantbooking, address, ptclasssize, classsize, groupdays, introvideourl, is_private } = packageDetail;
+
+        let { id, packagename, tags, disciplines, fitness_package_type, aboutpackage, benefits, level, mode, ptoffline, ptonline, grouponline, groupoffline, recordedclasses, restdays, fitnesspackagepricing, bookingleadday, bookingleadtime,duration, groupstarttime, groupendtime, groupinstantbooking, address, ptclasssize, classsize, groupdays, introvideourl, is_private } = packageDetail;
+
+        if(mode === "Offline_workout"){
+            mode = "Offline Workout"
+        }else if (mode === "Online_workout"){
+            mode = "Online Workout"
+        }
+
+        if(bookingleadtime){
+            bookingleadday = 0
+        }else if (bookingleadday){
+            bookingleadtime = ""
+        }
 
 
-        const updateFormData = updateform.createUpdateForm( id, packagename, tags, disciplines, fitness_package_type, aboutpackage, benefits, level, mode, ptoffline, ptonline, grouponline, groupoffline, recordedclasses, restdays, fitnesspackagepricing, bookingleadday, duration, groupstarttime, groupendtime, groupinstantbooking, address, ptclasssize, classsize, groupdays, introvideourl, is_private );
+        const updateFormData = updateform.createUpdateForm( id, packagename, tags, disciplines, fitness_package_type, aboutpackage, benefits, level, mode, ptoffline, ptonline, grouponline, groupoffline, recordedclasses, restdays, fitnesspackagepricing, bookingleadday,bookingleadtime, duration, groupstarttime, groupendtime, groupinstantbooking, address, ptclasssize, classsize, groupdays, introvideourl, is_private );
         
         setFormData(updateFormData);
 
@@ -371,7 +384,7 @@ function CreateEditView(props: any, ref: any) {
     function CreatePackage(frm) {
         // console.log('create message');
         // console.log('frm', frm)
-        // createPackage({ variables: frm })
+        createPackage({ variables: frm })
 
     }
 

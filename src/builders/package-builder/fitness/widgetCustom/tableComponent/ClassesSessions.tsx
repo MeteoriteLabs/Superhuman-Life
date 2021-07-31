@@ -1,47 +1,49 @@
 import React from 'react'
 
 
-type Props ={
-    type:string,
-    mode:string,
-    classicClasses:number,
-    ptonline:number,
-    ptoffline:number,
-    grouponline:number,
-    groupoffline:number,
-    recordedclasses:number,
-    
+type Props = {
+    type: string,
+    mode: string,
+    classicClasses: number,
+    ptonline: number,
+    ptoffline: number,
+    grouponline: number,
+    groupoffline: number,
+    recordedclasses: number,
+
 }
 
-export default function ClassesSessions({ type, classicClasses, ptonline, ptoffline, grouponline, groupoffline, recordedclasses, mode }:Props) {
-   
+export default function ClassesSessions({ type, classicClasses, ptonline, ptoffline, grouponline, groupoffline, recordedclasses, mode }: Props) {
+
 
 
     // console.log(ptonline, ptoffline, grouponline, groupoffline, recordedclasses)
 
     let arr = [ptonline, ptoffline, grouponline, groupoffline, recordedclasses];
-    let totalClasses = arr.filter(item =>item !== undefined).reduce((acc, cur) => acc + cur);
- 
+    let totalClasses = arr.filter(item => item !== undefined).reduce((acc, cur) => acc + cur);
+   
 
     let arrNumberClass: number[] = [];
     if (type === "Classic Class") {
         arrNumberClass.push(classicClasses);
 
-    } else if (mode === "Workout") {
+    } else if (mode === "Online Workout" || mode === "Offline Workout") {
         if (ptonline !== 0) {
             arrNumberClass.push(ptonline);
-        } else {
+            console.log(arrNumberClass)
+        }else{
             arrNumberClass.push(ptoffline);
-        }
+        } 
 
-    } else {
-
+    } 
+    else {
         arrNumberClass[0] = totalClasses;
         for (let i = 1; i < 4; i++) {
             i === 1 ? totalClasses *= 3 : totalClasses *= 2;
             arrNumberClass.push(totalClasses);
         }
     }
+
 
 
     return <>

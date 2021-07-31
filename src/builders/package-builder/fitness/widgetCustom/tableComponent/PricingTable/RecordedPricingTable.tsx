@@ -16,7 +16,7 @@ export default function RecordedPricingTable({ recordedclasses, packageTypeName,
                 {recordedclasses !== undefined && recordedclasses !== 0 ?
                     <>
                         <td>
-                            <img src={`/assets/${packageTypeName}.svg`} alt={`${packageTypeName}`} title={`${packageTypeName}`} />
+                            <img src={`/assets/preview-custom-${packageTypeName}.svg`} alt={`${packageTypeName}`} title={`${packageTypeName}`} />
                         </td>
                         <Classes
                             numberClass={recordedclasses}

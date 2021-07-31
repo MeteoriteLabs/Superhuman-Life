@@ -22,6 +22,7 @@ export const CREATE_PACKAGE = gql`
         $recordedclasses: Int
         $restdays: Int
         $bookingleadday: Int
+        $bookingleadtime:String
         $groupinstantbooking: Boolean
         $fitness_package_type:ID
         $fitnesspackagepricing:JSON
@@ -51,6 +52,7 @@ export const CREATE_PACKAGE = gql`
                         recordedclasses:$recordedclasses
                         restdays:$restdays
                         bookingleadday: $bookingleadday
+                        bookingleadtime:$bookingleadtime
                         groupinstantbooking: $groupinstantbooking
                         fitness_package_type: $fitness_package_type
                         fitnesspackagepricing: { packagepricing : $fitnesspackagepricing }
@@ -134,6 +136,7 @@ export const EDIT_PACKAGE = gql`
            $recordedclasses: Int
            $restdays: Int
            $bookingleadday: Int
+           $bookingleadtime:String
            $fitnesspackagepricing:[editComponentFitnesspackagepricingFitnesspackagepricingInput]
            $duration: Int
            $groupstarttime:String
@@ -168,6 +171,7 @@ export const EDIT_PACKAGE = gql`
                          recordedclasses:$recordedclasses
                          restdays:$restdays
                          bookingleadday:$bookingleadday
+                         bookingleadtime:$bookingleadtime
                          fitnesspackagepricing:$fitnesspackagepricing
                          duration:$duration
                          groupstarttime:$groupstarttime

@@ -5,7 +5,7 @@ import * as _ from 'lodash'
 
 export default function Voucher(props) {
     const {actionType, setStatus,setFitnesspackagepricing, fitnesspackagepricing, type, mode } = props
-    let numEle = (type === "Classic Class" || mode === "Workout") ? 1 : 4
+    let numEle = (type === "Classic Class" || mode === "Online Workout" || mode === "Offline Workout") ? 1 : 4
     return <>
     
     {[...Array(numEle)].map((item: any, index: number) => {

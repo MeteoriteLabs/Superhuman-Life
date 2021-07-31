@@ -3,7 +3,7 @@ import _ from 'lodash'
 
 export default function MRP(props) {
     const { actionType, setStatus, fitnesspackagepricing, setFitnesspackagepricing, type, mode } = props
-    let numEle = (type === "Classic Class" || mode ==="Workout") ? 1 : 4
+    let numEle = (type === "Classic Class" || mode === "Online Workout"  ||  mode === "Offline Workout" ) ? 1 : 4
     // console.log('MRP: ', fitnesspackagepricing)
 
     return <>

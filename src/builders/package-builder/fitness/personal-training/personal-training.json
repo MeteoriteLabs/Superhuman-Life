@@ -92,7 +92,8 @@
                     "Online",
                     "Offline",
                     "Hybrid",
-                    "Workout"
+                    "Online Workout",
+                    "Offline Workout"
                 ]
             },
             "duration": {
@@ -225,15 +226,10 @@
                     {
                         "properties": {
                             "mode": {
-                                "title": "Workout",
                                 "type": "string",
                                 "enum":[
-                                    "Workout"
+                                    "Online Workout"
                                 ]
-                            },
-                            "address": {
-                                "title": "address",
-                                "type": "string"
                             },
                             "ptonline": {
                                 "title": "Online",
@@ -241,7 +237,22 @@
                                 "minimum": 0,
                                 "maximum": 1,
                                 "default": 0,
-                                "value": ""
+                                "value": 0
+                            }
+                        }
+                    },
+                    {
+                        "properties": {
+                            "mode": {
+                               
+                                "type": "string",
+                                "enum":[
+                                    "Offline Workout"
+                                ]
+                            },
+                            "address": {
+                                "title": "address",
+                                "type": "string"
                             },
                             "ptoffline": {
                                 "title": "Offline",
@@ -249,7 +260,7 @@
                                 "minimum": 0,
                                 "maximum": 1,
                                 "default": 0,
-                                "value": ""
+                                "value": 0
                             }
                         }
                     }
@@ -263,11 +274,13 @@
         "properties": {
             "bookingleadday": {
                 "type": "number",
-                "title": "Consumer can choose start date, after"
+                "title": "Consumer can choose start date, after",
+                "value":0
             },
             "bookingleadtime": {
                 "type": "string",
-                "title": "Consumer can choose start time, after"
+                "title": "Consumer can choose start time, after",
+                "value":0
             }
         }
     },

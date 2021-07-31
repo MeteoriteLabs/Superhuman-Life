@@ -1,5 +1,5 @@
 export class UpdateForm {
-    createUpdateForm = (id, packagename, tags, disciplines, fitness_package_type, aboutpackage, benefits, level, mode, ptoffline, ptonline, grouponline, groupoffline, recordedclasses, restdays, fitnesspackagepricing, bookingleadday, duration, groupstarttime, groupendtime, groupinstantbooking, address, ptclasssize, classsize, groupdays, introvideourl, is_private) => {
+    createUpdateForm = (id, packagename, tags, disciplines, fitness_package_type, aboutpackage, benefits, level, mode, ptoffline, ptonline, grouponline, groupoffline, recordedclasses, restdays, fitnesspackagepricing, bookingleadday,bookingleadtime, duration, groupstarttime, groupendtime, groupinstantbooking, address, ptclasssize, classsize, groupdays, introvideourl, is_private) => {
         let updateFormData: any = {};
         updateFormData.id = id
         updateFormData.packagename = packagename;
@@ -19,6 +19,7 @@ export class UpdateForm {
         updateFormData.recordedclasses = recordedclasses;
         updateFormData.restdays = restdays;
         updateFormData.bookingleadday = bookingleadday;
+        updateFormData.bookingleadtime = bookingleadtime;
         updateFormData.duration = duration;
         updateFormData.groupstarttime = groupstarttime;
         updateFormData.groupendtime = groupendtime;

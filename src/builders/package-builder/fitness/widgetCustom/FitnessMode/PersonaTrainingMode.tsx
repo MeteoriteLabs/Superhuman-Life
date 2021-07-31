@@ -3,7 +3,8 @@ import React from 'react'
 export default function PersonaTrainingMode({ type, actionType, widgetProps, PTProps }) {
 
 
-    let arrMode = ["Online", "Offline", "Hybrid", "Workout"];
+
+    let arrMode = ["Online", "Offline", "Hybrid", "Online Workout", "Offline Workout"];
     if (type !== "Personal Training") {
         arrMode = arrMode.slice(0, 3)
     }
@@ -12,8 +13,9 @@ export default function PersonaTrainingMode({ type, actionType, widgetProps, PTP
 
 
     const handleChange = (e) => {
+        console.log('PTProps', PTProps)
         widgetProps.onChange(e.target.value)
-        if (e.target.value === "Workout") {
+        if (e.target.value === "Online Workout" || e.target.value === "Offline Workout") {
             PTProps.properties.duration.value = 1
             PTProps.properties.duration.default = 1
         } else {

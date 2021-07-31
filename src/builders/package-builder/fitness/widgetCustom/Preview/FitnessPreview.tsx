@@ -67,7 +67,7 @@ export default function FitnessPreview(props) {
 
 
     return <div>
-        {(packageType === "classic" || mode === "Workout") ?
+        {(packageType === "classic" || mode === "Online Workout" || mode === "Offline Workout") ?
             <ClassicPreview
                 type={type}
                 mode={mode}
@@ -115,6 +115,8 @@ export default function FitnessPreview(props) {
                                     <div className='d-flex justify-content-center align-items-center'>
                                         {packageType !== "custom" ?
                                             packageType !== "classic" ?
+
+                                            
                                                 <PTGroupPreview
                                                     packageType={packageType}
                                                     offlineClassesType={offlineClassesType}

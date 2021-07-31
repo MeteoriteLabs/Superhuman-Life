@@ -8,7 +8,7 @@ type Props = {
 
 export default function SuggestedPricing({ type, mode }: Props) {
 
-    const arrSuggestedPrice = (type === "Classic Class" || mode ==="Workout") ? [1000] : [2500, 2500, 2500, 2500];
+    const arrSuggestedPrice = (type === "Classic Class" ||  mode === "Online Workout" ||  mode === "Offline Workout" ) ? [1000] : [2500, 2500, 2500, 2500];
     return <>
         {arrSuggestedPrice.map((item, index) => {
             return <td key={index}>Rs {item}</td>

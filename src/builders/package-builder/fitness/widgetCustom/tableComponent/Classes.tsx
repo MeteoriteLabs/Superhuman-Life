@@ -11,7 +11,7 @@ export default function OnlineClasses({type, numberClass, mode}) {
 
     let arrayNumberClass: number[] = [];
 
-    if(type === "Classic Class" || mode === "Workout"){
+    if(type === "Classic Class" || mode === "Online Workout" ||  mode === "Offline Workout" ){
         arrayNumberClass.push(numberClass)
     }else{
         // if (numberClass !== '') {

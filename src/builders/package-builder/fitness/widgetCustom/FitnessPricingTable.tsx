@@ -1,6 +1,7 @@
 import React, { Fragment, useState } from 'react'
 import { useEffect } from 'react';
 import { Table } from 'react-bootstrap';
+import "./fitnessPricing.css"
 import Voucher from './tableComponent/Voucher';
 import ClassesSessions from './tableComponent/ClassesSessions';
 import SuggestedPricing from './tableComponent/SuggestedPricing';
@@ -110,11 +111,11 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
     }
 
     return <>
-        <Table striped bordered hover className='text-center'>
+        <Table  className='text-center'>
             <thead>
                 <tr>
                     <th>Details</th>
-                    {(type === "Classic Class" || userData.mode === "Workout") ?
+                    {(type === "Classic Class" || userData.mode === "Online Workout" ||  userData.mode === "Offline Workout") ?
                         <th>{duration} days</th>
                         :
                         <>
@@ -166,7 +167,6 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
                         status={status}
                         setStatus={setStatus}
                         formData={formData}
-                        // setFormData={setFormData}
                         fitnesspackagepricing={fitnesspackagepricing}
                         setFitnesspackagepricing={setFitnesspackagepricing}
                     />

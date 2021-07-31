@@ -17,13 +17,15 @@ type Props = {
     sizeType: any,
     ptclasssize: "Solo" | "Couple" | "Family",
     fitnesspackagepricing: any,
-    mode: "Online" | "Offline" | "Hybird" | "Workout"
+    mode: "Online" | "Offline" | "Hybird" | "Online Workout" | "Offline Workout"
 }
 
 
 
 export default function ClassicPreview({ type, disciplines, beginnerTag, intermediateTag, advancedTag, level, packageType, recordedclasses, ptonline, ptoffline, sizeType, ptclasssize, fitnesspackagepricing, mode }: Props) {
 
+    console.log('size', sizeType)
+    
     return (
         <Card className="text-center w-75 mx-auto" style={{ borderRadius: '20px' }}>
             <Card.Body className='pr-0 py-0'>
@@ -50,7 +52,8 @@ export default function ClassicPreview({ type, disciplines, beginnerTag, interme
                 </div>
                 <Card.Text className='py-3 d-flex justify-content-between align-items-center '>
                     <div className='d-flex justify-content-center align-items-center'>
-                        {mode === "Workout" ?
+                        {(mode === "Online Workout" || mode === "Offline Workout" )?
+                            // workout out
                             <PTGroupPreview
                                 packageType={packageType}
                                 offlineClassesType={ptoffline}
@@ -66,12 +69,7 @@ export default function ClassicPreview({ type, disciplines, beginnerTag, interme
 
                         {(packageType !== "classic" && packageType !== 'custom') ? <div className='ml-4'>
                             <h4>Class Size</h4>
-                            {mode === "Workout" ?
                                 <p className='mb-0' style={{ color: 'purple', fontSize: '1.3rem' }}>{ptclasssize}</p>
-                                :
-                                <p className='mb-0' style={{ color: 'purple', fontSize: '1.3rem' }}>{sizeType}</p>
-                            }
-
                         </div> : ""}
                     </div>
                     <div>

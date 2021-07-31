@@ -1,24 +1,31 @@
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Form } from 'react-bootstrap';
 
 export default function FitnessDuration(props) {
     console.log('duration props', props)
-    const { widgetProps, type, actionType } = props;
+    const { widgetProps, type, actionType, userData } = props;
     console.log('widgetProps.duration value', widgetProps.value);
-    const [selectedOption, setSelectedOption] = useState('')
+    console.log(userData)
 
+    const [value, setValue] = useState(30);
+
+    useEffect(() => {
+        if(userData.duration){
+            setValue(userData.duration)
+        }
+    }, [userData])
 
     return <>
-
-
         {(type === "Classic Class") &&
             <div>
                 <Form>
                     <Form.Group>
                         <Form.Label>Duration:</Form.Label>
                         <Form.Control type="email" placeholder="Enter number of days ..."
-                            value={widgetProps.value === "" ? 30 : widgetProps.value}
+                            // value={widgetProps.value === "" ? 30 : widgetProps.value}
+                            value={value}
+
                             disabled={(actionType === "view") ? true : false}
                             onChange={(e) => {
                                 widgetProps.schema.value = e.target.value

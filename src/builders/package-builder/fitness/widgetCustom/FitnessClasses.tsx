@@ -11,9 +11,9 @@ export default function FitnessClasses(props) {
     const dayAvailableRef = useRef<any>(null)
 
 
-    console.log('widgetProps', widgetProps)
-    console.log('classicProps', classicProps)
-    console.log(PTProps.properties.duration.value)
+    // console.log('widgetProps', widgetProps)
+    // console.log('classicProps', classicProps)
+    // console.log(PTProps.properties.duration.value)
 
 
     
@@ -32,8 +32,8 @@ export default function FitnessClasses(props) {
 
     // pt group
     const handlePTGroupInputValue = (e) => {
-        console.log('pt props', PTProps);
-        console.log('group props', groupProps);
+        // console.log('pt props', PTProps);
+        // console.log('group props', groupProps);
 
         dayAvailableRef.current = PTProps.properties.duration.value
         //    console.log('ref', dayAvailableRef.current);

@@ -6,7 +6,7 @@ export default function BookingLeadday({ widgetProps, actionType, userData }) {
 
 
     return <>
-        {userData.mode !== "Workout" ?
+        {(userData.mode === "Online" || userData.mode === "Offline" || userData.mode === "Hybrid") ?
             <>
                 <h2>For Programs</h2>
                 <p>Consumer can choose start date, after</p>
@@ -32,7 +32,8 @@ export default function BookingLeadday({ widgetProps, actionType, userData }) {
                 <p>The lead time will allow you to discuss, understand, request data and then build a custom program </p>
             </>
             : ""
-
         }
+
+        
     </>
 }

@@ -10,13 +10,14 @@ type Props = {
 }
 
 export default function PTGroupPricingTable({ onlineClassesType, offlineClassesType, packageTypeName, mode, type }: Props) {
+    console.log(offlineClassesType)
     return (
         <Fragment>
             <tr>
-                {onlineClassesType !== undefined && onlineClassesType !== 0 ?
+                {(onlineClassesType !== null && onlineClassesType !== undefined && onlineClassesType !== 0) ?
                     <Fragment>
                         <td>
-                            <img src={`/assets/${packageTypeName}-online.svg`} alt={`${packageTypeName} online`} title={`${packageTypeName} online`} />
+                            <img src={`/assets/preview-custom-${packageTypeName}-online.svg`} alt={`${packageTypeName} online`} title={`${packageTypeName} online`} />
                         </td>
                         <Classes
                             numberClass={onlineClassesType}
@@ -27,10 +28,10 @@ export default function PTGroupPricingTable({ onlineClassesType, offlineClassesT
                 }
             </tr>
             <tr>
-                {offlineClassesType !== undefined && offlineClassesType !== 0 ?
+                {(offlineClassesType !== null  && offlineClassesType !== undefined && offlineClassesType !== 0 )?
                     <Fragment>
                         <td>
-                            <img src={`/assets/${packageTypeName}-offline.svg `} alt={`${packageTypeName} offline`} title={`${packageTypeName} offline`} />
+                            <img src={`/assets/preview-custom-${packageTypeName}-offline.svg `} alt={`${packageTypeName} offline`} title={`${packageTypeName} offline`} />
                         </td>
                         <Classes
                             numberClass={offlineClassesType}

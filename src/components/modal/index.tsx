@@ -27,10 +27,10 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
         console.log(formData)
         let updateFinesspackagepricing: any = ''
         if (pricingDetailRef.current.getFitnessPackagePricing?.()) {
-            console.log(pricingDetailRef.current.getFitnessPackagePricing?.())
+            // console.log(pricingDetailRef.current.getFitnessPackagePricing?.())
             updateFinesspackagepricing = pricingDetailRef.current.getFitnessPackagePricing?.();
 
-            if (formData.fitness_package_type === "60e045867df648b0f5756c32" || formData.mode === "Workout") {
+            if (formData.fitness_package_type === "60e045867df648b0f5756c32" || formData.mode === "Online Workout" || formData.mode === "Offline Workout") {
                 updateFinesspackagepricing = updateFinesspackagepricing.slice(0, 1)
             }
         }
@@ -42,40 +42,44 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
                 if (pricingDetailRef.current.getFitnessPackagePricing?.()) {
                     updateFinesspackagepricing[0].packagepricing = pricingDetailRef.current.getFitnessPackagePricing?.();
                     delete updateFinesspackagepricing[0].__typename;
-                    console.log(updateFinesspackagepricing)
-                    // updateFinesspackagepricing = updateFinesspackagepricing[0]
-
-                    // if (fitness_package_type === "60e045867df648b0f5756c32") {
-                    //     updateFinesspackagepricing.packagepricing[0].duration = userData.duration
-                    //     console.log(updateFinesspackagepricing)
-                    // }
+                    // console.log(updateFinesspackagepricing)
                 }
 
             }
-            // else {
-            //     updateFinesspackagepricing = pricingDetailRef.current.getFitnessPackagePricing?.();
-            // }
         }
 
-        console.log(updateFinesspackagepricing)
+        // console.log(updateFinesspackagepricing)
         return updateFinesspackagepricing
     }
 
-    // const updateTimeDuration = (formData) => {
-    //     let updateFinesspackagepricing: any = '';
-    //     console.log(pricingDetailRef.current.getFitnessPackagePricing?.())
-    //     if (formData) {
-    //         updateFinesspackagepricing = _.cloneDeep(formData?.fitnesspackagepricing);
-    //         if (pricingDetailRef.current.getFitnessPackagePricing?.()) {
-    //             updateFinesspackagepricing = pricingDetailRef.current.getFitnessPackagePricing?.();
-    //             console.log(updateFinesspackagepricing)
-    //             if (fitness_package_type === "60e045867df648b0f5756c32") {
-    //                 updateFinesspackagepricing[0].duration = formData.duration
-    //                 console.log(updateFinesspackagepricing)
-    //             }
-    //         }
-    //     }
-    // }
+
+    const updateModeName = (formData) => {
+        let { mode } = formData;
+    
+        if (formData.mode) {
+            if (mode === "Online Workout") {
+                mode = "Online_workout"
+            } else if (mode === "Offline Workout") {
+                mode = "Offline_workout"
+            }
+        }
+        return mode
+    }
+
+
+    const updateFormDuration = (formData) =>{
+        let {duration, mode} = formData;
+        if (formData.mode) {
+            if (mode === "Online Workout" || mode === "Offline Workout") {
+                duration = 1
+            } 
+        }
+
+        return duration
+    }
+
+
+
 
     const resetClassesValue = (userData) => {
         let { ptonline, ptoffline, restdays, grouponline, groupoffline, recordedclasses, duration, mode } = userData;
@@ -83,9 +87,9 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
         PTProps.properties.ptonlineClasses.value = "";
         PTProps.properties.ptofflineClasses.value = "";
         PTProps.properties.restDay.value = "";
-        PTProps.properties.dayAvailable.value = mode === "Workout" ? 1 : 30;
-        PTProps.properties.duration.value = mode === "Workout" ? 1 : 30;
-        PTProps.properties.duration.default = mode === "Workout" ? 1 : 30;
+        PTProps.properties.dayAvailable.value = (mode === "Online Workout" || mode === "Offline Workout") ? 1 : 30;
+        PTProps.properties.duration.value = (mode === "Online Workout" || mode === "Offline Workout") ? 1 : 30;
+        PTProps.properties.duration.default = (mode === "Online Workout" || mode === "Offline Workout") ? 1 : 30;
         classicProps.properties.duration.default = 30;
         ptoffline = 0;
         ptonline = 0;
@@ -93,7 +97,7 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
         groupoffline = 0;
         recordedclasses = 0;
         restdays = 0;
-        duration = mode === "Workout" ? 1 : 30;
+        duration = (mode === "Online Workout" || mode === "Offline Workout") ? 1 : 30;
         setUserData({ ...userData, ptoffline, ptonline, grouponline, groupoffline, recordedclasses, duration, restdays })
         setFormValues({ ...formValues, ptoffline, ptonline, grouponline, groupoffline, recordedclasses, duration, restdays })
     }
@@ -101,12 +105,14 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
     function submitHandler(formData: any, userData) {
 
         const updateFinesspackagepricing = updatePrice(formData, actionType);
+        const updateMode = updateModeName(formData)
+        const updateDuration = updateFormDuration(formData)
         // const updateDuration = updateTimeDuration(formData)
         // console.log(updateFinesspackagepricing.slice(0, 1))
         if (isStepper && step < 6) {
             setStep(step + 1);
-            setFormValues({ ...formValues, ...formData, fitness_package_type, fitnesspackagepricing: updateFinesspackagepricing });
-            setUserData({ ...formValues, ...formData, fitness_package_type, fitnesspackagepricing: updateFinesspackagepricing })
+            setFormValues({ ...formValues, ...formData, fitness_package_type, fitnesspackagepricing: updateFinesspackagepricing, duration: updateDuration });
+            setUserData({ ...formValues, ...formData, fitness_package_type, fitnesspackagepricing: updateFinesspackagepricing,  duration: updateDuration })
             console.log('formData before submit', formData);
             // console.log('formValues', formValues)
             console.log("userData", userData);
@@ -114,7 +120,7 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
             if (typeof formData.disciplines !== "object") {
                 formData.disciplines = JSON.parse(formData.disciplines).map(item => item.id)
             }
-            formData = { ...formData, fitnesspackagepricing: updateFinesspackagepricing }
+            formData = { ...formData, fitnesspackagepricing: updateFinesspackagepricing, mode:updateMode }
             formSubmit(formData);
             // console.log("userData", userData)
             actionType === "view" && setRender(false)
