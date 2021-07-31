@@ -57,12 +57,12 @@ export default function FitnessPreview(props) {
             setOffineClassesType(groupoffline);
             setSizeType(classsize)
         }
-        else if (packageType === "classic") {
-            let updatePricing = _.cloneDeep(fitnesspackagepricing);
-            updatePricing = updatePricing.splice(0, 1)
-            updatePricing[0].duration = duration;
-            setUpdatePricing(updatePricing)
-        }
+        // else if (packageType === "classic") {
+        //     let updatePricing = _.cloneDeep(fitnesspackagepricing);
+        //     updatePricing = updatePricing.splice(0, 1)
+        //     updatePricing[0].duration = duration;
+        //     setUpdatePricing(updatePricing)
+        // }
     }, [packageType, actionType])
 
 
@@ -86,7 +86,7 @@ export default function FitnessPreview(props) {
             />
             :
             <Carousel slide={true} touch={true} activeIndex={index} onSelect={handleSelect}>
-                {updatePricing.map((price, idx) => {
+                {updatePricing.map((item, idx: number) => {
                     return <Carousel.Item key={idx}>
                         <Card className="text-center w-75 mx-auto" style={{ borderRadius: '20px' }}>
                             <Card.Body className='pr-0 py-0'>
@@ -140,8 +140,8 @@ export default function FitnessPreview(props) {
                                         </div> : ""}
                                     </div>
                                     <div>
-                                        <p className='mb-0 mr-3' style={{ color: '#72B54C', fontSize: '2rem' }}>{"\u20B9"} {price.mrp}</p>
-                                        <p>per {price.duration} days</p>
+                                        <p className='mb-0 mr-3' style={{ color: '#72B54C', fontSize: '2rem' }}>{"\u20B9"} {item.mrp}</p>
+                                        <p>per {item.duration} days</p>
                                     </div>
                                 </Card.Text>
                             </Card.Body>

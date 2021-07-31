@@ -12,15 +12,16 @@ export default function FitnessClasses(props) {
 
 
     console.log('widgetProps', widgetProps)
-    console.log('packageTypeName', packageTypeName)
-
+    console.log('classicProps', classicProps)
+    console.log(PTProps.properties.duration.value)
 
 
     // console.log("dayAvailable", dayAvaliable);
     // console.log("dayAvailableProps", PTProps.properties.dayAvailable.value);
 
-    const countingAvailableDays = (dayAvailableRef: number, ptonlineValue: number, ptofflineValue: number, grouponlineValue: number, groupofflineValue: number, recordValue:number, restdayValue: number) => {
-        dayAvailableRef -= (ptonlineValue + ptofflineValue + grouponlineValue + groupofflineValue + recordValue +  restdayValue);
+    const countingAvailableDays = (dayAvailableRef: number, ptonlineValue: number, ptofflineValue: number, grouponlineValue: number, groupofflineValue: number, recordValue: number, restdayValue: number) => {
+        
+        dayAvailableRef -= (ptonlineValue + ptofflineValue + grouponlineValue + groupofflineValue + recordValue + restdayValue);
 
         if (dayAvailableRef === 0) {
             widgetProps.schema.maximum = 30
@@ -35,8 +36,8 @@ export default function FitnessClasses(props) {
     const handlePTGroupInputValue = (e) => {
         console.log('pt props', PTProps);
         console.log('group props', groupProps);
-
-        dayAvailableRef.current = PTProps.properties.duration.default
+        
+        dayAvailableRef.current =  PTProps.properties.duration.value 
         //    console.log('ref', dayAvailableRef.current);
         if (packageTypeName === "personal-training") {
             if (widgetProps.label === 'Online') {
@@ -54,7 +55,7 @@ export default function FitnessClasses(props) {
             }
         }
 
-        dayAvailableRef.current = countingAvailableDays(dayAvailableRef.current, PTProps.properties.ptonlineClasses.value, PTProps.properties.ptofflineClasses.value, groupProps.properties.grouponlineClasses.value, groupProps.properties.groupofflineClasses.value,  customProps.properties.record.value ,PTProps.properties.restDay.value)
+        dayAvailableRef.current = countingAvailableDays(dayAvailableRef.current, PTProps.properties.ptonlineClasses.value, PTProps.properties.ptofflineClasses.value, groupProps.properties.grouponlineClasses.value, groupProps.properties.groupofflineClasses.value, customProps.properties.record.value, PTProps.properties.restDay.value)
 
         console.log('ref', dayAvailableRef.current);
 
@@ -64,8 +65,8 @@ export default function FitnessClasses(props) {
 
     // custom
     const handleCustomInputValue = (e) => {
-        console.log('custom', customProps)
-        dayAvailableRef.current = PTProps.properties.duration.default
+        console.log('classicProps', classicProps)
+        dayAvailableRef.current = PTProps.properties.duration.value
         if (widgetProps.id === "root_ptonline") {
             customProps.properties.ptonlineClasses.value = parseInt(e.target.value);
         } else if (widgetProps.id === "root_ptoffline") {
@@ -78,8 +79,8 @@ export default function FitnessClasses(props) {
             customProps.properties.record.value = parseInt(e.target.value);
         }
 
-        dayAvailableRef.current = countingAvailableDays(dayAvailableRef.current,customProps.properties.ptonlineClasses.value, customProps.properties.ptofflineClasses.value, customProps.properties.grouponlineClasses.value, customProps.properties.groupofflineClasses.value, customProps.properties.record.value, PTProps.properties.restDay.value)
-      
+        dayAvailableRef.current = countingAvailableDays(dayAvailableRef.current, customProps.properties.ptonlineClasses.value, customProps.properties.ptofflineClasses.value, customProps.properties.grouponlineClasses.value, customProps.properties.groupofflineClasses.value, customProps.properties.record.value, PTProps.properties.restDay.value)
+
         console.log('ref', dayAvailableRef.current);
     }
 
@@ -157,7 +158,7 @@ export default function FitnessClasses(props) {
                 <img src={`/assets/${packageTypeName}classic.svg`} alt='123' />
             </div> */}
 
-    
+
             <input
                 className="py-2 px-2"
                 disabled={actionType === "view" ? true : false}

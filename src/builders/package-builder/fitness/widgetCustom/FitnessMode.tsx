@@ -7,12 +7,12 @@ export default function FitnessMode(props) {
 
 
     const handleChange = (e) => {
-        console.log(e.target.value)
         widgetProps.onChange(e.target.value)
-
         if (e.target.value === "Workout") {
+            PTProps.properties.duration.value = 1
             PTProps.properties.duration.default = 1
         } else {
+            PTProps.properties.duration.value = 30
             PTProps.properties.duration.default = 30
         }
     }

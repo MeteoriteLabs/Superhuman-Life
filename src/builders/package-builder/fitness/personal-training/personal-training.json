@@ -98,7 +98,7 @@
             "duration": {
                 "title": "A null field",
                 "type": "number",
-                "default": 30,
+                "default":30,
                 "value":30
             },
             "ptonlineClasses": {
@@ -139,7 +139,7 @@
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 30,
-                                "default": "0",
+                                "default": "",
                                 "value": ""
                             },
                             "restdays": {
@@ -147,7 +147,7 @@
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 30,
-                                "default": 0,
+                                "default": "",
                                 "value": ""
                             }
                         }
@@ -170,7 +170,7 @@
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 30,
-                                "default": "0",
+                                "default": "",
                                 "value": ""
                             },
                             "restdays": {
@@ -178,7 +178,7 @@
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 30,
-                                "default": 0,
+                                "default": "",
                                 "value": ""
                             }
                         }
@@ -201,7 +201,7 @@
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 30,
-                                "default": "0",
+                                "default": "",
                                 "value": ""
                             },
                             "ptoffline": {
@@ -209,7 +209,7 @@
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 30,
-                                "default": "0",
+                                "default": "",
                                 "value": ""
                             },
                             "restdays": {
@@ -217,7 +217,7 @@
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 30,
-                                "default": 0,
+                                "default": "",
                                 "value": ""
                             }
                         }
@@ -240,7 +240,7 @@
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 1,
-                                "default": "",
+                                "default": 0,
                                 "value": ""
                             },
                             "ptoffline": {
@@ -248,7 +248,7 @@
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 1,
-                                "default": "",
+                                "default": 0,
                                 "value": ""
                             }
                         }
@@ -264,6 +264,10 @@
             "bookingleadday": {
                 "type": "number",
                 "title": "Consumer can choose start date, after"
+            },
+            "bookingleadtime": {
+                "type": "string",
+                "title": "Consumer can choose start time, after"
             }
         }
     },

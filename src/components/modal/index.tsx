@@ -1,4 +1,4 @@
-import { Fragment, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { withTheme, utils } from "@rjsf/core";
 import { Theme as Bootstrap4Theme } from '@rjsf/bootstrap-4';
 import { Button, Col, Modal, ProgressBar, Row } from "react-bootstrap";
@@ -22,18 +22,41 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
 
 
 
-    const updatePrice = () => {
+
+    const updatePrice = (formData, actionType) => {
+        console.log(formData)
         let updateFinesspackagepricing: any = ''
-        if (formData) {
-            updateFinesspackagepricing = _.cloneDeep(formData?.fitnesspackagepricing);
-            if (pricingDetailRef.current.getFitnessPackagePricing?.()) {
-                updateFinesspackagepricing[0].packagepricing = pricingDetailRef.current.getFitnessPackagePricing?.();
-                delete updateFinesspackagepricing[0].__typename;
-                updateFinesspackagepricing = updateFinesspackagepricing[0]
-            }
-        } else {
+        if (pricingDetailRef.current.getFitnessPackagePricing?.()) {
+            console.log(pricingDetailRef.current.getFitnessPackagePricing?.())
             updateFinesspackagepricing = pricingDetailRef.current.getFitnessPackagePricing?.();
+
+            if (formData.fitness_package_type === "60e045867df648b0f5756c32" || formData.mode === "Workout") {
+                updateFinesspackagepricing = updateFinesspackagepricing.slice(0, 1)
+            }
         }
+
+        if (actionType === "edit") {
+            console.log(formData)
+            if (formData) {
+                updateFinesspackagepricing = _.cloneDeep(formData?.fitnesspackagepricing);
+                if (pricingDetailRef.current.getFitnessPackagePricing?.()) {
+                    updateFinesspackagepricing[0].packagepricing = pricingDetailRef.current.getFitnessPackagePricing?.();
+                    delete updateFinesspackagepricing[0].__typename;
+                    console.log(updateFinesspackagepricing)
+                    // updateFinesspackagepricing = updateFinesspackagepricing[0]
+
+                    // if (fitness_package_type === "60e045867df648b0f5756c32") {
+                    //     updateFinesspackagepricing.packagepricing[0].duration = userData.duration
+                    //     console.log(updateFinesspackagepricing)
+                    // }
+                }
+
+            }
+            // else {
+            //     updateFinesspackagepricing = pricingDetailRef.current.getFitnessPackagePricing?.();
+            // }
+        }
+
         console.log(updateFinesspackagepricing)
         return updateFinesspackagepricing
     }
@@ -42,8 +65,10 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
     //     let updateFinesspackagepricing: any = '';
     //     console.log(pricingDetailRef.current.getFitnessPackagePricing?.())
     //     if (formData) {
+    //         updateFinesspackagepricing = _.cloneDeep(formData?.fitnesspackagepricing);
     //         if (pricingDetailRef.current.getFitnessPackagePricing?.()) {
     //             updateFinesspackagepricing = pricingDetailRef.current.getFitnessPackagePricing?.();
+    //             console.log(updateFinesspackagepricing)
     //             if (fitness_package_type === "60e045867df648b0f5756c32") {
     //                 updateFinesspackagepricing[0].duration = formData.duration
     //                 console.log(updateFinesspackagepricing)
@@ -52,12 +77,15 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
     //     }
     // }
 
-    const resetClassesValue = () => {
-        let { ptonline, ptoffline, restdays, grouponline, groupoffline, recordedclasses, duration } = userData;
-        PTProps.properties.ptonlineClasses.value = 0;
-        PTProps.properties.ptofflineClasses.value = 0;
-        PTProps.properties.restDay.value = 0;
-        PTProps.properties.dayAvailable.value = 30;
+    const resetClassesValue = (userData) => {
+        let { ptonline, ptoffline, restdays, grouponline, groupoffline, recordedclasses, duration, mode } = userData;
+
+        PTProps.properties.ptonlineClasses.value = "";
+        PTProps.properties.ptofflineClasses.value = "";
+        PTProps.properties.restDay.value = "";
+        PTProps.properties.dayAvailable.value = mode === "Workout" ? 1 : 30;
+        PTProps.properties.duration.value = mode === "Workout" ? 1 : 30;
+        PTProps.properties.duration.default = mode === "Workout" ? 1 : 30;
         classicProps.properties.duration.default = 30;
         ptoffline = 0;
         ptonline = 0;
@@ -65,13 +93,16 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
         groupoffline = 0;
         recordedclasses = 0;
         restdays = 0;
+        duration = mode === "Workout" ? 1 : 30;
         setUserData({ ...userData, ptoffline, ptonline, grouponline, groupoffline, recordedclasses, duration, restdays })
         setFormValues({ ...formValues, ptoffline, ptonline, grouponline, groupoffline, recordedclasses, duration, restdays })
     }
 
-    function submitHandler(formData: any) {
-        const updateFinesspackagepricing = updatePrice();
+    function submitHandler(formData: any, userData) {
+
+        const updateFinesspackagepricing = updatePrice(formData, actionType);
         // const updateDuration = updateTimeDuration(formData)
+        // console.log(updateFinesspackagepricing.slice(0, 1))
         if (isStepper && step < 6) {
             setStep(step + 1);
             setFormValues({ ...formValues, ...formData, fitness_package_type, fitnesspackagepricing: updateFinesspackagepricing });
@@ -140,7 +171,7 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
                                     uiSchema={formUISchema}
                                     schema={formSchema[step.toString()]}
                                     ref={formRef}
-                                    onSubmit={({ formData }: any) => submitHandler(formData)}
+                                    onSubmit={({ formData }: any) => submitHandler(formData, userData)}
                                     formData={formValues}
                                     widget={widgets}
                                 >
@@ -160,7 +191,7 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
                                     setStep(step - 1);
                                     if (step === 4) {
                                         if (actionType === "create") {
-                                            resetClassesValue()
+                                            resetClassesValue(userData)
                                         }
                                     }
                                 }}

@@ -2,8 +2,8 @@ import React, { Fragment } from 'react'
 
 type Props = {
     packageType: "personal-training" | "group" | "classic" | "custom",
-    offlineClassesType:number,
-    onlineClassesType:number
+    offlineClassesType:number | undefined,
+    onlineClassesType:number | undefined
 }
 
 export default function PTGroupPreview({packageType, offlineClassesType,onlineClassesType}:Props) {

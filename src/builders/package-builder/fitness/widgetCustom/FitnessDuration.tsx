@@ -5,7 +5,7 @@ import { Form } from 'react-bootstrap';
 export default function FitnessDuration(props) {
     console.log('duration props', props)
     const { widgetProps, type, actionType } = props;
-    console.log('widgetProps.value', widgetProps.value);
+    console.log('widgetProps.duration value', widgetProps.value);
     const [selectedOption, setSelectedOption] = useState('')
 
 
@@ -31,7 +31,6 @@ export default function FitnessDuration(props) {
                 <div className='text-center font-weight-bold mx-auto w-50 py-3 px-2 mt-5' style={{ boxShadow: '0px 7px 15px -5px #000000', borderRadius: '5px' }}>
                     <p className='m-0'>Set for {widgetProps.schema.value === "" ? 30 : widgetProps.value} days</p>
                 </div>
-
             </div>
         }
     </>

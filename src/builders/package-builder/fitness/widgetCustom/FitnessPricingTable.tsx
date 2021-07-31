@@ -28,7 +28,7 @@ type FitnessPricing = {
 export default function FitnessPricingTable({ userData, setUserData, actionType, type, formData, packageTypeName, pricingDetailRef }) {
 
     let { ptonline, ptoffline, mode, grouponline, groupoffline, recordedclasses, duration } = userData;
-
+    console.log(packageTypeName)
     const [status, setStatus] = useState<Boolean>(false);
     const [fitnesspackagepricing, setFitnesspackagepricing] = useState<FitnessPricing[]>([
         {
@@ -60,6 +60,7 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
     const [offlineClassesType, setOffineClassesType] = useState<number>(0);
 
     useEffect(() => {
+        
         if (pricingDetailRef) {
             pricingDetailRef.current = {
                 getFitnessPackagePricing: () => fitnesspackagepricing,
@@ -67,14 +68,22 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
         }
     }, [pricingDetailRef, fitnesspackagepricing])
 
-
+    console.log("form data pricing" , formData)
 
     useEffect(() => {
-        if (formData) {
-            setFitnesspackagepricing(formData)
-            console.log(fitnesspackagepricing)
+        let updatePricing:any = ''
+        if(formData){
+            updatePricing = _.cloneDeep(formData);
+        }else{
+            updatePricing = [...fitnesspackagepricing];
         }
-    }, [formData])
+        updatePricing[0].duration = duration;
+        setFitnesspackagepricing(updatePricing)
+        // console.log(updatePricing)
+    }, [])
+
+    console.log('packageTypeName', packageTypeName, fitnesspackagepricing)
+
 
     console.log(type, userData)
 

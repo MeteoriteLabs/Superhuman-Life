@@ -17,7 +17,7 @@ export default function ClassesSessions({ type, classicClasses, ptonline, ptoffl
    
 
 
-    console.log(ptonline, ptoffline, grouponline, groupoffline, recordedclasses)
+    // console.log(ptonline, ptoffline, grouponline, groupoffline, recordedclasses)
 
     let arr = [ptonline, ptoffline, grouponline, groupoffline, recordedclasses];
     let totalClasses = arr.filter(item =>item !== undefined).reduce((acc, cur) => acc + cur);
@@ -42,6 +42,7 @@ export default function ClassesSessions({ type, classicClasses, ptonline, ptoffl
             arrNumberClass.push(totalClasses);
         }
     }
+
 
     return <>
         {arrNumberClass.map((item, index) => {

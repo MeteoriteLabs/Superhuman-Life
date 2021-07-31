@@ -2,7 +2,7 @@ import React from 'react'
 
 
 export default function FitnessRestday(props: any) {
-    const { PTProps, widgetProps, actionType, classicProps } = props;
+    const { PTProps, widgetProps, actionType } = props;
 
 
     console.log(PTProps)
@@ -13,7 +13,7 @@ export default function FitnessRestday(props: any) {
         <input
             disabled={(actionType === "view") ? true : false}
             className="py-2 px-2"
-            value={widgetProps.value & widgetProps.value}
+            value={widgetProps.value ? widgetProps.value : ""}
             pattern="[0-9]+"
             onChange={(event: any) => {
                 if (event.target.value >  PTProps.properties.restDay.maximum) {

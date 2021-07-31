@@ -14,9 +14,10 @@ import FitnessMultiSelect from './widgetCustom/FitnessMultiSelect'
 import FitnessAddress from './widgetCustom/FitnessAddress';
 import FitnessPricingTable from './widgetCustom/FitnessPricingTable'
 import FitnessDuration from './widgetCustom/FitnessDuration';
-import FitnessBookingLeadday from './widgetCustom/FitnessBookingLeadday/FitnessBookingLeadday';
 import FitnessMode from './widgetCustom/FitnessMode';
 import { updateform } from './widgetCustom/_core/UpdateForm';
+import BookingLeadday from './widgetCustom/FitnessBookingLeadday/BookingLeadday';
+import BookingLeadTime from './widgetCustom/FitnessBookingLeadday/BookingLeadTime';
 
 
 interface Operation {
@@ -149,6 +150,7 @@ function CreateEditView(props: any, ref: any) {
 
 
     const pricingDetailRef = useRef<{ getFitnessPackagePricing?: Function }>({});
+   
 
     const uiSchema: any = {
         "disciplines": {
@@ -162,7 +164,7 @@ function CreateEditView(props: any, ref: any) {
             "ui:widget":(props) => <FitnessMode formData={formData} widgetProps={props} PTProps={ptSchema[3]} type={operation.type} actionType ={operation.actionType}/>
         },
         "duration": {
-            "ui:widget": (props) => <FitnessDuration type={operation.type} actionType={operation.actionType} widgetProps={props} />
+            "ui:widget": (props) => <FitnessDuration type={operation.type} actionType={operation.actionType} widgetProps={props}/>
         },
 
         "ptonline": {
@@ -191,7 +193,11 @@ function CreateEditView(props: any, ref: any) {
         },
 
         "bookingleadday":{
-            "ui:widget":(props:any) => <FitnessBookingLeadday actionType ={operation.actionType} type={operation.type} userData={userData} widgetProps={props}/>
+            "ui:widget":(props:any) => <BookingLeadday widgetProps={props} actionType={operation.actionType} userData={userData}/>
+        },
+
+        "bookingleadtime":{
+            "ui:widget":(props:any) => <BookingLeadTime widgetProps={props} actionType={operation.actionType}  userData={userData}/>
         },
 
         "level": {
@@ -365,7 +371,7 @@ function CreateEditView(props: any, ref: any) {
     function CreatePackage(frm) {
         // console.log('create message');
         // console.log('frm', frm)
-        createPackage({ variables: frm })
+        // createPackage({ variables: frm })
 
     }
 
