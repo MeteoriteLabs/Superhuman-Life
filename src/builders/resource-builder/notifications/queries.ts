@@ -20,7 +20,7 @@ export const ADD_MESSAGE = gql`
         $minidesc: String
         $prerecordedtype: ID
         $prerecordedtrigger: ID
-        $mediaupload: [ID]
+        $upload: String
         $mediaurl: String
         $user_permissions_user: ID
     ) {
@@ -33,7 +33,7 @@ export const ADD_MESSAGE = gql`
             prerecordedtype: $prerecordedtype
             prerecordedtrigger: $prerecordedtrigger
             mediaurl: $mediaurl
-            mediaupload: $mediaupload
+            image: $upload
             users_permissions_user: $user_permissions_user
             }
         }

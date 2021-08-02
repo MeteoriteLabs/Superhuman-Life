@@ -27,14 +27,17 @@ const myBucket = new AWS.S3({
 // Secret Access Key : JF+xqu4zgO7sw5jp4FqGe6XS0tibPsekiWm2bxmY
 
 
-const UploadImageToS3WithNativeSdk = () => {
+const UploadImageToS3WithNativeSdk = (props) => {
 
     const [progress , setProgress] = useState(0);
     const [selectedFile, setSelectedFile] = useState(null);
     const [render,setRender] = useState(null);
     const [url,setUrl]= useState(null);
     const [key,setKey] = useState(null);
+    const [imageid,setImageid] = useState(null);
     // const [loading,setLoading] = useState(false);
+
+    props.onChange(imageid);
 
     var albumPhotosKey = "sapien.partner.qa/";
     
@@ -94,7 +97,10 @@ const UploadImageToS3WithNativeSdk = () => {
         if(file.type === "image/png"|| file.type === "image/jpeg"||file.type === "image/jpg"||file.type === "image/svg"){
         setRender(1);
         var photoKey = albumPhotosKey + uuidv4()+fileType;
+        // console.log(photoKey);
+        // console.log(photoKey.slice(18));
         setKey(photoKey);
+        setImageid(photoKey.slice(18));
 
         const params = {
             Body: file,
@@ -123,7 +129,9 @@ const UploadImageToS3WithNativeSdk = () => {
         }
         
     }
-
+// large	1000px
+// medium	750px
+// small	500px
 
     return <div className="dropArea p-1">
         {url?
@@ -144,7 +152,7 @@ const UploadImageToS3WithNativeSdk = () => {
         {url?" ":
         <div className="bg-white">
             <div className="mb-3 p-4 dropzone" onDragOver={(e) => {e.preventDefault();}} onDrop={(e) => {e.preventDefault();uploadFile(e.dataTransfer.files[0])}}>
-            <p className="d-inline">Drag & Drop Image<p className="font-weight-bold d-inline">  (png/jpeg/jpg/svg)</p></p>
+            <p className="d-inline">Drag & Drop Image</p><p className="font-weight-bold d-inline">  (png/jpeg/jpg/svg)</p>
             <p className="mt-3">OR</p>
             <input type="file" className="pt-2"  onChange={handleFileInput}/>
             <div className="mt-3 d-flex flex-row-reverse">

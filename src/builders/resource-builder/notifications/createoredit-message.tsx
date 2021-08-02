@@ -52,6 +52,8 @@ function CreateEditMessage(props: any, ref: any) {
 
         let details: any = {};
         let msg = data.prerecordedmessage;
+        console.log(msg)
+        //debugger
         details.title = msg.title;
         details.prerecordedtype = msg.prerecordedtype.id;
         details.prerecordedtrigger = msg.prerecordedtrigger.id;
@@ -60,6 +62,8 @@ function CreateEditMessage(props: any, ref: any) {
         details.mediaurl = msg.mediaurl;
         details.file = msg.mediaupload.id;
         details.status = msg.status;
+        details.image = msg.upload;
+
         setMessageDetails(details);
     
         if (['edit', 'view'].indexOf(operation.type) > -1)
@@ -98,9 +102,10 @@ function CreateEditMessage(props: any, ref: any) {
 
     function OnSubmit(frm: any) {
        
-        if(frm)
-        frm.user_permissions_user = auth.userid;
-
+        if(frm){
+            frm.user_permissions_user = auth.userid;
+        }
+        
         switch (operation.type) {
             case 'create':
                 CreateMessage(frm);
