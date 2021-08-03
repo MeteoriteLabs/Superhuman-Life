@@ -43,7 +43,7 @@ const ProgramManager = (props) => {
   if (!show) return <span style={{ color: 'red' }}>Loading...</span>;
   else return (
       <>
-        <div className="mr-5 p-4 shadow-lg rounded bg-white">
+        <div className="mr-5 p-4 shadow-lg bg-white" style={{ borderRadius: '10px'}}>
             <Col>
                 <Row>
                     <h3>{data[0].programName.charAt(0).toUpperCase() + data[0].programName.slice(1)}</h3>
@@ -63,7 +63,7 @@ const ProgramManager = (props) => {
             </Col>
         </div>
         <div className="mt-5  mr-5">
-            <Schedular days={9}/>
+            <Schedular days={12}/>
         </div>
      </>
   )

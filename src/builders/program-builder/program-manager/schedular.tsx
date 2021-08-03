@@ -1,112 +1,224 @@
 import React, {useState, useEffect} from 'react';
 import { Table, Row, Col } from 'react-bootstrap';
+import './styles.css';
 
 const Schedular = (props: any) => {
 
     const [show, setShow] = useState(false)
     const [arr, setArr] = useState<any[]>([]);
+    const schedulerDay: any = require("./scheduler-day.json");
+
+function draganddrop() {
+    const draggable: any = document.querySelectorAll('.schedular-content');
+    const container: any = document.querySelectorAll('.container');
+    const resizer: any = document.getElementById('dragMe');
     
-    function handleRenderTable() {
-        for(var d=1; d<=props.days; d++){
-            for(var h=0; h<=23; h++){
-                if(typeof arr[d] == 'undefined'){
-                    arr[d] = [];
-                }
-                // console.log(arr[d]);
-                // if(d===5 && h===3){
-                //     arr[d][h] = {"title": "event", "color": "green"};
-                    
-                // }
-                // setArr(arr);
+    // const prevSibling: any = resizer.previousElementSibling;
+    // let prevSiblingHeight = 0;
+    // let x = 0;
+    // let y = 0;
+
+    // const mouseUpHandler = function() {
+    //     resizer.style.removeProperty('cursor');
+    //     document.body.style.removeProperty('cursor');
+    
+    //     // Remove the handlers of `mousemove` and `mouseup`
+    //     document.removeEventListener('mousemove', mouseMoveHandler);
+    //     document.removeEventListener('mouseup', mouseUpHandler);
+    // };
+
+    // const mouseDownHandler = function(e) {
+    //     x=e.clientX;
+    //     y=e.clientY;
+    //     const rect = prevSibling.getBoundingClientRect();
+    //     prevSiblingHeight = rect.height;
+    //     document.addEventListener('mousemove', mouseMoveHandler);
+    //     document.addEventListener('mouseup', mouseUpHandler);
+    // }
+
+    // const mouseMoveHandler = function(e) {
+    //     const dy = e.clientY - y;
+    //     const h = (prevSiblingHeight + dy) * 100 / resizer.parentNode.getBoundingClientRect().height;
+    //     prevSibling.style.height = `${h}%`;
+    //     resizer.style.cursor = 'row-resize';
+    //     document.body.style.cursor = 'row-resize';
+    // };
+
+    // resizer.addEventListener('mousedown', mouseDownHandler);
+
+    draggable.forEach(drag => {
+        drag.addEventListener('dragstart', () => {
+            drag.classList.add('dragging');
+        });
+
+        drag.addEventListener('dragend', () =>{
+            drag.classList.remove('dragging');
+        });
+    })
+
+    container.forEach(con => {
+        con.addEventListener('dragover', e => {
+            e.preventDefault();
+            const draggable = document.querySelector('.dragging');
+            const afterElement = getDragAfterElement(con, e.clientY);
+            if (afterElement === null) {
+                con.appendChild(draggable);
+            } else {
+                con.insertBefore(draggable, afterElement);
             }
-        }
+            con.appendChild(draggable);
+    });
+    })
+
+    function getDragAfterElement(container, y){
+        const draggableElements = [...container.querySelectorAll('.draggable:not(.dragging)')];
+
+        draggableElements.reduce((closest, child) => {
+            const box = child.getBoundingClientRect();
+            const offset = y - box.top - box.height /2;
+            if (offset < 0 && offset > closest.offset){
+                return { offset: offset, element: child }
+            }else {
+                return closest;
+            }
+        }, { offset: Number.POSITIVE_INFINITY })
     }
+}
 
-    const days: number[] = [];
-    function handleDays() {
-        for(var i=1; i<=props.days; i++){
-            days.push(i);
-        }
-    }
-    handleDays();
-    const hours: number[] = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23];
-
-    useEffect(() => {
-        handleRenderTable();
-        setTimeout(() => {
-            setShow(true)
-       }, 100)
-    }, [show]);    
-
-    function handleUserInput(d: any, h: any){
-        alert("day: " + d + "hour: " + h);
-        const values = [...arr];
-        values[d][h] = {"title": "event", "color": "crimson", "day": d, "hour": h};
-        setArr(values);
-    }
-
+setTimeout(() => {
+    draganddrop();
+}, 200)
     
+function handleRenderTable() {
+    for(var d=1; d<=props.days; d++){
+        arr[d] = JSON.parse(JSON.stringify(schedulerDay));
+        // for(var h=0; h<=23; h++){
+        //     if(typeof arr[d] == 'undefined'){
+        //         arr[d] = [];
+        //     }
+        //     for(var m=0; m<=59; m+=15){
+        //         console.log(m);
+        //         if(typeof arr[d][h] == 'undefined'){
+        //             arr[d][h] = [];
+        //         }
+        //         if(d ===4 && h===4 && m===15){
+        //             arr[d][h][m] = {"title": "event", "color": "crimson", "day": 4, "hour": 4, "min": 15};
+        //         }else {
+        //             arr[d][h][m] = null;
+        //         }
+        //     // console.log(arr[d]);
+        //     // if(d===5 && h===3){
+        //     //     arr[d][h] = {"title": "event", "color": "green"};
+                
+        //     // }
+        //     // setArr(arr);
+        //     }
+        // }
+    }
+    
+    arr[4][4][15] = {"title": "event", "color": "crimson", "day": 4, "hour": 4, "min": 15};
     console.log(arr);
+}
 
-    if (!show) return <span style={{ color: 'red' }}>Loading...</span>;
+const hours: number[] = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23];
+const days: number[] = [];
+const min: number[] = [0,15,30,45];
+
+function handleDays() {
+    for(var i=1; i<=props.days; i++){
+        days.push(i);
+    }
+}
+
+handleDays();
+
+useEffect(() => {
+    handleRenderTable();
+    setTimeout(() => {
+        setShow(true)
+    }, 100)
+}, [show]);    
+
+
+    // alert("day: " + d + "hour: " + h);
+
+console.log(arr);
+
+function handleChange(d: any, h: any,m: any, event: any){
+    console.log(event);
+    console.log(event.day, event.hour, event.min);
+    const values = [...arr];
+    values[event.day][event.hour][event.min] = null;
+    values[d][h][m] = {"title": "event", "color": "crimson", "day": d, "hour": h, "min": m};
+    setArr(values);
+}
+
+var changedDay;
+var changedHour;
+var changedEvent;
+var changedMin;
+
+if (!show) return <span style={{ color: 'red' }}>Loading...</span>;
     else return (
-        <Table striped bordered responsive>
-            <thead>
-                <tr>
-                    <th></th>
+        <>  
+        <div className="wrapper shadow-lg">
+            <div className="schedular">
+                <div className="day-row">
+                    <div className="cell" style={{ backgroundColor: 'white'}}></div>
                     {days.map(val => {
                         return (
-                            <th >{`Day ${val}`}</th>
+                            <div className="cell" style={{ backgroundColor: 'white'}}>{`Day ${val}`}</div>
                         )
                     })}
-                </tr>
-            </thead>
-            <tbody>
+                </div>
                 {hours.map(h => {
-                    return (<tr>
-                        <td>{`${h}:00`}</td>
+                    return (
+                    <div className="time-row">
+                        <div className="cell">{`${h}:00`}</div>
                         {days.map(d => {
                             return (
-                                <td 
-                                    data-day={d} 
-                                    data-hour={h} 
-                                    onClick={(e) => handleUserInput(d, h)}>
-                                        <div
-                                        style={{ backgroundColor: `${typeof arr[d][h] == 'undefined'? 'none' : arr[d][h].color }`}}>
-                                            <Col>
-                                                <Row>
-                                                    <span>{typeof arr[d][h] == 'undefined' ? null : `Day - ${arr[d][h].day}`}</span>
-                                                </Row>
-                                                <Row>
-                                                    <span>{typeof arr[d][h] == 'undefined'? null : arr[d][h].title}</span>
-                                                </Row>
-                                            </Col>
+                                <div className="cell container">
+                                        {min.map(m => {
+                                            return (
+                                        <div className="time"
+                                        data-day={d}
+                                        data-hour={h}
+                                        data-min={m} 
+                                        onDrop={(e) => {
+                                            e.preventDefault();
+                                            changedEvent = JSON.parse(e.dataTransfer.getData('scheduler-event'));
+                                            handleChange(changedDay, changedHour, changedMin, changedEvent);
+                                        }}
+                                        onDragLeave={(e) => {
+                                            changedDay = e.currentTarget.getAttribute('data-day');
+                                            changedHour = e.currentTarget.getAttribute('data-hour');
+                                            changedMin = e.currentTarget.getAttribute('data-min');
+                                        }}>
+                                            <div
+                                            id="dragMe" 
+                                            className="schedular-content draggable" 
+                                            draggable="true"
+                                            onDragStart={(e) => {  e.dataTransfer.setData("scheduler-event", JSON.stringify(arr[d][h][m]))}}
+                                            style={{ backgroundColor: `${(arr[d][h][m]) ? arr[d][h][m].color : 'none' }` }}>
+                                                <Col>
+                                                    <Row>
+                                                        <span>{(arr[d][h][m]) ? `Day - ${arr[d][h][m].day}` : null}</span>
+                                                    </Row>
+                                                </Col>
+                                            </div>
                                         </div>
-                                </td>
+                                            )
+                                        })}
+                                </div>
                             )
                         })}
-                    </tr>);
+                    </div>);
                 })}
-                
-            </tbody>
-        </Table>
+            </div>
+        </div>
+        </>
     );
 };
 
-// if(!d)
-//                             return <td>{arr[d][h].timeSlot ? arr[d][h].timeSlot : null}</td>
-// {arr.splice(0, 1).map(row => {
-//                     return (
-//                         row.map(val => {
-//                             console.log(val);
-//                         return (
-//                             <tr key={val.rowId}>
-//                                 <td >{val.timeSlot ? val.timeSlot : null}</td>
-//                                 <td onClick={(e) => console.log(val.colId)}></td>
-//                             </tr>
-//                         )
-//                         })
-//                     )
-//                 })}
-{/* <div data-day={1}></div> */ }
+
 export default Schedular;
