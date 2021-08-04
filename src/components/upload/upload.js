@@ -113,7 +113,6 @@ const UploadImageToS3WithNativeSdk = (props) => {
             Bucket: S3_BUCKET,
             Key: filename
         }
-        //console.log(params);
 
         myBucket.putObject(params)
             .on('httpUploadProgress', (evt) => {
@@ -126,7 +125,6 @@ const UploadImageToS3WithNativeSdk = (props) => {
                     promise.then(function (url) {
                         console.log(url);
                         setUrl(url);
-                        //console.log('The URL is', url);
                     }, function (err) { console.log(err) });
                 }
                 , (err) => {
@@ -137,7 +135,6 @@ const UploadImageToS3WithNativeSdk = (props) => {
     }
 
     const uploadFile = (file) => {
-        //png,jpeg,jpg,svg
         let fileType = " ";
 
         if (file.type === "image/png") {
@@ -146,9 +143,7 @@ const UploadImageToS3WithNativeSdk = (props) => {
             fileType = ".jpeg";
         } else if (file.type === "image/jpg") {
             fileType = ".jpg";
-        } else if (file.type === "image/svg") {
-            fileType = ".svg";
-        } else {
+        }else {
             setRender(0);
         }
 
@@ -180,11 +175,11 @@ const UploadImageToS3WithNativeSdk = (props) => {
         }
 
         <div>
-            {render === 0 ? <p className="text-danger">Supported Formats (png/jpeg/jpg/svg)</p> : " "}
+            {render === 0 ? <p className="text-danger">Supported Formats (png/jpeg/jpg)</p> : " "}
             {url ? " " :
                 <div className="bg-white">
                     <div className="mb-3 p-4 dropzone" onDragOver={(e) => { e.preventDefault(); }} onDrop={(e) => { e.preventDefault(); uploadFile(e.dataTransfer.files[0]) }}>
-                        <p className="d-inline">Drag & Drop Image</p><p className="font-weight-bold d-inline">  (png/jpeg/jpg/svg)</p>
+                        <p className="d-inline">Drag & Drop Image</p><p className="font-weight-bold d-inline">  (png/jpeg/jpg)</p>
                         <p className="mt-3">OR</p>
                         <input type="file" className="pt-2" onChange={handleFileInput} />
                         <div className="mt-3 d-flex flex-row-reverse">
