@@ -2,10 +2,15 @@ import {useState} from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { Image,ProgressBar} from "react-bootstrap";
 import AWS from 'aws-sdk';
-import "./upload.css"
+import "./upload.css";
+
 
 const S3_BUCKET ='sapien.systems';
 const REGION ='ap-south-1';
+
+var Jimp = require('jimp');
+//const multer = require('multer');
+
 
 
 AWS.config.update({
@@ -75,8 +80,49 @@ const UploadImageToS3WithNativeSdk = (props) => {
             setRender(0);
             e.target.value = '';
         }
-        //console.log(e);
+        console.log(e);
     }
+
+    function onImageLoaded(fileName,reader){
+    
+        Jimp.read(reader.result)
+            .then(img => {img.resize(500,Jimp.AUTO).quality(100).write(fileName, () => {
+                setRender(1);
+                var photoKey = albumPhotosKey +fileName;
+                // console.log(photoKey);
+                // console.log(photoKey.slice(18));
+                setKey(photoKey);
+                setImageid(photoKey.slice(18));
+        
+                const params = {
+                    Body: file,
+                    Bucket: S3_BUCKET,
+                    Key: photoKey
+                };
+                const paramUrl = {
+                    Bucket: S3_BUCKET,
+                    Key: photoKey
+                }
+                //console.log(params);
+        
+                myBucket.putObject(params)
+                    .on('httpUploadProgress', (evt) => {
+                        setProgress(Math.round((evt.loaded / evt.total) * 100))
+                    })
+                    .send((err) => {
+                        if (err) console.log(err)
+                    })
+        
+                    var promise = myBucket.getSignedUrlPromise('getObject', paramUrl);
+                    promise.then(function(url) {
+                    //console.log('The URL is', url);
+                    setTimeout(() => setUrl(url),5000);
+                    }, function(err) { console.log(err) });
+                }
+            )})}
+    }
+
+    
 
     const uploadFile = (file) => {
         //png,jpeg,jpg,svg
@@ -95,38 +141,90 @@ const UploadImageToS3WithNativeSdk = (props) => {
         }
 
         if(file.type === "image/png"|| file.type === "image/jpeg"||file.type === "image/jpg"||file.type === "image/svg"){
-        setRender(1);
-        var photoKey = albumPhotosKey + uuidv4()+fileType;
-        // console.log(photoKey);
-        // console.log(photoKey.slice(18));
-        setKey(photoKey);
-        setImageid(photoKey.slice(18));
 
-        const params = {
-            Body: file,
-            Bucket: S3_BUCKET,
-            Key: photoKey
-        };
-        const paramUrl = {
-            Bucket: S3_BUCKET,
-            Key: photoKey
-        }
-        //console.log(params);
+            var fileName = 'small-'+uuidv4()+fileType;
+            var reader = new FileReader();
+            
+            reader.addEventListener("load", onImageLoaded(fileName,reader));
+            reader.readAsArrayBuffer(file);
+            console.log(Jimp);
 
-        myBucket.putObject(params)
-            .on('httpUploadProgress', (evt) => {
-                setProgress(Math.round((evt.loaded / evt.total) * 100))
-            })
-            .send((err) => {
-                if (err) console.log(err)
-            })
+    
 
-            var promise = myBucket.getSignedUrlPromise('getObject', paramUrl);
-            promise.then(function(url) {
-            //console.log('The URL is', url);
-            setTimeout(() => setUrl(url),5000);
-            }, function(err) { console.log(err) });
-        }
+        //     Jimp.read(reader,function(err,img) {
+        //         if(err) throw err;
+        //         img.resize(500,Jimp.AUTO).quality(100).write(fileName, () => {
+        //             setRender(1);
+        //         var photoKey = albumPhotosKey +fileName;
+        //         // console.log(photoKey);
+        //         // console.log(photoKey.slice(18));
+        //         setKey(photoKey);
+        //         setImageid(photoKey.slice(18));
+        
+        //         const params = {
+        //             Body: file,
+        //             Bucket: S3_BUCKET,
+        //             Key: photoKey
+        //         };
+        //         const paramUrl = {
+        //             Bucket: S3_BUCKET,
+        //             Key: photoKey
+        //         }
+    
+        //         myBucket.putObject(params)
+        //             .on('httpUploadProgress', (evt) => {
+        //                 setProgress(Math.round((evt.loaded / evt.total) * 100))
+        //             })
+        //             .send((err) => {
+        //                 if (err) console.log(err)
+        //             })
+        
+        //             var promise = myBucket.getSignedUrlPromise('getObject', paramUrl);
+        //             promise.then(function(url) {
+        //             //console.log('The URL is', url);
+        //             setTimeout(() => setUrl(url),5000);
+        //             }, function(err) { console.log(err) });
+        //         })
+        //     })
+        // }
+
+            // Jimp.read(reader.readAsArrayBuffer(file))
+            // .then(img => {img.resize(500,Jimp.AUTO).quality(100).write(fileName, () => {
+            //     setRender(1);
+            //     var photoKey = albumPhotosKey +fileName;
+            //     // console.log(photoKey);
+            //     // console.log(photoKey.slice(18));
+            //     setKey(photoKey);
+            //     setImageid(photoKey.slice(18));
+        
+            //     const params = {
+            //         Body: file,
+            //         Bucket: S3_BUCKET,
+            //         Key: photoKey
+            //     };
+            //     const paramUrl = {
+            //         Bucket: S3_BUCKET,
+            //         Key: photoKey
+            //     }
+            //     //console.log(params);
+        
+            //     myBucket.putObject(params)
+            //         .on('httpUploadProgress', (evt) => {
+            //             setProgress(Math.round((evt.loaded / evt.total) * 100))
+            //         })
+            //         .send((err) => {
+            //             if (err) console.log(err)
+            //         })
+        
+            //         var promise = myBucket.getSignedUrlPromise('getObject', paramUrl);
+            //         promise.then(function(url) {
+            //         //console.log('The URL is', url);
+            //         setTimeout(() => setUrl(url),5000);
+            //         }, function(err) { console.log(err) });
+            //     }
+            // )})}
+            
+        
         
     }
 // large	1000px
