@@ -1,11 +1,11 @@
-import {  useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { withTheme, utils } from "@rjsf/core";
 import { Theme as Bootstrap4Theme } from '@rjsf/bootstrap-4';
 import { Button, Col, Modal, ProgressBar, Row } from "react-bootstrap";
 import _ from "lodash"
 
 
-export default function ModalView({ name, formUISchema, formSubmit, formSchema, formData, isStepper, userData, setUserData, widgets, setRender, fitness_package_type, PTProps, actionType, pricingDetailRef, classicProps,groupProps }: any) {
+export default function ModalView({ name, formUISchema, formSubmit, formSchema, formData, isStepper, userData, setUserData, widgets, setRender, fitness_package_type, PTProps, actionType, pricingDetailRef, classicProps, groupProps }: any) {
 
     const registry = utils.getDefaultRegistry();
     const defaultFileWidget = registry.widgets["FileWidget"];
@@ -24,7 +24,7 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
 
 
     const updatePrice = (formData, actionType) => {
-        console.log(formData)
+
         let updateFinesspackagepricing: any = ''
         if (pricingDetailRef.current.getFitnessPackagePricing?.()) {
             // console.log(pricingDetailRef.current.getFitnessPackagePricing?.())
@@ -36,7 +36,7 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
         }
 
         if (actionType === "edit") {
-            console.log(formData)
+
             if (formData) {
                 updateFinesspackagepricing = _.cloneDeep(formData?.fitnesspackagepricing);
                 if (pricingDetailRef.current.getFitnessPackagePricing?.()) {
@@ -47,7 +47,6 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
 
             }
         }
-
         // console.log(updateFinesspackagepricing)
         return updateFinesspackagepricing
     }
@@ -82,32 +81,29 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
 
 
     const resetClassesValue = (userData) => {
-        let { ptonline, ptoffline, restdays, grouponline, groupoffline, recordedclasses, duration, mode,fitness_package_type } = userData;
-        console.log("🚀 ~ file: index.tsx ~ line 86 ~ resetClassesValue ~ userData", userData)
+        let {ptonline,ptoffline, grouponline,groupoffline, recordedclasses, duration, mode, fitness_package_type, restdays } = userData;
+   
 
-        PTProps.properties.ptonlineClasses.value = "";
-        PTProps.properties.ptofflineClasses.value = "";
-        groupProps.properties.grouponlineClasses.value = "";
-        groupProps.properties.groupofflineClasses.value = "";
-        PTProps.properties.restDay.value = "";
-        groupProps.properties.restDay.value = "";
-        // mode = ''
+        
+        PTProps.properties.ptonlineClasses.value = ptonline;
+        PTProps.properties.ptofflineClasses.value = ptoffline;
+        groupProps.properties.grouponlineClasses.value = grouponline;
+        groupProps.properties.groupofflineClasses.value = groupoffline;
+        // PTProps.properties.restDay.value = "";
+        // groupProps.properties.restDay.value = "";
 
-        // classicProps.properties.duration.default = 30;
-        // ptoffline = 0;
-        // ptonline = 0;
-        // grouponline = 0;
-        // groupoffline = 0;
-        // recordedclasses = 0;
-        // restdays = 0;
-        if(mode === "Online Workout" || mode === "Offline Workout"){
+
+        PTProps.properties.restDay.maximum = "";
+        groupProps.properties.restDay.maximum = "";
+        
+        if (mode === "Online Workout" || mode === "Offline Workout") {
             duration = 1
-        }if(fitness_package_type !== "60e045867df648b0f5756c32"){
+        } if (fitness_package_type !== "60e045867df648b0f5756c32") {
             duration = 30
         }
         // duration = (mode === "Online Workout" || mode === "Offline Workout") ? 1 : 30;
-        setUserData({ ...userData,  duration, recordedclasses})
-        setFormValues({ ...formValues,duration, recordedclasses})
+        setUserData({ ...userData, duration, recordedclasses })
+        setFormValues({ ...formValues, duration, recordedclasses })
     }
 
     const updateInputValue = (formData) => {
@@ -130,6 +126,8 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
     function submitHandler(formData: any, userData) {
 
         const updateFinesspackagepricing = updatePrice(formData, actionType);
+
+
         const updateMode = updateModeName(formData)
         const updateDuration = updateFormDuration(formData)
 

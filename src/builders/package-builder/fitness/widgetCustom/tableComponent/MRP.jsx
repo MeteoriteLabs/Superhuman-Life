@@ -2,9 +2,9 @@ import React from 'react'
 import _ from 'lodash'
 
 export default function MRP(props) {
-    const { actionType, setStatus, fitnesspackagepricing, setFitnesspackagepricing, type, mode } = props
-    let numEle = (type === "Classic Class" || mode === "Online Workout"  ||  mode === "Offline Workout" ) ? 1 : 4
-    // console.log('MRP: ', fitnesspackagepricing)
+    const { actionType, fitnesspackagepricing, setFitnesspackagepricing, type, mode, formData } = props
+    let numEle = (type === "Classic Class" || mode === "Online Workout" || mode === "Offline Workout") ? 1 : 4
+
 
     return <>
         {[...Array(numEle)].map((item, index) => {
@@ -13,7 +13,7 @@ export default function MRP(props) {
                     required
                     key={index}
                     disabled={actionType === "view" ? true : false}
-                    value={fitnesspackagepricing[index].mrp}
+                    value={formData ? formData[index].mrp : fitnesspackagepricing[index].mrp}
                     className='w-50'
                     min="0"
                     max="6000"
@@ -21,7 +21,7 @@ export default function MRP(props) {
                     placeholder='Enter MRP'
                     onChange={(e) => {
                         e.preventDefault();
-                        setStatus(false)
+
                         const updateMRP = _.cloneDeep(fitnesspackagepricing)
                         updateMRP[index].mrp = e.target.value;
                         setFitnesspackagepricing(updateMRP);

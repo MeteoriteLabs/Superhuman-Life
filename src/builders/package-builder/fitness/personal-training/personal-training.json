@@ -115,7 +115,7 @@
             "dayAvailable": {
                 "title": "dayAvailable",
                 "type": "null",
-                "value": 0
+                "value": 30
             },
             "restDay": {
                 "title": "restDay",

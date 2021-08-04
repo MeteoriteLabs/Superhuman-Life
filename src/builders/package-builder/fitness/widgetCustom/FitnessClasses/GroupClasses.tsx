@@ -2,10 +2,21 @@ import React from 'react'
 import { useRef } from 'react';
 import { useState } from 'react';
 
-export default function GroupClasses({ widgetProps, packageTypeName, groupProps, actionType }) {
+export default function GroupClasses({ widgetProps, packageTypeName, groupProps, actionType, userData }) {
     const [dayAvaliable, setDayAvaliable] = useState<number | null>();
     const dayAvailableRef = useRef<any>(null)
-    console.log('widgetProps', widgetProps)
+ 
+
+
+    if (userData.grouponline) {
+        groupProps.properties.grouponlineClasses.value = userData.grouponline
+    }
+
+    if (userData.groupoffline) {
+        groupProps.properties.groupofflineClasses.value = userData.groupoffline
+    }
+
+    console.log(groupProps)
 
     const handleValidation = (e) => {
 
@@ -28,13 +39,15 @@ export default function GroupClasses({ widgetProps, packageTypeName, groupProps,
 
         console.log('ref', dayAvailableRef.current);
         if(dayAvailableRef.current < 0){
-            widgetProps.schema.maximum =  widgetProps.value + dayAvailableRef.current
+            widgetProps.schema.maximum =  dayAvailableRef.current
         }else{
             widgetProps.schema.maximum  = 30
         }
 
+        // groupProps.properties.restDay.maximum = dayAvailableRef.current;
+
     }
-    console.log(groupProps)
+    
 
     const handleChange = (e: any, widgetProps) => {
         handleValidation(e)

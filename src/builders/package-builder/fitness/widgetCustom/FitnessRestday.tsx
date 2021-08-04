@@ -2,10 +2,14 @@ import React from 'react'
 
 
 export default function FitnessRestday(props: any) {
-    const { PTProps, widgetProps, actionType, groupProps, customProps } = props;
+    const { PTProps, widgetProps, actionType, groupProps, customProps, userData } = props;
 
 
-    console.log(PTProps)
+    // console.log(PTProps)
+    if(userData.restdays){
+        PTProps.properties.restDay.value = userData.restdays
+        groupProps.properties.restDay.value = userData.restdays
+    }
 
     return <div className=' text-center text-black py-3 w-25 d-flex justify-content-center align-items-center' >
         <img src="/assets/rest-icon.svg" alt='123' />
@@ -17,6 +21,7 @@ export default function FitnessRestday(props: any) {
             value={widgetProps.value ? widgetProps.value : ""}
             pattern="[0-9]+"
             onChange={(event: any) => {
+             
                 if (event.target.value > PTProps.properties.restDay.maximum || event.target.value > groupProps.properties.restDay.maximum) {
                     // widgetProps.schema.maximum = 0
                     event.target.value = 0

@@ -305,7 +305,7 @@
     "5": {
         "title": "Pricing Plan",
         "type": "object",
-
+        "required":["pricingDetail"],
         "properties": {
             "pricingDetail": {
                 "type": "string",

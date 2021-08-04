@@ -12,7 +12,7 @@ import { CREATE_PACKAGE, DELETE_PACKAGE, EDIT_PACKAGE, UPDATE_PACKAGE_PRIVATE } 
 import StatusModal from '../../../components/StatusModal/StatusModal';
 import FitnessMultiSelect from './widgetCustom/FitnessMultiSelect'
 import FitnessAddress from './widgetCustom/FitnessAddress';
-import FitnessPricingTable from './widgetCustom/FitnessPricingTable'
+import FitnessPricingTable from './widgetCustom/tableComponent/FitnessPricingTable'
 import FitnessDuration from './widgetCustom/FitnessDuration';
 import FitnessMode from './widgetCustom/FitnessMode/FitnessMode';
 import { updateform } from './_core/UpdateForm';
@@ -169,27 +169,27 @@ function CreateEditView(props: any, ref: any) {
         },
 
         "ptonline": {
-            "ui:widget": (props) => <FitnessClasses packageTypeName={packageTypeName} actionType={operation.actionType} PTProps={ptSchema[3]} groupProps={groupSchema[3]} classicProps={classicSchema[3]} customProps={customSchema[3]} widgetProps={props} />
+            "ui:widget": (props) => <FitnessClasses packageTypeName={packageTypeName} actionType={operation.actionType} PTProps={ptSchema[3]} groupProps={groupSchema[3]} classicProps={classicSchema[3]} customProps={customSchema[3]} widgetProps={props} userData={userData}/>
         },
 
         "ptoffline": {
-            "ui:widget": (props) => <FitnessClasses packageTypeName={packageTypeName} actionType={operation.actionType} PTProps={ptSchema[3]} groupProps={groupSchema[3]} classicProps={classicSchema[3]} customProps={customSchema[3]} widgetProps={props} />
+            "ui:widget": (props) => <FitnessClasses packageTypeName={packageTypeName} actionType={operation.actionType} PTProps={ptSchema[3]} groupProps={groupSchema[3]} classicProps={classicSchema[3]} customProps={customSchema[3]} widgetProps={props}   userData={userData}/>
         },
 
         "grouponline": {
-            "ui:widget": (props) => <FitnessClasses packageTypeName={packageTypeName} actionType={operation.actionType} PTProps={ptSchema[3]} groupProps={groupSchema[3]} classicProps={classicSchema[3]} customProps={customSchema[3]} widgetProps={props} />
+            "ui:widget": (props) => <FitnessClasses packageTypeName={packageTypeName} actionType={operation.actionType} PTProps={ptSchema[3]} groupProps={groupSchema[3]} classicProps={classicSchema[3]} customProps={customSchema[3]} widgetProps={props}  userData={userData} />
         },
 
         "groupoffline": {
-            "ui:widget": (props) => <FitnessClasses packageTypeName={packageTypeName} actionType={operation.actionType} PTProps={ptSchema[3]} groupProps={groupSchema[3]} classicProps={classicSchema[3]} customProps={customSchema[3]} widgetProps={props} />
+            "ui:widget": (props) => <FitnessClasses packageTypeName={packageTypeName} actionType={operation.actionType} PTProps={ptSchema[3]} groupProps={groupSchema[3]} classicProps={classicSchema[3]} customProps={customSchema[3]} widgetProps={props}  userData={userData} />
         },
 
         "recordedclasses": {
-            "ui:widget": (props) =><FitnessClasses packageTypeName={packageTypeName} actionType={operation.actionType} PTProps={ptSchema[3]} groupProps={groupSchema[3]} classicProps={classicSchema[3]} customProps={customSchema[3]} widgetProps={props} />
+            "ui:widget": (props) =><FitnessClasses packageTypeName={packageTypeName} actionType={operation.actionType} PTProps={ptSchema[3]} groupProps={groupSchema[3]} classicProps={classicSchema[3]} customProps={customSchema[3]} widgetProps={props}   userData={userData}/>
         },
 
         "restdays": {
-            "ui:widget": (props: any) => <FitnessRestday actionType={operation.actionType} classicProps={classicSchema[3]} PTProps={ptSchema[3]} groupProps={groupSchema[3]} customProps={customSchema[3]} widgetProps={props} />
+            "ui:widget": (props: any) => <FitnessRestday actionType={operation.actionType} classicProps={classicSchema[3]} PTProps={ptSchema[3]} groupProps={groupSchema[3]} customProps={customSchema[3]} widgetProps={props} userData={userData} />
 
         },
 

@@ -2,14 +2,14 @@ import React, { Fragment, useState } from 'react'
 import { useEffect } from 'react';
 import { Table } from 'react-bootstrap';
 import "./fitnessPricing.css"
-import Voucher from './tableComponent/Voucher';
-import ClassesSessions from './tableComponent/ClassesSessions';
-import SuggestedPricing from './tableComponent/SuggestedPricing';
-import MRP from './tableComponent/MRP';
+import Voucher from './Voucher';
+import ClassesSessions from './ClassesSessions';
+import SuggestedPricing from './SuggestedPricing';
+import MRP from './MRP';
 import * as _ from 'lodash'
-import CustomPricingTable from './tableComponent/PricingTable/CustomPricingTable';
-import RecordedPricingTable from './tableComponent/PricingTable/RecordedPricingTable';
-import PTGroupPricingTable from './tableComponent/PricingTable/PTGroupPricingTable';
+import CustomPricingTable from './PricingTable/CustomPricingTable';
+import RecordedPricingTable from './PricingTable/RecordedPricingTable';
+import PTGroupPricingTable from './PricingTable/PTGroupPricingTable';
 
 
 type FitnessPricing = {
@@ -34,22 +34,22 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
     const [fitnesspackagepricing, setFitnesspackagepricing] = useState<FitnessPricing[]>([
         {
             "duration": 30,
-            "voucher": "Choose voucher",
+            "voucher": "",
             "mrp": 0,
         },
         {
             "duration": 90,
-            "voucher": "Choose voucher",
+            "voucher": "",
             "mrp": 0,
         },
         {
             "duration": 180,
-            "voucher": "Choose voucher",
+            "voucher": "",
             "mrp": 0,
         },
         {
             "duration": 360,
-            "voucher": "Choose voucher",
+            "voucher": "",
             "mrp": 0,
         },
     ])
@@ -61,7 +61,7 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
     const [offlineClassesType, setOffineClassesType] = useState<number>(0);
 
     useEffect(() => {
-        
+
         if (pricingDetailRef) {
             pricingDetailRef.current = {
                 getFitnessPackagePricing: () => fitnesspackagepricing,
@@ -69,24 +69,31 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
         }
     }, [pricingDetailRef, fitnesspackagepricing])
 
-    console.log("form data pricing" , formData)
+    console.log("form data pricing", userData)
 
     useEffect(() => {
-        let updatePricing:any = ''
-        if(formData){
+        let updatePricing: any = ''
+        if (formData) {
             updatePricing = _.cloneDeep(formData);
-        }else{
+        } else {
             updatePricing = [...fitnesspackagepricing];
         }
         updatePricing[0].duration = duration;
         setFitnesspackagepricing(updatePricing)
         // console.log(updatePricing)
-    }, [])
-
-    console.log('packageTypeName', packageTypeName, fitnesspackagepricing)
+    }, [formData])
 
 
-    console.log(type, userData)
+    useEffect(() => {
+        let updatePricing: any = ''
+        if (userData.fitnesspackagepricing) {
+            setFitnesspackagepricing(userData.fitnesspackagepricing)
+        }
+    }, [userData])
+    // console.log('packageTypeName', packageTypeName, fitnesspackagepricing)
+
+
+    // console.log(type, userData)
 
     useEffect(() => {
         if (type === "Personal Training") {
@@ -99,7 +106,6 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
 
         }
 
-        console.log(onlineClassesType, offlineClassesType)
     }, [])
 
 
@@ -113,11 +119,11 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
     }
 
     return <>
-        <Table  className='text-center'>
+        <Table className='text-center'>
             <thead>
                 <tr>
                     <th>Details</th>
-                    {(type === "Classic Class" || userData.mode === "Online Workout" ||  userData.mode === "Offline Workout") ?
+                    {(type === "Classic Class" || userData.mode === "Online Workout" || userData.mode === "Offline Workout") ?
                         <th>{duration} days</th>
                         :
                         <>
@@ -166,8 +172,6 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
                         type={type}
                         mode={mode}
                         actionType={actionType}
-                        status={status}
-                        setStatus={setStatus}
                         formData={formData}
                         fitnesspackagepricing={fitnesspackagepricing}
                         setFitnesspackagepricing={setFitnesspackagepricing}
@@ -196,8 +200,7 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
                         type={type}
                         mode={mode}
                         actionType={actionType}
-                        status={status}
-                        setStatus={setStatus}
+                        formData={formData}
                         fitnesspackagepricing={fitnesspackagepricing}
                         setFitnesspackagepricing={setFitnesspackagepricing}
                     />
