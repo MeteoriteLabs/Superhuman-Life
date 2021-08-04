@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { Table, Row, Col } from 'react-bootstrap';
+import { Row, Col } from 'react-bootstrap';
 import './styles.css';
 
 const Schedular = (props: any) => {
@@ -12,6 +12,176 @@ function draganddrop() {
     const draggable: any = document.querySelectorAll('.schedular-content');
     const container: any = document.querySelectorAll('.container');
     const resizer: any = document.getElementById('dragMe');
+
+// // Minimum resizable area
+// var minWidth = 60;
+// var minHeight = 40;
+
+// // Thresholds
+// var FULLSCREEN_MARGINS = -10;
+// var MARGINS = 4;
+
+// // End of what's configurable.
+// var clicked: any = null;
+// var onBottomEdge;
+
+// var bottomScreenEdge;
+
+// var preSnapped;
+
+// var b, x, y;
+
+// var redraw: any = false;
+
+// var pane: any = document.getElementsByClassName('container');
+// var ghostpane: any = document.getElementById('ghostpane');
+
+// function setBounds(element, x, y, w, h) {
+// 	element.style.left = x + 'px';
+// 	element.style.top = y + 'px';
+// 	element.style.width = w + 'px';
+// 	element.style.height = h + 'px';
+// }
+
+// function hintHide() {
+//   setBounds(ghostpane, b.left, b.top, b.width, b.height);
+//   ghostpane.style.opacity = 0;
+
+//   // var b = ghostpane.getBoundingClientRect();
+//   // ghostpane.style.top = b.top + b.height / 2;
+//   // ghostpane.style.left = b.left + b.width / 2;
+//   // ghostpane.style.width = 0;
+//   // ghostpane.style.height = 0;
+// }
+
+
+// // Mouse events
+// pane.addEventListener('mousedown', onMouseDown);
+// document.addEventListener('mousemove', onMove);
+// document.addEventListener('mouseup', onUp);
+
+// // Touch events	
+// pane.addEventListener('touchstart', onTouchDown);
+// document.addEventListener('touchmove', onTouchMove);
+// document.addEventListener('touchend', onTouchEnd);
+
+
+// function onTouchDown(e) {
+//   onDown(e.touches[0]);
+//   e.preventDefault();
+// }
+
+// function onTouchMove(e) {
+//   onMove(e.touches[0]);		
+// }
+
+// function onTouchEnd(e) {
+//   if (e.touches.length ==0) onUp(e.changedTouches[0]);
+// }
+
+// function onMouseDown(e) {
+//   onDown(e);
+//   e.preventDefault();
+// }
+
+// function onDown(e) {
+//   calc(e);
+
+//   var isResizing = onBottomEdge ;
+
+//   clicked = {
+//     x: x,
+//     y: y,
+//     cx: e.clientX,
+//     cy: e.clientY,
+//     w: b.width,
+//     h: b.height,
+//     isResizing: isResizing,
+//     isMoving: !isResizing && canMove(),
+//     onBottomEdge: onBottomEdge
+//   };
+// }
+
+// function canMove() {
+//   return x > 0 && x < b.width && y > 0 && y < b.height
+//   && y < 30;
+// }
+
+// function calc(e) {
+//   b = pane.getBoundingClientRect();
+//   y = e.clientY - b.top;
+//   onBottomEdge = y >= b.height - MARGINS;
+
+//   bottomScreenEdge = window.innerHeight - MARGINS;
+// }
+
+// var e;
+
+// function onMove(ee) {
+//   calc(ee);
+
+//   e = ee;
+
+//   redraw = true;
+
+// }
+
+// function animate() {
+
+//   requestAnimationFrame(animate);
+
+//   if (!redraw) return;
+
+//   redraw = false;
+
+//   if (clicked && clicked.isResizing) {
+
+//     if (clicked.onBottomEdge) pane.style.height = Math.max(y, minHeight) + 'px';
+
+//     hintHide();
+
+//     return;
+//   }
+
+//   // This code executes when mouse moves without clicking
+
+//   // style cursor
+//   if (onBottomEdge) {
+//     pane.style.cursor = 'ns-resize';
+//   } else {
+//     pane.style.cursor = 'default';
+//   }
+// }
+
+// animate();
+
+// function onUp(e) {
+//   calc(e);
+
+//   if (clicked && clicked.isMoving) {
+//     // Snap
+//     var snapped = {
+//       height: b.height
+//     };
+
+//     if (b.bottom > window.innerHeight - FULLSCREEN_MARGINS) {
+//       // hintFull();
+//       }else if (b.bottom > bottomScreenEdge) {
+//       // hintBottom();
+//       setBounds(pane, 0, window.innerHeight / 2, window.innerWidth, window.innerWidth / 2);
+//       preSnapped = snapped;
+//     } else {
+//       preSnapped = null;
+//     }
+
+//     hintHide();
+
+//   }
+
+//   clicked = null;
+
+// }
+
     
     // const prevSibling: any = resizer.previousElementSibling;
     // let prevSiblingHeight = 0;
@@ -135,7 +305,7 @@ handleDays();
 useEffect(() => {
     handleRenderTable();
     setTimeout(() => {
-        setShow(true)
+        setShow(true);
     }, 100)
 }, [show]);    
 
@@ -206,6 +376,7 @@ if (!show) return <span style={{ color: 'red' }}>Loading...</span>;
                                                     </Row>
                                                 </Col>
                                             </div>
+                                            <div id="ghostpane"></div>
                                         </div>
                                             )
                                         })}
