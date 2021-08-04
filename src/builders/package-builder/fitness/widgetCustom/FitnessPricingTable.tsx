@@ -98,7 +98,9 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
         } else if (type === "Custom Fitness") {
 
         }
-    }, [type])
+
+        console.log(onlineClassesType, offlineClassesType)
+    }, [])
 
 
 

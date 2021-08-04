@@ -6,43 +6,38 @@ import { GET_ADDRESS } from '../graphQL/queries'
 export default function FitnessAddress(props) {
 
     const { widgetProps, actionType, PTProps } = props
-    const [address, setAddress] = useState()
-   
+
+
     const { data, loading, error } = useQuery(GET_ADDRESS);
 
 
     if (loading) return <p>...loading</p>
 
     const handleChange = (e) => {
-        console.log(PTProps)
-        // if (PTProps.properties.duration === 1) {
-
-        // }
-      
         widgetProps.onChange(e.target.value)
     }
 
 
 
 
-    return <div>
-    
-            <label>{widgetProps.label}</label>
-            {data.addresses?.map((item: any, index: any) => {
-                return <div key={index}>
-                    <label className='ml-3'>
-                        <input type="radio"
-                            disabled={actionType === "view" ? true : false}
-                            checked={widgetProps.value === item.id}
-                            id={item.id} name='address'
-                            value={item.id}
-                            onChange={(e) => handleChange(e)} />
-                        <span className='ml-3'>{item.address1} {item.address2} {item.city} {item.state} {item.country}</span>
-                    </label>
-                </div>
-            })}
+    return <Fragment>
 
-        
-    </div>
+        <label>{widgetProps.label}</label>
+        {data.addresses?.map((item: any, index: any) => {
+            return <div key={index}>
+                <label className='ml-3'>
+                    <input type="radio"
+                        disabled={actionType === "view" ? true : false}
+                        checked={widgetProps.value === item.id}
+                        id={item.id} name='address'
+                        value={item.id}
+                        onChange={(e) => handleChange(e)} />
+                    <span className='ml-3'>{item.address1} {item.address2} {item.city} {item.state} {item.country}</span>
+                </label>
+            </div>
+        })}
+
+
+    </Fragment>
 
 }

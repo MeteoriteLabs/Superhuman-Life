@@ -2,7 +2,7 @@
     "1": {
         "title": "",
         "type": "object",
-        "required": [],
+        "required": ["packagename","disciplines", "tags" ,"level","is_private"],
         "properties": {
             "packagename": {
                 "type": "string",
@@ -44,7 +44,7 @@
     "2": {
         "title": "",
         "type": "object",
-        "required": [],
+        "required": ["aboutpackage", "benefits","ptclasssize" ],
         "properties": {
             "aboutpackage": {
                 "type": "string",
@@ -83,7 +83,7 @@
     "3": {
         "title": "Program Details",
         "type": "object",
-        "required": [],
+        "required": ["mode"],
         "properties": {
             "mode": {
                 "title": "Mode",
@@ -150,7 +150,8 @@
                                 "maximum": 30,
                                 "default": "",
                                 "value": ""
-                            }
+                            },
+                            "required": ["ptonline","restdays"]
                         }
                     },
                     {
@@ -163,7 +164,7 @@
                                 ]
                             },
                             "address": {
-                                "title": "address",
+                                "title": "Address",
                                 "type": "string"
                             },
                             "ptoffline": {
@@ -182,7 +183,9 @@
                                 "default": "",
                                 "value": ""
                             }
-                        }
+                  
+                        },
+                        "required": ["ptonline","restdays","address"]
                     },
                     {
                         "properties": {
@@ -194,7 +197,7 @@
                                 ]
                             },
                             "address": {
-                                "title": "address",
+                                "title": "Address",
                                 "type": "string"
                             },
                             "ptonline": {
@@ -221,7 +224,8 @@
                                 "default": "",
                                 "value": ""
                             }
-                        }
+                        },
+                        "required": ["ptonline","ptoffline","restdays","address"]
                     },
                     {
                         "properties": {
@@ -236,22 +240,22 @@
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 1,
-                                "default": 0,
+                                "default": "",
                                 "value": 0
                             }
-                        }
+                        },
+                        "required": ["ptonline"]
                     },
                     {
                         "properties": {
                             "mode": {
-                               
                                 "type": "string",
                                 "enum":[
                                     "Offline Workout"
                                 ]
                             },
                             "address": {
-                                "title": "address",
+                                "title": "Address",
                                 "type": "string"
                             },
                             "ptoffline": {
@@ -259,10 +263,11 @@
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 1,
-                                "default": 0,
+                                "default": "",
                                 "value": 0
                             }
-                        }
+                        },
+                        "required": ["ptoffline"]
                     }
                 ]
             }

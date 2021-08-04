@@ -2,7 +2,7 @@
     "1": {
         "title": "",
         "type": "object",
-        "required": [],
+        "required": ["packagename","disciplines", "tags" ,"level","is_private"],
         "properties": {
             "packagename": {
                 "type": "string",
@@ -44,7 +44,7 @@
     "2": {
         "title": "",
         "type": "object",
-        "required": [],
+        "required": ["aboutpackage", "benefits" ],
         "properties": {
             "aboutpackage": {
                 "type": "string",
@@ -74,6 +74,7 @@
     "3": {
         "title": "Program Details",
         "type": "object",
+        "required": ["mode" ],
         "properties": {
             "mode": {
                 "type": "string",
@@ -84,36 +85,41 @@
                     "Hybrid"
                 ]
             },
-            "ptonlineClasses": {
-                "title": "ptonlineClasses",
+            "customPTOnline": {
+                "title": "customePTOnline",
                 "type": "null",
-                "value": ""
+                "value": 0
             },
-            "ptofflineClasses": {
-                "title": "ptofflineClasses",
+            "customPTOffline": {
+                "title": "customePTOffline",
                 "type": "null",
-                "value": ""
+                "value": 0
             },
-            "grouponlineClasses": {
-                "title": "grouponlineClasses",
+            "customGroupOnline": {
+                "title": "customGroupOnline",
                 "type": "null",
-                "value": ""
+                "value": 0
             },
-            "groupofflineClasses": {
-                "title": "groupofflineClasses",
+            "customGroupOffline": {
+                "title": "customGroupOffline",
                 "type": "null",
-                "value": ""
+                "value": 0
             },
             "record": {
                 "title": "recordedclasses",
                 "type": "null",
-                "value": ""
+                "value": 0
             },
             "duration": {
                 "type": "number",
                 "title": "Duration",
                 "default": 30,
-                "value":""
+                "value": 30
+            },
+            "restDay": {
+                "title": "restDay",
+                "type": "null",
+                "value": ""
             }
         },
         "dependencies": {
@@ -133,7 +139,7 @@
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 30,
-                                "default": "0",
+                                "default": "",
                                 "value":""
                             },
                             "grouponline": {
@@ -141,14 +147,14 @@
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 30,
-                                "default": "0",
+                                "default": "",
                                 "value":""
                             },
                             "recordedclasses": {
                                 "title": "Recorded",
                                 "type": "number",
                                 "minimum": 0,
-                                "default": "0",
+                                "default": "",
                                 "value":""
                             },
                             "restdays": {
@@ -156,10 +162,11 @@
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 30,
-                                "default": 0,
+                                "default": "",
                                 "value":""
                             }
-                        }
+                        },
+                        "required": ["ptonline", "grouponline","recordedclasses","restdays" ]
                     },
                     {
                         "properties": {
@@ -179,7 +186,7 @@
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 30,
-                                "default": "0",
+                                "default": "",
                                 "value":""
                             },
                             "groupoffline": {
@@ -187,14 +194,14 @@
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 30,
-                                "default": "0",
+                                "default": "",
                                 "value":""
                             },
                             "recordedclasses": {
                                 "title": "Recorded",
                                 "type": "number",
                                 "minimum": 0,
-                                "default": "0",
+                                "default": "",
                                 "value":""
                             },
                             "restdays": {
@@ -202,10 +209,11 @@
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 30,
-                                "default": 0,
+                                "default": "",
                                 "value":""
                             }
-                        }
+                        },
+                        "required": ["address","ptoffline", "groupoffline","recordedclasses","restdays" ]
                     },
                     {
                         "properties": {
@@ -226,7 +234,7 @@
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 30,
-                                "default": "0",
+                                "default": "",
                                 "value":""
                             },
                             "ptoffline": {
@@ -234,7 +242,7 @@
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 30,
-                                "default": "0",
+                                "default": "",
                                 "value":""
                             },
                             "grouponline": {
@@ -242,7 +250,7 @@
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 30,
-                                "default": "0",
+                                "default": "",
                                 "value":""
                             },
                             "groupoffline": {
@@ -250,14 +258,14 @@
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 30,
-                                "default": "0",
+                                "default": "",
                                 "value":""
                             },
                             "recordedclasses": {
                                 "title": "Recorded",
                                 "type": "number",
                                 "minimum": 0,
-                                "default": "0",
+                                "default": "",
                                 "value":""
                             },
                             "restdays": {
@@ -265,10 +273,11 @@
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 30,
-                                "default": 0,
+                                "default": "",
                                 "value":""
                             }
-                        }
+                        },
+                        "required": ["address","ptoffline", "ptoffline","grouponline","groupoffline","recordedclasses","restdays" ]
                     }
                 ]
             }
@@ -296,11 +305,12 @@
     "5": {
         "title": "Pricing Plan",
         "type": "object",
+
         "properties": {
             "pricingDetail": {
                 "type": "string",
                 "title": "Pricing Plan",
-                "value": 0
+                "value": ""
             }
         }
     },

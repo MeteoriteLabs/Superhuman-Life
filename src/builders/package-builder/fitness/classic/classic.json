@@ -2,7 +2,7 @@
     "1": {
         "title": "",
         "type": "object",
-        "required": [],
+        "required": ["packagename","disciplines", "tags" ,"level","is_private"],
         "properties": {
             "packagename": {
                 "type": "string",
@@ -44,7 +44,7 @@
     "2": {
         "title": "",
         "type": "object",
-        "required": [],
+        "required": ["aboutpackage", "benefits" ],
         "properties": {
             "aboutpackage": {
                 "type": "string",
@@ -74,7 +74,7 @@
     "3": {
         "title": "Program Details",
         "type": "object",
-        "required": ["duration"],
+        "required": ["recordedclasses", "restdays"],
         "properties": {
         "duration": {
             "type": "number",
@@ -94,7 +94,7 @@
             "type": "number",
             "minimum": 0,
             "maximum": 30,
-            "default": 0,
+            "default": "",
             "value": ""
         }
         }
@@ -107,7 +107,7 @@
             "pricingDetail": {
                 "type": "string",
                 "title": "Pricing Plan",
-                "value": 0
+                "value": ""
             }
         }
     },

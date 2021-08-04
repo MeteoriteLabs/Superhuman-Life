@@ -11,6 +11,7 @@ export default function Voucher(props) {
     {[...Array(numEle)].map((item: any, index: number) => {
             return <td key={index}>
             <select
+                required
                 disabled={actionType === "view" ? true : false}
                 value={fitnesspackagepricing[index].voucher}
                 onChange={(e) => {

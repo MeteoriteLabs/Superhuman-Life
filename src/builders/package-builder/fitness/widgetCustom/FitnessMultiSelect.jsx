@@ -52,6 +52,7 @@ export default function FitnessMultiSelect(props) {
     return <div>
         <label>{widgetProps.label}</label>
         <Typeahead
+            required
             disabled={actionType === "view" ? true : false}
             selected={multiSelections}
             labelKey="disciplinename"

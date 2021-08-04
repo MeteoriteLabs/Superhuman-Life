@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useImperativeHandle, useRef, useState } f
 import ModalView from '../../../components/modal';
 import AuthContext from '../../../context/auth-context';
 
-import FitnessClasses from './widgetCustom/FitnessClasses';
+import FitnessClasses from './widgetCustom/FitnessClasses/FitnessClasses';
 import FitnessRestday from './widgetCustom/FitnessRestday';
 import { useMutation, useQuery } from '@apollo/client';
 import { GET_SINGLE_PACKAGE_BY_ID } from './graphQL/queries';
@@ -18,6 +18,7 @@ import FitnessMode from './widgetCustom/FitnessMode/FitnessMode';
 import { updateform } from './_core/UpdateForm';
 import BookingLeadday from './widgetCustom/FitnessBooking/BookingLeadday';
 import BookingLeadTime from './widgetCustom/FitnessBooking/BookingLeadTime';
+
 
 
 interface Operation {
@@ -56,29 +57,29 @@ function CreateEditView(props: any, ref: any) {
     const auth = useContext(AuthContext);
     const [operation, setOperation] = useState<Operation>({} as Operation);
     const [userData, setUserData] = useState<any>('');
-    const [fitnesspackagepricing, setFitnesspackagepricing] = useState<any>([
-        {
-            "duration": 30,
-            "voucher": "Choose voucher",
-            "mrp": "",
-        },
-        {
-            "duration": 90,
-            "voucher": "Choose voucher",
-            "mrp": "",
-        },
-        {
-            "duration": 180,
-            "voucher": "Choose voucher",
-            "mrp": "",
-        },
-        {
-            "duration": 360,
-            "voucher": "Choose voucher",
-            "mrp": "",
-        },
-    ]
-    )
+    // const [fitnesspackagepricing, setFitnesspackagepricing] = useState<any>([
+    //     {
+    //         "duration": 30,
+    //         "voucher": "Choose voucher",
+    //         "mrp": "",
+    //     },
+    //     {
+    //         "duration": 90,
+    //         "voucher": "Choose voucher",
+    //         "mrp": "",
+    //     },
+    //     {
+    //         "duration": 180,
+    //         "voucher": "Choose voucher",
+    //         "mrp": "",
+    //     },
+    //     {
+    //         "duration": 360,
+    //         "voucher": "Choose voucher",
+    //         "mrp": "",
+    //     },
+    // ]
+    // )
     const [packageTypeName, setPackageTypeName] = useState<string | null>('personal-training');
     const [actionName, setActionName] = useState<string>("")
     const [formData, setFormData] = useState<UserDataProps>();
@@ -89,7 +90,7 @@ function CreateEditView(props: any, ref: any) {
     const groupSchema = require("./group/group.json");
     const classicSchema = require("./classic/classic.json");
     const customSchema = require("./custom/custom.json");
- 
+
     const jsonSchema = require(`./${packageTypeName}/${packageTypeName}.json`);
 
 
@@ -150,54 +151,54 @@ function CreateEditView(props: any, ref: any) {
 
 
     const pricingDetailRef = useRef<{ getFitnessPackagePricing?: Function }>({});
-   
+
 
     const uiSchema: any = {
         "disciplines": {
             'ui:widget': (props) => <FitnessMultiSelect widgetProps={props} actionType={operation.actionType} />
         },
         "address": {
-            "ui:widget": (props) => <FitnessAddress actionType={operation.actionType} widgetProps={props} PTProps={ptSchema[3]}  />
+            "ui:widget": (props) => <FitnessAddress actionType={operation.actionType} widgetProps={props} PTProps={ptSchema[3]} />
 
         },
-        "mode":{
-            "ui:widget":(props) => <FitnessMode formData={formData} widgetProps={props} PTProps={ptSchema[3]} type={operation.type} actionType ={operation.actionType} userData={userData}/>
+        "mode": {
+            "ui:widget": (props) => <FitnessMode widgetProps={props} PTProps={ptSchema[3]} groupProps={groupSchema[3]} type={operation.type} actionType={operation.actionType} userData={userData} />
         },
         "duration": {
-            "ui:widget": (props) => <FitnessDuration type={operation.type} actionType={operation.actionType} userData={userData}  widgetProps={props}/>
+            "ui:widget": (props) => <FitnessDuration type={operation.type} actionType={operation.actionType} userData={userData} widgetProps={props} />
         },
 
         "ptonline": {
-            "ui:widget": (props) => <FitnessClasses  packageTypeName={packageTypeName} actionType={operation.actionType} PTProps={ptSchema[3]} groupProps={groupSchema[3]} recordedProps={classicSchema[3]} customProps= {customSchema[3]} widgetProps={props} />
+            "ui:widget": (props) => <FitnessClasses packageTypeName={packageTypeName} actionType={operation.actionType} PTProps={ptSchema[3]} groupProps={groupSchema[3]} classicProps={classicSchema[3]} customProps={customSchema[3]} widgetProps={props} />
         },
 
         "ptoffline": {
-            "ui:widget": (props) => <FitnessClasses  packageTypeName={packageTypeName} actionType={operation.actionType} PTProps={ptSchema[3]} groupProps={groupSchema[3]} recordedProps={classicSchema[3]} customProps= {customSchema[3]} widgetProps={props} />
+            "ui:widget": (props) => <FitnessClasses packageTypeName={packageTypeName} actionType={operation.actionType} PTProps={ptSchema[3]} groupProps={groupSchema[3]} classicProps={classicSchema[3]} customProps={customSchema[3]} widgetProps={props} />
         },
 
         "grouponline": {
-            "ui:widget": (props) => <FitnessClasses  packageTypeName={packageTypeName} actionType={operation.actionType} PTProps={ptSchema[3]} groupProps={groupSchema[3]} recordedProps={classicSchema[3]} customProps= {customSchema[3]} widgetProps={props} />
+            "ui:widget": (props) => <FitnessClasses packageTypeName={packageTypeName} actionType={operation.actionType} PTProps={ptSchema[3]} groupProps={groupSchema[3]} classicProps={classicSchema[3]} customProps={customSchema[3]} widgetProps={props} />
         },
 
         "groupoffline": {
-            "ui:widget": (props) => <FitnessClasses  packageTypeName={packageTypeName} actionType={operation.actionType} PTProps={ptSchema[3]} groupProps={groupSchema[3]} recordedProps={classicSchema[3]} customProps= {customSchema[3]} widgetProps={props} />
+            "ui:widget": (props) => <FitnessClasses packageTypeName={packageTypeName} actionType={operation.actionType} PTProps={ptSchema[3]} groupProps={groupSchema[3]} classicProps={classicSchema[3]} customProps={customSchema[3]} widgetProps={props} />
         },
 
         "recordedclasses": {
-            "ui:widget": (props) => <FitnessClasses  packageTypeName={packageTypeName} actionType={operation.actionType} classicProps={classicSchema[3]} PTProps={ptSchema[3]} groupProps={groupSchema[3]} customProps= {customSchema[3]} recordedProps={classicSchema[3]}  widgetProps={props} />
+            "ui:widget": (props) =><FitnessClasses packageTypeName={packageTypeName} actionType={operation.actionType} PTProps={ptSchema[3]} groupProps={groupSchema[3]} classicProps={classicSchema[3]} customProps={customSchema[3]} widgetProps={props} />
         },
 
         "restdays": {
-            "ui:widget": (props: any) => <FitnessRestday actionType={operation.actionType} classicProps={classicSchema[3]} PTProps={ptSchema[3]} widgetProps={props} />
+            "ui:widget": (props: any) => <FitnessRestday actionType={operation.actionType} classicProps={classicSchema[3]} PTProps={ptSchema[3]} groupProps={groupSchema[3]} customProps={customSchema[3]} widgetProps={props} />
 
         },
 
-        "bookingleadday":{
-            "ui:widget":(props:any) => <BookingLeadday widgetProps={props} actionType={operation.actionType} userData={userData}/>
+        "bookingleadday": {
+            "ui:widget": (props: any) => <BookingLeadday widgetProps={props} actionType={operation.actionType} userData={userData} />
         },
 
-        "bookingleadtime":{
-            "ui:widget":(props:any) => <BookingLeadTime widgetProps={props} actionType={operation.actionType} userData={userData}/>
+        "bookingleadtime": {
+            "ui:widget": (props: any) => <BookingLeadTime widgetProps={props} actionType={operation.actionType} userData={userData} />
         },
 
         "level": {
@@ -212,8 +213,8 @@ function CreateEditView(props: any, ref: any) {
                 "inline": true,
             },
         },
-   
-       
+
+
         "aboutpackage": {
             "ui:widget": "textarea",
             "ui:autofocus": true,
@@ -307,23 +308,23 @@ function CreateEditView(props: any, ref: any) {
         const packageDetail = dataPackage.fitnesspackage;
         console.log("packageDetail", packageDetail)
 
-        let { id, packagename, tags, disciplines, fitness_package_type, aboutpackage, benefits, level, mode, ptoffline, ptonline, grouponline, groupoffline, recordedclasses, restdays, fitnesspackagepricing, bookingleadday, bookingleadtime,duration, groupstarttime, groupendtime, groupinstantbooking, address, ptclasssize, classsize, groupdays, introvideourl, is_private } = packageDetail;
+        let { id, packagename, tags, disciplines, fitness_package_type, aboutpackage, benefits, level, mode, ptoffline, ptonline, grouponline, groupoffline, recordedclasses, restdays, fitnesspackagepricing, bookingleadday, bookingleadtime, duration, groupstarttime, groupendtime, groupinstantbooking, address, ptclasssize, classsize, groupdays, introvideourl, is_private } = packageDetail;
 
-        if(mode === "Offline_workout"){
+        if (mode === "Offline_workout") {
             mode = "Offline Workout"
-        }else if (mode === "Online_workout"){
+        } else if (mode === "Online_workout") {
             mode = "Online Workout"
         }
 
-        if(bookingleadtime){
+        if (bookingleadtime) {
             bookingleadday = 0
-        }else if (bookingleadday){
+        } else if (bookingleadday) {
             bookingleadtime = ""
         }
 
 
-        const updateFormData = updateform.createUpdateForm( id, packagename, tags, disciplines, fitness_package_type, aboutpackage, benefits, level, mode, ptoffline, ptonline, grouponline, groupoffline, recordedclasses, restdays, fitnesspackagepricing, bookingleadday,bookingleadtime, duration, groupstarttime, groupendtime, groupinstantbooking, address, ptclasssize, classsize, groupdays, introvideourl, is_private );
-        
+        const updateFormData = updateform.createUpdateForm(id, packagename, tags, disciplines, fitness_package_type, aboutpackage, benefits, level, mode, ptoffline, ptonline, grouponline, groupoffline, recordedclasses, restdays, fitnesspackagepricing, bookingleadday, bookingleadtime, duration, groupstarttime, groupendtime, groupinstantbooking, address, ptclasssize, classsize, groupdays, introvideourl, is_private);
+
         setFormData(updateFormData);
 
 
@@ -438,10 +439,11 @@ function CreateEditView(props: any, ref: any) {
                     pricingDetailRef={pricingDetailRef}
                     formSubmit={(frm: any) => OnSubmit(frm)}
                     setRender={setRender}
-                    // fitnesspackagepricing={fitnesspackagepricing}
+                 
                     widgets={widgets}
                     formData={operation.id && formData}
                     PTProps={ptSchema[3]}
+                    groupProps={groupSchema[3]}
                     classicProps={classicSchema[3]}
                     actionType={operation.actionType}
                     operation={operation}

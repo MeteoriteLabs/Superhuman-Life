@@ -2,7 +2,7 @@
     "1": {
         "title": "",
         "type": "object",
-        "required": [],
+        "required": ["packagename","disciplines", "tags" ,"level","is_private"],
         "properties": {
             "packagename": {
                 "type": "string",
@@ -44,7 +44,7 @@
     "2": {
         "title": "",
         "type": "object",
-        "required": [],
+        "required": ["aboutpackage", "benefits","classsize" ],
         "properties": {
             "aboutpackage": {
                 "type": "string",
@@ -78,7 +78,7 @@
     "3": {
         "title": "Program Details",
         "type": "object",
-        "required": [],
+        "required": ["mode"],
         "properties": {
             "mode": {
                 "title": "Mode",
@@ -93,17 +93,17 @@
                 "title": "A null field",
                 "type": "number",
                 "default":30,
-                "value":""
+                "value":30
             },
             "grouponlineClasses": {
                 "title": "grouponlineClasses",
                 "type": "null",
-                "value": ""
+                "value": 0
             },
             "groupofflineClasses": {
                 "title": "groupofflineClasses",
                 "type": "null",
-                "value": ""
+                "value": 0
             },
             "restDay": {
                 "title": "restDay",
@@ -134,7 +134,7 @@
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 30,
-                                "default": "0",
+                                "default": "",
                                 "value": 0
                             },
                             "restdays": {
@@ -142,10 +142,11 @@
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 30,
-                                "default": 0,
+                                "default": "",
                                 "value":""
                             }
-                        }
+                        },
+                        "required":["grouponline","restdays"]
                     },
                     {
                         "properties": {
@@ -157,7 +158,7 @@
                                 ]
                             },
                             "address": {
-                                "title": "address",
+                                "title": "Address",
                                 "type": "string"
                             },
                             "groupoffline": {
@@ -165,7 +166,7 @@
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 30,
-                                "default": "0",
+                                "default": "",
                                 "value": 0
                             },
                             "restdays": {
@@ -173,10 +174,11 @@
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 30,
-                                "default": 0,
+                                "default": "",
                                 "value":""
                             }
-                        }
+                        },
+                        "required":["groupoffline","restdays","address"]
                     },
                     {
                         "properties": {
@@ -189,7 +191,7 @@
                                 "default": "0"
                             },
                             "address": {
-                                "title": "address",
+                                "title": "Address",
                                 "type": "string"
                             },
                             "grouponline": {
@@ -197,7 +199,7 @@
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 30,
-                                "default": "0",
+                                "default": "",
                                 "value": 0
                             },
                             "groupoffline": {
@@ -205,7 +207,7 @@
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 30,
-                                "default": "0",
+                                "default": "",
                                 "value": 0
                             },
                             "restdays": {
@@ -213,10 +215,11 @@
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 30,
-                                "default": 0,
+                                "default": "",
                                 "value":""
                             }
-                        }
+                        },
+                        "required":["grouponline","groupoffline","restdays","address"]
                     }
                 ]
             }
@@ -225,7 +228,7 @@
     "4": {
         "title": "",
         "type": "object",
-        "required": [],
+        "required": ["groupinstantbooking"],
         "properties": {
             "groupinstantbooking": {
                 "type": "boolean",

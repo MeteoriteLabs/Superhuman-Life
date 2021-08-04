@@ -10,6 +10,7 @@ export default function MRP(props) {
         {[...Array(numEle)].map((item, index) => {
             return <td key={index}>
                 <input
+                    required
                     key={index}
                     disabled={actionType === "view" ? true : false}
                     value={fitnesspackagepricing[index].mrp}
