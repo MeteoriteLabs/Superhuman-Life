@@ -13,7 +13,7 @@ export default function MRP(props) {
                     required
                     key={index}
                     disabled={actionType === "view" ? true : false}
-                    value={formData ? formData[index].mrp : fitnesspackagepricing[index].mrp}
+                    value={fitnesspackagepricing[index].mrp}
                     className='w-50'
                     min="0"
                     max="6000"

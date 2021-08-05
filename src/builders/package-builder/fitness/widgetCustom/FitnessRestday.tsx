@@ -6,10 +6,15 @@ export default function FitnessRestday(props: any) {
 
 
     // console.log(PTProps)
-    if(userData.restdays){
-        PTProps.properties.restDay.value = userData.restdays
-        groupProps.properties.restDay.value = userData.restdays
-    }
+
+   
+        if(userData.restdays){
+            PTProps.properties.restDay.value = userData.restdays
+            groupProps.properties.restDay.value = userData.restdays
+        }
+ 
+
+
 
     return <div className=' text-center text-black py-3 w-25 d-flex justify-content-center align-items-center' >
         <img src="/assets/rest-icon.svg" alt='123' />

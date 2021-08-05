@@ -5,8 +5,7 @@ import { Form } from 'react-bootstrap';
 export default function FitnessDuration({ widgetProps, type, actionType, userData }) {
 
 
-    console.log('widgetProps.duration value', widgetProps.value);
-    console.log(userData)
+
 
     const [value, setValue] = useState(30);
 

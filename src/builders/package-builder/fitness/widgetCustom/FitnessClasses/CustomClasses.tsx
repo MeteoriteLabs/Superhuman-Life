@@ -15,7 +15,7 @@ export default function CustomClasses({ customProps, widgetProps, packageTypeNam
 
         dayAvailableRef -= (ptonlineValue + ptofflineValue + grouponlineValue + groupofflineValue + recordValue + restdayValue);
 
-        if (dayAvailableRef === 0) {
+        if (dayAvailableRef >= 0) {
             widgetProps.schema.maximum = 30
         } else if (dayAvailableRef < 0) {
             widgetProps.schema.maximum = 0

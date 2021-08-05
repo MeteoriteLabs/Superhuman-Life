@@ -30,19 +30,22 @@ export default function GroupClasses({ widgetProps, packageTypeName, groupProps,
             groupProps.properties.groupofflineClasses.value = parseInt(e.target.value);
         }
 
+        
 
         dayAvailableRef.current -= (groupProps.properties.grouponlineClasses.value +  groupProps.properties.groupofflineClasses.value + groupProps.properties.restDay.value)
 
+        if (dayAvailableRef.current < 0) {
+            widgetProps.schema.maximum = 0
+        } else if (dayAvailableRef.current >= 0) {
+            widgetProps.schema.maximum = 30
+        }
+
+        
         groupProps.properties.restDay.maximum = dayAvailableRef.current;
         // groupProps.properties.dayAvailable.value = dayAvailableRef.current
         setDayAvaliable(dayAvailableRef.current)
 
         console.log('ref', dayAvailableRef.current);
-        if(dayAvailableRef.current < 0){
-            widgetProps.schema.maximum =  dayAvailableRef.current
-        }else{
-            widgetProps.schema.maximum  = 30
-        }
 
         // groupProps.properties.restDay.maximum = dayAvailableRef.current;
 

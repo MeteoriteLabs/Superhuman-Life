@@ -29,8 +29,8 @@ type FitnessPricing = {
 export default function FitnessPricingTable({ userData, setUserData, actionType, type, formData, packageTypeName, pricingDetailRef }) {
 
     let { ptonline, ptoffline, mode, grouponline, groupoffline, recordedclasses, duration } = userData;
-    console.log(packageTypeName)
-    const [status, setStatus] = useState<Boolean>(false);
+ 
+
     const [fitnesspackagepricing, setFitnesspackagepricing] = useState<FitnessPricing[]>([
         {
             "duration": 30,
@@ -69,8 +69,6 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
         }
     }, [pricingDetailRef, fitnesspackagepricing])
 
-    console.log("form data pricing", userData)
-
     useEffect(() => {
         let updatePricing: any = ''
         if (formData) {
@@ -85,15 +83,14 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
 
 
     useEffect(() => {
-        let updatePricing: any = ''
         if (userData.fitnesspackagepricing) {
-            setFitnesspackagepricing(userData.fitnesspackagepricing)
+            setFitnesspackagepricing(userData.fitnesspackagepricing[0].packagepricing)
         }
     }, [userData])
     // console.log('packageTypeName', packageTypeName, fitnesspackagepricing)
 
 
-    // console.log(type, userData)
+    console.log(type, userData)
 
     useEffect(() => {
         if (type === "Personal Training") {

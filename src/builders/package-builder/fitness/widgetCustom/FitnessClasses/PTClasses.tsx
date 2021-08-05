@@ -5,7 +5,8 @@ import { useRef, useState } from 'react';
 
 
 export default function PTClasses({ widgetProps, packageTypeName, PTProps, actionType, userData }) {
-    console.log("🚀 ~ file: PTClasses.tsx ~ line 8 ~ PTClasses ~ userData", userData)
+    console.log("🚀 ~ file: PTClasses.tsx ~ line 8 ~ PTClasses ~ widgetProps", widgetProps)
+    // console.log("🚀 ~ file: PTClasses.tsx ~ line 8 ~ PTClasses ~ userData", userData)
     console.log("🚀 ~ file: PTClasses.tsx ~ line 8 ~ PTClasses ~ PTProps", PTProps)
     const [dayAvaliable, setDayAvaliable] = useState<number | null>();
     const dayAvailableRef = useRef<any>(null)
@@ -13,21 +14,21 @@ export default function PTClasses({ widgetProps, packageTypeName, PTProps, actio
 
 
 
-  
 
-    if (userData.ptonline) {
-        PTProps.properties.ptonlineClasses.value = userData.ptonline
-    }
+    if (PTProps.properties.duration.value === 30) {
+        if (userData.ptonline) {
+            PTProps.properties.ptonlineClasses.value = userData.ptonline
+        }
 
-    if (userData.ptoffline) {
-        PTProps.properties.ptofflineClasses.value = userData.ptoffline
+        if (userData.ptoffline) {
+            PTProps.properties.ptofflineClasses.value = userData.ptoffline
+        }
     }
+   
+
 
     const handleValidation = (e, widgetProps) => {
-
-
         dayAvailableRef.current = PTProps.properties.duration.value
-
 
         if (widgetProps.label === 'Online') {
             PTProps.properties.ptonlineClasses.value = parseInt(e.target.value);
@@ -36,14 +37,18 @@ export default function PTClasses({ widgetProps, packageTypeName, PTProps, actio
             PTProps.properties.ptofflineClasses.value = parseInt(e.target.value);
         }
 
-
-        dayAvailableRef.current -= (PTProps.properties.ptonlineClasses.value + PTProps.properties.ptofflineClasses.value + PTProps.properties.restDay.value)
-
+        if (PTProps.properties.duration.value === 30) {
+            dayAvailableRef.current -= (PTProps.properties.ptonlineClasses.value + PTProps.properties.ptofflineClasses.value + PTProps.properties.restDay.value)
+        } else {
+            PTProps.properties.restDay.maximum = 0;
+            dayAvailableRef.current = 1 - e.target.value
+        }
         console.log('ref', dayAvailableRef.current);
 
+
         if (dayAvailableRef.current < 0) {
-            widgetProps.schema.maximum = dayAvailableRef.current
-        } else if (dayAvailableRef.current === 0) {
+            widgetProps.schema.maximum = 0
+        } else if (dayAvailableRef.current >= 0) {
             widgetProps.schema.maximum = 30
         }
 
@@ -54,8 +59,8 @@ export default function PTClasses({ widgetProps, packageTypeName, PTProps, actio
     }
 
     const handleChange = (e: any, widgetProps) => {
-
         handleValidation(e, widgetProps)
+
         widgetProps.onChange(parseInt(e.target.value));
 
     }

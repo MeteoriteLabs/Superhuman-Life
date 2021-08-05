@@ -44,7 +44,6 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
                     delete updateFinesspackagepricing[0].__typename;
                     // console.log(updateFinesspackagepricing)
                 }
-
             }
         }
         // console.log(updateFinesspackagepricing)
@@ -73,7 +72,6 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
                 duration = 1
             }
         }
-
         return duration
     }
 
@@ -83,18 +81,16 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
     const resetClassesValue = (userData) => {
         let {ptonline,ptoffline, grouponline,groupoffline, recordedclasses, duration, mode, fitness_package_type, restdays } = userData;
    
-
-        
         PTProps.properties.ptonlineClasses.value = ptonline;
         PTProps.properties.ptofflineClasses.value = ptoffline;
         groupProps.properties.grouponlineClasses.value = grouponline;
         groupProps.properties.groupofflineClasses.value = groupoffline;
-        // PTProps.properties.restDay.value = "";
-        // groupProps.properties.restDay.value = "";
+    
 
-
-        PTProps.properties.restDay.maximum = "";
-        groupProps.properties.restDay.maximum = "";
+        if(PTProps.properties.duration.value === 1 || groupProps.properties.duration.value === 1){
+            PTProps.properties.restDay.maximum = 0;
+            groupProps.properties.restDay.maximum = 0;
+        }
         
         if (mode === "Online Workout" || mode === "Offline Workout") {
             duration = 1
@@ -105,6 +101,8 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
         setUserData({ ...userData, duration, recordedclasses })
         setFormValues({ ...formValues, duration, recordedclasses })
     }
+
+    
 
     const updateInputValue = (formData) => {
         const update = { ...formData };
@@ -133,13 +131,13 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
 
         if (isStepper && step < 6) {
             const update = updateInputValue(formData)
-            console.log('update', update)
+      
             setStep(step + 1);
             setFormValues({ ...formValues, ...update, fitness_package_type, fitnesspackagepricing: updateFinesspackagepricing, duration: updateDuration });
             setUserData({ ...formValues, ...update, fitness_package_type, fitnesspackagepricing: updateFinesspackagepricing, duration: updateDuration })
-            console.log('formData before submit', formData);
+            // console.log('formData before submit', formData);
             // console.log('formValues', formValues)
-            console.log("userData", userData);
+            // console.log("userData", userData);
         } else {
             if (typeof formData.disciplines !== "object") {
                 formData.disciplines = JSON.parse(formData.disciplines).map(item => item.id)
