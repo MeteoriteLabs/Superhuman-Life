@@ -2,30 +2,28 @@ import React from 'react'
 import { useRef, useState } from 'react';
 
 
-export default function ClassicClasses({ widgetProps, classicProps, actionType, packageTypeName }) {
+export default function ClassicClasses({ widgetProps, classicProps:{properties}, actionType, packageTypeName }) {
 
     const [dayAvaliable, setDayAvaliable] = useState<number | null>();
     const dayAvailableRef = useRef<any>(null)
-
+    const {recordedclasses, duration, restdays} = properties 
 
     // classic
-    const handleValidation = (e) => {
-        dayAvailableRef.current = classicProps.properties.duration.value;
+    const handleValidation = (e: { target: { value: string; }; }) => {
+        dayAvailableRef.current = duration.value;
 
-        classicProps.properties.recordedclasses.value = parseInt(e.target.value);
+       recordedclasses.value = parseInt(e.target.value);
 
-        dayAvailableRef.current -= classicProps.properties.recordedclasses.value
+        dayAvailableRef.current -= recordedclasses.value
 
-        classicProps.properties.restdays.maximum = dayAvailableRef.current;
+        restdays.maximum = dayAvailableRef.current;
         setDayAvaliable(dayAvailableRef.current)
         console.log('current', dayAvailableRef.current)
     }
 
 
-    const handleChange = (e: any, widgetProps) => {
-
+    const handleChange = (e: { target: any; }, widgetProps: { onChange: (arg0: number) => void; }) => {
         handleValidation(e)
-
         widgetProps.onChange(parseInt(e.target.value));
     }
 
@@ -41,7 +39,7 @@ export default function ClassicClasses({ widgetProps, classicProps, actionType, 
                 value={widgetProps.widgetProps.value && widgetProps.widgetProps.value}
                 ref={dayAvailableRef}
                 pattern="[0-9]+"
-                onChange={(e: any) => handleChange(e, widgetProps.widgetProps)}
+                onChange={(e:{ target: { value: string; };}) => handleChange(e, widgetProps.widgetProps)}
                 type="number"
                 min="0"
                 max="30"

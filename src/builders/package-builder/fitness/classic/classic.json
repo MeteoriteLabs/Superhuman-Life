@@ -79,8 +79,11 @@
         "duration": {
             "type": "number",
             "title": "Duration",
+            "minimum":1,
+            "maximum":365,
             "default": 30,
             "value":30
+
         },
         "recordedclasses": {
             "title": "Recorded",

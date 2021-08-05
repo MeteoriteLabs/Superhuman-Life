@@ -189,7 +189,7 @@ function CreateEditView(props: any, ref: any) {
         },
 
         "restdays": {
-            "ui:widget": (props: any) => <FitnessRestday actionType={operation.actionType} classicProps={classicSchema[3]} PTProps={ptSchema[3]} groupProps={groupSchema[3]} customProps={customSchema[3]} widgetProps={props} userData={userData} />
+            "ui:widget": (props: any) => <FitnessRestday actionType={operation.actionType} classicProps={classicSchema[3]} PTProps={ptSchema[3]} groupProps={groupSchema[3]} customProps={customSchema[3]} widgetProps={props} userData={userData} type={operation.type}  />
 
         },
 
@@ -445,6 +445,7 @@ function CreateEditView(props: any, ref: any) {
                     PTProps={ptSchema[3]}
                     groupProps={groupSchema[3]}
                     classicProps={classicSchema[3]}
+                    customProps={customSchema[3]}
                     actionType={operation.actionType}
                     operation={operation}
                     setOperation={setOperation}

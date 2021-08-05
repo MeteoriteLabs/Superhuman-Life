@@ -119,7 +119,7 @@
             "restDay": {
                 "title": "restDay",
                 "type": "null",
-                "value": ""
+                "value": 0
             }
         },
         "dependencies": {

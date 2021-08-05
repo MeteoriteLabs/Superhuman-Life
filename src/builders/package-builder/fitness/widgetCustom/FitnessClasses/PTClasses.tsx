@@ -1,93 +1,185 @@
 import React from 'react'
+import { useEffect } from 'react';
 import { useRef, useState } from 'react';
+import { Form } from 'react-bootstrap';
 
 
 
 
-export default function PTClasses({ widgetProps, packageTypeName, PTProps, actionType, userData }) {
-    console.log("🚀 ~ file: PTClasses.tsx ~ line 8 ~ PTClasses ~ widgetProps", widgetProps)
-    // console.log("🚀 ~ file: PTClasses.tsx ~ line 8 ~ PTClasses ~ userData", userData)
-    console.log("🚀 ~ file: PTClasses.tsx ~ line 8 ~ PTClasses ~ PTProps", PTProps)
+export default function PTClasses({ widgetProps, packageTypeName, PTProps: { properties }, actionType, userData }) {
+    // console.log("🚀 ~ file: PTClasses.tsx ~ line 8 ~ PTClasses ~ widgetProps", widgetProps)
+
+    // console.log("🚀 ~ file: PTClasses.tsx ~ line 8 ~ PTClasses ~ PTProps", PTProps)
     const [dayAvaliable, setDayAvaliable] = useState<number | null>();
     const dayAvailableRef = useRef<any>(null)
+    const { ptonlineClasses, ptofflineClasses, restDay, duration } = properties
 
+    useEffect(() => {
 
-
-
-
-    if (PTProps.properties.duration.value === 30) {
         if (userData.ptonline) {
-            PTProps.properties.ptonlineClasses.value = userData.ptonline
+            ptonlineClasses.value = userData.ptonline
         }
 
         if (userData.ptoffline) {
-            PTProps.properties.ptofflineClasses.value = userData.ptoffline
+            ptofflineClasses.value = userData.ptoffline
         }
-    }
-   
-
-
-    const handleValidation = (e, widgetProps) => {
-        dayAvailableRef.current = PTProps.properties.duration.value
-
-        if (widgetProps.label === 'Online') {
-            PTProps.properties.ptonlineClasses.value = parseInt(e.target.value);
-        }
-        else if (widgetProps.label === 'Offline') {
-            PTProps.properties.ptofflineClasses.value = parseInt(e.target.value);
+        if (userData.restdays) {
+            restDay.value = userData.restdays
         }
 
-        if (PTProps.properties.duration.value === 30) {
-            dayAvailableRef.current -= (PTProps.properties.ptonlineClasses.value + PTProps.properties.ptofflineClasses.value + PTProps.properties.restDay.value)
-        } else {
-            PTProps.properties.restDay.maximum = 0;
-            dayAvailableRef.current = 1 - e.target.value
-        }
-        console.log('ref', dayAvailableRef.current);
+    }, [])
+
+    // console.log('online: ', PTProps.properties.ptonlineClasses.value, ' offline: ', PTProps.properties.ptofflineClasses.value, " rest day: ", PTProps.properties.restDay.value)
 
 
+    // console.log('duration', PTProps.properties.duration.value)
+
+
+    const showErrorMessage = (e: { target: { value: string; }; }) => {
         if (dayAvailableRef.current < 0) {
             widgetProps.schema.maximum = 0
+            if (widgetProps.rawErrors) {
+                widgetProps.rawErrors[0] = `should be <= ${parseInt(e.target.value) - (dayAvailableRef.current * -1)}`
+            }
         } else if (dayAvailableRef.current >= 0) {
             widgetProps.schema.maximum = 30
+            if (widgetProps.rawErrors) {
+                widgetProps.rawErrors[0] = ""
+            }
+
+        }
+    }
+
+
+    // for Workout
+    const handleValidationForOneDay = (e: { target: { value: string; }; }) => {
+        if (widgetProps.label === 'Online') {
+            ptonlineClasses.value = parseInt(e.target.value);
+            restDay.maximum = 0;
+            ptonlineClasses.value = 0
+
+            dayAvailableRef.current = duration.value - parseInt(e.target.value)
+
+            console.log('ref', dayAvailableRef.current);
+            if (dayAvailableRef.current < 0) {
+                widgetProps.schema.maximum = 0
+                if (widgetProps.rawErrors) {
+                    widgetProps.rawErrors[0] = `should be <= ${parseInt(e.target.value) - (dayAvailableRef.current * -1)}`
+                }
+            } else if (dayAvailableRef.current === 0) {
+                widgetProps.schema.maximum = 1
+                if (widgetProps.rawErrors) {
+                    widgetProps.rawErrors[0] = ""
+                }
+            } else if (dayAvailableRef.current >= 0) {
+                widgetProps.schema.maximum = -1
+                if (widgetProps.rawErrors) {
+                    widgetProps.rawErrors[0] = `should be = 1`
+                }
+            }
+        } else if (widgetProps.label === 'Offline') {
+            ptonlineClasses.value = parseInt(e.target.value);
+            restDay.maximum = 0;
+            ptofflineClasses.value = 0
+
+            dayAvailableRef.current = duration.value - parseInt(e.target.value)
+
+            console.log('ref', dayAvailableRef.current);
+       
+            if (dayAvailableRef.current < 0) {
+                widgetProps.schema.maximum = 0
+                if (widgetProps.rawErrors) {
+                    widgetProps.rawErrors[0] = `should be <= ${parseInt(e.target.value) - (dayAvailableRef.current * -1)}`
+                }
+            } else if (dayAvailableRef.current === 0) {
+                widgetProps.schema.maximum = 1
+                if (widgetProps.rawErrors) {
+                    widgetProps.rawErrors[0] = ""
+                }
+            } else if (dayAvailableRef.current >= 0) {
+                widgetProps.schema.maximum = -1
+                if (widgetProps.rawErrors) {
+                    widgetProps.rawErrors[0] = `should be = 1`
+                }
+            }
+        }
+    }
+
+
+
+    const handleValidationFor30Day = (e: { target: any; }, widgetProps: { label: string; }) => {
+        // online
+        if (widgetProps.label === 'Online') {
+            ptonlineClasses.value = parseInt(e.target.value);
+
+            dayAvailableRef.current -= (parseInt(e.target.value) + ptofflineClasses.value + restDay.value);
+            console.log('ref', dayAvailableRef.current);
+
+            // error message
+            showErrorMessage(e)
+
+
+            // offline
+        } else if (widgetProps.label === 'Offline') {
+            ptofflineClasses.value = parseInt(e.target.value);
+
+            dayAvailableRef.current -= (parseInt(e.target.value) + ptonlineClasses.value + restDay.value);
+            console.log('ref', dayAvailableRef.current);
+            // widgetProps.schema.maximum = 0
+
+            // error message
+            showErrorMessage(e)
         }
 
-        PTProps.properties.restDay.maximum = dayAvailableRef.current;
+    }
+
+
+
+    const handleValidation = (e: { target: any; }) => {
+        dayAvailableRef.current = duration.value
+        if (duration.value === 30) {
+            handleValidationFor30Day(e, widgetProps)
+
+        } else if (duration.value === 1) {
+            handleValidationForOneDay(e)
+        }
+
         // PTProps.properties.dayAvailable.value = dayAvailableRef.current
-
-        // setDayAvaliable(dayAvailableRef.current)
     }
 
-    const handleChange = (e: any, widgetProps) => {
-        handleValidation(e, widgetProps)
 
+
+
+    const handleChange = (e: { target: { value: string; }; }, widgetProps: { onChange: (arg0: number) => void; }) => {
+        handleValidation(e)
         widgetProps.onChange(parseInt(e.target.value));
-
     }
+
 
 
     return (
-        <div>
+        <div className="d-flex justify-content-center aligns-items-center">
             {widgetProps.schema.title === 'Online' ?
                 <img src={`/assets/${packageTypeName}-online.svg`} alt={packageTypeName} title={`${packageTypeName} online`} />
                 :
                 <img src={`/assets/${packageTypeName}-offline.svg`} alt='123' title={`${packageTypeName} offline`} />
             }
 
+            <Form>
+                <Form.Control
+                    width="100%"
+                    disabled={actionType === "view" ? true : false}
+                    value={widgetProps.value && widgetProps.value}
+                    ref={dayAvailableRef}
+                    pattern="[0-9]+"
+                    onChange={(e: { target: { value: string; }; }) => handleChange(e, widgetProps)}
+                    type="number"
+                    min="0"
+                    max="30"
+                />
+            </Form>
 
-            <input
-                className="py-2 px-2"
-                disabled={actionType === "view" ? true : false}
-                value={widgetProps.value && widgetProps.value}
-                ref={dayAvailableRef}
-                pattern="[0-9]+"
-                onChange={(e: any) => handleChange(e, widgetProps)}
-                type="number"
-                min="0"
-                max="30"
-            />
-
-            {PTProps.properties.duration.value === 1 ?
+            {duration.value === 1 ?
                 <div className='ml-3 mt-1'>
                     <i style={{ color: "gray", fontSize: '0.9rem' }}>*** This field can only set to be 1</i>
                 </div> : ""

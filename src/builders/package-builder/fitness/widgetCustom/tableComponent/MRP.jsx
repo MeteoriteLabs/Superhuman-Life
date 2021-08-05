@@ -1,5 +1,6 @@
 import React from 'react'
 import _ from 'lodash'
+import { Form } from 'react-bootstrap'
 
 export default function MRP(props) {
     const { actionType, fitnesspackagepricing, setFitnesspackagepricing, type, mode, formData } = props
@@ -9,24 +10,26 @@ export default function MRP(props) {
     return <>
         {[...Array(numEle)].map((item, index) => {
             return <td key={index}>
-                <input
-                    required
-                    key={index}
-                    disabled={actionType === "view" ? true : false}
-                    value={fitnesspackagepricing[index].mrp}
-                    className='w-50'
-                    min="0"
-                    max="6000"
-                    type="number"
-                    placeholder='Enter MRP'
-                    onChange={(e) => {
-                        e.preventDefault();
+                <Form>
+                    <Form.Control
+                        required
+                        key={index}
+                        disabled={actionType === "view" ? true : false}
+                        value={fitnesspackagepricing[index].mrp}
+                 
+                        min="0"
+                        max="6000"
+                        type="number"
+                        placeholder='Enter MRP'
+                        onChange={(e) => {
+                            e.preventDefault();
+                            const updateMRP = _.cloneDeep(fitnesspackagepricing)
+                            updateMRP[index].mrp = e.target.value;
+                            setFitnesspackagepricing(updateMRP);
+                        }}
+                    />
+                </Form>
 
-                        const updateMRP = _.cloneDeep(fitnesspackagepricing)
-                        updateMRP[index].mrp = e.target.value;
-                        setFitnesspackagepricing(updateMRP);
-                    }}
-                />
             </td>
         })}
     </>

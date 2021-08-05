@@ -120,7 +120,7 @@
             "restDay": {
                 "title": "restDay",
                 "type": "null",
-                "value": ""
+                "value": 0
             }
         },
         "dependencies": {
@@ -222,7 +222,7 @@
                                 "minimum": 0,
                                 "maximum": 30,
                                 "default": "",
-                                "value": ""
+                                "value": 0
                             }
                         },
                         "required": ["ptonline","ptoffline","restdays","address"]

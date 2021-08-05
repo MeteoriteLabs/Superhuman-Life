@@ -21,7 +21,9 @@ export default function FitnessDuration({ widgetProps, type, actionType, userDat
                 <Form>
                     <Form.Group>
                         <Form.Label>Duration:</Form.Label>
-                        <Form.Control type="email" placeholder="Enter number of days ..."
+                        <Form.Control
+                            type="email"
+                            placeholder="Enter number of days ..."
                             value={widgetProps.value ? widgetProps.value : 30}
                             disabled={(actionType === "view") ? true : false}
                             onChange={(e) => {
@@ -33,7 +35,7 @@ export default function FitnessDuration({ widgetProps, type, actionType, userDat
 
 
                 <div className='text-center font-weight-bold mx-auto w-50 py-3 px-2 mt-5' style={{ boxShadow: '0px 7px 15px -5px #000000', borderRadius: '5px' }}>
-                    <p className='m-0'>Set for {widgetProps.value  ? widgetProps.value : 30} days</p>
+                    <p className='m-0'>Set for {widgetProps.value ? widgetProps.value : 30} days</p>
                 </div>
             </div>
         }

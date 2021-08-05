@@ -1,69 +1,119 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useRef } from 'react';
 import { useState } from 'react';
+import { Form } from 'react-bootstrap';
 
-export default function CustomClasses({ customProps, widgetProps, packageTypeName, actionType }) {
+export default function CustomClasses({ customProps: { properties }, widgetProps, packageTypeName, actionType, userData }) {
 
 
+    const { customPTOnline, customPTOffline, customGroupOnline, customGroupOffline, record, restDay, duration } = properties
 
     const [dayAvaliable, setDayAvaliable] = useState<number | null>(30);
     const dayAvailableRef = useRef<any>(null)
 
 
-
-    const countingAvailableDays = (dayAvailableRef: number, ptonlineValue: number, ptofflineValue: number, grouponlineValue: number, groupofflineValue: number, recordValue: number, restdayValue: number) => {
-
-        dayAvailableRef -= (ptonlineValue + ptofflineValue + grouponlineValue + groupofflineValue + recordValue + restdayValue);
-
-        if (dayAvailableRef >= 0) {
-            widgetProps.schema.maximum = 30
-        } else if (dayAvailableRef < 0) {
-            widgetProps.schema.maximum = 0
+    useEffect(() => {
+        if (userData.ptonline) {
+           customPTOnline.value = userData.ptonline
         }
-        return dayAvailableRef
+
+        if (userData.ptoffline) {
+            customPTOffline.value = userData.ptoffline
+        }
+
+        if (userData.grouponline) {
+            customGroupOnline.value = userData.grouponline
+        }
+
+        if (userData.groupoffline) {
+            customGroupOffline.value = userData.groupoffline
+        }
+        if (userData.recordedclasses) {
+            record.value = userData.recordedclasses
+
+        }
+        if (userData.restDay) {
+           restDay.value = userData.restdays
+        }
+    }, [])
+
+
+    const showErrorMessage = (e: { target: { value: string; }; }) => {
+        if (dayAvailableRef.current < 0) {
+            widgetProps.schema.maximum = 0
+            if (widgetProps.rawErrors) {
+                widgetProps.rawErrors[0] = `should be <= ${parseInt(e.target.value) - (dayAvailableRef.current * -1)}`
+            }
+        } else if (dayAvailableRef.current >= 0) {
+            widgetProps.schema.maximum = 30
+            if (widgetProps.rawErrors) {
+                widgetProps.rawErrors[0] = ""
+            }
+
+        }
     }
 
 
 
-
-
-
-    const handleValidation = (e, customProps) => {
-        dayAvailableRef.current = customProps.properties.duration.value
+    const handleValidation = (e: { target: { value: string; }; }) => {
+        dayAvailableRef.current = duration.value
         if (widgetProps.id === "root_ptonline") {
-            customProps.properties.customPTOnline.value = parseInt(e.target.value);
+            customPTOnline.value = parseInt(e.target.value);
+
+            dayAvailableRef.current -= (parseInt(e.target.value) + customPTOffline.value + customGroupOnline.value + customGroupOffline.value + record.value + restDay.value);
+            console.log('ref', dayAvailableRef.current);
+
+            // error message
+            showErrorMessage(e)
 
         } else if (widgetProps.id === "root_ptoffline") {
-            customProps.properties.customPTOffline.value = parseInt(e.target.value);
+            customPTOffline.value = parseInt(e.target.value);
+
+            dayAvailableRef.current -= (parseInt(e.target.value) + customPTOnline.value + customGroupOnline.value + customGroupOffline.value + record.value + restDay.value);
+            console.log('ref', dayAvailableRef.current);
+
+            // error message
+            showErrorMessage(e)
 
         } else if (widgetProps.id === "root_grouponline") {
-            customProps.properties.customGroupOnline.value = parseInt(e.target.value);
+            customGroupOnline.value = parseInt(e.target.value);
+
+            dayAvailableRef.current -= (parseInt(e.target.value) + customPTOnline.value + customPTOffline.value + customGroupOffline.value + record.value + restDay.value);
+            console.log('ref', dayAvailableRef.current);
+
+            // error message
+            showErrorMessage(e)
 
         } else if (widgetProps.id === "root_groupoffline") {
-            customProps.properties.customGroupOffline.value = parseInt(e.target.value);
+            customGroupOffline.value = parseInt(e.target.value);
+
+            dayAvailableRef.current -= (parseInt(e.target.value) + customPTOnline.value + customPTOffline.value + customGroupOnline.value + record.value + restDay.value);
+            console.log('ref', dayAvailableRef.current);
+
+            // error message
+            showErrorMessage(e)
 
         } else if (widgetProps.id === "root_recordedclasses") {
-            customProps.properties.record.value = parseInt(e.target.value);
+           record.value = parseInt(e.target.value);
+
+            dayAvailableRef.current -= (parseInt(e.target.value) + customPTOnline.value + customPTOffline.value + customGroupOffline.value + customGroupOnline.value + restDay.value);
+            console.log('ref', dayAvailableRef.current);
+
+            // error message
+            showErrorMessage(e)
 
         }
 
-        dayAvailableRef.current = countingAvailableDays(dayAvailableRef.current, customProps.properties.customPTOnline.value, customProps.properties.customPTOffline.value, customProps.properties.customGroupOnline.value, customProps.properties.customGroupOffline.value, customProps.properties.record.value, customProps.properties.restDay.value)
-
-
-        customProps.properties.restDay.maximum = dayAvailableRef.current;
-
-        setDayAvaliable(dayAvailableRef.current)
     }
 
-    const handleChange = (e: any, widgetProps) => {
-        handleValidation(e, customProps)
+    const handleChange = (e: { target: { value: string; }; }, widgetProps: { onChange: (arg0: number) => void; }) => {
+        handleValidation(e)
         widgetProps.onChange(parseInt(e.target.value));
     }
 
 
     return (
-        <div>
-
+        <div className="d-flex justify-content-center aligns-items-center">
             {widgetProps.schema.title === 'Online' ?
                 widgetProps.id === "root_ptonline" ?
                     <img src={`/assets/${packageTypeName}personal-training-online.svg`} alt='123' title={`${packageTypeName} personal training online`} />
@@ -81,17 +131,19 @@ export default function CustomClasses({ customProps, widgetProps, packageTypeNam
             }
 
 
-            <input
-                className="py-2 px-2"
-                disabled={actionType === "view" ? true : false}
-                value={widgetProps.value && widgetProps.value}
-                ref={dayAvailableRef}
-                pattern="[0-9]+"
-                onChange={(e: any) => handleChange(e, widgetProps)}
-                type="number"
-                min="0"
-                max="30"
-            />
+            <Form>
+                <Form.Control
+                    width="100%"
+                    disabled={actionType === "view" ? true : false}
+                    value={widgetProps.value && widgetProps.value}
+                    ref={dayAvailableRef}
+                    pattern="[0-9]+"
+                    onChange={(e: { target: { value: string; }; }) => handleChange(e, widgetProps)}
+                    type="number"
+                    min="0"
+                    max="30"
+                />
+            </Form>
 
 
         </div>

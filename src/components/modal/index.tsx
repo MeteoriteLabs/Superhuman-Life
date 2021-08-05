@@ -5,7 +5,7 @@ import { Button, Col, Modal, ProgressBar, Row } from "react-bootstrap";
 import _ from "lodash"
 
 
-export default function ModalView({ name, formUISchema, formSubmit, formSchema, formData, isStepper, userData, setUserData, widgets, setRender, fitness_package_type, PTProps, actionType, pricingDetailRef, classicProps, groupProps }: any) {
+export default function ModalView({ name, formUISchema, formSubmit, formSchema, formData, isStepper, userData, setUserData, widgets, setRender, fitness_package_type, PTProps, actionType, pricingDetailRef, classicProps, groupProps, customProps }: any) {
 
     const registry = utils.getDefaultRegistry();
     const defaultFileWidget = registry.widgets["FileWidget"];
@@ -85,6 +85,9 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
         PTProps.properties.ptofflineClasses.value = ptoffline;
         groupProps.properties.grouponlineClasses.value = grouponline;
         groupProps.properties.groupofflineClasses.value = groupoffline;
+        PTProps.properties.restDay.value = restdays
+        groupProps.properties.restDay.value = restdays
+        customProps.properties.restDay.value = restdays
     
 
         if(PTProps.properties.duration.value === 1 || groupProps.properties.duration.value === 1){
@@ -135,7 +138,7 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
             setStep(step + 1);
             setFormValues({ ...formValues, ...update, fitness_package_type, fitnesspackagepricing: updateFinesspackagepricing, duration: updateDuration });
             setUserData({ ...formValues, ...update, fitness_package_type, fitnesspackagepricing: updateFinesspackagepricing, duration: updateDuration })
-            // console.log('formData before submit', formData);
+            console.log('formData before submit', formData);
             // console.log('formValues', formValues)
             // console.log("userData", userData);
         } else {

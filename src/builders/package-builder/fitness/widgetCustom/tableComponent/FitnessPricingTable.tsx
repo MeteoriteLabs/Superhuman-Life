@@ -15,7 +15,7 @@ import PTGroupPricingTable from './PricingTable/PTGroupPricingTable';
 type FitnessPricing = {
     duration: number,
     voucher: string,
-    mrp: number,
+    mrp: number | string,
 }
 
 // interface UserData{
@@ -35,22 +35,22 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
         {
             "duration": 30,
             "voucher": "",
-            "mrp": 0,
+            "mrp": "",
         },
         {
             "duration": 90,
             "voucher": "",
-            "mrp": 0,
+            "mrp": "",
         },
         {
             "duration": 180,
             "voucher": "",
-            "mrp": 0,
+            "mrp": "",
         },
         {
             "duration": 360,
             "voucher": "",
-            "mrp": 0,
+            "mrp": "",
         },
     ])
 
@@ -83,9 +83,10 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
 
 
     useEffect(() => {
-        if (userData.fitnesspackagepricing) {
-            setFitnesspackagepricing(userData.fitnesspackagepricing[0].packagepricing)
-        }
+        // if (userData.fitnesspackagepricing) {
+        //     // setFitnesspackagepricing(userData.fitnesspackagepricing[0].packagepricing)
+        // }
+        setFitnesspackagepricing(fitnesspackagepricing)
     }, [userData])
     // console.log('packageTypeName', packageTypeName, fitnesspackagepricing)
 
