@@ -39,19 +39,27 @@ const UploadImageToS3WithNativeSdk = (props) => {
     const [selectedFile, setSelectedFile] = useState(null);
     const [render, setRender] = useState(null);
     const [url, setUrl] = useState(null);
-    const [key, setKey] = useState(null);
     const [imageid, setImageid] = useState(null);
-    // const [loading,setLoading] = useState(false);
+ 
 
     props.onChange(imageid);
 
     var albumPhotosKey = "sapien.partner.qa/";
 
+    function deleteAllImages(){
+        deleteFile(albumPhotosKey+'sm-'+imageid);
+        deleteFile(albumPhotosKey+'md-'+imageid);
+        deleteFile(albumPhotosKey+'lg-'+imageid);
+        setUrl(null);
+        setProgress(0);
+        setRender(null);
+    }
 
-    const deleteFile = () => {
+
+    const deleteFile = (keyName) => {
         var deleteparams = {
             Bucket: S3_BUCKET,
-            Key: key
+            Key: keyName
         };
         try {
             myBucket.headObject(deleteparams).promise()
@@ -66,10 +74,7 @@ const UploadImageToS3WithNativeSdk = (props) => {
         } catch (err) {
             console.log("File not Found ERROR : " + err.code)
         }
-        setUrl(null);
-        setProgress(0);
-        setRender(null);
-        //console.log(key);
+        
     }
 
     const handleFileInput = (e) => {
@@ -84,21 +89,49 @@ const UploadImageToS3WithNativeSdk = (props) => {
         console.log(e);
     }
 
-    function onImageLoaded(fileName, filetype) {
+    function onImageLoadedSmall(fileName, filetype) {
         Jimp.read(reader.result)
             .then(img => {
                 img.resize(500, Jimp.AUTO)
                     .quality(100)
                     .getBase64(Jimp.AUTO, (err, pic) => {
+                        let photoKey = albumPhotosKey + fileName;
+                        setRender(1);
+                        setImageid(photoKey.slice(21));
+                        uploadTOS3NoUrl(pic, photoKey, filetype);
+                    });
+            });
+    }
+    function onImageLoadedMedium(fileName, filetype) {
+        Jimp.read(reader.result)
+            .then(img => {
+                img.resize(750, Jimp.AUTO)
+                    .quality(100)
+                    .getBase64(Jimp.AUTO, (err, pic) => {
                         console.log(pic);
                         let photoKey = albumPhotosKey + fileName;
                         setRender(1);
-                        setKey(photoKey);
-                        setImageid(photoKey.slice(18));
+                        setImageid(photoKey.slice(21));
+                        uploadTOS3NoUrl(pic, photoKey, filetype);
+                    });
+            });
+    }
+    function onImageLoadedLarge(fileName, filetype) {
+        Jimp.read(reader.result)
+            .then(img => {
+                img.resize(1000, Jimp.AUTO)
+                    .quality(100)
+                    .getBase64(Jimp.AUTO, (err, pic) => {
+                        console.log(pic);
+                        let photoKey = albumPhotosKey + fileName;
+                        setRender(1);
+                        setImageid(photoKey.slice(21));
                         uploadTOS3(pic, photoKey, filetype);
                     });
             });
     }
+
+
 
     function uploadTOS3(file, filename, filetype) {
         let buf = Buffer.from(file.replace(/^data:image\/\w+;base64,/, ""), 'base64')
@@ -134,6 +167,26 @@ const UploadImageToS3WithNativeSdk = (props) => {
 
     }
 
+    function uploadTOS3NoUrl(file, filename, filetype) {
+        let buf = Buffer.from(file.replace(/^data:image\/\w+;base64,/, ""), 'base64')
+        const params = {
+            Body: buf,
+            Bucket: S3_BUCKET,
+            Key: filename,
+            ContentEncoding: 'base64',
+            ContentType: filetype
+        };
+        myBucket.putObject(params)
+            .on('httpUploadProgress', (evt) => {
+                setProgress(Math.round((evt.loaded / evt.total) * 100))
+            })
+            .send( (err) => {
+                    if (err) console.log(err)
+                })
+
+
+    }
+
     const uploadFile = (file) => {
         let fileType = " ";
 
@@ -149,15 +202,14 @@ const UploadImageToS3WithNativeSdk = (props) => {
 
         if (file.type === "image/png" || file.type === "image/jpeg" || file.type === "image/jpg" || file.type === "image/svg") {
 
-            var fileName = 'small-' + uuidv4() + fileType;
+            var fileName = uuidv4() + fileType;
             reader.onload = function (e) {
-                onImageLoaded(fileName, file.type);
+                onImageLoadedSmall('sm-'+ fileName, file.type);
+                onImageLoadedMedium('md-'+ fileName, file.type);
+                onImageLoadedLarge('lg-'+ fileName, file.type);
             };
             reader.readAsArrayBuffer(file);
         }
-        // large	1000px
-        // medium	750px
-        // small	500px
     }
 
     return <div className="dropArea p-1">
@@ -166,7 +218,7 @@ const UploadImageToS3WithNativeSdk = (props) => {
                 <Image src={url} width="500px" height="500px" className="img-thumbnail" alt="" />
                 <p className="ml-2 mt-3 text-success">Image Uploaded Successfully!!</p>
                 <div className="mt-3 d-flex flex-row-reverse">
-                    <button type="button" className="btn-sm btn-danger" onClick={() => deleteFile()}>Remove</button>
+                    <button type="button" className="btn-sm btn-danger" onClick={() => deleteAllImages()}>Remove</button>
                 </div>
 
             </div>
