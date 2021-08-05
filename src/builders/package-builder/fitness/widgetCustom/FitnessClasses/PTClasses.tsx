@@ -85,7 +85,7 @@ export default function PTClasses({ widgetProps, packageTypeName, PTProps: { pro
             dayAvailableRef.current = duration.value - parseInt(e.target.value)
 
             console.log('ref', dayAvailableRef.current);
-       
+
             if (dayAvailableRef.current < 0) {
                 widgetProps.schema.maximum = 0
                 if (widgetProps.rawErrors) {
@@ -167,6 +167,7 @@ export default function PTClasses({ widgetProps, packageTypeName, PTProps: { pro
 
             <Form>
                 <Form.Control
+                    className='text-center'
                     width="100%"
                     disabled={actionType === "view" ? true : false}
                     value={widgetProps.value && widgetProps.value}

@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react'
+import { Form } from 'react-bootstrap';
 
 
 export default function GroupClasses({ widgetProps, packageTypeName, groupProps: { properties }, actionType, userData }) {
@@ -83,25 +84,26 @@ export default function GroupClasses({ widgetProps, packageTypeName, groupProps:
 
 
     return (
-        <div>
+        <div className="d-flex justify-content-center aligns-items-center">
             {widgetProps.schema.title === 'Online' ?
                 <img src={`/assets/${packageTypeName}-online.svg`} alt={packageTypeName} title={`${packageTypeName} online`} />
                 :
                 <img src={`/assets/${packageTypeName}-offline.svg`} alt='123' title={`${packageTypeName} offline`} />
             }
 
-
-            <input
-                className="py-2 px-2"
-                disabled={actionType === "view" ? true : false}
-                value={widgetProps.value && widgetProps.value}
-                ref={dayAvailableRef}
-                pattern="[0-9]+"
-                onChange={(e: { target: { value: string; }; }) => handleChange(e, widgetProps)}
-                type="number"
-                min="0"
-                max="30"
-            />
+            <Form>
+                <Form.Control
+                    className='text-center'
+                    disabled={actionType === "view" ? true : false}
+                    value={widgetProps.value && widgetProps.value}
+                    ref={dayAvailableRef}
+                    pattern="[0-9]+"
+                    onChange={(e: { target: { value: string; }; }) => handleChange(e, widgetProps)}
+                    type="number"
+                    min="0"
+                    max="30"
+                />
+            </Form>
         </div>
 
 

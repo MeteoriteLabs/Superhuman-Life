@@ -7,26 +7,8 @@ export default function FitnessRestday(props: any) {
 
     const dayAvailableRef = useRef<any>(null)
 
-    // console.log(PTProps)
-
-
-    // if (userData.restdays) {
-    //     PTProps.properties.restDay.value = userData.restdays
-    //     groupProps.properties.restDay.value = userData.restdays
-    // }
-
-    
 
     useEffect(() => {
-        // if (PTProps.properties.duration.value === 30) {
-        //     if (userData.ptonline) {
-        //         PTProps.properties.ptonlineClasses.value = userData.ptonline
-        //     }
-
-        //     if (userData.ptoffline) {
-        //         PTProps.properties.ptofflineClasses.value = userData.ptoffline
-        //     }
-        // }
 
 
         if (userData.restdays) {
@@ -38,7 +20,7 @@ export default function FitnessRestday(props: any) {
 
 
 
-    const handeValidation = (e) => {
+    const handeValidation = (e: { target: { value: string; }; }) => {
 
         PTProps.properties.restDay.value = parseInt(e.target.value);
         groupProps.properties.restDay.value = parseInt(e.target.value)
@@ -91,11 +73,12 @@ export default function FitnessRestday(props: any) {
         <Form>
             <Form.Control
                 required
+                className='text-center'
                 ref={dayAvailableRef}
                 disabled={(actionType === "view") ? true : false}
                 value={widgetProps.value ? widgetProps.value : ""}
                 pattern="[0-9]+"
-                onChange={(e: any) => handleOnchange(e)}
+                onChange={(e:{target: { value: string; };}) => handleOnchange(e)}
                 type="number"
                 min="0"
                 max="30"

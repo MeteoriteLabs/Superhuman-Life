@@ -133,6 +133,7 @@ export default function CustomClasses({ customProps: { properties }, widgetProps
 
             <Form>
                 <Form.Control
+                    className='text-center'
                     width="100%"
                     disabled={actionType === "view" ? true : false}
                     value={widgetProps.value && widgetProps.value}
