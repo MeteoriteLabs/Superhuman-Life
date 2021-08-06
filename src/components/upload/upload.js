@@ -86,7 +86,7 @@ const UploadImageToS3WithNativeSdk = (props) => {
             setRender(0);
             e.target.value = '';
         }
-        console.log(e);
+        //console.log(e);
     }
 
     function onImageLoadedSmall(fileName, filetype) {
@@ -108,7 +108,7 @@ const UploadImageToS3WithNativeSdk = (props) => {
                 img.resize(750, Jimp.AUTO)
                     .quality(100)
                     .getBase64(Jimp.AUTO, (err, pic) => {
-                        console.log(pic);
+                        //console.log(pic);
                         let photoKey = albumPhotosKey + fileName;
                         setRender(1);
                         setImageid(photoKey.slice(21));
@@ -122,7 +122,7 @@ const UploadImageToS3WithNativeSdk = (props) => {
                 img.resize(1000, Jimp.AUTO)
                     .quality(100)
                     .getBase64(Jimp.AUTO, (err, pic) => {
-                        console.log(pic);
+                        //console.log(pic);
                         let photoKey = albumPhotosKey + fileName;
                         setRender(1);
                         setImageid(photoKey.slice(21));
@@ -156,7 +156,6 @@ const UploadImageToS3WithNativeSdk = (props) => {
                     //get the url of uploaded image
                     var promise = myBucket.getSignedUrlPromise('getObject', paramUrl);
                     promise.then(function (url) {
-                        console.log(url);
                         setUrl(url);
                     }, function (err) { console.log(err) });
                 }
