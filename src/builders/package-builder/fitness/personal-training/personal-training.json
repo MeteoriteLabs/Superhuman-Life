@@ -2,7 +2,7 @@
     "1": {
         "title": "",
         "type": "object",
-        "required": ["packagename","disciplines", "tags" ,"level","is_private"],
+       
         "properties": {
             "packagename": {
                 "type": "string",
@@ -44,7 +44,7 @@
     "2": {
         "title": "",
         "type": "object",
-        "required": ["aboutpackage", "benefits","ptclasssize" ],
+       
         "properties": {
             "aboutpackage": {
                 "type": "string",
@@ -83,7 +83,7 @@
     "3": {
         "title": "Program Details",
         "type": "object",
-        "required": ["mode"],
+       
         "properties": {
             "mode": {
                 "title": "Mode",
@@ -299,6 +299,7 @@
                 "value": 0
             }
         }
+
     },
     "6": {
         "title": "Preview",

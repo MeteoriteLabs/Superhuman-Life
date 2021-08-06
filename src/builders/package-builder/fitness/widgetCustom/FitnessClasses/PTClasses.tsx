@@ -39,7 +39,7 @@ export default function PTClasses({ widgetProps, packageTypeName, PTProps: { pro
         if (dayAvailableRef.current < 0) {
             widgetProps.schema.maximum = 0
             if (widgetProps.rawErrors) {
-                widgetProps.rawErrors[0] = `should be <= ${parseInt(e.target.value) - (dayAvailableRef.current * -1)}`
+                widgetProps.rawErrors[0] = `should be less than ${parseInt(e.target.value) - (dayAvailableRef.current * -1)}`
             }
         } else if (dayAvailableRef.current >= 0) {
             widgetProps.schema.maximum = 30

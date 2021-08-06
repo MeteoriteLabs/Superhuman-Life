@@ -10,7 +10,7 @@ type Props = {
 }
 
 export default function PTGroupPricingTable({ onlineClassesType, offlineClassesType, packageTypeName, mode, type }: Props) {
-    console.log(offlineClassesType)
+  
     return (
         <Fragment>
             <tr>

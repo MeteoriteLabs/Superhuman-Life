@@ -23,7 +23,7 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
 
 
 
-    const updatePrice = (formData, actionType) => {
+    const updatePrice = (formData: { fitness_package_type: string; mode: string; fitnesspackagepricing: { duration: number; voucher: string; mrp: number }; }, actionType: string) => {
 
         let updateFinesspackagepricing: any = ''
         if (pricingDetailRef.current.getFitnessPackagePricing?.()) {
@@ -51,7 +51,7 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
     }
 
 
-    const updateModeName = (formData) => {
+    const updateModeName = (formData: { mode: string; }) => {
         let { mode } = formData;
 
         if (formData.mode) {
@@ -65,11 +65,13 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
     }
 
 
-    const updateFormDuration = (formData) => {
+    const updateFormDuration = (formData: { mode: "Online Workout" | "Offline Workout"; duration?: number; }) => {
         let { duration, mode } = formData;
         if (formData.mode) {
             if (mode === "Online Workout" || mode === "Offline Workout") {
                 duration = 1
+            } else {
+                duration = 30
             }
         }
         return duration
@@ -78,9 +80,9 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
 
 
 
-    const resetClassesValue = (userData) => {
-        let {ptonline,ptoffline, grouponline,groupoffline, recordedclasses, duration, mode, fitness_package_type, restdays } = userData;
-   
+    const resetClassesValue = (userData: { ptonline: number; ptoffline: number; grouponline: number; groupoffline: number; recordedclasses: number; duration: number; mode: string; fitness_package_type: string; restdays: number; }) => {
+        let { ptonline, ptoffline, grouponline, groupoffline, recordedclasses, duration, mode, fitness_package_type, restdays } = userData;
+
         PTProps.properties.ptonlineClasses.value = ptonline;
         PTProps.properties.ptofflineClasses.value = ptoffline;
         groupProps.properties.grouponlineClasses.value = grouponline;
@@ -88,13 +90,13 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
         PTProps.properties.restDay.value = restdays
         groupProps.properties.restDay.value = restdays
         customProps.properties.restDay.value = restdays
-    
 
-        if(PTProps.properties.duration.value === 1 || groupProps.properties.duration.value === 1){
+
+        if (PTProps.properties.duration.value === 1 || groupProps.properties.duration.value === 1) {
             PTProps.properties.restDay.maximum = 0;
             groupProps.properties.restDay.maximum = 0;
         }
-        
+
         if (mode === "Online Workout" || mode === "Offline Workout") {
             duration = 1
         } if (fitness_package_type !== "60e045867df648b0f5756c32") {
@@ -105,9 +107,9 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
         setFormValues({ ...formValues, duration, recordedclasses })
     }
 
-    
 
-    const updateInputValue = (formData) => {
+
+    const updateInputValue = (formData: { ptonline: number, ptoffline: number, groupoffline: number, grouponline: number }) => {
         const update = { ...formData };
         if (userData.mode === "Online") {
             update.ptoffline = 0
@@ -124,7 +126,7 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
         return update
     }
 
-    function submitHandler(formData: any, userData) {
+    function submitHandler(formData:any) {
 
         const updateFinesspackagepricing = updatePrice(formData, actionType);
 
@@ -134,7 +136,7 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
 
         if (isStepper && step < 6) {
             const update = updateInputValue(formData)
-      
+
             setStep(step + 1);
             setFormValues({ ...formValues, ...update, fitness_package_type, fitnesspackagepricing: updateFinesspackagepricing, duration: updateDuration });
             setUserData({ ...formValues, ...update, fitness_package_type, fitnesspackagepricing: updateFinesspackagepricing, duration: updateDuration })
@@ -202,7 +204,7 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
                                     uiSchema={formUISchema}
                                     schema={formSchema[step.toString()]}
                                     ref={formRef}
-                                    onSubmit={({ formData }: any) => submitHandler(formData, userData)}
+                                    onSubmit={({ formData }: any) => submitHandler(formData)}
                                     formData={formValues}
                                     widget={widgets}
                                 >
@@ -235,7 +237,15 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
                                 size="sm"
                                 onClick={(event) => {
 
+
+                                    // if (pricingDetailRef.current.getFitnessPackagePricing?.().some((item: { mrp: string; }) => item.mrp === "")) {
+                                    //     // alert('Please enter all the MRP field')
+                                    //     return
+                                    // } else {
+                                    // }
+                                    
                                     formRef.current.onSubmit(event)
+
                                 }}
                             >
                                 {(step < 6)

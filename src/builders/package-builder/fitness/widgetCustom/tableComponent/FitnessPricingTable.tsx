@@ -26,10 +26,10 @@ type FitnessPricing = {
 
 
 
-export default function FitnessPricingTable({ userData, setUserData, actionType, type, formData, packageTypeName, pricingDetailRef }) {
+export default function FitnessPricingTable({ userData, setUserData, actionType, type, formData, packageTypeName, pricingDetailRef, widgetProps }) {
 
     let { ptonline, ptoffline, mode, grouponline, groupoffline, recordedclasses, duration } = userData;
- 
+
 
     const [fitnesspackagepricing, setFitnesspackagepricing] = useState<FitnessPricing[]>([
         {
@@ -61,7 +61,6 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
     const [offlineClassesType, setOffineClassesType] = useState<number>(0);
 
     useEffect(() => {
-
         if (pricingDetailRef) {
             pricingDetailRef.current = {
                 getFitnessPackagePricing: () => fitnesspackagepricing,
@@ -69,26 +68,30 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
         }
     }, [pricingDetailRef, fitnesspackagepricing])
 
+
+
     useEffect(() => {
+        console.log('duration', duration)
         let updatePricing: any = ''
-        if (formData) {
-            updatePricing = _.cloneDeep(formData);
+
+        if (actionType === 'create') {
+            if (userData.fitnesspackagepricing) {
+                updatePricing = _.cloneDeep(userData.fitnesspackagepricing);
+            } else {
+                updatePricing = [...fitnesspackagepricing];
+            }
+
+            console.log("updatePricing", updatePricing)
+            updatePricing[0].duration = duration;
         } else {
-            updatePricing = [...fitnesspackagepricing];
+            if (userData.fitnesspackagepricing) {
+                updatePricing = userData.fitnesspackagepricing[0].packagepricing
+            }
         }
-        updatePricing[0].duration = duration;
         setFitnesspackagepricing(updatePricing)
-        // console.log(updatePricing)
-    }, [formData])
-
-
-    useEffect(() => {
-        // if (userData.fitnesspackagepricing) {
-        //     // setFitnesspackagepricing(userData.fitnesspackagepricing[0].packagepricing)
-        // }
-        setFitnesspackagepricing(fitnesspackagepricing)
     }, [userData])
-    // console.log('packageTypeName', packageTypeName, fitnesspackagepricing)
+
+
 
 
     console.log(type, userData)
@@ -201,10 +204,12 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
                         formData={formData}
                         fitnesspackagepricing={fitnesspackagepricing}
                         setFitnesspackagepricing={setFitnesspackagepricing}
+                        widgetProps={widgetProps}
                     />
                 </tr>
             </tbody>
         </Table>
+       
     </>
 
 }

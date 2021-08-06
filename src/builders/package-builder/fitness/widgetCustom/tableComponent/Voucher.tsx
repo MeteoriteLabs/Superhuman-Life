@@ -9,10 +9,6 @@ export default function Voucher(props) {
     const { actionType, setFitnesspackagepricing, fitnesspackagepricing, type, mode, formData } = props
     let numEle = (type === "Classic Class" || mode === "Online Workout" || mode === "Offline Workout") ? 1 : 4
 
-    
-    console.log("🚀 ~ file: Voucher.tsx ~ line 8 ~ Voucher ~ fitnesspackagepricing", fitnesspackagepricing)
-
-
  
     return <>
         {[...Array(numEle)].map((item: any, index: number) => {
@@ -21,7 +17,7 @@ export default function Voucher(props) {
                     required
                     disabled={actionType === "view" ? true : false}
                     value={fitnesspackagepricing[index].voucher}
-                   
+                    className='text-center'
                     onChange={(e) => {
                         let updateVoucher: any = ''
                         updateVoucher = _.cloneDeep(fitnesspackagepricing)

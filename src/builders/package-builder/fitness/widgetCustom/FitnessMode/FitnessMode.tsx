@@ -5,7 +5,7 @@ import PersonaTrainingMode from './PersonaTrainingMode'
 export default function FitnessMode(props) {
     const { widgetProps, PTProps, type, userData, actionType , groupProps} = props
 
-    console.log(userData);
+   
 
 
     return (
@@ -17,6 +17,7 @@ export default function FitnessMode(props) {
                     widgetProps={widgetProps}
                     PTProps={PTProps}
                     groupProps={groupProps}
+                    userData={userData}
                     
                 />
             </div>

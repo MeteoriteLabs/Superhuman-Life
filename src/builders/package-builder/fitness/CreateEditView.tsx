@@ -266,7 +266,7 @@ function CreateEditView(props: any, ref: any) {
                 packageTypeName={packageTypeName}
                 actionType={operation.actionType}
                 pricingDetailRef={pricingDetailRef}
-                // widgetProps={props}
+                widgetProps={props}
                 formData={formData && formData.fitnesspackagepricing[0].packagepricing}
             />,
         },
@@ -298,7 +298,6 @@ function CreateEditView(props: any, ref: any) {
                 FillDetails(dataPackage)
             }
         });
-
     };
 
     FetchData()
