@@ -3,13 +3,14 @@ import { v4 as uuidv4 } from 'uuid';
 import { Image, ProgressBar } from "react-bootstrap";
 import AWS from 'aws-sdk';
 import "./upload.css";
+const _Jimp = require("jimp/browser/lib/jimp");
 
 
+require('dotenv').config();
+
+console.log(process.env);
 const S3_BUCKET = 'sapien.systems';
 const REGION = 'ap-south-1';
-
-require('jimp/browser/lib/jimp');
-const Jimp = window.Jimp;
 
 var reader = new FileReader();
 
@@ -35,11 +36,11 @@ const myBucket = new AWS.S3({
 
 const UploadImageToS3WithNativeSdk = (props) => {
 
-    const [progress, setProgress] = useState(0);
-    const [selectedFile, setSelectedFile] = useState(null);
-    const [render, setRender] = useState(null);
-    const [url, setUrl] = useState(null);
-    const [imageid, setImageid] = useState(null);
+    const [progress, setProgress] = useState<any>(0);
+    const [selectedFile, setSelectedFile] = useState<any>(null);
+    const [render, setRender] = useState<any>(null);
+    const [url, setUrl] = useState<any>(null);
+    const [imageid, setImageid] = useState<any>(null);
  
 
     props.onChange(imageid);
@@ -90,11 +91,11 @@ const UploadImageToS3WithNativeSdk = (props) => {
     }
 
     function onImageLoadedSmall(fileName, filetype) {
-        Jimp.read(reader.result)
+        _Jimp.read(reader.result)
             .then(img => {
-                img.resize(500, Jimp.AUTO)
+                img.resize(500, _Jimp.AUTO)
                     .quality(100)
-                    .getBase64(Jimp.AUTO, (err, pic) => {
+                    .getBase64(_Jimp.AUTO, (err, pic) => {
                         let photoKey = albumPhotosKey + fileName;
                         setRender(1);
                         setImageid(photoKey.slice(21));
@@ -103,11 +104,11 @@ const UploadImageToS3WithNativeSdk = (props) => {
             });
     }
     function onImageLoadedMedium(fileName, filetype) {
-        Jimp.read(reader.result)
+        _Jimp.read(reader.result)
             .then(img => {
-                img.resize(750, Jimp.AUTO)
+                img.resize(750, _Jimp.AUTO)
                     .quality(100)
-                    .getBase64(Jimp.AUTO, (err, pic) => {
+                    .getBase64(_Jimp.AUTO, (err, pic) => {
                         //console.log(pic);
                         let photoKey = albumPhotosKey + fileName;
                         setRender(1);
@@ -117,11 +118,11 @@ const UploadImageToS3WithNativeSdk = (props) => {
             });
     }
     function onImageLoadedLarge(fileName, filetype) {
-        Jimp.read(reader.result)
+        _Jimp.read(reader.result)
             .then(img => {
-                img.resize(1000, Jimp.AUTO)
+                img.resize(1000, _Jimp.AUTO)
                     .quality(100)
-                    .getBase64(Jimp.AUTO, (err, pic) => {
+                    .getBase64(_Jimp.AUTO, (err, pic) => {
                         //console.log(pic);
                         let photoKey = albumPhotosKey + fileName;
                         setRender(1);
@@ -159,9 +160,7 @@ const UploadImageToS3WithNativeSdk = (props) => {
                         setUrl(url);
                     }, function (err) { console.log(err) });
                 }
-                , (err) => {
-                    if (err) console.log(err)
-                })
+                )
 
 
     }
