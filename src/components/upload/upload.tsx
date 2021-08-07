@@ -6,18 +6,15 @@ import "./upload.css";
 const _Jimp = require("jimp/browser/lib/jimp");
 
 
-require('dotenv').config();
-
-console.log(process.env);
-const S3_BUCKET = 'sapien.systems';
-const REGION = 'ap-south-1';
+const S3_BUCKET: any= process.env.REACT_APP_S3_BUCKET_NAME;
+const REGION: any= process.env.REACT_APP_S3_BUCKET_REGION;
 
 var reader = new FileReader();
 
 
 AWS.config.update({
-    accessKeyId: 'AKIAXAJ4CKOKFOTV67ZP',
-    secretAccessKey: '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'
+    accessKeyId: process.env.REACT_APP_S3_ACCESS_KEY,
+    secretAccessKey: process.env.REACT_APP_S3_SECRET_KEY
 })
 
 const myBucket = new AWS.S3({
@@ -25,16 +22,7 @@ const myBucket = new AWS.S3({
     region: REGION,
 })
 
-// region : ap-south-1
-// bucket : sapien.systems
-// prefix : sapien.partner.qa 
-
-// IAM : S3user
-// Access Id : AKIAXAJ4CKOKFOTV67ZP
-// Secret Access Key : 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
-
-
-const UploadImageToS3WithNativeSdk = (props) => {
+const UploadImageToS3WithNativeSdk = (props: any) => {
 
     const [progress, setProgress] = useState<any>(0);
     const [selectedFile, setSelectedFile] = useState<any>(null);
@@ -45,7 +33,7 @@ const UploadImageToS3WithNativeSdk = (props) => {
 
     props.onChange(imageid);
 
-    var albumPhotosKey = "sapien.partner.qa/";
+    var albumPhotosKey = process.env.REACT_APP_S3_PREFIX_NAME;
 
     function deleteAllImages(){
         deleteFile(albumPhotosKey+'sm-'+imageid);
