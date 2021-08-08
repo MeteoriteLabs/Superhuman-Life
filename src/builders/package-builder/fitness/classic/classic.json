@@ -108,7 +108,7 @@
         "type": "object",
         "properties": {
             "pricingDetail": {
-                "type": "string",
+                "type": "number",
                 "title": "Pricing Plan",
                 "value": ""
             }

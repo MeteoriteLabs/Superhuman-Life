@@ -54,6 +54,8 @@ export default function MRP(props) {
             }
             widgetProps.onChange(123)
         }
+
+        console.log('valid', valid)
     }, [fitnesspackagepricing, userData])
     
     
@@ -70,19 +72,18 @@ export default function MRP(props) {
         const updateMRP = _.cloneDeep(fitnesspackagepricing)
         updateMRP[index].mrp = e.target.value;
         setFitnesspackagepricing(updateMRP);
-
         for (let i = 0; i < updateMRP.length; i++) {
+        console.log("🚀 ~ file: MRP.jsx ~ line 74 ~ handleValidationError ~ updateMRP", updateMRP)
             if (updateMRP[i].mrp.length) {
                 let mrp = Number(updateMRP[i].mrp);
+     
                 if (mrp > 0) {
-               
                     valid = true;
                 } else {
                     valid = false;
                     break;
                 }
             } else {
-               
                 valid = false;
                 break;
     
@@ -124,7 +125,7 @@ export default function MRP(props) {
                 <Form>
                     <Form.Control
                         id={index + 1}
-                        style={{margin:'0 auto', width:'80%', textAlign:'center'}}
+                        style={{margin:'0 auto', width:'75%', textAlign:'center'}}
                         ref={el => inputRef.current[index] = el}
                         required
                         disabled={actionType === "view" ? true : false}

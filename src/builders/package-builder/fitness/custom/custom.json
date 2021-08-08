@@ -308,7 +308,7 @@
         "required":["pricingDetail"],
         "properties": {
             "pricingDetail": {
-                "type": "string",
+                "type": "number",
                 "title": "Pricing Plan",
                 "value": ""
             }
