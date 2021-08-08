@@ -6,16 +6,16 @@ import './MRP.css'
 
 
 
+
 export default function MRP(props) {
-    const { actionType, fitnesspackagepricing, setFitnesspackagepricing, type, mode, formData, widgetProps } = props
+    const { actionType, fitnesspackagepricing, setFitnesspackagepricing, type, mode, userData, widgetProps } = props
     let numEle = (type === "Classic Class" || mode === "Online Workout" || mode === "Offline Workout") ? 1 : 4
 
-    // console.log('widgetProps.rawErrors', widgetProps.rawErrors)
-    // console.log('widgetProps', widgetProps)
+   
 
  
 
-    const [stateValid, setStateValid] = useState(false)
+    // const [stateValid, setStateValid] = useState(null)
  
 
     const inputRef = useRef([])
@@ -24,28 +24,26 @@ export default function MRP(props) {
    
 
     useEffect(() => {
-        inputRef.current = inputRef.current.splice(0, fitnesspackagepricing.length)
-        spanRef.current = spanRef.current.splice(0, fitnesspackagepricing.length)
-    }, [fitnesspackagepricing])
-    
-    useEffect(() => {
+        inputRef.current = inputRef.current.splice(0, fitnesspackagepricing.length);
+        spanRef.current = spanRef.current.splice(0, fitnesspackagepricing.length);
 
+        let valid = true
         for (let i = 0; i < fitnesspackagepricing.length; i++) {
             if (fitnesspackagepricing[i].mrp.length) {
                 let mrp = Number(fitnesspackagepricing[i].mrp);
                 if (mrp > 0) {
-                    setStateValid(true);
+                    valid = true
                 } else {
-                    setStateValid(false)
+                    valid = false
                     break;
                 }
             } else {
-                setStateValid(true)
+                valid = true
                 break;
             }
         }
     
-        if (!stateValid) {
+        if (!valid) {
             if (widgetProps.rawErrors) {
                 widgetProps.rawErrors[0] = "MRP can't be empty or less than 1"
             }
@@ -54,46 +52,52 @@ export default function MRP(props) {
             if (widgetProps.rawErrors) {
                 widgetProps.rawErrors[0] = ""
             }
+            widgetProps.onChange(123)
         }
-    },[])
+    }, [fitnesspackagepricing, userData])
+    
+    
+   
+
+    
+    useEffect(() => {
+           
+    },[fitnesspackagepricing])
     
 
-
-
-    const handleChange = (e, index) => {
-        e.preventDefault();
-
+    const handleValidationError = (e, index) => {
+        let valid = false;
         const updateMRP = _.cloneDeep(fitnesspackagepricing)
         updateMRP[index].mrp = e.target.value;
         setFitnesspackagepricing(updateMRP);
 
-        console.log('inputRef.current', inputRef.current[index])
-        console.log('spanRef.current', spanRef.current[index])
-
-        console.log(updateMRP)
-
-        let valid = false;
         for (let i = 0; i < updateMRP.length; i++) {
             if (updateMRP[i].mrp.length) {
                 let mrp = Number(updateMRP[i].mrp);
                 if (mrp > 0) {
+               
                     valid = true;
                 } else {
                     valid = false;
                     break;
                 }
             } else {
+               
                 valid = false;
                 break;
-
+    
             }
         }
+        return valid
+    }
 
 
+    const handleChange = (e, index) => {
+        e.preventDefault();
 
-        console.log('widgetProps.rawErrors', widgetProps)
-
-        if (valid && stateValid) {
+        const valid = handleValidationError(e, index)
+      
+        if (valid) {
             if (widgetProps.rawErrors) {
                 widgetProps.rawErrors[0] = ""
             }
@@ -107,7 +111,6 @@ export default function MRP(props) {
             }
             inputRef.current[index].className = "inputError"
             spanRef.current[index].className = "d-block text-danger"
-        
             widgetProps.onChange(null)
         }
 

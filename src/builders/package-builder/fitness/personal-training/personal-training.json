@@ -292,11 +292,12 @@
     "5": {
         "title": "Pricing Plan",
         "type": "object",
+        "required": [],
         "properties": {
             "pricingDetail": {
-                "type": "string",
+                "type": "number",
                 "title": "Pricing Plan",
-                "value": 0
+                "minimum":0
             }
         }
 

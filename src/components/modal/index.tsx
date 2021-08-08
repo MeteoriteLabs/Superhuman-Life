@@ -126,7 +126,7 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
         return update
     }
 
-    function submitHandler(formData:any) {
+    function submitHandler(formData: any) {
 
         const updateFinesspackagepricing = updatePrice(formData, actionType);
 
@@ -236,16 +236,22 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
                                 variant="danger"
                                 size="sm"
                                 onClick={(event) => {
-
-
-                                    // if (pricingDetailRef.current.getFitnessPackagePricing?.().some((item: { mrp: string; }) => item.mrp === "")) {
-                                    //     // alert('Please enter all the MRP field')
-                                    //     return
-                                    // } else {
+                                    // if (step === 5) {
+                                    //     if (pricingDetailRef.current.getFitnessPackagePricing?.()) {
+                                    //         if (pricingDetailRef.current.getFitnessPackagePricing?.().some(item => (item.mrp < 0 || item.mrp === ""))) {
+                                    //             return
+                                    //         }else{
+                                    //             formRef.current.onSubmit(event)
+                                    //         }
+                                    //     }
+                                    //     else {
+                                    //         formRef.current.onSubmit(event)
+                                    //     }
+                                    // } else{
+                                    //     formRef.current.onSubmit(event)
                                     // }
-                                    
-                                    formRef.current.onSubmit(event)
 
+                                    formRef.current.onSubmit(event)
                                 }}
                             >
                                 {(step < 6)

@@ -1,12 +1,12 @@
 import React from 'react'
 import * as _ from 'lodash'
-import { useEffect } from 'react'
-import { useState } from 'react'
+
 
 
 
 export default function Voucher(props) {
-    const { actionType, setFitnesspackagepricing, fitnesspackagepricing, type, mode, formData } = props
+    const { actionType, setFitnesspackagepricing, fitnesspackagepricing, type, mode } = props
+    console.log("🚀 ~ file: Voucher.tsx ~ line 9 ~ Voucher ~ fitnesspackagepricing", fitnesspackagepricing)
     let numEle = (type === "Classic Class" || mode === "Online Workout" || mode === "Offline Workout") ? 1 : 4
 
  

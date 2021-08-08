@@ -26,7 +26,7 @@ type FitnessPricing = {
 
 
 
-export default function FitnessPricingTable({ userData, setUserData, actionType, type, formData, packageTypeName, pricingDetailRef, widgetProps }) {
+export default function FitnessPricingTable({ userData, setUserData, actionType, type, formData, packageTypeName, pricingDetailRef, widgetProps, auth }) {
 
     let { ptonline, ptoffline, mode, grouponline, groupoffline, recordedclasses, duration } = userData;
 
@@ -71,7 +71,6 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
 
 
     useEffect(() => {
-        console.log('duration', duration)
         let updatePricing: any = ''
 
         if (actionType === 'create') {
@@ -83,6 +82,10 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
 
             console.log("updatePricing", updatePricing)
             updatePricing[0].duration = duration;
+        } else if (actionType === 'view') {
+            if (formData.fitnesspackagepricing) {
+                updatePricing = formData.fitnesspackagepricing[0].packagepricing
+            }
         } else {
             if (userData.fitnesspackagepricing) {
                 updatePricing = userData.fitnesspackagepricing[0].packagepricing
@@ -91,10 +94,11 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
         setFitnesspackagepricing(updatePricing)
     }, [userData])
 
+    console.log('userData', formData)
 
 
 
-    console.log(type, userData)
+
 
     useEffect(() => {
         if (type === "Personal Training") {
@@ -173,7 +177,7 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
                         type={type}
                         mode={mode}
                         actionType={actionType}
-                        formData={formData}
+
                         fitnesspackagepricing={fitnesspackagepricing}
                         setFitnesspackagepricing={setFitnesspackagepricing}
                     />
@@ -193,7 +197,13 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
                 </tr>
                 <tr>
                     <td>Suggested Pricing</td>
-                    <SuggestedPricing type={type} mode={mode} />
+                    <SuggestedPricing
+                        type={type}
+                        mode={mode}
+                        auth={auth}
+                        fitnesspackagepricing={fitnesspackagepricing}
+                        userData={userData}
+                    />
                 </tr>
                 <tr>
                     <td>Set MRP</td>
@@ -201,7 +211,7 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
                         type={type}
                         mode={mode}
                         actionType={actionType}
-                        formData={formData}
+                        userData={userData}
                         fitnesspackagepricing={fitnesspackagepricing}
                         setFitnesspackagepricing={setFitnesspackagepricing}
                         widgetProps={widgetProps}
@@ -209,7 +219,7 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
                 </tr>
             </tbody>
         </Table>
-       
+
     </>
 
 }

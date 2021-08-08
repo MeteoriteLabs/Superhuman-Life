@@ -267,7 +267,8 @@ function CreateEditView(props: any, ref: any) {
                 actionType={operation.actionType}
                 pricingDetailRef={pricingDetailRef}
                 widgetProps={props}
-                formData={formData && formData.fitnesspackagepricing[0].packagepricing}
+                formData={formData}
+                auth={auth}
             />,
         },
 
