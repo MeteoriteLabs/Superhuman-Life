@@ -20,9 +20,11 @@ type Props = {
 }
 
 
+
 export default function SuggestedPricing({ type, mode, auth, fitnesspackagepricing, userData }: Props) {
 
     const { ptonline, ptoffline, grouponline, groupoffline, recordedclasses, duration, fitness_package_type } = userData;
+
 
     const [suggestedPricing, setSuggestedPricing] = useState<number[]>([]);
 
@@ -36,7 +38,7 @@ export default function SuggestedPricing({ type, mode, auth, fitnesspackageprici
 
     const calculateSuggestPrice = (arrayData: { Mode: "Online" | "Offline"; mrp: number; }[], arrayClasses: number[]) => {
         const mrp: number[] = [];
-        
+
         // eslint-disable-next-line array-callback-return
         arrayData.map((item: { Mode: "Online" | "Offline"; mrp: number; }) => {
             if (item.Mode === "Online") {
@@ -49,40 +51,37 @@ export default function SuggestedPricing({ type, mode, auth, fitnesspackageprici
     }
 
 
-    const calculateArraySuggestPrice = (partnerMRP:number, arrayDuration: number[]) => {
-    console.log("🚀 ~ file: SuggestedPricing.tsx ~ line 53 ~ calculateArraySuggestPrice ~ partnerMRP", partnerMRP)
-        const arraySuggestedPricings:number[] = [];
-        
+    const calculateArraySuggestPrice = (partnerMRP: number, arrayDuration: number[]) => {
+        const arraySuggestedPricings: number[] = [];
+
         arraySuggestedPricings[0] = partnerMRP
         for (let i = 1; i < arrayDuration.length; i++) {
             if (i === 1) {
-                partnerMRP = Number(partnerMRP) *  3
+                partnerMRP = Number(partnerMRP) * 3
             } else {
-                partnerMRP = Number(partnerMRP)* 2
+                partnerMRP = Number(partnerMRP) * 2
             }
             arraySuggestedPricings.push(partnerMRP)
         }
 
-        console.log(arraySuggestedPricings)
+    
         setSuggestedPricing(arraySuggestedPricings)
         return arraySuggestedPricings
     }
 
 
-
-    // let arrSuggestedPrice = (type === "Classic Class" || mode === "Online Workout" || mode === "Offline Workout") ? [1000] : [2500, 2500, 2500, 2500];
-
-
+    // PT
     const PTSuggestedPricing = (data: { suggestedPricings: any[]; }) => {
         const arrayPTdata = data.suggestedPricings.filter((item: { fitness_package_type: { type: "Personal Training" | "Group Class" | "Classic Class"; }; }) => item.fitness_package_type.type === "Personal Training");
         const arrayPTClasses = [ptonline, ptoffline];
         const partnerSuggestPrice = calculateSuggestPrice(arrayPTdata, arrayPTClasses);
 
-        calculateArraySuggestPrice(partnerSuggestPrice, arrayDuration)
+        calculateArraySuggestPrice(partnerSuggestPrice, arrayDuration);
+        return calculateArraySuggestPrice
     }
 
 
-
+    // Group
     const groupSuggestedPricing = (data: { suggestedPricings: any[]; }) => {
         const arrayGroupData = data.suggestedPricings.filter((item: { fitness_package_type: { type: "Personal Training" | "Group Class" | "Classic Class"; }; }) => item.fitness_package_type.type === "Group Class");
         const arrayGroupClasses = [grouponline, groupoffline];
@@ -92,7 +91,7 @@ export default function SuggestedPricing({ type, mode, auth, fitnesspackageprici
     }
 
 
-
+    //classic
     const classicSuggestPricing = (data: { suggestedPricings: any[]; }) => {
         const arrayClassicData = data.suggestedPricings.filter((item: { fitness_package_type: { type: "Personal Training" | "Group Class" | "Classic Class"; }; }) => item.fitness_package_type.type === "Classic Class");
         const arrayClassic = [recordedclasses];
@@ -100,6 +99,46 @@ export default function SuggestedPricing({ type, mode, auth, fitnesspackageprici
 
         calculateArraySuggestPrice(partnerSuggestPrice, [duration])
     }
+
+
+
+    //custom
+    const customSuggestPrice = (data) => {
+
+        const arrayCustomPrice: number[] = []
+        const arrayPTdata = data.suggestedPricings.filter((item: { fitness_package_type: { type: "Personal Training" | "Group Class" | "Classic Class"; }; }) => item.fitness_package_type.type === "Personal Training");
+
+        const arrayGroupData = data.suggestedPricings.filter((item: { fitness_package_type: { type: "Personal Training" | "Group Class" | "Classic Class"; }; }) => item.fitness_package_type.type === "Group Class");
+
+        const arrayClassicData = data.suggestedPricings.filter((item: { fitness_package_type: { type: "Personal Training" | "Group Class" | "Classic Class"; }; }) => item.fitness_package_type.type === "Classic Class");
+
+
+        for (let i = 0; i < arrayPTdata.length; i++) {
+            if (arrayPTdata[i].Mode === "Online") {
+                arrayCustomPrice.push(arrayPTdata[i].mrp * ptonline)
+            } else {
+                arrayCustomPrice.push(arrayPTdata[i].mrp * ptoffline)
+            }
+        }
+
+        for (let i = 0; i < arrayGroupData.length; i++) {
+            if (arrayGroupData[i].Mode === "Online") {
+                arrayCustomPrice.push(arrayGroupData[i].mrp * grouponline)
+            } else {
+                arrayCustomPrice.push(arrayGroupData[i].mrp * groupoffline)
+            }
+        }
+
+        for (let i = 0; i < arrayClassicData.length; i++) {
+            arrayCustomPrice.push(arrayClassicData[i].mrp * recordedclasses)
+        }
+
+
+        const num = arrayCustomPrice.reduce((acc, cur) => acc + cur)
+        calculateArraySuggestPrice(num, arrayDuration)
+
+    }
+
 
 
 
@@ -115,13 +154,16 @@ export default function SuggestedPricing({ type, mode, auth, fitnesspackageprici
             //record/ classic
         } else if (fitness_package_type === "60e045867df648b0f5756c32") {
             classicSuggestPricing(data)
-        }
+
+            // custom
+        } else if (fitness_package_type === "60e045747df648b0f5756c31")
+            customSuggestPrice(data)
     }
 
-    console.log(suggestedPricing)
+
 
     return <>
-        {suggestedPricing.map((item:number, index:number) => {
+        {suggestedPricing.map((item: number, index: number) => {
             return <td key={index}>Rs {item.toLocaleString()}</td>
         })}
     </>

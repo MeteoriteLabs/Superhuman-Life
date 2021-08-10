@@ -133,3 +133,18 @@ export const GET_SUGGESTIONS_PRICES = gql`
     }
   }
 `;
+
+
+
+export const GET_SAPIENT_PRICES = gql`
+    query sapienPricings{
+      sapienPricings{
+        id
+        Mode
+        mrp
+        fitness_package_type {
+          type
+        }
+      }
+    }
+`
