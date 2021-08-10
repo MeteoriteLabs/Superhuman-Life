@@ -7,7 +7,7 @@ import { GET_SAPIENT_PRICES } from '../../graphQL/queries'
 
 
 
-export default function Voucher({ actionType, setFitnesspackagepricing, fitnesspackagepricing, type, mode,minPrice  ,setMinPrice, userData, arrSapientPrice }) {
+export default function Voucher({ actionType, setFitnesspackagepricing, fitnesspackagepricing, type, mode,minPrice  ,setMinPrice, userData, arrSapientPrice,setIndex }) {
 console.log("🚀 ~ file: Voucher.tsx ~ line 11 ~ Voucher ~ arrSapientPrice", arrSapientPrice)
 
   
@@ -35,6 +35,7 @@ console.log("🚀 ~ file: Voucher.tsx ~ line 11 ~ Voucher ~ arrSapientPrice", ar
             console.log('20%', updateValue)
         }
         
+        setIndex(index)
         setMinPrice(updateValue)
         setFitnesspackagepricing(updateVoucher);
     }

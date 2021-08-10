@@ -63,6 +63,7 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
 
     const [onlineClassesType, setOnlineClassesType] = useState<number>(0)
     const [offlineClassesType, setOffineClassesType] = useState<number>(0);
+    const [index, setIndex] = useState<number>(0)
 
 
     useQuery(GET_SAPIENT_PRICES, {
@@ -102,16 +103,9 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
             }
             arraySapient.push(Number(sapientPrice));
         }
-     
 
 
-
-
-
-   
-
-
-        let updatePrice = [...arraySapient];       
+        let updatePrice = [...arraySapient];
         if (actionType === "edit") {
             if (userData.fitnesspackagepricing) {
                 const arrayVoucher = userData.fitnesspackagepricing[0].packagepricing.map(item => item.voucher);
@@ -130,14 +124,11 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
                     }
                 }
             }
-          
+
             setMinPrice(updatePrice);
-        }else{
+        } else {
             setMinPrice(arraySapient);
         }
-
-
-
 
         setArraySapientPrice(arraySapient);
         console.log('arraySapientPrice', arrSapientPrice)
@@ -151,8 +142,8 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
         const arrayPTClasses = [ptonline, ptoffline];
         const sapientPrice = calculateSuggestPrice(arrayPTdata, arrayPTClasses);
 
-       calculateArraySuggestPrice(sapientPrice, arrayDuration);
-    
+        calculateArraySuggestPrice(sapientPrice, arrayDuration);
+
 
     }
 
@@ -208,8 +199,8 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
         }
 
 
-        const num = arrayCustomPrice.reduce((acc, cur) => acc + cur)
-        calculateArraySuggestPrice(num, arrayDuration)
+        const totalCustomPrice = arrayCustomPrice.reduce((acc, cur) => acc + cur)
+        calculateArraySuggestPrice(totalCustomPrice, arrayDuration)
 
     }
 
@@ -355,6 +346,7 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
                         setFitnesspackagepricing={setFitnesspackagepricing}
                         arrSapientPrice={arrSapientPrice}
                         userData={userData}
+                        setIndex={setIndex}
                     />
                 </tr>
                 <tr>
@@ -383,6 +375,7 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
                 <tr>
                     <td>Set MRP</td>
                     <MRP
+                        index={index}
                         type={type}
                         mode={mode}
                         actionType={actionType}
