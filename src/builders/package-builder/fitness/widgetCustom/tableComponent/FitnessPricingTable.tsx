@@ -37,22 +37,22 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
         {
             "duration": 30,
             "voucher": "",
-            "mrp": "",
+            "mrp": 0,
         },
         {
             "duration": 90,
             "voucher": "",
-            "mrp": "",
+            "mrp": 0,
         },
         {
             "duration": 180,
             "voucher": "",
-            "mrp": "",
+            "mrp": 0,
         },
         {
             "duration": 360,
             "voucher": "",
-            "mrp": "",
+            "mrp": 0,
         },
     ])
 
@@ -379,12 +379,12 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
                         type={type}
                         mode={mode}
                         actionType={actionType}
-                        userData={userData}
                         fitnesspackagepricing={fitnesspackagepricing}
                         setFitnesspackagepricing={setFitnesspackagepricing}
                         widgetProps={widgetProps}
                         minPrice={minPrice}
                         setMinPrice={setMinPrice}
+                        userData={userData}
                     />
                 </tr>
             </tbody>

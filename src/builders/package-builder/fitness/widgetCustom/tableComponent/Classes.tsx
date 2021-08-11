@@ -1,21 +1,19 @@
 import React from 'react'
 
 
-// type Props = {
-//     type: 'Personal Training' | 'Group Class' | 'Custom Fitness' | 'Classic Class';
-//     numberClass:number
-//     mode: "Online" | "Offline" | "Hybird" | "Workout"
-// }
+type Props = {
+    type: 'Personal Training' | 'Group Class' | 'Custom Fitness' | 'Classic Class';
+    numberClass:number
+    mode: "Online" | "Offline" | "Hybird" | "Workout" | "Online Workout" | "Offline Workout"
+}
 
-export default function OnlineClasses({type, numberClass, mode}) {
+export default function OnlineClasses({type, numberClass, mode}:Props) {
 
     let arrayNumberClass: number[] = [];
 
     if(type === "Classic Class" || mode === "Online Workout" ||  mode === "Offline Workout" ){
         arrayNumberClass.push(numberClass)
     }else{
-        // if (numberClass !== '') {
-        // }
         arrayNumberClass[0] = numberClass
 
         for (let i = 1; i < 4; i++) {
@@ -25,8 +23,8 @@ export default function OnlineClasses({type, numberClass, mode}) {
 
     }
     return <>
-        {arrayNumberClass.map((item, index) => {
-            return  <td key={index}>{item} Class</td>
+        {arrayNumberClass.map((numClass, index) => {
+            return  <td key={index}>{numClass} Class</td>
         })}
     </>
 

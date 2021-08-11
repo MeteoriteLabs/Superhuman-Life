@@ -8,7 +8,7 @@ import './MRP.css'
 
 
 export default function MRP(props) {
-    const { actionType, fitnesspackagepricing, setFitnesspackagepricing, type, mode, userData, widgetProps, minPrice, setMinPrice, index } = props
+    const { actionType, fitnesspackagepricing, setFitnesspackagepricing, type, mode, widgetProps, minPrice, setMinPrice, index, userData } = props
     let numEle = (type === "Classic Class" || mode === "Online Workout" || mode === "Offline Workout") ? 1 : 4
 
     // const [currentMinPrice, setCurrentMinPrice] = useState([])
@@ -28,54 +28,63 @@ export default function MRP(props) {
     useEffect(() => {
         inputRef.current = inputRef.current.splice(0, fitnesspackagepricing.length);
         spanRef.current = spanRef.current.splice(0, fitnesspackagepricing.length);
+        
+        if (actionType === "edit" || userData.fitnesspackagepricing) {
+            let valid = null;
+            const updateMRP = _.cloneDeep(fitnesspackagepricing);
+            let updateIndex = index;
 
-        let valid = false;
 
-        const updateMRP = _.cloneDeep(fitnesspackagepricing)
 
-        console.log("🚀 ~ file: MRP.jsx ~ line 35 ~ useEffect ~ updateMRP", updateMRP)
-        for (let i = 0; i < updateMRP.length; i++) {
-            if (updateMRP[i].mrp !== "") {
-                let mrp = Number(updateMRP[index].mrp);
-                // console.log(mrp)
-                if (mrp > 0 && Number(updateMRP[index].mrp) >= minPrice[index]) {
-                    valid = true;
-                    inputRef.current[index].className = "input"
-                    spanRef.current[index].className = "d-none"
+            console.log("🚀 ~ file: MRP.jsx ~ line 35 ~ useEffect ~ updateMRP", updateMRP)
+            for (let i = 0; i < updateMRP.length; i++) {
+                if (updateMRP[i].mrp !== "") {
+                    let mrp = Number(updateMRP[i].mrp);
+
+
+                    if (mrp > 0 && mrp >= minPrice[i]) {
+                        valid = true;
+                        inputRef.current[i].className = "input"
+                        spanRef.current[i].className = "d-none"
+                    } else {
+
+
+                        updateIndex = i
+                        inputRef.current[i].className = "inputError"
+                        spanRef.current[i].className = "d-block text-danger"
+                        valid = false;
+                        break;
+                    }
                 } else {
-                    inputRef.current[index].className = "inputError"
-                    spanRef.current[index].className = "d-block text-danger"
                     valid = false;
                     break;
                 }
+            }
+
+
+            console.log(valid);
+            if (valid) {
+                if (widgetProps.rawErrors) {
+                    widgetProps.rawErrors[0] = ""
+                }
+                widgetProps.onChange(123)
+                inputRef.current[updateIndex].className = "input"
+                spanRef.current[updateIndex].className = "d-none"
+
+
             } else {
-                valid = false;
-                break;
+                if (widgetProps.rawErrors) {
+                    widgetProps.rawErrors[0] = `MRP can't be empty or less than ${minPrice[index]}`
+                }
+                inputRef.current[updateIndex].className = "inputError"
+                spanRef.current[updateIndex].className = "d-block text-danger"
+
+                widgetProps.onChange(null)
             }
 
         }
 
-        // console.log(valid);
-        if (valid) {
-            if (widgetProps.rawErrors) {
-                widgetProps.rawErrors[0] = ""
-            }
-            widgetProps.onChange(123)
-            inputRef.current[index].className = "input"
-            spanRef.current[index].className = "d-none"
-
-
-        } else {
-            if (widgetProps.rawErrors) {
-                widgetProps.rawErrors[0] = `MRP can't be empty or less than ${minPrice[index]}`
-            }
-            inputRef.current[index].className = "inputError"
-            spanRef.current[index].className = "d-block text-danger"
-
-            widgetProps.onChange(null)
-        }
-
-    }, [minPrice])
+    }, [minPrice, fitnesspackagepricing])
 
 
 
@@ -94,12 +103,17 @@ export default function MRP(props) {
 
 
         for (let i = 0; i < updateMRP.length; i++) {
-        console.log("🚀 ~ file: MRP.jsx ~ line 98 ~ handleValidationError ~ fitnesspackagepricing", fitnesspackagepricing)
+            console.log("🚀 ~ file: MRP.jsx ~ line 98 ~ handleValidationError ~ updateMRP", updateMRP.map(item => item.mrp))
+            console.log('value', e.target.value)
             if (updateMRP[i].mrp !== "") {
                 let mrp = Number(updateMRP[i].mrp);
-                if ((mrp > 0 && Number(updateMRP[i].mrp) >= minPrice[index]) || Number(e.target.value) >= minPrice[index]) {
+                if ((mrp > 0 && Number(updateMRP[i].mrp) >= minPrice[i]) ||  Number(e.target.value) >= minPrice[i]) {
+                    // inputRef.current[i].className = "input"
+                    // spanRef.current[i].className = "d-none"
                     valid = true;
                 } else {
+                    // inputRef.current[i].className = "inputError"
+                    // spanRef.current[i].className = "d-block text-danger"
                     valid = false;
                     break;
                 }
