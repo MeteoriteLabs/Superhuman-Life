@@ -5,8 +5,8 @@ type Props = {
     onlineClassesType: number,
     offlineClassesType: number,
     packageTypeName: string,
-    mode: string
-    type: string
+    mode: "Online" | "Offline" | "Hybird" | "Workout" | "Online Workout" | "Offline Workout"
+    type: 'Personal Training' | 'Group Class' | 'Custom Fitness' | 'Classic Class';
 }
 
 export default function PTGroupPricingTable({ onlineClassesType, offlineClassesType, packageTypeName, mode, type }: Props) {

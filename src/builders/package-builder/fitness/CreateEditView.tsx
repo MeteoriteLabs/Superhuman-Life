@@ -37,7 +37,7 @@ interface UserDataProps {
     aboutpackage: string;
     benefits: string;
     level: string;
-    mode: string;
+    mode: "Online" | "Offline" | "Hybird" | "Workout" | "Online Workout" | "Offline Workout"
     address: { id: string, __typename: string };
     ptclasssize: string;
     classsize: number;

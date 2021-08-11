@@ -48,7 +48,6 @@ export default function MRP(props) {
                         spanRef.current[i].className = "d-none"
                     } else {
 
-
                         updateIndex = i
                         inputRef.current[i].className = "inputError"
                         spanRef.current[i].className = "d-block text-danger"

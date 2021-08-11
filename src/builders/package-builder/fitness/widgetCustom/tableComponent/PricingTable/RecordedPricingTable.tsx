@@ -4,8 +4,8 @@ import Classes from '../Classes'
 type Props = {
     recordedclasses: number,
     packageTypeName: string,
-    type: string,
-    mode: string
+    mode: "Online" | "Offline" | "Hybird" | "Workout" | "Online Workout" | "Offline Workout"
+    type: 'Personal Training' | 'Group Class' | 'Custom Fitness' | 'Classic Class';
 }
 
 
