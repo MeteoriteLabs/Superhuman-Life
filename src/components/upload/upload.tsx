@@ -4,7 +4,8 @@ import { Image, ProgressBar } from "react-bootstrap";
 import AWS from 'aws-sdk';
 import "./upload.css";
 const _Jimp = require("jimp/browser/lib/jimp");
-
+//Account Id: 8cbde4feee19132ef8f9a92b57782a11
+//Token: 9-EmH4BY0tjLmjjyqf4SARMsixjbEiTtZw3FEEbV
 
 const S3_BUCKET: any= process.env.REACT_APP_S3_BUCKET_NAME;
 const REGION: any= process.env.REACT_APP_S3_BUCKET_REGION;
@@ -22,6 +23,8 @@ const myBucket = new AWS.S3({
     region: REGION,
 })
 
+var tus:any = require("tus-js-client");
+
 const UploadImageToS3WithNativeSdk = (props: any) => {
 
     const [progress, setProgress] = useState<any>(0);
@@ -29,9 +32,13 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
     const [render, setRender] = useState<any>(null);
     const [url, setUrl] = useState<any>(null);
     const [imageid, setImageid] = useState<any>(null);
+    let allowedImageFormats = ["image/png","image/jpeg","image/jpg"];
+    let allowedVideoFormats = ["video/mp4"];
  
-
+    
     props.onChange(imageid);
+    
+
 
     var albumPhotosKey = process.env.REACT_APP_S3_PREFIX_NAME;
 
@@ -67,16 +74,33 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
     }
 
     const handleFileInput = (e) => {
-        setSelectedFile(e.target.files[0]);
 
-        if (e.target.files[0].type === "image/png" || e.target.files[0].type === "image/jpeg" || e.target.files[0].type === "image/jpg" || e.target.files[0].type === "image/svg") {
-            setRender(1);
-        } else {
-            setRender(0);
-            e.target.value = '';
+        if(props.allowImage === "true" && props.allowVideo === "true"){
+            if([...allowedImageFormats,...allowedVideoFormats].indexOf(e.target.files[0].type) === -1){
+                setRender(0);
+                e.target.value = '';
+                return;
+            }
+            
+        } else if(props.allowImage === "true" && props.allowVideo === "false"){
+            if(allowedImageFormats.indexOf(e.target.files[0].type) === -1){
+                setRender(0);
+                e.target.value = '';
+                return;
+            }
+        
+        }else if(props.allowImage === "false" && props.allowVideo === "true"){
+            if(allowedVideoFormats.indexOf(e.target.files[0].type) === -1){
+                setRender(0);
+                e.target.value = '';
+                return;
+            }
         }
-        //console.log(e);
+        setRender(1);
+        setSelectedFile(e.target.files[0]);
+    
     }
+
 
     function onImageLoadedSmall(fileName, filetype) {
         _Jimp.read(reader.result)
@@ -111,7 +135,6 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                 img.resize(1000, _Jimp.AUTO)
                     .quality(100)
                     .getBase64(_Jimp.AUTO, (err, pic) => {
-                        //console.log(pic);
                         let photoKey = albumPhotosKey + fileName;
                         setRender(1);
                         setImageid(photoKey.slice(21));
@@ -174,19 +197,13 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
     }
 
     const uploadFile = (file) => {
-        let fileType = " ";
-
-        if (file.type === "image/png") {
-            fileType = ".png";
-        } else if (file.type === "image/jpeg") {
-            fileType = ".jpeg";
-        } else if (file.type === "image/jpg") {
-            fileType = ".jpg";
-        }else {
-            setRender(0);
+        if(allowedVideoFormats.indexOf(file.type) > -1){
+            VideoUpload(file);
+            return;
         }
-
-        if (file.type === "image/png" || file.type === "image/jpeg" || file.type === "image/jpg" || file.type === "image/svg") {
+       
+        if (allowedImageFormats.indexOf(file.type) > -1) {
+            let fileType = '.' + file.type.slice(6); 
 
             var fileName = uuidv4() + fileType;
             reader.onload = function (e) {
@@ -195,8 +212,91 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                 onImageLoadedLarge('lg-'+ fileName, file.type);
             };
             reader.readAsArrayBuffer(file);
+            return;
         }
+        setRender(0);
     }
+
+    function handleVideoOrImageInput(e){
+        if(props.allowImage === "true" && props.allowVideo === "true"){
+            if([...allowedImageFormats,...allowedVideoFormats].indexOf(e.type) === -1){
+                setRender(0);
+                return;
+            }
+            if(allowedImageFormats.indexOf(e.type) > -1){
+                setRender(1);
+                uploadFile(e);
+                return;
+            }
+            if(allowedVideoFormats.indexOf(e.type) > -1){
+                setRender(1);
+                VideoUpload(e);
+                return;
+            }
+            
+        } else if(props.allowImage === "true" && props.allowVideo === "false"){
+            if(allowedImageFormats.indexOf(e.type) === -1){
+                setRender(0);
+                return;
+            }
+            if(allowedImageFormats.indexOf(e.type) > -1){
+                setRender(1);
+                uploadFile(e);
+                return;
+            }
+            
+        
+        }else if(props.allowImage === "false" && props.allowVideo === "true"){
+            if(allowedVideoFormats.indexOf(e.type) === -1){
+                setRender(0);
+                return;
+            }
+            if(allowedVideoFormats.indexOf(e.type) > -1){
+                setRender(1);
+                VideoUpload(e);
+                return;
+            }
+        }
+        
+    }
+    
+    function VideoUpload(file){
+        if(allowedVideoFormats.indexOf(file.type) > -1){
+            var options = {
+                endpoint: "https://api.cloudflare.com/client/v4/accounts/{ACCOUNT ID}/stream?direct_user=true",
+                headers: {
+                    'Authorization': 'Bearer $TOKEN',
+                },
+                chunkSize: 50 * 1024 * 1024, // Required a minimum chunk size of 5MB, here we use 50MB.
+                resume: true,
+                metadata: {
+                    filename: file.name,
+                    filetype: file.type,
+                    // defaulttimestamppct: 0.5,
+                    // watermark: "$WATERMARKUID"
+                },
+                // uploadSize: size,
+                onError: function (error) {
+                    throw error;
+                },
+                onProgress: function (bytesUploaded, bytesTotal) {
+                    var percentage = (bytesUploaded / bytesTotal * 100).toFixed(2);
+                    console.log(bytesUploaded, bytesTotal, percentage + "%");
+                },
+                onSuccess: function () {
+                    console.log("Upload finished");
+                }
+            };
+            
+            var upload = new tus.Upload(file, options);
+            upload.start();
+        }else{
+            setRender(0);
+        }
+    
+        
+    }
+    
 
     return <div className="dropArea p-1">
         {url ?
@@ -213,11 +313,54 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
         }
 
         <div>
-            {render === 0 ? <p className="text-danger">Supported Formats (png/jpeg/jpg)</p> : " "}
+                      {props.allowImage === "true" && props.allowVideo === "false" ? 
+                        <> 
+                       {render === 0 ? <p className="text-danger">Supported Formats (png/jpeg/jpg)</p> : " "}
+                        </>
+                         : 
+                         " "
+
+                       }
+                       {props.allowImage === "false" && props.allowVideo === "true"?
+                        <>
+                        {render === 0 ? <p className="text-danger">Supported Formats (mp4)</p> : " "}
+                        </>
+                        :
+                        " "
+                         }
+                       {props.allowImage === "true" && props.allowVideo === "true"?
+                        <>
+                        {render === 0 ? <p className="text-danger">Supported Formats (png/jpeg/jpg/mp4)</p> : " "}
+                        </>
+                        :
+                        " "
+                      }
             {url ? " " :
                 <div className="bg-white">
-                    <div className="mb-3 p-4 dropzone" onDragOver={(e) => { e.preventDefault(); }} onDrop={(e) => { e.preventDefault(); uploadFile(e.dataTransfer.files[0]) }}>
+                    <div className="mb-3 p-4 dropzone" onDragOver={(e) => { e.preventDefault(); }} onDrop={(e) => { e.preventDefault(); handleVideoOrImageInput(e.dataTransfer.files[0]) }}>
+                        {props.allowImage === "true" && props.allowVideo === "false" ? 
+                        <> 
                         <p className="d-inline">Drag & Drop Image</p><p className="font-weight-bold d-inline">  (png/jpeg/jpg)</p>
+                        </>
+                         : 
+                         " "
+
+                       }
+                       {props.allowImage === "false" && props.allowVideo === "true"?
+                        <>
+                        <p className="d-inline">Drag & Drop Video</p><p className="font-weight-bold d-inline">  (mp4)</p>
+                        </>
+                        :
+                        " "
+                         }
+                       {props.allowImage === "true" && props.allowVideo === "true"?
+                        <>
+                         <p className="d-inline">Drag & Drop Image Or Video</p><p className="font-weight-bold d-inline"> (png/jpeg/jpg/mp4)</p>
+                        </>
+                        :
+                        " "
+                         }
+                        
                         <p className="mt-3">OR</p>
                         <input type="file" className="pt-2" onChange={handleFileInput} />
                         <div className="mt-3 d-flex flex-row-reverse">
