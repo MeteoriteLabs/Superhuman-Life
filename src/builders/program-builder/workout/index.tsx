@@ -52,7 +52,7 @@ export default function EventsTab() {
     function loadData(data: any) {
         setTableData(
             [...data.workouts].map((detail) => {
-                // console.log(detail);
+                
                 return {
                     workoutName: detail.workouttitle,
                     discipline: detail.fitnessdisciplines.disciplinename,
@@ -170,7 +170,7 @@ export default function EventsTab() {
                     <div>
                         <Form.Group controlId="exampleForm.SelectCustom">
                             <Form.Label>Fitness Discipline</Form.Label>
-                            <Form.Control as="select" custom onChange={(e) => { console.log( e.target.value ) }}>
+                            <Form.Control as="select" custom>
                                 {fitnessdisciplines.map((val: any) => {
                                     return <option value={val.id} >{val.disciplineName}</option>
                                 })}
@@ -224,7 +224,7 @@ export default function EventsTab() {
     function onSubmit(formData: any) {
         let levelIndex = formData.level
         let intensityIndex = formData.intensity
-        console.log(formData);
+      
 
         createWorkout (
             {

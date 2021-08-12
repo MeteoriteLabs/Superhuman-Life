@@ -13,7 +13,6 @@ export default function ModalCustomRestday(PTProps: any) {
 
 
     PTProps.PTProps.properties.dayAvailable.value = duration - offlineClasses - onlineClasses - restDay
-    // props.schema.maximum = PTProps.PTProps.properties.dayAvailable.value
     if (PTProps.PTProps.properties.dayAvailable.value === 0) {
         props.schema.maximum = 30
     }
@@ -22,14 +21,12 @@ export default function ModalCustomRestday(PTProps: any) {
 
 
 
-    // console.log("dayAvailable", PTProps.PTProps.properties.dayAvailable.value);
+   
     return <div className=' text-center text-black py-3 w-25 d-flex justify-content-center align-items-center' >
         <img src="/assets/rest-icon.svg" alt='123' />
         <label className='d-block font-weight-bold mb-0 mr-3'>{PTProps.props.label}</label>
         <input
             className="py-2 px-2"
-            // value={PTProps.props.value}
-            // pattern="[0-9]+"
             onChange={(event: any) => {
                 if (PTProps.PTProps.properties.dayAvailable.value <= 0) {
                     event.target.value = 0

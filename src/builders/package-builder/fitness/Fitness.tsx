@@ -20,8 +20,6 @@ export default function FitnessTab(props) {
     const [currentIndex, setCurrentIndex] = useState<any>('');
 
 
-    // console.log('selectedDuration', selectedDuration);
-    // console.log('currentIndex', currentIndex)
 
     const columns = useMemo<any>(() => [
         { accessor: "packagename", Header: "Package Name" },
@@ -79,7 +77,6 @@ export default function FitnessTab(props) {
         {
             accessor: "duration", Header: "Duration",
             Cell: ({ row }: any) => {
-                // console.log('current row', row)
                 return <>
                     <Form.Group>
                         <Form.Control
@@ -149,13 +146,13 @@ export default function FitnessTab(props) {
 
     const FetchData = () => {
         useQuery(GET_FITNESS, {
-            variables: { id: auth.userid },
-            onCompleted: (data) => loadData(data)
+            variables: { id: auth.userid, },
+            onCompleted: (data) => loadData(data),
+           
         });
     }
 
     const loadData = (data: any) => {
-        console.log('query data', data)
         setDataTable(
             [...data.fitnesspackages].map(item => {
                 return {

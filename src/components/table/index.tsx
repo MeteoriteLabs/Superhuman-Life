@@ -32,14 +32,15 @@ function Table({ data, columns, selectedDuration }: any) {
                     }
                 </thead>
                 <tbody  {...getTableBodyProps()}>
-                    {rows.map(row => {
+                    {rows.map((row, index) => {
                         prepareRow(row);
                         const rowProps = row.getRowProps();
+                        console.log(rowProps)
                         return (
-                            <Fragment key={rowProps.key}>
+                            <Fragment key={index}>
                                 <tr className="rowCard" {...row.getRowProps()}>
                                     {row.cells.map(cell => (
-                                        <td className='bodyTd ml-3'{...row.getRowProps()}>
+                                        <td  className='bodyTd ml-3'{...row.getRowProps()}>
                                             {cell.render("Cell")}
                                         </td>
                                     ))}

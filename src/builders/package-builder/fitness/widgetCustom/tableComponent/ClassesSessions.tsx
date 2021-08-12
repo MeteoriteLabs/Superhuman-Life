@@ -17,7 +17,7 @@ export default function ClassesSessions({ type, classicClasses, ptonline, ptoffl
 
 
 
-    // console.log(ptonline, ptoffline, grouponline, groupoffline, recordedclasses)
+  
 
     let arr = [ptonline, ptoffline, grouponline, groupoffline, recordedclasses];
     let totalClasses = arr.filter(item => item !== undefined).reduce((acc, cur) => acc + cur);
@@ -30,7 +30,7 @@ export default function ClassesSessions({ type, classicClasses, ptonline, ptoffl
     } else if (mode === "Online Workout" || mode === "Offline Workout") {
         if (ptonline !== 0) {
             arrNumberClass.push(ptonline);
-            console.log(arrNumberClass)
+        
         }else{
             arrNumberClass.push(ptoffline);
         } 

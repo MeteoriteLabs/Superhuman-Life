@@ -1,16 +1,14 @@
 import React from 'react'
 import { useEffect } from 'react';
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import { Form } from 'react-bootstrap';
 
 
 
 
 export default function PTClasses({ widgetProps, packageTypeName, PTProps: { properties }, actionType, userData }) {
-    // console.log("🚀 ~ file: PTClasses.tsx ~ line 8 ~ PTClasses ~ widgetProps", widgetProps)
-
-    // console.log("🚀 ~ file: PTClasses.tsx ~ line 8 ~ PTClasses ~ PTProps", PTProps)
-    const [dayAvaliable, setDayAvaliable] = useState<number | null>();
+  
+   
     const dayAvailableRef = useRef<any>(null)
     const { ptonlineClasses, ptofflineClasses, restDay, duration } = properties
 
@@ -29,10 +27,6 @@ export default function PTClasses({ widgetProps, packageTypeName, PTProps: { pro
 
     }, [])
 
-    // console.log('online: ', PTProps.properties.ptonlineClasses.value, ' offline: ', PTProps.properties.ptofflineClasses.value, " rest day: ", PTProps.properties.restDay.value)
-
-
-    // console.log('duration', PTProps.properties.duration.value)
 
 
     const showErrorMessage = (e: { target: { value: string; }; }) => {
@@ -60,7 +54,6 @@ export default function PTClasses({ widgetProps, packageTypeName, PTProps: { pro
 
             dayAvailableRef.current = duration.value - parseInt(e.target.value)
 
-            console.log('ref', dayAvailableRef.current);
             if (dayAvailableRef.current < 0) {
                 widgetProps.schema.maximum = 0
                 if (widgetProps.rawErrors) {
@@ -84,7 +77,6 @@ export default function PTClasses({ widgetProps, packageTypeName, PTProps: { pro
 
             dayAvailableRef.current = duration.value - parseInt(e.target.value)
 
-            console.log('ref', dayAvailableRef.current);
 
             if (dayAvailableRef.current < 0) {
                 widgetProps.schema.maximum = 0
@@ -113,7 +105,6 @@ export default function PTClasses({ widgetProps, packageTypeName, PTProps: { pro
             ptonlineClasses.value = parseInt(e.target.value);
 
             dayAvailableRef.current -= (parseInt(e.target.value) + ptofflineClasses.value + restDay.value);
-            console.log('ref', dayAvailableRef.current);
 
             // error message
             showErrorMessage(e)
@@ -124,7 +115,6 @@ export default function PTClasses({ widgetProps, packageTypeName, PTProps: { pro
             ptofflineClasses.value = parseInt(e.target.value);
 
             dayAvailableRef.current -= (parseInt(e.target.value) + ptonlineClasses.value + restDay.value);
-            console.log('ref', dayAvailableRef.current);
             // widgetProps.schema.maximum = 0
 
             // error message

@@ -120,7 +120,7 @@ function CreateEditView(props: any, ref: any) {
     }, [operation]);
 
 
-    // console.log('parent')
+
 
 
     let fitness_package_type: string | undefined = ''
@@ -292,12 +292,12 @@ function CreateEditView(props: any, ref: any) {
         useQuery(GET_SINGLE_PACKAGE_BY_ID, {
             variables: {
                 id: operation.id,
-                skip: (!operation.id),
                 users_permissions_user: auth.userid
             },
             onCompleted: (dataPackage: any) => {
                 FillDetails(dataPackage)
-            }
+            },
+            skip: (!operation.id),
         });
     };
 
@@ -306,7 +306,6 @@ function CreateEditView(props: any, ref: any) {
 
     const FillDetails = (dataPackage: any) => {
         const packageDetail = dataPackage.fitnesspackage;
-        console.log("packageDetail", packageDetail)
 
         let { id, packagename, tags, disciplines, fitness_package_type, aboutpackage, benefits, level, mode, ptoffline, ptonline, grouponline, groupoffline, recordedclasses, restdays, fitnesspackagepricing, bookingleadday, bookingleadtime, duration, groupstarttime, groupendtime, groupinstantbooking, address, ptclasssize, classsize, groupdays, introvideourl, is_private } = packageDetail;
 
@@ -337,13 +336,12 @@ function CreateEditView(props: any, ref: any) {
         }
     }
 
-    console.log('form data parent', formData)
+
 
 
 
     useImperativeHandle(ref, () => ({
         TriggerForm: (msg: Operation) => {
-            console.log('msg', msg)
             setOperation(msg);
 
             //render form if no message id
@@ -357,7 +355,6 @@ function CreateEditView(props: any, ref: any) {
     const [createPackage] = useMutation(CREATE_PACKAGE, {
         variables: { users_permissions_user: auth.userid },
         onCompleted: (r: any) => {
-            console.log(r);
             setRender(false)
         }
     })
@@ -368,7 +365,6 @@ function CreateEditView(props: any, ref: any) {
 
     const [editPackage] = useMutation(EDIT_PACKAGE, {
         onCompleted: (data: any) => {
-            console.log('r', data);
             setRender(false)
         }
     });
@@ -383,31 +379,23 @@ function CreateEditView(props: any, ref: any) {
     }
 
     function CreatePackage(frm) {
-        // console.log('create message');
-        // console.log('frm', frm)
+
         createPackage({ variables: frm })
 
     }
 
     function EditPackage(frm: any) {
-        // console.log('frm', frm)
-        // console.log('edit message');
+
         editPackage({ variables: frm })
     }
 
-    // function ViewMessage() {
-    //     console.log('view message');
-
-    // }
 
     const DeletePackage = (id: any) => {
-        console.log('delete package');
         deletePackage({ variables: { id: id } })
     }
 
 
     function OnSubmit(frm: any) {
-        console.log('frm', frm);
         //bind user id
         if (frm)
             frm.user_permissions_user = auth.userid;

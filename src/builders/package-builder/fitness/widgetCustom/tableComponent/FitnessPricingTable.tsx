@@ -89,7 +89,7 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
         return mrp.reduce((acc, cur) => acc + cur)
     }
 
-    console.log('arrSapientPrice', arrSapientPrice)
+
 
 
     const calculateArraySuggestPrice = (sapientPrice: number, arrayDuration: number[]) => {
@@ -112,15 +112,15 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
                 for (let i = 0; i < updatePrice.length; i++) {
                     if (arrayVoucher[i] === "0%") {
                         updatePrice[i] = Number(arraySapient[i])
-                        // console.log('0%', price)
+                        
 
                     } else if (arrayVoucher[i] === "10%") {
                         updatePrice[i] = Number(((arraySapient[i] * 100) / (100 - 10)).toFixed(2))
-                        // console.log('10%', price)
+                      
 
                     } else if (arrayVoucher[i] === "20%") {
                         updatePrice[i] = Number(((arraySapient[i] * 100) / (100 - 20)).toFixed(2))
-                        console.log('20%', updatePrice[i])
+                       
                     }
                 }
             }
@@ -131,7 +131,7 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
         }
 
         setArraySapientPrice(arraySapient);
-        console.log('arraySapientPrice', arrSapientPrice)
+       
         return arraySapient
     }
 
@@ -244,7 +244,7 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
             } else {
                 updatePricing = [...fitnesspackagepricing];
             }
-            // console.log("updatePricing", updatePricing)
+            
             updatePricing[0].duration = duration;
 
         } else if (actionType === 'view') {
@@ -259,9 +259,7 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
         setFitnesspackagepricing(updatePricing)
     }, [userData])
 
-    // console.log('userData', userData)
-    // console.log('formData', formData)
-
+    
 
 
     useEffect(() => {

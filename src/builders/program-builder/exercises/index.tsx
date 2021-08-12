@@ -33,7 +33,7 @@ export default function EventsTab() {
     }
 
     function loadData(data: any) {
-        console.log(data);
+     
         setTableData(
             [...data.exercises].map((detail) => {
                 return {
@@ -195,12 +195,12 @@ export default function EventsTab() {
         Advance,
         None
     }
-    console.log(disc);
+   
     
     function onSubmit(formData: any) {
         
         let levelIndex = formData.level;
-        console.log(formData);
+      
         
         createExercise(
             {

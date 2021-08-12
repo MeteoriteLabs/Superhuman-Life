@@ -11,13 +11,7 @@ export default function MRP(props) {
     const { actionType, fitnesspackagepricing, setFitnesspackagepricing, type, mode, widgetProps, minPrice, setMinPrice, index, userData } = props
     let numEle = (type === "Classic Class" || mode === "Online Workout" || mode === "Offline Workout") ? 1 : 4
 
-    // const [currentMinPrice, setCurrentMinPrice] = useState([])
-
-    console.log('minPrice', minPrice)
-
-    // validation
-    // min. Set MRP = (Sapien MRP x 100) / (100 - Discount%)
-
+  
 
 
 
@@ -36,7 +30,7 @@ export default function MRP(props) {
 
 
 
-            console.log("🚀 ~ file: MRP.jsx ~ line 35 ~ useEffect ~ updateMRP", updateMRP)
+           
             for (let i = 0; i < updateMRP.length; i++) {
                 if (updateMRP[i].mrp !== "") {
                     let mrp = Number(updateMRP[i].mrp);
@@ -61,7 +55,7 @@ export default function MRP(props) {
             }
 
 
-            console.log(valid);
+           
             if (valid) {
                 if (widgetProps.rawErrors) {
                     widgetProps.rawErrors[0] = ""
@@ -73,7 +67,7 @@ export default function MRP(props) {
 
             } else {
                 if (widgetProps.rawErrors) {
-                    widgetProps.rawErrors[0] = `MRP can't be empty or less than ${minPrice[index]}`
+                    widgetProps.rawErrors[0] = `MRP can't be empty or less than &#8377; ${minPrice[index]}`
                 }
                 inputRef.current[updateIndex].className = "inputError"
                 spanRef.current[updateIndex].className = "d-block text-danger"
@@ -90,7 +84,6 @@ export default function MRP(props) {
 
 
 
-    console.log("🚀 ~ file: MRP.jsx ~ line 87 ~ MRP ~ fitnesspackagepricing", fitnesspackagepricing)
 
 
     const handleValidationError = (e, index) => {
@@ -102,8 +95,7 @@ export default function MRP(props) {
 
 
         for (let i = 0; i < updateMRP.length; i++) {
-            console.log("🚀 ~ file: MRP.jsx ~ line 98 ~ handleValidationError ~ updateMRP", updateMRP.map(item => item.mrp))
-            console.log('value', e.target.value)
+            
             if (updateMRP[i].mrp !== "") {
                 let mrp = Number(updateMRP[i].mrp);
                 if ((mrp > 0 && Number(updateMRP[i].mrp) >= minPrice[i]) ||  Number(e.target.value) >= minPrice[i]) {
@@ -121,7 +113,7 @@ export default function MRP(props) {
                 break;
             }
         }
-        console.log(valid)
+     
         return valid
     }
 
@@ -141,7 +133,7 @@ export default function MRP(props) {
 
         } else {
             if (widgetProps.rawErrors) {
-                widgetProps.rawErrors[0] = `MRP can't be empty or less than ${minPrice[index]}`
+                widgetProps.rawErrors[0] = `MRP can't be empty or less than &#8377; ${minPrice[index]}`
             }
             inputRef.current[index].className = "inputError"
             spanRef.current[index].className = "d-block text-danger"
@@ -173,7 +165,7 @@ export default function MRP(props) {
                     ref={el => spanRef.current[index] = el}
                     className='d-none'
                     style={{ fontSize: "0.9rem" }}>
-                    Can't be empty or less than ${minPrice[index]}
+                    Can't be empty or less than &#8377; {minPrice[index]}
                 </span>
             </td>
         })}

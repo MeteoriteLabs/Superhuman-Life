@@ -61,7 +61,6 @@ export default function CustomClasses({ customProps: { properties }, widgetProps
             customPTOnline.value = parseInt(e.target.value);
 
             dayAvailableRef.current -= (parseInt(e.target.value) + customPTOffline.value + customGroupOnline.value + customGroupOffline.value + record.value + restDay.value);
-            console.log('ref', dayAvailableRef.current);
 
             // error message
             showErrorMessage(e)
@@ -70,7 +69,6 @@ export default function CustomClasses({ customProps: { properties }, widgetProps
             customPTOffline.value = parseInt(e.target.value);
 
             dayAvailableRef.current -= (parseInt(e.target.value) + customPTOnline.value + customGroupOnline.value + customGroupOffline.value + record.value + restDay.value);
-            console.log('ref', dayAvailableRef.current);
 
             // error message
             showErrorMessage(e)
@@ -79,7 +77,6 @@ export default function CustomClasses({ customProps: { properties }, widgetProps
             customGroupOnline.value = parseInt(e.target.value);
 
             dayAvailableRef.current -= (parseInt(e.target.value) + customPTOnline.value + customPTOffline.value + customGroupOffline.value + record.value + restDay.value);
-            console.log('ref', dayAvailableRef.current);
 
             // error message
             showErrorMessage(e)
@@ -88,7 +85,6 @@ export default function CustomClasses({ customProps: { properties }, widgetProps
             customGroupOffline.value = parseInt(e.target.value);
 
             dayAvailableRef.current -= (parseInt(e.target.value) + customPTOnline.value + customPTOffline.value + customGroupOnline.value + record.value + restDay.value);
-            console.log('ref', dayAvailableRef.current);
 
             // error message
             showErrorMessage(e)
@@ -97,7 +93,6 @@ export default function CustomClasses({ customProps: { properties }, widgetProps
            record.value = parseInt(e.target.value);
 
             dayAvailableRef.current -= (parseInt(e.target.value) + customPTOnline.value + customPTOffline.value + customGroupOffline.value + customGroupOnline.value + restDay.value);
-            console.log('ref', dayAvailableRef.current);
 
             // error message
             showErrorMessage(e)

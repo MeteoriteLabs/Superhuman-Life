@@ -28,7 +28,6 @@ export default function FitnessRestday(props: any) {
      
 
 
-        // console.log('online: ', PTProps.properties.ptonlineClasses.value, ' offline: ', PTProps.properties.ptofflineClasses.value, " rest: ", parseInt(e.target.value));
 
         if(type === "Personal Training"){
             dayAvailableRef.current = PTProps.properties.duration.value - (PTProps.properties.ptonlineClasses.value + PTProps.properties.ptofflineClasses.value + PTProps.properties.restDay.value);
@@ -42,7 +41,6 @@ export default function FitnessRestday(props: any) {
             dayAvailableRef.current = customProps.properties.duration.value - (customProps.properties.customPTOnline.value + customProps.properties.customPTOffline.value + customProps.properties.customGroupOnline.value + customProps.properties.customGroupOffline.value + customProps.properties.record.value  + customProps.properties.restDay.value);
         }
 
-        console.log("ref: ", dayAvailableRef.current)
 
 
         if (dayAvailableRef.current < 0) {

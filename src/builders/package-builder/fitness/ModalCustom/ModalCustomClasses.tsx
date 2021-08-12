@@ -2,8 +2,7 @@ import React from 'react'
 
 
 export default function ModalCustomClasses(PTProps) {
-    // console.log(props)
-    // const { schema, onChange, label, value } = props
+
     const { props } = PTProps;
     const duration = PTProps.PTProps.properties.title_package.duration;
     const offlineClasses = PTProps.PTProps.properties.offlineClasses.value
@@ -23,8 +22,6 @@ export default function ModalCustomClasses(PTProps) {
 
 
 
-    // console.log("dayAvailable", PTProps.PTProps.properties.dayAvailable.value);
-    // console.log('mode',PTProps.PTProps.properties.currentMode.typeMode )
 
     return (
         <div>

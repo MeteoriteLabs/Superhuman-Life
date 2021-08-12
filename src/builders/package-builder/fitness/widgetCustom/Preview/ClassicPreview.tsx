@@ -16,7 +16,11 @@ type Props = {
     ptoffline: number,
     sizeType: any,
     ptclasssize: "Solo" | "Couple" | "Family",
-    fitnesspackagepricing: any,
+    fitnesspackagepricing: {
+        duration: number,
+        voucher:string, 
+        mrp: number|string
+    },
     mode: "Online" | "Offline" | "Hybird" | "Online Workout" | "Offline Workout"
 }
 
@@ -24,7 +28,7 @@ type Props = {
 
 export default function ClassicPreview({ type, disciplines, beginnerTag, intermediateTag, advancedTag, level, packageType, recordedclasses, ptonline, ptoffline, sizeType, ptclasssize, fitnesspackagepricing, mode }: Props) {
 
-    console.log('size', sizeType)
+ 
     
     return (
         <Card className="text-center w-75 mx-auto" style={{ borderRadius: '20px' }}>

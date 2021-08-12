@@ -19,7 +19,6 @@ export default function ClassicClasses({ widgetProps, classicProps: { properties
 
         restdays.maximum = dayAvailableRef.current;
         setDayAvaliable(dayAvailableRef.current)
-        console.log('current', dayAvailableRef.current)
     }
 
 

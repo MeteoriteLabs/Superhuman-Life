@@ -24,10 +24,6 @@ export default function FitnessPreview(props) {
         setIndex(selectedIndex);
     };
 
-    // console.log('action type', actionType)
-    console.log(packageType)
-    // console.log(duration)
-    console.log('fitnesspackagepricing', fitnesspackagepricing)
 
 
 

@@ -47,7 +47,6 @@ export default function GroupClasses({ widgetProps, packageTypeName, groupProps:
             grouponlineClasses.value = parseInt(e.target.value);
 
             dayAvailableRef.current -= (parseInt(e.target.value) + groupofflineClasses.value + restDay.value);
-            console.log('ref', dayAvailableRef.current);
 
             // error message
             showErrorMessage(e)
@@ -58,7 +57,6 @@ export default function GroupClasses({ widgetProps, packageTypeName, groupProps:
             groupofflineClasses.value = parseInt(e.target.value);
 
             dayAvailableRef.current -= (parseInt(e.target.value) + grouponlineClasses.value + restDay.value);
-            console.log('ref', dayAvailableRef.current);
             // widgetProps.schema.maximum = 0
 
             // error message

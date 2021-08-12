@@ -1,6 +1,5 @@
 import React from 'react'
 import { useState } from 'react';
-import PTClasses from '../FitnessClasses/PTClasses';
 
 
 export default function PersonaTrainingMode({ type, actionType, widgetProps, PTProps, groupProps, userData }) {
@@ -16,7 +15,6 @@ export default function PersonaTrainingMode({ type, actionType, widgetProps, PTP
 
 
     const handleChange = (e) => {
-        console.log('PTProps', PTProps)
         widgetProps.onChange(e.target.value)
         if (e.target.value === "Online Workout" || e.target.value === "Offline Workout") {
             PTProps.properties.duration.value = 1
@@ -57,17 +55,6 @@ export default function PersonaTrainingMode({ type, actionType, widgetProps, PTP
                 </div>
             })}
         </div>
-
-
-            
-            {/* <PTClasses
-                packageTypeName={packageTypeName}
-                widgetProps={widgetProps}
-                actionType={actionType}
-                PTProps={PTProps}
-
-            /> */}
-      
 
     </div>
 }

@@ -27,7 +27,7 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
 
         let updateFinesspackagepricing: any = ''
         if (pricingDetailRef.current.getFitnessPackagePricing?.()) {
-            // console.log(pricingDetailRef.current.getFitnessPackagePricing?.())
+          
             updateFinesspackagepricing = pricingDetailRef.current.getFitnessPackagePricing?.();
 
             if (formData.fitness_package_type === "60e045867df648b0f5756c32" || formData.mode === "Online Workout" || formData.mode === "Offline Workout") {
@@ -42,11 +42,11 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
                 if (pricingDetailRef.current.getFitnessPackagePricing?.()) {
                     updateFinesspackagepricing[0].packagepricing = pricingDetailRef.current.getFitnessPackagePricing?.();
                     delete updateFinesspackagepricing[0].__typename;
-                    // console.log(updateFinesspackagepricing)
+                  
                 }
             }
         }
-        // console.log(updateFinesspackagepricing)
+      
         return updateFinesspackagepricing
     }
 
@@ -140,18 +140,17 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
             setStep(step + 1);
             setFormValues({ ...formValues, ...update, fitness_package_type, fitnesspackagepricing: updateFinesspackagepricing, duration: updateDuration });
             setUserData({ ...formValues, ...update, fitness_package_type, fitnesspackagepricing: updateFinesspackagepricing, duration: updateDuration })
-            console.log('formData before submit', formData);
-            // console.log('formValues', formValues)
-            // console.log("userData", userData);
+      
+          
         } else {
             if (typeof formData.disciplines !== "object") {
                 formData.disciplines = JSON.parse(formData.disciplines).map(item => item.id)
             }
             formData = { ...formData, fitnesspackagepricing: updateFinesspackagepricing, mode: updateMode }
             formSubmit(formData);
-            // console.log("userData", userData)
+        
             actionType === "view" && setRender(false)
-            console.log("Data submitted: ", formData);
+           
         }
     }
 
