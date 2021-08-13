@@ -1,15 +1,13 @@
-
-import { Fragment } from "react";
 import { useTable, useExpanded } from "react-table";
 import "./table.css";
-function Table({ data, columns, selectedDuration }: any) {
+function Table({ data, columns }: any) {
     const {
         getTableProps,
         getTableBodyProps,
         headerGroups,
         rows,
         prepareRow,
-    } = useTable({ columns, data } ,useExpanded);
+    } = useTable({ columns, data }, useExpanded);
 
 
     return (
@@ -32,21 +30,22 @@ function Table({ data, columns, selectedDuration }: any) {
                     }
                 </thead>
                 <tbody  {...getTableBodyProps()}>
-                    {rows.map((row, index) => {
+                    {rows.map(row => {
                         prepareRow(row);
-                        const rowProps = row.getRowProps();
-                        console.log(rowProps)
                         return (
-                            <Fragment key={index}>
-                                <tr className="rowCard" {...row.getRowProps()}>
-                                    {row.cells.map(cell => (
-                                        <td  className='bodyTd ml-3'{...row.getRowProps()}>
+                            <tr className="rowCard" {...row.getRowProps()}>
+                                {row.cells.map(cell => {
+                                    return (
+                                        <td
+                                            className='bodyTd ml-3'
+                                            {...cell.getCellProps()}
+                                        >
                                             {cell.render("Cell")}
                                         </td>
-                                    ))}
+                                    )
+                                })}
+                            </tr>
 
-                                </tr>
-                            </Fragment>
                         );
                     })}
                 </tbody>

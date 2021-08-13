@@ -57,29 +57,7 @@ function CreateEditView(props: any, ref: any) {
     const auth = useContext(AuthContext);
     const [operation, setOperation] = useState<Operation>({} as Operation);
     const [userData, setUserData] = useState<any>('');
-    // const [fitnesspackagepricing, setFitnesspackagepricing] = useState<any>([
-    //     {
-    //         "duration": 30,
-    //         "voucher": "Choose voucher",
-    //         "mrp": "",
-    //     },
-    //     {
-    //         "duration": 90,
-    //         "voucher": "Choose voucher",
-    //         "mrp": "",
-    //     },
-    //     {
-    //         "duration": 180,
-    //         "voucher": "Choose voucher",
-    //         "mrp": "",
-    //     },
-    //     {
-    //         "duration": 360,
-    //         "voucher": "Choose voucher",
-    //         "mrp": "",
-    //     },
-    // ]
-    // )
+   
     const [packageTypeName, setPackageTypeName] = useState<string | null>('personal-training');
     const [actionName, setActionName] = useState<string>("")
     const [formData, setFormData] = useState<UserDataProps>();

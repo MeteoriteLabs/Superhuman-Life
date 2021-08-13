@@ -1,11 +1,10 @@
-import React from 'react'
-import { useRef, useState } from 'react';
+
+import { useRef } from 'react';
 import { Form } from 'react-bootstrap';
 
 
 export default function ClassicClasses({ widgetProps, classicProps: { properties }, actionType, packageTypeName }) {
 
-    const [dayAvaliable, setDayAvaliable] = useState<number | null>();
     const dayAvailableRef = useRef<any>(null)
     const { recordedclasses, duration, restdays } = properties
 
@@ -18,7 +17,7 @@ export default function ClassicClasses({ widgetProps, classicProps: { properties
         dayAvailableRef.current -= recordedclasses.value
 
         restdays.maximum = dayAvailableRef.current;
-        setDayAvaliable(dayAvailableRef.current)
+    
     }
 
 

@@ -1,14 +1,13 @@
 import { useQuery } from '@apollo/client'
-import React, { Fragment } from 'react'
-import { useState } from 'react'
+import  { Fragment } from 'react'
 import { GET_ADDRESS } from '../graphQL/queries'
 
 export default function FitnessAddress(props) {
 
-    const { widgetProps, actionType, PTProps } = props
+    const { widgetProps, actionType } = props
 
 
-    const { data, loading, error } = useQuery(GET_ADDRESS);
+    const { data, loading } = useQuery(GET_ADDRESS);
 
 
     if (loading) return <p>...loading</p>

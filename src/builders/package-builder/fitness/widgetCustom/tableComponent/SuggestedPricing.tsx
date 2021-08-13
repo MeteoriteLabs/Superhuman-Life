@@ -23,6 +23,7 @@ type Props = {
 
 export default function SuggestedPricing({ type, mode, auth, fitnesspackagepricing, userData }: Props) {
 
+
     const { ptonline, ptoffline, grouponline, groupoffline, recordedclasses, duration, fitness_package_type } = userData;
 
 
@@ -54,6 +55,7 @@ export default function SuggestedPricing({ type, mode, auth, fitnesspackageprici
     const calculateArraySuggestPrice = (partnerMRP: number, arrayDuration: number[]) => {
         const arraySuggestedPricings: number[] = [];
 
+      
         arraySuggestedPricings[0] = partnerMRP
         for (let i = 1; i < arrayDuration.length; i++) {
             if (i === 1) {
@@ -72,11 +74,18 @@ export default function SuggestedPricing({ type, mode, auth, fitnesspackageprici
 
     // PT
     const PTSuggestedPricing = (data: { suggestedPricings: any[]; }) => {
+        let ptDuration: number[] = [];
+
         const arrayPTdata = data.suggestedPricings.filter((item: { fitness_package_type: { type: "Personal Training" | "Group Class" | "Classic Class"; }; }) => item.fitness_package_type.type === "Personal Training");
         const arrayPTClasses = [ptonline, ptoffline];
-        const partnerSuggestPrice = calculateSuggestPrice(arrayPTdata, arrayPTClasses);
 
-        calculateArraySuggestPrice(partnerSuggestPrice, arrayDuration);
+        const partnerSuggestPrice = calculateSuggestPrice(arrayPTdata, arrayPTClasses);
+        if(mode === "Online Workout" || mode === "Offline Workout"){
+            ptDuration.push(arrayDuration[0])
+        }else{
+            ptDuration= arrayDuration
+        }
+        calculateArraySuggestPrice(partnerSuggestPrice, ptDuration);
         return calculateArraySuggestPrice
     }
 

@@ -1,19 +1,11 @@
 
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { Form } from 'react-bootstrap';
 
 export default function FitnessDuration({ widgetProps, type, actionType, userData }) {
 
 
 
-
-    const [value, setValue] = useState(30);
-
-    // useEffect(() => {
-    //     if(userData.duration){
-    //         setValue(userData.duration)
-    //     }
-    // }, [userData])
 
     return <>
         {(type === "Classic Class") &&

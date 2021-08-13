@@ -1,10 +1,8 @@
-import React from 'react'
-import { useState } from 'react';
+
 
 
 export default function PersonaTrainingMode({ type, actionType, widgetProps, PTProps, groupProps, userData }) {
 
-    const [mode, setMode] = useState()
 
     let arrMode = ["Online", "Offline", "Hybrid", "Online Workout", "Offline Workout"];
     if (type !== "Personal Training") {
@@ -32,7 +30,7 @@ export default function PersonaTrainingMode({ type, actionType, widgetProps, PTP
         PTProps.properties.ptofflineClasses.value = 0
         groupProps.properties.grouponlineClasses.value = 0
         groupProps.properties.groupofflineClasses.value = 0
-        setMode(e.target.value)
+    
     }
 
 

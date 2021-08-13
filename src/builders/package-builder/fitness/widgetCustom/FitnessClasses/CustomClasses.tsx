@@ -1,6 +1,5 @@
-import React, { useEffect } from 'react'
+import  { useEffect } from 'react'
 import { useRef } from 'react';
-import { useState } from 'react';
 import { Form } from 'react-bootstrap';
 
 export default function CustomClasses({ customProps: { properties }, widgetProps, packageTypeName, actionType, userData }) {
@@ -8,7 +7,6 @@ export default function CustomClasses({ customProps: { properties }, widgetProps
 
     const { customPTOnline, customPTOffline, customGroupOnline, customGroupOffline, record, restDay, duration } = properties
 
-    const [dayAvaliable, setDayAvaliable] = useState<number | null>(30);
     const dayAvailableRef = useRef<any>(null)
 
 

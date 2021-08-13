@@ -1,7 +1,7 @@
-import React, { Fragment, useEffect, useState } from 'react'
-import { Carousel, Card, Button, Row, Col } from 'react-bootstrap';
+import  {  useEffect, useState } from 'react'
+import { Carousel, Card } from 'react-bootstrap';
 import './fitnessPreview.css'
-import * as _ from 'lodash'
+
 import ClassicPreview from './ClassicPreview';
 import CustomPreview from './CustomPreview';
 import PTGroupPreview from './PTGroupPreview';
@@ -13,11 +13,11 @@ import SocialMediaComponent from './SocialMediaComponent';
 export default function FitnessPreview(props) {
     let { userData, fitnesspackagepricing, packageType, type, actionType } = props;
 
-    let { disciplines, ptclasssize, ptonline, ptoffline, URL, level, grouponline, groupoffline, recordedclasses, duration, classsize, mode } = userData;
+    let { disciplines, ptclasssize, ptonline, ptoffline, URL, level, grouponline, groupoffline, recordedclasses, classsize, mode } = userData;
 
     const [onlineClassesType, setOnlineClassesType] = useState<number>()
     const [offlineClassesType, setOffineClassesType] = useState<number>();
-    const [updatePricing, setUpdatePricing] = useState(fitnesspackagepricing)
+    const [updatePricing] = useState(fitnesspackagepricing)
     const [sizeType, setSizeType] = useState<string | number>()
     const [index, setIndex] = useState<number>(0);
     const handleSelect = (selectedIndex, e) => {
@@ -53,12 +53,7 @@ export default function FitnessPreview(props) {
             setOffineClassesType(groupoffline);
             setSizeType(classsize)
         }
-        // else if (packageType === "classic") {
-        //     let updatePricing = _.cloneDeep(fitnesspackagepricing);
-        //     updatePricing = updatePricing.splice(0, 1)
-        //     updatePricing[0].duration = duration;
-        //     setUpdatePricing(updatePricing)
-        // }
+
     }, [packageType, actionType])
 
 

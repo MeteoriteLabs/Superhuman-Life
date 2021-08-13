@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import _ from 'lodash'
 import { Form } from 'react-bootstrap'
 import './MRP.css'
@@ -8,10 +8,10 @@ import './MRP.css'
 
 
 export default function MRP(props) {
-    const { actionType, fitnesspackagepricing, setFitnesspackagepricing, type, mode, widgetProps, minPrice, setMinPrice, index, userData } = props
+    const { actionType, fitnesspackagepricing, setFitnesspackagepricing, type, mode, widgetProps, minPrice, index, userData } = props
     let numEle = (type === "Classic Class" || mode === "Online Workout" || mode === "Offline Workout") ? 1 : 4
 
-  
+
 
 
 
@@ -22,19 +22,15 @@ export default function MRP(props) {
     useEffect(() => {
         inputRef.current = inputRef.current.splice(0, fitnesspackagepricing.length);
         spanRef.current = spanRef.current.splice(0, fitnesspackagepricing.length);
-        
-        if (actionType === "edit" || userData.fitnesspackagepricing) {
+      
             let valid = null;
             const updateMRP = _.cloneDeep(fitnesspackagepricing);
             let updateIndex = index;
 
 
-
-           
             for (let i = 0; i < updateMRP.length; i++) {
                 if (updateMRP[i].mrp !== "") {
                     let mrp = Number(updateMRP[i].mrp);
-
 
                     if (mrp > 0 && mrp >= minPrice[i]) {
                         valid = true;
@@ -53,9 +49,9 @@ export default function MRP(props) {
                     break;
                 }
             }
+        
 
 
-           
             if (valid) {
                 if (widgetProps.rawErrors) {
                     widgetProps.rawErrors[0] = ""
@@ -75,7 +71,7 @@ export default function MRP(props) {
                 widgetProps.onChange(null)
             }
 
-        }
+      
 
     }, [minPrice, fitnesspackagepricing])
 
@@ -87,24 +83,31 @@ export default function MRP(props) {
 
 
     const handleValidationError = (e, index) => {
+        
         let valid = false;
-        const updateMRP = _.cloneDeep(fitnesspackagepricing)
+        let updateMRP = ""
+        if (mode === "Online Workout" || mode === "Offline Workout" || userData.fitness_package_type === "60e045867df648b0f5756c32") {
+            updateMRP = _.cloneDeep(fitnesspackagepricing.splice(0, 1))
+        } else {
+            updateMRP = _.cloneDeep(fitnesspackagepricing)
+        }
 
         updateMRP[index].mrp = Number(e.target.value);
+       
+
         setFitnesspackagepricing(updateMRP);
 
 
         for (let i = 0; i < updateMRP.length; i++) {
-            
             if (updateMRP[i].mrp !== "") {
                 let mrp = Number(updateMRP[i].mrp);
-                if ((mrp > 0 && Number(updateMRP[i].mrp) >= minPrice[i]) ||  Number(e.target.value) >= minPrice[i]) {
-                    // inputRef.current[i].className = "input"
-                    // spanRef.current[i].className = "d-none"
+                if ((mrp > 0 && Number(updateMRP[i].mrp) >= minPrice[i]) || Number(e.target.value) >= minPrice[i]) {
+                    inputRef.current[i].className = "input"
+                    spanRef.current[i].className = "d-none"
                     valid = true;
                 } else {
-                    // inputRef.current[i].className = "inputError"
-                    // spanRef.current[i].className = "d-block text-danger"
+                    inputRef.current[i].className = "inputError"
+                    spanRef.current[i].className = "d-block text-danger"
                     valid = false;
                     break;
                 }
@@ -112,8 +115,11 @@ export default function MRP(props) {
                 valid = false;
                 break;
             }
+            
         }
-     
+        
+        
+        
         return valid
     }
 
@@ -128,15 +134,13 @@ export default function MRP(props) {
                 widgetProps.rawErrors[0] = ""
             }
             widgetProps.onChange(Number(e.target.value))
-            inputRef.current[index].className = "input"
-            spanRef.current[index].className = "d-none"
+           
 
         } else {
             if (widgetProps.rawErrors) {
                 widgetProps.rawErrors[0] = `MRP can't be empty or less than &#8377; ${minPrice[index]}`
             }
-            inputRef.current[index].className = "inputError"
-            spanRef.current[index].className = "d-block text-danger"
+         
             widgetProps.onChange(null)
         }
 

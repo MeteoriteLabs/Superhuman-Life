@@ -2,7 +2,7 @@
     "1": {
         "title": "",
         "type": "object",
-       
+        "required": ["packagename","disciplines", "tags" ,"level","is_private"],
         "properties": {
             "packagename": {
                 "type": "string",
@@ -44,7 +44,7 @@
     "2": {
         "title": "",
         "type": "object",
-       
+        "required": ["aboutpackage", "benefits","ptclasssize" ],
         "properties": {
             "aboutpackage": {
                 "type": "string",
@@ -83,7 +83,7 @@
     "3": {
         "title": "Program Details",
         "type": "object",
-       
+        "required": ["mode"],
         "properties": {
             "mode": {
                 "title": "Mode",
@@ -150,8 +150,7 @@
                                 "maximum": 30,
                                 "default": "",
                                 "value": ""
-                            },
-                            "required": ["ptonline","restdays"]
+                            }
                         }
                     },
                     {
@@ -276,16 +275,16 @@
     "4": {
         "title": "For Programs",
         "type": "object",
+        "required": [],
         "properties": {
             "bookingleadday": {
                 "type": "number",
                 "title": "Consumer can choose start date, after",
-                "value":0
+                "default": 0
             },
             "bookingleadtime": {
                 "type": "string",
-                "title": "Consumer can choose start time, after",
-                "value":0
+                "title": "Consumer can choose start time, after"
             }
         }
     },

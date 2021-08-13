@@ -343,7 +343,6 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
                         fitnesspackagepricing={fitnesspackagepricing}
                         setFitnesspackagepricing={setFitnesspackagepricing}
                         arrSapientPrice={arrSapientPrice}
-                        userData={userData}
                         setIndex={setIndex}
                     />
                 </tr>

@@ -1,13 +1,11 @@
-import React, { useState } from 'react'
 import * as _ from 'lodash'
 import { Form } from 'react-bootstrap'
-import { useQuery } from '@apollo/client'
-import { GET_SAPIENT_PRICES } from '../../graphQL/queries'
 
 
 
 
-export default function Voucher({ actionType, setFitnesspackagepricing, fitnesspackagepricing, type, mode,minPrice  ,setMinPrice, userData, arrSapientPrice,setIndex }) {
+
+export default function Voucher({ actionType, setFitnesspackagepricing, fitnesspackagepricing, type, mode,minPrice  ,setMinPrice, arrSapientPrice,setIndex }) {
 
 
   
@@ -19,8 +17,7 @@ export default function Voucher({ actionType, setFitnesspackagepricing, fitnessp
         updateVoucher = _.cloneDeep(fitnesspackagepricing)
         updateVoucher[index].voucher = e.target.value;
 
-        // min. Set MRP = (Sapien MRP x 100) / (100 - Discount%)
-
+      
         let updateValue = [...minPrice]
         if (e.target.value === "0%") {
             updateValue[index] = Number(arrSapientPrice[index])

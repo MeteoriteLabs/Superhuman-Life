@@ -4,11 +4,11 @@
 }
 
 
-.rowCard {
+/* .rowCard {
   box-shadow: rgb(187 187 187) -1px 3px 0px 1px;
-  /* border-radius: 10px; */
+  border-radius: 10px;
  
-}
+} */
 
 .bodyTd{
   padding: 2rem 1rem !important;

@@ -1,9 +1,9 @@
-import React, { useRef, useState, useEffect } from 'react'
+import  { useRef, useEffect } from 'react'
 import { Form } from 'react-bootstrap';
 
 
 export default function GroupClasses({ widgetProps, packageTypeName, groupProps: { properties }, actionType, userData }) {
-    const [dayAvaliable, setDayAvaliable] = useState<number | null>();
+ 
     const dayAvailableRef = useRef<any>(null)
 
     const { grouponlineClasses, groupofflineClasses, restDay, duration } = properties
@@ -57,7 +57,7 @@ export default function GroupClasses({ widgetProps, packageTypeName, groupProps:
             groupofflineClasses.value = parseInt(e.target.value);
 
             dayAvailableRef.current -= (parseInt(e.target.value) + grouponlineClasses.value + restDay.value);
-            // widgetProps.schema.maximum = 0
+          
 
             // error message
             showErrorMessage(e)

@@ -1,10 +1,9 @@
-import { useMemo, useState, useContext, useRef, useEffect } from "react";
+import { useMemo, useState, useContext, useRef } from "react";
 import { useQuery } from "@apollo/client";
 import { Badge, Button, Card, Col, Container, Form, Row, TabContent } from "react-bootstrap";
 import Table from "../../../components/table";
 import AuthContext from "../../../context/auth-context";
 import './fitness.css'
-import _ from 'lodash'
 import ActionButton from "../../../components/actionbutton";
 
 import CreateEditView from "./CreateEditView";

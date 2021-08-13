@@ -5,6 +5,7 @@ import Form from 'react-bootstrap/Form'
 export default function BookingLeadday({ widgetProps, actionType, userData }) {
 
 
+
     return <>
         {(userData.mode === "Online" || userData.mode === "Offline" || userData.mode === "Hybrid") ?
             <>
@@ -18,6 +19,7 @@ export default function BookingLeadday({ widgetProps, actionType, userData }) {
                             aria-label="Default select example"
                             value={widgetProps.value && widgetProps.value}
                             onChange={e => widgetProps.onChange(e.target.value)}
+                        
                         >
                             <option>Select the lead day</option>
                             <option value="1">1 day</option>
