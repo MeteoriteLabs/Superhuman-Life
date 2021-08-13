@@ -243,25 +243,30 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
      function VideoUpload(file) {
           if (allowedVideoFormats.indexOf(file.type) > -1) {
                var options = {
-                    endpoint: "https://api.cloudflare.com/client/v4/accounts/{ACCOUNT ID}/stream?direct_user=true",
+                    endpoint:
+                         "https://api.cloudflare.com/client/v4/accounts/8cbde4feee19132ef8f9a92b57782a11/stream?direct_user=true",
+                    // method: "POST",
                     headers: {
-                         Authorization: "Bearer $TOKEN",
+                         Authorization: "Bearer 9-EmH4BY0tjLmjjyqf4SARMsixjbEiTtZw3FEEbV",
+                         "Tus-Resumable": "1.0.0",
+                         "Access-Control-Expose-Headers": "*",
+                         "Access-Control-Allow-Headers": "*",
+                         "Access-Control-Allow-Origin": "*",
                     },
+
                     chunkSize: 50 * 1024 * 1024, // Required a minimum chunk size of 5MB, here we use 50MB.
                     resume: true,
                     metadata: {
                          filename: file.name,
                          filetype: file.type,
-                         // defaulttimestamppct: 0.5,
-                         // watermark: "$WATERMARKUID"
                     },
                     // uploadSize: size,
                     onError: function (error) {
                          throw error;
                     },
                     onProgress: function (bytesUploaded, bytesTotal) {
-                         var percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2);
-                         console.log(bytesUploaded, bytesTotal, percentage + "%");
+                         setProgress(((bytesUploaded / bytesTotal) * 100).toFixed(2));
+                         console.log(bytesUploaded, bytesTotal, progress + "%");
                     },
                     onSuccess: function () {
                          console.log("Upload finished");
