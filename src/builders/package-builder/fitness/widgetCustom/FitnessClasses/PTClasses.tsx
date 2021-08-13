@@ -25,7 +25,7 @@ export default function PTClasses({ widgetProps, packageTypeName, PTProps: { pro
             restDay.value = userData.restdays
         }
 
-    }, [])
+    })
 
 
 
@@ -155,7 +155,7 @@ export default function PTClasses({ widgetProps, packageTypeName, PTProps: { pro
                 <img src={`/assets/${packageTypeName}-offline.svg`} alt='123' title={`${packageTypeName} offline`} />
             }
 
-            <Form>
+            
                 <Form.Control
                     className='text-center'
                     width="100%"
@@ -168,7 +168,7 @@ export default function PTClasses({ widgetProps, packageTypeName, PTProps: { pro
                     min="0"
                     max="30"
                 />
-            </Form>
+         
 
             {duration.value === 1 ?
                 <div className='ml-3 mt-1'>

@@ -20,7 +20,7 @@ export default function GroupClasses({ widgetProps, packageTypeName, groupProps:
             restDay.value = userData.restdays
         }
 
-    }, [])
+    })
 
 
 
@@ -89,7 +89,7 @@ export default function GroupClasses({ widgetProps, packageTypeName, groupProps:
                 <img src={`/assets/${packageTypeName}-offline.svg`} alt='123' title={`${packageTypeName} offline`} />
             }
 
-            <Form>
+           
                 <Form.Control
                     className='text-center'
                     disabled={actionType === "view" ? true : false}
@@ -101,7 +101,7 @@ export default function GroupClasses({ widgetProps, packageTypeName, groupProps:
                     min="0"
                     max="30"
                 />
-            </Form>
+          
         </div>
 
 

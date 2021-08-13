@@ -9,15 +9,15 @@ type Props = {
 export default function PTGroupPreview({ packageType, offlineClassesType, onlineClassesType }: Props) {
     return (
         <Fragment>
-            { (offlineClassesType !== null && offlineClassesType !== undefined) ? <div>
+            { (offlineClassesType !== null && offlineClassesType !== undefined) && <div>
                 <img src={`/assets/${packageType}-Offline.svg`} alt={`${packageType}`} title={`${packageType} offline`} />
                 <p>{offlineClassesType}</p>
-            </div> : ""
+            </div>
             }
-            {(onlineClassesType !== null && onlineClassesType !== undefined) ? <div className='px-4' style={{ borderRight: '1px solid black' }}>
+            {(onlineClassesType !== null && onlineClassesType !== undefined) && <div className='px-4' style={{ borderRight: '1px solid black' }}>
                 <img src={`/assets/${packageType}-Online.svg`} alt={`${packageType}`} title={`${packageType} online`} />
                 <p>{onlineClassesType}</p>
-            </div> : ""}
+            </div>}
 
         </Fragment>
     )

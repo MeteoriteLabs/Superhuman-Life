@@ -30,7 +30,7 @@ export default function ClassicClasses({ widgetProps, classicProps: { properties
     return (
         <div className="d-flex justify-content-center aligns-items-center">
             <img src={`/assets/${packageTypeName}.svg`} alt='123' title={`${packageTypeName}`} />
-            <Form>
+          
                 <Form.Control
                    className='text-center'
                     disabled={actionType === "view" ? true : false}
@@ -42,7 +42,7 @@ export default function ClassicClasses({ widgetProps, classicProps: { properties
                     min="0"
                     max="30"
                 />
-            </Form>
+         
         </div>
 
     )

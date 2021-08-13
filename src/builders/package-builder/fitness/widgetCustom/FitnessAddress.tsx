@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client'
-import  { Fragment } from 'react'
+import { Fragment } from 'react'
 import { GET_ADDRESS } from '../graphQL/queries'
 
 export default function FitnessAddress(props) {

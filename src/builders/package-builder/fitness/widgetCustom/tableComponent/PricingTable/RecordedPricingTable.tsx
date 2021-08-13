@@ -13,7 +13,7 @@ export default function RecordedPricingTable({ recordedclasses, packageTypeName,
     return (
         <Fragment>
             <tr>
-                {recordedclasses !== undefined && recordedclasses !== 0 ?
+                {recordedclasses !== undefined && recordedclasses !== 0 &&
                     <>
                         <td>
                             <img src={`/assets/preview-custom-${packageTypeName}.svg`} alt={`${packageTypeName}`} title={`${packageTypeName}`} />
@@ -23,7 +23,7 @@ export default function RecordedPricingTable({ recordedclasses, packageTypeName,
                             type={type}
                             mode={mode}
                         />
-                    </> : ""
+                    </> 
                 }
             </tr>
         </Fragment>

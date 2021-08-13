@@ -173,7 +173,7 @@ export default function SuggestedPricing({ type, mode, auth, fitnesspackageprici
 
     return <>
         {suggestedPricing.map((item: number, index: number) => {
-            return <td key={index}>Rs {item.toLocaleString()}</td>
+            return <td key={index}> &#8377; {item.toLocaleString()}</td>
         })}
     </>
 }

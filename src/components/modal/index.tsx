@@ -27,7 +27,7 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
 
         let updateFinesspackagepricing: any = ''
         if (pricingDetailRef.current.getFitnessPackagePricing?.()) {
-          
+
             updateFinesspackagepricing = pricingDetailRef.current.getFitnessPackagePricing?.();
 
             if (formData.fitness_package_type === "60e045867df648b0f5756c32" || formData.mode === "Online Workout" || formData.mode === "Offline Workout") {
@@ -42,11 +42,11 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
                 if (pricingDetailRef.current.getFitnessPackagePricing?.()) {
                     updateFinesspackagepricing[0].packagepricing = pricingDetailRef.current.getFitnessPackagePricing?.();
                     delete updateFinesspackagepricing[0].__typename;
-                  
+
                 }
             }
         }
-      
+
         return updateFinesspackagepricing
     }
 
@@ -140,21 +140,21 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
             setStep(step + 1);
             setFormValues({ ...formValues, ...update, fitness_package_type, fitnesspackagepricing: updateFinesspackagepricing, duration: updateDuration });
             setUserData({ ...formValues, ...update, fitness_package_type, fitnesspackagepricing: updateFinesspackagepricing, duration: updateDuration })
-      
-          
+
+
         } else {
             if (typeof formData.disciplines !== "object") {
                 formData.disciplines = JSON.parse(formData.disciplines).map(item => item.id)
             }
             formData = { ...formData, fitnesspackagepricing: updateFinesspackagepricing, mode: updateMode }
             formSubmit(formData);
-        
+
             actionType === "view" && setRender(false)
-           
+
         }
     }
 
-    const handleFormConfirmationName = (actionType: string) => {
+    const handleSubmitName = (actionType: string) => {
         let action = ''
         switch (actionType) {
             case 'create':
@@ -234,30 +234,13 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
                             <Button
                                 variant="danger"
                                 size="sm"
-                                onClick={(event) => {
-                                    // if (step === 5) {
-                                    //     if (pricingDetailRef.current.getFitnessPackagePricing?.()) {
-                                    //         if (pricingDetailRef.current.getFitnessPackagePricing?.().some(item => (item.mrp < 0 || item.mrp === ""))) {
-                                    //             return
-                                    //         }else{
-                                    //             formRef.current.onSubmit(event)
-                                    //         }
-                                    //     }
-                                    //     else {
-                                    //         formRef.current.onSubmit(event)
-                                    //     }
-                                    // } else{
-                                    //     formRef.current.onSubmit(event)
-                                    // }
-
-                                    formRef.current.onSubmit(event)
-                                }}
+                                onClick={(event) => { formRef.current.onSubmit(event) }}
                             >
                                 {(step < 6)
                                     ? <>Next<i className="ml-4 fas fa-arrow-right"></i></>
                                     :
                                     <div className='d-flex align-items-center justify-content-center'>
-                                        {handleFormConfirmationName(actionType)}
+                                        {handleSubmitName(actionType)}
                                         <i className="ml-4 fas fa-check"></i>
                                     </div>
                                 }

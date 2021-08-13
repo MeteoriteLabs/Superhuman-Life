@@ -16,7 +16,7 @@ export default function CustomPricingTable({ptonline, ptoffline, grouponline, gr
     return (
         <Fragment>
         <tr>
-            {ptonline !== undefined && ptonline !== 0 ?
+            {ptonline !== undefined && ptonline !== 0 &&
                 <Fragment>
                     <td>
                         <img src={`/assets/preview-${packageTypeName}-personal-training-online.svg`} alt={`${packageTypeName} online`} title={`${packageTypeName} personal training online`} />
@@ -26,11 +26,11 @@ export default function CustomPricingTable({ptonline, ptoffline, grouponline, gr
                     type={type}
                     mode={mode}
                     />
-                </Fragment> : ""
+                </Fragment>
             }
         </tr>
         <tr>
-            {ptoffline !== undefined && ptoffline !== 0 ?
+            {ptoffline !== undefined && ptoffline !== 0 &&
                 <Fragment>
                     <td>
                         <img src={`/assets/preview-${packageTypeName}-personal-training-offline.svg`} alt={`${packageTypeName} offline`} title={`${packageTypeName} personal training offline`} />
@@ -40,11 +40,11 @@ export default function CustomPricingTable({ptonline, ptoffline, grouponline, gr
                     type={type}
                     mode={mode}
                     />
-                </Fragment> : ""
+                </Fragment> 
             }
         </tr>
         <tr>
-            {grouponline !== undefined && grouponline !== 0 ?
+            {grouponline !== undefined && grouponline !== 0 &&
                 <Fragment>
                     <td>
                         <img src={`/assets/preview-${packageTypeName}-group-online.svg`} alt={`${packageTypeName} online`} title={`${packageTypeName} group online`} />
@@ -54,11 +54,11 @@ export default function CustomPricingTable({ptonline, ptoffline, grouponline, gr
                     type={type}
                     mode={mode}
                     />
-                </Fragment> : ""
+                </Fragment> 
             }
         </tr>
         <tr>
-            {groupoffline !== undefined && groupoffline !== 0 ?
+            {groupoffline !== undefined && groupoffline !== 0 &&
                 <Fragment>
                     <td>
                         <img src={`/assets/preview-${packageTypeName}-group-offline.svg`} alt={`${packageTypeName} offline`} title={`${packageTypeName} group offline`} />
@@ -68,11 +68,11 @@ export default function CustomPricingTable({ptonline, ptoffline, grouponline, gr
                     type={type}
                     mode={mode}
                     />
-                </Fragment> : ""
+                </Fragment> 
             }
         </tr>
         <tr>
-            {recordedclasses !== undefined && recordedclasses !== 0 ?
+            {recordedclasses !== undefined && recordedclasses !== 0 &&
                 <Fragment>
                     <td>
                         <img src={`/assets/preview-${packageTypeName}-classic.svg`} alt={`${packageTypeName}`} title={`${packageTypeName}`} />
@@ -82,7 +82,7 @@ export default function CustomPricingTable({ptonline, ptoffline, grouponline, gr
                       type={type}
                       mode={mode}
                     />
-                </Fragment> : ""
+                </Fragment>
             }
         </tr>
     </Fragment>

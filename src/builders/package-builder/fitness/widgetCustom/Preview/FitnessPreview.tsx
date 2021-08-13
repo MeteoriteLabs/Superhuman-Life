@@ -1,4 +1,4 @@
-import  {  useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Carousel, Card } from 'react-bootstrap';
 import './fitnessPreview.css'
 
@@ -7,6 +7,7 @@ import CustomPreview from './CustomPreview';
 import PTGroupPreview from './PTGroupPreview';
 import RecordedPreview from './RecordedPreview';
 import SocialMediaComponent from './SocialMediaComponent';
+import { Fragment } from 'react';
 
 
 
@@ -30,17 +31,8 @@ export default function FitnessPreview(props) {
 
 
     if (typeof disciplines !== "object") disciplines = JSON.parse(disciplines);
-    let beginnerTag = '';
-    let intermediateTag = '';
-    let advancedTag = '';
 
-    if (level === "Beginner") {
-        beginnerTag = 'beginnerTag'
-    } else if (level === "Intermediate") {
-        intermediateTag = "intermediateTag"
-    } else if (level === "Advance") {
-        advancedTag = 'advancedTag'
-    }
+
 
 
     useEffect(() => {
@@ -54,18 +46,16 @@ export default function FitnessPreview(props) {
             setSizeType(classsize)
         }
 
-    }, [packageType, actionType])
+    }, [packageType, actionType, ptonline, ptoffline, grouponline, groupoffline, classsize, ptclasssize])
 
+  
 
-    return <div>
+    return <Fragment>
         {(packageType === "classic" || mode === "Online Workout" || mode === "Offline Workout") ?
             <ClassicPreview
                 type={type}
                 mode={mode}
                 disciplines={disciplines}
-                beginnerTag={beginnerTag}
-                intermediateTag={intermediateTag}
-                advancedTag={advancedTag}
                 level={level}
                 packageType={packageType}
                 ptonline={ptonline}
@@ -78,6 +68,19 @@ export default function FitnessPreview(props) {
             :
             <Carousel slide={true} touch={true} activeIndex={index} onSelect={handleSelect}>
                 {updatePricing.map((item, idx: number) => {
+                    let beginnerTag = '';
+                    let intermediateTag = '';
+                    let advancedTag = '';
+
+                    if (level === "Beginner") {
+                        beginnerTag = 'beginnerTag'
+                    } else if (level === "Intermediate") {
+                        intermediateTag = "intermediateTag"
+                    } else if (level === "Advanced") {
+                        advancedTag = 'advancedTag'
+                    }
+
+           
                     return <Carousel.Item key={idx}>
                         <Card className="text-center w-75 mx-auto" style={{ borderRadius: '20px' }}>
                             <Card.Body className='pr-0 py-0'>
@@ -88,7 +91,7 @@ export default function FitnessPreview(props) {
                                     <div className='ml-4 pt-4 text-left d-flex flex-column justify-content-between'>
                                         <Card.Title>{type} program</Card.Title>
                                         <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Libero non numquam, quos ut placeat quo ducimus facere inventore facilis nostrum dolor amet doloremque molestias quasi ab consectetur, commodi maiores? Doloribus.</p>
-                                        <Card.Text>
+                                        <div>
                                             <div className='d-flex justify-content-start align-items-center'>
                                                 {disciplines?.map((item, index) => {
                                                     return <div key={index} className='mr-2 my-3' style={{ padding: '0.5rem 1rem', backgroundColor: '#F2E890', borderRadius: '20px' }}>
@@ -96,18 +99,16 @@ export default function FitnessPreview(props) {
                                                     </div>
                                                 })}
                                             </div>
-                                        </Card.Text>
+                                        </div>
                                     </div>
                                     <div>
                                         <p className={`py-2 px-4 text-white ${beginnerTag} ${intermediateTag} ${advancedTag}`} style={{ borderTopRightRadius: '20px', borderBottomLeftRadius: '20px' }}>{level}</p>
                                     </div>
                                 </div>
-                                <Card.Text className='pt-3 d-flex justify-content-between align-items-center '>
+                                <div className='pt-3 d-flex justify-content-between align-items-center '>
                                     <div className='d-flex justify-content-center align-items-center'>
                                         {packageType !== "custom" ?
                                             packageType !== "classic" ?
-
-                                            
                                                 <PTGroupPreview
                                                     packageType={packageType}
                                                     offlineClassesType={offlineClassesType}
@@ -127,16 +128,17 @@ export default function FitnessPreview(props) {
                                                 recordedclasses={recordedclasses}
                                             />
                                         }
-                                        {(packageType !== "classic" && packageType !== 'custom') ? <div className='ml-4'>
+                                        {(packageType !== "classic" && packageType !== 'custom') && 
+                                        <div className='ml-4'>
                                             <h4>Class Size</h4>
                                             <p className='mb-0' style={{ color: 'purple', fontSize: '1.3rem' }}>{sizeType}</p>
-                                        </div> : ""}
+                                        </div>}
                                     </div>
                                     <div>
                                         <p className='mb-0 mr-3' style={{ color: '#72B54C', fontSize: '2rem' }}>{"\u20B9"} {item.mrp}</p>
                                         <p>per {item.duration} days</p>
                                     </div>
-                                </Card.Text>
+                                </div>
                             </Card.Body>
                         </Card>
                     </Carousel.Item>
@@ -144,6 +146,6 @@ export default function FitnessPreview(props) {
             </Carousel>
         }
 
-        <SocialMediaComponent URL={URL} />
-    </div>
+        <SocialMediaComponent url={URL} />
+    </Fragment>
 }

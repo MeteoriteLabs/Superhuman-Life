@@ -3,7 +3,7 @@ import { Form } from 'react-bootstrap';
 
 
 export default function FitnessRestday(props: any) {
-    const { PTProps, widgetProps, actionType, groupProps, customProps, userData,type } = props;
+    const { PTProps, widgetProps, actionType, groupProps, customProps, userData, type } = props;
 
     const dayAvailableRef = useRef<any>(null)
 
@@ -16,7 +16,7 @@ export default function FitnessRestday(props: any) {
             groupProps.properties.restDay.value = userData.restdays
             customProps.properties.restDay.value = userData.restdays
         }
-    }, [])
+    })
 
 
 
@@ -25,20 +25,20 @@ export default function FitnessRestday(props: any) {
         PTProps.properties.restDay.value = parseInt(e.target.value);
         groupProps.properties.restDay.value = parseInt(e.target.value)
         customProps.properties.restDay.value = parseInt(e.target.value)
-     
 
 
 
-        if(type === "Personal Training"){
+
+        if (type === "Personal Training") {
             dayAvailableRef.current = PTProps.properties.duration.value - (PTProps.properties.ptonlineClasses.value + PTProps.properties.ptofflineClasses.value + PTProps.properties.restDay.value);
         }
 
-        if(type === "Group Class"){
+        if (type === "Group Class") {
             dayAvailableRef.current = groupProps.properties.duration.value - (groupProps.properties.grouponlineClasses.value + groupProps.properties.groupofflineClasses.value + groupProps.properties.restDay.value);
         }
 
-        if(type === "Custom Fitness"){
-            dayAvailableRef.current = customProps.properties.duration.value - (customProps.properties.customPTOnline.value + customProps.properties.customPTOffline.value + customProps.properties.customGroupOnline.value + customProps.properties.customGroupOffline.value + customProps.properties.record.value  + customProps.properties.restDay.value);
+        if (type === "Custom Fitness") {
+            dayAvailableRef.current = customProps.properties.duration.value - (customProps.properties.customPTOnline.value + customProps.properties.customPTOffline.value + customProps.properties.customGroupOnline.value + customProps.properties.customGroupOffline.value + customProps.properties.record.value + customProps.properties.restDay.value);
         }
 
 
@@ -65,23 +65,22 @@ export default function FitnessRestday(props: any) {
 
 
 
-    return <div className=' text-center text-black py-3 w-50 d-flex justify-content-start align-items-center' >
+    return <div className=' text-center text-black py-3 w-25 d-flex justify-content-start align-items-center' >
         <img src="/assets/rest-icon.svg" alt='123' />
         <label className='d-block font-weight-bold mb-0 mr-3'>{widgetProps.label}</label>
-        <Form>
-            <Form.Control
-                required
-                className='text-center'
-                ref={dayAvailableRef}
-                disabled={(actionType === "view") ? true : false}
-                value={widgetProps.value ? widgetProps.value : ""}
-                pattern="[0-9]+"
-                onChange={(e:{target: { value: string; };}) => handleOnchange(e)}
-                type="number"
-                min="0"
-                max="30"
-            />
-        </Form>
+
+        <Form.Control
+            required
+            className='text-center w-50'
+            ref={dayAvailableRef}
+            disabled={(actionType === "view") ? true : false}
+            value={widgetProps.value ? widgetProps.value : ""}
+            pattern="[0-9]+"
+            onChange={(e: { target: { value: string; }; }) => handleOnchange(e)}
+            type="number"
+            min="0"
+            max="30"
+        />
 
     </div>
 }

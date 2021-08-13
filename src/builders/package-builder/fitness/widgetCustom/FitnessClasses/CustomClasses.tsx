@@ -11,30 +11,33 @@ export default function CustomClasses({ customProps: { properties }, widgetProps
 
 
     useEffect(() => {
-        if (userData.ptonline) {
-           customPTOnline.value = userData.ptonline
+        const setValue = () =>{
+            if (userData.ptonline) {
+               customPTOnline.value = userData.ptonline
+            }
+    
+            if (userData.ptoffline) {
+                customPTOffline.value = userData.ptoffline
+            }
+    
+            if (userData.grouponline) {
+                customGroupOnline.value = userData.grouponline
+            }
+    
+            if (userData.groupoffline) {
+                customGroupOffline.value = userData.groupoffline
+            }
+            if (userData.recordedclasses) {
+                record.value = userData.recordedclasses
+    
+            }
+            if (userData.restDay) {
+               restDay.value = userData.restdays
+            }
         }
-
-        if (userData.ptoffline) {
-            customPTOffline.value = userData.ptoffline
-        }
-
-        if (userData.grouponline) {
-            customGroupOnline.value = userData.grouponline
-        }
-
-        if (userData.groupoffline) {
-            customGroupOffline.value = userData.groupoffline
-        }
-        if (userData.recordedclasses) {
-            record.value = userData.recordedclasses
-
-        }
-        if (userData.restDay) {
-           restDay.value = userData.restdays
-        }
-    }, [])
-
+        setValue()
+    })
+    
 
     const showErrorMessage = (e: { target: { value: string; }; }) => {
         if (dayAvailableRef.current < 0) {
@@ -124,7 +127,7 @@ export default function CustomClasses({ customProps: { properties }, widgetProps
             }
 
 
-            <Form>
+          
                 <Form.Control
                     className='text-center'
                     width="100%"
@@ -137,7 +140,7 @@ export default function CustomClasses({ customProps: { properties }, widgetProps
                     min="0"
                     max="30"
                 />
-            </Form>
+         
 
 
         </div>

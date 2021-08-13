@@ -14,7 +14,7 @@ export default function PTGroupPricingTable({ onlineClassesType, offlineClassesT
     return (
         <Fragment>
             <tr>
-                {(onlineClassesType !== null && onlineClassesType !== undefined && onlineClassesType !== 0) ?
+                {(onlineClassesType !== null && onlineClassesType !== undefined && onlineClassesType !== 0) &&
                     <Fragment>
                         <td>
                             <img src={`/assets/preview-custom-${packageTypeName}-online.svg`} alt={`${packageTypeName} online`} title={`${packageTypeName} online`} />
@@ -24,11 +24,11 @@ export default function PTGroupPricingTable({ onlineClassesType, offlineClassesT
                             mode={mode}
                             type={type}
                         />
-                    </Fragment> : ""
+                    </Fragment> 
                 }
             </tr>
             <tr>
-                {(offlineClassesType !== null  && offlineClassesType !== undefined && offlineClassesType !== 0 )?
+                {(offlineClassesType !== null  && offlineClassesType !== undefined && offlineClassesType !== 0 ) &&
                     <Fragment>
                         <td>
                             <img src={`/assets/preview-custom-${packageTypeName}-offline.svg `} alt={`${packageTypeName} offline`} title={`${packageTypeName} offline`} />
@@ -38,7 +38,7 @@ export default function PTGroupPricingTable({ onlineClassesType, offlineClassesT
                             mode={mode}
                             type={type}
                         />
-                    </Fragment> : ""
+                    </Fragment> 
                 }
             </tr>
         </Fragment>

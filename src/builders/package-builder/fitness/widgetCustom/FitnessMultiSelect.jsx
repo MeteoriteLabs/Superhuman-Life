@@ -28,6 +28,15 @@ export default function FitnessMultiSelect(props) {
                 }
             })
         )
+        // if (widgetProps.value && typeof (widgetProps.value) !== "object") {
+        //     if (typeof (widgetProps.value) === "string") {
+        //         setMultiSelections(JSON.parse(widgetProps.value))
+        //     } else {
+        //         setMultiSelections(JSON.stringify(widgetProps.value))
+        //     }
+        // } else {
+        //     setMultiSelections(widgetProps.value);
+        // }
     }
 
 
@@ -43,7 +52,12 @@ export default function FitnessMultiSelect(props) {
         } else {
             setMultiSelections(widgetProps.value);
         }
-    }, [])
+
+        return () =>{
+            setMultiSelections()
+        }
+        
+    },[setMultiSelections,widgetProps])
 
 
 
@@ -54,7 +68,7 @@ export default function FitnessMultiSelect(props) {
         <Typeahead
             required
             disabled={actionType === "view" ? true : false}
-            selected={multiSelections}
+            defaultSelected={multiSelections}
             labelKey="disciplinename"
             id="basic-typeahead-multiple"
             options={fitnessdisciplines}

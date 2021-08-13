@@ -22,58 +22,58 @@ export default function MRP(props) {
     useEffect(() => {
         inputRef.current = inputRef.current.splice(0, fitnesspackagepricing.length);
         spanRef.current = spanRef.current.splice(0, fitnesspackagepricing.length);
-      
-            let valid = null;
-            const updateMRP = _.cloneDeep(fitnesspackagepricing);
-            let updateIndex = index;
+
+        let valid = null;
+        const updateMRP = _.cloneDeep(fitnesspackagepricing);
+        let updateIndex = index;
 
 
-            for (let i = 0; i < updateMRP.length; i++) {
-                if (updateMRP[i].mrp !== "") {
-                    let mrp = Number(updateMRP[i].mrp);
+        for (let i = 0; i < updateMRP.length; i++) {
+            if (updateMRP[i].mrp !== "") {
+                let mrp = Number(updateMRP[i].mrp);
 
-                    if (mrp > 0 && mrp >= minPrice[i]) {
-                        valid = true;
-                        inputRef.current[i].className = "input"
-                        spanRef.current[i].className = "d-none"
-                    } else {
-
-                        updateIndex = i
-                        inputRef.current[i].className = "inputError"
-                        spanRef.current[i].className = "d-block text-danger"
-                        valid = false;
-                        break;
-                    }
+                if (mrp > 0 && mrp >= minPrice[i]) {
+                    valid = true;
+                    inputRef.current[i].className = "input"
+                    spanRef.current[i].className = "d-none"
                 } else {
+
+                    updateIndex = i
+                    inputRef.current[i].className = "inputError"
+                    spanRef.current[i].className = "d-block text-danger"
                     valid = false;
                     break;
                 }
-            }
-        
-
-
-            if (valid) {
-                if (widgetProps.rawErrors) {
-                    widgetProps.rawErrors[0] = ""
-                }
-                widgetProps.onChange(123)
-                inputRef.current[updateIndex].className = "input"
-                spanRef.current[updateIndex].className = "d-none"
-
-
             } else {
-                if (widgetProps.rawErrors) {
-                    widgetProps.rawErrors[0] = `MRP can't be empty or less than &#8377; ${minPrice[index]}`
-                }
-                inputRef.current[updateIndex].className = "inputError"
-                spanRef.current[updateIndex].className = "d-block text-danger"
-
-                widgetProps.onChange(null)
+                valid = false;
+                break;
             }
+        }
 
-      
 
-    }, [minPrice, fitnesspackagepricing])
+
+        if (valid) {
+            if (widgetProps.rawErrors) {
+                widgetProps.rawErrors[0] = ""
+            }
+            widgetProps.onChange(123)
+            inputRef.current[updateIndex].className = "input"
+            spanRef.current[updateIndex].className = "d-none"
+
+
+        } else {
+            if (widgetProps.rawErrors) {
+                widgetProps.rawErrors[0] = `MRP can't be empty or less than &#8377; ${minPrice[index]}`
+            }
+            inputRef.current[updateIndex].className = "inputError"
+            spanRef.current[updateIndex].className = "d-block text-danger"
+
+            widgetProps.onChange(null)
+        }
+
+
+
+    }, [minPrice, fitnesspackagepricing]) // eslint-disable-line react-hooks/exhaustive-deps
 
 
 
@@ -83,7 +83,7 @@ export default function MRP(props) {
 
 
     const handleValidationError = (e, index) => {
-        
+
         let valid = false;
         let updateMRP = ""
         if (mode === "Online Workout" || mode === "Offline Workout" || userData.fitness_package_type === "60e045867df648b0f5756c32") {
@@ -93,7 +93,7 @@ export default function MRP(props) {
         }
 
         updateMRP[index].mrp = Number(e.target.value);
-       
+
 
         setFitnesspackagepricing(updateMRP);
 
@@ -115,11 +115,11 @@ export default function MRP(props) {
                 valid = false;
                 break;
             }
-            
+
         }
-        
-        
-        
+
+
+
         return valid
     }
 
@@ -134,13 +134,13 @@ export default function MRP(props) {
                 widgetProps.rawErrors[0] = ""
             }
             widgetProps.onChange(Number(e.target.value))
-           
+
 
         } else {
             if (widgetProps.rawErrors) {
                 widgetProps.rawErrors[0] = `MRP can't be empty or less than &#8377; ${minPrice[index]}`
             }
-         
+
             widgetProps.onChange(null)
         }
 
@@ -151,20 +151,20 @@ export default function MRP(props) {
     return <>
         {[...Array(numEle)].map((item, index) => {
             return <td key={index}>
-                <Form>
-                    <Form.Control
-                        id={index + 1}
-                        style={{ margin: '0 auto', width: '75%', textAlign: 'center' }}
-                        ref={el => inputRef.current[index] = el}
-                        required
-                        disabled={actionType === "view" ? true : false}
-                        value={fitnesspackagepricing[index].mrp}
-                        min="0"
-                        type="number"
-                        placeholder='Enter MRP'
-                        onChange={(e) => handleChange(e, index)}
-                    />
-                </Form>
+
+                <Form.Control
+                    id={index + 1}
+                    style={{ margin: '0 auto', width: '75%', textAlign: 'center' }}
+                    ref={el => inputRef.current[index] = el}
+                    required
+                    disabled={actionType === "view" ? true : false}
+                    value={fitnesspackagepricing[index].mrp}
+                    min="0"
+                    type="number"
+                    placeholder='Enter MRP'
+                    onChange={(e) => handleChange(e, index)}
+                />
+
                 <span
                     ref={el => spanRef.current[index] = el}
                     className='d-none'

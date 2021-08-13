@@ -257,7 +257,7 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
             }
         }
         setFitnesspackagepricing(updatePricing)
-    }, [userData])
+    }, [userData, actionType, duration, formData]) // eslint-disable-line react-hooks/exhaustive-deps
 
     
 
@@ -272,7 +272,7 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
         } else if (type === "Custom Fitness") {
 
         }
-    }, [])
+    }, [ptonline, ptoffline, groupoffline, grouponline, type])
 
 
 
