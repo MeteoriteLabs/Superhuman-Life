@@ -8,6 +8,7 @@ import { Form } from 'react-bootstrap';
 
 export default function PTClasses({ widgetProps, packageTypeName, PTProps: { properties }, actionType, userData }) {
   
+  
    
     const dayAvailableRef = useRef<any>(null)
     const { ptonlineClasses, ptofflineClasses, restDay, duration } = properties

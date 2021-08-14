@@ -3,13 +3,16 @@ import React, { useEffect, useState } from 'react'
 import { Typeahead } from 'react-bootstrap-typeahead';
 
 import { GET_FITNESS_DISCIPLINES } from '../graphQL/queries';
+import _ from 'lodash';
 
 export default function FitnessMultiSelect(props) {
     const { widgetProps, actionType } = props;
 
 
-    const [multiSelections, setMultiSelections] = useState([]);
     const [fitnessdisciplines, setFitnessdisciplines] = useState([]);
+    const [multiSelections, setMultiSelections] = useState([
+
+    ]);
 
 
     const FetchData = () => {
@@ -28,15 +31,6 @@ export default function FitnessMultiSelect(props) {
                 }
             })
         )
-        // if (widgetProps.value && typeof (widgetProps.value) !== "object") {
-        //     if (typeof (widgetProps.value) === "string") {
-        //         setMultiSelections(JSON.parse(widgetProps.value))
-        //     } else {
-        //         setMultiSelections(JSON.stringify(widgetProps.value))
-        //     }
-        // } else {
-        //     setMultiSelections(widgetProps.value);
-        // }
     }
 
 
@@ -46,18 +40,21 @@ export default function FitnessMultiSelect(props) {
         if (widgetProps.value && typeof (widgetProps.value) !== "object") {
             if (typeof (widgetProps.value) === "string") {
                 setMultiSelections(JSON.parse(widgetProps.value))
+            
             } else {
                 setMultiSelections(JSON.stringify(widgetProps.value))
             }
-        } else {
-            setMultiSelections(widgetProps.value);
-        }
-
-        return () =>{
+        } 
+        
+        return () => {
             setMultiSelections()
         }
-        
-    },[setMultiSelections,widgetProps])
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
+
+
 
 
 
@@ -65,10 +62,10 @@ export default function FitnessMultiSelect(props) {
     FetchData()
     return <div>
         <label>{widgetProps.label}</label>
-        <Typeahead
+        {fitnessdisciplines && <Typeahead
             required
             disabled={actionType === "view" ? true : false}
-            defaultSelected={multiSelections}
+            selected={multiSelections}
             labelKey="disciplinename"
             id="basic-typeahead-multiple"
             options={fitnessdisciplines}
@@ -77,6 +74,7 @@ export default function FitnessMultiSelect(props) {
                 setMultiSelections(e)
                 widgetProps.onChange(JSON.stringify(e))
             }}
-            multiple />
+            multiple />}
+
     </div>
 }
