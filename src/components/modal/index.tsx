@@ -239,10 +239,10 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
                                 {(step < 6)
                                     ? <>Next<i className="ml-4 fas fa-arrow-right"></i></>
                                     :
-                                    <div className='d-flex align-items-center justify-content-center'>
+                                    <>
                                         {handleSubmitName(actionType)}
                                         <i className="ml-4 fas fa-check"></i>
-                                    </div>
+                                    </>
                                 }
                             </Button>
                         </>

@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react'
 import { Typeahead } from 'react-bootstrap-typeahead';
 
 import { GET_FITNESS_DISCIPLINES } from '../graphQL/queries';
-import _ from 'lodash';
 
 export default function FitnessMultiSelect(props) {
     const { widgetProps, actionType } = props;

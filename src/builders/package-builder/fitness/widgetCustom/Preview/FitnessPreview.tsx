@@ -82,7 +82,7 @@ export default function FitnessPreview(props) {
 
            
                     return <Carousel.Item key={idx}>
-                        <Card className="text-center w-75 mx-auto" style={{ borderRadius: '20px' }}>
+                        <Card className="text-center mx-auto" style={{ borderRadius: '20px', width: '80%'}}>
                             <Card.Body className='pr-0 py-0'>
                                 <div className='d-flex justify-content-between' style={{ borderBottom: '1px dashed gray' }}>
                                     <div className='pt-3'>
