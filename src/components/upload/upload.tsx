@@ -23,6 +23,7 @@ const myBucket = new AWS.S3({
 });
 
 var tus: any = require("tus-js-client");
+//var fs = require("fs");
 
 const UploadImageToS3WithNativeSdk = (props: any) => {
      const [progress, setProgress] = useState<any>(0);
@@ -240,27 +241,56 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
           }
      }
 
-     function VideoUpload(file) {
+     //  async function getOneTimeUploadUrl(request: any) {
+     //       const response = await fetch(
+     //            "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT/stream?direct_user=true",
+     //            {
+     //                 method: "POST",
+     //                 headers: {
+     //                      Authorization: "bearer $TOKEN",
+     //                      "Tus-Resumable": "1.0.0",
+     //                      "Upload-Length": request.headers.get("Upload-Length"),
+     //                      "Upload-Metadata": request.headers.get("Upload-Metadata"),
+     //                 },
+     //            }
+     //       );
+
+     //       const destination: any = response.headers.get("Location");
+
+     //       return new Response(null, {
+     //            headers: {
+     //                 "Access-Control-Expose-Headers": "Location",
+     //                 "Access-Control-Allow-Headers": "*",
+     //                 "Access-Control-Allow-Origin": "*",
+     //                 Location: destination,
+     //            },
+     //       });
+     //  }
+
+     function VideoUpload(file: any) {
+          console.log(file);
+          //console.log(file.size);
+          //let uploadLength = file.size / 1048576; //to mb
+          //   let uploadSize: any = file.size / 1024;
+          //   let uploadLength: any = parseFloat(uploadSize).toFixed(2);
           if (allowedVideoFormats.indexOf(file.type) > -1) {
                var options = {
                     endpoint:
                          "https://api.cloudflare.com/client/v4/accounts/8cbde4feee19132ef8f9a92b57782a11/stream?direct_user=true",
-                    // method: "POST",
                     headers: {
                          Authorization: "Bearer 9-EmH4BY0tjLmjjyqf4SARMsixjbEiTtZw3FEEbV",
-                         "Tus-Resumable": "1.0.0",
-                         "Access-Control-Expose-Headers": "*",
-                         "Access-Control-Allow-Headers": "*",
-                         "Access-Control-Allow-Origin": "*",
+                         //  "Tus-Resumable": "1.0.0",
+                         //  "Upload-Length": uploadLength + " ",
+                         //  "Upload-Metadata": "maxDurationSeconds NjAw",
                     },
 
-                    chunkSize: 50 * 1024 * 1024, // Required a minimum chunk size of 5MB, here we use 50MB.
+                    chunkSize: 5 * 1024 * 1024, // Required a minimum chunk size of 5MB, here we use 50MB.
                     resume: true,
                     metadata: {
                          filename: file.name,
                          filetype: file.type,
                     },
-                    // uploadSize: size,
+                    //uploadSize: uploadLength,
                     onError: function (error) {
                          throw error;
                     },
