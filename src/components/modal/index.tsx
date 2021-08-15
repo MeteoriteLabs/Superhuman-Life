@@ -7,6 +7,9 @@ import _ from "lodash"
 
 export default function ModalView({ name, formUISchema, formSubmit, formSchema, formData, isStepper, userData, setUserData, widgets, setRender, fitness_package_type, PTProps, actionType, pricingDetailRef, classicProps, groupProps, customProps }: any) {
 
+
+export default function ModalView({ name, formUISchema, formSubmit, formSchema, formData, isStepper, widgets, modalTrigger }: any) {
+
     const registry = utils.getDefaultRegistry();
     const defaultFileWidget = registry.widgets["FileWidget"];
     (Bootstrap4Theme as any).widgets["FileWidget"] = defaultFileWidget;
@@ -14,117 +17,15 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
     const Form: any = withTheme(Bootstrap4Theme);
     const formRef = useRef<any>(null);
     const [step, setStep] = useState<number>(1);
-    const [show, setShow] = useState<boolean>(true);
 
+    const [show, setShow] = useState<boolean>(false);
     const [formValues, setFormValues] = useState<any>(formData);
-    const stepper: string[] = ["Creator", "Details", "Program", "Schedule", "Pricing", "Preview"];
-
-
-
-
-
-    const updatePrice = (formData: { fitness_package_type: string; mode: string; fitnesspackagepricing: { duration: number; voucher: string; mrp: number }; }, actionType: string) => {
-
-        let updateFinesspackagepricing: any = ''
-        if (pricingDetailRef.current.getFitnessPackagePricing?.()) {
-
-            updateFinesspackagepricing = pricingDetailRef.current.getFitnessPackagePricing?.();
-
-            if (formData.fitness_package_type === "60e045867df648b0f5756c32" || formData.mode === "Online Workout" || formData.mode === "Offline Workout") {
-                updateFinesspackagepricing = updateFinesspackagepricing.slice(0, 1)
-            }
-        }
-
-        if (actionType === "edit") {
-
-            if (formData) {
-                updateFinesspackagepricing = _.cloneDeep(formData?.fitnesspackagepricing);
-                if (pricingDetailRef.current.getFitnessPackagePricing?.()) {
-                    updateFinesspackagepricing[0].packagepricing = pricingDetailRef.current.getFitnessPackagePricing?.();
-                    delete updateFinesspackagepricing[0].__typename;
-
-                }
-            }
-        }
-
-        return updateFinesspackagepricing
-    }
-
-
-    const updateModeName = (formData: { mode: string; }) => {
-        let { mode } = formData;
-
-        if (formData.mode) {
-            if (mode === "Online Workout") {
-                mode = "Online_workout"
-            } else if (mode === "Offline Workout") {
-                mode = "Offline_workout"
-            }
-        }
-        return mode
-    }
-
-
-    const updateFormDuration = (formData: { mode: "Online Workout" | "Offline Workout"; duration?: number; }) => {
-        let { duration, mode } = formData;
-        if (formData.mode) {
-            if (mode === "Online Workout" || mode === "Offline Workout") {
-                duration = 1
-            } else {
-                duration = 30
-            }
-        }
-        return duration
-    }
-
-
-
-
-    const resetClassesValue = (userData: { ptonline: number; ptoffline: number; grouponline: number; groupoffline: number; recordedclasses: number; duration: number; mode: string; fitness_package_type: string; restdays: number; }) => {
-        let { ptonline, ptoffline, grouponline, groupoffline, recordedclasses, duration, mode, fitness_package_type, restdays } = userData;
-
-        PTProps.properties.ptonlineClasses.value = ptonline;
-        PTProps.properties.ptofflineClasses.value = ptoffline;
-        groupProps.properties.grouponlineClasses.value = grouponline;
-        groupProps.properties.groupofflineClasses.value = groupoffline;
-        PTProps.properties.restDay.value = restdays
-        groupProps.properties.restDay.value = restdays
-        customProps.properties.restDay.value = restdays
-
-
-        if (PTProps.properties.duration.value === 1 || groupProps.properties.duration.value === 1) {
-            PTProps.properties.restDay.maximum = 0;
-            groupProps.properties.restDay.maximum = 0;
-        }
-
-        if (mode === "Online Workout" || mode === "Offline Workout") {
-            duration = 1
-        } if (fitness_package_type !== "60e045867df648b0f5756c32") {
-            duration = 30
-        }
-        // duration = (mode === "Online Workout" || mode === "Offline Workout") ? 1 : 30;
-        setUserData({ ...userData, duration, recordedclasses })
-        setFormValues({ ...formValues, duration, recordedclasses })
-    }
-
-
-
-    const updateInputValue = (formData: { ptonline: number, ptoffline: number, groupoffline: number, grouponline: number }) => {
-        const update = { ...formData };
-        if (userData.mode === "Online") {
-            update.ptoffline = 0
-            update.groupoffline = 0
-        } else if (userData.mode === "Offline") {
-            update.ptonline = 0
-            update.grouponline = 0
-        } else if (userData.mode === "Online Workout") {
-            update.ptoffline = 0
-        } else if (userData.mode === "Offline Workout") {
-            update.ptonline = 0
-        }
-
-        return update
-    }
+    const stepper: string[] = ["Creator", "Details", "Program", "Schedule", "Pricing"];
+    
+    modalTrigger.subscribe((res: boolean) => {
+        setShow(res);
+    });
+    
 
     function submitHandler(formData: any) {
 
@@ -205,7 +106,9 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
                                     ref={formRef}
                                     onSubmit={({ formData }: any) => submitHandler(formData)}
                                     formData={formValues}
-                                    widget={widgets}
+
+                                    widgets={widgets}
+
                                 >
                                     <div></div>
                                 </Form>
