@@ -256,7 +256,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                     },
                     onProgress: function (bytesUploaded, bytesTotal) {
                          setProgress(((bytesUploaded / bytesTotal) * 100).toFixed(2));
-                         console.log(bytesUploaded, bytesTotal, progress + "%");
+                         //console.log(bytesUploaded, bytesTotal, progress + "%");
                     },
                     onSuccess: function () {
                          console.log("Upload finished");
@@ -287,6 +287,13 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                ) : (
                     " "
                )}
+               {videoUpload ? (
+                    <>
+                         <p className="border bg-white border-dark p-4 text-success"> Video Uploaded Successfully</p>
+                    </>
+               ) : (
+                    " "
+               )}
 
                <div>
                     {props.allowImage && !props.allowVideo ? (
@@ -309,7 +316,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                     ) : (
                          " "
                     )}
-                    {url ? (
+                    {url || videoUpload ? (
                          " "
                     ) : (
                          <div className="bg-white">
@@ -359,14 +366,8 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                                              Upload
                                         </button>
                                    </div>
-                                   {videoUpload ? (
-                                        <>
-                                             <p className="text-success"> Video Uploaded Successfully</p>
-                                        </>
-                                   ) : (
-                                        " "
-                                   )}
-                                   {url ? (
+
+                                   {url || videoUpload ? (
                                         " "
                                    ) : (
                                         <div className={render ? "pt-2" : "d-none"}>
