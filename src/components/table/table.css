@@ -1,9 +1,12 @@
-.rowCard {
-  text-align: left;
-}
+
 .rowCard:hover {
   background-color: lightgray;
 }
-.headerCard {
-  text-align: left;
+
+
+.bodyTd{
+  padding: 2rem 1rem !important;
+  text-align: center !important;
+  vertical-align: middle !important;
 }
+

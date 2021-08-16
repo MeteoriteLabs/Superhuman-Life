@@ -12,12 +12,12 @@ function Table({ data, columns }: any) {
 
     return (
         <div className="table-responsive">
-            <table {...getTableProps()} className="table">
-                <thead >
+            <table {...getTableProps()} className="table text-center">
+                <thead>
                     {headerGroups.map(headerGroup => (
                         <tr {...headerGroup.getHeaderGroupProps()}>
                             {headerGroup.headers.map(column => (
-                                <th className="tableHeader" {...column.getHeaderProps()}>
+                                <th className="tableHeader text-center" {...column.getHeaderProps()}>
                                     {column.render("Header")}
                                 </th>
                             ))}
@@ -37,7 +37,7 @@ function Table({ data, columns }: any) {
                             <Fragment key={rowProps.key}>
                                 <tr className="rowCard" {...row.getRowProps()}>
                                     {row.cells.map(cell => (
-                                        <td {...cell.getCellProps()}>
+                                        <td  className='bodyTd ml-3' {...cell.getCellProps()}>
                                             {cell.render("Cell")}
                                         </td>
                                     ))}

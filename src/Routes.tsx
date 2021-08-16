@@ -26,6 +26,8 @@ const PackagePage = React.lazy(() => import("./builders/package-builder"));
 const ResourcePage = React.lazy(() => import("./builders/resource-builder"));
 const ProgramPage = React.lazy(() => import("./builders/program-builder"));
 
+const SessionPage = React.lazy(() => import("./builders/session-builder/"));
+
 function NoMatch() {
   const location = useLocation();
 
@@ -60,6 +62,7 @@ export default function Routes({ token }: any) {
               <Route path="/home" component={HomePage} />
               <Route exact path="/packages" component={PackagePage} />
               <Route exact path="/programs" component={ProgramPage} />
+              <Route exact path="/session" component={SessionPage} />
               <Route path="/profile" component={ProfilePage} />
               <Route path="/resources" component={ResourcePage} />
               <Route path="/schedule" component={SchedulePage} />

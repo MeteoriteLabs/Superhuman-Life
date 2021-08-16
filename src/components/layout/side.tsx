@@ -33,6 +33,9 @@ export function SideNav({ collapse, setCollapse }: any) {
         <NavLink className="nav-link text-white" to="/programs">
           <i className="far fa-eye mr-sm-2"></i>{!collapse && "Programs"}
         </NavLink>
+        <NavLink className="nav-link text-white" to="session">
+          <i className="far fa-eye mr-sm-2"></i>{!collapse && "Session"}
+        </NavLink>
         <NavLink className="nav-link text-white" to="/resources">
           <i className="fas fa-layer-group mr-sm-2"></i>{!collapse && "Resources"}
         </NavLink>
