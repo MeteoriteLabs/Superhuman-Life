@@ -31,6 +31,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
      const [render, setRender] = useState<any>(null);
      const [url, setUrl] = useState<any>(null);
      const [imageid, setImageid] = useState<any>(null);
+     const [videoUpload, setVideoUpload] = useState<any>(false);
      let allowedImageFormats = ["image/png", "image/jpeg", "image/jpg"];
      let allowedVideoFormats = ["video/mp4"];
 
@@ -241,56 +242,15 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
           }
      }
 
-     //  async function getOneTimeUploadUrl(request: any) {
-     //       const response = await fetch(
-     //            "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT/stream?direct_user=true",
-     //            {
-     //                 method: "POST",
-     //                 headers: {
-     //                      Authorization: "bearer $TOKEN",
-     //                      "Tus-Resumable": "1.0.0",
-     //                      "Upload-Length": request.headers.get("Upload-Length"),
-     //                      "Upload-Metadata": request.headers.get("Upload-Metadata"),
-     //                 },
-     //            }
-     //       );
-
-     //       const destination: any = response.headers.get("Location");
-
-     //       return new Response(null, {
-     //            headers: {
-     //                 "Access-Control-Expose-Headers": "Location",
-     //                 "Access-Control-Allow-Headers": "*",
-     //                 "Access-Control-Allow-Origin": "*",
-     //                 Location: destination,
-     //            },
-     //       });
-     //  }
-
      function VideoUpload(file: any) {
-          console.log(file);
-          //console.log(file.size);
-          //let uploadLength = file.size / 1048576; //to mb
-          //   let uploadSize: any = file.size / 1024;
-          //   let uploadLength: any = parseFloat(uploadSize).toFixed(2);
           if (allowedVideoFormats.indexOf(file.type) > -1) {
                var options = {
-                    endpoint:
-                         "https://api.cloudflare.com/client/v4/accounts/8cbde4feee19132ef8f9a92b57782a11/stream?direct_user=true",
-                    headers: {
-                         Authorization: "Bearer 9-EmH4BY0tjLmjjyqf4SARMsixjbEiTtZw3FEEbV",
-                         //  "Tus-Resumable": "1.0.0",
-                         //  "Upload-Length": uploadLength + " ",
-                         //  "Upload-Metadata": "maxDurationSeconds NjAw",
-                    },
-
-                    chunkSize: 5 * 1024 * 1024, // Required a minimum chunk size of 5MB, here we use 50MB.
-                    resume: true,
+                    endpoint: "https://broad-moon-6c41.tk3319.workers.dev/",
+                    chunkSize: 5242880,
                     metadata: {
                          filename: file.name,
                          filetype: file.type,
                     },
-                    //uploadSize: uploadLength,
                     onError: function (error) {
                          throw error;
                     },
@@ -300,6 +260,8 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                     },
                     onSuccess: function () {
                          console.log("Upload finished");
+                         setVideoUpload(true);
+                         setRender(1);
                     },
                };
 
@@ -397,14 +359,21 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                                              Upload
                                         </button>
                                    </div>
+                                   {videoUpload ? (
+                                        <>
+                                             <p className="text-success"> Video Uploaded Successfully</p>
+                                        </>
+                                   ) : (
+                                        " "
+                                   )}
+                                   {url ? (
+                                        " "
+                                   ) : (
+                                        <div className={render ? "pt-2" : "d-none"}>
+                                             <ProgressBar animated now={progress} label={`${progress}%`} />
+                                        </div>
+                                   )}
                               </div>
-                         </div>
-                    )}
-                    {url ? (
-                         " "
-                    ) : (
-                         <div className={render ? " " : "d-none"}>
-                              <ProgressBar animated now={progress} label={`${progress}%`} />
                          </div>
                     )}
                </div>
