@@ -23,7 +23,6 @@ const myBucket = new AWS.S3({
 });
 
 var tus: any = require("tus-js-client");
-//var fs = require("fs");
 
 const UploadImageToS3WithNativeSdk = (props: any) => {
      const [progress, setProgress] = useState<any>(0);
@@ -32,6 +31,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
      const [url, setUrl] = useState<any>(null);
      const [imageid, setImageid] = useState<any>(null);
      const [videoUpload, setVideoUpload] = useState<any>(false);
+     const [videoId, setVideoId] = useState<any>(null);
      let allowedImageFormats = ["image/png", "image/jpeg", "image/jpg"];
      let allowedVideoFormats = ["video/mp4"];
 
@@ -109,7 +109,6 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                img.resize(750, _Jimp.AUTO)
                     .quality(100)
                     .getBase64(_Jimp.AUTO, (err, pic) => {
-                         //console.log(pic);
                          let photoKey = albumPhotosKey + fileName;
                          setRender(1);
                          setImageid(photoKey.slice(21));
@@ -248,29 +247,42 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                     endpoint: "https://broad-moon-6c41.tk3319.workers.dev/",
                     chunkSize: 5242880,
                     metadata: {
-                         filename: file.name,
-                         filetype: file.type,
+                         name: file.name,
                     },
                     onError: function (error) {
                          throw error;
                     },
                     onProgress: function (bytesUploaded, bytesTotal) {
                          setProgress(((bytesUploaded / bytesTotal) * 100).toFixed(2));
-                         //console.log(bytesUploaded, bytesTotal, progress + "%");
                     },
                     onSuccess: function () {
                          console.log("Upload finished");
                          setVideoUpload(true);
                          setRender(1);
                     },
+                    onAfterResponse: function (req, res) {
+                         if (res.getHeader("stream-media-id")) {
+                              var value = res.getHeader("stream-media-id");
+                              console.log(value);
+                              setVideoId(value);
+                         }
+                    },
                };
-
                var upload = new tus.Upload(file, options);
                upload.start();
           } else {
                setRender(0);
           }
      }
+
+     // function videoDelete() {
+     //      var options = {
+     //           endpoint: "https://broad-moon-6c41.tk3319.workers.dev/",
+     //           key: videoId,
+     //      };
+     //      // var delete = new tus.Delete(options);
+     //      // delete.start();
+     // }
 
      return (
           <div className="dropArea p-1">
@@ -289,7 +301,14 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                )}
                {videoUpload ? (
                     <>
-                         <p className="border bg-white border-dark p-4 text-success"> Video Uploaded Successfully</p>
+                         <div className="border bg-white border-dark p-4 ">
+                              <p className="text-success"> Video Uploaded Successfully</p>
+                              <div className="mt-3 d-flex flex-row-reverse">
+                                   <button type="button" className="btn-sm btn-danger">
+                                        Remove
+                                   </button>
+                              </div>
+                         </div>
                     </>
                ) : (
                     " "
