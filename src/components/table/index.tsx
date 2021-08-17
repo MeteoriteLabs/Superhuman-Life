@@ -14,19 +14,23 @@ function Table({ data, columns }: any) {
         <div className="table-responsive">
             <table {...getTableProps()} className="table text-center">
                 <thead>
-                    {headerGroups.map(headerGroup => (
-                        <tr {...headerGroup.getHeaderGroupProps()}>
-                            {headerGroup.headers.map(column => (
-                                <th className="tableHeader text-center" {...column.getHeaderProps()}>
-                                    {column.render("Header")}
-                                </th>
-                            ))}
-                        </tr>
-                    ))}
-                    {!rows.length && 
+                    {headerGroups.map(headerGroup => {
+                        console.log(headerGroup)
+                        return (
+                            <tr {...headerGroup.getHeaderGroupProps()}>
+                                {headerGroup.headers.map(column => (
+                                    <th className="tableHeader text-center" {...column.getHeaderProps()}>
+                                        {column.render("Header")}
+                                    </th>
+                                ))}
+                            </tr>
+
+                        )
+                    })}
+                    {!rows.length &&
                         <tr className="rowCard text-center">
                             <td colSpan={columns.length}>No data</td>
-                    </tr>
+                        </tr>
                     }
                 </thead>
                 <tbody  {...getTableBodyProps()}>
@@ -37,7 +41,7 @@ function Table({ data, columns }: any) {
                             <Fragment key={rowProps.key}>
                                 <tr className="rowCard" {...row.getRowProps()}>
                                     {row.cells.map(cell => (
-                                        <td  className='bodyTd ml-3' {...cell.getCellProps()}>
+                                        <td className='bodyTd ml-3' {...cell.getCellProps()}>
                                             {cell.render("Cell")}
                                         </td>
                                     ))}

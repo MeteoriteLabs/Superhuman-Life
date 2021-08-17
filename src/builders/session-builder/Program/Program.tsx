@@ -1,9 +1,40 @@
-import { useMemo } from 'react'
-import { Badge, Button, Dropdown, OverlayTrigger, Popover } from "react-bootstrap";
+import { useQuery } from '@apollo/client';
+import { useContext, useMemo } from 'react'
+import { Badge, Button, Dropdown, OverlayTrigger, Popover, Row, Col } from "react-bootstrap";
 import Table from '../../../components/table';
+import { GET_ALL_PACKAGES } from '../../resource-builder/graphQL/queries';
+import AuthContext from "../../../context/auth-context"
 
 export default function Program(props) {
 
+    const auth = useContext(AuthContext);
+    console.log(auth)
+
+    const { data } = useQuery(GET_ALL_PACKAGES, {
+        variables: {
+            id: auth.userid,
+        }
+    });
+    console.log(data)
+
+
+
+    // const FetchData = () => {
+    //     useQuery(GET_ALL_PACKAGES, {
+    //         variables: {
+    //             id: auth.userid
+    //         },
+    //         onCompleted: (data => fillData(data))
+    //     })
+
+    // }
+
+    // FetchData();
+
+
+    // const fillData = (data) => {
+    //     console.log(data)
+    // }
 
 
     const columns = useMemo<any>(() => [
@@ -12,7 +43,7 @@ export default function Program(props) {
             Header: "Class Type",
             Cell: (v: any) => {
                 return <div className='text-center'>
-                    <img src={v.value} alt={v.value} style={{width:"60px",height:"60px"}}/>
+                    <img src={v.value} alt={v.value} style={{ width: "60px", height: "60px" }} />
                 </div>
             }
         },
@@ -29,14 +60,59 @@ export default function Program(props) {
 
             }
         },
-        { accessor: "name", Header: "Name" },
         {
-            accessor: "status",
-            Header: "Status",
-            Cell: (v: any) => <Badge variant="success">{v.value}</Badge>
+
+            Header: "Package",
+            columns: [
+                { accessor: "name", Header: "Name" },
+                {
+                    accessor: "status",
+                    Header: "Status",
+                    Cell: (row: any) => {
+                        return <>
+                            {(row.value === "Active" || row.value === "Private") ?
+                                <Badge style={{ padding: '0.8rem 3rem', borderRadius: '10px', fontSize:'1rem' }} variant="success">{row.value}</Badge> :
+                                <Badge style={{ padding: '0.8rem 3rem', borderRadius: '10px', fontSize:'1rem' }} variant="danger">{row.value}</Badge>
+                            }
+                        </>
+
+
+                    }
+                },
+                { accessor: "startDate", Header: "Start Date" },
+                { accessor: "renewal", Header: "renewal" },
+
+            ]
         },
-        { accessor: "startDate", Header: "Start Date" },
-        { accessor: "renewal", Header: "renewal" },
+        {
+            Header: " ",
+            columns: [
+                {
+                    accessor: "blank",
+                    Header: " ",
+                },
+
+            ]
+        },
+        {
+            Header: "Program",
+            columns: [
+                {
+                    accessor: "programStatus",
+                    Header: "Status",
+                    Cell: (row: any) => { 
+                        return <>
+                        {row.value === "Assigned"  ?
+                            <Badge style={{ padding: '0.8rem 3rem', borderRadius: '10px', fontSize:'1rem' }} variant="success">{row.value}</Badge> :
+                            <Badge style={{ padding: '0.8rem 3rem', borderRadius: '10px', fontSize:'1rem' }} variant="danger">{row.value}</Badge>
+                        }
+                    </>
+                    }
+                },
+                { accessor: "programRenewal", Header: "renewal" },
+
+            ]
+        },
 
         {
             id: "edit",
@@ -62,7 +138,7 @@ export default function Program(props) {
             ),
         }
     ], []);
-    const data = useMemo<any>(() => [
+    const dataTable = useMemo<any>(() => [
         {
             "classType": './assets/PTType.svg',
             "client": ["john", "mark"],
@@ -70,6 +146,9 @@ export default function Program(props) {
             "status": "Active",
             "startDate": "25/06/20",
             "renewal": "25/07/20",
+            "programStatus": "Not Assigned",
+            "programRenewal": "25/07/20",
+      
         },
         {
             "classType": './assets/GroupType.svg',
@@ -89,7 +168,7 @@ export default function Program(props) {
             "details": "Exercise Details",
             "duration": "6 Months",
             "price": "5000 INR",
-            "status": "Active"
+            "status": "Inactive"
         },
         {
             "classType": './assets/CustomType.svg',
@@ -99,13 +178,20 @@ export default function Program(props) {
             "details": "Exercise Details",
             "duration": "6 Months",
             "price": "5000 INR",
-            "status": "Active"
+            "status": "Active",
+            "programStatus":"Assigned",
         }
     ], []);
 
     return (
         <div className="mt-5">
-            <Table columns={columns} data={data} />
+            <Row>
+                <Col>
+
+                    <Table columns={columns} data={dataTable} />
+                </Col>
+
+            </Row>
         </div>
     )
 }

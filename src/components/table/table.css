@@ -5,8 +5,43 @@
 
 
 .bodyTd{
-  padding: 2rem 1rem !important;
+  padding: 1.5rem 1rem !important;
   text-align: center !important;
   vertical-align: middle !important;
 }
+
+.bodyTd:nth-child(7){
+  border-right: 1px solid black !important;
+  /* border: 1px solid black */
+}
+
+
+
+
+.tableHeader:nth-child(7){
+
+   /* border-right: 1px solid black !important; */
+   border-bottom: none;
+
+}
+
+thead:first-child th{
+  border-top: none !important;
+
+}
+
+
+
+thead:first-child th:first-child,
+thead:first-child th:nth-child(2),
+thead:first-child th:last-child
+{
+  border: none;
+}
+
+thead tr:first-child th:nth-child(3),
+thead tr:first-child th:nth-child(5){
+  border-bottom: 2px solid black !important;
+}
+
 
