@@ -275,14 +275,22 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
           }
      }
 
-     // function videoDelete() {
-     //      var options = {
-     //           endpoint: "https://broad-moon-6c41.tk3319.workers.dev/",
-     //           key: videoId,
-     //      };
-     //      // var delete = new tus.Delete(options);
-     //      // delete.start();
-     // }
+     function videoDelete() {
+          // try {
+          //      fetch(`https://broad-moon-6c41.tk3319.workers.dev/`, {
+          //           method: "DELETE",
+          //           body: JSON.stringify({
+          //                Key: videoId,
+          //           }),
+          //      });
+          // } catch (err) {
+          //      console.log(err);
+          // }
+          setVideoId(null);
+          setProgress(0);
+          setRender(null);
+          setVideoUpload(false);
+     }
 
      return (
           <div className="dropArea p-1">
@@ -302,9 +310,16 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                {videoUpload ? (
                     <>
                          <div className="border bg-white border-dark p-4 ">
-                              <p className="text-success"> Video Uploaded Successfully</p>
+                              <iframe
+                                   title="video preview"
+                                   src="https://iframe.videodelivery.net/43730bfbf10d069ae43af4248144c547"
+                                   className="videoPlayer"
+                                   height="200"
+                                   width="200"
+                              ></iframe>
+                              <p className="text-success mt-1"> Video Uploaded Successfully</p>
                               <div className="mt-3 d-flex flex-row-reverse">
-                                   <button type="button" className="btn-sm btn-danger">
+                                   <button type="button" className="btn-sm btn-danger" onClick={() => videoDelete()}>
                                         Remove
                                    </button>
                               </div>
