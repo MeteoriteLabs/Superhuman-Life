@@ -4,8 +4,6 @@ import { Image, ProgressBar } from "react-bootstrap";
 import AWS from "aws-sdk";
 import "./upload.css";
 const _Jimp = require("jimp/browser/lib/jimp");
-//Account Id: 8cbde4feee19132ef8f9a92b57782a11
-//Token: 9-EmH4BY0tjLmjjyqf4SARMsixjbEiTtZw3FEEbV
 
 const S3_BUCKET: any = process.env.REACT_APP_S3_BUCKET_NAME;
 const REGION: any = process.env.REACT_APP_S3_BUCKET_REGION;
@@ -31,11 +29,15 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
      const [url, setUrl] = useState<any>(null);
      const [imageid, setImageid] = useState<any>(null);
      const [videoUpload, setVideoUpload] = useState<any>(false);
-     const [videoId, setVideoId] = useState<any>(null);
+     const [videoID, setVideoID] = useState<any>(null);
      let allowedImageFormats = ["image/png", "image/jpeg", "image/jpg"];
      let allowedVideoFormats = ["video/mp4"];
 
-     props.onChange(imageid);
+     if (url) {
+          props.onChange(imageid);
+     } else {
+          props.onChange(videoID);
+     }
 
      var albumPhotosKey = process.env.REACT_APP_S3_PREFIX_NAME;
 
@@ -99,7 +101,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                     .getBase64(_Jimp.AUTO, (err, pic) => {
                          let photoKey = albumPhotosKey + fileName;
                          setRender(1);
-                         setImageid(photoKey.slice(21));
+                         setImageid(photoKey.split("/")[1].slice(3));
                          uploadTOS3NoUrl(pic, photoKey, filetype);
                     });
           });
@@ -111,7 +113,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                     .getBase64(_Jimp.AUTO, (err, pic) => {
                          let photoKey = albumPhotosKey + fileName;
                          setRender(1);
-                         setImageid(photoKey.slice(21));
+                         setImageid(photoKey.split("/")[1].slice(3));
                          uploadTOS3NoUrl(pic, photoKey, filetype);
                     });
           });
@@ -123,7 +125,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                     .getBase64(_Jimp.AUTO, (err, pic) => {
                          let photoKey = albumPhotosKey + fileName;
                          setRender(1);
-                         setImageid(photoKey.slice(21));
+                         setImageid(photoKey.split("/")[1].slice(3));
                          uploadTOS3(pic, photoKey, filetype);
                     });
           });
@@ -264,7 +266,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                          if (res.getHeader("stream-media-id")) {
                               var value = res.getHeader("stream-media-id");
                               console.log(value);
-                              setVideoId(value);
+                              setVideoID(value);
                          }
                     },
                };
@@ -286,7 +288,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
           // } catch (err) {
           //      console.log(err);
           // }
-          setVideoId(null);
+          setVideoID(null);
           setProgress(0);
           setRender(null);
           setVideoUpload(false);
@@ -296,8 +298,8 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
           <div className="dropArea p-1">
                {url ? (
                     <div className="border bg-white border-dark p-4 ">
-                         <Image src={url} width="500px" height="500px" className="img-thumbnail" alt="" />
-                         <p className="ml-2 mt-3 text-success">Image Uploaded Successfully!!</p>
+                         <Image src={url} width="500px" height="500px" className="img-thumbnail" alt="Image Preview" />
+                         <p className="ml-2 mt-3 font-weight-bold text-success">Image Uploaded Successfully!!</p>
                          <div className="mt-3 d-flex flex-row-reverse">
                               <button type="button" className="btn-sm btn-danger" onClick={() => deleteAllImages()}>
                                    Remove
@@ -310,14 +312,14 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                {videoUpload ? (
                     <>
                          <div className="border bg-white border-dark p-4 ">
-                              <iframe
-                                   title="video preview"
-                                   src="https://iframe.videodelivery.net/43730bfbf10d069ae43af4248144c547"
-                                   className="videoPlayer"
-                                   height="200"
-                                   width="200"
-                              ></iframe>
-                              <p className="text-success mt-1"> Video Uploaded Successfully</p>
+                              <Image
+                                   src={`https://videodelivery.net/${videoID}/thumbnails/thumbnail.jpg?time=0s`}
+                                   width="500px"
+                                   height="500px"
+                                   className="img-thumbnail"
+                                   alt="Image Preview For Video"
+                              />
+                              <p className="text-success font-weight-bold mt-2"> Video Uploaded Successfully!!</p>
                               <div className="mt-3 d-flex flex-row-reverse">
                                    <button type="button" className="btn-sm btn-danger" onClick={() => videoDelete()}>
                                         Remove
@@ -328,7 +330,6 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                ) : (
                     " "
                )}
-
                <div>
                     {props.allowImage && !props.allowVideo ? (
                          <>{render === 0 ? <p className="text-danger">Supported Formats (png/jpeg/jpg)</p> : " "}</>
