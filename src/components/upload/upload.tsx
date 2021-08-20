@@ -110,10 +110,9 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
           _Jimp.read(reader.result).then((img) => {
                img.resize(750, _Jimp.AUTO)
                     .quality(100)
-                    .getBase64(_Jimp.AUTO, (err, pic) => {
+                    .getBase64(_Jimp.AUTO, (pic) => {
                          let photoKey = albumPhotosKey + fileName;
                          setRender(1);
-                         setImageid(photoKey.split("/")[1].slice(3));
                          uploadTOS3NoUrl(pic, photoKey, filetype);
                     });
           });
@@ -122,10 +121,9 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
           _Jimp.read(reader.result).then((img) => {
                img.resize(1000, _Jimp.AUTO)
                     .quality(100)
-                    .getBase64(_Jimp.AUTO, (err, pic) => {
+                    .getBase64(_Jimp.AUTO, (pic) => {
                          let photoKey = albumPhotosKey + fileName;
                          setRender(1);
-                         setImageid(photoKey.split("/")[1].slice(3));
                          uploadTOS3(pic, photoKey, filetype);
                     });
           });
@@ -150,7 +148,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                .on("httpUploadProgress", (evt) => {
                     setProgress(Math.round((evt.loaded / evt.total) * 100));
                })
-               .send((res) => {
+               .send(() => {
                     //get the url of uploaded image
                     var promise = myBucket.getSignedUrlPromise("getObject", paramUrl);
                     promise.then(
@@ -262,7 +260,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                          setVideoUpload(true);
                          setRender(1);
                     },
-                    onAfterResponse: function (req, res) {
+                    onAfterResponse: function (res) {
                          if (res.getHeader("stream-media-id")) {
                               var value = res.getHeader("stream-media-id");
                               setVideoID(value);
