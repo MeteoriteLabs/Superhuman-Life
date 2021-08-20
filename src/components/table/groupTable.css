@@ -1,0 +1,43 @@
+.rowCard:hover {
+  background-color: lightgray;
+}
+
+.bodyTd {
+  padding: 1.5rem 1rem !important;
+  text-align: center !important;
+  vertical-align: middle !important;
+}
+
+.bodyTd:nth-child(5) {
+  border-right: none !important;
+}
+
+tbody .rowCard:nth-child(1) .bodyTd:nth-child(4),
+tbody .rowCard:nth-child(2) .bodyTd:nth-child(2),
+tbody .rowCard:nth-child(3) .bodyTd:nth-child(2),
+tbody .rowCard:nth-child(4) .bodyTd:nth-child(2),
+tbody .rowCard:nth-child(5) .bodyTd:nth-child(4),
+tbody .rowCard:nth-child(6) .bodyTd:nth-child(2),
+tbody .rowCard:nth-child(7) .bodyTd:nth-child(2),
+tbody .rowCard:nth-child(8) .bodyTd:nth-child(2) {
+  border-right: 1px solid black !important;
+}
+
+tbody .rowCard:nth-child(5) .bodyTd {
+  border-top: 1px solid black !important;
+}
+
+thead:first-child th {
+  border-top: none !important;
+}
+
+thead:first-child th:first-child,
+thead:first-child th:nth-child(2),
+thead:first-child th:last-child {
+  border: none;
+}
+
+thead tr:first-child th:nth-child(1),
+thead tr:first-child th:nth-child(3) {
+  border-bottom: 2px solid black !important;
+}

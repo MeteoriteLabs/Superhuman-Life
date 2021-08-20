@@ -1,7 +1,9 @@
 import React from 'react'
 import { Card, Tab, Tabs } from "react-bootstrap";
-import Program from '../Program/Program'
-import Workout from '../Workout/Workout';
+import Group from './Group/Group'
+import PT from './PT/PT';
+import Classic from './Classic/Classic';
+import Custom from './Custom/Custom';
 import './fitness.css'
 
 export default function Fitness() {
@@ -9,12 +11,18 @@ export default function Fitness() {
         <div>
              <Card className="shadow-sm mt-2" border="light">
                 <Card.Body>
-                    <Tabs  variant="pills" transition={false} defaultActiveKey="program">
-                        <Tab eventKey="workout" title="Workout">
-                            <Workout/>
+                    <Tabs  variant="pills" transition={false} defaultActiveKey="pt">
+                        <Tab eventKey="pt" title="Personal Training">
+                            <PT/>
                         </Tab>
-                        <Tab eventKey="program" title="Program">
-                            <Program/>
+                        <Tab eventKey="group" title="Group">
+                            <Group/>
+                        </Tab>
+                        <Tab eventKey="classic" title="Classic">
+                            <Classic/>
+                        </Tab>
+                        <Tab eventKey="custom" title="Custom">
+                            <Custom/>
                         </Tab>
                     </Tabs>
                 </Card.Body>
