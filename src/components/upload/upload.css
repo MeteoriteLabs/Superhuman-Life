@@ -5,19 +5,8 @@
 .dropArea {
      width: 70%;
 }
-/* .videoPlayer {
-     height: 500px;
-     width: 500px;
-} */
-
 @media (max-width: 500px) {
      .dropArea {
           width: 100%;
      }
 }
-/* @media (max-width: 1200px) {
-     .videoPlayer {
-          height: 200px;
-          width: 200px;
-     }
-} */

@@ -246,7 +246,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
      function VideoUpload(file: any) {
           if (allowedVideoFormats.indexOf(file.type) > -1) {
                var options = {
-                    endpoint: "https://broad-moon-6c41.tk3319.workers.dev/",
+                    endpoint: process.env.REACT_APP_CLOUDFLARE_URL,
                     chunkSize: 5242880,
                     metadata: {
                          name: file.name,
@@ -265,7 +265,6 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                     onAfterResponse: function (req, res) {
                          if (res.getHeader("stream-media-id")) {
                               var value = res.getHeader("stream-media-id");
-                              console.log(value);
                               setVideoID(value);
                          }
                     },
@@ -279,7 +278,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
 
      function videoDelete() {
           // try {
-          //      fetch(`https://broad-moon-6c41.tk3319.workers.dev/`, {
+          //      fetch(process.env.REACT_APP_CLOUDFLARE_URL, {
           //           method: "DELETE",
           //           body: JSON.stringify({
           //                Key: videoId,
