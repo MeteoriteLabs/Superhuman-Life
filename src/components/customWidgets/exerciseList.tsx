@@ -13,7 +13,7 @@ const ExerciseList = (props: any) => {
      const inputField = useRef<any>();
      let skipval: Boolean = true;
      
-     function FetchExerciseList(_variable: {} = {id: auth.userid}){
+     function FetchExerciseList(_variable: {} = {id: auth.userid, filter: " "}){
           useQuery(GET_EXERCISELIST, { variables: _variable ,onCompleted: loadExerciseList, skip: !searchInput});
      }
 

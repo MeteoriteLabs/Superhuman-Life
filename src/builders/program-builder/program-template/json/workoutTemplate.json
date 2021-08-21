@@ -1,0 +1,40 @@
+{
+     "1": {
+         "title": "",
+         "type": "object",
+         "required": [
+             "assignMode"
+         ],
+         "properties": {
+             "assignMode": {
+                 "type": "string",
+                 "title": "Mode",
+                 "enum": [
+                     "Online",
+                     "Offline",
+                     "Hybrid"
+                ]
+             },
+             "day": {
+                 "type": "string"
+             },
+             "startTime": {
+                 "type": "string"
+             },
+             "endTime": {
+                "type": "string"
+            }
+         }
+     },
+     "2": {
+        "title": "",
+        "type": "object",
+        "required": [
+        ],
+        "properties": {
+            "workoutEvent": {
+                "type": "string"
+            }
+        }
+     }
+ }

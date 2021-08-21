@@ -25,7 +25,7 @@ const FQAsPage = React.lazy(() => import("./pages/faqs"));
 const PackagePage = React.lazy(() => import("./builders/package-builder"));
 const ResourcePage = React.lazy(() => import("./builders/resource-builder"));
 const ProgramPage = React.lazy(() => import("./builders/program-builder"));
-const ProgramManagerPage = React.lazy(() => import("./builders/program-builder/program-manager"));
+const ProgramManagerPage = React.lazy(() => import("./builders/program-builder/program-template"));
 
 function NoMatch() {
   const location = useLocation();

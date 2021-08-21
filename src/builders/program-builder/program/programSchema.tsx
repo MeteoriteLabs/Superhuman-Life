@@ -1,9 +1,7 @@
-import EquipmentSearch from '../../../components/customWidgets/equipmentList';
 import FitnessMultiSelect from '../../../components/customWidgets/fitnessMultiSelect';
 
 export const widgets = {
      fitnessSelect: FitnessMultiSelect,
-     equipmentSearch: EquipmentSearch,
 };
 
 export const schema: any = {
@@ -18,9 +16,6 @@ export const schema: any = {
           "ui:options": {
               "rows": 3
           }
-     },
-     "equipment": {
-          "ui:widget": "equipmentSearch"
      },
      "discipline": {
           "ui:widget": "fitnessSelect"

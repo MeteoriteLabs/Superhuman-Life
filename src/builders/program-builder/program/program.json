@@ -8,12 +8,13 @@
          "properties": {
              "programName": {
                  "type": "string",
-                 "title": "Program Template Name"
+                 "title": "Program Name"
              },
              "duration": {
                 "type": "number",
                 "title": "Duration",
-                "minimum": 1
+                "minimum": 1,
+                "maximum": 30
              },
              "level": {
                  "type": "number",
@@ -29,11 +30,6 @@
              "discipline": {
                 "type": "string"
              },
-              
-            "equipment": {
-                "type": "string",
-                "title": "Equipment"
-            },
             "details": {
                 "type": "string",
                 "title": "Details"

@@ -1,10 +1,10 @@
 import React, { useContext, useImperativeHandle, useState } from 'react';
 import { useQuery, useMutation } from "@apollo/client";
-import ModalView from "../../../components/modal";
-import { CREATE_PROGRAM } from "./queries";
-import AuthContext from "../../../context/auth-context";
-import StatusModal from "../../../components/StatusModal/StatusModal";
-import { schema, widgets } from './programSchema';
+import ModalView from "../../../../components/modal";
+import { UPDATE_FITNESSPROGRAMS, GET_SCHEDULEREVENTS } from "../queries";
+import AuthContext from "../../../../context/auth-context";
+import StatusModal from '../../../../components/StatusModal/StatusModal';
+import { schema, widgets } from '../schema/workoutTemplateSchema';
 import {Subject} from 'rxjs';
 
 interface Operation {
@@ -15,13 +15,15 @@ interface Operation {
 
 function CreateEditMessage(props: any, ref: any) {
     const auth = useContext(AuthContext);
-    const programSchema: { [name: string]: any; } = require("./program.json");
+    const programSchema: { [name: string]: any; } = require("../json/workoutTemplate.json");
     const [programDetails, setProgramDetails] = useState<any>({});
     const [operation, setOperation] = useState<Operation>({} as Operation);
+    const program_id = window.location.pathname.split('/').pop();
     
 
-    const [createExercise] = useMutation(CREATE_PROGRAM, { onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
-//     const [editExercise] = useMutation(UPDATE_EXERCISE,{variables: {exerciseid: operation.id}, onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
+    // const [CreateProgram] = useMutation(CREATE_PROGRAM, { onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
+    const [updateProgram] = useMutation(UPDATE_FITNESSPROGRAMS, {onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
+    //     const [editExercise] = useMutation(UPDATE_EXERCISE,{variables: {exerciseid: operation.id}, onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
 //     const [deleteExercise] = useMutation(DELETE_EXERCISE, { onCompleted: (e: any) => console.log(e), refetchQueries: ["GET_TABLEDATA"] });
 
     const modalTrigger =  new Subject();
@@ -37,7 +39,7 @@ function CreateEditMessage(props: any, ref: any) {
 
     function FillDetails(data: any) {
         let details: any = {};
-        let msg = data.exercises;
+        let msg = data;
         console.log(msg);
         // setExerciseDetails(details);
 
@@ -49,7 +51,7 @@ function CreateEditMessage(props: any, ref: any) {
     }
 
     function FetchData() {
-        // useQuery(FETCH_DATA, { variables: { id: operation.id }, skip: (!operation.id || operation.type === 'toggle-status'), onCompleted: (e: any) => { FillDetails(e) } });
+        // useQuery(GET_SCHEDULEREVENTS, { variables: { id: program_id }, skip: (!operation.id || operation.type === 'toggle-status'), onCompleted: (e: any) => { setExistingEvents(e) } });
     }
 
     enum ENUM_EXERCISES_EXERCISELEVEL {
@@ -59,17 +61,22 @@ function CreateEditMessage(props: any, ref: any) {
         None
     }
 
-    function CreateExercise(frm: any) {
-        console.log(frm);
-        createExercise({ variables: {
-            title: frm.programName,
-            fitnessdisciplines: frm.discipline.split(","),
-            duration_days: frm.duration,
-            level: ENUM_EXERCISES_EXERCISELEVEL[frm.level],
-            description: frm.details,
-            events: [],
-            users_permissions_user: frm.user_permissions_user
 
+    function CreateProgram(frm: any) {
+        var existingEvents = [...props.events];
+        if(frm.day){
+            frm.day = JSON.parse(frm.day);
+        }
+        if(frm.workoutEvent){
+            frm.workoutEvent = JSON.parse(frm.workoutEvent);
+            frm.workoutEvent[0].startTime = frm.startTime;
+            frm.workoutEvent[0].endTime = frm.endTime;
+            frm.workoutEvent[0].day = parseInt(frm.day[0].day.substr(4));
+            existingEvents.push(frm.workoutEvent[0]);
+        }
+        updateProgram({ variables: {
+            programid: program_id,
+            events: existingEvents
         } });
     }
 
@@ -97,7 +104,7 @@ function CreateEditMessage(props: any, ref: any) {
 
         switch (operation.type) {
             case 'create':
-                CreateExercise(frm);
+                CreateProgram(frm);
                 break;
             case 'edit':
                 EditExercise(frm);
@@ -110,26 +117,26 @@ function CreateEditMessage(props: any, ref: any) {
 
     let name = "";
     if(operation.type === 'create'){
-        name="Create New Program";
+        name="Workout Template";
     }else if(operation.type === 'edit'){
         name="Edit";
     }else if(operation.type === 'view'){
         name="View";
     }
 
-//     FetchData();
-
+    FetchData();
 
     return (
         <>
             {/* {render && */}
                 <ModalView
                     name={name}
-                    isStepper={false}
+                    isStepper={true}
                     formUISchema={schema}
                     formSchema={programSchema}
                     formSubmit={name === "View" ? () => { modalTrigger.next(false); } : (frm: any) => { OnSubmit(frm); }}
                     formData={programDetails}
+                    stepperValues={["Schedule", "Workout"]}
                     widgets={widgets}
                     modalTrigger={modalTrigger}
                 />

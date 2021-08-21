@@ -29,8 +29,8 @@ export const FETCH_DATA = gql`
 `
 
 export const GET_EXERCISELIST = gql`
-     query exercisesList($id: String) {
-          exercises(where: { users_permissions_user: {id: $id}}){
+     query exercisesList($id: String, $filter: String!) {
+          exercises(where: { users_permissions_user: {id: $id}, exercisename_contains: $filter}){
                id
                exercisename
                users_permissions_user {

@@ -32,13 +32,13 @@ export const FETCH_DATA = gql`
 `
 
 export const FETCH_FITNESSDISCPLINES = gql`
-     query fitnessdiscplines{
-          fitnessdisciplines(sort: "updatedAt"){
-               id
-               disciplinename
-               updatedAt
-          }
-     }
+    query fitnessdiscplines{
+        fitnessdisciplines(sort: "updatedAt"){
+            id
+            disciplinename
+            updatedAt
+        }
+    }
 `
 
 export const GET_TABLEDATA = gql`

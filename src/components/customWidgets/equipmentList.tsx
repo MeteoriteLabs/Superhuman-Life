@@ -75,7 +75,7 @@ const EquipmentList = (props: any) => {
           <>
           <label style={{ fontSize: 17}}>Equipment</label>
                <InputGroup>
-                    <FormControl aria-describedby="basic-addon1" placeholder="Search For Equipment" id="searchInput" ref={inputField}
+                    <FormControl aria-describedby="basic-addon1" placeholder="Search For Equipment" id="equipment" ref={inputField}
                               onChange={(e) => {e.preventDefault();
                                    EquipmentSearch(e.target.value);
                          }} autoComplete="off"

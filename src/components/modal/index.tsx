@@ -3,7 +3,7 @@ import { withTheme, utils } from "@rjsf/core";
 import { Theme as Bootstrap4Theme } from '@rjsf/bootstrap-4';
 import { Button, Col, Modal, ProgressBar, Row } from "react-bootstrap";
 
-export default function ModalView({ name, formUISchema, formSubmit, formSchema, formData, isStepper, widgets, modalTrigger }: any) {
+export default function ModalView({ name, formUISchema, formSubmit, formSchema, formData, isStepper, widgets, modalTrigger, stepperValues }: any) {
     const registry = utils.getDefaultRegistry();
     const defaultFileWidget = registry.widgets["FileWidget"];
     (Bootstrap4Theme as any).widgets["FileWidget"] = defaultFileWidget;
@@ -13,14 +13,14 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
     const [step, setStep] = useState<number>(1);
     const [show, setShow] = useState<boolean>(false);
     const [formValues, setFormValues] = useState<any>(formData);
-    const stepper: string[] = ["Creator", "Details", "Program", "Schedule", "Pricing"];
+    const stepper: string[] = stepperValues;
     
     modalTrigger.subscribe((res: boolean) => {
         setShow(res);
     });
     
     function submitHandler(formData: any) {
-        if (isStepper && step < 5) {
+        if (isStepper && step < 2) {
             console.log("Data submitted: ", formData);
             setStep(step + 1);
             setFormValues({ ...formValues, ...formData });
@@ -88,7 +88,7 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
                                 size="sm"
                                 onClick={(event) => formRef.current.onSubmit(event)}
                             >
-                                {(step < 5)
+                                {(step < 2)
                                     ? <>Next<i className="ml-4 fas fa-arrow-right"></i></>
                                     : <>Create<i className="ml-4 fas fa-check"></i></>
                                 }

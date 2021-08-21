@@ -2,22 +2,18 @@ import { gql } from "@apollo/client";
 
 export const GET_TABLEDATA = gql`
      query ProgramQuery($id: String!) {
-          fitnesssProgramTemplates(where: {users_permissions_user: {id:$id}}) {
+          fitnessprograms(where: {users_permissions_user: {id:$id}}) {
                id
-               Program_template_name
+               title
+               description
                updatedAt
-               fitnessdisciplines{
+               fitnessdisciplines {
                     id
                     disciplinename
                }
-               Duration
+               duration_days
                level
-               Details
-               equipment_lists{
-                    id
-                    name
-               }
-               users_permissions_user{
+               users_permissions_user {
                     id
                }
           }
@@ -26,31 +22,31 @@ export const GET_TABLEDATA = gql`
 
 export const CREATE_PROGRAM = gql`
      mutation createprogram(
-          $Program_template_name: String
+          $title: String
           $fitnessdisciplines: [ID]
-          $Duration: Int
-          $level: ENUM_FITNESSSPROGRAMTEMPLATE_LEVEL
-          $Details: String
-          $equipment_lists: [ID]
+          $duration_days: Int!
+          $level: ENUM_FITNESSPROGRAMS_LEVEL
+          $description: String
+          $events: JSON
           $users_permissions_user: ID
      ){
-          createFitnesssProgramTemplate(
+          createFitnessprogram(
                input: {
                     data: {
-                         Program_template_name: $Program_template_name
+                         title: $title
                          fitnessdisciplines: $fitnessdisciplines
-                         Duration: $Duration
+                         duration_days: $duration_days
                          level: $level
-                         Details: $Details
-                         equipment_lists: $equipment_lists
+                         description: $description
+                         events: $events
                          users_permissions_user: $users_permissions_user
                     }
                }
           ){
-               fitnesssProgramTemplate {
+               fitnessprogram {
                     id
-                    Program_template_name
-               }
+                    title
+               } 
           }
      }
 `    

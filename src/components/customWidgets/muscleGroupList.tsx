@@ -72,7 +72,7 @@ const MuscleGroupList = (props: any) => {
           <>
                <label style={{ fontSize: 17}}>Muscle group</label>
                     <InputGroup>
-                         <FormControl aria-describedby="basic-addon1" placeholder="Search For Muscle Group"  id="searchInput" ref={inputField}
+                         <FormControl aria-describedby="basic-addon1" placeholder="Search For Muscle Group"  id="muscleGroup" ref={inputField}
                          onChange={(e) => {e.preventDefault();
                                    muscleGroupSearch(e.target.value);
                               }} autoComplete="off"

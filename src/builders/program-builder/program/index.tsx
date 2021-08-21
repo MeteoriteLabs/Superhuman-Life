@@ -22,8 +22,7 @@ export default function EventsTab() {
         { accessor: "discipline", Header: "Discipline" },
         { accessor: "duration", Header: "Duration" },
         { accessor: "level", Header: "Level" },
-        { accessor: "details", Header: "Details" },
-        { accessor: "equipment", Header: "Equipment" },
+        { accessor: "description", Header: "description" },
         { accessor: "updatedOn", Header: "Updated On" },
         {
             id: "edit",
@@ -61,19 +60,16 @@ export default function EventsTab() {
 
     function loadData(data: any) {
         setTableData(
-            [...data.fitnesssProgramTemplates].map((detail) => {
+            [...data.fitnessprograms].map((detail) => {
                 return {
                     id: detail.id,
-                    programName: detail.Program_template_name,
+                    programName: detail.title,
                     discipline: detail.fitnessdisciplines.map((val: any) => {
                         return val.disciplinename;
                     }).join(", "),
                     level: detail.level,
-                    duration: detail.Duration,
-                    details: detail.Details,
-                    equipment: detail.equipment_lists.map((equipment: any) => {
-                        return equipment.name
-                    }).join(", "),
+                    duration: detail.duration_days,
+                    description: detail.description,
                     updatedOn: getDate(Date.parse(detail.updatedAt))
                 }
             })
