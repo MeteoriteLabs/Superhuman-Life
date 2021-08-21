@@ -33,11 +33,12 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
      let allowedImageFormats = ["image/png", "image/jpeg", "image/jpg"];
      let allowedVideoFormats = ["video/mp4"];
 
-     if (url) {
-          props.onChange(imageid);
-     } else {
-          props.onChange(videoID);
-     }
+     // if (url) {
+     //      props.onChange(imageid);
+     // } else {
+     //      props.onChange(videoID);
+     // }
+     props.onChange(imageid);
 
      var albumPhotosKey = process.env.REACT_APP_S3_PREFIX_NAME;
 
@@ -110,7 +111,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
           _Jimp.read(reader.result).then((img) => {
                img.resize(750, _Jimp.AUTO)
                     .quality(100)
-                    .getBase64(_Jimp.AUTO, (pic) => {
+                    .getBase64(_Jimp.AUTO, (err, pic) => {
                          let photoKey = albumPhotosKey + fileName;
                          setRender(1);
                          uploadTOS3NoUrl(pic, photoKey, filetype);
@@ -121,7 +122,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
           _Jimp.read(reader.result).then((img) => {
                img.resize(1000, _Jimp.AUTO)
                     .quality(100)
-                    .getBase64(_Jimp.AUTO, (pic) => {
+                    .getBase64(_Jimp.AUTO, (err, pic) => {
                          let photoKey = albumPhotosKey + fileName;
                          setRender(1);
                          uploadTOS3(pic, photoKey, filetype);
@@ -260,7 +261,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                          setVideoUpload(true);
                          setRender(1);
                     },
-                    onAfterResponse: function (res) {
+                    onAfterResponse: function (req, res) {
                          if (res.getHeader("stream-media-id")) {
                               var value = res.getHeader("stream-media-id");
                               setVideoID(value);
@@ -310,6 +311,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                     <>
                          <div className="border bg-white border-dark p-4 ">
                               <Image
+                                   //https://videodelivery.net/513a6654dd41d64604f50eda381ff2d8/thumbnails/thumbnail.jpg?time=0s
                                    src={`https://videodelivery.net/${videoID}/thumbnails/thumbnail.jpg?time=0s`}
                                    width="500px"
                                    height="500px"
