@@ -33,13 +33,6 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
      let allowedImageFormats = ["image/png", "image/jpeg", "image/jpg"];
      let allowedVideoFormats = ["video/mp4"];
 
-     // if (url) {
-     //      props.onChange(imageid);
-     // } else {
-     //      props.onChange(videoID);
-     // }
-     props.onChange(imageid);
-
      var albumPhotosKey = process.env.REACT_APP_S3_PREFIX_NAME;
 
      function deleteAllImages() {
@@ -290,6 +283,12 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
           setProgress(0);
           setRender(null);
           setVideoUpload(false);
+     }
+
+     if (url) {
+          props.onChange(imageid);
+     } else {
+          props.onChange(videoID);
      }
 
      return (
