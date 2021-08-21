@@ -4,18 +4,26 @@ import { Badge, Button, Dropdown, OverlayTrigger, Popover, Row, Col } from "reac
 import Table from '../../../../components/table';
 import { GET_ALL_PACKAGES } from '../../../resource-builder/graphQL/queries';
 import AuthContext from "../../../../context/auth-context"
+import GroupTable from '../../../../components/table/GroupTable/GroupTable';
 
-export default function PT(props) {
+// type Data = {
+//     actor: string;
+//     movie: ;
+// };
+
+
+
+export default function Group(props) {
 
     const auth = useContext(AuthContext);
-    console.log(auth)
+ 
 
-    const { data } = useQuery(GET_ALL_PACKAGES, {
-        variables: {
-            id: auth.userid,
-        }
-    });
-    console.log(data)
+    // const { data } = useQuery(GET_ALL_PACKAGES, {
+    //     variables: {
+    //         id: auth.userid,
+    //     }
+    // });
+    // console.log(data)
 
 
 
@@ -37,162 +45,171 @@ export default function PT(props) {
     // }
 
 
-    const columns = useMemo<any>(() => [
+
+    const origData = [
         {
-            accessor: "students",
-            Header: "Students",
-            Cell: (v: any) => {
-                return <div className='text-center'>
-                    <img src={v.value} alt={v.value} style={{ width: "50px", height: "50px", borderRadius: "50%" }} />
-                </div>
-            }
-        },
-        // {
-        //     accessor: "client",
-        //     Header: "Client",
-        //     Cell: (row: any) => {
-        //         console.log(row.value)
-
-        //         return <div className='text-center'>
-        //             <div className='bg-dark mx-auto' style={{ width: '50px', height: '50px', borderRadius: '50%' }}></div>
-        //             {row.value.length === 1 ? <div className='mt-2'>{row.value}</div> : <div className='mt-2'>{row.value.length}+ people</div>}
-        //         </div>
-
-        //     }
-        // },
-        {
-
-            Header: "Package",
-            columns: [
+            packageName: "Package Name 1",
+            packageStatus: 'Active',
+            startDate: "27/07/20",
+            packageRenewal: "27/07/20",
+            programs: [
                 {
-                    accessor: "name",
-                    Header: "Name"
+                    program: "Pirates of the Carribean 1",
+                    student: "John",
+                    status: "Not Assigned",
+                    renewal: "25/04/20"
                 },
                 {
-                    accessor: "status",
-                    Header: "Status",
-                    Cell: (row: any) => {
-                        return <>
-                            {(row.value === "Active" || row.value === "Private") ?
-                                <Badge style={{ padding: '0.8rem 3rem', borderRadius: '10px', fontSize: '1rem' }} variant="success">{row.value}</Badge> :
-                                <Badge style={{ padding: '0.8rem 3rem', borderRadius: '10px', fontSize: '1rem' }} variant="danger">{row.value}</Badge>
-                            }
-                        </>
-
-
-                    }
+                    program: "Pirates of the Carribean 2",
+                    student: "John",
+                    status: "Assigned",
+                    renewal: "26/04/20",
                 },
-                { accessor: "startDate", Header: "Start Date" },
-                { accessor: "renewal", Header: "Renewal Date" },
-
+              
             ]
         },
-        {
-            Header: " ",
-            columns: [
-                {
-                    accessor: "blank",
-                    Header: " ",
-                },
 
-            ]
-        },
         {
-            Header: "Program",
-            columns: [
-
+            packageName: "Package Name 2",
+            packageStatus: 'inActive',
+            startDate: "28/07/20",
+            packageRenewal: "28/07/20",
+            programs: [
                 {
-                    accessor: "programStatus",
-                    Header: "Status",
-                    Cell: (row: any) => {
-                        return <>
-                            {row.value === "Assigned" ?
-                                <Badge style={{ padding: '0.8rem 3rem', borderRadius: '10px', fontSize: '1rem' }} variant="success">{row.value}</Badge> :
-                                <Badge style={{ padding: '0.8rem 3rem', borderRadius: '10px', fontSize: '1rem' }} variant="danger">{row.value}</Badge>
-                            }
-                        </>
-                    }
+                    program: "Pirates of the Carribean 1",
+                    student: "John",
+                    status: "Not Assigned",
+                    renewal: "25/04/20"
                 },
-                { accessor: "programRenewal", Header: "renewal" },
                 {
-                    id: "edit",
-                    Header: "Actions",
-                    Cell: ({ row }: any) => (
-                        <OverlayTrigger
-                            trigger="click"
-                            placement="right"
-                            overlay={
-                                <Popover id="action-popover">
-                                    <Popover.Content>
-                                        <Dropdown.Item>Assign</Dropdown.Item>
-                                        <Dropdown.Item>Edit</Dropdown.Item>
-                                        <Dropdown.Item>View</Dropdown.Item>
-                                    </Popover.Content>
-                                </Popover>
-                            }
-                        >
-                            <Button variant="white">
-                                <i className="fas fa-ellipsis-v"></i>
-                            </Button>
-                        </OverlayTrigger>
-                    ),
+                    program: "Pirates of the Carribean 2",
+                    student: "John",
+                    startDate: "7:00 am-8:00 am",
+                    status: "Assigned",
+                    renewal: "26/04/20",
+                },
+                {
+                    program: "Pirates of the Carribean 3",
+                    student: "John",
+                    time: "7:00 am-8:00 am",
+                    status: "Assigned",
+                    renewal: "27/04/20",
+                },
+                {
+                    program: "Pirates of the Carribean 4",
+                    student: "John",
+                    time: "7:00 am-8:00 am",
+                    status: "Not Assigned",
+                    renewal: "29/04/20",
                 }
-
             ]
         },
 
+    ];
 
+    const newData: Array<any> = [];
 
-    ], []);
-    const dataTable = useMemo<any>(() => [
-        {
-            "students": 'https://picsum.photos/200',
-            "name": "Exercise-1",
-            "status": "Active",
-            "startDate": "25/06/20",
-            "renewal": "25/07/20",
-            "programStatus": "Not Assigned",
-            "programRenewal": "25/07/20",
-            "time": "N/A"
+    origData.forEach(obj => {
+        obj.programs.forEach(program => {
+            newData.push({
+                packageName: obj.packageName,
+                packageStatus: obj.packageStatus,
+                startDate: obj.startDate,
+                packageRenewal: obj.packageRenewal,
 
-        },
-        {
-            "students": 'https://picsum.photos/200',
-            "name": "Exercise-2",
-            "type": "PT",
-            "details": "Exercise Details",
-            "duration": "6 Months",
-            "price": "5000 INR",
-            "status": "Active",
-            "time": "6:00 pm"
-        },
-        {
-            "students": 'https://picsum.photos/200',
-            "name": "Exercise-2",
-            "type": "PT",
-            "details": "Exercise Details",
-            "duration": "6 Months",
-            "price": "5000 INR",
-            "status": "Inactive"
-        },
-        {
-            "students": 'https://picsum.photos/200',
-            "name": "Exercise-2",
-            "type": "PT",
-            "details": "Exercise Details",
-            "duration": "6 Months",
-            "price": "5000 INR",
-            "status": "Active",
-            "programStatus": "Assigned",
-        }
-    ], []);
+                students: program.student,
+                programName: program.program,
+                programStatus: program.status,
+                programRenewal: program.renewal,
+            });
+        });
+
+        
+    console.log("🚀 ~ file: PT.tsx ~ line 111 ~ Group ~ newData", newData)
+    });
+
+    
+
+    const data = useMemo(() => newData, []);
+
+    const columns = useMemo(
+        () => [
+            {
+                Header: "Package",
+                columns: [
+                    { accessor: "packageName", Header: 'Name', enableRowSpan: true },
+                    {
+                        accessor: "packageStatus",
+                        Header: "Status",
+                        Cell: (row: any) => {
+                            return <>
+                                {row.value === "Active" ?
+                                    <Badge style={{ padding: '0.8rem 4rem', borderRadius: '10px', fontSize: '1rem' }} variant="success">{row.value}</Badge> :
+                                    <Badge style={{ padding: '0.8rem 3rem', borderRadius: '10px', fontSize: '1rem' }} variant="danger">{row.value}</Badge>
+                                }
+                            </>
+                        },
+                        enableRowSpan: true
+                    },
+                    { accessor: "startDate", Header: "Start Date", enableRowSpan: true },
+                    { accessor: "packageRenewal", Header: 'Renewal Date', enableRowSpan: true },
+                ]
+            },
+
+            { accessor: ' ', Header: '' },
+
+            {
+                Header: "Program",
+                columns: [
+                    { accessor: "students", Header: 'Students' },
+                    { accessor: "programName", Header: 'Name' },
+                    {
+                        accessor: "programStatus",
+                        Header: "Status",
+                        Cell: (row: any) => {
+                            return <>
+                                {row.value === "Assigned" ?
+                                    <Badge style={{ padding: '0.8rem 4rem', borderRadius: '10px', fontSize: '1rem' }} variant="success">{row.value}</Badge> :
+                                    <Badge style={{ padding: '0.8rem 3rem', borderRadius: '10px', fontSize: '1rem' }} variant="danger">{row.value}</Badge>
+                                }
+                            </>
+                        }
+                    },
+                    { accessor: "programRenewal", Header: "Renewal Date" },
+                    {
+                        id: "edit",
+                        Header: "Actions",
+                        Cell: ({ row }: any) => (
+                            <OverlayTrigger
+                                trigger="click"
+                                placement="right"
+                                overlay={
+                                    <Popover id="action-popover">
+                                        <Popover.Content>
+                                            <Dropdown.Item>Assign</Dropdown.Item>
+                                            <Dropdown.Item>Edit</Dropdown.Item>
+                                            <Dropdown.Item>View</Dropdown.Item>
+                                        </Popover.Content>
+                                    </Popover>
+                                }
+                            >
+                                <Button variant="white">
+                                    <i className="fas fa-ellipsis-v"></i>
+                                </Button>
+                            </OverlayTrigger>
+                        ),
+                    }
+                ]
+            },
+        ],
+        []
+    );
 
     return (
         <div className="mt-5">
             <Row>
                 <Col>
-
-                    <Table columns={columns} data={dataTable} />
+                    <GroupTable columns={columns} data={data} />
                 </Col>
 
             </Row>

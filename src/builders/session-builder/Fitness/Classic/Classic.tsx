@@ -8,7 +8,7 @@ import AuthContext from "../../../../context/auth-context"
 export default function Classic(props) {
 
     const auth = useContext(AuthContext);
-    console.log(auth)
+  
 
     const { data } = useQuery(GET_ALL_PACKAGES, {
         variables: {

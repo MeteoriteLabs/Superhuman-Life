@@ -6,7 +6,7 @@ import "./groupTable.css";
 
 
 
-function GroupTable({ data, columns }: any) {
+function PTTable({ data, columns }: any) {
 
     function useInstance(instance) {
         const { allColumns } = instance;
@@ -61,7 +61,7 @@ function GroupTable({ data, columns }: any) {
                 <tbody {...getTableBodyProps()}>
                     {rows.map((row, i) => {
                         prepareRow(row);
-                        console.log('row' ,row)
+                   
                         
                         for (let j = 0; j < row.cells.length; j++) {
                             let cell = row.allCells[j];
@@ -111,4 +111,5 @@ function GroupTable({ data, columns }: any) {
     );
 }
 
-export default GroupTable;
+
+export default PTTable

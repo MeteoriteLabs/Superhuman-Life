@@ -13,13 +13,13 @@
 }
 
 tbody .rowCard:nth-child(1) .bodyTd:nth-child(4),
-tbody .rowCard:nth-child(2) .bodyTd:nth-child(2),
-tbody .rowCard:nth-child(3) .bodyTd:nth-child(2),
-tbody .rowCard:nth-child(4) .bodyTd:nth-child(2),
+tbody .rowCard:nth-child(2),
+tbody .rowCard:nth-child(3),
+tbody .rowCard:nth-child(4),
 tbody .rowCard:nth-child(5) .bodyTd:nth-child(4),
-tbody .rowCard:nth-child(6) .bodyTd:nth-child(2),
-tbody .rowCard:nth-child(7) .bodyTd:nth-child(2),
-tbody .rowCard:nth-child(8) .bodyTd:nth-child(2) {
+tbody .rowCard:nth-child(6),
+tbody .rowCard:nth-child(7),
+tbody .rowCard:nth-child(8){
   border-right: 1px solid black !important;
 }
 
