@@ -80,9 +80,9 @@ export default function Custom(props) {
                     accessor: "blank",
                     Header: " ",
                 },
-
             ]
         },
+        
         {
             Header: "Program",
             columns: [

@@ -14,7 +14,10 @@ function GroupTable({ data, columns }: any) {
         let rowSpanHeaders: any[] = [];
 
         allColumns.forEach((column: any, i: any) => {
+
             const { id, enableRowSpan } = column;
+
+
 
             if (enableRowSpan !== undefined) {
                 rowSpanHeaders = [
@@ -24,7 +27,21 @@ function GroupTable({ data, columns }: any) {
             }
         });
 
+        // console.log(column)
+
+        // console.log("🚀 ~ file: GroupTable.tsx ~ line 19 ~ allColumns.forEach ~ id", id)
+
+        //   const id = allColumns[0].id
+        //   const {enableRowSpan} = allColumns[0]
+
+        //   if (enableRowSpan !== undefined) {
+        //       rowSpanHeaders = [
+        //           ...rowSpanHeaders,
+        //           { id, topCellValue: null, topCellIndex: 0 }
+        //       ];
+        //   }
         Object.assign(instance, { rowSpanHeaders });
+
     }
 
 
@@ -39,6 +56,7 @@ function GroupTable({ data, columns }: any) {
         hooks.useInstance.push(useInstance);
     });
 
+    let headerIndex = 0
     return (
         <div className="table-responsive">
             <table {...getTableProps()} className="table text-center">
@@ -59,30 +77,46 @@ function GroupTable({ data, columns }: any) {
                     }
                 </thead>
                 <tbody {...getTableBodyProps()}>
-                    {rows.map((row, i) => {
+                  
+                    { rows.map((row, i) => {
                         prepareRow(row);
+                        console.log('row', row)
+                        let samePackage = true;
+                        if (i > 0) {
 
-
+                            samePackage = (row.original.id === rows[i - 1].original.id) ? true : false;
+                            console.log(headerIndex, samePackage, row.original.id, rows[i-1].original.id);
+                        }
+                        if (!samePackage) {
+                            headerIndex = i;
+                        }
                         for (let j = 0; j < row.cells.length; j++) {
                             let cell = row.allCells[j];
-                       
+                            
+                            // let rowSpanHeader = rowSpanHeaders.find(x => x.id === cell.column.id);
+                            // // console.log('rowSpanHeaders', rowSpanHeaders)
+                            // // console.log('cell',cell)
 
-                            let rowSpanHeader = rowSpanHeaders.find( x => x.id === cell.column.id);
-                            console.log("🚀 ~ file: GroupTable.tsx ~ line 72 ~ {rows.map ~ rowSpanHeader", rowSpanHeader)
+                            // const rowSpanvalue = rowSpanHeaders[0].topCellValue; // id = 1/2
+                            // // const rowSpanvalue1 = rowSpanHeaders[1].topCellValue; // packageName
 
-                            if (rowSpanHeader !== undefined ) {
-                                if (rowSpanHeader.topCellValue === null || rowSpanHeader.topCellValue !== cell.value ) {
-                                    cell.isRowSpanned = false;
-                                    rowSpanHeader.topCellValue = cell.value;
-                                    rowSpanHeader.topCellIndex = i;
-                                    cell.rowSpan = 1;
-                                } else {
-                                    rows[rowSpanHeader.topCellIndex].allCells[j].rowSpan++;
-                                    cell.isRowSpanned = true;
-                                }
+
+                            // if (rowSpanHeader !== undefined ) {
+                            //     if (rowSpanHeader.topCellValue === null || rowSpanHeader.topCellValue !== cell.value) {
+                            if (!samePackage) {
+                                cell.isRowSpanned = false;
+                                // rowSpanHeader.topCellValue = cell.value;
+                                // rowSpanHeader.topCellIndex = i;
+                                cell.rowSpan = 1;
+
+                            } else {
+                                rows[headerIndex].allCells[j].rowSpan++;
+                                cell.isRowSpanned = true;
                             }
                         }
-                        return null;
+
+                        // return null;
+                    // }
                     })}
                     {rows.map(row => {
                         return (

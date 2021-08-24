@@ -16,7 +16,7 @@ import GroupTable from '../../../../components/table/GroupTable/GroupTable';
 export default function Group(props) {
 
     const auth = useContext(AuthContext);
-  
+
 
     // const { data } = useQuery(GET_ALL_PACKAGES, {
     //     variables: {
@@ -44,7 +44,7 @@ export default function Group(props) {
     //     console.log(data)
     // }
 
-    
+
 
     const buttonAction = () => {
         return <button>Add new</button>
@@ -52,36 +52,37 @@ export default function Group(props) {
 
     const origData = [
         {
+            id: "1",
             packageName: "Package Name 1",
-            expiry: "30/12/20",
-            packageStatus:'Active',
+            expiry: "29/12/20",
+            packageStatus: 'Active',
             action: buttonAction(),
             programs: [
                 {
                     program: "Pirates of the Carribean 1",
                     student: "John",
-                    time:"7:00 am-8:00 am",
+                    time: "7:00 am-8:00 am",
                     status: "Not Assigned",
                     renewal: "25/04/20"
                 },
                 {
                     program: "Pirates of the Carribean 2",
                     student: "John",
-                    time:"7:00 am-8:00 am",
+                    time: "7:00 am-8:00 am",
                     status: "Assigned",
                     renewal: "26/04/20",
                 },
                 {
                     program: "Pirates of the Carribean 3",
                     student: "John",
-                    time:"7:00 am-8:00 am",
+                    time: "7:00 am-8:00 am",
                     status: "Assigned",
                     renewal: "27/04/20",
                 },
                 {
                     program: "Pirates of the Carribean 4",
                     student: "John",
-                    time:"7:00 am-8:00 am",
+                    time: "7:00 am-8:00 am",
                     status: "Not Assigned",
                     renewal: "28/04/20",
                 }
@@ -89,36 +90,37 @@ export default function Group(props) {
         },
 
         {
+            id: "2",
             packageName: "Package Name 2",
-            expiry: "27/12/20",
-            packageStatus:'inActive',
+            expiry: "30/12/20",
+            packageStatus: 'inActive',
             action: buttonAction(),
             programs: [
                 {
                     program: "Pirates of the Carribean 1",
                     student: "John",
-                    time:"7:00 am-8:00 am",
+                    time: "7:00 am-8:00 am",
                     status: "Not Assigned",
                     renewal: "25/04/20"
                 },
                 {
                     program: "Pirates of the Carribean 2",
                     student: "John",
-                    time:"7:00 am-8:00 am",
+                    time: "7:00 am-8:00 am",
                     status: "Assigned",
                     renewal: "26/04/20",
                 },
                 {
                     program: "Pirates of the Carribean 3",
                     student: "John",
-                    time:"7:00 am-8:00 am",
+                    time: "7:00 am-8:00 am",
                     status: "Assigned",
                     renewal: "27/04/20",
                 },
                 {
                     program: "Pirates of the Carribean 4",
                     student: "John",
-                    time:"7:00 am-8:00 am",
+                    time: "7:00 am-8:00 am",
                     status: "Not Assigned",
                     renewal: "28/04/20",
                 }
@@ -132,14 +134,15 @@ export default function Group(props) {
     origData.forEach(obj => {
         obj.programs.forEach(program => {
             newData.push({
+                id: obj.id,
                 packageName: obj.packageName,
                 expiry: obj.expiry,
                 action: obj.action,
-                packageStatus:obj.packageStatus,
-                
+                packageStatus: obj.packageStatus,
+
                 students: program.student,
                 programName: program.program,
-                time:program.time,
+                time: program.time,
                 programStatus: program.status,
                 renewal: program.renewal,
             });
@@ -149,11 +152,14 @@ export default function Group(props) {
 
     const data = useMemo(() => newData, []);
 
+    console.log("🚀 ~ file: Group.tsx ~ line 155 ~ Group ~ newData", newData)
     const columns = useMemo(
         () => [
             {
+
                 Header: "Package",
                 columns: [
+                    { accessor: 'id', Header: 'ID', enableRowSpan: true },
                     { accessor: "packageName", Header: 'Name', enableRowSpan: true },
                     { accessor: "expiry", Header: 'Expiry', enableRowSpan: true },
                     {
@@ -179,7 +185,7 @@ export default function Group(props) {
                 columns: [
                     { accessor: "students", Header: 'Students' },
                     { accessor: "programName", Header: 'Name' },
-                    { accessor:'time', Header: 'Time' },
+                    { accessor: 'time', Header: 'Time' },
                     {
                         accessor: "programStatus",
                         Header: "Status",

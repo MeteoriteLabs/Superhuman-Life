@@ -4,7 +4,7 @@ import { Badge, Button, Dropdown, OverlayTrigger, Popover, Row, Col } from "reac
 import Table from '../../../../components/table';
 import { GET_ALL_PACKAGES } from '../../../resource-builder/graphQL/queries';
 import AuthContext from "../../../../context/auth-context"
-import GroupTable from '../../../../components/table/GroupTable/GroupTable';
+import PTTable from '../../../../components/table/PtTable/PTTable'
 
 // type Data = {
 //     actor: string;
@@ -16,7 +16,7 @@ import GroupTable from '../../../../components/table/GroupTable/GroupTable';
 export default function Group(props) {
 
     const auth = useContext(AuthContext);
- 
+
 
     // const { data } = useQuery(GET_ALL_PACKAGES, {
     //     variables: {
@@ -46,91 +46,121 @@ export default function Group(props) {
 
 
 
-    const origData = [
+    const dataTable = useMemo<any>(() => [
         {
             packageName: "Package Name 1",
             packageStatus: 'Active',
-            startDate: "27/07/20",
+            startDate: "28/07/20",
             packageRenewal: "27/07/20",
-            programs: [
-                {
-                    program: "Pirates of the Carribean 1",
-                    student: "John",
-                    status: "Not Assigned",
-                    renewal: "25/04/20"
-                },
-                {
-                    program: "Pirates of the Carribean 2",
-                    student: "John",
-                    status: "Assigned",
-                    renewal: "26/04/20",
-                },
-              
-            ]
+
+            program: [{
+                programName: "Pirates of the Carribean 2",
+                client: "John",
+                programStatus: "Assigned",
+                programRenewal: "26/04/20",
+            }
+        ]
+        },
+
+
+        {
+            packageName: "Package Name 1",
+            packageStatus: 'Active',
+            startDate: "28/07/20",
+            packageRenewal: "27/07/20",
+
+            program: [{
+                programName: "Pirates of the Carribean 4",
+                client: "Mary",
+                programStatus: "Not Assigned",
+                programRenewal: "25/04/20"
+            }]
+
         },
 
         {
             packageName: "Package Name 2",
-            packageStatus: 'inActive',
+            packageStatus: 'Active',
             startDate: "28/07/20",
-            packageRenewal: "28/07/20",
-            programs: [
-                {
-                    program: "Pirates of the Carribean 1",
-                    student: "John",
-                    status: "Not Assigned",
-                    renewal: "25/04/20"
-                },
-                {
-                    program: "Pirates of the Carribean 2",
-                    student: "John",
-                    startDate: "7:00 am-8:00 am",
-                    status: "Assigned",
-                    renewal: "26/04/20",
-                },
-                {
-                    program: "Pirates of the Carribean 3",
-                    student: "John",
-                    time: "7:00 am-8:00 am",
-                    status: "Assigned",
-                    renewal: "27/04/20",
-                },
-                {
-                    program: "Pirates of the Carribean 4",
-                    student: "John",
-                    time: "7:00 am-8:00 am",
-                    status: "Not Assigned",
-                    renewal: "29/04/20",
-                }
-            ]
+            packageRenewal: "27/07/20",
+
+            program: [{
+                programName: "Pirates of the Carribean 3",
+                client: "Harry",
+                programStatus: "Not Assigned",
+                programRenewal: "25/04/20"
+            }]
         },
+
+    ], []);
+
+
+
+
+    const newDataTable: Array<any> = [
+        // {
+        //     packageName: "Package Name 1",
+        //     packageStatus: 'Active',
+        //     startDate: "28/07/20",
+        //     packageRenewal: "27/07/20",
+
+
+        //         programName: "Pirates of the Carribean 2",
+        //         client: "John",
+        //         programStatus: "Assigned",
+        //         programRenewal: "26/04/20",
+
+
+        // },
+
 
     ];
 
-    const newData: Array<any> = [];
 
-    origData.forEach(obj => {
-        obj.programs.forEach(program => {
-            newData.push({
-                packageName: obj.packageName,
-                packageStatus: obj.packageStatus,
-                startDate: obj.startDate,
-                packageRenewal: obj.packageRenewal,
 
-                students: program.student,
-                programName: program.program,
-                programStatus: program.status,
-                programRenewal: program.renewal,
-            });
-        });
+    // dataTable.forEach(obj => {
+    //     obj.program.forEach(program => {
+    //         newDataTable.push({
+    //             packageName: obj.packageName,
+    //             packageStatus: obj.packageStatus,
+    //             startDate: obj.startDate,
+    //             packageRenewal: obj.packageRenewal,
 
-        
-    console.log("🚀 ~ file: PT.tsx ~ line 111 ~ Group ~ newData", newData)
-    });
+    //             client: program.client,
+    //             programName: program.programName,
+    //             programStatus: program.programStatus,
+    //             programRenewal: program.programRenewal,
+    //         });
+    //     });
 
-    
 
-    const data = useMemo(() => newData, []);
+    // });
+
+    dataTable.forEach(tableItem => {
+       
+
+        let index = newDataTable.findIndex(item => item.packageName === tableItem.packageName);
+        console.log(index)
+
+        if (index !== -1) {
+            // newDataTable.push(tableItem.program)
+            newDataTable[index].program.push(tableItem.program[0])
+
+        } else {
+            // let packageProgram = updatePackage.createPackage(tableItem.packageName, tableItem.packageStatus, tableItem.startDate, tableItem.packageRenewal, tableItem.program.programName, tableItem.program.client, tableItem.program.programStatus, tableItem.program.programRenewal);
+       
+
+            // newDataTable.push(packageProgram);
+            newDataTable.push(tableItem)
+
+        }
+
+
+
+    })
+
+    console.log("🚀 ~ file: PT.tsx ~ line 111 ~ Group ~ newData", newDataTable)
+
 
     const columns = useMemo(
         () => [
@@ -161,7 +191,7 @@ export default function Group(props) {
             {
                 Header: "Program",
                 columns: [
-                    { accessor: "students", Header: 'Students' },
+                    { accessor: "client", Header: 'Client' },
                     { accessor: "programName", Header: 'Name' },
                     {
                         accessor: "programStatus",
@@ -209,10 +239,29 @@ export default function Group(props) {
         <div className="mt-5">
             <Row>
                 <Col>
-                    <GroupTable columns={columns} data={data} />
+                    <PTTable columns={columns} data={newDataTable} />
                 </Col>
-
             </Row>
         </div>
     )
 }
+
+
+
+
+class Package {
+    createPackage = (packageName, packageStatus, startDate, packageRenewal, programName, client, programStatus, programRenewal) => {
+        let updatePackage: any = {};
+        updatePackage.packageName = packageName;
+        updatePackage.packageStatus = packageStatus;
+        updatePackage.startDate = startDate;
+        updatePackage.packageRenewal = packageRenewal;
+        updatePackage.programName = programName;
+        updatePackage.client = client;
+        updatePackage.programStatus = programStatus;
+        updatePackage.programRenewal = programRenewal;
+        return updatePackage
+    }
+}
+
+export const updatePackage = new Package();

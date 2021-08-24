@@ -15,7 +15,6 @@ function Table({ data, columns }: any) {
             <table {...getTableProps()} className="table text-center">
                 <thead>
                     {headerGroups.map(headerGroup => {
-                        console.log(headerGroup)
                         return (
                             <tr {...headerGroup.getHeaderGroupProps()}>
                                 {headerGroup.headers.map(column => (
@@ -35,7 +34,6 @@ function Table({ data, columns }: any) {
                 </thead>
                 <tbody  {...getTableBodyProps()}>
                     {rows.map(row => {
-                        console.log(row)
                         prepareRow(row);
                         const rowProps = row.getRowProps();
                         return (
