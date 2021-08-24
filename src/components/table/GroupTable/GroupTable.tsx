@@ -81,9 +81,8 @@ function GroupTable({ data, columns }: any) {
                     { rows.map((row, i) => {
                         prepareRow(row);
                         console.log('row', row)
-                        let samePackage = true;
+                        let samePackage = false;
                         if (i > 0) {
-
                             samePackage = (row.original.id === rows[i - 1].original.id) ? true : false;
                             console.log(headerIndex, samePackage, row.original.id, rows[i-1].original.id);
                         }
@@ -103,10 +102,8 @@ function GroupTable({ data, columns }: any) {
 
                             // if (rowSpanHeader !== undefined ) {
                             //     if (rowSpanHeader.topCellValue === null || rowSpanHeader.topCellValue !== cell.value) {
-                            if (!samePackage) {
+                            if (!samePackage || j > 5) {
                                 cell.isRowSpanned = false;
-                                // rowSpanHeader.topCellValue = cell.value;
-                                // rowSpanHeader.topCellIndex = i;
                                 cell.rowSpan = 1;
 
                             } else {
