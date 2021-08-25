@@ -63,16 +63,20 @@ function CreateEditMessage(props: any, ref: any) {
 
 
     function CreateProgram(frm: any) {
-        var existingEvents = [...props.events];
+        var existingEvents = (props.events === null ? [] : [...props.events]);
+        console.log(frm);
         if(frm.day){
             frm.day = JSON.parse(frm.day);
         }
         if(frm.workoutEvent){
+            var eventJson: any = {};
             frm.workoutEvent = JSON.parse(frm.workoutEvent);
-            frm.workoutEvent[0].startTime = frm.startTime;
-            frm.workoutEvent[0].endTime = frm.endTime;
-            frm.workoutEvent[0].day = parseInt(frm.day[0].day.substr(4));
-            existingEvents.push(frm.workoutEvent[0]);
+            eventJson.name = frm.workoutEvent[0].name;
+            eventJson.id = frm.workoutEvent[0].id;
+            eventJson.startTime = frm.startTime;
+            eventJson.endTime = frm.endTime;
+            eventJson.day = parseInt(frm.day[0].day.substr(4));
+            existingEvents.push(eventJson);
         }
         updateProgram({ variables: {
             programid: program_id,

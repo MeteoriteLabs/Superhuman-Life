@@ -66,14 +66,21 @@ const SchedulerEvent = (props: any) => {
                          {props.programDays.map(val => {
                               return (
                                    <div className="event-cell"
-                                        onDragLeave={(e) => {
-                                             console.log(e.currentTarget);
-                                        }}
+                                        // onDragLeave={(e) => {
+                                        //      // console.log(e.currentTarget);
+                                        // }}
+                                        // onDrop={(e) => {
+                                        //      e.preventDefault();
+                                        //      var changedEvent = JSON.parse(e.dataTransfer.getData('scheduler-event'));
+                                        // }}
                                    >
                                    <div 
                                         style={{ backgroundColor: `${(arr[val] ? arr[val].color : 'none')}`, height: '50px',borderRadius: '10px', zIndex: 997, minWidth: '120px'}}
                                         draggable="true"
+                                        id="rem"
                                         className="draggable-event m-2"
+                                        onDrop={(e) => {console.log(e);}}
+                                        onDragStart={(e) => {  e.dataTransfer.setData("scheduler-event", JSON.stringify(arr[val]))}}
                                    >{(arr[val] ? `title-${arr[val].title}` : null)}</div>
                                    </div>
                               )

@@ -20,7 +20,7 @@ function CreateEditMessage(props: any, ref: any) {
     const [operation, setOperation] = useState<Operation>({} as Operation);
     
 
-    const [createExercise] = useMutation(CREATE_PROGRAM, { onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
+    const [createProgram] = useMutation(CREATE_PROGRAM, { onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
 //     const [editExercise] = useMutation(UPDATE_EXERCISE,{variables: {exerciseid: operation.id}, onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
 //     const [deleteExercise] = useMutation(DELETE_EXERCISE, { onCompleted: (e: any) => console.log(e), refetchQueries: ["GET_TABLEDATA"] });
 
@@ -59,17 +59,15 @@ function CreateEditMessage(props: any, ref: any) {
         None
     }
 
-    function CreateExercise(frm: any) {
+    function CreateProgram(frm: any) {
         console.log(frm);
-        createExercise({ variables: {
+        createProgram({ variables: {
             title: frm.programName,
             fitnessdisciplines: frm.discipline.split(","),
             duration_days: frm.duration,
             level: ENUM_EXERCISES_EXERCISELEVEL[frm.level],
             description: frm.details,
-            events: [],
             users_permissions_user: frm.user_permissions_user
-
         } });
     }
 
@@ -97,7 +95,7 @@ function CreateEditMessage(props: any, ref: any) {
 
         switch (operation.type) {
             case 'create':
-                CreateExercise(frm);
+                CreateProgram(frm);
                 break;
             case 'edit':
                 EditExercise(frm);

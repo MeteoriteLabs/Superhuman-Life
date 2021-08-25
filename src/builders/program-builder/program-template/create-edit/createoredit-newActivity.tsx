@@ -63,21 +63,22 @@ function CreateEditMessage(props: any, ref: any) {
 
 
     function CreateProgram(frm: any) {
-        var existingEvents = [...props.events];
-        if(frm.day){
-            frm.day = JSON.parse(frm.day);
-        }
-        if(frm.workoutEvent){
-            frm.workoutEvent = JSON.parse(frm.workoutEvent);
-            frm.workoutEvent[0].startTime = frm.startTime;
-            frm.workoutEvent[0].endTime = frm.endTime;
-            frm.workoutEvent[0].day = parseInt(frm.day[0].day.substr(4));
-            existingEvents.push(frm.workoutEvent[0]);
-        }
-        updateProgram({ variables: {
-            programid: program_id,
-            events: existingEvents
-        } });
+        // var existingEvents = (props.events === null ? [] : [...props.events]);
+        console.log(frm);
+        // if(frm.day){
+        //     frm.day = JSON.parse(frm.day);
+        // }
+        // if(frm.workoutEvent){
+        //     frm.workoutEvent = JSON.parse(frm.workoutEvent);
+        //     frm.workoutEvent[0].startTime = frm.startTime;
+        //     frm.workoutEvent[0].endTime = frm.endTime;
+        //     frm.workoutEvent[0].day = parseInt(frm.day[0].day.substr(4));
+        //     existingEvents.push(frm.workoutEvent[0]);
+        // }
+        // updateProgram({ variables: {
+        //     programid: program_id,
+        //     events: existingEvents
+        // } });
     }
 
     function EditExercise(frm: any) {

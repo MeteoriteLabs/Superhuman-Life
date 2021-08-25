@@ -67,17 +67,10 @@ function CreateEditMessage(props: any, ref: any) {
         High
     }
 
-    function handleWarmupDataSubmit(data: any){
-        // if(data.addWorkout.build.warmup[0].type === 'exercise'){
-        //     return data.addWorkout.build.warmup.warmupExercise;
-        // }
-    }
-
     function CreateWorkout(frm: any) {
         if(frm.addWorkout.build){
             frm.addWorkout.build = JSON.parse(frm.addWorkout.build);
         }
-        console.log(handleWarmupDataSubmit(frm));
         createWorkout({ variables: {
             workouttitle: frm.workout,
             intensity: ENUM_WORKOUTS_INTENSITY[frm.intensity],

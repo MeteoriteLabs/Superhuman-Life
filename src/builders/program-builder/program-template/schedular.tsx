@@ -103,18 +103,31 @@ useEffect(() => {
     }, 300)
 }, [show]);    
 
-
-    // alert("day: " + d + "hour: " + h);
-
 console.log(arr);
+
+function handleDropElement(event: any){
+    console.log(event);
+    var data = event.title;
+    if(data){
+        // @ts-ignore: Object is possibly 'null'
+        var el: any = document.getElementById("rem");
+        console.log(el);
+        // el.remove(el);
+    }
+}
 
 function handleChange(d: any, h: any,m: any, event: any){
     console.log(event);
     console.log(event.day, event.hour, event.min);
     const values = [...arr];
-    values[event.day][event.hour][event.min] = null;
-    values[d][h][m] = {"title": "event", "color": "crimson", "day": d, "hour": h, "min": m};
+    if(event.day){
+        values[event.day][event.hour][event.min] = null;
+    }
+    values[d][h][m] = {"title": event.title, "color": event.color, "day": d, "hour": h, "min": m};
     setArr(values);
+    if(event.day === undefined){
+        handleDropElement(event);
+    }
 }
 
 function handleFloatingActionProgramCallback(event: any){
@@ -165,12 +178,11 @@ if (!show) return <span style={{ color: 'red' }}>Loading...</span>;
                                         data-hour={h}
                                         data-min={m} 
                                         onDrop={(e) => {
-                                            e.preventDefault();
                                             changedEvent = JSON.parse(e.dataTransfer.getData('scheduler-event'));
                                             handleChange(changedDay, changedHour, changedMin, changedEvent);
+                                            e.preventDefault();
                                         }}
                                         onDragLeave={(e) => {
-                                            console.log(e);
                                             changedDay = e.currentTarget.getAttribute('data-day');
                                             changedHour = e.currentTarget.getAttribute('data-hour');
                                             changedMin = e.currentTarget.getAttribute('data-min');

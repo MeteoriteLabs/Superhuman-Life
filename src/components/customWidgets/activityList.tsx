@@ -1,10 +1,12 @@
 import React, {useState} from 'react';
-import { InputGroup, FormControl, Row, Col, Form } from 'react-bootstrap';
+import { InputGroup, Row, Col, Form } from 'react-bootstrap';
 import { gql, useQuery } from '@apollo/client';
+import ActivityBuilder from './activityBuilder';
 
 const ActivityField = (props: any) => {
 
      const [activity, setActivity] = useState<any[]>([]);
+     const [selected, setSelected] = useState("");
 
      const FETCH_ACTIVITIES = gql`
           query activities{
@@ -32,13 +34,22 @@ const ActivityField = (props: any) => {
 
      FetchData();
 
+     // if(selected === 'none'){
+     //      setDetailsDiv('block');
+     // }
+
+     function OnChange(data: any){
+          const objectToString = JSON.stringify(data);
+          props.onChange(objectToString);
+     }
+
      return (
           <>
           <label>Select Activity</label>
           <Row className="pl-2 pr-2">
                <Col xs={12}>
                <InputGroup>
-                    <Form.Control as="select" defaultValue="" placeholder="Choose one Activity" onChange={(e) => console.log(e.target.value)}>
+                    <Form.Control as="select" defaultValue="" placeholder="Choose one Activity" onChange={(e) => setSelected(e.target.value)}>
                          <option></option>
                          {activity.map((activity) => {
                               return (
@@ -49,6 +60,9 @@ const ActivityField = (props: any) => {
                </InputGroup>
                </Col>
           </Row>
+          <div>
+               <ActivityBuilder activity={selected} onChange={OnChange}/>
+          </div>
           </>
      )
 }

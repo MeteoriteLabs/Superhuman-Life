@@ -9,23 +9,6 @@
              "day": {
                  "type": "string"
              },
-             "repeat": {
-                "type": "array",
-                "title": "Repeat",
-                "items": {
-                    "type": "string",
-                    "enum": [
-                        "monday",
-                        "tuesday",
-                        "wednesday",
-                        "thursday",
-                        "friday",
-                        "saturday",
-                        "sunday"
-                    ]
-                },
-                "uniqueItems": true
-             },
              "startTime": {
                  "type": "string"
              },
@@ -37,9 +20,6 @@
      "2": {
         "title": "",
         "type": "object",
-        "required": [
-            ""
-        ],
         "properties": {
             "newActivity": {
                 "type": "string"

@@ -74,19 +74,19 @@ const Build = (props: any) => {
     function renderOptions(){
      return (
           <div>
-           <Button size="sm" className="m-1" variant="outline-secondary" type="button" onClick={() => {handleExerciseFieldAdd(props.buildId); setCurrentTab('exercise')}} disabled={currentTab ? (currentTab !== 'exercise'): false}>
-                Exercise <i style={{ fontSize: 12}} className="fas fa-plus"></i>
-           </Button>
-           <Button size="sm" className="m-1" type="button" variant="outline-secondary" onClick={() => {handleTextFieldAdd(); setCurrentTab('text')}} disabled={currentTab ? (currentTab !== 'text'): false}>
-                Text <i style={{ fontSize: 12}} className="fas fa-plus"></i>
-           </Button>
-           <Button size="sm" className="m-1" type="button" variant="outline-secondary" onClick={() => {handleUrlFieldAdd(); setCurrentTab('url')}} disabled={currentTab ? (currentTab !== 'url'): false}>
-                URL <i style={{ fontSize: 12}} className="fas fa-plus"></i>
-           </Button>
-           <Button size="sm" className="m-1" type="button" variant="outline-secondary" onClick={() => {handleUploadFieldAdd(); setCurrentTab('upload');}} disabled={currentTab ? (currentTab !== 'upload'): false}>
-                Upload <i style={{ fontSize: 12}} className="fas fa-plus"></i>
-           </Button>
-      </div>
+               <Button size="sm" className="m-1" variant="outline-secondary" type="button" onClick={() => {handleExerciseFieldAdd(props.buildId); setCurrentTab('exercise')}} disabled={currentTab ? (currentTab !== 'exercise'): false}>
+                    Exercise <i style={{ fontSize: 12}} className="fas fa-plus"></i>
+               </Button>
+               <Button size="sm" className="m-1" type="button" variant="outline-secondary" onClick={() => {handleTextFieldAdd(); setCurrentTab('text')}} disabled={currentTab ? (currentTab !== 'text'): false}>
+                    Text <i style={{ fontSize: 12}} className="fas fa-plus"></i>
+               </Button>
+               <Button size="sm" className="m-1" type="button" variant="outline-secondary" onClick={() => {handleUrlFieldAdd(); setCurrentTab('url')}} disabled={currentTab ? (currentTab !== 'url'): false}>
+                    URL <i style={{ fontSize: 12}} className="fas fa-plus"></i>
+               </Button>
+               <Button size="sm" className="m-1" type="button" variant="outline-secondary" onClick={() => {handleUploadFieldAdd(); setCurrentTab('upload');}} disabled={currentTab ? (currentTab !== 'upload'): false}>
+                    Upload <i style={{ fontSize: 12}} className="fas fa-plus"></i>
+               </Button>
+          </div>
      )
 }
 

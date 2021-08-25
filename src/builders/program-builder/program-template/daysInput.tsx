@@ -42,6 +42,7 @@ const DaysInput = (props: any) => {
      function OnChange(e){
           const objectToString = JSON.stringify(e);
           props.onChange(objectToString);
+          setSelected(e);
      }
      
      renderInputField();
@@ -54,8 +55,9 @@ const DaysInput = (props: any) => {
                labelKey="day"
                onChange={OnChange}
                options={days}
-               placeholder="Choose Day..."
+               placeholder={props.id === 'newWorkout' ? 'Choose a day...' : 'Choose days...'}
                selected={selected}
+               multiple={props.id === 'newWorkout' ? false : true}
                />
           </div>
      );

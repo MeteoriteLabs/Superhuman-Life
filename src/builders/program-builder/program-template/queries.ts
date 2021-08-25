@@ -58,3 +58,50 @@ export const UPDATE_FITNESSPROGRAMS = gql`
           }
      }
 `
+
+export const CREATE_WORKOUT = gql`
+    mutation createworkout(
+        $workouttitle: String
+        $intensity: ENUM_WORKOUTS_INTENSITY
+        $level: ENUM_WORKOUTS_LEVEL
+        $About: String
+        $Benifits: String
+        $users_permissions_user: ID
+        $calories: Int
+        $fitnessdisciplines: [ID]
+        $equipment_lists: [ID]
+        $muscle_groups: [ID]
+        $workout_URL: String
+        $workout_text: String
+        $warmup: JSON
+        $mainmovement: JSON
+        $cooldown: JSON
+    ){
+        createWorkout(
+            input: {
+                data: {
+                    workouttitle: $workouttitle
+                    intensity: $intensity
+                    level: $level
+                    About: $About
+                    Benifits: $Benifits
+                    users_permissions_user: $users_permissions_user
+                    equipment_lists: $equipment_lists
+                    fitnessdisciplines: $fitnessdisciplines
+                    muscle_groups: $muscle_groups
+                    workout_URL: $workout_URL
+                    workout_text: $workout_text
+                    calories: $calories
+                    warmup: $warmup
+                    mainmovement: $mainmovement
+                    cooldown: $cooldown
+                }
+            }
+        ){
+            workout {
+               id
+               workouttitle
+            }
+        }
+    }
+`
