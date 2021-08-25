@@ -46,85 +46,116 @@ export default function Group(props) {
 
 
 
-    const dataTable = useMemo<any>(() => [
+    // const dataTable = useMemo<any>(() => [
+    //     {
+    //         id: '1',
+    //         packageName: "Package Name 1",
+    //         packageStatus: 'Active',
+    //         startDate: "28/07/20",
+    //         packageRenewal: "27/07/20",
+
+    //         programs: [
+    //             {
+    //                 programName: "Pirates of the Carribean 2",
+    //                 client: "John",
+    //                 programStatus: "Assigned",
+    //                 programRenewal: "26/04/20",
+    //             },
+    //             {
+    //                 programName: "Pirates of the Carribean 4",
+    //                 client: "Mary",
+    //                 programStatus: "Not Assigned",
+    //                 programRenewal: "25/04/20"
+    //             }
+    //         ]
+    //     },
+
+
+    //     {
+    //         id: '2',
+    //         packageName: "Package Name 2",
+    //         packageStatus: 'Active',
+    //         startDate: "28/07/20",
+    //         packageRenewal: "27/07/20",
+
+    //         programs: [{
+    //             programName: "Pirates of the Carribean 3",
+    //             client: "Harry",
+    //             programStatus: "Not Assigned",
+    //             programRenewal: "25/04/20"
+    //         }]
+    //     },
+
+    // ], []);
+
+
+    const dataTable2 = useMemo<any>(() => [
         {
+            id: '1',
             packageName: "Package Name 1",
             packageStatus: 'Active',
             startDate: "28/07/20",
             packageRenewal: "27/07/20",
 
-            program: [{
-                programName: "Pirates of the Carribean 2",
-                client: "John",
-                programStatus: "Assigned",
-                programRenewal: "26/04/20",
-            }
-        ]
+            programName: "Pirates of the Carribean 2",
+            client: "John",
+            programStatus: "Assigned",
+            programRenewal: "26/04/20",
+
         },
 
-
         {
+            id: '1',
             packageName: "Package Name 1",
             packageStatus: 'Active',
             startDate: "28/07/20",
             packageRenewal: "27/07/20",
 
-            program: [{
-                programName: "Pirates of the Carribean 4",
-                client: "Mary",
-                programStatus: "Not Assigned",
-                programRenewal: "25/04/20"
-            }]
+
+            programName: "Pirates of the Carribean 3",
+            client: "Mary",
+            programStatus: "Assigned",
+            programRenewal: "26/04/20",
 
         },
 
+
         {
+            id: '2',
             packageName: "Package Name 2",
             packageStatus: 'Active',
             startDate: "28/07/20",
             packageRenewal: "27/07/20",
 
-            program: [{
-                programName: "Pirates of the Carribean 3",
-                client: "Harry",
-                programStatus: "Not Assigned",
-                programRenewal: "25/04/20"
-            }]
+
+            programName: "Pirates of the Carribean 3",
+            client: "Harry",
+            programStatus: "Not Assigned",
+            programRenewal: "25/04/20"
+
         },
+
+
+     
 
     ], []);
 
 
 
 
-    const newDataTable: Array<any> = [
-        // {
-        //     packageName: "Package Name 1",
-        //     packageStatus: 'Active',
-        //     startDate: "28/07/20",
-        //     packageRenewal: "27/07/20",
 
 
-        //         programName: "Pirates of the Carribean 2",
-        //         client: "John",
-        //         programStatus: "Assigned",
-        //         programRenewal: "26/04/20",
-
-
-        // },
-
-
-    ];
-
-
+    // const newData: Array<any> = [];
 
     // dataTable.forEach(obj => {
-    //     obj.program.forEach(program => {
-    //         newDataTable.push({
+    //     obj.programs.forEach(program => {
+    //         newData.push({
+    //             id: obj.id,
     //             packageName: obj.packageName,
     //             packageStatus: obj.packageStatus,
     //             startDate: obj.startDate,
     //             packageRenewal: obj.packageRenewal,
+
 
     //             client: program.client,
     //             programName: program.programName,
@@ -132,34 +163,10 @@ export default function Group(props) {
     //             programRenewal: program.programRenewal,
     //         });
     //     });
-
-
     // });
 
-    dataTable.forEach(tableItem => {
-       
 
-        let index = newDataTable.findIndex(item => item.packageName === tableItem.packageName);
-        console.log(index)
-
-        if (index !== -1) {
-            // newDataTable.push(tableItem.program)
-            newDataTable[index].program.push(tableItem.program[0])
-
-        } else {
-            // let packageProgram = updatePackage.createPackage(tableItem.packageName, tableItem.packageStatus, tableItem.startDate, tableItem.packageRenewal, tableItem.program.programName, tableItem.program.client, tableItem.program.programStatus, tableItem.program.programRenewal);
-       
-
-            // newDataTable.push(packageProgram);
-            newDataTable.push(tableItem)
-
-        }
-
-
-
-    })
-
-    console.log("🚀 ~ file: PT.tsx ~ line 111 ~ Group ~ newData", newDataTable)
+    // console.log("newData", dataTable2)
 
 
     const columns = useMemo(
@@ -167,6 +174,7 @@ export default function Group(props) {
             {
                 Header: "Package",
                 columns: [
+                    { accessor: 'id', Header: "ID" },
                     { accessor: "packageName", Header: 'Name', enableRowSpan: true },
                     {
                         accessor: "packageStatus",
@@ -239,7 +247,7 @@ export default function Group(props) {
         <div className="mt-5">
             <Row>
                 <Col>
-                    <PTTable columns={columns} data={newDataTable} />
+                    <PTTable columns={columns} data={dataTable2} />
                 </Col>
             </Row>
         </div>

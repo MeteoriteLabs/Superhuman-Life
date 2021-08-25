@@ -1,43 +1,30 @@
-.rowCard:hover {
+/* .group .rowCard:hover {
   background-color: lightgray;
-}
+} */
 
-.bodyTd {
+.group .bodyTd {
   padding: 1.5rem 1rem !important;
   text-align: center !important;
   vertical-align: middle !important;
 }
 
-.bodyTd:nth-child(5) {
-  border-right: none !important;
+.group .rowCard .bodyTd{
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
 }
 
-tbody .rowCard:nth-child(1) .bodyTd:nth-child(4),
-tbody .rowCard:nth-child(2),
-tbody .rowCard:nth-child(3),
-tbody .rowCard:nth-child(4),
-tbody .rowCard:nth-child(5) .bodyTd:nth-child(4),
-tbody .rowCard:nth-child(6),
-tbody .rowCard:nth-child(7),
-tbody .rowCard:nth-child(8){
-  border-right: 1px solid black !important;
+.group .rowCard .bodyTd:nth-child(7)
+{
+  border-left: 1px solid black;
 }
 
-tbody .rowCard:nth-child(5) .bodyTd {
+/* 
+.group .rowCard:nth-child(1) .bodyTd:nth-child(6),
+.group .rowCard:nth-child(5) .bodyTd:nth-child(6)
+{
+  border-right: 1px solid black;
+}
+
+.group tbody .rowCard:nth-child(5) .bodyTd {
   border-top: 1px solid black !important;
-}
-
-thead:first-child th {
-  border-top: none !important;
-}
-
-thead:first-child th:first-child,
-thead:first-child th:nth-child(2),
-thead:first-child th:last-child {
-  border: none;
-}
-
-thead tr:first-child th:nth-child(1),
-thead tr:first-child th:nth-child(3) {
-  border-bottom: 2px solid black !important;
-}
+} */

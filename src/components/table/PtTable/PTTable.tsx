@@ -1,5 +1,6 @@
-import { Fragment } from "react";
-import { useTable, useExpanded } from "react-table";
+
+import { useTable } from "react-table";
+import './ptTable.css'
 
 
 
@@ -38,9 +39,12 @@ function PTTable({ data, columns }: any) {
         hooks.useInstance.push(useInstance);
     });
 
+
+
+    let currentRowsIndex = 0
     return (
         <div className="table-responsive">
-            <table {...getTableProps()} className="table text-center">
+            <table {...getTableProps()} className="pt table text-center">
                 <thead>
                     {headerGroups.map(headerGroup => (
                         <tr {...headerGroup.getHeaderGroupProps()}>
@@ -58,56 +62,67 @@ function PTTable({ data, columns }: any) {
                     }
                 </thead>
                 <tbody {...getTableBodyProps()}>
-                    {/* {rows.map((row: { cells: string | any[]; allCells: any[]; }) => {
-                        prepareRow(row);
-                        console.log('rows', rows);
-                        for (let i = 0; i < row.cells.length; i++) {
-                            let cell = row.allCells[i];
-                            if( cell.value === "Package Name 1"){
-                                cell.isRowSpanned = true;
-                                rows[0].allCells[i].rowSpan = 3
-                            }
-                        }
-                    })} */}
+
                     {rows.map((row, i) => {
                         prepareRow(row);
-                   
+                    
+                        let samePackage = false;
+
+                        if (i > 0) {
+                            samePackage = rows[i - 1].original.id === row.original.id ? true : false
+                        }
+
+                        if (!samePackage) {
+                            currentRowsIndex = i
+                        }
+
                         for (let j = 0; j < row.cells.length; j++) {
                             let cell = row.allCells[j];
-                            let rowSpanHeader = rowSpanHeaders.find(  x => x.id === cell.column.id );
 
-                          
-
-                            if (rowSpanHeader !== undefined) {
-                                if (rowSpanHeader.topCellValue === null || rowSpanHeader.topCellValue !== cell.value   ) {
-                                    cell.isRowSpanned = false;
-                                    rowSpanHeader.topCellValue = cell.value;
-                                    rowSpanHeader.topCellIndex = i;
-                                    cell.rowSpan = 1;
-                                } else {
-                                    cell.isRowSpanned = true;
-                                    rows[rowSpanHeader.topCellIndex].allCells[j].rowSpan++;
-                                }
+                            if (!samePackage || j> 5) {
+                                cell.rowSpan = 1;
+                                cell.isRowSpanned = false;
+                            } else {
+                                cell.isRowSpanned = true;
+                                rows[currentRowsIndex].allCells[j].rowSpan++
                             }
+
+
+
+
+                            // if (rowSpanHeader !== undefined) {
+                            //     if (rowSpanHeader.topCellValue === null || rowSpanHeader.topCellValue !== cell.value   ) {
+                            //         cell.isRowSpanned = false;
+                            //         rowSpanHeader.topCellValue = cell.value;
+                            //         rowSpanHeader.topCellIndex = i;
+                            //         cell.rowSpan = 1;
+                            //     } else {
+                            //         cell.isRowSpanned = true;
+                            //         rows[rowSpanHeader.topCellIndex].allCells[j].rowSpan++;
+                            //     }
+                            // }
                         }
-                        return null;
+
                     })}
                     {rows.map(row => {
-                        prepareRow(row);
-                        const rowProps = row.getRowProps();
                         return (
-                            <Fragment key={rowProps.key}>
                                 <tr className="rowCard" {...row.getRowProps()}>
                                     {row.cells.map(cell => {
-                                        return (
-                                            <td  className='bodyTd ml-3' {...cell.getCellProps()}>
-                                                {cell.render("Cell")}
-                                            </td>
-                                        )
+                                        if (cell.isRowSpanned) return null;
+                                        else {
+                                            return (
+                                                <td rowSpan={cell.rowSpan}
+                                                    style={{borderTop: '1px solid black'}}
+                                                    className='bodyTd ml-3'
+                                                    {...cell.getCellProps()}>
+                                                    {cell.render("Cell")}
+                                                </td>
+                                            )
+                                        }
                                     }
                                     )}
                                 </tr>
-                            </Fragment>
+                         
                         );
                     })}
                 </tbody>

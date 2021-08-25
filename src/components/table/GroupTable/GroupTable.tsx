@@ -1,5 +1,5 @@
-import { Fragment } from "react";
-import { useTable, useExpanded } from "react-table";
+
+import { useTable } from "react-table";
 import "./groupTable.css";
 
 
@@ -59,7 +59,7 @@ function GroupTable({ data, columns }: any) {
     let headerIndex = 0
     return (
         <div className="table-responsive">
-            <table {...getTableProps()} className="table text-center">
+            <table {...getTableProps()} className="group table text-center">
                 <thead>
                     {headerGroups.map(headerGroup => (
                         <tr {...headerGroup.getHeaderGroupProps()}>
@@ -77,46 +77,32 @@ function GroupTable({ data, columns }: any) {
                     }
                 </thead>
                 <tbody {...getTableBodyProps()}>
-                  
-                    { rows.map((row, i) => {
-                        prepareRow(row);
-                        console.log('row', row)
-                        let samePackage = true;
-                        if (i > 0) {
 
-                            samePackage = (row.original.id === rows[i - 1].original.id) ? true : false;
-                            console.log(headerIndex, samePackage, row.original.id, rows[i-1].original.id);
+                    {rows.map((row, i) => {
+                        prepareRow(row);
+                
+                        let samePackage = false
+                        if (i > 0) {
+                            samePackage = (rows[i - 1].original.id === row.original.id) ? true : false
                         }
+
                         if (!samePackage) {
                             headerIndex = i;
                         }
+
                         for (let j = 0; j < row.cells.length; j++) {
                             let cell = row.allCells[j];
-                            
-                            // let rowSpanHeader = rowSpanHeaders.find(x => x.id === cell.column.id);
-                            // // console.log('rowSpanHeaders', rowSpanHeaders)
-                            // // console.log('cell',cell)
-
-                            // const rowSpanvalue = rowSpanHeaders[0].topCellValue; // id = 1/2
-                            // // const rowSpanvalue1 = rowSpanHeaders[1].topCellValue; // packageName
-
-
-                            // if (rowSpanHeader !== undefined ) {
-                            //     if (rowSpanHeader.topCellValue === null || rowSpanHeader.topCellValue !== cell.value) {
-                            if (!samePackage) {
+                            if (!samePackage || j > 5) {
+                              
                                 cell.isRowSpanned = false;
-                                // rowSpanHeader.topCellValue = cell.value;
-                                // rowSpanHeader.topCellIndex = i;
-                                cell.rowSpan = 1;
-
+                                cell.rowSpan = 1
                             } else {
-                                rows[headerIndex].allCells[j].rowSpan++;
+                                rows[headerIndex].allCells[j].rowSpan++
                                 cell.isRowSpanned = true;
                             }
                         }
 
-                        // return null;
-                    // }
+                  
                     })}
                     {rows.map(row => {
                         return (
@@ -126,7 +112,8 @@ function GroupTable({ data, columns }: any) {
                                     else
                                         return (
                                             <td
-                                                className='bodyTd ml-3'
+                                               
+                                                className='bodyTd ml-3 relative'
                                                 rowSpan={cell.rowSpan}
                                                 {...cell.getCellProps()}
                                             >
