@@ -80,18 +80,10 @@ function GroupTable({ data, columns }: any) {
 
                     {rows.map((row, i) => {
                         prepareRow(row);
-<<<<<<< HEAD
                 
                         let samePackage = false
                         if (i > 0) {
                             samePackage = (rows[i - 1].original.id === row.original.id) ? true : false
-=======
-                        console.log('row', row)
-                        let samePackage = false;
-                        if (i > 0) {
-                            samePackage = (row.original.id === rows[i - 1].original.id) ? true : false;
-                            console.log(headerIndex, samePackage, row.original.id, rows[i-1].original.id);
->>>>>>> 43a026850e2e05403fc9f5cc55d9af42413cbb41
                         }
 
                         if (!samePackage) {
@@ -100,28 +92,10 @@ function GroupTable({ data, columns }: any) {
 
                         for (let j = 0; j < row.cells.length; j++) {
                             let cell = row.allCells[j];
-<<<<<<< HEAD
                             if (!samePackage || j > 5) {
                               
                                 cell.isRowSpanned = false;
                                 cell.rowSpan = 1
-=======
-                            
-                            // let rowSpanHeader = rowSpanHeaders.find(x => x.id === cell.column.id);
-                            // // console.log('rowSpanHeaders', rowSpanHeaders)
-                            // // console.log('cell',cell)
-
-                            // const rowSpanvalue = rowSpanHeaders[0].topCellValue; // id = 1/2
-                            // // const rowSpanvalue1 = rowSpanHeaders[1].topCellValue; // packageName
-
-
-                            // if (rowSpanHeader !== undefined ) {
-                            //     if (rowSpanHeader.topCellValue === null || rowSpanHeader.topCellValue !== cell.value) {
-                            if (!samePackage || j > 5) {
-                                cell.isRowSpanned = false;
-                                cell.rowSpan = 1;
-
->>>>>>> 43a026850e2e05403fc9f5cc55d9af42413cbb41
                             } else {
                                 rows[headerIndex].allCells[j].rowSpan++
                                 cell.isRowSpanned = true;
