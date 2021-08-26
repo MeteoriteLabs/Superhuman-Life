@@ -1,7 +1,0 @@
-thead tr:first-child th:nth-child(1),
-thead tr:first-child th:nth-child(2),
-thead tr:first-child th:nth-child(3) {
-     padding-left: 120px !important;
-     border-bottom: 3px solid black !important;
-     border-right: 20px solid white !important;
-}

@@ -10,7 +10,7 @@ function ClientTable({ data, columns }: any) {
      return (
           <div className="table-responsive">
                <table {...getTableProps()} className="table">
-                    <thead>
+                    <thead className="tableHeader">
                          {headerGroups.map((headerGroup) => (
                               <tr {...headerGroup.getHeaderGroupProps()}>
                                    {headerGroup.headers.map((column) => (

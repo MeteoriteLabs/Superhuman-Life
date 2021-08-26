@@ -1,0 +1,45 @@
+{
+     "1": {
+          "title": "Message",
+          "type": "object",
+          "required": ["title", "prerecordedtype", "prerecordedtrigger", "description", "minidesc"],
+          "properties": {
+               "title": {
+                    "type": "string",
+                    "title": "Message Title"
+               },
+               "prerecordedtype": {
+                    "type": "string",
+                    "title": "Type",
+                    "enum": [],
+                    "enumNames": []
+               },
+               "prerecordedtrigger": {
+                    "type": "string",
+                    "title": "Trigger for message",
+                    "enum": [],
+                    "enumNames": []
+               },
+               "description": {
+                    "type": "string",
+                    "title": "Description"
+               },
+               "minidesc": {
+                    "type": "string",
+                    "title": "Mini Description"
+               },
+               "mediaurl": {
+                    "title": "Url (Picture or Video)",
+                    "type": "string"
+               },
+               "or": {
+                    "title": "OR",
+                    "description": "OR",
+                    "type": "null"
+               },
+               "upload": {
+                    "type": "string"
+               }
+          }
+     }
+}
