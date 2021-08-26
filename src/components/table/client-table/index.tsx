@@ -22,7 +22,7 @@ function ClientTable({ data, columns }: any) {
                          ))}
                          {!rows.length && (
                               <tr className="rowCard text-center">
-                                   <td colSpan={columns.length}>No data</td>
+                                   <td colSpan={10}>No Client Data Available</td>
                               </tr>
                          )}
                     </thead>
