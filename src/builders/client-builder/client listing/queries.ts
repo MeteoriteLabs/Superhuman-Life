@@ -9,14 +9,18 @@ export const GET_CLIENTS = gql`
                }
           ) {
                id
+               purchase_date
+               package_duration
                users_permissions_user {
                     username
                     email
                     phone
+                    addresses {
+                         city
+                    }
                }
                fitnesspackages {
                     packagename
-                    groupendtime
                     Status
                     fitness_package_type {
                          type

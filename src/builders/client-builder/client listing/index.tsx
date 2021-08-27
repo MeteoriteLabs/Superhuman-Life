@@ -88,19 +88,6 @@ function ClientListingPage() {
           ],
           []
      );
-     //  const data = [
-     //       {
-     //            clientpic: "/assets/avatar-1.jpg",
-     //            clientname: "Name",
-     //            clientdetails: " +91 9013829110 dummy@gmail.com ",
-     //            clientlocation: "Delhi",
-     //            packagename: " Package Name",
-     //            packagerenewal: "2.03.2022",
-     //            packagestatus: "Purchased",
-     //            programstatus: "Not Assigned",
-     //            programrenewal: "2.03.2022",
-     //       },
-     //  ];
 
      function getDate(time: any) {
           let dateObj = new Date(time);
@@ -109,6 +96,11 @@ function ClientListingPage() {
           let date = dateObj.getDate();
 
           return `${date}/${month}/${year}`;
+     }
+     function getRenewalDate(time: any, duration: any) {
+          var date = new Date(time);
+          date.setDate(date.getDate() + duration);
+          return getDate(date);
      }
 
      const [datatable, setDataTable] = useState<{}[]>([]);
@@ -124,10 +116,10 @@ function ClientListingPage() {
                          clientpic: "/assets/avatar-1.jpg",
                          clientname: Detail.users_permissions_user.username,
                          clientdetails: Detail.users_permissions_user.email,
-                         clientlocation: "Delhi",
-                         packagename: Detail.fitnesspackages.packagename,
-                         packagerenewal: getDate(Date.parse(Detail.fitnesspackages.groupendtime)),
-                         packagestatus: Detail.fitnesspackages.Status,
+                         clientlocation: Detail.users_permissions_user.addresses[0].city,
+                         packagename: Detail.fitnesspackages[0].packagename,
+                         packagerenewal: getRenewalDate(Detail.purchase_date, Detail.package_duration),
+                         packagestatus: Detail.fitnesspackages[0].Status ? "Purchased" : "Not Assigned",
                          programstatus: "Not Assigned",
                          programrenewal: getDate(Date.parse(Detail.fitnessprograms.updatedAt)),
                     };
