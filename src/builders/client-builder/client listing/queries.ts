@@ -36,3 +36,32 @@ export const GET_CLIENTS = gql`
           }
      }
 `;
+
+export const ADD_CLIENT = gql`
+     mutation client(
+          $package_duration: Int!
+          $purchase_date: DateTime!
+          $fitnessprograms: [ID]
+          $fitnesspackages: [ID]
+          $user_permissions_user: ID
+     ) {
+          createUserPackageInput(
+               input: {
+                    data: {
+                         package_duration: $package_duration
+                         purchase_date: $purchase_date
+                         fitnessprograms: $fitnessprograms
+                         fitnesspackages: $fitnesspackages
+                         users_permissions_user: $user_permissions_user
+                    }
+               }
+          ) {
+               userPackage {
+                    package_duration
+                    purchase_date
+                    fitnessprograms
+                    fitnesspackages
+               }
+          }
+     }
+`;

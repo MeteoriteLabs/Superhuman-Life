@@ -5,11 +5,13 @@ import ClientTable from "../../../components/table/client-table";
 import AuthContext from "../../../context/auth-context";
 import { useQuery } from "@apollo/client";
 import { GET_CLIENTS } from "./queries";
+import CreateClient from "./addclientcomponent";
 
 function ClientListingPage() {
      const auth = useContext(AuthContext);
      const [searchFilter, setSearchFilter] = useState("");
      const searchInput = useRef<any>();
+     const CreateClientComponent = useRef<any>(null);
      const columns = useMemo<any>(
           () => [
                {
@@ -80,6 +82,12 @@ function ClientListingPage() {
                                         action3="Chat"
                                         action4="Build Package"
                                         action5="Remove Client"
+                                        actionClick5={() => {
+                                             CreateClientComponent.current.TriggerForm({
+                                                  id: row.original.id,
+                                                  type: "delete",
+                                             });
+                                        }}
                                    />
                               ),
                          },
@@ -120,8 +128,8 @@ function ClientListingPage() {
                          packagename: Detail.fitnesspackages[0].packagename,
                          packagerenewal: getRenewalDate(Detail.purchase_date, Detail.package_duration),
                          packagestatus: Detail.fitnesspackages[0].Status ? "Purchased" : "Not Assigned",
-                         programstatus: "Not Assigned",
-                         programrenewal: getDate(Date.parse(Detail.fitnessprograms.updatedAt)),
+                         programstatus: "Not Assigned", //to be fixed
+                         programrenewal: getDate(Date.parse(Detail.fitnessprograms.updatedAt)), //to be fixed
                     };
                })
           );
@@ -154,9 +162,20 @@ function ClientListingPage() {
                          </Col>
                          <Col>
                               <Card.Title className="text-center">
-                                   <Button variant={true ? "outline-secondary" : "light"} size="sm" onClick={() => {}}>
+                                   <Button
+                                        variant={true ? "outline-secondary" : "light"}
+                                        size="sm"
+                                        onClick={() => {
+                                             CreateClientComponent.current.TriggerForm({
+                                                  id: null,
+                                                  type: "create",
+                                                  modal_status: true,
+                                             });
+                                        }}
+                                   >
                                         <i className="fas fa-plus-circle"></i> Add Client
                                    </Button>
+                                   <CreateClient ref={CreateClientComponent}></CreateClient>
                               </Card.Title>
                          </Col>
                     </Row>
