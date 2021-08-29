@@ -24,6 +24,9 @@
                     "title": "Type",
                     "enum": [],
                     "enumNames": []
+               },
+               "packagesearch": {
+                    "type": "string"
                }
           }
      }

@@ -5,7 +5,7 @@ import { ADD_CLIENT } from "./queries";
 import AuthContext from "../../../context/auth-context";
 import StatusModal from "../../../components/StatusModal/StatusModal";
 import { Subject } from "rxjs";
-//import {schema, widgets} from "./schema"
+import { schema, widgets } from "./schema";
 
 interface Operation {
      id: string;
@@ -88,14 +88,14 @@ function CreateClient(props: any, ref: any) {
                     <ModalView
                          name="New Client"
                          isStepper={false}
-                         //formUISchema={schema}
+                         formUISchema={schema}
                          formSchema={ClientSchema}
                          showing={operation.modal_status}
                          formSubmit={(frm: any) => {
                               OnSubmit(frm);
                          }}
                          formData={messageDetails}
-                         //widgets={widgets}
+                         widgets={widgets}
                          modalTrigger={modalTrigger}
                     />
                )}
