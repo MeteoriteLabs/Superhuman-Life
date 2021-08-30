@@ -21,14 +21,10 @@
                },
                "clienttype": {
                     "type": "string",
-                    "title": "Type",
-                    "enum": [],
-                    "enumNames": []
+                    "title": "What's type of client?",
+                    "enum": ["New", "Existing"]
                },
                "packagesearch": {
-                    "type": "string"
-               },
-               "additionalinfo": {
                     "type": "string"
                }
           }

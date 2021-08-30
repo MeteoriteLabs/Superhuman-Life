@@ -39,28 +39,31 @@ export const GET_CLIENTS = gql`
 
 export const ADD_CLIENT = gql`
      mutation client(
-          $package_duration: Int!
-          $purchase_date: DateTime!
-          $fitnessprograms: [ID]
-          $fitnesspackages: [ID]
-          $user_permissions_user: ID
+          $username: String
+          $email: String
+          $phone: String
+          $sex: String
+          $type: String
+          $suggestedpackage : String
      ) {
-          createUserPackageInput(
+          users(
                input: {
                     data: {
-                         package_duration: $package_duration
-                         purchase_date: $purchase_date
-                         fitnessprograms: $fitnessprograms
-                         fitnesspackages: $fitnesspackages
-                         users_permissions_user: $user_permissions_user
+                        $username: $username
+                        $email: $email
+                        $phone: $phone
+                        $sex: $sex
+                        $type: $type
+                        $suggestedpackage : $suggestedpackage
                     }
                }
           ) {
-               userPackage {
-                    package_duration
-                    purchase_date
-                    fitnessprograms
-                    fitnesspackages
+               users {
+                    users
+                    email
+                    phone
+                    sex
+                    type
                }
           }
      }

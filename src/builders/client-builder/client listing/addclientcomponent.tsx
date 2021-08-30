@@ -1,9 +1,9 @@
 import React, { useContext, useImperativeHandle, useState } from "react";
-import { useQuery, useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import ModalView from "../../../components/modal";
 import { ADD_CLIENT } from "./queries";
 import AuthContext from "../../../context/auth-context";
-import StatusModal from "../../../components/StatusModal/StatusModal";
+//import StatusModal from "../../../components/StatusModal/StatusModal";
 import { Subject } from "rxjs";
 import { schema, widgets } from "./schema";
 
@@ -38,31 +38,31 @@ function CreateClient(props: any, ref: any) {
           },
      }));
 
-     function loadData(data: any) {
-          // messageSchema["1"].properties.prerecordedtype.enum = [...data.prerecordedtypes].map(n => (n.id));
-          // messageSchema["1"].properties.prerecordedtype.enumNames = [...data.prerecordedtypes].map(n => (n.name));
-          // messageSchema["1"].properties.prerecordedtrigger.enum = [...data.prerecordedtriggers].map(n => (n.id));
-          // messageSchema["1"].properties.prerecordedtrigger.enumNames = [...data.prerecordedtriggers].map(n => (n.name));
-     }
+     //function loadData(data: any) {
+     // messageSchema["1"].properties.prerecordedtype.enum = [...data.prerecordedtypes].map(n => (n.id));
+     // messageSchema["1"].properties.prerecordedtype.enumNames = [...data.prerecordedtypes].map(n => (n.name));
+     // messageSchema["1"].properties.prerecordedtrigger.enum = [...data.prerecordedtriggers].map(n => (n.id));
+     // messageSchema["1"].properties.prerecordedtrigger.enumNames = [...data.prerecordedtriggers].map(n => (n.name));
+     //}
 
-     function FillDetails(data: any) {
-          // let details: any = {};
-          // let msg = data.prerecordedmessage;
-          // console.log(msg)
-          // //debugger
-          // details.title = msg.title;
-          // details.prerecordedtype = msg.prerecordedtype.id;
-          // details.prerecordedtrigger = msg.prerecordedtrigger.id;
-          // details.description = msg.description;
-          // details.minidesc = msg.minidescription;
-          // details.mediaurl = msg.mediaurl;
-          // details.file = msg.mediaupload.id;
-          // details.status = msg.status;
-          // details.image = msg.upload;
-          // setMessageDetails(details);
+     //function FillDetails(data: any) {
+     // let details: any = {};
+     // let msg = data.prerecordedmessage;
+     // console.log(msg)
+     // //debugger
+     // details.title = msg.title;
+     // details.prerecordedtype = msg.prerecordedtype.id;
+     // details.prerecordedtrigger = msg.prerecordedtrigger.id;
+     // details.description = msg.description;
+     // details.minidesc = msg.minidescription;
+     // details.mediaurl = msg.mediaurl;
+     // details.file = msg.mediaupload.id;
+     // details.status = msg.status;
+     // details.image = msg.upload;
+     // setMessageDetails(details);
 
-          OnSubmit(null);
-     }
+     //OnSubmit(null);
+     //}
 
      function CreateClient(frm: any) {
           createClient({ variables: frm });
