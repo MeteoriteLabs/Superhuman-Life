@@ -126,7 +126,7 @@ function ClientListingPage() {
                          clientdetails: Detail.users_permissions_user.email,
                          clientlocation: Detail.users_permissions_user.addresses[0].city,
                          packagename: Detail.fitnesspackages[0].packagename,
-                         packagerenewal: getRenewalDate(Detail.purchase_date, Detail.package_duration),
+                         packagerenewal: getRenewalDate(Detail.effective_date, Detail.package_duration),
                          packagestatus: Detail.fitnesspackages[0].Status ? "Purchased" : "Not Assigned",
                          programstatus: "Not Assigned", //to be fixed
                          programrenewal: getDate(Date.parse(Detail.fitnessprograms.updatedAt)), //to be fixed

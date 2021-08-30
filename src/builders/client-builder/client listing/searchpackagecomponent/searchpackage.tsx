@@ -82,7 +82,7 @@ const PackageSearch = (props: any) => {
                <InputGroup>
                     <FormControl
                          aria-describedby="basic-addon1"
-                         placeholder="Search For Package Name"
+                         placeholder="Search For Package"
                          id="package"
                          ref={inputField}
                          onChange={(e) => {

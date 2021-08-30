@@ -27,6 +27,9 @@
                },
                "packagesearch": {
                     "type": "string"
+               },
+               "additionalinfo": {
+                    "type": "string"
                }
           }
      }

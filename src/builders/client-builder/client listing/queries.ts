@@ -9,7 +9,7 @@ export const GET_CLIENTS = gql`
                }
           ) {
                id
-               purchase_date
+               effective_date
                package_duration
                users_permissions_user {
                     username
