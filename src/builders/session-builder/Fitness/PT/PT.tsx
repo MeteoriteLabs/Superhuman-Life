@@ -1,50 +1,83 @@
 import { useQuery } from '@apollo/client';
-import { useContext, useMemo } from 'react'
+import { useContext, useMemo, useRef, useState } from 'react'
 import { Badge, Button, Dropdown, OverlayTrigger, Popover, Row, Col } from "react-bootstrap";
-import Table from '../../../../components/table';
-import { GET_ALL_PACKAGES } from '../../../resource-builder/graphQL/queries';
 import AuthContext from "../../../../context/auth-context"
 import PTTable from '../../../../components/table/PtTable/PTTable'
-
-// type Data = {
-//     actor: string;
-//     movie: ;
-// };
+import { GET_PACKAGE_BY_TYPE } from '../../graphQL/queries';
+import moment from 'moment';
+import ActionButton from '../../../../components/actionbutton';
+import FitnessAction from '../FitnessAction'
 
 
 
 export default function Group(props) {
 
     const auth = useContext(AuthContext);
+    const [userPackage, setUserPackage] = useState<any>([]);
+
+    const fitnessActionRef = useRef<any>(null);
+
+    const FetchData = () => {
+        useQuery(GET_PACKAGE_BY_TYPE, {
+            variables: {
+                id: auth.userid,
+                type: 'Personal Training'
+            },
+            onCompleted: (data) => loadData(data)
+        })
+
+    }
 
 
-    // const { data } = useQuery(GET_ALL_PACKAGES, {
-    //     variables: {
-    //         id: auth.userid,
-    //     }
-    // });
-    // console.log(data)
 
 
-
-    // const FetchData = () => {
-    //     useQuery(GET_ALL_PACKAGES, {
-    //         variables: {
-    //             id: auth.userid
-    //         },
-    //         onCompleted: (data => fillData(data))
-    //     })
-
-    // }
-
-    // FetchData();
-
-
-    // const fillData = (data) => {
-    //     console.log(data)
-    // }
+    const loadData = (data) => {
+        console.log('query data', data);
+        // const PTdata = data.userPackages[0].fitnesspackages.filter(item => item.fitness_package_type.type === "Personal Training")
+        // console.log("🚀 ~ file: PT.tsx ~ line 40 ~ loadData ~ PTdata", PTdata)
+        setUserPackage(
+            [...data.userPackages].map((packageItem, index) => {
+                return {
+                    id: packageItem.id,
+                    packageName: packageItem.fitnesspackages.map(item => item.packagename),
+                    effectiveDate: moment(packageItem.effective_date).format("DD/MM/YYYY"),
+                    packageStatus: packageItem.fitnesspackages.map(item => item.Status ? "Active" : "Inactive"),
+                    packageRenewal: "25/10/20",
 
 
+                    client: packageItem.fitnessprograms.map(item => item.users_permissions_user.username),
+                    programName: packageItem.fitnessprograms.map(item => item.title),
+                    programStatus: "Assigned",
+                    programRenewal: "25/07/20",
+                }
+            })
+        )
+    }
+
+
+    FetchData();
+    console.log('userPackage', userPackage);
+
+
+    const dataTable: any[] = []
+    new Array(2).fill(0).map((_, index) => {
+        dataTable.push({
+            id: userPackage[0]?.id,
+            packageName: userPackage[0]?.packageName[index],
+            effectiveDate: userPackage[0]?.effectiveDate,
+            packageStatus: userPackage[0]?.packageStatus[index],
+            packageRenewal: "25/10/20",
+
+
+            client: userPackage[0]?.client[index],
+            programName: userPackage[0]?.programName[index],
+            programStatus: "Assigned",
+            programRenewal: "25/07/20",
+
+        })
+    })
+
+    console.log('dataTable', dataTable);
 
     // const dataTable = useMemo<any>(() => [
     //     {
@@ -89,56 +122,54 @@ export default function Group(props) {
     // ], []);
 
 
-    const dataTable2 = useMemo<any>(() => [
-        {
-            id: '1',
-            packageName: "Package Name 1",
-            packageStatus: 'Active',
-            startDate: "28/07/20",
-            packageRenewal: "27/07/20",
+    // const dataTable2 = useMemo<any>(() => [
+    //     {
+    //         id: '1',
+    //         packageName: "Package Name 1",
+    //         packageStatus: 'Active',
+    //         effectiveDate: "28/07/20",
+    //         packageRenewal: "27/07/20",
 
-            programName: "Pirates of the Carribean 2",
-            client: "John",
-            programStatus: "Assigned",
-            programRenewal: "26/04/20",
+    //         programName: "Pirates of the Carribean 2",
+    //         client: "John",
+    //         programStatus: "Assigned",
+    //         programRenewal: "26/04/20",
 
-        },
+    //     },
 
-        {
-            id: '1',
-            packageName: "Package Name 1",
-            packageStatus: 'Active',
-            startDate: "28/07/20",
-            packageRenewal: "27/07/20",
+    //     {
+    //         id: '1',
+    //         packageName: "Package Name 1",
+    //         packageStatus: 'Active',
+    //         effectiveDate: "28/07/20",
+    //         packageRenewal: "27/07/20",
 
+    //         programName: "Pirates of the Carribean 3",
+    //         client: "Mary",
+    //         programStatus: "Assigned",
+    //         programRenewal: "26/04/20",
 
-            programName: "Pirates of the Carribean 3",
-            client: "Mary",
-            programStatus: "Assigned",
-            programRenewal: "26/04/20",
-
-        },
-
-
-        {
-            id: '2',
-            packageName: "Package Name 2",
-            packageStatus: 'Active',
-            startDate: "28/07/20",
-            packageRenewal: "27/07/20",
+    //     },
 
 
-            programName: "Pirates of the Carribean 3",
-            client: "Harry",
-            programStatus: "Not Assigned",
-            programRenewal: "25/04/20"
+    //     {
+    //         id: '2',
+    //         packageName: "Package Name 2",
+    //         packageStatus: 'Active',
+    //         effectiveDate: "28/07/20",
+    //         packageRenewal: "27/07/20",
 
-        },
+    //         programName: "Pirates of the Carribean 3",
+    //         client: "Harry",
+    //         programStatus: "Not Assigned",
+    //         programRenewal: "25/04/20"
+
+    //     },
 
 
-     
 
-    ], []);
+
+    // ], []);
 
 
 
@@ -189,7 +220,7 @@ export default function Group(props) {
                         },
                         enableRowSpan: true
                     },
-                    { accessor: "startDate", Header: "Start Date", enableRowSpan: true },
+                    { accessor: "effectiveDate", Header: "Effective Date", enableRowSpan: true },
                     { accessor: "packageRenewal", Header: 'Renewal Date', enableRowSpan: true },
                 ]
             },
@@ -217,25 +248,32 @@ export default function Group(props) {
                     {
                         id: "edit",
                         Header: "Actions",
-                        Cell: ({ row }: any) => (
-                            <OverlayTrigger
-                                trigger="click"
-                                placement="right"
-                                overlay={
-                                    <Popover id="action-popover">
-                                        <Popover.Content>
-                                            <Dropdown.Item>Assign</Dropdown.Item>
-                                            <Dropdown.Item>Edit</Dropdown.Item>
-                                            <Dropdown.Item>View</Dropdown.Item>
-                                        </Popover.Content>
-                                    </Popover>
-                                }
+                        Cell: ({ row }: any) => {
+                            return <ActionButton
+                                action1='Build'
+                                actionClick1={() => {
+                                    console.log(fitnessActionRef)
+                                    fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'build', type: "Personal Training" })
+                                }}
+                                action2='Assign'
+                                actionClick2={() => {
+                                    fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'assign', type: "Personal Training" })
+                                }}
+                                action3='Edit'
+                                actionClick3={() => {
+                                    fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'edit', type: "Personal Training" })
+                                }}
+                                action4='View'
+                                actionClick4={() => {
+                                    fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'view', type: "Personal Training" })
+                                }}
+                                action5='Details'
+                                actionClick5={() => {
+                                    fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'details', type: "Personal Training" })
+                                }}
                             >
-                                <Button variant="white">
-                                    <i className="fas fa-ellipsis-v"></i>
-                                </Button>
-                            </OverlayTrigger>
-                        ),
+                            </ActionButton>
+                        }
                     }
                 ]
             },
@@ -247,7 +285,8 @@ export default function Group(props) {
         <div className="mt-5">
             <Row>
                 <Col>
-                    <PTTable columns={columns} data={dataTable2} />
+                    <PTTable columns={columns} data={dataTable} />
+                    <FitnessAction ref={fitnessActionRef} />
                 </Col>
             </Row>
         </div>

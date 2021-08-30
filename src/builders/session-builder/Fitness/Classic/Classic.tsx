@@ -1,44 +1,68 @@
 import { useQuery } from '@apollo/client';
-import { useContext, useMemo } from 'react'
+import { useContext, useMemo, useState } from 'react'
 import { Badge, Button, Dropdown, OverlayTrigger, Popover, Row, Col } from "react-bootstrap";
 import Table from '../../../../components/table';
-import { GET_ALL_PACKAGES } from '../../../resource-builder/graphQL/queries';
 import AuthContext from "../../../../context/auth-context"
+import { GET_PACKAGE_BY_TYPE } from '../../graphQL/queries';
+import moment from 'moment'
 
 export default function Classic(props) {
 
     const auth = useContext(AuthContext);
-  
 
-    const { data } = useQuery(GET_ALL_PACKAGES, {
-        variables: {
-            id: auth.userid,
-        }
-    });
+    const [userPackage, setUserPackage]: any[] = useState('')
+
+
+    // const { data } = useQuery(GET_PACKAGE_BY_TYPE, {
+    //     variables: {
+    //         id: auth.userid,
+    //         type: 'Classic Class'
+    //     }
+    // });
     // console.log(data)
 
 
 
-    // const FetchData = () => {
-    //     useQuery(GET_ALL_PACKAGES, {
-    //         variables: {
-    //             id: auth.userid
-    //         },
-    //         onCompleted: (data => fillData(data))
-    //     })
 
-    // }
 
+    const FetchData = () => {
+        useQuery(GET_PACKAGE_BY_TYPE, {
+            variables: {
+                id: auth.userid,
+                type: 'Classic Class'
+            },
+            onCompleted: (data) => loadData(data)
+        })
+
+    }
+
+ 
+
+
+    const loadData = (data) => {
+        console.log(data);
+        setUserPackage(
+            [...data.userPackages]?.map((packageItem, index) => {
+                return {
+                    packageName: packageItem.fitnesspackages[0].packagename,
+                    duration: packageItem.fitnesspackages[0].duration.toString(),
+                    expiry:moment(packageItem.fitnesspackages[0].expiry_date).format("DD/MM/YY"),
+                    packageStatus: packageItem.fitnesspackages[0].Status ? "Active" : "Inactive",
+
+                    client:packageItem.fitnessprograms[0].users_permissions_user.username,
+                    programName:packageItem.fitnessprograms[0].title,
+                    programStatus: "Assigned",
+                    programRenewal: "25/07/20",
+                }
+            })
+        )
+    }
+
+    
     // FetchData();
 
-
-    // const fillData = (data) => {
-    //     console.log(data)
-    // }
-
-
     const columns = useMemo<any>(() => [
-  
+
         {
             Header: "Package",
             columns: [
@@ -46,8 +70,8 @@ export default function Classic(props) {
                     accessor: "packageName",
                     Header: "Name"
                 },
-                {accessor: "duration", Header:"Duration"},
-                {accessor: "expiry", Header:"Expiry"},
+                { accessor: "duration", Header: "Duration" },
+                { accessor: "expiry", Header: "Expiry" },
                 {
                     accessor: "packageStatus",
                     Header: "Status",
@@ -78,13 +102,13 @@ export default function Classic(props) {
         {
             Header: "Program",
             columns: [
-                { accessor:'programName', Header:"Name"},
+                { accessor: 'programName', Header: "Name" },
                 {
-                    accessor: "students",
-                    Header: "Students",
+                    accessor: "client",
+                    Header: "Client",
                     Cell: (v: any) => {
                         return <div className='text-center'>
-                            <img src={v.value} alt={v.value} style={{ width: "50px", height: "50px", borderRadius:"50%" }} />
+                            <img src={v.value} alt={v.value} style={{ width: "50px", height: "50px", borderRadius: "50%" }} />
                         </div>
                     }
                 },
@@ -131,40 +155,44 @@ export default function Classic(props) {
 
     const dataTable = useMemo<any>(() => [
         {
-            "packageName":"Package Name",
-            "duration":"10 days",
-            "expiry":"25/07/20",
+            "packageName": "Package Name",
+            "duration": "10 days",
+            "expiry": "25/07/20",
             "packageStatus": "Active",
 
             "programName": "Package Name",
-            "students": 'https://picsum.photos/200',
+            "client": 'https://picsum.photos/200',
             "programStatus": "Not Assigned",
             "programRenewal": "25/07/20",
         },
         {
-            "packageName":"Package Name",
-            "duration":"1 days",
-            "expiry":"25/07/20",
+            "packageName": "Package Name",
+            "duration": "1 days",
+            "expiry": "25/07/20",
             "packageStatus": "Inactive",
 
             "programName": "Package Name",
-            "students": 'https://picsum.photos/200',
+            "client": 'https://picsum.photos/200',
             "programStatus": "Assigned",
             "programRenewal": "25/07/20",
         },
         {
-            "packageName":"Package Name",
-            "duration":"10 days",
-            "expiry":"25/07/20",
+            "packageName": "Package Name",
+            "duration": "10 days",
+            "expiry": "25/07/20",
             "packageStatus": "Active",
 
             "programName": "Package Name",
-            "students": 'https://picsum.photos/200',
+            "client": 'https://picsum.photos/200',
             "programStatus": "Not Assigned",
             "programRenewal": "25/07/20",
         },
-      
+
     ], []);
+
+    
+    // console.log(userPackage);
+    // console.log(dataTable)
 
     return (
         <div className="mt-5">

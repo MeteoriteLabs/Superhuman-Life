@@ -1,15 +1,11 @@
 import { useQuery } from '@apollo/client';
-import { useContext, useMemo } from 'react'
+import { useContext, useMemo, useState } from 'react'
 import { Badge, Button, Dropdown, OverlayTrigger, Popover, Row, Col } from "react-bootstrap";
-import Table from '../../../../components/table';
-import { GET_ALL_PACKAGES } from '../../../resource-builder/graphQL/queries';
+
 import AuthContext from "../../../../context/auth-context"
 import GroupTable from '../../../../components/table/GroupTable/GroupTable';
-
-// type Data = {
-//     actor: string;
-//     movie: ;
-// };
+import { GET_PACKAGE_BY_TYPE } from '../../graphQL/queries';
+import moment from 'moment';
 
 
 
@@ -17,33 +13,46 @@ export default function Group(props) {
 
     const auth = useContext(AuthContext);
 
-
-    // const { data } = useQuery(GET_ALL_PACKAGES, {
-    //     variables: {
-    //         id: auth.userid,
-    //     }
-    // });
-    // console.log(data)
+    const [userPackage, setUserPackage] = useState<any>([])
 
 
+    const FetchData = () => {
+        useQuery(GET_PACKAGE_BY_TYPE, {
+            variables: {
+                id: auth.userid,
+                type: 'Group Class'
+            },
+            onCompleted: (data) => loadData(data)
+        })
 
-    // const FetchData = () => {
-    //     useQuery(GET_ALL_PACKAGES, {
-    //         variables: {
-    //             id: auth.userid
-    //         },
-    //         onCompleted: (data => fillData(data))
-    //     })
-
-    // }
-
-    // FetchData();
+    }
 
 
-    // const fillData = (data) => {
-    //     console.log(data)
-    // }
 
+
+    const loadData = (data) => {
+        console.log(data);
+        setUserPackage(
+            [...data.userPackages].map((packageItem, index) => {
+                return {
+                    id: packageItem.id,
+                    packageName: packageItem.fitnesspackages[0].packagename,
+                    expiry: moment(packageItem.fitnesspackages[0].expiry_date).format("DD/MM/YYYY"),
+                    packageStatus: packageItem.fitnesspackages[0].Status ? "Active" : "Inactive",
+                    action: buttonAction(),
+
+                    client: packageItem.fitnessprograms[0].users_permissions_user.username,
+                    time: moment(packageItem.fitnessprograms[0].published_at).format('h:mm:ss a'),
+                    programName: packageItem.fitnessprograms[0].title,
+                    programStatus: "Assigned",
+                    renewal: "25/07/20",
+                }
+            })
+        )
+    }
+
+
+    FetchData();
 
 
     const buttonAction = () => {
@@ -167,6 +176,20 @@ export default function Group(props) {
             renewal: "25/04/20"
         },
 
+
+        {
+            id: "1",
+            packageName: "Package Name 1",
+            expiry: "29/12/20",
+            packageStatus: 'Active',
+            action: buttonAction(),
+            programName: "Pirates of the Carribean 1",
+            client: "Mary",
+            time: "7:00 am-8:00 am",
+            programStatus: "Assigned",
+            renewal: "25/04/20"
+        },
+
         {
             id: "1",
             packageName: "Package Name 1",
@@ -251,7 +274,7 @@ export default function Group(props) {
 
     let arr: any[] = []
     for (let i = 0; i < dataTable.length - 1; i++) {
-        if(dataTable[i].id === dataTable[i + 1].id) {
+        if (dataTable[i].id === dataTable[i + 1].id) {
             if (dataTable[i].programName === dataTable[i + 1].programName) {
                 if (typeof dataTable[i].client === "string") {
                     arr[0] = dataTable[i].client;
@@ -261,16 +284,14 @@ export default function Group(props) {
                 dataTable.splice(i, 1);
                 i--;
             }
-        }else{
+        } else {
             arr = []
         }
     }
 
-    console.log(arr);
-    console.log("🚀 ~ file: Group.tsx ~ line 241 ~ Group ~ array", dataTable);
 
-
-
+    // console.log("dataTable", dataTable);
+    // console.log('userPackage', userPackage)
 
 
 
@@ -308,23 +329,29 @@ export default function Group(props) {
                         accessor: "client", Header: 'Client',
                         Cell: (row) => {
                             return <div >
-                                <div>
-                                    {typeof row.value === "string" ?
-                                        <img src="https://picsum.photos/200/100" alt='profile-pic' style={{ width: '60px', height: '60px', borderRadius: '50%' }} /> :
-                                        <div className='d-flex'>
-                                            {row.value.map((item, index) => {
-                                                return <img src="https://picsum.photos/200/100" alt='profile-pic' style={{ width: '60px', height: '60px', borderRadius: '50%' }} />
+                                {typeof row.value === "string" ?
+                                    <img
+                                        src="https://picsum.photos/200/100" alt='profile-pic'
+                                        style={{ width: '60px', height: '60px', borderRadius: '50%' }} />
+                                    :
+                                    <div className='position-relative' style={{ width: '8rem', height: '5rem' }}>
+                                        {row.value.slice(0, 4).map((item, index) => {
+                                            let postionLeft = 20;
+                                            return <img
+                                                key={index}
+                                                src="https://picsum.photos/200/100" alt='profile-pic'
+                                                style={{ width: '60px', height: '60px', borderRadius: '50%', left: `${postionLeft * index}%` }}
+                                                className='position-absolute'
+                                            />
+                                        })}
+                                    </div>
+                                }
 
-                                            })}
-                                        </div>
-                                    }
-                                    {/* <img src="https://picsum.photos/200/100" alt='profile-pic' style={{ width: '60px', height: '60px', borderRadius: '50%' }} />
-                                    <img src="https://picsum.photos/200/200" alt='profile-pic' style={{ width: '60px', height: '60px', borderRadius: '50%', position: 'absolute', left: '45%' }} />
-                                    <img src="https://picsum.photos/200/300" alt='profile-pic' style={{ width: '60px', height: '60px', borderRadius: '50%', position: 'absolute', left: '46%' }} /> */}
-                                </div>
-                                {typeof row.value !== "string" ? <p style={{ whiteSpace: 'nowrap' }}>{row.value.length}+ people</p>
-                                    : <p className='text-center'>{row.value}</p>}
-                                {/* {row.value.length > 1 ? <p>{row.value.length} people</p> : <p>{row.value[0]}</p>} */}
+                                {typeof row.value !== "string" ?
+                                    <p style={{ whiteSpace: 'nowrap' }}>{row.value.length} people</p>
+                                    :
+                                    <p className='text-center'>{row.value}</p>}
+
                             </div>
                         }
                     },
@@ -376,7 +403,7 @@ export default function Group(props) {
         <div className="mt-5">
             <Row>
                 <Col>
-                    <GroupTable columns={columns} data={dataTable} />
+                    <GroupTable columns={columns} data={userPackage} />
                 </Col>
 
             </Row>

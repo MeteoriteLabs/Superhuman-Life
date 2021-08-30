@@ -93,7 +93,7 @@ function GroupTable({ data, columns }: any) {
                         for (let j = 0; j < row.cells.length; j++) {
                             let cell = row.allCells[j];
                             if (!samePackage || j > 5) {
-                              
+                          
                                 cell.isRowSpanned = false;
                                 cell.rowSpan = 1
                             } else {
