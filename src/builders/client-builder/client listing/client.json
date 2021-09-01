@@ -13,7 +13,8 @@
                },
                "phonenumber": {
                     "type": "string",
-                    "title": "Phone Number"
+                    "title": "Phone Number",
+                    "minLength": 10
                },
                "email": {
                     "type": "string",

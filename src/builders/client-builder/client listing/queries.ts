@@ -38,32 +38,25 @@ export const GET_CLIENTS = gql`
 `;
 
 export const ADD_CLIENT = gql`
-     mutation client(
-          $username: String
-          $email: String
-          $phone: String
-          $sex: String
-          $type: String
-          $suggestedpackage : String
-     ) {
-          users(
+     mutation client($username: String!, $firstname: String, $lastname: String, $email: String!, $phone: Long) {
+          createUser(
                input: {
                     data: {
-                        $username: $username
-                        $email: $email
-                        $phone: $phone
-                        $sex: $sex
-                        $type: $type
-                        $suggestedpackage : $suggestedpackage
+                         username: $username
+                         Firstname: $firstname
+                         Lastname: $lastname
+                         email: $email
+                         Phone: $phone
                     }
                }
           ) {
-               users {
-                    users
+               user {
+                    id
+                    createdAt
+                    updatedAt
+                    username
+                    Phone
                     email
-                    phone
-                    sex
-                    type
                }
           }
      }
