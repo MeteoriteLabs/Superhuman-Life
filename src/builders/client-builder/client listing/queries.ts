@@ -14,7 +14,7 @@ export const GET_CLIENTS = gql`
                users_permissions_user {
                     username
                     email
-                    phone
+                    Phone
                     addresses {
                          city
                     }
