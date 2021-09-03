@@ -12,6 +12,7 @@ export const GET_CLIENTS = gql`
                effective_date
                package_duration
                users_permissions_user {
+                    id
                     username
                     email
                     Phone
@@ -38,7 +39,7 @@ export const GET_CLIENTS = gql`
 `;
 
 export const ADD_CLIENT = gql`
-     mutation client($username: String!, $firstname: String, $lastname: String, $email: String!, $phone: Long) {
+     mutation client($username: String!, $firstname: String, $lastname: String, $email: String!, $phone: String) {
           createUser(
                input: {
                     data: {
@@ -47,6 +48,7 @@ export const ADD_CLIENT = gql`
                          Lastname: $lastname
                          email: $email
                          Phone: $phone
+                         role: "2"
                     }
                }
           ) {

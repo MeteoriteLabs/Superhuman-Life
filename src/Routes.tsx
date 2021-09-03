@@ -15,7 +15,7 @@ const SettingsPage = React.lazy(() => import("./pages/settings"));
 const AboutPage = React.lazy(() => import("./pages/about"));
 const ContactPage = React.lazy(() => import("./pages/contact"));
 const FQAsPage = React.lazy(() => import("./pages/faqs"));
-
+const ClientHomePage = React.lazy(() => import("./builders/client-builder/clientlisting/client"));
 const PackagePage = React.lazy(() => import("./builders/package-builder"));
 const ResourcePage = React.lazy(() => import("./builders/resource-builder"));
 const ProgramPage = React.lazy(() => import("./builders/program-builder"));
@@ -55,6 +55,7 @@ export default function Routes({ token }: any) {
                                    <Route path="/home" component={HomePage} />
                                    <Route exact path="/packages" component={PackagePage} />
                                    <Route exact path="/programs" component={ProgramPage} />
+                                   <Route path="/client/home" component={ClientHomePage} />
                                    <Route path="/profile" component={ProfilePage} />
                                    <Route path="/resources" component={ResourcePage} />
                                    <Route path="/schedule" component={SchedulePage} />

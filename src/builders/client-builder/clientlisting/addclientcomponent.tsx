@@ -3,14 +3,14 @@ import { useMutation } from "@apollo/client";
 import ModalView from "../../../components/modal";
 import { ADD_CLIENT } from "./queries";
 //import AuthContext from "../../../context/auth-context";
-//import StatusModal from "../../../components/StatusModal/StatusModal";
+import StatusModal from "../../../components/StatusModal/StatusModal";
 import { Subject } from "rxjs";
 import { schema, widgets } from "./schema";
 
 interface Operation {
      id: string;
      modal_status: boolean;
-     type: "create";
+     type: "create" | "delete";
 }
 
 function CreateClient(props: any, ref: any) {
@@ -85,6 +85,29 @@ function CreateClient(props: any, ref: any) {
      }
 
      //FetchData();
+     // mutation client($username: String!, $firstname: String, $lastname: String, $email: String!, $phone: String) {
+     //      createUser(
+     //           input: {
+     //                data: {
+     //                     username: $username
+     //                     Firstname: $firstname
+     //                     Lastname: $lastname
+     //                     email: $email
+     //                     Phone: $phone
+     //                     role: "2"
+     //                }
+     //           }
+     //      ) {
+     //           user {
+     //                id
+     //                createdAt
+     //                updatedAt
+     //                username
+     //                Phone
+     //                email
+     //           }
+     //      }
+     // }
 
      return (
           <>
@@ -103,7 +126,7 @@ function CreateClient(props: any, ref: any) {
                          modalTrigger={modalTrigger}
                     />
                )}
-               {/* {operation.type === "delete" && (
+               {operation.type === "delete" && (
                     <StatusModal
                          modalTitle="Delete"
                          modalBody="Do you want to delete this message?"
@@ -111,7 +134,7 @@ function CreateClient(props: any, ref: any) {
                          buttonRight="Yes"
                          onClick={() => {}}
                     />
-               )} */}
+               )}
           </>
      );
 }

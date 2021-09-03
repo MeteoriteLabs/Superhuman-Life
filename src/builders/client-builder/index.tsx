@@ -1,5 +1,5 @@
 import { Card, Tab, Tabs, TabContent } from "react-bootstrap";
-import ClientListing from "./client listing";
+import ClientListing from "./clientlisting";
 
 export default function ClientPage() {
      return (

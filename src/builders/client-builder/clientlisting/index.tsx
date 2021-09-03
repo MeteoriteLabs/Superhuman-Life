@@ -6,12 +6,18 @@ import AuthContext from "../../../context/auth-context";
 import { useQuery } from "@apollo/client";
 import { GET_CLIENTS } from "./queries";
 import CreateClient from "./addclientcomponent";
+//import client from "./client";
 
 function ClientListingPage() {
      const auth = useContext(AuthContext);
      const [searchFilter, setSearchFilter] = useState("");
      const searchInput = useRef<any>();
      const CreateClientComponent = useRef<any>(null);
+
+     function handleRedirect(id: any) {
+          window.location.href = `/client/home/${id}`;
+     }
+
      const columns = useMemo<any>(
           () => [
                {
@@ -73,11 +79,15 @@ function ClientListingPage() {
                               accessor: "programrenewal",
                          },
                          {
+                              id: "edit",
                               Header: "Action",
                               accessor: "action",
                               Cell: ({ row }: any) => (
                                    <ActionButton
                                         action1="Go to client"
+                                        actionClick1={() => {
+                                             handleRedirect(row.original.id);
+                                        }}
                                         action2="Build Program"
                                         action3="Chat"
                                         action4="Build Package"
@@ -121,6 +131,7 @@ function ClientListingPage() {
           setDataTable(
                [...data.userPackages].map((Detail) => {
                     return {
+                         id: Detail.id,
                          clientpic: "/assets/avatar-1.jpg",
                          clientname: Detail.users_permissions_user.username,
                          clientdetails: Detail.users_permissions_user.email,
