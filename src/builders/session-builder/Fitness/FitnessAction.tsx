@@ -6,16 +6,21 @@ import SessionModal from '../../../components/SessionModal/SessionModal';
 
 interface Operation {
     id: string;
-    actionType: 'build' | 'assign' | 'edit' | 'view' | 'details';
-    type: 'Personal Training'
+    actionType: 'addNew' | 'manager' | 'details';
+    type: 'Personal Training' | 'Group Class' | 'Classic Class' | 'Custom Class'
+    rowData: {
+        programName: string
+    }
 }
 
 function FitnessAction(props, ref: any) {
-    console.log(ref)
+
 
     const [render, setRender] = useState<boolean>(false);
-    // const [opertion, setOperation] = useState<Operation>({} as Operation);
-    const [opertion, setOperation] = useState<any>({} as Operation);
+    const [operation, setOperation] = useState<Operation>({} as Operation);
+    const [packageId, setPackageId] = useState('')
+    // const [opertion, setOperation] = useState<any>({} as Operation);
+
 
 
 
@@ -24,11 +29,13 @@ function FitnessAction(props, ref: any) {
         TriggerForm: (msg: Operation) => {
             console.log('msg', msg)
             setOperation(msg);
-
-
-            setRender(true)
+            setRender(true);
+            setPackageId(msg.id)
         }
-    }))
+    }));
+
+
+
 
 
     return (
@@ -36,7 +43,11 @@ function FitnessAction(props, ref: any) {
             {render &&
                 <SessionModal
                     render={render}
-                    setRender= {setRender}
+                    setRender={setRender}
+                    rowData={operation.rowData}
+                    actionType={operation.actionType}
+                    packageId = {packageId}
+                    type={operation.type}
                 />}
 
         </div>

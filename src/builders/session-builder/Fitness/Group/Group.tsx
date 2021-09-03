@@ -1,11 +1,13 @@
 import { useQuery } from '@apollo/client';
-import { useContext, useMemo, useState } from 'react'
-import { Badge, Button, Dropdown, OverlayTrigger, Popover, Row, Col } from "react-bootstrap";
+import { useContext, useMemo, useRef, useState } from 'react'
+import { Badge, Row, Col } from "react-bootstrap";
 
 import AuthContext from "../../../../context/auth-context"
 import GroupTable from '../../../../components/table/GroupTable/GroupTable';
 import { GET_PACKAGE_BY_TYPE } from '../../graphQL/queries';
 import moment from 'moment';
+import ActionButton from '../../../../components/actionbutton';
+import FitnessAction from '../FitnessAction';
 
 
 
@@ -13,7 +15,9 @@ export default function Group(props) {
 
     const auth = useContext(AuthContext);
 
-    const [userPackage, setUserPackage] = useState<any>([])
+    const [userPackage, setUserPackage] = useState<any>([]);
+
+    const fitnessActionRef = useRef<any>(null)
 
 
     const FetchData = () => {
@@ -31,15 +35,16 @@ export default function Group(props) {
 
 
     const loadData = (data) => {
-        console.log(data);
+        console.log('group query data', data);
         setUserPackage(
             [...data.userPackages].map((packageItem, index) => {
                 return {
-                    id: packageItem.id,
+                    id: packageItem.fitnesspackages[0].id,
                     packageName: packageItem.fitnesspackages[0].packagename,
                     expiry: moment(packageItem.fitnesspackages[0].expiry_date).format("DD/MM/YYYY"),
+                    publishing_date: moment(packageItem.fitnesspackages[0].publishing_date).format("DD/MM/YYYY"),
+                    purchase_date: moment(packageItem.purchase_date).format("DD/MM/YYYY"),
                     packageStatus: packageItem.fitnesspackages[0].Status ? "Active" : "Inactive",
-                    action: buttonAction(),
 
                     client: packageItem.fitnessprograms[0].users_permissions_user.username,
                     time: moment(packageItem.fitnessprograms[0].published_at).format('h:mm:ss a'),
@@ -272,26 +277,26 @@ export default function Group(props) {
 
 
 
-    let arr: any[] = []
-    for (let i = 0; i < dataTable.length - 1; i++) {
-        if (dataTable[i].id === dataTable[i + 1].id) {
-            if (dataTable[i].programName === dataTable[i + 1].programName) {
-                if (typeof dataTable[i].client === "string") {
-                    arr[0] = dataTable[i].client;
-                };
-                arr.push(dataTable[i + 1].client);
-                dataTable[i + 1].client = arr
-                dataTable.splice(i, 1);
-                i--;
-            }
-        } else {
-            arr = []
-        }
-    }
+    // let arr: any[] = []
+    // for (let i = 0; i < dataTable.length - 1; i++) {
+    //     if (dataTable[i].id === dataTable[i + 1].id) {
+    //         if (dataTable[i].programName === dataTable[i + 1].programName) {
+    //             if (typeof dataTable[i].client === "string") {
+    //                 arr[0] = dataTable[i].client;
+    //             };
+    //             arr.push(dataTable[i + 1].client);
+    //             dataTable[i + 1].client = arr
+    //             dataTable.splice(i, 1);
+    //             i--;
+    //         }
+    //     } else {
+    //         arr = []
+    //     }
+    // }
 
 
     // console.log("dataTable", dataTable);
-    // console.log('userPackage', userPackage)
+    // console.log('user group Package', userPackage)
 
 
 
@@ -301,7 +306,7 @@ export default function Group(props) {
 
                 Header: "Package",
                 columns: [
-                    { accessor: 'id', Header: 'ID', enableRowSpan: true },
+                    // { accessor: 'id', Header: 'ID', enableRowSpan: true },
                     { accessor: "packageName", Header: 'Name', enableRowSpan: true },
                     { accessor: "expiry", Header: 'Expiry', enableRowSpan: true },
                     {
@@ -317,7 +322,17 @@ export default function Group(props) {
                         },
                         enableRowSpan: true
                     },
-                    { accessor: "action", Header: "Action", enableRowSpan: true }
+                    {
+                        accessor: "action", Header: "Action", enableRowSpan: true,
+                        Cell: (row: any) => {
+                            // console.log("🚀 ~ file: Group.tsx ~ line 326 ~ Group ~ row", row.rows)
+                            return <>
+                                <button onClick={() => {
+                                    fitnessActionRef.current.TriggerForm({ id: row.row.original.id, actionType: 'addNew', type: 'Group Class' , rowData: row.row.original})
+                                }}>Add new</button>
+                            </>
+                        }
+                    }
                 ]
             },
             { accessor: ' ', Header: '' },
@@ -373,25 +388,20 @@ export default function Group(props) {
                     {
                         id: "edit",
                         Header: "Actions",
-                        Cell: ({ row }: any) => (
-                            <OverlayTrigger
-                                trigger="click"
-                                placement="right"
-                                overlay={
-                                    <Popover id="action-popover">
-                                        <Popover.Content>
-                                            <Dropdown.Item>Assign</Dropdown.Item>
-                                            <Dropdown.Item>Edit</Dropdown.Item>
-                                            <Dropdown.Item>View</Dropdown.Item>
-                                        </Popover.Content>
-                                    </Popover>
-                                }
-                            >
-                                <Button variant="white">
-                                    <i className="fas fa-ellipsis-v"></i>
-                                </Button>
-                            </OverlayTrigger>
-                        ),
+                        Cell: ({ row }: any) => {
+                            return <ActionButton
+                                action1='Manage'
+                                actionClick1={() => {
+                                    fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'manage', type: "Group Class" })
+                                }}
+
+                                action2='Details'
+                                actionClick2={() => {
+                                    fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'details', type: "Group Class" })
+                                }}
+
+                            />
+                        }
                     }
                 ]
             },
@@ -404,6 +414,7 @@ export default function Group(props) {
             <Row>
                 <Col>
                     <GroupTable columns={columns} data={userPackage} />
+                    <FitnessAction ref={fitnessActionRef} />
                 </Col>
 
             </Row>

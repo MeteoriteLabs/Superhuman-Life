@@ -21,7 +21,7 @@ export default function Group(props) {
         useQuery(GET_PACKAGE_BY_TYPE, {
             variables: {
                 id: auth.userid,
-                type: 'Personal Training'
+                type: 'Personal Training',
             },
             onCompleted: (data) => loadData(data)
         })
@@ -32,21 +32,37 @@ export default function Group(props) {
 
 
     const loadData = (data) => {
-        console.log('query data', data);
-        // const PTdata = data.userPackages[0].fitnesspackages.filter(item => item.fitness_package_type.type === "Personal Training")
-        // console.log("🚀 ~ file: PT.tsx ~ line 40 ~ loadData ~ PTdata", PTdata)
+        console.log('pt query data', data)
         setUserPackage(
             [...data.userPackages].map((packageItem, index) => {
                 return {
-                    id: packageItem.id,
-                    packageName: packageItem.fitnesspackages.map(item => item.packagename),
+                  
+                    id: packageItem.fitnesspackages[0].id,
+                    packageName: packageItem.fitnesspackages[0].packagename,
+                    duration: packageItem.fitnesspackages[0].duration,
                     effectiveDate: moment(packageItem.effective_date).format("DD/MM/YYYY"),
-                    packageStatus: packageItem.fitnesspackages.map(item => item.Status ? "Active" : "Inactive"),
+                    packageDisciplines: packageItem.fitnesspackages[0].disciplines.map(item => {
+                        return {
+                            value:item.id,
+                            label:item.disciplinename
+                        }
+                    }),
+                    packageStatus: packageItem.fitnesspackages[0].Status ? "Active" : "Inactive",
                     packageRenewal: "25/10/20",
 
 
-                    client: packageItem.fitnessprograms.map(item => item.users_permissions_user.username),
-                    programName: packageItem.fitnessprograms.map(item => item.title),
+                    programId:packageItem.fitnessprograms[0].id,
+                    client:packageItem.fitnessprograms[0].users_permissions_user.username,
+                    programName: packageItem.fitnessprograms[0].title,
+                    description:packageItem.fitnessprograms[0].description,
+                    level: packageItem.fitnessprograms[0].level,
+                    programDisciplines: packageItem.fitnessprograms[0].fitnessdisciplines.map(item => {
+                        return {
+                            value:item.id,
+                            label:item.disciplinename
+                        }
+                    }),
+                    users_permissions_user: packageItem.fitnessprograms[0].users_permissions_user.id,
                     programStatus: "Assigned",
                     programRenewal: "25/07/20",
                 }
@@ -56,70 +72,30 @@ export default function Group(props) {
 
 
     FetchData();
-    console.log('userPackage', userPackage);
+    // console.log('userPackage', userPackage);
 
 
-    const dataTable: any[] = []
-    new Array(2).fill(0).map((_, index) => {
-        dataTable.push({
-            id: userPackage[0]?.id,
-            packageName: userPackage[0]?.packageName[index],
-            effectiveDate: userPackage[0]?.effectiveDate,
-            packageStatus: userPackage[0]?.packageStatus[index],
-            packageRenewal: "25/10/20",
+    // const dataTable: any[] = []
+    // new Array(2).fill(0).map((_, index) => {
+    //     dataTable.push({
+    //         id: userPackage[0]?.id,
+    //         packageName: userPackage[0]?.packageName[index],
+    //         effectiveDate: userPackage[0]?.effectiveDate,
+    //         packageStatus: userPackage[0]?.packageStatus[index],
+    //         packageRenewal: "25/10/20",
 
 
-            client: userPackage[0]?.client[index],
-            programName: userPackage[0]?.programName[index],
-            programStatus: "Assigned",
-            programRenewal: "25/07/20",
+    //         client: userPackage[0]?.client[index],
+    //         programName: userPackage[0]?.programName[index],
+    //         programStatus: "Assigned",
+    //         programRenewal: "25/07/20",
 
-        })
-    })
+    //     })
+    // })
 
-    console.log('dataTable', dataTable);
+    // console.log('dataTable', dataTable);
 
-    // const dataTable = useMemo<any>(() => [
-    //     {
-    //         id: '1',
-    //         packageName: "Package Name 1",
-    //         packageStatus: 'Active',
-    //         startDate: "28/07/20",
-    //         packageRenewal: "27/07/20",
-
-    //         programs: [
-    //             {
-    //                 programName: "Pirates of the Carribean 2",
-    //                 client: "John",
-    //                 programStatus: "Assigned",
-    //                 programRenewal: "26/04/20",
-    //             },
-    //             {
-    //                 programName: "Pirates of the Carribean 4",
-    //                 client: "Mary",
-    //                 programStatus: "Not Assigned",
-    //                 programRenewal: "25/04/20"
-    //             }
-    //         ]
-    //     },
-
-
-    //     {
-    //         id: '2',
-    //         packageName: "Package Name 2",
-    //         packageStatus: 'Active',
-    //         startDate: "28/07/20",
-    //         packageRenewal: "27/07/20",
-
-    //         programs: [{
-    //             programName: "Pirates of the Carribean 3",
-    //             client: "Harry",
-    //             programStatus: "Not Assigned",
-    //             programRenewal: "25/04/20"
-    //         }]
-    //     },
-
-    // ], []);
+    
 
 
     // const dataTable2 = useMemo<any>(() => [
@@ -205,7 +181,7 @@ export default function Group(props) {
             {
                 Header: "Package",
                 columns: [
-                    { accessor: 'id', Header: "ID" },
+                    // { accessor: 'id', Header: "ID" },
                     { accessor: "packageName", Header: 'Name', enableRowSpan: true },
                     {
                         accessor: "packageStatus",
@@ -230,7 +206,16 @@ export default function Group(props) {
             {
                 Header: "Program",
                 columns: [
-                    { accessor: "client", Header: 'Client' },
+                    {
+                        accessor: "client",
+                        Header: "Client",
+                        Cell: (row: any) => {
+                            return <div className='text-center'>
+                                <img  src="https://picsum.photos/200/100" alt={row.value} style={{ width: "60px", height: "60px", borderRadius: "50%" }} />
+                                <p className='mt-3'>{row.value}</p>
+                            </div>
+                        }
+                    },
                     { accessor: "programName", Header: 'Name' },
                     {
                         accessor: "programStatus",
@@ -249,27 +234,16 @@ export default function Group(props) {
                         id: "edit",
                         Header: "Actions",
                         Cell: ({ row }: any) => {
+                        console.log("🚀 ~ file: PT.tsx ~ line 233 ~ PT ~ row", row)
                             return <ActionButton
-                                action1='Build'
-                                actionClick1={() => {
-                                    console.log(fitnessActionRef)
-                                    fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'build', type: "Personal Training" })
-                                }}
-                                action2='Assign'
+                                action1='Manage'
+                                // actionClick1={() => {
+                                //     fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'manage', type: "Personal Training", rowData:""})
+                                // }}
+                             
+                                action2='Details'
                                 actionClick2={() => {
-                                    fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'assign', type: "Personal Training" })
-                                }}
-                                action3='Edit'
-                                actionClick3={() => {
-                                    fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'edit', type: "Personal Training" })
-                                }}
-                                action4='View'
-                                actionClick4={() => {
-                                    fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'view', type: "Personal Training" })
-                                }}
-                                action5='Details'
-                                actionClick5={() => {
-                                    fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'details', type: "Personal Training" })
+                                    fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'details', type: "Personal Training", rowData: row.original })
                                 }}
                             >
                             </ActionButton>
@@ -285,8 +259,8 @@ export default function Group(props) {
         <div className="mt-5">
             <Row>
                 <Col>
-                    <PTTable columns={columns} data={dataTable} />
-                    <FitnessAction ref={fitnessActionRef} />
+                    <PTTable columns={columns} data={userPackage} />
+                    <FitnessAction ref={fitnessActionRef}  />
                 </Col>
             </Row>
         </div>

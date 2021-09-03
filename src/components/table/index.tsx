@@ -10,6 +10,7 @@ function Table({ data, columns }: any) {
         prepareRow,
     } = useTable({ columns, data }, useExpanded);
 
+    console.log('table')
     return (
         <div className="table-responsive">
             <table {...getTableProps()} className="table text-center">

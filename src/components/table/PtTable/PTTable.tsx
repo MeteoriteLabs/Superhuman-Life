@@ -79,7 +79,7 @@ function PTTable({ data, columns }: any) {
                         for (let j = 0; j < row.cells.length; j++) {
                             let cell = row.allCells[j];
 
-                            if (!samePackage || j> 5) {
+                            if (!samePackage || j> 4) {
                                 cell.rowSpan = 1;
                                 cell.isRowSpanned = false;
                             } else {

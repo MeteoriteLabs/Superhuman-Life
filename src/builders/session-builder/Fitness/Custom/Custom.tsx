@@ -1,49 +1,86 @@
 import { useQuery } from '@apollo/client';
-import { useContext, useMemo } from 'react'
+import { useContext, useMemo, useRef, useState } from 'react'
 import { Badge, Button, Dropdown, OverlayTrigger, Popover, Row, Col } from "react-bootstrap";
 import Table from '../../../../components/table';
 import { GET_ALL_PACKAGES } from '../../../resource-builder/graphQL/queries';
 import AuthContext from "../../../../context/auth-context"
+import { GET_PACKAGE_BY_TYPE } from '../../graphQL/queries';
+import moment from 'moment';
+import ActionButton from '../../../../components/actionbutton';
+import FitnessAction from '../FitnessAction';
 
 export default function Custom(props) {
 
     const auth = useContext(AuthContext);
+    const [userPackage, setUserPackage] = useState<any>([]);
+
+    const fitnessActionRef = useRef<any>(null);
+
+    const FetchData = () => {
+        useQuery(GET_PACKAGE_BY_TYPE, {
+            variables: {
+                id: auth.userid,
+                type: 'Custom Fitness',
+            },
+            onCompleted: (data) => loadData(data)
+        })
+
+    }
 
 
-    const { data } = useQuery(GET_ALL_PACKAGES, {
-        variables: {
-            id: auth.userid,
-        }
-    });
-    // console.log(data)
 
 
+    const loadData = (data) => {
+        console.log('custom query data', data)
+        setUserPackage(
+            [...data.userPackages].map((packageItem, index) => {
+                return {
 
-    // const FetchData = () => {
-    //     useQuery(GET_ALL_PACKAGES, {
-    //         variables: {
-    //             id: auth.userid
-    //         },
-    //         onCompleted: (data => fillData(data))
-    //     })
+                    id: packageItem.fitnesspackages[0].id,
+                    packageName: packageItem.fitnesspackages[0].packagename,
+                    duration: packageItem.fitnesspackages[0].duration,
+                    effectiveDate: moment(packageItem.effective_date).format("DD/MM/YYYY"),
+                   
+                    packageDisciplines: packageItem.fitnesspackages[0].disciplines.map(item => {
+                        return {
+                            value: item.id,
+                            label: item.disciplinename
+                        }
+                    }),
+                    packageStatus: packageItem.fitnesspackages[0].Status ? "Active" : "Inactive",
+                    packageRenewal: "25/10/20",
 
-    // }
 
-    // FetchData();
+                    programId: packageItem.fitnessprograms[0].id,
+                    client: packageItem.fitnessprograms[0].users_permissions_user.username,
+                    programName: packageItem.fitnessprograms[0].title,
+                    description: packageItem.fitnessprograms[0].description,
+                    level: packageItem.fitnessprograms[0].level,
+                    programDisciplines: packageItem.fitnessprograms[0].fitnessdisciplines.map(item => {
+                        return {
+                            value: item.id,
+                            label: item.disciplinename
+                        }
+                    }),
+                    users_permissions_user: packageItem.fitnessprograms[0].users_permissions_user.id,
+                    programStatus: "Assigned",
+                    programRenewal: "25/07/20",
+                }
+            })
+        )
+    }
 
 
-    // const fillData = (data) => {
-    //     console.log(data)
-    // }
-
+    FetchData();
 
     const columns = useMemo<any>(() => [
         {
-            accessor: "students",
-            Header: "Students",
-            Cell: (v: any) => {
+            accessor: "client",
+            Header: "Client",
+            Cell: (row: any) => {
                 return <div className='text-center'>
-                    <img src={v.value} alt={v.value} style={{ width: "50px", height: "50px", borderRadius:"50%" }} />
+                    <img src="https://picsum.photos/200/100" alt={row.value} style={{ width: "60px", height: "60px", borderRadius: "50%" }} />
+                    <p className='mt-3'>{row.value}</p>
                 </div>
             }
         },
@@ -52,11 +89,11 @@ export default function Custom(props) {
             Header: "Package",
             columns: [
                 {
-                    accessor: "name",
+                    accessor: "packageName",
                     Header: "Name"
                 },
                 {
-                    accessor: "status",
+                    accessor: "packageStatus",
                     Header: "Status",
                     Cell: (row: any) => {
                         return <>
@@ -67,7 +104,7 @@ export default function Custom(props) {
                         </>
                     }
                 },
-                { accessor: "startDate", Header: "Start Date" },
+                { accessor: "effectiveDate", Header: "Effect Date" },
                 { accessor: "packageRenewal", Header: "Renewal Date" },
 
             ]
@@ -82,7 +119,7 @@ export default function Custom(props) {
                 },
             ]
         },
-        
+
         {
             Header: "Program",
             columns: [
@@ -102,30 +139,27 @@ export default function Custom(props) {
                 {
                     id: "edit",
                     Header: "Actions",
-                    Cell: ({ row }: any) => (
-                        <OverlayTrigger
-                            trigger="click"
-                            placement="right"
-                            overlay={
-                                <Popover id="action-popover">
-                                    <Popover.Content>
-                                        <Dropdown.Item>Assign</Dropdown.Item>
-                                        <Dropdown.Item>Edit</Dropdown.Item>
-                                        <Dropdown.Item>View</Dropdown.Item>
-                                    </Popover.Content>
-                                </Popover>
-                            }
+                    Cell: ({ row }: any) => {
+                        return <ActionButton
+                            action1='Manage'
+                            // actionClick1={() => {
+                            //     fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'manage', type: "Personal Training", rowData:""})
+                            // }}
+
+                            action2='Details'
+                            actionClick2={() => {
+                                fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'details', type: "Personal Training", rowData: row.original })
+                            }}
                         >
-                            <Button variant="white">
-                                <i className="fas fa-ellipsis-v"></i>
-                            </Button>
-                        </OverlayTrigger>
-                    ),
+                        </ActionButton>
+                    }
                 }
 
             ]
         },
     ], []);
+
+
 
     const dataTable = useMemo<any>(() => [
         {
@@ -138,7 +172,7 @@ export default function Custom(props) {
             "programStatus": "Not Assigned",
             "programRenewal": "25/07/20",
         },
-       
+
         {
             "students": 'https://picsum.photos/200',
             "name": "Exercise-1",
@@ -149,7 +183,7 @@ export default function Custom(props) {
             "programStatus": "Not Assigned",
             "programRenewal": "25/07/20",
         },
-       
+
         {
             "students": 'https://picsum.photos/200',
             "name": "Exercise-1",
@@ -160,7 +194,7 @@ export default function Custom(props) {
             "programStatus": "Not Assigned",
             "programRenewal": "25/07/20",
         },
-       
+
     ], []);
 
     return (
@@ -168,7 +202,8 @@ export default function Custom(props) {
             <Row>
                 <Col>
 
-                    <Table columns={columns} data={dataTable} />
+                    <Table columns={columns} data={userPackage} />
+                    <FitnessAction ref={fitnessActionRef}  />
                 </Col>
 
             </Row>
