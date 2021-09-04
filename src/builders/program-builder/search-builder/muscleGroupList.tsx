@@ -65,7 +65,7 @@ const MuscleGroupList = (props: any) => {
      }
 
       FetchMuscleGroupList({ filter: searchInput, skip: skipval});
-     // console.log(select);
+     
      return (
           <>
                <label style={{ fontSize: 17}}>Muscle Group</label>

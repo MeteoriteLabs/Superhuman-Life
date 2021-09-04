@@ -56,7 +56,6 @@ export default function EventsTab() {
     }
 
     function loadData(data: any) {
-        // console.log(data);
         setTableData(
             [...data.exercises].map((detail) => {
                 return {
@@ -89,7 +88,9 @@ export default function EventsTab() {
     }
 
 
+
     FetchData({id: auth.userid});    
+
     
     
     return (

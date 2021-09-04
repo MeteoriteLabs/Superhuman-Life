@@ -21,14 +21,14 @@ function CreateEditMessage(props: any, ref: any) {
     const [operation, setOperation] = useState<Operation>({} as Operation);
     
 
-    const [createMessage] = useMutation(ADD_MESSAGE, { onCompleted: (r: any) => { console.log(r); setRender(false); } });
-    const [editMessage] = useMutation(UPDATE_MESSAGE,{variables: {messageid: operation.id}, onCompleted: (r: any) => { console.log(r); setRender(false); } });
+    const [createMessage] = useMutation(ADD_MESSAGE, { onCompleted: (r: any) => { setRender(false); } });
+    const [editMessage] = useMutation(UPDATE_MESSAGE,{variables: {messageid: operation.id}, onCompleted: (r: any) => { setRender(false); } });
     const [deleteMessage] = useMutation(DELETE_MESSAGE, { onCompleted: (e: any) => console.log(e), refetchQueries: ["GET_TRIGGERS"] });
-    const [updateStatus] = useMutation(UPDATE_STATUS,{onCompleted: (d: any) => { console.log(d);}});
+    const [updateStatus] = useMutation(UPDATE_STATUS);
 
     useImperativeHandle(ref, () => ({
         TriggerForm: (msg: Operation) => {
-            console.log(msg);
+         
             setOperation(msg);
 
             if (msg && !msg.id) //render form if no message id

@@ -112,10 +112,12 @@ export default function EventsTab() {
     //     editorTextString = data;
     // }
 
+
     // let fitnessDiscplinesListarray: any;
     // function handleFitnessDiscplinesListCallback(data: any){
     //     fitnessDiscplinesListarray = data;
     // }
+
 
     // const eventSchema: any = require("./workout.json");
     // const uiSchema: any = {
@@ -205,11 +207,13 @@ export default function EventsTab() {
     //     None
     // }
 
+
     // enum ENUM_WORKOUTS_INTENSITY {
     //     Low,
     //     Medium,
     //     High
     // }
+
 
     // function onSubmit(formData: any) {
     //     let levelIndex = formData.level

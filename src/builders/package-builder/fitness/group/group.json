@@ -1,0 +1,265 @@
+{
+    "1": {
+        "title": "",
+        "type": "object",
+        "required": ["packagename","disciplines", "tags" ,"level","is_private"],
+        "properties": {
+            "packagename": {
+                "type": "string",
+                "title": "Name of Package"
+            },
+            "disciplines": {
+                "type": "string",
+                "title": "Disciplines"
+            },
+            "tags": {
+                "type": "string",
+                "title": "Tags"
+            },
+            "level": {
+                "type": "string",
+                "title": "Level",
+                "enum": [
+                    "Beginner",
+                    "Intermediate",
+                    "Advanced"
+                ]
+            },
+            "is_private": {
+                "type": "boolean",
+                "title": "Visiblity",
+                "oneOf": [
+                    {
+                        "title": "Public",
+                        "const": true
+                    },
+                    {
+                        "title": "Private",
+                        "const": false
+                    }
+                ]
+            }
+        }
+    },
+    "2": {
+        "title": "",
+        "type": "object",
+        "required": ["aboutpackage", "benefits","classsize" ],
+        "properties": {
+            "aboutpackage": {
+                "type": "string",
+                "title": "About"
+            },
+            "benefits": {
+                "type": "string",
+                "title": "Benefits"
+            },
+            "classsize": {
+                "type": "number",
+                "title": "Class Size"
+            },
+            "intropicture": {
+                "type": "string",
+                "format": "data-url",
+                "title": "Intro Picture"
+            },
+            "video": {
+                "type": "string",
+                "title": "Intro Video",
+                "format": "data-url"
+            },
+            "introvideourl": {
+                "type": "string",
+                "title": "Or add video URL",
+                "format": "uri"
+            }
+        }
+    },
+    "3": {
+        "title": "Program Details",
+        "type": "object",
+        "required": ["mode"],
+        "properties": {
+            "mode": {
+                "title": "Mode",
+                "type": "string",
+                "enum": [
+                    "Online",
+                    "Offline",
+                    "Hybrid"
+                ]
+            },
+            "duration": {
+                "title": "A null field",
+                "type": "number",
+                "default":30,
+                "value":30
+            },
+            "grouponlineClasses": {
+                "title": "grouponlineClasses",
+                "type": "null",
+                "value": 0
+            },
+            "groupofflineClasses": {
+                "title": "groupofflineClasses",
+                "type": "null",
+                "value": 0
+            },
+            "restDay": {
+                "title": "restDay",
+                "type": "null",
+                "value": 0
+            },
+          
+            "dayAvailable": {
+                "title": "dayAvailable",
+                "type": "null",
+                "value": 0
+            }
+        },
+        "dependencies": {
+            "mode": {
+                "oneOf": [
+                    {
+                        "properties": {
+                            "mode": {
+                                "title": "Online",
+                                "type": "string",
+                                "enum": [
+                                    "Online"
+                                ]
+                            },
+                            "grouponline": {
+                                "title": "Online",
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 30,
+                                "default": "",
+                                "value": 0
+                            },
+                            "restdays": {
+                                "title": "Rest Days",
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 30,
+                                "default": "",
+                                "value":""
+                            }
+                        },
+                        "required":["grouponline","restdays"]
+                    },
+                    {
+                        "properties": {
+                            "mode": {
+                                "title": "Offline",
+                                "type": "string",
+                                "enum": [
+                                    "Offline"
+                                ]
+                            },
+                            "address": {
+                                "title": "Address",
+                                "type": "string"
+                            },
+                            "groupoffline": {
+                                "title": "Offline",
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 30,
+                                "default": "",
+                                "value": 0
+                            },
+                            "restdays": {
+                                "title": "Rest Days",
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 30,
+                                "default": "",
+                                "value":""
+                            }
+                        },
+                        "required":["groupoffline","restdays","address"]
+                    },
+                    {
+                        "properties": {
+                            "mode": {
+                                "title": "Hybrid",
+                                "type": "string",
+                                "enum": [
+                                    "Hybrid"
+                                ],
+                                "default": "0"
+                            },
+                            "address": {
+                                "title": "Address",
+                                "type": "string"
+                            },
+                            "grouponline": {
+                                "title": "Online",
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 30,
+                                "default": "",
+                                "value": 0
+                            },
+                            "groupoffline": {
+                                "title": "Offline",
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 30,
+                                "default": "",
+                                "value": 0
+                            },
+                            "restdays": {
+                                "title": "Rest Days",
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 30,
+                                "default": "",
+                                "value":""
+                            }
+                        },
+                        "required":["grouponline","groupoffline","restdays","address"]
+                    }
+                ]
+            }
+        }
+    },
+    "4": {
+        "title": "",
+        "type": "object",
+        "required": ["groupinstantbooking"],
+        "properties": {
+            "groupinstantbooking": {
+                "type": "boolean",
+                "title": "Allow Consumers to book instant Workouts",
+                "description": "This will let people join this group class for a day on demand"
+              }
+        }
+    },
+    "5": {
+        "title": "Pricing Plan",
+        "type": "object",
+        "properties": {
+            "pricingDetail":{
+                "type":"number",
+                "title" :"Pricing Plan",
+                "value":0
+            }
+        }
+    },
+    "6":{
+        "title":"Preview",
+        "type":"object",
+        "properties":{
+            "carousel":{
+                "type":"string",
+                "title":"carousel"
+            },
+            "link":{
+                "type":"null",
+                "title":"carousel"
+            }
+        }
+    }
+}

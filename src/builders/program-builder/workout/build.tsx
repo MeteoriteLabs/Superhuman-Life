@@ -138,7 +138,7 @@ const Build = () => {
           <div>
                {renderOptions()}
                {exerciseFields.map((field, idx) => {
-                              console.log(field);
+                            
                               return (
                                    <div key={`${field}-${idx}`}>
                                         <span>Exercise <i className="far fa-trash-alt float-right"

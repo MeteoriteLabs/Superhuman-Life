@@ -42,7 +42,7 @@ const ExerciseList = (props: any) => {
           );
      }
 
-     console.log(exerciseList);
+  
      
      function ExerciseSearch(data: any) {
           if(data.length > 0){
