@@ -10,16 +10,7 @@
   vertical-align: middle !important;
 }
 
-.bodyTd:nth-child(5){
-  /* border-right: 1px solid black; */
-  /* border: 1px solid black */
-}
 
-
-tbody .rowCard:nth-child(1) .bodyTd:nth-child(4),
-tbody .rowCard:nth-child(2) .bodyTd:nth-child(4){
-  /* border-right: 1px solid black; */
-}
 
 
 
@@ -37,9 +28,5 @@ thead:first-child th:last-child
   border: none;
 }
 
-thead tr:first-child th:nth-child(1),
-thead tr:first-child th:nth-child(3){
-  border-bottom: 2px solid black !important;
-}
 
 

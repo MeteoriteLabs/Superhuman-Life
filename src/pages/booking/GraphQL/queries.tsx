@@ -16,13 +16,12 @@ query userPackages($id: ID!) {
       users_permissions_user {
         username
       }
+      package_duration
       effective_date
       purchase_date
       fitnesspackages {
-        duration
         expiry_date
         packagename
-        duration
         Status
         fitnesspackagepricing{
             packagepricing

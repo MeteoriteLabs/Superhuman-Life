@@ -3,7 +3,7 @@ import moment from 'moment';
 import React, { useContext, useMemo, useRef, useState } from 'react';
 import { Badge, Col, Row } from 'react-bootstrap';
 import ActionButton from '../../../components/actionbutton';
-import Table from '../../../components/table/index'
+import BookingTable from '../../../components/table/BookingTable/BookingTable'
 import authContext from '../../../context/auth-context';
 import { GET_ALL_PACKAGES } from '../GraphQL/queries';
 
@@ -15,34 +15,41 @@ export default function Fitness(props) {
 
 
     const bookingAction = useRef(null)
-    
-    const FetchData = () =>{
+
+    const FetchData = () => {
         useQuery(GET_ALL_PACKAGES, {
-            variables:{
-                id:auth.userid
+            variables: {
+                id: auth.userid
             },
             onCompleted: (data) => loadData(data)
         })
     }
-    const loadData = (data) =>{
-        console.log('booking data', data)
+    const loadData = (data) => {
+        console.log('booking data', data);
+        setUserPackage(
+            [...data.userPackages.map(packageItem => {
+                return {
+                    purchase_date: packageItem.purchase_date,
+                    // client:packageItem.fitnessprograms[0].users_permissions_user.username,
+                    packageName: packageItem.fitnesspackages[0].packagename,
+                    fitness_package_type: packageItem.fitnesspackages[0].fitness_package_type.type,
+                    effectiveDate:packageItem.effective_date,
+                    packageRenewal: "2021-08-04T19:00:00.000Z",
+                    duration: packageItem.package_duration,
+                    price: 'Rs 4000',
+                    payment_status: "Paid",
+                    Status: "Accepted",
+                }
+            })]
+        )
     };
 
     FetchData();
 
 
+
     const columns = useMemo(
         () => [
-            
-            { accessor: "purchase_date", Header: 'Purchase Data',
-            Cell:(row:any) =>{
-         
-                return <div>
-                    <p>{moment(row.value).format('MMMM DD, YYYY')}</p>
-                    <p>{moment(row.value).format('hh/mm a')}</p>
-                </div>
-            }    
-        },
             {
                 accessor: "client",
                 Header: "Client",
@@ -54,12 +61,41 @@ export default function Fitness(props) {
                 }
             },
             { accessor: "packageName", Header: 'Package Name' },
-            { accessor: "fitness_package_type", Header: 'Type' },
-            { accessor: "effectiveDate", Header: "Effective Date" },
-            { accessor: "packageRenewal", Header: 'Renewal Date' },
+            {
+                accessor: "fitness_package_type", Header: 'Type',
+                Cell: (row: any) => {
+                    return <>
+                        {row.value === "Personal Training" ? <img src='./assets/PTType.svg' /> : ""}
+                        {row.value === "Group Class" ? <img src='./assets/GRoupType.svg' /> : ""}
+                        {row.value === "Custom Fitness" ? <img src='./assets/CustomType.svg' /> : ""}
+                        {row.value === "Classic Class" ? <img src='./assets/ClassicType.svg' /> : ""}
+                    </>
+                }
+            },
+            {
+                accessor: "purchase_date", Header: 'Purchase Date',
+                Cell: (row: any) => {
+                    return <div>
+                        <p>{moment(row.value).format('MMMM DD, YYYY')}</p>
+                        <p>{moment(row.value).format('hh:mm a')}</p>
+                    </div>
+                }
+            },
+            {
+                accessor: "effectiveDate", Header: "Effective Date",
+                Cell: (row: any) => {
+                    return <p>{moment(row.value).format('MMMM DD, YYYY')}</p>
+                }
+            },
+            {
+                accessor: "packageRenewal", Header: 'Renewal Date',
+                Cell: (row: any) => {
+                    return <p>{moment(row.value).format('MMMM DD, YYYY')}</p>
+                }
+            },
             { accessor: "duration", Header: 'Duration' },
-            { accessor: "fitnesspackagepricing", Header: 'Price' },
-         
+            { accessor: "price", Header: 'Price' },
+
             {
                 accessor: "payment_status",
                 Header: "Payment Status",
@@ -121,53 +157,53 @@ export default function Fitness(props) {
 
     const dataTable2 = useMemo<any>(() => [
         {
-            purchase_date:'2021-08-03T19:00:00.000Z', 
-            client:'Arjun Nair',
+            purchase_date: '2021-08-03T19:00:00.000Z',
+            client: 'Arjun Nair',
             packageName: "Package Name 1",
-            fitness_package_type: "Personal Training", 
+            fitness_package_type: "Personal Training",
             effectiveDate: moment("2021-08-04T19:00:00.000Z").format('DD/MM/YYYY'),
             packageRenewal: moment("2021-08-04T19:00:00.000Z").format('DD/MM/YYYY'),
-            duration:'30 days',
-            price:'Rs 4000',
+            duration: '30 days',
+            price: 'Rs 4000',
             payment_status: "Paid",
             Status: "Accepted",
         },
 
         {
-            purchase_date:'2021-08-03T19:00:00.000Z', 
-            client:'Sophiya D’Cruz',
+            purchase_date: '2021-08-03T19:00:00.000Z',
+            client: 'Sophiya D’Cruz',
             packageName: "Package Name 2",
-            fitness_package_type: "Group Class", 
+            fitness_package_type: "Group Class",
             effectiveDate: moment("2021-08-04T19:00:00.000Z").format('DD/MM/YYYY'),
             packageRenewal: moment("2021-08-04T19:00:00.000Z").format('DD/MM/YYYY'),
-            duration:'30 days',
-            price:'Rs 4000',
+            duration: '30 days',
+            price: 'Rs 4000',
             payment_status: "unPaid",
             Status: "Accepted",
         },
 
         {
-            purchase_date:'2021-08-03T19:00:00.000Z', 
-            client:'Michael Wong',
+            purchase_date: '2021-08-03T19:00:00.000Z',
+            client: 'Michael Wong',
             packageName: "Package Name 3",
-            fitness_package_type: "Custom Fitness", 
+            fitness_package_type: "Custom Fitness",
             effectiveDate: moment("2021-08-04T19:00:00.000Z").format('DD/MM/YYYY'),
             packageRenewal: moment("2021-08-04T19:00:00.000Z").format('DD/MM/YYYY'),
-            duration:'30 days',
-            price:'Rs 4000',
+            duration: '30 days',
+            price: 'Rs 4000',
             payment_status: "Paid",
             Status: "Accepted",
         },
 
         {
-            purchase_date:'2021-08-03T19:00:00.000Z', 
-            client:'Michael Wong',
+            purchase_date: '2021-08-03T19:00:00.000Z',
+            client: 'Michael Wong',
             packageName: "Package Name 4",
-            fitness_package_type: "Classic Class", 
+            fitness_package_type: "Classic Class",
             effectiveDate: moment("2021-08-04T19:00:00.000Z").format('DD/MM/YYYY'),
             packageRenewal: moment("2021-08-04T19:00:00.000Z").format('DD/MM/YYYY'),
-            duration:'30 days',
-            price:'Rs 4000',
+            duration: '30 days',
+            price: 'Rs 4000',
             payment_status: "Paid",
             Status: "Accepted",
         },
@@ -180,7 +216,7 @@ export default function Fitness(props) {
         <div className="mt-5">
             <Row>
                 <Col>
-                    <Table columns={columns} data={dataTable2} />
+                    <BookingTable columns={columns} data={userPackage} />
                 </Col>
             </Row>
         </div>
