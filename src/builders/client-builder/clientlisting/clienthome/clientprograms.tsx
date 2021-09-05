@@ -1,27 +1,29 @@
 import { Card, Tab, Tabs, TabContent } from "react-bootstrap";
-import ClientListing from "./clientlisting";
-
-export default function ClientPage() {
+import Movement from "./ProgramScreens/movement";
+import Nutrition from "./ProgramScreens/nutrition";
+function Programs() {
      return (
-          <>
-               <h3>Clients</h3>
+          <div>
                <Card className="shadow-sm mt-3" border="light">
                     <Card.Body>
-                         <Tabs variant="pills" transition={false} defaultActiveKey="clients">
-                              <Tab eventKey="clients" title="Client">
+                         <Tabs variant="pills" transition={false} defaultActiveKey="movement">
+                              <Tab eventKey="movement" title="Movement">
                                    <TabContent>
                                         <hr />
-                                        <ClientListing />
+                                        <Movement />
                                    </TabContent>
                               </Tab>
-                              <Tab eventKey="insights" title="Insights">
+                              <Tab eventKey="nutrition" title="Nutrition">
                                    <TabContent>
                                         <hr />
+                                        <Nutrition />
                                    </TabContent>
                               </Tab>
                          </Tabs>
                     </Card.Body>
                </Card>
-          </>
+          </div>
      );
 }
+
+export default Programs;
