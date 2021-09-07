@@ -16,7 +16,7 @@ export default function SessionPage() {
                         <Tab eventKey="nutrition" title="Nutrition">
                             {/* <Fitness/> */}
                         </Tab>
-                        <Tab eventKey="journey" title="Fiteness">
+                        <Tab eventKey="journey" title="Journey">
                             {/* <Fitness/> */}
                         </Tab>
                       

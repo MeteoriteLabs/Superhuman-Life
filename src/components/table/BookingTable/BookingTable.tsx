@@ -45,7 +45,7 @@ function Table({ data, columns }: any) {
                         const rowProps = row.getRowProps();
                         return (
                             <Fragment key={rowProps.key}>
-                                {diffDays <= 5 ? <tr className="rowCard bg-info " {...row.getRowProps()} >
+                                {diffDays <= 5 ? <tr className="bookingRowCard bg-info text-white " {...row.getRowProps()} >
                                     {row.cells.map(cell => {
                                         return <td className='bodyTd ml-3' {...cell.getCellProps()}>
                                             {cell.render("Cell")}
@@ -53,7 +53,7 @@ function Table({ data, columns }: any) {
                                     }
                                     )}
                                 </tr> :
-                                    <tr className="rowCard " {...row.getRowProps()} >
+                                    <tr className="bookingRowCard " {...row.getRowProps()} >
                                         {row.cells.map(cell => {
                                             return <td className='bodyTd ml-3' {...cell.getCellProps()}>
                                                 {cell.render("Cell")}

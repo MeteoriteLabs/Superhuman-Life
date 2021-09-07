@@ -32,39 +32,48 @@ export default function Group(props) {
 
 
     const loadData = (data) => {
-        console.log('pt query data', data)
+        // console.log('pt query data', data);
         setUserPackage(
-            [...data.userPackages].map((packageItem, index) => {
-                return {
-                  
-                    id: packageItem.fitnesspackages[0].id,
-                    packageName: packageItem.fitnesspackages[0].packagename,
-                    duration: packageItem.fitnesspackages[0].duration,
-                    effectiveDate: moment(packageItem.effective_date).format("DD/MM/YYYY"),
-                    packageDisciplines: packageItem.fitnesspackages[0].disciplines.map(item => {
-                        return {
-                            value:item.id,
-                            label:item.disciplinename
-                        }
-                    }),
-                    packageStatus: packageItem.fitnesspackages[0].Status ? "Active" : "Inactive",
-                    packageRenewal: "25/10/20",
+            [...data.userPackages].map((packageItem) => {
+                let renewDay:any = '';
+                if (packageItem.fitnesspackages.length !== 0) {
+                    renewDay= new Date(packageItem.effective_date);
+                    renewDay.setDate(renewDay.getDate() + packageItem.fitnesspackages[0].duration)
+                }
 
-
-                    programId:packageItem.fitnessprograms[0].id,
-                    client:packageItem.fitnessprograms[0].users_permissions_user.username,
-                    programName: packageItem.fitnessprograms[0].title,
-                    description:packageItem.fitnessprograms[0].description,
-                    level: packageItem.fitnessprograms[0].level,
-                    programDisciplines: packageItem.fitnessprograms[0].fitnessdisciplines.map(item => {
-                        return {
-                            value:item.id,
-                            label:item.disciplinename
-                        }
-                    }),
-                    users_permissions_user: packageItem.fitnessprograms[0].users_permissions_user.id,
-                    programStatus: "Assigned",
-                    programRenewal: "25/07/20",
+                if (packageItem.program_managers.length === 0) {
+                    return {
+                        id: packageItem.fitnesspackages[0].id,
+                        packageName: packageItem.fitnesspackages[0].packagename,
+                        duration: packageItem.fitnesspackages[0].duration,
+                        effectiveDate: moment(packageItem.effective_date).format("MMMM DD,YYYY"),
+                        packageStatus: packageItem.fitnesspackages[0].Status ? "Active" : "Inactive",
+                        packageRenewal: moment(renewDay).format("MMMM DD,YYYY"),
+    
+                        // programId:packageItem.fitnessprograms[0].id,
+                        client: packageItem.users_permissions_user.username,
+                        programName: 'N/A' ,
+                        // users_permissions_user: packageItem.fitnessprograms[0].users_permissions_user.id,
+                        programStatus: 'N/A' ,
+                        programRenewal: 'N/A',
+                    }
+                }else{
+                    return {
+                        id: packageItem.fitnesspackages[0].id,
+                        packageName: packageItem.fitnesspackages[0].packagename,
+                        duration: packageItem.fitnesspackages[0].duration,
+                        effectiveDate: moment(packageItem.effective_date).format("MMMM DD,YYYY"),
+                        packageStatus: packageItem.fitnesspackages[0].Status ? "Active" : "Inactive",
+                        packageRenewal: moment(renewDay).format("MMMM DD,YYYY"),
+    
+    
+                        // programId:packageItem.fitnessprograms[0].id,
+                        client:packageItem.users_permissions_user.username,
+                        programName: packageItem.program_managers[0].fitnessprograms[0].title,
+                        // users_permissions_user: packageItem.fitnessprograms[0].users_permissions_user.id,
+                        programStatus:"Assigned",
+                        programRenewal:"26/04/20"
+                    }
                 }
             })
         )
@@ -95,57 +104,57 @@ export default function Group(props) {
 
     // console.log('dataTable', dataTable);
 
-    
-
-
-    // const dataTable2 = useMemo<any>(() => [
-    //     {
-    //         id: '1',
-    //         packageName: "Package Name 1",
-    //         packageStatus: 'Active',
-    //         effectiveDate: "28/07/20",
-    //         packageRenewal: "27/07/20",
-
-    //         programName: "Pirates of the Carribean 2",
-    //         client: "John",
-    //         programStatus: "Assigned",
-    //         programRenewal: "26/04/20",
-
-    //     },
-
-    //     {
-    //         id: '1',
-    //         packageName: "Package Name 1",
-    //         packageStatus: 'Active',
-    //         effectiveDate: "28/07/20",
-    //         packageRenewal: "27/07/20",
-
-    //         programName: "Pirates of the Carribean 3",
-    //         client: "Mary",
-    //         programStatus: "Assigned",
-    //         programRenewal: "26/04/20",
-
-    //     },
-
-
-    //     {
-    //         id: '2',
-    //         packageName: "Package Name 2",
-    //         packageStatus: 'Active',
-    //         effectiveDate: "28/07/20",
-    //         packageRenewal: "27/07/20",
-
-    //         programName: "Pirates of the Carribean 3",
-    //         client: "Harry",
-    //         programStatus: "Not Assigned",
-    //         programRenewal: "25/04/20"
-
-    //     },
 
 
 
+    const dataTable2 = useMemo<any>(() => [
+        {
+            id: '1',
+            packageName: "Package Name 1",
+            packageStatus: 'Active',
+            effectiveDate: "28/07/20",
+            packageRenewal: "27/07/20",
 
-    // ], []);
+            programName: "Pirates of the Carribean 2",
+            client: "John",
+            programStatus: "Assigned",
+            programRenewal: "26/04/20",
+
+        },
+
+        {
+            id: '1',
+            packageName: "Package Name 1",
+            packageStatus: 'Active',
+            effectiveDate: "28/07/20",
+            packageRenewal: "27/07/20",
+
+            programName: "Pirates of the Carribean 3",
+            client: "Mary",
+            programStatus: "Assigned",
+            programRenewal: "26/04/20",
+
+        },
+
+
+        {
+            id: '2',
+            packageName: "Package Name 2",
+            packageStatus: 'Active',
+            effectiveDate: "28/07/20",
+            packageRenewal: "27/07/20",
+
+            programName: "Pirates of the Carribean 3",
+            client: "Harry",
+            programStatus: "Not Assigned",
+            programRenewal: "25/04/20"
+
+        },
+
+
+
+
+    ], []);
 
 
 
@@ -210,10 +219,14 @@ export default function Group(props) {
                         accessor: "client",
                         Header: "Client",
                         Cell: (row: any) => {
-                            return <div className='text-center'>
-                                <img  src="https://picsum.photos/200/100" alt={row.value} style={{ width: "60px", height: "60px", borderRadius: "50%" }} />
-                                <p className='mt-3'>{row.value}</p>
-                            </div>
+                            return <>
+                                {row.value !== 'N/A' ? <div className='text-center'>
+                                    <img src="https://picsum.photos/200/100" alt={row.value} style={{ width: "60px", height: "60px", borderRadius: "50%" }} />
+                                    <p className='mt-3'>{row.value}</p>
+                                </div> : <p className='mt-3'>{row.value}</p>
+                                }
+                            </>
+
                         }
                     },
                     { accessor: "programName", Header: 'Name' },
@@ -234,13 +247,12 @@ export default function Group(props) {
                         id: "edit",
                         Header: "Actions",
                         Cell: ({ row }: any) => {
-                        console.log("🚀 ~ file: PT.tsx ~ line 233 ~ PT ~ row", row)
                             return <ActionButton
                                 action1='Manage'
                                 // actionClick1={() => {
                                 //     fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'manage', type: "Personal Training", rowData:""})
                                 // }}
-                             
+
                                 action2='Details'
                                 actionClick2={() => {
                                     fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'details', type: "Personal Training", rowData: row.original })
@@ -260,7 +272,7 @@ export default function Group(props) {
             <Row>
                 <Col>
                     <PTTable columns={columns} data={userPackage} />
-                    <FitnessAction ref={fitnessActionRef}  />
+                    <FitnessAction ref={fitnessActionRef} />
                 </Col>
             </Row>
         </div>

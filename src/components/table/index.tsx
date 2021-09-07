@@ -42,7 +42,7 @@ function Table({ data, columns }: any) {
                             <Fragment key={rowProps.key}>
                                 <tr className="rowCard " {...row.getRowProps()} >
                                     {row.cells.map(cell => {
-                                        return <td className='bodyTd ml-3' {...cell.getCellProps()}>
+                                        return <td className='bodyTd ml-3 bookingSetting' {...cell.getCellProps()}>
                                             {cell.render("Cell")}
                                         </td>
                                     }

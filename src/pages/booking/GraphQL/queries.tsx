@@ -10,22 +10,19 @@ query userPackages($id: ID!) {
           users_permissions_user: { id: $id }
         }
       }
-      sort: "fitnesspackages.id"
-    ) {
+      sort: "purchase_date:desc"
+    ) 
+    {
       id
       users_permissions_user {
         username
       }
-      package_duration
       effective_date
       purchase_date
+      package_duration
       fitnesspackages {
-        expiry_date
+        id
         packagename
-        Status
-        fitnesspackagepricing{
-            packagepricing
-        }
         fitness_package_type {
           type
         }
@@ -33,6 +30,7 @@ query userPackages($id: ID!) {
           id
         }
       }
+     
     }
   }
 

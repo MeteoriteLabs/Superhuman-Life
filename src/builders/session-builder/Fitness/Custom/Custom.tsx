@@ -1,8 +1,8 @@
 import { useQuery } from '@apollo/client';
 import { useContext, useMemo, useRef, useState } from 'react'
-import { Badge, Button, Dropdown, OverlayTrigger, Popover, Row, Col } from "react-bootstrap";
+import { Badge, Row, Col } from "react-bootstrap";
 import Table from '../../../../components/table';
-import { GET_ALL_PACKAGES } from '../../../resource-builder/graphQL/queries';
+// import '../../../../components/table/table.css'
 import AuthContext from "../../../../context/auth-context"
 import { GET_PACKAGE_BY_TYPE } from '../../graphQL/queries';
 import moment from 'moment';
@@ -31,40 +31,48 @@ export default function Custom(props) {
 
 
     const loadData = (data) => {
-        console.log('custom query data', data)
+        console.log('custom query data', data);
         setUserPackage(
-            [...data.userPackages].map((packageItem, index) => {
-                return {
+            [...data.userPackages].map((packageItem) => {
+                let renewDay:any = '';
+                if (packageItem.fitnesspackages.length !== 0) {
+                    renewDay= new Date(packageItem.effective_date);
+                    renewDay.setDate(renewDay.getDate() + packageItem.fitnesspackages[0].duration)
+                }
 
-                    id: packageItem.fitnesspackages[0].id,
-                    packageName: packageItem.fitnesspackages[0].packagename,
-                    duration: packageItem.fitnesspackages[0].duration,
-                    effectiveDate: moment(packageItem.effective_date).format("DD/MM/YYYY"),
-                   
-                    packageDisciplines: packageItem.fitnesspackages[0].disciplines.map(item => {
-                        return {
-                            value: item.id,
-                            label: item.disciplinename
-                        }
-                    }),
-                    packageStatus: packageItem.fitnesspackages[0].Status ? "Active" : "Inactive",
-                    packageRenewal: "25/10/20",
-
-
-                    programId: packageItem.fitnessprograms[0].id,
-                    client: packageItem.fitnessprograms[0].users_permissions_user.username,
-                    programName: packageItem.fitnessprograms[0].title,
-                    description: packageItem.fitnessprograms[0].description,
-                    level: packageItem.fitnessprograms[0].level,
-                    programDisciplines: packageItem.fitnessprograms[0].fitnessdisciplines.map(item => {
-                        return {
-                            value: item.id,
-                            label: item.disciplinename
-                        }
-                    }),
-                    users_permissions_user: packageItem.fitnessprograms[0].users_permissions_user.id,
-                    programStatus: "Assigned",
-                    programRenewal: "25/07/20",
+                if (packageItem.program_managers.length === 0) {
+                    return {
+                        id: packageItem.fitnesspackages[0].id,
+                        packageName: packageItem.fitnesspackages[0].packagename,
+                        duration: packageItem.fitnesspackages[0].duration,
+                        effectiveDate: moment(packageItem.effective_date).format("MMMM DD,YYYY"),
+                        packageStatus: packageItem.fitnesspackages[0].Status ? "Active" : "Inactive",
+                        packageRenewal: moment(renewDay).format("MMMM DD,YYYY"),
+    
+                        // programId:packageItem.fitnessprograms[0].id,
+                        client: packageItem.users_permissions_user.username,
+                        programName: 'N/A' ,
+                        // users_permissions_user: packageItem.fitnessprograms[0].users_permissions_user.id,
+                        programStatus: 'N/A' ,
+                        programRenewal: 'N/A',
+                    }
+                }else{
+                    return {
+                        id: packageItem.fitnesspackages[0].id,
+                        packageName: packageItem.fitnesspackages[0].packagename,
+                        duration: packageItem.fitnesspackages[0].duration,
+                        effectiveDate: moment(packageItem.effective_date).format("MMMM DD,YYYY"),
+                        packageStatus: packageItem.fitnesspackages[0].Status ? "Active" : "Inactive",
+                        packageRenewal: moment(renewDay).format("MMMM DD,YYYY"),
+    
+    
+                        // programId:packageItem.fitnessprograms[0].id,
+                        client:packageItem.users_permissions_user.username,
+                        programName: packageItem.program_managers[0].fitnessprograms[0].title,
+                        // users_permissions_user: packageItem.fitnessprograms[0].users_permissions_user.id,
+                        programStatus:"Assigned",
+                        programRenewal:"26/04/20"
+                    }
                 }
             })
         )
@@ -104,7 +112,7 @@ export default function Custom(props) {
                         </>
                     }
                 },
-                { accessor: "effectiveDate", Header: "Effect Date" },
+                { accessor: "effectiveDate", Header: "Effective Date" },
                 { accessor: "packageRenewal", Header: "Renewal Date" },
 
             ]
@@ -203,7 +211,7 @@ export default function Custom(props) {
                 <Col>
 
                     <Table columns={columns} data={userPackage} />
-                    <FitnessAction ref={fitnessActionRef}  />
+                    <FitnessAction ref={fitnessActionRef} />
                 </Col>
 
             </Row>

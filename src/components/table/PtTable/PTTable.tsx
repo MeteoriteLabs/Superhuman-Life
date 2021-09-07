@@ -112,7 +112,6 @@ function PTTable({ data, columns }: any) {
                                         else {
                                             return (
                                                 <td rowSpan={cell.rowSpan}
-                                                    style={{borderTop: '1px solid black'}}
                                                     className='bodyTd ml-3'
                                                     {...cell.getCellProps()}>
                                                     {cell.render("Cell")}

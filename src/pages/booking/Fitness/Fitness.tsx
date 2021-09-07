@@ -28,13 +28,15 @@ export default function Fitness(props) {
         console.log('booking data', data);
         setUserPackage(
             [...data.userPackages.map(packageItem => {
+                const renewDay:Date = new Date(packageItem.effective_date);
+                renewDay.setDate(renewDay.getDate() + packageItem.package_duration);
                 return {
                     purchase_date: packageItem.purchase_date,
-                    // client:packageItem.fitnessprograms[0].users_permissions_user.username,
+                    client:packageItem.users_permissions_user.username,
                     packageName: packageItem.fitnesspackages[0].packagename,
                     fitness_package_type: packageItem.fitnesspackages[0].fitness_package_type.type,
                     effectiveDate:packageItem.effective_date,
-                    packageRenewal: "2021-08-04T19:00:00.000Z",
+                    packageRenewal:renewDay,
                     duration: packageItem.package_duration,
                     price: 'Rs 4000',
                     payment_status: "Paid",
@@ -60,18 +62,18 @@ export default function Fitness(props) {
                     </div>
                 }
             },
-            { accessor: "packageName", Header: 'Package Name' },
             {
                 accessor: "fitness_package_type", Header: 'Type',
                 Cell: (row: any) => {
                     return <>
-                        {row.value === "Personal Training" ? <img src='./assets/PTType.svg' /> : ""}
-                        {row.value === "Group Class" ? <img src='./assets/GRoupType.svg' /> : ""}
-                        {row.value === "Custom Fitness" ? <img src='./assets/CustomType.svg' /> : ""}
-                        {row.value === "Classic Class" ? <img src='./assets/ClassicType.svg' /> : ""}
+                        {row.value === "Personal Training" ? <img src='./assets/PTType.svg' alt='PT' /> : ""}
+                        {row.value === "Group Class" ? <img src='./assets/GroupType.svg' alt='group'/> : ""}
+                        {row.value === "Custom Fitness" ? <img src='./assets/CustomType.svg' alt='custom' /> : ""}
+                        {row.value === "Classic Class" ? <img src='./assets/ClassicType.svg' alt='classic'/> : ""}
                     </>
                 }
             },
+            { accessor: "packageName", Header: 'Package Name' },
             {
                 accessor: "purchase_date", Header: 'Purchase Date',
                 Cell: (row: any) => {

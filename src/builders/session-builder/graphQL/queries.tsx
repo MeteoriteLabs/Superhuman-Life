@@ -18,43 +18,62 @@ export const GET_PACKAGE_BY_TYPE = gql`
       effective_date
       purchase_date
       fitnesspackages {
-        duration
         expiry_date
-        publishing_date
         id
         packagename
-        level
-        disciplines{
-          id
-          disciplinename
-        }
         duration
         Status
-        fitness_package_type {
-          type
-        }
-        users_permissions_user {
-          id
-        }
       }
-      fitnessprograms {
+      
+      program_managers{
         id
-        level
-        description
-        published_at
-        title
-        users_permissions_user {
-          username
+        fitnesspackages{
+          expiry_date
           id
+          packagename
+          duration
+          Status
         }
-        fitnessdisciplines{
-          disciplinename
+
+        fitnessprograms{
           id
+          title
+          published_at
         }
       }
     }
   }
 `;
+
+
+// export const GET_PACKAGE_BY_TYPE = gql`
+//     query programManagers($id: ID!, $type: String){
+//       programManagers( 
+//         where: {
+//             fitnesspackages: {
+//               users_permissions_user: { id: $id}
+//               fitness_package_type:{type:$type}
+//             }
+//         },
+//       )
+//       {
+//         id
+//         fitnesspackages{
+//           id
+//           packagename
+//           fitness_package_type{
+//             type
+//           }
+//         }
+//         fitnessprograms{
+//           id
+//           title
+//         }
+//       }
+//     }
+
+// `
+
 
 
 

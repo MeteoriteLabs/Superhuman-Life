@@ -3,7 +3,7 @@ table {
   border-spacing: 0 1.5em;
 }
 
-.rowCard {
+.bookingRowCard {
   border-radius: 15px;
   box-shadow: 3px 4px 8px 1px rgba(0,0,0,0.21);
 }
@@ -15,5 +15,4 @@ table {
 
 .table td, .table th {
   vertical-align: middle
-
 }

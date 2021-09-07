@@ -1,55 +1,19 @@
-/* .pt .bodyTd:nth-child(6) {
-  border-right: 1px solid black;
-}
-
-.pt .rowCard:first-child .bodyTd,
-.pt .rowCard:nth-child(3) .bodyTd {
-  border-top: 1px solid black;
-}
-
-.pt .rowCard:first-child .bodyTd:first-child,
-.pt .rowCard:nth-child(3) .bodyTd:first-child,
-.pt .rowCard:nth-child(3) .bodyTd:nth-child(7) {
-  border-left: 1px solid black;
-}
-
-.pt .rowCard:first-child .bodyTd,
-.pt .rowCard:nth-child(3) .bodyTd {
-  border-bottom: 1px solid black;
-}
-
-.pt .rowCard:nth-child(3) .bodyTd:nth-child(5),
-.pt .rowCard:first-child .bodyTd:nth-child(5) {
-  border-right: 1px solid black;
-}
-.pt .rowCard:first-child .bodyTd:nth-child(6),
-.pt .rowCard:nth-child(3) .bodyTd:nth-child(6) {
-  border: none;
-}
-
-.pt .rowCard:nth-child(1) .bodyTd:nth-child(7) {
-  border-left: 1px solid black;
-}
-
-.pt .rowCard:nth-child(2) .bodyTd:nth-child(1),
-.pt .rowCard:nth-child(2) .bodyTd:nth-child(2),
-.pt .rowCard:nth-child(2) .bodyTd:nth-child(3),
-.pt .rowCard:nth-child(2) .bodyTd:nth-child(4),
-.pt .rowCard:nth-child(2) .bodyTd:nth-child(5) {
-  border-top: 1px solid black;
-  border-bottom: 1px solid black;
-}
-
-.pt .rowCard:nth-child(2) .bodyTd:nth-child(1) {
-  border-left: 1px solid black;
-} */
-
-table {
+/* table {
   border-collapse: separate;
-  border-spacing: 0 1em;
+  border-spacing: 0 1.5em;
 }
 
-/* table thead th {
-  border-bottom: none;
-} */
+.rowCard {
+  border-radius: 15px;
+  box-shadow: 3px 4px 8px 1px rgba(0,0,0,0.21);
+}
 
+
+.table thead th {
+  border-bottom: none;
+}
+
+.table td, .table th {
+  vertical-align: middle
+
+} */
