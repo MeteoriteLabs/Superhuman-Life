@@ -1,11 +1,11 @@
 import { useMemo, useContext, useRef, useState } from "react";
 import ActionButton from "../../../components/actionbutton/index";
 import { Badge, Button, TabContent, InputGroup, FormControl, Card, Container, Row, Col } from "react-bootstrap";
-import ClientTable from "../../../components/table/client-table";
 import AuthContext from "../../../context/auth-context";
 import { useQuery } from "@apollo/client";
 import { GET_CLIENTS } from "./queries";
 import CreateClient from "./addclientcomponent";
+import Table from "../../../components/table";
 //import client from "./client";
 
 function ClientListingPage() {
@@ -21,105 +21,62 @@ function ClientListingPage() {
      const columns = useMemo<any>(
           () => [
                {
-                    Header: "Client",
-                    columns: [
-                         {
-                              Header: "",
-                              accessor: "clientpic",
-                              Cell: (v: any) => (
-                                   <img src={v.value} height="42" className="rounded-circle" alt="avatar" />
-                              ),
-                         },
-                         {
-                              Header: "Name",
-                              accessor: "clientname",
-                         },
-                         {
-                              Header: "Details",
-                              accessor: "clientdetails",
-                         },
-                         {
-                              Header: "Location",
-                              accessor: "clientlocation",
-                         },
-                    ],
+                    Header: "",
+                    accessor: "clientpic",
+                    Cell: (v: any) => <img src={v.value} height="42" className="rounded-circle" alt="avatar" />,
+               },
+               { accessor: "clientname", Header: "Name" },
+               { accessor: "clientdetails", Header: "Details" },
+               { accessor: "clientlocation", Header: "Location" },
+               {
+                    Header: "No of Bookings",
+                    accessor: "bookings",
                },
                {
-                    Header: "Package",
-                    columns: [
-                         {
-                              Header: "Package Name",
-                              accessor: "packagename",
-                         },
-                         {
-                              Header: "Renewal",
-                              accessor: "packagerenewal",
-                         },
-                         {
-                              Header: "Status",
-                              accessor: "packagestatus",
-                              Cell: (v: any) => (
-                                   <Badge variant={v.value === "Purchased" ? "success" : "danger"}>{v.value}</Badge>
-                              ),
-                         },
-                    ],
+                    accessor: "status",
+                    Header: "Status",
+                    Cell: (v: any) => <Badge variant={v.value === "Assigned" ? "success" : "danger"}>{v.value}</Badge>,
                },
                {
-                    Header: "Program",
-                    columns: [
-                         {
-                              Header: "Status",
-                              accessor: "programstatus",
-                              Cell: (v: any) => (
-                                   <Badge variant={v.value === "Assigned" ? "success" : "danger"}>{v.value}</Badge>
-                              ),
-                         },
-                         {
-                              Header: "Renewal",
-                              accessor: "programrenewal",
-                         },
-                         {
-                              id: "edit",
-                              Header: "Action",
-                              accessor: "action",
-                              Cell: ({ row }: any) => (
-                                   <ActionButton
-                                        action1="Go to client"
-                                        actionClick1={() => {
-                                             handleRedirect(row.original.id);
-                                        }}
-                                        action2="Build Program"
-                                        action3="Chat"
-                                        action4="Build Package"
-                                        action5="Remove Client"
-                                        actionClick5={() => {
-                                             CreateClientComponent.current.TriggerForm({
-                                                  id: row.original.id,
-                                                  type: "delete",
-                                             });
-                                        }}
-                                   />
-                              ),
-                         },
-                    ],
+                    id: "edit",
+                    Header: "Action",
+                    accessor: "action",
+                    Cell: ({ row }: any) => (
+                         <ActionButton
+                              action1="Go to client"
+                              actionClick1={() => {
+                                   handleRedirect(row.original.id);
+                              }}
+                              action2="Build Program"
+                              action3="Chat"
+                              action4="Build Package"
+                              action5="Remove Client"
+                              actionClick5={() => {
+                                   CreateClientComponent.current.TriggerForm({
+                                        id: row.original.id,
+                                        type: "delete",
+                                   });
+                              }}
+                         />
+                    ),
                },
           ],
           []
      );
 
-     function getDate(time: any) {
-          let dateObj = new Date(time);
-          let month = dateObj.getMonth() + 1;
-          let year = dateObj.getFullYear();
-          let date = dateObj.getDate();
+     // function getDate(time: any) {
+     //      let dateObj = new Date(time);
+     //      let month = dateObj.getMonth() + 1;
+     //      let year = dateObj.getFullYear();
+     //      let date = dateObj.getDate();
 
-          return `${date}/${month}/${year}`;
-     }
-     function getRenewalDate(time: any, duration: any) {
-          var date = new Date(time);
-          date.setDate(date.getDate() + duration);
-          return getDate(date);
-     }
+     //      return `${date}/${month}/${year}`;
+     // }
+     // function getRenewalDate(time: any, duration: any) {
+     //      var date = new Date(time);
+     //      date.setDate(date.getDate() + duration);
+     //      return getDate(date);
+     // }
 
      const [datatable, setDataTable] = useState<{}[]>([]);
 
@@ -136,11 +93,8 @@ function ClientListingPage() {
                          clientname: Detail.users_permissions_user.username,
                          clientdetails: Detail.users_permissions_user.email,
                          clientlocation: Detail.users_permissions_user.addresses[0].city,
-                         packagename: Detail.fitnesspackages[0].packagename,
-                         packagerenewal: getRenewalDate(Detail.effective_date, Detail.package_duration),
-                         packagestatus: Detail.fitnesspackages[0].Status ? "Purchased" : "Not Assigned",
-                         programstatus: "Not Assigned", //to be fixed
-                         programrenewal: getDate(Date.parse(Detail.fitnessprograms.updatedAt)), //to be fixed
+                         bookings: "2",
+                         status: "Assigned",
                     };
                })
           );
@@ -191,7 +145,7 @@ function ClientListingPage() {
                          </Col>
                     </Row>
                </Container>
-               <ClientTable columns={columns} data={datatable} />
+               <Table columns={columns} data={datatable} />
           </TabContent>
      );
 }

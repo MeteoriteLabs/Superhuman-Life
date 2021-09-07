@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 export const GET_CLIENTS = gql`
-     query getmessage($filter: String!, $id: String) {
+     query getmessage($filter: String!, $id: ID!) {
           userPackages(
                where: {
                     users_permissions_user: { username_contains: $filter }
@@ -30,9 +30,16 @@ export const GET_CLIENTS = gql`
                          id
                     }
                }
-               fitnessprograms {
-                    description
-                    updatedAt
+               program_managers {
+                    id
+                    fitnesspackages {
+                         id
+                         packagename
+                    }
+                    fitnessprograms {
+                         id
+                         title
+                    }
                }
           }
      }

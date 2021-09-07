@@ -1,4 +1,4 @@
-import { Accordion, Card } from "react-bootstrap";
+//import { Accordion, Card } from "react-bootstrap";
 import ActionButton from "../../../../../components/actionbutton/index";
 import { useMemo } from "react";
 import { Badge } from "react-bootstrap";
@@ -88,31 +88,18 @@ function Movement() {
      ];
      return (
           <div>
-               <Accordion defaultActiveKey="0">
-                    <Card>
-                         <Accordion.Toggle as={Card.Header} eventKey="0">
-                              <h5>Active</h5>
-                         </Accordion.Toggle>
-
-                         <Accordion.Collapse eventKey="0">
-                              <Card.Body>
-                                   <ClientTable columns={columns} data={data} />
-                              </Card.Body>
-                         </Accordion.Collapse>
-                    </Card>
-
-                    <Card>
-                         <Accordion.Toggle as={Card.Header} eventKey="1">
-                              <h5>History</h5>
-                         </Accordion.Toggle>
-
-                         <Accordion.Collapse eventKey="1">
-                              <Card.Body>
-                                   <ClientTable columns={columns} data={data} />
-                              </Card.Body>
-                         </Accordion.Collapse>
-                    </Card>
-               </Accordion>
+               <div>
+                    <div className="border rounded border-dark bg-secondary pt-1">
+                         <h5 className="text-white font-weight-bold ml-3 p-1 ">Active</h5>
+                    </div>
+                    <ClientTable columns={columns} data={data} />
+               </div>
+               <div>
+                    <div className="border rounded border-dark bg-secondary pt-1">
+                         <h5 className="text-white font-weight-bold ml-3 p-1 ">History</h5>
+                    </div>
+                    <ClientTable columns={columns} data={data} />
+               </div>
           </div>
      );
 }
