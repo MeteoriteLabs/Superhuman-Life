@@ -90,14 +90,16 @@ function Movement() {
                     return {
                          id: Detail.id,
                          packagetype: "/assets/avatar-1.jpg",
-                         packagename: Detail.program_managers.id
-                              ? Detail.program_managers.fitnesspackages[0].packagename
-                              : Detail.fitnesspackages[0].name,
+                         packagename: Detail.program_managers[0]
+                              ? Detail.program_managers[0].fitnesspackages[0].packagename
+                              : Detail.fitnesspackages[0].packagename,
                          packagedate: getDate(Date.parse(Detail.effective_date)),
                          packagerenewdate: getRenewalDate(Detail.effective_date, Detail.package_duration),
-                         programname: Detail.program_managers.fitnessprograms[0].title,
-                         programrenewal: "25/07/20",
-                         programstatus: "Assigned",
+                         programname: Detail.program_managers[0]
+                              ? Detail.program_managers[0].fitnessprograms[0].title
+                              : "N/A",
+                         programrenewal: Detail.program_managers[0] ? "2/04/22" : "N/A",
+                         programstatus: Detail.program_managers[0] ? "Assigned" : "Not Assigned",
                     };
                })
           );

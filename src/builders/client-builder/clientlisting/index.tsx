@@ -88,7 +88,7 @@ function ClientListingPage() {
           setDataTable(
                [...data.userPackages].map((Detail) => {
                     return {
-                         id: Detail.id,
+                         id: Detail.fitnesspackages[0].users_permissions_user.id,
                          clientpic: "/assets/avatar-1.jpg",
                          clientname: Detail.users_permissions_user.username,
                          clientdetails: Detail.users_permissions_user.email,

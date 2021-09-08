@@ -51,6 +51,7 @@ export const GET_CLIENT_DATA = gql`
                id
                effective_date
                package_duration
+
                users_permissions_user {
                     id
                     username
