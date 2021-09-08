@@ -45,6 +45,45 @@ export const GET_CLIENTS = gql`
      }
 `;
 
+export const GET_CLIENT_DATA = gql`
+     query getclient($id: ID!) {
+          userPackages(where: { fitnesspackages: { users_permissions_user: { id: $id } } }) {
+               id
+               effective_date
+               package_duration
+               users_permissions_user {
+                    id
+                    username
+                    email
+                    Phone
+                    addresses {
+                         city
+                    }
+               }
+               fitnesspackages {
+                    packagename
+                    Status
+                    fitness_package_type {
+                         type
+                    }
+                    users_permissions_user {
+                         id
+                    }
+               }
+               program_managers {
+                    id
+                    fitnesspackages {
+                         id
+                         packagename
+                    }
+                    fitnessprograms {
+                         id
+                         title
+                    }
+               }
+          }
+     }
+`;
 export const ADD_CLIENT = gql`
      mutation client($username: String!, $firstname: String, $lastname: String, $email: String!, $phone: String) {
           createUser(

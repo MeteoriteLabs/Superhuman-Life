@@ -1,9 +1,10 @@
 import { Card, Tab, Tabs, TabContent } from "react-bootstrap";
 import Programs from "./clienthome/clientprograms";
+import Goals from "./clienthome/clientGoals";
 
 function Client() {
-     const last = window.location.pathname.split("/").pop();
-     console.log(last);
+     //const last = window.location.pathname.split("/").pop();
+     //console.log(last);
      function handleRedirect() {
           window.location.href = `/clients`;
      }
@@ -90,6 +91,7 @@ function Client() {
                               <Tab eventKey="goal" title="Goals">
                                    <TabContent>
                                         <hr />
+                                        <Goals />
                                    </TabContent>
                               </Tab>
                               <Tab eventKey="Orders" title="Orders">
