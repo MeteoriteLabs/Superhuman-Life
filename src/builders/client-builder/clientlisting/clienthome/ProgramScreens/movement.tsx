@@ -21,7 +21,14 @@ function Movement() {
           date.setDate(date.getDate() + duration);
           return getDate(date);
      }
-
+     function compareDates(time: any) {
+          var date = new Date(time);
+          var currentdate = new Date();
+          if (date.getTime() < currentdate.getTime()) {
+               return true;
+          }
+          return false;
+     }
      const columns = useMemo<any>(
           () => [
                {
@@ -78,30 +85,57 @@ function Movement() {
           []
      );
 
-     const [datatable, setDataTable] = useState<{}[]>([]);
+     const [dataActivetable, setActiveDataTable] = useState<{}[]>([]);
+     const [dataHistorytable, setHistoryDataTable] = useState<{}[]>([]);
 
      function FetchData(_variables: {} = { id: last }) {
           useQuery(GET_CLIENT_DATA, { variables: _variables, onCompleted: loadData });
      }
 
      function loadData(data: any) {
-          setDataTable(
-               [...data.userPackages].map((Detail) => {
-                    return {
-                         id: Detail.id,
-                         packagetype: "/assets/avatar-1.jpg",
-                         packagename: Detail.program_managers[0]
-                              ? Detail.program_managers[0].fitnesspackages[0].packagename
-                              : Detail.fitnesspackages[0].packagename,
-                         packagedate: getDate(Date.parse(Detail.effective_date)),
-                         packagerenewdate: getRenewalDate(Detail.effective_date, Detail.package_duration),
-                         programname: Detail.program_managers[0]
-                              ? Detail.program_managers[0].fitnessprograms[0].title
-                              : "N/A",
-                         programrenewal: Detail.program_managers[0] ? "2/04/22" : "N/A",
-                         programstatus: Detail.program_managers[0] ? "Assigned" : "Not Assigned",
-                    };
-               })
+          setHistoryDataTable(
+               [...data.userPackages].flatMap((Detail) =>
+                    compareDates(getRenewalDate(Detail.effective_date, Detail.package_duration))
+                         ? {
+                                id: Detail.fitnesspackages[0].users_permissions_user.id,
+                                packagetype: "/assets/avatar-1.jpg",
+                                packagename: Detail.program_managers[0]
+                                     ? Detail.program_managers[0].fitnesspackages[0].packagename
+                                     : Detail.fitnesspackages[0].packagename,
+                                packagedate: getDate(Date.parse(Detail.effective_date)),
+                                packagerenewdate: getRenewalDate(Detail.effective_date, Detail.package_duration),
+                                programname: Detail.program_managers[0]
+                                     ? Detail.program_managers[0].fitnessprograms[0].title
+                                     : "N/A",
+                                programrenewal: Detail.program_managers[0]
+                                     ? getRenewalDate(Detail.effective_date, Detail.package_duration)
+                                     : "N/A",
+                                programstatus: Detail.program_managers[0] ? "Assigned" : "Not Assigned",
+                           }
+                         : []
+               )
+          );
+          setActiveDataTable(
+               [...data.userPackages].flatMap((Detail) =>
+                    !compareDates(getRenewalDate(Detail.effective_date, Detail.package_duration))
+                         ? {
+                                id: Detail.fitnesspackages[0].users_permissions_user.id,
+                                packagetype: "/assets/avatar-1.jpg",
+                                packagename: Detail.program_managers[0]
+                                     ? Detail.program_managers[0].fitnesspackages[0].packagename
+                                     : Detail.fitnesspackages[0].packagename,
+                                packagedate: getDate(Date.parse(Detail.effective_date)),
+                                packagerenewdate: getRenewalDate(Detail.effective_date, Detail.package_duration),
+                                programname: Detail.program_managers[0]
+                                     ? Detail.program_managers[0].fitnessprograms[0].title
+                                     : "N/A",
+                                programrenewal: Detail.program_managers[0]
+                                     ? getRenewalDate(Detail.effective_date, Detail.package_duration)
+                                     : "N/A",
+                                programstatus: Detail.program_managers[0] ? "Assigned" : "Not Assigned",
+                           }
+                         : []
+               )
           );
      }
 
@@ -112,13 +146,13 @@ function Movement() {
                     <div className="border rounded border-dark bg-secondary pt-1">
                          <h5 className="text-white font-weight-bold ml-3 p-1 ">Active</h5>
                     </div>
-                    <ClientTable columns={columns} data={datatable} />
+                    <ClientTable columns={columns} data={dataActivetable} />
                </div>
                <div>
                     <div className="border rounded border-dark bg-secondary pt-1">
                          <h5 className="text-white font-weight-bold ml-3 p-1 ">History</h5>
                     </div>
-                    <ClientTable columns={columns} data={datatable} />
+                    <ClientTable columns={columns} data={dataHistorytable} />
                </div>
           </div>
      );
