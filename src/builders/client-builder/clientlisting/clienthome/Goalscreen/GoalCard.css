@@ -1,0 +1,13 @@
+.goalCard {
+     width: 22rem;
+}
+@media (max-width: 1100px) {
+     .goalCard {
+          width: 15rem;
+     }
+}
+@media (max-width: 600px) {
+     .goalCard {
+          width: 13rem;
+     }
+}

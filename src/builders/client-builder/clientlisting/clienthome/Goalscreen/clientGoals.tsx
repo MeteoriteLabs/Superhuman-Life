@@ -2,8 +2,8 @@ import { Row, Button } from "react-bootstrap";
 import "./styles.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-
 import Slider from "react-slick";
+import GoalCard from "./Card";
 
 function Goals() {
      var settings = {
@@ -53,33 +53,16 @@ function Goals() {
                               </div>
                          </Row>
                     </div>
-                    <div className="w-80 ml-5 mr-5">
+                    <div className="w-95 ml-5 mr-5">
                          {/* slider */}
                          <Slider {...settings}>
-                              <div>
-                                   <h3>1</h3>
-                              </div>
-                              <div>
-                                   <h3>2</h3>
-                              </div>
-                              <div>
-                                   <h3>3</h3>
-                              </div>
-                              <div>
-                                   <h3>4</h3>
-                              </div>
-                              <div>
-                                   <h3>5</h3>
-                              </div>
-                              <div>
-                                   <h3>6</h3>
-                              </div>
-                              <div>
-                                   <h3>7</h3>
-                              </div>
-                              <div>
-                                   <h3>8</h3>
-                              </div>
+                              <GoalCard />
+                              <GoalCard />
+                              <GoalCard />
+                              <GoalCard />
+                              <GoalCard />
+                              <GoalCard />
+                              <GoalCard />
                          </Slider>
                     </div>
                </div>
