@@ -1,6 +1,6 @@
 import { Card, Tab, Tabs, TabContent } from "react-bootstrap";
-import Movement from "./ProgramScreens/movement";
-import Nutrition from "./ProgramScreens/nutrition";
+import Movement from "./movement";
+import Nutrition from "./nutrition";
 function Programs() {
      return (
           <div>

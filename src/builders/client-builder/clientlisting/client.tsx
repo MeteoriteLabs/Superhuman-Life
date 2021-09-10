@@ -1,6 +1,6 @@
 import { Card, Tab, Tabs, TabContent } from "react-bootstrap";
-import Programs from "./clienthome/clientprograms";
-import Goals from "./clienthome/clientGoals";
+import Programs from "./clienthome/ProgramScreens/clientprograms";
+import Goals from "./clienthome/Goalscreen/clientGoals";
 import { useQuery } from "@apollo/client";
 import { GET_CLIENT_DATA } from "./queries";
 import { useState } from "react";
