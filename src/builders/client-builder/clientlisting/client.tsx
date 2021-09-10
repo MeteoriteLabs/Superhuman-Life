@@ -1,14 +1,29 @@
 import { Card, Tab, Tabs, TabContent } from "react-bootstrap";
 import Programs from "./clienthome/clientprograms";
 import Goals from "./clienthome/clientGoals";
+import { useQuery } from "@apollo/client";
+import { GET_CLIENT_DATA } from "./queries";
+import { useState } from "react";
 
 function Client() {
-     //const last = window.location.pathname.split("/").pop();
-     //console.log(last);
+     const last = window.location.pathname.split("/").pop();
+
+     const [clientName, setClientName] = useState<any>(" ");
+     const [clientSex, setClientSex] = useState<any>(" ");
      function handleRedirect() {
           window.location.href = `/clients`;
      }
-
+     function FetchData(_variables: {} = { id: last }) {
+          useQuery(GET_CLIENT_DATA, { variables: _variables, onCompleted: loadData });
+     }
+     function loadData(data: any) {
+          [...data.userPackages].map((Detail) => {
+               setClientName(Detail.users_permissions_user.username);
+               setClientSex(Detail.users_permissions_user.sex);
+               return {};
+          });
+     }
+     FetchData({ id: last });
      return (
           <div>
                <div className="mb-3">
@@ -27,8 +42,8 @@ function Client() {
                          <div className="row">
                               <img src="/assets/avatar-1.jpg" height="90" className="rounded-circle" alt="avatar" />
                               <div className="col">
-                                   <h2 className="ml-2">Arjun Nair</h2>
-                                   <p className="ml-2 mt-3 text-muted">Male 30 yrs 170cm 80kg </p>
+                                   <h2 className="ml-2">{clientName}</h2>
+                                   <p className="ml-2 mt-3 text-muted">{clientSex} </p>
                               </div>
                               <div className="row mt-5">
                                    <img

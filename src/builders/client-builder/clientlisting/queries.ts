@@ -57,6 +57,7 @@ export const GET_CLIENT_DATA = gql`
                     username
                     email
                     Phone
+                    sex
                     addresses {
                          city
                     }
