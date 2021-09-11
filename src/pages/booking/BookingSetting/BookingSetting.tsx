@@ -1,14 +1,14 @@
 import React from 'react'
 import { Card, Tab, Tabs } from 'react-bootstrap';
 import * as Icon from 'react-bootstrap-icons';
-import { NavLink, Redirect } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import BookingFitness from './BookingFitness/BookingFitness';
 
 export default function BookingSetting(props) {
     return (
         <div>
             <div className='d-flex justify-content-start align-items-center'>
-                <NavLink to='bookings'>   <Icon.ArrowLeftCircle className='mr-3' style={{ fontSize: '2rem', cursor: 'pointer', color:'black' }} /></NavLink>
+                <NavLink to='bookings'><Icon.ArrowLeftCircle className='mr-3' style={{ fontSize: '2rem', cursor: 'pointer', color:'black' }} /></NavLink>
                 <h1>Booking settings</h1>
             </div>
 

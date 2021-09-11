@@ -1,15 +1,20 @@
-import React, { useContext, useMemo, useState } from 'react'
+import React, { useContext, useMemo, useRef, useState } from 'react'
 import { Row, Col, Badge } from 'react-bootstrap';
 import authContext from '../../../../context/auth-context';
 import Table from '../../../../components/table/index'
 import BookingTable from '../../../../components/table/BookingTable/BookingTable'
 import ActionButton from '../../../../components/actionbutton';
+import ConfirmRequestAction from './ConfirmRequestAction';
+import ConfirmationModel from '../model/ConfirmationModel';
+import RequestModel from '../model/RequestModel';
 
 export default function BookingFitness() {
     const auth = useContext(authContext);
     const [userPackage, setUserPackage] = useState<any>([]);
+    const [renderConfirmation, setRenderConfirmation] = useState<boolean>(false);
+    const [renderRequest, setRenderRequest] = useState<boolean>(false);
 
-    // const fitnessActionRef = useRef<any>(null);
+    const bookingFitnessActionRef = useRef<any>(null);
 
     // const FetchData = () => {
     //     useQuery(GET_PACKAGE_BY_TYPE, {
@@ -107,10 +112,12 @@ export default function BookingFitness() {
                     return <ActionButton
                         action1='Booking confirmation'
                         actionClick1={() => {
+                            bookingFitnessActionRef.current.TriggerForm({actionType:'confirmation'});
                         }}
 
                         action2='Data requests'
                         actionClick2={() => {
+                            bookingFitnessActionRef.current.TriggerForm({actionType:'request'});
                         }}
                     >
                     </ActionButton>
@@ -126,6 +133,7 @@ export default function BookingFitness() {
             <Row>
                 <Col>
                     <Table columns={columns} data={dataTable} />
+                    <ConfirmRequestAction ref={bookingFitnessActionRef}/>
                 </Col>
             </Row>
         </div>

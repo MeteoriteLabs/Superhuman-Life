@@ -16,3 +16,10 @@ table {
 .table td, .table th {
   vertical-align: middle
 }
+
+
+
+.newBookingRowCard{
+  border-radius: 15px;
+  box-shadow: 3px 4px 8px 1px  #FF244A;
+}
