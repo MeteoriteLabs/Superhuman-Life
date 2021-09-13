@@ -7,7 +7,7 @@ import { GET_CLIENT_DATA } from "../../queries";
 
 function Movement() {
      const last = window.location.pathname.split("/").pop();
-     console.log(last);
+     //console.log(last);
      function getDate(time: any) {
           let dateObj = new Date(time);
           let month = dateObj.getMonth() + 1;
