@@ -1,12 +1,21 @@
 import { Card } from "react-bootstrap";
 import "./GoalCard.css";
 
-function GoalCard(props: any) {
+function MilestoneCard(props: any) {
      return (
           <Card border="secondary" className="goalCard">
                <Card.Body>
                     <Card.Title>
-                         <h4>Build Muscle</h4>
+                         <div className="d-flex flex-column ">
+                              <div className="p-2 bd-highlight">
+                                   <h4>Milestone</h4>
+                              </div>
+                              <div className="d-flex flex-wrap">
+                                   <p className="milestoneCard">Loose Weight</p>
+                                   <p className="milestoneCard">Muscle Gain</p>
+                                   <p className="milestoneCard">Stamina</p>
+                              </div>
+                         </div>
                     </Card.Title>
                     <Card.Text>
                          <div className="d-flex">
@@ -37,4 +46,4 @@ function GoalCard(props: any) {
      );
 }
 
-export default GoalCard;
+export default MilestoneCard;

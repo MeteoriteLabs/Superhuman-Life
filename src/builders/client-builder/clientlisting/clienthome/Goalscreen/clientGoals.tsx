@@ -4,6 +4,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
 import GoalCard from "./Card";
+import MilestoneCard from "./MilestoneCard";
 
 function Goals() {
      var settings = {
@@ -53,8 +54,7 @@ function Goals() {
                               </div>
                          </Row>
                     </div>
-                    <div className="w-95 ml-5 mr-5">
-                         {/* slider */}
+                    <div className="w-95 ml-5 mr-5 mt-3">
                          <Slider {...settings}>
                               <GoalCard />
                               <GoalCard />
@@ -87,7 +87,18 @@ function Goals() {
                               </div>
                          </Row>
                     </div>
-                    <div className="border rounded border-dark">{/* slider */}</div>
+                    <div className="w-95 ml-5 mr-5 mt-3">
+                         {/* slider */}
+                         <Slider {...settings}>
+                              <MilestoneCard />
+                              <MilestoneCard />
+                              <MilestoneCard />
+                              <MilestoneCard />
+                              <MilestoneCard />
+                              <MilestoneCard />
+                              <MilestoneCard />
+                         </Slider>
+                    </div>
                </div>
           </div>
      );
