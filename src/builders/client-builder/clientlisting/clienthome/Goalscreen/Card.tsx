@@ -8,7 +8,7 @@ function GoalCard(props: any) {
                     <Card.Title>
                          <h4>Build Muscle</h4>
                     </Card.Title>
-                    <Card.Text>
+                    <Card.Text as="div">
                          <div className="d-flex">
                               <div className="flex-fill">
                                    <p className="font-weight-bold p-1">Start Date: 12.10.2021{props.startDate}</p>
@@ -26,10 +26,9 @@ function GoalCard(props: any) {
                               <img src="/assets/avatar-1.jpg" height="50" className="rounded-circle" alt="avatar" />
                               <p className="font-weight-bold p-1">Arjun Nair{props.updatedBy}</p>
                          </div>
-                         <div className="flex-fill p-1">
-                              <p className="font-weight-bold">
-                                   Updated On: <p>12.09.2021{props.updatedOn}</p>
-                              </p>
+                         <div className="flex-fill">
+                              <p className="font-weight-bold">Updated On: </p>
+                              <p className="font-weight-bold">12.09.2021{props.updatedOn}</p>
                          </div>
                     </div>
                </Card.Header>
