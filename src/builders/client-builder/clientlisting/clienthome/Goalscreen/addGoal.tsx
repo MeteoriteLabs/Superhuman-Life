@@ -1,8 +1,8 @@
-import React, { useImperativeHandle, useState } from "react";
-//import { useMutation } from "@apollo/client";
+import React, { useImperativeHandle, useState, useContext } from "react";
+import { useMutation } from "@apollo/client";
 import ModalView from "../../../../../components/modal";
-//import { ADD_CLIENT } from "./queries";
-//import AuthContext from "../../../context/auth-context";
+import { ADD_GOAL } from "./queries";
+import AuthContext from "../../../../../context/auth-context";
 import { Subject } from "rxjs";
 import { schema, widgets } from "./schema";
 
@@ -12,17 +12,18 @@ interface Operation {
 }
 
 function CreateGoal(props: any, ref: any) {
-     //const auth = useContext(AuthContext);
+     const last = window.location.pathname.split("/").pop();
+     const auth = useContext(AuthContext);
      const GoalSchema: { [name: string]: any } = require("./forms/goal.json");
      //const uiSchema: {} = require("./schema.tsx");
      //const [messageDetails, setMessageDetails] = useState<any>({});
      const [operation, setOperation] = useState<Operation>({} as Operation);
 
-     //  const [createClient] = useMutation(ADD_CLIENT, {
-     //       onCompleted: (r: any) => {
-     //            modalTrigger.next(false);
-     //       },
-     //  });
+     const [createGoal] = useMutation(ADD_GOAL, {
+          onCompleted: (r: any) => {
+               modalTrigger.next(false);
+          },
+     });
 
      const modalTrigger = new Subject();
 
@@ -38,16 +39,16 @@ function CreateGoal(props: any, ref: any) {
 
      function CreateGoal(frm: any) {
           console.log(frm);
-          //   let userName = frm.firstname.slice(0, 1) + " " + frm.lastname;
-          //   createClient({
-          //        variables: {
-          //             username: userName,
-          //             firstname: frm.firstname,
-          //             lastname: frm.lastname,
-          //             email: frm.email,
-          //             phone: frm.phone,
-          //        },
-          //   });
+
+          createGoal({
+               variables: {
+                    goals: frm.packagesearch.split(","),
+                    assignedBy: last,
+                    start: frm.startdate,
+                    end: frm.enddate,
+                    users_permissions_user: auth.userid,
+               },
+          });
      }
 
      function OnSubmit(frm: any) {

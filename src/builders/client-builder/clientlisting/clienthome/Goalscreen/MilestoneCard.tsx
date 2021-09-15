@@ -32,8 +32,15 @@ function MilestoneCard(props: any) {
                     <div className="d-flex">
                          <div className="flex-fill">
                               <p className="font-weight-bold">Updated By:</p>
-                              <img src="/assets/avatar-1.jpg" height="50" className="rounded-circle" alt="avatar" />
-                              <p className="font-weight-bold p-1">Arjun Nair{props.updatedBy}</p>
+                              <div className="d-flex flex-row ">
+                                   <img
+                                        src="/assets/avatar-1.jpg"
+                                        height="50"
+                                        className="rounded-circle"
+                                        alt="avatar"
+                                   />
+                                   <p className="font-weight-bold p-2">Arjun Nair{props.updatedBy}</p>
+                              </div>
                          </div>
                          <div className="flex-fill">
                               <p className="font-weight-bold">Updated On:</p>

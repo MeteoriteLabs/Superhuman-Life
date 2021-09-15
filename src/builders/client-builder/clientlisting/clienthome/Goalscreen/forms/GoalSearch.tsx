@@ -9,25 +9,25 @@ const GoalSearch = (props: any) => {
      const inputField = useRef<any>();
      let skipval: Boolean = true;
 
-     const GET_PACKAGELIST = gql`
-          query packageListQuery($filter: String!) {
-               fitnesspackages(sort: "updatedAt", where: { packagename_contains: $filter }) {
+     const GET_GOALLIST = gql`
+          query GoalsListQuery($filter: String!) {
+               goals(sort: "updatedAt", where: { name_contains: $filter }) {
                     id
-                    packagename
+                    name
                }
           }
      `;
 
      function FetchPackageList(_variable: {} = { filter: " " }) {
-          useQuery(GET_PACKAGELIST, { variables: _variable, onCompleted: loadPackageList, skip: !searchInput });
+          useQuery(GET_GOALLIST, { variables: _variable, onCompleted: loadPackageList, skip: !searchInput });
      }
 
      function loadPackageList(data: any) {
           setPackageLists(
-               [...data.fitnesspackages].map((p) => {
+               [...data.goals].map((p) => {
                     return {
                          id: p.id,
-                         name: p.packagename,
+                         name: p.name,
                     };
                })
           );
