@@ -1,5 +1,6 @@
 .goalCard {
      width: 20rem;
+     cursor: pointer;
 }
 .goalCard:hover {
      border: 2px solid black;

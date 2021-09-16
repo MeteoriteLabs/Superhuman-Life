@@ -5,6 +5,7 @@ import { gql, useQuery } from "@apollo/client";
 const GoalSearch = (props: any) => {
      const [packageLists, setPackageLists] = useState<any[]>([]);
      const [searchInput, setSearchInput] = useState(null);
+     const [errorMsg, setErrorMsg] = useState("");
      const [selected, setSelected] = useState<any[]>([]);
      const inputField = useRef<any>();
      let skipval: Boolean = true;
@@ -44,27 +45,32 @@ const GoalSearch = (props: any) => {
 
      function handleSelectedPackageAdd(name: any, id: any) {
           const values = [...selected];
-          let a = values.find((e) => e.id === id);
-          if (!a) {
-               values.push({ value: name, id: id });
-               setSelected(values);
+          if (values.length === 1) {
+               setErrorMsg("(Only One Goal Allowed)");
+          } else {
+               let a = values.find((e) => e.id === id);
+               if (!a) {
+                    values.push({ value: name, id: id });
+                    setSelected(values);
+               }
+               props.onChange(
+                    values
+                         .map((e) => {
+                              return e.id;
+                         })
+                         .join(",")
+               );
+               inputField.current.value = "";
+               setPackageLists([]);
+               skipval = true;
           }
-          props.onChange(
-               values
-                    .map((e) => {
-                         return e.id;
-                    })
-                    .join(",")
-          );
-          inputField.current.value = "";
-          setPackageLists([]);
-          skipval = true;
      }
 
      function handleSelectedPackageRemove(name: any) {
           const values = [...selected];
           values.splice(name, 1);
           setSelected(values);
+          setErrorMsg("");
           props.onChange(
                values
                     .map((e) => {
@@ -79,6 +85,8 @@ const GoalSearch = (props: any) => {
      return (
           <>
                <label style={{ fontSize: 17 }}>Search For Goals</label>
+               {errorMsg && <p className="text-danger">{errorMsg}</p>}
+
                <InputGroup>
                     <FormControl
                          aria-describedby="basic-addon1"

@@ -3,7 +3,7 @@ import "./GoalCard.css";
 
 function GoalCard(props: any) {
      return (
-          <Card border="secondary" className="goalCard">
+          <Card border="secondary" className="goalCard" onClick={props.click}>
                <Card.Body>
                     <Card.Title>
                          <h4>{props.goalName}</h4>

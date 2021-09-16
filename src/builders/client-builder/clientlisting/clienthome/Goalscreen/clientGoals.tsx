@@ -88,6 +88,12 @@ function Goals() {
                                    [...data.userGoals].map((Detail) => {
                                         return (
                                              <GoalCard
+                                                  click={() => {
+                                                       CreateGoalComponent.current.TriggerForm({
+                                                            id: Detail.id,
+                                                            type: "edit",
+                                                       });
+                                                  }}
                                                   goalName={Detail.goals[0].name}
                                                   startDate={getDate(Date.parse(Detail.start))}
                                                   endDate={getDate(Date.parse(Detail.end))}
