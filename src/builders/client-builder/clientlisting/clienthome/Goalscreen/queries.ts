@@ -19,3 +19,22 @@ export const ADD_GOAL = gql`
           }
      }
 `;
+
+export const GET_GOALS = gql`
+     query getGoals($id: ID) {
+          userGoals(where: { users_permissions_user: $id }) {
+               id
+               start
+               end
+               goals {
+                    id
+                    name
+               }
+               assignedBy {
+                    id
+                    username
+               }
+               updatedAt
+          }
+     }
+`;

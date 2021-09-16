@@ -10,12 +10,16 @@ import CreateGoal from "./addGoal";
 import CreateMovement from "./addMovement";
 import CreateHealth from "./addHealth";
 import CreateNutrition from "./addNutrition";
+import { GET_GOALS } from "./queries";
+import { useQuery } from "@apollo/client";
 
 function Goals() {
      const CreateGoalComponent = useRef<any>(null);
      const CreateHealthComponent = useRef<any>(null);
      const CreateNutritionComponent = useRef<any>(null);
      const CreateMovementComponent = useRef<any>(null);
+
+     const last = window.location.pathname.split("/").pop();
 
      var settings = {
           dots: true,
@@ -44,6 +48,17 @@ function Goals() {
                },
           ],
      };
+     function getDate(time: any) {
+          let dateObj = new Date(time);
+          let month = dateObj.getMonth() + 1;
+          let year = dateObj.getFullYear();
+          let date = dateObj.getDate();
+
+          return `${date}-${month}-${year}`;
+     }
+
+     const { data }: any = useQuery(GET_GOALS, { variables: { id: last } });
+
      return (
           <div>
                <div>
@@ -69,13 +84,18 @@ function Goals() {
                     </div>
                     <div className="w-95 ml-5 mr-5 mt-3">
                          <Slider {...settings}>
-                              <GoalCard />
-                              <GoalCard />
-                              <GoalCard />
-                              <GoalCard />
-                              <GoalCard />
-                              <GoalCard />
-                              <GoalCard />
+                              {data &&
+                                   [...data.userGoals].map((Detail) => {
+                                        return (
+                                             <GoalCard
+                                                  goalName={Detail.goals[0].name}
+                                                  startDate={getDate(Date.parse(Detail.start))}
+                                                  endDate={getDate(Date.parse(Detail.end))}
+                                                  updatedBy={Detail.assignedBy[0].username}
+                                                  updatedOn={getDate(Date.parse(Detail.updatedAt))}
+                                             />
+                                        );
+                                   })}
                          </Slider>
                     </div>
                </div>

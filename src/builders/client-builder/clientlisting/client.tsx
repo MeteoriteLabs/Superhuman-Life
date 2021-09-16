@@ -3,17 +3,18 @@ import Programs from "./clienthome/ProgramScreens/clientprograms";
 import Goals from "./clienthome/Goalscreen/clientGoals";
 import { useQuery } from "@apollo/client";
 import { GET_CLIENT_DATA } from "./queries";
-import { useState } from "react";
+import { useState, useContext } from "react";
+import AuthContext from "../../../context/auth-context";
 
 function Client() {
-     const last = window.location.pathname.split("/").pop();
-
+     //const last = window.location.pathname.split("/").pop();
+     const auth = useContext(AuthContext);
      const [clientName, setClientName] = useState<any>(" ");
      const [clientSex, setClientSex] = useState<any>(" ");
      function handleRedirect() {
           window.location.href = `/clients`;
      }
-     function FetchData(_variables: {} = { id: last }) {
+     function FetchData(_variables: {} = { id: auth.userid }) {
           useQuery(GET_CLIENT_DATA, { variables: _variables, onCompleted: loadData });
      }
      function loadData(data: any) {
@@ -23,7 +24,7 @@ function Client() {
                return {};
           });
      }
-     FetchData({ id: last });
+     FetchData({ id: auth.userid });
      return (
           <div>
                <div className="mb-3">

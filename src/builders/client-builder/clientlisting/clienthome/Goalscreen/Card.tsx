@@ -6,15 +6,17 @@ function GoalCard(props: any) {
           <Card border="secondary" className="goalCard">
                <Card.Body>
                     <Card.Title>
-                         <h4>Build Muscle</h4>
+                         <h4>{props.goalName}</h4>
                     </Card.Title>
                     <Card.Text as="div">
                          <div className="d-flex">
                               <div className="flex-fill">
-                                   <p className="font-weight-bold p-1">Start Date: 12.10.2021{props.startDate}</p>
+                                   <p className="font-weight-bold p-1">Start Date:</p>
+                                   <p className="p-1">{props.startDate}</p>
                               </div>
                               <div className="flex-fill">
-                                   <p className="font-weight-bold p-1">End Date: 12.11.2021{props.endDate}</p>
+                                   <p className="font-weight-bold p-1">End Date:</p>
+                                   <p className="p-1">{props.endDate}</p>
                               </div>
                          </div>
                     </Card.Text>
@@ -30,12 +32,12 @@ function GoalCard(props: any) {
                                         className="rounded-circle"
                                         alt="avatar"
                                    />
-                                   <p className="font-weight-bold p-2">Arjun Nair{props.updatedBy}</p>
+                                   <p className="p-2">{props.updatedBy}</p>
                               </div>
                          </div>
                          <div className="flex-fill">
-                              <p className="font-weight-bold">Updated On: </p>
-                              <p className="font-weight-bold">12.09.2021{props.updatedOn}</p>
+                              <p className="font-weight-bold">Updated On:</p>
+                              <p className="p-1">{props.updatedOn}</p>
                          </div>
                     </div>
                </Card.Header>

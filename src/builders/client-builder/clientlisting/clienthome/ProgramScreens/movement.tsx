@@ -1,13 +1,15 @@
 import ActionButton from "../../../../../components/actionbutton/index";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useContext } from "react";
 import { useQuery } from "@apollo/client";
 import { Badge } from "react-bootstrap";
 import ClientTable from "../../../../../components/table/client-table";
 import { GET_CLIENT_DATA } from "../../queries";
+import AuthContext from "../../../../../context/auth-context";
 
 function Movement() {
-     const last = window.location.pathname.split("/").pop();
+     //const last = window.location.pathname.split("/").pop();
      //console.log(last);
+     const auth = useContext(AuthContext);
      function getDate(time: any) {
           let dateObj = new Date(time);
           let month = dateObj.getMonth() + 1;
@@ -88,7 +90,7 @@ function Movement() {
      const [dataActivetable, setActiveDataTable] = useState<{}[]>([]);
      const [dataHistorytable, setHistoryDataTable] = useState<{}[]>([]);
 
-     function FetchData(_variables: {} = { id: last }) {
+     function FetchData(_variables: {} = { id: auth.userid }) {
           useQuery(GET_CLIENT_DATA, { variables: _variables, onCompleted: loadData });
      }
 
@@ -97,7 +99,7 @@ function Movement() {
                [...data.userPackages].flatMap((Detail) =>
                     compareDates(getRenewalDate(Detail.effective_date, Detail.package_duration))
                          ? {
-                                id: Detail.fitnesspackages[0].users_permissions_user.id,
+                                id: Detail.users_permissions_user.id,
                                 packagetype: "/assets/avatar-1.jpg",
                                 packagename: Detail.program_managers[0]
                                      ? Detail.program_managers[0].fitnesspackages[0].packagename
@@ -139,7 +141,7 @@ function Movement() {
           );
      }
 
-     FetchData({ id: last });
+     FetchData({ id: auth.userid });
      return (
           <div>
                <div>
