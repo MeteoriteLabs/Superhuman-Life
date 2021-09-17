@@ -6,7 +6,7 @@ import ActivityBuilder from './activityBuilder';
 const ActivityField = (props: any) => {
 
      const [activity, setActivity] = useState<any[]>([]);
-     const [selected, setSelected] = useState("");
+     const [selected, setSelected] = useState<any>({});
 
      const FETCH_ACTIVITIES = gql`
           query activities{
@@ -43,13 +43,21 @@ const ActivityField = (props: any) => {
           props.onChange(objectToString);
      }
 
+     function handleSelect(data: any){  
+          const values = [...activity];
+          let a = values.find((e) => e.title === data);
+          setSelected(a);
+     }
+
      return (
           <>
           <label>Select Activity</label>
           <Row className="pl-2 pr-2">
                <Col xs={12}>
                <InputGroup>
-                    <Form.Control as="select" defaultValue="" placeholder="Choose one Activity" onChange={(e) => setSelected(e.target.value)}>
+                    <Form.Control as="select" defaultValue="" placeholder="Choose one Activity" onChange={(e) =>{
+                         handleSelect(e.target.value);
+                    }}>
                          <option></option>
                          {activity.map((activity) => {
                               return (

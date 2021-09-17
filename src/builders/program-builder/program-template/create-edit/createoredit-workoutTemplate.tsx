@@ -5,7 +5,7 @@ import { UPDATE_FITNESSPROGRAMS, GET_SCHEDULEREVENTS } from "../queries";
 import AuthContext from "../../../../context/auth-context";
 import StatusModal from '../../../../components/StatusModal/StatusModal';
 import { schema, widgets } from '../schema/workoutTemplateSchema';
-import {Subject} from 'rxjs';
+import { Subject } from 'rxjs';
 
 interface Operation {
     id: string;
@@ -19,14 +19,14 @@ function CreateEditMessage(props: any, ref: any) {
     const [programDetails, setProgramDetails] = useState<any>({});
     const [operation, setOperation] = useState<Operation>({} as Operation);
     const program_id = window.location.pathname.split('/').pop();
-    
+
 
     // const [CreateProgram] = useMutation(CREATE_PROGRAM, { onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
-    const [updateProgram] = useMutation(UPDATE_FITNESSPROGRAMS, {onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
+    const [updateProgram] = useMutation(UPDATE_FITNESSPROGRAMS, { onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
     //     const [editExercise] = useMutation(UPDATE_EXERCISE,{variables: {exerciseid: operation.id}, onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
-//     const [deleteExercise] = useMutation(DELETE_EXERCISE, { onCompleted: (e: any) => console.log(e), refetchQueries: ["GET_TABLEDATA"] });
+    //     const [deleteExercise] = useMutation(DELETE_EXERCISE, { onCompleted: (e: any) => console.log(e), refetchQueries: ["GET_TABLEDATA"] });
 
-    const modalTrigger =  new Subject();
+    const modalTrigger = new Subject();
 
     useImperativeHandle(ref, () => ({
         TriggerForm: (msg: Operation) => {
@@ -61,27 +61,65 @@ function CreateEditMessage(props: any, ref: any) {
         None
     }
 
+    function handleTimeFormat(time: string) {
+        let timeArray = time.split(':');
+        let hours = timeArray[0];
+        let minutes = timeArray[1];
+        let timeString = (parseInt(hours) < 10 ? "0" + hours : hours) + ':' + (parseInt(minutes) === 0 ? "0" + minutes : minutes);
+        return timeString.toString();
+    }
 
-    function CreateProgram(frm: any) {
-        var existingEvents = (props.events === null ? [] : [...props.events]);
+
+    function UpdateProgram(frm: any) {
+        var existingEvents: any = (props.events === null ? [] : [...props.events]);
         console.log(frm);
-        if(frm.day){
+        if (frm.day) {
             frm.day = JSON.parse(frm.day);
         }
-        if(frm.workoutEvent){
-            var eventJson: any = {};
+        var eventJson: any = {};
+        if (frm.workoutEvent) {
+            console.log("beg");
             frm.workoutEvent = JSON.parse(frm.workoutEvent);
+            eventJson.type = 'workout';
             eventJson.name = frm.workoutEvent[0].name;
             eventJson.id = frm.workoutEvent[0].id;
             eventJson.startTime = frm.startTime;
             eventJson.endTime = frm.endTime;
             eventJson.day = parseInt(frm.day[0].day.substr(4));
-            existingEvents.push(eventJson);
+            if (existingEvents.length === 0) {
+                existingEvents.push(eventJson);
+            } else {
+                console.log("else Block");
+                var timeStart: any = new Date("01/01/2007 " + handleTimeFormat(frm.startTime));
+                var timeEnd: any = new Date("01/01/2007 " + handleTimeFormat(frm.endTime));
+                var diff1 = timeEnd - timeStart;
+                for (var i = 0; i <= existingEvents.length - 1; i++) {
+                    console.log(existingEvents);
+                    var startTimeHour: any = new Date("01/01/2007 " + handleTimeFormat(existingEvents[i].startTime));
+                    var endTimeHour: any = new Date("01/01/2007 " + handleTimeFormat(existingEvents[i].endTime));
+                    var diff2 = endTimeHour - startTimeHour;
+                    console.log(diff1, diff2);
+
+                    if (diff2 < diff1) {
+                        existingEvents.splice(i, 0, eventJson);
+                        break;
+                    }
+                    if (i === existingEvents.length - 1) {
+                        existingEvents.push(eventJson);
+                        break;
+                    }
+                }
+            }
+            console.log("end");
         }
-        updateProgram({ variables: {
-            programid: program_id,
-            events: existingEvents
-        } });
+
+        console.log("outside");
+        updateProgram({
+            variables: {
+                programid: program_id,
+                events: existingEvents
+            }
+        });
     }
 
     function EditExercise(frm: any) {
@@ -103,12 +141,12 @@ function CreateEditMessage(props: any, ref: any) {
 
     function OnSubmit(frm: any) {
         //bind user id
-        if(frm)
-        frm.user_permissions_user = auth.userid;
+        if (frm)
+            frm.user_permissions_user = auth.userid;
 
         switch (operation.type) {
             case 'create':
-                CreateProgram(frm);
+                UpdateProgram(frm);
                 break;
             case 'edit':
                 EditExercise(frm);
@@ -120,12 +158,12 @@ function CreateEditMessage(props: any, ref: any) {
     }
 
     let name = "";
-    if(operation.type === 'create'){
-        name="Workout Template";
-    }else if(operation.type === 'edit'){
-        name="Edit";
-    }else if(operation.type === 'view'){
-        name="View";
+    if (operation.type === 'create') {
+        name = "Workout Template";
+    } else if (operation.type === 'edit') {
+        name = "Edit";
+    } else if (operation.type === 'view') {
+        name = "View";
     }
 
     FetchData();
@@ -133,28 +171,28 @@ function CreateEditMessage(props: any, ref: any) {
     return (
         <>
             {/* {render && */}
-                <ModalView
-                    name={name}
-                    isStepper={true}
-                    formUISchema={schema}
-                    formSchema={programSchema}
-                    formSubmit={name === "View" ? () => { modalTrigger.next(false); } : (frm: any) => { OnSubmit(frm); }}
-                    formData={programDetails}
-                    stepperValues={["Schedule", "Workout"]}
-                    widgets={widgets}
-                    modalTrigger={modalTrigger}
-                />
-                
+            <ModalView
+                name={name}
+                isStepper={true}
+                formUISchema={schema}
+                formSchema={programSchema}
+                formSubmit={name === "View" ? () => { modalTrigger.next(false); } : (frm: any) => { OnSubmit(frm); }}
+                formData={programDetails}
+                stepperValues={["Schedule", "Workout"]}
+                widgets={widgets}
+                modalTrigger={modalTrigger}
+            />
+
             {/* } */}
-             {operation.type ==="delete" && <StatusModal
-             modalTitle="Delete"
-             modalBody="Do you want to delete this message?"
-             buttonLeft="Cancel"
-             buttonRight="Yes"
-             onClick={() => {DeleteExercise(operation.id)}}
-             />}
-        
-            
+            {operation.type === "delete" && <StatusModal
+                modalTitle="Delete"
+                modalBody="Do you want to delete this message?"
+                buttonLeft="Cancel"
+                buttonRight="Yes"
+                onClick={() => { DeleteExercise(operation.id) }}
+            />}
+
+
         </>
     )
 }

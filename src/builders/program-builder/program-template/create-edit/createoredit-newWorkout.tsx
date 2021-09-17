@@ -67,6 +67,7 @@ function CreateEditMessage(props: any, ref: any) {
         if(frm.day){
             var eventJson: any = {};
             frm.day = JSON.parse(frm.day);
+            eventJson.type = 'workout';
             eventJson.name = frm.workout;
             eventJson.id = workout_id;
             eventJson.startTime = frm.startTime;
@@ -80,7 +81,7 @@ function CreateEditMessage(props: any, ref: any) {
         } });
     }
 
-    function CreateProgram(frm: any) {
+    function UpdateProgram(frm: any) {
         setFrmDetails(frm);
         if(frm.addWorkout.build){
             frm.addWorkout.build = JSON.parse(frm.addWorkout.build);
@@ -140,7 +141,7 @@ function CreateEditMessage(props: any, ref: any) {
 
         switch (operation.type) {
             case 'create':
-                CreateProgram(frm);
+                UpdateProgram(frm);
                 break;
             case 'edit':
                 EditExercise(frm);

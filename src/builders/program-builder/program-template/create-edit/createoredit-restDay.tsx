@@ -1,10 +1,10 @@
 import React, { useContext, useImperativeHandle, useState } from 'react';
 import { useQuery, useMutation } from "@apollo/client";
-import ModalView from "../../../components/modal";
-import { CREATE_PROGRAM, DELETE_PROGRAM } from "./queries";
-import AuthContext from "../../../context/auth-context";
-import StatusModal from "../../../components/StatusModal/StatusModal";
-import { schema, widgets } from './programSchema';
+import ModalView from "../../../../components/modal";
+import { UPDATE_FITNESSPROGRAMS, GET_SCHEDULEREVENTS } from "../queries";
+import AuthContext from "../../../../context/auth-context";
+import StatusModal from '../../../../components/StatusModal/StatusModal';
+import { schema, widgets } from '../schema/restDaySchema';
 import {Subject} from 'rxjs';
 
 interface Operation {
@@ -15,19 +15,22 @@ interface Operation {
 
 function CreateEditMessage(props: any, ref: any) {
     const auth = useContext(AuthContext);
-    const programSchema: { [name: string]: any; } = require("./program.json");
+    const programSchema: { [name: string]: any; } = require("../json/restDay.json");
     const [programDetails, setProgramDetails] = useState<any>({});
     const [operation, setOperation] = useState<Operation>({} as Operation);
+    const program_id = window.location.pathname.split('/').pop();
     
 
-    const [createProgram] = useMutation(CREATE_PROGRAM, { onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
-//     const [editExercise] = useMutation(UPDATE_EXERCISE,{variables: {exerciseid: operation.id}, onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
-    const [deleteProgram] = useMutation(DELETE_PROGRAM, { onCompleted: (e: any) => console.log(e), refetchQueries: ["GET_TABLEDATA"] });
+    // const [CreateProgram] = useMutation(CREATE_PROGRAM, { onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
+    const [updateProgram] = useMutation(UPDATE_FITNESSPROGRAMS, {onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
+    //     const [editExercise] = useMutation(UPDATE_EXERCISE,{variables: {exerciseid: operation.id}, onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
+//     const [deleteExercise] = useMutation(DELETE_EXERCISE, { onCompleted: (e: any) => console.log(e), refetchQueries: ["GET_TABLEDATA"] });
 
     const modalTrigger =  new Subject();
 
     useImperativeHandle(ref, () => ({
         TriggerForm: (msg: Operation) => {
+            console.log(msg);
             setOperation(msg);
 
             if (msg && !msg.id) //render form if no message id
@@ -37,7 +40,7 @@ function CreateEditMessage(props: any, ref: any) {
 
     function FillDetails(data: any) {
         let details: any = {};
-        let msg = data.exercises;
+        let msg = data;
         console.log(msg);
         // setExerciseDetails(details);
 
@@ -49,7 +52,7 @@ function CreateEditMessage(props: any, ref: any) {
     }
 
     function FetchData() {
-        // useQuery(FETCH_DATA, { variables: { id: operation.id }, skip: (!operation.id || operation.type === 'toggle-status'), onCompleted: (e: any) => { FillDetails(e) } });
+        // useQuery(GET_SCHEDULEREVENTS, { variables: { id: program_id }, skip: (!operation.id || operation.type === 'toggle-status'), onCompleted: (e: any) => { setExistingEvents(e) } });
     }
 
     enum ENUM_EXERCISES_EXERCISELEVEL {
@@ -59,15 +62,26 @@ function CreateEditMessage(props: any, ref: any) {
         None
     }
 
-    function CreateProgram(frm: any) {
-        createProgram({ variables: {
-            title: frm.programName,
-            fitnessdisciplines: frm.discipline.split(","),
-            duration_days: frm.duration,
-            level: ENUM_EXERCISES_EXERCISELEVEL[frm.level],
-            description: frm.details,
-            users_permissions_user: frm.user_permissions_user
-        } });
+
+    function UpdateProgram(frm: any) {
+        var existingRestDays = (props.restDays === null ? [] : [...props.restDays]);
+        var daysArray: any = [];
+        if(frm.day){
+               frm.day = JSON.parse(frm.day);
+               for(var i=0; i<frm.day.length; i++){
+                    daysArray.push({
+                         day: parseInt(frm.day[i].day.substr(4)),
+                         type: 'restday'
+                    });
+               }
+               for(var j=0; j<daysArray.length; j++){
+                    existingRestDays.push(daysArray[j]);
+               }
+        }
+        updateProgram({ variables: {
+            programid: program_id,
+            rest_days: existingRestDays
+        }})
     }
 
     function EditExercise(frm: any) {
@@ -83,7 +97,8 @@ function CreateEditMessage(props: any, ref: any) {
     }
 
     function DeleteExercise(id: any) {
-        deleteProgram({ variables: { id: id }});
+        console.log('delete message');
+        // deleteExercise({ variables: { id: id }});
     }
 
     function OnSubmit(frm: any) {
@@ -93,7 +108,7 @@ function CreateEditMessage(props: any, ref: any) {
 
         switch (operation.type) {
             case 'create':
-                CreateProgram(frm);
+                UpdateProgram(frm);
                 break;
             case 'edit':
                 EditExercise(frm);
@@ -106,15 +121,14 @@ function CreateEditMessage(props: any, ref: any) {
 
     let name = "";
     if(operation.type === 'create'){
-        name="Create New Program";
+        name="Rest Day";
     }else if(operation.type === 'edit'){
         name="Edit";
     }else if(operation.type === 'view'){
         name="View";
     }
 
-//     FetchData();
-
+    FetchData();
 
     return (
         <>
@@ -126,6 +140,7 @@ function CreateEditMessage(props: any, ref: any) {
                     formSchema={programSchema}
                     formSubmit={name === "View" ? () => { modalTrigger.next(false); } : (frm: any) => { OnSubmit(frm); }}
                     formData={programDetails}
+                    stepperValues={["Schedule", "Workout"]}
                     widgets={widgets}
                     modalTrigger={modalTrigger}
                 />

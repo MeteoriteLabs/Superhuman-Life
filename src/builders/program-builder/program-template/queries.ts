@@ -11,6 +11,33 @@ export const GET_TABLEDATA = gql`
                }
                duration_days
                level
+               rest_days
+          }
+     }
+`
+
+export const FETCH_EVENT = gql`
+     query fetchEvent($id: String!) {
+          workouts(where: { id: $id }) {
+               id
+               warmup
+               mainmovement
+               cooldown
+               About
+               Benifits
+               calories
+               workout_URL
+               workout_text
+               intensity
+          }
+     }
+`
+
+export const PROGRAM_EVENTS = gql`
+     query getprogramdata($id: String!) {
+          fitnessprograms(where: { id: $id }) {
+               id
+               events
           }
      }
 `
@@ -20,6 +47,7 @@ export const GET_SCHEDULEREVENTS = gql`
           fitnessprograms(where: { id: $id }) {
                id
                events
+               rest_days
           }
      }
 `
@@ -40,6 +68,7 @@ export const UPDATE_FITNESSPROGRAMS = gql`
      mutation updatefitnessprograms(
           $fitness_modes: [ID]
           $events: JSON
+          $rest_days: JSON
           $programid: ID!      
      ){
           updateFitnessprogram(
@@ -47,6 +76,7 @@ export const UPDATE_FITNESSPROGRAMS = gql`
                     data: {
                          fitness_modes: $fitness_modes
                          events: $events
+                         rest_days: $rest_days
                     }
                     where: { id: $programid }
                }

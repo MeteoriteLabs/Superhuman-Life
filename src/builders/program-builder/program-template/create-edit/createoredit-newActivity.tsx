@@ -62,23 +62,37 @@ function CreateEditMessage(props: any, ref: any) {
     }
 
 
-    function CreateProgram(frm: any) {
-        // var existingEvents = (props.events === null ? [] : [...props.events]);
-        console.log(frm);
-        // if(frm.day){
-        //     frm.day = JSON.parse(frm.day);
-        // }
-        // if(frm.workoutEvent){
-        //     frm.workoutEvent = JSON.parse(frm.workoutEvent);
-        //     frm.workoutEvent[0].startTime = frm.startTime;
-        //     frm.workoutEvent[0].endTime = frm.endTime;
-        //     frm.workoutEvent[0].day = parseInt(frm.day[0].day.substr(4));
-        //     existingEvents.push(frm.workoutEvent[0]);
-        // }
-        // updateProgram({ variables: {
-        //     programid: program_id,
-        //     events: existingEvents
-        // } });
+    function UpdateProgram(frm: any) {
+        var existingEvents = (props.events === null ? [] : [...props.events]);
+        var daysArray: any = [];
+        if(frm.day && frm.newActivity){
+            frm.day = JSON.parse(frm.day);
+            frm.newActivity = JSON.parse(frm.newActivity);
+            var name: any = frm.newActivity[0].activity;
+            var id: any = frm.newActivity[0].id;
+            delete frm.newActivity[0].activity;
+            delete frm.newActivity[0].id;
+            for(var i = 0; i < frm.day.length; i++){
+                daysArray.push({
+                    day: parseInt(frm.day[i].day.substr(4)), 
+                    name: name,
+                    id: id,
+                    type: 'activity',
+                    startTime: frm.startTime,
+                    endTime: frm.endTime, 
+                    activityTarget: frm.newActivity[0]
+                });
+            }
+            for(var j=0 ;j<daysArray.length;j++){
+                existingEvents.push(daysArray[j]);
+            }
+        }
+        // console.log(existingEvents);
+        // console.log(frm);
+        updateProgram({ variables: {
+            programid: program_id,
+            events: existingEvents
+        } });
     }
 
     function EditExercise(frm: any) {
@@ -105,7 +119,7 @@ function CreateEditMessage(props: any, ref: any) {
 
         switch (operation.type) {
             case 'create':
-                CreateProgram(frm);
+                UpdateProgram(frm);
                 break;
             case 'edit':
                 EditExercise(frm);

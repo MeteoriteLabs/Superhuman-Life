@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { InputGroup, Row, Col, Form, Button, FormControl } from 'react-bootstrap';
+import { InputGroup, Row, Col, Form, FormControl } from 'react-bootstrap';
 
 const ActivityBuilder = (props: any) => {
 
@@ -9,14 +9,14 @@ const ActivityBuilder = (props: any) => {
      const [incline, setIncline] = useState(false);
      const [speed, setSpeed] = useState(false);
      const [calories, setCalories] = useState(false);
-     const [selected, setSelected] = useState<any>([{activity: `${props.activity}`}]);
+     const [selected, setSelected] = useState<any>([{}]);
 
      function renderOptions(){
           return (
                <div>
                     <Form>
                          <div key={1} className="mb-3">
-                              <Form.Check inline label="None" name="group1" type='checkbox' onClick={(e) => {setNone(!none); setSelected([{activity: `${props.activity}`}]);}}/>
+                              <Form.Check inline label="None" name="group1" type='checkbox' onClick={(e) => {setNone(!none); setSelected([{activity: `${props.activity.title}`, id: `${props.activity.id}`}]);}}/>
                               <Form.Check inline label="Time" name="group1" type='checkbox' disabled={none} onClick={(e) => setTime(!time)}/>
                               <Form.Check inline label="Distance" name="group1" type='checkbox' disabled={none} onClick={(e) => setDistance(!distance)}/>
                               <Form.Check inline label="Incline" name="group1" type='checkbox' disabled={none} onClick={(e) => setIncline(!incline)}/>
@@ -30,6 +30,8 @@ const ActivityBuilder = (props: any) => {
 
      function handleDataChange(id: any, data: any) {
           const values = [...selected];
+          values[0].activity = `${props.activity.title}`;
+          values[0].id = `${props.activity.id}`;
           if(id === 1){
                values[0].timeHr = parseInt(data);
           }else if(id === 2){
@@ -45,16 +47,14 @@ const ActivityBuilder = (props: any) => {
           }
           setSelected(values);
      }
-
-     console.log(selected);
      props.onChange(selected);
 
      return (
-          <div className="m-2 shadow-sm" style={{ borderRadius: '10px', backgroundColor: 'white', display: `${props.activity === '' ? 'none' : 'block'}`}}>
+          <div className="m-2 shadow-sm" style={{ borderRadius: '10px', backgroundColor: 'white', display: `${props.activity.title === undefined ? 'none' : 'block'}`}}>
                <div style={{ backgroundColor: 'white', borderBottom: '1px solid black'}}>
                     <Col>
                          <Row style={{ justifyContent: 'center'}} className="m-3">
-                              <span style={{ fontSize: '20px', fontWeight: 'bold'}}>Set target for {props.activity}</span>
+                              <span style={{ fontSize: '20px', fontWeight: 'bold'}}>Set target for {props.activity.title}</span>
                          </Row>
                          <Row style={{justifyContent: 'center'}}>
                               {renderOptions()}

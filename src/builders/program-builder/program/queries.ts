@@ -7,6 +7,7 @@ export const GET_TABLEDATA = gql`
                title
                description
                updatedAt
+               events
                fitnessdisciplines {
                     id
                     disciplinename
@@ -49,4 +50,19 @@ export const CREATE_PROGRAM = gql`
                } 
           }
      }
-`    
+`
+
+export const DELETE_PROGRAM = gql`
+     mutation deleteprogram($id: ID!){
+          deleteFitnessprogram (
+               input: {
+                    where: { id : $id }
+               }
+          ){
+               fitnessprogram {
+                    id
+                    title
+               }
+          }
+     }
+`

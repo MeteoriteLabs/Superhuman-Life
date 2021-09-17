@@ -1,0 +1,14 @@
+{
+     "1": {
+         "title": "",
+         "type": "object",
+         "required": [
+            
+         ],
+         "properties": {
+             "day": {
+                 "type": "string"
+             }
+         }
+     }
+}

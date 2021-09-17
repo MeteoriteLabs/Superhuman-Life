@@ -1,5 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import './styles.css';
+import { Row } from 'react-bootstrap';
+import TransferPrograms from './transferPrograms';
 
 const SchedulerEvent = (props: any) => {
 
@@ -35,8 +37,11 @@ const SchedulerEvent = (props: any) => {
                arr[d] = JSON.parse(JSON.stringify(schedulerDay));
           }
           if(props.programEvents){
-               props.programEvents.map((val) => {
-                    return arr[val.day] = {"title": val.name, "color": "skyblue"}
+               props.programEvents.forEach((val) => {
+                    if(!arr[val.day]){
+                         arr[val.day] = [];
+                    }
+                    arr[val.day].push({"title": val.name, "color": "skyblue"});
                })
           }
           draganddrop();
@@ -48,13 +53,15 @@ const SchedulerEvent = (props: any) => {
           }, 300)
      }, [show]); 
 
-     handleRenderTable();
+     useEffect(() => {
+          handleRenderTable();
+     },[]);
      
      if (!show) return <span style={{ color: 'red' }}>Loading...</span>;
      else return (
           <>
                <div>
-                    <div style={{ overflow: 'auto', border: '1px solid black'}} className="schedular mt-5 mb-3">
+                    <div style={{ overflow: 'auto', border: '1px solid black', maxHeight: '300px'}} className="schedular mt-5 mb-3">
                     <div className="day-row">
                          {props.programDays.map(val => {
                               return (
@@ -62,32 +69,41 @@ const SchedulerEvent = (props: any) => {
                               )
                          })}
                     </div>
-                    <div className="events-row" >
+                    <div className="events-row">
                          {props.programDays.map(val => {
                               return (
-                                   <div className="event-cell"
-                                        // onDragLeave={(e) => {
-                                        //      // console.log(e.currentTarget);
-                                        // }}
-                                        // onDrop={(e) => {
-                                        //      e.preventDefault();
-                                        //      var changedEvent = JSON.parse(e.dataTransfer.getData('scheduler-event'));
-                                        // }}
-                                   >
-                                   <div 
-                                        style={{ backgroundColor: `${(arr[val] ? arr[val].color : 'none')}`, height: '50px',borderRadius: '10px', zIndex: 997, minWidth: '120px'}}
+                                   <div className="event-cell" >
+                                   {(arr[val]) && arr[val].map(val => {
+                                        return (
+                                             <div 
+                                        style={{ 
+                                             backgroundColor: `${val.color}`,
+                                             height: '50px', 
+                                             borderRadius: '10px', 
+                                             zIndex: 997, 
+                                             minWidth: '120px'
+
+                                        }}
                                         draggable="true"
-                                        id="rem"
                                         className="draggable-event m-2"
-                                        onDrop={(e) => {console.log(e);}}
-                                        onDragStart={(e) => {  e.dataTransfer.setData("scheduler-event", JSON.stringify(arr[val]))}}
-                                   >{(arr[val] ? `title-${arr[val].title}` : null)}</div>
+                                        onDragStart={(e) => {  e.dataTransfer.setData("scheduler-event", JSON.stringify(val))
+                                             var el: any = e.target;
+                                             el.id = 'rem';
+                                        }}
+                                   >
+                                        <span style={{fontWeight: 'bold',overflow: 'hidden', fontSize: '10px'}}>{val.title}</span>
+                                   </div>
+                                        )
+                                   })}
                                    </div>
                               )
                          })}
                     </div>
                </div>
                </div>
+               <Row className="justify-content-end mr-1">
+                    <TransferPrograms events={props.programEvents} />
+               </Row>
         </>
      )
 }

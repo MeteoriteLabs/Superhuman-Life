@@ -3,6 +3,7 @@ import {  Row, Col, Dropdown, DropdownButton } from 'react-bootstrap';
 import CreateEditProgramManager from './create-edit/createoredit-workoutTemplate';
 import CreateEditNewWorkout from './create-edit/createoredit-newWorkout';
 import CreateEditNewActivity from './create-edit/createoredit-newActivity';
+import CreateEditRestDay from './create-edit/createoredit-restDay';
 import FitnessSvg from './assets/fitness.svg';
 import NutritionSvg from './assets/nutrition.svg';
 import ResourceSvg from './assets/resources.svg';
@@ -16,11 +17,13 @@ const FloatingButton = (props: any) => {
      const createEditProgramManagerComponent = useRef<any>(null);
      const createEditNewWorkoutComponent = useRef<any>(null);
      const createEditNewActivityComponent = useRef<any>(null);
+     const createEditRestDayComponent = useRef<any>(null);
      const [existingEvents, setExistingEvents] = useState<any[]>([]);
+     const [restDays, setRestDays] = useState<any[]>([]);
      const program_id = window.location.pathname.split('/').pop();
 
      function FetchData() {
-          useQuery(GET_SCHEDULEREVENTS, { variables: { id: program_id }, onCompleted: (e: any) => { setExistingEvents(e.fitnessprograms[0].events) } });
+          useQuery(GET_SCHEDULEREVENTS, { variables: { id: program_id }, onCompleted: (e: any) => { setExistingEvents(e.fitnessprograms[0].events); setRestDays(e.fitnessprograms[0].rest_days) } });
      }
 
      FetchData();
@@ -50,7 +53,9 @@ const FloatingButton = (props: any) => {
                               <Dropdown.Item eventKey="4" onClick={() => {
                                    createEditNewActivityComponent.current.TriggerForm({ id: null, type: 'create' });
                               }}>New Activity</Dropdown.Item>
-                              <Dropdown.Item eventKey="5">Add Rest Day</Dropdown.Item>
+                              <Dropdown.Item eventKey="5" onClick={() => {
+                                   createEditRestDayComponent.current.TriggerForm({ id: null, type: 'create' });
+                              }}>Mark Rest Day</Dropdown.Item>
                          </DropdownButton>
                          </Row>
                          <Row className="mt-3" style={{ justifyContent: 'center'}}>
@@ -111,7 +116,8 @@ const FloatingButton = (props: any) => {
                     </Col>
                     <CreateEditProgramManager ref={createEditProgramManagerComponent} events={existingEvents}></CreateEditProgramManager>
                     <CreateEditNewWorkout ref={createEditNewWorkoutComponent} events={existingEvents}></CreateEditNewWorkout>
-                    <CreateEditNewActivity ref={createEditNewActivityComponent}></CreateEditNewActivity>
+                    <CreateEditNewActivity ref={createEditNewActivityComponent} events={existingEvents}></CreateEditNewActivity>
+                    <CreateEditRestDay ref={createEditRestDayComponent} restDays={restDays}></CreateEditRestDay>
                </div>
           </>
      );

@@ -1,8 +1,8 @@
 import { useMemo, useContext, useState, useRef } from "react";
-import { Button, Card, TabContent } from "react-bootstrap";
+import { Button, Card, TabContent, Modal, FormControl } from "react-bootstrap";
 import Table from "../../../components/table";
-import { useQuery } from "@apollo/client";
-import { GET_TABLEDATA } from './queries';
+import { useQuery, useMutation } from "@apollo/client";
+import { GET_TABLEDATA, CREATE_PROGRAM } from './queries';
 import AuthContext from "../../../context/auth-context";
 import ActionButton from "../../../components/actionbutton";
 import CreateEditProgram from './createoredit-program';
@@ -12,10 +12,29 @@ export default function EventsTab() {
     const auth = useContext(AuthContext);
     const [tableData, setTableData] = useState<any[]>([]);
     const createEditProgramComponent = useRef<any>(null);
-
     function handleRedirect(id: any) {
         window.location.href = `/programs/manage/${id}`
     };
+
+    const [show, setShow] = useState(false);
+    const [name, setName] = useState("");
+    const [frm, setFrm] = useState<any>();
+    const [createProgram] = useMutation(CREATE_PROGRAM, { onCompleted: (r: any) => { console.log(r);}});
+
+     const handleClose = () => setShow(false);
+     const handleShow = () => setShow(true);
+
+    function CreateProgram(_variables: {} = {id: auth.userid, details: frm}) {
+        createProgram({ variables: {
+            title: name,
+            fitnessdisciplines: frm.disciplineId.split(","),
+            duration_days: frm.duration,
+            events: frm.events,
+            level: frm.level,
+            description: frm.description,
+            users_permissions_user: frm.user
+        } });
+    }
 
     const columns = useMemo<any>(() => [
         { accessor: "programName", Header: "Program Name" },
@@ -37,6 +56,8 @@ export default function EventsTab() {
                 actionClick3={() => {createEditProgramComponent.current.TriggerForm({id: row.original.id, type: 'delete'})}}
                 action4="Manage"
                 actionClick4={() => handleRedirect(row.original.id)}
+                action5="Duplicate"
+                actionClick5={() => {setName(row.original.programName + " copy");setFrm(row.original);handleShow();}}
                  />
             ),
         }
@@ -67,9 +88,14 @@ export default function EventsTab() {
                     discipline: detail.fitnessdisciplines.map((val: any) => {
                         return val.disciplinename;
                     }).join(", "),
+                    disciplineId: detail.fitnessdisciplines.map((val: any) => {
+                        return val.id;
+                    }).join(","),
                     level: detail.level,
+                    events: detail.events,
                     duration: detail.duration_days,
                     description: detail.description,
+                    user: detail.users_permissions_user.id,
                     updatedOn: getDate(Date.parse(detail.updatedAt))
                 }
             })
@@ -91,6 +117,30 @@ export default function EventsTab() {
                     <i className="fas fa-plus-circle"></i>{" "}Create Program
                 </Button>
                 <CreateEditProgram ref={createEditProgramComponent}></CreateEditProgram>
+                {
+                    <Modal show={show} onHide={handleClose}>
+                            <Modal.Header closeButton>
+                                <Modal.Title>Change name</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body>
+                                <FormControl
+                                value={name}
+                                onChange={(e: any) => setName(e.target.value)}
+                                />
+                            </Modal.Body>
+                            <Modal.Footer>
+                                <Button variant="danger" onClick={handleClose}>
+                                Close
+                                </Button>
+                                <Button variant="success" onClick={() => {
+                                    handleClose();
+                                    CreateProgram({id: auth.userid, frm: frm});
+                                }}>
+                                Save Changes
+                                </Button>
+                            </Modal.Footer>
+                    </Modal>
+                }
             </Card.Title>
             <Table columns={columns} data={tableData} />
         </TabContent>

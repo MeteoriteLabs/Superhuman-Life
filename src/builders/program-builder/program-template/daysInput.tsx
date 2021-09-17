@@ -49,7 +49,7 @@ const DaysInput = (props: any) => {
 
      return (
           <div>
-               <label>Select Day</label>
+               {props.type === 'transfer' ? null : <label>Select Day</label>}
                <Typeahead
                id="basic-typeahead-multiple"
                labelKey="day"

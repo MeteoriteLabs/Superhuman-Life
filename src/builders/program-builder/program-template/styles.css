@@ -10,7 +10,7 @@
 }
 
 .event-cell {
-  min-height: 115px;
+  max-width: 150px;
 }
 
 .day-row,
@@ -41,9 +41,8 @@
 
 .schedular-content {
   position: absolute;
-  min-width: 120px;
+  display: flex;
   z-index: 997;
-  height: 70px;
 }
 
 .draggable.dragging {
@@ -64,6 +63,8 @@
   width: 100%;
   min-height: 15px;
   position: relative;
+  display: flex;
+  flex-direction: row;
 }
 
 .right-floating-menu .btn-primary {
@@ -96,4 +97,48 @@
 .dropdown-header {
   padding-top: 4px;
   padding-bottom: 4px;
+}
+
+.rem {
+  display: none;
+}
+
+.inputError,
+.inputError:focus {
+  color: #495057;
+  background-color: #fff;
+  border-color: red;
+  outline: none;
+  box-shadow: 0 0 0 0.2rem #ff00b361;
+}
+
+.event-desc {
+  font-weight: bold;
+  font-size: 10px;
+  padding-left: 5px;
+  line-height: 7px;
+  vertical-align: middle;
+  text-align: start;
+}
+
+.event-time {
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 20px;
+  padding-left: 5px;
+  vertical-align: middle;
+  text-align: start;
+}
+
+.schedular-content:hover {
+  background-color: rgb(140,190,214) !important;
+  width: 150px !important;
+  z-index: 998;
+  box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.75);
+  -webkit-box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.75);
+  -webkit-transition: all 0.4s 0.1s ease;
+  -moz-transition: all 0.4s 0.1s ease;
+  -o-transition: all 0.4s 0.1s ease;
+  transition: all 0.4s 0.1s ease;
 }
