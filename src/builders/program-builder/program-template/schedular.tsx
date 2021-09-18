@@ -222,7 +222,7 @@ const Schedular = (props: any) => {
     var changedEvent;
     var changedMin;
     const handleClose = () => { setData([]); setShowModal(false) };
-    const handleShow = () => setShowModal(true);
+    const handleShow = () => {setShowModal(true)};
     const [data, setData] = useState<any[]>([]);
     const [startChange, setStartChange] = useState("");
     const createEditWorkoutComponent = useRef<any>(null);
@@ -237,22 +237,44 @@ const Schedular = (props: any) => {
     }
     handleTimeChange({ startChange, endChange });
 
+    //  function FetchDataWorkout(_variables: {}, p: any) {
+    //             useQuery(FETCH_EVENT, { variables: _variables, onCompleted: (r) => { loadDataWorkout(r, p); } });
+    //         }
 
-    function DetailModal() {
+            function loadDataWorkout(r: any) {
+                console.log(r);
+                debugger
+                setData(r.workouts);
+                handleShow();
+                // p.resolve(true);
+            }
 
-        function FetchDataWorkout(_variables: {}) {
-            useQuery(FETCH_EVENT, { variables: _variables, onCompleted: (r) => { loadDataWorkout(r); } });
-        }
+            const [fetchEvents]: any = useQuery(FETCH_EVENT, { onCompleted: (r: any) => { loadDataWorkout(r)} });
 
-        function loadDataWorkout(r: any) {
-            setData(r.workouts);
-        }
 
-        if (event.type === 'workout') {
-            FetchDataWorkout({ id: event.id });
-        } else if (event.type === 'activity') {
-            console.log("this is an activity");
-        }
+    async function DetailModal(e) {
+        // await fetchEvents({variables: { id: event.id }})
+        if (event.type === "workout") {
+                    // useQuery(FETCH_EVENT, { variables: { id: e.id } , onCompleted: (r) => { loadDataWorkout(r); } });
+                    await fetchEvents({variables: { id: event.id }})
+                    // resolve(true);
+                    // FetchDataWorkout({ id: event.id }, p);
+                } else if (e.type === 'activity') {
+                    console.log("this is an activity");
+                    // resolve(true);
+                }
+        // let p: Promise<boolean> =  new Promise(async(resolve) =>  {
+        //     if (event.type === "workout") {
+        //         // useQuery(FETCH_EVENT, { variables: { id: e.id } , onCompleted: (r) => { loadDataWorkout(r); } });
+        //         await fetchEvents({variables: { id: event.id }})
+        //         resolve(true);
+        //         // FetchDataWorkout({ id: event.id }, p);
+        //     } else if (e.type === 'activity') {
+        //         console.log("this is an activity");
+        //         resolve(true);
+        //     }
+        // })
+        // return p;
     }
 
     if (!show) return <span style={{ color: 'red' }}>Loading...</span>;
@@ -309,8 +331,8 @@ const Schedular = (props: any) => {
                                                                 <div
                                                                     onClick={(e) => {
                                                                         setEvent(val);
-                                                                        handleShow();
-                                                                        DetailModal();
+                                                                        DetailModal(val);
+                                                                        
                                                                     }}
                                                                     id="dragMe"
                                                                     className="schedular-content draggable"
@@ -404,13 +426,15 @@ const Schedular = (props: any) => {
                                 <TimeField title="End" onChange={handleEnd} hr={event.endHour} m={event.endMin} />
                             </Col>
                         </Row>
-                        {(event.type === 'workout') && <Tabs defaultActiveKey="agenda" transition={false} id="noanim-tab-example" className="pt-4">
+                        {(event.type === "workout") && <Tabs defaultActiveKey="agenda" transition={false} id="noanim-tab-example" className="pt-4">
                             <Tab eventKey="agenda" title="Agenda">
                                 {data.map(val => {
+                                    console.log(val);
                                     return (
                                         <>
                                             <Row>
                                                 {val.warmup === null ? '' : <Col className="pt-2"><h5>Warmup: {val.warmup.map((d) => {
+                                                    console.log(d);
                                                     return (
                                                         <>
                                                             <Row className="pt-2">
