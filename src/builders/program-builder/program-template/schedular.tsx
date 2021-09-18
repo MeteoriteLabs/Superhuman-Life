@@ -19,6 +19,15 @@ const Schedular = (props: any) => {
     const program_id = window.location.pathname.split('/').pop();
     const schedulerDay: any = require("./json/scheduler-day.json");
 
+    useQuery(FETCH_EVENT, {
+        variables: { id: event.id },
+        skip: (event.type !== "workout"),
+        onCompleted: (r: any) => {
+            setData(r.workouts);
+            handleShow();
+        }
+    });
+
     function Fetchdata(_variables: any) {
         useQuery(GET_SCHEDULEREVENTS, { variables: _variables, onCompleted: handleRenderTable });
     }
@@ -241,42 +250,6 @@ const Schedular = (props: any) => {
     //             useQuery(FETCH_EVENT, { variables: _variables, onCompleted: (r) => { loadDataWorkout(r, p); } });
     //         }
 
-            function loadDataWorkout(r: any) {
-                console.log(r);
-                debugger
-                setData(r.workouts);
-                handleShow();
-                // p.resolve(true);
-            }
-
-            const [fetchEvents]: any = useQuery(FETCH_EVENT, { onCompleted: (r: any) => { loadDataWorkout(r)} });
-
-
-    async function DetailModal(e) {
-        // await fetchEvents({variables: { id: event.id }})
-        if (event.type === "workout") {
-                    // useQuery(FETCH_EVENT, { variables: { id: e.id } , onCompleted: (r) => { loadDataWorkout(r); } });
-                    await fetchEvents({variables: { id: event.id }})
-                    // resolve(true);
-                    // FetchDataWorkout({ id: event.id }, p);
-                } else if (e.type === 'activity') {
-                    console.log("this is an activity");
-                    // resolve(true);
-                }
-        // let p: Promise<boolean> =  new Promise(async(resolve) =>  {
-        //     if (event.type === "workout") {
-        //         // useQuery(FETCH_EVENT, { variables: { id: e.id } , onCompleted: (r) => { loadDataWorkout(r); } });
-        //         await fetchEvents({variables: { id: event.id }})
-        //         resolve(true);
-        //         // FetchDataWorkout({ id: event.id }, p);
-        //     } else if (e.type === 'activity') {
-        //         console.log("this is an activity");
-        //         resolve(true);
-        //     }
-        // })
-        // return p;
-    }
-
     if (!show) return <span style={{ color: 'red' }}>Loading...</span>;
     else return (
         <>
@@ -329,11 +302,7 @@ const Schedular = (props: any) => {
                                                             val.index = index;
                                                             return (
                                                                 <div
-                                                                    onClick={(e) => {
-                                                                        setEvent(val);
-                                                                        DetailModal(val);
-                                                                        
-                                                                    }}
+                                                                    onClick={() => { setEvent(val); }}
                                                                     id="dragMe"
                                                                     className="schedular-content draggable"
                                                                     draggable={val.type === 'restday' ? false : true}
