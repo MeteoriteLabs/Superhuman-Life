@@ -72,7 +72,9 @@ function Movement() {
                               Header: "Status",
                               accessor: "programstatus",
                               Cell: (v: any) => (
-                                   <Badge variant={v.value === "Assigned" ? "success" : "danger"}>{v.value}</Badge>
+                                   <Badge className="p-2" variant={v.value === "Assigned" ? "success" : "danger"}>
+                                        {v.value}
+                                   </Badge>
                               ),
                          },
                          {

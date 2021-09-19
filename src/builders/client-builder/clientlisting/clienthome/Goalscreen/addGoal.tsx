@@ -18,7 +18,7 @@ function CreateGoal(props: any, ref: any) {
      //const uiSchema: {} = require("./schema.tsx");
      const [messageDetails, setMessageDetails] = useState<any>({});
      const [operation, setOperation] = useState<Operation>({} as Operation);
-
+     //console.log(operation.id);
      const [createGoal] = useMutation(ADD_GOAL, {
           onCompleted: (r: any) => {
                modalTrigger.next(false);
@@ -45,18 +45,15 @@ function CreateGoal(props: any, ref: any) {
 
      function FillDetails(data: any) {
           let details: any = {};
-          //   let msg = data.prerecordedmessage;
+          let msg = data.userGoals;
           //   console.log(msg);
-          //   //debugger
-          //   details.title = msg.title;
-          //   details.prerecordedtype = msg.prerecordedtype.id;
-          //   details.prerecordedtrigger = msg.prerecordedtrigger.id;
-          //   details.description = msg.description;
-          //   details.minidesc = msg.minidescription;
-          //   details.mediaurl = msg.mediaurl;
-          //   details.file = msg.mediaupload.id;
-          //   details.status = msg.status;
-          //   details.image = msg.upload;
+          //   console.log(msg[0].goals[0].name);
+          //   console.log(msg[0].start);
+          //   console.log(msg[0].end);
+          //debugger
+          details.packagesearch = msg[0].goals[0].name;
+          details.startdate = msg[0].start;
+          details.enddate = msg[0].end;
 
           setMessageDetails(details);
 
