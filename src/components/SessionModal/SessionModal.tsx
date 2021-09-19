@@ -1,248 +1,122 @@
+import { useRef, useState } from "react";
+import { withTheme, utils } from "@rjsf/core";
+import { Theme as Bootstrap4Theme } from '@rjsf/bootstrap-4';
+import { Button, Col, Modal, ProgressBar, Row } from "react-bootstrap";
 
-import { useMutation, useQuery } from '@apollo/client';
-import moment from 'moment';
-import { useState, useContext } from 'react';
-import { Modal, Button, FormControl, Form } from 'react-bootstrap'
-import Select from 'react-select';
-import { EDIT_PROGRAM } from '../../builders/session-builder/graphQL/mutation';
-import { GET_ALL_FITNESSDISCIPLINES, GET_ALL_FITNESSEQUIPMENT, GET_PACKAGE_BY_TYPE } from '../../builders/session-builder/graphQL/queries';
-import authContext from '../../context/auth-context';
+export default function SessionModal({ name, formUISchema, formSubmit, formSchema, formData, isStepper, widgets, modalTrigger, stepperValues }: any) {
+    const registry = utils.getDefaultRegistry();
+    const defaultFileWidget = registry.widgets["FileWidget"];
+    (Bootstrap4Theme as any).widgets["FileWidget"] = defaultFileWidget;
 
-
-interface Discipline {
-    id: string,
-    disciplinename: string
-}
-
-interface Equipment {
-    id: string,
-    name: string
-}
-
-
-
-export default function SessionModal(props) {
-
-
-    const { render, setRender, rowData, actionType, packageId, type } = props;
-    console.log("🚀 ~ file: SessionModal.tsx ~ line 24 ~ SessionModal ~ rowData", rowData)
-
-    const auth = useContext(authContext);
-    const startDay = moment(rowData.publishing_date, "DD/MM/YYYY");
-    const endDay = moment(rowData.expiry, 'DD/MM/YYYY');
-    let groupDuration = moment.duration(endDay.diff(startDay)).asDays();
-
-
-
-    const [disciplines, setDisciplines] = useState<Discipline[]>([]);
-    const [equipment, setEquipments] = useState<Equipment[]>([]);
-    const [formData, setFormData] = useState<any>({
-
-        // id:rowData.id,
-        // duration_days: rowData && rowData.duration,
-        // fitness_package_type: type,
-        id: rowData.programId,
-        title: rowData && rowData.programName,
-        description: rowData && rowData.description,
-        level: rowData && rowData.level,
-        fitnessdisciplines: rowData && rowData.programDisciplines.map(discipline => discipline.value),
-        users_permissions_user: rowData.users_permissions_user,
-        Is_program: true,
-    })
-
-
-    const FetchDataDisciplines = () => {
-        useQuery(GET_ALL_FITNESSDISCIPLINES, {
-            onCompleted: (data) => loadDataDisciplines(data)
-        })
-
-    }
-
-    const FetchDataEquipments = () => {
-        useQuery(GET_ALL_FITNESSEQUIPMENT, {
-            onCompleted: (data) => loadDataEquipment(data)
-        })
-    }
-
-
-    const loadDataEquipment = (data) => {
-        setEquipments(
-            [...data.equipmentLists.map(equipment => {
-                return {
-                    value: equipment.id,
-                    label: equipment.name
-                }
-            })]
-        )
-
-    }
-
-    const loadDataDisciplines = (data) => {
-        setDisciplines(
-            [...data.fitnessdisciplines.map(discipline => {
-                return {
-                    value: discipline.id,
-                    label: discipline.disciplinename
-                }
-            })]
-        )
-    }
-
-    FetchDataDisciplines();
-    FetchDataEquipments();
-
-
-
-
-    const [editProgram] = useMutation(EDIT_PROGRAM, {
-        variables:formData
+    const Form: any = withTheme(Bootstrap4Theme);
+    const formRef = useRef<any>(null);
+    const [step, setStep] = useState<number>(1);
+    const [show, setShow] = useState<boolean>(false);
+    const [formValues, setFormValues] = useState<any>(formData);
+    const stepper: string[] = stepperValues;
+    
+    modalTrigger.subscribe((res: boolean) => {
+        setShow(res);
     });
-
-    const HandleSubmit = (e) => {
-        e.preventDefault();
-        console.log(formData);
-
-        editProgram();
+    
+    function submitHandler(formData: any) {
+        if (isStepper && step < 2) {
+            console.log("Data submitted: ", formData);
+            setStep(step + 1);
+            setFormValues({ ...formValues, ...formData });
+        } else {
+            formSubmit(formData);
+        }
     }
-
-
-
-
-
-
-
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({
-            ...formData,
-            [name]: value
-        })
-    }
-
-    const handleChangeDisciplines = (e) => {
-        const value = e.map(item => item.value);
-        setFormData({
-            ...formData,
-            fitnessdisciplines: value
-        })
-    }
-
-    const handleChangeEquiments = (e) => {
-        const value = e.map(item => item.value);
-        setFormData({
-            ...formData,
-            fitnessdisciplines: value
-        })
-    }
-
 
 
     return (
-        <Modal
-            show={render}
-            size="lg"
-            aria-labelledby="contained-modal-title-vcenter"
-            centered
-            onHide={() => setRender(false)}
-        >
-            <Modal.Header closeButton>
-                <Modal.Title id="contained-modal-title-vcenter">
-                    New Program
-                </Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-
-                <Form onSubmit={HandleSubmit}>
-                    <Form.Group className="mb-3" controlId="formBasicEmail">
-                        <Form.Label className='font-weight-bold'>Program Name</Form.Label>
-                        <Form.Control defaultValue={(type === "Personal Training" || type === "Classic Class" || type === "Custom Class") && rowData.programName} onChange={(e) => handleChange(e)} name='title' />
-                    </Form.Group>
-
-                    <Form.Group className="mb-3" controlId="formBasicEmail">
-                        <Form.Label className='font-weight-bold'>Duration (days)</Form.Label>
-                        <Form.Control value={rowData.duration} disabled name='duration' type="number" />
-                    </Form.Group>
-
-
-                    <Form.Group className="mb-3" controlId="formBasicEmail">
-                        <Form.Label className='font-weight-bold'>Level</Form.Label>
-                        <div>
-                            <Form.Check
-                                defaultChecked={rowData.level === "Beginner"}
-                                name="level"
-                                label="Beginner"
-                                type="radio"
-                                id='Beginner'
-                                inline
-                                value="Beginner"
-                                onChange={(e) => handleChange(e)}
-                            />
-                            <Form.Check
-                                defaultChecked={rowData.level === "Intermediate"}
-                                name="level"
-                                label="Intermediate"
-                                type="radio"
-                                id='Intermediate'
-                                inline
-                                value="Intermediate"
-                                onChange={(e) => handleChange(e)}
-                            />
-                            <Form.Check
-                                defaultChecked={rowData.level === "Advanced"}
-                                name="level"
-                                label="Advanced"
-                                type="radio"
-                                id='Advanced'
-                                inline
-                                value="Advanced"
-                                onChange={(e) => handleChange(e)}
-                            />
-                        </div>
-                    </Form.Group>
-
-                    <Form.Group className="mb-3">
-                        <Form.Label className='font-weight-bold'>Discipline</Form.Label>
-                        <Select
-                            defaultValue={rowData.packageDisciplines}
-                            isMulti
-                            name="fitnessdisciplines"
-                            options={disciplines}
-                            className="basic-multi-select"
-                            classNamePrefix="select"
-                            closeMenuOnSelect={true}
-                        // onChange={(e) => handleChangeDisciplines(e)}
-                        />
-                    </Form.Group>
-
-                    <Form.Group className="mb-3">
-                        <Form.Label className='font-weight-bold'>Equipment</Form.Label>
-                        <Select
-                            defaultValue={rowData.programDisciplines}
-                            isMulti
-                            name="equipment"
-                            options={disciplines}
-                            className="basic-multi-select"
-                            classNamePrefix="select"
-                            closeMenuOnSelect={true}
-                            onChange={(e) => handleChangeDisciplines(e)}
-                        />
-                    </Form.Group>
-
-                    <Form.Group className="mb-3" controlId="formBasicEmail">
-                        <Form.Label className='font-weight-bold'>Details</Form.Label>
-                        <FormControl defaultValue={rowData.description} onChange={(e) => handleChange(e)} name='description' as="textarea" aria-label="With textarea" />
-                    </Form.Group>
-
-                    <Modal.Footer>
-                        <Button type='submit' onClick={() => {
-                            // setRender(false)
-                        }}>Submit</Button>
-                        <Button onClick={() => {
-                            setRender(false)
-                        }}>Close</Button>
-                    </Modal.Footer>
-                </Form>
-            </Modal.Body>
-        </Modal>
-    )
+        <>  
+            {/* <Button variant={name === "Create New"?"outline-secondary":"light"}  size="sm" onClick={() => setShow(true)}>
+                {name === "Create New"?<i className="fas fa-plus-circle"></i>:" "}{" "}{name}
+            </Button> */}
+            <Modal size="xl" show={show} onHide={() => setShow(false)} centered >
+                <Modal.Header closeButton>
+                    <Modal.Title as={Row}>
+                        <Col xs={12} md={12} lg={12}>
+                            <p className="lead">{name}</p>
+                        </Col>
+                        {isStepper && stepper.map((item: string, id: number) => (
+                            <Col xs={2} md={2} lg={2} key={id}>
+                                <ProgressBar
+                                    max={1}
+                                    now={step - (id + 1)}
+                                    style={{ height: '5px' }}
+                                    variant="danger"
+                                />
+                                <small className="text-muted">{`${id + 1}. ${item}`}</small>
+                            </Col>
+                        ))}
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body className="show-grid bg-light">
+                    <Row>
+                        <Col  lg={12}>
+                            <div style={{ height: '400px', overflowX: 'hidden', overflowY: 'auto' }}>
+                                <Form
+                                    uiSchema={formUISchema}
+                                    schema={formSchema[step.toString()]}
+                                    ref={formRef}
+                                    onSubmit={({ formData }: any) => submitHandler(formData)}
+                                    formData={formValues}
+                                    widgets={widgets}
+                                >
+                                    <div></div>
+                                </Form>
+                            </div>
+                        </Col>
+                    </Row>
+                </Modal.Body>
+                <Modal.Footer>
+                    {isStepper ?
+                        <>
+                            <Button
+                                variant="light"
+                                size="sm"
+                                onClick={() => setStep(step - 1)}
+                                disabled={step === 1 ? true : false}
+                            >
+                                <i className="mr-2 fas fa-arrow-left"></i>
+                            </Button>
+                            <Button
+                                variant="danger"
+                                size="sm"
+                                onClick={(event) => formRef.current.onSubmit(event)}
+                            >
+                                {(step < 2)
+                                    ? <>Next<i className="ml-4 fas fa-arrow-right"></i></>
+                                    : <>Create<i className="ml-4 fas fa-check"></i></>
+                                }
+                            </Button>
+                        </> :
+                        <> 
+                        <Button
+                         variant="danger"
+                         size="sm"
+                         onClick={() => {setShow(false)}}
+                         className={name === 'View'?"d-none":""}
+                        >
+                        Close
+                       </Button>
+                        <Button
+                         variant="success"
+                         size="sm"
+                         onClick={(event) => {formRef.current.onSubmit(event)}}
+                        >
+                        {name === 'View'? "Close": "Submit"} 
+                        </Button>
+                        
+                        </>
+                    
+                        
+                    }
+                </Modal.Footer>
+            </Modal>
+        </>
+    );
 }

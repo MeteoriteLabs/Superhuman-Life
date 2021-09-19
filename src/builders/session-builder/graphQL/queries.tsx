@@ -16,7 +16,7 @@ export const GET_PACKAGE_BY_TYPE = gql`
         username
       }
       effective_date
-      purchase_date
+      accepted_date
       fitnesspackages {
         expiry_date
         id
@@ -46,37 +46,6 @@ export const GET_PACKAGE_BY_TYPE = gql`
 `;
 
 
-// export const GET_PACKAGE_BY_TYPE = gql`
-//     query programManagers($id: ID!, $type: String){
-//       programManagers( 
-//         where: {
-//             fitnesspackages: {
-//               users_permissions_user: { id: $id}
-//               fitness_package_type:{type:$type}
-//             }
-//         },
-//       )
-//       {
-//         id
-//         fitnesspackages{
-//           id
-//           packagename
-//           fitness_package_type{
-//             type
-//           }
-//         }
-//         fitnessprograms{
-//           id
-//           title
-//         }
-//       }
-//     }
-
-// `
-
-
-
-
 
 export const GET_ALL_FITNESSDISCIPLINES = gql`
   query Fitnessdisciplines {
@@ -95,4 +64,16 @@ export const GET_ALL_FITNESSEQUIPMENT = gql`
       name
     }
   }
+`
+
+
+
+export const FETCH_FITNESSDISCPLINES = gql`
+    query fitnessdiscplines{
+        fitnessdisciplines(sort: "updatedAt"){
+            id
+            disciplinename
+            updatedAt
+        }
+    }
 `

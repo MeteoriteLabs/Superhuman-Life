@@ -2,15 +2,17 @@ import {gql} from "@apollo/client";
 
 
 
-export const GET_ALL_PACKAGES = gql `
-query userPackages($id: ID!) {
-    userPackages(
+export const GET_ALL_BOOKINGS = gql `
+query clientBookings($id: ID!, $start:Int, $limit:Int) {
+  clientBookings(
       where: {
         fitnesspackages: {
           users_permissions_user: { id: $id }
         }
       }
-      sort: "purchase_date:desc"
+      sort: "booking_date:desc"
+      start:$start
+      limit:$limit
     ) 
     {
       id
@@ -18,7 +20,8 @@ query userPackages($id: ID!) {
         username
       }
       effective_date
-      purchase_date
+      booking_status
+      booking_date
       package_duration
       fitnesspackages {
         id
@@ -34,6 +37,7 @@ query userPackages($id: ID!) {
     }
   }
 `
+
 
 
 export const FILTER_PACKAGES = gql `
@@ -72,6 +76,28 @@ query userPackages($id: ID!, $sorts:String) {
 
 
 
+export const BOOKING_CONFIG = gql`
+  query bookingConfigs($id: ID!){
+    bookingConfigs(
+      where:{
+        fitnesspackage:{users_permissions_user: { id: $id}}
+      }
+    )
+    {
+      id
+      fitnesspackage{
+        packagename
+        fitness_package_type{
+          type
+        }
+      }
+      isAuto
+      bookingsPerDay
+      BookingsPerMonth
+    }
+  }
+
+`
 
 
 

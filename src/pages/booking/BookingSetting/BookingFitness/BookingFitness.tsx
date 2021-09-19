@@ -2,70 +2,50 @@ import React, { useContext, useMemo, useRef, useState } from 'react'
 import { Row, Col, Badge } from 'react-bootstrap';
 import authContext from '../../../../context/auth-context';
 import Table from '../../../../components/table/index'
-import BookingTable from '../../../../components/table/BookingTable/BookingTable'
 import ActionButton from '../../../../components/actionbutton';
 import ConfirmRequestAction from './ConfirmRequestAction';
-import ConfirmationModel from '../model/ConfirmationModel';
-import RequestModel from '../model/RequestModel';
+
+import { BOOKING_CONFIG } from '../../graphQL/queries';
+import { useQuery } from '@apollo/client';
 
 export default function BookingFitness() {
     const auth = useContext(authContext);
-    const [userPackage, setUserPackage] = useState<any>([]);
-    const [renderConfirmation, setRenderConfirmation] = useState<boolean>(false);
-    const [renderRequest, setRenderRequest] = useState<boolean>(false);
-
+    const [bookingPackage, setBookingPackage] = useState<any>([]);
     const bookingFitnessActionRef = useRef<any>(null);
 
-    // const FetchData = () => {
-    //     useQuery(GET_PACKAGE_BY_TYPE, {
-    //         variables: {
-    //             id: auth.userid,
-    //             type: 'Personal Training',
-    //         },
-    //         onCompleted: (data) => loadData(data)
-    //     })
-
-    // }
 
 
-
-
-    const loadData = (data) => {
-        // console.log('pt query data', data);
+    const FetchData = () => {
+        useQuery(BOOKING_CONFIG, {
+            variables: {
+                id: auth.userid,
+            },
+            onCompleted: (data) => loadData(data)
+        })
 
     }
 
 
-    // FetchData();
-
-    const dataTable = useMemo<any>(() => [
-        {
-            packageName:'Package Name 1',
-            fitness_package_type:'Personal Training',
-            confirmations:'Auto Accept',
-            requests:'Configured',
-        },
-        {
-            packageName:'Package Name 2',
-            fitness_package_type:'Group Class',
-            confirmations:'Manual Accept',
-            requests:'Not configured',
-        },
-        {
-            packageName:'Package Name 3',
-            fitness_package_type:'Custom Fitness',
-            confirmations:'Auto Accept',
-            requests:'Not configured',
-        },
-        {
-            packageName:'Package Name 4',
-            fitness_package_type:'Classic Class',
-            confirmations:'Manual Accept',
-            requests:'Configured',
-        }
+    const loadData = (data) => {
+        console.log('booking setting data', {data});
+         setBookingPackage(
+            [...data.bookingConfigs?.map((fitnessPackage, index) =>{
+                return {
+                    id: fitnessPackage.id,
+                    packageName:fitnessPackage.fitnesspackage.packagename,
+                    fitness_package_type:fitnessPackage.fitnesspackage.fitness_package_type.type,
+                    bookingPerMonth: fitnessPackage.BookingsPerMonth,
+                    bookingPerDay: fitnessPackage.bookingsPerDay,
+                    confirmations:fitnessPackage.isAuto ? "Auto Accept" : "Manual Accept",
+                    requests:'Configured',
+                }
+            })]
+        )
+    }
 
 
-    ], []);
+    FetchData();
+    console.log('bookingPackage', bookingPackage)
 
     const columns = useMemo(
         () => [
@@ -112,7 +92,7 @@ export default function BookingFitness() {
                     return <ActionButton
                         action1='Booking confirmation'
                         actionClick1={() => {
-                            bookingFitnessActionRef.current.TriggerForm({actionType:'confirmation'});
+                            bookingFitnessActionRef.current.TriggerForm({actionType:'confirmation', formData:row.original});
                         }}
 
                         action2='Data requests'
@@ -132,8 +112,8 @@ export default function BookingFitness() {
         <div className="mt-5">
             <Row>
                 <Col>
-                    <Table columns={columns} data={dataTable} />
-                    <ConfirmRequestAction ref={bookingFitnessActionRef}/>
+                    <Table columns={columns} data={bookingPackage} />
+                    <ConfirmRequestAction ref={bookingFitnessActionRef} />
                 </Col>
             </Row>
         </div>

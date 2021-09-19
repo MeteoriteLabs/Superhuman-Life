@@ -35,7 +35,7 @@ export default function Group(props) {
 
 
     const loadData = (data) => {
-        // console.log('group query data', data);
+        console.log('group query data', data);
         setUserPackage(
             [...data.userPackages].map((packageItem, index) => {
                 if (packageItem.program_managers.length === 0) {
@@ -387,7 +387,7 @@ export default function Group(props) {
                             // console.log("🚀 ~ file: Group.tsx ~ line 326 ~ Group ~ row", row.rows)
                             return <>
                                 <button onClick={() => {
-                                    fitnessActionRef.current.TriggerForm({ id: row.row.original.id, actionType: 'addNew', type: 'Group Class', rowData: row.row.original })
+                                    fitnessActionRef.current.TriggerForm({ id: row.row.original.id, actionType: 'create', type: 'Group Class' })
                                 }}>Add new</button>
                             </>
                         }
@@ -447,12 +447,12 @@ export default function Group(props) {
                             return <ActionButton
                                 action1='Manage'
                                 actionClick1={() => {
-                                    fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'manage', type: "Group Class" })
+                                    fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'manage' })
                                 }}
 
                                 action2='Details'
                                 actionClick2={() => {
-                                    fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'details', type: "Group Class" })
+                                    fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'details' })
                                 }}
 
                             />

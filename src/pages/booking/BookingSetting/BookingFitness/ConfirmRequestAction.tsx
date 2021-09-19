@@ -5,9 +5,8 @@ import RequestModel from '../model/RequestModel';
 
 interface Operation {
     actionType: "confirmation" | 'request',
+    formData: any
 }
-
-
 
 function ConfirmRequestAction(props, ref: any) {
 
@@ -19,11 +18,13 @@ function ConfirmRequestAction(props, ref: any) {
 
     useImperativeHandle(ref, () => ({
         TriggerForm: (msg: Operation) => {
-            console.log(msg);
+            // console.log(msg);
             setRender(true);
             setOperation(msg)
         }
     }))
+
+
 
     return (
         <div>
@@ -31,6 +32,8 @@ function ConfirmRequestAction(props, ref: any) {
                 <ConfirmationModel
                     render={render}
                     setRender={setRender}
+                    formData = {operation.formData}
+                   
                 />}
 
 

@@ -1,12 +1,12 @@
 
 import moment from "moment";
-import { Fragment, useState } from "react";
-import { Badge, Button, Row, Col } from "react-bootstrap";
+import { Fragment, useEffect, useState } from "react";
+import { Badge, Button } from "react-bootstrap";
 import { useTable } from "react-table";
 import { useSortBy, usePagination } from 'react-table'
 import "./bookingTable.css";
 import * as Icon from 'react-bootstrap-icons';
-function Table({ data, columns, newPackageCount }: any) {
+function Table({ data, columns, newPackageCount, fetchData, loading, pageCount: controlledPageCount, }: any) {
 
     const {
         getTableProps,
@@ -23,23 +23,30 @@ function Table({ data, columns, newPackageCount }: any) {
         nextPage,
         previousPage,
         setPageSize,
-        state: { pageIndex, pageSize },
+        state: { pageSize },
     } = useTable({
         columns, data, initialState: {
             sortBy: [
                 { id: "purchase_date", desc: true },
-                { id: "effectiveDate", desc: true },
-                { id: "packageRenewal", desc: true },
-                { id: "fitness_package_type", desc: true },
-                { id: "price", desc: true },
-                { id: "payment_status", desc: true },
             ],
-            pageIndex: 0,
-            pageSize:3
+            // pageIndex: 0,
+            pageSize: 10
         },
-
+        manualPagination: true,
+        pageCount: controlledPageCount,
+        isMultiSortEvent: e => {
+            return true
+        }
     }, useSortBy, usePagination);
 
+
+    // start = (current page no - 1) x no of records per page
+
+    const [pageIndex, setPageIndex] = useState(0)
+
+    useEffect(() => {
+        fetchData({ pageIndex, pageSize })
+    }, [fetchData, pageIndex, pageSize])
 
 
     const [isSort, setIsSort] = useState(false);
@@ -73,7 +80,7 @@ function Table({ data, columns, newPackageCount }: any) {
             </Button>
 
 
-            {/* <pre>
+            <pre>
                 <code>
                     {JSON.stringify(
                         {
@@ -87,17 +94,12 @@ function Table({ data, columns, newPackageCount }: any) {
                         2
                     )}
                 </code>
-            </pre> */}
+            </pre>
             <table {...getTableProps()} className="table text-center">
                 <thead>
                     {headerGroups.map(headerGroup => {
                         return (
                             <tr {...headerGroup.getHeaderGroupProps()}>
-                                {/* {headerGroup.headers.slice(0,3).map(column =>{
-                                      <th className="tableHeader text-center"{...column.getHeaderProps}>
-                                      {column.render("Header")}
-                                  </th>
-                                })} */}
                                 {headerGroup.headers.map(column => (
                                     <th className="tableHeader text-center" {...column.getHeaderProps(column.getSortByToggleProps())}>
                                         {column.render("Header")}
@@ -105,7 +107,12 @@ function Table({ data, columns, newPackageCount }: any) {
                                             {column.isSorted
                                                 ? column.isSortedDesc
                                                     ? <Icon.SortDown className='ml-2' />
-                                                    : <Icon.SortDownAlt />
+                                                    : <Icon.SortDownAlt className='ml-2' />
+                                                : ""}
+                                        </span>
+                                        <span>
+                                            {(column.canSort && !column.isSorted) ?
+                                                <Icon.Funnel className='ml-2' />
                                                 : ""}
                                         </span>
                                     </th>
@@ -170,13 +177,24 @@ function Table({ data, columns, newPackageCount }: any) {
 
             <div className="pagination justify-content-around">
                 <div>
-                    <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
+                    <button onClick={() => {
+                        setPageIndex(0)
+                        gotoPage(0)
+                    }} disabled={pageIndex === 0 && !canPreviousPage}>
                         {'<<'}
                     </button>{' '}
-                    <button onClick={() => previousPage()} disabled={!canPreviousPage}>
+                    <button onClick={() => {
+                        setPageIndex(pageIndex - 1);
+                        previousPage()
+                    }} disabled={pageIndex === 0 && !canPreviousPage}>
                         {'<'}
                     </button>{' '}
-                    <button onClick={() => nextPage()} disabled={!canNextPage}>
+                    <button onClick={() => {
+                        setPageIndex(pageIndex + 1);
+                        nextPage()
+                    }} 
+                    // disabled={data.length <= pageSize }
+                    >
                         {'>'}
                     </button>{' '}
                     <button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
@@ -192,10 +210,15 @@ function Table({ data, columns, newPackageCount }: any) {
                         | Go to page:{' '}
                         <input
                             type="number"
-                            defaultValue={pageIndex + 1}
+                            min="1"
+                            // defaultValue={pageIndex + 1}
                             onChange={e => {
-                                const page = e.target.value ? Number(e.target.value) - 1 : 0
-                                gotoPage(page)
+                                let page = 0;
+                                page = Number(e.target.value) === 0 ? 0 : Number(e.target.value) - 1
+                                setPageIndex(page)
+
+                                console.log('page', page)
+                                // gotoPage(page)
                             }}
                             style={{ width: '100px' }}
                         />
@@ -209,10 +232,12 @@ function Table({ data, columns, newPackageCount }: any) {
                     <select
                         value={pageSize}
                         onChange={e => {
-                            setPageSize(Number(e.target.value))
+
+                            setPageSize(Number(e.target.value));
+
                         }}
                     >
-                        {[3, 20, 25, 50, 100].map(pageSize => (
+                        {[10, 20, 30, 50, 100].map(pageSize => (
                             <option key={pageSize} value={pageSize}>
                                 {pageSize} rows
                             </option>

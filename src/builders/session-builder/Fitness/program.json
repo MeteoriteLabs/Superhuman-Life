@@ -1,0 +1,38 @@
+{
+     "1": {
+         "title": "",
+         "type": "object",
+         "required": [
+             "programName"
+         ],
+         "properties": {
+             "programName": {
+                 "type": "string",
+                 "title": "Program Name"
+             },
+             "duration": {
+                "type": "number",
+                "title": "Duration",
+                "minimum": 1,
+                "maximum": 360
+             },
+             "level": {
+                 "type": "number",
+                 "title": "Level",
+                 "enum": [0, 1, 2],
+                 "enumNames": [
+                     "Beginner",
+                     "Intermediate",
+                     "Advance"
+                 ]
+             },
+             "discipline": {
+                "type": "string"
+             },
+            "details": {
+                "type": "string",
+                "title": "Details"
+            }
+         }
+     }
+ }

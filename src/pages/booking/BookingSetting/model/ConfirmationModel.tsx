@@ -1,25 +1,74 @@
-import React, { useState } from 'react'
+import { useMutation } from '@apollo/client';
+import React, { useContext, useEffect, useState } from 'react'
 import { Button, Form, FormControl, Modal } from 'react-bootstrap'
+import authContext from '../../../../context/auth-context';
+import { UPDATE_BOOKING_CONFIG } from '../../graphQL/mutation';
+import { BOOKING_CONFIG } from '../../graphQL/queries';
 
-export default function ConfirmationModel(props) {
-    const { render, setRender } = props;
 
-    const [isSwitchOn, setIsSwitchOn] = useState(false);
+interface FormValue {
+    id: string,
+    isAuto: boolean,
+    BookingsPerMonth: number,
+    bookingsPerDay: number,
+}
+
+export default function ConfirmationModel(props: { render: boolean; setRender: any; formData: any }) {
+    const { render, setRender, formData,  } = props;
+    const auth = useContext(authContext);
+
+    const [isSwitchOn, setIsSwitchOn] = useState<boolean>(false);
+
+    const [formValue, setFormValue] = useState<FormValue>({
+        id: formData.id,
+        isAuto: isSwitchOn,
+        BookingsPerMonth: formData.bookingPerMonth,
+        bookingsPerDay: formData.bookingPerDay,
+    })
 
 
     const onSwitchAction = () => {
         setIsSwitchOn(!isSwitchOn);
+        setFormValue({
+            ...formValue,
+            isAuto: isSwitchOn
+        })
     };
 
 
-    const HandleSubmit = (e) => {
+
+    const [updateBooking] = useMutation(UPDATE_BOOKING_CONFIG);
+
+
+
+    const handleSubmit = (e: { preventDefault: () => void; }) => {
         e.preventDefault();
+        updateBooking({
+            variables: formValue
+        })
+
+
     }
 
-    const handleChange = (e) => {
 
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+        const { name, value } = e.target;
+        setFormValue({
+            ...formValue,
+            [name]: Number(value)
+        })
 
     }
+
+
+    useEffect(() => {
+        if (formData.confirmations === "Auto Accept") {
+            setIsSwitchOn(false)
+        } else {
+            setIsSwitchOn(true)
+        }
+    }, [formData])
+
 
     return (
         <Modal
@@ -36,7 +85,7 @@ export default function ConfirmationModel(props) {
             </Modal.Header>
             <Modal.Body>
 
-                <Form onSubmit={HandleSubmit}>
+                <Form onSubmit={handleSubmit}>
                     <Form.Group className="mb-3" controlId="formBasicEmail">
                         <Form.Label className='font-weight-bold'>Confirmations</Form.Label>
                         <div className='d-flex'>
@@ -50,23 +99,23 @@ export default function ConfirmationModel(props) {
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="formBasicEmail">
-                        <Form.Label className='font-weight-bold'>Program Name:</Form.Label>
-                        <p>123</p>
+                        <Form.Label className='font-weight-bold'>Package Name:</Form.Label>
+                        <p>{formData.packageName}</p>
                     </Form.Group>
 
 
                     <Form.Group className="mb-3" controlId="formBasicEmail">
                         <Form.Label className='font-weight-bold'>Maximum booking/per month</Form.Label>
-                        <FormControl onChange={(e) => handleChange(e)} name='description' />
+                        <FormControl type='number' name='BookingsPerMonth' defaultValue={formData.bookingPerMonth} onChange={(e) => handleChange(e)} />
                     </Form.Group>
 
 
                     <Form.Group className="mb-3" controlId="formBasicEmail">
                         <Form.Label className='font-weight-bold'>Maximum booking/per day</Form.Label>
-                        <FormControl onChange={(e) => handleChange(e)} name='description' />
+                        <FormControl name='bookingsPerDay' defaultValue={formData.bookingPerDay} onChange={(e) => handleChange(e)} />
                     </Form.Group>
 
-                    
+
                     <Modal.Footer>
                         <Button type='submit' onClick={() => {
                             // setRender(false)
