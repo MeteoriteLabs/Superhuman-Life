@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Modal, Button, Row, Col, Tab, Tabs, InputGroup, FormControl } from 'react-bootstrap';
+import { Modal, Button, Row, Col, Tab, Tabs, InputGroup, FormControl, Badge } from 'react-bootstrap';
 import './styles.css';
 import { GET_SCHEDULEREVENTS, PROGRAM_EVENTS, UPDATE_FITNESSPROGRAMS, FETCH_EVENT } from './queries';
 import { useQuery, useMutation } from "@apollo/client";
 import ProgramList from "../../../components/customWidgets/programList";
 import FloatingButton from './FloatingButtons';
 import TimeField from '../../../components/customWidgets/timeField';
+import TextEditor from '../../../components/customWidgets/textEditor';
 import CreateoreditWorkout from '../workout/createoredit-workout';
 
 const Schedular = (props: any) => {
@@ -13,6 +14,9 @@ const Schedular = (props: any) => {
     const [show, setShow] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [currentProgram, setCurrentProgram] = useState<any[]>([]);
+    const [edit, setEdit] = useState(true);
+    const [del, setDel] = useState(false);
+    const [duplicate, setDuplicate] = useState(false);
     const [event, setEvent] = useState<any>({});
     const [arr, setArr] = useState<any[]>([]);
     const [program, setProgram] = useState('none');
@@ -36,8 +40,6 @@ const Schedular = (props: any) => {
         const draggable: any = document.querySelectorAll('.schedular-content');
         const container: any = document.querySelectorAll('.container');
         // const resizer: any = document.getElementById('dragMe');
-
-
 
         draggable.forEach(drag => {
             drag.addEventListener('dragstart', () => {
@@ -202,12 +204,57 @@ const Schedular = (props: any) => {
         changedTime = e;
     }
 
+    function handleTimeFormat(time: string) {
+        let timeArray = time.split(':');
+        let hours = timeArray[0];
+        let minutes = timeArray[1];
+        let timeString = (parseInt(hours) < 10 ? "0" + hours : hours) + ':' + (parseInt(minutes) === 0 ? "0" + minutes : minutes);
+        return timeString.toString();
+    }
+
+    function handleDuplicate(e: any, changedTime: any){
+        let values = [...currentProgram];
+        let newEvent: any = {};
+        newEvent.name = e.title;
+        newEvent.day = e.day;
+        newEvent.startTime = changedTime.startChange;
+        newEvent.endTime = changedTime.endChange;
+        newEvent.type = e.type;
+        newEvent.id = e.id;
+
+        var timeStart: any = new Date("01/01/2007 " + handleTimeFormat(newEvent.startTime));
+        var timeEnd: any = new Date("01/01/2007 " + handleTimeFormat(newEvent.endTime));
+        var diff1 = timeEnd - timeStart;
+        for (var i = 0; i <= values.length - 1; i++) {
+            console.log(values);
+            var startTimeHour: any = new Date("01/01/2007 " + handleTimeFormat(values[i].startTime));
+            var endTimeHour: any = new Date("01/01/2007 " + handleTimeFormat(values[i].endTime));
+            var diff2 = endTimeHour - startTimeHour;
+            console.log(diff1, diff2);
+
+            if (diff2 < diff1) {
+                values.splice(i, 0, newEvent);
+                break;
+            }
+            if (i === values.length - 1) {
+                values.push(newEvent);
+                break;
+            }
+        }
+
+        updateProgram({
+            variables: {
+                programid: program_id,
+                events: values
+            }
+        })
+    }
+
     function handleSaveChanges(e: any) {
         let values = [...currentProgram];
         let newEvent: any = {};
         let a = values.find((val) => val.id === event.id && val.day === event.day && val.startTime === event.hour + ":" + event.min && val.endTime === event.endHour + ":" + event.endMin);
         let b = values.findIndex((val) => val.id === event.id && val.day === event.day && val.startTime === event.hour + ":" + event.min && val.endTime === event.endHour + ":" + event.endMin);
-        console.log(a);
         if (a) {
             newEvent.id = a.id;
             newEvent.name = a.name;
@@ -217,7 +264,25 @@ const Schedular = (props: any) => {
             newEvent.day = a.day;
 
             values.splice(b, 1);
-            values.push(newEvent);
+            var timeStart: any = new Date("01/01/2007 " + handleTimeFormat(newEvent.startTime));
+            var timeEnd: any = new Date("01/01/2007 " + handleTimeFormat(newEvent.endTime));
+            var diff1 = timeEnd - timeStart;
+            for (var i = 0; i <= values.length - 1; i++) {
+                console.log(values);
+                var startTimeHour: any = new Date("01/01/2007 " + handleTimeFormat(values[i].startTime));
+                var endTimeHour: any = new Date("01/01/2007 " + handleTimeFormat(values[i].endTime));
+                var diff2 = endTimeHour - startTimeHour;
+                console.log(diff1, diff2);
+
+                if (diff2 < diff1) {
+                    values.splice(i, 0, newEvent);
+                    break;
+                }
+                if (i === values.length - 1) {
+                    values.push(newEvent);
+                    break;
+                }
+            }
             updateProgram({
                 variables: {
                     programid: program_id,
@@ -246,9 +311,122 @@ const Schedular = (props: any) => {
     }
     handleTimeChange({ startChange, endChange });
 
-    //  function FetchDataWorkout(_variables: {}, p: any) {
-    //             useQuery(FETCH_EVENT, { variables: _variables, onCompleted: (r) => { loadDataWorkout(r, p); } });
-    //         }
+    function handleAgenda(d: any){
+        return (
+            <>
+                <Row className="pt-2">
+                    <Col>
+                        <div style={{borderRadius: '10px', display: `${d.type !== 'exercise' ? 'none' : 'block'}`}} className="pt-2 shadow-lg">
+                            <Row className="pl-4">
+                                <p className="text-capitalize">{d.type !== 'exercise' ? null : d.value}</p>
+                            </Row>
+                            <Row className="pl-4 pr-2">
+                                <Col>
+                                    {
+                                    d.type !== 'exercise' ? null : 
+                                    <p>Reps: <br/> 
+                                    <InputGroup className="pt-2">
+                                        <FormControl
+                                            disabled
+                                            value={d.reps ? d.reps : 'N/A'}
+                                        />
+                                    </InputGroup>
+                                    </p>
+                                    }
+                                </Col>
+                                <Col>
+                                    {
+                                    d.type !== 'exercise' ? null : 
+                                    <p>Weights: <br/> 
+                                    <InputGroup className="pt-2">
+                                        <FormControl
+                                            disabled
+                                            value={d.weights ? d.weights : 'N/A'}
+                                        />
+                                    </InputGroup>
+                                    </p>
+                                    }
+                                </Col>
+                                <Col>
+                                    {
+                                    d.type !== 'exercise' ? null : 
+                                    <p>Sets: <br/> 
+                                    <InputGroup className="pt-2">
+                                        <FormControl
+                                            disabled
+                                            value={d.sets ? d.sets : 'N/A'}
+                                        />
+                                    </InputGroup>
+                                    </p>
+                                    }
+                                </Col>
+                                <Col>
+                                    {
+                                    d.type !== 'exercise' ? null : 
+                                    <p>Duration: <br/> 
+                                    <InputGroup className="pt-2">
+                                        <FormControl
+                                            disabled
+                                            value={d.duration ? d.duration : 'N/A'}
+                                        />
+                                    </InputGroup>
+                                    </p>
+                                    }
+                                </Col>
+                            </Row>
+                        </div>
+                        <div style={{borderRadius: '10px'}} className="mt-4 shadow-lg">
+                            {!d.restTime ? null : <Row className="pl-2">
+                            {d.type !== 'exercise' ? null : <>
+                            <Col lg={2} className="text-center pt-2 mt-1">
+                                <p>Rest Time: </p>
+                            </Col>
+                            <Col lg={3}>
+                            <InputGroup className="pt-2">
+                                        <FormControl
+                                            disabled
+                                            value={d.restTime ? d.restTime : 'N/A'}
+                                />
+                                </InputGroup></Col>
+                            </>}
+                        </Row>}
+                        </div>
+                    </Col>
+                </Row>
+                <Row className="pl-2">
+                    {d.type !== 'text' ? null : <Col>
+                        <TextEditor val={d.value} type="text"/>
+                    </Col>}
+                </Row>
+                <Row>
+                    <p>{d.type !== 'url' ? null : <Col >
+                            <InputGroup>
+                                        <FormControl
+                                            disabled
+                                            value={d.value}
+                                />
+                                </InputGroup></Col>
+                            }
+                    </p>
+                </Row>
+            </>
+        )
+    }
+
+    function handleEventDelete(){
+        console.log(event);
+        let values = [...currentProgram];
+        let a = values.findIndex((val) => val.id === event.id && val.day === event.day && val.startTime === event.hour + ":" + event.min && val.endTime === event.endHour + ":" + event.endMin);
+        values.splice(a,1);
+        updateProgram({
+            variables: {
+                programid: program_id,
+                events: values
+            }
+        });
+        handleClose();
+
+    }
 
     if (!show) return <span style={{ color: 'red' }}>Loading...</span>;
     else return (
@@ -264,7 +442,6 @@ const Schedular = (props: any) => {
                         {days.map(val => {
                             return (
                                 <div className="cell" style={{ backgroundColor: `${handleRestDays(val)}` }}>{`Day ${val}`}</div>
-                                // handleDaysRender(val)
                             )
                         })}
                     </div>
@@ -343,29 +520,27 @@ const Schedular = (props: any) => {
             </div>
             <FloatingButton callback={handleFloatingActionProgramCallback} />
             {
-                <Modal show={showModal} onHide={handleClose} centered size="lg" >
+                <Modal show={showModal} onHide={handleClose} backdrop="static" centered size="lg" >
                     <Modal.Body style={{ maxHeight: '600px', overflow: 'auto' }}>
-                        {/* <EventDetailModal event={event} type={event.type} close={handleClose} onChange={handleTimeChange} /> */}
                         <Row>
                             <Col lg={8}>
                                 <h3 className="text-capitalize">{event.title}</h3>
                             </Col>
                             <Col>
                                 <div>
-                                    <i className="fas fa-pencil-alt fa-lg" onClick={() => { handleClose(); setData([]); createEditWorkoutComponent.current.TriggerForm({ type: 'edit' }); }} style={{ cursor: 'pointer', color: 'dodgerblue' }} />
+                                    <i className="fas fa-pencil-alt fa-lg" onClick={(e) => {setEdit(!edit)}} style={{ cursor: 'pointer', color: 'dodgerblue' }}/>
                                 </div>
                             </Col>
                             <Col>
-                                <i className="fas fa-copy fa-lg" onClick={(e) => { console.log(e); }} style={{ cursor: 'pointer', color: '#696969' }} />
+                                <i className="fas fa-copy fa-lg" onClick={(e) => { handleClose(); setDuplicate(true); }} style={{ cursor: 'pointer', color: '#696969' }} />
                             </Col>
                             <Col>
                                 <div>
-                                    <i className="fas fa-trash-alt fa-lg" onClick={(e) => { console.log(e); }} style={{ cursor: 'pointer', color: 'red' }}></i>
-                                    {/* <DeleteEventModal /> */}
+                                    <i className="fas fa-trash-alt fa-lg" onClick={(e) => { setDel(true); }} style={{ cursor: 'pointer', color: 'red' }}></i>
                                 </div>
                             </Col>
                             <Col>
-                                <i className="fas fa-times fa-lg" onClick={(e) => { handleClose(); }} style={{ cursor: 'pointer' }}></i>
+                                <i className="fas fa-times fa-lg" onClick={(e) => { handleClose(); setData([]) }} style={{ cursor: 'pointer' }}></i>
                             </Col>
                         </Row>
                         <hr style={{ marginTop: '0px', marginBottom: '20px', borderTop: '2px solid grey' }}></hr>
@@ -387,72 +562,41 @@ const Schedular = (props: any) => {
                         </Row>
                         <Row className="pt-3 align-items-center">
                             <Col>
-                                <TimeField title="Start" onChange={handleStart} hr={event.hour} m={event.min} />
+                                <TimeField title="Start Time: " onChange={handleStart} hr={event.hour} m={event.min} disabled={edit}/>
                             </Col>
                         </Row>
                         <Row className="pt-3 align-items-center">
                             <Col>
-                                <TimeField title="End" onChange={handleEnd} hr={event.endHour} m={event.endMin} />
+                                <TimeField title="End Time: " onChange={handleEnd} hr={event.endHour} m={event.endMin} disabled={edit}/>
                             </Col>
                         </Row>
                         {(event.type === "workout") && <Tabs defaultActiveKey="agenda" transition={false} id="noanim-tab-example" className="pt-4">
                             <Tab eventKey="agenda" title="Agenda">
+                                <Row className="justify-content-end">
+                                    <Button className="mr-3 mt-2" variant="outline-secondary" size="sm" onClick={() => { handleClose(); setData([]); setEvent([]); createEditWorkoutComponent.current.TriggerForm({ type: 'create' }); }}><i className="fas fa-plus-circle"></i>{" "}Create Workout</Button>
+                                    <Button className="mr-3 mt-2" variant="outline-primary" size="sm" onClick={() => { handleClose(); setData([]); setEvent([]); createEditWorkoutComponent.current.TriggerForm({ type: 'edit' }); }}><i className="fas fa-pencil-alt"></i>{" "}Edit</Button>
+                                </Row>
                                 {data.map(val => {
-                                    console.log(val);
                                     return (
                                         <>
                                             <Row>
                                                 {val.warmup === null ? '' : <Col className="pt-2"><h5>Warmup: {val.warmup.map((d) => {
-                                                    console.log(d);
                                                     return (
-                                                        <>
-                                                            <Row className="pt-2">
-                                                                <Col>
-                                                                    <p>Content: {d.type === 'url' || 'text' ? d.value : d.name}</p>
-                                                                    {d.type !== 'exercise' ? null : <p>Reps: {d.reps}</p>}
-                                                                    {d.type !== 'exercise' ? null : <p>Weights: {d.weights}</p>}
-                                                                    {d.type !== 'exercise' ? null : <p>Sets: {d.sets}</p>}
-                                                                    {d.type !== 'exercise' ? null : <p>Duration: {d.duration}</p>}
-                                                                    {d.type !== 'exercise' ? null : <p>Rest Time: {d.restTime}</p>}
-                                                                </Col>
-                                                            </Row>
-                                                        </>
+                                                        handleAgenda(d)
                                                     )
                                                 })}</h5></Col>}
                                             </Row>
                                             <Row>
                                                 {val.mainmovement === null ? '' : <Col className="pt-2"><h5>Mainmovement {val.mainmovement.map((d) => {
                                                     return (
-                                                        <>
-                                                            <Row className="pt-2">
-                                                                <Col>
-                                                                    <p>Content: {d.type === 'url' || 'text' ? d.value : d.name}</p>
-                                                                    {d.type !== 'exercise' ? null : <p>Reps: {d.reps}</p>}
-                                                                    {d.type !== 'exercise' ? null : <p>Weights: {d.weights}</p>}
-                                                                    {d.type !== 'exercise' ? null : <p>Sets: {d.sets}</p>}
-                                                                    {d.type !== 'exercise' ? null : <p>Duration: {d.duration}</p>}
-                                                                    {d.type !== 'exercise' ? null : <p>Rest Time: {d.restTime}</p>}
-                                                                </Col>
-                                                            </Row>
-                                                        </>
+                                                        handleAgenda(d)
                                                     )
                                                 })}</h5></Col>}
                                             </Row>
                                             <Row>
                                                 {val.cooldown === null ? '' : <Col className="pt-2"><h5>Cooldown {val.cooldown.map((d) => {
                                                     return (
-                                                        <>
-                                                            <Row className="pt-2">
-                                                                <Col>
-                                                                    <p>Content: {d.type === 'url' || 'text' ? d.value : d.name}</p>
-                                                                    {d.type !== 'exercise' ? null : <p>Reps: {d.reps}</p>}
-                                                                    {d.type !== 'exercise' ? null : <p>Weights: {d.weights}</p>}
-                                                                    {d.type !== 'exercise' ? null : <p>Sets: {d.sets}</p>}
-                                                                    {d.type !== 'exercise' ? null : <p>Duration: {d.duration}</p>}
-                                                                    {d.type !== 'exercise' ? null : <p>Rest Time: {d.restTime}</p>}
-                                                                </Col>
-                                                            </Row>
-                                                        </>
+                                                        handleAgenda(d)
                                                     )
                                                 })}</h5></Col>}
                                             </Row>
@@ -497,10 +641,42 @@ const Schedular = (props: any) => {
                                                 <Col lg={1}>
                                                     <label>About: </label>
                                                 </Col>
-                                                <Col lg={9}>
+                                                <Col lg={11}>
                                                     <InputGroup>
                                                         <FormControl as="textarea" value={val.About} disabled />
                                                     </InputGroup>
+                                                </Col>
+                                            </Row>
+                                            <Row className="pt-3">
+                                                <Col lg={2} className="pr-0">
+                                                    <label>Equipment: </label>
+                                                </Col>
+                                                <Col lg={10} className="pl-0">
+                                                    {val.equipment_lists.map((d) => {
+                                                        return (
+                                                            <>
+                                                                <Badge pill variant="secondary">
+                                                                    {d.name}
+                                                                </Badge>{' '}
+                                                            </>
+                                                        )
+                                                    })}
+                                                </Col>
+                                            </Row>
+                                            <Row className="pt-3">
+                                                <Col lg={2} className="pr-0">
+                                                    <label>Muscle Group: </label>
+                                                </Col>
+                                                <Col lg={10} className="pl-0">
+                                                    {val.muscle_groups.map((d) => {
+                                                        return (
+                                                            <>
+                                                                <Badge pill variant="secondary">
+                                                                    {d.name}
+                                                                </Badge>{' '}
+                                                            </>
+                                                        )
+                                                    })}
                                                 </Col>
                                             </Row>
                                         </>
@@ -521,6 +697,69 @@ const Schedular = (props: any) => {
                         </Button>
                     </Modal.Footer>
                 </Modal>
+            }{
+                <Modal show={del} onHide={handleClose} centered backdrop='static'>
+                    <Modal.Header>
+                         <Modal.Title>Do you want to delete this event?</Modal.Title>
+                    </Modal.Header>
+                    {/* <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body> */}
+                    <Modal.Footer>
+                         <Button variant="danger" onClick={() => setDel(false)}>
+                              No
+                         </Button>
+                         <Button variant="success" onClick={() => {handleEventDelete();setDel(false);}}>
+                              Yes
+                         </Button>
+                    </Modal.Footer>
+               </Modal>
+            }{
+                <Modal show={duplicate} onHide={handleClose} centered backdrop='static'>
+                    <Modal.Body>
+                        <Row>
+                            <Col lg={11}>
+                                <h3 className="text-capitalize">{event.title}</h3>
+                            </Col>
+                            <Col lg={1}>
+                                <i className="fas fa-times fa-lg" onClick={(e) => { handleClose(); setData([]) }} style={{ cursor: 'pointer' }}></i>
+                            </Col>
+                        </Row>
+                        <hr style={{ marginTop: '0px', marginBottom: '20px', borderTop: '2px solid grey' }}></hr>
+                        <Row className="align-items-center">
+                                <Col lg={1}>
+                                    <h6>Type: </h6>
+                                </Col>
+                                <Col lg={4}>
+                                    <FormControl value={event.type} disabled />
+                                </Col>
+                            </Row>
+                            <Row className="pt-3 align-items-center">
+                                <Col lg={1}>
+                                    <h6>Day: </h6>
+                                </Col>
+                                <Col lg={4}>
+                                    <FormControl value={`Day-${event.day}`} disabled />
+                                </Col>
+                            </Row>
+                            <Row className="pt-3 align-items-center">
+                                <Col>
+                                    <TimeField title="Start Time: " onChange={handleStart} hr={event.hour} m={event.min}/>
+                                </Col>
+                            </Row>
+                            <Row className="pt-3 align-items-center">
+                                <Col>
+                                    <TimeField title="End Time: " onChange={handleEnd} hr={event.endHour} m={event.endMin}/>
+                                </Col>
+                            </Row>
+                    </Modal.Body>
+                    <Modal.Footer>
+                         <Button variant="danger" onClick={() => {setDuplicate(false); setData([]);}}>
+                              Cancel
+                         </Button>
+                         <Button variant="success" onClick={() => {handleDuplicate(event, changedTime);setDuplicate(false); setData([]);}}>
+                              Duplicate
+                         </Button>
+                    </Modal.Footer>
+               </Modal>
             }
             <CreateoreditWorkout ref={createEditWorkoutComponent}></CreateoreditWorkout>
         </>

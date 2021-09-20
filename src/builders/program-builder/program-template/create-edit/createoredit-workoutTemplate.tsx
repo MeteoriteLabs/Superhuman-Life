@@ -78,7 +78,6 @@ function CreateEditMessage(props: any, ref: any) {
         }
         var eventJson: any = {};
         if (frm.workoutEvent) {
-            console.log("beg");
             frm.workoutEvent = JSON.parse(frm.workoutEvent);
             eventJson.type = 'workout';
             eventJson.name = frm.workoutEvent[0].name;
@@ -89,7 +88,6 @@ function CreateEditMessage(props: any, ref: any) {
             if (existingEvents.length === 0) {
                 existingEvents.push(eventJson);
             } else {
-                console.log("else Block");
                 var timeStart: any = new Date("01/01/2007 " + handleTimeFormat(frm.startTime));
                 var timeEnd: any = new Date("01/01/2007 " + handleTimeFormat(frm.endTime));
                 var diff1 = timeEnd - timeStart;
@@ -110,10 +108,8 @@ function CreateEditMessage(props: any, ref: any) {
                     }
                 }
             }
-            console.log("end");
         }
 
-        console.log("outside");
         updateProgram({
             variables: {
                 programid: program_id,

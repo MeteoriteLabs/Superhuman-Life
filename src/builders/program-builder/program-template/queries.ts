@@ -29,6 +29,14 @@ export const FETCH_EVENT = gql`
                workout_URL
                workout_text
                intensity
+               equipment_lists{
+                    id
+                    name
+               }
+               muscle_groups{
+               id
+               name
+               }
           }
      }
 `

@@ -19,6 +19,7 @@ const TimeFieldInput = (props: any) => {
                                    type="number"
                                    min="0"
                                    max="23"
+                                   disabled={props.disabled ? props.disabled : false}
                                    value={hour}
                                    onChange={(e) => setHour(e.target.value)}
                               />
@@ -27,7 +28,7 @@ const TimeFieldInput = (props: any) => {
                     </Col>
                     <Col>
                          <InputGroup>
-                              <Form.Control as="select" value={min} onChange={(e) => setMin(e.target.value)}>
+                              <Form.Control as="select" disabled={props.disabled ? props.disabled : false} value={min} onChange={(e) => setMin(e.target.value)}>
                                    <option>0</option>
                                    <option>15</option>
                                    <option>30</option>

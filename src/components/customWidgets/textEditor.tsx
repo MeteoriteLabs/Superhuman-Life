@@ -4,20 +4,24 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 const TextEditor = (props: any) => {
 
-     const [value, setValue] = useState("");
+     const [value, setValue] = useState(props.val ? props.val : "");
 
      var richText: any = [{ "type": "text" }];
      if (props.type === "build") {
           richText[0].value = value;
           props.onChangebuild(richText);
      } else {
-          props.onChange(value);
+          if(props.type !== 'text'){
+               props.onChange(value);
+          }
      }
 
 
      return (
           <div id="editor1">
                <CKEditor editor={ClassicEditor}
+                    data={value}
+                    disabled={props.type === 'text' ? true : false}
                     onChange={(event, editor) => {
                          const data = editor.getData();
                          setValue(data);
