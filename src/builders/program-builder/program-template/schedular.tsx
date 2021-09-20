@@ -8,6 +8,7 @@ import FloatingButton from './FloatingButtons';
 import TimeField from '../../../components/customWidgets/timeField';
 import TextEditor from '../../../components/customWidgets/textEditor';
 import CreateoreditWorkout from '../workout/createoredit-workout';
+import DaysInput from './daysInput';
 
 const Schedular = (props: any) => {
 
@@ -212,11 +213,17 @@ const Schedular = (props: any) => {
         return timeString.toString();
     }
 
+    var duplicatedDay: any;
+    function onChange(e: any){
+        // console.log(e);
+        duplicatedDay = e;
+    }
+
     function handleDuplicate(e: any, changedTime: any){
         let values = [...currentProgram];
         let newEvent: any = {};
         newEvent.name = e.title;
-        newEvent.day = e.day;
+        newEvent.day = (duplicatedDay === undefined ? e.day : parseInt(duplicatedDay.substr(13,1)));
         newEvent.startTime = changedTime.startChange;
         newEvent.endTime = changedTime.endChange;
         newEvent.type = e.type;
@@ -383,9 +390,9 @@ const Schedular = (props: any) => {
                             </Col>
                             <Col lg={3}>
                             <InputGroup className="pt-2">
-                                        <FormControl
-                                            disabled
-                                            value={d.restTime ? d.restTime : 'N/A'}
+                                <FormControl
+                                    disabled
+                                    value={d.restTime ? d.restTime : 'N/A'}
                                 />
                                 </InputGroup></Col>
                             </>}
@@ -400,13 +407,13 @@ const Schedular = (props: any) => {
                 </Row>
                 <Row>
                     <p>{d.type !== 'url' ? null : <Col >
-                            <InputGroup>
-                                        <FormControl
-                                            disabled
-                                            value={d.value}
-                                />
-                                </InputGroup></Col>
-                            }
+                        <InputGroup>
+                                    <FormControl
+                                        disabled
+                                        value={d.value}
+                            />
+                            </InputGroup></Col>
+                        }
                     </p>
                 </Row>
             </>
@@ -586,6 +593,7 @@ const Schedular = (props: any) => {
                                                     )
                                                 })}</h5></Col>}
                                             </Row>
+                                            <hr style={{ marginTop: '0px', marginBottom: '20px', borderTop: '2px solid grey', display: `${val.mainmovement === null ? 'none' : 'block'}` }}></hr>
                                             <Row>
                                                 {val.mainmovement === null ? '' : <Col className="pt-2"><h5>Mainmovement {val.mainmovement.map((d) => {
                                                     return (
@@ -593,6 +601,7 @@ const Schedular = (props: any) => {
                                                     )
                                                 })}</h5></Col>}
                                             </Row>
+                                            <hr style={{ marginTop: '0px', marginBottom: '20px', borderTop: '2px solid grey', display: `${val.cooldown === null ? 'none' : 'block'}` }}></hr>
                                             <Row>
                                                 {val.cooldown === null ? '' : <Col className="pt-2"><h5>Cooldown {val.cooldown.map((d) => {
                                                     return (
@@ -655,7 +664,7 @@ const Schedular = (props: any) => {
                                                     {val.equipment_lists.map((d) => {
                                                         return (
                                                             <>
-                                                                <Badge pill variant="secondary">
+                                                                <Badge className="p-2" pill variant="secondary">
                                                                     {d.name}
                                                                 </Badge>{' '}
                                                             </>
@@ -671,7 +680,7 @@ const Schedular = (props: any) => {
                                                     {val.muscle_groups.map((d) => {
                                                         return (
                                                             <>
-                                                                <Badge pill variant="secondary">
+                                                                <Badge className="p-2" pill variant="secondary">
                                                                     {d.name}
                                                                 </Badge>{' '}
                                                             </>
@@ -720,7 +729,7 @@ const Schedular = (props: any) => {
                                 <h3 className="text-capitalize">{event.title}</h3>
                             </Col>
                             <Col lg={1}>
-                                <i className="fas fa-times fa-lg" onClick={(e) => { handleClose(); setData([]) }} style={{ cursor: 'pointer' }}></i>
+                                <i className="fas fa-times fa-lg" onClick={(e) => { setDuplicate(false); setData([]) }} style={{ cursor: 'pointer' }}></i>
                             </Col>
                         </Row>
                         <hr style={{ marginTop: '0px', marginBottom: '20px', borderTop: '2px solid grey' }}></hr>
@@ -737,7 +746,7 @@ const Schedular = (props: any) => {
                                     <h6>Day: </h6>
                                 </Col>
                                 <Col lg={4}>
-                                    <FormControl value={`Day-${event.day}`} disabled />
+                                    <DaysInput val={event.day} type="transfer" onChange={onChange} id="duplicateWorkout"/>
                                 </Col>
                             </Row>
                             <Row className="pt-3 align-items-center">
