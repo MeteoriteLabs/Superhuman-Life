@@ -61,6 +61,13 @@ function CreateEditMessage(props: any, ref: any) {
         None
     }
 
+    function handleTimeFormat(time: string) {
+        let timeArray = time.split(':');
+        let hours = timeArray[0];
+        let minutes = timeArray[1];
+        let timeString = (parseInt(hours) < 10 ? "0" + hours : hours) + ':' + (parseInt(minutes) === 0 ? "0" + minutes : minutes);
+        return timeString.toString();
+    }
 
     function UpdateProgram(frm: any) {
         var existingEvents = (props.events === null ? [] : [...props.events]);
@@ -84,11 +91,31 @@ function CreateEditMessage(props: any, ref: any) {
                 });
             }
             for(var j=0 ;j<daysArray.length;j++){
-                existingEvents.push(daysArray[j]);
+                if (existingEvents.length === 0) {
+                    existingEvents.push(daysArray[j]);
+                } else {
+                    var timeStart: any = new Date("01/01/2007 " + handleTimeFormat(frm.startTime));
+                    var timeEnd: any = new Date("01/01/2007 " + handleTimeFormat(frm.endTime));
+                    var diff1 = timeEnd - timeStart;
+                    for (var i = 0; i <= existingEvents.length - 1; i++) {
+                        console.log(existingEvents);
+                        var startTimeHour: any = new Date("01/01/2007 " + handleTimeFormat(existingEvents[i].startTime));
+                        var endTimeHour: any = new Date("01/01/2007 " + handleTimeFormat(existingEvents[i].endTime));
+                        var diff2 = endTimeHour - startTimeHour;
+                        console.log(diff1, diff2);
+    
+                        if (diff2 < diff1) {
+                            existingEvents.splice(i, 0, daysArray[j]);
+                            break;
+                        }
+                        if (i === existingEvents.length - 1) {
+                            existingEvents.push(daysArray[j]);
+                            break;
+                        }
+                    }
+                }
             }
         }
-        // console.log(existingEvents);
-        // console.log(frm);
         updateProgram({ variables: {
             programid: program_id,
             events: existingEvents

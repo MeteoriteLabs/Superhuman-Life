@@ -53,7 +53,7 @@ const DaysInput = (props: any) => {
                <Typeahead
                id="basic-typeahead-multiple"
                labelKey="day"
-               defaultSelected={props.val ? [{"day": `Day-${props.val}`}] : null}
+               defaultSelected={props.val ? [{"day": `Day-${props.val}`}] : ""}
                onChange={OnChange}
                options={days}
                placeholder={props.id === 'newWorkout' || 'duplicateWorkout' ? 'Choose a day...' : 'Choose days...'}

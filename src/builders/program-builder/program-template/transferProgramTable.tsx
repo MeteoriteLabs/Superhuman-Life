@@ -57,6 +57,7 @@ const TransferProgramTable = (props: any) => {
                     </thead>
                     <tbody>
                               {props.events.map((val: any, index) => {
+                                   console.log(val);
                                    return (
                                         <tr>
                                         <td><Form.Control value={val.name} disabled></Form.Control></td>

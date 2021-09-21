@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Modal, Button, Row, Col, Tab, Tabs, InputGroup, FormControl, Badge } from 'react-bootstrap';
+import { Modal, Button, Row, Col, Tab, Tabs, InputGroup, FormControl, Badge, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import './styles.css';
 import { GET_SCHEDULEREVENTS, PROGRAM_EVENTS, UPDATE_FITNESSPROGRAMS, FETCH_EVENT } from './queries';
 import { useQuery, useMutation } from "@apollo/client";
@@ -302,7 +302,7 @@ const Schedular = (props: any) => {
     var changedHour;
     var changedEvent;
     var changedMin;
-    const handleClose = () => { setData([]); setShowModal(false) };
+    const handleClose = () => { setData([]); setShowModal(false); };
     const handleShow = () => {setShowModal(true)};
     const [data, setData] = useState<any[]>([]);
     const [startChange, setStartChange] = useState("");
@@ -486,7 +486,7 @@ const Schedular = (props: any) => {
                                                             val.index = index;
                                                             return (
                                                                 <div
-                                                                    onClick={() => { setEvent(val); }}
+                                                                    onClick={() => { setEvent(val)}}
                                                                     id="dragMe"
                                                                     className="schedular-content draggable"
                                                                     draggable={val.type === 'restday' ? false : true}
@@ -535,19 +535,59 @@ const Schedular = (props: any) => {
                             </Col>
                             <Col>
                                 <div>
+                                <OverlayTrigger
+                                    key='left'
+                                    placement='left'
+                                    overlay={
+                                        <Tooltip id={`left`}>
+                                             <strong>Edit</strong>.
+                                        </Tooltip>
+                                    }
+                                    >
                                     <i className="fas fa-pencil-alt fa-lg" onClick={(e) => {setEdit(!edit)}} style={{ cursor: 'pointer', color: 'dodgerblue' }}/>
+                                </OverlayTrigger>
                                 </div>
                             </Col>
                             <Col>
-                                <i className="fas fa-copy fa-lg" onClick={(e) => { handleClose(); setDuplicate(true); }} style={{ cursor: 'pointer', color: '#696969' }} />
+                                <OverlayTrigger
+                                    key='left'
+                                    placement='left'
+                                    overlay={
+                                        <Tooltip id={`left`}>
+                                             <strong>Duplicate</strong>.
+                                        </Tooltip>
+                                    }
+                                    >
+                                    <i className="fas fa-copy fa-lg" onClick={(e) => { handleClose(); setDuplicate(true); }} style={{ cursor: 'pointer', color: '#696969' }} />
+                                </OverlayTrigger>
                             </Col>
                             <Col>
                                 <div>
+                                <OverlayTrigger
+                                    key='left'
+                                    placement='left'
+                                    overlay={
+                                        <Tooltip id={`left`}>
+                                             <strong>Delete</strong>.
+                                        </Tooltip>
+                                    }
+                                    >
                                     <i className="fas fa-trash-alt fa-lg" onClick={(e) => { setDel(true); }} style={{ cursor: 'pointer', color: 'red' }}></i>
+                                </OverlayTrigger>
                                 </div>
                             </Col>
                             <Col>
-                                <i className="fas fa-times fa-lg" onClick={(e) => { handleClose(); setData([]) }} style={{ cursor: 'pointer' }}></i>
+                                <OverlayTrigger
+                                    key='left'
+                                    placement='left'
+                                    overlay={
+                                        <Tooltip id={`left`}>
+                                             <strong>Close</strong>.
+                                        </Tooltip>
+                                    }
+                                    >
+                                    <i className="fas fa-times fa-lg" onClick={(e) => { handleClose(); setData([]) }} style={{ cursor: 'pointer' }}></i>
+                                </OverlayTrigger>
                             </Col>
                         </Row>
                         <hr style={{ marginTop: '0px', marginBottom: '20px', borderTop: '2px solid grey' }}></hr>
@@ -580,8 +620,9 @@ const Schedular = (props: any) => {
                         {(event.type === "workout") && <Tabs defaultActiveKey="agenda" transition={false} id="noanim-tab-example" className="pt-4">
                             <Tab eventKey="agenda" title="Agenda">
                                 <Row className="justify-content-end">
-                                    <Button className="mr-3 mt-2" variant="outline-secondary" size="sm" onClick={() => { handleClose(); setData([]); setEvent([]); createEditWorkoutComponent.current.TriggerForm({ type: 'create' }); }}><i className="fas fa-plus-circle"></i>{" "}Create Workout</Button>
-                                    <Button className="mr-3 mt-2" variant="outline-primary" size="sm" onClick={() => { handleClose(); setData([]); setEvent([]); createEditWorkoutComponent.current.TriggerForm({ type: 'edit' }); }}><i className="fas fa-pencil-alt"></i>{" "}Edit</Button>
+                                    <Button className="mr-3 mt-2" variant="secondary" size="sm" onClick={() => { handleClose(); setData([]); setEvent([]); createEditWorkoutComponent.current.TriggerForm({ type: 'create' }); }}><i className="fas fa-plus-circle"></i>{" "}Create Workout</Button>
+                                    <Button className="mr-3 mt-2" variant="primary" size="sm" onClick={() => { handleClose(); setData([]); setEvent([]); createEditWorkoutComponent.current.TriggerForm({ type: 'edit' }); }}><i className="fas fa-pencil-alt"></i>{" "}Edit</Button>
+                                    <Button className="mr-3 mt-2" variant="warning" size="sm" onClick={() => {handleClose(); setData([]); setEvent([])}}><i className="fas fa-reply"></i>{" "}Replace</Button>
                                 </Row>
                                 {data.map(val => {
                                     return (
@@ -695,7 +736,7 @@ const Schedular = (props: any) => {
                         </Tabs>}
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button variant="danger" onClick={handleClose}>
+                        <Button variant="danger" onClick={() => {setData([]);handleClose();}}>
                             Close
                         </Button>
                         <Button variant="success" onClick={() => {

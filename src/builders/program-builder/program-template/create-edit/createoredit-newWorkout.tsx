@@ -62,6 +62,14 @@ function CreateEditMessage(props: any, ref: any) {
         None
     }
 
+    function handleTimeFormat(time: string) {
+        let timeArray = time.split(':');
+        let hours = timeArray[0];
+        let minutes = timeArray[1];
+        let timeString = (parseInt(hours) < 10 ? "0" + hours : hours) + ':' + (parseInt(minutes) === 0 ? "0" + minutes : minutes);
+        return timeString.toString();
+    }
+
     function updateSchedulerEvents(frm: any, workout_id: any) {
         var existingEvents = (props.events === null ? [] : [...props.events]);
         if(frm.day){
@@ -73,7 +81,29 @@ function CreateEditMessage(props: any, ref: any) {
             eventJson.startTime = frm.startTime;
             eventJson.endTime = frm.endTime;
             eventJson.day = parseInt(frm.day[0].day.substr(4));
-            existingEvents.push(eventJson);
+            if (existingEvents.length === 0) {
+                existingEvents.push(eventJson);
+            } else {
+                var timeStart: any = new Date("01/01/2007 " + handleTimeFormat(frm.startTime));
+                var timeEnd: any = new Date("01/01/2007 " + handleTimeFormat(frm.endTime));
+                var diff1 = timeEnd - timeStart;
+                for (var i = 0; i <= existingEvents.length - 1; i++) {
+                    console.log(existingEvents);
+                    var startTimeHour: any = new Date("01/01/2007 " + handleTimeFormat(existingEvents[i].startTime));
+                    var endTimeHour: any = new Date("01/01/2007 " + handleTimeFormat(existingEvents[i].endTime));
+                    var diff2 = endTimeHour - startTimeHour;
+                    console.log(diff1, diff2);
+
+                    if (diff2 < diff1) {
+                        existingEvents.splice(i, 0, eventJson);
+                        break;
+                    }
+                    if (i === existingEvents.length - 1) {
+                        existingEvents.push(eventJson);
+                        break;
+                    }
+                }
+            }
         }
         updateProgram({ variables: {
             programid: program_id,

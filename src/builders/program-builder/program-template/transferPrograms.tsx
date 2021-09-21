@@ -54,6 +54,7 @@ const TransferPrograms = (props: any) => {
      }
 
      function loadData(data: any) {
+          console.log(data);
           setExistingEvents(
                [...data.fitnessprograms].map((detail) => {
                     return {
