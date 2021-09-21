@@ -35,7 +35,11 @@ function ClientListingPage() {
                {
                     accessor: "status",
                     Header: "Status",
-                    Cell: (v: any) => <Badge variant={v.value === "Assigned" ? "success" : "danger"}>{v.value}</Badge>,
+                    Cell: (v: any) => (
+                         <Badge className="p-2" variant={v.value === "Assigned" ? "success" : "danger"}>
+                              {v.value}
+                         </Badge>
+                    ),
                },
                {
                     id: "edit",

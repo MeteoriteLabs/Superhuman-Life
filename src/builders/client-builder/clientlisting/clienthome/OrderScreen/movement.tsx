@@ -1,23 +1,37 @@
 import ActionButton from "../../../../../components/actionbutton/index";
-import { useMemo } from "react";
+import { useMemo, useContext, useState, useRef } from "react";
 import { Badge } from "react-bootstrap";
+import { useQuery } from "@apollo/client";
 import Table from "../../../../../components/table";
 import { Row, Button } from "react-bootstrap";
+import AuthContext from "../../../../../context/auth-context";
+import { GET_BOOKINGS } from "./queries";
+import CreateSuggestion from "./addSuggestion";
 
 function Movement() {
-     //  function getDate(time: any) {
-     //       let dateObj = new Date(time);
-     //       let month = dateObj.getMonth() + 1;
-     //       let year = dateObj.getFullYear();
-     //       let date = dateObj.getDate();
+     const CreateSuggestionComponent = useRef<any>(null);
+     function getDate(time: any) {
+          let dateObj = new Date(time);
+          let month = dateObj.getMonth() + 1;
+          let year = dateObj.getFullYear();
+          let date = dateObj.getDate();
 
-     //       return `${date}/${month}/${year}`;
-     //  }
-     //  function getRenewalDate(time: any, duration: any) {
-     //       var date = new Date(time);
-     //       date.setDate(date.getDate() + duration);
-     //       return getDate(date);
-     //  }
+          return `${date}/${month}/${year}`;
+     }
+     function getRenewalDate(time: any, duration: any) {
+          var date = new Date(time);
+          date.setDate(date.getDate() + duration);
+          return getDate(date);
+     }
+     function compareDates(time: any) {
+          var date = new Date(time);
+          var currentdate = new Date();
+          if (date.getTime() < currentdate.getTime()) {
+               return true;
+          }
+          return false;
+     }
+     const auth = useContext(AuthContext);
 
      const columns = useMemo<any>(
           () => [
@@ -59,33 +73,95 @@ function Movement() {
           []
      );
 
-     const data = [
-          {
-               type: "/assets/avatar-1.jpg",
-               packagename: "Package Name",
-               details: "",
-               duration: "4 months",
-               effectivedate: "25/06/20",
-               enddate: "05/07/20",
-               cost: "Rs 4000",
-               payment: "Paid",
-          },
-     ];
+     const [dataActivetable, setActiveDataTable] = useState<{}[]>([]);
+     const [dataHistorytable, setHistoryDataTable] = useState<{}[]>([]);
+
+     function FetchData(_variables: {} = { id: auth.userid }) {
+          useQuery(GET_BOOKINGS, { variables: _variables, onCompleted: loadData });
+     }
+
+     function loadData(data: any) {
+          setHistoryDataTable(
+               [...data.clientBookings].flatMap((Detail) =>
+                    compareDates(getRenewalDate(Detail.effective_date, Detail.package_duration))
+                         ? {
+                                type: "/assets/avatar-1.jpg",
+                                packagename: Detail.program_managers[0]
+                                     ? Detail.program_managers[0].fitnesspackages[0].packagename
+                                     : Detail.fitnesspackages[0].packagename,
+                                details: "",
+                                duration: Detail.package_duration,
+                                effectivedate: getDate(Date.parse(Detail.effective_date)),
+                                enddate: getRenewalDate(Detail.effective_date, Detail.package_duration),
+                                cost: "",
+                                payment: Detail.booking_status ? "Paid" : "Pending",
+                           }
+                         : []
+               )
+          );
+          setActiveDataTable(
+               [...data.clientBookings].flatMap((Detail) =>
+                    !compareDates(getRenewalDate(Detail.effective_date, Detail.package_duration))
+                         ? {
+                                type: "/assets/avatar-1.jpg",
+                                packagename: Detail.program_managers[0]
+                                     ? Detail.program_managers[0].fitnesspackages[0].packagename
+                                     : Detail.fitnesspackages[0].packagename,
+                                details: "",
+                                duration: Detail.package_duration,
+                                effectivedate: getDate(Date.parse(Detail.effective_date)),
+                                enddate: getRenewalDate(Detail.effective_date, Detail.package_duration),
+                                cost: "",
+                                payment: Detail.booking_status ? "Paid" : "Pending",
+                           }
+                         : []
+               )
+          );
+     }
+
+     FetchData({ id: auth.userid });
 
      return (
           <div>
                <Row className="d-flex flex-row-reverse mr-4 ml-1">
                     <div className="m-1">
                          <Button variant="btn btn-light" size="sm" onClick={() => {}}>
-                              Suggest Package
+                              <i className="fas fa-plus-circle"></i> PT
                          </Button>
-                         {/* <CreateHealth ref={CreateHealthComponent}></CreateHealth> */}
+                         {/* <CreateMovement ref={CreateMovementComponent}></CreateMovement> */}
                     </div>
                     <div className="m-1">
                          <Button variant="btn btn-light" size="sm" onClick={() => {}}>
-                              <i className="fas fa-plus-circle"></i> Create Package
+                              <i className="fas fa-plus-circle"></i> Classic
                          </Button>
                          {/* <CreateMovement ref={CreateMovementComponent}></CreateMovement> */}
+                    </div>
+                    <div className="m-1">
+                         <Button variant="btn btn-light" size="sm" onClick={() => {}}>
+                              <i className="fas fa-plus-circle"></i> Custom
+                         </Button>
+                         {/* <CreateMovement ref={CreateMovementComponent}></CreateMovement> */}
+                    </div>
+                    <div className="m-1">
+                         <Button variant="btn btn-light" size="sm" onClick={() => {}}>
+                              <i className="fas fa-plus-circle"></i> Group
+                         </Button>
+                         {/* <CreateMovement ref={CreateMovementComponent}></CreateMovement> */}
+                    </div>
+                    <div className="m-1">
+                         <Button
+                              variant="btn btn-light"
+                              size="sm"
+                              onClick={() => {
+                                   CreateSuggestionComponent.current.TriggerForm({
+                                        id: null,
+                                        type: "create",
+                                   });
+                              }}
+                         >
+                              Suggest Package
+                         </Button>
+                         <CreateSuggestion ref={CreateSuggestionComponent}></CreateSuggestion>
                     </div>
                </Row>
                <div className="mt-4">
@@ -94,13 +170,13 @@ function Movement() {
                               <h5 className="text-white font-weight-bold ml-3 p-1 ">Fitness</h5>
                          </Row>
                     </div>
-                    <Table columns={columns} data={data} />
+                    <Table columns={columns} data={dataActivetable} />
                </div>
                <div>
                     <div className="border rounded border-dark bg-secondary pt-1">
                          <h5 className="text-white font-weight-bold ml-3 p-1 ">History</h5>
                     </div>
-                    <Table columns={columns} data={data} />
+                    <Table columns={columns} data={dataHistorytable} />
                </div>
           </div>
      );

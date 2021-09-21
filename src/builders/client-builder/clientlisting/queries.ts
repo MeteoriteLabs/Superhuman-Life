@@ -29,12 +29,34 @@ export const GET_CLIENTS = gql`
                     users_permissions_user {
                          id
                     }
+                    fitness_package_type {
+                         type
+                    }
+                    ptonline
+                    ptoffline
+                    grouponline
+                    groupoffline
+                    recordedclasses
+                    fitnesspackagepricing {
+                         packagepricing
+                    }
                }
                program_managers {
                     id
                     fitnesspackages {
                          id
                          packagename
+                         fitness_package_type {
+                              type
+                         }
+                         ptonline
+                         ptoffline
+                         grouponline
+                         groupoffline
+                         recordedclasses
+                         fitnesspackagepricing {
+                              packagepricing
+                         }
                     }
                     fitnessprograms {
                          id
@@ -62,6 +84,7 @@ export const GET_CLIENT_DATA = gql`
                          city
                     }
                }
+
                fitnesspackages {
                     packagename
                     Status
@@ -71,12 +94,34 @@ export const GET_CLIENT_DATA = gql`
                     users_permissions_user {
                          id
                     }
+                    fitness_package_type {
+                         type
+                    }
+                    ptonline
+                    ptoffline
+                    grouponline
+                    groupoffline
+                    recordedclasses
+                    fitnesspackagepricing {
+                         packagepricing
+                    }
                }
                program_managers {
                     id
                     fitnesspackages {
                          id
                          packagename
+                         fitness_package_type {
+                              type
+                         }
+                         ptonline
+                         ptoffline
+                         grouponline
+                         groupoffline
+                         recordedclasses
+                         fitnesspackagepricing {
+                              packagepricing
+                         }
                     }
                     fitnessprograms {
                          id
