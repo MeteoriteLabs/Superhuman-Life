@@ -1,8 +1,11 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useContext } from "react";
 import { InputGroup, FormControl, Container } from "react-bootstrap";
 import { gql, useQuery } from "@apollo/client";
+import AuthContext from "../../../../context/auth-context";
 
 const PackageSearch = (props: any) => {
+     //const last = window.location.pathname.split("/").pop();
+     const auth = useContext(AuthContext);
      const [packageLists, setPackageLists] = useState<any[]>([]);
      const [searchInput, setSearchInput] = useState(null);
      const [selected, setSelected] = useState<any[]>([]);
@@ -10,15 +13,18 @@ const PackageSearch = (props: any) => {
      let skipval: Boolean = true;
 
      const GET_PACKAGELIST = gql`
-          query packageListQuery($filter: String!) {
-               fitnesspackages(sort: "updatedAt", where: { packagename_contains: $filter }) {
+          query packageListQuery($filter: String!, $id: ID) {
+               fitnesspackages(
+                    sort: "updatedAt"
+                    where: { packagename_contains: $filter, users_permissions_user: { id: $id } }
+               ) {
                     id
                     packagename
                }
           }
      `;
 
-     function FetchPackageList(_variable: {} = { filter: " " }) {
+     function FetchPackageList(_variable: {} = { filter: " ", id: auth.userid }) {
           useQuery(GET_PACKAGELIST, { variables: _variable, onCompleted: loadPackageList, skip: !searchInput });
      }
 

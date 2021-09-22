@@ -61,3 +61,15 @@ export const GET_BOOKINGS = gql`
           }
      }
 `;
+
+export const ADD_SUGGESTION = gql`
+     mutation createSuggestion($id: ID, $fitnesspackage: ID) {
+          createUserPackageSuggestion(
+               input: { data: { users_permissions_user: $id, fitnesspackage: $fitnesspackage } }
+          ) {
+               userPackageSuggestion {
+                    id
+               }
+          }
+     }
+`;

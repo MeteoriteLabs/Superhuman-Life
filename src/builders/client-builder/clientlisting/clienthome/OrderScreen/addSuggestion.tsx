@@ -1,7 +1,7 @@
 import React, { useImperativeHandle, useState } from "react";
-//import { useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import ModalView from "../../../../../components/modal";
-//import {  } from "./queries";
+import { ADD_SUGGESTION } from "./queries";
 //import AuthContext from "../../../../../context/auth-context";
 import { Subject } from "rxjs";
 import { schema, widgets } from "./schema";
@@ -12,18 +12,18 @@ interface Operation {
 }
 
 function CreateSuggestion(props: any, ref: any) {
-     //  const last = window.location.pathname.split("/").pop();
+     const last = window.location.pathname.split("/").pop();
      //  const auth = useContext(AuthContext);
-     const GoalSchema: { [name: string]: any } = require("./suggest.json");
+     const Schema: { [name: string]: any } = require("./suggest.json");
      //const uiSchema: {} = require("./schema.tsx");
      //const [messageDetails, setMessageDetails] = useState<any>({});
      const [operation, setOperation] = useState<Operation>({} as Operation);
      //console.log(operation.id);
-     //  const [createGoal] = useMutation(ADD_GOAL, {
-     //       onCompleted: (r: any) => {
-     //            modalTrigger.next(false);
-     //       },
-     //  });
+     const [createSuggestion] = useMutation(ADD_SUGGESTION, {
+          onCompleted: (r: any) => {
+               modalTrigger.next(false);
+          },
+     });
 
      const modalTrigger = new Subject();
 
@@ -39,15 +39,12 @@ function CreateSuggestion(props: any, ref: any) {
 
      function CreateSuggestion(frm: any) {
           //console.log(frm);
-          //   createGoal({
-          //        variables: {
-          //             goals: frm.packagesearch.split(","),
-          //             assignedBy: auth.userid,
-          //             start: frm.startdate,
-          //             end: frm.enddate,
-          //             users_permissions_user: last,
-          //        },
-          //   });
+          createSuggestion({
+               variables: {
+                    fitnesspackage: frm.packagesearch.split(","),
+                    users_permissions_user: last,
+               },
+          });
      }
 
      function OnSubmit(frm: any) {
@@ -65,7 +62,7 @@ function CreateSuggestion(props: any, ref: any) {
                          name="Suggest Package"
                          isStepper={false}
                          formUISchema={schema}
-                         formSchema={GoalSchema}
+                         formSchema={Schema}
                          //showing={operation.modal_status}
                          formSubmit={(frm: any) => {
                               OnSubmit(frm);

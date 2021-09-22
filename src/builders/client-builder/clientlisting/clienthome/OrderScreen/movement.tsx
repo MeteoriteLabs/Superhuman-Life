@@ -38,13 +38,31 @@ function Movement() {
                { accessor: "packagename", Header: "Package Name" },
                {
                     Header: "Type",
-                    accessor: "type",
-                    Cell: (v: any) => <img src={v.value} height="42" className="rounded-circle" alt="avatar" />,
+                    accessor: "packagetype",
+                    Cell: (row: any) => {
+                         return (
+                              <>
+                                   {row.value === "Personal Training" ? <img src="./assets/PTtype.svg" alt="" /> : ""}
+                                   {row.value === "Group Class" ? <img src="./assets/Grouptype.svg" alt="" /> : ""}
+                                   {row.value === "Custom Fitness" ? <img src="./assets/Customtype.svg" alt="" /> : ""}
+                                   {row.value === "Classic Class" ? <img src="./assets/Classictype.svg" alt="" /> : ""}
+                              </>
+                         );
+                    },
                },
                {
                     Header: "Details",
                     accessor: "details",
-                    Cell: (v: any) => <img src={v.value} height="42" className="rounded-circle" alt="avatar" />,
+                    Cell: (row: any) => {
+                         return (
+                              <>
+                                   {row.value === "Personal Training" ? <img src="./assets/PTtype.svg" alt="PT" /> : ""}
+                                   {row.value === "Group Class" ? <img src="./assets/Grouptype.svg" alt="group" /> : ""}
+                                   {row.value === "Custom Fitness" ? <img src="./assets/Customtype.svg" alt="" /> : ""}
+                                   {row.value === "Classic Class" ? <img src="./assets/Classictype.svg" alt="" /> : ""}
+                              </>
+                         );
+                    },
                },
                { accessor: "duration", Header: "Duration" },
 
@@ -54,10 +72,28 @@ function Movement() {
                { accessor: "cost", Header: "Cost" },
 
                {
-                    accessor: "payment",
-                    Header: "Payment",
+                    accessor: "bookingstatus",
+                    Header: "Booking Status",
                     Cell: (v: any) => (
-                         <Badge className="p-2" variant={v.value === "Paid" ? "success" : "danger"}>
+                         <Badge
+                              className="p-2"
+                              variant={
+                                   v.value === "accepted"
+                                        ? "success"
+                                        : "danger" || v.value === "pending"
+                                        ? "warning"
+                                        : "danger"
+                              }
+                         >
+                              {v.value}
+                         </Badge>
+                    ),
+               },
+               {
+                    accessor: "payment",
+                    Header: "Payment Status",
+                    Cell: (v: any) => (
+                         <Badge className="p-2" variant="success">
                               {v.value}
                          </Badge>
                     ),
@@ -85,25 +121,34 @@ function Movement() {
                [...data.clientBookings].flatMap((Detail) =>
                     compareDates(getRenewalDate(Detail.effective_date, Detail.package_duration))
                          ? {
-                                type: "/assets/avatar-1.jpg",
+                                packagetype: Detail.fitnesspackages[0].fitness_package_type.type,
                                 packagename: Detail.program_managers[0]
                                      ? Detail.program_managers[0].fitnesspackages[0].packagename
                                      : Detail.fitnesspackages[0].packagename,
-                                details: "",
+                                details:
+                                     Detail.fitnesspackages[0].fitness_package_type.type === "Personal Training"
+                                          ? Detail.fitnesspackages[0].ptonline || Detail.fitnesspackages[0].ptoffline
+                                          : "",
                                 duration: Detail.package_duration,
                                 effectivedate: getDate(Date.parse(Detail.effective_date)),
                                 enddate: getRenewalDate(Detail.effective_date, Detail.package_duration),
-                                cost: "",
-                                payment: Detail.booking_status ? "Paid" : "Pending",
+                                cost: Detail.fitnesspackages[0].fitnesspackagepricing[0].packagepricing[0].mrp,
+                                bookingstatus: Detail.booking_status,
+                                payment: "",
                            }
                          : []
                )
           );
+          // Detail.fitnesspackages[0].ptonline ||
+          //                            Detail.fitnesspackages[0].ptoffline ||
+          //                            Detail.fitnesspackages[0].grouponline ||
+          //                            Detail.fitnesspackages[0].groupoffline ||
+          //                            Detail.fitnesspackages[0].recordedclasses,
           setActiveDataTable(
                [...data.clientBookings].flatMap((Detail) =>
                     !compareDates(getRenewalDate(Detail.effective_date, Detail.package_duration))
                          ? {
-                                type: "/assets/avatar-1.jpg",
+                                packagetype: Detail.fitnesspackages[0].fitness_package_type.type,
                                 packagename: Detail.program_managers[0]
                                      ? Detail.program_managers[0].fitnesspackages[0].packagename
                                      : Detail.fitnesspackages[0].packagename,
@@ -111,8 +156,9 @@ function Movement() {
                                 duration: Detail.package_duration,
                                 effectivedate: getDate(Date.parse(Detail.effective_date)),
                                 enddate: getRenewalDate(Detail.effective_date, Detail.package_duration),
-                                cost: "",
-                                payment: Detail.booking_status ? "Paid" : "Pending",
+                                cost: Detail.fitnesspackages[0].fitnesspackagepricing[0].packagepricing[0].mrp,
+                                bookingstatus: Detail.booking_status,
+                                payment: "",
                            }
                          : []
                )

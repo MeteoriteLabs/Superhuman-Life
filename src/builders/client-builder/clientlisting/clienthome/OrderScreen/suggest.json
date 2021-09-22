@@ -1,7 +1,7 @@
 {
      "1": {
           "type": "object",
-          "required": ["startdate", "enddate"],
+          "required": ["packagesearch"],
           "properties": {
                "packagesearch": {
                     "type": "string"
