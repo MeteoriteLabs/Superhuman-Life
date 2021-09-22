@@ -39,12 +39,15 @@ function CreateSuggestion(props: any, ref: any) {
 
      function CreateSuggestion(frm: any) {
           //console.log(frm);
-          createSuggestion({
-               variables: {
-                    fitnesspackage: frm.packagesearch.split(","),
-                    users_permissions_user: last,
-               },
-          });
+          let searchid: any = frm.packagesearch.split(",");
+          for (let i = 0; i < searchid.length; i++) {
+               createSuggestion({
+                    variables: {
+                         fitnesspackage: searchid[i],
+                         id: last,
+                    },
+               });
+          }
      }
 
      function OnSubmit(frm: any) {
