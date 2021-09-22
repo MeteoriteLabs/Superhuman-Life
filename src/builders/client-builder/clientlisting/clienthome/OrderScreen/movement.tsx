@@ -9,6 +9,7 @@ import { GET_BOOKINGS } from "./queries";
 import CreateSuggestion from "./addSuggestion";
 
 function Movement() {
+     const last = window.location.pathname.split("/").pop();
      const CreateSuggestionComponent = useRef<any>(null);
      function getDate(time: any) {
           let dateObj = new Date(time);
@@ -42,10 +43,18 @@ function Movement() {
                     Cell: (row: any) => {
                          return (
                               <>
-                                   {row.value === "Personal Training" ? <img src="./assets/PTtype.svg" alt="" /> : ""}
-                                   {row.value === "Group Class" ? <img src="./assets/Grouptype.svg" alt="" /> : ""}
-                                   {row.value === "Custom Fitness" ? <img src="./assets/Customtype.svg" alt="" /> : ""}
-                                   {row.value === "Classic Class" ? <img src="./assets/Classictype.svg" alt="" /> : ""}
+                                   {row.value === "Personal Training" ? <img src="/assets/PTtype.svg" alt="PT" /> : ""}
+                                   {row.value === "Group Class" ? <img src="/assets/Grouptype.svg" alt="Group" /> : ""}
+                                   {row.value === "Custom Fitness" ? (
+                                        <img src="/assets/Customtype.svg" alt="Custom" />
+                                   ) : (
+                                        ""
+                                   )}
+                                   {row.value === "Classic Class" ? (
+                                        <img src="/assets/Classictype.svg" alt="Classic" />
+                                   ) : (
+                                        ""
+                                   )}
                               </>
                          );
                     },
@@ -56,10 +65,10 @@ function Movement() {
                     Cell: (row: any) => {
                          return (
                               <>
-                                   {row.value === "Personal Training" ? <img src="./assets/PTtype.svg" alt="PT" /> : ""}
-                                   {row.value === "Group Class" ? <img src="./assets/Grouptype.svg" alt="group" /> : ""}
-                                   {row.value === "Custom Fitness" ? <img src="./assets/Customtype.svg" alt="" /> : ""}
-                                   {row.value === "Classic Class" ? <img src="./assets/Classictype.svg" alt="" /> : ""}
+                                   {row.value === "Personal Training" ? <img src="/assets/PTtype.svg" alt="PT" /> : ""}
+                                   {row.value === "Group Class" ? <img src="/assets/Grouptype.svg" alt="group" /> : ""}
+                                   {row.value === "Custom Fitness" ? <img src="/assets/Customtype.svg" alt="" /> : ""}
+                                   {row.value === "Classic Class" ? <img src="/assets/Classictype.svg" alt="" /> : ""}
                               </>
                          );
                     },
@@ -74,20 +83,33 @@ function Movement() {
                {
                     accessor: "bookingstatus",
                     Header: "Booking Status",
-                    Cell: (v: any) => (
-                         <Badge
-                              className="p-2"
-                              variant={
-                                   v.value === "accepted"
-                                        ? "success"
-                                        : "danger" || v.value === "pending"
-                                        ? "warning"
-                                        : "danger"
-                              }
-                         >
-                              {v.value}
-                         </Badge>
-                    ),
+                    Cell: (row: any) => {
+                         return (
+                              <>
+                                   {row.value === "accepted" ? (
+                                        <Badge className="p-2" variant="success">
+                                             {row.value}
+                                        </Badge>
+                                   ) : (
+                                        ""
+                                   )}
+                                   {row.value === "rejected" ? (
+                                        <Badge className="p-2" variant="danger">
+                                             {row.value}
+                                        </Badge>
+                                   ) : (
+                                        ""
+                                   )}
+                                   {row.value === "pending" ? (
+                                        <Badge className="p-2" variant="warning">
+                                             {row.value}
+                                        </Badge>
+                                   ) : (
+                                        ""
+                                   )}
+                              </>
+                         );
+                    },
                },
                {
                     accessor: "payment",
@@ -112,7 +134,7 @@ function Movement() {
      const [dataActivetable, setActiveDataTable] = useState<{}[]>([]);
      const [dataHistorytable, setHistoryDataTable] = useState<{}[]>([]);
 
-     function FetchData(_variables: {} = { id: auth.userid }) {
+     function FetchData(_variables: {} = { id: auth.userid, clientid: last }) {
           useQuery(GET_BOOKINGS, { variables: _variables, onCompleted: loadData });
      }
 
@@ -165,7 +187,7 @@ function Movement() {
           );
      }
 
-     FetchData({ id: auth.userid });
+     FetchData({ id: auth.userid, clientid: last });
 
      return (
           <div>

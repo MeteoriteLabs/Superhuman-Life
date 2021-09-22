@@ -1,11 +1,12 @@
 import { gql } from "@apollo/client";
 export const GET_BOOKINGS = gql`
-     query clientBookings($id: ID!, $start: Int, $limit: Int) {
+     query clientBookings($id: ID!, $clientid: ID) {
           clientBookings(
-               where: { fitnesspackages: { users_permissions_user: { id: $id } } }
+               where: {
+                    fitnesspackages: { users_permissions_user: { id: $id } }
+                    users_permissions_user: { id: $clientid }
+               }
                sort: "booking_date:desc"
-               start: $start
-               limit: $limit
           ) {
                id
                users_permissions_user {

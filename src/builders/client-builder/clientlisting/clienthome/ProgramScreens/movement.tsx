@@ -7,7 +7,7 @@ import { GET_CLIENT_DATA } from "../../queries";
 import AuthContext from "../../../../../context/auth-context";
 
 function Movement() {
-     //const last = window.location.pathname.split("/").pop();
+     const last = window.location.pathname.split("/").pop();
      //console.log(last);
      const auth = useContext(AuthContext);
      function getDate(time: any) {
@@ -39,9 +39,32 @@ function Movement() {
                          {
                               Header: "Type",
                               accessor: "packagetype",
-                              Cell: (v: any) => (
-                                   <img src={v.value} height="42" className="rounded-circle" alt="avatar" />
-                              ),
+                              Cell: (row: any) => {
+                                   return (
+                                        <>
+                                             {row.value === "Personal Training" ? (
+                                                  <img src="/assets/PTtype.svg" alt="PT" />
+                                             ) : (
+                                                  ""
+                                             )}
+                                             {row.value === "Group Class" ? (
+                                                  <img src="/assets/Grouptype.svg" alt="Group" />
+                                             ) : (
+                                                  ""
+                                             )}
+                                             {row.value === "Custom Fitness" ? (
+                                                  <img src="/assets/Customtype.svg" alt="Custom" />
+                                             ) : (
+                                                  ""
+                                             )}
+                                             {row.value === "Classic Class" ? (
+                                                  <img src="/assets/Classictype.svg" alt="Classic" />
+                                             ) : (
+                                                  ""
+                                             )}
+                                        </>
+                                   );
+                              },
                          },
                          {
                               Header: "Name",
@@ -92,7 +115,7 @@ function Movement() {
      const [dataActivetable, setActiveDataTable] = useState<{}[]>([]);
      const [dataHistorytable, setHistoryDataTable] = useState<{}[]>([]);
 
-     function FetchData(_variables: {} = { id: auth.userid }) {
+     function FetchData(_variables: {} = { id: auth.userid, clientid: last }) {
           useQuery(GET_CLIENT_DATA, { variables: _variables, onCompleted: loadData });
      }
 
@@ -102,7 +125,7 @@ function Movement() {
                     compareDates(getRenewalDate(Detail.effective_date, Detail.package_duration))
                          ? {
                                 id: Detail.users_permissions_user.id,
-                                packagetype: "/assets/avatar-1.jpg",
+                                packagetype: Detail.fitnesspackages[0].fitness_package_type.type,
                                 packagename: Detail.program_managers[0]
                                      ? Detail.program_managers[0].fitnesspackages[0].packagename
                                      : Detail.fitnesspackages[0].packagename,
@@ -124,7 +147,7 @@ function Movement() {
                     !compareDates(getRenewalDate(Detail.effective_date, Detail.package_duration))
                          ? {
                                 id: Detail.fitnesspackages[0].users_permissions_user.id,
-                                packagetype: "/assets/avatar-1.jpg",
+                                packagetype: Detail.fitnesspackages[0].fitness_package_type.type,
                                 packagename: Detail.program_managers[0]
                                      ? Detail.program_managers[0].fitnesspackages[0].packagename
                                      : Detail.fitnesspackages[0].packagename,
@@ -143,7 +166,7 @@ function Movement() {
           );
      }
 
-     FetchData({ id: auth.userid });
+     FetchData({ id: auth.userid, clientid: last });
      return (
           <div>
                <div>

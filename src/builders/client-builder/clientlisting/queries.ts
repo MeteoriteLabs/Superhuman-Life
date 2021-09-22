@@ -68,8 +68,13 @@ export const GET_CLIENTS = gql`
 `;
 
 export const GET_CLIENT_DATA = gql`
-     query getclient($id: ID!) {
-          userPackages(where: { fitnesspackages: { users_permissions_user: { id: $id } } }) {
+     query getclient($id: ID!, $clientid: ID) {
+          userPackages(
+               where: {
+                    fitnesspackages: { users_permissions_user: { id: $id } }
+                    users_permissions_user: { id: $clientid }
+               }
+          ) {
                id
                effective_date
                package_duration
