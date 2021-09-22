@@ -8,6 +8,7 @@ import FloatingButton from './FloatingButtons';
 import TimeField from '../../../components/customWidgets/timeField';
 import TextEditor from '../../../components/customWidgets/textEditor';
 import CreateoreditWorkout from '../workout/createoredit-workout';
+import ReplaceWorkout from './create-edit/replaceWorkout';
 import DaysInput from './daysInput';
 
 const Schedular = (props: any) => {
@@ -307,6 +308,7 @@ const Schedular = (props: any) => {
     const [data, setData] = useState<any[]>([]);
     const [startChange, setStartChange] = useState("");
     const createEditWorkoutComponent = useRef<any>(null);
+    const replaceWorkoutComponent = useRef<any>(null);
     const [endChange, setEndChange] = useState("");
 
     function handleStart(e: any) {
@@ -620,9 +622,8 @@ const Schedular = (props: any) => {
                         {(event.type === "workout") && <Tabs defaultActiveKey="agenda" transition={false} id="noanim-tab-example" className="pt-4">
                             <Tab eventKey="agenda" title="Agenda">
                                 <Row className="justify-content-end">
-                                    <Button className="mr-3 mt-2" variant="secondary" size="sm" onClick={() => { handleClose(); setData([]); setEvent([]); createEditWorkoutComponent.current.TriggerForm({ type: 'create' }); }}><i className="fas fa-plus-circle"></i>{" "}Create Workout</Button>
                                     <Button className="mr-3 mt-2" variant="primary" size="sm" onClick={() => { handleClose(); setData([]); setEvent([]); createEditWorkoutComponent.current.TriggerForm({ type: 'edit' }); }}><i className="fas fa-pencil-alt"></i>{" "}Edit</Button>
-                                    <Button className="mr-3 mt-2" variant="warning" size="sm" onClick={() => {handleClose(); setData([]); setEvent([])}}><i className="fas fa-reply"></i>{" "}Replace</Button>
+                                    <Button className="mr-3 mt-2" variant="warning" size="sm" onClick={() => {handleClose(); setData([]); setEvent([]); replaceWorkoutComponent.current.TriggerForm({type: 'edit' })}}><i className="fas fa-reply"></i>{" "}Replace</Button>
                                 </Row>
                                 {data.map(val => {
                                     return (
@@ -812,6 +813,7 @@ const Schedular = (props: any) => {
                </Modal>
             }
             <CreateoreditWorkout ref={createEditWorkoutComponent}></CreateoreditWorkout>
+            <ReplaceWorkout ref={replaceWorkoutComponent}></ReplaceWorkout>
         </>
     );
 };

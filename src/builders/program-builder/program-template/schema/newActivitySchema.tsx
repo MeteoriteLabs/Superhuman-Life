@@ -12,12 +12,6 @@ export const schema: any = {
      day: {
           "ui:widget": "daysInput"
      },
-     repeat: {
-          "ui:widget": "checkboxes",
-          "ui:options": {
-               "inline": true
-          }
-     },
      startTime: {
           "ui:widget": (props) => {
                return <TimeField title="Start Time" onChange={props.onChange}/>
