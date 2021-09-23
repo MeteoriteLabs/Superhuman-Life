@@ -65,10 +65,46 @@ function Movement() {
                     Cell: (row: any) => {
                          return (
                               <>
-                                   {row.value === "Personal Training" ? <img src="/assets/PTtype.svg" alt="PT" /> : ""}
-                                   {row.value === "Group Class" ? <img src="/assets/Grouptype.svg" alt="group" /> : ""}
-                                   {row.value === "Custom Fitness" ? <img src="/assets/Customtype.svg" alt="" /> : ""}
-                                   {row.value === "Classic Class" ? <img src="/assets/Classictype.svg" alt="" /> : ""}
+                                   {row.value[0] ? (
+                                        <>
+                                             <img src="/assets/PTonline.svg" alt="PT" />
+                                             <p>{row.value[0]}</p>
+                                        </>
+                                   ) : (
+                                        " "
+                                   )}
+                                   {row.value[1] ? (
+                                        <>
+                                             <img src="/assets/PToffline.svg" alt="PT" />
+                                             <p>{row.value[1]}</p>
+                                        </>
+                                   ) : (
+                                        " "
+                                   )}
+                                   {row.value[2] ? (
+                                        <>
+                                             <img src="/assets/Grouponline.svg" alt="PT" />
+                                             <p>{row.value[2]}</p>
+                                        </>
+                                   ) : (
+                                        " "
+                                   )}
+                                   {row.value[3] ? (
+                                        <>
+                                             <img src="/assets/Groupoffline.svg" alt="PT" />
+                                             <p>{row.value[3]}</p>
+                                        </>
+                                   ) : (
+                                        " "
+                                   )}
+                                   {row.value[4] ? (
+                                        <>
+                                             <img src="/assets/RecordedClass.svg" alt="PT" />
+                                             <p>{row.value[4]}</p>
+                                        </>
+                                   ) : (
+                                        " "
+                                   )}
                               </>
                          );
                     },
@@ -147,10 +183,13 @@ function Movement() {
                                 packagename: Detail.program_managers[0]
                                      ? Detail.program_managers[0].fitnesspackages[0].packagename
                                      : Detail.fitnesspackages[0].packagename,
-                                details:
-                                     Detail.fitnesspackages[0].fitness_package_type.type === "Personal Training"
-                                          ? Detail.fitnesspackages[0].ptonline || Detail.fitnesspackages[0].ptoffline
-                                          : "",
+                                details: [
+                                     Detail.fitnesspackages[0].ptonline,
+                                     Detail.fitnesspackages[0].ptoffline,
+                                     Detail.fitnesspackages[0].grouponline,
+                                     Detail.fitnesspackages[0].groupoffline,
+                                     Detail.fitnesspackages[0].recordedclasses,
+                                ],
                                 duration: Detail.package_duration,
                                 effectivedate: getDate(Date.parse(Detail.effective_date)),
                                 enddate: getRenewalDate(Detail.effective_date, Detail.package_duration),
@@ -161,11 +200,7 @@ function Movement() {
                          : []
                )
           );
-          // Detail.fitnesspackages[0].ptonline ||
-          //                            Detail.fitnesspackages[0].ptoffline ||
-          //                            Detail.fitnesspackages[0].grouponline ||
-          //                            Detail.fitnesspackages[0].groupoffline ||
-          //                            Detail.fitnesspackages[0].recordedclasses,
+
           setActiveDataTable(
                [...data.clientBookings].flatMap((Detail) =>
                     !compareDates(getRenewalDate(Detail.effective_date, Detail.package_duration))
@@ -174,7 +209,13 @@ function Movement() {
                                 packagename: Detail.program_managers[0]
                                      ? Detail.program_managers[0].fitnesspackages[0].packagename
                                      : Detail.fitnesspackages[0].packagename,
-                                details: "",
+                                details: [
+                                     Detail.fitnesspackages[0].ptonline,
+                                     Detail.fitnesspackages[0].ptoffline,
+                                     Detail.fitnesspackages[0].grouponline,
+                                     Detail.fitnesspackages[0].groupoffline,
+                                     Detail.fitnesspackages[0].recordedclasses,
+                                ],
                                 duration: Detail.package_duration,
                                 effectivedate: getDate(Date.parse(Detail.effective_date)),
                                 enddate: getRenewalDate(Detail.effective_date, Detail.package_duration),
