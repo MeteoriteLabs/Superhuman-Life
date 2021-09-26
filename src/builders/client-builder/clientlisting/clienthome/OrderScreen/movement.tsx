@@ -3,7 +3,7 @@ import { useMemo, useContext, useState, useRef } from "react";
 import { Badge } from "react-bootstrap";
 import { useQuery } from "@apollo/client";
 import Table from "../../../../../components/table";
-import { Row, Button } from "react-bootstrap";
+import { Row, Button, Col } from "react-bootstrap";
 import AuthContext from "../../../../../context/auth-context";
 import { GET_BOOKINGS } from "./queries";
 import CreateSuggestion from "./addSuggestion";
@@ -64,48 +64,58 @@ function Movement() {
                     accessor: "details",
                     Cell: (row: any) => {
                          return (
-                              <>
+                              <Row>
                                    {row.value[0] ? (
-                                        <>
-                                             <img src="/assets/PTonline.svg" alt="PT" />
-                                             <p>{row.value[0]}</p>
-                                        </>
+                                        <div className="d-flex flex-row ">
+                                             <Col>
+                                                  <img src="/assets/PTonline.svg" alt="PT" />
+                                                  <p className="ml-4">{row.value[0]}</p>
+                                             </Col>
+                                        </div>
                                    ) : (
                                         " "
                                    )}
                                    {row.value[1] ? (
-                                        <>
-                                             <img src="/assets/PToffline.svg" alt="PT" />
-                                             <p>{row.value[1]}</p>
-                                        </>
+                                        <div className="d-flex flex-row ">
+                                             <Col>
+                                                  <img src="/assets/PToffline.svg" alt="PT" />
+                                                  <p className="ml-4">{row.value[1]}</p>
+                                             </Col>
+                                        </div>
                                    ) : (
                                         " "
                                    )}
                                    {row.value[2] ? (
-                                        <>
-                                             <img src="/assets/Grouponline.svg" alt="PT" />
-                                             <p>{row.value[2]}</p>
-                                        </>
+                                        <div className="d-flex flex-row ">
+                                             <Col>
+                                                  <img src="/assets/Grouponline.svg" alt="PT" />
+                                                  <p className="ml-4">{row.value[2]}</p>
+                                             </Col>
+                                        </div>
                                    ) : (
                                         " "
                                    )}
                                    {row.value[3] ? (
-                                        <>
-                                             <img src="/assets/Groupoffline.svg" alt="PT" />
-                                             <p>{row.value[3]}</p>
-                                        </>
+                                        <div className="d-flex flex-row ">
+                                             <Col>
+                                                  <img src="/assets/Groupoffline.svg" alt="PT" />
+                                                  <p className="ml-4">{row.value[3]}</p>
+                                             </Col>
+                                        </div>
                                    ) : (
                                         " "
                                    )}
                                    {row.value[4] ? (
-                                        <>
-                                             <img src="/assets/RecordedClass.svg" alt="PT" />
-                                             <p>{row.value[4]}</p>
-                                        </>
+                                        <div className="d-flex flex-row ">
+                                             <Col>
+                                                  <img src="/assets/RecordedClass.svg" alt="PT" />
+                                                  <p className="ml-4">{row.value[4]}</p>
+                                             </Col>
+                                        </div>
                                    ) : (
                                         " "
                                    )}
-                              </>
+                              </Row>
                          );
                     },
                },

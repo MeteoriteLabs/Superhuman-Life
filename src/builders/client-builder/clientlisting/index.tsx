@@ -31,6 +31,13 @@ function ClientListingPage() {
                {
                     Header: "No of Bookings",
                     accessor: "bookings",
+                    Cell: (row: any) => {
+                         return (
+                              <>
+                                   <p className="ml-5">{row.value[0][row.value[1]]}</p>
+                              </>
+                         );
+                    },
                },
                {
                     accessor: "status",
@@ -89,17 +96,38 @@ function ClientListingPage() {
      }
 
      function loadData(data: any) {
+          let clientnamecount = {};
+          let flag: any;
+          let namearr: any = [];
+
           setDataTable(
-               [...data.userPackages].map((Detail) => {
-                    return {
-                         id: Detail.users_permissions_user.id,
-                         clientpic: "/assets/avatar-1.jpg",
-                         clientname: Detail.users_permissions_user.username,
-                         clientdetails: Detail.users_permissions_user.email,
-                         clientlocation: Detail.users_permissions_user.addresses[0].city,
-                         bookings: "2",
-                         status: "Assigned",
-                    };
+               [...data.userPackages].flatMap((Detail) => {
+                    let clientname: any = Detail.users_permissions_user.username;
+                    let clientemail: any = Detail.users_permissions_user.email;
+
+                    if (!clientnamecount[clientname]) {
+                         clientnamecount[clientname] = 1;
+                    } else {
+                         clientnamecount[clientname] += 1;
+                    }
+                    if (!namearr.includes(clientemail)) {
+                         flag = true;
+                         namearr.push(clientemail);
+                    }
+                    if (flag) {
+                         flag = false;
+                         return {
+                              id: Detail.users_permissions_user.id,
+                              clientpic: "/assets/avatar-1.jpg",
+                              clientname: Detail.users_permissions_user.username,
+                              clientdetails: Detail.users_permissions_user.email,
+                              clientlocation: Detail.users_permissions_user.addresses[0].city,
+                              bookings: [clientnamecount, Detail.users_permissions_user.username],
+                              status: "Assigned",
+                         };
+                    } else {
+                         return [];
+                    }
                })
           );
      }
