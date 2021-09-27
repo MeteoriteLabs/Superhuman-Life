@@ -2,6 +2,7 @@ import { Card, Tab, Tabs, TabContent } from "react-bootstrap";
 import Programs from "./clienthome/ProgramScreens/clientprograms";
 import Goals from "./clienthome/Goalscreen/clientGoals";
 import Orders from "./clienthome/OrderScreen/clientOrders";
+import Wall from "./clienthome/TeamWallScreen/index";
 import { useQuery } from "@apollo/client";
 import { GET_CLIENT_DATA } from "./queries";
 import { useState, useContext } from "react";
@@ -103,6 +104,7 @@ function Client() {
                               <Tab eventKey="teamwall" title="Team Wall">
                                    <TabContent>
                                         <hr />
+                                        <Wall />
                                    </TabContent>
                               </Tab>
                               <Tab eventKey="goal" title="Goals">
