@@ -9,7 +9,6 @@ export default function BookingLeadday({ widgetProps, actionType, userData }) {
     return <>
         {(userData.mode === "Online" || userData.mode === "Offline" || userData.mode === "Hybrid") ?
             <>
-                <h2>For Programs</h2>
                 <p>Consumer can choose start date, after</p>
 
                 <Form.Group>
