@@ -87,32 +87,6 @@ const ProgramList = (props: any) => {
           }).join(','))
      }
 
-     // function draganddrop(){
-     //      const draggable: any = document.querySelectorAll('.draggable-events');
-     //      const container: any = document.querySelectorAll('.events-container');
-
-     //      draggable.forEach(drag => {
-     //           drag.addEventListener('dragstart', () => {
-     //                // console.log('dragging');
-     //               drag.classList.add('dragging');
-     //           });
-       
-     //           drag.addEventListener('dragend', () =>{
-     //               drag.classList.remove('dragging');
-     //           });
-     //       })
-       
-     //      container.forEach(con => {
-     //           con.addEventListener('dragover', e => {
-     //               e.preventDefault();
-     //               const draggable = document.querySelector('.dragging');
-     //               con.appendChild(draggable);
-     //           });
-     //      })          
-     // }
-
-     // draganddrop();
-
      FetchEquipmentList({filter: searchInput, skip: skipval, id: auth.userid});
      props.onChange(JSON.stringify(selected));
 

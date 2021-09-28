@@ -27,6 +27,7 @@ export const CREATE_PROGRAM = gql`
           $fitnessdisciplines: [ID]
           $duration_days: Int!
           $level: ENUM_FITNESSPROGRAMS_LEVEL
+          $Is_program: Boolean
           $description: String
           $events: JSON
           $users_permissions_user: ID
@@ -39,6 +40,7 @@ export const CREATE_PROGRAM = gql`
                          duration_days: $duration_days
                          level: $level
                          description: $description
+                         Is_program: $Is_program
                          events: $events
                          users_permissions_user: $users_permissions_user
                     }

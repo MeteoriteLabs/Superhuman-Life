@@ -1,7 +1,7 @@
 import React, { useContext, useImperativeHandle, useState } from 'react';
 import { useQuery, useMutation } from "@apollo/client";
 import ModalView from "../../../components/modal";
-import { CREATE_PROGRAM, DELETE_PROGRAM } from "./queries";
+import { CREATE_PROGRAM, DELETE_PROGRAM, GET_TABLEDATA } from "./queries";
 import AuthContext from "../../../context/auth-context";
 import StatusModal from "../../../components/StatusModal/StatusModal";
 import { schema, widgets } from './programSchema';
@@ -20,9 +20,9 @@ function CreateEditMessage(props: any, ref: any) {
     const [operation, setOperation] = useState<Operation>({} as Operation);
     
 
-    const [createProgram] = useMutation(CREATE_PROGRAM, { onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
+    const [createProgram] = useMutation(CREATE_PROGRAM, { onCompleted: (r: any) => {  modalTrigger.next(false); } });
 //     const [editExercise] = useMutation(UPDATE_EXERCISE,{variables: {exerciseid: operation.id}, onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
-    const [deleteProgram] = useMutation(DELETE_PROGRAM, { onCompleted: (e: any) => console.log(e), refetchQueries: ["GET_TABLEDATA"] });
+    const [deleteProgram] = useMutation(DELETE_PROGRAM, { refetchQueries: ["GET_TABLEDATA"] });
 
     const modalTrigger =  new Subject();
 
@@ -37,9 +37,9 @@ function CreateEditMessage(props: any, ref: any) {
 
     function FillDetails(data: any) {
         let details: any = {};
-        let msg = data.exercises;
-        console.log(msg);
-        // setExerciseDetails(details);
+        // let msg = data.exercises;
+        // console.log(msg);
+        setProgramDetails(details);
 
         //if message exists - show form only for edit and view
         if (['edit', 'view'].indexOf(operation.type) > -1)
@@ -49,7 +49,7 @@ function CreateEditMessage(props: any, ref: any) {
     }
 
     function FetchData() {
-        // useQuery(FETCH_DATA, { variables: { id: operation.id }, skip: (!operation.id || operation.type === 'toggle-status'), onCompleted: (e: any) => { FillDetails(e) } });
+        useQuery(GET_TABLEDATA, { variables: { id: operation.id }, skip: (!operation.id || operation.type === 'toggle-status'), onCompleted: (e: any) => { FillDetails(e) } });
     }
 
     enum ENUM_EXERCISES_EXERCISELEVEL {
@@ -64,6 +64,7 @@ function CreateEditMessage(props: any, ref: any) {
             title: frm.programName,
             fitnessdisciplines: frm.discipline.split(","),
             duration_days: frm.duration,
+            Is_program: false,
             level: ENUM_EXERCISES_EXERCISELEVEL[frm.level],
             description: frm.details,
             users_permissions_user: frm.user_permissions_user
@@ -71,13 +72,13 @@ function CreateEditMessage(props: any, ref: any) {
     }
 
     function EditExercise(frm: any) {
-        console.log('edit message');
+        // console.log('edit message');
         // useMutation(UPDATE_MESSAGE, { variables: frm, onCompleted: (d: any) => { console.log(d); } });
         // editExercise({variables: frm });
     }
 
     function ViewExercise(frm: any) {
-        console.log('view message');
+        // console.log('view message');
         //use a variable to set form to disabled/not editable
         // useMutation(UPDATE_EXERCISE, { variables: frm, onCompleted: (d: any) => { console.log(d); } })
     }
@@ -113,7 +114,7 @@ function CreateEditMessage(props: any, ref: any) {
         name="View";
     }
 
-//     FetchData();
+    FetchData();
 
 
     return (

@@ -15,6 +15,7 @@ const Schedular = (props: any) => {
 
     const [show, setShow] = useState(false);
     const [showModal, setShowModal] = useState(false);
+    const [onDragAndDrop, setOnDragAndDrop] = useState(false);
     const [currentProgram, setCurrentProgram] = useState<any[]>([]);
     const [edit, setEdit] = useState(true);
     const [del, setDel] = useState(false);
@@ -131,40 +132,21 @@ const Schedular = (props: any) => {
         }, 2000)
     }, [show]);
 
-    console.log(arr);
+    let confirmVal: any = {};
+    const [arr2, setarr2] = useState<any>({});
 
     function handleChange(d: any, h: any, m: any, event: any) {
-        console.log(d, h, m);
-        console.log(event);
-        const values = [...arr];
-        if (event.day) {
-            values[event.day][event.hour][event.min].splice(event.index, 1);
-        }
-        if (d === undefined || h === undefined || m === undefined) {
-            return;
-        }
-        if (!values[d][h][m]) {
-            values[d][h][m] = [];
-        }
-        const diff = handleHeight(event) / 15;
-        var sh = parseInt(h);
-        var sm = parseInt(m);
-        for (var i = 0; i < diff; i++) {
-            sm += 15;
-            if (sm === 60) {
-                sh++;
-                sm = 0;
-            }
-        }
-
-        values[d][h][m].push({ "title": event.title, "color": event.color, "day": d, "hour": h, "min": m, "endHour": sh, "endMin": sm });
-        setArr(values);
+        confirmVal.event = event;
+        confirmVal.d = d;
+        confirmVal.h = h;
+        confirmVal.m = m;
+        setarr2(confirmVal);    
+        setOnDragAndDrop(true); 
     }
 
     function handleFloatingActionProgramCallback(event: any) {
         setProgram(`${event}`);
     }
-
 
     function handleRestDays(val: any) {
         if (props.restDays) {
@@ -199,7 +181,7 @@ const Schedular = (props: any) => {
 
     FetchProgramEvents({ id: program_id });
 
-    const [updateProgram] = useMutation(UPDATE_FITNESSPROGRAMS, { onCompleted: (r: any) => { console.log(r) } });
+    const [updateProgram] = useMutation(UPDATE_FITNESSPROGRAMS);
 
     var changedTime: any;
     function handleTimeChange(e: any) {
@@ -234,11 +216,9 @@ const Schedular = (props: any) => {
         var timeEnd: any = new Date("01/01/2007 " + handleTimeFormat(newEvent.endTime));
         var diff1 = timeEnd - timeStart;
         for (var i = 0; i <= values.length - 1; i++) {
-            console.log(values);
             var startTimeHour: any = new Date("01/01/2007 " + handleTimeFormat(values[i].startTime));
             var endTimeHour: any = new Date("01/01/2007 " + handleTimeFormat(values[i].endTime));
             var diff2 = endTimeHour - startTimeHour;
-            console.log(diff1, diff2);
 
             if (diff2 < diff1) {
                 values.splice(i, 0, newEvent);
@@ -276,11 +256,9 @@ const Schedular = (props: any) => {
             var timeEnd: any = new Date("01/01/2007 " + handleTimeFormat(newEvent.endTime));
             var diff1 = timeEnd - timeStart;
             for (var i = 0; i <= values.length - 1; i++) {
-                console.log(values);
                 var startTimeHour: any = new Date("01/01/2007 " + handleTimeFormat(values[i].startTime));
                 var endTimeHour: any = new Date("01/01/2007 " + handleTimeFormat(values[i].endTime));
                 var diff2 = endTimeHour - startTimeHour;
-                console.log(diff1, diff2);
 
                 if (diff2 < diff1) {
                     values.splice(i, 0, newEvent);
@@ -423,7 +401,6 @@ const Schedular = (props: any) => {
     }
 
     function handleEventDelete(){
-        console.log(event);
         let values = [...currentProgram];
         let a = values.findIndex((val) => val.id === event.id && val.day === event.day && val.startTime === event.hour + ":" + event.min && val.endTime === event.endHour + ":" + event.endMin);
         values.splice(a,1);
@@ -435,6 +412,123 @@ const Schedular = (props: any) => {
         });
         handleClose();
 
+    }
+
+    function confirm() {
+        const values = [...arr];
+        if (arr2.event.day) {
+            values[arr2.event.day][arr2.event.hour][arr2.event.min].splice(arr2.event.index, 1);
+        }
+        
+        if (arr2.d === undefined || arr2.h === undefined || arr2.m === undefined) {
+            return;
+        }
+        if (!values[arr2.d][arr2.h][arr2.m]) {
+            values[arr2.d][arr2.h][arr2.m] = [];
+        }
+        const diff = handleHeight(arr2.event) / 15;
+        var sh = parseInt(arr2.h);
+        var sm = parseInt(arr2.m);
+        for (var i = 0; i < diff; i++) {
+            sm += 15;
+            if (sm === 60) {
+                sh++;
+                sm = 0;
+            }
+        }
+
+        let localEvent: any = {};
+        localEvent.id = arr2.event.id;
+        localEvent.day = arr2.d;
+        localEvent.hour = arr2.h;
+        localEvent.min = arr2.m;
+        localEvent.endHour = sh;
+        localEvent.endMin = sm;
+        localEvent.type = arr2.event.type;
+        localEvent.title = arr2.event.title;
+        
+        let newEvent: any = {};
+        newEvent.id = arr2.event.id;
+        newEvent.name = arr2.event.title;
+        newEvent.startTime = arr2.h + ":" + arr2.m;
+        newEvent.endTime = sh + ":" + sm;
+        newEvent.type = arr2.event.type;
+        newEvent.day = arr2.d;
+        let existingValues = currentProgram === null ? [] : [...currentProgram];
+        if(arr2.event.type2 === "transferEvent"){
+            var timeStartTransfer: any = new Date("01/01/2007 " + handleTimeFormat(newEvent.startTime));
+            var timeEndTransfer: any = new Date("01/01/2007 " + handleTimeFormat(newEvent.endTime));
+            var diff1Transfer = timeEndTransfer - timeStartTransfer;
+            for (var j = 0; j <= existingValues.length - 1; j++) {
+                    var startTimeHourTransfer: any = new Date("01/01/2007 " + handleTimeFormat(existingValues[j].startTime));
+                    var endTimeHourTransfer: any = new Date("01/01/2007 " + handleTimeFormat(existingValues[j].endTime));
+                    var diff2Transfer = endTimeHourTransfer - startTimeHourTransfer;
+
+                    if (diff2Transfer < diff1Transfer) {
+                        existingValues.splice(j, 0, newEvent);
+                        break;
+                    }
+                    if (j === existingValues.length - 1) {
+                        existingValues.push(newEvent);
+                        break;
+                    }
+            }
+        }else {
+        let a = existingValues.findIndex((val) => val.id === arr2.event.id && val.day === arr2.event.day && val.startTime === arr2.event.hour + ":" + arr2.event.min && val.endTime === arr2.event.endHour + ":" + arr2.event.endMin);
+        existingValues.splice(a,1);
+        if(existingValues.length === 0 ){
+            existingValues.push(newEvent);
+        }else {
+                var timeStart: any = new Date("01/01/2007 " + handleTimeFormat(newEvent.startTime));
+                var timeEnd: any = new Date("01/01/2007 " + handleTimeFormat(newEvent.endTime));
+                var diff1 = timeEnd - timeStart;
+                for (var k = 0; k <= existingValues.length - 1; k++) {
+                    var startTimeHour: any = new Date("01/01/2007 " + handleTimeFormat(existingValues[k].startTime));
+                    var endTimeHour: any = new Date("01/01/2007 " + handleTimeFormat(existingValues[k].endTime));
+                    var diff2 = endTimeHour - startTimeHour;
+
+                    if (diff2 < diff1) {
+                        existingValues.splice(k, 0, newEvent);
+                        break;
+                    }
+                    if (k === existingValues.length - 1) {
+                        existingValues.push(newEvent);
+                        break;
+                    }
+                }
+            }
+        }
+        updateProgram({
+            variables: {
+                programid: program_id,
+                events: existingValues
+            }
+        })
+
+        if(values[arr2.d][arr2.h][arr2.m].length === 0){
+            values[arr2.d][arr2.h][arr2.m].push({ "title": arr2.event.title, "color": arr2.event.color, "day": arr2.d, "hour": arr2.h, "min": arr2.m, "endHour": sh, "endMin": sm });
+        }else {
+            var timeStartArr: any = new Date("01/01/2007 " + handleTimeFormat(newEvent.startTime));
+            var timeEndArr: any = new Date("01/01/2007 " + handleTimeFormat(newEvent.endTime));
+            var diff1Arr = timeEndArr - timeStartArr;
+            for(var l=0; l<values[arr2.d][arr2.h][arr2.m].length; l++){
+                    var startTimeHourArr: any = new Date("01/01/2007 " + handleTimeFormat(values[arr2.d][arr2.h][arr2.m][l].hour + ":" + values[arr2.d][arr2.h][arr2.m][l].min));
+                    var endTimeHourArr: any = new Date("01/01/2007 " + handleTimeFormat(values[arr2.d][arr2.h][arr2.m][l].endHour + ":" + values[arr2.d][arr2.h][arr2.m][l].endMin));
+                    var diff2Arr = endTimeHourArr - startTimeHourArr;
+
+                    if (diff2Arr < diff1Arr) {
+                        values[arr2.d][arr2.h][arr2.m].splice(l, 0, localEvent);
+                        break;
+                    }
+                    if (l === values[arr2.d][arr2.h][arr2.m].length - 1) {
+                        values[arr2.d][arr2.h][arr2.m].push(localEvent);
+                        break;
+                    }
+            }
+        }
+        setArr(values);
+        setarr2([]);
+        confirmVal = {};
     }
 
     if (!show) return <span style={{ color: 'red' }}>Loading...</span>;
@@ -492,7 +586,9 @@ const Schedular = (props: any) => {
                                                                     id="dragMe"
                                                                     className="schedular-content draggable"
                                                                     draggable={val.type === 'restday' ? false : true}
-                                                                    onDragStart={(e) => { e.dataTransfer.setData("scheduler-event", JSON.stringify(val)) }}
+                                                                    onDragStart={(e) => {
+                                                                        e.dataTransfer.setData("scheduler-event", JSON.stringify(val));
+                                                                    }}
                                                                     style={{
                                                                         borderRadius: '5px',
                                                                         height: `${handleHeight(val) + handleHeight(val) / 60}px`,
@@ -749,11 +845,10 @@ const Schedular = (props: any) => {
                     </Modal.Footer>
                 </Modal>
             }{
-                <Modal show={del} onHide={handleClose} centered backdrop='static'>
+                <Modal show={del} onHide={() => setDel(false)} centered backdrop='static'>
                     <Modal.Header>
                          <Modal.Title>Do you want to delete this event?</Modal.Title>
                     </Modal.Header>
-                    {/* <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body> */}
                     <Modal.Footer>
                          <Button variant="danger" onClick={() => setDel(false)}>
                               No
@@ -764,7 +859,7 @@ const Schedular = (props: any) => {
                     </Modal.Footer>
                </Modal>
             }{
-                <Modal show={duplicate} onHide={handleClose} centered backdrop='static'>
+                <Modal show={duplicate} onHide={() => setDuplicate(false)} centered backdrop='static'>
                     <Modal.Body>
                         <Row>
                             <Col lg={11}>
@@ -811,6 +906,23 @@ const Schedular = (props: any) => {
                          </Button>
                     </Modal.Footer>
                </Modal>
+            }{
+                <Modal show={onDragAndDrop} onHide={() => setOnDragAndDrop(false)} centered backdrop='static'>
+            <Modal.Header>
+                    <Modal.Title>Do you want to save changes?</Modal.Title>
+            </Modal.Header>
+            <Modal.Footer>
+                    <Button variant="danger" onClick={() => {setOnDragAndDrop(false); setarr2([]); confirmVal = {};} }>
+                        Cancel
+                    </Button>
+                    <Button variant="success" onClick={() => {
+                        confirm();
+                        setOnDragAndDrop(false);
+                    }}>
+                        Confirm
+                    </Button>
+            </Modal.Footer>
+        </Modal>
             }
             <CreateoreditWorkout ref={createEditWorkoutComponent}></CreateoreditWorkout>
             <ReplaceWorkout ref={replaceWorkoutComponent}></ReplaceWorkout>

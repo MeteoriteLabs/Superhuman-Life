@@ -91,10 +91,11 @@ const ProgramList = (props: any) => {
      return (
           <>
                <label style={{ fontSize: 17 }}>Import from existing program</label>
-               <Button variant="outline-danger" className="float-right mb-3" onClick={() => { props.callback('none') }}>close</Button>
+               <Button variant="outline-danger" className="float-right mb-3" onClick={() => { props.callback('none'); setSelected({}) }}>close</Button>
                <InputGroup>
                     <FormControl aria-describedby="basic-addon1" placeholder="Search for program" id="searchInput" ref={inputField}
                          onChange={(e) => {
+                              setSelected({});
                               e.preventDefault();
                               EquipmentSearch(e.target.value);
                          }} autoComplete="off"

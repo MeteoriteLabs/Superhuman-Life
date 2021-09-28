@@ -103,15 +103,6 @@
   display: none;
 }
 
-.inputError,
-.inputError:focus {
-  color: #495057;
-  background-color: #fff;
-  border-color: red;
-  outline: none;
-  box-shadow: 0 0 0 0.2rem #ff00b361;
-}
-
 .event-desc {
   font-weight: bold;
   font-size: 10px;

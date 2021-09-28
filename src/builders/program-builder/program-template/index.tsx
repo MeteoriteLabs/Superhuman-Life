@@ -59,7 +59,7 @@ const ProgramManager = (props: any) => {
                         </Col>
                     </div>
                     <div className="mt-5">
-                        <Schedular days={30} restDays={data[0].restDays} programId={last} />
+                        <Schedular days={data[0].duration} restDays={data[0].restDays} programId={last} />
                     </div>
                 </Col>
             </Row>

@@ -20,15 +20,14 @@ function CreateEditMessage(props: any, ref: any) {
     const [operation, setOperation] = useState<Operation>({} as Operation);
     
 
-    const [createWorkout] = useMutation(CREATE_WORKOUT, { onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
-    const [editWorkout] = useMutation(UPDATE_WORKOUT,{variables: {workoutid: operation.id}, onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
-    const [deleteWorkout] = useMutation(DELETE_WORKOUT, { onCompleted: (e: any) => console.log(e), refetchQueries: ["GET_TABLEDATA"] });
+    const [createWorkout] = useMutation(CREATE_WORKOUT, { onCompleted: (r: any) => { modalTrigger.next(false); } });
+    const [editWorkout] = useMutation(UPDATE_WORKOUT,{variables: {workoutid: operation.id}, onCompleted: (r: any) => { modalTrigger.next(false); } });
+    const [deleteWorkout] = useMutation(DELETE_WORKOUT, { refetchQueries: ["GET_TABLEDATA"] });
 
     const modalTrigger =  new Subject();
 
     useImperativeHandle(ref, () => ({
         TriggerForm: (msg: Operation) => {
-            console.log(msg);
             setOperation(msg);
 
             if (msg && !msg.id) //render form if no message id
@@ -91,19 +90,19 @@ function CreateEditMessage(props: any, ref: any) {
     }
 
     function EditWorkout(frm: any) {
-        console.log('edit message');
+        // console.log('edit message');
         // useMutation(UPDATE_MESSAGE, { variables: frm, onCompleted: (d: any) => { console.log(d); } });
         editWorkout({variables: frm });
     }
 
     function ViewWorkout(frm: any) {
-        console.log('view message');
+        // console.log('view message');
         //use a variable to set form to disabled/not editable
         useMutation(UPDATE_WORKOUT, { variables: frm, onCompleted: (d: any) => { console.log(d); } })
     }
 
     function DeleteWorkout(id: any) {
-        console.log('delete message');
+        // console.log('delete message');
         deleteWorkout({ variables: { id: id }});
     }
 

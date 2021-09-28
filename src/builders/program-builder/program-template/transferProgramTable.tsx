@@ -6,7 +6,6 @@ const TransferProgramTable = (props: any) => {
 
      const [show, setShow] = useState(false);
      const [data, setData] = useState<any[]>([]);
-     const [errorClass, setErrorClass] = useState({d: '', i: null});
 
      function handleDaysData(e: any, index: any) {
           const values = [...data];
@@ -42,7 +41,7 @@ const TransferProgramTable = (props: any) => {
           setTimeout(() => {
                setShow(true);
           }, 500);
-     }, []);
+     }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
      props.onChange(data);
 
@@ -57,7 +56,6 @@ const TransferProgramTable = (props: any) => {
                     </thead>
                     <tbody>
                               {props.events.map((val: any, index) => {
-                                   console.log(val);
                                    return (
                                         <tr>
                                         <td><Form.Control value={val.name} disabled></Form.Control></td>
@@ -66,10 +64,10 @@ const TransferProgramTable = (props: any) => {
                                         <td><InputGroup>
                                              <FormControl
                                              placeholder="24Hr"
-                                             className={`${(data[index].day &&  !data[index].startTimeHour)  ?  'inputError' : ''}`}
                                              type="number"
                                              min="0"
                                              max="23"
+                                             isInvalid={(data[index].day &&  !data[index].startTimeHour)  ?  true : false}
                                              id={index}
                                              autoComplete="off"
                                              value={data[index].startTimeHour === undefined ? '' : data[index].startTimeHour}

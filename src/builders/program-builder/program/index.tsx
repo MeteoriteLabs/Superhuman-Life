@@ -19,7 +19,7 @@ export default function EventsTab() {
     const [show, setShow] = useState(false);
     const [name, setName] = useState("");
     const [frm, setFrm] = useState<any>();
-    const [createProgram] = useMutation(CREATE_PROGRAM, { onCompleted: (r: any) => { console.log(r);}});
+    const [createProgram] = useMutation(CREATE_PROGRAM);
 
      const handleClose = () => setShow(false);
      const handleShow = () => setShow(true);
@@ -30,6 +30,7 @@ export default function EventsTab() {
             fitnessdisciplines: frm.disciplineId.split(","),
             duration_days: frm.duration,
             events: frm.events,
+            Is_program: false,
             level: frm.level,
             description: frm.description,
             users_permissions_user: frm.user

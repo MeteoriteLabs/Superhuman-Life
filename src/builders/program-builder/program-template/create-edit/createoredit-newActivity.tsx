@@ -3,7 +3,6 @@ import { useQuery, useMutation } from "@apollo/client";
 import ModalView from "../../../../components/modal";
 import { UPDATE_FITNESSPROGRAMS, GET_SCHEDULEREVENTS } from "../queries";
 import AuthContext from "../../../../context/auth-context";
-import StatusModal from '../../../../components/StatusModal/StatusModal';
 import { schema, widgets } from '../schema/newActivitySchema';
 import {Subject} from 'rxjs';
 
@@ -22,7 +21,7 @@ function CreateEditMessage(props: any, ref: any) {
     
 
     // const [CreateProgram] = useMutation(CREATE_PROGRAM, { onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
-    const [updateProgram] = useMutation(UPDATE_FITNESSPROGRAMS, {onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
+    const [updateProgram] = useMutation(UPDATE_FITNESSPROGRAMS, {onCompleted: (r: any) => { modalTrigger.next(false); } });
     //     const [editExercise] = useMutation(UPDATE_EXERCISE,{variables: {exerciseid: operation.id}, onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
 //     const [deleteExercise] = useMutation(DELETE_EXERCISE, { onCompleted: (e: any) => console.log(e), refetchQueries: ["GET_TABLEDATA"] });
 
@@ -39,9 +38,10 @@ function CreateEditMessage(props: any, ref: any) {
 
     function FillDetails(data: any) {
         let details: any = {};
-        let msg = data;
-        console.log(msg);
-        // setExerciseDetails(details);
+        // let msg = data;
+        // console.log(details);
+        // console.log(msg);
+        setProgramDetails(details);
 
         //if message exists - show form only for edit and view
         if (['edit', 'view'].indexOf(operation.type) > -1)
@@ -51,14 +51,7 @@ function CreateEditMessage(props: any, ref: any) {
     }
 
     function FetchData() {
-        // useQuery(GET_SCHEDULEREVENTS, { variables: { id: program_id }, skip: (!operation.id || operation.type === 'toggle-status'), onCompleted: (e: any) => { setExistingEvents(e) } });
-    }
-
-    enum ENUM_EXERCISES_EXERCISELEVEL {
-        Beginner,
-        Intermediate,
-        Advanced,
-        None
+        useQuery(GET_SCHEDULEREVENTS, { variables: { id: program_id }, skip: (!operation.id || operation.type === 'toggle-status'), onCompleted: (e: any) => { FillDetails(e) } });
     }
 
     function handleTimeFormat(time: string) {
@@ -97,18 +90,16 @@ function CreateEditMessage(props: any, ref: any) {
                     var timeStart: any = new Date("01/01/2007 " + handleTimeFormat(frm.startTime));
                     var timeEnd: any = new Date("01/01/2007 " + handleTimeFormat(frm.endTime));
                     var diff1 = timeEnd - timeStart;
-                    for (var i = 0; i <= existingEvents.length - 1; i++) {
-                        console.log(existingEvents);
-                        var startTimeHour: any = new Date("01/01/2007 " + handleTimeFormat(existingEvents[i].startTime));
-                        var endTimeHour: any = new Date("01/01/2007 " + handleTimeFormat(existingEvents[i].endTime));
+                    for (var k = 0; k <= existingEvents.length - 1; k++) {
+                        var startTimeHour: any = new Date("01/01/2007 " + handleTimeFormat(existingEvents[k].startTime));
+                        var endTimeHour: any = new Date("01/01/2007 " + handleTimeFormat(existingEvents[k].endTime));
                         var diff2 = endTimeHour - startTimeHour;
-                        console.log(diff1, diff2);
     
                         if (diff2 < diff1) {
-                            existingEvents.splice(i, 0, daysArray[j]);
+                            existingEvents.splice(k, 0, daysArray[j]);
                             break;
                         }
-                        if (i === existingEvents.length - 1) {
+                        if (k === existingEvents.length - 1) {
                             existingEvents.push(daysArray[j]);
                             break;
                         }
@@ -122,23 +113,6 @@ function CreateEditMessage(props: any, ref: any) {
         } });
     }
 
-    function EditExercise(frm: any) {
-        console.log('edit message');
-        // useMutation(UPDATE_MESSAGE, { variables: frm, onCompleted: (d: any) => { console.log(d); } });
-        // editExercise({variables: frm });
-    }
-
-    function ViewExercise(frm: any) {
-        console.log('view message');
-        //use a variable to set form to disabled/not editable
-        // useMutation(UPDATE_EXERCISE, { variables: frm, onCompleted: (d: any) => { console.log(d); } })
-    }
-
-    function DeleteExercise(id: any) {
-        console.log('delete message');
-        // deleteExercise({ variables: { id: id }});
-    }
-
     function OnSubmit(frm: any) {
         //bind user id
         if(frm)
@@ -147,12 +121,6 @@ function CreateEditMessage(props: any, ref: any) {
         switch (operation.type) {
             case 'create':
                 UpdateProgram(frm);
-                break;
-            case 'edit':
-                EditExercise(frm);
-                break;
-            case 'view':
-                ViewExercise(frm);
                 break;
         }
     }
@@ -183,16 +151,7 @@ function CreateEditMessage(props: any, ref: any) {
                     modalTrigger={modalTrigger}
                 />
                 
-            {/* } */}
-             {operation.type ==="delete" && <StatusModal
-             modalTitle="Delete"
-             modalBody="Do you want to delete this message?"
-             buttonLeft="Cancel"
-             buttonRight="Yes"
-             onClick={() => {DeleteExercise(operation.id)}}
-             />}
-        
-            
+            {/* } */}            
         </>
     )
 }

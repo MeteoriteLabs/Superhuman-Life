@@ -32,30 +32,32 @@ const SchedulerEvent = (props: any) => {
           })
      }
 
-     function handleRenderTable(){
-          for(var d=1; d<=props.programDays; d++){
-               arr[d] = JSON.parse(JSON.stringify(schedulerDay));
-          }
-          if(props.programEvents){
-               props.programEvents.forEach((val) => {
-                    if(!arr[val.day]){
-                         arr[val.day] = [];
-                    }
-                    arr[val.day].push({"title": val.name, "color": "skyblue"});
-               })
-          }
-          draganddrop();
-     }
-
      useEffect(() => {
           setTimeout(() => {
               setShow(true);
           }, 300)
      }, [show]); 
 
+     function handleRenderTable(){
+          const values = [...arr];
+          for(var d=1; d<=props.programDays; d++){
+               values[d] = JSON.parse(JSON.stringify(schedulerDay));
+          }
+          if(props.programEvents){
+               props.programEvents.forEach((val) => {
+                    if(!values[val.day]){
+                         values[val.day] = [];
+                    }
+                    values[val.day].push({"type": val.type ,"type2": "transferEvent" , "title": val.name, "color": "skyblue", "id": val.id, "endHour": val.endTime.split(":")[0], "endMin": val.endTime.split(":")[1], "hour": val.startTime.split(":")[0], "min": val.startTime.split(":")[1]});
+               })
+               setArr(values);
+          }
+          draganddrop();
+     };
+
      useEffect(() => {
           handleRenderTable();
-     },[]);
+     }, []); // eslint-disable-line react-hooks/exhaustive-deps
      
      if (!show) return <span style={{ color: 'red' }}>Loading...</span>;
      else return (
