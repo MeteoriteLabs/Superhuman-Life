@@ -9,14 +9,14 @@ import { useState, useContext } from "react";
 import AuthContext from "../../../context/auth-context";
 
 function Client() {
-     //const last = window.location.pathname.split("/").pop();
+     const last = window.location.pathname.split("/").pop();
      const auth = useContext(AuthContext);
      const [clientName, setClientName] = useState<any>(" ");
      const [clientSex, setClientSex] = useState<any>(" ");
      function handleRedirect() {
           window.location.href = `/clients`;
      }
-     function FetchData(_variables: {} = { id: auth.userid }) {
+     function FetchData(_variables: {} = { id: auth.userid, clientid: last }) {
           useQuery(GET_CLIENT_DATA, { variables: _variables, onCompleted: loadData });
      }
      function loadData(data: any) {
@@ -26,7 +26,7 @@ function Client() {
                return {};
           });
      }
-     FetchData({ id: auth.userid });
+     FetchData({ id: auth.userid, clientid: last });
      return (
           <div>
                <div className="mb-3">

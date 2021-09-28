@@ -4,7 +4,7 @@ import ModalView from "../../../../../components/modal";
 //import { ADD_SUGGESTION } from "./queries";
 //import AuthContext from "../../../../../context/auth-context";
 import { Subject } from "rxjs";
-//import { schema, widgets } from "./schema";
+import { schema, widgets } from "./schema";
 
 interface Operation {
      id: string;
@@ -63,15 +63,15 @@ function CreatePost(props: any, ref: any) {
           <>
                {operation.type === "create" && (
                     <ModalView
-                         name="Suggest Package"
+                         name="Create Post"
                          isStepper={false}
-                         //formUISchema={schema}
+                         formUISchema={schema}
                          formSchema={Schema}
                          //showing={operation.modal_status}
                          formSubmit={(frm: any) => {
                               OnSubmit(frm);
                          }}
-                         //widgets={widgets}
+                         widgets={widgets}
                          modalTrigger={modalTrigger}
                     />
                )}

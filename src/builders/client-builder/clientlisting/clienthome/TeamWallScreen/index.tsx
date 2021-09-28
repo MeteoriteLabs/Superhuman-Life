@@ -22,11 +22,11 @@ function Index() {
                     <CreatePost ref={CreatePostComponent}></CreatePost>
                </div>
                <Card>
-                    <Card.Header>
-                         <h5>Changemakers</h5>
-                    </Card.Header>
-
                     <Card.Body>
+                         <h5>Changemakers</h5>
+                    </Card.Body>
+
+                    <Card.Header>
                          <Row>
                               <Col>
                                    <img
@@ -83,7 +83,7 @@ function Index() {
                                    <p>CoachName</p>
                               </Col>
                          </Row>
-                    </Card.Body>
+                    </Card.Header>
                </Card>
                <CardComp />
                <CardComp />

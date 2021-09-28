@@ -1,20 +1,16 @@
 {
      "1": {
           "type": "object",
-          "required": ["startdate", "enddate"],
+          "required": [],
           "properties": {
+               "clientname": {
+                    "type": "string"
+               },
                "packagesearch": {
                     "type": "string"
                },
-               "startdate": {
-                    "type": "string",
-                    "title": "Start Date",
-                    "format": "date"
-               },
-               "enddate": {
-                    "type": "string",
-                    "title": "End Date",
-                    "format": "date"
+               "widget": {
+                    "type": "string"
                }
           }
      }

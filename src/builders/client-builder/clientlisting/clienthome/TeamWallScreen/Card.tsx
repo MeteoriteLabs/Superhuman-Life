@@ -4,7 +4,7 @@ function CardComp() {
      return (
           <div>
                <Card border="primary" className="mt-3">
-                    <Card.Header>
+                    <Card.Body>
                          <Row>
                               <img
                                    src="/assets/avatar-1.jpg"
@@ -20,12 +20,12 @@ function CardComp() {
                                    <ActionButton action1="Edit" action2="Delete" />
                               </div>
                          </Row>
-                    </Card.Header>
-                    <Card.Body>
+                    </Card.Body>
+                    <Card.Header>
                          <Card.Title>Special title treatment</Card.Title>
                          <Card.Text>With supporting text below as a natural lead-in to additional content.</Card.Text>
-                    </Card.Body>
-                    <Card.Footer>
+                    </Card.Header>
+                    <Card.Body>
                          <div className="d-flex">
                               <img
                                    src="/assets/avatar-1.jpg"
@@ -43,7 +43,7 @@ function CardComp() {
                                    </InputGroup.Prepend>
                               </InputGroup>
                          </div>
-                    </Card.Footer>
+                    </Card.Body>
                </Card>
                <p>Updated On 12-07-21</p>
           </div>
