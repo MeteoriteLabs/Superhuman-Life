@@ -1,0 +1,224 @@
+{
+    "1": {
+        "title": "",
+        "type": "object",
+        "required": [
+           
+        ],
+        "properties": {
+            "day": {
+                "type": "string"
+            },
+            "startTime": {
+                "type": "string"
+            },
+            "endTime": {
+               "type": "string"
+           },
+           "conditional": {
+               "title": "Select from: ",
+               "$ref": "#/definitions/workoutOption"
+           }
+        },
+        "definitions": {
+            "workoutOption": {
+                "type": "object",
+                "title": "Select from: ",
+                "properties": {
+                    "Select from: ": {
+                        "type": "string",
+                        "enum": [
+                            "Import from existing",
+                            "Create New Workout"
+                        ]
+                    }
+                },
+                "required": [
+                    "Select from: "
+                ],
+                "dependencies": {
+                    "Select from: ": {
+                        "oneOf": [
+                            {
+                                "properties": {
+                                    "Select from: ": {
+                                        "enum": [
+                                            "Import from existing"
+                                        ]
+                                    },
+                                    "Import": {
+                                        "title": "",
+                                        "type": "object",
+                                        "required": [
+                                        ],
+                                        "properties": {
+                                            "workoutEvent": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "properties": {
+                                    "Select from: ": {
+                                        "enum": [
+                                            "Create New Workout"
+                                        ]
+                                    },
+                                    "Create New Workout": {
+                                        "title": "",
+                                        "type": "object",
+                                        "required": [
+                                            "workout",
+                                            "intensity",
+                                            "level",
+                                            "discipline",
+                                            "about",
+                                            "benefits",
+                                            "calories",
+                                            "equipment",
+                                            "muscleGroup"
+                                        ],
+                                        "properties": {
+                                            "workout": {
+                                                "type": "string",
+                                                "title": "Workout name"
+                                            },
+                                            "intensity": {
+                                                "type": "number",
+                                                "title": "Intensity",
+                                                "enum": [0, 1, 2],
+                                                "enumNames": [
+                                                    "Low",
+                                                    "Medium",
+                                                    "High"
+                                                ]
+                                            },
+                                            "level": {
+                                                "type": "number",
+                                                "title": "Level",
+                                                "enum": [0, 1, 2, 3],
+                                                "enumNames": [
+                                                    "Beginner",
+                                                    "Intermediate",
+                                                    "Advanced", 
+                                                    "No level"
+                                                ]
+                                            },
+                                            "discipline": {
+                                                "type": "string"
+                                            },
+                                            "about": {
+                                                "type": "string",
+                                                "title": "About"
+                                            },
+                                            "benefits": {
+                                                "type": "string",
+                                                "title": "Benifits"
+                                            },
+                                            "addWorkout": {
+                                                "title": "Workout Agenda",
+                                                "$ref": "#/definitions/addWorkout"
+                                            },
+                                            "calories": {
+                                                "type": "number",
+                                                "title": "Total calories",
+                                                "minimum": 1
+                                            },
+                                            "equipment": {
+                                            "type": "string"
+                                        },
+                                        "muscleGroup": {
+                                            "type": "string"
+                                        }
+                                        }
+                                        }
+                                    }
+                                }
+                        ]
+                    }
+                }
+            },
+            "addWorkout": {
+                "title": "Add Workout",
+                "type": "object",
+                "properties": {
+                    "AddWorkout": {
+                        "type": "string",
+                        "title": "Add workout",
+                        "enum": [
+                            "Build",
+                            "Add URL",
+                            "Text",
+                            "Upload"
+                        ],
+                        "default": "Add URL"
+                    }
+                },
+                "required": [
+                    "AddWorkout"
+                ],
+                "dependencies": {
+                    "AddWorkout": {
+                        "oneOf": [
+                            {
+                                "properties": {
+                                    "AddWorkout": {
+                                        "enum": [
+                                            "Add URL"
+                                        ]
+                                    },
+                                    "AddURL": {
+                                        "type": "string",
+                                        "title": "Add URL"
+                                    }
+                                }
+                            },
+                            {
+                                "properties": {
+                                    "AddWorkout": {
+                                        "enum": [
+                                            "Text"
+                                        ]
+                                    },
+                                    "AddText": {
+                                        "type": "string",
+                                        "title": "Add Text"
+                                    }
+                                }
+                            },
+                            {
+                                "properties": {
+                                    "AddWorkout": {
+                                        "enum": [
+                                            "Upload"
+                                        ]
+                                    },
+                                    "Upload": {
+                                        "type": "string",
+                                        "format": "data-url",
+                                        "title": "Upload a Video file"
+                                    }
+                                }
+                            },
+                            {
+                                "properties": {
+                                    "AddWorkout": {
+                                        "enum": [
+                                            "Build"
+                                        ]
+                                    },
+                                    "build": {
+                                        "title": "Build Workout",
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+    }
+}

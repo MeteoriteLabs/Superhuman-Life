@@ -1,10 +1,10 @@
 import React, { useContext, useImperativeHandle, useState } from 'react';
 import { useQuery, useMutation } from "@apollo/client";
 import ModalView from "../../../components/modal";
-import { FETCH_DATA, CREATE_EXERCISE, UPDATE_EXERCISE, DELETE_EXERCISE } from "./queries";
+import { CREATE_PROGRAM, DELETE_PROGRAM, GET_TABLEDATA } from "./queries";
 import AuthContext from "../../../context/auth-context";
 import StatusModal from "../../../components/StatusModal/StatusModal";
-import { schema, widgets } from './exerciseSchema';
+import { schema, widgets } from './programSchema';
 import {Subject} from 'rxjs';
 
 interface Operation {
@@ -15,14 +15,14 @@ interface Operation {
 
 function CreateEditMessage(props: any, ref: any) {
     const auth = useContext(AuthContext);
-    const exerciseSchema: { [name: string]: any; } = require("./exercises.json");
-    const [exerciseDetails, setExerciseDetails] = useState<any>({});
+    const programSchema: { [name: string]: any; } = require("./program.json");
+    const [programDetails, setProgramDetails] = useState<any>({});
     const [operation, setOperation] = useState<Operation>({} as Operation);
     
 
-    const [createExercise] = useMutation(CREATE_EXERCISE, { onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
-    const [editExercise] = useMutation(UPDATE_EXERCISE,{variables: {exerciseid: operation.id}, onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
-    const [deleteExercise] = useMutation(DELETE_EXERCISE, { onCompleted: (e: any) => console.log(e), refetchQueries: ["GET_TABLEDATA"] });
+    const [createProgram] = useMutation(CREATE_PROGRAM, { onCompleted: (r: any) => {  modalTrigger.next(false); } });
+//     const [editExercise] = useMutation(UPDATE_EXERCISE,{variables: {exerciseid: operation.id}, onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
+    const [deleteProgram] = useMutation(DELETE_PROGRAM, { refetchQueries: ["GET_TABLEDATA"] });
 
     const modalTrigger =  new Subject();
 
@@ -35,26 +35,11 @@ function CreateEditMessage(props: any, ref: any) {
         }
     }));
 
-    // console.log(exerciseDetails);
-
     function FillDetails(data: any) {
         let details: any = {};
-        let msg = data.exercises;
-        details.exercise = msg[0].exercisename;
-        details.level = msg.exerciselevel;
-        details.discipline = msg[0].fitnessdisciplines.map((val: any) => {
-            return val.id;
-        });
-        details.miniDescription = msg[0].exerciseminidescription;
-        details.equipment = msg[0].equipment_lists.map((val: any) => {
-            return val.name;
-        });
-        details.muscleGroup = msg[0].exercisemusclegroups.map((val: any) => {
-            return val.name;
-        });
-        details.user_permissions_user = msg[0].users_permissions_user.id;
-        setExerciseDetails(details);
-        // console.log(exerciseDetails);
+        // let msg = data.exercises;
+        // console.log(msg);
+        setProgramDetails(details);
 
         //if message exists - show form only for edit and view
         if (['edit', 'view'].indexOf(operation.type) > -1)
@@ -64,45 +49,42 @@ function CreateEditMessage(props: any, ref: any) {
     }
 
     function FetchData() {
-        useQuery(FETCH_DATA, { variables: { id: operation.id }, onCompleted: (e: any) => { FillDetails(e) } });
+        useQuery(GET_TABLEDATA, { variables: { id: operation.id }, skip: (!operation.id || operation.type === 'toggle-status'), onCompleted: (e: any) => { FillDetails(e) } });
     }
 
     enum ENUM_EXERCISES_EXERCISELEVEL {
         Beginner,
         Intermediate,
-        Advance,
+        Advanced,
         None
     }
 
-    function CreateExercise(frm: any) {
-        createExercise({ variables: {
-            exercisename: frm.exercise,
-            exerciselevel: ENUM_EXERCISES_EXERCISELEVEL[frm.level],
+    function CreateProgram(frm: any) {
+        createProgram({ variables: {
+            title: frm.programName,
             fitnessdisciplines: frm.discipline.split(","),
-            exerciseminidescription: frm.miniDescription,
-            exercisetext: (!frm.addExercise.AddText ? null : frm.addExercise.AddText),
-            exerciseurl: (!frm.addExercise.AddURL ? null: frm.addExercise.AddURL),
-            equipment_lists: frm.equipment.split(","),
-            exercisemusclegroups: frm.muscleGroup.split(","),
+            duration_days: frm.duration,
+            Is_program: false,
+            level: ENUM_EXERCISES_EXERCISELEVEL[frm.level],
+            description: frm.details,
             users_permissions_user: frm.user_permissions_user
         } });
     }
 
     function EditExercise(frm: any) {
-        console.log('edit message');
+        // console.log('edit message');
         // useMutation(UPDATE_MESSAGE, { variables: frm, onCompleted: (d: any) => { console.log(d); } });
-        editExercise({variables: frm });
+        // editExercise({variables: frm });
     }
 
     function ViewExercise(frm: any) {
-        console.log('view message');
+        // console.log('view message');
         //use a variable to set form to disabled/not editable
-        useMutation(UPDATE_EXERCISE, { variables: frm, onCompleted: (d: any) => { console.log(d); } })
+        // useMutation(UPDATE_EXERCISE, { variables: frm, onCompleted: (d: any) => { console.log(d); } })
     }
 
     function DeleteExercise(id: any) {
-        console.log('delete message');
-        deleteExercise({ variables: { id: id }});
+        deleteProgram({ variables: { id: id }});
     }
 
     function OnSubmit(frm: any) {
@@ -112,7 +94,7 @@ function CreateEditMessage(props: any, ref: any) {
 
         switch (operation.type) {
             case 'create':
-                CreateExercise(frm);
+                CreateProgram(frm);
                 break;
             case 'edit':
                 EditExercise(frm);
@@ -125,7 +107,7 @@ function CreateEditMessage(props: any, ref: any) {
 
     let name = "";
     if(operation.type === 'create'){
-        name="Create New Exercise";
+        name="Create New Program";
     }else if(operation.type === 'edit'){
         name="Edit";
     }else if(operation.type === 'view'){
@@ -142,9 +124,9 @@ function CreateEditMessage(props: any, ref: any) {
                     name={name}
                     isStepper={false}
                     formUISchema={schema}
-                    formSchema={exerciseSchema}
+                    formSchema={programSchema}
                     formSubmit={name === "View" ? () => { modalTrigger.next(false); } : (frm: any) => { OnSubmit(frm); }}
-                    formData={exerciseDetails}
+                    formData={programDetails}
                     widgets={widgets}
                     modalTrigger={modalTrigger}
                 />

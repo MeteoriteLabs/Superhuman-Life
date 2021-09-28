@@ -21,9 +21,24 @@ export const FETCH_DATA = gql`
                     id
                     name
                }
+               users_permissions_user {
+                    id
+               }
           }
      }
 `
+
+export const GET_EXERCISELIST = gql`
+     query exercisesList($id: String, $filter: String!) {
+          exercises(where: { users_permissions_user: {id: $id}, exercisename_contains: $filter}){
+               id
+               exercisename
+               users_permissions_user {
+                    id
+               }
+          }
+     }
+     `
 
 export const FETCH_FITNESSDISCPLINES = gql`
      query fitnessdiscplines{
@@ -66,11 +81,6 @@ export const GET_TABLEDATA = gql`
                exercisemusclegroups {
                name
                }
-          }
-          fitnessdisciplines(sort: "updatedAt"){
-               id
-               disciplinename
-               updatedAt
           }
      }
 `

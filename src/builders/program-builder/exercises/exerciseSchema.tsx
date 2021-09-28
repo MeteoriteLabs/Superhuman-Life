@@ -1,23 +1,8 @@
-import TextEditor from '../search-builder/textEditor';
-import EquipmentSearch from '../search-builder/equipmentList';
-import MuscleGroupSearch from '../search-builder/muscleGroupList';
-import FitnessSelect from './fitnessSelect';
+import TextEditor from '../../../components/customWidgets/textEditor';
+import EquipmentSearch from '../../../components/customWidgets/equipmentList';
+import MuscleGroupSearch from '../../../components/customWidgets/muscleGroupList';
+import FitnessSelect from '../../../components/customWidgets/fitnessSelect';
 
-
-// let equipmentListarray: any;
-// function handleEquipmentCallback(data: any) {
-//     equipmentListarray = data;
-// }
-
-// let muscleGroupListarray: any;
-// function handleMuscleGroupCallback(data:any){
-//     muscleGroupListarray = data;
-// }
-
-// let editorTextString: any;
-// function handleEditorTextCallBack(data:any){
-//     editorTextString = data;
-// }
 
 export const widgets = {
     fitnessSelect: FitnessSelect,
@@ -55,7 +40,7 @@ export const schema: any = {
             "ui:widget": "fitnessSelect"
           },
           "addExercise": {
-              "Add Text": {
+              "AddText": {
                   "ui:widget": "textEditor"
               },
               "Upload": {

@@ -5,11 +5,12 @@ import { Button, Col, Modal, ProgressBar, Row } from "react-bootstrap";
 import _ from "lodash"
 
 
-export default function ModalView({ name, formUISchema, formSubmit, formSchema, formData, isStepper, userData, setUserData, widgets, setRender, fitness_package_type, PTProps, actionType, pricingDetailRef, classicProps, groupProps, customProps }: any) {
+export default function ModalView({ name, formUISchema, formSubmit, formSchema, formData, isStepper, userData, setUserData, widgets, setRender, fitness_package_type, PTProps, actionType, pricingDetailRef, classicProps, groupProps, customProps, modalTrigger, stepperValues }: any) {
 
 
-export default function ModalView({ name, formUISchema, formSubmit, formSchema, formData, isStepper, widgets, modalTrigger }: any) {
+// export default function ModalView({ name, formUISchema, formSubmit, formSchema, formData, isStepper, widgets, modalTrigger }: any) {
 
+// export default function ModalView({ name, formUISchema, formSubmit, formSchema, formData, isStepper, widgets, modalTrigger, stepperValues }: any) {
     const registry = utils.getDefaultRegistry();
     const defaultFileWidget = registry.widgets["FileWidget"];
     (Bootstrap4Theme as any).widgets["FileWidget"] = defaultFileWidget;
@@ -20,7 +21,7 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
 
     const [show, setShow] = useState<boolean>(false);
     const [formValues, setFormValues] = useState<any>(formData);
-    const stepper: string[] = ["Creator", "Details", "Program", "Schedule", "Pricing"];
+    const stepper: string[] = stepperValues;
     
     modalTrigger.subscribe((res: boolean) => {
         setShow(res);
@@ -29,30 +30,30 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
 
     function submitHandler(formData: any) {
 
-        const updateFinesspackagepricing = updatePrice(formData, actionType);
+        // const updateFinesspackagepricing = updatePrice(formData, actionType);
 
 
-        const updateMode = updateModeName(formData)
-        const updateDuration = updateFormDuration(formData)
+        // const updateMode = updateModeName(formData)
+        // const updateDuration = updateFormDuration(formData)
 
-        if (isStepper && step < 6) {
-            const update = updateInputValue(formData)
+        // if (isStepper && step < 2) {
+        //     const update = updateInputValue(formData)
 
-            setStep(step + 1);
-            setFormValues({ ...formValues, ...update, fitness_package_type, fitnesspackagepricing: updateFinesspackagepricing, duration: updateDuration });
-            setUserData({ ...formValues, ...update, fitness_package_type, fitnesspackagepricing: updateFinesspackagepricing, duration: updateDuration })
+        //     setStep(step + 1);
+        //     setFormValues({ ...formValues, ...update, fitness_package_type, fitnesspackagepricing: updateFinesspackagepricing, duration: updateDuration });
+        //     setUserData({ ...formValues, ...update, fitness_package_type, fitnesspackagepricing: updateFinesspackagepricing, duration: updateDuration })
 
 
-        } else {
-            if (typeof formData.disciplines !== "object") {
-                formData.disciplines = JSON.parse(formData.disciplines).map(item => item.id)
-            }
-            formData = { ...formData, fitnesspackagepricing: updateFinesspackagepricing, mode: updateMode }
-            formSubmit(formData);
+        // } else {
+        //     if (typeof formData.disciplines !== "object") {
+        //         formData.disciplines = JSON.parse(formData.disciplines).map(item => item.id)
+        //     }
+        //     formData = { ...formData, fitnesspackagepricing: updateFinesspackagepricing, mode: updateMode }
+        //     formSubmit(formData);
 
-            actionType === "view" && setRender(false)
+        //     actionType === "view" && setRender(false)
 
-        }
+        // }
     }
 
     const handleSubmitName = (actionType: string) => {
@@ -126,7 +127,7 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
                                     setStep(step - 1);
                                     if (step === 4) {
                                         if (actionType === "create") {
-                                            resetClassesValue(userData)
+                                            // resetClassesValue(userData)
                                         }
                                     }
                                 }}
@@ -139,7 +140,7 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
                                 size="sm"
                                 onClick={(event) => { formRef.current.onSubmit(event) }}
                             >
-                                {(step < 6)
+                                {(step < 2)
                                     ? <>Next<i className="ml-4 fas fa-arrow-right"></i></>
                                     :
                                     <>

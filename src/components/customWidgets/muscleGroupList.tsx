@@ -45,8 +45,14 @@ const MuscleGroupList = (props: any) => {
 
      function handleSeletedMuscleGroupAdd(name: any, id: any) {
           const values = [...selected];
-          values.push({ value: name, id: id});
-          setSelected(values);
+          let a = values.find((e) => e.id === id);
+          if (!a){
+               values.push({ value: name, id: id}); 
+               setSelected(values);
+          }
+          props.onChange(values.map((e) => {
+               return e.id;
+          }).join(','))
           inputField.current.value = "";
           setMuscleGroup([]);
           skipval = true;
@@ -56,21 +62,17 @@ const MuscleGroupList = (props: any) => {
           const values = [...selected];
           values.splice(name, 1);
           setSelected(values);
+          props.onChange(values.map((e) => {
+               return e.id;
+          }).join(','))
      }
 
-     onTrigger();
-
-     function onTrigger() {
-          props.muscleGroupList(selected);
-     }
-
-      FetchMuscleGroupList({ filter: searchInput, skip: skipval});
-     
+     FetchMuscleGroupList({ filter: searchInput, skip: skipval});
      return (
           <>
-               <label style={{ fontSize: 17}}>Muscle Group</label>
+               <label style={{ fontSize: 17}}>Muscle group</label>
                     <InputGroup>
-                         <FormControl aria-describedby="basic-addon1" placeholder="Search For Muscle Group"  id="searchInput" ref={inputField}
+                         <FormControl aria-describedby="basic-addon1" placeholder="Search For Muscle Group"  id="muscleGroup" ref={inputField}
                          onChange={(e) => {e.preventDefault();
                                    muscleGroupSearch(e.target.value);
                               }} autoComplete="off"
