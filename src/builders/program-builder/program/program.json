@@ -13,7 +13,7 @@
              "duration": {
                 "type": "number",
                 "title": "Duration",
-                "minimum": 1,
+                "minimum": 7,
                 "maximum": 30
              },
              "level": {
