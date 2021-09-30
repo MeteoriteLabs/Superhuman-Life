@@ -2,9 +2,9 @@ import { useQuery } from '@apollo/client';
 import { useContext, useMemo, useRef, useState } from 'react'
 import { Badge, Row, Col } from "react-bootstrap";
 import Table from '../../../../components/table';
-// import '../../../../components/table/table.css'
+
 import AuthContext from "../../../../context/auth-context"
-import { GET_PACKAGE_BY_TYPE } from '../../graphQL/queries';
+import { GET_ALL_CLIENT_PACKAGE_BY_TYPE } from '../../graphQL/queries';
 import moment from 'moment';
 import ActionButton from '../../../../components/actionbutton';
 import FitnessAction from '../FitnessAction';
@@ -16,8 +16,10 @@ export default function Custom(props) {
 
     const fitnessActionRef = useRef<any>(null);
 
+
+    
     const FetchData = () => {
-        useQuery(GET_PACKAGE_BY_TYPE, {
+        useQuery(GET_ALL_CLIENT_PACKAGE_BY_TYPE, {
             variables: {
                 id: auth.userid,
                 type: 'Custom Fitness',
@@ -31,7 +33,7 @@ export default function Custom(props) {
 
 
     const loadData = (data) => {
-        console.log('custom query data', data);
+        // console.log('custom query data', data);
         setUserPackage(
             [...data.userPackages].map((packageItem) => {
                 let renewDay:any = '';
@@ -166,6 +168,7 @@ export default function Custom(props) {
             ]
         },
     ], []);
+
 
 
 

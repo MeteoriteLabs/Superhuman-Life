@@ -8,16 +8,18 @@ export const schema: any = {
      "level": {
           "ui:widget": "radio",
           "ui:options": {
-              "inline": true
+               "inline": true
           }
      },
-      "details": {
+     "details": {
           "ui:widget": "textarea",
           "ui:options": {
-              "rows": 3
+               "rows": 3
           }
      },
+
      "discipline": {
           "ui:widget": "fitnessSelect"
-     }
+     },
+
 }

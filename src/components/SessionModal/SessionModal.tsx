@@ -4,6 +4,7 @@ import { Theme as Bootstrap4Theme } from '@rjsf/bootstrap-4';
 import { Button, Col, Modal, ProgressBar, Row } from "react-bootstrap";
 
 export default function SessionModal({ name, formUISchema, formSubmit, formSchema, formData, isStepper, widgets, modalTrigger, stepperValues }: any) {
+  
     const registry = utils.getDefaultRegistry();
     const defaultFileWidget = registry.widgets["FileWidget"];
     (Bootstrap4Theme as any).widgets["FileWidget"] = defaultFileWidget;
@@ -18,8 +19,11 @@ export default function SessionModal({ name, formUISchema, formSubmit, formSchem
     modalTrigger.subscribe((res: boolean) => {
         setShow(res);
     });
-    
+ 
+
     function submitHandler(formData: any) {
+
+   
         if (isStepper && step < 2) {
             console.log("Data submitted: ", formData);
             setStep(step + 1);
@@ -30,11 +34,9 @@ export default function SessionModal({ name, formUISchema, formSubmit, formSchem
     }
 
 
+
     return (
         <>  
-            {/* <Button variant={name === "Create New"?"outline-secondary":"light"}  size="sm" onClick={() => setShow(true)}>
-                {name === "Create New"?<i className="fas fa-plus-circle"></i>:" "}{" "}{name}
-            </Button> */}
             <Modal size="xl" show={show} onHide={() => setShow(false)} centered >
                 <Modal.Header closeButton>
                     <Modal.Title as={Row}>

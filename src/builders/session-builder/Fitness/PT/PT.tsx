@@ -1,9 +1,9 @@
 import { useQuery } from '@apollo/client';
 import { useContext, useMemo, useRef, useState } from 'react'
-import { Badge, Button, Dropdown, OverlayTrigger, Popover, Row, Col } from "react-bootstrap";
+import { Badge, Row, Col } from "react-bootstrap";
 import AuthContext from "../../../../context/auth-context"
 import PTTable from '../../../../components/table/PtTable/PTTable'
-import { GET_PACKAGE_BY_TYPE } from '../../graphQL/queries';
+import { GET_ALL_CLIENT_PACKAGE_BY_TYPE } from '../../graphQL/queries';
 import moment from 'moment';
 import ActionButton from '../../../../components/actionbutton';
 import FitnessAction from '../FitnessAction'
@@ -18,7 +18,7 @@ export default function Group(props) {
     const fitnessActionRef = useRef<any>(null);
 
     const FetchData = () => {
-        useQuery(GET_PACKAGE_BY_TYPE, {
+        useQuery(GET_ALL_CLIENT_PACKAGE_BY_TYPE, {
             variables: {
                 id: auth.userid,
                 type: 'Personal Training',

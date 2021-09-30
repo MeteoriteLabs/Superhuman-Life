@@ -6,7 +6,7 @@ import { useTable } from "react-table";
 import { useSortBy, usePagination } from 'react-table'
 import "./bookingTable.css";
 import * as Icon from 'react-bootstrap-icons';
-function Table({ data, columns, newPackageCount, fetchData, loading, pageCount: controlledPageCount, }: any) {
+function Table({ data, columns, newPackageCount, loading, pageCount: controlledPageCount, }: any) {
 
     const {
         getTableProps,
@@ -14,39 +14,39 @@ function Table({ data, columns, newPackageCount, fetchData, loading, pageCount: 
         headerGroups,
         rows,
         prepareRow,
-        page,
-        canPreviousPage,
-        canNextPage,
-        pageOptions,
-        pageCount,
-        gotoPage,
-        nextPage,
-        previousPage,
-        setPageSize,
-        state: { pageSize },
+        // page,
+        // canPreviousPage,
+        // canNextPage,
+        // pageOptions,
+        // pageCount,
+        // gotoPage,
+        // nextPage,
+        // previousPage,
+        // setPageSize,
+        // state: { pageSize },
     } = useTable({
         columns, data, initialState: {
             sortBy: [
                 { id: "purchase_date", desc: true },
             ],
             // pageIndex: 0,
-            pageSize: 10
+            // pageSize: 10
         },
-        manualPagination: true,
-        pageCount: controlledPageCount,
+        // manualPagination: true,
+        // pageCount: controlledPageCount,
         isMultiSortEvent: e => {
             return true
         }
     }, useSortBy, usePagination);
 
 
-    // start = (current page no - 1) x no of records per page
 
-    const [pageIndex, setPageIndex] = useState(0)
 
-    useEffect(() => {
-        fetchData({ pageIndex, pageSize })
-    }, [fetchData, pageIndex, pageSize])
+    // const [pageIndex, setPageIndex] = useState(0)
+
+    // useEffect(() => {
+    //     fetchData({ pageIndex, pageSize })
+    // }, [fetchData, pageIndex, pageSize])
 
 
     const [isSort, setIsSort] = useState(false);
@@ -80,7 +80,7 @@ function Table({ data, columns, newPackageCount, fetchData, loading, pageCount: 
             </Button>
 
 
-            <pre>
+            {/* <pre>
                 <code>
                     {JSON.stringify(
                         {
@@ -94,7 +94,7 @@ function Table({ data, columns, newPackageCount, fetchData, loading, pageCount: 
                         2
                     )}
                 </code>
-            </pre>
+            </pre> */}
             <table {...getTableProps()} className="table text-center">
                 <thead>
                     {headerGroups.map(headerGroup => {
@@ -130,10 +130,10 @@ function Table({ data, columns, newPackageCount, fetchData, loading, pageCount: 
 
 
                 <tbody  {...getTableBodyProps()}>
-                    {page.map(row => {
-                        let purchaseDate: Date = new Date(moment(row.values.purchase_date).format('MM/DD/YYYY'));
+                    {rows.map(row => {
+                        let bookingDate: Date = new Date(moment(row.values.booking_date).format('MM/DD/YYYY'));
                         let currentDate: Date = new Date(moment().format('MM/DD/YYYY'));
-                        const diffTime = Math.abs(Number(purchaseDate) - Number(currentDate));
+                        const diffTime = Math.abs(Number(bookingDate) - Number(currentDate));
                         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
                         prepareRow(row);
@@ -175,7 +175,7 @@ function Table({ data, columns, newPackageCount, fetchData, loading, pageCount: 
                 </tbody>
             </table>
 
-            <div className="pagination justify-content-around">
+            {/* <div className="pagination justify-content-around">
                 <div>
                     <button onClick={() => {
                         setPageIndex(0)
@@ -244,7 +244,7 @@ function Table({ data, columns, newPackageCount, fetchData, loading, pageCount: 
                         ))}
                     </select>
                 </div>
-            </div>
+            </div> */}
         </div>
 
     );

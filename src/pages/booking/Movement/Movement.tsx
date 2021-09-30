@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client';
 import moment from 'moment';
-import React, { useContext, useMemo, useRef, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { Badge, Col, Row } from 'react-bootstrap';
 import ActionButton from '../../../components/actionbutton';
 import BookingTable from '../../../components/table/BookingTable/BookingTable'
@@ -13,8 +13,16 @@ export default function Movement(props) {
 
     const auth = useContext(authContext);
     const [userPackage, setUserPackage] = useState<any>([]);
-    const [startRow, setStartRow] = useState(0);
-    const [endRow, setEndRow] = useState(3);
+    const [start, setStart] = useState(0);
+    const [endRow, setEndRow] = useState(1);
+    const [page, setPage] = useState(0);
+    const limit = 2
+    const dataLengthRef = useRef<number | null>(0)
+    console.log("🚀 ~ file: Movement.tsx ~ line 21 ~ Movement ~ dataLengthRef", dataLengthRef)
+
+
+
+
     // const [newPackageCount, setNewPackageCount] = useState(0)
 
 
@@ -25,44 +33,88 @@ export default function Movement(props) {
 
 
 
-    const FetchData = () => {
-        useQuery(GET_ALL_BOOKINGS, {
-            variables: {
-                id: auth.userid,
-                start: startRow,
-                limit: endRow
-            },
-            onCompleted: (data) => loadData(data)
-        })
-    }
+    useQuery(GET_ALL_BOOKINGS, {
+        variables: {
+            id: auth.userid,
+            start: start,
+            limit: limit
+        },
+        onCompleted: (data) => loadData(data)
+    })
+
+    // console.log('repeat')
+    // console.log('bottom page')
+    // console.log('page', page, 'startRow', start)
+
+
+ 
+    useEffect(() => {
+
+        const scrollFunction = () => {
+            if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+                setPage(page + 1)
+                setStart((limit * page) + 1);
+            }
+        };
+
+
+        if (userPackage.length > 1) {
+            for (let i = 0; i < userPackage.length; i++) {
+                for (let j = i + 1; j < userPackage.length; j++) {
+                    if (userPackage[i].id === userPackage[j].id) {
+                        userPackage.splice(j, 1);
+                        break
+                    }
+                }
+            }
+        }
+        dataLengthRef.current = userPackage.length
+
+        setTimeout(() => {
+            window.addEventListener('scroll', scrollFunction);
+        }, 1000)
+
+        return () => window.removeEventListener('scroll', scrollFunction)
+
+    }, [page])
+
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [])
 
 
 
     const loadData = (data: { clientBookings: any[]; }) => {
-        console.log("🚀 ~ file: Movement.tsx ~ line 34 ~ loadData ~ data", data)
+        let existingData = [...userPackage];
+        let newData = [...data.clientBookings.map(packageItem => {
+            const renewDay: Date = new Date(packageItem.effective_date);
+            renewDay.setDate(renewDay.getDate() + packageItem.package_duration);
+            return {
+                id: packageItem.id,
+                booking_date: packageItem.booking_date,
+                client: packageItem.users_permissions_user.username,
+                packageName: packageItem.fitnesspackages[0].packagename,
+                fitness_package_type: packageItem.fitnesspackages[0].fitness_package_type.type,
+                effectiveDate: packageItem.effective_date,
+                packageRenewal: renewDay,
+                duration: packageItem.package_duration,
+                price: 'Rs 4000',
+                payment_status: "Paid",
+                Status: packageItem.booking_status,
+            }
+        })]
+
         setUserPackage(
-            [...data.clientBookings.map(packageItem => {
-                const renewDay: Date = new Date(packageItem.effective_date);
-                renewDay.setDate(renewDay.getDate() + packageItem.package_duration);
-                return {
-                    id:packageItem.id,
-                    booking_date: packageItem.booking_date,
-                    client: packageItem.users_permissions_user.username,
-                    packageName: packageItem.fitnesspackages[0].packagename,
-                    fitness_package_type: packageItem.fitnesspackages[0].fitness_package_type.type,
-                    effectiveDate: packageItem.effective_date,
-                    packageRenewal: renewDay,
-                    duration: packageItem.package_duration,
-                    price: 'Rs 4000',
-                    payment_status: "Paid",
-                    Status: packageItem.booking_status
-                }
-            })]
+            existingData.concat(newData)
         )
     };
 
-    FetchData();
 
+    console.log({ userPackage })
+
+
+    // New package count
     let newPackageCount = 0
     userPackage.forEach((item: { booking_date: moment.MomentInput; }) => {
         let booking_date: any = new Date(moment(item.booking_date).format('MM/DD/YYYY'));
@@ -73,14 +125,6 @@ export default function Movement(props) {
             newPackageCount++
         }
     })
-
-
-    console.log("🚀 ~ file: Movement.tsx ~ line 64 ~ Movement ~ newPackageCount", newPackageCount)
-
-
-
-
-
 
 
     const columns = useMemo(
@@ -150,9 +194,9 @@ export default function Movement(props) {
                 Header: "Status",
                 Cell: (row: any) => {
                     return <>
-                        {row.value === "accepted" ?<Badge style={{ padding: '0.8rem 4rem', borderRadius: '10px', fontSize: '1rem' }} variant="success">{row.value}</Badge> : ""}
-                        {row.value === "rejected" ?<Badge style={{ padding: '0.8rem 4rem', borderRadius: '10px', fontSize: '1rem' }} variant="danger">{row.value}</Badge> : ""}
-                        {row.value === "pending" ?<Badge style={{ padding: '0.8rem 4rem', borderRadius: '10px', fontSize: '1rem' }} variant="warning">{row.value}</Badge> : ""}
+                        {row.value === "accepted" ? <Badge style={{ padding: '0.8rem 4rem', borderRadius: '10px', fontSize: '1rem' }} variant="success">{row.value}</Badge> : ""}
+                        {row.value === "rejected" ? <Badge style={{ padding: '0.8rem 4rem', borderRadius: '10px', fontSize: '1rem' }} variant="danger">{row.value}</Badge> : ""}
+                        {row.value === "pending" ? <Badge style={{ padding: '0.8rem 4rem', borderRadius: '10px', fontSize: '1rem' }} variant="warning">{row.value}</Badge> : ""}
                     </>
                 }
             },
@@ -161,28 +205,28 @@ export default function Movement(props) {
                 Header: "Actions",
                 Cell: ({ row }: any) => {
                     return <ActionButton
-                        status= {row.original.Status}
+                        status={row.original.Status}
                         action1='Go To Client'
                         actionClick1={() => {
-                            bookingActionRef.current.TriggerForm({ id: row.original.id, actionType: 'manage'})
+                            bookingActionRef.current.TriggerForm({ id: row.original.id, actionType: 'manage' })
                         }}
 
                         action2='View Invoice'
                         actionClick2={() => {
-                            bookingActionRef.current.TriggerForm({ id: row.original.id, actionType: 'view'})
+                            bookingActionRef.current.TriggerForm({ id: row.original.id, actionType: 'view' })
                         }}
                         action3='Request Data'
                         actionClick3={() => {
-                            bookingActionRef.current.TriggerForm({ id: row.original.id, actionType: 'request'})
+                            bookingActionRef.current.TriggerForm({ id: row.original.id, actionType: 'request' })
                         }}
-                        
+
                         action4='Accept'
                         actionClick4={() => {
-                            bookingActionRef.current.TriggerForm({ id: row.original.id, formData:row.original, actionType: 'accept'})
+                            bookingActionRef.current.TriggerForm({ id: row.original.id, formData: row.original, actionType: 'accept' })
                         }}
                         action5='Reject'
                         actionClick5={() => {
-                            bookingActionRef.current.TriggerForm({ id: row.original.id, actionType: 'reject'})
+                            bookingActionRef.current.TriggerForm({ id: row.original.id, actionType: 'reject' })
                         }}
                     >
                     </ActionButton>
@@ -195,18 +239,18 @@ export default function Movement(props) {
 
 
 
-    const fetchDataTable = React.useCallback(({ pageSize, pageIndex }) => {
+    // const fetchDataTable = React.useCallback(({ pageSize, pageIndex }) => {
 
-        const fetchId = ++fetchIdRef.current
+    //     const fetchId = ++fetchIdRef.current
 
 
-        setTimeout(() => {
-            if (fetchId === fetchIdRef.current) {
-                setStartRow(pageSize * pageIndex);
-                setEndRow(startRow + pageSize)
-            }
-        }, 1000)
-    }, [])
+    //     setTimeout(() => {
+    //         if (fetchId === fetchIdRef.current) {
+    //             setStartRow(pageSize * pageIndex);
+    //             setEndRow(startRow + pageSize)
+    //         }
+    //     }, 1000)
+    // }, [])
 
     return (
         <div className="mt-5">
@@ -216,10 +260,10 @@ export default function Movement(props) {
                         columns={columns}
                         data={userPackage}
                         newPackageCount={newPackageCount}
-                        fetchData={fetchDataTable}
+
                     />
 
-                    <BookingAction ref={bookingActionRef}/>
+                    <BookingAction ref={bookingActionRef} />
                 </Col>
             </Row>
         </div>

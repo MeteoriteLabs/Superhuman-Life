@@ -1,4 +1,3 @@
-import moment from "moment";
 import { Fragment } from "react";
 import { useTable, useExpanded } from "react-table";
 import "./table.css";

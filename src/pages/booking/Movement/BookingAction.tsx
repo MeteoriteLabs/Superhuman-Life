@@ -1,16 +1,17 @@
 import { useMutation } from '@apollo/client';
 import React, { useImperativeHandle, useState } from 'react'
 import AcceptRejectModal from '../../../components/AcceptRejectModal/AcceptRejectModal';
-import { UPDATE_BOOKING_STATUS } from '../graphQL/mutation';
+import { CREATE_USER_PACKAGE, UPDATE_BOOKING_STATUS } from '../graphQL/mutation';
+
 
 interface Operation {
     id: string,
     actionType: "manage" | "view" | "request" | "accept" | "reject",
-    formData:any
+    formData: any
 }
 
 function BookingAction(props, ref: any) {
-
+   
 
     const [render, setRender] = useState<boolean>(false);
     const [operation, setOperation] = useState<Operation>({} as Operation);
@@ -25,10 +26,19 @@ function BookingAction(props, ref: any) {
     }),
     )
 
-    const [updateBookingStatus] = useMutation(UPDATE_BOOKING_STATUS)
+    const [updateBookingStatus] = useMutation(UPDATE_BOOKING_STATUS, {
+        onCompleted: data => createClientPackage(data)
+    });
 
 
-    console.log(operation)
+    const [createUserPackage] = useMutation(CREATE_USER_PACKAGE, {
+     
+    })
+
+
+
+
+   
     const onClick = () => {
         const updateValue = {
             id: operation.id,
@@ -36,9 +46,28 @@ function BookingAction(props, ref: any) {
         };
 
         updateBookingStatus({
-            variables: updateValue
+            variables: updateValue,
         })
+    }
 
+    const createClientPackage = (data) => {
+        const { updateClientBooking } = data;
+       
+
+        const formValue = {
+            users_permissions_user: updateClientBooking.clientBooking.users_permissions_user.id,
+            fitnesspackages: updateClientBooking.clientBooking.fitnesspackages.map(item => item.id),
+            accepted_date: updateClientBooking.clientBooking.booking_date,
+            package_duration: updateClientBooking.clientBooking.package_duration,
+            effective_date: updateClientBooking.clientBooking.effective_date,
+            program_managers: updateClientBooking.clientBooking.program_managers.map(item => item.id),
+
+        }
+        console.log("🚀 ~ file: BookingAction.tsx ~ line 59 ~ createClientPackage ~ formValue", formValue);
+
+        createUserPackage({
+            variables: formValue
+        })
     }
 
     return (

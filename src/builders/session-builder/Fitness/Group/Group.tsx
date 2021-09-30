@@ -4,11 +4,11 @@ import { Badge, Row, Col } from "react-bootstrap";
 
 import AuthContext from "../../../../context/auth-context"
 import GroupTable from '../../../../components/table/GroupTable/GroupTable';
-import { GET_PACKAGE_BY_TYPE } from '../../graphQL/queries';
+import { GET_ALL_FITNESS_PACKAGE_BY_TYPE, GET_ALL_PROGRAM_BY_TYPE, GET_ALL_CLIENT_PACKAGE } from '../../graphQL/queries';
 import moment from 'moment';
 import ActionButton from '../../../../components/actionbutton';
 import FitnessAction from '../FitnessAction';
-
+import _ from 'lodash'
 
 
 export default function Group(props) {
@@ -17,332 +17,107 @@ export default function Group(props) {
 
     const [userPackage, setUserPackage] = useState<any>([]);
 
+
     const fitnessActionRef = useRef<any>(null)
 
 
-    const FetchData = () => {
-        useQuery(GET_PACKAGE_BY_TYPE, {
-            variables: {
-                id: auth.userid,
-                type: 'Group Class'
-            },
-            onCompleted: (data) => loadData(data)
+    const { data: data1 } = useQuery(GET_ALL_FITNESS_PACKAGE_BY_TYPE, {
+        variables: {
+            id: auth.userid,
+            type: 'Group Class'
+        },
+
+    });
+
+    const { data: data2 } = useQuery(GET_ALL_PROGRAM_BY_TYPE, {
+        variables: {
+            id: auth.userid,
+            type: 'Group Class'
+        },
+
+    });
+
+
+
+    const { data: data3 } = useQuery(GET_ALL_CLIENT_PACKAGE, {
+        variables: {
+            id: auth.userid,
+            type: 'Group Class'
+        },
+        onCompleted: (data) => loadData()
+    })
+
+
+
+    const loadData = () => {
+        
+        let arrayFitnessPackage: any[] = [];
+        let arrayData :any[] = []
+
+
+        let fitnessProgramItem:any = {};
+        for (let i = 0; i < data1.fitnesspackages.length; i++) {
+            for(let j = 0; j < data2?.programManagers.length; j ++){
+                if (data1.fitnesspackages[i].id === data2.programManagers[j].fitnesspackages[0].id) {
+                    fitnessProgramItem.programId = data2.programManagers[j].fitnessprograms[0].id;
+                    fitnessProgramItem.title = data2.programManagers[j].fitnessprograms[0].title;
+                    fitnessProgramItem.published_at = data2.programManagers[j].fitnessprograms[0].published_at
+
+                    arrayData.push( { ...data1.fitnesspackages[i], ...fitnessProgramItem});
+                }
+            }
+        }
+
+        let arrayA = arrayData.map(item =>item.id);
+     
+        const res = data1.fitnesspackages.filter(item =>  !arrayA.includes(item.id));
+        res.forEach(item => {
+            arrayData.push(item)
         })
 
-    }
 
 
-
-
-    const loadData = (data) => {
-        console.log('group query data', data);
-        setUserPackage(
-            [...data.userPackages].map((packageItem, index) => {
-                if (packageItem.program_managers.length === 0) {
-                    return {
-                        id: packageItem.fitnesspackages[0].id,
-                        packageName: packageItem.fitnesspackages[0].packagename,
-                        expiry: moment(packageItem.fitnesspackages[0].expiry_date).format("MMMM DD,YYYY"),
-                        packageStatus: packageItem.fitnesspackages[0].Status ? "Active" : "Inactive",
-
-                        client: "N/A",
-                        time: "N/A",
-                        programName: "N/A",
-                        programStatus: "N/A",
-                        renewal: "N/A",
-                    }
-                }else{
-                    return {
-                        id: packageItem.program_managers[0].fitnesspackages[0].id,
-                        packageName: packageItem.program_managers[0].fitnesspackages[0].packagename,
-                        expiry: moment(packageItem.program_managers[0].fitnesspackages[0].expiry_date).format("MMMM DD,YYYY"),
-                        packageStatus: packageItem.program_managers[0].fitnesspackages[0].Status ? "Active" : "Inactive",
-    
-                        client: packageItem.users_permissions_user.username,
-                        time: packageItem.program_managers[0].fitnessprograms.map(program => moment(program.published_at).format('h:mm:ss a')),
-                        programName: packageItem.program_managers[0].fitnessprograms[0].title,
-                        programStatus: "Assigned",
-                        renewal: "25/07/20",
+        for (let i = 0; i < arrayData.length; i++) {
+            for (let j = 0; j < data3.userPackages.length; j++) {
+                if (data3.userPackages[j].program_managers.length > 0) {
+                    if (arrayData[i].programId === data3.userPackages[j].program_managers[0].fitnessprograms[0].id) {
+                        arrayFitnessPackage.push({ ...arrayData[i], ...data3.userPackages[j].users_permissions_user });
+                    } else {
+                        arrayFitnessPackage.push(arrayData[i]);
+                        break;
                     }
                 }
-            })
+            }
+        }
+
+
+        setUserPackage(
+            [...arrayFitnessPackage.map((packageItem) => {
+                return {
+                    id: packageItem.id,
+                    packageName: packageItem.packagename,
+                    duration: packageItem.duration,
+                    expiry: moment(packageItem.expiry_date).format("MMMM DD,YYYY"),
+                    packageStatus: packageItem.Status ? "Active" : "Inactive",
+
+                    programId: packageItem.programId,
+                    client: packageItem.username ? packageItem.username : "N/A",
+                    time: packageItem.published_at ? moment(packageItem.published_at).format('h:mm:ss a') : "N/A",
+                    programName: packageItem.title ? packageItem.title : "N/A",
+                    programStatus: packageItem.username ? "Assigned" : "N/A",
+                    renewal: packageItem.title ? "25/08/2021" : "N/A",
+                }
+            })]
         )
+
     }
 
 
-  
 
-    FetchData();
-
-
-    const buttonAction = () => {
-        return <button>Add new</button>
-    }
-
-    // const origData = [
-    //     {
-    //         id: "1",
-    //         packageName: "Package Name 1",
-    //         expiry: "29/12/20",
-    //         packageStatus: 'Active',
-    //         action: buttonAction(),
-    //         programs: [
-    //             {
-    //                 program: "Pirates of the Carribean 1",
-    //                 client: "John",
-    //                 time: "7:00 am-8:00 am",
-    //                 status: "Not Assigned",
-    //                 renewal: "25/04/20"
-    //             },
-    //             {
-    //                 program: "Pirates of the Carribean 1",
-    //                 client: "John",
-    //                 time: "7:00 am-8:00 am",
-    //                 status: "Assigned",
-    //                 renewal: "26/04/20",
-    //             },
-    //             {
-    //                 program: "Pirates of the Carribean 3",
-    //                 client: "John",
-    //                 time: "10:00 am-8:00 am",
-    //                 status: "Not Assigned",
-    //                 renewal: "27/04/20",
-    //             },
-    //             {
-    //                 program: "Pirates of the Carribean 3",
-    //                 client: "John",
-    //                 time: "10:00 am-8:00 am",
-    //                 status: "Not Assigned",
-    //                 renewal: "27/04/20",
-    //             }
-    //         ]
-    //     },
-
-    //     {
-    //         id: "2",
-    //         packageName: "Package Name 2",
-    //         expiry: "30/12/20",
-    //         packageStatus: 'inActive',
-    //         action: buttonAction(),
-    //         programs: [
-    //             {
-    //                 program: "Pirates of the Carribean 1",
-    //                 client: "John",
-    //                 time: "7:00 am-8:00 am",
-    //                 status: "Not Assigned",
-    //                 renewal: "25/04/20"
-    //             },
-    //             {
-    //                 program: "Pirates of the Carribean 2",
-    //                 client: "John",
-    //                 time: "7:00 am-8:00 am",
-    //                 status: "Assigned",
-    //                 renewal: "26/04/20",
-    //             },
-    //             {
-    //                 program: "Pirates of the Carribean 3",
-    //                 client: "John",
-    //                 time: "7:00 am-8:00 am",
-    //                 status: "Assigned",
-    //                 renewal: "27/04/20",
-    //             },
-    //             {
-    //                 program: "Pirates of the Carribean 4",
-    //                 client: "John",
-    //                 time: "7:00 am-8:00 am",
-    //                 status: "Not Assigned",
-    //                 renewal: "28/04/20",
-    //             }
-    //         ]
-    //     },
-
-    // ];
-
-    // const newData: Array<any> = [];
-
-    // origData.forEach(obj => {
-    //     obj.programs.forEach(program => {
-    //         newData.push({
-    //             id: obj.id,
-    //             packageName: obj.packageName,
-    //             expiry: obj.expiry,
-    //             action: obj.action,
-    //             packageStatus: obj.packageStatus,
-
-    //             client: program.client,
-    //             programName: program.program,
-    //             time: program.time,
-    //             programStatus: program.status,
-    //             renewal: program.renewal,
-    //         });
-    //     });
-    // });
-
-
-    // const data = useMemo(() => newData, []);
-
-
-    // const dataTable: any[] = [
-    //     {
-    //         id: "1",
-    //         packageName: "Package Name 1",
-    //         expiry: "29/12/20",
-    //         packageStatus: 'Active',
-    //         action: buttonAction(),
-    //         programName: "Pirates of the Carribean 1",
-    //         client: "Mary",
-    //         time: "7:00 am-8:00 am",
-    //         programStatus: "Assigned",
-    //         renewal: "25/04/20"
-    //     },
-
-
-    //     {
-    //         id: "1",
-    //         packageName: "Package Name 1",
-    //         expiry: "29/12/20",
-    //         packageStatus: 'Active',
-    //         action: buttonAction(),
-    //         programName: "Pirates of the Carribean 1",
-    //         client: "Mary",
-    //         time: "7:00 am-8:00 am",
-    //         programStatus: "Assigned",
-    //         renewal: "25/04/20"
-    //     },
-
-    //     {
-    //         id: "1",
-    //         packageName: "Package Name 1",
-    //         expiry: "29/12/20",
-    //         packageStatus: 'Active',
-    //         action: buttonAction(),
-    //         programName: "Pirates of the Carribean 1",
-    //         client: "John",
-    //         time: "7:00 am-8:00 am",
-    //         programStatus: "Assigned",
-    //         renewal: "25/04/20"
-    //     },
-    //     {
-    //         id: "1",
-    //         packageName: "Package Name 1",
-    //         expiry: "29/12/20",
-    //         packageStatus: 'Active',
-    //         action: buttonAction(),
-    //         programName: "Pirates of the Carribean 1",
-    //         client: "Jack",
-    //         time: "7:00 am-8:00 am",
-    //         programStatus: "Assigned",
-    //         renewal: "25/04/20"
-    //     },
-
-    //     {
-    //         id: "1",
-    //         packageName: "Package Name 1",
-    //         expiry: "30/12/20",
-    //         packageStatus: 'Active',
-    //         action: buttonAction(),
-    //         programName: "Pirates of the Carribean 3",
-    //         client: "Harry",
-    //         time: "9:00 am-8:00 am",
-    //         programStatus: "Not Assigned",
-    //         renewal: "25/04/20"
-    //     },
-
-    //     {
-    //         id: "1",
-    //         packageName: "Package Name 1",
-    //         expiry: "30/12/20",
-    //         packageStatus: 'Active',
-    //         action: buttonAction(),
-    //         programName: "Pirates of the Carribean 2",
-    //         client: "Petter",
-    //         time: "10:00 am-8:00 am",
-    //         programStatus: "Not Assigned",
-    //         renewal: "25/04/20"
-    //     },
-
-
-
-    //     {
-    //         id: "2",
-    //         packageName: "Package Name 2",
-    //         expiry: "30/12/20",
-    //         packageStatus: 'inActive',
-    //         action: buttonAction(),
-    //         programName: "Pirates of the Carribean 6",
-    //         client: "John",
-    //         time: "10:00 am-8:00 am",
-    //         programStatus: "Not Assigned",
-    //         renewal: "25/04/20"
-    //     },
-    //     {
-    //         id: "2",
-    //         packageName: "Package Name 2",
-    //         expiry: "30/12/20",
-    //         packageStatus: 'inActive',
-    //         action: buttonAction(),
-    //         programName: "Pirates of the Carribean 8",
-    //         client: "Nick",
-    //         time: "10:00 am-8:00 am",
-    //         programStatus: "Not Assigned",
-    //         renewal: "25/04/20"
-    //     },
-
-    // ]
-
-
-    //     client: (2) ["quyentest", "quyentest"]
-    // expiry: "30/09/2021"
-    // id: "60ba15c2d2c10f4e484ec1d3"
-    // packageName: "Group Package -Quyen"
-    // packageStatus: "Active"
-    // programName: (2) ["Group Program_quyen", "Group2_quyen"]
-    // programStatus: "Assigned"
-    // renewal: "25/07/20"
-    // time: (2) ["3:44:04 am", "4:05:45 am"]
-
-
-    // let arr: any[] = [];
-    // for (let i = 0; i < userPackage[0].client.length; i++) {
-    //     let program: any = '';
-    //     program.id = userPackage[0].id;
-    //     program.packageName = userPackage[0].ppackageName;
-    //     program.packageStatus = userPackage[0].packageStatus;
-    //     program.expiry = userPackage[0].expiry;
-    //     program.client = userPackage[0].client[i];
-    //     program.programName = userPackage[0].programName[i];
-    //     program.programStatus = userPackage[0].programStatus;
-    //     program.renewal = userPackage[0].renewal;
-    //     program.time = userPackage[0].time[i];
-
-    //     arr.push(program);
-    // }
-
-    // console.log(arr)
-
-
-    // const dataTable: any[] = [];
-    // new Array(userPackage[0]?.programName).fill(0).map((_, index) => {
-    //     dataTable.push({
-    //         id: userPackage[0]?.id,
-    //         packageName: userPackage[0]?.packageName,
-    //         packageStatus: userPackage[0]?.packageStatus,
-    //         expiry: userPackage[0]?.expiry,
-
-    //         client: userPackage[0]?.client,
-    //         programName: userPackage[0]?.programName[index],
-    //         programStatus: userPackage[0]?.programStatus,
-    //         renewal: userPackage[0]?.renewal,
-    //         time: userPackage[0]?.time[index],
-
-    //     })
-    // })
-
-
-    let arr:any = []
+    let arr: any = []
     for (let i = 0; i < userPackage.length - 1; i++) {
-        if (userPackage[i].id === userPackage[i + 1].id) {
-            if (userPackage[i].programName === userPackage[i + 1].programName) {
+        if (userPackage[i].programId === userPackage[i + 1].programId) {
+            if (userPackage[i].programId === userPackage[i + 1].programId) {
                 if (typeof userPackage[i].client === "string") {
                     arr[0] = userPackage[i].client;
                 };
@@ -352,9 +127,6 @@ export default function Group(props) {
                 i--;
             }
         }
-        //  else {
-        //     arr = []
-        // }
     }
 
 
@@ -384,10 +156,9 @@ export default function Group(props) {
                     {
                         accessor: "action", Header: "Action", enableRowSpan: true,
                         Cell: (row: any) => {
-                            // console.log("🚀 ~ file: Group.tsx ~ line 326 ~ Group ~ row", row.rows)
                             return <>
                                 <button onClick={() => {
-                                    fitnessActionRef.current.TriggerForm({ id: row.row.original.id, actionType: 'create', type: 'Group Class' })
+                                    fitnessActionRef.current.TriggerForm({ id: row.row.original.id, actionType: 'create', type: 'Group Class', duration: row.row.original.duration })
                                 }}>Add new</button>
                             </>
                         }
@@ -420,8 +191,8 @@ export default function Group(props) {
                                         })}
                                     </div>
                                 }
-                                    {typeof row.value === 'string' ?  <p className='text-center'>{row.value}</p> :  <p className='text-center'>{row.value.length} people</p>}
-                            
+                                {typeof row.value === 'string' ? <p className='text-center'>{row.value}</p> : <p className='text-center'>{row.value.length} people</p>}
+
                             </div>
                         }
                     },
@@ -454,6 +225,8 @@ export default function Group(props) {
                                 actionClick2={() => {
                                     fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'details' })
                                 }}
+
+
 
                             />
                         }

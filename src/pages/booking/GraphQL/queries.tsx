@@ -33,7 +33,6 @@ query clientBookings($id: ID!, $start:Int, $limit:Int) {
           id
         }
       }
-     
     }
   }
 `

@@ -44,6 +44,7 @@ export const CREATE_PROGRAM = gql`
           $description: String
           $events: JSON
           $users_permissions_user: ID
+          $Is_program:Boolean
      ){
           createFitnessprogram(
                input: {
@@ -55,13 +56,43 @@ export const CREATE_PROGRAM = gql`
                          description: $description
                          events: $events
                          users_permissions_user: $users_permissions_user
+                         Is_program: $Is_program
                     }
                }
           ){
                fitnessprogram {
                     id
                     title
+                    level
+                    duration_days
+                    description
+                    fitnessdisciplines{
+                         id
+                    }
+                    Is_program
                } 
           }
      }
 `    
+
+
+export const CREATE_PROGRAM_MANAGER = gql`
+     mutation createProgramManager(
+          $fitnesspackages: [ID]
+          $fitnessprograms: [ID]
+     ){
+          createProgramManager(
+               input:{
+                    data:{
+                         fitnesspackages: $fitnesspackages
+                         fitnessprograms: $fitnessprograms
+                    }
+               }
+          ){
+               programManager{
+                    id
+               }
+          }
+     }
+`
+
