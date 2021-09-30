@@ -198,15 +198,14 @@ const Schedular = (props: any) => {
 
     var duplicatedDay: any;
     function onChange(e: any){
-        // console.log(e);
-        duplicatedDay = e;
+        duplicatedDay = JSON.parse(e);
     }
 
     function handleDuplicate(e: any, changedTime: any){
         let values = [...currentProgram];
         let newEvent: any = {};
         newEvent.name = e.title;
-        newEvent.day = (duplicatedDay === undefined ? e.day : parseInt(duplicatedDay.substr(13,1)));
+        newEvent.day = (duplicatedDay === undefined ? e.day : duplicatedDay[0].day.substr(4));
         newEvent.startTime = changedTime.startChange;
         newEvent.endTime = changedTime.endChange;
         newEvent.type = e.type;

@@ -3,7 +3,9 @@
          "title": "",
          "type": "object",
          "required": [
-             "assignMode"
+            "assignMode",
+            "day",
+            "startTime"
          ],
          "properties": {
              "assignMode": {

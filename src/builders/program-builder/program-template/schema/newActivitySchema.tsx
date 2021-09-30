@@ -10,7 +10,9 @@ export const widgets = {
 
 export const schema: any = {
      day: {
-          "ui:widget": "daysInput"
+          "ui:widget": (props) => {
+               return <DaysInput onChange={props.onChange}/>
+          }
      },
      startTime: {
           "ui:widget": (props) => {

@@ -3,7 +3,11 @@
          "title": "",
          "type": "object",
          "required": [
-             "programName"
+            "programName",
+            "duration",
+            "level",
+            "discipline",
+            "details"
          ],
          "properties": {
              "programName": {
@@ -13,7 +17,7 @@
              "duration": {
                 "type": "number",
                 "title": "Duration",
-                "minimum": 1,
+                "minimum": 7,
                 "maximum": 30
              },
              "level": {
