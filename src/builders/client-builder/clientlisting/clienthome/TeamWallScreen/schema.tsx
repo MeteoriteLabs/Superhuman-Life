@@ -1,6 +1,7 @@
 import TagSearch from "./TagSearch";
 import Widget from "./Widget";
 import ClientName from "./ClientNameWidget";
+
 export const widgets = {
      PackageSearch: TagSearch,
      Widget: Widget,

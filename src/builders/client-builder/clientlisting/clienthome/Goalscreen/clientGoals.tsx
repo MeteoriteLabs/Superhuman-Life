@@ -85,9 +85,10 @@ function Goals() {
                     <div className="w-95 ml-5 mr-5 mt-3">
                          <Slider {...settings}>
                               {data &&
-                                   [...data.userGoals].map((Detail) => {
+                                   [...data.userGoals].map((Detail, index) => {
                                         return (
                                              <GoalCard
+                                                  key={index}
                                                   click={() => {
                                                        CreateGoalComponent.current.TriggerForm({
                                                             id: Detail.id,

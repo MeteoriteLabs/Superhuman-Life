@@ -67,6 +67,21 @@ export const GET_CLIENTS = gql`
      }
 `;
 
+export const GET_CHANGEMAKERS = gql`
+     query getclient($clientid: ID) {
+          userPackages(where: { users_permissions_user: { id: $clientid } }) {
+               id
+
+               fitnesspackages {
+                    users_permissions_user {
+                         id
+                         username
+                         designation
+                    }
+               }
+          }
+     }
+`;
 export const GET_CLIENT_DATA = gql`
      query getclient($id: ID!, $clientid: ID) {
           userPackages(
@@ -98,6 +113,7 @@ export const GET_CLIENT_DATA = gql`
                     }
                     users_permissions_user {
                          id
+                         username
                     }
                     fitness_package_type {
                          type
@@ -118,6 +134,10 @@ export const GET_CLIENT_DATA = gql`
                          packagename
                          fitness_package_type {
                               type
+                         }
+                         users_permissions_user {
+                              id
+                              username
                          }
                          ptonline
                          ptoffline

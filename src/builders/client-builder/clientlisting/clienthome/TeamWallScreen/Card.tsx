@@ -8,23 +8,24 @@ function CardComp() {
                          <Row>
                               <img
                                    src="/assets/avatar-1.jpg"
-                                   height="60"
-                                   className="rounded-circle ml-3"
+                                   height="50"
+                                   className="rounded-circle ml-2 mt-2"
                                    alt="avatar"
                               />
                               <Col>
                                    <h5>User Name</h5>
-                                   <p>Nutritionist</p>
+                                   <p className="font-weight-light">Nutritionist</p>
                               </Col>
                               <div className="d-flex flex-row-reverse mr-3 p-2">
                                    <ActionButton action1="Edit" action2="Delete" />
+                                   <p className="mr-3">Updated On: 12-07-21</p>
                               </div>
                          </Row>
-                    </Card.Body>
-                    <Card.Header>
                          <Card.Title>Special title treatment</Card.Title>
                          <Card.Text>With supporting text below as a natural lead-in to additional content.</Card.Text>
-                    </Card.Header>
+                    </Card.Body>
+                    <hr />
+
                     <Card.Body>
                          <div className="d-flex">
                               <img
@@ -35,7 +36,7 @@ function CardComp() {
                               />
 
                               <InputGroup className="mb-2">
-                                   <FormControl aria-describedby="basic-addon1" placeholder="Search" />
+                                   <FormControl aria-describedby="basic-addon1" placeholder="Add Comment..." />
                                    <InputGroup.Prepend>
                                         <Button variant="outline-secondary" onClick={(e: any) => {}}>
                                              Add
@@ -45,7 +46,6 @@ function CardComp() {
                          </div>
                     </Card.Body>
                </Card>
-               <p>Updated On 12-07-21</p>
           </div>
      );
 }

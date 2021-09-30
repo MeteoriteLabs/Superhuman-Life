@@ -1,10 +1,51 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Card, Row, Col, Button } from "react-bootstrap";
 import CardComp from "./Card";
 import CreatePost from "./addPost";
+import { GET_CHANGEMAKERS } from "../../queries";
+import { useQuery } from "@apollo/client";
+//import AuthContext from "../../../../../context/auth-context";
 
 function Index() {
+     const last = window.location.pathname.split("/").pop();
+     //const auth = useContext(AuthContext);
      const CreatePostComponent = useRef<any>(null);
+     const [changemaker, setChangemaker] = useState<any>([]);
+
+     function FetchData(_variables: {} = { clientid: last }) {
+          useQuery(GET_CHANGEMAKERS, { variables: _variables, onCompleted: loadData });
+     }
+     function loadData(data: any) {
+          let changemakers: any = [];
+          let namearr: any = [];
+          let flag: any;
+
+          [...data.userPackages].map((Detail) => {
+               let changemakerValue = {};
+               let img = "img";
+               let type = "type";
+               let name = Detail.fitnesspackages[0].users_permissions_user.username;
+               if (!namearr.includes(name)) {
+                    flag = true;
+                    namearr.push(name);
+               }
+
+               if (flag) {
+                    flag = false;
+                    changemakers.push([
+                         name,
+                         (changemakerValue[img] = "/assets/avatar-1.jpg"),
+                         (changemakerValue[type] = Detail.fitnesspackages[0].users_permissions_user.designation),
+                    ]);
+               }
+               setChangemaker(changemakers);
+               return {};
+          });
+          console.log(changemakers);
+          console.log(namearr);
+     }
+     FetchData({ clientid: last });
+
      return (
           <div>
                <div className="d-flex flex-row-reverse mr-3 p-2">
@@ -28,60 +69,23 @@ function Index() {
 
                     <Card.Header>
                          <Row>
-                              <Col>
-                                   <img
-                                        src="/assets/avatar-1.jpg"
-                                        height="50"
-                                        className="rounded-circle ml-3"
-                                        alt="avatar"
-                                   />
-                                   <p>CoachName</p>
-                              </Col>
-                              <Col>
-                                   <img
-                                        src="/assets/avatar-1.jpg"
-                                        height="50"
-                                        className="rounded-circle ml-3"
-                                        alt="avatar"
-                                   />
-                                   <p>CoachName</p>
-                              </Col>
-                              <Col>
-                                   <img
-                                        src="/assets/avatar-1.jpg"
-                                        height="50"
-                                        className="rounded-circle ml-3"
-                                        alt="avatar"
-                                   />
-                                   <p>CoachName</p>
-                              </Col>
-                              <Col>
-                                   <img
-                                        src="/assets/avatar-1.jpg"
-                                        height="50"
-                                        className="rounded-circle ml-3"
-                                        alt="avatar"
-                                   />
-                                   <p>CoachName</p>
-                              </Col>
-                              <Col>
-                                   <img
-                                        src="/assets/avatar-1.jpg"
-                                        height="50"
-                                        className="rounded-circle ml-3"
-                                        alt="avatar"
-                                   />
-                                   <p>CoachName</p>
-                              </Col>
-                              <Col>
-                                   <img
-                                        src="/assets/avatar-1.jpg"
-                                        height="50"
-                                        className="rounded-circle ml-3"
-                                        alt="avatar"
-                                   />
-                                   <p>CoachName</p>
-                              </Col>
+                              {changemaker &&
+                                   changemaker.map((e: any, index) => {
+                                        //console.log(e);
+                                        return (
+                                             <Col key={index}>
+                                                  <img
+                                                       src={e[1]}
+                                                       height="70"
+                                                       className="rounded-circle ml-1"
+                                                       alt="avatar"
+                                                  />
+
+                                                  <h6 className="mt-2 p-1 font-weight-bold">{e[0]}</h6>
+                                                  <h6 className="p-1 font-weight-light">{e[2]} </h6>
+                                             </Col>
+                                        );
+                                   })}
                          </Row>
                     </Card.Header>
                </Card>

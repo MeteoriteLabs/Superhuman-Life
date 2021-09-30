@@ -35,7 +35,7 @@ function ClientListingPage() {
                     Cell: (row: any) => {
                          return (
                               <>
-                                   <p className="ml-5">{row.value[0][row.value[1]]}</p>
+                                   <p className="ml-5 pl-4">{row.value[0][row.value[1]]}</p>
                               </>
                          );
                     },

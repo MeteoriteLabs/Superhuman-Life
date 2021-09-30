@@ -1,31 +1,42 @@
 import { useState, useRef, useContext } from "react";
 import { InputGroup, FormControl, Container } from "react-bootstrap";
 import { gql, useQuery } from "@apollo/client";
+import AuthContext from "../../../../../context/auth-context";
 
 const TagSearch = (props: any) => {
-     //const last = window.location.pathname.split("/").pop();
-     //const auth = useContext(AuthContext);
      const [packageLists, setPackageLists] = useState<any[]>([]);
      const [searchInput, setSearchInput] = useState(null);
+     const [errorMsg, setErrorMsg] = useState("");
      const [selected, setSelected] = useState<any[]>([]);
      const inputField = useRef<any>();
+     const auth = useContext(AuthContext);
      let skipval: Boolean = true;
 
-     //const GET_TAG = gql``;
+     const GET_GOALLIST = gql`
+          query TagListQuery($filter: String!, $id: ID) {
+               workouts(
+                    sort: "updatedAt"
+                    where: { workouttitle_contains: $filter, users_permissions_user: { id: $id } }
+               ) {
+                    id
+                    workouttitle
+               }
+          }
+     `;
 
-     function FetchPackageList(_variable: {} = { filter: " " }) {
-          // useQuery(GET_TAG, { variables: _variable, onCompleted: loadPackageList, skip: !searchInput });
+     function FetchPackageList(_variable: {} = { filter: " ", id: auth.userid }) {
+          useQuery(GET_GOALLIST, { variables: _variable, onCompleted: loadPackageList, skip: !searchInput });
      }
 
      function loadPackageList(data: any) {
-          //   setPackageLists(
-          //        [...data.fitnesspackages].map((p) => {
-          //             return {
-          //                  id: p.id,
-          //                  name: p.packagename,
-          //             };
-          //        })
-          //   );
+          setPackageLists(
+               [...data.workouts].map((p) => {
+                    return {
+                         id: p.id,
+                         name: p.workouttitle,
+                    };
+               })
+          );
      }
 
      function Search(data: any) {
@@ -39,27 +50,32 @@ const TagSearch = (props: any) => {
 
      function handleSelectedPackageAdd(name: any, id: any) {
           const values = [...selected];
-          let a = values.find((e) => e.id === id);
-          if (!a) {
-               values.push({ value: name, id: id });
-               setSelected(values);
+          if (values.length === 1) {
+               setErrorMsg("(Only One Tag Allowed)");
+          } else {
+               let a = values.find((e) => e.id === id);
+               if (!a) {
+                    values.push({ value: name, id: id });
+                    setSelected(values);
+               }
+               props.onChange(
+                    values
+                         .map((e) => {
+                              return e.id;
+                         })
+                         .join(",")
+               );
+               inputField.current.value = "";
+               setPackageLists([]);
+               skipval = true;
           }
-          props.onChange(
-               values
-                    .map((e) => {
-                         return e.id;
-                    })
-                    .join(",")
-          );
-          inputField.current.value = "";
-          setPackageLists([]);
-          skipval = true;
      }
 
      function handleSelectedPackageRemove(name: any) {
           const values = [...selected];
           values.splice(name, 1);
           setSelected(values);
+          setErrorMsg("");
           props.onChange(
                values
                     .map((e) => {
@@ -74,6 +90,8 @@ const TagSearch = (props: any) => {
      return (
           <>
                <label style={{ fontSize: 17 }}>Tag</label>
+               {errorMsg && <p className="text-danger">{errorMsg}</p>}
+
                <InputGroup>
                     <FormControl
                          aria-describedby="basic-addon1"
