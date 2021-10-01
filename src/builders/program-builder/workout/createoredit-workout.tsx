@@ -1,10 +1,10 @@
 import React, { useContext, useImperativeHandle, useState } from 'react';
 import { useQuery, useMutation } from "@apollo/client";
 import ModalView from "../../../components/modal";
-import { FETCH_DATA, CREATE_EXERCISE, UPDATE_EXERCISE, DELETE_EXERCISE } from "./queries";
+import { FETCH_DATA, CREATE_WORKOUT, UPDATE_WORKOUT, DELETE_WORKOUT } from "./queries";
 import AuthContext from "../../../context/auth-context";
 import StatusModal from "../../../components/StatusModal/StatusModal";
-import { schema, widgets } from './exerciseSchema';
+import { schema, widgets } from './workoutSchema';
 import {Subject} from 'rxjs';
 
 interface Operation {
@@ -15,14 +15,14 @@ interface Operation {
 
 function CreateEditMessage(props: any, ref: any) {
     const auth = useContext(AuthContext);
-    const exerciseSchema: { [name: string]: any; } = require("./exercises.json");
-    const [exerciseDetails, setExerciseDetails] = useState<any>({});
+    const workoutSchema: { [name: string]: any; } = require("./workout.json");
+    const [workoutDetails, setWorkoutDetails] = useState<any>({});
     const [operation, setOperation] = useState<Operation>({} as Operation);
     
 
-    const [createExercise] = useMutation(CREATE_EXERCISE, { onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
-    const [editExercise] = useMutation(UPDATE_EXERCISE,{variables: {exerciseid: operation.id}, onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
-    const [deleteExercise] = useMutation(DELETE_EXERCISE, { onCompleted: (e: any) => console.log(e), refetchQueries: ["GET_TABLEDATA"] });
+    const [createWorkout] = useMutation(CREATE_WORKOUT, { onCompleted: (r: any) => { modalTrigger.next(false); } });
+    const [editWorkout] = useMutation(UPDATE_WORKOUT,{variables: {workoutid: operation.id}, onCompleted: (r: any) => { modalTrigger.next(false); } });
+    const [deleteWorkout] = useMutation(DELETE_WORKOUT, { refetchQueries: ["GET_TABLEDATA"] });
 
     const modalTrigger =  new Subject();
 
@@ -35,26 +35,12 @@ function CreateEditMessage(props: any, ref: any) {
         }
     }));
 
-    // console.log(exerciseDetails);
-
     function FillDetails(data: any) {
         let details: any = {};
-        let msg = data.exercises;
-        details.exercise = msg[0].exercisename;
-        details.level = msg.exerciselevel;
-        details.discipline = msg[0].fitnessdisciplines.map((val: any) => {
-            return val.id;
-        });
-        details.miniDescription = msg[0].exerciseminidescription;
-        details.equipment = msg[0].equipment_lists.map((val: any) => {
-            return val.name;
-        });
-        details.muscleGroup = msg[0].exercisemusclegroups.map((val: any) => {
-            return val.name;
-        });
-        details.user_permissions_user = msg[0].users_permissions_user.id;
-        setExerciseDetails(details);
-        // console.log(exerciseDetails);
+        // let msg = data.workouts;
+        // console.log(msg);
+        // details.workout = msg[0].workouttitle;
+        setWorkoutDetails(details);
 
         //if message exists - show form only for edit and view
         if (['edit', 'view'].indexOf(operation.type) > -1)
@@ -64,45 +50,60 @@ function CreateEditMessage(props: any, ref: any) {
     }
 
     function FetchData() {
-        useQuery(FETCH_DATA, { variables: { id: operation.id }, onCompleted: (e: any) => { FillDetails(e) } });
+        useQuery(FETCH_DATA, { variables: { id: operation.id }, skip: (!operation.id || operation.type === 'toggle-status'), onCompleted: (e: any) => { FillDetails(e) } });
     }
 
     enum ENUM_EXERCISES_EXERCISELEVEL {
         Beginner,
         Intermediate,
-        Advance,
+        Advanced,
         None
     }
 
-    function CreateExercise(frm: any) {
-        createExercise({ variables: {
-            exercisename: frm.exercise,
-            exerciselevel: ENUM_EXERCISES_EXERCISELEVEL[frm.level],
+    enum ENUM_WORKOUTS_INTENSITY {
+        Low,
+        Medium,
+        High
+    }
+
+    function CreateWorkout(frm: any) {
+        if(frm.addWorkout.build){
+            frm.addWorkout.build = JSON.parse(frm.addWorkout.build);
+        }
+        createWorkout({ variables: {
+            workouttitle: frm.workout,
+            intensity: ENUM_WORKOUTS_INTENSITY[frm.intensity],
+            level: ENUM_EXERCISES_EXERCISELEVEL[frm.level],
             fitnessdisciplines: frm.discipline.split(","),
-            exerciseminidescription: frm.miniDescription,
-            exercisetext: (!frm.addExercise.AddText ? null : frm.addExercise.AddText),
-            exerciseurl: (!frm.addExercise.AddURL ? null: frm.addExercise.AddURL),
+            About: frm.about,
+            Benifits: frm.benefits,
+            warmup: (frm.addWorkout.AddWorkout === "Build" ? (frm.addWorkout.build.warmup ? frm.addWorkout.build.warmup : null) : null),
+            mainmovement: (frm.addWorkout.AddWorkout === "Build" ? (frm.addWorkout.build.mainMovement ? frm.addWorkout.build.mainMovement : null) : null),
+            cooldown: (frm.addWorkout.AddWorkout === "Build" ? (frm.addWorkout.build.coolDown ? frm.addWorkout.build.coolDown : null) : null),
+            workout_text: (frm.addWorkout.AddWorkout === "Text" ? frm.addWorkout.AddText : null),
+            workout_URL: (frm.addWorkout.AddWorkout === "Add URL" ? frm.addWorkout.AddURL : null),
+            calories: frm.calories,
             equipment_lists: frm.equipment.split(","),
-            exercisemusclegroups: frm.muscleGroup.split(","),
+            muscle_groups: frm.muscleGroup.split(","),
             users_permissions_user: frm.user_permissions_user
-        } });
+        }});
     }
 
-    function EditExercise(frm: any) {
-        console.log('edit message');
+    function EditWorkout(frm: any) {
+        // console.log('edit message');
         // useMutation(UPDATE_MESSAGE, { variables: frm, onCompleted: (d: any) => { console.log(d); } });
-        editExercise({variables: frm });
+        editWorkout({variables: frm });
     }
 
-    function ViewExercise(frm: any) {
-        console.log('view message');
+    function ViewWorkout(frm: any) {
+        // console.log('view message');
         //use a variable to set form to disabled/not editable
-        useMutation(UPDATE_EXERCISE, { variables: frm, onCompleted: (d: any) => { console.log(d); } })
+        useMutation(UPDATE_WORKOUT, { variables: frm, onCompleted: (d: any) => { console.log(d); } })
     }
 
-    function DeleteExercise(id: any) {
-        console.log('delete message');
-        deleteExercise({ variables: { id: id }});
+    function DeleteWorkout(id: any) {
+        // console.log('delete message');
+        deleteWorkout({ variables: { id: id }});
     }
 
     function OnSubmit(frm: any) {
@@ -112,28 +113,27 @@ function CreateEditMessage(props: any, ref: any) {
 
         switch (operation.type) {
             case 'create':
-                CreateExercise(frm);
+                CreateWorkout(frm);
                 break;
             case 'edit':
-                EditExercise(frm);
+                EditWorkout(frm);
                 break;
             case 'view':
-                ViewExercise(frm);
+                ViewWorkout(frm);
                 break;
         }
     }
 
+    FetchData();
+
     let name = "";
     if(operation.type === 'create'){
-        name="Create New Exercise";
+        name="Create New Workout";
     }else if(operation.type === 'edit'){
         name="Edit";
     }else if(operation.type === 'view'){
         name="View";
     }
-
-    FetchData();
-
 
     return (
         <>
@@ -142,9 +142,9 @@ function CreateEditMessage(props: any, ref: any) {
                     name={name}
                     isStepper={false}
                     formUISchema={schema}
-                    formSchema={exerciseSchema}
+                    formSchema={workoutSchema}
                     formSubmit={name === "View" ? () => { modalTrigger.next(false); } : (frm: any) => { OnSubmit(frm); }}
-                    formData={exerciseDetails}
+                    formData={workoutDetails}
                     widgets={widgets}
                     modalTrigger={modalTrigger}
                 />
@@ -155,7 +155,7 @@ function CreateEditMessage(props: any, ref: any) {
              modalBody="Do you want to delete this message?"
              buttonLeft="Cancel"
              buttonRight="Yes"
-             onClick={() => {DeleteExercise(operation.id)}}
+             onClick={() => {DeleteWorkout(operation.id)}}
              />}
         
             

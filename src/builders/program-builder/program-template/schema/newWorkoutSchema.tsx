@@ -1,0 +1,82 @@
+import TimeField from '../../../../components/customWidgets/timeField';
+import FitnessMultiSelect from '../../../../components/customWidgets/fitnessMultiSelect';
+import EquipmentSearch from '../../../../components/customWidgets/equipmentList';
+import MuscleGroupSearch from '../../../../components/customWidgets/muscleGroupList';
+import TextEditor from '../../../../components/customWidgets/textEditor';
+import BuildWorkout from '../../workout/buildWorkout';
+import DaysInput from '../daysInput';
+
+export const widgets = {
+     daysInput: DaysInput,
+     timeField: TimeField,
+     fitnessSelect: FitnessMultiSelect,
+     equipmentSearch: EquipmentSearch,
+     muscleGroupSearch: MuscleGroupSearch,
+     textEditor: TextEditor,
+     buildWorkout: BuildWorkout
+};
+
+export const schema: any = {
+     day: {
+          "ui:widget": (props) => {
+              return <DaysInput id="newWorkout" onChange={props.onChange}/>
+          }
+     },
+     startTime: {
+          "ui:widget": (props) => {
+              console.log(props);
+               return <TimeField title="Start Time" onChange={props.onChange}/>
+          }
+     },
+     endTime: {
+          "ui:widget": (props) => {
+               return <TimeField title="End Time" onChange={props.onChange}/>
+          }
+     },
+     level: {
+          "ui:widget": "radio",
+          "ui:options": {
+              "inline": true
+          }
+      },
+      intensity: {
+          "ui:widget": "radio",
+          "ui:options": {
+              "inline": true
+          }
+      },
+      about: {
+          "ui:widget": "textarea",
+          "ui:options": {
+              "rows": 3
+          }
+      },
+      benefits: {
+          "ui:widget": "textarea",
+          "ui:options": {
+              "rows": 1
+          }
+      },
+      equipment: {
+          "ui:widget": "equipmentSearch"
+      },
+      muscleGroup: {
+          "ui:widget": "muscleGroupSearch"
+      },
+      discipline: {
+          "ui:widget": "fitnessSelect"
+      },
+      addWorkout: {
+          "AddText": {
+              "ui:widget": "textEditor"
+          },
+          Upload: {
+              "ui:options": {
+                  "accept": ".mp4"
+              }
+          },
+          build: {
+              "ui:widget": "buildWorkout"
+          }
+     }
+}

@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
-import { FETCH_FITNESSDISCPLINES } from './queries';
+import { FETCH_FITNESSDISCPLINES } from '../../builders/program-builder/exercises/queries';
 import { useQuery } from "@apollo/client";
 
 const FitnessSelect = (props: any) => {
@@ -26,21 +26,12 @@ const FitnessSelect = (props: any) => {
      }
 
      function OnChange(e){
-          console.log(e)
           let id = e.map(d => {return d.id}).join(',');
-          console.log(id);
           props.onChange(id);
           setSingleSelections(e);
      }
 
-//      onTrigger();
-
-//     function onTrigger(){
-//          props.fitnessdisciplinesList(singleSelections);
-//     }
-
     FetchData();
-
 
      return (
           <div>
