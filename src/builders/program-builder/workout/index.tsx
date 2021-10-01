@@ -38,10 +38,10 @@ export default function EventsTab() {
         }
     ], []);
 
-    function FetchData(_variables: {} = {id: auth.userid}){
-        useQuery(GET_TABLEDATA, {variables: _variables, onCompleted: loadData})
+    function FetchData(_variables: {} = { id: auth.userid }) {
+        useQuery(GET_TABLEDATA, { variables: _variables, onCompleted: loadData })
     }
-    
+
     function getDate(time: any) {
         const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
             "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"

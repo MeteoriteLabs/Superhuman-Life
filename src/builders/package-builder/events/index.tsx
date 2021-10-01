@@ -11,7 +11,7 @@ import {
     Row,
     TabContent
 } from "react-bootstrap";
-import ModalView from "../../../components/modal";
+import CreateFitnessPackageModal from "../../../components/CreateFitnessPackageModal/CreateFitnessPackageModal";
 import Table from "../../../components/table";
 
 function PaymentWidget({ formData }: any) {
@@ -176,13 +176,14 @@ export default function EventsTab() {
         <TabContent>
             <hr />
             <Card.Title className="text-center">
-                <ModalView
+                <CreateFitnessPackageModal
                     name="Event Package"
                     isStepper={true}
                     formUISchema={uiSchema}
                     formSchema={eventSchema}
                     formSubmit={onSubmit}
                     formData={{}}
+                    stepperValues={ ["Creator", "Details", "Program", "Schedule", "Pricing", "Preview"]}
                 />
             </Card.Title>
             <Table columns={columns} data={data} />
