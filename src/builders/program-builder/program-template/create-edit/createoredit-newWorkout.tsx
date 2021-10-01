@@ -69,6 +69,7 @@ function CreateEditMessage(props: any, ref: any) {
             frm.day = JSON.parse(frm.day);
             eventJson.type = 'workout';
             eventJson.name = frm.workout;
+            eventJson.mode = frm.assignMode;
             eventJson.id = workout_id;
             eventJson.startTime = frm.startTime;
             eventJson.endTime = frm.endTime;

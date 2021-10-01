@@ -107,7 +107,7 @@ const Schedular = (props: any) => {
                 arr[val.day][startTimeHour][startTimeMinute].push({
                     "title": val.name, "color": "skyblue",
                     "day": val.day, "hour": startTimeHour, "min": startTimeMinute, "type": val.type,
-                    "endHour": endTimeHour, "endMin": endTimeMin, "id": val.id
+                    "endHour": endTimeHour, "endMin": endTimeMin, "id": val.id, "mode": val.mode
                 });
             })
         }
@@ -202,10 +202,12 @@ const Schedular = (props: any) => {
     }
 
     function handleDuplicate(e: any, changedTime: any){
+        console.log(e);
         let values = [...currentProgram];
         let newEvent: any = {};
         newEvent.name = e.title;
-        newEvent.day = (duplicatedDay === undefined ? e.day : duplicatedDay[0].day.substr(4));
+        newEvent.mode = e.mode;
+        newEvent.day = (duplicatedDay === undefined ? e.day : parseInt(duplicatedDay[0].day.substr(4)));
         newEvent.startTime = changedTime.startChange;
         newEvent.endTime = changedTime.endChange;
         newEvent.type = e.type;

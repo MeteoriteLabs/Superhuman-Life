@@ -1,9 +1,7 @@
 import React, {useState} from 'react';
 import {InputGroup, FormControl } from 'react-bootstrap';
 
-const UrlList = (props: any) => {
-
-     
+const UrlList = (props: any) => {     
      const [selected, setSelected] = useState<any[]>([]);
      function handleUrlChange(i, e, field){
           const values = field;

@@ -63,6 +63,7 @@ function CreateEditMessage(props: any, ref: any) {
 
 
     function UpdateProgram(frm: any) {
+        console.log(frm);
         var existingEvents: any = (props.events === null ? [] : [...props.events]);
         if (frm.day) {
             frm.day = JSON.parse(frm.day);
@@ -71,6 +72,7 @@ function CreateEditMessage(props: any, ref: any) {
         if (frm.workoutEvent) {
             frm.workoutEvent = JSON.parse(frm.workoutEvent);
             eventJson.type = 'workout';
+            eventJson.mode = frm.assignMode;
             eventJson.name = frm.workoutEvent[0].name;
             eventJson.id = frm.workoutEvent[0].id;
             eventJson.startTime = frm.startTime;

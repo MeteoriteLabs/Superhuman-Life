@@ -149,6 +149,7 @@ function CreateEditMessage(props: any, ref: any) {
                     stepperValues={["Schedule", "Activity"]}
                     widgets={widgets}
                     modalTrigger={modalTrigger}
+                    type={operation.type}
                 />
                 
             {/* } */}            

@@ -3,7 +3,8 @@
         "title": "",
         "type": "object",
         "required": [
-           
+           "day",
+           "startTime"
         ],
         "properties": {
             "day": {

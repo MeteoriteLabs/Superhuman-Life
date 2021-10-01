@@ -116,7 +116,7 @@ const TransferPrograms = (props: any) => {
 
      return (
           <>
-               <Button variant="outline-info" onClick={handleShow}>Transfer all</Button>
+               <Button variant="outline-info" onClick={handleShow} style={{ cursor: 'pointer'}} disabled={props.events === null ? true : false}>Transfer all</Button>
                <Modal show={show} onHide={handleClose} centered size="xl">
                     <Modal.Header closeButton>
                          <Modal.Title>Transfer programs</Modal.Title>
