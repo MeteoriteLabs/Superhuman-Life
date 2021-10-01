@@ -8,7 +8,7 @@ const DaysInput = (props: any) => {
      const last = window.location.pathname.split('/').pop();
 
      const [data, setData] = useState(0);
-     const [selected, setSelected] = useState("");
+     const [selected, setSelected] = useState(props.val ? [{"day": `Day-${props.val}`}] : []);
 
      const GET_PROGRAM = gql`
           query getprogram($id: String!){
@@ -53,12 +53,11 @@ const DaysInput = (props: any) => {
                <Typeahead
                id="basic-typeahead-multiple"
                labelKey="day"
-               defaultSelected={props.val ? [{"day": `Day-${props.val}`}] : ""}
                onChange={OnChange}
                options={days}
-               placeholder={props.id === 'newWorkout' || 'duplicateWorkout' ? 'Choose a day...' : 'Choose days...'}
+               placeholder={props.id ? props.id === 'newWorkout' || 'duplicateWorkout' ? 'Choose a day...' : 'Choose days...' : 'Choose days...'}
                selected={selected}
-               multiple={props.id === 'newWorkout' || 'duplicateWorkout' ? false : true}
+               multiple={props.id ? props.id === 'newWorkout' || 'duplicateWorkout' ? false : true : true}
                />
           </div>
      );

@@ -3,7 +3,7 @@
          "title": "",
          "type": "object",
          "required": [
-            
+            "day"
          ],
          "properties": {
              "day": {
