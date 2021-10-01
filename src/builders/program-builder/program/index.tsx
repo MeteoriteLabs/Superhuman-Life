@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { Button, Card, Dropdown, OverlayTrigger, Popover, TabContent } from "react-bootstrap";
-import ModalView from "../../../components/modal";
+import CreateFitnessPackageModal from "../../../components/CreateFitnessPackageModal/CreateFitnessPackageModal";
 import Table from "../../../components/table";
 
 export default function EventsTab() {
@@ -89,7 +89,8 @@ export default function EventsTab() {
         <TabContent>
             <hr />
             <Card.Title className="text-right">
-                <ModalView
+                <CreateFitnessPackageModal
+                    stepperValues={["Creator", "Details", "Program", "Schedule", "Pricing", "Preview"]}
                     name="Create Template"
                     isStepper={false}
                     formUISchema={uiSchema}

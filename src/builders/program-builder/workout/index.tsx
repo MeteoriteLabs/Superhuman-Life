@@ -1,7 +1,6 @@
 import { useMemo, useContext, useState } from "react";
 import { Button, Card, Dropdown, OverlayTrigger, Popover, TabContent, Form } from "react-bootstrap";
 import BuildWorkout from './buildWorkout';
-import ModalView from "../../../components/modal";
 import Table from "../../../components/table";
 import { useQuery, useMutation } from "@apollo/client";
 import { GET_FITNESSDISCIPLINES, GET_TABLEDATA, CREATE_WORKOUT } from './queries';
@@ -9,6 +8,7 @@ import AuthContext from "../../../context/auth-context";
 import EquipmentSearch from '../search-builder/equipmentList';
 import MuscleGroupSearch from '../search-builder/muscleGroupList';
 import TextEditor from '../search-builder/textEditor';
+import CreateFitnessPackageModal from "../../../components/CreateFitnessPackageModal/CreateFitnessPackageModal";
 
 export default function EventsTab() {
 
@@ -17,11 +17,11 @@ export default function EventsTab() {
     const [fitnessdisciplines, setFitnessDisciplines] = useState<any[]>([]);
 
 
-    function FetchFitnessDisciplines(){
-        useQuery(GET_FITNESSDISCIPLINES, {onCompleted: loadFitnessDisciplines});
+    function FetchFitnessDisciplines() {
+        useQuery(GET_FITNESSDISCIPLINES, { onCompleted: loadFitnessDisciplines });
     }
 
-    function loadFitnessDisciplines(data: any){
+    function loadFitnessDisciplines(data: any) {
         setFitnessDisciplines(
             [...data.fitnessdisciplines].map((discipline) => {
                 return {
@@ -33,10 +33,10 @@ export default function EventsTab() {
         );
     }
 
-    function FetchData(_variables: {} = {id: auth.userid}){
-        useQuery(GET_TABLEDATA, {variables: _variables, onCompleted: loadData})
+    function FetchData(_variables: {} = { id: auth.userid }) {
+        useQuery(GET_TABLEDATA, { variables: _variables, onCompleted: loadData })
     }
-    
+
     function getDate(time: any) {
         const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
             "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"
@@ -52,7 +52,7 @@ export default function EventsTab() {
     function loadData(data: any) {
         setTableData(
             [...data.workouts].map((detail) => {
-                
+
                 return {
                     workoutName: detail.workouttitle,
                     discipline: detail.fitnessdisciplines.disciplinename,
@@ -110,12 +110,12 @@ export default function EventsTab() {
     }
 
     let muscleGroupListarray: any;
-    function handleMuscleGroupCallback(data:any){
+    function handleMuscleGroupCallback(data: any) {
         muscleGroupListarray = data;
     }
 
     let editorTextString: any;
-    function handleEditorTextCallBack(data:any){
+    function handleEditorTextCallBack(data: any) {
         editorTextString = data;
     }
 
@@ -150,7 +150,7 @@ export default function EventsTab() {
             "ui:widget": () => {
                 return (
                     <div>
-                        <EquipmentSearch equipmentList={handleEquipmentCallback}/>
+                        <EquipmentSearch equipmentList={handleEquipmentCallback} />
                     </div>
                 )
             }
@@ -159,7 +159,7 @@ export default function EventsTab() {
             "ui:widget": () => {
                 return (
                     <div>
-                        <MuscleGroupSearch muscleGroupList={handleMuscleGroupCallback}/>
+                        <MuscleGroupSearch muscleGroupList={handleMuscleGroupCallback} />
                     </div>
                 )
             }
@@ -184,7 +184,7 @@ export default function EventsTab() {
             "Add Text": {
                 "ui:widget": () => {
                     return (
-                        <TextEditor editorText={handleEditorTextCallBack}/>
+                        <TextEditor editorText={handleEditorTextCallBack} />
                     )
                 }
             },
@@ -197,12 +197,12 @@ export default function EventsTab() {
                 "ui:widget": () => {
                     return (
                         <div>
-                            <BuildWorkout/>
+                            <BuildWorkout />
                         </div>
                     )
                 }
             }
-       }
+        }
     }
 
     const [createWorkout, { error }] = useMutation(CREATE_WORKOUT);
@@ -224,9 +224,9 @@ export default function EventsTab() {
     function onSubmit(formData: any) {
         let levelIndex = formData.level
         let intensityIndex = formData.intensity
-      
 
-        createWorkout (
+
+        createWorkout(
             {
                 variables: {
                     workouttitle: formData.workout,
@@ -249,7 +249,7 @@ export default function EventsTab() {
 
     if (error) return <span>{`Error! ${error.message}`}</span>;
 
-    FetchData({id: auth.userid});
+    FetchData({ id: auth.userid });
     FetchFitnessDisciplines();
 
 
@@ -257,13 +257,14 @@ export default function EventsTab() {
         <TabContent>
             <hr />
             <Card.Title className="text-right">
-                <ModalView
+                <CreateFitnessPackageModal
+                    stepperValues={["Creator", "Details", "Program", "Schedule", "Pricing", "Preview"]}
                     name="Create Template"
                     isStepper={false}
                     formUISchema={uiSchema}
                     formSchema={eventSchema}
                     formSubmit={onSubmit}
-                    formData={{ level: ENUM_EXERCISES_EXERCISELEVEL.Beginner, intensity: ENUM_WORKOUTS_INTENSITY.Low}}
+                    formData={{ level: ENUM_EXERCISES_EXERCISELEVEL.Beginner, intensity: ENUM_WORKOUTS_INTENSITY.Low }}
                 />
             </Card.Title>
             <Table columns={columns} data={tableData} />

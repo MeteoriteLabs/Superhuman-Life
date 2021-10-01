@@ -1,13 +1,13 @@
 import { useContext, useMemo, useState } from "react";
 import { Button, Card, Dropdown, OverlayTrigger, Popover, TabContent, Form } from "react-bootstrap";
-import ModalView from "../../../components/modal";
 import Table from "../../../components/table";
-import { useQuery,useMutation } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client";
 import { GET_TABLEDATA, CREATE_EXERCISE } from './queries';
 import AuthContext from "../../../context/auth-context";
 import EquipmentSearch from '../search-builder/equipmentList';
 import MuscleGroupSearch from '../search-builder/muscleGroupList';
 import TextEditor from '../search-builder/textEditor';
+import CreateFitnessPackageModal from "../../../components/CreateFitnessPackageModal/CreateFitnessPackageModal";
 
 export default function EventsTab() {
 
@@ -16,10 +16,10 @@ export default function EventsTab() {
     const [fitnessdisciplines, setFitnessDisciplines] = useState<any[]>([]);
     let disc: any;
 
-    function FetchData(_variables: {} = {id: auth.userid}){
-        useQuery(GET_TABLEDATA, {variables: _variables, onCompleted: loadData})
+    function FetchData(_variables: {} = { id: auth.userid }) {
+        useQuery(GET_TABLEDATA, { variables: _variables, onCompleted: loadData })
     }
-    
+
     function getDate(time: any) {
         const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
             "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"
@@ -33,7 +33,7 @@ export default function EventsTab() {
     }
 
     function loadData(data: any) {
-     
+
         setTableData(
             [...data.exercises].map((detail) => {
                 return {
@@ -47,22 +47,22 @@ export default function EventsTab() {
                         return equipment.name
                     }).join(", "),
                     updatedOn: getDate(Date.parse(detail.updatedAt)),
-                    type: (detail.exercisetext) ? "Text": "Video" ,
+                    type: (detail.exercisetext) ? "Text" : "Video",
                 }
             })
         );
         let discplines = [...data.fitnessdisciplines].map((discipline) => {
-                    return {
-                        id: discipline.id,
-                        disciplineName: discipline.disciplinename,
-                        updatedAt: discipline.updatedAt
-                    }
-                })
+            return {
+                id: discipline.id,
+                disciplineName: discipline.disciplinename,
+                updatedAt: discipline.updatedAt
+            }
+        })
         setFitnessDisciplines(
             discplines
         );
         disc = discplines[0].id
-        
+
     }
 
 
@@ -105,16 +105,16 @@ export default function EventsTab() {
     }
 
     let muscleGroupListarray: any;
-    function handleMuscleGroupCallback(data:any){
+    function handleMuscleGroupCallback(data: any) {
         muscleGroupListarray = data;
     }
 
     let editorTextString: any;
-    function handleEditorTextCallBack(data:any){
+    function handleEditorTextCallBack(data: any) {
         editorTextString = data;
     }
 
-    
+
     const eventSchema: any = require("./exercises.json");
     const uiSchema: any = {
         "level": {
@@ -139,7 +139,7 @@ export default function EventsTab() {
             "ui:widget": () => {
                 return (
                     <div>
-                        <EquipmentSearch equipmentList={handleEquipmentCallback}/>
+                        <EquipmentSearch equipmentList={handleEquipmentCallback} />
                     </div>
                 )
             }
@@ -148,7 +148,7 @@ export default function EventsTab() {
             "ui:widget": () => {
                 return (
                     <div>
-                        <MuscleGroupSearch muscleGroupList={handleMuscleGroupCallback}/>
+                        <MuscleGroupSearch muscleGroupList={handleMuscleGroupCallback} />
                     </div>
                 )
             }
@@ -175,7 +175,7 @@ export default function EventsTab() {
             "Add Text": {
                 "ui:widget": () => {
                     return (
-                        <TextEditor editorText={handleEditorTextCallBack}/>
+                        <TextEditor editorText={handleEditorTextCallBack} />
                     )
                 }
             },
@@ -184,7 +184,7 @@ export default function EventsTab() {
                     "accept": ".mp4"
                 }
             }
-       }
+        }
     }
 
     const [createExercise, { error }] = useMutation(CREATE_EXERCISE);
@@ -195,13 +195,13 @@ export default function EventsTab() {
         Advance,
         None
     }
-   
-    
+
+
     function onSubmit(formData: any) {
-        
+
         let levelIndex = formData.level;
-      
-        
+
+
         createExercise(
             {
                 variables: {
@@ -224,15 +224,16 @@ export default function EventsTab() {
     }
     if (error) return <span>{`Error! ${error.message}`}</span>;
 
-    FetchData({id: auth.userid});
+    FetchData({ id: auth.userid });
     // FetchFitnessDisciplines();
-    
-    
+
+
     return (
         <TabContent>
             <hr />
             <Card.Title className="text-right">
-                <ModalView
+                <CreateFitnessPackageModal
+                    stepperValues={["Creator", "Details", "Program", "Schedule", "Pricing", "Preview"]}
                     name="Create Template"
                     isStepper={false}
                     formUISchema={uiSchema}
