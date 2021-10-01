@@ -155,7 +155,7 @@ const Build = () => {
                               <span>Add Text <i className="far fa-trash-alt float-right"
                                    style={{ color: 'red', cursor: 'pointer'}}
                               onClick={() => handleTextFieldRemove(idx)}></i></span>
-                              <TextEditor />
+                              <TextEditor/>
                          </div>
                     );
                     })}

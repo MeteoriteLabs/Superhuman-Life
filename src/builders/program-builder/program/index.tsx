@@ -1,6 +1,5 @@
 import { useMemo } from "react";
 import { Button, Card, Dropdown, OverlayTrigger, Popover, TabContent } from "react-bootstrap";
-import CreateFitnessPackageModal from "../../../components/CreateFitnessPackageModal/CreateFitnessPackageModal";
 import Table from "../../../components/table";
 
 export default function EventsTab() {
@@ -56,48 +55,47 @@ export default function EventsTab() {
             "updatedOn": "22/02/20"
         }
     ], []);
-    const eventSchema: any = require("./program.json");
-    const uiSchema: any = {
-        "level": {
-            "ui:widget": "radio",
-            "ui:options": {
-                "inline": true
-            }
-        },
-        "description": {
-            "ui:widget": "textarea",
-            "ui:options": {
-                "rows": 3
-            }
-        },
-        "miniDescription": {
-            "ui:widget": "textarea",
-            "ui:options": {
-                "rows": 3
-            }
-        },
-        "equipment": {
-            "ui:placeholder": "Search"
-        }
-    }
+    // const eventSchema: any = require("./program.json");
+    // const uiSchema: any = {
+    //     "level": {
+    //         "ui:widget": "radio",
+    //         "ui:options": {
+    //             "inline": true
+    //         }
+    //     },
+    //     "description": {
+    //         "ui:widget": "textarea",
+    //         "ui:options": {
+    //             "rows": 3
+    //         }
+    //     },
+    //     "miniDescription": {
+    //         "ui:widget": "textarea",
+    //         "ui:options": {
+    //             "rows": 3
+    //         }
+    //     },
+    //     "equipment": {
+    //         "ui:placeholder": "Search"
+    //     }
+    // }
 
-    function onSubmit(formData: any) {
-        alert("Values submitted: " + JSON.stringify(formData, null, 2));
-    }
+    // function onSubmit(formData: any) {
+    //     alert("Values submitted: " + JSON.stringify(formData, null, 2));
+    // }
 
     return (
         <TabContent>
             <hr />
             <Card.Title className="text-right">
-                <CreateFitnessPackageModal
-                    stepperValues={["Creator", "Details", "Program", "Schedule", "Pricing", "Preview"]}
+                {/* <ModalView
                     name="Create Template"
                     isStepper={false}
                     formUISchema={uiSchema}
                     formSchema={eventSchema}
                     formSubmit={onSubmit}
                     formData={{}}
-                />
+                /> */}
             </Card.Title>
             <Table columns={columns} data={data} />
         </TabContent>
