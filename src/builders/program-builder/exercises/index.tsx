@@ -78,7 +78,9 @@ export default function EventsTab() {
     }
 
 
+
     FetchData({id: auth.userid});    
+
     
     
     return (

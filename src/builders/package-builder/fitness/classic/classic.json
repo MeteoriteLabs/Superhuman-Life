@@ -1,0 +1,131 @@
+{
+    "1": {
+        "title": "",
+        "type": "object",
+        "required": ["packagename","disciplines", "tags" ,"level","is_private"],
+        "properties": {
+            "packagename": {
+                "type": "string",
+                "title": "Name of Package"
+            },
+            "disciplines": {
+                "type": "string",
+                "title": "Disciplines"
+            },
+            "tags": {
+                "type": "string",
+                "title": "Tags"
+            },
+            "level": {
+                "type": "string",
+                "title": "Level",
+                "enum": [
+                    "Beginner",
+                    "Intermediate",
+                    "Advanced"
+                ]
+            },
+            "is_private": {
+                "type": "boolean",
+                "title": "Visiblity",
+                "oneOf": [
+                    {
+                        "title": "Public",
+                        "const": true
+                    },
+                    {
+                        "title": "Private",
+                        "const": false
+                    }
+                ]
+            }
+        }
+    },
+    "2": {
+        "title": "",
+        "type": "object",
+        "required": ["aboutpackage", "benefits" ],
+        "properties": {
+            "aboutpackage": {
+                "type": "string",
+                "title": "About"
+            },
+            "benefits": {
+                "type": "string",
+                "title": "Benefits"
+            },
+            "intropicture": {
+                "type": "string",
+                "format": "data-url",
+                "title": "Intro Picture"
+            },
+            "video": {
+                "type": "string",
+                "title": "Intro Video",
+                "format": "data-url"
+            },
+            "introvideourl": {
+                "type": "string",
+                "title": "Or add video URL",
+                "format": "uri"
+            }
+        }
+    },
+    "3": {
+        "title": "Program Details",
+        "type": "object",
+        "required": ["recordedclasses", "restdays"],
+        "properties": {
+        "duration": {
+            "type": "number",
+            "title": "Duration",
+            "minimum":1,
+            "maximum":365,
+            "default": 30,
+            "value":30
+
+        },
+        "recordedclasses": {
+            "title": "Recorded",
+            "type": "number",
+            "minimum": 0,
+            "default": "0",
+            "value": ""
+        },
+        "restdays": {
+            "title": "Rest Days",
+            "type": "number",
+            "minimum": 0,
+            "maximum": 30,
+            "default": "",
+            "value": ""
+        }
+        }
+    },
+    "4": {},
+    "5": {
+        "title": "Pricing Plan",
+        "type": "object",
+        "properties": {
+            "pricingDetail": {
+                "type": "number",
+                "title": "Pricing Plan",
+                "value": ""
+            }
+        }
+    },
+    "6": {
+        "title": "Preview",
+        "type": "object",
+        "properties": {
+            "carousel": {
+                "type": "string",
+                "title": "carousel"
+            },
+            "link": {
+                "type": "null",
+                "title": "carousel"
+            }
+        }
+    }
+}
