@@ -1,0 +1,331 @@
+{
+    "1": {
+        "title": "",
+        "type": "object",
+        "required": ["packagename","disciplines", "tags" ,"level","is_private"],
+        "properties": {
+            "packagename": {
+                "type": "string",
+                "title": "Name of Package"
+            },
+            "disciplines": {
+                "type": "string",
+                "title": "Disciplines"
+            },
+            "tags": {
+                "type": "string",
+                "title": "Tags"
+            },
+            "level": {
+                "type": "string",
+                "title": "Level",
+                "enum": [
+                    "Beginner",
+                    "Intermediate",
+                    "Advanced"
+                ]
+            },
+            "is_private": {
+                "type": "boolean",
+                "title": "Visiblity",
+                "oneOf": [
+                    {
+                        "title": "Public",
+                        "const": true
+                    },
+                    {
+                        "title": "Private",
+                        "const": false
+                    }
+                ]
+            }
+        }
+    },
+    "2": {
+        "title": "",
+        "type": "object",
+        "required": ["aboutpackage", "benefits" ],
+        "properties": {
+            "aboutpackage": {
+                "type": "string",
+                "title": "About"
+            },
+            "benefits": {
+                "type": "string",
+                "title": "Benefits"
+            },
+            "intropicture": {
+                "type": "string",
+                "format": "data-url",
+                "title": "Intro Picture"
+            },
+            "video": {
+                "type": "string",
+                "title": "Intro Video",
+                "format": "data-url"
+            },
+            "introvideourl": {
+                "type": "string",
+                "title": "Or add video URL",
+                "format": "uri"
+            }
+        }
+    },
+    "3": {
+        "title": "Program Details",
+        "type": "object",
+        "required": ["mode" ],
+        "properties": {
+            "mode": {
+                "type": "string",
+                "title": "Mode",
+                "enum": [
+                    "Online",
+                    "Offline",
+                    "Hybrid"
+                ]
+            },
+            "customPTOnline": {
+                "title": "customePTOnline",
+                "type": "null",
+                "value": 0
+            },
+            "customPTOffline": {
+                "title": "customePTOffline",
+                "type": "null",
+                "value": 0
+            },
+            "customGroupOnline": {
+                "title": "customGroupOnline",
+                "type": "null",
+                "value": 0
+            },
+            "customGroupOffline": {
+                "title": "customGroupOffline",
+                "type": "null",
+                "value": 0
+            },
+            "record": {
+                "title": "recordedclasses",
+                "type": "null",
+                "value": 0
+            },
+            "duration": {
+                "type": "number",
+                "title": "Duration",
+                "default": 30,
+                "value": 30
+            },
+            "restDay": {
+                "title": "restDay",
+                "type": "null",
+                "value": 0
+            }
+        },
+        "dependencies": {
+            "mode": {
+                "oneOf": [
+                    {
+                        "properties": {
+                            "mode": {
+                                "title": "Online",
+                                "type": "string",
+                                "enum": [
+                                    "Online"
+                                ]
+                            },
+                            "ptonline": {
+                                "title": "Online",
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 30,
+                                "default": "",
+                                "value":""
+                            },
+                            "grouponline": {
+                                "title": "Online",
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 30,
+                                "default": "",
+                                "value":""
+                            },
+                            "recordedclasses": {
+                                "title": "Recorded",
+                                "type": "number",
+                                "minimum": 0,
+                                "default": "",
+                                "value":""
+                            },
+                            "restdays": {
+                                "title": "Rest Days",
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 30,
+                                "default": "",
+                                "value":""
+                            }
+                        },
+                        "required": ["ptonline", "grouponline","recordedclasses","restdays" ]
+                    },
+                    {
+                        "properties": {
+                            "mode": {
+                                "title": "Offline",
+                                "type": "string",
+                                "enum": [
+                                    "Offline"
+                                ]
+                            },
+                            "address": {
+                                "title": "address",
+                                "type": "string"
+                            },
+                            "ptoffline": {
+                                "title": "Offline",
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 30,
+                                "default": "",
+                                "value":""
+                            },
+                            "groupoffline": {
+                                "title": "Offline",
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 30,
+                                "default": "",
+                                "value":""
+                            },
+                            "recordedclasses": {
+                                "title": "Recorded",
+                                "type": "number",
+                                "minimum": 0,
+                                "default": "",
+                                "value":""
+                            },
+                            "restdays": {
+                                "title": "Rest Days",
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 30,
+                                "default": "",
+                                "value":""
+                            }
+                        },
+                        "required": ["address","ptoffline", "groupoffline","recordedclasses","restdays" ]
+                    },
+                    {
+                        "properties": {
+                            "mode": {
+                                "title": "Hybrid",
+                                "type": "string",
+                                "enum": [
+                                    "Hybrid"
+                                ],
+                                "default": "0"
+                            },
+                            "address": {
+                                "title": "address",
+                                "type": "string"
+                            },
+                            "ptonline": {
+                                "title": "Online",
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 30,
+                                "default": "",
+                                "value":""
+                            },
+                            "ptoffline": {
+                                "title": "Offline",
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 30,
+                                "default": "",
+                                "value":""
+                            },
+                            "grouponline": {
+                                "title": "Online",
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 30,
+                                "default": "",
+                                "value":""
+                            },
+                            "groupoffline": {
+                                "title": "Offline",
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 30,
+                                "default": "",
+                                "value":""
+                            },
+                            "recordedclasses": {
+                                "title": "Recorded",
+                                "type": "number",
+                                "minimum": 0,
+                                "default": "",
+                                "value":""
+                            },
+                            "restdays": {
+                                "title": "Rest Days",
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 30,
+                                "default": "",
+                                "value":""
+                            }
+                        },
+                        "required": ["address","ptoffline", "ptoffline","grouponline","groupoffline","recordedclasses","restdays" ]
+                    }
+                ]
+            }
+        }
+    },
+    "4": {
+        "title": "For Programs",
+        "type": "object",
+        "properties": {
+            "bookingleadday": {
+                "type": "number",
+                "title": "Consumer can choose start date, after",
+                "description": "This lead time will help you discuss, understand, request data and then build a custom program for the client.",
+                "enum": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6
+                ]
+            }
+        }
+    },
+    "5": {
+        "title": "Pricing Plan",
+        "type": "object",
+        "required":["pricingDetail"],
+        "properties": {
+            "pricingDetail": {
+                "type": "number",
+                "title": "Pricing Plan",
+                "value": ""
+            }
+        }
+    },
+    "6": {
+        "title": "Preview",
+        "type": "object",
+        "properties": {
+            "carousel": {
+                "type": "string",
+                "title": "carousel"
+            },
+            "link": {
+                "type": "null",
+                "title": "carousel"
+            }
+        }
+    }
+}

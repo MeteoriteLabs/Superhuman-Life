@@ -24,6 +24,7 @@ export const schema: any = {
      },
      time: {
           "ui:widget": (props) => {
+              console.log(props);
                return <TimeField title="Start Time" onChange={props.onChange}/>
           }
      },
