@@ -5,7 +5,7 @@ import { GET_SCHEDULEREVENTS, PROGRAM_EVENTS, UPDATE_FITNESSPROGRAMS, FETCH_EVEN
 import { useQuery, useMutation } from "@apollo/client";
 import ProgramList from "../../../components/customWidgets/programList";
 import FloatingButton from './FloatingButtons';
-import TimeField from '../../../components/customWidgets/timeField';
+import TimeField from '../../../components/customWidgets/multipleTimeFields';
 import TextEditor from '../../../components/customWidgets/textEditor';
 import CreateoreditWorkout from '../workout/createoredit-workout';
 import ReplaceWorkout from './create-edit/replaceWorkout';
@@ -42,7 +42,6 @@ const Schedular = (props: any) => {
     function draganddrop() {
         const draggable: any = document.querySelectorAll('.schedular-content');
         const container: any = document.querySelectorAll('.container');
-        // const resizer: any = document.getElementById('dragMe');
 
         draggable.forEach(drag => {
             drag.addEventListener('dragstart', () => {
@@ -196,20 +195,17 @@ const Schedular = (props: any) => {
         return timeString.toString();
     }
 
-    var duplicatedDay: any;
-    function onChange(e: any){
-        duplicatedDay = JSON.parse(e);
-    }
+    const [duplicatedDay, setDuplicatedDay] = useState<any>([]);
 
     function handleDuplicate(e: any, changedTime: any){
-        console.log(e);
         let values = [...currentProgram];
         let newEvent: any = {};
+        changedTime.startChange = JSON.parse(changedTime.startChange);
         newEvent.name = e.title;
         newEvent.mode = e.mode;
-        newEvent.day = (duplicatedDay === undefined ? e.day : parseInt(duplicatedDay[0].day.substr(4)));
-        newEvent.startTime = changedTime.startChange;
-        newEvent.endTime = changedTime.endChange;
+        newEvent.day = (duplicatedDay.length === 0 ? e.day : parseInt(duplicatedDay[0].day.substr(4)));
+        newEvent.startTime = changedTime.startChange.startTime;
+        newEvent.endTime = changedTime.startChange.endTime;
         newEvent.type = e.type;
         newEvent.id = e.id;
 
@@ -245,10 +241,11 @@ const Schedular = (props: any) => {
         let a = values.find((val) => val.id === event.id && val.day === event.day && val.startTime === event.hour + ":" + event.min && val.endTime === event.endHour + ":" + event.endMin);
         let b = values.findIndex((val) => val.id === event.id && val.day === event.day && val.startTime === event.hour + ":" + event.min && val.endTime === event.endHour + ":" + event.endMin);
         if (a) {
+            e.startChange = JSON.parse(e.startChange);
             newEvent.id = a.id;
             newEvent.name = a.name;
-            newEvent.startTime = e.startChange;
-            newEvent.endTime = e.endChange;
+            newEvent.startTime = e.startChange.startTime;
+            newEvent.endTime = e.startChange.endTime;
             newEvent.type = a.type;
             newEvent.day = a.day;
 
@@ -288,16 +285,12 @@ const Schedular = (props: any) => {
     const [startChange, setStartChange] = useState("");
     const createEditWorkoutComponent = useRef<any>(null);
     const replaceWorkoutComponent = useRef<any>(null);
-    const [endChange, setEndChange] = useState("");
 
     function handleStart(e: any) {
         setStartChange(e);
     }
 
-    function handleEnd(e: any) {
-        setEndChange(e);
-    }
-    handleTimeChange({ startChange, endChange });
+    handleTimeChange({ startChange });
 
     function handleAgenda(d: any){
         return (
@@ -685,7 +678,7 @@ const Schedular = (props: any) => {
                                         </Tooltip>
                                     }
                                     >
-                                    <i className="fas fa-times fa-lg" onClick={(e) => { handleClose(); setData([]) }} style={{ cursor: 'pointer' }}></i>
+                                    <i className="fas fa-times fa-lg" onClick={(e) => { handleClose(); setData([]); setEdit(!edit) }} style={{ cursor: 'pointer' }}></i>
                                 </OverlayTrigger>
                             </Col>
                         </Row>
@@ -708,12 +701,7 @@ const Schedular = (props: any) => {
                         </Row>
                         <Row className="pt-3 align-items-center">
                             <Col>
-                                <TimeField title="Start Time: " onChange={handleStart} hr={event.hour} m={event.min} disabled={edit}/>
-                            </Col>
-                        </Row>
-                        <Row className="pt-3 align-items-center">
-                            <Col>
-                                <TimeField title="End Time: " onChange={handleEnd} hr={event.endHour} m={event.endMin} disabled={edit}/>
+                                <TimeField title="Start Time: " onChange={handleStart} ehr={event.endHour} em={event.endMin} hr={event.hour} m={event.min} disabled={edit}/>
                             </Col>
                         </Row>
                         {(event.type === "workout") && <Tabs defaultActiveKey="agenda" transition={false} id="noanim-tab-example" className="pt-4">
@@ -834,12 +822,13 @@ const Schedular = (props: any) => {
                         </Tabs>}
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button variant="danger" onClick={() => {setData([]);handleClose();}}>
+                        <Button variant="danger" onClick={() => {setData([]);handleClose(); setEdit(!edit)}}>
                             Close
                         </Button>
                         <Button variant="success" onClick={() => {
                             handleSaveChanges(changedTime);
                             handleClose();
+                            setEdit(!edit);
                         }}>
                             Save Changes
                         </Button>
@@ -871,30 +860,23 @@ const Schedular = (props: any) => {
                             </Col>
                         </Row>
                         <hr style={{ marginTop: '0px', marginBottom: '20px', borderTop: '2px solid grey' }}></hr>
-                        <Row className="align-items-center">
-                                <Col lg={1}>
-                                    <h6>Type: </h6>
-                                </Col>
-                                <Col lg={4}>
-                                    <FormControl value={event.type} disabled />
-                                </Col>
-                            </Row>
                             <Row className="pt-3 align-items-center">
                                 <Col lg={1}>
                                     <h6>Day: </h6>
                                 </Col>
-                                <Col lg={4}>
-                                    <DaysInput val={event.day} type="transfer" onChange={onChange} id="duplicateWorkout"/>
+                                <Col lg={7}>
+                                    <DaysInput val={event.day} type="transfer" onChange={(e) => {
+                                        if(e === [] || e === undefined){
+                                            setDuplicatedDay([]);
+                                        }
+                                        setDuplicatedDay(JSON.parse(e));
+                                    }} id="duplicateWorkout"/>
+                                    <span><i className="fas fa-info-circle"></i>{' '}Please select from the drop down</span>
                                 </Col>
                             </Row>
                             <Row className="pt-3 align-items-center">
                                 <Col>
-                                    <TimeField title="Start Time: " onChange={handleStart} hr={event.hour} m={event.min}/>
-                                </Col>
-                            </Row>
-                            <Row className="pt-3 align-items-center">
-                                <Col>
-                                    <TimeField title="End Time: " onChange={handleEnd} hr={event.endHour} m={event.endMin}/>
+                                    <TimeField title="Start Time: " onChange={handleStart} ehr={event.endHour} em={event.endMin} hr={event.hour} m={event.min}/>
                                 </Col>
                             </Row>
                     </Modal.Body>

@@ -1,4 +1,4 @@
-import TimeField from '../../../../components/customWidgets/timeField';
+import TimeField from '../../../../components/customWidgets/multipleTimeFields';
 import FitnessMultiSelect from '../../../../components/customWidgets/fitnessMultiSelect';
 import EquipmentSearch from '../../../../components/customWidgets/equipmentList';
 import MuscleGroupSearch from '../../../../components/customWidgets/muscleGroupList';
@@ -22,14 +22,9 @@ export const schema: any = {
               return <DaysInput id="newWorkout" onChange={props.onChange}/>
           }
      },
-     startTime: {
+     time: {
           "ui:widget": (props) => {
                return <TimeField title="Start Time" onChange={props.onChange}/>
-          }
-     },
-     endTime: {
-          "ui:widget": (props) => {
-               return <TimeField title="End Time" onChange={props.onChange}/>
           }
      },
      level: {

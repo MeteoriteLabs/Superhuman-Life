@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { InputGroup, FormControl, Row, Col, Form } from 'react-bootstrap';
 
+//NOTE: This widget is used if you want the user to have seperate component for time field.
 const TimeFieldInput = (props: any) => {
 
      const [hour, setHour] = useState(props.hr ? props.hr : '');

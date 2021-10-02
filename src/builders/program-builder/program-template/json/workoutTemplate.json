@@ -5,28 +5,25 @@
          "required": [
             "assignMode",
             "day",
-            "startTime"
+            "time"
          ],
-         "properties": {
-             "assignMode": {
-                 "type": "string",
-                 "title": "Mode",
-                 "enum": [
-                     "Online",
-                     "Offline",
-                     "Hybrid"
+        "properties": {
+            "assignMode": {
+                "type": "string",
+                "title": "Mode",
+                "enum": [
+                    "Online",
+                    "Offline",
+                    "Hybrid"
                 ]
-             },
-             "day": {
-                 "type": "string"
-             },
-             "startTime": {
-                 "type": "string"
-             },
-             "endTime": {
+            },
+            "day": {
+                "type": "string"
+            },
+            "time": {
                 "type": "string"
             }
-         }
+        }
      },
      "2": {
         "title": "",

@@ -48,6 +48,7 @@ const DaysInput = (props: any) => {
      renderInputField();
 
      return (
+          <>
           <div>
                {props.type === 'transfer' ? null : <label>Select Day</label>}
                <Typeahead
@@ -60,6 +61,7 @@ const DaysInput = (props: any) => {
                multiple={props.id ? props.id === 'newWorkout' || 'duplicateWorkout' ? false : true : true}
                />
           </div>
+          </>
      );
 }
 

@@ -67,18 +67,19 @@ function CreateEditMessage(props: any, ref: any) {
         if(frm.day){
             var eventJson: any = {};
             frm.day = JSON.parse(frm.day);
+            frm.time = JSON.parse(frm.time);
             eventJson.type = 'workout';
             eventJson.name = frm.workout;
             eventJson.mode = frm.assignMode;
             eventJson.id = workout_id;
-            eventJson.startTime = frm.startTime;
-            eventJson.endTime = frm.endTime;
+            eventJson.startTime = frm.time.startTime;
+            eventJson.endTime = frm.time.endTime;
             eventJson.day = parseInt(frm.day[0].day.substr(4));
             if (existingEvents.length === 0) {
                 existingEvents.push(eventJson);
             } else {
-                var timeStart: any = new Date("01/01/2007 " + handleTimeFormat(frm.startTime));
-                var timeEnd: any = new Date("01/01/2007 " + handleTimeFormat(frm.endTime));
+                var timeStart: any = new Date("01/01/2007 " + handleTimeFormat(frm.time.startTime));
+                var timeEnd: any = new Date("01/01/2007 " + handleTimeFormat(frm.time.endTime));
                 var diff1 = timeEnd - timeStart;
                 for (var i = 0; i <= existingEvents.length - 1; i++) {
                     var startTimeHour: any = new Date("01/01/2007 " + handleTimeFormat(existingEvents[i].startTime));
