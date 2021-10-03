@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Modal, Button, Row, Col, Tab, Tabs, InputGroup, FormControl, Badge, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import './styles.css';
-import { GET_SCHEDULEREVENTS, PROGRAM_EVENTS, UPDATE_FITNESSPROGRAMS, FETCH_EVENT } from './queries';
+import { GET_SCHEDULEREVENTS, PROGRAM_EVENTS, UPDATE_FITNESSPROGRAMS, FETCH_WORKOUT, FETCH_ACTIVITY } from './queries';
 import { useQuery, useMutation } from "@apollo/client";
 import ProgramList from "../../../components/customWidgets/programList";
 import FloatingButton from './FloatingButtons';
@@ -26,11 +26,20 @@ const Schedular = (props: any) => {
     const program_id = window.location.pathname.split('/').pop();
     const schedulerDay: any = require("./json/scheduler-day.json");
 
-    useQuery(FETCH_EVENT, {
+    useQuery(FETCH_WORKOUT, {
         variables: { id: event.id },
         skip: (event.type !== "workout"),
         onCompleted: (r: any) => {
             setData(r.workouts);
+            handleShow();
+        }
+    });
+
+    useQuery(FETCH_ACTIVITY, {
+        variables: { id: event.id },
+        skip: (event.type !== "activity"),
+        onCompleted: (r: any) => {
+            setData(r.activities);
             handleShow();
         }
     });
@@ -678,7 +687,7 @@ const Schedular = (props: any) => {
                                         </Tooltip>
                                     }
                                     >
-                                    <i className="fas fa-times fa-lg" onClick={(e) => { handleClose(); setData([]); setEdit(!edit) }} style={{ cursor: 'pointer' }}></i>
+                                    <i className="fas fa-times fa-lg" onClick={(e) => { handleClose(); setData([]); setEdit(true) }} style={{ cursor: 'pointer' }}></i>
                                 </OverlayTrigger>
                             </Col>
                         </Row>
@@ -822,13 +831,13 @@ const Schedular = (props: any) => {
                         </Tabs>}
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button variant="danger" onClick={() => {setData([]);handleClose(); setEdit(!edit)}}>
+                        <Button variant="danger" onClick={() => {setData([]);handleClose(); setEdit(true)}}>
                             Close
                         </Button>
                         <Button variant="success" onClick={() => {
                             handleSaveChanges(changedTime);
                             handleClose();
-                            setEdit(!edit);
+                            setEdit(true);
                         }}>
                             Save Changes
                         </Button>
