@@ -16,7 +16,16 @@ export const GET_TABLEDATA = gql`
      }
 `
 
-export const FETCH_EVENT = gql`
+export const FETCH_ACTIVITY = gql`
+     query activity($id: String!){
+          activities(where: { id: $id}){
+               id
+               title
+          }
+     }
+`
+
+export const FETCH_WORKOUT = gql`
      query fetchEvent($id: String!) {
           workouts(where: { id: $id }) {
                id

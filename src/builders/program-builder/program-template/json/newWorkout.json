@@ -5,7 +5,7 @@
          "required": [
             "assignMode",
             "day",
-            "startTime"
+            "time"
          ],
          "properties": {
              "assignMode": {
@@ -20,12 +20,9 @@
              "day": {
                  "type": "string"
              },
-             "startTime": {
+             "time": {
                  "type": "string"
-             },
-             "endTime": {
-                "type": "string"
-            }
+             }
          }
      },
      "2": {

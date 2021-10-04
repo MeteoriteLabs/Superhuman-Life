@@ -1,4 +1,4 @@
-import TimeField from '../../../../components/customWidgets/timeField';
+import TimeField from '../../../../components/customWidgets/singleTimeField';
 import DaysInput from '../daysInput';
 import TextEditor from '../../../../components/customWidgets/textEditor';
 import EquipmentSearch from '../../../../components/customWidgets/equipmentList';
