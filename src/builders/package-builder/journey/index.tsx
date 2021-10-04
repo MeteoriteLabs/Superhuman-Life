@@ -9,7 +9,7 @@ import {
     Popover,
     TabContent
 } from "react-bootstrap";
-import ModalView from "../../../components/modal";
+import CreateFitnessPackageModal from "../../../components/CreateFitnessPackageModal/CreateFitnessPackageModal";
 import Table from "../../../components/table";
 
 function PaymentWidget({ formData }: any) {
@@ -196,7 +196,9 @@ export default function JourneyTab() {
         <TabContent>
             <hr />
             <Card.Title className="text-center">
-                <ModalView
+                <CreateFitnessPackageModal
+             
+                    stepperValues={["Creator", "Details", "Program", "Schedule", "Pricing", "Preview"]}
                     name="Journey Package"
                     isStepper={true}
                     isPreview={true}
