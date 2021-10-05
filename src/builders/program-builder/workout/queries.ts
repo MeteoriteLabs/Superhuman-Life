@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 export const FETCH_DATA = gql`
-    query fetchdata($id: String){
+    query fetchdata($id: String!){
         workout(where: {id: $id}){
             id
             workouttitle
@@ -27,6 +27,19 @@ export const FETCH_DATA = gql`
             users_permissions_user {
                 id
             }
+        }
+    }
+`
+
+export const FETCH_FITNESS_PROGRAMS = gql`
+    query programquery($id: String!){
+        fitnessprograms(where: {users_permissions_user: {id:$id}}){
+            id
+            title
+            users_permissions_user{
+                id
+            }
+            events
         }
     }
 `
