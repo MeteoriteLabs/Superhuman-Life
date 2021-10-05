@@ -3,50 +3,40 @@
          "title": "",
          "type": "object",
          "required": [
-             "exercise"
+            "programName",
+            "duration",
+            "level",
+            "discipline",
+            "details"
          ],
          "properties": {
              "programName": {
                  "type": "string",
-                 "title": "Program Template Name"
+                 "title": "Program Name"
              },
              "duration": {
-                 "type": "string",
-                 "title": "Duration",
-                 "enum": [
-                     "3 Days",
-                     "7 Days (01 week)",
-                     "14 Days (02 Week)",
-                     "30 Days (01 Month)",
-                     "45 Days",
-                     "60 Days (02 Month",
-                     "75 Days",
-                     "90 Days (03 Month)",
-                     "120 Days (04 Month",
-                     "180 Days (06 Month)",
-                     "360 Days (12 Month"
-                 ]
+                "type": "number",
+                "title": "Duration",
+                "minimum": 1,
+                "maximum": 30
              },
              "level": {
-                 "type": "string",
+                 "type": "number",
                  "title": "Level",
-                 "enum": [
+                 "enum": [0, 1, 2, 3],
+                 "enumNames": [
                      "Beginner",
                      "Intermediate",
-                     "Advance"
+                     "Advance",
+                     "None"
                  ]
              },
-             "description": {
-                 "type": "string",
-                 "title": "Description"
+             "discipline": {
+                "type": "string"
              },
-             "miniDescription": {
+            "details": {
                 "type": "string",
-                "title": "Mini Description"
-            }, 
-            "equipment": {
-                "type": "string",
-                "title": "Equipment"
+                "title": "Details"
             }
          }
      }

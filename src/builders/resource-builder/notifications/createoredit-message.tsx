@@ -1,9 +1,9 @@
 import React, { useContext, useImperativeHandle, useState } from 'react';
 import { useQuery, useMutation } from "@apollo/client";
-import ModalView from "../../../components/modal";
-import { GET_TRIGGERS, ADD_MESSAGE, UPDATE_MESSAGE, GET_MESSAGE, DELETE_MESSAGE,UPDATE_STATUS } from "./queries";
+import { GET_TRIGGERS, ADD_MESSAGE, UPDATE_MESSAGE, GET_MESSAGE, DELETE_MESSAGE, UPDATE_STATUS } from "./queries";
 import AuthContext from "../../../context/auth-context";
 import StatusModal from "../../../components/StatusModal/StatusModal";
+import CreateFitnessPackageModal from '../../../components/CreateFitnessPackageModal/CreateFitnessPackageModal';
 
 
 interface Operation {
@@ -19,16 +19,16 @@ function CreateEditMessage(props: any, ref: any) {
     const [messageDetails, setMessageDetails] = useState<any>({});
     const [render, setRender] = useState<boolean>(false);
     const [operation, setOperation] = useState<Operation>({} as Operation);
-    
 
-    const [createMessage] = useMutation(ADD_MESSAGE, { onCompleted: (r: any) => { console.log(r); setRender(false); } });
-    const [editMessage] = useMutation(UPDATE_MESSAGE,{variables: {messageid: operation.id}, onCompleted: (r: any) => { console.log(r); setRender(false); } });
+
+    const [createMessage] = useMutation(ADD_MESSAGE, { onCompleted: (r: any) => { setRender(false); } });
+    const [editMessage] = useMutation(UPDATE_MESSAGE, { variables: { messageid: operation.id }, onCompleted: (r: any) => { setRender(false); } });
     const [deleteMessage] = useMutation(DELETE_MESSAGE, { onCompleted: (e: any) => console.log(e), refetchQueries: ["GET_TRIGGERS"] });
-    const [updateStatus] = useMutation(UPDATE_STATUS,{onCompleted: (d: any) => { console.log(d);}});
+    const [updateStatus] = useMutation(UPDATE_STATUS);
 
     useImperativeHandle(ref, () => ({
         TriggerForm: (msg: Operation) => {
-            console.log(msg);
+
             setOperation(msg);
 
             if (msg && !msg.id) //render form if no message id
@@ -83,7 +83,7 @@ function CreateEditMessage(props: any, ref: any) {
     function EditMessage(frm: any) {
         console.log('edit message');
         // useMutation(UPDATE_MESSAGE, { variables: frm, onCompleted: (d: any) => { console.log(d); } });
-        editMessage({variables: frm });
+        editMessage({ variables: frm });
     }
 
     function ViewMessage(frm: any) {
@@ -93,24 +93,24 @@ function CreateEditMessage(props: any, ref: any) {
     }
 
     function ToggleMessageStatus(id: string, current_status: boolean) {
-        
+
         console.log('toggle message status');
         console.log(id, current_status);
         //use mutation to just toggle the status of message
         updateStatus({ variables: { status: !current_status, messageid: id } });
-        
+
     }
 
     function DeleteMessage(id: any) {
         console.log('delete message');
-        deleteMessage({ variables: { id: id }});
+        deleteMessage({ variables: { id: id } });
     }
 
     function OnSubmit(frm: any) {
         console.log(frm);
         //bind user id
-        if(frm)
-        frm.user_permissions_user = auth.userid;
+        if (frm)
+            frm.user_permissions_user = auth.userid;
 
         switch (operation.type) {
             case 'create':
@@ -134,45 +134,46 @@ function CreateEditMessage(props: any, ref: any) {
     FetchData();
 
     let name = "";
-    if(operation.type === 'create'){
-        name="Create New";
-    }else if(operation.type === 'edit'){
-        name="Edit";
-    }else if(operation.type === 'view'){
-        name="View";
+    if (operation.type === 'create') {
+        name = "Create New";
+    } else if (operation.type === 'edit') {
+        name = "Edit";
+    } else if (operation.type === 'view') {
+        name = "View";
     }
 
     return (
         <>
             {render &&
-                <ModalView
+                <CreateFitnessPackageModal
+                    stepperValues={["Creator", "Details", "Program", "Schedule", "Pricing", "Preview"]}
                     name={name}
                     isStepper={false}
                     formUISchema={uiSchema}
                     formSchema={messageSchema}
-                    formSubmit={name ==="View"? () => {setRender(false)}:(frm: any) => { OnSubmit(frm); }}
+                    formSubmit={name === "View" ? () => { setRender(false) } : (frm: any) => { OnSubmit(frm); }}
                     formData={messageDetails}
                 />
-                
+
             }
             {operation.type === "toggle-status" && <StatusModal
-             modalTitle="Change Status"
-             modalBody="Do you want to change the status?"
-             buttonLeft="Cancel"
-             buttonRight="Yes"
-             onClick={() => {ToggleMessageStatus(operation.id,operation.current_status)}
-             
-             }/>}
+                modalTitle="Change Status"
+                modalBody="Do you want to change the status?"
+                buttonLeft="Cancel"
+                buttonRight="Yes"
+                onClick={() => { ToggleMessageStatus(operation.id, operation.current_status) }
 
-             {operation.type ==="delete" && <StatusModal
-             modalTitle="Delete"
-             modalBody="Do you want to delete this message?"
-             buttonLeft="Cancel"
-             buttonRight="Yes"
-             onClick={() => {DeleteMessage(operation.id)}}
-             />}
-        
-            
+                } />}
+
+            {operation.type === "delete" && <StatusModal
+                modalTitle="Delete"
+                modalBody="Do you want to delete this message?"
+                buttonLeft="Cancel"
+                buttonRight="Yes"
+                onClick={() => { DeleteMessage(operation.id) }}
+            />}
+
+
         </>
     )
 }

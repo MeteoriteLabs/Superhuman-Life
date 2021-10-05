@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { Badge, Button, Card, Dropdown, OverlayTrigger, Popover, TabContent } from "react-bootstrap";
-import ModalView from "../../../components/modal";
+import CreateFitnessPackageModal from "../../../components/CreateFitnessPackageModal/CreateFitnessPackageModal";
 import Table from "../../../components/table";
 
 export default function NutritionTab() {
@@ -75,6 +75,7 @@ export default function NutritionTab() {
     const uiSchema: any = {
         "about": {
             "ui:widget": "textarea",
+            "ui:autofocus": true,
             "ui:options": {
                 "rows": 3
             }
@@ -104,33 +105,41 @@ export default function NutritionTab() {
         <TabContent>
             <hr />
             <Card.Title className="text-center">
-                <ModalView
-                    name="Classic Meal"
+                <CreateFitnessPackageModal
+                    stepperValues={["Creator", "Details", "Program", "Schedule", "Pricing", "Preview"]}
+                    name="New Classic Meal Package"
                     isStepper={true}
+                    isPreview={true}
                     formUISchema={uiSchema}
                     formSchema={classicMealSchema}
                     formSubmit={onSubmit}
                     formData={{}}
                 />{" "}
-                <ModalView
-                    name="Consultation"
+                <CreateFitnessPackageModal
+                    stepperValues={["Creator", "Details", "Program", "Schedule", "Pricing", "Preview"]}
+                    name="New Consultation Package"
                     isStepper={true}
+                    isPreview={true}
                     formUISchema={uiSchema}
                     formSchema={consultSchema}
                     formSubmit={onSubmit}
                     formData={{}}
                 />{" "}
-                <ModalView
-                    name="Custom Meal"
+                <CreateFitnessPackageModal
+                    stepperValues={["Creator", "Details", "Program", "Schedule", "Pricing", "Preview"]}
+                    name="New Custom Meal Package"
                     isStepper={true}
+                    isPreview={true}
                     formUISchema={uiSchema}
                     formSchema={customSchema}
                     formSubmit={onSubmit}
                     formData={{}}
                 />{" "}
-                <ModalView
-                    name="Custom"
+                <CreateFitnessPackageModal
+                    stepperValues={["Creator", "Details", "Program", "Schedule", "Pricing", "Preview"]}
+                    name="New Custom Package"
                     isStepper={true}
+                    isPreview={true}
                     formUISchema={uiSchema}
                     formSchema={customMealSchema}
                     formSubmit={onSubmit}

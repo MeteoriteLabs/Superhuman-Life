@@ -1,5 +1,5 @@
 import React, { Suspense } from "react";
-import { Helmet } from "react-helmet";
+// import { Helmet } from "react-helmet";
 import {
   BrowserRouter as Router,
   Redirect,
@@ -26,6 +26,7 @@ const FQAsPage = React.lazy(() => import("./pages/faqs"));
 const PackagePage = React.lazy(() => import("./builders/package-builder"));
 const ResourcePage = React.lazy(() => import("./builders/resource-builder"));
 const ProgramPage = React.lazy(() => import("./builders/program-builder"));
+const ProgramManagerPage = React.lazy(() => import("./builders/program-builder/program-template"));
 
 const SessionPage = React.lazy(() => import("./builders/session-builder/"));
 
@@ -48,11 +49,11 @@ export default function Routes({ token }: any) {
       <Layout token={token}>
         {token ? (
           <Suspense fallback={<code>Loading...</code>}>
-            <Helmet>
+            {/* <Helmet>
               <meta charSet="utf-8" />
               <title>Sapien Dashboard | Dashboard</title>
               <link rel="canonical" href="https://sapien.systems/" />
-            </Helmet>
+            </Helmet> */}
 
             <Switch>
               <Redirect exact from="/" to="/home" />
@@ -65,6 +66,7 @@ export default function Routes({ token }: any) {
               <Route exact path="/packages" component={PackagePage} />
               <Route exact path="/programs" component={ProgramPage} />
               <Route exact path="/session" component={SessionPage} />
+              <Route path="/programs/manage" component={ProgramManagerPage} />
               <Route path="/profile" component={ProfilePage} />
               <Route path="/resources" component={ResourcePage} />
               <Route path="/schedule" component={SchedulePage} />

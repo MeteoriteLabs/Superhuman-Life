@@ -1,4 +1,3 @@
-import { Fragment } from "react";
 import { useTable, useExpanded } from "react-table";
 import "./table.css";
 function Table({ data, columns }: any) {
@@ -10,22 +9,20 @@ function Table({ data, columns }: any) {
         prepareRow,
     } = useTable({ columns, data }, useExpanded);
 
+
     return (
         <div className="table-responsive">
-            <table {...getTableProps()} className="table text-center">
-                <thead>
-                    {headerGroups.map(headerGroup => {
-                        return (
-                            <tr {...headerGroup.getHeaderGroupProps()}>
-                                {headerGroup.headers.map(column => (
-                                    <th className="tableHeader text-center" {...column.getHeaderProps()}>
-                                        {column.render("Header")}
-                                    </th>
-                                ))}
-                            </tr>
-
-                        )
-                    })}
+            <table {...getTableProps()} className="table">
+                <thead >
+                    {headerGroups.map(headerGroup => (
+                        <tr  {...headerGroup.getHeaderGroupProps()}>
+                            {headerGroup.headers.map(column => (
+                                <th className="tableHeader border-0 text-center" {...column.getHeaderProps()}>
+                                    {column.render("Header")}
+                                </th>
+                            ))}
+                        </tr>
+                    ))}
                     {!rows.length &&
                         <tr className="rowCard text-center">
                             <td colSpan={columns.length}>No data</td>
@@ -35,18 +32,19 @@ function Table({ data, columns }: any) {
                 <tbody  {...getTableBodyProps()}>
                     {rows.map(row => {
                         prepareRow(row);
-                        const rowProps = row.getRowProps();
                         return (
-                            <Fragment key={rowProps.key}>
-                                <tr className="rowCard " {...row.getRowProps()} >
-                                    {row.cells.map(cell => {
-                                        return <td className='bodyTd ml-3 bookingSetting' {...cell.getCellProps()}>
+                            <tr className="rowCard" {...row.getRowProps()}>
+                                {row.cells.map(cell => {
+                                    return (
+                                        <td
+                                            className='bodyTd ml-3'
+                                            {...cell.getCellProps()}
+                                        >
                                             {cell.render("Cell")}
                                         </td>
-                                    }
-                                    )}
-                                </tr>
-                            </Fragment>
+                                    )
+                                })}
+                            </tr>
                         );
                     })}
                 </tbody>
