@@ -17,7 +17,7 @@ export default function Custom(props) {
     const fitnessActionRef = useRef<any>(null);
 
 
-    
+
     const FetchData = () => {
         useQuery(GET_ALL_CLIENT_PACKAGE_BY_TYPE, {
             variables: {
@@ -30,52 +30,30 @@ export default function Custom(props) {
     }
 
 
-
-
     const loadData = (data) => {
         // console.log('custom query data', data);
         setUserPackage(
             [...data.userPackages].map((packageItem) => {
-                let renewDay:any = '';
+                let renewDay: any = '';
                 if (packageItem.fitnesspackages.length !== 0) {
-                    renewDay= new Date(packageItem.effective_date);
+                    renewDay = new Date(packageItem.effective_date);
                     renewDay.setDate(renewDay.getDate() + packageItem.fitnesspackages[0].duration)
                 }
+                return {
+                    id: packageItem.fitnesspackages[0].id,
+                    packageName: packageItem.fitnesspackages[0].packagename,
+                    duration: packageItem.fitnesspackages[0].duration,
+                    effectiveDate: moment(packageItem.effective_date).format("MMMM DD,YYYY"),
+                    packageStatus: packageItem.fitnesspackages[0].Status ? "Active" : "Inactive",
+                    packageRenewal: moment(renewDay).format("MMMM DD,YYYY"),
 
-                if (packageItem.program_managers.length === 0) {
-                    return {
-                        id: packageItem.fitnesspackages[0].id,
-                        packageName: packageItem.fitnesspackages[0].packagename,
-                        duration: packageItem.fitnesspackages[0].duration,
-                        effectiveDate: moment(packageItem.effective_date).format("MMMM DD,YYYY"),
-                        packageStatus: packageItem.fitnesspackages[0].Status ? "Active" : "Inactive",
-                        packageRenewal: moment(renewDay).format("MMMM DD,YYYY"),
-    
-                        // programId:packageItem.fitnessprograms[0].id,
-                        client: packageItem.users_permissions_user.username,
-                        programName: 'N/A' ,
-                        // users_permissions_user: packageItem.fitnessprograms[0].users_permissions_user.id,
-                        programStatus: 'N/A' ,
-                        programRenewal: 'N/A',
-                    }
-                }else{
-                    return {
-                        id: packageItem.fitnesspackages[0].id,
-                        packageName: packageItem.fitnesspackages[0].packagename,
-                        duration: packageItem.fitnesspackages[0].duration,
-                        effectiveDate: moment(packageItem.effective_date).format("MMMM DD,YYYY"),
-                        packageStatus: packageItem.fitnesspackages[0].Status ? "Active" : "Inactive",
-                        packageRenewal: moment(renewDay).format("MMMM DD,YYYY"),
-    
-    
-                        // programId:packageItem.fitnessprograms[0].id,
-                        client:packageItem.users_permissions_user.username,
-                        programName: packageItem.program_managers[0].fitnessprograms[0].title,
-                        // users_permissions_user: packageItem.fitnessprograms[0].users_permissions_user.id,
-                        programStatus:"Assigned",
-                        programRenewal:"26/04/20"
-                    }
+
+                    client: packageItem.users_permissions_user.username,
+                    programName: packageItem.program_managers.length === 0 ? 'N/A' : packageItem.program_managers[0].fitnessprograms[0].title,
+                    programStatus: packageItem.program_managers.length === 0 ? 'N/A' : "Assigned",
+                    programRenewal: packageItem.program_managers.length === 0 ? 'N/A' : moment(renewDay).format('MMMM DD,YYYY'),
                 }
+
             })
         )
     }
@@ -151,14 +129,16 @@ export default function Custom(props) {
                     Header: "Actions",
                     Cell: ({ row }: any) => {
                         return <ActionButton
+                          // actionName={["Manage", "Details"]}
                             action1='Manage'
-                            // actionClick1={() => {
-                            //     fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'manage', type: "Personal Training", rowData:""})
-                            // }}
+                            
+                            actionClick1={() => {
+                                fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'manage', type: "Custom Fitness", rowData:""})
+                            }}
 
                             action2='Details'
                             actionClick2={() => {
-                                fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'details', type: "Personal Training", rowData: row.original })
+                                fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'details', type: "Custom Fitness", rowData: row.original })
                             }}
                         >
                         </ActionButton>
@@ -169,44 +149,6 @@ export default function Custom(props) {
         },
     ], []);
 
-
-
-
-    const dataTable = useMemo<any>(() => [
-        {
-            "students": 'https://picsum.photos/200',
-            "name": "Exercise-1",
-            "status": "Active",
-            "startDate": "25/06/20",
-            "packageRenewal": "25/07/20",
-
-            "programStatus": "Not Assigned",
-            "programRenewal": "25/07/20",
-        },
-
-        {
-            "students": 'https://picsum.photos/200',
-            "name": "Exercise-1",
-            "status": "Active",
-            "startDate": "25/06/20",
-            "packageRenewal": "25/07/20",
-
-            "programStatus": "Not Assigned",
-            "programRenewal": "25/07/20",
-        },
-
-        {
-            "students": 'https://picsum.photos/200',
-            "name": "Exercise-1",
-            "status": "Active",
-            "startDate": "25/06/20",
-            "packageRenewal": "25/07/20",
-
-            "programStatus": "Not Assigned",
-            "programRenewal": "25/07/20",
-        },
-
-    ], []);
 
     return (
         <div className="mt-5">

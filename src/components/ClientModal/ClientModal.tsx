@@ -1,30 +1,53 @@
 import { useQuery } from '@apollo/client'
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { Badge, Button, Modal } from 'react-bootstrap'
 import Table from '../table/index'
-import { GET_ALL_CLIENT_PACKAGE_BY_ID } from '../../builders/session-builder/graphQL/queries'
+import { GET_ALL_CLASSIC_CLIENT_BY_ID, GET_ALL_GROUP_CLIENT_BY_ID } from '../../builders/session-builder/graphQL/queries'
 import ActionButton from '../actionbutton'
 import moment from 'moment'
+import FitnessAction from '../../builders/session-builder/Fitness/FitnessAction'
+
 
 export default function ClientModal(props) {
-    const { id, render, setRender } = props
-    const [dataTable, setDataTable] = useState<any[]>([])
+    const { id, render, setRender, type } = props
+
+    const [dataTable, setDataTable] = useState<any[]>([]);
+    const [queryName, setQueryName] = useState<any>("")
+    const fitnessActionRef = useRef<any>(null)
 
 
-    const FetchData = () => useQuery(GET_ALL_CLIENT_PACKAGE_BY_ID, {
+
+    useEffect(() => {
+        if (type === 'Classic Class') {
+            setQueryName("GET_ALL_CLASSIC_CLIENT_BY_ID")
+        } else {
+            setQueryName("GET_ALL_GROUP_CLIENT_BY_ID")
+        }
+    }, [type]);
+
+
+
+    const FetchData = () => useQuery(queryName === "GET_ALL_CLASSIC_CLIENT_BY_ID" ? GET_ALL_CLASSIC_CLIENT_BY_ID : GET_ALL_GROUP_CLIENT_BY_ID, {
         variables: {
             id: id,
         },
         onCompleted: (data) => loadData(data)
     })
 
+
+
     const loadData = (data) => {
+
         setDataTable(
             [...data.userPackages].map((packageItem) => {
                 const startDate = moment(packageItem.effective_date).format('MMMM DD,YYYY');
                 const endDate = moment(startDate).add(packageItem.fitnesspackages[0].duration, "days").format("MMMM DD,YYYY");
                 return {
+                    programName: packageItem.fitnesspackages[0].packagename,
                     client: packageItem.users_permissions_user.username,
+                    duration: packageItem.fitnesspackages[0].duration,
+                    level:packageItem.program_managers.length > 0 ? packageItem.program_managers[0].fitnessprograms[0].level: "",
+                    description:packageItem.program_managers.length > 0 ?  packageItem.program_managers[0].fitnessprograms[0].description : "",
                     startDate: startDate,
                     endDate: endDate,
                     programStatus: packageItem.program_managers.length > 0 ? "Assigned" : "Not Assigned",
@@ -34,6 +57,7 @@ export default function ClientModal(props) {
     }
 
     FetchData()
+    // console.log(dataTable)
 
     const columns = useMemo(
         () => [
@@ -89,10 +113,11 @@ export default function ClientModal(props) {
                         //     fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'manage', type: "Personal Training", rowData:""})
                         // }}
 
-                        action2='Details'
-                        actionClick2={() => {
-                            // fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'details', type: "Personal Training", rowData: row.original })
-                        }}
+                        // action2='Details'
+                        // actionClick2={() => {
+                        //     console.log('client modal')
+                        //     fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'details', type: "Personal Training", rowData: row.original })
+                        // }}
                     >
                     </ActionButton>
                 }
@@ -114,7 +139,7 @@ export default function ClientModal(props) {
                 </Modal.Header>
 
                 <Table columns={columns} data={dataTable} />
-
+                <FitnessAction ref={fitnessActionRef} />
                 <Modal.Footer>
                     <Button variant="danger" onClick={() => setRender(false)}>
                         Close

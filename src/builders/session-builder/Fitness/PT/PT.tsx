@@ -35,46 +35,28 @@ export default function Group(props) {
         // console.log('pt query data', data);
         setUserPackage(
             [...data.userPackages].map((packageItem) => {
-                let renewDay:any = '';
+                let renewDay: any = '';
                 if (packageItem.fitnesspackages.length !== 0) {
-                    renewDay= new Date(packageItem.effective_date);
+                    renewDay = new Date(packageItem.effective_date);
                     renewDay.setDate(renewDay.getDate() + packageItem.fitnesspackages[0].duration)
                 }
+                return {
+                    id: packageItem.fitnesspackages[0].id,
+                    packageName: packageItem.fitnesspackages[0].packagename,
+                    duration: packageItem.fitnesspackages[0].duration,
+                    effectiveDate: moment(packageItem.effective_date).format("MMMM DD,YYYY"),
+                    packageStatus: packageItem.fitnesspackages[0].Status ? "Active" : "Inactive",
+                    packageRenewal: moment(renewDay).format("MMMM DD,YYYY"),
 
-                if (packageItem.program_managers.length === 0) {
-                    return {
-                        id: packageItem.fitnesspackages[0].id,
-                        packageName: packageItem.fitnesspackages[0].packagename,
-                        duration: packageItem.fitnesspackages[0].duration,
-                        effectiveDate: moment(packageItem.effective_date).format("MMMM DD,YYYY"),
-                        packageStatus: packageItem.fitnesspackages[0].Status ? "Active" : "Inactive",
-                        packageRenewal: moment(renewDay).format("MMMM DD,YYYY"),
-    
-                        // programId:packageItem.fitnessprograms[0].id,
-                        client: packageItem.users_permissions_user.username,
-                        programName: 'N/A' ,
-                        // users_permissions_user: packageItem.fitnessprograms[0].users_permissions_user.id,
-                        programStatus: 'N/A' ,
-                        programRenewal: 'N/A',
-                    }
-                }else{
-                    return {
-                        id: packageItem.fitnesspackages[0].id,
-                        packageName: packageItem.fitnesspackages[0].packagename,
-                        duration: packageItem.fitnesspackages[0].duration,
-                        effectiveDate: moment(packageItem.effective_date).format("MMMM DD,YYYY"),
-                        packageStatus: packageItem.fitnesspackages[0].Status ? "Active" : "Inactive",
-                        packageRenewal: moment(renewDay).format("MMMM DD,YYYY"),
-    
-    
-                        // programId:packageItem.fitnessprograms[0].id,
-                        client:packageItem.users_permissions_user.username,
-                        programName: packageItem.program_managers[0].fitnessprograms[0].title,
-                        // users_permissions_user: packageItem.fitnessprograms[0].users_permissions_user.id,
-                        programStatus:"Assigned",
-                        programRenewal:"26/04/20"
-                    }
+                    client: packageItem.users_permissions_user.username,
+                    level:packageItem.program_managers.length === 0 ? "" : packageItem?.program_managers[0]?.fitnessprograms[0].level,
+                    discipline:packageItem.program_managers.length === 0 ? "" : packageItem?.program_managers[0]?.fitnessprograms[0].fitnessdisciplines,
+                    description:packageItem.program_managers.length === 0 ? "" : packageItem?.program_managers[0]?.fitnessprograms[0].description,
+                    programName: packageItem.program_managers.length === 0 ? 'N/A' : packageItem.program_managers[0].fitnessprograms[0].title,
+                    programStatus: packageItem.program_managers.length === 0 ? 'N/A' : "Assigned",
+                    programRenewal: packageItem.program_managers.length === 0 ? 'N/A' : moment(renewDay).format('MMMM DD,YYYY')
                 }
+
             })
         )
     }
@@ -82,83 +64,6 @@ export default function Group(props) {
 
     FetchData();
     // console.log('userPackage', userPackage);
-
-
-    // const dataTable: any[] = []
-    // new Array(2).fill(0).map((_, index) => {
-    //     dataTable.push({
-    //         id: userPackage[0]?.id,
-    //         packageName: userPackage[0]?.packageName[index],
-    //         effectiveDate: userPackage[0]?.effectiveDate,
-    //         packageStatus: userPackage[0]?.packageStatus[index],
-    //         packageRenewal: "25/10/20",
-
-
-    //         client: userPackage[0]?.client[index],
-    //         programName: userPackage[0]?.programName[index],
-    //         programStatus: "Assigned",
-    //         programRenewal: "25/07/20",
-
-    //     })
-    // })
-
-    // console.log('dataTable', dataTable);
-
-
-
-
-    const dataTable2 = useMemo<any>(() => [
-        {
-            id: '1',
-            packageName: "Package Name 1",
-            packageStatus: 'Active',
-            effectiveDate: "28/07/20",
-            packageRenewal: "27/07/20",
-
-            programName: "Pirates of the Carribean 2",
-            client: "John",
-            programStatus: "Assigned",
-            programRenewal: "26/04/20",
-
-        },
-
-        {
-            id: '1',
-            packageName: "Package Name 1",
-            packageStatus: 'Active',
-            effectiveDate: "28/07/20",
-            packageRenewal: "27/07/20",
-
-            programName: "Pirates of the Carribean 3",
-            client: "Mary",
-            programStatus: "Assigned",
-            programRenewal: "26/04/20",
-
-        },
-
-
-        {
-            id: '2',
-            packageName: "Package Name 2",
-            packageStatus: 'Active',
-            effectiveDate: "28/07/20",
-            packageRenewal: "27/07/20",
-
-            programName: "Pirates of the Carribean 3",
-            client: "Harry",
-            programStatus: "Not Assigned",
-            programRenewal: "25/04/20"
-
-        },
-
-
-
-
-    ], []);
-
-
-
-
 
 
     // const newData: Array<any> = [];
@@ -248,10 +153,12 @@ export default function Group(props) {
                         Header: "Actions",
                         Cell: ({ row }: any) => {
                             return <ActionButton
+                                // actionName={["Manage", "Details"]}
+
                                 action1='Manage'
-                                // actionClick1={() => {
-                                //     fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'manage', type: "Personal Training", rowData:""})
-                                // }}
+                                actionClick1={() => {
+                                    fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'manage', type: "Personal Training", rowData: "" })
+                                }}
 
                                 action2='Details'
                                 actionClick2={() => {
@@ -282,19 +189,19 @@ export default function Group(props) {
 
 
 
-class Package {
-    createPackage = (packageName, packageStatus, startDate, packageRenewal, programName, client, programStatus, programRenewal) => {
-        let updatePackage: any = {};
-        updatePackage.packageName = packageName;
-        updatePackage.packageStatus = packageStatus;
-        updatePackage.startDate = startDate;
-        updatePackage.packageRenewal = packageRenewal;
-        updatePackage.programName = programName;
-        updatePackage.client = client;
-        updatePackage.programStatus = programStatus;
-        updatePackage.programRenewal = programRenewal;
-        return updatePackage
-    }
-}
+// class Package {
+//     createPackage = (packageName, packageStatus, startDate, packageRenewal, programName, client, programStatus, programRenewal) => {
+//         let updatePackage: any = {};
+//         updatePackage.packageName = packageName;
+//         updatePackage.packageStatus = packageStatus;
+//         updatePackage.startDate = startDate;
+//         updatePackage.packageRenewal = packageRenewal;
+//         updatePackage.programName = programName;
+//         updatePackage.client = client;
+//         updatePackage.programStatus = programStatus;
+//         updatePackage.programRenewal = programRenewal;
+//         return updatePackage
+//     }
+// }
 
-export const updatePackage = new Package();
+// export const updatePackage = new Package();

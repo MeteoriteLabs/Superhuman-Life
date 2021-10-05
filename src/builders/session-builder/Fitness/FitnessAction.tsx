@@ -14,19 +14,12 @@ interface Operation {
     actionType: 'create' | 'manager' | 'details' | "allClients";
     type: 'Personal Training' | 'Group Class' | 'Classic Class' | 'Custom Class';
     duration: number;
-
-}
-
-enum ENUM_EXERCISES_EXERCISELEVEL {
-    Beginner,
-    Intermediate,
-    Advanced
+    rowData:any
 }
 
 function FitnessAction(props, ref: any) {
 
     const auth = useContext(authContext);
-    const modalTrigger = new Subject();
     const [render, setRender] = useState<boolean>(false);
 
     const programSchema: { [name: string]: any; } = require("./program.json");
@@ -38,7 +31,8 @@ function FitnessAction(props, ref: any) {
     const [createFitnessProgram] = useMutation(CREATE_PROGRAM, {
         onCompleted: (data: any) => {
             CreateProgramManager(data)
-            modalTrigger.next(false);
+            // modalTrigger.next(false);
+            setRender(false)
         }
     });
 
@@ -52,7 +46,7 @@ function FitnessAction(props, ref: any) {
                 title: frm.programName,
                 fitnessdisciplines: frm.discipline.split(","),
                 duration_days: Number(operation.duration),
-                level: ENUM_EXERCISES_EXERCISELEVEL[frm.level],
+                level: frm.level,
                 description: frm.details,
                 Is_program: true,
                 users_permissions_user: frm.user_permissions_user
@@ -76,18 +70,24 @@ function FitnessAction(props, ref: any) {
         TriggerForm: (msg: Operation) => {
             console.log(msg)
             setOperation(msg);
-            setProgramDetails({ ...programDetails, duration: msg.duration })
-            modalTrigger.next(true);
 
-            if (msg.actionType === "allClients") {
-                setRender(true)
+            
+            
+            if(msg.actionType === "create"){
+                setProgramDetails({ ...programDetails, duration: msg.duration })
+            }else if (msg.actionType === "details"){
+                setProgramDetails({ ...programDetails, ...msg.rowData })
             }
+            setRender(true)
+            // if (msg.actionType === "allClients") {
+            // }
             //render form if no message id
             // if (msg && !msg.id)
         }
     }));
 
-
+ 
+    
     // function FillDetails(data: any) {
     //     let details: any = {};
     //     let msg = data.exercises;
@@ -104,15 +104,18 @@ function FitnessAction(props, ref: any) {
     // }
 
 
-    function ManageProgram(frm: any) {
-        console.log('edit message');
-        // useMutation(UPDATE_MESSAGE, { variables: frm, onCompleted: (d: any) => { console.log(d); } });
-        // editExercise({variables: frm });
-    }
+    // function viewDetails(frm: any) {
+    //     console.log('detail message');
+    //     // useMutation(UPDATE_MESSAGE, { variables: frm, onCompleted: (d: any) => { console.log(d); } });
+    //     // editExercise({variables: frm });
+    //     console.log(operation)
+    //     // setProgramDetails({...programDetails})
+    // }
 
 
     function OnSubmit(frm: any) {
         //bind user id
+        console.log(frm)
         if (frm) {
             frm.user_permissions_user = auth.userid;
             frm.duration = operation.duration;
@@ -122,8 +125,8 @@ function FitnessAction(props, ref: any) {
             case 'create':
                 CreateFitnessProgram(frm);
                 break;
-            case 'manager':
-                ManageProgram(frm);
+            case 'details':
+                // viewDetails(frm);
                 break;
 
         }
@@ -142,21 +145,24 @@ function FitnessAction(props, ref: any) {
 
     return (
         <div>
-            {operation.actionType === "create" &&
+            {(operation.actionType === "create"  || operation.actionType === "details")&&
                 <SessionModal
                     name={name}
                     isStepper={false}
                     formUISchema={schema}
                     formSchema={programSchema}
-                    formSubmit={name === "View" ? () => { modalTrigger.next(false); } : (frm: any) => { OnSubmit(frm); }}
+                    formSubmit={ (frm: any) => { OnSubmit(frm) }}
                     formData={programDetails}
                     widgets={widgets}
-                    modalTrigger={modalTrigger}
+                    // modalTrigger={modalTrigger}
+                    render={render}
+                    setRender={setRender}
                 />
             }
 
             {operation.actionType === "allClients" &&
                 <ClientModal
+                    type={operation.type}
                     render={render}
                     setRender={setRender}
                     id={operation.id}

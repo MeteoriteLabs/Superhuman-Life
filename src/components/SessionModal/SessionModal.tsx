@@ -3,7 +3,7 @@ import { withTheme, utils } from "@rjsf/core";
 import { Theme as Bootstrap4Theme } from '@rjsf/bootstrap-4';
 import { Button, Col, Modal, ProgressBar, Row } from "react-bootstrap";
 
-export default function SessionModal({ name, formUISchema, formSubmit, formSchema, formData, isStepper, widgets, modalTrigger, stepperValues }: any) {
+export default function SessionModal({ name, formUISchema, formSubmit, formSchema, formData, isStepper, widgets, stepperValues, render, setRender }: any) {
   
     const registry = utils.getDefaultRegistry();
     const defaultFileWidget = registry.widgets["FileWidget"];
@@ -16,11 +16,11 @@ export default function SessionModal({ name, formUISchema, formSubmit, formSchem
     const [formValues, setFormValues] = useState<any>(formData);
     const stepper: string[] = stepperValues;
     
-    modalTrigger.subscribe((res: boolean) => {
-        setShow(res);
-    });
+    // modalTrigger.subscribe((res: boolean) => {
+    //     setShow(res);
+    // });
  
-
+    
     function submitHandler(formData: any) {
 
    
@@ -37,7 +37,7 @@ export default function SessionModal({ name, formUISchema, formSubmit, formSchem
 
     return (
         <>  
-            <Modal size="xl" show={show} onHide={() => setShow(false)} centered >
+            <Modal size="xl" show={render} onHide={() => setRender(false)} centered >
                 <Modal.Header closeButton>
                     <Modal.Title as={Row}>
                         <Col xs={12} md={12} lg={12}>
@@ -100,7 +100,7 @@ export default function SessionModal({ name, formUISchema, formSubmit, formSchem
                         <Button
                          variant="danger"
                          size="sm"
-                         onClick={() => {setShow(false)}}
+                         onClick={() => setRender(false)}
                          className={name === 'View'?"d-none":""}
                         >
                         Close

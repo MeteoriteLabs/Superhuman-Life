@@ -4,14 +4,21 @@ import "./button.css";
 function ActionButton(props: any) {
 
     const { status } = props
-    return (
+    
+    // const renderItemAction = () => {
+    //     return actionName.map((item, index) => {
+    //         return <Dropdown.Item onClick={props.actionClick + `${index}`}>{item}</Dropdown.Item>
+    //     })
+    // }
 
+    return (
         <Dropdown >
             <Dropdown.Toggle id="dropdown-basic" as="button" className="dropDown">
                 <i className="fas fa-ellipsis-v"></i>
             </Dropdown.Toggle>
 
             <Dropdown.Menu>
+                {/* {renderItemAction()} */}
                 <Dropdown.Item onClick={props.actionClick1}>{props.action1}</Dropdown.Item>
                 <Dropdown.Item onClick={props.actionClick2}>{props.action2}</Dropdown.Item>
                 <Dropdown.Item onClick={props.actionClick3}>{props.action3}</Dropdown.Item>

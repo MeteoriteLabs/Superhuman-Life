@@ -16,23 +16,20 @@
                 "minimum": 1,
                 "maximum": 360,
                 "readOnly": true
-                
-                
              },
              "level": {
-                 "type": "number",
+                 "type": "string",
                  "title": "Level",
-                 "enum": [0, 1, 2],
-                 "enumNames": [
+                 "enum": [
                      "Beginner",
                      "Intermediate",
-                     "Advance"
+                     "Advanced"
                  ]
              },
              "discipline": {
                 "type": "string"
              },
-            "details": {
+            "description": {
                 "type": "string",
                 "title": "Details"
             }

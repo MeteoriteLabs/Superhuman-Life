@@ -48,29 +48,29 @@ export default function Group(props) {
     })
 
 
-
     const loadData = () => {
-        
+
         let arrayFitnessPackage: any[] = [];
-        let arrayData :any[] = []
+        let arrayData: any[] = []
 
-
-        let fitnessProgramItem:any = {};
-        for (let i = 0; i < data1.fitnesspackages.length; i++) {
-            for(let j = 0; j < data2?.programManagers.length; j ++){
+        let fitnessProgramItem: any = {};
+        for (let i = 0; i < data1?.fitnesspackages.length; i++) {
+            for (let j = 0; j < data2?.programManagers.length; j++) {
                 if (data1.fitnesspackages[i].id === data2.programManagers[j].fitnesspackages[0].id) {
-                    fitnessProgramItem.programId = data2.programManagers[j].fitnessprograms[0].id;
+                    fitnessProgramItem.proManagerFitnessId = data2.programManagers[j].fitnessprograms[0].id;
                     fitnessProgramItem.title = data2.programManagers[j].fitnessprograms[0].title;
                     fitnessProgramItem.published_at = data2.programManagers[j].fitnessprograms[0].published_at
+                    fitnessProgramItem.proManagerId = data2.programManagers[j].id;
 
-                    arrayData.push( { ...data1.fitnesspackages[i], ...fitnessProgramItem});
+                    arrayData.push({ ...data1.fitnesspackages[i], ...fitnessProgramItem });
                 }
             }
         }
 
-        let arrayA = arrayData.map(item =>item.id);
-     
-        const res = data1.fitnesspackages.filter(item =>  !arrayA.includes(item.id));
+
+        let arrayA = arrayData.map(item => item.id);
+
+        const res = data1.fitnesspackages.filter(item => !arrayA.includes(item.id));
         res.forEach(item => {
             arrayData.push(item)
         })
@@ -80,7 +80,7 @@ export default function Group(props) {
         for (let i = 0; i < arrayData.length; i++) {
             for (let j = 0; j < data3.userPackages.length; j++) {
                 if (data3.userPackages[j].program_managers.length > 0) {
-                    if (arrayData[i].programId === data3.userPackages[j].program_managers[0].fitnessprograms[0].id) {
+                    if (arrayData[i].proManagerFitnessId === data3.userPackages[j].program_managers[0].fitnessprograms[0].id) {
                         arrayFitnessPackage.push({ ...arrayData[i], ...data3.userPackages[j].users_permissions_user });
                     } else {
                         arrayFitnessPackage.push(arrayData[i]);
@@ -100,7 +100,8 @@ export default function Group(props) {
                     expiry: moment(packageItem.expiry_date).format("MMMM DD,YYYY"),
                     packageStatus: packageItem.Status ? "Active" : "Inactive",
 
-                    programId: packageItem.programId,
+                    proManagerId: packageItem.proManagerId,
+                    proManagerFitnessId: packageItem.proManagerFitnessId,
                     client: packageItem.username ? packageItem.username : "N/A",
                     time: packageItem.published_at ? moment(packageItem.published_at).format('h:mm:ss a') : "N/A",
                     programName: packageItem.title ? packageItem.title : "N/A",
@@ -116,8 +117,8 @@ export default function Group(props) {
 
     let arr: any = []
     for (let i = 0; i < userPackage.length - 1; i++) {
-        if (userPackage[i].programId === userPackage[i + 1].programId) {
-            if (userPackage[i].programId === userPackage[i + 1].programId) {
+        if (userPackage[i].id === userPackage[i + 1].id) {
+            if (userPackage[i].proManagerFitnessId === userPackage[i + 1].proManagerFitnessId) {
                 if (typeof userPackage[i].client === "string") {
                     arr[0] = userPackage[i].client;
                 };
@@ -137,7 +138,6 @@ export default function Group(props) {
 
                 Header: "Package",
                 columns: [
-                    // { accessor: 'id', Header: 'ID', enableRowSpan: true },
                     { accessor: "packageName", Header: 'Name', enableRowSpan: true },
                     { accessor: "expiry", Header: 'Expiry', enableRowSpan: true },
                     {
@@ -157,7 +157,7 @@ export default function Group(props) {
                         accessor: "action", Header: "Action", enableRowSpan: true,
                         Cell: (row: any) => {
                             return <>
-                                <button onClick={() => {
+                                <button className='text-nowrap' onClick={() => {
                                     fitnessActionRef.current.TriggerForm({ id: row.row.original.id, actionType: 'create', type: 'Group Class', duration: row.row.original.duration })
                                 }}>Add new</button>
                             </>
@@ -173,26 +173,32 @@ export default function Group(props) {
                     {
                         accessor: "client", Header: 'Client',
                         Cell: (row) => {
+                            console.log("🚀 ~ file: Group.tsx ~ line 176 ~ Group ~ row", row.value)
                             return <div >
-                                {typeof row.value === "string" ?
-                                    <img
-                                        src="https://picsum.photos/200/100" alt='profile-pic'
-                                        style={{ width: '60px', height: '60px', borderRadius: '50%' }} />
-                                    :
-                                    <div className='position-relative' style={{ width: '8rem', height: '5rem' }}>
-                                        {row.value.slice(0, 4).map((item, index) => {
-                                            let postionLeft = 20;
-                                            return <img
-                                                key={index}
-                                                src="https://picsum.photos/200/100" alt='profile-pic'
-                                                style={{ width: '60px', height: '60px', borderRadius: '50%', left: `${postionLeft * index}%` }}
-                                                className='position-absolute'
-                                            />
-                                        })}
-                                    </div>
+                                {row.value === "N/A" ? <p className='text-center mb-0'>N/A</p> :
+                                    row.value.length === 1 ?
+                                        <img
+                                            src="https://picsum.photos/200/100" alt='profile-pic'
+                                            style={{ width: '60px', height: '60px', borderRadius: '50%' }} />
+                                        :
+                                        <div className='position-relative mx-auto' style={{ width: '8rem', height: '5rem' }}>
+                                            {row.value.slice(0, 4).map((item, index) => {
+                                                let postionLeft = 20;
+                                                return <img
+                                                    key={index}
+                                                    src="https://picsum.photos/200/100" alt='profile-pic'
+                                                    style={{ width: '60px', height: '60px', borderRadius: '50%', left: `${postionLeft * index}%` }}
+                                                    className='position-absolute ml-2'
+                                                />
+                                            })}
+                                        </div>
                                 }
-                                {typeof row.value === 'string' ? <p className='text-center'>{row.value}</p> : <p className='text-center'>{row.value.length} people</p>}
 
+
+                                {row.value === "N/A" ? "" :
+                                    row.value.length === 1 ? <p className='text-center'>{row.value}</p> : <p className='text-center'>{row.value.length} people</p>
+
+                                }
                             </div>
                         }
                     },
@@ -216,7 +222,9 @@ export default function Group(props) {
                         Header: "Actions",
                         Cell: ({ row }: any) => {
                             return <ActionButton
+                                // actionName={["Manage", "Details", "All Clients"]}
                                 action1='Manage'
+
                                 actionClick1={() => {
                                     fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'manage' })
                                 }}
@@ -227,6 +235,10 @@ export default function Group(props) {
                                 }}
 
 
+                                action3='All Clients'
+                                actionClick3={() => {
+                                    fitnessActionRef.current.TriggerForm({ id: row.original.proManagerId, actionType: 'allClients', type: 'Group Class' })
+                                }}
 
                             />
                         }

@@ -45,7 +45,12 @@ export const GET_ALL_CLIENT_PACKAGE_BY_TYPE = gql`
           id
           title
           published_at
-       
+          level
+          description
+          fitnessdisciplines{
+            id
+            disciplinename
+          }
         }
 
       }
@@ -84,7 +89,7 @@ export const GET_ALL_PROGRAM_BY_TYPE = gql`
         }
       )
       {
-        
+        id
         fitnesspackages{
           id
           packagename
@@ -149,7 +154,7 @@ export const GET_ALL_CLIENT_PACKAGE = gql`
   }
 `;
 
-export const GET_ALL_CLIENT_PACKAGE_BY_ID = gql`
+export const GET_ALL_CLASSIC_CLIENT_BY_ID = gql`
   query userPackages($id: ID!){
     userPackages(
       where:{
@@ -163,17 +168,48 @@ export const GET_ALL_CLIENT_PACKAGE_BY_ID = gql`
           }
           effective_date
          fitnesspackages{
+            packagename
             id
             duration
           }
           program_managers{
             id
+            fitnessprograms{
+              level
+              description
+            }
           }
         }
-    
   }
+`
 
-
+export const GET_ALL_GROUP_CLIENT_BY_ID = gql`
+  query userPackages($id: ID!){
+    userPackages(
+      where:{
+        program_managers: { id: $id }
+      }
+    )
+        {
+          id
+          users_permissions_user {
+            username
+          }
+          effective_date
+         fitnesspackages{
+            packagename
+            id
+            duration
+          }
+          program_managers{
+            id
+            fitnessprograms{
+              level
+              description
+            }
+          }
+        }
+  }
 `
 
 

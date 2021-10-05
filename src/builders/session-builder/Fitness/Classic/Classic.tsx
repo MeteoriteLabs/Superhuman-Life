@@ -3,7 +3,7 @@ import { useContext, useMemo, useRef, useState } from 'react'
 import { Badge, Row, Col } from "react-bootstrap";
 import Table from '../../../../components/table';
 import AuthContext from "../../../../context/auth-context"
-import { GET_ALL_CLIENT_PACKAGE_BY_TYPE } from '../../graphQL/queries';
+import { GET_ALL_CLIENT_PACKAGE, GET_ALL_CLIENT_PACKAGE_BY_TYPE, GET_ALL_FITNESS_PACKAGE_BY_TYPE, GET_ALL_PROGRAM_BY_TYPE } from '../../graphQL/queries';
 import moment from 'moment'
 import FitnessAction from '../FitnessAction';
 import ActionButton from '../../../../components/actionbutton';
@@ -16,66 +16,251 @@ export default function Classic(props) {
 
     const fitnessActionRef = useRef<any>(null);
 
-
-    const FetchData = () => useQuery(GET_ALL_CLIENT_PACKAGE_BY_TYPE, {
+    const { data: data1 } = useQuery(GET_ALL_FITNESS_PACKAGE_BY_TYPE, {
         variables: {
             id: auth.userid,
-            type: 'Classic Class',
+            type: 'Classic Class'
         },
-        onCompleted: (data) => loadData(data)
+
+    });
+
+    const { data: data2 } = useQuery(GET_ALL_PROGRAM_BY_TYPE, {
+        variables: {
+            id: auth.userid,
+            type: 'Classic Class'
+        },
+
+    });
+
+
+
+    const { data: data3 } = useQuery(GET_ALL_CLIENT_PACKAGE, {
+        variables: {
+            id: auth.userid,
+            type: 'Classic Class'
+        },
+        onCompleted: (data) => loadData()
     })
 
 
-    const loadData = (data) => {
-        console.log('Classic query data', data);
-        setUserPackage(
-            [...data.userPackages].map((packageItem) => {
-                let renewDay: any = '';
-                if (packageItem.fitnesspackages.length !== 0) {
-                    renewDay = new Date(packageItem.effective_date);
-                    renewDay.setDate(renewDay.getDate() + packageItem.fitnesspackages[0].duration)
+    // console.log('fitness package', data1);
+    // console.log('program manager', data2?.programManagers?.map(item => item));
+    // console.log('client package', data3?.userPackages?.map(item => item));
+
+
+
+    // const loadData = () => {
+    //     let arrayFitnessPackage: any[] = [];
+    //     let arrayData: any[] = [];
+
+    //     let fitnessProgramItem: any = {};
+    //     for (let i = 0; i < data1?.fitnesspackages.length; i++) {
+    //         for (let j = 0; j < data3?.userPackages.length; j++) {
+    //             if (data1.fitnesspackages[i].id === data3.userPackages[j].fitnesspackages[0].id) {
+
+    //                 const client = data3.userPackages[j].users_permissions_user.username;
+    //                 const title = data3.userPackages[j].program_managers.map(item =>item.fitnessprograms[0].title)
+    //                 arrayData.push({ ...data1.fitnesspackages[i], client, title});
+    //                 // if (data3.userPackages[j].program_managers.length >= 1) {
+    //                 //     fitnessProgramItem.proManagerFitnessId = data3.userPackages[j].fitnesspackages[0].id;
+    //                 //     fitnessProgramItem.title = data3.userPackages[j].program_managers[0].fitnessprograms[0].title;
+    //                 //     fitnessProgramItem.published_at = data3.userPackages[j].program_managers[0].fitnessprograms[0].published_at;
+    //                 //     fitnessProgramItem.proManagerId = data3.userPackages[j].id;
+
+    //                 //     arrayData.push({ ...data1.fitnesspackages[i], ...fitnessProgramItem });
+    //                 // } else {
+    //                 //     arrayData.push({ ...data1.fitnesspackages[i]});
+    //                 // }
+    //             }
+    //         }
+    //     }
+
+    //     console.log('arrayData', arrayData)
+
+
+
+    //     setUserPackage(
+    //         [...arrayData.map((packageItem) => {
+    //             return {
+    //                 id: packageItem.id,
+    //                 packageName: packageItem.packagename,
+    //                 duration: packageItem.duration,
+    //                 expiry: moment(packageItem.expiry_date).format("MMMM DD,YYYY"),
+    //                 packageStatus: packageItem.Status ? "Active" : "Inactive",
+
+    //                 proManagerId: packageItem.proManagerId,
+    //                 proManagerFitnessId: packageItem.proManagerFitnessId,
+    //                 client: packageItem.client  ? packageItem.client : "N/A",
+    //                 time: packageItem.published_at ? moment(packageItem.published_at).format('h:mm:ss a') : "N/A",
+    //                 programName: packageItem.title.length > 0  ? packageItem.title : "N/A",
+    //                 programStatus: packageItem.title.length > 0 ? "Assigned" : "N/A",
+    //                 renewal: packageItem.title ? "25/08/2021" : "N/A",
+    //             }
+    //         })]
+    //     )
+    // }
+
+
+
+
+
+
+    // from group
+    const loadData = () => {
+        // const arrayFitnessPackage: any[] = [];
+        const arrayData: any[] = []
+
+        let fitnessProgramItem: any = {};
+        for (let i = 0; i < data1?.fitnesspackages.length; i++) {
+            for (let j = 0; j < data2?.programManagers.length; j++) {
+                // if (data2.programManagers[j].fitnessprograms.length >= 1) {
+                if (data1.fitnesspackages[i].id === data2.programManagers[j].fitnesspackages[0].id) {
+                    fitnessProgramItem.proManagerFitnessId = data2.programManagers[j].fitnessprograms[0].id;
+                    fitnessProgramItem.title = data2.programManagers[j].fitnessprograms[0].title;
+                    fitnessProgramItem.published_at = data2.programManagers[j].fitnessprograms[0].published_at;
+                    fitnessProgramItem.proManagerId = data2.programManagers[j].id;
+
+                    arrayData.push({ ...data1.fitnesspackages[i], ...fitnessProgramItem });
                 }
-
-                return {
-                    id: packageItem.fitnesspackages[0].id,
-                    packageName: packageItem.fitnesspackages[0].packagename,
-                    duration: packageItem.fitnesspackages[0].duration,
-                    expiry: moment(packageItem.expiry_date).format("MMMM DD,YYYY"),
-                    packageStatus: packageItem.fitnesspackages[0].Status ? "Active" : "Inactive",
-                    effective_date: moment(packageItem.effective_date).format("MMMM DD,YYYY"),
-
-
-                    client: packageItem.users_permissions_user.username,
-                    programName: packageItem.program_managers.length === 0 ? 'N/A' : packageItem.program_managers[0].fitnessprograms[0].title,
-                    programStatus: packageItem.program_managers.length === 0 ? 'N/A' : "Assigned",
-                    programRenewal: packageItem.program_managers.length === 0 ? 'N/A' : renewDay,
-                }
-
-            })
-        )
-    }
-
-
-    FetchData();
-
-    console.log('userPackage', userPackage);
-
-    let arr: any = []
-    for (let i = 0; i < userPackage.length - 1; i++) {
-        if ((userPackage[i].id === userPackage[i + 1].id && userPackage[i].duration === userPackage[i + 1].duration)) {
-            if (typeof userPackage[i].client === "string") {
-                arr[0] = userPackage[i].client;
-            };
-            arr.push(userPackage[i + 1].client);
-            userPackage[i].client = arr
-            userPackage.splice(i + 1, 1);
-            i--;
-
-
-            // if (userPackage[i].programName === userPackage[i + 1].programName) {
-            // }
+                // } 
+            }
         }
+
+
+        let arrayA = arrayData.map(item => item.id);
+
+        const res = data1.fitnesspackages.filter(item => !arrayA.includes(item.id));
+        res.forEach(item => {
+            arrayData.push(item)
+        })
+
+        // console.log("🚀 ~ file: Classic.tsx ~ line 65 ~ loadData ~ arrayData", arrayData)
+
+
+
+
+        // for (let i = 0; i < arrayData.length; i++) {
+        //     for (let j = 0; j < data3.userPackages.length; j++) {
+        //         if (data3.userPackages[j].fitnesspackages[0].id === arrayData[i].id) {
+        //             const client = data3.userPackages[j].users_permissions_user.username
+        //             arrayFitnessPackage.push({ ...arrayData[i], client });
+
+
+        //         }  
+        //         else {
+        //             arrayFitnessPackage.push(arrayData[i]);
+        //             break
+        //         }
+        //     }
+        // }
+
+        const arrayFitnessPackage = arrayData.map(item => {
+            let client: any[] = [];
+            for (let j = 0; j < data3.userPackages.length; j++) {
+                if (item.id === data3.userPackages[j].fitnesspackages[0].id) {
+                    client.push(data3.userPackages[j].users_permissions_user.username)
+                }
+                item = { ...item, client }
+            }
+            return item
+        })
+
+     
+
+        for (let i = 0; i < arrayFitnessPackage.length - 1; i++) {
+            if (arrayFitnessPackage[i].id === arrayFitnessPackage[i + 1].id) {
+                arrayFitnessPackage.splice(arrayFitnessPackage[i], 1)
+            }
+        }
+      
+
+        setUserPackage(
+            [...arrayFitnessPackage.map((packageItem) => {
+                return {
+                    id: packageItem.id,
+                    packageName: packageItem.packagename,
+                    duration: packageItem.duration,
+                    expiry: moment(packageItem.expiry_date).format("MMMM DD,YYYY"),
+                    packageStatus: packageItem.Status ? "Active" : "Inactive",
+
+                    proManagerId: packageItem.proManagerId,
+                    proManagerFitnessId: packageItem.proManagerFitnessId,
+                    client: packageItem.client ? packageItem.client : "N/A",
+                    time: packageItem.published_at ? moment(packageItem.published_at).format('h:mm:ss a') : "N/A",
+                    programName: packageItem.title ? packageItem.title : "N/A",
+                    programStatus: packageItem.client.length > 0 ? "Assigned" : "N/A",
+                    renewal: packageItem.title ? "25/08/2021" : "N/A",
+                }
+            })]
+        )
+
     }
+
+
+
+
+
+
+    // const FetchData = () => useQuery(GET_ALL_CLIENT_PACKAGE_BY_TYPE, {
+    //     variables: {
+    //         id: auth.userid,
+    //         type: 'Classic Class',
+    //     },
+    //     onCompleted: (data) => loadData(data)
+    // })
+
+
+    // const loadData = (data) => {
+    //     // console.log('Classic query data', data);
+    //     setUserPackage(
+    //         [...data.userPackages].map((packageItem) => {
+    //             // let renewDay: any = '';
+    //             // if (packageItem.fitnesspackages.length !== 0) {
+    //             //     renewDay = new Date(packageItem.effective_date);
+    //             //     renewDay.setDate(renewDay.getDate() + packageItem.fitnesspackages[0].duration)
+    //             // }
+
+    //             return {
+    //                 id: packageItem.fitnesspackages[0].id,
+    //                 packageName: packageItem.fitnesspackages[0].packagename,
+    //                 duration: packageItem.fitnesspackages[0].duration,
+    //                 expiry: moment(packageItem.expiry_date).format("MMMM DD,YYYY"),
+    //                 packageStatus: packageItem.fitnesspackages[0].Status ? "Active" : "Inactive",
+    //                 // effective_date: moment(packageItem.effective_date).format("MMMM DD,YYYY"),
+
+
+    //                 client: packageItem.users_permissions_user.username,
+    //                 programName: packageItem.program_managers.length === 0 ? 'N/A' : packageItem.program_managers[0].fitnessprograms[0].title,
+    //                 programStatus: packageItem.program_managers.length === 0 ? 'N/A' : "Assigned",
+    //                 // programRenewal: packageItem.program_managers.length === 0 ? 'N/A' : moment(renewDay).format('MMMM DD,YYYY'),
+    //             }
+
+    //         })
+    //     )
+    // }
+
+
+    // FetchData();
+
+    // console.log('user package', userPackage)
+
+    // let arr: any = []
+    // for (let i = 0; i < userPackage.length - 1; i++) {
+    //     if ((userPackage[i].id === userPackage[i + 1].id && userPackage[i].duration === userPackage[i + 1].duration)) {
+    //         if (userPackage[i].client.length > 0) {
+    //             arr[0] = userPackage[i].client;
+    //         };
+
+    //         arr.push(userPackage[i + 1].client);
+    //         userPackage[i].client = arr
+    //         userPackage.splice(i + 1, 1);
+    //         i--;
+
+
+    //         // if (userPackage[i].programName === userPackage[i + 1].programName) {
+    //         // }
+    //     }
+    // }
 
     const columns = useMemo(
         () => [
@@ -112,24 +297,29 @@ export default function Classic(props) {
                         Header: "Client",
                         Cell: (row) => {
                             return <div >
-                                {typeof row.value === "string" ?
-                                    <img
-                                        src="https://picsum.photos/200/100" alt='profile-pic'
-                                        style={{ width: '60px', height: '60px', borderRadius: '50%' }} />
-                                    :
-                                    <div className='position-relative mx-auto' style={{ width: '8rem', height: '5rem' }}>
-                                        {row.value.slice(0, 4).map((item, index) => {
-                                            let postionLeft = 20;
-                                            return <img
-                                                key={index}
-                                                src="https://picsum.photos/200/100" alt='profile-pic'
-                                                style={{ width: '60px', height: '60px', borderRadius: '50%', left: `${postionLeft * index}%` }}
-                                                className='position-absolute ml-2'
-                                            />
-                                        })}
-                                    </div>
+                                {row.value.length === 0 ? <p className='text-center mb-0'>N/A</p> :
+                                    row.value.length === 1 ?
+                                        <img
+                                            src="https://picsum.photos/200/100" alt='profile-pic'
+                                            style={{ width: '60px', height: '60px', borderRadius: '50%' }} />
+                                        :
+                                        <div className='position-relative mx-auto' style={{ width: '8rem', height: '5rem' }}>
+                                            {row.value.slice(0, 4).map((item, index) => {
+                                                let postionLeft = 20;
+                                                return <img
+                                                    key={index}
+                                                    src="https://picsum.photos/200/100" alt='profile-pic'
+                                                    style={{ width: '60px', height: '60px', borderRadius: '50%', left: `${postionLeft * index}%` }}
+                                                    className='position-absolute ml-2'
+                                                />
+                                            })}
+                                        </div>
                                 }
-                                {typeof row.value === 'string' ? <p className='text-center'>{row.value}</p> : <p className='text-center'>{row.value.length} people</p>}
+
+                                {row.value.length === 0 ? "" :
+                                    row.value.length === 1 ? <p className='text-center'>{row.value}</p> : <p className='text-center'>{row.value.length} people</p>
+                                }
+
 
                             </div>
                         }
@@ -152,19 +342,21 @@ export default function Classic(props) {
                         Header: "Actions",
                         Cell: ({ row }: any) => {
                             return <ActionButton
+                                     // actionName={["Manage", "Details", "All Clients"]}
                                 action1='Manage'
-                                // actionClick1={() => {
-                                //     fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'manage', type: "Personal Training", rowData:""})
-                                // }}
+                                
+                                actionClick1={() => {
+                                    fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'manage', type: "Classic Class", rowData:""})
+                                }}
 
                                 action2='Details'
                                 actionClick2={() => {
-                                    fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'details', type: "Personal Training", rowData: row.original })
+                                    fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'details', type: "Classic Class", rowData: row.original })
                                 }}
 
                                 action3='All Clients'
                                 actionClick3={() => {
-                                    fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'allClients' })
+                                    fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'allClients', type: "Classic Class" })
 
                                 }}
                             >
@@ -181,7 +373,6 @@ export default function Classic(props) {
         <div className="mt-5">
             <Row>
                 <Col>
-
                     <Table columns={columns} data={userPackage} />
                     <FitnessAction ref={fitnessActionRef} />
                 </Col>

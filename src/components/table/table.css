@@ -31,7 +31,7 @@ thead:first-child th:last-child
 
 table {
   border-collapse: separate;
-  border-spacing: 0 1.5em;
+  /* border-spacing: 0 1.5em; */
 }
 
 /* .rowCard {
