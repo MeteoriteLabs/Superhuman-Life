@@ -1,5 +1,6 @@
 import { Card, Col, Row, FormControl, InputGroup, Button } from "react-bootstrap";
 import ActionButton from "../../../../../components/actionbutton/index";
+import "./Styles.css";
 function CardComp() {
      return (
           <div>
@@ -14,7 +15,7 @@ function CardComp() {
                               />
                               <Col>
                                    <h5>User Name</h5>
-                                   <p className="font-weight-light">Nutritionist</p>
+                                   <p className="font-weight-light desc">Nutritionist</p>
                               </Col>
                               <div className="d-flex flex-row-reverse mr-3 p-2">
                                    <ActionButton action1="Edit" action2="Delete" />
