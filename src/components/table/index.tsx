@@ -45,7 +45,6 @@ function Table({ data, columns }: any) {
                                     )
                                 })}
                             </tr>
-
                         );
                     })}
                 </tbody>

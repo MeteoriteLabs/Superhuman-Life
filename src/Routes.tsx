@@ -10,6 +10,7 @@ import {
 import Layout from "./components/layout";
 
 const BookingPage = React.lazy(() => import("./pages/booking"));
+const BookingSetting = React.lazy(() => import("./pages/booking/BookingSetting/BookingSetting"));
 const ChatPage = React.lazy(() => import("./pages/chat"));
 const ClientPage = React.lazy(() => import("./pages/client"));
 const HomePage = React.lazy(() => import("./pages/home"));
@@ -26,6 +27,8 @@ const PackagePage = React.lazy(() => import("./builders/package-builder"));
 const ResourcePage = React.lazy(() => import("./builders/resource-builder"));
 const ProgramPage = React.lazy(() => import("./builders/program-builder"));
 const ProgramManagerPage = React.lazy(() => import("./builders/program-builder/program-template"));
+
+const SessionPage = React.lazy(() => import("./builders/session-builder/"));
 
 function NoMatch() {
   const location = useLocation();
@@ -56,11 +59,13 @@ export default function Routes({ token }: any) {
               <Redirect exact from="/" to="/home" />
               <Redirect exact from="/login" to="/home" />
               <Route path="/bookings" component={BookingPage} />
+              <Route exact path="/bookingSettings" component={BookingSetting} />
               <Route path="/chats" component={ChatPage} />
               <Route path="/clients" component={ClientPage} />
               <Route path="/home" component={HomePage} />
               <Route exact path="/packages" component={PackagePage} />
               <Route exact path="/programs" component={ProgramPage} />
+              <Route exact path="/session" component={SessionPage} />
               <Route path="/programs/manage" component={ProgramManagerPage} />
               <Route path="/profile" component={ProfilePage} />
               <Route path="/resources" component={ResourcePage} />
