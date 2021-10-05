@@ -1,9 +1,10 @@
 import { useRef, useState } from "react";
-import { Card, Row, Col, Button } from "react-bootstrap";
+import { Card, Row, Button } from "react-bootstrap";
 import CardComp from "./Card";
 import CreatePost from "./addPost";
 import { GET_CHANGEMAKERS } from "../../queries";
 import { useQuery } from "@apollo/client";
+import "./Styles.css";
 //import AuthContext from "../../../../../context/auth-context";
 
 function Index() {
@@ -73,17 +74,21 @@ function Index() {
                                    changemaker.map((e: any, index) => {
                                         //console.log(e);
                                         return (
-                                             <Col key={index}>
-                                                  <img
-                                                       src={e[1]}
-                                                       height="70"
-                                                       className="rounded-circle ml-1"
-                                                       alt="avatar"
-                                                  />
+                                             <div className="changemaker d-flex flex-column" key={index}>
+                                                  <div>
+                                                       <img
+                                                            src={e[1]}
+                                                            height="70"
+                                                            className="rounded-circle ml-1"
+                                                            alt="avatar"
+                                                       />
+                                                  </div>
 
-                                                  <h6 className="mt-2 p-1 font-weight-bold">{e[0]}</h6>
-                                                  <h6 className="p-1 font-weight-light">{e[2]} </h6>
-                                             </Col>
+                                                  <div className="d-flex flex-column changemakerText">
+                                                       <h6 className="mt-2 font-weight-bold">{e[0]}</h6>
+                                                       <h6 className="desc font-weight-light">{e[2]} </h6>
+                                                  </div>
+                                             </div>
                                         );
                                    })}
                          </Row>
