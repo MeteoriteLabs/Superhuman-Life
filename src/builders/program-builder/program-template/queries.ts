@@ -43,8 +43,8 @@ export const FETCH_WORKOUT = gql`
                     name
                }
                muscle_groups{
-               id
-               name
+                    id
+                    name
                }
           }
      }

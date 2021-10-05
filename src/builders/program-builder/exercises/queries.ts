@@ -28,6 +28,35 @@ export const FETCH_DATA = gql`
      }
 `
 
+export const FETCH_WORKOUTS = gql`
+     query fetchworkouts($id: String!){
+          workouts(where: {users_permissions_user: {id:$id}}){
+               id
+               workouttitle
+               warmup
+               mainmovement
+               cooldown
+               About
+               Benifits
+               calories
+               workout_URL
+               workout_text
+               intensity
+               equipment_lists{
+                    id
+                    name
+               }
+               muscle_groups{
+                    id
+                    name
+               }
+               users_permissions_user{
+                    id
+               }
+          }
+     }
+`
+
 export const GET_EXERCISELIST = gql`
      query exercisesList($id: String, $filter: String!) {
           exercises(where: { users_permissions_user: {id: $id}, exercisename_contains: $filter}){

@@ -1,9 +1,9 @@
 import React, { useContext, useImperativeHandle, useState } from 'react';
 import { useQuery, useMutation } from "@apollo/client";
 import ModalView from "../../../components/modal";
-import { FETCH_DATA, CREATE_WORKOUT, UPDATE_WORKOUT, DELETE_WORKOUT } from "./queries";
+import { FETCH_DATA, CREATE_WORKOUT, UPDATE_WORKOUT, DELETE_WORKOUT, FETCH_FITNESS_PROGRAMS } from "./queries";
 import AuthContext from "../../../context/auth-context";
-import StatusModal from "../../../components/StatusModal/StatusModal";
+import StatusModal from "../../../components/StatusModal/workoutStatusModal";
 import { schema, widgets } from './workoutSchema';
 import {Subject} from 'rxjs';
 
@@ -17,8 +17,15 @@ function CreateEditMessage(props: any, ref: any) {
     const auth = useContext(AuthContext);
     const workoutSchema: { [name: string]: any; } = require("./workout.json");
     const [workoutDetails, setWorkoutDetails] = useState<any>({});
+    const [programDetails, setProgramDetails] = useState<any[]>([]);
     const [operation, setOperation] = useState<Operation>({} as Operation);
     
+    useQuery(FETCH_FITNESS_PROGRAMS, {
+        variables: {id: auth.userid},
+        onCompleted: (r: any) => {
+            setProgramDetails(r.fitnessprograms);
+        }
+    });
 
     const [createWorkout] = useMutation(CREATE_WORKOUT, { onCompleted: (r: any) => { modalTrigger.next(false); } });
     const [editWorkout] = useMutation(UPDATE_WORKOUT,{variables: {workoutid: operation.id}, onCompleted: (r: any) => { modalTrigger.next(false); } });
@@ -152,6 +159,8 @@ function CreateEditMessage(props: any, ref: any) {
             {/* } */}
              {operation.type ==="delete" && <StatusModal
              modalTitle="Delete"
+             EventConnectedDetails={programDetails}
+             ExistingEventId={operation.id}
              modalBody="Do you want to delete this message?"
              buttonLeft="Cancel"
              buttonRight="Yes"
