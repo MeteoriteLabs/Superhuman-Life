@@ -49,9 +49,9 @@ export default function Group(props) {
                     packageRenewal: moment(renewDay).format("MMMM DD,YYYY"),
 
                     client: packageItem.users_permissions_user.username,
-                    level:packageItem.program_managers.length === 0 ? "" : packageItem?.program_managers[0]?.fitnessprograms[0].level,
-                    discipline:packageItem.program_managers.length === 0 ? "" : packageItem?.program_managers[0]?.fitnessprograms[0].fitnessdisciplines,
-                    description:packageItem.program_managers.length === 0 ? "" : packageItem?.program_managers[0]?.fitnessprograms[0].description,
+                    level: packageItem.program_managers.length === 0 ? "" : packageItem?.program_managers[0]?.fitnessprograms[0].level,
+                    discipline: packageItem.program_managers.length === 0 ? "" : packageItem?.program_managers[0]?.fitnessprograms[0].fitnessdisciplines,
+                    description: packageItem.program_managers.length === 0 ? "" : packageItem?.program_managers[0]?.fitnessprograms[0].description,
                     programName: packageItem.program_managers.length === 0 ? 'N/A' : packageItem.program_managers[0].fitnessprograms[0].title,
                     programStatus: packageItem.program_managers.length === 0 ? 'N/A' : "Assigned",
                     programRenewal: packageItem.program_managers.length === 0 ? 'N/A' : moment(renewDay).format('MMMM DD,YYYY')
@@ -152,18 +152,21 @@ export default function Group(props) {
                         id: "edit",
                         Header: "Actions",
                         Cell: ({ row }: any) => {
+                            const actionClick1 = () => {
+                                fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'manage', type: "Personal Training", rowData: "" })
+                            };
+
+                            const actionClick2 = () => {
+                                fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'details', type: "Personal Training", rowData: row.original })
+                            };
+
+                            const arrayAction = [
+                                { actionName: 'Manage', actionClick: actionClick1 },
+                                { actionName: 'Details', actionClick: actionClick2 },
+                            ]
+
                             return <ActionButton
-                                // actionName={["Manage", "Details"]}
-
-                                action1='Manage'
-                                actionClick1={() => {
-                                    fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'manage', type: "Personal Training", rowData: "" })
-                                }}
-
-                                action2='Details'
-                                actionClick2={() => {
-                                    fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'details', type: "Personal Training", rowData: row.original })
-                                }}
+                                arrayAction={arrayAction}
                             >
                             </ActionButton>
                         }
@@ -187,21 +190,3 @@ export default function Group(props) {
 }
 
 
-
-
-// class Package {
-//     createPackage = (packageName, packageStatus, startDate, packageRenewal, programName, client, programStatus, programRenewal) => {
-//         let updatePackage: any = {};
-//         updatePackage.packageName = packageName;
-//         updatePackage.packageStatus = packageStatus;
-//         updatePackage.startDate = startDate;
-//         updatePackage.packageRenewal = packageRenewal;
-//         updatePackage.programName = programName;
-//         updatePackage.client = client;
-//         updatePackage.programStatus = programStatus;
-//         updatePackage.programRenewal = programRenewal;
-//         return updatePackage
-//     }
-// }
-
-// export const updatePackage = new Package();

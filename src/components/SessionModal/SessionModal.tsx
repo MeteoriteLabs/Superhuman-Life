@@ -65,7 +65,7 @@ export default function SessionModal({ name, formUISchema, formSubmit, formSchem
                                     schema={formSchema[step.toString()]}
                                     ref={formRef}
                                     onSubmit={({ formData }: any) => submitHandler(formData)}
-                                    formData={formValues}
+                                    formData={formData}
                                     widgets={widgets}
                                 >
                                     <div></div>

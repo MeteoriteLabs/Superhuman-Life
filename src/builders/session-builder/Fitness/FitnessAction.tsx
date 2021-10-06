@@ -14,7 +14,7 @@ interface Operation {
     actionType: 'create' | 'manager' | 'details' | "allClients";
     type: 'Personal Training' | 'Group Class' | 'Classic Class' | 'Custom Class';
     duration: number;
-    rowData:any
+    rowData: any
 }
 
 function FitnessAction(props, ref: any) {
@@ -68,14 +68,17 @@ function FitnessAction(props, ref: any) {
 
     useImperativeHandle(ref, () => ({
         TriggerForm: (msg: Operation) => {
-            console.log(msg)
+            // console.log(msg)
             setOperation(msg);
 
-            
-            
-            if(msg.actionType === "create"){
-                setProgramDetails({ ...programDetails, duration: msg.duration })
-            }else if (msg.actionType === "details"){
+
+
+            if (msg.actionType === "create") {
+                const update: { duration: number } = { duration: 0 };
+                update.duration = msg.duration;
+                setProgramDetails(update);
+
+            } else if (msg.actionType === "details") {
                 setProgramDetails({ ...programDetails, ...msg.rowData })
             }
             setRender(true)
@@ -86,8 +89,7 @@ function FitnessAction(props, ref: any) {
         }
     }));
 
- 
-    
+
     // function FillDetails(data: any) {
     //     let details: any = {};
     //     let msg = data.exercises;
@@ -134,27 +136,22 @@ function FitnessAction(props, ref: any) {
 
 
     let name = "";
-    if (operation.actionType === 'create') {
-        name = "Create New Program";
-    } else if (operation.actionType === 'manager') {
-        name = "Manager";
-    }
+    operation.actionType === 'create' ? name = "Create New Program" : name = "Manager";
 
 
 
 
     return (
         <div>
-            {(operation.actionType === "create"  || operation.actionType === "details")&&
+            {(operation.actionType === "create" || operation.actionType === "details") &&
                 <SessionModal
                     name={name}
                     isStepper={false}
                     formUISchema={schema}
                     formSchema={programSchema}
-                    formSubmit={ (frm: any) => { OnSubmit(frm) }}
+                    formSubmit={(frm: any) => { OnSubmit(frm) }}
                     formData={programDetails}
                     widgets={widgets}
-                    // modalTrigger={modalTrigger}
                     render={render}
                     setRender={setRender}
                 />

@@ -27,19 +27,6 @@ function GroupTable({ data, columns }: any) {
             }
         });
 
-        // console.log(column)
-
-        // console.log("🚀 ~ file: GroupTable.tsx ~ line 19 ~ allColumns.forEach ~ id", id)
-
-        //   const id = allColumns[0].id
-        //   const {enableRowSpan} = allColumns[0]
-
-        //   if (enableRowSpan !== undefined) {
-        //       rowSpanHeaders = [
-        //           ...rowSpanHeaders,
-        //           { id, topCellValue: null, topCellIndex: 0 }
-        //       ];
-        //   }
         Object.assign(instance, { rowSpanHeaders });
 
     }

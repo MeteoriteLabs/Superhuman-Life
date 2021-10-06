@@ -27,17 +27,17 @@ export default function BookingFitness() {
 
 
     const loadData = (data) => {
-        console.log('booking setting data', {data});
-         setBookingPackage(
-            [...data.bookingConfigs?.map((fitnessPackage, index) =>{
+        console.log('booking setting data', { data });
+        setBookingPackage(
+            [...data.bookingConfigs?.map((fitnessPackage, index) => {
                 return {
                     id: fitnessPackage.id,
-                    packageName:fitnessPackage.fitnesspackage.packagename,
-                    fitness_package_type:fitnessPackage.fitnesspackage.fitness_package_type.type,
+                    packageName: fitnessPackage.fitnesspackage.packagename,
+                    fitness_package_type: fitnessPackage.fitnesspackage.fitness_package_type.type,
                     bookingPerMonth: fitnessPackage.BookingsPerMonth,
                     bookingPerDay: fitnessPackage.bookingsPerDay,
-                    confirmations:fitnessPackage.isAuto ? "Auto Accept" : "Manual Accept",
-                    requests:'Configured',
+                    confirmations: fitnessPackage.isAuto ? "Auto Accept" : "Manual Accept",
+                    requests: 'Configured',
                 }
             })]
         )
@@ -89,16 +89,30 @@ export default function BookingFitness() {
                 id: "edit",
                 Header: "Actions",
                 Cell: ({ row }: any) => {
-                    return <ActionButton
-                        action1='Booking confirmation'
-                        actionClick1={() => {
-                            bookingFitnessActionRef.current.TriggerForm({actionType:'confirmation', formData:row.original});
-                        }}
+                    const actionClick1 = () => {
+                        bookingFitnessActionRef.current.TriggerForm({ actionType: 'confirmation', formData: row.original });
+                    };
 
-                        action2='Data requests'
-                        actionClick2={() => {
-                            bookingFitnessActionRef.current.TriggerForm({actionType:'request'});
-                        }}
+                    const actionClick2 = () => {
+                        bookingFitnessActionRef.current.TriggerForm({ actionType: 'request' });
+                    };
+
+
+                    const arrayAction = [
+                        { actionName: 'Booking confirmation', actionClick: actionClick1 },
+                        { actionName: 'Data requests', actionClick: actionClick2 },
+                    ]
+                    return <ActionButton
+                        arrayAction={arrayAction}
+                    // action1='Booking confirmation'
+                    // actionClick1={() => {
+                    //     bookingFitnessActionRef.current.TriggerForm({actionType:'confirmation', formData:row.original});
+                    // }}
+
+                    // action2='Data requests'
+                    // actionClick2={() => {
+                    //     bookingFitnessActionRef.current.TriggerForm({actionType:'request'});
+                    // }}
                     >
                     </ActionButton>
                 }

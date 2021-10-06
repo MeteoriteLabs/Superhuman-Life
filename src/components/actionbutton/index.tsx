@@ -3,13 +3,17 @@ import { Dropdown } from "react-bootstrap";
 import "./button.css";
 function ActionButton(props: any) {
 
-    const { status } = props
-    
-    // const renderItemAction = () => {
-    //     return actionName.map((item, index) => {
-    //         return <Dropdown.Item onClick={props.actionClick + `${index}`}>{item}</Dropdown.Item>
-    //     })
-    // }
+    const { status, arrayAction } = props;
+
+
+    const renderItemAction = () => {
+        return (status !== "accepted" && status !== "rejected") ? arrayAction.map((item, index) => {
+            return <Dropdown.Item key={index} onClick={item.actionClick}>{item.actionName}</Dropdown.Item>
+        }) :
+            arrayAction.slice(0, 2).map((item, index) => {
+                return <Dropdown.Item key={index} onClick={item}>{item.actionName}</Dropdown.Item>
+            })
+    }
 
     return (
         <Dropdown >
@@ -18,18 +22,7 @@ function ActionButton(props: any) {
             </Dropdown.Toggle>
 
             <Dropdown.Menu>
-                {/* {renderItemAction()} */}
-                <Dropdown.Item onClick={props.actionClick1}>{props.action1}</Dropdown.Item>
-                <Dropdown.Item onClick={props.actionClick2}>{props.action2}</Dropdown.Item>
-                <Dropdown.Item onClick={props.actionClick3}>{props.action3}</Dropdown.Item>
-                {status !== "accepted" && status !== "rejected" ?
-                    <>
-                        <Dropdown.Item onClick={props.actionClick4}>{props.action4}</Dropdown.Item>
-                        <Dropdown.Item onClick={props.actionClick5}>{props.action5}</Dropdown.Item>
-                    </>
-                    : ""
-                }
-
+                {renderItemAction()}
             </Dropdown.Menu>
         </Dropdown>
 

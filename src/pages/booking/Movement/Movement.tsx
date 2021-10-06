@@ -204,30 +204,32 @@ export default function Movement(props) {
                 id: "edit",
                 Header: "Actions",
                 Cell: ({ row }: any) => {
+
+                    const actionClick1 = () => {
+                        bookingActionRef.current.TriggerForm({ id: row.original.id, actionType: 'manage' })
+                    };
+
+                    const actionClick2 = () => {
+                        bookingActionRef.current.TriggerForm({ id: row.original.id, actionType: 'view' })
+                    };
+
+                    const actionClick3 = () => {
+                        bookingActionRef.current.TriggerForm({ id: row.original.id, actionType: 'request' })
+                    };
+
+                    const actionClick4 = () => {
+                        bookingActionRef.current.TriggerForm({ id: row.original.id, actionType: 'reject' })
+                    };
+
+                    const arrayAction = [
+                        { actionName: 'Go To Client', actionClick: actionClick1 },
+                        { actionName: 'View Invoice', actionClick: actionClick2 },
+                        { actionName: 'Accept', actionClick: actionClick3 },
+                        { actionName: 'Reject', actionClick: actionClick4 },
+                    ]
                     return <ActionButton
                         status={row.original.Status}
-                        action1='Go To Client'
-                        actionClick1={() => {
-                            bookingActionRef.current.TriggerForm({ id: row.original.id, actionType: 'manage' })
-                        }}
-
-                        action2='View Invoice'
-                        actionClick2={() => {
-                            bookingActionRef.current.TriggerForm({ id: row.original.id, actionType: 'view' })
-                        }}
-                        action3='Request Data'
-                        actionClick3={() => {
-                            bookingActionRef.current.TriggerForm({ id: row.original.id, actionType: 'request' })
-                        }}
-
-                        action4='Accept'
-                        actionClick4={() => {
-                            bookingActionRef.current.TriggerForm({ id: row.original.id, formData: row.original, actionType: 'accept' })
-                        }}
-                        action5='Reject'
-                        actionClick5={() => {
-                            bookingActionRef.current.TriggerForm({ id: row.original.id, actionType: 'reject' })
-                        }}
+                        arrayAction={arrayAction}
                     >
                     </ActionButton>
                 }
@@ -237,20 +239,6 @@ export default function Movement(props) {
         []
     );
 
-
-
-    // const fetchDataTable = React.useCallback(({ pageSize, pageIndex }) => {
-
-    //     const fetchId = ++fetchIdRef.current
-
-
-    //     setTimeout(() => {
-    //         if (fetchId === fetchIdRef.current) {
-    //             setStartRow(pageSize * pageIndex);
-    //             setEndRow(startRow + pageSize)
-    //         }
-    //     }, 1000)
-    // }, [])
 
     return (
         <div className="mt-5">

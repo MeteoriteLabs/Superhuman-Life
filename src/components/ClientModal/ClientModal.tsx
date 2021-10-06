@@ -46,8 +46,8 @@ export default function ClientModal(props) {
                     programName: packageItem.fitnesspackages[0].packagename,
                     client: packageItem.users_permissions_user.username,
                     duration: packageItem.fitnesspackages[0].duration,
-                    level:packageItem.program_managers.length > 0 ? packageItem.program_managers[0].fitnessprograms[0].level: "",
-                    description:packageItem.program_managers.length > 0 ?  packageItem.program_managers[0].fitnessprograms[0].description : "",
+                    level: packageItem.program_managers.length > 0 ? packageItem.program_managers[0].fitnessprograms[0].level : "",
+                    description: packageItem.program_managers.length > 0 ? packageItem.program_managers[0].fitnessprograms[0].description : "",
                     startDate: startDate,
                     endDate: endDate,
                     programStatus: packageItem.program_managers.length > 0 ? "Assigned" : "Not Assigned",
@@ -107,17 +107,16 @@ export default function ClientModal(props) {
                 id: "edit",
                 Header: "Actions",
                 Cell: ({ row }: any) => {
-                    return <ActionButton
-                        action1='Manage'
-                        // actionClick1={() => {
-                        //     fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'manage', type: "Personal Training", rowData:""})
-                        // }}
+                    const actionClick1 = () => {
+                        fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'manage', rowData: "" })
+                    };
 
-                        // action2='Details'
-                        // actionClick2={() => {
-                        //     console.log('client modal')
-                        //     fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'details', type: "Personal Training", rowData: row.original })
-                        // }}
+                    const arrayAction = [
+                        { actionName: 'Manage', actionClick: actionClick1 },
+                    ]
+
+                    return <ActionButton
+                        arrayAction={arrayAction}
                     >
                     </ActionButton>
                 }

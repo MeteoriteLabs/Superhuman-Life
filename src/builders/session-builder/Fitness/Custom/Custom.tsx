@@ -128,18 +128,21 @@ export default function Custom(props) {
                     id: "edit",
                     Header: "Actions",
                     Cell: ({ row }: any) => {
-                        return <ActionButton
-                          // actionName={["Manage", "Details"]}
-                            action1='Manage'
-                            
-                            actionClick1={() => {
-                                fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'manage', type: "Custom Fitness", rowData:""})
-                            }}
+                        const actionClick1 = () => {
+                            fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'manage', type: "Custom Fitness", rowData: "" })
+                        };
 
-                            action2='Details'
-                            actionClick2={() => {
-                                fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'details', type: "Custom Fitness", rowData: row.original })
-                            }}
+                        const actionClick2 = () => {
+                            fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'details', type: "Custom Fitness", rowData: row.original })
+                        };
+
+                        const arrayAction = [
+                            { actionName: 'Manage', actionClick: actionClick1 },
+                            { actionName: 'Details', actionClick: actionClick2 },
+                        ]
+
+                        return <ActionButton
+                        arrayAction={arrayAction}
                         >
                         </ActionButton>
                     }

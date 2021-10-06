@@ -70,8 +70,8 @@ export default function Group(props) {
 
         let arrayA = arrayData.map(item => item.id);
 
-        const res = data1.fitnesspackages.filter(item => !arrayA.includes(item.id));
-        res.forEach(item => {
+        const filterPackage = data1?.fitnesspackages.filter((item: { id: string; }) => !arrayA.includes(item.id));
+        filterPackage.forEach(item => {
             arrayData.push(item)
         })
 
@@ -173,8 +173,7 @@ export default function Group(props) {
                     {
                         accessor: "client", Header: 'Client',
                         Cell: (row) => {
-                            console.log("🚀 ~ file: Group.tsx ~ line 176 ~ Group ~ row", row.value)
-                            return <div >
+                            return <>
                                 {row.value === "N/A" ? <p className='text-center mb-0'>N/A</p> :
                                     row.value.length === 1 ?
                                         <img
@@ -199,7 +198,7 @@ export default function Group(props) {
                                     row.value.length === 1 ? <p className='text-center'>{row.value}</p> : <p className='text-center'>{row.value.length} people</p>
 
                                 }
-                            </div>
+                            </>
                         }
                     },
                     { accessor: "programName", Header: 'Name' },
@@ -221,25 +220,26 @@ export default function Group(props) {
                         id: "edit",
                         Header: "Actions",
                         Cell: ({ row }: any) => {
+                            const actionClick1 = () => {
+                                fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'manage', type: "Group Class", rowData: "" })
+                            }
+                            const actionClick2 = () => {
+                                fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'details', type: "Group Class", rowData: row.original })
+                            }
+
+                            const actionClick3 = () => {
+                                fitnessActionRef.current.TriggerForm({ id: row.original.proManagerId, actionType: 'allClients', type: 'Group Class' })
+                            }
+
+
+                            const arrayAction = [
+                                { actionName: 'Manage', actionClick: actionClick1 },
+                                { actionName: 'Details', actionClick: actionClick2 },
+                                { actionName: 'All Clients', actionClick: actionClick3 },
+                            ]
+
                             return <ActionButton
-                                // actionName={["Manage", "Details", "All Clients"]}
-                                action1='Manage'
-
-                                actionClick1={() => {
-                                    fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'manage' })
-                                }}
-
-                                action2='Details'
-                                actionClick2={() => {
-                                    fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'details' })
-                                }}
-
-
-                                action3='All Clients'
-                                actionClick3={() => {
-                                    fitnessActionRef.current.TriggerForm({ id: row.original.proManagerId, actionType: 'allClients', type: 'Group Class' })
-                                }}
-
+                                arrayAction={arrayAction}
                             />
                         }
                     }
