@@ -42,8 +42,6 @@ function Index() {
                setChangemaker(changemakers);
                return {};
           });
-          console.log(changemakers);
-          console.log(namearr);
      }
      FetchData({ clientid: last });
 

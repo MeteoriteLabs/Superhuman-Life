@@ -58,7 +58,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                } catch (err) {
                     console.log("ERROR in file Deleting : " + JSON.stringify(err));
                }
-          } catch (err) {
+          } catch (err: any) {
                console.log("File not Found ERROR : " + err.code);
           }
      };

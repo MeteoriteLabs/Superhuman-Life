@@ -39,7 +39,7 @@ function CreatePost(props: any, ref: any) {
      }));
 
      function CreateSuggestion(frm: any) {
-          //console.log(frm);
+          console.log(frm);
           //   let searchid: any = frm.packagesearch.split(",");
           //   for (let i = 0; i < searchid.length; i++) {
           //        createSuggestion({

@@ -1,19 +1,27 @@
-//import { useState } from "react";
+import { useState } from "react";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 
-const TextEditor = () => {
-     //  const [value, setValue] = useState("");
+const TextEditor = (props: any) => {
+     const [value, setValue] = useState(" ");
+     //props.onChange(JSON.stringify({ rpm: props.value1, mood: props.value2, note: value }));
+     //props.onChange(value);
 
-     //var richText: any = [{ type: "text" }];
+     function setData(data: any) {
+          props.onChange(JSON.stringify({ rpm: props.value1, mood: props.value2, note: value }));
+          props.sendValue(value);
+          //props.onChange(value);
+     }
 
      return (
           <div id="editor1">
                <CKEditor
+                    data={value}
                     editor={ClassicEditor}
                     onChange={(event, editor) => {
                          const data = editor.getData();
-                         console.log({ event, editor, data });
+                         setValue(data);
+                         setData(data);
                     }}
                />
           </div>

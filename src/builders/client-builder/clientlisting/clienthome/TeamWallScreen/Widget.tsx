@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import { Form } from "react-bootstrap";
 import Editor from "./textEditor";
-import Slider from "react-rangeslider";
-import "react-rangeslider/lib/index.css";
 import { GET_FITNESSSCALE, GET_MOODSCALE } from "./queries";
 import { useQuery } from "@apollo/client";
+import Rating from "./Rating";
 
-function Widget() {
+function Widget(props: any) {
      const [editor, setEditor] = useState<any>(false);
      const [rating, setRating] = useState<any>(false);
      const [value, setValue] = useState<any>();
@@ -15,6 +14,7 @@ function Widget() {
      const [icon, setIcon] = useState<any>();
      const [rate1, setRate1] = useState<any>();
      const [img, setImg] = useState<any>();
+     const [data, setData] = useState<any>();
 
      function handleChange(e) {
           setValue(e);
@@ -60,27 +60,29 @@ function Widget() {
                </div>
                {editor ? (
                     <div className="mt-2">
-                         <Editor />
+                         <Editor onChange={props.onChange} value1={value} value2={value2} sendValue={setData} />
                     </div>
                ) : (
                     " "
                )}
                {rating ? (
-                    <div className="mt-3">
-                         <div>
-                              <h5>Rate of Perceived Exertion</h5>
-                              <div className="slider w-75 ml-1">
-                                   <Slider min={1} max={rate1.length} value={value} onChange={handleChange} />
-                                   <p className="">{render}</p>
-                              </div>
-                         </div>
-                         <div>
-                              <h5>Mood Status</h5>
-                              <div className="slider w-75 ml-1">
-                                   <Slider min={1} max={img.length} value={value2} onChange={handleMoodChange} />
-                                   <img src={`/assets/ratingicons/${icon}`} alt="" />
-                              </div>
-                         </div>
+                    <div className="">
+                         <Rating
+                              heading1="Rate of Perceived Exertion"
+                              min1={1}
+                              max1={rate1.length}
+                              value1={value}
+                              handleChange1={handleChange}
+                              title1={render}
+                              heading2="Mood Status"
+                              min2={1}
+                              max2={img.length}
+                              value2={value2}
+                              handleChange2={handleMoodChange}
+                              icon={icon}
+                              onChange={props.onChange}
+                              editorData={data}
+                         />
                     </div>
                ) : (
                     ""
