@@ -1,11 +1,11 @@
 import React, { useContext, useImperativeHandle, useState } from 'react'
 import SessionModal from '../../../components/SessionModal/SessionModal';
-import { Subject } from 'rxjs';
 import authContext from '../../../context/auth-context';
 import { schema, widgets } from './programSchema';
 import { CREATE_PROGRAM, CREATE_PROGRAM_MANAGER } from '../graphQL/mutation';
 import { useMutation } from '@apollo/client';
 import ClientModal from '../../../components/ClientModal/ClientModal';
+import { Subject } from 'rxjs';
 
 
 
@@ -20,19 +20,19 @@ interface Operation {
 function FitnessAction(props, ref: any) {
 
     const auth = useContext(authContext);
-    const [render, setRender] = useState<boolean>(false);
 
     const programSchema: { [name: string]: any; } = require("./program.json");
 
     const [programDetails, setProgramDetails] = useState<any>({});
 
     const [operation, setOperation] = useState<Operation>({} as Operation);
+    
+    const modalTrigger = new Subject();
 
     const [createFitnessProgram] = useMutation(CREATE_PROGRAM, {
         onCompleted: (data: any) => {
             CreateProgramManager(data)
-            // modalTrigger.next(false);
-            setRender(false)
+            modalTrigger.next(true);
         }
     });
 
@@ -40,7 +40,7 @@ function FitnessAction(props, ref: any) {
 
 
     function CreateFitnessProgram(frm: any) {
-        console.log(frm);
+        // console.log(frm);
         createFitnessProgram({
             variables: {
                 title: frm.programName,
@@ -68,9 +68,7 @@ function FitnessAction(props, ref: any) {
 
     useImperativeHandle(ref, () => ({
         TriggerForm: (msg: Operation) => {
-            // console.log(msg)
             setOperation(msg);
-
 
 
             if (msg.actionType === "create") {
@@ -81,38 +79,12 @@ function FitnessAction(props, ref: any) {
             } else if (msg.actionType === "details") {
                 setProgramDetails({ ...programDetails, ...msg.rowData })
             }
-            setRender(true)
-            // if (msg.actionType === "allClients") {
-            // }
-            //render form if no message id
-            // if (msg && !msg.id)
+            modalTrigger.next(true);
+  
         }
     }));
 
 
-    // function FillDetails(data: any) {
-    //     let details: any = {};
-    //     let msg = data.exercises;
-    //     console.log(msg);
-    //     // setExerciseDetails(details);
-
-    //     //if message exists - show form only for edit and view
-    //     if (['edit', 'view'].indexOf(operation.type) > -1) {
-    //         modalTrigger.next(true);
-    //     }
-    //     else {
-    //         // OnSubmit(null);
-    //     }
-    // }
-
-
-    // function viewDetails(frm: any) {
-    //     console.log('detail message');
-    //     // useMutation(UPDATE_MESSAGE, { variables: frm, onCompleted: (d: any) => { console.log(d); } });
-    //     // editExercise({variables: frm });
-    //     console.log(operation)
-    //     // setProgramDetails({...programDetails})
-    // }
 
 
     function OnSubmit(frm: any) {
@@ -152,16 +124,14 @@ function FitnessAction(props, ref: any) {
                     formSubmit={(frm: any) => { OnSubmit(frm) }}
                     formData={programDetails}
                     widgets={widgets}
-                    render={render}
-                    setRender={setRender}
+                    modalTrigger={modalTrigger}
                 />
             }
 
             {operation.actionType === "allClients" &&
                 <ClientModal
                     type={operation.type}
-                    render={render}
-                    setRender={setRender}
+                    modalTrigger={modalTrigger}
                     id={operation.id}
                 />
             }

@@ -14,11 +14,9 @@ export default function Movement(props) {
     const auth = useContext(authContext);
     const [userPackage, setUserPackage] = useState<any>([]);
     const [start, setStart] = useState(0);
-    const [endRow, setEndRow] = useState(1);
     const [page, setPage] = useState(0);
     const limit = 2
     const dataLengthRef = useRef<number | null>(0)
-    console.log("🚀 ~ file: Movement.tsx ~ line 21 ~ Movement ~ dataLengthRef", dataLengthRef)
 
 
 
@@ -28,7 +26,6 @@ export default function Movement(props) {
 
 
     const bookingActionRef = useRef<any>(null)
-    const fetchIdRef = React.useRef(0)
 
 
 
@@ -42,9 +39,6 @@ export default function Movement(props) {
         onCompleted: (data) => loadData(data)
     })
 
-    // console.log('repeat')
-    // console.log('bottom page')
-    // console.log('page', page, 'startRow', start)
 
 
  
@@ -74,8 +68,9 @@ export default function Movement(props) {
             window.addEventListener('scroll', scrollFunction);
         }, 1000)
 
-        return () => window.removeEventListener('scroll', scrollFunction)
+        return () => window.removeEventListener('scroll', scrollFunction);
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [page])
 
 
@@ -111,7 +106,6 @@ export default function Movement(props) {
     };
 
 
-    console.log({ userPackage })
 
 
     // New package count
@@ -214,7 +208,7 @@ export default function Movement(props) {
                     };
 
                     const actionClick3 = () => {
-                        bookingActionRef.current.TriggerForm({ id: row.original.id, actionType: 'request' })
+                        bookingActionRef.current.TriggerForm({ id: row.original.id, actionType: 'accept' })
                     };
 
                     const actionClick4 = () => {

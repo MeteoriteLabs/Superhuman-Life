@@ -21,7 +21,7 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
     
     function submitHandler(formData: any) {
         if (isStepper && step < 5) {
-            console.log("Data submitted: ", formData);
+            // console.log("Data submitted: ", formData);
             setStep(step + 1);
             setFormValues({ ...formValues, ...formData });
         } else {

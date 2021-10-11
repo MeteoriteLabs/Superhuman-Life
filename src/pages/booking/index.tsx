@@ -1,5 +1,5 @@
 import { Card, Tab, Tabs } from "react-bootstrap";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import Movement from "./Movement/Movement"
 import Nutrition from "./Nutrition/Nutrition"
 import Journey from "./Journey/Journey"
@@ -8,7 +8,6 @@ import React from "react";
 import * as Icon from 'react-bootstrap-icons';
 
 export default function BookingPage() {
-    const location = useLocation();
 
     return (
         <div>

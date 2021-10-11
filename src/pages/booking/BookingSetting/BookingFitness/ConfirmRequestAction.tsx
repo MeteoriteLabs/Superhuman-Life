@@ -1,6 +1,7 @@
 import React, { useImperativeHandle, useState } from 'react'
 import ConfirmationModel from '../model/ConfirmationModel';
 import RequestModel from '../model/RequestModel';
+import { Subject } from 'rxjs';
 
 
 interface Operation {
@@ -15,12 +16,14 @@ function ConfirmRequestAction(props, ref: any) {
     const [operation, setOperation] = useState<Operation>({} as Operation);
 
 
+    const modalTrigger = new Subject();
+
 
     useImperativeHandle(ref, () => ({
         TriggerForm: (msg: Operation) => {
             // console.log(msg);
-            setRender(true);
             setOperation(msg)
+            modalTrigger.next(true);
         }
     }))
 
@@ -28,16 +31,14 @@ function ConfirmRequestAction(props, ref: any) {
 
     return (
         <div>
-            {(render && operation.actionType === "confirmation") &&
+            {operation.actionType === "confirmation" &&
                 <ConfirmationModel
-                    render={render}
-                    setRender={setRender}
-                    formData = {operation.formData}
-                   
+                    formData={operation.formData}
+                    modalTrigger={modalTrigger}
                 />}
 
 
-            {(render && operation.actionType === "request") &&
+            {operation.actionType === "request" &&
                 <RequestModel
                     render={render}
                     setRender={setRender} />}

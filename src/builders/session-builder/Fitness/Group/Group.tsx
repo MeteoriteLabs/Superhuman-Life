@@ -8,7 +8,6 @@ import { GET_ALL_FITNESS_PACKAGE_BY_TYPE, GET_ALL_PROGRAM_BY_TYPE, GET_ALL_CLIEN
 import moment from 'moment';
 import ActionButton from '../../../../components/actionbutton';
 import FitnessAction from '../FitnessAction';
-import _ from 'lodash'
 
 
 export default function Group(props) {

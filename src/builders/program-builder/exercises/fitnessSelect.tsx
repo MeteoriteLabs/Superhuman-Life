@@ -26,9 +26,7 @@ const FitnessSelect = (props: any) => {
      }
 
      function OnChange(e){
-          console.log(e)
           let id = e.map(d => {return d.id}).join(',');
-          console.log(id);
           props.onChange(id);
           setSingleSelections(e);
      }

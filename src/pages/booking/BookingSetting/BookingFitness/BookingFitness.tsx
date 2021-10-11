@@ -27,7 +27,7 @@ export default function BookingFitness() {
 
 
     const loadData = (data) => {
-        console.log('booking setting data', { data });
+        // console.log('booking setting data', { data });
         setBookingPackage(
             [...data.bookingConfigs?.map((fitnessPackage, index) => {
                 return {
@@ -45,7 +45,6 @@ export default function BookingFitness() {
 
 
     FetchData();
-    console.log('bookingPackage', bookingPackage)
 
     const columns = useMemo(
         () => [
@@ -104,15 +103,6 @@ export default function BookingFitness() {
                     ]
                     return <ActionButton
                         arrayAction={arrayAction}
-                    // action1='Booking confirmation'
-                    // actionClick1={() => {
-                    //     bookingFitnessActionRef.current.TriggerForm({actionType:'confirmation', formData:row.original});
-                    // }}
-
-                    // action2='Data requests'
-                    // actionClick2={() => {
-                    //     bookingFitnessActionRef.current.TriggerForm({actionType:'request'});
-                    // }}
                     >
                     </ActionButton>
                 }

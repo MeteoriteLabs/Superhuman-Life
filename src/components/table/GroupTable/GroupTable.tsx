@@ -38,7 +38,6 @@ function GroupTable({ data, columns }: any) {
         headerGroups,
         rows,
         prepareRow,
-        rowSpanHeaders
     }: any = useTable({ columns, data }, hooks => {
         hooks.useInstance.push(useInstance);
     });
@@ -65,7 +64,7 @@ function GroupTable({ data, columns }: any) {
                 </thead>
                 <tbody {...getTableBodyProps()}>
 
-                    {rows.map((row, i) => {
+                    {rows.forEach((row, i) => {
                         prepareRow(row);
                 
                         let samePackage = false
@@ -88,7 +87,7 @@ function GroupTable({ data, columns }: any) {
                                 cell.isRowSpanned = true;
                             }
                         }
-
+                     
                   
                     })}
                     {rows.map(row => {
