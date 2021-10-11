@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button, Form, FormControl, Modal } from 'react-bootstrap';
+import { Button, Form, Modal } from 'react-bootstrap';
 
 
 
@@ -51,10 +51,10 @@ export default function RequestModel(props) {
         e.preventDefault();
     }
 
-    const handleChange = (e) => {
+    // const handleChange = (e) => {
 
 
-    }
+    // }
 
     const handleSelect = (person) => {
       
@@ -77,7 +77,6 @@ export default function RequestModel(props) {
         }
     }
 
-    console.log(state)
 
     return (
         <Modal
@@ -120,10 +119,6 @@ export default function RequestModel(props) {
                                     onChange={(e) => handleSelect(person)} />
                             </Form.Group>
                         })}
-
-                        {/* <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                            <Form.Check type="checkbox" label="Check me out" onChange={(e) => handleChange(e)} />
-                        </Form.Group> */}
 
 
                     </Form.Group>

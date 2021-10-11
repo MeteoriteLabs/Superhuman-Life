@@ -1,10 +1,7 @@
 import { useMutation } from '@apollo/client';
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Form, FormControl, Modal } from 'react-bootstrap'
-import authContext from '../../../../context/auth-context';
 import { UPDATE_BOOKING_CONFIG } from '../../graphQL/mutation';
-import { BOOKING_CONFIG } from '../../graphQL/queries';
-
 
 interface FormValue {
     id: string,
@@ -13,11 +10,18 @@ interface FormValue {
     bookingsPerDay: number,
 }
 
-export default function ConfirmationModel(props: { render: boolean; setRender: any; formData: any }) {
-    const { render, setRender, formData,  } = props;
-    const auth = useContext(authContext);
+export default function ConfirmationModel(props) {
+
+ 
+    const { formData, modalTrigger } = props;
 
     const [isSwitchOn, setIsSwitchOn] = useState<boolean>(false);
+    const [show, setShow] = useState<boolean>(false);
+
+
+    modalTrigger.subscribe((res: boolean) => {
+        setShow(res);
+    });
 
     const [formValue, setFormValue] = useState<FormValue>({
         id: formData.id,
@@ -37,7 +41,9 @@ export default function ConfirmationModel(props: { render: boolean; setRender: a
 
 
 
-    const [updateBooking] = useMutation(UPDATE_BOOKING_CONFIG);
+    const [updateBooking] = useMutation(UPDATE_BOOKING_CONFIG, {
+        onCompleted: (data: any) => modalTrigger.next(false)
+    });
 
 
 
@@ -51,7 +57,7 @@ export default function ConfirmationModel(props: { render: boolean; setRender: a
     }
 
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const handleChange = (e: any) => {
         const { name, value } = e.target;
         setFormValue({
             ...formValue,
@@ -62,70 +68,62 @@ export default function ConfirmationModel(props: { render: boolean; setRender: a
 
 
     useEffect(() => {
-        if (formData.confirmations === "Auto Accept") {
-            setIsSwitchOn(false)
-        } else {
-            setIsSwitchOn(true)
-        }
+        formData.confirmations === "Auto Accept" ? setIsSwitchOn(false) : setIsSwitchOn(true);
     }, [formData])
 
 
     return (
-        <Modal
-            show={render}
-            size="lg"
-            aria-labelledby="contained-modal-title-vcenter"
-            centered
-            onHide={() => setRender(false)}
-        >
-            <Modal.Header closeButton>
-                <Modal.Title id="contained-modal-title-vcenter">
-                    Booking Confirmations
-                </Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
+        <>
+            <Modal size="xl" show={show} onHide={() => setShow(false)} centered  >
+                <Modal.Header closeButton>
+                    <Modal.Title>
+                        Booking Confirmations
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
 
-                <Form onSubmit={handleSubmit}>
-                    <Form.Group className="mb-3" controlId="formBasicEmail">
-                        <Form.Label className='font-weight-bold'>Confirmations</Form.Label>
-                        <div className='d-flex'>
-                            <p>Manual</p>
-                            <Form.Switch
-                                checked={!isSwitchOn}
-                                className='mx-4'
-                                onChange={onSwitchAction} />
-                            <p>Auto</p>
-                        </div>
-                    </Form.Group>
+                    <Form onSubmit={handleSubmit}>
+                        <Form.Group className="mb-3" controlId="formBasicEmail">
+                            <Form.Label className='font-weight-bold'>Confirmations</Form.Label>
+                            <div className='d-flex'>
+                                <p>Manual</p>
+                                <Form.Switch
+                                    checked={!isSwitchOn}
+                                    className='mx-4'
+                                    onChange={onSwitchAction} />
+                                <p>Auto</p>
+                            </div>
+                        </Form.Group>
 
-                    <Form.Group className="mb-3" controlId="formBasicEmail">
-                        <Form.Label className='font-weight-bold'>Package Name:</Form.Label>
-                        <p>{formData.packageName}</p>
-                    </Form.Group>
+                        <Form.Group className="mb-3" controlId="formBasicEmail">
+                            <Form.Label className='font-weight-bold'>Package Name:</Form.Label>
+                            <p>{formData.packageName}</p>
+                        </Form.Group>
 
 
-                    <Form.Group className="mb-3" controlId="formBasicEmail">
-                        <Form.Label className='font-weight-bold'>Maximum booking/per month</Form.Label>
-                        <FormControl type='number' name='BookingsPerMonth' defaultValue={formData.bookingPerMonth} onChange={(e) => handleChange(e)} />
-                    </Form.Group>
+                        <Form.Group className="mb-3" controlId="formBasicEmail">
+                            <Form.Label className='font-weight-bold'>Maximum booking/per month</Form.Label>
+                            <FormControl type='number' name='BookingsPerMonth' defaultValue={formData.bookingPerMonth} onChange={(e) => handleChange(e)} />
+                        </Form.Group>
 
 
-                    <Form.Group className="mb-3" controlId="formBasicEmail">
-                        <Form.Label className='font-weight-bold'>Maximum booking/per day</Form.Label>
-                        <FormControl name='bookingsPerDay' defaultValue={formData.bookingPerDay} onChange={(e) => handleChange(e)} />
-                    </Form.Group>
+                        <Form.Group className="mb-3" controlId="formBasicEmail">
+                            <Form.Label className='font-weight-bold'>Maximum booking/per day</Form.Label>
+                            <FormControl name='bookingsPerDay' defaultValue={formData.bookingPerDay} onChange={(e) => handleChange(e)} />
+                        </Form.Group>
 
 
-                    <Modal.Footer>
-                        <Button type='submit' onClick={() => {
-                            // setRender(false)
-                        }}>Submit</Button>
-                        <Button className="btn btn-danger" onClick={() => {
-                            setRender(false)
-                        }}>Close</Button>
-                    </Modal.Footer>
-                </Form>
-            </Modal.Body>
-        </Modal>
+                        <Modal.Footer>
+                            <Button type='submit' onClick={() => {
+                                modalTrigger.next(false);
+                            }}>Submit</Button>
+                            <Button className="btn btn-danger" onClick={() => {
+                                modalTrigger.next(false);
+                            }}>Close</Button>
+                        </Modal.Footer>
+                    </Form>
+                </Modal.Body>
+            </Modal>
+        </>
     )
 }

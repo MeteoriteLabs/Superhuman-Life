@@ -1,6 +1,6 @@
 
 import moment from "moment";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment} from "react";
 import { Badge, Button } from "react-bootstrap";
 import { useTable } from "react-table";
 import { useSortBy, usePagination } from 'react-table'
@@ -14,16 +14,7 @@ function Table({ data, columns, newPackageCount, loading, pageCount: controlledP
         headerGroups,
         rows,
         prepareRow,
-        // page,
-        // canPreviousPage,
-        // canNextPage,
-        // pageOptions,
-        // pageCount,
-        // gotoPage,
-        // nextPage,
-        // previousPage,
-        // setPageSize,
-        // state: { pageSize },
+       
     } = useTable({
         columns, data, initialState: {
             sortBy: [
@@ -41,35 +32,27 @@ function Table({ data, columns, newPackageCount, loading, pageCount: controlledP
 
 
 
-
-    // const [pageIndex, setPageIndex] = useState(0)
-
-    // useEffect(() => {
-    //     fetchData({ pageIndex, pageSize })
-    // }, [fetchData, pageIndex, pageSize])
+    // const [isSort, setIsSort] = useState(false);
 
 
-    const [isSort, setIsSort] = useState(false);
+    // const toggleSort = () => {
+    //     setIsSort(!isSort);
+    //     console.log(data);
 
+    //     data.sort((a, b) => {
+    //         if (new Date(a.purchase_data) > new Date(b.purchase_data)) {
+    //             if (isSort) {
+    //                 return 1
+    //             }
+    //         }
 
-    const toggleSort = () => {
-        setIsSort(!isSort);
-        console.log(data);
-
-        data.sort((a, b) => {
-            if (new Date(a.purchase_data) > new Date(b.purchase_data)) {
-                if (isSort) {
-                    return 1
-                }
-            }
-
-            return -1
-        })
+    //         return -1
+    //     })
 
 
 
-        console.log('sort data', data)
-    }
+    //     console.log('sort data', data)
+    // }
 
 
     return (
@@ -80,21 +63,7 @@ function Table({ data, columns, newPackageCount, loading, pageCount: controlledP
             </Button>
 
 
-            {/* <pre>
-                <code>
-                    {JSON.stringify(
-                        {
-                            pageIndex,
-                            pageSize,
-                            pageCount,
-                            canNextPage,
-                            canPreviousPage,
-                        },
-                        null,
-                        2
-                    )}
-                </code>
-            </pre> */}
+        
             <table {...getTableProps()} className="table text-center">
                 <thead>
                     {headerGroups.map(headerGroup => {

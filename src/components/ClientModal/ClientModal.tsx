@@ -9,11 +9,19 @@ import FitnessAction from '../../builders/session-builder/Fitness/FitnessAction'
 
 
 export default function ClientModal(props) {
-    const { id, render, setRender, type } = props
+    const { id, modalTrigger, type } = props
 
     const [dataTable, setDataTable] = useState<any[]>([]);
     const [queryName, setQueryName] = useState<any>("")
     const fitnessActionRef = useRef<any>(null)
+
+
+    const [show, setShow] = useState<boolean>(false);
+
+
+    modalTrigger.subscribe((res: boolean) => {
+        setShow(res);
+    });
 
 
 
@@ -37,18 +45,17 @@ export default function ClientModal(props) {
 
 
     const loadData = (data) => {
-
         setDataTable(
             [...data.userPackages].map((packageItem) => {
-                const startDate = moment(packageItem.effective_date).format('MMMM DD,YYYY');
+                const startDate = moment(packageItem.effective_date);
                 const endDate = moment(startDate).add(packageItem.fitnesspackages[0].duration, "days").format("MMMM DD,YYYY");
                 return {
                     programName: packageItem.fitnesspackages[0].packagename,
                     client: packageItem.users_permissions_user.username,
                     duration: packageItem.fitnesspackages[0].duration,
-                    level:packageItem.program_managers.length > 0 ? packageItem.program_managers[0].fitnessprograms[0].level: "",
-                    description:packageItem.program_managers.length > 0 ?  packageItem.program_managers[0].fitnessprograms[0].description : "",
-                    startDate: startDate,
+                    level: packageItem.program_managers.length > 0 ? packageItem.program_managers[0].fitnessprograms[0].level : "",
+                    description: packageItem.program_managers.length > 0 ? packageItem.program_managers[0].fitnessprograms[0].description : "",
+                    startDate: startDate.format("MMMM DD,YYYY"),
                     endDate: endDate,
                     programStatus: packageItem.program_managers.length > 0 ? "Assigned" : "Not Assigned",
                 }
@@ -107,17 +114,16 @@ export default function ClientModal(props) {
                 id: "edit",
                 Header: "Actions",
                 Cell: ({ row }: any) => {
-                    return <ActionButton
-                        action1='Manage'
-                        // actionClick1={() => {
-                        //     fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'manage', type: "Personal Training", rowData:""})
-                        // }}
+                    const actionClick1 = () => {
+                        fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'manage', rowData: "" })
+                    };
 
-                        // action2='Details'
-                        // actionClick2={() => {
-                        //     console.log('client modal')
-                        //     fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'details', type: "Personal Training", rowData: row.original })
-                        // }}
+                    const arrayAction = [
+                        { actionName: 'Manage', actionClick: actionClick1 },
+                    ]
+
+                    return <ActionButton
+                        arrayAction={arrayAction}
                     >
                     </ActionButton>
                 }
@@ -133,7 +139,7 @@ export default function ClientModal(props) {
 
     return (
         <>
-            <Modal show={render} size="xl" onHide={() => setRender(false)} centered>
+            <Modal size="xl" show={show} onHide={() => setShow(false)} centered  >
                 <Modal.Header closeButton>
                     <Modal.Title>Clients</Modal.Title>
                 </Modal.Header>
@@ -141,10 +147,9 @@ export default function ClientModal(props) {
                 <Table columns={columns} data={dataTable} />
                 <FitnessAction ref={fitnessActionRef} />
                 <Modal.Footer>
-                    <Button variant="danger" onClick={() => setRender(false)}>
+                    <Button variant="danger" onClick={() => modalTrigger.next(false)}>
                         Close
                     </Button>
-
                 </Modal.Footer>
             </Modal>
         </>

@@ -2,6 +2,7 @@ import { useMutation } from '@apollo/client';
 import React, { useImperativeHandle, useState } from 'react'
 import AcceptRejectModal from '../../../components/AcceptRejectModal/AcceptRejectModal';
 import { CREATE_USER_PACKAGE, UPDATE_BOOKING_STATUS } from '../graphQL/mutation';
+import { Subject } from 'rxjs';
 
 
 interface Operation {
@@ -13,14 +14,15 @@ interface Operation {
 function BookingAction(props, ref: any) {
    
 
-    const [render, setRender] = useState<boolean>(false);
+    
     const [operation, setOperation] = useState<Operation>({} as Operation);
+    const modalTrigger = new Subject();
 
 
 
     useImperativeHandle(ref, () => ({
         TriggerForm: (msg: any) => {
-            setRender(true);
+            modalTrigger.next(true);
             setOperation(msg)
         }
     }),
@@ -63,7 +65,6 @@ function BookingAction(props, ref: any) {
             program_managers: updateClientBooking.clientBooking.program_managers.map(item => item.id),
 
         }
-        console.log("🚀 ~ file: BookingAction.tsx ~ line 59 ~ createClientPackage ~ formValue", formValue);
 
         createUserPackage({
             variables: formValue
@@ -72,16 +73,16 @@ function BookingAction(props, ref: any) {
 
     return (
         <div>
-            {(render && (operation.actionType === "accept" || operation.actionType === "reject")) &&
+            {(operation.actionType === "accept" || operation.actionType === "reject") &&
                 <AcceptRejectModal
-                    render={render}
-                    setRender={setRender}
                     modalTitle="Change Status"
                     modalBody={`Are you sure you want to ${operation.actionType.toUpperCase()} the booking?`}
                     modalBodyDetail={`Once ${operation.actionType}, it cant be change. So are you sure ?`}
                     buttonRight="Close"
                     buttonLeft="Submit"
-                    onClick={onClick} />
+                    onClick={onClick}
+                    modalTrigger={modalTrigger}
+                    />
             }
         </div>
     )

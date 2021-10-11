@@ -3,8 +3,8 @@ import { withTheme, utils } from "@rjsf/core";
 import { Theme as Bootstrap4Theme } from '@rjsf/bootstrap-4';
 import { Button, Col, Modal, ProgressBar, Row } from "react-bootstrap";
 
-export default function SessionModal({ name, formUISchema, formSubmit, formSchema, formData, isStepper, widgets, stepperValues, render, setRender }: any) {
-  
+export default function SessionModal({ name, formUISchema, formSubmit, formSchema, formData, isStepper, widgets, stepperValues, modalTrigger }: any) {
+
     const registry = utils.getDefaultRegistry();
     const defaultFileWidget = registry.widgets["FileWidget"];
     (Bootstrap4Theme as any).widgets["FileWidget"] = defaultFileWidget;
@@ -12,20 +12,20 @@ export default function SessionModal({ name, formUISchema, formSubmit, formSchem
     const Form: any = withTheme(Bootstrap4Theme);
     const formRef = useRef<any>(null);
     const [step, setStep] = useState<number>(1);
-    const [show, setShow] = useState<boolean>(false);
     const [formValues, setFormValues] = useState<any>(formData);
     const stepper: string[] = stepperValues;
-    
-    // modalTrigger.subscribe((res: boolean) => {
-    //     setShow(res);
-    // });
- 
-    
+    const [show, setShow] = useState<boolean>(false);
+
+    modalTrigger.subscribe((res: boolean) => {
+        setShow(res);
+    });
+
+
     function submitHandler(formData: any) {
 
-   
+
         if (isStepper && step < 2) {
-            console.log("Data submitted: ", formData);
+            // console.log("Data submitted: ", formData);
             setStep(step + 1);
             setFormValues({ ...formValues, ...formData });
         } else {
@@ -36,8 +36,8 @@ export default function SessionModal({ name, formUISchema, formSubmit, formSchem
 
 
     return (
-        <>  
-            <Modal size="xl" show={render} onHide={() => setRender(false)} centered >
+        <>
+            <Modal size="xl" show={show} onHide={() => setShow(false)} centered  >
                 <Modal.Header closeButton>
                     <Modal.Title as={Row}>
                         <Col xs={12} md={12} lg={12}>
@@ -58,14 +58,14 @@ export default function SessionModal({ name, formUISchema, formSubmit, formSchem
                 </Modal.Header>
                 <Modal.Body className="show-grid bg-light">
                     <Row>
-                        <Col  lg={12}>
+                        <Col lg={12}>
                             <div style={{ height: '400px', overflowX: 'hidden', overflowY: 'auto' }}>
                                 <Form
                                     uiSchema={formUISchema}
                                     schema={formSchema[step.toString()]}
                                     ref={formRef}
                                     onSubmit={({ formData }: any) => submitHandler(formData)}
-                                    formData={formValues}
+                                    formData={formData}
                                     widgets={widgets}
                                 >
                                     <div></div>
@@ -96,26 +96,26 @@ export default function SessionModal({ name, formUISchema, formSubmit, formSchem
                                 }
                             </Button>
                         </> :
-                        <> 
-                        <Button
-                         variant="danger"
-                         size="sm"
-                         onClick={() => setRender(false)}
-                         className={name === 'View'?"d-none":""}
-                        >
-                        Close
-                       </Button>
-                        <Button
-                         variant="success"
-                         size="sm"
-                         onClick={(event) => {formRef.current.onSubmit(event)}}
-                        >
-                        {name === 'View'? "Close": "Submit"} 
-                        </Button>
-                        
+                        <>
+                            <Button
+                                variant="danger"
+                                size="sm"
+                                onClick={() =>  modalTrigger.next(false)}
+                                className={name === 'View' ? "d-none" : ""}
+                            >
+                                Close
+                            </Button>
+                            <Button
+                                variant="success"
+                                size="sm"
+                                onClick={(event) => { formRef.current.onSubmit(event) }}
+                            >
+                                {name === 'View' ? "Close" : "Submit"}
+                            </Button>
+
                         </>
-                    
-                        
+
+
                     }
                 </Modal.Footer>
             </Modal>

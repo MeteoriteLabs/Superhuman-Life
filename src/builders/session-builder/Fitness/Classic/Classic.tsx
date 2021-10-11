@@ -3,7 +3,7 @@ import { useContext, useMemo, useRef, useState } from 'react'
 import { Badge, Row, Col } from "react-bootstrap";
 import Table from '../../../../components/table';
 import AuthContext from "../../../../context/auth-context"
-import { GET_ALL_CLIENT_PACKAGE, GET_ALL_CLIENT_PACKAGE_BY_TYPE, GET_ALL_FITNESS_PACKAGE_BY_TYPE, GET_ALL_PROGRAM_BY_TYPE } from '../../graphQL/queries';
+import { GET_ALL_CLIENT_PACKAGE, GET_ALL_FITNESS_PACKAGE_BY_TYPE, GET_ALL_PROGRAM_BY_TYPE } from '../../graphQL/queries';
 import moment from 'moment'
 import FitnessAction from '../FitnessAction';
 import ActionButton from '../../../../components/actionbutton';
@@ -43,77 +43,14 @@ export default function Classic(props) {
     })
 
 
-    // console.log('fitness package', data1);
-    // console.log('program manager', data2?.programManagers?.map(item => item));
-    // console.log('client package', data3?.userPackages?.map(item => item));
 
-
-
-    // const loadData = () => {
-    //     let arrayFitnessPackage: any[] = [];
-    //     let arrayData: any[] = [];
-
-    //     let fitnessProgramItem: any = {};
-    //     for (let i = 0; i < data1?.fitnesspackages.length; i++) {
-    //         for (let j = 0; j < data3?.userPackages.length; j++) {
-    //             if (data1.fitnesspackages[i].id === data3.userPackages[j].fitnesspackages[0].id) {
-
-    //                 const client = data3.userPackages[j].users_permissions_user.username;
-    //                 const title = data3.userPackages[j].program_managers.map(item =>item.fitnessprograms[0].title)
-    //                 arrayData.push({ ...data1.fitnesspackages[i], client, title});
-    //                 // if (data3.userPackages[j].program_managers.length >= 1) {
-    //                 //     fitnessProgramItem.proManagerFitnessId = data3.userPackages[j].fitnesspackages[0].id;
-    //                 //     fitnessProgramItem.title = data3.userPackages[j].program_managers[0].fitnessprograms[0].title;
-    //                 //     fitnessProgramItem.published_at = data3.userPackages[j].program_managers[0].fitnessprograms[0].published_at;
-    //                 //     fitnessProgramItem.proManagerId = data3.userPackages[j].id;
-
-    //                 //     arrayData.push({ ...data1.fitnesspackages[i], ...fitnessProgramItem });
-    //                 // } else {
-    //                 //     arrayData.push({ ...data1.fitnesspackages[i]});
-    //                 // }
-    //             }
-    //         }
-    //     }
-
-    //     console.log('arrayData', arrayData)
-
-
-
-    //     setUserPackage(
-    //         [...arrayData.map((packageItem) => {
-    //             return {
-    //                 id: packageItem.id,
-    //                 packageName: packageItem.packagename,
-    //                 duration: packageItem.duration,
-    //                 expiry: moment(packageItem.expiry_date).format("MMMM DD,YYYY"),
-    //                 packageStatus: packageItem.Status ? "Active" : "Inactive",
-
-    //                 proManagerId: packageItem.proManagerId,
-    //                 proManagerFitnessId: packageItem.proManagerFitnessId,
-    //                 client: packageItem.client  ? packageItem.client : "N/A",
-    //                 time: packageItem.published_at ? moment(packageItem.published_at).format('h:mm:ss a') : "N/A",
-    //                 programName: packageItem.title.length > 0  ? packageItem.title : "N/A",
-    //                 programStatus: packageItem.title.length > 0 ? "Assigned" : "N/A",
-    //                 renewal: packageItem.title ? "25/08/2021" : "N/A",
-    //             }
-    //         })]
-    //     )
-    // }
-
-
-
-
-
-
-    // from group
     const loadData = () => {
-        // const arrayFitnessPackage: any[] = [];
         const arrayData: any[] = []
 
         let fitnessProgramItem: any = {};
         for (let i = 0; i < data1?.fitnesspackages.length; i++) {
             for (let j = 0; j < data2?.programManagers.length; j++) {
-                // if (data2.programManagers[j].fitnessprograms.length >= 1) {
+            
                 if (data1.fitnesspackages[i].id === data2.programManagers[j].fitnesspackages[0].id) {
                     fitnessProgramItem.proManagerFitnessId = data2.programManagers[j].fitnessprograms[0].id;
                     fitnessProgramItem.title = data2.programManagers[j].fitnessprograms[0].title;
@@ -122,57 +59,41 @@ export default function Classic(props) {
 
                     arrayData.push({ ...data1.fitnesspackages[i], ...fitnessProgramItem });
                 }
-                // } 
+             
             }
         }
 
 
-        let arrayA = arrayData.map(item => item.id);
+        const arrayA = arrayData.map(item => item.id);
 
-        const res = data1.fitnesspackages.filter(item => !arrayA.includes(item.id));
-        res.forEach(item => {
+        const filterPackage = data1?.fitnesspackages.filter((item: { id: string; }) => !arrayA.includes(item.id));
+        filterPackage.forEach(item => {
             arrayData.push(item)
         })
 
-        // console.log("🚀 ~ file: Classic.tsx ~ line 65 ~ loadData ~ arrayData", arrayData)
+     
 
+        const arrayFitnessPackage = arrayData.map(fitnessPackage => {
+            let client: string[] = [];
 
-
-
-        // for (let i = 0; i < arrayData.length; i++) {
-        //     for (let j = 0; j < data3.userPackages.length; j++) {
-        //         if (data3.userPackages[j].fitnesspackages[0].id === arrayData[i].id) {
-        //             const client = data3.userPackages[j].users_permissions_user.username
-        //             arrayFitnessPackage.push({ ...arrayData[i], client });
-
-
-        //         }  
-        //         else {
-        //             arrayFitnessPackage.push(arrayData[i]);
-        //             break
-        //         }
-        //     }
-        // }
-
-        const arrayFitnessPackage = arrayData.map(item => {
-            let client: any[] = [];
-            for (let j = 0; j < data3.userPackages.length; j++) {
-                if (item.id === data3.userPackages[j].fitnesspackages[0].id) {
-                    client.push(data3.userPackages[j].users_permissions_user.username)
+            data3.userPackages.forEach((userPackage: { fitnesspackages: { id: string; }; users_permissions_user: { username: string; }; }) => {
+                if (fitnessPackage.id === userPackage.fitnesspackages[0].id) {
+                    client.push(userPackage.users_permissions_user.username)
                 }
-                item = { ...item, client }
-            }
-            return item
+                fitnessPackage = { ...fitnessPackage, client }
+            })
+
+            return fitnessPackage
         })
 
-     
+
 
         for (let i = 0; i < arrayFitnessPackage.length - 1; i++) {
             if (arrayFitnessPackage[i].id === arrayFitnessPackage[i + 1].id) {
                 arrayFitnessPackage.splice(arrayFitnessPackage[i], 1)
             }
         }
-      
+
 
         setUserPackage(
             [...arrayFitnessPackage.map((packageItem) => {
@@ -341,24 +262,24 @@ export default function Classic(props) {
                         id: "edit",
                         Header: "Actions",
                         Cell: ({ row }: any) => {
+                            const actionClick1 = () => {
+                                fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'manage', type: "Personal Training", rowData: "" })
+                            }
+                            const actionClick2 = () => {
+                                fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'details', type: "Classic Class", rowData: row.original })
+                            }
+
+                            const actionClick3 = () => {
+                                fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'allClients', type: "Classic Class" })
+                            }
+
+                            const arrayAction = [
+                                { actionName: 'Manage', actionClick: actionClick1 },
+                                { actionName: 'Details', actionClick: actionClick2 },
+                                { actionName: 'All Clients', actionClick: actionClick3 },
+                            ]
                             return <ActionButton
-                                     // actionName={["Manage", "Details", "All Clients"]}
-                                action1='Manage'
-                                
-                                actionClick1={() => {
-                                    fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'manage', type: "Classic Class", rowData:""})
-                                }}
-
-                                action2='Details'
-                                actionClick2={() => {
-                                    fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'details', type: "Classic Class", rowData: row.original })
-                                }}
-
-                                action3='All Clients'
-                                actionClick3={() => {
-                                    fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'allClients', type: "Classic Class" })
-
-                                }}
+                                arrayAction={arrayAction}
                             >
                             </ActionButton>
                         }

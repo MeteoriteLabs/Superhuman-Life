@@ -3,24 +3,24 @@ import { Button, Modal } from 'react-bootstrap'
 
 export default function AcceptRejectModal(props) {
 
-    const { render, setRender } = props
+    const { modalTrigger } = props
 
+
+    const [show, setShow] = useState<boolean>(false);
+
+    modalTrigger.subscribe((res: boolean) => {
+        setShow(res);
+    });
 
 
     function handleClick() {
         props.onClick();
-        setRender(false);
+        modalTrigger.next(false)
     }
 
     return (
-        <div>
-            <Modal
-                show={render}
-                onHide={() => setRender(false)}
-                backdrop="static"
-                keyboard={false}
-                centered
-            >
+        <div  >
+            <Modal  show={show} onHide={() => setShow(false)} centered  >
                 <Modal.Header closeButton>
                     <Modal.Title>  {props.modalTitle}</Modal.Title>
                 </Modal.Header>
@@ -30,7 +30,7 @@ export default function AcceptRejectModal(props) {
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="success" onClick={handleClick}>{props.buttonLeft}</Button>
-                    <Button variant="danger" onClick={() => setRender(false)}>
+                    <Button variant="danger" onClick={() => modalTrigger.next(false)}>
                         {props.buttonRight}
                     </Button>
                 </Modal.Footer>
