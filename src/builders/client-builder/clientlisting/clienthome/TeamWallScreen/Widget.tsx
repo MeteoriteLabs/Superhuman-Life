@@ -15,6 +15,8 @@ function Widget(props: any) {
      const [rate1, setRate1] = useState<any>();
      const [img, setImg] = useState<any>();
      const [data, setData] = useState<any>();
+     const [id1, setId1] = useState<any>();
+     const [id2, setId2] = useState<any>();
 
      function handleChange(e) {
           setValue(e);
@@ -34,12 +36,14 @@ function Widget(props: any) {
      function loadRating(data: any) {
           [...data.ratingScales].map((p) => {
                setRate1(p.items);
+               setId1(p.id);
                return {};
           });
      }
      function loadMood(data: any) {
           [...data.ratingScales].map((p) => {
                setImg(p.items);
+               setId2(p.id);
                return {};
           });
      }
@@ -82,6 +86,8 @@ function Widget(props: any) {
                               icon={icon}
                               onChange={props.onChange}
                               editorData={data}
+                              moodId={id2}
+                              rpmId={id1}
                          />
                     </div>
                ) : (

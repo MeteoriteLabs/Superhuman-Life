@@ -3,7 +3,17 @@ import Slider from "react-rangeslider";
 import "react-rangeslider/lib/index.css";
 
 function Rating(props: any) {
-     props.onChange(JSON.stringify({ rpm: props.value1, mood: props.value2, note: props.editorData }));
+     props.onChange(
+          JSON.stringify({
+               rpm: props.value1,
+               mood: props.value2,
+               note: props.editorData,
+               rpm_max: props.max1,
+               mood_max: props.max2,
+               rpm_id: props.rpmId,
+               mood_id: props.moodId,
+          })
+     );
 
      return (
           <div className="mt-3">
