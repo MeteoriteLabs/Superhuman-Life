@@ -5,48 +5,64 @@ import Build from './build';
 
 const BuildWorkout = (props: any) => {
 
-     const [active, setActive] = useState("active");
-     const [rotate, setRotate] = useState("accordian__icon");
+     const [active, setActive] = useState(null);
 
-     function toggleAccodian(){
-          setActive(active === "active" ? "" : "active");
-          setRotate(
-               active === "active" ? "accordion__icon" : "accordian__icon rotate"
-          )
+     function toggleAccodian(id){
+          setActive( id );
+     }
+
+     var build: any = {};
+
+     function OnChangeWarmUp(e: any){
+          build.warmup = e;
+          const objectToString = JSON.stringify(build);
+          props.onChange(objectToString);
+     }
+
+     function OnChangeMainMovement(e: any){
+          build.mainMovement = e;
+          const objectToString = JSON.stringify(build);
+          props.onChange(objectToString);
+     }
+
+     function OnChangeCoolDown(e: any){
+          build.coolDown = e;
+          const objectToString = JSON.stringify(build);
+          props.onChange(objectToString);
      }
 
      return (
-          <Accordion defaultActiveKey="0">
+          <Accordion defaultActiveKey="">
                <Card>
-                    <Accordion.Toggle as={Card.Header} eventKey="0"  className={`${active}`} onClick={() => toggleAccodian()}>
-                    Warm Up
-                         <Chevron className={`${rotate} float-right`}  width={10} fill={"#777"}/>
+                    <Accordion.Toggle as={Card.Header} eventKey="0"  className={`${active}`} onClick={() => toggleAccodian(active === 0 ? null : 0)}>
+                    Warm up
+                         <Chevron className={"accordion__icon float-right " + ((active === 0) ? 'rotate' : '')}  width={10} fill={"#777"}/>
                     </Accordion.Toggle>
                     <Accordion.Collapse eventKey="0">
                          <Card.Body>
-                              <Build />
+                              <Build onChange={OnChangeWarmUp} buildId={1}/>
                          </Card.Body>
                     </Accordion.Collapse>
                </Card>
                <Card>
-                    <Accordion.Toggle as={Card.Header} eventKey="1" >
-                    Main Movement
-                         <Chevron className={`${rotate} float-right`}  width={10} fill={"#777"}/>
+                    <Accordion.Toggle as={Card.Header} eventKey="1" className={`${active}`} onClick={() => toggleAccodian(active === 1 ? null : 1)}>
+                    Main movement
+                         <Chevron className={"accordion__icon float-right " + ((active === 1) ? 'rotate' : '')}  width={10} fill={"#777"}/>
                     </Accordion.Toggle>
                     <Accordion.Collapse eventKey="1">
                     <Card.Body>
-                         <Build />
+                         <Build onChange={OnChangeMainMovement} buildId={2}/>
                     </Card.Body>
                     </Accordion.Collapse>
                </Card>
                <Card>
-                    <Accordion.Toggle as={Card.Header} eventKey="2" >
-                    Cool Down
-                         <Chevron className={`${rotate} float-right`}  width={10} fill={"#777"}/>
+                    <Accordion.Toggle as={Card.Header} eventKey="2" className={`${active}`} onClick={() => toggleAccodian(active === 2 ? null : 2)}>
+                    Cool down
+                         <Chevron className={"accordion__icon float-right " + ((active === 2) ? 'rotate' : '')}  width={10} fill={"#777"}/>
                     </Accordion.Toggle>
                     <Accordion.Collapse eventKey="2">
                     <Card.Body>
-                         <Build />
+                         <Build onChange={OnChangeCoolDown} buildId={3}/>
                     </Card.Body>
                     </Accordion.Collapse>
                </Card>

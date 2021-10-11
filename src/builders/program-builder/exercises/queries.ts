@@ -21,9 +21,53 @@ export const FETCH_DATA = gql`
                     id
                     name
                }
+               users_permissions_user {
+                    id
+               }
           }
      }
 `
+
+export const FETCH_WORKOUTS = gql`
+     query fetchworkouts($id: String!){
+          workouts(where: {users_permissions_user: {id:$id}}){
+               id
+               workouttitle
+               warmup
+               mainmovement
+               cooldown
+               About
+               Benifits
+               calories
+               workout_URL
+               workout_text
+               intensity
+               equipment_lists{
+                    id
+                    name
+               }
+               muscle_groups{
+                    id
+                    name
+               }
+               users_permissions_user{
+                    id
+               }
+          }
+     }
+`
+
+export const GET_EXERCISELIST = gql`
+     query exercisesList($id: String, $filter: String!) {
+          exercises(where: { users_permissions_user: {id: $id}, exercisename_contains: $filter}){
+               id
+               exercisename
+               users_permissions_user {
+                    id
+               }
+          }
+     }
+     `
 
 export const FETCH_FITNESSDISCPLINES = gql`
      query fitnessdiscplines{
@@ -66,11 +110,6 @@ export const GET_TABLEDATA = gql`
                exercisemusclegroups {
                name
                }
-          }
-          fitnessdisciplines(sort: "updatedAt"){
-               id
-               disciplinename
-               updatedAt
           }
      }
 `

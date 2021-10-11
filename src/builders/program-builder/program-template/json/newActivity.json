@@ -1,0 +1,27 @@
+{
+     "1": {
+         "title": "",
+         "type": "object",
+         "required": [
+            "day",
+            "time"
+         ],
+         "properties": {
+             "day": {
+                 "type": "string"
+             },
+             "time": {
+                "type": "string"
+             }
+         }
+     },
+     "2": {
+        "title": "",
+        "type": "object",
+        "properties": {
+            "newActivity": {
+                "type": "string"
+            }
+        }
+    }
+ }

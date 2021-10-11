@@ -1,7 +1,60 @@
 import { useMemo } from "react";
-import { Badge, Button, Card, Dropdown, OverlayTrigger, Popover, TabContent } from "react-bootstrap";
-import ModalView from "../../../components/modal";
+import {
+    Badge,
+    Button,
+    Card,
+    Col,
+    Dropdown,
+    Form,
+    OverlayTrigger,
+    Popover,
+    Row,
+    TabContent
+} from "react-bootstrap";
+import CreateFitnessPackageModal from "../../../components/CreateFitnessPackageModal/CreateFitnessPackageModal";
 import Table from "../../../components/table";
+
+function PaymentWidget({ formData }: any) {
+    return (
+        <Form>
+            <Card.Title>Pricing Plans</Card.Title>
+            <hr />
+            <Form.Group as={Row}>
+                <Form.Label column>No of Days</Form.Label>
+                <Col>
+                    <Form.Control plaintext readOnly defaultValue={formData.days} />
+                </Col>
+            </Form.Group>
+            <Form.Group as={Row}>
+                <Form.Label column>No of Hours</Form.Label>
+                <Col>
+                    <Form.Control plaintext readOnly defaultValue={formData.days} />
+                </Col>
+            </Form.Group>
+            <Form.Group as={Row}>
+                <Form.Label column>Suggested Pricing</Form.Label>
+                <Col>
+                    <Form.Control plaintext readOnly defaultValue="Rs. 1000" />
+                </Col>
+            </Form.Group>
+            <Form.Group as={Row}>
+                <Form.Label column>Set Pricing</Form.Label>
+                <Col>
+                    <Form.Control type="number" />
+                </Col>
+            </Form.Group>
+            <Form.Group as={Row}>
+                <Form.Label column>Set Voucher?</Form.Label>
+                <Col>
+                    <Form.Control type="number" />
+                    <Form.Text className="text-muted">
+                        This voucher can be stored by you.
+                    </Form.Text>
+                </Col>
+            </Form.Group>
+        </Form>
+    );
+}
 
 export default function EventsTab() {
     const columns = useMemo<any>(() => [
@@ -28,7 +81,7 @@ export default function EventsTab() {
             Cell: ({ row }: any) => (
                 <OverlayTrigger
                     trigger="click"
-                    placement="right"
+                    placement="bottom"
                     overlay={
                         <Popover id="action-popover">
                             <Popover.Content>
@@ -73,31 +126,45 @@ export default function EventsTab() {
     ], []);
     const eventSchema: any = require("./event.json");
     const uiSchema: any = {
-        "level": {
-            "ui:widget": "radio",
-            "ui:options": {
-                "inline": true
+        "1": {
+            "name": {
+                "ui:autofocus": true
+            },
+            "level": {
+                "ui:widget": "radio",
+                "ui:options": {
+                    "inline": true
+                }
             }
         },
-        "summary": {
-            "ui:widget": "textarea",
-            "ui:options": {
-                "rows": 3
-            }
-        },
-        "description": {
-            "ui:widget": "textarea",
-            "ui:options": {
-                "rows": 3
-            }
-        },
-        "items": {
-            "about": {
+        "2": {
+            "summary": {
+                "ui:widget": "textarea",
+                "ui:autofocus": true,
+                "ui:options": {
+                    "rows": 3
+                }
+            },
+            "description": {
                 "ui:widget": "textarea",
                 "ui:options": {
                     "rows": 3
                 }
             }
+        },
+        "3": {
+            "items": {
+                "about": {
+                    "ui:widget": "textarea",
+                    "ui:options": {
+                        "rows": 3
+                    }
+                }
+            }
+        },
+        "4": {},
+        "5": {
+            "ui:field": (props: any) => <PaymentWidget {...props} />
         }
     }
 
@@ -109,13 +176,14 @@ export default function EventsTab() {
         <TabContent>
             <hr />
             <Card.Title className="text-center">
-                <ModalView
-                    name="Event"
+                <CreateFitnessPackageModal
+                    name="Event Package"
                     isStepper={true}
                     formUISchema={uiSchema}
                     formSchema={eventSchema}
                     formSubmit={onSubmit}
                     formData={{}}
+                    stepperValues={ ["Creator", "Details", "Program", "Schedule", "Pricing", "Preview"]}
                 />
             </Card.Title>
             <Table columns={columns} data={data} />

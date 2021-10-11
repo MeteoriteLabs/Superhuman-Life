@@ -1,5 +1,5 @@
 
-import { Dropdown } from "react-bootstrap";
+import {Dropdown} from "react-bootstrap";
 import "./button.css";
 function ActionButton(props: any) {
 
@@ -25,7 +25,6 @@ function ActionButton(props: any) {
                 {renderItemAction()}
             </Dropdown.Menu>
         </Dropdown>
-
     )
 }
 

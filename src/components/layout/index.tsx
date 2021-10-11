@@ -13,7 +13,7 @@ export default function Layout({ token, children }: any) {
       </header>
       <main>
         {token ?
-          <Row noGutters className="bg-light mt-5 pt-4  min-vh-100">
+          <Row noGutters className="bg-light mt-5 py-4  min-vh-100">
             <Col lg={collapse ? "1" : "2"} className="d-none d-lg-block">
               <SideNav collapse={collapse} setCollapse={setCollapse} />
             </Col>
