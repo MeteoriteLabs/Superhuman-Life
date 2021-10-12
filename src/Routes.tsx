@@ -26,6 +26,7 @@ const PackagePage = React.lazy(() => import("./builders/package-builder"));
 const ResourcePage = React.lazy(() => import("./builders/resource-builder"));
 const ProgramPage = React.lazy(() => import("./builders/program-builder"));
 const ProgramManagerPage = React.lazy(() => import("./builders/program-builder/program-template"));
+const ProgramSchedulerPage = React.lazy(() => import("./builders/session-builder/Fitness/scheduler"));
 
 const SessionPage = React.lazy(() => import("./builders/session-builder/"));
 
@@ -66,6 +67,7 @@ export default function Routes({ token }: any) {
               <Route exact path="/programs" component={ProgramPage} />
               <Route exact path="/session" component={SessionPage} />
               <Route path="/programs/manage" component={ProgramManagerPage} />
+              <Route path="/session/scheduler" component={ProgramSchedulerPage} />
               <Route path="/profile" component={ProfilePage} />
               <Route path="/resources" component={ResourcePage} />
               <Route path="/schedule" component={SchedulePage} />

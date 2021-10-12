@@ -183,6 +183,10 @@ export default function Classic(props) {
     //     }
     // }
 
+    function handleRedirect(id: any){
+        window.location.href = `/session/scheduler/${id}`;
+    };
+
     const columns = useMemo(
         () => [
             {
@@ -263,7 +267,7 @@ export default function Classic(props) {
                         Header: "Actions",
                         Cell: ({ row }: any) => {
                             const actionClick1 = () => {
-                                fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'manage', type: "Personal Training", rowData: "" })
+                                handleRedirect(row.original.id);
                             }
                             const actionClick2 = () => {
                                 fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'details', type: "Classic Class", rowData: row.original })
