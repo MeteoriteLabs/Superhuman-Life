@@ -9,6 +9,7 @@ import {
 } from "react-router-dom";
 import Layout from "./components/layout";
 
+const MainLobby = React.lazy(() => import("./pages/dashboard"));
 const BookingPage = React.lazy(() => import("./pages/booking"));
 const ChatPage = React.lazy(() => import("./pages/chat"));
 const ClientPage = React.lazy(() => import("./pages/client"));
@@ -21,7 +22,6 @@ const SettingsPage = React.lazy(() => import("./pages/settings"));
 const AboutPage = React.lazy(() => import("./pages/about"));
 const ContactPage = React.lazy(() => import("./pages/contact"));
 const FQAsPage = React.lazy(() => import("./pages/faqs"));
-
 const PackagePage = React.lazy(() => import("./builders/package-builder"));
 const ResourcePage = React.lazy(() => import("./builders/resource-builder"));
 const ProgramPage = React.lazy(() => import("./builders/program-builder"));
@@ -53,8 +53,9 @@ export default function Routes({ token }: any) {
             </Helmet> */}
 
             <Switch>
-              <Redirect exact from="/" to="/home" />
-              <Redirect exact from="/login" to="/home" />
+              <Redirect exact from="/" to="/lobby" />
+              <Redirect exact from="/login" to="/lobby" />
+              <Route path="/lobby" component={MainLobby} />
               <Route path="/bookings" component={BookingPage} />
               <Route path="/chats" component={ChatPage} />
               <Route path="/clients" component={ClientPage} />

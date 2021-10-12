@@ -1,15 +1,16 @@
 import { useContext } from "react";
 import { NavLink } from "react-router-dom";
-import { Container, DropdownButton, Dropdown, Nav, Navbar } from "react-bootstrap";
+import { Container, DropdownButton, Dropdown, Nav, Navbar, Col, Row, NavDropdown } from "react-bootstrap";
 import authContext from "../../context/auth-context";
+import { MiniLobbyComponent } from "../../pages/dashboard/mini-lobby/LobbyPopover";
 
 export function AuthenticatedNav() {
   const auth = useContext(authContext);
 
   return (
     <Navbar bg="dark" className="shadow-sm" expand="lg" fixed="top">
-      <Navbar.Brand href="/" className="text-white">
-        <img width="100%" src="/logo.svg" alt="brand" />
+      <Navbar.Brand col-sm href="/" className="text-white">
+        <img className="d-inline-block align-top" src="/logo.svg" alt="brand"/>
       </Navbar.Brand>
       <Navbar.Toggle aria-controls="navbar" />
       <Navbar.Collapse className="justify-content-end" id="navbar">
@@ -35,9 +36,7 @@ export function AuthenticatedNav() {
         </DropdownButton>
       </Nav.Item>
       <Nav.Item className="d-none d-lg-block">
-        <DropdownButton variant="dark" title={<i className="fas fa-th"></i>}>
-          <Dropdown.Header>Other Apps</Dropdown.Header>
-        </DropdownButton>
+        <MiniLobbyComponent/>
       </Nav.Item>
       <Nav.Item className="d-none d-lg-block mr-5 pr-5">
         <DropdownButton
@@ -49,6 +48,8 @@ export function AuthenticatedNav() {
         </DropdownButton>
       </Nav.Item>
     </Navbar>
+
+
   );
 }
 
