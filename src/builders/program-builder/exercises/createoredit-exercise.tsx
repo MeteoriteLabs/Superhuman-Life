@@ -1,9 +1,9 @@
 import React, { useContext, useImperativeHandle, useState } from 'react';
 import { useQuery, useMutation } from "@apollo/client";
 import ModalView from "../../../components/modal";
-import { FETCH_DATA, CREATE_EXERCISE, UPDATE_EXERCISE, DELETE_EXERCISE } from "./queries";
+import { FETCH_DATA, CREATE_EXERCISE, UPDATE_EXERCISE, DELETE_EXERCISE, FETCH_WORKOUTS } from "./queries";
 import AuthContext from "../../../context/auth-context";
-import StatusModal from "../../../components/StatusModal/StatusModal";
+import StatusModal from "../../../components/StatusModal/exerciseStatusModal";
 import { schema, widgets } from './exerciseSchema';
 import {Subject} from 'rxjs';
 
@@ -17,8 +17,16 @@ function CreateEditMessage(props: any, ref: any) {
     const auth = useContext(AuthContext);
     const exerciseSchema: { [name: string]: any; } = require("./exercises.json");
     const [exerciseDetails, setExerciseDetails] = useState<any>({});
+    const [workoutDetails, setWorkoutDetails] = useState<any[]>([]);
     const [operation, setOperation] = useState<Operation>({} as Operation);
-    
+
+    useQuery(FETCH_WORKOUTS, {
+        variables: {id: auth.userid},
+        skip: (operation.type !== "delete"),
+        onCompleted: (r: any) => {
+            setWorkoutDetails(r.workouts);
+        }
+    });
 
     const [createExercise] = useMutation(CREATE_EXERCISE, { onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
     const [editExercise] = useMutation(UPDATE_EXERCISE,{variables: {exerciseid: operation.id}, onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
@@ -152,6 +160,8 @@ function CreateEditMessage(props: any, ref: any) {
             {/* } */}
              {operation.type ==="delete" && <StatusModal
              modalTitle="Delete"
+             EventConnectedDetails={workoutDetails}
+             ExistingEventId={operation.id}
              modalBody="Do you want to delete this message?"
              buttonLeft="Cancel"
              buttonRight="Yes"

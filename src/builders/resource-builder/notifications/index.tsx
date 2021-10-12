@@ -56,18 +56,29 @@ export default function MessagePage() {
         {
             id: "edit",
             Header: "Actions",
-            Cell: ({ row }: any) => (
-                <ActionButton 
-                action1="Edit"
-                actionClick1={() => {createEditMessageComponent.current.TriggerForm({id: row.original.id, type: 'edit'})}}
-                action2="View"
-                actionClick2={() => {createEditMessageComponent.current.TriggerForm({id: row.original.id, type: 'view'})}}
-                action3="Status"
-                actionClick3={() => { createEditMessageComponent.current.TriggerForm({ id: row.original.id, type: 'toggle-status', current_status: (row.original.status === "Active") }) }}
-                action4="Delete"
-                actionClick4={() => {createEditMessageComponent.current.TriggerForm({id: row.original.id, type: 'delete'})}}
-                 />
-            ),
+            Cell: ({ row }: any) => {
+                const actionClick1 = () => {
+                    createEditMessageComponent.current.TriggerForm({id: row.original.id, type: 'edit'});
+                };
+                const actionClick2 = () => {
+                    createEditMessageComponent.current.TriggerForm({id: row.original.id, type: 'view'})
+                };
+                const actionClick3 = () => {
+                    createEditMessageComponent.current.TriggerForm({ id: row.original.id, type: 'toggle-status', current_status: (row.original.status === "Active") })
+                };
+                const actionClick4 = () => {
+                    createEditMessageComponent.current.TriggerForm({id: row.original.id, type: 'delete'})
+                };
+
+                const arrayAction = [
+                    { actionName: 'Edit', actionClick: actionClick1 },
+                    { actionName: 'View', actionClick: actionClick2 },
+                    { actionName: 'Status', actionClick: actionClick3 },
+                    { actionName: 'Delete', actionClick: actionClick4 },
+                ];
+
+                return <ActionButton arrayAction={arrayAction}></ActionButton>
+            },
         }
     ], []);
     

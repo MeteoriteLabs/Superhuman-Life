@@ -67,6 +67,7 @@ function CreateEditMessage(props: any, ref: any) {
         var daysArray: any = [];
         if(frm.day && frm.newActivity){
             frm.day = JSON.parse(frm.day);
+            frm.time = JSON.parse(frm.time);
             frm.newActivity = JSON.parse(frm.newActivity);
             var name: any = frm.newActivity[0].activity;
             var id: any = frm.newActivity[0].id;
@@ -78,8 +79,8 @@ function CreateEditMessage(props: any, ref: any) {
                     name: name,
                     id: id,
                     type: 'activity',
-                    startTime: frm.startTime,
-                    endTime: frm.endTime, 
+                    startTime: frm.time.startTime,
+                    endTime: frm.time.endTime, 
                     activityTarget: frm.newActivity[0]
                 });
             }
@@ -87,8 +88,8 @@ function CreateEditMessage(props: any, ref: any) {
                 if (existingEvents.length === 0) {
                     existingEvents.push(daysArray[j]);
                 } else {
-                    var timeStart: any = new Date("01/01/2007 " + handleTimeFormat(frm.startTime));
-                    var timeEnd: any = new Date("01/01/2007 " + handleTimeFormat(frm.endTime));
+                    var timeStart: any = new Date("01/01/2007 " + handleTimeFormat(frm.time.startTime));
+                    var timeEnd: any = new Date("01/01/2007 " + handleTimeFormat(frm.time.endTime));
                     var diff1 = timeEnd - timeStart;
                     for (var k = 0; k <= existingEvents.length - 1; k++) {
                         var startTimeHour: any = new Date("01/01/2007 " + handleTimeFormat(existingEvents[k].startTime));
@@ -149,6 +150,7 @@ function CreateEditMessage(props: any, ref: any) {
                     stepperValues={["Schedule", "Activity"]}
                     widgets={widgets}
                     modalTrigger={modalTrigger}
+                    type={operation.type}
                 />
                 
             {/* } */}            

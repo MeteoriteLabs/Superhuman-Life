@@ -29,6 +29,8 @@ export const CREATE_PACKAGE = gql`
         $ptclasssize:ENUM_FITNESSPACKAGES_PTCLASSSIZE
         $classsize:Int
         $users_permissions_user:ID
+        $publishing_date: DateTime!
+        $expiry_date: DateTime!
     )
     {
         createFitnesspackage
@@ -59,6 +61,8 @@ export const CREATE_PACKAGE = gql`
                         ptclasssize:$ptclasssize
                         classsize:$classsize
                         users_permissions_user:$users_permissions_user
+                        publishing_date:$publishing_date
+                        expiry_date:$expiry_date
                     }
                 }
             )  

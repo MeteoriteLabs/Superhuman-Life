@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useImperativeHandle, useRef, useState } from 'react';
-import ModalView from '../../../components/modal';
 import AuthContext from '../../../context/auth-context';
 
 import FitnessClasses from './widgetCustom/FitnessClasses/FitnessClasses';
@@ -18,6 +17,8 @@ import FitnessMode from './widgetCustom/FitnessMode/FitnessMode';
 import { updateform } from './_core/UpdateForm';
 import BookingLeadday from './widgetCustom/FitnessBooking/BookingLeadday';
 import BookingLeadTime from './widgetCustom/FitnessBooking/BookingLeadTime';
+import { Subject } from 'rxjs';
+import CreateFitnessPackageModal from '../../../components/CreateFitnessPackageModal/CreateFitnessPackageModal';
 
 
 
@@ -29,39 +30,16 @@ interface Operation {
 }
 
 
-interface UserDataProps {
-    packagename: string;
-    tags: string;
-    disciplines: { typename: string, id: string, disciplines: string }[];
-    type: string;
-    aboutpackage: string;
-    benefits: string;
-    level: string;
-    mode: "Online" | "Offline" | "Hybird" | "Workout" | "Online Workout" | "Offline Workout"
-    address: { id: string, __typename: string };
-    ptclasssize: string;
-    classsize: number;
-    ptonline: number | null;
-    ptoffline: number | null;
-    restdays: number;
-    bookingleadday: number;
-    fitnesspackagepricing: any;
-    is_private: boolean;
-    introvideourl: string;
-    fitness_package_type: { id: string, type: string, __typename: string };
-    duration: number
-}
 
 
 function CreateEditView(props: any, ref: any) {
     const auth = useContext(AuthContext);
     const [operation, setOperation] = useState<Operation>({} as Operation);
     const [userData, setUserData] = useState<any>('');
-   
+
     const [packageTypeName, setPackageTypeName] = useState<string | null>('personal-training');
     const [actionName, setActionName] = useState<string>("")
-    const [formData, setFormData] = useState<UserDataProps>();
-    const [render, setRender] = useState<boolean>(false);
+    const [formData, setFormData] = useState<any>();
 
 
     const ptSchema = require("./personal-training/personal-training.json");
@@ -70,6 +48,7 @@ function CreateEditView(props: any, ref: any) {
     const customSchema = require("./custom/custom.json");
 
     const jsonSchema = require(`./${packageTypeName}/${packageTypeName}.json`);
+    const modalTrigger = new Subject();
 
 
 
@@ -121,8 +100,6 @@ function CreateEditView(props: any, ref: any) {
 
 
     const widgets = {
-        // ModalCustomClasses,
-        // FitnessMultiSelect
     }
 
 
@@ -147,27 +124,27 @@ function CreateEditView(props: any, ref: any) {
         },
 
         "ptonline": {
-            "ui:widget": (props) => <FitnessClasses packageTypeName={packageTypeName} actionType={operation.actionType} PTProps={ptSchema[3]} groupProps={groupSchema[3]} classicProps={classicSchema[3]} customProps={customSchema[3]} widgetProps={props} userData={userData}/>
+            "ui:widget": (props) => <FitnessClasses packageTypeName={packageTypeName} actionType={operation.actionType} PTProps={ptSchema[3]} groupProps={groupSchema[3]} classicProps={classicSchema[3]} customProps={customSchema[3]} widgetProps={props} userData={userData} />
         },
 
         "ptoffline": {
-            "ui:widget": (props) => <FitnessClasses packageTypeName={packageTypeName} actionType={operation.actionType} PTProps={ptSchema[3]} groupProps={groupSchema[3]} classicProps={classicSchema[3]} customProps={customSchema[3]} widgetProps={props}   userData={userData}/>
+            "ui:widget": (props) => <FitnessClasses packageTypeName={packageTypeName} actionType={operation.actionType} PTProps={ptSchema[3]} groupProps={groupSchema[3]} classicProps={classicSchema[3]} customProps={customSchema[3]} widgetProps={props} userData={userData} />
         },
 
         "grouponline": {
-            "ui:widget": (props) => <FitnessClasses packageTypeName={packageTypeName} actionType={operation.actionType} PTProps={ptSchema[3]} groupProps={groupSchema[3]} classicProps={classicSchema[3]} customProps={customSchema[3]} widgetProps={props}  userData={userData} />
+            "ui:widget": (props) => <FitnessClasses packageTypeName={packageTypeName} actionType={operation.actionType} PTProps={ptSchema[3]} groupProps={groupSchema[3]} classicProps={classicSchema[3]} customProps={customSchema[3]} widgetProps={props} userData={userData} />
         },
 
         "groupoffline": {
-            "ui:widget": (props) => <FitnessClasses packageTypeName={packageTypeName} actionType={operation.actionType} PTProps={ptSchema[3]} groupProps={groupSchema[3]} classicProps={classicSchema[3]} customProps={customSchema[3]} widgetProps={props}  userData={userData} />
+            "ui:widget": (props) => <FitnessClasses packageTypeName={packageTypeName} actionType={operation.actionType} PTProps={ptSchema[3]} groupProps={groupSchema[3]} classicProps={classicSchema[3]} customProps={customSchema[3]} widgetProps={props} userData={userData} />
         },
 
         "recordedclasses": {
-            "ui:widget": (props) =><FitnessClasses packageTypeName={packageTypeName} actionType={operation.actionType} PTProps={ptSchema[3]} groupProps={groupSchema[3]} classicProps={classicSchema[3]} customProps={customSchema[3]} widgetProps={props}   userData={userData}/>
+            "ui:widget": (props) => <FitnessClasses packageTypeName={packageTypeName} actionType={operation.actionType} PTProps={ptSchema[3]} groupProps={groupSchema[3]} classicProps={classicSchema[3]} customProps={customSchema[3]} widgetProps={props} userData={userData} />
         },
 
         "restdays": {
-            "ui:widget": (props: any) => <FitnessRestday actionType={operation.actionType} classicProps={classicSchema[3]} PTProps={ptSchema[3]} groupProps={groupSchema[3]} customProps={customSchema[3]} widgetProps={props} userData={userData} type={operation.type}  />
+            "ui:widget": (props: any) => <FitnessRestday actionType={operation.actionType} classicProps={classicSchema[3]} PTProps={ptSchema[3]} groupProps={groupSchema[3]} customProps={customSchema[3]} widgetProps={props} userData={userData} type={operation.type} />
 
         },
 
@@ -263,8 +240,6 @@ function CreateEditView(props: any, ref: any) {
 
 
 
-    // if (operation.actionType === "edit" || operation.actionType === "view") {
-    // }
 
     const FetchData = () => {
         useQuery(GET_SINGLE_PACKAGE_BY_ID, {
@@ -307,24 +282,23 @@ function CreateEditView(props: any, ref: any) {
 
         // if message exists - show form only for edit and view
         if (['edit', 'view'].indexOf(operation.actionType) > -1) {
-            setRender(true)
+            modalTrigger.next(true);
         }
         else {
             OnSubmit(null);
         }
     }
 
-
-
+   
 
 
     useImperativeHandle(ref, () => ({
         TriggerForm: (msg: Operation) => {
             setOperation(msg);
-
+            handleSubmitName(msg.actionType);
             //render form if no message id
             if (msg && !msg.id) {
-                setRender(true);
+                modalTrigger.next(true);
             }
         }
     }));
@@ -333,7 +307,7 @@ function CreateEditView(props: any, ref: any) {
     const [createPackage] = useMutation(CREATE_PACKAGE, {
         variables: { users_permissions_user: auth.userid },
         onCompleted: (r: any) => {
-            setRender(false)
+            modalTrigger.next(false);
         }
     })
 
@@ -343,7 +317,7 @@ function CreateEditView(props: any, ref: any) {
 
     const [editPackage] = useMutation(EDIT_PACKAGE, {
         onCompleted: (data: any) => {
-            setRender(false)
+            modalTrigger.next(false);
         }
     });
 
@@ -357,13 +331,10 @@ function CreateEditView(props: any, ref: any) {
     }
 
     function CreatePackage(frm) {
-
         createPackage({ variables: frm })
-
     }
 
     function EditPackage(frm: any) {
-
         editPackage({ variables: frm })
     }
 
@@ -391,10 +362,33 @@ function CreateEditView(props: any, ref: any) {
         }
     }
 
+
+    const handleSubmitName = (actionType: string) => {
+        let action = ''
+        switch (actionType) {
+            case 'create':
+                action = "Create"
+                break
+    
+            case 'edit':
+                action = "Update"
+                break
+    
+            case 'view':
+                action = "Looks Good"
+                break
+        }
+        return action
+    }
+    
+
     return (
         <>
-            {render &&
-                <ModalView
+            {
+                <CreateFitnessPackageModal
+                    modalTrigger={modalTrigger}
+                    pricingDetailRef={pricingDetailRef}
+                    stepperValues={["Creator", "Details", "Program", "Schedule", "Pricing", "Preview"]}
                     fitness_package_type={fitness_package_type}
                     name={actionName}
                     isStepper={true}
@@ -402,10 +396,8 @@ function CreateEditView(props: any, ref: any) {
                     formSchema={jsonSchema}
                     userData={userData}
                     setUserData={setUserData}
-                    pricingDetailRef={pricingDetailRef}
                     formSubmit={(frm: any) => OnSubmit(frm)}
-                    setRender={setRender}
-                 
+
                     widgets={widgets}
                     formData={operation.id && formData}
                     PTProps={ptSchema[3]}
@@ -415,6 +407,9 @@ function CreateEditView(props: any, ref: any) {
                     actionType={operation.actionType}
                     operation={operation}
                     setOperation={setOperation}
+                    type={operation.type}
+                    submitName={(handleSubmitName(operation.actionType))}
+                  
 
                 />
             }
@@ -425,13 +420,15 @@ function CreateEditView(props: any, ref: any) {
                 buttonRight="Yes"
                 onClick={() => DeletePackage(operation.id)}
             />}
-            {operation.actionType === 'toggle-status' && <StatusModal
-                modalTile="Change Status"
-                modalBody="Do you want to change status ?"
-                buttonLeft="Cancel"
-                buttonRight="Yes"
-                onClick={() => TogglePackageStatus(operation.id, operation.current_status)}
-            />}
+            {operation.actionType === 'toggle-status' &&
+                <StatusModal
+                    modalTile="Change Status"
+                    modalBody="Do you want to change status ?"
+                    buttonLeft="Cancel"
+                    buttonRight="Yes"
+                    onClick={() => TogglePackageStatus(operation.id, operation.current_status)}
+                />
+            }
         </>
     )
 }

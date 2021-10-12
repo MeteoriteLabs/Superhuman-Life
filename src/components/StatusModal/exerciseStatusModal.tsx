@@ -1,0 +1,111 @@
+import { useState, useEffect } from 'react'
+import { Button, Col, Modal, Row } from "react-bootstrap";
+
+
+function StatusModal(props: any) {
+    const [show, setShow] = useState<boolean>(true);
+    const [eventConnections, setEventConnections] = useState<any[]>([]);
+    const [loading, setLoading] = useState(false);
+
+    function handleClick() {
+        props.onClick();
+        setShow(false);
+    }
+
+    useEffect(() => {
+        if(props.EventConnectedDetails.length !== 0){
+            const values = [...eventConnections];
+            for(var i=0; i<=props.EventConnectedDetails.length -1; i++){
+            if(props.EventConnectedDetails[i].warmup || props.EventConnectedDetails[i].mainmovement || props.EventConnectedDetails[i].cooldown !== null){
+                values.push(props.EventConnectedDetails[i]);
+            }
+            }
+            setEventConnections(values);
+        }
+        setTimeout(() => {
+            setLoading(true);
+        }, 500)
+    }, [props.EventConnectedDetails]);// eslint-disable-line react-hooks/exhaustive-deps
+
+    const linkedWorkouts: any[] = [];
+
+    if(eventConnections.length !== 0){
+        const values = [...eventConnections];
+        for(var j=0; j<=values.length -1; j++){
+            if(values[j].warmup !== null && values[j].warmup[0].type === 'exercise'){
+                for(var k=0; k<=values[j].warmup.length-1; k++){
+                    if(values[j].warmup[k].id === props.ExistingEventId){
+                        linkedWorkouts.push(values[j]);
+                        break;
+                    }
+                }
+            }
+            if(values[j].mainmovement !== null && values[j].mainmovement[0].type === 'exercise'){
+                for(var x=0; x<=values[j].mainmovement.length-1; x++){
+                    if(values[j].mainmovement[x].id === props.ExistingEventId){
+                        linkedWorkouts.push(values[j]);
+                        break;
+                    }
+                }
+            }
+            if(values[j].cooldown !== null && values[j].cooldown[0].type === 'exercise'){
+                for(var y=0; y<=values[j].cooldown.length-1; y++){
+                    if(values[j].cooldown[y].id === props.ExistingEventId){
+                        linkedWorkouts.push(values[j]);
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    function handleBodyRender() {
+        
+        if (!loading) return <span style={{ color: 'red' }}>Loading...</span>;
+        else return (
+            <>
+                <div style={{ display: `${linkedWorkouts.length !== 0 ? 'none' : 'block'}`}}>
+                    <h5>{props.modalBody}</h5>
+                </div>
+            <div style={{ display: `${linkedWorkouts.length !== 0 ? 'block' : 'none'}`}}>
+                <p>The Exercise you are trying to delete is being used in the following workouts: </p>
+                {linkedWorkouts.length !== 0 && linkedWorkouts.map((val, index) => {
+                    return (
+                        <h5 key={val.id}>{`${index+1})`}{` ${val.workouttitle}`}</h5>
+                    )
+                })}
+                <span><i className="fas fa-info-circle"></i>{' '}Please Make sure you edit the workout, and then try deleting.</span>
+            </div>
+            </>
+        )
+    }
+
+    return (
+        <>
+        <Modal show={show} onHide={() => setShow(false)} aria-labelledby="contained-modal-title-vcenter" centered>
+            <Modal.Header closeButton>
+            <Modal.Title id="contained-modal-title-vcenter">
+                {props.modalTitle}
+            </Modal.Title>
+            </Modal.Header>
+            <Modal.Body className="show-grid">
+                {handleBodyRender()}
+            </Modal.Body>
+            <Modal.Footer>
+            <div>
+                <Row>
+                <Col xs={4} md={4} className="ml-4">
+                    <Button variant="danger" onClick={() => setShow(false)}>{props.buttonLeft}</Button>
+                </Col>
+                <Col xs={4} md={5} className="ml-4">
+                    <Button variant="success" onClick={handleClick} disabled={linkedWorkouts.length !== 0 ? true : false}>{props.buttonRight}</Button>
+                </Col>
+                </Row>
+            </div>
+            </Modal.Footer>
+        </Modal>
+        </>
+    );
+}
+
+export default StatusModal

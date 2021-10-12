@@ -129,6 +129,7 @@ function CreateEditMessage(props: any, ref: any) {
                     formData={programDetails}
                     widgets={widgets}
                     modalTrigger={modalTrigger}
+                    type={operation.type}
                 />
                 
             {/* } */}

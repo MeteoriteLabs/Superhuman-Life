@@ -41,14 +41,18 @@ export default function SuggestedPricing({ type, mode, auth, fitnesspackageprici
         const mrp: number[] = [];
 
         // eslint-disable-next-line array-callback-return
-        arrayData.map((item: { Mode: "Online" | "Offline"; mrp: number; }) => {
+        arrayData?.map((item: { Mode: "Online" | "Offline"; mrp: number; }) => {
             if (item.Mode === "Online") {
                 mrp.unshift(item.mrp * arrayClasses[0])
             } else if (item.Mode === "Offline") {
                 mrp.push(item.mrp * arrayClasses[1])
             }
         })
-        return mrp.reduce((acc, cur) => acc + cur)
+        if(mrp.length > 0){
+            return mrp.reduce((acc, cur) => acc + cur);
+        }else {
+            return 0;
+        }
     }
 
 

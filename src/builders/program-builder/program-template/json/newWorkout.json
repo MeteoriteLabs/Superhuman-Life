@@ -3,7 +3,9 @@
          "title": "",
          "type": "object",
          "required": [
-             "assignMode"
+            "assignMode",
+            "day",
+            "time"
          ],
          "properties": {
              "assignMode": {
@@ -18,12 +20,9 @@
              "day": {
                  "type": "string"
              },
-             "startTime": {
+             "time": {
                  "type": "string"
-             },
-             "endTime": {
-                "type": "string"
-            }
+             }
          }
      },
      "2": {
