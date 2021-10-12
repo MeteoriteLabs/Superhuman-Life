@@ -154,12 +154,12 @@ export default function FitnessTab(props) {
         useQuery(GET_FITNESS, {
             variables: { id: auth.userid, },
             onCompleted: (data) => loadData(data),
-           
+
         });
     }
 
     const loadData = (data: any) => {
-    console.log("🚀 ~ file: Fitness.tsx ~ line 155 ~ loadData ~ data", data)
+        console.log("🚀 ~ file: Fitness.tsx ~ line 155 ~ loadData ~ data", data)
         setDataTable(
             [...data.fitnesspackages].map(item => {
                 return {
@@ -208,7 +208,7 @@ export default function FitnessTab(props) {
                                 <i className="fas fa-plus-circle"></i>{" "}Classic
                             </Button>
 
-                            
+
                             <Button className='mr-4' variant={true ? "outline-secondary" : "light"} size="sm"
                                 onClick={() => {
                                     createEditViewRef.current.TriggerForm({ id: null, actionType: 'create', type: 'Custom Fitness' });
