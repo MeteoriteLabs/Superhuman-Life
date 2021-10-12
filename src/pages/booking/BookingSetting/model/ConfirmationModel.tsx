@@ -1,7 +1,7 @@
 import { useMutation } from '@apollo/client';
 import React, { useEffect, useState } from 'react'
 import { Button, Form, FormControl, Modal } from 'react-bootstrap'
-import { UPDATE_BOOKING_CONFIG } from '../../graphQL/mutation';
+import { UPDATE_BOOKING_CONFIG } from '../../GraphQL/mutation';
 
 interface FormValue {
     id: string,

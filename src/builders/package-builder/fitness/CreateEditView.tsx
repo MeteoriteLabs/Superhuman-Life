@@ -40,7 +40,6 @@ function CreateEditView(props: any, ref: any) {
     const [packageTypeName, setPackageTypeName] = useState<string | null>('personal-training');
     const [actionName, setActionName] = useState<string>("")
     const [formData, setFormData] = useState<any>();
-    const [render, setRender] = useState<boolean>(false);
 
 
     const ptSchema = require("./personal-training/personal-training.json");
@@ -398,7 +397,6 @@ function CreateEditView(props: any, ref: any) {
                     userData={userData}
                     setUserData={setUserData}
                     formSubmit={(frm: any) => OnSubmit(frm)}
-                    setRender={setRender}
 
                     widgets={widgets}
                     formData={operation.id && formData}

@@ -1,7 +1,7 @@
 import { useMutation } from '@apollo/client';
 import React, { useImperativeHandle, useState } from 'react'
 import AcceptRejectModal from '../../../components/AcceptRejectModal/AcceptRejectModal';
-import { CREATE_USER_PACKAGE, UPDATE_BOOKING_STATUS } from '../graphQL/mutation';
+import { CREATE_USER_PACKAGE, UPDATE_BOOKING_STATUS } from '../GraphQL/mutation';
 import { Subject } from 'rxjs';
 
 

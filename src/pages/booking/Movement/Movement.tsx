@@ -5,7 +5,7 @@ import { Badge, Col, Row } from 'react-bootstrap';
 import ActionButton from '../../../components/actionbutton';
 import BookingTable from '../../../components/table/BookingTable/BookingTable'
 import authContext from '../../../context/auth-context';
-import { GET_ALL_BOOKINGS } from '../graphQL/queries';
+import { GET_ALL_BOOKINGS } from '../GraphQL/queries';
 import BookingAction from './BookingAction'
 
 export default function Movement(props) {

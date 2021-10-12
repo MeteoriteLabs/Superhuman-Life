@@ -47,20 +47,33 @@ export default function EventsTab() {
         {
             id: "edit",
             Header: "Actions",
-            Cell: ({ row }: any) => (
-                <ActionButton 
-                action1="Edit"
-                actionClick1={() => {createEditProgramComponent.current.TriggerForm({id: row.original.id, type: 'edit'})}}
-                action2="View"
-                actionClick2={() => {createEditProgramComponent.current.TriggerForm({id: row.original.id, type: 'view'})}}
-                action3="Delete"
-                actionClick3={() => {createEditProgramComponent.current.TriggerForm({id: row.original.id, type: 'delete'})}}
-                action4="Manage"
-                actionClick4={() => handleRedirect(row.original.id)}
-                action5="Duplicate"
-                actionClick5={() => {setName(row.original.programName + " copy");setFrm(row.original);handleShow();}}
-                 />
-            ),
+            Cell: ({ row }: any) => {
+                const actionClick1 = () => {
+                    createEditProgramComponent.current.TriggerForm({id: row.original.id, type: 'edit'});
+                };
+                const actionClick2 = () => {
+                    createEditProgramComponent.current.TriggerForm({id: row.original.id, type: 'view'});
+                };
+                const actionClick3 = () => {
+                    createEditProgramComponent.current.TriggerForm({id: row.original.id, type: 'delete'});
+                };
+                const actionClick4 = () => {
+                    handleRedirect(row.original.id);
+                };
+                const actionClick5 = () => {
+                    setName(row.original.programName + " copy");setFrm(row.original);handleShow();
+                };
+
+                const arrayAction = [
+                    { actionName: 'Edit', actionClick: actionClick1 },
+                    { actionName: 'View', actionClick: actionClick2 },
+                    { actionName: 'Delete', actionClick: actionClick3 },
+                    { actionName: 'Manage', actionClick: actionClick4 },
+                    { actionName: 'Duplicate', actionClick: actionClick5 },
+                ];
+
+                return <ActionButton arrayAction={arrayAction}></ActionButton>
+            },
         }
     ], []);
 

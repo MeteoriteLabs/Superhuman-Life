@@ -120,20 +120,27 @@ export default function FitnessTab(props) {
             id: "edit",
             Header: "Actions",
             Cell: ({ row }: any) => {
-                return <ActionButton
-                    action1="Edit"
-                    actionClick1={() => {
-                        createEditViewRef.current.TriggerForm({ id: row.original.id, actionType: 'edit', type: row.original.type })
-                    }}
-                    action2="View"
-                    actionClick2={() => {
-                        createEditViewRef.current.TriggerForm({ id: row.original.id, actionType: 'view', type: row.original.type })
-                    }}
-                    action3="Status"
-                    actionClick3={() => { createEditViewRef.current.TriggerForm({ id: row.original.id, actionType: 'toggle-status', current_status: (row.original.status === "Active") }) }}
-                    action4="Delete"
-                    actionClick4={() => { createEditViewRef.current.TriggerForm({ id: row.original.id, actionType: 'delete' }) }}
-                />
+                const actionClick1 = () => {
+                    createEditViewRef.current.TriggerForm({ id: row.original.id, actionType: 'edit', type: row.original.type })
+                };
+                const actionClick2 = () => {
+                    createEditViewRef.current.TriggerForm({ id: row.original.id, actionType: 'view', type: row.original.type })
+                };
+                const actionClick3 = () => {
+                    createEditViewRef.current.TriggerForm({ id: row.original.id, actionType: 'toggle-status', current_status: (row.original.status === "Active") })
+                };
+                const actionClick4 = () => {
+                    createEditViewRef.current.TriggerForm({ id: row.original.id, actionType: 'delete' })
+                };
+
+                const arrayAction = [
+                    { actionName: 'Edit', actionClick: actionClick1 },
+                    { actionName: 'View', actionClick: actionClick2 },
+                    { actionName: 'Status', actionClick: actionClick3 },
+                    { actionName: 'Delete', actionClick: actionClick4 },
+                ];
+
+                return <ActionButton arrayAction={arrayAction}></ActionButton>
             }
 
         }

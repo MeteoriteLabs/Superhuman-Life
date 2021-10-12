@@ -5,7 +5,7 @@ import Table from '../../../../components/table/index'
 import ActionButton from '../../../../components/actionbutton';
 import ConfirmRequestAction from './ConfirmRequestAction';
 
-import { BOOKING_CONFIG } from '../../graphQL/queries';
+import { BOOKING_CONFIG } from '../../GraphQL/queries';
 import { useQuery } from '@apollo/client';
 
 export default function BookingFitness() {

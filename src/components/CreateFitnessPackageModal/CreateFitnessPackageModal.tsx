@@ -7,7 +7,7 @@ import moment from "moment";
 
 
 
-export default function CreateFitnessPackageModal({ name, formUISchema, formSubmit, formSchema, formData, isStepper, userData, setUserData, widgets, setRender, fitness_package_type, PTProps, actionType, groupProps, customProps, stepperValues, pricingDetailRef, submitName, modalTrigger }: any) {
+export default function CreateFitnessPackageModal({ name, formUISchema, formSubmit, formSchema, formData, isStepper, userData, setUserData, widgets, fitness_package_type, PTProps, actionType, groupProps, customProps, stepperValues, pricingDetailRef, submitName, modalTrigger }: any) {
 
     const registry = utils.getDefaultRegistry();
     const defaultFileWidget = registry.widgets["FileWidget"];
@@ -151,7 +151,7 @@ export default function CreateFitnessPackageModal({ name, formUISchema, formSubm
             formData = { ...formData, fitnesspackagepricing: updateFinesspackagepricing, mode: updateMode,publishing_date,expiry_date   }
             formSubmit(formData);
 
-            actionType === "view" && setRender(false)
+            actionType === "view" && modalTrigger.next(false)
 
         }
 

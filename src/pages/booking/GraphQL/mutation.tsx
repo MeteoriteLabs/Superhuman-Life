@@ -1,7 +1,4 @@
-import { gql } from '@apollo/client'
-
-
-
+import { gql } from '@apollo/client';
 
 export const UPDATE_BOOKING_CONFIG = gql`
     mutation updateBookingConfig(

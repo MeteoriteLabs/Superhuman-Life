@@ -25,16 +25,24 @@ export default function EventsTab() {
         {
             id: "edit",
             Header: "Actions",
-            Cell: ({ row }: any) => (
-                <ActionButton 
-                action1="Edit"
-                actionClick1={() => {createEditExerciseComponent.current.TriggerForm({id: row.original.id, type: 'edit'})}}
-                action2="View"
-                actionClick2={() => {createEditExerciseComponent.current.TriggerForm({id: row.original.id, type: 'view'})}}
-                action3="Delete"
-                actionClick3={() => {createEditExerciseComponent.current.TriggerForm({id: row.original.id, type: 'delete'})}}
-                 />
-            ),
+            Cell: ({ row }: any) => {
+                const actionClick1 = () => {
+                    createEditExerciseComponent.current.TriggerForm({id: row.original.id, type: 'edit'})
+                };
+                const actionClick2 = () => {
+                    createEditExerciseComponent.current.TriggerForm({id: row.original.id, type: 'view'})
+                };
+                const actionClick3 = () => {
+                    createEditExerciseComponent.current.TriggerForm({id: row.original.id, type: 'delete'})
+                };
+
+                const arrayAction = [
+                    {actionName: 'Edit', actionClick: actionClick1},
+                    {actionName: 'View', actionClick: actionClick2},
+                    {actionName: 'Delete', actionClick: actionClick3},
+                ];
+                return <ActionButton arrayAction={arrayAction}></ActionButton>
+            },
         }
     ], []);
 
