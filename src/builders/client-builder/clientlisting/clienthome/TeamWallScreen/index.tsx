@@ -1,8 +1,9 @@
 import { useRef, useState } from "react";
-import { Card, Row, Button } from "react-bootstrap";
+import { Card, Row, Col, Button } from "react-bootstrap";
 import CardComp from "./Card";
 import CreatePost from "./addPost";
 import { GET_CHANGEMAKERS } from "../../queries";
+import { GET_NOTES } from "./queries";
 import { useQuery } from "@apollo/client";
 import "./Styles.css";
 //import AuthContext from "../../../../../context/auth-context";
@@ -12,6 +13,17 @@ function Index() {
      //const auth = useContext(AuthContext);
      const CreatePostComponent = useRef<any>(null);
      const [changemaker, setChangemaker] = useState<any>([]);
+     const [notes, setNotes] = useState<any>();
+
+     function FetchNotes() {
+          useQuery(GET_NOTES, { onCompleted: LoadNotes });
+     }
+
+     function LoadNotes(data: any) {
+          if (data) {
+               setNotes([...data.feedbackNotes]);
+          }
+     }
 
      function FetchData(_variables: {} = { clientid: last }) {
           useQuery(GET_CHANGEMAKERS, { variables: _variables, onCompleted: loadData });
@@ -44,6 +56,7 @@ function Index() {
           });
      }
      FetchData({ clientid: last });
+     FetchNotes();
 
      return (
           <div>
@@ -62,17 +75,16 @@ function Index() {
                     <CreatePost ref={CreatePostComponent}></CreatePost>
                </div>
                <Card>
-                    <Card.Body>
-                         <h5>Changemakers</h5>
-                    </Card.Body>
-
                     <Card.Header>
-                         <Row>
+                         <h5>Changemakers</h5>
+                    </Card.Header>
+
+                    <Card.Body>
+                         <div className="changemakerRow">
                               {changemaker &&
                                    changemaker.map((e: any, index) => {
-                                        //console.log(e);
                                         return (
-                                             <div className="changemaker d-flex flex-column" key={index}>
+                                             <div className="changemaker" key={index}>
                                                   <div>
                                                        <img
                                                             src={e[1]}
@@ -89,11 +101,24 @@ function Index() {
                                              </div>
                                         );
                                    })}
-                         </Row>
-                    </Card.Header>
+                         </div>
+                    </Card.Body>
                </Card>
-               <CardComp />
-               <CardComp />
+               {/* {console.log(arr)} */}
+               {notes &&
+                    notes.map((e: any, index) => {
+                         return (
+                              <CardComp
+                                   key={index}
+                                   comments={e.feedback_comments}
+                                   userName={e.users_permissions_user.username}
+                                   designation={e.users_permissions_user.designation}
+                                   updatedOn={e.updatedAt}
+                                   note={e.note}
+                              />
+                         );
+                    })}
+               ;
           </div>
      );
 }

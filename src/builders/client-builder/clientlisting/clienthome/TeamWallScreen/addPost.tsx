@@ -53,6 +53,7 @@ function CreatePosts(props: any, ref: any) {
                createRating({
                     variables: {
                          type: "rpm",
+                         resource_type: "workout",
                          resource_id: searchid[0],
                          rating: widget.rpm,
                          max_rating: widget.rpm_max,
@@ -65,6 +66,7 @@ function CreatePosts(props: any, ref: any) {
                createRating({
                     variables: {
                          type: "mood",
+                         resource_type: "workout",
                          resource_id: searchid[0],
                          rating: widget.mood,
                          max_rating: widget.mood_max,

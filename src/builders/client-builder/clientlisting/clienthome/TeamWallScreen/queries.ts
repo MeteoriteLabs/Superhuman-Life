@@ -29,6 +29,7 @@ export const ADD_RATING = gql`
           $rating: Int
           $max_rating: Int
           $rating_scale_id: ID
+          $resource_type: String
           $user_permissions_user: ID
      ) {
           createRating(
@@ -39,6 +40,7 @@ export const ADD_RATING = gql`
                          users_permissions_user: $user_permissions_user
                          rating: $rating
                          max_rating: $max_rating
+                         resource_type: $resource_type
                          rating_scale: $rating_scale_id
                     }
                }
@@ -64,6 +66,30 @@ export const ADD_NOTE = gql`
           ) {
                feedbackNote {
                     id
+               }
+          }
+     }
+`;
+
+export const GET_NOTES = gql`
+     query getfeedbackNotes {
+          feedbackNotes {
+               id
+               updatedAt
+               type
+               users_permissions_user {
+                    id
+                    username
+                    designation
+               }
+               note
+               feedback_comments {
+                    id
+                    comment
+                    users_permissions_user {
+                         id
+                         username
+                    }
                }
           }
      }
