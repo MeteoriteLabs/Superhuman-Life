@@ -1,0 +1,11 @@
+.button-wrapper {
+  position: relative;
+  margin-top: -18%;
+  margin-left: 35%;
+}
+
+.hover-effect:hover {
+  background-color: #eb6154;
+  opacity: 0.4;
+  border-radius: 25px;
+}
