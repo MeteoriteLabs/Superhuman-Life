@@ -1,0 +1,112 @@
+{
+    "1": {
+        "title": "Webpage details",
+        "type": "object",
+        "required": [
+            "brandName",
+            "logo",
+            "shortBio",
+            "emailId"
+        ],
+        "properties": {
+            "brandName": {
+                "type": "string",
+                "title": "Brand Name"
+            },
+            "logo": {
+                "type": "string",
+                "title": "Logo"
+            },
+            "shortBio": {
+                "type": "string",
+                "title": "Short Bio"
+            },
+            "emailId": {
+                "type": "string",
+                "title": "Email ID"
+            },
+            "socialAccounts": {
+                "type": "string",
+                "title": "Social Accounts"
+            },
+            "address": {
+                "type": "string",
+                "title": "Address"
+            },
+            "phoneNumber": {
+                "type": "number",
+                "title": "Phone Number"
+            }
+        }
+    },
+    "2": {
+        "title": "Webpage details",
+        "type": "object",
+        "properties": {
+            "carousel": {
+                "type": "string",
+                "title": "Carousel"
+            },
+            "buttonText": {
+                "type": "string",
+                "title": "Button Text"
+            }
+        }
+    },
+    "3": {
+        "title": "Webpage details",
+        "type": "object",
+        "properties": {
+            "aboutImage": {
+                "type": "string",
+                "title": "About Image"
+            },
+            "aboutText": {
+                "type": "string",
+                "title": "About Text"
+            },
+            "aboutBackgroundColor": {
+                "type": "string",
+                "title": "About Background Color"
+            }
+        }
+    },
+    "4": {
+        "title": "Webpage details",
+        "type": "object",
+        "properties": {
+            "stories": {
+                "type": "string",
+                "title": "Stories"
+            },
+            "stories-backgroundColor": {
+                "type": "string",
+                "title": " Stories Background Color"
+            }
+        }
+    },
+    "5": {
+        "title": "Webpage details",
+        "type": "object",
+        "properties": {
+            "packagesBackgroundColor": "string",
+            "title": "Packages-BackgroundColor"
+        }
+    },
+    "6": {
+        "title": "Webpage details",
+        "type": "object",
+        "properties": {
+            "contactUsBackground": "string",
+            "title": "Contact Us -Background"
+        }
+    },
+    "7": {
+        "title": "Webpage details",
+        "type": "object",
+        "properties": {
+            "gallary": "string",
+            "title": "Gallary"
+        }
+    }
+}
