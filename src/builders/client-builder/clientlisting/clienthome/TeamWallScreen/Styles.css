@@ -15,6 +15,9 @@
 .desc {
      margin-top: -6px;
 }
+.cardBorder {
+     border-top: 2px solid lightgrey;
+}
 
 @media (max-width: 900px) {
      .changemaker {

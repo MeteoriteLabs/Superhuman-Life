@@ -72,8 +72,8 @@ export const ADD_NOTE = gql`
 `;
 
 export const GET_NOTES = gql`
-     query getfeedbackNotes {
-          feedbackNotes {
+     query getfeedbackNotes($arr: [ID]) {
+          feedbackNotes(where: { users_permissions_user: { id_in: $arr } }, sort: "updatedAt:desc") {
                id
                updatedAt
                type
@@ -90,6 +90,43 @@ export const GET_NOTES = gql`
                          id
                          username
                     }
+               }
+          }
+     }
+`;
+
+export const ADD_COMMENT = gql`
+     mutation addComment($feedback_note: ID, $comment: String, $users_permissions_user: ID) {
+          createFeedbackComment(
+               input: {
+                    data: {
+                         feedback_note: $feedback_note
+                         comment: $comment
+                         users_permissions_user: $users_permissions_user
+                    }
+               }
+          ) {
+               feedbackComment {
+                    id
+               }
+          }
+     }
+`;
+
+export const DELETE_NOTE = gql`
+     mutation deleteNote($id: ID!) {
+          deleteFeedbackNote(input: { where: { id: $id } }) {
+               feedbackNote {
+                    id
+               }
+          }
+     }
+`;
+export const DELETE_COMMENT = gql`
+     mutation deleteComment($id: ID!) {
+          deleteFeedbackComment(input: { where: { id: $id } }) {
+               feedbackComment {
+                    id
                }
           }
      }

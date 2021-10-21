@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { Card, Row, Col, Button } from "react-bootstrap";
+import { Card, Button } from "react-bootstrap";
 import CardComp from "./Card";
 import CreatePost from "./addPost";
 import { GET_CHANGEMAKERS } from "../../queries";
@@ -14,16 +14,7 @@ function Index() {
      const CreatePostComponent = useRef<any>(null);
      const [changemaker, setChangemaker] = useState<any>([]);
      const [notes, setNotes] = useState<any>();
-
-     function FetchNotes() {
-          useQuery(GET_NOTES, { onCompleted: LoadNotes });
-     }
-
-     function LoadNotes(data: any) {
-          if (data) {
-               setNotes([...data.feedbackNotes]);
-          }
-     }
+     const noteFetch: any = [];
 
      function FetchData(_variables: {} = { clientid: last }) {
           useQuery(GET_CHANGEMAKERS, { variables: _variables, onCompleted: loadData });
@@ -37,6 +28,7 @@ function Index() {
                let changemakerValue = {};
                let img = "img";
                let type = "type";
+               let id = "id";
                let name = Detail.fitnesspackages[0].users_permissions_user.username;
                if (!namearr.includes(name)) {
                     flag = true;
@@ -49,15 +41,37 @@ function Index() {
                          name,
                          (changemakerValue[img] = "/assets/avatar-1.jpg"),
                          (changemakerValue[type] = Detail.fitnesspackages[0].users_permissions_user.designation),
+                         (changemakerValue[id] = Detail.fitnesspackages[0].users_permissions_user.id),
                     ]);
                }
                setChangemaker(changemakers);
+
                return {};
           });
      }
-     FetchData({ clientid: last });
-     FetchNotes();
 
+     function FetchNotes(_variables: {} = { arr: noteFetch }) {
+          useQuery(GET_NOTES, { variables: _variables, onCompleted: LoadNotes });
+     }
+
+     function LoadNotes(data: any) {
+          if (data) {
+               setNotes([...data.feedbackNotes]);
+          }
+     }
+
+     FetchData({ clientid: last });
+
+     for (let i = 0; i < changemaker.length; i++) {
+          noteFetch.push(changemaker[i][3]);
+     }
+
+     if (!noteFetch.includes(last)) {
+          noteFetch.push(last);
+     }
+     FetchNotes({ arr: noteFetch });
+
+     console.log(noteFetch);
      return (
           <div>
                <div className="d-flex flex-row-reverse mr-3 p-2">
@@ -104,9 +118,10 @@ function Index() {
                          </div>
                     </Card.Body>
                </Card>
-               {/* {console.log(arr)} */}
+
                {notes &&
                     notes.map((e: any, index) => {
+                         // console.log(e);
                          return (
                               <CardComp
                                    key={index}
@@ -115,10 +130,10 @@ function Index() {
                                    designation={e.users_permissions_user.designation}
                                    updatedOn={e.updatedAt}
                                    note={e.note}
+                                   id={e.id}
                               />
                          );
                     })}
-               ;
           </div>
      );
 }
