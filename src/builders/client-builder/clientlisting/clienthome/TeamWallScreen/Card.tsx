@@ -1,14 +1,15 @@
 import { Card, Col, Row, FormControl, InputGroup, Button } from "react-bootstrap";
 import ActionButton from "../../../../../components/actionbutton/index";
-import { ADD_COMMENT } from "./queries";
+import { ADD_COMMENT, GET_TAGNAME } from "./queries";
 import AuthContext from "../../../../../context/auth-context";
-import { useContext, useRef } from "react";
-import { useMutation } from "@apollo/client";
+import { useContext, useRef, useState } from "react";
+import { useMutation, useQuery } from "@apollo/client";
 import "./Styles.css";
 
 function CardComp(props: any) {
      const auth = useContext(AuthContext);
      const comment = useRef<any>();
+     const [name, setName] = useState<any>();
 
      function getDate(time: any) {
           let dateObj = new Date(time);
@@ -20,9 +21,13 @@ function CardComp(props: any) {
      }
      const [createComment] = useMutation(ADD_COMMENT, {});
 
-     // function FetchData(_variables: {} = { note: " " ,id : auth.userid }) {
-     //      useQuery(GET_NOTIFICATIONS, { variables: _variables, onCompleted: loadData })
-     //  }
+     function FetchData(_variables: {} = { id: props.resourceid }) {
+          useQuery(GET_TAGNAME, { variables: _variables, onCompleted: loadName });
+     }
+
+     function loadName(d: any) {
+          setName(d.workouts[0].workouttitle);
+     }
      function addComment(val: any) {
           createComment({
                variables: {
@@ -32,6 +37,7 @@ function CardComp(props: any) {
                },
           });
      }
+     FetchData({ id: props.resourceid });
 
      return (
           <div>
@@ -41,7 +47,7 @@ function CardComp(props: any) {
                               <img
                                    src="/assets/avatar-1.jpg"
                                    height="50"
-                                   className="rounded-circle ml-2 mt-2"
+                                   className="rounded-circle ml-2"
                                    alt="avatar"
                               />
                               <Col>
@@ -54,7 +60,8 @@ function CardComp(props: any) {
                               </div>
                          </Row>
                          <Card.Text>
-                              <div dangerouslySetInnerHTML={{ __html: props.note }}></div>
+                              <h6>{name}</h6>
+                              <div className="mt-1" dangerouslySetInnerHTML={{ __html: props.note }}></div>
                          </Card.Text>
 
                          <Card.Body>

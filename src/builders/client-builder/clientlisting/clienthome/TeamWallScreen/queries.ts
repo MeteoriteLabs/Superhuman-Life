@@ -31,6 +31,7 @@ export const ADD_RATING = gql`
           $rating_scale_id: ID
           $resource_type: String
           $user_permissions_user: ID
+          $clientid: ID
      ) {
           createRating(
                input: {
@@ -42,6 +43,7 @@ export const ADD_RATING = gql`
                          max_rating: $max_rating
                          resource_type: $resource_type
                          rating_scale: $rating_scale_id
+                         target_user: $clientid
                     }
                }
           ) {
@@ -53,7 +55,7 @@ export const ADD_RATING = gql`
 `;
 
 export const ADD_NOTE = gql`
-     mutation addNote($type: String, $resource_id: String, $user_permissions_user: ID, $note: String) {
+     mutation addNote($type: String, $resource_id: String, $user_permissions_user: ID, $note: String, $clientid: ID) {
           createFeedbackNote(
                input: {
                     data: {
@@ -61,6 +63,7 @@ export const ADD_NOTE = gql`
                          resource_id: $resource_id
                          users_permissions_user: $user_permissions_user
                          note: $note
+                         target_user: $clientid
                     }
                }
           ) {
@@ -83,6 +86,7 @@ export const GET_NOTES = gql`
                     designation
                }
                note
+               resource_id
                feedback_comments {
                     id
                     comment
@@ -91,6 +95,15 @@ export const GET_NOTES = gql`
                          username
                     }
                }
+          }
+     }
+`;
+
+export const CHECK_NOTES = gql`
+     query checkNotes($id: ID, $clientid: ID) {
+          feedbackNotes(where: { users_permissions_user: { id: $id }, target_user: { id: $clientid } }) {
+               id
+               resource_id
           }
      }
 `;
@@ -128,6 +141,30 @@ export const DELETE_COMMENT = gql`
                feedbackComment {
                     id
                }
+          }
+     }
+`;
+
+export const GET_TAGNAME = gql`
+     query TagName($id: ID) {
+          workouts(where: { id: $id }) {
+               id
+               workouttitle
+          }
+     }
+`;
+
+export const GET_RATING_NOTES = gql`
+     query ratingsforNotes($id1: ID, $clientid: ID, $type: String) {
+          ratings(where: { resource_id: $id1, type: $type, target_user: { id: $clientid } }) {
+               id
+               rating
+               max_rating
+               target_user {
+                    id
+                    username
+               }
+               type
           }
      }
 `;

@@ -70,8 +70,6 @@ function Index() {
           noteFetch.push(last);
      }
      FetchNotes({ arr: noteFetch });
-
-     console.log(noteFetch);
      return (
           <div>
                <div className="d-flex flex-row-reverse mr-3 p-2">
@@ -131,6 +129,7 @@ function Index() {
                                    updatedOn={e.updatedAt}
                                    note={e.note}
                                    id={e.id}
+                                   resourceid={e.resource_id}
                               />
                          );
                     })}

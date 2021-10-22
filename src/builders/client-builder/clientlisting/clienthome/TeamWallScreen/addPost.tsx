@@ -12,7 +12,7 @@ interface Operation {
 }
 
 function CreatePosts(props: any, ref: any) {
-     //const last = window.location.pathname.split("/").pop();
+     const last = window.location.pathname.split("/").pop();
      const auth = useContext(AuthContext);
 
      const Schema: { [name: string]: any } = require("./post.json");
@@ -56,6 +56,7 @@ function CreatePosts(props: any, ref: any) {
                          resource_type: "workout",
                          resource_id: searchid[0],
                          rating: widget.rpm,
+                         clientid: last,
                          max_rating: widget.rpm_max,
                          rating_scale_id: widget.rpm_id,
                          user_permissions_user: auth.userid,
@@ -69,6 +70,7 @@ function CreatePosts(props: any, ref: any) {
                          resource_type: "workout",
                          resource_id: searchid[0],
                          rating: widget.mood,
+                         clientid: last,
                          max_rating: widget.mood_max,
                          rating_scale_id: widget.mood_id,
                          user_permissions_user: auth.userid,
@@ -82,6 +84,7 @@ function CreatePosts(props: any, ref: any) {
                          resource_id: searchid[0],
                          user_permissions_user: auth.userid,
                          note: widget.note,
+                         clientid: last,
                     },
                });
           }

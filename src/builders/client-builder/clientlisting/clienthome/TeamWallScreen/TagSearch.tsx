@@ -2,8 +2,10 @@ import { useState, useRef, useContext } from "react";
 import { InputGroup, FormControl, Container } from "react-bootstrap";
 import { gql, useQuery } from "@apollo/client";
 import AuthContext from "../../../../../context/auth-context";
+import { CHECK_NOTES } from "./queries";
 
 const TagSearch = (props: any) => {
+     const last = window.location.pathname.split("/").pop();
      const [packageLists, setPackageLists] = useState<any[]>([]);
      const [searchInput, setSearchInput] = useState(null);
      const [errorMsg, setErrorMsg] = useState("");
@@ -11,6 +13,8 @@ const TagSearch = (props: any) => {
      const inputField = useRef<any>();
      const auth = useContext(AuthContext);
      let skipval: Boolean = true;
+     const Arr: any = [];
+     const [idArray, setIdArray] = useState<any>();
 
      const GET_GOALLIST = gql`
           query TagListQuery($filter: String!, $id: ID) {
@@ -31,12 +35,24 @@ const TagSearch = (props: any) => {
      function loadPackageList(data: any) {
           setPackageLists(
                [...data.workouts].map((p) => {
-                    return {
-                         id: p.id,
-                         name: p.workouttitle,
-                    };
+                    if (!idArray.includes(p.id)) {
+                         return {
+                              id: p.id,
+                              name: p.workouttitle,
+                         };
+                    }
+                    return {};
                })
           );
+     }
+     function FetchNotes(_variable: {} = { id: auth.userid, clientid: last }) {
+          useQuery(CHECK_NOTES, { variables: _variable, onCompleted: loadNotes });
+     }
+     function loadNotes(d: any) {
+          for (let i = 0; i < d.feedbackNotes.length; i++) {
+               Arr.push(d.feedbackNotes[i].resource_id);
+          }
+          setIdArray(Arr);
      }
 
      function Search(data: any) {
@@ -84,9 +100,8 @@ const TagSearch = (props: any) => {
                     .join(",")
           );
      }
-
+     FetchNotes({ id: auth.userid, clientid: last });
      FetchPackageList({ filter: searchInput, skip: skipval });
-
      return (
           <>
                <label style={{ fontSize: 17 }}>Tag</label>
@@ -107,21 +122,24 @@ const TagSearch = (props: any) => {
                </InputGroup>
                <>
                     {packageLists.slice(0, 5).map((p) => {
-                         return (
-                              <Container className="pl-0">
-                                   <option
-                                        style={{ cursor: "pointer" }}
-                                        className="m-2 p-1 shadow-sm rounded bg-white"
-                                        value={p.id}
-                                        onClick={(e) => {
-                                             e.preventDefault();
-                                             handleSelectedPackageAdd(p.name, p.id);
-                                        }}
-                                   >
-                                        {p.name}
-                                   </option>
-                              </Container>
-                         );
+                         if (p.id) {
+                              return (
+                                   <Container className="pl-0">
+                                        <option
+                                             style={{ cursor: "pointer" }}
+                                             className="m-2 p-1 shadow-sm rounded bg-white"
+                                             value={p.id}
+                                             onClick={(e) => {
+                                                  e.preventDefault();
+                                                  handleSelectedPackageAdd(p.name, p.id);
+                                             }}
+                                        >
+                                             {p.name}
+                                        </option>
+                                   </Container>
+                              );
+                         }
+                         return "";
                     })}
                </>
                <>
