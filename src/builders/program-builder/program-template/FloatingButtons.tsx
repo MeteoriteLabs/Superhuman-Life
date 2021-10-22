@@ -20,10 +20,11 @@ const FloatingButton = (props: any) => {
      const createEditRestDayComponent = useRef<any>(null);
      const [existingEvents, setExistingEvents] = useState<any[]>([]);
      const [restDays, setRestDays] = useState<any[]>([]);
+     const [renewalDate, setRenewalDate] = useState("");
      const program_id = window.location.pathname.split('/').pop();
 
      function FetchData() {
-          useQuery(GET_SCHEDULEREVENTS, { variables: { id: program_id }, onCompleted: (e: any) => { setExistingEvents(e.fitnessprograms[0].events); setRestDays(e.fitnessprograms[0].rest_days) } });
+          useQuery(GET_SCHEDULEREVENTS, { variables: { id: program_id }, onCompleted: (e: any) => { setExistingEvents(e.fitnessprograms[0].events); setRestDays(e.fitnessprograms[0].rest_days); setRenewalDate(e.fitnessprograms[0].renewal_dt) } });
      }
 
      FetchData();
@@ -114,7 +115,7 @@ const FloatingButton = (props: any) => {
                          </DropdownButton>
                          </Row>
                     </Col>
-                    <CreateEditProgramManager ref={createEditProgramManagerComponent} events={existingEvents}></CreateEditProgramManager>
+                    <CreateEditProgramManager ref={createEditProgramManagerComponent} events={existingEvents} renewalDate={renewalDate}></CreateEditProgramManager>
                     <CreateEditNewWorkout ref={createEditNewWorkoutComponent} events={existingEvents}></CreateEditNewWorkout>
                     <CreateEditNewActivity ref={createEditNewActivityComponent} events={existingEvents}></CreateEditNewActivity>
                     <CreateEditRestDay ref={createEditRestDayComponent} restDays={restDays}></CreateEditRestDay>

@@ -14,6 +14,7 @@ export const GET_ALL_CLIENT_PACKAGE_BY_TYPE = gql`
       id
       users_permissions_user {
         username
+        id
       }
       effective_date
       accepted_date
@@ -45,8 +46,12 @@ export const GET_ALL_CLIENT_PACKAGE_BY_TYPE = gql`
           id
           title
           published_at
+          duration_days
+          rest_days
+          start_dt
           level
           description
+          renewal_dt
           fitnessdisciplines{
             id
             disciplinename
@@ -56,8 +61,7 @@ export const GET_ALL_CLIENT_PACKAGE_BY_TYPE = gql`
       }
     }
   }
-`;
-
+`
 
 export const GET_ALL_FITNESS_PACKAGE_BY_TYPE = gql`
     query fitnesspackages($id: ID!, $type: String){
@@ -98,6 +102,8 @@ export const GET_ALL_PROGRAM_BY_TYPE = gql`
           id
           title
           published_at
+          renewal_dt
+          start_dt
         }
       }
     }
@@ -146,13 +152,13 @@ export const GET_ALL_CLIENT_PACKAGE = gql`
           id
           title
           published_at
-       
+          start_dt
         }
 
       }
     }
   }
-`;
+`
 
 export const GET_ALL_CLASSIC_CLIENT_BY_ID = gql`
   query userPackages($id: ID!){
@@ -212,7 +218,6 @@ export const GET_ALL_GROUP_CLIENT_BY_ID = gql`
   }
 `
 
-
 export const GET_ALL_FITNESSDISCIPLINES = gql`
   query Fitnessdisciplines {
     fitnessdisciplines {
@@ -220,8 +225,7 @@ export const GET_ALL_FITNESSDISCIPLINES = gql`
       disciplinename
     }
   }
-`;
-
+`
 
 export const GET_ALL_FITNESSEQUIPMENT = gql`
   query equipmentLists{
@@ -232,8 +236,6 @@ export const GET_ALL_FITNESSEQUIPMENT = gql`
   }
 `
 
-
-
 export const FETCH_FITNESSDISCPLINES = gql`
     query fitnessdiscplines{
         fitnessdisciplines(sort: "updatedAt"){
@@ -242,4 +244,23 @@ export const FETCH_FITNESSDISCPLINES = gql`
             updatedAt
         }
     }
+`
+
+export const GET_TABLEDATA = gql`
+query getprogramdata($id: String!) {
+     fitnessprograms(where: { id: $id }) {
+          id
+          title
+          fitnessdisciplines{
+               id
+               disciplinename
+          }
+          duration_days
+          level
+          start_dt
+          end_dt
+          rest_days
+          events
+     }
+}
 `

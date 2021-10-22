@@ -25,10 +25,7 @@ export default function Group(props) {
             },
             onCompleted: (data) => loadData(data)
         })
-
     }
-
-
 
 
     const loadData = (data) => {
@@ -49,22 +46,31 @@ export default function Group(props) {
                     packageRenewal: moment(renewDay).format("MMMM DD,YYYY"),
 
                     client: packageItem.users_permissions_user.username,
+                    clientId: packageItem.users_permissions_user.id,
                     level: packageItem.program_managers.length === 0 ? "" : packageItem?.program_managers[0]?.fitnessprograms[0].level,
                     discipline: packageItem.program_managers.length === 0 ? "" : packageItem?.program_managers[0]?.fitnessprograms[0].fitnessdisciplines,
                     description: packageItem.program_managers.length === 0 ? "" : packageItem?.program_managers[0]?.fitnessprograms[0].description,
                     programName: packageItem.program_managers.length === 0 ? 'N/A' : packageItem.program_managers[0].fitnessprograms[0].title,
+                    programId: packageItem.program_managers.length === 0 ? null : packageItem.program_managers[0].fitnessprograms[0].id,
                     programStatus: packageItem.program_managers.length === 0 ? 'N/A' : "Assigned",
-                    programRenewal: packageItem.program_managers.length === 0 ? 'N/A' : moment(renewDay).format('MMMM DD,YYYY')
+                    programRenewal: packageItem.program_managers.length === 0 ? 'N/A' : calculateProgramRenewal(packageItem.program_managers[0].fitnessprograms[0].duration_days, packageItem.effective_date, packageItem.program_managers[0].fitnessprograms[0].renewal_dt),
                 }
-
             })
         )
     }
 
+    function calculateProgramRenewal(duration, effectiveDate, renewalDate) {
+        
+        const dates: string[] = []; 
+
+        for(var i=0; i<duration; i++){
+            const t = moment(effectiveDate).add(i, 'days').format("MMMM DD,YYYY");
+            dates.push(t);
+        }
+        return dates[renewalDate-1];
+    }
 
     FetchData();
-    // console.log('userPackage', userPackage);
-
 
     // const newData: Array<any> = [];
 
@@ -88,6 +94,14 @@ export default function Group(props) {
 
 
     // console.log("newData", dataTable2)
+
+    function handleRedirect(id: any, client: any, clientId: any){
+        if(id === null){
+            alert("Please assign a program to this client first");
+            return;
+        }
+        window.location.href = `/pt/session/scheduler/${clientId}/${client}/${id}`
+    }
 
 
     const columns = useMemo(
@@ -153,7 +167,7 @@ export default function Group(props) {
                         Header: "Actions",
                         Cell: ({ row }: any) => {
                             const actionClick1 = () => {
-                                fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'manage', type: "Personal Training", rowData: "" })
+                                handleRedirect(row.original.programId, row.original.id, row.original.clientId);
                             };
 
                             const actionClick2 = () => {

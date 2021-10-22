@@ -12,7 +12,7 @@ interface Operation {
     current_status: boolean;
 }
 
-function CreateEditMessage(props: any, ref: any) {
+function CreateEditWorkoutTemplate(props: any, ref: any) {
     const auth = useContext(AuthContext);
     const programSchema: { [name: string]: any; } = require("../json/workoutTemplate.json");
     const [programDetails, setProgramDetails] = useState<any>({});
@@ -61,9 +61,7 @@ function CreateEditMessage(props: any, ref: any) {
         return timeString.toString();
     }
 
-
     function UpdateProgram(frm: any) {
-        console.log(frm);
         var existingEvents: any = (props.events === null ? [] : [...props.events]);
         if (frm.day) {
             frm.day = JSON.parse(frm.day);
@@ -102,10 +100,19 @@ function CreateEditMessage(props: any, ref: any) {
             }
         }
 
+        let lastEventDay: number = 0;
+
+        for(var k=0; k<= existingEvents.length - 1; k++) {
+            if(existingEvents[k].day > lastEventDay){
+                lastEventDay = parseInt(existingEvents[k].day);
+            }
+        }
+
         updateProgram({
             variables: {
                 programid: program_id,
-                events: existingEvents
+                events: existingEvents,
+                renewal_dt: lastEventDay
             }
         });
     }
@@ -153,4 +160,4 @@ function CreateEditMessage(props: any, ref: any) {
     )
 }
 
-export default React.forwardRef(CreateEditMessage);
+export default React.forwardRef(CreateEditWorkoutTemplate);

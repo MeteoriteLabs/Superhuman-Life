@@ -30,6 +30,7 @@ export const CREATE_PROGRAM = gql`
           $Is_program: Boolean
           $description: String
           $events: JSON
+          $renewal_dt: Int
           $users_permissions_user: ID
      ){
           createFitnessprogram(
@@ -41,6 +42,7 @@ export const CREATE_PROGRAM = gql`
                          level: $level
                          description: $description
                          Is_program: $Is_program
+                         renewal_dt: $renewal_dt
                          events: $events
                          users_permissions_user: $users_permissions_user
                     }

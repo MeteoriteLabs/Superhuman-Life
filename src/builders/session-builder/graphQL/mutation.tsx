@@ -1,5 +1,23 @@
 import { gql } from '@apollo/client'
 
+export const UPDATE_STARTDATE = gql`
+     mutation updateStartDate($id: ID!, $startDate: Date!, $endDate: Date!) {
+          updateFitnessprogram(
+               input: {
+                    where: {id: $id}
+                    data: {
+                         start_dt: $startDate
+                         end_dt: $endDate
+                    }
+               }
+          ){
+               fitnessprogram {
+                    id
+                    start_dt
+               }
+          } 
+     }
+`
 
 export const EDIT_PROGRAM = gql`
     mutation fitnessprogram(
@@ -43,6 +61,7 @@ export const CREATE_PROGRAM = gql`
           $level: ENUM_FITNESSPROGRAMS_LEVEL
           $description: String
           $events: JSON
+          $renewal_dt: Int
           $users_permissions_user: ID
           $Is_program:Boolean
      ){
@@ -55,6 +74,7 @@ export const CREATE_PROGRAM = gql`
                          level: $level
                          description: $description
                          events: $events
+                         renewal_dt: $renewal_dt
                          users_permissions_user: $users_permissions_user
                          Is_program: $Is_program
                     }

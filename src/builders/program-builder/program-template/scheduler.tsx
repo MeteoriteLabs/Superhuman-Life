@@ -10,6 +10,7 @@ import TextEditor from '../../../components/customWidgets/textEditor';
 import CreateoreditWorkout from '../workout/createoredit-workout';
 import ReplaceWorkout from './create-edit/replaceWorkout';
 import DaysInput from './daysInput';
+import moment from 'moment';
 
 const Schedular = (props: any) => {
 
@@ -123,11 +124,28 @@ const Schedular = (props: any) => {
 
     const hours: number[] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
     const days: number[] = [];
+    const dates: string[] = [];
     const min: number[] = [0, 15, 30, 45];
 
     function handleDays() {
-        for (var i = 1; i <= props.days; i++) {
-            days.push(i);
+        if(props.type === 'day'){
+            for (var i = 1; i <= props.days; i++) {
+                days.push(i);
+            }
+        }
+        else if(props.type === 'date'){
+            for (var l = 1; l <= props.days; l++) {
+                days.push(l);
+            }
+            for(var j=0; j<props.days; j++){
+                const t = moment(props.startDate).add(j, 'days').format("DD MMM YY");
+                dates.push(t);
+            }
+        }
+        else {
+            for (var k = 1; k <= props.days; k++) {
+                days.push(k);
+            }
         }
     }
 
@@ -236,10 +254,19 @@ const Schedular = (props: any) => {
             }
         }
 
+        let lastEventDay: number = 0;
+
+        for(var k=0; k<= values.length - 1; k++) {
+            if(values[k].day > lastEventDay){
+                lastEventDay = parseInt(values[k].day);
+            }
+        }
+
         updateProgram({
             variables: {
                 programid: program_id,
-                events: values
+                events: values, 
+                renewal_dt: lastEventDay
             }
         })
     }
@@ -276,10 +303,20 @@ const Schedular = (props: any) => {
                     break;
                 }
             }
+
+            let lastEventDay: number = 0;
+
+            for(var k=0; k<= values.length - 1; k++) {
+                if(values[k].day > lastEventDay){
+                    lastEventDay = parseInt(values[k].day);
+                }
+            }
+
             updateProgram({
                 variables: {
                     programid: program_id,
-                    events: values
+                    events: values,
+                    renewal_dt: lastEventDay
                 }
             })
         }
@@ -407,10 +444,20 @@ const Schedular = (props: any) => {
         let values = [...currentProgram];
         let a = values.findIndex((val) => val.id === event.id && val.day === event.day && val.startTime === event.hour + ":" + event.min && val.endTime === event.endHour + ":" + event.endMin);
         values.splice(a,1);
+
+        let lastEventDay: number = 0;
+
+        for(var k=0; k<= values.length - 1; k++) {
+            if(values[k].day > lastEventDay){
+                lastEventDay = parseInt(values[k].day);
+            }
+        }
+
         updateProgram({
             variables: {
                 programid: program_id,
-                events: values
+                events: values,
+                renewal_dt: lastEventDay
             }
         });
         handleClose();
@@ -501,10 +548,20 @@ const Schedular = (props: any) => {
                 }
             }
         }
+
+        let lastEventDay: number = 0;
+
+        for(var m=0; m<= existingValues.length - 1; m++) {
+            if(existingValues[m].day > lastEventDay){
+                lastEventDay = parseInt(existingValues[m].day);
+            }
+        }
+
         updateProgram({
             variables: {
                 programid: program_id,
-                events: existingValues
+                events: existingValues,
+                renewal_dt: lastEventDay
             }
         })
 
@@ -534,6 +591,41 @@ const Schedular = (props: any) => {
         confirmVal = {};
     }
 
+    
+
+    function handleDaysRowRender() {
+        if(props.type === "date"){
+            return (
+                dates.map((val, index) => {
+                    return (
+                        <>
+                            <div className="cell" style={{ backgroundColor: `${handleRestDays(index+1)}`, minHeight: '80px' }}>
+                                <div className="event-dayOfWeek text-center mt-1">
+                                    <span style={{ fontSize: '14px'}}>{moment(val).format("dddd")}</span>
+                                </div>
+                                <div className="event-date text-center mt-1" style={{ backgroundColor: `${handleRestDays(index+1)}` }}>
+                                    <span style={{ fontSize: '14px'}}>{moment(val).format("Do, MMM YY")}</span>
+                                </div>
+                                <div className="event-date text-center" style={{ backgroundColor: `${handleRestDays(index+1)}` }}>
+                                    <span style={{ fontSize: '12px'}}>Day-{index+1}</span>
+                                    <Badge variant="success" className="ml-4 mr-4 mb-1" style={{ display: `${moment().format("Do, MMM YY") === moment(val).format("Do, MMM YY") ? 'block': 'none'}`}}>Today</Badge>
+                                </div>
+                            </div>
+                        </>
+                    )
+                })
+            )
+        }else {
+            return (
+                days.map(val => {
+                    return (
+                        <div className="cell" style={{ backgroundColor: `${handleRestDays(val)}` }}>{`Day ${val}`}</div>
+                    )
+                })
+            )
+        }
+    }
+
     if (!show) return <span style={{ color: 'red' }}>Loading...</span>;
     else return (
         <>
@@ -544,12 +636,8 @@ const Schedular = (props: any) => {
             <div className="wrapper shadow-lg">
                 <div className="schedular">
                     <div className="day-row">
-                        <div className="cell" style={{ backgroundColor: 'white', position: 'relative' }}></div>
-                        {days.map(val => {
-                            return (
-                                <div className="cell" style={{ backgroundColor: `${handleRestDays(val)}` }}>{`Day ${val}`}</div>
-                            )
-                        })}
+                        <div className="cell" style={{ backgroundColor: 'white', position: 'relative', minHeight: '80px' }}></div>
+                        {handleDaysRowRender()}
                     </div>
                     {hours.map(h => {
                         return (
@@ -585,6 +673,7 @@ const Schedular = (props: any) => {
                                                             val.index = index;
                                                             return (
                                                                 <div
+                                                                    key={index}
                                                                     onClick={() => { setEvent(val)}}
                                                                     id="dragMe"
                                                                     className="schedular-content draggable"

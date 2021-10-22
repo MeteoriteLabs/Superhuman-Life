@@ -1,23 +1,23 @@
-import { useQuery } from '@apollo/client';
+import { useQuery, useMutation } from '@apollo/client';
 import { useContext, useMemo, useRef, useState } from 'react'
 import { Badge, Row, Col } from "react-bootstrap";
 
 import AuthContext from "../../../../context/auth-context"
 import GroupTable from '../../../../components/table/GroupTable/GroupTable';
 import { GET_ALL_FITNESS_PACKAGE_BY_TYPE, GET_ALL_PROGRAM_BY_TYPE, GET_ALL_CLIENT_PACKAGE } from '../../graphQL/queries';
+import { UPDATE_STARTDATE } from '../../graphQL/mutation';
 import moment from 'moment';
 import ActionButton from '../../../../components/actionbutton';
 import FitnessAction from '../FitnessAction';
-
 
 export default function Group(props) {
 
     const auth = useContext(AuthContext);
 
     const [userPackage, setUserPackage] = useState<any>([]);
+    const fitnessActionRef = useRef<any>(null);
 
-
-    const fitnessActionRef = useRef<any>(null)
+    const [updateDate] = useMutation(UPDATE_STARTDATE, {onCompleted: (r: any) => {console.log(r)}});
 
 
     const { data: data1 } = useQuery(GET_ALL_FITNESS_PACKAGE_BY_TYPE, {
@@ -58,6 +58,8 @@ export default function Group(props) {
                 if (data1.fitnesspackages[i].id === data2.programManagers[j].fitnesspackages[0].id) {
                     fitnessProgramItem.proManagerFitnessId = data2.programManagers[j].fitnessprograms[0].id;
                     fitnessProgramItem.title = data2.programManagers[j].fitnessprograms[0].title;
+                    fitnessProgramItem.start_dt = data2.programManagers[j].fitnessprograms[0].start_dt;
+                    fitnessProgramItem.renewal_dt = data2.programManagers[j].fitnessprograms[0].renewal_dt;
                     fitnessProgramItem.published_at = data2.programManagers[j].fitnessprograms[0].published_at
                     fitnessProgramItem.proManagerId = data2.programManagers[j].id;
 
@@ -89,7 +91,6 @@ export default function Group(props) {
             }
         }
 
-
         setUserPackage(
             [...arrayFitnessPackage.map((packageItem) => {
                 return {
@@ -102,17 +103,26 @@ export default function Group(props) {
                     proManagerId: packageItem.proManagerId,
                     proManagerFitnessId: packageItem.proManagerFitnessId,
                     client: packageItem.username ? packageItem.username : "N/A",
+                    start_dt: packageItem.start_dt,
+                    renewal_dt: packageItem.renewal_dt,
                     time: packageItem.published_at ? moment(packageItem.published_at).format('h:mm:ss a') : "N/A",
                     programName: packageItem.title ? packageItem.title : "N/A",
                     programStatus: packageItem.username ? "Assigned" : "N/A",
-                    renewal: packageItem.title ? "25/08/2021" : "N/A",
+                    renewal: packageItem.title ? calculateProgramRenewal(packageItem.duration, packageItem.start_dt,  packageItem.renewal_dt) : "N/A",
                 }
             })]
         )
-
     }
 
+    function calculateProgramRenewal(duration, effectiveDate, renewalDate) {
+        const dates: string[] = []; 
 
+        for(var i=0; i<duration; i++){
+            const t = moment(effectiveDate).add(i, 'days').format("MMMM DD,YYYY");
+            dates.push(t);
+        }
+        return dates[renewalDate-1];
+    }
 
     let arr: any = []
     for (let i = 0; i < userPackage.length - 1; i++) {
@@ -129,7 +139,29 @@ export default function Group(props) {
         }
     }
 
+    function handleRedirect(id: any, clientId: any, startDate: any, duration: any, value: any){
+        // console.log(id, clientId, startDate, duration)
+        // if(value === undefined){
+        //     alert("Please assign client to this program")
+        //     return;
+        // }
+        if (startDate === null){
+            let sdate = moment();
+            let edate = moment(sdate).add(duration, 'days');
 
+            updateDate({
+                variables: {
+                    id: id,
+                    startDate: moment(sdate).format("YYYY-MM-DD"),
+                    endDate: moment(edate).format("YYYY-MM-DD") 
+                }
+            });
+        }
+
+        setTimeout(() => {
+            window.location.href = `/group/session/scheduler/${clientId}/${id}`
+        }, 500);
+    }
 
     const columns = useMemo(
         () => [
@@ -220,7 +252,7 @@ export default function Group(props) {
                         Header: "Actions",
                         Cell: ({ row }: any) => {
                             const actionClick1 = () => {
-                                fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'manage', type: "Group Class", rowData: "" })
+                                handleRedirect(row.original.proManagerFitnessId, row.original.proManagerId, row.original.start_dt, row.original.duration, row.value)
                             }
                             const actionClick2 = () => {
                                 fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'details', type: "Group Class", rowData: row.original })
@@ -245,7 +277,7 @@ export default function Group(props) {
                 ]
             },
         ],
-        []
+        [] // eslint-disable-line react-hooks/exhaustive-deps
     );
 
     return (

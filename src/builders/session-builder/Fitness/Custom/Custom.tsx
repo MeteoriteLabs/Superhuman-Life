@@ -49,17 +49,37 @@ export default function Custom(props) {
 
 
                     client: packageItem.users_permissions_user.username,
+                    clientId: packageItem.users_permissions_user.id,
                     programName: packageItem.program_managers.length === 0 ? 'N/A' : packageItem.program_managers[0].fitnessprograms[0].title,
+                    programId: packageItem.program_managers.length === 0 ? 'N/A' : packageItem.program_managers[0].fitnessprograms[0].id,
                     programStatus: packageItem.program_managers.length === 0 ? 'N/A' : "Assigned",
-                    programRenewal: packageItem.program_managers.length === 0 ? 'N/A' : moment(renewDay).format('MMMM DD,YYYY'),
+                    programRenewal: packageItem.program_managers.length === 0 ? 'N/A' : calculateProgramRenewal(packageItem.program_managers[0].fitnessprograms[0].duration_days, packageItem.effective_date, packageItem.program_managers[0].fitnessprograms[0].renewal_dt),
                 }
 
             })
         )
     }
 
+    function calculateProgramRenewal(duration, effectiveDate, renewalDate) {
+        const dates: string[] = []; 
+
+        for(var i=0; i<duration; i++){
+            const t = moment(effectiveDate).add(i, 'days').format("MMMM DD,YYYY");
+            dates.push(t);
+        }
+        return dates[renewalDate-1];
+    }
+
 
     FetchData();
+
+    function handleRedirect(id: any, clientId: any) {
+        if(id === 'N/A'){
+            alert('No Program Assigned');
+            return;
+        }
+        window.location.href = `/custom/session/scheduler/${clientId}/${id}`
+    }
 
     const columns = useMemo<any>(() => [
         {
@@ -129,7 +149,7 @@ export default function Custom(props) {
                     Header: "Actions",
                     Cell: ({ row }: any) => {
                         const actionClick1 = () => {
-                            fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'manage', type: "Custom Fitness", rowData: "" })
+                            handleRedirect(row.original.programId, row.original.clientId);
                         };
 
                         const actionClick2 = () => {

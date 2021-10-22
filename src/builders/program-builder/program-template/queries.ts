@@ -65,6 +65,7 @@ export const GET_SCHEDULEREVENTS = gql`
                id
                events
                rest_days
+               renewal_dt
           }
      }
 `
@@ -86,7 +87,8 @@ export const UPDATE_FITNESSPROGRAMS = gql`
           $fitness_modes: [ID]
           $events: JSON
           $rest_days: JSON
-          $programid: ID!      
+          $programid: ID!
+          $renewal_dt: Int      
      ){
           updateFitnessprogram(
                input: {
@@ -94,6 +96,7 @@ export const UPDATE_FITNESSPROGRAMS = gql`
                          fitness_modes: $fitness_modes
                          events: $events
                          rest_days: $rest_days
+                         renewal_dt: $renewal_dt
                     }
                     where: { id: $programid }
                }

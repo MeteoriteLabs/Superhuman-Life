@@ -2,7 +2,7 @@ import { useQuery } from '@apollo/client';
 import { useContext, useMemo, useRef, useState } from 'react'
 import { Badge, Row, Col } from "react-bootstrap";
 import Table from '../../../../components/table';
-import AuthContext from "../../../../context/auth-context"
+import AuthContext from "../../../../context/auth-context";
 import { GET_ALL_CLIENT_PACKAGE, GET_ALL_FITNESS_PACKAGE_BY_TYPE, GET_ALL_PROGRAM_BY_TYPE } from '../../graphQL/queries';
 import moment from 'moment'
 import FitnessAction from '../FitnessAction';
@@ -117,11 +117,6 @@ export default function Classic(props) {
 
     }
 
-
-
-
-
-
     // const FetchData = () => useQuery(GET_ALL_CLIENT_PACKAGE_BY_TYPE, {
     //     variables: {
     //         id: auth.userid,
@@ -183,8 +178,8 @@ export default function Classic(props) {
     //     }
     // }
 
-    function handleRedirect(id: any){
-        window.location.href = `/session/scheduler/${id}`;
+    function handleRedirect(id: any, clients: any){
+        window.location.href = `/classic/session/scheduler/${clients}/${id}`;
     };
 
     const columns = useMemo(
@@ -267,7 +262,7 @@ export default function Classic(props) {
                         Header: "Actions",
                         Cell: ({ row }: any) => {
                             const actionClick1 = () => {
-                                handleRedirect(row.original.id);
+                                handleRedirect(row.original.proManagerFitnessId, row.original.id);
                             }
                             const actionClick2 = () => {
                                 fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'details', type: "Classic Class", rowData: row.original })
