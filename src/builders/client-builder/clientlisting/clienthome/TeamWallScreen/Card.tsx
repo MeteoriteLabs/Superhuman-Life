@@ -1,15 +1,19 @@
 import { Card, Col, Row, FormControl, InputGroup, Button } from "react-bootstrap";
 import ActionButton from "../../../../../components/actionbutton/index";
-import { ADD_COMMENT, GET_TAGNAME } from "./queries";
+import { ADD_COMMENT, GET_TAGNAME, GET_RATING_NOTES, GET_FITNESSSCALE, GET_MOODSCALE } from "./queries";
 import AuthContext from "../../../../../context/auth-context";
 import { useContext, useRef, useState } from "react";
 import { useMutation, useQuery } from "@apollo/client";
 import "./Styles.css";
 
 function CardComp(props: any) {
+     const last = window.location.pathname.split("/").pop();
      const auth = useContext(AuthContext);
      const comment = useRef<any>();
      const [name, setName] = useState<any>();
+     const [rating, setRating] = useState<any>();
+     const [img, setImg] = useState<any>();
+     const [rate1, setRate1] = useState<any>();
 
      function getDate(time: any) {
           let dateObj = new Date(time);
@@ -28,6 +32,13 @@ function CardComp(props: any) {
      function loadName(d: any) {
           setName(d.workouts[0].workouttitle);
      }
+     function FetchRating(_variables: {} = { id: props.resourceid, clientid: last }) {
+          useQuery(GET_RATING_NOTES, { variables: _variables, onCompleted: loadRating });
+     }
+     function loadRating(d: any) {
+          //console.log(d);
+          setRating(d.ratings);
+     }
      function addComment(val: any) {
           createComment({
                variables: {
@@ -37,8 +48,26 @@ function CardComp(props: any) {
                },
           });
      }
-     FetchData({ id: props.resourceid });
+     function Fetch() {
+          useQuery(GET_FITNESSSCALE, { onCompleted: loadRating2 });
+          useQuery(GET_MOODSCALE, { onCompleted: loadMood });
+     }
 
+     function loadRating2(data: any) {
+          [...data.ratingScales].map((p) => {
+               setRate1(p.items);
+               return {};
+          });
+     }
+     function loadMood(data: any) {
+          [...data.ratingScales].map((p) => {
+               setImg(p.items);
+               return {};
+          });
+     }
+     Fetch();
+     FetchData({ id: props.resourceid });
+     FetchRating({ id: props.resourceid, clientid: last });
      return (
           <div>
                <Card border="primary" className="mt-3">
@@ -62,6 +91,16 @@ function CardComp(props: any) {
                          <Card.Text>
                               <h6>{name}</h6>
                               <div className="mt-1" dangerouslySetInnerHTML={{ __html: props.note }}></div>
+                              {rating &&
+                                   rating.map((d) => {
+                                        if (d.type === "rpm") {
+                                             return <p>{rate1[d.rating - 1]}</p>;
+                                        }
+                                        if (d.type === "mood") {
+                                             return <img src={`/assets/ratingicons/${img[d.rating - 1]}`} alt="" />;
+                                        }
+                                        return "";
+                                   })}
                          </Card.Text>
 
                          <Card.Body>

@@ -155,8 +155,8 @@ export const GET_TAGNAME = gql`
 `;
 
 export const GET_RATING_NOTES = gql`
-     query ratingsforNotes($id1: ID, $clientid: ID, $type: String) {
-          ratings(where: { resource_id: $id1, type: $type, target_user: { id: $clientid } }) {
+     query ratingsforNotes($id: ID, $clientid: ID, $type: String) {
+          ratings(where: { resource_id_contains: $id, type: $type, target_user: { id: $clientid } }) {
                id
                rating
                max_rating
