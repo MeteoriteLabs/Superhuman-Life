@@ -159,7 +159,6 @@ export default function FitnessTab(props) {
     }
 
     const loadData = (data: any) => {
-        console.log("🚀 ~ file: Fitness.tsx ~ line 155 ~ loadData ~ data", data)
         setDataTable(
             [...data.fitnesspackages].map(item => {
                 return {

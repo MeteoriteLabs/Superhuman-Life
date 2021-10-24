@@ -14,11 +14,11 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
     const [show, setShow] = useState<boolean>(false);
     const [formValues, setFormValues] = useState<any>(formData);
     const stepper: string[] = stepperValues;
-    
+
     modalTrigger.subscribe((res: boolean) => {
         setShow(res);
     });
-    
+
     function submitHandler(formData: any) {
         if (isStepper && step < 2) {
             console.log("Data submitted: ", formData);
@@ -31,7 +31,7 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
 
 
     return (
-        <> 
+        <>
             <Modal size="xl" show={show} onHide={() => setShow(false)} centered >
                 <Modal.Header closeButton>
                     <Modal.Title as={Row}>
@@ -53,7 +53,7 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
                 </Modal.Header>
                 <Modal.Body className="show-grid bg-light">
                     <Row>
-                        <Col  lg={12}>
+                        <Col lg={12}>
                             <div style={{ height: '400px', overflowX: 'hidden', overflowY: 'auto' }}>
                                 <Form
                                     uiSchema={formUISchema}
@@ -91,26 +91,26 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
                                 }
                             </Button>
                         </> :
-                        <> 
-                        <Button
-                         variant="danger"
-                         size="sm"
-                         onClick={() => {setShow(false)}}
-                         className={name === 'View'?"d-none":""}
-                        >
-                        Close
-                       </Button>
-                        <Button
-                         variant="success"
-                         size="sm"
-                         onClick={(event) => {formRef.current.onSubmit(event)}}
-                        >
-                        {name === 'View'? "Close": "Submit"} 
-                        </Button>
-                        
+                        <>
+                            <Button
+                                variant="danger"
+                                size="sm"
+                                onClick={() => { setShow(false) }}
+                                className={name === 'View' ? "d-none" : ""}
+                            >
+                                Close
+                            </Button>
+                            <Button
+                                variant="success"
+                                size="sm"
+                                onClick={(event) => { formRef.current.onSubmit(event) }}
+                            >
+                                {name === 'View' ? "Close" : "Submit"}
+                            </Button>
+
                         </>
-                    
-                        
+
+
                     }
                 </Modal.Footer>
             </Modal>

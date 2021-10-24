@@ -48,9 +48,9 @@ export default function SuggestedPricing({ type, mode, auth, fitnesspackageprici
                 mrp.push(item.mrp * arrayClasses[1])
             }
         })
-        if(mrp.length > 0){
+        if (mrp.length > 0) {
             return mrp.reduce((acc, cur) => acc + cur);
-        }else {
+        } else {
             return 0;
         }
     }
@@ -59,7 +59,7 @@ export default function SuggestedPricing({ type, mode, auth, fitnesspackageprici
     const calculateArraySuggestPrice = (partnerMRP: number, arrayDuration: number[]) => {
         const arraySuggestedPricings: number[] = [];
 
-      
+
         arraySuggestedPricings[0] = partnerMRP
         for (let i = 1; i < arrayDuration.length; i++) {
             if (i === 1) {
@@ -70,7 +70,7 @@ export default function SuggestedPricing({ type, mode, auth, fitnesspackageprici
             arraySuggestedPricings.push(partnerMRP)
         }
 
-    
+
         setSuggestedPricing(arraySuggestedPricings)
         return arraySuggestedPricings
     }
@@ -84,10 +84,10 @@ export default function SuggestedPricing({ type, mode, auth, fitnesspackageprici
         const arrayPTClasses = [ptonline, ptoffline];
 
         const partnerSuggestPrice = calculateSuggestPrice(arrayPTdata, arrayPTClasses);
-        if(mode === "Online Workout" || mode === "Offline Workout"){
+        if (mode === "Online Workout" || mode === "Offline Workout") {
             ptDuration.push(arrayDuration[0])
-        }else{
-            ptDuration= arrayDuration
+        } else {
+            ptDuration = arrayDuration
         }
         calculateArraySuggestPrice(partnerSuggestPrice, ptDuration);
         return calculateArraySuggestPrice
@@ -117,39 +117,38 @@ export default function SuggestedPricing({ type, mode, auth, fitnesspackageprici
 
     //custom
     const customSuggestPrice = (data) => {
+        const arrayCustomPrice: number[] = [];
+        let num = 0
+        if (data.length > 0) {
+            const arrayPTdata = data.suggestedPricings.filter((item: { fitness_package_type: { type: "Personal Training" | "Group Class" | "Classic Class"; }; }) => item.fitness_package_type.type === "Personal Training");
 
-        const arrayCustomPrice: number[] = []
-        const arrayPTdata = data.suggestedPricings.filter((item: { fitness_package_type: { type: "Personal Training" | "Group Class" | "Classic Class"; }; }) => item.fitness_package_type.type === "Personal Training");
+            const arrayGroupData = data.suggestedPricings.filter((item: { fitness_package_type: { type: "Personal Training" | "Group Class" | "Classic Class"; }; }) => item.fitness_package_type.type === "Group Class");
 
-        const arrayGroupData = data.suggestedPricings.filter((item: { fitness_package_type: { type: "Personal Training" | "Group Class" | "Classic Class"; }; }) => item.fitness_package_type.type === "Group Class");
-
-        const arrayClassicData = data.suggestedPricings.filter((item: { fitness_package_type: { type: "Personal Training" | "Group Class" | "Classic Class"; }; }) => item.fitness_package_type.type === "Classic Class");
+            const arrayClassicData = data.suggestedPricings.filter((item: { fitness_package_type: { type: "Personal Training" | "Group Class" | "Classic Class"; }; }) => item.fitness_package_type.type === "Classic Class");
 
 
-        for (let i = 0; i < arrayPTdata.length; i++) {
-            if (arrayPTdata[i].Mode === "Online") {
-                arrayCustomPrice.push(arrayPTdata[i].mrp * ptonline)
-            } else {
-                arrayCustomPrice.push(arrayPTdata[i].mrp * ptoffline)
+            for (let i = 0; i < arrayPTdata.length; i++) {
+                if (arrayPTdata[i].Mode === "Online") {
+                    arrayCustomPrice.push(arrayPTdata[i].mrp * ptonline)
+                } else {
+                    arrayCustomPrice.push(arrayPTdata[i].mrp * ptoffline)
+                }
             }
-        }
 
-        for (let i = 0; i < arrayGroupData.length; i++) {
-            if (arrayGroupData[i].Mode === "Online") {
-                arrayCustomPrice.push(arrayGroupData[i].mrp * grouponline)
-            } else {
-                arrayCustomPrice.push(arrayGroupData[i].mrp * groupoffline)
+            for (let i = 0; i < arrayGroupData.length; i++) {
+                if (arrayGroupData[i].Mode === "Online") {
+                    arrayCustomPrice.push(arrayGroupData[i].mrp * grouponline)
+                } else {
+                    arrayCustomPrice.push(arrayGroupData[i].mrp * groupoffline)
+                }
             }
+
+            for (let i = 0; i < arrayClassicData.length; i++) {
+                arrayCustomPrice.push(arrayClassicData[i].mrp * recordedclasses)
+            }
+            num = arrayCustomPrice.reduce((acc, cur) => acc + cur)
         }
-
-        for (let i = 0; i < arrayClassicData.length; i++) {
-            arrayCustomPrice.push(arrayClassicData[i].mrp * recordedclasses)
-        }
-
-
-        const num = arrayCustomPrice.reduce((acc, cur) => acc + cur)
         calculateArraySuggestPrice(num, arrayDuration)
-
     }
 
 

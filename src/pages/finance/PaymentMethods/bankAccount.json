@@ -1,0 +1,47 @@
+{
+    "title": "",
+    "type": "object",
+    "required": [
+       
+    ],
+    "properties": {
+        "fullName": {
+            "type": "string",
+            "title": "Full Name"
+        },
+        "accountNumber": {
+           "type": "number",
+           "title": "Account Number"
+        },
+        "bankName": {
+            "type": "string",
+            "title": "Bank Name"
+        },
+        "ifsc": {
+           "type": "string",
+           "title": "ifsc"
+        },
+        "panCard": {
+            "type": "string",
+            "title": "PAN CARD"
+         },
+         "billingState": {
+            "type": "string",
+            "title": "Billing State"
+         },
+         "GSTNumber": {
+            "type": "number",
+            "title": "GST Number"
+         },
+         "companyName": {
+            "type": "string",
+            "title": "Company Name"
+         },
+         "companyAddress": {
+            "type": "string",
+            "title": "Company Address"
+         }
+     
+    }
+
+}

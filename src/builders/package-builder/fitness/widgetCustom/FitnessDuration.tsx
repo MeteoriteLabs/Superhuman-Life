@@ -4,7 +4,7 @@ import { Form } from 'react-bootstrap';
 
 export default function FitnessDuration({ widgetProps, type, actionType, userData }) {
 
-
+ 
 
 
     return <>

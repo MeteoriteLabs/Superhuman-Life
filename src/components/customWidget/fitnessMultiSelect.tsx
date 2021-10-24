@@ -5,7 +5,6 @@ import { useQuery } from "@apollo/client";
 import { FETCH_FITNESSDISCPLINES } from '../../builders/session-builder/graphQL/queries';
 
 const MultiSelect = (props: any) => {
-
      const [multiSelections, setMultiSelections] = useState([]);
      const [fitnessdisciplines, setFitnessDisciplines] = useState<any[]>([]);
 

@@ -1,0 +1,36 @@
+import React from 'react'
+
+export default function PricingAssistEditIcon(props) {
+    const { rowData } = props;
+    
+    let type = "";
+    switch (rowData.mode) {
+        case "Online": {
+            if (rowData.type === "Personal Training") {
+                type = "custompersonal-training-Online.svg";
+            } else if (rowData.type === "Group Class") {
+                type = "customgroup-Online.svg";
+            } else if (rowData.type === "Classic Class") {
+                type = "customgroup-Online.svg";
+            }
+            break;
+        }
+
+        case "Offline": {
+            if (rowData.type === "Personal Training") {
+                type = "custompersonal-training-Offline.svg";
+            } else if (rowData.type === "Group Class") {
+                type = "customgroup-Offline.svg";
+            }
+            break;
+        }
+    }
+    return (
+        <div className='d-flex  align-items-center'>
+            <p>Type:</p>
+            <div className='ml-5'>
+                <img src={`./assets/${type}`} alt={rowData.type} />
+            </div>
+        </div>
+    )
+}

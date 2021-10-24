@@ -3,61 +3,63 @@ import { Badge, Row, Col, Button } from "react-bootstrap";
 import { useContext, useMemo, useRef, useState } from 'react'
 import Table from "../../../components/table/index"
 import ActionButton from '../../../components/actionbutton';
-import FinanceActions from "../FinanceActions"
+import { useQuery } from '@apollo/client';
+import { GET_ALL_VOUCHERS } from '../graphQL/queries';
+import authContext from '../../../context/auth-context';
+import moment from 'moment';
+import VoucherAction from './VoucherAction';
 
 export default function Vouchers() {
 
+    const auth = useContext(authContext);
+    const [dataTable, setDataTable] = useState<any[]>([])
+    const voucherActionRef = useRef<any>(null);
 
-    const financeActionsRef = useRef<any>(null)
+    const FetchData = () => useQuery(GET_ALL_VOUCHERS, {
+        variables: { id: auth.userid },
+        onCompleted: data => loadData(data)
+    })
 
-    const dataTable = [
-        {
-            code: "Code123",
-            discount: 50,
-            expiry: 30,
-            usage: "Single use",
-            status: 'Active',
-        },
+    const loadData = (data) => {
+        console.log(data);
+        setDataTable(
+            [...data.vouchers].map(voucher => {
+                let todayDate: any = moment(new Date());
+                let expiryDate: any = moment(voucher.expiry_date);
+                let diff = expiryDate.diff(todayDate, 'day')
+                return {
+                    id: voucher.id,
+                    voucher_name: voucher.voucher_name,
+                    discount_percentage: voucher.discount_percentage,
+                    expiry_date: moment(voucher.expiry_date).format('MMMM DD,YYYY'),
+                    Usage_restriction: voucher.Usage_restriction,
+                    Status:( diff <= 0 || voucher.Usage_restriction <= 0 )? "Expired" : voucher.Status
+                }
+            })
+        )
+    }
 
-        {
-            code: "Code123",
-            discount: 80,
-            expiry: 30,
-            usage: "Multi use",
-            status: 'Expired',
-        },
+    FetchData();
 
-
-        {
-            code: "Code123",
-            discount: 80,
-            expiry: 30,
-            usage: "Single use",
-            status: 'Disables',
-        },
-
-
-    ]
 
     const columns = useMemo(
         () => [
-            { accessor: 'code', Header: 'Code' },
+            { accessor: 'voucher_name', Header: 'Code' },
             {
-                accessor: 'discount', Header: 'Discount', Cell: ({ row }: any) => {
-                    return <p className="mb-0">{row.values.discount} %</p>
+                accessor: 'discount_percentage', Header: 'Discount', Cell: ({ row }: any) => {
+                    return <p className="mb-0">{row.values.discount_percentage} %</p>
                 }
             },
             {
-                accessor: 'expiry', Header: 'Expiry', Cell: ({ row }: any) => {
-                    return <p className="mb-0">{row.values.expiry} Days</p>
+                accessor: 'expiry_date', Header: 'Expiry', Cell: ({ row }: any) => {
+                    return <p className="mb-0">{row.values.expiry_date}</p>
                 }
             },
-            { accessor: 'usage', Header: 'Usage' },
+            { accessor: 'Usage_restriction', Header: 'Usage' },
             {
-                accessor: "status", Header: "Status", Cell: ({ row }: any) => {
-                    console.log({ row })
+                accessor: "Status", Header: "Status", Cell: ({ row }: any) => {
                     let statusColor = ""
-                    switch (row.values.status) {
+                    switch (row.values.Status) {
                         case "Active":
                             statusColor = "success";
                             break;
@@ -66,12 +68,12 @@ export default function Vouchers() {
                             statusColor = "danger";
                             break;
 
-                        case "Disables":
+                        case "Disabled":
                             statusColor = "warning";
                             break;
                     }
                     return <>
-                        <Badge className='py-3 px-5' style={{ fontSize: '1rem', borderRadius: '10px' }} variant={statusColor}>{row.values.status}</Badge>
+                        <Badge className='py-3 px-5' style={{ fontSize: '1rem', borderRadius: '10px' }} variant={statusColor}>{row.values.Status}</Badge>
                     </>
                 }
             },
@@ -80,16 +82,16 @@ export default function Vouchers() {
                 Header: "Actions",
                 Cell: ({ row }: any) => {
                     const actionClick1 = () => {
-                        // fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'manage', type: "Personal Training", rowData: "" })
+                        voucherActionRef.current.TriggerForm({ id: row.original.id, actionType: 'view' })
                     };
                     const actionClick2 = () => {
-                        // fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'manage', type: "Personal Training", rowData: "" })
+                        voucherActionRef.current.TriggerForm({ id: row.original.id, actionType: 'edit' })
                     };
                     const actionClick3 = () => {
-                        // fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'manage', type: "Personal Training", rowData: "" })
+                        voucherActionRef.current.TriggerForm({ id: row.original.id, actionType: 'delete' })
                     };
                     const actionClick4 = () => {
-                        // fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'manage', type: "Personal Training", rowData: "" })
+                        voucherActionRef.current.TriggerForm({ id: row.original.id, actionType: 'toggle-status', current_status: row.original.Status })
                     };
                     const arrayAction = [
                         { actionName: 'View', actionClick: actionClick1 },
@@ -114,13 +116,13 @@ export default function Vouchers() {
         <div className="mt-5">
             <div className="d-flex justify-content-end mb-5 mr-5">
                 <Button onClick={() => {
-                     financeActionsRef.current.TriggerForm({actionType: 'createVoucher'})
+                    voucherActionRef.current.TriggerForm({ actionType: 'create' })
                 }}>Create Voucher</Button>
             </div>
             <Row>
                 <Col>
                     <Table columns={columns} data={dataTable} />
-                    <FinanceActions ref={financeActionsRef} />
+                    <VoucherAction ref={voucherActionRef} />
                 </Col>
             </Row>
         </div>

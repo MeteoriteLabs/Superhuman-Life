@@ -70,15 +70,21 @@ export default function CreateFitnessPackageModal({ name, formUISchema, formSubm
     }
 
 
-    const updateFormDuration = (formData: { mode: "Online Workout" | "Offline Workout"; duration?: number; }) => {
+    const updateFormDuration = (formData: { mode: "Online Workout" | "Offline Workout"; duration: number; }) => {
         let { duration, mode } = formData;
-        if (formData.mode) {
+        if (mode) {
             if (mode === "Online Workout" || mode === "Offline Workout") {
                 duration = 1
-            } else {
+            } 
+            else {
                 duration = 30
             }
         }
+     
+        if(duration === undefined) {
+            duration = 30
+        }
+
         return duration
     }
 
@@ -134,8 +140,9 @@ export default function CreateFitnessPackageModal({ name, formUISchema, formSubm
         const updateFinesspackagepricing = updatePrice(formData, actionType)
         const updateMode = updateModeName(formData);
         const updateDuration = updateFormDuration(formData);
-        const publishing_date = moment()
-        const expiry_date = moment(moment().add(365, 'days').calendar()); 
+        const publishing_date = moment();
+        const expiry_date = moment(publishing_date.add(365, 'days')); 
+   
 
         if (isStepper && step < stepper.length) {
             const update = updateInputValue(formData)
