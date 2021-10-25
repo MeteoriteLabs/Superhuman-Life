@@ -1,12 +1,15 @@
 import React, {useState, useEffect, useRef, useContext} from 'react';
 import { GET_TABLEDATA, GET_ALL_FITNESS_PACKAGE_BY_TYPE, GET_ALL_PROGRAM_BY_TYPE, GET_ALL_CLIENT_PACKAGE} from '../../graphQL/queries';
-import { useQuery } from '@apollo/client';
-import {Row, Col, Button} from 'react-bootstrap';
+import {UPDATE_STARTDATE} from '../../graphQL/mutation';
+import { useQuery, useMutation } from '@apollo/client';
+import {Row, Col, Button, Dropdown, Modal, InputGroup, FormControl} from 'react-bootstrap';
 import SchedulerPage from '../../../program-builder/program-template/scheduler';
 import moment from 'moment';
 import '../fitness.css';
 import FitnessAction from '../FitnessAction';
 import AuthContext from '../../../../context/auth-context';
+
+import './actionButton.css';
 
 const Scheduler = () => {
 
@@ -15,13 +18,21 @@ const Scheduler = () => {
     const [data, setData] = useState<any[]>([]);
     const [show, setShow] = useState(false);   
     const [userPackage, setUserPackage] = useState<any>([]);
-    let programIndex;
+    const [editDatesModal, setEditdatesModal] = useState(false);
+    const [startDate, setStartDate] = useState("");
 
+    let programIndex;
+    
     const fitnessActionRef = useRef<any>(null);
+    
+    const handleCloseDatesModal = () => setEditdatesModal(false);
+    const handleShowDatesModal = () => setEditdatesModal(true);
+
+    const [updateDate] = useMutation(UPDATE_STARTDATE, {onCompleted: (r: any) => {console.log(r)}});
 
     useEffect(() => {
         setTimeout(() => {
-            setShow(true)
+            setShow(true);
         }, 1500)
     }, [show]);
 
@@ -150,6 +161,22 @@ const Scheduler = () => {
     if(userPackage.length > 0){ 
         programIndex = userPackage.findIndex(item => item.proManagerId === last[1] && item.proManagerFitnessId === last[0]);
     }
+    
+    function handleDateEdit(){
+
+        let edate = moment(startDate).add(moment(data[0].edate).diff(data[0].sdate, 'days'), 'days');
+
+        updateDate({
+            variables: {
+                id: last[0],
+                startDate: moment(startDate).format("YYYY-MM-DD"),
+                endDate: moment(edate).format("YYYY-MM-DD") 
+            }
+        });
+
+        handleCloseDatesModal();
+        
+    }
 
     if (!show) return <span style={{ color: 'red' }}>Loading...</span>;
     else return (
@@ -253,9 +280,18 @@ const Scheduler = () => {
                                     <span><b>05</b></span><br/>
                                     </Col>
                                 </Row>
-                                <span><b style={{ color: 'gray'}}>Left to assign:</b> 7/{data[0].duration}</span>
+                                <span><b style={{ color: 'gray'}}>Left to assign:</b> 7/{moment(data[0].edate).diff(data[0].sdate, 'days') + " days"}</span>
                            </div>
                         </Col> 
+                        <Dropdown className="ml-5">
+                            <Dropdown.Toggle id="dropdown-basic" as="button" className="actionButtonDropDown">
+                                <i className="fas fa-ellipsis-v"></i>
+                            </Dropdown.Toggle>
+                            <Dropdown.Menu>
+                                <Dropdown.Item>Edit Details</Dropdown.Item>
+                                <Dropdown.Item onClick={handleShowDatesModal}>Edit Dates</Dropdown.Item>
+                            </Dropdown.Menu>
+                        </Dropdown>
                     </Row>
                 </Col> 
             </Row>
@@ -267,6 +303,26 @@ const Scheduler = () => {
                 </Col>
                 <FitnessAction ref={fitnessActionRef} />
             </Row>
+            <Modal show={editDatesModal} onHide={handleCloseDatesModal}>
+                <Modal.Body>
+                    <label>Edit Start Date: </label>
+                <InputGroup className="mb-3">
+                    <FormControl
+                        value={startDate === "" ? data[0].sdate : startDate}
+                        onChange={(e) => {setStartDate(e.target.value)}}
+                        type="date"
+                    />
+                </InputGroup>
+                </Modal.Body>
+                <Modal.Footer>
+                <Button variant="outline-danger" onClick={handleCloseDatesModal}>
+                    Close
+                </Button>
+                <Button variant="outline-success" disabled={startDate === "" ? true : false} onClick={() => { handleDateEdit()}}>
+                    Submit
+                </Button>
+                </Modal.Footer>
+            </Modal>
         </>
     );
 };

@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useContext} from 'react';
 import { GET_TABLEDATA, GET_ALL_CLIENT_PACKAGE_BY_TYPE } from '../../graphQL/queries';
 import { useQuery } from '@apollo/client';
-import {Row, Col, Button} from 'react-bootstrap';
+import {Row, Col} from 'react-bootstrap';
 import SchedulerPage from '../../../program-builder/program-template/scheduler';
 import moment from 'moment';
 import AuthContext from '../../../../context/auth-context';
@@ -115,9 +115,6 @@ const Scheduler = () => {
                                     <Row>
                                     <div className="ml-2">
                                         <img src="https://picsum.photos/200/100" alt="pic" style={{ width: "50px", height: "50px", borderRadius: "50%" }} />
-                                        <Button onClick={() => {
-                                            // fitnessActionRef.current.TriggerForm({ id: last[1], actionType: 'allClients', type: "Classic Class" })
-                                        }} className="ml-4" variant="outline-primary">All clients</Button>
                                     </div>
                                     </Row>
                                     <Row className="mt-1">
