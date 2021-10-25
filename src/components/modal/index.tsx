@@ -20,7 +20,7 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
     });
     
     function submitHandler(formData: any) {
-        if (isStepper && step < 2) {
+        if (isStepper && step < stepper.length) {
             console.log("Data submitted: ", formData);
             setStep(step + 1);
             setFormValues({ ...formValues, ...formData });
@@ -85,7 +85,7 @@ export default function ModalView({ name, formUISchema, formSubmit, formSchema, 
                                 size="sm"
                                 onClick={(event) => formRef.current.onSubmit(event)}
                             >
-                                {(step < 2)
+                                {(step < stepper.length)
                                     ? <>Next<i className="ml-4 fas fa-arrow-right"></i></>
                                     : <>Create<i className="ml-4 fas fa-check"></i></>
                                 }
