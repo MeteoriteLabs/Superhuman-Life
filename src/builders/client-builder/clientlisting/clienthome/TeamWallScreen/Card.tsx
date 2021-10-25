@@ -1,5 +1,6 @@
 import { Card, Col, Row, FormControl, InputGroup, Button } from "react-bootstrap";
 import ActionButton from "../../../../../components/actionbutton/index";
+import CreatePost from "./addPost";
 import { ADD_COMMENT, GET_TAGNAME, GET_RATING_NOTES, GET_FITNESSSCALE, GET_MOODSCALE } from "./queries";
 import AuthContext from "../../../../../context/auth-context";
 import { useContext, useRef, useState } from "react";
@@ -14,6 +15,7 @@ function CardComp(props: any) {
      const [rating, setRating] = useState<any>();
      const [img, setImg] = useState<any>();
      const [rate1, setRate1] = useState<any>();
+     const createEditMessageComponent = useRef<any>();
 
      function getDate(time: any) {
           let dateObj = new Date(time);
@@ -36,7 +38,6 @@ function CardComp(props: any) {
           useQuery(GET_RATING_NOTES, { variables: _variables, onCompleted: loadRating });
      }
      function loadRating(d: any) {
-          //console.log(d);
           setRating(d.ratings);
      }
      function addComment(val: any) {
@@ -68,8 +69,20 @@ function CardComp(props: any) {
      Fetch();
      FetchData({ id: props.resourceid });
      FetchRating({ id: props.resourceid, clientid: last });
+
+     // <StatusModal
+     //         modalTitle="Delete"
+     //         modalBody="Do you want to delete this message?"
+     //         buttonLeft="Cancel"
+     //         buttonRight="Yes"
+     //         onClick={() => {DeleteMessage(operation.id)}}
+     //         />
+
+     //deleteComment({ variables: { id: e.id } });
+     //deleteNote({ variables: { id: props.id } });
      return (
           <div>
+               <CreatePost ref={createEditMessageComponent}></CreatePost>
                <Card border="primary" className="mt-3">
                     <Card.Body>
                          <Row>
@@ -84,7 +97,16 @@ function CardComp(props: any) {
                                    <p className="font-weight-light desc">{props.designation}</p>
                               </Col>
                               <div className="d-flex flex-row-reverse mr-3 p-2">
-                                   <ActionButton action1="Edit" action2="Delete" />
+                                   <ActionButton
+                                        action1="Edit"
+                                        action2="Delete"
+                                        actionClick2={() => {
+                                             createEditMessageComponent.current.TriggerForm({
+                                                  id: props.id,
+                                                  type: "deleteNote",
+                                             });
+                                        }}
+                                   />
                                    <p className="mr-3">Updated: {getDate(Date.parse(props.updatedOn))}</p>
                               </div>
                          </Row>
@@ -141,7 +163,16 @@ function CardComp(props: any) {
                                                   <h5>{e.users_permissions_user.username}</h5>
                                              </Col>
                                              <div className="d-flex flex-row-reverse mr-3 p-2">
-                                                  <ActionButton action1="Edit" action2="Delete" />
+                                                  <ActionButton
+                                                       action1="Edit"
+                                                       action2="Delete"
+                                                       actionClick2={() => {
+                                                            createEditMessageComponent.current.TriggerForm({
+                                                                 id: e.id,
+                                                                 type: "deleteComment",
+                                                            });
+                                                       }}
+                                                  />
                                                   <p className="mr-3">
                                                        Updated: {getDate(Date.parse(props.updatedOn))}
                                                   </p>

@@ -1,14 +1,15 @@
 import React, { useImperativeHandle, useState, useContext } from "react";
 import { useMutation } from "@apollo/client";
 import ModalView from "../../../../../components/modal";
-import { ADD_RATING, ADD_NOTE } from "./queries";
+import { ADD_RATING, ADD_NOTE, DELETE_COMMENT, DELETE_NOTE } from "./queries";
 import AuthContext from "../../../../../context/auth-context";
 import { Subject } from "rxjs";
 import { schema, widgets } from "./schema";
+import StatusModal from "../../../../../components/StatusModal/StatusModal";
 
 interface Operation {
      id: string;
-     type: "create";
+     type: "create" | "deleteNote" | "deleteComment";
 }
 
 function CreatePosts(props: any, ref: any) {
@@ -30,6 +31,8 @@ function CreatePosts(props: any, ref: any) {
                modalTrigger.next(false);
           },
      });
+     const [deleteNote] = useMutation(DELETE_NOTE, {});
+     const [deleteComment] = useMutation(DELETE_COMMENT, {});
 
      const modalTrigger = new Subject();
 
@@ -89,6 +92,12 @@ function CreatePosts(props: any, ref: any) {
                });
           }
      }
+     function DeleteNote(id: any) {
+          deleteNote({ variables: { id: id } });
+     }
+     function DeleteComment(id: any) {
+          deleteComment({ variables: { id: id } });
+     }
 
      function OnSubmit(frm: any) {
           switch (operation.type) {
@@ -112,6 +121,28 @@ function CreatePosts(props: any, ref: any) {
                          }}
                          widgets={widgets}
                          modalTrigger={modalTrigger}
+                    />
+               )}
+               {operation.type === "deleteNote" && (
+                    <StatusModal
+                         modalTitle="Delete"
+                         modalBody="Do you want to delete this Feedback?"
+                         buttonLeft="Cancel"
+                         buttonRight="Yes"
+                         onClick={() => {
+                              DeleteNote(operation.id);
+                         }}
+                    />
+               )}
+               {operation.type === "deleteComment" && (
+                    <StatusModal
+                         modalTitle="Delete"
+                         modalBody="Do you want to delete this Comment?"
+                         buttonLeft="Cancel"
+                         buttonRight="Yes"
+                         onClick={() => {
+                              DeleteComment(operation.id);
+                         }}
                     />
                )}
           </>
