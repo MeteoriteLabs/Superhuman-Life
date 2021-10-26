@@ -5,15 +5,15 @@
        
     ],
     "properties": {
-        "fullName": {
+        "Full_Name": {
             "type": "string",
             "title": "Full Name"
         },
-         "phoneNumber": {
-            "type": "number",
+         "Phone_Number": {
+            "type": "string",
             "title": "Phone Number"
          },
-         "UPIid": {
+         "UPI_ID": {
             "type": "string",
             "title": "UPI ID"
          }

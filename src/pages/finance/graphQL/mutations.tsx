@@ -1,4 +1,4 @@
-import {gql} from '@apollo/client'
+import { gql } from '@apollo/client'
 
 
 
@@ -124,6 +124,75 @@ export const UPDATE_FITNESS_PRICING_ASSITS = gql`
         ){
             suggestedPricing{
                 mrp
+            }
+        }
+    }
+`
+
+export const CREAT_UPI = gql`
+    mutation createUpiDetailsChangemaker(
+        $Full_Name:String
+        $Phone_Number:String
+        $UPI_ID:String
+        $users_permissions_user:ID
+    ){
+        createUpiDetailsChangemaker(
+            input:{
+                data:{
+                    Full_Name: $Full_Name
+                    Phone_Number: $Phone_Number
+                    UPI_ID: $UPI_ID
+                    users_permissions_user:$users_permissions_user
+                }
+            }
+        ){
+            upiDetailsChangemaker{
+                id
+                Full_Name
+                Phone_Number
+                UPI_ID
+            }
+        }
+    }
+`
+
+export const CREATE_BANK_DETAIL = gql`
+    mutation createBankDetail(
+        $Full_Name:String
+        $Account_Number:String
+        $Bank_Name:String
+        $IFSC_Code:String
+        $PAN_Number:String
+        $GST_Number:String
+        $Company_Name:String
+        $Company_Address:String
+        $users_permissions_user: ID
+    ){
+        createBankDetail(
+            input:{
+                data:{
+                    Full_Name: $Full_Name
+                    Account_Number: $Account_Number
+                    Bank_Name: $Bank_Name
+                    IFSC_Code: $IFSC_Code
+                    PAN_Number: $PAN_Number
+                    GST_Number: $GST_Number
+                    Company_Name: $Company_Name
+                    Company_Address: $Company_Address
+                    users_permissions_user: $users_permissions_user
+                }
+            }
+        ){
+            bankDetail{
+                id
+                Full_Name
+                Account_Number
+                Bank_Name
+                IFSC_Code
+                PAN_Number
+                GST_Number
+                Company_Name
+                Company_Address
             }
         }
     }

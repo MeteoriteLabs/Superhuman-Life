@@ -1,4 +1,6 @@
 import React, { useRef } from 'react'
+import PaymentMethodsAction from './PaymentMethodsAction'
+
 
 export default function PaymentMethods() {
 
@@ -8,7 +10,7 @@ export default function PaymentMethods() {
 
     return (
         <div>
-            {/* <FinanceActions ref={paymentMethodActionRef} /> */}
+            <PaymentMethodsAction ref={paymentMethodActionRef} />
 
             <div className='d-flex justify-content-around' style={{ marginTop: '10rem' }}>
                 <div className='text-center' style={{ cursor: 'pointer' }} onClick={() => {

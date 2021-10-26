@@ -76,7 +76,6 @@ function PricingAssistAction(props, ref) {
                 formSubmit={(frm: any) => OnSubmit(frm)}
                 actionType={operation.actionType}
                 formData={operation.id && formData}
-                widgets={null}
                 formUISchema={uiSchema}
             />
         </div>

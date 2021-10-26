@@ -55,18 +55,6 @@ function VoucherAction(props, ref) {
             name = "Edit Voucher"
             break;
         }
-
-        // case "bank": {
-        //     name = "Bank Account"
-        //     formSchema = require("./PaymentMethods/bankAccount.json");
-        //     break;
-        // }
-
-        // case "upi": {
-        //     name = "UPI"
-        //     formSchema = require("./PaymentMethods/upi.json");
-        //     break;
-        // }
     }
 
 
@@ -166,8 +154,6 @@ function VoucherAction(props, ref) {
                 formSubmit={(frm: any) => OnSubmit(frm)}
                 actionType={operation.actionType}
                 formData={operation.id && formData}
-                widgets={widgets}
-                // formUISchema={null}
             />
             {operation.actionType === 'delete' &&
                 <StatusModal
