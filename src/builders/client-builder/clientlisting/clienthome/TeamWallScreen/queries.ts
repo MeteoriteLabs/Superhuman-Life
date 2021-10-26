@@ -75,8 +75,8 @@ export const ADD_NOTE = gql`
 `;
 
 export const GET_NOTES = gql`
-     query getfeedbackNotes($arr: [ID]) {
-          feedbackNotes(where: { users_permissions_user: { id_in: $arr } }, sort: "updatedAt:desc") {
+     query getfeedbackNotes($id: ID) {
+          feedbackNotes(where: { target_user: { id: $id } }, sort: "updatedAt:desc") {
                id
                updatedAt
                type
@@ -84,6 +84,9 @@ export const GET_NOTES = gql`
                     id
                     username
                     designation
+               }
+               target_user {
+                    id
                }
                note
                resource_id

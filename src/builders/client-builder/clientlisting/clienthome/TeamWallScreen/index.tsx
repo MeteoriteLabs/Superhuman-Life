@@ -14,7 +14,7 @@ function Index() {
      const CreatePostComponent = useRef<any>(null);
      const [changemaker, setChangemaker] = useState<any>([]);
      const [notes, setNotes] = useState<any>();
-     const noteFetch: any = [];
+     //const noteFetch: any = [];
 
      function FetchData(_variables: {} = { clientid: last }) {
           useQuery(GET_CHANGEMAKERS, { variables: _variables, onCompleted: loadData });
@@ -50,7 +50,7 @@ function Index() {
           });
      }
 
-     function FetchNotes(_variables: {} = { arr: noteFetch }) {
+     function FetchNotes(_variables: {} = { id: last }) {
           useQuery(GET_NOTES, { variables: _variables, onCompleted: LoadNotes });
      }
 
@@ -62,14 +62,14 @@ function Index() {
 
      FetchData({ clientid: last });
 
-     for (let i = 0; i < changemaker.length; i++) {
-          noteFetch.push(changemaker[i][3]);
-     }
+     // for (let i = 0; i < changemaker.length; i++) {
+     //      noteFetch.push(changemaker[i][3]);
+     // }
 
-     if (!noteFetch.includes(last)) {
-          noteFetch.push(last);
-     }
-     FetchNotes({ arr: noteFetch });
+     // if (!noteFetch.includes(last)) {
+     //      noteFetch.push(last);
+     // }
+     FetchNotes({ id: last });
      return (
           <div>
                <div className="d-flex flex-row-reverse mr-3 p-2">
