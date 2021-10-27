@@ -18,10 +18,23 @@
 .cardBorder {
      border-top: 2px solid lightgrey;
 }
+.rating1 {
+     margin-left: 90px;
+     font-weight: bold;
+}
+.rating2 {
+     margin-left: 20px;
+}
 
 @media (max-width: 900px) {
      .changemaker {
           width: 30%;
           margin-left: 20px;
+     }
+}
+@media (max-width: 450px) {
+     .rating2 {
+          margin-top: 10px;
+          margin-left: 60px;
      }
 }

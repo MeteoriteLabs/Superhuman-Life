@@ -111,18 +111,43 @@ function CardComp(props: any) {
                               </div>
                          </Row>
                          <Card.Text>
-                              <h6>{name}</h6>
-                              <div className="mt-1" dangerouslySetInnerHTML={{ __html: props.note }}></div>
-                              {rating &&
-                                   rating.map((d) => {
-                                        if (d.type === "rpm") {
-                                             return <p>{rate1[d.rating - 1]}</p>;
-                                        }
-                                        if (d.type === "mood") {
-                                             return <img src={`/assets/ratingicons/${img[d.rating - 1]}`} alt="" />;
-                                        }
-                                        return "";
-                                   })}
+                              <div>
+                                   <h6>Tag: {name}</h6>
+                              </div>
+                              <div>
+                                   <h6>Notes:</h6>
+                                   <div dangerouslySetInnerHTML={{ __html: props.note }}></div>
+                              </div>
+
+                              <Row className="ml-2">
+                                   {rating &&
+                                        rating.map((d) => {
+                                             if (d.type === "rpm") {
+                                                  let word = rate1[d.rating - 1];
+                                                  let string = word.split("-");
+                                                  return (
+                                                       <div className="rounded border border-dark p-2">
+                                                            <h6 className="ml-2">Rate Of Perceived Exertion</h6>
+
+                                                            <p className="rating1">{string[0]} </p>
+                                                            <p>{string[1]}</p>
+                                                       </div>
+                                                  );
+                                             }
+                                             if (d.type === "mood") {
+                                                  return (
+                                                       <div className="rounded border border-dark p-2 rating2">
+                                                            <h6 className="ml-3">Mood</h6>
+                                                            <img
+                                                                 src={`/assets/ratingicons/${img[d.rating - 1]}`}
+                                                                 alt=""
+                                                            />
+                                                       </div>
+                                                  );
+                                             }
+                                             return "";
+                                        })}
+                              </Row>
                          </Card.Text>
 
                          <Card.Body>
