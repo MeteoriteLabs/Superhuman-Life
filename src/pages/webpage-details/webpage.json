@@ -1,15 +1,10 @@
 {
     "1": {
-        "title": "Webpage details",
+        "title": "",
         "type": "object",
-        "required": [
-            "brandName",
-            "logo",
-            "shortBio",
-            "emailId"
-        ],
+        "required": [],
         "properties": {
-            "brandName": {
+            "brand_name": {
                 "type": "string",
                 "title": "Brand Name"
             },
@@ -25,10 +20,6 @@
                 "type": "string",
                 "title": "Email ID"
             },
-            "socialAccounts": {
-                "type": "string",
-                "title": "Social Accounts"
-            },
             "address": {
                 "type": "string",
                 "title": "Address"
@@ -36,11 +27,33 @@
             "phoneNumber": {
                 "type": "number",
                 "title": "Phone Number"
+            },
+            "socialAccounts": {
+                "type": "object",
+                "title": "Social Accounts",
+                "properties": {
+                    "instagram": {
+                        "type": "string",
+                        "title": "Instagram"
+                    },
+                    "facebook": {
+                        "type": "string",
+                        "title": "Facebook"
+                    },
+                    "youtube": {
+                        "type": "string",
+                        "title": "Youtube"
+                    },
+                    "linkedIn": {
+                        "type": "string",
+                        "title": "LinkedIn"
+                    }
+                }
             }
         }
     },
     "2": {
-        "title": "Webpage details",
+        "title": "",
         "type": "object",
         "properties": {
             "carousel": {
@@ -54,7 +67,7 @@
         }
     },
     "3": {
-        "title": "Webpage details",
+        "title": "",
         "type": "object",
         "properties": {
             "aboutImage": {
@@ -72,7 +85,7 @@
         }
     },
     "4": {
-        "title": "Webpage details",
+        "title": "",
         "type": "object",
         "properties": {
             "stories": {
@@ -86,27 +99,33 @@
         }
     },
     "5": {
-        "title": "Webpage details",
+        "title": "",
         "type": "object",
         "properties": {
-            "packagesBackgroundColor": "string",
-            "title": "Packages-BackgroundColor"
+            "packagesBackgroundColor": {
+                "type": "string",
+                "title": "Packages-BackgroundColor"
+            }
         }
     },
     "6": {
-        "title": "Webpage details",
+        "title": "",
         "type": "object",
         "properties": {
-            "contactUsBackground": "string",
-            "title": "Contact Us -Background"
+            "contactUsBackground": {
+                "type": "string",
+                "title": "Contact Us -Background"
+            }
         }
     },
     "7": {
-        "title": "Webpage details",
+        "title": "",
         "type": "object",
         "properties": {
-            "gallary": "string",
-            "title": "Gallary"
+            "gallery": {
+                "type": "string",
+                "title": "Gallery"
+            }
         }
     }
 }

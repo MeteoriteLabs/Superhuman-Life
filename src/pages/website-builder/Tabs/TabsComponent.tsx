@@ -98,7 +98,7 @@ export default function TabsComponent() {
               className="text-center text-light bg-dark"
               md={{ span: 12, offset: 0 }}
             >
-              <h3>Webiste</h3>
+              <h3>Website</h3>
             </Col>
           </Row>
 
@@ -189,18 +189,15 @@ export default function TabsComponent() {
                         <Button
                           variant="dark"
                           className="px-5 border"
-                          // onClick={() => {
-                          //   createWebpageDetailsComponent.current.TriggerForm({
-                          //     id: null,
-                          //     type: "create",
-                          //   });
-                          // }}
+                          onClick={() => {
+                            createWebpageDetailsComponent.current.TriggerForm({
+                              id: null,
+                              type: "create",
+                            });
+                          }}
                         >
                           Edit
                         </Button>
-                        {/* <CreateWebpageDetails
-                        ref={createWebpageDetailsComponent}
-                      ></CreateWebpageDetails> */}
                       </div>
                     </Col>
                   </Row>
