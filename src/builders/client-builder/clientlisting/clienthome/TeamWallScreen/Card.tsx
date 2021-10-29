@@ -112,10 +112,9 @@ function CardComp(props: any) {
                          </Row>
                          <Card.Text>
                               <div>
-                                   <h6>Tag: {name}</h6>
+                                   <h5>{name}</h5>
                               </div>
                               <div>
-                                   <h6>Notes:</h6>
                                    <div dangerouslySetInnerHTML={{ __html: props.note }}></div>
                               </div>
 
