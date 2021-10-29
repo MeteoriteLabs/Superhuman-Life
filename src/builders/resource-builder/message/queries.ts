@@ -150,7 +150,7 @@ export const UPDATE_STATUS = gql`
 `
 export const GET_MESSAGE = gql`
     query getmessage($id: ID!) {
-        mindsetmessages(id: $id) {
+        mindsetmessage(id: $id) {
             id
             title
             description
