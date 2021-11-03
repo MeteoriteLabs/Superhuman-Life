@@ -1,7 +1,12 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { Image, ProgressBar } from "react-bootstrap";
 import AWS from "aws-sdk";
+import Cropper from "react-easy-crop";
+import Slider from "react-rangeslider";
+import { Point, Area } from "react-easy-crop/types";
+import "react-rangeslider/lib/index.css";
+import getCroppedImg from "./cropImage";
 import "./upload.css";
 const _Jimp = require("jimp/browser/lib/jimp");
 
@@ -30,11 +35,48 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
      const [imageid, setImageid] = useState<any>(null);
      const [videoUpload, setVideoUpload] = useState<any>(false);
      const [videoID, setVideoID] = useState<any>(null);
+     //const [renderCrop, setRenderCrop] = useState<any>(null);
+
+     const [imageSrc, setImageSrc] = useState<any>(null);
+     const [crop, setCrop] = useState<Point>({ x: 0, y: 0 });
+     const [zoom, setZoom] = useState<any>(1);
+     const [croppedAreaPixels, setCroppedAreaPixels] = useState<any>(null);
+     const [croppedImage, setCroppedImage] = useState<any>(null);
+
      let allowedImageFormats = ["image/png", "image/jpeg", "image/jpg"];
      let allowedVideoFormats = ["video/mp4"];
 
      var albumPhotosKey = process.env.REACT_APP_S3_PREFIX_NAME;
 
+     const onCropComplete = useCallback((croppedArea: Area, croppedAreaPixels: Area) => {
+          console.log(croppedArea, croppedAreaPixels);
+          setCroppedAreaPixels(croppedAreaPixels);
+     }, []);
+
+     const showCroppedImage = useCallback(async () => {
+          try {
+               const cropImage = await getCroppedImg(imageSrc, croppedAreaPixels);
+               console.log("donee", { croppedImage });
+               setCroppedImage(cropImage);
+               uploadFile(cropImage);
+               setImageSrc(null);
+               console.log(cropImage);
+          } catch (e) {
+               console.error(e);
+          }
+     }, [croppedAreaPixels, imageSrc]);
+
+     function handleCrop(file) {
+          //console.log(e.target.files[0]);
+          //const file = e.target.files[0];
+
+          if (allowedVideoFormats.indexOf(file.type) > -1) {
+               uploadFile(file);
+               return;
+          } else {
+               setImageSrc(URL.createObjectURL(file));
+          }
+     }
      function deleteAllImages() {
           deleteFile(albumPhotosKey + "sm-" + imageid);
           deleteFile(albumPhotosKey + "md-" + imageid);
@@ -175,7 +217,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                });
      }
 
-     const uploadFile = (file) => {
+     const uploadFile = (file: any) => {
           if (allowedVideoFormats.indexOf(file.type) > -1) {
                VideoUpload(file);
                return;
@@ -204,7 +246,8 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                }
                if (allowedImageFormats.indexOf(e.type) > -1) {
                     setRender(1);
-                    uploadFile(e);
+                    handleCrop(e);
+                    //uploadFile(e);
                     return;
                }
                if (allowedVideoFormats.indexOf(e.type) > -1) {
@@ -219,7 +262,8 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                }
                if (allowedImageFormats.indexOf(e.type) > -1) {
                     setRender(1);
-                    uploadFile(e);
+                    handleCrop(e);
+                    //uploadFile(e);
                     return;
                }
           } else if (!props.allowImage && props.allowVideo) {
@@ -292,124 +336,192 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
      }
 
      return (
-          <div className="dropArea p-1">
-               {url ? (
-                    <div className="border bg-white border-dark p-4 ">
-                         <Image src={url} width="500px" height="500px" className="img-thumbnail" alt="Image Preview" />
-                         <p className="ml-2 mt-3 font-weight-bold text-success">Image Uploaded Successfully!!</p>
-                         <div className="mt-3 d-flex flex-row-reverse">
-                              <button type="button" className="btn-sm btn-danger" onClick={() => deleteAllImages()}>
-                                   Remove
-                              </button>
-                         </div>
-                    </div>
-               ) : (
-                    " "
-               )}
-               {videoUpload ? (
-                    <>
+          <div>
+               <div className="dropArea p-1">
+                    {url ? (
                          <div className="border bg-white border-dark p-4 ">
                               <Image
-                                   //https://videodelivery.net/513a6654dd41d64604f50eda381ff2d8/thumbnails/thumbnail.jpg?time=0s
-                                   src={`https://videodelivery.net/${videoID}/thumbnails/thumbnail.jpg?time=0s`}
+                                   src={url}
                                    width="500px"
                                    height="500px"
                                    className="img-thumbnail"
-                                   alt="Image Preview For Video"
+                                   alt="Image Preview"
                               />
-                              <p className="text-success font-weight-bold mt-2"> Video Uploaded Successfully!!</p>
+                              <p className="ml-2 mt-3 font-weight-bold text-success">Image Uploaded Successfully!!</p>
                               <div className="mt-3 d-flex flex-row-reverse">
-                                   <button type="button" className="btn-sm btn-danger" onClick={() => videoDelete()}>
+                                   <button
+                                        type="button"
+                                        className="btn-sm btn-danger"
+                                        onClick={() => deleteAllImages()}
+                                   >
                                         Remove
                                    </button>
                               </div>
                          </div>
-                    </>
-               ) : (
-                    " "
-               )}
-               <div>
-                    {props.allowImage && !props.allowVideo ? (
-                         <>{render === 0 ? <p className="text-danger">Supported Formats (png/jpeg/jpg)</p> : " "}</>
                     ) : (
                          " "
                     )}
-                    {!props.allowImage && props.allowVideo ? (
-                         <>{render === 0 ? <p className="text-danger">Supported Formats (mp4)</p> : " "}</>
-                    ) : (
-                         " "
-                    )}
-                    {props.allowImage && props.allowVideo ? (
-                         <>{render === 0 ? <p className="text-danger">Supported Formats (png/jpeg/jpg/mp4)</p> : " "}</>
-                    ) : (
-                         " "
-                    )}
-                    {!props.allowImage && !props.allowVideo ? (
-                         <p className="text-danger">upload component cannot have both values as false </p>
-                    ) : (
-                         " "
-                    )}
-                    {url || videoUpload ? (
-                         " "
-                    ) : (
-                         <div className="bg-white">
-                              <div
-                                   className="mb-3 p-4 dropzone"
-                                   onDragOver={(e) => {
-                                        e.preventDefault();
-                                   }}
-                                   onDrop={(e) => {
-                                        e.preventDefault();
-                                        handleVideoOrImageInputDragDrop(e.dataTransfer.files[0]);
-                                   }}
-                              >
-                                   {props.allowImage && !props.allowVideo ? (
-                                        <>
-                                             <p className="d-inline">Drag & Drop Image</p>
-                                             <p className="font-weight-bold d-inline"> (png/jpeg/jpg)</p>
-                                        </>
-                                   ) : (
-                                        " "
-                                   )}
-                                   {!props.allowImage && props.allowVideo ? (
-                                        <>
-                                             <p className="d-inline">Drag & Drop Video</p>
-                                             <p className="font-weight-bold d-inline"> (mp4)</p>
-                                        </>
-                                   ) : (
-                                        " "
-                                   )}
-                                   {props.allowImage && props.allowVideo ? (
-                                        <>
-                                             <p className="d-inline">Drag & Drop Image Or Video</p>
-                                             <p className="font-weight-bold d-inline"> (png/jpeg/jpg/mp4)</p>
-                                        </>
-                                   ) : (
-                                        " "
-                                   )}
-
-                                   <p className="mt-3">OR</p>
-                                   <input type="file" className="pt-2" onChange={handleFileInput} />
+                    {videoUpload ? (
+                         <>
+                              <div className="border bg-white border-dark p-4 ">
+                                   <Image
+                                        //https://videodelivery.net/513a6654dd41d64604f50eda381ff2d8/thumbnails/thumbnail.jpg?time=0s
+                                        src={`https://videodelivery.net/${videoID}/thumbnails/thumbnail.jpg?time=0s`}
+                                        width="500px"
+                                        height="500px"
+                                        className="img-thumbnail"
+                                        alt="Image Preview For Video"
+                                   />
+                                   <p className="text-success font-weight-bold mt-2"> Video Uploaded Successfully!!</p>
                                    <div className="mt-3 d-flex flex-row-reverse">
                                         <button
                                              type="button"
-                                             className={render ? "btn-sm btn-success ml-5" : "d-none"}
-                                             onClick={() => uploadFile(selectedFile)}
+                                             className="btn-sm btn-danger"
+                                             onClick={() => videoDelete()}
                                         >
-                                             Upload
+                                             Remove
                                         </button>
                                    </div>
+                              </div>
+                         </>
+                    ) : (
+                         " "
+                    )}
+                    {imageSrc ? (
+                         <div className="">
+                              <div className="crop-container">
+                                   <Cropper
+                                        image={imageSrc}
+                                        crop={crop}
+                                        zoom={zoom}
+                                        aspect={4 / 3}
+                                        onCropChange={setCrop}
+                                        onCropComplete={onCropComplete}
+                                        onZoomChange={setZoom}
+                                   />
+                              </div>
 
-                                   {url || videoUpload ? (
-                                        " "
-                                   ) : (
-                                        <div className={render ? "pt-2" : "d-none"}>
-                                             <ProgressBar animated now={progress} label={`${progress}%`} />
-                                        </div>
-                                   )}
+                              <div className="mt-2">
+                                   <Slider
+                                        className="controls"
+                                        min={1}
+                                        max={3}
+                                        step={0.1}
+                                        value={zoom}
+                                        onChange={(zoom: any) => setZoom(zoom)}
+                                   />
+                                   <button
+                                        type="button"
+                                        className="uploadButton btn-sm btn-success ml-5"
+                                        onClick={() => {
+                                             showCroppedImage();
+                                        }}
+                                   >
+                                        Upload
+                                   </button>
                               </div>
                          </div>
+                    ) : (
+                         " "
                     )}
+                    <div>
+                         {props.allowImage && !props.allowVideo ? (
+                              <>
+                                   {render === 0 ? (
+                                        <p className="text-danger">Supported Formats (png/jpeg/jpg)</p>
+                                   ) : (
+                                        " "
+                                   )}
+                              </>
+                         ) : (
+                              " "
+                         )}
+                         {!props.allowImage && props.allowVideo ? (
+                              <>{render === 0 ? <p className="text-danger">Supported Formats (mp4)</p> : " "}</>
+                         ) : (
+                              " "
+                         )}
+                         {props.allowImage && props.allowVideo ? (
+                              <>
+                                   {render === 0 ? (
+                                        <p className="text-danger">Supported Formats (png/jpeg/jpg/mp4)</p>
+                                   ) : (
+                                        " "
+                                   )}
+                              </>
+                         ) : (
+                              " "
+                         )}
+                         {!props.allowImage && !props.allowVideo ? (
+                              <p className="text-danger">upload component cannot have both values as false </p>
+                         ) : (
+                              " "
+                         )}
+                         {url || videoUpload ? (
+                              " "
+                         ) : (
+                              <div className="bg-white">
+                                   <div
+                                        className="mb-3 p-4 dropzone"
+                                        onDragOver={(e) => {
+                                             e.preventDefault();
+                                        }}
+                                        onDrop={(e) => {
+                                             e.preventDefault();
+                                             handleVideoOrImageInputDragDrop(e.dataTransfer.files[0]);
+                                        }}
+                                   >
+                                        {props.allowImage && !props.allowVideo ? (
+                                             <>
+                                                  <p className="d-inline">Drag & Drop Image</p>
+                                                  <p className="font-weight-bold d-inline"> (png/jpeg/jpg)</p>
+                                             </>
+                                        ) : (
+                                             " "
+                                        )}
+                                        {!props.allowImage && props.allowVideo ? (
+                                             <>
+                                                  <p className="d-inline">Drag & Drop Video</p>
+                                                  <p className="font-weight-bold d-inline"> (mp4)</p>
+                                             </>
+                                        ) : (
+                                             " "
+                                        )}
+                                        {props.allowImage && props.allowVideo ? (
+                                             <>
+                                                  <p className="d-inline">Drag & Drop Image Or Video</p>
+                                                  <p className="font-weight-bold d-inline"> (png/jpeg/jpg/mp4)</p>
+                                             </>
+                                        ) : (
+                                             " "
+                                        )}
+
+                                        <p className="mt-3">OR</p>
+                                        <input type="file" className="pt-2" onChange={handleFileInput} />
+
+                                        <div className="mt-3 d-flex flex-row-reverse">
+                                             <button
+                                                  type="button"
+                                                  className={render ? "btn-sm btn-success ml-5" : "d-none"}
+                                                  onClick={() => handleCrop(selectedFile)}
+                                             >
+                                                  {selectedFile && allowedVideoFormats.indexOf(selectedFile.type) > -1
+                                                       ? "Upload"
+                                                       : "Crop"}
+                                             </button>
+                                        </div>
+
+                                        {url || videoUpload ? (
+                                             " "
+                                        ) : (
+                                             <div className={render ? "pt-2" : "d-none"}>
+                                                  <ProgressBar animated now={progress} label={`${progress}%`} />
+                                             </div>
+                                        )}
+                                   </div>
+                              </div>
+                         )}
+                    </div>
                </div>
           </div>
      );
