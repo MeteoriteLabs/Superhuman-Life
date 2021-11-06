@@ -19,6 +19,43 @@ export const UPDATE_STARTDATE = gql`
      }
 `
 
+export const UPDATE_FITNESSPACKAGE_GROUP_TIME = gql`
+     mutation updateFitnesspackageGroupTime($id: ID!, $groupstarttime: String!, $groupendtime: String!) {
+          updateFitnesspackage(
+               input: {
+                    where: {id: $id}
+                    data: {
+                         groupstarttime: $groupstarttime
+                         groupendtime: $groupendtime
+                    }
+               }
+          ){
+               fitnesspackage {
+                    id
+                    packagename
+               }
+          }
+     }
+`
+
+export const UPDATE_USERPACKAGE_EFFECTIVEDATE = gql`
+     mutation updateUserPackage($id: ID!, $effectiveDate: DateTime!){
+          updateUserPackage(
+               input: {
+                    where: {id: $id}
+                    data: {
+                         effective_date: $effectiveDate
+                    }
+               }
+          ){
+               userPackage {
+                    id
+                    effective_date
+               }
+          }
+     }
+`
+
 export const EDIT_PROGRAM = gql`
     mutation fitnessprogram(
             $id: ID! 

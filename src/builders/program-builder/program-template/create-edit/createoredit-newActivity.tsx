@@ -30,6 +30,8 @@ function CreateEditActivity(props: any, ref: any) {
     useImperativeHandle(ref, () => ({
         TriggerForm: (msg: Operation) => {
             setOperation(msg);
+            schema.startDate = props.startDate;
+            schema.duration = props.duration;
 
             if (msg && !msg.id) //render form if no message id
                 modalTrigger.next(true);
@@ -61,6 +63,13 @@ function CreateEditActivity(props: any, ref: any) {
         let timeString = (parseInt(hours) < 10 ? "0" + hours : hours) + ':' + (parseInt(minutes) === 0 ? "0" + minutes : minutes);
         return timeString.toString();
     }
+    function handleTime(time: string){
+        let timeArray = time.split(':');
+        let hours = timeArray[0];
+        let minutes = timeArray[1];
+        let timeString = (parseInt(hours) < 10 ? hours.charAt(1) : hours) + ':' + (parseInt(minutes) === 0 ? "0" : minutes);
+        return timeString.toString();
+    }
 
     function UpdateProgram(frm: any) {
         var existingEvents = (props.events === null ? [] : [...props.events]);
@@ -75,12 +84,12 @@ function CreateEditActivity(props: any, ref: any) {
             delete frm.newActivity[0].id;
             for(var i = 0; i < frm.day.length; i++){
                 daysArray.push({
-                    day: parseInt(frm.day[i].day.substr(4)), 
+                    day: parseInt(frm.day[i].key), 
                     name: name,
                     id: id,
                     type: 'activity',
-                    startTime: frm.time.startTime,
-                    endTime: frm.time.endTime, 
+                    startTime: handleTime(frm.time.startTime),
+                    endTime: handleTime(frm.time.endTime), 
                     activityTarget: frm.newActivity[0]
                 });
             }

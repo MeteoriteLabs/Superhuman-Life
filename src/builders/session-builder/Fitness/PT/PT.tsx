@@ -53,13 +53,14 @@ export default function Group(props) {
                     programName: packageItem.program_managers.length === 0 ? 'N/A' : packageItem.program_managers[0].fitnessprograms[0].title,
                     programId: packageItem.program_managers.length === 0 ? null : packageItem.program_managers[0].fitnessprograms[0].id,
                     programStatus: packageItem.program_managers.length === 0 ? 'N/A' : "Assigned",
-                    programRenewal: packageItem.program_managers.length === 0 ? 'N/A' : calculateProgramRenewal(packageItem.program_managers[0].fitnessprograms[0].duration_days, packageItem.effective_date, packageItem.program_managers[0].fitnessprograms[0].renewal_dt),
+                    programRenewal: packageItem.program_managers.length === 0 ? 'N/A' : calculateProgramRenewal(packageItem.program_managers[0].fitnessprograms[0].duration_days, packageItem.program_managers[0].fitnessprograms[0].start_dt, packageItem.program_managers[0].fitnessprograms[0].renewal_dt),
                 }
             })
         )
     }
 
     function calculateProgramRenewal(duration, effectiveDate, renewalDate) {
+        console.log('calculateProgramRenewal', duration, effectiveDate, renewalDate);
         
         const dates: string[] = []; 
 

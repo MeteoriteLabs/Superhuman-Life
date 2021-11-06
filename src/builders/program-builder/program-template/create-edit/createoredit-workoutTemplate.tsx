@@ -30,6 +30,8 @@ function CreateEditWorkoutTemplate(props: any, ref: any) {
     useImperativeHandle(ref, () => ({
         TriggerForm: (msg: Operation) => {
             setOperation(msg);
+            schema.startDate = props.startDate;
+            schema.duration = props.duration;
 
             if (msg && !msg.id) //render form if no message id
                 modalTrigger.next(true);
@@ -61,6 +63,14 @@ function CreateEditWorkoutTemplate(props: any, ref: any) {
         return timeString.toString();
     }
 
+    function handleTime(time: string){
+        let timeArray = time.split(':');
+        let hours = timeArray[0];
+        let minutes = timeArray[1];
+        let timeString = (parseInt(hours) < 10 ? hours.charAt(1) : hours) + ':' + (parseInt(minutes) === 0 ? "0" : minutes);
+        return timeString.toString();
+    }
+
     function UpdateProgram(frm: any) {
         var existingEvents: any = (props.events === null ? [] : [...props.events]);
         if (frm.day) {
@@ -72,11 +82,12 @@ function CreateEditWorkoutTemplate(props: any, ref: any) {
             frm.time = JSON.parse(frm.time);
             eventJson.type = 'workout';
             eventJson.mode = frm.assignMode;
+            eventJson.tag = frm.tag;
             eventJson.name = frm.workoutEvent[0].name;
             eventJson.id = frm.workoutEvent[0].id;
-            eventJson.startTime = frm.time.startTime;
-            eventJson.endTime = frm.time.endTime;
-            eventJson.day = parseInt(frm.day[0].day.substr(4));
+            eventJson.startTime = handleTime(frm.time.startTime);
+            eventJson.endTime = handleTime(frm.time.endTime);
+            eventJson.day = parseInt(frm.day[0].key);
             if (existingEvents.length === 0) {
                 existingEvents.push(eventJson);
             } else {

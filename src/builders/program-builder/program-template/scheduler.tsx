@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Modal, Button, Row, Col, Tab, Tabs, InputGroup, FormControl, Badge, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { Modal, Button, Row, Col, Tab, Tabs, InputGroup, FormControl, Badge, OverlayTrigger, Tooltip, Form } from 'react-bootstrap';
 import './styles.css';
 import { GET_SCHEDULEREVENTS, PROGRAM_EVENTS, UPDATE_FITNESSPROGRAMS, FETCH_WORKOUT, FETCH_ACTIVITY } from './queries';
 import { useQuery, useMutation } from "@apollo/client";
@@ -23,16 +23,41 @@ const Schedular = (props: any) => {
     const [duplicate, setDuplicate] = useState(false);
     const [event, setEvent] = useState<any>({});
     const [arr, setArr] = useState<any[]>([]);
+    const [arr2, setarr2] = useState<any>({});
     const [program, setProgram] = useState('none');
+    const [mode, setMode] = useState("");
+    const [tag, setTag] = useState("");
     const program_id = window.location.pathname.split('/').pop();
     const schedulerDay: any = require("./json/scheduler-day.json");
 
+    function handleEndTime(startTime: any, endTime: any){
+        var timeStart: any = new Date("01/01/2007 " + handleTimeFormat(startTime));
+        var timeEnd: any = new Date("01/01/2007 " + handleTimeFormat(endTime));
+        var diff1 = ((timeEnd - timeStart) / 1000 ) /60;
+
+        return moment().set({"hour": arr2?.h, "minute": arr2?.m}).add(diff1, 'minutes').format("HH:mm")
+    }
+
     useQuery(FETCH_WORKOUT, {
-        variables: { id: event.id },
-        skip: (event.type !== "workout"),
+        variables: { id: arr2.event?.import !== 'importedEvent' ? event.id : arr2.event?.id },
+        skip: (event.type !== "workout" && arr2.event?.import !== "importedEvent"),
         onCompleted: (r: any) => {
             setData(r.workouts);
             handleShow();
+            if(arr2.event?.import === "importedEvent"){
+                setEvent({ 
+                    title: arr2.event?.title, 
+                    type: arr2.event?.type,
+                    id: arr2.event?.id,
+                    tag: arr2.event?.tag,
+                    mode: arr2.event?.mode,
+                    day: arr2?.d,
+                    hour: arr2?.h,
+                    min: arr2?.m,
+                    endHour: handleEndTime(arr2.event?.hour + ':' + arr2.event?.min, arr2.event?.endHour + ':' + arr2.event?.endMin).split(':')[0].charAt(1),
+                    endMin: handleEndTime(arr2.event?.hour + ':' + arr2.event?.min, arr2.event?.endHour + ':' + arr2.event?.endMin).split(':')[1],
+                });
+            }
         }
     });
 
@@ -116,7 +141,8 @@ const Schedular = (props: any) => {
                 arr[val.day][startTimeHour][startTimeMinute].push({
                     "title": val.name, "color": "skyblue",
                     "day": val.day, "hour": startTimeHour, "min": startTimeMinute, "type": val.type,
-                    "endHour": endTimeHour, "endMin": endTimeMin, "id": val.id, "mode": val.mode
+                    "endHour": endTimeHour, "endMin": endTimeMin, "id": val.id, "mode": val.mode,
+                    "tag": val.tag
                 });
             })
         }
@@ -159,7 +185,6 @@ const Schedular = (props: any) => {
     }, [show]);
 
     let confirmVal: any = {};
-    const [arr2, setarr2] = useState<any>({});
 
     function handleChange(d: any, h: any, m: any, event: any) {
         confirmVal.event = event;
@@ -167,7 +192,7 @@ const Schedular = (props: any) => {
         confirmVal.h = h;
         confirmVal.m = m;
         setarr2(confirmVal);    
-        setOnDragAndDrop(true); 
+        event.import === 'importedEvent' ? setOnDragAndDrop(false) : setOnDragAndDrop(true); 
     }
 
     function handleFloatingActionProgramCallback(event: any) {
@@ -218,7 +243,7 @@ const Schedular = (props: any) => {
         let timeArray = time.split(':');
         let hours = timeArray[0];
         let minutes = timeArray[1];
-        let timeString = (parseInt(hours) < 10 ? "0" + hours : hours) + ':' + (parseInt(minutes) === 0 ? "0" + minutes : minutes);
+        let timeString = (parseInt(hours) < 10 && parseInt(hours) !== 0 ? "0" + hours : hours) + ':' + (parseInt(minutes) === 0 ? "0" + minutes : minutes);
         return timeString.toString();
     }
 
@@ -230,6 +255,7 @@ const Schedular = (props: any) => {
         changedTime.startChange = JSON.parse(changedTime.startChange);
         newEvent.name = e.title;
         newEvent.mode = e.mode;
+        newEvent.tag = e.tag;
         newEvent.day = (duplicatedDay.length === 0 ? e.day : parseInt(duplicatedDay[0].day.substr(4)));
         newEvent.startTime = changedTime.startChange.startTime;
         newEvent.endTime = changedTime.startChange.endTime;
@@ -271,54 +297,166 @@ const Schedular = (props: any) => {
         })
     }
 
-    function handleSaveChanges(e: any) {
+    function handleImportedEvent(e: any, mode: any, tag: any) {
+        let newEvent: any = {};
+        function handleTime(time: string){
+            let timeArray = time.split(':');
+            let hours = timeArray[0];
+            let minutes = timeArray[1];
+            let timeString = (parseInt(hours) < 10 ? hours.charAt(1) : hours) + ':' + (parseInt(minutes) === 0 ? "0" : minutes);
+            return timeString.toString();
+        }
+        const values = [...arr];
+        if (arr2.event.day) {
+            values[arr2.event.day][arr2.event.hour][arr2.event.min].splice(arr2.event.index, 1);
+        }
+        
+        if (arr2.d === undefined || arr2.h === undefined || arr2.m === undefined) {
+            return;
+        }
+        if (!values[arr2.d][arr2.h][arr2.m]) {
+            values[arr2.d][arr2.h][arr2.m] = [];
+        }
+
+        const timeInput = JSON.parse(e.startChange);
+
+        newEvent.name = event.title;
+        newEvent.mode = mode === "" ? event.mode : mode;
+        newEvent.tag = tag === "" ? event.tag : tag
+        newEvent.day = event.day;
+        newEvent.type = event.type;
+        newEvent.id = event.id;
+        newEvent.startTime = timeInput.startTime === "" ? event.hour + ':' + event.min : handleTime(timeInput.startTime);
+        newEvent.endTime = timeInput.endTime === "" ? event.endHour + ':' + event.endMin : handleTime(timeInput.endTime);
+        let existingValues = currentProgram === null ? [] : [...currentProgram];
+        if(arr2.event.type2 === "transferEvent"){
+            var timeStartTransfer: any = new Date("01/01/2007 " + handleTimeFormat(newEvent.startTime));
+            var timeEndTransfer: any = new Date("01/01/2007 " + handleTimeFormat(newEvent.endTime));
+            var diff1Transfer = timeEndTransfer - timeStartTransfer;
+            for (var j = 0; j <= existingValues.length - 1; j++) {
+                    var startTimeHourTransfer: any = new Date("01/01/2007 " + handleTimeFormat(existingValues[j].startTime));
+                    var endTimeHourTransfer: any = new Date("01/01/2007 " + handleTimeFormat(existingValues[j].endTime));
+                    var diff2Transfer = endTimeHourTransfer - startTimeHourTransfer;
+
+                    if (diff2Transfer < diff1Transfer) {
+                        existingValues.splice(j, 0, newEvent);
+                        break;
+                    }
+                    if (j === existingValues.length - 1) {
+                        existingValues.push(newEvent);
+                        break;
+                    }
+            }
+        }else {
+        let a = existingValues.findIndex((val) => val.id === arr2.event.id && val.day === arr2.event.day && val.startTime === arr2.event.hour + ":" + arr2.event.min && val.endTime === arr2.event.endHour + ":" + arr2.event.endMin);
+        existingValues.splice(a,1);
+        if(existingValues.length === 0 ){
+            existingValues.push(newEvent);
+        }else {
+                var timeStart: any = new Date("01/01/2007 " + handleTimeFormat(newEvent.startTime));
+                var timeEnd: any = new Date("01/01/2007 " + handleTimeFormat(newEvent.endTime));
+                var diff1 = timeEnd - timeStart;
+                for (var k = 0; k <= existingValues.length - 1; k++) {
+                    var startTimeHour: any = new Date("01/01/2007 " + handleTimeFormat(existingValues[k].startTime));
+                    var endTimeHour: any = new Date("01/01/2007 " + handleTimeFormat(existingValues[k].endTime));
+                    var diff2 = endTimeHour - startTimeHour;
+
+                    if (diff2 < diff1) {
+                        existingValues.splice(k, 0, newEvent);
+                        break;
+                    }
+                    if (k === existingValues.length - 1) {
+                        existingValues.push(newEvent);
+                        break;
+                    }
+                }
+            }
+        }
+
+        let lastEventDay: number = 0;
+
+        for(var m=0; m<= existingValues.length - 1; m++) {
+            if(existingValues[m].day > lastEventDay){
+                lastEventDay = parseInt(existingValues[m].day);
+            }
+        }
+        
+        updateProgram({
+            variables: {
+                programid: program_id,
+                events: existingValues,
+                renewal_dt: lastEventDay
+            }
+        })
+
+        setArr(values);
+        setarr2([]);
+        setEvent({});
+        confirmVal = {};
+    }
+
+    function handleSaveChanges(e: any, mode: any, tag: any) {
         let values = [...currentProgram];
         let newEvent: any = {};
-        let a = values.find((val) => val.id === event.id && val.day === event.day && val.startTime === event.hour + ":" + event.min && val.endTime === event.endHour + ":" + event.endMin);
-        let b = values.findIndex((val) => val.id === event.id && val.day === event.day && val.startTime === event.hour + ":" + event.min && val.endTime === event.endHour + ":" + event.endMin);
-        if (a) {
-            e.startChange = JSON.parse(e.startChange);
-            newEvent.id = a.id;
-            newEvent.name = a.name;
-            newEvent.startTime = e.startChange.startTime;
-            newEvent.endTime = e.startChange.endTime;
-            newEvent.type = a.type;
-            newEvent.day = a.day;
+        function handleTime(time: string){
+            let timeArray = time.split(':');
+            let hours = timeArray[0];
+            let minutes = timeArray[1];
+            let timeString = (parseInt(hours) < 10 && parseInt(hours) !== 0 ? hours.charAt(1) : hours) + ':' + (parseInt(minutes) === 0 ? "0" : minutes);
+            return timeString.toString();
+        }
 
-            values.splice(b, 1);
-            var timeStart: any = new Date("01/01/2007 " + handleTimeFormat(newEvent.startTime));
-            var timeEnd: any = new Date("01/01/2007 " + handleTimeFormat(newEvent.endTime));
-            var diff1 = timeEnd - timeStart;
-            for (var i = 0; i <= values.length - 1; i++) {
-                var startTimeHour: any = new Date("01/01/2007 " + handleTimeFormat(values[i].startTime));
-                var endTimeHour: any = new Date("01/01/2007 " + handleTimeFormat(values[i].endTime));
-                var diff2 = endTimeHour - startTimeHour;
-
-                if (diff2 < diff1) {
-                    values.splice(i, 0, newEvent);
-                    break;
+        if(arr2.event?.import === 'importedEvent'){
+            handleImportedEvent(e, mode, tag);
+        } else {
+            let a = values.find((val) => val.id === event.id && val.day === event.day && val.startTime === event.hour + ":" + event.min && val.endTime === event.endHour + ":" + event.endMin);
+            let b = values.findIndex((val) => val.id === event.id && val.day === event.day && val.startTime === event.hour + ":" + event.min && val.endTime === event.endHour + ":" + event.endMin);
+            if (a) {
+                e.startChange = JSON.parse(e.startChange);
+                newEvent.id = a.id;
+                newEvent.name = a.name;
+                newEvent.mode = mode === "" ? a.mode : mode;
+                newEvent.tag = tag === "" ? a.tag : tag;
+                newEvent.startTime = handleTime(e.startChange.startTime);
+                newEvent.endTime = handleTime(e.startChange.endTime);
+                newEvent.type = a.type;
+                newEvent.day = a.day;
+    
+                values.splice(b, 1);
+                var timeStart: any = new Date("01/01/2007 " + handleTimeFormat(newEvent.startTime));
+                var timeEnd: any = new Date("01/01/2007 " + handleTimeFormat(newEvent.endTime));
+                var diff1 = timeEnd - timeStart;
+                for (var i = 0; i <= values.length - 1; i++) {
+                    var startTimeHour: any = new Date("01/01/2007 " + handleTimeFormat(values[i].startTime));
+                    var endTimeHour: any = new Date("01/01/2007 " + handleTimeFormat(values[i].endTime));
+                    var diff2 = endTimeHour - startTimeHour;
+    
+                    if (diff2 < diff1) {
+                        values.splice(i, 0, newEvent);
+                        break;
+                    }
+                    if (i === values.length - 1) {
+                        values.push(newEvent);
+                        break;
+                    }
                 }
-                if (i === values.length - 1) {
-                    values.push(newEvent);
-                    break;
+    
+                let lastEventDay: number = 0;
+    
+                for(var k=0; k<= values.length - 1; k++) {
+                    if(values[k].day > lastEventDay){
+                        lastEventDay = parseInt(values[k].day);
+                    }
                 }
+    
+                updateProgram({
+                    variables: {
+                        programid: program_id,
+                        events: values,
+                        renewal_dt: lastEventDay
+                    }
+                })
             }
-
-            let lastEventDay: number = 0;
-
-            for(var k=0; k<= values.length - 1; k++) {
-                if(values[k].day > lastEventDay){
-                    lastEventDay = parseInt(values[k].day);
-                }
-            }
-
-            updateProgram({
-                variables: {
-                    programid: program_id,
-                    events: values,
-                    renewal_dt: lastEventDay
-                }
-            })
         }
     }
     var changedDay;
@@ -428,10 +566,10 @@ const Schedular = (props: any) => {
                 <Row>
                     <p>{d.type !== 'url' ? null : <Col >
                         <InputGroup>
-                                    <FormControl
-                                        disabled
-                                        value={d.value}
-                            />
+                            <FormControl
+                                disabled
+                                value={d.value}
+                        />
                             </InputGroup></Col>
                         }
                     </p>
@@ -464,6 +602,8 @@ const Schedular = (props: any) => {
 
     }
 
+    const [ErrorModal, setErrorModal] = useState(false);
+
     function confirm() {
         const values = [...arr];
         if (arr2.event.day) {
@@ -493,6 +633,8 @@ const Schedular = (props: any) => {
         localEvent.hour = arr2.h;
         localEvent.min = arr2.m;
         localEvent.endHour = sh;
+        localEvent.mode = arr2.event.mode;
+        localEvent.tag = arr2.event.tag;
         localEvent.endMin = sm;
         localEvent.type = arr2.event.type;
         localEvent.title = arr2.event.title;
@@ -503,6 +645,8 @@ const Schedular = (props: any) => {
         newEvent.startTime = arr2.h + ":" + arr2.m;
         newEvent.endTime = sh + ":" + sm;
         newEvent.type = arr2.event.type;
+        newEvent.mode = arr2.event.mode;
+        newEvent.tag = arr2.event.tag;
         newEvent.day = arr2.d;
         let existingValues = currentProgram === null ? [] : [...currentProgram];
         if(arr2.event.type2 === "transferEvent"){
@@ -566,7 +710,7 @@ const Schedular = (props: any) => {
         })
 
         if(values[arr2.d][arr2.h][arr2.m].length === 0){
-            values[arr2.d][arr2.h][arr2.m].push({ "title": arr2.event.title, "color": arr2.event.color, "day": arr2.d, "hour": arr2.h, "min": arr2.m, "endHour": sh, "endMin": sm });
+            values[arr2.d][arr2.h][arr2.m].push({ "title": arr2.event.title, "color": arr2.event.color, "day": arr2.d, "hour": arr2.h, "min": arr2.m, "endHour": sh, "endMin": sm, "mode": arr2.event.mode, "tag": arr2.event.tag });
         }else {
             var timeStartArr: any = new Date("01/01/2007 " + handleTimeFormat(newEvent.startTime));
             var timeEndArr: any = new Date("01/01/2007 " + handleTimeFormat(newEvent.endTime));
@@ -588,6 +732,7 @@ const Schedular = (props: any) => {
         }
         setArr(values);
         setarr2([]);
+        setEvent({});
         confirmVal = {};
     }
 
@@ -636,7 +781,7 @@ const Schedular = (props: any) => {
             <div className="wrapper shadow-lg">
                 <div className="schedular">
                     <div className="day-row">
-                        <div className="cell" style={{ backgroundColor: 'white', position: 'relative', minHeight: '80px' }}></div>
+                        <div className="cell" style={{ backgroundColor: 'white', position: 'relative', minHeight: `${props.type === 'date' ? '80px' : '60px'}` }}></div>
                         {handleDaysRowRender()}
                     </div>
                     {hours.map(h => {
@@ -674,7 +819,7 @@ const Schedular = (props: any) => {
                                                             return (
                                                                 <div
                                                                     key={index}
-                                                                    onClick={() => { setEvent(val)}}
+                                                                    onClick={() => { setEvent(val) }}
                                                                     id="dragMe"
                                                                     className="schedular-content draggable"
                                                                     draggable={val.type === 'restday' ? false : true}
@@ -715,7 +860,7 @@ const Schedular = (props: any) => {
                     })}
                 </div>
             </div>
-            <FloatingButton callback={handleFloatingActionProgramCallback} />
+            <FloatingButton startDate={props.startDate} duration={props.days} callback={handleFloatingActionProgramCallback} />
             {
                 <Modal show={showModal} onHide={handleClose} backdrop="static" centered size="lg" >
                     <Modal.Body style={{ maxHeight: '600px', overflow: 'auto' }}>
@@ -738,7 +883,7 @@ const Schedular = (props: any) => {
                                 </OverlayTrigger>
                                 </div>
                             </Col>
-                            <Col>
+                            {event?.import === 'importedEvent' && <Col>
                                 <OverlayTrigger
                                     key='left'
                                     placement='left'
@@ -750,8 +895,8 @@ const Schedular = (props: any) => {
                                     >
                                     <i className="fas fa-copy fa-lg" onClick={(e) => { handleClose(); setDuplicate(true); }} style={{ cursor: 'pointer', color: '#696969' }} />
                                 </OverlayTrigger>
-                            </Col>
-                            <Col>
+                            </Col>}
+                            {event?.import === 'importedEvent' && <Col>
                                 <div>
                                 <OverlayTrigger
                                     key='left'
@@ -765,7 +910,7 @@ const Schedular = (props: any) => {
                                     <i className="fas fa-trash-alt fa-lg" onClick={(e) => { setDel(true); }} style={{ cursor: 'pointer', color: 'red' }}></i>
                                 </OverlayTrigger>
                                 </div>
-                            </Col>
+                            </Col>}
                             <Col>
                                 <OverlayTrigger
                                     key='left'
@@ -776,7 +921,7 @@ const Schedular = (props: any) => {
                                         </Tooltip>
                                     }
                                     >
-                                    <i className="fas fa-times fa-lg" onClick={(e) => { handleClose(); setData([]); setEdit(true) }} style={{ cursor: 'pointer' }}></i>
+                                    <i className="fas fa-times fa-lg" onClick={(e) => { handleClose(); setData([]); setEdit(true); setEvent({}) }} style={{ cursor: 'pointer' }}></i>
                                 </OverlayTrigger>
                             </Col>
                         </Row>
@@ -797,9 +942,32 @@ const Schedular = (props: any) => {
                                 <FormControl value={`Day-${event.day}`} disabled />
                             </Col>
                         </Row>
+                        {(tag || event.tag) !== 'Classic' && <Row className="pt-3 align-items-center">
+                            <Col lg={1}>
+                                <h6>Mode: </h6>
+                            </Col>
+                            <Col lg={4}>
+                                <Form.Control value={mode === "" ? event.mode : mode} as="select" onChange={(e) => {setMode(e.target.value)}}>
+                                    <option value="Offline">Offline</option>
+                                    <option value="Online">Online</option>
+                                </Form.Control>
+                            </Col>
+                        </Row>}
+                        <Row className="pt-3 align-items-center">
+                            <Col lg={1}>
+                                <h6>Class Type: </h6>
+                            </Col>
+                            <Col lg={4}>
+                                <Form.Control value={tag === "" ? event.tag : tag} as="select" onChange={(e) => {setTag(e.target.value)}}>
+                                    <option value="Personal Training">Personal Training</option>
+                                    <option value="Group Class">Group Class</option>
+                                    <option value="Classic">Classic</option>
+                                </Form.Control>
+                            </Col>
+                        </Row>
                         <Row className="pt-3 align-items-center">
                             <Col>
-                                <TimeField title="Start Time: " onChange={handleStart} ehr={event.endHour} em={event.endMin} hr={event.hour} m={event.min} disabled={edit}/>
+                                <TimeField title="Start Time: " onChange={handleStart} endTime={event.endHour + ':' + event.endMin} startTime={event.hour + ':' + event.min} disabled={edit}/>
                             </Col>
                         </Row>
                         {(event.type === "workout") && <Tabs defaultActiveKey="agenda" transition={false} id="noanim-tab-example" className="pt-4">
@@ -920,11 +1088,11 @@ const Schedular = (props: any) => {
                         </Tabs>}
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button variant="danger" onClick={() => {setData([]);handleClose(); setEdit(true)}}>
+                        <Button variant="danger" onClick={() => {setData([]);handleClose(); setEvent({}); setEdit(true)}}>
                             Close
                         </Button>
-                        <Button variant="success" onClick={() => {
-                            handleSaveChanges(changedTime);
+                        <Button disabled={document.getElementById('timeErr') ? true : false} variant="success" onClick={() => {
+                            handleSaveChanges(changedTime, mode, tag);
                             handleClose();
                             setEdit(true);
                         }}>
@@ -945,7 +1113,7 @@ const Schedular = (props: any) => {
                               Yes
                          </Button>
                     </Modal.Footer>
-               </Modal>
+                </Modal>
             }{
                 <Modal show={duplicate} onHide={() => setDuplicate(false)} centered backdrop='static'>
                     <Modal.Body>
@@ -974,7 +1142,7 @@ const Schedular = (props: any) => {
                             </Row>
                             <Row className="pt-3 align-items-center">
                                 <Col>
-                                    <TimeField title="Start Time: " onChange={handleStart} ehr={event.endHour} em={event.endMin} hr={event.hour} m={event.min}/>
+                                    <TimeField onChange={handleStart} endTime={event.endHour + ':' + event.endMin} startTime={event.hour + ':' + event.min}/>
                                 </Col>
                             </Row>
                     </Modal.Body>
@@ -982,28 +1150,48 @@ const Schedular = (props: any) => {
                          <Button variant="danger" onClick={() => {setDuplicate(false); setData([]);}}>
                               Cancel
                          </Button>
-                         <Button variant="success" onClick={() => {handleDuplicate(event, changedTime);setDuplicate(false); setData([]);}}>
+                         <Button disabled={document.getElementById('timeErr') ? true : false} variant="success" onClick={() => {handleDuplicate(event, changedTime);setDuplicate(false); setData([]);}}>
                               Duplicate
                          </Button>
                     </Modal.Footer>
-               </Modal>
-            }{
+                </Modal>
+            }{ arr2.event?.import !== 'importedEvent' && 
                 <Modal show={onDragAndDrop} onHide={() => setOnDragAndDrop(false)} centered backdrop='static'>
-            <Modal.Header>
-                    <Modal.Title>Do you want to save changes?</Modal.Title>
-            </Modal.Header>
-            <Modal.Footer>
-                    <Button variant="danger" onClick={() => {setOnDragAndDrop(false); setarr2([]); confirmVal = {};} }>
-                        Cancel
-                    </Button>
-                    <Button variant="success" onClick={() => {
-                        confirm();
-                        setOnDragAndDrop(false);
-                    }}>
-                        Confirm
-                    </Button>
-            </Modal.Footer>
-        </Modal>
+                    <Modal.Header>
+                            <Modal.Title>Do you want to save changes?</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Footer>
+                            <Button variant="danger" onClick={() => {setOnDragAndDrop(false); setarr2([]); confirmVal = {};} }>
+                                Cancel
+                            </Button>
+                            <Button variant="success" onClick={() => {
+                                confirm();
+                                setOnDragAndDrop(false);
+                            }}>
+                                Confirm
+                            </Button>
+                    </Modal.Footer>
+                </Modal>
+            }
+            {
+                <Modal show={ErrorModal} onHide={() => setErrorModal(false)} centered backdrop='static'>
+                    <Modal.Header>
+                            <Modal.Title>Maximum Number of Classes Reached!</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <span>You cannot add more classes.</span>
+                    </Modal.Body>
+                    <Modal.Footer>
+                            <Button variant="danger" onClick={() => {setErrorModal(false); setarr2([]); confirmVal = {};} }>
+                                Cancel
+                            </Button>
+                            <Button variant="success" onClick={() => {
+                                setErrorModal(false);
+                            }}>
+                                Confirm
+                            </Button>
+                    </Modal.Footer>
+                </Modal>
             }
             <CreateoreditWorkout ref={createEditWorkoutComponent}></CreateoreditWorkout>
             <ReplaceWorkout ref={replaceWorkoutComponent}></ReplaceWorkout>

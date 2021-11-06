@@ -31,6 +31,8 @@ function CreateEditRestDay(props: any, ref: any) {
         TriggerForm: (msg: Operation) => {
             // console.log(msg);
             setOperation(msg);
+            schema.startDate = props.startDate;
+            schema.duration = props.duration;
 
             if (msg && !msg.id) //render form if no message id
                 modalTrigger.next(true);
@@ -61,7 +63,7 @@ function CreateEditRestDay(props: any, ref: any) {
                frm.day = JSON.parse(frm.day);
                for(var i=0; i<frm.day.length; i++){
                     daysArray.push({
-                         day: parseInt(frm.day[i].day.substr(4)),
+                         day: parseInt(frm.day[i].key),
                          type: 'restday'
                     });
                }

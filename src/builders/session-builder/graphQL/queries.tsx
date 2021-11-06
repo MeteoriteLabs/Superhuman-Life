@@ -25,6 +25,14 @@ export const GET_ALL_CLIENT_PACKAGE_BY_TYPE = gql`
           type
         }
         packagename
+        groupstarttime
+    		groupendtime
+        restdays
+        ptonline
+    		ptoffline
+    		grouponline
+    		groupoffline
+    		recordedclasses
         duration
         Status
       }
@@ -72,12 +80,22 @@ export const GET_ALL_FITNESS_PACKAGE_BY_TYPE = gql`
             fitness_package_type:{ type: $type}
           }
       ){
-
         id
         packagename
         expiry_date
         Status
         duration
+        ptonline
+    		ptoffline
+    		grouponline
+        restdays
+    		groupoffline
+    		recordedclasses
+    		fitness_package_type{
+          type
+        }
+        groupstarttime
+    		groupendtime
       }
     }
 `
@@ -257,6 +275,7 @@ query getprogramdata($id: String!) {
           }
           duration_days
           level
+          events
           start_dt
           end_dt
           rest_days

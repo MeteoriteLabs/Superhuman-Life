@@ -224,10 +224,8 @@ export default function Group(props) {
                                         </div>
                                 }
 
-
                                 {row.value === "N/A" ? "" :
                                     row.value.length === 1 ? <p className='text-center'>{row.value}</p> : <p className='text-center'>{row.value.length} people</p>
-
                                 }
                             </>
                         }

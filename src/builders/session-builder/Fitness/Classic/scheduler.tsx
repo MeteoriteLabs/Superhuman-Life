@@ -6,6 +6,7 @@ import SchedulerPage from '../../../program-builder/program-template/scheduler';
 import moment from 'moment';
 import FitnessAction from '../FitnessAction';
 import AuthContext from '../../../../context/auth-context';
+import { Link } from 'react-router-dom';
 
 const Scheduler = () => {
 
@@ -14,6 +15,8 @@ const Scheduler = () => {
     const [data, setData] = useState<any[]>([]);
     const [show, setShow] = useState(false);
     const [userPackage, setUserPackage] = useState<any>([]);
+    const [tagSeperation, setTagSeperation] = useState<any>([]);
+    const [statusDays, setStatusDays] = useState();
     let programIndex;
 
     const fitnessActionRef = useRef<any>(null);
@@ -52,7 +55,25 @@ const Scheduler = () => {
             type: 'Classic Class'
         },
         onCompleted: (data) => loadData()
-    })
+    });
+
+    function handleEventsSeperation(data: any, rest_days: any){
+        var classic: number = 0;
+        if(data){
+            for(var i=0; i<data.length; i++){
+                if(data[i].tag === 'Classic'){
+                    classic++;
+                }
+            }
+            setTagSeperation([classic]);
+            var arr: any = [];
+            for(var j=0; j<data.length; j++){
+                if(arr.includes(parseInt(data[j].day)) === false) arr.push(parseInt(data[j].day));
+            }
+            var restDays = rest_days === null ? 0 : rest_days.length;
+            setStatusDays(arr.length + restDays);
+        }
+    }
         
     function loadData() {
         setData(
@@ -64,6 +85,7 @@ const Scheduler = () => {
                         return val.disciplinename;
                     }).join(", "),
                     level: detail.level,
+                    events: handleEventsSeperation(detail.events, detail.rest_days),
                     duration: detail.duration_days,
                     details: detail.description,
                     restDays: detail.rest_days
@@ -121,6 +143,9 @@ const Scheduler = () => {
                     id: packageItem.id,
                     packageName: packageItem.packagename,
                     duration: packageItem.duration,
+                    details: [packageItem.ptonline, packageItem.ptoffline, packageItem.grouponline, packageItem.groupoffline, packageItem.recordedclasses, packageItem.restdays],
+                    groupStart: packageItem.groupstarttime,
+                    groupEnd: packageItem.groupendtime,
                     expiry: moment(packageItem.expiry_date).format("MMMM DD,YYYY"),
                     packageStatus: packageItem.Status ? "Active" : "Inactive",
 
@@ -140,9 +165,20 @@ const Scheduler = () => {
         programIndex = userPackage.findIndex(item => item.id === last[1] && item.proManagerFitnessId === last[0])
     }
 
+    function handleTimeFormatting(data: any, duration: number){
+        var digits = duration <= 30 ? 2 : 3;
+        return (data).toLocaleString('en-US', { minimumIntegerDigits: digits.toString(), useGrouping: false });
+    }
+
     if (!show) return <span style={{ color: 'red' }}>Loading...</span>;
     else return (
         <>
+            <div className="mb-3">
+                <span style={{ fontSize: '30px'}}>
+                    <Link to="/session"><i className="fa fa-arrow-circle-left" style={{ color: 'black'}}></i></Link>
+                    <b> back</b>
+                </span>
+            </div>
             <Row>
                 <Col lg={11} className="p-4 shadow-lg bg-white" style={{ borderRadius: '10px'}}>
                     <Row>
@@ -193,13 +229,51 @@ const Scheduler = () => {
                         <Col lg={5} xs={11}  className="ml-5" style={{ borderLeft: '2px dashed gray'}}>
                            <div className="m-2 ml-5 text-center p-2" style={{ border: '2px solid gray', borderRadius: '10px'}}>
                                 <h4><b>Movement</b></h4>
-                                <img
-                                    src="https://picsum.photos/200/100" alt='profile-pic'
-                                    style={{ width: '40px', height: '40px', borderRadius: '50%'}}
-                                /><br/>
-                                <span>20 Recorded</span><br/>
-                                <span><b>05</b></span><br/>
-                                <span><b style={{ color: 'gray'}}>Left to assign:</b> 7/{data[0].duration}</span>
+                                <Row>
+                                    <Col>
+                                        <Row style={{ justifyContent: 'space-around'}}>
+                                        {userPackage[programIndex].details[0] !== null && userPackage[programIndex].details[0] !== 0 ?
+                                            <div>
+                                                <img src='/assets/custompersonal-training-Online.svg' alt="PT-Online" /><br/>
+                                                <span></span>
+                                            </div>
+                                            : ""}
+                                        {userPackage[programIndex].details[1] !== null && userPackage[programIndex].details[1] !== 0 ?
+                                            <div>
+                                                <img src='/assets/custompersonal-training-Offline.svg' alt="PT-Offline" />
+                                            </div> : ""}
+                                        {userPackage[programIndex].details[2] !== null && userPackage[programIndex].details[2] !== 0 ?
+                                            <div>
+                                                <img src='/assets/customgroup-Online.svg' alt="Group-Online" /><br/>
+                                                <span>{userPackage[programIndex].details[2]} Group</span><br/>
+                                                <span><b>05</b></span>
+                                            </div> : ""}
+                                        {userPackage[programIndex].details[3] !== null && userPackage[programIndex].details[3] !== 0 ?
+                                            <div>
+                                                <img src='/assets/customgroup-Offline.svg' alt="GRoup-Offline" /><br/>
+                                                <span>{userPackage[programIndex].details[3]} Group</span><br/>
+                                                <span><b>05</b></span>
+                                            </div> : ""}
+                                        {userPackage[programIndex].details[4] !== null && userPackage[programIndex].details[4] !== 0 ?
+                                            <div>
+                                                <img src='/assets/customclassic.svg' alt="Classic" /><br/>
+                                                <span>{userPackage[programIndex].details[4]} Recorded</span><br/>
+                                                <span><b>{tagSeperation === [] || tagSeperation[0] === 0 ? handleTimeFormatting(0, data[0].duration) : handleTimeFormatting(tagSeperation[0], data[0].duration)}</b></span>
+                                            </div> : ""}
+                                        </Row>
+                                        <Row>
+                                            
+                                        </Row>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col>
+                                        <span><b style={{ color: 'gray'}}>Status: </b> {statusDays === undefined ? 'N/A' : statusDays}/{data[0].duration}</span>
+                                    </Col>
+                                    <Col>
+                                        <span><b style={{ color: 'gray'}}>Rest-Days: </b> {userPackage[programIndex].details[5]} days</span>
+                                    </Col>
+                                </Row>
                            </div>
                         </Col>
                     </Row>
