@@ -41,7 +41,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
      const [crop, setCrop] = useState<Point>({ x: 0, y: 0 });
      const [zoom, setZoom] = useState<any>(1);
      const [croppedAreaPixels, setCroppedAreaPixels] = useState<any>(null);
-     const [croppedImage, setCroppedImage] = useState<any>(null);
+     //const [croppedImage, setCroppedImage] = useState<any>(null);
 
      let allowedImageFormats = ["image/png", "image/jpeg", "image/jpg"];
      let allowedVideoFormats = ["video/mp4"];
@@ -49,22 +49,21 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
      var albumPhotosKey = process.env.REACT_APP_S3_PREFIX_NAME;
 
      const onCropComplete = useCallback((croppedArea: Area, croppedAreaPixels: Area) => {
-          console.log(croppedArea, croppedAreaPixels);
+          // console.log(croppedArea, croppedAreaPixels);
           setCroppedAreaPixels(croppedAreaPixels);
      }, []);
 
      const showCroppedImage = useCallback(async () => {
           try {
                const cropImage = await getCroppedImg(imageSrc, croppedAreaPixels);
-               console.log("donee", { croppedImage });
-               setCroppedImage(cropImage);
+               //console.log("donee", { croppedImage });
+               //setCroppedImage(cropImage);
                uploadFile(cropImage);
                setImageSrc(null);
-               console.log(cropImage);
           } catch (e) {
                console.error(e);
           }
-     }, [croppedAreaPixels, imageSrc]);
+     }, [croppedAreaPixels, imageSrc]); // eslint-disable-line react-hooks/exhaustive-deps
 
      function handleCrop(file) {
           //console.log(e.target.files[0]);
@@ -394,7 +393,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                                         image={imageSrc}
                                         crop={crop}
                                         zoom={zoom}
-                                        aspect={4 / 3}
+                                        aspect={5 / 3}
                                         onCropChange={setCrop}
                                         onCropComplete={onCropComplete}
                                         onZoomChange={setZoom}
