@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useContext } from "react";
 import {
   Tabs,
   Tab,
@@ -8,16 +8,35 @@ import {
   Button,
   Image,
   Form,
+  OverlayTrigger,
+  Popover,
 } from "react-bootstrap";
+import "./Tabs.css";
+import SetUpDomain from "../Domain/SetUpDomain";
+import { useQuery } from "@apollo/client";
 import WebsiteModalComponent from "../templateModal/TemplateModal";
-import DomainModalComponent from "../Domain";
+import DomainHelpModalComponent from "../Domain";
 import { templateData } from "./TemplateData";
 import CreateWebpageDetails from "../../webpage-details/createoredit-webpage";
+import { FETCH_WEBSITE_DATA } from "../../webpage-details/queries";
+import AuthContext from "../../../context/auth-context";
 
 export default function TabsComponent() {
   const [key, setKey] = useState("professional");
+  const auth = useContext(AuthContext);
   const createWebpageDetailsComponent = useRef<any>(null);
 
+  const [websiteData, setWebsiteData] = useState<any>({});
+
+  useQuery(FETCH_WEBSITE_DATA, {
+    variables: { id: auth.userid },
+    onCompleted: (r: any) => {
+      setWebsiteData(r.websiteData[0]);
+    },
+  });
+
+  console.log(auth.userid);
+  console.log(websiteData);
   return (
     <>
       <Tabs
@@ -29,7 +48,7 @@ export default function TabsComponent() {
         <Tab eventKey="professional" title="Professional">
           <Row className="bg-dark">
             <Col
-              className="text-center text-light d-flex align-items-center"
+              className=" text-light d-flex align-items-center justify-content-center"
               md={{ span: 2, offset: 5 }}
               xs={{ span: 6, offset: 0 }}
             >
@@ -40,14 +59,14 @@ export default function TabsComponent() {
               xs={{ span: 6, offset: 0 }}
               className="d-flex justify-content-end"
             >
-              <DomainModalComponent />
+              <DomainHelpModalComponent />
             </Col>
           </Row>
 
           {/* cards section */}
           <Row>
-            <Col className="p-0 ">
-              <Col className="py-3 p-0 " md={{ span: 9, offset: 3 }} xs={12}>
+            <Col className="p-0" md={{ span: 4, offset: 2 }} xs={12}>
+              <Col className="py-3 p-0 ">
                 <Card className="border border-dark p-0 mt-2 ">
                   <Card.Header
                     as="h6"
@@ -56,14 +75,21 @@ export default function TabsComponent() {
                     Custom Domain
                   </Card.Header>
                   <Card.Body className="d-flex justify-content-center align-items-center">
-                    <Card.Text>www.dummy.com</Card.Text>
+                    <Card.Text>
+                      {" "}
+                      {websiteData != null ? (
+                        <p> www.dummy.com</p>
+                      ) : (
+                        <p>.........................</p>
+                      )}
+                    </Card.Text>
                   </Card.Body>
                 </Card>
               </Col>
             </Col>
 
-            <Col className="p-0">
-              <Col className=" py-3 p-0" md={{ span: 9, offset: 0 }} xs={12}>
+            <Col className="p-0" md={{ span: 4, offset: 0 }} xs={12}>
+              <Col className=" py-3 p-0">
                 <Card className="border border-dark mt-2">
                   <Card.Header as="h6" className="m-0 bg-dark p-0">
                     <Row>
@@ -79,14 +105,22 @@ export default function TabsComponent() {
                         md={{ span: 3, offset: 1 }}
                         xs={{ span: 4, offset: 1 }}
                       >
-                        <Button variant="dark" className="p-1">
+                        {/* <Button variant="dark" className="p-1">
                           <span>&#8942;</span>
-                        </Button>
+                        </Button> */}
+                        <DomainPopover />
                       </Col>
                     </Row>
                   </Card.Header>
                   <Card.Body className="d-flex justify-content-center align-items-center">
-                    <Card.Text>www.dummy.sapienlife.app</Card.Text>
+                    <Card.Text>
+                      {" "}
+                      {websiteData != null ? (
+                        <p> Www.dummy.sapienlife.com</p>
+                      ) : (
+                        <p>.........................</p>
+                      )}
+                    </Card.Text>
                   </Card.Body>
                 </Card>
               </Col>
@@ -157,10 +191,19 @@ export default function TabsComponent() {
                 <Card.Body className="d-flex justify-content-center">
                   <Row md={1} xs={1}>
                     <Col className="d-flex justify-content-center">
-                      <Image fluid src="assets/website_images/template.svg" />
+                      {websiteData != null ? (
+                        <Image fluid src="assets/website_images/template.svg" />
+                      ) : (
+                        <>
+                          <Image fluid src="assets/website_images/black.svg" />
+                          <div className="template-btn">
+                            <WebsiteModalComponent />
+                          </div>
+                        </>
+                      )}
                     </Col>
-                    <Col className="d-flex justify-content-center">
-                      <Card.Text>Template Name</Card.Text>
+                    <Col className="d-flex justify-content-center mt-3">
+                      {websiteData != null ? <p>Template Name</p> : ""}
                     </Col>
                   </Row>
                 </Card.Body>
@@ -192,7 +235,7 @@ export default function TabsComponent() {
                           onClick={() => {
                             createWebpageDetailsComponent.current.TriggerForm({
                               id: null,
-                              type: "create",
+                              type: "edit",
                             });
                           }}
                         >
@@ -203,39 +246,52 @@ export default function TabsComponent() {
                   </Row>
                 </Card.Header>
                 <Card.Body>
-                  <Row xs={2}>
-                    <Col md={{ span: 4, offset: 2 }}>
-                      {templateData.map((data) => (
-                        <div key={data.id} className="d-flex p-2 gap-4">
-                          <Image fluid src={data.image} />
-                          <h6 className="d-flex align-items-center">
-                            {data.label}
-                          </h6>
-                        </div>
-                      ))}
-                    </Col>
+                  {websiteData != null ? (
+                    <>
+                      <Row>
+                        <Col md={{ span: 4, offset: 3 }}>
+                          {templateData.map((data) => (
+                            <div key={data.id} className="d-flex p-2 gap-4">
+                              <Image fluid src={data.image} />
+                              <h6 className="d-flex align-items-center px-3">
+                                {data.label}
+                              </h6>
+                            </div>
+                          ))}
+                        </Col>
+                        <Col md={{ span: 4, offset: 0 }}>
+                          {templateData.map((data) => (
+                            <div key={data.id} className="d-flex p-2 gap-4">
+                              <Image fluid src={data.image} />
+                              <h6 className="d-flex align-items-center px-3">
+                                {data.label}
+                              </h6>
+                            </div>
+                          ))}
+                        </Col>
+                      </Row>
 
-                    <Col md={{ span: 4, offset: 1 }}>
-                      <Form>
-                        {templateData.map((data) => (
-                          <div key={data.id} className="d-flex p-2 gap-4">
-                            <Image fluid src={data.image} />
-                            <h6 className="d-flex align-items-center ">
-                              {data.label}
-                            </h6>
-                          </div>
-                        ))}
-                      </Form>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col
-                      md={{ span: 3, offset: 9 }}
-                      className="p-0 d-flex justify-content-end"
-                    >
-                      <span> Last updated: 20 June 2021</span>
-                    </Col>
-                  </Row>
+                      <Row>
+                        <Col
+                          md={{ span: 3, offset: 9 }}
+                          className="p-0 d-flex justify-content-end"
+                        >
+                          <span> Last updated: 20 June 2021</span>
+                        </Col>
+                      </Row>
+                    </>
+                  ) : (
+                    <Row>
+                      <Col className="d-flex justify-content-center p-5 m-4">
+                        <div>
+                          <h1 className="text-center">N/A</h1>
+                          <h4 className="text-secondary">
+                            No template selected
+                          </h4>
+                        </div>
+                      </Col>
+                    </Row>
+                  )}
                 </Card.Body>
               </Card>
             </Col>
@@ -254,3 +310,20 @@ export default function TabsComponent() {
     </>
   );
 }
+
+const popover = (
+  <Popover id="popover-basic">
+    <Popover.Content className="p-3">
+      <SetUpDomain />
+      <p>View</p>
+    </Popover.Content>
+  </Popover>
+);
+
+const DomainPopover = () => (
+  <OverlayTrigger trigger="click" rootClose placement="right" overlay={popover}>
+    <Button variant="dark" className="p-1">
+      <span>&#8942;</span>
+    </Button>
+  </OverlayTrigger>
+);

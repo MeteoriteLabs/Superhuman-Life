@@ -11,7 +11,9 @@ import Layout from "./components/layout";
 const MainLobby = React.lazy(() => import("./pages/dashboard"));
 const WebsiteBuilder = React.lazy(() => import("./pages/website-builder"));
 const BookingPage = React.lazy(() => import("./pages/booking"));
-const BookingSetting = React.lazy(() => import("./pages/booking/BookingSetting/BookingSetting"));
+const BookingSetting = React.lazy(
+  () => import("./pages/booking/BookingSetting/BookingSetting")
+);
 const ChatPage = React.lazy(() => import("./pages/chat"));
 const ClientPage = React.lazy(() => import("./pages/client"));
 const HomePage = React.lazy(() => import("./pages/home"));
@@ -26,7 +28,9 @@ const FQAsPage = React.lazy(() => import("./pages/faqs"));
 const PackagePage = React.lazy(() => import("./builders/package-builder"));
 const ResourcePage = React.lazy(() => import("./builders/resource-builder"));
 const ProgramPage = React.lazy(() => import("./builders/program-builder"));
-const ProgramManagerPage = React.lazy(() => import("./builders/program-builder/program-template"));
+const ProgramManagerPage = React.lazy(
+  () => import("./builders/program-builder/program-template")
+);
 
 const SessionPage = React.lazy(() => import("./builders/session-builder/"));
 

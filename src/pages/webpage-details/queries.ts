@@ -1,29 +1,192 @@
 import { gql } from "@apollo/client";
 
 export const CREATE_WEBPAGE_DETAILS = gql`
-    mutation createWebsiteDataum(
-        $brand_name: String
-        $address: ID
-        $email: String
-        $phone: String
-    ) {
-        createWebsiteDataumInput (
-            input: {
-                data: {
-                    brand_name:$brand_name
-                    address : $address
-                    email : $email
-                    phone : $phone
-                }
-            }
-        )
-        {
-            websiteData {
-                brand_name
-                address
-            }   
+
+
+mutation createWebsite($frm:createWebsiteDatumInput){
+	createWebsiteDatum(input: $frm)
+		{
+			websiteDatum {
+				id
+				email
+				brand_name
+				phone
+                about_text
+                action_button_text
+				
+			}
+		}
+}
+   
+`  
+
+export const FETCH_WEBSITE_DATA = gql`
+    query fetchData($id: ID!) {
+        websiteData(where: {users_permissions_user: {id:$id}}){
+            form_data
         }
-    
     }
 
 `;
+
+export const FETCH_WEBSITE_SCHEMA = gql`
+
+    query fetchSchema($id: ID!) {
+        websiteData(where: {users_permissions_user: {id:$id}}){
+            
+            website_template{
+                schema_json
+            }
+        
+        }
+    }
+
+`;
+
+export const FETCH_WEBSITE_FORM_JSON = gql`
+
+    query fetchFormJSON($id: ID!) {
+        websiteData(where: {users_permissions_user: {id: $id}}) {
+            website_template{
+                form_json
+            }
+        }
+    }
+
+`;
+
+
+/**
+ * 
+ * {
+    "1": {
+        "title": "",
+        "type": "object",
+        "required": [],
+        "properties": {
+            "brand_name": {
+                "type": "string",
+                "title": "Brand Name"
+            },
+            "logo": {
+                "type": "string",
+                "title": "Logo"
+            },
+            "shortBio": {
+                "type": "string",
+                "title": "Short Bio"
+            },
+            "emailId": {
+                "type": "string",
+                "title": "Email ID"
+            },
+            "address": {
+                "type": "string",
+                "title": "Address"
+            },
+            "phoneNumber": {
+                "type": "number",
+                "title": "Phone Number"
+            },
+            "socialAccounts": {
+                "type": "object",
+                "title": "Social Accounts",
+                "properties": {
+                    "instagram": {
+                        "type": "string",
+                        "title": "Instagram"
+                    },
+                    "facebook": {
+                        "type": "string",
+                        "title": "Facebook"
+                    },
+                    "youtube": {
+                        "type": "string",
+                        "title": "Youtube"
+                    },
+                    "linkedIn": {
+                        "type": "string",
+                        "title": "LinkedIn"
+                    }
+                }
+            }
+        }
+    },
+    "2": {
+        "title": "",
+        "type": "object",
+        "properties": {
+            "carousel": {
+                "type": "string",
+                "title": "Carousel"
+            },
+            "buttonText": {
+                "type": "string",
+                "title": "Button Text"
+            }
+        }
+    },
+    "3": {
+        "title": "",
+        "type": "object",
+        "properties": {
+            "aboutImage": {
+                "type": "string",
+                "title": "About Image"
+            },
+            "aboutText": {
+                "type": "string",
+                "title": "About Text"
+            },
+            "aboutBackgroundColor": {
+                "type": "string",
+                "title": "About Background Color"
+            }
+        }
+    },
+    "4": {
+        "title": "",
+        "type": "object",
+        "properties": {
+            "stories": {
+                "type": "string",
+                "title": "Stories"
+            },
+            "stories-backgroundColor": {
+                "type": "string",
+                "title": " Stories Background Color"
+            }
+        }
+    },
+    "5": {
+        "title": "",
+        "type": "object",
+        "properties": {
+            "packagesBackgroundColor": {
+                "type": "string",
+                "title": "Packages-BackgroundColor"
+            }
+        }
+    },
+    "6": {
+        "title": "",
+        "type": "object",
+        "properties": {
+            "contactUsBackground": {
+                "type": "string",
+                "title": "Contact Us -Background"
+            }
+        }
+    },
+    "7": {
+        "title": "",
+        "type": "object",
+        "properties": {
+            "gallery": {
+                "type": "string",
+                "title": "Gallery"
+            }
+        }
+    }
+}
+ */

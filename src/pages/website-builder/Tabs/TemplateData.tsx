@@ -11,17 +11,17 @@ export const templateData = [
   },
   {
     label: "About",
-    image: "assets/website_images/unchecked.svg",
+    image: "assets/website_images/checked.svg",
     id: 3,
   },
   {
     label: "Experience / Packages",
-    image: "assets/website_images/unchecked.svg",
+    image: "assets/website_images/checked.svg",
     id: 4,
   },
   {
     label: "Stories / Testimonies",
-    image: "assets/website_images/unchecked.svg",
+    image: "assets/website_images/checked.svg",
     id: 5,
   },
 ];

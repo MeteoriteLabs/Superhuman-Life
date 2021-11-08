@@ -5,7 +5,7 @@ export const schema: any = {
       rows: 3,
     },
   },
-  aboutText: {
+  about_text: {
     "ui:widget": "textarea",
     "ui:options": {
       rows: 3,

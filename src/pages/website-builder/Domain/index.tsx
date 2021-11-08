@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Modal, Col, Row, Container, Button } from "react-bootstrap";
 
-function DomainModal(props) {
+function HelpModal(props) {
   return (
     <Modal {...props} aria-labelledby="contained-modal-title-vcenter">
       <Modal.Header className="p-0 d-flex justify-content-center bg-dark">
@@ -80,7 +80,7 @@ function DomainModal(props) {
   );
 }
 
-export default function DomainModalComponent() {
+export default function DomainHelpModalComponent() {
   const [modalShow, setModalShow] = useState(false);
 
   return (
@@ -93,7 +93,7 @@ export default function DomainModalComponent() {
         Help
       </Button>
 
-      <DomainModal show={modalShow} onHide={() => setModalShow(false)} />
+      <HelpModal show={modalShow} onHide={() => setModalShow(false)} />
     </>
   );
 }

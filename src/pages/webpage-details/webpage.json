@@ -8,15 +8,7 @@
                 "type": "string",
                 "title": "Brand Name"
             },
-            "logo": {
-                "type": "string",
-                "title": "Logo"
-            },
-            "shortBio": {
-                "type": "string",
-                "title": "Short Bio"
-            },
-            "emailId": {
+            "email": {
                 "type": "string",
                 "title": "Email ID"
             },
@@ -24,107 +16,17 @@
                 "type": "string",
                 "title": "Address"
             },
-            "phoneNumber": {
-                "type": "number",
+            "phone": {
+                "type": "string",
                 "title": "Phone Number"
             },
-            "socialAccounts": {
-                "type": "object",
-                "title": "Social Accounts",
-                "properties": {
-                    "instagram": {
-                        "type": "string",
-                        "title": "Instagram"
-                    },
-                    "facebook": {
-                        "type": "string",
-                        "title": "Facebook"
-                    },
-                    "youtube": {
-                        "type": "string",
-                        "title": "Youtube"
-                    },
-                    "linkedIn": {
-                        "type": "string",
-                        "title": "LinkedIn"
-                    }
-                }
-            }
-        }
-    },
-    "2": {
-        "title": "",
-        "type": "object",
-        "properties": {
-            "carousel": {
-                "type": "string",
-                "title": "Carousel"
-            },
-            "buttonText": {
-                "type": "string",
-                "title": "Button Text"
-            }
-        }
-    },
-    "3": {
-        "title": "",
-        "type": "object",
-        "properties": {
-            "aboutImage": {
-                "type": "string",
-                "title": "About Image"
-            },
-            "aboutText": {
+            "about_text": {
                 "type": "string",
                 "title": "About Text"
             },
-            "aboutBackgroundColor": {
+            "action_button_text": {
                 "type": "string",
-                "title": "About Background Color"
-            }
-        }
-    },
-    "4": {
-        "title": "",
-        "type": "object",
-        "properties": {
-            "stories": {
-                "type": "string",
-                "title": "Stories"
-            },
-            "stories-backgroundColor": {
-                "type": "string",
-                "title": " Stories Background Color"
-            }
-        }
-    },
-    "5": {
-        "title": "",
-        "type": "object",
-        "properties": {
-            "packagesBackgroundColor": {
-                "type": "string",
-                "title": "Packages-BackgroundColor"
-            }
-        }
-    },
-    "6": {
-        "title": "",
-        "type": "object",
-        "properties": {
-            "contactUsBackground": {
-                "type": "string",
-                "title": "Contact Us -Background"
-            }
-        }
-    },
-    "7": {
-        "title": "",
-        "type": "object",
-        "properties": {
-            "gallery": {
-                "type": "string",
-                "title": "Gallery"
+                "title": "Action Button Text"
             }
         }
     }
