@@ -144,7 +144,7 @@ const Scheduler = () => {
 
     function handleTimeFormatting(data: any, duration: number){
         var digits = duration <= 30 ? 2 : 3;
-        return (data).toLocaleString('en-US', { minimumIntegerDigits: digits.toString(), useGrouping: false });
+        return (data === undefined ? 0 : data).toLocaleString('en-US', { minimumIntegerDigits: digits.toString(), useGrouping: false });
     }
 
     if (!show) return <span style={{ color: 'red' }}>Loading...</span>;

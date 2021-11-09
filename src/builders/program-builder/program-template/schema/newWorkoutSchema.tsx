@@ -1,4 +1,4 @@
-import TimeField from '../../../../components/customWidgets/multipleTimeFields';
+import TimeField from '../../../../components/customWidgets/timeField';
 import FitnessMultiSelect from '../../../../components/customWidgets/fitnessMultiSelect';
 import EquipmentSearch from '../../../../components/customWidgets/equipmentList';
 import MuscleGroupSearch from '../../../../components/customWidgets/muscleGroupList';
@@ -24,7 +24,7 @@ export const schema: any = {
      },
      time: {
           "ui:widget": (props) => {
-               return <TimeField title="Start Time" onChange={props.onChange}/>
+               return <TimeField onChange={props.onChange}/>
           }
      },
      level: {

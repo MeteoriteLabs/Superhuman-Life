@@ -64,14 +64,6 @@ function CreateEditNewWorkout(props: any, ref: any) {
         return timeString.toString();
     }
 
-    function handleTime(time: string){
-        let timeArray = time.split(':');
-        let hours = timeArray[0];
-        let minutes = timeArray[1];
-        let timeString = (parseInt(hours) < 10 ? hours.charAt(1) : hours) + ':' + (parseInt(minutes) === 0 ? "0" : minutes);
-        return timeString.toString();
-    }
-
     function updateSchedulerEvents(frm: any, workout_id: any) {
         var existingEvents = (props.events === null ? [] : [...props.events]);
         if(frm.day){
@@ -83,8 +75,8 @@ function CreateEditNewWorkout(props: any, ref: any) {
             eventJson.mode = frm.assignMode;
             eventJson.tag = frm.tag;
             eventJson.id = workout_id;
-            eventJson.startTime = handleTime(frm.time.startTime);
-            eventJson.endTime = handleTime(frm.time.endTime);
+            eventJson.startTime = frm.time.startTime;
+            eventJson.endTime = frm.time.endTime;
             eventJson.day = parseInt(frm.day[0].key);
             if (existingEvents.length === 0) {
                 existingEvents.push(eventJson);

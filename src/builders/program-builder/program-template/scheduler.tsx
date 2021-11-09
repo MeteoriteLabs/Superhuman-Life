@@ -250,23 +250,15 @@ const Schedular = (props: any) => {
     const [duplicatedDay, setDuplicatedDay] = useState<any>([]);
 
     function handleDuplicate(e: any, changedTime: any){
-        function handleTime(time: string){
-            let timeArray = time.split(':');
-            let hours = timeArray[0];
-            let minutes = timeArray[1];
-            let timeString = (parseInt(hours) < 10 && hours !== '0' ? hours.charAt(1) : hours) + ':' + (parseInt(minutes) === 0 ? "0" : minutes);
-            return timeString.toString();
-        }
         const timeInput = JSON.parse(changedTime.startChange);
         let values = [...currentProgram];
         let newEvent: any = {};
-        changedTime.startChange = JSON.parse(changedTime.startChange);
         newEvent.name = e.title;
         newEvent.mode = e.mode;
         newEvent.tag = e.tag;
         newEvent.day = (duplicatedDay.length === 0 ? e.day : parseInt(duplicatedDay[0].day.substr(4)));
-        newEvent.startTime = handleTime(timeInput.startTime);
-        newEvent.endTime = handleTime(timeInput.endTime);
+        newEvent.startTime = timeInput.startTime;
+        newEvent.endTime = timeInput.endTime;
         newEvent.type = e.type;
         newEvent.id = e.id;
 
@@ -296,24 +288,18 @@ const Schedular = (props: any) => {
             }
         }
 
-        // updateProgram({
-        //     variables: {
-        //         programid: program_id,
-        //         events: values, 
-        //         renewal_dt: lastEventDay
-        //     }
-        // })
+        updateProgram({
+            variables: {
+                programid: program_id,
+                events: values, 
+                renewal_dt: lastEventDay
+            }
+        })
+        setEvent({});
     }
 
     function handleImportedEvent(e: any, mode: any, tag: any) {
         let newEvent: any = {};
-        function handleTime(time: string){
-            let timeArray = time.split(':');
-            let hours = timeArray[0];
-            let minutes = timeArray[1];
-            let timeString = (parseInt(hours) < 10 ? hours.charAt(1) : hours) + ':' + (parseInt(minutes) === 0 ? "0" : minutes);
-            return timeString.toString();
-        }
         const values = [...arr];
         if (arr2.event.day) {
             values[arr2.event.day][arr2.event.hour][arr2.event.min].splice(arr2.event.index, 1);
@@ -334,10 +320,14 @@ const Schedular = (props: any) => {
         newEvent.day = event.day;
         newEvent.type = event.type;
         newEvent.id = event.id;
-        newEvent.startTime = timeInput.startTime === "" ? event.hour + ':' + event.min : handleTime(timeInput.startTime);
-        newEvent.endTime = timeInput.endTime === "" ? event.endHour + ':' + event.endMin : handleTime(timeInput.endTime);
+        newEvent.startTime = timeInput.startTime === "" ? event.hour + ':' + event.min : timeInput.startTime;
+        newEvent.endTime = timeInput.endTime === "" ? event.endHour + ':' + event.endMin : timeInput.endTime;
+        console.log(newEvent);
         let existingValues = currentProgram === null ? [] : [...currentProgram];
         if(arr2.event.type2 === "transferEvent"){
+            if(existingValues.length === 0){
+                existingValues.push(newEvent);
+            }else {
             var timeStartTransfer: any = new Date("01/01/2007 " + handleTimeFormat(newEvent.startTime));
             var timeEndTransfer: any = new Date("01/01/2007 " + handleTimeFormat(newEvent.endTime));
             var diff1Transfer = timeEndTransfer - timeStartTransfer;
@@ -355,6 +345,7 @@ const Schedular = (props: any) => {
                         break;
                     }
             }
+        }
         }else {
         let a = existingValues.findIndex((val) => val.id === arr2.event.id && val.day === arr2.event.day && val.startTime === arr2.event.hour + ":" + arr2.event.min && val.endTime === arr2.event.endHour + ":" + arr2.event.endMin);
         existingValues.splice(a,1);
@@ -404,15 +395,9 @@ const Schedular = (props: any) => {
     }
 
     function handleSaveChanges(e: any, mode: any, tag: any) {
-        let values = [...currentProgram];
+        console.log(currentProgram)
+        let values = currentProgram === null ? [] : [...currentProgram];
         let newEvent: any = {};
-        function handleTime(time: string){
-            let timeArray = time.split(':');
-            let hours = timeArray[0];
-            let minutes = timeArray[1];
-            let timeString = (parseInt(hours) < 10 && hours !== '0' ? hours.charAt(1) : hours) + ':' + (parseInt(minutes) === 0 ? "0" : minutes);
-            return timeString.toString();
-        }
 
         if(arr2.event?.import === 'importedEvent'){
             handleImportedEvent(e, mode, tag);
@@ -425,8 +410,8 @@ const Schedular = (props: any) => {
                 newEvent.name = a.name;
                 newEvent.mode = mode === "" ? a.mode : mode;
                 newEvent.tag = tag === "" ? a.tag : tag;
-                newEvent.startTime = handleTime(e.startChange.startTime);
-                newEvent.endTime = handleTime(e.startChange.endTime);
+                newEvent.startTime = e.startChange.startTime;
+                newEvent.endTime = e.startChange.endTime;
                 newEvent.type = a.type;
                 newEvent.day = a.day;
     

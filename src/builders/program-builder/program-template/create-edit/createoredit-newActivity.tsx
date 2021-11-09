@@ -63,13 +63,6 @@ function CreateEditActivity(props: any, ref: any) {
         let timeString = (parseInt(hours) < 10 ? "0" + hours : hours) + ':' + (parseInt(minutes) === 0 ? "0" + minutes : minutes);
         return timeString.toString();
     }
-    function handleTime(time: string){
-        let timeArray = time.split(':');
-        let hours = timeArray[0];
-        let minutes = timeArray[1];
-        let timeString = (parseInt(hours) < 10 ? hours.charAt(1) : hours) + ':' + (parseInt(minutes) === 0 ? "0" : minutes);
-        return timeString.toString();
-    }
 
     function UpdateProgram(frm: any) {
         var existingEvents = (props.events === null ? [] : [...props.events]);
@@ -88,8 +81,8 @@ function CreateEditActivity(props: any, ref: any) {
                     name: name,
                     id: id,
                     type: 'activity',
-                    startTime: handleTime(frm.time.startTime),
-                    endTime: handleTime(frm.time.endTime), 
+                    startTime: frm.time.startTime,
+                    endTime: frm.time.endTime, 
                     activityTarget: frm.newActivity[0]
                 });
             }

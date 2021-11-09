@@ -1,5 +1,5 @@
 import WorkoutList from '../../../../components/customWidgets/workoutList';
-import TimeField from '../../../../components/customWidgets/multipleTimeFields';
+import TimeField from '../../../../components/customWidgets/timeField';
 import DaysInput from '../daysInput';
 
 export const widgets = {
@@ -20,7 +20,7 @@ export const schema: any = {
      },
      time: {
           "ui:widget": (props) => {
-               return <TimeField title="Start Time" onChange={props.onChange}/>
+               return <TimeField onChange={props.onChange}/>
           }
      }
 }

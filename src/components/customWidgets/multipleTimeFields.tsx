@@ -7,7 +7,6 @@ import 'rc-time-picker/assets/index.css';
 
 
 const TimeFieldInput = (props: any) => {
-
      const [startTime, setStartTime] = useState(props.eventType === 'duplicate' || 'edit' ? props.startTime : ''); 
      const [endTime, setEndTime] = useState(props.eventType === 'duplicate' || 'edit' ? props.endTime : '');
 
@@ -18,6 +17,7 @@ const TimeFieldInput = (props: any) => {
           let timeString = (parseInt(hours) < 10 && parseInt(hours) !== 0 ? "0" + hours : hours) + ':' + (parseInt(minutes) === 0 ? "0" + minutes : minutes);
           return timeString.toString();
      }
+     console.log(startTime);
 
      function handleStartTimeInput(val: any){
           var m = (Math.round(parseInt(val.slice(3,5))/15) * 15) % 60;
@@ -48,17 +48,41 @@ const TimeFieldInput = (props: any) => {
           }
      }
 
-     const startTimeSplit = startTime.split(":").map(Number);
-     const endTimeSplit = endTime.split(":").map(Number);
-     var startTimeValue = moment().set({"hour": startTimeSplit[0], "minute": startTimeSplit[1]});
-     var endTimeValue = moment().set({"hour": endTimeSplit[0], "minute": endTimeSplit[1]});
+     var startTimeSplit;
+     var endTimeSplit;
+     startTimeSplit = startTime?.split(":").map(Number);
+     endTimeSplit = endTime?.split(":").map(Number);
+     var startTimeValue;
+     var endTimeValue
+     console.log(startTimeSplit);
+     if(startTimeSplit && endTimeSplit !== undefined){
+          startTimeValue = moment().set({"hour": startTimeSplit[0], "minute": startTimeSplit[1]});
+          endTimeValue = moment().set({"hour": endTimeSplit[0], "minute": endTimeSplit[1]});
+     }
 
      function convertToMomnet(time: string) {
           var timeSplit = time.split(":").map(Number);
           return moment().set({"hour": timeSplit[0], "minute": timeSplit[1]});
      }
 
-     const object = {"startTime": startTime, "endTime": endTime};
+     function handleFormatting(time){
+          var inputTime: any = time.split(':');
+          return `${parseInt(inputTime[0]) < 10 ? inputTime[0].charAt(1) : inputTime[0]}:${inputTime[1] === '00' ? '0' : inputTime[1]}`; 
+     }
+
+     function handleObjectFormat({ startTime, endTime}){
+          if(props.startTime === startTime && props.endTime === endTime){
+               return {startTime: startTime, endTime: endTime};
+          }else if(props.startTime === startTime && props.endTime !== endTime){
+               return {startTime: startTime, endTime: handleFormatting(endTime)}
+          }else if(props.startTime !== startTime && props.endTime === endTime){
+               return {startTime: handleFormatting(startTime), endTime: endTime}
+          }else {;
+               return {startTime: handleFormatting(startTime), endTime: handleFormatting(endTime)}
+          }
+     }
+
+     const object = handleObjectFormat({"startTime": startTime, "endTime": endTime});
      props.onChange(JSON.stringify(object));
      
      return (
