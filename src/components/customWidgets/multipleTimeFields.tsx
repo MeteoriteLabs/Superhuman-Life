@@ -8,8 +8,8 @@ import 'rc-time-picker/assets/index.css';
 
 const TimeFieldInput = (props: any) => {
 
-     const [startTime, setStartTime] = useState(''); 
-     const [endTime, setEndTime] = useState('');
+     const [startTime, setStartTime] = useState(props.eventType === 'duplicate' || 'edit' ? props.startTime : ''); 
+     const [endTime, setEndTime] = useState(props.eventType === 'duplicate' || 'edit' ? props.endTime : '');
 
      function handleTimeFormat(time: string) {
           let timeArray = time.split(':');

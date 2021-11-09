@@ -250,6 +250,14 @@ const Schedular = (props: any) => {
     const [duplicatedDay, setDuplicatedDay] = useState<any>([]);
 
     function handleDuplicate(e: any, changedTime: any){
+        function handleTime(time: string){
+            let timeArray = time.split(':');
+            let hours = timeArray[0];
+            let minutes = timeArray[1];
+            let timeString = (parseInt(hours) < 10 && hours !== '0' ? hours.charAt(1) : hours) + ':' + (parseInt(minutes) === 0 ? "0" : minutes);
+            return timeString.toString();
+        }
+        const timeInput = JSON.parse(changedTime.startChange);
         let values = [...currentProgram];
         let newEvent: any = {};
         changedTime.startChange = JSON.parse(changedTime.startChange);
@@ -257,8 +265,8 @@ const Schedular = (props: any) => {
         newEvent.mode = e.mode;
         newEvent.tag = e.tag;
         newEvent.day = (duplicatedDay.length === 0 ? e.day : parseInt(duplicatedDay[0].day.substr(4)));
-        newEvent.startTime = changedTime.startChange.startTime;
-        newEvent.endTime = changedTime.startChange.endTime;
+        newEvent.startTime = handleTime(timeInput.startTime);
+        newEvent.endTime = handleTime(timeInput.endTime);
         newEvent.type = e.type;
         newEvent.id = e.id;
 
@@ -288,13 +296,13 @@ const Schedular = (props: any) => {
             }
         }
 
-        updateProgram({
-            variables: {
-                programid: program_id,
-                events: values, 
-                renewal_dt: lastEventDay
-            }
-        })
+        // updateProgram({
+        //     variables: {
+        //         programid: program_id,
+        //         events: values, 
+        //         renewal_dt: lastEventDay
+        //     }
+        // })
     }
 
     function handleImportedEvent(e: any, mode: any, tag: any) {
@@ -402,7 +410,7 @@ const Schedular = (props: any) => {
             let timeArray = time.split(':');
             let hours = timeArray[0];
             let minutes = timeArray[1];
-            let timeString = (parseInt(hours) < 10 && parseInt(hours) !== 0 ? hours.charAt(1) : hours) + ':' + (parseInt(minutes) === 0 ? "0" : minutes);
+            let timeString = (parseInt(hours) < 10 && hours !== '0' ? hours.charAt(1) : hours) + ':' + (parseInt(minutes) === 0 ? "0" : minutes);
             return timeString.toString();
         }
 
@@ -458,6 +466,7 @@ const Schedular = (props: any) => {
                 })
             }
         }
+        setEvent({});
     }
     var changedDay;
     var changedHour;
@@ -865,7 +874,7 @@ const Schedular = (props: any) => {
                 <Modal show={showModal} onHide={handleClose} backdrop="static" centered size="lg" >
                     <Modal.Body style={{ maxHeight: '600px', overflow: 'auto' }}>
                         <Row>
-                            <Col lg={8}>
+                            <Col lg={arr2?.event?.import === 'importedEvent' ? 10 : 8}>
                                 <h3 className="text-capitalize">{event.title}</h3>
                             </Col>
                             <Col>
@@ -883,7 +892,7 @@ const Schedular = (props: any) => {
                                 </OverlayTrigger>
                                 </div>
                             </Col>
-                            {event?.import === 'importedEvent' && <Col>
+                            {arr2?.event?.import !== 'importedEvent' && <Col>
                                 <OverlayTrigger
                                     key='left'
                                     placement='left'
@@ -896,7 +905,7 @@ const Schedular = (props: any) => {
                                     <i className="fas fa-copy fa-lg" onClick={(e) => { handleClose(); setDuplicate(true); }} style={{ cursor: 'pointer', color: '#696969' }} />
                                 </OverlayTrigger>
                             </Col>}
-                            {event?.import === 'importedEvent' && <Col>
+                            {arr2?.event?.import !== 'importedEvent' && <Col>
                                 <div>
                                 <OverlayTrigger
                                     key='left'
@@ -967,7 +976,7 @@ const Schedular = (props: any) => {
                         </Row>
                         <Row className="pt-3 align-items-center">
                             <Col>
-                                <TimeField title="Start Time: " onChange={handleStart} endTime={event.endHour + ':' + event.endMin} startTime={event.hour + ':' + event.min} disabled={edit}/>
+                                <TimeField eventType="edit" onChange={handleStart} endTime={event.endHour + ':' + event.endMin} startTime={event.hour + ':' + event.min} disabled={edit}/>
                             </Col>
                         </Row>
                         {(event.type === "workout") && <Tabs defaultActiveKey="agenda" transition={false} id="noanim-tab-example" className="pt-4">
@@ -1142,7 +1151,7 @@ const Schedular = (props: any) => {
                             </Row>
                             <Row className="pt-3 align-items-center">
                                 <Col>
-                                    <TimeField onChange={handleStart} endTime={event.endHour + ':' + event.endMin} startTime={event.hour + ':' + event.min}/>
+                                    <TimeField eventType="duplicate" onChange={handleStart} endTime={event.endHour + ':' + event.endMin} startTime={event.hour + ':' + event.min}/>
                                 </Col>
                             </Row>
                     </Modal.Body>
