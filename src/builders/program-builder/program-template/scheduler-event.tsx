@@ -48,7 +48,7 @@ const SchedulerEvent = (props: any) => {
                     if(!values[val.day]){
                          values[val.day] = [];
                     }
-                    values[val.day].push({"type": val.type ,"type2": "transferEvent" , "title": val.name, "color": "skyblue", "id": val.id, "endHour": val.endTime.split(":")[0], "endMin": val.endTime.split(":")[1], "hour": val.startTime.split(":")[0], "min": val.startTime.split(":")[1]});
+                    values[val.day].push({"import": "importedEvent","type": val.type, "mode": val.mode, "tag": val.tag,"type2": "transferEvent" , "title": val.name, "color": "skyblue", "id": val.id, "endHour": val.endTime.split(":")[0], "endMin": val.endTime.split(":")[1], "hour": val.startTime.split(":")[0], "min": val.startTime.split(":")[1]});
                })
                setArr(values);
           }

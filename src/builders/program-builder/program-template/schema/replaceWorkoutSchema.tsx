@@ -1,4 +1,4 @@
-import TimeField from '../../../../components/customWidgets/singleTimeField';
+import TimeField from '../../../../components/customWidgets/timeField';
 import DaysInput from '../daysInput';
 import TextEditor from '../../../../components/customWidgets/textEditor';
 import EquipmentSearch from '../../../../components/customWidgets/equipmentList';
@@ -22,14 +22,9 @@ export const schema: any = {
     day: {
         "ui:widget": "daysInput"
     },
-    startTime: {
+    time: {
         "ui:widget": (props) => {
-            return <TimeField title="Start Time" onChange={props.onChange}/>
-        }
-    },
-    endTime: {
-        "ui:widget": (props) => {
-            return <TimeField title="End Time" onChange={props.onChange}/>
+             return <TimeField onChange={props.onChange}/>
         }
     },
     "conditional": {

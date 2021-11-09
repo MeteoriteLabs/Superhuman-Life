@@ -26,6 +26,10 @@ const PackagePage = React.lazy(() => import("./builders/package-builder"));
 const ResourcePage = React.lazy(() => import("./builders/resource-builder"));
 const ProgramPage = React.lazy(() => import("./builders/program-builder"));
 const ProgramManagerPage = React.lazy(() => import("./builders/program-builder/program-template"));
+const ClassicProgramSchedulerPage = React.lazy(() => import("./builders/session-builder/Fitness/Classic/scheduler"));
+const PTProgramSchedulerPage = React.lazy(() => import("./builders/session-builder/Fitness/PT/scheduler"));
+const GroupProgramSchedulerPage = React.lazy(() => import("./builders/session-builder/Fitness/Group/scheduler"));
+const CustomProgramSchedulerPage = React.lazy(() => import("./builders/session-builder/Fitness/Custom/scheduler"));
 
 const SessionPage = React.lazy(() => import("./builders/session-builder/"));
 
@@ -66,6 +70,10 @@ export default function Routes({ token }: any) {
               <Route exact path="/programs" component={ProgramPage} />
               <Route exact path="/session" component={SessionPage} />
               <Route path="/programs/manage" component={ProgramManagerPage} />
+              <Route path="/classic/session/scheduler" component={ClassicProgramSchedulerPage} />
+              <Route path="/pt/session/scheduler" component={PTProgramSchedulerPage} />
+              <Route path="/group/session/scheduler" component={GroupProgramSchedulerPage} />
+              <Route path="/custom/session/scheduler" component={CustomProgramSchedulerPage} />
               <Route path="/profile" component={ProfilePage} />
               <Route path="/resources" component={ResourcePage} />
               <Route path="/schedule" component={SchedulePage} />

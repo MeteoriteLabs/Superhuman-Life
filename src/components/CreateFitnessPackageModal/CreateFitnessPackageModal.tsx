@@ -79,6 +79,10 @@ export default function CreateFitnessPackageModal({ name, formUISchema, formSubm
                 duration = 30
             }
         }
+        if(duration === undefined){
+            duration = 30
+        }
+
         return duration
     }
 
@@ -135,7 +139,7 @@ export default function CreateFitnessPackageModal({ name, formUISchema, formSubm
         const updateMode = updateModeName(formData);
         const updateDuration = updateFormDuration(formData);
         const publishing_date = moment()
-        const expiry_date = moment(moment().add(365, 'days').calendar()); 
+        const expiry_date = moment(publishing_date.add(365, 'days')); 
 
         if (isStepper && step < stepper.length) {
             const update = updateInputValue(formData)

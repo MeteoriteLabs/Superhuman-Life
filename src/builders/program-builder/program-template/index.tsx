@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useQuery } from "@apollo/client";
 import { GET_TABLEDATA } from './queries';
 import { Row, Col } from 'react-bootstrap';
-import Schedular from './schedular';
+import Schedular from './scheduler';
 
 const ProgramManager = (props: any) => {
     const last = window.location.pathname.split('/').pop();

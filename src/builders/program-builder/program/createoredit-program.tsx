@@ -13,7 +13,7 @@ interface Operation {
     current_status: boolean;
 }
 
-function CreateEditMessage(props: any, ref: any) {
+function CreateEditProgram(props: any, ref: any) {
     const auth = useContext(AuthContext);
     const programSchema: { [name: string]: any; } = require("./program.json");
     const [programDetails, setProgramDetails] = useState<any>({});
@@ -67,6 +67,7 @@ function CreateEditMessage(props: any, ref: any) {
             Is_program: false,
             level: ENUM_EXERCISES_EXERCISELEVEL[frm.level],
             description: frm.details,
+            renewal_dt: 0,
             users_permissions_user: frm.user_permissions_user
         } });
     }
@@ -146,4 +147,4 @@ function CreateEditMessage(props: any, ref: any) {
     )
 }
 
-export default React.forwardRef(CreateEditMessage);
+export default React.forwardRef(CreateEditProgram);

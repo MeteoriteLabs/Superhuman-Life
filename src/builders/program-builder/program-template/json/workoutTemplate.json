@@ -5,16 +5,25 @@
          "required": [
             "assignMode",
             "day",
-            "time"
+            "time",
+            "tag"
          ],
         "properties": {
+            "tag": {
+                "type": "string",
+                "title": "Class Type",
+                "enum": [
+                    "Personal Training",
+                    "Group Class",
+                    "Classic"
+                ]
+            },
             "assignMode": {
                 "type": "string",
                 "title": "Mode",
                 "enum": [
                     "Online",
-                    "Offline",
-                    "Hybrid"
+                    "Offline"
                 ]
             },
             "day": {

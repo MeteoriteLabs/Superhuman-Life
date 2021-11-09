@@ -12,7 +12,7 @@ interface Operation {
     current_status: boolean;
 }
 
-function CreateEditMessage(props: any, ref: any) {
+function CreateEditActivity(props: any, ref: any) {
     const auth = useContext(AuthContext);
     const programSchema: { [name: string]: any; } = require("../json/newActivity.json");
     const [programDetails, setProgramDetails] = useState<any>({});
@@ -30,6 +30,8 @@ function CreateEditMessage(props: any, ref: any) {
     useImperativeHandle(ref, () => ({
         TriggerForm: (msg: Operation) => {
             setOperation(msg);
+            schema.startDate = props.startDate;
+            schema.duration = props.duration;
 
             if (msg && !msg.id) //render form if no message id
                 modalTrigger.next(true);
@@ -75,7 +77,7 @@ function CreateEditMessage(props: any, ref: any) {
             delete frm.newActivity[0].id;
             for(var i = 0; i < frm.day.length; i++){
                 daysArray.push({
-                    day: parseInt(frm.day[i].day.substr(4)), 
+                    day: parseInt(frm.day[i].key), 
                     name: name,
                     id: id,
                     type: 'activity',
@@ -108,9 +110,19 @@ function CreateEditMessage(props: any, ref: any) {
                 }
             }
         }
+
+        let lastEventDay: number = 0;
+
+        for(var m=0; m<= existingEvents.length - 1; m++) {
+            if(existingEvents[m].day > lastEventDay){
+                lastEventDay = parseInt(existingEvents[m].day);
+            }
+        }
+
         updateProgram({ variables: {
             programid: program_id,
-            events: existingEvents
+            events: existingEvents,
+            renewal_dt: lastEventDay
         } });
     }
 
@@ -158,4 +170,4 @@ function CreateEditMessage(props: any, ref: any) {
     )
 }
 
-export default React.forwardRef(CreateEditMessage);
+export default React.forwardRef(CreateEditActivity);

@@ -1,5 +1,5 @@
 import WorkoutList from '../../../../components/customWidgets/workoutList';
-import TimeField from '../../../../components/customWidgets/multipleTimeFields';
+import TimeField from '../../../../components/customWidgets/timeField';
 import DaysInput from '../daysInput';
 
 export const widgets = {
@@ -9,9 +9,10 @@ export const widgets = {
 };
 
 export const schema: any = {
+     effectiveDate: null,
      day: {
           "ui:widget": (props) => {
-               return <DaysInput id="newWorkout" onChange={props.onChange}/>
+               return <DaysInput startDate={schema.startDate} duration={schema.duration} id="newWorkout" onChange={props.onChange}/>
            }
      },
      workoutEvent: {
@@ -19,7 +20,7 @@ export const schema: any = {
      },
      time: {
           "ui:widget": (props) => {
-               return <TimeField title="Start Time" onChange={props.onChange}/>
+               return <TimeField onChange={props.onChange}/>
           }
      }
 }

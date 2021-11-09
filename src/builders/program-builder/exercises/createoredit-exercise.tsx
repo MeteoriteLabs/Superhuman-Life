@@ -13,7 +13,7 @@ interface Operation {
     current_status: boolean;
 }
 
-function CreateEditMessage(props: any, ref: any) {
+function CreateEditExercise(props: any, ref: any) {
     const auth = useContext(AuthContext);
     const exerciseSchema: { [name: string]: any; } = require("./exercises.json");
     const [exerciseDetails, setExerciseDetails] = useState<any>({});
@@ -28,9 +28,9 @@ function CreateEditMessage(props: any, ref: any) {
         }
     });
 
-    const [createExercise] = useMutation(CREATE_EXERCISE, { onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
-    const [editExercise] = useMutation(UPDATE_EXERCISE,{variables: {exerciseid: operation.id}, onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
-    const [deleteExercise] = useMutation(DELETE_EXERCISE, { onCompleted: (e: any) => console.log(e), refetchQueries: ["GET_TABLEDATA"] });
+    const [createExercise] = useMutation(CREATE_EXERCISE, { onCompleted: (r: any) => { modalTrigger.next(false); } });
+    const [editExercise] = useMutation(UPDATE_EXERCISE,{variables: {exerciseid: operation.id}, onCompleted: (r: any) => { modalTrigger.next(false); } });
+    const [deleteExercise] = useMutation(DELETE_EXERCISE, { refetchQueries: ["GET_TABLEDATA"] });
 
     const modalTrigger =  new Subject();
 
@@ -72,6 +72,7 @@ function CreateEditMessage(props: any, ref: any) {
     }
 
     function FetchData() {
+        console.log('Fetch Data');
         useQuery(FETCH_DATA, { variables: { id: operation.id }, onCompleted: (e: any) => { FillDetails(e) } });
     }
 
@@ -173,4 +174,4 @@ function CreateEditMessage(props: any, ref: any) {
     )
 }
 
-export default React.forwardRef(CreateEditMessage);
+export default React.forwardRef(CreateEditExercise);

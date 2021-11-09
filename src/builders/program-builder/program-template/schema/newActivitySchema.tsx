@@ -1,4 +1,4 @@
-import TimeField from '../../../../components/customWidgets/multipleTimeFields';
+import TimeField from '../../../../components/customWidgets/timeField';
 import DaysInput from '../daysInput';
 import NewActivity from '../../../../components/customWidgets/activityList';
 
@@ -11,7 +11,7 @@ export const widgets = {
 export const schema: any = {
      day: {
           "ui:widget": (props) => {
-               return <DaysInput onChange={props.onChange}/>
+               return <DaysInput startDate={schema.startDate} duration={schema.duration} onChange={props.onChange}/>
           }
      },
      time: {
