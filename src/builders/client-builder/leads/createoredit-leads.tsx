@@ -1,7 +1,7 @@
 import React, { useContext, useImperativeHandle, useState } from "react";
-//import { useQuery, useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import ModalView from "../../../components/modal";
-//import { GET_TRIGGERS, ADD_MESSAGE, UPDATE_MESSAGE, GET_MESSAGE, DELETE_MESSAGE,UPDATE_STATUS } from "./queries";
+import { ADD_LEADS, DELETE_LEAD } from "./queries";
 import AuthContext from "../../../context/auth-context";
 import StatusModal from "../../../components/StatusModal/StatusModal";
 import { Subject } from "rxjs";
@@ -19,12 +19,16 @@ function CreateEditMessage(props: any, ref: any) {
      const auth = useContext(AuthContext);
      const messageSchema: { [name: string]: any } = require("./leads.json");
      //const uiSchema: {} = require("./schema.tsx");
-     const [messageDetails, setMessageDetails] = useState<any>({});
+     //const [messageDetails, setMessageDetails] = useState<any>({});
      const [operation, setOperation] = useState<Operation>({} as Operation);
 
-     // const [createMessage] = useMutation(ADD_MESSAGE, { onCompleted: (r: any) => { modalTrigger.next(false); } });
+     const [createLeads] = useMutation(ADD_LEADS, {
+          onCompleted: (r: any) => {
+               modalTrigger.next(false);
+          },
+     });
      // const [editMessage] = useMutation(UPDATE_MESSAGE,{variables: {messageid: operation.id}, onCompleted: (r: any) => { modalTrigger.next(false); } });
-     // const [deleteMessage] = useMutation(DELETE_MESSAGE, { onCompleted: (e: any) => console.log(e), refetchQueries: ["GET_TRIGGERS"] });
+     const [deleteLeads] = useMutation(DELETE_LEAD, { onCompleted: (e: any) => console.log(e) });
 
      const modalTrigger = new Subject();
 
@@ -36,40 +40,37 @@ function CreateEditMessage(props: any, ref: any) {
           },
      }));
 
-     function loadData(data: any) {
-          // messageSchema["1"].properties.prerecordedtype.enum = [...data.prerecordedtypes].map(n => (n.id));
-          // messageSchema["1"].properties.prerecordedtype.enumNames = [...data.prerecordedtypes].map(n => (n.name));
-          // messageSchema["1"].properties.prerecordedtrigger.enum = [...data.prerecordedtriggers].map(n => (n.id));
-          // messageSchema["1"].properties.prerecordedtrigger.enumNames = [...data.prerecordedtriggers].map(n => (n.name));
-     }
+     //  function loadData(data: any) {
+     //       // messageSchema["1"].properties.prerecordedtype.enum = [...data.prerecordedtypes].map(n => (n.id));
+     //       // messageSchema["1"].properties.prerecordedtype.enumNames = [...data.prerecordedtypes].map(n => (n.name));
+     //       // messageSchema["1"].properties.prerecordedtrigger.enum = [...data.prerecordedtriggers].map(n => (n.id));
+     //       // messageSchema["1"].properties.prerecordedtrigger.enumNames = [...data.prerecordedtriggers].map(n => (n.name));
+     //  }
 
-     function FillDetails(data: any) {
-          let details: any = {};
-          let msg = data.prerecordedmessage;
-          console.log(msg);
-          //debugger
-          details.title = msg.title;
-          details.prerecordedtype = msg.prerecordedtype.id;
-          details.prerecordedtrigger = msg.prerecordedtrigger.id;
-          details.description = msg.description;
-          details.minidesc = msg.minidescription;
-          details.mediaurl = msg.mediaurl;
-          details.file = msg.mediaupload.id;
-          details.status = msg.status;
-          details.image = msg.upload;
+     //  function FillDetails(data: any) {
+     //       let details: any = {};
+     //       let msg = data.prerecordedmessage;
+     //       console.log(msg);
+     //       //debugger
+     //       details.title = msg.title;
+     //       details.prerecordedtype = msg.prerecordedtype.id;
+     //       details.prerecordedtrigger = msg.prerecordedtrigger.id;
+     //       details.description = msg.description;
+     //       details.minidesc = msg.minidescription;
+     //       details.mediaurl = msg.mediaurl;
+     //       details.file = msg.mediaupload.id;
+     //       details.status = msg.status;
+     //       details.image = msg.upload;
 
-          setMessageDetails(details);
+     //       setMessageDetails(details);
 
-          if (["edit", "view"].indexOf(operation.type) > -1) modalTrigger.next(true);
-          else OnSubmit(null);
-     }
-
-     function FetchData() {
-          // useQuery(GET_TRIGGERS, { onCompleted: loadData });
-          // useQuery(GET_MESSAGE, { variables: { id: operation.id }, skip: (!operation.id || operation.type === 'toggle-status'), onCompleted: (e: any) => { FillDetails(e) } });
-     }
+     //       if (["edit", "view"].indexOf(operation.type) > -1) modalTrigger.next(true);
+     //       else OnSubmit(null);
+     //  }
 
      function CreateMessage(frm: any) {
+          console.log(frm);
+          createLeads({ variables: { id: auth.userid, details: frm } });
           // createMessage({ variables: frm });
      }
 
@@ -82,14 +83,11 @@ function CreateEditMessage(props: any, ref: any) {
      }
 
      function DeleteMessage(id: any) {
-          // deleteMessage({ variables: { id: id }});
+          console.log(id);
+          deleteLeads({ variables: { id: id } });
      }
 
      function OnSubmit(frm: any) {
-          if (frm) {
-               frm.user_permissions_user = auth.userid;
-          }
-
           switch (operation.type) {
                case "create":
                     CreateMessage(frm);
@@ -103,11 +101,9 @@ function CreateEditMessage(props: any, ref: any) {
           }
      }
 
-     FetchData();
-
      let name = "";
      if (operation.type === "create") {
-          name = "Create New";
+          name = "Lead";
      } else if (operation.type === "edit") {
           name = "Edit";
      } else if (operation.type === "view") {
@@ -132,7 +128,7 @@ function CreateEditMessage(props: any, ref: any) {
                                           OnSubmit(frm);
                                      }
                          }
-                         formData={messageDetails}
+                         //formData={messageDetails}
                          //widgets={widgets}
                          modalTrigger={modalTrigger}
                     />

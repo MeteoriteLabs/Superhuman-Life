@@ -4,7 +4,7 @@ import Table from "../../../components/table";
 import { useQuery } from "@apollo/client";
 import AuthContext from "../../../context/auth-context";
 import ActionButton from "../../../components/actionbutton/index";
-//import CreateEditMessage from "./createoredit-message";
+import CreateEditMessage from "./createoredit-leads";
 import { GET_LEADS } from "./queries";
 
 export default function Leads() {
@@ -94,17 +94,20 @@ export default function Leads() {
           setData([...data.websiteContactForms]);
           setDataTable(
                [...data.websiteContactForms].flatMap((Detail) => {
-                    if (!namearr.includes(Detail.details.username)) {
-                         namearr.push(Detail.details.username);
-                         namearr.push(Detail.details.username.toLowerCase());
+                    if (!namearr.includes(Detail.details.leadsdetails.name)) {
+                         namearr.push(Detail.details.leadsdetails.name);
+                         namearr.push(Detail.details.leadsdetails.name.toLowerCase());
+                    }
+                    if (!namearr.includes(Detail.details.status)) {
+                         namearr.push(Detail.details.status.toLowerCase());
                     }
 
                     return {
                          id: Detail.id,
                          leadsdate: getDate(Date.parse(Detail.createdAt)),
-                         name: Detail.details.username,
-                         number: Detail.details.contact,
-                         email: Detail.details.email,
+                         name: Detail.details.leadsdetails.name,
+                         number: Detail.details.leadsdetails.phonenumber,
+                         email: Detail.details.leadsdetails.email,
                          source: Detail.details.source,
                          status: Detail.details.status,
                          lastupdated: getDate(Date.parse(Detail.updatedAt)),
@@ -121,16 +124,19 @@ export default function Leads() {
                     data.flatMap((Detail: any) => {
                          //  console.log(Detail.details.username.toLowerCase());
                          //  console.log(searchFilter.toLowerCase());
+                         console.log(nameArr);
                          if (
-                              nameArr.includes(searchFilter) &&
-                              Detail.details.username.toLowerCase() === searchFilter.toLowerCase()
+                              (nameArr.includes(searchFilter) &&
+                                   Detail.details.leadsdetails.name.toLowerCase() === searchFilter.toLowerCase()) ||
+                              (nameArr.includes(searchFilter) &&
+                                   Detail.details.status.toLowerCase() === searchFilter.toLowerCase())
                          ) {
                               return {
                                    id: Detail.id,
                                    leadsdate: getDate(Date.parse(Detail.createdAt)),
-                                   name: Detail.details.username,
-                                   number: Detail.details.contact,
-                                   email: Detail.details.email,
+                                   name: Detail.details.leadsdetails.name,
+                                   number: Detail.details.leadsdetails.phonenumber,
+                                   email: Detail.details.leadsdetails.email,
                                    source: Detail.details.source,
                                    status: Detail.details.status,
                                    lastupdated: getDate(Date.parse(Detail.updatedAt)),
@@ -147,9 +153,9 @@ export default function Leads() {
                          return {
                               id: Detail.id,
                               leadsdate: getDate(Date.parse(Detail.createdAt)),
-                              name: Detail.details.username,
-                              number: Detail.details.contact,
-                              email: Detail.details.email,
+                              name: Detail.details.leadsdetails.name,
+                              number: Detail.details.leadsdetails.phonenumber,
+                              email: Detail.details.leadsdetails.email,
                               source: Detail.details.source,
                               status: Detail.details.status,
                               lastupdated: getDate(Date.parse(Detail.updatedAt)),
@@ -199,7 +205,7 @@ export default function Leads() {
                                    >
                                         <i className="fas fa-plus-circle"></i> Add Lead
                                    </Button>
-                                   {/* <CreateEditMessage ref={createEditMessageComponent}></CreateEditMessage> */}
+                                   <CreateEditMessage ref={createEditMessageComponent}></CreateEditMessage>
                               </Card.Title>
                          </Col>
                     </Row>

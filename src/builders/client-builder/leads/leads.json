@@ -1,32 +1,45 @@
 {
      "1": {
-          "title": "Message",
           "type": "object",
-          "required": ["title", "prerecordedtype", "prerecordedtrigger", "description", "minidesc"],
+          "required": [],
           "properties": {
-               "title": {
+               "status": {
                     "type": "string",
-                    "title": "Message Title"
+                    "title": "Status",
+                    "enum": ["New", "Interested", "Folllow Up", "Negative", "Enrolled"]
                },
-               "prerecordedtype": {
+               "source": {
                     "type": "string",
-                    "title": "Type",
-                    "enum": [],
-                    "enumNames": []
+                    "title": "Source",
+                    "enum": ["Website", "Application", "Social Media", "Google", "Word of Mouth"]
                },
-               "prerecordedtrigger": {
+               "notes": {
                     "type": "string",
-                    "title": "Trigger for message",
-                    "enum": [],
-                    "enumNames": []
+                    "title": "Notes"
                },
-               "description": {
-                    "type": "string",
-                    "title": "Description"
-               },
-               "minidesc": {
-                    "type": "string",
-                    "title": "Mini Description"
+               "leadsdetails": {
+                    "title": "Leads Details",
+                    "type": "object",
+                    "required": [],
+                    "properties": {
+                         "name": {
+                              "type": "string",
+                              "title": "Name"
+                         },
+                         "phonenumber": {
+                              "type": "string",
+                              "title": "Phone Number",
+                              "minLength": 10
+                         },
+                         "email": {
+                              "type": "string",
+                              "title": "Email ID"
+                         },
+                         "leadsmesssage": {
+                              "type": "string",
+                              "title": "Lead's Message"
+                         }
+                    }
                }
           }
      }

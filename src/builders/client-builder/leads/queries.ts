@@ -17,3 +17,22 @@ export const GET_LEADS = gql`
           }
      }
 `;
+export const ADD_LEADS = gql`
+     mutation addLead($id: ID, $details: JSON) {
+          createWebsiteContactForm(input: { data: { users_permissions_user: $id, details: $details } }) {
+               websiteContactForm {
+                    id
+               }
+          }
+     }
+`;
+
+export const DELETE_LEAD = gql`
+     mutation deleteLead($id: ID!) {
+          deleteWebsiteContactForm(input: { where: { id: $id } }) {
+               websiteContactForm {
+                    id
+               }
+          }
+     }
+`;

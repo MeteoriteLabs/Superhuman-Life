@@ -1,14 +1,16 @@
 export const schema: any = {
-     description: {
+     notes: {
           "ui:widget": "textarea",
           "ui:options": {
                rows: 4,
           },
      },
-     minidesc: {
-          "ui:widget": "textarea",
-          "ui:options": {
-               rows: 2,
+     leadsdetails: {
+          leadsmesssage: {
+               "ui:widget": "textarea",
+               "ui:options": {
+                    rows: 4,
+               },
           },
      },
 };
