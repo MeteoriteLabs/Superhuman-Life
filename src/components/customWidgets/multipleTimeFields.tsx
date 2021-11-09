@@ -48,18 +48,10 @@ const TimeFieldInput = (props: any) => {
           }
      }
 
-     var startTimeSplit;
-     var endTimeSplit;
-     startTimeSplit = startTime?.split(":").map(Number);
-     endTimeSplit = endTime?.split(":").map(Number);
-     var startTimeValue;
-     var endTimeValue
-     console.log(startTimeSplit);
-     if(startTimeSplit && endTimeSplit !== undefined){
-          startTimeValue = moment().set({"hour": startTimeSplit[0], "minute": startTimeSplit[1]});
-          endTimeValue = moment().set({"hour": endTimeSplit[0], "minute": endTimeSplit[1]});
-     }
-
+     var startTimeSplit = startTime?.split(":").map(Number);
+     var endTimeSplit = endTime?.split(":").map(Number);
+     var startTimeValue = moment().set({"hour": startTimeSplit[0], "minute": startTimeSplit[1]});
+     var endTimeValue = moment().set({"hour": endTimeSplit[0], "minute": endTimeSplit[1]});
      function convertToMomnet(time: string) {
           var timeSplit = time.split(":").map(Number);
           return moment().set({"hour": timeSplit[0], "minute": timeSplit[1]});

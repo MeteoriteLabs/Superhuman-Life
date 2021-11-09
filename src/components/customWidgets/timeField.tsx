@@ -50,8 +50,7 @@ const TimeFieldInput = (props: any) => {
         return `${parseInt(inputTime[0]) < 10 ? inputTime[0].charAt(1) : inputTime[0]}:${inputTime[1] === '00' ? '0' : inputTime[1]}`; 
     }
 
-    const object = ({"startTime": handleFormatting(startTime), "endTime": handleFormatting(endTime)})
-    // console.log(object);
+    const object = ({"startTime": handleFormatting(startTime), "endTime": handleFormatting(endTime)});
     props.onChange(JSON.stringify(object));
      
     return (

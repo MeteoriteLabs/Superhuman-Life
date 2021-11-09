@@ -322,7 +322,7 @@ const Schedular = (props: any) => {
         newEvent.id = event.id;
         newEvent.startTime = timeInput.startTime === "" ? event.hour + ':' + event.min : timeInput.startTime;
         newEvent.endTime = timeInput.endTime === "" ? event.endHour + ':' + event.endMin : timeInput.endTime;
-        console.log(newEvent);
+        
         let existingValues = currentProgram === null ? [] : [...currentProgram];
         if(arr2.event.type2 === "transferEvent"){
             if(existingValues.length === 0){
@@ -395,7 +395,6 @@ const Schedular = (props: any) => {
     }
 
     function handleSaveChanges(e: any, mode: any, tag: any) {
-        console.log(currentProgram)
         let values = currentProgram === null ? [] : [...currentProgram];
         let newEvent: any = {};
 

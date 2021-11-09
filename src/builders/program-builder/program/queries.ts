@@ -2,7 +2,7 @@ import { gql } from "@apollo/client";
 
 export const GET_TABLEDATA = gql`
      query ProgramQuery($id: String!) {
-          fitnessprograms(where: {users_permissions_user: {id:$id}}) {
+          fitnessprograms(where: {users_permissions_user: {id:$id}, Is_program: false}) {
                id
                title
                description
