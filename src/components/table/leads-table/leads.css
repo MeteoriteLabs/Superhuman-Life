@@ -2,12 +2,12 @@
      text-align: left;
 }
 /* .rowCard:hover {
-  background-color: lightgray;
+ background-color: lightgray;
 } */
 .headerCard {
      text-align: left;
 }
 
 .highlight {
-     border: 2px solid red;
+     border: 2px solid red !important;
 }

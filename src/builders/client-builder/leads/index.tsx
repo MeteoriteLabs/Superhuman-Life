@@ -1,6 +1,6 @@
 import { useMemo, useState, useRef, useContext, useEffect } from "react";
 import { Badge, Button, TabContent, InputGroup, FormControl, Card, Container, Row, Col } from "react-bootstrap";
-import Table from "../../../components/table";
+import Table from "../../../components/table/leads-table";
 import { useQuery } from "@apollo/client";
 import AuthContext from "../../../context/auth-context";
 import ActionButton from "../../../components/actionbutton/index";
@@ -21,6 +21,7 @@ export default function Leads() {
                { accessor: "name", Header: "Name" },
                { accessor: "number", Header: "Number" },
                { accessor: "email", Header: "Email" },
+               { accessor: "isseen" },
                {
                     accessor: "source",
                     Header: "Source",
@@ -110,6 +111,7 @@ export default function Leads() {
                          email: Detail.details.leadsdetails.email,
                          source: Detail.details.source,
                          status: Detail.details.status,
+                         isseen: Detail.isSeen,
                          lastupdated: getDate(Date.parse(Detail.updatedAt)),
                     };
                })

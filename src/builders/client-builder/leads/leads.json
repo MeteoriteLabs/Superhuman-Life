@@ -1,7 +1,7 @@
 {
      "1": {
           "type": "object",
-          "required": [],
+          "required": ["status", "source"],
           "properties": {
                "status": {
                     "type": "string",
@@ -20,7 +20,7 @@
                "leadsdetails": {
                     "title": "Leads Details",
                     "type": "object",
-                    "required": [],
+                    "required": ["name", "phonenumber", "email"],
                     "properties": {
                          "name": {
                               "type": "string",
