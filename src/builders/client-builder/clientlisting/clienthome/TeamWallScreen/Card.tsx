@@ -17,6 +17,21 @@ function CardComp(props: any) {
      const [rate1, setRate1] = useState<any>();
      const createEditMessageComponent = useRef<any>();
 
+     const actionClick1 = () => {
+          //handleRedirect(row.original.id);
+     };
+     const actionClick2 = () => {
+          createEditMessageComponent.current.TriggerForm({
+               id: props.id,
+               type: "deleteNote",
+          });
+     };
+
+     const arrayAction = [
+          { actionName: "Edit", actionClick: actionClick1 },
+          { actionName: "Delete", actionClick: actionClick2 },
+     ];
+
      function getDate(time: any) {
           let dateObj = new Date(time);
           let month = dateObj.getMonth() + 1;
@@ -97,16 +112,7 @@ function CardComp(props: any) {
                                    <p className="font-weight-light desc">{props.designation}</p>
                               </Col>
                               <div className="d-flex flex-row-reverse mr-3 p-2">
-                                   <ActionButton
-                                        action1="Edit"
-                                        action2="Delete"
-                                        actionClick2={() => {
-                                             createEditMessageComponent.current.TriggerForm({
-                                                  id: props.id,
-                                                  type: "deleteNote",
-                                             });
-                                        }}
-                                   />
+                                   <ActionButton arrayAction={arrayAction}></ActionButton>
                                    <p className="mr-3">Updated: {getDate(Date.parse(props.updatedOn))}</p>
                               </div>
                          </Row>
@@ -174,6 +180,19 @@ function CardComp(props: any) {
                          </Card.Body>
 
                          {props.comments.map((e) => {
+                              const actionClick1 = () => {
+                                   //handleRedirect(row.original.id);
+                              };
+                              const actionClick2 = () => {
+                                   createEditMessageComponent.current.TriggerForm({
+                                        id: e.id,
+                                        type: "deleteComment",
+                                   });
+                              };
+                              const arrayAction = [
+                                   { actionName: "Edit", actionClick: actionClick1 },
+                                   { actionName: "Delete", actionClick: actionClick2 },
+                              ];
                               return (
                                    <Card.Body className="cardBorder">
                                         <Row>
@@ -187,16 +206,7 @@ function CardComp(props: any) {
                                                   <h5>{e.users_permissions_user.username}</h5>
                                              </Col>
                                              <div className="d-flex flex-row-reverse mr-3 p-2">
-                                                  <ActionButton
-                                                       action1="Edit"
-                                                       action2="Delete"
-                                                       actionClick2={() => {
-                                                            createEditMessageComponent.current.TriggerForm({
-                                                                 id: e.id,
-                                                                 type: "deleteComment",
-                                                            });
-                                                       }}
-                                                  />
+                                                  <ActionButton arrayAction={arrayAction}></ActionButton>
                                                   <p className="mr-3">
                                                        Updated: {getDate(Date.parse(props.updatedOn))}
                                                   </p>

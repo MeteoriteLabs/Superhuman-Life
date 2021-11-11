@@ -41,10 +41,23 @@ function Nutrition() {
                     Header: "Status",
                     Cell: (v: any) => <Badge variant={v.value === "Assigned" ? "success" : "danger"}>{v.value}</Badge>,
                },
+               // {
+               //      id: "edit",
+               //      Header: "Actions",
+               //      Cell: ({ row }: any) => <ActionButton action1="Edit" actionClick1={() => {}} />,
+               // },
                {
                     id: "edit",
                     Header: "Actions",
-                    Cell: ({ row }: any) => <ActionButton action1="Edit" actionClick1={() => {}} />,
+                    Cell: ({ row }: any) => {
+                         const actionClick1 = () => {
+                              //handleRedirect(row.original.id);
+                         };
+
+                         const arrayAction = [{ actionName: "Edit", actionClick: actionClick1 }];
+
+                         return <ActionButton arrayAction={arrayAction}></ActionButton>;
+                    },
                },
           ],
           []

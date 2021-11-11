@@ -166,12 +166,31 @@ function Movement() {
                          </Badge>
                     ),
                },
+               // {
+               //      id: "edit",
+               //      Header: "Actions",
+               //      Cell: ({ row }: any) => (
+               //           <ActionButton action1="View Invoice" action2="Renew Package" actionClick1={() => {}} />
+               //      ),
+               // },
                {
                     id: "edit",
                     Header: "Actions",
-                    Cell: ({ row }: any) => (
-                         <ActionButton action1="View Invoice" action2="Renew Package" actionClick1={() => {}} />
-                    ),
+                    Cell: ({ row }: any) => {
+                         const actionClick1 = () => {
+                              //handleRedirect(row.original.id);
+                         };
+                         const actionClick2 = () => {
+                              //CreateClientComponent.current.TriggerForm({id: row.original.id, type: 'view'})
+                         };
+
+                         const arrayAction = [
+                              { actionName: "View Invoice", actionClick: actionClick1 },
+                              { actionName: "Renew Package", actionClick: actionClick2 },
+                         ];
+
+                         return <ActionButton arrayAction={arrayAction}></ActionButton>;
+                    },
                },
           ],
           []

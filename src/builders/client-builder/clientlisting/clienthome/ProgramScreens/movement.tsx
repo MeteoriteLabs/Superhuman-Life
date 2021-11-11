@@ -100,11 +100,23 @@ function Movement() {
                                    </Badge>
                               ),
                          },
+                         // {
+                         //      id: "edit",
+                         //      Header: "Action",
+                         //      accessor: "action",
+                         //      Cell: ({ row }: any) => <ActionButton action1="Manage" actionClick1={() => {}} />,
+                         // },
                          {
                               id: "edit",
-                              Header: "Action",
-                              accessor: "action",
-                              Cell: ({ row }: any) => <ActionButton action1="Manage" actionClick1={() => {}} />,
+                              Header: "Actions",
+                              Cell: ({ row }: any) => {
+                                   const actionClick1 = () => {
+                                        //handleRedirect(row.original.id);
+                                   };
+                                   const arrayAction = [{ actionName: "Manage", actionClick: actionClick1 }];
+
+                                   return <ActionButton arrayAction={arrayAction}></ActionButton>;
+                              },
                          },
                     ],
                },
