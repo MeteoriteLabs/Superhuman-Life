@@ -29,31 +29,63 @@ export const FETCH_WEBSITE_DATA = gql`
 
 `;
 
-export const FETCH_WEBSITE_SCHEMA = gql`
 
-    query fetchSchema($id: ID!) {
-        websiteData(where: {users_permissions_user: {id:$id}}){
-            
+export const FETCH_WEBSITE_SCHEMA_AND_FORM_JSON = gql`
+
+        query fetchSchemaAndFormJSON($id: ID!) {
+            websiteData(where: {users_permissions_user: {id:$id}}) {
             website_template{
                 schema_json
-            }
-        
-        }
-    }
-
-`;
-
-export const FETCH_WEBSITE_FORM_JSON = gql`
-
-    query fetchFormJSON($id: ID!) {
-        websiteData(where: {users_permissions_user: {id: $id}}) {
-            website_template{
                 form_json
             }
+            }
+        }
+
+`;
+
+
+
+export const FETCH_PUBLISHED_TEMPLATES = gql`
+
+     query fetchTemplates {
+        websiteTemplates(where: {published: true})
+     {
+    
+         template_name
+         published
+         id
+     }
+    }
+`;
+
+
+export const FETCH_DATA_FORM = gql`
+
+    query formData($id: ID!) {
+        websiteData(where: {users_permissions_user: {id:$id}}) {
+        
+            id
+            form_data
         }
     }
 
 `;
+
+
+// export const EDIT_WEBPAGE_DETAILS = gql`
+
+
+// mutation updateWebsiteData($id: ID!){
+// 	updateWebsiteDatum(where: {users_permissions_user: {id:$id}})
+// 		{
+// 			websiteDatum {
+// 			form_data
+				
+// 			}
+// 		}
+// }
+   
+// `    
 
 
 /**
