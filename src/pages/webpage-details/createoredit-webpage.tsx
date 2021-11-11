@@ -6,8 +6,9 @@ import AuthContext from "../../context/auth-context";
 import { Subject } from "rxjs";
 import {
   CREATE_WEBPAGE_DETAILS,
-  FETCH_WEBSITE_SCHEMA,
-  FETCH_WEBSITE_FORM_JSON,
+  FETCH_WEBSITE_SCHEMA_AND_FORM_JSON,
+  FETCH_PUBLISHED_TEMPLATES,
+  FETCH_DATA_FORM,
 } from "./queries";
 
 interface Operation {
@@ -29,17 +30,15 @@ function CreateWebpageDetails(props: any, ref: any) {
   const [formJsonData, setFormJsonData] = useState<any>({});
   const [operation, setOperation] = useState<Operation>({} as Operation);
 
-  useQuery(FETCH_WEBSITE_SCHEMA, {
-    variables: { id: auth.userid },
+  useQuery(FETCH_WEBSITE_SCHEMA_AND_FORM_JSON, {
+    variables: { id: "2323" },
     onCompleted: (r: any) => {
-      setSchemaData(r.websiteData[0].website_template.schema_json);
-    },
-  });
-
-  useQuery(FETCH_WEBSITE_FORM_JSON, {
-    variables: { id: auth.userid },
-    onCompleted: (r: any) => {
-      setFormJsonData(r.websiteData[0].website_template.form_json);
+      if (r.websiteData[0] === undefined) {
+        return;
+      } else {
+        setSchemaData(r.websiteData[0].website_template.schema_json);
+        setFormJsonData(r.websiteData[0].website_template.form_json);
+      }
     },
   });
 
@@ -65,7 +64,7 @@ function CreateWebpageDetails(props: any, ref: any) {
     },
   });
 
-  // const [editDetails] = useMutation(UPDATE_WEBPAGE_DETAILS, {
+  // const [editDetails] = useMutation(EDIT_WEBPAGE_DETAILS, {
   //   variables: { id: operation.id },
   //   onCompleted: (r: any) => {
   //     console.log(r);
@@ -75,8 +74,16 @@ function CreateWebpageDetails(props: any, ref: any) {
 
   function FillDetails(data: any) {
     let details: any = {};
-    let msg = data.exercises;
-    console.log(details, msg);
+    let msg = data.websiteData[0].form_data;
+    details.brand_name = msg.brand_name;
+    details.email = msg.email;
+    details.about_text = msg.about_text;
+    details.action_button_text = msg.action_button_text;
+    details.phone = msg.phone;
+    details.users_permissions_user = data.websiteData[0].id;
+
+    // console.log(details);
+    setWebPageDetails(details);
 
     //if message exists - show form only for edit and view
     if (["edit", "view"].indexOf(operation.type) > -1) modalTrigger.next(true);
@@ -84,9 +91,15 @@ function CreateWebpageDetails(props: any, ref: any) {
   }
   //FillDetails("edit");
 
-  // function FetchData() {
-  //   // useQuery(FETCH_DATA, { variables: { id: operation.id }, onCompleted: (e: any) => { FillDetails(e) } });
-  // }
+  function FetchData() {
+    // useQuery(FETCH_DATA, { variables: { id: operation.id }, onCompleted: (e: any) => { FillDetails(e) } });
+    useQuery(FETCH_DATA_FORM, {
+      variables: { id: auth.userid },
+      onCompleted: (e: any) => {
+        FillDetails(e);
+      },
+    });
+  }
 
   function CreateWebpage(frm: any) {
     createDetails({
@@ -97,8 +110,7 @@ function CreateWebpageDetails(props: any, ref: any) {
   function EditWebpage(frm: any) {
     console.log("edit message");
 
-    // useMutation(UPDATE_MESSAGE, { variables: frm, onCompleted: (d: any) => { console.log(d); } });
-    // editExercise({variables: frm });
+    //editDetails({ variables: frm });
   }
 
   function ViewWebpage(frm: any) {
@@ -140,7 +152,7 @@ function CreateWebpageDetails(props: any, ref: any) {
   //   name = "View";
   // }
 
-  // FetchData();
+  FetchData();
 
   return (
     <>
