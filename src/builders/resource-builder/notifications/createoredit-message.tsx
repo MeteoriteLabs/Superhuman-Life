@@ -1,11 +1,11 @@
 import React, { useContext, useImperativeHandle, useState } from 'react';
 import { useQuery, useMutation } from "@apollo/client";
-import ModalView from "../../../components/modal";
-import { GET_TRIGGERS, ADD_MESSAGE, UPDATE_MESSAGE, GET_MESSAGE, DELETE_MESSAGE,UPDATE_STATUS } from "./queries";
+import { GET_TRIGGERS, ADD_MESSAGE, UPDATE_MESSAGE, GET_MESSAGE, DELETE_MESSAGE, UPDATE_STATUS } from "./queries";
 import AuthContext from "../../../context/auth-context";
 import StatusModal from "../../../components/StatusModal/StatusModal";
 import {Subject} from 'rxjs';
-import {schema, widgets} from "./schema"
+import {schema, widgets} from "./schema";
+import ModalView from "../../../components/modal";
 
 interface Operation {
     id: string;
@@ -26,7 +26,7 @@ function CreateEditMessage(props: any, ref: any) {
     const [createMessage] = useMutation(ADD_MESSAGE, { onCompleted: (r: any) => { modalTrigger.next(false); } });
     const [editMessage] = useMutation(UPDATE_MESSAGE,{variables: {messageid: operation.id}, onCompleted: (r: any) => { modalTrigger.next(false); } });
     const [deleteMessage] = useMutation(DELETE_MESSAGE, { onCompleted: (e: any) => console.log(e), refetchQueries: ["GET_TRIGGERS"] });
-    const [updateStatus] = useMutation(UPDATE_STATUS,{onCompleted: (d: any) => { console.log(d);}});
+    const [updateStatus] = useMutation(UPDATE_STATUS);
 
     const modalTrigger =  new Subject();
 
@@ -92,7 +92,7 @@ function CreateEditMessage(props: any, ref: any) {
 
     function ToggleMessageStatus(id: string, current_status: boolean) {
         updateStatus({ variables: { status: !current_status, messageid: id } });
-        
+
     }
 
     function DeleteMessage(id: any) {
@@ -122,12 +122,12 @@ function CreateEditMessage(props: any, ref: any) {
     FetchData();
 
     let name = "";
-    if(operation.type === 'create'){
-        name="Create New";
-    }else if(operation.type === 'edit'){
-        name="Edit";
-    }else if(operation.type === 'view'){
-        name="View";
+    if (operation.type === 'create') {
+        name = "Create New";
+    } else if (operation.type === 'edit') {
+        name = "Edit";
+    } else if (operation.type === 'view') {
+        name = "View";
     }
     
     return (
@@ -145,23 +145,23 @@ function CreateEditMessage(props: any, ref: any) {
             />}
              
             {operation.type === "toggle-status" && <StatusModal
-             modalTitle="Change Status"
-             modalBody="Do you want to change the status?"
-             buttonLeft="Cancel"
-             buttonRight="Yes"
-             onClick={() => {ToggleMessageStatus(operation.id,operation.current_status)}
-             
-             }/>}
+                modalTitle="Change Status"
+                modalBody="Do you want to change the status?"
+                buttonLeft="Cancel"
+                buttonRight="Yes"
+                onClick={() => { ToggleMessageStatus(operation.id, operation.current_status) }
 
-             {operation.type ==="delete" && <StatusModal
-             modalTitle="Delete"
-             modalBody="Do you want to delete this message?"
-             buttonLeft="Cancel"
-             buttonRight="Yes"
-             onClick={() => {DeleteMessage(operation.id)}}
-             />}
-        
-            
+                } />}
+
+            {operation.type === "delete" && <StatusModal
+                modalTitle="Delete"
+                modalBody="Do you want to delete this message?"
+                buttonLeft="Cancel"
+                buttonRight="Yes"
+                onClick={() => { DeleteMessage(operation.id) }}
+            />}
+
+
         </>
     )
 }

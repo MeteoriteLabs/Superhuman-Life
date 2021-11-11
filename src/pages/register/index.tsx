@@ -1,5 +1,4 @@
 import { useRef, useState } from "react";
-import { Helmet } from "react-helmet";
 import { withTheme } from "@rjsf/core";
 import { Theme as Bootstrap4Theme } from '@rjsf/bootstrap-4';
 import { Button, Carousel, Col, Container, Modal, ProgressBar, Row } from "react-bootstrap";
@@ -60,7 +59,7 @@ export default function Register() {
 
     function submitHandler(formData: any) {
         if (step < 4) {
-            console.log("Data submitted: ", formData);
+            // console.log("Data submitted: ", formData);
             setStep(step + 1);
             carouselRef.current.next();
             setFormValues({ ...formValues, ...formData });
@@ -71,11 +70,11 @@ export default function Register() {
 
     return (
         <Row noGutters>
-            <Helmet>
+            {/* <Helmet>
                 <meta charSet="utf-8" />
                 <title>Sapien Dashboard | Register</title>
                 <link rel="canonical" href="https://sapien.systems/" />
-            </Helmet>
+            </Helmet> */}
             <Col>
                 <Container>
                     <Row>

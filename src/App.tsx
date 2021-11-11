@@ -35,7 +35,7 @@ function App() {
           username: username,
           userid: userid,
           login: (token: any, username: any,userid: any) => {
-            console.log(userid);
+
             localStorage.setItem("token", token);
             localStorage.setItem("username", username);
             localStorage.setItem("userid", userid);

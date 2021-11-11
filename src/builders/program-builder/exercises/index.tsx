@@ -12,7 +12,6 @@ export default function EventsTab() {
 
     const auth = useContext(AuthContext);
     const [tableData, setTableData] = useState<any[]>([]);
-    // const [fitnessdisciplines, setFitnessDisciplines] = useState<any[]>([]);
     const createEditExerciseComponent = useRef<any>(null);
 
     const columns = useMemo<any>(() => [
@@ -26,16 +25,24 @@ export default function EventsTab() {
         {
             id: "edit",
             Header: "Actions",
-            Cell: ({ row }: any) => (
-                <ActionButton 
-                action1="Edit"
-                actionClick1={() => {createEditExerciseComponent.current.TriggerForm({id: row.original.id, type: 'edit'})}}
-                action2="View"
-                actionClick2={() => {createEditExerciseComponent.current.TriggerForm({id: row.original.id, type: 'view'})}}
-                action3="Delete"
-                actionClick3={() => {createEditExerciseComponent.current.TriggerForm({id: row.original.id, type: 'delete'})}}
-                 />
-            ),
+            Cell: ({ row }: any) => {
+                const actionClick1 = () => {
+                    createEditExerciseComponent.current.TriggerForm({id: row.original.id, type: 'edit'})
+                };
+                const actionClick2 = () => {
+                    createEditExerciseComponent.current.TriggerForm({id: row.original.id, type: 'view'})
+                };
+                const actionClick3 = () => {
+                    createEditExerciseComponent.current.TriggerForm({id: row.original.id, type: 'delete'})
+                };
+
+                const arrayAction = [
+                    {actionName: 'Edit', actionClick: actionClick1},
+                    {actionName: 'View', actionClick: actionClick2},
+                    {actionName: 'Delete', actionClick: actionClick3},
+                ];
+                return <ActionButton arrayAction={arrayAction}></ActionButton>
+            },
         }
     ], []);
 
@@ -56,7 +63,6 @@ export default function EventsTab() {
     }
 
     function loadData(data: any) {
-        // console.log(data);
         setTableData(
             [...data.exercises].map((detail) => {
                 return {
@@ -77,15 +83,6 @@ export default function EventsTab() {
                 }
             })
         );
-        // setFitnessDisciplines(
-        //     [...data.fitnessdisciplines].map((discipline) => {
-        //         return {
-        //             id: discipline.id,
-        //             disciplineName: discipline.disciplinename,
-        //             updatedAt: discipline.updatedAt
-        //         }
-        //     })
-        // );
     }
 
 
@@ -101,7 +98,7 @@ export default function EventsTab() {
                         createEditExerciseComponent.current.TriggerForm({ id: null, type: 'create' });
                     }}
                 >
-                    <i className="fas fa-plus-circle"></i>{" "}Create New
+                    <i className="fas fa-plus-circle"></i>{" "}Create Exercise
                 </Button>
                 <CreateEditExercise ref={createEditExerciseComponent}></CreateEditExercise>
             </Card.Title>

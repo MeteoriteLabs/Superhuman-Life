@@ -1,0 +1,48 @@
+{
+     "1": {
+         "title": "",
+         "type": "object",
+         "required": [
+            "assignMode",
+            "day",
+            "time",
+            "tag"
+         ],
+        "properties": {
+            "tag": {
+                "type": "string",
+                "title": "Class Type",
+                "enum": [
+                    "Personal Training",
+                    "Group Class",
+                    "Classic"
+                ]
+            },
+            "assignMode": {
+                "type": "string",
+                "title": "Mode",
+                "enum": [
+                    "Online",
+                    "Offline"
+                ]
+            },
+            "day": {
+                "type": "string"
+            },
+            "time": {
+                "type": "string"
+            }
+        }
+     },
+     "2": {
+        "title": "",
+        "type": "object",
+        "required": [
+        ],
+        "properties": {
+            "workoutEvent": {
+                "type": "string"
+            }
+        }
+     }
+ }

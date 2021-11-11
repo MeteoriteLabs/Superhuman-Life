@@ -1,0 +1,75 @@
+import React, { useState } from 'react';
+import { Typeahead } from 'react-bootstrap-typeahead';
+import 'react-bootstrap-typeahead/css/Typeahead.css';
+import { gql } from "@apollo/client";
+import { useQuery } from "@apollo/client";
+import moment from 'moment';
+
+const DaysInput = (props: any) => {
+     const last = window.location.pathname.split('/').pop();
+
+     const [data, setData] = useState(0);
+     const [selected, setSelected] = useState(props.val ? [{"day": `Day-${props.val}`}] : []);
+
+     const GET_PROGRAM = gql`
+          query getprogram($id: String!){
+               fitnessprograms(where: {id: $id}){
+                    id
+                    duration_days
+               }
+          }
+     `
+
+     function FetchData(_variables: {} = {id: last}) {
+          useQuery(GET_PROGRAM, {variables: _variables, onCompleted: loadData});
+     }
+
+     function loadData(data: any) {
+          setData(
+             data.fitnessprograms[0].duration_days
+         )
+     }
+
+     FetchData({id: last});
+
+     const days: any[] = [];
+
+     function renderInputField() {
+          if(props.startDate !== undefined){
+               for (var i=0; i<data;i++){
+                    days.push({"key": i+1,"day": `${moment(props.startDate).add(i, 'days').format("Do, MMM YY")}`})
+               }  
+          } else {
+               for (var j=0; j<data; j++){
+                    days.push({"key": j+1, "day": `Day-${j+1}`})
+               }  
+          }      
+     }
+
+     function OnChange(e){
+          const objectToString = JSON.stringify(e);
+          props.onChange(objectToString);
+          setSelected(e);
+     }
+     
+     renderInputField();
+
+     return (
+          <>
+          <div>
+               {props.type === 'transfer' ? null : <label>Select Day</label>}
+               <Typeahead
+               id="basic-typeahead-multiple"
+               labelKey="day"
+               onChange={OnChange}
+               options={days}
+               placeholder={props.id ? props.id === 'newWorkout' || 'duplicateWorkout' ? 'Choose a day...' : 'Choose days...' : 'Choose days...'}
+               selected={selected}
+               multiple={props.id ? props.id === 'newWorkout' || 'duplicateWorkout' ? false : true : true}
+               />
+          </div>
+          </>
+     );
+}
+
+export default DaysInput;
