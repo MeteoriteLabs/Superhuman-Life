@@ -1,9 +1,25 @@
 import { useState } from "react";
 import "./templateModal.css";
+import { useQuery } from "@apollo/client";
 import { Container, Row, Col, Button, Modal, Image } from "react-bootstrap";
-import { templateModalData } from "./TemplateModalData";
+import { FETCH_PUBLISHED_TEMPLATES } from "../../webpage-details/queries";
 
 function ModalComp(props) {
+  const [showTemplate, setShowTemplate] = useState<any>({});
+
+  useQuery(FETCH_PUBLISHED_TEMPLATES, {
+    onCompleted: (data: any) => {
+      let templateName = data.websiteTemplates[0].template_name;
+      let templateId = data.websiteTemplates[0].id;
+      let templateNameID = { templateName, templateId };
+      setShowTemplate(templateNameID);
+    },
+  });
+
+  let templates: any = [];
+
+  templates.push(showTemplate);
+
   return (
     <Modal {...props} aria-labelledby="contained-modal-title-vcenter" size="lg">
       <Modal.Header className="d-flex justify-content-center p-0 bg-dark">
@@ -28,18 +44,18 @@ function ModalComp(props) {
           {/* end of filter button */}
 
           <Row className="p-0">
-            {templateModalData.map((data) => (
+            {templates.map((data) => (
               <Col
-                key={data.id}
+                key={data.templateId}
                 className="p-3 m-0 hover-effect"
                 md={{ span: 4, offset: 0 }}
               >
-                <Image fluid src={data.image} />
+                <Image fluid src="assets/website_images/template.svg" />
                 <div className="button-wrapper">
-                  <Button className="border rounded">{data.btnName}</Button>
+                  <Button className="border rounded">Preview</Button>
                 </div>
                 <Col className="d-flex justify-content-center mt-3">
-                  <h5>{data.title}</h5>
+                  <h5>{data.templateName}</h5>
                 </Col>
               </Col>
             ))}
@@ -51,9 +67,6 @@ function ModalComp(props) {
               md={{ span: 4, offset: 4 }}
             >
               <Button variant="outline-success">1</Button>
-              <Button variant="outline-success">2</Button>
-              <Button variant="outline-success">3</Button>
-              <Button variant="outline-success">4</Button>
             </Col>
           </Row>
 
