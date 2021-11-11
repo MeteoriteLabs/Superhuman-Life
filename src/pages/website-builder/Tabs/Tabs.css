@@ -2,3 +2,7 @@
   position: absolute;
   margin-top: 25%;
 }
+
+.view-tag:hover {
+  cursor: pointer;
+}
