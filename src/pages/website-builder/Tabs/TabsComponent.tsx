@@ -18,7 +18,10 @@ import WebsiteModalComponent from "../templateModal/TemplateModal";
 import DomainHelpModalComponent from "../Domain";
 import { templateData } from "./TemplateData";
 import CreateWebpageDetails from "../../webpage-details/createoredit-webpage";
-import { FETCH_WEBSITE_DATA } from "../../webpage-details/queries";
+import {
+  FETCH_WEBSITE_DATA,
+  FETCH_WEBSITE_SCHEMA_AND_FORM_JSON,
+} from "../../webpage-details/queries";
 import AuthContext from "../../../context/auth-context";
 
 export default function TabsComponent() {
@@ -27,16 +30,26 @@ export default function TabsComponent() {
   const createWebpageDetailsComponent = useRef<any>(null);
 
   const [websiteData, setWebsiteData] = useState<any>({});
+  const [btnStatus, setBtnStatus] = useState<boolean>(false);
+  const [formSwitch, setFormSwitch] = useState<boolean>(true);
 
   useQuery(FETCH_WEBSITE_DATA, {
-    variables: { id: auth.userid },
+    variables: { id: "343" },
     onCompleted: (r: any) => {
       setWebsiteData(r.websiteData[0]);
     },
   });
 
-  console.log(auth.userid);
-  console.log(websiteData);
+  useQuery(FETCH_WEBSITE_SCHEMA_AND_FORM_JSON, {
+    variables: { id: "34" },
+    onCompleted: (r: any) => {
+      if (r.websiteData[0] === undefined) {
+        setBtnStatus(true);
+        setFormSwitch(false);
+      }
+    },
+  });
+
   return (
     <>
       <Tabs
@@ -105,9 +118,6 @@ export default function TabsComponent() {
                         md={{ span: 3, offset: 1 }}
                         xs={{ span: 4, offset: 1 }}
                       >
-                        {/* <Button variant="dark" className="p-1">
-                          <span>&#8942;</span>
-                        </Button> */}
                         <DomainPopover />
                       </Col>
                     </Row>
@@ -159,7 +169,7 @@ export default function TabsComponent() {
                 <Form>
                   <div className="d-flex ">
                     <h6 className="pr-2">Inactive</h6>
-                    <Form.Check type="switch" id="custom-switch" />
+                    <Form.Switch checked={formSwitch} id="custom-switch" />
                     <h6>Active</h6>
                   </div>
                 </Form>
@@ -230,6 +240,7 @@ export default function TabsComponent() {
                     >
                       <div>
                         <Button
+                          disabled={btnStatus}
                           variant="dark"
                           className="px-5 border"
                           onClick={() => {
@@ -315,7 +326,7 @@ const popover = (
   <Popover id="popover-basic">
     <Popover.Content className="p-3">
       <SetUpDomain />
-      <p>View</p>
+      <p className="view-tag">View</p>
     </Popover.Content>
   </Popover>
 );

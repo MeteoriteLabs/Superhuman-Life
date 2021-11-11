@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Modal, Col, Row, Container, Form, Button } from "react-bootstrap";
+import "./SetUpDomain.css";
 
 function HelpModal(props) {
   return (
@@ -56,7 +57,9 @@ export default function SetUpDomain() {
 
   return (
     <>
-      <p onClick={() => setModalShow(true)}>Edit</p>
+      <p onClick={() => setModalShow(true)} className="edit_tag">
+        Edit
+      </p>
 
       <HelpModal show={modalShow} onHide={() => setModalShow(false)} />
     </>
