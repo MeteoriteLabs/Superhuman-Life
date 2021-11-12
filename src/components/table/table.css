@@ -1,15 +1,9 @@
 .rowCard {
-     text-align: left !important;
+     text-align: left;
 }
-/* .headerCard {
-     text-align: left !important;
-} */
 /* .rowCard:hover {
-     background-color: lightgray;
+background-color: lightgray;
 } */
-
-.bodyTd {
-     padding: 1rem 1rem !important;
-     text-align: center !important;
-     vertical-align: middle !important;
+.headerCard {
+     text-align: left;
 }
