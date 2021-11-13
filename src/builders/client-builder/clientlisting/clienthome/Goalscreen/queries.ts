@@ -22,7 +22,7 @@ export const ADD_GOAL = gql`
 
 export const GET_GOALS = gql`
      query getGoals($id: ID) {
-          userGoals(where: { users_permissions_user: $id }) {
+          userGoals(sort: "updatedAt:desc", where: { users_permissions_user: $id }) {
                id
                start
                end
@@ -61,7 +61,7 @@ export const UPDATE_GOALS = gql`
      mutation updategoal(
           $goals: [ID]
           $assignedBy: [ID]
-          $start: Date!
+          $start: Date
           $end: Date
           $users_permissions_user: ID
           $messageid: ID!

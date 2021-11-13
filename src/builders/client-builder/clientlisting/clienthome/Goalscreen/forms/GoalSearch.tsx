@@ -3,8 +3,9 @@ import { InputGroup, FormControl, Container } from "react-bootstrap";
 import { gql, useQuery } from "@apollo/client";
 
 const GoalSearch = (props: any) => {
+     console.log(props.value);
      const [packageLists, setPackageLists] = useState<any[]>([]);
-     const [searchInput, setSearchInput] = useState(null);
+     const [searchInput, setSearchInput] = useState<any>(props.value ? props.value.name : null);
      const [errorMsg, setErrorMsg] = useState("");
      const [selected, setSelected] = useState<any[]>([]);
      const inputField = useRef<any>();

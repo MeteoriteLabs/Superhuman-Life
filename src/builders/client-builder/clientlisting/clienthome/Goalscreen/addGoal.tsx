@@ -19,12 +19,12 @@ function CreateGoal(props: any, ref: any) {
      const [messageDetails, setMessageDetails] = useState<any>({});
      const [operation, setOperation] = useState<Operation>({} as Operation);
      //console.log(operation.id);
-     const [createGoal] = useMutation(ADD_GOAL, {
+     const [createGoal]: any = useMutation(ADD_GOAL, {
           onCompleted: (r: any) => {
                modalTrigger.next(false);
           },
      });
-     const [editMessage] = useMutation(UPDATE_GOALS, {
+     const [editMessage]: any = useMutation(UPDATE_GOALS, {
           variables: { messageid: operation.id },
           onCompleted: (r: any) => {
                modalTrigger.next(false);
@@ -46,12 +46,12 @@ function CreateGoal(props: any, ref: any) {
      function FillDetails(data: any) {
           let details: any = {};
           let msg = data.userGoals;
-          //   console.log(msg);
-          //   console.log(msg[0].goals[0].name);
-          //   console.log(msg[0].start);
-          //   console.log(msg[0].end);
-          //debugger
-          details.packagesearch = msg[0].goals[0].name;
+          // console.log(
+          //      msg[0].goals.map((val: any) => {
+          //           return val.name;
+          //      })
+          // );
+          details.packagesearch = msg[0].goals[0];
           details.startdate = msg[0].start;
           details.enddate = msg[0].end;
 
@@ -61,18 +61,16 @@ function CreateGoal(props: any, ref: any) {
           else OnSubmit(null);
      }
 
-     function FetchData() {
-          useQuery(GET_GOALS_DETAILS, {
-               variables: { id: operation.id },
-               skip: !operation.id,
-               onCompleted: (e: any) => {
-                    FillDetails(e);
-               },
-          });
-     }
+     useQuery(GET_GOALS_DETAILS, {
+          variables: { id: operation.id },
+          skip: !operation.id,
+          onCompleted: (e: any) => {
+               FillDetails(e);
+          },
+     });
 
      function CreateGoal(frm: any) {
-          //console.log(frm);
+          console.log(frm);
 
           createGoal({
                variables: {
@@ -85,7 +83,17 @@ function CreateGoal(props: any, ref: any) {
           });
      }
      function EditMessage(frm: any) {
-          editMessage({ variables: frm });
+          console.log(frm);
+          //editMessage({ variables: frm });
+          editMessage({
+               variables: {
+                    goals: frm.packagesearch.split(","),
+                    assignedBy: auth.userid,
+                    start: frm.startdate,
+                    end: frm.enddate,
+                    users_permissions_user: last,
+               },
+          });
      }
 
      function OnSubmit(frm: any) {
@@ -98,7 +106,7 @@ function CreateGoal(props: any, ref: any) {
                     break;
           }
      }
-     FetchData();
+     //FetchData();
      return (
           <>
                {operation.type === "create" && (

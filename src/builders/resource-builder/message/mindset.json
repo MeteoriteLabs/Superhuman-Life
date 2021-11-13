@@ -34,11 +34,6 @@
                     "title": "OR",
                     "description": "OR",
                     "type": "null"
-               },
-               "file": {
-                    "type": "string",
-                    "format": "data-url",
-                    "title": "Upload (Picture or Video)"
                }
           }
      }

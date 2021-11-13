@@ -1,163 +1,189 @@
-import React, { useContext, useImperativeHandle, useState } from 'react';
+import React, { useContext, useImperativeHandle, useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import ModalView from "../../../components/modal";
 import { GET_TRIGGERS, ADD_MESSAGE, UPDATE_MESSAGE, GET_MESSAGE, DELETE_MESSAGE, UPDATE_STATUS } from "./queries";
 import AuthContext from "../../../context/auth-context";
 import StatusModal from "../../../components/StatusModal/StatusModal";
-import { Subject } from 'rxjs';
-
+import { Subject } from "rxjs";
 
 interface Operation {
-    id: string;
-    modal_status: boolean;
-    type: 'create' | 'edit' | 'view' | 'toggle-status' | 'delete';
-    current_status: boolean;
+     id: string;
+     modal_status: boolean;
+     type: "create" | "edit" | "view" | "toggle-status" | "delete";
+     current_status: boolean;
 }
 
 function CreateEditMessage(props: any, ref: any) {
-    const auth = useContext(AuthContext);
-    const messageSchema: { [name: string]: any; } = require("./mindset.json");
-    const uiSchema: {} = require("./schema.json");
-    const [messageDetails, setMessageDetails] = useState<any>({});
-    const [operation, setOperation] = useState<Operation>({} as Operation);
+     const auth = useContext(AuthContext);
+     const messageSchema: { [name: string]: any } = require("./mindset.json");
+     const uiSchema: {} = require("./schema.json");
+     const [messageDetails, setMessageDetails] = useState<any>({});
+     const [operation, setOperation] = useState<Operation>({} as Operation);
 
+     const [createMessage] = useMutation(ADD_MESSAGE, {
+          onCompleted: (r: any) => {
+               modalTrigger.next(false);
+          },
+     });
+     const [editMessage] = useMutation(UPDATE_MESSAGE, {
+          variables: { messageid: operation.id },
+          onCompleted: (r: any) => {
+               modalTrigger.next(false);
+          },
+     });
+     const [deleteMessage] = useMutation(DELETE_MESSAGE, {
+          onCompleted: (e: any) => console.log(e),
+          refetchQueries: ["GET_TRIGGERS"],
+     });
+     const [updateStatus] = useMutation(UPDATE_STATUS, {
+          onCompleted: (d: any) => {
+               console.log(d);
+          },
+     });
 
+     const modalTrigger = new Subject();
 
+     useImperativeHandle(ref, () => ({
+          TriggerForm: (msg: Operation) => {
+               setOperation(msg);
 
-    const [createMessage] = useMutation(ADD_MESSAGE, { onCompleted: (r: any) => { modalTrigger.next(false); } });
-    const [editMessage] = useMutation(UPDATE_MESSAGE, { variables: { messageid: operation.id }, onCompleted: (r: any) => { modalTrigger.next(false); } });
-    const [deleteMessage] = useMutation(DELETE_MESSAGE, { onCompleted: (e: any) => console.log(e), refetchQueries: ["GET_TRIGGERS"] });
-    const [updateStatus] = useMutation(UPDATE_STATUS, { onCompleted: (d: any) => { console.log(d); } });
+               if (msg && !msg.id) modalTrigger.next(true);
+          },
+     }));
 
-    const modalTrigger = new Subject();
+     function loadData(data: any) {
+          messageSchema["1"].properties.mindsetmessagetype.enum = [...data.mindsetmessagetypes].map((n) => n.id);
+          messageSchema["1"].properties.mindsetmessagetype.enumNames = [...data.mindsetmessagetypes].map((n) => n.type);
+     }
 
-    useImperativeHandle(ref, () => ({
-        TriggerForm: (msg: Operation) => {
+     function FillDetails(data: any) {
+          let details: any = {};
+          let msg = data.mindsetmessage;
+          details.title = msg.title;
+          details.mindsetmessagetype = msg.mindsetmessagetype.id;
+          details.description = msg.description;
+          details.minidesc = msg.minidescription;
+          details.tags = msg.tags;
+          details.mediaurl = msg.mediaurl;
+          // details.file = msg.mediaupload.id;
+          //details.status = msg.status;
 
-            setOperation(msg);
+          setMessageDetails(details);
 
-            if (msg && !msg.id)
-                modalTrigger.next(true);
-        }
-    }));
+          if (["edit", "view"].indexOf(operation.type) > -1) modalTrigger.next(true);
+          else OnSubmit(null);
+     }
 
-    function loadData(data: any) {
-        messageSchema["1"].properties.mindsetmessagetype.enum = [...data.mindsetmessagetypes].map(n => (n.id));
-        messageSchema["1"].properties.mindsetmessagetype.enumNames = [...data.mindsetmessagetypes].map(n => (n.type));
-    }
+     useQuery(GET_TRIGGERS, { onCompleted: loadData });
+     useQuery(GET_MESSAGE, {
+          variables: { id: operation.id },
+          skip: !operation.id || operation.type === "toggle-status",
+          onCompleted: (e: any) => {
+               FillDetails(e);
+          },
+     });
 
-    function FillDetails(data: any) {
+     // function FetchData() {    }
 
+     function CreateMessage(frm: any) {
+          createMessage({ variables: frm });
+     }
 
-        let details: any = {};
-        let msg = data.mindsetmessage;
-        details.title = msg.title;
-        details.mindsetmessagetype = msg.mindsetmessagetype.id;
-        details.description = msg.description;
-        details.minidesc = msg.minidescription;
-        // details.mediaurl = msg.mediaurl;
-        // details.file = msg.mediaupload.id;
-        details.status = msg.status;
+     function EditMessage(frm: any) {
+          editMessage({ variables: frm });
+     }
 
-        setMessageDetails(details);
+     function ViewMessage(frm: any) {
+          useMutation(UPDATE_MESSAGE, {
+               variables: frm,
+               onCompleted: (d: any) => {
+                    console.log(d);
+               },
+          });
+     }
 
-        if (['edit', 'view'].indexOf(operation.type) > -1)
-            modalTrigger.next(true);
-        else
-            OnSubmit(null);
-    }
+     function ToggleMessageStatus(id: string, current_status: boolean) {
+          updateStatus({ variables: { status: !current_status, messageid: id } });
+     }
 
-    useQuery(GET_TRIGGERS, { onCompleted: loadData });
-    useQuery(GET_MESSAGE, { variables: { id: operation.id }, skip: (!operation.id || operation.type === 'toggle-status'), onCompleted: (e: any) => { FillDetails(e) } });
+     function DeleteMessage(id: any) {
+          deleteMessage({ variables: { id: id } });
+     }
 
-    // function FetchData() {    }
+     function OnSubmit(frm: any) {
+          if (frm) frm.user_permissions_user = auth.userid;
 
-    function CreateMessage(frm: any) {
-        createMessage({ variables: frm });
-    }
+          switch (operation.type) {
+               case "create":
+                    CreateMessage(frm);
+                    break;
+               case "edit":
+                    EditMessage(frm);
+                    break;
+               case "view":
+                    ViewMessage(frm);
+                    break;
+          }
+     }
 
-    function EditMessage(frm: any) {
-        editMessage({ variables: frm });
-    }
+     // FetchData();
 
-    function ViewMessage(frm: any) {
-        useMutation(UPDATE_MESSAGE, { variables: frm, onCompleted: (d: any) => { console.log(d); } })
-    }
+     let name = "";
+     if (operation.type === "create") {
+          name = "Create New";
+     } else if (operation.type === "edit") {
+          name = "Edit";
+     } else if (operation.type === "view") {
+          name = "View";
+     }
 
-    function ToggleMessageStatus(id: string, current_status: boolean) {
-        updateStatus({ variables: { status: !current_status, messageid: id } });
+     return (
+          <>
+               {/* {operation.type==='create' && } */}
+               <ModalView
+                    name={name}
+                    isStepper={false}
+                    formUISchema={uiSchema}
+                    formSchema={messageSchema}
+                    showing={operation.modal_status}
+                    formSubmit={
+                         name === "View"
+                              ? () => {
+                                     modalTrigger.next(false);
+                                }
+                              : (frm: any) => {
+                                     OnSubmit(frm);
+                                }
+                    }
+                    formData={messageDetails}
+                    modalTrigger={modalTrigger}
+               />
 
-    }
+               {operation.type === "toggle-status" && (
+                    <StatusModal
+                         modalTitle="Change Status"
+                         modalBody="Do you want to change the status?"
+                         buttonLeft="Cancel"
+                         buttonRight="Yes"
+                         onClick={() => {
+                              ToggleMessageStatus(operation.id, operation.current_status);
+                         }}
+                    />
+               )}
 
-    function DeleteMessage(id: any) {
-        deleteMessage({ variables: { id: id } });
-    }
-
-    function OnSubmit(frm: any) {
-
-        if (frm)
-            frm.user_permissions_user = auth.userid;
-
-        switch (operation.type) {
-            case 'create':
-                CreateMessage(frm);
-                break;
-            case 'edit':
-                EditMessage(frm);
-                break;
-            case 'view':
-                ViewMessage(frm);
-                break;
-
-        }
-    }
-
-    // FetchData();
-
-    let name = "";
-    if (operation.type === 'create') {
-        name = "Create New";
-    } else if (operation.type === 'edit') {
-        name = "Edit";
-    } else if (operation.type === 'view') {
-        name = "View";
-    }
-
-
-    return (
-        <>
-            {/* {operation.type==='create' && } */}
-            <ModalView
-                name={name}
-                isStepper={false}
-                formUISchema={uiSchema}
-                formSchema={messageSchema}
-                showing={operation.modal_status}
-                formSubmit={name === "View" ? () => { modalTrigger.next(false); } : (frm: any) => { OnSubmit(frm); }}
-                formData={messageDetails}
-                modalTrigger={modalTrigger}
-            />
-
-            {operation.type === "toggle-status" && <StatusModal
-                modalTitle="Change Status"
-                modalBody="Do you want to change the status?"
-                buttonLeft="Cancel"
-                buttonRight="Yes"
-                onClick={() => { ToggleMessageStatus(operation.id, operation.current_status) }
-
-                } />}
-
-            {operation.type === "delete" && <StatusModal
-                modalTitle="Delete"
-                modalBody="Do you want to delete this message?"
-                buttonLeft="Cancel"
-                buttonRight="Yes"
-                onClick={() => { DeleteMessage(operation.id) }}
-            />}
-
-
-        </>
-    )
+               {operation.type === "delete" && (
+                    <StatusModal
+                         modalTitle="Delete"
+                         modalBody="Do you want to delete this message?"
+                         buttonLeft="Cancel"
+                         buttonRight="Yes"
+                         onClick={() => {
+                              DeleteMessage(operation.id);
+                         }}
+                    />
+               )}
+          </>
+     );
 }
 
 export default React.forwardRef(CreateEditMessage);

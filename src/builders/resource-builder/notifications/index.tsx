@@ -1,119 +1,141 @@
-import { useMemo, useState,useRef,useContext } from 'react'
-import { Badge, Button, TabContent, InputGroup, FormControl, Card, Container, Row, Col} from "react-bootstrap";
+import { useMemo, useState, useRef, useContext } from "react";
+import { Badge, Button, TabContent, InputGroup, FormControl, Card, Container, Row, Col } from "react-bootstrap";
 import Table from "../../../components/table";
-import {useQuery} from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import AuthContext from "../../../context/auth-context";
 import ActionButton from "../../../components/actionbutton/index";
 import CreateEditMessage from "./createoredit-message";
-import { GET_NOTIFICATIONS} from "./queries";
-
-
+import { GET_NOTIFICATIONS } from "./queries";
 
 export default function MessagePage() {
-    const auth = useContext(AuthContext);
-    const [searchFilter, setSearchFilter] = useState('');
-    const searchInput = useRef<any>();
-    const createEditMessageComponent = useRef<any>(null);
-    
-    const columns = useMemo<any>(() => [
-        { accessor: "title", Header: "Title" },
-        { accessor: "trigger", Header: "Trigger" },
-        { accessor: "minidesc", Header: "Mini Description" },
-        { accessor: "status", Header: "Status", Cell: (v: any) => <Badge variant={v.value === "Active" ? "success" : "danger"}>{v.value}</Badge> },
-        { accessor: "updatedon", Header: "Updated On" },
-        {
-            id: "edit",
-            Header: "Actions",
-            Cell: ({ row }: any) => {
-                const actionClick1 = () => {
-                    createEditMessageComponent.current.TriggerForm({id: row.original.id, type: 'edit'});
-                };
-                const actionClick2 = () => {
-                    createEditMessageComponent.current.TriggerForm({id: row.original.id, type: 'view'})
-                };
-                const actionClick3 = () => {
-                    createEditMessageComponent.current.TriggerForm({ id: row.original.id, type: 'toggle-status', current_status: (row.original.status === "Active") })
-                };
-                const actionClick4 = () => {
-                    createEditMessageComponent.current.TriggerForm({id: row.original.id, type: 'delete'})
-                };
+     const auth = useContext(AuthContext);
+     const [searchFilter, setSearchFilter] = useState("");
+     const searchInput = useRef<any>();
+     const createEditMessageComponent = useRef<any>(null);
 
-                const arrayAction = [
-                    { actionName: 'Edit', actionClick: actionClick1 },
-                    { actionName: 'View', actionClick: actionClick2 },
-                    { actionName: 'Status', actionClick: actionClick3 },
-                    { actionName: 'Delete', actionClick: actionClick4 },
-                ];
+     const columns = useMemo<any>(
+          () => [
+               { accessor: "title", Header: "Title" },
+               { accessor: "trigger", Header: "Trigger" },
+               { accessor: "minidesc", Header: "Mini Description" },
+               {
+                    accessor: "status",
+                    Header: "Status",
+                    Cell: (v: any) => <Badge variant={v.value === "Active" ? "success" : "danger"}>{v.value}</Badge>,
+               },
+               { accessor: "updatedon", Header: "Updated On" },
+               {
+                    id: "edit",
+                    Header: "Actions",
+                    Cell: ({ row }: any) => {
+                         const actionClick1 = () => {
+                              createEditMessageComponent.current.TriggerForm({ id: row.original.id, type: "edit" });
+                         };
+                         const actionClick2 = () => {
+                              createEditMessageComponent.current.TriggerForm({ id: row.original.id, type: "view" });
+                         };
+                         const actionClick3 = () => {
+                              createEditMessageComponent.current.TriggerForm({
+                                   id: row.original.id,
+                                   type: "toggle-status",
+                                   current_status: row.original.status === "Active",
+                              });
+                         };
+                         const actionClick4 = () => {
+                              createEditMessageComponent.current.TriggerForm({ id: row.original.id, type: "delete" });
+                         };
 
-                return <ActionButton arrayAction={arrayAction}></ActionButton>
-            },
-        }
-    ], []);
-    
-                    
-  
+                         const arrayAction = [
+                              { actionName: "Edit", actionClick: actionClick1 },
+                              { actionName: "View", actionClick: actionClick2 },
+                              { actionName: "Status", actionClick: actionClick3 },
+                              { actionName: "Delete", actionClick: actionClick4 },
+                         ];
 
-    function getDate(time: any) {
-        let dateObj = new Date(time);
-        let month = dateObj.getMonth() + 1;
-        let year = dateObj.getFullYear();
-        let date = dateObj.getDate();
+                         return <ActionButton arrayAction={arrayAction}></ActionButton>;
+                    },
+               },
+          ],
+          []
+     );
 
-        return (`${date}/${month}/${year}`);
-    }
+     function getDate(time: any) {
+          let dateObj = new Date(time);
+          let month = dateObj.getMonth() + 1;
+          let year = dateObj.getFullYear();
+          let date = dateObj.getDate();
 
-    const [datatable, setDataTable] = useState<{}[]>([]);
+          return `${date}/${month}/${year}`;
+     }
 
-    function FetchData(_variables: {} = { filter: " " ,id : auth.userid }) {
-        useQuery(GET_NOTIFICATIONS, { variables: _variables, onCompleted: loadData })
-    }
+     const [datatable, setDataTable] = useState<{}[]>([]);
 
-    function loadData(data: any) {
-        setDataTable(
-            [...data.prerecordedmessages].map((Detail) => {
-                return {
-                    id: Detail.id,
-                    title: Detail.title,
-                    trigger: Detail.prerecordedtrigger.name,
-                    minidesc: Detail.minidescription,
-                    status: Detail.status ? "Active" : "Inactive",
-                    updatedon: getDate(Date.parse(Detail.updatedAt))
-                }
-            })
-        ); 
-    }
+     function FetchData(_variables: {} = { filter: " ", id: auth.userid }) {
+          useQuery(GET_NOTIFICATIONS, { variables: _variables, onCompleted: loadData });
+     }
 
+     function loadData(data: any) {
+          setDataTable(
+               [...data.prerecordedmessages].map((Detail) => {
+                    return {
+                         id: Detail.id,
+                         title: Detail.title,
+                         trigger: Detail.prerecordedtrigger.name,
+                         minidesc: Detail.minidescription,
+                         status: Detail.status ? "Active" : "Inactive",
+                         updatedon: getDate(Date.parse(Detail.updatedAt)),
+                    };
+               })
+          );
+     }
 
-    FetchData({ filter: searchFilter , id: auth.userid });
-    
+     FetchData({ filter: searchFilter, id: auth.userid });
 
-    return (
-        <TabContent>
-            <Container>
-                <Row>
-                    <Col>
-                        <InputGroup className="mb-3" >
-                            <FormControl aria-describedby="basic-addon1" placeholder="Search"  ref={searchInput}/>
-                            <InputGroup.Prepend>
-                                <Button variant="outline-secondary" onClick={(e:any) => {e.preventDefault(); setSearchFilter(searchInput.current.value)}} ><i className="fas fa-search"></i></Button>
-                            </InputGroup.Prepend>
-                        </InputGroup> 
-                    </Col>
-                    <Col>
-                        <Card.Title className="text-center">
-                            <Button variant={true ? "outline-secondary" : "light"} size="sm"
-                                onClick={() => {
-                                    createEditMessageComponent.current.TriggerForm({ id: null, type: 'create',modal_status: true });
-                                }}
-                            >
-                                <i className="fas fa-plus-circle"></i>{" "}Create New
-                            </Button>
-                            <CreateEditMessage ref={createEditMessageComponent}></CreateEditMessage>
-                        </Card.Title>
-                    </Col>
-                </Row>
-            </Container>
-            <Table columns={columns} data={datatable} />
-        </TabContent>
-    );
+     return (
+          <TabContent>
+               <Container>
+                    <Row>
+                         <Col>
+                              <InputGroup className="mb-3">
+                                   <FormControl
+                                        aria-describedby="basic-addon1"
+                                        placeholder="Search"
+                                        ref={searchInput}
+                                   />
+                                   <InputGroup.Prepend>
+                                        <Button
+                                             variant="outline-secondary"
+                                             onClick={(e: any) => {
+                                                  e.preventDefault();
+                                                  setSearchFilter(searchInput.current.value);
+                                             }}
+                                        >
+                                             <i className="fas fa-search"></i>
+                                        </Button>
+                                   </InputGroup.Prepend>
+                              </InputGroup>
+                         </Col>
+                         <Col>
+                              <Card.Title className="text-center">
+                                   <Button
+                                        variant={true ? "outline-secondary" : "light"}
+                                        size="sm"
+                                        onClick={() => {
+                                             createEditMessageComponent.current.TriggerForm({
+                                                  id: null,
+                                                  type: "create",
+                                                  modal_status: true,
+                                             });
+                                        }}
+                                   >
+                                        <i className="fas fa-plus-circle"></i> Create New
+                                   </Button>
+                                   <CreateEditMessage ref={createEditMessageComponent}></CreateEditMessage>
+                              </Card.Title>
+                         </Col>
+                    </Row>
+               </Container>
+               <Table columns={columns} data={datatable} />
+          </TabContent>
+     );
 }
