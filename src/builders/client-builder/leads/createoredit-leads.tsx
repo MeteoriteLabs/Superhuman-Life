@@ -1,7 +1,7 @@
 import React, { useContext, useImperativeHandle, useState } from "react";
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import ModalView from "../../../components/modal";
-import { ADD_LEADS, DELETE_LEAD } from "./queries";
+import { ADD_LEADS, DELETE_LEAD, GET_LEADS_ID, UPDATE_LEADS, UPDATE_SEEN } from "./queries";
 import AuthContext from "../../../context/auth-context";
 import StatusModal from "../../../components/StatusModal/StatusModal";
 import { Subject } from "rxjs";
@@ -19,7 +19,7 @@ function CreateEditMessage(props: any, ref: any) {
      const auth = useContext(AuthContext);
      const messageSchema: { [name: string]: any } = require("./leads.json");
      //const uiSchema: {} = require("./schema.tsx");
-     //const [messageDetails, setMessageDetails] = useState<any>({});
+     const [messageDetails, setMessageDetails] = useState<any>({});
      const [operation, setOperation] = useState<Operation>({} as Operation);
 
      const [createLeads] = useMutation(ADD_LEADS, {
@@ -27,7 +27,19 @@ function CreateEditMessage(props: any, ref: any) {
                modalTrigger.next(false);
           },
      });
-     // const [editMessage] = useMutation(UPDATE_MESSAGE,{variables: {messageid: operation.id}, onCompleted: (r: any) => { modalTrigger.next(false); } });
+     const [editMessage]: any = useMutation(UPDATE_LEADS, {
+          variables: { messageid: operation.id },
+          onCompleted: (r: any) => {
+               modalTrigger.next(false);
+          },
+     });
+
+     const [updatateseen]: any = useMutation(UPDATE_SEEN, {
+          onCompleted: (r: any) => {
+               console.log(r);
+          },
+     });
+
      const [deleteLeads] = useMutation(DELETE_LEAD, { onCompleted: (e: any) => console.log(e) });
 
      const modalTrigger = new Subject();
@@ -39,7 +51,13 @@ function CreateEditMessage(props: any, ref: any) {
                if (msg && !msg.id) modalTrigger.next(true);
           },
      }));
-
+     useQuery(GET_LEADS_ID, {
+          variables: { id: operation.id },
+          skip: !operation.id,
+          onCompleted: (e: any) => {
+               FillDetails(e);
+          },
+     });
      //  function loadData(data: any) {
      //       // messageSchema["1"].properties.prerecordedtype.enum = [...data.prerecordedtypes].map(n => (n.id));
      //       // messageSchema["1"].properties.prerecordedtype.enumNames = [...data.prerecordedtypes].map(n => (n.name));
@@ -47,26 +65,23 @@ function CreateEditMessage(props: any, ref: any) {
      //       // messageSchema["1"].properties.prerecordedtrigger.enumNames = [...data.prerecordedtriggers].map(n => (n.name));
      //  }
 
-     //  function FillDetails(data: any) {
-     //       let details: any = {};
-     //       let msg = data.prerecordedmessage;
-     //       console.log(msg);
-     //       //debugger
-     //       details.title = msg.title;
-     //       details.prerecordedtype = msg.prerecordedtype.id;
-     //       details.prerecordedtrigger = msg.prerecordedtrigger.id;
-     //       details.description = msg.description;
-     //       details.minidesc = msg.minidescription;
-     //       details.mediaurl = msg.mediaurl;
-     //       details.file = msg.mediaupload.id;
-     //       details.status = msg.status;
-     //       details.image = msg.upload;
+     function FillDetails(data: any) {
+          let detail: any = { leadsdetails: {} };
+          let msg: any = data.websiteContactForms[0];
 
-     //       setMessageDetails(details);
+          detail.status = msg.details.status;
+          detail.source = msg.details.source;
+          detail.notes = msg.details.notes;
+          detail.leadsdetails.email = msg.details.leadsdetails.email;
+          detail.leadsdetails.name = msg.details.leadsdetails.name;
+          detail.leadsdetails.phonenumber = msg.details.leadsdetails.phonenumber;
+          detail.leadsdetails.leadsmesssage = msg.details.leadsdetails.leadsmesssage;
 
-     //       if (["edit", "view"].indexOf(operation.type) > -1) modalTrigger.next(true);
-     //       else OnSubmit(null);
-     //  }
+          setMessageDetails(detail);
+
+          if (["edit", "view"].indexOf(operation.type) > -1) modalTrigger.next(true);
+          else OnSubmit(null);
+     }
 
      function CreateMessage(frm: any) {
           console.log(frm);
@@ -75,11 +90,12 @@ function CreateEditMessage(props: any, ref: any) {
      }
 
      function EditMessage(frm: any) {
-          // editMessage({variables: frm });
+          console.log(frm);
+          editMessage({ variables: { id: auth.userid, details: frm } });
      }
 
-     function ViewMessage(frm: any) {
-          // useMutation(UPDATE_MESSAGE, { variables: frm, onCompleted: (d: any) => { console.log(d); } })
+     if (operation.type === "view") {
+          updatateseen({ variables: { messageid: operation.id, seen: false } });
      }
 
      function DeleteMessage(id: any) {
@@ -96,7 +112,7 @@ function CreateEditMessage(props: any, ref: any) {
                     EditMessage(frm);
                     break;
                case "view":
-                    ViewMessage(frm);
+                    //ViewMessage();
                     break;
           }
      }
@@ -112,27 +128,25 @@ function CreateEditMessage(props: any, ref: any) {
 
      return (
           <>
-               {operation.type === "create" && (
-                    <ModalView
-                         name={name}
-                         isStepper={false}
-                         formUISchema={schema}
-                         formSchema={messageSchema}
-                         showing={operation.modal_status}
-                         formSubmit={
-                              name === "View"
-                                   ? () => {
-                                          modalTrigger.next(false);
-                                     }
-                                   : (frm: any) => {
-                                          OnSubmit(frm);
-                                     }
-                         }
-                         //formData={messageDetails}
-                         //widgets={widgets}
-                         modalTrigger={modalTrigger}
-                    />
-               )}
+               <ModalView
+                    name={name}
+                    isStepper={false}
+                    formUISchema={schema}
+                    formSchema={messageSchema}
+                    showing={operation.modal_status}
+                    formSubmit={
+                         name === "View"
+                              ? () => {
+                                     modalTrigger.next(false);
+                                }
+                              : (frm: any) => {
+                                     OnSubmit(frm);
+                                }
+                    }
+                    formData={messageDetails}
+                    //widgets={widgets}
+                    modalTrigger={modalTrigger}
+               />
 
                {operation.type === "delete" && (
                     <StatusModal
