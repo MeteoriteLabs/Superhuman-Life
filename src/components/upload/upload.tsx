@@ -197,6 +197,40 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                });
      }
 
+     // if (props.value && !imageid) {
+     //      console.log(props.value);
+     //      console.log(props.value.split(".")[1]);
+     // }
+
+     if (props.value && !imageid) {
+          if (props.value.split(".")[1] === "jpeg") {
+               setImageid(props.value);
+               const paramUrl = {
+                    Bucket: S3_BUCKET,
+                    Key: albumPhotosKey + "lg-" + props.value,
+               };
+               var promise = myBucket.getSignedUrlPromise("getObject", paramUrl);
+               promise.then(
+                    function (url) {
+                         setUrl(url);
+                    },
+                    function (err) {
+                         console.log(err);
+                    }
+               );
+          }
+
+          console.log(props.value.split(".")[1]);
+     }
+
+     if (props.value && !videoID) {
+          if (!props.value.split(".")[1]) {
+               setVideoID(props.value);
+               setVideoUpload(true);
+          }
+          //console.log(props.value);
+     }
+
      function uploadTOS3NoUrl(file, filename, filetype) {
           let buf = Buffer.from(file.replace(/^data:image\/\w+;base64,/, ""), "base64");
           const params = {

@@ -5,6 +5,7 @@ import { GET_TRIGGERS, ADD_MESSAGE, UPDATE_MESSAGE, GET_MESSAGE, DELETE_MESSAGE,
 import AuthContext from "../../../context/auth-context";
 import StatusModal from "../../../components/StatusModal/StatusModal";
 import { Subject } from "rxjs";
+import { schema, widgets } from "./schema";
 
 interface Operation {
      id: string;
@@ -16,7 +17,7 @@ interface Operation {
 function CreateEditMessage(props: any, ref: any) {
      const auth = useContext(AuthContext);
      const messageSchema: { [name: string]: any } = require("./mindset.json");
-     const uiSchema: {} = require("./schema.json");
+     //const uiSchema: {} = require("./schema.json");
      const [messageDetails, setMessageDetails] = useState<any>({});
      const [operation, setOperation] = useState<Operation>({} as Operation);
 
@@ -59,12 +60,14 @@ function CreateEditMessage(props: any, ref: any) {
      function FillDetails(data: any) {
           let details: any = {};
           let msg = data.mindsetmessage;
+          console.log(msg.uploadID);
           details.title = msg.title;
           details.mindsetmessagetype = msg.mindsetmessagetype.id;
           details.description = msg.description;
           details.minidesc = msg.minidescription;
           details.tags = msg.tags;
           details.mediaurl = msg.mediaurl;
+          details.upload = msg.uploadID;
           // details.file = msg.mediaupload.id;
           //details.status = msg.status;
 
@@ -86,6 +89,7 @@ function CreateEditMessage(props: any, ref: any) {
      // function FetchData() {    }
 
      function CreateMessage(frm: any) {
+          //console.log(frm);
           createMessage({ variables: frm });
      }
 
@@ -139,11 +143,10 @@ function CreateEditMessage(props: any, ref: any) {
 
      return (
           <>
-               {/* {operation.type==='create' && } */}
                <ModalView
                     name={name}
                     isStepper={false}
-                    formUISchema={uiSchema}
+                    formUISchema={schema}
                     formSchema={messageSchema}
                     showing={operation.modal_status}
                     formSubmit={
@@ -156,6 +159,7 @@ function CreateEditMessage(props: any, ref: any) {
                                 }
                     }
                     formData={messageDetails}
+                    widgets={widgets}
                     modalTrigger={modalTrigger}
                />
 

@@ -4,7 +4,7 @@ import { GET_TRIGGERS, ADD_MESSAGE, UPDATE_MESSAGE, GET_MESSAGE, DELETE_MESSAGE,
 import AuthContext from "../../../context/auth-context";
 import StatusModal from "../../../components/StatusModal/StatusModal";
 import { Subject } from "rxjs";
-import { schema, widgets } from "./schema";
+import { schema } from "./schema";
 import ModalView from "../../../components/modal";
 
 interface Operation {
@@ -143,27 +143,6 @@ function CreateEditMessage(props: any, ref: any) {
 
      return (
           <>
-               {/* {operation.type === "create" && (
-                    <ModalView
-                         name={name}
-                         isStepper={false}
-                         formUISchema={schema}
-                         formSchema={messageSchema}
-                         showing={operation.modal_status}
-                         formSubmit={
-                              name === "View"
-                                   ? () => {
-                                          modalTrigger.next(false);
-                                     }
-                                   : (frm: any) => {
-                                          OnSubmit(frm);
-                                     }
-                         }
-                         formData={messageDetails}
-                         widgets={widgets}
-                         modalTrigger={modalTrigger}
-                    />
-               )} */}
                <ModalView
                     name={name}
                     isStepper={false}
@@ -180,7 +159,7 @@ function CreateEditMessage(props: any, ref: any) {
                                 }
                     }
                     formData={messageDetails}
-                    widgets={widgets}
+                    //widgets={widgets}
                     modalTrigger={modalTrigger}
                />
 
