@@ -61,30 +61,33 @@ function CreateEditMessage(props: any, ref: any) {
 
      function FillDetails(data: any) {
           let details: any = {};
-          let msg = data.informationbankmessages;
+          let msg: any = data.informationbankmessages[0];
+          console.log(msg);
+          console.log(msg.title);
           details.title = msg.title;
-          details.infomessagetype = msg.infomessagetype.id;
+          details.infomessagetype = msg.informationbankmessagestype.id;
           details.description = msg.description;
           details.minidesc = msg.minidescription;
           details.mediaurl = msg.mediaurl;
-          details.file = msg.mediaupload.id;
-          details.status = msg.status;
+          details.upload = msg.uploadID;
+          details.tags = msg.tags;
+
+          console.log(details);
+
           setMessageDetails(details);
 
           if (["edit", "view"].indexOf(operation.type) > -1) modalTrigger.next(true);
           else OnSubmit(null);
      }
 
-     function FetchData() {
-          useQuery(GET_TRIGGERS, { onCompleted: loadData });
-          useQuery(GET_MESSAGE, {
-               variables: { id: operation.id },
-               skip: !operation.id || operation.type === "toggle-status",
-               onCompleted: (e: any) => {
-                    FillDetails(e);
-               },
-          });
-     }
+     useQuery(GET_TRIGGERS, { onCompleted: loadData });
+     useQuery(GET_MESSAGE, {
+          variables: { id: operation.id },
+          skip: !operation.id || operation.type === "toggle-status",
+          onCompleted: (e: any) => {
+               FillDetails(e);
+          },
+     });
 
      function CreateMessage(frm: any) {
           createMessage({ variables: frm });
@@ -126,8 +129,6 @@ function CreateEditMessage(props: any, ref: any) {
                     break;
           }
      }
-
-     FetchData();
 
      let name = "";
      if (operation.type === "create") {
