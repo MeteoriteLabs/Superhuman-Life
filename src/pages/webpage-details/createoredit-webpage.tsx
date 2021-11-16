@@ -1,5 +1,11 @@
-import React, { useContext, useImperativeHandle, useState } from "react";
-import { useMutation, useQuery } from "@apollo/client";
+import React, {
+  useContext,
+  useEffect,
+  useImperativeHandle,
+  useState,
+  useRef,
+} from "react";
+import { useMutation, useQuery, useLazyQuery } from "@apollo/client";
 import ModalView from "../../components/modal";
 import StatusModal from "../../components/StatusModal/StatusModal";
 import AuthContext from "../../context/auth-context";
@@ -7,17 +13,18 @@ import { Subject } from "rxjs";
 import {
   CREATE_WEBPAGE_DETAILS,
   FETCH_WEBSITE_SCHEMA_AND_FORM_JSON,
-  FETCH_PUBLISHED_TEMPLATES,
   FETCH_DATA_FORM,
+  FETCH_TEMPLATE_SCHEMA_FORM,
 } from "./queries";
 
 interface Operation {
   id: string;
-  type: "create" | "edit" | "view" | "toggle-status" | "delete";
+  type: "create" | "edit" | "view" | "toggle-status" | "delete" | "select";
   current_status: boolean;
+  template_id: string;
 }
 
-export let tabsDetails: any = {};
+//export let tabsDetails: any = {};
 
 function CreateWebpageDetails(props: any, ref: any) {
   const auth = useContext(AuthContext);
@@ -26,36 +33,53 @@ function CreateWebpageDetails(props: any, ref: any) {
     email: "test@kevin.com",
   });
 
-  const [schemaData, setSchemaData] = useState<any>({});
-  const [formJsonData, setFormJsonData] = useState<any>({});
+  const [schemaData, setSchemaData] = useState<any>(null);
+  const [formJsonData, setFormJsonData] = useState<any>(null);
   const [operation, setOperation] = useState<Operation>({} as Operation);
 
-  useQuery(FETCH_WEBSITE_SCHEMA_AND_FORM_JSON, {
-    variables: { id: "2323" },
-    onCompleted: (r: any) => {
-      if (r.websiteData[0] === undefined) {
-        return;
-      } else {
-        setSchemaData(r.websiteData[0].website_template.schema_json);
-        setFormJsonData(r.websiteData[0].website_template.form_json);
-      }
-    },
-  });
-
-  // const [createExercise] = useMutation(CREATE_EXERCISE, { onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
-  // const [editExercise] = useMutation(UPDATE_EXERCISE,{variables: {exerciseid: operation.id}, onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
-  // const [deleteExercise] = useMutation(DELETE_EXERCISE, { onCompleted: (e: any) => console.log(e), refetchQueries: ["GET_TABLEDATA"] });
+  // useQuery(FETCH_WEBSITE_SCHEMA_AND_FORM_JSON, {
+  //   variables: { id: auth.userid },
+  //   onCompleted: (r: any) => {
+  //     if (r.websiteData[0] === undefined) {
+  //       return;
+  //     } else {
+  //       setSchemaData(r.websiteData[0].website_template.schema_json);
+  //       setFormJsonData(r.websiteData[0].website_template.form_json);
+  //     }
+  //   },
+  // });
 
   const modalTrigger = new Subject();
 
   useImperativeHandle(ref, () => ({
     TriggerForm: (msg: Operation) => {
       setOperation(msg);
-
+      console.log(typeof msg.type);
+      if (msg.type === "edit") {
+        modalTrigger.next(true);
+      }
       //render form if no message id
-      if (msg && !msg.id) modalTrigger.next(true);
+      // if (msg && !msg.id) modalTrigger.next(true);
     },
   }));
+
+  useQuery(FETCH_TEMPLATE_SCHEMA_FORM, {
+    variables: { id: operation.template_id }, // getting null
+    skip: !operation.template_id,
+    onCompleted: (r: any) => {
+      console.log(r);
+      // if (r.websiteTemplate === undefined) {
+      //   return;
+      // } else {
+      setSchemaData(r.websiteTemplate.schema_json);
+      setFormJsonData(r.websiteTemplate.form_json);
+    },
+  });
+
+  // console.log(r.websiteTemplate.form_json);
+  // const [createExercise] = useMutation(CREATE_EXERCISE, { onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
+  // const [editExercise] = useMutation(UPDATE_EXERCISE,{variables: {exerciseid: operation.id}, onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
+  // const [deleteExercise] = useMutation(DELETE_EXERCISE, { onCompleted: (e: any) => console.log(e), refetchQueries: ["GET_TABLEDATA"] });
 
   const [createDetails] = useMutation(CREATE_WEBPAGE_DETAILS, {
     onCompleted: (r: any) => {
@@ -89,7 +113,6 @@ function CreateWebpageDetails(props: any, ref: any) {
     if (["edit", "view"].indexOf(operation.type) > -1) modalTrigger.next(true);
     else OnSubmit(null);
   }
-  //FillDetails("edit");
 
   function FetchData() {
     // useQuery(FETCH_DATA, { variables: { id: operation.id }, onCompleted: (e: any) => { FillDetails(e) } });
@@ -152,30 +175,31 @@ function CreateWebpageDetails(props: any, ref: any) {
   //   name = "View";
   // }
 
-  FetchData();
+  //FetchData();
 
   return (
     <>
       {/* {render && */}
-      <ModalView
-        name={name}
-        isStepper={true}
-        stepperValues={["Intro Page"]}
-        formUISchema={schemaData}
-        formSchema={formJsonData}
-        formSubmit={
-          name === "View"
-            ? () => {
-                modalTrigger.next(false);
-              }
-            : (frm: any) => {
-                OnSubmit(frm);
-              }
-        }
-        formData={webPagedetails}
-        modalTrigger={modalTrigger}
-      />
-
+      {schemaData && formJsonData && (
+        <ModalView
+          name={name}
+          isStepper={true}
+          stepperValues={["Intro Page"]}
+          formUISchema={schemaData}
+          formSchema={formJsonData}
+          formSubmit={
+            name === "View"
+              ? () => {
+                  modalTrigger.next(false);
+                }
+              : (frm: any) => {
+                  OnSubmit(frm);
+                }
+          }
+          formData={webPagedetails}
+          modalTrigger={modalTrigger}
+        />
+      )}
       {/* } */}
       {operation.type === "delete" && (
         <StatusModal

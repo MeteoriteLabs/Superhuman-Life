@@ -52,7 +52,6 @@ export const FETCH_PUBLISHED_TEMPLATES = gql`
      {
     
          template_name
-         published
          id
      }
     }
@@ -69,6 +68,16 @@ export const FETCH_DATA_FORM = gql`
         }
     }
 
+`;
+
+export const FETCH_TEMPLATE_SCHEMA_FORM = gql`
+    query templateData($id: ID!) {
+        websiteTemplate(id:$id) {
+        
+            form_json
+            schema_json
+        }
+    }
 `;
 
 

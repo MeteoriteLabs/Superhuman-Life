@@ -34,14 +34,14 @@ export default function TabsComponent() {
   const [formSwitch, setFormSwitch] = useState<boolean>(true);
 
   useQuery(FETCH_WEBSITE_DATA, {
-    variables: { id: "343" },
+    variables: { id: auth.userid },
     onCompleted: (r: any) => {
       setWebsiteData(r.websiteData[0]);
     },
   });
 
   useQuery(FETCH_WEBSITE_SCHEMA_AND_FORM_JSON, {
-    variables: { id: "34" },
+    variables: { id: auth.userid },
     onCompleted: (r: any) => {
       if (r.websiteData[0] === undefined) {
         setBtnStatus(true);
@@ -128,7 +128,7 @@ export default function TabsComponent() {
                       {websiteData != null ? (
                         <p> Www.dummy.sapienlife.com</p>
                       ) : (
-                        <p>.........................</p>
+                        <p>..............................</p>
                       )}
                     </Card.Text>
                   </Card.Body>
@@ -240,7 +240,6 @@ export default function TabsComponent() {
                     >
                       <div>
                         <Button
-                          disabled={btnStatus}
                           variant="dark"
                           className="px-5 border"
                           onClick={() => {
@@ -295,10 +294,7 @@ export default function TabsComponent() {
                     <Row>
                       <Col className="d-flex justify-content-center p-5 m-4">
                         <div>
-                          <h1 className="text-center">N/A</h1>
-                          <h4 className="text-secondary">
-                            No template selected
-                          </h4>
+                          <h1>No Template Selected</h1>
                         </div>
                       </Col>
                     </Row>
@@ -326,7 +322,6 @@ const popover = (
   <Popover id="popover-basic">
     <Popover.Content className="p-3">
       <SetUpDomain />
-      <p className="view-tag">View</p>
     </Popover.Content>
   </Popover>
 );
