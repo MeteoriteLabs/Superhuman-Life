@@ -24,7 +24,7 @@ export default function ModalView({
      const [show, setShow] = useState<boolean>(false);
      //const [formValues, setFormValues] = useState<any>(formData);
      const stepper: string[] = stepperValues;
-
+     console.log(formData.name);
      modalTrigger.subscribe((res: boolean) => {
           setShow(res);
      });
@@ -39,13 +39,17 @@ export default function ModalView({
           }
      }
 
+     if (name) {
+          formData = {};
+     }
+
      return (
           <>
                <Modal size="xl" show={show} onHide={() => setShow(false)} centered>
                     <Modal.Header closeButton>
                          <Modal.Title as={Row}>
                               <Col xs={12} md={12} lg={12}>
-                                   <p className="lead">{name}</p>
+                                   <p className="lead">{name ? name : formData.name}</p>
                               </Col>
                               {isStepper &&
                                    stepper.map((item: string, id: number) => (
@@ -114,7 +118,7 @@ export default function ModalView({
                                         onClick={() => {
                                              setShow(false);
                                         }}
-                                        className={name === "View" ? "d-none" : ""}
+                                        className={formData.name === "View" ? "d-none" : ""}
                                    >
                                         Close
                                    </Button>
@@ -122,10 +126,12 @@ export default function ModalView({
                                         variant="success"
                                         size="sm"
                                         onClick={(event) => {
-                                             formRef.current.onSubmit(event);
+                                             formData.name === "View"
+                                                  ? setShow(false)
+                                                  : formRef.current.onSubmit(event);
                                         }}
                                    >
-                                        {name === "View" ? "Close" : "Submit"}
+                                        {formData.name === "View" ? "Close" : "Submit"}
                                    </Button>
                               </>
                          )}

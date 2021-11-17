@@ -27,7 +27,6 @@ function CreateEditMessage(props: any, ref: any) {
           },
      });
      const [editMessage] = useMutation(UPDATE_MESSAGE, {
-          variables: { messageid: operation.id },
           onCompleted: (r: any) => {
                modalTrigger.next(false);
           },
@@ -68,6 +67,30 @@ function CreateEditMessage(props: any, ref: any) {
           details.tags = msg.tags;
           details.mediaurl = msg.mediaurl;
           details.upload = msg.uploadID;
+          details.name = "Edit";
+          details.messageid = msg.id;
+          console.log(details);
+          // details.file = msg.mediaupload.id;
+          //details.status = msg.status;
+
+          setMessageDetails(details);
+
+          if (["edit", "view"].indexOf(operation.type) > -1) modalTrigger.next(true);
+          else OnSubmit(null);
+     }
+     function FillDetailsView(data: any) {
+          let details: any = {};
+          let msg = data.mindsetmessage;
+          console.log(msg.uploadID);
+          details.title = msg.title;
+          details.mindsetmessagetype = msg.mindsetmessagetype.id;
+          details.description = msg.description;
+          details.minidesc = msg.minidescription;
+          details.tags = msg.tags;
+          details.mediaurl = msg.mediaurl;
+          details.upload = msg.uploadID;
+          details.name = "View";
+          console.log(details);
           // details.file = msg.mediaupload.id;
           //details.status = msg.status;
 
@@ -80,9 +103,18 @@ function CreateEditMessage(props: any, ref: any) {
      useQuery(GET_TRIGGERS, { onCompleted: loadData });
      useQuery(GET_MESSAGE, {
           variables: { id: operation.id },
-          skip: !operation.id || operation.type === "toggle-status",
+          skip: !operation.id || operation.type === "toggle-status" || operation.type === "view",
           onCompleted: (e: any) => {
+               setOperation({} as Operation);
                FillDetails(e);
+          },
+     });
+     useQuery(GET_MESSAGE, {
+          variables: { id: operation.id },
+          skip: !operation.id || operation.type === "toggle-status" || operation.type === "edit",
+          onCompleted: (e: any) => {
+               setOperation({} as Operation);
+               FillDetailsView(e);
           },
      });
 
@@ -97,14 +129,14 @@ function CreateEditMessage(props: any, ref: any) {
           editMessage({ variables: frm });
      }
 
-     function ViewMessage(frm: any) {
-          useMutation(UPDATE_MESSAGE, {
-               variables: frm,
-               onCompleted: (d: any) => {
-                    console.log(d);
-               },
-          });
-     }
+     // function ViewMessage(frm: any) {
+     //      useMutation(UPDATE_MESSAGE, {
+     //           variables: frm,
+     //           onCompleted: (d: any) => {
+     //                console.log(d);
+     //           },
+     //      });
+     // }
 
      function ToggleMessageStatus(id: string, current_status: boolean) {
           updateStatus({ variables: { status: !current_status, messageid: id } });
@@ -115,42 +147,48 @@ function CreateEditMessage(props: any, ref: any) {
      }
 
      function OnSubmit(frm: any) {
+          console.log(frm);
+          console.log(frm.name);
           if (frm) frm.user_permissions_user = auth.userid;
-
-          switch (operation.type) {
-               case "create":
-                    CreateMessage(frm);
-                    break;
-               case "edit":
+          if (frm.name === "Edit" || frm.name === "View") {
+               if (frm.name === "Edit") {
                     EditMessage(frm);
-                    break;
-               case "view":
-                    ViewMessage(frm);
-                    break;
+               }
+          } else {
+               CreateMessage(frm);
           }
+          // switch (operation.type) {
+          //      case "create":
+          //           CreateMessage(frm);
+          //           break;
+          //      case "edit":
+          //           EditMessage(frm);
+          //           break;
+          //      case "view":
+          //           ViewMessage(frm);
+          //           break;
+          // }
+          //debugger;
      }
 
      // FetchData();
 
-     let name = "";
-     if (operation.type === "create") {
-          name = "Create New";
-     } else if (operation.type === "edit") {
-          name = "Edit";
-     } else if (operation.type === "view") {
-          name = "View";
-     }
+     // let name = "";
+     // if (operation.type === "create") {
+     //      name = "Create New";
+     //      //setMessageDetails({});
+     // }
 
      return (
           <>
                <ModalView
-                    name={name}
+                    name={operation.type}
                     isStepper={false}
                     formUISchema={schema}
                     formSchema={messageSchema}
                     showing={operation.modal_status}
                     formSubmit={
-                         name === "View"
+                         messageDetails.name === "View"
                               ? () => {
                                      modalTrigger.next(false);
                                 }
