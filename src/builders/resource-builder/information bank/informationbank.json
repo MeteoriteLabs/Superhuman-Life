@@ -30,11 +30,6 @@
                     "type": "string",
                     "title": "Url (Picture or Video)"
                },
-               "Or": {
-                    "title": "OR",
-                    "description": "OR",
-                    "type": "null"
-               },
                "upload": {
                     "type": "string"
                }

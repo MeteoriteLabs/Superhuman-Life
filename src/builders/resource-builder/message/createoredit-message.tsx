@@ -17,7 +17,6 @@ interface Operation {
 function CreateEditMessage(props: any, ref: any) {
      const auth = useContext(AuthContext);
      const messageSchema: { [name: string]: any } = require("./mindset.json");
-     //const uiSchema: {} = require("./schema.json");
      const [messageDetails, setMessageDetails] = useState<any>({});
      const [operation, setOperation] = useState<Operation>({} as Operation);
 
@@ -59,7 +58,10 @@ function CreateEditMessage(props: any, ref: any) {
      function FillDetails(data: any) {
           let details: any = {};
           let msg = data.mindsetmessage;
-          console.log(msg.uploadID);
+
+          let o = { ...operation };
+          details.name = o.type.toLowerCase();
+          console.log(o.type);
           details.title = msg.title;
           details.mindsetmessagetype = msg.mindsetmessagetype.id;
           details.description = msg.description;
@@ -67,34 +69,12 @@ function CreateEditMessage(props: any, ref: any) {
           details.tags = msg.tags;
           details.mediaurl = msg.mediaurl;
           details.upload = msg.uploadID;
-          details.name = "Edit";
           details.messageid = msg.id;
+
           console.log(details);
-          // details.file = msg.mediaupload.id;
-          //details.status = msg.status;
 
           setMessageDetails(details);
-
-          if (["edit", "view"].indexOf(operation.type) > -1) modalTrigger.next(true);
-          else OnSubmit(null);
-     }
-     function FillDetailsView(data: any) {
-          let details: any = {};
-          let msg = data.mindsetmessage;
-          console.log(msg.uploadID);
-          details.title = msg.title;
-          details.mindsetmessagetype = msg.mindsetmessagetype.id;
-          details.description = msg.description;
-          details.minidesc = msg.minidescription;
-          details.tags = msg.tags;
-          details.mediaurl = msg.mediaurl;
-          details.upload = msg.uploadID;
-          details.name = "View";
-          console.log(details);
-          // details.file = msg.mediaupload.id;
-          //details.status = msg.status;
-
-          setMessageDetails(details);
+          setOperation({} as Operation);
 
           if (["edit", "view"].indexOf(operation.type) > -1) modalTrigger.next(true);
           else OnSubmit(null);
@@ -103,22 +83,11 @@ function CreateEditMessage(props: any, ref: any) {
      useQuery(GET_TRIGGERS, { onCompleted: loadData });
      useQuery(GET_MESSAGE, {
           variables: { id: operation.id },
-          skip: !operation.id || operation.type === "toggle-status" || operation.type === "view",
+          skip: !operation.id || operation.type === "toggle-status",
           onCompleted: (e: any) => {
-               setOperation({} as Operation);
                FillDetails(e);
           },
      });
-     useQuery(GET_MESSAGE, {
-          variables: { id: operation.id },
-          skip: !operation.id || operation.type === "toggle-status" || operation.type === "edit",
-          onCompleted: (e: any) => {
-               setOperation({} as Operation);
-               FillDetailsView(e);
-          },
-     });
-
-     // function FetchData() {    }
 
      function CreateMessage(frm: any) {
           //console.log(frm);
@@ -150,34 +119,17 @@ function CreateEditMessage(props: any, ref: any) {
           console.log(frm);
           console.log(frm.name);
           if (frm) frm.user_permissions_user = auth.userid;
-          if (frm.name === "Edit" || frm.name === "View") {
-               if (frm.name === "Edit") {
+          if (frm.name === "edit" || frm.name === "view") {
+               if (frm.name === "edit") {
                     EditMessage(frm);
+               }
+               if (frm.name === "view") {
+                    modalTrigger.next(false);
                }
           } else {
                CreateMessage(frm);
           }
-          // switch (operation.type) {
-          //      case "create":
-          //           CreateMessage(frm);
-          //           break;
-          //      case "edit":
-          //           EditMessage(frm);
-          //           break;
-          //      case "view":
-          //           ViewMessage(frm);
-          //           break;
-          // }
-          //debugger;
      }
-
-     // FetchData();
-
-     // let name = "";
-     // if (operation.type === "create") {
-     //      name = "Create New";
-     //      //setMessageDetails({});
-     // }
 
      return (
           <>
@@ -187,15 +139,9 @@ function CreateEditMessage(props: any, ref: any) {
                     formUISchema={schema}
                     formSchema={messageSchema}
                     showing={operation.modal_status}
-                    formSubmit={
-                         messageDetails.name === "View"
-                              ? () => {
-                                     modalTrigger.next(false);
-                                }
-                              : (frm: any) => {
-                                     OnSubmit(frm);
-                                }
-                    }
+                    formSubmit={(frm: any) => {
+                         OnSubmit(frm);
+                    }}
                     formData={messageDetails}
                     widgets={widgets}
                     modalTrigger={modalTrigger}

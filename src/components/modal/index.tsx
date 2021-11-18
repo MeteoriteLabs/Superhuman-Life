@@ -118,7 +118,7 @@ export default function ModalView({
                                         onClick={() => {
                                              setShow(false);
                                         }}
-                                        className={formData.name === "View" ? "d-none" : ""}
+                                        className={formData.name === "view" ? "d-none" : ""}
                                    >
                                         Close
                                    </Button>
@@ -126,12 +126,12 @@ export default function ModalView({
                                         variant="success"
                                         size="sm"
                                         onClick={(event) => {
-                                             formData.name === "View"
+                                             formData.name === "view"
                                                   ? setShow(false)
                                                   : formRef.current.onSubmit(event);
                                         }}
                                    >
-                                        {formData.name === "View" ? "Close" : "Submit"}
+                                        {formData.name === "view" ? "Close" : "Submit"}
                                    </Button>
                               </>
                          )}
