@@ -83,7 +83,7 @@ function CreateEditMessage(props: any, ref: any) {
      useQuery(GET_TRIGGERS, { onCompleted: loadData });
      useQuery(GET_MESSAGE, {
           variables: { id: operation.id },
-          skip: !operation.id || operation.type === "toggle-status",
+          skip: !operation.id || operation.type === "toggle-status" || operation.type === "delete",
           onCompleted: (e: any) => {
                FillDetails(e);
           },
