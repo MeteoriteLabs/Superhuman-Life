@@ -49,3 +49,63 @@ export const GET_VOUCHERS_BY_ID = gql`
         }
 }
 `
+
+
+
+
+export const GET_ALL_BOOKINGS_FINANCE = gql `
+query clientBookings($id: ID!) {
+  clientBookings(
+      where: {
+        fitnesspackages: {
+          users_permissions_user: { id: $id }
+        }
+      }
+    ) 
+    {
+      id
+      users_permissions_user {
+        username
+        Phone
+        addresses{
+          address1
+          city
+          state
+          country
+          zipcode
+        }
+      }
+      package_duration
+      effective_date
+      booking_status
+      booking_date
+      package_duration
+      fitnesspackages {
+        id
+        packagename
+        mode
+        fitness_package_type {
+          type
+        }
+        fitnesspackagepricing{
+            packagepricing
+          }
+        users_permissions_user {
+          id
+          Phone
+          Firstname
+          Lastname
+          email
+        }
+
+        ptoffline
+        ptonline
+        grouponline
+        groupoffline
+        recordedclasses
+      }
+    }
+  }
+`
+
+

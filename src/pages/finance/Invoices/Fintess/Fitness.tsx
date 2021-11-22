@@ -3,60 +3,60 @@ import { Badge, Row, Col, Button } from "react-bootstrap";
 import { useContext, useMemo, useRef, useState } from 'react'
 import Table from '../../../../components/table/index'
 import ActionButton from '../../../../components/actionbutton';
+import { GET_ALL_BOOKINGS_FINANCE } from '../../graphQL/queries';
+import { useQuery } from '@apollo/client';
+import authContext from '../../../../context/auth-context';
+import moment from 'moment';
+import InvoicesAction from '../InvoicesAction';
 
 
 export default function Fitness() {
 
 
-    // const financeActionsRef = useRef<any>(null)
+    const InvoiceActionRef = useRef<any>(null)
 
-    const dataTable = [
-        {
-            client: "Michael Hubbard",
-            type: "ptOnline",
-            package: "PT Package",
-            duration: "1 Month",
-            effective: '25/06/20',
-            expiry:"25/07/20",
-            mrp:10,
-            status: 'Paid',
-        },
+    const auth = useContext(authContext);
+    const [dataTable, setDataTable] = useState<any[]>([]);
 
-        {
-            client: "Jhone Doe",
-            type: "groupOffline",
-            package: "Group Offline",
-            duration: "1 Month",
-            effective: '25/06/20',
-            expiry:"25/07/20",
-            mrp:50,
-            status: 'Cancelled',
-        },
+    const FetchData = () => useQuery(GET_ALL_BOOKINGS_FINANCE, {
+        variables: { id: auth.userid },
+        onCompleted: data => loadData(data)
+    })
 
-        {
-            client: "Walter White",
-            type: "classic",
-            package: "Group Offline",
-            duration: "1 Month",
-            effective: '25/06/20',
-            expiry:"25/07/20",
-            mrp:50,
-            status: 'Processing',
-        },
 
-        
-        {
-            client: "Walter White",
-            type: "custom",
-            package: "Custom Package",
-            duration: "6 Month",
-            effective: '25/06/20',
-            expiry:"25/07/20",
-            mrp:50,
-            status: 'Processing',
-        },
+    const loadData = (data: any) => {
+        console.log("🚀 ~ file: Fitness.tsx ~ line 23 ~ loadData ~ data", data);
+        setDataTable(
 
-    ]
+            [...data.clientBookings].map(fitnessPackage => {
+                const renewDay: Date = new Date(fitnessPackage.effective_date);
+                renewDay.setDate(renewDay.getDate() + fitnessPackage.package_duration);
+
+                return {
+                    client: fitnessPackage.users_permissions_user.length > 0 ? fitnessPackage.users_permissions_user[0].username : "N/A",
+                    clientPhoneNumber: fitnessPackage.users_permissions_user.length > 0 ? fitnessPackage.users_permissions_user[0].Phone : "N/A",
+                    clientAddress: fitnessPackage.users_permissions_user.length > 0 ? fitnessPackage.users_permissions_user[0].addresses : "N/A",
+
+                    package: fitnessPackage.fitnesspackages[0],
+                    type: fitnessPackage.fitnesspackages[0].fitness_package_type.type,
+                    bookingDate: moment(fitnessPackage.booking_date).format("MMMM DD,YYYY"),
+                    mode: fitnessPackage.fitnesspackages[0].mode,
+                    packageName: fitnessPackage.fitnesspackages[0].packagename,
+                    duration: fitnessPackage.package_duration,
+                    effective: moment(fitnessPackage.effective_date).format('MMMM DD,YYYY'),
+                    expiry: moment(renewDay).format('MMMM DD,YYYY'),
+                    mrp: 10,
+                    status: fitnessPackage.booking_status,
+                    userInfo:fitnessPackage.fitnesspackages[0].users_permissions_user
+                }
+            })
+
+        )
+    }
+
+    FetchData();
+    console.log(dataTable)
+
 
     const columns = useMemo(
         () => [
@@ -76,43 +76,89 @@ export default function Fitness() {
             },
             {
                 accessor: "type", Header: "Type", Cell: ({ row }: any) => {
-                    return <div className='d-flex justify-content-center align-items-center'>
-                        {row.values.type === "ptOnline" ?
-                            <div>
-                                <img src='./assets/custompersonal-training-Online.svg' alt="PT-Online" />
-                                <p className="mb-0">PT</p>
-                            </div>
-                            : ""}
-                        {row.values.type === "ptOffline" ?
-                            <div>
-                                <img src='./assets/custompersonal-training-Offline.svg' alt="PT-Offline" />
-                                <p className="mb-0">PT</p>
-                            </div> : ""}
-                        {row.values.type === "groupOnline" ?
-                            <div>
-                                <img src='./assets/customgroup-Online.svg' alt="Group-Online" />
-                                <p className="mb-0">Group</p>
-                            </div> : ""}
-                        {row.values.type === "groupOffline" ?
-                            <div>
-                                <img src='./assets/customgroup-Offline.svg' alt="Group-Offline" />
-                                <p className="mb-0">Group</p>
-                            </div> : ""}
-                        {row.values.type === "classic" ?
-                            <div>
-                                <img src='./assets/customclassic.svg' alt="Classic" />
-                                <p className="mb-0">Classic</p>
-                            </div> : ""}
+                    let imgName = '';
+                    let name = '';
 
-                            {row.values.type === "custom" ?
-                            <div>
-                                <img src='./assets/CustomType.svg' alt="custom" />
-                                {/* <p className="mb-0">Custom</p> */}
-                            </div> : ""}
+                    switch (row.original.type) {
+                        case "Personal Training": {
+                            switch (row.original.mode) {
+                                case "Online": {
+                                    imgName = "custompersonal-training-Online.svg";
+                                    name = "PT";
+                                    break;
+                                }
+
+                                case "Online_workout": {
+                                    imgName = "custompersonal-training-Online.svg";
+                                    name = "PT";
+                                    break
+                                }
+
+                                case "Offline": {
+                                    imgName = "custompersonal-training-Offline.svg";
+                                    name = "PT";
+                                    break;
+                                }
+
+                                case "Offline_workout": {
+                                    imgName = "custompersonal-training-Offline.svg";
+                                    name = "PT";
+                                    break;
+                                }
+
+                                case "Hybrid": {
+                                    imgName = "pt.svg";
+                                    name = "";
+                                    break;
+                                }
+                            }
+                            break
+                        }
+
+                        case "Group Class": {
+                            switch (row.original.mode) {
+                                case "Online": {
+                                    imgName = "customgroup-Online.svg";
+                                    name = "Group Online";
+                                    break;
+                                }
+
+                                case "Offline": {
+                                    imgName = "customgroup-Offline.svg";
+                                    name = "Group Offline";
+                                    break;
+                                }
+
+                                case "Hybrid": {
+                                    imgName = "group.svg";
+                                    name = "";
+                                    break;
+                                }
+                            }
+                            break;
+                        }
+
+                        case "Classic Class": {
+                            imgName = "customclassic.svg";
+                            name = "classic";
+                            break;
+                        }
+                        case "Custom Fitness": {
+                            imgName = "CustomType.svg";
+                            name = "";
+                            break;
+                        }
+                    }
+
+                    return <div className='d-flex justify-content-center align-items-center'>
+                        <div>
+                            <img src={`./assets/${imgName}`} alt={imgName} />
+                            <p className='mb-0'>{name}</p>
+                        </div>
                     </div>
                 }
             },
-            { accessor: 'package', Header: 'Package' },
+            { accessor: 'packageName', Header: 'Package' },
             {
                 accessor: 'duration', Header: 'Duration', Cell: ({ row }: any) => {
                     return <p className="mb-0">{row.values.duration}</p>
@@ -127,23 +173,26 @@ export default function Fitness() {
             },
             {
                 accessor: "status", Header: "Status", Cell: ({ row }: any) => {
-                    console.log({ row })
-                    let statusColor = ""
+                    let statusColor = "";
+                    let name = "";
                     switch (row.values.status) {
-                        case "Paid":
+                        case "accepted":
+                            name = "Paid";
                             statusColor = "success";
                             break;
 
-                        case "Cancelled":
+                        case "rejected":
+                            name = "Cancelled";
                             statusColor = "danger";
                             break;
 
-                        case "Processing":
+                        case "pending":
+                            name = "Processing";
                             statusColor = "warning";
                             break;
                     }
                     return <>
-                        <Badge className='py-3 px-5' style={{ fontSize: '1rem', borderRadius: '10px' }} variant={statusColor}>{row.values.status}</Badge>
+                        <Badge className='py-3 px-5' style={{ fontSize: '1rem', borderRadius: '10px' }} variant={statusColor}>{name}</Badge>
                     </>
                 }
             },
@@ -152,9 +201,9 @@ export default function Fitness() {
                 Header: "Actions",
                 Cell: ({ row }: any) => {
                     const actionClick1 = () => {
-                        // fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'manage', type: "Personal Training", rowData: "" })
+                        InvoiceActionRef.current.TriggerForm({ id: row.original.id, actionType: 'view', rowData: row.original })
                     };
-                 
+
                     const arrayAction = [
                         { actionName: 'View', actionClick: actionClick1 },
                     ]
@@ -176,7 +225,7 @@ export default function Fitness() {
             <Row>
                 <Col>
                     <Table columns={columns} data={dataTable} />
-                    {/* <FinanceActions ref={financeActionsRef} /> */}
+                    <InvoicesAction ref={InvoiceActionRef} />
                 </Col>
             </Row>
         </div>
