@@ -1,7 +1,7 @@
 import React, { useImperativeHandle, useState, useContext } from "react";
 import { useMutation } from "@apollo/client";
 import ModalView from "../../../../../components/modal";
-import { ADD_RATING, ADD_NOTE, DELETE_COMMENT, DELETE_NOTE } from "./queries";
+import { ADD_RATING, ADD_NOTE, DELETE_COMMENT, DELETE_NOTE, GET_NOTES_BYID } from "./queries";
 import AuthContext from "../../../../../context/auth-context";
 import { Subject } from "rxjs";
 import { schema, widgets } from "./schema";
@@ -9,7 +9,7 @@ import StatusModal from "../../../../../components/StatusModal/StatusModal";
 
 interface Operation {
      id: string;
-     type: "create" | "deleteNote" | "deleteComment";
+     type: "create" | "deleteNote" | "deleteComment" | "edit";
 }
 
 function CreatePosts(props: any, ref: any) {
@@ -27,6 +27,12 @@ function CreatePosts(props: any, ref: any) {
           },
      });
      const [createNote] = useMutation(ADD_NOTE, {
+          onCompleted: (r: any) => {
+               modalTrigger.next(false);
+          },
+     });
+     const [editNotesAndMessage] = useMutation(GET_NOTES_BYID, {
+          variables: { messageid: operation.id },
           onCompleted: (r: any) => {
                modalTrigger.next(false);
           },
@@ -92,6 +98,15 @@ function CreatePosts(props: any, ref: any) {
                });
           }
      }
+
+     function EditPost(frm: any) {
+          editNotesAndMessage({
+               // variables: {
+               //      messageid: operation.id,
+               //      note: frm.note,
+               // },
+          });
+     }
      function DeleteNote(id: any) {
           deleteNote({ variables: { id: id } });
      }
@@ -103,6 +118,9 @@ function CreatePosts(props: any, ref: any) {
           switch (operation.type) {
                case "create":
                     CreatePost(frm);
+                    break;
+               case "edit":
+                    EditPost(frm);
                     break;
           }
      }

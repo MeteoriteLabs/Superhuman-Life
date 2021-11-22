@@ -101,6 +101,33 @@ export const GET_NOTES = gql`
           }
      }
 `;
+export const GET_NOTES_BYID = gql`
+     query getfeedbackNotes($id: ID) {
+          feedbackNotes(where: { id: $id }) {
+               id
+               updatedAt
+               type
+               users_permissions_user {
+                    id
+                    username
+                    designation
+               }
+               target_user {
+                    id
+               }
+               note
+               resource_id
+               feedback_comments {
+                    id
+                    comment
+                    users_permissions_user {
+                         id
+                         username
+                    }
+               }
+          }
+     }
+`;
 
 export const CHECK_NOTES = gql`
      query checkNotes($id: ID, $clientid: ID) {
