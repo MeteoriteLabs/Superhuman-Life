@@ -22,13 +22,15 @@ function CreateEditMessage(props: any, ref: any) {
      const [messageDetails, setMessageDetails] = useState<any>({});
      const [operation, setOperation] = useState<Operation>({} as Operation);
 
+     let o = { ...operation };
+     console.log(o.type);
+
      const [createLeads] = useMutation(ADD_LEADS, {
           onCompleted: (r: any) => {
                modalTrigger.next(false);
           },
      });
      const [editMessage]: any = useMutation(UPDATE_LEADS, {
-          variables: { messageid: operation.id },
           onCompleted: (r: any) => {
                modalTrigger.next(false);
           },
@@ -51,24 +53,27 @@ function CreateEditMessage(props: any, ref: any) {
                if (msg && !msg.id) modalTrigger.next(true);
           },
      }));
+     // useQuery(GET_LEADS_ID, {
+     //      variables: { id: operation.id },
+     //      skip: !operation.id,
+     //      onCompleted: (e: any) => {
+     //           FillDetails(e);
+     //      },
+     // });
      useQuery(GET_LEADS_ID, {
           variables: { id: operation.id },
-          skip: !operation.id,
+          skip: !operation.id || operation.type === "delete",
           onCompleted: (e: any) => {
                FillDetails(e);
           },
      });
-     //  function loadData(data: any) {
-     //       // messageSchema["1"].properties.prerecordedtype.enum = [...data.prerecordedtypes].map(n => (n.id));
-     //       // messageSchema["1"].properties.prerecordedtype.enumNames = [...data.prerecordedtypes].map(n => (n.name));
-     //       // messageSchema["1"].properties.prerecordedtrigger.enum = [...data.prerecordedtriggers].map(n => (n.id));
-     //       // messageSchema["1"].properties.prerecordedtrigger.enumNames = [...data.prerecordedtriggers].map(n => (n.name));
-     //  }
 
      function FillDetails(data: any) {
           let detail: any = { leadsdetails: {} };
           let msg: any = data.websiteContactForms[0];
 
+          let o = { ...operation };
+          detail.name = o.type.toLowerCase();
           detail.status = msg.details.status;
           detail.source = msg.details.source;
           detail.notes = msg.details.notes;
@@ -76,8 +81,10 @@ function CreateEditMessage(props: any, ref: any) {
           detail.leadsdetails.name = msg.details.leadsdetails.name;
           detail.leadsdetails.phonenumber = msg.details.leadsdetails.phonenumber;
           detail.leadsdetails.leadsmesssage = msg.details.leadsdetails.leadsmesssage;
+          detail.messageid = msg.id;
 
           setMessageDetails(detail);
+          setOperation({} as Operation);
 
           if (["edit", "view"].indexOf(operation.type) > -1) modalTrigger.next(true);
           else OnSubmit(null);
@@ -91,12 +98,16 @@ function CreateEditMessage(props: any, ref: any) {
 
      function EditMessage(frm: any) {
           console.log(frm);
-          editMessage({ variables: { id: auth.userid, details: frm } });
+          editMessage({ variables: { id: auth.userid, details: frm, messageid: frm.messageid } });
      }
 
-     if (operation.type === "view") {
-          updatateseen({ variables: { messageid: operation.id, seen: false } });
+     if (o.type === "view") {
+          updatateseen({ variables: { messageid: o.id, seen: false } });
      }
+
+     // function ViewMessage(frm: any) {
+     //      updatateseen({ variables: { messageid: frm.messageid, seen: false } });
+     // }
 
      function DeleteMessage(id: any) {
           console.log(id);
@@ -104,50 +115,38 @@ function CreateEditMessage(props: any, ref: any) {
      }
 
      function OnSubmit(frm: any) {
-          switch (operation.type) {
-               case "create":
-                    CreateMessage(frm);
-                    break;
-               case "edit":
+          console.log(frm);
+          console.log(frm.name);
+          if (frm) frm.user_permissions_user = auth.userid;
+          if (frm.name === "edit" || frm.name === "view") {
+               if (frm.name === "edit") {
                     EditMessage(frm);
-                    break;
-               case "view":
-                    //ViewMessage();
-                    break;
+               }
+               // if (frm.name === "view") {
+               //      ViewMessage(frm);
+               //      // updatateseen({ variables: { messageid: frm.messageid, seen: false } });
+               //      // modalTrigger.next(false);
+               // }
+          } else {
+               CreateMessage(frm);
           }
-     }
-
-     let name = "";
-     if (operation.type === "create") {
-          name = "Lead";
-     } else if (operation.type === "edit") {
-          name = "Edit";
-     } else if (operation.type === "view") {
-          name = "View";
      }
 
      return (
           <>
                <ModalView
-                    name={name}
+                    name={operation.type}
                     isStepper={false}
                     formUISchema={schema}
                     formSchema={messageSchema}
                     showing={operation.modal_status}
-                    formSubmit={
-                         name === "View"
-                              ? () => {
-                                     modalTrigger.next(false);
-                                }
-                              : (frm: any) => {
-                                     OnSubmit(frm);
-                                }
-                    }
+                    formSubmit={(frm: any) => {
+                         OnSubmit(frm);
+                    }}
                     formData={messageDetails}
                     //widgets={widgets}
                     modalTrigger={modalTrigger}
                />
-
                {operation.type === "delete" && (
                     <StatusModal
                          modalTitle="Delete"
