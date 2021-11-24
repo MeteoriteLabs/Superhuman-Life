@@ -174,6 +174,15 @@ export const DELETE_COMMENT = gql`
           }
      }
 `;
+export const DELETE_RATING = gql`
+     mutation deleteRating($id: ID!) {
+          deleteRating(input: { where: { id: $id } }) {
+               rating {
+                    id
+               }
+          }
+     }
+`;
 
 export const GET_TAGNAME = gql`
      query TagName($id: ID) {
@@ -194,6 +203,15 @@ export const GET_RATING_NOTES = gql`
                     id
                     username
                }
+               type
+          }
+     }
+`;
+
+export const GET_RATING_NOTES_BYID = gql`
+     query ratingsforNotes($id: ID, $clientid: ID) {
+          ratings(where: { resource_id_contains: $id, target_user: { id: $clientid } }) {
+               id
                type
           }
      }

@@ -19,10 +19,16 @@ function CardComp(props: any) {
 
      const actionClick1 = () => {
           //handleRedirect(row.original.id);
+          createEditMessageComponent.current.TriggerForm({
+               id: props.id,
+               type: "editNote",
+          });
      };
      const actionClick2 = () => {
           createEditMessageComponent.current.TriggerForm({
                id: props.id,
+               comments: props.comments,
+               resourceid: props.resource_id,
                type: "deleteNote",
           });
      };

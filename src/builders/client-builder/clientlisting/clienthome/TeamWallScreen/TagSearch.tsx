@@ -28,6 +28,20 @@ const TagSearch = (props: any) => {
           }
      `;
 
+     const GET_GOALLIST_ID = gql`
+          query TagListQuery($id: ID) {
+               workouts(sort: "updatedAt", where: { id: $id }) {
+                    id
+                    workouttitle
+               }
+          }
+     `;
+
+     useQuery(GET_GOALLIST_ID, { variables: { id: props.value }, onCompleted: storeName, skip: !props.value });
+     function storeName(e: any) {
+          setSelected([{ value: e.workouts[0].workouttitle, id: props.value }]);
+     }
+
      function FetchPackageList(_variable: {} = { filter: " ", id: auth.userid }) {
           useQuery(GET_GOALLIST, { variables: _variable, onCompleted: loadPackageList, skip: !searchInput });
      }
