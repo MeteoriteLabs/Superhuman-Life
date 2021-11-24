@@ -155,10 +155,14 @@ function CreatePosts(props: any, ref: any) {
      //           FillDetails(e);
      //      },
      // });
-
+     // console.log(operation.resourceid);
      useQuery(GET_RATING_NOTES_BYID, {
           variables: { id: operation.resourceid, clientid: last },
-          skip: !operation.id || operation.type === "deleteComment" || operation.type === "editNote",
+          skip:
+               !operation.id ||
+               operation.type === "deleteComment" ||
+               operation.type === "editNote" ||
+               !operation.resourceid,
           onCompleted: (e: any) => {
                DeleteRatings(e);
           },
@@ -166,12 +170,12 @@ function CreatePosts(props: any, ref: any) {
 
      function DeleteRatings(e: any) {
           console.log(e);
+
           setDeletion(e);
           //console.log(deletion);
      }
 
      function DeleteNotesRatingPermanent() {
-          console.log(deletion.ratings.length);
           for (let i = 0; i < deletion.ratings.length; i++) {
                console.log(deletion.ratings[i].id);
                deleteRating({ variables: { id: deletion.ratings[i].id } });

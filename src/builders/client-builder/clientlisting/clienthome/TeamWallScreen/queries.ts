@@ -213,6 +213,7 @@ export const GET_RATING_NOTES_BYID = gql`
           ratings(where: { resource_id_contains: $id, target_user: { id: $clientid } }) {
                id
                type
+               resource_id
           }
      }
 `;

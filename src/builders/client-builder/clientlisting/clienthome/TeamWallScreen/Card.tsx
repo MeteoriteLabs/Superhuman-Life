@@ -28,7 +28,7 @@ function CardComp(props: any) {
           createEditMessageComponent.current.TriggerForm({
                id: props.id,
                comments: props.comments,
-               resourceid: props.resource_id,
+               resourceid: props.resourceid,
                type: "deleteNote",
           });
      };
