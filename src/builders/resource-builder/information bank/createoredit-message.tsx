@@ -27,7 +27,6 @@ function CreateEditMessage(props: any, ref: any) {
           },
      });
      const [editMessage] = useMutation(UPDATE_MESSAGE, {
-          variables: { messageid: operation.id },
           onCompleted: (r: any) => {
                modalTrigger.next(false);
           },
@@ -63,7 +62,9 @@ function CreateEditMessage(props: any, ref: any) {
           let details: any = {};
           let msg: any = data.informationbankmessages[0];
           console.log(msg);
-          console.log(msg.title);
+
+          let o = { ...operation };
+          details.name = o.type.toLowerCase();
           details.title = msg.title;
           details.infomessagetype = msg.informationbankmessagestype.id;
           details.description = msg.description;
@@ -71,10 +72,12 @@ function CreateEditMessage(props: any, ref: any) {
           details.mediaurl = msg.mediaurl;
           details.upload = msg.uploadID;
           details.tags = msg.tags;
+          details.messageid = msg.id;
 
           console.log(details);
 
           setMessageDetails(details);
+          setOperation({} as Operation);
 
           if (["edit", "view"].indexOf(operation.type) > -1) modalTrigger.next(true);
           else OnSubmit(null);
@@ -83,7 +86,7 @@ function CreateEditMessage(props: any, ref: any) {
      useQuery(GET_TRIGGERS, { onCompleted: loadData });
      useQuery(GET_MESSAGE, {
           variables: { id: operation.id },
-          skip: !operation.id || operation.type === "toggle-status",
+          skip: !operation.id || operation.type === "toggle-status" || operation.type === "delete",
           onCompleted: (e: any) => {
                FillDetails(e);
           },
@@ -97,14 +100,14 @@ function CreateEditMessage(props: any, ref: any) {
           editMessage({ variables: frm });
      }
 
-     function ViewMessage(frm: any) {
-          useMutation(UPDATE_MESSAGE, {
-               variables: frm,
-               onCompleted: (d: any) => {
-                    console.log(d);
-               },
-          });
-     }
+     // function ViewMessage(frm: any) {
+     //      useMutation(UPDATE_MESSAGE, {
+     //           variables: frm,
+     //           onCompleted: (d: any) => {
+     //                console.log(d);
+     //           },
+     //      });
+     // }
 
      function ToggleMessageStatus(id: string, current_status: boolean) {
           updateStatus({ variables: { status: !current_status, messageid: id } });
@@ -114,48 +117,58 @@ function CreateEditMessage(props: any, ref: any) {
           deleteMessage({ variables: { id: id } });
      }
 
-     function OnSubmit(frm: any) {
-          if (frm) frm.user_permissions_user = auth.userid;
+     // function OnSubmit(frm: any) {
+     //      if (frm) frm.user_permissions_user = auth.userid;
 
-          switch (operation.type) {
-               case "create":
-                    CreateMessage(frm);
-                    break;
-               case "edit":
+     //      switch (operation.type) {
+     //           case "create":
+     //                CreateMessage(frm);
+     //                break;
+     //           case "edit":
+     //                EditMessage(frm);
+     //                break;
+     //           case "view":
+     //                ViewMessage(frm);
+     //                break;
+     //      }
+     // }
+
+     function OnSubmit(frm: any) {
+          console.log(frm);
+          console.log(frm.name);
+          if (frm) frm.user_permissions_user = auth.userid;
+          if (frm.name === "edit" || frm.name === "view") {
+               if (frm.name === "edit") {
                     EditMessage(frm);
-                    break;
-               case "view":
-                    ViewMessage(frm);
-                    break;
+               }
+               if (frm.name === "view") {
+                    modalTrigger.next(false);
+               }
+          } else {
+               CreateMessage(frm);
           }
      }
 
-     let name = "";
-     if (operation.type === "create") {
-          name = "Create New";
-     } else if (operation.type === "edit") {
-          name = "Edit";
-     } else if (operation.type === "view") {
-          name = "View";
-     }
+     // let name = "";
+     // if (operation.type === "create") {
+     //      name = "Create New";
+     // } else if (operation.type === "edit") {
+     //      name = "Edit";
+     // } else if (operation.type === "view") {
+     //      name = "View";
+     // }
 
      return (
           <>
                <ModalView
-                    name={name}
+                    name={operation.type}
                     isStepper={false}
                     formUISchema={schema}
                     formSchema={messageSchema}
                     showing={operation.modal_status}
-                    formSubmit={
-                         name === "View"
-                              ? () => {
-                                     modalTrigger.next(false);
-                                }
-                              : (frm: any) => {
-                                     OnSubmit(frm);
-                                }
-                    }
+                    formSubmit={(frm: any) => {
+                         OnSubmit(frm);
+                    }}
                     formData={messageDetails}
                     widgets={widgets}
                     modalTrigger={modalTrigger}
