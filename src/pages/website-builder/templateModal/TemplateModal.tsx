@@ -9,10 +9,6 @@ import {
 } from "../../webpage-details/queries";
 import CreateWebpageDetails from "../../webpage-details/createoredit-webpage";
 
-// export const getTemplateId = (data: any) => data;
-
-export let huhu: string;
-
 function ModalComp(props) {
   const [showTemplate, setShowTemplate] = useState<any>([]);
   const [templateId, setTemplateId] = useState<string>("");
@@ -24,18 +20,9 @@ function ModalComp(props) {
     },
   });
 
-  let getTemplateId = (id: any) => {
-    setTemplateId(id);
+  const { setReceivedData, setModalShow } = props;
 
-    console.log(id);
-  };
-
-  // useQuery(FETCH_TEMPLATE_DATA, {
-  //   variables: { id: templateId },
-  //   onCompleted: (r: any) => {
-  //     console.log(r);
-  //   },
-  // });
+  setReceivedData(templateId);
 
   return (
     <>
@@ -69,13 +56,12 @@ function ModalComp(props) {
               {showTemplate.map((data) => (
                 <Col
                   onClick={() => {
-                    // passTemplateId.current.TriggerForm({
-                    //   template_id: data.id,
-                    // });
-                    getTemplateId(data.id);
+                    setTemplateId(data.id);
                   }}
                   key={data.id}
-                  className="p-3 m-0 hover-effect"
+                  className={`p-3 m-0 hover-effect ${
+                    templateId === data.id ? "active_template" : ""
+                  }`}
                   md={{ span: 4, offset: 0 }}
                 >
                   <Image fluid src="assets/website_images/template.svg" />
@@ -107,11 +93,7 @@ function ModalComp(props) {
                 <Button
                   variant="success"
                   className="m-0"
-                  onClick={() =>
-                    passTemplateId.current.TriggerForm({
-                      template_id: templateId,
-                    })
-                  }
+                  onClick={() => setModalShow(false)}
                 >
                   Select Template
                 </Button>
@@ -125,8 +107,11 @@ function ModalComp(props) {
   );
 }
 
-export default function WebsiteModalComponent() {
-  const [modalShow, setModalShow] = useState(false);
+export default function WebsiteModalComponent({ setTemplateId }) {
+  const [modalShow, setModalShow] = useState<boolean>(false);
+  const [receivedData, setReceivedData] = useState<any>();
+
+  setTemplateId(receivedData);
 
   return (
     <>
@@ -138,7 +123,12 @@ export default function WebsiteModalComponent() {
         Show Templates
       </Button>
 
-      <ModalComp show={modalShow} onHide={() => setModalShow(false)} />
+      <ModalComp
+        show={modalShow}
+        onHide={() => setModalShow(false)}
+        setReceivedData={setReceivedData}
+        setModalShow={setModalShow}
+      />
     </>
   );
 }

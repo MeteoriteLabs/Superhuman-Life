@@ -1,9 +1,9 @@
 import React, {
   useContext,
-  useEffect,
   useImperativeHandle,
   useState,
   useRef,
+  useEffect,
 } from "react";
 import { useMutation, useQuery, useLazyQuery } from "@apollo/client";
 import ModalView from "../../components/modal";
@@ -13,8 +13,10 @@ import { Subject } from "rxjs";
 import {
   CREATE_WEBPAGE_DETAILS,
   FETCH_WEBSITE_SCHEMA_AND_FORM_JSON,
+  FETCH_WEBSITE_DATA,
   FETCH_DATA_FORM,
   FETCH_TEMPLATE_SCHEMA_FORM,
+  UPDATE_WEBSITE_DATA,
 } from "./queries";
 
 interface Operation {
@@ -24,55 +26,63 @@ interface Operation {
   template_id: string;
 }
 
-//export let tabsDetails: any = {};
+interface WebsiteData {
+  users_permissions_user: string;
+  form_data: {};
+  website_template: string;
+}
 
 function CreateWebpageDetails(props: any, ref: any) {
   const auth = useContext(AuthContext);
-  const [webPagedetails, setWebPageDetails] = useState<any>({
-    brand_name: "test",
-    email: "test@kevin.com",
-  });
+  const [webPagedetails, setWebPageDetails] = useState<any>({});
 
   const [schemaData, setSchemaData] = useState<any>(null);
   const [formJsonData, setFormJsonData] = useState<any>(null);
+  const [websiteTemplateId, setWebsiteTemplateId] = useState<string>("");
   const [operation, setOperation] = useState<Operation>({} as Operation);
+  const [websiteDataRecordId, setWebsiteDataRecordId] = useState<any>();
 
-  // useQuery(FETCH_WEBSITE_SCHEMA_AND_FORM_JSON, {
-  //   variables: { id: auth.userid },
-  //   onCompleted: (r: any) => {
-  //     if (r.websiteData[0] === undefined) {
-  //       return;
-  //     } else {
-  //       setSchemaData(r.websiteData[0].website_template.schema_json);
-  //       setFormJsonData(r.websiteData[0].website_template.form_json);
-  //     }
-  //   },
-  // });
+  const { templateId, setTemplateName, setWebsiteData } = props;
 
   const modalTrigger = new Subject();
+
+  console.log(props.templateId);
 
   useImperativeHandle(ref, () => ({
     TriggerForm: (msg: Operation) => {
       setOperation(msg);
-      console.log(typeof msg.type);
-      if (msg.type === "edit") {
-        modalTrigger.next(true);
-      }
+      // console.log(msg.template_id);
+      console.log(msg);
+      fetchTemplate();
       //render form if no message id
-      // if (msg && !msg.id) modalTrigger.next(true);
+
+      if (msg && !msg.id) modalTrigger.next(true);
     },
   }));
 
-  useQuery(FETCH_TEMPLATE_SCHEMA_FORM, {
-    variables: { id: operation.template_id }, // getting null
-    skip: !operation.template_id,
+  useQuery(FETCH_WEBSITE_DATA, {
+    variables: { id: auth.userid },
     onCompleted: (r: any) => {
       console.log(r);
-      // if (r.websiteTemplate === undefined) {
-      //   return;
-      // } else {
+      console.log("Fetching website data");
+      if (r.websiteData[0] != undefined) {
+        setSchemaData(r.websiteData[0].website_template.schema_json);
+        setFormJsonData(r.websiteData[0].website_template.form_json);
+        setWebsiteDataRecordId(r.websiteData[0].id);
+        setWebsiteTemplateId(r.websiteData[0].website_template.id);
+        //setWebsiteData(r.websiteData[0]);
+      } else {
+        return;
+      }
+    },
+  });
+
+  const [fetchTemplate] = useLazyQuery(FETCH_TEMPLATE_SCHEMA_FORM, {
+    variables: { id: templateId },
+    onCompleted: (r: any) => {
       setSchemaData(r.websiteTemplate.schema_json);
       setFormJsonData(r.websiteTemplate.form_json);
+      setTemplateName(r.websiteTemplate.template_name);
     },
   });
 
@@ -84,30 +94,36 @@ function CreateWebpageDetails(props: any, ref: any) {
   const [createDetails] = useMutation(CREATE_WEBPAGE_DETAILS, {
     onCompleted: (r: any) => {
       console.log(r);
+
       modalTrigger.next(false);
     },
   });
 
-  // const [editDetails] = useMutation(EDIT_WEBPAGE_DETAILS, {
-  //   variables: { id: operation.id },
-  //   onCompleted: (r: any) => {
-  //     console.log(r);
-  //     modalTrigger.next(false);
-  //   },
-  // });
+  const [updateDetails] = useMutation(UPDATE_WEBSITE_DATA, {
+    onCompleted: (r: any) => {
+      debugger;
+      console.log(r);
+
+      modalTrigger.next(false);
+    },
+  });
 
   function FillDetails(data: any) {
-    let details: any = {};
-    let msg = data.websiteData[0].form_data;
-    details.brand_name = msg.brand_name;
-    details.email = msg.email;
-    details.about_text = msg.about_text;
-    details.action_button_text = msg.action_button_text;
-    details.phone = msg.phone;
-    details.users_permissions_user = data.websiteData[0].id;
+    //console.log(data.websiteData[0].form_data.data.address);
+    if (data.websiteData.length != 0) {
+      // let details: any = {};
+      let msg = { ...data.websiteData[0].form_data.data };
+      msg.website_template = templateId;
+      // details.brand_name = msg.brand_name;
+      // details.email = msg.email;
+      // details.about_text = msg.about_text;
+      // details.action_button_text = msg.action_button_text;
+      // details.phone = msg.phone;
+      // details.users_permissions_user = data.websiteData[0].id;
+      setWebPageDetails(msg);
+    }
 
     // console.log(details);
-    setWebPageDetails(details);
 
     //if message exists - show form only for edit and view
     if (["edit", "view"].indexOf(operation.type) > -1) modalTrigger.next(true);
@@ -124,14 +140,29 @@ function CreateWebpageDetails(props: any, ref: any) {
     });
   }
 
-  function CreateWebpage(frm: any) {
+  function CreateWebpage(data: any) {
+    //console.log(frm);
+    debugger;
     createDetails({
-      variables: { frm: { data: frm } },
+      variables: {
+        user: data.users_permissions_user,
+        template_id: data.website_template,
+        frm: { data: data.form_data },
+      },
     });
   }
 
-  function EditWebpage(frm: any) {
+  function EditWebpage(data: any) {
     console.log("edit message");
+    debugger;
+    updateDetails({
+      variables: {
+        record_id: websiteDataRecordId,
+        user: data.users_permissions_user,
+        template_id: websiteTemplateId,
+        frm: { data: data.form_data },
+      },
+    });
 
     //editDetails({ variables: frm });
   }
@@ -148,17 +179,23 @@ function CreateWebpageDetails(props: any, ref: any) {
   }
 
   function OnSubmit(frm: any) {
-    console.log(frm);
     //bind user id
+
+    const data: WebsiteData = {
+      users_permissions_user: auth.userid,
+      form_data: frm,
+      website_template: templateId,
+    };
 
     if (frm) frm.users_permissions_user = auth.userid;
 
     switch (operation.type) {
       case "create":
-        CreateWebpage(frm);
+        CreateWebpage(data);
+
         break;
       case "edit":
-        EditWebpage(frm);
+        EditWebpage(data);
         break;
       case "view":
         ViewWebpage(frm);
@@ -175,7 +212,7 @@ function CreateWebpageDetails(props: any, ref: any) {
   //   name = "View";
   // }
 
-  //FetchData();
+  FetchData();
 
   return (
     <>

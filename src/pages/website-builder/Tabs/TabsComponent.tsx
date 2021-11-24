@@ -1,4 +1,4 @@
-import { useState, useRef, useContext } from "react";
+import { useState, useRef, useContext, useEffect } from "react";
 import {
   Tabs,
   Tab,
@@ -13,7 +13,7 @@ import {
 } from "react-bootstrap";
 import "./Tabs.css";
 import SetUpDomain from "../Domain/SetUpDomain";
-import { useQuery } from "@apollo/client";
+import { useQuery, useLazyQuery } from "@apollo/client";
 import WebsiteModalComponent from "../templateModal/TemplateModal";
 import DomainHelpModalComponent from "../Domain";
 import { templateData } from "./TemplateData";
@@ -30,25 +30,24 @@ export default function TabsComponent() {
   const createWebpageDetailsComponent = useRef<any>(null);
 
   const [websiteData, setWebsiteData] = useState<any>({});
-  const [btnStatus, setBtnStatus] = useState<boolean>(false);
+  const [templateName, setTemplateName] = useState<string>("");
   const [formSwitch, setFormSwitch] = useState<boolean>(true);
+  const [templateId, setTemplateId] = useState<any>();
 
   useQuery(FETCH_WEBSITE_DATA, {
     variables: { id: auth.userid },
     onCompleted: (r: any) => {
-      setWebsiteData(r.websiteData[0]);
-    },
-  });
-
-  useQuery(FETCH_WEBSITE_SCHEMA_AND_FORM_JSON, {
-    variables: { id: auth.userid },
-    onCompleted: (r: any) => {
-      if (r.websiteData[0] === undefined) {
-        setBtnStatus(true);
-        setFormSwitch(false);
+      console.log(r);
+      if (r.websiteData.length != 0) {
+        setWebsiteData(r.websiteData[0]);
+        setTemplateName(r.websiteData[0].website_template.template_name);
+        setTemplateId(r.websiteData[0].website_template.id);
+      } else {
+        setWebsiteData(null);
       }
     },
   });
+  console.log(templateId);
 
   return (
     <>
@@ -194,7 +193,7 @@ export default function TabsComponent() {
                       xs={{ span: 7, offset: 0 }}
                       className="d-flex justify-content-end text-light p-0"
                     >
-                      <WebsiteModalComponent />
+                      <WebsiteModalComponent setTemplateId={setTemplateId} />
                     </Col>
                   </Row>
                 </Card.Header>
@@ -207,13 +206,15 @@ export default function TabsComponent() {
                         <>
                           <Image fluid src="assets/website_images/black.svg" />
                           <div className="template-btn">
-                            <WebsiteModalComponent />
+                            <WebsiteModalComponent
+                              setTemplateId={setTemplateId}
+                            />
                           </div>
                         </>
                       )}
                     </Col>
                     <Col className="d-flex justify-content-center mt-3">
-                      {websiteData != null ? <p>Template Name</p> : ""}
+                      {websiteData != null ? <p>{templateName}</p> : ""}
                     </Col>
                   </Row>
                 </Card.Body>
@@ -245,7 +246,9 @@ export default function TabsComponent() {
                           onClick={() => {
                             createWebpageDetailsComponent.current.TriggerForm({
                               id: null,
-                              type: "edit",
+                              type: `${
+                                websiteData === null ? "create" : "edit"
+                              }`,
                             });
                           }}
                         >
@@ -259,28 +262,25 @@ export default function TabsComponent() {
                   {websiteData != null ? (
                     <>
                       <Row>
-                        <Col md={{ span: 4, offset: 3 }}>
+                        <Col
+                          md={{ span: 9, offset: 2 }}
+                          className="d-flex mt-3 mb-5"
+                        >
                           {templateData.map((data) => (
-                            <div key={data.id} className="d-flex p-2 gap-4">
-                              <Image fluid src={data.image} />
-                              <h6 className="d-flex align-items-center px-3">
-                                {data.label}
-                              </h6>
-                            </div>
-                          ))}
-                        </Col>
-                        <Col md={{ span: 4, offset: 0 }}>
-                          {templateData.map((data) => (
-                            <div key={data.id} className="d-flex p-2 gap-4">
-                              <Image fluid src={data.image} />
-                              <h6 className="d-flex align-items-center px-3">
-                                {data.label}
-                              </h6>
-                            </div>
+                            <Col>
+                              <div key={data.id} className="d-flex p-2 gap-4">
+                                <Image fluid src={data.image} />
+                                <h6 className="d-flex align-items-center px-3">
+                                  {data.label}
+                                </h6>
+                              </div>
+                            </Col>
                           ))}
                         </Col>
                       </Row>
-
+                      <br />
+                      <br />
+                      <br />
                       <Row>
                         <Col
                           md={{ span: 3, offset: 9 }}
@@ -312,6 +312,9 @@ export default function TabsComponent() {
         </Tab>
       </Tabs>
       <CreateWebpageDetails
+        templateId={templateId}
+        setTemplateName={setTemplateName}
+        setWebsiteData={setWebsiteData}
         ref={createWebpageDetailsComponent}
       ></CreateWebpageDetails>
     </>

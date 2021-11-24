@@ -76,7 +76,7 @@ export default function ModalView({
                   schema={formSchema[step.toString()]}
                   ref={formRef}
                   onSubmit={({ formData }: any) => submitHandler(formData)}
-                  formData={formValues}
+                  formData={formData}
                   widgets={widgets}
                 >
                   <div></div>

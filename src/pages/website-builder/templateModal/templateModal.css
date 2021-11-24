@@ -8,4 +8,11 @@
   background-color: #eb6154;
   opacity: 0.4;
   border-radius: 25px;
+  cursor: pointer;
+}
+
+.active_template {
+  background-color: #eb6154;
+  opacity: 0.4;
+  border-radius: 25px;
 }
