@@ -6,14 +6,17 @@ import { useQuery } from "@apollo/client";
 import Rating from "./Rating";
 
 function Widget(props: any) {
+     console.log(JSON.parse(props.value));
+     let Data = JSON.parse(props.value);
      const [editor, setEditor] = useState<any>(false);
      const [rating, setRating] = useState<any>(false);
-     const [value, setValue] = useState<any>();
-     const [value2, setValue2] = useState<any>();
-     const [render, setRender] = useState<any>();
-     const [icon, setIcon] = useState<any>();
      const [rate1, setRate1] = useState<any>();
      const [img, setImg] = useState<any>();
+     const [value, setValue] = useState<any>(props.value ? Data.rpm.rating : "");
+     const [value2, setValue2] = useState<any>(props.value ? Data.mood.rating : "");
+     const [render, setRender] = useState<any>();
+     const [icon, setIcon] = useState<any>();
+
      const [data, setData] = useState<any>();
      const [id1, setId1] = useState<any>();
      const [id2, setId2] = useState<any>();
@@ -64,7 +67,13 @@ function Widget(props: any) {
                </div>
                {editor ? (
                     <div className="mt-2">
-                         <Editor onChange={props.onChange} value1={value} value2={value2} sendValue={setData} />
+                         <Editor
+                              onChange={props.onChange}
+                              value1={value}
+                              value2={value2}
+                              sendValue={setData}
+                              value={props.value ? Data.note : ""}
+                         />
                     </div>
                ) : (
                     " "

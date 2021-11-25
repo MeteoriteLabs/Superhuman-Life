@@ -217,3 +217,100 @@ export const GET_RATING_NOTES_BYID = gql`
           }
      }
 `;
+
+export const GET_NOTES_RATING = gql`
+     query ratingsforNotes($id: String, $clientid: ID) {
+          ratings(where: { resource_id_contains: $id, target_user: { id: $clientid } }) {
+               id
+               type
+               resource_id
+               rating
+               max_rating
+          }
+          feedbackNotes(where: { resource_id_contains: $id, target_user: { id: $clientid } }) {
+               id
+               updatedAt
+               type
+               users_permissions_user {
+                    id
+                    username
+                    designation
+               }
+               target_user {
+                    id
+               }
+               note
+               resource_id
+               feedback_comments {
+                    id
+                    comment
+                    users_permissions_user {
+                         id
+                         username
+                    }
+               }
+          }
+     }
+`;
+
+export const UPDATE_NOTES = gql`
+     mutation updateNotes(
+          $type: String
+          $resource_id: String
+          $users_permissions_user: ID
+          $note: String
+          $clientid: ID
+          $messageid: ID!
+     ) {
+          updateFeedbackNote(
+               input: {
+                    data: {
+                         type: $type
+                         resource_id: $resource_id
+                         note: $note
+                         target_user: $clientid
+                         users_permissions_user: $users_permissions_user
+                    }
+                    where: { id: $messageid }
+               }
+          ) {
+               feedbackNote {
+                    id
+               }
+          }
+     }
+`;
+
+export const UPDATE_RATING = gql`
+     mutation updateNotes(
+          $type: String
+          $resource_id: String
+          $rating: Int
+          $max_rating: Int
+          $rating_scale_id: ID
+          $resource_type: String
+          $user_permissions_user: ID
+          $clientid: ID
+          $messageid: ID!
+     ) {
+          updateRating(
+               input: {
+                    data: {
+                         type: $type
+                         resource_id: $resource_id
+                         users_permissions_user: $user_permissions_user
+                         rating: $rating
+                         max_rating: $max_rating
+                         resource_type: $resource_type
+                         rating_scale: $rating_scale_id
+                         target_user: $clientid
+                    }
+                    where: { id: $messageid }
+               }
+          ) {
+               rating {
+                    id
+               }
+          }
+     }
+`;

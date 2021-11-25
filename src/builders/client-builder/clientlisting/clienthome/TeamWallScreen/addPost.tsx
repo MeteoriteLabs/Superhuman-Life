@@ -6,9 +6,11 @@ import {
      ADD_NOTE,
      DELETE_COMMENT,
      DELETE_NOTE,
-     GET_NOTES_BYID,
      DELETE_RATING,
      GET_RATING_NOTES_BYID,
+     GET_NOTES_RATING,
+     UPDATE_RATING,
+     UPDATE_NOTES,
 } from "./queries";
 import AuthContext from "../../../../../context/auth-context";
 import { Subject } from "rxjs";
@@ -20,6 +22,7 @@ interface Operation {
      type: "create" | "deleteNote" | "deleteComment" | "editNote";
      comments: any;
      resourceid: any;
+     resource_id: any;
 }
 
 function CreatePosts(props: any, ref: any) {
@@ -29,7 +32,8 @@ function CreatePosts(props: any, ref: any) {
      const Schema: { [name: string]: any } = require("./post.json");
      //const uiSchema: {} = require("./schema.tsx");
      const [messageDetails, setMessageDetails] = useState<any>({});
-
+     //const [rating, setRating] = useState<any>(null);
+     //const [details, setDetails] = useState<any>(null);
      const [deletion, setDeletion] = useState<any>(null);
      // const [resourceid, setresourceid] = useState<any>(null);
 
@@ -55,6 +59,16 @@ function CreatePosts(props: any, ref: any) {
                modalTrigger.next(false);
           },
      });
+     const [updaterating] = useMutation(UPDATE_RATING, {
+          onCompleted: (r: any) => {
+               modalTrigger.next(false);
+          },
+     });
+     const [updatenote] = useMutation(UPDATE_NOTES, {
+          onCompleted: (r: any) => {
+               modalTrigger.next(false);
+          },
+     });
      const [deleteNote] = useMutation(DELETE_NOTE, {});
      const [deleteComment] = useMutation(DELETE_COMMENT, {});
      const [deleteRating] = useMutation(DELETE_RATING, {});
@@ -70,28 +84,40 @@ function CreatePosts(props: any, ref: any) {
                }
           },
      }));
-     useQuery(GET_NOTES_BYID, {
-          variables: { id: operation.id },
-          skip: !operation.id || operation.type === "deleteNote" || operation.type === "deleteComment",
+
+     useQuery(GET_NOTES_RATING, {
+          variables: { id: operation.resource_id, clientid: last },
+          skip: !operation.resource_id,
           onCompleted: (e: any) => {
                FillDetails(e);
           },
      });
 
+     // useQuery(GET_NOTES_BYID, {
+     //      variables: { id: operation.id },
+     //      skip: !operation.id || operation.type === "deleteNote" || operation.type === "deleteComment",
+     //      onCompleted: (e: any) => {
+     //           FillDetails(e);
+     //           //setDetails(e)
+     //           //SetDetails(e);
+     //      },
+     // });
+
      function FillDetails(data: any) {
+          console.log(data);
           let details: any = {};
           let msg = data.feedbackNotes[0];
-          //console.log(msg.resource_id);
-          // setresourceid(msg.resource_id);
+          let rate1 = data.ratings[0];
+          let rate2 = data.ratings[1];
 
           let o = { ...operation };
           details.name = o.type.toLowerCase();
-          //console.log(o.type);
-          console.log(msg);
 
           details.packagesearch = msg.resource_id;
-
-          //details.messageid = msg.id;
+          details.widget = JSON.stringify({ rpm: rate1, mood: rate2, note: msg.note });
+          details.notesmessageid = msg.id;
+          details.rpmmessageid = rate1.id;
+          details.moodmessageid = rate2.id;
 
           console.log(details);
 
@@ -198,6 +224,52 @@ function CreatePosts(props: any, ref: any) {
 
      function EditNote(frm: any) {
           console.log(frm);
+          let searchid: any = frm.packagesearch.split(",");
+          let widget: any = JSON.parse(frm.widget);
+          console.log(searchid[0]);
+          console.log(widget.rpm);
+          if (widget.rpm > 0) {
+               updaterating({
+                    variables: {
+                         type: "rpm",
+                         resource_type: "workout",
+                         resource_id: searchid[0],
+                         rating: widget.rpm,
+                         clientid: last,
+                         max_rating: widget.rpm_max,
+                         rating_scale_id: widget.rpm_id,
+                         user_permissions_user: auth.userid,
+                         messageid: frm.rpmmessageid,
+                    },
+               });
+          }
+          if (widget.mood > 0) {
+               updaterating({
+                    variables: {
+                         type: "mood",
+                         resource_type: "workout",
+                         resource_id: searchid[0],
+                         rating: widget.mood,
+                         clientid: last,
+                         max_rating: widget.mood_max,
+                         rating_scale_id: widget.mood_id,
+                         user_permissions_user: auth.userid,
+                         messageid: frm.moodmessageid,
+                    },
+               });
+          }
+          if (widget.note) {
+               updatenote({
+                    variables: {
+                         type: "workout",
+                         resource_id: searchid[0],
+                         user_permissions_user: auth.userid,
+                         note: widget.note,
+                         clientid: last,
+                         messageid: frm.notesmessageid,
+                    },
+               });
+          }
      }
 
      // function OnSubmit(frm: any) {

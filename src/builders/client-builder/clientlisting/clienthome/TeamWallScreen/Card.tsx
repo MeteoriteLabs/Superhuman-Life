@@ -21,6 +21,7 @@ function CardComp(props: any) {
           //handleRedirect(row.original.id);
           createEditMessageComponent.current.TriggerForm({
                id: props.id,
+               resource_id: props.resourceid,
                type: "editNote",
           });
      };
