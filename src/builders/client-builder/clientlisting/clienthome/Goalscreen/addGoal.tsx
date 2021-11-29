@@ -25,7 +25,6 @@ function CreateGoal(props: any, ref: any) {
           },
      });
      const [editMessage]: any = useMutation(UPDATE_GOALS, {
-          variables: { messageid: operation.id },
           onCompleted: (r: any) => {
                modalTrigger.next(false);
           },
@@ -51,11 +50,15 @@ function CreateGoal(props: any, ref: any) {
           //           return val.name;
           //      })
           // );
+          let o = { ...operation };
+          details.name = o.type.toLowerCase();
           details.packagesearch = msg[0].goals[0];
           details.startdate = msg[0].start;
           details.enddate = msg[0].end;
+          details.messageid = msg[0].id;
 
           setMessageDetails(details);
+          setOperation({} as Operation);
 
           if (["edit"].indexOf(operation.type) > -1) modalTrigger.next(true);
           else OnSubmit(null);
@@ -92,24 +95,40 @@ function CreateGoal(props: any, ref: any) {
                     start: frm.startdate,
                     end: frm.enddate,
                     users_permissions_user: last,
+                    messageid: frm.messageid,
                },
           });
      }
 
      function OnSubmit(frm: any) {
-          switch (operation.type) {
-               case "create":
-                    CreateGoal(frm);
-                    break;
-               case "edit":
+          console.log(frm);
+          console.log(frm.name);
+          if (frm) frm.user_permissions_user = auth.userid;
+          if (frm.name === "edit" || frm.name === "view") {
+               if (frm.name === "edit") {
                     EditMessage(frm);
-                    break;
+               }
+          } else {
+               CreateGoal(frm);
           }
      }
      //FetchData();
      return (
           <>
-               {operation.type === "create" && (
+               <ModalView
+                    name={operation.type}
+                    isStepper={false}
+                    formUISchema={schema}
+                    formSchema={GoalSchema}
+                    //showing={operation.modal_status}
+                    formSubmit={(frm: any) => {
+                         OnSubmit(frm);
+                    }}
+                    formData={messageDetails}
+                    widgets={widgets}
+                    modalTrigger={modalTrigger}
+               />
+               {/* {operation.type === "create" && (
                     <ModalView
                          name="New Goal"
                          isStepper={false}
@@ -137,7 +156,7 @@ function CreateGoal(props: any, ref: any) {
                          widgets={widgets}
                          modalTrigger={modalTrigger}
                     />
-               )}
+               )} */}
           </>
      );
 }
