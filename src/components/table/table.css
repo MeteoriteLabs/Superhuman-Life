@@ -1,48 +1,9 @@
-
-
-.rowCard:hover {
-  background-color: lightgray;
+.rowCard {
+     text-align: left;
+}
+/* .rowCard:hover {
+background-color: lightgray;
 } */
-
-
-/* .bodyTd{
-  padding: 1.5rem 1rem !important;
-  text-align: center !important;
-  vertical-align: middle !important;
+.headerCard {
+     text-align: left;
 }
-
-
-
-
-
-thead:first-child th{
-  border-top: none !important;
-
-}
-
-
-
-thead:first-child th:first-child,
-thead:first-child th:nth-child(2),
-thead:first-child th:last-child
-{
-  border: none;
-} */
-
-
-table {
-  border-collapse: separate;
-  /* border-spacing: 0 1.5em; */
-}
-
-/* .rowCard {
-  border-radius: 15px;
-  box-shadow: 3px 4px 8px 1px rgba(0,0,0,0.21);
-}
-
-.bodyTd{
-  padding: 2rem 1rem !important;
-  text-align: center !important;
-  vertical-align: middle !important;
-}*/
-

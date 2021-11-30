@@ -1,50 +1,38 @@
 {
-    "1": {
-        "title": "Information Bank",
-        "type": "object",
-        "required": [
-            "name",
-            "typo",
-            "description"
-        ],
-        "properties": {
-            "name": {
-                "type": "string",
-                "title": "Message Title"
-            },
-            "typo": {
-                "type": "string",
-                "title": "Type",
-                "enum": [],
-                "enumNames": []
-            },
-            "tags": {
-                "type": "string",
-                "title": "Tags"
-            },
-            "description": {
-                "type": "string",
-                "title": "Description"
-            },
-            "minidescription": {
-                "type": "string",
-                "title": "Mini Description"
-            },
-            "Url": {
-                "type": "string",
-                "title": "Url (Picture or Video)"
-            },
-            "Or": {
-                "title": "OR",
-                "description": "OR",
-                "type": "null"
-              },
-            "file": {
-                "type": "string",
-                "format": "data-url",
-                "title": "Upload (Picture or Video)"
-                
-            }
-        }
-    }
+     "1": {
+          "title": "Information Bank",
+          "type": "object",
+          "required": ["title", "infomessagetype", "description"],
+          "properties": {
+               "title": {
+                    "type": "string",
+                    "title": "Message Title"
+               },
+               "infomessagetype": {
+                    "type": "string",
+                    "title": "Type",
+                    "enum": [],
+                    "enumNames": []
+               },
+               "tags": {
+                    "type": "string",
+                    "title": "Tags"
+               },
+               "description": {
+                    "type": "string",
+                    "title": "Description"
+               },
+               "minidesc": {
+                    "type": "string",
+                    "title": "Mini Description"
+               },
+               "mediaurl": {
+                    "type": "string",
+                    "title": "Url (Picture or Video)"
+               },
+               "upload": {
+                    "type": "string"
+               }
+          }
+     }
 }

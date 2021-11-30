@@ -1,0 +1,17 @@
+{
+     "1": {
+          "type": "object",
+          "required": [],
+          "properties": {
+               "clientname": {
+                    "type": "string"
+               },
+               "packagesearch": {
+                    "type": "string"
+               },
+               "widget": {
+                    "type": "string"
+               }
+          }
+     }
+}

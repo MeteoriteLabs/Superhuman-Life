@@ -1,0 +1,13 @@
+.rowCard {
+     text-align: left;
+}
+/* .rowCard:hover {
+ background-color: lightgray;
+} */
+.headerCard {
+     text-align: left;
+}
+
+.highlight {
+     border: 2px solid red !important;
+}

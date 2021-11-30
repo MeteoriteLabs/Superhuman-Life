@@ -1,0 +1,11 @@
+{
+     "1": {
+          "type": "object",
+          "required": ["packagesearch"],
+          "properties": {
+               "packagesearch": {
+                    "type": "string"
+               }
+          }
+     }
+}
