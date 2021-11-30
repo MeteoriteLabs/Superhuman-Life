@@ -18,12 +18,10 @@ interface Operation {
 function CreateEditMessage(props: any, ref: any) {
      const auth = useContext(AuthContext);
      const messageSchema: { [name: string]: any } = require("./leads.json");
-     //const uiSchema: {} = require("./schema.tsx");
      const [messageDetails, setMessageDetails] = useState<any>({});
      const [operation, setOperation] = useState<Operation>({} as Operation);
 
      let o = { ...operation };
-     console.log(o.type);
 
      const [createLeads] = useMutation(ADD_LEADS, {
           onCompleted: (r: any) => {
@@ -53,13 +51,7 @@ function CreateEditMessage(props: any, ref: any) {
                if (msg && !msg.id) modalTrigger.next(true);
           },
      }));
-     // useQuery(GET_LEADS_ID, {
-     //      variables: { id: operation.id },
-     //      skip: !operation.id,
-     //      onCompleted: (e: any) => {
-     //           FillDetails(e);
-     //      },
-     // });
+
      useQuery(GET_LEADS_ID, {
           variables: { id: operation.id },
           skip: !operation.id || operation.type === "delete",
@@ -91,13 +83,11 @@ function CreateEditMessage(props: any, ref: any) {
      }
 
      function CreateMessage(frm: any) {
-          console.log(frm);
           createLeads({ variables: { id: auth.userid, details: frm } });
           // createMessage({ variables: frm });
      }
 
      function EditMessage(frm: any) {
-          console.log(frm);
           editMessage({ variables: { id: auth.userid, details: frm, messageid: frm.messageid } });
      }
 
@@ -110,23 +100,15 @@ function CreateEditMessage(props: any, ref: any) {
      // }
 
      function DeleteMessage(id: any) {
-          console.log(id);
           deleteLeads({ variables: { id: id } });
      }
 
      function OnSubmit(frm: any) {
-          console.log(frm);
-          console.log(frm.name);
           if (frm) frm.user_permissions_user = auth.userid;
           if (frm.name === "edit" || frm.name === "view") {
                if (frm.name === "edit") {
                     EditMessage(frm);
                }
-               // if (frm.name === "view") {
-               //      ViewMessage(frm);
-               //      // updatateseen({ variables: { messageid: frm.messageid, seen: false } });
-               //      // modalTrigger.next(false);
-               // }
           } else {
                CreateMessage(frm);
           }

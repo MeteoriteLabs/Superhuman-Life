@@ -30,25 +30,13 @@ function CreatePosts(props: any, ref: any) {
      const auth = useContext(AuthContext);
 
      const Schema: { [name: string]: any } = require("./post.json");
-     //const uiSchema: {} = require("./schema.tsx");
+
      const [messageDetails, setMessageDetails] = useState<any>({});
-     //const [rating, setRating] = useState<any>(null);
-     //const [details, setDetails] = useState<any>(null);
+
      const [deletion, setDeletion] = useState<any>(null);
-     // const [resourceid, setresourceid] = useState<any>(null);
 
      const [operation, setOperation] = useState<Operation>({} as Operation);
 
-     // const GET_GOALLIST = gql`
-     //      query TagListQuery($id: ID) {
-     //           workouts(sort: "updatedAt", where: { id: $id }) {
-     //                id
-     //                workouttitle
-     //           }
-     //      }
-     // `;
-
-     //console.log(operation.id);
      const [createRating] = useMutation(ADD_RATING, {
           onCompleted: (r: any) => {
                modalTrigger.next(false);
@@ -93,18 +81,7 @@ function CreatePosts(props: any, ref: any) {
           },
      });
 
-     // useQuery(GET_NOTES_BYID, {
-     //      variables: { id: operation.id },
-     //      skip: !operation.id || operation.type === "deleteNote" || operation.type === "deleteComment",
-     //      onCompleted: (e: any) => {
-     //           FillDetails(e);
-     //           //setDetails(e)
-     //           //SetDetails(e);
-     //      },
-     // });
-
      function FillDetails(data: any) {
-          console.log(data);
           let details: any = {};
           let msg = data.feedbackNotes[0];
           let rate1 = data.ratings[0];
@@ -119,8 +96,6 @@ function CreatePosts(props: any, ref: any) {
           details.rpmmessageid = rate1.id;
           details.moodmessageid = rate2.id;
 
-          console.log(details);
-
           setMessageDetails(details);
           setOperation({} as Operation);
 
@@ -129,11 +104,9 @@ function CreatePosts(props: any, ref: any) {
      }
 
      function CreatePost(frm: any) {
-          console.log(frm);
           let searchid: any = frm.packagesearch.split(",");
           let widget: any = JSON.parse(frm.widget);
-          console.log(searchid[0]);
-          console.log(widget.rpm);
+
           if (widget.rpm > 0) {
                createRating({
                     variables: {
@@ -175,13 +148,6 @@ function CreatePosts(props: any, ref: any) {
           }
      }
 
-     // useQuery(GET_RATING_NOTES_BYID, {
-     //      variables: { id: operation.id },
-     //      onCompleted: (e: any) => {
-     //           FillDetails(e);
-     //      },
-     // });
-     // console.log(operation.resourceid);
      useQuery(GET_RATING_NOTES_BYID, {
           variables: { id: operation.resourceid, clientid: last },
           skip:
@@ -195,15 +161,11 @@ function CreatePosts(props: any, ref: any) {
      });
 
      function DeleteRatings(e: any) {
-          console.log(e);
-
           setDeletion(e);
-          //console.log(deletion);
      }
 
      function DeleteNotesRatingPermanent() {
           for (let i = 0; i < deletion.ratings.length; i++) {
-               console.log(deletion.ratings[i].id);
                deleteRating({ variables: { id: deletion.ratings[i].id } });
           }
      }
@@ -223,11 +185,9 @@ function CreatePosts(props: any, ref: any) {
      }
 
      function EditNote(frm: any) {
-          console.log(frm);
           let searchid: any = frm.packagesearch.split(",");
           let widget: any = JSON.parse(frm.widget);
-          console.log(searchid[0]);
-          console.log(widget.rpm);
+
           if (widget.rpm > 0) {
                updaterating({
                     variables: {
@@ -272,23 +232,12 @@ function CreatePosts(props: any, ref: any) {
           }
      }
 
-     // function OnSubmit(frm: any) {
-     //      switch (operation.type) {
-     //           case "create":
-     //                CreatePost(frm);
-     //                break;
-     //      }
-     // }
      function OnSubmit(frm: any) {
-          console.log(frm);
           if (frm) frm.user_permissions_user = auth.userid;
           if (frm.name === "editnote") {
                if (frm.name === "editnote") {
                     EditNote(frm);
                }
-               // if (frm.name === "view") {
-               //      modalTrigger.next(false);
-               // }
           } else {
                CreatePost(frm);
           }

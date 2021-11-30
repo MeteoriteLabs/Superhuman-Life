@@ -17,7 +17,6 @@ interface Operation {
 function CreateEditMessage(props: any, ref: any) {
      const auth = useContext(AuthContext);
      const messageSchema: { [name: string]: any } = require("./informationbank.json");
-     //const uiSchema: {} = require("./schema.json");
      const [messageDetails, setMessageDetails] = useState<any>({});
      const [operation, setOperation] = useState<Operation>({} as Operation);
 
@@ -61,7 +60,6 @@ function CreateEditMessage(props: any, ref: any) {
      function FillDetails(data: any) {
           let details: any = {};
           let msg: any = data.informationbankmessages[0];
-          console.log(msg);
 
           let o = { ...operation };
           details.name = o.type.toLowerCase();
@@ -73,8 +71,6 @@ function CreateEditMessage(props: any, ref: any) {
           details.upload = msg.uploadID;
           details.tags = msg.tags;
           details.messageid = msg.id;
-
-          console.log(details);
 
           setMessageDetails(details);
           setOperation({} as Operation);
@@ -100,15 +96,6 @@ function CreateEditMessage(props: any, ref: any) {
           editMessage({ variables: frm });
      }
 
-     // function ViewMessage(frm: any) {
-     //      useMutation(UPDATE_MESSAGE, {
-     //           variables: frm,
-     //           onCompleted: (d: any) => {
-     //                console.log(d);
-     //           },
-     //      });
-     // }
-
      function ToggleMessageStatus(id: string, current_status: boolean) {
           updateStatus({ variables: { status: !current_status, messageid: id } });
      }
@@ -117,25 +104,7 @@ function CreateEditMessage(props: any, ref: any) {
           deleteMessage({ variables: { id: id } });
      }
 
-     // function OnSubmit(frm: any) {
-     //      if (frm) frm.user_permissions_user = auth.userid;
-
-     //      switch (operation.type) {
-     //           case "create":
-     //                CreateMessage(frm);
-     //                break;
-     //           case "edit":
-     //                EditMessage(frm);
-     //                break;
-     //           case "view":
-     //                ViewMessage(frm);
-     //                break;
-     //      }
-     // }
-
      function OnSubmit(frm: any) {
-          console.log(frm);
-          console.log(frm.name);
           if (frm) frm.user_permissions_user = auth.userid;
           if (frm.name === "edit" || frm.name === "view") {
                if (frm.name === "edit") {
@@ -148,15 +117,6 @@ function CreateEditMessage(props: any, ref: any) {
                CreateMessage(frm);
           }
      }
-
-     // let name = "";
-     // if (operation.type === "create") {
-     //      name = "Create New";
-     // } else if (operation.type === "edit") {
-     //      name = "Edit";
-     // } else if (operation.type === "view") {
-     //      name = "View";
-     // }
 
      return (
           <>

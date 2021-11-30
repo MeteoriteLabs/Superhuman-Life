@@ -24,7 +24,7 @@ export default function ModalView({
      const [show, setShow] = useState<boolean>(false);
      //const [formValues, setFormValues] = useState<any>(formData);
      const stepper: string[] = stepperValues;
-     console.log(formData.name);
+     //console.log(formData.name);
      modalTrigger.subscribe((res: boolean) => {
           setShow(res);
      });

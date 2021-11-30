@@ -15,10 +15,8 @@ function CreateGoal(props: any, ref: any) {
      const last = window.location.pathname.split("/").pop();
      const auth = useContext(AuthContext);
      const GoalSchema: { [name: string]: any } = require("./forms/goal.json");
-     //const uiSchema: {} = require("./schema.tsx");
      const [messageDetails, setMessageDetails] = useState<any>({});
      const [operation, setOperation] = useState<Operation>({} as Operation);
-     //console.log(operation.id);
      const [createGoal]: any = useMutation(ADD_GOAL, {
           onCompleted: (r: any) => {
                modalTrigger.next(false);
@@ -45,11 +43,6 @@ function CreateGoal(props: any, ref: any) {
      function FillDetails(data: any) {
           let details: any = {};
           let msg = data.userGoals;
-          // console.log(
-          //      msg[0].goals.map((val: any) => {
-          //           return val.name;
-          //      })
-          // );
           let o = { ...operation };
           details.name = o.type.toLowerCase();
           details.packagesearch = msg[0].goals[0];
@@ -73,8 +66,6 @@ function CreateGoal(props: any, ref: any) {
      });
 
      function CreateGoal(frm: any) {
-          console.log(frm);
-
           createGoal({
                variables: {
                     goals: frm.packagesearch.split(","),
@@ -86,8 +77,6 @@ function CreateGoal(props: any, ref: any) {
           });
      }
      function EditMessage(frm: any) {
-          console.log(frm);
-          //editMessage({ variables: frm });
           editMessage({
                variables: {
                     goals: frm.packagesearch.split(","),
@@ -101,8 +90,6 @@ function CreateGoal(props: any, ref: any) {
      }
 
      function OnSubmit(frm: any) {
-          console.log(frm);
-          console.log(frm.name);
           if (frm) frm.user_permissions_user = auth.userid;
           if (frm.name === "edit" || frm.name === "view") {
                if (frm.name === "edit") {
@@ -112,7 +99,6 @@ function CreateGoal(props: any, ref: any) {
                CreateGoal(frm);
           }
      }
-     //FetchData();
      return (
           <>
                <ModalView
@@ -120,7 +106,6 @@ function CreateGoal(props: any, ref: any) {
                     isStepper={false}
                     formUISchema={schema}
                     formSchema={GoalSchema}
-                    //showing={operation.modal_status}
                     formSubmit={(frm: any) => {
                          OnSubmit(frm);
                     }}
@@ -128,35 +113,6 @@ function CreateGoal(props: any, ref: any) {
                     widgets={widgets}
                     modalTrigger={modalTrigger}
                />
-               {/* {operation.type === "create" && (
-                    <ModalView
-                         name="New Goal"
-                         isStepper={false}
-                         formUISchema={schema}
-                         formSchema={GoalSchema}
-                         //showing={operation.modal_status}
-                         formSubmit={(frm: any) => {
-                              OnSubmit(frm);
-                         }}
-                         widgets={widgets}
-                         modalTrigger={modalTrigger}
-                    />
-               )}
-               {operation.type === "edit" && (
-                    <ModalView
-                         name="Edit"
-                         isStepper={false}
-                         formUISchema={schema}
-                         formSchema={GoalSchema}
-                         //showing={operation.modal_status}
-                         formSubmit={(frm: any) => {
-                              OnSubmit(frm);
-                         }}
-                         formData={messageDetails}
-                         widgets={widgets}
-                         modalTrigger={modalTrigger}
-                    />
-               )} */}
           </>
      );
 }
