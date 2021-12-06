@@ -31,7 +31,8 @@ export default function Fitness() {
             [...data.clientBookings].map(fitnessPackage => {
                 const renewDay: Date = new Date(fitnessPackage.effective_date);
                 renewDay.setDate(renewDay.getDate() + fitnessPackage.package_duration);
-
+                const mrpFilter = fitnessPackage.fitnesspackages[0].fitnesspackagepricing[0].packagepricing.filter(item =>item.duration === fitnessPackage.package_duration);
+               
                 return {
                     client: fitnessPackage.users_permissions_user.length > 0 ? fitnessPackage.users_permissions_user[0].username : "N/A",
                     clientPhoneNumber: fitnessPackage.users_permissions_user.length > 0 ? fitnessPackage.users_permissions_user[0].Phone : "N/A",
@@ -45,7 +46,7 @@ export default function Fitness() {
                     duration: fitnessPackage.package_duration,
                     effective: moment(fitnessPackage.effective_date).format('MMMM DD,YYYY'),
                     expiry: moment(renewDay).format('MMMM DD,YYYY'),
-                    mrp: 10,
+                    mrp: mrpFilter[0].mrp,
                     status: fitnessPackage.booking_status,
                     userInfo:fitnessPackage.fitnesspackages[0].users_permissions_user
                 }
