@@ -42,6 +42,26 @@ export const UPDATE_WEBSITE_DATA = gql`
 
 }
 `;
+export const UPDATE_WEBSITE_DATA_TO_EMPTY = gql`
+
+ mutation updateWebsiteDataRecord($user:ID!, $form_data:JSON, $record_id: ID!) {
+    updateWebsiteDatum(input: {
+        where: {id: $record_id},
+        data: {
+            users_permissions_user: $user,
+			form_data: $form_data
+			
+            }
+        
+    }) {
+        websiteDatum {
+            
+            form_data
+        }
+    }
+
+}
+`;
 
 export const FETCH_WEBSITE_DATA = gql`
     query fetchData($id: ID!) {
@@ -53,6 +73,7 @@ export const FETCH_WEBSITE_DATA = gql`
                schema_json
                form_json
                template_name
+               Stepper_Title
             }
         }
     }
@@ -110,6 +131,10 @@ export const FETCH_TEMPLATE_SCHEMA_FORM = gql`
             form_json
             schema_json
             template_name
+            Stepper_Title
+            website_data{
+                form_data
+            }
         }
     }
 `;

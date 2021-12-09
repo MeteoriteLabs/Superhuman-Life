@@ -1,17 +1,24 @@
-import { useState, createContext, useRef } from "react";
+import { useState, useContext, useRef } from "react";
 import "./templateModal.css";
-import { useQuery } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client";
 import { Container, Row, Col, Button, Modal, Image } from "react-bootstrap";
 import { PaginationBasic } from "./PaginationModal";
 import {
   FETCH_PUBLISHED_TEMPLATES,
   FETCH_TEMPLATE_SCHEMA_FORM,
+  FETCH_WEBSITE_DATA,
+  UPDATE_WEBSITE_DATA_TO_EMPTY,
 } from "../../webpage-details/queries";
 import CreateWebpageDetails from "../../webpage-details/createoredit-webpage";
+
+import AuthContext from "../../../context/auth-context";
 
 function ModalComp(props) {
   const [showTemplate, setShowTemplate] = useState<any>([]);
   const [templateId, setTemplateId] = useState<string>("");
+  const [websiteDataRecordId, setWebsiteDataRecordId] = useState<any>();
+  const auth = useContext(AuthContext);
+  // const [userId, setUserId] = useState<any>();
   const passTemplateId = useRef<any>(null);
 
   useQuery(FETCH_PUBLISHED_TEMPLATES, {
@@ -23,6 +30,33 @@ function ModalComp(props) {
   const { setReceivedData, setModalShow } = props;
 
   setReceivedData(templateId);
+  console.log(auth.userid);
+
+  useQuery(FETCH_WEBSITE_DATA, {
+    variables: { id: auth.userid },
+    onCompleted: (r: any) => {
+      console.log(r);
+      if (r.websiteData[0] != undefined) {
+        setWebsiteDataRecordId(r.websiteData[0].id);
+      } else {
+        return;
+      }
+    },
+  });
+
+  console.log(websiteDataRecordId);
+
+  const [updateDetails, { data }] = useMutation(UPDATE_WEBSITE_DATA_TO_EMPTY, {
+    variables: {
+      record_id: websiteDataRecordId,
+      user: auth.userid,
+      form_data: {},
+    },
+    onCompleted: (r: any) => {
+      console.log(r);
+    },
+  });
+  console.log(data);
 
   return (
     <>
@@ -93,7 +127,10 @@ function ModalComp(props) {
                 <Button
                   variant="success"
                   className="m-0"
-                  onClick={() => setModalShow(false)}
+                  onClick={() => {
+                    setModalShow(false);
+                    updateDetails();
+                  }}
                 >
                   Select Template
                 </Button>

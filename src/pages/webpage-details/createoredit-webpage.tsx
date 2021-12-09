@@ -17,6 +17,7 @@ import {
   FETCH_DATA_FORM,
   FETCH_TEMPLATE_SCHEMA_FORM,
   UPDATE_WEBSITE_DATA,
+  UPDATE_WEBSITE_DATA_TO_EMPTY,
 } from "./queries";
 
 interface Operation {
@@ -38,6 +39,7 @@ function CreateWebpageDetails(props: any, ref: any) {
 
   const [schemaData, setSchemaData] = useState<any>(null);
   const [formJsonData, setFormJsonData] = useState<any>(null);
+  const [stepperValues, setStepperValues] = useState<any>([]);
   const [websiteTemplateId, setWebsiteTemplateId] = useState<string>("");
   const [operation, setOperation] = useState<Operation>({} as Operation);
   const [websiteDataRecordId, setWebsiteDataRecordId] = useState<any>();
@@ -46,7 +48,8 @@ function CreateWebpageDetails(props: any, ref: any) {
 
   const modalTrigger = new Subject();
 
-  console.log(props.templateId);
+  console.log(websiteTemplateId);
+  console.log(templateId);
 
   useImperativeHandle(ref, () => ({
     TriggerForm: (msg: Operation) => {
@@ -67,6 +70,7 @@ function CreateWebpageDetails(props: any, ref: any) {
       console.log("Fetching website data");
       if (r.websiteData[0] != undefined) {
         setSchemaData(r.websiteData[0].website_template.schema_json);
+        setStepperValues(r.websiteData[0].website_template.Stepper_Title);
         setFormJsonData(r.websiteData[0].website_template.form_json);
         setWebsiteDataRecordId(r.websiteData[0].id);
         setWebsiteTemplateId(r.websiteData[0].website_template.id);
@@ -80,9 +84,11 @@ function CreateWebpageDetails(props: any, ref: any) {
   const [fetchTemplate] = useLazyQuery(FETCH_TEMPLATE_SCHEMA_FORM, {
     variables: { id: templateId },
     onCompleted: (r: any) => {
+      // debugger;
       setSchemaData(r.websiteTemplate.schema_json);
       setFormJsonData(r.websiteTemplate.form_json);
       setTemplateName(r.websiteTemplate.template_name);
+      setStepperValues(r.websiteTemplate.Stepper_Title);
     },
   });
 
@@ -101,15 +107,24 @@ function CreateWebpageDetails(props: any, ref: any) {
 
   const [updateDetails] = useMutation(UPDATE_WEBSITE_DATA, {
     onCompleted: (r: any) => {
-      debugger;
+      // debugger;
       console.log(r);
 
       modalTrigger.next(false);
     },
   });
+  const [formDataToEmpty] = useMutation(UPDATE_WEBSITE_DATA_TO_EMPTY, {
+    onCompleted: (r: any) => {
+      console.log(r);
+
+      //modalTrigger.next(false);
+    },
+  });
 
   function FillDetails(data: any) {
     //console.log(data.websiteData[0].form_data.data.address);
+    //debugger;
+    console.log(data);
     if (data.websiteData.length != 0) {
       // let details: any = {};
       let msg = { ...data.websiteData[0].form_data.data };
@@ -154,12 +169,13 @@ function CreateWebpageDetails(props: any, ref: any) {
 
   function EditWebpage(data: any) {
     console.log("edit message");
-    debugger;
+
+    // debugger;
     updateDetails({
       variables: {
         record_id: websiteDataRecordId,
         user: data.users_permissions_user,
-        template_id: websiteTemplateId,
+        template_id: templateId,
         frm: { data: data.form_data },
       },
     });
@@ -189,6 +205,8 @@ function CreateWebpageDetails(props: any, ref: any) {
 
     if (frm) frm.users_permissions_user = auth.userid;
 
+    console.log(data);
+
     switch (operation.type) {
       case "create":
         CreateWebpage(data);
@@ -212,6 +230,17 @@ function CreateWebpageDetails(props: any, ref: any) {
   //   name = "View";
   // }
 
+  const TestThings = () => {
+    formDataToEmpty({
+      variables: {
+        record_id: websiteDataRecordId,
+        user: auth.userid,
+        template_id: websiteTemplateId,
+        frm: {},
+      },
+    });
+  };
+  // if (templateId != undefined) TestThings();
   FetchData();
 
   return (
@@ -221,7 +250,7 @@ function CreateWebpageDetails(props: any, ref: any) {
         <ModalView
           name={name}
           isStepper={true}
-          stepperValues={["Intro Page"]}
+          stepperValues={stepperValues}
           formUISchema={schemaData}
           formSchema={formJsonData}
           formSubmit={

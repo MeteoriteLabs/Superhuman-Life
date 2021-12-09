@@ -35,7 +35,7 @@ export default function ModalView({
       setStep(step + 1);
       setFormValues({ ...formValues, ...formData });
     } else {
-      formSubmit(formData);
+      formSubmit(isStepper ? formValues : formData);
     }
   }
 

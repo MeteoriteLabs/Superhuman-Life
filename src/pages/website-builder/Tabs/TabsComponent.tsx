@@ -21,6 +21,7 @@ import CreateWebpageDetails from "../../webpage-details/createoredit-webpage";
 import {
   FETCH_WEBSITE_DATA,
   FETCH_WEBSITE_SCHEMA_AND_FORM_JSON,
+  FETCH_TEMPLATE_SCHEMA_FORM,
 } from "../../webpage-details/queries";
 import AuthContext from "../../../context/auth-context";
 
@@ -33,6 +34,8 @@ export default function TabsComponent() {
   const [templateName, setTemplateName] = useState<string>("");
   const [formSwitch, setFormSwitch] = useState<boolean>(true);
   const [templateId, setTemplateId] = useState<any>();
+  const [templateId2, setTemplateId2] = useState<any>();
+  const [selectedTemplateName, setSelectedTemplateName] = useState<any>();
 
   useQuery(FETCH_WEBSITE_DATA, {
     variables: { id: auth.userid },
@@ -41,13 +44,19 @@ export default function TabsComponent() {
       if (r.websiteData.length != 0) {
         setWebsiteData(r.websiteData[0]);
         setTemplateName(r.websiteData[0].website_template.template_name);
-        setTemplateId(r.websiteData[0].website_template.id);
+        setTemplateId2(r.websiteData[0].website_template.id);
       } else {
         setWebsiteData(null);
       }
     },
   });
-  console.log(templateId);
+
+  useQuery(FETCH_TEMPLATE_SCHEMA_FORM, {
+    variables: { id: templateId },
+    onCompleted: (r: any) => {
+      setTemplateName(r.websiteTemplate.template_name);
+    },
+  });
 
   return (
     <>
@@ -193,7 +202,10 @@ export default function TabsComponent() {
                       xs={{ span: 7, offset: 0 }}
                       className="d-flex justify-content-end text-light p-0"
                     >
-                      <WebsiteModalComponent setTemplateId={setTemplateId} />
+                      <WebsiteModalComponent
+                        // setSelectedTemplateName={setSelectedTemplateName}
+                        setTemplateId={setTemplateId}
+                      />
                     </Col>
                   </Row>
                 </Card.Header>
@@ -207,6 +219,7 @@ export default function TabsComponent() {
                           <Image fluid src="assets/website_images/black.svg" />
                           <div className="template-btn">
                             <WebsiteModalComponent
+                              // setSelectedTemplateName={setSelectedTemplateName}
                               setTemplateId={setTemplateId}
                             />
                           </div>
