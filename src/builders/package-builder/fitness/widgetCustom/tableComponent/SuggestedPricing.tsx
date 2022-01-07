@@ -119,37 +119,38 @@ export default function SuggestedPricing({ type, mode, auth, fitnesspackageprici
     const customSuggestPrice = (data) => {
 
         const arrayCustomPrice: number[] = []
-        const arrayPTdata = data.suggestedPricings.filter((item: { fitness_package_type: { type: "Personal Training" | "Group Class" | "Classic Class"; }; }) => item.fitness_package_type.type === "Personal Training");
+        let num = 0;
+        if(data.length > 0){
+            const arrayPTdata = data.suggestedPricings.filter((item: { fitness_package_type: { type: "Personal Training" | "Group Class" | "Classic Class"; }; }) => item.fitness_package_type.type === "Personal Training");
 
-        const arrayGroupData = data.suggestedPricings.filter((item: { fitness_package_type: { type: "Personal Training" | "Group Class" | "Classic Class"; }; }) => item.fitness_package_type.type === "Group Class");
+            const arrayGroupData = data.suggestedPricings.filter((item: { fitness_package_type: { type: "Personal Training" | "Group Class" | "Classic Class"; }; }) => item.fitness_package_type.type === "Group Class");
 
-        const arrayClassicData = data.suggestedPricings.filter((item: { fitness_package_type: { type: "Personal Training" | "Group Class" | "Classic Class"; }; }) => item.fitness_package_type.type === "Classic Class");
+            const arrayClassicData = data.suggestedPricings.filter((item: { fitness_package_type: { type: "Personal Training" | "Group Class" | "Classic Class"; }; }) => item.fitness_package_type.type === "Classic Class");
+        
 
 
-        for (let i = 0; i < arrayPTdata.length; i++) {
-            if (arrayPTdata[i].Mode === "Online") {
-                arrayCustomPrice.push(arrayPTdata[i].mrp * ptonline)
-            } else {
-                arrayCustomPrice.push(arrayPTdata[i].mrp * ptoffline)
+            for (let i = 0; i < arrayPTdata.length; i++) {
+                if (arrayPTdata[i].Mode === "Online") {
+                    arrayCustomPrice.push(arrayPTdata[i].mrp * ptonline)
+                } else {
+                    arrayCustomPrice.push(arrayPTdata[i].mrp * ptoffline)
+                }
             }
-        }
 
-        for (let i = 0; i < arrayGroupData.length; i++) {
-            if (arrayGroupData[i].Mode === "Online") {
-                arrayCustomPrice.push(arrayGroupData[i].mrp * grouponline)
-            } else {
-                arrayCustomPrice.push(arrayGroupData[i].mrp * groupoffline)
+            for (let i = 0; i < arrayGroupData.length; i++) {
+                if (arrayGroupData[i].Mode === "Online") {
+                    arrayCustomPrice.push(arrayGroupData[i].mrp * grouponline)
+                } else {
+                    arrayCustomPrice.push(arrayGroupData[i].mrp * groupoffline)
+                }
             }
+
+            for (let i = 0; i < arrayClassicData.length; i++) {
+                arrayCustomPrice.push(arrayClassicData[i].mrp * recordedclasses)
+            }
+            num = arrayCustomPrice.reduce((acc, cur) => acc + cur)
         }
-
-        for (let i = 0; i < arrayClassicData.length; i++) {
-            arrayCustomPrice.push(arrayClassicData[i].mrp * recordedclasses)
-        }
-
-
-        const num = arrayCustomPrice.reduce((acc, cur) => acc + cur)
         calculateArraySuggestPrice(num, arrayDuration)
-
     }
 
 

@@ -13,7 +13,7 @@ interface Operation {
     current_status: boolean;
 }
 
-function CreateEditMessage(props: any, ref: any) {
+function CreateEditWorkout(props: any, ref: any) {
     const auth = useContext(AuthContext);
     const workoutSchema: { [name: string]: any; } = require("./workout.json");
     const [workoutDetails, setWorkoutDetails] = useState<any>({});
@@ -172,4 +172,4 @@ function CreateEditMessage(props: any, ref: any) {
     )
 }
 
-export default React.forwardRef(CreateEditMessage);
+export default React.forwardRef(CreateEditWorkout);

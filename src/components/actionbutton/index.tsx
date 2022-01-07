@@ -1,31 +1,50 @@
-
-import {Dropdown} from "react-bootstrap";
+import { Dropdown } from "react-bootstrap";
 import "./button.css";
 function ActionButton(props: any) {
+     //  return (
+     //       <Dropdown>
+     //            <Dropdown.Toggle id="dropdown-basic" as="button" className="table-dropdown">
+     //                 <i className="fas fa-ellipsis-v"></i>
+     //            </Dropdown.Toggle>
+     //            <Dropdown.Menu>
+     //                 <Dropdown.Item onClick={props.actionClick1}>{props.action1}</Dropdown.Item>
+     //                 <Dropdown.Item onClick={props.actionClick2}>{props.action2}</Dropdown.Item>
+     //                 <Dropdown.Item onClick={props.actionClick3}>{props.action3}</Dropdown.Item>
+     //                 <Dropdown.Item onClick={props.actionClick4}>{props.action4}</Dropdown.Item>
+     //                 <Dropdown.Item onClick={props.actionClick5}>{props.action5}</Dropdown.Item>
+     //            </Dropdown.Menu>
+     //       </Dropdown>
+     //  );
 
-    const { status, arrayAction } = props;
+     const { status, arrayAction } = props;
 
+     const renderItemAction = () => {
+          return status !== "accepted" && status !== "rejected"
+               ? arrayAction.map((item, index) => {
+                      return (
+                           <Dropdown.Item key={index} onClick={item.actionClick}>
+                                {item.actionName}
+                           </Dropdown.Item>
+                      );
+                 })
+               : arrayAction.slice(0, 2).map((item, index) => {
+                      return (
+                           <Dropdown.Item key={index} onClick={item}>
+                                {item.actionName}
+                           </Dropdown.Item>
+                      );
+                 });
+     };
 
-    const renderItemAction = () => {
-        return (status !== "accepted" && status !== "rejected") ? arrayAction.map((item, index) => {
-            return <Dropdown.Item key={index} onClick={item.actionClick}>{item.actionName}</Dropdown.Item>
-        }) :
-            arrayAction.slice(0, 2).map((item, index) => {
-                return <Dropdown.Item key={index} onClick={item}>{item.actionName}</Dropdown.Item>
-            })
-    }
+     return (
+          <Dropdown>
+               <Dropdown.Toggle id="dropdown-basic" as="button" className="dropDown">
+                    <i className="fas fa-ellipsis-v"></i>
+               </Dropdown.Toggle>
 
-    return (
-        <Dropdown >
-            <Dropdown.Toggle id="dropdown-basic" as="button" className="dropDown">
-                <i className="fas fa-ellipsis-v"></i>
-            </Dropdown.Toggle>
-
-            <Dropdown.Menu>
-                {renderItemAction()}
-            </Dropdown.Menu>
-        </Dropdown>
-    )
+               <Dropdown.Menu>{renderItemAction()}</Dropdown.Menu>
+          </Dropdown>
+     );
 }
 
-export default ActionButton
+export default ActionButton;

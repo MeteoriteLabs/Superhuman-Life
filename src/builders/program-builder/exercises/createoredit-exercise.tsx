@@ -19,145 +19,105 @@ interface Operation {
   current_status: boolean;
 }
 
-function CreateEditMessage(props: any, ref: any) {
-  const auth = useContext(AuthContext);
-  const exerciseSchema: { [name: string]: any } = require("./exercises.json");
-  const [exerciseDetails, setExerciseDetails] = useState<any>({});
-  const [workoutDetails, setWorkoutDetails] = useState<any[]>([]);
-  const [operation, setOperation] = useState<Operation>({} as Operation);
+function CreateEditExercise(props: any, ref: any) {
+    const auth = useContext(AuthContext);
+    const exerciseSchema: { [name: string]: any; } = require("./exercises.json");
+    const [exerciseDetails, setExerciseDetails] = useState<any>({});
+    const [workoutDetails, setWorkoutDetails] = useState<any[]>([]);
+    const [operation, setOperation] = useState<Operation>({} as Operation);
 
-  useQuery(FETCH_WORKOUTS, {
-    variables: { id: auth.userid },
-    skip: operation.type !== "delete",
-    onCompleted: (r: any) => {
-      setWorkoutDetails(r.workouts);
-    },
-  });
-
-  const [createExercise] = useMutation(CREATE_EXERCISE, {
-    onCompleted: (r: any) => {
-      console.log(r);
-      modalTrigger.next(false);
-    },
-  });
-  const [editExercise] = useMutation(UPDATE_EXERCISE, {
-    variables: { exerciseid: operation.id },
-    onCompleted: (r: any) => {
-      console.log(r);
-      modalTrigger.next(false);
-    },
-  });
-  const [deleteExercise] = useMutation(DELETE_EXERCISE, {
-    onCompleted: (e: any) => console.log(e),
-    refetchQueries: ["GET_TABLEDATA"],
-  });
-
-  const modalTrigger = new Subject();
-
-  useImperativeHandle(ref, () => ({
-    TriggerForm: (msg: Operation) => {
-      setOperation(msg);
-
-      if (msg && !msg.id)
-        //render form if no message id
-        modalTrigger.next(true);
-    },
-  }));
-
-  // console.log(exerciseDetails);
-
-  function FillDetails(data: any) {
-    let details: any = {};
-    let msg = data.exercises;
-    details.exercise = msg[0].exercisename;
-    details.level = msg.exerciselevel;
-    details.discipline = msg[0].fitnessdisciplines.map((val: any) => {
-      return val.id;
+    useQuery(FETCH_WORKOUTS, {
+        variables: {id: auth.userid},
+        skip: (operation.type !== "delete"),
+        onCompleted: (r: any) => {
+            setWorkoutDetails(r.workouts);
+        }
     });
-    details.miniDescription = msg[0].exerciseminidescription;
-    details.equipment = msg[0].equipment_lists.map((val: any) => {
-      return val.name;
-    });
-    details.muscleGroup = msg[0].exercisemusclegroups.map((val: any) => {
-      return val.name;
-    });
-    details.user_permissions_user = msg[0].users_permissions_user.id;
-    setExerciseDetails(details);
+
+    const [createExercise] = useMutation(CREATE_EXERCISE, { onCompleted: (r: any) => { modalTrigger.next(false); } });
+    const [editExercise] = useMutation(UPDATE_EXERCISE,{variables: {exerciseid: operation.id}, onCompleted: (r: any) => { modalTrigger.next(false); } });
+    const [deleteExercise] = useMutation(DELETE_EXERCISE, { refetchQueries: ["GET_TABLEDATA"] });
+
+    const modalTrigger =  new Subject();
+
+    useImperativeHandle(ref, () => ({
+        TriggerForm: (msg: Operation) => {
+            setOperation(msg);
+
+            if (msg && !msg.id) //render form if no message id
+                modalTrigger.next(true);
+        }
+    }));
+
     // console.log(exerciseDetails);
 
-    //if message exists - show form only for edit and view
-    if (["edit", "view"].indexOf(operation.type) > -1) modalTrigger.next(true);
-    else OnSubmit(null);
-  }
+    function FillDetails(data: any) {
+        let details: any = {};
+        let msg = data.exercises;
+        details.exercise = msg[0].exercisename;
+        details.level = msg.exerciselevel;
+        details.discipline = msg[0].fitnessdisciplines.map((val: any) => {
+            return val.id;
+        });
+        details.miniDescription = msg[0].exerciseminidescription;
+        details.equipment = msg[0].equipment_lists.map((val: any) => {
+            return val.name;
+        });
+        details.muscleGroup = msg[0].exercisemusclegroups.map((val: any) => {
+            return val.name;
+        });
+        details.user_permissions_user = msg[0].users_permissions_user.id;
+        setExerciseDetails(details);
+        // console.log(exerciseDetails);
 
-  function FetchData() {
-    useQuery(FETCH_DATA, {
-      variables: { id: operation.id },
-      onCompleted: (e: any) => {
-        FillDetails(e);
-      },
-    });
-  }
+        //if message exists - show form only for edit and view
+        if (['edit', 'view'].indexOf(operation.type) > -1)
+            modalTrigger.next(true);
+        else
+            OnSubmit(null);
+    }
 
-  enum ENUM_EXERCISES_EXERCISELEVEL {
-    Beginner,
-    Intermediate,
-    Advance,
-    None,
-  }
+    function FetchData() {
+        console.log('Fetch Data');
+        useQuery(FETCH_DATA, { variables: { id: operation.id }, onCompleted: (e: any) => { FillDetails(e) } });
+    }
 
-  function CreateExercise(frm: any) {
-    createExercise({
-      variables: {
-        exercisename: frm.exercise,
-        exerciselevel: ENUM_EXERCISES_EXERCISELEVEL[frm.level],
-        fitnessdisciplines: frm.discipline.split(","),
-        exerciseminidescription: frm.miniDescription,
-        exercisetext: !frm.addExercise.AddText ? null : frm.addExercise.AddText,
-        exerciseurl: !frm.addExercise.AddURL ? null : frm.addExercise.AddURL,
-        equipment_lists: frm.equipment.split(","),
-        exercisemusclegroups: frm.muscleGroup.split(","),
-        users_permissions_user: frm.user_permissions_user,
-      },
-    });
-  }
+    enum ENUM_EXERCISES_EXERCISELEVEL {
+        Beginner,
+        Intermediate,
+        Advance,
+        None
+    }
 
-  function EditExercise(frm: any) {
-    console.log("edit message");
-    // useMutation(UPDATE_MESSAGE, { variables: frm, onCompleted: (d: any) => { console.log(d); } });
-    editExercise({ variables: frm });
-  }
+    function CreateExercise(frm: any) {
+        createExercise({ variables: {
+            exercisename: frm.exercise,
+            exerciselevel: ENUM_EXERCISES_EXERCISELEVEL[frm.level],
+            fitnessdisciplines: frm.discipline.split(","),
+            exerciseminidescription: frm.miniDescription,
+            exercisetext: (!frm.addExercise.AddText ? null : frm.addExercise.AddText),
+            exerciseurl: (!frm.addExercise.AddURL ? null: frm.addExercise.AddURL),
+            equipment_lists: frm.equipment.split(","),
+            exercisemusclegroups: frm.muscleGroup.split(","),
+            users_permissions_user: frm.user_permissions_user
+        } });
+    }
 
-  function ViewExercise(frm: any) {
-    console.log("view message");
-    //use a variable to set form to disabled/not editable
-    useMutation(UPDATE_EXERCISE, {
-      variables: frm,
-      onCompleted: (d: any) => {
-        console.log(d);
-      },
-    });
-  }
+    function EditExercise(frm: any) {
+        console.log('edit message');
+        // useMutation(UPDATE_MESSAGE, { variables: frm, onCompleted: (d: any) => { console.log(d); } });
+        editExercise({variables: frm });
+    }
 
-  function DeleteExercise(id: any) {
-    console.log("delete message");
-    deleteExercise({ variables: { id: id } });
-  }
+    function ViewExercise(frm: any) {
+        console.log('view message');
+        //use a variable to set form to disabled/not editable
+        useMutation(UPDATE_EXERCISE, { variables: frm, onCompleted: (d: any) => { console.log(d); } })
+    }
 
-  function OnSubmit(frm: any) {
-    //bind user id
-    if (frm) frm.user_permissions_user = auth.userid;
-
-    switch (operation.type) {
-      case "create":
-        CreateExercise(frm);
-        break;
-      case "edit":
-        EditExercise(frm);
-        break;
-      case "view":
-        ViewExercise(frm);
-        break;
+    function DeleteExercise(id: any) {
+        console.log('delete message');
+        deleteExercise({ variables: { id: id }});
     }
   }
 
@@ -212,4 +172,4 @@ function CreateEditMessage(props: any, ref: any) {
   );
 }
 
-export default React.forwardRef(CreateEditMessage);
+export default React.forwardRef(CreateEditExercise);

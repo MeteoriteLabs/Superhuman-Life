@@ -14,16 +14,17 @@ import { useQuery } from "@apollo/client";
 
 const FloatingButton = (props: any) => {
 
-     const createEditProgramManagerComponent = useRef<any>(null);
+     const createEditWorkoutTemplateComponent = useRef<any>(null);
      const createEditNewWorkoutComponent = useRef<any>(null);
      const createEditNewActivityComponent = useRef<any>(null);
      const createEditRestDayComponent = useRef<any>(null);
      const [existingEvents, setExistingEvents] = useState<any[]>([]);
      const [restDays, setRestDays] = useState<any[]>([]);
+     const [renewalDate, setRenewalDate] = useState("");
      const program_id = window.location.pathname.split('/').pop();
 
      function FetchData() {
-          useQuery(GET_SCHEDULEREVENTS, { variables: { id: program_id }, onCompleted: (e: any) => { setExistingEvents(e.fitnessprograms[0].events); setRestDays(e.fitnessprograms[0].rest_days) } });
+          useQuery(GET_SCHEDULEREVENTS, { variables: { id: program_id }, onCompleted: (e: any) => { setExistingEvents(e.fitnessprograms[0].events); setRestDays(e.fitnessprograms[0].rest_days); setRenewalDate(e.fitnessprograms[0].renewal_dt) } });
      }
 
      FetchData();
@@ -45,7 +46,7 @@ const FloatingButton = (props: any) => {
                                    props.callback('block');
                               }}>Program Template</Dropdown.Item>
                               <Dropdown.Item eventKey="2" onClick={() => {
-                                   createEditProgramManagerComponent.current.TriggerForm({ id: null, type: 'create' });
+                                   createEditWorkoutTemplateComponent.current.TriggerForm({ id: null, type: 'create' });
                               }}>Workout Template</Dropdown.Item>
                               <Dropdown.Item eventKey="3" onClick={() => {
                                    createEditNewWorkoutComponent.current.TriggerForm({ id: null, type: 'create' });
@@ -114,10 +115,10 @@ const FloatingButton = (props: any) => {
                          </DropdownButton>
                          </Row>
                     </Col>
-                    <CreateEditProgramManager ref={createEditProgramManagerComponent} events={existingEvents}></CreateEditProgramManager>
-                    <CreateEditNewWorkout ref={createEditNewWorkoutComponent} events={existingEvents}></CreateEditNewWorkout>
-                    <CreateEditNewActivity ref={createEditNewActivityComponent} events={existingEvents}></CreateEditNewActivity>
-                    <CreateEditRestDay ref={createEditRestDayComponent} restDays={restDays}></CreateEditRestDay>
+                    <CreateEditProgramManager startDate={props.startDate} duration={props.duration} ref={createEditWorkoutTemplateComponent} events={existingEvents} renewalDate={renewalDate}></CreateEditProgramManager>
+                    <CreateEditNewWorkout startDate={props.startDate} duration={props.duration} ref={createEditNewWorkoutComponent} events={existingEvents}></CreateEditNewWorkout>
+                    <CreateEditNewActivity startDate={props.startDate} duration={props.duration} ref={createEditNewActivityComponent} events={existingEvents}></CreateEditNewActivity>
+                    <CreateEditRestDay startDate={props.startDate} duration={props.duration} ref={createEditRestDayComponent} restDays={restDays}></CreateEditRestDay>
                </div>
           </>
      );

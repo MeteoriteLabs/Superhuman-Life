@@ -3,6 +3,7 @@ import { Typeahead } from 'react-bootstrap-typeahead';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 import { gql } from "@apollo/client";
 import { useQuery } from "@apollo/client";
+import moment from 'moment';
 
 const DaysInput = (props: any) => {
      const last = window.location.pathname.split('/').pop();
@@ -34,9 +35,15 @@ const DaysInput = (props: any) => {
      const days: any[] = [];
 
      function renderInputField() {
-          for (var i=0; i<data;i++){
-               days.push({"day": `Day-${i+1}`})
-          }         
+          if(props.startDate !== undefined){
+               for (var i=0; i<data;i++){
+                    days.push({"key": i+1,"day": `${moment(props.startDate).add(i, 'days').format("Do, MMM YY")}`})
+               }  
+          } else {
+               for (var j=0; j<data; j++){
+                    days.push({"key": j+1, "day": `Day-${j+1}`})
+               }  
+          }      
      }
 
      function OnChange(e){

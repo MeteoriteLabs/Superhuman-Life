@@ -49,6 +49,7 @@ function FitnessAction(props, ref: any) {
                 level: frm.level,
                 description: frm.details,
                 Is_program: true,
+                renewal_dt: 0,
                 users_permissions_user: frm.user_permissions_user
             }
         });

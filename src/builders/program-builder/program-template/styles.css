@@ -119,6 +119,24 @@
   text-align: start;
 }
 
+.event-dayOfWeek {
+  font-weight: bold;
+  font-size: 10px;
+  padding-left: 5px;
+  line-height: 7px;
+  vertical-align: middle;
+  text-align: start;
+}
+
+.event-date {
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 20px;
+  padding-left: 5px;
+  vertical-align: middle;
+  text-align: start;
+}
+
 .schedular-content:hover {
   background-color: rgb(140,190,214) !important;
   width: 150px !important;

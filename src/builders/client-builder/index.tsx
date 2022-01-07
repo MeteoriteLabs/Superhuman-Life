@@ -1,0 +1,29 @@
+import { Card, Tab, Tabs, TabContent } from "react-bootstrap";
+import ClientListing from "./clientlisting";
+import Leads from "./leads/index";
+
+export default function ClientPage() {
+     return (
+          <>
+               <h3>Clients</h3>
+               <Card className="shadow-sm mt-3" border="light">
+                    <Card.Body>
+                         <Tabs variant="pills" transition={false} defaultActiveKey="clients">
+                              <Tab eventKey="clients" title="Client">
+                                   <TabContent>
+                                        <hr />
+                                        <ClientListing />
+                                   </TabContent>
+                              </Tab>
+                              <Tab eventKey="leads" title="Leads">
+                                   <TabContent>
+                                        <hr />
+                                        <Leads />
+                                   </TabContent>
+                              </Tab>
+                         </Tabs>
+                    </Card.Body>
+               </Card>
+          </>
+     );
+}
