@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { withTheme, utils } from "@rjsf/core";
 import { Theme as Bootstrap4Theme } from "@rjsf/bootstrap-4";
 import { Button, Col, Modal, ProgressBar, Row } from "react-bootstrap";
@@ -29,15 +29,42 @@ export default function ModalView({
     setShow(res);
   });
 
-  function submitHandler(formData: any) {
+  useEffect(() => {
+    setStep(1);
+  }, [show === false]);
+
+  useEffect(() => {
+    setFormValues(formData);
+  }, [formData]);
+
+  function submitHandler(data: any) {
+    debugger;
+    formData = { ...formData, ...data };
+    debugger;
     if (isStepper && step < stepper.length) {
-      console.log("Data submitted: ", formData);
+      console.log("Data submitted: ", data);
       setStep(step + 1);
-      setFormValues({ ...formValues, ...formData });
+      setFormValues({ ...formValues, ...data });
     } else {
-      formSubmit(isStepper ? formValues : formData);
+      formSubmit({ ...formValues, ...data });
     }
   }
+
+  // function submitHandler(data: any) {
+  //   formData = { ...data };
+  //   if (isStepper && step < stepper.length) {
+  //     console.log("Data submitted: ", data);
+
+  //     setStep(step + 1);
+  //     setFormValues({ ...formValues, ...data });
+  //     debugger;
+  //   } else {
+  //     // formSubmit({ ...formValues, ...data });
+  //     formSubmit({ ...formValues, ...data });
+  //   }
+  //   console.log(data);
+  //   // console.log(finalValues);
+  // }
 
   return (
     <>
@@ -76,7 +103,7 @@ export default function ModalView({
                   schema={formSchema[step.toString()]}
                   ref={formRef}
                   onSubmit={({ formData }: any) => submitHandler(formData)}
-                  formData={formData}
+                  formData={formValues}
                   widgets={widgets}
                 >
                   <div></div>
@@ -91,7 +118,7 @@ export default function ModalView({
               <Button
                 variant="light"
                 size="sm"
-                onClick={() => setStep(step - 1)}
+                onClick={() => setStep((step) => step - 1)}
                 disabled={step === 1 ? true : false}
               >
                 <i className="mr-2 fas fa-arrow-left"></i>

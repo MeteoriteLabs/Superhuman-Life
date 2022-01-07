@@ -5,7 +5,6 @@ import { Container, Row, Col, Button, Modal, Image } from "react-bootstrap";
 import { PaginationBasic } from "./PaginationModal";
 import {
   FETCH_PUBLISHED_TEMPLATES,
-  FETCH_TEMPLATE_SCHEMA_FORM,
   FETCH_WEBSITE_DATA,
   UPDATE_WEBSITE_DATA_TO_EMPTY,
 } from "../../webpage-details/queries";
@@ -15,10 +14,12 @@ import AuthContext from "../../../context/auth-context";
 
 function ModalComp(props) {
   const [showTemplate, setShowTemplate] = useState<any>([]);
-  const [templateId, setTemplateId] = useState<string>("");
+  const [templateId, setTemplateId] = useState<any>(null);
   const [websiteDataRecordId, setWebsiteDataRecordId] = useState<any>();
+  const [currentTemplateId, setCurrentTemplateId] = useState<any>();
+
   const auth = useContext(AuthContext);
-  // const [userId, setUserId] = useState<any>();
+
   const passTemplateId = useRef<any>(null);
 
   useQuery(FETCH_PUBLISHED_TEMPLATES, {
@@ -27,36 +28,49 @@ function ModalComp(props) {
     },
   });
 
-  const { setReceivedData, setModalShow } = props;
+  const { setReceivedData, setModalShow, setCount } = props;
 
   setReceivedData(templateId);
-  console.log(auth.userid);
 
   useQuery(FETCH_WEBSITE_DATA, {
     variables: { id: auth.userid },
     onCompleted: (r: any) => {
+      console.log("I am templateModal");
       console.log(r);
-      if (r.websiteData[0] != undefined) {
+      if (r.websiteData[0] !== undefined) {
         setWebsiteDataRecordId(r.websiteData[0].id);
+        setCurrentTemplateId(r.websiteData[0].website_template.id);
       } else {
         return;
       }
     },
   });
 
-  console.log(websiteDataRecordId);
-
-  const [updateDetails, { data }] = useMutation(UPDATE_WEBSITE_DATA_TO_EMPTY, {
+  const [updateDetails] = useMutation(UPDATE_WEBSITE_DATA_TO_EMPTY, {
     variables: {
       record_id: websiteDataRecordId,
       user: auth.userid,
       form_data: {},
     },
+
     onCompleted: (r: any) => {
       console.log(r);
+
+      setCount(templateId);
     },
+    refetchQueries: [
+      { query: FETCH_WEBSITE_DATA, variables: { id: auth.userid } },
+    ],
   });
-  console.log(data);
+
+  const triggerUpdateDetailsMutation = () => {
+    if (currentTemplateId !== templateId && websiteDataRecordId !== undefined) {
+      updateDetails();
+      console.log("trigger update");
+    } else {
+      return;
+    }
+  };
 
   return (
     <>
@@ -91,6 +105,7 @@ function ModalComp(props) {
                 <Col
                   onClick={() => {
                     setTemplateId(data.id);
+                    triggerUpdateDetailsMutation();
                   }}
                   key={data.id}
                   className={`p-3 m-0 hover-effect ${
@@ -129,7 +144,6 @@ function ModalComp(props) {
                   className="m-0"
                   onClick={() => {
                     setModalShow(false);
-                    updateDetails();
                   }}
                 >
                   Select Template
@@ -144,11 +158,16 @@ function ModalComp(props) {
   );
 }
 
-export default function WebsiteModalComponent({ setTemplateId }) {
+export default function WebsiteModalComponent({
+  setTemplateId,
+  setNewTemplateId,
+}) {
   const [modalShow, setModalShow] = useState<boolean>(false);
   const [receivedData, setReceivedData] = useState<any>();
+  const [changeInTemplateId, setChangeInTemplateId] = useState<any>();
 
   setTemplateId(receivedData);
+  setNewTemplateId(changeInTemplateId);
 
   return (
     <>
@@ -165,6 +184,7 @@ export default function WebsiteModalComponent({ setTemplateId }) {
         onHide={() => setModalShow(false)}
         setReceivedData={setReceivedData}
         setModalShow={setModalShow}
+        setCount={setChangeInTemplateId}
       />
     </>
   );

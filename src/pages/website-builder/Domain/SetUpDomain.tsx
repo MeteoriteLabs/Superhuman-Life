@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Modal, Col, Row, Container, Form, Button } from "react-bootstrap";
+import { Modal, Col, Row, Form, Button } from "react-bootstrap";
 import "./SetUpDomain.css";
 
 function HelpModal(props) {

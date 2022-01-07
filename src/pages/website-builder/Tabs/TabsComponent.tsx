@@ -1,4 +1,4 @@
-import { useState, useRef, useContext, useEffect } from "react";
+import { useState, useRef, useContext } from "react";
 import {
   Tabs,
   Tab,
@@ -13,14 +13,13 @@ import {
 } from "react-bootstrap";
 import "./Tabs.css";
 import SetUpDomain from "../Domain/SetUpDomain";
-import { useQuery, useLazyQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import WebsiteModalComponent from "../templateModal/TemplateModal";
 import DomainHelpModalComponent from "../Domain";
 import { templateData } from "./TemplateData";
 import CreateWebpageDetails from "../../webpage-details/createoredit-webpage";
 import {
   FETCH_WEBSITE_DATA,
-  FETCH_WEBSITE_SCHEMA_AND_FORM_JSON,
   FETCH_TEMPLATE_SCHEMA_FORM,
 } from "../../webpage-details/queries";
 import AuthContext from "../../../context/auth-context";
@@ -33,18 +32,19 @@ export default function TabsComponent() {
   const [websiteData, setWebsiteData] = useState<any>({});
   const [templateName, setTemplateName] = useState<string>("");
   const [formSwitch, setFormSwitch] = useState<boolean>(true);
-  const [templateId, setTemplateId] = useState<any>();
-  const [templateId2, setTemplateId2] = useState<any>();
-  const [selectedTemplateName, setSelectedTemplateName] = useState<any>();
+  const [templateId, setTemplateId] = useState<any>(null);
+  // const [templateId2, setTemplateId2] = useState<any>();
+  const [newTemplateId, setNewTemplateId] = useState<any>();
 
   useQuery(FETCH_WEBSITE_DATA, {
     variables: { id: auth.userid },
     onCompleted: (r: any) => {
+      // console.log("TabsComponent I've been called");
       console.log(r);
-      if (r.websiteData.length != 0) {
+      if (r.websiteData.length !== 0) {
         setWebsiteData(r.websiteData[0]);
         setTemplateName(r.websiteData[0].website_template.template_name);
-        setTemplateId2(r.websiteData[0].website_template.id);
+        // setTemplateId2(r.websiteData[0].website_template.id);
       } else {
         setWebsiteData(null);
       }
@@ -53,6 +53,7 @@ export default function TabsComponent() {
 
   useQuery(FETCH_TEMPLATE_SCHEMA_FORM, {
     variables: { id: templateId },
+    skip: templateId === null,
     onCompleted: (r: any) => {
       setTemplateName(r.websiteTemplate.template_name);
     },
@@ -205,6 +206,7 @@ export default function TabsComponent() {
                       <WebsiteModalComponent
                         // setSelectedTemplateName={setSelectedTemplateName}
                         setTemplateId={setTemplateId}
+                        setNewTemplateId={setNewTemplateId}
                       />
                     </Col>
                   </Row>
@@ -221,6 +223,7 @@ export default function TabsComponent() {
                             <WebsiteModalComponent
                               // setSelectedTemplateName={setSelectedTemplateName}
                               setTemplateId={setTemplateId}
+                              setNewTemplateId={setNewTemplateId}
                             />
                           </div>
                         </>
@@ -326,6 +329,7 @@ export default function TabsComponent() {
       </Tabs>
       <CreateWebpageDetails
         templateId={templateId}
+        newTemplateId={newTemplateId}
         setTemplateName={setTemplateName}
         setWebsiteData={setWebsiteData}
         ref={createWebpageDetailsComponent}
