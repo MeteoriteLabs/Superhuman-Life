@@ -25,30 +25,31 @@ export default function Fitness() {
 
 
     const loadData = (data: any) => {
-        console.log("🚀 ~ file: Fitness.tsx ~ line 23 ~ loadData ~ data", data);
+        
         setDataTable(
-
-            [...data.clientBookings].map(fitnessPackage => {
-                const renewDay: Date = new Date(fitnessPackage.effective_date);
-                renewDay.setDate(renewDay.getDate() + fitnessPackage.package_duration);
-                const mrpFilter = fitnessPackage.fitnesspackages[0].fitnesspackagepricing[0].packagepricing.filter(item =>item.duration === fitnessPackage.package_duration);
-               
+            [...data.clientBookings.data].map(fitnessPackage => {
+                const renewDay: Date = new Date(fitnessPackage.attributes.effective_date);
+                renewDay.setDate(renewDay.getDate() + fitnessPackage.attributes.package_duration);
+                const mrpFilter = fitnessPackage.attributes.fitnesspackages.data[0].attributes.fitnesspackagepricing.filter(item =>item.duration === fitnessPackage.attributes.package_duration);
+                console.log("🚀 ~ file: Fitness.tsx ~ line 35 ~ loadData ~ mrpFilter", mrpFilter)
+                
                 return {
-                    client: fitnessPackage.users_permissions_user.length > 0 ? fitnessPackage.users_permissions_user[0].username : "N/A",
-                    clientPhoneNumber: fitnessPackage.users_permissions_user.length > 0 ? fitnessPackage.users_permissions_user[0].Phone : "N/A",
-                    clientAddress: fitnessPackage.users_permissions_user.length > 0 ? fitnessPackage.users_permissions_user[0].addresses : "N/A",
+                    client: fitnessPackage.attributes.users_permissions_users.data.length > 0 ? fitnessPackage.attributes.users_permissions_users.data[0].attributes.username : "N/A",
+                    clientPhoneNumber: fitnessPackage.attributes.users_permissions_users.data.length > 0 ? fitnessPackage.attributes.users_permissions_users.data[0].Phone_Number : "N/A",
+                    clientAddress: fitnessPackage.attributes.users_permissions_users.data.length > 0 ? fitnessPackage.attributes.users_permissions_users.data[0].addresses : "N/A",
 
-                    package: fitnessPackage.fitnesspackages[0],
-                    type: fitnessPackage.fitnesspackages[0].fitness_package_type.type,
-                    bookingDate: moment(fitnessPackage.booking_date).format("MMMM DD,YYYY"),
-                    mode: fitnessPackage.fitnesspackages[0].mode,
-                    packageName: fitnessPackage.fitnesspackages[0].packagename,
-                    duration: fitnessPackage.package_duration,
-                    effective: moment(fitnessPackage.effective_date).format('MMMM DD,YYYY'),
+                    package: fitnessPackage.attributes.fitnesspackages.data[0].attributes,
+                    type: fitnessPackage.attributes.fitnesspackages.data[0].attributes.fitness_package_type.data.attributes.type,
+
+                    bookingDate: moment(fitnessPackage.attributes.booking_date).format("MMMM DD,YYYY"),
+                    mode: fitnessPackage.attributes.fitnesspackages.data[0].attributes.mode,
+                    packageName: fitnessPackage.attributes.fitnesspackages.data[0].attributes.packagename,
+                    duration: fitnessPackage.attributes.package_duration,
+                    effective: moment(fitnessPackage.attributes.effective_date).format('MMMM DD,YYYY'),
                     expiry: moment(renewDay).format('MMMM DD,YYYY'),
-                    mrp: mrpFilter[0].mrp,
-                    status: fitnessPackage.booking_status,
-                    userInfo:fitnessPackage.fitnesspackages[0].users_permissions_user
+                    mrp: mrpFilter.length > 0 ? mrpFilter[0].mrp : 0,
+                    status: fitnessPackage.attributes.booking_status,
+                    userInfo:fitnessPackage.attributes.fitnesspackages.data[0].attributes.users_permissions_user.data.attributes
                 }
             })
 

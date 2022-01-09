@@ -45,7 +45,7 @@ export default function InvoiceModal(props) {
 
     const renderPrices = () => {
         const totalNumberOfClasses = availablePackageClasses.reduce((acc, item) => acc + item.numberOfClasses, 0);
-        const price = totalNumberOfClasses * rowData.package.fitnesspackagepricing[0].packagepricing[0].mrp
+        const price = totalNumberOfClasses * rowData.package.fitnesspackagepricing[0].mrp
         return <>
             <p>{price.toLocaleString()}</p>
         </>

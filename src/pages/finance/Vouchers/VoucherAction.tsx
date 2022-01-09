@@ -24,7 +24,6 @@ function VoucherAction(props, ref) {
     const modalTrigger = new Subject();
     const [formData, setFormData] = useState<any>();
     const formSchema = require("./voucher.json");
-    const widgets = null;
 
 
     useImperativeHandle(ref, () => ({
@@ -37,6 +36,7 @@ function VoucherAction(props, ref) {
         }
     }));
 
+ 
 
 
     let name = ""
@@ -70,11 +70,11 @@ function VoucherAction(props, ref) {
 
     const FillData = (data: any) => {
         let updateFormData: any = {};
-        updateFormData.voucher_name = data.vouchers[0].voucher_name;
-        updateFormData.discount_percentage = data.vouchers[0].discount_percentage;
-        updateFormData.expiry_date = data.vouchers[0].expiry_date;
-        updateFormData.Start_date = data.vouchers[0].Start_date;
-        updateFormData.Usage_restriction = data.vouchers[0].Usage_restriction;
+        updateFormData.voucher_name = data.vouchers.data[0].attributes.voucher_name;
+        updateFormData.discount_percentage = data.vouchers.data[0].attributes.discount_percentage;
+        updateFormData.expiry_date = data.vouchers.data[0].attributes.expiry_date;
+        updateFormData.Start_date = data.vouchers.data[0].attributes.Start_date;
+        updateFormData.Usage_restriction = data.vouchers.data[0].attributes.Usage_restriction;
 
 
         setFormData(updateFormData)
@@ -126,7 +126,6 @@ function VoucherAction(props, ref) {
 
 
     const OnSubmit = (frm: any) => {
-        console.log(frm)
         //bind user id
         if (frm) {
             frm.id = operation.id;

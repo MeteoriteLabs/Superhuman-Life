@@ -1,6 +1,6 @@
 import { Card, Tab, Tabs } from "react-bootstrap";
 import Event from "./Event/Event";
-import Fitness from "./Fintess/Fitness";
+import Fitness from "./Fitness/Fitness";
 import Journey from "./Journey/Journey";
 import Nutrition from "./Nutrition/Nutrition";
 
@@ -14,7 +14,7 @@ export default function Invoice() {
                         <Tab eventKey="fitness" title="Fitness">
                             <Fitness/>
                         </Tab>
-                        <Tab eventKey="nutrition" title="Nutrition">
+                        {/* <Tab eventKey="nutrition" title="Nutrition">
                             <Nutrition/>
                         </Tab>
                         <Tab eventKey="journey" title="Journey">
@@ -23,7 +23,7 @@ export default function Invoice() {
                         <Tab eventKey="event" title="Event">
                             <Event/>
                         </Tab>
-                       
+                        */}
                     </Tabs>
                 </Card.Body>
             </Card>

@@ -22,7 +22,7 @@ function InvoicesAction(props, ref) {
     const modalTrigger = new Subject();
     const [formData, setFormData] = useState<any>();
     const widgets = null;
-    const formSchema = require("../Invoices/Fintess/fitness.json");
+    const formSchema = require("../Invoices/Fitness/fitness.json");
 
 
     useImperativeHandle(ref, () => ({

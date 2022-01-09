@@ -10,28 +10,29 @@ export const CREATE_VOUCHER = gql`
         $Start_date:DateTime
         $Usage_restriction:Int
         $users_permissions_user:ID
-        $Status:ENUM_VOUCHERS_STATUS
+        $Status:String
     ){
         createVoucher(
-            input:{
-                data:{
-                    voucher_name: $voucher_name
-                    discount_percentage: $discount_percentage
-                    expiry_date: $expiry_date
-                    Start_date: $Start_date
-                    Usage_restriction:$Usage_restriction
-                    users_permissions_user: $users_permissions_user
-                    Status:$Status
-                }
+            data:{
+                voucher_name: $voucher_name
+                discount_percentage: $discount_percentage
+                expiry_date: $expiry_date
+                Start_date: $Start_date
+                Usage_restriction:$Usage_restriction
+                users_permissions_user: $users_permissions_user
+                Status:$Status
             }
+           
         ){
-            voucher{
+            data{
                 id
-                voucher_name
-                discount_percentage
-                expiry_date
-                Start_date
-                Usage_restriction
+                attributes{
+                    voucher_name
+                    discount_percentage
+                    expiry_date
+                    Start_date
+                    Usage_restriction
+                }
             }
         }
     }
@@ -48,25 +49,26 @@ export const EDIT_VOUCHER = gql`
         $users_permissions_user:ID
     ){
         updateVoucher(
-            input:{
-                where:{ id: $id}
-                data:{ 
-                    voucher_name: $voucher_name
-                    discount_percentage: $discount_percentage
-                    expiry_date: $expiry_date
-                    Start_date: $Start_date
-                    Usage_restriction:$Usage_restriction
-                    users_permissions_user: $users_permissions_user
-                }
+            id: $id
+            data:{ 
+                voucher_name: $voucher_name
+                discount_percentage: $discount_percentage
+                expiry_date: $expiry_date
+                Start_date: $Start_date
+                Usage_restriction:$Usage_restriction
+                users_permissions_user: $users_permissions_user
             }
+           
         ){
-            voucher{
+            data{
                 id
-                voucher_name
-                discount_percentage
-                expiry_date
-                Start_date
-                Usage_restriction
+                attributes{
+                    voucher_name
+                    discount_percentage
+                    expiry_date
+                    Start_date
+                    Usage_restriction
+                }
             }
         }
     }
@@ -75,12 +77,9 @@ export const EDIT_VOUCHER = gql`
 
 export const DELETE_VOUCHER = gql`
     mutation deleteVoucher($id: ID!){
-        deleteVoucher(
-            input:{
-                where:{ id: $id}
-            }
-        ){
-            voucher{
+        deleteVoucher(id: $id)
+        {
+            data{
                 id
             }
         }
@@ -90,24 +89,47 @@ export const DELETE_VOUCHER = gql`
 export const TOGGLE_STATUS = gql`
     mutation updateVoucher(
         $id:ID!
-        $Status:ENUM_VOUCHERS_STATUS
+        $Status:String
     ){
         updateVoucher(
-            input:{
-                where:{ id: $id}
-                data:{ 
-                    Status: $Status
-                }
+            id: $id
+            data:{ 
+                Status: $Status
             }
         ){
-            voucher{
+            data{
                 id
-                voucher_name
-                Status
+                attributes{
+                    voucher_name
+                    Status
+                }
             }
         }
     }   
 `
+
+export const CREATE_FITNESS_PRICING_ASSIT = gql`
+    mutation createSuggestedPricing(
+        $fitness_package_type:ID
+        $users_permissions_users:[ID]
+        $Mode:String
+        $mrp:Float
+    ){
+        createSuggestedPricing(
+            data:{
+                fitness_package_type:$fitness_package_type
+                users_permissions_users:$users_permissions_users
+                Mode: $Mode
+                mrp: $mrp
+            }
+        ){
+            data{
+                id
+            }
+        }
+    }
+`
+
 
 export const UPDATE_FITNESS_PRICING_ASSITS = gql`
     mutation updateSuggestedPricing(
@@ -115,15 +137,16 @@ export const UPDATE_FITNESS_PRICING_ASSITS = gql`
         $mrp:Float
     ){
         updateSuggestedPricing(
-            input:{
-                where:{ id: $id}
-                data:{
-                    mrp:$mrp
-                }
+            id:$id
+            data:{
+                mrp:$mrp
             }
         ){
-            suggestedPricing{
-                mrp
+            data{
+                id
+                attributes{
+                    mrp
+                }
             }
         }
     }
@@ -132,25 +155,27 @@ export const UPDATE_FITNESS_PRICING_ASSITS = gql`
 export const CREAT_UPI = gql`
     mutation createUpiDetailsChangemaker(
         $Full_Name:String
-        $Phone_Number:String
+        $phone_number:String
         $UPI_ID:String
         $users_permissions_user:ID
+        $publishedAt:DateTime
     ){
         createUpiDetailsChangemaker(
-            input:{
-                data:{
-                    Full_Name: $Full_Name
-                    Phone_Number: $Phone_Number
-                    UPI_ID: $UPI_ID
-                    users_permissions_user:$users_permissions_user
-                }
+            data:{
+                Full_Name: $Full_Name
+                phone_number: $phone_number
+                UPI_ID: $UPI_ID
+                users_permissions_user:$users_permissions_user
+                publishedAt: $publishedAt
             }
         ){
-            upiDetailsChangemaker{
+            data{
                 id
-                Full_Name
-                Phone_Number
-                UPI_ID
+                attributes{
+                    Full_Name
+                    phone_number
+                    UPI_ID
+                }
             }
         }
     }
@@ -167,32 +192,34 @@ export const CREATE_BANK_DETAIL = gql`
         $Company_Name:String
         $Company_Address:String
         $users_permissions_user: ID
+        $publishedAt:DateTime
     ){
         createBankDetail(
-            input:{
-                data:{
-                    Full_Name: $Full_Name
-                    Account_Number: $Account_Number
-                    Bank_Name: $Bank_Name
-                    IFSC_Code: $IFSC_Code
-                    PAN_Number: $PAN_Number
-                    GST_Number: $GST_Number
-                    Company_Name: $Company_Name
-                    Company_Address: $Company_Address
-                    users_permissions_user: $users_permissions_user
-                }
+            data:{
+                Full_Name: $Full_Name
+                Account_Number: $Account_Number
+                Bank_Name: $Bank_Name
+                IFSC_Code: $IFSC_Code
+                PAN_Number: $PAN_Number
+                GST_Number: $GST_Number
+                Company_Name: $Company_Name
+                Company_Address: $Company_Address
+                users_permissions_user: $users_permissions_user
+                publishedAt: $publishedAt
             }
         ){
-            bankDetail{
+            data{
                 id
-                Full_Name
-                Account_Number
-                Bank_Name
-                IFSC_Code
-                PAN_Number
-                GST_Number
-                Company_Name
-                Company_Address
+                attributes{
+                    Full_Name
+                    Account_Number
+                    Bank_Name
+                    IFSC_Code
+                    PAN_Number
+                    GST_Number
+                    Company_Name
+                    Company_Address
+                }
             }
         }
     }

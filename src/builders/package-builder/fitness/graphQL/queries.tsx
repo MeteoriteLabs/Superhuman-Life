@@ -25,9 +25,13 @@ export const GET_FITNESS_DISCIPLINES = gql`
 
 export const GET_FITNESS_PACKAGE_TYPES = gql`
   query fitnessPackageTypes {
-    fitnessPackageTypes {
-      type
-      id
+    fitnessPackageTypes{
+      data{
+        id
+        attributes{
+          type
+        }
+      }
     }
   }
 `;

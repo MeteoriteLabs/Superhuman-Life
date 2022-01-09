@@ -2,6 +2,7 @@ import { useMutation } from '@apollo/client';
 import React, { useContext, useImperativeHandle, useState } from 'react';
 import { Subject } from 'rxjs';
 import FinanceModal from '../../../components/financeModal/FinanceModal'
+import moment from 'moment';
 
 
 import authContext from '../../../context/auth-context';
@@ -42,7 +43,8 @@ function PaymentMethodsAction(props, ref) {
                 GST_Number: form.GST_Number || "",
                 Company_Name: form.Company_Name  || "",
                 Company_Address: form.Company_Address  || "",
-                users_permissions_user: form.user_permissions_user
+                users_permissions_user: form.user_permissions_user,
+                publishedAt:moment().format()
             }
         })
     };
@@ -56,9 +58,10 @@ function PaymentMethodsAction(props, ref) {
         createUPI({
             variables: {
                 Full_Name: form.Full_Name,
-                Phone_Number: form.Phone_Number,
+                phone_number: form.phone_number,
                 UPI_ID: form.UPI_ID,
-                users_permissions_user: form.user_permissions_user
+                users_permissions_user: form.user_permissions_user,
+                publishedAt:moment().format()
             }
         })
     };

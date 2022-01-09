@@ -9,7 +9,7 @@
             "type": "string",
             "title": "Full Name"
         },
-         "Phone_Number": {
+         "phone_number": {
             "type": "string",
             "title": "Phone Number"
          },

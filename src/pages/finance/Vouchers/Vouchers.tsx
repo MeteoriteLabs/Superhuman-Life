@@ -21,26 +21,24 @@ export default function Vouchers() {
     })
 
     const loadData = (data) => {
-        console.log(data);
         setDataTable(
-            [...data.vouchers].map(voucher => {
+            [...data.vouchers.data].map(voucher => {
                 let todayDate: any = moment(new Date());
-                let expiryDate: any = moment(voucher.expiry_date);
+                let expiryDate: any = moment(voucher.attributes.expiry_date);
                 let diff = expiryDate.diff(todayDate, 'day')
                 return {
                     id: voucher.id,
-                    voucher_name: voucher.voucher_name,
-                    discount_percentage: voucher.discount_percentage,
-                    expiry_date: moment(voucher.expiry_date).format('MMMM DD,YYYY'),
-                    Usage_restriction: voucher.Usage_restriction,
-                    Status:( diff <= 0 || voucher.Usage_restriction <= 0 )? "Expired" : voucher.Status
+                    voucher_name: voucher.attributes.voucher_name,
+                    discount_percentage: voucher.attributes.discount_percentage,
+                    expiry_date: moment(voucher.attributes.expiry_date).format('MMMM DD,YYYY'),
+                    Usage_restriction: voucher.attributes.Usage_restriction,
+                    Status:( diff <= 0 || voucher.attributes.Usage_restriction <= 0 )? "Expired" : voucher.attributes.Status
                 }
             })
         )
     }
 
     FetchData();
-
 
     const columns = useMemo(
         () => [

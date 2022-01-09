@@ -1,12 +1,12 @@
 import { useMutation } from '@apollo/client';
-import React, { useContext, useImperativeHandle, useState } from 'react';
+import React, { useContext, useEffect, useImperativeHandle, useState } from 'react';
 import { Subject } from 'rxjs';
 import PricingAssistEditIcon from '../../../components/customWidget/PricingAssistEditIcon';
 import FinanceModal from '../../../components/financeModal/FinanceModal'
 
 
 import authContext from '../../../context/auth-context';
-import { UPDATE_FITNESS_PRICING_ASSITS } from "../graphQL/mutations"
+import { CREATE_FITNESS_PRICING_ASSIT, UPDATE_FITNESS_PRICING_ASSITS } from "../graphQL/mutations"
 
 interface Operation {
     id: string;
@@ -25,7 +25,7 @@ function PricingAssistAction(props, ref) {
 
     const uiSchema: any = {
         "type": {
-            "ui:widget": (props) => <PricingAssistEditIcon rowData={operation.rowData} />
+            "ui:widget": () => <PricingAssistEditIcon rowData={operation.rowData} />
         }
     }
 
@@ -38,8 +38,31 @@ function PricingAssistAction(props, ref) {
     }));
 
 
-    console.log('operation', operation);
 
+
+    useEffect(() => {
+        let updateFormData: any = {};
+        updateFormData.mrp = operation?.rowData?.mrp;
+        setFormData(updateFormData);
+    }, [operation])
+
+
+    // create price 
+    const [createFitnessPricingAssist] = useMutation(CREATE_FITNESS_PRICING_ASSIT, { onCompleted: (r: any) => { modalTrigger.next(false); } });
+
+    const CreateFitnessPricingAssist = (form: any) => {
+        createFitnessPricingAssist({
+            variables: {
+                fitness_package_type: operation.rowData.packageTypeID[0],
+                users_permissions_users:form.users_permissions_users,
+                Mode: operation.rowData.mode,
+                mrp: form.mrp
+            }
+        })
+    }
+
+
+    // update price
     const [updateFitnessPricingAssist] = useMutation(UPDATE_FITNESS_PRICING_ASSITS, { onCompleted: (r: any) => { modalTrigger.next(false); } });
 
     const UpdateFitnessPricingAssist = (form: any) => {
@@ -51,16 +74,22 @@ function PricingAssistAction(props, ref) {
         })
     }
 
+
+
     const OnSubmit = (frm: any) => {
         //bind user id
         if (frm) {
             frm.id = operation.id;
-            frm.user_permissions_user = auth.userid;
+            frm.users_permissions_users = auth.userid;
         }
 
         switch (operation.actionType) {
             case 'edit':
-                UpdateFitnessPricingAssist(frm);
+                if (operation.id === "") {
+                    CreateFitnessPricingAssist(frm)
+                } else {
+                    UpdateFitnessPricingAssist(frm);
+                }
                 break;
         }
     }

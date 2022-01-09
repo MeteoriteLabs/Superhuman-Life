@@ -13,12 +13,12 @@ export default function PricingAssist() {
                         <Tab eventKey="fitness" title="Fitness">
                             <Fitness/>
                         </Tab>
-                        <Tab eventKey="nutrition" title="Nutrition">
+                        {/* <Tab eventKey="nutrition" title="Nutrition">
                             <Nutrition/>
                         </Tab>
                         <Tab eventKey="event" title="Event">
                             <Event/>
-                        </Tab>
+                        </Tab> */}
                        
                     </Tabs>
                 </Card.Body>
