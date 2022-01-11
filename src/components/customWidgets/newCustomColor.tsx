@@ -4,11 +4,8 @@ function NewCustomColorPicker(props: any) {
   return (
     <>
       <SketchPicker
-        color={props.value !== undefined ? props.value.hex : "ffff"}
+        color={props.value !== undefined ? props.value : "ffff"}
         onChange={(event: any) => {
-          debugger;
-          console.log(typeof event.hex);
-
           props.onChange(event.hex);
         }}
       />
