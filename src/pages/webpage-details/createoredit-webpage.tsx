@@ -9,7 +9,11 @@ import ModalView from "../../components/modal";
 import StatusModal from "../../components/StatusModal/StatusModal";
 import AuthContext from "../../context/auth-context";
 import { Subject } from "rxjs";
-import { widgets } from "./webpageSchema";
+import {
+  widgets,
+  UploadImageToS3WithNativeSdkComponent,
+  UploadVideoToS3WithNativeSdkComponent,
+} from "./webpageSchema";
 import {
   CREATE_WEBPAGE_DETAILS,
   FETCH_WEBSITE_DATA,
@@ -35,6 +39,7 @@ function CreateWebpageDetails(props: any, ref: any) {
   const [webpageDetails, setWebPageDetails] = useState<any>({});
 
   const [schemaData, setSchemaData] = useState<any>(null);
+  // const [tempSchemaData, setTempSchemaData] = useState<any>(null);
   const [formJsonData, setFormJsonData] = useState<any>(null);
   const [stepperValues, setStepperValues] = useState<any>([]);
   const [websiteTemplateId, setWebsiteTemplateId] = useState<string>("");
@@ -42,7 +47,7 @@ function CreateWebpageDetails(props: any, ref: any) {
   const [websiteDataRecordId, setWebsiteDataRecordId] = useState<any>();
 
   const { templateId, setTemplateName, newTemplateId } = props;
-
+  // console.log(schema);
   useEffect(() => {
     fetchData();
   }, [newTemplateId]);
@@ -74,8 +79,12 @@ function CreateWebpageDetails(props: any, ref: any) {
       // console.log(r);
       console.log("Fetching website data");
       if (r.websiteData[0] !== undefined) {
-        setSchemaData(r.websiteData[0].website_template.schema_json);
+        console.log(r.websiteData[0].website_template.schema_json);
+        setSchemaData(
+          replaceSchema({ ...r.websiteData[0].website_template.schema_json })
+        );
 
+        // setTempSchemaData(r.websiteData[0].website_template.schema_json);
         setStepperValues(r.websiteData[0].website_template.Stepper_Title);
         setFormJsonData(r.websiteData[0].website_template.form_json);
         setWebsiteDataRecordId(r.websiteData[0].id);
@@ -96,7 +105,13 @@ function CreateWebpageDetails(props: any, ref: any) {
       // debugger;
       console.log("Fetching website data");
       if (r.websiteData[0] !== undefined) {
-        setSchemaData(r.websiteData[0].website_template.schema_json);
+        // setTempSchemaData(r.websiteData[0].website_template.schema_json);
+        // console.log(
+        //   replaceSchema(r.websiteData[0].website_template.schema_json)
+        // );
+        setSchemaData(
+          replaceSchema({ ...r.websiteData[0].website_template.schema_json })
+        );
         setWebsiteTemplateId(r.websiteData[0].website_template.id);
         setStepperValues(r.websiteData[0].website_template.Stepper_Title);
         setFormJsonData(r.websiteData[0].website_template.form_json);
@@ -112,12 +127,51 @@ function CreateWebpageDetails(props: any, ref: any) {
     fetchPolicy: "network-only",
     onCompleted: (r: any) => {
       console.log(r);
-      setSchemaData(r.websiteTemplate.schema_json);
+      // setTempSchemaData(r.websiteTemplate.schema_json);
+      setSchemaData(replaceSchema({ ...r.websiteTemplate.schema_json }));
       setFormJsonData(r.websiteTemplate.form_json);
       // setTemplateName(r.websiteTemplate.template_name);
       setStepperValues(r.websiteTemplate.Stepper_Title);
     },
   });
+
+  function replaceSchema(schema1) {
+    let schema = {};
+    let keys = Object.keys(schema1);
+    // console.log(schema);
+    if (keys.length) {
+      // debugger;
+      keys.forEach((key) => {
+        if (typeof schema1[key] == "object") {
+          schema[key] = replaceSchema({ ...schema1[key] });
+        } else {
+          if (
+            key == "ui:widget" &&
+            schema1[key] == "uploadImageToS3WithNativeSdk"
+          ) {
+            schema[key] = UploadImageToS3WithNativeSdkComponent;
+          } else if (
+            key == "ui:widget" &&
+            schema1[key] == "uploadVideoToS3WithNativeSdkComponent"
+          ) {
+            schema[key] = UploadVideoToS3WithNativeSdkComponent;
+          } else {
+            schema[key] = schema1[key];
+          }
+        }
+      });
+    }
+    console.log(schema);
+    // setSchemaData(schema);
+    return schema;
+  } //end function replaceSchema
+
+  // function setSchema() {
+  //   setSchemaData(replaceSchema({ ...schemaData }));
+  // }
+  // setSchema();
+
+  // console.log(sc);
 
   const [createDetails] = useMutation(CREATE_WEBPAGE_DETAILS, {
     onCompleted: (r: any) => {
