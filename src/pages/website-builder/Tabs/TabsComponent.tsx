@@ -41,7 +41,7 @@ export default function TabsComponent() {
     onCompleted: (r: any) => {
       // console.log("TabsComponent I've been called");
       console.log(r);
-      if (r.websiteData.length !== 0) {
+      if (r.websiteData.length) {
         setWebsiteData(r.websiteData[0]);
         setTemplateName(r.websiteData[0].website_template.template_name);
         // setTemplateId2(r.websiteData[0].website_template.id);
@@ -99,7 +99,7 @@ export default function TabsComponent() {
                   <Card.Body className="d-flex justify-content-center align-items-center">
                     <Card.Text>
                       {" "}
-                      {websiteData != null ? (
+                      {websiteData ? (
                         <p> www.dummy.com</p>
                       ) : (
                         <p>.........................</p>
@@ -134,7 +134,7 @@ export default function TabsComponent() {
                   <Card.Body className="d-flex justify-content-center align-items-center">
                     <Card.Text>
                       {" "}
-                      {websiteData != null ? (
+                      {websiteData ? (
                         <p> Www.dummy.sapienlife.com</p>
                       ) : (
                         <p>..............................</p>
@@ -214,7 +214,7 @@ export default function TabsComponent() {
                 <Card.Body className="d-flex justify-content-center">
                   <Row md={1} xs={1}>
                     <Col className="d-flex justify-content-center">
-                      {websiteData != null ? (
+                      {websiteData ? (
                         <Image fluid src="assets/website_images/template.svg" />
                       ) : (
                         <>
@@ -230,7 +230,7 @@ export default function TabsComponent() {
                       )}
                     </Col>
                     <Col className="d-flex justify-content-center mt-3">
-                      {websiteData != null ? <p>{templateName}</p> : ""}
+                      {websiteData ? <p>{templateName}</p> : ""}
                     </Col>
                   </Row>
                 </Card.Body>
@@ -275,7 +275,7 @@ export default function TabsComponent() {
                   </Row>
                 </Card.Header>
                 <Card.Body>
-                  {websiteData != null ? (
+                  {websiteData ? (
                     <>
                       <Row>
                         <Col

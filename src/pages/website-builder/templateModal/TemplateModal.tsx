@@ -64,7 +64,7 @@ function ModalComp(props) {
   });
 
   const triggerUpdateDetailsMutation = () => {
-    if (currentTemplateId !== templateId && websiteDataRecordId !== undefined) {
+    if (currentTemplateId !== templateId && websiteDataRecordId) {
       updateDetails();
       console.log("trigger update");
     } else {

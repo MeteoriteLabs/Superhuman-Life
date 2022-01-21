@@ -78,7 +78,7 @@ function CreateWebpageDetails(props: any, ref: any) {
       FillDetails(r);
       // console.log(r);
       console.log("Fetching website data");
-      if (r.websiteData[0] !== undefined) {
+      if (r.websiteData[0]) {
         console.log(r.websiteData[0].website_template.schema_json);
         setSchemaData(
           replaceSchema({ ...r.websiteData[0].website_template.schema_json })
@@ -104,7 +104,7 @@ function CreateWebpageDetails(props: any, ref: any) {
 
       // debugger;
       console.log("Fetching website data");
-      if (r.websiteData[0] !== undefined) {
+      if (r.websiteData[0]) {
         // setTempSchemaData(r.websiteData[0].website_template.schema_json);
         // console.log(
         //   replaceSchema(r.websiteData[0].website_template.schema_json)
@@ -126,7 +126,6 @@ function CreateWebpageDetails(props: any, ref: any) {
     variables: { id: templateId ? templateId : websiteTemplateId },
     fetchPolicy: "network-only",
     onCompleted: (r: any) => {
-      console.log(r);
       // setTempSchemaData(r.websiteTemplate.schema_json);
       setSchemaData(replaceSchema({ ...r.websiteTemplate.schema_json }));
       setFormJsonData(r.websiteTemplate.form_json);
@@ -161,7 +160,7 @@ function CreateWebpageDetails(props: any, ref: any) {
         }
       });
     }
-    console.log(schema);
+
     // setSchemaData(schema);
     return schema;
   } //end function replaceSchema
