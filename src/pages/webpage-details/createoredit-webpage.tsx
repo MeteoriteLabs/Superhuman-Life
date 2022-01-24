@@ -37,17 +37,15 @@ interface WebsiteData {
 function CreateWebpageDetails(props: any, ref: any) {
   const auth = useContext(AuthContext);
   const [webpageDetails, setWebPageDetails] = useState<any>({});
-
   const [schemaData, setSchemaData] = useState<any>(null);
-  // const [tempSchemaData, setTempSchemaData] = useState<any>(null);
   const [formJsonData, setFormJsonData] = useState<any>(null);
   const [stepperValues, setStepperValues] = useState<any>([]);
   const [websiteTemplateId, setWebsiteTemplateId] = useState<string>("");
   const [operation, setOperation] = useState<Operation>({} as Operation);
   const [websiteDataRecordId, setWebsiteDataRecordId] = useState<any>();
 
-  const { templateId, setTemplateName, newTemplateId } = props;
-  // console.log(schema);
+  const { templateId, newTemplateId } = props;
+
   useEffect(() => {
     fetchData();
   }, [newTemplateId]);
@@ -71,27 +69,18 @@ function CreateWebpageDetails(props: any, ref: any) {
   useQuery(FETCH_WEBSITE_DATA, {
     variables: { id: auth.userid },
     fetchPolicy: "network-only",
-
     onCompleted: (r: any) => {
-      // debugger;
-
       FillDetails(r);
-      // console.log(r);
-      console.log("Fetching website data");
+
       if (r.websiteData[0]) {
         console.log(r.websiteData[0].website_template.schema_json);
         setSchemaData(
           replaceSchema({ ...r.websiteData[0].website_template.schema_json })
         );
-
-        // setTempSchemaData(r.websiteData[0].website_template.schema_json);
         setStepperValues(r.websiteData[0].website_template.Stepper_Title);
         setFormJsonData(r.websiteData[0].website_template.form_json);
         setWebsiteDataRecordId(r.websiteData[0].id);
         setWebsiteTemplateId(r.websiteData[0].website_template.id);
-      } else {
-        console.log("its me after undefined");
-        return;
       }
     },
   });
@@ -101,14 +90,7 @@ function CreateWebpageDetails(props: any, ref: any) {
     fetchPolicy: "network-only",
     onCompleted: (r: any) => {
       FillDetails(r);
-
-      // debugger;
-      console.log("Fetching website data");
       if (r.websiteData[0]) {
-        // setTempSchemaData(r.websiteData[0].website_template.schema_json);
-        // console.log(
-        //   replaceSchema(r.websiteData[0].website_template.schema_json)
-        // );
         setSchemaData(
           replaceSchema({ ...r.websiteData[0].website_template.schema_json })
         );
@@ -126,10 +108,8 @@ function CreateWebpageDetails(props: any, ref: any) {
     variables: { id: templateId ? templateId : websiteTemplateId },
     fetchPolicy: "network-only",
     onCompleted: (r: any) => {
-      // setTempSchemaData(r.websiteTemplate.schema_json);
       setSchemaData(replaceSchema({ ...r.websiteTemplate.schema_json }));
       setFormJsonData(r.websiteTemplate.form_json);
-      // setTemplateName(r.websiteTemplate.template_name);
       setStepperValues(r.websiteTemplate.Stepper_Title);
     },
   });
@@ -137,21 +117,20 @@ function CreateWebpageDetails(props: any, ref: any) {
   function replaceSchema(schema1) {
     let schema = {};
     let keys = Object.keys(schema1);
-    // console.log(schema);
+
     if (keys.length) {
-      // debugger;
       keys.forEach((key) => {
         if (typeof schema1[key] == "object") {
           schema[key] = replaceSchema({ ...schema1[key] });
         } else {
           if (
-            key == "ui:widget" &&
-            schema1[key] == "uploadImageToS3WithNativeSdk"
+            key === "ui:widget" &&
+            schema1[key] === "uploadImageToS3WithNativeSdk"
           ) {
             schema[key] = UploadImageToS3WithNativeSdkComponent;
           } else if (
-            key == "ui:widget" &&
-            schema1[key] == "uploadVideoToS3WithNativeSdkComponent"
+            key === "ui:widget" &&
+            schema1[key] === "uploadVideoToS3WithNativeSdkComponent"
           ) {
             schema[key] = UploadVideoToS3WithNativeSdkComponent;
           } else {
@@ -161,29 +140,18 @@ function CreateWebpageDetails(props: any, ref: any) {
       });
     }
 
-    // setSchemaData(schema);
     return schema;
   } //end function replaceSchema
-
-  // function setSchema() {
-  //   setSchemaData(replaceSchema({ ...schemaData }));
-  // }
-  // setSchema();
-
-  // console.log(sc);
 
   const [createDetails] = useMutation(CREATE_WEBPAGE_DETAILS, {
     onCompleted: (r: any) => {
       modalTrigger.next(false);
-      // fetchData();
     },
   });
 
   const [updateDetails] = useMutation(UPDATE_WEBSITE_DATA, {
     onCompleted: (r: any) => {
-      // debugger;
-      console.log(r);
-
+      // console.log(r);
       modalTrigger.next(false);
     },
     refetchQueries: [
@@ -192,8 +160,7 @@ function CreateWebpageDetails(props: any, ref: any) {
   });
 
   function FillDetails(data: any) {
-    if (data.websiteData.length !== 0) {
-      // let details: any = {};
+    if (data.websiteData.length) {
       let msg = { ...data.websiteData[0].form_data.data };
       msg.website_template = data.websiteData[0].website_template.id;
 
@@ -206,8 +173,6 @@ function CreateWebpageDetails(props: any, ref: any) {
   }
 
   function CreateWebpage(data: any) {
-    //console.log(frm);
-    // debugger;
     createDetails({
       variables: {
         user: data.users_permissions_user,
@@ -220,7 +185,6 @@ function CreateWebpageDetails(props: any, ref: any) {
   function EditWebpage(data: any) {
     console.log("edit message");
 
-    // debugger;
     updateDetails({
       variables: {
         record_id: websiteDataRecordId,
@@ -229,8 +193,6 @@ function CreateWebpageDetails(props: any, ref: any) {
         frm: { data: data.form_data },
       },
     });
-
-    //editDetails({ variables: frm });
   }
 
   function ViewWebpage(frm: any) {
@@ -288,7 +250,6 @@ function CreateWebpageDetails(props: any, ref: any) {
                 }
           }
           formData={webpageDetails}
-          // debugger
           widgets={widgets}
           modalTrigger={modalTrigger}
         />

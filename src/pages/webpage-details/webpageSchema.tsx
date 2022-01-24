@@ -7,8 +7,6 @@ export const widgets = {
   uploadVideoToS3WithNativeSdk: UploadImageToS3WithNativeSdk,
 };
 
-export const schema: any = {};
-
 export const UploadImageToS3WithNativeSdkComponent = (props: any) => {
   return (
     <UploadImageToS3WithNativeSdk

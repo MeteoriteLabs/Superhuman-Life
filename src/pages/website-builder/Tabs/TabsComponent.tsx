@@ -28,23 +28,19 @@ export default function TabsComponent() {
   const [key, setKey] = useState("professional");
   const auth = useContext(AuthContext);
   const createWebpageDetailsComponent = useRef<any>(null);
-
   const [websiteData, setWebsiteData] = useState<any>({});
   const [templateName, setTemplateName] = useState<string>("");
   const [formSwitch, setFormSwitch] = useState<boolean>(true);
   const [templateId, setTemplateId] = useState<any>(null);
-  // const [templateId2, setTemplateId2] = useState<any>();
   const [newTemplateId, setNewTemplateId] = useState<any>();
 
   useQuery(FETCH_WEBSITE_DATA, {
     variables: { id: auth.userid },
     onCompleted: (r: any) => {
-      // console.log("TabsComponent I've been called");
       console.log(r);
       if (r.websiteData.length) {
         setWebsiteData(r.websiteData[0]);
         setTemplateName(r.websiteData[0].website_template.template_name);
-        // setTemplateId2(r.websiteData[0].website_template.id);
       } else {
         setWebsiteData(null);
       }
@@ -135,7 +131,7 @@ export default function TabsComponent() {
                     <Card.Text>
                       {" "}
                       {websiteData ? (
-                        <p> Www.dummy.sapienlife.com</p>
+                        <p> www.dummy.sapienlife.com</p>
                       ) : (
                         <p>..............................</p>
                       )}
@@ -204,7 +200,6 @@ export default function TabsComponent() {
                       className="d-flex justify-content-end text-light p-0"
                     >
                       <WebsiteModalComponent
-                        // setSelectedTemplateName={setSelectedTemplateName}
                         setTemplateId={setTemplateId}
                         setNewTemplateId={setNewTemplateId}
                       />
@@ -221,7 +216,6 @@ export default function TabsComponent() {
                           <Image fluid src="assets/website_images/black.svg" />
                           <div className="template-btn">
                             <WebsiteModalComponent
-                              // setSelectedTemplateName={setSelectedTemplateName}
                               setTemplateId={setTemplateId}
                               setNewTemplateId={setNewTemplateId}
                             />
@@ -330,7 +324,6 @@ export default function TabsComponent() {
       <CreateWebpageDetails
         templateId={templateId}
         newTemplateId={newTemplateId}
-        setTemplateName={setTemplateName}
         setWebsiteData={setWebsiteData}
         ref={createWebpageDetailsComponent}
       ></CreateWebpageDetails>
