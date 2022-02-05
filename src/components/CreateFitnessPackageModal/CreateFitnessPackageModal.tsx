@@ -35,7 +35,7 @@ export default function CreateFitnessPackageModal({ name, formUISchema, formSubm
 
             updateFinesspackagepricing = pricingDetailRef.current.getFitnessPackagePricing?.();
 
-            if (formData.fitness_package_type === "60e045867df648b0f5756c32" || formData.mode === "Online Workout" || formData.mode === "Offline Workout") {
+            if (formData.fitness_package_type === "Classic Class" || formData.mode === "Online Workout" || formData.mode === "Offline Workout") {
                 updateFinesspackagepricing = updateFinesspackagepricing.slice(0, 1)
             }
         }
@@ -107,7 +107,7 @@ export default function CreateFitnessPackageModal({ name, formUISchema, formSubm
 
         if (mode === "Online Workout" || mode === "Offline Workout") {
             duration = 1
-        } if (fitness_package_type !== "60e045867df648b0f5756c32") {
+        } if (fitness_package_type !== "Classic Class") {
             duration = 30
         }
         // duration = (mode === "Online Workout" || mode === "Offline Workout") ? 1 : 30;

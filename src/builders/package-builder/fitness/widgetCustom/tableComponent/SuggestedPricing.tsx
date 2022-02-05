@@ -9,7 +9,7 @@ type Props = {
     auth: { userid: string }
     fitnesspackagepricing: { duration: number, voucher: string, mrp: number | string, }[]
     userData: {
-        fitness_package_type: "60e0455e7df648b0f5756c2f" | "60e045697df648b0f5756c30" | "60e045867df648b0f5756c32"
+        fitness_package_type: any
         ptonline: number,
         ptoffline: number,
         grouponline: number,
@@ -158,19 +158,20 @@ export default function SuggestedPricing({ type, mode, auth, fitnesspackageprici
 
     const fillData = (data: { suggestedPricings: any[]; }) => {
         //personal-training
-        if (fitness_package_type === "60e0455e7df648b0f5756c2f") {
+        console.log(fitness_package_type);
+        if (fitness_package_type === "Personal Training") {
             PTSuggestedPricing(data)
 
             // group
-        } else if (fitness_package_type === "60e045697df648b0f5756c30") {
+        } else if (fitness_package_type === "Group Class") {
             groupSuggestedPricing(data)
 
             //record/ classic
-        } else if (fitness_package_type === "60e045867df648b0f5756c32") {
+        } else if (fitness_package_type === "Classic Class") {
             classicSuggestPricing(data)
 
             // custom
-        } else if (fitness_package_type === "60e045747df648b0f5756c31")
+        } else if (fitness_package_type === "Custom Fitness")
             customSuggestPrice(data)
     }
 

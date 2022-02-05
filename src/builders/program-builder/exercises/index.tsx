@@ -6,6 +6,7 @@ import { GET_TABLEDATA} from './queries';
 import AuthContext from "../../../context/auth-context";
 import ActionButton from "../../../components/actionbutton";
 import CreateEditExercise from "./createoredit-exercise";
+import {flattenObj} from '../../../components/utils/responseFlatten';
 
 
 export default function EventsTab() {
@@ -63,8 +64,10 @@ export default function EventsTab() {
     }
 
     function loadData(data: any) {
+        const flattenData = flattenObj({...data});
+        console.log(flattenData);
         setTableData(
-            [...data.exercises].map((detail) => {
+            [...flattenData.exercises].map((detail) => {
                 return {
                     id: detail.id,
                     exerciseName: detail.exercisename,
@@ -72,7 +75,7 @@ export default function EventsTab() {
                         return disc.disciplinename;
                     }),
                     level: detail.exerciselevel,
-                    muscleGroup: detail.exercisemusclegroups.map((muscle: any) => {
+                    muscleGroup: detail.muscle_groups.map((muscle: any) => {
                         return muscle.name
                     }).join(", "),
                     equipment: detail.equipment_lists.map((equipment: any) => {

@@ -3,6 +3,7 @@ import { Typeahead } from 'react-bootstrap-typeahead';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 import { FETCH_FITNESSDISCPLINES } from '../../builders/program-builder/workout/queries';
 import { useQuery } from "@apollo/client";
+import { flattenObj } from '../utils/responseFlatten';
 
 const MultiSelect = (props: any) => {
 
@@ -14,8 +15,9 @@ const MultiSelect = (props: any) => {
       }
   
      function loadData(data: any) {
+          const flattenedData = flattenObj({...data});
           setFitnessDisciplines(
-              [...data.fitnessdisciplines].map((discipline) => {
+              [...flattenedData.fitnessdisciplines].map((discipline) => {
                   return {
                       id: discipline.id,
                       disciplineName: discipline.disciplinename,
