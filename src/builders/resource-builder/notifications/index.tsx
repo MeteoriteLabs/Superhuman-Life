@@ -6,6 +6,7 @@ import AuthContext from "../../../context/auth-context";
 import ActionButton from "../../../components/actionbutton/index";
 import CreateEditMessage from "./createoredit-message";
 import { GET_NOTIFICATIONS } from "./queries";
+import { flattenObj } from "../../../components/utils/responseFlatten";
 
 export default function MessagePage() {
      const auth = useContext(AuthContext);
@@ -75,8 +76,9 @@ export default function MessagePage() {
      }
 
      function loadData(data: any) {
+          const flattenData = flattenObj({...data});
           setDataTable(
-               [...data.prerecordedmessages].map((Detail) => {
+               [...flattenData.notifications].map((Detail) => {
                     return {
                          id: Detail.id,
                          title: Detail.title,

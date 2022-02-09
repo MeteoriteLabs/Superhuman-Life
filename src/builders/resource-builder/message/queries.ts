@@ -1,160 +1,175 @@
 import { gql } from "@apollo/client";
 
 export const GET_TRIGGERS = gql`
-     query FetchTypesTriggers {
-          mindsetmessagetypes {
-               id
-               type
-          }
-     }
+  query FetchTypesTriggers {
+    prerecordedtypes {
+      data {
+        id
+        attributes {
+          name
+        }
+      }
+    }
+  }
 `;
 
 export const GET_MESSAGES = gql`
-     query FeedSearchQuery($filter: String!, $id: String) {
-          mindsetmessages(sort: "updatedAt", where: { title_contains: $filter, users_permissions_user: { id: $id } }) {
-               id
-               title
-               description
-               minidescription
-               tags
-               status
-               updatedAt
-               users_permissions_user {
-                    id
-               }
-               mindsetmessagetype {
-                    id
-                    type
-               }
+  query FeedSearchQuery($filter: String!, $id: ID!) {
+    prerecordedMessages(
+      sort: ["updatedAt"]
+      filters: {
+        Title: { containsi: $filter }
+        users_permissions_user: { id: { eq: $id } }
+      }
+    ) {
+      data {
+        id
+        attributes {
+          Title
+          Description
+          tags
+          Status
+          Image_URL
+          uploadID
+          updatedAt
+          users_permissions_user {
+            data {
+              id
+            }
           }
-          mindsetmessagetypes {
-               id
-               type
+          resourcetype {
+            data {
+              id
+              attributes {
+                name
+              }
+            }
           }
-     }
+        }
+      }
+    }
+    prerecordedtypes {
+      data {
+        id
+        attributes {
+          name
+        }
+      }
+    }
+  }
 `;
 
 export const ADD_MESSAGE = gql`
-     mutation msg(
-          $title: String
-          $tags: String
-          $description: String
-          $minidesc: String
-          $mindsetmessagetype: ID
-          $mediaurl: String
-          $user_permissions_user: ID
-          $upload: String
-     ) {
-          createMindsetmessage(
-               input: {
-                    data: {
-                         title: $title
-                         tags: $tags
-                         mindsetmessagetype: $mindsetmessagetype
-                         description: $description
-                         minidescription: $minidesc
-                         mediaurl: $mediaurl
-                         users_permissions_user: $user_permissions_user
-                         uploadID: $upload
-                    }
-               }
-          ) {
-               mindsetmessage {
-                    id
-                    createdAt
-                    updatedAt
-                    title
-                    tags
-                    minidescription
-               }
-          }
-     }
+  mutation msg(
+    $title: String
+    $tags: String
+    $description: String
+    $minidesc: String
+    $mindsetmessagetype: ID
+    $mediaurl: String
+    $user_permissions_user: ID
+    $upload: String
+  ) {
+    createPrerecordedMessage(
+      data: {
+        Title: $title
+        tags: $tags
+        resourcetype: $mindsetmessagetype
+        Description: $description
+        minidescription: $minidesc
+        Image_URL: $mediaurl
+        users_permissions_user: $user_permissions_user
+        uploadID: $upload
+      }
+    ) {
+      data {
+        id
+      }
+    }
+  }
 `;
 export const UPDATE_MESSAGE = gql`
-     mutation updatemsg(
-          $title: String
-          $description: String
-          $minidesc: String
-          $mindsetmessagetype: ID
-          $tags: String
-          $mediaurl: String
-          $userpermission: ID
-          $messageid: ID!
-          $upload: String
-     ) {
-          updateMindsetmessage(
-               input: {
-                    data: {
-                         title: $title
-                         description: $description
-                         minidescription: $minidesc
-                         mediaurl: $mediaurl
-                         tags: $tags
-                         mindsetmessagetype: $mindsetmessagetype
-                         users_permissions_user: $userpermission
-                         uploadID: $upload
-                    }
-                    where: { id: $messageid }
-               }
-          ) {
-               mindsetmessage {
-                    id
-                    title
-                    tags
-                    description
-                    minidescription
-                    mediaurl
-               }
-          }
-     }
+  mutation updatemsg(
+    $title: String
+    $description: String
+    $minidesc: String
+    $mindsetmessagetype: ID
+    $tags: String
+    $mediaurl: String
+    $userpermission: ID
+    $messageid: ID!
+    $upload: String
+  ) {
+    updatePrerecordedMessage(
+      id: $messageid
+      data: {
+        title: $title
+        description: $description
+        minidescription: $minidesc
+        mediaurl: $mediaurl
+        tags: $tags
+        resourcetype: $mindsetmessagetype
+        users_permissions_user: $userpermission
+        uploadID: $upload
+      }
+    ) {
+      data {
+        id
+      }
+    }
+  }
 `;
 
 export const DELETE_MESSAGE = gql`
-     mutation deleteMessage($id: ID!) {
-          deleteMindsetmessage(input: { where: { id: $id } }) {
-               mindsetmessage {
-                    id
-                    __typename
-               }
-          }
-     }
+  mutation deleteMessage($id: ID!) {
+    deletePrerecordedMessage(id: $id) {
+      data {
+        id
+      }
+    }
+  }
 `;
 
 export const UPDATE_STATUS = gql`
-     mutation updatestatus($status: Boolean, $messageid: ID!) {
-          updateMindsetmessage(input: { data: { status: $status }, where: { id: $messageid } }) {
-               mindsetmessage {
-                    id
-                    title
-                    description
-                    minidescription
-                    mediaurl
-                    status
-               }
-          }
-     }
+  mutation updatestatus($status: Boolean, $messageid: ID!) {
+    updatePrerecordedMessage(id: $messageid, data: { Status: $status }) {
+      data {
+        id
+      }
+    }
+  }
 `;
 export const GET_MESSAGE = gql`
-     query getmessage($id: ID!) {
-          mindsetmessage(id: $id) {
-               id
-               title
-               description
-               minidescription
-               tags
-               uploadID
-               status
-               updatedAt
-               users_permissions_user {
-                    id
-               }
-               mindsetmessagetype {
-                    id
-                    type
-               }
-               users_permissions_user {
-                    id
-               }
+  query getmessage($id: ID!) {
+    prerecordedMessage(id: $id) {
+      data {
+        id
+        attributes {
+          Title
+          Description
+          minidescription
+          tags
+          Status
+          Image_URL
+          uploadID
+          updatedAt
+          users_permissions_user {
+            data {
+              id
+            }
           }
-     }
+          resourcetype {
+            data {
+              id
+            }
+          }
+          users_permissions_user {
+            data {
+              id
+            }
+          }
+        }
+      }
+    }
+  }
 `;

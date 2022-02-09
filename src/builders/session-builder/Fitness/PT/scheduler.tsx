@@ -8,6 +8,8 @@ import moment from 'moment';
 import AuthContext from '../../../../context/auth-context';
 import {Link} from 'react-router-dom';
 
+import { flattenObj } from '../../../../components/utils/responseFlatten';
+
 import '../fitness.css';
 import '../Group/actionButton.css';
 
@@ -77,8 +79,10 @@ const Scheduler = () => {
     }
 
     function loadData() {
+        const flattenData1 = flattenObj({ ...data1 });
+        const flattenData2 = flattenObj({ ...data2 });
         setData(
-            [...data1.fitnessprograms].map((detail) => {
+            [...flattenData1.fitnessprograms].map((detail) => {
                 return {
                     id: detail.id,
                     programName: detail.title,
@@ -95,7 +99,7 @@ const Scheduler = () => {
         )
 
         setUserPackage(
-            [...data2.userPackages].map((packageItem) => {
+            [...flattenData2.clientPackages].map((packageItem) => {
                 let renewDay: any = '';
                 if (packageItem.fitnesspackages.length !== 0) {
                     renewDay = new Date(packageItem.effective_date);

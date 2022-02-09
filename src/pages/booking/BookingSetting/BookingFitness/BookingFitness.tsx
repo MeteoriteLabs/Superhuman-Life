@@ -7,6 +7,7 @@ import ConfirmRequestAction from './ConfirmRequestAction';
 
 import { BOOKING_CONFIG } from '../../GraphQL/queries';
 import { useQuery } from '@apollo/client';
+import { flattenObj } from '../../../../components/utils/responseFlatten';
 
 export default function BookingFitness() {
     const auth = useContext(authContext);
@@ -28,8 +29,9 @@ export default function BookingFitness() {
 
     const loadData = (data) => {
         // console.log('booking setting data', { data });
+        const flattenData = flattenObj({...data});
         setBookingPackage(
-            [...data.bookingConfigs?.map((fitnessPackage, index) => {
+            [...flattenData.bookingConfigs?.map((fitnessPackage, index) => {
                 return {
                     id: fitnessPackage.id,
                     packageName: fitnessPackage.fitnesspackage.packagename,

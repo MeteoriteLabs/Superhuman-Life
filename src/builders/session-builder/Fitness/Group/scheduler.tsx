@@ -11,6 +11,8 @@ import AuthContext from '../../../../context/auth-context';
 import {Link} from 'react-router-dom';
 import TimePicker from 'rc-time-picker';
 
+import { flattenObj } from '../../../../components/utils/responseFlatten';
+
 import 'rc-time-picker/assets/index.css';
 import './actionButton.css';
 
@@ -102,8 +104,13 @@ const Scheduler = () => {
 
     const loadData = () => {
 
+        const flattenData1 = flattenObj({...data1});
+        const flattenData2 = flattenObj({...data2});
+        const flattenData3 = flattenObj({...data3});
+        const flattenData4 = flattenObj({...data4});
+
         setData(
-            [...data4.fitnessprograms].map((detail) => {
+            [...flattenData4.fitnessprograms].map((detail) => {
                 return {
                     id: detail.id,
                     programName: detail.title,
@@ -124,31 +131,31 @@ const Scheduler = () => {
         let arrayData: any[] = []
 
         let fitnessProgramItem: any = {};
-        for (let i = 0; i < data1?.fitnesspackages.length; i++) {
-            for (let j = 0; j < data2?.programManagers.length; j++) {
-                if (data1.fitnesspackages[i].id === data2.programManagers[j].fitnesspackages[0].id) {
-                    fitnessProgramItem.proManagerFitnessId = data2.programManagers[j].fitnessprograms[0].id;
-                    fitnessProgramItem.title = data2.programManagers[j].fitnessprograms[0].title;
-                    fitnessProgramItem.published_at = data2.programManagers[j].fitnessprograms[0].published_at
-                    fitnessProgramItem.proManagerId = data2.programManagers[j].id;
+        for (let i = 0; i < flattenData1?.fitnesspackages.length; i++) {
+            for (let j = 0; j < flattenData2?.programManagers.length; j++) {
+                if (flattenData1.fitnesspackages[i].id === flattenData2.programManagers[j].fitnesspackages[0].id) {
+                    fitnessProgramItem.proManagerFitnessId = flattenData2.programManagers[j].fitnessprograms[0].id;
+                    fitnessProgramItem.title = flattenData2.programManagers[j].fitnessprograms[0].title;
+                    fitnessProgramItem.published_at = flattenData2.programManagers[j].fitnessprograms[0].published_at
+                    fitnessProgramItem.proManagerId = flattenData2.programManagers[j].id;
 
-                    arrayData.push({ ...data1.fitnesspackages[i], ...fitnessProgramItem });
+                    arrayData.push({ ...flattenData1.fitnesspackages[i], ...fitnessProgramItem });
                 }
             }
         }
 
         let arrayA = arrayData.map(item => item.id);
 
-        const filterPackage = data1?.fitnesspackages.filter((item: { id: string; }) => !arrayA.includes(item.id));
+        const filterPackage = flattenData1?.fitnesspackages.filter((item: { id: string; }) => !arrayA.includes(item.id));
         filterPackage.forEach(item => {
             arrayData.push(item)
         })
 
         for (let i = 0; i < arrayData.length; i++) {
-            for (let j = 0; j < data3.userPackages.length; j++) {
-                if (data3.userPackages[j].program_managers.length > 0) {
-                    if (arrayData[i].proManagerFitnessId === data3.userPackages[j].program_managers[0].fitnessprograms[0].id) {
-                        arrayFitnessPackage.push({ ...arrayData[i], ...data3.userPackages[j].users_permissions_user });
+            for (let j = 0; j < flattenData3.clientPackages.length; j++) {
+                if (flattenData3.clientPackages[j].program_managers.length > 0) {
+                    if (arrayData[i].proManagerFitnessId === flattenData3.clientPackages[j].program_managers[0].fitnessprograms[0].id) {
+                        arrayFitnessPackage.push({ ...arrayData[i], ...flattenData3.clientPackages[j].users_permissions_user });
                     } else {
                         arrayFitnessPackage.push(arrayData[i]);
                         break;
@@ -171,7 +178,7 @@ const Scheduler = () => {
 
                     proManagerId: packageItem.proManagerId,
                     proManagerFitnessId: packageItem.proManagerFitnessId,
-                    client: packageItem.username ? packageItem.username : "N/A",
+                    client: packageItem.username ? [packageItem.username] : "N/A",
                     time: packageItem.published_at ? moment(packageItem.published_at).format('h:mm:ss a') : "N/A",
                     programName: packageItem.title ? packageItem.title : "N/A",
                     programStatus: packageItem.username ? "Assigned" : "N/A",
@@ -299,11 +306,11 @@ const Scheduler = () => {
                                                     <span>Time:</span>
                                                 </Col>
                                                 <Col lg={5} className="text-center">
-                                                    <span className="p-1 scheduler-badge">{userPackage[programIndex].groupStart.slice(0,2) + ":" + userPackage[programIndex].groupStart.slice(2,4)}</span>
+                                                    <span className="p-1 scheduler-badge">{userPackage[programIndex].groupStart?.slice(0,2) + ":" + userPackage[programIndex].groupStart?.slice(2,4)}</span>
                                                 </Col>
                                                     to
                                                 <Col lg={5} className="text-center">
-                                                    <span className="p-1 scheduler-badge">{userPackage[programIndex].groupEnd.slice(0,2) + ":" + userPackage[programIndex].groupEnd.slice(2,4)}</span>
+                                                    <span className="p-1 scheduler-badge">{userPackage[programIndex].groupEnd?.slice(0,2) + ":" + userPackage[programIndex].groupEnd?.slice(2,4)}</span>
                                                 </Col>
                                             </Row>
                                         </div>

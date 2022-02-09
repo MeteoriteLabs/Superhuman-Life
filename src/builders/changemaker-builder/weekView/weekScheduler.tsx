@@ -43,7 +43,7 @@ const WeekScheduler = (props: any) => {
             dates.map((val, index) => {
                 return (
                     <>
-                        <div className="cell" style={{ minHeight: '60px' }}>
+                        <div key={index} className="cell" style={{ minHeight: '60px' }}>
                             <div className="event-dayOfWeek text-center mt-2">
                                 <span style={{ fontSize: '14px'}}>{moment(val).format("dddd")}</span>
                             </div>
@@ -100,9 +100,9 @@ const WeekScheduler = (props: any) => {
                         <div className="cell" style={{ backgroundColor: 'white', position: 'relative', minHeight: '60px' }}></div>
                         {handleDaysRowRender()}
                     </div>
-                    {hours.map(h => {
+                    {hours.map((h, index) => {
                         return (
-                            <div className="time-row" style={{ backgroundColor: 'white' }}>
+                            <div key={index} className="time-row" style={{ backgroundColor: 'white' }}>
                                 <div className="cell" style={{ position: 'relative' }}>
                                     <span style={{
                                         position: 'absolute', lineHeight: '14px', top: '-8px', fontSize: '14px',
@@ -110,12 +110,12 @@ const WeekScheduler = (props: any) => {
                                         zIndex: 999
                                     }}>{`${h}:00`}</span>
                                 </div>
-                                {days.map(d => {
+                                {days.map((d, index) => {
                                     return (
-                                        <div className="cell container">
-                                            {min.map(m => {
+                                        <div key={index} className="cell container">
+                                            {min.map((m, index) => {
                                                 return (
-                                                    <div className="time">
+                                                    <div key={index} className="time">
                                                         {(arr[d][h][m]) && arr[d][h][m].map((val, index) => {
                                                             val.index = index;
                                                             return (

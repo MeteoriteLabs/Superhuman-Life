@@ -29,7 +29,7 @@ export const flattenObj = (data) => {
         }
 
         for (const key in data) {
-            if(key === "fitnesspackagepricing"){
+            if(key === "fitnesspackagepricing" || key === "events" || key === "rest_days" || key === "Changemaker_weekly_schedule") {
                 continue;
             }else {
                 data[key] = flattenObj(data[key]);

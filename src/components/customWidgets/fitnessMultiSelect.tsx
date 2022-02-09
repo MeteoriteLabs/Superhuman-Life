@@ -7,7 +7,9 @@ import { flattenObj } from '../utils/responseFlatten';
 
 const MultiSelect = (props: any) => {
 
-     const [multiSelections, setMultiSelections] = useState([]);
+     const [multiSelections, setMultiSelections] = useState(
+          props.value?.length > 0 ? props.value : []
+        );
      const [fitnessdisciplines, setFitnessDisciplines] = useState<any[]>([]);
 
      function FetchData(){
@@ -20,7 +22,7 @@ const MultiSelect = (props: any) => {
               [...flattenedData.fitnessdisciplines].map((discipline) => {
                   return {
                       id: discipline.id,
-                      disciplineName: discipline.disciplinename,
+                      disciplinename: discipline.disciplinename,
                       updatedAt: discipline.updatedAt
                   }
               })
@@ -40,7 +42,7 @@ const MultiSelect = (props: any) => {
                <label>Fitness discplines</label>
                <Typeahead
                id="basic-typeahead-multiple"
-               labelKey="disciplineName"
+               labelKey="disciplinename"
                onChange={OnChange}
                options={fitnessdisciplines}
                placeholder="Choose multiple discplines..."

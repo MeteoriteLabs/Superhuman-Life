@@ -1,15 +1,14 @@
 import { gql } from "@apollo/client";
 
 export const GET_ALL_CLIENT_PACKAGE_BY_TYPE = gql`
-  query userPackages($id: ID!, $type: String) {
+  query userPackages($id: ID!, $type: [String]) {
     clientPackages(
       filters: {
         fitnesspackages: {
           users_permissions_user: { id: { eq: $id } }
-          fitness_package_type: { type: { eq: $type } }
+          fitness_package_type: { type: { or: $type } }
         }
       }
-      sort: ["updatedAt"]
     ) {
       data {
         id
@@ -31,6 +30,7 @@ export const GET_ALL_CLIENT_PACKAGE_BY_TYPE = gql`
                 expiry_date
                 fitness_package_type {
                   data {
+                    id
                     attributes {
                       type
                     }
@@ -61,12 +61,21 @@ export const GET_ALL_CLIENT_PACKAGE_BY_TYPE = gql`
                       expiry_date
                       fitness_package_type {
                         data {
+                          id
                           attributes {
                             type
                           }
                         }
                       }
                       packagename
+                      groupstarttime
+                      groupendtime
+                      restdays
+                      ptonline
+                      ptoffline
+                      grouponline
+                      groupoffline
+                      recordedclasses
                       duration
                       Status
                     }
@@ -79,9 +88,9 @@ export const GET_ALL_CLIENT_PACKAGE_BY_TYPE = gql`
                       title
                       duration_days
                       rest_days
-                      events
                       start_dt
                       level
+                      events
                       description
                       renewal_dt
                       fitnessdisciplines {

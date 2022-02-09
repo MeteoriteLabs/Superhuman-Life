@@ -27,6 +27,8 @@ import AuthContext from "../../../../context/auth-context";
 import TimePicker from "rc-time-picker";
 import "rc-time-picker/assets/index.css";
 
+import { flattenObj } from "../../../../components/utils/responseFlatten";
+
 const WorkHours = () => {
   const auth = useContext(AuthContext);
   const [value, onChange] = useState(new Date());
@@ -54,14 +56,16 @@ const WorkHours = () => {
       id: auth.userid,
     },
     onCompleted: (data) => {
-      setHolidays(data.changemakerHolidays);
+      const flattenData = flattenObj({ ...data });
+      setHolidays(flattenData.changemakerHolidays);
     },
   });
 
   useQuery(GET_USER_WEEKLY_CONFIG, {
     variables: { id: auth.userid },
     onCompleted: (data) => {
-      setMasterSettings(data.usersPermissionsUsers);
+      const flattenData = flattenObj({ ...data });
+      setMasterSettings(flattenData.usersPermissionsUsers);
     },
   });
   const [createChangeMakerHoliday] = useMutation(CREATE_CHANGEMAKER_HOLIDAY);

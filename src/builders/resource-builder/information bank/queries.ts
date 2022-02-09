@@ -1,158 +1,170 @@
 import { gql } from "@apollo/client";
 
 export const GET_TRIGGERS = gql`
-     query FetchTypesTriggers {
-          informationbankmessagestypes {
-               id
-               type
-          }
-     }
+  query FetchTypesTriggers {
+    prerecordedtypes {
+      data {
+        id
+        attributes {
+          name
+        }
+      }
+    }
+  }
 `;
 
 export const ADD_MESSAGE = gql`
-     mutation msg(
-          $title: String
-          $tags: String
-          $minidesc: String
-          $description: String
-          $infomessagetype: ID
-          $mediaurl: String
-          $user_permissions_user: ID
-          $upload: String
-     ) {
-          createInformationbankmessage(
-               input: {
-                    data: {
-                         title: $title
-                         tags: $tags
-                         informationbankmessagestype: $infomessagetype
-                         description: $description
-                         minidescription: $minidesc
-                         mediaurl: $mediaurl
-                         users_permissions_user: $user_permissions_user
-                         uploadID: $upload
-                    }
-               }
-          ) {
-               informationbankmessage {
-                    id
-                    createdAt
-                    updatedAt
-                    title
-                    tags
-                    minidescription
-               }
-          }
-     }
+  mutation msg(
+    $title: String
+    $tags: String
+    $minidesc: String
+    $description: String
+    $infomessagetype: ID
+    $mediaurl: String
+    $user_permissions_user: ID
+    $upload: String
+  ) {
+    createInformationbankmessage(
+      data: {
+        title: $title
+        tags: $tags
+        resourcetype: $infomessagetype
+        description: $description
+        minidescription: $minidesc
+        mediaurl: $mediaurl
+        users_permissions_user: $user_permissions_user
+        uploadID: $upload
+      }
+    ) {
+      data {
+        id
+      }
+    }
+  }
 `;
 export const UPDATE_MESSAGE = gql`
-     mutation updatemsg(
-          $title: String
-          $description: String
-          $minidesc: String
-          $informationbankmessagestype: ID
-          $tags: String
-          $mediaurl: String
-          $userpermission: ID
-          $messageid: ID!
-          $upload: String
-     ) {
-          updateInformationbankmessage(
-               input: {
-                    data: {
-                         title: $title
-                         description: $description
-                         minidescription: $minidesc
-                         mediaurl: $mediaurl
-                         tags: $tags
-                         informationbankmessagestype: $informationbankmessagestype
-                         users_permissions_user: $userpermission
-                         uploadID: $upload
-                    }
-                    where: { id: $messageid }
-               }
-          ) {
-               informationbankmessage {
-                    id
-                    title
-                    tags
-                    description
-                    minidescription
-                    mediaurl
-               }
-          }
-     }
+  mutation updatemsg(
+    $title: String
+    $description: String
+    $minidesc: String
+    $informationbankmessagestype: ID
+    $tags: String
+    $mediaurl: String
+    $userpermission: ID
+    $messageid: ID!
+    $upload: String
+  ) {
+    updateInformationbankmessage(
+      id: $messageid
+      data: {
+        title: $title
+        description: $description
+        minidescription: $minidesc
+        mediaurl: $mediaurl
+        tags: $tags
+        informationbankmessagestype: $informationbankmessagestype
+        users_permissions_user: $userpermission
+        uploadID: $upload
+      }
+    ) {
+      data {
+        id
+      }
+    }
+  }
 `;
 
 export const GET_MESSAGES = gql`
-     query FeedSearchQuery($filter: String!, $id: String) {
-          informationbankmessages(
-               sort: "updatedAt"
-               where: { title_contains: $filter, users_permissions_user: { id: $id } }
-          ) {
-               id
-               title
-               description
-               updatedAt
-               status
-               users_permissions_user {
-                    id
-               }
-               informationbankmessagestype {
-                    id
-                    type
-               }
+  query FeedSearchQuery($filter: String!, $id: ID!) {
+    informationbankmessages(
+      sort: ["updatedAt"]
+      filters: {
+        title: { containsi: $filter }
+        users_permissions_user: { id: { eq: $id } }
+      }
+    ) {
+      data {
+        id
+        attributes {
+          tags
+          title
+          description
+          updatedAt
+          status
+          users_permissions_user {
+            data {
+              id
+            }
           }
-          informationbankmessagestypes {
-               id
-               type
+          resourcetype {
+            data {
+              id
+              attributes {
+                name
+              }
+            }
           }
-     }
+        }
+      }
+    }
+    prerecordedtypes {
+      data {
+        id
+        attributes {
+          name
+        }
+      }
+    }
+  }
 `;
 export const DELETE_MESSAGE = gql`
-     mutation deleteMessage($id: ID!) {
-          deleteInformationbankmessage(input: { where: { id: $id } }) {
-               informationbankmessage {
-                    id
-                    __typename
-               }
-          }
-     }
+  mutation deleteMessage($id: ID!) {
+    deleteInformationbankmessage(id: $id) {
+      data {
+        id
+      }
+    }
+  }
 `;
 
 export const UPDATE_STATUS = gql`
-     mutation updatestatus($status: Boolean, $messageid: ID!) {
-          updateInformationbankmessage(input: { data: { status: $status }, where: { id: $messageid } }) {
-               informationbankmessage {
-                    id
-                    title
-                    description
-                    minidescription
-                    mediaurl
-                    status
-               }
-          }
-     }
+  mutation updatestatus($status: Boolean, $messageid: ID!) {
+    updateInformationbankmessage(id: $messageid, data: { status: $status }) {
+      data {
+        id
+      }
+    }
+  }
 `;
 export const GET_MESSAGE = gql`
-     query getmessage($id: ID!) {
-          informationbankmessages(where: { id: $id }) {
-               id
-               title
-               description
-               tags
-               minidescription
-               updatedAt
-               status
-               uploadID
-               mediaurl
-               users_permissions_user {
-                    id
-               }
-               informationbankmessagestype {
-                    id
-                    type
-               }
+  query getmessage($id: ID!) {
+    informationbankmessages(filters: { id: { eq: $id } }) {
+      data {
+        id
+        attributes {
+          title
+          description
+          tags
+          minidescription
+          updatedAt
+          status
+          uploadID
+          mediaurl
+          users_permissions_user {
+            data {
+              id
+            }
           }
-     }
+          resourcetype {
+            data {
+              id
+              attributes {
+                name
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 `;

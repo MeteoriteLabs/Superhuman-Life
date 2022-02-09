@@ -9,6 +9,7 @@ import { UPDATE_STARTDATE } from '../../graphQL/mutation';
 import moment from 'moment';
 import ActionButton from '../../../../components/actionbutton';
 import FitnessAction from '../FitnessAction';
+import { flattenObj } from '../../../../components/utils/responseFlatten';
 
 export default function Group(props) {
 
@@ -50,20 +51,24 @@ export default function Group(props) {
     const loadData = () => {
 
         let arrayFitnessPackage: any[] = [];
-        let arrayData: any[] = []
+        let arrayData: any[] = [];
+
+        const flattenData1 = flattenObj({...data1});
+        const flattenData2 = flattenObj({...data2});
+        const flattenData3 = flattenObj({...data3});
 
         let fitnessProgramItem: any = {};
-        for (let i = 0; i < data1?.fitnesspackages.length; i++) {
-            for (let j = 0; j < data2?.programManagers.length; j++) {
-                if (data1.fitnesspackages[i].id === data2.programManagers[j].fitnesspackages[0].id) {
-                    fitnessProgramItem.proManagerFitnessId = data2.programManagers[j].fitnessprograms[0].id;
-                    fitnessProgramItem.title = data2.programManagers[j].fitnessprograms[0].title;
-                    fitnessProgramItem.start_dt = data2.programManagers[j].fitnessprograms[0].start_dt;
-                    fitnessProgramItem.renewal_dt = data2.programManagers[j].fitnessprograms[0].renewal_dt;
-                    fitnessProgramItem.published_at = data2.programManagers[j].fitnessprograms[0].published_at
-                    fitnessProgramItem.proManagerId = data2.programManagers[j].id;
+        for (let i = 0; i < flattenData1?.fitnesspackages.length; i++) {
+            for (let j = 0; j < flattenData2?.programManagers?.length; j++) {
+                if (flattenData1.fitnesspackages[i].id === flattenData2.programManagers[j].fitnesspackages[0].id) {
+                    fitnessProgramItem.proManagerFitnessId = flattenData2.programManagers[j].fitnessprograms[0].id;
+                    fitnessProgramItem.title = flattenData2.programManagers[j].fitnessprograms[0].title;
+                    fitnessProgramItem.start_dt = flattenData2.programManagers[j].fitnessprograms[0].start_dt;
+                    fitnessProgramItem.renewal_dt = flattenData2.programManagers[j].fitnessprograms[0].renewal_dt;
+                    fitnessProgramItem.published_at = flattenData2.programManagers[j].fitnessprograms[0].published_at
+                    fitnessProgramItem.proManagerId = flattenData2.programManagers[j].id;
 
-                    arrayData.push({ ...data1.fitnesspackages[i], ...fitnessProgramItem });
+                    arrayData.push({ ...flattenData1.fitnesspackages[i], ...fitnessProgramItem });
                 }
             }
         }
@@ -71,7 +76,7 @@ export default function Group(props) {
 
         let arrayA = arrayData.map(item => item.id);
 
-        const filterPackage = data1?.fitnesspackages.filter((item: { id: string; }) => !arrayA.includes(item.id));
+        const filterPackage = flattenData1?.fitnesspackages.filter((item: { id: string; }) => !arrayA.includes(item.id));
         filterPackage.forEach(item => {
             arrayData.push(item)
         })
@@ -79,10 +84,10 @@ export default function Group(props) {
 
 
         for (let i = 0; i < arrayData.length; i++) {
-            for (let j = 0; j < data3.userPackages.length; j++) {
-                if (data3.userPackages[j].program_managers.length > 0) {
-                    if (arrayData[i].proManagerFitnessId === data3.userPackages[j].program_managers[0].fitnessprograms[0].id) {
-                        arrayFitnessPackage.push({ ...arrayData[i], ...data3.userPackages[j].users_permissions_user });
+            for (let j = 0; j < flattenData3.clientPackages?.length; j++) {
+                if (flattenData3.clientPackages[j].program_managers.length > 0) {
+                    if (arrayData[i].proManagerFitnessId === flattenData3.clientPackages[j].program_managers[0].fitnessprograms[0].id) {
+                        arrayFitnessPackage.push({ ...arrayData[i], ...flattenData3.clientPackages[j].users_permissions_user });
                     } else {
                         arrayFitnessPackage.push(arrayData[i]);
                         break;
@@ -102,7 +107,7 @@ export default function Group(props) {
 
                     proManagerId: packageItem.proManagerId,
                     proManagerFitnessId: packageItem.proManagerFitnessId,
-                    client: packageItem.username ? packageItem.username : "N/A",
+                    client: packageItem.username ? [packageItem.username] : "N/A",
                     start_dt: packageItem.start_dt,
                     renewal_dt: packageItem.renewal_dt,
                     time: packageItem.published_at ? moment(packageItem.published_at).format('h:mm:ss a') : "N/A",

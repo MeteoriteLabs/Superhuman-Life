@@ -6,6 +6,8 @@ import { GET_ALL_CLIENT_PACKAGE_BY_TYPE } from "../graphql/queries";
 import { useQuery } from "@apollo/client";
 import AuthContext from "../../../context/auth-context";
 
+import { flattenObj } from "../../../components/utils/responseFlatten";
+
 const WeekView = (props: any) => {
   const auth = useContext(AuthContext);
   const [todaysEvents, setTodaysEvents] = useState<any[]>([]);
@@ -20,54 +22,33 @@ const WeekView = (props: any) => {
     moment().startOf("week").format("YYYY-MM-DD")
   );
 
-  const { data: data1 } = useQuery(GET_ALL_CLIENT_PACKAGE_BY_TYPE, {
+  useQuery(GET_ALL_CLIENT_PACKAGE_BY_TYPE, {
     variables: {
       id: auth.userid,
-      type_in: ["Personal Training", "Group Class", "Custom Fitness"],
+      type_in: ["Personal Training", "Group Class", "Custom"],
     },
-    onCompleted: () => {
-      LoadData(data1);
+    onCompleted: (data) => {
+      LoadData(data);
     },
   });
 
   function LoadData(data: any) {
-    console.log(data);
+    const flattenData = flattenObj({ ...data });
     var sortedPrograms: any = [];
     var Values: any = {};
-    for (var i = 0; i < data.userPackages.length; i++) {
-      if (data.userPackages[i].program_managers.length !== 0) {
-        if (
-          data.userPackages[i].fitnesspackages[0].fitness_package_type.type ===
-          "Group Class"
-        ) {
-          for (
-            var j = 0;
-            j < data.userPackages[i].program_managers[0].fitnessprograms.length;
-            j++
-          ) {
-            Values.effectiveDate =
-              data.userPackages[i].program_managers[0].fitnessprograms[
-                j
-              ].start_dt;
-            Values.program =
-              data.userPackages[i].program_managers[0].fitnessprograms[j];
+    for (var i = 0; i < flattenData.clientPackages.length; i++) {
+      if (flattenData.clientPackages[i].program_managers.length !== 0) {
+        if (flattenData.clientPackages[i].fitnesspackages[0].fitness_package_type.type === "Group Class") {
+          for (var j = 0; j < flattenData.clientPackages[i].program_managers[0].fitnessprograms.length; j++) {
+            Values.effectiveDate = flattenData.clientPackages[i].program_managers[0].fitnessprograms[j].start_dt;
+            Values.program = flattenData.clientPackages[i].program_managers[0].fitnessprograms[j];
             sortedPrograms.push(Values);
             Values = {};
           }
         } else {
-          for (
-            var k = 0;
-            k < data.userPackages[i].program_managers[0].fitnessprograms.length;
-            k++
-          ) {
-            Values.effectiveDate = data.userPackages[
-              i
-            ].effective_date.substring(
-              0,
-              data.userPackages[i].effective_date.indexOf("T")
-            );
-            Values.program =
-              data.userPackages[i].program_managers[0].fitnessprograms[k];
+          for (var k = 0; k < flattenData.clientPackages[i].program_managers[0].fitnessprograms.length; k++) {
+            Values.effectiveDate = flattenData.clientPackages[i].effective_date.substring(0,flattenData.clientPackages[i].effective_date.indexOf("T"));
+            Values.program = flattenData.clientPackages[i].program_managers[0].fitnessprograms[k];
             sortedPrograms.push(Values);
             Values = {};
           }
@@ -91,20 +72,15 @@ const WeekView = (props: any) => {
     }
   }
 
-  handleCurrentDate(props.events);
 
   function handleCurrentDate(data: any) {
-    console.log(data);
     const currentDay: any = [];
     const timePeriod: any = [];
-    for (var i = 0; i < data.length; i++) {
+    for (var i = 0; i < data?.length; i++) {
       var date1 = moment();
       var date2 = moment(data[i].effectiveDate);
       var diff = date1.diff(date2, "days");
-      var numberOfDaysPassed = moment()
-        .clone()
-        .startOf("week")
-        .diff(moment(), "days");
+      var numberOfDaysPassed = moment().clone().startOf("week").diff(moment(), "days");
       currentDay.push(diff - Math.abs(numberOfDaysPassed) + 1);
     }
     for (var j = 0; j < currentDay.length; j++) {
@@ -127,22 +103,13 @@ const WeekView = (props: any) => {
     var newEvent: any = {};
     var newArrayEvents: any = [];
     var newData: any = [];
-    for (var i = 0; i < values.length; i++) {
-      for (var j = 0; j < values[i].program.events.length; j++) {
+    for (var i = 0; i < values?.length; i++) {
+      for (var j = 0; j < values[i]?.program.events.length; j++) {
         if (
           parseInt(values[i].program.events[j].day) >= currentDay[i] &&
           parseInt(values[i].program.events[j].day) <= timePeriod[i]
         ) {
-          newEvent.day =
-            values[i].program.events[j].day - Math.abs(currentDay[i]) <= 0
-              ? Math.abs(
-                  parseInt(values[i].program.events[j].day) - currentDay[i] + 1
-                )
-              : Math.abs(
-                  parseInt(values[i].program.events[j].day) -
-                    Math.abs(currentDay[i]) +
-                    1
-                );
+          newEvent.day = values[i].program.events[j].day - Math.abs(currentDay[i]) <= 0 ? Math.abs(parseInt(values[i].program.events[j].day) - currentDay[i] + 1) : Math.abs(parseInt(values[i].program.events[j].day) - Math.abs(currentDay[i]) + 1);
           newEvent.endTime = values[i].program.events[j].endTime;
           newEvent.startTime = values[i].program.events[j].startTime;
           newEvent.name = values[i].program.events[j].name;
@@ -154,10 +121,7 @@ const WeekView = (props: any) => {
           newEvent = {};
         }
       }
-      newData.push({
-        effectiveDate: values[i].effectiveDate,
-        events: newArrayEvents,
-      });
+      newData.push({effectiveDate: values[i].effectiveDate, events: newArrayEvents});
       newArrayEvents = [];
     }
     handleTodaysEvents(newData);
@@ -216,12 +180,7 @@ const WeekView = (props: any) => {
     }
     setDays(newDay);
     setTimePeriod(newTimePeriod);
-    setScheduleDate(
-      moment(scheduleDate)
-        .subtract(7, "days")
-        .startOf("week")
-        .format("YYYY-MM-DD")
-    );
+    setScheduleDate(moment(scheduleDate).subtract(7, "days").startOf("week").format("YYYY-MM-DD"));
     handleDayChange(events, newDay, newTimePeriod);
   }
 
@@ -294,14 +253,13 @@ const WeekView = (props: any) => {
         </h5>
       </div>
     );
-  else
-    return (
+  else return (
       <>
         <div>
           <Row>
             <Col>
               <div style={{ textAlign: "end" }}>
-                <Button variant="outline-dark">Availability</Button>
+                <Button variant="outline-dark" onClick={() => (window.location.href = "/availability")}>Availability</Button>
               </div>
             </Col>
           </Row>
