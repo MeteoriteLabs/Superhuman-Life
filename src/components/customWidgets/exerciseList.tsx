@@ -3,6 +3,7 @@ import { InputGroup, FormControl, Container, Row, Col } from 'react-bootstrap';
 import {useQuery} from "@apollo/client";
 import { GET_EXERCISELIST } from '../../builders/program-builder/exercises/queries';
 import AuthContext from "../../context/auth-context";
+import {flattenObj} from '../utils/responseFlatten';
 
 const ExerciseList = (props: any) => {
 
@@ -18,8 +19,9 @@ const ExerciseList = (props: any) => {
      }
 
      function loadExerciseList(data: any){
+          const flattenedData = flattenObj({...data});
           setExerciseList(
-          [...data.exercises].map((exercise) => {
+          [...flattenedData.exercises].map((exercise) => {
                return {
                     id: exercise.id,
                     name: exercise.exercisename

@@ -6,6 +6,7 @@ import AuthContext from "../../../context/auth-context";
 import StatusModal from "../../../components/StatusModal/exerciseStatusModal";
 import { schema, widgets } from './exerciseSchema';
 import {Subject} from 'rxjs';
+import {flattenObj} from '../../../components/utils/responseFlatten';
 
 interface Operation {
     id: string;
@@ -29,7 +30,7 @@ function CreateEditExercise(props: any, ref: any) {
     });
 
     const [createExercise] = useMutation(CREATE_EXERCISE, { onCompleted: (r: any) => { modalTrigger.next(false); } });
-    const [editExercise] = useMutation(UPDATE_EXERCISE,{variables: {exerciseid: operation.id}, onCompleted: (r: any) => { modalTrigger.next(false); } });
+    const [editExercise] = useMutation(UPDATE_EXERCISE,{onCompleted: (r: any) => { modalTrigger.next(false); } });
     const [deleteExercise] = useMutation(DELETE_EXERCISE, { refetchQueries: ["GET_TABLEDATA"] });
 
     const modalTrigger =  new Subject();
@@ -45,22 +46,40 @@ function CreateEditExercise(props: any, ref: any) {
 
     // console.log(exerciseDetails);
 
+    enum ENUM_EXERCISES_EXERCISELEVEL {
+        Beginner,
+        Intermediate,
+        Advance,
+        None
+    }
+
     function FillDetails(data: any) {
+
+        function handleAddExerciseShowUp(msg: any) {
+            if (msg.exercisetext !== null) {
+              return { AddExercise: "Text", AddText: msg.exercisetext };
+            } else if (msg.exerciseurl !== null) {
+              return { AddExercise: "Add URL", AddURL: msg.exerciseurl };
+            }
+          }
+
+        const flattenedData = flattenObj({...data});
         let details: any = {};
-        let msg = data.exercises;
+        let msg = flattenedData.exercises;
         details.exercise = msg[0].exercisename;
-        details.level = msg.exerciselevel;
+        details.level = ENUM_EXERCISES_EXERCISELEVEL[ msg[0].exerciselevel];
         details.discipline = msg[0].fitnessdisciplines.map((val: any) => {
-            return val.id;
+            return val;
         });
         details.miniDescription = msg[0].exerciseminidescription;
         details.equipment = msg[0].equipment_lists.map((val: any) => {
-            return val.name;
+            return val;
         });
-        details.muscleGroup = msg[0].exercisemusclegroups.map((val: any) => {
-            return val.name;
+        details.muscleGroup = msg[0].muscle_groups.map((val: any) => {
+            return val;
         });
         details.user_permissions_user = msg[0].users_permissions_user.id;
+        details.addExercise = handleAddExerciseShowUp(msg[0]);
         setExerciseDetails(details);
         // console.log(exerciseDetails);
 
@@ -71,16 +90,11 @@ function CreateEditExercise(props: any, ref: any) {
             OnSubmit(null);
     }
 
+    console.log(operation.type);
+
     function FetchData() {
         console.log('Fetch Data');
-        useQuery(FETCH_DATA, { variables: { id: operation.id }, onCompleted: (e: any) => { FillDetails(e) } });
-    }
-
-    enum ENUM_EXERCISES_EXERCISELEVEL {
-        Beginner,
-        Intermediate,
-        Advance,
-        None
+        useQuery(FETCH_DATA, { variables: { id: operation.id }, skip: (operation.type === 'create'),onCompleted: (e: any) => { FillDetails(e) } });
     }
 
     function CreateExercise(frm: any) {
@@ -98,9 +112,20 @@ function CreateEditExercise(props: any, ref: any) {
     }
 
     function EditExercise(frm: any) {
-        console.log('edit message');
+        console.log('edit message', frm);
         // useMutation(UPDATE_MESSAGE, { variables: frm, onCompleted: (d: any) => { console.log(d); } });
-        editExercise({variables: frm });
+        editExercise({ variables: {
+            exerciseid: operation.id,
+            exercisename: frm.exercise,
+            exerciselevel: ENUM_EXERCISES_EXERCISELEVEL[frm.level],
+            fitnessdisciplines: frm.discipline.split(","),
+            exerciseminidescription: frm.miniDescription,
+            exercisetext: (!frm.addExercise.AddText ? null : frm.addExercise.AddText),
+            exerciseurl: (!frm.addExercise.AddURL ? null: frm.addExercise.AddURL),
+            equipment_lists: frm.equipment.split(","),
+            exercisemusclegroups: frm.muscleGroup.split(","),
+            users_permissions_user: frm.user_permissions_user
+        } });
     }
 
     function ViewExercise(frm: any) {

@@ -7,7 +7,7 @@ import { GET_ALL_CLIENT_PACKAGE_BY_TYPE } from '../../graphQL/queries';
 import moment from 'moment';
 import ActionButton from '../../../../components/actionbutton';
 import FitnessAction from '../FitnessAction'
-
+import { flattenObj } from '../../../../components/utils/responseFlatten';
 
 
 export default function Group(props) {
@@ -29,9 +29,9 @@ export default function Group(props) {
 
 
     const loadData = (data) => {
-        // console.log('pt query data', data);
+        const flattenData = flattenObj({...data});
         setUserPackage(
-            [...data.userPackages].map((packageItem) => {
+            [...flattenData.clientPackages].map((packageItem) => {
                 let renewDay: any = '';
                 if (packageItem.fitnesspackages.length !== 0) {
                     renewDay = new Date(packageItem.effective_date);
@@ -60,7 +60,7 @@ export default function Group(props) {
     }
 
     function calculateProgramRenewal(duration, effectiveDate, renewalDate) {
-        console.log('calculateProgramRenewal', duration, effectiveDate, renewalDate);
+        // console.log('calculateProgramRenewal', duration, effectiveDate, renewalDate);
         
         const dates: string[] = []; 
 

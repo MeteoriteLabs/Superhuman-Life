@@ -6,6 +6,7 @@ import { GET_ALL_CLASSIC_CLIENT_BY_ID, GET_ALL_GROUP_CLIENT_BY_ID } from '../../
 import ActionButton from '../actionbutton'
 import moment from 'moment'
 import FitnessAction from '../../builders/session-builder/Fitness/FitnessAction'
+import { flattenObj } from '../../components/utils/responseFlatten'
 
 
 export default function ClientModal(props) {
@@ -26,7 +27,7 @@ export default function ClientModal(props) {
 
 
     useEffect(() => {
-        if (type === 'Classic Class') {
+        if (type === 'Classic') {
             setQueryName("GET_ALL_CLASSIC_CLIENT_BY_ID")
         } else {
             setQueryName("GET_ALL_GROUP_CLIENT_BY_ID")
@@ -45,8 +46,9 @@ export default function ClientModal(props) {
 
 
     const loadData = (data) => {
+        const flattenData = flattenObj({ ...data });
         setDataTable(
-            [...data.userPackages].map((packageItem) => {
+            [...flattenData.clientPackages].map((packageItem) => {
                 const startDate = moment(packageItem.effective_date);
                 const endDate = moment(startDate).add(packageItem.fitnesspackages[0].duration, "days").format("MMMM DD,YYYY");
                 return {

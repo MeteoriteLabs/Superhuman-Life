@@ -7,6 +7,8 @@ import StatusModal from "../../../components/StatusModal/StatusModal";
 import { Subject } from "rxjs";
 import { schema, widgets } from "./schema";
 
+import {flattenObj} from '../../../components/utils/responseFlatten';
+
 interface Operation {
      id: string;
      modal_status: boolean;
@@ -51,20 +53,22 @@ function CreateEditMessage(props: any, ref: any) {
      }));
 
      function loadData(data: any) {
-          messageSchema["1"].properties.infomessagetype.enum = [...data.informationbankmessagestypes].map((n) => n.id);
-          messageSchema["1"].properties.infomessagetype.enumNames = [...data.informationbankmessagestypes].map(
+          const flattenData = flattenObj({...data});
+          messageSchema["1"].properties.infomessagetype.enum = [...flattenData.prerecordedtypes].map((n) => n.id);
+          messageSchema["1"].properties.infomessagetype.enumNames = [...flattenData.prerecordedtypes].map(
                (n) => n.type
           );
      }
 
      function FillDetails(data: any) {
+          const flattenData = flattenObj({...data});
           let details: any = {};
-          let msg: any = data.informationbankmessages[0];
+          let msg: any = flattenData.informationbankmessages[0];
 
           let o = { ...operation };
           details.name = o.type.toLowerCase();
           details.title = msg.title;
-          details.infomessagetype = msg.informationbankmessagestype.id;
+          details.infomessagetype = msg.resourcetype.id;
           details.description = msg.description;
           details.minidesc = msg.minidescription;
           details.mediaurl = msg.mediaurl;

@@ -6,6 +6,7 @@ import { GET_TABLEDATA } from './queries';
 import AuthContext from "../../../context/auth-context";
 import ActionButton from "../../../components/actionbutton";
 import CreateEditWorkout from "./createoredit-workout";
+import {flattenObj} from '../../../components/utils/responseFlatten';
 
 export default function EventsTab() {
 
@@ -64,8 +65,9 @@ export default function EventsTab() {
     }
 
     function loadData(data: any) {
+        const flattenData = flattenObj({...data});
         setTableData(
-            [...data.workouts].map((detail) => {
+            [...flattenData.workouts].map((detail) => {
                 return {
                     id: detail.id,
                     workoutName: detail.workouttitle,

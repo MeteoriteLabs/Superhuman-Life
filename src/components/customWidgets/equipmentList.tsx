@@ -1,33 +1,42 @@
 import { useState, useRef } from 'react';
 import { InputGroup, FormControl, Container } from 'react-bootstrap';
 import { gql, useQuery} from "@apollo/client";
+import {flattenObj} from '../utils/responseFlatten';
 
 const EquipmentList = (props: any) => {
 
      const [fitnessEquipments, setFitnessEquipments] = useState<any[]>([]);
      const [searchInput, setSearchInput] = useState(null);
-     const [selected, setSelected] = useState<any[]>([]);
+     const [selected, setSelected] = useState<any[]>(
+          props.value?.length > 0 ? props.value : []
+        );
      const inputField = useRef<any>();
      let skipval: Boolean = true;
-
      
-     
-    const GET_EQUIPMENTLIST = gql`
-     query equipmentListQuery($filter: String!) {
-          equipmentLists(sort: "updatedAt", where: { name_contains: $filter}){
+     const GET_EQUIPMENTLIST = gql`
+          query equipmentListQuery($filter: String!) {
+          equipmentLists(
+          sort: ["updatedAt"]
+          filters: { name: { containsi: $filter } }
+          ) {
+          data {
                id
+               attributes {
                name
+               }
           }
-     }
-     `
+          }
+          }
+   `;
      
      function FetchEquipmentList(_variable: {} = { filter: " "}){
           useQuery(GET_EQUIPMENTLIST, { variables: _variable ,onCompleted: loadEquipmentList, skip: !searchInput});
      }
 
      function loadEquipmentList(data: any){
+          const flattenedData = flattenObj({...data});
           setFitnessEquipments(
-          [...data.equipmentLists].map((equipment) => {
+          [...flattenedData.equipmentLists].map((equipment) => {
                return {
                     id: equipment.id,
                     name: equipment.name
@@ -49,12 +58,9 @@ const EquipmentList = (props: any) => {
           const values = [...selected];
           let a = values.find((e) => e.id === id);
           if (!a){
-               values.push({ value: name, id: id}); 
+               values.push({ name: name, id: id}); 
                setSelected(values);
-          }
-          props.onChange(values.map((e) => {
-               return e.id;
-          }).join(','))
+          }   
           inputField.current.value = "";
           setFitnessEquipments([]);
           skipval = true;
@@ -64,10 +70,13 @@ const EquipmentList = (props: any) => {
           const values = [...selected];
           values.splice(name, 1);
           setSelected(values);
-          props.onChange(values.map((e) => {
-               return e.id;
-          }).join(','))
      }
+
+     props.onChange(selected.map((e) => {
+          return e.id;
+     }).join(','))
+
+
 
      FetchEquipmentList({filter: searchInput, skip: skipval});
 
@@ -111,7 +120,7 @@ const EquipmentList = (props: any) => {
                                    color: 'rgba(0,0,0,0.8)',
                                    backgroundColor: '#bebdb8',
                               }}>
-                                   {val.value}
+                                   {val.name}
                                    <i className="close fas fa-times" 
                                         style={{ fontSize: '14px', 
                                         cursor: 'pointer', 
@@ -120,7 +129,7 @@ const EquipmentList = (props: any) => {
                                         lineHeight: '32px',
                                         height: '32px'
                                    }} 
-                                        onClick={() => handleSelectedEquipmentRemove(val.value)}></i>
+                                        onClick={() => handleSelectedEquipmentRemove(val.name)}></i>
                               </div>
                          )
                     })}

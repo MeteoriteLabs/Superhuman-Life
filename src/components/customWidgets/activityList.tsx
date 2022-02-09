@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import { InputGroup, Row, Col, Form } from 'react-bootstrap';
 import { gql, useQuery } from '@apollo/client';
 import ActivityBuilder from './activityBuilder';
+import {flattenObj} from '../utils/responseFlatten';
 
 const ActivityField = (props: any) => {
 
@@ -9,21 +10,26 @@ const ActivityField = (props: any) => {
      const [selected, setSelected] = useState<any>({});
 
      const FETCH_ACTIVITIES = gql`
-          query activities{
-               activities(sort: "updatedAt"){
-                    id
-                    title
+     query activities {
+          activities(sort: ["updatedAt"]) {
+          data {
+               id
+               attributes {
+               title
                }
           }
-     `
+          }
+     }
+  `;
 
      function FetchData(){
           useQuery(FETCH_ACTIVITIES, {onCompleted: loadData});
       }
   
      function loadData(data: any) {
+          const flattenedData = flattenObj({...data});
           setActivity(
-              [...data.activities].map((activity) => {
+              [...flattenedData.activities].map((activity) => {
                   return {
                       id: activity.id,
                       title: activity.title

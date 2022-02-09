@@ -5,6 +5,7 @@ import { UPDATE_FITNESSPROGRAMS, GET_SCHEDULEREVENTS } from "../queries";
 import AuthContext from "../../../../context/auth-context";
 import { schema, widgets } from '../schema/restDaySchema';
 import {Subject} from 'rxjs';
+import {flattenObj} from "../../../../components/utils/responseFlatten";
 
 interface Operation {
     id: string;
@@ -40,16 +41,19 @@ function CreateEditRestDay(props: any, ref: any) {
     }));
 
     function FillDetails(data: any) {
+        const flattenData = flattenObj({...data});
         let details: any = {};
-        // let msg = data;
-        // console.log(msg);
-        setProgramDetails(details);
+        let msg = flattenData;
+        details.day = msg.fitnessprograms[0].rest_days?.map(
+            (val: any) => {
+                return { id: val.day, day: `Day-${val.day}` };
+            }
+        );
+    setProgramDetails(details);
 
-        //if message exists - show form only for edit and view
-        if (['edit', 'view'].indexOf(operation.type) > -1)
-            modalTrigger.next(true);
-        else
-            OnSubmit(null);
+    //if message exists - show form only for edit and view
+    if (["edit", "view"].indexOf(operation.type) > -1) modalTrigger.next(true);
+    else OnSubmit(null);
     }
 
     function FetchData() {

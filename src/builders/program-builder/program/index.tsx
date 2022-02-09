@@ -6,6 +6,7 @@ import { GET_TABLEDATA, CREATE_PROGRAM } from './queries';
 import AuthContext from "../../../context/auth-context";
 import ActionButton from "../../../components/actionbutton";
 import CreateEditProgram from './createoredit-program';
+import {flattenObj} from '../../../components/utils/responseFlatten';
 
 export default function EventsTab() {
 
@@ -94,8 +95,9 @@ export default function EventsTab() {
     }
 
     function loadData(data: any) {
+        const flattenData = flattenObj({...data});
         setTableData(
-            [...data.fitnessprograms].map((detail) => {
+            [...flattenData.fitnessprograms].map((detail) => {
                 return {
                     id: detail.id,
                     programName: detail.title,
