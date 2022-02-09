@@ -68,6 +68,7 @@ const WorkHours = () => {
       setMasterSettings(flattenData.usersPermissionsUsers);
     },
   });
+
   const [createChangeMakerHoliday] = useMutation(CREATE_CHANGEMAKER_HOLIDAY);
   const [updateUserData] = useMutation(UPDATE_USER_DATA);
 
@@ -95,7 +96,7 @@ const WorkHours = () => {
 
   function tileDisabled({ date, view }) {
     if (view === "month") {
-      return holidays.data?.find(
+      return holidays?.find(
         (dDate) =>
           moment(dDate.date).format("YYYY-MM-DD") ===
           moment(date).format("YYYY-MM-DD")
@@ -252,9 +253,9 @@ const WorkHours = () => {
                   overflowX: "hidden",
                 }}
               >
-                {holidays.data?.map((item, index) => {
+                {holidays?.map((item, index) => {
                   return (
-                    <Row key={index} className="mt-3 pt-1 pb-1">
+                    <Row key={index} className="mt-3 pt-1 pb-1 items-center">
                       <Col lg={8}>
                         <Row>
                           <Col lg={5}>
@@ -399,7 +400,7 @@ const WorkHours = () => {
                 }}
               >
                 {handleTimeConversion(
-                  masterSettings?.booking_lead_time_online_mins
+                  masterSettings[0]?.booking_lead_time_online_mins
                 )}{" "}
                 mins
               </div>
@@ -415,7 +416,7 @@ const WorkHours = () => {
                 }}
               >
                 {handleTimeConversion(
-                  masterSettings?.booking_lead_time_offline_mins
+                  masterSettings[0]?.booking_lead_time_offline_mins
                 )}{" "}
                 mins
               </div>

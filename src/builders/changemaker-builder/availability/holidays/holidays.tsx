@@ -260,7 +260,6 @@ const Holidays = () => {
               }}
             >
               {holidays?.map((item, index) => {
-                console.log(item);
                 return (
                   <Row key={index} className="mt-3 pt-1 pb-1">
                     <Col lg={3}>
