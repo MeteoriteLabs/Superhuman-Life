@@ -20,6 +20,29 @@ export const CREATE_CHANGEMAKER_HOLIDAY = gql`
   }
 `;
 
+export const CREATE_CANGEMAKER_WORK_HOUR = gql`
+  mutation createChangeMakerWorkHour(
+    $date: Date
+    $From_time: Time
+    $To_time: Time
+    $Mode: ENUM_CHANGEMAKERWORKHOUR_MODE
+    $users_permissions_user: ID!
+  ){
+    createChangemakerWorkhour(data: {
+      date: $date,
+      To_Time: $From_time,
+      From_time: $To_time,
+      Mode: $Mode,
+      is_disabled: false,
+      users_permissions_user: $users_permissions_user,
+    }){
+      data{
+        id
+      }
+    }
+  }
+`
+
 export const DELETE_CHANGEMAKER_HOLIDAY = gql`
   mutation deleteChangeMakerHoliday($id: ID!) {
     deleteChangemakerHoliday(id: $id) {

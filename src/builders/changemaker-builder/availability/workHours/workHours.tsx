@@ -18,9 +18,10 @@ import {
 } from "../../graphql/queries";
 import {
   UPDATE_USER_DATA,
-  UPDATE_USER_BOOKING_TIME
+  UPDATE_USER_BOOKING_TIME,
+  CREATE_CANGEMAKER_WORK_HOUR
 } from "../../graphql/mutations";
-import { useQuery, useMutation } from "@apollo/client";
+import { useQuery, useMutation, from } from "@apollo/client";
 import AuthContext from "../../../../context/auth-context";
 import TimePicker from "rc-time-picker";
 import "rc-time-picker/assets/index.css";
@@ -38,6 +39,7 @@ const WorkHours = () => {
   const [slots, setSlots] = useState<any>([]);
   const [toast, setToast] = useState(false);
   const [show, setShow] = useState(false);
+  const [date, setDate] = useState(moment().format("YYYY-MM-DD"));
 
   useQuery(GET_ALL_CHANGEMAKER_HOLIDAYS, {
     variables: {
@@ -80,6 +82,7 @@ const WorkHours = () => {
 
   const [updateUserData] = useMutation(UPDATE_USER_DATA);
   const [updateUserBookingTime] = useMutation(UPDATE_USER_BOOKING_TIME);
+  const [createChangemakerWorkHour] = useMutation(CREATE_CANGEMAKER_WORK_HOUR);
 
   const daysOfWeek = [
     "Monday",
@@ -221,51 +224,60 @@ const WorkHours = () => {
     }
   }
 
-
-  function handleWorkTime(fromTime: any, toTime: any, mode: any) {
-    for(var i=0; i<masterSettings[0].Changemaker_weekly_schedule.length; i++){
-      if(masterSettings[0].Changemaker_weekly_schedule[i].day === moment().format("dddd")){
-        const values = [...masterSettings[0].Changemaker_weekly_schedule[i].slots];
-        values.push({
-          "to": toTime,
-          "from": fromTime,
-          "mode": mode,
-          "isDisabled": false
-        });
-        handleScheduleUpdate(values);
-      }
-    }
-  }
-
-  function handleScheduleUpdate(val: any){
-    const values = [...masterSettings[0].Changemaker_weekly_schedule];
-
-    let updatedUserConfig: any = [];
-    let obj: any = {};
-    for (var i = 0; i < values.length; i++) {
-      if(values[i].day === moment().format("dddd")){
-        obj.id = values[i].id;
-        obj.day = values[i].day;
-        obj.is_holiday = values[i].is_holiday;
-        obj.slots = val;
-        updatedUserConfig.push(obj);
-        obj = {};
-      }else {
-        obj.id = values[i].id;
-        obj.day = values[i].day;
-        obj.is_holiday = values[i].is_holiday;
-        obj.slots = values[i].slots;
-        updatedUserConfig.push(obj);
-        obj = {};
-      }
-    }
-    updateUserData({
+  function handleWorkTime(fromTime: any, toTime: any, mode: any, date: any) {
+    createChangemakerWorkHour({
       variables: {
-        id: auth.userid,
-        changemaker_weekly_schedule: updatedUserConfig,
-      },
-    });
+        date: date,
+        From_time: fromTime + ":00.000",
+        To_time: toTime + ":00.000",
+        Mode: mode,
+        users_permissions_user: auth.userid,
+      }
+    })
+
+    // for(var i=0; i<masterSettings[0].Changemaker_weekly_schedule.length; i++){
+    //   if(masterSettings[0].Changemaker_weekly_schedule[i].day === moment().format("dddd")){
+    //     const values = [...masterSettings[0].Changemaker_weekly_schedule[i].slots];
+    //     values.push({
+    //       "to": toTime,
+    //       "from": fromTime,
+    //       "mode": mode,
+    //       "isDisabled": false
+    //     });
+    //     handleScheduleUpdate(values);
+    //   }
+    // }
   }
+
+  // function handleScheduleUpdate(val: any){
+  //   const values = [...masterSettings[0].Changemaker_weekly_schedule];
+
+  //   let updatedUserConfig: any = [];
+  //   let obj: any = {};
+  //   for (var i = 0; i < values.length; i++) {
+  //     if(values[i].day === moment().format("dddd")){
+  //       obj.id = values[i].id;
+  //       obj.day = values[i].day;
+  //       obj.is_holiday = values[i].is_holiday;
+  //       obj.slots = val;
+  //       updatedUserConfig.push(obj);
+  //       obj = {};
+  //     }else {
+  //       obj.id = values[i].id;
+  //       obj.day = values[i].day;
+  //       obj.is_holiday = values[i].is_holiday;
+  //       obj.slots = values[i].slots;
+  //       updatedUserConfig.push(obj);
+  //       obj = {};
+  //     }
+  //   }
+  //   updateUserData({
+  //     variables: {
+  //       id: auth.userid,
+  //       changemaker_weekly_schedule: updatedUserConfig,
+  //     },
+  //   });
+  // }
 
 
   useEffect(() => {
@@ -437,13 +449,22 @@ const WorkHours = () => {
               </div>
             </Col>
           </Row>
-          <Row>
-            <Col lg={{ span: 8, offset: 4 }}>
+          <Row className="mt-3">
+            <Col>
               <Row style={{ borderTop: "3px solid gray" }}></Row>
             </Col>
           </Row>
-          <Row className="mt-3">
-            <Col lg={{ span: 5, offset: 4 }}>
+          <Row className="mt-3 mb-3">
+          <Col lg={{ span: 2, offset: 2 }}>
+            <input
+              type="date"
+              value={date}
+              className="p-1 shadow-lg"
+              style={{ border: "1px solid gray", borderRadius: "10px" }}
+              onChange={(e) => setDate(e.target.value)}
+            />
+          </Col>
+            <Col lg={{ span: 5 }}>
               <Row>
                 <Col lg={5}>
                   {/* <div className="shadow-sm" style={{ border: '1px solid gray',backgroundColor: 'whitesmoke', padding: '5px', borderRadius: '10px'}}> */}
@@ -476,7 +497,7 @@ const WorkHours = () => {
                 disabled={disableAdd || classMode === ''}
                 style={{ backgroundColor: "#647a8c", borderRadius: "10px" }}
                 onClick={() => {
-                  handleWorkTime(fromTime, toTime, classMode);
+                  handleWorkTime(fromTime, toTime, classMode, date);
                   setToast(true);
                   handleToast();
                 }}
