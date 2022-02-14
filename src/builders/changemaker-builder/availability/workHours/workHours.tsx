@@ -105,8 +105,6 @@ const WorkHours = () => {
   }
 
   function handleBookingTimeUpdate(newOnline: number, newOffline: number) {
-    console.log(newOnline, newOffline);
-    console.log(auth.userid);
     updateUserBookingTime({
       variables: {
         id: auth.userid,
