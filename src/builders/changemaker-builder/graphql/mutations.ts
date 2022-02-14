@@ -42,3 +42,16 @@ export const UPDATE_USER_DATA = gql`
     }
   }
 `;
+
+export const UPDATE_USER_BOOKING_TIME = gql`
+  mutation updateUserBookingTime($id: ID!, $booking_Online_time: Int, $booking_Offline_time: Int) {
+    updateUsersPermissionsUser(
+      id: $id
+      data:{ booking_lead_time_online_mins: $booking_Online_time, booking_lead_time_offline_mins: $booking_Offline_time}
+    ){
+      data{
+        id
+      }
+    }
+  }
+`

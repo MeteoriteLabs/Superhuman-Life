@@ -7,8 +7,6 @@ import {
   Modal,
   Button,
   Form,
-  FormControl,
-  InputGroup,
   Alert,
 } from "react-bootstrap";
 import moment from "moment";
@@ -19,8 +17,8 @@ import {
   GET_USER_WEEKLY_CONFIG,
 } from "../../graphql/queries";
 import {
-  CREATE_CHANGEMAKER_HOLIDAY,
   UPDATE_USER_DATA,
+  UPDATE_USER_BOOKING_TIME
 } from "../../graphql/mutations";
 import { useQuery, useMutation } from "@apollo/client";
 import AuthContext from "../../../../context/auth-context";
@@ -32,14 +30,12 @@ import { flattenObj } from "../../../../components/utils/responseFlatten";
 const WorkHours = () => {
   const auth = useContext(AuthContext);
   const [value, onChange] = useState(new Date());
-  const [rangeValue, rangeOnChange] = useState([new Date(), new Date()]);
-  const [date, setDate] = useState(moment().format("YYYY-MM-DD"));
-  const [desc, setDesc] = useState("");
   const [holidays, setHolidays] = useState<any>([]);
   const [month, setMonth] = useState(0);
   const [showDaysModal, setShowDaysModal] = useState(false);
   const [showDatesModal, setShowDatesModal] = useState(false);
   const [masterSettings, setMasterSettings] = useState<any>([]);
+  const [slots, setSlots] = useState<any>([]);
   const [toast, setToast] = useState(false);
   const [show, setShow] = useState(false);
 
@@ -61,16 +57,29 @@ const WorkHours = () => {
     },
   });
 
+  function handleTodaysSlots(settings: any){
+    var today = moment().format("dddd");
+    var values: any;
+    
+    for(var i=0; i<settings?.length; i++){
+      if(today === settings[i].day){
+        values = settings[i].slots;
+      }
+    }
+    setSlots(values);
+  }
+
   useQuery(GET_USER_WEEKLY_CONFIG, {
     variables: { id: auth.userid },
     onCompleted: (data) => {
       const flattenData = flattenObj({ ...data });
       setMasterSettings(flattenData.usersPermissionsUsers);
+      handleTodaysSlots(flattenData.usersPermissionsUsers[0].Changemaker_weekly_schedule);
     },
   });
 
-  const [createChangeMakerHoliday] = useMutation(CREATE_CHANGEMAKER_HOLIDAY);
   const [updateUserData] = useMutation(UPDATE_USER_DATA);
+  const [updateUserBookingTime] = useMutation(UPDATE_USER_BOOKING_TIME);
 
   const daysOfWeek = [
     "Monday",
@@ -82,18 +91,6 @@ const WorkHours = () => {
     "Sunday",
   ];
 
-  function handleAddHoliday(date: any, event: any) {
-    createChangeMakerHoliday({
-      variables: {
-        date: `${moment(date).format("YYYY-MM-DD")}`,
-        description: desc,
-        users_permissions_user: auth.userid,
-      },
-    });
-    setDesc("");
-    setDate(moment().format("YYYY-MM-DD"));
-  }
-
   function tileDisabled({ date, view }) {
     if (view === "month") {
       return holidays?.find(
@@ -104,38 +101,60 @@ const WorkHours = () => {
     }
   }
 
-  function handleCustomDates(data: any, date: any) {
-    const diff = moment(date[1]).diff(moment(date[0]), "days") + 1;
-    for (var i = 0; i < diff; i++) {
-      createChangeMakerHoliday({
-        variables: {
-          date: `${moment(date[0]).add(i, "days").format("YYYY-MM-DD")}`,
-          description: data,
-          users_permissions_user: auth.userid,
-        },
-      });
-    }
-    setDesc("");
-    setDate(moment().format("YYYY-MM-DD"));
+  function handleBookingTimeUpdate(newOnline: number, newOffline: number) {
+    console.log(newOnline, newOffline);
+    console.log(auth.userid);
+    updateUserBookingTime({
+      variables: {
+        id: auth.userid,
+        booking_Online_time: newOnline,
+        booking_Offline_time: newOffline,
+      }
+    });
   }
 
   const changeMakerWeeklySchedule: any = [];
 
   function handleCheckBoxes() {
     var values: any = document.querySelectorAll('[name="holiday-checkbox"]');
-    for (var i = 0; i <= 6; i++) {
-      changeMakerWeeklySchedule.push({
-        day: values[i].value,
-        is_holiday: values[i].checked,
-        slots: [],
+    if (masterSettings === undefined) {
+      for (var i = 0; i <= 6; i++) {
+        changeMakerWeeklySchedule.push({
+          id: i,
+          day: values[i].value,
+          is_holiday: values[i].checked,
+          slots: [],
+        });
+      }
+      updateUserData({
+        variables: {
+          id: auth.userid,
+          changemaker_weekly_schedule: changeMakerWeeklySchedule,
+        },
+      });
+    } else {
+      const userConfig = [...masterSettings.Changemaker_weekly_schedule];
+      let updatedUserConfig: any = [];
+      let obj: any = {};
+      for (var j = 0; j <= 6; j++) {
+        obj.id = userConfig[j].id;
+        obj.day = userConfig[j].day;
+        if (userConfig[j].is_holiday !== values[j].checked) {
+          obj.is_holiday = values[j].checked;
+        } else {
+          obj.is_holiday = userConfig[j].is_holiday;
+        }
+        obj.slots = userConfig[j].slots;
+        updatedUserConfig.push(obj);
+        obj = {};
+      }
+      updateUserData({
+        variables: {
+          id: auth.userid,
+          changemaker_weekly_schedule: updatedUserConfig,
+        },
       });
     }
-    updateUserData({
-      variables: {
-        id: auth.userid,
-        changemaker_weekly_schedule: changeMakerWeeklySchedule,
-      },
-    });
   }
 
   function handleToast() {
@@ -144,10 +163,15 @@ const WorkHours = () => {
     }, 3000);
   }
 
+  const [fromTime, setFromTime]= useState("00:00"); 
+  const [toTime, setToTime] = useState("00:00"); 
+  const [disableAdd, setDisableAdd] = useState(false);
+  const [classMode, setClassMode] = useState("");
+
   function convertToMoment(time: string) {
     var timeSplit = time.split(":").map(Number);
-    return moment().set({ hour: timeSplit[0], minute: timeSplit[1] });
-  }
+    return moment().set({"hour": timeSplit[0], "minute": timeSplit[1]});
+}
 
   function handleTimeConversion(time: number) {
     var val = 60 / (1 / (time / 60));
@@ -159,6 +183,102 @@ const WorkHours = () => {
       setShow(true);
     }, 1000);
   }, []);
+
+  function handleTimeSlot(val: any){
+    const values = slots.map(elem => {
+      return Object.assign({}, elem, slots[elem]);
+    });
+    values[val].isDisabled = !values[val].isDisabled;
+    setSlots(values); 
+  }
+
+  function handleFromTimeInput(val: any){
+    var m = (Math.round(parseInt(val.slice(3,5))/15) * 15) % 60;
+    setFromTime(val.slice(0,2) + ':' + (m === 0 ? '00' : m));
+  }
+
+  function handleToTimeInput(val: any){
+    var m = (Math.round(parseInt(val.slice(3,5))/15) * 15) % 60;
+    setToTime(val.slice(0,2) + ':' + (m === 0 ? '00' : m));
+  }
+
+  function handleTimeValidation() {
+    var sh = fromTime.split(":")[0];
+    var sm = fromTime.split(":")[1];
+    var eh = toTime.split(":")[0];
+    var em = toTime.split(":")[1];
+
+    if(fromTime !== "00:00" || toTime !== "00:00"){
+      if(parseInt(sh) > parseInt(eh)) {
+          return <span id="timeErr" style={{color: 'red'}}>End Time should be greater than Start Time</span>
+      }else if(parseInt(sh) === parseInt(eh) && parseInt(sm) === parseInt(em)) {
+          return <span id="timeErr" style={{color: 'red'}}>End Time and start Time cannot be the same</span>
+      }else if(parseInt(sh) === parseInt(eh) && parseInt(sm) > parseInt(em)) {
+          return <span id="timeErr" style={{color: 'red'}}>End Time Cannot be lesser than Start Time</span>
+      }else {
+          return <span style={{color: 'green'}}>Valid Time</span>
+      }
+    }
+  }
+
+
+  function handleWorkTime(fromTime: any, toTime: any, mode: any) {
+    for(var i=0; i<masterSettings[0].Changemaker_weekly_schedule.length; i++){
+      if(masterSettings[0].Changemaker_weekly_schedule[i].day === moment().format("dddd")){
+        const values = [...masterSettings[0].Changemaker_weekly_schedule[i].slots];
+        values.push({
+          "to": toTime,
+          "from": fromTime,
+          "mode": mode,
+          "isDisabled": false
+        });
+        handleScheduleUpdate(values);
+      }
+    }
+  }
+
+  function handleScheduleUpdate(val: any){
+    const values = [...masterSettings[0].Changemaker_weekly_schedule];
+
+    let updatedUserConfig: any = [];
+    let obj: any = {};
+    for (var i = 0; i < values.length; i++) {
+      if(values[i].day === moment().format("dddd")){
+        obj.id = values[i].id;
+        obj.day = values[i].day;
+        obj.is_holiday = values[i].is_holiday;
+        obj.slots = val;
+        updatedUserConfig.push(obj);
+        obj = {};
+      }else {
+        obj.id = values[i].id;
+        obj.day = values[i].day;
+        obj.is_holiday = values[i].is_holiday;
+        obj.slots = values[i].slots;
+        updatedUserConfig.push(obj);
+        obj = {};
+      }
+    }
+    updateUserData({
+      variables: {
+        id: auth.userid,
+        changemaker_weekly_schedule: updatedUserConfig,
+      },
+    });
+  }
+
+
+  useEffect(() => {
+    var element = document.getElementById("timeErr");
+    if(element !== null) {
+      setDisableAdd(true);
+    }else {
+      setDisableAdd(false);
+    }
+  }, [fromTime, toTime]);
+
+  const [userOfflineTime, setUserOfflineTime]: any = useState(45);
+  const [userOnlineTime, setUserOnlineTime]: any = useState(45);
 
   if (!show)
     return (
@@ -253,7 +373,7 @@ const WorkHours = () => {
                   overflowX: "hidden",
                 }}
               >
-                {holidays?.map((item, index) => {
+                {slots?.map((item, index) => {
                   return (
                     <Row key={index} className="mt-3 pt-1 pb-1 items-center">
                       <Col lg={8}>
@@ -268,7 +388,7 @@ const WorkHours = () => {
                                 borderRadius: "10px",
                               }}
                             >
-                              <span>{moment().format("hh:mm a")}</span>
+                              <span>{item.from}</span>
                             </div>
                           </Col>
                           <Col lg={2}>To</Col>
@@ -282,7 +402,7 @@ const WorkHours = () => {
                                 borderRadius: "10px",
                               }}
                             >
-                              <span>{moment().format("hh:mm a")}</span>
+                              <span>{item.to}</span>
                             </div>
                           </Col>
                         </Row>
@@ -296,7 +416,7 @@ const WorkHours = () => {
                             borderRadius: "10px",
                           }}
                         >
-                          <span>Online</span>
+                          <span>{item.mode}</span>
                         </div>
                       </Col>
                       <Col lg={1}>
@@ -304,6 +424,8 @@ const WorkHours = () => {
                           <Form>
                             <Form.Check
                               type="switch"
+                              checked={item.isDisabled}
+                              onChange={(e) => {handleTimeSlot(index)}}
                               id={`custom-switch-${index}`}
                             />
                           </Form>
@@ -325,45 +447,36 @@ const WorkHours = () => {
               <Row>
                 <Col lg={5}>
                   {/* <div className="shadow-sm" style={{ border: '1px solid gray',backgroundColor: 'whitesmoke', padding: '5px', borderRadius: '10px'}}> */}
-                  <TimePicker
-                    value={convertToMoment("2:15")}
-                    showSecond={false}
-                    minuteStep={15}
-                    onChange={(e) => {
-                      console.log(e);
-                    }}
-                  />
+                  <TimePicker value={convertToMoment(fromTime)} showSecond={false} minuteStep={15} onChange={(e) => {handleFromTimeInput(moment(e).format("HH:mm"))}}/>
                   {/* </div> */}
                 </Col>
                 <Col lg={2}>To</Col>
                 <Col lg={5}>
                   {/* <div className="shadow-sm" style={{ border: '1px solid gray',backgroundColor: 'whitesmoke', padding: '5px', borderRadius: '10px'}}> */}
-                  <TimePicker
-                    value={convertToMoment("2:15")}
-                    showSecond={false}
-                    minuteStep={15}
-                    onChange={(e) => {
-                      console.log(e);
-                    }}
-                  />
+                  <TimePicker value={convertToMoment(toTime)} showSecond={false} minuteStep={15} onChange={(e) => {handleToTimeInput(moment(e).format("HH:mm"))}}/>
                   {/* </div> */}
                 </Col>
               </Row>
+              <div className="text-center mt-2">
+                {handleTimeValidation()}
+                </div>
             </Col>
             <Col lg={2} className="pl-0 pr-0">
-              <Form.Control as="select">
-                <option>Select Mode</option>
-                <option value="offline">Online</option>
-                <option value="online">Offline</option>
-                <option value="hybrid">Hybrid</option>
+              <Form.Control as="select" onChange={(e) => {setClassMode(e.target.value)}}>
+                <option value="">Select Mode</option>
+                <option value="Offline">Online</option>
+                <option value="Online">Offline</option>
+                <option value="Hybrid">Hybrid</option>
               </Form.Control>
             </Col>
             <Col lg={1}>
               <button
                 className="pl-3 pr-3 pt-1 pb-1 shadow-lg"
+                title={disableAdd || classMode === '' ? "please enter valid details": ""}
+                disabled={disableAdd || classMode === ''}
                 style={{ backgroundColor: "#647a8c", borderRadius: "10px" }}
                 onClick={() => {
-                  handleAddHoliday(date, desc);
+                  handleWorkTime(fromTime, toTime, classMode);
                   setToast(true);
                   handleToast();
                 }}
@@ -447,10 +560,11 @@ const WorkHours = () => {
                 </span>
               </div>
               <Form className="mt-3">
-                {daysOfWeek.map((day) => {
+                {daysOfWeek.map((day, index) => {
                   return (
                     <>
                       <Form.Check
+                        key={index}
                         name="holiday-checkbox"
                         type="checkbox"
                         label={day}
@@ -488,37 +602,36 @@ const WorkHours = () => {
               }}
             >
               <Modal.Title id="contained-modal-title-vcenter">
-                Master Settings
+                Booking Time
               </Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <div className="text-center">
                 <h4>
-                  <b>Select Dates for Holidays</b>
+                  <b>Client can book session time prior to?</b>
                 </h4>
-                <Row className="mt-5" style={{ justifyContent: "center" }}>
-                  <Calendar
-                    tileDisabled={tileDisabled}
-                    onChange={rangeOnChange}
-                    value={rangeValue}
-                    minDetail="month"
-                    maxDetail="month"
-                    selectRange={true}
-                    next2Label={null}
-                    prev2Label={null}
-                  />
-                </Row>
-                <div className="mt-5 ml-5 mr-5 pl-5 pr-5">
-                  <InputGroup className="mb-3">
-                    <FormControl
-                      placeholder="Type New Holiday"
-                      onChange={(e) => {
-                        setDesc(e.target.value);
-                      }}
-                      value={desc}
-                    />
-                  </InputGroup>
+                <Form.Group>
+                  <label>Online Mode</label>
+                  <div>
+                    <Form.Control as="select" onChange={(e) => {setUserOnlineTime(e.target.value)}}>
+                      <option value={45}>45 min</option>
+                      <option value={90}>90 min</option>
+                      <option value={120}>120 min</option>
+                      <option value={180}>180 min</option>
+                    </Form.Control>
                 </div>
+                </Form.Group>
+                <Form.Group>
+                  <label>Offline Mode</label>
+                  <div>
+                    <Form.Control as="select" onChange={(e) => {setUserOfflineTime(e.target.value)}}>
+                      <option value={45}>45 min</option>
+                      <option value={90}>90 min</option>
+                      <option value={120}>120 min</option>
+                      <option value={180}>180 min</option>
+                    </Form.Control>
+                </div>
+                </Form.Group>
               </div>
             </Modal.Body>
             <Modal.Footer>
@@ -532,9 +645,8 @@ const WorkHours = () => {
               </Button>
               <Button
                 variant="success"
-                disabled={desc === "" ? true : false}
                 onClick={() => {
-                  handleCustomDates(desc, rangeValue);
+                  handleBookingTimeUpdate(parseInt(userOnlineTime), parseInt(userOfflineTime));
                   setShowDatesModal(false);
                 }}
               >

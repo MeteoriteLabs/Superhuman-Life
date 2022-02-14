@@ -87,10 +87,9 @@ const Holidays = () => {
 
   function loadMasterSettings(data: any) {
     var values: any = document.querySelectorAll('[name="holiday-checkbox"]');
-    console.log(data)
-    if (data !== undefined) {
+    if (data?.Changemaker_weekly_schedule !== null && data !== undefined) {
       for (var i = 0; i <= 6; i++) {
-        if (data.Changemaker_weekly_schedule[i].is_holiday) {
+        if (data?.Changemaker_weekly_schedule[i]?.is_holiday) {
           values[i].checked = true;
         }
       }
@@ -145,7 +144,7 @@ const Holidays = () => {
 
   function handleCheckBoxes() {
     var values: any = document.querySelectorAll('[name="holiday-checkbox"]');
-    if (masterSettings === undefined) {
+    if (masterSettings === undefined || masterSettings.Changemaker_weekly_schedule === null) {
       for (var i = 0; i <= 6; i++) {
         changeMakerWeeklySchedule.push({
           id: i,
@@ -161,7 +160,7 @@ const Holidays = () => {
         },
       });
     } else {
-      const userConfig = [...masterSettings];
+      const userConfig = [...masterSettings.Changemaker_weekly_schedule];
       let updatedUserConfig: any = [];
       let obj: any = {};
       for (var j = 0; j <= 6; j++) {
