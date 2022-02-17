@@ -17,10 +17,14 @@ import "react-calendar/dist/Calendar.css";
 import {
   GET_ALL_CHANGEMAKER_HOLIDAYS,
   GET_USER_WEEKLY_CONFIG,
+  GET_ALL_CHANGEMAKER_AVAILABILITY_HOLIDAYS,
+  GET_ALL_CHANGEMAKER_AVAILABILITY
 } from "../../graphql/queries";
 import {
   CREATE_CHANGEMAKER_HOLIDAY,
+  DELETE_CHANGEMAKER_AVAILABILITY_HOLIDAY,
   DELETE_CHANGEMAKER_HOLIDAY,
+  CREATE_CHANGEMAKER_AVAILABILITY_HOLIDAY,
   UPDATE_USER_DATA,
 } from "../../graphql/mutations";
 import { useQuery, useMutation } from "@apollo/client";
@@ -42,9 +46,11 @@ const Holidays = () => {
   const [masterSettings, setMasterSettings] = useState<any>([]);
   const [toast, setToast] = useState(false);
   const [deleteItem, setDeleteItem] = useState("");
+  const [allChangeMakerHolidays, setAllChangeMakerHolidays] = useState<any>([]);
+  const [errModal, setErrModal] = useState(false);
 
 
-  useQuery(GET_ALL_CHANGEMAKER_HOLIDAYS, {
+  useQuery(GET_ALL_CHANGEMAKER_AVAILABILITY_HOLIDAYS, {
     variables: {
       dateLowerLimit: `${moment()
         .endOf("month")
@@ -58,9 +64,20 @@ const Holidays = () => {
     },
     onCompleted: (data) => {
       const flattenData = flattenObj({...data});
-      setHolidays(flattenData.changemakerHolidays);
+      setHolidays(flattenData.changemakerAvailabilties);
     },
   });
+
+  useQuery(GET_ALL_CHANGEMAKER_AVAILABILITY, {
+    variables: {
+      id: auth.userid,
+    },
+    onCompleted: (data) => {
+      const flattenData = flattenObj({...data});
+      setAllChangeMakerHolidays(flattenData.changemakerAvailabilties);
+    },
+  });
+
   useQuery(GET_USER_WEEKLY_CONFIG, {
     variables: { id: auth.userid },
     onCompleted: (data) => {
@@ -71,8 +88,8 @@ const Holidays = () => {
     },
   });
 
-  const [createChangeMakerHoliday] = useMutation(CREATE_CHANGEMAKER_HOLIDAY);
-  const [deleteChangeMakerHoliday] = useMutation(DELETE_CHANGEMAKER_HOLIDAY);
+  const [createChangeMakerHoliday] = useMutation(CREATE_CHANGEMAKER_AVAILABILITY_HOLIDAY);
+  const [deleteChangeMakerHoliday] = useMutation(DELETE_CHANGEMAKER_AVAILABILITY_HOLIDAY);
   const [updateUserData] = useMutation(UPDATE_USER_DATA);
 
   const daysOfWeek = [
@@ -97,13 +114,23 @@ const Holidays = () => {
   }
 
   function handleAddHoliday(date: any, event: any) {
-    createChangeMakerHoliday({
+    const values = allChangeMakerHolidays.find((item: any) => item.date === date);
+    if(values){
+      if(values.booking_slots.length > 0){
+        // set a modal to display the error
+        setErrModal(true);
+      }
+    }else {
+      createChangeMakerHoliday({
       variables: {
         date: `${moment(date).format("YYYY-MM-DD")}`,
         description: desc,
         users_permissions_user: auth.userid,
       },
     });
+    setToast(true);
+    }
+
     setDesc("");
     setDate(moment().format("YYYY-MM-DD"));
   }
@@ -287,7 +314,7 @@ const Holidays = () => {
                           borderRadius: "10px",
                         }}
                       >
-                        <span>{item.description}</span>
+                        <span>{item.holiday_title}</span>
                       </div>
                     </Col>
                     <Col lg={1}>
@@ -342,7 +369,6 @@ const Holidays = () => {
               style={{ backgroundColor: "#647a8c", borderRadius: "10px" }}
               onClick={() => {
                 handleAddHoliday(date, desc);
-                setToast(true);
                 handleToast();
               }}
             >
@@ -524,6 +550,35 @@ const Holidays = () => {
               }}
             >
               Yes
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      }
+       {
+        <Modal
+          size="lg"
+          aria-labelledby="contained-modal-title-vcenter"
+          show={errModal}
+          centered
+        >
+          <Modal.Header
+            closeButton
+            onHide={() => {
+              setErrModal(false);
+            }}
+          >
+            <Modal.Title id="contained-modal-title-vcenter">
+              You cannot mark the day as a holiday as you have events planned for the day.
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Footer>
+            <Button
+              variant="success"
+              onClick={() => {
+                setErrModal(false);
+              }}
+            >
+              Close
             </Button>
           </Modal.Footer>
         </Modal>

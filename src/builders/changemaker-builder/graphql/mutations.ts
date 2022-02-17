@@ -78,3 +78,64 @@ export const UPDATE_USER_BOOKING_TIME = gql`
     }
   }
 `
+
+export const CREATE_CHANGEMAKER_AVAILABILITY_HOLIDAY = gql`
+mutation createChangeMakerAvailabilityHoliday(
+  $date: Date
+  $description: String
+  $users_permissions_user: ID!
+) {
+  createChangemakerAvailabilty(
+    data: {
+      date: $date
+      holiday_title: $description
+      users_permissions_user: $users_permissions_user,
+      Is_Holiday: true
+    }
+  ) {
+    data {
+      id
+    }
+  }
+} 
+`;
+
+export const DELETE_CHANGEMAKER_AVAILABILITY_HOLIDAY = gql`
+  mutation deleteChangeMakerHoliday($id: ID!) {
+    deleteChangemakerAvailabilty(id: $id) {
+      data {
+        id
+      }
+    }
+  }
+`; 
+
+export const CREATE_CHANGEMAKER_AVAILABILITY_WORKHOURS = gql`
+  mutation createChangeMakerAvailabilityWorkHours($slots: JSON, $id: ID!, $date: Date) {
+    createChangemakerAvailabilty(data: {
+      booking_slots: $slots,
+      Is_Holiday: false,
+      users_permissions_user: $id,
+      date: $date
+    }){
+      data{
+        id
+      }
+    }
+  }
+`
+
+export const UPDATE_CHANGEMAKER_AVAILABILITY_WORKHOURS = gql`
+  mutation updateCHageMakerAvailabilityWorkHour($id: ID!, $slots: JSON){
+    updateChangemakerAvailabilty(id: $id, data: {
+      booking_slots: $slots
+    }){
+      data{
+        id
+        attributes{
+          date
+        }
+      }
+    }
+  }
+`

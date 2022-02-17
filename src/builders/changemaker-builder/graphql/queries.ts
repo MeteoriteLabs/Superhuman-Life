@@ -142,7 +142,7 @@ export const GET_ALL_CHANGEMAKER_HOLIDAYS = gql`
 `;
 
 export const GET_USER_WEEKLY_CONFIG = gql`
-  query getUserWeeklyConfig($id: ID!) {
+  query getUserWeeklyConfig($id: ID!, $date: Date) {
     usersPermissionsUsers(filters: { id: { eq: $id } }) {
       data {
         id
@@ -150,6 +150,113 @@ export const GET_USER_WEEKLY_CONFIG = gql`
           Changemaker_weekly_schedule
           booking_lead_time_online_mins
           booking_lead_time_offline_mins
+        }
+      }
+    }
+    changemakerWorkhours(filters:{
+      date: {
+        eq: $date
+      },
+      users_permissions_user:{
+        id: {
+          eq: $id
+        }
+      }
+    }){
+      data{
+        id
+        attributes{
+          To_Time
+          From_time
+          Mode
+          is_disabled
+          date
+        }
+      }
+    }
+  }
+`;
+
+export const GET_ALL_CHANGEMAKER_AVAILABILITY = gql`
+  query getAllChangeMakerAvailabilityHolidays($id: ID!) {
+    changemakerAvailabilties(filters: {
+      users_permissions_user: {
+        id: {
+          eq: $id
+        }
+      }
+    }){
+      data{
+        id
+        attributes{
+          holiday_title
+          booking_slots
+          Is_Holiday
+          date
+          users_permissions_user{
+            data{
+              id
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const GET_ALL_CHANGEMAKER_AVAILABILITY_HOLIDAYS = gql`
+  query getAllChangeMakerAvailabilityHolidays($id: ID!, $dateUpperLimit: Date, $dateLowerLimit: Date) {
+    changemakerAvailabilties(filters: {
+      date: { between: [$dateUpperLimit, $dateLowerLimit] }
+      Is_Holiday: {
+        eq: true
+      },
+      users_permissions_user: {
+        id: {
+          eq: $id
+        }
+      }
+    }){
+      data{
+        id
+        attributes{
+          holiday_title
+          booking_slots
+          Is_Holiday
+          date
+          users_permissions_user{
+            data{
+              id
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const GET_ALL_CHANGEMAKER_AVAILABILITY_WORKHOURS = gql`
+  query getAllChangeMakerAvailabilityHolidays($id: ID!, $date: Date) {
+    changemakerAvailabilties(filters: {
+      date: { eq: $date }
+      users_permissions_user: {
+        id: {
+          eq: $id
+        }
+      }
+    }){
+      data{
+        id
+        attributes{
+          holiday_title
+          booking_slots
+          Is_Holiday
+          date
+          users_permissions_user{
+            data{
+              id
+            }
+          }
         }
       }
     }

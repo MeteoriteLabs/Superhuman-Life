@@ -15,13 +15,18 @@ import "react-calendar/dist/Calendar.css";
 import {
   GET_ALL_CHANGEMAKER_HOLIDAYS,
   GET_USER_WEEKLY_CONFIG,
+  GET_ALL_CLIENT_PACKAGE_BY_TYPE,
+  GET_ALL_CHANGEMAKER_AVAILABILITY_WORKHOURS,
+  GET_ALL_CHANGEMAKER_AVAILABILITY
 } from "../../graphql/queries";
 import {
   UPDATE_USER_DATA,
   UPDATE_USER_BOOKING_TIME,
-  CREATE_CANGEMAKER_WORK_HOUR
+  CREATE_CANGEMAKER_WORK_HOUR,
+  UPDATE_CHANGEMAKER_AVAILABILITY_WORKHOURS,
+  CREATE_CHANGEMAKER_AVAILABILITY_WORKHOURS
 } from "../../graphql/mutations";
-import { useQuery, useMutation, from } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client";
 import AuthContext from "../../../../context/auth-context";
 import TimePicker from "rc-time-picker";
 import "rc-time-picker/assets/index.css";
@@ -40,26 +45,33 @@ const WorkHours = () => {
   const [toast, setToast] = useState(false);
   const [show, setShow] = useState(false);
   const [date, setDate] = useState(moment().format("YYYY-MM-DD"));
+  const [todaysEvents, setTodaysEvents] = useState<any>([]);
+  const [userWorkHoursConfig, setUserWorkHoursConfig] = useState<any>([]);
+  const [allChangeMakerHolidays, setAllChangeMakerHolidays] = useState<any>([]);
 
-  useQuery(GET_ALL_CHANGEMAKER_HOLIDAYS, {
+  useQuery(GET_ALL_CHANGEMAKER_AVAILABILITY_WORKHOURS, {
     variables: {
-      dateLowerLimit: `${moment()
-        .endOf("month")
-        .add(month, "month")
-        .format("YYYY-MM-DD")}`,
-      dateUpperLimit: `${moment()
-        .startOf("month")
-        .add(month, "month")
-        .format("YYYY-MM-DD")}`,
+      date: moment().format("YYYY-MM-DD"),
       id: auth.userid,
     },
     onCompleted: (data) => {
       const flattenData = flattenObj({ ...data });
-      setHolidays(flattenData.changemakerHolidays);
+      console.log(flattenData);
+      setHolidays(flattenData.changemakerAvailabilties);
     },
   });
 
-  function handleTodaysSlots(settings: any){
+  useQuery(GET_ALL_CHANGEMAKER_AVAILABILITY, {
+    variables: {
+      id: auth.userid,
+    },
+    onCompleted: (data) => {
+      const flattenData = flattenObj({...data});
+      setAllChangeMakerHolidays(flattenData.changemakerAvailabilties);
+    },
+  });
+
+  function handleTodaysSlots(settings: any, todaysSlots: any){
     var today = moment().format("dddd");
     var values: any;
     
@@ -68,38 +80,118 @@ const WorkHours = () => {
         values = settings[i].slots;
       }
     }
+    setUserWorkHoursConfig(values);
+    handleWorkHours(values, todaysSlots);
+  }
+
+  function handleWorkHours(val: any, currentWorkHours: any){
+    const values = val.concat(currentWorkHours);
     setSlots(values);
   }
 
+  function LoadProgramEvents(data: any) {
+    const flattenData = flattenObj({ ...data });
+    var sortedPrograms: any = [];
+    var Values: any = {};
+    for (var i = 0; i < flattenData.clientPackages.length; i++) {
+        if (flattenData.clientPackages[i].program_managers.length !== 0) {
+        if (flattenData.clientPackages[i].fitnesspackages[0].fitness_package_type.type === "Group Class") {
+            for (var j = 0; j < flattenData.clientPackages[i].program_managers[0].fitnessprograms.length; j++) {
+            Values.effectiveDate = flattenData.clientPackages[i].program_managers[0].fitnessprograms[j].start_dt;
+            Values.program = flattenData.clientPackages[i].program_managers[0].fitnessprograms[j];
+            sortedPrograms.push(Values);
+            Values = {};
+            }
+        } else {
+            for (var k = 0; k < flattenData.clientPackages[i].program_managers[0].fitnessprograms.length; k++) {
+            Values.effectiveDate = flattenData.clientPackages[i].effective_date.substring(0,flattenData.clientPackages[i].effective_date.indexOf("T"));
+            Values.program = flattenData.clientPackages[i].program_managers[0].fitnessprograms[k];
+            sortedPrograms.push(Values);
+            Values = {};
+            }
+        }
+        }
+    }
+    handleDuplicates(sortedPrograms);
+    }
+    
+    function handleDuplicates(sortedPrograms: any) {
+    if (sortedPrograms.length > 0) {
+        const values = [...sortedPrograms];
+        for (var i = 0; i < values.length; i++) {
+        for (var j = i + 1; j < values.length - 1; j++) {
+            if (values[i].program.id === values[j].program.id) {
+            values.splice(j, 1);
+            }
+        }
+        }
+        handleCurrentDate(values);
+    }
+    }
+    
+    function handleCurrentDate(data: any) {
+        const currentDay: any = [];
+        for (var i = 0; i < data?.length; i++) {
+            var date1 = moment();
+            var date2 = moment(data[i].effectiveDate);
+            var diff = date1.diff(date2, "days");
+            currentDay.push(diff + 1);
+        }
+        handleTodaysEvents(data, currentDay);
+    }
+    
+    function handleTodaysEvents(data: any, currentDay: any) {
+        const todaysPrograms: any = [];
+        for (var i = 0; i < data?.length; i++) {
+            for (var j = 0; j < data[i]?.program.events?.length; j++) {
+            if (currentDay[i] === parseInt(data[i].program.events[j].day) && data[i].program.events[j].type === "workout") {
+                todaysPrograms.push(data[i].program.events[j]);
+            }
+            }
+        }
+        setTodaysEvents(todaysPrograms);
+    }
+
+  useQuery(GET_ALL_CLIENT_PACKAGE_BY_TYPE, {
+    variables: {
+      id: auth.userid,
+      type_in: ["Personal Training", "Group Class", "Custom"],
+    },
+    onCompleted: (data) => {
+      LoadProgramEvents(data);
+    },
+  });
+
   useQuery(GET_USER_WEEKLY_CONFIG, {
-    variables: { id: auth.userid },
+    variables: { id: auth.userid, date: moment().format("YYYY-MM-DD") },
     onCompleted: (data) => {
       const flattenData = flattenObj({ ...data });
+      // console.log(flattenData);
       setMasterSettings(flattenData.usersPermissionsUsers);
-      handleTodaysSlots(flattenData.usersPermissionsUsers[0].Changemaker_weekly_schedule);
+      handleTodaysSlots(flattenData.usersPermissionsUsers[0].Changemaker_weekly_schedule, flattenData.changemakerWorkhours);
     },
   });
 
   const [updateUserData] = useMutation(UPDATE_USER_DATA);
   const [updateUserBookingTime] = useMutation(UPDATE_USER_BOOKING_TIME);
   const [createChangemakerWorkHour] = useMutation(CREATE_CANGEMAKER_WORK_HOUR);
+  const [updateChangemakerAvailabilityWorkHour] = useMutation(UPDATE_CHANGEMAKER_AVAILABILITY_WORKHOURS);
+  const [createChangemakerAvailabilityWorkHour] = useMutation(CREATE_CHANGEMAKER_AVAILABILITY_WORKHOURS);
 
   const daysOfWeek = [
+    "Sunday",
     "Monday",
     "Tuesday",
     "Wednesday",
     "Thursday",
     "Friday",
     "Saturday",
-    "Sunday",
   ];
 
   function tileDisabled({ date, view }) {
     if (view === "month") {
-      return holidays?.find(
-        (dDate) =>
-          moment(dDate.date).format("YYYY-MM-DD") ===
-          moment(date).format("YYYY-MM-DD")
+      return allChangeMakerHolidays?.find(
+        (dDate) => moment(dDate.date).format("YYYY-MM-DD") === moment(date).format("YYYY-MM-DD") && dDate.Is_Holiday === true
       );
     }
   }
@@ -189,7 +281,7 @@ const WorkHours = () => {
     const values = slots.map(elem => {
       return Object.assign({}, elem, slots[elem]);
     });
-    values[val].isDisabled = !values[val].isDisabled;
+    values[val].is_disabled = !values[val].is_disabled;
     setSlots(values); 
   }
 
@@ -222,16 +314,53 @@ const WorkHours = () => {
     }
   }
 
-  function handleWorkTime(fromTime: any, toTime: any, mode: any, date: any) {
-    createChangemakerWorkHour({
-      variables: {
-        date: date,
-        From_time: fromTime + ":00.000",
-        To_time: toTime + ":00.000",
-        Mode: mode,
-        users_permissions_user: auth.userid,
+  function getRandomId(length) {
+    var randomChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var result = '';
+    for ( var i = 0; i < length; i++ ) {
+      result += randomChars.charAt(Math.floor(Math.random() * randomChars.length));
+    }
+    return result;
+  }
+
+  function handleWorkTime(fromTime: any, toTime: any, mode: any, date: any, holidays: any) {
+
+    const values = holidays.find((item: any) => item.date === date);
+    var obj: any = {};
+    if(values){
+      if(values.Is_Holiday === false){
+        obj.id = getRandomId(10);
+        obj.from_time = fromTime;
+        obj.to_time = toTime;
+        obj.mode = mode;
+        const userData = values.booking_slots !== null ? [...values.booking_slots] : [];
+        userData.push(obj);
+        updateChangemakerAvailabilityWorkHour({
+          variables: {id: values.id, slots: userData}
+        });
       }
-    })
+    }else if(values === undefined){
+      obj.id = getRandomId(10);
+      obj.from_time = fromTime;
+      obj.to_time = toTime;
+      obj.mode = mode;
+      const userData: any = [];
+      userData.push(obj);
+      createChangemakerAvailabilityWorkHour({
+        variables: {id: auth.userid, slots: userData, date: date}
+      });
+      
+    }
+
+    // createChangemakerWorkHour({
+    //   variables: {
+    //     date: date,
+    //     From_time: fromTime + ":00.000",
+    //     To_time: toTime + ":00.000",
+    //     Mode: mode,
+    //     users_permissions_user: auth.userid,
+    //   }
+    // });
 
     // for(var i=0; i<masterSettings[0].Changemaker_weekly_schedule.length; i++){
     //   if(masterSettings[0].Changemaker_weekly_schedule[i].day === moment().format("dddd")){
@@ -289,6 +418,7 @@ const WorkHours = () => {
 
   const [userOfflineTime, setUserOfflineTime]: any = useState(45);
   const [userOnlineTime, setUserOnlineTime]: any = useState(45);
+  const [dayIndex, setDayIndex]: any = useState(moment().weekday());
 
   if (!show)
     return (
@@ -383,9 +513,9 @@ const WorkHours = () => {
                   overflowX: "hidden",
                 }}
               >
-                {slots?.map((item, index) => {
+                {holidays[0].booking_slots?.map((item, index) => {
                   return (
-                    <Row key={index} className="mt-3 pt-1 pb-1 items-center">
+                    <Row id={item.id} key={index} className="mt-3 pt-1 pb-1 items-center">
                       <Col lg={8}>
                         <Row>
                           <Col lg={5}>
@@ -398,7 +528,7 @@ const WorkHours = () => {
                                 borderRadius: "10px",
                               }}
                             >
-                              <span>{item.from}</span>
+                              <span>{moment(item.from_time, "HH:mm").format("HH:mm")}</span>
                             </div>
                           </Col>
                           <Col lg={2}>To</Col>
@@ -412,7 +542,7 @@ const WorkHours = () => {
                                 borderRadius: "10px",
                               }}
                             >
-                              <span>{item.to}</span>
+                              <span>{moment(item.to_time, "HH:mm").format("HH:mm")}</span>
                             </div>
                           </Col>
                         </Row>
@@ -434,7 +564,7 @@ const WorkHours = () => {
                           <Form>
                             <Form.Check
                               type="switch"
-                              checked={item.isDisabled}
+                              checked={item.is_disabled}
                               onChange={(e) => {handleTimeSlot(index)}}
                               id={`custom-switch-${index}`}
                             />
@@ -495,7 +625,7 @@ const WorkHours = () => {
                 disabled={disableAdd || classMode === ''}
                 style={{ backgroundColor: "#647a8c", borderRadius: "10px" }}
                 onClick={() => {
-                  handleWorkTime(fromTime, toTime, classMode, date);
+                  handleWorkTime(fromTime, toTime, classMode, date, holidays);
                   setToast(true);
                   handleToast();
                 }}
@@ -557,7 +687,7 @@ const WorkHours = () => {
         </div>
         {
           <Modal
-            size="sm"
+            size="lg"
             aria-labelledby="contained-modal-title-vcenter"
             show={showDaysModal}
             centered
@@ -575,10 +705,146 @@ const WorkHours = () => {
             <Modal.Body>
               <div className="text-center">
                 <span>
-                  <b>Select Days for Holidays</b>
+                  <b>Set By Day</b>
                 </span>
               </div>
-              <Form className="mt-3">
+              <div className="text-center">
+                <span>What all day do you work on?</span>
+              </div>
+              <div className="text-center">
+                <Row style={{ justifyContent: 'center'}}>
+                  {daysOfWeek.map((item: any, index: any) => {
+                    return (
+                      <>
+                        <Col 
+                          onClick={(e) => {setDayIndex(index)}} 
+                          key={index} lg={1} 
+                          style={{cursor: 'pointer', backgroundColor: `${dayIndex === index ? '#647a8c' : ''}`,border: '1px solid black', borderRadius: '20px'}} 
+                          className="p-0 m-2"
+                        >
+                          {moment(item, "ddd").format("ddd")}
+                        </Col>
+                      </>
+                    )
+                  })}
+                </Row>
+              </div>
+              <hr />
+              <div className="text-center">
+              <div className="text-center">
+                <span style={{fontSize: '25px', textDecorationLine: 'underline'}}><b>{daysOfWeek[dayIndex]}</b></span>
+              </div>
+              <div className="text-center">
+                <span><b>General Working Hours</b></span>
+              </div>
+              <div className="text-center">
+                <p style={{color: 'gray'}}>Everyone will be able to book only during this duration</p>
+              </div>
+              {userWorkHoursConfig?.map((item, index) => {
+                  return (
+                    <Row key={index} className="mt-3 pt-1 pb-1 items-center">
+                      <Col lg={8}>
+                        <Row>
+                          <Col lg={5}>
+                            <div
+                              className="shadow-sm"
+                              style={{
+                                border: "1px solid gray",
+                                backgroundColor: "whitesmoke",
+                                padding: "5px",
+                                borderRadius: "10px",
+                              }}
+                            >
+                              <span>{moment(item.From_time, "HH:mm").format("HH:mm")}</span>
+                            </div>
+                          </Col>
+                          <Col lg={2}>To</Col>
+                          <Col lg={5}>
+                            <div
+                              className="shadow-sm"
+                              style={{
+                                border: "1px solid gray",
+                                backgroundColor: "whitesmoke",
+                                padding: "5px",
+                                borderRadius: "10px",
+                              }}
+                            >
+                              <span>{moment(item.To_Time, "HH:mm").format("HH:mm")}</span>
+                            </div>
+                          </Col>
+                        </Row>
+                      </Col>
+                      <Col lg={2} className="ml-3">
+                        <div
+                          style={{
+                            border: "1px solid gray",
+                            backgroundColor: "whitesmoke",
+                            padding: "5px",
+                            borderRadius: "10px",
+                          }}
+                        >
+                          <span>{item.Mode}</span>
+                        </div>
+                      </Col>
+                      <Col lg={1}>
+                        <div className="ml-3">
+                        <img
+                        style={{ cursor: "pointer" }}
+                        src="/assets/delete.svg"
+                        alt="delete"
+                        onClick={() => {
+                          // setConfirmModal(true);
+                          // setDeleteItem(item.id);
+                        }}
+                      />
+                        </div>
+                      </Col>
+                    </Row>
+                  );
+                })}
+              <Col>
+                <Row className="mt-2" style={{ borderTop: "3px solid gray" }}></Row>
+              </Col>
+              <Col>
+              <Row className="mt-4">
+                <Col lg={3}>
+                  {/* <div className="shadow-sm" style={{ border: '1px solid gray',backgroundColor: 'whitesmoke', padding: '5px', borderRadius: '10px'}}> */}
+                  <TimePicker value={convertToMoment(fromTime)} showSecond={false} minuteStep={15} onChange={(e) => {handleFromTimeInput(moment(e).format("HH:mm"))}}/>
+                  {/* </div> */}
+                </Col>
+                <Col lg={1}>To</Col>
+                <Col lg={3}>
+                  {/* <div className="shadow-sm" style={{ border: '1px solid gray',backgroundColor: 'whitesmoke', padding: '5px', borderRadius: '10px'}}> */}
+                  <TimePicker value={convertToMoment(toTime)} showSecond={false} minuteStep={15} onChange={(e) => {handleToTimeInput(moment(e).format("HH:mm"))}}/>
+                  {/* </div> */}
+                </Col>
+                <Col lg={3}>
+                <Form.Control as="select" onChange={(e) => {setClassMode(e.target.value)}}>
+                <option value="">Select Mode</option>
+                <option value="Offline">Online</option>
+                <option value="Online">Offline</option>
+                <option value="Hybrid">Hybrid</option>
+              </Form.Control>
+                  </Col>
+                <Col lg={2}>
+                <button
+                  className="pl-3 pr-3 pt-1 pb-1 shadow-lg"
+                  title={disableAdd || classMode === '' ? "please enter valid details": ""}
+                  disabled={disableAdd || classMode === ''}
+                  style={{ backgroundColor: "#647a8c", borderRadius: "10px" }}
+                  onClick={() => {
+                    // handleWorkTime(fromTime, toTime, classMode, date);
+                    // setToast(true);
+                    // handleToast();
+                  }}
+                >
+                  Add
+                </button>
+                </Col>
+              </Row>
+              </Col>
+              </div>
+              {/* <Form className="mt-3">
                 {daysOfWeek.map((day, index) => {
                   return (
                     <>
@@ -593,7 +859,7 @@ const WorkHours = () => {
                     </>
                   );
                 })}
-              </Form>
+              </Form> */}
             </Modal.Body>
             <Modal.Footer>
               <Button
