@@ -48,6 +48,17 @@ const WorkHours = () => {
   const [todaysEvents, setTodaysEvents] = useState<any>([]);
   const [userWorkHoursConfig, setUserWorkHoursConfig] = useState<any>([]);
   const [allChangeMakerHolidays, setAllChangeMakerHolidays] = useState<any>([]);
+  const [errModal, setErrModal] = useState(false);
+
+  useQuery(GET_ALL_CLIENT_PACKAGE_BY_TYPE, {
+    variables: {
+      id: auth.userid,
+      type_in: ["Personal Training", "Group Class", "Custom"],
+    },
+    onCompleted: (data) => {
+      LoadProgramEvents(data);
+    },
+  });
 
   useQuery(GET_ALL_CHANGEMAKER_AVAILABILITY_WORKHOURS, {
     variables: {
@@ -56,7 +67,6 @@ const WorkHours = () => {
     },
     onCompleted: (data) => {
       const flattenData = flattenObj({ ...data });
-      console.log(flattenData);
       setHolidays(flattenData.changemakerAvailabilties);
     },
   });
@@ -71,7 +81,7 @@ const WorkHours = () => {
     },
   });
 
-  function handleTodaysSlots(settings: any, todaysSlots: any){
+  function handleTodaysSlots(settings: any, todaysSlots: any, todaysEvents: any){
     var today = moment().format("dddd");
     var values: any;
     
@@ -81,11 +91,13 @@ const WorkHours = () => {
       }
     }
     setUserWorkHoursConfig(values);
-    handleWorkHours(values, todaysSlots);
+    handleWorkHours(values, todaysSlots, todaysEvents);
   }
 
-  function handleWorkHours(val: any, currentWorkHours: any){
+  function handleWorkHours(val: any, currentWorkHours: any, todaysEvents: any){
     const values = val.concat(currentWorkHours);
+    console.log(todaysEvents);
+    console.log(values);
     setSlots(values);
   }
 
@@ -135,7 +147,7 @@ const WorkHours = () => {
             var date1 = moment();
             var date2 = moment(data[i].effectiveDate);
             var diff = date1.diff(date2, "days");
-            currentDay.push(diff + 1);
+            currentDay.push(diff);
         }
         handleTodaysEvents(data, currentDay);
     }
@@ -149,18 +161,9 @@ const WorkHours = () => {
             }
             }
         }
+        console.log(todaysPrograms);
         setTodaysEvents(todaysPrograms);
     }
-
-  useQuery(GET_ALL_CLIENT_PACKAGE_BY_TYPE, {
-    variables: {
-      id: auth.userid,
-      type_in: ["Personal Training", "Group Class", "Custom"],
-    },
-    onCompleted: (data) => {
-      LoadProgramEvents(data);
-    },
-  });
 
   useQuery(GET_USER_WEEKLY_CONFIG, {
     variables: { id: auth.userid, date: moment().format("YYYY-MM-DD") },
@@ -168,7 +171,7 @@ const WorkHours = () => {
       const flattenData = flattenObj({ ...data });
       // console.log(flattenData);
       setMasterSettings(flattenData.usersPermissionsUsers);
-      handleTodaysSlots(flattenData.usersPermissionsUsers[0].Changemaker_weekly_schedule, flattenData.changemakerWorkhours);
+      handleTodaysSlots(flattenData.usersPermissionsUsers[0].Changemaker_weekly_schedule, flattenData.changemakerWorkhours, todaysEvents);
     },
   });
 
@@ -325,8 +328,13 @@ const WorkHours = () => {
 
   function handleWorkTime(fromTime: any, toTime: any, mode: any, date: any, holidays: any) {
 
-    const values = holidays.find((item: any) => item.date === date);
+    const values = allChangeMakerHolidays.find((item: any) => item.date === date);
     var obj: any = {};
+
+    if(values?.Is_Holiday === true) {
+      setErrModal(true);
+    }
+
     if(values){
       if(values.Is_Holiday === false){
         obj.id = getRandomId(10);
@@ -338,6 +346,7 @@ const WorkHours = () => {
         updateChangemakerAvailabilityWorkHour({
           variables: {id: values.id, slots: userData}
         });
+        setToast(true);
       }
     }else if(values === undefined){
       obj.id = getRandomId(10);
@@ -349,7 +358,7 @@ const WorkHours = () => {
       createChangemakerAvailabilityWorkHour({
         variables: {id: auth.userid, slots: userData, date: date}
       });
-      
+      setToast(true);
     }
 
     // createChangemakerWorkHour({
@@ -626,7 +635,6 @@ const WorkHours = () => {
                 style={{ backgroundColor: "#647a8c", borderRadius: "10px" }}
                 onClick={() => {
                   handleWorkTime(fromTime, toTime, classMode, date, holidays);
-                  setToast(true);
                   handleToast();
                 }}
               >
@@ -940,6 +948,35 @@ const WorkHours = () => {
             </Modal.Footer>
           </Modal>
         }
+        {
+        <Modal
+          size="lg"
+          aria-labelledby="contained-modal-title-vcenter"
+          show={errModal}
+          centered
+        >
+          <Modal.Header
+            closeButton
+            onHide={() => {
+              setErrModal(false);
+            }}
+          >
+            <Modal.Title id="contained-modal-title-vcenter">
+              You cannot assign work hour for the date: {date} as you have marked the date as a holiday.
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Footer>
+            <Button
+              variant="success"
+              onClick={() => {
+                setErrModal(false);
+              }}
+            >
+              Close
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      }
       </>
     );
 };
