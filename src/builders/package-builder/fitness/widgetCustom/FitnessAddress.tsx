@@ -1,5 +1,6 @@
 import { useQuery } from '@apollo/client'
 import { Fragment } from 'react'
+import { flattenObj } from '../../../../components/utils/responseFlatten';
 import { GET_ADDRESS } from '../graphQL/queries'
 
 export default function FitnessAddress(props) {
@@ -8,6 +9,7 @@ export default function FitnessAddress(props) {
 
 
     const { data, loading } = useQuery(GET_ADDRESS);
+    console.log("🚀 ~ file: FitnessAddress.tsx ~ line 11 ~ FitnessAddress ~ data", data)
 
 
     if (loading) return <p>...loading</p>
@@ -17,12 +19,10 @@ export default function FitnessAddress(props) {
     }
 
 
-
-
     return <Fragment>
 
         <label>{widgetProps.label}</label>
-        {data.addresses?.map((item: any, index: any) => {
+        {flattenObj({...data}).addresses?.map((item: any, index: any) => {
             return <div key={index}>
                 <label className='ml-3'>
                     <input type="radio"

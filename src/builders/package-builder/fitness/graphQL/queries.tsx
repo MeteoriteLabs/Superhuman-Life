@@ -19,7 +19,7 @@ export const GET_ADDRESS = gql`
 `;
 
 export const GET_FITNESS_DISCIPLINES = gql`
-  query Fitnessdisciplines {
+  query fitnessdisciplines {
     fitnessdisciplines {
       data {
         id
