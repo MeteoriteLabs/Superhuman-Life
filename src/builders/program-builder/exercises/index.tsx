@@ -65,7 +65,6 @@ export default function EventsTab() {
 
     function loadData(data: any) {
         const flattenData = flattenObj({...data});
-        console.log(flattenData);
         setTableData(
             [...flattenData.exercises].map((detail) => {
                 return {

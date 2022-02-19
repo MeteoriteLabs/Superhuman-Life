@@ -11,6 +11,7 @@ import UpdateSvg from './assets/update.svg';
 import SettingSvg from './assets/settings.svg';
 import { GET_SCHEDULEREVENTS } from "./queries";
 import { useQuery } from "@apollo/client";
+import { flattenObj } from '../../../components/utils/responseFlatten';
 
 const FloatingButton = (props: any) => {
 
@@ -24,7 +25,9 @@ const FloatingButton = (props: any) => {
      const program_id = window.location.pathname.split('/').pop();
 
      function FetchData() {
-          useQuery(GET_SCHEDULEREVENTS, { variables: { id: program_id }, onCompleted: (e: any) => { setExistingEvents(e.fitnessprograms[0].events); setRestDays(e.fitnessprograms[0].rest_days); setRenewalDate(e.fitnessprograms[0].renewal_dt) } });
+          useQuery(GET_SCHEDULEREVENTS, { variables: { id: program_id }, onCompleted: (e: any) => { 
+               const flattenData = flattenObj({...e});
+               setExistingEvents(flattenData.fitnessprograms[0].events); setRestDays(flattenData.fitnessprograms[0].rest_days); setRenewalDate(flattenData.fitnessprograms[0].renewal_dt) } });
      }
 
      FetchData();

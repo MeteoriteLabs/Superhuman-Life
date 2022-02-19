@@ -1,56 +1,61 @@
-import {gql} from "@apollo/client";
+import { gql } from "@apollo/client";
 
-
-
-export const GET_ALL_BOOKINGS = gql `
-query clientBookings($id: ID!, $start:Int, $limit:Int) {
-  clientBookings(
-      where: {
-        fitnesspackages: {
-          users_permissions_user: { id: $id }
-        }
+export const GET_ALL_BOOKINGS = gql`
+  query clientBookings($id: ID!, $start: Int, $limit: Int) {
+    clientBookings(
+      filters: {
+        fitnesspackages: { users_permissions_user: { id: { eq: $id } } }
       }
-      sort: "booking_date:desc"
-      start:$start
-      limit:$limit
-    ) 
-    {
-      id
-      users_permissions_user {
-        username
-      }
-      effective_date
-      booking_status
-      booking_date
-      package_duration
-      fitnesspackages {
+      pagination: { start: $start, limit: $limit }
+      sort: ["booking_date"]
+    ) {
+      data {
         id
-        packagename
-        fitness_package_type {
-          type
-        }
-        users_permissions_user {
-          id
+        attributes {
+          users_permissions_users {
+            data {
+              id
+              attributes {
+                username
+              }
+            }
+          }
+          effective_date
+          booking_status
+          booking_date
+          package_duration
+          fitnesspackages {
+            data {
+              id
+              attributes {
+                packagename
+                fitness_package_type {
+                  data {
+                    attributes {
+                      type
+                    }
+                  }
+                }
+                users_permissions_user {
+                  data {
+                    id
+                  }
+                }
+              }
+            }
+          }
         }
       }
     }
   }
-`
+`;
 
-
-
-export const FILTER_PACKAGES = gql `
-query userPackages($id: ID!, $sorts:String) {
+export const FILTER_PACKAGES = gql`
+  query userPackages($id: ID!, $sorts: String) {
     userPackages(
-      where: {
-        fitnesspackages: {
-          users_permissions_user: { id: $id }
-        }
-      },
+      where: { fitnesspackages: { users_permissions_user: { id: $id } } }
       sort: $sorts
-    
-    ) 
-    {
+    ) {
       id
       users_permissions_user {
         username
@@ -68,37 +73,39 @@ query userPackages($id: ID!, $sorts:String) {
           id
         }
       }
-     
     }
   }
-`
-
-
+`;
 
 export const BOOKING_CONFIG = gql`
-  query bookingConfigs($id: ID!){
+  query bookingConfigs($id: ID!) {
     bookingConfigs(
-      where:{
-        fitnesspackage:{users_permissions_user: { id: $id}}
+      filters: {
+        fitnesspackage: { users_permissions_user: { id: { eq: $id } } }
       }
-    )
-    {
-      id
-      fitnesspackage{
-        packagename
-        fitness_package_type{
-          type
+    ) {
+      data {
+        id
+        attributes {
+          fitnesspackage {
+            data {
+              attributes {
+                packagename
+                fitness_package_type {
+                  data {
+                    attributes {
+                      type
+                    }
+                  }
+                }
+              }
+            }
+          }
+          isAuto
+          bookingsPerDay
+          BookingsPerMonth
         }
       }
-      isAuto
-      bookingsPerDay
-      BookingsPerMonth
     }
   }
-
-`
-
-
-
-
-
+`;

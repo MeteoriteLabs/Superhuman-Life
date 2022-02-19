@@ -26,6 +26,7 @@ import {
 import { useQuery, useMutation } from "@apollo/client";
 import "./styles.css";
 import AuthContext from "../../../../context/auth-context";
+import { flattenObj } from "../../../../components/utils/responseFlatten";
 
 const Holidays = () => {
   const auth = useContext(AuthContext);
@@ -42,6 +43,7 @@ const Holidays = () => {
   const [toast, setToast] = useState(false);
   const [deleteItem, setDeleteItem] = useState("");
 
+
   useQuery(GET_ALL_CHANGEMAKER_HOLIDAYS, {
     variables: {
       dateLowerLimit: `${moment()
@@ -55,14 +57,16 @@ const Holidays = () => {
       id: auth.userid,
     },
     onCompleted: (data) => {
-      setHolidays(data.changemakerHolidays);
+      const flattenData = flattenObj({...data});
+      setHolidays(flattenData.changemakerHolidays);
     },
   });
   useQuery(GET_USER_WEEKLY_CONFIG, {
     variables: { id: auth.userid },
     onCompleted: (data) => {
+      const flattenData = flattenObj({...data})
       setMasterSettings(
-        data.usersPermissionsUsers[0]
+        flattenData.usersPermissionsUsers[0]
       );
     },
   });
@@ -83,9 +87,10 @@ const Holidays = () => {
 
   function loadMasterSettings(data: any) {
     var values: any = document.querySelectorAll('[name="holiday-checkbox"]');
+    console.log(data)
     if (data !== undefined) {
       for (var i = 0; i <= 6; i++) {
-        if (data[i].is_holiday) {
+        if (data.Changemaker_weekly_schedule[i].is_holiday) {
           values[i].checked = true;
         }
       }
@@ -110,7 +115,7 @@ const Holidays = () => {
 
   function tileDisabled({ date, view }) {
     if (view === "month") {
-      return holidays.data?.find(
+      return holidays?.find(
         (dDate) =>
           moment(dDate.date).format("YYYY-MM-DD") ===
           moment(date).format("YYYY-MM-DD")
@@ -254,7 +259,8 @@ const Holidays = () => {
                 overflowX: "hidden",
               }}
             >
-              {holidays.data?.map((item, index) => {
+              {holidays?.map((item, index) => {
+                console.log(item);
                 return (
                   <Row key={index} className="mt-3 pt-1 pb-1">
                     <Col lg={3}>

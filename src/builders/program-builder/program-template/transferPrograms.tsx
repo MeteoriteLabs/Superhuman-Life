@@ -3,6 +3,7 @@ import { Button, Modal } from 'react-bootstrap';
 import TransferProgramsTable from './transferProgramTable';
 import { UPDATE_FITNESSPROGRAMS, PROGRAM_EVENTS } from './queries';
 import { useMutation, useQuery } from "@apollo/client";
+import { flattenObj } from '../../../components/utils/responseFlatten';
 
 const TransferPrograms = (props: any) => {
 
@@ -94,8 +95,9 @@ const TransferPrograms = (props: any) => {
      }
 
      function loadData(data: any) {
+          const flattenData = flattenObj({...data});
           setExistingEvents(
-               [...data.fitnessprograms].map((detail) => {
+               [...flattenData.fitnessprograms].map((detail) => {
                     return {
                          events: (detail.events === null ? [] : detail.events),
                     }

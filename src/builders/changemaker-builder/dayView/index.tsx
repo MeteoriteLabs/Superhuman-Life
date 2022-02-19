@@ -11,6 +11,8 @@ import AuthContext from "../../../context/auth-context";
 
 import "react-vertical-timeline-component/style.min.css";
 
+import { flattenObj } from "../../../components/utils/responseFlatten";
+
 const DayView = (props: any) => {
   const auth = useContext(AuthContext);
   const [todaysEvents, setTodaysEvents] = useState<any[]>([]);
@@ -25,54 +27,33 @@ const DayView = (props: any) => {
       .format("YYYY-MM-DD")
   );
 
-  const { data: data1 } = useQuery(GET_ALL_CLIENT_PACKAGE_BY_TYPE, {
+  useQuery(GET_ALL_CLIENT_PACKAGE_BY_TYPE, {
     variables: {
       id: auth.userid,
-      type_in: ["Personal Training", "Group Class", "Custom Fitness"],
+      type_in: ["Personal Training", "Group Class", "Custom"],
     },
-    onCompleted: () => {
-      LoadData(data1);
+    onCompleted: (data) => {
+      loadData(data);
     },
   });
 
-  function LoadData(data: any) {
-    console.log(data);
+  function loadData(data: any) {
+    const flattenData = flattenObj({ ...data });
     var sortedPrograms: any = [];
     var Values: any = {};
-    for (var i = 0; i < data.userPackages.length; i++) {
-      if (data.userPackages[i].program_managers.length !== 0) {
-        if (
-          data.userPackages[i].fitnesspackages[0].fitness_package_type.type ===
-          "Group Class"
-        ) {
-          for (
-            var j = 0;
-            j < data.userPackages[i].program_managers[0].fitnessprograms.length;
-            j++
-          ) {
-            Values.effectiveDate =
-              data.userPackages[i].program_managers[0].fitnessprograms[
-                j
-              ].start_dt;
-            Values.program =
-              data.userPackages[i].program_managers[0].fitnessprograms[j];
+    for (var i = 0; i < flattenData.clientPackages.length; i++) {
+      if (flattenData.clientPackages[i].program_managers.length !== 0) {
+        if (flattenData.clientPackages[i].fitnesspackages[0].fitness_package_type.type === "Group Class") {
+          for (var j = 0; j < flattenData.clientPackages[i].program_managers[0].fitnessprograms.length; j++) {
+            Values.effectiveDate = flattenData.clientPackages[i].program_managers[0].fitnessprograms[j].start_dt;
+            Values.program = flattenData.clientPackages[i].program_managers[0].fitnessprograms[j];
             sortedPrograms.push(Values);
             Values = {};
           }
         } else {
-          for (
-            var k = 0;
-            k < data.userPackages[i].program_managers[0].fitnessprograms.length;
-            k++
-          ) {
-            Values.effectiveDate = data.userPackages[
-              i
-            ].effective_date.substring(
-              0,
-              data.userPackages[i].effective_date.indexOf("T")
-            );
-            Values.program =
-              data.userPackages[i].program_managers[0].fitnessprograms[k];
+          for (var k = 0; k < flattenData.clientPackages[i].program_managers[0].fitnessprograms.length; k++) {
+            Values.effectiveDate = flattenData.clientPackages[i].effective_date.substring(0,flattenData.clientPackages[i].effective_date.indexOf("T"));
+            Values.program = flattenData.clientPackages[i].program_managers[0].fitnessprograms[k];
             sortedPrograms.push(Values);
             Values = {};
           }
@@ -96,18 +77,9 @@ const DayView = (props: any) => {
     }
   }
 
-  // if(props.events.length > 0){
-  //     debugger
-  //     setData(props.events);
-  // }
-
-  // console.log('child component', props.events);
-
   function handleCurrentDate(data: any) {
-    console.log(data);
-    // debugger;
     const currentDay: any = [];
-    for (var i = 0; i < data.length; i++) {
+    for (var i = 0; i < data?.length; i++) {
       var date1 = moment();
       var date2 = moment(data[i].effectiveDate);
       var diff = date1.diff(date2, "days");
@@ -121,12 +93,9 @@ const DayView = (props: any) => {
 
   function handleTodaysEvents(data: any, currentDay: any) {
     const todaysPrograms: any = [];
-    for (var i = 0; i < data.length; i++) {
-      for (var j = 0; j < data[i].program.events?.length; j++) {
-        if (
-          currentDay[i] === parseInt(data[i].program.events[j].day) &&
-          data[i].program.events[j].type === "workout"
-        ) {
+    for (var i = 0; i < data?.length; i++) {
+      for (var j = 0; j < data[i]?.program.events?.length; j++) {
+        if (currentDay[i] === parseInt(data[i].program.events[j].day) && data[i].program.events[j].type === "workout") {
           todaysPrograms.push(data[i].program.events[j]);
         }
       }
@@ -161,9 +130,7 @@ const DayView = (props: any) => {
   }
 
   function handleDatePicked(date: any) {
-    if (
-      moment().format("YYYY, DD, MM") === moment(date).format("YYYY, DD, MM")
-    ) {
+    if (moment().format("YYYY, DD, MM") === moment(date).format("YYYY, DD, MM")) {
       setDays(immutableDays);
       setScheduleDay(1);
       setScheduleDate(moment().format("YYYY-MM-DD"));
@@ -289,9 +256,6 @@ const DayView = (props: any) => {
     );
   }
 
-  handleCurrentDate(props.events);
-  console.log(todaysEvents);
-
   if (!show)
     return (
       <div className="text-center mt-5">
@@ -301,9 +265,8 @@ const DayView = (props: any) => {
         </h5>
       </div>
     );
-  return (
+  else return (
     <>
-      {todaysEvents.length > 0 && (
         <div>
           <Row>
             <Col>
@@ -384,7 +347,6 @@ const DayView = (props: any) => {
             </Row>
           )}
         </div>
-      )}
     </>
   );
 };

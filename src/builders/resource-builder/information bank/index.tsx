@@ -7,6 +7,8 @@ import CreateEditMessage from "./createoredit-message";
 import ActionButton from "../../../components/actionbutton/index";
 import { GET_MESSAGES } from "./queries";
 
+import {flattenObj} from "../../../components/utils/responseFlatten";
+
 export default function InformationPage() {
      const [searchFilter, setSearchFilter] = useState("");
      const searchInput = useRef<any>();
@@ -79,12 +81,13 @@ export default function InformationPage() {
      }
 
      function loadData(data: any) {
+          const flattenData = flattenObj({...data});
           setDataTable(
-               [...data.informationbankmessages].map((Detail) => {
+               [...flattenData.informationbankmessages].map((Detail) => {
                     return {
                          id: Detail.id,
                          title: Detail.title,
-                         type: Detail.informationbankmessagestype.type,
+                         type: Detail.resourcetype.name,
                          desc: Detail.description,
                          status: Detail.status ? "Active" : "Inactive",
                          updatedon: getDate(Date.parse(Detail.updatedAt)),

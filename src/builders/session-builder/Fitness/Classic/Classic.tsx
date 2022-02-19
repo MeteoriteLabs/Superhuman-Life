@@ -7,6 +7,7 @@ import { GET_ALL_CLIENT_PACKAGE, GET_ALL_FITNESS_PACKAGE_BY_TYPE, GET_ALL_PROGRA
 import moment from 'moment'
 import FitnessAction from '../FitnessAction';
 import ActionButton from '../../../../components/actionbutton';
+import { flattenObj } from '../../../../components/utils/responseFlatten';
 
 export default function Classic(props) {
 
@@ -19,7 +20,7 @@ export default function Classic(props) {
     const { data: data1 } = useQuery(GET_ALL_FITNESS_PACKAGE_BY_TYPE, {
         variables: {
             id: auth.userid,
-            type: 'Classic Class'
+            type: 'Classic'
         },
 
     });
@@ -27,7 +28,7 @@ export default function Classic(props) {
     const { data: data2 } = useQuery(GET_ALL_PROGRAM_BY_TYPE, {
         variables: {
             id: auth.userid,
-            type: 'Classic Class'
+            type: 'Classic'
         },
 
     });
@@ -37,7 +38,7 @@ export default function Classic(props) {
     const { data: data3 } = useQuery(GET_ALL_CLIENT_PACKAGE, {
         variables: {
             id: auth.userid,
-            type: 'Classic Class'
+            type: 'Classic'
         },
         onCompleted: (data) => loadData()
     })
@@ -45,19 +46,23 @@ export default function Classic(props) {
 
 
     const loadData = () => {
-        const arrayData: any[] = []
+        const arrayData: any[] = [];
+
+        const flattenData1 = flattenObj({...data1});
+        const flattenData2 = flattenObj({...data2});
+        const flattenData3 = flattenObj({...data3});
 
         let fitnessProgramItem: any = {};
-        for (let i = 0; i < data1?.fitnesspackages.length; i++) {
-            for (let j = 0; j < data2?.programManagers.length; j++) {
+        for (let i = 0; i < flattenData1?.fitnesspackages.length; i++) {
+            for (let j = 0; j < flattenData2?.programManagers.length; j++) {
             
-                if (data1.fitnesspackages[i].id === data2.programManagers[j].fitnesspackages[0].id) {
-                    fitnessProgramItem.proManagerFitnessId = data2.programManagers[j].fitnessprograms[0].id;
-                    fitnessProgramItem.title = data2.programManagers[j].fitnessprograms[0].title;
-                    fitnessProgramItem.published_at = data2.programManagers[j].fitnessprograms[0].published_at;
-                    fitnessProgramItem.proManagerId = data2.programManagers[j].id;
+                if (flattenData1.fitnesspackages[i].id === flattenData2.programManagers[j].fitnesspackages[0].id) {
+                    fitnessProgramItem.proManagerFitnessId = flattenData2.programManagers[j].fitnessprograms[0].id;
+                    fitnessProgramItem.title = flattenData2.programManagers[j].fitnessprograms[0].title;
+                    fitnessProgramItem.published_at = flattenData2.programManagers[j].fitnessprograms[0].published_at;
+                    fitnessProgramItem.proManagerId = flattenData2.programManagers[j].id;
 
-                    arrayData.push({ ...data1.fitnesspackages[i], ...fitnessProgramItem });
+                    arrayData.push({ ...flattenData1.fitnesspackages[i], ...fitnessProgramItem });
                 }
              
             }
@@ -66,7 +71,7 @@ export default function Classic(props) {
 
         const arrayA = arrayData.map(item => item.id);
 
-        const filterPackage = data1?.fitnesspackages.filter((item: { id: string; }) => !arrayA.includes(item.id));
+        const filterPackage = flattenData1?.fitnesspackages.filter((item: { id: string; }) => !arrayA.includes(item.id));
         filterPackage.forEach(item => {
             arrayData.push(item)
         })
@@ -76,7 +81,7 @@ export default function Classic(props) {
         const arrayFitnessPackage = arrayData.map(fitnessPackage => {
             let client: string[] = [];
 
-            data3.userPackages.forEach((userPackage: { fitnesspackages: { id: string; }; users_permissions_user: { username: string; }; }) => {
+            flattenData3?.clientPackages?.forEach((userPackage: { fitnesspackages: { id: string; }; users_permissions_user: { username: string; }; }) => {
                 if (fitnessPackage.id === userPackage.fitnesspackages[0].id) {
                     client.push(userPackage.users_permissions_user.username)
                 }
@@ -109,7 +114,7 @@ export default function Classic(props) {
                     client: packageItem.client ? packageItem.client : "N/A",
                     time: packageItem.published_at ? moment(packageItem.published_at).format('h:mm:ss a') : "N/A",
                     programName: packageItem.title ? packageItem.title : "N/A",
-                    programStatus: packageItem.client.length > 0 ? "Assigned" : "N/A",
+                    programStatus: packageItem.client?.length > 0 ? "Assigned" : "N/A",
                     renewal: packageItem.title ? "25/08/2021" : "N/A",
                 }
             })]
@@ -217,14 +222,14 @@ export default function Classic(props) {
                         Header: "Client",
                         Cell: (row) => {
                             return <div >
-                                {row.value.length === 0 ? <p className='text-center mb-0'>N/A</p> :
-                                    row.value.length === 1 ?
+                                {row.value?.length === 0 ? <p className='text-center mb-0'>N/A</p> :
+                                    row.value?.length === 1 ?
                                         <img
                                             src="https://picsum.photos/200/100" alt='profile-pic'
                                             style={{ width: '60px', height: '60px', borderRadius: '50%' }} />
                                         :
                                         <div className='position-relative mx-auto' style={{ width: '8rem', height: '5rem' }}>
-                                            {row.value.slice(0, 4).map((item, index) => {
+                                            {row.value?.slice(0, 4).map((item, index) => {
                                                 let postionLeft = 20;
                                                 return <img
                                                     key={index}

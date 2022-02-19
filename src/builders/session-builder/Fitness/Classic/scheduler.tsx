@@ -8,6 +8,8 @@ import FitnessAction from '../FitnessAction';
 import AuthContext from '../../../../context/auth-context';
 import { Link } from 'react-router-dom';
 
+import { flattenObj } from '../../../../components/utils/responseFlatten';
+
 const Scheduler = () => {
 
     const auth = useContext(AuthContext);
@@ -36,7 +38,7 @@ const Scheduler = () => {
     const { data: data1 } = useQuery(GET_ALL_FITNESS_PACKAGE_BY_TYPE, {
         variables: {
             id: auth.userid,
-            type: 'Classic Class'
+            type: 'Classic'
         },
 
     });
@@ -44,7 +46,7 @@ const Scheduler = () => {
     const { data: data2 } = useQuery(GET_ALL_PROGRAM_BY_TYPE, {
         variables: {
             id: auth.userid,
-            type: 'Classic Class'
+            type: 'Classic'
         },
 
     });
@@ -52,7 +54,7 @@ const Scheduler = () => {
     const { data: data3 } = useQuery(GET_ALL_CLIENT_PACKAGE, {
         variables: {
             id: auth.userid,
-            type: 'Classic Class'
+            type: 'Classic'
         },
         onCompleted: (data) => loadData()
     });
@@ -76,8 +78,15 @@ const Scheduler = () => {
     }
         
     function loadData() {
+
+        const flattenData1 = flattenObj({ ...data1 });
+        const flattenData2 = flattenObj({ ...data2 });
+        const flattenData3 = flattenObj({ ...data3 });
+        const flattenData4 = flattenObj({ ...data4 });
+
+
         setData(
-            [...data4.fitnessprograms].map((detail) => {
+            [...flattenData4.fitnessprograms].map((detail) => {
                 return {
                     id: detail.id,
                     programName: detail.title,
@@ -96,16 +105,16 @@ const Scheduler = () => {
         const arrayData: any[] = []
 
         let fitnessProgramItem: any = {};
-        for (let i = 0; i < data1?.fitnesspackages.length; i++) {
-            for (let j = 0; j < data2?.programManagers.length; j++) {
+        for (let i = 0; i < flattenData1?.fitnesspackages.length; i++) {
+            for (let j = 0; j < flattenData2?.programManagers.length; j++) {
             
-                if (data1.fitnesspackages[i].id === data2.programManagers[j].fitnesspackages[0].id) {
-                    fitnessProgramItem.proManagerFitnessId = data2.programManagers[j].fitnessprograms[0].id;
-                    fitnessProgramItem.title = data2.programManagers[j].fitnessprograms[0].title;
-                    fitnessProgramItem.published_at = data2.programManagers[j].fitnessprograms[0].published_at;
-                    fitnessProgramItem.proManagerId = data2.programManagers[j].id;
+                if (flattenData1.fitnesspackages[i].id === flattenData2.programManagers[j].fitnesspackages[0].id) {
+                    fitnessProgramItem.proManagerFitnessId = flattenData2.programManagers[j].fitnessprograms[0].id;
+                    fitnessProgramItem.title = flattenData2.programManagers[j].fitnessprograms[0].title;
+                    fitnessProgramItem.published_at = flattenData2.programManagers[j].fitnessprograms[0].published_at;
+                    fitnessProgramItem.proManagerId = flattenData2.programManagers[j].id;
 
-                    arrayData.push({ ...data1.fitnesspackages[i], ...fitnessProgramItem });
+                    arrayData.push({ ...flattenData1.fitnesspackages[i], ...fitnessProgramItem });
                 }
              
             }
@@ -113,7 +122,7 @@ const Scheduler = () => {
 
         const arrayA = arrayData.map(item => item.id);
 
-        const filterPackage = data1?.fitnesspackages.filter((item: { id: string; }) => !arrayA.includes(item.id));
+        const filterPackage = flattenData1?.fitnesspackages.filter((item: { id: string; }) => !arrayA.includes(item.id));
         filterPackage.forEach(item => {
             arrayData.push(item)
         })     
@@ -121,7 +130,7 @@ const Scheduler = () => {
         const arrayFitnessPackage = arrayData.map(fitnessPackage => {
             let client: string[] = [];
 
-            data3.userPackages.forEach((userPackage: { fitnesspackages: { id: string; }; users_permissions_user: { username: string; }; }) => {
+            flattenData3.clientPackages.forEach((userPackage: { fitnesspackages: { id: string; }; users_permissions_user: { username: string; }; }) => {
                 if (fitnessPackage.id === userPackage.fitnesspackages[0].id) {
                     client.push(userPackage.users_permissions_user.username)
                 }
@@ -170,6 +179,7 @@ const Scheduler = () => {
         return (data).toLocaleString('en-US', { minimumIntegerDigits: digits.toString(), useGrouping: false });
     }
 
+
     if (!show) return <span style={{ color: 'red' }}>Loading...</span>;
     else return (
         <>
@@ -187,7 +197,7 @@ const Scheduler = () => {
                                 <h3 className="text-capitalize">{data[0].programName}</h3>
                             </Row>
                             <Row>
-                                <span>{userPackage[programIndex].packageName}</span>
+                                <span>{userPackage[programIndex]?.packageName}</span>
                                 <div className="ml-3 mt-1" style={{ borderLeft: '1px solid black', height: '20px' }}></div>
                                 <span className="ml-4">{data[0].duration + " days"}</span>
                                 <div className="ml-3" style={{ borderLeft: '1px solid black', height: '20px' }}></div>
@@ -214,7 +224,7 @@ const Scheduler = () => {
                                             )
                                         })}
                                         <Button onClick={() => {
-                                            fitnessActionRef.current.TriggerForm({ id: last[1], actionType: 'allClients', type: "Classic Class" })
+                                            fitnessActionRef.current.TriggerForm({ id: last[1], actionType: 'allClients', type: "Classic" })
                                         }} style={{ marginLeft: '150px'}} variant="outline-primary">All clients</Button>
                                         </div>
                                     </Row>
