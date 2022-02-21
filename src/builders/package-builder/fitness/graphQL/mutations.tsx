@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 export const CREATE_PACKAGE = gql`
-  mutation PTPackage(
+  mutation createFitnesspackage(
     $packagename: String
     $tags: String
     $level: ENUM_FITNESSPACKAGE_LEVEL
@@ -26,40 +26,42 @@ export const CREATE_PACKAGE = gql`
     $ptclasssize: ENUM_FITNESSPACKAGE_PTCLASSSIZE
     $classsize: Int
     $users_permissions_user: ID
-    $publishing_date: DateTime!
-    $expiry_date: DateTime!
+    $publishing_date: DateTime
+    $expiry_date: DateTime
   ) {
     createFitnesspackage(
-      data: {
-        packagename: $packagename
-        tags: $tags
-        level: $level
-        aboutpackage: $aboutpackage
-        benefits: $benefits
-        introvideo: $introvideourl
-        mode: $mode
-        address: $address
-        fitnessdisciplines: $disciplines
-        duration: $duration
-        ptoffline: $ptoffline
-        ptonline: $ptonline
-        grouponline: $grouponline
-        groupoffline: $groupoffline
-        recordedclasses: $recordedclasses
-        restdays: $restdays
-        bookingleadday: $bookingleadday
-        bookingleadtime: $bookingleadtime
-        groupinstantbooking: $groupinstantbooking
-        fitness_package_type: $fitness_package_type
-        fitnesspackagepricing: $fitnesspackagepricing
-        Ptclasssize: $ptclasssize
-        classsize: $classsize
-        users_permissions_user: $users_permissions_user
-        publishing_date: $publishing_date
-        expiry_date: $expiry_date
+      input:{
+        data:{
+          packagename: $packagename
+          tags: $tags
+          level: $level
+          aboutpackage: $aboutpackage
+          benefits: $benefits
+          introvideo: $introvideourl
+          mode: $mode
+          address: $address
+          fitnessdisciplines: $disciplines
+          duration: $duration
+          ptoffline: $ptoffline
+          ptonline: $ptonline
+          grouponline: $grouponline
+          groupoffline: $groupoffline
+          recordedclasses: $recordedclasses
+          restdays: $restdays
+          bookingleadday: $bookingleadday
+          bookingleadtime: $bookingleadtime
+          groupinstantbooking: $groupinstantbooking
+          fitness_package_type: $fitness_package_type
+          fitnesspackagepricing: $fitnesspackagepricing
+          Ptclasssize: $ptclasssize
+          classsize: $classsize
+          users_permissions_user: $users_permissions_user
+          publishing_date: $publishing_date
+          expiry_date: $expiry_date
+        }
       }
     ) {
-      data {
+      data{
         id
       }
     }

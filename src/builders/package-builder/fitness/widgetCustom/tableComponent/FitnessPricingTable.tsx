@@ -12,6 +12,7 @@ import RecordedPricingTable from './PricingTable/RecordedPricingTable';
 import PTGroupPricingTable from './PricingTable/PTGroupPricingTable';
 import { useQuery } from '@apollo/client';
 import { GET_SAPIENT_PRICES } from '../../graphQL/queries';
+import { flattenObj } from '../../../../../components/utils/responseFlatten';
 
 
 type FitnessPricing = {
@@ -75,17 +76,20 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
 
     const arrayDuration = fitnesspackagepricing.map(fitness => fitness.duration);
 
-    const calculateSuggestPrice = (arrayData: { Mode: "Online" | "Offline"; mrp: number; }[], arrayClasses: number[]) => {
+    const calculateSuggestPrice = (arrayData: { mode: "Online" | "Offline"; mrp: number; }[], arrayClasses: number[]) => {
+    console.log("🚀 ~ file: FitnessPricingTable.tsx ~ line 80 ~ calculateSuggestPrice ~ arrayClasses", arrayClasses)
+    console.log("🚀 ~ file: FitnessPricingTable.tsx ~ line 80 ~ calculateSuggestPrice ~ arrayData", arrayData)
         const mrp: number[] = [];
 
         // eslint-disable-next-line array-callback-return
-        arrayData.map((item: { Mode: "Online" | "Offline"; mrp: number; }) => {
-            if (item.Mode === "Online") {
-                mrp.unshift(item.mrp * arrayClasses[0])
-            } else if (item.Mode === "Offline") {
+        arrayData.map(item => {
+            if (item.mode === "Online") {
+                mrp.push(item.mrp * arrayClasses[0])
+            } else if (item.mode === "Offline") {
                 mrp.push(item.mrp * arrayClasses[1])
             }
         })
+        console.log(mrp)
         return mrp.reduce((acc, cur) => acc + cur)
     }
 
@@ -130,6 +134,7 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
             setMinPrice(arraySapient);
         }
 
+
         setArraySapientPrice(arraySapient);
        
         return arraySapient
@@ -137,10 +142,11 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
 
 
     // PT
-    const PTSuggestedPricing = (data: { sapienPricings: any[]; }) => {
+    const PTSuggestedPricing = (data:any) => {
         const arrayPTdata = data.sapienPricings.filter((item: { fitness_package_type: { type: "Personal Training" | "Group Class" | "Classic Class"; }; }) => item.fitness_package_type.type === "Personal Training");
         const arrayPTClasses = [ptonline, ptoffline];
         const sapientPrice = calculateSuggestPrice(arrayPTdata, arrayPTClasses);
+    
 
         calculateArraySuggestPrice(sapientPrice, arrayDuration);
 
@@ -179,7 +185,7 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
 
 
         for (let i = 0; i < arrayPTdata.length; i++) {
-            if (arrayPTdata[i].Mode === "Online") {
+            if (arrayPTdata[i].mode === "Online") {
                 arrayCustomPrice.push(arrayPTdata[i].mrp * ptonline)
             } else {
                 arrayCustomPrice.push(arrayPTdata[i].mrp * ptoffline)
@@ -187,7 +193,7 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
         }
 
         for (let i = 0; i < arrayGroupData.length; i++) {
-            if (arrayGroupData[i].Mode === "Online") {
+            if (arrayGroupData[i].mode === "Online") {
                 arrayCustomPrice.push(arrayGroupData[i].mrp * grouponline)
             } else {
                 arrayCustomPrice.push(arrayGroupData[i].mrp * groupoffline)
@@ -206,21 +212,23 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
 
 
     const fetchData = (data) => {
+        const flattenedData = flattenObj({...data});
+        console.log("🚀 ~ file: FitnessPricingTable.tsx ~ line 211 ~ fetchData ~ flattenedData", flattenedData)
         console.log(fitness_package_type);
         if (fitness_package_type === "Personal Training") {
-            PTSuggestedPricing(data)
+            PTSuggestedPricing(flattenedData)
         }
         //  group
         else if (fitness_package_type === "Group Class") {
-            groupSuggestedPricing(data)
+            groupSuggestedPricing(flattenedData)
         }
         //record/ classic
         else if (fitness_package_type === "Classic Class") {
-            classicSuggestPricing(data)
+            classicSuggestPricing(flattenedData)
         }
         // custom
         else if (fitness_package_type === "Custom Fitness") {
-            customSuggestPrice(data)
+            customSuggestPrice(flattenedData)
         }
     }
 

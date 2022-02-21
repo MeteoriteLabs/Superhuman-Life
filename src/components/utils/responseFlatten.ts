@@ -34,6 +34,7 @@ export const flattenObj = (data) => {
             }else {
                 data[key] = flattenObj(data[key]);
             }
+
         }
 
         return data;

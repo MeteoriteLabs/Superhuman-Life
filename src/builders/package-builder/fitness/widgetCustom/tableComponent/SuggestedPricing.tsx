@@ -1,5 +1,6 @@
 import { useQuery } from '@apollo/client';
 import React, { useState } from 'react'
+import { flattenObj } from '../../../../../components/utils/responseFlatten';
 import { GET_SUGGESTIONS_PRICES } from '../../graphQL/queries';
 
 
@@ -22,7 +23,7 @@ type Props = {
 
 
 export default function SuggestedPricing({ type, mode, auth, fitnesspackagepricing, userData }: Props) {
-
+   
 
     const { ptonline, ptoffline, grouponline, groupoffline, recordedclasses, duration, fitness_package_type } = userData;
 
@@ -77,10 +78,10 @@ export default function SuggestedPricing({ type, mode, auth, fitnesspackageprici
 
 
     // PT
-    const PTSuggestedPricing = (data: { suggestedPricings: any[]; }) => {
+    const PTSuggestedPricing = (data:any) => {
         let ptDuration: number[] = [];
-
-        const arrayPTdata = data.suggestedPricings.filter((item: { fitness_package_type: { type: "Personal Training" | "Group Class" | "Classic Class"; }; }) => item.fitness_package_type.type === "Personal Training");
+  
+        const arrayPTdata = data.suggestedPricings.data.filter((item => item.attributes.fitness_package_type.data.attributes.type === "Personal Training"));
         const arrayPTClasses = [ptonline, ptoffline];
 
         const partnerSuggestPrice = calculateSuggestPrice(arrayPTdata, arrayPTClasses);
@@ -95,8 +96,8 @@ export default function SuggestedPricing({ type, mode, auth, fitnesspackageprici
 
 
     // Group
-    const groupSuggestedPricing = (data: { suggestedPricings: any[]; }) => {
-        const arrayGroupData = data.suggestedPricings.filter((item: { fitness_package_type: { type: "Personal Training" | "Group Class" | "Classic Class"; }; }) => item.fitness_package_type.type === "Group Class");
+    const groupSuggestedPricing = (data) => {
+        const arrayGroupData = data.suggestedPricings.data.filter((item => item.attributes.fitness_package_type.data.attributes.type ==="Group Class"));
         const arrayGroupClasses = [grouponline, groupoffline];
         const partnerSuggestPrice = calculateSuggestPrice(arrayGroupData, arrayGroupClasses);
 
@@ -105,8 +106,8 @@ export default function SuggestedPricing({ type, mode, auth, fitnesspackageprici
 
 
     //classic
-    const classicSuggestPricing = (data: { suggestedPricings: any[]; }) => {
-        const arrayClassicData = data.suggestedPricings.filter((item: { fitness_package_type: { type: "Personal Training" | "Group Class" | "Classic Class"; }; }) => item.fitness_package_type.type === "Classic Class");
+    const classicSuggestPricing = (data) => {
+        const arrayClassicData = data.suggestedPricings.data.filter((item => item.attributes.fitness_package_type.data.attributes.type === "Classic Class"));
         const arrayClassic = [recordedclasses];
         const partnerSuggestPrice = calculateSuggestPrice(arrayClassicData, arrayClassic);
 
@@ -156,8 +157,11 @@ export default function SuggestedPricing({ type, mode, auth, fitnesspackageprici
 
 
 
+
     const fillData = (data: { suggestedPricings: any[]; }) => {
         //personal-training
+        // const flattenedData = flattenObj({...data});
+        // console.log("🚀 ~ file: SuggestedPricing.tsx ~ line 165 ~ fillData ~ flattenedData", flattenedData)
         console.log(fitness_package_type);
         if (fitness_package_type === "Personal Training") {
             PTSuggestedPricing(data)
