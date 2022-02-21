@@ -24,7 +24,8 @@ import {
   UPDATE_USER_BOOKING_TIME,
   CREATE_CANGEMAKER_WORK_HOUR,
   UPDATE_CHANGEMAKER_AVAILABILITY_WORKHOURS,
-  CREATE_CHANGEMAKER_AVAILABILITY_WORKHOURS
+  CREATE_CHANGEMAKER_AVAILABILITY_WORKHOURS,
+  CREATE_CHANGEMAKER_AVAILABILITY_HOLIDAY
 } from "../../graphql/mutations";
 import { useQuery, useMutation } from "@apollo/client";
 import AuthContext from "../../../../context/auth-context";
@@ -52,6 +53,8 @@ const WorkHours = () => {
   const [startDate, setStartDate] = useState(moment().format("YYYY-MM-DD"));
   const [endDate, setEndDate] = useState(moment().add(1, 'months').format("YYYY-MM-DD"));
   const [userConfig, setUserConfig] = useState<any>([]);
+  const [checkState, setCheckState] = useState(false);
+  const [desc, setDesc] = useState("");
 
   useQuery(GET_ALL_CLIENT_PACKAGE_BY_TYPE, {
     variables: {
@@ -487,6 +490,30 @@ const WorkHours = () => {
     setUserConfig(values);
   }
 
+  const [createChangeMakerHoliday] = useMutation(CREATE_CHANGEMAKER_AVAILABILITY_HOLIDAY);
+
+  function handleAddHoliday(date: any, event: any) {
+    const values = allChangeMakerHolidays.find((item: any) => item.date === date);
+    if(values){
+      if(values.booking_slots.length > 0){
+        // set a modal to display the error
+        setErrModal(true);
+      }
+    }else {
+      createChangeMakerHoliday({
+      variables: {
+        date: `${moment(date).format("YYYY-MM-DD")}`,
+        description: desc,
+        users_permissions_user: auth.userid,
+      },
+    });
+    setToast(true);
+    }
+
+    setDesc("");
+    setDate(moment().format("YYYY-MM-DD"));
+  }
+
   console.log(userConfig);
 
   if (!show)
@@ -559,6 +586,7 @@ const WorkHours = () => {
             <Col lg={4}>
               <Row style={{ justifyContent: "center" }}>
                 <Calendar
+                  className="disabled"
                   tileDisabled={tileDisabled}
                   onChange={onChange}
                   onActiveStartDateChange={({ action }) => {
@@ -651,8 +679,67 @@ const WorkHours = () => {
               <Row style={{ borderTop: "3px solid gray" }}></Row>
             </Col>
           </Row>
-          <Row className="mt-3 mb-3">
+          {checkState && <Row className="mt-3 mb-3">
+          <Col>
+                <Form>
+                <Form.Check 
+                  type="switch"
+                  checked={checkState}
+                  onClick={() => setCheckState(!checkState)}
+                  id="custom-switch"
+                  label="Set Holiday"
+                />
+                </Form>
+            </Col>
           <Col lg={{ span: 2, offset: 2 }}>
+            <input
+              type="date"
+              value={date}
+              className="p-1 shadow-lg"
+              style={{ border: "1px solid gray", borderRadius: "10px" }}
+              onChange={(e) => setDate(e.target.value)}
+            />
+          </Col>
+          <Col lg={5} className="pl-0 pr-0">
+            <input
+              type="text"
+              className="shadow-lg p-1"
+              value={desc}
+              onChange={(e) => setDesc(e.target.value)}
+              placeholder="Enter the event"
+              style={{
+                width: "100%",
+                border: "1px solid gray",
+                borderRadius: "10px",
+              }}
+            ></input>
+          </Col>
+          <Col lg={1}>
+            <button
+              className="pl-3 pr-3 pt-1 pb-1 shadow-lg"
+              style={{ backgroundColor: "#647a8c", borderRadius: "10px" }}
+              onClick={() => {
+                handleAddHoliday(date, desc);
+                handleToast();
+              }}
+            >
+              Add
+            </button>
+          </Col>
+        </Row>}
+          {!checkState && <Row className="mt-3 mb-3">
+            <Col>
+                <Form>
+                <Form.Check 
+                  type="switch"
+                  checked={checkState}
+                  onClick={() => setCheckState(!checkState)}
+                  id="custom-switch"
+                  label="Set Holiday"
+                />
+                </Form>
+            </Col>
+          <Col lg={{ span: 2 }}>
             <input
               type="date"
               value={date}
@@ -701,7 +788,7 @@ const WorkHours = () => {
                 Add
               </button>
             </Col>
-          </Row>
+          </Row>}
           <Row>
             <Col lg={{ span: 8, offset: 4 }}>
               <div
