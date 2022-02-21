@@ -45,15 +45,19 @@ const WorkHours = () => {
   const [toast, setToast] = useState(false);
   const [show, setShow] = useState(false);
   const [date, setDate] = useState(moment().format("YYYY-MM-DD"));
-  const [todaysEvents, setTodaysEvents] = useState<any>([]);
-  const [userWorkHoursConfig, setUserWorkHoursConfig] = useState<any>([]);
+  // const [todaysEvents, setTodaysEvents] = useState<any>([]);
+  // const [userWorkHoursConfig, setUserWorkHoursConfig] = useState<any>([]);
   const [allChangeMakerHolidays, setAllChangeMakerHolidays] = useState<any>([]);
   const [errModal, setErrModal] = useState(false);
+  const [startDate, setStartDate] = useState(moment().format("YYYY-MM-DD"));
+  const [endDate, setEndDate] = useState(moment().add(1, 'months').format("YYYY-MM-DD"));
+  const [userConfig, setUserConfig] = useState<any>([]);
 
   useQuery(GET_ALL_CLIENT_PACKAGE_BY_TYPE, {
     variables: {
       id: auth.userid,
       type_in: ["Personal Training", "Group Class", "Custom"],
+      date: moment().format("YYYY-MM-DD"),
     },
     onCompleted: (data) => {
       LoadProgramEvents(data);
@@ -81,28 +85,42 @@ const WorkHours = () => {
     },
   });
 
-  function handleTodaysSlots(settings: any, todaysSlots: any, todaysEvents: any){
-    var today = moment().format("dddd");
-    var values: any;
+  function handleTodaysSlots(todaysEvents: any, changeMakerAvailability: any){
+    const currentDateWorkHours = changeMakerAvailability[0]?.booking_slots.length > 0 ? [...changeMakerAvailability[0]?.booking_slots] : [];
+
+    const values = todaysEvents.concat(currentDateWorkHours);
+    values.sort((a: any, b: any) => {
+      var btime1: any = moment(a.startTime, "HH:mm a");
+      var btime2: any = moment(b.startTime, "HH:mm a");
+      return btime1 - btime2;
+    });
+    setSlots(values);
+
+    // var today = moment().format("dddd");
+    // var values: any;
     
-    for(var i=0; i<settings?.length; i++){
-      if(today === settings[i].day){
-        values = settings[i].slots;
-      }
-    }
-    setUserWorkHoursConfig(values);
-    handleWorkHours(values, todaysSlots, todaysEvents);
+    // for(var i=0; i<settings?.length; i++){
+    //   if(today === settings[i].day){
+    //     values = settings[i].slots;
+    //   }
+    // }
+    // setUserWorkHoursConfig(values);
+    // handleWorkHours(values, todaysSlots, todaysEvents);
   }
 
-  function handleWorkHours(val: any, currentWorkHours: any, todaysEvents: any){
-    const values = val.concat(currentWorkHours);
-    console.log(todaysEvents);
-    console.log(values);
-    setSlots(values);
-  }
+
+  // function handleWorkHours(val: any, currentWorkHours: any, todaysEvents: any){
+  //   const values = val.concat(currentWorkHours);
+  //   console.log(todaysEvents);
+  //   console.log(values);
+  //   setSlots(values);
+  // }
+
+  const [availability, setAvailability] = useState<any>([]);
 
   function LoadProgramEvents(data: any) {
     const flattenData = flattenObj({ ...data });
+    setAvailability(flattenData.changemakerAvailabilties);
     var sortedPrograms: any = [];
     var Values: any = {};
     for (var i = 0; i < flattenData.clientPackages.length; i++) {
@@ -124,10 +142,10 @@ const WorkHours = () => {
         }
         }
     }
-    handleDuplicates(sortedPrograms);
+    handleDuplicates(sortedPrograms, flattenData.changemakerAvailabilties);
     }
     
-    function handleDuplicates(sortedPrograms: any) {
+    function handleDuplicates(sortedPrograms: any, changeMakerAvailability: any){
     if (sortedPrograms.length > 0) {
         const values = [...sortedPrograms];
         for (var i = 0; i < values.length; i++) {
@@ -137,11 +155,11 @@ const WorkHours = () => {
             }
         }
         }
-        handleCurrentDate(values);
+        handleCurrentDate(values, changeMakerAvailability);
     }
     }
     
-    function handleCurrentDate(data: any) {
+    function handleCurrentDate(data: any, changeMakerAvailability: any) {
         const currentDay: any = [];
         for (var i = 0; i < data?.length; i++) {
             var date1 = moment();
@@ -149,10 +167,10 @@ const WorkHours = () => {
             var diff = date1.diff(date2, "days");
             currentDay.push(diff);
         }
-        handleTodaysEvents(data, currentDay);
+        handleTodaysEvents(data, currentDay, changeMakerAvailability);
     }
     
-    function handleTodaysEvents(data: any, currentDay: any) {
+    function handleTodaysEvents(data: any, currentDay: any, changeMakerAvailability: any) {
         const todaysPrograms: any = [];
         for (var i = 0; i < data?.length; i++) {
             for (var j = 0; j < data[i]?.program.events?.length; j++) {
@@ -161,23 +179,21 @@ const WorkHours = () => {
             }
             }
         }
-        console.log(todaysPrograms);
-        setTodaysEvents(todaysPrograms);
+        handleTodaysSlots(todaysPrograms, changeMakerAvailability);
+        // setTodaysEvents(todaysPrograms);
     }
 
   useQuery(GET_USER_WEEKLY_CONFIG, {
-    variables: { id: auth.userid, date: moment().format("YYYY-MM-DD") },
+    variables: { id: auth.userid, date: moment().format("YYYY-MM-DD"), type_in: ["Personal Training", "Group Class", "Custom"] },
     onCompleted: (data) => {
       const flattenData = flattenObj({ ...data });
-      // console.log(flattenData);
       setMasterSettings(flattenData.usersPermissionsUsers);
-      handleTodaysSlots(flattenData.usersPermissionsUsers[0].Changemaker_weekly_schedule, flattenData.changemakerWorkhours, todaysEvents);
     },
   });
 
   const [updateUserData] = useMutation(UPDATE_USER_DATA);
   const [updateUserBookingTime] = useMutation(UPDATE_USER_BOOKING_TIME);
-  const [createChangemakerWorkHour] = useMutation(CREATE_CANGEMAKER_WORK_HOUR);
+  // const [createChangemakerWorkHour] = useMutation(CREATE_CANGEMAKER_WORK_HOUR);
   const [updateChangemakerAvailabilityWorkHour] = useMutation(UPDATE_CHANGEMAKER_AVAILABILITY_WORKHOURS);
   const [createChangemakerAvailabilityWorkHour] = useMutation(CREATE_CHANGEMAKER_AVAILABILITY_WORKHOURS);
 
@@ -280,13 +296,13 @@ const WorkHours = () => {
     }, 1000);
   }, []);
 
-  function handleTimeSlot(val: any){
-    const values = slots.map(elem => {
-      return Object.assign({}, elem, slots[elem]);
-    });
-    values[val].is_disabled = !values[val].is_disabled;
-    setSlots(values); 
-  }
+  // function handleTimeSlot(val: any){
+  //   const values = slots.map(elem => {
+  //     return Object.assign({}, elem, slots[elem]);
+  //   });
+  //   values[val].is_disabled = !values[val].is_disabled;
+  //   setSlots(values); 
+  // }
 
   function handleFromTimeInput(val: any){
     var m = (Math.round(parseInt(val.slice(3,5))/15) * 15) % 60;
@@ -326,10 +342,21 @@ const WorkHours = () => {
     return result;
   }
 
+  const [slotErr, setSlotErr] = useState(false);
+
   function handleWorkTime(fromTime: any, toTime: any, mode: any, date: any, holidays: any) {
 
     const values = allChangeMakerHolidays.find((item: any) => item.date === date);
     var obj: any = {};
+
+    if(slots.length > 1){
+      for(var i=0; i<slots.length; i++ ){
+        if(moment(fromTime, 'hh:mm:ss').isSameOrAfter(moment(slots[i].startTime, 'hh:mm:ss')) && moment(fromTime, 'hh:mm:ss').isBefore(moment(slots[i].endTime, 'hh:mm:ss'))){
+          setSlotErr(true);
+          return;
+        }
+      }
+    }
 
     if(values?.Is_Holiday === true) {
       setErrModal(true);
@@ -338,8 +365,8 @@ const WorkHours = () => {
     if(values){
       if(values.Is_Holiday === false){
         obj.id = getRandomId(10);
-        obj.from_time = fromTime;
-        obj.to_time = toTime;
+        obj.startTime = fromTime;
+        obj.endTime = toTime;
         obj.mode = mode;
         const userData = values.booking_slots !== null ? [...values.booking_slots] : [];
         userData.push(obj);
@@ -350,8 +377,8 @@ const WorkHours = () => {
       }
     }else if(values === undefined){
       obj.id = getRandomId(10);
-      obj.from_time = fromTime;
-      obj.to_time = toTime;
+      obj.startTime = fromTime;
+      obj.endTime = toTime;
       obj.mode = mode;
       const userData: any = [];
       userData.push(obj);
@@ -428,6 +455,39 @@ const WorkHours = () => {
   const [userOfflineTime, setUserOfflineTime]: any = useState(45);
   const [userOnlineTime, setUserOnlineTime]: any = useState(45);
   const [dayIndex, setDayIndex]: any = useState(moment().weekday());
+  const [confirmModal, setConfirmModal]: any = useState(false);
+  const [slotId, setSlotId]: any = useState('');
+
+  function handleDeleteWorkHour(id: any){
+    const objIndex = availability[0]?.booking_slots.findIndex((item: any) => item.id === id);
+
+    const values = [...availability[0].booking_slots];
+    values.splice(objIndex, 1);
+
+    updateChangemakerAvailabilityWorkHour({
+      variables: {id: availability[0].id, slots: values}
+    });
+
+  }
+
+  function handleUserConfig(fromTime: any, toTime: any, classMode: any, date: any, dayIndex: any){
+    const values = [...userConfig];
+    console.log(fromTime, toTime, classMode, date, dayIndex);
+    var obj: any = {};
+    obj.day = daysOfWeek[dayIndex];
+    obj.slots = [{
+      id: getRandomId(10),
+      startTime: fromTime,
+      endTime: toTime,
+      mode: classMode,
+    }];
+
+    values.push(obj);
+
+    setUserConfig(values);
+  }
+
+  console.log(userConfig);
 
   if (!show)
     return (
@@ -492,7 +552,7 @@ const WorkHours = () => {
               <h5>Mode</h5>
             </Col>
             <Col lg={1}>
-              <h5>Toggle</h5>
+              <h5>Edit</h5>
             </Col>
           </Row>
           <Row className="mt-3">
@@ -522,7 +582,7 @@ const WorkHours = () => {
                   overflowX: "hidden",
                 }}
               >
-                {holidays[0].booking_slots?.map((item, index) => {
+                {slots?.map((item, index) => {
                   return (
                     <Row id={item.id} key={index} className="mt-3 pt-1 pb-1 items-center">
                       <Col lg={8}>
@@ -537,7 +597,7 @@ const WorkHours = () => {
                                 borderRadius: "10px",
                               }}
                             >
-                              <span>{moment(item.from_time, "HH:mm").format("HH:mm")}</span>
+                              <span>{moment(item.startTime, "HH:mm").format("HH:mm")}</span>
                             </div>
                           </Col>
                           <Col lg={2}>To</Col>
@@ -551,7 +611,7 @@ const WorkHours = () => {
                                 borderRadius: "10px",
                               }}
                             >
-                              <span>{moment(item.to_time, "HH:mm").format("HH:mm")}</span>
+                              <span>{moment(item.endTime, "HH:mm").format("HH:mm")}</span>
                             </div>
                           </Col>
                         </Row>
@@ -569,16 +629,16 @@ const WorkHours = () => {
                         </div>
                       </Col>
                       <Col lg={1}>
-                        <div className="ml-5">
-                          <Form>
-                            <Form.Check
-                              type="switch"
-                              checked={item.is_disabled}
-                              onChange={(e) => {handleTimeSlot(index)}}
-                              id={`custom-switch-${index}`}
-                            />
-                          </Form>
-                        </div>
+                          {/* <i className='fas fa-ban' style={{display: `${item.tag ? 'block' : 'none'}`, marginLeft: "50px", fontSize: '25px'}}></i> */}
+                          <img
+                          style={{ cursor: "pointer", marginLeft: "50px", display: `${item.tag ? 'none' : 'block'}` }}
+                          src="/assets/delete.svg"
+                          alt="delete"
+                          onClick={() => {
+                            setConfirmModal(true);
+                            setSlotId(item.id);
+                          }}
+                        />
                       </Col>
                     </Row>
                   );
@@ -652,9 +712,9 @@ const WorkHours = () => {
               </div>
             </Col>
           </Row>
-          <Row style={{ textAlign: "start" }}>
+          <Row className="mt-4" style={{ textAlign: "start" }}>
             <Col lg={4}>
-              <span>Clients can book session time prior to?</span>
+              <span><b>Clients can book session time prior to?</b></span>
               <br />
             </Col>
           </Row>
@@ -710,8 +770,44 @@ const WorkHours = () => {
                 Master Settings
               </Modal.Title>
             </Modal.Header>
-            <Modal.Body>
+            <Modal.Body style={{ "maxHeight": '500px', "overflow": "auto"}}>
+              <Row className="mb-3" style={{ justifyContent: 'space-around'}}>
               <div className="text-center">
+                <Row style={{ justifyContent: 'center'}}>
+                  <label>Start Date</label>
+                </Row>
+                <input
+                  type="date"
+                  value={startDate}
+                  min={moment().format("YYYY-MM-DD")}
+                  max={moment().add(1, "month").format("YYYY-MM-DD")}
+                  className="p-1 shadow-sm"
+                  style={{ border: "1px solid gray", borderRadius: "10px" }}
+                  onChange={(e) => setStartDate(e.target.value)}
+                />
+              </div>
+              <div className="text-center">
+                <Row style={{ justifyContent: 'center'}}>
+                  <label>End Date</label>
+                </Row>
+                <input
+                  type="date"
+                  value={endDate}
+                  min={moment().add(1, "month").format("YYYY-MM-DD")}
+                  max={moment().add(1, "year").format("YYYY-MM-DD")}
+                  className="p-1 shadow-sm"
+                  style={{ border: "1px solid gray", borderRadius: "10px" }}
+                  onChange={(e) => setEndDate(e.target.value)}
+                />
+              </div>
+              </Row>
+              <div className="text-center">
+                <span style={{ color: 'gray'}}>
+                  *This config will be set for the duration of the dates selected
+                </span>
+              </div>
+              <hr/>
+              <div className="text-center mt-3">
                 <span>
                   <b>Set By Day</b>
                 </span>
@@ -748,7 +844,8 @@ const WorkHours = () => {
               <div className="text-center">
                 <p style={{color: 'gray'}}>Everyone will be able to book only during this duration</p>
               </div>
-              {userWorkHoursConfig?.map((item, index) => {
+              {userConfig[0]?.slots?.map((item, index) => {
+                  console.log(userConfig)
                   return (
                     <Row key={index} className="mt-3 pt-1 pb-1 items-center">
                       <Col lg={8}>
@@ -763,7 +860,7 @@ const WorkHours = () => {
                                 borderRadius: "10px",
                               }}
                             >
-                              <span>{moment(item.From_time, "HH:mm").format("HH:mm")}</span>
+                              <span>{moment(item.startTime, "HH:mm").format("HH:mm")}</span>
                             </div>
                           </Col>
                           <Col lg={2}>To</Col>
@@ -777,7 +874,7 @@ const WorkHours = () => {
                                 borderRadius: "10px",
                               }}
                             >
-                              <span>{moment(item.To_Time, "HH:mm").format("HH:mm")}</span>
+                              <span>{moment(item.endTime, "HH:mm").format("HH:mm")}</span>
                             </div>
                           </Col>
                         </Row>
@@ -791,7 +888,7 @@ const WorkHours = () => {
                             borderRadius: "10px",
                           }}
                         >
-                          <span>{item.Mode}</span>
+                          <span>{item.mode}</span>
                         </div>
                       </Col>
                       <Col lg={1}>
@@ -838,12 +935,13 @@ const WorkHours = () => {
                 <button
                   className="pl-3 pr-3 pt-1 pb-1 shadow-lg"
                   title={disableAdd || classMode === '' ? "please enter valid details": ""}
-                  disabled={disableAdd || classMode === ''}
+                  disabled={classMode === ''}
                   style={{ backgroundColor: "#647a8c", borderRadius: "10px" }}
                   onClick={() => {
                     // handleWorkTime(fromTime, toTime, classMode, date);
                     // setToast(true);
                     // handleToast();
+                    handleUserConfig(fromTime, toTime, classMode, date, dayIndex);
                   }}
                 >
                   Add
@@ -973,6 +1071,73 @@ const WorkHours = () => {
               }}
             >
               Close
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      }
+       {
+        <Modal
+          size="lg"
+          aria-labelledby="contained-modal-title-vcenter"
+          show={slotErr}
+          centered
+        >
+          <Modal.Header
+            closeButton
+            onHide={() => {
+              setSlotErr(false);
+            }}
+          >
+            <Modal.Title id="contained-modal-title-vcenter">
+              You cannot add this slot as you already have an existing slot at this time.
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Footer>
+            <Button
+              variant="success"
+              onClick={() => {
+                setSlotErr(false);
+              }}
+            >
+              Close
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      }
+      {
+        <Modal
+          size="lg"
+          aria-labelledby="contained-modal-title-vcenter"
+          show={confirmModal}
+          centered
+        >
+          <Modal.Header
+            closeButton
+            onHide={() => {
+              setSlotErr(false);
+            }}
+          >
+            <Modal.Title id="contained-modal-title-vcenter">
+              Are you sure you want to delete this slot?
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Footer>
+          <Button
+              variant="danger"
+              onClick={() => {
+                setConfirmModal(false);
+              }}
+            >
+              No
+            </Button>
+            <Button
+              variant="success"
+              onClick={() => {
+                setConfirmModal(false);
+                handleDeleteWorkHour(slotId);
+              }}
+            >
+              Yes
             </Button>
           </Modal.Footer>
         </Modal>

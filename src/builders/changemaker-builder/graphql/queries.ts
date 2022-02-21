@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 export const GET_ALL_CLIENT_PACKAGE_BY_TYPE = gql`
-  query userPackages($id: ID!, $type: [String]) {
+  query userPackages($id: ID!, $type: [String], $date: Date) {
     clientPackages(
       filters: {
         fitnesspackages: {
@@ -110,6 +110,29 @@ export const GET_ALL_CLIENT_PACKAGE_BY_TYPE = gql`
         }
       }
     }
+    changemakerAvailabilties(filters: {
+      date: { eq: $date }
+      users_permissions_user: {
+        id: {
+          eq: $id
+        }
+      }
+    }){
+      data{
+        id
+        attributes{
+          holiday_title
+          booking_slots
+          Is_Holiday
+          date
+          users_permissions_user{
+            data{
+              id
+            }
+          }
+        }
+      }
+    }
   }
 `;
 
@@ -142,7 +165,7 @@ export const GET_ALL_CHANGEMAKER_HOLIDAYS = gql`
 `;
 
 export const GET_USER_WEEKLY_CONFIG = gql`
-  query getUserWeeklyConfig($id: ID!, $date: Date) {
+  query getUserWeeklyConfig($id: ID!, $date: Date, $type: [String]) {
     usersPermissionsUsers(filters: { id: { eq: $id } }) {
       data {
         id
@@ -171,6 +194,114 @@ export const GET_USER_WEEKLY_CONFIG = gql`
           Mode
           is_disabled
           date
+        }
+      }
+    }
+    clientPackages(
+      filters: {
+        fitnesspackages: {
+          users_permissions_user: { id: { eq: $id } }
+          fitness_package_type: { type: { or: $type } }
+        }
+      }
+    ) {
+      data {
+        id
+        attributes {
+          users_permissions_user {
+            data {
+              id
+              attributes {
+                username
+              }
+            }
+          }
+          effective_date
+          accepted_date
+          fitnesspackages {
+            data {
+              id
+              attributes {
+                expiry_date
+                fitness_package_type {
+                  data {
+                    id
+                    attributes {
+                      type
+                    }
+                  }
+                }
+                packagename
+                groupstarttime
+                groupendtime
+                restdays
+                ptonline
+                ptoffline
+                grouponline
+                groupoffline
+                recordedclasses
+                duration
+                Status
+              }
+            }
+          }
+          program_managers {
+            data {
+              id
+              attributes {
+                fitnesspackages {
+                  data {
+                    id
+                    attributes {
+                      expiry_date
+                      fitness_package_type {
+                        data {
+                          id
+                          attributes {
+                            type
+                          }
+                        }
+                      }
+                      packagename
+                      groupstarttime
+                      groupendtime
+                      restdays
+                      ptonline
+                      ptoffline
+                      grouponline
+                      groupoffline
+                      recordedclasses
+                      duration
+                      Status
+                    }
+                  }
+                }
+                fitnessprograms {
+                  data {
+                    id
+                    attributes {
+                      title
+                      duration_days
+                      rest_days
+                      start_dt
+                      level
+                      events
+                      description
+                      renewal_dt
+                      fitnessdisciplines {
+                        data {
+                          id
+                          attributes {
+                            disciplinename
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       }
     }
