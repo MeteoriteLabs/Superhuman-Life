@@ -715,16 +715,18 @@ const WorkHours = () => {
             ></input>
           </Col>
           <Col lg={1}>
-            <button
+            <Button
               className="pl-3 pr-3 pt-1 pb-1 shadow-lg"
-              style={{ backgroundColor: "#647a8c", borderRadius: "10px" }}
+              disabled={desc === "" ? true : false}
+              style={{ borderRadius: "10px" }}
+              variant="info"
               onClick={() => {
                 handleAddHoliday(date, desc);
                 handleToast();
               }}
             >
               Add
-            </button>
+            </Button>
           </Col>
         </Row>}
           {!checkState && <Row className="mt-3 mb-3">
@@ -775,18 +777,19 @@ const WorkHours = () => {
               </Form.Control>
             </Col>
             <Col lg={1}>
-              <button
+              <Button
                 className="pl-3 pr-3 pt-1 pb-1 shadow-lg"
                 title={disableAdd || classMode === '' ? "please enter valid details": ""}
                 disabled={disableAdd || classMode === ''}
-                style={{ backgroundColor: "#647a8c", borderRadius: "10px" }}
+                style={{ borderRadius: "10px" }}
+                variant="info"
                 onClick={() => {
                   handleWorkTime(fromTime, toTime, classMode, date, holidays);
                   handleToast();
                 }}
               >
                 Add
-              </button>
+              </Button>
             </Col>
           </Row>}
           <Row>
@@ -1019,11 +1022,12 @@ const WorkHours = () => {
               </Form.Control>
                   </Col>
                 <Col lg={2}>
-                <button
+                <Button
                   className="pl-3 pr-3 pt-1 pb-1 shadow-lg"
                   title={disableAdd || classMode === '' ? "please enter valid details": ""}
                   disabled={classMode === ''}
-                  style={{ backgroundColor: "#647a8c", borderRadius: "10px" }}
+                  style={{ borderRadius: "10px" }}
+                  variant="info"
                   onClick={() => {
                     // handleWorkTime(fromTime, toTime, classMode, date);
                     // setToast(true);
@@ -1032,8 +1036,15 @@ const WorkHours = () => {
                   }}
                 >
                   Add
-                </button>
+                </Button>
                 </Col>
+              </Row>
+              <Row>
+                  <Col lg={7}>
+                    <div className="text-center mt-2">
+                      {handleTimeValidation()}
+                    </div>
+                  </Col>
               </Row>
               </Col>
               </div>
