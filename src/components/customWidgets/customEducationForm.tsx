@@ -2,21 +2,12 @@ import React from "react";
 import { Col, Container, Row, Form, Button } from "react-bootstrap";
 
 function CustomEducationForm(props) {
-  const initialValues = {
-    Institute_Name: props.value ? props.value.Institute_Name : "",
-    Type_of_degree: props.value ? props.value.Type_of_degree : "",
-    Specialization: props.value ? props.value.Specialization : "",
-    Year: props.value ? props.value.Year : "",
-    id: props.value ? props.value.id : "",
-  };
-
-  const [formValues, setFormValues] = React.useState(initialValues);
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormValues({ ...formValues, [name]: value });
+
+    let formValues = { ...props.value };
+    props.onChange(JSON.stringify({ ...formValues, [name]: value }));
   };
-  props.onChange(JSON.stringify(formValues));
-  console.log(formValues);
 
   console.log(props);
   return (
@@ -34,7 +25,7 @@ function CustomEducationForm(props) {
                 placeholder="Institute"
                 onChange={handleChange}
                 name="Institute_Name"
-                value={props.value ? props.value.Institute_Name : ""}
+                value={props.value.Institute_Name}
               />
             </Form.Group>
           </Col>
@@ -49,7 +40,7 @@ function CustomEducationForm(props) {
                 onChange={handleChange}
                 aria-label="Default select example"
                 style={{ width: "80%" }}
-                value={props.value ? props.value.Type_of_degree : ""}
+                value={props.value.Type_of_degree}
               >
                 <option>Select type of degree</option>
                 <option value="Bachelors">Bachelors</option>
@@ -68,7 +59,7 @@ function CustomEducationForm(props) {
                 placeholder="Specialization"
                 onChange={handleChange}
                 name="Specialization"
-                value={props.value ? props.value.Specialization : ""}
+                value={props.value.Specialization}
               />
             </Form.Group>
           </Col>
@@ -81,7 +72,7 @@ function CustomEducationForm(props) {
                 placeholder="Year you Graduated"
                 onChange={handleChange}
                 name="Year"
-                value={props.value ? props.value.Year : ""}
+                value={props.value.Year}
               />
             </Form.Group>
           </Col>

@@ -2,26 +2,12 @@ import React from "react";
 import { Col, Container, Row, Form, Button } from "react-bootstrap";
 
 function AddressForm(props) {
-  // const initalValues = {
-  //   address1: props.value ? props.value.address1 : "",
-  //   type: props.value ? props.value.type : "",
-  //   address2: props.value ? props.value.address2 : "",
-  //   city: props.value ? props.value.city : "",
-  //   state: props.value ? props.value.state : "",
-  //   country: props.value ? props.value.country : "",
-  //   zipcode: props.value ? props.value.zipcode : "",
-  //   id: props.value ? props.value.id : "",
-  // };
-
-  // const [formValues, setFormValues] = React.useState(initalValues);
   const handleChange = (e) => {
     const { name, value } = e.target;
-    // setFormValues({ ...formValues, [name]: value });
-    let formValues = { ...props.values };
+
+    let formValues = { ...props.value };
     props.onChange(JSON.stringify({ ...formValues, [name]: value }));
   };
-  // props.onChange(JSON.stringify(formValues));
-  // console.log(formValues);
 
   console.log(props);
   return (

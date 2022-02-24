@@ -9,7 +9,7 @@ import {
   UPDATE_EDUCATION_DETAILS,
   DELETE_EDUCATION_DETAILS,
 } from "./queries/queries";
-import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 
 import BasicProfile from "./BasicProfile";
 
@@ -34,31 +34,29 @@ function EditProfile() {
     onCompleted: (r: any) => {
       console.log(r);
       const flattenData = flattenObj({ ...r });
-
+      console.log(flattenData);
       FillDetails(flattenData.usersPermissionsUser);
-
+      console.log(r.usersPermissionsUser.data.attributes.addresses.data[0].id);
       setAddressID(
-        flattenData.usersPermissionsUser.addresses.length
-          ? flattenData.usersPermissionsUser.addresses.map(
+        r.usersPermissionsUser.data.attributes.addresses.data.length
+          ? r.usersPermissionsUser.data.attributes.addresses.data.map(
               (address: any) => address.id
             )
           : null
       );
       setEducationID(
-        flattenData.usersPermissionsUser.educational_details.length
-          ? flattenData.usersPermissionsUser.educational_details.map(
-              (educationData) => educationData.id
+        r.usersPermissionsUser.data.attributes.educational_details.data.length
+          ? r.usersPermissionsUser.data.attributes.educational_details.data.map(
+              (eduId: any) => eduId.id
             )
           : null
       );
     },
   });
 
-  console.log(educationID);
-
   function callEditProfilepage(r: any) {
-    debugger;
-    let id = "";
+    // debugger;
+    let id: any = "";
     let edId: any = "";
 
     if ("updateAddress" in r) {
@@ -94,20 +92,22 @@ function EditProfile() {
   });
   const [deleteAddress] = useMutation(DELETE_ADDRESS, {
     onCompleted: (data: any) => {
-      debugger;
+      // debugger;
       console.log("Deleted id ");
     },
   });
 
   function EditAddressAndProfilePage(addressData) {
-    debugger;
+    // debugger;
 
     let currentID = "";
 
     addressData.forEach((address: any) => {
       currentID = address.id;
       delete address.id;
-      if (currentID === "") {
+      delete address.__typename;
+      console.log(address);
+      if (!currentID) {
         // currentID == ""
 
         createAddress({
@@ -124,13 +124,11 @@ function EditProfile() {
         });
       } //end else statement
     }); //end forEach
-    debugger;
-    console.log(profileData);
   } //end EditAddressAndProfile function
 
   function EditProfilepage() {
     console.log("edit message");
-    debugger;
+    // debugger;
     console.log(profileData);
 
     updateProfile({
@@ -142,7 +140,7 @@ function EditProfile() {
   }
   function DeleteUserAddress(data: any) {
     console.log(data);
-    debugger;
+    // debugger;
     data.forEach((id: any) =>
       deleteAddress({
         variables: {
@@ -160,13 +158,13 @@ function EditProfile() {
   });
   const [deleteEducationData] = useMutation(DELETE_EDUCATION_DETAILS, {
     onCompleted: (data: any) => {
-      debugger;
+      // debugger;
       console.log("Deleted id ");
     },
   });
 
   function Create_Edit_EducationData(data: any) {
-    debugger;
+    // debugger;
 
     let educationDataID = "";
 
@@ -195,7 +193,7 @@ function EditProfile() {
 
   function DeleteUserEducationData(data: any) {
     console.log(data);
-    debugger;
+    // debugger;
     data.forEach((id: any) =>
       deleteEducationData({
         variables: {
@@ -206,45 +204,32 @@ function EditProfile() {
   } //end DeleteUserEducationData function
 
   function FillDetails(data: any) {
-    // let newAddress = data.addresses.map((address) => JSON.stringify(address));
-    // delete data.addresses;
-    // data.addresses = newAddress;
-    // console.log(data);
+    let newAddressData = data.addresses.map((address) =>
+      JSON.stringify(address)
+    );
+    console.log(newAddressData);
 
-    //     address1: "Be Happy"
-    // address2: "React"
-    // city: "React"
-    // country: "Be Happys"
-    // id: "78"
-    // state: "React"
-    // type: "Be Happy"
-    // zipcode: "React"
+    let newEducationData = data.educational_details.map((education) =>
+      JSON.stringify(education)
+    );
 
     delete data.addresses;
-    let addresses = {
-      id: "1",
-      type: "Type form",
-      address1: "Uthiru",
-      address2: "React",
-      city: "react",
-      country: "kenya",
-      state: "state form",
-      zipcode: "zipcode form",
-    };
+    delete data.educational_details;
 
-    data.addresses = [addresses];
+    data.addresses = newAddressData;
+    data.educational_details = newEducationData;
 
-    debugger;
     if (data) {
       setWebPageDetails({ ...data });
     }
   } //fillDetails
 
   function OnSubmit(frm: any) {
-    debugger;
+    // debugger;
     console.log(frm);
 
     let addressData = frm.addresses.map((address: any) => JSON.parse(address));
+
     let educationData = frm.educational_details.map((education: any) =>
       JSON.parse(education)
     );
@@ -253,18 +238,25 @@ function EditProfile() {
     let educationDataArray = educationData.map((id) => id.id);
 
     let addressIDNotSubmitted = addressID
-      ? addressID.filter((x) => !addressDataArray.includes(x))
+      ? addressID.filter((x: any) => !addressDataArray.includes(x))
       : null;
 
     let educationIDNotSubmitted = educationID
-      ? educationID.filter((id) => !educationDataArray.includes(id))
+      ? educationID.filter((id: any) => !educationDataArray.includes(id))
       : null;
 
-    if (addressIDNotSubmitted) {
+    console.log(educationIDNotSubmitted);
+    if (
+      addressIDNotSubmitted !== null &&
+      addressIDNotSubmitted[0] !== undefined
+    ) {
       DeleteUserAddress(addressIDNotSubmitted);
     }
 
-    if (educationIDNotSubmitted) {
+    if (
+      educationIDNotSubmitted !== null &&
+      educationIDNotSubmitted[0] !== undefined
+    ) {
       DeleteUserEducationData(educationIDNotSubmitted);
     }
 
@@ -274,17 +266,19 @@ function EditProfile() {
 
     // let newEducationDetail = EducationData.filter((x) => !x.id);
 
-    Create_Edit_EducationData(educationData);
+    if (educationData.length !== 0) {
+      Create_Edit_EducationData(educationData);
+    }
 
     delete frm.addresses;
     delete frm.educational_details;
     delete frm.__typename;
 
-    console.log(frm);
     setProfileData(frm);
     frm.addresses = [];
     frm.educational_details = [];
-    // EditAddressAndProfilePage(addressData);
+
+    EditAddressAndProfilePage(addressData);
   }
 
   console.log(webpageDetails);
