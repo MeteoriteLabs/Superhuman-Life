@@ -8,21 +8,21 @@ import {
   Button,
   Form,
   Alert,
+  FormControl,
+  InputGroup,
 } from "react-bootstrap";
 import moment from "moment";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import {
-  GET_ALL_CHANGEMAKER_HOLIDAYS,
   GET_USER_WEEKLY_CONFIG,
   GET_ALL_CLIENT_PACKAGE_BY_TYPE,
   GET_ALL_CHANGEMAKER_AVAILABILITY_WORKHOURS,
-  GET_ALL_CHANGEMAKER_AVAILABILITY
+  GET_ALL_CHANGEMAKER_AVAILABILITY,
+  GET_SLOTS_TO_CHECK
 } from "../../graphql/queries";
 import {
-  UPDATE_USER_DATA,
   UPDATE_USER_BOOKING_TIME,
-  CREATE_CANGEMAKER_WORK_HOUR,
   UPDATE_CHANGEMAKER_AVAILABILITY_WORKHOURS,
   CREATE_CHANGEMAKER_AVAILABILITY_WORKHOURS,
   CREATE_CHANGEMAKER_AVAILABILITY_HOLIDAY
@@ -34,6 +34,44 @@ import "rc-time-picker/assets/index.css";
 
 import { flattenObj } from "../../../../components/utils/responseFlatten";
 
+const configTemplate: any = {
+  "Sunday": {
+    isHoliday: false,
+    slots: [],
+    desc: ""
+  },
+  "Monday": {
+    isHoliday: false,
+    slots: [],
+    desc: ""
+  },
+  "Tuesday": {
+    isHoliday: false,
+    slots: [],
+    desc: ""
+  },
+  "Wednesday": {
+    isHoliday: false,
+    slots: [],
+    desc: ""
+  },
+  "Thursday": {
+    isHoliday: false,
+    slots: [],
+    desc: ""
+  },
+  "Friday": {
+    isHoliday: false,
+    slots: [],
+    desc: ""
+  },
+  "Saturday": {
+    isHoliday: false,
+    slots: [],
+    desc: ""
+  }
+};
+
 const WorkHours = () => {
   const auth = useContext(AuthContext);
   const [value, onChange] = useState(new Date());
@@ -41,20 +79,36 @@ const WorkHours = () => {
   const [month, setMonth] = useState(0);
   const [showDaysModal, setShowDaysModal] = useState(false);
   const [showDatesModal, setShowDatesModal] = useState(false);
+  const [showDatesRangeModal, setShowDatesRangeModal] = useState(false);
   const [masterSettings, setMasterSettings] = useState<any>([]);
   const [slots, setSlots] = useState<any>([]);
   const [toast, setToast] = useState(false);
   const [show, setShow] = useState(false);
   const [date, setDate] = useState(moment().format("YYYY-MM-DD"));
-  // const [todaysEvents, setTodaysEvents] = useState<any>([]);
-  // const [userWorkHoursConfig, setUserWorkHoursConfig] = useState<any>([]);
   const [allChangeMakerHolidays, setAllChangeMakerHolidays] = useState<any>([]);
   const [errModal, setErrModal] = useState(false);
   const [startDate, setStartDate] = useState(moment().format("YYYY-MM-DD"));
   const [endDate, setEndDate] = useState(moment().add(1, 'months').format("YYYY-MM-DD"));
-  const [userConfig, setUserConfig] = useState<any>([]);
+  const [userConfig, setUserConfig] = useState<any>(configTemplate);
   const [checkState, setCheckState] = useState(false);
+  const [dayHoliday, setDayHoliday] = useState(false);
   const [desc, setDesc] = useState("");
+  const [rangeValue, rangeOnChange] = useState([new Date(), new Date()]);
+  const [slotsValidation, setSlotsValidation] = useState<any>([]);
+  const [conflictSlots, setConflictSlots] = useState<any>([]);
+
+  useQuery(GET_SLOTS_TO_CHECK, {
+    skip: (!showDaysModal),
+    variables: {
+      id: auth.userid,
+      dateUpperLimit: moment().format("YYYY-MM-DD"),
+      dateLowerLimit: moment().add(1, 'months').format("YYYY-MM-DD")
+    },
+    onCompleted: (data) => {
+      const flattenData = flattenObj({...data});
+      setSlotsValidation(flattenData);
+    }
+  });
 
   useQuery(GET_ALL_CLIENT_PACKAGE_BY_TYPE, {
     variables: {
@@ -89,7 +143,7 @@ const WorkHours = () => {
   });
 
   function handleTodaysSlots(todaysEvents: any, changeMakerAvailability: any){
-    const currentDateWorkHours = changeMakerAvailability[0]?.booking_slots.length > 0 ? [...changeMakerAvailability[0]?.booking_slots] : [];
+    const currentDateWorkHours = changeMakerAvailability[0]?.booking_slots?.length > 0 ? [...changeMakerAvailability[0]?.booking_slots] : [];
 
     const values = todaysEvents.concat(currentDateWorkHours);
     values.sort((a: any, b: any) => {
@@ -98,26 +152,7 @@ const WorkHours = () => {
       return btime1 - btime2;
     });
     setSlots(values);
-
-    // var today = moment().format("dddd");
-    // var values: any;
-    
-    // for(var i=0; i<settings?.length; i++){
-    //   if(today === settings[i].day){
-    //     values = settings[i].slots;
-    //   }
-    // }
-    // setUserWorkHoursConfig(values);
-    // handleWorkHours(values, todaysSlots, todaysEvents);
   }
-
-
-  // function handleWorkHours(val: any, currentWorkHours: any, todaysEvents: any){
-  //   const values = val.concat(currentWorkHours);
-  //   console.log(todaysEvents);
-  //   console.log(values);
-  //   setSlots(values);
-  // }
 
   const [availability, setAvailability] = useState<any>([]);
 
@@ -183,20 +218,17 @@ const WorkHours = () => {
             }
         }
         handleTodaysSlots(todaysPrograms, changeMakerAvailability);
-        // setTodaysEvents(todaysPrograms);
     }
 
   useQuery(GET_USER_WEEKLY_CONFIG, {
-    variables: { id: auth.userid, date: moment().format("YYYY-MM-DD"), type_in: ["Personal Training", "Group Class", "Custom"] },
+    variables: { id: auth.userid },
     onCompleted: (data) => {
       const flattenData = flattenObj({ ...data });
       setMasterSettings(flattenData.usersPermissionsUsers);
     },
   });
 
-  const [updateUserData] = useMutation(UPDATE_USER_DATA);
   const [updateUserBookingTime] = useMutation(UPDATE_USER_BOOKING_TIME);
-  // const [createChangemakerWorkHour] = useMutation(CREATE_CANGEMAKER_WORK_HOUR);
   const [updateChangemakerAvailabilityWorkHour] = useMutation(UPDATE_CHANGEMAKER_AVAILABILITY_WORKHOURS);
   const [createChangemakerAvailabilityWorkHour] = useMutation(CREATE_CHANGEMAKER_AVAILABILITY_WORKHOURS);
 
@@ -228,50 +260,6 @@ const WorkHours = () => {
     });
   }
 
-  const changeMakerWeeklySchedule: any = [];
-
-  function handleCheckBoxes() {
-    var values: any = document.querySelectorAll('[name="holiday-checkbox"]');
-    if (masterSettings === undefined) {
-      for (var i = 0; i <= 6; i++) {
-        changeMakerWeeklySchedule.push({
-          id: i,
-          day: values[i].value,
-          is_holiday: values[i].checked,
-          slots: [],
-        });
-      }
-      updateUserData({
-        variables: {
-          id: auth.userid,
-          changemaker_weekly_schedule: changeMakerWeeklySchedule,
-        },
-      });
-    } else {
-      const userConfig = [...masterSettings.Changemaker_weekly_schedule];
-      let updatedUserConfig: any = [];
-      let obj: any = {};
-      for (var j = 0; j <= 6; j++) {
-        obj.id = userConfig[j].id;
-        obj.day = userConfig[j].day;
-        if (userConfig[j].is_holiday !== values[j].checked) {
-          obj.is_holiday = values[j].checked;
-        } else {
-          obj.is_holiday = userConfig[j].is_holiday;
-        }
-        obj.slots = userConfig[j].slots;
-        updatedUserConfig.push(obj);
-        obj = {};
-      }
-      updateUserData({
-        variables: {
-          id: auth.userid,
-          changemaker_weekly_schedule: updatedUserConfig,
-        },
-      });
-    }
-  }
-
   function handleToast() {
     setTimeout(() => {
       setToast(false);
@@ -298,14 +286,6 @@ const WorkHours = () => {
       setShow(true);
     }, 1000);
   }, []);
-
-  // function handleTimeSlot(val: any){
-  //   const values = slots.map(elem => {
-  //     return Object.assign({}, elem, slots[elem]);
-  //   });
-  //   values[val].is_disabled = !values[val].is_disabled;
-  //   setSlots(values); 
-  // }
 
   function handleFromTimeInput(val: any){
     var m = (Math.round(parseInt(val.slice(3,5))/15) * 15) % 60;
@@ -352,7 +332,7 @@ const WorkHours = () => {
     const values = allChangeMakerHolidays.find((item: any) => item.date === date);
     var obj: any = {};
 
-    if(slots.length > 1){
+    if(slots.length !== 0){
       for(var i=0; i<slots.length; i++ ){
         if(moment(fromTime, 'hh:mm:ss').isSameOrAfter(moment(slots[i].startTime, 'hh:mm:ss')) && moment(fromTime, 'hh:mm:ss').isBefore(moment(slots[i].endTime, 'hh:mm:ss'))){
           setSlotErr(true);
@@ -390,61 +370,7 @@ const WorkHours = () => {
       });
       setToast(true);
     }
-
-    // createChangemakerWorkHour({
-    //   variables: {
-    //     date: date,
-    //     From_time: fromTime + ":00.000",
-    //     To_time: toTime + ":00.000",
-    //     Mode: mode,
-    //     users_permissions_user: auth.userid,
-    //   }
-    // });
-
-    // for(var i=0; i<masterSettings[0].Changemaker_weekly_schedule.length; i++){
-    //   if(masterSettings[0].Changemaker_weekly_schedule[i].day === moment().format("dddd")){
-    //     const values = [...masterSettings[0].Changemaker_weekly_schedule[i].slots];
-    //     values.push({
-    //       "to": toTime,
-    //       "from": fromTime,
-    //       "mode": mode,
-    //       "isDisabled": false
-    //     });
-    //     handleScheduleUpdate(values);
-    //   }
-    // }
   }
-
-  // function handleScheduleUpdate(val: any){
-  //   const values = [...masterSettings[0].Changemaker_weekly_schedule];
-
-  //   let updatedUserConfig: any = [];
-  //   let obj: any = {};
-  //   for (var i = 0; i < values.length; i++) {
-  //     if(values[i].day === moment().format("dddd")){
-  //       obj.id = values[i].id;
-  //       obj.day = values[i].day;
-  //       obj.is_holiday = values[i].is_holiday;
-  //       obj.slots = val;
-  //       updatedUserConfig.push(obj);
-  //       obj = {};
-  //     }else {
-  //       obj.id = values[i].id;
-  //       obj.day = values[i].day;
-  //       obj.is_holiday = values[i].is_holiday;
-  //       obj.slots = values[i].slots;
-  //       updatedUserConfig.push(obj);
-  //       obj = {};
-  //     }
-  //   }
-  //   updateUserData({
-  //     variables: {
-  //       id: auth.userid,
-  //       changemaker_weekly_schedule: updatedUserConfig,
-  //     },
-  //   });
-  // }
-
 
   useEffect(() => {
     var element = document.getElementById("timeErr");
@@ -473,21 +399,84 @@ const WorkHours = () => {
 
   }
 
-  function handleUserConfig(fromTime: any, toTime: any, classMode: any, date: any, dayIndex: any){
-    const values = [...userConfig];
-    console.log(fromTime, toTime, classMode, date, dayIndex);
-    var obj: any = {};
-    obj.day = daysOfWeek[dayIndex];
-    obj.slots = [{
-      id: getRandomId(10),
-      startTime: fromTime,
-      endTime: toTime,
-      mode: classMode,
-    }];
+  interface NamedParameters{
+    fromTime?: any,
+    toTime?: any,
+    classMode?: any,
+    date?: any,
+    dayIndex?: any,
+    isHoliday?: boolean
+    desc?: string,
+    config: any
+  }
 
-    values.push(obj);
+  function handleDeleteUserConfig(dayIndex, id){
 
-    setUserConfig(values);
+    const objIndex = userConfig[daysOfWeek[dayIndex]].slots.findIndex((item: any) => item.id === id);
+    const values = [...userConfig[daysOfWeek[dayIndex]].slots];
+    values.splice(objIndex, 1);
+
+    userConfig[daysOfWeek[dayIndex]].slots = values;
+
+    setUserConfig(userConfig);
+  }
+
+  function handleUserConfigHoliday({dayIndex, isHoliday=false, config}: NamedParameters): any {
+    const val = config;
+    val[daysOfWeek[dayIndex]].isHoliday = isHoliday;
+    setUserConfig(val);
+  }
+
+  function handleUserConfigHolidayDesc({dayIndex, desc="", config}: NamedParameters): any{
+    const val = config;
+    if(val[daysOfWeek[dayIndex]].isHoliday === true){
+      val[daysOfWeek[dayIndex]].desc = desc;
+    }
+    setUserConfig(val);
+    setDesc("");
+  }
+
+
+  function handleUserConfig({fromTime, toTime, classMode, date, dayIndex, isHoliday=false, desc="", config}: NamedParameters): any{
+
+    const val = config;
+    const values = slotsValidation.changemakerAvailabilties;
+    const conflict = [...conflictSlots];
+
+    for(var i=0; i<values.length; i++){
+      const obj = [...values[i]?.booking_slots] || [];
+      if(moment(values[i].date).format('dddd') === daysOfWeek[dayIndex]){
+        for(var j=0; j<obj.length; j++){
+          if(moment(fromTime, 'hh:mm:ss').isSameOrAfter(moment(obj[j].startTime, 'hh:mm:ss')) && moment(fromTime, 'hh:mm:ss').isBefore(moment(obj[j].endTime, 'hh:mm:ss'))){
+            conflict.push(obj[j]);
+          }else if(val[daysOfWeek[dayIndex]]?.slots?.length !== 0){
+            for(var k=0; k<val[daysOfWeek[dayIndex]].slots?.length; k++){
+              if(moment(fromTime, 'hh:mm:ss').isSameOrAfter(moment(val[daysOfWeek[dayIndex]]?.slots[k]?.startTime, 'hh:mm:ss')) && moment(fromTime, 'hh:mm:ss').isBefore(moment(val[daysOfWeek[dayIndex]].slots[k].endTime, 'hh:mm:ss'))){
+                conflict.push(val[daysOfWeek[dayIndex]].slots[k]);
+              }
+            }
+          }
+
+          if(conflict.length !== 0){
+            setSlotErr(true);
+            setConflictSlots(conflict);
+            return;
+          }
+        }
+        var obj1: any = {};
+          obj1 = {
+            id: getRandomId(10),
+            startTime: fromTime,
+            endTime: toTime,
+            mode: classMode,
+          };
+          val[daysOfWeek[dayIndex]].slots.push(obj1);
+          setUserConfig(val);
+          setDayIndex(dayIndex);
+          setFromTime("00:00");
+          setToTime("00:00");
+      }
+    }
   }
 
   const [createChangeMakerHoliday] = useMutation(CREATE_CHANGEMAKER_AVAILABILITY_HOLIDAY);
@@ -514,7 +503,20 @@ const WorkHours = () => {
     setDate(moment().format("YYYY-MM-DD"));
   }
 
-  console.log(userConfig);
+  function handleCustomDates(data: any, date: any) {
+    const diff = moment(date[1]).diff(moment(date[0]), "days") + 1;
+    for (var i = 0; i < diff; i++) {
+      createChangeMakerHoliday({
+        variables: {
+          date: `${moment(date[0]).add(i, "days").format("YYYY-MM-DD")}`,
+          description: data,
+          users_permissions_user: auth.userid,
+        },
+      });
+    }
+    setDesc("");
+    setDate(moment().format("YYYY-MM-DD"));
+  }
 
   if (!show)
     return (
@@ -559,6 +561,14 @@ const WorkHours = () => {
                   }}
                 >
                   Booking Time
+                </Dropdown.Item>
+                <Dropdown.Item
+                  eventKey="2"
+                  onClick={() => {
+                    setShowDatesRangeModal(true);
+                  }}
+                >
+                  Dates
                 </Dropdown.Item>
               </DropdownButton>
             </div>
@@ -925,17 +935,35 @@ const WorkHours = () => {
               </div>
               <hr />
               <div className="text-center">
-              <div className="text-center">
+              <Row style={{verticalAlign: 'middle'}} className="text-center">
+                <Col lg={{offset: 4}}>
                 <span style={{fontSize: '25px', textDecorationLine: 'underline'}}><b>{daysOfWeek[dayIndex]}</b></span>
-              </div>
+                </Col>
+                <Col>
+                <Form>
+                  <Form.Check 
+                    type="switch"
+                    checked={userConfig[daysOfWeek[dayIndex]]?.isHoliday}
+                    onClick={() => {
+                      setDayHoliday(!dayHoliday);
+                      handleUserConfigHoliday({dayIndex: dayIndex, isHoliday: !dayHoliday, config: userConfig });
+                    }}
+                    id="custom"
+                    label="Set Holiday"
+                  />
+                </Form>
+                </Col>
+              </Row>
               <div className="text-center">
                 <span><b>General Working Hours</b></span>
               </div>
               <div className="text-center">
                 <p style={{color: 'gray'}}>Everyone will be able to book only during this duration</p>
               </div>
-              {userConfig[0]?.slots?.map((item, index) => {
-                  console.log(userConfig)
+              {userConfig[daysOfWeek[dayIndex]]?.isHoliday && 
+                <div style={{ display: `${userConfig[daysOfWeek[dayIndex]]?.desc === "" ? 'none' : 'block'}` }}>You've marked This Day as {userConfig[daysOfWeek[dayIndex]]?.desc}</div>
+              }
+              {!userConfig[daysOfWeek[dayIndex]]?.isHoliday && userConfig[daysOfWeek[dayIndex]]?.slots?.map((item, index) => {
                   return (
                     <Row key={index} className="mt-3 pt-1 pb-1 items-center">
                       <Col lg={8}>
@@ -988,8 +1016,7 @@ const WorkHours = () => {
                         src="/assets/delete.svg"
                         alt="delete"
                         onClick={() => {
-                          // setConfirmModal(true);
-                          // setDeleteItem(item.id);
+                          handleDeleteUserConfig(dayIndex, item.id);
                         }}
                       />
                         </div>
@@ -1001,17 +1028,43 @@ const WorkHours = () => {
                 <Row className="mt-2" style={{ borderTop: "3px solid gray" }}></Row>
               </Col>
               <Col>
-              <Row className="mt-4">
+              {userConfig[daysOfWeek[dayIndex]]?.isHoliday && <Row className="mt-3">
+                <Col lg={10} className="pl-0 pr-0">
+                  <input
+                    type="text"
+                    className="shadow-lg p-1"
+                    value={desc}
+                    onChange={(e) => setDesc(e.target.value)}
+                    placeholder="Holiday description"
+                    style={{
+                      width: "100%",
+                      border: "1px solid gray",
+                      borderRadius: "10px",
+                    }}
+                  ></input>
+                </Col>
+                <Col lg={2}>
+                  <Button
+                    className="pl-3 pr-3 pt-1 pb-1 shadow-lg"
+                    style={{ borderRadius: "10px" }}
+                    variant="info"
+                    onClick={() => {
+                      handleUserConfigHolidayDesc({dayIndex: dayIndex, desc: desc, config: userConfig });
+                      // handleAddHoliday(date, desc);
+                      // handleToast();
+                    }}
+                  >
+                    Add
+                  </Button>
+                </Col>
+              </Row>}
+              {!userConfig[daysOfWeek[dayIndex]]?.isHoliday && <Row className="mt-4">
                 <Col lg={3}>
-                  {/* <div className="shadow-sm" style={{ border: '1px solid gray',backgroundColor: 'whitesmoke', padding: '5px', borderRadius: '10px'}}> */}
                   <TimePicker value={convertToMoment(fromTime)} showSecond={false} minuteStep={15} onChange={(e) => {handleFromTimeInput(moment(e).format("HH:mm"))}}/>
-                  {/* </div> */}
                 </Col>
                 <Col lg={1}>To</Col>
                 <Col lg={3}>
-                  {/* <div className="shadow-sm" style={{ border: '1px solid gray',backgroundColor: 'whitesmoke', padding: '5px', borderRadius: '10px'}}> */}
                   <TimePicker value={convertToMoment(toTime)} showSecond={false} minuteStep={15} onChange={(e) => {handleToTimeInput(moment(e).format("HH:mm"))}}/>
-                  {/* </div> */}
                 </Col>
                 <Col lg={3}>
                 <Form.Control as="select" onChange={(e) => {setClassMode(e.target.value)}}>
@@ -1029,47 +1082,28 @@ const WorkHours = () => {
                   style={{ borderRadius: "10px" }}
                   variant="info"
                   onClick={() => {
-                    // handleWorkTime(fromTime, toTime, classMode, date);
-                    // setToast(true);
-                    // handleToast();
-                    handleUserConfig(fromTime, toTime, classMode, date, dayIndex);
+                    handleUserConfig({fromTime: fromTime, toTime: toTime, classMode: classMode, date: date, dayIndex: dayIndex, config: userConfig});
                   }}
                 >
                   Add
                 </Button>
                 </Col>
-              </Row>
-              <Row>
+              </Row>}
+              {!userConfig[daysOfWeek[dayIndex]]?.isHoliday && <Row>
                   <Col lg={7}>
                     <div className="text-center mt-2">
                       {handleTimeValidation()}
                     </div>
                   </Col>
-              </Row>
+              </Row>}
               </Col>
               </div>
-              {/* <Form className="mt-3">
-                {daysOfWeek.map((day, index) => {
-                  return (
-                    <>
-                      <Form.Check
-                        key={index}
-                        name="holiday-checkbox"
-                        type="checkbox"
-                        label={day}
-                        id={day}
-                        value={day}
-                      />
-                    </>
-                  );
-                })}
-              </Form> */}
             </Modal.Body>
             <Modal.Footer>
               <Button
                 variant="success"
                 onClick={() => {
-                  handleCheckBoxes();
+                  // handleCheckBoxes();
                 }}
               >
                 Save
@@ -1187,7 +1221,24 @@ const WorkHours = () => {
             }}
           >
             <Modal.Title id="contained-modal-title-vcenter">
-              You cannot add this slot as you already have an existing slot at this time.
+              You cannot add this slot as you already have an existing slot at this time.<br/>
+              The Following slots are:
+              <table>
+                <tr>
+                  <th className="pl-3 pr-3">From </th>
+                  <th className="pl-3 pr-3">To </th>
+                  <th className="pl-3 pr-3">Mode </th>
+                </tr>
+                {conflictSlots?.map((slot, index) => {
+                  return (
+                    <tr key={index}>
+                      <td className="pl-3 pr-3">{slot.startTime}</td>
+                      <td className="pl-3 pr-3">{slot.endTime}</td>
+                      <td className="pl-3 pr-3">{slot.mode}</td>
+                    </tr>
+                  )
+                })}
+              </table>
             </Modal.Title>
           </Modal.Header>
           <Modal.Footer>
@@ -1195,6 +1246,7 @@ const WorkHours = () => {
               variant="success"
               onClick={() => {
                 setSlotErr(false);
+                setConflictSlots([]);
               }}
             >
               Close
@@ -1236,6 +1288,75 @@ const WorkHours = () => {
               }}
             >
               Yes
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      }
+      {
+        <Modal
+          size="lg"
+          aria-labelledby="contained-modal-title-vcenter"
+          show={showDatesRangeModal}
+          centered
+        >
+          <Modal.Header
+            closeButton
+            onHide={() => {
+              setShowDatesRangeModal(false);
+            }}
+          >
+            <Modal.Title id="contained-modal-title-vcenter">
+              Master Settings
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <div className="text-center">
+              <h4>
+                <b>Select Dates for Holidays</b>
+              </h4>
+              <Row className="mt-5" style={{ justifyContent: "center" }}>
+                <Calendar
+                  tileDisabled={tileDisabled}
+                  onChange={rangeOnChange}
+                  value={rangeValue}
+                  minDetail="month"
+                  maxDetail="month"
+                  selectRange={true}
+                  next2Label={null}
+                  prev2Label={null}
+                />
+              </Row>
+              <div className="mt-5 ml-5 mr-5 pl-5 pr-5">
+                <InputGroup className="mb-3">
+                  <FormControl
+                    placeholder="Type New Holiday"
+                    onChange={(e) => {
+                      setDesc(e.target.value);
+                    }}
+                    value={desc}
+                  />
+                </InputGroup>
+              </div>
+            </div>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button
+              variant="danger"
+              onClick={() => {
+                setShowDatesRangeModal(false);
+              }}
+            >
+              Close
+            </Button>
+            <Button
+              variant="success"
+              disabled={desc === "" ? true : false}
+              onClick={() => {
+                handleCustomDates(desc, rangeValue);
+                setShowDatesRangeModal(false);
+              }}
+            >
+              Save
             </Button>
           </Modal.Footer>
         </Modal>
