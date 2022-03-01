@@ -1,8 +1,7 @@
-import React from "react";
 import { Col, Container, Row, Form, Button } from "react-bootstrap";
 
 function CustomEducationForm(props) {
-  const handleChange = (e) => {
+  const handleChange = (e: any) => {
     const { name, value } = e.target;
 
     let formValues = { ...props.value };
@@ -83,54 +82,3 @@ function CustomEducationForm(props) {
 }
 
 export default CustomEducationForm;
-
-// <form>
-//         <Row>
-//           <Col className="p-0 mb-4">
-//             <Row>
-//               <Col md={12} className="px-3">
-//                 <label>Institute Name</label>
-//               </Col>
-//               <Col>
-//                 <input type="text" name="Institute_Name" />
-//               </Col>
-//             </Row>
-//           </Col>
-//           <Col className="p-0 mb-4">
-//             {" "}
-//             <Row>
-//               <Col md={12} className="px-3">
-//                 <label for="Type_of_degree">Type Of Degree</label>
-//               </Col>
-//               <Col>
-//                 <select style={{ width: "70%" }} name="Type_of_degree" id="Type_of_degree">
-//                   <option value="bachelors">Bachelors</option>
-//                   <option value="master">Master</option>
-//                 </select>
-//               </Col>
-//             </Row>
-//           </Col>
-//         </Row>
-//         <Row>
-//           <Col className="p-0 ">
-//             <Row>
-//               <Col md={12} className="px-3">
-//                 <label>Specialization</label>
-//               </Col>
-//               <Col xs={{ offset: 0, span: 5 }}>
-//                 <input type="text" name="Specialization" />
-//               </Col>
-//             </Row>
-//           </Col>
-//           <Col className="p-0 ">
-//             <Row>
-//               <Col md={12} className="px-3">
-//                 <label>Year</label>
-//               </Col>
-//               <Col>
-//                 <input type="text" name="Year" />
-//               </Col>
-//             </Row>
-//           </Col>
-//         </Row>
-//       </form>

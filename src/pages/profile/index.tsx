@@ -31,7 +31,7 @@ export default function ProfilePage() {
       setProfileData(r.usersPermissionsUser.data.attributes);
     },
   });
-  console.log(profileData);
+
   return (
     <>
       <Tabs
@@ -159,7 +159,7 @@ export default function ProfilePage() {
         <Tab eventKey="myclientapp" title=" My Client App">
           My Client App
         </Tab>
-        <Tab eventKey="settins" title="Settings">
+        <Tab eventKey="settings" title="Settings">
           Settings
         </Tab>
       </Tabs>

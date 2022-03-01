@@ -27,16 +27,14 @@ function EditProfile() {
   const [educationID, setEducationID] = useState<any>([]);
 
   const [profileData, setProfileData] = useState<any>();
-  // const [flattenedData, setFlattenedData] = useState<any>();
 
   useQuery(FETCH_USER_PROFILE_DATA, {
     variables: { id: auth.userid },
     onCompleted: (r: any) => {
-      console.log(r);
       const flattenData = flattenObj({ ...r });
       console.log(flattenData);
       FillDetails(flattenData.usersPermissionsUser);
-      console.log(r.usersPermissionsUser.data.attributes.addresses.data[0].id);
+
       setAddressID(
         r.usersPermissionsUser.data.attributes.addresses.data.length
           ? r.usersPermissionsUser.data.attributes.addresses.data.map(
@@ -55,7 +53,6 @@ function EditProfile() {
   });
 
   function callEditProfilepage(r: any) {
-    // debugger;
     let id: any = "";
     let edId: any = "";
 
@@ -78,9 +75,7 @@ function EditProfile() {
   }
 
   const [updateProfile] = useMutation(UPDATE_USER_PROFILE_DATA, {
-    onCompleted: (r: any) => {
-      console.log(r);
-    },
+    onCompleted: (r: any) => {},
   });
 
   const [updateAddress] = useMutation(UPDATE_ADDRESS_DATA, {
@@ -91,25 +86,18 @@ function EditProfile() {
     onCompleted: callEditProfilepage,
   });
   const [deleteAddress] = useMutation(DELETE_ADDRESS, {
-    onCompleted: (data: any) => {
-      // debugger;
-      console.log("Deleted id ");
-    },
+    onCompleted: (data: any) => {},
   });
 
   function EditAddressAndProfilePage(addressData) {
-    // debugger;
-
     let currentID = "";
 
     addressData.forEach((address: any) => {
       currentID = address.id;
       delete address.id;
       delete address.__typename;
-      console.log(address);
-      if (!currentID) {
-        // currentID == ""
 
+      if (!currentID) {
         createAddress({
           variables: {
             data: address,
@@ -127,10 +115,6 @@ function EditProfile() {
   } //end EditAddressAndProfile function
 
   function EditProfilepage() {
-    console.log("edit message");
-    // debugger;
-    console.log(profileData);
-
     updateProfile({
       variables: {
         id: auth.userid,
@@ -139,8 +123,6 @@ function EditProfile() {
     });
   }
   function DeleteUserAddress(data: any) {
-    console.log(data);
-    // debugger;
     data.forEach((id: any) =>
       deleteAddress({
         variables: {
@@ -157,15 +139,10 @@ function EditProfile() {
     onCompleted: callEditProfilepage,
   });
   const [deleteEducationData] = useMutation(DELETE_EDUCATION_DETAILS, {
-    onCompleted: (data: any) => {
-      // debugger;
-      console.log("Deleted id ");
-    },
+    onCompleted: (data: any) => {},
   });
 
   function Create_Edit_EducationData(data: any) {
-    // debugger;
-
     let educationDataID = "";
 
     data.map((educationData) => {
@@ -192,8 +169,6 @@ function EditProfile() {
   } //end create_edit education data function
 
   function DeleteUserEducationData(data: any) {
-    console.log(data);
-    // debugger;
     data.forEach((id: any) =>
       deleteEducationData({
         variables: {
@@ -207,7 +182,6 @@ function EditProfile() {
     let newAddressData = data.addresses.map((address) =>
       JSON.stringify(address)
     );
-    console.log(newAddressData);
 
     let newEducationData = data.educational_details.map((education) =>
       JSON.stringify(education)
@@ -225,9 +199,6 @@ function EditProfile() {
   } //fillDetails
 
   function OnSubmit(frm: any) {
-    // debugger;
-    console.log(frm);
-
     let addressData = frm.addresses.map((address: any) => JSON.parse(address));
 
     let educationData = frm.educational_details.map((education: any) =>
@@ -260,12 +231,6 @@ function EditProfile() {
       DeleteUserEducationData(educationIDNotSubmitted);
     }
 
-    // let EducationData = frm.educational_details;
-
-    // EducationData.forEach((data) => console.log(data.id));
-
-    // let newEducationDetail = EducationData.filter((x) => !x.id);
-
     if (educationData.length !== 0) {
       Create_Edit_EducationData(educationData);
     }
@@ -280,8 +245,6 @@ function EditProfile() {
 
     EditAddressAndProfilePage(addressData);
   }
-
-  console.log(webpageDetails);
 
   return (
     <>

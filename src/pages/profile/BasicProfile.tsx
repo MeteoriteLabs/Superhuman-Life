@@ -26,8 +26,6 @@ export default function BasicProfile({
     formSubmit(data);
   }
 
-  // '{"address1":"Basic","type":"Basic","address2":"Bas…ate":"Basic","country":"Basic","zipcode":"Basic"}',
-
   return (
     <>
       <Card>
@@ -54,7 +52,6 @@ export default function BasicProfile({
                   onSubmit={({ formData }: any) => submitHandler(formData)}
                   formData={formData}
                   widgets={widgets}
-                  // noValidate={true}
                 >
                   <div></div>
                 </Form>

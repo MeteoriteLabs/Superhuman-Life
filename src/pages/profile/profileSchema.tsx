@@ -3,7 +3,6 @@ import AddressForm from "../../components/customWidgets/addressForm";
 import CustomEducationForm from "../../components/customWidgets/customEducationForm";
 export const widgets = {
   uploadImageToS3WithNativeSdk: UploadImageToS3WithNativeSdk,
-  // customFormEditor: CustomAddressForm,
 };
 export const schema: any = {
   uploadProfilePicture: {
@@ -69,7 +68,6 @@ export const schema: any = {
       "ui:widget": (props: any) => (
         <AddressForm
           value={props.value ? JSON.parse(props.value) : ""}
-          // value={props.value}
           id={props.id}
           onChange={(event: any) => {
             props.onChange(event);
@@ -82,7 +80,6 @@ export const schema: any = {
     items: {
       "ui:widget": (props: any) => (
         <CustomEducationForm
-          // value={props.value}
           value={props.value ? JSON.parse(props.value) : ""}
           id={props.id}
           onChange={(event: any) => {
@@ -93,12 +90,3 @@ export const schema: any = {
     },
   },
 };
-
-// (props: any) => (
-//   <CustomFormEditor
-//     value={props.value}
-//     onChange={(event: any) => {
-//       props.onChange(event);
-//     }}
-//   />
-// ),
