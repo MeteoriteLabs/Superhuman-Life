@@ -1,4 +1,4 @@
-import { Col, Container, Row, Form, Button } from "react-bootstrap";
+import { Col, Container, Row, Form } from "react-bootstrap";
 
 function CustomEducationForm(props) {
   const handleChange = (e: any) => {

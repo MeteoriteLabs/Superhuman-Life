@@ -18,7 +18,7 @@ export default function BasicProfile({
 
   const Form: any = withTheme(Bootstrap4Theme);
   const formRef = useRef<any>(null);
-  const [step, setStep] = useState<number>(1);
+  const [step] = useState<number>(1);
 
   console.log(formData);
 

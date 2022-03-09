@@ -145,7 +145,8 @@ function EditProfile() {
   function Create_Edit_EducationData(data: any) {
     let educationDataID = "";
 
-    data.map((educationData) => {
+    // eslint-disable-next-line array-callback-return
+    data.map((educationData) => { 
       educationDataID = educationData.id;
 
       delete educationData.id;
