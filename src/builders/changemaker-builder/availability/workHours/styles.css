@@ -7,8 +7,12 @@
     padding: 10px;
 }
 
-.react-calendar__tile:disabled{
+.HolidayMark{
 	background-color: rgba(255,0,0,0.5);
+	border-radius: 10px;
+}
+
+.react-calendar__tile:disabled{
 	border-radius: 10px;
 }
 

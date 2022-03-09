@@ -10,6 +10,7 @@ import {
   Alert,
   FormControl,
   InputGroup,
+  Spinner
 } from "react-bootstrap";
 import moment from "moment";
 import Calendar from "react-calendar";
@@ -25,12 +26,15 @@ import {
   UPDATE_USER_BOOKING_TIME,
   UPDATE_CHANGEMAKER_AVAILABILITY_WORKHOURS,
   CREATE_CHANGEMAKER_AVAILABILITY_WORKHOURS,
-  CREATE_CHANGEMAKER_AVAILABILITY_HOLIDAY
+  CREATE_CHANGEMAKER_AVAILABILITY_HOLIDAY,
+  UPDATE_CHANGEMAKER_AVAILABILITY_HOLIDAY,
+  DELETE_CHANGEMAKER_AVAILABILITY_HOLIDAY
 } from "../../graphql/mutations";
 import { useQuery, useMutation } from "@apollo/client";
 import AuthContext from "../../../../context/auth-context";
 import TimePicker from "rc-time-picker";
 import "rc-time-picker/assets/index.css";
+import './styles.css';
 
 import { flattenObj } from "../../../../components/utils/responseFlatten";
 
@@ -83,6 +87,7 @@ const WorkHours = () => {
   const [masterSettings, setMasterSettings] = useState<any>([]);
   const [slots, setSlots] = useState<any>([]);
   const [toast, setToast] = useState(false);
+  const [deleteToast, setDeleteToast] = useState(false);
   const [show, setShow] = useState(false);
   const [date, setDate] = useState(moment().format("YYYY-MM-DD"));
   const [allChangeMakerHolidays, setAllChangeMakerHolidays] = useState<any>([]);
@@ -91,18 +96,35 @@ const WorkHours = () => {
   const [endDate, setEndDate] = useState(moment().add(1, 'months').format("YYYY-MM-DD"));
   const [userConfig, setUserConfig] = useState<any>(configTemplate);
   const [checkState, setCheckState] = useState(false);
+  const [holidayCheckState, setHolidayCheckState] = useState(false);
   const [dayHoliday, setDayHoliday] = useState(false);
   const [desc, setDesc] = useState("");
   const [rangeValue, rangeOnChange] = useState([new Date(), new Date()]);
   const [slotsValidation, setSlotsValidation] = useState<any>([]);
   const [conflictSlots, setConflictSlots] = useState<any>([]);
 
+  useEffect(() => {
+    setDate(moment(value).format("YYYY-MM-DD"));
+  }, [value]);
+
+  useEffect(() => {
+    if(holidays.length > 0){
+      setHolidayCheckState(holidays[0]?.Is_Holiday);
+      setCheckState(holidays[0]?.Is_Holiday);
+      setDesc(holidays[0]?.holiday_title);
+    }else {
+      setCheckState(false);
+      setHolidayCheckState(false);
+      setDesc("");
+    }
+  }, [holidays]);
+
   useQuery(GET_SLOTS_TO_CHECK, {
     skip: (!showDaysModal),
     variables: {
       id: auth.userid,
-      dateUpperLimit: moment().format("YYYY-MM-DD"),
-      dateLowerLimit: moment().add(1, 'months').format("YYYY-MM-DD")
+      dateUpperLimit: startDate,
+      dateLowerLimit: endDate
     },
     onCompleted: (data) => {
       const flattenData = flattenObj({...data});
@@ -114,7 +136,7 @@ const WorkHours = () => {
     variables: {
       id: auth.userid,
       type_in: ["Personal Training", "Group Class", "Custom"],
-      date: moment().format("YYYY-MM-DD"),
+      date: moment(value).format("YYYY-MM-DD"),
     },
     onCompleted: (data) => {
       LoadProgramEvents(data);
@@ -123,7 +145,7 @@ const WorkHours = () => {
 
   useQuery(GET_ALL_CHANGEMAKER_AVAILABILITY_WORKHOURS, {
     variables: {
-      date: moment().format("YYYY-MM-DD"),
+      date: moment(value).format("YYYY-MM-DD"),
       id: auth.userid,
     },
     onCompleted: (data) => {
@@ -135,6 +157,7 @@ const WorkHours = () => {
   useQuery(GET_ALL_CHANGEMAKER_AVAILABILITY, {
     variables: {
       id: auth.userid,
+      limit: moment(endDate).diff(moment(startDate), 'days') + 1,
     },
     onCompleted: (data) => {
       const flattenData = flattenObj({...data});
@@ -231,6 +254,11 @@ const WorkHours = () => {
   const [updateUserBookingTime] = useMutation(UPDATE_USER_BOOKING_TIME);
   const [updateChangemakerAvailabilityWorkHour] = useMutation(UPDATE_CHANGEMAKER_AVAILABILITY_WORKHOURS);
   const [createChangemakerAvailabilityWorkHour] = useMutation(CREATE_CHANGEMAKER_AVAILABILITY_WORKHOURS);
+  const [createChangeMakerHoliday] = useMutation(CREATE_CHANGEMAKER_AVAILABILITY_HOLIDAY);
+  const [updateChangemakerAvailabilityHoliday] = useMutation(UPDATE_CHANGEMAKER_AVAILABILITY_HOLIDAY);
+  const [deleteChangemakerAvailabilityHoliday] = useMutation(DELETE_CHANGEMAKER_AVAILABILITY_HOLIDAY, {onCompleted: () => {
+    setDeleteToast(true);
+  }});
 
   const daysOfWeek = [
     "Sunday",
@@ -243,11 +271,21 @@ const WorkHours = () => {
   ];
 
   function tileDisabled({ date, view }) {
+    const values = allChangeMakerHolidays.filter((item: any) => item.Is_Holiday === true);
     if (view === "month") {
-      return allChangeMakerHolidays?.find(
-        (dDate) => moment(dDate.date).format("YYYY-MM-DD") === moment(date).format("YYYY-MM-DD") && dDate.Is_Holiday === true
+      return values?.find(
+        (dDate) => moment(dDate.date).format("YYYY-MM-DD") === moment(date).format("YYYY-MM-DD")
       );
     }
+  }
+
+  function tileContent({ date, view }) {
+    const values = allChangeMakerHolidays.filter((item: any) => item.Is_Holiday === true);
+    for(var i=0; i<values.length; i++){
+      if(moment(values[i].date).format('YYYY-MM-DD') === moment(date).format('YYYY-MM-DD')){
+        return 'HolidayMark';
+      };
+    };
   }
 
   function handleBookingTimeUpdate(newOnline: number, newOffline: number) {
@@ -263,6 +301,12 @@ const WorkHours = () => {
   function handleToast() {
     setTimeout(() => {
       setToast(false);
+    }, 3000);
+  }
+
+  function handleDeleteToast(){
+    setTimeout(() => {
+      setDeleteToast(false);
     }, 3000);
   }
 
@@ -421,10 +465,21 @@ const WorkHours = () => {
     setUserConfig(userConfig);
   }
 
+  const [holidayErr, setHolidayErr] = useState(false);
+  const [holidayConflics, setHolidayConflicts] = useState<any>([]);
+
   function handleUserConfigHoliday({dayIndex, isHoliday=false, config}: NamedParameters): any {
     const val = config;
-    val[daysOfWeek[dayIndex]].isHoliday = isHoliday;
-    setUserConfig(val);
+    const values = slotsValidation.changemakerAvailabilties;
+    const isExisting = values.filter((item: any) => moment(item.date).format("dddd") === daysOfWeek[dayIndex]);
+
+    if(isExisting?.length !== 0){
+      setHolidayConflicts(isExisting);
+      setHolidayErr(true);
+    }else {
+      val[daysOfWeek[dayIndex]].isHoliday = isHoliday;
+      setUserConfig(val);
+    }
   }
 
   function handleUserConfigHolidayDesc({dayIndex, desc="", config}: NamedParameters): any{
@@ -436,6 +491,8 @@ const WorkHours = () => {
     setDesc("");
   }
 
+  const [workHourErr, setWorkHourErr] = useState(false);
+  const [workHourConflict, setWorkHourConflict] = useState<any>();
 
   function handleUserConfig({fromTime, toTime, classMode, date, dayIndex, isHoliday=false, desc="", config}: NamedParameters): any{
 
@@ -443,50 +500,68 @@ const WorkHours = () => {
     const values = slotsValidation.changemakerAvailabilties;
     const conflict = [...conflictSlots];
 
+    const holidayExists = values.find((item: any) => moment(item.date).format("dddd") === daysOfWeek[dayIndex] && item.Is_Holiday === true);
+    if(holidayExists){
+      setWorkHourErr(true);
+      setWorkHourConflict(holidayExists);
+      return;
+    }
+
     for(var i=0; i<values.length; i++){
-      const obj = [...values[i]?.booking_slots] || [];
-      if(moment(values[i].date).format('dddd') === daysOfWeek[dayIndex]){
+      const obj = values[i]?.booking_slots !== null ? [...values[i]?.booking_slots] : [];
+      if(moment(values[i].date).format('dddd') === daysOfWeek[dayIndex] && values[i].Is_Holiday === false){
         for(var j=0; j<obj.length; j++){
           if(moment(fromTime, 'hh:mm:ss').isSameOrAfter(moment(obj[j].startTime, 'hh:mm:ss')) && moment(fromTime, 'hh:mm:ss').isBefore(moment(obj[j].endTime, 'hh:mm:ss'))){
-            conflict.push(obj[j]);
+            const slotDate = {date: values[i].date};
+            const obj1: any = {...slotDate, ...obj[j]}; 
+            conflict.push(obj1);
           }else if(val[daysOfWeek[dayIndex]]?.slots?.length !== 0){
             for(var k=0; k<val[daysOfWeek[dayIndex]].slots?.length; k++){
               if(moment(fromTime, 'hh:mm:ss').isSameOrAfter(moment(val[daysOfWeek[dayIndex]]?.slots[k]?.startTime, 'hh:mm:ss')) && moment(fromTime, 'hh:mm:ss').isBefore(moment(val[daysOfWeek[dayIndex]].slots[k].endTime, 'hh:mm:ss'))){
-                conflict.push(val[daysOfWeek[dayIndex]].slots[k]);
+                const slotDate = {date: moment().format("YYYY-MM-DD")};
+                const obj1: any = {...slotDate, ...val[daysOfWeek[dayIndex]].slots[k]};
+                conflict.push(obj1);
               }
             }
           }
-
-          if(conflict.length !== 0){
-            setSlotErr(true);
-            setConflictSlots(conflict);
-            return;
+        }
+      }else {
+        for(var x=0; x<val[daysOfWeek[dayIndex]].slots?.length; x++){
+          if(moment(fromTime, 'hh:mm:ss').isSameOrAfter(moment(val[daysOfWeek[dayIndex]]?.slots[x]?.startTime, 'hh:mm:ss')) && moment(fromTime, 'hh:mm:ss').isBefore(moment(val[daysOfWeek[dayIndex]].slots[x].endTime, 'hh:mm:ss'))){
+            const slotDate = {date: moment().format("YYYY-MM-DD")};
+            const obj1: any = {...slotDate, ...val[daysOfWeek[dayIndex]].slots[x]};
+            conflict.push(obj1);
           }
         }
-        var obj1: any = {};
-          obj1 = {
-            id: getRandomId(10),
-            startTime: fromTime,
-            endTime: toTime,
-            mode: classMode,
-          };
-          val[daysOfWeek[dayIndex]].slots.push(obj1);
-          setUserConfig(val);
-          setDayIndex(dayIndex);
-          setFromTime("00:00");
-          setToTime("00:00");
       }
     }
+    if(conflict.length !== 0){
+      setSlotErr(true);
+      setConflictSlots(conflict);
+      return;
+    }
+    var obj1: any = {};
+    obj1 = {
+      id: getRandomId(10),
+      startTime: fromTime,
+      endTime: toTime,
+      mode: classMode,
+    };
+    val[daysOfWeek[dayIndex]].slots.push(obj1);
+    setUserConfig(val);
+    setDayIndex(dayIndex);
+    setFromTime("00:00");
+    setToTime("00:00");
+    return;
   }
-
-  const [createChangeMakerHoliday] = useMutation(CREATE_CHANGEMAKER_AVAILABILITY_HOLIDAY);
 
   function handleAddHoliday(date: any, event: any) {
     const values = allChangeMakerHolidays.find((item: any) => item.date === date);
     if(values){
       if(values.booking_slots.length > 0){
         // set a modal to display the error
-        setErrModal(true);
+        setHolidayConflicts([values]);
+        setHolidayErr(true);
       }
     }else {
       createChangeMakerHoliday({
@@ -501,6 +576,14 @@ const WorkHours = () => {
 
     setDesc("");
     setDate(moment().format("YYYY-MM-DD"));
+  }
+
+  function handleDeleteHoliday(event: any){
+    deleteChangemakerAvailabilityHoliday({
+      variables: {
+        id: event[0].id
+      }
+    });
   }
 
   function handleCustomDates(data: any, date: any) {
@@ -518,10 +601,74 @@ const WorkHours = () => {
     setDate(moment().format("YYYY-MM-DD"));
   }
 
+  function handleUserConfigSubmit(newConfig: any){
+
+    const range = moment(endDate).diff(moment(startDate), "days");
+
+    for(var i=0; i<daysOfWeek.length; i++){
+      if(newConfig[daysOfWeek[i]].isHoliday === false && newConfig[daysOfWeek[i]].slots.length === 0){
+        continue;
+      }else if(newConfig[daysOfWeek[i]].isHoliday === true) {
+        for(var j=0; j<range; j++){
+          if(moment(startDate).add(j, "days").format('dddd') === daysOfWeek[i]){
+            /* eslint-disable */
+            const obj = slotsValidation.changemakerAvailabilties.filter((item: any) => moment(item.date).format('dddd') === moment(startDate).add(j, "days").format('dddd'));
+            if(obj.length > 0){
+              for(var x = 0; x < obj.length; x++){
+                updateChangemakerAvailabilityHoliday({
+                  variables: {
+                    id: obj[x].id,
+                    title: newConfig[daysOfWeek[i]].desc
+                  }
+                });
+              }
+            }else {
+              createChangeMakerHoliday({
+                variables: {
+                  date: `${moment(startDate).add(j, "days").format("YYYY-MM-DD")}`,
+                  description: newConfig[daysOfWeek[i]].desc,
+                  users_permissions_user: auth.userid,
+                },
+              });
+            }
+          }
+        }
+      }else {
+        for(var k=0; k<range; k++){
+          if(moment(startDate).add(k, "days").format('dddd') === daysOfWeek[i]){
+            /* eslint-disable */
+            const obj = slotsValidation.changemakerAvailabilties.filter((item: any) => moment(item.date).format('dddd') === moment(startDate).add(j, "days").format('dddd'));
+            if(obj.length > 0){
+              for(var y = 0; y < obj.length; y++){
+                const oldSlots = [...obj[y].booking_slots];
+                const newSlots = [...oldSlots, ...newConfig[daysOfWeek[i]].slots];
+                updateChangemakerAvailabilityWorkHour({
+                  variables: {id: obj[y].id, slots: newSlots}
+                });
+              }
+            }else {
+              createChangemakerAvailabilityWorkHour({
+                variables: {
+                  date: `${moment(startDate).add(k, "days").format("YYYY-MM-DD")}`,
+                  slots: newConfig[daysOfWeek[i]].slots,
+                  id: auth.userid,
+                }
+              });
+            }
+          }
+        }
+      }
+    }
+    setShowDaysModal(false);
+  }
+
   if (!show)
     return (
-      <div className="mt-2" style={{ color: "red" }}>
-        Loading....
+      <div className="text-center mt-5">
+        <Spinner animation="border" variant="danger" />
+        <h5 className="mt-5">
+          <b>Please wait while we load your Schedule...</b>
+        </h5>
       </div>
     );
   else
@@ -580,7 +727,7 @@ const WorkHours = () => {
         >
           <Row style={{ borderBottom: "3px solid gray" }}>
             <Col lg={4}>
-              <h5>Calender</h5>
+              <h5>Calendar</h5>
             </Col>
             <Col lg={5}>
               <h5>Slots</h5>
@@ -597,7 +744,7 @@ const WorkHours = () => {
               <Row style={{ justifyContent: "center" }}>
                 <Calendar
                   className="disabled"
-                  tileDisabled={tileDisabled}
+                  tileClassName={tileContent}
                   onChange={onChange}
                   onActiveStartDateChange={({ action }) => {
                     action === "next"
@@ -605,6 +752,8 @@ const WorkHours = () => {
                       : setMonth(month - 1);
                   }}
                   value={value}
+                  minDate={moment().startOf('month').toDate()}
+                  maxDate={moment().add(2, 'months').toDate()}
                   maxDetail="month"
                   minDetail="month"
                   next2Label={null}
@@ -613,6 +762,8 @@ const WorkHours = () => {
               </Row>
             </Col>
             <Col lg={8}>
+              {slots?.length === 0 && holidays[0]?.Is_Holiday === false && <div>You have nothing assigned for today</div>}
+              {holidays[0]?.date === moment().format("YYYY-MM-DD") && holidays[0]?.Is_Holiday === true && <div>You have marked today as a holiday</div>}
               <div
                 style={{
                   maxHeight: "300px",
@@ -701,14 +852,14 @@ const WorkHours = () => {
                 />
                 </Form>
             </Col>
-          <Col lg={{ span: 2, offset: 2 }}>
-            <input
+          <Col lg={{ span: 1, offset: 2 }}>
+            {/* <input
               type="date"
               value={date}
               className="p-1 shadow-lg"
               style={{ border: "1px solid gray", borderRadius: "10px" }}
               onChange={(e) => setDate(e.target.value)}
-            />
+            /> */}
           </Col>
           <Col lg={5} className="pl-0 pr-0">
             <input
@@ -723,8 +874,9 @@ const WorkHours = () => {
                 borderRadius: "10px",
               }}
             ></input>
+            <span className="text-start"><b>Enter holiday Description above</b></span>
           </Col>
-          <Col lg={1}>
+          {!holidayCheckState && <Col lg={2}>
             <Button
               className="pl-3 pr-3 pt-1 pb-1 shadow-lg"
               disabled={desc === "" ? true : false}
@@ -735,9 +887,23 @@ const WorkHours = () => {
                 handleToast();
               }}
             >
-              Add
+              Set Holiday
             </Button>
-          </Col>
+          </Col>}
+          {holidayCheckState && <Col lg={2}>
+            <Button
+              className="pl-3 pr-3 pt-1 pb-1 shadow-lg"
+              disabled={desc === "" ? true : false}
+              style={{ borderRadius: "10px" }}
+              variant="danger"
+              onClick={() => {
+                handleDeleteHoliday(holidays);
+                handleDeleteToast();
+              }}
+            >
+              Delete Holiday
+            </Button>
+          </Col>}
         </Row>}
           {!checkState && <Row className="mt-3 mb-3">
             <Col>
@@ -752,13 +918,13 @@ const WorkHours = () => {
                 </Form>
             </Col>
           <Col lg={{ span: 2 }}>
-            <input
+            {/* <input
               type="date"
               value={date}
               className="p-1 shadow-lg"
               style={{ border: "1px solid gray", borderRadius: "10px" }}
               onChange={(e) => setDate(e.target.value)}
-            />
+            /> */}
           </Col>
             <Col lg={{ span: 5 }}>
               <Row>
@@ -802,6 +968,16 @@ const WorkHours = () => {
               </Button>
             </Col>
           </Row>}
+          <Row>
+            <Col lg={{ span: 8, offset: 4 }}>
+              <div
+                className="mt-2"
+                style={{ display: `${deleteToast ? "block" : "none"}` }}
+              >
+                <Alert variant={"danger"}>Holiday Has Been Deleted.</Alert>
+              </div>
+            </Col>
+          </Row>
           <Row>
             <Col lg={{ span: 8, offset: 4 }}>
               <div
@@ -1104,6 +1280,7 @@ const WorkHours = () => {
                 variant="success"
                 onClick={() => {
                   // handleCheckBoxes();
+                  handleUserConfigSubmit(userConfig);
                 }}
               >
                 Save
@@ -1207,6 +1384,77 @@ const WorkHours = () => {
           </Modal.Footer>
         </Modal>
       }
+      {
+        <Modal
+          size="lg"
+          aria-labelledby="contained-modal-title-vcenter"
+          show={workHourErr}
+          centered
+        >
+          <Modal.Header
+            closeButton
+            onHide={() => {
+              setWorkHourErr(false);
+            }}
+          >
+            <Modal.Title id="contained-modal-title-vcenter">
+              You cannot assign work hour for the date: {workHourConflict?.date} as you have marked every {moment(workHourConflict?.date).format("dddd")} as a holiday.
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Footer>
+            <Button
+              variant="success"
+              onClick={() => {
+                setWorkHourErr(false);
+              }}
+            >
+              Close
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      }
+      {
+        <Modal
+          size="lg"
+          aria-labelledby="contained-modal-title-vcenter"
+          show={holidayErr}
+          centered
+        >
+          <Modal.Header
+            closeButton
+            onHide={() => {
+              setHolidayErr(false);
+            }}
+          >
+            <Modal.Title id="contained-modal-title-vcenter">
+              You cannot mark this day as a holiday as you have slots assigned <br /> 
+              on the following days:
+              <table>
+                <tr>
+                  <th className="pl-3 pr-3">Date </th>
+                </tr>
+                {holidayConflics?.map((slot, index) => {
+                  return (
+                    <tr key={index}>
+                      <td className="pl-3 pr-3">{moment(slot.date).format("DD MMM, YYYY")}</td>
+                    </tr>
+                  )
+                })}
+              </table>
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Footer>
+            <Button
+              variant="success"
+              onClick={() => {
+                setHolidayErr(false);
+              }}
+            >
+              Close
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      }
        {
         <Modal
           size="lg"
@@ -1225,6 +1473,7 @@ const WorkHours = () => {
               The Following slots are:
               <table>
                 <tr>
+                  <th className="pl-3 pr-3">Date </th>
                   <th className="pl-3 pr-3">From </th>
                   <th className="pl-3 pr-3">To </th>
                   <th className="pl-3 pr-3">Mode </th>
@@ -1232,6 +1481,7 @@ const WorkHours = () => {
                 {conflictSlots?.map((slot, index) => {
                   return (
                     <tr key={index}>
+                      <td className="pl-3 pr-3">{moment(slot.date).format("DD MMM, YYYY")}</td>
                       <td className="pl-3 pr-3">{slot.startTime}</td>
                       <td className="pl-3 pr-3">{slot.endTime}</td>
                       <td className="pl-3 pr-3">{slot.mode}</td>
@@ -1246,7 +1496,11 @@ const WorkHours = () => {
               variant="success"
               onClick={() => {
                 setSlotErr(false);
+                setUserConfig(userConfig);
                 setConflictSlots([]);
+                setFromTime("00:00");
+                setToTime("00:00");
+                setDayIndex(dayIndex);
               }}
             >
               Close

@@ -139,3 +139,15 @@ export const UPDATE_CHANGEMAKER_AVAILABILITY_WORKHOURS = gql`
     }
   }
 `
+
+export const UPDATE_CHANGEMAKER_AVAILABILITY_HOLIDAY = gql`
+mutation updateCHageMakerAvailabilityWorkHour($id: ID!, $title: String){
+  updateChangemakerAvailabilty(id: $id, data:{
+    holiday_title: $title
+  }){
+    data{
+      id
+    }
+  }
+}
+`

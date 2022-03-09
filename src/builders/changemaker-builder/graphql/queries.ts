@@ -180,14 +180,14 @@ export const GET_USER_WEEKLY_CONFIG = gql`
 `;
 
 export const GET_ALL_CHANGEMAKER_AVAILABILITY = gql`
-  query getAllChangeMakerAvailabilityHolidays($id: ID!) {
+  query getAllChangeMakerAvailabilityHolidays($id: ID!, $limit: Int) {
     changemakerAvailabilties(filters: {
       users_permissions_user: {
         id: {
           eq: $id
         }
       }
-    }){
+    }, pagination: {pageSize: $limit}){
       data{
         id
         attributes{

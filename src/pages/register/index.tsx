@@ -2,6 +2,11 @@ import { useRef, useState } from "react";
 import { withTheme } from "@rjsf/core";
 import { Theme as Bootstrap4Theme } from '@rjsf/bootstrap-4';
 import { Button, Carousel, Col, Container, Modal, ProgressBar, Row } from "react-bootstrap";
+import SocialLogin from "./SocialLogin";
+import ChangeMakerSelect from '../../components/customWidgets/changeMakerList';
+import LanguageSelect from '../../components/customWidgets/languagesList';
+import OrganizationSelect from '../../components/customWidgets/organizationTypeList';
+import LocationForm from './Location';
 
 export default function Register() {
     const registerSchema: any = require("./register.json");
@@ -24,6 +29,27 @@ export default function Register() {
                 "inline": true
             }
         },
+        "changemaker" : {
+            "specialist": {
+                "ui:widget": (props) => {
+                    return <ChangeMakerSelect {...props} />
+                }
+            },
+        },
+        "language": {
+            "ui:widget": (props) => {
+                return <LanguageSelect {...props} />
+            }
+        },
+        "education": {
+            "ui:options": {
+                "orderable": false
+            },
+            "items": {
+              "ui:emptyValue": "",
+              "ui:placeholder": "e.g. Masters in Yoga Therapy",
+            }
+          },
         "contact": {
             "ui:options": {
                 "inputType": "tel"
@@ -32,13 +58,26 @@ export default function Register() {
         "specification": {
             "ui:placeholder": "e.g. Yoga Trainer or General Physician"
         },
-        "education": {
-            "ui:placeholder": "e.g. Masters in Yoga Therapy"
-        },
-        "about": {
+        "aboutMe": {
             "ui:widget": "textarea",
             "ui:options": {
                 "rows": 3
+            }
+        },
+        "multipleChoicesList": {
+            "ui:widget": "checkboxes"
+        },
+        "organization": {
+            "ui:widget": "radio",
+        },
+        "organizationType": {
+            "ui:widget": (props) => {
+                return <OrganizationSelect {...props} />
+            }
+        },
+        "location": {
+            "ui:widget": (props) => {
+                return <LocationForm {...props} />
             }
         },
         "challenge": {
@@ -48,11 +87,16 @@ export default function Register() {
                 "rows": 3
             }
         },
-        "message": {
+        "aboutOrganization": {
             "ui:widget": "textarea",
             "ui:placeholder": "Anything that you want us to know!",
             "ui:options": {
                 "rows": 3
+            }
+        },
+        "socialLogins": {
+            "ui:widget": (props) => {
+                return <SocialLogin {...props} />
             }
         }
     }
@@ -66,6 +110,13 @@ export default function Register() {
         } else {
             console.log("Values submitted: " + JSON.stringify(formValues, null, 2));
         }
+    }
+
+    function validate(formData, errors) {
+        if (formData.password !== formData.confirm) {
+            errors.confirm.addError("Passwords don't match");
+        }
+        return errors;
     }
 
     return (
@@ -121,6 +172,7 @@ export default function Register() {
                                 uiSchema={uiSchema}
                                 schema={registerSchema[step]}
                                 ref={formRef}
+                                validate={validate}
                                 onSubmit={({ formData }: any) => submitHandler(formData)}
                                 formData={formValues}
                             >
@@ -157,61 +209,65 @@ export default function Register() {
                 <Carousel ref={carouselRef} interval={600000} indicators={false} fade={true} controls={false}>
                     <Carousel.Item>
                         <img
-                            src="/assets/register-1.png"
-                            height="545px"
+                            src="/assets/step-1.svg"
+                            // style={{ height: "90vh" }}
+                            height="700px"
                             className="d-block w-100"
                             alt="sapien-exercise"
                         />
-                        <Carousel.Caption>
+                        {/* <Carousel.Caption>
                             <h3>Get Early Access</h3>
                             <p>
                                 You will be able to try the BETA, get our constant support and
                                 guidance on your journey.
                             </p>
                             <p className="text-white blockquote-footer">No String Attached</p>
-                        </Carousel.Caption>
+                        </Carousel.Caption> */}
                     </Carousel.Item>
                     <Carousel.Item>
                         <img
-                            src="/assets/register-1.png"
-                            height="545px"
+                            src="/assets/step-2.svg"
+                            // style={{ height: "90vh" }}
+                            height="700px"
                             className="d-block w-100"
                             alt="sapien-exercise"
                         />
-                        <Carousel.Caption>
+                        {/* <Carousel.Caption>
                             <h3>Embark on your journey</h3>
                             <p>In a gentle way, you can shake the world.</p>
                             <p className="text-white blockquote-footer">Mahatma Gandhi</p>
-                        </Carousel.Caption>
+                        </Carousel.Caption> */}
                     </Carousel.Item>
                     <Carousel.Item>
                         <img
-                            src="/assets/register-1.png"
-                            height="545px"
+                            src="/assets/step-3.svg"
+                            // style={{ height: "90vh" }}
+                            height="700px"
                             className="d-block w-100"
                             alt="sapien-exercise"
                         />
-                        <Carousel.Caption>
+                        {/* <Carousel.Caption>
                             <h3>We got your back</h3>
                             <p>
                                 The greatest glory in living lies not in never falling,
                                 but in rising every time we fall.
                             </p>
                             <p className="text-white blockquote-footer">Nelson Mandela</p>
-                        </Carousel.Caption>
+                        </Carousel.Caption> */}
                     </Carousel.Item>
                     <Carousel.Item>
                         <img
-                            src="/assets/register-1.png"
-                            height="545px"
+                            src="/assets/step-4.svg"
+                            // style={{ height: "90vh" }}
+                            height="700px"
                             className="d-block w-100"
                             alt="sapien-exercise"
                         />
-                        <Carousel.Caption>
+                        {/* <Carousel.Caption>
                             <h3>#BeAChangemaker</h3>
                             <p>You must be the change you wish to see in the world.</p>
                             <p className="text-white blockquote-footer">Mahatma Gandhi</p>
-                        </Carousel.Caption>
+                        </Carousel.Caption> */}
                     </Carousel.Item>
                 </Carousel>
             </Col>

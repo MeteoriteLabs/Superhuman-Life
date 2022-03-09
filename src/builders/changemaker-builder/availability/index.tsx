@@ -1,7 +1,6 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
-import {Tabs, Tab, Card} from 'react-bootstrap';
-import Holidays from './holidays/holidays';
+import {Card} from 'react-bootstrap';
 import WorkHours from './workHours/workHours';
 
 const Availability = () => {
@@ -15,14 +14,7 @@ const Availability = () => {
             </div>
             <Card className="shadow-sm mt-3" border="light">
                 <Card.Body>
-                    <Tabs variant="pills" transition={false} defaultActiveKey="workHours">
-                        <Tab eventKey="workHours" title="Work Hours" >
-                            <WorkHours />
-                        </Tab>
-                        <Tab eventKey="holidays" title="Holidays">
-                            <Holidays />
-                        </Tab>
-                    </Tabs>
+                    <WorkHours />
                 </Card.Body>
             </Card>
         </>

@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import { Modal, Button, Row, Col, Tab, Tabs, InputGroup, FormControl, Badge, OverlayTrigger, Tooltip, Form } from 'react-bootstrap';
 import './styles.css';
-import { GET_SCHEDULEREVENTS, PROGRAM_EVENTS, UPDATE_FITNESSPROGRAMS, FETCH_WORKOUT, FETCH_ACTIVITY } from './queries';
+import { GET_SCHEDULEREVENTS, PROGRAM_EVENTS, UPDATE_FITNESSPROGRAMS, FETCH_WORKOUT, FETCH_ACTIVITY, GET_SLOTS_TO_CHECK, UPDATE_CHANGEMAKER_AVAILABILITY_WORKHOURS } from './queries';
 import { useQuery, useMutation } from "@apollo/client";
 import ProgramList from "../../../components/customWidgets/programList";
 import FloatingButton from './FloatingButtons';
@@ -12,9 +12,11 @@ import ReplaceWorkout from './create-edit/replaceWorkout';
 import DaysInput from './daysInput';
 import moment from 'moment';
 import { flattenObj } from '../../../components/utils/responseFlatten';
+import AuthContext from '../../../context/auth-context';
 
 const Schedular = (props: any) => {
 
+    const auth = useContext(AuthContext);
     const [show, setShow] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [onDragAndDrop, setOnDragAndDrop] = useState(false);
@@ -30,6 +32,7 @@ const Schedular = (props: any) => {
     const [tag, setTag] = useState("");
     const program_id = window.location.pathname.split('/').pop();
     const schedulerDay: any = require("./json/scheduler-day.json");
+    const [changeMakerAvailability, setChangeMakerAvailability] = useState<any>([]);
 
     function handleEndTime(startTime: any, endTime: any){
         var timeStart: any = new Date("01/01/2007 " + handleTimeFormat(startTime));
@@ -157,6 +160,7 @@ const Schedular = (props: any) => {
     const dates: string[] = [];
     const min: number[] = [0, 15, 30, 45];
 
+    
     function handleDays() {
         if(props.type === 'day'){
             for (var i = 1; i <= props.days; i++) {
@@ -178,7 +182,7 @@ const Schedular = (props: any) => {
             }
         }
     }
-
+    
     handleDays();
     Fetchdata({ id: props.programId });
 
@@ -238,6 +242,7 @@ const Schedular = (props: any) => {
     FetchProgramEvents({ id: program_id });
 
     const [updateProgram] = useMutation(UPDATE_FITNESSPROGRAMS);
+    const [updateChangeMakerAvailability] = useMutation(UPDATE_CHANGEMAKER_AVAILABILITY_WORKHOURS);
 
     var changedTime: any;
     function handleTimeChange(e: any) {
@@ -251,6 +256,14 @@ const Schedular = (props: any) => {
         let timeString = (parseInt(hours) < 10 && parseInt(hours) !== 0 ? "0" + hours : hours) + ':' + (parseInt(minutes) === 0 ? "0" + minutes : minutes);
         return timeString.toString();
     }
+
+    useQuery(GET_SLOTS_TO_CHECK, {
+        variables: { id: auth.userid, dateUpperLimit: moment(dates[0]).format("YYYY-MM-DD"), dateLowerLimit: moment(dates[dates.length - 1]).format("YYYY-MM-DD") },
+        onCompleted: (r: any) => {
+            const flattenData = flattenObj({...r});
+            setChangeMakerAvailability(flattenData);
+        }
+    });
 
     const [duplicatedDay, setDuplicatedDay] = useState<any>([]);
 
@@ -293,13 +306,31 @@ const Schedular = (props: any) => {
             }
         }
 
+        const addedEventDate = dates[(duplicatedDay.length === 0 ? e.day : parseInt(duplicatedDay[0].day.substr(4))) - 1];
+        const availability = changeMakerAvailability.changemakerAvailabilties.find((x: any) => moment(x.date).format('YYYY-MM-DD') === moment(addedEventDate).format('YYYY-MM-DD'));
+        const availabilitySlots = availability ? [...availability.booking_slots] : [];
+        if(availabilitySlots.length > 0){
+            for(var x=0; x< availabilitySlots.length; x++){
+                if(moment(newEvent.endTime, 'hh:mm:ss').isSameOrAfter(moment(availabilitySlots[x].startTime, 'hh:mm:ss')) && moment(newEvent.endTime, 'hh:mm:ss').isBefore(moment(availabilitySlots[x].endTime, 'hh:mm:ss'))){
+                    availabilitySlots.splice(x, 1);
+                    break;
+                }
+            }
+            updateChangeMakerAvailability({
+                variables: {
+                    id: availability.id,
+                    slots: availabilitySlots
+                }
+            });
+        }
+
         updateProgram({
             variables: {
                 programid: program_id,
                 events: values, 
                 renewal_dt: lastEventDay
             }
-        })
+        });
         setEvent({});
     }
 
@@ -384,6 +415,24 @@ const Schedular = (props: any) => {
                 lastEventDay = parseInt(existingValues[m].day);
             }
         }
+
+        const addedEventDate = dates[(duplicatedDay.length === 0 ? e.day : parseInt(duplicatedDay[0].day.substr(4))) - 1];
+        const availability = changeMakerAvailability.changemakerAvailabilties.find((x: any) => moment(x.date).format('YYYY-MM-DD') === moment(addedEventDate).format('YYYY-MM-DD'));
+        const availabilitySlots = availability ? [...availability.booking_slots] : [];
+        if(availabilitySlots.length > 0){
+            for(var x=0; x< availabilitySlots.length; x++){
+                if(moment(newEvent.endTime, 'hh:mm:ss').isSameOrAfter(moment(availabilitySlots[x].startTime, 'hh:mm:ss')) && moment(newEvent.endTime, 'hh:mm:ss').isBefore(moment(availabilitySlots[x].endTime, 'hh:mm:ss'))){
+                    availabilitySlots.splice(x, 1);
+                    break;
+                }
+            }
+            updateChangeMakerAvailability({
+                variables: {
+                    id: availability.id,
+                    slots: availabilitySlots
+                }
+            });
+        }
         
         updateProgram({
             variables: {
@@ -444,6 +493,24 @@ const Schedular = (props: any) => {
                     if(values[k].day > lastEventDay){
                         lastEventDay = parseInt(values[k].day);
                     }
+                }
+
+                const addedEventDate = dates[(duplicatedDay.length === 0 ? e.day : parseInt(duplicatedDay[0].day.substr(4))) - 1];
+                const availability = changeMakerAvailability.changemakerAvailabilties.find((x: any) => moment(x.date).format('YYYY-MM-DD') === moment(addedEventDate).format('YYYY-MM-DD'));
+                const availabilitySlots = availability ? [...availability.booking_slots] : [];
+                if(availabilitySlots.length > 0){
+                    for(var x=0; x< availabilitySlots.length; x++){
+                        if(moment(newEvent.endTime, 'hh:mm:ss').isSameOrAfter(moment(availabilitySlots[x].startTime, 'hh:mm:ss')) && moment(newEvent.endTime, 'hh:mm:ss').isBefore(moment(availabilitySlots[x].endTime, 'hh:mm:ss'))){
+                            availabilitySlots.splice(x, 1);
+                            break;
+                        }
+                    }
+                    updateChangeMakerAvailability({
+                        variables: {
+                            id: availability.id,
+                            slots: availabilitySlots
+                        }
+                    });
                 }
     
                 updateProgram({
@@ -697,6 +764,24 @@ const Schedular = (props: any) => {
             if(existingValues[m].day > lastEventDay){
                 lastEventDay = parseInt(existingValues[m].day);
             }
+        }
+
+        const addedEventDate = dates[arr2.d - 1];
+        const availability = changeMakerAvailability.changemakerAvailabilties.find((x: any) => moment(x.date).format('YYYY-MM-DD') === moment(addedEventDate).format('YYYY-MM-DD'));
+        const availabilitySlots = availability ? [...availability.booking_slots] : [];
+        if(availabilitySlots.length > 0){
+            for(var x=0; x< availabilitySlots.length; x++){
+                if(moment(newEvent.endTime, 'hh:mm:ss').isSameOrAfter(moment(availabilitySlots[x].startTime, 'hh:mm:ss')) && moment(newEvent.endTime, 'hh:mm:ss').isBefore(moment(availabilitySlots[x].endTime, 'hh:mm:ss'))){
+                    availabilitySlots.splice(x, 1);
+                    break;
+                }
+            }
+            updateChangeMakerAvailability({
+                variables: {
+                    id: availability.id,
+                    slots: availabilitySlots
+                }
+            });
         }
 
         updateProgram({

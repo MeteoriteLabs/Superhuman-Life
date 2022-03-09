@@ -202,3 +202,16 @@ export const GET_SAPIENT_PRICES = gql`
     }
   }
 `;
+
+export const GET_FITNESS_PACKAGE_TYPE = gql`
+  query fitnessPackageType {
+    fitnessPackageTypes{
+      data{
+        id
+        attributes{
+          type
+        }
+      }
+    }
+  }
+`
