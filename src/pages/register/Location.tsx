@@ -21,7 +21,7 @@ const LocationForm = (props: any) => {
             <Form>
             <Form.Group controlId="formBasicEmail">
                 <Form.Label>Address 1</Form.Label>
-                <Form.Control type="text" placeholder="enter address 1" />
+                <Form.Control type="text" onChange={(e) => {props.onChange(e.target.value)}} placeholder="enter address 1" />
             </Form.Group>
             <Form.Group controlId="formBasicEmail">
                 <Form.Label>Address 2</Form.Label>

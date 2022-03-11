@@ -18,7 +18,6 @@ const MultiSelect = (props: any) => {
   
      function loadData(data: any) {
           const flattenedData = flattenObj({...data});
-          console.log(flattenedData);
           setOrg(
               [...flattenedData.organizationTypes].map((orgType) => {
                   return {

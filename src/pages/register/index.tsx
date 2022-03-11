@@ -6,7 +6,11 @@ import SocialLogin from "./SocialLogin";
 import ChangeMakerSelect from '../../components/customWidgets/changeMakerList';
 import LanguageSelect from '../../components/customWidgets/languagesList';
 import OrganizationSelect from '../../components/customWidgets/organizationTypeList';
-import LocationForm from './Location';
+import { useMutation } from '@apollo/client';
+import { CREATE_USER, CREATE_ADDRESS, CREATE_ORGANIZATION, CREATE_EDUCATION_DETAIL} from './mutations';
+// import LocationForm from './Location';
+import EmailForm from './email';
+import UserNameForm from './userName';
 
 export default function Register() {
     const registerSchema: any = require("./register.json");
@@ -15,7 +19,20 @@ export default function Register() {
     const carouselRef = useRef<any>(null);
     const [step, setStep] = useState<number>(1);
     const [formValues, setFormValues] = useState<any>({});
+    const [userFormData, setUserFormData] = useState<any>([]);
+    const [successScreen, setSuccessScreen] = useState(false);
+
     const uiSchema: any = {
+        "email": {
+            "ui:widget": (props) => {
+                return <EmailForm {...props} />
+            },
+        },
+        "userName": {
+            "ui:widget": (props) => {
+                return <UserNameForm {...props} />
+            }
+        },
         "password": {
             "ui:widget": "password",
             "ui:help": "Hint: Make it strong! minimum password length should be 8."
@@ -75,11 +92,11 @@ export default function Register() {
                 return <OrganizationSelect {...props} />
             }
         },
-        "location": {
-            "ui:widget": (props) => {
-                return <LocationForm {...props} />
-            }
-        },
+        // "location": {
+        //     "ui:widget": (props) => {
+        //         return <LocationForm {...props} />
+        //     }
+        // },
         "challenge": {
             "ui:widget": "textarea",
             "ui:placeholder": "Try to explain the challenges you are facing (if any)",
@@ -101,26 +118,112 @@ export default function Register() {
         }
     }
 
+    const [newUserId, setNewUserId] = useState('');
+
+    const [createUser] = useMutation(CREATE_USER, {
+        onCompleted: (data: any) => {
+            console.log(data);
+            setNewUserId(data.createUsersPermissionsUser.data.id);
+            createOrganization({
+                variables: {
+                    Organization_Name: userFormData.organizationName,
+                    organization_type: userFormData.organizationType,
+                    Organization_description: userFormData.aboutOrganization,
+                    users: [data.createUsersPermissionsUser.data.id]
+                }
+            })
+        }
+    });
+    const [createOrganization] = useMutation(CREATE_ORGANIZATION, {onCompleted: (data: any) => {
+        console.log(data);
+        createAddress({
+            variables: {
+                address1: userFormData.address1,
+                address2: userFormData.address2,
+                city: userFormData.city,
+                state: userFormData.state,
+                zipcode: userFormData.zip,
+                country: userFormData.country,
+                Title: userFormData.title,
+                user: newUserId
+            }
+        });
+    }});
+
+    
+    const [createAddress] = useMutation(CREATE_ADDRESS, {onCompleted: (data: any) => {
+        console.log(data);
+        for(var i=0; i<userFormData.education.length; i++){
+            createEducationDetail({
+                variables: {
+                    Institute_Name: userFormData.education[i].instituteName,
+                    Type_of_degree: userFormData.education[i].typeOfDegree,
+                    Specialization: userFormData.education[i].specialization,
+                    year_of_passing: userFormData.education[i].yearOfPassing.toString(),
+                    user: newUserId
+                }
+            });
+        }
+    }});
+    const [createEducationDetail] = useMutation(CREATE_EDUCATION_DETAIL, {onCompleted: (data: any) => {
+        setSuccessScreen(true);
+    }});
+
+
     function submitHandler(formData: any) {
         if (step < 4) {
-            // console.log("Data submitted: ", formData);
+            console.log("Data submitted: ", formData);
             setStep(step + 1);
             carouselRef.current.next();
             setFormValues({ ...formValues, ...formData });
         } else {
-            console.log("Values submitted: " + JSON.stringify(formValues, null, 2));
+            // setFormValues({ ...formValues, ...formData });
+            const values = { ...formValues, ...formData };
+            setUserFormData(values);
+            console.log(values);
+            createUser({
+                variables: {
+                    fname: values.fname,
+                    lname: values.lname,
+                    email: values.email,
+                    password: values.password,
+                    phone: values.contact.toString(),
+                    uname: values.userName,
+                    dob: values.dob,
+                    gender: values.gender,
+                    about: values.aboutMe,
+                    module_permissions: values.multipleChoicesList,
+                    languages: values.language.split(",")
+                }
+            })
+            // console.log("Values submitted: " + JSON.stringify(formValues, null, 2));
         }
     }
 
-    function validate(formData, errors) {
+    function Validate(formData, errors) {
+        var ele = document.getElementsByClassName("invalidEmail");
+        var ele2 = document.getElementsByClassName("invalidUname")
+        if(formData.email) {
+            if(ele.length !== 0){
+                errors.email.addError('Please enter a valid email address');
+            }
+        }
+        if(formData.userName){
+            if(ele2.length !== 0){
+                errors.userName.addError('Please enter some other username');
+            }
+        }
         if (formData.password !== formData.confirm) {
             errors.confirm.addError("Passwords don't match");
         }
         return errors;
     }
 
+
     return (
-        <Row noGutters>
+        <>
+        {successScreen && <div className="text-center">Your Sign up was successfull! we have sent you an email for verification.</div>}
+        {!successScreen && <Row noGutters>
             {/* <Helmet>
                 <meta charSet="utf-8" />
                 <title>Sapien Dashboard | Register</title>
@@ -172,9 +275,10 @@ export default function Register() {
                                 uiSchema={uiSchema}
                                 schema={registerSchema[step]}
                                 ref={formRef}
-                                validate={validate}
+                                validate={Validate}
                                 onSubmit={({ formData }: any) => submitHandler(formData)}
                                 formData={formValues}
+                                // onChange={HandleChange}
                             >
                                 <div></div>
                             </Form>
@@ -271,6 +375,7 @@ export default function Register() {
                     </Carousel.Item>
                 </Carousel>
             </Col>
-        </Row>
+        </Row>}
+        </>
     );
 }
