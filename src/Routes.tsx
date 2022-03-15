@@ -14,6 +14,7 @@ const ChatPage = React.lazy(() => import("./pages/chat"));
 
 const HomePage = React.lazy(() => import("./pages/home"));
 const LoginPage = React.lazy(() => import("./pages/login"));
+const ForgotPasswordPage = React.lazy(() => import("./pages/forgotPassword"));
 const ProfilePage = React.lazy(() => import("./pages/profile"));
 const RegisterPage = React.lazy(() => import("./pages/register"));
 const SchedulePage = React.lazy(() => import("./pages/schedule"));
@@ -94,6 +95,7 @@ export default function Routes({ token }: any) {
                                    <Redirect exact from="/" to="/login" />
                                    <Redirect exact from="/home" to="/login" />
                                    <Route path="/login" component={LoginPage} />
+                                   <Route path="/forgot-password" component={ForgotPasswordPage} />
                                    <Route path="/register" component={RegisterPage} />
                                    <Route path="/about" component={AboutPage} />
                                    <Route path="/contact" component={ContactPage} />

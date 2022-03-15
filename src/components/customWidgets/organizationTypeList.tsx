@@ -46,7 +46,6 @@ const MultiSelect = (props: any) => {
                options={org}
                placeholder="Select type..."
                selected={multiSelections}
-               multiple
                />
           </div>
      )
