@@ -6,6 +6,7 @@ import AuthContext from "../../../context/auth-context";
 import CreateEditMessage from "./createoredit-message";
 import ActionButton from "../../../components/actionbutton/index";
 import { GET_MESSAGES } from "./queries";
+import { flattenObj } from "../../../components/utils/responseFlatten";
 
 export default function MindsetPage() {
      const [searchFilter, setSearchFilter] = useState("");
@@ -79,14 +80,15 @@ export default function MindsetPage() {
      }
 
      function loadData(data: any) {
+          const flattenData = flattenObj({...data});
           setDataTable(
-               [...data.mindsetmessages].map((Detail) => {
+               [...flattenData.prerecordedMessages].map((Detail) => {
                     return {
                          id: Detail.id,
-                         title: Detail.title,
+                         title: Detail.Title,
                          tags: Detail.tags,
-                         type: Detail.mindsetmessagetype.type,
-                         minidesc: Detail.minidescription,
+                         type: Detail.resourcetype.name,
+                         minidesc: Detail.Description,
                          status: Detail.status ? "Active" : "Inactive",
                          updatedon: getDate(Date.parse(Detail.updatedAt)),
                     };

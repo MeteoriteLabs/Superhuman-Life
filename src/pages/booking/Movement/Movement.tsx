@@ -7,6 +7,7 @@ import BookingTable from '../../../components/table/BookingTable/BookingTable'
 import authContext from '../../../context/auth-context';
 import { GET_ALL_BOOKINGS } from '../GraphQL/queries';
 import BookingAction from './BookingAction'
+import { flattenObj } from '../../../components/utils/responseFlatten';
 
 export default function Movement(props) {
 
@@ -82,13 +83,15 @@ export default function Movement(props) {
 
     const loadData = (data: { clientBookings: any[]; }) => {
         let existingData = [...userPackage];
-        let newData = [...data.clientBookings.map(packageItem => {
+        const flattenData = flattenObj({...data});
+        console.log(flattenData);
+        let newData = [...flattenData.clientBookings.map(packageItem => {
             const renewDay: Date = new Date(packageItem.effective_date);
             renewDay.setDate(renewDay.getDate() + packageItem.package_duration);
             return {
                 id: packageItem.id,
                 booking_date: packageItem.booking_date,
-                client: packageItem.users_permissions_user.username,
+                client: packageItem.users_permissions_users[0].username,
                 packageName: packageItem.fitnesspackages[0].packagename,
                 fitness_package_type: packageItem.fitnesspackages[0].fitness_package_type.type,
                 effectiveDate: packageItem.effective_date,

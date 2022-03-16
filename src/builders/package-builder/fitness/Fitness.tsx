@@ -8,6 +8,7 @@ import ActionButton from "../../../components/actionbutton";
 
 import CreateEditView from "./CreateEditView";
 import { GET_FITNESS, GET_FITNESS_PACKAGE_TYPES } from "./graphQL/queries";
+import { flattenObj } from "../../../components/utils/responseFlatten";
 
 
 export default function FitnessTab(props) {
@@ -159,22 +160,24 @@ export default function FitnessTab(props) {
     }
 
     const loadData = (data: any) => {
-    console.log("🚀 ~ file: Fitness.tsx ~ line 155 ~ loadData ~ data", data)
+    // console.log("🚀 ~ file: Fitness.tsx ~ line 155 ~ loadData ~ data", data)
+        const flattenData = flattenObj({...data});
+        console.log(flattenData);
         setDataTable(
-            [...data.fitnesspackages].map(item => {
+            [...flattenData.fitnesspackages].map(item => {
                 return {
                     id: item.id,
                     packagename: item.packagename,
                     type: item.fitness_package_type.type,
                     details: [item.ptonline, item.ptoffline, item.grouponline, item.groupoffline, item.recordedclasses],
-                    duration: item.fitnesspackagepricing[0].packagepricing.map(i => i.duration),
-                    mrp: item.fitnesspackagepricing[0].packagepricing.map(i => i.mrp),
+                    duration: item.fitnesspackagepricing.map(i => i.duration),
+                    mrp: item.fitnesspackagepricing.map(i => i.mrp),
                     Status: item.Status ? "Active" : "Inactive",
                 }
             })
         )
-        setSelectedDuration(new Array(data.fitnesspackages.length).fill(0));
-        setCurrentIndex(new Array(data.fitnesspackages.length).fill(1))
+        setSelectedDuration(new Array(flattenData.fitnesspackages.length).fill(0));
+        setCurrentIndex(new Array(flattenData.fitnesspackages.length).fill(1))
     }
     FetchData()
 
@@ -216,7 +219,7 @@ export default function FitnessTab(props) {
                             >
                                 <i className="fas fa-plus-circle"></i>{" "}Custom
                             </Button>
-                            <CreateEditView packageType={data} ref={createEditViewRef}></CreateEditView>
+                            <CreateEditView packageType={flattenObj({...data})} ref={createEditViewRef}></CreateEditView>
                         </Card.Title>
                     </Col>
                 </Row>

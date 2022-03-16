@@ -8,6 +8,7 @@ import { GET_ALL_CLIENT_PACKAGE_BY_TYPE } from '../../graphQL/queries';
 import moment from 'moment';
 import ActionButton from '../../../../components/actionbutton';
 import FitnessAction from '../FitnessAction';
+import { flattenObj } from '../../../../components/utils/responseFlatten';
 
 export default function Custom(props) {
 
@@ -22,7 +23,7 @@ export default function Custom(props) {
         useQuery(GET_ALL_CLIENT_PACKAGE_BY_TYPE, {
             variables: {
                 id: auth.userid,
-                type: 'Custom Fitness',
+                type: 'Custom',
             },
             onCompleted: (data) => loadData(data)
         })
@@ -31,9 +32,9 @@ export default function Custom(props) {
 
 
     const loadData = (data) => {
-        // console.log('custom query data', data);
+        const flattenData = flattenObj({ ...data });
         setUserPackage(
-            [...data.userPackages].map((packageItem) => {
+            [...flattenData.clientPackages].map((packageItem) => {
                 let renewDay: any = '';
                 if (packageItem.fitnesspackages.length !== 0) {
                     renewDay = new Date(packageItem.effective_date);

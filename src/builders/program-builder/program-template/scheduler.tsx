@@ -11,6 +11,7 @@ import CreateoreditWorkout from '../workout/createoredit-workout';
 import ReplaceWorkout from './create-edit/replaceWorkout';
 import DaysInput from './daysInput';
 import moment from 'moment';
+import { flattenObj } from '../../../components/utils/responseFlatten';
 
 const Schedular = (props: any) => {
 
@@ -42,7 +43,8 @@ const Schedular = (props: any) => {
         variables: { id: arr2.event?.import !== 'importedEvent' ? event.id : arr2.event?.id },
         skip: (event.type !== "workout" && arr2.event?.import !== "importedEvent"),
         onCompleted: (r: any) => {
-            setData(r.workouts);
+            const flattenData = flattenObj({...r});
+            setData(flattenData.workouts);
             handleShow();
             if(arr2.event?.import === "importedEvent"){
                 setEvent({ 
@@ -65,7 +67,8 @@ const Schedular = (props: any) => {
         variables: { id: event.id },
         skip: (event.type !== "activity"),
         onCompleted: (r: any) => {
-            setData(r.activities);
+            const flattenData = flattenObj({...r});
+            setData(flattenData.activities);
             handleShow();
         }
     });
@@ -126,11 +129,12 @@ const Schedular = (props: any) => {
     }, 200)
 
     function handleRenderTable(data: any) {
+        const flattenData = flattenObj({...data});
         for (var d = 1; d <= props.days; d++) {
             arr[d] = JSON.parse(JSON.stringify(schedulerDay));
         }
-        if (data.fitnessprograms[0].events) {
-            data.fitnessprograms[0].events.forEach((val) => {
+        if (flattenData.fitnessprograms[0].events) {
+            flattenData.fitnessprograms[0].events.forEach((val) => {
                 var startTimeHour: any = `${val.startTime === undefined ? '0' : val.startTime.split(':')[0]}`;
                 var startTimeMinute: any = `${val.startTime === undefined ? '0' : val.startTime.split(':')[1]}`;
                 var endTimeHour: any = `${val.endTime === undefined ? '0' : val.endTime.split(':')[0]}`;
@@ -227,7 +231,8 @@ const Schedular = (props: any) => {
     }
 
     function loadProgramEvents(r: any) {
-        setCurrentProgram([...r.fitnessprograms[0].events] ? r.fitnessprograms[0].events : []);
+        const flattenData = flattenObj({...r});
+        setCurrentProgram([...flattenData.fitnessprograms[0].events] ? flattenData.fitnessprograms[0].events : []);
     }
 
     FetchProgramEvents({ id: program_id });

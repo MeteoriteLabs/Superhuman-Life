@@ -3,6 +3,7 @@ import { useQuery } from "@apollo/client";
 import { GET_TABLEDATA } from './queries';
 import { Row, Col } from 'react-bootstrap';
 import Schedular from './scheduler';
+import { flattenObj } from '../../../components/utils/responseFlatten';
 
 const ProgramManager = (props: any) => {
     const last = window.location.pathname.split('/').pop();
@@ -20,8 +21,9 @@ const ProgramManager = (props: any) => {
     }
 
     function loadData(data: any) {
+        const flattenData = flattenObj({...data});
         setData(
-            [...data.fitnessprograms].map((detail) => {
+            [...flattenData.fitnessprograms].map((detail) => {
                 return {
                     id: detail.id,
                     programName: detail.title,

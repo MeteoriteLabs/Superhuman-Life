@@ -10,6 +10,7 @@ import {Link} from 'react-router-dom';
 import '../Group/actionButton.css';
 
 import '../fitness.css';
+import { flattenObj } from '../../../../components/utils/responseFlatten';
 
 const Scheduler = () => {
 
@@ -44,7 +45,7 @@ const Scheduler = () => {
     const { data: data2 } = useQuery(GET_ALL_CLIENT_PACKAGE_BY_TYPE, {
         variables: {
             id: auth.userid,
-            type: 'Custom Fitness'
+            type: 'Custom'
         },
         onCompleted: () => loadData()
     });
@@ -85,8 +86,10 @@ const Scheduler = () => {
     }
 
     function loadData() {
+        const flattenData1 = flattenObj({...data1});
+        const flattenData2 = flattenObj({...data2});
         setData(
-            [...data1.fitnessprograms].map((detail) => {
+            [...flattenData1.fitnessprograms].map((detail) => {
                 return {
                     id: detail.id,
                     programName: detail.title,
@@ -103,7 +106,7 @@ const Scheduler = () => {
         )
 
         setUserPackage(
-            [...data2.userPackages].map((packageItem) => {
+            [...flattenData2.clientPackages].map((packageItem) => {
                 let renewDay: any = '';
                 if (packageItem.fitnesspackages.length !== 0) {
                     renewDay = new Date(packageItem.effective_date);

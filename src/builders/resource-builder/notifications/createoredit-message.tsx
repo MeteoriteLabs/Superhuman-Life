@@ -7,6 +7,8 @@ import { Subject } from "rxjs";
 import { schema } from "./schema";
 import ModalView from "../../../components/modal";
 
+import {flattenObj} from '../../../components/utils/responseFlatten';
+
 interface Operation {
      id: string;
      modal_status: boolean;
@@ -47,21 +49,23 @@ function CreateEditMessage(props: any, ref: any) {
      }));
 
      function loadData(data: any) {
-          messageSchema["1"].properties.prerecordedtype.enum = [...data.prerecordedtypes].map((n) => n.id);
-          messageSchema["1"].properties.prerecordedtype.enumNames = [...data.prerecordedtypes].map((n) => n.name);
-          messageSchema["1"].properties.prerecordedtrigger.enum = [...data.prerecordedtriggers].map((n) => n.id);
-          messageSchema["1"].properties.prerecordedtrigger.enumNames = [...data.prerecordedtriggers].map((n) => n.name);
+          const flattenData = flattenObj({...data});
+          messageSchema["1"].properties.prerecordedtype.enum = [...flattenData.prerecordedtypes].map((n) => n.id);
+          messageSchema["1"].properties.prerecordedtype.enumNames = [...flattenData.prerecordedtypes].map((n) => n.name);
+          messageSchema["1"].properties.prerecordedtrigger.enum = [...flattenData.prerecordedtriggers].map((n) => n.id);
+          messageSchema["1"].properties.prerecordedtrigger.enumNames = [...flattenData.prerecordedtriggers].map((n) => n.name);
      }
 
      function FillDetails(data: any) {
           let details: any = {};
-          let msg = data.prerecordedmessage;
+          const flattenData = flattenObj({...data});
+          let msg = flattenData.notifications[0];
 
           let o = { ...operation };
           details.name = o.type.toLowerCase();
           details.title = msg.title;
-          details.prerecordedtype = msg.prerecordedtype.id;
-          details.prerecordedtrigger = msg.prerecordedtrigger.id;
+          details.prerecordedtype = msg.prerecordedtype?.id;
+          details.prerecordedtrigger = msg.prerecordedtrigger?.id;
           details.description = msg.description;
           details.minidesc = msg.minidescription;
           details.mediaurl = msg.mediaurl;

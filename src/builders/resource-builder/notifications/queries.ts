@@ -1,165 +1,192 @@
 import { gql } from "@apollo/client";
 
 export const GET_TRIGGERS = gql`
-     query FetchTypesTriggers {
-          prerecordedtypes {
-               id
-               name
-          }
-          prerecordedtriggers {
-               id
-               name
-          }
-     }
+  query FetchTypesTriggers {
+    prerecordedtypes {
+      data {
+        id
+        attributes {
+          name
+        }
+      }
+    }
+    prerecordedtriggers {
+      data {
+        id
+        attributes {
+          name
+        }
+      }
+    }
+  }
 `;
 
 export const ADD_MESSAGE = gql`
-     mutation msg(
-          $title: String
-          $description: String
-          $minidesc: String
-          $prerecordedtype: ID
-          $prerecordedtrigger: ID
-          $mediaurl: String
-          $user_permissions_user: ID
-     ) {
-          createPrerecordedmessage(
-               input: {
-                    data: {
-                         title: $title
-                         description: $description
-                         minidescription: $minidesc
-                         prerecordedtype: $prerecordedtype
-                         prerecordedtrigger: $prerecordedtrigger
-                         mediaurl: $mediaurl
-                         users_permissions_user: $user_permissions_user
-                    }
-               }
-          ) {
-               prerecordedmessage {
-                    id
-                    createdAt
-                    updatedAt
-                    title
-                    description
-                    minidescription
-               }
-          }
-     }
+  mutation msg(
+    $title: String
+    $description: String
+    $minidesc: String
+    $prerecordedtype: ID
+    $prerecordedtrigger: ID
+    $mediaurl: String
+    $user_permissions_user: ID
+  ) {
+    createNotification(
+      data: {
+        title: $title
+        description: $description
+        minidescription: $minidesc
+        prerecordedtype: $prerecordedtype
+        prerecordedtrigger: $prerecordedtrigger
+        mediaurl: $mediaurl
+        users_permissions_user: $user_permissions_user
+      }
+    ) {
+      data {
+        id
+        attributes {
+          title
+        }
+      }
+    }
+  }
 `;
 
 export const UPDATE_MESSAGE = gql`
-     mutation updatemsg(
-          $title: String
-          $description: String
-          $minidesc: String
-          $prerecordedtype: ID
-          $prerecordedtrigger: ID
-          $mediaurl: String
-          $userpermission: ID
-          $messageid: ID!
-     ) {
-          updatePrerecordedmessage(
-               input: {
-                    data: {
-                         title: $title
-                         description: $description
-                         minidescription: $minidesc
-                         mediaurl: $mediaurl
-                         prerecordedtype: $prerecordedtype
-                         prerecordedtrigger: $prerecordedtrigger
-                         users_permissions_user: $userpermission
-                    }
-                    where: { id: $messageid }
-               }
-          ) {
-               prerecordedmessage {
-                    id
-                    title
-                    description
-                    minidescription
-                    mediaurl
-               }
-          }
-     }
+  mutation updatemsg(
+    $title: String
+    $description: String
+    $minidesc: String
+    $prerecordedtype: ID
+    $prerecordedtrigger: ID
+    $mediaurl: String
+    $userpermission: ID
+    $messageid: ID!
+  ) {
+    updateNotification(
+      id: $messageid
+      data: {
+        title: $title
+        description: $description
+        minidescription: $minidesc
+        mediaurl: $mediaurl
+        prerecordedtype: $prerecordedtype
+        prerecordedtrigger: $prerecordedtrigger
+        users_permissions_user: $userpermission
+      }
+    ) {
+      data {
+        id
+      }
+    }
+  }
 `;
 
 export const GET_MESSAGE = gql`
-     query getmessage($id: ID!) {
-          prerecordedmessage(id: $id) {
-               id
-               title
-               description
-               minidescription
-               mediaurl
-               status
-               updatedAt
-               prerecordedtrigger {
-                    id
-                    name
-               }
-               prerecordedtype {
-                    id
-                    name
-               }
-               users_permissions_user {
-                    id
-               }
+  query getmessage($id: ID!) {
+    notifications(filters: { id: { eq: $id } }) {
+      data {
+        id
+        attributes {
+          title
+          description
+          minidescription
+          mediaurl
+          status
+          updatedAt
+          prerecordedtype {
+            data {
+              id
+              attributes {
+                name
+              }
+            }
           }
-     }
+          prerecordedtrigger {
+            data {
+              id
+              attributes {
+                name
+              }
+            }
+          }
+          users_permissions_user {
+            data {
+              id
+            }
+          }
+        }
+      }
+    }
+  }
 `;
 
 export const DELETE_MESSAGE = gql`
-     mutation deleteMessage($id: ID!) {
-          deletePrerecordedmessage(input: { where: { id: $id } }) {
-               prerecordedmessage {
-                    id
-                    __typename
-               }
-          }
-     }
+  mutation deleteMessage($id: ID!) {
+    deleteNotification(id: $id) {
+      data {
+        id
+      }
+    }
+  }
 `;
 
 export const UPDATE_STATUS = gql`
-     mutation updatestatus($status: Boolean, $messageid: ID!) {
-          updatePrerecordedmessage(input: { data: { status: $status }, where: { id: $messageid } }) {
-               prerecordedmessage {
-                    id
-                    title
-                    description
-                    minidescription
-                    mediaurl
-                    status
-               }
-          }
-     }
+  mutation updatestatus($status: Boolean, $messageid: ID!) {
+    updateNotification(data: { status: $status }, id: $messageid) {
+      data {
+        id
+      }
+    }
+  }
 `;
 export const GET_NOTIFICATIONS = gql`
-     query FeedSearchQuery($filter: String!, $id: String) {
-          prerecordedmessages(
-               sort: "updatedAt"
-               where: { title_contains: $filter, users_permissions_user: { id: $id } }
-          ) {
-               id
-               title
-               minidescription
-               prerecordedtrigger {
-                    id
-                    name
-               }
-               status
-               updatedAt
-               users_permissions_user {
-                    id
-               }
+  query FeedSearchQuery($filter: String!, $id: ID) {
+    notifications(
+      sort: ["updatedAt"]
+      filters: {
+        title: { containsi: $filter }
+        users_permissions_user: { id: { eq: $id } }
+      }
+    ) {
+      data {
+        id
+        attributes {
+          title
+          minidescription
+          prerecordedtrigger {
+            data {
+              id
+              attributes {
+                name
+              }
+            }
           }
-          prerecordedtypes {
-               id
-               name
+          status
+          updatedAt
+          users_permissions_user {
+            data {
+              id
+            }
           }
-          prerecordedtriggers {
-               id
-               name
-          }
-     }
+        }
+      }
+    }
+    prerecordedtypes {
+      data {
+        id
+        attributes {
+          name
+        }
+      }
+    }
+    prerecordedtriggers {
+      data {
+        id
+        attributes {
+          name
+        }
+      }
+    }
+  }
 `;

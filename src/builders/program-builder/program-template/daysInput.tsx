@@ -4,6 +4,7 @@ import 'react-bootstrap-typeahead/css/Typeahead.css';
 import { gql } from "@apollo/client";
 import { useQuery } from "@apollo/client";
 import moment from 'moment';
+import {flattenObj} from '../../../components/utils/responseFlatten';
 
 const DaysInput = (props: any) => {
      const last = window.location.pathname.split('/').pop();
@@ -12,21 +13,26 @@ const DaysInput = (props: any) => {
      const [selected, setSelected] = useState(props.val ? [{"day": `Day-${props.val}`}] : []);
 
      const GET_PROGRAM = gql`
-          query getprogram($id: String!){
-               fitnessprograms(where: {id: $id}){
-                    id
-                    duration_days
+     query getprogram($id: ID!) {
+          fitnessprograms(filters: { id: { eq: $id } }) {
+          data {
+               id
+               attributes {
+               duration_days
                }
           }
-     `
+          }
+     }
+  `;
 
      function FetchData(_variables: {} = {id: last}) {
           useQuery(GET_PROGRAM, {variables: _variables, onCompleted: loadData});
      }
 
      function loadData(data: any) {
+          const flattenData = flattenObj({...data});
           setData(
-             data.fitnessprograms[0].duration_days
+               flattenData.fitnessprograms[0].duration_days
          )
      }
 
