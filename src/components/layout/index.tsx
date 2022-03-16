@@ -12,6 +12,7 @@ export default function Layout({ token, children }: any) {
 
   useEffect(() => {
     getSideNavStatus();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
   const getSideNavStatus = () => {

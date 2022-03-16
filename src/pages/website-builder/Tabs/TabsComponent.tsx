@@ -30,7 +30,7 @@ export default function TabsComponent() {
   const createWebpageDetailsComponent = useRef<any>(null);
   const [websiteData, setWebsiteData] = useState<any>({});
   const [templateName, setTemplateName] = useState<string>("");
-  const [formSwitch, setFormSwitch] = useState<boolean>(true);
+  const [formSwitch] = useState<boolean>(true);
   const [templateId, setTemplateId] = useState<any>(null);
   const [newTemplateId, setNewTemplateId] = useState<any>();
 

@@ -48,10 +48,12 @@ function CreateWebpageDetails(props: any, ref: any) {
 
   useEffect(() => {
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [newTemplateId]);
 
   useEffect(() => {
     fetchTemplate();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const modalTrigger = new Subject();
