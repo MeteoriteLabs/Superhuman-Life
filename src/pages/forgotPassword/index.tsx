@@ -19,9 +19,21 @@ export default function ForgotPassword() {
         }
     }
 
+    const FORGOT_PASSWORD = gql`
+      mutation forgotPasswordMutation($email: String!) {
+        forgotPassword(email: $email){
+          ok
+        }
+      }
+    `
+
+    const [forgotPassword] = useMutation(FORGOT_PASSWORD, { onCompleted: () => { setEmailSent(true) } });
+
   
     function onSubmit(formData: any) {
+        console.log(formData.email);
         console.log(formData);
+        forgotPassword({ variables: { email: formData.email } });
     }
 
     function Validate(formData, errors) {
@@ -42,7 +54,7 @@ export default function ForgotPassword() {
         <link rel="canonical" href="https://sapien.systems/" />
       </Helmet> */}
       <Modal.Body>
-        {!emailSent && 
+        {emailSent && 
             <div>
                 <Row style={{ justifyContent: 'center', justifyItems: 'center'}}>
                     <h1><img src="/assets/confirmed.svg" alt="confirmed"></img>Email Sent</h1>
@@ -62,7 +74,7 @@ export default function ForgotPassword() {
                 </Row>
             </div>
         }
-        {emailSent && <><h4>Forgot Password</h4>
+        {!emailSent && <><h4>Forgot Password</h4>
         <p className="text-danger blockquote-footer">Enter the registered email ID</p>
         <hr />
         <Form uiSchema={uiSchema} validate={Validate} schema={loginSchema} onSubmit={({ formData }) => onSubmit(formData)}>

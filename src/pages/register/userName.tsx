@@ -9,7 +9,7 @@ const Email = (props: any) => {
     const [user, setUser] = useState<any>([]);
 
     const FETCH_USER = gql`
-     query fetchUsers($uname: String!) {
+     query fetchUsers($uname: String) {
         usersPermissionsUsers(filters: {
             username: {eq: $uname}
           }){
