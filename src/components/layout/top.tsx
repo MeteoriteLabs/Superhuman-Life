@@ -45,6 +45,7 @@ export function AuthenticatedNav() {
           title={<img src="/assets/avatar-1.jpg" height="42" className="rounded-circle" alt="avatar" />}
         >
           <NavLink to="/profile" className="dropdown-item">Profile</NavLink>
+          <Dropdown.Item onClick={() => window.location.href = '/change-password'}>Change Password</Dropdown.Item>
           <Dropdown.Item onClick={() => auth.logout()}>Sign Out</Dropdown.Item>
         </DropdownButton>
       </Nav.Item>

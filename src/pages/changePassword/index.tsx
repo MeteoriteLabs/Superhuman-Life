@@ -1,20 +1,24 @@
 import React, { useState } from "react";
 import Form from "@rjsf/bootstrap-4";
-import { Link } from "react-router-dom";
 import { Button, Modal, Row } from "react-bootstrap";
 import { useMutation, gql } from '@apollo/client';
-import EmailForm from './email';
 
-export default function ForgotPassword() {
+export default function ChangePassword() {
 
     const [emailSent, setEmailSent] = useState(false);
-    const loginSchema: any = require("./forgotPassword.json");
+    const loginSchema: any = require("./changePassword.json");
     const uiSchema: any = {
-        "email": {
-            "ui:widget": (props) => {
-                return <EmailForm {...props} />
-            },
-        }
+        "oldPassword": {
+            "ui:widget": "password",
+            "ui:help": "Hint: Enter your existing password."
+        },
+        "password": {
+            "ui:widget": "password",
+            "ui:help": "Hint: Make it strong! minimum password length should be 8."
+        },
+        "confirm": {
+            "ui:widget": "password"
+        },
     }
 
     const FORGOT_PASSWORD = gql`
@@ -55,10 +59,10 @@ export default function ForgotPassword() {
         {emailSent && 
             <div>
                 <Row style={{ justifyContent: 'center', justifyItems: 'center'}}>
-                    <h1><img src="/assets/confirmed.svg" alt="confirmed"></img>Email Sent</h1>
+                    <h1><img src="/assets/confirmed.svg" alt="confirmed"></img>Password Reset</h1>
                 </Row>
                 <blockquote className="blockquote text-right">
-                    <p className="text-danger blockquote-footer">Happens to the best of us</p>
+                    <p className="text-danger blockquote-footer">Use your new password to login</p>
                     {/* <footer className="blockquote-footer">Someone famous in <cite title="Source Title">Source Title</cite></footer> */}
                 </blockquote>
                 <ul>
@@ -72,8 +76,8 @@ export default function ForgotPassword() {
                 </Row>
             </div>
         }
-        {!emailSent && <><h4>Forgot Password</h4>
-        <p className="text-danger blockquote-footer">Enter the registered email ID</p>
+        {!emailSent && <><h4>Reset Password</h4>
+        <p className="text-danger blockquote-footer">Enter New Password</p>
         <hr />
         <Form uiSchema={uiSchema} validate={Validate} schema={loginSchema} onSubmit={({ formData }) => onSubmit(formData)}>
           {/* { error &&
@@ -84,19 +88,6 @@ export default function ForgotPassword() {
             <Button type="submit" size="sm" variant="danger">
                 Reset Password
             </Button>
-          </Row>
-          <Row className="mb-2" style={{justifyContent: 'center'}}>
-              <span>
-                Or
-              </span>
-          </Row>
-
-          <Row style={{justifyContent: 'center'}}>
-            <p>No Account?&nbsp;
-            <Link style={{ color: 'red'}} className="float-right" to="/register">
-                Signup NOW
-            </Link>
-            </p>
           </Row>
         </Form> </>}
       </Modal.Body>

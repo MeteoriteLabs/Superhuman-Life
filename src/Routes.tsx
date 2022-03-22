@@ -15,6 +15,9 @@ const ChatPage = React.lazy(() => import("./pages/chat"));
 const HomePage = React.lazy(() => import("./pages/home"));
 const LoginPage = React.lazy(() => import("./pages/login"));
 const ForgotPasswordPage = React.lazy(() => import("./pages/forgotPassword"));
+const ResetPasswordPage = React.lazy(() => import('./pages/resetPassword'));
+const ConfirmAccountPage = React.lazy(() => import("./pages/emailConfirmation"));
+const ChangePasswordPage = React.lazy(() => import("./pages/changePassword"));
 const ProfilePage = React.lazy(() => import("./pages/profile"));
 const RegisterPage = React.lazy(() => import("./pages/register"));
 const SchedulePage = React.lazy(() => import("./pages/schedule"));
@@ -85,6 +88,7 @@ export default function Routes({ token }: any) {
               <Route path="/resources" component={ResourcePage} />
               <Route path="/schedule" component={SchedulePage} />
               <Route path="/settings" component={SettingsPage} />
+              <Route path="/change-password" component={ChangePasswordPage} />
 
                                    <Route path="*" component={NoMatch} />
                               </Switch>
@@ -96,6 +100,8 @@ export default function Routes({ token }: any) {
                                    <Redirect exact from="/home" to="/login" />
                                    <Route path="/login" component={LoginPage} />
                                    <Route path="/forgot-password" component={ForgotPasswordPage} />
+                                   <Route path="/resetpassword" component={ResetPasswordPage} />
+                                   <Route path="/confirm-account" component={ConfirmAccountPage} />
                                    <Route path="/register" component={RegisterPage} />
                                    <Route path="/about" component={AboutPage} />
                                    <Route path="/contact" component={ContactPage} />

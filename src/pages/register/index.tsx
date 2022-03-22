@@ -7,7 +7,7 @@ import ChangeMakerSelect from '../../components/customWidgets/changeMakerList';
 import LanguageSelect from '../../components/customWidgets/languagesList';
 import OrganizationSelect from '../../components/customWidgets/organizationTypeList';
 import { useMutation } from '@apollo/client';
-import { CREATE_USER, CREATE_ADDRESS, CREATE_ORGANIZATION, CREATE_EDUCATION_DETAIL} from './mutations';
+import { CREATE_ADDRESS, CREATE_ORGANIZATION, CREATE_EDUCATION_DETAIL, UPDATE_USER, REGISTER_USER} from './mutations';
 // import LocationForm from './Location';
 import EmailForm from './email';
 import UserNameForm from './userName';
@@ -120,16 +120,37 @@ export default function Register() {
 
     const [newUserId, setNewUserId] = useState('');
 
-    const [createUser] = useMutation(CREATE_USER, {
+    const [registerUser] = useMutation(REGISTER_USER, {onCompleted: (data: any) => {
+        console.log(data.register.user.id);
+        setNewUserId(data.register.user.id);
+        console.log(userFormData);
+        updateUser({
+            variables: {
+                userid: data.register.user.id, 
+                fname: userFormData.fname,
+                lname: userFormData.lname,
+                email: userFormData.email,
+                password: userFormData.password,
+                phone: userFormData.contact.toString(),
+                uname: userFormData.userName,
+                dob: userFormData.dob,
+                gender: userFormData.gender,
+                about: userFormData.aboutMe,
+                module_permissions: userFormData.multipleChoicesList,
+                languages: userFormData.language.split(",")
+            }
+        });
+    }});
+
+    const [updateUser] = useMutation(UPDATE_USER, {
         onCompleted: (data: any) => {
             console.log(data);
-            setNewUserId(data.createUsersPermissionsUser.data.id);
             createOrganization({
                 variables: {
                     Organization_Name: userFormData.organizationName,
                     organization_type: userFormData.organizationType,
                     Organization_description: userFormData.aboutOrganization,
-                    users: [data.createUsersPermissionsUser.data.id]
+                    users: [newUserId]
                 }
             })
         }
@@ -170,7 +191,7 @@ export default function Register() {
     }});
 
 
-    function submitHandler(formData: any) {
+    async function submitHandler(formData: any) {
         if (step < 4) {
             console.log("Data submitted: ", formData);
             setStep(step + 1);
@@ -179,23 +200,13 @@ export default function Register() {
         } else {
             // setFormValues({ ...formValues, ...formData });
             const values = { ...formValues, ...formData };
-            setUserFormData(values);
+            await setUserFormData(values);
             console.log(values);
-            createUser({
-                variables: {
-                    fname: values.fname,
-                    lname: values.lname,
-                    email: values.email,
-                    password: values.password,
-                    phone: values.contact.toString(),
-                    uname: values.userName,
-                    dob: values.dob,
-                    gender: values.gender,
-                    about: values.aboutMe,
-                    module_permissions: values.multipleChoicesList,
-                    languages: values.language.split(",")
-                }
-            })
+            registerUser({ variables: {
+                email: values.email,
+                name: values.userName,
+                password: values.password,
+            }})
             // console.log("Values submitted: " + JSON.stringify(formValues, null, 2));
         }
     }
@@ -222,7 +233,68 @@ export default function Register() {
 
     return (
         <>
-        {successScreen && <div className="text-center">Your Sign up was successfull! we have sent you an email for verification.</div>}
+        {successScreen && <Modal.Dialog>
+      <Modal.Body>
+            <div>
+                <Row style={{ justifyContent: 'center'}}>
+                    <h1>Congratulations!</h1>
+                </Row>
+                <Row style={{ justifyContent: 'center', justifyItems: 'center'}}>
+                    <h5><img height="32px" src="/assets/confirmed.svg" alt="confirmed"></img>Confrimation Email Sent</h5>
+                </Row>
+                <blockquote className="blockquote text-right">
+                    <p className="text-danger blockquote-footer">Please Confirm your email address</p>
+                    {/* <footer className="blockquote-footer">Someone famous in <cite title="Source Title">Source Title</cite></footer> */}
+                </blockquote>
+                <ul>
+                    <li>You will receive an email with the confirmation link.</li>
+                    <li>Please click the link in your mail to confirm and then login into your account</li>
+                </ul>
+                <Row style={{ justifyContent: 'center', justifyItems: 'center'}}>
+                    <Button onClick={() => window.location.href = '/login'} size="sm" variant="danger">
+                        Sign in
+                    </Button>
+                </Row>
+                <Row className="mt-5" style={{ justifyContent: 'center'}}>
+                    <h6>Follow us</h6>
+                </Row>
+                <Row style={{ justifyContent: 'center'}}>
+                <div style={{ display: 'flex', flexDirection: 'row'}}>
+                    <div>
+                    <img
+                        src="/assets/linkedin_signin.svg"
+                        style={{ cursor: 'pointer' }}
+                        height="70px"
+                        className="d-block w-100"
+                        alt="sapien-exercise"
+                        onClick={() => console.log('linkedin')}
+                    />
+                    </div>
+                    <div>
+                    <img
+                        src="/assets/insta_signin.svg"
+                        style={{ cursor: 'pointer' }}
+                        height="70px"
+                        className="d-block w-100"
+                        alt="sapien-exercise"
+                        onClick={() => console.log('instagram')}
+                    />
+                    </div>
+                    <div>
+                    <img
+                        src="/assets/facebook_signin.svg"
+                        style={{ cursor: 'pointer' }}
+                        height="70px"
+                        className="d-block w-100"
+                        alt="sapien-exercise"
+                        onClick={() => console.log('facebook')}
+                    />
+                    </div>
+                </div>
+                </Row>
+            </div>
+      </Modal.Body>
+    </Modal.Dialog>}
         {!successScreen && <Row noGutters>
             {/* <Helmet>
                 <meta charSet="utf-8" />
