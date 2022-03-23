@@ -6,11 +6,11 @@ import BuildWorkout from './buildWorkout';
 
 
 export const widgets = {
-     fitnessSelect: FitnessMultiSelect,
-     equipmentSearch: EquipmentSearch,
-     muscleGroupSearch: MuscleGroupSearch,
-     textEditor: TextEditor,
-     buildWorkout: BuildWorkout
+    fitnessSelect: FitnessMultiSelect,
+    equipmentSearch: EquipmentSearch,
+    muscleGroupSearch: MuscleGroupSearch,
+    textEditor: TextEditor,
+    buildWorkout: BuildWorkout
 };
 
 export const schema: any = {

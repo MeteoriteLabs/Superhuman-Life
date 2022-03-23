@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import Form from "@rjsf/bootstrap-4";
 import { Link } from "react-router-dom";
-import { Button, Modal } from "react-bootstrap";
+import { Button, Modal, Row, Col } from "react-bootstrap";
 import authContext from "../../context/auth-context";
 import { useMutation, gql } from '@apollo/client';
 
@@ -64,12 +64,23 @@ export default function Login() {
           { error &&
             <p className="text-danger">Incorrect email or password</p>
           }
-          <Button type="submit" size="sm" variant="danger">
-            Sign In<i className="ml-4 fas fa-arrow-right"></i>
-          </Button>
-          <Link className="float-right" to="/register">
-            Don't have an account? Sign Up
-          </Link>
+          <Row className="mb-4 pr-3" style={{ justifyContent: 'end'}}>
+            <Link style={{ color: 'red'}} className="float-right" to="/forgot-password">
+              Forgot Password?
+            </Link>
+          </Row>
+          <Row>
+            <Col lg={5}>
+              <Button type="submit" size="sm" variant="danger">
+                Sign In<i className="ml-4 fas fa-arrow-right"></i>
+              </Button>
+            </Col>
+            <Col>
+              <Link className="float-right" to="/register">
+                Don't have an account? Sign Up
+              </Link>
+            </Col>
+          </Row>
         </Form>
       </Modal.Body>
     </Modal.Dialog>

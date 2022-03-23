@@ -29,32 +29,7 @@ export const flattenObj = (data) => {
         }
 
         for (const key in data) {
-            // if("data" in data[key]) {
-            //     // where [data[key]["data"]] is an object 
-            //     //type object
-            //     if(isObject(data[key]["data"])){
-            //         if("id" in data[key]["data"] && "attributes" in data[key]["data"]){
-            //             data[key] = flattenObj(data[key]);
-            //         }else {
-            //             continue;
-            //         }
-            //     }
-            //     //type array
-            //     else if(isArray(data[key]["data"])){
-            //         // if array look for id and attributes key at index 0.
-            //         if("id" in data[key]["data"][0] && "attributes" in data[key]["data"][0]){
-            //             data[key] = flattenObj(data[key]);
-            //         }else {
-            //             continue;
-            //         }
-            //     }else {
-            //         continue;
-            //     }
-            // }else {
-            //     // data[key] = flattenObj(data[key]);
-            //     continue
-            // }
-            if(key === "fitnesspackagepricing" || key === "events" || key === "rest_days" || key === "Changemaker_weekly_schedule") {
+            if(key === "fitnesspackagepricing" || key === "events" || key === "rest_days" || key === "Changemaker_weekly_schedule" || key === "booking_slots") {
                 continue;
             }else {
                 data[key] = flattenObj(data[key]);

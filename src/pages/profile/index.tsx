@@ -16,6 +16,7 @@ import AuthContext from "../../context/auth-context";
 import { useQuery } from "@apollo/client";
 import { FETCH_USER_PROFILE_DATA } from "./queries/queries";
 import ellipse from "./ellipse.svg";
+import ChangePasswordPage from '../changePassword';
 
 import EditProfile from "./EditProfile";
 
@@ -161,6 +162,9 @@ export default function ProfilePage() {
         </Tab>
         <Tab eventKey="settings" title="Settings">
           Settings
+        </Tab>
+        <Tab eventKey="password" title="Password">
+          <ChangePasswordPage />
         </Tab>
       </Tabs>
     </>

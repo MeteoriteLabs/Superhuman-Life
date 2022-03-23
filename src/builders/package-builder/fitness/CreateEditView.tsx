@@ -4,7 +4,7 @@ import AuthContext from '../../../context/auth-context';
 import FitnessClasses from './widgetCustom/FitnessClasses/FitnessClasses';
 import FitnessRestday from './widgetCustom/FitnessRestday';
 import { useMutation, useQuery } from '@apollo/client';
-import { GET_SINGLE_PACKAGE_BY_ID } from './graphQL/queries';
+import { GET_SINGLE_PACKAGE_BY_ID, GET_FITNESS_PACKAGE_TYPE } from './graphQL/queries';
 import ModalPreview from './widgetCustom/Preview/FitnessPreview';
 import './CreateEditView.css'
 import { CREATE_PACKAGE, DELETE_PACKAGE, EDIT_PACKAGE, UPDATE_PACKAGE_PRIVATE } from './graphQL/mutations';
@@ -19,6 +19,7 @@ import BookingLeadday from './widgetCustom/FitnessBooking/BookingLeadday';
 import BookingLeadTime from './widgetCustom/FitnessBooking/BookingLeadTime';
 import { Subject } from 'rxjs';
 import CreateFitnessPackageModal from '../../../components/CreateFitnessPackageModal/CreateFitnessPackageModal';
+import {flattenObj} from '../../../components/utils/responseFlatten';
 
 
 
@@ -41,6 +42,8 @@ function CreateEditView(props: any, ref: any) {
     const [packageTypeName, setPackageTypeName] = useState<string | null>('personal-training');
     const [actionName, setActionName] = useState<string>("")
     const [formData, setFormData] = useState<any>();
+
+    const [sapienFitnessPackageTypes, setSapienFitnessPackageTypes] = useState<any>([]);
 
 
     const ptSchema = require("./personal-training/personal-training.json");
@@ -78,7 +81,7 @@ function CreateEditView(props: any, ref: any) {
     }, [operation]);
 
 
-
+    console.log(formData);
 
 
     let fitness_package_type: string | undefined = ''
@@ -257,6 +260,14 @@ function CreateEditView(props: any, ref: any) {
 
 
     const FetchData = () => {
+
+        useQuery(GET_FITNESS_PACKAGE_TYPE, {
+            onCompleted: (data) => {
+                const flattedData = flattenObj({...data});
+                setSapienFitnessPackageTypes(flattedData.fitnessPackageTypes);
+            }
+        })
+
         useQuery(GET_SINGLE_PACKAGE_BY_ID, {
             variables: {
                 id: operation.id,
@@ -265,7 +276,7 @@ function CreateEditView(props: any, ref: any) {
             onCompleted: (dataPackage: any) => {
                 FillDetails(dataPackage)
             },
-            skip: (!operation.id),
+            skip: (!operation.id || operation.actionType === 'delete'),
         });
     };
 
@@ -273,7 +284,8 @@ function CreateEditView(props: any, ref: any) {
 
 
     const FillDetails = (dataPackage: any) => {
-        const packageDetail = dataPackage.fitnesspackage;
+        const flattedData = flattenObj({...dataPackage});
+        const packageDetail = flattedData.fitnesspackages;
 
         let { id, packagename, tags, disciplines, fitness_package_type, aboutpackage, benefits, level, mode, ptoffline, ptonline, grouponline, groupoffline, recordedclasses, restdays, fitnesspackagepricing, bookingleadday, bookingleadtime, duration, groupstarttime, groupendtime, groupinstantbooking, address, ptclasssize, classsize, groupdays, introvideourl, is_private } = packageDetail;
 
@@ -328,6 +340,9 @@ function CreateEditView(props: any, ref: any) {
          },
         onCompleted: (r: any) => {
             modalTrigger.next(false);
+        },
+        onError: (error: any) => {
+            console.log(error)
         }
     })
 
@@ -351,10 +366,14 @@ function CreateEditView(props: any, ref: any) {
     }
 
     function CreatePackage(frm) {
-        createPackage({ variables: frm})
+        const fitnessPackageId = sapienFitnessPackageTypes.find(x => x.type === frm.fitness_package_type).id;
+        frm.fitness_package_type = fitnessPackageId;
+        createPackage({ variables: frm});
     }
 
     function EditPackage(frm: any) {
+        const fitnessPackageId = sapienFitnessPackageTypes.find(x => x.type === frm.fitness_package_type).id;
+        frm.fitness_package_type = fitnessPackageId;
         editPackage({ variables: frm })
     }
 

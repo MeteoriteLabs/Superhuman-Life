@@ -19,6 +19,7 @@ const ProgramList = (props: any) => {
      query programlistQuery($id: ID!, $filter: String!) {
           fitnessprograms(
           filters: {
+               Is_program: { eq: true }
                users_permissions_user: { id: { eq: $id } }
                title: { containsi: $filter }
           }

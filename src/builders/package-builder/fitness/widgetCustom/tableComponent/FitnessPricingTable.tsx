@@ -71,9 +71,6 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
         onCompleted: (data) => fetchData(data)
     })
 
-
-
-
     const arrayDuration = fitnesspackagepricing.map(fitness => fitness.duration);
 
     const calculateSuggestPrice = (arrayData: { mode: "Online" | "Offline"; mrp: number; }[], arrayClasses: number[]) => {
@@ -97,6 +94,7 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
 
 
     const calculateArraySuggestPrice = (sapientPrice: number, arrayDuration: number[]) => {
+        console.log(sapientPrice, arrayDuration);
         const arraySapient: number[] = [];
         arraySapient[0] = Number(sapientPrice);
         for (let i = 1; i < arrayDuration.length; i++) {

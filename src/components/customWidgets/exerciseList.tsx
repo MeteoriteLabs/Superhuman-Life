@@ -15,11 +15,13 @@ const ExerciseList = (props: any) => {
      let skipval: Boolean = true;
      
      function FetchExerciseList(_variable: {} = {id: auth.userid, filter: " "}){
+          console.log(auth.userid);
           useQuery(GET_EXERCISELIST, { variables: _variable ,onCompleted: loadExerciseList, skip: !searchInput});
      }
 
      function loadExerciseList(data: any){
           const flattenedData = flattenObj({...data});
+          console.log(flattenedData);
           setExerciseList(
           [...flattenedData.exercises].map((exercise) => {
                return {
@@ -77,7 +79,7 @@ const ExerciseList = (props: any) => {
      props.onChange(selected);
      
 
-     FetchExerciseList({filter: searchInput, skip: skipval});
+     FetchExerciseList({filter: searchInput, skip: skipval, id: auth.userid});
 
      return (
           <>

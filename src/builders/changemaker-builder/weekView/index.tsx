@@ -81,7 +81,7 @@ const WeekView = (props: any) => {
       var date2 = moment(data[i].effectiveDate);
       var diff = date1.diff(date2, "days");
       var numberOfDaysPassed = moment().clone().startOf("week").diff(moment(), "days");
-      currentDay.push(diff - Math.abs(numberOfDaysPassed) + 1);
+      currentDay.push(diff - Math.abs(numberOfDaysPassed));
     }
     for (var j = 0; j < currentDay.length; j++) {
       if (currentDay[j] + 7 <= 30) {

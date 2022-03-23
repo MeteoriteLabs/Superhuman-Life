@@ -195,3 +195,46 @@ export const CREATE_WORKOUT = gql`
     }
   }
 `;
+
+export const GET_SLOTS_TO_CHECK = gql`
+query getAllChangeMakerAvailabilityHolidays($id: ID!, $dateUpperLimit: Date, $dateLowerLimit: Date) {
+  changemakerAvailabilties(filters: {
+    date: { between: [$dateUpperLimit, $dateLowerLimit] }
+    users_permissions_user: {
+      id: {
+        eq: $id
+      }
+    }
+  }, pagination: {pageSize: 200}){
+    data{
+      id
+      attributes{
+        holiday_title
+        booking_slots
+        Is_Holiday
+        date
+        users_permissions_user{
+          data{
+            id
+          }
+        }
+      }
+    }
+  }
+}
+`
+
+export const UPDATE_CHANGEMAKER_AVAILABILITY_WORKHOURS = gql`
+  mutation updateCHageMakerAvailabilityWorkHour($id: ID!, $slots: JSON){
+    updateChangemakerAvailabilty(id: $id, data: {
+      booking_slots: $slots
+    }){
+      data{
+        id
+        attributes{
+          date
+        }
+      }
+    }
+  }
+`

@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 export const FETCH_DATA = gql`
-  query fetchdata($id: ID) {
+  query fetchdata($id: ID!) {
     exercises(filters: { id: { eq: $id } }) {
       data {
         id

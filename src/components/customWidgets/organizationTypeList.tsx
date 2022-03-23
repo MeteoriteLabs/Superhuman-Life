@@ -1,31 +1,28 @@
 import {useState} from 'react';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
-import { FETCH_FITNESSDISCPLINES } from '../../builders/program-builder/workout/queries';
+import { ORGANIZATION_TYPE } from './queries';
 import { useQuery } from "@apollo/client";
 import { flattenObj } from '../utils/responseFlatten';
 
 const MultiSelect = (props: any) => {
 
-     console.log(props);
-
      const [multiSelections, setMultiSelections] = useState(
           props.value?.length > 0 ? props.value : []
         );
-     const [fitnessdisciplines, setFitnessDisciplines] = useState<any[]>([]);
+     const [org, setOrg] = useState<any[]>([]);
 
      function FetchData(){
-          useQuery(FETCH_FITNESSDISCPLINES, {onCompleted: loadData})
+          useQuery(ORGANIZATION_TYPE, {onCompleted: loadData, onError: error => console.log(error)});
       }
   
      function loadData(data: any) {
           const flattenedData = flattenObj({...data});
-          setFitnessDisciplines(
-              [...flattenedData.fitnessdisciplines].map((discipline) => {
+          setOrg(
+              [...flattenedData.organizationTypes].map((orgType) => {
                   return {
-                      id: discipline.id,
-                      disciplinename: discipline.disciplinename,
-                      updatedAt: discipline.updatedAt
+                      id: orgType.id,
+                      title: orgType.Org_title_name
                   }
               })
           );
@@ -41,15 +38,14 @@ const MultiSelect = (props: any) => {
 
      return (
           <div>
-               <label>Fitness discplines</label>
+               <label>Organization Type</label>
                <Typeahead
                id="basic-typeahead-multiple"
-               labelKey="disciplinename"
+               labelKey="title"
                onChange={OnChange}
-               options={fitnessdisciplines}
-               placeholder="Choose multiple discplines..."
+               options={org}
+               placeholder="Select type..."
                selected={multiSelections}
-               multiple
                />
           </div>
      )

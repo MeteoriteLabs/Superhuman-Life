@@ -72,9 +72,7 @@ export function AuthenticatedNav() {
             />
           }
         >
-          <NavLink to="/profile" className="dropdown-item">
-            Profile
-          </NavLink>
+          <NavLink to="/profile" className="dropdown-item">Profile</NavLink>
           <Dropdown.Item onClick={() => auth.logout()}>Sign Out</Dropdown.Item>
         </DropdownButton>
       </Nav.Item>

@@ -7,6 +7,31 @@
     padding: 10px;
 }
 
+.HolidayMark{
+	background-color: rgba(255,0,0,0.5);
+	border-radius: 10px;
+}
+
+.react-calendar__tile:disabled{
+	border-radius: 10px;
+}
+
+.react-calendar__tile--active {
+	border-radius: 10px;
+}
+
+.react-calendar__tile--now {
+	border-radius: 10px;
+}
+
+.react-calendar__tile:hover {
+	border-radius: 10px;
+}
+
+abbr[title]{
+	text-decoration: none;
+}
+
 button, input[type="submit"], input[type="reset"] {
 	background: none;
 	color: inherit;

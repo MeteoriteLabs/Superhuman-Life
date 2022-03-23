@@ -83,7 +83,7 @@ const DayView = (props: any) => {
       var date1 = moment();
       var date2 = moment(data[i].effectiveDate);
       var diff = date1.diff(date2, "days");
-      currentDay.push(diff + 1);
+      currentDay.push(diff);
     }
     setEvents(data);
     setDays(currentDay);
