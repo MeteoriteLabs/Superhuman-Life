@@ -1,0 +1,20 @@
+input[type="textr"] {
+  display: block;
+  width: 80%;
+  padding: 6px 12px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  color: #000000;
+  /* background-color: #e1d9d1; */
+  background-image: none;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  border-top: none;
+  border-right: none;
+  border-left: none;
+  opacity: 0.7;
+}
+
+input[type="text"] {
+  width: 80%;
+}
