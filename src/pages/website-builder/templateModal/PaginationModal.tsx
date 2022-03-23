@@ -1,0 +1,19 @@
+import { Pagination } from "react-bootstrap";
+
+let active = 1;
+let items: any = [];
+for (let number = 1; number <= 2; number++) {
+  items.push(
+    <Pagination.Item key={number} active={number === active}>
+      {number}
+    </Pagination.Item>
+  );
+}
+export const PaginationBasic = () => {
+  return (
+    <div>
+      <Pagination>{items}</Pagination>
+      <br />
+    </div>
+  );
+};
