@@ -24,6 +24,7 @@ export default function ForgotPassword() {
       confirmAccount({ variables: {
         confirmation: confirmation
       }});
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
   return (

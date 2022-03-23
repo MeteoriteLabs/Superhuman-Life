@@ -73,10 +73,6 @@ export function AuthenticatedNav() {
           }
         >
           <NavLink to="/profile" className="dropdown-item">Profile</NavLink>
-          <Dropdown.Item onClick={() => window.location.href = '/change-password'}>Change Password</Dropdown.Item>
-          <NavLink to="/profile" className="dropdown-item">
-            Profile
-          </NavLink>
           <Dropdown.Item onClick={() => auth.logout()}>Sign Out</Dropdown.Item>
         </DropdownButton>
       </Nav.Item>
