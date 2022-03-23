@@ -34,7 +34,7 @@ export default function MainLobby() {
                 {organizations.length > 0 && <Col sm key={'asdfasdfa'}>
                     {organizations.map((data: any) => {
                         return (
-                            <Row style={{background: "#9c528b", height: `${100/organizations.length}vh`}}>
+                            <Row style={{background: `#${Math.floor(Math.random()*16777215).toString(16)}`, height: `${100/organizations.length}vh`}}>
                                 <Col sm className="d-flex justify-content-center align-items-center">
                                     <div className="flex flex-row">
                                         <div className="text-center">

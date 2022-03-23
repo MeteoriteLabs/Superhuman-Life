@@ -52,7 +52,8 @@ export default function ChangePassword() {
     }
 
   return (
-    <Modal.Dialog>
+    <>
+    {/* <Modal.Dialog> */}
       {/* <Helmet>
         <meta charSet="utf-8" />
         <title>Sapien Dashboard | Login</title>
@@ -64,13 +65,16 @@ export default function ChangePassword() {
                 <Row style={{ justifyContent: 'center', justifyItems: 'center'}}>
                     <h1><img src="/assets/confirmed.svg" alt="confirmed"></img>Password Changed</h1>
                 </Row>
+                <Row style={{ justifyContent: 'center', justifyItems: 'center'}}>
                 <blockquote className="blockquote text-right">
                     <p className="text-danger blockquote-footer">Use your new password to login</p>
                     {/* <footer className="blockquote-footer">Someone famous in <cite title="Source Title">Source Title</cite></footer> */}
                 </blockquote>
+                </Row>
             </div>
         }
-        {!emailSent && <><h4>Change Password</h4>
+        {!emailSent && <><div>
+          <h4>Change Password</h4>
         <p className="text-danger blockquote-footer">Enter New Password</p>
         <hr />
         <Form uiSchema={uiSchema} validate={Validate} schema={loginSchema} onSubmit={({ formData }) => onSubmit(formData)}>
@@ -83,8 +87,10 @@ export default function ChangePassword() {
                 Change Password
             </Button>
           </Row>
-        </Form> </>}
+        </Form> 
+          </div></>}
       </Modal.Body>
-    </Modal.Dialog>
+    {/* </Modal.Dialog> */}
+    </>
   );
 }

@@ -53,7 +53,7 @@ export default function ForgotPassword() {
       <Modal.Body>
         <div>
             <Row style={{ justifyContent: 'center', justifyItems: 'center'}}>
-                <h1 style={{color: 'red'}}><img src="/assets/confirmed.svg" alt="confirmed"></img>Email Not Verified</h1>
+                <h1 style={{color: 'red'}}><img src="/assets/email_error.svg" height="56px" alt="confirmed"></img>Email Not Verified</h1>
             </Row>
             <blockquote className="blockquote text-right">
                 <p className="text-danger blockquote-footer">Link Not Valid</p>
