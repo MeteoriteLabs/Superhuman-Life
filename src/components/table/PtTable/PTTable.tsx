@@ -67,9 +67,9 @@ function PTTable({ data, columns }: any) {
                     
                         let samePackage = false;
 
-                        if (i > 0) {
-                            samePackage = rows[i - 1].original.id === row.original.id ? true : false
-                        }
+                        // if (i > 0) {
+                        //     samePackage = rows[i - 1].original.id === row.original.id ? true : false
+                        // }
 
                         if (!samePackage) {
                             currentRowsIndex = i

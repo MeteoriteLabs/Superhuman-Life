@@ -5,7 +5,7 @@ import TransferPrograms from './transferPrograms';
 
 const SchedulerEvent = (props: any) => {
 
-     const [arr, setArr] = useState<any[]>([]);
+     const [arr, setArr] = useState<any>([]);
      const [show, setShow] = useState(false);
      const schedulerDay: any = require("./json/scheduler-day.json");
      
@@ -38,26 +38,28 @@ const SchedulerEvent = (props: any) => {
           }, 300)
      }, [show]); 
 
-     function handleRenderTable(){
-          const values = [...arr];
+     function handleRenderTable(data: any){
+          const values = [...data];
           for(var d=1; d<=props.programDays; d++){
                values[d] = JSON.parse(JSON.stringify(schedulerDay));
           }
           if(props.programEvents){
                props.programEvents.forEach((val) => {
-                    if(!values[val.day]){
-                         values[val.day] = [];
+                    if(!values[val.day_of_program]){
+                         values[val.day_of_program] = [];
                     }
-                    values[val.day].push({"import": "importedEvent","type": val.type, "mode": val.mode, "tag": val.tag,"type2": "transferEvent" , "title": val.name, "color": "skyblue", "id": val.id, "endHour": val.endTime.split(":")[0], "endMin": val.endTime.split(":")[1], "hour": val.startTime.split(":")[0], "min": val.startTime.split(":")[1]});
+                    values[val.day_of_program].push({"import": "importedEvent","type": val.type, "mode": val.mode, "tag": val.tag,"type2": "transferEvent" , "title": val.activity === null ? val.workout.workouttitle : val.activity.title, "color": "skyblue", "id":  val.activity === null ? val.workout.id : val.activity.id, "endHour": val.end_time.split(":")[0], "endMin": val.end_time.split(":")[1], "hour": val.start_time.split(":")[0], "min": val.start_time.split(":")[1], "activityTarget": val.activity === null ? null : val.activity_target, "activity": val.activity === null ? null : val.activity, "day": val.day_of_program, "sessionId": val.id});
                })
                setArr(values);
           }
           draganddrop();
      };
 
+     console.log(props.startDate, props.days)
+
      useEffect(() => {
-          handleRenderTable();
-     }, []); // eslint-disable-line react-hooks/exhaustive-deps
+          handleRenderTable([]);
+     }, [props.programEvents]); // eslint-disable-line react-hooks/exhaustive-deps
      
      if (!show) return <span style={{ color: 'red' }}>Loading...</span>;
      else return (
@@ -65,9 +67,9 @@ const SchedulerEvent = (props: any) => {
                <div>
                     <div style={{ overflow: 'auto', border: '1px solid black', maxHeight: '300px'}} className="schedular mt-5 mb-3">
                     <div className="day-row">
-                         {props.programDays.map(val => {
+                         {props.days.map(val => {
                               return (
-                                   <div className="cell" style={{ backgroundColor: 'white'}}>{`Day ${val}`}</div>
+                                   <div className="cell" style={{ backgroundColor: 'white'}}>{`${val}`}</div>
                               )
                          })}
                     </div>
@@ -103,9 +105,9 @@ const SchedulerEvent = (props: any) => {
                     </div>
                </div>
                </div>
-               <Row className="justify-content-end mr-1">
+               {props.type !== 'sessions' && <Row className="justify-content-end mr-1">
                     <TransferPrograms events={props.programEvents} />
-               </Row>
+               </Row>}
         </>
      )
 }

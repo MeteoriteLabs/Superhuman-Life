@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef, useContext} from 'react';
-import { GET_TABLEDATA, GET_ALL_FITNESS_PACKAGE_BY_TYPE, GET_ALL_PROGRAM_BY_TYPE, GET_ALL_CLIENT_PACKAGE } from '../../graphQL/queries';
+import { GET_TABLEDATA, GET_ALL_FITNESS_PACKAGE_BY_TYPE, GET_ALL_PROGRAM_BY_TYPE, GET_ALL_CLIENT_PACKAGE, GET_TAG_BY_ID } from '../../graphQL/queries';
 import { useQuery } from '@apollo/client';
 import {Row, Col, Button} from 'react-bootstrap';
 import SchedulerPage from '../../../program-builder/program-template/scheduler';
@@ -14,11 +14,14 @@ const Scheduler = () => {
 
     const auth = useContext(AuthContext);
     const last = window.location.pathname.split('/').reverse();
+    const tagId = window.location.pathname.split('/').pop();
     const [data, setData] = useState<any[]>([]);
     const [show, setShow] = useState(false);
     const [userPackage, setUserPackage] = useState<any>([]);
     const [tagSeperation, setTagSeperation] = useState<any>([]);
     const [statusDays, setStatusDays] = useState();
+    const [totalClasses, setTotalClasses] = useState<any>([]);
+    const [tag, setTag] = useState<any>();
     let programIndex;
 
     const fitnessActionRef = useRef<any>(null);
@@ -28,6 +31,22 @@ const Scheduler = () => {
             setShow(true)
         }, 1500)
     }, [show]);
+
+    useQuery(GET_TAG_BY_ID, { variables: {id: tagId}, onCompleted: (data) => loadTagData(data) });
+
+    function loadTagData(data: any){
+        const flattenData = flattenObj({...data});
+        let total = [0];
+        const values = [...flattenData.tags[0]?.sessions];
+        for(let i = 0; i < values.length; i++){
+            if(values[i].tag === "Classic"){
+                total[0] += 1;
+            }
+        }
+        setTotalClasses(total);
+        setTag(flattenData.tags[0]);
+    }
+
 
     const { data: data4 } = useQuery(GET_TABLEDATA, {
         variables: {
@@ -56,7 +75,7 @@ const Scheduler = () => {
             id: auth.userid,
             type: 'Classic'
         },
-        onCompleted: (data) => loadData()
+        onCompleted: (data) => console.log()
     });
 
     function handleEventsSeperation(data: any, rest_days: any){
@@ -194,14 +213,14 @@ const Scheduler = () => {
                     <Row>
                         <Col xs={11} lg={6} className="pl-4" style={{paddingRight: '20%' }}>
                             <Row>
-                                <h3 className="text-capitalize">{data[0].programName}</h3>
+                                <h3 className="text-capitalize">{tag.tag_name}</h3>
                             </Row>
                             <Row>
-                                <span>{userPackage[programIndex]?.packageName}</span>
+                                <span>{tag.fitnesspackage.packagename}</span>
                                 <div className="ml-3 mt-1" style={{ borderLeft: '1px solid black', height: '20px' }}></div>
-                                <span className="ml-4">{data[0].duration + " days"}</span>
+                                <span className="ml-4">{tag.fitnesspackage.packagename + " days"}</span>
                                 <div className="ml-3" style={{ borderLeft: '1px solid black', height: '20px' }}></div>
-                                <span className="ml-4">{"Level: " + data[0].level}</span>
+                                <span className="ml-4">{"Level: " + tag.fitnesspackage.packagename}</span>
                             </Row>
                             <Row className="p-1 mt-2" style={{ border: '2px solid gray', borderRadius: '10px'}}>
                                 <Col lg={12} className="pl-0 pr-0">
@@ -212,7 +231,7 @@ const Scheduler = () => {
                                 <Col lg={{ offset: 4}}>
                                     <Row>
                                     <div className='position-relative'>
-                                        {userPackage[programIndex].client.slice(0,4).map((item, index) => {
+                                        {tag.client_packages.slice(0,4).map((item, index) => {
                                             let postionLeft = 8;
                                             return (
                                                 <img
@@ -229,7 +248,7 @@ const Scheduler = () => {
                                         </div>
                                     </Row>
                                     <Row className="mt-1">
-                                        <span>{userPackage[programIndex].client.length} people</span>
+                                        <span>{tag.client_packages.length} people</span>
                                     </Row>
                                 </Col>
                                 </Col>
@@ -242,34 +261,11 @@ const Scheduler = () => {
                                 <Row>
                                     <Col>
                                         <Row style={{ justifyContent: 'space-around'}}>
-                                        {userPackage[programIndex].details[0] !== null && userPackage[programIndex].details[0] !== 0 ?
-                                            <div>
-                                                <img src='/assets/custompersonal-training-Online.svg' alt="PT-Online" /><br/>
-                                                <span></span>
-                                            </div>
-                                            : ""}
-                                        {userPackage[programIndex].details[1] !== null && userPackage[programIndex].details[1] !== 0 ?
-                                            <div>
-                                                <img src='/assets/custompersonal-training-Offline.svg' alt="PT-Offline" />
-                                            </div> : ""}
-                                        {userPackage[programIndex].details[2] !== null && userPackage[programIndex].details[2] !== 0 ?
-                                            <div>
-                                                <img src='/assets/customgroup-Online.svg' alt="Group-Online" /><br/>
-                                                <span>{userPackage[programIndex].details[2]} Group</span><br/>
-                                                <span><b>05</b></span>
-                                            </div> : ""}
-                                        {userPackage[programIndex].details[3] !== null && userPackage[programIndex].details[3] !== 0 ?
-                                            <div>
-                                                <img src='/assets/customgroup-Offline.svg' alt="GRoup-Offline" /><br/>
-                                                <span>{userPackage[programIndex].details[3]} Group</span><br/>
-                                                <span><b>05</b></span>
-                                            </div> : ""}
-                                        {userPackage[programIndex].details[4] !== null && userPackage[programIndex].details[4] !== 0 ?
                                             <div>
                                                 <img src='/assets/customclassic.svg' alt="Classic" /><br/>
-                                                <span>{userPackage[programIndex].details[4]} Recorded</span><br/>
-                                                <span><b>{tagSeperation === [] || tagSeperation[0] === 0 ? handleTimeFormatting(0, data[0].duration) : handleTimeFormatting(tagSeperation[0], data[0].duration)}</b></span>
-                                            </div> : ""}
+                                                <span>{tag.fitnesspackage.recordedclasses} Recorded</span><br/>
+                                                <span><b>{handleTimeFormatting(totalClasses[0], tag.fitnesspackage.duration)}</b></span>
+                                            </div>
                                         </Row>
                                         <Row>
                                             
@@ -278,10 +274,10 @@ const Scheduler = () => {
                                 </Row>
                                 <Row>
                                     <Col>
-                                        <span><b style={{ color: 'gray'}}>Status: </b> {statusDays === undefined ? 'N/A' : statusDays}/{data[0].duration}</span>
+                                        <span><b style={{ color: 'gray'}}>Status: </b> {handleTimeFormatting(totalClasses[0], tag.fitnesspackage.duration)}/{tag.fitnesspackage.duration}</span>
                                     </Col>
                                     <Col>
-                                        <span><b style={{ color: 'gray'}}>Rest-Days: </b> {userPackage[programIndex].details[5]} days</span>
+                                        <span><b style={{ color: 'gray'}}>Rest-Days: </b> {tag.fitnesspackage.restdays} days</span>
                                     </Col>
                                 </Row>
                            </div>
@@ -292,7 +288,7 @@ const Scheduler = () => {
             <Row>
                 <Col lg={11} className="pl-0 pr-0">
                     <div className="mt-5">
-                        <SchedulerPage type="day" days={data[0].duration} restDays={data[0].restDays} programId={last[0]} />
+                        <SchedulerPage type="day" days={30} restDays={[]} programId={tagId} />
                     </div>
                 </Col>
                 <FitnessAction ref={fitnessActionRef} />

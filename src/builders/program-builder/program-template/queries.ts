@@ -152,8 +152,8 @@ export const UPDATE_FITNESSPROGRAMS = gql`
 export const CREATE_WORKOUT = gql`
   mutation createworkout(
     $workouttitle: String
-    $intensity: String
-    $level: String
+    $intensity: ENUM_WORKOUT_INTENSITY 
+    $level: ENUM_WORKOUT_LEVEL 
     $About: String
     $Benifits: String
     $users_permissions_user: ID
@@ -196,6 +196,177 @@ export const CREATE_WORKOUT = gql`
   }
 `;
 
+export const GET_SESSIONS = gql`
+  query getSessions($id: ID!, $startDate: Date, $endDate: Date) {
+    tags(filters: {
+      id: {
+        eq: $id
+      },
+      sessions: {
+        session_date: {
+          gte: $startDate,
+          lte: $endDate
+        }
+      }
+    }){
+      data{
+        id
+        attributes{
+          tag_name
+          fitnesspackage{
+            data{
+              id
+              attributes{
+                packagename
+                level
+              }
+            }
+          }
+          sessions{
+            data{
+              id
+              attributes{
+                day_of_program
+                session_date
+                tag
+                type
+                end_time
+                Is_restday
+                start_time
+                mode
+                session_date
+                activity{
+                  data{
+                    id
+                    attributes{
+                      title
+                    }
+                  }
+                }
+                activity_target
+                workout{
+                  data{
+                    id
+                    attributes{
+                      workouttitle
+                    }
+                  }
+                }
+              }
+            }
+          }
+          client_packages{
+            data{
+              id
+              attributes{
+                effective_date
+                accepted_date
+                users_permissions_user{
+                  data{
+                    id
+                    attributes{
+                      username
+                      First_Name
+                      Last_Name
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const CREATE_SESSION = gql`
+  mutation createSessionMutation(
+    $start_time: String,
+    $end_time: String,
+    $workout: ID,
+    $activity: ID,
+    $activity_target: JSON,
+    $tag: String,
+    $mode: String,
+    $type: String,
+    $Is_restday: Boolean,
+    $session_date: Date,
+  ){
+    createSession(data: {
+      type: $type,
+      end_time: $end_time,
+      start_time: $start_time,
+      activity_target: $activity_target,
+      tag: $tag,
+      mode: $mode,
+      workout: $workout,
+      activity: $activity,
+      Is_restday: $Is_restday,
+      session_date: $session_date
+    }){
+      data{
+        id
+      }
+    }
+  }
+`;
+
+export const UPDATE_TAG_SESSIONS = gql`
+  mutation updateTagSessions($id: ID!, $sessions_ids: [ID]){
+    updateTag(id:$id, data: {
+      sessions: $sessions_ids
+    }){
+      data{
+        id
+      }
+    }
+  }
+`
+
+export const UPDATE_SESSION = gql`
+  mutation updateSessionMutation(
+    $id: ID!,
+    $day_of_program: Int,
+    $start_time: String,
+    $end_time: String,
+    $workout: ID,
+    $activity: ID,
+    $activity_target: JSON,
+    $tag: String,
+    $mode: String,
+    $type: String
+  ){
+    updateSession(id: $id, data: {
+      day_of_program: $day_of_program,
+      start_time: $start_time,
+      end_time: $end_time,
+      workout: $workout,
+      activity: $activity,
+      activity_target: $activity_target,
+      tag: $tag,
+      mode: $mode,
+      type: $type,
+    }){
+      data{
+        id
+      }
+    }
+  }
+`;
+
+export const DELETE_SESSION = gql`
+  mutation deleteSessionMutation(
+    $id: ID!
+  ){
+    deleteSession(id: $id){
+      data{
+        id
+      }
+    }
+  }
+`
+
 export const GET_SLOTS_TO_CHECK = gql`
 query getAllChangeMakerAvailabilityHolidays($id: ID!, $dateUpperLimit: Date, $dateLowerLimit: Date) {
   changemakerAvailabilties(filters: {
@@ -237,4 +408,4 @@ export const UPDATE_CHANGEMAKER_AVAILABILITY_WORKHOURS = gql`
       }
     }
   }
-`
+`;

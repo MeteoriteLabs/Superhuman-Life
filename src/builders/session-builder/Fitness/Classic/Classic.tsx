@@ -3,7 +3,7 @@ import { useContext, useMemo, useRef, useState } from 'react'
 import { Badge, Row, Col } from "react-bootstrap";
 import Table from '../../../../components/table';
 import AuthContext from "../../../../context/auth-context";
-import { GET_ALL_CLIENT_PACKAGE, GET_ALL_FITNESS_PACKAGE_BY_TYPE, GET_ALL_PROGRAM_BY_TYPE } from '../../graphQL/queries';
+import { GET_ALL_CLIENT_PACKAGE, GET_ALL_FITNESS_PACKAGE_BY_TYPE, GET_ALL_PROGRAM_BY_TYPE, GET_TAGS_FOR_CLASSIC } from '../../graphQL/queries';
 import moment from 'moment'
 import FitnessAction from '../FitnessAction';
 import ActionButton from '../../../../components/actionbutton';
@@ -16,6 +16,8 @@ export default function Classic(props) {
 
 
     const fitnessActionRef = useRef<any>(null);
+
+    useQuery(GET_TAGS_FOR_CLASSIC, {variables: {id: auth.userid}, onCompleted: (data) => loadData(data)});
 
     const { data: data1 } = useQuery(GET_ALL_FITNESS_PACKAGE_BY_TYPE, {
         variables: {
@@ -35,87 +37,91 @@ export default function Classic(props) {
 
 
 
-    const { data: data3 } = useQuery(GET_ALL_CLIENT_PACKAGE, {
-        variables: {
-            id: auth.userid,
-            type: 'Classic'
-        },
-        onCompleted: (data) => loadData()
-    })
+    // const { data: data3 } = useQuery(GET_ALL_CLIENT_PACKAGE, {
+    //     variables: {
+    //         id: auth.userid,
+    //         type: 'Classic'
+    //     },
+    //     onCompleted: (data) => conso()
+    // })
 
 
 
-    const loadData = () => {
-        const arrayData: any[] = [];
+    const loadData = (data: any) => {
+        // const arrayData: any[] = [];
 
-        const flattenData1 = flattenObj({...data1});
-        const flattenData2 = flattenObj({...data2});
-        const flattenData3 = flattenObj({...data3});
+        // const flattenData1 = flattenObj({...data1});
+        // const flattenData2 = flattenObj({...data2});
+        // const flattenData3 = flattenObj({...data3});
 
-        let fitnessProgramItem: any = {};
-        for (let i = 0; i < flattenData1?.fitnesspackages.length; i++) {
-            for (let j = 0; j < flattenData2?.programManagers.length; j++) {
+        // let fitnessProgramItem: any = {};
+        // for (let i = 0; i < flattenData1?.fitnesspackages.length; i++) {
+        //     for (let j = 0; j < flattenData2?.programManagers.length; j++) {
             
-                if (flattenData1.fitnesspackages[i].id === flattenData2.programManagers[j].fitnesspackages[0].id) {
-                    fitnessProgramItem.proManagerFitnessId = flattenData2.programManagers[j].fitnessprograms[0].id;
-                    fitnessProgramItem.title = flattenData2.programManagers[j].fitnessprograms[0].title;
-                    fitnessProgramItem.published_at = flattenData2.programManagers[j].fitnessprograms[0].published_at;
-                    fitnessProgramItem.proManagerId = flattenData2.programManagers[j].id;
+        //         if (flattenData1.fitnesspackages[i].id === flattenData2.programManagers[j].fitnesspackages[0].id) {
+        //             fitnessProgramItem.proManagerFitnessId = flattenData2.programManagers[j].fitnessprograms[0].id;
+        //             fitnessProgramItem.title = flattenData2.programManagers[j].fitnessprograms[0].title;
+        //             fitnessProgramItem.published_at = flattenData2.programManagers[j].fitnessprograms[0].published_at;
+        //             fitnessProgramItem.proManagerId = flattenData2.programManagers[j].id;
 
-                    arrayData.push({ ...flattenData1.fitnesspackages[i], ...fitnessProgramItem });
-                }
+        //             arrayData.push({ ...flattenData1.fitnesspackages[i], ...fitnessProgramItem });
+        //         }
              
-            }
-        }
+        //     }
+        // }
 
 
-        const arrayA = arrayData.map(item => item.id);
+        // const arrayA = arrayData.map(item => item.id);
 
-        const filterPackage = flattenData1?.fitnesspackages.filter((item: { id: string; }) => !arrayA.includes(item.id));
-        filterPackage.forEach(item => {
-            arrayData.push(item)
-        })
+        // const filterPackage = flattenData1?.fitnesspackages.filter((item: { id: string; }) => !arrayA.includes(item.id));
+        // filterPackage.forEach(item => {
+        //     arrayData.push(item)
+        // })
 
      
 
-        const arrayFitnessPackage = arrayData.map(fitnessPackage => {
-            let client: string[] = [];
+        // const arrayFitnessPackage = arrayData.map(fitnessPackage => {
+        //     let client: string[] = [];
 
-            flattenData3?.clientPackages?.forEach((userPackage: { fitnesspackages: { id: string; }; users_permissions_user: { username: string; }; }) => {
-                if (fitnessPackage.id === userPackage.fitnesspackages[0].id) {
-                    client.push(userPackage.users_permissions_user.username)
-                }
-                fitnessPackage = { ...fitnessPackage, client }
-            })
+        //     flattenData3?.clientPackages?.forEach((userPackage: { fitnesspackages: { id: string; }; users_permissions_user: { username: string; }; }) => {
+        //         if (fitnessPackage.id === userPackage.fitnesspackages[0].id) {
+        //             client.push(userPackage.users_permissions_user.username)
+        //         }
+        //         fitnessPackage = { ...fitnessPackage, client }
+        //     })
 
-            return fitnessPackage
-        })
+        //     return fitnessPackage
+        // })
 
 
 
-        for (let i = 0; i < arrayFitnessPackage.length - 1; i++) {
-            if (arrayFitnessPackage[i].id === arrayFitnessPackage[i + 1].id) {
-                arrayFitnessPackage.splice(arrayFitnessPackage[i], 1)
-            }
-        }
+        // for (let i = 0; i < arrayFitnessPackage.length - 1; i++) {
+        //     if (arrayFitnessPackage[i].id === arrayFitnessPackage[i + 1].id) {
+        //         arrayFitnessPackage.splice(arrayFitnessPackage[i], 1)
+        //     }
+        // }
+
+        const flattenData = flattenObj({...data});
+        console.log(flattenData);
 
 
         setUserPackage(
-            [...arrayFitnessPackage.map((packageItem) => {
+            [...flattenData.tags.map((packageItem) => {
                 return {
+                    tagId: packageItem.id,
                     id: packageItem.id,
-                    packageName: packageItem.packagename,
-                    duration: packageItem.duration,
-                    expiry: moment(packageItem.expiry_date).format("MMMM DD,YYYY"),
-                    packageStatus: packageItem.Status ? "Active" : "Inactive",
+                    packageName: packageItem.fitnesspackage.packagename,
+                    duration: packageItem.fitnesspackage.duration,
+                    // expiry: moment(packageItem.expiry_date).format("MMMM DD,YYYY"),
+                    // packageStatus: packageItem.Status ? "Active" : "Inactive",
 
-                    proManagerId: packageItem.proManagerId,
-                    proManagerFitnessId: packageItem.proManagerFitnessId,
-                    client: packageItem.client ? packageItem.client : "N/A",
-                    time: packageItem.published_at ? moment(packageItem.published_at).format('h:mm:ss a') : "N/A",
-                    programName: packageItem.title ? packageItem.title : "N/A",
-                    programStatus: packageItem.client?.length > 0 ? "Assigned" : "N/A",
-                    renewal: packageItem.title ? "25/08/2021" : "N/A",
+                    // proManagerId: packageItem.proManagerId,
+                    // proManagerFitnessId: packageItem.proManagerFitnessId,
+                    // client: packageItem.client ? packageItem.client : "N/A",
+                    // time: packageItem.published_at ? moment(packageItem.published_at).format('h:mm:ss a') : "N/A",
+                    programName: packageItem.tag_name ? packageItem.tag_name : "N/A",
+                    // programStatus: packageItem.client?.length > 0 ? "Assigned" : "N/A",
+                    // renewal: packageItem.title ? "25/08/2021" : "N/A",
                 }
             })]
         )
@@ -183,8 +189,8 @@ export default function Classic(props) {
     //     }
     // }
 
-    function handleRedirect(id: any, clients: any){
-        window.location.href = `/classic/session/scheduler/${clients}/${id}`;
+    function handleRedirect(id: any){
+        window.location.href = `/classic/session/scheduler/${id}`;
     };
 
     const columns = useMemo(
@@ -195,34 +201,34 @@ export default function Classic(props) {
                     { accessor: "packageName", Header: 'Name', enableRowSpan: true },
                     { accessor: 'duration', Header: 'Duration' },
                     { accessor: 'expiry', Header: 'Expiry' },
-                    {
-                        accessor: "packageStatus",
-                        Header: "Status",
-                        Cell: (row: any) => {
-                            return <>
-                                {row.value === "Active" ?
-                                    <Badge style={{ padding: '0.8rem 4rem', borderRadius: '10px', fontSize: '1rem' }} variant="success">{row.value}</Badge> :
-                                    <Badge style={{ padding: '0.8rem 3rem', borderRadius: '10px', fontSize: '1rem' }} variant="danger">{row.value}</Badge>
-                                }
-                            </>
-                        },
-                        enableRowSpan: true
-                    },
+                    // {
+                    //     accessor: "packageStatus",
+                    //     Header: "Status",
+                    //     Cell: (row: any) => {
+                    //         return <>
+                    //             {row.value === "Active" ?
+                    //                 <Badge style={{ padding: '0.8rem 4rem', borderRadius: '10px', fontSize: '1rem' }} variant="success">{row.value}</Badge> :
+                    //                 <Badge style={{ padding: '0.8rem 3rem', borderRadius: '10px', fontSize: '1rem' }} variant="danger">{row.value}</Badge>
+                    //             }
+                    //         </>
+                    //     },
+                    //     enableRowSpan: true
+                    // },
                 ]
             },
 
             { accessor: ' ', Header: '' },
 
             {
-                Header: "Program",
+                Header: "Class Details",
                 columns: [
-                    { accessor: "programName", Header: 'Name' },
+                    { accessor: "programName", Header: 'Class Name' },
                     {
                         accessor: "client",
                         Header: "Client",
                         Cell: (row) => {
                             return <div >
-                                {row.value?.length === 0 ? <p className='text-center mb-0'>N/A</p> :
+                                {row.value?.length === undefined ? <p className='text-center mb-0'>N/A</p> :
                                     row.value?.length === 1 ?
                                         <img
                                             src="https://picsum.photos/200/100" alt='profile-pic'
@@ -240,9 +246,8 @@ export default function Classic(props) {
                                             })}
                                         </div>
                                 }
-
-                                {row.value.length === 0 ? "" :
-                                    row.value.length === 1 ? <p className='text-center'>{row.value}</p> : <p className='text-center'>{row.value.length} people</p>
+                                {row.value?.length === undefined  ? "" :
+                                    row.value?.length === 1 ? <p className='text-center'>{row.value}</p> : <p className='text-center'>{row.value?.length} people</p>
                                 }
 
 
@@ -267,7 +272,7 @@ export default function Classic(props) {
                         Header: "Actions",
                         Cell: ({ row }: any) => {
                             const actionClick1 = () => {
-                                handleRedirect(row.original.proManagerFitnessId, row.original.id);
+                                handleRedirect(row.original.tagId);
                             }
                             const actionClick2 = () => {
                                 fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'details', type: "Classic Class", rowData: row.original })

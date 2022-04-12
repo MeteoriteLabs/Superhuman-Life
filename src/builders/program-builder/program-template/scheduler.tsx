@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import { Modal, Button, Row, Col, Tab, Tabs, InputGroup, FormControl, Badge, OverlayTrigger, Tooltip, Form } from 'react-bootstrap';
 import './styles.css';
-import { GET_SCHEDULEREVENTS, PROGRAM_EVENTS, UPDATE_FITNESSPROGRAMS, FETCH_WORKOUT, FETCH_ACTIVITY, GET_SLOTS_TO_CHECK, UPDATE_CHANGEMAKER_AVAILABILITY_WORKHOURS } from './queries';
+import { PROGRAM_EVENTS, FETCH_WORKOUT, FETCH_ACTIVITY, GET_SLOTS_TO_CHECK, UPDATE_CHANGEMAKER_AVAILABILITY_WORKHOURS, GET_SESSIONS, DELETE_SESSION, UPDATE_SESSION, CREATE_SESSION, UPDATE_TAG_SESSIONS } from './queries';
 import { useQuery, useMutation } from "@apollo/client";
 import ProgramList from "../../../components/customWidgets/programList";
+import SessionList from '../../../components/customWidgets/sessionList';
 import FloatingButton from './FloatingButtons';
 import TimeField from '../../../components/customWidgets/multipleTimeFields';
 import TextEditor from '../../../components/customWidgets/textEditor';
@@ -28,11 +29,14 @@ const Schedular = (props: any) => {
     const [arr, setArr] = useState<any[]>([]);
     const [arr2, setarr2] = useState<any>({});
     const [program, setProgram] = useState('none');
+    const [sessionFilter, setSessionFilter] = useState('none');
     const [mode, setMode] = useState("");
     const [tag, setTag] = useState("");
     const program_id = window.location.pathname.split('/').pop();
     const schedulerDay: any = require("./json/scheduler-day.json");
     const [changeMakerAvailability, setChangeMakerAvailability] = useState<any>([]);
+    const [sessionIds, setSessionsIds] = useState<any>([]);
+
 
     function handleEndTime(startTime: any, endTime: any){
         var timeStart: any = new Date("01/01/2007 " + handleTimeFormat(startTime));
@@ -50,18 +54,35 @@ const Schedular = (props: any) => {
             setData(flattenData.workouts);
             handleShow();
             if(arr2.event?.import === "importedEvent"){
-                setEvent({ 
-                    title: arr2.event?.title, 
-                    type: arr2.event?.type,
-                    id: arr2.event?.id,
-                    tag: arr2.event?.tag,
-                    mode: arr2.event?.mode,
-                    day: arr2?.d,
-                    hour: arr2?.h,
-                    min: arr2?.m,
-                    endHour: handleEndTime(arr2.event?.hour + ':' + arr2.event?.min, arr2.event?.endHour + ':' + arr2.event?.endMin).split(':')[0].charAt(1),
-                    endMin: handleEndTime(arr2.event?.hour + ':' + arr2.event?.min, arr2.event?.endHour + ':' + arr2.event?.endMin).split(':')[1],
-                });
+                if(arr2.event?.tag === 'Group Class'){
+                    setEvent({ 
+                        title: arr2.event?.title, 
+                        type: arr2.event?.type,
+                        id: arr2.event?.id,
+                        tag: arr2.event?.tag,
+                        mode: arr2.event?.mode,
+                        day: arr2.event?.day,
+                        hour: arr2?.event?.hour,
+                        min: arr2?.event?.min,
+                        endHour:arr2.event?.endHour,
+                        endMin: arr2.event?.endMin,
+                        sessionId: arr2.event?.sessionId,
+                    });
+                }else {
+                    setEvent({ 
+                        title: arr2.event?.title, 
+                        type: arr2.event?.type,
+                        id: arr2.event?.id,
+                        tag: arr2.event?.tag,
+                        mode: arr2.event?.mode,
+                        day: arr2?.d,
+                        hour: arr2?.h,
+                        min: arr2?.m,
+                        endHour: handleEndTime(arr2.event?.hour + ':' + arr2.event?.min, arr2.event?.endHour + ':' + arr2.event?.endMin).split(':')[0].charAt(1),
+                        endMin: handleEndTime(arr2.event?.hour + ':' + arr2.event?.min, arr2.event?.endHour + ':' + arr2.event?.endMin).split(':')[1],
+                        sessionId: arr2.event?.sessionId,
+                    });
+                }
             }
         }
     });
@@ -77,7 +98,7 @@ const Schedular = (props: any) => {
     });
 
     function Fetchdata(_variables: any) {
-        useQuery(GET_SCHEDULEREVENTS, { variables: _variables, onCompleted: handleRenderTable });
+        useQuery(GET_SESSIONS, { variables: _variables, onCompleted: handleRenderTable });
     }
 
     function draganddrop() {
@@ -129,30 +150,45 @@ const Schedular = (props: any) => {
 
     setTimeout(() => {
         draganddrop();
-    }, 200)
+    }, 200);
+
 
     function handleRenderTable(data: any) {
         const flattenData = flattenObj({...data});
+        const sessionsExistingValues = [...sessionIds];
+        for(var q=0; q<flattenData.tags[0]?.sessions.length; q++){
+            sessionsExistingValues.push(flattenData.tags[0]?.sessions[q].id);
+        }
+        setSessionsIds(sessionsExistingValues);
         for (var d = 1; d <= props.days; d++) {
             arr[d] = JSON.parse(JSON.stringify(schedulerDay));
         }
-        if (flattenData.fitnessprograms[0].events) {
-            flattenData.fitnessprograms[0].events.forEach((val) => {
-                var startTimeHour: any = `${val.startTime === undefined ? '0' : val.startTime.split(':')[0]}`;
-                var startTimeMinute: any = `${val.startTime === undefined ? '0' : val.startTime.split(':')[1]}`;
-                var endTimeHour: any = `${val.endTime === undefined ? '0' : val.endTime.split(':')[0]}`;
-                var endTimeMin: any = `${val.endTime === undefined ? '0' : val.endTime.split(':')[1]}`;
-                if (!arr[val.day][startTimeHour][startTimeMinute]) {
-                    arr[val.day][startTimeHour][startTimeMinute] = [];
+        if (flattenData.tags[0]?.sessions.length > 0) {
+            flattenData.tags[0]?.sessions.forEach((val) => {
+                var startTimeHour: any = `${val.start_time === undefined ? '0' : val.start_time.split(':')[0]}`;
+                var startTimeMinute: any = `${val.start_time === undefined ? '0' : val.start_time.split(':')[1]}`;
+                var endTimeHour: any = `${val.end_time === undefined ? '0' : val.end_time.split(':')[0]}`;
+                var endTimeMin: any = `${val.end_time === undefined ? '0' : val.end_time.split(':')[1]}`;
+                if (!arr[calculateDay(props.startDate, val.session_date)][startTimeHour][startTimeMinute]) {
+                    arr[calculateDay(props.startDate, val.session_date)][startTimeHour][startTimeMinute] = [];
                 }
-                arr[val.day][startTimeHour][startTimeMinute].push({
-                    "title": val.name, "color": "skyblue",
-                    "day": val.day, "hour": startTimeHour, "min": startTimeMinute, "type": val.type,
-                    "endHour": endTimeHour, "endMin": endTimeMin, "id": val.id, "mode": val.mode,
-                    "tag": val.tag
+                arr[calculateDay(props.startDate, val.session_date)][startTimeHour][startTimeMinute].push({
+                    "title": val.activity === null ? val.workout.workouttitle : val.activity.title, "color": "skyblue",
+                    "day": calculateDay(props.startDate, val.session_date), "hour": startTimeHour, "min": startTimeMinute, "type": val.type,
+                    "endHour": endTimeHour, "endMin": endTimeMin, "id": val.activity === null ? val.workout.id : val.activity.id, "mode": val.mode,
+                    "tag": val.tag, "sessionId": val.id, "activityTarget": val.activity === null ? null : val.activity_target
                 });
             })
         }
+    }
+
+    function calculateDay(startDate, sessionDate){
+        const startDateFormatted = moment(startDate);
+        startDateFormatted.set({hour: 12, minute: 0, second: 0, millisecond: 0});
+        const sessionDateFormatted = moment(sessionDate);
+        sessionDateFormatted.set({hour: 12, minute: 0, second: 0, millisecond: 0});
+        const diffDays = sessionDateFormatted.diff(startDateFormatted, 'days') + 1;
+        return diffDays;
     }
 
     const hours: number[] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
@@ -184,7 +220,7 @@ const Schedular = (props: any) => {
     }
     
     handleDays();
-    Fetchdata({ id: props.programId });
+    Fetchdata({ id: props.programId, startDate: moment(props.startDate).format("YYYY-MM-DD"), endDate: moment(props.startDate).add(props.days - 1 , 'days').format("YYYY-MM-DD") });
 
     useEffect(() => {
         setTimeout(() => {
@@ -205,6 +241,10 @@ const Schedular = (props: any) => {
 
     function handleFloatingActionProgramCallback(event: any) {
         setProgram(`${event}`);
+    }
+
+    function handleFloatingActionProgramCallback2(event: any) {
+        setSessionFilter(`${event}`);
     }
 
     function handleRestDays(val: any) {
@@ -236,12 +276,12 @@ const Schedular = (props: any) => {
 
     function loadProgramEvents(r: any) {
         const flattenData = flattenObj({...r});
-        setCurrentProgram([...flattenData.fitnessprograms[0].events] ? flattenData.fitnessprograms[0].events : []);
+        // setCurrentProgram([...flattenData.fitnessprograms[0].events] ? flattenData.fitnessprograms[0].events : []);
     }
 
     FetchProgramEvents({ id: program_id });
 
-    const [updateProgram] = useMutation(UPDATE_FITNESSPROGRAMS);
+    // const [updateProgram] = useMutation(UPDATE_FITNESSPROGRAMS);
     const [updateChangeMakerAvailability] = useMutation(UPDATE_CHANGEMAKER_AVAILABILITY_WORKHOURS);
 
     var changedTime: any;
@@ -266,52 +306,65 @@ const Schedular = (props: any) => {
     });
 
     const [duplicatedDay, setDuplicatedDay] = useState<any>([]);
+    const [createSession] = useMutation(CREATE_SESSION, {onCompleted: (r: any) => {handleUpdateTag(r.createSession.data.id)}});
+    const [updateSession] = useMutation(UPDATE_SESSION, { onCompleted: () => {setEvent({})}});
+    const [updateTagSessions] = useMutation(UPDATE_TAG_SESSIONS, { onCompleted: () => {setEvent({})}});
+
+    function handleUpdateTag(newId: any){
+        const values = [...sessionIds];
+        values.push(newId);
+        updateTagSessions({
+            variables: {
+                id: program_id,
+                sessions_ids: values
+            }
+        });
+    }
 
     function handleDuplicate(e: any, changedTime: any){
         const timeInput = JSON.parse(changedTime.startChange);
-        let values = [...currentProgram];
-        let newEvent: any = {};
-        newEvent.name = e.title;
-        newEvent.mode = e.mode;
-        newEvent.tag = e.tag;
-        newEvent.day = (duplicatedDay.length === 0 ? e.day : parseInt(duplicatedDay[0].day.substr(4)));
-        newEvent.startTime = timeInput.startTime;
-        newEvent.endTime = timeInput.endTime;
-        newEvent.type = e.type;
-        newEvent.id = e.id;
+        // let newEvent: any = {};
+        // newEvent.name = e.title;
+        // newEvent.mode = e.mode;
+        // newEvent.tag = e.tag;
+        // newEvent.day = (duplicatedDay.length === 0 ? e.day : parseInt(duplicatedDay[0].day.substr(4)));
+        // newEvent.startTime = timeInput.startTime;
+        // newEvent.endTime = timeInput.endTime;
+        // newEvent.type = e.type;
+        // newEvent.id = e.id;
 
-        var timeStart: any = new Date("01/01/2007 " + handleTimeFormat(newEvent.startTime));
-        var timeEnd: any = new Date("01/01/2007 " + handleTimeFormat(newEvent.endTime));
-        var diff1 = timeEnd - timeStart;
-        for (var i = 0; i <= values.length - 1; i++) {
-            var startTimeHour: any = new Date("01/01/2007 " + handleTimeFormat(values[i].startTime));
-            var endTimeHour: any = new Date("01/01/2007 " + handleTimeFormat(values[i].endTime));
-            var diff2 = endTimeHour - startTimeHour;
+        // var timeStart: any = new Date("01/01/2007 " + handleTimeFormat(newEvent.startTime));
+        // var timeEnd: any = new Date("01/01/2007 " + handleTimeFormat(newEvent.endTime));
+        // var diff1 = timeEnd - timeStart;
+        // for (var i = 0; i <= values.length - 1; i++) {
+        //     var startTimeHour: any = new Date("01/01/2007 " + handleTimeFormat(values[i].startTime));
+        //     var endTimeHour: any = new Date("01/01/2007 " + handleTimeFormat(values[i].endTime));
+        //     var diff2 = endTimeHour - startTimeHour;
 
-            if (diff2 < diff1) {
-                values.splice(i, 0, newEvent);
-                break;
-            }
-            if (i === values.length - 1) {
-                values.push(newEvent);
-                break;
-            }
-        }
+        //     if (diff2 < diff1) {
+        //         values.splice(i, 0, newEvent);
+        //         break;
+        //     }
+        //     if (i === values.length - 1) {
+        //         values.push(newEvent);
+        //         break;
+        //     }
+        // }
 
-        let lastEventDay: number = 0;
+        // let lastEventDay: number = 0;
 
-        for(var k=0; k<= values.length - 1; k++) {
-            if(values[k].day > lastEventDay){
-                lastEventDay = parseInt(values[k].day);
-            }
-        }
+        // for(var k=0; k<= values.length - 1; k++) {
+        //     if(values[k].day > lastEventDay){
+        //         lastEventDay = parseInt(values[k].day);
+        //     }
+        // }
 
         const addedEventDate = dates[(duplicatedDay.length === 0 ? e.day : parseInt(duplicatedDay[0].day.substr(4))) - 1];
         const availability = changeMakerAvailability.changemakerAvailabilties.find((x: any) => moment(x.date).format('YYYY-MM-DD') === moment(addedEventDate).format('YYYY-MM-DD'));
         const availabilitySlots = availability ? [...availability.booking_slots] : [];
         if(availabilitySlots.length > 0){
             for(var x=0; x< availabilitySlots.length; x++){
-                if(moment(newEvent.endTime, 'hh:mm:ss').isSameOrAfter(moment(availabilitySlots[x].startTime, 'hh:mm:ss')) && moment(newEvent.endTime, 'hh:mm:ss').isBefore(moment(availabilitySlots[x].endTime, 'hh:mm:ss'))){
+                if(moment(timeInput.endTime, 'hh:mm:ss').isSameOrAfter(moment(availabilitySlots[x].startTime, 'hh:mm:ss')) && moment(timeInput.endTime, 'hh:mm:ss').isBefore(moment(availabilitySlots[x].endTime, 'hh:mm:ss'))){
                     availabilitySlots.splice(x, 1);
                     break;
                 }
@@ -324,22 +377,48 @@ const Schedular = (props: any) => {
             });
         }
 
-        updateProgram({
-            variables: {
-                programid: program_id,
-                events: values, 
-                renewal_dt: lastEventDay
-            }
-        });
-        setEvent({});
+        if(e.type === "workout"){
+            createSession({
+                variables: {
+                    day_of_program: (duplicatedDay.length === 0 ? e.day : parseInt(duplicatedDay[0].day.substr(4))),
+                    start_time: timeInput.startTime,
+                    end_time: timeInput.endTime,
+                    workout: e.id,
+                    tag: e.tag,
+                    mode: e.mode,
+                    type: e.type
+                }
+            })
+        }else {
+            createSession({
+                variables: {
+                    day_of_program: (duplicatedDay.length === 0 ? e.day : parseInt(duplicatedDay[0].day.substr(4))),
+                    start_time: timeInput.startTime,
+                    end_time: timeInput.endTime,
+                    activity: e.id,
+                    activity_target: e.activityTarget,
+                    tag: e.tag,
+                    mode: e.mode,
+                    type: e.type
+                }
+            })
+        }
+
+        // updateProgram({
+        //     variables: {
+        //         programid: program_id,
+        //         events: values, 
+        //         renewal_dt: lastEventDay
+        //     }
+        // });
     }
 
     function handleImportedEvent(e: any, mode: any, tag: any) {
         let newEvent: any = {};
         const values = [...arr];
-        if (arr2.event.day) {
-            values[arr2.event.day][arr2.event.hour][arr2.event.min].splice(arr2.event.index, 1);
-        }
+        // if (arr2.event.day) {
+        //     values[arr2.event.day][arr2.event.hour][arr2.event.min].splice(arr2.event.index, 1);
+        // }
         
         if (arr2.d === undefined || arr2.h === undefined || arr2.m === undefined) {
             return;
@@ -351,7 +430,7 @@ const Schedular = (props: any) => {
         const timeInput = JSON.parse(e.startChange);
 
         newEvent.name = event.title;
-        newEvent.mode = mode === "" ? event.mode : mode;
+        newEvent.mode = mode === "" ? event.mode : mode
         newEvent.tag = tag === "" ? event.tag : tag
         newEvent.day = event.day;
         newEvent.type = event.type;
@@ -433,14 +512,65 @@ const Schedular = (props: any) => {
                 }
             });
         }
-        
-        updateProgram({
-            variables: {
-                programid: program_id,
-                events: existingValues,
-                renewal_dt: lastEventDay
+        if(event.type === "workout"){
+            if(event.tag === 'Group Class'){
+                const values = [...sessionIds];
+                values.push(event.sessionId);
+                updateTagSessions({
+                    variables: {
+                        id: program_id,
+                        sessions_ids: values
+                    }
+                });
+
             }
-        })
+            else {
+                createSession({
+                    variables: {
+                        day_of_program: parseInt(event.day),
+                        start_time: event.hour + ':' + event.min,
+                        end_time: event.endHour + ':' + event.endMin,
+                        workout: event.id,
+                        tag: tag === "" ? event.tag : tag,
+                        mode: mode === "" ? event.mode : mode,
+                        type: event.type
+                    }
+                })
+            }
+        }else {
+            if(event.tag === 'Group Class'){
+                const values = [...sessionIds];
+                values.push(event.sessionId);
+                updateTagSessions({
+                    variables: {
+                        id: program_id,
+                        sessions_ids: values
+                    }
+                });
+
+            }else {
+                createSession({
+                    variables: {
+                        day_of_program: parseInt(event.day),
+                        start_time: timeInput.startTime === "" ? event.hour + ':' + event.min : timeInput.startTime,
+                        end_time: timeInput.endTime === "" ? event.endHour + ':' + event.endMin : timeInput.endTime,
+                        activity: event.id,
+                        activity_target: event.activityTarget,
+                        tag: tag === "" ? event.tag : tag,
+                        mode: mode === "" ? event.mode : mode,
+                        type: e.type
+                    }
+                })
+            }
+        }
+        
+        // updateProgram({
+        //     variables: {
+        //         programid: program_id,
+        //         events: existingValues,
+        //         renewal_dt: lastEventDay
+        //     }
+        // })
 
         setArr(values);
         setarr2([]);
@@ -449,80 +579,87 @@ const Schedular = (props: any) => {
     }
 
     function handleSaveChanges(e: any, mode: any, tag: any) {
-        let values = currentProgram === null ? [] : [...currentProgram];
+        // let values = currentProgram === null ? [] : [...currentProgram];
         let newEvent: any = {};
 
         if(arr2.event?.import === 'importedEvent'){
             handleImportedEvent(e, mode, tag);
         } else {
-            let a = values.find((val) => val.id === event.id && val.day === event.day && val.startTime === event.hour + ":" + event.min && val.endTime === event.endHour + ":" + event.endMin);
-            let b = values.findIndex((val) => val.id === event.id && val.day === event.day && val.startTime === event.hour + ":" + event.min && val.endTime === event.endHour + ":" + event.endMin);
-            if (a) {
-                e.startChange = JSON.parse(e.startChange);
-                newEvent.id = a.id;
-                newEvent.name = a.name;
-                newEvent.mode = mode === "" ? a.mode : mode;
-                newEvent.tag = tag === "" ? a.tag : tag;
-                newEvent.startTime = e.startChange.startTime;
-                newEvent.endTime = e.startChange.endTime;
-                newEvent.type = a.type;
-                newEvent.day = a.day;
-    
-                values.splice(b, 1);
-                var timeStart: any = new Date("01/01/2007 " + handleTimeFormat(newEvent.startTime));
-                var timeEnd: any = new Date("01/01/2007 " + handleTimeFormat(newEvent.endTime));
-                var diff1 = timeEnd - timeStart;
-                for (var i = 0; i <= values.length - 1; i++) {
-                    var startTimeHour: any = new Date("01/01/2007 " + handleTimeFormat(values[i].startTime));
-                    var endTimeHour: any = new Date("01/01/2007 " + handleTimeFormat(values[i].endTime));
-                    var diff2 = endTimeHour - startTimeHour;
-    
-                    if (diff2 < diff1) {
-                        values.splice(i, 0, newEvent);
-                        break;
-                    }
-                    if (i === values.length - 1) {
-                        values.push(newEvent);
+            // let a = values.find((val) => val.id === event.id && val.day === event.day && val.startTime === event.hour + ":" + event.min && val.endTime === event.endHour + ":" + event.endMin);
+            // let b = values.findIndex((val) => val.id === event.id && val.day === event.day && val.startTime === event.hour + ":" + event.min && val.endTime === event.endHour + ":" + event.endMin);
+            // e.startChange = JSON.parse(e.startChange);
+            const addedEventDate = dates[(duplicatedDay.length === 0 ? e.day : parseInt(duplicatedDay[0].day.substr(4))) - 1];
+            const availability = changeMakerAvailability.changemakerAvailabilties.find((x: any) => moment(x.date).format('YYYY-MM-DD') === moment(addedEventDate).format('YYYY-MM-DD'));
+            const availabilitySlots = availability ? [...availability.booking_slots] : [];
+            if(availabilitySlots.length > 0){
+                for(var x=0; x< availabilitySlots.length; x++){
+                    if(moment(newEvent.endTime, 'hh:mm:ss').isSameOrAfter(moment(availabilitySlots[x].startTime, 'hh:mm:ss')) && moment(newEvent.endTime, 'hh:mm:ss').isBefore(moment(availabilitySlots[x].endTime, 'hh:mm:ss'))){
+                        availabilitySlots.splice(x, 1);
                         break;
                     }
                 }
-    
-                let lastEventDay: number = 0;
-    
-                for(var k=0; k<= values.length - 1; k++) {
-                    if(values[k].day > lastEventDay){
-                        lastEventDay = parseInt(values[k].day);
-                    }
-                }
-
-                const addedEventDate = dates[(duplicatedDay.length === 0 ? e.day : parseInt(duplicatedDay[0].day.substr(4))) - 1];
-                const availability = changeMakerAvailability.changemakerAvailabilties.find((x: any) => moment(x.date).format('YYYY-MM-DD') === moment(addedEventDate).format('YYYY-MM-DD'));
-                const availabilitySlots = availability ? [...availability.booking_slots] : [];
-                if(availabilitySlots.length > 0){
-                    for(var x=0; x< availabilitySlots.length; x++){
-                        if(moment(newEvent.endTime, 'hh:mm:ss').isSameOrAfter(moment(availabilitySlots[x].startTime, 'hh:mm:ss')) && moment(newEvent.endTime, 'hh:mm:ss').isBefore(moment(availabilitySlots[x].endTime, 'hh:mm:ss'))){
-                            availabilitySlots.splice(x, 1);
-                            break;
-                        }
-                    }
-                    updateChangeMakerAvailability({
-                        variables: {
-                            id: availability.id,
-                            slots: availabilitySlots
-                        }
-                    });
-                }
-    
-                updateProgram({
+                updateChangeMakerAvailability({
                     variables: {
-                        programid: program_id,
-                        events: values,
-                        renewal_dt: lastEventDay
+                        id: availability.id,
+                        slots: availabilitySlots
                     }
-                })
+                });
             }
+            updateSession({
+                variables: {
+                    id: event.sessionId,
+                    start_time: e.startChange.startTime,
+                    end_time: e.startChange.endTime,
+                    tag: tag === "" ? event.tag : tag,
+                    mode: mode === "" ? event.mode : mode 
+                }
+            });
+            // if (event) {
+                // newEvent.id = a.id;
+                // newEvent.name = a.name;
+                // newEvent.mode = mode === "" ? a.mode : mode;
+                // newEvent.tag = tag === "" ? a.tag : tag;
+                // newEvent.startTime = e.startChange.startTime;
+                // newEvent.endTime = e.startChange.endTime;
+                // newEvent.type = a.type;
+                // newEvent.day = a.day;
+    
+                // values.splice(b, 1);
+                // var timeStart: any = new Date("01/01/2007 " + handleTimeFormat(newEvent.startTime));
+                // var timeEnd: any = new Date("01/01/2007 " + handleTimeFormat(newEvent.endTime));
+                // var diff1 = timeEnd - timeStart;
+                // for (var i = 0; i <= values.length - 1; i++) {
+                //     var startTimeHour: any = new Date("01/01/2007 " + handleTimeFormat(values[i].startTime));
+                //     var endTimeHour: any = new Date("01/01/2007 " + handleTimeFormat(values[i].endTime));
+                //     var diff2 = endTimeHour - startTimeHour;
+    
+                //     if (diff2 < diff1) {
+                //         values.splice(i, 0, newEvent);
+                //         break;
+                //     }
+                //     if (i === values.length - 1) {
+                //         values.push(newEvent);
+                //         break;
+                //     }
+                // }
+    
+                // let lastEventDay: number = 0;
+    
+                // for(var k=0; k<= values.length - 1; k++) {
+                //     if(values[k].day > lastEventDay){
+                //         lastEventDay = parseInt(values[k].day);
+                //     }
+                // }
+    
+                // updateProgram({
+                //     variables: {
+                //         programid: program_id,
+                //         events: values,
+                //         renewal_dt: lastEventDay
+                //     }
+                // })
+            // }
         }
-        setEvent({});
     }
     var changedDay;
     var changedHour;
@@ -643,27 +780,34 @@ const Schedular = (props: any) => {
         )
     }
 
+    const [deleteSession] = useMutation(DELETE_SESSION, {onCompleted: () => {handleClose()}});
+
     function handleEventDelete(){
-        let values = [...currentProgram];
-        let a = values.findIndex((val) => val.id === event.id && val.day === event.day && val.startTime === event.hour + ":" + event.min && val.endTime === event.endHour + ":" + event.endMin);
-        values.splice(a,1);
-
-        let lastEventDay: number = 0;
-
-        for(var k=0; k<= values.length - 1; k++) {
-            if(values[k].day > lastEventDay){
-                lastEventDay = parseInt(values[k].day);
-            }
-        }
-
-        updateProgram({
+        // let values = [...currentProgram];
+        deleteSession({
             variables: {
-                programid: program_id,
-                events: values,
-                renewal_dt: lastEventDay
+                id: event.sessionId
             }
         });
-        handleClose();
+        // let a = values.findIndex((val) => val.id === event.id && val.day === event.day && val.startTime === event.hour + ":" + event.min && val.endTime === event.endHour + ":" + event.endMin);
+        // values.splice(a,1);
+
+        // let lastEventDay: number = 0;
+
+        // for(var k=0; k<= values.length - 1; k++) {
+        //     if(values[k].day > lastEventDay){
+        //         lastEventDay = parseInt(values[k].day);
+        //     }
+        // }
+
+        // updateProgram({
+        //     variables: {
+        //         programid: program_id,
+        //         events: values,
+        //         renewal_dt: lastEventDay
+        //     }
+        // });
+        // handleClose();
 
     }
 
@@ -784,13 +928,22 @@ const Schedular = (props: any) => {
             });
         }
 
-        updateProgram({
+        updateSession({
             variables: {
-                programid: program_id,
-                events: existingValues,
-                renewal_dt: lastEventDay
+                id: arr2.event.sessionId,
+                start_time: newEvent.startTime,
+                end_time: newEvent.endTime,
+                day_of_program: parseInt(newEvent.day)
             }
-        })
+        });
+
+        // updateProgram({
+        //     variables: {
+        //         programid: program_id,
+        //         events: existingValues,
+        //         renewal_dt: lastEventDay
+        //     }
+        // })
 
         if(values[arr2.d][arr2.h][arr2.m].length === 0){
             values[arr2.d][arr2.h][arr2.m].push({ "title": arr2.event.title, "color": arr2.event.color, "day": arr2.d, "hour": arr2.h, "min": arr2.m, "endHour": sh, "endMin": sm, "mode": arr2.event.mode, "tag": arr2.event.tag });
@@ -827,17 +980,17 @@ const Schedular = (props: any) => {
                 dates.map((val, index) => {
                     return (
                         <>
-                            <div className="cell" style={{ backgroundColor: `${handleRestDays(index+1)}`, minHeight: '80px' }}>
+                            <div className="cell" style={{ backgroundColor: `${handleRestDays(index+1)}`, minHeight: '60px' }}>
                                 <div className="event-dayOfWeek text-center mt-1">
                                     <span style={{ fontSize: '14px'}}>{moment(val).format("dddd")}</span>
                                 </div>
                                 <div className="event-date text-center mt-1" style={{ backgroundColor: `${handleRestDays(index+1)}` }}>
                                     <span style={{ fontSize: '14px'}}>{moment(val).format("Do, MMM YY")}</span>
                                 </div>
-                                <div className="event-date text-center" style={{ backgroundColor: `${handleRestDays(index+1)}` }}>
+                                {/* <div className="event-date text-center" style={{ backgroundColor: `${handleRestDays(index+1)}` }}>
                                     <span style={{ fontSize: '12px'}}>Day-{index+1}</span>
                                     <Badge variant="success" className="ml-4 mr-4 mb-1" style={{ display: `${moment().format("Do, MMM YY") === moment(val).format("Do, MMM YY") ? 'block': 'none'}`}}>Today</Badge>
-                                </div>
+                                </div> */}
                             </div>
                         </>
                     )
@@ -861,10 +1014,14 @@ const Schedular = (props: any) => {
                 <ProgramList callback={handleFloatingActionProgramCallback} />
             </div>
 
+            <div className="mb-5 shadow-lg p-3" style={{ display: `${sessionFilter}`, borderRadius: '20px' }}>
+                <SessionList startDate={props.startDate} days={dates} callback2={handleFloatingActionProgramCallback2} />
+            </div>
+
             <div className="wrapper shadow-lg">
                 <div className="schedular">
                     <div className="day-row">
-                        <div className="cell" style={{ backgroundColor: 'white', position: 'relative', minHeight: `${props.type === 'date' ? '80px' : '60px'}` }}></div>
+                        <div className="cell" style={{ backgroundColor: 'white', position: 'relative', minHeight: `${props.type === 'date' ? '60px' : '60px'}` }}></div>
                         {handleDaysRowRender()}
                     </div>
                     {hours.map(h => {
@@ -943,7 +1100,7 @@ const Schedular = (props: any) => {
                     })}
                 </div>
             </div>
-            <FloatingButton startDate={props.startDate} duration={props.days} callback={handleFloatingActionProgramCallback} />
+            <FloatingButton startDate={props.startDate} duration={props.days} callback={handleFloatingActionProgramCallback} callback2={handleFloatingActionProgramCallback2}/>
             {
                 <Modal show={showModal} onHide={handleClose} backdrop="static" centered size="lg" >
                     <Modal.Body style={{ maxHeight: '600px', overflow: 'auto' }}>
@@ -951,7 +1108,7 @@ const Schedular = (props: any) => {
                             <Col lg={arr2?.event?.import === 'importedEvent' ? 10 : 8}>
                                 <h3 className="text-capitalize">{event.title}</h3>
                             </Col>
-                            <Col>
+                            {arr2?.event?.import !== 'importedEvent' && <Col>
                                 <div>
                                 <OverlayTrigger
                                     key='left'
@@ -965,7 +1122,7 @@ const Schedular = (props: any) => {
                                     <i className="fas fa-pencil-alt fa-lg" onClick={(e) => {setEdit(!edit)}} style={{ cursor: 'pointer', color: 'dodgerblue' }}/>
                                 </OverlayTrigger>
                                 </div>
-                            </Col>
+                            </Col>}
                             {arr2?.event?.import !== 'importedEvent' && <Col>
                                 <OverlayTrigger
                                     key='left'
@@ -1004,7 +1161,7 @@ const Schedular = (props: any) => {
                                         </Tooltip>
                                     }
                                     >
-                                    <i className="fas fa-times fa-lg" onClick={(e) => { handleClose(); setData([]); setEdit(true); setEvent({}) }} style={{ cursor: 'pointer' }}></i>
+                                    <i className="fas fa-times fa-lg" onClick={(e) => { handleClose(); setData([]); setEdit(true); setEvent({}) }} style={{ cursor: 'pointer', float: 'right' }}></i>
                                 </OverlayTrigger>
                             </Col>
                         </Row>

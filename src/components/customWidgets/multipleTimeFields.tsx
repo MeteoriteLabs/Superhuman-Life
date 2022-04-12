@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Row, Col } from 'react-bootstrap';
 import moment from 'moment';
 import TimePicker from 'rc-time-picker';
@@ -17,7 +17,6 @@ const TimeFieldInput = (props: any) => {
           let timeString = (parseInt(hours) < 10 && parseInt(hours) !== 0 ? "0" + hours : hours) + ':' + (parseInt(minutes) === 0 ? "0" + minutes : minutes);
           return timeString.toString();
      }
-     console.log(startTime);
 
      function handleStartTimeInput(val: any){
           var m = (Math.round(parseInt(val.slice(3,5))/15) * 15) % 60;
@@ -76,6 +75,17 @@ const TimeFieldInput = (props: any) => {
 
      const object = handleObjectFormat({"startTime": startTime, "endTime": endTime});
      props.onChange(JSON.stringify(object));
+
+     console.log(props.endTime, props.startTime);
+
+     // setTimeout(() => {
+     //      setShow(true);
+     // }, 2000);
+
+     useEffect(() => {
+          setStartTime(props.startTime);
+          setEndTime(props.endTime);
+     }, [props.startTime, props.endTime]);
      
      return (
           <>

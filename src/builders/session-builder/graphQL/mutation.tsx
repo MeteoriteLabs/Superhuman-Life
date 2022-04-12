@@ -54,6 +54,18 @@ export const UPDATE_USERPACKAGE_EFFECTIVEDATE = gql`
                }
           }
      }
+`;
+
+export const CREATE_TAG = gql`
+     mutation createTag($name: String!){
+          createTag(data: {
+               tag_name: $name
+          }){
+               data{
+                    id
+               }
+          }
+     }
 `
 
 export const EDIT_PROGRAM = gql`

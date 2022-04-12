@@ -27,7 +27,8 @@ const FloatingButton = (props: any) => {
      function FetchData() {
           useQuery(GET_SCHEDULEREVENTS, { variables: { id: program_id }, onCompleted: (e: any) => { 
                const flattenData = flattenObj({...e});
-               setExistingEvents(flattenData.fitnessprograms[0].events); setRestDays(flattenData.fitnessprograms[0].rest_days); setRenewalDate(flattenData.fitnessprograms[0].renewal_dt) } });
+               // setExistingEvents(flattenData.fitnessprograms[0].events); setRestDays(flattenData.fitnessprograms[0].rest_days); setRenewalDate(flattenData.fitnessprograms[0].renewal_dt)
+           } });
      }
 
      FetchData();
@@ -48,16 +49,19 @@ const FloatingButton = (props: any) => {
                               <Dropdown.Item eventKey="1" onClick={(e) => {
                                    props.callback('block');
                               }}>Program Template</Dropdown.Item>
-                              <Dropdown.Item eventKey="2" onClick={() => {
+                              <Dropdown.Item eventKey="2" onClick={(e) => {
+                                   props.callback2('block');
+                              }}>Sessions</Dropdown.Item>
+                              <Dropdown.Item eventKey="3" onClick={() => {
                                    createEditWorkoutTemplateComponent.current.TriggerForm({ id: null, type: 'create' });
                               }}>Workout Template</Dropdown.Item>
-                              <Dropdown.Item eventKey="3" onClick={() => {
+                              <Dropdown.Item eventKey="4" onClick={() => {
                                    createEditNewWorkoutComponent.current.TriggerForm({ id: null, type: 'create' });
                               }}>New Workout</Dropdown.Item>
-                              <Dropdown.Item eventKey="4" onClick={() => {
+                              <Dropdown.Item eventKey="5" onClick={() => {
                                    createEditNewActivityComponent.current.TriggerForm({ id: null, type: 'create' });
                               }}>New Activity</Dropdown.Item>
-                              <Dropdown.Item eventKey="5" onClick={() => {
+                              <Dropdown.Item eventKey="6" onClick={() => {
                                    createEditRestDayComponent.current.TriggerForm({ id: null, type: 'create' });
                               }}>Mark Rest Day</Dropdown.Item>
                          </DropdownButton>

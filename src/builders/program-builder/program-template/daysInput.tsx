@@ -31,22 +31,24 @@ const DaysInput = (props: any) => {
 
      function loadData(data: any) {
           const flattenData = flattenObj({...data});
-          setData(
-               flattenData.fitnessprograms[0].duration_days
-         )
+     //      setData(
+     //           flattenData.fitnessprograms[0].duration_days
+     //     )
      }
 
      FetchData({id: last});
 
      const days: any[] = [];
 
+     console.log(props)
+
      function renderInputField() {
           if(props.startDate !== undefined){
-               for (var i=0; i<data;i++){
+               for (var i=0; i<props.duration;i++){
                     days.push({"key": i+1,"day": `${moment(props.startDate).add(i, 'days').format("Do, MMM YY")}`})
                }  
           } else {
-               for (var j=0; j<data; j++){
+               for (var j=0; j<props.duration; j++){
                     days.push({"key": j+1, "day": `Day-${j+1}`})
                }  
           }      

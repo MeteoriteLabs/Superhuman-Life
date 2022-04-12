@@ -2,7 +2,7 @@ import React, { useContext, useImperativeHandle, useState } from 'react'
 import SessionModal from '../../../components/SessionModal/SessionModal';
 import authContext from '../../../context/auth-context';
 import { schema, widgets } from './programSchema';
-import { CREATE_PROGRAM, CREATE_PROGRAM_MANAGER } from '../graphQL/mutation';
+import { CREATE_PROGRAM, CREATE_PROGRAM_MANAGER, CREATE_TAG } from '../graphQL/mutation';
 import { useMutation } from '@apollo/client';
 import ClientModal from '../../../components/ClientModal/ClientModal';
 import { Subject } from 'rxjs';
@@ -29,9 +29,9 @@ function FitnessAction(props, ref: any) {
     
     const modalTrigger = new Subject();
 
-    const [createFitnessProgram] = useMutation(CREATE_PROGRAM, {
+    const [createTag] = useMutation(CREATE_TAG, {
         onCompleted: (data: any) => {
-            CreateProgramManager(data)
+            // CreateProgramManager(data)
             modalTrigger.next(true);
         }
     });
@@ -40,31 +40,35 @@ function FitnessAction(props, ref: any) {
 
 
     function CreateFitnessProgram(frm: any) {
-        // console.log(frm);
-        createFitnessProgram({
+        createTag({
             variables: {
-                title: frm.programName,
-                fitnessdisciplines: frm.discipline.split(","),
-                duration_days: Number(operation.duration),
-                level: frm.level,
-                description: frm.details,
-                Is_program: true,
-                renewal_dt: 0,
-                users_permissions_user: frm.user_permissions_user
-            }
-        });
-    }
-
-
-    const CreateProgramManager = (data) => {
-        const { fitnessprogram } = data.createFitnessprogram;
-        createProgramManager({
-            variables: {
-                fitnesspackages: operation.id,
-                fitnessprograms: fitnessprogram.id
+                name: frm.batchName
             }
         })
+        // createFitnessProgram({
+        //     variables: {
+        //         title: frm.programName,
+        //         fitnessdisciplines: frm.discipline.split(","),
+        //         duration_days: Number(operation.duration),
+        //         level: frm.level,
+        //         description: frm.details,
+        //         Is_program: true,
+        //         renewal_dt: 0,
+        //         users_permissions_user: frm.user_permissions_user
+        //     }
+        // });
     }
+
+
+    // const CreateProgramManager = (data) => {
+    //     const { fitnessprogram } = data.createFitnessprogram;
+    //     createProgramManager({
+    //         variables: {
+    //             fitnesspackages: operation.id,
+    //             fitnessprograms: fitnessprogram.id
+    //         }
+    //     })
+    // }
 
 
     useImperativeHandle(ref, () => ({
@@ -109,7 +113,7 @@ function FitnessAction(props, ref: any) {
 
 
     let name = "";
-    operation.actionType === 'create' ? name = "Create New Program" : name = "Manager";
+    operation.actionType === 'create' ? name = "Create New Batch" : name = "Manager";
 
 
 
