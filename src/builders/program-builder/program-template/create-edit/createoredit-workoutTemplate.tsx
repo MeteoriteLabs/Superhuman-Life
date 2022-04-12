@@ -132,8 +132,6 @@ function CreateEditWorkoutTemplate(props: any, ref: any) {
                 lastEventDay = parseInt(existingEvents[k].day);
             }
         }
-        console.log(frm.day[0].day);
-        console.log(moment(frm.day[0].day, 'Da, MMM YY').format('YYYY-MM-DD'));
 
         createSession({
             variables: {
@@ -143,7 +141,7 @@ function CreateEditWorkoutTemplate(props: any, ref: any) {
                 tag: eventJson.tag,
                 mode: eventJson.mode,
                 type: eventJson.type,
-                session_date: moment(frm.day[0].day, 'Da, MMM YY').format('YYYY-MM-DD'),
+                session_date: moment(frm.day[0].day, 'Do, MMM YY').format('YYYY-MM-DD'),
             }
         })
 

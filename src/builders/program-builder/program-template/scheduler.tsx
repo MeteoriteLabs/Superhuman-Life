@@ -155,6 +155,7 @@ const Schedular = (props: any) => {
 
     function handleRenderTable(data: any) {
         const flattenData = flattenObj({...data});
+        console.log(flattenData);
         const sessionsExistingValues = [...sessionIds];
         for(var q=0; q<flattenData.tags[0]?.sessions.length; q++){
             sessionsExistingValues.push(flattenData.tags[0]?.sessions[q].id);
@@ -1054,7 +1055,7 @@ const Schedular = (props: any) => {
                                                             changedHour = e.currentTarget.getAttribute('data-hour');
                                                             changedMin = e.currentTarget.getAttribute('data-min');
                                                         }}>
-                                                        {(arr[d][h][m]) && arr[d][h][m].map((val, index) => {
+                                                        {(arr[d][h][m]) && arr[d][h][m]?.map((val, index) => {
                                                             val.index = index;
                                                             return (
                                                                 <div
