@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useRef, useState } from 'react';
 import {  Row, Col, Dropdown, DropdownButton } from 'react-bootstrap';
 import CreateEditProgramManager from './create-edit/createoredit-workoutTemplate';
@@ -46,9 +47,9 @@ const FloatingButton = (props: any) => {
                          >
                               <Dropdown.Header style={{ color: 'black', fontWeight: 'bold', letterSpacing: '1px'}}>Movement</Dropdown.Header>
                               <Dropdown.Divider/>
-                              <Dropdown.Item eventKey="1" onClick={(e) => {
+                              {/* <Dropdown.Item eventKey="1" onClick={(e) => {
                                    props.callback('block');
-                              }}>Program Template</Dropdown.Item>
+                              }}>Program Template</Dropdown.Item> */}
                               <Dropdown.Item eventKey="2" onClick={(e) => {
                                    props.callback2('block');
                               }}>Sessions</Dropdown.Item>

@@ -2,7 +2,7 @@ import { useQuery } from '@apollo/client'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { Badge, Button, Modal } from 'react-bootstrap'
 import Table from '../table/index'
-import { GET_ALL_CLASSIC_CLIENT_BY_ID, GET_ALL_GROUP_CLIENT_BY_ID, GET_CLIENTS_BY_TAG } from '../../builders/session-builder/graphQL/queries'
+import { GET_CLIENTS_BY_TAG } from '../../builders/session-builder/graphQL/queries'
 import ActionButton from '../actionbutton'
 import moment from 'moment'
 import FitnessAction from '../../builders/session-builder/Fitness/FitnessAction'
@@ -13,6 +13,7 @@ export default function ClientModal(props) {
     const { id, modalTrigger, type } = props
 
     const [dataTable, setDataTable] = useState<any[]>([]);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [queryName, setQueryName] = useState<any>("")
     const fitnessActionRef = useRef<any>(null)
 

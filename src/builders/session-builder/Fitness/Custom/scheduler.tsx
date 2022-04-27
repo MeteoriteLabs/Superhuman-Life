@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, {useState, useEffect, useContext} from 'react';
-import { GET_TABLEDATA, GET_ALL_CLIENT_PACKAGE_BY_TYPE, GET_TAG_BY_ID } from '../../graphQL/queries';
+import { GET_TABLEDATA, GET_TAG_BY_ID } from '../../graphQL/queries';
 import {UPDATE_USERPACKAGE_EFFECTIVEDATE} from '../../graphQL/mutation';
 import { useQuery, useMutation } from '@apollo/client';
 import {Row, Col, Dropdown, Modal, InputGroup, FormControl, Button} from 'react-bootstrap';
@@ -17,7 +18,7 @@ const Scheduler = () => {
     const auth = useContext(AuthContext);
     const last = window.location.pathname.split('/').reverse();
     const tagId = window.location.pathname.split('/').pop();
-    const [data, setData] = useState<any[]>([]);
+    // const [data, setData] = useState<any[]>([]);
     const [show, setShow] = useState(false);   
     const [userPackage, setUserPackage] = useState<any>([]);
     const [tagSeperation, setTagSeperation] = useState<any>([]);
@@ -68,13 +69,13 @@ const Scheduler = () => {
         }
     });
 
-    const { data: data2 } = useQuery(GET_ALL_CLIENT_PACKAGE_BY_TYPE, {
-        variables: {
-            id: auth.userid,
-            type: 'Custom'
-        },
-        onCompleted: () => loadData()
-    });
+    // const { data: data2 } = useQuery(GET_ALL_CLIENT_PACKAGE_BY_TYPE, {
+    //     variables: {
+    //         id: auth.userid,
+    //         type: 'Custom'
+    //     },
+    //     onCompleted: () => loadData()
+    // });
 
     function handleEventsSeperation(data: any, rest_days: any){
         var ptonline: number = 0;
@@ -111,55 +112,55 @@ const Scheduler = () => {
         }
     }
 
-    function loadData() {
-        const flattenData1 = flattenObj({...data1});
-        const flattenData2 = flattenObj({...data2});
-        setData(
-            [...flattenData1?.fitnessprograms].map((detail) => {
-                return {
-                    id: detail.id,
-                    programName: detail.title,
-                    discipline: detail.fitnessdisciplines.map((val: any) => {
-                        return val.disciplinename;
-                    }).join(", "),
-                    level: detail.level,
-                    events: handleEventsSeperation(detail.events, detail.rest_days),
-                    duration: detail.duration_days,
-                    details: detail.description,
-                    restDays: detail.rest_days
-                }
-            })
-        )
+    // function loadData() {
+        // const flattenData1 = flattenObj({...data1});
+        // const flattenData2 = flattenObj({...data2});
+        // setData(
+        //     [...flattenData1?.fitnessprograms].map((detail) => {
+        //         return {
+        //             id: detail.id,
+        //             programName: detail.title,
+        //             discipline: detail.fitnessdisciplines.map((val: any) => {
+        //                 return val.disciplinename;
+        //             }).join(", "),
+        //             level: detail.level,
+        //             events: handleEventsSeperation(detail.events, detail.rest_days),
+        //             duration: detail.duration_days,
+        //             details: detail.description,
+        //             restDays: detail.rest_days
+        //         }
+        //     })
+        // )
 
-        setUserPackage(
-            [...flattenData2.clientPackages].map((packageItem) => {
-                let renewDay: any = '';
-                if (packageItem.fitnesspackages.length !== 0) {
-                    renewDay = new Date(packageItem.effective_date);
-                    renewDay.setDate(renewDay.getDate() + packageItem.fitnesspackages[0].duration)
-                }
-                return {
-                    userPackageId: packageItem.id,
-                    id: packageItem.fitnesspackages[0].id,
-                    packageName: packageItem.fitnesspackages[0].packagename,
-                    details: [packageItem.fitnesspackages[0].ptonline, packageItem.fitnesspackages[0].ptoffline, packageItem.fitnesspackages[0].grouponline, packageItem.fitnesspackages[0].groupoffline, packageItem.fitnesspackages[0].recordedclasses, packageItem.fitnesspackages[0].restdays],
-                    duration: packageItem.fitnesspackages[0].duration,
-                    effectiveDate: moment(packageItem.effective_date).format("MMMM DD,YYYY"),
-                    packageStatus: packageItem.fitnesspackages[0].Status ? "Active" : "Inactive",
-                    packageRenewal: moment(renewDay).format("MMMM DD,YYYY"),
+        // setUserPackage(
+        //     [...flattenData2.clientPackages].map((packageItem) => {
+        //         let renewDay: any = '';
+        //         if (packageItem.fitnesspackages.length !== 0) {
+        //             renewDay = new Date(packageItem.effective_date);
+        //             renewDay.setDate(renewDay.getDate() + packageItem.fitnesspackages[0].duration)
+        //         }
+        //         return {
+        //             userPackageId: packageItem.id,
+        //             id: packageItem.fitnesspackages[0].id,
+        //             packageName: packageItem.fitnesspackages[0].packagename,
+        //             details: [packageItem.fitnesspackages[0].ptonline, packageItem.fitnesspackages[0].ptoffline, packageItem.fitnesspackages[0].grouponline, packageItem.fitnesspackages[0].groupoffline, packageItem.fitnesspackages[0].recordedclasses, packageItem.fitnesspackages[0].restdays],
+        //             duration: packageItem.fitnesspackages[0].duration,
+        //             effectiveDate: moment(packageItem.effective_date).format("MMMM DD,YYYY"),
+        //             packageStatus: packageItem.fitnesspackages[0].Status ? "Active" : "Inactive",
+        //             packageRenewal: moment(renewDay).format("MMMM DD,YYYY"),
 
 
-                    client: packageItem.users_permissions_user.username,
-                    clientId: packageItem.users_permissions_user.id,
-                    programName: packageItem.program_managers.length === 0 ? 'N/A' : packageItem.program_managers[0].fitnessprograms[0].title,
-                    programId: packageItem.program_managers.length === 0 ? 'N/A' : packageItem.program_managers[0].fitnessprograms[0].id,
-                    programStatus: packageItem.program_managers.length === 0 ? 'N/A' : "Assigned",
-                    programRenewal: packageItem.program_managers.length === 0 ? 'N/A' : moment(renewDay).format('MMMM DD,YYYY'),
-                }
+        //             client: packageItem.users_permissions_user.username,
+        //             clientId: packageItem.users_permissions_user.id,
+        //             programName: packageItem.program_managers.length === 0 ? 'N/A' : packageItem.program_managers[0].fitnessprograms[0].title,
+        //             programId: packageItem.program_managers.length === 0 ? 'N/A' : packageItem.program_managers[0].fitnessprograms[0].id,
+        //             programStatus: packageItem.program_managers.length === 0 ? 'N/A' : "Assigned",
+        //             programRenewal: packageItem.program_managers.length === 0 ? 'N/A' : moment(renewDay).format('MMMM DD,YYYY'),
+        //         }
 
-            })
-        )
-    }
+        //     })
+        // )
+    // }
     
     if(userPackage.length > 0) {
         programIndex = userPackage.findIndex((item) => item.programId === last[0] && item.clientId === last[1]);
@@ -199,15 +200,15 @@ const Scheduler = () => {
     //     return 5;
     // }
 
-    function handleAssignedClasses(dataArr: any, restDays: any){
-        let sum = 0;
-        for(var i=0; i<dataArr.length; i++){
-            sum += dataArr[i];
-        }
-        return 5;
-    }
+    // function handleAssignedClasses(dataArr: any, restDays: any){
+    //     let sum = 0;
+    //     for(var i=0; i<dataArr.length; i++){
+    //         sum += dataArr[i];
+    //     }
+    //     return 5;
+    // }
 
-    console.log(tag);
+    // console.log(tag);
 
     if (!show) return <span style={{ color: 'red' }}>Loading...</span>;
     else return (
@@ -331,12 +332,14 @@ const Scheduler = () => {
                     <div className="mt-5">
                         <SchedulerPage 
                             type="date"
-                            days={30} 
+                            days={tag?.fitnesspackage?.duration} 
                             restDays={[]}
                             totalClasses={5}
                             assignedClasses={5} 
-                            programId={tagId} 
+                            programId={tagId}
+                            classType={'Custom'} 
                             startDate={tag?.client_packages[0].effective_date}
+                            clientId={tag.client_packages[0]?.users_permissions_user.id}
                         />
                     </div>
                 </Col>

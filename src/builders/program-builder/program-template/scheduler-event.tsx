@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import './styles.css';
 import { Row } from 'react-bootstrap';
 import TransferPrograms from './transferPrograms';
+import moment from 'moment';
 
 const SchedulerEvent = (props: any) => {
 
@@ -45,17 +46,26 @@ const SchedulerEvent = (props: any) => {
           }
           if(props.programEvents){
                props.programEvents.forEach((val) => {
-                    if(!values[val.day_of_program]){
-                         values[val.day_of_program] = [];
+                    if(!values[calculateDay(props.startDate, val.session_date)]){
+                         values[calculateDay(props.startDate, val.session_date)] = [];
                     }
-                    values[val.day_of_program].push({"import": "importedEvent","type": val.type, "mode": val.mode, "tag": val.tag,"type2": "transferEvent" , "title": val.activity === null ? val.workout.workouttitle : val.activity.title, "color": "skyblue", "id":  val.activity === null ? val.workout.id : val.activity.id, "endHour": val.end_time.split(":")[0], "endMin": val.end_time.split(":")[1], "hour": val.start_time.split(":")[0], "min": val.start_time.split(":")[1], "activityTarget": val.activity === null ? null : val.activity_target, "activity": val.activity === null ? null : val.activity, "day": val.day_of_program, "sessionId": val.id});
+                    console.log(val);
+                    values[calculateDay(props.startDate, val.session_date)].push({"import": "importedEvent","type": val.type, "mode": val.mode, "tag": val.tag,"type2": "transferEvent" , "title": val.activity === null ? val.workout.workouttitle : val.activity.title, "color": "skyblue", "id":  val.activity === null ? val.workout.id : val.activity.id, "endHour": val.end_time.split(":")[0], "endMin": val.end_time.split(":")[1], "hour": val.start_time.split(":")[0], "min": val.start_time.split(":")[1], "activityTarget": val.activity === null ? null : val.activity_target, "activity": val.activity === null ? null : val.activity, "day": calculateDay(props.startDate, val.session_date), "sessionId": val.id, "sessionDate": val.session_date});
                })
                setArr(values);
           }
           draganddrop();
      };
-
-     console.log(props.startDate, props.days)
+     function calculateDay(startDate, sessionDate){
+          const startDateFormatted = moment(startDate);
+          startDateFormatted.set({hour: 12, minute: 0, second: 0, millisecond: 0});
+          const sessionDateFormatted = moment(sessionDate);
+          sessionDateFormatted.set({hour: 12, minute: 0, second: 0, millisecond: 0});
+          const diffDays = sessionDateFormatted.diff(startDateFormatted, 'days') + 1;
+          return diffDays;
+      }
+     // console.log(arr);
+     // console.log(props.startDate, props.days)
 
      useEffect(() => {
           handleRenderTable([]);

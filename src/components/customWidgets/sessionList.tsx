@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState, useRef, useContext, useEffect } from 'react';
-import { InputGroup, FormControl, Container, Col, Row, Button } from 'react-bootstrap';
+import { FormControl, Row, Button } from 'react-bootstrap';
 import { GET_PROGRAMLIST, GET_FITNESSPACKAGE_DETAILS, GET_TAGS_BY_TYPE, GET_SESSIONS_BY_TAG } from './queries';
-import { gql, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import AuthContext from '../../context/auth-context';
 import '../../builders/program-builder/program-template/styles.css';
 import SchedulerEvent from '../../builders/program-builder/program-template/scheduler-event';
@@ -19,10 +20,8 @@ const ProgramList = (props: any) => {
     const [tagsList, setTagList] = useState<any>([]);
     const [selectedTag, setSelectedTag] = useState("");
     const [packageDuration, setPackageDuration] = useState<any>();
-    const inputField = useRef<any>();
     const [displayDates, setDisplayDate] = useState<any>([]);
     const [startDate, setStartDate] = useState<any>();
-    const urlList: any = window.location.href.split("/").reverse();
     let skipval: Boolean = true;
 
     useQuery(GET_FITNESSPACKAGE_DETAILS, {onCompleted: (data) => {
@@ -72,22 +71,6 @@ const ProgramList = (props: any) => {
         );
     }
 
-    function EquipmentSearch(data: any) {
-        if (data.length > 0) {
-            setSearchInput(data);
-            skipval = false;
-        } else {
-            setProgramList([]);
-        }
-    }
-
-    function handleSelectedEquipmentAdd(name: any, id: any, duration: any, level: any, description: any, discpline: any, events: any) {
-        setSelected({ name: name, id: id, duration: duration, level: level, description: description, discpline: discpline, events: events });
-        inputField.current.value = "";
-        setProgramList([]);
-        skipval = true;
-    }
-
     var days: any = [];
 
     for (var i = 1; i <= packageDuration; i++) {
@@ -105,13 +88,13 @@ const ProgramList = (props: any) => {
     FetchEquipmentList({ filter: searchInput, skip: skipval, id: auth.userid });
 
     useEffect(() => {
-        if(urlList[3] === 'pt'){
-            setSelectedFitnessPackage('Personal Training');
-        }else if(urlList[3] === 'group'){
-            setSelectedFitnessPackage('Group Class');
-        }else if(urlList[3] === 'classic'){
-            setSelectedFitnessPackage('Classic Class');
-        }
+        // if(urlList[3] === 'pt'){
+        //     setSelectedFitnessPackage('Personal Training');
+        // }else if(urlList[3] === 'group'){
+        //     setSelectedFitnessPackage('Group Class');
+        // }else if(urlList[3] === 'classic'){
+        //     setSelectedFitnessPackage('Classic Class');
+        // }
     }, []);
 
     return (
@@ -121,7 +104,9 @@ const ProgramList = (props: any) => {
             <Row className='mb-3'>
                 <div className="mr-5">
                     <span><b>Select Fitness Package type</b></span>
-                    <FormControl value={selectedFitnessPackage} disabled={urlList[3] === 'pt' || urlList[3] === 'group' || urlList[3] === 'classic'}  as="select" onChange={(e) => setSelectedFitnessPackage(e.target.value)}>
+                    <FormControl value={selectedFitnessPackage} 
+                    // disabled={urlList[3] === 'pt' || urlList[3] === 'group' || urlList[3] === 'classic'}  
+                    as="select" onChange={(e) => setSelectedFitnessPackage(e.target.value)}>
                         <option>Choose Type</option>
                         {fitnessPackageTypes.slice(0,4).map((item) => {
                             return <option value={item.type}>{item.type}</option>

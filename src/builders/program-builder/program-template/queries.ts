@@ -197,7 +197,7 @@ export const CREATE_WORKOUT = gql`
 `;
 
 export const GET_SESSIONS = gql`
-  query getSessions($id: ID!, $startDate: Date, $endDate: Date) {
+  query getSessions($id: ID!, $startDate: Date, $endDate: Date, $Is_restday: Boolean) {
     tags(filters: {
       id: {
         eq: $id
@@ -222,7 +222,11 @@ export const GET_SESSIONS = gql`
               }
             }
           }
-          sessions{
+          sessions(filters: {
+            Is_restday: {
+              eq: $Is_restday
+            }
+          }){
             data{
               id
               attributes{
@@ -292,6 +296,7 @@ export const CREATE_SESSION = gql`
     $type: String,
     $Is_restday: Boolean,
     $session_date: Date,
+    $changemaker: ID
   ){
     createSession(data: {
       type: $type,
@@ -303,7 +308,8 @@ export const CREATE_SESSION = gql`
       workout: $workout,
       activity: $activity,
       Is_restday: $Is_restday,
-      session_date: $session_date
+      session_date: $session_date,
+      changemaker: $changemaker
     }){
       data{
         id
@@ -335,7 +341,8 @@ export const UPDATE_SESSION = gql`
     $activity_target: JSON,
     $tag: String,
     $mode: String,
-    $type: String
+    $type: String,
+    $session_date: Date
   ){
     updateSession(id: $id, data: {
       day_of_program: $day_of_program,
@@ -347,6 +354,7 @@ export const UPDATE_SESSION = gql`
       tag: $tag,
       mode: $mode,
       type: $type,
+      session_date: $session_date
     }){
       data{
         id
@@ -409,3 +417,72 @@ export const UPDATE_CHANGEMAKER_AVAILABILITY_WORKHOURS = gql`
     }
   }
 `;
+
+export const CREATE_SESSION_BOOKING = gql`
+     mutation createSessionBooking(
+          $session: ID
+          $client: ID
+          $session_date: Date
+     ){
+          createSessionsBooking(data:{
+               session_date: $session_date,
+               session: $session,
+               client: $client,
+               Session_booking_status: Booked
+             }){
+               data{
+                 id
+                 attributes{
+                   session_date
+                 }
+               }
+             }
+     }
+`;
+
+export const GET_SESSION_BOOKINGS = gql`
+     query getSessionBooking($id: ID!){
+      sessionsBookings(filters: {
+        session: {
+          id: {
+            eq: $id
+          }
+        }
+      }){
+        data{
+          id
+          attributes{
+            createdAt
+            Session_booking_status
+            client{
+              data{
+                id
+                attributes{
+                  username
+                }
+              }
+            }
+          }
+        }
+      }
+     }
+`
+
+export const UPDATE_SESSION_BOOKING = gql`
+     mutation updateSessionBooking($id: ID!, $status: ENUM_SESSIONSBOOKING_SESSION_BOOKING_STATUS){
+      updateSessionsBooking(id: $id, data: {
+        Session_booking_status: $status
+      }){
+        data{
+          id
+        }
+      }
+     }
+`
+
+
+// export const GET_SESSIONS_ON_DATE = gql`
+//      query getSessionsOnDate($id: ID!, $date: Date) {
+
+//      }
+// `

@@ -1,6 +1,7 @@
 import WorkoutList from '../../../../components/customWidgets/workoutList';
 import TimeField from '../../../../components/customWidgets/timeField';
 import DaysInput from '../daysInput';
+import ClassTypeSelect from '../../../../components/customWidgets/classTypeSelect';
 
 export const widgets = {
      workoutList: WorkoutList,
@@ -10,6 +11,11 @@ export const widgets = {
 
 export const schema: any = {
      effectiveDate: null,
+     tag: {
+          "ui:widget": (props) => {
+               return <ClassTypeSelect onChange={props.onChange} />
+          }
+     },
      day: {
           "ui:widget": (props) => {
                return <DaysInput startDate={schema.startDate} duration={schema.duration} id="newWorkout" onChange={props.onChange}/>

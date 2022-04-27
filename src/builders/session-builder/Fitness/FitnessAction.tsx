@@ -2,7 +2,7 @@ import React, { useContext, useImperativeHandle, useState } from 'react'
 import SessionModal from '../../../components/SessionModal/SessionModal';
 import authContext from '../../../context/auth-context';
 import { schema, widgets } from './programSchema';
-import { CREATE_PROGRAM, CREATE_PROGRAM_MANAGER, CREATE_TAG } from '../graphQL/mutation';
+import { CREATE_TAG } from '../graphQL/mutation';
 import { useMutation } from '@apollo/client';
 import ClientModal from '../../../components/ClientModal/ClientModal';
 import { Subject } from 'rxjs';
@@ -36,7 +36,7 @@ function FitnessAction(props, ref: any) {
         }
     });
 
-    const [createProgramManager] = useMutation(CREATE_PROGRAM_MANAGER);
+    // const [createProgramManager] = useMutation(CREATE_PROGRAM_MANAGER);
 
 
     function CreateFitnessProgram(frm: any) {

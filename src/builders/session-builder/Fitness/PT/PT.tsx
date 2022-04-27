@@ -3,7 +3,7 @@ import { useContext, useMemo, useRef, useState } from 'react'
 import { Badge, Row, Col } from "react-bootstrap";
 import AuthContext from "../../../../context/auth-context"
 import PTTable from '../../../../components/table/PtTable/PTTable'
-import { GET_ALL_CLIENT_PACKAGE_BY_TYPE, GET_SESSIONS_FROM_TAGS } from '../../graphQL/queries';
+import { GET_SESSIONS_FROM_TAGS } from '../../graphQL/queries';
 import moment from 'moment';
 import ActionButton from '../../../../components/actionbutton';
 import FitnessAction from '../FitnessAction'

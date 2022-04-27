@@ -39,16 +39,7 @@ function CreateEditActivity(props: any, ref: any) {
      //      },
      // });
      const [upateSessions] = useMutation(UPDATE_TAG_SESSIONS, { onCompleted: (data: any) => {modalTrigger.next(false);}})
-    const [createSession] = useMutation(CREATE_SESSION, { onCompleted: (r: any) => { 
-        const values = [...sessionsIds];
-        values.push(r.createSession.data.id);
-        upateSessions({
-            variables: {
-                id: program_id,
-                sessions_ids: values
-            }
-        });
-     } });
+    const [createSession] = useMutation(CREATE_SESSION);
      //     const [editExercise] = useMutation(UPDATE_EXERCISE,{variables: {exerciseid: operation.id}, onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
      //     const [deleteExercise] = useMutation(DELETE_EXERCISE, { onCompleted: (e: any) => console.log(e), refetchQueries: ["GET_TABLEDATA"] });
 
@@ -156,6 +147,20 @@ function CreateEditActivity(props: any, ref: any) {
                }
           }
 
+          const sessionIds_new: any = [];
+
+          function updateSessionFunc(id: any){
+               sessionIds_new.push(id);
+               if(frm.day.length === sessionIds_new.length){
+                   upateSessions({
+                       variables: {
+                           id: program_id,
+                           sessions_ids: sessionsIds.concat(sessionIds_new)
+                       }
+                   });
+               }
+           }
+
           for (var z = 0; z < frm.day.length; z++) {
                createSession({
                     variables: {
@@ -164,7 +169,11 @@ function CreateEditActivity(props: any, ref: any) {
                         activity: id,
                         activity_target: frm.newActivity[0],
                         type: "activity",
-                        session_date: moment(frm.day[0].day, 'Da, MMM YY').format('YYYY-MM-DD')
+                        session_date: moment(frm.day[0].day, 'Da, MMM YY').format('YYYY-MM-DD'),
+                        changemaker: auth.userid
+                    },
+                    onCompleted: (data: any) => {
+                         updateSessionFunc(data.createSession.data.id);
                     }
                 })
           }

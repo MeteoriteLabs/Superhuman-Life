@@ -5,6 +5,7 @@ import MuscleGroupSearch from '../../../../components/customWidgets/muscleGroupL
 import TextEditor from '../../../../components/customWidgets/textEditor';
 import BuildWorkout from '../../workout/buildWorkout';
 import DaysInput from '../daysInput';
+import ClassTypeSelect from '../../../../components/customWidgets/classTypeSelect';
 
 export const widgets = {
      daysInput: DaysInput,
@@ -17,6 +18,11 @@ export const widgets = {
 };
 
 export const schema: any = {
+    tag: {
+        "ui:widget": (props) => {
+             return <ClassTypeSelect onChange={props.onChange} />
+        }
+    },
      day: {
           "ui:widget": (props) => {
               return <DaysInput startDate={schema.startDate} duration={schema.duration} id="newWorkout" onChange={props.onChange}/>

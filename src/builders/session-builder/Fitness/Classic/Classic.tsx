@@ -3,8 +3,7 @@ import { useContext, useMemo, useRef, useState } from 'react'
 import { Badge, Row, Col } from "react-bootstrap";
 import Table from '../../../../components/table';
 import AuthContext from "../../../../context/auth-context";
-import { GET_ALL_CLIENT_PACKAGE, GET_ALL_FITNESS_PACKAGE_BY_TYPE, GET_ALL_PROGRAM_BY_TYPE, GET_TAGS_FOR_CLASSIC } from '../../graphQL/queries';
-import moment from 'moment'
+import { GET_TAGS_FOR_CLASSIC } from '../../graphQL/queries';
 import FitnessAction from '../FitnessAction';
 import ActionButton from '../../../../components/actionbutton';
 import { flattenObj } from '../../../../components/utils/responseFlatten';
@@ -19,21 +18,21 @@ export default function Classic(props) {
 
     useQuery(GET_TAGS_FOR_CLASSIC, {variables: {id: auth.userid}, onCompleted: (data) => loadData(data)});
 
-    const { data: data1 } = useQuery(GET_ALL_FITNESS_PACKAGE_BY_TYPE, {
-        variables: {
-            id: auth.userid,
-            type: 'Classic'
-        },
+    // const { data: data1 } = useQuery(GET_ALL_FITNESS_PACKAGE_BY_TYPE, {
+    //     variables: {
+    //         id: auth.userid,
+    //         type: 'Classic'
+    //     },
 
-    });
+    // });
 
-    const { data: data2 } = useQuery(GET_ALL_PROGRAM_BY_TYPE, {
-        variables: {
-            id: auth.userid,
-            type: 'Classic'
-        },
+    // const { data: data2 } = useQuery(GET_ALL_PROGRAM_BY_TYPE, {
+    //     variables: {
+    //         id: auth.userid,
+    //         type: 'Classic'
+    //     },
 
-    });
+    // });
 
 
 

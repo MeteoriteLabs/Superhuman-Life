@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useQuery, useMutation } from '@apollo/client';
 import { useContext, useMemo, useRef, useState } from 'react'
 import { Badge, Row, Col } from "react-bootstrap";
@@ -20,12 +21,12 @@ export default function Group(props) {
 
     const [updateDate] = useMutation(UPDATE_STARTDATE, {onCompleted: (r: any) => {console.log(r)}});
 
-    const { data: data } = useQuery(GET_TAGS_FOR_GROUP, {
-        variables: {
-            id: auth.userid
-        },
-        onCompleted: (r: any) => loadData(r)
-    });
+    // const { data: data } = useQuery(GET_TAGS_FOR_GROUP, {
+    //     variables: {
+    //         id: auth.userid
+    //     },
+    //     onCompleted: (r: any) => loadData(r)
+    // });
 
 
     const { data: data1 } = useQuery(GET_ALL_FITNESS_PACKAGE_BY_TYPE, {
@@ -117,6 +118,11 @@ export default function Group(props) {
 
         setUserPackage(
             [...flattenData.tags.map((packageItem, index) => {
+                let renewDay: any = '';
+                if (packageItem.client_packages[index]?.fitnesspackages[0].length !== 0) {
+                    renewDay = new Date(packageItem.client_packages[index]?.effective_date);
+                    renewDay.setDate(renewDay.getDate() + packageItem.client_packages[index]?.fitnesspackages[0].duration)
+                }
                 return {
                     tagId: packageItem.id,
                     id: packageItem.client_packages[index]?.fitnesspackages[0].id,
@@ -132,11 +138,35 @@ export default function Group(props) {
                     // renewal_dt: packageItem.renewal_dt,
                     // time: packageItem.published_at ? moment(packageItem.published_at).format('h:mm:ss a') : "N/A",
                     programName: packageItem.tag_name,
-                    programStatus: packageItem.client_packages[index]?.users_permissions_user.username ? "Assigned" : "N/A",
-                    renewal: packageItem.id ? calculateProgramRenewal(packageItem.client_packages[index].effective_date, packageItem.sessions) : "N/A",
+                    programStatus: handleStatus(packageItem.sessions, packageItem.client_packages[index]?.effective_date, renewDay),
+                    renewal: packageItem.id ? calculateProgramRenewal(packageItem.client_packages[index]?.effective_date, packageItem.sessions) : "N/A",
                 }
             })]
         )
+    }
+
+    function handleStatus(sessions: any, effective_date: any, renewDay){
+        let effectiveDate: any;
+        if(sessions.length === 0){
+            return "Not_Assigned"
+        }else if(sessions.length > 0){
+            let max: number = 0;
+            for(var i=0; i<sessions.length; i++){
+                if(sessions[i].day_of_program > max){
+                    max = sessions[i].day_of_program;
+                }
+            }
+            effectiveDate = moment(effective_date).add(max, 'days').format("MMMM DD,YYYY");
+            if(moment(effectiveDate).isBetween(moment(), moment().subtract(5, 'months'))){
+                return "Almost Ending"
+            }else {
+                return "Assigned"
+            }
+        }else {
+            if(moment(effectiveDate) === moment(renewDay)){
+                return "Completed"
+            }
+        }
     }
 
     function calculateProgramRenewal(effective_date, sessions) {

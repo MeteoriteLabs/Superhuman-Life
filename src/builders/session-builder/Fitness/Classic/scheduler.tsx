@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, {useState, useEffect, useRef, useContext} from 'react';
 import { GET_TABLEDATA, GET_ALL_FITNESS_PACKAGE_BY_TYPE, GET_ALL_PROGRAM_BY_TYPE, GET_ALL_CLIENT_PACKAGE, GET_TAG_BY_ID } from '../../graphQL/queries';
 import { useQuery } from '@apollo/client';
@@ -189,9 +190,9 @@ const Scheduler = () => {
         )
     }
 
-    if(userPackage.length > 0){
-        programIndex = userPackage.findIndex(item => item.id === last[1] && item.proManagerFitnessId === last[0])
-    }
+    // if(userPackage.length > 0){
+    //     programIndex = userPackage.findIndex(item => item.id === last[1] && item.proManagerFitnessId === last[0])
+    // }
 
     function handleTimeFormatting(data: any, duration: number){
         var digits = duration <= 30 ? 2 : 3;
@@ -288,7 +289,7 @@ const Scheduler = () => {
             <Row>
                 <Col lg={11} className="pl-0 pr-0">
                     <div className="mt-5">
-                        <SchedulerPage type="day" days={30} restDays={[]} programId={tagId} />
+                        <SchedulerPage type="day" days={30} restDays={[]} classType={'Classic Class'} programId={tagId} />
                     </div>
                 </Col>
                 <FitnessAction ref={fitnessActionRef} />

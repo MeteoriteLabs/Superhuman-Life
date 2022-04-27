@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, {useState, useEffect, useRef, useContext} from 'react';
 import { GET_TABLEDATA, GET_ALL_FITNESS_PACKAGE_BY_TYPE, GET_ALL_PROGRAM_BY_TYPE, GET_ALL_CLIENT_PACKAGE, GET_TAG_BY_ID} from '../../graphQL/queries';
 import {UPDATE_STARTDATE} from '../../graphQL/mutation';
@@ -396,6 +397,7 @@ const Scheduler = () => {
                             type="date" 
                             days={30} 
                             restDays={[]} programId={tagId} 
+                            classType={'Group Class'}
                             startDate={tag?.client_packages[0].effective_date}
                         />
                     </div>
