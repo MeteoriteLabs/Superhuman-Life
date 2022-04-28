@@ -18,8 +18,6 @@ export default function MainLobby() {
         setOrganizations(flattendData.usersPermissionsUsers[0].organizations);
     }});
 
-    console.log(organizations);
-
     return (
         <>
         <Container fluid style={{overflow: 'hidden'}}>

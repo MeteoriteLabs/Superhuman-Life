@@ -4,13 +4,12 @@ import 'react-bootstrap-typeahead/css/Typeahead.css';
 import { gql } from "@apollo/client";
 import { useQuery } from "@apollo/client";
 import moment from 'moment';
-import {flattenObj} from '../../../components/utils/responseFlatten';
 
 const DaysInput = (props: any) => {
      const last = window.location.pathname.split('/').pop();
 
-     const [data, setData] = useState(0);
-     const [selected, setSelected] = useState(props.val ? [{"day": `Day-${props.val}`}] : []);
+     // const [data, setData] = useState(0);
+     const [selected, setSelected] = useState(props.val ? [moment(props.startDate).add(props.val, 'days').format("Do, MMM YY")] : []);
 
      const GET_PROGRAM = gql`
      query getprogram($id: ID!) {
@@ -30,26 +29,22 @@ const DaysInput = (props: any) => {
      }
 
      function loadData(data: any) {
-          const flattenData = flattenObj({...data});
-          setData(
-               flattenData.fitnessprograms[0].duration_days
-         )
+          // const flattenData = flattenObj({...data});
+     //      setData(
+     //           flattenData.fitnessprograms[0].duration_days
+     //     )
      }
 
      FetchData({id: last});
 
      const days: any[] = [];
 
+     console.log(props)
+
      function renderInputField() {
-          if(props.startDate !== undefined){
-               for (var i=0; i<data;i++){
-                    days.push({"key": i+1,"day": `${moment(props.startDate).add(i, 'days').format("Do, MMM YY")}`})
-               }  
-          } else {
-               for (var j=0; j<data; j++){
-                    days.push({"key": j+1, "day": `Day-${j+1}`})
-               }  
-          }      
+          for (var i=0; i<props.duration;i++){
+               days.push({"key": i+1,"day": `${moment(props.startDate).add(i, 'days').format("Do, MMM YY")}`})
+          }  
      }
 
      function OnChange(e){

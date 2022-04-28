@@ -18,9 +18,19 @@ const authLink = setContext((_, { headers }) => {
   };
 });
 
+const defaultOptions: any = {
+	watchQuery: {
+		fetchPolicy: 'no-cache',
+	},
+	query: {
+		fetchPolicy: 'no-cache',
+	}
+}
+
 const client = new ApolloClient({
   link: authLink.concat(httpLink),
   cache: new InMemoryCache(),
+  defaultOptions: defaultOptions
 });
 
 function App() {

@@ -10,13 +10,7 @@
          ],
         "properties": {
             "tag": {
-                "type": "string",
-                "title": "Class Type",
-                "enum": [
-                    "Personal Training",
-                    "Group Class",
-                    "Classic"
-                ]
+                "type": "string"
             },
             "assignMode": {
                 "type": "string",

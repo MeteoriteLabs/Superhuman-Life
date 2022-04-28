@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, {useState, useEffect, useContext} from 'react';
-import { GET_TABLEDATA, GET_ALL_CLIENT_PACKAGE_BY_TYPE } from '../../graphQL/queries';
+import { GET_TABLEDATA, GET_TAG_BY_ID } from '../../graphQL/queries';
 import {UPDATE_USERPACKAGE_EFFECTIVEDATE} from '../../graphQL/mutation';
 import { useQuery, useMutation } from '@apollo/client';
 import {Row, Col, Dropdown, Modal, InputGroup, FormControl, Button} from 'react-bootstrap';
@@ -16,13 +17,16 @@ const Scheduler = () => {
 
     const auth = useContext(AuthContext);
     const last = window.location.pathname.split('/').reverse();
-    const [data, setData] = useState<any[]>([]);
+    const tagId = window.location.pathname.split('/').pop();
+    // const [data, setData] = useState<any[]>([]);
     const [show, setShow] = useState(false);   
     const [userPackage, setUserPackage] = useState<any>([]);
     const [tagSeperation, setTagSeperation] = useState<any>([]);
     const [editDatesModal, setEditdatesModal] = useState(false);
     const [startDate, setStartDate] = useState("");
     const [statusDays, setStatusDays] = useState();
+    const [totalClasses, setTotalClasses] = useState<any>([]);
+    const [tag, setTag] = useState<any>();
     let programIndex;
 
     useEffect(() => {
@@ -30,6 +34,29 @@ const Scheduler = () => {
             setShow(true)
         }, 1500)
     }, [show]);
+
+    useQuery(GET_TAG_BY_ID, { variables: {id: tagId}, onCompleted: (data) => loadTagData(data) });
+
+    function loadTagData(data: any){
+        const flattenData = flattenObj({...data});
+        let total = [0,0,0,0,0];
+        const values = [...flattenData.tags[0]?.sessions];
+        for(let i = 0; i < values.length; i++){
+            if(values[i].tag === "Personal Training" && values[i].mode === "Online"){
+                total[0] += 1;
+            }else if(values[i].tag === "Personal Training" && values[i].mode === "Offline"){
+                total[1] += 1;
+            }else if(values[i].tag === "Group Class" && values[i].mode === "Online"){
+                total[2] += 1;
+            }else if(values[i].tag === "Group Class" && values[i].mode === "Offline"){
+                total[3] += 1;
+            }else {
+                total[4] += 1;
+            }
+        }
+        setTotalClasses(total);
+        setTag(flattenData.tags[0]);
+    }
 
     const handleCloseDatesModal = () => setEditdatesModal(false);
     const handleShowDatesModal = () => setEditdatesModal(true);
@@ -42,13 +69,13 @@ const Scheduler = () => {
         }
     });
 
-    const { data: data2 } = useQuery(GET_ALL_CLIENT_PACKAGE_BY_TYPE, {
-        variables: {
-            id: auth.userid,
-            type: 'Custom'
-        },
-        onCompleted: () => loadData()
-    });
+    // const { data: data2 } = useQuery(GET_ALL_CLIENT_PACKAGE_BY_TYPE, {
+    //     variables: {
+    //         id: auth.userid,
+    //         type: 'Custom'
+    //     },
+    //     onCompleted: () => loadData()
+    // });
 
     function handleEventsSeperation(data: any, rest_days: any){
         var ptonline: number = 0;
@@ -85,55 +112,55 @@ const Scheduler = () => {
         }
     }
 
-    function loadData() {
-        const flattenData1 = flattenObj({...data1});
-        const flattenData2 = flattenObj({...data2});
-        setData(
-            [...flattenData1.fitnessprograms].map((detail) => {
-                return {
-                    id: detail.id,
-                    programName: detail.title,
-                    discipline: detail.fitnessdisciplines.map((val: any) => {
-                        return val.disciplinename;
-                    }).join(", "),
-                    level: detail.level,
-                    events: handleEventsSeperation(detail.events, detail.rest_days),
-                    duration: detail.duration_days,
-                    details: detail.description,
-                    restDays: detail.rest_days
-                }
-            })
-        )
+    // function loadData() {
+        // const flattenData1 = flattenObj({...data1});
+        // const flattenData2 = flattenObj({...data2});
+        // setData(
+        //     [...flattenData1?.fitnessprograms].map((detail) => {
+        //         return {
+        //             id: detail.id,
+        //             programName: detail.title,
+        //             discipline: detail.fitnessdisciplines.map((val: any) => {
+        //                 return val.disciplinename;
+        //             }).join(", "),
+        //             level: detail.level,
+        //             events: handleEventsSeperation(detail.events, detail.rest_days),
+        //             duration: detail.duration_days,
+        //             details: detail.description,
+        //             restDays: detail.rest_days
+        //         }
+        //     })
+        // )
 
-        setUserPackage(
-            [...flattenData2.clientPackages].map((packageItem) => {
-                let renewDay: any = '';
-                if (packageItem.fitnesspackages.length !== 0) {
-                    renewDay = new Date(packageItem.effective_date);
-                    renewDay.setDate(renewDay.getDate() + packageItem.fitnesspackages[0].duration)
-                }
-                return {
-                    userPackageId: packageItem.id,
-                    id: packageItem.fitnesspackages[0].id,
-                    packageName: packageItem.fitnesspackages[0].packagename,
-                    details: [packageItem.fitnesspackages[0].ptonline, packageItem.fitnesspackages[0].ptoffline, packageItem.fitnesspackages[0].grouponline, packageItem.fitnesspackages[0].groupoffline, packageItem.fitnesspackages[0].recordedclasses, packageItem.fitnesspackages[0].restdays],
-                    duration: packageItem.fitnesspackages[0].duration,
-                    effectiveDate: moment(packageItem.effective_date).format("MMMM DD,YYYY"),
-                    packageStatus: packageItem.fitnesspackages[0].Status ? "Active" : "Inactive",
-                    packageRenewal: moment(renewDay).format("MMMM DD,YYYY"),
+        // setUserPackage(
+        //     [...flattenData2.clientPackages].map((packageItem) => {
+        //         let renewDay: any = '';
+        //         if (packageItem.fitnesspackages.length !== 0) {
+        //             renewDay = new Date(packageItem.effective_date);
+        //             renewDay.setDate(renewDay.getDate() + packageItem.fitnesspackages[0].duration)
+        //         }
+        //         return {
+        //             userPackageId: packageItem.id,
+        //             id: packageItem.fitnesspackages[0].id,
+        //             packageName: packageItem.fitnesspackages[0].packagename,
+        //             details: [packageItem.fitnesspackages[0].ptonline, packageItem.fitnesspackages[0].ptoffline, packageItem.fitnesspackages[0].grouponline, packageItem.fitnesspackages[0].groupoffline, packageItem.fitnesspackages[0].recordedclasses, packageItem.fitnesspackages[0].restdays],
+        //             duration: packageItem.fitnesspackages[0].duration,
+        //             effectiveDate: moment(packageItem.effective_date).format("MMMM DD,YYYY"),
+        //             packageStatus: packageItem.fitnesspackages[0].Status ? "Active" : "Inactive",
+        //             packageRenewal: moment(renewDay).format("MMMM DD,YYYY"),
 
 
-                    client: packageItem.users_permissions_user.username,
-                    clientId: packageItem.users_permissions_user.id,
-                    programName: packageItem.program_managers.length === 0 ? 'N/A' : packageItem.program_managers[0].fitnessprograms[0].title,
-                    programId: packageItem.program_managers.length === 0 ? 'N/A' : packageItem.program_managers[0].fitnessprograms[0].id,
-                    programStatus: packageItem.program_managers.length === 0 ? 'N/A' : "Assigned",
-                    programRenewal: packageItem.program_managers.length === 0 ? 'N/A' : moment(renewDay).format('MMMM DD,YYYY'),
-                }
+        //             client: packageItem.users_permissions_user.username,
+        //             clientId: packageItem.users_permissions_user.id,
+        //             programName: packageItem.program_managers.length === 0 ? 'N/A' : packageItem.program_managers[0].fitnessprograms[0].title,
+        //             programId: packageItem.program_managers.length === 0 ? 'N/A' : packageItem.program_managers[0].fitnessprograms[0].id,
+        //             programStatus: packageItem.program_managers.length === 0 ? 'N/A' : "Assigned",
+        //             programRenewal: packageItem.program_managers.length === 0 ? 'N/A' : moment(renewDay).format('MMMM DD,YYYY'),
+        //         }
 
-            })
-        )
-    }
+        //     })
+        // )
+    // }
     
     if(userPackage.length > 0) {
         programIndex = userPackage.findIndex((item) => item.programId === last[0] && item.clientId === last[1]);
@@ -156,21 +183,32 @@ const Scheduler = () => {
         return (data).toLocaleString('en-US', { minimumIntegerDigits: digits.toString(), useGrouping: false });
     }
 
-    function handleTotalClasses(dataArr: any){
-        let sum = 0;
-        for(var i=0; i<dataArr.length; i++){
-            sum += dataArr[i];
+    function handleTotalClasses(data: any, duration: number){
+        var sum = 0;
+        for(var i=0; i<data.length; i++){
+            sum += data[i];
         }
-        return sum;
+        var formattedSum = handleTimeFormatting(sum, duration);
+        return formattedSum;
     }
 
-    function handleAssignedClasses(dataArr: any, restDays: any){
-        let sum = 0;
-        for(var i=0; i<dataArr.length; i++){
-            sum += dataArr[i];
-        }
-        return sum + restDays;
-    }
+    // function handleTotalClasses(dataArr: any){
+    //     let sum = 0;
+    //     for(var i=0; i<dataArr.length; i++){
+    //         sum += dataArr[i];
+    //     }
+    //     return 5;
+    // }
+
+    // function handleAssignedClasses(dataArr: any, restDays: any){
+    //     let sum = 0;
+    //     for(var i=0; i<dataArr.length; i++){
+    //         sum += dataArr[i];
+    //     }
+    //     return 5;
+    // }
+
+    // console.log(tag);
 
     if (!show) return <span style={{ color: 'red' }}>Loading...</span>;
     else return (
@@ -186,14 +224,14 @@ const Scheduler = () => {
                     <Row>
                         <Col lg={7}>
                             <Row>
-                                <h3 className="text-capitalize">{data[0].programName}</h3>
+                                <h3 className="text-capitalize">{tag.tag_name}</h3>
                             </Row>
                             <Row>
-                                <span>{userPackage[programIndex].packageName}</span>
+                                <span>{tag.fitnesspackage.packagename}</span>
                                 <div className="ml-3 mt-1" style={{ borderLeft: '1px solid black', height: '20px' }}></div>
-                                <span className="ml-4">{data[0].duration + " days"}</span>
+                                <span className="ml-4">{tag.fitnesspackage.duration + " days"}</span>
                                 <div className="ml-3" style={{ borderLeft: '1px solid black', height: '20px' }}></div>
-                                <span className="ml-4">{"Level: " + data[0].level}</span>
+                                <span className="ml-4">{"Level: " + tag.fitnesspackage.level}</span>
                             </Row>
                             <Row>
                                 <Col lg={4} className="pl-0 pr-0">
@@ -208,7 +246,7 @@ const Scheduler = () => {
                                     </div>
                                     </Row>
                                     <Row className="mt-1">
-                                        <span className="text-capitalize"><b style={{ color: 'gray'}}>{userPackage[programIndex].client}</b></span>
+                                        <span className="text-capitalize"><b style={{ color: 'gray'}}>{tag.client_packages[0].users_permissions_user.username}</b></span>
                                     </Row>
                                 </Col>
                                 </Col>
@@ -220,12 +258,12 @@ const Scheduler = () => {
                                                     <span>Date:</span>
                                                 </Col>
                                                 <Col lg={5} className="text-center">
-                                                    <span className="p-1 ml-2 scheduler-badge">{userPackage[programIndex].effectiveDate}</span>
+                                                    <span className="p-1 ml-2 scheduler-badge">{moment(tag.client_packages[0].effective_date).format('DD MMMM, YY')}</span>
                                                 </Col>
-                                                    to
+                                                    {/* to
                                                 <Col lg={5} className="text-center">
                                                     <span className="p-1 scheduler-badge">{userPackage[programIndex].packageRenewal}</span>
-                                                </Col>
+                                                </Col> */}
                                             </Row>
                                         </div>
                                 </Col>
@@ -236,38 +274,32 @@ const Scheduler = () => {
                                 <h4><b>Movement</b></h4>
                                 <Row>
                                     <Col>
-                                        <Row style={{ justifyContent: 'space-around'}}>
-                                        {userPackage[programIndex].details[0] !== null && userPackage[programIndex].details[0] !== 0 ?
+                                    <Row style={{ justifyContent: 'space-around'}}>
                                             <div>
                                                 <img src='/assets/custompersonal-training-Online.svg' alt="PT-Online" /><br/>
-                                                <span>{userPackage[programIndex].details[0]} PT</span><br/>
-                                                <span><b>{tagSeperation === [] || tagSeperation[0] === 0 ? handleTimeFormatting(0, data[0].duration) : handleTimeFormatting(tagSeperation[0], data[0].duration)}</b></span>
+                                                <span>{tag.fitnesspackage.ptonline} PT</span><br/>
+                                                <span><b>{handleTimeFormatting(totalClasses[0], tag.fitnesspackage.duration)}</b></span>
                                             </div>
-                                            : ""}
-                                        {userPackage[programIndex].details[1] !== null && userPackage[programIndex].details[1] !== 0 ?
                                             <div>
                                                 <img src='/assets/custompersonal-training-Offline.svg' alt="PT-Offline" /><br/>
-                                                <span>{userPackage[programIndex].details[1]} PT</span><br/>
-                                                <span><b>{tagSeperation === [] || tagSeperation[1] === 0 ? handleTimeFormatting(0, data[0].duration) : handleTimeFormatting(tagSeperation[1], data[0].duration)}</b></span>
-                                            </div> : ""}
-                                        {userPackage[programIndex].details[2] !== null && userPackage[programIndex].details[2] !== 0 ?
+                                                <span>{tag.fitnesspackage.ptoffline} PT</span><br/>
+                                                <span><b>{handleTimeFormatting(totalClasses[1], tag.fitnesspackage.duration)}</b></span>
+                                            </div>
                                             <div>
                                                 <img src='/assets/customgroup-Online.svg' alt="Group-Online" /><br/>
-                                                <span>{userPackage[programIndex].details[2]} Group</span><br/>
-                                                <span><b>{tagSeperation === [] || tagSeperation[2] === 0 ? handleTimeFormatting(0, data[0].duration) : handleTimeFormatting(tagSeperation[2], data[0].duration)}</b></span>
-                                            </div> : ""}
-                                        {userPackage[programIndex].details[3] !== null && userPackage[programIndex].details[3] !== 0 ?
+                                                <span>{tag.fitnesspackage.grouponline} Group</span><br/>
+                                                <span><b>{handleTimeFormatting(totalClasses[2], tag.fitnesspackage.duration)}</b></span>
+                                            </div>
                                             <div>
                                                 <img src='/assets/customgroup-Offline.svg' alt="GRoup-Offline" /><br/>
-                                                <span>{userPackage[programIndex].details[3]} Group</span><br/>
-                                                <span><b>{tagSeperation === [] || tagSeperation[3] === 0 ? handleTimeFormatting(0, data[0].duration): handleTimeFormatting(tagSeperation[3], data[0].duration)}</b></span>
-                                            </div> : ""}
-                                        {userPackage[programIndex].details[4] !== null && userPackage[programIndex].details[4] !== 0 ?
+                                                <span>{tag.fitnesspackage.groupoffline} Group</span><br/>
+                                                <span><b>{handleTimeFormatting(totalClasses[3], tag.fitnesspackage.duration)}</b></span>
+                                           </div>
                                             <div>
                                                 <img src='/assets/customclassic.svg' alt="Classic" /><br/>
-                                                <span>{userPackage[programIndex].details[4]} Classic</span><br/>
-                                                <span><b>{tagSeperation === [] || tagSeperation[4] === 0 ? handleTimeFormatting(0, data[0].duration) : handleTimeFormatting(tagSeperation[4], data[0].duration)}</b></span>
-                                            </div> : ""}
+                                                <span>{tag.fitnesspackage.recordedclasses} Recorded</span><br/>
+                                                <span><b>{handleTimeFormatting(totalClasses[4], tag.fitnesspackage.duration)}</b></span>
+                                            </div>
                                         </Row>
                                         <Row>
                                             
@@ -276,10 +308,10 @@ const Scheduler = () => {
                                 </Row>
                                 <Row>
                                     <Col>
-                                        <span><b style={{ color: 'gray'}}>Status:</b> {statusDays === undefined ? 0 : statusDays}/{data[0].duration} days</span>
+                                        <span><b style={{ color: 'gray'}}>Status:</b> {handleTotalClasses(totalClasses, tag.fitnesspackage.duration)}/{tag.fitnesspackage.duration} days</span>
                                     </Col>
                                     <Col>
-                                        <span><b style={{ color: 'gray'}}>Rest-Days:</b> {userPackage[programIndex].details[5]} days</span>
+                                        <span><b style={{ color: 'gray'}}>Rest-Days:</b> {tag.fitnesspackage.restdays} days</span>
                                     </Col>
                                 </Row>
                            </div>
@@ -300,12 +332,14 @@ const Scheduler = () => {
                     <div className="mt-5">
                         <SchedulerPage 
                             type="date"
-                            days={data[0].duration} 
-                            restDays={data[0].restDays}
-                            totalClasses={handleTotalClasses(userPackage[programIndex].details)}
-                            assignedClasses={handleAssignedClasses(tagSeperation, userPackage[programIndex].details[5])} 
-                            programId={last[0]} 
-                            startDate={userPackage[programIndex].effectiveDate}
+                            days={tag?.fitnesspackage?.duration} 
+                            restDays={[]}
+                            totalClasses={5}
+                            assignedClasses={5} 
+                            programId={tagId}
+                            classType={'Custom'} 
+                            startDate={tag?.client_packages[0].effective_date}
+                            clientId={tag.client_packages[0]?.users_permissions_user.id}
                         />
                     </div>
                 </Col>
@@ -315,7 +349,7 @@ const Scheduler = () => {
                     <label>Edit Start Date: </label>
                 <InputGroup className="mb-3">
                     <FormControl
-                        value={startDate === "" ? moment(userPackage[programIndex].effectiveDate).format("YYYY-MM-DD") : startDate}
+                        value={startDate === "" ? moment(tag?.client_packages[0].effective_date).format("YYYY-MM-DD") : startDate}
                         onChange={(e) => {setStartDate(e.target.value)}}
                         type="date"
                     />

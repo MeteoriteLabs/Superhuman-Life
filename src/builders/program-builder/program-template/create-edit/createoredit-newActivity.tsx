@@ -1,10 +1,12 @@
 import React, { useContext, useImperativeHandle, useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import ModalView from "../../../../components/modal";
-import { UPDATE_FITNESSPROGRAMS, GET_SCHEDULEREVENTS } from "../queries";
+import { GET_SCHEDULEREVENTS, CREATE_SESSION, GET_SESSIONS, UPDATE_TAG_SESSIONS } from "../queries";
 import AuthContext from "../../../../context/auth-context";
 import { schema, widgets } from "../schema/newActivitySchema";
 import { Subject } from "rxjs";
+import {flattenObj} from '../../../../components/utils/responseFlatten';
+import moment from 'moment';
 
 interface Operation {
      id: string;
@@ -19,12 +21,25 @@ function CreateEditActivity(props: any, ref: any) {
      const [operation, setOperation] = useState<Operation>({} as Operation);
      const program_id = window.location.pathname.split("/").pop();
 
+     const [sessionsIds, setSessionsIds] = useState<any>([]);
+
+    useQuery(GET_SESSIONS, {variables: {id: program_id},onCompleted: (data: any) => {
+        const flattenData = flattenObj({...data});
+        const sessionsExistingValues = [...sessionsIds];
+        for(var q=0; q<flattenData.tags[0].sessions.length; q++){
+            sessionsExistingValues.push(flattenData.tags[0].sessions[q].id);
+        }
+        setSessionsIds(sessionsExistingValues);
+    }});
+
      // const [CreateProgram] = useMutation(CREATE_PROGRAM, { onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
-     const [updateProgram] = useMutation(UPDATE_FITNESSPROGRAMS, {
-          onCompleted: (r: any) => {
-               modalTrigger.next(false);
-          },
-     });
+     // const [updateProgram] = useMutation(UPDATE_FITNESSPROGRAMS, {
+     //      onCompleted: (r: any) => {
+     //           modalTrigger.next(false);
+     //      },
+     // });
+     const [upateSessions] = useMutation(UPDATE_TAG_SESSIONS, { onCompleted: (data: any) => {modalTrigger.next(false);}})
+    const [createSession] = useMutation(CREATE_SESSION);
      //     const [editExercise] = useMutation(UPDATE_EXERCISE,{variables: {exerciseid: operation.id}, onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
      //     const [deleteExercise] = useMutation(DELETE_EXERCISE, { onCompleted: (e: any) => console.log(e), refetchQueries: ["GET_TABLEDATA"] });
 
@@ -74,10 +89,12 @@ function CreateEditActivity(props: any, ref: any) {
      function UpdateProgram(frm: any) {
           var existingEvents = props.events === null ? [] : [...props.events];
           var daysArray: any = [];
+          console.log(frm);
           if (frm.day && frm.newActivity) {
                frm.day = JSON.parse(frm.day);
                frm.time = JSON.parse(frm.time);
                frm.newActivity = JSON.parse(frm.newActivity);
+               console.log(frm.newActivity)
                var name: any = frm.newActivity[0].activity;
                var id: any = frm.newActivity[0].id;
                delete frm.newActivity[0].activity;
@@ -130,13 +147,44 @@ function CreateEditActivity(props: any, ref: any) {
                }
           }
 
-          updateProgram({
-               variables: {
-                    programid: program_id,
-                    events: existingEvents,
-                    renewal_dt: lastEventDay,
-               },
-          });
+          const sessionIds_new: any = [];
+
+          function updateSessionFunc(id: any){
+               sessionIds_new.push(id);
+               if(frm.day.length === sessionIds_new.length){
+                   upateSessions({
+                       variables: {
+                           id: program_id,
+                           sessions_ids: sessionsIds.concat(sessionIds_new)
+                       }
+                   });
+               }
+           }
+
+          for (var z = 0; z < frm.day.length; z++) {
+               createSession({
+                    variables: {
+                        start_time: frm.time.startTime,
+                        end_time: frm.time.endTime,
+                        activity: id,
+                        activity_target: frm.newActivity[0],
+                        type: "activity",
+                        session_date: moment(frm.day[0].day, 'Da, MMM YY').format('YYYY-MM-DD'),
+                        changemaker: auth.userid
+                    },
+                    onCompleted: (data: any) => {
+                         updateSessionFunc(data.createSession.data.id);
+                    }
+                })
+          }
+
+          // updateProgram({
+          //      variables: {
+          //           programid: program_id,
+          //           events: existingEvents,
+          //           renewal_dt: lastEventDay,
+          //      },
+          // });
      }
 
      // function OnSubmit(frm: any) {
