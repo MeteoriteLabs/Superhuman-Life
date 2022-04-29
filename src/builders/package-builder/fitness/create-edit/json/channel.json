@@ -1,0 +1,118 @@
+{
+    "1": {
+        "title": "",
+        "type": "object",
+        "required": [
+           
+        ],
+       "properties": {
+            "channelName": {
+                "type": "string",
+                "title": "Channel Name"
+            },
+            "tag": {
+                "type": "string",
+                "title": "Tags"
+            },
+           "level": {
+                "type": "number",
+                "title": "Level",
+                "enum": [0, 1, 2, 3],
+                "enumNames": [
+                    "Beginner",
+                    "Intermediate",
+                    "Advanced", 
+                    "No level"
+                ]
+            }
+        }   
+    },
+    "2": {
+       "title": "",
+       "type": "object",
+       "required": [
+       ],
+       "properties": {
+            "About": {
+                "type": "string",
+                "title": "Channel Name"
+            },
+            "Benifits": {
+                "type": "string",
+                "title": "Tags"
+            },
+            "UploadPicture": {
+                "type": "string",
+                "format": "data-url",
+                "title": "Upload a Intro Picture"
+            },
+            "UploadVideo": {
+                "type": "string",
+                "format": "data-url",
+                "title": "Upload a Intro Video"
+            },
+            "VideoUrl": {
+                "type": "string",
+                "title": "Add Vieo Url"
+            }
+        }
+    },
+    "3": {
+        "title": "",
+       "type": "object",
+       "required": [
+       ],
+       "properties": {
+            "programSchedule": {
+                "type": "array",
+                "title": "Select Days",
+                "items": {
+                    "type": "string",
+                    "enum": [
+                        "Monday",
+                        "Tuesday",
+                        "Wednesday",
+                        "Thursday",
+                        "Friday",
+                        "Saturday",
+                        "Sunday"
+                    ]
+                },
+                "uniqueItems": true
+            }
+        }
+    },
+    "4": {
+        "title": "",
+       "type": "object",
+       "required": [
+       ],
+       "properties": {
+            "bookingConfig": {
+                "type": "string"
+            }
+        }
+    },
+    "5": {
+        "title": "",
+       "type": "object",
+       "required": [
+       ],
+       "properties": {
+            "pricing": {
+                "type": "string"
+            }
+        }
+    },
+    "6": {
+        "title": "",
+       "type": "object",
+       "required": [
+       ],
+       "properties": {
+            "config": {
+                "type": "string"
+            }
+        }
+    }
+}

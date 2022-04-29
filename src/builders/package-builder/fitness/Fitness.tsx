@@ -7,6 +7,8 @@ import './fitness.css'
 import ActionButton from "../../../components/actionbutton";
 
 import CreateEditView from "./CreateEditView";
+import CreateEditViewChannel from './create-edit/CreateEditView-Channel';
+import CreateEditViewCohort from "./create-edit/CreateEditView-Cohort";
 import { GET_FITNESS, GET_FITNESS_PACKAGE_TYPES } from "./graphQL/queries";
 import { flattenObj } from "../../../components/utils/responseFlatten";
 
@@ -16,6 +18,8 @@ export default function FitnessTab(props) {
 
 
     const createEditViewRef = useRef<any>(null);
+    const createEditViewChannelRef = useRef<any>(null);
+    const createEditViewCohortRef = useRef<any>(null);
     const [selectedDuration, setSelectedDuration] = useState<any>('');
     const [currentIndex, setCurrentIndex] = useState<any>('');
 
@@ -219,7 +223,23 @@ export default function FitnessTab(props) {
                             >
                                 <i className="fas fa-plus-circle"></i>{" "}Custom
                             </Button>
+                            <Button className='mr-4' variant={true ? "outline-secondary" : "light"} size="sm"
+                                onClick={() => {
+                                    createEditViewChannelRef.current.TriggerForm({ id: null, actionType: 'create', type: 'Custom Fitness' });
+                                }}
+                            >
+                                <i className="fas fa-plus-circle"></i>{" "}Channel
+                            </Button>
+                            <Button className='mr-4' variant={true ? "outline-secondary" : "light"} size="sm"
+                                onClick={() => {
+                                    createEditViewCohortRef.current.TriggerForm({ id: null, actionType: 'create', type: 'Custom Fitness' });
+                                }}
+                            >
+                                <i className="fas fa-plus-circle"></i>{" "}Cohort
+                            </Button>
                             <CreateEditView packageType={flattenObj({...data})} ref={createEditViewRef}></CreateEditView>
+                            <CreateEditViewChannel ref={createEditViewChannelRef}></CreateEditViewChannel>
+                            <CreateEditViewCohort ref={createEditViewCohortRef}></CreateEditViewCohort>
                         </Card.Title>
                     </Col>
                 </Row>
