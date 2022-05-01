@@ -3,7 +3,7 @@ import { useQuery, useMutation, gql } from "@apollo/client";
 import ModalView from "../../../../components/modal";
 import { GET_SCHEDULEREVENTS, CREATE_WORKOUT, CREATE_SESSION, GET_SESSIONS, UPDATE_TAG_SESSIONS, CREATE_SESSION_BOOKING } from "../../../program-builder/program-template/queries";
 import AuthContext from "../../../../context/auth-context";
-import { schema, widgets } from '../../../program-builder/program-template/schema/newWorkoutSchema';
+import { schema, widgets } from './schema/cohortSchema';
 import {Subject} from 'rxjs';
 import {flattenObj} from '../../../../components/utils/responseFlatten';
 import moment from 'moment';
@@ -16,9 +16,9 @@ interface Operation {
     current_status: boolean;
 }
 
-function CreateEditNewWorkout(props: any, ref: any) {
+function CreateEditCohort(props: any, ref: any) {
     const auth = useContext(AuthContext);
-    const programSchema: { [name: string]: any; } = require("../../../program-builder/program-template/json/newWorkout.json");
+    const programSchema: { [name: string]: any; } = require("./json/cohort.json");
     const [programDetails, setProgramDetails] = useState<any>({});
     // const [frmDetails, setFrmDetails] = useState<any>([]);
     const [operation, setOperation] = useState<Operation>({} as Operation);
@@ -271,7 +271,7 @@ function CreateEditNewWorkout(props: any, ref: any) {
                     formSchema={programSchema}
                     formSubmit={name === "View" ? () => { modalTrigger.next(false); } : (frm: any) => { OnSubmit(frm); }}
                     formData={programDetails}
-                    stepperValues={["Schedule", "Workout"]}
+                    stepperValues={["Creator", "Details", "Program", "Pricing", "config", "Review"]}
                     widgets={widgets}
                     modalTrigger={modalTrigger}
                 />
@@ -299,4 +299,4 @@ function CreateEditNewWorkout(props: any, ref: any) {
     )
 }
 
-export default React.forwardRef(CreateEditNewWorkout);
+export default React.forwardRef(CreateEditCohort);

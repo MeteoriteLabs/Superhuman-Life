@@ -35,11 +35,11 @@
        "properties": {
             "About": {
                 "type": "string",
-                "title": "Channel Name"
+                "title": "About"
             },
             "Benifits": {
                 "type": "string",
-                "title": "Tags"
+                "title": "Benefits"
             },
             "UploadPicture": {
                 "type": "string",
@@ -97,6 +97,7 @@
         "title": "",
        "type": "object",
        "required": [
+           "pricing"
        ],
        "properties": {
             "pricing": {
@@ -105,12 +106,69 @@
         }
     },
     "6": {
+        "title": "Package Settings",
+       "type": "object",
+       "required": [
+       ],
+       "properties": {
+            "visibility": {
+                "type": "number",
+                "title": "Visibility",
+                "enum": [0, 1],
+                "enumNames": [
+                    "Public",
+                    "Private"
+                ]
+            },
+            "startDate": {
+                "type": "string",
+                "format": "date",
+                "title": "Start Date"
+            },
+            "publishingDate": {
+                "type": "string",
+                "format": "date",
+                "title": "Publishing Date"
+            },
+            "expiryDate": {
+                "type": "string",
+                "format": "date",
+                "title": "Expiry Date"
+            },
+            "config": {
+                "title": "Booking Config",
+                "type": "object",
+                "required": [
+                ],
+                "properties": {
+                    "acceptBooking": {
+                        "type": "number",
+                        "title": "",
+                        "enum": [0, 1],
+                        "enumNames": [
+                            "Manual",
+                            "Auto"
+                        ]
+                    },
+                    "maxBookingMonth": {
+                        "type": "number",
+                        "title": "Maximum booking/per month"
+                    },
+                    "maxBookingDay": {
+                        "type": "number",
+                        "title": "Maximum booking/per day"
+                    }
+                }
+            }
+        }
+    },
+    "7": {
         "title": "",
        "type": "object",
        "required": [
        ],
        "properties": {
-            "config": {
+            "preview": {
                 "type": "string"
             }
         }

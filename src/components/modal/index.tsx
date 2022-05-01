@@ -106,6 +106,7 @@ export default function ModalView({
                   onSubmit={({ formData }: any) => submitHandler(formData)}
                   formData={formValues}
                   widgets={widgets}
+                  formContext={formData}
                 >
                   <div></div>
                 </Form>

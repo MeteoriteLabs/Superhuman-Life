@@ -3,9 +3,25 @@ import {Row, Col, Form, Table, FormControl, InputGroup} from 'react-bootstrap';
 
 const PricingTable = (props) => {
 
-    const [pricing, setPricing] = useState(false);
+    console.log(props);
+    const [show, setShow] = useState(props.value === 'free' ? true : false);
+    const [pricing, setPricing] = useState<any>(props.value !== undefined && props.value !== 'free' ? JSON.parse(props.value) : [ null, null, null, null, null]);
 
-    props.onChange("");
+
+    function handlePricingUpdate(value: any, id: any){
+        let newPricing = [...pricing];
+        newPricing[id] = value;
+        setPricing(newPricing);
+    }
+
+    if(show){
+        props.onChange('free');
+    }
+
+    if(pricing[0] !== null && pricing[1] !== null && pricing[2] !== null && pricing[3] !== null && pricing[4] !== null){
+        props.onChange(JSON.stringify(pricing));    
+    }
+
 
     return(
         <>
@@ -24,8 +40,8 @@ const PricingTable = (props) => {
                                 <Form.Check 
                                     type="switch"
                                     id="custom-switch"
-                                    defaultChecked={pricing}
-                                    onClick={() => setPricing(!pricing)}
+                                    defaultChecked={show}
+                                    onClick={() => setShow(!show)}
                                 />
                             </Form>
                             </Col>
@@ -36,7 +52,7 @@ const PricingTable = (props) => {
             </div>
             <br />
             <br />
-            {!pricing && <div>
+            {!show && <div>
                 <h4>Subscription Plan</h4>
                 <Table style={{ tableLayout: 'fixed'}}>
                 <thead>
@@ -54,27 +70,37 @@ const PricingTable = (props) => {
                     <td><b>Vouchers</b></td>
                     <td>
                     <Form.Control as="select">
-                        <option>Default select</option>
+                        <option value={0}>Choose voucher</option>
+                        <option value={10}>Get Fit - 10%</option>
+                        <option value={20}>Get Fit - 20%</option>
                     </Form.Control>
                     </td>
                     <td>
                     <Form.Control as="select">
-                        <option>Default select</option>
+                        <option value={0}>Choose voucher</option>
+                        <option value={10}>Get Fit - 10%</option>
+                        <option value={20}>Get Fit - 20%</option>
                     </Form.Control>
                     </td>
                     <td>
                     <Form.Control as="select">
-                        <option>Default select</option>
+                        <option value={0}>Choose voucher</option>
+                        <option value={10}>Get Fit - 10%</option>
+                        <option value={20}>Get Fit - 20%</option>
                     </Form.Control>
                     </td>
                     <td>
                     <Form.Control as="select">
-                        <option>Default select</option>
+                        <option value={0}>Choose voucher</option>
+                        <option value={10}>Get Fit - 10%</option>
+                        <option value={20}>Get Fit - 20%</option>
                     </Form.Control>
                     </td>
                     <td>
                     <Form.Control as="select">
-                        <option>Default select</option>
+                        <option value={0}>Choose voucher</option>
+                        <option value={10}>Get Fit - 10%</option>
+                        <option value={20}>Get Fit - 20%</option>
                     </Form.Control>
                     </td>
                     </tr>
@@ -99,46 +125,66 @@ const PricingTable = (props) => {
                     <td>
                     <InputGroup className="mb-3">
                         <FormControl
+                        className={`${pricing[0] < 2500 && pricing[0] !== null ? "is-invalid" : pricing[0] >= 2500 ? "is-valid" : ""}`}
                         aria-label="Default"
                         type='number'
                         aria-describedby="inputGroup-sizing-default"
+                        value={pricing[0]}
+                        onChange={(e) => {handlePricingUpdate(e.target.value, 0)}}
                         />
+                        {pricing[0] < 2500 && pricing[0] !== null && <span style={{ fontSize: '12px', color: 'red'}}>cannot be less than ₹2500</span>}    
+                    </InputGroup>
+                    </td>
+                    <td>
+                    <InputGroup className="mb-3">
+                        <FormControl
+                        className={`${pricing[1] < 2500 && pricing[1] !== null ? "is-invalid" : pricing[1] >= 2500 ? "is-valid" : ""}`}
+                        aria-label="Default"
+                        type='number'
+                        aria-describedby="inputGroup-sizing-default"
+                        value={pricing[1]}
+                        onChange={(e) => {handlePricingUpdate(e.target.value, 1)}}
+                        />
+                        {pricing[1] < 2500 && pricing[1] !== null && <span style={{ fontSize: '12px', color: 'red'}}>cannot be less than ₹2500</span>}   
                     </InputGroup>    
                     </td>
                     <td>
                     <InputGroup className="mb-3">
                         <FormControl
+                        className={`${pricing[2] < 2500 && pricing[2] !== null ? "is-invalid" : pricing[2] >= 2500 ? "is-valid" : ""}`}
                         aria-label="Default"
                         type='number'
                         aria-describedby="inputGroup-sizing-default"
+                        value={pricing[2]}
+                        onChange={(e) => {handlePricingUpdate(e.target.value, 2)}}
                         />
+                        {pricing[2] < 2500 && pricing[2] !== null && <span style={{ fontSize: '12px', color: 'red'}}>cannot be less than ₹2500</span>}   
                     </InputGroup>    
                     </td>
                     <td>
                     <InputGroup className="mb-3">
                         <FormControl
+                        className={`${pricing[3] < 2500 && pricing[3] !== null ? "is-invalid" : pricing[3] >= 2500 ? "is-valid" : ""}`}
                         aria-label="Default"
                         type='number'
                         aria-describedby="inputGroup-sizing-default"
+                        value={pricing[3]}
+                        onChange={(e) => {handlePricingUpdate(e.target.value, 3)}}
                         />
+                        {pricing[3] < 2500 && pricing[3] !== null && <span style={{ fontSize: '12px', color: 'red'}}>cannot be less than ₹2500</span>}   
                     </InputGroup>    
                     </td>
                     <td>
                     <InputGroup className="mb-3">
                         <FormControl
+                        className={`${pricing[4] < 2500 && pricing[4] !== null ? "is-invalid" : pricing[4] >= 2500 ? "is-valid" : ""}`}
                         aria-label="Default"
                         type='number'
                         aria-describedby="inputGroup-sizing-default"
+                        value={pricing[4]}
+                        onChange={(e) => {handlePricingUpdate(e.target.value, 4)}}
                         />
-                    </InputGroup>    
-                    </td>
-                    <td>
-                    <InputGroup className="mb-3">
-                        <FormControl
-                        aria-label="Default"
-                        type='number'
-                        aria-describedby="inputGroup-sizing-default"
-                        />
+                        {pricing[4] < 2500 && pricing[4] !== null && <span style={{ fontSize: '12px', color: 'red'}}>cannot be less than ₹2500</span>}   
                     </InputGroup>    
                     </td>
                     </tr>

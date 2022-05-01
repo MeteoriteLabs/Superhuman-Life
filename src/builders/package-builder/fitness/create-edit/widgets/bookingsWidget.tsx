@@ -6,7 +6,7 @@ const BookingsWidget = (props) => {
     const [instantBookings, setInstantBookings] = useState(false);
     const [freebooking, setFreeBooking] = useState(false);
 
-    props.onChange("");
+    props.onChange(JSON.stringify({instantBooking: instantBookings, freeBooking: freebooking}));
 
     return(
         <>

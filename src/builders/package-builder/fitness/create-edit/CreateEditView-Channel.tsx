@@ -203,39 +203,8 @@ function CreateEditChannel(props: any, ref: any) {
     }
 
     function UpdateProgram(frm: any) {
-        frmDetails = frm;
-        if(frm.addWorkout.build){
-            frm.addWorkout.build = JSON.parse(frm.addWorkout.build);
-        }
-        enum ENUM_EXERCISES_EXERCISELEVEL {
-            Beginner,
-            Intermediate,
-            Advanced,
-            None
-        }
-    
-        enum ENUM_WORKOUTS_INTENSITY {
-            Low,
-            Medium,
-            High
-        }
-        createWorkout({ variables: {
-            workouttitle: frm.workout,
-            intensity: ENUM_WORKOUTS_INTENSITY[frm.intensity],
-            level: ENUM_EXERCISES_EXERCISELEVEL[frm.level],
-            fitnessdisciplines: frm.discipline.split(","),
-            About: frm.about,
-            Benifits: frm.benefits,
-            warmup: (frm.addWorkout.AddWorkout === "Build" ? (frm.addWorkout.build.warmup ? frm.addWorkout.build.warmup : null) : null),
-            mainmovement: (frm.addWorkout.AddWorkout === "Build" ? (frm.addWorkout.build.mainMovement ? frm.addWorkout.build.mainMovement : null) : null),
-            cooldown: (frm.addWorkout.AddWorkout === "Build" ? (frm.addWorkout.build.coolDown ? frm.addWorkout.build.coolDown : null) : null),
-            workout_text: (frm.addWorkout.AddWorkout === "Text" ? frm.addWorkout.AddText : null),
-            workout_URL: (frm.addWorkout.AddWorkout === "Add URL" ? frm.addWorkout.AddURL : null),
-            calories: frm.calories,
-            equipment_lists: frm.equipment.split(","),
-            muscle_groups: frm.muscleGroup.split(","),
-            users_permissions_user: frm.user_permissions_user
-        }});
+        debugger;
+        console.log(frm);
     }
 
     function OnSubmit(frm: any) {

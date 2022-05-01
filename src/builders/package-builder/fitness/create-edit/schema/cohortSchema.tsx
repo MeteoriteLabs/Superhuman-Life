@@ -1,11 +1,11 @@
-import BookingsWidget  from "../widgets/bookingsWidget";
-import PricingTableChannel from '../widgets/pricingTableChannel';
+import PricingTableChannel from '../widgets/pricingTableCohort';
 import PreviewChannel from '../widgets/preview';
+import LocationList from '../widgets/locationList';
 
 export const widgets = {
-    bookingWidget: BookingsWidget,
     pricingTableChannel: PricingTableChannel,
-    previewChannel: PreviewChannel
+    previewChannel: PreviewChannel,
+    locationList: LocationList
 };
 
 export const schema: any = {
@@ -37,6 +37,33 @@ export const schema: any = {
                 "accept": ".mp4"
             }
         },
+        "mode": {
+            "ui:widget": "radio",
+            "ui:options": {
+                "inline": true
+            }
+        },
+        "location": {
+            "ui:widget": "locationList",
+        },
+        "residential": {
+            "ui:widget": "radio",
+            "ui:options": {
+                "inline": true
+            }
+        },
+        "description": {
+            "ui:widget": "textarea",
+            "ui:options": {
+                "rows": 3
+            }
+        },
+        "programSchedule": {
+            "ui:widget": "checkboxes"
+        },
+        "pricing": {
+            "ui:widget": "pricingTableChannel"
+        },
         "visibility": {
             "ui:widget": "radio",
             "ui:options": {
@@ -50,15 +77,6 @@ export const schema: any = {
                     "inline": true
                 }
             }
-        },
-        "programSchedule": {
-            "ui:widget": "checkboxes"
-        },
-        "bookingConfig": {
-            "ui:widget": "bookingWidget"
-        },
-        "pricing": {
-            "ui:widget": "pricingTableChannel"
         },
         "preview": {
             "ui:widget": "previewChannel"
