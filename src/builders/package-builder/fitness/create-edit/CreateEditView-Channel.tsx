@@ -2,7 +2,7 @@ import React, { useContext, useImperativeHandle, useState } from 'react';
 import { useQuery, useMutation } from "@apollo/client";
 import ModalView from "../../../../components/modal";
 import {CREATE_CHANNEL_PACKAGE, CREATE_BOOKING_CONFIG} from '../graphQL/mutations';
-import {GET_FITNESS_PACKAGE_TYPE} from '../graphQL/queries';
+import {GET_FITNESS_PACKAGE_TYPE, GET_SINGLE_PACKAGE_BY_ID} from '../graphQL/queries';
 import AuthContext from "../../../../context/auth-context";
 import { schema, widgets } from './schema/channelSchema';
 import {Subject} from 'rxjs';
@@ -60,8 +60,33 @@ function CreateEditChannel(props: any, ref: any) {
         }
     }));
 
+    enum ENUM_FITNESSPACKAGE_LEVEL {
+        Beginner,
+        Intermediate,
+        Advanced
+    }
+
     function FillDetails(data: any) {
+        const flattenData = flattenObj({...data});
+        let msg: any = flattenData.fitnesspackages[0];
+        let booking: any = {};
         let details: any = {};
+        details.About = msg.aboutpackage;
+        details.Benefits = msg.Benifits;
+        details.channelName = msg.packagename;
+        details.channelinstantBooking = msg.groupinstantbooking;
+        details.expiryDate = moment(msg.expirydate).format('YYYY-MM-DD');
+        details.level = ENUM_FITNESSPACKAGE_LEVEL[msg.level];
+        details.pricing = msg.fitnesspackagepricing[0]?.pricing === 'free' ? 'free' : JSON.stringify(msg.fitnesspackagepricing);
+        details.publishingDate = moment(msg.publishing_date).format('YYYY-MM-DD');
+        details.tag = msg.tags;
+        details.user_permissions_user = msg.users_permissions_user.id;
+        details.visibility = msg.is_private === true ? 1 : 0;
+        booking.acceptBooking = msg.booking_config.isAuto === true ? 1 : 0;
+        booking.maxBookingDay = msg.booking_config.bookingsPerDay;
+        booking.maxBookingMonth = msg.booking_config.BookingsPerMonth;
+        details.config = booking;
+        // details.visibility = 
         // let msg = data;
         // console.log(msg);
         setProgramDetails(details);
@@ -73,10 +98,8 @@ function CreateEditChannel(props: any, ref: any) {
             OnSubmit(null);
     }
 
-    enum ENUM_FITNESSPACKAGE_LEVEL {
-        Beginner,
-        Intermediate,
-        Advanced
+    function FetchData() {
+        useQuery(GET_SINGLE_PACKAGE_BY_ID, { variables: { id: operation.id }, skip: (operation.type === 'create'), onCompleted: (e: any) => { FillDetails(e) } });
     }
 
     function findPackageType(creationType: any){
@@ -105,6 +128,10 @@ function CreateEditChannel(props: any, ref: any) {
         })
     }
 
+    function editChannelPackege(frm: any){
+        console.log(frm);
+    }
+
     function OnSubmit(frm: any) {
         //bind user id
         if(frm)
@@ -116,8 +143,13 @@ function CreateEditChannel(props: any, ref: any) {
             case 'create':
                 CreateChannelPackage(frm);
                 break;
+            case 'edit':
+                editChannelPackege(frm);
+                break;
         }
     }
+
+    FetchData();
 
     let name = "";
     if(operation.type === 'create'){

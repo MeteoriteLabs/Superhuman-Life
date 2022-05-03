@@ -125,17 +125,18 @@ export default function FitnessTab(props) {
             id: "edit",
             Header: "Actions",
             Cell: ({ row }: any) => {
+                console.log(row.original)
                 const actionClick1 = () => {
-                    createEditViewRef.current.TriggerForm({ id: row.original.id, actionType: 'edit', type: row.original.type })
+                    row.original.type === "Live Stream Channel" ? createEditViewChannelRef.current.TriggerForm({ id: row.original.id, type: 'edit', packageType: row.original.type }) : row.original.type === "Cohort" ? createEditViewCohortRef.current.TriggerForm({ id: row.original.id, type: 'edit', packageType: row.original.type }) : createEditViewRef.current.TriggerForm({ id: row.original.id, type: 'edit', packageType: row.original.type });
                 };
                 const actionClick2 = () => {
-                    createEditViewRef.current.TriggerForm({ id: row.original.id, actionType: 'view', type: row.original.type })
+                    row.original.type === "Live Stream Channel" ? createEditViewChannelRef.current.TriggerForm({ id: row.original.id, type: 'view', packageType: row.original.type }) : row.original.type === "Cohort" ? createEditViewCohortRef.current.TriggerForm({ id: row.original.id, type: 'view', packageType: row.original.type }) : createEditViewRef.current.TriggerForm({ id: row.original.id, type: 'view', packageType: row.original.type });
                 };
                 const actionClick3 = () => {
-                    createEditViewRef.current.TriggerForm({ id: row.original.id, actionType: 'toggle-status', current_status: (row.original.status === "Active") })
+                    row.original.type === "Live Stream Channel" ? createEditViewChannelRef.current.TriggerForm({ id: row.original.id, type: 'toggle-status', packageType: row.original.type }) : row.original.type === "Cohort" ? createEditViewCohortRef.current.TriggerForm({ id: row.original.id, type: 'toggle-status', packageType: row.original.type }) : createEditViewRef.current.TriggerForm({ id: row.original.id, type: 'toggle-statu', packageType: row.original.type });
                 };
                 const actionClick4 = () => {
-                    createEditViewRef.current.TriggerForm({ id: row.original.id, actionType: 'delete' })
+                    row.original.type === "Live Stream Channel" ? createEditViewChannelRef.current.TriggerForm({ id: row.original.id, type: 'delete', packageType: row.original.type }) : row.original.type === "Cohort" ? createEditViewCohortRef.current.TriggerForm({ id: row.original.id, type: 'delete', packageType: row.original.type }) : createEditViewRef.current.TriggerForm({ id: row.original.id, type: 'delete', packageType: row.original.type });
                 };
 
                 const arrayAction = [

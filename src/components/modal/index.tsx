@@ -29,6 +29,8 @@ export default function ModalView({
     setShow(res);
   });
 
+  console.log(name);
+
   useEffect(() => {
     setStep(1);
     // eslint-disable-next-line react-hooks/exhaustive-deps

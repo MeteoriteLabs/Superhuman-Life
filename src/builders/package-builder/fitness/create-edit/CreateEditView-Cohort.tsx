@@ -2,7 +2,7 @@ import React, { useContext, useImperativeHandle, useState } from 'react';
 import { useQuery, useMutation, gql } from "@apollo/client";
 import ModalView from "../../../../components/modal";
 import {CREATE_CHANNEL_PACKAGE, CREATE_BOOKING_CONFIG} from '../graphQL/mutations';
-import {GET_FITNESS_PACKAGE_TYPE} from '../graphQL/queries';
+import {GET_FITNESS_PACKAGE_TYPE, GET_SINGLE_PACKAGE_BY_ID} from '../graphQL/queries';
 import AuthContext from "../../../../context/auth-context";
 import { schema, widgets } from './schema/cohortSchema';
 import {Subject} from 'rxjs';
@@ -63,19 +63,6 @@ function CreateEditCohort(props: any, ref: any) {
         }
     }));
 
-    function FillDetails(data: any) {
-        let details: any = {};
-        // let msg = data;
-        // console.log(msg);
-        setProgramDetails(details);
-
-        //if message exists - show form only for edit and view
-        if (['edit', 'view'].indexOf(operation.type) > -1)
-            modalTrigger.next(true);
-        else
-            OnSubmit(null);
-    }
-
     enum ENUM_FITNESSPACKAGE_LEVEL {
         Beginner,
         Intermediate,
@@ -94,21 +81,60 @@ function CreateEditCohort(props: any, ref: any) {
         Accommodation_Food
     }
 
+    function FillDetails(data: any) {
+        console.log('Cohort');
+        debugger
+        const flattenData = flattenObj({...data});
+        let msg: any = flattenData.fitnesspackages[0];
+        console.log(msg);
+        let booking: any = {};
+        let details: any = {};
+        details.About = msg.aboutpackage;
+        details.Benefits = msg.benefits;
+        details.packageName = msg.packagename;
+        details.channelinstantBooking = msg.groupinstantbooking;
+        details.expiryDate = moment(msg.expirydate).format('YYYY-MM-DD');
+        details.level = ENUM_FITNESSPACKAGE_LEVEL[msg.level];
+        details.pricing = msg.fitnesspackagepricing[0]?.pricing === 'free' ? 'free' : JSON.stringify(msg.fitnesspackagepricing);
+        details.publishingDate = moment(msg.publishing_date).format('YYYY-MM-DD');
+        details.tag = msg.tags;
+        details.user_permissions_user = msg.users_permissions_user.id;
+        details.visibility = msg.is_private === true ? 1 : 0;
+        booking.acceptBooking = msg.booking_config.isAuto === true ? 1 : 0;
+        booking.maxBookingDay = msg.booking_config.bookingsPerDay;
+        booking.maxBookingMonth = msg.booking_config.BookingsPerMonth;
+        details.config = booking;
+        details.classSize = msg.classsize;
+        details.mode = ENUM_FITNESSPACKAGE_MODE[msg.mode];
+        details.residential =  ENUM_FITNESSPACKAGE_RESIDENTIAL_TYPE[msg.residential_type];
+        // let msg = data;
+        // console.log(msg);
+        setProgramDetails(details);
+
+        //if message exists - show form only for edit and view
+        if (['edit', 'view'].indexOf(operation.type) > -1)
+            modalTrigger.next(true);
+        else
+            OnSubmit(null);
+    }
+
+    function FetchData() {
+        useQuery(GET_SINGLE_PACKAGE_BY_ID, { variables: { id: operation.id }, skip: (operation.type === 'create'), onCompleted: (e: any) => { FillDetails(e) } });
+    }
+
     function findPackageType(creationType: any){
         const foundType = fitnessPackageTypes.find((item: any) => item.type === creationType);
         return foundType.id;
     }
 
     function createCohort(frm: any) {
-        debugger;
-        console.log(frm);
         frmDetails = frm;
         frm.location = JSON.parse(frm.location)
         CreateCohortPackage({
             variables: {
                 aboutpackage: frm.About,
-                benefits: frm.Benefits,
-                packagename: frm.channelName,
+                benefits: frm.Benifits,
+                packagename: frm.packageName,
                 channelinstantBooking: frm.channelinstantBooking,
                 expiry_date: moment(frm.expiryDate).toISOString(),
                 level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
@@ -148,6 +174,8 @@ function CreateEditCohort(props: any, ref: any) {
         name="View";
     }
 
+
+    FetchData();
 
     return (
         <>
