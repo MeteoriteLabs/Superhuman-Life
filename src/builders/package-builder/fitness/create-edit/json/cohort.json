@@ -119,6 +119,7 @@
         "title": "",
        "type": "object",
        "required": [
+           "pricing"
        ],
        "properties": {
             "pricing": {

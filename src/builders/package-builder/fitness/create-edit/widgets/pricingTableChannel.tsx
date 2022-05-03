@@ -1,27 +1,84 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import {Row, Col, Form, Table, FormControl, InputGroup} from 'react-bootstrap';
+import {gql, useQuery} from '@apollo/client';
+import AuthContext from '../../../../../context/auth-context';
+import { flattenObj } from '../../../../../components/utils/responseFlatten';
 
 const PricingTable = (props) => {
 
-    console.log(props);
+    const auth = useContext(AuthContext);
     const [show, setShow] = useState(props.value === 'free' ? true : false);
-    const [pricing, setPricing] = useState<any>(props.value !== undefined && props.value !== 'free' ? JSON.parse(props.value) : [ null, null, null, null, null]);
+    const [pricing, setPricing] = useState<any>(props.value !== undefined && props.value !== 'free' ? JSON.parse(props.value) : [ {mrp: null, suggestedPrice: null, voucher: 1, duration: 1, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 1, duration: 30, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 1, duration: 90, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 1, duration: 180, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 1, duration: 360, sapienPricing: null}]);
 
+    const SAPIEN_PRICING = gql`
+        query fetchSapienPricing($id: ID!) {
+            suggestedPricings(filters: {
+                fitness_package_type: {
+                  type: {
+                    eq: "Live Stream Channel"
+                  }
+                },
+                users_permissions_users:{
+                  id: {
+                    eq: $id
+                  }
+                }
+              }){
+                data{
+                  id
+                  attributes{
+                    mrp
+                  }
+                }
+              }
+        }
+    `;
+
+    function FetchData(){
+        useQuery(SAPIEN_PRICING, {variables: { id: auth.userid },onCompleted: (data) => {loadData(data)}})
+    }
+
+    function loadData(data){
+        const flattenData = flattenObj({...data});
+        const newValue = [...pricing];
+        newValue.forEach((item, index) => {
+            if(item.voucher !== 1 && item.price !== null){
+                item.suggestedPrice = flattenData.suggestedPricings[0]?.mrp * item.duration - (flattenData.suggestedPricings[0]?.mrp * item.duration * item.voucher/100);
+            }else {
+                item.suggestedPrice = flattenData.suggestedPricings[0]?.mrp * item.duration;
+            }
+            item.sapienPricing = flattenData.suggestedPricings[0]?.mrp * item.duration;
+        });
+        setPricing(newValue);
+    }
 
     function handlePricingUpdate(value: any, id: any){
         let newPricing = [...pricing];
-        newPricing[id] = value;
+        newPricing[id].mrp = value;
         setPricing(newPricing);
     }
 
     if(show){
         props.onChange('free');
-    }
-
-    if(pricing[0] !== null && pricing[1] !== null && pricing[2] !== null && pricing[3] !== null && pricing[4] !== null){
+    }else if(pricing[0].mrp !== null && pricing[1].mrp !== null && pricing[2].mrp !== null && pricing[3].mrp !== null && pricing[4].mrp !== null){
         props.onChange(JSON.stringify(pricing));    
     }
 
+    function handleUpdatePricing(id: any, value: any){
+        if(parseInt(value) !== 1){
+            let newValue = [...pricing];
+            newValue[id].voucher = parseInt(value);
+            newValue[id].suggestedPrice = newValue[id].sapienPricing - (newValue[id].sapienPricing * value/100);
+            setPricing(newValue);
+        }else {
+            let newValue = [...pricing];
+            newValue[id].voucher = parseInt(value);
+            newValue[id].suggestedPrice = newValue[id].sapienPricing;
+            setPricing(newValue);
+        }
+    }
+
+    FetchData();
 
     return(
         <>
@@ -68,125 +125,53 @@ const PricingTable = (props) => {
                 <tbody>
                     <tr className='text-center'>
                     <td><b>Vouchers</b></td>
-                    <td>
-                    <Form.Control as="select">
-                        <option value={0}>Choose voucher</option>
-                        <option value={10}>Get Fit - 10%</option>
-                        <option value={20}>Get Fit - 20%</option>
-                    </Form.Control>
-                    </td>
-                    <td>
-                    <Form.Control as="select">
-                        <option value={0}>Choose voucher</option>
-                        <option value={10}>Get Fit - 10%</option>
-                        <option value={20}>Get Fit - 20%</option>
-                    </Form.Control>
-                    </td>
-                    <td>
-                    <Form.Control as="select">
-                        <option value={0}>Choose voucher</option>
-                        <option value={10}>Get Fit - 10%</option>
-                        <option value={20}>Get Fit - 20%</option>
-                    </Form.Control>
-                    </td>
-                    <td>
-                    <Form.Control as="select">
-                        <option value={0}>Choose voucher</option>
-                        <option value={10}>Get Fit - 10%</option>
-                        <option value={20}>Get Fit - 20%</option>
-                    </Form.Control>
-                    </td>
-                    <td>
-                    <Form.Control as="select">
-                        <option value={0}>Choose voucher</option>
-                        <option value={10}>Get Fit - 10%</option>
-                        <option value={20}>Get Fit - 20%</option>
-                    </Form.Control>
-                    </td>
+                    {pricing.map((item, index) => {
+                        return (
+                            <td>
+                                <Form.Control as="select" defaultValue={item.voucher} onChange={(e) => handleUpdatePricing(index, e.target.value)}>
+                                    <option value={1}>Choose voucher</option>
+                                    <option value={10}>Get Fit - 10%</option>
+                                    <option value={20}>Get Fit - 20%</option>
+                                </Form.Control>
+                            </td>
+                        )
+                    })}
                     </tr>
                     <tr className='text-center'>
                     <td><b>Total days</b></td>
-                    <td>01 Days</td>
-                    <td>30 Days</td>
-                    <td>90 Days</td>
-                    <td>180 Days</td>
-                    <td>360 Days</td>
+                    {pricing.map((item, index) => {
+                        return (
+                            <td>{item.duration} days</td>
+                        )
+                    })}
                     </tr>
                     <tr className='text-center'>
                     <td><b>Suggested</b></td>
-                    <td>Rs 2500</td>
-                    <td>Rs 2500</td>
-                    <td>Rs 2500</td>
-                    <td>Rs 2500</td>
-                    <td>Rs 2500</td>
+                    {pricing.map((item, index) => {
+                        return (
+                            <td>₹ {item.suggestedPrice}</td>
+                        )
+                    })}
                     </tr>
                     <tr>
                     <td className='text-center'><b>Set MRP</b></td>
-                    <td>
-                    <InputGroup className="mb-3">
-                        <FormControl
-                        className={`${pricing[0] < 2500 && pricing[0] !== null ? "is-invalid" : pricing[0] >= 2500 ? "is-valid" : ""}`}
-                        aria-label="Default"
-                        type='number'
-                        aria-describedby="inputGroup-sizing-default"
-                        value={pricing[0]}
-                        onChange={(e) => {handlePricingUpdate(e.target.value, 0)}}
-                        />
-                        {pricing[0] < 2500 && pricing[0] !== null && <span style={{ fontSize: '12px', color: 'red'}}>cannot be less than ₹2500</span>}    
-                    </InputGroup>
-                    </td>
-                    <td>
-                    <InputGroup className="mb-3">
-                        <FormControl
-                        className={`${pricing[1] < 2500 && pricing[1] !== null ? "is-invalid" : pricing[1] >= 2500 ? "is-valid" : ""}`}
-                        aria-label="Default"
-                        type='number'
-                        aria-describedby="inputGroup-sizing-default"
-                        value={pricing[1]}
-                        onChange={(e) => {handlePricingUpdate(e.target.value, 1)}}
-                        />
-                        {pricing[1] < 2500 && pricing[1] !== null && <span style={{ fontSize: '12px', color: 'red'}}>cannot be less than ₹2500</span>}   
-                    </InputGroup>    
-                    </td>
-                    <td>
-                    <InputGroup className="mb-3">
-                        <FormControl
-                        className={`${pricing[2] < 2500 && pricing[2] !== null ? "is-invalid" : pricing[2] >= 2500 ? "is-valid" : ""}`}
-                        aria-label="Default"
-                        type='number'
-                        aria-describedby="inputGroup-sizing-default"
-                        value={pricing[2]}
-                        onChange={(e) => {handlePricingUpdate(e.target.value, 2)}}
-                        />
-                        {pricing[2] < 2500 && pricing[2] !== null && <span style={{ fontSize: '12px', color: 'red'}}>cannot be less than ₹2500</span>}   
-                    </InputGroup>    
-                    </td>
-                    <td>
-                    <InputGroup className="mb-3">
-                        <FormControl
-                        className={`${pricing[3] < 2500 && pricing[3] !== null ? "is-invalid" : pricing[3] >= 2500 ? "is-valid" : ""}`}
-                        aria-label="Default"
-                        type='number'
-                        aria-describedby="inputGroup-sizing-default"
-                        value={pricing[3]}
-                        onChange={(e) => {handlePricingUpdate(e.target.value, 3)}}
-                        />
-                        {pricing[3] < 2500 && pricing[3] !== null && <span style={{ fontSize: '12px', color: 'red'}}>cannot be less than ₹2500</span>}   
-                    </InputGroup>    
-                    </td>
-                    <td>
-                    <InputGroup className="mb-3">
-                        <FormControl
-                        className={`${pricing[4] < 2500 && pricing[4] !== null ? "is-invalid" : pricing[4] >= 2500 ? "is-valid" : ""}`}
-                        aria-label="Default"
-                        type='number'
-                        aria-describedby="inputGroup-sizing-default"
-                        value={pricing[4]}
-                        onChange={(e) => {handlePricingUpdate(e.target.value, 4)}}
-                        />
-                        {pricing[4] < 2500 && pricing[4] !== null && <span style={{ fontSize: '12px', color: 'red'}}>cannot be less than ₹2500</span>}   
-                    </InputGroup>    
-                    </td>
+                    {pricing.map((item, index) => {
+                        return (
+                            <td>
+                                <InputGroup className="mb-3">
+                                    <FormControl
+                                    className={`${pricing[index]?.mrp < pricing[index]?.suggestedPrice && pricing[index]?.mrp !== null ? "is-invalid" : pricing[index]?.mrp >= pricing[index]?.suggestedPrice ? "is-valid" : ""}`}
+                                    aria-label="Default"
+                                    type='number'
+                                    aria-describedby="inputGroup-sizing-default"
+                                    value={pricing[index]?.mrp}
+                                    onChange={(e) => {handlePricingUpdate(e.target.value, index)}}
+                                    />
+                                    {pricing[index]?.mrp < pricing[index]?.suggestedPrice && pricing[index]?.mrp !== null && <span style={{ fontSize: '12px', color: 'red'}}>cannot be less than ₹ {pricing[index]?.suggestedPrice}</span>}    
+                                </InputGroup>
+                            </td>
+                        )
+                    })}
                     </tr>
                 </tbody>
                 </Table>

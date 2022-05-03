@@ -55,8 +55,6 @@ const LocationList = (props) => {
         setSingleSelections(e);
     }
 
-    console.log(props);
-
     props.onChange(JSON.stringify({addressTag: addressTitle, address: singleSelections}));
     
     return (

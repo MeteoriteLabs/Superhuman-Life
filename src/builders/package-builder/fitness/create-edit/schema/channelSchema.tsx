@@ -1,9 +1,7 @@
-import BookingsWidget  from "../widgets/bookingsWidget";
 import PricingTableChannel from '../widgets/pricingTableChannel';
 import PreviewChannel from '../widgets/preview';
 
 export const widgets = {
-    bookingWidget: BookingsWidget,
     pricingTableChannel: PricingTableChannel,
     previewChannel: PreviewChannel
 };
@@ -54,8 +52,11 @@ export const schema: any = {
         "programSchedule": {
             "ui:widget": "checkboxes"
         },
-        "bookingConfig": {
-            "ui:widget": "bookingWidget"
+        "channelinstantBooking": {
+            "ui:widget": "radio",
+            "ui:options": {
+                "inline": true,
+            },
         },
         "pricing": {
             "ui:widget": "pricingTableChannel"

@@ -59,41 +59,17 @@
     },
     "3": {
         "title": "",
-       "type": "object",
-       "required": [
-       ],
-       "properties": {
-            "programSchedule": {
-                "type": "array",
-                "title": "Select Days",
-                "items": {
-                    "type": "string",
-                    "enum": [
-                        "Monday",
-                        "Tuesday",
-                        "Wednesday",
-                        "Thursday",
-                        "Friday",
-                        "Saturday",
-                        "Sunday"
-                    ]
-                },
-                "uniqueItems": true
-            }
+        "type": "object",
+        "required": ["channelinstantBooking"],
+        "properties": {
+            "channelinstantBooking": {
+                "type": "boolean",
+                "title": "Allow instant Bookings",
+                "description": "This will let people join this group Call for a day on demand"
+              }
         }
     },
     "4": {
-        "title": "",
-       "type": "object",
-       "required": [
-       ],
-       "properties": {
-            "bookingConfig": {
-                "type": "string"
-            }
-        }
-    },
-    "5": {
         "title": "",
        "type": "object",
        "required": [
@@ -105,7 +81,7 @@
             }
         }
     },
-    "6": {
+    "5": {
         "title": "Package Settings",
        "type": "object",
        "required": [
@@ -162,7 +138,7 @@
             }
         }
     },
-    "7": {
+    "6": {
         "title": "",
        "type": "object",
        "required": [

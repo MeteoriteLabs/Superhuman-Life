@@ -225,14 +225,14 @@ export default function FitnessTab(props) {
                             </Button>
                             <Button className='mr-4' variant={true ? "outline-secondary" : "light"} size="sm"
                                 onClick={() => {
-                                    createEditViewChannelRef.current.TriggerForm({ id: null, actionType: 'create', type: 'Custom Fitness' });
+                                    createEditViewChannelRef.current.TriggerForm({ id: null, type: 'create', packageType: 'Live Stream Channel' });
                                 }}
                             >
                                 <i className="fas fa-plus-circle"></i>{" "}Channel
                             </Button>
                             <Button className='mr-4' variant={true ? "outline-secondary" : "light"} size="sm"
                                 onClick={() => {
-                                    createEditViewCohortRef.current.TriggerForm({ id: null, actionType: 'create', type: 'Custom Fitness' });
+                                    createEditViewCohortRef.current.TriggerForm({ id: null, type: 'create', packageType: 'Cohort' });
                                 }}
                             >
                                 <i className="fas fa-plus-circle"></i>{" "}Cohort

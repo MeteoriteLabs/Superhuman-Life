@@ -1,7 +1,8 @@
 import React, { useContext, useImperativeHandle, useState } from 'react';
-import { useQuery, useMutation, gql } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client";
 import ModalView from "../../../../components/modal";
-import { GET_SCHEDULEREVENTS, CREATE_WORKOUT, CREATE_SESSION, GET_SESSIONS, UPDATE_TAG_SESSIONS, CREATE_SESSION_BOOKING } from "../../../program-builder/program-template/queries";
+import {CREATE_CHANNEL_PACKAGE, CREATE_BOOKING_CONFIG} from '../graphQL/mutations';
+import {GET_FITNESS_PACKAGE_TYPE} from '../graphQL/queries';
 import AuthContext from "../../../../context/auth-context";
 import { schema, widgets } from './schema/channelSchema';
 import {Subject} from 'rxjs';
@@ -12,6 +13,7 @@ import { Modal, Button } from 'react-bootstrap';
 
 interface Operation {
     id: string;
+    packageType: 'Cohort' | 'Live Stream Channel',
     type: 'create' | 'edit' | 'view' | 'toggle-status' | 'delete';
     current_status: boolean;
 }
@@ -20,72 +22,31 @@ function CreateEditChannel(props: any, ref: any) {
     const auth = useContext(AuthContext);
     const programSchema: { [name: string]: any; } = require("./json/channel.json");
     const [programDetails, setProgramDetails] = useState<any>({});
-    // const [frmDetails, setFrmDetails] = useState<any>([]);
+    // const [frmDetails, setFrmDetails] = useState<any>();
     const [operation, setOperation] = useState<Operation>({} as Operation);
-    const program_id = window.location.pathname.split('/').pop();
-    let frmDetails: any;
-    const [sessionsIds, setSessionsIds] = useState<any>([]);
-    // userId here is the new sessionID.
-    const [userId, setUserId] = useState("");
-    const [clientId, setClientId] = useState("")
-    const [dropConflict, setDropConflict] = useState(false);
+    const [fitnessPackageTypes, setFitnessPackageTypes] = useState<any>([]);
+    let frmDetails: any = {};
 
-    const GET_SESSIONS_BY_DATE = gql`
-        query getprogramdata($date: Date) {
-            sessions(filters: {
-                session_date: {
-                    eq: $date
-                }
-            }){
-                data{
-                    id
-                    attributes{
-                        tag
-                        start_time
-                        end_time
-                    }
-                }
-            }
-        }      
-`;  
-
-    const query = useQuery(GET_SESSIONS_BY_DATE, {skip: true});
-
-    useQuery(GET_SESSIONS, {variables: {id: program_id},onCompleted: (data: any) => {
-        const flattenData = flattenObj({...data});
-        setClientId(flattenData.tags[0]?.client_packages[0]?.users_permissions_user.id);
-        const sessionsExistingValues = [...sessionsIds];
-        for(var q=0; q<flattenData.tags[0].sessions.length; q++){
-            sessionsExistingValues.push(flattenData.tags[0].sessions[q].id);
-        }
-        setSessionsIds(sessionsExistingValues);
-    }});
-    
-    const [createWorkout] = useMutation(CREATE_WORKOUT, { onCompleted: (r: any) => { updateSchedulerEvents(frmDetails, r.createWorkout.data.id); modalTrigger.next(false); } });
-    // const [CreateProgram] = useMutation(CREATE_PROGRAM, { onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
-    // const [updateProgram] = useMutation(UPDATE_FITNESSPROGRAMS, {onCompleted: (r: any) => { modalTrigger.next(false); } });
-    const [createSessionBooking] = useMutation(CREATE_SESSION_BOOKING, { onCompleted: (data: any) => {modalTrigger.next(false)} })
-    const [upateSessions] = useMutation(UPDATE_TAG_SESSIONS, { onCompleted: (data: any) => {
-        createSessionBooking({
+    const [bookingConfig] = useMutation(CREATE_BOOKING_CONFIG, {onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); }})
+    const [CreatePackage] = useMutation(CREATE_CHANNEL_PACKAGE, { onCompleted: (r: any) => {
+        bookingConfig({
             variables: {
-                session: userId,
-                client: clientId,
+                isAuto: frmDetails.config.acceptBooking === 0 ? false : true,
+                id: r.createFitnesspackage.data.id,
+                bookings_per_day: frmDetails.config.maxBookingDay,
+                bookings_per_month: frmDetails.config.maxBookingMonth
             }
-        });
-    }})
-    const [createSession] = useMutation(CREATE_SESSION, { onCompleted: (r: any) => { 
-        const values = [...sessionsIds];
-        setUserId(r.createSession.data.id);
-        values.push(r.createSession.data.id);
-        upateSessions({
-            variables: {
-                id: program_id,
-                sessions_ids: values
-            }
-        });
+        })
      } });
+    // const [updateProgram] = useMutation(UPDATE_FITNESSPROGRAMS, {onCompleted: (r: any) => { modalTrigger.next(false); } });
+    
     //     const [editExercise] = useMutation(UPDATE_EXERCISE,{variables: {exerciseid: operation.id}, onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
 //     const [deleteExercise] = useMutation(DELETE_EXERCISE, { onCompleted: (e: any) => console.log(e), refetchQueries: ["GET_TABLEDATA"] });
+
+    useQuery(GET_FITNESS_PACKAGE_TYPE, {onCompleted: (data: any) => {
+        const flattenData = flattenObj({...data});
+        setFitnessPackageTypes(flattenData.fitnessPackageTypes);
+    }})
 
     const modalTrigger =  new Subject();
     useImperativeHandle(ref, () => ({
@@ -112,99 +73,36 @@ function CreateEditChannel(props: any, ref: any) {
             OnSubmit(null);
     }
 
-    function FetchData() {
-        useQuery(GET_SCHEDULEREVENTS, { variables: { id: program_id }, skip: (!operation.id || operation.type === 'toggle-status'), onCompleted: (e: any) => { FillDetails(e) } });
-    }
-    
-    function handleTimeFormat(time: string) {
-        let timeArray = time.split(':');
-        let hours = timeArray[0];
-        let minutes = timeArray[1];
-        let timeString = (parseInt(hours) < 10 ? "0" + hours : hours) + ':' + (parseInt(minutes) === 0 ? "0" + minutes : minutes);
-        return timeString.toString();
+    enum ENUM_FITNESSPACKAGE_LEVEL {
+        Beginner,
+        Intermediate,
+        Advanced
     }
 
-    async function updateSchedulerEvents(frm: any, workout_id: any) {
-        var existingEvents = (props.events === null ? [] : [...props.events]);
-        // AvailabilityCheck({...frm})
+    function findPackageType(creationType: any){
+        const foundType = fitnessPackageTypes.find((item: any) => item.type === creationType);
+        return foundType.id;
+    }
 
-        const variables = {
-            date: moment(frm.day[0].day, 'Do, MMM YY').format('YYYY-MM-DD')
-        }
-        
-        let result = await query.refetch(variables);
-        let filterResult = await AvailabilityCheck({sessions: result.data.sessions, event: frm });
-        if(filterResult){
-            setDropConflict(true);
-            return
-        }
 
-        if(frm.day){
-            var eventJson: any = {};
-            frm.day = JSON.parse(frm.day);
-            frm.time = JSON.parse(frm.time);
-            eventJson.type = 'workout';
-            eventJson.name = frm.workout;
-            eventJson.mode = frm.assignMode;
-            eventJson.tag = frm.tag;
-            eventJson.id = workout_id;
-            eventJson.startTime = frm.time.startTime;
-            eventJson.endTime = frm.time.endTime;
-            eventJson.day = parseInt(frm.day[0].key);
-            if (existingEvents.length === 0) {
-                existingEvents.push(eventJson);
-            } else {
-                var timeStart: any = new Date("01/01/2007 " + handleTimeFormat(frm.time.startTime));
-                var timeEnd: any = new Date("01/01/2007 " + handleTimeFormat(frm.time.endTime));
-                var diff1 = timeEnd - timeStart;
-                for (var i = 0; i <= existingEvents.length - 1; i++) {
-                    var startTimeHour: any = new Date("01/01/2007 " + handleTimeFormat(existingEvents[i].startTime));
-                    var endTimeHour: any = new Date("01/01/2007 " + handleTimeFormat(existingEvents[i].endTime));
-                    var diff2 = endTimeHour - startTimeHour;
-
-                    if (diff2 < diff1) {
-                        existingEvents.splice(i, 0, eventJson);
-                        break;
-                    }
-                    if (i === existingEvents.length - 1) {
-                        existingEvents.push(eventJson);
-                        break;
-                    }
-                }
-            }
-
-        let lastEventDay: number = 0;
-
-        for(var k=0; k<= existingEvents.length - 1; k++) {
-            if(existingEvents[k].day > lastEventDay){
-                lastEventDay = parseInt(existingEvents[k].day);
-            }
-        }
-
-        createSession({
+    function CreateChannelPackage(frm: any) {
+        frmDetails = frm;
+        CreatePackage({
             variables: {
-                start_time: eventJson.startTime,
-                end_time: eventJson.endTime,
-                workout: eventJson.id,
-                tag: eventJson.tag,
-                mode: eventJson.mode,
-                type: eventJson.type,
-                session_date: moment(frm.day[0].day, 'Da, MMM YY').format('YYYY-MM-DD'),
-                changemaker: auth.userid
+                aboutpackage: frm.About,
+                benefits: frm.Benefits,
+                packagename: frm.channelName,
+                channelinstantBooking: frm.channelinstantBooking,
+                expiry_date: moment(frm.expiryDate).toISOString(),
+                level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
+                fitnesspackagepricing: frm.pricing === "free" ? [{pricing: 'free'}] : JSON.stringify(frm.pricing),
+                publishing_date: moment(frm.publishingDate).toISOString(),
+                tags: frm.tag,
+                users_permissions_user: frm.user_permissions_user,
+                fitness_package_type: findPackageType(operation.packageType),
+                is_private: frm.visibility === 0 ? false : true
             }
         })
-    }
-
-        // updateProgram({ variables: {
-        //     programid: program_id,
-        //     events: existingEvents,
-        //     renewal_dt: lastEventDay
-        // } });
-    }
-
-    function UpdateProgram(frm: any) {
-        debugger;
-        console.log(frm);
     }
 
     function OnSubmit(frm: any) {
@@ -212,23 +110,24 @@ function CreateEditChannel(props: any, ref: any) {
         if(frm)
         frm.user_permissions_user = auth.userid;
 
+        console.log(operation.packageType);
+
         switch (operation.type) {
             case 'create':
-                UpdateProgram(frm);
+                CreateChannelPackage(frm);
                 break;
         }
     }
 
     let name = "";
     if(operation.type === 'create'){
-        name="New Workout";
+        name="New Live Stream Channel";
     }else if(operation.type === 'edit'){
         name="Edit";
     }else if(operation.type === 'view'){
         name="View";
     }
 
-    FetchData();
 
     return (
         <>
@@ -241,29 +140,11 @@ function CreateEditChannel(props: any, ref: any) {
                     formSubmit={name === "View" ? () => { modalTrigger.next(false); } : (frm: any) => { OnSubmit(frm); }}
                     formData={programDetails}
                     widgets={widgets}
-                    stepperValues={["Creator", "Details", "Program", "Schedule", "Pricing", "Config", "Review"]}
+                    stepperValues={["Creator", "Details", "Schedule", "Pricing", "Config", "Review"]}
                     modalTrigger={modalTrigger}
                 />
                 
-            {/* } */}
-            {
-                <Modal show={dropConflict} onHide={() => setDropConflict(false)} centered backdrop='static'>
-                <Modal.Header>
-                        <Modal.Title>Session Conflict</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <span>There is already an existing session at this time. Cannot add!</span>
-                </Modal.Body>
-                <Modal.Footer>
-                        <Button variant="success" onClick={() => {
-                            setDropConflict(false);
-                            modalTrigger.next(false);
-                        }}>
-                            Understood
-                        </Button>
-                </Modal.Footer>
-            </Modal>
-            }        
+            {/* } */}  
         </>
     )
 }

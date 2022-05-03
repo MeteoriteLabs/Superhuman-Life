@@ -163,11 +163,58 @@ export const EDIT_PACKAGE = gql`
 `;
 
 export const CREATE_BOOKING_CONFIG = gql`
-  mutation createBookingconfig($id: ID!) {
-    createBookingConfig(data: { isAuto: true, fitnesspackage: $id }) {
+  mutation createBookingconfig($id: ID!, $isAuto: Boolean, $bookings_per_day: Int, $bookings_per_month: Int) {
+    createBookingConfig(data: { isAuto: $isAuto, fitnesspackage: $id, bookingsPerDay: $bookings_per_day, BookingsPerMonth: $bookings_per_month }) {
       data {
         id
       }
     }
   }
 `;
+
+export const CREATE_CHANNEL_PACKAGE = gql`
+  mutation createChannelPackage(
+    $aboutpackage: String
+    $benefits: String
+    $packagename: String
+    $channelinstantBooking: Boolean
+    $expiry_date: DateTime
+    $level: ENUM_FITNESSPACKAGE_LEVEL 
+    $fitnesspackagepricing: JSON
+    $publishing_date: DateTime
+    $tags: String
+    $users_permissions_user: ID
+    $fitness_package_type: ID
+    $is_private: Boolean
+    $classsize: Int
+    $address: ID
+    $mode: ENUM_FITNESSPACKAGE_MODE 
+    $residential_type: ENUM_FITNESSPACKAGE_RESIDENTIAL_TYPE 
+  ){
+    createFitnesspackage(data: {
+      aboutpackage: $aboutpackage,
+      benefits: $benefits,
+      packagename: $packagename,
+      groupinstantbooking: $channelinstantBooking,
+      expiry_date: $expiry_date,
+      level: $level,
+      fitnesspackagepricing: $fitnesspackagepricing,
+      publishing_date: $publishing_date,
+      tags: $tags,
+      users_permissions_user: $users_permissions_user,
+      fitness_package_type: $fitness_package_type,
+      is_private: $is_private,
+      classsize: $classsize,
+      address: $address
+      mode: $mode,
+      residential_type: $residential_type
+    }){
+      data{
+        id
+        attributes{
+          packagename
+        }
+      }
+    }
+  }
+`
