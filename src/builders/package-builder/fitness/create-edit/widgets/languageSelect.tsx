@@ -1,17 +1,13 @@
 import {useState} from 'react';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
-import { LANGUAGES } from './queries';
+import { LANGUAGES } from '../../graphQL/queries';
 import { useQuery } from "@apollo/client";
-import { flattenObj } from '../utils/responseFlatten';
+import { flattenObj} from '../../../../../components/utils/responseFlatten';
 
 const MultiSelect = (props: any) => {
 
-     console.log(props);
-
-     const [multiSelections, setMultiSelections] = useState(
-          props.value?.length > 0 ? props.value.split(",") : []
-        );
+     const [multiSelections, setMultiSelections] = useState<any>(props.value !== undefined ? JSON.parse(props.value) : []);
      const [languages, setlanguages] = useState<any[]>([]);
 
      function FetchData(){
@@ -31,9 +27,8 @@ const MultiSelect = (props: any) => {
      }
 
      function OnChange(e){
-          let id = e.map(d => {return d.id}).join(',');
-          props.onChange(id);
-          setMultiSelections(e);
+        props.onChange(JSON.stringify(e));
+        setMultiSelections(e);
      }
 
      FetchData();

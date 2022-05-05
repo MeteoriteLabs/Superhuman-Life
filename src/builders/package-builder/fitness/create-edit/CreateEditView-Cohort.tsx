@@ -1,7 +1,7 @@
 import React, { useContext, useImperativeHandle, useState } from 'react';
 import { useQuery, useMutation, gql } from "@apollo/client";
 import ModalView from "../../../../components/modal";
-import {CREATE_CHANNEL_PACKAGE, CREATE_BOOKING_CONFIG} from '../graphQL/mutations';
+import {CREATE_CHANNEL_PACKAGE, CREATE_BOOKING_CONFIG, DELETE_PACKAGE} from '../graphQL/mutations';
 import {GET_FITNESS_PACKAGE_TYPE, GET_SINGLE_PACKAGE_BY_ID} from '../graphQL/queries';
 import AuthContext from "../../../../context/auth-context";
 import { schema, widgets } from './schema/cohortSchema';
@@ -10,6 +10,7 @@ import {flattenObj} from '../../../../components/utils/responseFlatten';
 import moment from 'moment';
 import {AvailabilityCheck} from '../../../program-builder/program-template/availabilityCheck';
 import { Modal, Button } from 'react-bootstrap';
+import StatusModal from "../../../../components/StatusModal/exerciseStatusModal";
 
 interface Operation {
     id: string;
@@ -25,9 +26,11 @@ function CreateEditCohort(props: any, ref: any) {
     // const [frmDetails, setFrmDetails] = useState<any>([]);
     const [operation, setOperation] = useState<Operation>({} as Operation);
     const [fitnessPackageTypes, setFitnessPackageTypes] = useState<any>([]);
+    const [deleteModalShow, setDeleteModalShow] = useState(false);
     const program_id = window.location.pathname.split('/').pop();
     let frmDetails: any = {};
     
+    const [deletePackage] = useMutation(DELETE_PACKAGE, { refetchQueries: ["GET_TABLEDATA"] });
     const [bookingConfig] = useMutation(CREATE_BOOKING_CONFIG, {onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); }})
     const [CreateCohortPackage] = useMutation(CREATE_CHANNEL_PACKAGE, { onCompleted: (r: any) => { 
         console.log(r);
@@ -83,14 +86,13 @@ function CreateEditCohort(props: any, ref: any) {
 
     function FillDetails(data: any) {
         console.log('Cohort');
-        debugger
         const flattenData = flattenObj({...data});
         let msg: any = flattenData.fitnesspackages[0];
         console.log(msg);
         let booking: any = {};
         let details: any = {};
         details.About = msg.aboutpackage;
-        details.Benefits = msg.benefits;
+        details.Benifits = msg.benefits;
         details.packageName = msg.packagename;
         details.channelinstantBooking = msg.groupinstantbooking;
         details.expiryDate = moment(msg.expirydate).format('YYYY-MM-DD');
@@ -138,7 +140,7 @@ function CreateEditCohort(props: any, ref: any) {
                 channelinstantBooking: frm.channelinstantBooking,
                 expiry_date: moment(frm.expiryDate).toISOString(),
                 level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
-                fitnesspackagepricing: frm.pricing === "free" ? [{pricing: 'free'}] : JSON.stringify(frm.pricing),
+                fitnesspackagepricing: frm.pricing === "free" ? [{pricing: 'free'}] : JSON.parse(frm.pricing),
                 publishing_date: moment(frm.publishingDate).toISOString(),
                 tags: frm.tag,
                 users_permissions_user: frm.user_permissions_user,
@@ -152,6 +154,14 @@ function CreateEditCohort(props: any, ref: any) {
         })
     }
 
+    function editCohort(frm){
+        console.log(frm);
+    }
+
+    function deleteChannelPackage(id: any){
+        deletePackage({variables: {id}});
+        setDeleteModalShow(false);
+    }
 
     function OnSubmit(frm: any) {
         //bind user id
@@ -161,6 +171,12 @@ function CreateEditCohort(props: any, ref: any) {
         switch (operation.type) {
             case 'create':
                 createCohort(frm);
+                break;
+            case 'edit':
+                editCohort(frm);
+                break;
+            case 'delete':
+                setDeleteModalShow(true);
                 break;
         }
     }
@@ -193,6 +209,25 @@ function CreateEditCohort(props: any, ref: any) {
                 />
                 
             {/* } */}
+            <Modal
+                    size="lg"
+                    aria-labelledby="contained-modal-title-vcenter"
+                    show={deleteModalShow}
+                    centered
+                    >
+                    <Modal.Header closeButton>
+                        <Modal.Title id="contained-modal-title-vcenter">
+                            Delete Package
+                        </Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <p>Are you sure you want to delete this package</p>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant='danger' onClick={() => {setDeleteModalShow(false)}}>No</Button>
+                        <Button variant='success' onClick={() => {deleteChannelPackage(operation.id)}}>Yes</Button>
+                    </Modal.Footer>
+                    </Modal>
         </>
     )
 }

@@ -3,6 +3,9 @@ import {Row, Col, Carousel, Card} from 'react-bootstrap';
 import SocialMediaComponent from '../../widgetCustom/Preview/SocialMediaComponent';
 
 const PreviewChannel = (props) => {
+
+    console.log(props);
+
     return (
         <>
         <Carousel>

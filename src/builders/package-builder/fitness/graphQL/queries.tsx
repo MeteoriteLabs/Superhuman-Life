@@ -230,4 +230,17 @@ export const GET_FITNESS_PACKAGE_TYPE = gql`
       }
     }
   }
-`
+`;
+
+export const LANGUAGES = gql`
+    query fetchLanguages {
+        languages(pagination: {pageSize: 1000}){
+            data{
+              id
+              attributes{
+                languages
+              }
+            }
+          }
+    }
+`;
