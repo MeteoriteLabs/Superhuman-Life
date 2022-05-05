@@ -125,7 +125,6 @@ export default function FitnessTab(props) {
             id: "edit",
             Header: "Actions",
             Cell: ({ row }: any) => {
-                console.log(row.original)
                 const actionClick1 = () => {
                     row.original.type === "Live Stream Channel" ? createEditViewChannelRef.current.TriggerForm({ id: row.original.id, type: 'edit', packageType: row.original.type }) : row.original.type === "Cohort" ? createEditViewCohortRef.current.TriggerForm({ id: row.original.id, type: 'edit', packageType: row.original.type }) : createEditViewRef.current.TriggerForm({ id: row.original.id, type: 'edit', packageType: row.original.type });
                 };
