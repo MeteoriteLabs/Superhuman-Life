@@ -1,11 +1,11 @@
 import PricingTableChannel from '../widgets/pricingTableCohort';
-import PreviewChannel from '../widgets/preview';
+import PreviewCohort from '../widgets/previewCohort';
 import LocationList from '../widgets/locationList';
 import LanguageList from '../widgets/languageSelect';
 
 export const widgets = {
     pricingTableChannel: PricingTableChannel,
-    previewChannel: PreviewChannel,
+    previewCohort: PreviewCohort,
     locationList: LocationList,
     languageList: LanguageList
 };
@@ -84,8 +84,6 @@ export const schema: any = {
             }
         },
         "preview": {
-            "ui:widget": (props: any) => {
-                return <PreviewChannel props={props} />
-            }
+            "ui:widget": "previewCohort"
         }
     }

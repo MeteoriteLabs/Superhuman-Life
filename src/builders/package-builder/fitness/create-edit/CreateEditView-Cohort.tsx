@@ -33,8 +33,6 @@ function CreateEditCohort(props: any, ref: any) {
     const [deletePackage] = useMutation(DELETE_PACKAGE, { refetchQueries: ["GET_TABLEDATA"] });
     const [bookingConfig] = useMutation(CREATE_BOOKING_CONFIG, {onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); }})
     const [CreateCohortPackage] = useMutation(CREATE_CHANNEL_PACKAGE, { onCompleted: (r: any) => { 
-        console.log(r);
-        debugger;
         bookingConfig({
             variables: {
                 isAuto: frmDetails.config.acceptBooking === 0 ? false : true,
@@ -85,10 +83,8 @@ function CreateEditCohort(props: any, ref: any) {
     }
 
     function FillDetails(data: any) {
-        console.log('Cohort');
         const flattenData = flattenObj({...data});
         let msg: any = flattenData.fitnesspackages[0];
-        console.log(msg);
         let booking: any = {};
         let details: any = {};
         details.About = msg.aboutpackage;
@@ -109,6 +105,7 @@ function CreateEditCohort(props: any, ref: any) {
         details.classSize = msg.classsize;
         details.mode = ENUM_FITNESSPACKAGE_MODE[msg.mode];
         details.residential =  ENUM_FITNESSPACKAGE_RESIDENTIAL_TYPE[msg.residential_type];
+        details.languages = JSON.stringify(msg.languages);
         // let msg = data;
         // console.log(msg);
         setProgramDetails(details);
@@ -132,6 +129,7 @@ function CreateEditCohort(props: any, ref: any) {
     function createCohort(frm: any) {
         frmDetails = frm;
         frm.location = JSON.parse(frm.location)
+        frm.languages = JSON.parse(frm.languages)
         CreateCohortPackage({
             variables: {
                 aboutpackage: frm.About,
@@ -149,12 +147,14 @@ function CreateEditCohort(props: any, ref: any) {
                 classsize: frm.classSize,
                 address: frm.location.address[0].id,
                 mode: ENUM_FITNESSPACKAGE_MODE[frm.mode],
-                residential_type: ENUM_FITNESSPACKAGE_RESIDENTIAL_TYPE[frm.residential]
+                residential_type: ENUM_FITNESSPACKAGE_RESIDENTIAL_TYPE[frm.residential],
+                languages: frm.languages
             }
         })
     }
 
     function editCohort(frm){
+        debugger;
         console.log(frm);
     }
 

@@ -190,6 +190,7 @@ export const CREATE_CHANNEL_PACKAGE = gql`
     $address: ID
     $mode: ENUM_FITNESSPACKAGE_MODE 
     $residential_type: ENUM_FITNESSPACKAGE_RESIDENTIAL_TYPE 
+    $languages: JSON
   ){
     createFitnesspackage(data: {
       aboutpackage: $aboutpackage,
@@ -208,6 +209,7 @@ export const CREATE_CHANNEL_PACKAGE = gql`
       address: $address
       mode: $mode,
       residential_type: $residential_type
+      languages: $languages
     }){
       data{
         id

@@ -105,6 +105,7 @@ export const GET_SINGLE_PACKAGE_BY_ID = gql`
           benefits
           introvideo
           mode
+          languages
           ptoffline
           ptonline
           groupoffline

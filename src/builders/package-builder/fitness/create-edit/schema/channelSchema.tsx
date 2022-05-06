@@ -1,5 +1,5 @@
 import PricingTableChannel from '../widgets/pricingTableChannel';
-import PreviewChannel from '../widgets/preview';
+import PreviewChannel from '../widgets/previewChannel';
 
 export const widgets = {
     pricingTableChannel: PricingTableChannel,
