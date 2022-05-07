@@ -1,16 +1,61 @@
 import React, {useState, useContext} from 'react';
 import {Row, Col, Form, Table, FormControl, InputGroup} from 'react-bootstrap';
-import {gql, useQuery} from '@apollo/client';
+import {gql, useQuery, useLazyQuery} from '@apollo/client';
 import AuthContext from '../../../../../context/auth-context';
 import { flattenObj } from '../../../../../components/utils/responseFlatten';
+import moment from 'moment';
 
 const PricingTable = (props) => {
 
     const auth = useContext(AuthContext);
     const [show, setShow] = useState(props.value === 'free' ? true : false);
+    const [vouchers, setVouchers] = useState<any>([]);
     const [pricing, setPricing] = useState<any>(props.value !== undefined && props.value !== 'free' ? JSON.parse(props.value) : [ {mrp: null, suggestedPrice: null, voucher: 1, duration: 1, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 1, duration: 30, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 1, duration: 90, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 1, duration: 180, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 1, duration: 360, sapienPricing: null}]);
 
-    const SAPIEN_PRICING = gql`
+    const GET_VOUCHERS = gql`
+        query fetchVouchers($expiry: DateTime!, $id: ID!, $start: DateTime!, $status: String!) {
+            vouchers(filters: {
+                expiry_date: {
+                  gte: $expiry
+                },
+                Start_date: {
+                  lte: $start
+                },
+                Status: {
+                  eq: $status
+                },
+                users_permissions_user:{
+                  id: {
+                    eq: $id
+                  }
+                }
+              }){
+                data{
+                id
+                  attributes{
+                    voucher_name
+                    discount_percentage
+                    Status
+                    Start_date
+                    expiry_date
+                  }
+                }
+              }
+        }
+    `;
+
+    const [getVouchers] = useLazyQuery(GET_VOUCHERS, {onCompleted: (data) => {
+        const flattenData = flattenObj({...data});
+        setVouchers(flattenData.vouchers);
+    }});
+    React.useEffect(() => {
+        getVouchers( {
+            variables: {expiry: moment().toISOString(), id: auth.userid, start: moment().toISOString(), status: 'Active'},
+        } );
+      }, []);
+
+
+    const SUGGESTED_PRICING = gql`
         query fetchSapienPricing($id: ID!) {
             suggestedPricings(filters: {
                 fitness_package_type: {
@@ -35,7 +80,7 @@ const PricingTable = (props) => {
     `;
 
     function FetchData(){
-        useQuery(SAPIEN_PRICING, {variables: { id: auth.userid },onCompleted: (data) => {loadData(data)}})
+        useQuery(SUGGESTED_PRICING, {variables: { id: auth.userid },onCompleted: (data) => {loadData(data)}})
     }
 
     function loadData(data){
@@ -43,7 +88,7 @@ const PricingTable = (props) => {
         const newValue = [...pricing];
         newValue.forEach((item, index) => {
             if(item.voucher !== 1 && item.price !== null){
-                item.suggestedPrice = flattenData.suggestedPricings[0]?.mrp * item.duration - (flattenData.suggestedPricings[0]?.mrp * item.duration * item.voucher/100);
+                item.suggestedPrice = ((item.sapienPricing * 100) / (100 - item.voucher)).toFixed(2)
             }else {
                 item.suggestedPrice = flattenData.suggestedPricings[0]?.mrp * item.duration;
             }
@@ -64,11 +109,14 @@ const PricingTable = (props) => {
         props.onChange(JSON.stringify(pricing));    
     }
 
+    console.log(vouchers);
+
     function handleUpdatePricing(id: any, value: any){
         if(parseInt(value) !== 1){
             let newValue = [...pricing];
             newValue[id].voucher = parseInt(value);
-            newValue[id].suggestedPrice = newValue[id].sapienPricing - (newValue[id].sapienPricing * value/100);
+            // ((arraySapient[i] * 100) / (100 - 10)).toFixed(2)
+            newValue[id].suggestedPrice = ((newValue[id].sapienPricing * 100) / (100 - value)).toFixed(2);
             setPricing(newValue);
         }else {
             let newValue = [...pricing];
@@ -128,10 +176,13 @@ const PricingTable = (props) => {
                     {pricing.map((item, index) => {
                         return (
                             <td>
-                                <Form.Control as="select" defaultValue={item.voucher} onChange={(e) => handleUpdatePricing(index, e.target.value)}>
+                                <Form.Control as="select" value={item.voucher} onChange={(e) => handleUpdatePricing(index, e.target.value)}>
                                     <option value={1}>Choose voucher</option>
-                                    <option value={10}>Get Fit - 10%</option>
-                                    <option value={20}>Get Fit - 20%</option>
+                                    {vouchers.map((voucher, index) => {
+                                        return (
+                                            <option value={voucher.discount_percentage}>{voucher.voucher_name}</option>
+                                        )
+                                    })}
                                 </Form.Control>
                             </td>
                         )

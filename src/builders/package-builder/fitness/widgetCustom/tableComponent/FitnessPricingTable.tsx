@@ -106,7 +106,7 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
             arraySapient.push(Number(sapientPrice));
         }
 
-
+        // get dicount vouchers from vouchers collection.
         let updatePrice = [...arraySapient];
         if (actionType === "edit") {
             if (userData.fitnesspackagepricing) {

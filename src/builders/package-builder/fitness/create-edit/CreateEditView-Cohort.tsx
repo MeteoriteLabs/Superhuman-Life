@@ -93,7 +93,7 @@ function CreateEditCohort(props: any, ref: any) {
         details.channelinstantBooking = msg.groupinstantbooking;
         details.expiryDate = moment(msg.expirydate).format('YYYY-MM-DD');
         details.level = ENUM_FITNESSPACKAGE_LEVEL[msg.level];
-        details.pricing = msg.fitnesspackagepricing[0]?.pricing === 'free' ? 'free' : JSON.stringify(msg.fitnesspackagepricing);
+        details.pricing = msg.fitnesspackagepricing[0]?.mrp === 'free' ? 'free' : JSON.stringify(msg.fitnesspackagepricing);
         details.publishingDate = moment(msg.publishing_date).format('YYYY-MM-DD');
         details.tag = msg.tags;
         details.user_permissions_user = msg.users_permissions_user.id;
@@ -106,6 +106,8 @@ function CreateEditCohort(props: any, ref: any) {
         details.mode = ENUM_FITNESSPACKAGE_MODE[msg.mode];
         details.residential =  ENUM_FITNESSPACKAGE_RESIDENTIAL_TYPE[msg.residential_type];
         details.languages = JSON.stringify(msg.languages);
+        details.startDate = moment(msg.Start_date).format('YYYY-MM-DD');
+        details.endDate = moment(msg.End_date).format('YYYY-MM-DD');
         // let msg = data;
         // console.log(msg);
         setProgramDetails(details);
@@ -138,7 +140,7 @@ function CreateEditCohort(props: any, ref: any) {
                 channelinstantBooking: frm.channelinstantBooking,
                 expiry_date: moment(frm.expiryDate).toISOString(),
                 level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
-                fitnesspackagepricing: frm.pricing === "free" ? [{pricing: 'free'}] : JSON.parse(frm.pricing),
+                fitnesspackagepricing: frm.pricing === "free" ? [{mrp: 'free'}] : JSON.parse(frm.pricing),
                 publishing_date: moment(frm.publishingDate).toISOString(),
                 tags: frm.tag,
                 users_permissions_user: frm.user_permissions_user,
@@ -148,7 +150,9 @@ function CreateEditCohort(props: any, ref: any) {
                 address: frm.location.address[0].id,
                 mode: ENUM_FITNESSPACKAGE_MODE[frm.mode],
                 residential_type: ENUM_FITNESSPACKAGE_RESIDENTIAL_TYPE[frm.residential],
-                languages: frm.languages
+                languages: frm.languages,
+                Start_date: moment(frm.startDate).toISOString(),
+                End_date: moment(frm.endDate).toISOString()
             }
         })
     }

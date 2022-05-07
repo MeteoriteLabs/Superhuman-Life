@@ -191,6 +191,8 @@ export const CREATE_CHANNEL_PACKAGE = gql`
     $mode: ENUM_FITNESSPACKAGE_MODE 
     $residential_type: ENUM_FITNESSPACKAGE_RESIDENTIAL_TYPE 
     $languages: JSON
+    $End_date: DateTime
+    $Start_date: DateTime
   ){
     createFitnesspackage(data: {
       aboutpackage: $aboutpackage,
@@ -210,6 +212,8 @@ export const CREATE_CHANNEL_PACKAGE = gql`
       mode: $mode,
       residential_type: $residential_type
       languages: $languages
+      Start_date: $Start_date
+      End_date: $End_date
     }){
       data{
         id

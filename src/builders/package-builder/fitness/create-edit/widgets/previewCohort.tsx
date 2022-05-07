@@ -4,8 +4,8 @@ import SocialMediaComponent from '../../widgetCustom/Preview/SocialMediaComponen
 
 const PreviewCohort = (props) => {
 
-    const formData = props.formContext;
-    formData.pricing = formData.pricing === "free" ? "free" : JSON.parse(formData.pricing);
+    const formData = props?.formContext;
+    formData.pricing = formData?.pricing === "free" ? "free" : JSON.parse(formData.pricing);
 
     function handleCardRender(){
         if(formData.pricing === 'free'){
@@ -18,7 +18,7 @@ const PreviewCohort = (props) => {
                                     <img src="https://picsum.photos/200" style={{ borderRadius: '10px' }} alt="random" />
                                 </div>
                                 <div className='ml-4 pt-4 text-left d-flex flex-column justify-content-start'>
-                                    <Card.Title>{formData.packageName}</Card.Title>
+                                    <Card.Title>{ formData.packageName}</Card.Title>
                                     <p>{formData.About}</p>
                                     <div>
                                         <div className='d-flex justify-content-start align-items-center'>
@@ -85,7 +85,7 @@ const PreviewCohort = (props) => {
                                             <img src="https://picsum.photos/200" style={{ borderRadius: '10px' }} alt="random" />
                                         </div>
                                         <div className='ml-4 pt-4 text-left d-flex flex-column justify-content-start'>
-                                            <Card.Title>{formData.channelName}</Card.Title>
+                                            <Card.Title>{formData.packageName}</Card.Title>
                                             <p>{formData.About}</p>
                                             <div>
                                                 <div className='d-flex justify-content-start align-items-center'>

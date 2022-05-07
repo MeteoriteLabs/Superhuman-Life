@@ -106,6 +106,8 @@ export const GET_SINGLE_PACKAGE_BY_ID = gql`
           introvideo
           mode
           languages
+          Start_date
+          End_date
           ptoffline
           ptonline
           groupoffline
