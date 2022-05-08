@@ -37,15 +37,16 @@ export default function SuggestedPricing({ type, mode, auth, fitnesspackageprici
 
     const arrayDuration = fitnesspackagepricing.map(fitness => fitness.duration);
 
-    const calculateSuggestPrice = (arrayData: { Mode: "Online" | "Offline"; mrp: number; }[], arrayClasses: number[]) => {
+    const calculateSuggestPrice = (arrayData: any, arrayClasses: number[]) => {
         const mrp: number[] = [];
-
+        debugger;
         // eslint-disable-next-line array-callback-return
-        arrayData?.map((item: { Mode: "Online" | "Offline"; mrp: number; }) => {
-            if (item.Mode === "Online") {
-                mrp.unshift(item.mrp * arrayClasses[0])
-            } else if (item.Mode === "Offline") {
-                mrp.push(item.mrp * arrayClasses[1])
+        arrayData?.map((item) => {
+            console.log(item);
+            if (item.attributes.Mode === "Online") {
+                mrp.unshift(item.attributes.mrp * arrayClasses[0])
+            } else if (item.attributes.Mode === "Offline") {
+                mrp.push(item.attributes.mrp * arrayClasses[1])
             }
         })
         if(mrp.length > 0){
@@ -70,7 +71,7 @@ export default function SuggestedPricing({ type, mode, auth, fitnesspackageprici
             arraySuggestedPricings.push(partnerMRP)
         }
 
-    
+        debugger;
         setSuggestedPricing(arraySuggestedPricings)
         return arraySuggestedPricings
     }
@@ -79,7 +80,7 @@ export default function SuggestedPricing({ type, mode, auth, fitnesspackageprici
     // PT
     const PTSuggestedPricing = (data:any) => {
         let ptDuration: number[] = [];
-  
+        debugger;
         const arrayPTdata = data.suggestedPricings.data.filter((item => item.attributes.fitness_package_type.data.attributes.type === "Personal Training"));
         const arrayPTClasses = [ptonline, ptoffline];
 

@@ -1,5 +1,5 @@
 import React, { useContext, useImperativeHandle, useState } from 'react';
-import { useQuery, useMutation, gql } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client";
 import ModalView from "./widgets/Modal";
 import {CREATE_CHANNEL_PACKAGE, CREATE_BOOKING_CONFIG, DELETE_PACKAGE} from '../graphQL/mutations';
 import {GET_FITNESS_PACKAGE_TYPE, GET_SINGLE_PACKAGE_BY_ID} from '../graphQL/queries';
@@ -8,9 +8,9 @@ import { schema, widgets } from './schema/cohortSchema';
 import {Subject} from 'rxjs';
 import {flattenObj} from '../../../../components/utils/responseFlatten';
 import moment from 'moment';
-import {AvailabilityCheck} from '../../../program-builder/program-template/availabilityCheck';
+// import {AvailabilityCheck} from '../../../program-builder/program-template/availabilityCheck';
 import { Modal, Button } from 'react-bootstrap';
-import StatusModal from "../../../../components/StatusModal/exerciseStatusModal";
+// import StatusModal from "../../../../components/StatusModal/exerciseStatusModal";
 
 interface Operation {
     id: string;
@@ -27,7 +27,7 @@ function CreateEditCohort(props: any, ref: any) {
     const [operation, setOperation] = useState<Operation>({} as Operation);
     const [fitnessPackageTypes, setFitnessPackageTypes] = useState<any>([]);
     const [deleteModalShow, setDeleteModalShow] = useState(false);
-    const program_id = window.location.pathname.split('/').pop();
+    // const program_id = window.location.pathname.split('/').pop();
     let frmDetails: any = {};
     
     const [deletePackage] = useMutation(DELETE_PACKAGE, { refetchQueries: ["GET_TABLEDATA"] });

@@ -8,9 +8,9 @@ import { schema, widgets } from './schema/channelSchema';
 import {Subject} from 'rxjs';
 import {flattenObj} from '../../../../components/utils/responseFlatten';
 import moment from 'moment';
-import {AvailabilityCheck} from '../../../program-builder/program-template/availabilityCheck';
+// import {AvailabilityCheck} from '../../../program-builder/program-template/availabilityCheck';
 import { Modal, Button } from 'react-bootstrap';
-import StatusModal from "../../../../components/StatusModal/exerciseStatusModal";
+// import StatusModal from "../../../../components/StatusModal/exerciseStatusModal";
 
 interface Operation {
     id: string;

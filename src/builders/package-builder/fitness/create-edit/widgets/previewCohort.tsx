@@ -1,5 +1,5 @@
 import React from 'react';
-import {Row, Col, Carousel, Card} from 'react-bootstrap';
+import {Carousel, Card} from 'react-bootstrap';
 import SocialMediaComponent from '../../widgetCustom/Preview/SocialMediaComponent';
 
 const PreviewCohort = (props) => {

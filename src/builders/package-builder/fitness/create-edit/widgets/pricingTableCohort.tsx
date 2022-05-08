@@ -52,6 +52,7 @@ const PricingTable = (props) => {
         getVouchers( {
             variables: {expiry: moment().toISOString(), id: auth.userid, start: moment().toISOString(), status: 'Active'},
         } );
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       }, []);
 
     const SAPIEN_PRICING = gql`

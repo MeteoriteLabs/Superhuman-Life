@@ -10,7 +10,7 @@ const PricingTable = (props) => {
     const auth = useContext(AuthContext);
     const [show, setShow] = useState(props.value === 'free' ? true : false);
     const [vouchers, setVouchers] = useState<any>([]);
-    const [pricing, setPricing] = useState<any>(props.value !== undefined && props.value !== 'free' ? JSON.parse(props.value) : [ {mrp: null, suggestedPrice: null, voucher: 1, duration: 1, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 1, duration: 30, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 1, duration: 90, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 1, duration: 180, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 1, duration: 360, sapienPricing: null}]);
+    const [pricing, setPricing] = useState<any>(props.value !== undefined && props.value !== 'free' ? JSON.parse(props.value) : [ {mrp: null, suggestedPrice: null, voucher: 0, duration: 1, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 30, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 90, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 180, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 360, sapienPricing: null}]);
 
     const GET_VOUCHERS = gql`
         query fetchVouchers($expiry: DateTime!, $id: ID!, $start: DateTime!, $status: String!) {
@@ -52,6 +52,7 @@ const PricingTable = (props) => {
         getVouchers( {
             variables: {expiry: moment().toISOString(), id: auth.userid, start: moment().toISOString(), status: 'Active'},
         } );
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       }, []);
 
 
@@ -87,8 +88,8 @@ const PricingTable = (props) => {
         const flattenData = flattenObj({...data});
         const newValue = [...pricing];
         newValue.forEach((item, index) => {
-            if(item.voucher !== 1 && item.price !== null){
-                item.suggestedPrice = ((item.sapienPricing * 100) / (100 - item.voucher)).toFixed(2)
+            if(item.voucher !== 0 && item.price !== null){
+                item.suggestedPrice = parseInt(((item.sapienPricing * 100) / (100 - item.voucher)).toFixed(2))
             }else {
                 item.suggestedPrice = flattenData.suggestedPricings[0]?.mrp * item.duration;
             }
@@ -109,14 +110,13 @@ const PricingTable = (props) => {
         props.onChange(JSON.stringify(pricing));    
     }
 
-    console.log(vouchers);
 
     function handleUpdatePricing(id: any, value: any){
-        if(parseInt(value) !== 1){
+        if(parseInt(value) !== 0){
             let newValue = [...pricing];
             newValue[id].voucher = parseInt(value);
             // ((arraySapient[i] * 100) / (100 - 10)).toFixed(2)
-            newValue[id].suggestedPrice = ((newValue[id].sapienPricing * 100) / (100 - value)).toFixed(2);
+            newValue[id].suggestedPrice = parseInt(((newValue[id].sapienPricing * 100) / (100 - value)).toFixed(0));
             setPricing(newValue);
         }else {
             let newValue = [...pricing];
@@ -177,7 +177,7 @@ const PricingTable = (props) => {
                         return (
                             <td>
                                 <Form.Control as="select" value={item.voucher} onChange={(e) => handleUpdatePricing(index, e.target.value)}>
-                                    <option value={1}>Choose voucher</option>
+                                    <option value={0}>Choose voucher</option>
                                     {vouchers.map((voucher, index) => {
                                         return (
                                             <option value={voucher.discount_percentage}>{voucher.voucher_name}</option>
@@ -200,7 +200,7 @@ const PricingTable = (props) => {
                     <td><b>Suggested</b></td>
                     {pricing.map((item, index) => {
                         return (
-                            <td>₹ {item.suggestedPrice}</td>
+                            <td>₹ {item.sapienPricing}</td>
                         )
                     })}
                     </tr>
