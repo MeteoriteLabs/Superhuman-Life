@@ -3,7 +3,11 @@
         "title": "",
         "type": "object",
         "required": [
-           
+           "packageName",
+           "tag",
+           "level",
+           "startDate",
+            "endDate" 
         ],
        "properties": {
             "packageName": {
@@ -41,6 +45,10 @@
        "title": "",
        "type": "object",
        "required": [
+           "About",
+           "Benifits",
+           "languages",
+           "classSize"
        ],
        "properties": {
             "About": {
@@ -79,6 +87,11 @@
         "title": "",
        "type": "object",
        "required": [
+           "mode",
+           "location",
+           "residential",
+           "title",
+           "description"
        ],
        "properties": {
             "mode": {
@@ -131,6 +144,10 @@
         "title": "Package Settings",
        "type": "object",
        "required": [
+           "visibility",
+           "publishingDate",
+           "expiryDate",
+           "config"
        ],
        "properties": {
             "visibility": {
@@ -156,6 +173,9 @@
                 "title": "Booking Config",
                 "type": "object",
                 "required": [
+                    "acceptBooking",
+                    "maxBookingMonth",
+                    "maxBookingDay"
                 ],
                 "properties": {
                     "acceptBooking": {
