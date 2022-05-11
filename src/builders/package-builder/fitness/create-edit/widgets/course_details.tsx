@@ -3,7 +3,7 @@ import {Button, Form} from 'react-bootstrap';
 
 const CourseDetails = (props) => {
 
-
+    
     const [details, setDetails] = useState<any>(props.value === undefined ? [{title: '', description: ''}] : JSON.parse(props.value));
 
     function handleAddCourseDetails(data: any) {
@@ -30,7 +30,7 @@ const CourseDetails = (props) => {
         <>
         <div>
             <div className="text-right" style={{ justifyContent: 'end'}}>
-                <Button variant='outline-info'><i className="fa fa-plus-circle" onClick={() => {handleAddCourseDetails(details)}}></i>&nbsp;Add</Button>
+                <Button variant='outline-info' onClick={() => {handleAddCourseDetails(details)}}><i className="fa fa-plus-circle"></i>&nbsp;Add</Button>
             </div>
             <div>
                 {details.map((detail, index) => {

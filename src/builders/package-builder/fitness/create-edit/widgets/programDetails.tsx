@@ -9,12 +9,13 @@ import { flattenObj } from '../../../../../components/utils/responseFlatten';
 const ProgramDetails = (props) => {
 
     const existingData = props.value !== undefined && JSON.parse(props.value);
+    existingData.address = {id: existingData.address.id, title: existingData.address.address1};
 
     const [mode, setMode] = useState(props.value === undefined ? '' : (existingData.mode).toString());
     const [residential, setResidential] = useState(props.value === undefined ? '' : (existingData.residential).toString());
 
     const auth = useContext(AuthContext); 
-    const [singleSelections, setSingleSelections] = useState<any[]>(existingData?.address?.length !== 0 ? existingData?.address : []);
+    const [singleSelections, setSingleSelections] = useState<any[]>(existingData?.address?.length !== 0 ? [existingData?.address] : []);
     const [addresses, setAddresses] = useState<any[]>([]);
     const [addressTitle, setAddressTitle] = useState(props.value !== undefined ? existingData.addressTag : 'At My Address');
 
@@ -104,7 +105,7 @@ const ProgramDetails = (props) => {
                 <label><b>Residential</b></label>
                 <Form>
                     <Form.Check inline label="Accommodation" value='0' checked={residential === '0' ? true : false} name="group1" type='radio' onClick={(e: any) => setResidential(e.target.value)} />
-                    <Form.Check inline label="Accommodation + Food" value='1' checked={mode === '1' ? true : false} name="group1" type='radio' onClick={(e: any) => setResidential(e.target.value)}/>
+                    <Form.Check inline label="Accommodation + Food" value='1' checked={residential === '1' ? true : false} name="group1" type='radio' onClick={(e: any) => setResidential(e.target.value)}/>
                 </Form>
             </div>
             </>}

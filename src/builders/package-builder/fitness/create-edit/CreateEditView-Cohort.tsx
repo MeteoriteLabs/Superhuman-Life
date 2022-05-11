@@ -115,7 +115,6 @@ function CreateEditCohort(props: any, ref: any) {
         // {addressTag: addressTitle, address: singleSelections, mode: mode, residential: residential}
         details.courseDetails = courseDetails;
         details.programDetails = JSON.stringify({addressTag: msg.address === null ? 'At Client Address' : 'At My Address', address: msg.address, mode: ENUM_FITNESSPACKAGE_MODE[msg.mode], residential: ENUM_FITNESSPACKAGE_RESIDENTIAL_TYPE[msg.residential_type]});
-        debugger;
         // let msg = data;
         // console.log(msg);
         setProgramDetails(details);
@@ -156,7 +155,7 @@ function CreateEditCohort(props: any, ref: any) {
                 fitness_package_type: findPackageType(operation.packageType),
                 is_private: frm.visibility === 0 ? false : true,
                 classsize: frm.classSize,
-                address: frm.programDetails?.addressTag === 'At My Address' ? frm.location.address[0].id : null,
+                address: frm.programDetails?.addressTag === 'At My Address' ? frm.programDetails?.address[0].id : null,
                 mode: ENUM_FITNESSPACKAGE_MODE[frm.programDetails?.mode],
                 residential_type: ENUM_FITNESSPACKAGE_RESIDENTIAL_TYPE[frm.programDetails?.residential],
                 languages: frm.languages,
