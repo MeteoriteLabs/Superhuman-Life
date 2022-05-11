@@ -91,7 +91,6 @@ function CreateEditCohort(props: any, ref: any) {
         let booking: any = {};
         let details: any = {};
         let courseDetails = {details: JSON.stringify(msg.Course_details)};
-        console.log(msg);
         details.About = msg.aboutpackage;
         details.Benifits = msg.benefits;
         details.packageName = msg.packagename;
@@ -170,8 +169,9 @@ function CreateEditCohort(props: any, ref: any) {
 
     function editCohort(frm){
         frmDetails = frm;
-        frm.location = JSON.parse(frm.location)
+        frm.programDetails = JSON.parse(frm.programDetails)
         frm.languages = JSON.parse(frm.languages)
+        frm.courseDetails.details = JSON.parse(frm.courseDetails.details)
         editPackageDetails({
             variables: {
                 id: operation.id,
@@ -188,12 +188,13 @@ function CreateEditCohort(props: any, ref: any) {
                 fitness_package_type: findPackageType(operation.packageType),
                 is_private: frm.visibility === 0 ? false : true,
                 classsize: frm.classSize,
-                address: frm.location.address[0].id,
-                mode: ENUM_FITNESSPACKAGE_MODE[frm.mode],
-                residential_type: ENUM_FITNESSPACKAGE_RESIDENTIAL_TYPE[frm.residential],
+                address: frm.programDetails?.addressTag === 'At My Address' ? frm.location.address[0].id : null,
+                mode: ENUM_FITNESSPACKAGE_MODE[frm.programDetails?.mode],
+                residential_type: ENUM_FITNESSPACKAGE_RESIDENTIAL_TYPE[frm.programDetails?.residential],
                 languages: frm.languages,
                 Start_date: moment(frm.startDate).toISOString(),
-                End_date: moment(frm.endDate).toISOString()
+                End_date: moment(frm.endDate).toISOString(),
+                Course_details: frm.courseDetails.details
             }
         })
     }

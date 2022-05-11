@@ -9,7 +9,6 @@ import { flattenObj } from '../../../../../components/utils/responseFlatten';
 const ProgramDetails = (props) => {
 
     const existingData = props.value !== undefined && JSON.parse(props.value);
-    console.log(existingData);
 
     const [mode, setMode] = useState(props.value === undefined ? '' : (existingData.mode).toString());
     const [residential, setResidential] = useState(props.value === undefined ? '' : (existingData.residential).toString());
