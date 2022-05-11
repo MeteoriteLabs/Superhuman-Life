@@ -2,12 +2,16 @@ import PricingTableChannel from '../widgets/pricingTableCohort';
 import PreviewCohort from '../widgets/previewCohort';
 import LocationList from '../widgets/locationList';
 import LanguageList from '../widgets/languageSelect';
+import ProgramDetails from '../widgets/programDetails';
+import CourseDetails from '../widgets/course_details';
 
 export const widgets = {
     pricingTableChannel: PricingTableChannel,
     previewCohort: PreviewCohort,
     locationList: LocationList,
-    languageList: LanguageList
+    languageList: LanguageList,
+    programDetails: ProgramDetails,
+    courseDetails: CourseDetails
 };
 
 export const schema: any = {
@@ -85,5 +89,13 @@ export const schema: any = {
         },
         "preview": {
             "ui:widget": "previewCohort"
+        },
+        "programDetails": {
+            "ui:widget": "programDetails"
+        },
+        "courseDetails": {
+            "details": {
+                "ui:widget": "courseDetails"
+            }
         }
     }

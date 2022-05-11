@@ -3,11 +3,6 @@
         "title": "",
         "type": "object",
         "required": [
-           "packageName",
-           "tag",
-           "level",
-           "startDate",
-            "endDate" 
         ],
        "properties": {
             "packageName": {
@@ -45,10 +40,6 @@
        "title": "",
        "type": "object",
        "required": [
-           "About",
-           "Benifits",
-           "languages",
-           "classSize"
        ],
        "properties": {
             "About": {
@@ -87,45 +78,22 @@
         "title": "",
        "type": "object",
        "required": [
-           "mode",
-           "location",
-           "residential",
-           "title",
-           "description"
        ],
        "properties": {
-            "mode": {
-                "type": "number",
-                "title": "Mode",
-                "enum": [0, 1, 2, 3],
-                "enumNames": [
-                    "Online",
-                    "Offline",
-                    "Hybrid", 
-                    "Residential"
-                ]
-            },
-            "location": {
-                "type": "string",
-                "title": "Location (add widget here)"
-            },
-            "residential": {
-                "type": "number",
-                "title": "Residential",
-                "enum": [0, 1],
-                "enumNames": [
-                    "Accomodation",
-                    "Accomdation + Food"
-                ]
-            },
-            "title": {
-                "type": "string",
-                "title": "Title"
-            },
-            "description": {
-                "type": "string",
-                "title": "Description"
-            }
+           "programDetails": {
+                "type": "string"
+           },
+           "courseDetails": {
+                "title": "Course Details",
+                "type": "object",
+                "required": [
+                ],
+                "properties": {
+                    "details": {
+                        "type": "string"
+                    }
+                }
+        }
         }
     },
     "4": {

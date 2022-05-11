@@ -1,7 +1,7 @@
 import React, { useContext, useImperativeHandle, useState } from 'react';
 import { useQuery, useMutation } from "@apollo/client";
 import ModalView from "./widgets/Modal";
-import {CREATE_CHANNEL_PACKAGE, CREATE_BOOKING_CONFIG, DELETE_PACKAGE} from '../graphQL/mutations';
+import {CREATE_CHANNEL_PACKAGE, CREATE_BOOKING_CONFIG, DELETE_PACKAGE, UPDATE_PACKAGE_STATUS, UPDATE_CHANNEL_COHORT_PACKAGE} from '../graphQL/mutations';
 import {GET_FITNESS_PACKAGE_TYPE, GET_SINGLE_PACKAGE_BY_ID} from '../graphQL/queries';
 import AuthContext from "../../../../context/auth-context";
 import { schema, widgets } from './schema/cohortSchema';
@@ -27,11 +27,14 @@ function CreateEditCohort(props: any, ref: any) {
     const [operation, setOperation] = useState<Operation>({} as Operation);
     const [fitnessPackageTypes, setFitnessPackageTypes] = useState<any>([]);
     const [deleteModalShow, setDeleteModalShow] = useState(false);
+    const [statusModalShow, setStatusModalShow] = useState(false);
     // const program_id = window.location.pathname.split('/').pop();
     let frmDetails: any = {};
     
-    const [deletePackage] = useMutation(DELETE_PACKAGE, { refetchQueries: ["GET_TABLEDATA"] });
-    const [bookingConfig] = useMutation(CREATE_BOOKING_CONFIG, {onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); }})
+    const [editPackageDetails] = useMutation(UPDATE_CHANNEL_COHORT_PACKAGE, {onCompleted: (data) => {modalTrigger.next(false);}})
+    const [updatePackageStatus] = useMutation(UPDATE_PACKAGE_STATUS, {onCompleted: (data) => {setStatusModalShow(false);}});
+    const [deletePackage] = useMutation(DELETE_PACKAGE, { refetchQueries: ["GET_TABLEDATA"], onCompleted: (data) => {props.callback();}});
+    const [bookingConfig] = useMutation(CREATE_BOOKING_CONFIG, {onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); props.callback();}})
     const [CreateCohortPackage] = useMutation(CREATE_CHANNEL_PACKAGE, { onCompleted: (r: any) => { 
         bookingConfig({
             variables: {
@@ -87,6 +90,8 @@ function CreateEditCohort(props: any, ref: any) {
         let msg: any = flattenData.fitnesspackages[0];
         let booking: any = {};
         let details: any = {};
+        let courseDetails = {details: JSON.stringify(msg.Course_details)};
+        console.log(msg);
         details.About = msg.aboutpackage;
         details.Benifits = msg.benefits;
         details.packageName = msg.packagename;
@@ -108,6 +113,10 @@ function CreateEditCohort(props: any, ref: any) {
         details.languages = JSON.stringify(msg.languages);
         details.startDate = moment(msg.Start_date).format('YYYY-MM-DD');
         details.endDate = moment(msg.End_date).format('YYYY-MM-DD');
+        // {addressTag: addressTitle, address: singleSelections, mode: mode, residential: residential}
+        details.courseDetails = courseDetails;
+        details.programDetails = JSON.stringify({addressTag: msg.address === null ? 'At Client Address' : 'At My Address', address: msg.address, mode: ENUM_FITNESSPACKAGE_MODE[msg.mode], residential: ENUM_FITNESSPACKAGE_RESIDENTIAL_TYPE[msg.residential_type]});
+        debugger;
         // let msg = data;
         // console.log(msg);
         setProgramDetails(details);
@@ -130,10 +139,42 @@ function CreateEditCohort(props: any, ref: any) {
 
     function createCohort(frm: any) {
         frmDetails = frm;
-        frm.location = JSON.parse(frm.location)
+        frm.programDetails = JSON.parse(frm.programDetails)
         frm.languages = JSON.parse(frm.languages)
+        frm.courseDetails.details = JSON.parse(frm.courseDetails.details)
         CreateCohortPackage({
             variables: {
+                aboutpackage: frm.About,
+                benefits: frm.Benifits,
+                packagename: frm.packageName,
+                channelinstantBooking: frm.channelinstantBooking,
+                expiry_date: moment(frm.expiryDate).toISOString(),
+                level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
+                fitnesspackagepricing: frm.pricing === "free" ? [{mrp: 'free'}] : JSON.parse(frm.pricing),
+                publishing_date: moment(frm.publishingDate).toISOString(),
+                tags: frm.tag,
+                users_permissions_user: frm.user_permissions_user,
+                fitness_package_type: findPackageType(operation.packageType),
+                is_private: frm.visibility === 0 ? false : true,
+                classsize: frm.classSize,
+                address: frm.programDetails?.addressTag === 'At My Address' ? frm.location.address[0].id : null,
+                mode: ENUM_FITNESSPACKAGE_MODE[frm.programDetails?.mode],
+                residential_type: ENUM_FITNESSPACKAGE_RESIDENTIAL_TYPE[frm.programDetails?.residential],
+                languages: frm.languages,
+                Start_date: moment(frm.startDate).toISOString(),
+                End_date: moment(frm.endDate).toISOString(),
+                Course_details: frm.courseDetails.details
+            }
+        })
+    }
+
+    function editCohort(frm){
+        frmDetails = frm;
+        frm.location = JSON.parse(frm.location)
+        frm.languages = JSON.parse(frm.languages)
+        editPackageDetails({
+            variables: {
+                id: operation.id,
                 aboutpackage: frm.About,
                 benefits: frm.Benifits,
                 packagename: frm.packageName,
@@ -157,15 +198,15 @@ function CreateEditCohort(props: any, ref: any) {
         })
     }
 
-    function editCohort(frm){
-        debugger;
-        console.log(frm);
-    }
-
     function deleteChannelPackage(id: any){
         deletePackage({variables: {id}});
         setDeleteModalShow(false);
     }
+
+    function updateChannelPackageStatus(id: any, status: any){
+        updatePackageStatus({variables: {id: id, Status: status}});
+    }
+
 
     function OnSubmit(frm: any) {
         //bind user id
@@ -181,6 +222,9 @@ function CreateEditCohort(props: any, ref: any) {
                 break;
             case 'delete':
                 setDeleteModalShow(true);
+                break;
+            case 'toggle-status':
+                setStatusModalShow(true);
                 break;
         }
     }
@@ -219,7 +263,7 @@ function CreateEditCohort(props: any, ref: any) {
                     show={deleteModalShow}
                     centered
                     >
-                    <Modal.Header closeButton>
+                    <Modal.Header closeButton onHide={() => {setDeleteModalShow(false)}}>
                         <Modal.Title id="contained-modal-title-vcenter">
                             Delete Package
                         </Modal.Title>
@@ -230,6 +274,26 @@ function CreateEditCohort(props: any, ref: any) {
                     <Modal.Footer>
                         <Button variant='danger' onClick={() => {setDeleteModalShow(false)}}>No</Button>
                         <Button variant='success' onClick={() => {deleteChannelPackage(operation.id)}}>Yes</Button>
+                    </Modal.Footer>
+                    </Modal>
+
+                    <Modal
+                    size="lg"
+                    aria-labelledby="contained-modal-title-vcenter"
+                    show={statusModalShow}
+                    centered
+                    >
+                    <Modal.Header closeButton onHide={() => {setStatusModalShow(false)}}>
+                        <Modal.Title id="contained-modal-title-vcenter">
+                            Update Status
+                        </Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <p>Are you sure you want to update the status of this package?</p>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant='danger' onClick={() => {setStatusModalShow(false)}}>No</Button>
+                        <Button variant='success' onClick={() => {updateChannelPackageStatus(operation.id, operation.current_status)}}>Yes</Button>
                     </Modal.Footer>
                     </Modal>
         </>

@@ -107,6 +107,7 @@ export const GET_SINGLE_PACKAGE_BY_ID = gql`
           mode
           languages
           Start_date
+          Course_details
           End_date
           ptoffline
           ptonline

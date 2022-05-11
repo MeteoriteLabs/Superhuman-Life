@@ -88,7 +88,7 @@ const PricingTable = (props) => {
         const newValue = [...pricing];
         newValue.forEach((item, index) => {
             if(item.voucher !== 0 && item.mrp !== null){
-                item.suggestedPrice =  ((item.sapienPricing * 100) / (100 - item.voucher)).toFixed(2)
+                item.suggestedPrice =  parseInt(((item.sapienPricing * 100) / (100 - item.voucher)).toFixed(2))
             }else {
                 item.suggestedPrice = flattenData.suggestedPricings[0]?.mrp * item.duration;
             }
@@ -114,7 +114,7 @@ const PricingTable = (props) => {
         if(parseInt(value) !== 1){
             let newValue = [...pricing];
             newValue[id].voucher = parseInt(value);
-            newValue[id].suggestedPrice = ((newValue[id].sapienPricing * 100) / (100 - value)).toFixed(2);
+            newValue[id].suggestedPrice = parseInt(((newValue[id].sapienPricing * 100) / (100 - value)).toFixed(2));
             setPricing(newValue);
         }else {
             let newValue = [...pricing];
@@ -184,7 +184,7 @@ const PricingTable = (props) => {
                     </tr>
                     <tr className='text-center'>
                     <td><b>Suggested</b></td>
-                    <td>₹ {pricing[0].suggestedPrice}</td>
+                    <td>₹ {pricing[0].sapienPricing}</td>
                     </tr>
                     <tr>
                     <td className='text-center'><b>Set MRP</b></td>

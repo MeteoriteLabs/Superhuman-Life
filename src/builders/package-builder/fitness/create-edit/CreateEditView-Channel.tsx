@@ -1,7 +1,7 @@
 import React, { useContext, useImperativeHandle, useState } from 'react';
 import { useQuery, useMutation } from "@apollo/client";
 import ModalView from "./widgets/Modal";
-import {CREATE_CHANNEL_PACKAGE, CREATE_BOOKING_CONFIG, DELETE_PACKAGE} from '../graphQL/mutations';
+import {CREATE_CHANNEL_PACKAGE, CREATE_BOOKING_CONFIG, DELETE_PACKAGE, UPDATE_PACKAGE_STATUS, UPDATE_CHANNEL_COHORT_PACKAGE} from '../graphQL/mutations';
 import {GET_FITNESS_PACKAGE_TYPE, GET_SINGLE_PACKAGE_BY_ID} from '../graphQL/queries';
 import AuthContext from "../../../../context/auth-context";
 import { schema, widgets } from './schema/channelSchema';
@@ -17,6 +17,7 @@ interface Operation {
     packageType: 'Cohort' | 'Live Stream Channel',
     type: 'create' | 'edit' | 'view' | 'toggle-status' | 'delete';
     current_status: boolean;
+    // callback: Function;
 }
 
 function CreateEditChannel(props: any, ref: any) {
@@ -27,10 +28,13 @@ function CreateEditChannel(props: any, ref: any) {
     const [operation, setOperation] = useState<Operation>({} as Operation);
     const [fitnessPackageTypes, setFitnessPackageTypes] = useState<any>([]);
     const [deleteModalShow, setDeleteModalShow] = useState(false);
+    const [statusModalShow, setStatusModalShow] = useState(false);
     let frmDetails: any = {};
 
-    const [deletePackage] = useMutation(DELETE_PACKAGE, { refetchQueries: ["GET_TABLEDATA"] });
-    const [bookingConfig] = useMutation(CREATE_BOOKING_CONFIG, {onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); }})
+    const [editPackageDetails] = useMutation(UPDATE_CHANNEL_COHORT_PACKAGE, {onCompleted: (data) => {modalTrigger.next(false);}})
+    const [updatePackageStatus] = useMutation(UPDATE_PACKAGE_STATUS, {onCompleted: (data) => {}});
+    const [deletePackage] = useMutation(DELETE_PACKAGE, { refetchQueries: ["GET_TABLEDATA"], onCompleted: (data) => {props.callback()}});
+    const [bookingConfig] = useMutation(CREATE_BOOKING_CONFIG, {onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); props.callback(); }})
     const [CreatePackage] = useMutation(CREATE_CHANNEL_PACKAGE, { onCompleted: (r: any) => {
         bookingConfig({
             variables: {
@@ -133,12 +137,36 @@ function CreateEditChannel(props: any, ref: any) {
     }
 
     function editChannelPackege(frm: any){
-        console.log(frm);
+        frmDetails = frm;
+        frm.location = JSON.parse(frm.location)
+        frm.languages = JSON.parse(frm.languages)
+        editPackageDetails({
+            variables: {
+                id: operation.id,
+                aboutpackage: frm.About,
+                benefits: frm.Benifits,
+                packagename: frm.channelName,
+                channelinstantBooking: frm.channelinstantBooking,
+                expiry_date: moment(frm.expiryDate).toISOString(),
+                level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
+                fitnesspackagepricing: frm.pricing === "free" ? [{mrp: 'free'}] : JSON.parse(frm.pricing),
+                publishing_date: moment(frm.publishingDate).toISOString(),
+                tags: frm.tag,
+                users_permissions_user: frm.user_permissions_user,
+                fitness_package_type: findPackageType(operation.packageType),
+                is_private: frm.visibility === 0 ? false : true
+            }
+        })
     }
 
     function deleteChannelPackage(id: any){
         deletePackage({variables: {id}});
         setDeleteModalShow(false);
+    }
+
+    function updateChannelPackageStatus(id: any, status: any){
+        updatePackageStatus({variables: {id: id, Status: status}});
+        setStatusModalShow(false);
     }
 
     function OnSubmit(frm: any) {
@@ -193,7 +221,7 @@ function CreateEditChannel(props: any, ref: any) {
                     show={deleteModalShow}
                     centered
                     >
-                    <Modal.Header closeButton>
+                    <Modal.Header closeButton onHide={() => {setDeleteModalShow(false)}}>
                         <Modal.Title id="contained-modal-title-vcenter">
                             Delete Package
                         </Modal.Title>
@@ -204,6 +232,26 @@ function CreateEditChannel(props: any, ref: any) {
                     <Modal.Footer>
                         <Button variant='danger' onClick={() => {setDeleteModalShow(false)}}>No</Button>
                         <Button variant='success' onClick={() => {deleteChannelPackage(operation.id)}}>Yes</Button>
+                    </Modal.Footer>
+                    </Modal>
+
+                    <Modal
+                    size="lg"
+                    aria-labelledby="contained-modal-title-vcenter"
+                    show={statusModalShow}
+                    centered
+                    >
+                    <Modal.Header closeButton onHide={() => {setStatusModalShow(false)}}>
+                        <Modal.Title id="contained-modal-title-vcenter">
+                            Update Status
+                        </Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <p>Are you sure you want to update the status of this package?</p>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant='danger' onClick={() => {setStatusModalShow(false)}}>No</Button>
+                        <Button variant='success' onClick={() => {updateChannelPackageStatus(operation.id, operation.current_status)}}>Yes</Button>
                     </Modal.Footer>
                     </Modal>
         </>
