@@ -1,6 +1,6 @@
-import { useState } from 'react'
-import { Button, Col, Modal, Row } from "react-bootstrap";
 
+import { useState } from 'react';
+import { Button, Col, Modal, Row } from "react-bootstrap";
 
 function StatusModal(props: any) {
   
@@ -40,4 +40,4 @@ function StatusModal(props: any) {
   );
 }
 
-export default StatusModal
+export default StatusModal;

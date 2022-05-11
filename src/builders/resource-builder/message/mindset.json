@@ -1,46 +1,38 @@
 {
-    "1": {
-        "title": "Mindset",
-        "type": "object",
-        "required": [
-            "name",
-            "typo",
-            "minidescription"
-        ],
-        "properties": {
-            "name": {
-                "type": "string",
-                "title": "Message Title"
-            },
-            "typo": {
-                "type": "string",
-                "title": "Type",
-                "enum": [],
-                "enumNames": []
-            },
-            "tags": {
-                "type": "string",
-                "title": "Tags"
-            },
-            "minidescription": {
-                "type": "string",
-                "title": "Mini Description"
-            },
-            "Url": {
-                "type": "string",
-                "title": "Url (Picture or Video)"
-            },
-            "Or": {
-                "title": "OR",
-                "description": "OR",
-                "type": "null"
-              },
-            "file": {
-                "type": "string",
-                "format": "data-url",
-                "title": "Upload (Picture or Video)"
-                
-            }
-        }
-    }
+     "1": {
+          "title": "Message",
+          "type": "object",
+          "required": ["title", "mindsetmessagetype", "minidesc"],
+          "properties": {
+               "title": {
+                    "type": "string",
+                    "title": "Message Title"
+               },
+               "mindsetmessagetype": {
+                    "type": "string",
+                    "title": "Type",
+                    "enum": [],
+                    "enumNames": []
+               },
+               "tags": {
+                    "type": "string",
+                    "title": "Tags"
+               },
+               "description": {
+                    "type": "string",
+                    "title": "Description"
+               },
+               "minidesc": {
+                    "type": "string",
+                    "title": "Mini Description"
+               },
+               "mediaurl": {
+                    "type": "string",
+                    "title": "Url (Picture or Video)"
+               },
+               "upload": {
+                    "type": "string"
+               }
+          }
+     }
 }

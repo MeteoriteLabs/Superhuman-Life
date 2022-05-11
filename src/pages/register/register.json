@@ -22,6 +22,9 @@
                 "type": "string",
                 "title": "Confirm Password",
                 "minLength": 8
+            },
+            "socialLogins": {
+                "type": "string"
             }
         }
     },
@@ -29,15 +32,25 @@
         "title": "Sign Up",
         "type": "object",
         "required": [
-            "name",
+            "fname",
             "dob",
             "gender",
-            "contact"
+            "contact",
+            "lname",
+            "userName"
         ],
         "properties": {
-            "name": {
+            "fname": {
                 "type": "string",
-                "title": "Full Name"
+                "title": "First Name"
+            },
+            "lname": {
+                "type": "string",
+                "title": "Last Name"
+            },
+            "userName": {
+                "type": "string",
+                "title": "User Name"
             },
             "dob": {
                 "type": "string",
@@ -54,85 +67,97 @@
                 ]
             },
             "contact": {
-                "type": "string",
+                "type": "number",
                 "title": "Contact",
                 "minLength": 10
             },
-            "location": {
+            "address1": {
                 "type": "string",
-                "title": "Location"
+                "title": "Address 1"
+            },
+            "address2": {
+                "type": "string",
+                "title": "Address 2"
+            },
+            "city": {
+                "type": "string",
+                "title": "City"
+            },
+            "state": {
+                "type": "string",
+                "title": "State"
+            },
+            "country": {
+                "type": "string",
+                "title": "Country"
+            },
+            "zip": {
+                "type": "string",
+                "title": "Zip"
+            },
+            "title": {
+                "type": "string",
+                "title": "Title"
+            },
+            "timezone": {
+                "type": "string",
+                "title": "Timezone"
             }
         }
     },
     "3": {
         "title": "Sign Up",
         "type": "object",
-        "required": [
-            "specification",
-            "education",
-            "language"
-        ],
+        "required": [        ],
         "properties": {
             "changemaker": {
                 "title": "",
                 "description": "Type of Changemaker",
                 "type": "object",
-                "required": [
-                    "specialist",
-                    "business"
-                ],
                 "properties": {
                     "specialist": {
-                        "type": "string",
-                        "title": "Specialist",
-                        "enum": [
-                            "Fitness Coach",
-                            "Sports Coach",
-                            "Nutritionist",
-                            "Dietician",
-                            "Doctor",
-                            "Dentist",
-                            "Physiotherapist",
-                            "Psychiatrist",
-                            "Psychologist",
-                            "Chriopractor",
-                            "Activity Leader",
-                            "Chef",
-                            "Therapist"
-                        ]
-                    },
-                    "business": {
-                        "type": "string",
-                        "title": "Business",
-                        "enum": [
-                            "Fitness Center",
-                            "Gym",
-                            "Fitness Studio",
-                            "Nutrition Clinic",
-                            "Primary Care Clinic",
-                            "Rehabilitation Center",
-                            "Sports Complex",
-                            "Academy",
-                            "Pharmacy",
-                            "Diagnostic Center",
-                            "Activity Center/Club",
-                            "Community Center",
-                            "Store"
-                        ]
+                        "type": "string"
                     }
                 }
             },
-            "specification": {
-                "type": "string",
-                "title": "Specifications"
-            },
             "education": {
-                "type": "string",
-                "title": "Educational Qualifications"
+                "type": "array",
+                "title": "Educational qualifications",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "instituteName": {
+                            "title": "Institue Name",
+                            "type": "string"
+                        },
+                        "specialization":{
+                            "title": "Specialization",
+                            "type": "string"
+                        },
+                        "yearOfPassing":{
+                            "title": "Year of Passing",
+                            "type": "number"
+                        },
+                        "typeOfDegree":{
+                            "type": "string",
+                            "title": "Type of Degree",
+                            "enum": [
+                                "Bachelors",
+                                "Master",
+                                "Diploma",
+                                "Certification"
+                            ]
+                        }
+                    }
+                }
             },
             "language": {
                 "type": "string",
                 "title": "Language Spoken"
+            },
+            "aboutMe": {
+                "type": "string",
+                "title": "About me"
             }
         }
     },
@@ -140,17 +165,36 @@
         "title": "Sign Up",
         "type": "object",
         "properties": {
-            "about": {
+            "multipleChoicesList": {
+                "type": "array",
+                "title": "Select the Modules (for Changemaker dashboard)",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "Fitness",
+                    "Nutrition",
+                    "Mental Health",
+                    "Activities",
+                    "Teach"
+                  ]
+                },
+                "uniqueItems": true
+              },
+              "organization": {
+                "type": "boolean",
+                "title": "Do you own organization?"
+              },
+              "organizationName": {
                 "type": "string",
-                "title": "About Me"
+                "title": "Organization Name"
+              },
+              "organizationType": {
+                "type": "string",
+                "title": "Type of Organization"
             },
-            "challenge": {
+            "aboutOrganization": {
                 "type": "string",
-                "title": "Most Common Challenges Faced"
-            },
-            "message": {
-                "type": "string",
-                "title": "Any other message?"
+                "title": "About Organization"
             }
         }
     }

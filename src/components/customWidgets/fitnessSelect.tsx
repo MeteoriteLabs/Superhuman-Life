@@ -3,10 +3,13 @@ import { Typeahead } from 'react-bootstrap-typeahead';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 import { FETCH_FITNESSDISCPLINES } from '../../builders/program-builder/exercises/queries';
 import { useQuery } from "@apollo/client";
+import {flattenObj} from '../utils/responseFlatten';
 
 const FitnessSelect = (props: any) => {
 
-     const [singleSelections, setSingleSelections] = useState<any[]>([]);
+     const [singleSelections, setSingleSelections] = useState<any[]>(
+          props.value?.length > 0 ? props.value : []
+        );
      const [fitnessdisciplines, setFitnessDisciplines] = useState<any[]>([]);
 
      function FetchData(){
@@ -14,22 +17,26 @@ const FitnessSelect = (props: any) => {
       }
   
      function loadData(data: any) {
+          const flattenedData = flattenObj({...data});
           setFitnessDisciplines(
-              [...data.fitnessdisciplines].map((discipline) => {
+              [...flattenedData.fitnessdisciplines].map((discipline) => {
                   return {
                       id: discipline.id,
-                      disciplineName: discipline.disciplinename,
+                      disciplinename: discipline.disciplinename,
                       updatedAt: discipline.updatedAt
                   }
               })
           );
      }
 
-     function OnChange(e){
-          let id = e.map(d => {return d.id}).join(',');
-          props.onChange(id);
+     function OnChange(e) {
           setSingleSelections(e);
-     }
+        }
+      
+     props.onChange(singleSelections.map((d) => {
+          return d.id;
+          }).join(",").toString()
+     );
 
     FetchData();
 
@@ -38,7 +45,7 @@ const FitnessSelect = (props: any) => {
                <label>Fitness Discplines</label>
                <Typeahead
                id="basic-typeahead-multiple"
-               labelKey="disciplineName"
+               labelKey="disciplinename"
                onChange={OnChange}
                options={fitnessdisciplines}
                placeholder="Choose Discpline..."

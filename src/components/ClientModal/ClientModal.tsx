@@ -2,16 +2,18 @@ import { useQuery } from '@apollo/client'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { Badge, Button, Modal } from 'react-bootstrap'
 import Table from '../table/index'
-import { GET_ALL_CLASSIC_CLIENT_BY_ID, GET_ALL_GROUP_CLIENT_BY_ID } from '../../builders/session-builder/graphQL/queries'
+import { GET_CLIENTS_BY_TAG } from '../../builders/session-builder/graphQL/queries'
 import ActionButton from '../actionbutton'
 import moment from 'moment'
 import FitnessAction from '../../builders/session-builder/Fitness/FitnessAction'
+import { flattenObj } from '../../components/utils/responseFlatten'
 
 
 export default function ClientModal(props) {
     const { id, modalTrigger, type } = props
 
     const [dataTable, setDataTable] = useState<any[]>([]);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [queryName, setQueryName] = useState<any>("")
     const fitnessActionRef = useRef<any>(null)
 
@@ -26,7 +28,7 @@ export default function ClientModal(props) {
 
 
     useEffect(() => {
-        if (type === 'Classic Class') {
+        if (type === 'Classic') {
             setQueryName("GET_ALL_CLASSIC_CLIENT_BY_ID")
         } else {
             setQueryName("GET_ALL_GROUP_CLIENT_BY_ID")
@@ -35,7 +37,7 @@ export default function ClientModal(props) {
 
 
 
-    const FetchData = () => useQuery(queryName === "GET_ALL_CLASSIC_CLIENT_BY_ID" ? GET_ALL_CLASSIC_CLIENT_BY_ID : GET_ALL_GROUP_CLIENT_BY_ID, {
+    const FetchData = () => useQuery(GET_CLIENTS_BY_TAG, {
         variables: {
             id: id,
         },
@@ -45,19 +47,20 @@ export default function ClientModal(props) {
 
 
     const loadData = (data) => {
+        const flattenData = flattenObj({ ...data });
         setDataTable(
-            [...data.userPackages].map((packageItem) => {
+            [...flattenData.tags[0].client_packages].map((packageItem) => {
                 const startDate = moment(packageItem.effective_date);
-                const endDate = moment(startDate).add(packageItem.fitnesspackages[0].duration, "days").format("MMMM DD,YYYY");
+                const endDate = moment(startDate).add(flattenData.tags[0].fitnesspackage.duration, "days").format("MMMM DD,YYYY");
                 return {
-                    programName: packageItem.fitnesspackages[0].packagename,
+                    programName:flattenData.tags[0].fitnesspackage.packagename,
                     client: packageItem.users_permissions_user.username,
-                    duration: packageItem.fitnesspackages[0].duration,
-                    level: packageItem.program_managers.length > 0 ? packageItem.program_managers[0].fitnessprograms[0].level : "",
-                    description: packageItem.program_managers.length > 0 ? packageItem.program_managers[0].fitnessprograms[0].description : "",
+                    duration: flattenData.tags[0].fitnesspackage.duration,
+                    level:flattenData.tags[0].fitnesspackage.level,
+                    // description: packageItem.program_managers.length > 0 ? packageItem.program_managers[0].fitnessprograms[0].description : "",
                     startDate: startDate.format("MMMM DD,YYYY"),
                     endDate: endDate,
-                    programStatus: packageItem.program_managers.length > 0 ? "Assigned" : "Not Assigned",
+                    programStatus: flattenData.tags[0].sessions.length > 0 ? "Assigned" : "Not Assigned",
                 }
             })
         )

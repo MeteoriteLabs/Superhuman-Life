@@ -1,10 +1,11 @@
-import TimeField from '../../../../components/customWidgets/multipleTimeFields';
+import TimeField from '../../../../components/customWidgets/timeField';
 import FitnessMultiSelect from '../../../../components/customWidgets/fitnessMultiSelect';
 import EquipmentSearch from '../../../../components/customWidgets/equipmentList';
 import MuscleGroupSearch from '../../../../components/customWidgets/muscleGroupList';
 import TextEditor from '../../../../components/customWidgets/textEditor';
 import BuildWorkout from '../../workout/buildWorkout';
 import DaysInput from '../daysInput';
+import ClassTypeSelect from '../../../../components/customWidgets/classTypeSelect';
 
 export const widgets = {
      daysInput: DaysInput,
@@ -17,15 +18,19 @@ export const widgets = {
 };
 
 export const schema: any = {
+    tag: {
+        "ui:widget": (props) => {
+             return <ClassTypeSelect onChange={props.onChange} />
+        }
+    },
      day: {
           "ui:widget": (props) => {
-              return <DaysInput id="newWorkout" onChange={props.onChange}/>
+              return <DaysInput startDate={schema.startDate} duration={schema.duration} id="newWorkout" onChange={props.onChange}/>
           }
      },
      time: {
           "ui:widget": (props) => {
-              console.log(props);
-               return <TimeField title="Start Time" onChange={props.onChange}/>
+               return <TimeField onChange={props.onChange}/>
           }
      },
      level: {

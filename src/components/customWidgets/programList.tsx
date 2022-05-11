@@ -4,6 +4,7 @@ import { gql, useQuery } from "@apollo/client";
 import AuthContext from '../../context/auth-context';
 import '../../builders/program-builder/program-template/styles.css';
 import SchedulerEvent from '../../builders/program-builder/program-template/scheduler-event';
+import {flattenObj} from '../utils/responseFlatten';
 
 const ProgramList = (props: any) => {
 
@@ -14,35 +15,50 @@ const ProgramList = (props: any) => {
      const inputField = useRef<any>();
      let skipval: Boolean = true;
 
-
-
      const GET_PROGRAMLIST = gql`
-     query programlistQuery($id: String!, $filter: String!) {
-          fitnessprograms(where: {users_permissions_user: {id:$id}, title_contains: $filter}){
+     query programlistQuery($id: ID!, $filter: String!) {
+          fitnessprograms(
+          filters: {
+               Is_program: { eq: true }
+               users_permissions_user: { id: { eq: $id } }
+               title: { containsi: $filter }
+          }
+          ) {
+          data {
                id
+               attributes {
                title
                duration_days
                level
                description
                events
                fitnessdisciplines {
+               data {
                     id
+                    attributes {
                     disciplinename
+                    }
+               }
                }
                users_permissions_user {
+               data {
                     id
                }
+               }
+               }
+          }
           }
      }
-     `
+     `;
 
      function FetchEquipmentList(_variable: {} = { id: auth.userid, filter: " " }) {
           useQuery(GET_PROGRAMLIST, { variables: _variable, onCompleted: loadProgramList, skip: !searchInput });
      }
 
      function loadProgramList(data: any) {
+          const flattenedData = flattenObj({ ...data });
           setProgramList(
-               [...data.fitnessprograms].map((program) => {
+               [...flattenedData.fitnessprograms].map((program) => {
                     return {
                          id: program.id,
                          name: program.title,

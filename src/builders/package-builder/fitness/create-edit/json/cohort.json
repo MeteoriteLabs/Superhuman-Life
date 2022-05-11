@@ -1,0 +1,193 @@
+{
+    "1": {
+        "title": "",
+        "type": "object",
+        "required": [
+            "packageName",
+            "tag",
+            "level",
+            "startDate",
+            "endDate"
+        ],
+       "properties": {
+            "packageName": {
+                "type": "string",
+                "title": "Packge Name"
+            },
+            "tag": {
+                "type": "string",
+                "title": "Tags"
+            },
+           "level": {
+                "type": "number",
+                "title": "Level",
+                "enum": [0, 1, 2, 3],
+                "enumNames": [
+                    "Beginner",
+                    "Intermediate",
+                    "Advanced", 
+                    "No level"
+                ]
+            },
+            "startDate": {
+                "type": "string",
+                "format": "date",
+                "title": "Start Date"
+            },
+            "endDate": {
+                "type": "string",
+                "format": "date",
+                "title": "End Date"
+            }
+        }   
+    },
+    "2": {
+       "title": "",
+       "type": "object",
+       "required": [
+           "About",
+           "Benifits",
+           "languages",
+           "classSize"
+       ],
+       "properties": {
+            "About": {
+                "type": "string",
+                "title": "About"
+            },
+            "Benifits": {
+                "type": "string",
+                "title": "Benefits"
+            },
+            "languages": {
+                "type": "string",
+                "title": "Languages"
+            },
+            "classSize": {
+                "type": "number",
+                "title": "Class Size"
+            },
+            "UploadPicture": {
+                "type": "string",
+                "format": "data-url",
+                "title": "Upload a Intro Picture"
+            },
+            "UploadVideo": {
+                "type": "string",
+                "format": "data-url",
+                "title": "Upload a Intro Video"
+            },
+            "VideoUrl": {
+                "type": "string",
+                "title": "Add Vieo Url"
+            }
+        }
+    },
+    "3": {
+        "title": "",
+       "type": "object",
+       "required": [
+           "programDetails",
+           "courseDetails"
+       ],
+       "properties": {
+           "programDetails": {
+                "type": "string"
+           },
+           "courseDetails": {
+                "title": "Course Details",
+                "type": "object",
+                "required": [
+                    "details"
+                ],
+                "properties": {
+                    "details": {
+                        "type": "string"
+                    }
+                }
+        }
+        }
+    },
+    "4": {
+        "title": "",
+       "type": "object",
+       "required": [
+           "pricing"
+       ],
+       "properties": {
+            "pricing": {
+                "type": "string"
+            }
+        }
+    },
+    "5": {
+        "title": "Package Settings",
+       "type": "object",
+       "required": [
+           "visibility",
+           "publishingDate",
+           "expiryDate",
+           "config"
+       ],
+       "properties": {
+            "visibility": {
+                "type": "number",
+                "title": "Visibility",
+                "enum": [0, 1],
+                "enumNames": [
+                    "Public",
+                    "Private"
+                ]
+            },
+            "publishingDate": {
+                "type": "string",
+                "format": "date",
+                "title": "Publishing Date"
+            },
+            "expiryDate": {
+                "type": "string",
+                "format": "date",
+                "title": "Expiry Date"
+            },
+            "config": {
+                "title": "Booking Config",
+                "type": "object",
+                "required": [
+                    "acceptBooking",
+                    "maxBookingMonth",
+                    "maxBookingDay"
+                ],
+                "properties": {
+                    "acceptBooking": {
+                        "type": "number",
+                        "title": "",
+                        "enum": [0, 1],
+                        "enumNames": [
+                            "Manual",
+                            "Auto"
+                        ]
+                    },
+                    "maxBookingMonth": {
+                        "type": "number",
+                        "title": "Maximum booking/per month"
+                    },
+                    "maxBookingDay": {
+                        "type": "number",
+                        "title": "Maximum booking/per day"
+                    }
+                }
+            }
+        }
+    },
+    "6": {
+        "title": "",
+       "type": "object",
+       "required": [
+       ],
+       "properties": {
+            "preview": {
+                "type": "string"
+            }
+        }
+    }
+}

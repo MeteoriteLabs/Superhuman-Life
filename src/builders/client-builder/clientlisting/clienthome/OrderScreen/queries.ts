@@ -1,0 +1,76 @@
+import { gql } from "@apollo/client";
+export const GET_BOOKINGS = gql`
+     query clientBookings($id: ID!, $clientid: ID) {
+          clientBookings(
+               where: {
+                    fitnesspackages: { users_permissions_user: { id: $id } }
+                    users_permissions_user: { id: $clientid }
+               }
+               sort: "booking_date:desc"
+          ) {
+               id
+               users_permissions_user {
+                    username
+               }
+               effective_date
+               booking_status
+               booking_date
+               booking_status
+               package_duration
+               fitnesspackages {
+                    id
+                    packagename
+                    aboutpackage
+                    tags
+                    fitness_package_type {
+                         type
+                    }
+                    ptonline
+                    ptoffline
+                    grouponline
+                    groupoffline
+                    recordedclasses
+                    fitnesspackagepricing {
+                         packagepricing
+                    }
+               }
+               program_managers {
+                    id
+                    fitnesspackages {
+                         id
+                         packagename
+                         tags
+                         aboutpackage
+                         fitness_package_type {
+                              type
+                         }
+                         ptonline
+                         ptoffline
+                         grouponline
+                         groupoffline
+                         recordedclasses
+                         fitnesspackagepricing {
+                              packagepricing
+                         }
+                    }
+                    fitnessprograms {
+                         id
+                         title
+                         description
+                    }
+               }
+          }
+     }
+`;
+
+export const ADD_SUGGESTION = gql`
+     mutation createSuggestion($id: ID, $fitnesspackage: ID) {
+          createUserPackageSuggestion(
+               input: { data: { users_permissions_user: $id, fitnesspackage: $fitnesspackage } }
+          ) {
+               userPackageSuggestion {
+                    id
+               }
+          }
+     }
+`;

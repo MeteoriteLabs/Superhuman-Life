@@ -2,6 +2,7 @@ import { useState, useRef, useContext } from 'react';
 import { InputGroup, FormControl, Container, Col, Row, Button } from 'react-bootstrap';
 import { gql, useQuery} from "@apollo/client";
 import AuthContext from '../../context/auth-context';
+import {flattenObj} from '../utils/responseFlatten';
 
 const ProgramList = (props: any) => {
 
@@ -12,34 +13,54 @@ const ProgramList = (props: any) => {
      const inputField = useRef<any>();
      let skipval: Boolean = true;
      
-    const GET_WORKOUTLIST = gql`
-     query workoutlistQuery($id: String!, $filter: String!) {
-          workouts(where: {users_permissions_user: {id:$id}, workouttitle_contains: $filter}){
-               id
-               workouttitle
-               About
-               level
-               intensity
-               fitnessdisciplines{
-                    disciplinename
+     const GET_WORKOUTLIST = gql`
+     query workoutlistQuery($id: ID!, $filter: String!) {
+       workouts(
+         filters: {
+           users_permissions_user: { id: { eq: $id } }
+           workouttitle: { containsi: $filter }
+         }
+       ) {
+         data {
+           id
+           attributes {
+             workouttitle
+             About
+             level
+             intensity
+             fitnessdisciplines {
+               data {
+                 attributes {
+                   disciplinename
+                 }
                }
-               equipment_lists{
-                    name
+             }
+             equipment_lists {
+               data {
+                 attributes {
+                   name
+                 }
                }
-               users_permissions_user {
-                    id
+             }
+             users_permissions_user {
+               data {
+                 id
                }
-          }
+             }
+           }
+         }
+       }
      }
-     `
+   `;
      
      function FetchEquipmentList(_variable: {} = { id: auth.userid, filter: " "}){
           useQuery(GET_WORKOUTLIST, { variables: _variable ,onCompleted: loadProgramList, skip: !searchInput});
      }
 
      function loadProgramList(data: any){
+          const flattenedData = flattenObj({...data});
           setWokroutList(
-          [...data.workouts].map((workout) => {
+          [...flattenedData.workouts].map((workout) => {
                return {
                     id: workout.id,
                     name: workout.workouttitle,

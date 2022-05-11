@@ -35,7 +35,7 @@ export default function CreateFitnessPackageModal({ name, formUISchema, formSubm
 
             updateFinesspackagepricing = pricingDetailRef.current.getFitnessPackagePricing?.();
 
-            if (formData.fitness_package_type === "60e045867df648b0f5756c32" || formData.mode === "Online Workout" || formData.mode === "Offline Workout") {
+            if (formData.fitness_package_type === "Classic Class" || formData.mode === "Online Workout" || formData.mode === "Offline Workout") {
                 updateFinesspackagepricing = updateFinesspackagepricing.slice(0, 1)
             }
         }
@@ -80,8 +80,7 @@ export default function CreateFitnessPackageModal({ name, formUISchema, formSubm
                 duration = 30
             }
         }
-     
-        if(duration === undefined) {
+        if(duration === undefined){
             duration = 30
         }
 
@@ -109,7 +108,7 @@ export default function CreateFitnessPackageModal({ name, formUISchema, formSubm
 
         if (mode === "Online Workout" || mode === "Offline Workout") {
             duration = 1
-        } if (fitness_package_type !== "60e045867df648b0f5756c32") {
+        } if (fitness_package_type !== "Classic Class") {
             duration = 30
         }
         // duration = (mode === "Online Workout" || mode === "Offline Workout") ? 1 : 30;
@@ -140,9 +139,8 @@ export default function CreateFitnessPackageModal({ name, formUISchema, formSubm
         const updateFinesspackagepricing = updatePrice(formData, actionType)
         const updateMode = updateModeName(formData);
         const updateDuration = updateFormDuration(formData);
-        const publishing_date = moment();
+        const publishing_date = moment()
         const expiry_date = moment(publishing_date.add(365, 'days')); 
-   
 
         if (isStepper && step < stepper.length) {
             const update = updateInputValue(formData)

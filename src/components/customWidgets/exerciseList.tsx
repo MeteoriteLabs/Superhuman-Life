@@ -3,6 +3,7 @@ import { InputGroup, FormControl, Container, Row, Col } from 'react-bootstrap';
 import {useQuery} from "@apollo/client";
 import { GET_EXERCISELIST } from '../../builders/program-builder/exercises/queries';
 import AuthContext from "../../context/auth-context";
+import {flattenObj} from '../utils/responseFlatten';
 
 const ExerciseList = (props: any) => {
 
@@ -14,12 +15,15 @@ const ExerciseList = (props: any) => {
      let skipval: Boolean = true;
      
      function FetchExerciseList(_variable: {} = {id: auth.userid, filter: " "}){
+          console.log(auth.userid);
           useQuery(GET_EXERCISELIST, { variables: _variable ,onCompleted: loadExerciseList, skip: !searchInput});
      }
 
      function loadExerciseList(data: any){
+          const flattenedData = flattenObj({...data});
+          console.log(flattenedData);
           setExerciseList(
-          [...data.exercises].map((exercise) => {
+          [...flattenedData.exercises].map((exercise) => {
                return {
                     id: exercise.id,
                     name: exercise.exercisename
@@ -75,7 +79,7 @@ const ExerciseList = (props: any) => {
      props.onChange(selected);
      
 
-     FetchExerciseList({filter: searchInput, skip: skipval});
+     FetchExerciseList({filter: searchInput, skip: skipval, id: auth.userid});
 
      return (
           <>

@@ -1,10 +1,14 @@
 import React, { useContext, useImperativeHandle, useState } from 'react';
-import { useQuery, useMutation } from "@apollo/client";
+import { useQuery, useMutation, gql } from "@apollo/client";
 import ModalView from "../../../../components/modal";
-import { UPDATE_FITNESSPROGRAMS, GET_SCHEDULEREVENTS } from "../queries";
+import { GET_SCHEDULEREVENTS, CREATE_SESSION, GET_SESSIONS, UPDATE_TAG_SESSIONS, CREATE_SESSION_BOOKING } from "../queries";
 import AuthContext from "../../../../context/auth-context";
 import { schema, widgets } from '../schema/workoutTemplateSchema';
 import { Subject } from 'rxjs';
+import {flattenObj} from '../../../../components/utils/responseFlatten';
+import moment from 'moment';
+import {AvailabilityCheck} from './availabilityCheck';
+import { Modal, Button } from 'react-bootstrap';
 
 interface Operation {
     id: string;
@@ -12,16 +16,71 @@ interface Operation {
     current_status: boolean;
 }
 
-function CreateEditMessage(props: any, ref: any) {
+function CreateEditWorkoutTemplate(props: any, ref: any) {
     const auth = useContext(AuthContext);
     const programSchema: { [name: string]: any; } = require("../json/workoutTemplate.json");
     const [programDetails, setProgramDetails] = useState<any>({});
     const [operation, setOperation] = useState<Operation>({} as Operation);
     const program_id = window.location.pathname.split('/').pop();
+    const [sessionsIds, setSessionsIds] = useState<any>([]);
+    // userId here is the new sessionID.
+    const [userId, setUserId] = useState("");
+    const [clientId, setClientId] = useState("");
+    const [dropConflict, setDropConflict] = useState(false);
+
+    const GET_SESSIONS_BY_DATE = gql`
+        query getprogramdata($date: Date) {
+            sessions(filters: {
+                session_date: {
+                    eq: $date
+                }
+            }){
+                data{
+                    id
+                    attributes{
+                        tag
+                        start_time
+                        end_time
+                    }
+                }
+            }
+        }      
+`;  
 
 
-    // const [CreateProgram] = useMutation(CREATE_PROGRAM, { onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
-    const [updateProgram] = useMutation(UPDATE_FITNESSPROGRAMS, { onCompleted: (r: any) => { modalTrigger.next(false); } });
+    const query = useQuery(GET_SESSIONS_BY_DATE, {skip: true});
+
+    useQuery(GET_SESSIONS, {variables: {id: program_id},onCompleted: (data: any) => {
+        const flattenData = flattenObj({...data});
+        setClientId(flattenData.tags[0]?.client_packages[0]?.users_permissions_user.id);
+        const sessionsExistingValues = [...sessionsIds];
+        for(var q=0; q<flattenData.tags[0].sessions.length; q++){
+            sessionsExistingValues.push(flattenData.tags[0].sessions[q].id);
+        }
+        setSessionsIds(sessionsExistingValues);
+    }});
+
+    const [createSessionBooking] = useMutation(CREATE_SESSION_BOOKING, { onCompleted: (data: any) => {modalTrigger.next(false)} })
+    const [upateSessions] = useMutation(UPDATE_TAG_SESSIONS, { onCompleted: (data: any) => {
+        createSessionBooking({
+            variables: {
+                session: userId,
+                client: clientId,
+            }
+        });
+    }})
+    const [createSession] = useMutation(CREATE_SESSION, { onCompleted: (r: any) => { 
+        const values = [...sessionsIds];
+        setUserId(r.createSession.data.id);
+        values.push(r.createSession.data.id);
+        upateSessions({
+            variables: {
+                id: program_id,
+                sessions_ids: values
+            }
+        });
+     } });
+    // const [updateProgram] = useMutation(UPDATE_FITNESSPROGRAMS, { onCompleted: (r: any) => { modalTrigger.next(false); } });
     //     const [editExercise] = useMutation(UPDATE_EXERCISE,{variables: {exerciseid: operation.id}, onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
     //     const [deleteExercise] = useMutation(DELETE_EXERCISE, { onCompleted: (e: any) => console.log(e), refetchQueries: ["GET_TABLEDATA"] });
 
@@ -30,6 +89,8 @@ function CreateEditMessage(props: any, ref: any) {
     useImperativeHandle(ref, () => ({
         TriggerForm: (msg: Operation) => {
             setOperation(msg);
+            schema.startDate = props.startDate;
+            schema.duration = props.duration;
 
             if (msg && !msg.id) //render form if no message id
                 modalTrigger.next(true);
@@ -61,24 +122,37 @@ function CreateEditMessage(props: any, ref: any) {
         return timeString.toString();
     }
 
-
-    function UpdateProgram(frm: any) {
+    async function UpdateProgram(frm: any) {
         console.log(frm);
         var existingEvents: any = (props.events === null ? [] : [...props.events]);
         if (frm.day) {
             frm.day = JSON.parse(frm.day);
         }
+
+
+        const variables = {
+            date: moment(frm.day[0].day, 'Do, MMM YY').format('YYYY-MM-DD')
+        }
+
+        let result = await query.refetch(variables);
+        let filterResult = await AvailabilityCheck({sessions: result.data.sessions, event: frm });
+        if(filterResult){
+            setDropConflict(true);
+            return
+        }
+
         var eventJson: any = {};
         if (frm.workoutEvent) {
             frm.workoutEvent = JSON.parse(frm.workoutEvent);
             frm.time = JSON.parse(frm.time);
             eventJson.type = 'workout';
             eventJson.mode = frm.assignMode;
+            eventJson.tag = frm.tag;
             eventJson.name = frm.workoutEvent[0].name;
             eventJson.id = frm.workoutEvent[0].id;
             eventJson.startTime = frm.time.startTime;
             eventJson.endTime = frm.time.endTime;
-            eventJson.day = parseInt(frm.day[0].day.substr(4));
+            eventJson.day = parseInt(frm.day[0].key);
             if (existingEvents.length === 0) {
                 existingEvents.push(eventJson);
             } else {
@@ -102,12 +176,34 @@ function CreateEditMessage(props: any, ref: any) {
             }
         }
 
-        updateProgram({
+        let lastEventDay: number = 0;
+
+        for(var k=0; k<= existingEvents.length - 1; k++) {
+            if(existingEvents[k].day > lastEventDay){
+                lastEventDay = parseInt(existingEvents[k].day);
+            }
+        }
+
+        createSession({
             variables: {
-                programid: program_id,
-                events: existingEvents
+                start_time: eventJson.startTime,
+                end_time: eventJson.endTime,
+                workout: eventJson.id,
+                tag: eventJson.tag,
+                mode: eventJson.mode,
+                type: eventJson.type,
+                session_date: moment(frm.day[0].day, 'Do, MMM YY').format('YYYY-MM-DD'),
+                changemaker: auth.userid
             }
         });
+
+        // updateProgram({
+        //     variables: {
+        //         programid: program_id,
+        //         events: existingEvents,
+        //         renewal_dt: lastEventDay
+        //     }
+        // });
     }
 
     function OnSubmit(frm: any) {
@@ -149,8 +245,26 @@ function CreateEditMessage(props: any, ref: any) {
             />
 
             {/* } */}
+            {
+                <Modal show={dropConflict} onHide={() => setDropConflict(false)} centered backdrop='static'>
+                <Modal.Header>
+                        <Modal.Title>Session Conflict</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <span>There is already an existing session at this time. Cannot add!</span>
+                </Modal.Body>
+                <Modal.Footer>
+                        <Button variant="success" onClick={() => {
+                            setDropConflict(false);
+                            modalTrigger.next(false);
+                        }}>
+                            Understood
+                        </Button>
+                </Modal.Footer>
+            </Modal>
+            }
         </>
     )
 }
 
-export default React.forwardRef(CreateEditMessage);
+export default React.forwardRef(CreateEditWorkoutTemplate);

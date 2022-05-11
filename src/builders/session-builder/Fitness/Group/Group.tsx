@@ -1,23 +1,32 @@
-import { useQuery } from '@apollo/client';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { useQuery, useMutation } from '@apollo/client';
 import { useContext, useMemo, useRef, useState } from 'react'
 import { Badge, Row, Col } from "react-bootstrap";
 
 import AuthContext from "../../../../context/auth-context"
 import GroupTable from '../../../../components/table/GroupTable/GroupTable';
-import { GET_ALL_FITNESS_PACKAGE_BY_TYPE, GET_ALL_PROGRAM_BY_TYPE, GET_ALL_CLIENT_PACKAGE } from '../../graphQL/queries';
+import { GET_ALL_FITNESS_PACKAGE_BY_TYPE, GET_ALL_PROGRAM_BY_TYPE, GET_ALL_CLIENT_PACKAGE, GET_TAGS_FOR_GROUP } from '../../graphQL/queries';
+import { UPDATE_STARTDATE } from '../../graphQL/mutation';
 import moment from 'moment';
 import ActionButton from '../../../../components/actionbutton';
 import FitnessAction from '../FitnessAction';
-
+import { flattenObj } from '../../../../components/utils/responseFlatten';
 
 export default function Group(props) {
 
     const auth = useContext(AuthContext);
 
     const [userPackage, setUserPackage] = useState<any>([]);
+    const fitnessActionRef = useRef<any>(null);
 
+    const [updateDate] = useMutation(UPDATE_STARTDATE, {onCompleted: (r: any) => {console.log(r)}});
 
-    const fitnessActionRef = useRef<any>(null)
+    // const { data: data } = useQuery(GET_TAGS_FOR_GROUP, {
+    //     variables: {
+    //         id: auth.userid
+    //     },
+    //     onCompleted: (r: any) => loadData(r)
+    // });
 
 
     const { data: data1 } = useQuery(GET_ALL_FITNESS_PACKAGE_BY_TYPE, {
@@ -43,93 +52,179 @@ export default function Group(props) {
             id: auth.userid,
             type: 'Group Class'
         },
-        onCompleted: (data) => loadData()
+        // onCompleted: (data) => loadData()
     })
 
 
-    const loadData = () => {
+    const loadData = (data: any) => {
 
-        let arrayFitnessPackage: any[] = [];
-        let arrayData: any[] = []
+        // let arrayFitnessPackage: any[] = [];
+        // let arrayData: any[] = [];
 
-        let fitnessProgramItem: any = {};
-        for (let i = 0; i < data1?.fitnesspackages.length; i++) {
-            for (let j = 0; j < data2?.programManagers.length; j++) {
-                if (data1.fitnesspackages[i].id === data2.programManagers[j].fitnesspackages[0].id) {
-                    fitnessProgramItem.proManagerFitnessId = data2.programManagers[j].fitnessprograms[0].id;
-                    fitnessProgramItem.title = data2.programManagers[j].fitnessprograms[0].title;
-                    fitnessProgramItem.published_at = data2.programManagers[j].fitnessprograms[0].published_at
-                    fitnessProgramItem.proManagerId = data2.programManagers[j].id;
+        // const flattenData1 = flattenObj({...data1});
+        // const flattenData2 = flattenObj({...data2});
+        // const flattenData3 = flattenObj({...data3});
 
-                    arrayData.push({ ...data1.fitnesspackages[i], ...fitnessProgramItem });
-                }
+        // let fitnessProgramItem: any = {};
+        // for (let i = 0; i < flattenData1?.fitnesspackages.length; i++) {
+        //     for (let j = 0; j < flattenData2?.programManagers?.length; j++) {
+        //         if (flattenData1.fitnesspackages[i].id === flattenData2.programManagers[j].fitnesspackages[0].id) {
+        //             fitnessProgramItem.proManagerFitnessId = flattenData2.programManagers[j].fitnessprograms[0].id;
+        //             fitnessProgramItem.title = flattenData2.programManagers[j].fitnessprograms[0].title;
+        //             fitnessProgramItem.start_dt = flattenData2.programManagers[j].fitnessprograms[0].start_dt;
+        //             fitnessProgramItem.renewal_dt = flattenData2.programManagers[j].fitnessprograms[0].renewal_dt;
+        //             fitnessProgramItem.published_at = flattenData2.programManagers[j].fitnessprograms[0].published_at
+        //             fitnessProgramItem.proManagerId = flattenData2.programManagers[j].id;
+
+        //             arrayData.push({ ...flattenData1.fitnesspackages[i], ...fitnessProgramItem });
+        //         }
+        //     }
+        // }
+
+
+        // let arrayA = arrayData.map(item => item.id);
+
+        // const filterPackage = flattenData1?.fitnesspackages.filter((item: { id: string; }) => !arrayA.includes(item.id));
+        // filterPackage.forEach(item => {
+        //     arrayData.push(item)
+        // })
+
+
+
+        // for (let i = 0; i < arrayData.length; i++) {
+        //     for (let j = 0; j < flattenData3.clientPackages?.length; j++) {
+        //         if (flattenData3.clientPackages[j].program_managers.length > 0) {
+        //             if (arrayData[i].proManagerFitnessId === flattenData3.clientPackages[j].program_managers[0].fitnessprograms[0].id) {
+        //                 arrayFitnessPackage.push({ ...arrayData[i], ...flattenData3.clientPackages[j].users_permissions_user });
+        //             } else {
+        //                 arrayFitnessPackage.push(arrayData[i]);
+        //                 break;
+        //             }
+        //         }
+        //     }
+        // }
+
+        const flattenData = flattenObj({...data});
+        console.log(flattenData)
+
+        function handleUsers(data: any){
+            let clients: any = [];
+            for(var i=0; i<data.length; i++){
+                clients.push(data[i].users_permissions_user.username);
             }
+            // packageItem.client_packages[index]?.users_permissions_user
+            return clients;
         }
-
-
-        let arrayA = arrayData.map(item => item.id);
-
-        const filterPackage = data1?.fitnesspackages.filter((item: { id: string; }) => !arrayA.includes(item.id));
-        filterPackage.forEach(item => {
-            arrayData.push(item)
-        })
-
-
-
-        for (let i = 0; i < arrayData.length; i++) {
-            for (let j = 0; j < data3.userPackages.length; j++) {
-                if (data3.userPackages[j].program_managers.length > 0) {
-                    if (arrayData[i].proManagerFitnessId === data3.userPackages[j].program_managers[0].fitnessprograms[0].id) {
-                        arrayFitnessPackage.push({ ...arrayData[i], ...data3.userPackages[j].users_permissions_user });
-                    } else {
-                        arrayFitnessPackage.push(arrayData[i]);
-                        break;
-                    }
-                }
-            }
-        }
-
 
         setUserPackage(
-            [...arrayFitnessPackage.map((packageItem) => {
+            [...flattenData.tags.map((packageItem, index) => {
+                let renewDay: any = '';
+                if (packageItem.client_packages[index]?.fitnesspackages[0].length !== 0) {
+                    renewDay = new Date(packageItem.client_packages[index]?.effective_date);
+                    renewDay.setDate(renewDay.getDate() + packageItem.client_packages[index]?.fitnesspackages[0].duration)
+                }
                 return {
-                    id: packageItem.id,
-                    packageName: packageItem.packagename,
-                    duration: packageItem.duration,
-                    expiry: moment(packageItem.expiry_date).format("MMMM DD,YYYY"),
-                    packageStatus: packageItem.Status ? "Active" : "Inactive",
+                    tagId: packageItem.id,
+                    id: packageItem.client_packages[index]?.fitnesspackages[0].id,
+                    packageName: packageItem.client_packages[index]?.fitnesspackages[0].packagename,
+                    duration: packageItem.client_packages[index]?.fitnesspackages[0].duration,
+                    expiry: packageItem.client_packages[index]?.fitnesspackages[0].expiry_date ?  moment(packageItem.client_packages[index]?.fitnesspackages[0].expiry_date).format("MMMM DD,YYYY") : "N/A",
+                    packageStatus: packageItem.client_packages[index]?.fitnesspackages[0].Status ? "Active" : "Inactive",
 
-                    proManagerId: packageItem.proManagerId,
-                    proManagerFitnessId: packageItem.proManagerFitnessId,
-                    client: packageItem.username ? packageItem.username : "N/A",
-                    time: packageItem.published_at ? moment(packageItem.published_at).format('h:mm:ss a') : "N/A",
-                    programName: packageItem.title ? packageItem.title : "N/A",
-                    programStatus: packageItem.username ? "Assigned" : "N/A",
-                    renewal: packageItem.title ? "25/08/2021" : "N/A",
+                    // proManagerId: packageItem.proManagerId,
+                    // proManagerFitnessId: packageItem.proManagerFitnessId,
+                    client: packageItem.client_packages[index]?.users_permissions_user.username ? handleUsers(packageItem.client_packages) : "N/A",
+                    // start_dt: packageItem.effective_date,
+                    // renewal_dt: packageItem.renewal_dt,
+                    // time: packageItem.published_at ? moment(packageItem.published_at).format('h:mm:ss a') : "N/A",
+                    programName: packageItem.tag_name,
+                    programStatus: handleStatus(packageItem.sessions, packageItem.client_packages[index]?.effective_date, renewDay),
+                    renewal: packageItem.id ? calculateProgramRenewal(packageItem.client_packages[index]?.effective_date, packageItem.sessions) : "N/A",
                 }
             })]
         )
-
     }
 
-
-
-    let arr: any = []
-    for (let i = 0; i < userPackage.length - 1; i++) {
-        if (userPackage[i].id === userPackage[i + 1].id) {
-            if (userPackage[i].proManagerFitnessId === userPackage[i + 1].proManagerFitnessId) {
-                if (typeof userPackage[i].client === "string") {
-                    arr[0] = userPackage[i].client;
-                };
-                arr.push(userPackage[i + 1].client);
-                userPackage[i + 1].client = arr
-                userPackage.splice(i, 1);
-                i--;
+    function handleStatus(sessions: any, effective_date: any, renewDay){
+        let effectiveDate: any;
+        if(sessions.length === 0){
+            return "Not_Assigned"
+        }else if(sessions.length > 0){
+            let max: number = 0;
+            for(var i=0; i<sessions.length; i++){
+                if(sessions[i].day_of_program > max){
+                    max = sessions[i].day_of_program;
+                }
+            }
+            effectiveDate = moment(effective_date).add(max, 'days').format("MMMM DD,YYYY");
+            if(moment(effectiveDate).isBetween(moment(), moment().subtract(5, 'months'))){
+                return "Almost Ending"
+            }else {
+                return "Assigned"
+            }
+        }else {
+            if(moment(effectiveDate) === moment(renewDay)){
+                return "Completed"
             }
         }
     }
 
+    function calculateProgramRenewal(effective_date, sessions) {
+        console.log(effective_date);
+        let max: number = 0;
 
+        for(var i=0; i<sessions?.length; i++){
+            if(sessions[i].day_of_program > max){
+                max = sessions[i].day_of_program;
+            }
+        }
+
+        return moment(effective_date).add(max, 'days').format("MMMM DD,YYYY");
+        // const dates: string[] = []; 
+
+        // for(var i=0; i<duration; i++){
+        //     const t = moment(effectiveDate).add(i, 'days').format("MMMM DD,YYYY");
+        //     dates.push(t);
+        // }
+        // return dates[renewalDate-1];
+    }
+
+    let arr: any = []
+    // for (let i = 0; i < userPackage.length - 1; i++) {
+    //     if (userPackage[i].id === userPackage[i + 1].id) {
+    //         if (userPackage[i].proManagerFitnessId === userPackage[i + 1].proManagerFitnessId) {
+    //             if (typeof userPackage[i].client === "string") {
+    //                 arr[0] = userPackage[i].client;
+    //             };
+    //             arr.push(userPackage[i + 1].client);
+    //             userPackage[i + 1].client = arr
+    //             userPackage.splice(i, 1);
+    //             i--;
+    //         }
+    //     }
+    // }
+
+    function handleRedirect(id: any){
+        // console.log(id, clientId, startDate, duration)
+        // if(value === undefined){
+        //     alert("Please assign client to this program")
+        //     return;
+        // }
+        // if (startDate === null){
+        //     let sdate = moment();
+        //     let edate = moment(sdate).add(duration, 'days');
+
+        //     updateDate({
+        //         variables: {
+        //             id: id,
+        //             startDate: moment(sdate).format("YYYY-MM-DD"),
+        //             endDate: moment(edate).format("YYYY-MM-DD") 
+        //         }
+        //     });
+        // }
+
+        window.location.href = `/group/session/scheduler/${id}`
+    }
 
     const columns = useMemo(
         () => [
@@ -167,7 +262,7 @@ export default function Group(props) {
             { accessor: ' ', Header: '' },
 
             {
-                Header: "Program",
+                Header: "Class Details",
                 columns: [
                     {
                         accessor: "client", Header: 'Client',
@@ -192,16 +287,14 @@ export default function Group(props) {
                                         </div>
                                 }
 
-
                                 {row.value === "N/A" ? "" :
                                     row.value.length === 1 ? <p className='text-center'>{row.value}</p> : <p className='text-center'>{row.value.length} people</p>
-
                                 }
                             </>
                         }
                     },
-                    { accessor: "programName", Header: 'Name' },
-                    { accessor: 'time', Header: 'Time' },
+                    { accessor: "programName", Header: 'Class Name' },
+                    // { accessor: 'time', Header: 'Time' },
                     {
                         accessor: "programStatus",
                         Header: "Status",
@@ -214,13 +307,13 @@ export default function Group(props) {
                             </>
                         }
                     },
-                    { accessor: "renewal", Header: "Renewal Date" },
+                    { accessor: "renewal", Header: "Last Session Date" },
                     {
                         id: "edit",
                         Header: "Actions",
                         Cell: ({ row }: any) => {
                             const actionClick1 = () => {
-                                fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'manage', type: "Group Class", rowData: "" })
+                                handleRedirect(row.original.tagId)
                             }
                             const actionClick2 = () => {
                                 fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'details', type: "Group Class", rowData: row.original })
@@ -245,7 +338,7 @@ export default function Group(props) {
                 ]
             },
         ],
-        []
+        [] // eslint-disable-line react-hooks/exhaustive-deps
     );
 
     return (

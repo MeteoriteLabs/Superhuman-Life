@@ -10,12 +10,9 @@
             "day": {
                 "type": "string"
             },
-            "startTime": {
+            "time": {
                 "type": "string"
             },
-            "endTime": {
-               "type": "string"
-           },
            "conditional": {
                "title": "Select from: ",
                "$ref": "#/definitions/workoutOption"

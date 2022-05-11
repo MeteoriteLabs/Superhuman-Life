@@ -1,156 +1,192 @@
 import { gql } from "@apollo/client";
 
 export const GET_TRIGGERS = gql`
-    query FetchTypesTriggers {
-          prerecordedtypes{
-            id  
-            name
-          }
-          prerecordedtriggers{
-            id  
-            name
-          }
+  query FetchTypesTriggers {
+    prerecordedtypes {
+      data {
+        id
+        attributes {
+          name
+        }
       }
-    `;
+    }
+    prerecordedtriggers {
+      data {
+        id
+        attributes {
+          name
+        }
+      }
+    }
+  }
+`;
 
 export const ADD_MESSAGE = gql`
-    mutation msg(
-        $title: String
-        $description: String
-        $minidesc: String
-        $prerecordedtype: ID
-        $prerecordedtrigger: ID
-        $mediaupload: [ID]
-        $mediaurl: String
-        $user_permissions_user: ID
+  mutation msg(
+    $title: String
+    $description: String
+    $minidesc: String
+    $prerecordedtype: ID
+    $prerecordedtrigger: ID
+    $mediaurl: String
+    $user_permissions_user: ID
+  ) {
+    createNotification(
+      data: {
+        title: $title
+        description: $description
+        minidescription: $minidesc
+        prerecordedtype: $prerecordedtype
+        prerecordedtrigger: $prerecordedtrigger
+        mediaurl: $mediaurl
+        users_permissions_user: $user_permissions_user
+      }
     ) {
-        createPrerecordedmessage(
-        input: {
-            data: {
-            title: $title
-            description: $description
-            minidescription: $minidesc
-            prerecordedtype: $prerecordedtype
-            prerecordedtrigger: $prerecordedtrigger
-            mediaurl: $mediaurl
-            mediaupload: $mediaupload
-            users_permissions_user: $user_permissions_user
-            }
+      data {
+        id
+        attributes {
+          title
         }
-        ) {
-            prerecordedmessage {
-                id
-                createdAt
-                updatedAt
-                title
-                description
-                minidescription
-            }
-        }
+      }
     }
+  }
 `;
 
 export const UPDATE_MESSAGE = gql`
-    mutation updatemsg(
-        $title: String
-        $description: String
-        $minidesc: String
-        $prerecordedtype: ID
-        $prerecordedtrigger: ID
-        $mediaurl: String
-        $userpermission: ID
-        $messageid: ID!
+  mutation updatemsg(
+    $title: String
+    $description: String
+    $minidesc: String
+    $prerecordedtype: ID
+    $prerecordedtrigger: ID
+    $mediaurl: String
+    $userpermission: ID
+    $messageid: ID!
+  ) {
+    updateNotification(
+      id: $messageid
+      data: {
+        title: $title
+        description: $description
+        minidescription: $minidesc
+        mediaurl: $mediaurl
+        prerecordedtype: $prerecordedtype
+        prerecordedtrigger: $prerecordedtrigger
+        users_permissions_user: $userpermission
+      }
     ) {
-        updatePrerecordedmessage(
-        input: {
-            data: {
-            title: $title
-            description: $description
-            minidescription: $minidesc
-            mediaurl: $mediaurl
-            prerecordedtype: $prerecordedtype
-            prerecordedtrigger: $prerecordedtrigger
-            users_permissions_user: $userpermission
-            }
-            where: { id: $messageid }
-        }
-        ) {
-        prerecordedmessage {
-            id
-            title
-            description
-            minidescription
-            mediaurl
-        }
-        }
+      data {
+        id
+      }
     }
+  }
 `;
 
 export const GET_MESSAGE = gql`
-    query getmessage($id: ID!) {
-        prerecordedmessage(id: $id) {
-            id
-            title
-            description
-            minidescription
-            mediaurl
-            mediaupload {
-                id
-            }
-            status
-            updatedAt
-            prerecordedtrigger {
-                id
+  query getmessage($id: ID!) {
+    notifications(filters: { id: { eq: $id } }) {
+      data {
+        id
+        attributes {
+          title
+          description
+          minidescription
+          mediaurl
+          status
+          updatedAt
+          prerecordedtype {
+            data {
+              id
+              attributes {
                 name
+              }
             }
-            prerecordedtype {
-                id
+          }
+          prerecordedtrigger {
+            data {
+              id
+              attributes {
                 name
+              }
             }
-            users_permissions_user {
-                id
+          }
+          users_permissions_user {
+            data {
+              id
             }
+          }
         }
-    } 
-
+      }
+    }
+  }
 `;
 
 export const DELETE_MESSAGE = gql`
-    mutation deleteMessage($id: ID!) {
-        deletePrerecordedmessage(
-            input: {
-                where: { id : $id }
-            }
-        ) {
-            prerecordedmessage {
-                id
-                __typename
-            }
-        }
+  mutation deleteMessage($id: ID!) {
+    deleteNotification(id: $id) {
+      data {
+        id
+      }
     }
+  }
 `;
 
 export const UPDATE_STATUS = gql`
-    mutation updatestatus(
-        $status: Boolean
-        $messageid: ID!
-    ) {
-        updatePrerecordedmessage(
-            input: {
-                data: {
-                status: $status
-                }
-                where: { id: $messageid }
-            }
-        ) {
-            prerecordedmessage {
-                id
-                title
-                description
-                minidescription
-                mediaurl
-                status
-            }
-        }
+  mutation updatestatus($status: Boolean, $messageid: ID!) {
+    updateNotification(data: { status: $status }, id: $messageid) {
+      data {
+        id
+      }
     }
-`
+  }
+`;
+export const GET_NOTIFICATIONS = gql`
+  query FeedSearchQuery($filter: String!, $id: ID) {
+    notifications(
+      sort: ["updatedAt"]
+      filters: {
+        title: { containsi: $filter }
+        users_permissions_user: { id: { eq: $id } }
+      }
+    ) {
+      data {
+        id
+        attributes {
+          title
+          minidescription
+          prerecordedtrigger {
+            data {
+              id
+              attributes {
+                name
+              }
+            }
+          }
+          status
+          updatedAt
+          users_permissions_user {
+            data {
+              id
+            }
+          }
+        }
+      }
+    }
+    prerecordedtypes {
+      data {
+        id
+        attributes {
+          name
+        }
+      }
+    }
+    prerecordedtriggers {
+      data {
+        id
+        attributes {
+          name
+        }
+      }
+    }
+  }
+`;

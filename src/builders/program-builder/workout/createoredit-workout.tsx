@@ -6,6 +6,7 @@ import AuthContext from "../../../context/auth-context";
 import StatusModal from "../../../components/StatusModal/workoutStatusModal";
 import { schema, widgets } from './workoutSchema';
 import {Subject} from 'rxjs';
+import {flattenObj} from '../../../components/utils/responseFlatten';
 
 interface Operation {
     id: string;
@@ -13,7 +14,7 @@ interface Operation {
     current_status: boolean;
 }
 
-function CreateEditMessage(props: any, ref: any) {
+function CreateEditWorkout(props: any, ref: any) {
     const auth = useContext(AuthContext);
     const workoutSchema: { [name: string]: any; } = require("./workout.json");
     const [workoutDetails, setWorkoutDetails] = useState<any>({});
@@ -28,7 +29,7 @@ function CreateEditMessage(props: any, ref: any) {
     });
 
     const [createWorkout] = useMutation(CREATE_WORKOUT, { onCompleted: (r: any) => { modalTrigger.next(false); } });
-    const [editWorkout] = useMutation(UPDATE_WORKOUT,{variables: {workoutid: operation.id}, onCompleted: (r: any) => { modalTrigger.next(false); } });
+    const [editWorkout] = useMutation(UPDATE_WORKOUT,{ onCompleted: (r: any) => { modalTrigger.next(false); } });
     const [deleteWorkout] = useMutation(DELETE_WORKOUT, { refetchQueries: ["GET_TABLEDATA"] });
 
     const modalTrigger =  new Subject();
@@ -42,24 +43,6 @@ function CreateEditMessage(props: any, ref: any) {
         }
     }));
 
-    function FillDetails(data: any) {
-        let details: any = {};
-        // let msg = data.workouts;
-        // console.log(msg);
-        // details.workout = msg[0].workouttitle;
-        setWorkoutDetails(details);
-
-        //if message exists - show form only for edit and view
-        if (['edit', 'view'].indexOf(operation.type) > -1)
-            modalTrigger.next(true);
-        else
-            OnSubmit(null);
-    }
-
-    function FetchData() {
-        useQuery(FETCH_DATA, { variables: { id: operation.id }, skip: (!operation.id || operation.type === 'toggle-status'), onCompleted: (e: any) => { FillDetails(e) } });
-    }
-
     enum ENUM_EXERCISES_EXERCISELEVEL {
         Beginner,
         Intermediate,
@@ -71,6 +54,61 @@ function CreateEditMessage(props: any, ref: any) {
         Low,
         Medium,
         High
+    }
+
+    function FillDetails(data: any) {
+        const flattenData = flattenObj({...data});
+        function handleAddWorkout(data: any) {
+            if (data.workout_URL !== null) {
+              return { AddWorkout: "Add URL", AddURL: data.workout_URL };
+            } else if (data.workout_text !== null) {
+              return { AddWorkout: "Text", AddText: data.workout_text };
+            } else {
+              return {
+                AddWorkout: "Build",
+                build: {
+                  warmup: data.warmup,
+                  cooldown: data.cooldown,
+                  mainmovement: data.mainmovement,
+                },
+              };
+            }
+          }
+      
+          let details: any = {};
+          let msg = flattenData.workouts;
+          console.log(msg);
+          details.workout = msg[0].workouttitle;
+          details.benefits = msg[0].Benifits;
+          details.about = msg[0].About;
+          details.equipment = msg[0].equipment_lists.map(
+            (val: any) => {
+              return val;
+            }
+          );
+          details.discipline = msg[0].fitnessdisciplines.map(
+            (val: any) => {
+              return val
+            }
+          );
+          details.muscleGroup = msg[0].muscle_groups.map(
+            (val: any) => {
+              return val;
+            }
+          );
+          details.intensity = ENUM_WORKOUTS_INTENSITY[msg[0].intensity];
+          details.level = ENUM_EXERCISES_EXERCISELEVEL[msg[0].level];
+          details.calories = msg[0].calories;
+          details.addWorkout = handleAddWorkout(msg[0]);
+          setWorkoutDetails(details);
+      
+          //if message exists - show form only for edit and view
+          if (["edit", "view"].indexOf(operation.type) > -1) modalTrigger.next(true);
+          else OnSubmit(null);
+    }
+
+    function FetchData() {
+        useQuery(FETCH_DATA, { variables: { id: operation.id },skip: (operation.type === 'create'), onCompleted: (e: any) => { FillDetails(e) } });
     }
 
     function CreateWorkout(frm: any) {
@@ -99,13 +137,54 @@ function CreateEditMessage(props: any, ref: any) {
     function EditWorkout(frm: any) {
         // console.log('edit message');
         // useMutation(UPDATE_MESSAGE, { variables: frm, onCompleted: (d: any) => { console.log(d); } });
-        editWorkout({variables: frm });
+        if (frm.addWorkout.build) {
+            frm.addWorkout.build = JSON.parse(frm.addWorkout.build);
+          }
+          editWorkout({
+            variables: {
+              workoutid: operation.id,
+              workouttitle: frm.workout,
+              intensity: ENUM_WORKOUTS_INTENSITY[frm.intensity],
+              level: ENUM_EXERCISES_EXERCISELEVEL[frm.level],
+              fitnessdisciplines: frm.discipline.split(","),
+              About: frm.about,
+              Benifits: frm.benefits,
+              warmup:
+                frm.addWorkout.AddWorkout === "Build"
+                  ? frm.addWorkout.build.warmup
+                    ? frm.addWorkout.build.warmup
+                    : null
+                  : null,
+              mainmovement:
+                frm.addWorkout.AddWorkout === "Build"
+                  ? frm.addWorkout.build.mainMovement
+                    ? frm.addWorkout.build.mainMovement
+                    : null
+                  : null,
+              cooldown:
+                frm.addWorkout.AddWorkout === "Build"
+                  ? frm.addWorkout.build.coolDown
+                    ? frm.addWorkout.build.coolDown
+                    : null
+                  : null,
+              workout_text:
+                frm.addWorkout.AddWorkout === "Text" ? frm.addWorkout.AddText : null,
+              workout_URL:
+                frm.addWorkout.AddWorkout === "Add URL"
+                  ? frm.addWorkout.AddURL
+                  : null,
+              calories: frm.calories,
+              equipment_lists: frm.equipment.split(","),
+              muscle_groups: frm.muscleGroup.split(","),
+              users_permissions_user: frm.user_permissions_user,
+            },
+          });
     }
 
     function ViewWorkout(frm: any) {
         // console.log('view message');
         //use a variable to set form to disabled/not editable
-        useMutation(UPDATE_WORKOUT, { variables: frm, onCompleted: (d: any) => { console.log(d); } })
+        useMutation(UPDATE_WORKOUT, { variables: frm,onCompleted: (d: any) => { console.log(d); } })
     }
 
     function DeleteWorkout(id: any) {
@@ -159,7 +238,7 @@ function CreateEditMessage(props: any, ref: any) {
             {/* } */}
              {operation.type ==="delete" && <StatusModal
              modalTitle="Delete"
-             EventConnectedDetails={programDetails}
+             EventConnectedDetails={flattenObj({...programDetails})}
              ExistingEventId={operation.id}
              modalBody="Do you want to delete this message?"
              buttonLeft="Cancel"
@@ -172,4 +251,4 @@ function CreateEditMessage(props: any, ref: any) {
     )
 }
 
-export default React.forwardRef(CreateEditMessage);
+export default React.forwardRef(CreateEditWorkout);

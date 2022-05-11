@@ -5,16 +5,19 @@
          "required": [
             "assignMode",
             "day",
-            "time"
+            "time",
+            "tag"
          ],
          "properties": {
+            "tag": {
+                "type": "string"
+            },
              "assignMode": {
                  "type": "string",
                  "title": "Mode",
                  "enum": [
                      "Online",
-                     "Offline",
-                     "Hybrid"
+                     "Offline"
                 ]
              },
              "day": {

@@ -1,9 +1,9 @@
-/* 
-table {
-  border-collapse: separate;
+.rowCard {
+     text-align: left;
+}
+/* .rowCard:hover {
+background-color: lightgray;
 } */
-
-.table td {
-  text-align: center !important;
-  vertical-align: middle !important;
+.headerCard {
+     text-align: left;
 }

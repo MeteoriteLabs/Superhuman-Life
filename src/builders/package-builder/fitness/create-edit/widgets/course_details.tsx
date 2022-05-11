@@ -1,0 +1,56 @@
+import React, {useState} from 'react';
+import {Button, Form} from 'react-bootstrap';
+
+const CourseDetails = (props) => {
+
+    
+    const [details, setDetails] = useState<any>(props.value === undefined ? [{title: '', description: ''}] : JSON.parse(props.value));
+
+    function handleAddCourseDetails(data: any) {
+        const newData = [...data];
+        newData.unshift({title: '', description: ''});
+        setDetails(newData);
+    }
+
+    function handleCourseDetailsTitleUpdate(value, index) {
+        const newDetails = [...details];
+        newDetails[index].title = value;
+        setDetails(newDetails);
+    }
+
+    function handleCourseDetailsDescriptionUpdate(value, index) {
+        const newDetails = [...details];
+        newDetails[index].description = value;
+        setDetails(newDetails);
+    }
+
+    props.onChange(JSON.stringify(details));
+
+    return (
+        <>
+        <div>
+            <div className="text-right" style={{ justifyContent: 'end'}}>
+                <Button variant='outline-info' onClick={() => {handleAddCourseDetails(details)}}><i className="fa fa-plus-circle"></i>&nbsp;Add</Button>
+            </div>
+            <div>
+                {details.map((detail, index) => {
+                    return (
+                        <Form key={index}>
+                            <Form.Group controlId="exampleForm.ControlInput1">
+                                <Form.Label>Title</Form.Label>
+                                <Form.Control type="text" value={detail.title} onChange={(e: any) => handleCourseDetailsTitleUpdate(e.target.value, index)}/>
+                            </Form.Group>
+                            <Form.Group controlId="exampleForm.ControlTextarea1">
+                                <Form.Label>Description</Form.Label>
+                                <Form.Control as="textarea" rows={3} value={detail.description} onChange={(e: any) => handleCourseDetailsDescriptionUpdate(e.target.value, index)}/>
+                            </Form.Group>
+                        </Form>
+                    )
+                })}
+            </div>
+        </div>
+        </>
+    );
+};
+
+export default CourseDetails;

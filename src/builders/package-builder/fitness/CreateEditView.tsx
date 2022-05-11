@@ -4,7 +4,7 @@ import AuthContext from '../../../context/auth-context';
 import FitnessClasses from './widgetCustom/FitnessClasses/FitnessClasses';
 import FitnessRestday from './widgetCustom/FitnessRestday';
 import { useMutation, useQuery } from '@apollo/client';
-import { GET_SINGLE_PACKAGE_BY_ID } from './graphQL/queries';
+import { GET_SINGLE_PACKAGE_BY_ID, GET_FITNESS_PACKAGE_TYPE } from './graphQL/queries';
 import ModalPreview from './widgetCustom/Preview/FitnessPreview';
 import './CreateEditView.css'
 import { CREATE_PACKAGE, DELETE_PACKAGE, EDIT_PACKAGE, UPDATE_PACKAGE_PRIVATE } from './graphQL/mutations';
@@ -19,6 +19,7 @@ import BookingLeadday from './widgetCustom/FitnessBooking/BookingLeadday';
 import BookingLeadTime from './widgetCustom/FitnessBooking/BookingLeadTime';
 import { Subject } from 'rxjs';
 import CreateFitnessPackageModal from '../../../components/CreateFitnessPackageModal/CreateFitnessPackageModal';
+import {flattenObj} from '../../../components/utils/responseFlatten';
 
 
 
@@ -33,6 +34,7 @@ interface Operation {
 
 
 function CreateEditView(props: any, ref: any) {
+    console.log("🚀 ~ file: CreateEditView.tsx ~ line 36 ~ CreateEditView ~ props", props)
     const auth = useContext(AuthContext);
     const [operation, setOperation] = useState<Operation>({} as Operation);
     const [userData, setUserData] = useState<any>('');
@@ -40,6 +42,8 @@ function CreateEditView(props: any, ref: any) {
     const [packageTypeName, setPackageTypeName] = useState<string | null>('personal-training');
     const [actionName, setActionName] = useState<string>("")
     const [formData, setFormData] = useState<any>();
+
+    const [sapienFitnessPackageTypes, setSapienFitnessPackageTypes] = useState<any>([]);
 
 
     const ptSchema = require("./personal-training/personal-training.json");
@@ -77,24 +81,37 @@ function CreateEditView(props: any, ref: any) {
     }, [operation]);
 
 
-
+    console.log(formData);
 
 
     let fitness_package_type: string | undefined = ''
     if (operation.actionType === "view" || operation.actionType === 'edit') {
         fitness_package_type = formData?.fitness_package_type.id
-    } else if (operation.actionType === "create") {
+    } 
+    else if (operation.actionType === "create") {
         if (operation.type === "Personal Training") {
-            fitness_package_type = props.packageType.fitnessPackageTypes[0].id;
+            fitness_package_type = "Personal Training";
         } else if (operation.type === "Group Class") {
-            fitness_package_type = props.packageType.fitnessPackageTypes[1].id;
+            fitness_package_type = "Group Class";
         } else if (operation.type === "Custom Fitness") {
-            fitness_package_type = props.packageType.fitnessPackageTypes[2].id;
+            fitness_package_type ="Custom Fitness";
         } else if (operation.type === "Classic Class") {
-            fitness_package_type = props.packageType.fitnessPackageTypes[3].id;
+            fitness_package_type = "Classic Class";
         }
     }
-
+    
+    // before fixed
+    // else if (operation.actionType === "create") {
+    //     if (operation.type === "Personal Training") {
+    //         fitness_package_type = props.packageType.fitnessPackageTypes[0].id;
+    //     } else if (operation.type === "Group Class") {
+    //         fitness_package_type = props.packageType.fitnessPackageTypes[1].id;
+    //     } else if (operation.type === "Custom Fitness") {
+    //         fitness_package_type = props.packageType.fitnessPackageTypes[2].id;
+    //     } else if (operation.type === "Classic Class") {
+    //         fitness_package_type = props.packageType.fitnessPackageTypes[3].id;
+    //     }
+    // }
 
 
 
@@ -108,6 +125,7 @@ function CreateEditView(props: any, ref: any) {
     const pricingDetailRef = useRef<{ getFitnessPackagePricing?: Function }>({});
 
 
+    console.log('userData', userData)
     const uiSchema: any = {
         "disciplines": {
             'ui:widget': (props) => <FitnessMultiSelect widgetProps={props} actionType={operation.actionType} />
@@ -242,6 +260,14 @@ function CreateEditView(props: any, ref: any) {
 
 
     const FetchData = () => {
+
+        useQuery(GET_FITNESS_PACKAGE_TYPE, {
+            onCompleted: (data) => {
+                const flattedData = flattenObj({...data});
+                setSapienFitnessPackageTypes(flattedData.fitnessPackageTypes);
+            }
+        })
+
         useQuery(GET_SINGLE_PACKAGE_BY_ID, {
             variables: {
                 id: operation.id,
@@ -250,7 +276,7 @@ function CreateEditView(props: any, ref: any) {
             onCompleted: (dataPackage: any) => {
                 FillDetails(dataPackage)
             },
-            skip: (!operation.id),
+            skip: (!operation.id || operation.actionType === 'delete'),
         });
     };
 
@@ -258,7 +284,8 @@ function CreateEditView(props: any, ref: any) {
 
 
     const FillDetails = (dataPackage: any) => {
-        const packageDetail = dataPackage.fitnesspackage;
+        const flattedData = flattenObj({...dataPackage});
+        const packageDetail = flattedData.fitnesspackages;
 
         let { id, packagename, tags, disciplines, fitness_package_type, aboutpackage, benefits, level, mode, ptoffline, ptonline, grouponline, groupoffline, recordedclasses, restdays, fitnesspackagepricing, bookingleadday, bookingleadtime, duration, groupstarttime, groupendtime, groupinstantbooking, address, ptclasssize, classsize, groupdays, introvideourl, is_private } = packageDetail;
 
@@ -294,7 +321,10 @@ function CreateEditView(props: any, ref: any) {
 
     useImperativeHandle(ref, () => ({
         TriggerForm: (msg: Operation) => {
+            console.log(msg)
             setOperation(msg);
+
+            
             handleSubmitName(msg.actionType);
             //render form if no message id
             if (msg && !msg.id) {
@@ -305,9 +335,14 @@ function CreateEditView(props: any, ref: any) {
 
 
     const [createPackage] = useMutation(CREATE_PACKAGE, {
-        variables: { users_permissions_user: auth.userid },
+        variables: { 
+            users_permissions_user: auth.userid,
+         },
         onCompleted: (r: any) => {
             modalTrigger.next(false);
+        },
+        onError: (error: any) => {
+            console.log(error)
         }
     })
 
@@ -331,10 +366,14 @@ function CreateEditView(props: any, ref: any) {
     }
 
     function CreatePackage(frm) {
-        createPackage({ variables: frm })
+        const fitnessPackageId = sapienFitnessPackageTypes.find(x => x.type === frm.fitness_package_type).id;
+        frm.fitness_package_type = fitnessPackageId;
+        createPackage({ variables: frm});
     }
 
     function EditPackage(frm: any) {
+        const fitnessPackageId = sapienFitnessPackageTypes.find(x => x.type === frm.fitness_package_type).id;
+        frm.fitness_package_type = fitnessPackageId;
         editPackage({ variables: frm })
     }
 
