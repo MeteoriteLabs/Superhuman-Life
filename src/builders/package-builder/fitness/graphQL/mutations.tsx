@@ -91,11 +91,14 @@ export const EDIT_PACKAGE = gql`
     $id: ID!
     $packagename: String
     $tags: String
-    $level: ENUM_FITNESSPACKAGES_LEVEL
+    $level: ENUM_FITNESSPACKAGE_LEVEL
     $aboutpackage: String
     $benefits: String
     $introvideourl: String
-    $mode: ENUM_FITNESSPACKAGES_MODE
+    $mode: ENUM_FITNESSPACKAGE_MODE
+    $address: ID
+    $disciplines: [ID]
+    $duration: Int
     $ptoffline: Int
     $ptonline: Int
     $grouponline: Int
@@ -104,24 +107,17 @@ export const EDIT_PACKAGE = gql`
     $restdays: Int
     $bookingleadday: Int
     $bookingleadtime: String
-    $fitnesspackagepricing: [editComponentFitnesspackagepricingFitnesspackagepricingInput]
-    $duration: Int
-    $groupstarttime: String
-    $groupendtime: String
     $groupinstantbooking: Boolean
-    $address: ID
-    $disciplines: [ID]
-    $ptclasssize: ENUM_FITNESSPACKAGES_PTCLASSSIZE
-    $classsize: Int
-    $groupdays: String
     $fitness_package_type: ID
-    $users_permissions_user: ID
-    $Status: Boolean
-    $is_private: Boolean
+    $fitnesspackagepricing: JSON
+    $ptclasssize: ENUM_FITNESSPACKAGE_PTCLASSSIZE
+    $classsize: Int
+    $users_permissions_user: ID!
+    $publishing_date: DateTime
+    $expiry_date: DateTime
   ) {
     updateFitnesspackage(
-      input: {
-        where: { id: $id }
+        id: $id
         data: {
           packagename: $packagename
           tags: $tags
@@ -152,10 +148,9 @@ export const EDIT_PACKAGE = gql`
           users_permissions_user: $users_permissions_user
           Status: $Status
           is_private: $is_private
-        }
       }
     ) {
-      fitnesspackage {
+      data{
         id
       }
     }
@@ -163,11 +158,131 @@ export const EDIT_PACKAGE = gql`
 `;
 
 export const CREATE_BOOKING_CONFIG = gql`
-  mutation createBookingconfig($id: ID!) {
-    createBookingConfig(data: { isAuto: true, fitnesspackage: $id }) {
+  mutation createBookingconfig($id: ID!, $isAuto: Boolean, $bookings_per_day: Int, $bookings_per_month: Int) {
+    createBookingConfig(data: { isAuto: $isAuto, fitnesspackage: $id, bookingsPerDay: $bookings_per_day, BookingsPerMonth: $bookings_per_month }) {
       data {
         id
       }
     }
   }
 `;
+
+export const UPDATE_PACKAGE_STATUS = gql`
+  mutation updateFitnesspackageStatus($id: ID!, $Status: Boolean) {
+    updateFitnesspackage(id: $id, data:{
+      Status: $Status
+    }){
+      data{
+        id
+      }
+    }
+  }
+`;
+
+export const UPDATE_CHANNEL_COHORT_PACKAGE = gql`
+  mutation updateChannelCohortPackage(
+    $id: ID!
+    $aboutpackage: String
+    $benefits: String
+    $packagename: String
+    $channelinstantBooking: Boolean
+    $expiry_date: DateTime
+    $level: ENUM_FITNESSPACKAGE_LEVEL 
+    $fitnesspackagepricing: JSON
+    $publishing_date: DateTime
+    $tags: String
+    $users_permissions_user: ID
+    $fitness_package_type: ID
+    $is_private: Boolean
+    $classsize: Int
+    $address: ID
+    $mode: ENUM_FITNESSPACKAGE_MODE 
+    $residential_type: ENUM_FITNESSPACKAGE_RESIDENTIAL_TYPE 
+    $languages: JSON
+    $End_date: DateTime
+    $Start_date: DateTime
+    ) {
+      updateFitnesspackage(
+        id: $id, 
+        data:{
+          aboutpackage: $aboutpackage,
+          benefits: $benefits,
+          packagename: $packagename,
+          groupinstantbooking: $channelinstantBooking,
+          expiry_date: $expiry_date,
+          level: $level,
+          fitnesspackagepricing: $fitnesspackagepricing,
+          publishing_date: $publishing_date,
+          tags: $tags,
+          users_permissions_user: $users_permissions_user,
+          fitness_package_type: $fitness_package_type,
+          is_private: $is_private,
+          classsize: $classsize,
+          address: $address
+          mode: $mode,
+          residential_type: $residential_type
+          languages: $languages
+          Start_date: $Start_date
+          End_date: $End_date
+      }){
+        data{
+          id
+        }
+      }
+  }
+`
+
+export const CREATE_CHANNEL_PACKAGE = gql`
+  mutation createChannelPackage(
+    $aboutpackage: String
+    $benefits: String
+    $packagename: String
+    $channelinstantBooking: Boolean
+    $expiry_date: DateTime
+    $level: ENUM_FITNESSPACKAGE_LEVEL 
+    $fitnesspackagepricing: JSON
+    $publishing_date: DateTime
+    $tags: String
+    $users_permissions_user: ID
+    $fitness_package_type: ID
+    $is_private: Boolean
+    $classsize: Int
+    $address: ID
+    $mode: ENUM_FITNESSPACKAGE_MODE 
+    $residential_type: ENUM_FITNESSPACKAGE_RESIDENTIAL_TYPE 
+    $languages: JSON
+    $End_date: DateTime
+    $Start_date: DateTime
+    $Course_details: JSON
+  ){
+    createFitnesspackage(data: {
+      aboutpackage: $aboutpackage,
+      benefits: $benefits,
+      packagename: $packagename,
+      groupinstantbooking: $channelinstantBooking,
+      expiry_date: $expiry_date,
+      level: $level,
+      fitnesspackagepricing: $fitnesspackagepricing,
+      publishing_date: $publishing_date,
+      tags: $tags,
+      users_permissions_user: $users_permissions_user,
+      fitness_package_type: $fitness_package_type,
+      is_private: $is_private,
+      classsize: $classsize,
+      address: $address
+      mode: $mode,
+      residential_type: $residential_type
+      languages: $languages
+      Start_date: $Start_date
+      End_date: $End_date
+      Course_details: $Course_details
+    }){
+      data{
+        id
+        attributes{
+          packagename
+        }
+      }
+    }
+  }
+`

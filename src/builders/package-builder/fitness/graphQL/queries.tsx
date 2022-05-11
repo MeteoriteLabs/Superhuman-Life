@@ -49,6 +49,7 @@ export const GET_FITNESS = gql`
     fitnesspackages(
       sort: ["updatedAt"]
       filters: { users_permissions_user: { id: { eq: $id } } }
+      pagination: {pageSize: 1000}
     ) {
       data {
         id
@@ -104,6 +105,10 @@ export const GET_SINGLE_PACKAGE_BY_ID = gql`
           benefits
           introvideo
           mode
+          languages
+          Start_date
+          Course_details
+          End_date
           ptoffline
           ptonline
           groupoffline
@@ -118,6 +123,9 @@ export const GET_SINGLE_PACKAGE_BY_ID = gql`
           address {
             data {
               id
+              attributes{
+                address1
+              }
             }
           }
           Ptclasssize
@@ -147,6 +155,18 @@ export const GET_SINGLE_PACKAGE_BY_ID = gql`
           duration
           Status
           is_private
+          expiry_date
+          publishing_date
+          residential_type
+          booking_config{
+            data{
+              attributes{
+                isAuto
+                bookingsPerDay
+                BookingsPerMonth
+              }
+            }
+          }
         }
       }
     }
@@ -214,4 +234,17 @@ export const GET_FITNESS_PACKAGE_TYPE = gql`
       }
     }
   }
-`
+`;
+
+export const LANGUAGES = gql`
+    query fetchLanguages {
+        languages(pagination: {pageSize: 1000}){
+            data{
+              id
+              attributes{
+                languages
+              }
+            }
+          }
+    }
+`;

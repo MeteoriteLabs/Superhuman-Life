@@ -84,9 +84,11 @@ export default function MRP(props) {
 
     const handleValidationError = (e, index) => {
 
+        debugger
+        console.log(userData);
         let valid = false;
         let updateMRP = ""
-        if (mode === "Online Workout" || mode === "Offline Workout" || userData.fitness_package_type === "60e045867df648b0f5756c32") {
+        if (mode === "Online Workout" || mode === "Offline Workout" || userData.fitness_package_type === "Classic Class") {
             updateMRP = _.cloneDeep(fitnesspackagepricing.splice(0, 1))
         } else {
             updateMRP = _.cloneDeep(fitnesspackagepricing)
@@ -125,6 +127,7 @@ export default function MRP(props) {
 
 
     const handleChange = (e, index) => {
+        debugger
         e.preventDefault();
 
         const valid = handleValidationError(e, index)

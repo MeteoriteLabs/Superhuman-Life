@@ -1,0 +1,164 @@
+{
+    "1": {
+        "title": "",
+        "type": "object",
+        "required": [
+           "channelName",
+           "tag",
+           "level"
+        ],
+       "properties": {
+            "channelName": {
+                "type": "string",
+                "title": "Channel Name"
+            },
+            "tag": {
+                "type": "string",
+                "title": "Tags"
+            },
+           "level": {
+                "type": "number",
+                "title": "Level",
+                "enum": [0, 1, 2, 3],
+                "enumNames": [
+                    "Beginner",
+                    "Intermediate",
+                    "Advanced", 
+                    "No level"
+                ]
+            }
+        }   
+    },
+    "2": {
+       "title": "",
+       "type": "object",
+       "required": [
+           "About",
+           "Benifits"
+       ],
+       "properties": {
+            "About": {
+                "type": "string",
+                "title": "About"
+            },
+            "Benifits": {
+                "type": "string",
+                "title": "Benefits"
+            },
+            "UploadPicture": {
+                "type": "string",
+                "format": "data-url",
+                "title": "Upload a Intro Picture"
+            },
+            "UploadVideo": {
+                "type": "string",
+                "format": "data-url",
+                "title": "Upload a Intro Video"
+            },
+            "VideoUrl": {
+                "type": "string",
+                "title": "Add Vieo Url"
+            }
+        }
+    },
+    "3": {
+        "title": "",
+        "type": "object",
+        "required": ["channelinstantBooking"],
+        "properties": {
+            "channelinstantBooking": {
+                "type": "boolean",
+                "title": "Allow instant Bookings",
+                "description": "This will let people join this group Call for a day on demand"
+              }
+        }
+    },
+    "4": {
+        "title": "",
+       "type": "object",
+       "required": [
+           "pricing"
+       ],
+       "properties": {
+            "pricing": {
+                "type": "string"
+            }
+        }
+    },
+    "5": {
+        "title": "Package Settings",
+       "type": "object",
+       "required": [
+           "visibility",
+           "startDate",
+           "publishingDate",
+           "expiryDate",
+           "config"
+       ],
+       "properties": {
+            "visibility": {
+                "type": "number",
+                "title": "Visibility",
+                "enum": [0, 1],
+                "enumNames": [
+                    "Public",
+                    "Private"
+                ]
+            },
+            "startDate": {
+                "type": "string",
+                "format": "date",
+                "title": "Start Date"
+            },
+            "publishingDate": {
+                "type": "string",
+                "format": "date",
+                "title": "Publishing Date"
+            },
+            "expiryDate": {
+                "type": "string",
+                "format": "date",
+                "title": "Expiry Date"
+            },
+            "config": {
+                "title": "Booking Config",
+                "type": "object",
+                "required": [
+                    "acceptBooking",
+                    "maxBookingMonth",
+                    "maxBookingDay"
+                ],
+                "properties": {
+                    "acceptBooking": {
+                        "type": "number",
+                        "title": "",
+                        "enum": [0, 1],
+                        "enumNames": [
+                            "Manual",
+                            "Auto"
+                        ]
+                    },
+                    "maxBookingMonth": {
+                        "type": "number",
+                        "title": "Maximum booking/per month"
+                    },
+                    "maxBookingDay": {
+                        "type": "number",
+                        "title": "Maximum booking/per day"
+                    }
+                }
+            }
+        }
+    },
+    "6": {
+        "title": "",
+       "type": "object",
+       "required": [
+       ],
+       "properties": {
+            "preview": {
+                "type": "string"
+            }
+        }
+    }
+}
