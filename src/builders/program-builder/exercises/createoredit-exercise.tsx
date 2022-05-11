@@ -29,9 +29,9 @@ function CreateEditExercise(props: any, ref: any) {
         }
     });
 
-    const [createExercise] = useMutation(CREATE_EXERCISE, { onCompleted: (r: any) => { modalTrigger.next(false); } });
-    const [editExercise] = useMutation(UPDATE_EXERCISE,{onCompleted: (r: any) => { modalTrigger.next(false); } });
-    const [deleteExercise] = useMutation(DELETE_EXERCISE, { refetchQueries: ["GET_TABLEDATA"] });
+    const [createExercise] = useMutation(CREATE_EXERCISE, { onCompleted: (r: any) => { modalTrigger.next(false); props.callback(); } });
+    const [editExercise] = useMutation(UPDATE_EXERCISE,{onCompleted: (r: any) => { modalTrigger.next(false); props.callback(); } });
+    const [deleteExercise] = useMutation(DELETE_EXERCISE, { refetchQueries: ["GET_TABLEDATA"], onCompleted: (r: any) => { modalTrigger.next(false); props.callback(); } });
 
     const modalTrigger =  new Subject();
 
@@ -188,7 +188,7 @@ function CreateEditExercise(props: any, ref: any) {
              modalTitle="Delete"
              EventConnectedDetails={workoutDetails}
              ExistingEventId={operation.id}
-             modalBody="Do you want to delete this message?"
+             modalBody="Do you want to delete this exercise?"
              buttonLeft="Cancel"
              buttonRight="Yes"
              onClick={() => {DeleteExercise(operation.id)}}
