@@ -29,6 +29,7 @@ export default function FitnessTab(props) {
         { accessor: "packagename", Header: "Package Name" },
         {
             accessor: "type", Header: "Type", Cell: ({ row }: any) => {
+                console.log(row);
                 return <div >
                     {row.original.type === "Group Class" ? <div>
                         <img src='./assets/GroupType.svg' alt="GroupType" />
@@ -41,6 +42,12 @@ export default function FitnessTab(props) {
                     </div> : ""}
                     {row.original.type === "Custom Fitness" ? <div>
                         <img src='./assets/CustomType.svg' alt="CustomType" />
+                    </div> : ""}
+                    {row.original.type === "Cohort" ? <div>
+                        <img src='./assets/CohortType.svg' alt="CohortType" />
+                    </div> : ""}
+                    {row.original.type === "Live Stream Channel" ? <div>
+                        <img src='./assets/ChannelType.svg' alt="ChannelType" />
                     </div> : ""}
                 </div>
             }
