@@ -1,7 +1,7 @@
 import { Card, Tab, Tabs } from "react-bootstrap";
 import Fitness from "./Fitness/Fitness";
-import Nutrition from "./Nutrition/Nutrition";
-import Event from './Event/Event'
+// import Nutrition from "./Nutrition/Nutrition";
+// import Event from './Event/Event'
 import './pricingAssist.css'
 
 export default function PricingAssist() {

@@ -1,8 +1,8 @@
 import { Card, Tab, Tabs } from "react-bootstrap";
-import Event from "./Event/Event";
+// import Event from "./Event/Event";
 import Fitness from "./Fitness/Fitness";
-import Journey from "./Journey/Journey";
-import Nutrition from "./Nutrition/Nutrition";
+// import Journey from "./Journey/Journey";
+// import Nutrition from "./Nutrition/Nutrition";
 
 
 export default function Invoice() {

@@ -20,8 +20,9 @@ function InvoicesAction(props, ref) {
     const auth = useContext(authContext);
     const [operation, setOperation] = useState<Operation>({} as Operation);
     const modalTrigger = new Subject();
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [formData, setFormData] = useState<any>();
-    const widgets = null;
+    // const widgets = null;
     const formSchema = require("../Invoices/Fitness/fitness.json");
 
 
