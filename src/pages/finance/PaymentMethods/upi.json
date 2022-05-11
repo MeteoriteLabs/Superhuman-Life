@@ -1,0 +1,23 @@
+{
+    "title": "",
+    "type": "object",
+    "required": [
+       
+    ],
+    "properties": {
+        "Full_Name": {
+            "type": "string",
+            "title": "Full Name"
+        },
+         "phone_number": {
+            "type": "string",
+            "title": "Phone Number"
+         },
+         "UPI_ID": {
+            "type": "string",
+            "title": "UPI ID"
+         }
+     
+    }
+
+}

@@ -1,0 +1,32 @@
+{
+        "title": "",
+        "type": "object",
+        "required": [
+           
+        ],
+        "properties": {
+            "voucher_name": {
+                "type": "string",
+                "title": "Voucher Name"
+            },
+            "discount_percentage": {
+               "type": "number",
+               "title": "Discount"
+            },
+            "Start_date": {
+                "type": "string",
+                "title": "Start Date",
+                "format": "date-time"
+            },
+            "expiry_date": {
+               "type": "string",
+               "title": "Expiry Date",
+               "format": "date-time"
+            },
+           "Usage_restriction": {
+               "type": "number",
+               "title": "Usage Limit"
+           }
+        }
+  
+}

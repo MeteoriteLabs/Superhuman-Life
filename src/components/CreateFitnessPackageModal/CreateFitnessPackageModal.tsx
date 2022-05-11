@@ -70,12 +70,13 @@ export default function CreateFitnessPackageModal({ name, formUISchema, formSubm
     }
 
 
-    const updateFormDuration = (formData: { mode: "Online Workout" | "Offline Workout"; duration?: number; }) => {
+    const updateFormDuration = (formData: { mode: "Online Workout" | "Offline Workout"; duration: number; }) => {
         let { duration, mode } = formData;
-        if (formData.mode) {
+        if (mode) {
             if (mode === "Online Workout" || mode === "Offline Workout") {
                 duration = 1
-            } else {
+            } 
+            else {
                 duration = 30
             }
         }

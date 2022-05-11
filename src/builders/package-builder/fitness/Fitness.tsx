@@ -226,7 +226,7 @@ export default function FitnessTab(props) {
                                 <i className="fas fa-plus-circle"></i>{" "}Classic
                             </Button>
 
-                            
+
                             <Button className='mr-4' variant={true ? "outline-secondary" : "light"} size="sm"
                                 onClick={() => {
                                     createEditViewRef.current.TriggerForm({ id: null, actionType: 'create', type: 'Custom Fitness' });

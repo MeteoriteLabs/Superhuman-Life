@@ -1,0 +1,141 @@
+import { gql } from "@apollo/client"
+
+
+
+export const GET_ALL_SUGGESTED_PRICING = gql`
+    query suggestedPricings($id:ID!){
+        suggestedPricings(
+          filters:{users_permissions_users:{id:{eq:$id}}}
+        )
+    {
+      data{
+        id
+        attributes{
+          updatedAt
+          Mode
+          mrp
+          fitness_package_type{
+            data{
+              attributes{
+                type
+              }
+            }
+          }
+        }
+      }
+    }
+}
+`
+
+export const GET_ALL_VOUCHERS = gql`
+    query vouchers($id: ID){
+        vouchers(
+          filters:{users_permissions_user:{id:{eq:$id}}}
+        )
+    {
+      data{
+        id
+        attributes{
+          voucher_name
+          discount_percentage
+          expiry_date
+          Start_date
+          Usage_restriction
+          Status
+        }
+      }
+    }
+}
+`
+
+
+export const GET_VOUCHERS_BY_ID = gql`
+    query vouchers($id: ID!){
+        vouchers(filters:{ id: {eq:$id}}){
+          data{
+            attributes{
+              voucher_name
+              discount_percentage
+              expiry_date
+              Start_date
+              Usage_restriction
+              Status
+            }
+          }
+        }
+}
+`
+
+
+
+
+export const GET_ALL_BOOKINGS_FINANCE = gql `
+query clientBookings($id: ID!) {
+  clientBookings( filters: {users_permissions_users: { id: {eq:$id} } }) 
+    {
+      data{
+        attributes{
+          users_permissions_users {
+            data{
+              attributes{
+                username
+                Phone_Number
+                addresses{
+                  data{
+                    attributes{
+                      address1
+                      city
+                      state
+                      country
+                      zipcode
+                    }
+                  }
+                }
+              }
+            }
+          }
+          package_duration
+          effective_date
+          booking_status
+          booking_date
+          package_duration
+          fitnesspackages {
+          
+            data{
+              attributes{
+                packagename
+                mode
+                fitness_package_type {
+                  data{
+                    attributes{
+                      type
+                    }
+                  }
+                }
+                fitnesspackagepricing
+                users_permissions_user {
+                 
+                  data{
+                    attributes{
+                      Phone_Number
+                      First_Name
+                      Last_Name
+                      email
+                    }
+                  }
+                }
+                ptoffline
+                ptonline
+                grouponline
+                groupoffline
+                recordedclasses
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`
+
+

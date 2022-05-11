@@ -168,17 +168,34 @@ export default function Group(props) {
                 Header: "Package",
                 columns: [
                     {
-                        accessor: "client",
-                        Header: "Client",
-                        Cell: (row: any) => {
+                        accessor: "client", Header: 'Client',
+                        Cell: (row) => {
                             return <>
-                                {row.value !== 'N/A' ? <div className='text-center'>
-                                    <img src="https://picsum.photos/200/100" alt={row.value} style={{ width: "60px", height: "60px", borderRadius: "50%" }} />
-                                    <p className='mt-3'>{row.value}</p>
-                                </div> : <p className='mt-3'>{row.value}</p>
+                                {row.value === "N/A" ? <p className='text-center mb-0'>N/A</p> :
+                                    typeof(row.value)=== "string" ?
+                                        <img
+                                            src="https://picsum.photos/200/100" alt='profile-pic'
+                                            style={{ width: '60px', height: '60px', borderRadius: '50%' }} />
+                                        :
+                                        <div className='position-relative mx-auto' style={{ width: '8rem', height: '5rem' }}>
+                                            {row.value.slice(0, 4).map((item, index) => {
+                                                let postionLeft = 20;
+                                                return <img
+                                                    key={index}
+                                                    src="https://picsum.photos/200/100" alt='profile-pic'
+                                                    style={{ width: '60px', height: '60px', borderRadius: '50%', left: `${postionLeft * index}%` }}
+                                                    className='position-absolute ml-2'
+                                                />
+                                            })}
+                                        </div>
+                                }
+
+
+                                {row.value === "N/A" ? "" :
+                                    row.value.length === 1 ? <p className='text-center'>{row.value}</p> : <p className='text-center'>{row.value.length} people</p>
+
                                 }
                             </>
-
                         }
                     },
                     // { accessor: 'id', Header: "ID" },

@@ -6,7 +6,6 @@ import { FETCH_FITNESSDISCPLINES } from '../../builders/session-builder/graphQL/
 import {flattenObj} from '../utils/responseFlatten';
 
 const MultiSelect = (props: any) => {
-
      const [multiSelections, setMultiSelections] = useState([]);
      const [fitnessdisciplines, setFitnessDisciplines] = useState<any[]>([]);
 
