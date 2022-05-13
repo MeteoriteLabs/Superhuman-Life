@@ -248,7 +248,7 @@ export default function FitnessTab(props) {
                             >
                                 <i className="fas fa-plus-circle"></i>{" "}Cohort
                             </Button>
-                            <CreateEditView packageType={flattenObj({...data})} ref={createEditViewRef}></CreateEditView>
+                            <CreateEditView packageType={flattenObj({...data})} ref={createEditViewRef} callback={refetchQueryCallback}></CreateEditView>
                             <CreateEditViewChannel ref={createEditViewChannelRef} callback={refetchQueryCallback}></CreateEditViewChannel>
                             <CreateEditViewCohort ref={createEditViewCohortRef} callback={refetchQueryCallback}></CreateEditViewCohort>
                         </Card.Title>

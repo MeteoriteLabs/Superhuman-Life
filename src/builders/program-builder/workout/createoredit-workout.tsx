@@ -28,9 +28,9 @@ function CreateEditWorkout(props: any, ref: any) {
         }
     });
 
-    const [createWorkout] = useMutation(CREATE_WORKOUT, { onCompleted: (r: any) => { modalTrigger.next(false); } });
-    const [editWorkout] = useMutation(UPDATE_WORKOUT,{ onCompleted: (r: any) => { modalTrigger.next(false); } });
-    const [deleteWorkout] = useMutation(DELETE_WORKOUT, { refetchQueries: ["GET_TABLEDATA"] });
+    const [createWorkout] = useMutation(CREATE_WORKOUT, { onCompleted: (r: any) => { modalTrigger.next(false); props.callback()} });
+    const [editWorkout] = useMutation(UPDATE_WORKOUT,{ onCompleted: (r: any) => { modalTrigger.next(false); props.callback();}});
+    const [deleteWorkout] = useMutation(DELETE_WORKOUT, { refetchQueries: ["GET_TABLEDATA"], onCompleted: (r: any) => { modalTrigger.next(false); props.callback();}});
 
     const modalTrigger =  new Subject();
 

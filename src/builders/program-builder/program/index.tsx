@@ -20,7 +20,7 @@ export default function EventsTab() {
     const [show, setShow] = useState(false);
     const [name, setName] = useState("");
     const [frm, setFrm] = useState<any>();
-    const [createProgram] = useMutation(CREATE_PROGRAM);
+    const [createProgram] = useMutation(CREATE_PROGRAM, {onCompleted: () => {refetchQueryCallback()}});
 
      const handleClose = () => setShow(false);
      const handleShow = () => setShow(true);
@@ -78,8 +78,12 @@ export default function EventsTab() {
         }
     ], []);
 
-    function FetchData(_variables: {} = {id: auth.userid}){
-        useQuery(GET_TABLEDATA, {variables: _variables, onCompleted: loadData});
+    // function FetchData(_variables: {} = {id: auth.userid}){
+        const fetch = useQuery(GET_TABLEDATA, {variables: {id: auth.userid}, onCompleted: loadData});
+    // }
+
+    function refetchQueryCallback() {
+        fetch.refetch();
     }
     
     function getDate(time: any) {
@@ -118,7 +122,7 @@ export default function EventsTab() {
         )
     }
 
-    FetchData({id: auth.userid});
+    // FetchData();
 
 
     return (
@@ -132,7 +136,7 @@ export default function EventsTab() {
                 >
                     <i className="fas fa-plus-circle"></i>{" "}Create Program
                 </Button>
-                <CreateEditProgram ref={createEditProgramComponent}></CreateEditProgram>
+                <CreateEditProgram ref={createEditProgramComponent} callback={refetchQueryCallback}></CreateEditProgram>
                 {
                     <Modal show={show} onHide={handleClose}>
                             <Modal.Header closeButton>

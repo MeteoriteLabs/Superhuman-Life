@@ -170,6 +170,7 @@ export default function Group(props) {
                     {
                         accessor: "client", Header: 'Client',
                         Cell: (row) => {
+                            console.log(row);
                             return <>
                                 {row.value === "N/A" ? <p className='text-center mb-0'>N/A</p> :
                                     typeof(row.value)=== "string" ?
@@ -192,7 +193,7 @@ export default function Group(props) {
 
 
                                 {row.value === "N/A" ? "" :
-                                    row.value.length === 1 ? <p className='text-center'>{row.value}</p> : <p className='text-center'>{row.value.length} people</p>
+                                    row.value.length === 1 ? <p className='text-center'>{row.value}</p> : <p className='text-center'>{row.value}</p>
 
                                 }
                             </>

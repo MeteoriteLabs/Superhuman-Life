@@ -340,19 +340,21 @@ function CreateEditView(props: any, ref: any) {
          },
         onCompleted: (r: any) => {
             modalTrigger.next(false);
+            props.callback();
         },
         onError: (error: any) => {
             console.log(error)
         }
     })
 
-    const [deletePackage] = useMutation(DELETE_PACKAGE);
+    const [deletePackage] = useMutation(DELETE_PACKAGE, {onCompleted: (r: any) => {props.callback();}});
 
-    const [updateStatus] = useMutation(UPDATE_PACKAGE_PRIVATE);
+    const [updateStatus] = useMutation(UPDATE_PACKAGE_PRIVATE, {onCompleted: (r: any) => {props.callback();}});
 
     const [editPackage] = useMutation(EDIT_PACKAGE, {
         onCompleted: (data: any) => {
             modalTrigger.next(false);
+            props.callback();
         }
     });
 

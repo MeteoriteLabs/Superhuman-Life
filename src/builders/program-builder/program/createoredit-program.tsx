@@ -21,9 +21,9 @@ function CreateEditProgram(props: any, ref: any) {
     const [operation, setOperation] = useState<Operation>({} as Operation);
     
 
-    const [createProgram] = useMutation(CREATE_PROGRAM, { onCompleted: (r: any) => {  modalTrigger.next(false); } });
-    const [editProgram] = useMutation(UPDATE_PROGRAM, {onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
-    const [deleteProgram] = useMutation(DELETE_PROGRAM, { refetchQueries: ["GET_TABLEDATA"] });
+    const [createProgram] = useMutation(CREATE_PROGRAM, { onCompleted: (r: any) => {  modalTrigger.next(false); props.callback() } });
+    const [editProgram] = useMutation(UPDATE_PROGRAM, {onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); props.callback() } });
+    const [deleteProgram] = useMutation(DELETE_PROGRAM, { refetchQueries: ["GET_TABLEDATA"], onCompleted: () => {props.callback()} });
 
     const modalTrigger =  new Subject();
 
