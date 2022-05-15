@@ -41,6 +41,8 @@ const ClassicProgramSchedulerPage = React.lazy(() => import("./builders/session-
 const PTProgramSchedulerPage = React.lazy(() => import("./builders/session-builder/Fitness/PT/scheduler"));
 const GroupProgramSchedulerPage = React.lazy(() => import("./builders/session-builder/Fitness/Group/scheduler"));
 const CustomProgramSchedulerPage = React.lazy(() => import("./builders/session-builder/Fitness/Custom/scheduler"));
+const CohortProgramSchedulerPage = React.lazy(() => import("./builders/session-builder/Fitness/Cohort/scheduler"));
+const ChannelProgramSchedulerPage = React.lazy(() => import("./builders/session-builder/Fitness/Channel/scheduler"));
 const clientSchedulerPage = React.lazy(() => import("./builders/changemaker-builder"));
 const AvailabilityPage = React.lazy(() => import("./builders/changemaker-builder/availability"));
 
@@ -90,6 +92,8 @@ export default function Routes({ token }: any) {
               <Route path="/pt/session/scheduler" component={PTProgramSchedulerPage} />
               <Route path="/group/session/scheduler" component={GroupProgramSchedulerPage} />
               <Route path="/custom/session/scheduler" component={CustomProgramSchedulerPage} />
+              <Route path="/cohort/session/scheduler" component={CohortProgramSchedulerPage} />
+              <Route path="/channel/session/scheduler" component={CohortProgramSchedulerPage} />
               <Route path="/schedule" component={clientSchedulerPage} />
               <Route path="/availability" component={AvailabilityPage} />
               <Route path="/profile" component={ProfilePage} />

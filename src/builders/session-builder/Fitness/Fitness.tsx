@@ -4,6 +4,8 @@ import Group from './Group/Group'
 import PT from './PT/PT';
 import Classic from './Classic/Classic';
 import Custom from './Custom/Custom';
+import Channel from './Channel/channel';
+import Cohort from './Cohort/cohort';
 import './fitness.css'
 
 export default function Fitness() {
@@ -11,7 +13,7 @@ export default function Fitness() {
         <div>
              <Card className="shadow-sm mt-2" border="light">
                 <Card.Body>
-                    <Tabs  variant="pills" transition={false} defaultActiveKey="pt">
+                    <Tabs  variant="pills" transition={false} defaultActiveKey="cohort">
                         <Tab eventKey="pt" title="Personal Training">
                             <PT/>
                         </Tab>
@@ -23,6 +25,12 @@ export default function Fitness() {
                         </Tab>
                         <Tab eventKey="custom" title="Custom">
                             <Custom/>
+                        </Tab>
+                        <Tab eventKey="channel" title="Channel">
+                            <Channel />
+                        </Tab>
+                        <Tab eventKey="cohort" title="Cohort">
+                            <Cohort />
                         </Tab>
                     </Tabs>
                 </Card.Body>
