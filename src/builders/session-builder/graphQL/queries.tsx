@@ -911,6 +911,10 @@ query getTagById($id: ID!) {
               groupoffline
               recordedclasses
               restdays
+              Start_date
+              End_date
+              Status
+              residential_type
             }
           }
         }
@@ -1084,6 +1088,10 @@ query getClientsGroup($id: ID!) {
               packagename
               duration
               level
+              Start_date
+              End_date
+              Status
+              residential_type
             }
           }
         }

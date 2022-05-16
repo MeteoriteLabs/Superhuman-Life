@@ -2,7 +2,7 @@
 import React, {useState, useEffect, useRef, useContext} from 'react';
 import { GET_TABLEDATA, GET_ALL_FITNESS_PACKAGE_BY_TYPE, GET_ALL_PROGRAM_BY_TYPE, GET_ALL_CLIENT_PACKAGE, GET_TAG_BY_ID } from '../../graphQL/queries';
 import { useQuery } from '@apollo/client';
-import {Row, Col, Button} from 'react-bootstrap';
+import {Row, Col, Button, Dropdown} from 'react-bootstrap';
 import SchedulerPage from '../../../program-builder/program-template/scheduler';
 import moment from 'moment';
 import FitnessAction from '../FitnessAction';
@@ -10,6 +10,7 @@ import AuthContext from '../../../../context/auth-context';
 import { Link } from 'react-router-dom';
 
 import { flattenObj } from '../../../../components/utils/responseFlatten';
+import '../Group/actionButton.css'
 
 const Scheduler = () => {
 
@@ -199,6 +200,8 @@ const Scheduler = () => {
         return (data).toLocaleString('en-US', { minimumIntegerDigits: digits.toString(), useGrouping: false });
     }
 
+    console.log(tag);
+
 
     if (!show) return <span style={{ color: 'red' }}>Loading...</span>;
     else return (
@@ -212,6 +215,87 @@ const Scheduler = () => {
             <Row>
                 <Col lg={11} className="p-4 shadow-lg bg-white" style={{ borderRadius: '10px'}}>
                     <Row>
+                        <Col style={{ borderRight: '2px dotted grey '}}>
+                            <Row>
+                                <h3 className="text-center">{tag.tag_name}</h3>
+                            </Row>
+                            <Row>
+                                <span>{moment(tag.fitnesspackage.Start_date).format("DD MMMM, YYYY")}</span>
+                                &nbsp;&nbsp;to&nbsp;&nbsp;
+                                <span>{moment(tag.fitnesspackage.End_date).format("DD MMMM, YYYY")}</span>
+                            </Row>
+                        </Col>
+                        <Col style={{ borderRight: '2px dotted grey '}}>
+                            <Row>
+                                <Col>
+                                    <span><b>Active Subscribers</b></span>
+                                </Col>
+                                <Col>
+                                <div className='position-relative'>
+                                    {tag.client_packages.slice(0,4).map((item, index) => {
+                                        let postionLeft = 8;
+                                        return (
+                                            <img
+                                                key={index}
+                                                src="https://picsum.photos/200/100" alt='profile-pic'
+                                                style={{ width: '40px', height: '40px', borderRadius: '50%', left: `${postionLeft * index}%` }}
+                                                className='position-absolute'
+                                            />
+                                        )
+                                    })}
+                                    <Button onClick={() => {
+                                        fitnessActionRef.current.TriggerForm({ id: last[1], actionType: 'allClients', type: "Classic" })
+                                    }} style={{ marginLeft: '150px'}} variant="outline-primary">All clients</Button>
+                                </div>
+                                </Col>
+                            </Row>
+                                <span><b>Status:</b> {tag.fitnesspackage.Status === true ? 'Active' : 'Inactive'}</span>
+                                <br />  
+                                <span><b>Level:</b> {tag.fitnesspackage.level}</span>
+                                <br />  
+                                <span><b>Type:</b> {tag.fitnesspackage.residential_type}</span>
+                        </Col>
+                        <Col>
+                            <Row>
+                            <Col lg={8}>
+                                <span><b>Last scheduled sessions:</b> {tag.fitnesspackage.level}</span>
+                                <br />     
+                                <span><b>No of session daily:</b> {tag.fitnesspackage.level}</span>
+                                <br />      
+                                <span><b>Program Status:</b> {tag.fitnesspackage.level}</span> 
+                            </Col>    
+                            <Col className='text-right'>
+                                <Dropdown className="ml-5">
+                                    <Dropdown.Toggle id="dropdown-basic" as="button" className="actionButtonDropDown">
+                                        <i className="fas fa-ellipsis-v"></i>
+                                    </Dropdown.Toggle>
+                                    <Dropdown.Menu>
+                                        <Dropdown.Item>Not Assignes</Dropdown.Item>
+                                        <Dropdown.Item>Pending</Dropdown.Item>
+                                        <Dropdown.Item>Scheduled</Dropdown.Item>
+                                    </Dropdown.Menu>
+                                </Dropdown>
+                            </Col>
+                            </Row>    
+                        </Col>
+                    </Row>
+                </Col>
+            </Row>
+            <Row>
+                <Col lg={11} className="pl-0 pr-0">
+                    <div className="mt-5">
+                        <SchedulerPage type="day" days={30} restDays={[]} classType={'Classic Class'} programId={tagId} />
+                    </div>
+                </Col>
+                <FitnessAction ref={fitnessActionRef} />
+            </Row>
+        </>
+    );
+};
+
+export default Scheduler;
+
+{/* <Row>
                         <Col xs={11} lg={6} className="pl-4" style={{paddingRight: '20%' }}>
                             <Row>
                                 <h3 className="text-capitalize">{tag.tag_name}</h3>
@@ -283,19 +367,4 @@ const Scheduler = () => {
                                 </Row>
                            </div>
                         </Col>
-                    </Row>
-                </Col>
-            </Row>
-            <Row>
-                <Col lg={11} className="pl-0 pr-0">
-                    <div className="mt-5">
-                        <SchedulerPage type="day" days={30} restDays={[]} classType={'Classic Class'} programId={tagId} />
-                    </div>
-                </Col>
-                <FitnessAction ref={fitnessActionRef} />
-            </Row>
-        </>
-    );
-};
-
-export default Scheduler;;
+                    </Row> */}

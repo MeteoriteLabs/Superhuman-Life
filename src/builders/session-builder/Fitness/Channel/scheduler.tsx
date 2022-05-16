@@ -2,7 +2,7 @@
 import React, {useState, useEffect, useRef, useContext} from 'react';
 import { GET_TABLEDATA, GET_ALL_FITNESS_PACKAGE_BY_TYPE, GET_ALL_PROGRAM_BY_TYPE, GET_ALL_CLIENT_PACKAGE, GET_TAG_BY_ID } from '../../graphQL/queries';
 import { useQuery } from '@apollo/client';
-import {Row, Col, Button} from 'react-bootstrap';
+import {Row, Col, Button, Dropdown} from 'react-bootstrap';
 import SchedulerPage from '../../../program-builder/program-template/scheduler';
 import moment from 'moment';
 import FitnessAction from '../FitnessAction';
@@ -211,77 +211,64 @@ const Scheduler = () => {
             </div>
             <Row>
                 <Col lg={11} className="p-4 shadow-lg bg-white" style={{ borderRadius: '10px'}}>
-                    <Row>
-                        <Col xs={11} lg={6} className="pl-4" style={{paddingRight: '20%' }}>
-                            <Row>
-                                <h3 className="text-capitalize">{tag.tag_name}</h3>
-                            </Row>
-                            <Row>
-                                <span>{tag.fitnesspackage.packagename}</span>
-                                <div className="ml-3 mt-1" style={{ borderLeft: '1px solid black', height: '20px' }}></div>
-                                <span className="ml-4">{tag.fitnesspackage.packagename + " days"}</span>
-                                <div className="ml-3" style={{ borderLeft: '1px solid black', height: '20px' }}></div>
-                                <span className="ml-4">{"Level: " + tag.fitnesspackage.packagename}</span>
-                            </Row>
-                            <Row className="p-1 mt-2" style={{ border: '2px solid gray', borderRadius: '10px'}}>
-                                <Col lg={12} className="pl-0 pr-0">
-                                <Col>
-                                    <Row>
-                                        <h5><b>Clients</b></h5>
-                                    </Row>
-                                <Col lg={{ offset: 4}}>
-                                    <Row>
-                                    <div className='position-relative'>
-                                        {tag.client_packages.slice(0,4).map((item, index) => {
-                                            let postionLeft = 8;
-                                            return (
-                                                <img
-                                                    key={index}
-                                                    src="https://picsum.photos/200/100" alt='profile-pic'
-                                                    style={{ width: '40px', height: '40px', borderRadius: '50%', left: `${postionLeft * index}%` }}
-                                                    className='position-absolute'
-                                                />
-                                            )
-                                        })}
-                                        <Button onClick={() => {
-                                            fitnessActionRef.current.TriggerForm({ id: last[1], actionType: 'allClients', type: "Classic" })
-                                        }} style={{ marginLeft: '150px'}} variant="outline-primary">All clients</Button>
-                                        </div>
-                                    </Row>
-                                    <Row className="mt-1">
-                                        <span>{tag.client_packages.length} people</span>
-                                    </Row>
-                                </Col>
-                                </Col>
-                                </Col>
-                            </Row>
+                <Row>
+                        <Col style={{ borderRight: '2px dotted grey'}}>
+                        <Row>
+                            <h3 className="text-center">{tag.tag_name}</h3>
+                        </Row>
                         </Col>
-                        <Col lg={5} xs={11}  className="ml-5" style={{ borderLeft: '2px dashed gray'}}>
-                           <div className="m-2 ml-5 text-center p-2" style={{ border: '2px solid gray', borderRadius: '10px'}}>
-                                <h4><b>Movement</b></h4>
-                                <Row>
-                                    <Col>
-                                        <Row style={{ justifyContent: 'space-around'}}>
-                                            <div>
-                                                <img src='/assets/customclassic.svg' alt="Classic" /><br/>
-                                                <span>{tag.fitnesspackage.recordedclasses} Recorded</span><br/>
-                                                <span><b>{handleTimeFormatting(totalClasses[0], tag.fitnesspackage.duration)}</b></span>
-                                            </div>
-                                        </Row>
-                                        <Row>
-                                            
-                                        </Row>
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col>
-                                        <span><b style={{ color: 'gray'}}>Status: </b> {handleTimeFormatting(totalClasses[0], tag.fitnesspackage.duration)}/{tag.fitnesspackage.duration}</span>
-                                    </Col>
-                                    <Col>
-                                        <span><b style={{ color: 'gray'}}>Rest-Days: </b> {tag.fitnesspackage.restdays} days</span>
-                                    </Col>
-                                </Row>
-                           </div>
+                        <Col style={{ borderRight: '2px dotted grey '}}>
+                            <Row>
+                                <Col>
+                                    <span><b>Active Subscribers</b></span>
+                                </Col>
+                                <Col>
+                                <div className='position-relative'>
+                                    {tag.client_packages.slice(0,4).map((item, index) => {
+                                        let postionLeft = 8;
+                                        return (
+                                            <img
+                                                key={index}
+                                                src="https://picsum.photos/200/100" alt='profile-pic'
+                                                style={{ width: '40px', height: '40px', borderRadius: '50%', left: `${postionLeft * index}%` }}
+                                                className='position-absolute'
+                                            />
+                                        )
+                                    })}
+                                    <Button onClick={() => {
+                                        fitnessActionRef.current.TriggerForm({ id: last[1], actionType: 'allClients', type: "Classic" })
+                                    }} style={{ marginLeft: '150px'}} variant="outline-primary">All clients</Button>
+                                </div>
+                                </Col>
+                            </Row>
+                                <span><b>Status:</b> {tag.fitnesspackage.Status === true ? 'Active' : 'Inactive'}</span>
+                                <br />  
+                                <span><b>Level:</b> {tag.fitnesspackage.level}</span>
+                        </Col>
+                        <Col>
+                            <Row>
+                            <Col lg={8}>
+                                <span><b>Last scheduled sessions:</b> {tag.fitnesspackage.level}</span>
+                                <br />     
+                                <span><b>No of session daily:</b> {tag.fitnesspackage.level}</span>
+                                <br />      
+                                <span><b>Active days:</b> {tag.fitnesspackage.level}</span> 
+                                <br />      
+                                <span><b>Stream Sync:</b> {tag.fitnesspackage.level}</span> 
+                            </Col>    
+                            <Col className='text-right'>
+                                <Dropdown className="ml-5">
+                                    <Dropdown.Toggle id="dropdown-basic" as="button" className="actionButtonDropDown">
+                                        <i className="fas fa-ellipsis-v"></i>
+                                    </Dropdown.Toggle>
+                                    <Dropdown.Menu>
+                                        <Dropdown.Item>Not Assignes</Dropdown.Item>
+                                        <Dropdown.Item>Pending</Dropdown.Item>
+                                        <Dropdown.Item>Scheduled</Dropdown.Item>
+                                    </Dropdown.Menu>
+                                </Dropdown>
+                            </Col>
+                            </Row>    
                         </Col>
                     </Row>
                 </Col>
@@ -298,4 +285,78 @@ const Scheduler = () => {
     );
 };
 
-export default Scheduler;;
+export default Scheduler;
+
+{/* <Row>
+<Col xs={11} lg={6} className="pl-4" style={{paddingRight: '20%' }}>
+    <Row>
+        <h3 className="text-capitalize">{tag.tag_name}</h3>
+    </Row>
+    <Row>
+        <span>{tag.fitnesspackage.packagename}</span>
+        <div className="ml-3 mt-1" style={{ borderLeft: '1px solid black', height: '20px' }}></div>
+        <span className="ml-4">{tag.fitnesspackage.packagename + " days"}</span>
+        <div className="ml-3" style={{ borderLeft: '1px solid black', height: '20px' }}></div>
+        <span className="ml-4">{"Level: " + tag.fitnesspackage.packagename}</span>
+    </Row>
+    <Row className="p-1 mt-2" style={{ border: '2px solid gray', borderRadius: '10px'}}>
+        <Col lg={12} className="pl-0 pr-0">
+        <Col>
+            <Row>
+                <h5><b>Clients</b></h5>
+            </Row>
+        <Col lg={{ offset: 4}}>
+            <Row>
+            <div className='position-relative'>
+                {tag.client_packages.slice(0,4).map((item, index) => {
+                    let postionLeft = 8;
+                    return (
+                        <img
+                            key={index}
+                            src="https://picsum.photos/200/100" alt='profile-pic'
+                            style={{ width: '40px', height: '40px', borderRadius: '50%', left: `${postionLeft * index}%` }}
+                            className='position-absolute'
+                        />
+                    )
+                })}
+                <Button onClick={() => {
+                    fitnessActionRef.current.TriggerForm({ id: last[1], actionType: 'allClients', type: "Classic" })
+                }} style={{ marginLeft: '150px'}} variant="outline-primary">All clients</Button>
+                </div>
+            </Row>
+            <Row className="mt-1">
+                <span>{tag.client_packages.length} people</span>
+            </Row>
+        </Col>
+        </Col>
+        </Col>
+    </Row>
+</Col>
+<Col lg={5} xs={11}  className="ml-5" style={{ borderLeft: '2px dashed gray'}}>
+   <div className="m-2 ml-5 text-center p-2" style={{ border: '2px solid gray', borderRadius: '10px'}}>
+        <h4><b>Movement</b></h4>
+        <Row>
+            <Col>
+                <Row style={{ justifyContent: 'space-around'}}>
+                    <div>
+                        <img src='/assets/customclassic.svg' alt="Classic" /><br/>
+                        <span>{tag.fitnesspackage.recordedclasses} Recorded</span><br/>
+                        <span><b>{handleTimeFormatting(totalClasses[0], tag.fitnesspackage.duration)}</b></span>
+                    </div>
+                </Row>
+                <Row>
+                    
+                </Row>
+            </Col>
+        </Row>
+        <Row>
+            <Col>
+                <span><b style={{ color: 'gray'}}>Status: </b> {handleTimeFormatting(totalClasses[0], tag.fitnesspackage.duration)}/{tag.fitnesspackage.duration}</span>
+            </Col>
+            <Col>
+                <span><b style={{ color: 'gray'}}>Rest-Days: </b> {tag.fitnesspackage.restdays} days</span>
+            </Col>
+        </Row>
+   </div>
+</Col>
+</Row> */}

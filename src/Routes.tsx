@@ -93,7 +93,7 @@ export default function Routes({ token }: any) {
               <Route path="/group/session/scheduler" component={GroupProgramSchedulerPage} />
               <Route path="/custom/session/scheduler" component={CustomProgramSchedulerPage} />
               <Route path="/cohort/session/scheduler" component={CohortProgramSchedulerPage} />
-              <Route path="/channel/session/scheduler" component={CohortProgramSchedulerPage} />
+              <Route path="/channel/session/scheduler" component={ChannelProgramSchedulerPage} />
               <Route path="/schedule" component={clientSchedulerPage} />
               <Route path="/availability" component={AvailabilityPage} />
               <Route path="/profile" component={ProfilePage} />
