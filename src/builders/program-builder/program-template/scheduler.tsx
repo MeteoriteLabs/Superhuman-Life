@@ -161,9 +161,9 @@ const Schedular = (props: any) => {
         }
     });
 
-    function Fetchdata(_variables: any) {
-        useQuery(GET_SESSIONS, { variables: _variables, onCompleted: handleRenderTable });
-    }
+    // function Fetchdata(_variables: any) {
+        const mainQuery = useQuery(GET_SESSIONS, { variables: { id: props.programId, startDate: moment(props.startDate).format("YYYY-MM-DD"), endDate: moment(props.startDate).add(props.days - 1 , 'days').format("YYYY-MM-DD"), Is_restday: false }, onCompleted: handleRenderTable });
+    // }
 
     function draganddrop() {
         const draggable: any = document.querySelectorAll('.schedular-content');
@@ -287,7 +287,7 @@ const Schedular = (props: any) => {
     }
     
     handleDays();
-    Fetchdata({ id: props.programId, startDate: moment(props.startDate).format("YYYY-MM-DD"), endDate: moment(props.startDate).add(props.days - 1 , 'days').format("YYYY-MM-DD"), Is_restday: false });
+    // Fetchdata({ id: props.programId, startDate: moment(props.startDate).format("YYYY-MM-DD"), endDate: moment(props.startDate).add(props.days - 1 , 'days').format("YYYY-MM-DD"), Is_restday: false });
 
     useEffect(() => {
         setTimeout(() => {
@@ -1083,17 +1083,16 @@ const Schedular = (props: any) => {
                 dates.map((val, index) => {
                     return (
                         <>
-                            <div className="cell" style={{ backgroundColor: `${handleRestDays(index+1)}`, minHeight: '60px', paddingTop: '10px' }}>
+                            <div className="cell" style={{ backgroundColor: `${handleRestDays(index+1)}`, minHeight: '70px', paddingTop: '10px' }}>
                                 <div className="event-dayOfWeek text-center mt-1">
                                     <span style={{ fontSize: '14px'}}>{moment(val).format("dddd")}</span>
                                 </div>
                                 <div className="event-date text-center mt-1" style={{ backgroundColor: `${handleRestDays(index+1)}` }}>
                                     <span style={{ fontSize: '14px'}}>{moment(val).format("Do, MMM YY")}</span>
                                 </div>
-                                {/* <div className="event-date text-center" style={{ backgroundColor: `${handleRestDays(index+1)}` }}>
-                                    <span style={{ fontSize: '12px'}}>Day-{index+1}</span>
+                                <div className="event-date text-center" style={{ backgroundColor: `${handleRestDays(index+1)}` }}>
                                     <Badge variant="success" className="ml-4 mr-4 mb-1" style={{ display: `${moment().format("Do, MMM YY") === moment(val).format("Do, MMM YY") ? 'block': 'none'}`}}>Today</Badge>
-                                </div> */}
+                                </div>
                             </div>
                         </>
                     )
@@ -1133,6 +1132,10 @@ const Schedular = (props: any) => {
         })
     }
 
+    function handleRefetch(){
+        mainQuery.refetch();
+    }
+
     if (!show) return <span style={{ color: 'red' }}>Loading...</span>;
     else return (
         <>
@@ -1147,7 +1150,7 @@ const Schedular = (props: any) => {
             <div className="wrapper shadow-lg">
                 <div className="schedular">
                     <div className="day-row">
-                        <div className="cell" style={{backgroundColor: 'white', position: 'relative', minHeight: `${props.type === 'date' ? '60px' : '60px'}` }}></div>
+                        <div className="cell" style={{backgroundColor: 'white', position: 'relative', minHeight: `${props.type === 'date' ? '70px' : '70px'}` }}></div>
                         {handleDaysRowRender()}
                     </div>
                     {hours.map(h => {
@@ -1226,7 +1229,7 @@ const Schedular = (props: any) => {
                     })}
                 </div>
             </div>
-            <FloatingButton startDate={props.startDate} duration={props.days} callback={handleFloatingActionProgramCallback} callback2={handleFloatingActionProgramCallback2}/>
+            <FloatingButton startDate={props.startDate} duration={props.days} callback={handleFloatingActionProgramCallback} callback2={handleFloatingActionProgramCallback2} callback3={handleRefetch}/>
             {
                 <Modal show={showModal} onHide={handleClose} backdrop="static" centered size="lg" >
                     <Modal.Body style={{ maxHeight: '600px', overflow: 'auto' }}>
@@ -1469,6 +1472,8 @@ const Schedular = (props: any) => {
                                 <hr className='m-0' style={{ height: '5px'}}/>
                                 {/* {sessionBookings.length === 0 ? <div className='text-center'>No session Bookings yet.</div> : ""} */}
                                 {sessionBookings?.map(val => {
+                                    console.log(val);
+                                    debugger;
                                     return (
                                         <>
                                             <div className='p-3 shadow-sm' style={{ borderRadius: '20px'}}>
@@ -1479,7 +1484,7 @@ const Schedular = (props: any) => {
                                                         <img src="https://picsum.photos/200/100" alt="pic" style={{ width: "50px", height: "50px", borderRadius: "50%" }} />
                                                         </div>
                                                         <div>
-                                                            {val.client.username}
+                                                            {val.client?.username}
                                                         </div>
                                                     </div>
                                                 </Col>

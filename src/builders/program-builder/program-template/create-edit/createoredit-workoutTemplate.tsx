@@ -60,12 +60,12 @@ function CreateEditWorkoutTemplate(props: any, ref: any) {
         setSessionsIds(sessionsExistingValues);
     }});
 
-    const [createSessionBooking] = useMutation(CREATE_SESSION_BOOKING, { onCompleted: (data: any) => {modalTrigger.next(false)} })
+    const [createSessionBooking] = useMutation(CREATE_SESSION_BOOKING, { onCompleted: (data: any) => {modalTrigger.next(false); props.callback()} })
     const [upateSessions] = useMutation(UPDATE_TAG_SESSIONS, { onCompleted: (data: any) => {
         createSessionBooking({
             variables: {
                 session: userId,
-                client: clientId,
+                client: clientId
             }
         });
     }})

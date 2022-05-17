@@ -116,7 +116,7 @@ export default function Channel(props) {
 
                     // proManagerId: packageItem.proManagerId,
                     // proManagerFitnessId: packageItem.proManagerFitnessId,
-                    // client: packageItem.client ? packageItem.client : "N/A",
+                    client: packageItem.client_packages.length > 0 ? packageItem.client_packages : "N/A",
                     // time: packageItem.published_at ? moment(packageItem.published_at).format('h:mm:ss a') : "N/A",
                     programName: packageItem.tag_name ? packageItem.tag_name : "N/A",
                     programStatus: packageItem.fitnesspackage.Status === true ? "Assigned" : "N/A",
@@ -128,8 +128,6 @@ export default function Channel(props) {
     }
 
     function calculateProgramRenewal(sessions) {
-        console.log(sessions);
-
         if(sessions.length === 0){
             return "N/A"
         }
@@ -238,7 +236,8 @@ export default function Channel(props) {
                         accessor: "client",
                         Header: "Client",
                         Cell: (row) => {
-                            return <div >
+                            console.log(row);
+                            return <div>
                                 {row.value?.length === undefined ? <p className='text-center mb-0'>N/A</p> :
                                     row.value?.length === 1 ?
                                         <img
@@ -258,7 +257,7 @@ export default function Channel(props) {
                                         </div>
                                 }
                                 {row.value?.length === undefined  ? "" :
-                                    row.value?.length === 1 ? <p className='text-center'>{row.value}</p> : <p className='text-center'>{row.value?.length} people</p>
+                                    row.value?.length === 1 ? <p>{row.value[0].users_permissions_user.username}</p> : <p>{row.value?.length} people</p>
                                 }
 
 

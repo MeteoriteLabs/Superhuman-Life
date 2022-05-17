@@ -8,20 +8,18 @@ import moment from 'moment';
 import FitnessAction from '../FitnessAction';
 import AuthContext from '../../../../context/auth-context';
 import { Link } from 'react-router-dom';
+import YouteubeActive from './assets/youtube_active.svg';
 
 import { flattenObj } from '../../../../components/utils/responseFlatten';
+import '../Group/actionButton.css';
 
 const Scheduler = () => {
 
     const auth = useContext(AuthContext);
     const last = window.location.pathname.split('/').reverse();
     const tagId = window.location.pathname.split('/').pop();
-    const [data, setData] = useState<any[]>([]);
     const [show, setShow] = useState(false);
-    const [userPackage, setUserPackage] = useState<any>([]);
-    const [tagSeperation, setTagSeperation] = useState<any>([]);
-    const [statusDays, setStatusDays] = useState();
-    const [totalClasses, setTotalClasses] = useState<any>([]);
+    // const [totalClasses, setTotalClasses] = useState<any>([]);
     const [tag, setTag] = useState<any>();
     let programIndex;
 
@@ -37,6 +35,7 @@ const Scheduler = () => {
 
     function loadTagData(data: any){
         const flattenData = flattenObj({...data});
+        console.log(flattenData);
         let total = [0];
         const values = [...flattenData.tags[0]?.sessions];
         for(let i = 0; i < values.length; i++){
@@ -44,160 +43,27 @@ const Scheduler = () => {
                 total[0] += 1;
             }
         }
-        setTotalClasses(total);
+        // setTotalClasses(total);
         setTag(flattenData.tags[0]);
     }
 
-
-    const { data: data4 } = useQuery(GET_TABLEDATA, {
-        variables: {
-            id: last[0]
-        },
-    });
-
-    const { data: data1 } = useQuery(GET_ALL_FITNESS_PACKAGE_BY_TYPE, {
-        variables: {
-            id: auth.userid,
-            type: 'Classic'
-        },
-
-    });
-
-    const { data: data2 } = useQuery(GET_ALL_PROGRAM_BY_TYPE, {
-        variables: {
-            id: auth.userid,
-            type: 'Classic'
-        },
-
-    });
-
-    const { data: data3 } = useQuery(GET_ALL_CLIENT_PACKAGE, {
-        variables: {
-            id: auth.userid,
-            type: 'Classic'
-        },
-        onCompleted: (data) => console.log()
-    });
-
-    function handleEventsSeperation(data: any, rest_days: any){
-        var classic: number = 0;
-        if(data){
-            for(var i=0; i<data.length; i++){
-                if(data[i].tag === 'Classic'){
-                    classic++;
-                }
-            }
-            setTagSeperation([classic]);
-            var arr: any = [];
-            for(var j=0; j<data.length; j++){
-                if(arr.includes(parseInt(data[j].day)) === false) arr.push(parseInt(data[j].day));
-            }
-            var restDays = rest_days === null ? 0 : rest_days.length;
-            setStatusDays(arr.length + restDays);
-        }
-    }
-        
-    function loadData() {
-
-        const flattenData1 = flattenObj({ ...data1 });
-        const flattenData2 = flattenObj({ ...data2 });
-        const flattenData3 = flattenObj({ ...data3 });
-        const flattenData4 = flattenObj({ ...data4 });
-
-
-        setData(
-            [...flattenData4.fitnessprograms].map((detail) => {
-                return {
-                    id: detail.id,
-                    programName: detail.title,
-                    discipline: detail.fitnessdisciplines.map((val: any) => {
-                        return val.disciplinename;
-                    }).join(", "),
-                    level: detail.level,
-                    events: handleEventsSeperation(detail.events, detail.rest_days),
-                    duration: detail.duration_days,
-                    details: detail.description,
-                    restDays: detail.rest_days
-                }
-            })
-        )
-
-        const arrayData: any[] = []
-
-        let fitnessProgramItem: any = {};
-        for (let i = 0; i < flattenData1?.fitnesspackages.length; i++) {
-            for (let j = 0; j < flattenData2?.programManagers.length; j++) {
-            
-                if (flattenData1.fitnesspackages[i].id === flattenData2.programManagers[j].fitnesspackages[0].id) {
-                    fitnessProgramItem.proManagerFitnessId = flattenData2.programManagers[j].fitnessprograms[0].id;
-                    fitnessProgramItem.title = flattenData2.programManagers[j].fitnessprograms[0].title;
-                    fitnessProgramItem.published_at = flattenData2.programManagers[j].fitnessprograms[0].published_at;
-                    fitnessProgramItem.proManagerId = flattenData2.programManagers[j].id;
-
-                    arrayData.push({ ...flattenData1.fitnesspackages[i], ...fitnessProgramItem });
-                }
-             
-            }
+    function calculateLastSession(sessions) {
+        if(sessions.length === 0){
+            return "N/A"
         }
 
-        const arrayA = arrayData.map(item => item.id);
+        let moments = sessions.map(d => moment(d.session_date)),
+        maxDate = moment.max(moments)
 
-        const filterPackage = flattenData1?.fitnesspackages.filter((item: { id: string; }) => !arrayA.includes(item.id));
-        filterPackage.forEach(item => {
-            arrayData.push(item)
-        })     
-
-        const arrayFitnessPackage = arrayData.map(fitnessPackage => {
-            let client: string[] = [];
-
-            flattenData3.clientPackages.forEach((userPackage: { fitnesspackages: { id: string; }; users_permissions_user: { username: string; }; }) => {
-                if (fitnessPackage.id === userPackage.fitnesspackages[0].id) {
-                    client.push(userPackage.users_permissions_user.username)
-                }
-                fitnessPackage = { ...fitnessPackage, client }
-            })
-
-            return fitnessPackage
-        })
-
-        for (let i = 0; i < arrayFitnessPackage.length - 1; i++) {
-            if (arrayFitnessPackage[i].id === arrayFitnessPackage[i + 1].id) {
-                arrayFitnessPackage.splice(arrayFitnessPackage[i], 1)
-            }
-        }
-
-        setUserPackage(
-            [...arrayFitnessPackage.map((packageItem) => {
-                return {
-                    id: packageItem.id,
-                    packageName: packageItem.packagename,
-                    duration: packageItem.duration,
-                    details: [packageItem.ptonline, packageItem.ptoffline, packageItem.grouponline, packageItem.groupoffline, packageItem.recordedclasses, packageItem.restdays],
-                    groupStart: packageItem.groupstarttime,
-                    groupEnd: packageItem.groupendtime,
-                    expiry: moment(packageItem.expiry_date).format("MMMM DD,YYYY"),
-                    packageStatus: packageItem.Status ? "Active" : "Inactive",
-
-                    proManagerId: packageItem.proManagerId,
-                    proManagerFitnessId: packageItem.proManagerFitnessId,
-                    client: packageItem.client ? packageItem.client : "N/A",
-                    time: packageItem.published_at ? moment(packageItem.published_at).format('h:mm:ss a') : "N/A",
-                    programName: packageItem.title ? packageItem.title : "N/A",
-                    programStatus: packageItem.client.length > 0 ? "Assigned" : "N/A",
-                    renewal: packageItem.title ? "25/08/2021" : "N/A",
-                }
-            })]
-        )
+        return maxDate.format('MMM Do,YYYY');
     }
 
-    // if(userPackage.length > 0){
-    //     programIndex = userPackage.findIndex(item => item.id === last[1] && item.proManagerFitnessId === last[0])
-    // }
-
-    function handleTimeFormatting(data: any, duration: number){
-        var digits = duration <= 30 ? 2 : 3;
-        return (data).toLocaleString('en-US', { minimumIntegerDigits: digits.toString(), useGrouping: false });
+    function calculateDailySessions(sessions){
+        const dailySessions = sessions.filter((ses: any) => ses.session_date === moment().format('YYYY-MM-DD'));
+        return dailySessions.length >= 1 ? dailySessions.length : 'N/A';
     }
+
+    console.log(tag);
 
 
     if (!show) return <span style={{ color: 'red' }}>Loading...</span>;
@@ -213,48 +79,60 @@ const Scheduler = () => {
                 <Col lg={11} className="p-4 shadow-lg bg-white" style={{ borderRadius: '10px'}}>
                 <Row>
                         <Col style={{ borderRight: '2px dotted grey'}}>
-                        <Row>
-                            <h3 className="text-center">{tag.tag_name}</h3>
-                        </Row>
+                            <Row>
+                                <div style={{ top: '50%', left: '50%', position: 'absolute', transform: 'translate(-50%, -50%)'}}>
+                                    <h3 className="text-center">{tag.fitnesspackage.packagename}</h3>
+                                </div>
+                            </Row>
                         </Col>
                         <Col style={{ borderRight: '2px dotted grey '}}>
                             <Row>
                                 <Col>
-                                    <span><b>Active Subscribers</b></span>
+                                    <span><b>Active Subscribers: </b></span>
                                 </Col>
-                                <Col>
-                                <div className='position-relative'>
-                                    {tag.client_packages.slice(0,4).map((item, index) => {
-                                        let postionLeft = 8;
-                                        return (
-                                            <img
-                                                key={index}
-                                                src="https://picsum.photos/200/100" alt='profile-pic'
-                                                style={{ width: '40px', height: '40px', borderRadius: '50%', left: `${postionLeft * index}%` }}
-                                                className='position-absolute'
-                                            />
-                                        )
-                                    })}
-                                    <Button onClick={() => {
-                                        fitnessActionRef.current.TriggerForm({ id: last[1], actionType: 'allClients', type: "Classic" })
-                                    }} style={{ marginLeft: '150px'}} variant="outline-primary">All clients</Button>
-                                </div>
+                                <Col lg={7}>
+                                    <Row style={{ justifyContent: 'center'}}>
+                                        <div className='position-relative'>
+                                        {tag.client_packages.length === 0 ? <span>N/A</span> : tag.client_packages.slice(0,4).map((item, index) => {
+                                            let postionLeft = 8;
+                                            return (
+                                                <img
+                                                    key={index}
+                                                    src="https://picsum.photos/200/100" alt='profile-pic'
+                                                    style={{ width: '40px', height: '40px', borderRadius: '50%', left: `${postionLeft * index}%` }}
+                                                />
+                                            )
+                                        })}
+                                    </div>    
+                                    </Row>                      
+                                    <Row style={{ justifyContent: 'center'}}>
+                                        <span>{tag.client_packages.length} people</span>
+                                    </Row>          
+                                    <Row style={{ justifyContent: 'center'}}>
+                                        <button style={{ border: 'none', backgroundColor: 'white', color: '#006E99', cursor: 'pointer'}} onClick={() => {
+                                            fitnessActionRef.current.TriggerForm({ id: last[0], actionType: 'allClients', type: "Live Stream Channel" })
+                                        }}>View all</button>
+                                    </Row>
                                 </Col>
                             </Row>
-                                <span><b>Status:</b> {tag.fitnesspackage.Status === true ? 'Active' : 'Inactive'}</span>
+                            <div>
+                                <div><b>Status:</b> {tag.fitnesspackage.Status === true ? <span className='text-success'>Active</span> : <span className='text-danger'>Inactive</span>}</div>
                                 <br />  
-                                <span><b>Level:</b> {tag.fitnesspackage.level}</span>
+                                <div><b>Level:</b> {tag.fitnesspackage.level}</div>
+                            </div>
                         </Col>
                         <Col>
                             <Row>
                             <Col lg={8}>
-                                <span><b>Last scheduled sessions:</b> {tag.fitnesspackage.level}</span>
-                                <br />     
-                                <span><b>No of session daily:</b> {tag.fitnesspackage.level}</span>
-                                <br />      
-                                <span><b>Active days:</b> {tag.fitnesspackage.level}</span> 
-                                <br />      
-                                <span><b>Stream Sync:</b> {tag.fitnesspackage.level}</span> 
+                                <div style={{ justifyContent: 'space-evenly'}}>
+                                    <div><b>Last scheduled session:</b> {calculateLastSession(tag.sessions)}</div>
+                                    <br />     
+                                    <div><b>No of session daily:</b> {calculateDailySessions(tag.sessions)}</div>
+                                    <br />      
+                                    <div><b>Active days:</b> {tag.fitnesspackage.level}</div> 
+                                    <br />      
+                                    <div><b>Stream Sync:</b> &nbsp;<img src='/assets/youtube_active.svg' alt='youtuve-active' height={25}/></div> 
+                                </div>
                             </Col>    
                             <Col className='text-right'>
                                 <Dropdown className="ml-5">
@@ -276,7 +154,7 @@ const Scheduler = () => {
             <Row>
                 <Col lg={11} className="pl-0 pr-0">
                     <div className="mt-5">
-                        <SchedulerPage type="day" days={30} restDays={[]} classType={'Classic Class'} programId={tagId} />
+                        <SchedulerPage type="date" days={30} restDays={tag?.sessions.filter((ses) => ses.type === "restday")} classType={'Live Stream Channel'} programId={tagId} startDate={tag?.client_packages[0]?.effective_date} />
                     </div>
                 </Col>
                 <FitnessAction ref={fitnessActionRef} />
@@ -286,77 +164,3 @@ const Scheduler = () => {
 };
 
 export default Scheduler;
-
-{/* <Row>
-<Col xs={11} lg={6} className="pl-4" style={{paddingRight: '20%' }}>
-    <Row>
-        <h3 className="text-capitalize">{tag.tag_name}</h3>
-    </Row>
-    <Row>
-        <span>{tag.fitnesspackage.packagename}</span>
-        <div className="ml-3 mt-1" style={{ borderLeft: '1px solid black', height: '20px' }}></div>
-        <span className="ml-4">{tag.fitnesspackage.packagename + " days"}</span>
-        <div className="ml-3" style={{ borderLeft: '1px solid black', height: '20px' }}></div>
-        <span className="ml-4">{"Level: " + tag.fitnesspackage.packagename}</span>
-    </Row>
-    <Row className="p-1 mt-2" style={{ border: '2px solid gray', borderRadius: '10px'}}>
-        <Col lg={12} className="pl-0 pr-0">
-        <Col>
-            <Row>
-                <h5><b>Clients</b></h5>
-            </Row>
-        <Col lg={{ offset: 4}}>
-            <Row>
-            <div className='position-relative'>
-                {tag.client_packages.slice(0,4).map((item, index) => {
-                    let postionLeft = 8;
-                    return (
-                        <img
-                            key={index}
-                            src="https://picsum.photos/200/100" alt='profile-pic'
-                            style={{ width: '40px', height: '40px', borderRadius: '50%', left: `${postionLeft * index}%` }}
-                            className='position-absolute'
-                        />
-                    )
-                })}
-                <Button onClick={() => {
-                    fitnessActionRef.current.TriggerForm({ id: last[1], actionType: 'allClients', type: "Classic" })
-                }} style={{ marginLeft: '150px'}} variant="outline-primary">All clients</Button>
-                </div>
-            </Row>
-            <Row className="mt-1">
-                <span>{tag.client_packages.length} people</span>
-            </Row>
-        </Col>
-        </Col>
-        </Col>
-    </Row>
-</Col>
-<Col lg={5} xs={11}  className="ml-5" style={{ borderLeft: '2px dashed gray'}}>
-   <div className="m-2 ml-5 text-center p-2" style={{ border: '2px solid gray', borderRadius: '10px'}}>
-        <h4><b>Movement</b></h4>
-        <Row>
-            <Col>
-                <Row style={{ justifyContent: 'space-around'}}>
-                    <div>
-                        <img src='/assets/customclassic.svg' alt="Classic" /><br/>
-                        <span>{tag.fitnesspackage.recordedclasses} Recorded</span><br/>
-                        <span><b>{handleTimeFormatting(totalClasses[0], tag.fitnesspackage.duration)}</b></span>
-                    </div>
-                </Row>
-                <Row>
-                    
-                </Row>
-            </Col>
-        </Row>
-        <Row>
-            <Col>
-                <span><b style={{ color: 'gray'}}>Status: </b> {handleTimeFormatting(totalClasses[0], tag.fitnesspackage.duration)}/{tag.fitnesspackage.duration}</span>
-            </Col>
-            <Col>
-                <span><b style={{ color: 'gray'}}>Rest-Days: </b> {tag.fitnesspackage.restdays} days</span>
-            </Col>
-        </Row>
-   </div>
-</Col>
-</Row> */}

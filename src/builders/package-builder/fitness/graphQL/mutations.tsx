@@ -179,6 +179,19 @@ export const UPDATE_PACKAGE_STATUS = gql`
   }
 `;
 
+export const CREATE_CHANNEL_TAG = gql`
+  mutation createChannelTag($packageId: ID!, $tagName: String!) {
+    createTag(data: {
+      tag_name: $tagName,
+      fitnesspackage: $packageId
+    }){
+      data{
+        id
+      }
+    }
+  }
+`
+
 export const UPDATE_CHANNEL_COHORT_PACKAGE = gql`
   mutation updateChannelCohortPackage(
     $id: ID!
