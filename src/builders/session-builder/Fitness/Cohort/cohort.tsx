@@ -104,10 +104,6 @@ export default function Cohort(props) {
         const flattenData = flattenObj({...data});
         console.log(flattenData);
 
-
-        debugger;
-
-
         setUserPackage(
             [...flattenData.tags.map((packageItem) => {
                 return {
@@ -122,7 +118,7 @@ export default function Cohort(props) {
 
                     // proManagerId: packageItem.proManagerId,
                     // proManagerFitnessId: packageItem.proManagerFitnessId,
-                    // client: packageItem.client ? packageItem.client : "N/A",
+                    client: packageItem.client_packages.length > 0 ? packageItem.client_packages : "N/A",
                     // time: packageItem.published_at ? moment(packageItem.published_at).format('h:mm:ss a') : "N/A",
                     programName: packageItem.tag_name ? packageItem.tag_name : "N/A",
                     programStatus: packageItem.fitnesspackage.Status === true ? "Assigned" : "N/A",
@@ -264,7 +260,7 @@ export default function Cohort(props) {
                                         </div>
                                 }
                                 {row.value?.length === undefined  ? "" :
-                                    row.value?.length === 1 ? <p className='text-center'>{row.value}</p> : <p className='text-center'>{row.value?.length} people</p>
+                                    row.value?.length === 1 ? <p className=''>{row.value[0]?.users_permissions_user?.username}</p> : <p className=''>{row.value?.length} people</p>
                                 }
 
 

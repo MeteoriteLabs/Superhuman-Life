@@ -116,7 +116,7 @@ export default function Channel(props) {
 
                     // proManagerId: packageItem.proManagerId,
                     // proManagerFitnessId: packageItem.proManagerFitnessId,
-                    client: packageItem.client_packages.length > 0 ? packageItem.client_packages : "N/A",
+                    client: packageItem.client_packages.length > 0 ? packageItem.client_packages : undefined,
                     // time: packageItem.published_at ? moment(packageItem.published_at).format('h:mm:ss a') : "N/A",
                     programName: packageItem.tag_name ? packageItem.tag_name : "N/A",
                     programStatus: packageItem.fitnesspackage.Status === true ? "Assigned" : "N/A",
@@ -257,7 +257,7 @@ export default function Channel(props) {
                                         </div>
                                 }
                                 {row.value?.length === undefined  ? "" :
-                                    row.value?.length === 1 ? <p>{row.value[0].users_permissions_user.username}</p> : <p>{row.value?.length} people</p>
+                                    row.value?.length === 1 ? <p>{row.value[0]?.users_permissions_user?.username}</p> : <p>{row.value?.length} people</p>
                                 }
 
 

@@ -157,8 +157,26 @@ export const EDIT_PACKAGE = gql`
   }
 `;
 
+export const CREATE_BOOKING_CONFIG_AND_TAG_CHANNEL = gql`
+mutation createBookingconfig($id: ID!, $isAuto: Boolean, $bookings_per_day: Int, $bookings_per_month: Int, $packageId: ID!, $tagName: String!) {
+  createBookingConfig(data: { isAuto: $isAuto, fitnesspackage: $id, bookingsPerDay: $bookings_per_day, BookingsPerMonth: $bookings_per_month }) {
+    data {
+      id
+    }
+  }
+  createTag(data: {
+    tag_name: $tagName,
+    fitnesspackage: $packageId
+  }){
+    data{
+      id
+    }
+  }
+}
+`
+
 export const CREATE_BOOKING_CONFIG = gql`
-  mutation createBookingconfig($id: ID!, $isAuto: Boolean, $bookings_per_day: Int, $bookings_per_month: Int) {
+  mutation createBookingconfig($id: ID!, $isAuto: Boolean, $bookings_per_day: Int, $bookings_per_month: Int, $packageId: ID!, $tagName: String!) {
     createBookingConfig(data: { isAuto: $isAuto, fitnesspackage: $id, bookingsPerDay: $bookings_per_day, BookingsPerMonth: $bookings_per_month }) {
       data {
         id
@@ -178,19 +196,6 @@ export const UPDATE_PACKAGE_STATUS = gql`
     }
   }
 `;
-
-export const CREATE_CHANNEL_TAG = gql`
-  mutation createChannelTag($packageId: ID!, $tagName: String!) {
-    createTag(data: {
-      tag_name: $tagName,
-      fitnesspackage: $packageId
-    }){
-      data{
-        id
-      }
-    }
-  }
-`
 
 export const UPDATE_CHANNEL_COHORT_PACKAGE = gql`
   mutation updateChannelCohortPackage(
