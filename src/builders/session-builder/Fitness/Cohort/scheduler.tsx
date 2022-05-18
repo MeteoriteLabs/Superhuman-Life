@@ -84,8 +84,8 @@ const Scheduler = () => {
                                 <div style={{ top: '50%', left: '50%', position: 'absolute', transform: 'translate(-50%, -50%)'}}>
                                     <h3 className="text-center">{tag.fitnesspackage.packagename}</h3>
                                     <span>{moment(tag.fitnesspackage.Start_date).format("DD MMMM, YYYY")}</span>
-                                &nbsp;&nbsp;to&nbsp;&nbsp;
-                                <span>{moment(tag.fitnesspackage.End_date).format("DD MMMM, YYYY")}</span>
+                                    &nbsp;to&nbsp;
+                                    <span>{moment(tag.fitnesspackage.End_date).format("DD MMMM, YYYY")}</span>
                                 </div>
                             </Row>
                         </Col>
@@ -104,14 +104,13 @@ const Scheduler = () => {
                                                     key={index}
                                                     src="https://picsum.photos/200/100" alt='profile-pic'
                                                     style={{ width: '40px', height: '40px', borderRadius: '50%', left: `${postionLeft * index}%` }}
-                                                    className='position-absolute'
                                                 />
                                             )
                                         })}
                                     </div>    
                                     </Row>                      
                                     <Row style={{ justifyContent: 'center'}}>
-                                        <span>2000 people</span>
+                                        <span>{tag.client_packages.length} people</span>
                                     </Row>          
                                     <Row style={{ justifyContent: 'center'}}>
                                     <button style={{ border: 'none', backgroundColor: 'white', color: '#006E99', cursor: 'pointer'}} onClick={() => {

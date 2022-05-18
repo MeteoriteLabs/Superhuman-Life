@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client';
 import { useContext, useMemo, useRef, useState } from 'react'
-import { Badge, Row, Col } from "react-bootstrap";
+import { Badge, Row, Col, Form } from "react-bootstrap";
 import Table from '../../../../components/table';
 
 import AuthContext from "../../../../context/auth-context"
@@ -14,13 +14,14 @@ export default function Custom(props) {
 
     const auth = useContext(AuthContext);
     const [userPackage, setUserPackage] = useState<any>([]);
+    const [showHistory, setShowHistory] = useState(false);
 
     const fitnessActionRef = useRef<any>(null);
 
 
 
-    const FetchData = () => {
-        useQuery(GET_SESSIONS_FROM_TAGS, {
+    // const FetchData = () => {
+        const mainQuery = useQuery(GET_SESSIONS_FROM_TAGS, {
             variables: {
                 id: auth.userid,
                 tagType: 'Custom Fitness'
@@ -35,7 +36,7 @@ export default function Custom(props) {
         //     onCompleted: (data) => loadData(data)
         // })
 
-    }
+    // }
 
 
     const loadData = (data) => {
@@ -117,7 +118,7 @@ export default function Custom(props) {
     }
 
 
-    FetchData();
+    // FetchData();
 
     function handleRedirect(id: any) {
         if(id === 'N/A'){
@@ -221,6 +222,17 @@ export default function Custom(props) {
 
     return (
         <div className="mt-5">
+            <div className='mb-3'>
+                <Form>
+                    <Form.Check 
+                        type="switch"
+                        id="custom-switch"
+                        label="Show History"
+                        defaultChecked={showHistory}
+                        onClick={() => { setShowHistory(!showHistory); mainQuery.refetch(); }}
+                    />
+                </Form>
+            </div>
             <Row>
                 <Col>
 

@@ -13,7 +13,7 @@ export default function Fitness() {
         <div>
              <Card className="shadow-sm mt-2" border="light">
                 <Card.Body>
-                    <Tabs  variant="pills" transition={false} defaultActiveKey="cohort">
+                    <Tabs  variant="pills" transition={false} defaultActiveKey="pt">
                         <Tab eventKey="pt" title="Personal Training">
                             <PT/>
                         </Tab>

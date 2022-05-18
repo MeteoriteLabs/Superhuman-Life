@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useQuery, useMutation } from '@apollo/client';
 import { useContext, useMemo, useRef, useState } from 'react'
-import { Badge, Row, Col } from "react-bootstrap";
+import { Badge, Row, Col, Form } from "react-bootstrap";
 
 import AuthContext from "../../../../context/auth-context"
 import GroupTable from '../../../../components/table/GroupTable/GroupTable';
@@ -343,6 +343,17 @@ export default function Group(props) {
 
     return (
         <div className="mt-5">
+            {/* <div className='mb-3'>
+                <Form>
+                    <Form.Check 
+                        type="switch"
+                        id="custom-switch"
+                        label="Show History"
+                        defaultChecked={showHistory}
+                        onClick={() => { setShowHistory(!showHistory); mainQuery.refetch(); }}
+                    />
+                </Form>
+            </div> */}
             <Row>
                 <Col>
                     <GroupTable columns={columns} data={userPackage} />

@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client';
 import { useContext, useMemo, useRef, useState } from 'react'
-import { Badge, Row, Col } from "react-bootstrap";
+import { Badge, Row, Col, Form } from "react-bootstrap";
 import Table from '../../../../components/table';
 import AuthContext from "../../../../context/auth-context";
 import { GET_TAGS_FOR_CHANNEL } from '../../graphQL/queries';
@@ -13,11 +13,11 @@ export default function Channel(props) {
 
     const auth = useContext(AuthContext);
     const [userPackage, setUserPackage] = useState<any>([]);
-
+    const [showHistory, setShowHistory] = useState(false);
 
     const fitnessActionRef = useRef<any>(null);
 
-    useQuery(GET_TAGS_FOR_CHANNEL, {variables: {id: auth.userid}, onCompleted: (data) => loadData(data)});
+    const mainQuery = useQuery(GET_TAGS_FOR_CHANNEL, {variables: {id: auth.userid}, onCompleted: (data) => loadData(data)});
 
     // const { data: data1 } = useQuery(GET_ALL_FITNESS_PACKAGE_BY_TYPE, {
     //     variables: {
@@ -312,6 +312,17 @@ export default function Channel(props) {
 
     return (
         <div className="mt-5">
+            <div className='mb-3'>
+                <Form>
+                    <Form.Check 
+                        type="switch"
+                        id="custom-switch"
+                        label="Show History"
+                        defaultChecked={showHistory}
+                        onClick={() => { setShowHistory(!showHistory); mainQuery.refetch(); }}
+                    />
+                </Form>
+            </div>
             <Row>
                 <Col>
                     <Table columns={columns} data={userPackage} />
