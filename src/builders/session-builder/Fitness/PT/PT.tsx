@@ -15,32 +15,34 @@ export default function Group(props) {
     const auth = useContext(AuthContext);
     const [userPackage, setUserPackage] = useState<any>([]);
     const [showHistory, setShowHistory] = useState(true);
+    const [historyPackages, setHistoryPackage] = useState<any>([]);
 
     const fitnessActionRef = useRef<any>(null);
 
 
     // const FetchData = () => {
 
-        const mainQuery = useQuery(GET_SESSIONS_FROM_TAGS, {
-            variables: {
-                id: auth.userid,
-                tagType: 'Personal Training'
-            },
-            onCompleted: (data) => loadData(data)
-        });
+    const mainQuery = useQuery(GET_SESSIONS_FROM_TAGS, {
+        variables: {
+            id: auth.userid,
+            tagType: 'Personal Training'
+        },
+        onCompleted: (data) => { console.log(data); loadData(data) },
+        fetchPolicy: 'no-cache'
+    });
 
-        // useQuery(GET_ALL_CLIENT_PACKAGE_BY_TYPE, {
-        //     variables: {
-        //         id: auth.userid,
-        //         type: 'Personal Training',
-        //     },
-        //     onCompleted: (data) => loadData(data)
-        // })
+    // useQuery(GET_ALL_CLIENT_PACKAGE_BY_TYPE, {
+    //     variables: {
+    //         id: auth.userid,
+    //         type: 'Personal Training',
+    //     },
+    //     onCompleted: (data) => loadData(data)
+    // })
     // }
 
 
     const loadData = (data) => {
-        const flattenData = flattenObj({...data});
+        const flattenData = flattenObj({ ...data });
         console.log(flattenData);
         setUserPackage(
             [...flattenData.tags].map((packageItem) => {
@@ -66,31 +68,31 @@ export default function Group(props) {
                     programName: packageItem.tag_name,
                     // programId: packageItem.program_managers.length === 0 ? null : packageItem.program_managers[0].fitnessprograms[0].id,
                     programStatus: handleStatus(packageItem.sessions, packageItem.client_packages[0].effective_date, renewDay),
-                    programRenewal:  calculateProgramRenewal(packageItem.sessions, packageItem.client_packages[0].effective_date),
+                    programRenewal: calculateProgramRenewal(packageItem.sessions, packageItem.client_packages[0].effective_date),
                 }
             })
         )
     }
 
-    function handleStatus(sessions: any, effective_date: any, renewDay){
+    function handleStatus(sessions: any, effective_date: any, renewDay) {
         let effectiveDate: any;
-        if(sessions.length === 0){
+        if (sessions.length === 0) {
             return "Not_Assigned"
-        }else if(sessions.length > 0){
+        } else if (sessions.length > 0) {
             let max: number = 0;
-            for(var i=0; i<sessions.length; i++){
-                if(sessions[i].day_of_program > max){
+            for (var i = 0; i < sessions.length; i++) {
+                if (sessions[i].day_of_program > max) {
                     max = sessions[i].day_of_program;
                 }
             }
             effectiveDate = moment(effective_date).add(max, 'days').format("MMMM DD,YYYY");
-            if(moment(effectiveDate).isBetween(moment(), moment().subtract(5, 'months'))){
+            if (moment(effectiveDate).isBetween(moment(), moment().subtract(5, 'months'))) {
                 return "Almost Ending"
-            }else {
+            } else {
                 return "Assigned"
             }
-        }else {
-            if(moment(effectiveDate) === moment(renewDay)){
+        } else {
+            if (moment(effectiveDate) === moment(renewDay)) {
                 return "Completed"
             }
         }
@@ -98,12 +100,12 @@ export default function Group(props) {
 
     function calculateProgramRenewal(sessions: any, effectiveDate: any) {
         // console.log('calculateProgramRenewal', duration, effectiveDate, renewalDate);
-        
+
         // const dates: string[] = []; 
 
         let max: number = 0;
-        for(var i=0; i<sessions.length; i++){
-            if(sessions[i].day_of_program > max){
+        for (var i = 0; i < sessions.length; i++) {
+            if (sessions[i].day_of_program > max) {
                 max = sessions[i].day_of_program;
             }
         }
@@ -142,22 +144,22 @@ export default function Group(props) {
 
     // console.log("newData", dataTable2)
 
-    function handleRedirect(id: any){
-        if(id === null){
+    function handleRedirect(id: any) {
+        if (id === null) {
             alert("Please assign a program to this client first");
             return;
         }
         window.location.href = `/pt/session/scheduler/${id}`
     }
 
-    function handleBadgeRender(val: any){
-        if(val === "Not_Assigned"){
+    function handleBadgeRender(val: any) {
+        if (val === "Not_Assigned") {
             return <Badge style={{ padding: '0.8rem 3rem', borderRadius: '10px', fontSize: '1rem' }} variant="danger">{val}</Badge>
-        }else if(val === "Almost Ending"){
+        } else if (val === "Almost Ending") {
             return <Badge style={{ padding: '0.8rem 3rem', borderRadius: '10px', fontSize: '1rem' }} variant="warning">{val}</Badge>
-        }else if(val === "Assigned"){
+        } else if (val === "Assigned") {
             return <Badge style={{ padding: '0.8rem 3rem', borderRadius: '10px', fontSize: '1rem' }} variant="success">{val}</Badge>
-        }else if(val === "Completed"){
+        } else if (val === "Completed") {
             return <Badge style={{ padding: '0.8rem 3rem', borderRadius: '10px', fontSize: '1rem' }} variant="info">{val}</Badge>
         }
     }
@@ -172,7 +174,7 @@ export default function Group(props) {
                         Cell: (row) => {
                             return <>
                                 {row.value === "N/A" ? <p className='text-center mb-0'>N/A</p> :
-                                    typeof(row.value)=== "string" ?
+                                    typeof (row.value) === "string" ?
                                         <img
                                             src="https://picsum.photos/200/100" alt='profile-pic'
                                             style={{ width: '60px', height: '60px', borderRadius: '50%' }} />
@@ -263,17 +265,27 @@ export default function Group(props) {
         []
     );
 
-    if(showHistory){
-        if(userPackage.length > 0){
-            userPackage.filter((item: any, index: any) => moment(item.packageRenewal).isBefore(moment()) === true ? userPackage.splice(index, 1) : null);
+    function handleHistoryPackage(data: any, index: any) {
+        historyPackages.push(data);
+        const values = [...userPackage];
+        values.splice(index, 1);
+        setUserPackage(values);
+    }
+
+    if (showHistory) {
+        if (userPackage.length > 0) {
+            userPackage.map((item: any, index: any) => moment(item.packageRenewal).isAfter(moment()) === true ? handleHistoryPackage(item, index) : null)
         }
+        // if (userPackage.length > 0) {
+        //     userPackage.filter((item: any, index: any) => moment(item.packageRenewal).isAfter(moment()) === true ? userPackage.splice(index, 1) : null);
+        // }
     }
 
     return (
         <div className="mt-5">
             <div className='mb-3'>
                 <Form>
-                    <Form.Check 
+                    <Form.Check
                         type="switch"
                         id="custom-switch"
                         label="Show History"
