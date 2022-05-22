@@ -5,7 +5,7 @@ import {
   VerticalTimeline,
   VerticalTimelineElement,
 } from "react-vertical-timeline-component";
-import { GET_ALL_CLIENT_PACKAGE_BY_TYPE } from "../graphql/queries";
+import { GET_ALL_CLIENT_PACKAGE_BY_TYPE, GET_ALL_DAILY_SESSIONS } from "../graphql/queries";
 import { useQuery } from "@apollo/client";
 import AuthContext from "../../../context/auth-context";
 
@@ -27,13 +27,25 @@ const DayView = (props: any) => {
       .format("YYYY-MM-DD")
   );
 
+  useQuery(GET_ALL_DAILY_SESSIONS, {
+    variables: {
+      id: auth.userid,
+      Date: scheduleDate,
+    },
+    onCompleted: (data: any) => {
+      const flattenData = flattenObj({...data});
+      setTodaysEvents(flattenData.tags);
+
+    }
+  })
+
   useQuery(GET_ALL_CLIENT_PACKAGE_BY_TYPE, {
     variables: {
       id: auth.userid,
       type_in: ["Personal Training", "Group Class", "Custom"],
     },
     onCompleted: (data) => {
-      loadData(data);
+      // loadData(data);
     },
   });
 
@@ -194,9 +206,9 @@ const DayView = (props: any) => {
           backgroundColor: "rgba(211,211,211, 0.8)",
         }}
         contentArrowStyle={{ borderRight: "7px solid  rgba(211,211,211,0.8)" }}
-        date={`${moment(event.startTime, "hh:mm a").format(
+        date={`${moment(event.sessions[0].start_time, "hh:mm a").format(
           "hh:mm a"
-        )} - ${moment(event.endTime, "hh:mm a").format("hh:mm a")}`}
+        )} - ${moment(event.sessions[0].end_time, "hh:mm a").format("hh:mm a")}`}
         iconStyle={{
           background: "rgba(33, 150, 243)",
           color: "#fff",
@@ -206,7 +218,7 @@ const DayView = (props: any) => {
         }}
         icon={
           <img
-            src={`/assets/${handleIcon(event.tag)}-schedule.svg`}
+            src={`/assets/${handleIcon(event.sessions[0].tag)}-schedule.svg`}
             alt="classical"
           />
         }
@@ -214,13 +226,13 @@ const DayView = (props: any) => {
         <div className="text-center">
           <Row>
             <Col lg={12} xs={12}>
-              <h5>{event.name}</h5>
-              <Badge variant="info">{event.tag}</Badge>{" "}
+              <h5>{event.sessions[0].activity === null ? event.sessions[0].workout.workouttitle : event.sessions[0].activity.title}</h5>
+              <Badge variant="info">{event.sessions[0].tag}</Badge>{" "}
               {event.tag !== "Classic" && (
                 <Badge
-                  variant={event.mode === "Offline" ? "danger" : "success"}
+                  variant={event.sessions[0].mode === "Offline" ? "danger" : "success"}
                 >
-                  {event.mode}
+                  {event.sessions[0].mode}
                 </Badge>
               )}
             </Col>
@@ -228,7 +240,7 @@ const DayView = (props: any) => {
           <Row>
             <Col lg={6} xs={6} className="mt-2">
               <Button variant="success">
-                {event.mode === "Offline" ? "Navigate" : "Join Now"}
+                {event.sessions[0].mode === "Offline" ? "Navigate" : "Join Now"}
               </Button>
             </Col>
             <Col lg={6} xs={6} className="mt-2">
@@ -255,6 +267,7 @@ const DayView = (props: any) => {
         .format("YYYY-MM-DD")
     );
   }
+
 
   if (!show)
     return (

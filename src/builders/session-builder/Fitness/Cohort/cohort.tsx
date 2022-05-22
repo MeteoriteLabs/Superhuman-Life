@@ -315,16 +315,50 @@ export default function Cohort(props) {
         []
     );
 
+    function handleHistoryPackage(data: any) {
+        const flattenData = flattenObj({...data});
+        setUserPackage(
+            [...flattenData.tags.map((packageItem) => {
+                return {
+                    tagId: packageItem.id,
+                    id: packageItem.id,
+                    packageName: packageItem.fitnesspackage.packagename,
+                    duration: packageItem.fitnesspackage.duration,
+                    start: moment(packageItem.fitnesspackage.Start_date).format('MMM Do,YYYY'),
+                    end: moment(packageItem.fitnesspackage.End_date).format('MMM Do,YYYY'),
+                    // expiry: moment(packageItem.expiry_date).format("MMMM DD,YYYY"),
+                    // packageStatus: packageItem.Status ? "Active" : "Inactive",
+
+                    // proManagerId: packageItem.proManagerId,
+                    // proManagerFitnessId: packageItem.proManagerFitnessId,
+                    client: packageItem.client_packages.length > 0 ? packageItem.client_packages : "N/A",
+                    // time: packageItem.published_at ? moment(packageItem.published_at).format('h:mm:ss a') : "N/A",
+                    programName: packageItem.tag_name ? packageItem.tag_name : "N/A",
+                    programStatus: packageItem.fitnesspackage.Status === true ? "Assigned" : "N/A",
+                    renewal: calculateProgramRenewal(packageItem.sessions),
+                }
+            })]
+        )
+    }
+
+    if (!showHistory) {
+        if (userPackage.length > 0) {
+            userPackage.filter((item: any, index: any) => moment(item.end, 'MMM Do,YYYY').isBefore(moment()) === true ? userPackage.splice(index, 1) : null);
+        }
+    }
+
     return (
         <div className="mt-5">
             <div className='mb-3'>
                 <Form>
                     <Form.Check 
                         type="switch"
-                        id="custom-switch"
+                        id="switchEnabled2"
                         label="Show History"
                         defaultChecked={showHistory}
-                        onClick={() => { setShowHistory(!showHistory); mainQuery.refetch(); }}
+                        onClick={() => { setShowHistory(!showHistory); mainQuery.refetch().then((res: any) => {
+                            handleHistoryPackage(res.data)
+                        }) }}
                     />
                 </Form>
             </div>

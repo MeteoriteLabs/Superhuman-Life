@@ -67,18 +67,17 @@ const WeekScheduler = (props: any) => {
             arr[d] = JSON.parse(JSON.stringify(schedulerDay));
         }
         values.forEach((val) => {
-            var startTimeHour: any = `${val.startTime === undefined ? '0' : val.startTime.split(':')[0]}`;
-            var startTimeMinute: any = `${val.startTime === undefined ? '0' : val.startTime.split(':')[1]}`;
-            var endTimeHour: any = `${val.endTime === undefined ? '0' : val.endTime.split(':')[0]}`;
-            var endTimeMin: any = `${val.endTime === undefined ? '0' : val.endTime.split(':')[1]}`;
-            if (!arr[val.day][startTimeHour][startTimeMinute]) {
-                arr[val.day][startTimeHour][startTimeMinute] = [];
+            var startTimeHour: any = `${val.sessions[0].start_time === undefined ? '0' : val.sessions[0].start_time.split(':')[0]}`;
+            var startTimeMinute: any = `${val.sessions[0].start_time === undefined ? '0' : val.sessions[0].start_time.split(':')[1]}`;
+            var endTimeHour: any = `${val.sessions[0].end_time === undefined ? '0' : val.sessions[0].end_time.split(':')[0]}`;
+            var endTimeMin: any = `${val.sessions[0].end_time === undefined ? '0' : val.sessions[0].end_time.split(':')[1]}`;
+            if (!arr[moment(val.sessions[0].session_date).weekday() + 1][startTimeHour][startTimeMinute]) {
+                arr[moment(val.sessions[0].session_date).weekday() + 1][startTimeHour][startTimeMinute] = [];
             }
-            arr[val.day][startTimeHour][startTimeMinute].push({
-                "title": val.name, "color": "skyblue",
-                "day": val.day, "hour": startTimeHour, "min": startTimeMinute, "type": val.type,
-                "endHour": endTimeHour, "endMin": endTimeMin, "id": val.id, "mode": val.mode,
-                "tag": val.tag
+            arr[moment(val.sessions[0].session_date).weekday() + 1][startTimeHour][startTimeMinute].push({
+                "title": val.sessions[0].activity === null ? val.sessions[0].workout.workouttitle : val.sessions[0].activity.title, "color": "skyblue",
+                "day": moment(val.sessions[0].session_date).weekday() + 1, "hour": startTimeHour, "min": startTimeMinute, "type": val.sessions[0].type,
+                "endHour": endTimeHour, "endMin": endTimeMin, "id": val.sessions[0].activity === null ? val.sessions[0].workout.id : val.sessions[0].activity.id, "mode": val.sessions[0].mode, "tag": val.sessions[0].tag, "sessionId": val.id, "activityTarget": val.sessions[0].activity === null ? null : val.sessions[0].activity_target, "sessionDate": val.sessions[0].session_date,
             });
         })
     }

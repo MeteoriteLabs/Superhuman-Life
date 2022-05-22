@@ -20,7 +20,8 @@ import {
   GET_ALL_CLIENT_PACKAGE_BY_TYPE,
   GET_ALL_CHANGEMAKER_AVAILABILITY_WORKHOURS,
   GET_ALL_CHANGEMAKER_AVAILABILITY,
-  GET_SLOTS_TO_CHECK
+  GET_SLOTS_TO_CHECK,
+  GET_CHANGEMAKER_AVAILABILITY_AND_TAGS
 } from "../../graphql/queries";
 import {
   UPDATE_USER_BOOKING_TIME,
@@ -102,6 +103,7 @@ const WorkHours = () => {
   const [rangeValue, rangeOnChange] = useState([new Date(), new Date()]);
   const [slotsValidation, setSlotsValidation] = useState<any>([]);
   const [conflictSlots, setConflictSlots] = useState<any>([]);
+  const [sessions, setSessions] = useState<any>([]);
 
   useEffect(() => {
     setDate(moment(value).format("YYYY-MM-DD"));
@@ -118,6 +120,22 @@ const WorkHours = () => {
       setDesc("");
     }
   }, [holidays]);
+
+  useQuery(GET_CHANGEMAKER_AVAILABILITY_AND_TAGS, {
+    variables: {
+      date: date,
+      id: auth.userid,
+      changemakerDate: date
+    },
+    onCompleted: (data: any) => {
+      const flattenData = flattenObj({...data});
+      const changemakerSlots = flattenData.changemakerAvailabilties[0]?.booking_slots;
+      const sessionSlots = flattenData.tags[0]?.sessions;
+      const mergedSlots = sessionSlots?.concat(changemakerSlots);
+      console.log(mergedSlots);
+      setSlots(mergedSlots);
+    }
+  })
 
   useQuery(GET_SLOTS_TO_CHECK, {
     skip: (!showDaysModal),
@@ -150,6 +168,7 @@ const WorkHours = () => {
     },
     onCompleted: (data) => {
       const flattenData = flattenObj({ ...data });
+      console.log(flattenData);
       setHolidays(flattenData.changemakerAvailabilties);
     },
   });
@@ -786,7 +805,7 @@ const WorkHours = () => {
                                 borderRadius: "10px",
                               }}
                             >
-                              <span>{moment(item.startTime, "HH:mm").format("HH:mm")}</span>
+                              <span>{moment(item.start_time, "HH:mm").format("HH:mm")}</span>
                             </div>
                           </Col>
                           <Col lg={2}>To</Col>
@@ -800,7 +819,7 @@ const WorkHours = () => {
                                 borderRadius: "10px",
                               }}
                             >
-                              <span>{moment(item.endTime, "HH:mm").format("HH:mm")}</span>
+                              <span>{moment(item.end_time, "HH:mm").format("HH:mm")}</span>
                             </div>
                           </Col>
                         </Row>

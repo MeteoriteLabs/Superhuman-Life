@@ -219,6 +219,44 @@ export default function Custom(props) {
         },
     ], []);
 
+    function handleHistoryPackage(data: any) {
+        const flattenData = flattenObj({...data});
+        setUserPackage(
+            [...flattenData.tags].map((packageItem) => {
+                let renewDay: any = '';
+                if (packageItem.client_packages[0].fitnesspackages[0].length !== 0) {
+                    renewDay = new Date(packageItem.client_packages[0].effective_date);
+                    renewDay.setDate(renewDay.getDate() + packageItem.client_packages[0].fitnesspackages[0].duration)
+                }
+                return {
+                    tagId: packageItem.id,
+                    id: packageItem.client_packages[0].fitnesspackages[0].id,
+                    packageName: packageItem.client_packages[0].fitnesspackages[0].packagename,
+                    duration: packageItem.client_packages[0].fitnesspackages[0].duration,
+                    effectiveDate: moment(packageItem.client_packages[0].effective_date).format("MMMM DD,YYYY"),
+                    packageStatus: packageItem.client_packages[0].fitnesspackages[0].Status ? "Active" : "Inactive",
+                    packageRenewal: moment(renewDay).format("MMMM DD,YYYY"),
+
+                    client: packageItem.client_packages[0].users_permissions_user.username,
+                    clientId: packageItem.client_packages[0].users_permissions_user.id,
+                    // level: packageItem.program_managers.length === 0 ? "" : packageItem?.program_managers[0]?.fitnessprograms[0].level,
+                    // discipline: packageItem.program_managers.length === 0 ? "" : packageItem?.program_managers[0]?.fitnessprograms[0].fitnessdisciplines,
+                    // description: packageItem.program_managers.length === 0 ? "" : packageItem?.program_managers[0]?.fitnessprograms[0].description,
+                    programName: packageItem.tag_name,
+                    // programId: packageItem.program_managers.length === 0 ? null : packageItem.program_managers[0].fitnessprograms[0].id,
+                    programStatus: handleStatus(packageItem.sessions, packageItem.client_packages[0].effective_date, renewDay),
+                    programRenewal:  calculateProgramRenewal(packageItem.sessions, packageItem.client_packages[0].effective_date),
+                }
+            })
+        )
+    }
+
+    if (!showHistory) {
+        if (userPackage.length > 0) {
+            userPackage.filter((item: any, index: any) => moment(item.packageRenewal).isBefore(moment()) === true ? userPackage.splice(index, 1) : null);
+        }
+    }
+
 
     return (
         <div className="mt-5">
@@ -226,10 +264,12 @@ export default function Custom(props) {
                 <Form>
                     <Form.Check 
                         type="switch"
-                        id="custom-switch"
+                        id="switchEnabled"
                         label="Show History"
                         defaultChecked={showHistory}
-                        onClick={() => { setShowHistory(!showHistory); mainQuery.refetch(); }}
+                        onClick={() => { setShowHistory(!showHistory); mainQuery.refetch().then((res: any) => {
+                            handleHistoryPackage(res.data);
+                        }) }}
                     />
                 </Form>
             </div>

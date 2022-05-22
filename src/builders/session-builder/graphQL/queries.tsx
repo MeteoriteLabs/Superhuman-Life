@@ -785,6 +785,7 @@ query getTagsforGroup($id: ID!) {
             id
             attributes{
               packagename
+              expiry_date
               duration
               mode
               Status

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { Row, Col, Button, Spinner } from "react-bootstrap";
 import SchedulerPage from "./weekScheduler";
 import moment from "moment";
-import { GET_ALL_CLIENT_PACKAGE_BY_TYPE } from "../graphql/queries";
+import { GET_ALL_CLIENT_PACKAGE_BY_TYPE, GET_ALL_WEEKLY_SESSIONOS } from "../graphql/queries";
 import { useQuery } from "@apollo/client";
 import AuthContext from "../../../context/auth-context";
 
@@ -22,15 +22,27 @@ const WeekView = (props: any) => {
     moment().startOf("week").format("YYYY-MM-DD")
   );
 
-  useQuery(GET_ALL_CLIENT_PACKAGE_BY_TYPE, {
+  useQuery(GET_ALL_WEEKLY_SESSIONOS, {
     variables: {
       id: auth.userid,
-      type_in: ["Personal Training", "Group Class", "Custom"],
+      startDate: scheduleDate,
+      endDate: moment(scheduleDate).add(7, 'days').format("YYYY-MM-DD")
     },
     onCompleted: (data) => {
-      LoadData(data);
-    },
-  });
+      const flattenData = flattenObj({...data});
+      setTodaysEvents(flattenData.tags);
+    }
+  })
+
+  // useQuery(GET_ALL_CLIENT_PACKAGE_BY_TYPE, {
+  //   variables: {
+  //     id: auth.userid,
+  //     type_in: ["Personal Training", "Group Class", "Custom"],
+  //   },
+  //   onCompleted: (data) => {
+  //     LoadData(data);
+  //   },
+  // });
 
   function LoadData(data: any) {
     const flattenData = flattenObj({ ...data });
