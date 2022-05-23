@@ -419,67 +419,23 @@ export const GET_ALL_CHANGEMAKER_AVAILABILITY_WORKHOURS = gql`
 
 export const GET_CHANGEMAKER_AVAILABILITY_AND_TAGS = gql`
 query changemakerAvailabilityAndTags($id: ID!, $date: Date!, $changemakerDate: Date!){
-  tags(filters:  {
-    fitnesspackage: {
-      users_permissions_user: {
-        id: {
-          eq: $id
-        }
+  sessions(filters: {
+    changemaker: {
+      id: {
+        eq: $id
       }
     },
-    sessions: {
-      session_date: {
-        eq: $date
-      }
+    session_date: {
+      eq: $date
     }
   }){
     data{
+      id
       attributes{
-        client_packages{
-          data{
-            id
-            attributes{
-              users_permissions_user{
-                data{
-                  id
-                  attributes{
-                    username
-                  }
-                }
-              }
-            }
-          }
-        }
-        sessions{
-          data{
-            id
-            attributes{
-              session_date
-              start_time
-              end_time
-              type
-              mode
-              tag
-              activity_target
-              workout{
-                data{
-                  id
-                  attributes{
-                    workouttitle
-                  }
-                }
-              }
-              activity{
-                data{
-                  id
-                  attributes{
-                    title
-                  }
-                }
-              }
-            }
-          }
-        }
+        mode
+        start_time
+        end_time
+        tag
       }
     }
   }

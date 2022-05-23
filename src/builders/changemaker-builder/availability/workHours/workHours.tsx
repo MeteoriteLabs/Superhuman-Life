@@ -104,6 +104,11 @@ const WorkHours = () => {
   const [slotsValidation, setSlotsValidation] = useState<any>([]);
   const [conflictSlots, setConflictSlots] = useState<any>([]);
   const [sessions, setSessions] = useState<any>([]);
+  const [availability, setAvailability] = useState<any>([]);
+  const [fromTime, setFromTime]= useState("00:00"); 
+  const [toTime, setToTime] = useState("00:00"); 
+  const [disableAdd, setDisableAdd] = useState(false);
+  const [classMode, setClassMode] = useState("");
 
   useEffect(() => {
     setDate(moment(value).format("YYYY-MM-DD"));
@@ -121,7 +126,7 @@ const WorkHours = () => {
     }
   }, [holidays]);
 
-  useQuery(GET_CHANGEMAKER_AVAILABILITY_AND_TAGS, {
+  const mainQuery = useQuery(GET_CHANGEMAKER_AVAILABILITY_AND_TAGS, {
     variables: {
       date: date,
       id: auth.userid,
@@ -129,101 +134,100 @@ const WorkHours = () => {
     },
     onCompleted: (data: any) => {
       const flattenData = flattenObj({...data});
-      const changemakerSlots = flattenData.changemakerAvailabilties[0]?.booking_slots;
-      const sessionSlots = flattenData.tags[0]?.sessions;
+      setAvailability(flattenData.changemakerAvailabilties);
+      setSessions(flattenData.sessions);
+      const changemakerSlots = flattenData.changemakerAvailabilties.length > 0 ? flattenData.changemakerAvailabilties[0]?.booking_slots : [];
+      const sessionSlots = flattenData?.sessions;
       const mergedSlots = sessionSlots?.concat(changemakerSlots);
-      console.log(mergedSlots);
       setSlots(mergedSlots);
     }
   })
 
-  useQuery(GET_SLOTS_TO_CHECK, {
-    skip: (!showDaysModal),
-    variables: {
-      id: auth.userid,
-      dateUpperLimit: startDate,
-      dateLowerLimit: endDate
-    },
-    onCompleted: (data) => {
-      const flattenData = flattenObj({...data});
-      setSlotsValidation(flattenData);
-    }
-  });
+  // useQuery(GET_SLOTS_TO_CHECK, {
+  //   skip: (!showDaysModal),
+  //   variables: {
+  //     id: auth.userid,
+  //     dateUpperLimit: startDate,
+  //     dateLowerLimit: endDate
+  //   },
+  //   onCompleted: (data) => {
+  //     const flattenData = flattenObj({...data});
+  //     setSlotsValidation(flattenData);
+  //   }
+  // });
 
-  useQuery(GET_ALL_CLIENT_PACKAGE_BY_TYPE, {
-    variables: {
-      id: auth.userid,
-      type_in: ["Personal Training", "Group Class", "Custom"],
-      date: moment(value).format("YYYY-MM-DD"),
-    },
-    onCompleted: (data) => {
-      LoadProgramEvents(data);
-    },
-  });
+  // useQuery(GET_ALL_CLIENT_PACKAGE_BY_TYPE, {
+  //   variables: {
+  //     id: auth.userid,
+  //     type_in: ["Personal Training", "Group Class", "Custom", "Live Stream Channel", "Cohort"],
+  //     date: moment(value).format("YYYY-MM-DD"),
+  //   },
+  //   onCompleted: (data) => {
+  //     LoadProgramEvents(data);
+  //   },
+  // });
 
-  useQuery(GET_ALL_CHANGEMAKER_AVAILABILITY_WORKHOURS, {
-    variables: {
-      date: moment(value).format("YYYY-MM-DD"),
-      id: auth.userid,
-    },
-    onCompleted: (data) => {
-      const flattenData = flattenObj({ ...data });
-      console.log(flattenData);
-      setHolidays(flattenData.changemakerAvailabilties);
-    },
-  });
+  // useQuery(GET_ALL_CHANGEMAKER_AVAILABILITY_WORKHOURS, {
+  //   variables: {
+  //     date: moment(value).format("YYYY-MM-DD"),
+  //     id: auth.userid,
+  //   },
+  //   onCompleted: (data) => {
+  //     const flattenData = flattenObj({ ...data });
+  //     console.log(flattenData);
+  //     setHolidays(flattenData.changemakerAvailabilties);
+  //   },
+  // });
 
-  useQuery(GET_ALL_CHANGEMAKER_AVAILABILITY, {
-    variables: {
-      id: auth.userid,
-      limit: moment(endDate).diff(moment(startDate), 'days') + 1,
-    },
-    onCompleted: (data) => {
-      const flattenData = flattenObj({...data});
-      setAllChangeMakerHolidays(flattenData.changemakerAvailabilties);
-    },
-  });
+  // useQuery(GET_ALL_CHANGEMAKER_AVAILABILITY, {
+  //   variables: {
+  //     id: auth.userid,
+  //     limit: moment(endDate).diff(moment(startDate), 'days') + 1,
+  //   },
+  //   onCompleted: (data) => {
+  //     const flattenData = flattenObj({...data});
+  //     setAllChangeMakerHolidays(flattenData.changemakerAvailabilties);
+  //   },
+  // });
 
   function handleTodaysSlots(todaysEvents: any, changeMakerAvailability: any){
     const currentDateWorkHours = changeMakerAvailability[0]?.booking_slots?.length > 0 ? [...changeMakerAvailability[0]?.booking_slots] : [];
 
     const values = todaysEvents.concat(currentDateWorkHours);
     values.sort((a: any, b: any) => {
-      var btime1: any = moment(a.startTime, "HH:mm a");
-      var btime2: any = moment(b.startTime, "HH:mm a");
+      var btime1: any = moment(a.start_time, "HH:mm a");
+      var btime2: any = moment(b.start_time, "HH:mm a");
       return btime1 - btime2;
     });
     setSlots(values);
   }
 
-  const [availability, setAvailability] = useState<any>([]);
-
-  function LoadProgramEvents(data: any) {
-    const flattenData = flattenObj({ ...data });
-    setAvailability(flattenData.changemakerAvailabilties);
-    var sortedPrograms: any = [];
-    var Values: any = {};
-    for (var i = 0; i < flattenData.clientPackages.length; i++) {
-        if (flattenData.clientPackages[i].program_managers.length !== 0) {
-        if (flattenData.clientPackages[i].fitnesspackages[0].fitness_package_type.type === "Group Class") {
-            for (var j = 0; j < flattenData.clientPackages[i].program_managers[0].fitnessprograms.length; j++) {
-            Values.effectiveDate = flattenData.clientPackages[i].program_managers[0].fitnessprograms[j].start_dt;
-            Values.program = flattenData.clientPackages[i].program_managers[0].fitnessprograms[j];
-            sortedPrograms.push(Values);
-            Values = {};
-            }
-        } else {
-            for (var k = 0; k < flattenData.clientPackages[i].program_managers[0].fitnessprograms.length; k++) {
-            Values.effectiveDate = flattenData.clientPackages[i].effective_date.substring(0,flattenData.clientPackages[i].effective_date.indexOf("T"));
-            Values.program = flattenData.clientPackages[i].program_managers[0].fitnessprograms[k];
-            sortedPrograms.push(Values);
-            Values = {};
-            }
-        }
-        }
-    }
-    handleDuplicates(sortedPrograms, flattenData.changemakerAvailabilties);
-    }
+  // function LoadProgramEvents(data: any) {
+  //   const flattenData = flattenObj({ ...data });
+  //   setAvailability(flattenData.changemakerAvailabilties);
+  //   var sortedPrograms: any = [];
+  //   var Values: any = {};
+  //   for (var i = 0; i < flattenData.clientPackages.length; i++) {
+  //       if (flattenData.clientPackages[i].program_managers.length !== 0) {
+  //       if (flattenData.clientPackages[i].fitnesspackages[0].fitness_package_type.type === "Group Class") {
+  //           for (var j = 0; j < flattenData.clientPackages[i].program_managers[0].fitnessprograms.length; j++) {
+  //           Values.effectiveDate = flattenData.clientPackages[i].program_managers[0].fitnessprograms[j].start_dt;
+  //           Values.program = flattenData.clientPackages[i].program_managers[0].fitnessprograms[j];
+  //           sortedPrograms.push(Values);
+  //           Values = {};
+  //           }
+  //       } else {
+  //           for (var k = 0; k < flattenData.clientPackages[i].program_managers[0].fitnessprograms.length; k++) {
+  //           Values.effectiveDate = flattenData.clientPackages[i].effective_date.substring(0,flattenData.clientPackages[i].effective_date.indexOf("T"));
+  //           Values.program = flattenData.clientPackages[i].program_managers[0].fitnessprograms[k];
+  //           sortedPrograms.push(Values);
+  //           Values = {};
+  //           }
+  //       }
+  //       }
+  //   }
+  //   handleDuplicates(sortedPrograms, flattenData.changemakerAvailabilties);
+  //   }
     
     function handleDuplicates(sortedPrograms: any, changeMakerAvailability: any){
     if (sortedPrograms.length > 0) {
@@ -271,8 +275,8 @@ const WorkHours = () => {
   });
 
   const [updateUserBookingTime] = useMutation(UPDATE_USER_BOOKING_TIME);
-  const [updateChangemakerAvailabilityWorkHour] = useMutation(UPDATE_CHANGEMAKER_AVAILABILITY_WORKHOURS);
-  const [createChangemakerAvailabilityWorkHour] = useMutation(CREATE_CHANGEMAKER_AVAILABILITY_WORKHOURS);
+  const [updateChangemakerAvailabilityWorkHour] = useMutation(UPDATE_CHANGEMAKER_AVAILABILITY_WORKHOURS, {onCompleted: () => {mainQuery.refetch(); setFromTime("00:00"); setToTime("00:00"); setClassMode("none")}});
+  const [createChangemakerAvailabilityWorkHour] = useMutation(CREATE_CHANGEMAKER_AVAILABILITY_WORKHOURS, {onCompleted: () => {mainQuery.refetch(); setFromTime("00:00"); setToTime("00:00"); setClassMode("none")}});
   const [createChangeMakerHoliday] = useMutation(CREATE_CHANGEMAKER_AVAILABILITY_HOLIDAY);
   const [updateChangemakerAvailabilityHoliday] = useMutation(UPDATE_CHANGEMAKER_AVAILABILITY_HOLIDAY);
   const [deleteChangemakerAvailabilityHoliday] = useMutation(DELETE_CHANGEMAKER_AVAILABILITY_HOLIDAY, {onCompleted: () => {
@@ -328,11 +332,6 @@ const WorkHours = () => {
       setDeleteToast(false);
     }, 3000);
   }
-
-  const [fromTime, setFromTime]= useState("00:00"); 
-  const [toTime, setToTime] = useState("00:00"); 
-  const [disableAdd, setDisableAdd] = useState(false);
-  const [classMode, setClassMode] = useState("");
 
   function convertToMoment(time: string) {
     var timeSplit = time.split(":").map(Number);
@@ -392,12 +391,15 @@ const WorkHours = () => {
 
   function handleWorkTime(fromTime: any, toTime: any, mode: any, date: any, holidays: any) {
 
-    const values = allChangeMakerHolidays.find((item: any) => item.date === date);
+    const values = availability.find((item: any) => item.date === date);
     var obj: any = {};
 
     if(slots.length !== 0){
       for(var i=0; i<slots.length; i++ ){
-        if(moment(fromTime, 'hh:mm:ss').isSameOrAfter(moment(slots[i].startTime, 'hh:mm:ss')) && moment(fromTime, 'hh:mm:ss').isBefore(moment(slots[i].endTime, 'hh:mm:ss'))){
+        if(moment(fromTime, 'hh:mm:ss').isSameOrAfter(moment(slots[i].start_time, 'hh:mm:ss')) && moment(fromTime, 'hh:mm:ss').isBefore(moment(slots[i].end_time, 'hh:mm:ss'))){
+          console.log(slots, i);
+          console.log(slots[i]);
+          setConflictSlots([slots[i]]);
           setSlotErr(true);
           return;
         }
@@ -407,12 +409,14 @@ const WorkHours = () => {
     if(values?.Is_Holiday === true) {
       setErrModal(true);
     }
+    console.log(values);
+    debugger;
 
     if(values){
       if(values.Is_Holiday === false){
         obj.id = getRandomId(10);
-        obj.startTime = fromTime;
-        obj.endTime = toTime;
+        obj.start_time = fromTime;
+        obj.end_time = toTime;
         obj.mode = mode;
         const userData = values.booking_slots !== null ? [...values.booking_slots] : [];
         userData.push(obj);
@@ -423,14 +427,15 @@ const WorkHours = () => {
       }
     }else if(values === undefined){
       obj.id = getRandomId(10);
-      obj.startTime = fromTime;
-      obj.endTime = toTime;
+      obj.start_time = fromTime;
+      obj.end_time = toTime;
       obj.mode = mode;
       const userData: any = [];
       userData.push(obj);
       createChangemakerAvailabilityWorkHour({
         variables: {id: auth.userid, slots: userData, date: date}
       });
+      mainQuery.refetch();
       setToast(true);
     }
   }
@@ -459,7 +464,6 @@ const WorkHours = () => {
     updateChangemakerAvailabilityWorkHour({
       variables: {id: availability[0].id, slots: values}
     });
-
   }
 
   interface NamedParameters{
@@ -530,13 +534,13 @@ const WorkHours = () => {
       const obj = values[i]?.booking_slots !== null ? [...values[i]?.booking_slots] : [];
       if(moment(values[i].date).format('dddd') === daysOfWeek[dayIndex] && values[i].Is_Holiday === false){
         for(var j=0; j<obj.length; j++){
-          if(moment(fromTime, 'hh:mm:ss').isSameOrAfter(moment(obj[j].startTime, 'hh:mm:ss')) && moment(fromTime, 'hh:mm:ss').isBefore(moment(obj[j].endTime, 'hh:mm:ss'))){
+          if(moment(fromTime, 'hh:mm:ss').isSameOrAfter(moment(obj[j].start_time, 'hh:mm:ss')) && moment(fromTime, 'hh:mm:ss').isBefore(moment(obj[j].end_time, 'hh:mm:ss'))){
             const slotDate = {date: values[i].date};
             const obj1: any = {...slotDate, ...obj[j]}; 
             conflict.push(obj1);
           }else if(val[daysOfWeek[dayIndex]]?.slots?.length !== 0){
             for(var k=0; k<val[daysOfWeek[dayIndex]].slots?.length; k++){
-              if(moment(fromTime, 'hh:mm:ss').isSameOrAfter(moment(val[daysOfWeek[dayIndex]]?.slots[k]?.startTime, 'hh:mm:ss')) && moment(fromTime, 'hh:mm:ss').isBefore(moment(val[daysOfWeek[dayIndex]].slots[k].endTime, 'hh:mm:ss'))){
+              if(moment(fromTime, 'hh:mm:ss').isSameOrAfter(moment(val[daysOfWeek[dayIndex]]?.slots[k]?.start_time, 'hh:mm:ss')) && moment(fromTime, 'hh:mm:ss').isBefore(moment(val[daysOfWeek[dayIndex]].slots[k].end_time, 'hh:mm:ss'))){
                 const slotDate = {date: moment().format("YYYY-MM-DD")};
                 const obj1: any = {...slotDate, ...val[daysOfWeek[dayIndex]].slots[k]};
                 conflict.push(obj1);
@@ -546,7 +550,7 @@ const WorkHours = () => {
         }
       }else {
         for(var x=0; x<val[daysOfWeek[dayIndex]].slots?.length; x++){
-          if(moment(fromTime, 'hh:mm:ss').isSameOrAfter(moment(val[daysOfWeek[dayIndex]]?.slots[x]?.startTime, 'hh:mm:ss')) && moment(fromTime, 'hh:mm:ss').isBefore(moment(val[daysOfWeek[dayIndex]].slots[x].endTime, 'hh:mm:ss'))){
+          if(moment(fromTime, 'hh:mm:ss').isSameOrAfter(moment(val[daysOfWeek[dayIndex]]?.slots[x]?.start_time, 'hh:mm:ss')) && moment(fromTime, 'hh:mm:ss').isBefore(moment(val[daysOfWeek[dayIndex]].slots[x].end_time, 'hh:mm:ss'))){
             const slotDate = {date: moment().format("YYYY-MM-DD")};
             const obj1: any = {...slotDate, ...val[daysOfWeek[dayIndex]].slots[x]};
             conflict.push(obj1);
@@ -562,8 +566,8 @@ const WorkHours = () => {
     var obj1: any = {};
     obj1 = {
       id: getRandomId(10),
-      startTime: fromTime,
-      endTime: toTime,
+      start_time: fromTime,
+      end_time: toTime,
       mode: classMode,
     };
     val[daysOfWeek[dayIndex]].slots.push(obj1);
@@ -575,7 +579,9 @@ const WorkHours = () => {
   }
 
   function handleAddHoliday(date: any, event: any) {
-    const values = allChangeMakerHolidays.find((item: any) => item.date === date);
+    const values = availability.find((item: any) => item.date === date);
+    console.log(values);
+    debugger;
     if(values){
       if(values.booking_slots.length > 0){
         // set a modal to display the error
@@ -583,6 +589,14 @@ const WorkHours = () => {
         setHolidayErr(true);
       }
     }else {
+      if(values.Is_holiday === false){
+        updateChangemakerAvailabilityHoliday({
+          variables: {
+            id: values.id,
+            holiday_title: desc
+          }
+        })
+      }
       createChangeMakerHoliday({
       variables: {
         date: `${moment(date).format("YYYY-MM-DD")}`,
@@ -965,7 +979,7 @@ const WorkHours = () => {
             </Col>
             <Col lg={2} className="pl-0 pr-0">
               <Form.Control as="select" onChange={(e) => {setClassMode(e.target.value)}}>
-                <option value="">Select Mode</option>
+                <option value="none">Select Mode</option>
                 <option value="Offline">Online</option>
                 <option value="Online">Offline</option>
                 <option value="Hybrid">Hybrid</option>
@@ -1173,7 +1187,7 @@ const WorkHours = () => {
                                 borderRadius: "10px",
                               }}
                             >
-                              <span>{moment(item.startTime, "HH:mm").format("HH:mm")}</span>
+                              <span>{moment(item.start_time, "HH:mm").format("HH:mm")}</span>
                             </div>
                           </Col>
                           <Col lg={2}>To</Col>
@@ -1187,7 +1201,7 @@ const WorkHours = () => {
                                 borderRadius: "10px",
                               }}
                             >
-                              <span>{moment(item.endTime, "HH:mm").format("HH:mm")}</span>
+                              <span>{moment(item.end_time, "HH:mm").format("HH:mm")}</span>
                             </div>
                           </Col>
                         </Row>
@@ -1501,8 +1515,8 @@ const WorkHours = () => {
                   return (
                     <tr key={index}>
                       <td className="pl-3 pr-3">{moment(slot.date).format("DD MMM, YYYY")}</td>
-                      <td className="pl-3 pr-3">{slot.startTime}</td>
-                      <td className="pl-3 pr-3">{slot.endTime}</td>
+                      <td className="pl-3 pr-3">{moment(slot.start_time, "HH:mm").format("HH:mm")}</td>
+                      <td className="pl-3 pr-3">{moment(slot.end_time, "HH:mm").format("HH:mm")}</td>
                       <td className="pl-3 pr-3">{slot.mode}</td>
                     </tr>
                   )
