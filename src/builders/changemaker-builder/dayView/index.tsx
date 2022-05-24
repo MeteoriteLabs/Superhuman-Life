@@ -34,8 +34,7 @@ const DayView = (props: any) => {
     },
     onCompleted: (data: any) => {
       const flattenData = flattenObj({...data});
-      setTodaysEvents(flattenData.tags);
-
+      setTodaysEvents(flattenData.sessions);
     }
   })
 
@@ -206,9 +205,9 @@ const DayView = (props: any) => {
           backgroundColor: "rgba(211,211,211, 0.8)",
         }}
         contentArrowStyle={{ borderRight: "7px solid  rgba(211,211,211,0.8)" }}
-        date={`${moment(event.sessions[0].start_time, "hh:mm a").format(
+        date={`${moment(event.start_time, "hh:mm a").format(
           "hh:mm a"
-        )} - ${moment(event.sessions[0].end_time, "hh:mm a").format("hh:mm a")}`}
+        )} - ${moment(event.end_time, "hh:mm a").format("hh:mm a")}`}
         iconStyle={{
           background: "rgba(33, 150, 243)",
           color: "#fff",
@@ -218,7 +217,7 @@ const DayView = (props: any) => {
         }}
         icon={
           <img
-            src={`/assets/${handleIcon(event.sessions[0].tag)}-schedule.svg`}
+            src={`/assets/${handleIcon(event.tag)}-schedule.svg`}
             alt="classical"
           />
         }
@@ -226,13 +225,13 @@ const DayView = (props: any) => {
         <div className="text-center">
           <Row>
             <Col lg={12} xs={12}>
-              <h5>{event.sessions[0].activity === null ? event.sessions[0].workout.workouttitle : event.sessions[0].activity.title}</h5>
-              <Badge variant="info">{event.sessions[0].tag}</Badge>{" "}
+              <h5>{event.activity === null ? event.workout.workouttitle : event.activity.title}</h5>
+              <Badge variant="info">{event.tag}</Badge>{" "}
               {event.tag !== "Classic" && (
                 <Badge
-                  variant={event.sessions[0].mode === "Offline" ? "danger" : "success"}
+                  variant={event.mode === "Offline" ? "danger" : "success"}
                 >
-                  {event.sessions[0].mode}
+                  {event.mode}
                 </Badge>
               )}
             </Col>
@@ -240,7 +239,7 @@ const DayView = (props: any) => {
           <Row>
             <Col lg={6} xs={6} className="mt-2">
               <Button variant="success">
-                {event.sessions[0].mode === "Offline" ? "Navigate" : "Join Now"}
+                {event.mode === "Offline" ? "Navigate" : "Join Now"}
               </Button>
             </Col>
             <Col lg={6} xs={6} className="mt-2">

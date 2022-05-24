@@ -138,53 +138,43 @@ export const GET_ALL_CLIENT_PACKAGE_BY_TYPE = gql`
 
 export const GET_ALL_WEEKLY_SESSIONOS = gql`
   query weeklySessions($id: ID!, $startDate: Date, $endDate: Date) {
-    tags(filters:  {
-      fitnesspackage: {
-        users_permissions_user: {
-          id: {
-            eq: $id
-          }
+    sessions(filters: {
+      changemaker: {
+        id: {
+          eq: $id
         }
       },
-      sessions: {
-        session_date: {
-          between: [$startDate,  $endDate]
-        }
+      session_date: {
+        between: [$startDate, $endDate]
       }
     }){
       data{
         id
         attributes{
-          sessions{
+          mode
+          start_time
+          end_time
+          tag
+          type
+          type
+          session_date
+          activity{
             data{
               id
               attributes{
-                session_date
-                start_time
-                end_time
-                type
-                mode
-                tag
-                activity_target
-                workout{
-                  data{
-                    id
-                    attributes{
-                      workouttitle
-                    }
-                  }
-                }
-                activity{
-                  data{
-                    id
-                    attributes{
-                      title
-                    }
-                  }
-                }
+                title
               }
             }
           }
+          workout{
+            data{
+              id
+              attributes{
+                workouttitle
+              }
+            }
+          }
+          activity_target
         }
       }
     }
@@ -193,67 +183,43 @@ export const GET_ALL_WEEKLY_SESSIONOS = gql`
 
 export const GET_ALL_DAILY_SESSIONS = gql`
 query getDailySessions($id: ID!, $Date: Date!){
-  tags(filters:  {
-    fitnesspackage: {
-      users_permissions_user: {
-        id: {
-          eq: $id
-        }
+  sessions(filters: {
+    changemaker: {
+      id: {
+        eq: $id
       }
     },
-    sessions: {
-      session_date: {
-        eq: $Date
-      }
+    session_date: {
+      eq: $Date
     }
   }){
     data{
       id
       attributes{
-        client_packages{
+        mode
+        start_time
+        end_time
+        tag
+        type
+        type
+        session_date
+        activity{
           data{
             id
             attributes{
-              users_permissions_user{
-                data{
-                  id
-                  attributes{
-                    username
-                  }
-                }
-              }
+              title
             }
           }
         }
-        sessions{
+        workout{
           data{
             id
             attributes{
-              session_date
-              start_time
-              end_time
-              type
-              tag
-              mode
-              workout{
-                data{
-                  id
-                  attributes{
-                    workouttitle
-                  }
-                }
-              }
-              activity{
-                data{
-                  id
-                  attributes{
-                    title
-                  }
-                }
-              }
+              workouttitle
             }
           }
         }
+        activity_target
       }
     }
   }

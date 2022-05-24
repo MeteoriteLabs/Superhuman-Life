@@ -17,10 +17,8 @@ import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import {
   GET_USER_WEEKLY_CONFIG,
-  GET_ALL_CLIENT_PACKAGE_BY_TYPE,
   GET_ALL_CHANGEMAKER_AVAILABILITY_WORKHOURS,
   GET_ALL_CHANGEMAKER_AVAILABILITY,
-  GET_SLOTS_TO_CHECK,
   GET_CHANGEMAKER_AVAILABILITY_AND_TAGS
 } from "../../graphql/queries";
 import {
@@ -146,8 +144,6 @@ const WorkHours = () => {
     }
   })
 
-  console.log(holidays);
-
   // useQuery(GET_SLOTS_TO_CHECK, {
   //   skip: (!showDaysModal),
   //   variables: {
@@ -172,17 +168,16 @@ const WorkHours = () => {
   //   },
   // });
 
-  // useQuery(GET_ALL_CHANGEMAKER_AVAILABILITY_WORKHOURS, {
-  //   variables: {
-  //     date: moment(value).format("YYYY-MM-DD"),
-  //     id: auth.userid,
-  //   },
-  //   onCompleted: (data) => {
-  //     const flattenData = flattenObj({ ...data });
-  //     console.log(flattenData);
-  //     setHolidays(flattenData.changemakerAvailabilties);
-  //   },
-  // });
+  useQuery(GET_ALL_CHANGEMAKER_AVAILABILITY_WORKHOURS, {
+    variables: {
+      date: moment(value).format("YYYY-MM-DD"),
+      id: auth.userid,
+    },
+    onCompleted: (data) => {
+      const flattenData = flattenObj({ ...data });
+      setHolidays(flattenData.changemakerAvailabilties);
+    },
+  });
 
   useQuery(GET_ALL_CHANGEMAKER_AVAILABILITY, {
     variables: {
@@ -404,8 +399,6 @@ const WorkHours = () => {
     if (slots.length !== 0) {
       for (var i = 0; i < slots.length; i++) {
         if (moment(fromTime, 'hh:mm:ss').isSameOrAfter(moment(slots[i].start_time, 'hh:mm:ss')) && moment(fromTime, 'hh:mm:ss').isBefore(moment(slots[i].end_time, 'hh:mm:ss'))) {
-          console.log(slots, i);
-          console.log(slots[i]);
           setConflictSlots([slots[i]]);
           setSlotErr(true);
           return;
@@ -416,8 +409,6 @@ const WorkHours = () => {
     if (values?.Is_Holiday === true) {
       setErrModal(true);
     }
-    console.log(values);
-    debugger;
 
     if (values) {
       if (values.Is_Holiday === false) {
@@ -587,7 +578,6 @@ const WorkHours = () => {
 
   function handleAddHoliday(date: any, event: any) {
     const values = availability.find((item: any) => item.date === date);
-    console.log(values);
     debugger;
     if (values) {
       if (values.booking_slots.length > 0) {
@@ -702,6 +692,14 @@ const WorkHours = () => {
     setShowDaysModal(false);
   }
 
+  function findHolidayIndex(id: any){
+    const obj = allChangeMakerHolidays.findIndex((item: any) => moment(item.date).format("YYYY-MM-DD") === moment(id).format("YYYY-MM-DD"));
+    debugger;
+    return obj;
+  }
+
+  console.log(holidays);
+
   if (!show)
     return (
       <div className="text-center mt-5">
@@ -802,8 +800,9 @@ const WorkHours = () => {
               </Row>
             </Col>
             <Col lg={8}>
-              {slots?.length === 0 && holidays[0]?.Is_Holiday === false && <div>You have nothing assigned for today</div>}
+              {slots?.length === 0 && <div>You have nothing assigned for {moment(value).format("Do MMM, YYYY")}</div>}
               {holidays[0]?.date === moment().format("YYYY-MM-DD") && holidays[0]?.Is_Holiday === true && <div>You have marked today as a holiday</div>}
+              {holidays[0]?.Is_Holiday === true && holidays[0]?.date !== moment().format("YYYY-MM-DD") && <div>You have marked {moment(value).format("Do MMM, YYYY")}  as a holiday</div>}
               <div
                 style={{
                   maxHeight: "300px",
@@ -811,8 +810,7 @@ const WorkHours = () => {
                   overflowX: "hidden",
                 }}
               >
-                {slots?.map((item, index) => {
-                  console.log(item);
+                {slots[0] !== null && slots?.map((item, index) => {
                   return (
                     <Row id={item.id} key={index} className="mt-3 pt-1 pb-1 items-center">
                       <Col lg={8}>

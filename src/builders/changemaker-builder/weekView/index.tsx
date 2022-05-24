@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { Row, Col, Button, Spinner } from "react-bootstrap";
 import SchedulerPage from "./weekScheduler";
 import moment from "moment";
-import { GET_ALL_CLIENT_PACKAGE_BY_TYPE, GET_ALL_WEEKLY_SESSIONOS } from "../graphql/queries";
+import { GET_ALL_WEEKLY_SESSIONOS } from "../graphql/queries";
 import { useQuery } from "@apollo/client";
 import AuthContext from "../../../context/auth-context";
 
@@ -26,11 +26,11 @@ const WeekView = (props: any) => {
     variables: {
       id: auth.userid,
       startDate: scheduleDate,
-      endDate: moment(scheduleDate).add(7, 'days').format("YYYY-MM-DD")
+      endDate: moment(scheduleDate).add(6, 'days').format("YYYY-MM-DD")
     },
     onCompleted: (data) => {
       const flattenData = flattenObj({...data});
-      setTodaysEvents(flattenData.tags);
+      setTodaysEvents(flattenData.sessions);
     }
   })
 
