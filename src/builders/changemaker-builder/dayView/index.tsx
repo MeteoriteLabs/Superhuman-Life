@@ -248,6 +248,9 @@ const DayView = (props: any) => {
                   backgroundColor: "purple",
                   border: "1px solid purple",
                 }}
+                onClick={() => {
+                  window.location.href = `/roster/${event.id}`;
+                }}
               >
                 Roster
               </Button>
