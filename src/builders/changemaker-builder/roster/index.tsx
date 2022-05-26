@@ -1,13 +1,29 @@
 import React, {useState} from 'react';
 import {Link} from 'react-router-dom';
-import {Card, Col, Row, Button} from 'react-bootstrap';
+import {Card, Col, Row, Button, Spinner} from 'react-bootstrap';
 import moment from 'moment';
 import RosterTabs from './tabs';
+import {GET_SESSION_AND_SESSION_BOOKINGS} from './graphql/queries';
+import {useQuery} from '@apollo/client';
+import { flattenObj } from '../../../components/utils/responseFlatten';
 
 const Roster =  () => {
 
     const [scheduleDay, setScheduleDay] = useState(1);
     const [scheduleDate, setScheduleDate] = useState(moment().startOf("week").format("YYYY-MM-DD"));
+    const [sessionData, setSessionData] = useState<any>([]);
+    const [show, setShow] = useState(false);
+
+    useQuery(GET_SESSION_AND_SESSION_BOOKINGS, {
+        variables: {
+            id: window.location.pathname.split('/').pop()
+        },
+        onCompleted: (data) => {
+            const flattenedData = flattenObj(data);
+            setSessionData(flattenedData.sessionsBookings);
+            setShow(true);
+        }
+    })
 
     return (
         <>
@@ -54,7 +70,7 @@ const Roster =  () => {
                                 <Button variant='success'>Join Session</Button>
                             </div>
                             <div className='text-center mt-4'>
-                                <button className='pl-3 pr-3' style={{ border: '1px solid black', borderRadius: '20px'}}>Attendance</button>
+                                <button className='pl-3 pr-3' style={{ border: '2px solid gray', borderRadius: '10px'}}>Attendance</button>
                             </div>
                         </Col>
                         <Col lg={3}>
@@ -102,7 +118,13 @@ const Roster =  () => {
                 </Card.Body>
             </Card>
             <div className='mt-4'>
-                <RosterTabs />
+                {!show ? <div className="text-center mt-5">
+                    <Spinner animation="border" variant="danger" />
+                    <h5 className="mt-5">
+                        <b>Please wait while we load your Schedule for the day...</b>
+                    </h5>
+                </div> : 
+                <RosterTabs data={sessionData}/>}
             </div>
         </>
     );

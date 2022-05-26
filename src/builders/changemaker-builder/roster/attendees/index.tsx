@@ -1,10 +1,114 @@
-import React from 'react';
+import React, {useState} from 'react';
+import {Col, Row, FormControl, InputGroup, Button, Dropdown} from 'react-bootstrap';
+import './actionButton.css';
 
 const RosterAttendees = () => {
     return (
-        <div>
-            <h1>Attendees</h1>
-        </div>
+        <>
+            <div className='text-left shadow-lg p-4' style={{ borderRadius: '15px'}}>
+                <Row>
+                    <Col lg={6}>
+                        <InputGroup className="mb-3">
+                            <FormControl
+                                aria-describedby="basic-addon1"
+                                placeholder="Search"
+                                // ref={searchInput}
+                            />
+                            <InputGroup.Prepend>
+                                <Button
+                                        variant="outline-secondary"
+                                        onClick={(e: any) => {
+                                            e.preventDefault();
+                                        //   setSearchFilter(searchInput.current.value);
+                                        }}
+                                >
+                                        <i className="fas fa-search"></i>
+                                </Button>
+                            </InputGroup.Prepend>
+                        </InputGroup>
+                    </Col>
+                </Row>
+                <div className='mt-3'>
+                    <div className='text-left shadow-lg' style={{ borderRadius: '15px'}}>
+                        <Row>
+                            <Col lg={4} style={{ borderRight: '2px dashed gray'}}>
+                                <div className='pl-3 pt-1 pb-1' style={{ backgroundColor: 'gray', maxWidth: '50px', borderTopLeftRadius: '15px'}}>
+                                    <h6>01</h6>
+                                </div>
+                                <div className='text-center'>
+                                    <img src="https://picsum.photos/200/100" alt='profile-pic' 
+                                        style={{ width: '50px', height: '50px', borderRadius: '50%' }} 
+                                    />
+                                    <h5>Michael Hubbard</h5>
+                                    <span>29 years | Male | 174 cm | 80 kg</span>
+                                    <br />
+                                    <br />
+                                    <img src="/assets/phone_icon.svg" alt='call-pic' 
+                                        style={{ width: '45px', height: '45px' }} 
+                                    />
+                                    <img src="/assets/record_icon.svg" alt='call-pic' 
+                                        style={{ width: '45px', height: '45px' }} 
+                                    />
+                                    <img src="/assets/message_icon.svg" alt='call-pic' 
+                                        style={{ width: '45px', height: '45px' }} 
+                                    />
+                                </div>
+                            </Col>
+                            <Col lg={4} style={{ borderRight: '2px dashed gray'}}>
+                                <div className="p-3 text-center">
+                                    <h5>Pre-Session</h5>
+                                </div>
+                                <h5>Notes: </h5>
+                                <div className='ml-3'>
+                                    <span>Lower back pain and sore leg muscles Lower back pain and sore leg muscles.</span>
+                                </div>
+                                <div className="mt-3" style={{ display: 'flex', flexDirection: 'row'}}>
+                                    <h5>Mood: </h5>
+                                    <img src="/assets/happy_icon.svg" alt='call-pic' 
+                                        style={{ width: '45px', height: '45px' }} 
+                                    />
+                                </div>
+                                <div className="p-3 text-center">
+                                    <span style={{ color: 'gray'}}>From Client</span>
+                                </div>
+                            </Col>
+                            <Col lg={4}>
+                                <div className="p-3">
+                                    <Row>
+                                        <Col lg={10} sm={10} className='text-center'>
+                                            <h5>Feedback</h5>
+                                        </Col>
+                                        <Col>
+                                            <Dropdown>
+                                                <Dropdown.Toggle id="dropdown-basic" as="button" className="actionButtonDropDown">
+                                                    <i className="fas fa-ellipsis-v"></i>
+                                                </Dropdown.Toggle>
+                                                <Dropdown.Menu>
+                                                    <Dropdown.Item >Add Feedback</Dropdown.Item>
+                                                    <Dropdown.Item >Go to Client</Dropdown.Item>
+                                                    <Dropdown.Item >Add Pre-Session</Dropdown.Item>
+                                                </Dropdown.Menu>
+                                            </Dropdown>
+                                        </Col>
+                                    </Row>
+                                </div>
+                                <h5>Feedback: </h5>
+                                <div className='ml-3'>
+                                    <span>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s</span>
+                                </div>
+                                <div className="mt-3" style={{ display: 'flex', flexDirection: 'row'}}>
+                                    <h5>Mood: </h5>
+                                    <span className='ml-3' style={{ color: 'green'}}><b>Attended</b></span>
+                                </div>
+                                <div className="p-3 text-center">
+                                    <span style={{ color: 'gray'}}>From Changemaker</span>
+                                </div>
+                            </Col>
+                        </Row>                     
+                    </div>
+                </div>
+            </div>
+        </>
     );
 };
 

@@ -1,7 +1,10 @@
 import React from 'react';
 import {Row, Col} from 'react-bootstrap';
 
-const RosterGeneral = () => {
+const RosterGeneral = (props: any) => {
+
+    const data = props?.data[0]?.session;
+
     return (
         <>
             <div className='text-right shadow-lg p-4' style={{ borderRadius: '15px'}}>
@@ -14,7 +17,7 @@ const RosterGeneral = () => {
                         <h5>About</h5>
                         <div className='p-4' style={{ border: '1px solid black', borderRadius: '20px'}}>
                             <span>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit ut aliquam, purus sit amet luctus enenatis, lectus magna fringilla urna, porttitor
+                                {data.workout.About}
                             </span>
                         </div>
                     </div>
@@ -22,7 +25,7 @@ const RosterGeneral = () => {
                         <h5>Benefits</h5>
                         <div className='p-4' style={{ border: '1px solid black', borderRadius: '20px'}}>
                             <span>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit ut aliquam, purus sit amet luctus enenatis, lectus magna fringilla urna, porttitor
+                                {data.workout.Benifits}
                             </span>
                         </div>
                     </div>
@@ -30,7 +33,9 @@ const RosterGeneral = () => {
                         <h5>Equipment</h5>
                         <div className='p-4' style={{ border: '1px solid black', borderRadius: '20px'}}>
                             <span>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit ut aliquam, purus sit amet luctus enenatis, lectus magna fringilla urna, porttitor
+                                {data.workout.equipment_lists.map((item: any) => {
+                                    return item.name
+                                }).join(', ')}
                             </span>
                         </div>
                     </div>

@@ -5,7 +5,8 @@ import RosterAgenda from './agenda';
 import RosterAttendees from './attendees';
 import RosterSettings from './settings';
 
-const RosterTab = () => {
+
+const RosterTab = (props: any) => {
     return (
         <>
             <Tabs
@@ -16,10 +17,10 @@ const RosterTab = () => {
                 variant='pills'
             >
                 <Tab eventKey="general" title="General">
-                    <RosterGeneral />
+                    <RosterGeneral data={props.data}/>
                 </Tab>
                 <Tab eventKey="agenda" title="Agenda">
-                    <RosterAgenda />
+                    <RosterAgenda data={props.data}/>
                 </Tab>
                 <Tab eventKey="attendees" title="Attendees">
                     <RosterAttendees />
