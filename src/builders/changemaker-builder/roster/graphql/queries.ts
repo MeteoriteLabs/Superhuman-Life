@@ -12,6 +12,7 @@ query getSessionAndSessionsBookings($id: ID!) {
       data{
           id
         attributes{
+          Session_booking_status
           client{
             data{
               id
@@ -26,6 +27,19 @@ query getSessionAndSessionsBookings($id: ID!) {
               attributes{
                 start_time
                 end_time
+                activity{
+                  data{
+                    id
+                    attributes{
+                      title
+                    }
+                  }
+                }
+                activity_target
+                tag
+                type
+                mode
+                session_date
                 workout{
                   data{
                     id

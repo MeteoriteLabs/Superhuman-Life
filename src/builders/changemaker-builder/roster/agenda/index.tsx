@@ -1,9 +1,16 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Col, Row, Accordion, Card} from 'react-bootstrap';
+import Chevron from './Chevron';
 
 const RosterAgenda = (props: any) => {
 
     const data = props?.data[0]?.session?.workout;
+
+    const [active, setActive] = useState(null);
+
+     function toggleAccodian(id){
+          setActive( id );
+     }
 
     console.log(data)
 
@@ -73,26 +80,29 @@ const RosterAgenda = (props: any) => {
             <div className='mt-4'>
                 <Accordion defaultActiveKey="">
                     <Card>
-                        <Accordion.Toggle as={Card.Header} className="text-left" eventKey="0">
+                        <Accordion.Toggle as={Card.Header} className="text-left" eventKey="0" onClick={() => toggleAccodian(active === 0 ? null : 0)}>
                             <b>Warmup</b>
+                            <Chevron className={"accordion__icon float-right " + ((active === 0) ? 'rotate' : '')}  width={10} fill={"#777"}/>
                         </Accordion.Toggle>
                         <Accordion.Collapse eventKey="0">
                             <Card.Body>Hello! I'm the body</Card.Body>
                         </Accordion.Collapse>
                     </Card>
                     <Card>
-                        <Accordion.Toggle as={Card.Header} className="text-left" eventKey="1">
+                        <Accordion.Toggle as={Card.Header} className="text-left" eventKey="1" onClick={() => toggleAccodian(active === 1 ? null : 1)}>
                             <b>Main Movement</b>
+                            <Chevron className={"accordion__icon float-right " + ((active === 1) ? 'rotate' : '')}  width={10} fill={"#777"}/>
                         </Accordion.Toggle>
                         <Accordion.Collapse eventKey="1">
                             <Card.Body>Hello! I'm another body</Card.Body>
                         </Accordion.Collapse>
                     </Card>
                     <Card>
-                        <Accordion.Toggle as={Card.Header} className="text-left" eventKey="1">
+                        <Accordion.Toggle as={Card.Header} className="text-left" eventKey="1" onClick={() => toggleAccodian(active === 2 ? null : 2)}>
                             <b>CoolDown</b>
+                            <Chevron className={"accordion__icon float-right " + ((active === 2) ? 'rotate' : '')}  width={10} fill={"#777"}/>
                         </Accordion.Toggle>
-                        <Accordion.Collapse eventKey="1">
+                        <Accordion.Collapse eventKey="2">
                             <Card.Body>Hello! I'm another body</Card.Body>
                         </Accordion.Collapse>
                     </Card>

@@ -32,7 +32,7 @@ const RosterAttendees = () => {
                     <div className='text-left shadow-lg' style={{ borderRadius: '15px'}}>
                         <Row>
                             <Col lg={4} style={{ borderRight: '2px dashed gray'}}>
-                                <div className='pl-3 pt-1 pb-1' style={{ backgroundColor: 'gray', maxWidth: '50px', borderTopLeftRadius: '15px'}}>
+                                <div className='pl-3 pt-1 pb-1' style={{ backgroundColor: 'gray', maxWidth: '50px', borderTopLeftRadius: '15px', borderBottomRightRadius: '15px'}}>
                                     <h6>01</h6>
                                 </div>
                                 <div className='text-center'>

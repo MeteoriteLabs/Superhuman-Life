@@ -26,7 +26,7 @@ const RosterTab = (props: any) => {
                     <RosterAttendees />
                 </Tab>
                 <Tab eventKey="settings" title="Settings">
-                    <RosterSettings />
+                    <RosterSettings data={props.data}/>
                 </Tab>
             </Tabs>
         </>
