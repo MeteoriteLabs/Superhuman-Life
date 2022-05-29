@@ -1,22 +1,24 @@
 import { useQuery } from '@apollo/client';
 import { useContext, useMemo, useRef, useState } from 'react'
-import { Badge, Row, Col } from "react-bootstrap";
+import { Badge, Row, Col, Form } from "react-bootstrap";
 import Table from '../../../../components/table';
 import AuthContext from "../../../../context/auth-context";
 import { GET_TAGS_FOR_CLASSIC } from '../../graphQL/queries';
 import FitnessAction from '../FitnessAction';
 import ActionButton from '../../../../components/actionbutton';
 import { flattenObj } from '../../../../components/utils/responseFlatten';
+import moment from 'moment';
 
 export default function Classic(props) {
 
     const auth = useContext(AuthContext);
     const [userPackage, setUserPackage] = useState<any>([]);
+    const [showHistory, setShowHistory] = useState(false);
 
 
     const fitnessActionRef = useRef<any>(null);
 
-    useQuery(GET_TAGS_FOR_CLASSIC, {variables: {id: auth.userid}, onCompleted: (data) => loadData(data)});
+    const mainQuery = useQuery(GET_TAGS_FOR_CLASSIC, {variables: {id: auth.userid}, onCompleted: (data) => loadData(data)});
 
     // const { data: data1 } = useQuery(GET_ALL_FITNESS_PACKAGE_BY_TYPE, {
     //     variables: {
@@ -111,7 +113,7 @@ export default function Classic(props) {
                     id: packageItem.id,
                     packageName: packageItem.fitnesspackage.packagename,
                     duration: packageItem.fitnesspackage.duration,
-                    // expiry: moment(packageItem.expiry_date).format("MMMM DD,YYYY"),
+                    // expiry: moment(packageItem?.client_packages[0]?.expiry_date).format("MMMM DD,YYYY"),
                     // packageStatus: packageItem.Status ? "Active" : "Inactive",
 
                     // proManagerId: packageItem.proManagerId,
@@ -298,8 +300,52 @@ export default function Classic(props) {
         []
     );
 
+    function handleHistoryPackage(data: any){
+        const flattenData = flattenObj({...data});
+
+        setUserPackage(
+            [...flattenData.tags.map((packageItem) => {
+                return {
+                    tagId: packageItem.id,
+                    id: packageItem.id,
+                    packageName: packageItem.fitnesspackage.packagename,
+                    duration: packageItem.fitnesspackage.duration,
+                    // expiry: moment(packageItem?.client_packages[0]?.expiry_date).format("MMMM DD,YYYY"),
+                    // packageStatus: packageItem.Status ? "Active" : "Inactive",
+
+                    // proManagerId: packageItem.proManagerId,
+                    // proManagerFitnessId: packageItem.proManagerFitnessId,
+                    // client: packageItem.client ? packageItem.client : "N/A",
+                    // time: packageItem.published_at ? moment(packageItem.published_at).format('h:mm:ss a') : "N/A",
+                    programName: packageItem.tag_name ? packageItem.tag_name : "N/A",
+                    // programStatus: packageItem.client?.length > 0 ? "Assigned" : "N/A",
+                    // renewal: packageItem.title ? "25/08/2021" : "N/A",
+                }
+            })]
+        )
+    }
+
+    if (!showHistory) {
+        if (userPackage.length > 0) {
+            userPackage.filter((item: any, index: any) => moment(item.expiry).isBefore(moment()) === true ? userPackage.splice(index, 1) : null);
+        }
+    }
+
     return (
         <div className="mt-5">
+            <div className='mb-3'>
+                <Form>
+                    <Form.Check 
+                        type="switch"
+                        id="custom-switch4"
+                        label="Show History"
+                        defaultChecked={showHistory}
+                        onClick={() => { setShowHistory(!showHistory); mainQuery.refetch().then((res: any) => {
+                            handleHistoryPackage(res.data);
+                        }) }}
+                    />
+                </Form>
+            </div>
             <Row>
                 <Col>
                     <Table columns={columns} data={userPackage} />

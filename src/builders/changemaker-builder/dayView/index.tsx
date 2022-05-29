@@ -27,6 +27,8 @@ const DayView = (props: any) => {
       .format("YYYY-MM-DD")
   );
 
+  console.log(todaysEvents);
+
   useQuery(GET_ALL_DAILY_SESSIONS, {
     variables: {
       id: auth.userid,
@@ -116,8 +118,8 @@ const DayView = (props: any) => {
 
   if (todaysEvents.length > 1) {
     todaysEvents.sort((a: any, b: any) => {
-      var btime1: any = moment(a.startTime, "HH:mm a");
-      var btime2: any = moment(b.startTime, "HH:mm a");
+      var btime1: any = moment(a.start_time, "HH:mm a");
+      var btime2: any = moment(b.start_time, "HH:mm a");
       return btime1 - btime2;
     });
   }

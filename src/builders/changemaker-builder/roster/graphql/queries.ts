@@ -87,4 +87,92 @@ query getSessionAndSessionsBookings($id: ID!) {
       }
     }
   }
+`;
+
+export const GET_SESSIONS_BASED_ON_DATE = gql`
+  query getSessionsBasedOnDate($date: Date!, $id: ID!) {
+    sessions(filters: {
+      changemaker: {
+        id: {
+          eq: $id
+        }
+      },
+      session_date: {
+        eq: $date
+      }
+    }){
+      data{
+        id
+        attributes{
+          start_time
+        }
+      }
+    }
+  }
+`;
+
+export const GET_TAG_BASED_ON_SESSION = gql`
+  query getTagBasedOnSession($id: ID!) {
+    tags(filters: {
+      sessions: {
+        id: {
+          eq: $id
+        }
+      }
+    }){
+      data{
+        id
+        attributes{
+          tag_name
+          fitnesspackage{
+            data{
+              id
+              attributes{
+                address{
+                  data{
+                    id
+                    attributes{
+                      address1
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const GET_PARTICULAR_CLIENT = gql`
+  query getParticularClient($id: ID!, $username: String){
+    sessionsBookings(filters: {
+      session: {
+        id: {
+          eq: $id
+        }
+      },
+      client: {
+        username: {
+          containsi: $username
+        }
+      }
+    }){
+      data{
+        id
+        attributes{
+          client{
+            data{
+              id
+              attributes{
+                username
+                Gender
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 `

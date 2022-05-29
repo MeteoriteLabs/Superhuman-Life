@@ -79,33 +79,222 @@ const RosterAgenda = (props: any) => {
             </div>
             <div className='mt-4'>
                 <Accordion defaultActiveKey="">
-                    <Card>
+                    {data?.warmup?.length > 0 && <Card>
                         <Accordion.Toggle as={Card.Header} className="text-left" eventKey="0" onClick={() => toggleAccodian(active === 0 ? null : 0)}>
                             <b>Warmup</b>
                             <Chevron className={"accordion__icon float-right " + ((active === 0) ? 'rotate' : '')}  width={10} fill={"#777"}/>
                         </Accordion.Toggle>
                         <Accordion.Collapse eventKey="0">
-                            <Card.Body>Hello! I'm the body</Card.Body>
+                            <Card.Body>
+                                {data?.warmup[0]?.type === "exercise" && data?.warmup?.map((item: any) => {
+                                    return (
+                                        <>
+                                            <div className='shadow-lg p-3' style={{ borderRadius: "15px", display: 'inline-block'}}>
+                                                <Row>
+                                                    <Col lg={7}>
+                                                        <img src='https://picsum.photos/200/100' alt='img' style={{ borderRadius: "15px"}}/>
+                                                    </Col>
+                                                    <Col lg={5}>
+                                                        <Row>
+                                                            <h5>{item.value}</h5>
+                                                        </Row>
+                                                        <Row>
+                                                            <Col>
+                                                                <h6>Reps</h6>
+                                                                <span>{item.reps}</span>
+                                                            </Col>
+                                                            <Col>
+                                                                <h6>Weight</h6>
+                                                                <span>{item.weights}</span>
+                                                            </Col>
+                                                        </Row>
+                                                    </Col>
+                                                </Row>
+                                            </div>
+                                            <br />
+                                            <div className='shadow-lg p-3 mt-4' style={{ borderRadius: "15px", display: 'inline-block'}}>
+                                                <Row>
+                                                    <Col lg={6}>
+                                                        <h6>Rest Time</h6>
+                                                    </Col>
+                                                    <Col lg={1}>
+                                                        <span>{item.restTime}</span>
+                                                    </Col>
+                                                    <Col lg={4}>
+                                                        <span><b>min</b></span>
+                                                    </Col>
+                                                </Row>
+                                            </div>
+                                        </>
+                                    )
+                                })}
+                                <br />
+                                {data?.warmup[0]?.type === "text" && data?.warmup?.map((item: any) => {
+                                    return (
+                                        <>
+                                            <div className='p-3 shadow-lg mt-3' style={{ borderRadius: '15px', border: '1px solid gray', display: 'inline-block'}}>
+                                                <div dangerouslySetInnerHTML={{ __html: `${item.value}`}}></div>
+                                            </div>
+                                        </>
+                                    )    
+                                })}
+                                <br />
+                                {data?.warmup[0]?.type === "url" && data?.warmup?.map((item: any) => {
+                                    return (
+                                        <>
+                                            <div className='p-3 shadow-lg mt-3' style={{ borderRadius: '15px', border: '1px solid gray', display: 'inline-block'}}>
+                                                <span>{item.value}</span>
+                                            </div>
+                                        </>
+                                    )    
+                                })}
+                            </Card.Body>
                         </Accordion.Collapse>
-                    </Card>
-                    <Card>
+                    </Card>}
+                    {data?.mainmovement?.length > 0 && <Card>
                         <Accordion.Toggle as={Card.Header} className="text-left" eventKey="1" onClick={() => toggleAccodian(active === 1 ? null : 1)}>
                             <b>Main Movement</b>
                             <Chevron className={"accordion__icon float-right " + ((active === 1) ? 'rotate' : '')}  width={10} fill={"#777"}/>
                         </Accordion.Toggle>
                         <Accordion.Collapse eventKey="1">
-                            <Card.Body>Hello! I'm another body</Card.Body>
+                            <Card.Body>
+                                {data?.mainmovement[0]?.type === "exercise" && data?.mainmovement?.map((item: any) => {
+                                    return (
+                                        <>
+                                            <div className='shadow-lg p-3' style={{ borderRadius: "15px", display: 'inline-block'}}>
+                                                <Row>
+                                                    <Col lg={7}>
+                                                        <img src='https://picsum.photos/200/100' alt='img' style={{ borderRadius: "15px"}}/>
+                                                    </Col>
+                                                    <Col lg={5}>
+                                                        <Row>
+                                                            <h5>{item.value}</h5>
+                                                        </Row>
+                                                        <Row>
+                                                            <Col>
+                                                                <h6>Reps</h6>
+                                                                <span>{item.reps}</span>
+                                                            </Col>
+                                                            <Col>
+                                                                <h6>Weight</h6>
+                                                                <span>{item.weights}</span>
+                                                            </Col>
+                                                        </Row>
+                                                    </Col>
+                                                </Row>
+                                            </div>
+                                            <br />
+                                            <div className='shadow-lg p-3 mt-4' style={{ borderRadius: "15px", display: 'inline-block'}}>
+                                                <Row>
+                                                    <Col lg={6}>
+                                                        <h6>Rest Time</h6>
+                                                    </Col>
+                                                    <Col lg={1}>
+                                                        <span>{item.restTime}</span>
+                                                    </Col>
+                                                    <Col lg={4}>
+                                                        <span><b>min</b></span>
+                                                    </Col>
+                                                </Row>
+                                            </div>
+                                        </>
+                                    )
+                                })}
+                                <br />
+                                {data?.mainmovement[0]?.type === "text" && data?.mainmovement?.map((item: any) => {
+                                    return (
+                                        <>
+                                            <div className='p-3 shadow-lg mt-3' style={{ borderRadius: '15px', border: '1px solid gray', display: 'inline-block'}}>
+                                                <div dangerouslySetInnerHTML={{ __html: `${item.value}`}}></div>
+                                            </div>
+                                        </>
+                                    )    
+                                })}
+                                <br />
+                                {data?.mainmovement[0]?.type === "url" && data?.mainmovement?.map((item: any) => {
+                                    return (
+                                        <>
+                                            <div className='p-3 shadow-lg mt-3' style={{ borderRadius: '15px', border: '1px solid gray', display: 'inline-block'}}>
+                                                <span>{item.value}</span>
+                                            </div>
+                                        </>
+                                    )    
+                                })}
+                            </Card.Body>
                         </Accordion.Collapse>
-                    </Card>
-                    <Card>
+                    </Card>}
+                    {data?.cooldown?.length > 0 && <Card>
                         <Accordion.Toggle as={Card.Header} className="text-left" eventKey="1" onClick={() => toggleAccodian(active === 2 ? null : 2)}>
                             <b>CoolDown</b>
                             <Chevron className={"accordion__icon float-right " + ((active === 2) ? 'rotate' : '')}  width={10} fill={"#777"}/>
                         </Accordion.Toggle>
                         <Accordion.Collapse eventKey="2">
-                            <Card.Body>Hello! I'm another body</Card.Body>
+                            <Card.Body>
+                                {data?.cooldown[0]?.type === "exercise" && data?.cooldown?.map((item: any) => {
+                                    return (
+                                        <>
+                                            <div className='shadow-lg p-3' style={{ borderRadius: "15px", display: 'inline-block'}}>
+                                                <Row>
+                                                    <Col lg={7}>
+                                                        <img src='https://picsum.photos/200/100' alt='img' style={{ borderRadius: "15px"}}/>
+                                                    </Col>
+                                                    <Col lg={5}>
+                                                        <Row>
+                                                            <h5>{item.value}</h5>
+                                                        </Row>
+                                                        <Row>
+                                                            <Col>
+                                                                <h6>Reps</h6>
+                                                                <span>{item.reps}</span>
+                                                            </Col>
+                                                            <Col>
+                                                                <h6>Weight</h6>
+                                                                <span>{item.weights}</span>
+                                                            </Col>
+                                                        </Row>
+                                                    </Col>
+                                                </Row>
+                                            </div>
+                                            <br />
+                                            <div className='shadow-lg p-3 mt-4' style={{ borderRadius: "15px", display: 'inline-block'}}>
+                                                <Row>
+                                                    <Col lg={6}>
+                                                        <h6>Rest Time</h6>
+                                                    </Col>
+                                                    <Col lg={1}>
+                                                        <span>{item.restTime}</span>
+                                                    </Col>
+                                                    <Col lg={4}>
+                                                        <span><b>min</b></span>
+                                                    </Col>
+                                                </Row>
+                                            </div>
+                                        </>
+                                    )
+                                })}
+                                <br />
+                                {data?.cooldown[0]?.type === "text" && data?.cooldown?.map((item: any) => {
+                                    return (
+                                        <>
+                                            <div className='p-3 shadow-lg mt-3' style={{ borderRadius: '15px', border: '1px solid gray', display: 'inline-block'}}>
+                                                <div dangerouslySetInnerHTML={{ __html: `${item.value}`}}></div>
+                                            </div>
+                                        </>
+                                    )    
+                                })}
+                                <br />
+                                {data?.cooldown[0]?.type === "url" && data?.cooldown?.map((item: any) => {
+                                    return (
+                                        <>
+                                            <div className='p-3 shadow-lg mt-3' style={{ borderRadius: '15px', border: '1px solid gray', display: 'inline-block'}}>
+                                                <span>{item.value}</span>
+                                            </div>
+                                        </>
+                                    )    
+                                })}
+                            </Card.Body>
                         </Accordion.Collapse>
-                    </Card>
+                    </Card>}
                 </Accordion>
             </div>
         </div>

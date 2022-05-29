@@ -17,16 +17,17 @@ export default function Group(props) {
     const auth = useContext(AuthContext);
 
     const [userPackage, setUserPackage] = useState<any>([]);
+    const [showHistory, setShowHistory] = useState(false);
     const fitnessActionRef = useRef<any>(null);
 
     const [updateDate] = useMutation(UPDATE_STARTDATE, {onCompleted: (r: any) => {console.log(r)}});
 
-    // const { data: data } = useQuery(GET_TAGS_FOR_GROUP, {
-    //     variables: {
-    //         id: auth.userid
-    //     },
-    //     onCompleted: (r: any) => loadData(r)
-    // });
+    const mainQuery = useQuery(GET_TAGS_FOR_GROUP, {
+        variables: {
+            id: auth.userid
+        },
+        onCompleted: (r: any) => loadData(r)
+    });
 
 
     const { data: data1 } = useQuery(GET_ALL_FITNESS_PACKAGE_BY_TYPE, {
@@ -226,6 +227,46 @@ export default function Group(props) {
         window.location.href = `/group/session/scheduler/${id}`
     }
 
+    function handleHistoryPackage(data: any){
+        const flattenData = flattenObj({...data});
+        function handleUsers(data: any){
+            let clients: any = [];
+            for(var i=0; i<data.length; i++){
+                clients.push(data[i].users_permissions_user.username);
+            }
+            // packageItem.client_packages[index]?.users_permissions_user
+            return clients;
+        }
+
+        setUserPackage(
+            [...flattenData.tags.map((packageItem, index) => {
+                let renewDay: any = '';
+                if (packageItem.client_packages[index]?.fitnesspackages[0].length !== 0) {
+                    renewDay = new Date(packageItem.client_packages[index]?.effective_date);
+                    renewDay.setDate(renewDay.getDate() + packageItem.client_packages[index]?.fitnesspackages[0].duration)
+                }
+                return {
+                    tagId: packageItem.id,
+                    id: packageItem.client_packages[index]?.fitnesspackages[0].id,
+                    packageName: packageItem.client_packages[index]?.fitnesspackages[0].packagename,
+                    duration: packageItem.client_packages[index]?.fitnesspackages[0].duration,
+                    expiry: packageItem.client_packages[index]?.fitnesspackages[0].expiry_date ?  moment(packageItem.client_packages[index]?.fitnesspackages[0].expiry_date).format("MMMM DD,YYYY") : "N/A",
+                    packageStatus: packageItem.client_packages[index]?.fitnesspackages[0].Status ? "Active" : "Inactive",
+
+                    // proManagerId: packageItem.proManagerId,
+                    // proManagerFitnessId: packageItem.proManagerFitnessId,
+                    client: packageItem.client_packages[index]?.users_permissions_user.username ? handleUsers(packageItem.client_packages) : "N/A",
+                    // start_dt: packageItem.effective_date,
+                    // renewal_dt: packageItem.renewal_dt,
+                    // time: packageItem.published_at ? moment(packageItem.published_at).format('h:mm:ss a') : "N/A",
+                    programName: packageItem.tag_name,
+                    programStatus: handleStatus(packageItem.sessions, packageItem.client_packages[index]?.effective_date, renewDay),
+                    renewal: packageItem.id ? calculateProgramRenewal(packageItem.client_packages[index]?.effective_date, packageItem.sessions) : "N/A",
+                }
+            })]
+        )
+    }
+
     const columns = useMemo(
         () => [
             {
@@ -341,19 +382,27 @@ export default function Group(props) {
         [] // eslint-disable-line react-hooks/exhaustive-deps
     );
 
+    if (!showHistory) {
+        if (userPackage.length > 0) {
+            userPackage.filter((item: any, index: any) => moment(item.expiry).isBefore(moment()) === true ? userPackage.splice(index, 1) : null);
+        }
+    }
+
     return (
         <div className="mt-5">
-            {/* <div className='mb-3'>
+            <div className='mb-3'>
                 <Form>
                     <Form.Check 
                         type="switch"
-                        id="custom-switch"
+                        id="custom-switch3"
                         label="Show History"
                         defaultChecked={showHistory}
-                        onClick={() => { setShowHistory(!showHistory); mainQuery.refetch(); }}
+                        onClick={() => { setShowHistory(!showHistory); mainQuery.refetch().then((res: any) => {
+                            handleHistoryPackage(res.data);
+                        }) }}
                     />
                 </Form>
-            </div> */}
+            </div>
             <Row>
                 <Col>
                     <GroupTable columns={columns} data={userPackage} />

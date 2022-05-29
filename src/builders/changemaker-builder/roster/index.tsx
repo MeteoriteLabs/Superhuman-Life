@@ -1,31 +1,76 @@
-import React, {useState} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import {Link} from 'react-router-dom';
 import {Card, Col, Row, Button, Spinner} from 'react-bootstrap';
 import moment from 'moment';
 import RosterTabs from './tabs';
-import {GET_SESSION_AND_SESSION_BOOKINGS} from './graphql/queries';
+import {GET_SESSION_AND_SESSION_BOOKINGS, GET_SESSIONS_BASED_ON_DATE, GET_TAG_BASED_ON_SESSION} from './graphql/queries';
 import {useQuery} from '@apollo/client';
 import { flattenObj } from '../../../components/utils/responseFlatten';
+import AuthContext from '../../../context/auth-context';
 
 const Roster =  () => {
 
+    const auth = useContext(AuthContext);
     const [scheduleDay, setScheduleDay] = useState(0);
-    const [scheduleDate, setScheduleDate] = useState(moment().format("YYYY-MM-DD"));
+    const [scheduleDate, setScheduleDate] = useState<any>(moment().format('YYYY-MM-DD'));
+    const [currentDateSessions, setCurrentDateSessions] = useState<any>([]);
+    const [tags, setTags] = useState<any>([]);
     const [sessionData, setSessionData] = useState<any>([]);
     const [show, setShow] = useState(false);
 
-    useQuery(GET_SESSION_AND_SESSION_BOOKINGS, {
+    // if(sessionData.length > 0){
+    //     setScheduleDate(sessionData[0]?.session?.session_date);
+    // }
+
+    // useEffect(() => {
+    //     setScheduleDate(sessionData[0]?.session?.session_date);
+    // }, [scheduleDate]);
+
+    function handleSorting(data: any){
+        data.sort((a: any, b: any) => {
+            var btime1: any = moment(a.startTime, "HH:mm a");
+            var btime2: any = moment(b.startTime, "HH:mm a");
+            return btime1 - btime2;
+        });
+        if(scheduleDate === moment().format("YYYY-MM-DD")){
+            setCurrentDateSessions(data);
+        }else {
+            window.location.href = `/roster/${data[0]?.id}`;
+        }
+    };
+
+    useQuery(GET_TAG_BASED_ON_SESSION, {
+        variables: {
+            id: window.location.pathname.split('/').pop()
+        },
+        onCompleted: (data: any) => {
+            const flattenData = flattenObj({...data});
+            setTags(flattenData.tags);
+        }
+    })
+
+    const currentDateData = useQuery(GET_SESSIONS_BASED_ON_DATE, {
+        variables: {
+            id: auth.userid,
+            date: scheduleDate
+        },
+        onCompleted: (data) => {
+            const flattenData = flattenObj({...data});
+            handleSorting(flattenData.sessions);
+        }
+    });
+
+    const currentSession = useQuery(GET_SESSION_AND_SESSION_BOOKINGS, {
         variables: {
             id: window.location.pathname.split('/').pop()
         },
         onCompleted: (data) => {
-            const flattenedData = flattenObj(data);
+            const flattenedData = flattenObj({...data});
+            // setScheduleDate(moment(flattenedData?.sessionsBookings[0]?.session?.session_date).format("YYYY-MM-DD"));
             setSessionData(flattenedData.sessionsBookings);
             setShow(true);
         }
     });
-
-    console.log(sessionData);
 
     function handleIconRender(tag: any, mode: any){
         if(tag === 'Personal Training'){
@@ -83,6 +128,35 @@ const Roster =  () => {
         }
     }
 
+    function handlePrevSessionLoad(currentId: any){
+        const location = currentDateSessions.findIndex(session => session.id === currentId);
+        debugger;
+        console.log(location);
+        if(location === 0 || currentDateSessions.length === 1){
+            console.log('no previous sessions available');
+            // currentDateData.refetch()
+        }else {
+            window.location.href = `/roster/${currentDateSessions[location - 1].id}`;
+        }
+    }
+
+    function handleNextSessionLoad(currentId: any){
+        const location = currentDateSessions.findIndex(session => session.id === currentId);
+        if(location === currentDateSessions.length - 1){
+            console.log('no next sessions available');
+            // currentDateData.refetch();
+        }else {
+            window.location.href = `/roster/${currentDateSessions[location + 1].id}`;
+        }
+    }
+
+    function handlePrevDayLoad(){
+        setScheduleDate(moment(scheduleDate).subtract(1, 'days').format("YYYY-MM-DD"));
+        // currentDateData.refetch();
+    }
+
+    console.log(sessionData);
+
     return (
         <>
             <div className="mb-3">
@@ -99,7 +173,8 @@ const Roster =  () => {
                                 <span
                                     onClick={() => {
                                         // handleTimeUpdate(scheduleDay - 7);
-                                        handleSubChangeDay(scheduleDay);
+                                        // handleSubChangeDay(scheduleDay);
+                                        handlePrevSessionLoad(window.location.pathname.split('/').pop());
                                     }}
                                     className="rounded-circle"
                                     style={{ cursor: 'pointer', fontSize: '20px'}}
@@ -110,7 +185,8 @@ const Roster =  () => {
                                 <span
                                     onClick={() => {
                                         // handleTimeUpdate(scheduleDay + 7);
-                                        handleAddChangeDay(scheduleDay);
+                                        // handleAddChangeDay(scheduleDay);
+                                        handleNextSessionLoad(window.location.pathname.split('/').pop())
                                     }}
                                     style={{ cursor: 'pointer', fontSize: '20px'}}
                                     >
@@ -131,7 +207,7 @@ const Roster =  () => {
                             <div className='mt-2' style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around' }}>
                                 <div style={{ maxWidth: '300px'}}>
                                     <img src="/assets/navigation_icon.svg" alt="navigation-icon"/>
-                                    <span className='pl-2'>asdfasdfasdfuis asdiohf aisd iasdfh ianw ei asidi oasud asdfhiu</span>
+                                    <span className='pl-2'>{tags[0]?.fitnesspackage?.address === null ? 'Class will be on google meet' : tags[0]?.fitnesspackage?.address?.address1}</span>
                                 </div>
                                 <div>
                                     <span>{handleIconRender(sessionData[0]?.session?.tag, sessionData[0]?.session?.mode)}</span>
@@ -141,7 +217,7 @@ const Roster =  () => {
                         </Col>
                         <Col lg={3} style={{ borderRight: '2px dashed gray'}}>
                             <div className='text-center'>
-                                <span><b>{handleClassTimeDisplay(sessionData[0]?.session?.start_time)}</b></span>
+                                <span><b>{moment(sessionData[0]?.session?.session_date).isAfter(moment()) ? <span className="text-success">Class Is Tomorrow</span> : handleClassTimeDisplay(sessionData[0]?.session?.start_time)}</b></span>
                             </div>
                             <div className='text-center'>
                                 <Button variant='success'
@@ -155,7 +231,9 @@ const Roster =  () => {
                         </Col>
                         <Col lg={3}>
                             <div className='text-center'>
-                                <span><b>Tag Program Name</b></span>
+                                <span><b>{tags?.map((item: any) => {
+                                    return item.tag_name 
+                                }).join(", ")}</b></span>
                             </div>
                             <div className="text-center">
                                 <br />
@@ -163,6 +241,7 @@ const Roster =  () => {
                                     onClick={() => {
                                         // handleTimeUpdate(scheduleDay - 7);
                                         handleSubChangeDay(scheduleDay);
+                                        handlePrevDayLoad();
                                     }}
                                     className="rounded-circle"
                                     style={{ cursor: 'pointer'}}
