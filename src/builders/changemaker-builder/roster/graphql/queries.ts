@@ -61,6 +61,8 @@ query getSessionAndSessionsBookings($id: ID!) {
                         warmup
                         mainmovement
                         cooldown
+                        workout_text
+                        workout_URL
                         muscle_groups{
                             data{
                                 id

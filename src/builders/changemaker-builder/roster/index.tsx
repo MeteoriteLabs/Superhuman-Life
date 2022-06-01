@@ -1,4 +1,4 @@
-import React, {useState, useContext, useEffect} from 'react';
+import React, {useState, useContext} from 'react';
 import {Link} from 'react-router-dom';
 import {Card, Col, Row, Button, Spinner} from 'react-bootstrap';
 import moment from 'moment';
@@ -11,12 +11,13 @@ import AuthContext from '../../../context/auth-context';
 const Roster =  () => {
 
     const auth = useContext(AuthContext);
-    const [scheduleDay, setScheduleDay] = useState(0);
-    const [scheduleDate, setScheduleDate] = useState<any>(moment().format('YYYY-MM-DD'));
+    // const [scheduleDay, setScheduleDay] = useState(0);
+    const [scheduleDate, setScheduleDate] = useState(moment().format('YYYY-MM-DD'));
     const [currentDateSessions, setCurrentDateSessions] = useState<any>([]);
     const [tags, setTags] = useState<any>([]);
     const [sessionData, setSessionData] = useState<any>([]);
     const [show, setShow] = useState(false);
+    const [anotherDate, setAnotherDate] = useState('');
 
     // if(sessionData.length > 0){
     //     setScheduleDate(sessionData[0]?.session?.session_date);
@@ -28,8 +29,8 @@ const Roster =  () => {
 
     function handleSorting(data: any){
         data.sort((a: any, b: any) => {
-            var btime1: any = moment(a.startTime, "HH:mm a");
-            var btime2: any = moment(b.startTime, "HH:mm a");
+            var btime1: any = moment(a.start_time, "HH:mm a");
+            var btime2: any = moment(b.start_time, "HH:mm a");
             return btime1 - btime2;
         });
         if(scheduleDate === moment().format("YYYY-MM-DD")){
@@ -52,7 +53,7 @@ const Roster =  () => {
     const currentDateData = useQuery(GET_SESSIONS_BASED_ON_DATE, {
         variables: {
             id: auth.userid,
-            date: scheduleDate
+            date: scheduleDate === anotherDate ? scheduleDate : anotherDate 
         },
         onCompleted: (data) => {
             const flattenData = flattenObj({...data});
@@ -66,7 +67,8 @@ const Roster =  () => {
         },
         onCompleted: (data) => {
             const flattenedData = flattenObj({...data});
-            // setScheduleDate(moment(flattenedData?.sessionsBookings[0]?.session?.session_date).format("YYYY-MM-DD"));
+            console.log(flattenedData);
+            setAnotherDate(moment(flattenedData.sessionsBookings[0]?.session?.session_date).format("YYYY-MM-DD"));
             setSessionData(flattenedData.sessionsBookings);
             setShow(true);
         }
@@ -94,13 +96,17 @@ const Roster =  () => {
     }
 
     function handleSubChangeDay(day: any){
-        setScheduleDay(day - 1);
-        setScheduleDate(moment().add(day - 1, 'days').format("YYYY-MM-DD"));
+        // setScheduleDay(day - 1);
+        setScheduleDate(moment(day).subtract(1, 'days').format("YYYY-MM-DD"));
+        setAnotherDate(moment(day).subtract(1, 'days').format("YYYY-MM-DD"));
+        currentDateData.refetch();
     } 
     
     function handleAddChangeDay(day: any){
-        setScheduleDay(day + 1);
-        setScheduleDate(moment().add(day + 1, 'days').format("YYYY-MM-DD"));
+        // setScheduleDay(day + 1);
+        setScheduleDate(moment(day).add(1, 'days').format("YYYY-MM-DD"));
+        setAnotherDate(moment(day).add(1, 'days').format("YYYY-MM-DD"));
+        currentDateData.refetch();
     }
 
     function toHoursAndMinutes(totalMinutes) {
@@ -130,10 +136,9 @@ const Roster =  () => {
 
     function handlePrevSessionLoad(currentId: any){
         const location = currentDateSessions.findIndex(session => session.id === currentId);
-        debugger;
-        console.log(location);
         if(location === 0 || currentDateSessions.length === 1){
-            console.log('no previous sessions available');
+            // console.log('no previous sessions available');
+            handleSubChangeDay(scheduleDate === anotherDate ? scheduleDate : anotherDate);
             // currentDateData.refetch()
         }else {
             window.location.href = `/roster/${currentDateSessions[location - 1].id}`;
@@ -143,19 +148,18 @@ const Roster =  () => {
     function handleNextSessionLoad(currentId: any){
         const location = currentDateSessions.findIndex(session => session.id === currentId);
         if(location === currentDateSessions.length - 1){
-            console.log('no next sessions available');
+            // console.log('no next sessions available');
+            handleAddChangeDay(scheduleDate === anotherDate ? scheduleDate : anotherDate);
             // currentDateData.refetch();
         }else {
             window.location.href = `/roster/${currentDateSessions[location + 1].id}`;
         }
     }
 
-    function handlePrevDayLoad(){
-        setScheduleDate(moment(scheduleDate).subtract(1, 'days').format("YYYY-MM-DD"));
-        // currentDateData.refetch();
-    }
-
-    console.log(sessionData);
+    // function handlePrevDayLoad(){
+    //     setScheduleDate(moment(scheduleDate).subtract(1, 'days').format("YYYY-MM-DD"));
+    //     // currentDateData.refetch();
+    // }
 
     return (
         <>
@@ -240,19 +244,19 @@ const Roster =  () => {
                                 <span
                                     onClick={() => {
                                         // handleTimeUpdate(scheduleDay - 7);
-                                        handleSubChangeDay(scheduleDay);
-                                        handlePrevDayLoad();
+                                        handleSubChangeDay(scheduleDate === anotherDate ? scheduleDate : anotherDate);
+                                        // handlePrevDayLoad();
                                     }}
                                     className="rounded-circle"
                                     style={{ cursor: 'pointer'}}
                                     >
                                     <i className="fa fa-chevron-left mr-5"></i>
                                 </span>
-                                <span><b>{moment().add(scheduleDay, 'days').format("Do MMM, YY")}</b></span>
+                                <span><b>{scheduleDate === anotherDate ? moment(scheduleDate).format("Do MMM, YY") : moment(anotherDate).format("Do MMM, YY")}</b></span>
                                 <span
                                     onClick={() => {
                                         // handleTimeUpdate(scheduleDay + 7);
-                                        handleAddChangeDay(scheduleDay);
+                                        handleAddChangeDay(scheduleDate === anotherDate ? scheduleDate : anotherDate);
                                     }}
                                     style={{ cursor: 'pointer'}}
                                     >
@@ -268,7 +272,7 @@ const Roster =  () => {
                                         border: "none",
                                         backgroundColor: "rgba(211,211,211,0.8)",
                                     }}
-                                    value={scheduleDate}
+                                    value={scheduleDate === anotherDate ? scheduleDate : anotherDate}
                                     onChange={(e) => 
                                         handleDatePicked(e.target.value)
                                     }

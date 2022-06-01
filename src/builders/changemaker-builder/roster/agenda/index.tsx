@@ -77,14 +77,22 @@ const RosterAgenda = (props: any) => {
                     </Col>
                 </Row>
             </div>
+            {data.workout_URL !== null && <div className='mt-3 shadow-lg p-3' style={{ borderRadius: "15px", display: 'inline-block'}}>
+                <h5><b>Workout URL: </b></h5>
+                <span>{data.workout_URL}</span>
+            </div>}
+            {data.workout_text !== null && <div className='mt-3 shadow-lg p-3' style={{ borderRadius: "15px", display: 'inline-block'}}>
+                <h5><b>Workout Instructions in Text: </b></h5>
+                <span>{data.workout_text}</span>
+            </div>}
             <div className='mt-4'>
                 <Accordion defaultActiveKey="">
                     {data?.warmup?.length > 0 && <Card>
-                        <Accordion.Toggle as={Card.Header} className="text-left" eventKey="0" onClick={() => toggleAccodian(active === 0 ? null : 0)}>
+                        <Accordion.Toggle as={Card.Header} className="text-left" eventKey="1" onClick={() => toggleAccodian(active === 1 ? null : 1)}>
                             <b>Warmup</b>
-                            <Chevron className={"accordion__icon float-right " + ((active === 0) ? 'rotate' : '')}  width={10} fill={"#777"}/>
+                            <Chevron className={"accordion__icon float-right " + ((active === 1) ? 'rotate' : '')}  width={10} fill={"#777"}/>
                         </Accordion.Toggle>
-                        <Accordion.Collapse eventKey="0">
+                        <Accordion.Collapse eventKey="1">
                             <Card.Body>
                                 {data?.warmup[0]?.type === "exercise" && data?.warmup?.map((item: any) => {
                                     return (
@@ -152,11 +160,11 @@ const RosterAgenda = (props: any) => {
                         </Accordion.Collapse>
                     </Card>}
                     {data?.mainmovement?.length > 0 && <Card>
-                        <Accordion.Toggle as={Card.Header} className="text-left" eventKey="1" onClick={() => toggleAccodian(active === 1 ? null : 1)}>
+                        <Accordion.Toggle as={Card.Header} className="text-left" eventKey="2" onClick={() => toggleAccodian(active === 2 ? null : 2)}>
                             <b>Main Movement</b>
-                            <Chevron className={"accordion__icon float-right " + ((active === 1) ? 'rotate' : '')}  width={10} fill={"#777"}/>
+                            <Chevron className={"accordion__icon float-right " + ((active === 2) ? 'rotate' : '')}  width={10} fill={"#777"}/>
                         </Accordion.Toggle>
-                        <Accordion.Collapse eventKey="1">
+                        <Accordion.Collapse eventKey="2">
                             <Card.Body>
                                 {data?.mainmovement[0]?.type === "exercise" && data?.mainmovement?.map((item: any) => {
                                     return (
@@ -224,11 +232,11 @@ const RosterAgenda = (props: any) => {
                         </Accordion.Collapse>
                     </Card>}
                     {data?.cooldown?.length > 0 && <Card>
-                        <Accordion.Toggle as={Card.Header} className="text-left" eventKey="1" onClick={() => toggleAccodian(active === 2 ? null : 2)}>
+                        <Accordion.Toggle as={Card.Header} className="text-left" eventKey="3" onClick={() => toggleAccodian(active === 3 ? null : 3)}>
                             <b>CoolDown</b>
-                            <Chevron className={"accordion__icon float-right " + ((active === 2) ? 'rotate' : '')}  width={10} fill={"#777"}/>
+                            <Chevron className={"accordion__icon float-right " + ((active === 3) ? 'rotate' : '')}  width={10} fill={"#777"}/>
                         </Accordion.Toggle>
-                        <Accordion.Collapse eventKey="2">
+                        <Accordion.Collapse eventKey="3">
                             <Card.Body>
                                 {data?.cooldown[0]?.type === "exercise" && data?.cooldown?.map((item: any) => {
                                     return (
