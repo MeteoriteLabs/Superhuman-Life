@@ -146,7 +146,10 @@ export const GET_ALL_WEEKLY_SESSIONOS = gql`
       },
       session_date: {
         between: [$startDate, $endDate]
-      }
+      },
+      type: {
+        ne: "restday"
+      },
     }){
       data{
         id
@@ -191,7 +194,10 @@ query getDailySessions($id: ID!, $Date: Date!){
     },
     session_date: {
       eq: $Date
-    }
+    },
+    type: {
+      ne: "restday"
+    },
   }){
     data{
       id

@@ -17,7 +17,7 @@ const RosterGeneral = (props: any) => {
                         <h5>About</h5>
                         <div className='p-4' style={{ border: '1px solid black', borderRadius: '20px'}}>
                             <span>
-                                {data.workout.About}
+                                {data?.workout?.About}
                             </span>
                         </div>
                     </div>
@@ -25,7 +25,7 @@ const RosterGeneral = (props: any) => {
                         <h5>Benefits</h5>
                         <div className='p-4' style={{ border: '1px solid black', borderRadius: '20px'}}>
                             <span>
-                                {data.workout.Benifits}
+                                {data?.workout?.Benifits}
                             </span>
                         </div>
                     </div>
@@ -33,7 +33,7 @@ const RosterGeneral = (props: any) => {
                         <h5>Equipment</h5>
                         <div className='p-4' style={{ border: '1px solid black', borderRadius: '20px'}}>
                             <span>
-                                {data.workout.equipment_lists.map((item: any) => {
+                                {data?.workout?.equipment_lists?.map((item: any) => {
                                     return item.name
                                 }).join(', ')}
                             </span>

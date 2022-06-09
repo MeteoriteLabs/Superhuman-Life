@@ -6,6 +6,9 @@ query getSessionAndSessionsBookings($id: ID!) {
       session: {
         id: {
           eq: $id
+        },
+        type: {
+          ne: "restday"
         }
       }
     }){
@@ -114,7 +117,7 @@ export const GET_SESSIONS_BASED_ON_DATE = gql`
 `;
 
 export const GET_TAG_BASED_ON_SESSION = gql`
-  query getTagBasedOnSession($id: ID!) {
+  query getTagBasedOnSession($id: ID!, $lowerDate: Date!, $upperDate: Date!, $userid: ID!) {
     tags(filters: {
       sessions: {
         id: {
@@ -126,6 +129,51 @@ export const GET_TAG_BASED_ON_SESSION = gql`
         id
         attributes{
           tag_name
+          sessions(
+            filters: {
+              session_date: {
+                between:[$lowerDate , $upperDate]
+              },
+              changemaker: {
+                id: {
+                  eq: $userid
+                }
+              }
+            },
+            pagination: {
+              limit: 1000
+            }
+          ){
+            data{
+              id
+              attributes{
+                start_time
+                end_time
+                tag
+                type
+                mode
+                session_date
+                Is_restday
+                activity{
+                  data{
+                    id
+                    attributes{
+                      title
+                    }
+                  }
+                }
+                activity_target
+                workout{
+                  data{
+                    id
+                    attributes{
+                      workouttitle
+                    }
+                  }
+                }
+              }
+            }
+          }
           fitnesspackage{
             data{
               id

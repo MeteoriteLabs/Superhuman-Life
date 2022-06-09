@@ -46,10 +46,10 @@ const RosterAgenda = (props: any) => {
             <div className='text-left shadow-lg p-4' style={{ borderRadius: '15px'}}>
                 <Row>
                     <Col>
-                        <span>{data.workouttitle}</span>
+                        <span>{data?.workouttitle}</span>
                     </Col>
                     <Col>
-                        <span>{data.fitnessdisciplines.map((item: any) => {
+                        <span>{data?.fitnessdisciplines?.map((item: any) => {
                             return item.disciplinename
                         }).join(", ")}</span>
                     </Col>
@@ -57,33 +57,33 @@ const RosterAgenda = (props: any) => {
                         <span>{'duration'}</span>
                     </Col>
                     <Col>
-                        <span>{data.level}</span>
+                        <span>{data?.level}</span>
                     </Col>
                     <Col>
-                        <span>{data.intensity}</span>
+                        <span>{data?.intensity}</span>
                     </Col>
                     <Col>
-                        <span>{data.calories}</span>
+                        <span>{data?.calories}</span>
                     </Col>
                     <Col>
-                        <span>{data.muscle_groups.map((item: any) => {
+                        <span>{data?.muscle_groups?.map((item: any) => {
                             return item.name
                         }).join(", ")}</span>
                     </Col>
                     <Col>
-                        <h6>{data.equipment_lists.map((item: any) => {
+                        <h6>{data?.equipment_lists?.map((item: any) => {
                             return item.name
                         }).join(", ")}</h6>
                     </Col>
                 </Row>
             </div>
-            {data.workout_URL !== null && <div className='mt-3 shadow-lg p-3' style={{ borderRadius: "15px", display: 'inline-block'}}>
+            {data?.workout_URL !== null && <div className='mt-3 shadow-lg p-3' style={{ borderRadius: "15px", display: 'inline-block'}}>
                 <h5><b>Workout URL: </b></h5>
-                <span>{data.workout_URL}</span>
+                <span>{data?.workout_URL}</span>
             </div>}
-            {data.workout_text !== null && <div className='mt-3 shadow-lg p-3' style={{ borderRadius: "15px", display: 'inline-block'}}>
+            {data?.workout_text !== null && <div className='mt-3 shadow-lg p-3' style={{ borderRadius: "15px", display: 'inline-block'}}>
                 <h5><b>Workout Instructions in Text: </b></h5>
-                <span>{data.workout_text}</span>
+                <div dangerouslySetInnerHTML={{ __html: `${data?.workout_text}`}}></div>
             </div>}
             <div className='mt-4'>
                 <Accordion defaultActiveKey="">
