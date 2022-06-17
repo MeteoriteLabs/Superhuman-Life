@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Card, Col, Row, Button, Spinner } from 'react-bootstrap';
+import { Card, Col, Row, Button, Spinner, Alert } from 'react-bootstrap';
 import moment from 'moment';
 import RosterTabs from './tabs';
 import { GET_SESSION_AND_SESSION_BOOKINGS, GET_SESSIONS_BASED_ON_DATE, GET_TAG_BASED_ON_SESSION } from './graphql/queries';
@@ -9,6 +9,7 @@ import { flattenObj } from '../../../components/utils/responseFlatten';
 import AuthContext from '../../../context/auth-context';
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
+import './styles.css';
 
 const Roster = () => {
 
@@ -21,9 +22,39 @@ const Roster = () => {
     const [sessionData, setSessionData] = useState<any>([]);
     const [show, setShow] = useState(false);
     const [anotherDate, setAnotherDate] = useState('');
+    const [showAlert, setShowAlert] = useState(false);
+    const [choosenDate, setChoosenDate] = useState('');
 
     console.log(restDays);
     console.log(currentDateSessions);
+
+    useEffect(() => {
+        setTimeout(() => {
+            setShowAlert(false);
+        }, 5000);
+    }, [showAlert])
+
+    function tileContent({ date, view }) {
+        for (var i = 0; i < currentDateSessions.length; i++) {
+            if (moment(currentDateSessions[i].session_date).format('YYYY-MM-DD') === moment(date).format('YYYY-MM-DD') && currentDateSessions[i].type === 'restday') {
+                return 'sessionRestDay';
+            };
+            if (moment(currentDateSessions[i].session_date).format('YYYY-MM-DD') === moment(date).format('YYYY-MM-DD') && currentDateSessions[i].type !== 'restday') {
+                return 'sessionPresent';
+            };
+        };
+    }
+
+    function handleDateChange(date){
+        const checkingIfSessionExists = currentDateSessions.filter(session => session.session_date === moment(date).format('YYYY-MM-DD') && session.type !== 'restday');
+        console.log(checkingIfSessionExists);
+        if (checkingIfSessionExists.length > 0) {
+            window.location.href = `/roster/${checkingIfSessionExists[0].id}`;
+        }else {
+            setShowAlert(true);
+            setChoosenDate(moment(date).format('Do MMM, YY'));
+        }
+    }
 
     // if(sessionData.length > 0){
     //     setScheduleDate(sessionData[0]?.session?.session_date);
@@ -194,6 +225,9 @@ const Roster = () => {
                     <Link to="/schedule"><i className="fa fa-arrow-circle-left" style={{ color: 'black' }}></i></Link>
                     <b> Back</b>
                 </span>
+                {showAlert && <Alert key={2} variant={'warning'}>
+                    There are no available Session on {choosenDate}
+                </Alert>}
             </div>
             <Card className="shadow-sm mt-3" border="light">
                 <Card.Body>
@@ -266,8 +300,8 @@ const Roster = () => {
                                 }).join(", ")}</b></span>
                             </div>
                             <div className="text-center">
-                                <br />
-                                <span
+                                {/* <br /> */}
+                                {/* <span
                                     onClick={() => {
                                         // handleTimeUpdate(scheduleDay - 7);
                                         handleSubChangeDay(scheduleDate === anotherDate ? scheduleDate : anotherDate);
@@ -287,8 +321,8 @@ const Roster = () => {
                                     style={{ cursor: 'pointer' }}
                                 >
                                     <i className="fa fa-chevron-right ml-5"></i>
-                                </span>
-                                <br />
+                                </span> */}
+                                {/* <br /> */}
                                 {/* <input
                                     min={moment().subtract(3, "months").format("YYYY-MM-DD")}
                                     max={moment().add(3, "months").format("YYYY-MM-DD")}
@@ -305,8 +339,8 @@ const Roster = () => {
                                 />{" "} */}
                                 <Calendar
                                     className="disabled mt-3"
-                                    // tileClassName={tileContent}
-                                    // onChange={onChange}
+                                    tileClassName={tileContent}
+                                    onChange={handleDateChange}
                                     // onActiveStartDateChange={({ action }) => {
                                     //     action === "next"
                                     //         ? setMonth(month + 1)
