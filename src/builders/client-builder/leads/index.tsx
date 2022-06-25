@@ -1,11 +1,11 @@
 import { useMemo, useState, useRef, useContext, useEffect } from "react";
 import { Badge, Button, TabContent, InputGroup, FormControl, Card, Container, Row, Col } from "react-bootstrap";
 import Table from "../../../components/table/leads-table";
-import { useQuery } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client";
 import AuthContext from "../../../context/auth-context";
 import ActionButton from "../../../components/actionbutton/index";
 import CreateEditMessage from "./createoredit-leads";
-import { GET_LEADS_NEW } from "./queries";
+import { GET_LEADS_NEW, UPDATE_SEEN_NEW } from "./queries";
 import { flattenObj } from "../../../components/utils/responseFlatten";
 
 export default function Leads() {
@@ -16,13 +16,25 @@ export default function Leads() {
      const searchInput = useRef<any>();
      const createEditMessageComponent = useRef<any>(null);
 
+     const [updateSeenStatus] = useMutation(UPDATE_SEEN_NEW, {
+          onCompleted: (e: any) => {
+               fetch.refetch();
+          }
+     });
+
      const columns = useMemo<any>(
           () => [
                { accessor: "leadsdate", Header: "Leads Date" },
                { accessor: "name", Header: "Name" },
                { accessor: "number", Header: "Number" },
                { accessor: "email", Header: "Email" },
-               { accessor: "isseen" },
+               {
+                    accessor: "isseen",
+                    Header: "Is Read",
+                    Cell: (v: any) => (
+                         <Badge variant={v.value ? "success" : "danger"}>{v.value ? "Read" : "Unread"}</Badge>
+                    ),
+               },
                {
                     accessor: "source",
                     Header: "Source",
@@ -95,9 +107,29 @@ export default function Leads() {
                               });
                          };
 
+                         const actionClick4 = () => {
+                              updateSeenStatus({
+                                   variables: {
+                                        seen: false,
+                                        id: row.original.id,
+                                   }
+                              });
+                         };
+
+                         const actionClick5 = () => {
+                              updateSeenStatus({
+                                   variables: {
+                                        seen: true,
+                                        id: row.original.id,
+                                   }
+                              });
+                         };
+
                          const arrayAction = [
                               { actionName: "Edit", actionClick: actionClick1 },
                               { actionName: "View", actionClick: actionClick2 },
+                              { actionName: "Mark as Unread", actionClick: actionClick4 },
+                              { actionName: "Mark as Read", actionClick: actionClick5 },
                               { actionName: "Delete", actionClick: actionClick3 },
                          ];
 
@@ -131,7 +163,6 @@ export default function Leads() {
      function loadData(data: any) {
           let namearr: any = [];
           const flattenData = flattenObj({ ...data });
-          console.log(flattenData);
           setData([...flattenData.websiteContactForms]);
           setDataTable(
                [...flattenData.websiteContactForms].flatMap((Detail) => {

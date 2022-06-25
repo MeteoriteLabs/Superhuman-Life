@@ -177,7 +177,7 @@ export const UPDATE_SEEN = gql`
 `;
 
 export const UPDATE_SEEN_NEW = gql`
-mutation updateleads($seen: Boolean, $messageid: ID!) {
+mutation updateleads($seen: Boolean, $id: ID!) {
      updateWebsiteContactForm(id: $id, data: {
        isSeen: $seen,
      }){

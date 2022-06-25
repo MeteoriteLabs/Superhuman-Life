@@ -33,7 +33,7 @@ function Table({ data, columns }: any) {
                               return (
                                    <Fragment key={rowProps.key}>
                                         <tr
-                                             className={row.values.isseen ? "rowCard highlight" : "rowCard"}
+                                             className={!row.values.isseen ? "rowCard highlight" : "rowCard"}
                                              {...row.getRowProps()}
                                         >
                                              {row.cells.map((cell) => (

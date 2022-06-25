@@ -37,13 +37,13 @@ function CreateEditMessage(props: any, ref: any) {
           },
      });
 
-     const [updatateseen]: any = useMutation(UPDATE_SEEN_NEW, {
-          onCompleted: (r: any) => {
-               console.log(r);
-          },
-     });
+     // const [updatateseen]: any = useMutation(UPDATE_SEEN_NEW, {
+     //      onCompleted: (r: any) => {
+     //           console.log(r);
+     //      },
+     // });
 
-     const [deleteLeads] = useMutation(DELETE_LEAD_NEW, { onCompleted: (e: any) => props.callback() });
+     const [deleteLeads] = useMutation(DELETE_LEAD_NEW, { onCompleted: (e: any) => { modalTrigger.next(false); props.callback(); } });
 
      const modalTrigger = new Subject();
 
@@ -95,9 +95,9 @@ function CreateEditMessage(props: any, ref: any) {
           editMessage({ variables: { id: auth.userid, details: frm, messageid: frm.messageid } });
      }
 
-     if (o.type === "view") {
-          updatateseen({ variables: { messageid: o.id, seen: false } });
-     }
+     // if (o.type === "view") {
+     //      updatateseen({ variables: { messageid: o.id, seen: true } });
+     // }
 
      // function ViewMessage(frm: any) {
      //      updatateseen({ variables: { messageid: frm.messageid, seen: false } });
