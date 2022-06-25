@@ -5,7 +5,8 @@ import { useQuery } from "@apollo/client";
 import AuthContext from "../../../context/auth-context";
 import ActionButton from "../../../components/actionbutton/index";
 import CreateEditMessage from "./createoredit-leads";
-import { GET_LEADS } from "./queries";
+import { GET_LEADS_NEW } from "./queries";
+import { flattenObj } from "../../../components/utils/responseFlatten";
 
 export default function Leads() {
      const auth = useContext(AuthContext);
@@ -118,32 +119,39 @@ export default function Leads() {
 
      const [datatable, setDataTable] = useState<{}[]>([]);
 
-     function FetchData(_variables: {} = { id: auth.userid }) {
-          useQuery(GET_LEADS, { variables: _variables, onCompleted: loadData });
+     // function FetchData(_variables: {} = { id: auth.userid }) {
+     const fetch = useQuery(GET_LEADS_NEW, { variables: { id: auth.userid }, onCompleted: loadData });
+     // }
+
+     function refetchQueryCallback() {
+          fetch.refetch();
      }
+
 
      function loadData(data: any) {
           let namearr: any = [];
-          setData([...data.websiteContactForms]);
+          const flattenData = flattenObj({ ...data });
+          console.log(flattenData);
+          setData([...flattenData.websiteContactForms]);
           setDataTable(
-               [...data.websiteContactForms].flatMap((Detail) => {
-                    if (!namearr.includes(Detail.details.leadsdetails.name)) {
-                         namearr.push(Detail.details.leadsdetails.name);
-                         namearr.push(Detail.details.leadsdetails.name.toLowerCase());
+               [...flattenData.websiteContactForms].flatMap((Detail) => {
+                    if (!namearr.includes(Detail.Details?.leadsdetails?.name)) {
+                         namearr.push(Detail.Details?.leadsdetails?.name);
+                         namearr.push(Detail.Details?.leadsdetails?.name?.toLowerCase());
                     }
-                    if (!namearr.includes(Detail.details.status)) {
-                         namearr.push(Detail.details.status.toLowerCase());
+                    if (!namearr.includes(Detail.Details?.leadsdetails?.status)) {
+                         namearr.push(Detail.Details?.leadsdetails.status?.toLowerCase());
                     }
 
                     return {
                          id: Detail.id,
                          leadsdate: getDate(Date.parse(Detail.createdAt)),
-                         name: Detail.details.leadsdetails.name,
-                         number: Detail.details.leadsdetails.phonenumber,
-                         email: Detail.details.leadsdetails.email,
-                         source: Detail.details.source,
-                         status: Detail.details.status,
-                         isseen: Detail.isSeen,
+                         name: Detail.Details?.leadsdetails?.name,
+                         number: Detail.Details?.leadsdetails?.phonenumber,
+                         email: Detail.Details?.leadsdetails?.email,
+                         source: Detail.Details?.source,
+                         status: Detail.Details?.status,
+                         isseen: Detail?.isSeen,
                          lastupdated: getDate(Date.parse(Detail.updatedAt)),
                     };
                })
@@ -199,7 +207,7 @@ export default function Leads() {
           }
      }, [searchFilter, data, nameArr]);
 
-     FetchData({ id: auth.userid });
+     // FetchData({ id: auth.userid });
      return (
           <TabContent>
                <Container>
@@ -239,7 +247,7 @@ export default function Leads() {
                                    >
                                         <i className="fas fa-plus-circle"></i> Add Lead
                                    </Button>
-                                   <CreateEditMessage ref={createEditMessageComponent}></CreateEditMessage>
+                                   <CreateEditMessage ref={createEditMessageComponent} callback={refetchQueryCallback}></CreateEditMessage>
                               </Card.Title>
                          </Col>
                     </Row>

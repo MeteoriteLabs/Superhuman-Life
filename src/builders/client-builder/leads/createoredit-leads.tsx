@@ -1,11 +1,12 @@
 import React, { useContext, useImperativeHandle, useState } from "react";
 import { useMutation, useQuery } from "@apollo/client";
 import ModalView from "../../../components/modal";
-import { ADD_LEADS, DELETE_LEAD, GET_LEADS_ID, UPDATE_LEADS, UPDATE_SEEN } from "./queries";
+import { ADD_LEADS_NEW, DELETE_LEAD_NEW, GET_LEADS_ID_NEW, UPDATE_LEADS_NEW, UPDATE_SEEN_NEW } from "./queries";
 import AuthContext from "../../../context/auth-context";
 import StatusModal from "../../../components/StatusModal/StatusModal";
 import { Subject } from "rxjs";
 import { schema } from "./schema";
+import { flattenObj } from "../../../components/utils/responseFlatten";
 //import {widgets} from "./schema"
 
 interface Operation {
@@ -23,24 +24,26 @@ function CreateEditMessage(props: any, ref: any) {
 
      let o = { ...operation };
 
-     const [createLeads] = useMutation(ADD_LEADS, {
+     const [createLeads] = useMutation(ADD_LEADS_NEW, {
           onCompleted: (r: any) => {
                modalTrigger.next(false);
+               props.callback();
           },
      });
-     const [editMessage]: any = useMutation(UPDATE_LEADS, {
+     const [editMessage]: any = useMutation(UPDATE_LEADS_NEW, {
           onCompleted: (r: any) => {
                modalTrigger.next(false);
+               props.callback();
           },
      });
 
-     const [updatateseen]: any = useMutation(UPDATE_SEEN, {
+     const [updatateseen]: any = useMutation(UPDATE_SEEN_NEW, {
           onCompleted: (r: any) => {
                console.log(r);
           },
      });
 
-     const [deleteLeads] = useMutation(DELETE_LEAD, { onCompleted: (e: any) => console.log(e) });
+     const [deleteLeads] = useMutation(DELETE_LEAD_NEW, { onCompleted: (e: any) => props.callback() });
 
      const modalTrigger = new Subject();
 
@@ -52,7 +55,7 @@ function CreateEditMessage(props: any, ref: any) {
           },
      }));
 
-     useQuery(GET_LEADS_ID, {
+     useQuery(GET_LEADS_ID_NEW, {
           variables: { id: operation.id },
           skip: !operation.id || operation.type === "delete",
           onCompleted: (e: any) => {
@@ -61,18 +64,19 @@ function CreateEditMessage(props: any, ref: any) {
      });
 
      function FillDetails(data: any) {
+          const flattenData = flattenObj({ ...data })
           let detail: any = { leadsdetails: {} };
-          let msg: any = data.websiteContactForms[0];
+          let msg: any = flattenData.websiteContactForms[0];
 
           let o = { ...operation };
           detail.name = o.type.toLowerCase();
-          detail.status = msg.details.status;
-          detail.source = msg.details.source;
-          detail.notes = msg.details.notes;
-          detail.leadsdetails.email = msg.details.leadsdetails.email;
-          detail.leadsdetails.name = msg.details.leadsdetails.name;
-          detail.leadsdetails.phonenumber = msg.details.leadsdetails.phonenumber;
-          detail.leadsdetails.leadsmesssage = msg.details.leadsdetails.leadsmesssage;
+          detail.status = msg.Details.status;
+          detail.source = msg.Details.source;
+          detail.notes = msg.Details.notes;
+          detail.leadsdetails.email = msg.Details?.leadsdetails.email;
+          detail.leadsdetails.name = msg.Details?.leadsdetails.name;
+          detail.leadsdetails.phonenumber = msg.Details?.leadsdetails.phonenumber;
+          detail.leadsdetails.leadsmesssage = msg.Details?.leadsdetails.leadsmesssage;
           detail.messageid = msg.id;
 
           setMessageDetails(detail);

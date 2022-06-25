@@ -3,9 +3,10 @@ import ActionButton from "../../../components/actionbutton/index";
 import { Badge, Button, TabContent, InputGroup, FormControl, Card, Container, Row, Col } from "react-bootstrap";
 import AuthContext from "../../../context/auth-context";
 import { useQuery } from "@apollo/client";
-import { GET_CLIENTS } from "./queries";
+import { GET_CLIENT_NEW } from "./queries";
 import CreateClient from "./addclientcomponent";
 import Table from "../../../components/table";
+import { flattenObj } from '../../../components/utils/responseFlatten';
 //import client from "./client";
 
 function ClientListingPage() {
@@ -126,8 +127,12 @@ function ClientListingPage() {
 
      const [datatable, setDataTable] = useState<{}[]>([]);
 
-     function FetchData(_variables: {} = { filter: " ", id: auth.userid }) {
-          useQuery(GET_CLIENTS, { variables: _variables, onCompleted: loadData });
+     // function FetchData(_variables: {} = { filter: " ", id: auth.userid }) {
+     const fetch = useQuery(GET_CLIENT_NEW, { variables: { filter: searchFilter, id: auth.userid }, onCompleted: loadData });
+     // }
+
+     function refetchQueryCallback() {
+          fetch.refetch();
      }
 
      function loadData(data: any) {
@@ -135,8 +140,10 @@ function ClientListingPage() {
           let flag: any;
           let namearr: any = [];
 
+          const flattenData = flattenObj({ ...data });
+
           setDataTable(
-               [...data.userPackages].flatMap((Detail) => {
+               [...flattenData.clientPackages].flatMap((Detail) => {
                     let clientname: any = Detail.users_permissions_user.username;
                     let clientemail: any = Detail.users_permissions_user.email;
 
@@ -157,7 +164,7 @@ function ClientListingPage() {
                               clientname: Detail.users_permissions_user.username,
                               clientemail: Detail.users_permissions_user.email,
                               clientphone: Detail.users_permissions_user.Phone,
-                              clientlocation: Detail.users_permissions_user.addresses[0].city,
+                              clientlocation: Detail.users_permissions_user?.addresses[0]?.city,
                               bookings: [clientnamecount, Detail.users_permissions_user.username],
                               status: "Assigned",
                          };
@@ -168,7 +175,7 @@ function ClientListingPage() {
           );
      }
 
-     FetchData({ filter: searchFilter, id: auth.userid });
+     // FetchData({ filter: searchFilter, id: auth.userid });
      return (
           <TabContent>
                <Container>
@@ -208,7 +215,7 @@ function ClientListingPage() {
                                    >
                                         <i className="fas fa-plus-circle"></i> Add Client
                                    </Button>
-                                   <CreateClient ref={CreateClientComponent}></CreateClient>
+                                   <CreateClient ref={CreateClientComponent} callback={refetchQueryCallback}></CreateClient>
                               </Card.Title>
                          </Col>
                     </Row>

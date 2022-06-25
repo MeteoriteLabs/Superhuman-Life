@@ -2,6 +2,7 @@ import { useState, useRef, useContext } from "react";
 import { InputGroup, FormControl, Container } from "react-bootstrap";
 import { gql, useQuery } from "@apollo/client";
 import AuthContext from "../../../../context/auth-context";
+import { flattenObj } from "../../../../components/utils/responseFlatten";
 
 const PackageSearch = (props: any) => {
      //const last = window.location.pathname.split("/").pop();
@@ -14,13 +15,23 @@ const PackageSearch = (props: any) => {
 
      const GET_PACKAGELIST = gql`
           query packageListQuery($filter: String!, $id: ID) {
-               fitnesspackages(
-                    sort: "updatedAt"
-                    where: { packagename_contains: $filter, users_permissions_user: { id: $id } }
-               ) {
-                    id
-                    packagename
-               }
+               fitnesspackages(filters: {
+                    packagename:{
+                      containsi: $filter
+                    },
+                    users_permissions_user: {
+                      id: {
+                        eq: $id
+                      }
+                    }
+                  }){
+                    data{
+                      id
+                      attributes{
+                        packagename
+                      }
+                    }
+                  }
           }
      `;
 
@@ -29,8 +40,9 @@ const PackageSearch = (props: any) => {
      }
 
      function loadPackageList(data: any) {
+          const flattenData = flattenObj({ ...data });
           setPackageLists(
-               [...data.fitnesspackages].map((p) => {
+               [...flattenData.fitnesspackages].map((p) => {
                     return {
                          id: p.id,
                          name: p.packagename,
