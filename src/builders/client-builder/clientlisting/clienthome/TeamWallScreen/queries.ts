@@ -11,6 +11,25 @@ export const GET_MOODSCALE = gql`
      }
 `;
 
+export const GET_MOODSCALE_NEW = gql`
+query{
+     ratingScales(filters: {
+       Type: {
+         eq: "Mood"
+       }
+     }){
+       data{
+         id
+         attributes{
+           Type
+           items
+           item_type
+         }
+       }
+     }
+   }
+`
+
 export const GET_FITNESSSCALE = gql`
      query scale {
           ratingScales(where: { Type: "fitness" }) {
@@ -21,6 +40,25 @@ export const GET_FITNESSSCALE = gql`
           }
      }
 `;
+
+export const GET_FITNESSSCALE_NEW = gql`
+query{
+     ratingScales(filters: {
+       Type: {
+         eq: "fitness"
+       }
+     }){
+       data{
+         id
+         attributes{
+           Type
+           items
+           item_type
+         }
+       }
+     }
+   }
+`
 
 export const ADD_RATING = gql`
      mutation addRating(
@@ -54,6 +92,34 @@ export const ADD_RATING = gql`
      }
 `;
 
+export const ADD_RATING_NEW = gql`
+mutationaddRating(
+     $type: String
+     $resource_id: String
+     $rating: Int
+     $max_rating: Int
+     $rating_scale_id: ID
+     $resource_type: String
+     $user_permissions_user: ID
+     $clientid: ID
+){
+     createRating(data: {
+       type: $type,
+       resource_id: $resource_id,
+       rating: $rating,
+       max_rating: $max_rating,
+       rating_scale: $rating_scale_id,
+       resource_type: $resource_type,
+       users_permissions_user: $user_permissions_user,
+       target_user: $clientid
+     }){
+       data{
+         id
+       }
+     }
+   }
+`
+
 export const ADD_NOTE = gql`
      mutation addNote($type: String, $resource_id: String, $user_permissions_user: ID, $note: String, $clientid: ID) {
           createFeedbackNote(
@@ -73,6 +139,22 @@ export const ADD_NOTE = gql`
           }
      }
 `;
+
+export const ADD_NOTE_NEW = gql`
+mutation addNote($type: String, $resource_id: String, $user_permissions_user: ID, $note: String, $clientid: ID){
+     createFeedbackNote(data: {
+       type: $type,
+       resource_id: $resource_id,
+       users_permissions_user: $user_permissions_user,
+       note: $note,
+       target_user: $clientid
+     }){
+       data{
+         id
+       }
+     }
+   }
+`
 
 export const GET_NOTES = gql`
      query getfeedbackNotes($id: ID) {
@@ -101,6 +183,66 @@ export const GET_NOTES = gql`
           }
      }
 `;
+
+export const GET_NOTES_NEW = gql`
+query getfeedbackNotes($id: ID){
+     feedbackNotes(filters: {
+       target_user: {
+         id: {
+           eq: $id
+         }
+       }
+     }, sort: ["updatedAt:desc"]){
+       data{
+         id
+         attributes{
+           updatedAt
+           type
+           users_permissions_user{
+             data{
+               id
+               attributes{
+                 username
+                 designations{
+                   data{
+                     id
+                     attributes{
+                       Designation_title
+                     }
+                   }
+                 }
+               }
+             }
+           }
+           target_user{
+             data{
+               id
+             }
+           }
+           note
+           resource_id
+           feedback_comments{
+             data{
+               id
+               attributes{
+                 comment
+                 users_permissions_user{
+                   data{
+                     id
+                     attributes{
+                       username
+                     }
+                   }
+                 }
+               }
+             }
+           }
+         }
+       }
+     }
+   }
+`
+
 export const GET_NOTES_BYID = gql`
      query getfeedbackNotes($id: ID) {
           feedbackNotes(where: { id: $id }) {
