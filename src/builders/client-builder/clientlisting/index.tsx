@@ -84,10 +84,10 @@ function ClientListingPage() {
                               //CreateClientComponent.current.TriggerForm({id: row.original.id, type: 'view'})
                          };
                          const actionClick3 = () => {
-                              //CreateClientComponent.current.TriggerForm({ id: row.original.id, type: 'toggle-status', current_status: (row.original.status === "Active") })
+                              window.location.href = '/chats'
                          };
                          const actionClick4 = () => {
-                              //CreateClientComponent.current.TriggerForm({id: row.original.id, type: 'delete'})
+                              window.location.href = '/packages';
                          };
                          const actionClick5 = () => {
                               CreateClientComponent.current.TriggerForm({

@@ -152,7 +152,7 @@ export default function Leads() {
      const [datatable, setDataTable] = useState<{}[]>([]);
 
      // function FetchData(_variables: {} = { id: auth.userid }) {
-     const fetch = useQuery(GET_LEADS_NEW, { variables: { id: auth.userid }, onCompleted: loadData });
+     const fetch = useQuery(GET_LEADS_NEW, { variables: { filter: searchFilter, id: auth.userid }, onCompleted: loadData });
      // }
 
      function refetchQueryCallback() {
@@ -200,18 +200,18 @@ export default function Leads() {
                          console.log(nameArr);
                          if (
                               (nameArr.includes(searchFilter) &&
-                                   Detail.details.leadsdetails.name.toLowerCase() === searchFilter.toLowerCase()) ||
+                                   Detail.Details?.leadsdetails?.name.toLowerCase() === searchFilter.toLowerCase()) ||
                               (nameArr.includes(searchFilter) &&
-                                   Detail.details.status.toLowerCase() === searchFilter.toLowerCase())
+                                   Detail.Details?.status.toLowerCase() === searchFilter.toLowerCase())
                          ) {
                               return {
                                    id: Detail.id,
                                    leadsdate: getDate(Date.parse(Detail.createdAt)),
-                                   name: Detail.details.leadsdetails.name,
-                                   number: Detail.details.leadsdetails.phonenumber,
-                                   email: Detail.details.leadsdetails.email,
-                                   source: Detail.details.source,
-                                   status: Detail.details.status,
+                                   name: Detail.Details?.leadsdetails.name,
+                                   number: Detail.Details?.leadsdetails.phonenumber,
+                                   email: Detail.Details?.leadsdetails.email,
+                                   source: Detail.Details.source,
+                                   status: Detail.Details.status,
                                    lastupdated: getDate(Date.parse(Detail.updatedAt)),
                               };
                          } else {
@@ -226,11 +226,11 @@ export default function Leads() {
                          return {
                               id: Detail.id,
                               leadsdate: getDate(Date.parse(Detail.createdAt)),
-                              name: Detail.details.leadsdetails.name,
-                              number: Detail.details.leadsdetails.phonenumber,
-                              email: Detail.details.leadsdetails.email,
-                              source: Detail.details.source,
-                              status: Detail.details.status,
+                              name: Detail.Details?.leadsdetails?.name,
+                              number: Detail.Details?.leadsdetails?.phonenumber,
+                              email: Detail.Details?.leadsdetails?.email,
+                              source: Detail.Details.source,
+                              status: Detail.Details.status,
                               lastupdated: getDate(Date.parse(Detail.updatedAt)),
                          };
                     })

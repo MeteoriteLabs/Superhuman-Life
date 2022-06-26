@@ -20,33 +20,33 @@ export const GET_LEADS = gql`
 
 export const GET_LEADS_NEW = gql`
 query Forms($id: ID) {
-     websiteContactForms(filters: {
-       users_permissions_user: {
-         id: {
-           eq: $id
-         }
-       }
-     }){
-       data{
-         id
-         attributes{
-           Details
-           isSeen
-           createdAt
-           updatedAt
-           users_permissions_user{
-             data{
-               id
-               attributes{
-                 username
-                 email
-                 Phone_Number
-               }
-             }
-           }
-         }
-       }
-     }
+  websiteContactForms(filters: {
+    users_permissions_user: {
+      id: {
+        eq: $id
+      }
+    }
+  }){
+    data{
+      id
+      attributes{
+        Details
+        isSeen
+        createdAt
+        updatedAt
+        users_permissions_user{
+          data{
+            id
+            attributes{
+              username
+              email
+              Phone_Number
+            }
+          }
+        }
+      }
+    }
+  }
    }
 `;
 
