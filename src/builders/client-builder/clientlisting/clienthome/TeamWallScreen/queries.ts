@@ -271,6 +271,63 @@ export const GET_NOTES_BYID = gql`
      }
 `;
 
+export const GET_NOTES_BYID_NEW = gql`
+query getfeedbackNotes($id: ID){
+     feedbackNotes(filters: {
+       id: {
+         eq: $id
+       }
+     }){
+           data{
+         id
+                attributes{
+           updatedAt
+           type
+           users_permissions_user{
+             data{
+               id
+               attributes{
+                 username
+                 designations{
+                   data{
+                     id
+                     attributes{
+                       Designation_title
+                     }
+                   }
+                 }
+               }
+             }
+           }
+           target_user{
+             data{
+               id
+             }
+           }
+           note
+           resource_id
+           feedback_comments{
+             data{
+               id
+               attributes{
+                 comment
+                 users_permissions_user{
+                   data{
+                     id
+                     attributes{
+                       username
+                     }
+                   }
+                 }
+               }
+             }
+           }
+         }   
+       }
+     }
+   }
+`
+
 export const CHECK_NOTES = gql`
      query checkNotes($id: ID, $clientid: ID) {
           feedbackNotes(where: { users_permissions_user: { id: $id }, target_user: { id: $clientid } }) {
@@ -279,6 +336,30 @@ export const CHECK_NOTES = gql`
           }
      }
 `;
+
+export const CHECK_NOTES_NEW = gql`
+query checkNotes($id: ID, $clientid: ID){
+     feedbackNotes(filters: {
+       users_permissions_user: {
+         id: {
+           eq: $id
+         }
+       },
+       target_user:{
+         id: {
+           eq: $clientid
+         }
+       }
+     }){
+       data{
+         id
+         attributes{
+           resource_id
+         }
+       }
+     }
+   }
+`
 
 export const ADD_COMMENT = gql`
      mutation addComment($feedback_note: ID, $comment: String, $users_permissions_user: ID) {
@@ -298,6 +379,20 @@ export const ADD_COMMENT = gql`
      }
 `;
 
+export const ADD_COMMENT_NEW = gql`
+mutation addComment($feedback_note: ID, $comment: String, $users_permissions_user: ID){
+     createFeedbackComment(data: {
+       feedback_note: $feedback_note,
+       comment: $comment,
+       users_permissions_user: $users_permissions_user
+     }){
+       data{
+         id
+       }
+     }
+   }
+`
+
 export const DELETE_NOTE = gql`
      mutation deleteNote($id: ID!) {
           deleteFeedbackNote(input: { where: { id: $id } }) {
@@ -307,6 +402,17 @@ export const DELETE_NOTE = gql`
           }
      }
 `;
+
+export const DELETE_NOTE_NEW = gql`
+mutation deleteNote($id: ID!){
+     deleteFeedbackNote(id: $id){
+          data{
+               id
+          }
+     }
+}
+`;
+
 export const DELETE_COMMENT = gql`
      mutation deleteComment($id: ID!) {
           deleteFeedbackComment(input: { where: { id: $id } }) {
@@ -316,6 +422,17 @@ export const DELETE_COMMENT = gql`
           }
      }
 `;
+
+export const DELETE_COMMENT_NEW = gql`
+     mutation deleteComment($id: ID!){
+          deleteFeedbackComment(id: $id){
+               data{
+                 id
+               }
+          }
+     }
+`
+
 export const DELETE_RATING = gql`
      mutation deleteRating($id: ID!) {
           deleteRating(input: { where: { id: $id } }) {
@@ -326,6 +443,16 @@ export const DELETE_RATING = gql`
      }
 `;
 
+export const DELETE_RATING_NEW = gql`
+mutation deleteRating($id: ID!){
+     deleteRating(id: $id){
+       data{
+         id
+       }
+     }
+   }
+`
+
 export const GET_TAGNAME = gql`
      query TagName($id: ID) {
           workouts(where: { id: $id }) {
@@ -334,6 +461,23 @@ export const GET_TAGNAME = gql`
           }
      }
 `;
+
+export const GET_TAGNAME_NEW = gql`
+query TagName($id: ID){
+     workouts(filters: {
+       id: {
+         eq: $id
+       }
+     }){
+       data{
+         id
+         attributes{
+           workouttitle
+         }
+       }
+     }
+   }
+`
 
 export const GET_RATING_NOTES = gql`
      query ratingsforNotes($id: ID, $clientid: ID, $type: String) {
@@ -350,6 +494,41 @@ export const GET_RATING_NOTES = gql`
      }
 `;
 
+export const GET_RATING_NOTES_NEW = gql`
+query ratingsforNotes($id: ID, $clientid: ID, $type: String){
+     ratings(filters: {
+       resource_id: {
+         containsi: $id
+       },
+       type: {
+         eq: $type
+       },
+       target_user: {
+         id: {
+           eq: $clientid
+         }
+       }
+     }){
+       data{
+         id
+         attributes{
+           rating
+           max_rating
+           type
+           target_user{
+             data{
+               id
+               attributes{
+                 username
+               }
+             }
+           }
+         }
+       }
+     }
+   }
+`
+
 export const GET_RATING_NOTES_BYID = gql`
      query ratingsforNotes($id: ID, $clientid: ID) {
           ratings(where: { resource_id_contains: $id, target_user: { id: $clientid } }) {
@@ -359,6 +538,38 @@ export const GET_RATING_NOTES_BYID = gql`
           }
      }
 `;
+
+export const GET_RATING_NOTES_BYID_NEW = gql`
+query ratingsforNotes($id: ID, $clientid: ID){
+     ratings(filters: {
+       resource_id: {
+         containsi: $id
+       },
+       target_user: {
+         id: {
+           eq: $clientid
+         }
+       }
+     }){
+       data{
+         id
+         attributes{
+           rating
+           max_rating
+           type
+           target_user{
+             data{
+               id
+               attributes{
+                 username
+               }
+             }
+           }
+         }
+       }
+     }
+   }
+`
 
 export const GET_NOTES_RATING = gql`
      query ratingsforNotes($id: String, $clientid: ID) {
@@ -395,6 +606,88 @@ export const GET_NOTES_RATING = gql`
      }
 `;
 
+export const GET_NOTES_RATING_NEW = gql`
+query ratingsforNotes($id: String, $clientid: ID){
+     ratings(filters: {
+       resource_id: {
+         containsi: $id
+       },
+       target_user: {
+         id: {
+           eq: $clientid
+         }
+       }
+     }){
+       data{
+         id
+         attributes{
+           type
+           resource_id
+           rating
+           max_rating
+         }
+       }
+     }
+     feedbackNotes(filters: {
+       resource_id: {
+         containsi: $id
+       },
+       target_user: {
+         id: {
+           eq: $clientid
+         }
+       }
+     }){
+       data{
+         id
+         attributes{
+           updatedAt
+           type
+           users_permissions_user{
+             data{
+               id
+               attributes{
+                 username
+                 designations{
+                   data{
+                     id
+                     attributes{
+                       Designation_title
+                     }
+                   }
+                 }
+               }
+             }
+           }
+           target_user{
+             data{
+               id
+             }
+           }
+           note
+           resource_id
+           feedback_comments{
+             data{
+               id
+               attributes{
+                 comment
+                 users_permissions_user{
+                   data{
+                     id
+                     attributes{
+                       username
+                     }
+                   }
+                 }
+               }
+             }
+           }
+         }
+       }
+     }
+   }
+`
+
 export const UPDATE_NOTES = gql`
      mutation updateNotes(
           $type: String
@@ -422,6 +715,29 @@ export const UPDATE_NOTES = gql`
           }
      }
 `;
+
+export const UPDATE_NOTES_NEW = gql`
+mutation updateNotes(
+     $type: String
+     $resource_id: String
+     $users_permissions_user: ID
+     $note: String
+     $clientid: ID
+     $messageid: ID!
+) {
+     updateFeedbackNote(id: $messageid, data: {
+       type: $type,
+       resource_id: $resource_id,
+       note: $note,
+       target_user: $clientid,
+       users_permissions_user: $users_permissions_user
+     }){
+       data{
+         id
+       }
+     }
+   }
+`
 
 export const UPDATE_RATING = gql`
      mutation updateNotes(
@@ -456,3 +772,32 @@ export const UPDATE_RATING = gql`
           }
      }
 `;
+
+export const UPDATE_RATING_NEW = gql`
+mutation updateNotes(
+     $type: String
+     $resource_id: String
+     $rating: Int
+     $max_rating: Int
+     $rating_scale_id: ID
+     $resource_type: String
+     $user_permissions_user: ID
+     $clientid: ID
+     $messageid: ID!
+){
+     updateRating(id: $messageid, data: {
+       type: $type,
+       resource_id: $resource_id,
+       users_permissions_user: $user_permissions_user,
+       rating: $rating,
+       max_rating: $max_rating,
+       resource_type: $resource_type,
+       rating_scale: $rating_scale_id,
+       target_user: $clientid
+     }){
+       data{
+         id
+       }
+     }
+   }
+`
