@@ -92,33 +92,33 @@ export const ADD_RATING = gql`
      }
 `;
 
-export const ADD_RATING_NEW = gql`
-mutationaddRating(
-     $type: String
-     $resource_id: String
-     $rating: Int
-     $max_rating: Int
-     $rating_scale_id: ID
-     $resource_type: String
-     $user_permissions_user: ID
-     $clientid: ID
-){
-     createRating(data: {
-       type: $type,
-       resource_id: $resource_id,
-       rating: $rating,
-       max_rating: $max_rating,
-       rating_scale: $rating_scale_id,
-       resource_type: $resource_type,
-       users_permissions_user: $user_permissions_user,
-       target_user: $clientid
-     }){
-       data{
-         id
-       }
-     }
-   }
-`
+// export const ADD_RATING_NEW = gql`
+// mutation addRating(
+//      $type: String
+//      $resource_id: String
+//      $rating: Int
+//      $max_rating: Int
+//      $rating_scale_id: ID
+//      $resource_type: String
+//      $user_permissions_user: ID
+//      $clientid: ID
+// ){
+//      createRating(data: {
+//        type: $type,
+//        resource_id: $resource_id,
+//        rating: $rating,
+//        max_rating: $max_rating,
+//        rating_scale: $rating_scale_id,
+//        resource_type: $resource_type,
+//        users_permissions_user: $user_permissions_user,
+//        target_user: $clientid
+//      }){
+//        data{
+//          id
+//        }
+//      }
+//    }
+// `
 
 export const ADD_NOTE = gql`
      mutation addNote($type: String, $resource_id: String, $user_permissions_user: ID, $note: String, $clientid: ID) {

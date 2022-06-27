@@ -113,39 +113,39 @@ export const GET_GOALS_DETAILS = gql`
 
 export const GET_GOALS_DETAILS_NEW = gql`
 query getGoals($id: ID){
-     userGoals(filters: {
-       users_permissions_user: {
-         id: {
-           eq: $id
-         }
-       }
-     }{
-       data{
-         id
-         attributes{
-           start
-           end
-           goals{
-             data{
-               id
-               attributes{
-                 name
-               }
-             }
-           }
-           assigned_by{
-             data{
-               id
-               attributes{
-                 username
-               }
-             }
-           }
-           updatedAt
-         }
-       }
-     }
-   }
+  userGoals(filters: {
+    users_permissions_user:{
+      id: {
+        eq: $id
+      }
+    }
+  }){
+    data{
+      id
+      attributes{
+        start
+        end
+        goals{
+          data{
+            id
+            attributes{
+              name
+            }
+          }
+        }
+        assigned_by{
+          data{
+            id
+            attributes{
+              username
+            }
+          }
+        }
+        updatedAt
+      }
+    }
+  }
+}
 `;
 
 export const UPDATE_GOALS = gql`
