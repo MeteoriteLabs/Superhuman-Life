@@ -1,9 +1,9 @@
 import { useState, useRef } from "react";
 import { InputGroup, FormControl, Container } from "react-bootstrap";
 import { gql, useQuery } from "@apollo/client";
+import { flattenObj } from "../../../../../../components/utils/responseFlatten";
 
 const GoalSearch = (props: any) => {
-     console.log(props.value);
      const [packageLists, setPackageLists] = useState<any[]>([]);
      const [searchInput, setSearchInput] = useState<any>(props.value ? props.value.name : null);
      const [errorMsg, setErrorMsg] = useState("");
@@ -13,10 +13,18 @@ const GoalSearch = (props: any) => {
 
      const GET_GOALLIST = gql`
           query GoalsListQuery($filter: String!) {
-               goals(sort: "updatedAt", where: { name_contains: $filter }) {
-                    id
-                    name
-               }
+               goals(filters: {
+                    name: {
+                      containsi: $filter
+                    }
+                  }, sort: ["updatedAt"]){
+                    data{
+                      id
+                      attributes{
+                        name
+                      }
+                    }
+                  }
           }
      `;
 
@@ -25,8 +33,9 @@ const GoalSearch = (props: any) => {
      }
 
      function loadPackageList(data: any) {
+          const flattenData = flattenObj({...data})
           setPackageLists(
-               [...data.goals].map((p) => {
+               [...flattenData.goals].map((p) => {
                     return {
                          id: p.id,
                          name: p.name,
