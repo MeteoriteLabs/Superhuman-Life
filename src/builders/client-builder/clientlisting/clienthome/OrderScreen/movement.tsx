@@ -5,8 +5,9 @@ import { useQuery } from "@apollo/client";
 import Table from "../../../../../components/table";
 import { Row, Button, Col } from "react-bootstrap";
 import AuthContext from "../../../../../context/auth-context";
-import { GET_BOOKINGS } from "./queries";
+import { GET_BOOKINGS_NEW } from "./queries";
 import CreateSuggestion from "./addSuggestion";
+import { flattenObj } from "../../../../../components/utils/responseFlatten";
 
 function Movement() {
      const last = window.location.pathname.split("/").pop();
@@ -200,12 +201,15 @@ function Movement() {
      const [dataHistorytable, setHistoryDataTable] = useState<{}[]>([]);
 
      function FetchData(_variables: {} = { id: auth.userid, clientid: last }) {
-          useQuery(GET_BOOKINGS, { variables: _variables, onCompleted: loadData });
+          useQuery(GET_BOOKINGS_NEW, { variables: _variables, onCompleted: loadData });
      }
 
      function loadData(data: any) {
+          const flattenData = flattenObj({...data});
+          debugger
+          console.log(flattenData);
           setHistoryDataTable(
-               [...data.clientBookings].flatMap((Detail) =>
+               [...flattenData.clientBookings].flatMap((Detail) =>
                     compareDates(getRenewalDate(Detail.effective_date, Detail.package_duration))
                          ? {
                                 packagetype: Detail.fitnesspackages[0].fitness_package_type.type,
@@ -231,7 +235,7 @@ function Movement() {
           );
 
           setActiveDataTable(
-               [...data.clientBookings].flatMap((Detail) =>
+               [...flattenData.clientBookings].flatMap((Detail) =>
                     !compareDates(getRenewalDate(Detail.effective_date, Detail.package_duration))
                          ? {
                                 packagetype: Detail.fitnesspackages[0].fitness_package_type.type,
