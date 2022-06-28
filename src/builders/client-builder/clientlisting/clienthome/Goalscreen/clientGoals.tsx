@@ -1,5 +1,5 @@
 import { Row, Button } from "react-bootstrap";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./styles.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -10,14 +10,17 @@ import CreateGoal from "./addGoal";
 import CreateMovement from "./addMovement";
 import CreateHealth from "./addHealth";
 import CreateNutrition from "./addNutrition";
-import { GET_GOALS } from "./queries";
+import { GET_GOALS_NEW } from "./queries";
 import { useQuery } from "@apollo/client";
+import { flattenObj } from "../../../../../components/utils/responseFlatten";
 
 function Goals() {
      const CreateGoalComponent = useRef<any>(null);
      const CreateHealthComponent = useRef<any>(null);
      const CreateNutritionComponent = useRef<any>(null);
      const CreateMovementComponent = useRef<any>(null);
+
+     const [goals, setGoals] = useState<any>([]);
 
      const last = window.location.pathname.split("/").pop();
 
@@ -57,7 +60,17 @@ function Goals() {
           return `${date}-${month}-${year}`;
      }
 
-     const { data }: any = useQuery(GET_GOALS, { variables: { id: last } });
+     const fetchData = useQuery(GET_GOALS_NEW, { variables: { id: last }, onCompleted: loadData });
+
+     
+     function loadData(data: any){
+          const flattenData = flattenObj({...data});
+          setGoals(flattenData);
+     }
+
+     function refetchQueryCallback(){
+          fetchData.refetch();
+     }
 
      return (
           <div>
@@ -78,31 +91,30 @@ function Goals() {
                                    >
                                         <i className="fas fa-plus-circle"></i> New Goal
                                    </Button>
-                                   <CreateGoal ref={CreateGoalComponent}></CreateGoal>
+                                   <CreateGoal ref={CreateGoalComponent} callback={refetchQueryCallback}></CreateGoal>
                               </div>
                          </Row>
                     </div>
                     <div className="w-95 ml-5 mr-5 mt-3">
                          <Slider {...settings}>
-                              {data &&
-                                   [...data.userGoals].map((Detail, index) => {
-                                        return (
-                                             <GoalCard
-                                                  key={index}
-                                                  click={() => {
-                                                       CreateGoalComponent.current.TriggerForm({
-                                                            id: Detail.id,
-                                                            type: "edit",
-                                                       });
-                                                  }}
-                                                  goalName={Detail.goals[0].name}
-                                                  startDate={getDate(Date.parse(Detail.start))}
-                                                  endDate={getDate(Date.parse(Detail.end))}
-                                                  updatedBy={Detail.assignedBy[0].username}
-                                                  updatedOn={getDate(Date.parse(Detail.updatedAt))}
-                                             />
-                                        );
-                                   })}
+                         {goals?.userGoals?.length > 0 && [...goals?.userGoals].map((Detail, index) => {
+                              return (
+                                   <GoalCard
+                                        key={index}
+                                        click={() => {
+                                             CreateGoalComponent.current.TriggerForm({
+                                                  id: Detail?.id,
+                                                  type: "edit",
+                                             });
+                                        }}
+                                        goalName={Detail?.goals[0]?.name}
+                                        startDate={getDate(Date.parse(Detail?.start))}
+                                        endDate={getDate(Date.parse(Detail?.end))}
+                                        updatedBy={Detail?.assigned_by[0]?.username}
+                                        updatedOn={getDate(Date.parse(Detail?.updatedAt))}
+                                   />
+                              );
+                         })}
                          </Slider>
                     </div>
                </div>

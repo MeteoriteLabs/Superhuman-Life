@@ -24,7 +24,7 @@ export const ADD_GOAL_NEW = gql`
 mutation addgoal($goals: [ID], $assignedBy: [ID], $start: Date!, $end: Date, $users_permissions_user: ID){
      createUserGoal(data: {
        goals: $goals,
-       assigned_by: $assingedBy,
+       assigned_by: $assignedBy,
        start: $start,
        end: $end,
        users_permissions_user: $users_permissions_user
@@ -63,7 +63,7 @@ query getGoals($id: ID){
            eq: $id
          }
        }
-     }, sort: ["updateAt:desc"]){
+     }){
        data{
          id
          attributes{
@@ -114,10 +114,8 @@ export const GET_GOALS_DETAILS = gql`
 export const GET_GOALS_DETAILS_NEW = gql`
 query getGoals($id: ID){
   userGoals(filters: {
-    users_permissions_user:{
-      id: {
-        eq: $id
-      }
+    id: {
+      eq: $id
     }
   }){
     data{

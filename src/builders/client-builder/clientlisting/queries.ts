@@ -153,6 +153,48 @@ export const GET_CHANGEMAKERS = gql`
           }
      }
 `;
+
+export const GET_CHANGEMAKERS_NEW = gql`
+query getclient($clientid: ID){
+     clientPackages(filters: {
+       users_permissions_user: {
+         id: {
+           eq: $clientid
+         }
+       }
+     }){
+       data{
+         id
+         attributes{
+           fitnesspackages{
+             data{
+               attributes{
+                 users_permissions_user{
+                   data{
+                     id
+                     attributes{
+                       username
+                       designations{
+                         data{
+                           id
+                           attributes{
+                             Designation_title
+                           }
+                         }
+                       }
+                     }
+                   }
+                 }
+               }
+             }
+           }
+         }
+       }
+     }
+   } 
+`;
+
+
 export const GET_CLIENT_DATA = gql`
      query getclient($id: ID!, $clientid: ID) {
           userPackages(
@@ -227,6 +269,84 @@ export const GET_CLIENT_DATA = gql`
           }
      }
 `;
+
+export const GET_CLIENT_DATA_NEW = gql`
+query getclient($id: ID!, $clientid: ID){
+     clientPackages(filters: {
+       fitnesspackages: {
+         users_permissions_user: {
+           id: {
+             eq: $id
+           }
+         }
+       },
+       users_permissions_user: {
+         id: {
+           eq: $clientid
+         }
+       }
+     }){
+       data{
+         id
+         attributes{
+           effective_date
+           package_duration
+           users_permissions_user{
+             data{
+               id
+               attributes{
+                 username
+                 email
+                 Phone_Number
+                 Gender
+                 addresses{
+                   data{
+                     id
+                     attributes{
+                       city
+                     }
+                   }
+                 }
+               }
+             }
+           }
+           fitnesspackages{
+             data{
+               id
+               attributes{
+                 packagename
+                 Status
+                 fitness_package_type{
+                   data{
+                     id
+                     attributes{
+                       type
+                     }
+                   }
+                 }
+                 users_permissions_user{
+                   data{
+                     id
+                     attributes{
+                       username
+                     }
+                   }
+                 }
+                 ptonline
+                 ptoffline
+                 grouponline
+                 groupoffline
+                 recordedclasses
+                 fitnesspackagepricing
+               }
+             }
+           }
+         }
+       }
+     }
+   }
+`;
+
 export const ADD_CLIENT = gql`
      mutation client($username: String!, $firstname: String, $lastname: String, $email: String!, $phone: String) {
           createUser(
