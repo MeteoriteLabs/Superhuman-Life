@@ -82,7 +82,7 @@ function Client() {
                </div>
                <Card className="shadow-sm mt-3" border="light">
                     <Card.Body>
-                         <Tabs defaultActiveKey="goal" id="uncontrolled-tab-example" className="mb-2">
+                         <Tabs defaultActiveKey="Orders" id="uncontrolled-tab-example" className="mb-2">
                               <Tab eventKey="insights" title="Insights">
                                    <TabContent>
                                         <hr />

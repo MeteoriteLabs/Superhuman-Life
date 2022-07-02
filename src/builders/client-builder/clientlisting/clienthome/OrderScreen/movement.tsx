@@ -206,16 +206,13 @@ function Movement() {
 
      function loadData(data: any) {
           const flattenData = flattenObj({...data});
-          debugger
           console.log(flattenData);
           setHistoryDataTable(
                [...flattenData.clientBookings].flatMap((Detail) =>
                     compareDates(getRenewalDate(Detail.effective_date, Detail.package_duration))
                          ? {
                                 packagetype: Detail.fitnesspackages[0].fitness_package_type.type,
-                                packagename: Detail.program_managers[0]
-                                     ? Detail.program_managers[0].fitnesspackages[0].packagename
-                                     : Detail.fitnesspackages[0].packagename,
+                                packagename: Detail.fitnesspackages[0]?.packagename,
                                 details: [
                                      Detail.fitnesspackages[0].ptonline,
                                      Detail.fitnesspackages[0].ptoffline,
@@ -226,7 +223,7 @@ function Movement() {
                                 duration: Detail.package_duration,
                                 effectivedate: getDate(Date.parse(Detail.effective_date)),
                                 enddate: getRenewalDate(Detail.effective_date, Detail.package_duration),
-                                cost: Detail.fitnesspackages[0].fitnesspackagepricing[0].packagepricing[0].mrp,
+                                cost: Detail.fitnesspackages[0]?.fitnesspackagepricing[0]?.mrp,
                                 bookingstatus: Detail.booking_status,
                                 payment: "",
                            }
@@ -239,9 +236,7 @@ function Movement() {
                     !compareDates(getRenewalDate(Detail.effective_date, Detail.package_duration))
                          ? {
                                 packagetype: Detail.fitnesspackages[0].fitness_package_type.type,
-                                packagename: Detail.program_managers[0]
-                                     ? Detail.program_managers[0].fitnesspackages[0].packagename
-                                     : Detail.fitnesspackages[0].packagename,
+                                packagename: Detail.fitnesspackages[0]?.packagename,
                                 details: [
                                      Detail.fitnesspackages[0].ptonline,
                                      Detail.fitnesspackages[0].ptoffline,
@@ -252,7 +247,7 @@ function Movement() {
                                 duration: Detail.package_duration,
                                 effectivedate: getDate(Date.parse(Detail.effective_date)),
                                 enddate: getRenewalDate(Detail.effective_date, Detail.package_duration),
-                                cost: Detail.fitnesspackages[0].fitnesspackagepricing[0].packagepricing[0].mrp,
+                                cost: Detail.fitnesspackages[0]?.fitnesspackagepricing[0]?.mrp,
                                 bookingstatus: Detail.booking_status,
                                 payment: "",
                            }
