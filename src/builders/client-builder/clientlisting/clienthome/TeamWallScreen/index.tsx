@@ -2,10 +2,11 @@ import { useRef, useState } from "react";
 import { Card, Button } from "react-bootstrap";
 import CardComp from "./Card";
 import CreatePost from "./addPost";
-import { GET_CHANGEMAKERS } from "../../queries";
-import { GET_NOTES } from "./queries";
+import { GET_CHANGEMAKERS_NEW } from "../../queries";
+import { GET_NOTES_NEW } from "./queries";
 import { useQuery } from "@apollo/client";
 import "./Styles.css";
+import { flattenObj } from "../../../../../components/utils/responseFlatten";
 //import AuthContext from "../../../../../context/auth-context";
 
 function Index() {
@@ -17,14 +18,16 @@ function Index() {
      //const noteFetch: any = [];
 
      function FetchData(_variables: {} = { clientid: last }) {
-          useQuery(GET_CHANGEMAKERS, { variables: _variables, onCompleted: loadData });
+          useQuery(GET_CHANGEMAKERS_NEW, { variables: _variables, onCompleted: loadData });
      }
      function loadData(data: any) {
+          const flattenData = flattenObj({...data})
+          console.log(flattenData);
           let changemakers: any = [];
           let namearr: any = [];
           let flag: any;
 
-          [...data.userPackages].map((Detail) => {
+          [...flattenData.clientPackages].map((Detail) => {
                let changemakerValue = {};
                let img = "img";
                let type = "type";
@@ -40,7 +43,7 @@ function Index() {
                     changemakers.push([
                          name,
                          (changemakerValue[img] = "/assets/avatar-1.jpg"),
-                         (changemakerValue[type] = Detail.fitnesspackages[0].users_permissions_user.designation),
+                         (changemakerValue[type] = Detail.fitnesspackages[0].users_permissions_user?.designations),
                          (changemakerValue[id] = Detail.fitnesspackages[0].users_permissions_user.id),
                     ]);
                }
@@ -51,12 +54,13 @@ function Index() {
      }
 
      function FetchNotes(_variables: {} = { id: last }) {
-          useQuery(GET_NOTES, { variables: _variables, onCompleted: LoadNotes });
+          useQuery(GET_NOTES_NEW, { variables: _variables, onCompleted: LoadNotes });
      }
 
      function LoadNotes(data: any) {
+          const flattenData = flattenObj({ ...data });
           if (data) {
-               setNotes([...data.feedbackNotes]);
+               setNotes([...flattenData.feedbackNotes]);
           }
      }
 

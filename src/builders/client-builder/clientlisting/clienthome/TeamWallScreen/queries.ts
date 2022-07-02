@@ -1,4 +1,45 @@
-import { gql } from "@apollo/client";
+ import { gql } from "@apollo/client";
+
+ export const GET_CHANGEMAKERS_NEW = gql`
+query getclient($clientid: ID){
+     clientPackages(filters: {
+       users_permissions_user: {
+         id: {
+           eq: $clientid
+         }
+       }
+     }){
+       data{
+         id
+         attributes{
+           fitnesspackages{
+             data{
+               attributes{
+                 users_permissions_user{
+                   data{
+                     id
+                     attributes{
+                       username
+                       designations{
+                         data{
+                           id
+                           attributes{
+                             Designation_title
+                           }
+                         }
+                       }
+                     }
+                   }
+                 }
+               }
+             }
+           }
+         }
+       }
+     }
+   } 
+`;
+
 
 export const GET_MOODSCALE = gql`
      query scale {
@@ -92,33 +133,33 @@ export const ADD_RATING = gql`
      }
 `;
 
-// export const ADD_RATING_NEW = gql`
-// mutation addRating(
-//      $type: String
-//      $resource_id: String
-//      $rating: Int
-//      $max_rating: Int
-//      $rating_scale_id: ID
-//      $resource_type: String
-//      $user_permissions_user: ID
-//      $clientid: ID
-// ){
-//      createRating(data: {
-//        type: $type,
-//        resource_id: $resource_id,
-//        rating: $rating,
-//        max_rating: $max_rating,
-//        rating_scale: $rating_scale_id,
-//        resource_type: $resource_type,
-//        users_permissions_user: $user_permissions_user,
-//        target_user: $clientid
-//      }){
-//        data{
-//          id
-//        }
-//      }
-//    }
-// `
+export const ADD_RATING_NEW = gql`
+mutation addRating(
+     $type: String
+     $resource_id: String
+     $rating: Int
+     $max_rating: Int
+     $rating_scale_id: ID
+     $resource_type: String
+     $user_permissions_user: ID
+     $clientid: ID
+){
+     createRating(data: {
+       type: $type,
+       resource_id: $resource_id,
+       rating: $rating,
+       max_rating: $max_rating,
+       rating_scale: $rating_scale_id,
+       resource_type: $resource_type,
+       users_permissions_user: $user_permissions_user,
+       target_user: $clientid
+     }){
+       data{
+         id
+       }
+     }
+   }
+`
 
 export const ADD_NOTE = gql`
      mutation addNote($type: String, $resource_id: String, $user_permissions_user: ID, $note: String, $clientid: ID) {

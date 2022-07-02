@@ -3,8 +3,9 @@ import { useMemo, useState, useContext } from "react";
 import { useQuery } from "@apollo/client";
 import { Badge } from "react-bootstrap";
 import ClientTable from "../../../../../components/table/client-table";
-import { GET_CLIENT_DATA } from "../../queries";
+import { GET_CLIENT_DATA_NEW } from "../../queries";
 import AuthContext from "../../../../../context/auth-context";
+import { flattenObj } from "../../../../../components/utils/responseFlatten";
 
 function Movement() {
      const last = window.location.pathname.split("/").pop();
@@ -128,50 +129,51 @@ function Movement() {
      const [dataHistorytable, setHistoryDataTable] = useState<{}[]>([]);
 
      function FetchData(_variables: {} = { id: auth.userid, clientid: last }) {
-          useQuery(GET_CLIENT_DATA, { variables: _variables, onCompleted: loadData });
+          useQuery(GET_CLIENT_DATA_NEW, { variables: _variables, onCompleted: loadData });
      }
 
      function loadData(data: any) {
+          const flattenData = flattenObj({...data})
           setHistoryDataTable(
-               [...data.userPackages].flatMap((Detail) =>
+               [...flattenData.clientPackages].flatMap((Detail) =>
                     compareDates(getRenewalDate(Detail.effective_date, Detail.package_duration))
                          ? {
                                 id: Detail.users_permissions_user.id,
                                 packagetype: Detail.fitnesspackages[0].fitness_package_type.type,
-                                packagename: Detail.program_managers[0]
-                                     ? Detail.program_managers[0].fitnesspackages[0].packagename
-                                     : Detail.fitnesspackages[0].packagename,
+                              //   packagename: Detail.program_managers[0]
+                              //        ? Detail.program_managers[0].fitnesspackages[0].packagename
+                              //        : Detail.fitnesspackages[0].packagename,
                                 packagedate: getDate(Date.parse(Detail.effective_date)),
                                 packagerenewdate: getRenewalDate(Detail.effective_date, Detail.package_duration),
-                                programname: Detail.program_managers[0]
-                                     ? Detail.program_managers[0].fitnessprograms[0].title
-                                     : "N/A",
-                                programrenewal: Detail.program_managers[0]
-                                     ? getRenewalDate(Detail.effective_date, Detail.package_duration)
-                                     : "N/A",
-                                programstatus: Detail.program_managers[0] ? "Assigned" : "Not Assigned",
+                              //   programname: Detail.program_managers[0]
+                              //        ? Detail.program_managers[0].fitnessprograms[0].title
+                              //        : "N/A",
+                              //   programrenewal: Detail.program_managers[0]
+                              //        ? getRenewalDate(Detail.effective_date, Detail.package_duration)
+                              //        : "N/A",
+                              //   programstatus: Detail.program_managers[0] ? "Assigned" : "Not Assigned",
                            }
                          : []
                )
           );
           setActiveDataTable(
-               [...data.userPackages].flatMap((Detail) =>
+               [...flattenData.clientPackages].flatMap((Detail) =>
                     !compareDates(getRenewalDate(Detail.effective_date, Detail.package_duration))
                          ? {
                                 id: Detail.fitnesspackages[0].users_permissions_user.id,
                                 packagetype: Detail.fitnesspackages[0].fitness_package_type.type,
-                                packagename: Detail.program_managers[0]
-                                     ? Detail.program_managers[0].fitnesspackages[0].packagename
-                                     : Detail.fitnesspackages[0].packagename,
+                              //   packagename: Detail.program_managers[0]
+                              //        ? Detail.program_managers[0].fitnesspackages[0].packagename
+                              //        : Detail.fitnesspackages[0].packagename,
                                 packagedate: getDate(Date.parse(Detail.effective_date)),
                                 packagerenewdate: getRenewalDate(Detail.effective_date, Detail.package_duration),
-                                programname: Detail.program_managers[0]
-                                     ? Detail.program_managers[0].fitnessprograms[0].title
-                                     : "N/A",
-                                programrenewal: Detail.program_managers[0]
-                                     ? getRenewalDate(Detail.effective_date, Detail.package_duration)
-                                     : "N/A",
-                                programstatus: Detail.program_managers[0] ? "Assigned" : "Not Assigned",
+                              //   programname: Detail.program_managers[0]
+                              //        ? Detail.program_managers[0].fitnessprograms[0].title
+                              //        : "N/A",
+                              //   programrenewal: Detail.program_managers[0]
+                              //        ? getRenewalDate(Detail.effective_date, Detail.package_duration)
+                              //        : "N/A",
+                              //   programstatus: Detail.program_managers[0] ? "Assigned" : "Not Assigned",
                            }
                          : []
                )

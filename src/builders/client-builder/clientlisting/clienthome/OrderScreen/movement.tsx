@@ -206,7 +206,6 @@ function Movement() {
 
      function loadData(data: any) {
           const flattenData = flattenObj({...data});
-          console.log(flattenData);
           setHistoryDataTable(
                [...flattenData.clientBookings].flatMap((Detail) =>
                     compareDates(getRenewalDate(Detail.effective_date, Detail.package_duration))
