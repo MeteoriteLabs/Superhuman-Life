@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
-import { Modal, Button, Row, Col, Tab, Tabs, InputGroup, FormControl, Badge, OverlayTrigger, Tooltip, Form } from 'react-bootstrap';
+import { Modal, Button, Row, Col, Tab, Tabs, InputGroup, FormControl, Badge, OverlayTrigger, Tooltip, Form, Spinner } from 'react-bootstrap';
 import './styles.css';
 import { PROGRAM_EVENTS, FETCH_WORKOUT, FETCH_ACTIVITY, GET_SLOTS_TO_CHECK, UPDATE_CHANGEMAKER_AVAILABILITY_WORKHOURS, GET_SESSIONS, DELETE_SESSION, UPDATE_SESSION, CREATE_SESSION, UPDATE_TAG_SESSIONS, CREATE_SESSION_BOOKING, GET_SESSION_BOOKINGS, UPDATE_SESSION_BOOKING } from './queries';
 import { useQuery, useMutation, gql } from "@apollo/client";
@@ -1136,7 +1136,13 @@ const Schedular = (props: any) => {
         mainQuery.refetch();
     }
 
-    if (!show) return <span style={{ color: 'red' }}>Loading...</span>;
+    if (!show) {
+        return <div className="text-center">
+            <Spinner animation="border" variant="danger" />
+            <br />
+            <div className='mt-3' style={{ fontWeight: 'bold'}}>Loading Schedule...</div>
+        </div>;
+    }
     else return (
         <>
             <div className="mb-5 shadow-lg p-3" style={{ display: `${program}`, borderRadius: '20px' }}>
@@ -1229,7 +1235,7 @@ const Schedular = (props: any) => {
                     })}
                 </div>
             </div>
-            <FloatingButton startDate={props.startDate} duration={props.days} callback={handleFloatingActionProgramCallback} callback2={handleFloatingActionProgramCallback2} callback3={handleRefetch}/>
+            {props?.clientSchedular !== 'client' && <FloatingButton startDate={props.startDate} duration={props.days} callback={handleFloatingActionProgramCallback} callback2={handleFloatingActionProgramCallback2} callback3={handleRefetch}/>}
             {
                 <Modal show={showModal} onHide={handleClose} backdrop="static" centered size="lg" >
                     <Modal.Body style={{ maxHeight: '600px', overflow: 'auto' }}>

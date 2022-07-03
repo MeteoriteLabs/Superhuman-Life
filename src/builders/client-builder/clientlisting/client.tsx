@@ -4,6 +4,7 @@ import Goals from "./clienthome/Goalscreen/clientGoals";
 import Orders from "./clienthome/OrderScreen/clientOrders";
 import Wall from "./clienthome/TeamWallScreen/index";
 import Data from "./clienthome/DataScreen/ClientData";
+import Schedular from './clienthome/SchedularScreen/index';
 import { useQuery } from "@apollo/client";
 import { GET_CLIENT_DATA_NEW } from "./queries";
 import { useState, useContext } from "react";
@@ -91,6 +92,7 @@ function Client() {
                               <Tab eventKey="scheduler" title="Scheduler">
                                    <TabContent>
                                         <hr />
+                                        <Schedular />
                                    </TabContent>
                               </Tab>
                               <Tab eventKey="programs" title="Programs">
