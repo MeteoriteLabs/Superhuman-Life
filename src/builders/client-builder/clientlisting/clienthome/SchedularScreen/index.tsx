@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Spinner } from 'react-bootstrap';
-import Schedular from '../../../../program-builder/program-template/scheduler';
+import Schedular from './schedular';
+import moment from 'moment';
 
 const SchedularScreen = (props: any) => {
     const last = window.location.pathname.split('/').pop();
@@ -20,11 +21,10 @@ const SchedularScreen = (props: any) => {
                <div className='mt-3' style={{ fontWeight: 'bold'}}>Please wait while we load the client's schedule...</div>
           </div>;
     } 
-
     else return (
         <>
-          <Schedular days={30} restDays={[]} programId={last} clientSchedular={'client'}/>
-          
+          {/* <Schedular days={30} restDays={[]} programId={last} clientSchedular={'client'}/> */}
+          <Schedular type="date" days={moment().daysInMonth()} classType={'Personal Training'} restDays={[]} programId={1} startDate={moment().startOf('month').format('YYYY-MM-DD')} clientId={1}/>
         </>
     )
 };
