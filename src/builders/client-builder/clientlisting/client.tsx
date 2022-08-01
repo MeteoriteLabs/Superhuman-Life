@@ -4,7 +4,7 @@ import Goals from "./clienthome/Goalscreen/clientGoals";
 import Orders from "./clienthome/OrderScreen/clientOrders";
 import Wall from "./clienthome/TeamWallScreen/index";
 import Data from "./clienthome/DataScreen/ClientData";
-import Schedular from './clienthome/SchedularScreen/index';
+import ClientSchedular from './clienthome/SchedularScreen'
 import { useQuery } from "@apollo/client";
 import { GET_CLIENT_DATA_NEW } from "./queries";
 import { useState, useContext } from "react";
@@ -83,16 +83,16 @@ function Client() {
                </div>
                <Card className="shadow-sm mt-3" border="light">
                     <Card.Body>
-                         <Tabs defaultActiveKey="teamwall" id="uncontrolled-tab-example" className="mb-2">
+                         <Tabs defaultActiveKey="scheduler" id="uncontrolled-tab-example" className="mb-2">
                               <Tab eventKey="insights" title="Insights">
                                    <TabContent>
                                         <hr />
                                    </TabContent>
                               </Tab>
                               <Tab eventKey="scheduler" title="Scheduler">
-                                   <TabContent>
+                                   <TabContent className="mr-5">
                                         <hr />
-                                        <Schedular />
+                                        <ClientSchedular />
                                    </TabContent>
                               </Tab>
                               <Tab eventKey="programs" title="Programs">

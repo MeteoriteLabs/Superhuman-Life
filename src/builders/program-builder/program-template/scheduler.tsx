@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import { Modal, Button, Row, Col, Tab, Tabs, InputGroup, FormControl, Badge, OverlayTrigger, Tooltip, Form, Spinner } from 'react-bootstrap';
 import './styles.css';
-import { PROGRAM_EVENTS, FETCH_WORKOUT, FETCH_ACTIVITY, GET_SLOTS_TO_CHECK, UPDATE_CHANGEMAKER_AVAILABILITY_WORKHOURS, GET_SESSIONS, DELETE_SESSION, UPDATE_SESSION, CREATE_SESSION, UPDATE_TAG_SESSIONS, CREATE_SESSION_BOOKING, GET_SESSION_BOOKINGS, UPDATE_SESSION_BOOKING } from './queries';
+import { PROGRAM_EVENTS, FETCH_WORKOUT, FETCH_ACTIVITY, GET_SLOTS_TO_CHECK, UPDATE_CHANGEMAKER_AVAILABILITY_WORKHOURS, GET_SESSIONS, GET_CLIENT_SESSIONS, DELETE_SESSION, UPDATE_SESSION, CREATE_SESSION, UPDATE_TAG_SESSIONS, CREATE_SESSION_BOOKING, GET_SESSION_BOOKINGS, UPDATE_SESSION_BOOKING } from './queries';
 import { useQuery, useMutation, gql } from "@apollo/client";
 import ProgramList from "../../../components/customWidgets/programList";
 import SessionList from '../../../components/customWidgets/sessionList';
@@ -161,8 +161,9 @@ const Schedular = (props: any) => {
         }
     });
 
+    // this is the entry point to the file.
     // function Fetchdata(_variables: any) {
-        const mainQuery = useQuery(GET_SESSIONS, { variables: { id: props.programId, startDate: moment(props.startDate).format("YYYY-MM-DD"), endDate: moment(props.startDate).add(props.days - 1 , 'days').format("YYYY-MM-DD"), Is_restday: false }, onCompleted: handleRenderTable });
+        const mainQuery = useQuery(!props?.clientSessions ? GET_SESSIONS : GET_CLIENT_SESSIONS, { variables: { id: props.programId, startDate: moment(props.startDate).format("YYYY-MM-DD"), endDate: moment(props.startDate).add(props.days - 1 , 'days').format("YYYY-MM-DD"), Is_restday: false }, onCompleted: !props?.clientSessions ? handleRenderTable : handleRenderClientTable });
     // }
 
     function draganddrop() {
@@ -215,6 +216,37 @@ const Schedular = (props: any) => {
     setTimeout(() => {
         draganddrop();
     }, 200);
+
+    function handleRenderClientTable(data: any){
+        const flattenData = flattenObj({...data});
+        const sessionsExistingValues = [...sessionIds];
+        console.log(flattenData);
+        for(var q=0; q<flattenData.sessionsBookings.length; q++){
+            sessionsExistingValues.push(flattenData.sessionsBookings[q]?.session.id);
+        }
+        setSessionsIds(sessionsExistingValues);
+        for (var d = 1; d <= props.days; d++) {
+            arr[d] = JSON.parse(JSON.stringify(schedulerDay));
+        }
+        // console.log(flattenData.sessionsBookings)
+        if (flattenData.sessionsBookings?.length > 0) {
+            flattenData.sessionsBookings?.forEach((val) => {
+                var startTimeHour: any = `${val.session.start_time === null ? '0' : val.session.start_time.split(':')[0]}`;
+                var startTimeMinute: any = `${val.session.start_time === null ? '0' : val.session.start_time.split(':')[1]}`;
+                var endTimeHour: any = `${val.session.end_time === null ? '0' : val.session.end_time.split(':')[0]}`;
+                var endTimeMin: any = `${val.session.end_time === null ? '0' : val.session.end_time.split(':')[1]}`;
+                if (!arr[calculateDay(props.startDate, val.session.session_date)][startTimeHour][startTimeMinute]) {
+                    arr[calculateDay(props.startDate, val.session.session_date)][startTimeHour][startTimeMinute] = [];
+                }
+                arr[calculateDay(props.startDate, val.session.session_date)][startTimeHour][startTimeMinute].push({
+                    "title": val.session.activity === null ? val.session.workout.workouttitle : val.session.activity.title, "color": "skyblue",
+                    "day": calculateDay(props.startDate, val.session.session_date), "hour": startTimeHour, "min": startTimeMinute, "type": val.session.type,
+                    "endHour": endTimeHour, "endMin": endTimeMin, "id": val.session.activity === null ? val.session.workout.id : val.session.activity.id, "mode": val.session.mode,
+                    "tag": val.session.tag, "sessionId": val.session.id, "activityTarget": val.session.activity === null ? null : val.session.activity_target, "sessionDate": val.session.session_date,
+                });
+            })
+        }
+    }
 
 
     function handleRenderTable(data: any) {
@@ -292,7 +324,7 @@ const Schedular = (props: any) => {
     useEffect(() => {
         setTimeout(() => {
             setShow(true);
-        }, 2000)
+        }, 2500)
     }, [show]);
 
     let confirmVal: any = {};
