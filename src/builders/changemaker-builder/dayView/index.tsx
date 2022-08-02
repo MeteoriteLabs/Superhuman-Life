@@ -50,6 +50,7 @@ const DayView = (props: any) => {
     },
   });
 
+  /* eslint-disable */
   function loadData(data: any) {
     const flattenData = flattenObj({ ...data });
     var sortedPrograms: any = [];

@@ -99,9 +99,9 @@ const WorkHours = () => {
   const [dayHoliday, setDayHoliday] = useState(false);
   const [desc, setDesc] = useState("");
   const [rangeValue, rangeOnChange] = useState([new Date(), new Date()]);
-  const [slotsValidation, setSlotsValidation] = useState<any>([]);
+  const [slotsValidation] = useState<any>([]);
   const [conflictSlots, setConflictSlots] = useState<any>([]);
-  const [sessions, setSessions] = useState<any>([]);
+  // const [sessions, setSessions] = useState<any>([]);
   const [availability, setAvailability] = useState<any>([]);
   const [fromTime, setFromTime] = useState("00:00");
   const [toTime, setToTime] = useState("00:00");
@@ -133,7 +133,7 @@ const WorkHours = () => {
     onCompleted: (data: any) => {
       const flattenData = flattenObj({ ...data });
       setAvailability(flattenData.changemakerAvailabilties);
-      setSessions(flattenData.sessions);
+      // setSessions(flattenData.sessions);
       const changemakerSlots = flattenData.changemakerAvailabilties.length > 0 ? flattenData.changemakerAvailabilties[0]?.booking_slots : [];
       const sessionSlots = flattenData?.sessions;
       const mergedSlots = sessionSlots?.concat(changemakerSlots);
@@ -229,6 +229,7 @@ const WorkHours = () => {
   //   handleDuplicates(sortedPrograms, flattenData.changemakerAvailabilties);
   //   }
 
+  /* eslint-disable */
   function handleDuplicates(sortedPrograms: any, changeMakerAvailability: any) {
     if (sortedPrograms.length > 0) {
       const values = [...sortedPrograms];

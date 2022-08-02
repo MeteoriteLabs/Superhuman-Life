@@ -44,6 +44,7 @@ const WeekView = (props: any) => {
   //   },
   // });
 
+  /* eslint-disable */
   function LoadData(data: any) {
     const flattenData = flattenObj({ ...data });
     var sortedPrograms: any = [];

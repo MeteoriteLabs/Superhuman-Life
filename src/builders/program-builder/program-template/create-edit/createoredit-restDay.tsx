@@ -90,34 +90,26 @@ function CreateEditRestDay(props: any, ref: any) {
             }
         }
 
-        function createSessionBookingFunc(id: any){
-            createSessionBooking({
-                variables: {
-                    session: id,
-                    client: program_id
-                }
-            });
-        }
-
-
         if(frm.day){
                frm.day = JSON.parse(frm.day);
-               console.log(frm.day)
-               console.log(moment(frm.day[0].day, 'Da, MMM YY').format('YYYY-MM-DD'))
-               debugger
                for(var i=0; i<frm.day.length; i++){
                     createSession({
                         variables: {
                             type: "restday",
                             Is_restday: true,
-                            session_date: moment(frm.day[i].day, 'Da, MMM YY').format('YYYY-MM-DD'),
+                            session_date: moment(frm.day[i].day, 'Do, MMM YY').format('YYYY-MM-DD'),
                             changemaker: auth.userid
                         },
                         onCompleted: (data: any) => {
                             console.log(data);
                             debugger;
                             if(window.location.pathname.split('/')[1] === 'client'){
-                                createSessionBookingFunc(data.createSession.data.id);
+                                createSessionBooking({
+                                    variables: {
+                                        session: data.createSession.data.id,
+                                        client: program_id
+                                    }
+                                })
                             }else {
                                 updateSessionFunc(data.createSession.data.id);
                             }

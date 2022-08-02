@@ -1,5 +1,5 @@
 import { Row, Button } from "react-bootstrap";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import "./styles.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";

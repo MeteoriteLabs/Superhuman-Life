@@ -1,13 +1,15 @@
 import React, {useState} from 'react';
 import Schedular from '../../../../../builders/program-builder/program-template/scheduler';
 import moment from 'moment';
-import { useQuery, useMutation } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { GET_CLIENT_SESSIONS } from './queries';
+import { flattenObj } from '../../../../../components/utils/responseFlatten';
 
 const SchedulerScreen = (props: any) => {
 
     const clientsSessions = window.location.href.split('/').pop();
-     const [scheduleDate, setScheduleDate] = useState(moment().format("YYYY-MM-DD"));
+    const [scheduleDate, setScheduleDate] = useState(moment().format("YYYY-MM-DD"));
+    const [restDays, setRestDays] = useState<any>([]);
 
     function handleDatePicked(date: any){
       setScheduleDate(date);
@@ -22,7 +24,8 @@ const SchedulerScreen = (props: any) => {
     }
 
     useQuery(GET_CLIENT_SESSIONS, { variables: { id: clientsSessions, startDate: moment(moment(scheduleDate).startOf('month').format('YYYY-MM-DD')).format("YYYY-MM-DD"), endDate: moment(moment(scheduleDate).startOf('month').format('YYYY-MM-DD')).add(moment(scheduleDate).daysInMonth() - 1 , 'days').format("YYYY-MM-DD") }, onCompleted: (data: any) => {
-      console.log(data)
+      const flattenData = flattenObj({...data});
+      setRestDays(flattenData);
     }})
 
      return (
@@ -66,7 +69,7 @@ const SchedulerScreen = (props: any) => {
                   <i className="fa fa-chevron-right ml-5" style={{ cursor: 'pointer'}}></i>
                 </span>
                </div>
-               <Schedular type="date" days={moment(scheduleDate).daysInMonth()} classType={'Personal Training'} restDays={[]} programId={clientsSessions} startDate={moment(scheduleDate).startOf('month').format('YYYY-MM-DD')} clientId={1} clientSessions={true}/>
+               <Schedular type="date" days={moment(scheduleDate).daysInMonth()} classType={'Personal Training'} restDays={restDays.sessionsBookings} programId={clientsSessions} startDate={moment(scheduleDate).startOf('month').format('YYYY-MM-DD')} clientId={1} clientSessions={true}/>
           </div>
      );
 };

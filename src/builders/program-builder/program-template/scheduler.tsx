@@ -348,7 +348,18 @@ const Schedular = (props: any) => {
     }
 
     function handleRestDays(val: any) {
-        if (props.restDays) {
+        // the first if statement is to check if we are in the client scheduler page
+        // the else if block is to run if we are in the session scheduler page
+        if(props.clientSessions){
+            if (props.restDays) {
+                for (var j = 0; j < props.restDays.length; j++) {
+                    if (val === calculateDay(props.startDate, props.restDays[j].session.session_date)) {
+                        return 'rgba(255,165,0)';
+                    }
+                }
+            }
+        }
+        else if (props.restDays) {
             for (var i = 0; i < props.restDays.length; i++) {
                 if (val === calculateDay(props.startDate, props.restDays[i].session_date)) {
                     return 'rgba(255,165,0)';

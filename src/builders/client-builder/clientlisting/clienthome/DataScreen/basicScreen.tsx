@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import { Card, Row, Col, ProgressBar, Button, Modal, InputGroup, Form} from 'react-bootstrap';
+import React from 'react';
+import { Card, Row, Col, ProgressBar, Button, Modal, Form} from 'react-bootstrap';
 import './styles.css';
 
 const BasicScreen = (props: any) => {
@@ -166,7 +166,7 @@ const BasicScreen = (props: any) => {
                                         <Row>
                                              <Col>
                                                   <span style={{ color: 'gray', fontSize: "14px"}}>Updated By: </span>
-                                                  <span style={{ color: 'gray', fontSize: "12px", fontWeight: 'bold'}}>Updated By: </span>
+                                                  <span style={{ color: 'gray', fontSize: "12px", fontWeight: 'bold'}}>test </span>
                                              </Col>
                                              <Col>
                                              <img

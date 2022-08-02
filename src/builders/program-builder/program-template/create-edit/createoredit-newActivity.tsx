@@ -163,15 +163,7 @@ function CreateEditActivity(props: any, ref: any) {
                }
           }
 
-          function createSessionBooking(id: any){
-               createSessionBooking({
-                    variables: {
-                        session: id,
-                        client: program_id
-                    }
-                });
-          }
-
+          
           for (var z = 0; z < frm.day.length; z++) {
                createSession({
                     variables: {
@@ -180,12 +172,17 @@ function CreateEditActivity(props: any, ref: any) {
                         activity: id,
                         activity_target: frm.newActivity[0],
                         type: "activity",
-                        session_date: moment(frm.day[z].day, 'Da, MMM YY').format('YYYY-MM-DD'),
+                        session_date: moment(frm.day[z].day, 'Do, MMM YY').format('YYYY-MM-DD'),
                         changemaker: auth.userid
                     },
                     onCompleted: (data: any) => {
                          if(window.location.pathname.split('/')[1] === 'client'){
-                              createSessionBooking(data.createSession.data.id);
+                              createSessionBooking({
+                                   variables: {
+                                       session: data.createSession.data.id,
+                                       client: program_id
+                                   }
+                              });
                          }else {
                               updateSessionFunc(data.createSession.data.id);
                          }

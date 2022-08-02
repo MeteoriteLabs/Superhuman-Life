@@ -12,6 +12,9 @@ query getClientSessions($id: ID!, $startDate: Date, $endDate: Date){
       session_date: {
         gte: $startDate,
         lte: $endDate
+      },
+      Is_restday: {
+        eq: true
       }
     }
   }){

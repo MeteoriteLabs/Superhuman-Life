@@ -1,7 +1,8 @@
 import React, { useContext, useImperativeHandle, useState } from "react";
 import { useMutation, useQuery } from "@apollo/client";
 import ModalView from "../../../components/modal";
-import { ADD_LEADS_NEW, DELETE_LEAD_NEW, GET_LEADS_ID_NEW, UPDATE_LEADS_NEW, UPDATE_SEEN_NEW } from "./queries";
+// use this query if needed UPDATE_SEEN_NEW
+import { ADD_LEADS_NEW, DELETE_LEAD_NEW, GET_LEADS_ID_NEW, UPDATE_LEADS_NEW } from "./queries";
 import AuthContext from "../../../context/auth-context";
 import StatusModal from "../../../components/StatusModal/StatusModal";
 import { Subject } from "rxjs";
@@ -22,7 +23,7 @@ function CreateEditMessage(props: any, ref: any) {
      const [messageDetails, setMessageDetails] = useState<any>({});
      const [operation, setOperation] = useState<Operation>({} as Operation);
 
-     let o = { ...operation };
+     // let o = { ...operation };
 
      const [createLeads] = useMutation(ADD_LEADS_NEW, {
           onCompleted: (r: any) => {

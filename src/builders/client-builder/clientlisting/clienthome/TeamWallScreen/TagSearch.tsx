@@ -2,7 +2,7 @@ import { useState, useRef, useContext } from "react";
 import { InputGroup, FormControl, Container } from "react-bootstrap";
 import { gql, useQuery } from "@apollo/client";
 import AuthContext from "../../../../../context/auth-context";
-import { CHECK_NOTES, CHECK_NOTES_NEW } from "./queries";
+import { CHECK_NOTES_NEW } from "./queries";
 import { flattenObj } from "../../../../../components/utils/responseFlatten";
 
 const TagSearch = (props: any) => {

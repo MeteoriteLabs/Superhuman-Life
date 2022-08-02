@@ -137,6 +137,7 @@ export default function Leads() {
                     },
                },
           ],
+          // eslint-disable-next-line react-hooks/exhaustive-deps
           []
      );
 
