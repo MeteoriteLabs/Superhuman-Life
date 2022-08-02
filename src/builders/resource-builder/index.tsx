@@ -9,7 +9,7 @@ export default function ResourcePage() {
    
     return (
         <>
-            <h3>Resources</h3>
+            <h3>Communications</h3>
             <Card className="shadow-sm mt-3" border="light">
                 <Card.Body>
                     <Tabs variant="pills" transition={false} defaultActiveKey="message">
