@@ -27,7 +27,7 @@ export function AuthenticatedNav() {
           <NavLink className="nav-link text-white" to="/schedule">
             My Schedule
           </NavLink>
-          <NavLink className="nav-link" to="/session">
+          <NavLink className="nav-link text-white" to="/session">
             Session Manager
           </NavLink>
           <NavLink className="nav-link text-white" to="/clients">
