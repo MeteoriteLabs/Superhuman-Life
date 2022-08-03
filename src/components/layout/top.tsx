@@ -14,7 +14,7 @@ export function AuthenticatedNav() {
   const auth = useContext(authContext);
 
   return (
-    <Navbar bg="dark" className="shadow-sm" expand="lg" fixed="top">
+    <Navbar bg="dark" className="shadow-sm" expand="lg" fixed="top" variant="dark">
       <Navbar.Brand col-sm href="/" className="text-white">
         <img className="d-inline-block align-top" src="/logo.svg" alt="brand" />
       </Navbar.Brand>
