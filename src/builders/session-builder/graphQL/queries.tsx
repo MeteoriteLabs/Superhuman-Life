@@ -751,6 +751,139 @@ query getTagsforGroup($id: ID!) {
 }
 `;
 
+export const GET_TAGS_FOR_CHANNEL = gql`
+query getTagsforGroup($id: ID!) {
+  tags(filters: {
+    fitnesspackage: {
+      users_permissions_user: {
+        id: {
+          eq: $id
+        }
+      },
+      fitness_package_type: {
+        type: {
+          eq: "Live Stream Channel"
+        }
+      }
+    }
+  }){
+    data{
+      id
+      attributes{
+        tag_name
+        sessions{
+          data{
+            id
+            attributes{
+              session_date
+              type
+            }
+          }
+        }
+        fitnesspackage{
+          data{
+            id
+            attributes{
+              packagename
+              expiry_date
+              duration
+              mode
+              Status
+            }
+          }
+        }
+        client_packages{
+          data{
+            id
+            attributes{
+              effective_date
+              accepted_date
+              users_permissions_user{
+                data{
+                  id
+                  attributes{
+                    username
+                    First_Name
+                    Last_Name
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+`;
+
+export const GET_TAGS_FOR_COHORT = gql`
+query getTagsforGroup($id: ID!) {
+  tags(filters: {
+    fitnesspackage: {
+      users_permissions_user: {
+        id: {
+          eq: $id
+        }
+      },
+      fitness_package_type: {
+        type: {
+          eq: "Cohort"
+        }
+      }
+    }
+  }){
+    data{
+      id
+      attributes{
+        tag_name
+        sessions{
+          data{
+            id
+            attributes{
+              session_date
+              type
+            }
+          }
+        }
+        fitnesspackage{
+          data{
+            id
+            attributes{
+              packagename
+              duration
+              mode
+              Status
+              Start_date
+              End_date
+            }
+          }
+        }
+        client_packages{
+          data{
+            id
+            attributes{
+              effective_date
+              accepted_date
+              users_permissions_user{
+                data{
+                  id
+                  attributes{
+                    username
+                    First_Name
+                    Last_Name
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+`;
+
 
 export const GET_TAG_BY_ID = gql`
 query getTagById($id: ID!) {
@@ -779,6 +912,10 @@ query getTagById($id: ID!) {
               groupoffline
               recordedclasses
               restdays
+              Start_date
+              End_date
+              Status
+              residential_type
             }
           }
         }
@@ -952,6 +1089,10 @@ query getClientsGroup($id: ID!) {
               packagename
               duration
               level
+              Start_date
+              End_date
+              Status
+              residential_type
             }
           }
         }

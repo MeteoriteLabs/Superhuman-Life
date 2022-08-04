@@ -196,6 +196,73 @@ export const CREATE_WORKOUT = gql`
   }
 `;
 
+export const GET_CLIENT_SESSIONS = gql`
+query getClientSessions($id: ID!, $startDate: Date, $endDate: Date, $Is_restday: Boolean){
+  sessionsBookings(filters: {
+    client: {
+      id: {
+        eq: $id
+      }
+    },
+    session:{
+      session_date: {
+        gte: $startDate,
+        lte: $endDate
+      }
+      Is_restday: {
+        eq: $Is_restday
+      }
+    }
+  }){
+    data{
+      id
+      attributes{
+        client{
+          data{
+            id
+            attributes{
+              username
+            }
+          }
+        }
+        session{
+          data{
+            id
+            attributes{
+              type
+              session_date
+              tag
+              end_time
+              Is_restday
+              start_time
+              mode
+              activity{
+                data{
+                  id
+                  attributes{
+                    title
+                  }
+                }
+              }
+              activity_target
+              workout{
+                data{
+                  id
+                  attributes{
+                    workouttitle
+                  }
+                }
+              }
+            }
+          }
+        }
+        
+      }
+    }
+  }
+}
+`
+
 export const GET_SESSIONS = gql`
   query getSessions($id: ID!, $startDate: Date, $endDate: Date, $Is_restday: Boolean) {
     tags(filters: {

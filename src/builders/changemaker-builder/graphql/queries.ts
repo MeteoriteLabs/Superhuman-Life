@@ -136,6 +136,102 @@ export const GET_ALL_CLIENT_PACKAGE_BY_TYPE = gql`
   }
 `;
 
+export const GET_ALL_WEEKLY_SESSIONOS = gql`
+  query weeklySessions($id: ID!, $startDate: Date, $endDate: Date) {
+    sessions(filters: {
+      changemaker: {
+        id: {
+          eq: $id
+        }
+      },
+      session_date: {
+        between: [$startDate, $endDate]
+      },
+      type: {
+        ne: "restday"
+      },
+    }){
+      data{
+        id
+        attributes{
+          mode
+          start_time
+          end_time
+          tag
+          type
+          type
+          session_date
+          activity{
+            data{
+              id
+              attributes{
+                title
+              }
+            }
+          }
+          workout{
+            data{
+              id
+              attributes{
+                workouttitle
+              }
+            }
+          }
+          activity_target
+        }
+      }
+    }
+  }
+`
+
+export const GET_ALL_DAILY_SESSIONS = gql`
+query getDailySessions($id: ID!, $Date: Date!){
+  sessions(filters: {
+    changemaker: {
+      id: {
+        eq: $id
+      }
+    },
+    session_date: {
+      eq: $Date
+    },
+    type: {
+      ne: "restday"
+    },
+  }){
+    data{
+      id
+      attributes{
+        mode
+        start_time
+        end_time
+        tag
+        type
+        type
+        session_date
+        activity{
+          data{
+            id
+            attributes{
+              title
+            }
+          }
+        }
+        workout{
+          data{
+            id
+            attributes{
+              workouttitle
+            }
+          }
+        }
+        activity_target
+      }
+    }
+  }
+}
+`;
+
 export const GET_ALL_CHANGEMAKER_HOLIDAYS = gql`
   query getAllChangeMakerHolidays(
     $id: ID!
@@ -292,3 +388,56 @@ export const GET_ALL_CHANGEMAKER_AVAILABILITY_WORKHOURS = gql`
     }
   }
 `;
+
+export const GET_CHANGEMAKER_AVAILABILITY_AND_TAGS = gql`
+query changemakerAvailabilityAndTags($id: ID!, $date: Date!, $changemakerDate: Date!){
+  sessions(filters: {
+    changemaker: {
+      id: {
+        eq: $id
+      }
+    },
+    session_date: {
+      eq: $date
+    }
+  }){
+    data{
+      id
+      attributes{
+        mode
+        start_time
+        end_time
+        tag
+      }
+    }
+  }
+  changemakerAvailabilties(filters: {
+    date: {
+      eq: $changemakerDate
+    },
+    users_permissions_user: {
+      id: {
+        eq: $id
+      }
+    }
+  }){
+    data{
+      id
+      attributes{
+        Is_Holiday
+        booking_slots
+        date
+        holiday_title
+				users_permissions_user{
+          data{
+            id
+            attributes{
+              username
+            }
+          }
+        }
+      }
+    }
+  }
+}
+`

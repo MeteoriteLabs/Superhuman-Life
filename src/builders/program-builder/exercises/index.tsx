@@ -59,8 +59,12 @@ export default function EventsTab() {
         return (`${date}-${month}-${year}`);
     }
 
-    function FetchData(_variables: {} = {id: auth.userid}){
-        useQuery(GET_TABLEDATA, {variables: _variables, onCompleted: loadData})
+    // function FetchData(_variables: {} = {id: auth.userid}){
+        const fetch = useQuery(GET_TABLEDATA, {variables: {id: auth.userid}, onCompleted: loadData});
+    // }
+
+    function refetchQueryCallback() {
+        fetch.refetch();
     }
 
     function loadData(data: any) {
@@ -88,7 +92,7 @@ export default function EventsTab() {
     }
 
 
-    FetchData({id: auth.userid});    
+    // FetchData({id: auth.userid});    
     
     
     return (
@@ -102,7 +106,7 @@ export default function EventsTab() {
                 >
                     <i className="fas fa-plus-circle"></i>{" "}Create Exercise
                 </Button>
-                <CreateEditExercise ref={createEditExerciseComponent}></CreateEditExercise>
+                <CreateEditExercise ref={createEditExerciseComponent} callback={refetchQueryCallback}></CreateEditExercise>
             </Card.Title>
             <Table columns={columns} data={tableData} />
         </TabContent>

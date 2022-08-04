@@ -2,7 +2,8 @@ import { useState, useRef, useContext } from "react";
 import { InputGroup, FormControl, Container } from "react-bootstrap";
 import { gql, useQuery } from "@apollo/client";
 import AuthContext from "../../../../../context/auth-context";
-import { CHECK_NOTES } from "./queries";
+import { CHECK_NOTES_NEW } from "./queries";
+import { flattenObj } from "../../../../../components/utils/responseFlatten";
 
 const TagSearch = (props: any) => {
      const last = window.location.pathname.split("/").pop();
@@ -18,28 +19,47 @@ const TagSearch = (props: any) => {
 
      const GET_GOALLIST = gql`
           query TagListQuery($filter: String!, $id: ID) {
-               workouts(
-                    sort: "updatedAt"
-                    where: { workouttitle_contains: $filter, users_permissions_user: { id: $id } }
-               ) {
-                    id
-                    workouttitle
-               }
+               workouts(filters: {
+                    workouttitle: {
+                      containsi: $filter
+                    },
+                    users_permissions_user:{
+                      id: {
+                        eq: $id
+                      }
+                    }
+                  }, sort: ["updatedAt"]){
+                    data{
+                      id
+                      attributes{
+                        workouttitle
+                      }
+                    }
+                  }
           }
      `;
 
      const GET_GOALLIST_ID = gql`
           query TagListQuery($id: ID) {
-               workouts(sort: "updatedAt", where: { id: $id }) {
-                    id
-                    workouttitle
-               }
+               workouts(filters: {
+                    id: {
+                      eq: $id
+                    }
+                  }){
+                    data{
+                      id
+                      attributes{
+                        workouttitle
+                      }
+                    }
+                  }
           }
      `;
 
      useQuery(GET_GOALLIST_ID, { variables: { id: props.value }, onCompleted: storeName, skip: !props.value });
      function storeName(e: any) {
-          setSelected([{ value: e.workouts[0].workouttitle, id: props.value }]);
+          const flattenData = flattenObj({...e});
+          setSelected([{ value: flattenData.workouts[0].workouttitle, id: props.value }]);
      }
 
      function FetchPackageList(_variable: {} = { filter: " ", id: auth.userid }) {
@@ -47,8 +67,9 @@ const TagSearch = (props: any) => {
      }
 
      function loadPackageList(data: any) {
+          const flattenData = flattenObj({...data});
           setPackageLists(
-               [...data.workouts].map((p) => {
+               [...flattenData.workouts].map((p) => {
                     if (!idArray.includes(p.id)) {
                          return {
                               id: p.id,
@@ -60,11 +81,12 @@ const TagSearch = (props: any) => {
           );
      }
      function FetchNotes(_variable: {} = { id: auth.userid, clientid: last }) {
-          useQuery(CHECK_NOTES, { variables: _variable, onCompleted: loadNotes });
+          useQuery(CHECK_NOTES_NEW, { variables: _variable, onCompleted: loadNotes });
      }
      function loadNotes(d: any) {
-          for (let i = 0; i < d.feedbackNotes.length; i++) {
-               Arr.push(d.feedbackNotes[i].resource_id);
+          const flattenData = flattenObj({...d});
+          for (let i = 0; i < flattenData.feedbackNotes.length; i++) {
+               Arr.push(flattenData.feedbackNotes[i].resource_id);
           }
           setIdArray(Arr);
      }

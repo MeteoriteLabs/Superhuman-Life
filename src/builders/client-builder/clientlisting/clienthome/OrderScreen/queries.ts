@@ -63,6 +63,67 @@ export const GET_BOOKINGS = gql`
      }
 `;
 
+export const GET_BOOKINGS_NEW = gql`
+query clientBookings($id: ID!, $clientid: ID){
+     clientBookings(filters: {
+       fitnesspackages: {
+         users_permissions_user: {
+           id: {
+             eq: $id
+           }
+         }
+       },
+       users_permissions_users: {
+         id: {
+           eq: $clientid
+         }
+       }
+     }, sort: ["booking_date:desc"]){
+       data{
+         id
+         attributes{
+           users_permissions_users{
+             data{
+               id
+               attributes{
+                 username
+               }
+             }
+           }
+           effective_date
+           booking_date
+           booking_status
+           package_duration
+           fitnesspackages{
+             data{
+               id
+               attributes{
+                 packagename
+                 aboutpackage
+                 tags
+                 fitness_package_type{
+                   data{
+                     id
+                     attributes{
+                       type
+                     }
+                   }
+                 }
+                 ptonline
+                 ptoffline
+                 grouponline
+                 groupoffline
+                 recordedclasses
+                 fitnesspackagepricing
+               }
+             }
+           }
+         }
+       }
+     }
+   }
+`;
+
 export const ADD_SUGGESTION = gql`
      mutation createSuggestion($id: ID, $fitnesspackage: ID) {
           createUserPackageSuggestion(
@@ -74,3 +135,16 @@ export const ADD_SUGGESTION = gql`
           }
      }
 `;
+
+export const ADD_SUGGESTION_NEW = gql`
+mutation createSuggestion($id: ID, $fitnesspackage: ID){
+     createUserPackageSuggestion(data: {
+       users_permissions_user: $id,
+       fitnesspackage: $fitnesspackage
+     }){
+       data{
+         id
+       }
+     }
+   }
+`

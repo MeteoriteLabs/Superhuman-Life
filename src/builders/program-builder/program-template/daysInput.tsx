@@ -39,8 +39,6 @@ const DaysInput = (props: any) => {
 
      const days: any[] = [];
 
-     console.log(props)
-
      function renderInputField() {
           for (var i=0; i<props.duration;i++){
                days.push({"key": i+1,"day": `${moment(props.startDate).add(i, 'days').format("Do, MMM YY")}`})

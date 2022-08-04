@@ -135,6 +135,15 @@ function CreateEditCohort(props: any, ref: any) {
         return foundType.id;
     }
 
+
+    function calculateDuration(sd, ed){
+        const start = moment(sd);
+        const end = moment(ed);
+        const duration = end.diff(start, 'days');
+        return duration;
+    }
+
+
     function createCohort(frm: any) {
         frmDetails = frm;
         frm.programDetails = JSON.parse(frm.programDetails)
@@ -148,7 +157,7 @@ function CreateEditCohort(props: any, ref: any) {
                 channelinstantBooking: frm.channelinstantBooking,
                 expiry_date: moment(frm.expiryDate).toISOString(),
                 level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
-                fitnesspackagepricing: frm.pricing === "free" ? [{mrp: 'free'}] : JSON.parse(frm.pricing),
+                fitnesspackagepricing: frm.pricing === "free" ? [{mrp: 'free', duration: calculateDuration(frm.startDate, frm.endDate)}] : JSON.parse(frm.pricing),
                 publishing_date: moment(frm.publishingDate).toISOString(),
                 tags: frm.tag,
                 users_permissions_user: frm.user_permissions_user,

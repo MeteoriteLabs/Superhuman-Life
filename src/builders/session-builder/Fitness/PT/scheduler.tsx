@@ -188,6 +188,8 @@ const Scheduler = () => {
 
     console.log(tag)
 
+    console.log(tag?.sessions.filter((ses) => ses.type === "restday"));
+
     if (!show) return <span style={{ color: 'red' }}>Loading...</span>;
     else return (
         <>

@@ -67,18 +67,17 @@ const WeekScheduler = (props: any) => {
             arr[d] = JSON.parse(JSON.stringify(schedulerDay));
         }
         values.forEach((val) => {
-            var startTimeHour: any = `${val.startTime === undefined ? '0' : val.startTime.split(':')[0]}`;
-            var startTimeMinute: any = `${val.startTime === undefined ? '0' : val.startTime.split(':')[1]}`;
-            var endTimeHour: any = `${val.endTime === undefined ? '0' : val.endTime.split(':')[0]}`;
-            var endTimeMin: any = `${val.endTime === undefined ? '0' : val.endTime.split(':')[1]}`;
-            if (!arr[val.day][startTimeHour][startTimeMinute]) {
-                arr[val.day][startTimeHour][startTimeMinute] = [];
+            var startTimeHour: any = `${val.start_time === undefined ? '0' : val.start_time.split(':')[0]}`;
+            var startTimeMinute: any = `${val.start_time === undefined ? '0' : val.start_time.split(':')[1]}`;
+            var endTimeHour: any = `${val.end_time === undefined ? '0' : val.end_time.split(':')[0]}`;
+            var endTimeMin: any = `${val.end_time === undefined ? '0' : val.end_time.split(':')[1]}`;
+            if (!arr[moment(val.session_date).weekday() + 1][startTimeHour][startTimeMinute]) {
+                arr[moment(val.session_date).weekday() + 1][startTimeHour][startTimeMinute] = [];
             }
-            arr[val.day][startTimeHour][startTimeMinute].push({
-                "title": val.name, "color": "skyblue",
-                "day": val.day, "hour": startTimeHour, "min": startTimeMinute, "type": val.type,
-                "endHour": endTimeHour, "endMin": endTimeMin, "id": val.id, "mode": val.mode,
-                "tag": val.tag
+            arr[moment(val.session_date).weekday() + 1][startTimeHour][startTimeMinute].push({
+                "title": val.activity === null ? val.workout.workouttitle : val.activity.title, "color": "skyblue",
+                "day": moment(val.session_date).weekday() + 1, "hour": startTimeHour, "min": startTimeMinute, "type": val.type,
+                "endHour": endTimeHour, "endMin": endTimeMin, "id": val.activity === null ? val.workout.id : val.activity.id, "mode": val.mode, "tag": val.tag, "sessionId": val.id, "activityTarget": val.activity === null ? null : val.activity_target, "sessionDate": val.session_date,
             });
         })
     }

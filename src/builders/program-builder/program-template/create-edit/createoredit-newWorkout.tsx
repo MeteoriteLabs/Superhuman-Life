@@ -77,12 +77,22 @@ function CreateEditNewWorkout(props: any, ref: any) {
         const values = [...sessionsIds];
         setUserId(r.createSession.data.id);
         values.push(r.createSession.data.id);
-        upateSessions({
-            variables: {
-                id: program_id,
-                sessions_ids: values
-            }
-        });
+
+        if(window.location.pathname.split('/')[1] === 'client'){
+            createSessionBooking({
+                variables: {
+                    session: r.createSession.data.id,
+                    client: program_id
+                }
+            });
+        }else {
+            upateSessions({
+                variables: {
+                    id: program_id,
+                    sessions_ids: values
+                }
+            });
+        }
      } });
     //     const [editExercise] = useMutation(UPDATE_EXERCISE,{variables: {exerciseid: operation.id}, onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
 //     const [deleteExercise] = useMutation(DELETE_EXERCISE, { onCompleted: (e: any) => console.log(e), refetchQueries: ["GET_TABLEDATA"] });

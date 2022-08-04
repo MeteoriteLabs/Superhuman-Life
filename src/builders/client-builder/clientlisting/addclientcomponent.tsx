@@ -1,7 +1,7 @@
 import React, { useImperativeHandle, useState } from "react";
 import { useMutation } from "@apollo/client";
 import ModalView from "../../../components/modal";
-import { ADD_CLIENT } from "./queries";
+import { ADD_CLIENT_NEW } from "./queries";
 //import AuthContext from "../../../context/auth-context";
 import StatusModal from "../../../components/StatusModal/StatusModal";
 import { Subject } from "rxjs";
@@ -20,9 +20,10 @@ function CreateClient(props: any, ref: any) {
      //const [messageDetails, setMessageDetails] = useState<any>({});
      const [operation, setOperation] = useState<Operation>({} as Operation);
 
-     const [createClient] = useMutation(ADD_CLIENT, {
+     const [createClient] = useMutation(ADD_CLIENT_NEW, {
           onCompleted: (r: any) => {
                modalTrigger.next(false);
+               props.callback();
           },
      });
 
@@ -72,6 +73,10 @@ function CreateClient(props: any, ref: any) {
           });
      }
 
+     function DeleteClient(id: any) {
+          // deleteClient({ variables: { id: id } });
+     }
+
      function OnSubmit(frm: any) {
           //   if (frm) {
           //        frm.user_permissions_user = auth.userid;
@@ -109,6 +114,8 @@ function CreateClient(props: any, ref: any) {
      //      }
      // }
 
+
+
      return (
           <>
                {operation.type === "create" && (
@@ -132,7 +139,7 @@ function CreateClient(props: any, ref: any) {
                          modalBody="Do you want to delete this message?"
                          buttonLeft="Cancel"
                          buttonRight="Yes"
-                         onClick={() => {}}
+                         onClick={() => { DeleteClient(operation.id) }}
                     />
                )}
           </>

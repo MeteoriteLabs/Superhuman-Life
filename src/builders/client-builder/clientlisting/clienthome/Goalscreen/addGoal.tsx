@@ -1,10 +1,11 @@
 import React, { useImperativeHandle, useState, useContext } from "react";
 import { useMutation, useQuery } from "@apollo/client";
 import ModalView from "../../../../../components/modal";
-import { ADD_GOAL, UPDATE_GOALS, GET_GOALS_DETAILS } from "./queries";
+import { ADD_GOAL_NEW, GET_GOALS_DETAILS_NEW, UPDATE_GOALS_NEW } from "./queries";
 import AuthContext from "../../../../../context/auth-context";
 import { Subject } from "rxjs";
 import { schema, widgets } from "./schema";
+import { flattenObj } from "../../../../../components/utils/responseFlatten";
 
 interface Operation {
      id: string;
@@ -17,14 +18,16 @@ function CreateGoal(props: any, ref: any) {
      const GoalSchema: { [name: string]: any } = require("./forms/goal.json");
      const [messageDetails, setMessageDetails] = useState<any>({});
      const [operation, setOperation] = useState<Operation>({} as Operation);
-     const [createGoal]: any = useMutation(ADD_GOAL, {
+     const [createGoal]: any = useMutation(ADD_GOAL_NEW, {
           onCompleted: (r: any) => {
                modalTrigger.next(false);
+               props.callback();
           },
      });
-     const [editMessage]: any = useMutation(UPDATE_GOALS, {
+     const [editMessage]: any = useMutation(UPDATE_GOALS_NEW, {
           onCompleted: (r: any) => {
                modalTrigger.next(false);
+               props.callback();
           },
      });
 
@@ -41,8 +44,9 @@ function CreateGoal(props: any, ref: any) {
      }));
 
      function FillDetails(data: any) {
+          const flattenData = flattenObj({...data});
           let details: any = {};
-          let msg = data.userGoals;
+          let msg = flattenData.userGoals;
           let o = { ...operation };
           details.name = o.type.toLowerCase();
           details.packagesearch = msg[0].goals[0];
@@ -57,7 +61,7 @@ function CreateGoal(props: any, ref: any) {
           else OnSubmit(null);
      }
 
-     useQuery(GET_GOALS_DETAILS, {
+     useQuery(GET_GOALS_DETAILS_NEW, {
           variables: { id: operation.id },
           skip: !operation.id,
           onCompleted: (e: any) => {
@@ -66,10 +70,13 @@ function CreateGoal(props: any, ref: any) {
      });
 
      function CreateGoal(frm: any) {
+          const assignedByArray: any = [];
+          assignedByArray.push(auth.userid);
+
           createGoal({
                variables: {
                     goals: frm.packagesearch.split(","),
-                    assignedBy: auth.userid,
+                    assignedBy: assignedByArray,
                     start: frm.startdate,
                     end: frm.enddate,
                     users_permissions_user: last,

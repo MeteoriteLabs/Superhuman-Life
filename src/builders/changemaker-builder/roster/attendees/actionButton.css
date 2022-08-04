@@ -1,0 +1,12 @@
+#dropdown-basic::after {
+    display: none;
+}
+.actionButtonDropDown {
+    border: none;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 15px;
+    padding-right: 15px;
+    background-color: #F8F9FA;
+    border-radius: 50px;
+}

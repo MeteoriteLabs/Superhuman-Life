@@ -60,25 +60,36 @@ function CreateEditWorkoutTemplate(props: any, ref: any) {
         setSessionsIds(sessionsExistingValues);
     }});
 
-    const [createSessionBooking] = useMutation(CREATE_SESSION_BOOKING, { onCompleted: (data: any) => {modalTrigger.next(false)} })
+    const [createSessionBooking] = useMutation(CREATE_SESSION_BOOKING, { onCompleted: (data: any) => {modalTrigger.next(false); props.callback()} })
     const [upateSessions] = useMutation(UPDATE_TAG_SESSIONS, { onCompleted: (data: any) => {
         createSessionBooking({
             variables: {
                 session: userId,
-                client: clientId,
+                client: clientId
             }
         });
     }})
     const [createSession] = useMutation(CREATE_SESSION, { onCompleted: (r: any) => { 
         const values = [...sessionsIds];
+        // here userId refers to the sessionID
         setUserId(r.createSession.data.id);
         values.push(r.createSession.data.id);
-        upateSessions({
-            variables: {
-                id: program_id,
-                sessions_ids: values
-            }
-        });
+
+        if(window.location.pathname.split('/')[1] === 'client'){
+            createSessionBooking({
+                variables: {
+                    session: r.createSession.data.id,
+                    client: program_id
+                }
+            });
+        }else {
+            upateSessions({
+                variables: {
+                    id: program_id,
+                    sessions_ids: values
+                }
+            });
+        }
      } });
     // const [updateProgram] = useMutation(UPDATE_FITNESSPROGRAMS, { onCompleted: (r: any) => { modalTrigger.next(false); } });
     //     const [editExercise] = useMutation(UPDATE_EXERCISE,{variables: {exerciseid: operation.id}, onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
@@ -123,7 +134,6 @@ function CreateEditWorkoutTemplate(props: any, ref: any) {
     }
 
     async function UpdateProgram(frm: any) {
-        console.log(frm);
         var existingEvents: any = (props.events === null ? [] : [...props.events]);
         if (frm.day) {
             frm.day = JSON.parse(frm.day);

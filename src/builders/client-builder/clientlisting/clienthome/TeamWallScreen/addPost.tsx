@@ -2,15 +2,15 @@ import React, { useImperativeHandle, useState, useContext } from "react";
 import { useMutation, useQuery } from "@apollo/client";
 import ModalView from "../../../../../components/modal";
 import {
-     ADD_RATING,
-     ADD_NOTE,
-     DELETE_COMMENT,
-     DELETE_NOTE,
-     DELETE_RATING,
-     GET_RATING_NOTES_BYID,
-     GET_NOTES_RATING,
-     UPDATE_RATING,
-     UPDATE_NOTES,
+     ADD_RATING_NEW,
+     GET_RATING_NOTES_BYID_NEW,
+     GET_NOTES_RATING_NEW,
+     ADD_NOTE_NEW,
+     UPDATE_RATING_NEW,
+     UPDATE_NOTES_NEW,
+     DELETE_NOTE_NEW,
+     DELETE_COMMENT_NEW,
+     DELETE_RATING_NEW,
 } from "./queries";
 import AuthContext from "../../../../../context/auth-context";
 import { Subject } from "rxjs";
@@ -37,29 +37,29 @@ function CreatePosts(props: any, ref: any) {
 
      const [operation, setOperation] = useState<Operation>({} as Operation);
 
-     const [createRating] = useMutation(ADD_RATING, {
+     const [createRating] = useMutation(ADD_RATING_NEW, {
           onCompleted: (r: any) => {
                modalTrigger.next(false);
           },
      });
-     const [createNote] = useMutation(ADD_NOTE, {
+     const [createNote] = useMutation(ADD_NOTE_NEW, {
           onCompleted: (r: any) => {
                modalTrigger.next(false);
           },
      });
-     const [updaterating] = useMutation(UPDATE_RATING, {
+     const [updaterating] = useMutation(UPDATE_RATING_NEW, {
           onCompleted: (r: any) => {
                modalTrigger.next(false);
           },
      });
-     const [updatenote] = useMutation(UPDATE_NOTES, {
+     const [updatenote] = useMutation(UPDATE_NOTES_NEW, {
           onCompleted: (r: any) => {
                modalTrigger.next(false);
           },
      });
-     const [deleteNote] = useMutation(DELETE_NOTE, {});
-     const [deleteComment] = useMutation(DELETE_COMMENT, {});
-     const [deleteRating] = useMutation(DELETE_RATING, {});
+     const [deleteNote] = useMutation(DELETE_NOTE_NEW, {});
+     const [deleteComment] = useMutation(DELETE_COMMENT_NEW, {});
+     const [deleteRating] = useMutation(DELETE_RATING_NEW, {});
 
      const modalTrigger = new Subject();
 
@@ -73,7 +73,7 @@ function CreatePosts(props: any, ref: any) {
           },
      }));
 
-     useQuery(GET_NOTES_RATING, {
+     useQuery(GET_NOTES_RATING_NEW, {
           variables: { id: operation.resource_id, clientid: last },
           skip: !operation.resource_id,
           onCompleted: (e: any) => {
@@ -148,7 +148,7 @@ function CreatePosts(props: any, ref: any) {
           }
      }
 
-     useQuery(GET_RATING_NOTES_BYID, {
+     useQuery(GET_RATING_NOTES_BYID_NEW, {
           variables: { id: operation.resourceid, clientid: last },
           skip:
                !operation.id ||

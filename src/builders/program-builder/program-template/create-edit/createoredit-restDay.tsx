@@ -1,7 +1,7 @@
 import React, { useContext, useImperativeHandle, useState } from 'react';
 import { useQuery, useMutation } from "@apollo/client";
 import ModalView from "../../../../components/modal";
-import { GET_SCHEDULEREVENTS, CREATE_SESSION, GET_SESSIONS, UPDATE_TAG_SESSIONS } from "../queries";
+import { GET_SCHEDULEREVENTS, CREATE_SESSION, GET_SESSIONS, UPDATE_TAG_SESSIONS, CREATE_SESSION_BOOKING } from "../queries";
 import AuthContext from "../../../../context/auth-context";
 import { schema, widgets } from '../schema/restDaySchema';
 import {Subject} from 'rxjs';
@@ -35,6 +35,7 @@ function CreateEditRestDay(props: any, ref: any) {
 
     // const [CreateProgram] = useMutation(CREATE_PROGRAM, { onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
     // const [updateProgram] = useMutation(UPDATE_FITNESSPROGRAMS, {onCompleted: (r: any) => { modalTrigger.next(false); } });
+    const [createSessionBooking] = useMutation(CREATE_SESSION_BOOKING, { onCompleted: (data: any) => {modalTrigger.next(false)} })
     const [upateSessions] = useMutation(UPDATE_TAG_SESSIONS, { onCompleted: (data: any) => {modalTrigger.next(false);}})
     const [createSession] = useMutation(CREATE_SESSION);
     //     const [editExercise] = useMutation(UPDATE_EXERCISE,{variables: {exerciseid: operation.id}, onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
@@ -76,17 +77,19 @@ function CreateEditRestDay(props: any, ref: any) {
 
     function UpdateProgram(frm: any) {
         const sessionIds_new: any = [];
+        const sessionIds_old: string[] = [...sessionsIds];
         function updateSessionFunc(id: any){
             sessionIds_new.push(id);
             if(frm.day.length === sessionIds_new.length){
                 upateSessions({
                     variables: {
                         id: program_id,
-                        sessions_ids: sessionsIds.concat(sessionIds_new)
+                        sessions_ids: sessionIds_old.concat(sessionIds_new)
                     }
                 });
             }
         }
+
         if(frm.day){
                frm.day = JSON.parse(frm.day);
                for(var i=0; i<frm.day.length; i++){
@@ -94,11 +97,22 @@ function CreateEditRestDay(props: any, ref: any) {
                         variables: {
                             type: "restday",
                             Is_restday: true,
-                            session_date: moment(frm.day[0].day, 'Da, MMM YY').format('YYYY-MM-DD'),
+                            session_date: moment(frm.day[i].day, 'Do, MMM YY').format('YYYY-MM-DD'),
                             changemaker: auth.userid
                         },
                         onCompleted: (data: any) => {
-                            updateSessionFunc(data.createSession.data.id);
+                            console.log(data);
+                            debugger;
+                            if(window.location.pathname.split('/')[1] === 'client'){
+                                createSessionBooking({
+                                    variables: {
+                                        session: data.createSession.data.id,
+                                        client: program_id
+                                    }
+                                })
+                            }else {
+                                updateSessionFunc(data.createSession.data.id);
+                            }
                         }
                     });
                }

@@ -5,8 +5,9 @@ import { useQuery } from "@apollo/client";
 import Table from "../../../../../components/table";
 import { Row, Button, Col } from "react-bootstrap";
 import AuthContext from "../../../../../context/auth-context";
-import { GET_BOOKINGS } from "./queries";
+import { GET_BOOKINGS_NEW } from "./queries";
 import CreateSuggestion from "./addSuggestion";
+import { flattenObj } from "../../../../../components/utils/responseFlatten";
 
 function Movement() {
      const last = window.location.pathname.split("/").pop();
@@ -200,18 +201,17 @@ function Movement() {
      const [dataHistorytable, setHistoryDataTable] = useState<{}[]>([]);
 
      function FetchData(_variables: {} = { id: auth.userid, clientid: last }) {
-          useQuery(GET_BOOKINGS, { variables: _variables, onCompleted: loadData });
+          useQuery(GET_BOOKINGS_NEW, { variables: _variables, onCompleted: loadData });
      }
 
      function loadData(data: any) {
+          const flattenData = flattenObj({...data});
           setHistoryDataTable(
-               [...data.clientBookings].flatMap((Detail) =>
+               [...flattenData.clientBookings].flatMap((Detail) =>
                     compareDates(getRenewalDate(Detail.effective_date, Detail.package_duration))
                          ? {
                                 packagetype: Detail.fitnesspackages[0].fitness_package_type.type,
-                                packagename: Detail.program_managers[0]
-                                     ? Detail.program_managers[0].fitnesspackages[0].packagename
-                                     : Detail.fitnesspackages[0].packagename,
+                                packagename: Detail.fitnesspackages[0]?.packagename,
                                 details: [
                                      Detail.fitnesspackages[0].ptonline,
                                      Detail.fitnesspackages[0].ptoffline,
@@ -222,7 +222,7 @@ function Movement() {
                                 duration: Detail.package_duration,
                                 effectivedate: getDate(Date.parse(Detail.effective_date)),
                                 enddate: getRenewalDate(Detail.effective_date, Detail.package_duration),
-                                cost: Detail.fitnesspackages[0].fitnesspackagepricing[0].packagepricing[0].mrp,
+                                cost: Detail.fitnesspackages[0]?.fitnesspackagepricing[0]?.mrp,
                                 bookingstatus: Detail.booking_status,
                                 payment: "",
                            }
@@ -231,13 +231,11 @@ function Movement() {
           );
 
           setActiveDataTable(
-               [...data.clientBookings].flatMap((Detail) =>
+               [...flattenData.clientBookings].flatMap((Detail) =>
                     !compareDates(getRenewalDate(Detail.effective_date, Detail.package_duration))
                          ? {
                                 packagetype: Detail.fitnesspackages[0].fitness_package_type.type,
-                                packagename: Detail.program_managers[0]
-                                     ? Detail.program_managers[0].fitnesspackages[0].packagename
-                                     : Detail.fitnesspackages[0].packagename,
+                                packagename: Detail.fitnesspackages[0]?.packagename,
                                 details: [
                                      Detail.fitnesspackages[0].ptonline,
                                      Detail.fitnesspackages[0].ptoffline,
@@ -248,7 +246,7 @@ function Movement() {
                                 duration: Detail.package_duration,
                                 effectivedate: getDate(Date.parse(Detail.effective_date)),
                                 enddate: getRenewalDate(Detail.effective_date, Detail.package_duration),
-                                cost: Detail.fitnesspackages[0].fitnesspackagepricing[0].packagepricing[0].mrp,
+                                cost: Detail.fitnesspackages[0]?.fitnesspackagepricing[0]?.mrp,
                                 bookingstatus: Detail.booking_status,
                                 payment: "",
                            }

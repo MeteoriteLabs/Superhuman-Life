@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { Form } from "react-bootstrap";
 import Editor from "./textEditor";
-import { GET_FITNESSSCALE, GET_MOODSCALE } from "./queries";
+import { GET_FITNESSSCALE_NEW, GET_MOODSCALE_NEW } from "./queries";
 import { useQuery } from "@apollo/client";
 import Rating from "./Rating";
+import {flattenObj} from '../../../../../components/utils/responseFlatten';
 
 function Widget(props: any) {
-     console.log(JSON.parse(props.value));
-     let Data = JSON.parse(props.value);
+     let Data = props.value !== undefined && JSON.parse(props.value);
      const [editor, setEditor] = useState<any>(false);
      const [rating, setRating] = useState<any>(false);
      const [rate1, setRate1] = useState<any>();
@@ -32,19 +32,21 @@ function Widget(props: any) {
      }
 
      function Fetch() {
-          useQuery(GET_FITNESSSCALE, { onCompleted: loadRating });
-          useQuery(GET_MOODSCALE, { onCompleted: loadMood });
+          useQuery(GET_MOODSCALE_NEW, { onCompleted: loadRating });
+          useQuery(GET_FITNESSSCALE_NEW, { onCompleted: loadMood });
      }
 
      function loadRating(data: any) {
-          [...data.ratingScales].map((p) => {
+          const flattenData = flattenObj({ ...data });
+          [...flattenData.ratingScales].map((p) => {
                setRate1(p.items);
                setId1(p.id);
                return {};
           });
      }
      function loadMood(data: any) {
-          [...data.ratingScales].map((p) => {
+          const flattenData = flattenObj({ ...data });
+          [...flattenData.ratingScales].map((p) => {
                setImg(p.items);
                setId2(p.id);
                return {};
@@ -83,13 +85,13 @@ function Widget(props: any) {
                          <Rating
                               heading1="Rate of Perceived Exertion"
                               min1={1}
-                              max1={rate1.length}
+                              max1={rate1?.length}
                               value1={value}
                               handleChange1={handleChange}
                               title1={render}
                               heading2="Mood Status"
                               min2={1}
-                              max2={img.length}
+                              max2={img?.length}
                               value2={value2}
                               handleChange2={handleMoodChange}
                               icon={icon}

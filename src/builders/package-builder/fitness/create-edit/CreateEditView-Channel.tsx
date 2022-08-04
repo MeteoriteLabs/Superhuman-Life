@@ -1,7 +1,7 @@
 import React, { useContext, useImperativeHandle, useState } from 'react';
 import { useQuery, useMutation } from "@apollo/client";
 import ModalView from "./widgets/Modal";
-import {CREATE_CHANNEL_PACKAGE, CREATE_BOOKING_CONFIG, DELETE_PACKAGE, UPDATE_PACKAGE_STATUS, UPDATE_CHANNEL_COHORT_PACKAGE} from '../graphQL/mutations';
+import {CREATE_CHANNEL_PACKAGE, CREATE_BOOKING_CONFIG_AND_TAG_CHANNEL, DELETE_PACKAGE, UPDATE_PACKAGE_STATUS, UPDATE_CHANNEL_COHORT_PACKAGE} from '../graphQL/mutations';
 import {GET_FITNESS_PACKAGE_TYPE, GET_SINGLE_PACKAGE_BY_ID} from '../graphQL/queries';
 import AuthContext from "../../../../context/auth-context";
 import { schema, widgets } from './schema/channelSchema';
@@ -34,14 +34,18 @@ function CreateEditChannel(props: any, ref: any) {
     const [editPackageDetails] = useMutation(UPDATE_CHANNEL_COHORT_PACKAGE, {onCompleted: (data) => {modalTrigger.next(false);}})
     const [updatePackageStatus] = useMutation(UPDATE_PACKAGE_STATUS, {onCompleted: (data) => {}});
     const [deletePackage] = useMutation(DELETE_PACKAGE, { refetchQueries: ["GET_TABLEDATA"], onCompleted: (data) => {props.callback()}});
-    const [bookingConfig] = useMutation(CREATE_BOOKING_CONFIG, {onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); props.callback(); }})
+    const [bookingConfig] = useMutation(CREATE_BOOKING_CONFIG_AND_TAG_CHANNEL, {onCompleted: (r: any) => { 
+        console.log(r); modalTrigger.next(false); props.callback();
+     }})
     const [CreatePackage] = useMutation(CREATE_CHANNEL_PACKAGE, { onCompleted: (r: any) => {
         bookingConfig({
             variables: {
                 isAuto: frmDetails.config.acceptBooking === 0 ? false : true,
                 id: r.createFitnesspackage.data.id,
                 bookings_per_day: frmDetails.config.maxBookingDay,
-                bookings_per_month: frmDetails.config.maxBookingMonth
+                bookings_per_month: frmDetails.config.maxBookingMonth,
+                tagName: frmDetails.channelName,
+                packageId: r.createFitnesspackage.data.id
             }
         })
      } });

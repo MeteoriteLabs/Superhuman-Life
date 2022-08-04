@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
-import { Modal, Button, Row, Col, Tab, Tabs, InputGroup, FormControl, Badge, OverlayTrigger, Tooltip, Form } from 'react-bootstrap';
+import { Modal, Button, Row, Col, Tab, Tabs, InputGroup, FormControl, Badge, OverlayTrigger, Tooltip, Form, Spinner } from 'react-bootstrap';
 import './styles.css';
-import { PROGRAM_EVENTS, FETCH_WORKOUT, FETCH_ACTIVITY, GET_SLOTS_TO_CHECK, UPDATE_CHANGEMAKER_AVAILABILITY_WORKHOURS, GET_SESSIONS, DELETE_SESSION, UPDATE_SESSION, CREATE_SESSION, UPDATE_TAG_SESSIONS, CREATE_SESSION_BOOKING, GET_SESSION_BOOKINGS, UPDATE_SESSION_BOOKING } from './queries';
+import { PROGRAM_EVENTS, FETCH_WORKOUT, FETCH_ACTIVITY, GET_SLOTS_TO_CHECK, UPDATE_CHANGEMAKER_AVAILABILITY_WORKHOURS, GET_SESSIONS, GET_CLIENT_SESSIONS, DELETE_SESSION, UPDATE_SESSION, CREATE_SESSION, UPDATE_TAG_SESSIONS, CREATE_SESSION_BOOKING, GET_SESSION_BOOKINGS, UPDATE_SESSION_BOOKING } from './queries';
 import { useQuery, useMutation, gql } from "@apollo/client";
 import ProgramList from "../../../components/customWidgets/programList";
 import SessionList from '../../../components/customWidgets/sessionList';
@@ -161,9 +161,10 @@ const Schedular = (props: any) => {
         }
     });
 
-    function Fetchdata(_variables: any) {
-        useQuery(GET_SESSIONS, { variables: _variables, onCompleted: handleRenderTable });
-    }
+    // this is the entry point to the file.
+    // function Fetchdata(_variables: any) {
+        const mainQuery = useQuery(!props?.clientSessions ? GET_SESSIONS : GET_CLIENT_SESSIONS, { variables: { id: props.programId, startDate: moment(props.startDate).format("YYYY-MM-DD"), endDate: moment(props.startDate).add(props.days - 1 , 'days').format("YYYY-MM-DD"), Is_restday: false }, onCompleted: !props?.clientSessions ? handleRenderTable : handleRenderClientTable });
+    // }
 
     function draganddrop() {
         const draggable: any = document.querySelectorAll('.schedular-content');
@@ -215,6 +216,37 @@ const Schedular = (props: any) => {
     setTimeout(() => {
         draganddrop();
     }, 200);
+
+    function handleRenderClientTable(data: any){
+        const flattenData = flattenObj({...data});
+        const sessionsExistingValues = [...sessionIds];
+        console.log(flattenData);
+        for(var q=0; q<flattenData.sessionsBookings.length; q++){
+            sessionsExistingValues.push(flattenData.sessionsBookings[q]?.session.id);
+        }
+        setSessionsIds(sessionsExistingValues);
+        for (var d = 1; d <= props.days; d++) {
+            arr[d] = JSON.parse(JSON.stringify(schedulerDay));
+        }
+        // console.log(flattenData.sessionsBookings)
+        if (flattenData.sessionsBookings?.length > 0) {
+            flattenData.sessionsBookings?.forEach((val) => {
+                var startTimeHour: any = `${val.session.start_time === null ? '0' : val.session.start_time.split(':')[0]}`;
+                var startTimeMinute: any = `${val.session.start_time === null ? '0' : val.session.start_time.split(':')[1]}`;
+                var endTimeHour: any = `${val.session.end_time === null ? '0' : val.session.end_time.split(':')[0]}`;
+                var endTimeMin: any = `${val.session.end_time === null ? '0' : val.session.end_time.split(':')[1]}`;
+                if (!arr[calculateDay(props.startDate, val.session.session_date)][startTimeHour][startTimeMinute]) {
+                    arr[calculateDay(props.startDate, val.session.session_date)][startTimeHour][startTimeMinute] = [];
+                }
+                arr[calculateDay(props.startDate, val.session.session_date)][startTimeHour][startTimeMinute].push({
+                    "title": val.session.activity === null ? val.session.workout.workouttitle : val.session.activity.title, "color": "skyblue",
+                    "day": calculateDay(props.startDate, val.session.session_date), "hour": startTimeHour, "min": startTimeMinute, "type": val.session.type,
+                    "endHour": endTimeHour, "endMin": endTimeMin, "id": val.session.activity === null ? val.session.workout.id : val.session.activity.id, "mode": val.session.mode,
+                    "tag": val.session.tag, "sessionId": val.session.id, "activityTarget": val.session.activity === null ? null : val.session.activity_target, "sessionDate": val.session.session_date,
+                });
+            })
+        }
+    }
 
 
     function handleRenderTable(data: any) {
@@ -287,12 +319,12 @@ const Schedular = (props: any) => {
     }
     
     handleDays();
-    Fetchdata({ id: props.programId, startDate: moment(props.startDate).format("YYYY-MM-DD"), endDate: moment(props.startDate).add(props.days - 1 , 'days').format("YYYY-MM-DD"), Is_restday: false });
+    // Fetchdata({ id: props.programId, startDate: moment(props.startDate).format("YYYY-MM-DD"), endDate: moment(props.startDate).add(props.days - 1 , 'days').format("YYYY-MM-DD"), Is_restday: false });
 
     useEffect(() => {
         setTimeout(() => {
             setShow(true);
-        }, 2000)
+        }, 2500)
     }, [show]);
 
     let confirmVal: any = {};
@@ -316,7 +348,18 @@ const Schedular = (props: any) => {
     }
 
     function handleRestDays(val: any) {
-        if (props.restDays) {
+        // the first if statement is to check if we are in the client scheduler page
+        // the else if block is to run if we are in the session scheduler page
+        if(props.clientSessions){
+            if (props.restDays) {
+                for (var j = 0; j < props.restDays.length; j++) {
+                    if (val === calculateDay(props.startDate, props.restDays[j].session.session_date)) {
+                        return 'rgba(255,165,0)';
+                    }
+                }
+            }
+        }
+        else if (props.restDays) {
             for (var i = 0; i < props.restDays.length; i++) {
                 if (val === calculateDay(props.startDate, props.restDays[i].session_date)) {
                     return 'rgba(255,165,0)';
@@ -1083,17 +1126,16 @@ const Schedular = (props: any) => {
                 dates.map((val, index) => {
                     return (
                         <>
-                            <div className="cell" style={{ backgroundColor: `${handleRestDays(index+1)}`, minHeight: '60px', paddingTop: '10px' }}>
+                            <div className="cell" style={{ backgroundColor: `${handleRestDays(index+1)}`, minHeight: '70px', paddingTop: '10px' }}>
                                 <div className="event-dayOfWeek text-center mt-1">
                                     <span style={{ fontSize: '14px'}}>{moment(val).format("dddd")}</span>
                                 </div>
                                 <div className="event-date text-center mt-1" style={{ backgroundColor: `${handleRestDays(index+1)}` }}>
                                     <span style={{ fontSize: '14px'}}>{moment(val).format("Do, MMM YY")}</span>
                                 </div>
-                                {/* <div className="event-date text-center" style={{ backgroundColor: `${handleRestDays(index+1)}` }}>
-                                    <span style={{ fontSize: '12px'}}>Day-{index+1}</span>
+                                <div className="event-date text-center" style={{ backgroundColor: `${handleRestDays(index+1)}` }}>
                                     <Badge variant="success" className="ml-4 mr-4 mb-1" style={{ display: `${moment().format("Do, MMM YY") === moment(val).format("Do, MMM YY") ? 'block': 'none'}`}}>Today</Badge>
-                                </div> */}
+                                </div>
                             </div>
                         </>
                     )
@@ -1133,7 +1175,17 @@ const Schedular = (props: any) => {
         })
     }
 
-    if (!show) return <span style={{ color: 'red' }}>Loading...</span>;
+    function handleRefetch(){
+        mainQuery.refetch();
+    }
+
+    if (!show) {
+        return <div className="text-center">
+            <Spinner animation="border" variant="danger" />
+            <br />
+            <div className='mt-3' style={{ fontWeight: 'bold'}}>Loading Schedule...</div>
+        </div>;
+    }
     else return (
         <>
             <div className="mb-5 shadow-lg p-3" style={{ display: `${program}`, borderRadius: '20px' }}>
@@ -1147,7 +1199,7 @@ const Schedular = (props: any) => {
             <div className="wrapper shadow-lg">
                 <div className="schedular">
                     <div className="day-row">
-                        <div className="cell" style={{backgroundColor: 'white', position: 'relative', minHeight: `${props.type === 'date' ? '60px' : '60px'}` }}></div>
+                        <div className="cell" style={{backgroundColor: 'white', position: 'relative', minHeight: `${props.type === 'date' ? '70px' : '70px'}` }}></div>
                         {handleDaysRowRender()}
                     </div>
                     {hours.map(h => {
@@ -1226,7 +1278,7 @@ const Schedular = (props: any) => {
                     })}
                 </div>
             </div>
-            <FloatingButton startDate={props.startDate} duration={props.days} callback={handleFloatingActionProgramCallback} callback2={handleFloatingActionProgramCallback2}/>
+            {props?.clientSchedular !== 'client' && <FloatingButton startDate={props.startDate} duration={props.days} callback={handleFloatingActionProgramCallback} callback2={handleFloatingActionProgramCallback2} callback3={handleRefetch}/>}
             {
                 <Modal show={showModal} onHide={handleClose} backdrop="static" centered size="lg" >
                     <Modal.Body style={{ maxHeight: '600px', overflow: 'auto' }}>
@@ -1469,6 +1521,8 @@ const Schedular = (props: any) => {
                                 <hr className='m-0' style={{ height: '5px'}}/>
                                 {/* {sessionBookings.length === 0 ? <div className='text-center'>No session Bookings yet.</div> : ""} */}
                                 {sessionBookings?.map(val => {
+                                    console.log(val);
+                                    debugger;
                                     return (
                                         <>
                                             <div className='p-3 shadow-sm' style={{ borderRadius: '20px'}}>
@@ -1479,7 +1533,7 @@ const Schedular = (props: any) => {
                                                         <img src="https://picsum.photos/200/100" alt="pic" style={{ width: "50px", height: "50px", borderRadius: "50%" }} />
                                                         </div>
                                                         <div>
-                                                            {val.client.username}
+                                                            {val.client?.username}
                                                         </div>
                                                     </div>
                                                 </Col>
