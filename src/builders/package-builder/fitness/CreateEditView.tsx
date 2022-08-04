@@ -4,7 +4,7 @@ import AuthContext from '../../../context/auth-context';
 import FitnessClasses from './widgetCustom/FitnessClasses/FitnessClasses';
 import FitnessRestday from './widgetCustom/FitnessRestday';
 import { useMutation, useQuery } from '@apollo/client';
-import { GET_SINGLE_PACKAGE_BY_ID, GET_FITNESS_PACKAGE_TYPE } from './graphQL/queries';
+import { GET_SINGLE_PACKAGE_BY_ID, GET_FITNESS_PACKAGE_TYPE, ADD_SUGGESTION_NEW } from './graphQL/queries';
 import ModalPreview from './widgetCustom/Preview/FitnessPreview';
 import './CreateEditView.css'
 import { CREATE_PACKAGE, DELETE_PACKAGE, EDIT_PACKAGE, UPDATE_PACKAGE_PRIVATE } from './graphQL/mutations';
@@ -257,7 +257,7 @@ function CreateEditView(props: any, ref: any) {
     }
 
 
-
+    console.log(auth.userid)
 
     const FetchData = () => {
 
@@ -270,8 +270,7 @@ function CreateEditView(props: any, ref: any) {
 
         useQuery(GET_SINGLE_PACKAGE_BY_ID, {
             variables: {
-                id: operation.id,
-                users_permissions_user: auth.userid
+                id: operation.id
             },
             onCompleted: (dataPackage: any) => {
                 FillDetails(dataPackage)
@@ -285,7 +284,7 @@ function CreateEditView(props: any, ref: any) {
 
     const FillDetails = (dataPackage: any) => {
         const flattedData = flattenObj({...dataPackage});
-        const packageDetail = flattedData.fitnesspackages;
+        const packageDetail = flattedData.fitnesspackages[0];
 
         let { id, packagename, tags, disciplines, fitness_package_type, aboutpackage, benefits, level, mode, ptoffline, ptonline, grouponline, groupoffline, recordedclasses, restdays, fitnesspackagepricing, bookingleadday, bookingleadtime, duration, groupstarttime, groupendtime, groupinstantbooking, address, ptclasssize, classsize, groupdays, introvideourl, is_private } = packageDetail;
 
@@ -324,7 +323,6 @@ function CreateEditView(props: any, ref: any) {
             console.log(msg)
             setOperation(msg);
 
-            
             handleSubmitName(msg.actionType);
             //render form if no message id
             if (msg && !msg.id) {
@@ -333,12 +331,28 @@ function CreateEditView(props: any, ref: any) {
         }
     }));
 
+    console.log(window.location.href.split('/'));
+
+    const [createUserPackageSuggestion] = useMutation(ADD_SUGGESTION_NEW, {onCompleted: (data) => {
+        modalTrigger.next(false);
+        props.callback();
+    }});
 
     const [createPackage] = useMutation(CREATE_PACKAGE, {
         variables: { 
             users_permissions_user: auth.userid,
          },
         onCompleted: (r: any) => {
+            debugger;
+            console.log(r)
+            if(window.location.href.split('/')[3] === 'client'){
+                createUserPackageSuggestion({
+                    variables: {
+                        id:  window.location.href.split('/').pop(),
+                        fitnesspackage: r.createFitnesspackage.data.id, 
+                    }
+                })
+            }
             modalTrigger.next(false);
             props.callback();
         },

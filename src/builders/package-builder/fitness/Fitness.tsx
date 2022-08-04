@@ -29,7 +29,6 @@ export default function FitnessTab(props) {
         { accessor: "packagename", Header: "Package Name" },
         {
             accessor: "type", Header: "Type", Cell: ({ row }: any) => {
-                console.log(row);
                 return <div >
                     {row.original.type === "Group Class" ? <div>
                         <img src='./assets/GroupType.svg' alt="GroupType" />

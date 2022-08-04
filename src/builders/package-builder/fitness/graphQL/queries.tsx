@@ -248,3 +248,16 @@ export const LANGUAGES = gql`
           }
     }
 `;
+
+export const ADD_SUGGESTION_NEW = gql`
+mutation createSuggestion($id: ID, $fitnesspackage: ID){
+     createUserPackageSuggestion(data: {
+       users_permissions_user: $id,
+       fitnesspackage: $fitnesspackage
+     }){
+       data{
+         id
+       }
+     }
+   }
+`;

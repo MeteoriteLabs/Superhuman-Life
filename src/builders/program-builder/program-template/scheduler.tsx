@@ -1188,9 +1188,9 @@ const Schedular = (props: any) => {
     }
     else return (
         <>
-            <div className="mb-5 shadow-lg p-3" style={{ display: `${program}`, borderRadius: '20px' }}>
+            {/* <div className="mb-5 shadow-lg p-3" style={{ display: `${program}`, borderRadius: '20px' }}>
                 <ProgramList callback={handleFloatingActionProgramCallback} />
-            </div>
+            </div> */}
 
             <div className="mb-5 shadow-lg p-3" style={{ display: `${sessionFilter}`, borderRadius: '20px' }}>
                 <SessionList startDate={props.startDate} days={dates} callback2={handleFloatingActionProgramCallback2} />

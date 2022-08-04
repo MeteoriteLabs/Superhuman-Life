@@ -98,14 +98,16 @@ function Goals() {
                     <div className="w-95 ml-5 mr-5 mt-3">
                          <Slider {...settings}>
                          {goals?.userGoals?.length > 0 && [...goals?.userGoals].map((Detail, index) => {
+                              console.log(Detail);
                               return (
                                    <GoalCard
                                         key={index}
                                         click={() => {
-                                             CreateGoalComponent.current.TriggerForm({
-                                                  id: Detail?.id,
-                                                  type: "edit",
-                                             });
+                                             window.location.href = `/pillar/${Detail.id}/${last}`
+                                             // CreateGoalComponent.current.TriggerForm({
+                                             //      id: Detail?.id,
+                                             //      type: "edit",
+                                             // });
                                         }}
                                         goalName={Detail?.goals[0]?.name}
                                         startDate={getDate(Date.parse(Detail?.start))}
@@ -118,7 +120,7 @@ function Goals() {
                          </Slider>
                     </div>
                </div>
-               <div className="mt-4">
+               {/* <div className="mt-4">
                     <div className="border rounded border-dark bg-secondary pt-1 mb-2">
                          <Row className="d-flex justify-content-between mr-4 ml-1">
                               <h5 className="text-white font-weight-bold ml-3 p-1 ">Milestones</h5>
@@ -170,7 +172,7 @@ function Goals() {
                          </Row>
                     </div>
                     <div className="w-95 ml-5 mr-5 mt-3">
-                         {/* slider */}
+                         slider
                          <Slider {...settings}>
                               <MilestoneCard />
                               <MilestoneCard />
@@ -181,7 +183,7 @@ function Goals() {
                               <MilestoneCard />
                          </Slider>
                     </div>
-               </div>
+               </div> */}
           </div>
      );
 }

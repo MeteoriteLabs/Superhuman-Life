@@ -159,7 +159,11 @@ query getSessionsByTag($id: ID!) {
                 }
               }
             }
-            sessions{
+            sessions(filters: {
+              Is_restday: {
+                eq: false
+              }
+            }){
               data{
                 id
                 attributes{

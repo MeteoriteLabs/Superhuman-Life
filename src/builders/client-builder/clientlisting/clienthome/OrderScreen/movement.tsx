@@ -5,13 +5,21 @@ import { useQuery } from "@apollo/client";
 import Table from "../../../../../components/table";
 import { Row, Button, Col } from "react-bootstrap";
 import AuthContext from "../../../../../context/auth-context";
-import { GET_BOOKINGS_NEW } from "./queries";
+import { GET_BOOKINGS_NEW, GET_FITNESS_PACKAGE_TYPES } from "./queries";
 import CreateSuggestion from "./addSuggestion";
 import { flattenObj } from "../../../../../components/utils/responseFlatten";
+import CreateEditView from "../../../../../builders/package-builder/fitness/CreateEditView";
 
 function Movement() {
+
+
      const last = window.location.pathname.split("/").pop();
      const CreateSuggestionComponent = useRef<any>(null);
+
+     const createEditViewRef = useRef<any>(null);
+
+     const { data } = useQuery(GET_FITNESS_PACKAGE_TYPES);
+
      function getDate(time: any) {
           let dateObj = new Date(time);
           let month = dateObj.getMonth() + 1;
@@ -261,28 +269,37 @@ function Movement() {
           <div>
                <Row className="d-flex flex-row-reverse mr-4 ml-1">
                     <div className="m-1">
-                         <Button variant="btn btn-light" size="sm" onClick={() => {}}>
+                         <Button variant="btn btn-light" size="sm" 
+                              onClick={() => {
+                                   createEditViewRef.current.TriggerForm({ id: null, actionType: 'create', type: 'Personal Training' });
+                              }}>
                               <i className="fas fa-plus-circle"></i> PT
                          </Button>
                          {/* <CreateMovement ref={CreateMovementComponent}></CreateMovement> */}
                     </div>
                     <div className="m-1">
-                         <Button variant="btn btn-light" size="sm" onClick={() => {}}>
+                         <Button variant="btn btn-light" size="sm" 
+                              onClick={() => {
+                                   createEditViewRef.current.TriggerForm({ id: null, actionType: 'create', type: 'Classic Class'});
+                              }}>
                               <i className="fas fa-plus-circle"></i> Classic
                          </Button>
-                         {/* <CreateMovement ref={CreateMovementComponent}></CreateMovement> */}
                     </div>
                     <div className="m-1">
-                         <Button variant="btn btn-light" size="sm" onClick={() => {}}>
+                         <Button variant="btn btn-light" size="sm" 
+                              onClick={() => {
+                                   createEditViewRef.current.TriggerForm({ id: null, actionType: 'create', type: 'Custom Fitness' });
+                              }}>
                               <i className="fas fa-plus-circle"></i> Custom
                          </Button>
-                         {/* <CreateMovement ref={CreateMovementComponent}></CreateMovement> */}
                     </div>
                     <div className="m-1">
-                         <Button variant="btn btn-light" size="sm" onClick={() => {}}>
+                         <Button variant="btn btn-light" size="sm" 
+                              onClick={() => {
+                                   createEditViewRef.current.TriggerForm({ id: null, actionType: 'create', type: 'Group Class' });
+                              }}>
                               <i className="fas fa-plus-circle"></i> Group
                          </Button>
-                         {/* <CreateMovement ref={CreateMovementComponent}></CreateMovement> */}
                     </div>
                     <div className="m-1">
                          <Button
@@ -314,6 +331,7 @@ function Movement() {
                     </div>
                     <Table columns={columns} data={dataHistorytable} />
                </div>
+               <CreateEditView packageType={flattenObj({...data})} ref={createEditViewRef}></CreateEditView>
           </div>
      );
 }
