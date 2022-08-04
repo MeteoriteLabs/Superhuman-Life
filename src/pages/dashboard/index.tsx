@@ -1,13 +1,15 @@
 import React, {useContext, useState} from 'react';
 import {Container, Row, Col} from "react-bootstrap";
 import { ImageCaptions } from "./dashboard-data/data";
+import { LobbyColors } from "./dashboard-data/colors";
 import {Link} from 'react-router-dom';
 import AuthContext from "../../context/auth-context";
 import {GET_USER_ORGANIZATIONS} from './queries';
 import { flattenObj } from '../../components/utils/responseFlatten';
 import { useQuery } from '@apollo/client';
+import './mainLobby.css';
 
-export default function MainLobby() {
+export default function () {
 
     const auth = useContext(AuthContext);
 
@@ -20,14 +22,15 @@ export default function MainLobby() {
 
     return (
         <>
+
         <Container fluid style={{overflow: 'hidden'}}>
             <Row className="vh-100">
                 {ImageCaptions.map((data) => ( 
-                    <Col sm key={data.id} className="d-flex justify-content-center align-items-center" style={{background: `${data.color}`}}>
-                        <Link to={data.link}>
-                            <img style={{width: data.imageWidth}} src={data.image} alt=""/>
-                        </Link>
-                    </Col>               
+                        <Col as={Link} to={data.link} sm key={data.id} className="d-flex justify-content-center align-items-center lobby__card" style={{background: `${LobbyColors[Math.floor(Math.random() * LobbyColors.length)]}`}}>
+                            <Link to={data.link} key={data.id}>
+                              <img style={{width: data.imageWidth}} src={data.image} alt=""/>
+                            </Link>
+                        </Col>
                 ))}
                 {organizations.length > 0 && <Col sm key={'asdfasdfa'}>
                     {organizations.map((data: any) => {

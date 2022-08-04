@@ -1,0 +1,7 @@
+.lobby__card{
+  transition: transform 500ms ease;
+}
+
+.lobby__card:hover{
+  transform: scale(1.05);
+}

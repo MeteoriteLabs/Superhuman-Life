@@ -21,16 +21,16 @@ export const MiniLobbyComponent = () => {
               </Link>
             </Col>
             {LobbyData.map((data) => (
-              <Col
-                key={data.id}
-                className="d-flex justify-content-center align-items-center p-2"
-                style={{ background: data.color }}
-                md={{ span: 4, offset: 0 }}
-              >
-                <Link to={data.link}>
-                  {data.image === null ? " " : <Image fluid src={data.image} />}
-                </Link>
-              </Col>
+                <Col
+                  key={data.id}
+                  className="d-flex justify-content-center align-items-center p-2"
+                  style={{ background: data.color }}
+                  md={{ span: 4, offset: 0 }}
+                >
+                  <Link to={data.link}>
+                    {data.image === null ? " " : <Image fluid src={data.image} />}
+                  </Link>
+                </Col>
             ))}
           </Row>
         </Dropdown.Item>
