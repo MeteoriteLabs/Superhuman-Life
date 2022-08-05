@@ -9,12 +9,13 @@ import {
 } from "react-bootstrap";
 import authContext from "../../context/auth-context";
 import { MiniLobbyComponent } from "../../pages/dashboard/mini-lobby/LobbyPopover";
+import './topNavbar.css';
 
 export function AuthenticatedNav() {
   const auth = useContext(authContext);
 
   return (
-    <Navbar bg="dark" className="shadow-sm" expand="lg" fixed="top" variant="dark">
+    <Navbar bg="dark" className="shadow-sm top__navbar" expand="lg" fixed="top" variant="dark">
       <Navbar.Brand col-sm href="/" className="text-white">
         <img className="d-inline-block align-top" src="/logo.svg" alt="brand" />
       </Navbar.Brand>
