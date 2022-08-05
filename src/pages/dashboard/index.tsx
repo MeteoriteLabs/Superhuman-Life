@@ -14,6 +14,7 @@ export default function () {
     const auth = useContext(AuthContext);
 
     const [organizations, setOrganizations] = useState([]);
+    const randomColorInArray = Math.floor(Math.random() * LobbyColors.length);
 
     useQuery(GET_USER_ORGANIZATIONS, {variables: {id: auth.userid}, onCompleted: (data: any) => {
         const flattendData = flattenObj({...data});
@@ -23,27 +24,41 @@ export default function () {
     return (
         <>
 
-        <Container fluid style={{overflow: 'hidden'}}>
-            <Row className="vh-100">
-                {ImageCaptions.map((data) => ( 
-                        <Col as={Link} to={data.link} sm key={data.id} className="d-flex justify-content-center align-items-center lobby__card" style={{background: `${LobbyColors[Math.floor(Math.random() * LobbyColors.length)]}`}}>
-                            <Link to={data.link} key={data.id}>
+        <Container fluid className="lobby__container"  style={{overflow: 'hidden'}}>
+            <Row>
+                {ImageCaptions.map((data, index) => ( 
+                        <Col as={Link} to={data.link} sm key={data.id} className="d-flex justify-content-center align-items-center lobby__card" style={{background: `${LobbyColors[randomColorInArray + index]}`}}>
                               <img style={{width: data.imageWidth}} src={data.image} alt=""/>
-                            </Link>
                         </Col>
                 ))}
-                {organizations.length > 0 && <Col sm key={'asdfasdfa'}>
-                    {organizations.map((data: any) => {
+                {organizations.length > 0 && <Col className="d-lg-block d-md-block d-sm-none d-none"  key={'asdfasdfa'}>
+                    {organizations.map((data: any, index: number) => {
                         return (
-                            <Row style={{background: `#${Math.floor(Math.random()*16777215).toString(16)}`, height: `${100/organizations.length}vh`}}>
-                                <Col sm className="d-flex justify-content-center align-items-center">
+                            <Row style={{background: `${LobbyColors[randomColorInArray + index + ImageCaptions.length]}`, height: `${100/organizations.length}vh`}}>
+                                <Col  as={Link} to={'/lobby'} key={index} sm className="d-flex justify-content-center align-items-center lobby__card">
                                     <div className="flex flex-row">
-                                        <div className="text-center">
-                                        <Link to={'/lobby'}>
-                                            <img style={{width: '40px'}} src='/assets/my-org.svg' alt=""/>
-                                        </Link>{' '}    
+                                        <div className="text-center organisation__image">
+                                            <img style={{width: '40px'}} src='/assets/lobby_images/organisation.svg' alt=""/>
                                         </div>
-                                        <div className="text-center mt-2">
+                                        <div className="text-center mt-2" style={{color: 'white'}}>
+                                            <span><b>{data.Organization_Name}</b></span>
+                                        </div>
+                                    </div>
+                                </Col>
+                            </Row>
+                        )
+                    })}         
+                </Col>  }   
+                {organizations.length > 0 && <Col className="d-lg-none d-md-none d-sm-block"  key={'asdfasdfa'}>
+                    {organizations.map((data: any, index: number) => {
+                        return (
+                            <Row style={{background: `${LobbyColors[randomColorInArray + index + ImageCaptions.length]}`}}>
+                                <Col  as={Link} to={'/lobby'} key={index} sm className="d-flex justify-content-center align-items-center lobby__card">
+                                    <div className="flex flex-row">
+                                        <div className="text-center organisation__image">
+                                            <img style={{width: '40px'}} src='/assets/lobby_images/organisation.svg' alt=""/>
+                                        </div>
+                                        <div className="text-center mt-2" style={{color: 'white'}}>
                                             <span><b>{data.Organization_Name}</b></span>
                                         </div>
                                     </div>

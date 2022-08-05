@@ -5,3 +5,16 @@
 .lobby__card:hover{
   transform: scale(1.05);
 }
+
+@media screen and (min-width: 320px) and (max-width: 480px) {
+  .lobby__container{
+    position: absolute;
+    top: 8%;
+  }
+  .lobby__card{
+    padding: 30px;
+  }
+  .organisation__image >img{
+    height: 20px;
+  }
+}
