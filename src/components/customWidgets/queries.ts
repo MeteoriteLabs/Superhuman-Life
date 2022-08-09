@@ -199,3 +199,17 @@ query getSessionsByTag($id: ID!) {
       }
 }
 `
+
+export const GET_TIMEZONES = gql`
+query getTimezones{
+  timezones(pagination: {pageSize: 200}){
+    data{
+      id
+      attributes{
+        time
+        name
+      }
+    }
+  }
+}
+`

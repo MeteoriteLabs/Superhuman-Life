@@ -31,8 +31,6 @@ interface Operation {
 }
 
 
-
-
 function CreateEditView(props: any, ref: any) {
     console.log("🚀 ~ file: CreateEditView.tsx ~ line 36 ~ CreateEditView ~ props", props)
     const auth = useContext(AuthContext);
@@ -252,7 +250,8 @@ function CreateEditView(props: any, ref: any) {
                 type={operation.type}
                 actionType={operation.actionType}
                 packageType={packageTypeName}
-                fitnesspackagepricing={pricingDetailRef.current.getFitnessPackagePricing?.()} />
+                fitnesspackagepricing={pricingDetailRef.current.getFitnessPackagePricing?.()} 
+            />
         },
     }
 
@@ -307,7 +306,7 @@ function CreateEditView(props: any, ref: any) {
 
 
         // if message exists - show form only for edit and view
-        if (['edit', 'view'].indexOf(operation.actionType) > -1) {
+        if (['edit', 'view'].indexOf(operation.type) > -1) {
             modalTrigger.next(true);
         }
         else {

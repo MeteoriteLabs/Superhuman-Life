@@ -39,6 +39,8 @@ const Email = (props: any) => {
 
     props.onChange(userName);
 
+    console.log(userName);
+
     return (
         <div>
             <Form.Group controlId="formBasicEmail">

@@ -21,7 +21,6 @@ export default function CreateFitnessPackageModal({ name, formUISchema, formSubm
     const [formValues, setFormValues] = useState<any>(formData);
     const stepper: string[] = stepperValues;
 
-
     modalTrigger.subscribe((res: boolean) => {
         setShow(res);
     });

@@ -1,57 +1,52 @@
 import {useState} from 'react';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
-import { LANGUAGES } from './queries';
+import { GET_TIMEZONES } from './queries';
 import { useQuery } from "@apollo/client";
 import { flattenObj } from '../utils/responseFlatten';
 
 const MultiSelect = (props: any) => {
 
-     console.log(props);
 
      const [multiSelections, setMultiSelections] = useState(
           props.value?.length > 0 ? JSON.parse(props.value) : []
         );
-     const [languages, setlanguages] = useState<any[]>([]);
+     const [timezone, setTimeZone] = useState<any[]>([]);
 
      function FetchData(){
-          useQuery(LANGUAGES, {onCompleted: loadData, onError: error => console.log(error)});
+          useQuery(GET_TIMEZONES, {onCompleted: loadData, onError: error => console.log(error)});
       }
   
      function loadData(data: any) {
           const flattenedData = flattenObj({...data});
-          setlanguages(
-              [...flattenedData.languages].map((language) => {
+          console.log('time zones',flattenedData)
+          setTimeZone(
+              [...flattenedData.timezones].map((zone) => {
                   return {
-                      id: language.id,
-                      title: language.languages
+                      id: zone.id,
+                      title: `${zone.time} ${zone.name}`
                   }
               })
           );
      }
 
      function OnChange(e){
-          console.log(e);
-          // let id = e.map(d => {return d.id}).join(',');
-          // props.onChange(id);
+          props.onChange(JSON.stringify(e));
           setMultiSelections(e);
      }
 
      FetchData();
 
-     props.onChange(JSON.stringify(multiSelections));
-
      return (
           <div>
-               <label>Languages</label>
+               <label>Timezone</label>
                <Typeahead
                id="basic-typeahead-multiple"
                labelKey="title"
                onChange={OnChange}
-               options={languages}
-               placeholder="Select languages..."
+               options={timezone}
+               placeholder="Select Timezone..."
                selected={multiSelections}
-               multiple
                />
           </div>
      )

@@ -47,8 +47,8 @@ const clientSchedulerPage = React.lazy(() => import("./builders/changemaker-buil
 const AvailabilityPage = React.lazy(() => import("./builders/changemaker-builder/availability"));
 const RosterPage = React.lazy(() => import('./builders/changemaker-builder/roster'));
 
-//misc pages
-const PillarPage = React.lazy(() => import("./builders/client-builder/clientlisting/clienthome/Goalscreen/PillarsScreen/index"));
+//auth logins
+const GoogleAuthCallbackPage = React.lazy(() => import("./pages/register/oAuthLogins/googleAuthCallback"));
 
 const SessionPage = React.lazy(() => import("./builders/session-builder/"));
 
@@ -106,7 +106,6 @@ export default function Routes({ token }: any) {
               <Route path="/schedule" component={SchedulePage} />
               <Route path="/settings" component={SettingsPage} />
               <Route path="/finance" component={FinancePage} />
-              <Route path="/pillar" component={PillarPage}/>
               <Route path="/change-password" component={ChangePasswordPage} />
 
                                    <Route path="*" component={NoMatch} />
@@ -121,6 +120,7 @@ export default function Routes({ token }: any) {
                                    <Route path="/forgot-password" component={ForgotPasswordPage} />
                                    <Route path="/resetpassword" component={ResetPasswordPage} />
                                    <Route path="/confirm-account" component={ConfirmAccountPage} />
+                                   <Route path="/api/auth/google/callback" component={GoogleAuthCallbackPage}/>
                                    <Route path="/register" component={RegisterPage} />
                                    <Route path="/about" component={AboutPage} />
                                    <Route path="/contact" component={ContactPage} />

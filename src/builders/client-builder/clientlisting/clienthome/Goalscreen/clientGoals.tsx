@@ -5,20 +5,20 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
 import GoalCard from "./Card";
-import MilestoneCard from "./MilestoneCard";
+// import MilestoneCard from "./MilestoneCard";
 import CreateGoal from "./addGoal";
-import CreateMovement from "./addMovement";
-import CreateHealth from "./addHealth";
-import CreateNutrition from "./addNutrition";
+// import CreateMovement from "./addMovement";
+// import CreateHealth from "./addHealth";
+// import CreateNutrition from "./addNutrition";
 import { GET_GOALS_NEW } from "./queries";
 import { useQuery } from "@apollo/client";
 import { flattenObj } from "../../../../../components/utils/responseFlatten";
 
 function Goals() {
      const CreateGoalComponent = useRef<any>(null);
-     const CreateHealthComponent = useRef<any>(null);
-     const CreateNutritionComponent = useRef<any>(null);
-     const CreateMovementComponent = useRef<any>(null);
+     // const CreateHealthComponent = useRef<any>(null);
+     // const CreateNutritionComponent = useRef<any>(null);
+     // const CreateMovementComponent = useRef<any>(null);
 
      const [goals, setGoals] = useState<any>([]);
 
