@@ -27,7 +27,7 @@ const Number = (props: any) => {
         }
   `;
 
-    useQuery(FETCH_USER, {variables: {num: userNumber}, skip: (userNumber === ""),onCompleted: loadData});
+    useQuery(FETCH_USER, {variables: {num: userNumber}, skip: (userNumber === undefined),onCompleted: loadData});
 
     function loadData(data: any) {
       const flattenedData = flattenObj({...data});
@@ -40,7 +40,6 @@ const Number = (props: any) => {
             })
       );
     }
-
 
     props.onChange(userNumber);
 
@@ -55,8 +54,7 @@ const Number = (props: any) => {
                   onChange={phone => setUserNumber(phone)}
                 />
                 {/* <Form.Control className={`${user.length === 0 ? `${userNumber === '' || userNumber === undefined ? '' : 'is-valid'}` : 'is-invalid invalidNumber'}`} type="text" value={userNumber} onChange={(e) => {setUserNumber(e.target.value)}} placeholder="" /> */}
-                {user.length !==0 && <span style={{fontSize: '13px', color: 'red'}}>This Phone number is already in use try another.</span>}
-                {user.length === 0 && <span style={{fontSize: '13px', color: 'green'}}>This Phone number is Valid.</span>}
+                {userNumber !== undefined && user.length !==0 ? <span className='invalidNumber' style={{fontSize: '13px', color: 'red'}}>This Phone number is already in use try another.</span> : ''}
             </Form.Group>
         </div>
     );

@@ -23,7 +23,7 @@ const Email = (props: any) => {
      }
   `;
 
-    useQuery(FETCH_USER, {variables: {uname: userName}, skip: (userName === ""),onCompleted: loadData});
+    useQuery(FETCH_USER, {variables: {uname: userName}, skip: (userName === undefined),onCompleted: loadData});
 
     function loadData(data: any) {
         const flattenedData = flattenObj({...data});
@@ -46,7 +46,7 @@ const Email = (props: any) => {
             <Form.Group controlId="formBasicEmail">
                 <Form.Label>User name</Form.Label>
                 <Form.Control className={`${user.length === 0 ? `${userName === '' || userName === undefined ? '' : 'is-valid'}` : 'is-invalid invalidUname'}`} type="text" value={userName} onChange={(e) => {setUserName(e.target.value)}} placeholder="" />
-                {user.length !==0 && <span style={{fontSize: '13px', color: 'red'}}>This userName is already taken try another.</span>}
+                {userName !== undefined && user.length !==0 ? <span style={{fontSize: '13px', color: 'red'}}>This userName is already taken try another.</span> : ''}
             </Form.Group>
         </div>
     );
