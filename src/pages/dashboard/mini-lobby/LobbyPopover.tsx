@@ -27,7 +27,7 @@ export const MiniLobbyComponent = () => {
         src="/assets/navbar_icons/candyBarIcon.svg"
         className="img-responsive"
         alt="candy bar"
-        style={{ height: '25px', width: '25px' }}
+        style={{ height: '20px', width: '20px' }}
       />}
       id="collasible-nav-dropdown"
     >

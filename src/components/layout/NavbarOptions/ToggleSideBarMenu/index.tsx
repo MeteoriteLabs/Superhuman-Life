@@ -37,36 +37,36 @@ function ToggleSideBarMenu() {
       {
         sideNavStatus ?
           <Nav>
-            <NavLink className="nav-link text-white d-sm-block d-lg-none" to="/home">
+            <Nav.Link eventKey="1" className="nav-link text-white d-sm-block d-lg-none" href="/home">
               <img src={HomeIcon} alt="home icon" className="mr-sm-2" style={{ height: '20px', width: '20px', marginRight: '5px' }} />Home
-            </NavLink>
-            <NavLink className="nav-link text-white d-sm-block d-lg-none" to="/schedule">
+            </Nav.Link>
+            <Nav.Link  eventKey="2" className="nav-link text-white d-sm-block d-lg-none" href="/schedule">
               <img src={CalendarIcon} alt="calendar icon" className="mr-sm-2" style={{ height: '20px', width: '20px', marginRight: '5px' }} />My Schedule
-            </NavLink>
-            <NavLink className="nav-link text-white d-sm-block d-lg-none" to="/session">
+            </Nav.Link>
+            <Nav.Link eventKey="3" className="nav-link text-white d-sm-block d-lg-none" href="/session">
               <img src={SessionIcon} alt="session icon" className="mr-sm-2" style={{ height: '20px', width: '20px', marginRight: '5px' }} />Session Manager
-            </NavLink>
-            <NavLink className="nav-link text-white d-sm-block d-lg-none" to="/clients">
+            </Nav.Link>
+            <Nav.Link eventKey="4" className="nav-link text-white d-sm-block d-lg-none" href="/clients">
               <img src={ClientIcon} alt="client icon" className="mr-sm-2" style={{ height: '20px', width: '20px', marginRight: '5px' }} />Clients
-            </NavLink>
-            <NavLink className="nav-link text-white d-sm-block d-lg-none" to="/bookings">
+            </Nav.Link>
+            <Nav.Link eventKey="5" className="nav-link text-white d-sm-block d-lg-none" href="/bookings">
               <img src={BookingIcon} alt="booking icon" className="mr-sm-2" style={{ height: '20px', width: '20px', marginRight: '5px' }} />Bookings
-            </NavLink>
-            <NavLink className="nav-link text-white d-sm-block d-lg-none" to="/offerings">
+            </Nav.Link>
+            <Nav.Link eventKey="6" className="nav-link text-white d-sm-block d-lg-none" href="/offerings">
               <img src={OfferingsIcon} alt="offerings icon" className="mr-sm-2" style={{ height: '20px', width: '20px', marginRight: '5px' }} />Offerings
-            </NavLink>
-            <NavLink className="nav-link text-white d-sm-block d-lg-none" to="/resources">
+            </Nav.Link>
+            <Nav.Link eventKey="7" className="nav-link text-white d-sm-block d-lg-none" href="/resources">
               <img src={ResourcesIcon} alt="resources icon" className="mr-sm-2" style={{ height: '20px', width: '20px', marginRight: '5px' }} />Resources
-            </NavLink>
-            <NavLink className="nav-link text-white d-sm-block d-lg-none" to="/finances">
+            </Nav.Link>
+            <Nav.Link eventKey="8" className="nav-link text-white d-sm-block d-lg-none" href="/finances">
               <img src={FinancesIcon} alt="finances icon" className="mr-sm-2" style={{ height: '20px', width: '20px', marginRight: '5px' }} />Finances
-            </NavLink>
-            <NavLink className="nav-link text-white d-sm-block d-lg-none" to="/communication">
+            </Nav.Link>
+            <Nav.Link eventKey="9" className="nav-link text-white d-sm-block d-lg-none" href="/communication">
               <img src={CommunicationIcon} alt="communication icon" className="mr-sm-2" style={{ height: '20px', width: '20px', marginRight: '5px' }} />Communication
-            </NavLink>
-            <NavLink className="nav-link text-white d-sm-block d-lg-none" to="/settings">
+            </Nav.Link>
+            <Nav.Link eventKey="10" className="nav-link text-white d-sm-block d-lg-none" href="/settings">
               <img src={SettingsIcon} alt="settings icon" className="mr-sm-2" style={{ height: '20px', width: '20px', marginRight: '5px' }} />Settings
-            </NavLink>
+            </Nav.Link>
           </Nav>
           : null
       }

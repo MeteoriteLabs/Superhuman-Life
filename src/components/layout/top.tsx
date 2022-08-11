@@ -4,6 +4,7 @@ import {
   Container,
   Nav,
   Navbar,
+  Row
 } from "react-bootstrap";
 import { MiniLobbyComponent } from "../../pages/dashboard/mini-lobby/LobbyPopover";
 import { NotificationOption } from "./NavbarOptions/Notifications";
@@ -27,23 +28,22 @@ export function AuthenticatedNav() {
           <img className="d-inline-block align-top" src="/assets/navbar_icons/sapiensLogoSmallScreen.svg" alt="brand" />
         </Navbar.Brand>
 
-        <Navbar.Toggle aria-controls="responsive-navbar-nav"/>
+          {/* notification option */}
+          <NotificationOption />
+
+          {/* mini lobby option */}
+          <MiniLobbyComponent />
+
+          {/* profile option */}
+          <ProfileOption />
+        
+        <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav navbarScroll" className="justify-content-end">
 
-        <Nav navbarScroll>
-          {/* sidebar menu options for small screen */}
-          <ToggleSideBarMenu/>
-
-          {/* notification option */}
-          
-            <NotificationOption/>
-          
-          {/* mini lobby option */}
-            <MiniLobbyComponent />
-          
-          {/* profile option */}
-            <ProfileOption/>
-          </Nav> 
+          <Nav navbarScroll>
+            {/* sidebar menu options for small screen */}
+            <ToggleSideBarMenu />
+          </Nav>
         </Navbar.Collapse>
 
         {/* change maker logo */}

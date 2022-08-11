@@ -12,7 +12,7 @@ export function NotificationOption() {
       src="/assets/navbar_icons/notificationIcon.svg"
       alt="notification"
       className="img-responsive "
-      style={{ height: '25px', width: '25px' }}
+      style={{ height: '20px', width: '20px' }}
     />}
       id="collasible-nav-dropdown">
       <NavDropdown.Item href="#action/3.1">
