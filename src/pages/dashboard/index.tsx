@@ -9,7 +9,7 @@ import { flattenObj } from '../../components/utils/responseFlatten';
 import { useQuery } from '@apollo/client';
 import './mainLobby.css';
 
-export default function () {
+export default function Dashboard() {
 
     const auth = useContext(AuthContext);
 
@@ -24,7 +24,7 @@ export default function () {
     return (
         <>
 
-        <Container fluid className="lobby__container"  style={{overflow: 'hidden'}}>
+        <Container fluid className="lobby__container pt-5"  style={{overflow: 'hidden'}}>
             <Row>
                 {ImageCaptions.map((data, index) => ( 
                         <Col as={Link} to={data.link} sm key={data.id} className="d-flex justify-content-center align-items-center lobby__card" style={{background: `${LobbyColors[randomColorInArray + index]}`}}>

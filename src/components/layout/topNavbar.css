@@ -1,8 +1,6 @@
-@media screen and (min-width: 320px) and (max-width: 480px) {
-    img{
-       width: 200px;
-       height: 60px;
-       object-fit: contain;
-    }
-    
+#dropdown-basic-button::after{
+    display: none;
+}
+#collasible-nav-dropdown::after{
+    display: none;
 }

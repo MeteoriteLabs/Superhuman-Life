@@ -1,95 +1,63 @@
-import { useContext } from "react";
+import React from "react";
 import { NavLink } from "react-router-dom";
 import {
   Container,
-  DropdownButton,
-  Dropdown,
   Nav,
   Navbar,
 } from "react-bootstrap";
-import authContext from "../../context/auth-context";
 import { MiniLobbyComponent } from "../../pages/dashboard/mini-lobby/LobbyPopover";
+import { NotificationOption } from "./NavbarOptions/Notifications";
+import { ProfileOption } from "./NavbarOptions/ProfileOption";
+import ToggleSideBarMenu from "./NavbarOptions/ToggleSideBarMenu";
 import './topNavbar.css';
 
 export function AuthenticatedNav() {
-  const auth = useContext(authContext);
 
   return (
-    <Navbar bg="dark" className="shadow-sm top__navbar" expand="lg" fixed="top" variant="dark">
-      <Navbar.Brand col-sm href="/" className="text-white">
-        <img className="d-inline-block align-top" src="/logo.svg" alt="brand" />
-      </Navbar.Brand>
-      <Navbar.Toggle aria-controls="navbar"/>
-      <Navbar.Collapse className="justify-content-end" id="navbar">
-        <Nav className="d-lg-none">
-          <NavLink className="nav-link text-white" to="/home">
-            Home
-          </NavLink>
-          <NavLink className="nav-link text-white" to="/schedule">
-            My Schedule
-          </NavLink>
-          <NavLink className="nav-link text-white" to="/session">
-            Session Manager
-          </NavLink>
-          <NavLink className="nav-link text-white" to="/clients">
-            Clients
-          </NavLink>
-          <NavLink className="nav-link text-white" to="/bookings">
-            Bookings
-          </NavLink>
-          <NavLink className="nav-link text-white" to="/offerings">
-            Offerings
-          </NavLink>
-          <NavLink className="nav-link text-white" to="/resources">
-            Resources
-          </NavLink>
-          <NavLink className="nav-link text-white" to="/finances">
-            Finances
-          </NavLink>
-          <NavLink className="nav-link text-white" to="/communication">
-            Communication
-          </NavLink>
-          <NavLink className="nav-link text-white" to="/settings">
-            Settings
-          </NavLink>
-          <NavLink className="nav-link text-white" to="/profile">
-            Profile
-          </NavLink>
-          <Nav.Link className="text-white">Logout</Nav.Link>
-        </Nav>
-      </Navbar.Collapse>
-      <Nav.Item className="d-none d-lg-block">
-        <DropdownButton variant="dark" title={<i className="fas fa-bell"></i>}>
-          <Dropdown.Header>Notifications</Dropdown.Header>
-          <Dropdown.Divider />
-          <Dropdown.Item>PT #18 has been created</Dropdown.Item>
-          <Dropdown.Divider />
-          <Dropdown.Item as="small">More Notifications</Dropdown.Item>
-        </DropdownButton>
-      </Nav.Item>
-      <Nav.Item className="d-none d-lg-block">
-        <MiniLobbyComponent />
-      </Nav.Item>
-      <Nav.Item className="d-none d-lg-block mr-5 pr-5">
-        <DropdownButton
-          variant="dark"
-          title={
-            <img
-              src="/assets/avatar-1.jpg"
-              height="42"
-              className="rounded-circle"
-              alt="avatar"
-            />
-          }
-        >
-          <NavLink to="/profile" className="dropdown-item">Profile</NavLink>
-          <Dropdown.Item onClick={() => auth.logout()}>Sign Out</Dropdown.Item>
-        </DropdownButton>
-      </Nav.Item>
-    </Navbar>
+    <>
+      <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark" fixed="top">
+
+        {/* brand logo for large screen */}
+        <Navbar.Brand href="/" className="d-none d-lg-block">
+          <img className="d-inline-block align-top" src="/logo.svg" alt="brand" />
+        </Navbar.Brand>
+
+        {/* brand logo for small screen */}
+        <Navbar.Brand href="/" className="d-sm-block d-lg-none">
+          <img className="d-inline-block align-top" src="/assets/navbar_icons/sapiensLogoSmallScreen.svg" alt="brand" />
+        </Navbar.Brand>
+
+        <Navbar.Toggle aria-controls="responsive-navbar-nav"/>
+        <Navbar.Collapse id="responsive-navbar-nav navbarScroll" className="justify-content-end">
+
+        <Nav navbarScroll>
+          {/* sidebar menu options for small screen */}
+          <ToggleSideBarMenu/>
+
+          {/* notification option */}
+          
+            <NotificationOption/>
+          
+          {/* mini lobby option */}
+            <MiniLobbyComponent />
+          
+          {/* profile option */}
+            <ProfileOption/>
+          </Nav> 
+        </Navbar.Collapse>
+
+        {/* change maker logo */}
+        <Navbar.Collapse className="justify-content-end d-none d-lg-block">
+          <Navbar.Text>
+            <h5 className="text-light">#BeAChangeMaker</h5>
+          </Navbar.Text>
+        </Navbar.Collapse>
+      </Navbar>
+    </>
   );
 }
 
+// unauthorised user
 export function UnauthenticatedNav() {
   return (
     <Navbar bg="light" className="shadow-sm" expand="lg">
@@ -119,5 +87,6 @@ export function UnauthenticatedNav() {
         </Navbar.Collapse>
       </Container>
     </Navbar>
+
   );
 }
