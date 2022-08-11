@@ -28,7 +28,7 @@ export default function Dashboard() {
             <Row>
                 {ImageCaptions.map((data, index) => ( 
                         <Col as={Link} to={data.link} sm key={data.id} className="d-flex justify-content-center align-items-center lobby__card" style={{background: `${LobbyColors[randomColorInArray + index]}`}}>
-                              <img style={{width: data.imageWidth}} src={data.image} alt=""/>
+                              <img style={{width: data.imageWidth}} src={data.image} alt="icon"/>
                         </Col>
                 ))}
                 {organizations.length > 0 && <Col className="d-lg-block d-md-block d-sm-none d-none"  key={'asdfasdfa'}>
@@ -38,9 +38,9 @@ export default function Dashboard() {
                                 <Col  as={Link} to={'/lobby'} key={index} sm className="d-flex justify-content-center align-items-center lobby__card">
                                     <div className="flex flex-row">
                                         <div className="text-center organisation__image">
-                                            <img style={{width: '40px'}} src='/assets/lobby_images/organisation.svg' alt=""/>
+                                            <img style={{width: '40px'}} src='/assets/lobby_images/organisation.svg' alt="organisation"/>
                                         </div>
-                                        <div className="text-center mt-2" style={{color: 'white'}}>
+                                        <div className="text-center mt-2 text-white">
                                             <span><b>{data.Organization_Name}</b></span>
                                         </div>
                                     </div>

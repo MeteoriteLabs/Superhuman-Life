@@ -3,8 +3,7 @@ import { NavLink } from "react-router-dom";
 import {
   Container,
   Nav,
-  Navbar,
-  Row
+  Navbar
 } from "react-bootstrap";
 import { MiniLobbyComponent } from "../../pages/dashboard/mini-lobby/LobbyPopover";
 import { NotificationOption } from "./NavbarOptions/Notifications";
@@ -28,20 +27,31 @@ export function AuthenticatedNav() {
           <img className="d-inline-block align-top" src="/assets/navbar_icons/sapiensLogoSmallScreen.svg" alt="brand" />
         </Navbar.Brand>
 
-          {/* notification option */}
+        {/* notification, lobby and profile options for large screen */}
+        <Navbar.Collapse className="justify-content-end text-white d-none d-lg-block ">
           <NotificationOption />
-
-          {/* mini lobby option */}
           <MiniLobbyComponent />
-
-          {/* profile option */}
           <ProfileOption />
-        
+        </Navbar.Collapse>
+
+
+        {/* notification, lobby , profile options for small screen */}
+        <Nav.Item className="d-lg-none d-sm-block ">
+          <NotificationOption />
+        </Nav.Item>
+
+        <Nav.Item className="d-lg-none d-sm-block ">
+          <MiniLobbyComponent />
+        </Nav.Item>
+
+        <Nav.Item className="d-lg-none d-sm-block">
+          <ProfileOption />
+        </Nav.Item>
+
+        {/* sidebar menu options for small screen */}
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav navbarScroll" className="justify-content-end">
-
           <Nav navbarScroll>
-            {/* sidebar menu options for small screen */}
             <ToggleSideBarMenu />
           </Nav>
         </Navbar.Collapse>
