@@ -6,6 +6,8 @@ import { GET_FITNESS_DISCIPLINES } from '../graphQL/queries';
 import { flattenObj } from '../../../../components/utils/responseFlatten';
 
 export default function FitnessMultiSelect(props) {
+
+
     const { widgetProps, actionType } = props;
 
 

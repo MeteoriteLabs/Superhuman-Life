@@ -18,8 +18,12 @@ export default function CreateFitnessPackageModal({ name, formUISchema, formSubm
     const [step, setStep] = useState<number>(1);
     const [show, setShow] = useState<boolean>(false);
 
+    console.log(formData)
+
     const [formValues, setFormValues] = useState<any>(formData);
     const stepper: string[] = stepperValues;
+
+    console.log(formValues)
 
     modalTrigger.subscribe((res: boolean) => {
         setShow(res);
@@ -112,7 +116,7 @@ export default function CreateFitnessPackageModal({ name, formUISchema, formSubm
         }
         // duration = (mode === "Online Workout" || mode === "Offline Workout") ? 1 : 30;
         setUserData({ ...userData, duration, recordedclasses })
-        setFormValues({ ...formValues, duration, recordedclasses })
+        setFormValues({ ...formData, duration, recordedclasses })
     }
 
 
@@ -145,8 +149,8 @@ export default function CreateFitnessPackageModal({ name, formUISchema, formSubm
             const update = updateInputValue(formData)
 
             setStep(step + 1);
-            setFormValues({ ...formValues, ...update, fitness_package_type, fitnesspackagepricing: updateFinesspackagepricing, duration: updateDuration });
-            setUserData({ ...formValues, ...update, fitness_package_type, fitnesspackagepricing: updateFinesspackagepricing, duration: updateDuration })
+            setFormValues({ ...formData, ...update, fitness_package_type, fitnesspackagepricing: updateFinesspackagepricing, duration: updateDuration });
+            setUserData({ ...formData, ...update, fitness_package_type, fitnesspackagepricing: updateFinesspackagepricing, duration: updateDuration })
 
         } else {
             if (typeof formData.disciplines !== "object") {
@@ -161,6 +165,8 @@ export default function CreateFitnessPackageModal({ name, formUISchema, formSubm
 
     }
 
+
+    console.log(formData);
 
 
     return (
@@ -194,7 +200,7 @@ export default function CreateFitnessPackageModal({ name, formUISchema, formSubm
                                     schema={formSchema[step.toString()]}
                                     ref={formRef}
                                     onSubmit={({ formData }: any) => submitHandler(formData)}
-                                    formData={formValues}
+                                    formData={formData}
                                     widget={widgets}
                                 >
                                     <div></div>

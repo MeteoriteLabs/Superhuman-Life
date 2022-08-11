@@ -71,7 +71,7 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
         onCompleted: (data) => fetchData(data)
     })
 
-    const arrayDuration = fitnesspackagepricing.map(fitness => fitness.duration);
+    const arrayDuration = [...fitnesspackagepricing].map(fitness => fitness.duration);
 
     const calculateSuggestPrice = (arrayData: { mode: "Online" | "Offline"; mrp: number; }[], arrayClasses: number[]) => {
     console.log("🚀 ~ file: FitnessPricingTable.tsx ~ line 80 ~ calculateSuggestPrice ~ arrayClasses", arrayClasses)

@@ -11,6 +11,10 @@ import moment from 'moment';
 
 export default function Voucher({ actionType, setFitnesspackagepricing, fitnesspackagepricing, type, mode,minPrice  ,setMinPrice, arrSapientPrice,setIndex }) {
 
+
+  console.log(fitnesspackagepricing);
+  debugger;
+
     const auth = useContext(AuthContext);
     const [vouchers, setVouchers] = useState<any>([]);
     const GET_VOUCHERS = gql`

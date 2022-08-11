@@ -435,6 +435,7 @@ function CreateEditView(props: any, ref: any) {
         return action
     }
     
+    console.log(formData);
 
     return (
         <>
