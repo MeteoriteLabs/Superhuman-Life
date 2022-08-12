@@ -1,6 +1,4 @@
 import React from 'react';
-import { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
 import {
   Nav
 } from "react-bootstrap";
@@ -16,25 +14,9 @@ import CommunicationIcon from "../../Icons/Communications.svg";
 import SettingsIcon from "../../Icons/Settings.svg";
 
 function ToggleSideBarMenu() {
-  const [sideNavStatus, setSideNavStatus] = useState<boolean>(false);
-
-  const { pathname } = useLocation<any>();
-
-  useEffect(() => {
-    getSideNavStatus();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname]);
-
-  const getSideNavStatus = () => {
-    const currentSideNavStatus: boolean =
-      pathname !== "/lobby" && pathname !== "/website" ? true : false;
-    setSideNavStatus(currentSideNavStatus);
-  };
-
+ 
   return (
     <>
-      {
-        sideNavStatus ?
           <Nav>
             <Nav.Link eventKey="1" className="nav-link text-white d-sm-block d-lg-none" href="/home">
               <img src={HomeIcon} alt="home icon" className="mr-sm-2" style={{ height: '20px', width: '20px', marginRight: '5px' }} />Home
@@ -67,9 +49,6 @@ function ToggleSideBarMenu() {
               <img src={SettingsIcon} alt="settings icon" className="mr-sm-2" style={{ height: '20px', width: '20px', marginRight: '5px' }} />Settings
             </Nav.Link>
           </Nav>
-          : null
-      }
-
     </>
   )
 }

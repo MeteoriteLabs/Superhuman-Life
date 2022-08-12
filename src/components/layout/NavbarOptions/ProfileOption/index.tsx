@@ -3,11 +3,13 @@ import {
   NavDropdown
 } from "react-bootstrap";
 import authContext from "../../../../context/auth-context";
+import './ProfileOption.css';
 
 export function ProfileOption() {
   const auth = useContext(authContext);
   return (
     <NavDropdown
+      alignRight
       title={<img
         src="/assets/navbar_icons/profileIcon.svg"
         className="rounded-circle img-responsive "
@@ -15,6 +17,7 @@ export function ProfileOption() {
         style={{ height: '25px', width: '25px', backgroundColor: '#F2F2F2' }}
       />}
       id="collasible-nav-dropdown"
+      flip
     >
       <NavDropdown.Item style={{ textDecoration: 'underline', fontWeight: 'bold' }}>Hey there!</NavDropdown.Item>
 

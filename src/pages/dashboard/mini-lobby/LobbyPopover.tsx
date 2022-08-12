@@ -23,6 +23,7 @@ export const MiniLobbyComponent = () => {
 
   return (
     <NavDropdown
+      alignRight
       title={<img
         src="/assets/navbar_icons/candyBarIcon.svg"
         className="img-responsive"
@@ -30,6 +31,7 @@ export const MiniLobbyComponent = () => {
         style={{ height: '20px', width: '20px' }}
       />}
       id="collasible-nav-dropdown"
+      flip
     >
       <NavDropdown.Item style={{ textAlign: 'center'}}>Lobby</NavDropdown.Item>
       {LobbyData.map((data, index) => (

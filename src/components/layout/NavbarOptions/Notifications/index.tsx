@@ -27,7 +27,7 @@ export function NotificationOption() {
       <NavDropdown.Item href="#action/3.3">
         <Row>
 
-          <Alert variant={'dark'} className="col-sm-12">
+          <Alert variant={'dark'}>
             <Row className="justify-content-end">
               <div className="float-right"><small><img src="/assets/close.svg" alt="close icon" /></small></div>
             </Row>

@@ -24,7 +24,7 @@ export default function Dashboard() {
     return (
         <>
 
-        <Container fluid className="lobby__container pt-5"  style={{overflow: 'hidden'}}>
+        <Container fluid className="lobby__container pt-5 mt-3"  style={{overflow: 'hidden'}}>
             <Row>
                 {ImageCaptions.map((data, index) => ( 
                         <Col as={Link} to={data.link} sm key={data.id} className="d-flex justify-content-center align-items-center lobby__card" style={{background: `${LobbyColors[randomColorInArray + index]}`}}>
