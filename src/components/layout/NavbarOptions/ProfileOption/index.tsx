@@ -3,7 +3,6 @@ import {
   NavDropdown
 } from "react-bootstrap";
 import authContext from "../../../../context/auth-context";
-import './ProfileOption.css';
 
 export function ProfileOption() {
   const auth = useContext(authContext);
