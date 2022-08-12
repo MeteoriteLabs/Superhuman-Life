@@ -47,6 +47,9 @@ const clientSchedulerPage = React.lazy(() => import("./builders/changemaker-buil
 const AvailabilityPage = React.lazy(() => import("./builders/changemaker-builder/availability"));
 const RosterPage = React.lazy(() => import('./builders/changemaker-builder/roster'));
 
+//auth logins
+const GoogleAuthCallbackPage = React.lazy(() => import("./pages/register/oAuthLogins/googleAuthCallback"));
+
 const SessionPage = React.lazy(() => import("./builders/session-builder/"));
 
 function NoMatch() {
@@ -117,6 +120,7 @@ export default function Routes({ token }: any) {
                                    <Route path="/forgot-password" component={ForgotPasswordPage} />
                                    <Route path="/resetpassword" component={ResetPasswordPage} />
                                    <Route path="/confirm-account" component={ConfirmAccountPage} />
+                                   <Route path="/api/auth/google/callback" component={GoogleAuthCallbackPage}/>
                                    <Route path="/register" component={RegisterPage} />
                                    <Route path="/about" component={AboutPage} />
                                    <Route path="/contact" component={ContactPage} />

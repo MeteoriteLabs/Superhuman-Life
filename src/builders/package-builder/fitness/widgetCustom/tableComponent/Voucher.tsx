@@ -89,7 +89,7 @@ export default function Voucher({ actionType, setFitnesspackagepricing, fitnessp
                         as="select"
                         required
                         disabled={actionType === "view" ? true : false}
-                        value={fitnesspackagepricing[index].voucher}
+                        value={fitnesspackagepricing[index]?.voucher}
                         className='text-center w-75 mx-auto'
                         onChange={(e) => handleOnChange(e, index)} >
                         <option value={0}>Choose voucher</option>

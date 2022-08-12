@@ -147,4 +147,17 @@ mutation createSuggestion($id: ID, $fitnesspackage: ID){
        }
      }
    }
-`
+`;
+
+export const GET_FITNESS_PACKAGE_TYPES = gql`
+  query fitnessPackageTypes {
+    fitnessPackageTypes {
+      data {
+        id
+        attributes {
+          type
+        }
+      }
+    }
+  }
+`;

@@ -203,16 +203,16 @@ export const GET_SUGGESTIONS_PRICES = gql`
 
 export const GET_SAPIENT_PRICES = gql`
   query sapienPricings {
-    sapienPricings {
-      data {
+    sapienPricings{
+      data{
         id
-        attributes {
+        attributes{
           mode
           mrp
-          fitness_package_type {
-            data {
+          fitness_package_type{
+            data{
               id
-              attributes {
+              attributes{
                 type
               }
             }
@@ -247,4 +247,17 @@ export const LANGUAGES = gql`
             }
           }
     }
+`;
+
+export const ADD_SUGGESTION_NEW = gql`
+mutation createSuggestion($id: ID, $fitnesspackage: ID){
+     createUserPackageSuggestion(data: {
+       users_permissions_user: $id,
+       fitnesspackage: $fitnesspackage
+     }){
+       data{
+         id
+       }
+     }
+   }
 `;

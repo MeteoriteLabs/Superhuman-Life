@@ -159,7 +159,11 @@ query getSessionsByTag($id: ID!) {
                 }
               }
             }
-            sessions{
+            sessions(filters: {
+              Is_restday: {
+                eq: false
+              }
+            }){
               data{
                 id
                 attributes{
@@ -193,5 +197,19 @@ query getSessionsByTag($id: ID!) {
           }
         }
       }
+}
+`
+
+export const GET_TIMEZONES = gql`
+query getTimezones{
+  timezones(pagination: {pageSize: 200}){
+    data{
+      id
+      attributes{
+        time
+        name
+      }
+    }
+  }
 }
 `

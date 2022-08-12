@@ -42,7 +42,7 @@ const SocialLogin = (props: any) => {
                     height="70px"
                     className="d-block w-100"
                     alt="sapien-exercise"
-                    onClick={() => console.log('google')}
+                    onClick={() => window.location.href = 'http://localhost:3000/connect/'}
                 />
                 </div>
             </div>

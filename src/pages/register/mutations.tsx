@@ -28,6 +28,7 @@ export const UPDATE_USER = gql`
         $about: String,
         $module_permissions: JSON
         $languages: [ID]
+        $timezone: ID
     ){
         updateUsersPermissionsUser(
             id: $userid
@@ -42,7 +43,8 @@ export const UPDATE_USER = gql`
                 Phone_Number: $phone,
                 About_User: $about,
                 Modules_permission: $module_permissions
-                languages: $languages
+                languages: $languages,
+                timezone: $timezone
         }){
             data{
                 id
@@ -121,13 +123,13 @@ export const CREATE_ADDRESS = gql`
 export const CREATE_ORGANIZATION = gql`
     mutation createOrganization(
         $Organization_Name: String, 
-        $organization_type: ID, 
+        $organization_type: [ID], 
         $Organization_description: String,
         $users: [ID]
     ) {
         createOrganization(data:{
             Organization_Name: $Organization_Name,
-            organization_type: $organization_type,
+            organization_types: $organization_type,
             Organization_description: $Organization_description
             users: $users
           }){

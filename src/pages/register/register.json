@@ -33,11 +33,13 @@
         "type": "object",
         "required": [
             "fname",
+            "lname",
+            "userName",
             "dob",
             "gender",
             "contact",
-            "lname",
-            "userName"
+            "address",
+            "timezone"
         ],
         "properties": {
             "fname": {
@@ -67,37 +69,12 @@
                 ]
             },
             "contact": {
-                "type": "number",
-                "title": "Contact",
-                "minLength": 10
-            },
-            "address1": {
                 "type": "string",
-                "title": "Address 1"
+                "title": "Contact"
             },
-            "address2": {
+            "address": {
                 "type": "string",
-                "title": "Address 2"
-            },
-            "city": {
-                "type": "string",
-                "title": "City"
-            },
-            "state": {
-                "type": "string",
-                "title": "State"
-            },
-            "country": {
-                "type": "string",
-                "title": "Country"
-            },
-            "zip": {
-                "type": "string",
-                "title": "Zip"
-            },
-            "title": {
-                "type": "string",
-                "title": "Title"
+                "title": "Address"
             },
             "timezone": {
                 "type": "string",
@@ -108,7 +85,12 @@
     "3": {
         "title": "Sign Up",
         "type": "object",
-        "required": [        ],
+        "required": [    
+            "changemaker",
+            "education",
+            "language",
+            "aboutMe"
+        ],
         "properties": {
             "changemaker": {
                 "title": "",
@@ -127,7 +109,7 @@
                     "type": "object",
                     "properties": {
                         "instituteName": {
-                            "title": "Institue Name",
+                            "title": "Institute Name",
                             "type": "string"
                         },
                         "specialization":{
@@ -136,7 +118,7 @@
                         },
                         "yearOfPassing":{
                             "title": "Year of Passing",
-                            "type": "number"
+                            "type": "string"
                         },
                         "typeOfDegree":{
                             "type": "string",
@@ -148,7 +130,13 @@
                                 "Certification"
                             ]
                         }
-                    }
+                    },
+                    "required": [
+                        "instituteName",
+                        "specialization",
+                        "yearOfPassing",
+                        "typeOfDegree"
+                    ]
                 }
             },
             "language": {
@@ -164,6 +152,10 @@
     "4": {
         "title": "Sign Up",
         "type": "object",
+        "required": [
+            "multipleChoicesList",
+            "organization"
+        ],
         "properties": {
             "multipleChoicesList": {
                 "type": "array",
@@ -181,20 +173,74 @@
                 "uniqueItems": true
               },
               "organization": {
-                "type": "boolean",
-                "title": "Do you own organization?"
-              },
-              "organizationName": {
-                "type": "string",
-                "title": "Organization Name"
-              },
-              "organizationType": {
-                "type": "string",
-                "title": "Type of Organization"
-            },
-            "aboutOrganization": {
-                "type": "string",
-                "title": "About Organization"
+                "type": "array",
+                "title": "Organization Details",
+                "items": [
+                    {
+                        "title": "",
+                        "$ref": "#/definitions/org_details"
+                    }
+                ]
+            }
+        },
+        "definitions": {
+            "org_details": {
+                "title": "Do you have an organization",
+                "type": "object",
+                "properties": {
+                    "Do_you_have_an_organization": {
+                        "type": "string",
+                        "title": "Do you own an organization?",
+                        "enum": [
+                            "Yes",
+                            "No"
+                        ]
+                    }
+                },
+                "required": [
+                    "Do_you_have_an_organization"
+                ],
+                "dependencies": {
+                    "Do_you_have_an_organization": {
+                        "oneOf": [
+                            {
+                                "properties": {
+                                    "Do_you_have_an_organization": {
+                                        "enum": [
+                                            "No"
+                                        ]
+                                    }
+                                }
+                            },
+                            {
+                                "properties": {
+                                    "Do_you_have_an_organization": {
+                                        "enum": [
+                                            "Yes"
+                                        ]
+                                    },
+                                    "Organization_Name": {
+                                        "type": "string",
+                                        "title": "Name of Organization"
+                                    },
+                                    "Organization_Type": {
+                                        "type": "string",
+                                        "title": "Type of Organization"
+                                    },
+                                    "Organization_Description": {
+                                        "type": "string",
+                                        "title": "About Organizations"
+                                    }
+                                },
+                                "required": [
+                                    "Organization_Name",
+                                    "Organization_Type",
+                                    "Organization_Description"
+                                ]
+                            }
+                        ]
+                    }
+                }
             }
         }
     }

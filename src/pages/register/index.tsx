@@ -6,11 +6,15 @@ import SocialLogin from "./SocialLogin";
 import ChangeMakerSelect from '../../components/customWidgets/changeMakerList';
 import LanguageSelect from '../../components/customWidgets/languagesList';
 import OrganizationSelect from '../../components/customWidgets/organizationTypeList';
+import TimeZoneSelect from '../../components/customWidgets/timeZoneSelect';
 import { useMutation } from '@apollo/client';
 import { CREATE_ADDRESS, CREATE_ORGANIZATION, CREATE_EDUCATION_DETAIL, UPDATE_USER, REGISTER_USER} from './mutations';
 // import LocationForm from './Location';
 import EmailForm from './email';
 import UserNameForm from './userName';
+import PhoneNumberForm from './number';
+import YearOfPassingForm from './yearOfPassing';
+import AddressForm from './address';
 
 export default function Register() {
     const registerSchema: any = require("./register.json");
@@ -65,11 +69,21 @@ export default function Register() {
             "items": {
               "ui:emptyValue": "",
               "ui:placeholder": "e.g. Masters in Yoga Therapy",
+              "yearOfPassing": {
+                "ui:widget": (props) => {
+                    return <YearOfPassingForm {...props} />
+                }
+            }
             }
           },
         "contact": {
-            "ui:options": {
-                "inputType": "tel"
+            "ui:widget": (props) => {
+                return <PhoneNumberForm {...props} />
+            },
+        },
+        "address": {
+            "ui:widget": (props) => {
+                return <AddressForm {...props} />
             }
         },
         "specification": {
@@ -85,11 +99,23 @@ export default function Register() {
             "ui:widget": "checkboxes"
         },
         "organization": {
-            "ui:widget": "radio",
+            "items": {
+                "Organization_Description": {
+                    "ui:widget": "textarea",
+                    "ui:options": {
+                        "rows": 3
+                    }
+                },
+                "Organization_Type": {
+                    "ui:widget": (props) => {
+                        return <OrganizationSelect {...props} />
+                    }
+                }
+            }
         },
-        "organizationType": {
+        "timezone": {
             "ui:widget": (props) => {
-                return <OrganizationSelect {...props} />
+                return <TimeZoneSelect {...props} />
             }
         },
         // "location": {
@@ -100,13 +126,6 @@ export default function Register() {
         "challenge": {
             "ui:widget": "textarea",
             "ui:placeholder": "Try to explain the challenges you are facing (if any)",
-            "ui:options": {
-                "rows": 3
-            }
-        },
-        "aboutOrganization": {
-            "ui:widget": "textarea",
-            "ui:placeholder": "Anything that you want us to know!",
             "ui:options": {
                 "rows": 3
             }
@@ -131,13 +150,15 @@ export default function Register() {
                 lname: userFormData.lname,
                 email: userFormData.email,
                 password: userFormData.password,
-                phone: userFormData.contact.toString(),
+                phone: userFormData.contact,
                 uname: userFormData.userName,
                 dob: userFormData.dob,
                 gender: userFormData.gender,
                 about: userFormData.aboutMe,
                 module_permissions: userFormData.multipleChoicesList,
-                languages: userFormData.language.split(",")
+                // let id = e.map(d => {return d.id}).join(',');
+                languages: JSON.parse(userFormData.language).map(d => {return d.id}).join(', ').split(", "),
+                timezone: JSON.parse(userFormData.timezone)[0].id,
             }
         });
     }});
@@ -145,14 +166,29 @@ export default function Register() {
     const [updateUser] = useMutation(UPDATE_USER, {
         onCompleted: (data: any) => {
             console.log(data);
-            createOrganization({
-                variables: {
-                    Organization_Name: userFormData.organizationName,
-                    organization_type: userFormData.organizationType,
-                    Organization_description: userFormData.aboutOrganization,
-                    users: [newUserId]
-                }
-            })
+            if(userFormData.organization[0]?.Do_you_have_an_organization === 'Yes') {
+                createOrganization({
+                    variables: {
+                        Organization_Name: userFormData.organization[0]?.Organization_Name,
+                        organization_type: [JSON.parse(userFormData.organization[0]?.Organization_Type)[0]?.id],
+                        Organization_description: userFormData.organization[0]?.Organization_Description,
+                        users: [newUserId]
+                    }
+                })
+            }else {
+                createAddress({
+                    variables: {
+                        address1: JSON.parse(userFormData.address).address1,
+                        address2: JSON.parse(userFormData.address).address2,
+                        city: JSON.parse(userFormData.address).city,
+                        state: JSON.parse(userFormData.address).state,
+                        zipcode: JSON.parse(userFormData.address).zip,
+                        country: JSON.parse(userFormData.address).country,
+                        Title: JSON.parse(userFormData.address).addressTitle,
+                        user: newUserId
+                    }
+                });
+            }
         }
     });
     const [createOrganization] = useMutation(CREATE_ORGANIZATION, {onCompleted: (data: any) => {
@@ -180,7 +216,7 @@ export default function Register() {
                     Institute_Name: userFormData.education[i].instituteName,
                     Type_of_degree: userFormData.education[i].typeOfDegree,
                     Specialization: userFormData.education[i].specialization,
-                    year_of_passing: userFormData.education[i].yearOfPassing.toString(),
+                    year_of_passing: userFormData.education[i].yearOfPassing,
                     user: newUserId
                 }
             });
@@ -200,20 +236,26 @@ export default function Register() {
         } else {
             // setFormValues({ ...formValues, ...formData });
             const values = { ...formValues, ...formData };
+            // JSON.parse(values.address)
+            // JSON.parse(values.changemaker.specialist)
+            // JSON.parse(values.language)
+            // JSON.parse(values.organization[0]?.Organization_Type)
+            // JSON.parse(values.timezone)
             await setUserFormData(values);
             console.log(values);
             registerUser({ variables: {
                 email: values.email,
                 name: values.userName,
                 password: values.password,
-            }})
+            }});
             // console.log("Values submitted: " + JSON.stringify(formValues, null, 2));
         }
     }
 
     function Validate(formData, errors) {
         var ele = document.getElementsByClassName("invalidEmail");
-        var ele2 = document.getElementsByClassName("invalidUname")
+        var ele2 = document.getElementsByClassName("invalidUname");
+        var ele3 = document.getElementsByClassName("invalidNumber");
         if(formData.email) {
             if(ele.length !== 0){
                 errors.email.addError('Please enter a valid email address');
@@ -222,6 +264,11 @@ export default function Register() {
         if(formData.userName){
             if(ele2.length !== 0){
                 errors.userName.addError('Please enter some other username');
+            }
+        }
+        if(formData.contact){
+            if(ele3.length !== 0){
+                errors.contact.addError('Please enter a valid phone number');
             }
         }
         if (formData.password !== formData.confirm) {
@@ -240,7 +287,7 @@ export default function Register() {
                     <h1>Congratulations!</h1>
                 </Row>
                 <Row style={{ justifyContent: 'center', justifyItems: 'center'}}>
-                    <h5><img height="32px" src="/assets/confirmed.svg" alt="confirmed"></img>Confrimation Email Sent</h5>
+                    <h5><img height="32px" src="/assets/confirmed.svg" alt="confirmed"></img>Confirmation Email Sent</h5>
                 </Row>
                 <blockquote className="blockquote text-right">
                     <p className="text-danger blockquote-footer">Please Confirm your email address</p>
@@ -347,6 +394,7 @@ export default function Register() {
                                 uiSchema={uiSchema}
                                 schema={registerSchema[step]}
                                 ref={formRef}
+                                showErrorList={false}
                                 validate={Validate}
                                 onSubmit={({ formData }: any) => submitHandler(formData)}
                                 formData={formValues}
@@ -382,7 +430,7 @@ export default function Register() {
                 </Container>
             </Col>
             <Col className="d-none d-lg-block">
-                <Carousel ref={carouselRef} interval={600000} indicators={false} fade={true} controls={false}>
+                <Carousel ref={carouselRef} interval={8000} indicators={false} fade={true} controls={false}>
                     <Carousel.Item>
                         <img
                             src="/assets/step-1.svg"
