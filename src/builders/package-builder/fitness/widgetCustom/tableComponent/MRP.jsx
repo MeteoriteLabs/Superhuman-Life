@@ -12,9 +12,6 @@ export default function MRP(props) {
     let numEle = (type === "Classic Class" || mode === "Online Workout" || mode === "Offline Workout") ? 1 : 4
 
 
-
-
-
     const inputRef = useRef([])
     const spanRef = useRef([])
 
@@ -161,7 +158,7 @@ export default function MRP(props) {
                     ref={el => inputRef.current[index] = el}
                     required
                     disabled={actionType === "view" ? true : false}
-                    value={fitnesspackagepricing[index].mrp}
+                    value={fitnesspackagepricing[index]?.mrp}
                     min="0"
                     type="number"
                     placeholder='Enter MRP'

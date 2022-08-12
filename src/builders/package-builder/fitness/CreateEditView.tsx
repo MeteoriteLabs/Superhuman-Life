@@ -84,7 +84,7 @@ function CreateEditView(props: any, ref: any) {
 
     let fitness_package_type: string | undefined = ''
     if (operation.actionType === "view" || operation.actionType === 'edit') {
-        fitness_package_type = formData?.fitness_package_type.id
+        fitness_package_type = formData?.fitness_package_type.type
     } 
     else if (operation.actionType === "create") {
         if (operation.type === "Personal Training") {
@@ -306,7 +306,7 @@ function CreateEditView(props: any, ref: any) {
 
 
         // if message exists - show form only for edit and view
-        if (['edit', 'view'].indexOf(operation.type) > -1) {
+        if (['edit', 'view'].indexOf(operation.actionType) > -1) {
             modalTrigger.next(true);
         }
         else {

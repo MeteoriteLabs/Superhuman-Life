@@ -11,10 +11,6 @@ import moment from 'moment';
 
 export default function Voucher({ actionType, setFitnesspackagepricing, fitnesspackagepricing, type, mode,minPrice  ,setMinPrice, arrSapientPrice,setIndex }) {
 
-
-  console.log(fitnesspackagepricing);
-  debugger;
-
     const auth = useContext(AuthContext);
     const [vouchers, setVouchers] = useState<any>([]);
     const GET_VOUCHERS = gql`
@@ -93,7 +89,7 @@ export default function Voucher({ actionType, setFitnesspackagepricing, fitnessp
                         as="select"
                         required
                         disabled={actionType === "view" ? true : false}
-                        value={fitnesspackagepricing[index].voucher}
+                        value={fitnesspackagepricing[index]?.voucher}
                         className='text-center w-75 mx-auto'
                         onChange={(e) => handleOnChange(e, index)} >
                         <option value={0}>Choose voucher</option>

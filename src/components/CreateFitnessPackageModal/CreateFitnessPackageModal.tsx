@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { withTheme, utils } from "@rjsf/core";
 import { Theme as Bootstrap4Theme } from '@rjsf/bootstrap-4';
 import { Button, Col, Modal, ProgressBar, Row } from "react-bootstrap";
@@ -7,7 +7,7 @@ import moment from "moment";
 
 
 
-export default function CreateFitnessPackageModal({ name, formUISchema, formSubmit, formSchema, formData, isStepper, userData, setUserData, widgets, fitness_package_type, PTProps, actionType, groupProps, customProps, stepperValues, pricingDetailRef, submitName, modalTrigger }: any) {
+export default function CreateFitnessPackageModal({ name, formUISchema, formSubmit, formSchema, formData, isStepper, userData, setUserData, widgets, setRender, fitness_package_type, PTProps, actionType, groupProps, customProps, stepperValues, pricingDetailRef, submitName, modalTrigger }: any) {
 
     const registry = utils.getDefaultRegistry();
     const defaultFileWidget = registry.widgets["FileWidget"];
@@ -18,16 +18,17 @@ export default function CreateFitnessPackageModal({ name, formUISchema, formSubm
     const [step, setStep] = useState<number>(1);
     const [show, setShow] = useState<boolean>(false);
 
-    console.log(formData)
-
     const [formValues, setFormValues] = useState<any>(formData);
     const stepper: string[] = stepperValues;
 
-    console.log(formValues)
 
     modalTrigger.subscribe((res: boolean) => {
         setShow(res);
     });
+
+    useEffect(() => {
+        setFormValues(formData);
+    }, [formData]);
 
 
 
@@ -38,7 +39,7 @@ export default function CreateFitnessPackageModal({ name, formUISchema, formSubm
 
             updateFinesspackagepricing = pricingDetailRef.current.getFitnessPackagePricing?.();
 
-            if (formData.fitness_package_type === "Classic Class" || formData.mode === "Online Workout" || formData.mode === "Offline Workout") {
+            if (formData.fitness_package_type === "60e045867df648b0f5756c32" || formData.mode === "Online Workout" || formData.mode === "Offline Workout") {
                 updateFinesspackagepricing = updateFinesspackagepricing.slice(0, 1)
             }
         }
@@ -73,20 +74,15 @@ export default function CreateFitnessPackageModal({ name, formUISchema, formSubm
     }
 
 
-    const updateFormDuration = (formData: { mode: "Online Workout" | "Offline Workout"; duration: number; }) => {
+    const updateFormDuration = (formData: { mode: "Online Workout" | "Offline Workout"; duration?: number; }) => {
         let { duration, mode } = formData;
-        if (mode) {
+        if (formData.mode) {
             if (mode === "Online Workout" || mode === "Offline Workout") {
                 duration = 1
-            } 
-            else {
+            } else {
                 duration = 30
             }
         }
-        if(duration === undefined){
-            duration = 30
-        }
-
         return duration
     }
 
@@ -111,12 +107,12 @@ export default function CreateFitnessPackageModal({ name, formUISchema, formSubm
 
         if (mode === "Online Workout" || mode === "Offline Workout") {
             duration = 1
-        } if (fitness_package_type !== "Classic Class") {
+        } if (fitness_package_type !== "60e045867df648b0f5756c32") {
             duration = 30
         }
         // duration = (mode === "Online Workout" || mode === "Offline Workout") ? 1 : 30;
         setUserData({ ...userData, duration, recordedclasses })
-        setFormValues({ ...formData, duration, recordedclasses })
+        setFormValues({ ...formValues, duration, recordedclasses })
     }
 
 
@@ -143,14 +139,14 @@ export default function CreateFitnessPackageModal({ name, formUISchema, formSubm
         const updateMode = updateModeName(formData);
         const updateDuration = updateFormDuration(formData);
         const publishing_date = moment()
-        const expiry_date = moment(publishing_date.add(365, 'days')); 
+        const expiry_date = moment(moment().add(365, 'days').calendar()); 
 
         if (isStepper && step < stepper.length) {
             const update = updateInputValue(formData)
 
             setStep(step + 1);
-            setFormValues({ ...formData, ...update, fitness_package_type, fitnesspackagepricing: updateFinesspackagepricing, duration: updateDuration });
-            setUserData({ ...formData, ...update, fitness_package_type, fitnesspackagepricing: updateFinesspackagepricing, duration: updateDuration })
+            setFormValues({ ...formValues, ...update, fitness_package_type, fitnesspackagepricing: updateFinesspackagepricing, duration: updateDuration });
+            setUserData({ ...formValues, ...update, fitness_package_type, fitnesspackagepricing: updateFinesspackagepricing, duration: updateDuration })
 
         } else {
             if (typeof formData.disciplines !== "object") {
@@ -159,14 +155,12 @@ export default function CreateFitnessPackageModal({ name, formUISchema, formSubm
             formData = { ...formData, fitnesspackagepricing: updateFinesspackagepricing, mode: updateMode,publishing_date,expiry_date   }
             formSubmit(formData);
 
-            actionType === "view" && modalTrigger.next(false)
+            actionType === "view" && setRender(false)
 
         }
 
     }
 
-
-    console.log(formData);
 
 
     return (
@@ -200,7 +194,7 @@ export default function CreateFitnessPackageModal({ name, formUISchema, formSubm
                                     schema={formSchema[step.toString()]}
                                     ref={formRef}
                                     onSubmit={({ formData }: any) => submitHandler(formData)}
-                                    formData={formData}
+                                    formData={formValues}
                                     widget={widgets}
                                 >
                                     <div></div>

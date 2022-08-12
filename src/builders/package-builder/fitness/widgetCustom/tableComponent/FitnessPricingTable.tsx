@@ -33,7 +33,6 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
 
     let { ptonline, ptoffline, mode, grouponline, groupoffline, recordedclasses, duration, fitness_package_type } = userData;
 
-
     const [fitnesspackagepricing, setFitnesspackagepricing] = useState<FitnessPricing[]>([
         {
             "duration": 30,
@@ -55,7 +54,8 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
             "voucher": "",
             "mrp": 0,
         },
-    ])
+    ]);
+
 
     const [minPrice, setMinPrice] = useState<number[]>([]);
     const [arrSapientPrice, setArraySapientPrice] = useState<any[]>([]);
@@ -68,10 +68,12 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
 
 
     useQuery(GET_SAPIENT_PRICES, {
-        onCompleted: (data) => fetchData(data)
-    })
+        onCompleted: (data) => fetchData(data),
+    });
 
-    const arrayDuration = [...fitnesspackagepricing].map(fitness => fitness.duration);
+    console.log(fitnesspackagepricing);
+
+    const arrayDuration = fitnesspackagepricing?.map(fitness => fitness.duration);
 
     const calculateSuggestPrice = (arrayData: { mode: "Online" | "Offline"; mrp: number; }[], arrayClasses: number[]) => {
     console.log("🚀 ~ file: FitnessPricingTable.tsx ~ line 80 ~ calculateSuggestPrice ~ arrayClasses", arrayClasses)
@@ -109,8 +111,10 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
         // get dicount vouchers from vouchers collection.
         let updatePrice = [...arraySapient];
         if (actionType === "edit") {
+            debugger;
+            console.log(userData);
             if (userData.fitnesspackagepricing) {
-                const arrayVoucher = userData.fitnesspackagepricing[0].packagepricing.map(item => item.voucher);
+                const arrayVoucher = userData.fitnesspackagepricing.map(item => item.voucher);
                 for (let i = 0; i < updatePrice.length; i++) {
                     if (arrayVoucher[i] === "0%") {
                         updatePrice[i] = Number(arraySapient[i])
@@ -144,7 +148,6 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
         const arrayPTdata = data.sapienPricings.filter((item: { fitness_package_type: { type: "Personal Training" | "Group Class" | "Classic Class"; }; }) => item.fitness_package_type.type === "Personal Training");
         const arrayPTClasses = [ptonline, ptoffline];
         const sapientPrice = calculateSuggestPrice(arrayPTdata, arrayPTClasses);
-    
 
         calculateArraySuggestPrice(sapientPrice, arrayDuration);
 
@@ -173,6 +176,9 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
 
     //custom
     const customSuggestPrice = (data) => {
+
+        debugger;
+        console.log(data);
 
         const arrayCustomPrice: number[] = []
         const arrayPTdata = data.sapienPricings.filter((item: { fitness_package_type: { type: "Personal Training" | "Group Class" | "Classic Class"; }; }) => item.fitness_package_type.type === "Personal Training");
@@ -256,11 +262,11 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
 
         } else if (actionType === 'view') {
             if (formData.fitnesspackagepricing) {
-                updatePricing = formData.fitnesspackagepricing[0].packagepricing
+                updatePricing = formData.fitnesspackagepricing
             }
         } else {
             if (userData.fitnesspackagepricing) {
-                updatePricing = userData.fitnesspackagepricing[0].packagepricing
+                updatePricing = userData.fitnesspackagepricing
             }
         }
         setFitnesspackagepricing(updatePricing)
