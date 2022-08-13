@@ -1,6 +1,3 @@
-#dropdown-basic-button::after{
-    display: none;
-}
 #collasible-nav-dropdown::after{
     display: none;
 }

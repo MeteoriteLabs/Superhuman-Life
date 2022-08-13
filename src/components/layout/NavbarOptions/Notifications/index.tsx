@@ -14,7 +14,9 @@ export function NotificationOption() {
       className="img-responsive "
       style={{ height: '20px', width: '20px' }}
     />}
-      id="collasible-nav-dropdown">
+      id="collasible-nav-dropdown"
+      className="position-static"
+    >
       <NavDropdown.Item href="#action/3.1">
         <Row className="justify-content-between">
           <div className="float-left"><b>Notification</b></div>
@@ -24,7 +26,7 @@ export function NotificationOption() {
       <NavDropdown.Item href="#action/3.2">
         <small>Today</small>
       </NavDropdown.Item>
-      <NavDropdown.Item href="#action/3.3">
+      <NavDropdown.Item href="#action/3.3" className="overflow-hidden">
         <Row>
 
           <Alert variant={'dark'}>
@@ -35,13 +37,12 @@ export function NotificationOption() {
               <div className="float-left"><small><b>@username</b></small></div>
               <div className="float-right"><small>07:00 AM</small></div>
             </Row>
-            <Row className="justify-content-between">
-              <div>
+            <Row>
+              <div className="overflow-hidden">
                 This is a demo notification.
               </div>
             </Row>
           </Alert>
-
         </Row>
       </NavDropdown.Item>
       <NavDropdown.Divider />

@@ -4,14 +4,12 @@ import { GET_USER_ORGANIZATIONS } from '../queries';
 import { flattenObj } from '../../../components/utils/responseFlatten';
 import { useQuery } from '@apollo/client';
 import { LobbyData } from "./LobbyData";
-import { Link } from "react-router-dom";
 import AuthContext from "../../../context/auth-context";
 import { LobbyColors } from "../dashboard-data/colors";
 import './miniLobby.css';
 
 export const MiniLobbyComponent = () => {
   const auth = useContext(AuthContext);
-  const randomColorInArray = Math.floor(Math.random() * LobbyColors.length);
   const [organizations, setOrganizations] = useState([]);
 
   useQuery(GET_USER_ORGANIZATIONS, {
@@ -20,6 +18,9 @@ export const MiniLobbyComponent = () => {
       setOrganizations(flattendData.usersPermissionsUsers[0].organizations);
     }
   });
+  
+  const totalNumberOfColors = LobbyColors.length; 
+  const randomColorInArray = Math.floor(Math.random() * LobbyColors.length);
 
   return (
     <NavDropdown
@@ -31,16 +32,16 @@ export const MiniLobbyComponent = () => {
         style={{ height: '20px', width: '20px' }}
       />}
       id="collasible-nav-dropdown"
-      flip
+      className="position-static"
     >
-      <NavDropdown.Item style={{ textAlign: 'center'}}>Lobby</NavDropdown.Item>
+      <NavDropdown.Item xs={12} sm={12} style={{ textAlign: 'center'}}>Lobby</NavDropdown.Item>
       {LobbyData.map((data, index) => (
-        <NavDropdown.Item className="text-white" as={Link} to={data.link} style={{ background: `${LobbyColors[randomColorInArray + index]}`}}>
-          <Row className="justify-content-between">
-            <div>
+        <NavDropdown.Item  className="text-white py-3" key={index}  href={data.link} style={{ background: `${LobbyColors[((randomColorInArray + index ) < totalNumberOfColors) ? (randomColorInArray + index) : index ]}`}}>
+          <Row >
+            <div className="pr-1">
               {data.image === null ? " " : <Image fluid src={data.image} style={{ width: '25px' }} />}
             </div>
-            <div>
+            <div className="ml-1">
               {data.label}
             </div>
           </Row>
@@ -49,12 +50,12 @@ export const MiniLobbyComponent = () => {
       {organizations.length > 0 && 
         organizations.map((data: any, index: number) => {
           return (
-            <NavDropdown.Item key={index} style={{ background: `${LobbyColors[randomColorInArray + index + LobbyData.length]}` }}>
-            <Row  className="justify-content-between" as={Link} to={'/lobby'} key={index}>
-              <div className="float-left">
+            <NavDropdown.Item href={'/lobby'} className="py-3" key={index} style={{ background: `${LobbyColors[((randomColorInArray + index + LobbyData.length ) < totalNumberOfColors) ? (randomColorInArray + index + LobbyData.length ) : index ]}` }}>
+            <Row key={index}>
+              <div className="pr-1">
                 <img style={{ width: '20px' }} src='/assets/miniLobby_icons/organisation.svg' alt="organisation_icon" />
               </div>
-              <div className="float-right text-white">
+              <div className="text-white ml-1">
                 {data.Organization_Name}
               </div>
             </Row>

@@ -28,7 +28,7 @@ export function AuthenticatedNav() {
 
   const getSideNavStatus = () => {
     const currentSideNavStatus: boolean =
-      pathname !== "/lobby" && pathname !== "/website" ? true : false;
+      pathname !== "/lobby" && pathname !== "/website" && pathname !== "/insights" && pathname !== "/support" ? true : false;
     setSideNavStatus(currentSideNavStatus);
   };
 
@@ -46,16 +46,23 @@ export function AuthenticatedNav() {
           <img className="d-inline-block align-top" src="/assets/navbar_icons/sapiensLogoSmallScreen.svg" alt="brand" />
         </Navbar.Brand>
 
+        {/* change maker logo */}
+        <Navbar.Collapse className="justify-content-end d-none d-lg-block">
+          <Navbar.Text>
+            <h5 className="text-light">#BeAChangeMaker</h5>
+          </Navbar.Text>
+        </Navbar.Collapse>
+
         {/* notification, lobby , profile options for small screen */}
-        <Nav.Item className="d-lg-none d-sm-block ml-auto ">
+        <Nav.Item className="d-lg-none d-sm-block ">
           <NotificationOption />
         </Nav.Item>
 
-        <Nav.Item className="d-lg-none d-sm-block ml-auto ">
+        <Nav.Item className="d-lg-none d-sm-block  ">
           <MiniLobbyComponent />
         </Nav.Item>
 
-        <Nav.Item className="d-lg-none d-sm-block ml-auto ">
+        <Nav.Item className="d-lg-none d-sm-block  ">
           <ProfileOption />
         </Nav.Item>
 
@@ -73,24 +80,16 @@ export function AuthenticatedNav() {
             : null
         }
 
-        {/* change maker logo */}
-        <Navbar.Collapse className="justify-content-center d-none d-lg-block">
-          <Navbar.Text>
-            <h5 className="text-light">#BeAChangeMaker</h5>
-          </Navbar.Text>
-        </Navbar.Collapse>
-
         {/* notification, lobby and profile options for large screen */}
         <Navbar.Collapse className="justify-content-end text-white d-none d-lg-block ">
           <NavDropdown
             alignRight
-            flip
             title={<img
-            src="/assets/navbar_icons/notificationIcon.svg"
-            alt="notification"
-            className="img-responsive "
-            style={{ height: '20px', width: '20px' }}
-          />}
+              src="/assets/navbar_icons/notificationIcon.svg"
+              alt="notification"
+              className="img-responsive "
+              style={{ height: '20px', width: '20px' }}
+            />}
             id="collasible-nav-dropdown">
             <NavDropdown.Item href="#action/3.1">
               <Row className="justify-content-between">

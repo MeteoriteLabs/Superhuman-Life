@@ -16,6 +16,9 @@
       margin: 0px;
       padding: 0px;
    } 
+   .dropdown-menu{
+      width: 100%;
+   }
 } 
 
 @media screen and (min-width: 320px) and (max-width: 480px) {
@@ -29,6 +32,9 @@
       width: 15px; 
       margin: 0px;
       padding: 0px;
+   }
+   .dropdown-menu{
+      width: 100%;
    }
 
 }

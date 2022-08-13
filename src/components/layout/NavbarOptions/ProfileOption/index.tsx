@@ -6,6 +6,7 @@ import authContext from "../../../../context/auth-context";
 
 export function ProfileOption() {
   const auth = useContext(authContext);
+
   return (
     <NavDropdown
       alignRight
@@ -16,13 +17,14 @@ export function ProfileOption() {
         style={{ height: '25px', width: '25px', backgroundColor: '#F2F2F2' }}
       />}
       id="collasible-nav-dropdown"
-      flip
+      className="position-static"
     >
+
       <NavDropdown.Item style={{ textDecoration: 'underline', fontWeight: 'bold' }}>Hey there!</NavDropdown.Item>
 
       <NavDropdown.Item href="/profile" style={{ backgroundColor: '#D9D9D9', fontWeight: 'bold' }}>My Profile</NavDropdown.Item>
       <NavDropdown.Item href="/settings" style={{ backgroundColor: '#D9D9D9', fontWeight: 'bold' }}>Settings</NavDropdown.Item>
-      <NavDropdown.Item href="#action/3.3" style={{ backgroundColor: '#8B0000', fontWeight: 'bold', color: 'white' }} onClick={() => auth.logout()}>Logout</NavDropdown.Item>
+      <NavDropdown.Item style={{ backgroundColor: '#8B0000', fontWeight: 'bold', color: 'white' }} onClick={() => auth.logout()}>Logout</NavDropdown.Item>
     </NavDropdown>
   );
 }
