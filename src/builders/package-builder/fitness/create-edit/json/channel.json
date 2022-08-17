@@ -34,7 +34,9 @@
        "type": "object",
        "required": [
            "About",
-           "Benifits"
+           "Benifits",
+           "upload",
+           "thumbnail"
        ],
        "properties": {
             "About": {
@@ -45,15 +47,11 @@
                 "type": "string",
                 "title": "Benefits"
             },
-            "UploadPicture": {
-                "type": "string",
-                "format": "data-url",
-                "title": "Upload a Intro Picture"
+            "thumbnail": {
+                "type": "string"
             },
-            "UploadVideo": {
-                "type": "string",
-                "format": "data-url",
-                "title": "Upload a Intro Video"
+            "upload": {
+                "type": "string"
             },
             "VideoUrl": {
                 "type": "string",

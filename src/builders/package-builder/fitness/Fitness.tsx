@@ -126,7 +126,7 @@ export default function FitnessTab(props) {
             }
         },
 
-        { accessor: "Status", Header: "Status", Cell: (v: any) => <Badge className='py-3 px-5' style={{ fontSize: '1rem' }} variant={v.value === "Active" ? "success" : "danger"}>{v.value}</Badge> },
+        { accessor: "Status", Header: "Status", Cell: (v: any) => <Badge className='py-3 px-5' style={{ fontSize: '1rem' }} variant={v.value === "Active" ? "success" : "danger"}>{v.value === "Active" ? "Published" : "Draft"}</Badge> },
         {
             id: "edit",
             Header: "Actions",
@@ -197,64 +197,50 @@ export default function FitnessTab(props) {
 
     return (
         <TabContent>
-            <Col lg={{ offset: 2, span: 8}}>
-            <Row className="justify-content-center">
-                <Col sm={12} lg={2} className="py-2 px-0 text-center text-sm-right">
-                <Button className='' variant={true ? "outline-secondary" : "light"} size="sm"
+            <div className="justify-content-lg-center d-flex overflow-auto p-3">
+                <Button className='mx-3' variant={true ? "outline-secondary" : "light"} size="sm"
                     onClick={() => {
                         createEditViewRef.current.TriggerForm({ id: null, actionType: 'create', type: 'Personal Training' });
                     }}
                 >
                     <i className="fas fa-plus-circle"></i>{" "}Personal Training
                 </Button>
-                </Col>
-                <Col sm={12} lg={2} className="py-2 px-0 text-center">
-                <Button className='' variant={true ? "outline-secondary" : "light"} size="sm"
+                <Button className='mx-3' variant={true ? "outline-secondary" : "light"} size="sm"
                     onClick={() => {
                         createEditViewRef.current.TriggerForm({ id: null, actionType: 'create', type: 'Group Class' });
                     }}
                 >
                     <i className="fas fa-plus-circle"></i>{" "}Group
                 </Button>
-                </Col>        
-                <Col sm={12} lg={2} className="py-2 px-0 text-center">
-                <Button className='' variant={true ? "outline-secondary" : "light"} size="sm"
+                <Button className='mx-3' variant={true ? "outline-secondary" : "light"} size="sm"
                     onClick={() => {
                         createEditViewRef.current.TriggerForm({ id: null, actionType: 'create', type: 'Classic Class'});
                     }}
                 >
                     <i className="fas fa-plus-circle"></i>{" "}Classic
                 </Button>
-                </Col>
-                <Col sm={12} lg={2} className="py-2 px-0 text-center">
-                <Button className='' variant={true ? "outline-secondary" : "light"} size="sm"
+                <Button className='mx-3' variant={true ? "outline-secondary" : "light"} size="sm"
                     onClick={() => {
                         createEditViewRef.current.TriggerForm({ id: null, actionType: 'create', type: 'Custom Fitness' });
                     }}
                 >
                     <i className="fas fa-plus-circle"></i>{" "}Custom
                 </Button>
-                </Col>
-                <Col sm={12} lg={2} className="py-2 px-0 text-center">
-                <Button className='' variant={true ? "outline-secondary" : "light"} size="sm"
+                <Button className='mx-3' variant={true ? "outline-secondary" : "light"} size="sm"
                     onClick={() => {
                         createEditViewChannelRef.current.TriggerForm({ id: null, type: 'create', packageType: 'Live Stream Channel', callback: refetchQueryCallback() });
                     }}
                 >
                     <i className="fas fa-plus-circle"></i>{" "}Channel
                 </Button>
-                </Col>
-                <Col sm={12} lg={2} className="py-2 px-0 text-center">
-                <Button className='' variant={true ? "outline-secondary" : "light"} size="sm"
+                <Button className='mx-3' variant={true ? "outline-secondary" : "light"} size="sm"
                     onClick={() => {
                         createEditViewCohortRef.current.TriggerForm({ id: null, type: 'create', packageType: 'Cohort' });
                     }}
                 >
                     <i className="fas fa-plus-circle"></i>{" "}Cohort
                 </Button>
-                </Col>
-            </Row>
-            </Col>
+            </div>
             <Container>
                 <Row>
                     <Col>

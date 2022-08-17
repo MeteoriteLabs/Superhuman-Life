@@ -1,42 +1,42 @@
 {
      "1": {
-         "title": "",
-         "type": "object",
-         "required": [
-             "exercise",
-             "level",
-             "discipline",
-             "miniDescription",
-             "equipment",
+        "title": "",
+        "type": "object",
+        "required": [
+            "exercise",
+            "level",
+            "discipline",
+            "miniDescription",
+            "equipment",
             "muscleGroup"
-         ],
+        ],
          "properties": {
-             "exercise": {
-                 "type": "string",
-                 "title": "Name exercise"
-             },
-             "level": {
-                 "type": "number",
-                 "title": "Level",
-                 "enum": [0, 1, 2, 3],
-                 "enumNames": [
-                     "Beginner",
-                     "Intermediate",
-                     "Advance", 
-                     "No level"
-                 ]
-             },
-             "discipline": {
-                 "type": "string"
-             },
-             "miniDescription": {
+            "exercise": {
+                "type": "string",
+                "title": "Name exercise"
+            },
+            "level": {
+                "type": "number",
+                "title": "Level",
+                "enum": [0, 1, 2, 3],
+                "enumNames": [
+                    "Beginner",
+                    "Intermediate",
+                    "Advance", 
+                    "No level"
+                ]
+            },
+            "discipline": {
+                "type": "string"
+            },
+            "miniDescription": {
                 "type": "string",
                 "title": "Mini description"
             },
             "addExercise": {
                 "title": "",
                 "$ref": "#/definitions/addexercise"
-              },
+            },
             "equipment": {
                 "type": "string"
             },
@@ -99,9 +99,7 @@
                                         ]
                                     },
                                     "Upload": {
-                                        "type": "string",
-                                        "format": "data-url",
-                                        "title": "Upload a Video file"
+                                        "type": "string"
                                     }
                                 }
                             }

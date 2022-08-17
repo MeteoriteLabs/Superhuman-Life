@@ -2,7 +2,7 @@
     "1": {
         "title": "",
         "type": "object",
-        "required": ["packagename","disciplines", "tags" ,"level","is_private"],
+        "required": ["packagename","disciplines", "tags" ,"level","is_private", "equipmentList"],
         "properties": {
             "packagename": {
                 "type": "string",
@@ -11,6 +11,9 @@
             "disciplines": {
                 "type": "string",
                 "title": "Disciplines"
+            },
+            "equipmentList": {
+                "type": "string"
             },
             "tags": {
                 "type": "string",
@@ -44,7 +47,7 @@
     "2": {
         "title": "",
         "type": "object",
-        "required": ["aboutpackage", "benefits" ],
+        "required": ["aboutpackage", "benefits", "upload", "thumbnail" ],
         "properties": {
             "aboutpackage": {
                 "type": "string",
@@ -54,15 +57,11 @@
                 "type": "string",
                 "title": "Benefits"
             },
-            "intropicture": {
-                "type": "string",
-                "format": "data-url",
-                "title": "Intro Picture"
+            "thumbnail": {
+                "type": "string"
             },
-            "video": {
-                "type": "string",
-                "title": "Intro Video",
-                "format": "data-url"
+            "upload": {
+                "type": "string"
             },
             "introvideourl": {
                 "type": "string",

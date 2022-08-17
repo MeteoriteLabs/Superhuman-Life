@@ -22,8 +22,8 @@ export default function EventsTab() {
     const [frm, setFrm] = useState<any>();
     const [createProgram] = useMutation(CREATE_PROGRAM, {onCompleted: () => {refetchQueryCallback()}});
 
-     const handleClose = () => setShow(false);
-     const handleShow = () => setShow(true);
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
 
     function CreateProgram(_variables: {} = {id: auth.userid, details: frm}) {
         createProgram({ variables: {

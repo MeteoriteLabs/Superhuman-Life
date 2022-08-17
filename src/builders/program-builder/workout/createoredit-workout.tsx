@@ -63,6 +63,8 @@ function CreateEditWorkout(props: any, ref: any) {
               return { AddWorkout: "Add URL", AddURL: data.workout_URL };
             } else if (data.workout_text !== null) {
               return { AddWorkout: "Text", AddText: data.workout_text };
+            } else if (data.Workout_Video_ID !== null){
+              return { AddWorkout: "Upload", Upload: data.Workout_Video_ID };
             } else {
               return {
                 AddWorkout: "Build",
@@ -108,12 +110,12 @@ function CreateEditWorkout(props: any, ref: any) {
     }
 
     function FetchData() {
-        useQuery(FETCH_DATA, { variables: { id: operation.id },skip: (operation.type === 'create'), onCompleted: (e: any) => { FillDetails(e) } });
+      useQuery(FETCH_DATA, { variables: { id: operation.id },skip: (operation.type === 'create' || operation.type === 'delete'), onCompleted: (e: any) => { FillDetails(e) } });
     }
 
     function CreateWorkout(frm: any) {
         if(frm.addWorkout.build){
-            frm.addWorkout.build = JSON.parse(frm.addWorkout.build);
+          frm.addWorkout.build = JSON.parse(frm.addWorkout.build);
         }
         createWorkout({ variables: {
             workouttitle: frm.workout,
@@ -127,6 +129,7 @@ function CreateEditWorkout(props: any, ref: any) {
             cooldown: (frm.addWorkout.AddWorkout === "Build" ? (frm.addWorkout.build.coolDown ? frm.addWorkout.build.coolDown : null) : null),
             workout_text: (frm.addWorkout.AddWorkout === "Text" ? frm.addWorkout.AddText : null),
             workout_URL: (frm.addWorkout.AddWorkout === "Add URL" ? frm.addWorkout.AddURL : null),
+            Workout_Video_ID: (frm.addWorkout.AddWorkout === "Upload" ? frm.addWorkout.Upload : null),
             calories: frm.calories,
             equipment_lists: frm.equipment.split(","),
             muscle_groups: frm.muscleGroup.split(","),
@@ -173,6 +176,7 @@ function CreateEditWorkout(props: any, ref: any) {
                 frm.addWorkout.AddWorkout === "Add URL"
                   ? frm.addWorkout.AddURL
                   : null,
+              Workout_Video_ID: (frm.addWorkout.AddWorkout === "Upload" ? frm.addWorkout.Upload : null),
               calories: frm.calories,
               equipment_lists: frm.equipment.split(","),
               muscle_groups: frm.muscleGroup.split(","),
@@ -212,13 +216,14 @@ function CreateEditWorkout(props: any, ref: any) {
 
     FetchData();
 
+
     let name = "";
     if(operation.type === 'create'){
-        name="Create New Workout";
+      name="Create New Workout";
     }else if(operation.type === 'edit'){
-        name="Edit";
+      name="Edit";
     }else if(operation.type === 'view'){
-        name="View";
+      name="View";
     }
 
     return (

@@ -123,9 +123,7 @@
                                         ]
                                     },
                                     "Upload": {
-                                        "type": "string",
-                                        "format": "data-url",
-                                        "title": "Upload a Video file"
+                                        "type": "string"
                                     }
                                 }
                             },

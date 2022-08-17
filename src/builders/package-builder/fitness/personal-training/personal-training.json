@@ -2,7 +2,7 @@
     "1": {
         "title": "",
         "type": "object",
-        "required": ["packagename","disciplines", "tags" ,"level","is_private"],
+        "required": [],
         "properties": {
             "packagename": {
                 "type": "string",
@@ -11,6 +11,9 @@
             "disciplines": {
                 "type": "string",
                 "title": "Disciplines"
+            },
+            "equipmentList": {
+                "type": "string"
             },
             "tags": {
                 "type": "string",
@@ -44,7 +47,7 @@
     "2": {
         "title": "",
         "type": "object",
-        "required": ["aboutpackage", "benefits","ptclasssize" ],
+        "required": [],
         "properties": {
             "aboutpackage": {
                 "type": "string",
@@ -62,16 +65,6 @@
                     "Couple",
                     "Family"
                 ]
-            },
-            "intropicture": {
-                "type": "string",
-                "format": "data-url",
-                "title": "Intro Picture"
-            },
-            "video": {
-                "type": "string",
-                "title": "Intro Video",
-                "format": "data-url"
             },
             "introvideourl": {
                 "type": "string",

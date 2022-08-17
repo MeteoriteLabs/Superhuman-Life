@@ -9,7 +9,8 @@ import ModalPreview from './widgetCustom/Preview/FitnessPreview';
 import './CreateEditView.css'
 import { CREATE_PACKAGE, DELETE_PACKAGE, EDIT_PACKAGE, UPDATE_PACKAGE_PRIVATE } from './graphQL/mutations';
 import StatusModal from '../../../components/StatusModal/StatusModal';
-import FitnessMultiSelect from './widgetCustom/FitnessMultiSelect'
+import FitnessMultiSelect from './widgetCustom/FitnessMultiSelect';
+import EquipmentListSelect from '../../../components/customWidgets/equipmentListSelect';
 import FitnessAddress from './widgetCustom/FitnessAddress';
 import FitnessPricingTable from './widgetCustom/tableComponent/FitnessPricingTable'
 import FitnessDuration from './widgetCustom/FitnessDuration';
@@ -19,6 +20,7 @@ import BookingLeadday from './widgetCustom/FitnessBooking/BookingLeadday';
 import BookingLeadTime from './widgetCustom/FitnessBooking/BookingLeadTime';
 import { Subject } from 'rxjs';
 import CreateFitnessPackageModal from '../../../components/CreateFitnessPackageModal/CreateFitnessPackageModal';
+import Upload from '../../../components/upload/upload';
 import {flattenObj} from '../../../components/utils/responseFlatten';
 
 
@@ -128,6 +130,9 @@ function CreateEditView(props: any, ref: any) {
         "disciplines": {
             'ui:widget': (props) => <FitnessMultiSelect widgetProps={props} actionType={operation.actionType} />
         },
+        "equipmentList": {
+            "ui:widget": (props) => <EquipmentListSelect  onChange={props.onChange} value={props.value}/>
+        },
         "address": {
             "ui:widget": (props) => <FitnessAddress actionType={operation.actionType} widgetProps={props} PTProps={ptSchema[3]} />
 
@@ -207,13 +212,21 @@ function CreateEditView(props: any, ref: any) {
             },
         },
 
+        "thumbnail": {
+            "ui:widget": (props: any) => {
+                return <Upload allowImage={true} allowVideo={false} onChange={props.onChange} value={props.value} title={'Thumbnail'}/>;
+            },
+        },
+
+        "upload": {
+            "ui:widget": (props: any) => {
+                return <Upload allowImage={true} allowVideo={true} onChange={props.onChange} value={props.value} title={'upload picture or video'}/>;
+            },
+        },
 
         "introvideourl": {
             "ui:placeholder": "http://"
         },
-
-
-
 
         "groupinstantbooking": {
             "ui:widget": "radio",
@@ -285,7 +298,12 @@ function CreateEditView(props: any, ref: any) {
         const flattedData = flattenObj({...dataPackage});
         const packageDetail = flattedData.fitnesspackages[0];
 
-        let { id, packagename, tags, disciplines, fitness_package_type, aboutpackage, benefits, level, mode, ptoffline, ptonline, grouponline, groupoffline, recordedclasses, restdays, fitnesspackagepricing, bookingleadday, bookingleadtime, duration, groupstarttime, groupendtime, groupinstantbooking, address, ptclasssize, classsize, groupdays, introvideourl, is_private } = packageDetail;
+        console.log(packageDetail);
+        debugger;
+
+        // packageDetails?.equipment_lists = JSON.stringify(packageDetail?.equipment_lists);
+
+        let { id, packagename, tags, disciplines, fitness_package_type, aboutpackage, benefits, level, mode, ptoffline, ptonline, grouponline, groupoffline, recordedclasses, restdays, fitnesspackagepricing, bookingleadday, bookingleadtime, duration, groupstarttime, groupendtime, groupinstantbooking, address, ptclasssize, classsize, groupdays, introvideourl, is_private, Upload_ID, Thumbnail_ID, equipment_lists } = packageDetail;
 
         if (mode === "Offline_workout") {
             mode = "Offline Workout"
@@ -299,8 +317,9 @@ function CreateEditView(props: any, ref: any) {
             bookingleadtime = ""
         }
 
+        const updateFormData = updateform.createUpdateForm(id, packagename, tags, disciplines, fitness_package_type, aboutpackage, benefits, level, mode, ptoffline, ptonline, grouponline, groupoffline, recordedclasses, restdays, fitnesspackagepricing, bookingleadday, bookingleadtime, duration, groupstarttime, groupendtime, groupinstantbooking, address, ptclasssize, classsize, groupdays, introvideourl, is_private, Upload_ID, Thumbnail_ID, equipment_lists);
 
-        const updateFormData = updateform.createUpdateForm(id, packagename, tags, disciplines, fitness_package_type, aboutpackage, benefits, level, mode, ptoffline, ptonline, grouponline, groupoffline, recordedclasses, restdays, fitnesspackagepricing, bookingleadday, bookingleadtime, duration, groupstarttime, groupendtime, groupinstantbooking, address, ptclasssize, classsize, groupdays, introvideourl, is_private);
+        console.log(updateFormData);
 
         setFormData(updateFormData);
 
@@ -330,8 +349,6 @@ function CreateEditView(props: any, ref: any) {
         }
     }));
 
-    console.log(window.location.href.split('/'));
-
     const [createUserPackageSuggestion] = useMutation(ADD_SUGGESTION_NEW, {onCompleted: (data) => {
         modalTrigger.next(false);
         props.callback();
@@ -342,8 +359,6 @@ function CreateEditView(props: any, ref: any) {
             users_permissions_user: auth.userid,
          },
         onCompleted: (r: any) => {
-            debugger;
-            console.log(r)
             if(window.location.href.split('/')[3] === 'client'){
                 createUserPackageSuggestion({
                     variables: {
@@ -383,12 +398,14 @@ function CreateEditView(props: any, ref: any) {
     function CreatePackage(frm) {
         const fitnessPackageId = sapienFitnessPackageTypes.find(x => x.type === frm.fitness_package_type).id;
         frm.fitness_package_type = fitnessPackageId;
+        frm.equipmentList = JSON.parse(frm.equipmentList).map((x: any) => x.id).join(', ').split(', ');
         createPackage({ variables: frm});
     }
 
     function EditPackage(frm: any) {
         const fitnessPackageId = sapienFitnessPackageTypes.find(x => x.type === frm.fitness_package_type).id;
         frm.fitness_package_type = fitnessPackageId;
+        frm.equipmentList = JSON.parse(frm.equipmentList).map((x: any) => x.id).join(', ').split(', ');
         editPackage({ variables: frm })
     }
 

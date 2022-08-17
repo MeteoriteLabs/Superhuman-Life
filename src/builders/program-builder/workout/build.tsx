@@ -3,6 +3,7 @@ import { Button } from 'react-bootstrap';
 import TextEditor from '../../../components/customWidgets/textEditor';
 import ExerciseList from '../../../components/customWidgets/exerciseList';
 import URLlist from '../search-builder/urlList';
+import Upload from '../../../components/upload/upload';
 
 
 const Build = (props: any) => {
@@ -13,9 +14,15 @@ const Build = (props: any) => {
      const [uploadFields, setUploadFields] = useState<any[]>([]);
      const [currentTab, setCurrentTab] = useState<String | null>(null);
 
+     var warmup: any = {};
+     var mainmovement: any = {};
+     var cooldown: any = {};
+
      function handleUploadFieldChange(i: any, event: any){
+          console.log(i, event);
           const values = [...uploadFields];
-          values[i].value = event.target.value;
+          values[i].type = "upload";
+          values[i].value = event;
           setUploadFields(values);
      }
 
@@ -90,10 +97,6 @@ const Build = (props: any) => {
      )
 }
 
-var warmup: any = {};
-var mainmovement: any = {};
-var cooldown: any = {};
-
 function OnChangeExercise(data: any){
      if(props.buildId === 1){
           warmup = data;
@@ -108,6 +111,7 @@ function OnChangeExercise(data: any){
 }
 
 function OnChangeText(data: any){
+     console.log(data);
      if(props.buildId === 1){
           warmup = data;
           props.onChange(warmup);
@@ -145,20 +149,19 @@ function OnChangeUpload(data: any){
           props.onChange(cooldown);
      }
 }
-
      return (
           <div>
                {renderOptions()}
                {exerciseFields.map((field, idx) => {
-                              return (
-                                   <div key={`${field}-${idx}`} className="mt-2">
-                                        <span className="ml-2" style={{fontSize: '18px'}}>Exercise <i className="far fa-trash-alt float-right"
-                                             style={{ color: 'red', cursor: 'pointer'}}
-                                        onClick={() => {handleExerciseFieldRemove(idx); setCurrentTab(null);}}></i></span>
-                                        <ExerciseList onChange={OnChangeExercise}/>
-                                   </div>
-                              );
-                              })}
+                    return (
+                         <div key={`${field}-${idx}`} className="mt-2">
+                              <span className="ml-2" style={{fontSize: '18px'}}>Exercise <i className="far fa-trash-alt float-right"
+                                   style={{ color: 'red', cursor: 'pointer'}}
+                              onClick={() => {handleExerciseFieldRemove(idx); setCurrentTab(null);}}></i></span>
+                              <ExerciseList onChange={OnChangeExercise}/>
+                         </div>
+                    );
+               })}
 
                {textFields.map((field, idx) => {
                     return (
@@ -169,7 +172,7 @@ function OnChangeUpload(data: any){
                               <TextEditor onChangebuild={OnChangeText} type="build"/>
                          </div>
                     );
-                    })}
+               })}
 
                {urlFields.map((field, idx) => {
                     return (
@@ -180,17 +183,24 @@ function OnChangeUpload(data: any){
                               <URLlist onChange={OnChangeURL} id={idx} field={urlFields}/>
                          </div>
                     );
-                    })}
-                    {uploadFields.map((field, idx) => {
+               })}
+               {uploadFields.map((field, idx) => {
                     return (
                          <div key={`${field}-${idx}`} className="m-2">
-                              <input type="file" id="myFile" name="filename" onChange={e => {handleUploadFieldChange(idx, e);
-                                   OnChangeUpload(uploadFields);
+                              <Upload allowImage={true} allowVideo={true} value={props.value} onChange={(e) => {
+                                   console.log(e);
+                                   if(e !== null){
+                                        handleUploadFieldChange(idx, e);
+                                        OnChangeUpload(uploadFields);
+                                   }
                               }}/>
+                              {/* <input type="file" id="myFile" name="filename" onChange={e => {handleUploadFieldChange(idx, e);
+                                   OnChangeUpload(uploadFields);
+                              }}/> */}
                               <i className="far fa-trash-alt float-right" style={{cursor: 'pointer', color:'red'}} onClick={() => {handleUploadFieldRemove(idx); setCurrentTab(null);}}></i>
                          </div>
                     );
-                    })}
+               })}
                </div>
      )
 }

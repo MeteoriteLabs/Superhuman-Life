@@ -1,9 +1,10 @@
 import PricingTableChannel from '../widgets/pricingTableChannel';
 import PreviewChannel from '../widgets/previewChannel';
+import Upload from '../../../../../components/upload/upload';
 
 export const widgets = {
     pricingTableChannel: PricingTableChannel,
-    previewChannel: PreviewChannel
+    previewChannel: PreviewChannel,
 };
 
 export const schema: any = {
@@ -25,15 +26,15 @@ export const schema: any = {
                 "rows": 3
             }
         },
-        "UploadPicture": {
-            "ui:options": {
-                "accept": ".png, .svg, .jpg"
-            }
+        "thumbnail": {
+            "ui:widget": (props: any) => {
+                return <Upload allowImage={true} allowVideo={true} onChange={props.onChange} value={props.value} title={'Thumbnail'} />;
+            },
         },
-        "UploadVideo": {
-            "ui:options": {
-                "accept": ".mp4"
-            }
+        "upload": {
+            "ui:widget": (props: any) => {
+                return <Upload allowImage={true} allowVideo={true} onChange={props.onChange} value={props.value} title={'upload picture or video'}/>;
+            },
         },
         "visibility": {
             "ui:widget": "radio",

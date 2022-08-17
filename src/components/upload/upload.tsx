@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { Image, ProgressBar } from "react-bootstrap";
 import AWS from "aws-sdk";
@@ -362,14 +362,18 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
           setVideoUpload(false);
      }
 
-     if (url) {
-          props.onChange(imageid);
-     } else {
-          props.onChange(videoID);
-     }
+     useEffect(() => {
+          if (url) {
+               props.onChange(imageid);
+          } else {
+               props.onChange(videoID);
+          }
+          // eslint-disable-next-line react-hooks/exhaustive-deps
+     }, [url]);
 
      return (
           <div>
+               {props?.title && <div><span>{props.title}</span></div>}
                <div className="dropArea p-1">
                     {url ? (
                          <div className="border bg-white border-dark p-4 ">
