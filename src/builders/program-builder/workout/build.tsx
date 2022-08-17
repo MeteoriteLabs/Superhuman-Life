@@ -187,7 +187,7 @@ function OnChangeUpload(data: any){
                {uploadFields.map((field, idx) => {
                     return (
                          <div key={`${field}-${idx}`} className="m-2">
-                              <Upload allowImage={true} allowVideo={true} value={props.value} onChange={(e) => {
+                              <Upload allowImage={false} allowVideo={true} value={props.value} onChange={(e) => {
                                    console.log(e);
                                    if(e !== null){
                                         handleUploadFieldChange(idx, e);
