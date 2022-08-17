@@ -9,7 +9,7 @@ import { flattenObj } from '../../components/utils/responseFlatten';
 import { useQuery } from '@apollo/client';
 import './mainLobby.css';
 
-export default function () {
+export default function Dashboard() {
 
     const auth = useContext(AuthContext);
 

@@ -19,6 +19,8 @@ import ellipse from "./ellipse.svg";
 import ChangePasswordPage from '../changePassword';
 
 import EditProfile from "./EditProfile";
+import ProfileCard from "./ProfileOptions/ProfileCard";
+import ProfileAccordion from "./ProfileOptions/ProfileAccordion";
 
 export default function ProfilePage() {
   const auth = useContext(AuthContext);
@@ -34,19 +36,21 @@ export default function ProfilePage() {
   });
 
   return (
-    <>
+    <Container className="mt-5 pt-5">
       <Tabs
         id="controlled-tab"
         activeKey={key}
         onSelect={(k: any) => setKey(k)}
-        className="mb-3 d-flex justify-content-center"
+        className="mb-3 mt-5 pt-5 d-flex justify-content-center"
       >
         <Tab eventKey="profile" title="Profile">
-          <Container fluid>
+          <ProfileCard/>
+          <ProfileAccordion/>
+           {/* <Container fluid>
             <Row className="">
               <Card>
                 <div>
-                  {/* Settings */}
+                  /* Settings  
                   <Col
                     md={12}
                     className="rounded"
@@ -80,7 +84,7 @@ export default function ProfilePage() {
                       <Col md={{ offset: 2, span: 6 }}>
                         <p>Designation</p>
                       </Col>
-                      {/* Number */}
+                       Number 
                       <Col
                         md={{ offset: 2, span: 2 }}
                         className=" d-flex justify-content-end"
@@ -100,7 +104,7 @@ export default function ProfilePage() {
                     </div>
                   </Col>
 
-                  {/* About */}
+                   About 
                   <Col md={{ offset: 3, span: 6 }} className="mt-5">
                     <p className="lead">
                       Lorem Ipsum is simply dummy text of the printing and
@@ -108,7 +112,7 @@ export default function ProfilePage() {
                       standard dummy text ever since the 1500s, when an unknown
                     </p>
                   </Col>
-                  {/* Social Media, Link, Icon Share */}
+              
                   <Col md={12} className="mt-5">
                     <Row>
                       <Col md={{ offset: 0, span: 3 }}>
@@ -151,7 +155,7 @@ export default function ProfilePage() {
                 <EditProfile ref={editProfileComponent}></EditProfile>
               </Col>
             </Row>
-          </Container>
+          </Container> */}
         </Tab>
 
         <Tab eventKey="collaborations" title="Collaborations">
@@ -167,6 +171,6 @@ export default function ProfilePage() {
           <ChangePasswordPage />
         </Tab>
       </Tabs>
-    </>
+    </Container>
   );
 }

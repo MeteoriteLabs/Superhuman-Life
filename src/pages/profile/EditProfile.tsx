@@ -52,7 +52,7 @@ function EditProfile() {
     },
   });
 
-  function callEditProfilepage(r: any) {
+  function callEdit(r: any) {
     let id: any = "";
     let edId: any = "";
 
@@ -71,7 +71,7 @@ function EditProfile() {
     }
 
     console.log(profileData);
-    EditProfilepage();
+    Edit();
   }
 
   const [updateProfile] = useMutation(UPDATE_USER_PROFILE_DATA, {
@@ -79,17 +79,17 @@ function EditProfile() {
   });
 
   const [updateAddress] = useMutation(UPDATE_ADDRESS_DATA, {
-    onCompleted: callEditProfilepage,
+    onCompleted: callEdit,
   });
 
   const [createAddress] = useMutation(CREATE_ADDRESS, {
-    onCompleted: callEditProfilepage,
+    onCompleted: callEdit,
   });
   const [deleteAddress] = useMutation(DELETE_ADDRESS, {
     onCompleted: (data: any) => {},
   });
 
-  function EditAddressAndProfilePage(addressData) {
+  function EditAddressAnd(addressData) {
     let currentID = "";
 
     addressData.forEach((address: any) => {
@@ -114,7 +114,7 @@ function EditProfile() {
     }); //end forEach
   } //end EditAddressAndProfile function
 
-  function EditProfilepage() {
+  function Edit() {
     updateProfile({
       variables: {
         id: auth.userid,
@@ -133,10 +133,10 @@ function EditProfile() {
   }
 
   const [createEducationData] = useMutation(CREATE_EDUCATION_DETAILS, {
-    onCompleted: callEditProfilepage,
+    onCompleted: callEdit,
   });
   const [updateEducationData] = useMutation(UPDATE_EDUCATION_DETAILS, {
-    onCompleted: callEditProfilepage,
+    onCompleted: callEdit,
   });
   const [deleteEducationData] = useMutation(DELETE_EDUCATION_DETAILS, {
     onCompleted: (data: any) => {},
@@ -244,7 +244,7 @@ function EditProfile() {
     frm.addresses = [];
     frm.educational_details = [];
 
-    EditAddressAndProfilePage(addressData);
+    EditAddressAnd(addressData);
   }
 
   return (
