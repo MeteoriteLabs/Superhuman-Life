@@ -58,6 +58,7 @@ function CreateEditWorkout(props: any, ref: any) {
 
     function FillDetails(data: any) {
         const flattenData = flattenObj({...data});
+        console.log(flattenData);
         function handleAddWorkout(data: any) {
             if (data.workout_URL !== null) {
               return { AddWorkout: "Add URL", AddURL: data.workout_URL };

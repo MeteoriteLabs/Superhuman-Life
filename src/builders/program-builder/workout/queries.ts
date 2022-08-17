@@ -92,8 +92,10 @@ export const FETCH_FITNESSDISCPLINES = gql`
 `;
 
 export const GET_TABLEDATA = gql`
-  query WorkoutQuery($id: ID) {
-    workouts(filters: { users_permissions_user: { id: { eq: $id } } }) {
+  query fetchdata($id: ID!) {
+    workouts(filters: { users_permissions_user: { id: { eq: $id } } }, pagination: {
+      pageSize: 100
+    }) {
       data {
         id
         attributes {
@@ -101,6 +103,14 @@ export const GET_TABLEDATA = gql`
           intensity
           level
           updatedAt
+          About
+          Benifits
+          workout_URL
+          Workout_Video_ID
+          workout_text
+          warmup
+          cooldown
+          mainmovement
           calories
           users_permissions_user {
             data {
@@ -117,6 +127,7 @@ export const GET_TABLEDATA = gql`
           }
           muscle_groups {
             data {
+              id
               attributes {
                 name
               }

@@ -23,17 +23,28 @@ export default function EventsTab() {
     const handleShow = () => setShow(true);
 
     function CreateWorkout(_variables: {} = {id: auth.userid, details: frm}) {
-        console.log(frm, name);
+        frm.rawDiscipline = frm.rawDiscipline.map((item: any) => item.id).join(", ").split(", ");
+        frm.rawEquipment = frm.rawEquipment.map((item: any) => item.id).join(", ").split(", ");
+        frm.rawMuscleGroup = frm.rawMuscleGroup.map((item: any) => item.id).join(", ").split(", ");
+        console.log(frm);
         createWorkout({ variables: {
-            title: name,
-            fitnessdisciplines: frm.disciplineId.split(","),
-            duration_days: frm.duration,
-            events: frm.events,
-            Is_program: false,
+            workouttitle: name,
+            intensity: frm.intensity,
             level: frm.level,
-            description: frm.description,
-            users_permissions_user: frm.user
-        } });
+            fitnessdisciplines: frm.rawDiscipline,
+            About: frm.about,
+            Benifits: frm.benifits,
+            warmup: frm.warmup,
+            mainmovement: frm.mainmovement,
+            cooldown: frm.cooldown,
+            workout_text: frm.workout_text,
+            workout_URL: frm.workout_url,
+            Workout_Video_ID: frm.workout_video_id,
+            calories: frm.calories,
+            equipment_lists: frm.rawEquipment,
+            muscle_groups: frm.rawMuscleGroup,
+            users_permissions_user: frm.users_permissions_user
+        }});
     }
 
     const columns = useMemo<any>(() => [
@@ -101,19 +112,31 @@ export default function EventsTab() {
                 return {
                     id: detail.id,
                     workoutName: detail.workouttitle,
+                    rawDiscipline: detail.fitnessdisciplines,
                     discipline: detail.fitnessdisciplines.map((val: any) => {
                         return val.disciplinename;
                     }).join(", "),
                     level: detail.level,
                     intensity: detail.intensity,
                     calories: detail.calories,
+                    rawMuscleGroup: detail.muscle_groups,
                     muscleGroup: detail.muscle_groups.map((muscle: any) => {
                         return muscle.name;
                     }).join(", "),
+                    rawEquipment: detail.equipment_lists,
                     equipment: detail.equipment_lists.map((equipment: any) => {
                         return equipment.name
                     }).join(", "),
-                    updatedOn: getDate(Date.parse(detail.updatedAt))
+                    updatedOn: getDate(Date.parse(detail.updatedAt)),
+                    about: detail.About,
+                    benifits: detail.Benifits,
+                    users_permissions_user: detail.users_permissions_user.id,
+                    workout_url: detail.workout_URL,
+                    workout_text: detail.workout_text,
+                    warmup: detail.warmup,
+                    mainmovement: detail.mainmovement,
+                    cooldown: detail.cooldown,
+                    workout_video_id: detail.Workout_Video_ID
                 }
             })
         )
