@@ -5,7 +5,6 @@ import { useQuery } from "@apollo/client";
 import { FETCH_USER_PROFILE_DATA } from "../../queries/queries";
 import ChangePasswordPage from '../../../changePassword/changePassword.json';
 import DisplayImage from '../../../../components/DisplayImage/index';
-import UploadImageToS3WithNativeSdk from '../../../../components/upload/upload';
 
 export default function ProfileCard() {
     const auth = useContext(AuthContext);
@@ -23,15 +22,16 @@ export default function ProfileCard() {
     if(profileData) {
         console.log('photo id', profileData.Photo_ID);
     }
+
     return (
         <>
-            {/* <UploadImageToS3WithNativeSdk/> */}
             <Container className="justify-content-center w-75 rounded ">
                 <Container className="bg-dark w-75 rounded">
                     <Row className="justify-content-end p-3"><img src="assets/profile_icons/share.svg" alt="share" height="20" /></Row>
                     <Row>
-                        <DisplayImage/>
-
+                        <Col className="ml-3">
+                          <DisplayImage imageName="003555c1-b07e-4edc-89dd-7e32d49fb237" defaultImageUrl="assets/image_placeholder.svg"/>
+                        </Col>
                         <Col>
                             <Row className="text-white"><h3>{profileData
                                 ? `${profileData.First_Name} ${profileData.Last_Name}`
