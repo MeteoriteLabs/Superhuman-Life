@@ -70,6 +70,7 @@ const SchedulerEvent = (props: any) => {
      useEffect(() => {
           handleRenderTable([]);
      }, [props.programEvents]); // eslint-disable-line react-hooks/exhaustive-deps
+
      
      if (!show) return <span style={{ color: 'red' }}>Loading...</span>;
      else return (
@@ -77,7 +78,7 @@ const SchedulerEvent = (props: any) => {
                <div>
                     <div style={{ overflow: 'auto', border: '1px solid black', maxHeight: '300px'}} className="schedular mt-5 mb-3">
                     <div className="day-row">
-                         {props.days.map(val => {
+                         {props?.days?.map(val => {
                               return (
                                    <div className="cell" style={{ backgroundColor: 'white'}}>{`${val}`}</div>
                               )

@@ -7,6 +7,7 @@ import AuthContext from "../../../context/auth-context";
 import ActionButton from "../../../components/actionbutton";
 import CreateEditExercise from "./createoredit-exercise";
 import {flattenObj} from '../../../components/utils/responseFlatten';
+import moment from 'moment';
 
 
 export default function EventsTab() {
@@ -69,6 +70,7 @@ export default function EventsTab() {
 
     function loadData(data: any) {
         const flattenData = flattenObj({...data});
+        console.log(flattenData);
         setTableData(
             [...flattenData.exercises].map((detail) => {
                 return {
@@ -84,7 +86,7 @@ export default function EventsTab() {
                     equipment: detail.equipment_lists.map((equipment: any) => {
                         return equipment.name
                     }).join(", "),
-                    updatedOn: getDate(Date.parse(detail.updatedAt)),
+                    updatedOn: moment(getDate(Date.parse(detail.updatedAt))).format("Do MMM YYYY"),
                     type: (detail.exercisetext) ? "Text": "Video" ,
                 }
             })

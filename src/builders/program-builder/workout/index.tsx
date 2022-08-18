@@ -7,6 +7,7 @@ import AuthContext from "../../../context/auth-context";
 import ActionButton from "../../../components/actionbutton";
 import CreateEditWorkout from "./createoredit-workout";
 import {flattenObj} from '../../../components/utils/responseFlatten';
+import moment from 'moment';
 
 export default function EventsTab() {
 
@@ -127,7 +128,7 @@ export default function EventsTab() {
                     equipment: detail.equipment_lists.map((equipment: any) => {
                         return equipment.name
                     }).join(", "),
-                    updatedOn: getDate(Date.parse(detail.updatedAt)),
+                    updatedOn: moment(getDate(Date.parse(detail.updatedAt))).format("Do MMM YYYY"),
                     about: detail.About,
                     benifits: detail.Benifits,
                     users_permissions_user: detail.users_permissions_user.id,

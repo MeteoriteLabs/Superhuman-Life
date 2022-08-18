@@ -7,6 +7,7 @@ import AuthContext from "../../../context/auth-context";
 import ActionButton from "../../../components/actionbutton";
 import CreateEditProgram from './createoredit-program';
 import {flattenObj} from '../../../components/utils/responseFlatten';
+import moment from 'moment';
 
 export default function EventsTab() {
 
@@ -116,7 +117,7 @@ export default function EventsTab() {
                     duration: detail.duration_days,
                     description: detail.description,
                     user: detail.users_permissions_user.id,
-                    updatedOn: getDate(Date.parse(detail.updatedAt))
+                    updatedOn: moment(getDate(Date.parse(detail.updatedAt))).format("Do MMM YYYY")
                 }
             })
         )

@@ -5,7 +5,6 @@ export const GET_TABLEDATA = gql`
     fitnessprograms(
       filters: {
         users_permissions_user: { id: { eq: $id } }
-        Is_program: { eq: false }
       }
     ) {
       data {
@@ -14,7 +13,6 @@ export const GET_TABLEDATA = gql`
           title
           description
           updatedAt
-          events
           duration_days
           level
           users_permissions_user {
@@ -74,9 +72,9 @@ export const CREATE_PROGRAM = gql`
     $duration_days: Int!
     $level: ENUM_FITNESSPROGRAM_LEVEL
     $description: String
-    $events: JSON
-    $renewal_dt: Int
     $users_permissions_user: ID!
+    $startdate: Date
+    $enddate: Date
   ) {
     createFitnessprogram(
       data: {
@@ -85,18 +83,13 @@ export const CREATE_PROGRAM = gql`
         duration_days: $duration_days
         level: $level
         description: $description
-        Is_program: false
-        renewal_dt: $renewal_dt
-        events: $events
         users_permissions_user: $users_permissions_user
+        start_date: $startdate
+        end_date: $enddate
       }
     ) {
       data {
         id
-        attributes {
-          title
-          Is_program
-        }
       }
     }
   }
@@ -110,6 +103,8 @@ export const UPDATE_PROGRAM = gql`
     $level: ENUM_FITNESSPROGRAM_LEVEL
     $description: String
     $programid: ID!
+    $startdate: Date
+    $enddate: Date
   ) {
     updateFitnessprogram(
       id: $programid
@@ -119,6 +114,8 @@ export const UPDATE_PROGRAM = gql`
         duration_days: $duration_days
         level: $level
         description: $description
+        start_date: $startdate
+        end_date: $enddate
       }
     ) {
       data {
