@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import { Button } from 'react-bootstrap';
 import TextEditor from '../../../components/customWidgets/textEditor';
 import ExerciseList from '../../../components/customWidgets/exerciseList';
@@ -18,8 +18,30 @@ const Build = (props: any) => {
      var mainmovement: any = {};
      var cooldown: any = {};
 
+     useEffect(() => {
+          if(props.value !== null && props.value !== undefined){
+               console.log(props);
+               if(props?.value[0]?.type === 'upload'){
+                    setUploadFields(props.value);
+                    setCurrentTab('upload');
+               }
+               if(props?.value[0]?.type === 'text'){
+                    setTextFields(props.value);
+                    setCurrentTab('text');
+               }
+               if(props?.value[0]?.type === 'exercise'){
+                    setExerciseFields(props.value);
+                    setCurrentTab('exercise');
+               }
+               if(props?.value[0]?.type === 'url'){
+                    setUrlFields(props.value);
+                    setCurrentTab('url');
+               }
+          }
+     }, [props]);
+
+
      function handleUploadFieldChange(i: any, event: any){
-          console.log(i, event);
           const values = [...uploadFields];
           values[i].type = "upload";
           values[i].value = event;
@@ -111,7 +133,6 @@ function OnChangeExercise(data: any){
 }
 
 function OnChangeText(data: any){
-     console.log(data);
      if(props.buildId === 1){
           warmup = data;
           props.onChange(warmup);
@@ -158,7 +179,7 @@ function OnChangeUpload(data: any){
                               <span className="ml-2" style={{fontSize: '18px'}}>Exercise <i className="far fa-trash-alt float-right"
                                    style={{ color: 'red', cursor: 'pointer'}}
                               onClick={() => {handleExerciseFieldRemove(idx); setCurrentTab(null);}}></i></span>
-                              <ExerciseList onChange={OnChangeExercise}/>
+                              <ExerciseList onChange={OnChangeExercise} value={exerciseFields.length > 0 && exerciseFields}/>
                          </div>
                     );
                })}
@@ -169,7 +190,7 @@ function OnChangeUpload(data: any){
                               <span>Add Text <i className="far fa-trash-alt float-right"
                                    style={{ color: 'red', cursor: 'pointer'}}
                               onClick={() => {handleTextFieldRemove(idx); setCurrentTab(null);}}></i></span>
-                              <TextEditor onChangebuild={OnChangeText} type="build"/>
+                              <TextEditor onChangebuild={OnChangeText} type="build" val={textFields.length > 0 && textFields[0]?.value}/>
                          </div>
                     );
                })}
@@ -180,18 +201,18 @@ function OnChangeUpload(data: any){
                               <span>Add URL <i className="far fa-trash-alt float-right"
                                    style={{ color: 'red', cursor: 'pointer'}}
                               onClick={() => {handleUrlFieldRemove(idx); setCurrentTab(null);}}></i></span>
-                              <URLlist onChange={OnChangeURL} id={idx} field={urlFields}/>
+                              <URLlist onChange={OnChangeURL} id={idx} field={urlFields} />
                          </div>
                     );
                })}
                {uploadFields.map((field, idx) => {
                     return (
                          <div key={`${field}-${idx}`} className="m-2">
-                              <Upload allowImage={false} allowVideo={true} value={props.value} onChange={(e) => {
+                              <Upload allowImage={true} allowVideo={true} value={uploadFields.length > 0 && uploadFields[0]?.value} onChange={(e) => {
                                    console.log(e);
-                                   if(e !== null){
+                                   if(e !== null && e !== uploadFields[0]?.value){
                                         handleUploadFieldChange(idx, e);
-                                        OnChangeUpload(uploadFields);
+                                        OnChangeUpload(uploadFields);    
                                    }
                               }}/>
                               {/* <input type="file" id="myFile" name="filename" onChange={e => {handleUploadFieldChange(idx, e);
