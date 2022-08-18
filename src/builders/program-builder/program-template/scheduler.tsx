@@ -248,7 +248,7 @@ const Schedular = (props: any) => {
         }
     }
 
-    // this is for testing purposes.
+    // this is for testing purposes chaning to using day
     function handleTemplateTable(data: any){
         for (var d = 1; d <= props.days; d++) {
             arr[d] = JSON.parse(JSON.stringify(schedulerDay));
