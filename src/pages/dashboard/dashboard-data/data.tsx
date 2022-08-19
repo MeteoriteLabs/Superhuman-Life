@@ -2,7 +2,7 @@ export const ImageCaptions = [
     {
         image:"assets/lobby_images/insights.svg",
         color: "#A9A9A9",
-        link: "/lobby",
+        link: "/insights",
         imageWidth: "55px",
         id:1
     },
@@ -35,6 +35,13 @@ export const ImageCaptions = [
         link: "/support",
         imageWidth: "55px",
         id:5
+    },
+    {
+        image:"assets/lobby_images/learn.svg",
+        color: "#0D6EBA",
+        link: "/support",
+        imageWidth: "55px",
+        id:6
     },
     
 ]

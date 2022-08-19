@@ -10,7 +10,7 @@ export default function SessionPage() {
             <Card className="shadow-sm mt-3" border="light">
                 <Card.Body>
                     <Tabs style={{borderBottom: "1px solid black"}} className="pb-3" variant="pills" transition={false} defaultActiveKey="fiteness">
-                        <Tab eventKey="fiteness" title="Fiteness">
+                        <Tab eventKey="fiteness" title="Fitness">
                             <Fitness/>
                         </Tab>
                         <Tab eventKey="nutrition" title="Nutrition">

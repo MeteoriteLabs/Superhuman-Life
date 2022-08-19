@@ -1,51 +1,79 @@
-import { useContext } from "react";
+import React from "react";
+import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 import {
   Container,
-  DropdownButton,
-  Dropdown,
   Nav,
   Navbar,
+  NavDropdown,
+  Row,
+  Alert
 } from "react-bootstrap";
-import authContext from "../../context/auth-context";
 import { MiniLobbyComponent } from "../../pages/dashboard/mini-lobby/LobbyPopover";
+import { NotificationOption } from "./NavbarOptions/Notifications";
+import { ProfileOption } from "./NavbarOptions/ProfileOption";
+import ToggleSideBarMenu from "./NavbarOptions/ToggleSideBarMenu";
+import './topNavbar.css';
 
 export function AuthenticatedNav() {
-  const auth = useContext(authContext);
+  const [sideNavStatus, setSideNavStatus] = useState<boolean>(false);
+
+  const { pathname } = useLocation<any>();
+
+  useEffect(() => {
+    getSideNavStatus();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname]);
+
+  const getSideNavStatus = () => {
+    const currentSideNavStatus: boolean =
+      pathname !== "/lobby" && pathname !== "/website" && pathname !== "/insights" && pathname !== "/support" && pathname !== "/profile" ? true : false;
+    setSideNavStatus(currentSideNavStatus);
+  };
 
   return (
-    <Navbar bg="dark" className="shadow-sm" expand="lg" fixed="top">
-      <Navbar.Brand col-sm href="/" className="text-white">
+    <Navbar bg="dark" className="shadow-sm top__navbar" expand="lg" fixed="top" variant="dark">
+      <Navbar.Brand col-sm="true" href="/" className="text-white">
         <img className="d-inline-block align-top" src="/logo.svg" alt="brand" />
       </Navbar.Brand>
-      <Navbar.Toggle aria-controls="navbar" />
+      <Navbar.Toggle aria-controls="navbar"/>
       <Navbar.Collapse className="justify-content-end" id="navbar">
         <Nav className="d-lg-none">
-          <NavLink className="nav-link" to="/home">
+          <NavLink className="nav-link text-white" to="/home">
             Home
           </NavLink>
-          <NavLink className="nav-link" to="/chats">
-            Chats
+          <NavLink className="nav-link text-white" to="/schedule">
+            My Schedule
           </NavLink>
-          <NavLink className="nav-link" to="/clients">
+          <NavLink className="nav-link text-white" to="/session">
+            Session Manager
+          </NavLink>
+          <NavLink className="nav-link text-white" to="/clients">
             Clients
           </NavLink>
-          <NavLink className="nav-link" to="/packages">
-            Packages
+          <NavLink className="nav-link text-white" to="/bookings">
+            Bookings
           </NavLink>
-          <NavLink className="nav-link" to="/profile">
-            Profile
+          <NavLink className="nav-link text-white" to="/offerings">
+            Offerings
           </NavLink>
-          <NavLink className="nav-link" to="/resources">
+          <NavLink className="nav-link text-white" to="/resources">
             Resources
           </NavLink>
-          <NavLink className="nav-link" to="/schedule">
-            Schedule
+          <NavLink className="nav-link text-white" to="/finances">
+            Finances
           </NavLink>
-          <NavLink className="nav-link" to="/settings">
+          <NavLink className="nav-link text-white" to="/communication">
+            Communication
+          </NavLink>
+          <NavLink className="nav-link text-white" to="/settings">
             Settings
           </NavLink>
-          <Nav.Link>Logout</Nav.Link>
+          <NavLink className="nav-link text-white" to="/profile">
+            Profile
+          </NavLink>
+          <Nav.Link className="text-white">Logout</Nav.Link>
         </Nav>
       </Navbar.Collapse>
       <Nav.Item className="d-none d-lg-block">
@@ -80,6 +108,7 @@ export function AuthenticatedNav() {
   );
 }
 
+// unauthorised user
 export function UnauthenticatedNav() {
   return (
     <Navbar bg="light" className="shadow-sm" expand="lg">
@@ -109,5 +138,6 @@ export function UnauthenticatedNav() {
         </Navbar.Collapse>
       </Container>
     </Navbar>
+
   );
 }
