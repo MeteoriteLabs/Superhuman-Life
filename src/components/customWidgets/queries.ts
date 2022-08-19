@@ -213,3 +213,18 @@ query getTimezones{
   }
 }
 `
+
+export const GET_EQUIPMENTLIST = gql`
+  query equipmentListQuery{
+    equipmentLists(pagination: {
+      pageSize:100
+    }){
+      data{
+        id
+        attributes{
+          name
+        }
+      }
+    }
+  }
+`

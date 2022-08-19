@@ -60,6 +60,8 @@ function CreateEditExercise(props: any, ref: any) {
               return { AddExercise: "Text", AddText: msg.exercisetext };
             } else if (msg.exerciseurl !== null) {
               return { AddExercise: "Add URL", AddURL: msg.exerciseurl };
+            }else if (msg.exerciseupload !== null){
+                return { AddExercise: "Upload", Upload: msg.exerciseupload };
             }
           }
 
@@ -105,6 +107,7 @@ function CreateEditExercise(props: any, ref: any) {
             exerciseminidescription: frm.miniDescription,
             exercisetext: (!frm.addExercise.AddText ? null : frm.addExercise.AddText),
             exerciseurl: (!frm.addExercise.AddURL ? null: frm.addExercise.AddURL),
+            exerciseupload: (!frm.addExercise.Upload ? null : frm.addExercise.Upload),
             equipment_lists: frm.equipment.split(","),
             exercisemusclegroups: frm.muscleGroup.split(","),
             users_permissions_user: frm.user_permissions_user

@@ -25,6 +25,8 @@ const FloatingButton = (props: any) => {
      const [renewalDate, setRenewalDate] = useState("");
      const program_id = window.location.pathname.split('/').pop();
 
+     console.log(window.location.pathname.split('/'));
+
      function FetchData() {
           useQuery(GET_SCHEDULEREVENTS, { variables: { id: program_id }, onCompleted: (e: any) => { 
                const flattenData = flattenObj({...e});

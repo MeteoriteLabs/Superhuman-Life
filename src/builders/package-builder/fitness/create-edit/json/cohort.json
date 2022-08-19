@@ -48,7 +48,9 @@
            "About",
            "Benifits",
            "languages",
-           "classSize"
+           "classSize",
+           "upload",
+           "thumbnail"
        ],
        "properties": {
             "About": {
@@ -67,15 +69,11 @@
                 "type": "number",
                 "title": "Class Size"
             },
-            "UploadPicture": {
-                "type": "string",
-                "format": "data-url",
-                "title": "Upload a Intro Picture"
+            "thumbnail": {
+                "type": "string"
             },
-            "UploadVideo": {
-                "type": "string",
-                "format": "data-url",
-                "title": "Upload a Intro Video"
+            "upload": {
+                "type": "string"
             },
             "VideoUrl": {
                 "type": "string",

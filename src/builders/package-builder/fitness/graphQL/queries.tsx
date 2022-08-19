@@ -1,11 +1,11 @@
 import { gql } from "@apollo/client";
 
 export const GET_ADDRESS = gql`
-  query fitnessdisciplines {
-    addresses {
-      data {
+  query fitnessdisciplines($userId: ID) {
+    addresses(filters:{users_permissions_user: {id: {eq: $userId}}}){
+      data{
         id
-        attributes {
+        attributes{
           address1
           address2
           city
@@ -103,7 +103,6 @@ export const GET_SINGLE_PACKAGE_BY_ID = gql`
           level
           aboutpackage
           benefits
-          introvideo
           mode
           languages
           Start_date
@@ -115,6 +114,16 @@ export const GET_SINGLE_PACKAGE_BY_ID = gql`
           grouponline
           recordedclasses
           bookingleadday
+          Upload_ID
+          Thumbnail_ID
+          equipment_lists{
+            data{
+              id
+              attributes{
+                name
+              }
+            }
+          }
           restdays
           bookingleadtime
           groupstarttime

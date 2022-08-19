@@ -1,8 +1,3 @@
-@media screen and (min-width: 320px) and (max-width: 480px) {
-    img{
-       width: 200px;
-       height: 60px;
-       object-fit: contain;
-    }
-    
+#collasible-nav-dropdown::after{
+    display: none;
 }

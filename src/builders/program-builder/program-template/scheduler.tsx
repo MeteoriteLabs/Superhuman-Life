@@ -248,9 +248,39 @@ const Schedular = (props: any) => {
         }
     }
 
+    // this is for testing purposes.
+    function handleTemplateTable(data: any){
+        for (var d = 1; d <= props.days; d++) {
+            arr[d] = JSON.parse(JSON.stringify(schedulerDay));
+        }
+
+        if (data?.length > 0) {
+            data?.forEach((val) => {
+                var startTimeHour: any = `${val.start_time === null ? '0' : val.start_time.split(':')[0]}`;
+                var startTimeMinute: any = `${val.start_time === null ? '0' : val.start_time.split(':')[1]}`;
+                var endTimeHour: any = `${val.end_time === null ? '0' : val.end_time.split(':')[0]}`;
+                var endTimeMin: any = `${val.end_time === null ? '0' : val.end_time.split(':')[1]}`;
+                if (!arr[val.day_of_program][startTimeHour][startTimeMinute]) {
+                    arr[val.day_of_program][startTimeHour][startTimeMinute] = [];
+                }
+                arr[val.day_of_program][startTimeHour][startTimeMinute].push({
+                    "title": val.activity === null ? val.workout.workouttitle : val.activity.title, "color": "skyblue",
+                    "day": val.day_of_program, "hour": startTimeHour, "min": startTimeMinute, "type": val.type,
+                    "endHour": endTimeHour, "endMin": endTimeMin, "id": val.activity === null ? val.workout.id : val.activity.id, "mode": val.mode,
+                    "tag": val.tag, "sessionId": val.id, "activityTarget": val.activity === null ? null : val.activity_target, "sessionDate": val.session_date,
+                });
+                debugger;
+                console.log(arr[val.day_of_program])
+            })
+        }
+    }
+
 
     function handleRenderTable(data: any) {
         const flattenData = flattenObj({...data});
+        if(window.location.pathname.split('/')[1] === 'programs'){
+            handleTemplateTable(props?.templateSessions);
+        }
         const sessionsExistingValues = [...sessionIds];
         for(var q=0; q<flattenData.tags[0]?.sessions.length; q++){
             sessionsExistingValues.push(flattenData.tags[0]?.sessions[q].id);
@@ -1145,7 +1175,7 @@ const Schedular = (props: any) => {
             return (
                 days.map(val => {
                     return (
-                        <div className="cell" style={{ backgroundColor: `${handleRestDays(val)}` }}>{`Day ${val}`}</div>
+                        <div className="cell" style={{ backgroundColor: `${handleRestDays(val)}`, minHeight: '70px' }}>{`Day ${val}`}</div>
                     )
                 })
             )
@@ -1178,6 +1208,8 @@ const Schedular = (props: any) => {
     function handleRefetch(){
         mainQuery.refetch();
     }
+
+    console.log(arr);
 
     if (!show) {
         return <div className="text-center">

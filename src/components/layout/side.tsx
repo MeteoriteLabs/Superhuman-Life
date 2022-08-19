@@ -14,12 +14,6 @@ import SettingsIcon from "./Icons/Settings.svg";
 export function SideNav({ collapse, setCollapse }: any) {
   return (
     <aside style={{ position: 'fixed', height: '100%' }} className="bg-dark">
-      {/* <div className="text-center">
-        <NavLink className="navbar-brand" to="/profile">
-          <img src="/assets/avatar-1.jpg" height="42" className="rounded-circle" alt="profile" />
-        </NavLink>
-        <p>John Doe<br /><small className="text-muted">Fitness Coach</small></p>
-      </div> */}
       <hr />
       <Nav className="flex-column">
         <NavLink className="nav-link text-white" to="/home">
@@ -43,9 +37,6 @@ export function SideNav({ collapse, setCollapse }: any) {
         <NavLink className="nav-link text-white" to="/resources">
           <img src={ResourcesIcon} alt="resources icon" className="mr-sm-2" style={{height: '25px', width: '25px'}}/>{!collapse && "Resources"}
         </NavLink>
-        {/* <NavLink className="nav-link text-white" to="/chats">
-          <i className="far fa-comment-alt mr-sm-2"></i>{!collapse && "Chats"}
-        </NavLink> */}
         <NavLink className="nav-link text-white" to="/finance">
           <img src={FinancesIcon} alt="finances icon" className="mr-sm-2" style={{height: '20px', width: '20px'}}/>{!collapse && "Finances"}
         </NavLink>

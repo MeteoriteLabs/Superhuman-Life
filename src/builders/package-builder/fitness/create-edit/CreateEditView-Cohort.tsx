@@ -115,6 +115,8 @@ function CreateEditCohort(props: any, ref: any) {
         // {addressTag: addressTitle, address: singleSelections, mode: mode, residential: residential}
         details.courseDetails = courseDetails;
         details.programDetails = JSON.stringify({addressTag: msg.address === null ? 'At Client Address' : 'At My Address', address: msg.address, mode: ENUM_FITNESSPACKAGE_MODE[msg.mode], residential: ENUM_FITNESSPACKAGE_RESIDENTIAL_TYPE[msg.residential_type]});
+        details.thumbnail = msg.Thumbnail_ID;
+        details.upload = msg.Upload_ID;
         // let msg = data;
         // console.log(msg);
         setProgramDetails(details);
@@ -170,7 +172,9 @@ function CreateEditCohort(props: any, ref: any) {
                 languages: frm.languages,
                 Start_date: moment(frm.startDate).toISOString(),
                 End_date: moment(frm.endDate).toISOString(),
-                Course_details: frm.courseDetails.details
+                Course_details: frm.courseDetails.details,
+                thumbnail: frm.thumbnail,
+                upload: frm.upload
             }
         })
     }
@@ -202,7 +206,9 @@ function CreateEditCohort(props: any, ref: any) {
                 languages: frm.languages,
                 Start_date: moment(frm.startDate).toISOString(),
                 End_date: moment(frm.endDate).toISOString(),
-                Course_details: frm.courseDetails.details
+                Course_details: frm.courseDetails.details,
+                thumbnail: frm.thumbnail,
+                upload: frm.upload
             }
         })
     }

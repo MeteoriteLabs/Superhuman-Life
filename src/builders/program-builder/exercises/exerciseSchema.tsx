@@ -2,12 +2,14 @@ import TextEditor from "../../../components/customWidgets/textEditor";
 import EquipmentSearch from "../../../components/customWidgets/equipmentList";
 import MuscleGroupSearch from "../../../components/customWidgets/muscleGroupList";
 import FitnessSelect from "../../../components/customWidgets/fitnessSelect";
+import Upload from '../../../components/upload/upload';
 
 export const widgets = {
   fitnessSelect: FitnessSelect,
   equipmentSearch: EquipmentSearch,
   muscleGroupSearch: MuscleGroupSearch,
   textEditor: TextEditor,
+  upload: Upload
 };
 
 export const schema: any = {
@@ -43,8 +45,8 @@ export const schema: any = {
       "ui:widget": "textEditor",
     },
     Upload: {
-      "ui:options": {
-        accept: ".mp4",
+      "ui:widget": (props: any) => {
+        return <Upload allowImage={true} allowVideo={true} onChange={props.onChange} value={props.value} />;
       },
     },
   },
