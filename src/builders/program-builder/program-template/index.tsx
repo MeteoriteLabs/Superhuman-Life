@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useQuery } from "@apollo/client";
 import { GET_TABLEDATA } from './queries';
 import { Row, Col } from 'react-bootstrap';
-import Schedular from './scheduler';
+import Scheduler from './scheduler';
 import { flattenObj } from '../../../components/utils/responseFlatten';
 
 const ProgramManager = (props: any) => {
@@ -22,6 +22,7 @@ const ProgramManager = (props: any) => {
 
     function loadData(data: any) {
         const flattenData = flattenObj({...data});
+        console.log(flattenData);
         setData(
             [...flattenData.fitnessprograms].map((detail) => {
                 return {
@@ -33,7 +34,8 @@ const ProgramManager = (props: any) => {
                     level: detail.level,
                     duration: detail.duration_days,
                     details: detail.description,
-                    restDays: detail.rest_days
+                    restDays: detail.rest_days,
+                    sessions: detail.sessions
                 }
             })
         )
@@ -61,7 +63,7 @@ const ProgramManager = (props: any) => {
                         </Col>
                     </div>
                     <div className="mt-5">
-                        <Schedular days={data[0].duration} restDays={data[0].restDays} programId={last} />
+                        <Scheduler templateSessions={data[0].sessions} days={data[0].duration} type={'day'} restDays={data[0].restDays} programId={last} />
                     </div>
                 </Col>
             </Row>

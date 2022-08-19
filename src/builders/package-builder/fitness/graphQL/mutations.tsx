@@ -7,7 +7,6 @@ export const CREATE_PACKAGE = gql`
     $level: ENUM_FITNESSPACKAGE_LEVEL
     $aboutpackage: String
     $benefits: String
-    $introvideourl: String
     $mode: ENUM_FITNESSPACKAGE_MODE
     $address: ID
     $disciplines: [ID]
@@ -28,6 +27,10 @@ export const CREATE_PACKAGE = gql`
     $users_permissions_user: ID!
     $publishing_date: DateTime
     $expiry_date: DateTime
+    $thumbnail: String
+    $upload: String
+    $equipmentList: [ID]
+
   ) {
     createFitnesspackage(
       data:{
@@ -36,7 +39,6 @@ export const CREATE_PACKAGE = gql`
         level: $level
         aboutpackage: $aboutpackage
         benefits: $benefits
-        introvideo: $introvideourl
         mode: $mode
         address: $address
         fitnessdisciplines: $disciplines
@@ -57,6 +59,9 @@ export const CREATE_PACKAGE = gql`
         users_permissions_user: $users_permissions_user
         publishing_date: $publishing_date
         expiry_date: $expiry_date
+        Thumbnail_ID: $thumbnail
+        Upload_ID: $upload
+        equipment_lists: $equipmentList
       }
     ) {
       data{
@@ -115,6 +120,9 @@ export const EDIT_PACKAGE = gql`
     $users_permissions_user: ID!
     $publishing_date: DateTime
     $expiry_date: DateTime
+    $thumbnail: String
+    $upload: String
+    $equipmentList: [ID]
   ) {
     updateFitnesspackage(
         id: $id
@@ -148,6 +156,9 @@ export const EDIT_PACKAGE = gql`
           users_permissions_user: $users_permissions_user
           Status: $Status
           is_private: $is_private
+          Thumbnail_ID: $thumbnail
+          Upload_ID: $upload
+          equipment_lists: $equipmentList
       }
     ) {
       data{
@@ -248,6 +259,32 @@ export const UPDATE_CHANNEL_COHORT_PACKAGE = gql`
         }
       }
   }
+`;
+
+export const CREATE_ADDRESS = gql`
+  mutation createAddress(
+    $address: String,
+    $city: String,
+    $country: String,
+    $state: String,
+    $zipcode: String
+    $title: String
+    $users_permissions_user: ID
+  ) {
+    createAddress(data: {
+      address1: $address,
+      city: $city,
+      state: $state,
+      country: $country,
+      zipcode: $zipcode,
+      Title: $title,
+      users_permissions_user: $users_permissions_user
+    }){
+      data{
+        id
+      }
+    }
+  }
 `
 
 export const CREATE_CHANNEL_PACKAGE = gql`
@@ -272,6 +309,9 @@ export const CREATE_CHANNEL_PACKAGE = gql`
     $End_date: DateTime
     $Start_date: DateTime
     $Course_details: JSON
+    $thumbnail: String
+    $upload: String
+    $equipmentList: [ID]
   ){
     createFitnesspackage(data: {
       aboutpackage: $aboutpackage,
@@ -294,6 +334,9 @@ export const CREATE_CHANNEL_PACKAGE = gql`
       Start_date: $Start_date
       End_date: $End_date
       Course_details: $Course_details
+      Thumbnail_ID: $thumbnail
+      Upload_ID: $upload
+      equipment_lists: $equipmentList
     }){
       data{
         id

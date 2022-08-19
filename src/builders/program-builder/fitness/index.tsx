@@ -14,7 +14,7 @@ export default function FitnessTab(){
                           <Tab eventKey="workout" title="Workout">
                                 <WorkoutTab />
                           </Tab>
-                          <Tab eventKey="program" title="Program">
+                          <Tab eventKey="program" title="Program Template">
                               <ProgramTab />
                           </Tab>
                       </Tabs>

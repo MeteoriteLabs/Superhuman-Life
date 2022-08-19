@@ -7,6 +7,7 @@ import AuthContext from "../../../context/auth-context";
 import ActionButton from "../../../components/actionbutton";
 import CreateEditProgram from './createoredit-program';
 import {flattenObj} from '../../../components/utils/responseFlatten';
+import moment from 'moment';
 
 export default function EventsTab() {
 
@@ -22,8 +23,8 @@ export default function EventsTab() {
     const [frm, setFrm] = useState<any>();
     const [createProgram] = useMutation(CREATE_PROGRAM, {onCompleted: () => {refetchQueryCallback()}});
 
-     const handleClose = () => setShow(false);
-     const handleShow = () => setShow(true);
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
 
     function CreateProgram(_variables: {} = {id: auth.userid, details: frm}) {
         createProgram({ variables: {
@@ -116,7 +117,7 @@ export default function EventsTab() {
                     duration: detail.duration_days,
                     description: detail.description,
                     user: detail.users_permissions_user.id,
-                    updatedOn: getDate(Date.parse(detail.updatedAt))
+                    updatedOn: moment(getDate(Date.parse(detail.updatedAt))).format("Do MMM YYYY")
                 }
             })
         )

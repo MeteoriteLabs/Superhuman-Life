@@ -1,0 +1,12 @@
+@media screen and (min-width: 481px) and (max-width: 768px) {
+   .dropdown-menu{
+      width: 100%;
+   }
+} 
+
+@media screen and (min-width: 320px) and (max-width: 480px) {
+     
+   .dropdown-menu{
+      width: 100%;
+   }
+}

@@ -7,10 +7,27 @@ export const FETCH_USER_PROFILE_DATA = gql`
         attributes {
           First_Name
           Last_Name
-
+          email
           Phone_Number
           Photo_ID
           About_User
+          Website_URL
+          designations{
+            data{
+              id
+              attributes{
+                Designation_title
+                description
+              }
+            }
+          }
+          addresses{
+            data{
+              attributes{
+                city
+              }
+            }
+          }
           instagram_url
           Facebook_URL
           Youtube_URL

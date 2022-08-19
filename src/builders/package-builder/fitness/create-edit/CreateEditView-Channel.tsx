@@ -80,7 +80,6 @@ function CreateEditChannel(props: any, ref: any) {
     function FillDetails(data: any) {
         const flattenData = flattenObj({...data});
         let msg: any = flattenData.fitnesspackages[0];
-        console.log(msg);
         let booking: any = {};
         let details: any = {};
         details.About = msg.aboutpackage;
@@ -98,6 +97,8 @@ function CreateEditChannel(props: any, ref: any) {
         booking.maxBookingDay = msg.booking_config.bookingsPerDay;
         booking.maxBookingMonth = msg.booking_config.BookingsPerMonth;
         details.config = booking;
+        details.thumbnail = msg.Thumbnail_ID;
+        details.upload = msg.Upload_ID;
         // details.visibility = 
         // let msg = data;
         // console.log(msg);
@@ -135,7 +136,9 @@ function CreateEditChannel(props: any, ref: any) {
                 tags: frm.tag,
                 users_permissions_user: frm.user_permissions_user,
                 fitness_package_type: findPackageType(operation.packageType),
-                is_private: frm.visibility === 0 ? false : true
+                is_private: frm.visibility === 0 ? false : true,
+                thumbnail: frm.thumbnail,
+                upload: frm.upload
             }
         })
     }
@@ -158,7 +161,9 @@ function CreateEditChannel(props: any, ref: any) {
                 tags: frm.tag,
                 users_permissions_user: frm.user_permissions_user,
                 fitness_package_type: findPackageType(operation.packageType),
-                is_private: frm.visibility === 0 ? false : true
+                is_private: frm.visibility === 0 ? false : true,
+                thumbnail: frm.thumbnail,
+                upload: frm.upload
             }
         })
     }

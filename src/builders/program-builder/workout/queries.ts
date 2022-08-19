@@ -13,6 +13,7 @@ export const FETCH_DATA = gql`
           About
           Benifits
           workout_URL
+          Workout_Video_ID
           workout_text
           warmup
           cooldown
@@ -91,8 +92,10 @@ export const FETCH_FITNESSDISCPLINES = gql`
 `;
 
 export const GET_TABLEDATA = gql`
-  query WorkoutQuery($id: ID) {
-    workouts(filters: { users_permissions_user: { id: { eq: $id } } }) {
+  query fetchdata($id: ID!) {
+    workouts(filters: { users_permissions_user: { id: { eq: $id } } }, pagination: {
+      pageSize: 100
+    }) {
       data {
         id
         attributes {
@@ -100,6 +103,14 @@ export const GET_TABLEDATA = gql`
           intensity
           level
           updatedAt
+          About
+          Benifits
+          workout_URL
+          Workout_Video_ID
+          workout_text
+          warmup
+          cooldown
+          mainmovement
           calories
           users_permissions_user {
             data {
@@ -116,6 +127,7 @@ export const GET_TABLEDATA = gql`
           }
           muscle_groups {
             data {
+              id
               attributes {
                 name
               }
@@ -162,6 +174,7 @@ export const CREATE_WORKOUT = gql`
     $warmup: JSON
     $mainmovement: JSON
     $cooldown: JSON
+    $Workout_Video_ID: String
   ) {
     createWorkout(
       data: {
@@ -180,6 +193,7 @@ export const CREATE_WORKOUT = gql`
         warmup: $warmup
         mainmovement: $mainmovement
         cooldown: $cooldown
+        Workout_Video_ID: $Workout_Video_ID
       }
     ) {
       data {
@@ -210,6 +224,7 @@ export const UPDATE_WORKOUT = gql`
     $warmup: JSON
     $mainmovement: JSON
     $cooldown: JSON
+    $Workout_Video_ID: String 
   ) {
     updateWorkout(
       id: $workoutid
@@ -229,6 +244,7 @@ export const UPDATE_WORKOUT = gql`
         warmup: $warmup
         mainmovement: $mainmovement
         cooldown: $cooldown
+        Workout_Video_ID: $Workout_Video_ID
       }
     ) {
       data {

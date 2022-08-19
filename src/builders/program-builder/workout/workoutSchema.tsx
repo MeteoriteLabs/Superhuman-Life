@@ -3,6 +3,7 @@ import EquipmentSearch from '../../../components/customWidgets/equipmentList';
 import MuscleGroupSearch from '../../../components/customWidgets/muscleGroupList';
 import FitnessMultiSelect from '../../../components/customWidgets/fitnessMultiSelect';
 import BuildWorkout from './buildWorkout';
+import Upload from '../../../components/upload/upload';
 
 
 export const widgets = {
@@ -10,7 +11,8 @@ export const widgets = {
     equipmentSearch: EquipmentSearch,
     muscleGroupSearch: MuscleGroupSearch,
     textEditor: TextEditor,
-    buildWorkout: BuildWorkout
+    buildWorkout: BuildWorkout,
+    upload: Upload
 };
 
 export const schema: any = {
@@ -52,9 +54,9 @@ export const schema: any = {
                 "ui:widget": "textEditor"
             },
             "Upload": {
-                "ui:options": {
-                    "accept": ".mp4"
-                }
+                "ui:widget": (props: any) => {
+                    return <Upload allowImage={false} allowVideo={true} onChange={props.onChange} value={props.value} />;
+                },
             },
             "build": {
                 "ui:widget": "buildWorkout"

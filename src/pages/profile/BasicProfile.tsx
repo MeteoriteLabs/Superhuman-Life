@@ -20,7 +20,7 @@ export default function BasicProfile({
   const formRef = useRef<any>(null);
   const [step] = useState<number>(1);
 
-  // console.log(formData);
+  console.log(formData);
 
   function submitHandler(data: any) {
     formSubmit(data);

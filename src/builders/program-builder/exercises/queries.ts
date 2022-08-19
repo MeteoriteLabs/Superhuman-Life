@@ -12,6 +12,7 @@ export const FETCH_DATA = gql`
           exerciseminidescription
           exercisetext
           exerciseurl
+          exerciseupload
           users_permissions_user {
             data {
               id
@@ -221,6 +222,7 @@ export const CREATE_EXERCISE = gql`
     $users_permissions_user: ID!
     $equipment_lists: [ID]
     $exercisemusclegroups: [ID]
+    $exerciseupload: String
   ) {
     createExercise(
       data: {
@@ -233,6 +235,7 @@ export const CREATE_EXERCISE = gql`
         fitnessdisciplines: $fitnessdisciplines
         equipment_lists: $equipment_lists
         muscle_groups: $exercisemusclegroups
+        exerciseupload: $exerciseupload
       }
     ) {
       data {
@@ -256,6 +259,7 @@ export const UPDATE_EXERCISE = gql`
     $equipment_lists: [ID]
     $exercisemusclegroups: [ID]
     $exerciseid: ID!
+    $exerciseupload: String
   ) {
     updateExercise(
       id: $exerciseid
@@ -269,6 +273,7 @@ export const UPDATE_EXERCISE = gql`
         fitnessdisciplines: $fitnessdisciplines
         equipment_lists: $equipment_lists
         muscle_groups: $exercisemusclegroups
+        exerciseupload: $exerciseupload
       }
     ) {
       data {
