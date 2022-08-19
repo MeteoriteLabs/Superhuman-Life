@@ -248,7 +248,7 @@ const Schedular = (props: any) => {
         }
     }
 
-    // this is for testing purposes chaning to using day
+    // this is for testing purposes 
     function handleTemplateTable(data: any){
         for (var d = 1; d <= props.days; d++) {
             arr[d] = JSON.parse(JSON.stringify(schedulerDay));
@@ -279,7 +279,7 @@ const Schedular = (props: any) => {
     function handleRenderTable(data: any) {
         const flattenData = flattenObj({...data});
         if(window.location.pathname.split('/')[1] === 'programs'){
-            handleTemplateTable(props?.templateSessions);
+            return handleTemplateTable(props?.templateSessions);
         }
         const sessionsExistingValues = [...sessionIds];
         for(var q=0; q<flattenData.tags[0]?.sessions.length; q++){
@@ -1266,6 +1266,8 @@ const Schedular = (props: any) => {
                                                         }}>
                                                         {(arr[d][h][m]) && arr[d][h][m]?.map((val, index) => {
                                                             val.index = index;
+                                                            debugger;
+                                                            console.log(val);
                                                             return (
                                                                 <div
                                                                     key={index}
