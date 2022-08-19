@@ -88,8 +88,8 @@ export default function Routes({ token }: any) {
               <Route path="/clients" component={ClientPage} />
               <Route path="/client/home" component={ClientHomePage} />
               <Route path="/home" component={HomePage} />
-              <Route exact path="/packages" component={PackagePage} />
-              <Route exact path="/programs" component={ProgramPage} />
+              <Route exact path="/offerings" component={PackagePage} />
+              <Route exact path="/resources" component={ProgramPage} />
               <Route exact path="/session" component={SessionPage} />
               <Route path="/programs/manage" component={ProgramManagerPage} />
               <Route path="/classic/session/scheduler" component={ClassicProgramSchedulerPage} />
@@ -102,7 +102,7 @@ export default function Routes({ token }: any) {
               <Route path="/availability" component={AvailabilityPage} />
               <Route path="/roster" component={RosterPage} />
               <Route path="/profile" component={ProfilePage} />
-              <Route path="/resources" component={ResourcePage} />
+              <Route path="/communication" component={ResourcePage} />
               <Route path="/schedule" component={SchedulePage} />
               <Route path="/settings" component={SettingsPage} />
               <Route path="/finance" component={FinancePage} />

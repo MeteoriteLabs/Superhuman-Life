@@ -1,5 +1,15 @@
 import { Button, Nav } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
+import HomeIcon from "./Icons/Home.svg";
+import CalendarIcon from "./Icons/Calendar.svg";
+import SessionIcon from "./Icons/Session.svg"
+import ClientIcon from "./Icons/Client.svg";
+import BookingIcon from "./Icons/Booking.svg";
+import OfferingsIcon from "./Icons/Offerings.svg";
+import ResourcesIcon from "./Icons/Resources.svg";
+import FinancesIcon from "./Icons/Finances.svg";
+import CommunicationIcon from "./Icons/Communications.svg";
+import SettingsIcon from "./Icons/Settings.svg";
 
 export function SideNav({ collapse, setCollapse }: any) {
   return (
@@ -13,37 +23,37 @@ export function SideNav({ collapse, setCollapse }: any) {
       <hr />
       <Nav className="flex-column">
         <NavLink className="nav-link text-white" to="/home">
-          <i className="fas fa-home mr-sm-2"></i>{!collapse && "Home"}
-        </NavLink>
-        <NavLink className="nav-link text-white" to="/bookings">
-          <i className="far fa-calendar-check mr-sm-2"></i>{!collapse && "Bookings"}
-        </NavLink>
-        <NavLink className="nav-link text-white" to="/chats">
-          <i className="far fa-comment-alt mr-sm-2"></i>{!collapse && "Chats"}
-        </NavLink>
-        <NavLink className="nav-link text-white" to="/clients">
-          <i className="fas fa-users mr-sm-1"></i>{!collapse && "Clients"}
-        </NavLink>
-        <NavLink className="nav-link text-white" to="/finance">
-          <i className="fas fa-wallet mr-sm-2"></i>{!collapse && "Finance"}
-        </NavLink>
-        <NavLink className="nav-link text-white" to="/packages">
-          <i className="fas fa-tools mr-sm-2"></i>{!collapse && "Packages"}
-        </NavLink>
-        <NavLink className="nav-link text-white" to="/programs">
-          <i className="far fa-eye mr-sm-2"></i>{!collapse && "Programs"}
-        </NavLink>
-        <NavLink className="nav-link text-white" to="/session">
-          <i className="far fa-eye mr-sm-2"></i>{!collapse && "Session"}
-        </NavLink>
-        <NavLink className="nav-link text-white" to="/resources">
-          <i className="fas fa-layer-group mr-sm-2"></i>{!collapse && "Resources"}
+          <img src={HomeIcon} alt="home icon" className="mr-sm-2" style={{height: '20px', width: '20px'}}/>{!collapse && "Home"}
         </NavLink>
         <NavLink className="nav-link text-white" to="/schedule">
-          <i className="far fa-calendar-alt mr-sm-2"></i>{!collapse && "Schedule"}
+          <img src={CalendarIcon} alt="calendar icon" className="mr-sm-2" style={{height: '20px', width: '20px'}}/>{!collapse && "My Schedule"}
+        </NavLink>
+        <NavLink className="nav-link text-white" to="/session">
+          <img src={SessionIcon} alt="session icon" className="mr-sm-2" style={{height: '20px', width: '20px'}}/>{!collapse && "Session Manager"}
+        </NavLink>
+        <NavLink className="nav-link text-white" to="/clients">
+          <img src={ClientIcon} alt="client icon" className="mr-sm-2" style={{height: '20px', width: '20px'}}/>{!collapse && "Clients"}
+        </NavLink>
+        <NavLink className="nav-link text-white" to="/bookings">
+          <img src={BookingIcon} alt="booking icon" className="mr-sm-2" style={{height: '20px', width: '20px'}}/>{!collapse && "Bookings"}
+        </NavLink>
+        <NavLink className="nav-link text-white" to="/offerings">
+          <img src={OfferingsIcon} alt="offerings icon" className="mr-sm-2" style={{height: '20px', width: '20px'}}/>{!collapse && "Offerings"}
+        </NavLink>
+        <NavLink className="nav-link text-white" to="/resources">
+          <img src={ResourcesIcon} alt="resources icon" className="mr-sm-2" style={{height: '25px', width: '25px'}}/>{!collapse && "Resources"}
+        </NavLink>
+        {/* <NavLink className="nav-link text-white" to="/chats">
+          <i className="far fa-comment-alt mr-sm-2"></i>{!collapse && "Chats"}
+        </NavLink> */}
+        <NavLink className="nav-link text-white" to="/finance">
+          <img src={FinancesIcon} alt="finances icon" className="mr-sm-2" style={{height: '20px', width: '20px'}}/>{!collapse && "Finances"}
+        </NavLink>
+        <NavLink className="nav-link text-white" to="/communication">
+          <img src={CommunicationIcon} alt="communication icon" className="mr-sm-2" style={{height: '20px', width: '20px'}}/>{!collapse && "Communication"}
         </NavLink>
         <NavLink className="nav-link text-white" to="/settings">
-          <i className="fas fa-cog mr-sm-2"></i>{!collapse && "Settings"}
+          <img src={SettingsIcon} alt="settings icon" className="mr-sm-2" style={{height: '20px', width: '20px'}}/>{!collapse && "Settings"}
         </NavLink>
       </Nav>
       <Button

@@ -36,5 +36,12 @@ export const ImageCaptions = [
         imageWidth: "55px",
         id:5
     },
+    {
+        image:"assets/lobby_images/learn.svg",
+        color: "#0D6EBA",
+        link: "/support",
+        imageWidth: "55px",
+        id:6
+    },
     
 ]
