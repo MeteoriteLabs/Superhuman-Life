@@ -239,7 +239,8 @@ function CreateEditWorkoutTemplate(props: any, ref: any) {
                     mode: eventJson.mode,
                     type: eventJson.type,
                     day_of_program: eventJson.day,
-                    changemaker: auth.userid
+                    changemaker: auth.userid,
+                    session_date: null
                 }
             });
         }else {

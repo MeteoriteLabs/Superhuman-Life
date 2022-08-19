@@ -399,7 +399,8 @@ export const CREATE_SESSION = gql`
     $type: String,
     $Is_restday: Boolean,
     $session_date: Date,
-    $changemaker: ID
+    $changemaker: ID,
+    $day_of_program: Int
   ){
     createSession(data: {
       type: $type,
@@ -412,7 +413,8 @@ export const CREATE_SESSION = gql`
       activity: $activity,
       Is_restday: $Is_restday,
       session_date: $session_date,
-      changemaker: $changemaker
+      changemaker: $changemaker,
+      day_of_program: $day_of_program
     }){
       data{
         id
@@ -420,6 +422,18 @@ export const CREATE_SESSION = gql`
     }
   }
 `;
+
+export const UPDATE_FITNESSPORGRAMS_SESSIONS = gql`
+  mutation updatefitnessprogramsSessions($id: ID!, $sessions_ids: [ID]){
+    updateFitnessprogram(id: $id, data: {
+      sessions: $sessions_ids
+    }){
+      data{
+        id
+      }
+    }
+  }
+`
 
 export const UPDATE_TAG_SESSIONS = gql`
   mutation updateTagSessions($id: ID!, $sessions_ids: [ID]){

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import { Modal, Button, Row, Col, Tab, Tabs, InputGroup, FormControl, Badge, OverlayTrigger, Tooltip, Form, Spinner } from 'react-bootstrap';
 import './styles.css';
-import { PROGRAM_EVENTS, FETCH_WORKOUT, FETCH_ACTIVITY, GET_SLOTS_TO_CHECK, UPDATE_CHANGEMAKER_AVAILABILITY_WORKHOURS, GET_SESSIONS, GET_CLIENT_SESSIONS, DELETE_SESSION, UPDATE_SESSION, CREATE_SESSION, UPDATE_TAG_SESSIONS, CREATE_SESSION_BOOKING, GET_SESSION_BOOKINGS, UPDATE_SESSION_BOOKING } from './queries';
+import { PROGRAM_EVENTS, FETCH_WORKOUT, FETCH_ACTIVITY, GET_SLOTS_TO_CHECK, UPDATE_CHANGEMAKER_AVAILABILITY_WORKHOURS, GET_SESSIONS, GET_CLIENT_SESSIONS, DELETE_SESSION, UPDATE_SESSION, CREATE_SESSION, UPDATE_TAG_SESSIONS, CREATE_SESSION_BOOKING, GET_SESSION_BOOKINGS, UPDATE_SESSION_BOOKING, UPDATE_FITNESSPORGRAMS_SESSIONS } from './queries';
 import { useQuery, useMutation, gql } from "@apollo/client";
 import ProgramList from "../../../components/customWidgets/programList";
 import SessionList from '../../../components/customWidgets/sessionList';
@@ -38,6 +38,7 @@ const Schedular = (props: any) => {
     const schedulerDay: any = require("./json/scheduler-day.json");
     const [changeMakerAvailability, setChangeMakerAvailability] = useState<any>([]);
     const [sessionIds, setSessionsIds] = useState<any>([]);
+    const [templateSessionsIds, setTemplateSessionsIds] = useState<any>([]);
     const [dropConflict, setDropConflict] = useState(false);
     const [groupDropConflict, setGroupDropConflict] = useState(false);
     const [sessionBookings, setSessionBooking] = useState<any>([]);
@@ -217,6 +218,7 @@ const Schedular = (props: any) => {
         draganddrop();
     }, 200);
 
+    // this incase of the scheduler in the client page
     function handleRenderClientTable(data: any){
         const flattenData = flattenObj({...data});
         const sessionsExistingValues = [...sessionIds];
@@ -248,11 +250,17 @@ const Schedular = (props: any) => {
         }
     }
 
-    // this is for testing purposes 
+    // this incase of the scheduler in the template page
     function handleTemplateTable(data: any){
+        const existingTemplateIds = [...templateSessionsIds];
         for (var d = 1; d <= props.days; d++) {
             arr[d] = JSON.parse(JSON.stringify(schedulerDay));
         }
+
+        for(var i=0; i<data.length; i++){
+            existingTemplateIds.push(data[i].id);
+        }
+        setTemplateSessionsIds(existingTemplateIds);
 
         if (data?.length > 0) {
             data?.forEach((val) => {
@@ -269,13 +277,11 @@ const Schedular = (props: any) => {
                     "endHour": endTimeHour, "endMin": endTimeMin, "id": val.activity === null ? val.workout.id : val.activity.id, "mode": val.mode,
                     "tag": val.tag, "sessionId": val.id, "activityTarget": val.activity === null ? null : val.activity_target, "sessionDate": val.session_date,
                 });
-                debugger;
-                console.log(arr[val.day_of_program])
             })
         }
     }
 
-
+    // this incase of the scheduler in the session manager page
     function handleRenderTable(data: any) {
         const flattenData = flattenObj({...data});
         if(window.location.pathname.split('/')[1] === 'programs'){
@@ -309,7 +315,6 @@ const Schedular = (props: any) => {
         }
     }
 
-    console.log(event);
 
     function calculateDay(startDate, sessionDate){
         const startDateFormatted = moment(startDate);
@@ -377,6 +382,7 @@ const Schedular = (props: any) => {
         setSessionFilter(`${event}`);
     }
 
+    // this handles the displaying of rest days on the scheduler
     function handleRestDays(val: any) {
         // the first if statement is to check if we are in the client scheduler page
         // the else if block is to run if we are in the session scheduler page
@@ -451,7 +457,13 @@ const Schedular = (props: any) => {
     const [duplicatedDay, setDuplicatedDay] = useState<any>([]);
     const [updateSessionBooking] = useMutation(UPDATE_SESSION_BOOKING);
     const [createSessionBooking] = useMutation(CREATE_SESSION_BOOKING, {onCompleted: (r: any) => {setEvent({})}})
-    const [createSession] = useMutation(CREATE_SESSION, {onCompleted: (r: any) => {handleUpdateTag(r.createSession.data.id)}});
+    const [createSession] = useMutation(CREATE_SESSION, {onCompleted: (r: any) => {
+        if(window.location.pathname.split('/')[1] === 'programs'){
+            handleUpdateFitnessPrograms(r.createSession.data.id);
+        }else {
+            handleUpdateTag(r.createSession.data.id)
+        }
+    }});
     const [updateSession] = useMutation(UPDATE_SESSION, { onCompleted: () => {setEvent({})}});
     const [updateTagSessions] = useMutation(UPDATE_TAG_SESSIONS, { onCompleted: () => {
         if(props.classType !== 'Group Class'){
@@ -465,6 +477,22 @@ const Schedular = (props: any) => {
             setEvent({})
         }
     }});
+    const [updateFitnessProgramSessions] = useMutation(UPDATE_FITNESSPORGRAMS_SESSIONS, { onCompleted: () => {
+        setEvent({});
+    }});
+
+    function handleUpdateFitnessPrograms(newId: any){
+        setNewSessionId(newId);
+        const values = [...templateSessionsIds];
+        values.push(newId);
+        updateFitnessProgramSessions({
+            variables: {
+                id: program_id,
+                sessions_ids: values
+            }
+        })
+
+    }
 
     function handleUpdateTag(newId: any){
         setNewSessionId(newId);
@@ -534,6 +562,9 @@ const Schedular = (props: any) => {
             });
         }
 
+        debugger;
+        console.log(duplicatedDay); 
+
         if(e.type === "workout"){
             createSession({
                 variables: {
@@ -541,6 +572,7 @@ const Schedular = (props: any) => {
                     end_time: timeInput.endTime,
                     workout: e.id,
                     tag: e.tag,
+                    day_of_program: duplicatedDay[0].key,
                     mode: e.mode,
                     type: e.type,
                     session_date: duplicatedDay.length === 0 ? e.sessionDate : moment(duplicatedDay[0].day, 'Do, MMMM YYYY').format('YYYY-MM-DD'),
@@ -554,6 +586,7 @@ const Schedular = (props: any) => {
                     end_time: timeInput.endTime,
                     activity: e.id,
                     activity_target: e.activityTarget,
+                    day_of_program: duplicatedDay[0].key,
                     tag: e.tag,
                     mode: e.mode,
                     type: e.type,
@@ -1209,7 +1242,7 @@ const Schedular = (props: any) => {
         mainQuery.refetch();
     }
 
-    console.log(arr);
+    console.log(event);
 
     if (!show) {
         return <div className="text-center">
@@ -1266,8 +1299,6 @@ const Schedular = (props: any) => {
                                                         }}>
                                                         {(arr[d][h][m]) && arr[d][h][m]?.map((val, index) => {
                                                             val.index = index;
-                                                            debugger;
-                                                            console.log(val);
                                                             return (
                                                                 <div
                                                                     key={index}
@@ -1391,7 +1422,7 @@ const Schedular = (props: any) => {
                                 <h6>Day: </h6>
                             </Col>
                             <Col lg={4}>
-                                <FormControl value={moment(event.sessionDate).format("Do, MMM YY")} disabled />
+                                <FormControl value={event.sessionDate ? moment(event.sessionDate).format("Do, MMM YY") : `Day - ${event.day}`} disabled />
                             </Col>
                         </Row>
                         {(tag || event.tag) !== 'Classic' && <Row className="pt-3 align-items-center">
@@ -1422,7 +1453,7 @@ const Schedular = (props: any) => {
                                 <TimeField eventType="edit" onChange={handleStart} endTime={event.endHour + ':' + event.endMin} startTime={event.hour + ':' + event.min} disabled={edit}/>
                             </Col>
                         </Row>
-                        {(event.type === "workout") && <Tabs defaultActiveKey="bookings" transition={false} id="noanim-tab-example" className="pt-4">
+                        {(event.type === "workout") && <Tabs defaultActiveKey="agenda" transition={false} id="noanim-tab-example" className="pt-4">
                             <Tab eventKey="agenda" title="Agenda">
                                 {/* <Row className="justify-content-end">
                                     <Button className="mr-3 mt-2" variant="primary" size="sm" onClick={() => { handleClose(); setData([]); setEvent([]); createEditWorkoutComponent.current.TriggerForm({ type: 'edit' }); }}><i className="fas fa-pencil-alt"></i>{" "}Edit</Button>
@@ -1537,7 +1568,7 @@ const Schedular = (props: any) => {
                                     )
                                 })}
                             </Tab>
-                            {arr2.event?.import !== "importedEvent" && <Tab eventKey="bookings" title="Bookings">
+                            {(arr2.event?.import !== "importedEvent" && event.sessionDate) && <Tab eventKey="bookings" title="Bookings">
                                 <Row className="p-3">
                                     <Col>
                                         <b>Clients</b>
@@ -1555,8 +1586,6 @@ const Schedular = (props: any) => {
                                 <hr className='m-0' style={{ height: '5px'}}/>
                                 {/* {sessionBookings.length === 0 ? <div className='text-center'>No session Bookings yet.</div> : ""} */}
                                 {sessionBookings?.map(val => {
-                                    console.log(val);
-                                    debugger;
                                     return (
                                         <>
                                             <div className='p-3 shadow-sm' style={{ borderRadius: '20px'}}>
@@ -1637,7 +1666,7 @@ const Schedular = (props: any) => {
                                     <h6>Day: </h6>
                                 </Col>
                                 <Col lg={7}>
-                                    <DaysInput startDate={props.startDate} duration={props.days} val={event.day} type="transfer" onChange={(e) => {
+                                    <DaysInput dayType="day" startDate={props.startDate} duration={props.days} val={event.day} type="transfer" onChange={(e) => {
                                         if(e === [] || e === undefined){
                                             setDuplicatedDay([]);
                                         }
