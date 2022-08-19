@@ -28,7 +28,7 @@ export function AuthenticatedNav() {
 
   const getSideNavStatus = () => {
     const currentSideNavStatus: boolean =
-      pathname !== "/lobby" && pathname !== "/website" && pathname !== "/insights" && pathname !== "/support" ? true : false;
+      pathname !== "/lobby" && pathname !== "/website" && pathname !== "/insights" && pathname !== "/support" && pathname !== "/profile" ? true : false;
     setSideNavStatus(currentSideNavStatus);
   };
 
