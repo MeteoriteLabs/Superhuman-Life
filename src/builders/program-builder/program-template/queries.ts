@@ -8,8 +8,44 @@ export const GET_TABLEDATA = gql`
         attributes {
           title
           duration_days
-          rest_days
+          sessions{
+            data{
+              id
+              attributes{
+                day_of_program
+                start_time
+                end_time
+                tag
+                type
+                mode
+                activity{
+                  data{
+                    id
+                    attributes{
+                      title
+                    }
+                  }
+                }
+                activity_target
+                workout{
+                  data{
+                    id
+                    attributes{
+                      workouttitle
+                    }
+                  }
+                }
+                changemaker{
+                  data{
+                    id
+                  }
+                }
+              }
+            }
+          }
           description
+          start_date
+          end_date
           level
           users_permissions_user {
             data {
@@ -545,6 +581,39 @@ export const UPDATE_SESSION_BOOKING = gql`
         }
       }
      }
+`;
+
+export const GET_TEMPLATE_SESSIONS = gql`
+query getTemplateSessions($id: ID!){
+  fitnessprograms(filters: {
+    id: {
+      eq: $id
+    }
+  }){	
+  	data{
+      id
+      attributes{
+        sessions{
+          data{
+            id
+          }
+        }
+      }
+    }
+  }
+}
+`;
+
+export const UPDATE_FITNESSPROGRAMS_SESSIONS = gql`
+  mutation updateFitnessProgramsSessions($id: ID!, $sessions: [ID]){
+    updateFitnessprogram(id: $id, data:{
+      sessions: $sessions
+    }){
+      data{
+        id
+      }
+    }
+  }
 `
 
 

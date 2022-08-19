@@ -81,8 +81,6 @@ export default function MRP(props) {
 
     const handleValidationError = (e, index) => {
 
-        debugger
-        console.log(userData);
         let valid = false;
         let updateMRP = ""
         if (mode === "Online Workout" || mode === "Offline Workout" || userData.fitness_package_type === "Classic Class") {

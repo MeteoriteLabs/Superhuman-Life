@@ -1,28 +1,42 @@
 import { useQuery } from '@apollo/client'
-import { Fragment } from 'react'
+import { Fragment, useState, useContext } from 'react';
+import { Button } from 'react-bootstrap';
 import { flattenObj } from '../../../../components/utils/responseFlatten';
-import { GET_ADDRESS } from '../graphQL/queries'
+import { GET_ADDRESS } from '../graphQL/queries';
+import AddFitnessAddressModal from './AddFitnessAddressModal';
+import authContext from '../../../../context/auth-context';
 
 export default function FitnessAddress(props) {
 
-    const { widgetProps, actionType } = props
+    const auth = useContext(authContext);
+    const { widgetProps, actionType } = props;
+
+    const [addressModal, setAddressModal] = useState(false);
+    const [addressDetails, setAddressDetails] = useState<any>([]);
 
 
-    const { data, loading } = useQuery(GET_ADDRESS);
-    console.log("🚀 ~ file: FitnessAddress.tsx ~ line 11 ~ FitnessAddress ~ data", data)
+    const addressQuery= useQuery(GET_ADDRESS, {variables: {userId: auth.userid}, onCompleted: (data: any) => {
+        const flattedData = flattenObj({...data});
+        setAddressDetails(flattedData.addresses);
+    }});
+    // console.log("🚀 ~ file: FitnessAddress.tsx ~ line 11 ~ FitnessAddress ~ data", data)
 
 
-    if (loading) return <p>...loading</p>
+    // if (loading) return <p>...loading</p>
 
     const handleChange = (e) => {
         widgetProps.onChange(e.target.value)
+    }
+
+    function handleCallback(){
+        addressQuery.refetch();
     }
 
 
     return <Fragment>
 
         <label>{widgetProps.label}</label>
-        {flattenObj({...data}).addresses?.map((item: any, index: any) => {
+        {addressDetails?.map((item: any, index: any) => {
             return <div key={index}>
                 <label className='ml-3'>
                     <input type="radio"
@@ -36,6 +50,12 @@ export default function FitnessAddress(props) {
             </div>
         })}
 
+        <Button variant='outline-info' onClick={() => {setAddressModal(true)}}>+ New</Button>
+
+        <AddFitnessAddressModal
+        show={addressModal}
+        onHide={() => {setAddressModal(false); handleCallback()}}
+        />
 
     </Fragment>
 

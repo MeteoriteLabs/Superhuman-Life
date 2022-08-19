@@ -7,6 +7,7 @@ import StatusModal from "../../../components/StatusModal/StatusModal";
 import { schema, widgets } from './programSchema';
 import {Subject} from 'rxjs';
 import {flattenObj} from '../../../components/utils/responseFlatten';
+import moment from 'moment';
 
 interface Operation {
     id: string;
@@ -68,32 +69,37 @@ function CreateEditProgram(props: any, ref: any) {
     }
 
     function CreateProgram(frm: any) {
+        const sdate = moment().format("YYYY-MM-DD");
+        const edate = moment().add(frm.duration, "days").format("YYYY-MM-DD");
+        console.log(frm);
         createProgram({ variables: {
             title: frm.programName,
             fitnessdisciplines: frm.discipline.split(","),
             duration_days: frm.duration,
-            Is_program: false,
             level: ENUM_FITNESSPROGRAM_LEVEL[frm.level],
             description: frm.details,
-            renewal_dt: 0,
-            users_permissions_user: frm.user_permissions_user
+            users_permissions_user: frm.user_permissions_user,
+            startdate: sdate,
+            enddate: edate
         } });
     }
 
     function EditExercise(frm: any) {
-        // console.log('edit message');
-        // useMutation(UPDATE_MESSAGE, { variables: frm, onCompleted: (d: any) => { console.log(d); } });
+        const sdate = moment().format("YYYY-MM-DD");
+        const edate = moment().add(frm.duration, "days").format("YYYY-MM-DD");
         editProgram({
             variables: {
-              programid: operation.id,
-              title: frm.programName,
-              fitnessdisciplines: frm.discipline.split(","),
-              duration_days: frm.duration,
-              level: ENUM_FITNESSPROGRAM_LEVEL[frm.level],
-              description: frm.details,
-              users_permissions_user: frm.user_permissions_user,
+                programid: operation.id,
+                title: frm.programName,
+                fitnessdisciplines: frm.discipline.split(","),
+                duration_days: frm.duration,
+                level: ENUM_FITNESSPROGRAM_LEVEL[frm.level],
+                description: frm.details,
+                users_permissions_user: frm.user_permissions_user,
+                startdate: sdate,
+                enddate: edate
             },
-          });
+        });
     }
 
     function ViewExercise(frm: any) {

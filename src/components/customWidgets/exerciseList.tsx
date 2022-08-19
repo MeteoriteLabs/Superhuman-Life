@@ -10,10 +10,10 @@ const ExerciseList = (props: any) => {
      const auth = useContext(AuthContext);
      const [exerciseList, setExerciseList] = useState<any[]>([]);
      const [searchInput, setSearchInput] = useState(null);
-     const [selected, setSelected] = useState<any[]>([]);
+     const [selected, setSelected] = useState<any[]>(props?.value[0]?.type === "exercise" ? props.value : []);
      const inputField = useRef<any>();
      let skipval: Boolean = true;
-     
+
      function FetchExerciseList(_variable: {} = {id: auth.userid, filter: " "}){
           console.log(auth.userid);
           useQuery(GET_EXERCISELIST, { variables: _variable ,onCompleted: loadExerciseList, skip: !searchInput});
@@ -21,7 +21,6 @@ const ExerciseList = (props: any) => {
 
      function loadExerciseList(data: any){
           const flattenedData = flattenObj({...data});
-          console.log(flattenedData);
           setExerciseList(
           [...flattenedData.exercises].map((exercise) => {
                return {
@@ -122,6 +121,7 @@ const ExerciseList = (props: any) => {
                                                             type="number"
                                                             min="0"
                                                             placeholder="Enter reps"
+                                                            value={val?.reps}
                                                             aria-describedby="basic-addon2"
                                                             onChange={e => handleDataChange(val.id, e, 1)}
                                                        />
@@ -136,6 +136,7 @@ const ExerciseList = (props: any) => {
                                                             type="number"
                                                             min="0"
                                                             placeholder="Enter sets"
+                                                            value={val?.sets}
                                                             aria-describedby="basic-addon2"
                                                             onChange={e => handleDataChange(val.id, e, 2)}
                                                        />
@@ -150,6 +151,7 @@ const ExerciseList = (props: any) => {
                                                             type="number"
                                                             min="0"
                                                             placeholder="Enter rest time"
+                                                            value={val?.restTime}
                                                             aria-describedby="basic-addon2"
                                                             onChange={e => handleDataChange(val.id, e, 5)}
                                                        />
@@ -167,6 +169,7 @@ const ExerciseList = (props: any) => {
                                                        type="number"
                                                        min="0"
                                                        placeholder="Weight"
+                                                       value={val.weights}
                                                        aria-describedby="basic-addon2"
                                                        onChange={e => handleDataChange(val.id, e, 3)}
                                                   />
@@ -182,6 +185,7 @@ const ExerciseList = (props: any) => {
                                                             type="number"
                                                             min="0"
                                                             placeholder="Duration"
+                                                            value={val?.duration}
                                                             aria-describedby="basic-addon2"
                                                             onChange={e => handleDataChange(val.id, e, 4)}
                                                        />

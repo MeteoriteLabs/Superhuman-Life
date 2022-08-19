@@ -40,9 +40,15 @@ const DaysInput = (props: any) => {
      const days: any[] = [];
 
      function renderInputField() {
-          for (var i=0; i<props.duration;i++){
-               days.push({"key": i+1,"day": `${moment(props.startDate).add(i, 'days').format("Do, MMM YY")}`})
-          }  
+          if(props?.type === 'day') {
+               for (var i=0; i<props?.duration;i++){
+                    days.push({"key": i+1,"day": `Day - ${i+1}`})
+               }
+          }else {
+               for (var j=0; j<props?.duration;j++){
+                    days.push({"key": j+1,"day": `${moment(props?.startDate).add(j, 'days').format("Do, MMM YY")}`})
+               }  
+          }
      }
 
      function OnChange(e){

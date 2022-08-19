@@ -4,6 +4,7 @@ import LocationList from '../widgets/locationList';
 import LanguageList from '../widgets/languageSelect';
 import ProgramDetails from '../widgets/programDetails';
 import CourseDetails from '../widgets/course_details';
+import Upload from '../../../../../components/upload/upload';
 
 export const widgets = {
     pricingTableChannel: PricingTableChannel,
@@ -36,15 +37,15 @@ export const schema: any = {
         "languages": {
             "ui:widget": "languageList",
         },
-        "UploadPicture": {
-            "ui:options": {
-                "accept": ".png, .svg, .jpg"
-            }
+        "thumbnail": {
+            "ui:widget": (props: any) => {
+                return <Upload allowImage={true} allowVideo={true} onChange={props.onChange} value={props.value} title={'Thumbnail'} />;
+            },
         },
-        "UploadVideo": {
-            "ui:options": {
-                "accept": ".mp4"
-            }
+        "upload": {
+            "ui:widget": (props: any) => {
+                return <Upload allowImage={true} allowVideo={true} onChange={props.onChange} value={props.value} />;
+            },
         },
         "mode": {
             "ui:widget": "radio",

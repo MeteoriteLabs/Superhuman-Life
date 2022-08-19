@@ -40,7 +40,7 @@ const BuildWorkout = (props: any) => {
                     </Accordion.Toggle>
                     <Accordion.Collapse eventKey="0">
                          <Card.Body>
-                              <Build onChange={OnChangeWarmUp} buildId={1}/>
+                              <Build onChange={OnChangeWarmUp} buildId={1} value={props?.value?.warmup}/>
                          </Card.Body>
                     </Accordion.Collapse>
                </Card>
@@ -51,7 +51,7 @@ const BuildWorkout = (props: any) => {
                     </Accordion.Toggle>
                     <Accordion.Collapse eventKey="1">
                     <Card.Body>
-                         <Build onChange={OnChangeMainMovement} buildId={2}/>
+                         <Build onChange={OnChangeMainMovement} buildId={2} value={props?.value?.mainmovement}/>
                     </Card.Body>
                     </Accordion.Collapse>
                </Card>
@@ -62,7 +62,7 @@ const BuildWorkout = (props: any) => {
                     </Accordion.Toggle>
                     <Accordion.Collapse eventKey="2">
                     <Card.Body>
-                         <Build onChange={OnChangeCoolDown} buildId={3}/>
+                         <Build onChange={OnChangeCoolDown} buildId={3} value={props?.value?.cooldown}/>
                     </Card.Body>
                     </Accordion.Collapse>
                </Card>
