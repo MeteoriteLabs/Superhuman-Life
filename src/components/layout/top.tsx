@@ -33,102 +33,78 @@ export function AuthenticatedNav() {
   };
 
   return (
-    <>
-      <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark" fixed="top">
-
-        {/* brand logo for large screen */}
-        <Navbar.Brand href="/" className="d-none d-lg-block">
-          <img className="d-inline-block align-top" src="/logo.svg" alt="brand" />
-        </Navbar.Brand>
-
-        {/* brand logo for small screen */}
-        <Navbar.Brand href="/" className="d-sm-block d-lg-none">
-          <img className="d-inline-block align-top" src="/assets/navbar_icons/sapiensLogoSmallScreen.svg" alt="brand" />
-        </Navbar.Brand>
-
-        {/* change maker logo */}
-        <Navbar.Collapse className="justify-content-end d-none d-lg-block">
-          <Navbar.Text>
-            <h5 className="text-light">#BeAChangeMaker</h5>
-          </Navbar.Text>
-        </Navbar.Collapse>
-
-        {/* notification, lobby , profile options for small screen */}
-        <Nav.Item className="d-lg-none d-sm-block ">
-          <NotificationOption />
-        </Nav.Item>
-
-        <Nav.Item className="d-lg-none d-sm-block  ">
-          <MiniLobbyComponent />
-        </Nav.Item>
-
-        <Nav.Item className="d-lg-none d-sm-block  ">
-          <ProfileOption />
-        </Nav.Item>
-
-        {/* sidebar menu options for small screen */}
-
-        {
-          sideNavStatus ? <Navbar.Toggle aria-controls="responsive-navbar-nav" /> : null}
-        {
-          sideNavStatus ?
-            <Navbar.Collapse id="responsive-navbar-nav navbarScroll" className="justify-content-end">
-              <Nav navbarScroll>
-                <ToggleSideBarMenu />
-              </Nav>
-            </Navbar.Collapse>
-            : null
-        }
-
-        {/* notification, lobby and profile options for large screen */}
-        <Navbar.Collapse className="justify-content-end text-white d-none d-lg-block ">
-          <NavDropdown
-            alignRight
-            title={<img
-              src="/assets/navbar_icons/notificationIcon.svg"
-              alt="notification"
-              className="img-responsive "
-              style={{ height: '20px', width: '20px' }}
-            />}
-            id="collasible-nav-dropdown">
-            <NavDropdown.Item href="#action/3.1">
-              <Row className="justify-content-between">
-                <div className="float-left"><b>Notification</b></div>
-                <div className="float-right"><small>Clear All</small></div>
-              </Row>
-            </NavDropdown.Item>
-            <NavDropdown.Item href="#action/3.2">
-              <small>Today</small>
-            </NavDropdown.Item>
-            <NavDropdown.Item href="#action/3.3">
-              <Row>
-
-                <Alert variant={'dark'}>
-                  <Row className="justify-content-end">
-                    <div className="float-right"><small><img src="/assets/close.svg" alt="close icon" /></small></div>
-                  </Row>
-                  <Row className="justify-content-between">
-                    <div className="float-left"><small><b>@username</b></small></div>
-                    <div className="float-right"><small>07:00 AM</small></div>
-                  </Row>
-                  <Row className="justify-content-between">
-                    <div>
-                      This is a demo notification.
-                    </div>
-                  </Row>
-                </Alert>
-
-              </Row>
-            </NavDropdown.Item>
-            <NavDropdown.Divider />
-            <NavDropdown.Item href="#action/3.4">
-            </NavDropdown.Item>
-          </NavDropdown>
-          <MiniLobbyComponent />
-          <ProfileOption />
-        </Navbar.Collapse>
-      </Navbar>
-    </>
+    <Navbar bg="dark" className="shadow-sm top__navbar" expand="lg" fixed="top" variant="dark">
+      <Navbar.Brand col-sm="true" href="/" className="text-white">
+        <img className="d-inline-block align-top" src="/logo.svg" alt="brand" />
+      </Navbar.Brand>
+      <Navbar.Toggle aria-controls="navbar"/>
+      <Navbar.Collapse className="justify-content-end" id="navbar">
+        <Nav className="d-lg-none">
+          <NavLink className="nav-link text-white" to="/home">
+            Home
+          </NavLink>
+          <NavLink className="nav-link text-white" to="/schedule">
+            My Schedule
+          </NavLink>
+          <NavLink className="nav-link text-white" to="/session">
+            Session Manager
+          </NavLink>
+          <NavLink className="nav-link text-white" to="/clients">
+            Clients
+          </NavLink>
+          <NavLink className="nav-link text-white" to="/bookings">
+            Bookings
+          </NavLink>
+          <NavLink className="nav-link text-white" to="/offerings">
+            Offerings
+          </NavLink>
+          <NavLink className="nav-link text-white" to="/resources">
+            Resources
+          </NavLink>
+          <NavLink className="nav-link text-white" to="/finances">
+            Finances
+          </NavLink>
+          <NavLink className="nav-link text-white" to="/communication">
+            Communication
+          </NavLink>
+          <NavLink className="nav-link text-white" to="/settings">
+            Settings
+          </NavLink>
+          <NavLink className="nav-link text-white" to="/profile">
+            Profile
+          </NavLink>
+          <Nav.Link className="text-white">Logout</Nav.Link>
+        </Nav>
+      </Navbar.Collapse>
+      <Nav.Item className="d-none d-lg-block">
+        <DropdownButton variant="dark" title={<i className="fas fa-bell"></i>}>
+          <Dropdown.Header>Notifications</Dropdown.Header>
+          <Dropdown.Divider />
+          <Dropdown.Item>PT #18 has been created</Dropdown.Item>
+          <Dropdown.Divider />
+          <Dropdown.Item as="small">More Notifications</Dropdown.Item>
+        </DropdownButton>
+      </Nav.Item>
+      <Nav.Item className="d-none d-lg-block">
+        <MiniLobbyComponent />
+      </Nav.Item>
+      <Nav.Item className="d-none d-lg-block mr-5 pr-5">
+        <DropdownButton
+          variant="dark"
+          title={
+            <img
+              src="/assets/avatar-1.jpg"
+              height="42"
+              className="rounded-circle"
+              alt="avatar"
+            />
+          }
+        >
+          <NavLink to="/profile" className="dropdown-item">Profile</NavLink>
+          <Dropdown.Item onClick={() => auth.logout()}>Sign Out</Dropdown.Item>
+        </DropdownButton>
+      </Nav.Item>
+    </Navbar>
   );
 }
 

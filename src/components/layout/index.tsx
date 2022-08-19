@@ -17,7 +17,7 @@ export default function Layout({ token, children }: any) {
 
   const getSideNavStatus = () => {
     const currentSideNavStatus: boolean =
-      pathname !== "/lobby" && pathname !== "/website" && pathname !== "/profile" &&  pathname !== "/insights" &&  pathname !== "/support"? true : false;
+      pathname !== "/lobby" && pathname !== "/website" && pathname !== "/profile" &&  pathname !== "/insights" &&  pathname !== "/support" ? true : false;
     setSideNavStatus(currentSideNavStatus);
   };
   return (
