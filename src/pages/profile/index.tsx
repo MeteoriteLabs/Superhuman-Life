@@ -1,41 +1,38 @@
-import { useState, useRef, useContext } from "react";
+import { useState, useRef } from "react";
 
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import {
   Tabs,
   Tab,
-  Row,
-  Col,
   Container,
-  Card,
-  Image,
-  Button,
+  Row,
+  Col
 } from "react-bootstrap";
 import "./profile.css";
-import AuthContext from "../../context/auth-context";
-import { useQuery } from "@apollo/client";
-import { FETCH_USER_PROFILE_DATA } from "./queries/queries";
-import ellipse from "./ellipse.svg";
+// import AuthContext from "../../context/auth-context";
+// import { useQuery } from "@apollo/client";
+// import { FETCH_USER_PROFILE_DATA } from "./queries/queries";
+// import ellipse from "./ellipse.svg";
 import ChangePasswordPage from '../changePassword';
 
 import EditProfile from "./EditProfile";
 import ProfileCard from "./ProfileOptions/ProfileCard";
 
 export default function ProfilePage() {
-  const auth = useContext(AuthContext);
+  // const auth = useContext(AuthContext);
   const [key, setKey] = useState("profile");
   const editProfileComponent = useRef<any>(null);
-  const [profileData, setProfileData] = useState<any>({});
+  // const [profileData, setProfileData] = useState<any>({});
 
-  useQuery(FETCH_USER_PROFILE_DATA, {
-    variables: { id: auth.userid },
-    onCompleted: (r: any) => {
-      setProfileData(r.usersPermissionsUser.data.attributes);
-    },
-  });
+  // useQuery(FETCH_USER_PROFILE_DATA, {
+  //   variables: { id: auth.userid },
+  //   onCompleted: (r: any) => {
+  //     setProfileData(r.usersPermissionsUser.data.attributes);
+  //   },
+  // });
 
   return (
-    <>
+    <Container className="mt-5 pt-5">
       <Tabs
         id="controlled-tab"
         activeKey={key}
@@ -43,8 +40,9 @@ export default function ProfilePage() {
         className="mb-3 d-flex justify-content-center"
       >
         <Tab eventKey="profile" title="Profile">
-          {/* <Container fluid>
-            <Row className="">
+        <ProfileCard/>
+          <Container fluid>
+            {/*<Row className="">
               <Card>
                 <div>
                   {/* Settings *
@@ -146,14 +144,14 @@ export default function ProfilePage() {
               <Col md={{ offset: 9, span: 3 }}>
                 Visibility to open community
               </Col>
-            </Row>
+            </Row> */}
             <Row className="my-3">
               <Col className="p-2" md={12}>
                 <EditProfile ref={editProfileComponent}></EditProfile>
               </Col>
             </Row>
-          </Container> */}
-          <ProfileCard/>
+          </Container> 
+          
         </Tab>
 
         <Tab eventKey="collaborations" title="Collaborations">
@@ -169,6 +167,6 @@ export default function ProfilePage() {
           <ChangePasswordPage />
         </Tab>
       </Tabs>
-    </>
+    </Container>
   );
 }

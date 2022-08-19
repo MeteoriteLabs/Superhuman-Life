@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import AWS from "aws-sdk";
 
 const S3_BUCKET: any = process.env.REACT_APP_S3_BUCKET_NAME;
@@ -12,31 +12,36 @@ AWS.config.update({
 const myBucket = new AWS.S3({
   params: { Bucket: S3_BUCKET },
   region: REGION,
-  
+
 });
+
 var albumPhotosKey = process.env.REACT_APP_S3_PREFIX_NAME;
 
 function DisplayImage(props: any) {
   const [photoUrl, setPhotoUrl] = useState<string>(props.defaultImageUrl);
-  var imageName = 'sm-' + props.imageName + '.jpeg';
-  
+  var imageName = 'sm-' + props.imageName;
+
   const paramUrl = {
     Bucket: S3_BUCKET,
     Key: albumPhotosKey + imageName,
   };
 
-  var promise = myBucket.getSignedUrlPromise("getObject", paramUrl);
-                    promise.then(
-                         function (url) {
-                          setPhotoUrl(url);
-                         },
-                         function (err) {
-                            setPhotoUrl(props.defaultImageUrl);
-                         }
-                    );
+  if (props.imageName && props.imageName.length) {
+    var promise = myBucket.getSignedUrlPromise("getObject", paramUrl);
+    promise.then(
+      function (url) {
+        if (url) {
+          setPhotoUrl(url);
+        }
+      },
+      function (err) {
+        console.log("image not found");
+      }
+    );
+  }
 
   return (
-    <img src={photoUrl} alt="profile picture" style={{height: '200px', width: '200px', borderRadius: '100px', margin: '10px'}} />
+    <img src={photoUrl} alt="profile" className={props.imageCSS} />
   )
 }
 
