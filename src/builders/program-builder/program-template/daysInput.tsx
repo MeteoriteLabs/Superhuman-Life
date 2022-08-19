@@ -45,8 +45,8 @@ const DaysInput = (props: any) => {
                     days.push({"key": i+1,"day": `Day - ${i+1}`})
                }
           }else {
-               for (var i=0; i<props?.duration;i++){
-                    days.push({"key": i+1,"day": `${moment(props?.startDate).add(i, 'days').format("Do, MMM YY")}`})
+               for (var j=0; j<props?.duration;j++){
+                    days.push({"key": j+1,"day": `${moment(props?.startDate).add(j, 'days').format("Do, MMM YY")}`})
                }  
           }
      }
