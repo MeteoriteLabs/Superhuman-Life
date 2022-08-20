@@ -348,12 +348,11 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
           }
      }
 
-     function handleAspectRation(data: String){
-          console.log(data);
+     function handleAspectRatio(data: String){
           if(data !== undefined){
                return parseInt(data.split(":")[0]) / parseInt(data.split(":")[1]);
           }else {
-               return 5 / 4;
+               return 5 / 3;
           }
      }
 
@@ -445,7 +444,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                                         image={imageSrc}
                                         crop={crop}
                                         zoom={zoom}
-                                        aspect={handleAspectRation(props.aspectRatio)}
+                                        aspect={handleAspectRatio(props.aspectRatio)}
                                         onCropChange={setCrop}
                                         onCropComplete={onCropComplete}
                                         onZoomChange={setZoom}
