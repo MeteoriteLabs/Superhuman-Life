@@ -28,6 +28,9 @@ const myBucket = new AWS.S3({
 var tus: any = require("tus-js-client");
 
 const UploadImageToS3WithNativeSdk = (props: any) => {
+
+     console.log(props);
+
      const [progress, setProgress] = useState<any>(0);
      const [selectedFile, setSelectedFile] = useState<any>(null);
      const [render, setRender] = useState<any>(null);
@@ -345,6 +348,14 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
           }
      }
 
+     function handleAspectRatio(data: String){
+          if(data !== undefined){
+               return parseInt(data.split(":")[0]) / parseInt(data.split(":")[1]);
+          }else {
+               return 5 / 3;
+          }
+     }
+
      function videoDelete() {
           // try {
           //      fetch(process.env.REACT_APP_CLOUDFLARE_URL, {
@@ -370,6 +381,8 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
           }
           // eslint-disable-next-line react-hooks/exhaustive-deps
      }, [url]);
+
+     console.log(url);
 
      return (
           <div>
@@ -431,7 +444,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                                         image={imageSrc}
                                         crop={crop}
                                         zoom={zoom}
-                                        aspect={5 / 3}
+                                        aspect={handleAspectRatio(props.aspectRatio)}
                                         onCropChange={setCrop}
                                         onCropComplete={onCropComplete}
                                         onZoomChange={setZoom}

@@ -82,30 +82,6 @@ const TransferPrograms = (props: any) => {
                }
           });
 
-          // for (var j = 0; j < eventsJson.length; j++) {
-          //      if (allEvents.length === 0) {
-          //           allEvents.push(eventsJson[j]);
-          //       } else {
-          //           var timeStart: any = new Date("01/01/2007 " + handleTimeFormat(eventsJson[j].startTime));
-          //           var timeEnd: any = new Date("01/01/2007 " + handleTimeFormat(eventsJson[j].endTime));
-          //           var diff1 = timeEnd - timeStart;
-          //           for (var i = 0; i <= allEvents.length - 1; i++) {
-          //               var startTimeHour: any = new Date("01/01/2007 " + handleTimeFormat(allEvents[i].startTime));
-          //               var endTimeHour: any = new Date("01/01/2007 " + handleTimeFormat(allEvents[i].endTime));
-          //               var diff2 = endTimeHour - startTimeHour;
-    
-          //               if (diff2 < diff1) {
-          //                allEvents.splice(i, 0, eventsJson[j]);
-          //                   break;
-          //               }
-          //               if (i === allEvents.length - 1) {
-          //                     allEvents.push(eventsJson[j]);
-          //                     break;
-          //               }
-          //           }
-          //       }
-          // }
-
           for(var i=0; i<eventsJson.length; i++){
                if(eventsJson[i].type === 'workout'){
                     createSession({
@@ -136,12 +112,6 @@ const TransferPrograms = (props: any) => {
                      })
                }
           }
-          // updateProgram({
-          //      variables: {
-          //           programid: program_id,
-          //           events: allEvents
-          //      }
-          // });
      }
 
      function FetchData(_variables: {} = { id: program_id }) {

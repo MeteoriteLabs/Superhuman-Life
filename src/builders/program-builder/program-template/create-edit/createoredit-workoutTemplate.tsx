@@ -120,9 +120,6 @@ function CreateEditWorkoutTemplate(props: any, ref: any) {
             });
         }
      } });
-    // const [updateProgram] = useMutation(UPDATE_FITNESSPROGRAMS, { onCompleted: (r: any) => { modalTrigger.next(false); } });
-    //     const [editExercise] = useMutation(UPDATE_EXERCISE,{variables: {exerciseid: operation.id}, onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
-    //     const [deleteExercise] = useMutation(DELETE_EXERCISE, { onCompleted: (e: any) => console.log(e), refetchQueries: ["GET_TABLEDATA"] });
 
     const modalTrigger = new Subject();
 
@@ -253,16 +250,6 @@ function CreateEditWorkoutTemplate(props: any, ref: any) {
                 }
             });
         }
-
-        
-
-        // updateProgram({
-        //     variables: {
-        //         programid: program_id,
-        //         events: existingEvents,
-        //         renewal_dt: lastEventDay
-        //     }
-        // });
     }
 
     function OnSubmit(frm: any) {

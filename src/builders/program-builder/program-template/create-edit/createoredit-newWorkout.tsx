@@ -72,8 +72,6 @@ function CreateEditNewWorkout(props: any, ref: any) {
     }});
     
     const [createWorkout] = useMutation(CREATE_WORKOUT, { onCompleted: (r: any) => { updateSchedulerEvents(frmDetails, r.createWorkout.data.id); modalTrigger.next(false); } });
-    // const [CreateProgram] = useMutation(CREATE_PROGRAM, { onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
-    // const [updateProgram] = useMutation(UPDATE_FITNESSPROGRAMS, {onCompleted: (r: any) => { modalTrigger.next(false); } });
     const [createSessionBooking] = useMutation(CREATE_SESSION_BOOKING, { onCompleted: (data: any) => {modalTrigger.next(false)} })
     const [upateSessions] = useMutation(UPDATE_TAG_SESSIONS, { onCompleted: (data: any) => {
         createSessionBooking({
@@ -119,8 +117,6 @@ function CreateEditNewWorkout(props: any, ref: any) {
             });
         }
      } });
-    //     const [editExercise] = useMutation(UPDATE_EXERCISE,{variables: {exerciseid: operation.id}, onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
-//     const [deleteExercise] = useMutation(DELETE_EXERCISE, { onCompleted: (e: any) => console.log(e), refetchQueries: ["GET_TABLEDATA"] });
 
     const modalTrigger =  new Subject();
     useImperativeHandle(ref, () => ({
@@ -234,12 +230,6 @@ function CreateEditNewWorkout(props: any, ref: any) {
             }
         })
     }
-
-        // updateProgram({ variables: {
-        //     programid: program_id,
-        //     events: existingEvents,
-        //     renewal_dt: lastEventDay
-        // } });
     }
 
     function UpdateProgram(frm: any) {

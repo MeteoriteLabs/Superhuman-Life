@@ -42,17 +42,10 @@ function CreateEditActivity(props: any, ref: any) {
         setSessionsIds(sessionsExistingValues);
     }});
 
-     // const [CreateProgram] = useMutation(CREATE_PROGRAM, { onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
-     // const [updateProgram] = useMutation(UPDATE_FITNESSPROGRAMS, {
-     //      onCompleted: (r: any) => {
-     //           modalTrigger.next(false);
-     //      },
-     // });
+
      const [createSessionBooking] = useMutation(CREATE_SESSION_BOOKING, { onCompleted: (data: any) => {modalTrigger.next(false)} })
      const [upateSessions] = useMutation(UPDATE_TAG_SESSIONS, { onCompleted: (data: any) => {modalTrigger.next(false);}})
     const [createSession] = useMutation(CREATE_SESSION);
-     //     const [editExercise] = useMutation(UPDATE_EXERCISE,{variables: {exerciseid: operation.id}, onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
-     //     const [deleteExercise] = useMutation(DELETE_EXERCISE, { onCompleted: (e: any) => console.log(e), refetchQueries: ["GET_TABLEDATA"] });
 
      const [updateTemplateSessions] = useMutation(UPDATE_FITNESSPORGRAMS_SESSIONS, { onCompleted: (data: any) => {modalTrigger.next(false);} });
 
@@ -222,27 +215,8 @@ function CreateEditActivity(props: any, ref: any) {
                     }
                 })
           }
-
-          // updateProgram({
-          //      variables: {
-          //           programid: program_id,
-          //           events: existingEvents,
-          //           renewal_dt: lastEventDay,
-          //      },
-          // });
      }
 
-     // function OnSubmit(frm: any) {
-     //     //bind user id
-     //     if(frm)
-     //     frm.user_permissions_user = auth.userid;
-
-     //     switch (operation.type) {
-     //         case 'create':
-     //             UpdateProgram(frm);
-     //             break;
-     //     }
-     // }
      function OnSubmit(frm: any) {
           console.log(frm);
           console.log(frm.name);
@@ -271,19 +245,6 @@ function CreateEditActivity(props: any, ref: any) {
 
      return (
           <>
-               {/* {render && */}
-               {/* <ModalView
-                    name={name}
-                    isStepper={true}
-                    formUISchema={schema}
-                    formSchema={programSchema}
-                    formSubmit={name === "View" ? () => { modalTrigger.next(false); } : (frm: any) => { OnSubmit(frm); }}
-                    formData={programDetails}
-                    stepperValues={["Schedule", "Activity"]}
-                    widgets={widgets}
-                    modalTrigger={modalTrigger}
-                    type={operation.type}
-                /> */}
                <ModalView
                     name={operation.type}
                     isStepper={true}
@@ -298,7 +259,6 @@ function CreateEditActivity(props: any, ref: any) {
                     widgets={widgets}
                     modalTrigger={modalTrigger}
                />
-               {/* } */}
           </>
      );
 }
