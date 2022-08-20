@@ -16,6 +16,8 @@ import "./profile.css";
 import ChangePasswordPage from '../changePassword';
 
 import EditProfile from "./EditProfile";
+import ProfileCard from "./ProfileOptions/ProfileCard";
+import ProfileAccordion from "./ProfileOptions/ProfileAccordion";
 
 export default function ProfilePage() {
   // const auth = useContext(AuthContext);
@@ -36,14 +38,15 @@ export default function ProfilePage() {
         id="controlled-tab"
         activeKey={key}
         onSelect={(k: any) => setKey(k)}
-        className="mb-3 mt-5 pt-5 d-flex justify-content-center"
+        className="mb-3 d-flex justify-content-center"
       >
         <Tab eventKey="profile" title="Profile">
+        <ProfileCard/>
           <Container fluid>
-            <Row className="">
+            {/*<Row className="">
               <Card>
                 <div>
-                  {/* Settings */}
+                  {/* Settings *
                   <Col
                     md={12}
                     className="rounded"
@@ -77,7 +80,7 @@ export default function ProfilePage() {
                       <Col md={{ offset: 2, span: 6 }}>
                         <p>Designation</p>
                       </Col>
-                      {/* Number */}
+                      {/* Number *
                       <Col
                         md={{ offset: 2, span: 2 }}
                         className=" d-flex justify-content-end"
@@ -97,7 +100,7 @@ export default function ProfilePage() {
                     </div>
                   </Col>
 
-                  {/* About */}
+                  {/* About *
                   <Col md={{ offset: 3, span: 6 }} className="mt-5">
                     <p className="lead">
                       Lorem Ipsum is simply dummy text of the printing and
@@ -105,7 +108,7 @@ export default function ProfilePage() {
                       standard dummy text ever since the 1500s, when an unknown
                     </p>
                   </Col>
-                  {/* Social Media, Link, Icon Share */}
+                  {/* Social Media, Link, Icon Share *
                   <Col md={12} className="mt-5">
                     <Row>
                       <Col md={{ offset: 0, span: 3 }}>
@@ -142,13 +145,15 @@ export default function ProfilePage() {
               <Col md={{ offset: 9, span: 3 }}>
                 Visibility to open community
               </Col>
-            </Row> 
-            <Row className="my-3">
+            </Row> */}
+            {/* <Row className="my-3">
               <Col className="p-2" md={12}>
                 <EditProfile ref={editProfileComponent}></EditProfile>
               </Col>
-            </Row>
-          </Container>
+            </Row> */}
+            <ProfileAccordion/>
+          </Container> 
+          
         </Tab>
 
         <Tab eventKey="collaborations" title="Collaborations">

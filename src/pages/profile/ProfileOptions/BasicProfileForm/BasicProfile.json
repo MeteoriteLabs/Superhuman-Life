@@ -10,64 +10,27 @@
                 "type": "string",
                 "title": "Last Name"
             },
+            "Designations": {
+                "type": "string",
+                "title": "Designations"
+            },
             "About_User": {
                 "type": "string",
                 "title": "About"
             },
-            "addresses": {
-                "type": "array",
-                "title": "Address",
-                "items": {
-                    "type": "string"
-                }
-            },
-            "educational_details": {
-                "type": "array",
-                "title": "Education",
-                "items": {
-                    "type": "string"
-                }
-            },
+            
             "Phone_Number": {
                 "type": "string",
                 "title": "Contact Number"
             },
-            "Photo_ID": {
+            "Email": {
                 "type": "string",
-                "title": "Upload Profile Picture"
+                "title": "Email"
             },
-            "instagram_url": {
+            "Website_URL": {
                 "type": "string",
-                "title": "Instagram URL"
-            },
-            "Facebook_URL": {
-                "type": "string",
-                "title": "Facebook URL"
-            },
-            "Youtube_URL": {
-                "type": "string",
-                "title": "Youtube URL"
-            },
-            "LinkedIn_URL": {
-                "type": "string",
-                "title": "LinkedIn URL"
-            },
-            "Clubhouse_URL": {
-                "type": "string",
-                "title": "Clubhouse URL"
-            },
-            "Twitter_URL": {
-                "type": "string",
-                "title": "Twitter URL"
-            },
-            "Verification_ID": {
-                "type": "string",
-                "title": "Verification"
-            },
-            "Photo_profile_banner_ID": {
-                "type": "string",
-                "title": "Profile Banner"
-            }
+                "title": "Website URL"
+            }    
         }
     }
 }
