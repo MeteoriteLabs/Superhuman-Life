@@ -31,9 +31,8 @@ export default function EventsTab() {
             title: name,
             fitnessdisciplines: frm.disciplineId.split(","),
             duration_days: frm.duration,
-            events: frm.events,
-            Is_program: false,
             level: frm.level,
+            sessions: frm.sessionId.split(","),
             description: frm.description,
             users_permissions_user: frm.user
         } });
@@ -101,6 +100,7 @@ export default function EventsTab() {
 
     function loadData(data: any) {
         const flattenData = flattenObj({...data});
+        console.log(flattenData);
         setTableData(
             [...flattenData.fitnessprograms].map((detail) => {
                 return {
@@ -113,7 +113,9 @@ export default function EventsTab() {
                         return val.id;
                     }).join(","),
                     level: detail.level,
-                    events: detail.events,
+                    sessionId: detail.sessions.map((val: any) => {
+                        return val.id;
+                    }).join(","),
                     duration: detail.duration_days,
                     description: detail.description,
                     user: detail.users_permissions_user.id,

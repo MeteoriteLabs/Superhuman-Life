@@ -2,28 +2,35 @@ import { gql } from "@apollo/client";
 
 export const GET_TABLEDATA = gql`
   query ProgramQuery($id: ID!) {
-    fitnessprograms(
-      filters: {
-        users_permissions_user: { id: { eq: $id } }
+    fitnessprograms(filters:{
+      users_permissions_user:{
+        id: { eq: $id }
       }
-    ) {
-      data {
+    }){
+      data{
         id
-        attributes {
+        attributes{
           title
           description
           updatedAt
           duration_days
           level
-          users_permissions_user {
-            data {
+          start_date
+          end_date
+          sessions{
+            data{
               id
             }
           }
-          fitnessdisciplines {
-            data {
+          users_permissions_user{
+            data{
               id
-              attributes {
+            }
+          }
+          fitnessdisciplines{
+            data{
+              id
+              attributes{
                 disciplinename
               }
             }
@@ -43,7 +50,6 @@ export const GET_DATA = gql`
           title
           description
           updatedAt
-          events
           duration_days
           level
           users_permissions_user {
@@ -75,6 +81,7 @@ export const CREATE_PROGRAM = gql`
     $users_permissions_user: ID!
     $startdate: Date
     $enddate: Date
+    $sessions: [ID]
   ) {
     createFitnessprogram(
       data: {
@@ -86,6 +93,7 @@ export const CREATE_PROGRAM = gql`
         users_permissions_user: $users_permissions_user
         start_date: $startdate
         end_date: $enddate
+        sessions: $sessions
       }
     ) {
       data {

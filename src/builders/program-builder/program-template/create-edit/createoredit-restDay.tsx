@@ -1,7 +1,7 @@
 import React, { useContext, useImperativeHandle, useState } from 'react';
 import { useQuery, useMutation } from "@apollo/client";
 import ModalView from "../../../../components/modal";
-import { GET_SCHEDULEREVENTS, CREATE_SESSION, GET_SESSIONS, UPDATE_TAG_SESSIONS, CREATE_SESSION_BOOKING } from "../queries";
+import { GET_SCHEDULEREVENTS, CREATE_SESSION, GET_SESSIONS, UPDATE_TAG_SESSIONS, CREATE_SESSION_BOOKING, GET_TEMPLATE_SESSIONS, UPDATE_FITNESSPORGRAMS_SESSIONS } from "../queries";
 import AuthContext from "../../../../context/auth-context";
 import { schema, widgets } from '../schema/restDaySchema';
 import {Subject} from 'rxjs';
@@ -22,6 +22,16 @@ function CreateEditRestDay(props: any, ref: any) {
     const program_id = window.location.pathname.split('/').pop();
 
     const [sessionsIds, setSessionsIds] = useState<any>([]);
+    const [templateSessionsIds, setTemplateSessionsIds] =  useState<any>([]);
+
+    useQuery(GET_TEMPLATE_SESSIONS, {variables: {id: program_id}, skip: (window.location.pathname.split('/')[1] !== 'programs'), onCompleted: (data: any) => {
+        const flattenData = flattenObj({...data});
+        const templateExistingValues = [...templateSessionsIds];
+        for(var q=0; q<flattenData.fitnessprograms[0].sessions.length; q++){
+            templateExistingValues.push(flattenData.fitnessprograms[0].sessions[q].id);
+        }
+        setTemplateSessionsIds(templateExistingValues);
+   }});
 
     useQuery(GET_SESSIONS, {variables: {id: program_id},onCompleted: (data: any) => {
         const flattenData = flattenObj({...data});
@@ -41,6 +51,8 @@ function CreateEditRestDay(props: any, ref: any) {
     //     const [editExercise] = useMutation(UPDATE_EXERCISE,{variables: {exerciseid: operation.id}, onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
 //     const [deleteExercise] = useMutation(DELETE_EXERCISE, { onCompleted: (e: any) => console.log(e), refetchQueries: ["GET_TABLEDATA"] });
 
+    const [updateTemplateSessions] = useMutation(UPDATE_FITNESSPORGRAMS_SESSIONS, { onCompleted: (data: any) => {modalTrigger.next(false);} });
+
     const modalTrigger =  new Subject();
 
     useImperativeHandle(ref, () => ({
@@ -49,6 +61,7 @@ function CreateEditRestDay(props: any, ref: any) {
             setOperation(msg);
             schema.startDate = props.startDate;
             schema.duration = props.duration;
+            schema.type = window.location.pathname.split('/')[1] === "programs" ? 'day' : '';
 
             if (msg && !msg.id) //render form if no message id
                 modalTrigger.next(true);
@@ -78,6 +91,8 @@ function CreateEditRestDay(props: any, ref: any) {
     function UpdateProgram(frm: any) {
         const sessionIds_new: any = [];
         const sessionIds_old: string[] = [...sessionsIds];
+        const templateIds_old: string[] = [...templateSessionsIds];
+
         function updateSessionFunc(id: any){
             sessionIds_new.push(id);
             if(frm.day.length === sessionIds_new.length){
@@ -90,6 +105,19 @@ function CreateEditRestDay(props: any, ref: any) {
             }
         }
 
+        function updateTemplateSessionsFunc(id: any){
+            debugger;
+            sessionIds_new.push(id);
+            if(frm.day.length === sessionIds_new.length){
+                 updateTemplateSessions({
+                      variables: {
+                           id: program_id,
+                           sessions_ids: templateIds_old.concat(sessionIds_new)
+                      }
+                 })
+            }
+       }
+
         if(frm.day){
                frm.day = JSON.parse(frm.day);
                for(var i=0; i<frm.day.length; i++){
@@ -97,6 +125,7 @@ function CreateEditRestDay(props: any, ref: any) {
                         variables: {
                             type: "restday",
                             Is_restday: true,
+                            day_of_program: frm.day[i].key,
                             session_date: moment(frm.day[i].day, 'Do, MMM YY').format('YYYY-MM-DD'),
                             changemaker: auth.userid
                         },
@@ -111,7 +140,11 @@ function CreateEditRestDay(props: any, ref: any) {
                                     }
                                 })
                             }else {
-                                updateSessionFunc(data.createSession.data.id);
+                                if(window.location.pathname.split('/')[1] === 'programs'){
+                                    return updateTemplateSessionsFunc(data.createSession.data.id);
+                               }else {
+                                    return updateSessionFunc(data.createSession.data.id);
+                               }
                             }
                         }
                     });

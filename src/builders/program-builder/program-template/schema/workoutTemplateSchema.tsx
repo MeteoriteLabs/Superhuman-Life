@@ -18,7 +18,7 @@ export const schema: any = {
      },
      day: {
           "ui:widget": (props) => {
-               return <DaysInput type={schema.type} startDate={schema.startDate} duration={schema.duration} id="newWorkout" onChange={props.onChange}/>
+               return <DaysInput dayType={schema.type} startDate={schema.startDate} duration={schema.duration} id="newWorkout" onChange={props.onChange}/>
            }
      },
      workoutEvent: {

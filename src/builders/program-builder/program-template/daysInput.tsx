@@ -8,8 +8,10 @@ import moment from 'moment';
 const DaysInput = (props: any) => {
      const last = window.location.pathname.split('/').pop();
 
+     console.log(props)
+     // [moment(props.startDate).add(props.val, 'days').format("Do, MMM YY")]
      // const [data, setData] = useState(0);
-     const [selected, setSelected] = useState(props.val ? [moment(props.startDate).add(props.val, 'days').format("Do, MMM YY")] : []);
+     const [selected, setSelected] = useState(props.dayType === "day" && props.val ? [`Day - ${props.val}`] : props.val ? [moment(props.startDate).add(props.val, 'days').format("Do, MMM YY")] : []);
 
      const GET_PROGRAM = gql`
      query getprogram($id: ID!) {
@@ -40,7 +42,7 @@ const DaysInput = (props: any) => {
      const days: any[] = [];
 
      function renderInputField() {
-          if(props?.type === 'day') {
+          if(props?.dayType === 'day') {
                for (var i=0; i<props?.duration;i++){
                     days.push({"key": i+1,"day": `Day - ${i+1}`})
                }
