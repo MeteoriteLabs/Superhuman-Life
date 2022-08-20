@@ -12,6 +12,7 @@ export const schema: any = {
         onChange={(event: any) => {
           props.onChange(event);
         }}
+        aspectRation={"4:4"}
         allowImage={true}
         allowVideo={false}
       />
