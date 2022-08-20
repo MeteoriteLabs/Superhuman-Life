@@ -11,7 +11,7 @@ export const widgets = {
 export const schema: any = {
      day: {
           "ui:widget": (props) => {
-               return <DaysInput startDate={schema.startDate} duration={schema.duration} onChange={props.onChange}/>
+               return <DaysInput dayType={schema.type} startDate={schema.startDate} duration={schema.duration} onChange={props.onChange}/>
           }
      },
      time: {

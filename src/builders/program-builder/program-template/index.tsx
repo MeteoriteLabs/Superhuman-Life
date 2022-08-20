@@ -16,13 +16,14 @@ const ProgramManager = (props: any) => {
         }, 1500)
     }, [show]);
 
-    function FetchData(_variables: {} = { id: last }) {
-        useQuery(GET_TABLEDATA, { variables: _variables, onCompleted: loadData });
-    }
+    // function FetchData(_variables: {} = { id: last }) {
+        const mainQuery = useQuery(GET_TABLEDATA, { variables: { id: last }, onCompleted: loadData });
+    // }
 
     function loadData(data: any) {
         const flattenData = flattenObj({...data});
-        console.log(flattenData);
+        const restDayData = flattenData.fitnessprograms[0].sessions.filter((session: any) => session.Is_restday === true);
+        const sessionData = flattenData.fitnessprograms[0].sessions.filter((val: any) => !restDayData.includes(val));
         setData(
             [...flattenData.fitnessprograms].map((detail) => {
                 return {
@@ -34,14 +35,19 @@ const ProgramManager = (props: any) => {
                     level: detail.level,
                     duration: detail.duration_days,
                     details: detail.description,
-                    restDays: detail.rest_days,
-                    sessions: detail.sessions
+                    restDays: restDayData,
+                    sessions: sessionData
                 }
             })
         )
     }
 
-    FetchData({ id: last });
+    function queryCallback(){
+        mainQuery.refetch();
+    }
+
+
+    // FetchData({ id: last });
     if (!show) return <span style={{ color: 'red' }}>Loading...</span>;
     else return (
         <>
@@ -63,7 +69,7 @@ const ProgramManager = (props: any) => {
                         </Col>
                     </div>
                     <div className="mt-5">
-                        <Scheduler templateSessions={data[0].sessions} days={data[0].duration} type={'day'} restDays={data[0].restDays} programId={last} />
+                        <Scheduler templateSessions={data[0].sessions} callbackTemplate={queryCallback} days={data[0].duration} type={'day'} restDays={data[0].restDays} programId={last} />
                     </div>
                 </Col>
             </Row>

@@ -31,7 +31,22 @@ const TransferProgramTable = (props: any) => {
      function handleTransfer(e: any){
           const values = [...data];
           for(var i=0; i<e.length; i++){
-               values.push({name: e[i].name, transferId: i, id: e[i].id, type: e[i].type});
+               values.push({
+                    name: e[i].workout === null ? e[i].activity.title : e[i].workout.workouttitle, 
+                    transferId: i, 
+                    id: e[i].id, 
+                    type: e[i].type, 
+                    startTime: e[i].start_time, 
+                    endTime: e[i].end_time,
+                    Is_restday: e[i].Is_restday,
+                    activity: e[i].activity,
+                    activity_target: e[i].activity_target,
+                    changemaker: e[i].changemaker.id,
+                    day_of_program: e[i].day_of_program,
+                    mode: e[i].mode,
+                    tag: e[i].tag,
+                    workout: e[i].workout                    
+               });
           }
           setData(values);
      }
@@ -42,7 +57,6 @@ const TransferProgramTable = (props: any) => {
                setShow(true);
           }, 500);
      }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
      props.onChange(data);
 
      if (!show) return <span style={{ color: 'red' }}>Loading...</span>;
@@ -58,9 +72,9 @@ const TransferProgramTable = (props: any) => {
                               {props.events.map((val: any, index) => {
                                    return (
                                         <tr>
-                                        <td><Form.Control value={val.name} disabled></Form.Control></td>
+                                        <td><Form.Control value={val.workout === null ? val.activity.title : val.workout.workouttitle} disabled></Form.Control></td>
                                         <td>to</td>
-                                        <td><DaysInput onChange={(e) => {handleDaysData(e, index)}} type="transfer"/></td>
+                                        <td><DaysInput duration={props.duration.length} dayType={props.dayType} onChange={(e) => {handleDaysData(e, index)}} type="transfer"/></td>
                                         <td><InputGroup>
                                              <FormControl
                                              placeholder="24Hr"

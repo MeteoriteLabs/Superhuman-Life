@@ -16,6 +16,7 @@ export const GET_TABLEDATA = gql`
                 start_time
                 end_time
                 tag
+                Is_restday
                 type
                 mode
                 activity{
@@ -123,7 +124,32 @@ export const PROGRAM_EVENTS = gql`
       data {
         id
         attributes {
-          events
+          sessions{
+            data{
+              id
+              attributes{
+                day_of_program
+                Is_restday
+                tag
+                type
+                mode
+                end_time
+                start_time
+                Is_restday
+                workout{
+                  data{
+                    id
+                  }
+                }
+                activity{
+                  data{
+                    id
+                  }
+                }
+                activity_target
+              }
+            }
+          }
         }
       }
     }
@@ -617,18 +643,6 @@ query getTemplateSessions($id: ID!){
   }
 }
 `;
-
-export const UPDATE_FITNESSPROGRAMS_SESSIONS = gql`
-  mutation updateFitnessProgramsSessions($id: ID!, $sessions: [ID]){
-    updateFitnessprogram(id: $id, data:{
-      sessions: $sessions
-    }){
-      data{
-        id
-      }
-    }
-  }
-`
 
 
 // export const GET_SESSIONS_ON_DATE = gql`

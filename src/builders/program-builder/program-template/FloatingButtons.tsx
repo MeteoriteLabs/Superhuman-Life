@@ -49,12 +49,12 @@ const FloatingButton = (props: any) => {
                          >
                               <Dropdown.Header style={{ color: 'black', fontWeight: 'bold', letterSpacing: '1px'}}>Movement</Dropdown.Header>
                               <Dropdown.Divider/>
-                              {/* <Dropdown.Item eventKey="1" onClick={(e) => {
+                              {window.location.pathname.split("/")[1] === 'programs' &&<Dropdown.Item eventKey="1" onClick={(e) => {
                                    props.callback('block');
-                              }}>Program Template</Dropdown.Item> */}
-                              <Dropdown.Item eventKey="2" onClick={(e) => {
+                              }}>Program Template</Dropdown.Item>}
+                              {window.location.pathname.split("/")[1] !== 'programs' && <Dropdown.Item eventKey="2" onClick={(e) => {
                                    props.callback2('block');
-                              }}>Sessions</Dropdown.Item>
+                              }}>Sessions</Dropdown.Item>}
                               <Dropdown.Item eventKey="3" onClick={() => {
                                    createEditWorkoutTemplateComponent.current.TriggerForm({ id: null, type: 'create' });
                               }}>Workout Template</Dropdown.Item>
@@ -69,7 +69,7 @@ const FloatingButton = (props: any) => {
                               }}>Mark Rest Day</Dropdown.Item>
                          </DropdownButton>
                          </Row>
-                         <Row className="mt-3" style={{ justifyContent: 'center'}}>
+                         {/* <Row className="mt-3" style={{ justifyContent: 'center'}}>
                          <DropdownButton
                               key={1}
                               drop='left'
@@ -83,7 +83,7 @@ const FloatingButton = (props: any) => {
                               <Dropdown.Item eventKey="3">Add Template</Dropdown.Item>
                               <Dropdown.Item eventKey="4">Add Food</Dropdown.Item>
                          </DropdownButton>
-                         </Row>
+                         </Row> */}
                          <Row className="mt-3" style={{ justifyContent: 'center'}}>
                          <DropdownButton
                               key={1}

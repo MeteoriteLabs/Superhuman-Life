@@ -22,8 +22,7 @@ const Schedular = (props: any) => {
     const [show, setShow] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [onDragAndDrop, setOnDragAndDrop] = useState(false);
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [currentProgram, setCurrentProgram] = useState<any[]>([]);
+    const [currentProgram] = useState<any[]>([]);
     const [edit, setEdit] = useState(true);
     const [del, setDel] = useState(false);
     const [duplicate, setDuplicate] = useState(false);
@@ -384,12 +383,21 @@ const Schedular = (props: any) => {
 
     // this handles the displaying of rest days on the scheduler
     function handleRestDays(val: any) {
+        if(props?.type === 'day'){
+            if (props.restDays) {
+                for (var j = 0; j < props.restDays.length; j++) {
+                    if (val === props.restDays[j].day_of_program) {
+                        return 'rgba(255,165,0)';
+                    }
+                }
+            }
+        }
         // the first if statement is to check if we are in the client scheduler page
         // the else if block is to run if we are in the session scheduler page
         if(props.clientSessions){
             if (props.restDays) {
-                for (var j = 0; j < props.restDays.length; j++) {
-                    if (val === calculateDay(props.startDate, props.restDays[j].session.session_date)) {
+                for (var k = 0; k < props.restDays.length; k++) {
+                    if (val === calculateDay(props.startDate, props.restDays[k].session.session_date)) {
                         return 'rgba(255,165,0)';
                     }
                 }
@@ -479,16 +487,20 @@ const Schedular = (props: any) => {
     }});
     const [updateFitnessProgramSessions] = useMutation(UPDATE_FITNESSPORGRAMS_SESSIONS, { onCompleted: () => {
         setEvent({});
+        props.callbackTemplate();
     }});
 
     function handleUpdateFitnessPrograms(newId: any){
         setNewSessionId(newId);
         const values = [...templateSessionsIds];
+        const holidayIds = props.restDays.map((day: any) => day.id).join(",").split(",");
+        debugger;
+        console.log(holidayIds);
         values.push(newId);
         updateFitnessProgramSessions({
             variables: {
                 id: program_id,
-                sessions_ids: values
+                sessions_ids: values.concat(holidayIds)
             }
         })
 
@@ -561,9 +573,6 @@ const Schedular = (props: any) => {
                 }
             });
         }
-
-        debugger;
-        console.log(duplicatedDay); 
 
         if(e.type === "workout"){
             createSession({
@@ -716,7 +725,39 @@ const Schedular = (props: any) => {
                 }
             });
         }
-        if(event.type === "workout"){
+        debugger;
+        console.log(event);
+        if(window.location.pathname.split('/')[1] === 'programs'){
+            if(event.type === 'workout'){
+                createSession({
+                    variables: {
+                        start_time: event.hour + ':' + event.min,
+                        end_time: event.endHour + ':' + event.endMin,
+                        workout: event.id,
+                        tag: tag === "" ? event.tag : tag,
+                        mode: mode === "" ? event.mode : mode,
+                        type: event.type,
+                        day_of_program: parseInt(event.day),
+                        changemaker: auth.userid
+                    }
+                })
+            }else {
+                createSession({
+                    variables: {
+                        day_of_program: parseInt(event.day),
+                        start_time: timeInput.startTime === "" ? event.hour + ':' + event.min : timeInput.startTime,
+                        end_time: timeInput.endTime === "" ? event.endHour + ':' + event.endMin : timeInput.endTime,
+                        activity: event.id,
+                        activity_target: event.activityTarget,
+                        tag: tag === "" ? event.tag : tag,
+                        mode: mode === "" ? event.mode : mode,
+                        type: e.type,
+                        session_date: moment(event.sessionDate).format('YYYY-MM-DD'),
+                        changemaker: auth.userid
+                    }
+                })
+            }
+        }else if(event.type === "workout"){
             if(event.tag === 'Group Class'){
                 const values = [...sessionIds];
                 values.push(event.sessionId);
@@ -816,8 +857,8 @@ const Schedular = (props: any) => {
             updateSession({
                 variables: {
                     id: event.sessionId,
-                    start_time: e.startChange.startTime,
-                    end_time: e.startChange.endTime,
+                    start_time: JSON.parse(e.startChange).startTime,
+                    end_time: JSON.parse(e.startChange).endTime,
                     tag: tag === "" ? event.tag : tag,
                     mode: mode === "" ? event.mode : mode
                 }
@@ -1141,7 +1182,7 @@ const Schedular = (props: any) => {
                 id: arr2.event.sessionId,
                 start_time: newEvent.startTime,
                 end_time: newEvent.endTime,
-                // day_of_program: parseInt(newEvent.day)
+                day_of_program: parseInt(newEvent.day),
                 session_date: moment(props.startDate).add(parseInt(newEvent.day) - 1, 'days').format('YYYY-MM-DD')
             }
         });
@@ -1422,7 +1463,7 @@ const Schedular = (props: any) => {
                                 <h6>Day: </h6>
                             </Col>
                             <Col lg={4}>
-                                <FormControl value={event.sessionDate ? moment(event.sessionDate).format("Do, MMM YY") : `Day - ${event.day}`} disabled />
+                                <FormControl value={event.sessionDate && props.type !== 'day' ? moment(event.sessionDate).format("Do, MMM YY") : `Day - ${event.day}`} disabled />
                             </Col>
                         </Row>
                         {(tag || event.tag) !== 'Classic' && <Row className="pt-3 align-items-center">

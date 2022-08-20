@@ -1,7 +1,7 @@
 import React, { useContext, useImperativeHandle, useState } from 'react';
 import { useQuery, useMutation, gql } from "@apollo/client";
 import ModalView from "../../../../components/modal";
-import { GET_SCHEDULEREVENTS, CREATE_SESSION, GET_SESSIONS, UPDATE_TAG_SESSIONS, CREATE_SESSION_BOOKING, GET_TEMPLATE_SESSIONS, UPDATE_FITNESSPROGRAMS_SESSIONS } from "../queries";
+import { GET_SCHEDULEREVENTS, CREATE_SESSION, GET_SESSIONS, UPDATE_TAG_SESSIONS, CREATE_SESSION_BOOKING, GET_TEMPLATE_SESSIONS, UPDATE_FITNESSPORGRAMS_SESSIONS } from "../queries";
 import AuthContext from "../../../../context/auth-context";
 import { schema, widgets } from '../schema/workoutTemplateSchema';
 import { Subject } from 'rxjs';
@@ -51,7 +51,7 @@ function CreateEditWorkoutTemplate(props: any, ref: any) {
 
     const query = useQuery(GET_SESSIONS_BY_DATE, {skip: true});
 
-    useQuery(GET_TEMPLATE_SESSIONS, {variables: {id: program_id}, onCompleted: (data: any) => {
+    useQuery(GET_TEMPLATE_SESSIONS, {variables: {id: program_id}, skip: (window.location.pathname.split('/')[1] !== 'programs'), onCompleted: (data: any) => {
         const flattenData = flattenObj({...data});
         const templateExistingValues = [...templateSessionsIds];
         for(var q=0; q<flattenData.fitnessprograms[0].sessions.length; q++){
@@ -72,8 +72,7 @@ function CreateEditWorkoutTemplate(props: any, ref: any) {
         setSessionsIds(sessionsExistingValues);
     }});
 
-    const [updateFitenssProgram] = useMutation(UPDATE_FITNESSPROGRAMS_SESSIONS, { onCompleted: (data: any) => {
-        debugger;
+    const [updateFitenssProgram] = useMutation(UPDATE_FITNESSPORGRAMS_SESSIONS, { onCompleted: (data: any) => {
         modalTrigger.next(false);
         props.callback();
     }})
@@ -91,14 +90,13 @@ function CreateEditWorkoutTemplate(props: any, ref: any) {
         
         
         if(window.location.pathname.split('/')[1] === 'programs'){
-            debugger;
             const templateValues = [...templateSessionsIds];
             setUserId(r.createSession.data.id);
             templateValues.push(r.createSession.data.id);
             updateFitenssProgram({
                 variables: {
                     id: program_id,
-                    sessions: templateValues
+                    sessions_ids: templateValues
                 }
             })
         }
@@ -109,7 +107,7 @@ function CreateEditWorkoutTemplate(props: any, ref: any) {
                     client: program_id
                 }
             });
-        }else if(window.location.pathname.split('/')[1] !== 'client' && window.location.pathname.split('/')[1] === 'programs') {
+        }else if(window.location.pathname.split('/')[1] !== 'client' && window.location.pathname.split('/')[1] !== 'programs') {
             const values = [...sessionsIds];
             // here userId refers to the sessionID
             setUserId(r.createSession.data.id);
@@ -133,7 +131,7 @@ function CreateEditWorkoutTemplate(props: any, ref: any) {
             setOperation(msg);
             schema.startDate = props.startDate;
             schema.duration = props.duration;
-            schema.type = 'day';
+            schema.type = window.location.pathname.split('/')[1] === "programs" ? 'day' : '';
 
             if (msg && !msg.id) //render form if no message id
                 modalTrigger.next(true);
@@ -226,8 +224,6 @@ function CreateEditWorkoutTemplate(props: any, ref: any) {
                 lastEventDay = parseInt(existingEvents[k].day);
             }
         }
-        debugger;
-        console.log(eventJson);
 
         if(window.location.pathname.split('/')[1] === 'programs'){
             createSession({

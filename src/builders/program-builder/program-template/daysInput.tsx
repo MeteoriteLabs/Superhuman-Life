@@ -11,7 +11,7 @@ const DaysInput = (props: any) => {
      console.log(props)
      // [moment(props.startDate).add(props.val, 'days').format("Do, MMM YY")]
      // const [data, setData] = useState(0);
-     const [selected, setSelected] = useState(props.dayType === "day" ? [`Day - ${props.val}`] : props.val ? [moment(props.startDate).add(props.val, 'days').format("Do, MMM YY")] : []);
+     const [selected, setSelected] = useState(props.dayType === "day" && props.val ? [`Day - ${props.val}`] : props.val ? [moment(props.startDate).add(props.val, 'days').format("Do, MMM YY")] : []);
 
      const GET_PROGRAM = gql`
      query getprogram($id: ID!) {

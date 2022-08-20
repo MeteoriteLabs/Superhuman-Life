@@ -39,7 +39,28 @@ const SchedulerEvent = (props: any) => {
           }, 300)
      }, [show]); 
 
+     function handleTemplteRenderTable(data: any) {
+          const values = [...data];
+          for(var d=1; d<=props.programDays; d++){
+               values[d] = JSON.parse(JSON.stringify(schedulerDay));
+          }
+
+          if(props.programEvents){
+               props.programEvents.forEach((val) => {
+                    if(!values[val.day_of_program]){
+                         values[val.day_of_program] = [];
+                    }
+                    values[val.day_of_program].push({"import": "importedEvent","type": val.type, "mode": val.mode, "tag": val.tag,"type2": "transferEvent" , "title": val.activity === null ? val.workout?.workouttitle : val.activity.title, "color": "skyblue", "id":  val.activity === null ? val.workout.id : val.activity.id, "endHour": val.end_time.split(":")[0], "endMin": val.end_time.split(":")[1], "hour": val.start_time.split(":")[0], "min": val.start_time.split(":")[1], "activityTarget": val.activity === null ? null : val.activity_target, "activity": val.activity === null ? null : val.activity, "day": val.day_of_program, "sessionId": val.id, "sessionDate": val.session_date});
+               })
+               setArr(values);
+          }
+          draganddrop();
+     }
+
      function handleRenderTable(data: any){
+          if(window.location.pathname.split("/")[1] === 'programs'){
+               return handleTemplteRenderTable(data);
+          }
           const values = [...data];
           for(var d=1; d<=props.programDays; d++){
                values[d] = JSON.parse(JSON.stringify(schedulerDay));
@@ -78,9 +99,10 @@ const SchedulerEvent = (props: any) => {
                <div>
                     <div style={{ overflow: 'auto', border: '1px solid black', maxHeight: '300px'}} className="schedular mt-5 mb-3">
                     <div className="day-row">
-                         {props?.days?.map(val => {
+                         {props?.programDays?.map(val => {
+                              console.log(val);
                               return (
-                                   <div className="cell" style={{ backgroundColor: 'white'}}>{`${val}`}</div>
+                                   <div className="cell" style={{ backgroundColor: 'white'}}>{`Day - ${val}`}</div>
                               )
                          })}
                     </div>
@@ -117,7 +139,7 @@ const SchedulerEvent = (props: any) => {
                </div>
                </div>
                {props.type !== 'sessions' && <Row className="justify-content-end mr-1">
-                    <TransferPrograms events={props.programEvents} />
+                    <TransferPrograms duration={props.programDays} events={props.programEvents} />
                </Row>}
         </>
      )
