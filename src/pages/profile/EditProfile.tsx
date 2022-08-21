@@ -10,13 +10,9 @@ import {
   DELETE_EDUCATION_DETAILS,
 } from "./queries/queries";
 import { useMutation, useQuery } from "@apollo/client";
-
 import BasicProfile from "./BasicProfile";
-
 import AuthContext from "../../context/auth-context";
-
 import { schema, widgets } from "./profileSchema";
-
 import { flattenObj } from "../../components/utils/responseFlatten";
 
 function EditProfile() {
@@ -25,7 +21,6 @@ function EditProfile() {
   const [webpageDetails, setWebPageDetails] = useState<any>({});
   const [addressID, setAddressID] = useState<any>([]);
   const [educationID, setEducationID] = useState<any>([]);
-
   const [profileData, setProfileData] = useState<any>();
 
   useQuery(FETCH_USER_PROFILE_DATA, {

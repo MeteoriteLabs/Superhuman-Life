@@ -1,7 +1,11 @@
-import React from 'react';
+import { useState } from 'react';
 import { Form, Container, Row, Col, Button } from "react-bootstrap";
+// import Form from "@rjsf/core";
 
 export default function Timings() {
+    const profileJson: { [name: string]: any } = require("../../Profile.json");
+    const [step] = useState<number>(2);
+
     return (
         <Container className="mt-5">
             <Row className="mt-3 ml-3 inline">
@@ -27,7 +31,14 @@ export default function Timings() {
                     aria-describedby="passwordHelpInline"
                 />
             </Form.Group>
-        </Form>
+        </Form> 
+        {/* <Form
+                // schema={BasicProfile}
+                schema={profileJson[step.toString()]}
+                // uiSchema={uiSchema}
+                // formData={formData}
+            >
+            </Form> */}
         </Container>
     )
 }

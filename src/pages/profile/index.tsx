@@ -9,7 +9,7 @@ import {
   Col
 } from "react-bootstrap";
 import "./profile.css";
-// import AuthContext from "../../context/auth-context";
+import AuthContext from "../../context/auth-context";
 // import { useQuery } from "@apollo/client";
 // import { FETCH_USER_PROFILE_DATA } from "./queries/queries";
 // import ellipse from "./ellipse.svg";
@@ -23,7 +23,7 @@ export default function ProfilePage() {
   // const auth = useContext(AuthContext);
   const [key, setKey] = useState("profile");
   const editProfileComponent = useRef<any>(null);
-  // const [profileData, setProfileData] = useState<any>({});
+  const [profileData, setProfileData] = useState<any>({});
 
   // useQuery(FETCH_USER_PROFILE_DATA, {
   //   variables: { id: auth.userid },

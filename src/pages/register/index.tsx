@@ -140,9 +140,9 @@ export default function Register() {
     const [newUserId, setNewUserId] = useState('');
 
     const [registerUser] = useMutation(REGISTER_USER, {onCompleted: (data: any) => {
-        console.log(data.register.user.id);
+        // console.log(data.register.user.id);
         setNewUserId(data.register.user.id);
-        console.log(userFormData);
+        // console.log(userFormData);
         updateUser({
             variables: {
                 userid: data.register.user.id, 
@@ -165,7 +165,7 @@ export default function Register() {
 
     const [updateUser] = useMutation(UPDATE_USER, {
         onCompleted: (data: any) => {
-            console.log(data);
+            // console.log(data);
             if(userFormData.organization[0]?.Do_you_have_an_organization === 'Yes') {
                 createOrganization({
                     variables: {
@@ -209,7 +209,7 @@ export default function Register() {
 
     
     const [createAddress] = useMutation(CREATE_ADDRESS, {onCompleted: (data: any) => {
-        console.log(data);
+        // console.log(data);
         for(var i=0; i<userFormData.education.length; i++){
             createEducationDetail({
                 variables: {
@@ -242,7 +242,7 @@ export default function Register() {
             // JSON.parse(values.organization[0]?.Organization_Type)
             // JSON.parse(values.timezone)
             await setUserFormData(values);
-            console.log(values);
+            // console.log(values);
             registerUser({ variables: {
                 email: values.email,
                 name: values.userName,

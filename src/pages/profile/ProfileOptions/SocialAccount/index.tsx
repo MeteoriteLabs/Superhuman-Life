@@ -1,7 +1,11 @@
-import React from 'react';
-import { Form, Button, Col, Container, Row } from "react-bootstrap";
+import React, { useState } from 'react';
+import { Button, Col, Container, Row } from "react-bootstrap";
+import Form from "@rjsf/core";
 
 export default function SocialAccount() {
+    const profileJson: { [name: string]: any } = require("../../Profile.json");
+    const [step] = useState<number>(4);
+
     return (
         <Container className="mt-5">
             <Row className="mt-3 ml-3 inline">
@@ -9,7 +13,7 @@ export default function SocialAccount() {
             <Col lg={2}><Button variant="outline-dark">Edit</Button></Col>
           </Row>
           <hr />
-        <Form className="m-5">
+        {/* <Form className="m-5">
             <Form.Row>
                 <Form.Group as={Col} controlId="formBasicName">
                     <Form.Label>Instagram</Form.Label>
@@ -53,12 +57,19 @@ export default function SocialAccount() {
                     <Form.Label>Pintrest</Form.Label>
                     <Form.Control type="text" placeholder="Pinterest" />
                 </Form.Group>
-            </Form.Row>
+            </Form.Row>  */}
 
             {/* <Button variant="success" type="submit">
                 Save
             </Button> */}
-        </Form>
+        {/* </Form> */}
+        {/* <Form
+                // schema={BasicProfile}
+                schema={profileJson[step.toString()]}
+                // uiSchema={uiSchema}
+                // formData={formData}
+            >
+            </Form> */}
         </Container>
     )
 }

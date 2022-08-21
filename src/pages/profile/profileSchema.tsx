@@ -1,6 +1,7 @@
 import UploadImageToS3WithNativeSdk from "../../components/upload/upload";
 import AddressForm from "../../components/customWidgets/addressForm";
 import CustomEducationForm from "../../components/customWidgets/customEducationForm";
+
 export const widgets = {
   uploadImageToS3WithNativeSdk: UploadImageToS3WithNativeSdk,
 };

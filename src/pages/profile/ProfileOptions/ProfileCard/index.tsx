@@ -41,16 +41,16 @@ export default function ProfileCard() {
                     </Col>
                 </Row>
 
-                {/* user contact details */}
-                <Row>
-                    {profileData ? <Col sm={12} lg={6}><img src="assets/profile_icons/telephone.svg" alt="phone" className='pr-2 icons' /> {profileData.Phone_Number}</Col> : null}
-                    {profileData ? <Col sm={12} lg={6}><img src="assets/profile_icons/website.svg" alt="website" className='pr-2 icons' />  {profileData.Website_URL} </Col> : null}
+                {/* user contact details */} 
+                <Row className="pt-3">
+                    {profileData ? <Col sm={12} lg={{ span: 3, offset: 3 }}><img src="assets/profile_icons/telephone.svg" alt="phone" className='pr-2 icons' /> {profileData.Phone_Number}</Col> : null}
+                    {profileData ? <Col sm={12} lg={{ span: 2, offset: 1 }} ><img src="assets/profile_icons/website.svg" alt="website" className='pr-2 icons' />  {profileData.Website_URL} </Col> : null}
                 </Row>
-                <Row>
-                    {profileData ? <Col sm={12} lg={6}><img src="assets/profile_icons/email.svg" alt="email" className='pr-2 icons' />  {profileData.email} </Col> : null}
-                    {profileData && profileData.addresses && (profileData.addresses.data.length > 0) ? <Col sm={12} lg={6}><img src="assets/profile_icons/location.svg" alt="location" className='pr-2 icons' />  {profileData.addresses.data[0].attributes.city} </Col> : null}
+                <Row className="pb-3">
+                    {profileData ? <Col sm={12} lg={{ span: 3, offset: 3 }} ><img src="assets/profile_icons/email.svg" alt="email" className='pr-2 icons' />  {profileData.email} </Col> : null}
+                    {profileData && profileData.addresses && (profileData.addresses.data.length > 0) ? <Col sm={12} lg={{ span: 2, offset: 1 }}  ><img src="assets/profile_icons/location.svg" alt="location" className='pr-2 icons' />  {profileData.addresses.data[0].attributes.city} </Col> : null}
                 </Row>
-
+                
             </Container>
     )
 }
