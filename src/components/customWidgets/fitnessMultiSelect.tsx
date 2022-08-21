@@ -37,6 +37,10 @@ const MultiSelect = (props: any) => {
           setMultiSelections(e);
      }
 
+     if(props.value === multiSelections){
+          props.onChange(multiSelections.map(d => {return d.id}).join(','));
+     }
+
      FetchData();
 
      return (

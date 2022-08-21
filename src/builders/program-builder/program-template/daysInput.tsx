@@ -1,46 +1,16 @@
 import React, { useState } from 'react';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
-import { gql } from "@apollo/client";
-import { useQuery } from "@apollo/client";
 import moment from 'moment';
 
 const DaysInput = (props: any) => {
-     const last = window.location.pathname.split('/').pop();
 
-     // const [data, setData] = useState(0);
-     const [selected, setSelected] = useState(props.val ? [moment(props.startDate).add(props.val, 'days').format("Do, MMM YY")] : []);
-
-     const GET_PROGRAM = gql`
-     query getprogram($id: ID!) {
-          fitnessprograms(filters: { id: { eq: $id } }) {
-          data {
-               id
-               attributes {
-               duration_days
-               }
-          }
-          }
-     }
-  `;
-
-     function FetchData(_variables: {} = {id: last}) {
-          useQuery(GET_PROGRAM, {variables: _variables, onCompleted: loadData});
-     }
-
-     function loadData(data: any) {
-          // const flattenData = flattenObj({...data});
-     //      setData(
-     //           flattenData.fitnessprograms[0].duration_days
-     //     )
-     }
-
-     FetchData({id: last});
+     const [selected, setSelected] = useState(props.dayType === "day" && props.val ? [`Day - ${props.val}`] : props.val ? [moment(props.startDate).add(props.val, 'days').format("Do, MMM YY")] : []);
 
      const days: any[] = [];
 
      function renderInputField() {
-          if(props?.type === 'day') {
+          if(props?.dayType === 'day') {
                for (var i=0; i<props?.duration;i++){
                     days.push({"key": i+1,"day": `Day - ${i+1}`})
                }

@@ -19,7 +19,6 @@ const ProgramList = (props: any) => {
      query programlistQuery($id: ID!, $filter: String!) {
           fitnessprograms(
           filters: {
-               Is_program: { eq: true }
                users_permissions_user: { id: { eq: $id } }
                title: { containsi: $filter }
           }
@@ -29,9 +28,44 @@ const ProgramList = (props: any) => {
                attributes {
                title
                duration_days
+               sessions{
+                    data{
+                      id
+                      attributes{
+                        day_of_program
+                        start_time
+                        end_time
+                        tag
+                        Is_restday
+                        type
+                        mode
+                        activity{
+                          data{
+                            id
+                            attributes{
+                              title
+                            }
+                          }
+                        }
+                        activity_target
+                        workout{
+                          data{
+                            id
+                            attributes{
+                              workouttitle
+                            }
+                          }
+                        }
+                        changemaker{
+                          data{
+                            id
+                          }
+                        }
+                      }
+                    }
+                  }
                level
                description
-               events
                fitnessdisciplines {
                data {
                     id
@@ -57,6 +91,7 @@ const ProgramList = (props: any) => {
 
      function loadProgramList(data: any) {
           const flattenedData = flattenObj({ ...data });
+          console.log(flattenedData);
           setProgramList(
                [...flattenedData.fitnessprograms].map((program) => {
                     return {
@@ -66,7 +101,7 @@ const ProgramList = (props: any) => {
                          level: program.level,
                          description: program.description,
                          discpline: program.fitnessdisciplines,
-                         events: program.events
+                         events: program.sessions.filter((session: any) => session.Is_restday === false)
                     }
                })
           );
@@ -90,12 +125,15 @@ const ProgramList = (props: any) => {
 
      var days: any = [];
 
+     console.log(selected);
+
      for (var i = 1; i <= selected.duration; i++) {
           days.push(i);
      }
 
      function renderEventsTable() {
           if (selected.duration) {
+               console.log(days);
                return (
                     <SchedulerEvent programDays={days} programEvents={selected.events} />
                )

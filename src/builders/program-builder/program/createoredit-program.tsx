@@ -48,6 +48,7 @@ function CreateEditProgram(props: any, ref: any) {
         const flattenData = flattenObj({...data});
         let details: any = {};
         let msg = flattenData.fitnessprograms;
+
         details.programName = msg[0].title;
         details.duration = msg[0].duration_days;
         details.level = ENUM_FITNESSPROGRAM_LEVEL[msg[0].level];

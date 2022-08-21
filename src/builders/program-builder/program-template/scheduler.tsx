@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import { Modal, Button, Row, Col, Tab, Tabs, InputGroup, FormControl, Badge, OverlayTrigger, Tooltip, Form, Spinner } from 'react-bootstrap';
 import './styles.css';
-import { PROGRAM_EVENTS, FETCH_WORKOUT, FETCH_ACTIVITY, GET_SLOTS_TO_CHECK, UPDATE_CHANGEMAKER_AVAILABILITY_WORKHOURS, GET_SESSIONS, GET_CLIENT_SESSIONS, DELETE_SESSION, UPDATE_SESSION, CREATE_SESSION, UPDATE_TAG_SESSIONS, CREATE_SESSION_BOOKING, GET_SESSION_BOOKINGS, UPDATE_SESSION_BOOKING } from './queries';
+import { FETCH_WORKOUT, FETCH_ACTIVITY, GET_SLOTS_TO_CHECK, UPDATE_CHANGEMAKER_AVAILABILITY_WORKHOURS, GET_SESSIONS, GET_CLIENT_SESSIONS, DELETE_SESSION, UPDATE_SESSION, CREATE_SESSION, UPDATE_TAG_SESSIONS, CREATE_SESSION_BOOKING, GET_SESSION_BOOKINGS, UPDATE_SESSION_BOOKING, UPDATE_FITNESSPORGRAMS_SESSIONS } from './queries';
 import { useQuery, useMutation, gql } from "@apollo/client";
 import ProgramList from "../../../components/customWidgets/programList";
 import SessionList from '../../../components/customWidgets/sessionList';
@@ -22,8 +22,7 @@ const Schedular = (props: any) => {
     const [show, setShow] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [onDragAndDrop, setOnDragAndDrop] = useState(false);
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [currentProgram, setCurrentProgram] = useState<any[]>([]);
+    const [currentProgram] = useState<any[]>([]);
     const [edit, setEdit] = useState(true);
     const [del, setDel] = useState(false);
     const [duplicate, setDuplicate] = useState(false);
@@ -38,6 +37,7 @@ const Schedular = (props: any) => {
     const schedulerDay: any = require("./json/scheduler-day.json");
     const [changeMakerAvailability, setChangeMakerAvailability] = useState<any>([]);
     const [sessionIds, setSessionsIds] = useState<any>([]);
+    const [templateSessionsIds, setTemplateSessionsIds] = useState<any>([]);
     const [dropConflict, setDropConflict] = useState(false);
     const [groupDropConflict, setGroupDropConflict] = useState(false);
     const [sessionBookings, setSessionBooking] = useState<any>([]);
@@ -74,17 +74,6 @@ const Schedular = (props: any) => {
 
         return moment().set({"hour": arr2?.h, "minute": arr2?.m}).add(diff1, 'minutes').format("HH:mm")
     }
-
-    // function handleSessionDate(date: any, startDateOfPackage: any, durtionOfPackage: any, droppedDay: any){
-    //     var endDateOfPackage = moment(startDateOfPackage).add(durtionOfPackage, 'days').format("YYYY-MM-DD");
-    //     if(moment(date).isBefore(moment(endDateOfPackage)) && moment(date).isAfter(moment(startDateOfPackage))){
-    //         return moment(date).format("YYYY-MM-DD");
-    //     }else if(moment(date).isAfter(moment(endDateOfPackage))){
-    //         setDropConflict(true);
-    //     }else if(moment(date).isBefore(moment(startDateOfPackage))){
-    //         return moment(props.startDate).add(parseInt(droppedDay) - 1, 'days').format("YYYY-MM-DD")
-    //     }
-    // }
 
 
     useQuery(GET_SESSION_BOOKINGS, {
@@ -161,10 +150,9 @@ const Schedular = (props: any) => {
         }
     });
 
+    // ENTRY POINT
     // this is the entry point to the file.
-    // function Fetchdata(_variables: any) {
         const mainQuery = useQuery(!props?.clientSessions ? GET_SESSIONS : GET_CLIENT_SESSIONS, { variables: { id: props.programId, startDate: moment(props.startDate).format("YYYY-MM-DD"), endDate: moment(props.startDate).add(props.days - 1 , 'days').format("YYYY-MM-DD"), Is_restday: false }, onCompleted: !props?.clientSessions ? handleRenderTable : handleRenderClientTable });
-    // }
 
     function draganddrop() {
         const draggable: any = document.querySelectorAll('.schedular-content');
@@ -217,6 +205,7 @@ const Schedular = (props: any) => {
         draganddrop();
     }, 200);
 
+    // this incase of the scheduler in the client page
     function handleRenderClientTable(data: any){
         const flattenData = flattenObj({...data});
         const sessionsExistingValues = [...sessionIds];
@@ -248,11 +237,18 @@ const Schedular = (props: any) => {
         }
     }
 
-    // this is for testing purposes.
+    // this incase of the scheduler in the template page
+    // here it renders day wise
     function handleTemplateTable(data: any){
+        const existingTemplateIds = [...templateSessionsIds];
         for (var d = 1; d <= props.days; d++) {
             arr[d] = JSON.parse(JSON.stringify(schedulerDay));
         }
+
+        for(var i=0; i<data.length; i++){
+            existingTemplateIds.push(data[i].id);
+        }
+        setTemplateSessionsIds(existingTemplateIds);
 
         if (data?.length > 0) {
             data?.forEach((val) => {
@@ -269,17 +265,15 @@ const Schedular = (props: any) => {
                     "endHour": endTimeHour, "endMin": endTimeMin, "id": val.activity === null ? val.workout.id : val.activity.id, "mode": val.mode,
                     "tag": val.tag, "sessionId": val.id, "activityTarget": val.activity === null ? null : val.activity_target, "sessionDate": val.session_date,
                 });
-                debugger;
-                console.log(arr[val.day_of_program])
             })
         }
     }
 
-
+    // this incase of the scheduler in the session manager page
     function handleRenderTable(data: any) {
         const flattenData = flattenObj({...data});
         if(window.location.pathname.split('/')[1] === 'programs'){
-            handleTemplateTable(props?.templateSessions);
+            return handleTemplateTable(props?.templateSessions);
         }
         const sessionsExistingValues = [...sessionIds];
         for(var q=0; q<flattenData.tags[0]?.sessions.length; q++){
@@ -309,7 +303,6 @@ const Schedular = (props: any) => {
         }
     }
 
-    console.log(event);
 
     function calculateDay(startDate, sessionDate){
         const startDateFormatted = moment(startDate);
@@ -349,7 +342,6 @@ const Schedular = (props: any) => {
     }
     
     handleDays();
-    // Fetchdata({ id: props.programId, startDate: moment(props.startDate).format("YYYY-MM-DD"), endDate: moment(props.startDate).add(props.days - 1 , 'days').format("YYYY-MM-DD"), Is_restday: false });
 
     useEffect(() => {
         setTimeout(() => {
@@ -360,7 +352,6 @@ const Schedular = (props: any) => {
     let confirmVal: any = {};
 
     function handleChange(d: any, h: any, m: any, event: any) {
-        console.log(event);
         confirmVal.event = event;
         confirmVal.d = d;
         confirmVal.h = h;
@@ -377,13 +368,23 @@ const Schedular = (props: any) => {
         setSessionFilter(`${event}`);
     }
 
+    // this handles the displaying of rest days on the scheduler
     function handleRestDays(val: any) {
+        if(props?.type === 'day'){
+            if (props.restDays) {
+                for (var j = 0; j < props.restDays.length; j++) {
+                    if (val === props.restDays[j].day_of_program) {
+                        return 'rgba(255,165,0)';
+                    }
+                }
+            }
+        }
         // the first if statement is to check if we are in the client scheduler page
         // the else if block is to run if we are in the session scheduler page
         if(props.clientSessions){
             if (props.restDays) {
-                for (var j = 0; j < props.restDays.length; j++) {
-                    if (val === calculateDay(props.startDate, props.restDays[j].session.session_date)) {
+                for (var k = 0; k < props.restDays.length; k++) {
+                    if (val === calculateDay(props.startDate, props.restDays[k].session.session_date)) {
                         return 'rgba(255,165,0)';
                     }
                 }
@@ -399,6 +400,7 @@ const Schedular = (props: any) => {
         return 'white';
     }
 
+    // handles the height of the event being displayed on the scheduler
     function handleHeight(val: any) {
         var starth = parseInt(val.hour);
         var startm = parseInt(val.min);
@@ -411,17 +413,6 @@ const Schedular = (props: any) => {
         return height;
     }
 
-    function FetchProgramEvents(_variables: {}) {
-        useQuery(PROGRAM_EVENTS, { variables: _variables, onCompleted: (r) => { loadProgramEvents(r); } });
-    }
-
-    function loadProgramEvents(r: any) {
-        // const flattenData = flattenObj({...r});
-        // setCurrentProgram([...flattenData.fitnessprograms[0].events] ? flattenData.fitnessprograms[0].events : []);
-    }
-
-    FetchProgramEvents({ id: program_id });
-
     // const [updateProgram] = useMutation(UPDATE_FITNESSPROGRAMS);
     const [updateChangeMakerAvailability] = useMutation(UPDATE_CHANGEMAKER_AVAILABILITY_WORKHOURS);
 
@@ -430,6 +421,7 @@ const Schedular = (props: any) => {
         changedTime = e;
     }
 
+    // gives you the correct time format to be used throught the application
     function handleTimeFormat(time: string) {
         let timeArray = time.split(':');
         let hours = timeArray[0];
@@ -451,7 +443,13 @@ const Schedular = (props: any) => {
     const [duplicatedDay, setDuplicatedDay] = useState<any>([]);
     const [updateSessionBooking] = useMutation(UPDATE_SESSION_BOOKING);
     const [createSessionBooking] = useMutation(CREATE_SESSION_BOOKING, {onCompleted: (r: any) => {setEvent({})}})
-    const [createSession] = useMutation(CREATE_SESSION, {onCompleted: (r: any) => {handleUpdateTag(r.createSession.data.id)}});
+    const [createSession] = useMutation(CREATE_SESSION, {onCompleted: (r: any) => {
+        if(window.location.pathname.split('/')[1] === 'programs'){
+            handleUpdateFitnessPrograms(r.createSession.data.id);
+        }else {
+            handleUpdateTag(r.createSession.data.id)
+        }
+    }});
     const [updateSession] = useMutation(UPDATE_SESSION, { onCompleted: () => {setEvent({})}});
     const [updateTagSessions] = useMutation(UPDATE_TAG_SESSIONS, { onCompleted: () => {
         if(props.classType !== 'Group Class'){
@@ -465,6 +463,24 @@ const Schedular = (props: any) => {
             setEvent({})
         }
     }});
+    const [updateFitnessProgramSessions] = useMutation(UPDATE_FITNESSPORGRAMS_SESSIONS, { onCompleted: () => {
+        setEvent({});
+        props.callbackTemplate();
+    }});
+
+    function handleUpdateFitnessPrograms(newId: any){
+        setNewSessionId(newId);
+        const values = [...templateSessionsIds];
+        const holidayIds = props.restDays.map((day: any) => day.id).join(",").split(",");
+        values.push(newId);
+        updateFitnessProgramSessions({
+            variables: {
+                id: program_id,
+                sessions_ids: values.concat(holidayIds)
+            }
+        })
+
+    }
 
     function handleUpdateTag(newId: any){
         setNewSessionId(newId);
@@ -478,43 +494,9 @@ const Schedular = (props: any) => {
         });
     }
 
+    // this function handles the duplication of the event
     function handleDuplicate(e: any, changedTime: any){
         const timeInput = JSON.parse(changedTime.startChange);
-        // let newEvent: any = {};
-        // newEvent.name = e.title;
-        // newEvent.mode = e.mode;
-        // newEvent.tag = e.tag;
-        // newEvent.day = (duplicatedDay.length === 0 ? e.day : parseInt(duplicatedDay[0].day.substr(4)));
-        // newEvent.startTime = timeInput.startTime;
-        // newEvent.endTime = timeInput.endTime;
-        // newEvent.type = e.type;
-        // newEvent.id = e.id;
-
-        // var timeStart: any = new Date("01/01/2007 " + handleTimeFormat(newEvent.startTime));
-        // var timeEnd: any = new Date("01/01/2007 " + handleTimeFormat(newEvent.endTime));
-        // var diff1 = timeEnd - timeStart;
-        // for (var i = 0; i <= values.length - 1; i++) {
-        //     var startTimeHour: any = new Date("01/01/2007 " + handleTimeFormat(values[i].startTime));
-        //     var endTimeHour: any = new Date("01/01/2007 " + handleTimeFormat(values[i].endTime));
-        //     var diff2 = endTimeHour - startTimeHour;
-
-        //     if (diff2 < diff1) {
-        //         values.splice(i, 0, newEvent);
-        //         break;
-        //     }
-        //     if (i === values.length - 1) {
-        //         values.push(newEvent);
-        //         break;
-        //     }
-        // }
-
-        // let lastEventDay: number = 0;
-
-        // for(var k=0; k<= values.length - 1; k++) {
-        //     if(values[k].day > lastEventDay){
-        //         lastEventDay = parseInt(values[k].day);
-        //     }
-        // }
 
         const addedEventDate = dates[(duplicatedDay.length === 0 ? e.day : parseInt(duplicatedDay[0].day.substr(4))) - 1];
         const availability = changeMakerAvailability.changemakerAvailabilties.find((x: any) => moment(x.date).format('YYYY-MM-DD') === moment(addedEventDate).format('YYYY-MM-DD'));
@@ -541,6 +523,7 @@ const Schedular = (props: any) => {
                     end_time: timeInput.endTime,
                     workout: e.id,
                     tag: e.tag,
+                    day_of_program: duplicatedDay[0].key,
                     mode: e.mode,
                     type: e.type,
                     session_date: duplicatedDay.length === 0 ? e.sessionDate : moment(duplicatedDay[0].day, 'Do, MMMM YYYY').format('YYYY-MM-DD'),
@@ -554,6 +537,7 @@ const Schedular = (props: any) => {
                     end_time: timeInput.endTime,
                     activity: e.id,
                     activity_target: e.activityTarget,
+                    day_of_program: duplicatedDay[0].key,
                     tag: e.tag,
                     mode: e.mode,
                     type: e.type,
@@ -562,22 +546,12 @@ const Schedular = (props: any) => {
                 }
             })
         }
-
-        // updateProgram({
-        //     variables: {
-        //         programid: program_id,
-        //         events: values, 
-        //         renewal_dt: lastEventDay
-        //     }
-        // });
     }
 
+    // this function handles the import of even from the small schedular
     async function handleImportedEvent(e: any, mode: any, tag: any) {
         let newEvent: any = {};
         const values = [...arr];
-        // if (arr2.event.day) {
-        //     values[arr2.event.day][arr2.event.hour][arr2.event.min].splice(arr2.event.index, 1);
-        // }
         
         if (arr2.d === undefined || arr2.h === undefined || arr2.m === undefined) {
             return;
@@ -664,7 +638,6 @@ const Schedular = (props: any) => {
             setDropConflict(true);
             return
         }
-        // console.log(sesData);
 
         const addedEventDate = dates[(duplicatedDay.length === 0 ? e.day : parseInt(duplicatedDay[0].day.substr(4))) - 1];
         const availability = changeMakerAvailability.changemakerAvailabilties.find((x: any) => moment(x.date).format('YYYY-MM-DD') === moment(addedEventDate).format('YYYY-MM-DD'));
@@ -683,7 +656,38 @@ const Schedular = (props: any) => {
                 }
             });
         }
-        if(event.type === "workout"){
+        // the first if block is incase of the template page. which works based on day.
+        if(window.location.pathname.split('/')[1] === 'programs'){
+            if(event.type === 'workout'){
+                createSession({
+                    variables: {
+                        start_time: event.hour + ':' + event.min,
+                        end_time: event.endHour + ':' + event.endMin,
+                        workout: event.id,
+                        tag: tag === "" ? event.tag : tag,
+                        mode: mode === "" ? event.mode : mode,
+                        type: event.type,
+                        day_of_program: parseInt(event.day),
+                        changemaker: auth.userid
+                    }
+                })
+            }else {
+                createSession({
+                    variables: {
+                        day_of_program: parseInt(event.day),
+                        start_time: timeInput.startTime === "" ? event.hour + ':' + event.min : timeInput.startTime,
+                        end_time: timeInput.endTime === "" ? event.endHour + ':' + event.endMin : timeInput.endTime,
+                        activity: event.id,
+                        activity_target: event.activityTarget,
+                        tag: tag === "" ? event.tag : tag,
+                        mode: mode === "" ? event.mode : mode,
+                        type: e.type,
+                        session_date: moment(event.sessionDate).format('YYYY-MM-DD'),
+                        changemaker: auth.userid
+                    }
+                })
+            }
+        }else if(event.type === "workout"){
             if(event.tag === 'Group Class'){
                 const values = [...sessionIds];
                 values.push(event.sessionId);
@@ -737,14 +741,6 @@ const Schedular = (props: any) => {
                 })
             }
         }
-        
-        // updateProgram({
-        //     variables: {
-        //         programid: program_id,
-        //         events: existingValues,
-        //         renewal_dt: lastEventDay
-        //     }
-        // })
 
         setArr(values);
         setarr2([]);
@@ -752,6 +748,7 @@ const Schedular = (props: any) => {
         confirmVal = {};
     }
 
+    // this helps handle the changes of the event when click on it.
     function handleSaveChanges(e: any, mode: any, tag: any) {
         // let values = currentProgram === null ? [] : [...currentProgram];
         let newEvent: any = {};
@@ -760,9 +757,6 @@ const Schedular = (props: any) => {
             console.log('save')
             handleImportedEvent(e, mode, tag);
         } else {
-            // let a = values.find((val) => val.id === event.id && val.day === event.day && val.startTime === event.hour + ":" + event.min && val.endTime === event.endHour + ":" + event.endMin);
-            // let b = values.findIndex((val) => val.id === event.id && val.day === event.day && val.startTime === event.hour + ":" + event.min && val.endTime === event.endHour + ":" + event.endMin);
-            // e.startChange = JSON.parse(e.startChange);
             const addedEventDate = dates[(duplicatedDay.length === 0 ? e.day : parseInt(duplicatedDay[0].day.substr(4))) - 1];
             const availability = changeMakerAvailability.changemakerAvailabilties.find((x: any) => moment(x.date).format('YYYY-MM-DD') === moment(addedEventDate).format('YYYY-MM-DD'));
             const availabilitySlots = availability ? [...availability.booking_slots] : [];
@@ -783,57 +777,12 @@ const Schedular = (props: any) => {
             updateSession({
                 variables: {
                     id: event.sessionId,
-                    start_time: e.startChange.startTime,
-                    end_time: e.startChange.endTime,
+                    start_time: JSON.parse(e.startChange).startTime,
+                    end_time: JSON.parse(e.startChange).endTime,
                     tag: tag === "" ? event.tag : tag,
                     mode: mode === "" ? event.mode : mode
                 }
             });
-            // if (event) {
-                // newEvent.id = a.id;
-                // newEvent.name = a.name;
-                // newEvent.mode = mode === "" ? a.mode : mode;
-                // newEvent.tag = tag === "" ? a.tag : tag;
-                // newEvent.startTime = e.startChange.startTime;
-                // newEvent.endTime = e.startChange.endTime;
-                // newEvent.type = a.type;
-                // newEvent.day = a.day;
-    
-                // values.splice(b, 1);
-                // var timeStart: any = new Date("01/01/2007 " + handleTimeFormat(newEvent.startTime));
-                // var timeEnd: any = new Date("01/01/2007 " + handleTimeFormat(newEvent.endTime));
-                // var diff1 = timeEnd - timeStart;
-                // for (var i = 0; i <= values.length - 1; i++) {
-                //     var startTimeHour: any = new Date("01/01/2007 " + handleTimeFormat(values[i].startTime));
-                //     var endTimeHour: any = new Date("01/01/2007 " + handleTimeFormat(values[i].endTime));
-                //     var diff2 = endTimeHour - startTimeHour;
-    
-                //     if (diff2 < diff1) {
-                //         values.splice(i, 0, newEvent);
-                //         break;
-                //     }
-                //     if (i === values.length - 1) {
-                //         values.push(newEvent);
-                //         break;
-                //     }
-                // }
-    
-                // let lastEventDay: number = 0;
-    
-                // for(var k=0; k<= values.length - 1; k++) {
-                //     if(values[k].day > lastEventDay){
-                //         lastEventDay = parseInt(values[k].day);
-                //     }
-                // }
-    
-                // updateProgram({
-                //     variables: {
-                //         programid: program_id,
-                //         events: values,
-                //         renewal_dt: lastEventDay
-                //     }
-                // })
-            // }
         }
     }
     var changedDay;
@@ -964,30 +913,12 @@ const Schedular = (props: any) => {
                 id: event.sessionId
             }
         });
-        // let a = values.findIndex((val) => val.id === event.id && val.day === event.day && val.startTime === event.hour + ":" + event.min && val.endTime === event.endHour + ":" + event.endMin);
-        // values.splice(a,1);
-
-        // let lastEventDay: number = 0;
-
-        // for(var k=0; k<= values.length - 1; k++) {
-        //     if(values[k].day > lastEventDay){
-        //         lastEventDay = parseInt(values[k].day);
-        //     }
-        // }
-
-        // updateProgram({
-        //     variables: {
-        //         programid: program_id,
-        //         events: values,
-        //         renewal_dt: lastEventDay
-        //     }
-        // });
-        // handleClose();
 
     }
 
     const [ErrorModal, setErrorModal] = useState(false);
 
+    // this function handles drag and drop of an even once they confirm the drop.
     function confirm() {
         const values = [...arr];
         if (arr2.event.day) {
@@ -1108,18 +1039,10 @@ const Schedular = (props: any) => {
                 id: arr2.event.sessionId,
                 start_time: newEvent.startTime,
                 end_time: newEvent.endTime,
-                // day_of_program: parseInt(newEvent.day)
+                day_of_program: parseInt(newEvent.day),
                 session_date: moment(props.startDate).add(parseInt(newEvent.day) - 1, 'days').format('YYYY-MM-DD')
             }
         });
-
-        // updateProgram({
-        //     variables: {
-        //         programid: program_id,
-        //         events: existingValues,
-        //         renewal_dt: lastEventDay
-        //     }
-        // })
 
         if(values[arr2.d][arr2.h][arr2.m].length === 0){
             values[arr2.d][arr2.h][arr2.m].push({ "title": arr2.event.title, "color": arr2.event.color, "day": arr2.d, "hour": arr2.h, "min": arr2.m, "endHour": sh, "endMin": sm, "mode": arr2.event.mode, "tag": arr2.event.tag });
@@ -1150,6 +1073,7 @@ const Schedular = (props: any) => {
 
     
 
+    // it helps render the first row in the calendar
     function handleDaysRowRender() {
         if(props.type === "date"){
             return (
@@ -1209,7 +1133,7 @@ const Schedular = (props: any) => {
         mainQuery.refetch();
     }
 
-    console.log(arr);
+    console.log(event);
 
     if (!show) {
         return <div className="text-center">
@@ -1389,7 +1313,7 @@ const Schedular = (props: any) => {
                                 <h6>Day: </h6>
                             </Col>
                             <Col lg={4}>
-                                <FormControl value={moment(event.sessionDate).format("Do, MMM YY")} disabled />
+                                <FormControl value={event.sessionDate && props.type !== 'day' ? moment(event.sessionDate).format("Do, MMM YY") : `Day - ${event.day}`} disabled />
                             </Col>
                         </Row>
                         {(tag || event.tag) !== 'Classic' && <Row className="pt-3 align-items-center">
@@ -1420,7 +1344,7 @@ const Schedular = (props: any) => {
                                 <TimeField eventType="edit" onChange={handleStart} endTime={event.endHour + ':' + event.endMin} startTime={event.hour + ':' + event.min} disabled={edit}/>
                             </Col>
                         </Row>
-                        {(event.type === "workout") && <Tabs defaultActiveKey="bookings" transition={false} id="noanim-tab-example" className="pt-4">
+                        {(event.type === "workout") && <Tabs defaultActiveKey="agenda" transition={false} id="noanim-tab-example" className="pt-4">
                             <Tab eventKey="agenda" title="Agenda">
                                 {/* <Row className="justify-content-end">
                                     <Button className="mr-3 mt-2" variant="primary" size="sm" onClick={() => { handleClose(); setData([]); setEvent([]); createEditWorkoutComponent.current.TriggerForm({ type: 'edit' }); }}><i className="fas fa-pencil-alt"></i>{" "}Edit</Button>
@@ -1535,7 +1459,7 @@ const Schedular = (props: any) => {
                                     )
                                 })}
                             </Tab>
-                            {arr2.event?.import !== "importedEvent" && <Tab eventKey="bookings" title="Bookings">
+                            {(arr2.event?.import !== "importedEvent" && event.sessionDate) && <Tab eventKey="bookings" title="Bookings">
                                 <Row className="p-3">
                                     <Col>
                                         <b>Clients</b>
@@ -1553,8 +1477,6 @@ const Schedular = (props: any) => {
                                 <hr className='m-0' style={{ height: '5px'}}/>
                                 {/* {sessionBookings.length === 0 ? <div className='text-center'>No session Bookings yet.</div> : ""} */}
                                 {sessionBookings?.map(val => {
-                                    console.log(val);
-                                    debugger;
                                     return (
                                         <>
                                             <div className='p-3 shadow-sm' style={{ borderRadius: '20px'}}>
@@ -1635,7 +1557,7 @@ const Schedular = (props: any) => {
                                     <h6>Day: </h6>
                                 </Col>
                                 <Col lg={7}>
-                                    <DaysInput startDate={props.startDate} duration={props.days} val={event.day} type="transfer" onChange={(e) => {
+                                    <DaysInput dayType="day" startDate={props.startDate} duration={props.days} val={event.day} type="transfer" onChange={(e) => {
                                         if(e === [] || e === undefined){
                                             setDuplicatedDay([]);
                                         }

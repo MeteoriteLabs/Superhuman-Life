@@ -1,7 +1,7 @@
 import React, { useContext, useImperativeHandle, useState } from 'react';
 import { useQuery, useMutation, gql } from "@apollo/client";
 import ModalView from "../../../../components/modal";
-import { GET_SCHEDULEREVENTS, CREATE_WORKOUT, CREATE_SESSION, GET_SESSIONS, UPDATE_TAG_SESSIONS, CREATE_SESSION_BOOKING } from "../queries";
+import { GET_SCHEDULEREVENTS, CREATE_WORKOUT, CREATE_SESSION, GET_SESSIONS, UPDATE_TAG_SESSIONS, CREATE_SESSION_BOOKING, GET_TEMPLATE_SESSIONS, UPDATE_FITNESSPORGRAMS_SESSIONS } from "../queries";
 import AuthContext from "../../../../context/auth-context";
 import { schema, widgets } from '../schema/newWorkoutSchema';
 import {Subject} from 'rxjs';
@@ -25,6 +25,7 @@ function CreateEditNewWorkout(props: any, ref: any) {
     const program_id = window.location.pathname.split('/').pop();
     let frmDetails: any;
     const [sessionsIds, setSessionsIds] = useState<any>([]);
+    const [templateSessionsIds, setTemplateSessionsIds] = useState<any>([]);
     // userId here is the new sessionID.
     const [userId, setUserId] = useState("");
     const [clientId, setClientId] = useState("")
@@ -51,6 +52,15 @@ function CreateEditNewWorkout(props: any, ref: any) {
 
     const query = useQuery(GET_SESSIONS_BY_DATE, {skip: true});
 
+    useQuery(GET_TEMPLATE_SESSIONS, {variables: {id: program_id}, skip: (window.location.pathname.split('/')[1] !== 'programs'), onCompleted: (data: any) => {
+        const flattenData = flattenObj({...data});
+        const templateExistingValues = [...templateSessionsIds];
+        for(var q=0; q<flattenData.fitnessprograms[0].sessions.length; q++){
+            templateExistingValues.push(flattenData.fitnessprograms[0].sessions[q].id);
+        }
+        setTemplateSessionsIds(templateExistingValues);
+    }});
+
     useQuery(GET_SESSIONS, {variables: {id: program_id},onCompleted: (data: any) => {
         const flattenData = flattenObj({...data});
         setClientId(flattenData.tags[0]?.client_packages[0]?.users_permissions_user.id);
@@ -62,8 +72,6 @@ function CreateEditNewWorkout(props: any, ref: any) {
     }});
     
     const [createWorkout] = useMutation(CREATE_WORKOUT, { onCompleted: (r: any) => { updateSchedulerEvents(frmDetails, r.createWorkout.data.id); modalTrigger.next(false); } });
-    // const [CreateProgram] = useMutation(CREATE_PROGRAM, { onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
-    // const [updateProgram] = useMutation(UPDATE_FITNESSPROGRAMS, {onCompleted: (r: any) => { modalTrigger.next(false); } });
     const [createSessionBooking] = useMutation(CREATE_SESSION_BOOKING, { onCompleted: (data: any) => {modalTrigger.next(false)} })
     const [upateSessions] = useMutation(UPDATE_TAG_SESSIONS, { onCompleted: (data: any) => {
         createSessionBooking({
@@ -72,12 +80,23 @@ function CreateEditNewWorkout(props: any, ref: any) {
                 client: clientId,
             }
         });
-    }})
+    }});
+    const [updateFitenssProgram] = useMutation(UPDATE_FITNESSPORGRAMS_SESSIONS, { onCompleted: (data: any) => {
+        modalTrigger.next(false);
+        props.callback();
+    }});
     const [createSession] = useMutation(CREATE_SESSION, { onCompleted: (r: any) => { 
-        const values = [...sessionsIds];
-        setUserId(r.createSession.data.id);
-        values.push(r.createSession.data.id);
-
+        if(window.location.pathname.split('/')[1] === 'programs'){
+            const templateValues = [...templateSessionsIds];
+            setUserId(r.createSession.data.id);
+            templateValues.push(r.createSession.data.id);
+            updateFitenssProgram({
+                variables: {
+                    id: program_id,
+                    sessions_ids: templateValues
+                }
+            })
+        }
         if(window.location.pathname.split('/')[1] === 'client'){
             createSessionBooking({
                 variables: {
@@ -85,7 +104,11 @@ function CreateEditNewWorkout(props: any, ref: any) {
                     client: program_id
                 }
             });
-        }else {
+        }else if(window.location.pathname.split('/')[1] !== 'client' && window.location.pathname.split('/')[1] !== 'programs') {
+            const values = [...sessionsIds];
+            // here userId refers to the sessionID
+            setUserId(r.createSession.data.id);
+            values.push(r.createSession.data.id);
             upateSessions({
                 variables: {
                     id: program_id,
@@ -94,8 +117,6 @@ function CreateEditNewWorkout(props: any, ref: any) {
             });
         }
      } });
-    //     const [editExercise] = useMutation(UPDATE_EXERCISE,{variables: {exerciseid: operation.id}, onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
-//     const [deleteExercise] = useMutation(DELETE_EXERCISE, { onCompleted: (e: any) => console.log(e), refetchQueries: ["GET_TABLEDATA"] });
 
     const modalTrigger =  new Subject();
     useImperativeHandle(ref, () => ({
@@ -103,6 +124,7 @@ function CreateEditNewWorkout(props: any, ref: any) {
             setOperation(msg);
             schema.startDate = props.startDate;
             schema.duration = props.duration;
+            schema.type = window.location.pathname.split('/')[1] === "programs" ? 'day' : '';
 
             if (msg && !msg.id) //render form if no message id
                 modalTrigger.next(true);
@@ -138,15 +160,17 @@ function CreateEditNewWorkout(props: any, ref: any) {
         var existingEvents = (props.events === null ? [] : [...props.events]);
         // AvailabilityCheck({...frm})
 
-        const variables = {
-            date: moment(frm.day[0].day, 'Do, MMM YY').format('YYYY-MM-DD')
-        }
-        
-        let result = await query.refetch(variables);
-        let filterResult = await AvailabilityCheck({sessions: result.data.sessions, event: frm });
-        if(filterResult){
-            setDropConflict(true);
-            return
+        if(window.location.pathname.split('/')[1] !== 'programs'){
+            const variables = {
+                date: moment(frm.day[0].day, 'Do, MMM YY').format('YYYY-MM-DD')
+            }
+            
+            let result = await query.refetch(variables);
+            let filterResult = await AvailabilityCheck({sessions: result.data.sessions, event: frm });
+            if(filterResult){
+                setDropConflict(true);
+                return
+            }
         }
 
         if(frm.day){
@@ -191,6 +215,7 @@ function CreateEditNewWorkout(props: any, ref: any) {
             }
         }
 
+
         createSession({
             variables: {
                 start_time: eventJson.startTime,
@@ -198,18 +223,13 @@ function CreateEditNewWorkout(props: any, ref: any) {
                 workout: eventJson.id,
                 tag: eventJson.tag,
                 mode: eventJson.mode,
+                day_of_program: eventJson.day,
                 type: eventJson.type,
                 session_date: moment(frm.day[0].day, 'Da, MMM YY').format('YYYY-MM-DD'),
                 changemaker: auth.userid
             }
         })
     }
-
-        // updateProgram({ variables: {
-        //     programid: program_id,
-        //     events: existingEvents,
-        //     renewal_dt: lastEventDay
-        // } });
     }
 
     function UpdateProgram(frm: any) {

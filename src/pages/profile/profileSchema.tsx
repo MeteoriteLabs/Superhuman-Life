@@ -15,16 +15,17 @@ export const schema: any = {
         }}
         allowImage={true}
         allowVideo={false}
-      />
-    ),
-  },
-  Photo_ID: {
-    "ui:widget": (props: any) => (
-      <UploadImageToS3WithNativeSdk
-        value={props.value}
-        onChange={(event: any) => {
-          props.onChange(event);
-        }}
+        />
+        ),
+      },
+      Photo_ID: {
+        "ui:widget": (props: any) => (
+          <UploadImageToS3WithNativeSdk
+          value={props.value}
+          onChange={(event: any) => {
+            props.onChange(event);
+          }}
+        aspectRatio={"4:4"}
         allowImage={true}
         allowVideo={false}
       />

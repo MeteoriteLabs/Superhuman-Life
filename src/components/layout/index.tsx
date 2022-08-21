@@ -27,10 +27,10 @@ export default function Layout({ token, children }: any) {
           <div>
             {sideNavStatus ? (
               <Row noGutters className="bg-light mt-5 py-4  min-vh-100">
-                <Col lg={collapse ? "1" : "3"} className="d-none d-lg-block">
+                <Col lg={collapse ? "1" : "2"} className="d-none d-lg-block">
                   <SideNav collapse={collapse} setCollapse={setCollapse} />
                 </Col>
-                <Col lg={collapse ? "11" : "9"} className="pr-2">
+                <Col lg={collapse ? "11" : "10"} className="pr-2">
                   <hr />
                   {children}
                 </Col>

@@ -91,6 +91,7 @@ export default function Routes({ token }: any) {
               <Route exact path="/offerings" component={PackagePage} />
               <Route exact path="/resources" component={ProgramPage} />
               <Route exact path="/session" component={SessionPage} />
+              {/* please do not change the below route /programs/manage!!! It is a very important route for program templates, any change could break the code. */}
               <Route path="/programs/manage" component={ProgramManagerPage} />
               <Route path="/classic/session/scheduler" component={ClassicProgramSchedulerPage} />
               <Route path="/pt/session/scheduler" component={PTProgramSchedulerPage} />
