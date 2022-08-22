@@ -17,7 +17,6 @@ import ChangePasswordPage from '../changePassword';
 
 import EditProfile from "./EditProfile";
 import ProfileCard from "./ProfileOptions/ProfileCard";
-import ProfileAccordion from "./ProfileOptions/ProfileAccordion";
 import ProfileNavTab from "./ProfileOptions/ProfileNavTab";
 
 export default function ProfilePage() {
@@ -152,7 +151,6 @@ export default function ProfilePage() {
                 <EditProfile ref={editProfileComponent}></EditProfile>
               </Col>
             </Row> */}
-            {/* <ProfileAccordion/> */}
             <ProfileNavTab/>
           </Container> 
           

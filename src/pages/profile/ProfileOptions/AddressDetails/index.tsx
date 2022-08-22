@@ -15,8 +15,14 @@ import AuthContext from "../../../../context/auth-context";
 import { useMutation, useQuery } from "@apollo/client";
 import { flattenObj } from "../../../../components/utils/responseFlatten";
 import { schema, widgets } from '../../profileSchema';
+import { withTheme, utils } from "@rjsf/core";
+import { Theme as Bootstrap4Theme } from "@rjsf/bootstrap-4";
 
 export default function AddressDetails() {
+    const registry = utils.getDefaultRegistry();
+    const defaultFileWidget = registry.widgets["FileWidget"];
+    (Bootstrap4Theme as any).widgets["FileWidget"] = defaultFileWidget;
+    const Form: any = withTheme(Bootstrap4Theme);
     const auth = useContext(AuthContext);
     const addressJson: { [name: string]: any } = require("./Address.json");
     const [step] = useState<number>(4);
@@ -245,11 +251,11 @@ export default function AddressDetails() {
       }
 
     return (
-        <Container className="mt-5">
-            <Row className="mt-3 ml-3 inline">
+        <Container className="m-5">
+            {/* <Row className="mt-3 ml-3 inline">
               <Col lg={10}><h5>Addresses</h5></Col>
             </Row>
-            <hr />
+            <hr /> */}
             {/* <Row className="justify-content-end pr-3">
                 <Button variant="outline-dark d-flex"><b>New Address</b> <img src="assets/plusIcon.svg" alt="add" height="25" style={{marginLeft: '5px'}} /></Button>
             </Row> */}

@@ -3,24 +3,23 @@ import Form from "@rjsf/core";
 import { Button, Col, Container, Row } from 'react-bootstrap';
 import { schema, widgets } from "../../profileSchema";
 import {
-    FETCH_USER_PROFILE_DATA,
-    UPDATE_USER_PROFILE_DATA,
-    UPDATE_ADDRESS_DATA,
-    CREATE_ADDRESS,
-    DELETE_ADDRESS,
-    CREATE_EDUCATION_DETAILS,
-    UPDATE_EDUCATION_DETAILS,
-    DELETE_EDUCATION_DETAILS,
-  } from "../../queries/queries";
+  FETCH_USER_PROFILE_DATA,
+  UPDATE_USER_PROFILE_DATA,
+  UPDATE_ADDRESS_DATA,
+  CREATE_ADDRESS,
+  DELETE_ADDRESS,
+  CREATE_EDUCATION_DETAILS,
+  UPDATE_EDUCATION_DETAILS,
+  DELETE_EDUCATION_DETAILS,
+} from "../../queries/queries";
 import AuthContext from "../../../../context/auth-context";
 import { useMutation, useQuery } from "@apollo/client";
 import { flattenObj } from "../../../../components/utils/responseFlatten";
 
 export default function BasicProfileForm() {
-    const auth = useContext(AuthContext);
-    const profileJson: { [name: string]: any } = require("./BasicProfile.json");
-    const [step] = useState<number>(1);
-    const [webpageDetails, setWebPageDetails] = useState<any>({});
+  const auth = useContext(AuthContext);
+  const profileJson: { [name: string]: any } = require("./BasicProfile.json");
+  const [webpageDetails, setWebPageDetails] = useState<any>({});
   const [addressID, setAddressID] = useState<any>([]);
   const [educationID, setEducationID] = useState<any>([]);
   const [profileData, setProfileData] = useState<any>();
@@ -35,15 +34,15 @@ export default function BasicProfileForm() {
       setAddressID(
         r.usersPermissionsUser.data.attributes.addresses.data.length
           ? r.usersPermissionsUser.data.attributes.addresses.data.map(
-              (address: any) => address.id
-            )
+            (address: any) => address.id
+          )
           : null
       );
       setEducationID(
         r.usersPermissionsUser.data.attributes.educational_details.data.length
           ? r.usersPermissionsUser.data.attributes.educational_details.data.map(
-              (eduId: any) => eduId.id
-            )
+            (eduId: any) => eduId.id
+          )
           : null
       );
     },
@@ -72,7 +71,7 @@ export default function BasicProfileForm() {
   }
 
   const [updateProfile] = useMutation(UPDATE_USER_PROFILE_DATA, {
-    onCompleted: (r: any) => {},
+    onCompleted: (r: any) => { },
   });
 
   const [updateAddress] = useMutation(UPDATE_ADDRESS_DATA, {
@@ -83,7 +82,7 @@ export default function BasicProfileForm() {
     onCompleted: callEdit,
   });
   const [deleteAddress] = useMutation(DELETE_ADDRESS, {
-    onCompleted: (data: any) => {},
+    onCompleted: (data: any) => { },
   });
 
   function EditAddressAnd(addressData) {
@@ -136,14 +135,14 @@ export default function BasicProfileForm() {
     onCompleted: callEdit,
   });
   const [deleteEducationData] = useMutation(DELETE_EDUCATION_DETAILS, {
-    onCompleted: (data: any) => {},
+    onCompleted: (data: any) => { },
   });
 
   function Create_Edit_EducationData(data: any) {
     let educationDataID = "";
 
     // eslint-disable-next-line array-callback-return
-    data.map((educationData) => { 
+    data.map((educationData) => {
       educationDataID = educationData.id;
 
       delete educationData.id;
@@ -244,17 +243,23 @@ export default function BasicProfileForm() {
     EditAddressAnd(addressData);
   }
 
-    return (
-        <Container className="m-5">
-                <Form
-                  uiSchema={schema}
-                  schema={profileJson}
-                //   ref={formRef}
-                //   onSubmit={({ formData }: any) => submitHandler(formData)}
-                  formData={webpageDetails}
-                  widgets={widgets}
-                />
-            {/* <Form
+  // function submitHandler(data: any) {
+  //   formSubmit(data);
+  // }
+
+  return (
+    <Container className="m-5">
+      <Form
+        uiSchema={schema}
+        schema={profileJson}
+        // ref={formRef}
+                  onSubmit={(frm: any) => {
+                    OnSubmit(frm);}}
+                  // formData={formData}
+        formData={webpageDetails}
+        widgets={widgets}
+      />
+      {/* <Form
                 // schema={BasicProfile}
                 schema={profileJson[step.toString()]}
                 //  uiSchema={uiSchema}
@@ -262,7 +267,7 @@ export default function BasicProfileForm() {
                 widgets={widgets}
             >
             </Form> */}
-        </Container>
-    )
+    </Container>
+  )
 }
 

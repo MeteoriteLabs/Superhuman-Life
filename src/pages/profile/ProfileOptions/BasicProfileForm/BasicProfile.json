@@ -24,12 +24,10 @@
         },
         "Photo_ID": {
             "type": "string",
-            "format": "data-url",
             "title": "Upload Profile Picture"
         },
         "Photo_profile_banner_ID": {
             "type": "string",
-            "format": "data-url",
             "title": "Profile Banner"
         }
     }
