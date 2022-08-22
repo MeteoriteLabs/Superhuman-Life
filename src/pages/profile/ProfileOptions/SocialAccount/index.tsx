@@ -3,16 +3,16 @@ import { Button, Col, Container, Row } from "react-bootstrap";
 import Form from "@rjsf/core";
 
 export default function SocialAccount() {
-    const profileJson: { [name: string]: any } = require("../../Profile.json");
+    const socialAccountJson: { [name: string]: any } = require("./SocialAccount.json");
     const [step] = useState<number>(4);
 
     return (
         <Container className="mt-5">
-            <Row className="mt-3 ml-3 inline">
+            {/* <Row className="mt-3 ml-3 inline">
             <Col lg={10}><h5>Social Accounts</h5></Col>
             <Col lg={2}><Button variant="outline-dark">Edit</Button></Col>
           </Row>
-          <hr />
+          <hr /> */}
         {/* <Form className="m-5">
             <Form.Row>
                 <Form.Group as={Col} controlId="formBasicName">
@@ -63,13 +63,13 @@ export default function SocialAccount() {
                 Save
             </Button> */}
         {/* </Form> */}
-        {/* <Form
+        <Form
                 // schema={BasicProfile}
-                schema={profileJson[step.toString()]}
+                schema={socialAccountJson}
                 // uiSchema={uiSchema}
                 // formData={formData}
             >
-            </Form> */}
+            </Form>
         </Container>
     )
 }

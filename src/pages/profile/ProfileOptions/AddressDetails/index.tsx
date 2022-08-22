@@ -1,7 +1,6 @@
 import { useState, useContext } from 'react';
 import { Card, Container, Row, Button, Col } from "react-bootstrap";
 import Form from '@rjsf/core';
-import { schema, widgets } from "../../profileSchema";
 import {
     FETCH_USER_PROFILE_DATA,
     UPDATE_USER_PROFILE_DATA,
@@ -15,10 +14,11 @@ import {
 import AuthContext from "../../../../context/auth-context";
 import { useMutation, useQuery } from "@apollo/client";
 import { flattenObj } from "../../../../components/utils/responseFlatten";
+import { schema, widgets } from '../../profileSchema';
 
 export default function AddressDetails() {
     const auth = useContext(AuthContext);
-    const profileJson: { [name: string]: any } = require("../../Profile.json");
+    const addressJson: { [name: string]: any } = require("./Address.json");
     const [step] = useState<number>(4);
     const [webpageDetails, setWebPageDetails] = useState<any>({});
     const [addressID, setAddressID] = useState<any>([]);
@@ -250,17 +250,17 @@ export default function AddressDetails() {
               <Col lg={10}><h5>Addresses</h5></Col>
             </Row>
             <hr />
-            <Row className="justify-content-end pr-3">
+            {/* <Row className="justify-content-end pr-3">
                 <Button variant="outline-dark d-flex"><b>New Address</b> <img src="assets/plusIcon.svg" alt="add" height="25" style={{marginLeft: '5px'}} /></Button>
-            </Row>
-            {/* <Form
-                //   schema={schema}
-                  schema={profileJson[step.toString()]}
+            </Row> */}
+            <Form
+                  uiSchema={schema}
+                  schema={addressJson}
                 //   ref={formRef}
                 //   onSubmit={({ formData }: any) => submitHandler(formData)}
                 //   formData={webpageDetails}
-                //   widgets={widgets}
-            /> */}
+                  widgets={widgets}
+            />
             <Row className="mt-4">
                 <Col>
                 <Card>

@@ -23,6 +23,8 @@ function EditProfile() {
   const [educationID, setEducationID] = useState<any>([]);
   const [profileData, setProfileData] = useState<any>();
 
+  console.log('profileJson', profileJson)
+ 
   useQuery(FETCH_USER_PROFILE_DATA, {
     variables: { id: auth.userid },
     onCompleted: (r: any) => {

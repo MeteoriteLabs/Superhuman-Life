@@ -15,10 +15,10 @@ export default function ProfileAccordion() {
             <Card className="m-3">
                 <Card.Header  >
                     <Accordion.Toggle as={Button} variant="link" eventKey="0" className="col-lg-12">
-                        <Row lg={12}>
-                            <Col lg={1}><img src="assets/chevron.svg" alt="downarrow"/></Col>
-                            <Col lg={2}><b className='text-dark'>Basic Profile</b></Col>   
-                        </Row>
+                        <Row className="justify-content-between">
+                            <div className='float-left'><b className='text-dark'><h4>Basic Profile</h4></b></div>
+                            <div className='float-right'><img src="assets/chevron.svg" alt="downarrow" height="25"/></div>   
+                        </Row> 
                     </Accordion.Toggle>
                 </Card.Header>
                 <Accordion.Collapse eventKey="0">
@@ -30,9 +30,9 @@ export default function ProfileAccordion() {
             <Card className="m-3">
                 <Card.Header>
                     <Accordion.Toggle as={Button} variant="link" eventKey="1" className="col-lg-12">
-                        <Row lg={12}>
-                            <Col lg={1}><img src="assets/chevron.svg" alt="downarrow"/></Col>
-                            <Col lg={2}><b className='text-dark'>Education</b></Col>   
+                        <Row className="justify-content-between">
+                            <div className='float-left'><b className='text-dark'><h4>Education</h4></b></div>
+                            <div className='float-right'><img src="assets/chevron.svg" alt="downarrow" height="25"/></div>   
                         </Row>   
                     </Accordion.Toggle>
                 </Card.Header>
@@ -45,10 +45,10 @@ export default function ProfileAccordion() {
             <Card className="m-3">
                 <Card.Header>
                     <Accordion.Toggle as={Button} variant="link" eventKey="2" className="col-lg-12">
-                        <Row lg={12}>
-                            <Col lg={1}><img src="assets/chevron.svg" alt="downarrow"/></Col>
-                            <Col lg={2}><b className='text-dark'>Addresses</b></Col>   
-                        </Row>    
+                        <Row className="justify-content-between">
+                            <div className='float-left'><b className='text-dark'><h4>Addresses</h4></b></div>
+                            <div className='float-right'><img src="assets/chevron.svg" alt="downarrow" height="25"/></div>   
+                        </Row>   
                     </Accordion.Toggle>
                 </Card.Header>
                 <Accordion.Collapse eventKey="2">
@@ -60,9 +60,9 @@ export default function ProfileAccordion() {
             <Card className="m-3">
                 <Card.Header>
                     <Accordion.Toggle as={Button} variant="link" eventKey="3" className="col-lg-12">
-                        <Row lg={12}>
-                            <Col lg={1}><img src="assets/chevron.svg" alt="downarrow"/></Col>
-                            <Col lg={2}><b className='text-dark'>Timings</b></Col>   
+                        <Row className="justify-content-between">
+                            <div className='float-left'><b className='text-dark'><h4>Timings</h4></b></div>
+                            <div className='float-right'><img src="assets/chevron.svg" alt="downarrow" height="25"/></div>   
                         </Row>  
                     </Accordion.Toggle>
                 </Card.Header>
@@ -75,10 +75,10 @@ export default function ProfileAccordion() {
             <Card className="m-3">
                 <Card.Header>
                     <Accordion.Toggle as={Button} variant="link" eventKey="4" className="col-lg-12">
-                        <Row lg={12}>
-                            <Col lg={1}><img src="assets/chevron.svg" alt="downarrow"/></Col>
-                            <Col lg={2}><b className='text-dark'>Social Account</b></Col>   
-                        </Row>  
+                    <Row className="justify-content-between">
+                            <div className='float-left'><b className='text-dark'><h4>Social Account</h4></b></div>
+                            <div className='float-right'><img src="assets/chevron.svg" alt="downarrow" height="25"/></div>   
+                        </Row> 
                     </Accordion.Toggle>
                 </Card.Header>
                 <Accordion.Collapse eventKey="4">
@@ -90,9 +90,9 @@ export default function ProfileAccordion() {
             <Card className="m-3">
                 <Card.Header>
                     <Accordion.Toggle as={Button} variant="link" eventKey="5" className="col-lg-12">
-                        <Row lg={12}>
-                            <Col lg={1}><img src="assets/chevron.svg" alt="downarrow"/></Col>
-                            <Col lg={2}><b className='text-dark'>Verification</b></Col>   
+                        <Row className="justify-content-between">
+                            <div className='float-left'><b className='text-dark'><h4>Verification</h4></b></div>
+                            <div className='float-right'><img src="assets/chevron.svg" alt="downarrow" height="25"/></div>   
                         </Row>  
                     </Accordion.Toggle>
                 </Card.Header>

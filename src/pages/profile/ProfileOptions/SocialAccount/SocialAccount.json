@@ -1,0 +1,31 @@
+{
+    "title": "Social Login",
+    "type":"object",
+    "properties":{
+    
+    "instagram_url": {
+        "type": "string",
+        "title": "Instagram URL"
+    },
+    "Facebook_URL": {
+        "type": "string",
+        "title": "Facebook URL"
+    },
+    "Youtube_URL": {
+        "type": "string",
+        "title": "Youtube URL"
+    },
+    "LinkedIn_URL": {
+        "type": "string",
+        "title": "LinkedIn URL"
+    },
+    "Clubhouse_URL": {
+        "type": "string",
+        "title": "Clubhouse URL"
+    },
+    "Twitter_URL": {
+        "type": "string",
+        "title": "Twitter URL"
+    }
+}
+}

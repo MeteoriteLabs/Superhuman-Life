@@ -1,0 +1,11 @@
+{
+    "title": "Account Verification",
+    "type":"object",
+    "properties":{
+    "Verification_ID": {
+        "type": "string",
+        "format": "data-url",
+        "title": "Verification"
+    }
+}
+}      

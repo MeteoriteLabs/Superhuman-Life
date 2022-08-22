@@ -1,0 +1,11 @@
+{
+    "type":"object",
+    "properties":{
+        "educational_details": {
+            "type": "array",
+            "title": "Education",
+            "items": {
+                "type": "string"
+            }
+        }}
+    }

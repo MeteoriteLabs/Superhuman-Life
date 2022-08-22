@@ -20,13 +20,18 @@
             }
         },    
     "2":{
-            "addresses": {
-                "type": "array",
-                "title": "Address",
-                "items": {
-                    "type": "string"
-                }
-            }},  
+            "title": "Address",
+            "type":"object",
+            "properties":{
+                "addresses": {
+                    "type": "array",
+                    "title": "Address",
+                    "items": {
+                        "type": "string"
+                    }
+                }}
+            },
+             
     "3": {    
             "educational_details": {
                 "type": "array",
@@ -56,6 +61,9 @@
                   }
         }},
     "4":{
+        "title": "Social Login",
+        "type":"object",
+        "properties":{
         "instagram_url": {
             "type": "string",
             "title": "Instagram URL"
@@ -80,8 +88,12 @@
             "type": "string",
             "title": "Twitter URL"
         }
+    }
     },
     "5":{
+        "title": "Account Verification",
+        "type":"object",
+        "properties":{
         "Photo_ID": {
             "type": "string",
             "title": "Upload Profile Picture"
@@ -94,6 +106,7 @@
             "type": "string",
             "title": "Profile Banner"
         }
+    }
     }      
         }
     }

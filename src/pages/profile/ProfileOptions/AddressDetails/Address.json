@@ -1,0 +1,11 @@
+{
+    "type":"object",
+    "properties":{
+        "addresses": {
+            "type": "array",
+            "title": "Address",
+            "items": {
+                "type": "string"
+            }
+        }}
+    }

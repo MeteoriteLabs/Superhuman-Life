@@ -4,6 +4,7 @@ export const FETCH_USER_PROFILE_DATA = gql`
   query fetchUserProfileData($id: ID!) {
     usersPermissionsUser(id: $id) {
       data {
+        id
         attributes {
           First_Name
           Last_Name

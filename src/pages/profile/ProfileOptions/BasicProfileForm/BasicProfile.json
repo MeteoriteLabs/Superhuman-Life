@@ -1,0 +1,36 @@
+{
+    "type": "object",
+    "title": "Basic Profile",
+    "properties": {
+        "First_Name": {
+            "type": "string",
+            "title": "First Name"
+        },
+        "Last_Name": {
+            "type": "string",
+            "title": "Last Name"
+        },
+        "About_User": {
+            "type": "string",
+            "title": "About"
+        },
+        "about_mini_description": {
+            "type": "string",
+            "title": "Mini description"
+        },
+        "Phone_Number": {
+            "type": "string",
+            "title": "Contact Number"
+        },
+        "Photo_ID": {
+            "type": "string",
+            "format": "data-url",
+            "title": "Upload Profile Picture"
+        },
+        "Photo_profile_banner_ID": {
+            "type": "string",
+            "format": "data-url",
+            "title": "Profile Banner"
+        }
+    }
+}
