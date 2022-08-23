@@ -82,26 +82,43 @@ const AttendanceModal = (props: any) => {
           }
      }
 
+     function padTo2Digits(num) {
+          return num.toString().padStart(2, '0');
+      }
+
+     function handleAttendanceCalculations(data: any[], statusToCheck?: string) {
+
+          const filteredData = data.filter((session: any) => session.attendance === statusToCheck);
+          return padTo2Digits(filteredData.length);
+      }
+
      return (
           <Modal
                {...props}
-               size="lg"
+               size="md"
                aria-labelledby="contained-modal-title-vcenter"
                backdrop="static"
                centered
           >
-               <Modal.Header>
-               <Modal.Title id="contained-modal-title-vcenter">
-                    Attendance
-               </Modal.Title>
-               </Modal.Header>
-               <Modal.Body>
-                    <Row className='border-top border-bottom pl-3 pr-3'>
-                         <Col lg={8}>
-                              <span>Name</span>
-                         </Col>
+               <Modal.Body style={{ maxHeight: '400px', overflow: 'auto'}}>
+                    <Row className='text-center border-bottom'>
+                         <Col className='text-left h4'>Attendance</Col>
+
                          <Col className='text-center'>
-                              <span>Mark Attendance</span>
+                         <Row className=''>
+                                <Col className='pl-1 pr-1 text-center'>
+                                   <span className='small'>{padTo2Digits(attendanceData.length)}</span><br />
+                                   <span className='small'>Total</span>
+                                </Col>
+                                <Col className='pl-1 pr-1 text-center'>
+                                    <span className='small'>{handleAttendanceCalculations(attendanceData, 'Attended')}</span><br />
+                                    <span className='small'>Present</span>
+                                </Col>
+                                <Col className='pl-1 pr-1 text-center'>
+                                    <span className='small'>{handleAttendanceCalculations(attendanceData, 'Absent')}</span><br />
+                                    <span className='small'>Absent</span>
+                                </Col>
+                            </Row>
                          </Col>
                     </Row>
                     {!showData ? <div>Loading...</div> : attendanceData.map((item: any, index: any) => {
@@ -112,8 +129,8 @@ const AttendanceModal = (props: any) => {
                                              <img
                                                   src="https://picsum.photos/200/100" alt='profile-pic'
                                                   style={{ width: '50px', height: '50px', borderRadius: '50%' }} 
-                                                  /><br />
-                                             <span>{item?.username}</span>
+                                                  />
+                                             <span className='pl-3'>{item?.username}</span>
                                         </Col>
                                         <Col className='text-center'>
                                              <Row className='justify-content-between'>

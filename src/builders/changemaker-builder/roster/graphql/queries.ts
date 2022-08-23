@@ -210,6 +210,9 @@ export const UPDATE_ATTENDANCE_DATA = gql`
 export const GET_PARTICULAR_CLIENT = gql`
   query getParticularClient($id: ID!, $username: String){
     sessionsBookings(filters: {
+      Session_booking_status: {
+        in: ["Attended", "Booked", "Absent"]
+      },
       session: {
         id: {
           eq: $id
