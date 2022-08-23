@@ -1144,8 +1144,9 @@ const Schedular = (props: any) => {
     }
     else return (
         <>
+            {/* this program list is only for fitnesstemplate */}
             <div className="mb-5 shadow-lg p-3" style={{ display: `${program}`, borderRadius: '20px' }}>
-                <ProgramList callback={handleFloatingActionProgramCallback} />
+                <ProgramList dayType={'programs'} callback={handleFloatingActionProgramCallback} />
             </div>
 
             <div className="mb-5 shadow-lg p-3" style={{ display: `${sessionFilter}`, borderRadius: '20px' }}>

@@ -3,11 +3,12 @@ import { Link } from 'react-router-dom';
 import { Card, Col, Row, Button, Spinner, Alert } from 'react-bootstrap';
 import moment from 'moment';
 import RosterTabs from './tabs';
-import { GET_SESSION_AND_SESSION_BOOKINGS, GET_TAG_BASED_ON_SESSION } from './graphql/queries';
+import { GET_SESSION_AND_SESSION_BOOKINGS, GET_TAG_BASED_ON_SESSION, GET_PARTICULAR_CLIENT } from './graphql/queries';
 import { useQuery } from '@apollo/client';
 import { flattenObj } from '../../../components/utils/responseFlatten';
 import AuthContext from '../../../context/auth-context';
 import Calendar from "react-calendar";
+import AttendanceModal from './attendance_modal';
 import "react-calendar/dist/Calendar.css";
 import './styles.css';
 
@@ -15,8 +16,7 @@ const Roster = () => {
 
     const auth = useContext(AuthContext);
     // const [scheduleDay, setScheduleDay] = useState(0);
-    /* eslint-disable */
-    const [scheduleDate, setScheduleDate] = useState(moment().format('YYYY-MM-DD'));
+    const [scheduleDate] = useState(moment().format('YYYY-MM-DD'));
     const [currentDateSessions, setCurrentDateSessions] = useState<any>([]);
     const [restDays, setRestDays] = useState<any>([]);
     const [tags, setTags] = useState<any>([]);
@@ -24,10 +24,9 @@ const Roster = () => {
     const [show, setShow] = useState(false);
     const [anotherDate, setAnotherDate] = useState('');
     const [showAlert, setShowAlert] = useState(false);
+    const [attendanceModalShow, setAttendanceModalShow] = useState(false);
     const [choosenDate, setChoosenDate] = useState('');
-
-    console.log(restDays);
-    console.log(currentDateSessions);
+    const [bookingStatusDetails, setBookingStatusDetails] = useState<any>([]);
 
     useEffect(() => {
         setTimeout(() => {
@@ -35,19 +34,29 @@ const Roster = () => {
         }, 5000);
     }, [showAlert])
 
+    useQuery(GET_PARTICULAR_CLIENT, {
+        variables: {
+             id: window.location.pathname.split('/').pop()
+        },
+        onCompleted: (data) => {
+            const flattenData = flattenObj({...data});
+            setBookingStatusDetails(flattenData.sessionsBookings);
+        }
+    });
+
     function tileContent({ date, view }) {
-        for (var i = 0; i < currentDateSessions.length; i++) {
-            if (moment(currentDateSessions[i].session_date).format('YYYY-MM-DD') === moment(date).format('YYYY-MM-DD') && currentDateSessions[i].type === 'restday') {
+        for (var i = 0; i < currentDateSessions?.length; i++) {
+            if (moment(currentDateSessions[i]?.session_date).format('YYYY-MM-DD') === moment(date).format('YYYY-MM-DD') && currentDateSessions[i].type === 'restday') {
                 return 'sessionRestDay';
             };
-            if (moment(currentDateSessions[i].session_date).format('YYYY-MM-DD') === moment(date).format('YYYY-MM-DD') && currentDateSessions[i].type !== 'restday') {
+            if (moment(currentDateSessions[i]?.session_date).format('YYYY-MM-DD') === moment(date).format('YYYY-MM-DD') && currentDateSessions[i].type !== 'restday') {
                 return 'sessionPresent';
             };
         };
     }
 
     function handleDateChange(date){
-        const checkingIfSessionExists = currentDateSessions.filter(session => session.session_date === moment(date).format('YYYY-MM-DD') && session.type !== 'restday');
+        const checkingIfSessionExists = currentDateSessions?.filter(session => session.session_date === moment(date).format('YYYY-MM-DD') && session.type !== 'restday');
         console.log(checkingIfSessionExists);
         if (checkingIfSessionExists.length > 0) {
             window.location.href = `/roster/${checkingIfSessionExists[0].id}`;
@@ -66,18 +75,18 @@ const Roster = () => {
     // }, [scheduleDate]);
 
     function handleSorting(data: any) {
-        data.sort((a: any, b: any) => {
+        data?.sort((a: any, b: any) => {
             var btime1: any = moment(a.start_time, "HH:mm a");
             var btime2: any = moment(b.start_time, "HH:mm a");
             return btime1 - btime2;
         });
-        data.sort(function (a: any, b: any) {
+        data?.sort(function (a: any, b: any) {
             const date1: any = new Date(a.session_date)
             const date2: any = new Date(b.session_date)
 
             return date1 - date2;
         });
-        data.filter((sess: any) => sess.Is_Holiday === true);
+        data?.filter((sess: any) => sess.Is_Holiday === true);
         if (scheduleDate === moment().format("YYYY-MM-DD")) {
             setCurrentDateSessions(data);
             // window.location.href = `/roster/${data[0]?.id}`;
@@ -85,7 +94,7 @@ const Roster = () => {
     };
 
     useEffect(() => {
-        const restDaysSorted = currentDateSessions.filter(session => session.Is_restday === true && session.session_date === anotherDate);
+        const restDaysSorted = currentDateSessions?.filter(session => session.Is_restday === true && session.session_date === anotherDate);
         setRestDays(restDaysSorted);
     }, [anotherDate, currentDateSessions])
 
@@ -98,8 +107,8 @@ const Roster = () => {
         },
         onCompleted: (data: any) => {
             const flattenData = flattenObj({ ...data });
-            setTags(flattenData.tags);
-            handleSorting(flattenData.tags[0].sessions);
+            setTags(flattenData?.tags);
+            handleSorting(flattenData?.tags[0]?.sessions);
         }
     })
 
@@ -214,6 +223,12 @@ const Roster = () => {
         }
     }
 
+    function handleBookingStatusCalculations(data: any[], statusToCheck: string) {
+
+        const filteredData = data.filter((session: any) => session.Session_booking_status === statusToCheck);
+        return padTo2Digits(filteredData.length);
+    }
+
     // function handlePrevDayLoad(){
     //     setScheduleDate(moment(scheduleDate).subtract(1, 'days').format("YYYY-MM-DD"));
     //     // currentDateData.refetch();
@@ -233,7 +248,7 @@ const Roster = () => {
             <Card className="shadow-sm mt-3" border="light">
                 <Card.Body>
                     <Row>
-                        <Col lg={6} style={{ borderRight: '2px dashed gray' }}>
+                        <Col lg={5} style={{ borderRight: '2px dashed gray' }}>
                             <div className='text-center mb-2'>
                                 <span
                                     onClick={() => {
@@ -280,7 +295,7 @@ const Roster = () => {
                                 </div>
                             </div>
                         </Col>
-                        <Col lg={3} style={{ borderRight: '2px dashed gray' }}>
+                        <Col lg={4} style={{ borderRight: '2px dashed gray' }}>
                             <div className='text-center'>
                                 <span><b>{moment(sessionData[0]?.session?.session_date).isAfter(moment()) ? <span className="text-success">Class Is Tomorrow</span> : handleClassTimeDisplay(sessionData[0]?.session?.start_time)}</b></span>
                             </div>
@@ -291,8 +306,33 @@ const Roster = () => {
                                 </Button>
                             </div>
                             <div className='text-center mt-4'>
-                                <button className='pl-3 pr-3' style={{ border: '2px solid gray', borderRadius: '10px' }}>Attendance</button>
+                                <Button className='pl-3 pr-3' onClick={() => {
+                                    setAttendanceModalShow(true);
+                                }} variant='outline-dark'>Mark Attendance</Button>
+                                <AttendanceModal show={attendanceModalShow} onHide={() => setAttendanceModalShow(false)}/>
                             </div>
+                            <Row className='mt-5'>
+                                <Col className='pl-1 pr-1 text-center'>
+                                    <span className='small'>{handleBookingStatusCalculations(bookingStatusDetails, 'Booked')}</span><br />
+                                    <span className='small'>Booked</span>
+                                </Col>
+                                <Col className='pl-1 pr-1 text-center'>
+                                    <span className='small'>{handleBookingStatusCalculations(bookingStatusDetails, 'Attended')}</span><br />
+                                    <span className='small'>Present</span>
+                                </Col>
+                                <Col className='pl-1 pr-1 text-center'>
+                                    <span className='small'>{handleBookingStatusCalculations(bookingStatusDetails, 'Absent')}</span><br />
+                                    <span className='small'>Absent</span>
+                                </Col>
+                                <Col className='pl-1 pr-1 text-center'>
+                                    <span className='small'>{handleBookingStatusCalculations(bookingStatusDetails, 'Canceled')}</span><br />
+                                    <span className='small'>Cancelled</span>
+                                </Col>
+                                <Col className='pl-1 pr-1 text-center'>
+                                    <span className='small'>{handleBookingStatusCalculations(bookingStatusDetails, 'Rescheduled')}</span><br />
+                                    <span className='small'>Rescheduled</span>
+                                </Col>
+                            </Row>
                         </Col>
                         <Col lg={3}>
                             <div className='text-center'>

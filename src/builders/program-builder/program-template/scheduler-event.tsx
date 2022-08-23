@@ -58,7 +58,7 @@ const SchedulerEvent = (props: any) => {
      }
 
      function handleRenderTable(data: any){
-          if(window.location.pathname.split("/")[1] === 'programs'){
+          if(props.dayType === 'programs'){
                return handleTemplteRenderTable(data);
           }
           const values = [...data];

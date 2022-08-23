@@ -195,6 +195,18 @@ export const GET_TAG_BASED_ON_SESSION = gql`
   }
 `;
 
+export const UPDATE_ATTENDANCE_DATA = gql`
+  mutation updateAttendanceData($id: ID!, $status: ENUM_SESSIONSBOOKING_SESSION_BOOKING_STATUS!) {
+    updateSessionsBooking(id: $id, data: {
+      Session_booking_status: $status
+    }){
+      data{
+        id
+      }
+    }
+  }
+`
+
 export const GET_PARTICULAR_CLIENT = gql`
   query getParticularClient($id: ID!, $username: String){
     sessionsBookings(filters: {
@@ -212,6 +224,15 @@ export const GET_PARTICULAR_CLIENT = gql`
       data{
         id
         attributes{
+          session{
+            data{
+              id
+              attributes{
+                session_date
+              }
+            }
+          }
+          Session_booking_status
           client{
             data{
               id
