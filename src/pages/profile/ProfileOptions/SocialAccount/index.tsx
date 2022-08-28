@@ -15,7 +15,7 @@ export default function SocialAccount() {
     const [webpageDetails, setWebPageDetails] = useState<any>({});
     const [profileData, setProfileData] = useState<any>();
 
-    useQuery(FETCH_USER_PROFILE_DATA, {
+    const fetch = useQuery(FETCH_USER_PROFILE_DATA, {
         variables: { id: auth.userid },
         onCompleted: (r: any) => {
             const flattenData = flattenObj({ ...r });
@@ -24,7 +24,7 @@ export default function SocialAccount() {
     });
 
     const [updateProfile, { error }] = useMutation(UPDATE_USER_PROFILE_DATA, {
-        onCompleted: (r: any) => { setIsFormSubmitted(!isFormSubmitted); },
+        onCompleted: (r: any) => { setIsFormSubmitted(!isFormSubmitted); fetch.refetch();},
 
     });
 
