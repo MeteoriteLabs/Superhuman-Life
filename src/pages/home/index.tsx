@@ -40,24 +40,23 @@ export default function HomePage() {
       text: "Network Community",
     },
   ];
-  //eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwYjBjMjg2MjBjZDVkZWE1NzU5MWU0YSIsImlhdCI6MTYyMjQ1OTAxMiwiZXhwIjoxNjI1MDUxMDEyfQ.XV4vYaPW9QpuNhjqlYx0gT2gDXTzxhbtXv7BbVpl9QY
+  
   return (
-    <>
+    <div className="col-lg-12">
       <h3>Dashboard</h3>
       <hr />
-        
-        <CardDeck>
-          {shortcuts &&
-            shortcuts.map((shortcut, id) => (
-              <Card key={id} className="shadow-sm text-center" border="light">
-                <Card.Body>
-                  <Link to={shortcut.link}>{shortcut.icon}</Link>
-                  <hr />
-                  <Card.Text className="text-muted">{shortcut.text}</Card.Text>
-                </Card.Body>
-              </Card>
-            ))}
-        </CardDeck>
-    </>
+      <CardDeck>
+        {shortcuts &&
+          shortcuts.map((shortcut, id) => (
+            <Card key={id} className="shadow-sm text-center" border="light">
+              <Card.Body>
+                <Link to={shortcut.link}>{shortcut.icon}</Link>
+                <hr />
+                <Card.Text className="text-muted">{shortcut.text}</Card.Text>
+              </Card.Body>
+            </Card>
+          ))}
+      </CardDeck>
+    </div>
   );
 }
