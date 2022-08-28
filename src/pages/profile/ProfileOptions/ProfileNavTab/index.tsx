@@ -1,9 +1,5 @@
 import { useState } from 'react';
-import {
-    Tabs,
-    Tab,
-    Container,
-  } from "react-bootstrap";
+import { Tabs, Tab } from "react-bootstrap";
 import BasicProfileForm from '../BasicProfileForm';
 import AddressDetails from '../AddressDetails';
 import EducationDetails from '../EducationDetails';
@@ -14,12 +10,11 @@ function ProfileNavTab() {
   const [key, setKey] = useState("basicprofile");
     
   return (
-    <Container className="mt-5 pt-5">
       <Tabs
         id="controlled-tab"
         activeKey={key}
         onSelect={(k: any) => setKey(k)}
-        className="mb-3 d-flex justify-content-center"
+        className="mb-3 d-flex justify-content-center mt-5"
       >
         <Tab eventKey="basicprofile" title="Basic Profile">
           <BasicProfileForm/>
@@ -37,7 +32,6 @@ function ProfileNavTab() {
           <AccountVerification/>
         </Tab>
       </Tabs>
-    </Container>
   )
 }
 

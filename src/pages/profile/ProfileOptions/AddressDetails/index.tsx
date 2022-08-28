@@ -1,307 +1,124 @@
-import { useState, useContext } from 'react';
-import { Card, Container, Row, Button, Col } from "react-bootstrap";
-import Form from '@rjsf/core';
-import {
-    FETCH_USER_PROFILE_DATA,
-    UPDATE_USER_PROFILE_DATA,
-    UPDATE_ADDRESS_DATA,
-    CREATE_ADDRESS,
-    DELETE_ADDRESS,
-    CREATE_EDUCATION_DETAILS,
-    UPDATE_EDUCATION_DETAILS,
-    DELETE_EDUCATION_DETAILS,
-  } from "../../queries/queries";
+import { useState, useContext, useRef, forwardRef } from 'react';
+import { Card, Row, Col, Button, Dropdown } from "react-bootstrap";
+import { FETCH_USER_PROFILE_DATA, DELETE_ADDRESS } from "../../queries/queries";
 import AuthContext from "../../../../context/auth-context";
-import { useMutation, useQuery } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client";
 import { flattenObj } from "../../../../components/utils/responseFlatten";
-import { schema, widgets } from '../../profileSchema';
-import { withTheme, utils } from "@rjsf/core";
-import { Theme as Bootstrap4Theme } from "@rjsf/bootstrap-4";
+import CreateAddress from './CreateAddress';
 
-export default function AddressDetails() {
-    const registry = utils.getDefaultRegistry();
-    const defaultFileWidget = registry.widgets["FileWidget"];
-    (Bootstrap4Theme as any).widgets["FileWidget"] = defaultFileWidget;
-    const Form: any = withTheme(Bootstrap4Theme);
-    const auth = useContext(AuthContext);
-    const addressJson: { [name: string]: any } = require("./Address.json");
-    const [step] = useState<number>(4);
-    const [webpageDetails, setWebPageDetails] = useState<any>({});
-    const [addressID, setAddressID] = useState<any>([]);
-    const [educationID, setEducationID] = useState<any>([]);
-    const [profileData, setProfileData] = useState<any>();
+function AddressDetails() {
+  const auth = useContext(AuthContext);
+  const [addressData, setAddressData] = useState<any>([]);
+  const CreateAddressComponent = useRef<any>(null);
 
-    useQuery(FETCH_USER_PROFILE_DATA, {
-        variables: { id: auth.userid },
-        onCompleted: (r: any) => {
-          const flattenData = flattenObj({ ...r });
-          console.log(flattenData);
-          FillDetails(flattenData.usersPermissionsUser);
-    
-          setAddressID(
-            r.usersPermissionsUser.data.attributes.addresses.data.length
-              ? r.usersPermissionsUser.data.attributes.addresses.data.map(
-                  (address: any) => address.id
-                )
-              : null
-          );
-          setEducationID(
-            r.usersPermissionsUser.data.attributes.educational_details.data.length
-              ? r.usersPermissionsUser.data.attributes.educational_details.data.map(
-                  (eduId: any) => eduId.id
-                )
-              : null
-          );
-        },
-      });
-    
-      function callEdit(r: any) {
-        let id: any = "";
-        let edId: any = "";
-    
-        if ("updateAddress" in r) {
-          id = r.updateAddress.data.id;
-          profileData.addresses.push(id);
-        } else if ("createAddress" in r) {
-          id = r.createAddress.data.id;
-          profileData.addresses.push(id);
-        } else if ("createEducationalDetail" in r) {
-          edId = r.createEducationalDetail.data.id;
-          profileData.educational_details.push(edId);
-        } else {
-          edId = r.updateEducationalDetail.data.id;
-          profileData.educational_details.push(edId);
-        }
-    
-        console.log(profileData);
-        Edit();
+  const fetch = useQuery(FETCH_USER_PROFILE_DATA, {
+    variables: { id: auth.userid },
+    onCompleted: (r: any) => {
+      const flattenData = flattenObj({ ...r });
+      setAddressData(flattenData.usersPermissionsUser.addresses);
+    },
+  });
+
+  const [deleteAddress] = useMutation(DELETE_ADDRESS, {
+    onCompleted: (data: any) => { fetch.refetch(); },
+  });
+
+  function deleteUserAddress(data: any) {
+    deleteAddress({
+      variables: {
+        id: data.id
       }
-    
-      const [updateProfile] = useMutation(UPDATE_USER_PROFILE_DATA, {
-        onCompleted: (r: any) => {},
-      });
-    
-      const [updateAddress] = useMutation(UPDATE_ADDRESS_DATA, {
-        onCompleted: callEdit,
-      });
-    
-      const [createAddress] = useMutation(CREATE_ADDRESS, {
-        onCompleted: callEdit,
-      });
-      const [deleteAddress] = useMutation(DELETE_ADDRESS, {
-        onCompleted: (data: any) => {},
-      });
-    
-      function EditAddressAnd(addressData) {
-        let currentID = "";
-    
-        addressData.forEach((address: any) => {
-          currentID = address.id;
-          delete address.id;
-          delete address.__typename;
-    
-          if (!currentID) {
-            createAddress({
-              variables: {
-                data: address,
-              },
-            });
-          } else {
-            updateAddress({
-              variables: {
-                id: currentID,
-                data: address,
-              },
-            });
-          } //end else statement
-        }); //end forEach
-      } //end EditAddressAndProfile function
-    
-      function Edit() {
-        updateProfile({
-          variables: {
-            id: auth.userid,
-            data: profileData ? profileData : {},
-          },
+    })
+  }
+
+  // calling modal for update option
+  function updateAddress(data: any) {
+    CreateAddressComponent.current.TriggerForm({
+            id: data.id,
+            type: "update",
+            modal_status: true,
         });
-      }
-      function DeleteUserAddress(data: any) {
-        data.forEach((id: any) =>
-          deleteAddress({
-            variables: {
-              id: id,
-            },
-          })
-        );
-      }
-    
-      const [createEducationData] = useMutation(CREATE_EDUCATION_DETAILS, {
-        onCompleted: callEdit,
-      });
-      const [updateEducationData] = useMutation(UPDATE_EDUCATION_DETAILS, {
-        onCompleted: callEdit,
-      });
-      const [deleteEducationData] = useMutation(DELETE_EDUCATION_DETAILS, {
-        onCompleted: (data: any) => {},
-      });
-    
-      function Create_Edit_EducationData(data: any) {
-        let educationDataID = "";
-    
-        // eslint-disable-next-line array-callback-return
-        data.map((educationData) => { 
-          educationDataID = educationData.id;
-    
-          delete educationData.id;
-          delete educationData.__typename;
-    
-          if (!educationDataID) {
-            createEducationData({
-              variables: {
-                data: educationData,
-              },
-            });
-          } else {
-            updateEducationData({
-              variables: {
-                id: educationDataID,
-                data: educationData,
-              },
-            });
-          }
-        }); //end forEach
-      } //end create_edit education data function
-    
-      function DeleteUserEducationData(data: any) {
-        data.forEach((id: any) =>
-          deleteEducationData({
-            variables: {
-              id: id,
-            },
-          })
-        );
-      } //end DeleteUserEducationData function
-    
-      function FillDetails(data: any) {
-        let newAddressData = data.addresses.map((address) =>
-          JSON.stringify(address)
-        );
-    
-        let newEducationData = data.educational_details.map((education) =>
-          JSON.stringify(education)
-        );
-    
-        delete data.addresses;
-        delete data.educational_details;
-    
-        data.addresses = newAddressData;
-        data.educational_details = newEducationData;
-    
-        if (data) {
-          setWebPageDetails({ ...data });
-        }
-      } //fillDetails
-    
-      function OnSubmit(frm: any) {
-        let addressData = frm.addresses.map((address: any) => JSON.parse(address));
-    
-        let educationData = frm.educational_details.map((education: any) =>
-          JSON.parse(education)
-        );
-    
-        let addressDataArray = addressData.map((id) => id.id);
-        let educationDataArray = educationData.map((id) => id.id);
-    
-        let addressIDNotSubmitted = addressID
-          ? addressID.filter((x: any) => !addressDataArray.includes(x))
-          : null;
-    
-        let educationIDNotSubmitted = educationID
-          ? educationID.filter((id: any) => !educationDataArray.includes(id))
-          : null;
-    
-        console.log(educationIDNotSubmitted);
-        if (
-          addressIDNotSubmitted !== null &&
-          addressIDNotSubmitted[0] !== undefined
-        ) {
-          DeleteUserAddress(addressIDNotSubmitted);
-        }
-    
-        if (
-          educationIDNotSubmitted !== null &&
-          educationIDNotSubmitted[0] !== undefined
-        ) {
-          DeleteUserEducationData(educationIDNotSubmitted);
-        }
-    
-        if (educationData.length !== 0) {
-          Create_Edit_EducationData(educationData);
-        }
-    
-        delete frm.addresses;
-        delete frm.educational_details;
-        delete frm.__typename;
-    
-        setProfileData(frm);
-        frm.addresses = [];
-        frm.educational_details = [];
-    
-        EditAddressAnd(addressData);
-      }
-
-    return (
-        <Container className="m-5">
-            {/* <Row className="mt-3 ml-3 inline">
-              <Col lg={10}><h5>Addresses</h5></Col>
-            </Row>
-            <hr /> */}
-            {/* <Row className="justify-content-end pr-3">
-                <Button variant="outline-dark d-flex"><b>New Address</b> <img src="assets/plusIcon.svg" alt="add" height="25" style={{marginLeft: '5px'}} /></Button>
-            </Row> */}
-            <Form
-                  uiSchema={schema}
-                  schema={addressJson}
-                //   ref={formRef}
-                //   onSubmit={({ formData }: any) => submitHandler(formData)}
-                //   formData={webpageDetails}
-                  widgets={widgets}
-            />
-            <Row className="mt-4">
-                <Col>
-                <Card>
-                    <Card.Body>
-                        <Row className='justify-content-end'>
-                          <img src="assets/kebabcase.svg" style={{margin:'5px'}} alt="edit" height="15"/>
-                        </Row>
-                        <Card.Title>Card Title</Card.Title>
-                        <Card.Text>This is some text within a card body.</Card.Text>
-                    </Card.Body>
-                </Card>
-                </Col>
-                <Col>
-                <Card>
-                    <Card.Body>
-                        <Row className='justify-content-end'>
-                            <img src="assets/kebabcase.svg" style={{margin:'5px'}} alt="edit" height="15"/>
-                        </Row>
-                        <Card.Title>Card Title</Card.Title>
-                        <Card.Text>This is some text within a card body.</Card.Text>
-                    </Card.Body>
-                </Card>
-                </Col>
-                <Col>
-                <Card>
-                    <Card.Body>
-                        <Row className='justify-content-end'>
-                          <img src="assets/kebabcase.svg" style={{margin:'5px'}} alt="edit" height="15"/>
-                        </Row>
-                        <Card.Title>Card Title</Card.Title>
-                        <Card.Text>This is some text within a card body.</Card.Text>
-                    </Card.Body>
-                </Card>
-                </Col>
-            </Row>
-        </Container>
-    )
 }
+
+  function refetchQueryCallback() {
+    fetch.refetch();
+  }
+
+  return (
+    <Col md={{ span: 8, offset: 2 }}>
+
+      <Col md={{ offset: 9, span: 3 }}>
+        <Card.Title className="text-center">
+          <Button
+            variant={true ? "outline-secondary" : "light"}
+            size="sm"
+            onClick={() => {
+              CreateAddressComponent.current.TriggerForm({
+                id: null,
+                type: "create",
+                modal_status: true,
+              });
+            }}
+          >
+            <i className="fas fa-plus-circle"></i> Add Address
+          </Button>
+          <CreateAddress ref={CreateAddressComponent} callback={refetchQueryCallback}></CreateAddress>
+        </Card.Title>
+      </Col>
+
+      <Row className="mt-4">
+        {
+          (addressData && addressData?.length) ? addressData?.length && addressData.map((currValue: any) =>
+            <Col lg={12} key={currValue.id}>
+              <Card key={currValue.id} className="m-2">
+                <Card.Body key={currValue.id}>
+                  <Row className='justify-content-end'>
+
+                    <Dropdown key={currValue.id}>
+                      <Dropdown.Toggle variant="bg-light" id="dropdown-basic">
+                        <img
+                          src="/assets/kebabcase.svg"
+                          alt="notification"
+                          className="img-responsive "
+                          style={{ height: '20px', width: '20px' }}
+                        />
+                      </Dropdown.Toggle>
+
+                      <Dropdown.Menu>
+                        <Dropdown.Item key={1} onClick={() => deleteUserAddress(currValue)}>Delete</Dropdown.Item>
+                        <Dropdown.Item key={2} onClick={() => updateAddress(currValue)}>Edit</Dropdown.Item>
+                      </Dropdown.Menu>
+                    </Dropdown>
+
+                    {/* <ActionButton key={currValue.id} arrayAction={
+                      [
+                        { actionName: 'Edit', actionClick: CreateAddressComponent.current.TriggerForm({ id: currValue.id, type: 'edit'}) },
+                        { actionName: 'Delete', actionClick: CreateAddressComponent.current.TriggerForm({ id: currValue.id, type: 'delete'})  },
+                      ]
+                    }></ActionButton> */}
+                  </Row>
+
+                  <Card.Title>{currValue.Title ? currValue.Title : null}<span className='text-white rounded bg-secondary p-1 ml-2'>{currValue.type_address ? currValue.type_address : null}</span></Card.Title>
+                  <Card.Text>
+                    <Row className="p-1">
+                      <Col xs={12} lg={6}><b>Address 1 : </b>{currValue.House_Number ? currValue.House_Number : null} {currValue.address1 ? currValue.address1 : null}</Col>
+                      <Col xs={12} lg={6}>{currValue.address2 ? currValue.address2 : null}</Col>
+                    </Row>
+                    <Row className="p-1">
+                      <Col xs={12} lg={3}><b>City : </b>{currValue.city ? currValue.city : null}</Col>
+                      <Col xs={12} lg={3}><b>State : </b>{currValue.state ? currValue.state : null}</Col>
+                      <Col xs={12} lg={3}><b>Country : </b>{currValue.country ? currValue.country : null}</Col>
+                      <Col xs={12} lg={3}><b>Zipcode : </b>{currValue.zipcode ? currValue.zipcode : null}</Col>
+                    </Row>
+                  </Card.Text>
+                </Card.Body>
+              </Card>
+            </Col>
+          ) : null
+        }
+      </Row>
+    </Col>
+  )
+}
+
+export default forwardRef(AddressDetails);

@@ -23,8 +23,6 @@ function EditProfile() {
   const [educationID, setEducationID] = useState<any>([]);
   const [profileData, setProfileData] = useState<any>();
 
-  console.log('profileJson', profileJson)
- 
   useQuery(FETCH_USER_PROFILE_DATA, {
     variables: { id: auth.userid },
     onCompleted: (r: any) => {
@@ -49,7 +47,7 @@ function EditProfile() {
     },
   });
 
-  function callEdit(r: any) {
+  function callEditProfilepage(r: any) {
     let id: any = "";
     let edId: any = "";
 
@@ -68,7 +66,7 @@ function EditProfile() {
     }
 
     console.log(profileData);
-    Edit();
+    EditProfilepage();
   }
 
   const [updateProfile] = useMutation(UPDATE_USER_PROFILE_DATA, {
@@ -76,17 +74,17 @@ function EditProfile() {
   });
 
   const [updateAddress] = useMutation(UPDATE_ADDRESS_DATA, {
-    onCompleted: callEdit,
+    onCompleted: callEditProfilepage,
   });
 
   const [createAddress] = useMutation(CREATE_ADDRESS, {
-    onCompleted: callEdit,
+    onCompleted: callEditProfilepage,
   });
   const [deleteAddress] = useMutation(DELETE_ADDRESS, {
     onCompleted: (data: any) => {},
   });
 
-  function EditAddressAnd(addressData) {
+  function EditAddressAndProfilePage(addressData) {
     let currentID = "";
 
     addressData.forEach((address: any) => {
@@ -111,7 +109,7 @@ function EditProfile() {
     }); //end forEach
   } //end EditAddressAndProfile function
 
-  function Edit() {
+  function EditProfilepage() {
     updateProfile({
       variables: {
         id: auth.userid,
@@ -130,10 +128,10 @@ function EditProfile() {
   }
 
   const [createEducationData] = useMutation(CREATE_EDUCATION_DETAILS, {
-    onCompleted: callEdit,
+    onCompleted: callEditProfilepage,
   });
   const [updateEducationData] = useMutation(UPDATE_EDUCATION_DETAILS, {
-    onCompleted: callEdit,
+    onCompleted: callEditProfilepage,
   });
   const [deleteEducationData] = useMutation(DELETE_EDUCATION_DETAILS, {
     onCompleted: (data: any) => {},
@@ -241,7 +239,7 @@ function EditProfile() {
     frm.addresses = [];
     frm.educational_details = [];
 
-    EditAddressAnd(addressData);
+    EditAddressAndProfilePage(addressData);
   }
 
   return (

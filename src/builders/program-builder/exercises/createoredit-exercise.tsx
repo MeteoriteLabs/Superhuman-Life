@@ -44,8 +44,6 @@ function CreateEditExercise(props: any, ref: any) {
         }
     }));
 
-    // console.log(exerciseDetails);
-
     enum ENUM_EXERCISES_EXERCISELEVEL {
         Beginner,
         Intermediate,
@@ -68,7 +66,9 @@ function CreateEditExercise(props: any, ref: any) {
         const flattenedData = flattenObj({...data});
         let details: any = {};
         let msg = flattenedData.exercises;
+        
         details.exercise = msg[0].exercisename;
+        
         details.level = ENUM_EXERCISES_EXERCISELEVEL[ msg[0].exerciselevel];
         details.discipline = msg[0].fitnessdisciplines.map((val: any) => {
             return val;
@@ -83,7 +83,6 @@ function CreateEditExercise(props: any, ref: any) {
         details.user_permissions_user = msg[0].users_permissions_user.id;
         details.addExercise = handleAddExerciseShowUp(msg[0]);
         setExerciseDetails(details);
-        // console.log(exerciseDetails);
 
         //if message exists - show form only for edit and view
         if (['edit', 'view'].indexOf(operation.type) > -1)
@@ -92,14 +91,12 @@ function CreateEditExercise(props: any, ref: any) {
             OnSubmit(null);
     }
 
-    console.log(operation.type);
-
     function FetchData() {
-        console.log('Fetch Data');
         useQuery(FETCH_DATA, { variables: { id: operation.id }, skip: (operation.type === 'create'),onCompleted: (e: any) => { FillDetails(e) } });
     }
 
     function CreateExercise(frm: any) {
+        
         createExercise({ variables: {
             exercisename: frm.exercise,
             exerciselevel: ENUM_EXERCISES_EXERCISELEVEL[frm.level],
@@ -115,8 +112,7 @@ function CreateEditExercise(props: any, ref: any) {
     }
 
     function EditExercise(frm: any) {
-        console.log('edit message', frm);
-        // useMutation(UPDATE_MESSAGE, { variables: frm, onCompleted: (d: any) => { console.log(d); } });
+
         editExercise({ variables: {
             exerciseid: operation.id,
             exercisename: frm.exercise,
@@ -132,13 +128,13 @@ function CreateEditExercise(props: any, ref: any) {
     }
 
     function ViewExercise(frm: any) {
-        console.log('view message');
+
         //use a variable to set form to disabled/not editable
         useMutation(UPDATE_EXERCISE, { variables: frm, onCompleted: (d: any) => { console.log(d); } })
     }
 
     function DeleteExercise(id: any) {
-        console.log('delete message');
+
         deleteExercise({ variables: { id: id }});
     }
 
@@ -174,7 +170,6 @@ function CreateEditExercise(props: any, ref: any) {
 
     return (
         <>
-            {/* {render && */}
                 <ModalView
                     name={name}
                     isStepper={false}
@@ -186,7 +181,6 @@ function CreateEditExercise(props: any, ref: any) {
                     modalTrigger={modalTrigger}
                 />
                 
-            {/* } */}
              {operation.type ==="delete" && <StatusModal
              modalTitle="Delete"
              EventConnectedDetails={workoutDetails}
@@ -195,9 +189,7 @@ function CreateEditExercise(props: any, ref: any) {
              buttonLeft="Cancel"
              buttonRight="Yes"
              onClick={() => {DeleteExercise(operation.id)}}
-             />}
-        
-            
+             />}  
         </>
     )
 }

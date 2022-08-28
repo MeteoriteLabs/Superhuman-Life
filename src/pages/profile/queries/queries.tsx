@@ -13,19 +13,13 @@ export const FETCH_USER_PROFILE_DATA = gql`
           Photo_ID
           About_User
           Website_URL
+          about_mini_description
           designations{
             data{
               id
               attributes{
                 Designation_title
                 description
-              }
-            }
-          }
-          addresses{
-            data{
-              attributes{
-                city
               }
             }
           }
@@ -59,6 +53,9 @@ export const FETCH_USER_PROFILE_DATA = gql`
                 zipcode
                 country
                 state
+                Title
+                type_address
+                House_Number
               }
             }
           }
@@ -74,7 +71,14 @@ export const UPDATE_USER_PROFILE_DATA = gql`
       data {
         attributes {
           Phone_Number
+          First_Name
+          Last_Name
+          instagram_url
+          Facebook_URL
+          LinkedIn_URL
+          About_User
         }
+
       }
     }
   }
@@ -95,6 +99,14 @@ export const CREATE_ADDRESS = gql`
     createAddress(data: $data) {
       data {
         id
+        attributes{
+          address1
+          address2
+          city
+          country
+          zipcode
+          state
+        }
       }
     }
   }

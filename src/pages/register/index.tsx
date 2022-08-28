@@ -229,7 +229,7 @@ export default function Register() {
 
     async function submitHandler(formData: any) {
         if (step < 4) {
-            console.log("Data submitted: ", formData);
+            // console.log("Data submitted: ", formData);
             setStep(step + 1);
             carouselRef.current.next();
             setFormValues({ ...formValues, ...formData });

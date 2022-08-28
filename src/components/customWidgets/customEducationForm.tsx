@@ -1,11 +1,7 @@
-import React, { useState } from 'react';
-import { Col, Container, Row, Form, Button, Modal } from "react-bootstrap";
+import { Col, Container, Row, Form } from "react-bootstrap";
 
 function CustomEducationForm(props) {
-  const [show, setShow] = useState(false);
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
   const handleChange = (e: any) => {
     const { name, value } = e.target;
 
@@ -13,28 +9,11 @@ function CustomEducationForm(props) {
     props.onChange(JSON.stringify({ ...formValues, [name]: value }));
   };
 
-  console.log(props);
   return (
     <>
-      {/* <Button variant="outline" onClick={handleShow}>
-        Launch static backdrop modal
-      </Button> */}
-      <Button variant="outline-dark d-flex" onClick={handleShow}><b>New Qualification</b> <img src="assets/plusIcon.svg" alt="add" height="25" style={{marginLeft: '5px'}} /></Button>
-      <Modal
-        show={show}
-        onHide={handleClose}
-        backdrop="static"
-        keyboard={false}
-        centered
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>Modal title</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
           <Container className="mt-3">
             <h6>New Qualification</h6>
             <hr />
-            <Form>
               <Row>
                 <Col>
                   {" "}
@@ -97,16 +76,8 @@ function CustomEducationForm(props) {
                   </Form.Group>
                 </Col>
               </Row>
-            </Form>
           </Container>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-          <Button variant="primary">Understood</Button>
-        </Modal.Footer>
-      </Modal>
+       
     </>
   );
 }

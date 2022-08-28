@@ -36,7 +36,7 @@ export default function Layout({ token, children }: any) {
                 </Col>
               </Row>
             ) : (
-              <div>{children}</div>
+              <div className="pt-5">{children}</div>
             )}
           </div>
         ) : (

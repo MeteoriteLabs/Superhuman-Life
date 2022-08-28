@@ -1,273 +1,89 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useRef } from 'react';
 import Form from "@rjsf/core";
-import { Button, Col, Container, Row } from 'react-bootstrap';
 import { schema, widgets } from "../../profileSchema";
-import {
-  FETCH_USER_PROFILE_DATA,
-  UPDATE_USER_PROFILE_DATA,
-  UPDATE_ADDRESS_DATA,
-  CREATE_ADDRESS,
-  DELETE_ADDRESS,
-  CREATE_EDUCATION_DETAILS,
-  UPDATE_EDUCATION_DETAILS,
-  DELETE_EDUCATION_DETAILS,
-} from "../../queries/queries";
+import { FETCH_USER_PROFILE_DATA, UPDATE_USER_PROFILE_DATA } from "../../queries/queries";
 import AuthContext from "../../../../context/auth-context";
 import { useMutation, useQuery } from "@apollo/client";
 import { flattenObj } from "../../../../components/utils/responseFlatten";
+import Toaster from '../../../../components/Toaster';
+import { Col } from 'react-bootstrap';
 
 export default function BasicProfileForm() {
+  let [isFormSubmitted, setIsFormSubmitted] = useState(false);
+  let [isFormSubmissionFailed, setIsFormSubmissionFailed] = useState(false);
+  const formRef = useRef<any>(null);
   const auth = useContext(AuthContext);
   const profileJson: { [name: string]: any } = require("./BasicProfile.json");
   const [webpageDetails, setWebPageDetails] = useState<any>({});
-  const [addressID, setAddressID] = useState<any>([]);
-  const [educationID, setEducationID] = useState<any>([]);
   const [profileData, setProfileData] = useState<any>();
 
   useQuery(FETCH_USER_PROFILE_DATA, {
     variables: { id: auth.userid },
     onCompleted: (r: any) => {
       const flattenData = flattenObj({ ...r });
-      console.log(flattenData);
       FillDetails(flattenData.usersPermissionsUser);
-
-      setAddressID(
-        r.usersPermissionsUser.data.attributes.addresses.data.length
-          ? r.usersPermissionsUser.data.attributes.addresses.data.map(
-            (address: any) => address.id
-          )
-          : null
-      );
-      setEducationID(
-        r.usersPermissionsUser.data.attributes.educational_details.data.length
-          ? r.usersPermissionsUser.data.attributes.educational_details.data.map(
-            (eduId: any) => eduId.id
-          )
-          : null
-      );
     },
   });
 
-  function callEdit(r: any) {
-    let id: any = "";
-    let edId: any = "";
+  const [updateProfile, { error }] = useMutation(UPDATE_USER_PROFILE_DATA, {
+    onCompleted: (r: any) => { setIsFormSubmitted(!isFormSubmitted); },
+  });
 
-    if ("updateAddress" in r) {
-      id = r.updateAddress.data.id;
-      profileData.addresses.push(id);
-    } else if ("createAddress" in r) {
-      id = r.createAddress.data.id;
-      profileData.addresses.push(id);
-    } else if ("createEducationalDetail" in r) {
-      edId = r.createEducationalDetail.data.id;
-      profileData.educational_details.push(edId);
-    } else {
-      edId = r.updateEducationalDetail.data.id;
-      profileData.educational_details.push(edId);
-    }
-
-    console.log(profileData);
-    Edit();
+  if (error) {
+    setIsFormSubmissionFailed(!isFormSubmissionFailed);
   }
 
-  const [updateProfile] = useMutation(UPDATE_USER_PROFILE_DATA, {
-    onCompleted: (r: any) => { },
-  });
-
-  const [updateAddress] = useMutation(UPDATE_ADDRESS_DATA, {
-    onCompleted: callEdit,
-  });
-
-  const [createAddress] = useMutation(CREATE_ADDRESS, {
-    onCompleted: callEdit,
-  });
-  const [deleteAddress] = useMutation(DELETE_ADDRESS, {
-    onCompleted: (data: any) => { },
-  });
-
-  function EditAddressAnd(addressData) {
-    let currentID = "";
-
-    addressData.forEach((address: any) => {
-      currentID = address.id;
-      delete address.id;
-      delete address.__typename;
-
-      if (!currentID) {
-        createAddress({
-          variables: {
-            data: address,
-          },
-        });
-      } else {
-        updateAddress({
-          variables: {
-            id: currentID,
-            data: address,
-          },
-        });
-      } //end else statement
-    }); //end forEach
-  } //end EditAddressAndProfile function
-
-  function Edit() {
+  function updateBasicDetails(frm: any) {
+    console.log(frm.formData.addresses);
     updateProfile({
       variables: {
         id: auth.userid,
-        data: profileData ? profileData : {},
+        data: profileData ? profileData : {
+          First_Name: frm.formData.First_Name,
+          About_User: frm.formData.About_User,
+          about_mini_description: frm.formData.about_mini_description,
+          Phone_Number: frm.formData.Phone_Number,
+          Photo_ID: frm.formData.Photo_ID,
+          Photo_profile_banner_ID: frm.formData.Photo_profile_banner_ID
+        },
       },
     });
   }
-  function DeleteUserAddress(data: any) {
-    data.forEach((id: any) =>
-      deleteAddress({
-        variables: {
-          id: id,
-        },
-      })
-    );
+
+  function OnSubmit(frm: any) {
+    setProfileData(frm);
+    updateBasicDetails(frm);
   }
 
-  const [createEducationData] = useMutation(CREATE_EDUCATION_DETAILS, {
-    onCompleted: callEdit,
-  });
-  const [updateEducationData] = useMutation(UPDATE_EDUCATION_DETAILS, {
-    onCompleted: callEdit,
-  });
-  const [deleteEducationData] = useMutation(DELETE_EDUCATION_DETAILS, {
-    onCompleted: (data: any) => { },
-  });
-
-  function Create_Edit_EducationData(data: any) {
-    let educationDataID = "";
-
-    // eslint-disable-next-line array-callback-return
-    data.map((educationData) => {
-      educationDataID = educationData.id;
-
-      delete educationData.id;
-      delete educationData.__typename;
-
-      if (!educationDataID) {
-        createEducationData({
-          variables: {
-            data: educationData,
-          },
-        });
-      } else {
-        updateEducationData({
-          variables: {
-            id: educationDataID,
-            data: educationData,
-          },
-        });
-      }
-    }); //end forEach
-  } //end create_edit education data function
-
-  function DeleteUserEducationData(data: any) {
-    data.forEach((id: any) =>
-      deleteEducationData({
-        variables: {
-          id: id,
-        },
-      })
-    );
-  } //end DeleteUserEducationData function
-
+  //fillDetails
   function FillDetails(data: any) {
-    let newAddressData = data.addresses.map((address) =>
-      JSON.stringify(address)
-    );
-
-    let newEducationData = data.educational_details.map((education) =>
-      JSON.stringify(education)
-    );
-
-    delete data.addresses;
-    delete data.educational_details;
-
-    data.addresses = newAddressData;
-    data.educational_details = newEducationData;
-
     if (data) {
       setWebPageDetails({ ...data });
     }
-  } //fillDetails
-
-  function OnSubmit(frm: any) {
-    let addressData = frm.addresses.map((address: any) => JSON.parse(address));
-
-    let educationData = frm.educational_details.map((education: any) =>
-      JSON.parse(education)
-    );
-
-    let addressDataArray = addressData.map((id) => id.id);
-    let educationDataArray = educationData.map((id) => id.id);
-
-    let addressIDNotSubmitted = addressID
-      ? addressID.filter((x: any) => !addressDataArray.includes(x))
-      : null;
-
-    let educationIDNotSubmitted = educationID
-      ? educationID.filter((id: any) => !educationDataArray.includes(id))
-      : null;
-
-    console.log(educationIDNotSubmitted);
-    if (
-      addressIDNotSubmitted !== null &&
-      addressIDNotSubmitted[0] !== undefined
-    ) {
-      DeleteUserAddress(addressIDNotSubmitted);
-    }
-
-    if (
-      educationIDNotSubmitted !== null &&
-      educationIDNotSubmitted[0] !== undefined
-    ) {
-      DeleteUserEducationData(educationIDNotSubmitted);
-    }
-
-    if (educationData.length !== 0) {
-      Create_Edit_EducationData(educationData);
-    }
-
-    delete frm.addresses;
-    delete frm.educational_details;
-    delete frm.__typename;
-
-    setProfileData(frm);
-    frm.addresses = [];
-    frm.educational_details = [];
-
-    EditAddressAnd(addressData);
   }
 
-  // function submitHandler(data: any) {
-  //   formSubmit(data);
-  // }
-
   return (
-    <Container className="m-5">
+    <Col md={{span:8, offset: 2}}>
       <Form
         uiSchema={schema}
         schema={profileJson}
-        // ref={formRef}
-                  onSubmit={(frm: any) => {
-                    OnSubmit(frm);}}
-                  // formData={formData}
+        ref={formRef}
+        onSubmit={(frm: any) => { OnSubmit(frm) }}
         formData={webpageDetails}
         widgets={widgets}
       />
-      {/* <Form
-                // schema={BasicProfile}
-                schema={profileJson[step.toString()]}
-                //  uiSchema={uiSchema}
-                // formData={formData}
-                widgets={widgets}
-            >
-            </Form> */}
-    </Container>
+
+      {/* success toaster notification */}
+      {isFormSubmitted ?
+        <Toaster heading="Success" textColor="text-success" headingCSS="mr-auto text-success" msg="Basic Profile details has been updated" />
+        : null}
+
+      {/* failure toaster notification */}
+      {isFormSubmissionFailed ?
+        <Toaster heading="Failed" textColor="text-danger" headingCSS="mr-auto text-danger" msg="Basic Profile details has not been updated" />
+        : null}
+
+    </Col>
   )
 }
 

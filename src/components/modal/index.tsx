@@ -29,8 +29,6 @@ export default function ModalView({
     setShow(res);
   });
 
-  console.log(name);
-
   useEffect(() => {
     setStep(1);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -41,9 +39,8 @@ export default function ModalView({
   }, [formData]);
 
   function submitHandler(data: any) {
-    // debugger;
     formData = { ...formData, ...data };
-    // debugger;
+
     if (isStepper && step < stepper.length) {
       console.log("Data submitted: ", data);
       setStep(step + 1);
