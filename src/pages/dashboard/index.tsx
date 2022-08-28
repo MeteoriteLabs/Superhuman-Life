@@ -26,7 +26,8 @@ export default function Dashboard() {
     return (
         <>
 
-        <Container fluid className="lobby__container pt-5 mt-3"  style={{overflow: 'hidden'}}>
+        <Container fluid className="lobby__container"  style={{overflow: 'hidden'}}>
+            {/* main options on lobby for insights, blog, dashboard, website, support and learn */}
             <Row>
                 {ImageCaptions.map((data, index) => ( 
                         <Col as={Link} to={data.link} sm key={data.id} className="d-flex justify-content-center align-items-center lobby__card" style={{background: `${LobbyColors[((randomColorInArray + index ) < totalNumberOfColors) ? (randomColorInArray + index) : index ]}`, height: '100vh'}}>

@@ -9,7 +9,6 @@ import { Col } from 'react-bootstrap';
 
 export default function SocialAccount() {
     let [isFormSubmitted, setIsFormSubmitted] = useState(false);
-    let [isFormSubmissionFailed, setIsFormSubmissionFailed] = useState(false);
     const formRef = useRef<any>(null);
     const socialAccountJson: { [name: string]: any } = require("./SocialAccount.json");
     const auth = useContext(AuthContext);
@@ -30,7 +29,7 @@ export default function SocialAccount() {
     });
 
     if (error) {
-        setIsFormSubmissionFailed(!isFormSubmissionFailed);
+        return <Toaster heading="Failed" textColor="text-danger" headingCSS="mr-auto text-danger" msg="Social account details has not been updated" />;
     }
 
     function updateSocialAccountDetails(frm: any) {
@@ -74,15 +73,10 @@ export default function SocialAccount() {
             
             {/* success toaster notification */}
             {isFormSubmitted ?
-                <Toaster heading="Success" textColor="text-success" headingCSS="mr-auto text-success" msg="Basic Profile details has been updated" />
+                <Toaster heading="Success" textColor="text-success" headingCSS="mr-auto text-success" msg="Social account details has been updated" />
                 : null
             }
 
-            {/* failure toaster notification */}
-            {isFormSubmissionFailed ?
-                <Toaster heading="Failed" textColor="text-danger" headingCSS="mr-auto text-danger" msg="Basic Profile details has not been updated" />
-                : null
-            }
         </Col>
     )
 }

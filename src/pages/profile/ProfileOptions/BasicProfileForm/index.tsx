@@ -10,14 +10,13 @@ import { Col } from 'react-bootstrap';
 
 export default function BasicProfileForm() {
   let [isFormSubmitted, setIsFormSubmitted] = useState(false);
-  let [isFormSubmissionFailed, setIsFormSubmissionFailed] = useState(false);
   const formRef = useRef<any>(null);
   const auth = useContext(AuthContext);
   const profileJson: { [name: string]: any } = require("./BasicProfile.json");
   const [webpageDetails, setWebPageDetails] = useState<any>({});
   const [profileData, setProfileData] = useState<any>();
 
-  useQuery(FETCH_USER_PROFILE_DATA, {
+  const fetch = useQuery(FETCH_USER_PROFILE_DATA, {
     variables: { id: auth.userid },
     onCompleted: (r: any) => {
       const flattenData = flattenObj({ ...r });
@@ -26,15 +25,15 @@ export default function BasicProfileForm() {
   });
 
   const [updateProfile, { error }] = useMutation(UPDATE_USER_PROFILE_DATA, {
-    onCompleted: (r: any) => { setIsFormSubmitted(!isFormSubmitted); },
+    onCompleted: (r: any) => { setIsFormSubmitted(!isFormSubmitted); fetch.refetch();}
   });
 
   if (error) {
-    setIsFormSubmissionFailed(!isFormSubmissionFailed);
+    return <Toaster heading="Failed" textColor="text-danger" headingCSS="mr-auto text-danger" msg="Basic Profile details has not been updated" />;
   }
 
   function updateBasicDetails(frm: any) {
-    console.log(frm.formData.addresses);
+    
     updateProfile({
       variables: {
         id: auth.userid,
@@ -63,27 +62,24 @@ export default function BasicProfileForm() {
   }
 
   return (
-    <Col md={{span:8, offset: 2}}>
-      <Form
-        uiSchema={schema}
-        schema={profileJson}
-        ref={formRef}
-        onSubmit={(frm: any) => { OnSubmit(frm) }}
-        formData={webpageDetails}
-        widgets={widgets}
-      />
+    <>
+      <Col md={{ span: 8, offset: 2 }}>
+        <Form
+          uiSchema={schema}
+          schema={profileJson}
+          ref={formRef}
+          onSubmit={(frm: any) => { OnSubmit(frm) }}
+          formData={webpageDetails}
+          widgets={widgets}
+        />
+      </Col>
 
       {/* success toaster notification */}
       {isFormSubmitted ?
         <Toaster heading="Success" textColor="text-success" headingCSS="mr-auto text-success" msg="Basic Profile details has been updated" />
         : null}
 
-      {/* failure toaster notification */}
-      {isFormSubmissionFailed ?
-        <Toaster heading="Failed" textColor="text-danger" headingCSS="mr-auto text-danger" msg="Basic Profile details has not been updated" />
-        : null}
-
-    </Col>
+    </>
   )
 }
 
