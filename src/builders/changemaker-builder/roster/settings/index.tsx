@@ -33,10 +33,10 @@ const RosterSettings = (props: any) => {
     const handleCloseDate = () => setShowRescheduleDate(false);
     const handleShowDate = () => setShowRescheduleDate(true);
 
-    const [sionTime] = useMutation(UPDATE_SESSION_TIME, {onCompleted: () => {console.log('updated successfully'); handleClose();}});
-    const [sionMode] = useMutation(UPDATE_SESSION_MODE, {onCompleted: () => {console.log('updated successfully'); handleCloseMode();}});
-    const [sionClassStatus] = useMutation(UPDATE_SESSION_BOOKING_STATUS, {onCompleted: () => {console.log('updated successfully'); handleCloseStatus();}});
-    const [sionDate] = useMutation(UPDATE_SESSION_DATE, {onCompleted: () => {console.log('updated successfully'); handleCloseDate();}});
+    const [updateSessionTime] = useMutation(UPDATE_SESSION_TIME, {onCompleted: () => {console.log('updated successfully'); handleClose();}});
+    const [updateSessionMode] = useMutation(UPDATE_SESSION_MODE, {onCompleted: () => {console.log('updated successfully'); handleCloseMode();}});
+    const [updateSessionClassStatus] = useMutation(UPDATE_SESSION_BOOKING_STATUS, {onCompleted: () => {console.log('updated successfully'); handleCloseStatus();}});
+    const [updateSessionDate] = useMutation(UPDATE_SESSION_DATE, {onCompleted: () => {console.log('updated successfully'); handleCloseDate();}});
 
     function convertToMoment(time: string) {
         var timeSplit = time.split(":").map(Number);
@@ -179,7 +179,7 @@ const RosterSettings = (props: any) => {
                         Close
                     </Button>
                     <Button variant="success" disabled={handleDisableCheck()} onClick={() => {
-                        sionTime({ variables: {
+                        updateSessionTime({ variables: {
                             id: data?.session?.id, 
                             start_time: startTime, 
                             end_time: endTime
@@ -211,7 +211,7 @@ const RosterSettings = (props: any) => {
                         Close
                     </Button>
                     <Button variant="success" disabled={newMode === data?.session?.mode ? true : false} onClick={() => {
-                        sionMode({ variables: {
+                        updateSessionMode({ variables: {
                             id: data?.session?.id,
                             mode: newMode
                         }})
@@ -248,7 +248,7 @@ const RosterSettings = (props: any) => {
                         Close
                     </Button>
                     {classCancel !== 'Booked' && <Button variant="success" disabled={(classCancel !== 'Booked' && classCancel !== '') && classCancellationReason !== '' ? false : true} onClick={() => {
-                        sionClassStatus({ variables: {
+                        updateSessionClassStatus({ variables: {
                             id: data?.id,
                             status: classCancel
                         }})
@@ -256,7 +256,7 @@ const RosterSettings = (props: any) => {
                         Submit
                     </Button>}
                     {classCancel === 'Booked' && <Button variant="success" onClick={() => {
-                        sionClassStatus({ variables: {
+                        updateSessionClassStatus({ variables: {
                             id: data?.id,
                             status: classCancel
                         }})
@@ -297,7 +297,7 @@ const RosterSettings = (props: any) => {
                         Close
                     </Button>
                     <Button variant="success" disabled={newDate === data?.session?.session_date ? true : false} onClick={() => {
-                        sionDate({ variables: {
+                        updateSessionDate({ variables: {
                             id: data?.session?.id,
                             date: newDate
                         }})
