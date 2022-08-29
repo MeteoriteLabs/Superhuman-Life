@@ -152,7 +152,7 @@ const Schedular = (props: any) => {
 
     // ENTRY POINT
     // this is the entry point to the file.
-        const mainQuery = useQuery(!props?.clientSessions ? GET_SESSIONS : GET_CLIENT_SESSIONS, { variables: { id: props.programId, startDate: moment(props.startDate).format("YYYY-MM-DD"), endDate: moment(props.startDate).add(props.days - 1 , 'days').format("YYYY-MM-DD"), Is_restday: false }, onCompleted: !props?.clientSessions ? handleRenderTable : handleRenderClientTable });
+        const mainQuery = useQuery(!props?.clientSessions ? GET_SESSIONS : GET_CLIENT_SESSIONS, { variables: { id: props.programId, startDate: moment(props.startDate).format("YYYY-MM-DD"), endDate: moment(props.startDate).add(props.days - 1 , 'days').format("YYYY-MM-DD") }, onCompleted: !props?.clientSessions ? handleRenderTable : handleRenderClientTable });
 
     function draganddrop() {
         const draggable: any = document.querySelectorAll('.schedular-content');
@@ -219,7 +219,7 @@ const Schedular = (props: any) => {
         }
         // console.log(flattenData.sessionsBookings)
         if (flattenData.sessionsBookings?.length > 0) {
-            flattenData.sessionsBookings?.forEach((val) => {
+            flattenData.sessionsBookings?.filter((itm) => itm.Is_restday === true).forEach((val) => {
                 var startTimeHour: any = `${val.session.start_time === null ? '0' : val.session.start_time.split(':')[0]}`;
                 var startTimeMinute: any = `${val.session.start_time === null ? '0' : val.session.start_time.split(':')[1]}`;
                 var endTimeHour: any = `${val.session.end_time === null ? '0' : val.session.end_time.split(':')[0]}`;
@@ -285,7 +285,7 @@ const Schedular = (props: any) => {
         }
         console.log(flattenData.tags[0]?.sessions)
         if (flattenData.tags[0]?.sessions?.length > 0) {
-            flattenData.tags[0]?.sessions?.forEach((val) => {
+            flattenData.tags[0]?.sessions?.filter((itm) => itm.Is_restday === false).forEach((val) => {
                 var startTimeHour: any = `${val.start_time === null ? '0' : val.start_time.split(':')[0]}`;
                 var startTimeMinute: any = `${val.start_time === null ? '0' : val.start_time.split(':')[1]}`;
                 var endTimeHour: any = `${val.end_time === null ? '0' : val.end_time.split(':')[0]}`;
@@ -479,8 +479,9 @@ const Schedular = (props: any) => {
                 sessions_ids: values.concat(holidayIds)
             }
         })
-
     }
+
+    console.log(sessionIds);
 
     function handleUpdateTag(newId: any){
         setNewSessionId(newId);
@@ -1558,7 +1559,7 @@ const Schedular = (props: any) => {
                                     <h6>Day: </h6>
                                 </Col>
                                 <Col lg={7}>
-                                    <DaysInput dayType="day" startDate={props.startDate} duration={props.days} val={event.day} type="transfer" onChange={(e) => {
+                                    <DaysInput dayType={window.location.pathname.split("/")[1] === 'programs' && "day"} startDate={props.startDate} duration={props.days} val={event.day} type="transfer" onChange={(e) => {
                                         if(e === [] || e === undefined){
                                             setDuplicatedDay([]);
                                         }

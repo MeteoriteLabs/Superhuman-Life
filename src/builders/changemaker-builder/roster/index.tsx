@@ -58,7 +58,7 @@ const Roster = () => {
     function handleDateChange(date){
         const checkingIfSessionExists = currentDateSessions?.filter(session => session.session_date === moment(date).format('YYYY-MM-DD') && session.type !== 'restday');
         console.log(checkingIfSessionExists);
-        if (checkingIfSessionExists.length > 0) {
+        if (checkingIfSessionExists?.length > 0 && checkingIfSessionExists !== undefined) {
             window.location.href = `/roster/${checkingIfSessionExists[0].id}`;
         }else {
             setShowAlert(true);
@@ -122,6 +122,8 @@ const Roster = () => {
     //         handleSorting(flattenData.sessions);
     //     }
     // });
+
+    console.log(sessionData);
 
     useQuery(GET_SESSION_AND_SESSION_BOOKINGS, {
         variables: {
@@ -207,6 +209,9 @@ const Roster = () => {
             console.log('no previous sessions available');
             // handleSubChangeDay(anotherDate);
             // currentDateData.refetch()
+        } else if(currentDateSessions[location - 1].Is_restday === true){
+            console.log('no previous sessions available');
+            // handleSubChangeDay(anotherDate);
         } else {
             window.location.href = `/roster/${currentDateSessions[location - 1].id}`;
         }
@@ -218,6 +223,8 @@ const Roster = () => {
             console.log('no next sessions available');
             // handleAddChangeDay(scheduleDate === anotherDate ? scheduleDate : anotherDate);
             // currentDateData.refetch();
+        }else if(currentDateSessions[location + 1].Is_restday === true){
+            console.log('no next sessions available');
         } else {
             window.location.href = `/roster/${currentDateSessions[location + 1].id}`;
         }
@@ -233,6 +240,9 @@ const Roster = () => {
     //     setScheduleDate(moment(scheduleDate).subtract(1, 'days').format("YYYY-MM-DD"));
     //     // currentDateData.refetch();
     // }
+
+    console.log(restDays);
+    console.log(sessionData);
 
     return (
         <>
@@ -388,7 +398,7 @@ const Roster = () => {
                                     //         : setMonth(month - 1);
                                     // }}
                                     // value={value}
-                                    minDate={moment().startOf('month').toDate()}
+                                    // minDate={moment().startOf('month').toDate()}
                                     maxDate={moment().add(2, 'months').toDate()}
                                     maxDetail="month"
                                     minDetail="month"

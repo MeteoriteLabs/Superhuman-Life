@@ -22,8 +22,11 @@ const AttendanceModal = (props: any) => {
                const flattenData = flattenObj({...data});
                setSessionDate(flattenData?.sessionsBookings[0]?.session?.session_date);
                const values = [...attendanceData];
+               // eslint-disable-next-line
                flattenData.sessionsBookings.map((val: any) => {
-                    return values.push({ username: val.client.username, attendance: handleUserAttendance(val.Session_booking_status), bookingId: val.id });
+                    if(val?.client !== null){
+                         return values.push({ username: val?.client?.username, attendance: handleUserAttendance(val?.Session_booking_status), bookingId: val?.id });
+                    }
                });
                setAttendanceData(values);
                setShowData(true);
@@ -121,6 +124,7 @@ const AttendanceModal = (props: any) => {
                             </Row>
                          </Col>
                     </Row>
+                    {attendanceData.length === 0 && <div className='text-center mt-2'>No Clients</div>}
                     {!showData ? <div>Loading...</div> : attendanceData.map((item: any, index: any) => {
                          return (
                               <Container fluid>

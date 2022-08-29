@@ -12,7 +12,7 @@ const RosterGeneral = (props: any) => {
                 <img src='/assets/edit.svg' alt='edit_icon' className='pl-4'/>
                 <hr />
                 <Row>
-                <Col lg={8} className="text-left">
+                <Col className="text-left">
                     <div className='mb-3'>
                         <h5>About</h5>
                         <div className='p-4' style={{ border: '1px solid black', borderRadius: '20px'}}>
@@ -39,14 +39,16 @@ const RosterGeneral = (props: any) => {
                             </span>
                         </div>
                     </div>
-                </Col>
-                <Col lg={4} className='text-center'>
-                    <div className='mb-3 text-center' style={{ border: '1px solid black', borderRadius: '20px', minHeight: '250px'}}>
-                        <span>
-                            Muscle group vector image
-                        </span>
+                    <div className='mb-3'>
+                        <h5>Muscle Group</h5>
+                        <div className='p-4' style={{ border: '1px solid black', borderRadius: '20px'}}>
+                            <span>
+                                {data?.workout?.muscle_groups?.map((item: any) => {
+                                    return item.name
+                                }).join(', ')}
+                            </span>
+                        </div>
                     </div>
-                    <span>Add equipment required as well</span>
                 </Col>
             </Row>
             </div>
