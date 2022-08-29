@@ -90,12 +90,6 @@ function AddressDetails() {
                       </Dropdown.Menu>
                     </Dropdown>
 
-                    {/* <ActionButton key={currValue.id} arrayAction={
-                      [
-                        { actionName: 'Edit', actionClick: CreateAddressComponent.current.TriggerForm({ id: currValue.id, type: 'edit'}) },
-                        { actionName: 'Delete', actionClick: CreateAddressComponent.current.TriggerForm({ id: currValue.id, type: 'delete'})  },
-                      ]
-                    }></ActionButton> */}
                   </Row>
 
                   <Card.Title>{currValue.Title ? currValue.Title : null}<span className='text-white rounded bg-secondary p-1 ml-2'>{currValue.type_address ? currValue.type_address : null}</span></Card.Title>

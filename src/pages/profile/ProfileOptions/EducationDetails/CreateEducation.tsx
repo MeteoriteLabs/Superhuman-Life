@@ -33,7 +33,8 @@ function CreateEducation(props: any, ref: any) {
 
      function FetchData() {
           useQuery(FETCH_USER_PROFILE_DATA, {
-               variables: { id: auth.userid }, skip: (operation.type === 'create'),
+               variables: { id: auth.userid }, 
+               skip: (operation.type === 'create'),
                onCompleted: (r: any) => {
 
                     let selectedEducationArrayToUpdate = r.usersPermissionsUser.data.attributes.educational_details.data && r.usersPermissionsUser.data.attributes.educational_details.data.length ? r.usersPermissionsUser.data.attributes.educational_details.data.filter((currValue: any) => (currValue.id === operation.id)) : null;
@@ -153,7 +154,7 @@ function CreateEducation(props: any, ref: any) {
 
      return (
           <ModalView
-               name={"Create New Education Detail"}
+               name={operation.type === 'create' ? "Create New Education Detail" : "Edit Education Details"}
                isStepper={false}
                formUISchema={schema}
                formSchema={educationJson}

@@ -15,7 +15,7 @@ import { flattenObj } from "../../../../components/utils/responseFlatten";
 interface Operation {
     id: string;
     modal_status: boolean;
-    type: "create" | "edit" | "delete";
+    type: "create" | "edit" ;
 }
 
 const emptyAddressState = {
@@ -39,16 +39,16 @@ function CreateAddress(props: any, ref: any) {
 
     function FetchData() {
         useQuery(FETCH_USER_PROFILE_DATA, {
-            // skip: (operation.type === 'create' || operation.type === 'delete'),
+            skip: (operation.type === 'create'),
             variables: { id: auth.userid },
             onCompleted: (r: any) => {
                 const flattenData = flattenObj({ ...r });
-                
+
                 const addressIds = flattenData.usersPermissionsUser.addresses && flattenData.usersPermissionsUser.addresses?.length ? flattenData.usersPermissionsUser.addresses.map((currentValue: any) => currentValue.id) : null;
                 setAddressData(addressIds);
-                
+
                 let selectedAddressArrayToUpdate = r.usersPermissionsUser.data.attributes.addresses.data && r.usersPermissionsUser.data.attributes.addresses.data.length ? r.usersPermissionsUser.data.attributes.addresses.data.filter((currValue: any) => (currValue.id === operation.id)) : null;
-                
+
                 // passing selected address details to prefill form
                 FillDetails(selectedAddressArrayToUpdate);
             },
@@ -176,19 +176,19 @@ function CreateAddress(props: any, ref: any) {
     FetchData();
 
     return (
-                <ModalView
-                    name={"Create New Address"}
-                    isStepper={false}
-                    formUISchema={schema}
-                    formSchema={addressJson}
-                    showing={operation.modal_status}
-                    formSubmit={(frm: any) => {
-                        OnSubmit(frm);
-                    }}
-                    widgets={widgets}
-                    modalTrigger={modalTrigger}
-                    formData={operation.type === 'create' ? addressDetails : emptyAddressState}
-                />
+        <ModalView
+            name={operation.type === 'create' ? "Create New Address" : "Edit Address Details"}
+            isStepper={false}
+            formUISchema={schema}
+            formSchema={addressJson}
+            showing={operation.modal_status}
+            formSubmit={(frm: any) => {
+                OnSubmit(frm);
+            }}
+            widgets={widgets}
+            modalTrigger={modalTrigger}
+            formData={operation.type === 'create' ? addressDetails : emptyAddressState}
+        />
     );
 }
 
