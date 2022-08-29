@@ -474,7 +474,7 @@ export const UPDATE_TAG_SESSIONS = gql`
 `
 
 export const UPDATE_SESSION = gql`
-  mutation sionMutation(
+  mutation updateSessionMutation(
     $id: ID!,
     $day_of_program: Int,
     $start_time: String,
