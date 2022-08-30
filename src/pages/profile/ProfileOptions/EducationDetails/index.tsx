@@ -95,8 +95,8 @@ export default function EducationDetails() {
                                     <Card.Text>
                                         <Row>
                                             <Col sm={12} lg={4}><b>Type of Degree : </b>{currValue.Type_of_degree && currValue.Type_of_degree}</Col>
-                                            <Col sm={12} lg={4}><b>Specialization : </b>{currValue.Type_of_degree && currValue.Specialization}</Col>
-                                            <Col sm={12} lg={4}><b>Passing year : </b>{currValue.Type_of_degree && currValue.Year}</Col>
+                                            <Col sm={12} lg={4}><b>Specialization : </b>{currValue.Specialization && currValue.Specialization}</Col>
+                                            <Col sm={12} lg={4}><b>Passing year : </b>{currValue.Year && currValue.Year}</Col>
                                         </Row>
                                     </Card.Text>
                                 </Card.Body>
