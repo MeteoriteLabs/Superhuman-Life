@@ -19,6 +19,7 @@ function DeleteAccountConfirmation(props: any) {
 
   const auth = useContext(AuthContext);
   const [username, setUsername] = useState(null);
+  const [email, setEmail] = useState(null);
   const deleteAccountJson: { [name: string]: any } = require("./DeleteAccountVerification.json");
   const [show, setShow] = useState(false);
 
@@ -34,9 +35,14 @@ function DeleteAccountConfirmation(props: any) {
     },
   }
 
+  const logout = () => {
+    auth.logout();
+  }
+  
   const [updateProfile] = useMutation(UPDATE_USER_PROFILE_DATA, {
     onCompleted: (r: any) => { 
-      
+      logout();
+      window.open(`deactiveAccount`, "_self");
     },
   });
 
@@ -45,6 +51,8 @@ function DeleteAccountConfirmation(props: any) {
     onCompleted: (r: any) => {
       console.log(r.usersPermissionsUser.data.attributes.username);
       setUsername(r.usersPermissionsUser.data.attributes.username);
+      setEmail(r.usersPermissionsUser.data.attributes.email);
+      console.log(r.usersPermissionsUser.data.attributes.email);
     },
   });
 
@@ -74,24 +82,16 @@ function DeleteAccountConfirmation(props: any) {
 
   // delete account function
   function deleteAccount(frm: any) {
-    console.log(frm.formData);
     if (frm.formData.typeDelete === "DELETE" && frm.formData.username === username) {
       createDeleteAccount({
         variables: {
           data: {
             Reason_to_Delete: frm.formData.Reason_to_Delete,
-            users_permissions_user: auth.userid,
+            // users_permissions_user: auth.userid,
+            email: email
           }
         },
       });
-    }
-    else{
-      if(frm.formData.typeDelete !== "DELETE"){
-        console.log("Enter DELETE in capital");
-      }
-      else if (frm.formData.username !== username){
-        console.log("Enter correct username");
-      }
     }
   }
 
