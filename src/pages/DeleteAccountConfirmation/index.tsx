@@ -49,15 +49,12 @@ function DeleteAccountConfirmation(props: any) {
   useQuery(FETCH_USER_PROFILE_DATA, {
     variables: { id: auth.userid },
     onCompleted: (r: any) => {
-      console.log(r.usersPermissionsUser.data.attributes.username);
       setUsername(r.usersPermissionsUser.data.attributes.username);
       setEmail(r.usersPermissionsUser.data.attributes.email);
-      console.log(r.usersPermissionsUser.data.attributes.email);
     },
   });
 
   function Validate(frm: any, errors: any) {
-    console.log(frm);
     if (frm.typeDelete !== "DELETE") {
       errors.typeDelete.addError("Need to enter delete in capital");
     }
@@ -87,7 +84,6 @@ function DeleteAccountConfirmation(props: any) {
         variables: {
           data: {
             Reason_to_Delete: frm.formData.Reason_to_Delete,
-            // users_permissions_user: auth.userid,
             email: email
           }
         },
