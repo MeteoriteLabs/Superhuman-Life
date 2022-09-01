@@ -48,12 +48,12 @@ const FloatingButton = (props: any) => {
                          >
                               <Dropdown.Header style={{ color: 'black', fontWeight: 'bold', letterSpacing: '1px'}}>Movement</Dropdown.Header>
                               <Dropdown.Divider/>
-                              {window.location.pathname.split("/")[1] === 'programs' &&<Dropdown.Item eventKey="1" onClick={(e) => {
-                                   props.callback('block');
-                              }}>Program Template</Dropdown.Item>}
                               {window.location.pathname.split("/")[1] !== 'programs' && <Dropdown.Item eventKey="2" onClick={(e) => {
                                    props.callback2('block');
                               }}>Sessions</Dropdown.Item>}
+                              <Dropdown.Item eventKey="1" onClick={(e) => {
+                                   props.callback('block');
+                              }}>Program Template</Dropdown.Item>
                               <Dropdown.Item eventKey="3" onClick={() => {
                                    createEditWorkoutTemplateComponent.current.TriggerForm({ id: null, type: 'create' });
                               }}>Workout Template</Dropdown.Item>
