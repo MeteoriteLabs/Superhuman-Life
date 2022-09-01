@@ -187,7 +187,7 @@ function CreateAddress(props: any, ref: any) {
             }}
             widgets={widgets}
             modalTrigger={modalTrigger}
-            formData={operation.type === 'create' ? addressDetails : emptyAddressState}
+            formData={operation.type === 'create' ? emptyAddressState : addressDetails }
         />
     );
 }
