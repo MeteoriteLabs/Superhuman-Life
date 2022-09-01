@@ -1,8 +1,8 @@
 import React from 'react';
 import { Container, Row} from 'react-bootstrap';
 
-var email = process.env.REACT_APP_SUPPORT_EMAIL;
-var phone = process.env.REACT_APP_SUPPORT_CONTACT_NUMBER;
+const email = process.env.REACT_APP_SUPPORT_EMAIL;
+const phone = process.env.REACT_APP_SUPPORT_CONTACT_NUMBER;
 
 function DeactiveAccount() {
 

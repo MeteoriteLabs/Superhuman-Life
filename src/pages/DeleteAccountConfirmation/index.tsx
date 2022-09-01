@@ -38,9 +38,9 @@ function DeleteAccountConfirmation(props: any) {
   const logout = () => {
     auth.logout();
   }
-  
+
   const [updateProfile] = useMutation(UPDATE_USER_PROFILE_DATA, {
-    onCompleted: (r: any) => { 
+    onCompleted: (r: any) => {
       logout();
       window.open(`deactiveAccount`, "_self");
     },
@@ -58,7 +58,7 @@ function DeleteAccountConfirmation(props: any) {
     if (frm.typeDelete !== "DELETE") {
       errors.typeDelete.addError("Need to enter delete in capital");
     }
-    else if(frm.username !== username){
+    else if (frm.username !== username) {
       errors.username.addError("Enter correct username");
     }
     return errors;
@@ -68,12 +68,12 @@ function DeleteAccountConfirmation(props: any) {
     onCompleted: (r: any) => {
       updateProfile({
         variables: {
-             id: auth.userid,
-             data: {
-              confirmed: false
-             },
+          id: auth.userid,
+          data: {
+            confirmed: false
+          },
         },
-   });
+      });
     },
   });
 
