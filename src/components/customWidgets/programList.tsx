@@ -135,7 +135,7 @@ const ProgramList = (props: any) => {
           if (selected.duration) {
                console.log(days);
                return (
-                    <SchedulerEvent programDays={days} programEvents={selected.events} />
+                    <SchedulerEvent dayType={props.dayType} programDays={days} programEvents={selected.events} />
                )
           }
      }
