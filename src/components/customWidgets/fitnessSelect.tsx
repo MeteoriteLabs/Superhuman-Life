@@ -7,8 +7,10 @@ import {flattenObj} from '../utils/responseFlatten';
 
 const FitnessSelect = (props: any) => {
 
+     console.log(props)
+
      const [singleSelections, setSingleSelections] = useState<any[]>(
-          props.value?.length > 0 ? props.value : []
+          props.value?.length > 0 ? JSON.parse(props.value) : []
         );
      const [fitnessdisciplines, setFitnessDisciplines] = useState<any[]>([]);
 
@@ -31,12 +33,9 @@ const FitnessSelect = (props: any) => {
 
      function OnChange(e) {
           setSingleSelections(e);
-        }
+     }
       
-     props.onChange(singleSelections.map((d) => {
-          return d.id;
-          }).join(",").toString()
-     );
+     props.onChange(JSON.stringify(singleSelections));
 
     FetchData();
 

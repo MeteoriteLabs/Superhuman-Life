@@ -231,7 +231,7 @@ export default function FitnessTab(props) {
                         createEditViewChannelRef.current.TriggerForm({ id: null, type: 'create', packageType: 'Live Stream Channel', callback: refetchQueryCallback() });
                     }}
                 >
-                    <i className="fas fa-plus-circle"></i>{" "}Channel
+                    <i className="fas fa-plus-circle"></i>{" "}Live Stream
                 </Button>
                 <Button className='mx-3' variant={true ? "outline-secondary" : "light"} size="sm"
                     onClick={() => {

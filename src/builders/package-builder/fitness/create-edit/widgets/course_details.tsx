@@ -24,7 +24,9 @@ const CourseDetails = (props) => {
         setDetails(newDetails);
     }
 
-    props.onChange(JSON.stringify(details));
+    if(details[0].title !== "" && details[0].description !== ""){
+        props.onChange(JSON.stringify(details));
+    }
 
     return (
         <>

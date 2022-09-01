@@ -1,5 +1,5 @@
 import React, {useState, useContext} from 'react';
-import {Row, Col, Form, Table, FormControl, InputGroup} from 'react-bootstrap';
+import {Row, Col, Form, Table, FormControl, InputGroup, Button} from 'react-bootstrap';
 import {gql, useQuery, useLazyQuery} from '@apollo/client';
 import AuthContext from '../../../../../context/auth-context';
 import { flattenObj } from '../../../../../components/utils/responseFlatten';
@@ -14,10 +14,12 @@ const PricingTable = (props) => {
         return duration;
     }
 
+    console.log(props.formContext)
+
     const auth = useContext(AuthContext);
     const [vouchers, setVouchers] = useState<any>([]);
     const [show, setShow] = useState(props.value === 'free' ? true : false);
-    const [pricing, setPricing] = useState<any>(props.value !== undefined && props.value !== 'free' ? JSON.parse(props.value) : [ {mrp: null, suggestedPrice: null, voucher: 0, duration: calculateDuration(props.formContext.startDate, props.formContext.endDate), sapienPricing: null}]);
+    const [pricing, setPricing] = useState<any>(props.value !== undefined && props.value !== 'free' ? JSON.parse(props.value) : [ {mrp: null, suggestedPrice: null, voucher: 0, duration: calculateDuration(JSON.parse(props.formContext.dates).publishingDate, JSON.parse(props.formContext.dates).expiryDate), sapienPricing: null}]);
 
     const GET_VOUCHERS = gql`
         query fetchVouchers($expiry: DateTime!, $id: ID!, $start: DateTime!, $status: String!) {
@@ -163,12 +165,20 @@ const PricingTable = (props) => {
             <br />
             <br />
             {!show && <div>
-                <h4>Subscription Plan</h4>
+                <div className="d-flex justify-content-between p-2">
+                    <div>
+                        <h4>Subscription Plan</h4>
+                    </div>
+                    <div>
+                        
+                    <Button variant='outline-info' onClick={() => {window.location.href = '/finance'}}>Add suggest pricing</Button>
+                    </div>
+                </div>
                 <Table style={{ tableLayout: 'fixed'}}>
                 <thead>
                     <tr className='text-center'>
                     <th>Details</th>
-                    <th>One day</th>
+                    <th>Duration</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -201,6 +211,7 @@ const PricingTable = (props) => {
                         className={`${pricing[0]?.mrp < pricing[0]?.suggestedPrice && pricing[0]?.mrp !== null ? "is-invalid" : pricing[0]?.mrp >= pricing[0]?.suggestedPrice ? "is-valid" : ""}`}
                         aria-label="Default"
                         type='number'
+                        min={0}
                         aria-describedby="inputGroup-sizing-default"
                         value={pricing[0]?.mrp}
                         onChange={(e) => {handlePricingUpdate(e.target.value, 0)}}

@@ -8,17 +8,24 @@ import { flattenObj } from '../../../../../components/utils/responseFlatten';
 
 const ProgramDetails = (props) => {
     const existingData = props.value === undefined ? undefined : JSON.parse(props.value);
-    if(existingData !== undefined){
-        existingData.address = {id: existingData?.address?.id, title: existingData?.address?.address1};
+    if(existingData !== undefined && existingData.length > 0){
+        existingData.address = {id: JSON.parse(existingData?.address)[0].id, title: JSON.parse(existingData?.address)[0].title};
+
     }
 
+    console.log(props);
+    console.log(existingData);
+
     const [mode, setMode] = useState(props.value === undefined ? '' : (existingData.mode).toString());
-    const [residential, setResidential] = useState(props.value === undefined ? '' : (existingData.residential).toString());
+    const [residential, setResidential] = useState(props.value === undefined || existingData.residential === null ? '' : (existingData.residential).toString());
 
     const auth = useContext(AuthContext); 
-    const [singleSelections, setSingleSelections] = useState<any[]>(existingData?.address?.length !== 0 && props.value !== undefined ? [existingData?.address] : []);
+    const [singleSelections, setSingleSelections] = useState<any[]>(existingData?.address?.length !== 0 && props.value !== undefined ? existingData?.address : []);
     const [addresses, setAddresses] = useState<any[]>([]);
     const [addressTitle, setAddressTitle] = useState(props.value !== undefined ? existingData.addressTag : 'At My Address');
+
+    console.log(singleSelections);
+
 
     const FETCH_USER_ADDRESSES = gql`
     query addresses($id: ID!) {
@@ -50,7 +57,7 @@ const ProgramDetails = (props) => {
               [...flattenedData.addresses].map((address) => {
                   return {
                       id: address.id,
-                      title: address.address1
+                      address1: address.address1
                   }
               })
           );
@@ -62,24 +69,31 @@ const ProgramDetails = (props) => {
         setSingleSelections(e);
     }
 
-    // console.log({addressTag: addressTitle, address: singleSelections, mode: mode, residential: residential});
-
-    props.onChange(JSON.stringify({addressTag: addressTitle, address: singleSelections, mode: mode, residential: residential}));
+    if(mode === "0"){
+        props.onChange(JSON.stringify({addressTag: addressTitle, address: singleSelections, mode: mode, residential: residential}));
+    }else if(mode === "1" && addressTitle === "At My Address" && singleSelections.length !== 0){
+        props.onChange(JSON.stringify({addressTag: addressTitle, address: singleSelections, mode: mode, residential: residential}));
+    }else if(mode === "2" && addressTitle === "At My Address" && singleSelections.length !== 0 && residential !== ""){
+        props.onChange(JSON.stringify({addressTag: addressTitle, address: singleSelections, mode: mode, residential: residential}));
+    }else if(mode === "1" && addressTitle === "At Client Address"){
+        props.onChange(JSON.stringify({addressTag: addressTitle, address: singleSelections, mode: mode, residential: residential}));
+    }else if(mode === "2" && addressTitle === "At Client Address"){
+        props.onChange(JSON.stringify({addressTag: addressTitle, address: singleSelections, mode: mode, residential: residential}));
+    }
 
     return (
         <>
             <div>
                 <label><b>Mode</b></label>
                 <Form>
-                    <Form.Check inline label="Online" value='0' checked={mode === '0' ? true : false} name="group1" type='radio' onClick={(e: any) => setMode(e.target.value)} />
-                    <Form.Check inline label="Offline" value='1' checked={mode === '1' ? true : false} name="group1" type='radio' onClick={(e: any) => setMode(e.target.value)}/>
-                    <Form.Check inline label="Hybrid" value='2' checked={mode === '2' ? true : false} name="group1" type='radio' onClick={(e: any) => setMode(e.target.value)}/>
-                    <Form.Check inline label="Residential" value='3' checked={mode === '3' ? true : false} name="group1" type='radio' onClick={(e: any) => setMode(e.target.value)}/>
+                    <Form.Check inline label="Online" value='0' defaultChecked={mode === '0' ? true : false} name="group1" type='radio' onClick={(e: any) => setMode(e.target.value)} />
+                    <Form.Check inline label="Offline" value='1' defaultChecked={mode === '1' ? true : false} name="group1" type='radio' onClick={(e: any) => setMode(e.target.value)}/>
+                    <Form.Check inline label="Residential" value='2' defaultChecked={mode === '2' ? true : false} name="group1" type='radio' onClick={(e: any) => setMode(e.target.value)}/>
                 </Form>
             </div>
             {mode !== '0' && 
             <>
-            <div>
+            {mode !== '' && <div>
                 <label><b>Location</b></label>
                 <Row>
                     <Col lg={3}>
@@ -93,7 +107,7 @@ const ProgramDetails = (props) => {
                     {addressTitle === 'At My Address' && <Col>
                         <Typeahead
                             id="basic-typeahead-multiple"
-                            labelKey="title"
+                            labelKey="address1"
                             onChange={OnChange}
                             options={addresses}
                             placeholder="Search Address.."
@@ -101,15 +115,15 @@ const ProgramDetails = (props) => {
                         />
                     </Col>}
                 </Row>
-            </div>
-            <div>
+            </div>}
+            {mode !== '' && mode === '2' && <div>
                 <label><b>Residential</b></label>
                 <Form>
-                    <Form.Check inline label="Accommodation" value='0' checked={residential === '0' ? true : false} name="group1" type='radio' onClick={(e: any) => setResidential(e.target.value)} />
-                    <Form.Check inline label="Accommodation + Food" value='1' checked={residential === '1' ? true : false} name="group1" type='radio' onClick={(e: any) => setResidential(e.target.value)}/>
+                    <Form.Check inline label="Accommodation" value='0' defaultChecked={residential === '0' ? true : false} name="group1" type='radio' onClick={(e: any) => setResidential(e.target.value)} />
+                    <Form.Check inline label="Accommodation + Food" value='1' defaultChecked={residential === '1' ? true : false} name="group1" type='radio' onClick={(e: any) => setResidential(e.target.value)}/>
                 </Form>
-            </div>
-            </>}
+            </div>}
+        </>}
         </>
     );
 }

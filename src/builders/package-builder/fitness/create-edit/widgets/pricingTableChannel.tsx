@@ -1,5 +1,5 @@
 import React, {useState, useContext} from 'react';
-import {Row, Col, Form, Table, FormControl, InputGroup} from 'react-bootstrap';
+import {Row, Col, Form, Table, FormControl, InputGroup, Button} from 'react-bootstrap';
 import {gql, useQuery, useLazyQuery} from '@apollo/client';
 import AuthContext from '../../../../../context/auth-context';
 import { flattenObj } from '../../../../../components/utils/responseFlatten';
@@ -7,10 +7,20 @@ import moment from 'moment';
 
 const PricingTable = (props) => {
 
+    function handleReturnType(val: any) {
+        if (typeof(val) === 'string') {
+            return JSON.parse(val);
+        } else {
+            return val;
+        }
+    }
+
+    console.log(props.value);
+
     const auth = useContext(AuthContext);
     const [show, setShow] = useState(props.value === 'free' ? true : false);
     const [vouchers, setVouchers] = useState<any>([]);
-    const [pricing, setPricing] = useState<any>(props.value !== undefined && props.value !== 'free' ? JSON.parse(props.value) : [ {mrp: null, suggestedPrice: null, voucher: 0, duration: 1, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 30, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 90, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 180, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 360, sapienPricing: null}]);
+    const [pricing, setPricing] = useState<any>(props.value !== undefined && props.value !== 'free' ? handleReturnType(props.value) : [ {mrp: null, suggestedPrice: null, voucher: 0, duration: 1, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 30, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 90, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 180, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 360, sapienPricing: null}]);
 
     const GET_VOUCHERS = gql`
         query fetchVouchers($expiry: DateTime!, $id: ID!, $start: DateTime!, $status: String!) {
@@ -106,7 +116,7 @@ const PricingTable = (props) => {
 
     if(show){
         props.onChange('free');
-    }else if(pricing[0].mrp !== null && pricing[1].mrp !== null && pricing[2].mrp !== null && pricing[3].mrp !== null && pricing[4].mrp !== null){
+    }else if(pricing[0].mrp !== null || pricing[1].mrp !== null || pricing[2].mrp !== null || pricing[3].mrp !== null || pricing[4].mrp !== null){
         props.onChange(JSON.stringify(pricing));    
     }
 
@@ -158,7 +168,15 @@ const PricingTable = (props) => {
             <br />
             <br />
             {!show && <div>
-                <h4>Subscription Plan</h4>
+                <div className="d-flex justify-content-between p-2">
+                    <div>
+                        <h4>Subscription Plan</h4>
+                    </div>
+                    <div>
+                        
+                    <Button variant='outline-info' onClick={() => {window.location.href = '/finance'}}>Add suggest pricing</Button>
+                    </div>
+                </div>
                 <Table style={{ tableLayout: 'fixed'}}>
                 <thead>
                     <tr className='text-center'>
@@ -214,6 +232,7 @@ const PricingTable = (props) => {
                                     className={`${pricing[index]?.mrp < pricing[index]?.suggestedPrice && pricing[index]?.mrp !== null ? "is-invalid" : pricing[index]?.mrp >= pricing[index]?.suggestedPrice ? "is-valid" : ""}`}
                                     aria-label="Default"
                                     type='number'
+                                    min={0}
                                     aria-describedby="inputGroup-sizing-default"
                                     value={pricing[index]?.mrp}
                                     onChange={(e) => {handlePricingUpdate(e.target.value, index)}}

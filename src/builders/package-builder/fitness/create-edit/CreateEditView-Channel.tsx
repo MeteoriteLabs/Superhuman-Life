@@ -11,6 +11,7 @@ import moment from 'moment';
 // import {AvailabilityCheck} from '../../../program-builder/program-template/availabilityCheck';
 import { Modal, Button } from 'react-bootstrap';
 // import StatusModal from "../../../../components/StatusModal/exerciseStatusModal";
+import toast, { Toaster } from 'react-hot-toast';
 
 interface Operation {
     id: string;
@@ -31,11 +32,16 @@ function CreateEditChannel(props: any, ref: any) {
     const [statusModalShow, setStatusModalShow] = useState(false);
     let frmDetails: any = {};
 
-    const [editPackageDetails] = useMutation(UPDATE_CHANNEL_COHORT_PACKAGE, {onCompleted: (data) => {modalTrigger.next(false);}})
-    const [updatePackageStatus] = useMutation(UPDATE_PACKAGE_STATUS, {onCompleted: (data) => {}});
+    const notifyCreated = () => toast.success("Package Created Successfully!", { position: "top-right" });
+    const notifyUpdated = () => toast.success("Package Updated Successfully!", { position: "top-right" });
+
+    const [editPackageDetails] = useMutation(UPDATE_CHANNEL_COHORT_PACKAGE, {onCompleted: (data) => {modalTrigger.next(false); notifyUpdated(); props.callback();}})
+    const [updatePackageStatus] = useMutation(UPDATE_PACKAGE_STATUS, {onCompleted: (data) => {
+        props.callback();
+    }});
     const [deletePackage] = useMutation(DELETE_PACKAGE, { refetchQueries: ["GET_TABLEDATA"], onCompleted: (data) => {props.callback()}});
     const [bookingConfig] = useMutation(CREATE_BOOKING_CONFIG_AND_TAG_CHANNEL, {onCompleted: (r: any) => { 
-        console.log(r); modalTrigger.next(false); props.callback();
+        console.log(r); notifyCreated(); modalTrigger.next(false); props.callback();
      }})
     const [CreatePackage] = useMutation(CREATE_CHANNEL_PACKAGE, { onCompleted: (r: any) => {
         bookingConfig({
@@ -44,8 +50,6 @@ function CreateEditChannel(props: any, ref: any) {
                 id: r.createFitnesspackage.data.id,
                 bookings_per_day: frmDetails.config.maxBookingDay,
                 bookings_per_month: frmDetails.config.maxBookingMonth,
-                tagName: frmDetails.channelName,
-                packageId: r.createFitnesspackage.data.id
             }
         })
      } });
@@ -77,20 +81,37 @@ function CreateEditChannel(props: any, ref: any) {
         Advanced
     }
 
+    enum ENUM_FITNESSPACKAGE_INTENSITY {
+        Low,
+        Moderate,
+        High
+    }
+
+    const PRICING_TABLE_DEFAULT = [ {mrp: null, suggestedPrice: null, voucher: 0, duration: 1, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 30, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 90, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 180, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 360, sapienPricing: null}];
+
     function FillDetails(data: any) {
         const flattenData = flattenObj({...data});
         let msg: any = flattenData.fitnesspackages[0];
         let booking: any = {};
         let details: any = {};
+        for(var i =0; i<msg.fitnesspackagepricing.length; i++){
+            PRICING_TABLE_DEFAULT[i].mrp = msg.fitnesspackagepricing[i].mrp;
+            PRICING_TABLE_DEFAULT[i].suggestedPrice = msg.fitnesspackagepricing[i].suggestedPrice;
+            PRICING_TABLE_DEFAULT[i].voucher = msg.fitnesspackagepricing[i].voucher;
+            PRICING_TABLE_DEFAULT[i].sapienPricing = msg.fitnesspackagepricing[i].sapienPricing;
+        }
         details.About = msg.aboutpackage;
         details.Benifits = msg.benefits;
         details.channelName = msg.packagename;
+        details.equipment = JSON.stringify(msg.equipment_lists);
+        details.discpline = JSON.stringify(msg.fitnessdisciplines);
         details.channelinstantBooking = msg.groupinstantbooking;
         details.expiryDate = moment(msg.expirydate).format('YYYY-MM-DD');
         details.level = ENUM_FITNESSPACKAGE_LEVEL[msg.level];
-        details.pricing = msg.fitnesspackagepricing[0]?.mrp === 'free' ? 'free' : JSON.stringify(msg.fitnesspackagepricing);
+        details.intensity = ENUM_FITNESSPACKAGE_INTENSITY[msg.Intensity];
+        details.pricing = msg.fitnesspackagepricing[0]?.mrp === 'free' ? 'free' : JSON.stringify(PRICING_TABLE_DEFAULT);
         details.publishingDate = moment(msg.publishing_date).format('YYYY-MM-DD');
-        details.tag = msg.tags;
+        details.tag = msg?.tags === null ? "" : msg.tags;
         details.user_permissions_user = msg.users_permissions_user.id;
         details.visibility = msg.is_private === true ? 1 : 0;
         booking.acceptBooking = msg.booking_config.isAuto === true ? 1 : 0;
@@ -98,7 +119,8 @@ function CreateEditChannel(props: any, ref: any) {
         booking.maxBookingMonth = msg.booking_config.BookingsPerMonth;
         details.config = booking;
         details.thumbnail = msg.Thumbnail_ID;
-        details.upload = msg.Upload_ID;
+        details.Upload = msg.Upload_ID === null ? {"VideoUrl": msg.video_URL} : {"upload": msg.Upload_ID};
+        details.datesConfig = {"expiryDate": msg.expiry_date, "publishingDate": msg.publishing_date};
         // details.visibility = 
         // let msg = data;
         // console.log(msg);
@@ -123,30 +145,47 @@ function CreateEditChannel(props: any, ref: any) {
 
     function CreateChannelPackage(frm: any) {
         frmDetails = frm;
+        frm.datesConfig = JSON.parse(frm.datesConfig);
+        if(frm.equipment){
+            frm.equipment = JSON.parse(frm?.equipment);
+        }
+        if(frm.discpline){
+            frm.discpline = JSON.parse(frm?.discpline);
+        }
+        console.log(frm)
         CreatePackage({
             variables: {
                 aboutpackage: frm.About,
                 benefits: frm.Benifits,
                 packagename: frm.channelName,
                 channelinstantBooking: frm.channelinstantBooking,
-                expiry_date: moment(frm.expiryDate).toISOString(),
+                expiry_date: moment(frm.datesConfig?.expiryDate).toISOString(),
                 level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
-                fitnesspackagepricing: frm.pricing === "free" ? [{mrp: 'free'}] : JSON.parse(frm.pricing),
-                publishing_date: moment(frm.publishingDate).toISOString(),
-                tags: frm.tag,
+                Intensity: ENUM_FITNESSPACKAGE_INTENSITY[frm.intensity],
+                equipmentList: frm?.equipment?.length > 0 ? frm.equipment.map((item: any) => item.id).join(", ").split(", ") : [],
+                fitnessdisciplines: frm?.discpline?.length > 0 ? frm.discpline.map((item: any) => item.id).join(", ").split(", ") : [],
+                fitnesspackagepricing: frm.pricing === "free" ? [{mrp: 'free'}] : JSON.parse(frm.pricing).filter((item: any) => item.mrp !== null),
+                publishing_date: moment(frm.datesConfig?.publishingDate).toISOString(),
+                tags: frm?.tag,
                 users_permissions_user: frm.user_permissions_user,
                 fitness_package_type: findPackageType(operation.packageType),
                 is_private: frm.visibility === 0 ? false : true,
                 thumbnail: frm.thumbnail,
-                upload: frm.upload
+                upload: frm.Upload?.upload,
+                videoUrl: frm.Upload?.VideoUrl,
             }
         })
     }
 
     function editChannelPackege(frm: any){
         frmDetails = frm;
-        frm.location = JSON.parse(frm.location)
-        frm.languages = JSON.parse(frm.languages)
+        frm.datesConfig = JSON.parse(frm.datesConfig);
+        if(frm.equipment){
+            frm.equipment = JSON.parse(frm?.equipment);
+        }
+        if(frm.discpline){
+            frm.discpline = JSON.parse(frm?.discpline);
+        }
         editPackageDetails({
             variables: {
                 id: operation.id,
@@ -154,16 +193,20 @@ function CreateEditChannel(props: any, ref: any) {
                 benefits: frm.Benifits,
                 packagename: frm.channelName,
                 channelinstantBooking: frm.channelinstantBooking,
-                expiry_date: moment(frm.expiryDate).toISOString(),
+                expiry_date: moment(frm.datesConfig?.expiryDate).toISOString(),
                 level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
-                fitnesspackagepricing: frm.pricing === "free" ? [{mrp: 'free'}] : JSON.parse(frm.pricing),
-                publishing_date: moment(frm.publishingDate).toISOString(),
+                Intensity: ENUM_FITNESSPACKAGE_INTENSITY[frm.intensity],
+                equipmentList: frm?.equipment?.length > 0 ? frm.equipment.map((item: any) => item.id).join(", ").split(", ") : [],
+                fitnessdisciplines: frm?.discpline?.length > 0 ? frm.discpline.map((item: any) => item.id).join(", ").split(", ") : [],
+                fitnesspackagepricing: frm.pricing === "free" ? [{mrp: 'free'}] : JSON.parse(frm.pricing).filter((item: any) => item.mrp !== null),
+                publishing_date: moment(frm.datesConfig?.publishingDate).toISOString(),
                 tags: frm.tag,
                 users_permissions_user: frm.user_permissions_user,
                 fitness_package_type: findPackageType(operation.packageType),
                 is_private: frm.visibility === 0 ? false : true,
                 thumbnail: frm.thumbnail,
-                upload: frm.upload
+                upload: frm.Upload?.upload,
+                videoUrl: frm.Upload?.VideoUrl,
             }
         })
     }
@@ -180,15 +223,19 @@ function CreateEditChannel(props: any, ref: any) {
 
     function OnSubmit(frm: any) {
         //bind user id
-        if(frm)
-        frm.user_permissions_user = auth.userid;
-
+        if(frm){
+            frm.user_permissions_user = auth.userid;
+        }
+        console.log(operation.type);
         switch (operation.type) {
             case 'create':
                 CreateChannelPackage(frm);
                 break;
             case 'edit':
                 editChannelPackege(frm);
+                break;
+            case 'toggle-status':
+                setStatusModalShow(true);
                 break;
             case 'delete':
                 setDeleteModalShow(true);
@@ -215,6 +262,7 @@ function CreateEditChannel(props: any, ref: any) {
                     name={name}
                     isStepper={true}
                     formUISchema={schema}
+                    showErrorList={false}
                     formSchema={programSchema}
                     formSubmit={name === "View" ? () => { modalTrigger.next(false); } : (frm: any) => { OnSubmit(frm); }}
                     formData={programDetails}
@@ -263,6 +311,9 @@ function CreateEditChannel(props: any, ref: any) {
                         <Button variant='success' onClick={() => {updateChannelPackageStatus(operation.id, operation.current_status)}}>Yes</Button>
                     </Modal.Footer>
                     </Modal>
+
+            <Toaster />
+
         </>
     )
 }
