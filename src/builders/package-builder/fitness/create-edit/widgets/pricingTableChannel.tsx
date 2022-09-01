@@ -15,8 +15,6 @@ const PricingTable = (props) => {
         }
     }
 
-    console.log(props.value);
-
     const auth = useContext(AuthContext);
     const [show, setShow] = useState(props.value === 'free' ? true : false);
     const [vouchers, setVouchers] = useState<any>([]);
@@ -87,6 +85,22 @@ const PricingTable = (props) => {
                   }
                 }
               }
+            sapienPricings(
+            filters:{
+                fitness_package_type:{
+                type: {
+                    eq: "Live Stream Channel"
+                }
+                }
+            }
+            ){
+                data{
+                    id
+                    attributes{
+                    mrp
+                    }
+                }
+            }
         }
     `;
 
@@ -103,7 +117,7 @@ const PricingTable = (props) => {
             }else {
                 item.suggestedPrice = flattenData.suggestedPricings[0]?.mrp * item.duration;
             }
-            item.sapienPricing = flattenData.suggestedPricings[0]?.mrp * item.duration;
+            item.sapienPricing = flattenData.sapienPricings[0]?.mrp * item.duration;
         });
         setPricing(newValue);
     }
@@ -218,7 +232,7 @@ const PricingTable = (props) => {
                     <td><b>Suggested</b></td>
                     {pricing.map((item, index) => {
                         return (
-                            <td>₹ {item.sapienPricing}</td>
+                            <td>₹ {item.suggestedPrice}</td>
                         )
                     })}
                     </tr>
@@ -229,7 +243,7 @@ const PricingTable = (props) => {
                             <td>
                                 <InputGroup className="mb-3">
                                     <FormControl
-                                    className={`${pricing[index]?.mrp < pricing[index]?.suggestedPrice && pricing[index]?.mrp !== null ? "is-invalid" : pricing[index]?.mrp >= pricing[index]?.suggestedPrice ? "is-valid" : ""}`}
+                                    className={`${pricing[index]?.mrp < pricing[index]?.sapienPricing && pricing[index]?.mrp !== null ? "is-invalid" : pricing[index]?.mrp >= pricing[index]?.sapienPricing ? "is-valid" : ""}`}
                                     aria-label="Default"
                                     type='number'
                                     min={0}
@@ -237,7 +251,7 @@ const PricingTable = (props) => {
                                     value={pricing[index]?.mrp}
                                     onChange={(e) => {handlePricingUpdate(e.target.value, index)}}
                                     />
-                                    {pricing[index]?.mrp < pricing[index]?.suggestedPrice && pricing[index]?.mrp !== null && <span style={{ fontSize: '12px', color: 'red'}}>cannot be less than ₹ {pricing[index]?.suggestedPrice}</span>}    
+                                    {pricing[index]?.mrp < pricing[index]?.sapienPricing && pricing[index]?.mrp !== null && <span style={{ fontSize: '12px', color: 'red'}}>cannot be less than ₹ {pricing[index]?.sapienPricing}</span>}    
                                 </InputGroup>
                             </td>
                         )
