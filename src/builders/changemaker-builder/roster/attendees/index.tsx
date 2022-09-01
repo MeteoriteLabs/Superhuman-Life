@@ -1,14 +1,16 @@
-import React, {useState} from 'react';
+import React, {useState, useRef} from 'react';
 import {Col, Row, FormControl, InputGroup, Button, Dropdown} from 'react-bootstrap';
 import './actionButton.css';
 import {GET_PARTICULAR_CLIENT} from '../graphql/queries';
 import {useQuery} from '@apollo/client';
 import { flattenObj } from '../../../../components/utils/responseFlatten';
+import AddFeedback from './feedback/addFeedback';
 
 const RosterAttendees = () => {
 
     const [clients, setClients] = useState<any>([]);
     const [searchInput, setSearchInput] = useState<any>('');
+    const CreateFeedbackComponent = useRef<any>(null);
 
     useQuery(GET_PARTICULAR_CLIENT, {
         variables: {
@@ -55,6 +57,7 @@ const RosterAttendees = () => {
                 {clients.length === 0 && <div className='text-center mt-3 text-info p-3 shadow-lg rounded border border-secondary'><b>No Clients Available</b></div>}
                 {clients.length > 0 && <div className='mt-3'>
                     {clients?.map((item: any, index: any) => {
+                        console.log(item);
                         return (
                             <>
                                 <div className='text-left shadow-lg' style={{ borderRadius: '15px'}}>
@@ -112,8 +115,16 @@ const RosterAttendees = () => {
                                                                 <i className="fas fa-ellipsis-v"></i>
                                                             </Dropdown.Toggle>
                                                             <Dropdown.Menu>
-                                                                <Dropdown.Item >Add Feedback</Dropdown.Item>
-                                                                <Dropdown.Item >Go to Client</Dropdown.Item>
+                                                                <Dropdown.Item onClick={() => {
+                                                                    CreateFeedbackComponent.current.TriggerForm({
+                                                                        id: null,
+                                                                        type: "create",
+                                                                    });
+                                                                }}>Add Feedback</Dropdown.Item>
+                                                                <AddFeedback ref={CreateFeedbackComponent}></AddFeedback>
+                                                                <Dropdown.Item onClick={() => {
+                                                                    window.location.href = `/client/home/${item?.client?.id}`
+                                                                }} >Go to Client</Dropdown.Item>
                                                                 <Dropdown.Item >Add Pre-Session</Dropdown.Item>
                                                             </Dropdown.Menu>
                                                         </Dropdown>
