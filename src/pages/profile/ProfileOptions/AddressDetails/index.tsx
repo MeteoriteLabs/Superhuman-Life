@@ -35,7 +35,7 @@ function AddressDetails() {
   function updateAddress(data: any) {
     CreateAddressComponent.current.TriggerForm({
             id: data.id,
-            type: "update",
+            type: "edit",
             modal_status: true,
         });
 }
@@ -93,7 +93,7 @@ function AddressDetails() {
                   </Row>
 
                   <Card.Title>{currValue.Title ? currValue.Title : null}<span className='text-white rounded bg-secondary p-1 ml-2'>{currValue.type_address ? currValue.type_address : null}</span></Card.Title>
-                  <Card.Text>
+                  
                     <Row className="p-1">
                       <Col xs={12} lg={6}><b>Address 1 : </b>{currValue.House_Number ? currValue.House_Number : null} {currValue.address1 ? currValue.address1 : null}</Col>
                       <Col xs={12} lg={6}>{currValue.address2 ? currValue.address2 : null}</Col>
@@ -104,7 +104,7 @@ function AddressDetails() {
                       <Col xs={12} lg={3}><b>Country : </b>{currValue.country ? currValue.country : null}</Col>
                       <Col xs={12} lg={3}><b>Zipcode : </b>{currValue.zipcode ? currValue.zipcode : null}</Col>
                     </Row>
-                  </Card.Text>
+                  
                 </Card.Body>
               </Card>
             </Col>

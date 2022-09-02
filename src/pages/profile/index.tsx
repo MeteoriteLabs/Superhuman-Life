@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Tabs, Tab, Container } from "react-bootstrap";
+import { Tabs, Tab } from "react-bootstrap";
 import ChangePasswordPage from '../changePassword';
 import ProfileCard from "./ProfileOptions/ProfileCard";
 import ProfileNavTab from "./ProfileOptions/ProfileNavTab";
@@ -18,9 +18,9 @@ export default function ProfilePage() {
     >
       <Tab eventKey="profile" title="Profile">
         <ProfileCard />
-        <Container fluid>
+        {/* <Container fluid> */}
           <ProfileNavTab />
-        </Container>
+        {/* </Container> */}
       </Tab>
 
       <Tab eventKey="collaborations" title="Collaborations">

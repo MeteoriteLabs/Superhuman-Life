@@ -14,7 +14,7 @@ import { schema, widgets } from "../../profileSchema";
 interface Operation {
      id: string;
      modal_status: boolean;
-     type: "create" | "update";
+     type: "create" | "edit";
 }
 
 const emptyEducationState = {
@@ -31,14 +31,29 @@ function CreateEducation(props: any, ref: any) {
      const [educationDetails, setEducationDetails] = useState<any>([]);
      const auth = useContext(AuthContext);
 
-     function FetchData() {
+     // Modal trigger
+     const modalTrigger = new Subject();
+
+     useImperativeHandle(ref, () => ({
+          TriggerForm: (msg: Operation) => {
+               setOperation(msg);
+               
+               if(msg){
+                    modalTrigger.next(true);
+               }
+               
+          },
+     }));
+
+     // function FetchData() {
+
           useQuery(FETCH_USER_PROFILE_DATA, {
-               variables: { id: auth.userid }, 
-               skip: (operation.type === 'create'),
+               variables: { id: auth.userid },
+               // skip: (operation.type === 'create'),
                onCompleted: (r: any) => {
 
                     let selectedEducationArrayToUpdate = r.usersPermissionsUser.data.attributes.educational_details.data && r.usersPermissionsUser.data.attributes.educational_details.data.length ? r.usersPermissionsUser.data.attributes.educational_details.data.filter((currValue: any) => (currValue.id === operation.id)) : null;
-
+                    console.log(selectedEducationArrayToUpdate);
                     // passing selected education details to prefill form
                     FillDetails(selectedEducationArrayToUpdate);
 
@@ -47,8 +62,10 @@ function CreateEducation(props: any, ref: any) {
                     ) : null
                     );
                },
+
           });
-     }
+
+     // }
 
      const [updateProfile] = useMutation(UPDATE_USER_PROFILE_DATA, {
           onCompleted: (r: any) => { props.callback(); },
@@ -77,21 +94,11 @@ function CreateEducation(props: any, ref: any) {
           },
      });
 
-     // Modal trigger
-     const modalTrigger = new Subject();
-
-     useImperativeHandle(ref, () => ({
-          TriggerForm: (msg: Operation) => {
-               setOperation(msg);
-
-               if (msg && !msg.id) {
-                    modalTrigger.next(true);
-               }
-          },
-     }));
-
      // Prefill details function for forms    
      function FillDetails(data: any) {
+          console.log('data', data);
+          console.log('id', operation.id)
+
           let details: any = {};
 
           details.Institute_Name = data && data.length ? data[0].attributes.Institute_Name : '';
@@ -102,7 +109,7 @@ function CreateEducation(props: any, ref: any) {
           setEducationDetails(details);
 
           //if message exists - show form only for edit and view
-          if (['update'].indexOf(operation.type) > -1)
+          if (['edit'].indexOf(operation.type) > -1)
                modalTrigger.next(true);
           else
                OnSubmit(null);
@@ -118,7 +125,6 @@ function CreateEducation(props: any, ref: any) {
                          Type_of_degree: frm.Type_of_degree,
                          Year: frm.Year,
                     }
-
                },
           });
      }
@@ -134,7 +140,6 @@ function CreateEducation(props: any, ref: any) {
                          Type_of_degree: frm.Type_of_degree,
                          Year: frm.Year,
                     }
-
                },
           });
      }
@@ -144,13 +149,13 @@ function CreateEducation(props: any, ref: any) {
                case "create":
                     CreateUserEducation(frm);
                     break;
-               case "update":
+               case "edit":
                     UpdateUserEducation(frm);
                     break;
           }
      }
 
-     FetchData();
+     // FetchData();
 
      return (
           <ModalView

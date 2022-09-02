@@ -1,7 +1,7 @@
 import { useState, useContext, useRef } from 'react';
-import { Card, Row, Col, Dropdown, Button } from "react-bootstrap";
+import { Card, Row, Col, Button, Dropdown } from "react-bootstrap";
 import { FETCH_USER_PROFILE_DATA, DELETE_EDUCATION_DETAILS } from "../../queries/queries";
-import { useMutation, useQuery } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client";
 import AuthContext from "../../../../context/auth-context";
 import { flattenObj } from "../../../../components/utils/responseFlatten";
 import CreateEducation from './CreateEducation';
@@ -36,10 +36,10 @@ export default function EducationDetails() {
     // calling modal for update option
     function updateEducation(data: any) {
         CreateEducationComponent.current.TriggerForm({
-                id: data,
-                type: "update",
-                modal_status: true,
-            });
+            id: data.id,
+            type: "edit",
+            modal_status: true,
+        });
     }
 
     function refetchQueryCallback() {
@@ -47,24 +47,25 @@ export default function EducationDetails() {
     }
 
     return (
+
         <Col md={{ span: 8, offset: 2 }}>
             <Col md={{ offset: 9, span: 3 }}>
-                <Card.Title className="text-center">
-                    <Button
-                        variant={true ? "outline-secondary" : "light"}
-                        size="sm"
-                        onClick={() => {
-                            CreateEducationComponent.current.TriggerForm({
-                                id: null,
-                                type: "create",
-                                modal_status: true,
-                            });
-                        }}
-                    >
-                        <i className="fas fa-plus-circle"></i> Add Education
-                    </Button>
-                    <CreateEducation ref={CreateEducationComponent} callback={refetchQueryCallback}></CreateEducation>
-                </Card.Title>
+                {/* <Card.Title className="text-center"> */}
+                <Button
+                    variant={true ? "outline-secondary" : "light"}
+                    size="sm"
+                    onClick={() => {
+                        CreateEducationComponent.current.TriggerForm({
+                            id: null,
+                            type: "create",
+                            modal_status: true,
+                        });
+                    }}
+                >
+                    <i className="fas fa-plus-circle"></i> Add Education
+                </Button>
+                <CreateEducation ref={CreateEducationComponent} callback={refetchQueryCallback}></CreateEducation>
+                {/* </Card.Title> */}
             </Col>
 
             <Row className="mt-4">
@@ -73,7 +74,7 @@ export default function EducationDetails() {
                         <Col lg={12} key={currValue.id}>
                             <Card className="m-2" key={currValue.id}>
                                 <Card.Body key={currValue.id}>
-                                    <Row className='justify-content-end'>
+                                    <Row className='justify-content-end' key={currValue.id}>
 
                                         <Dropdown key={currValue.id}>
                                             <Dropdown.Toggle variant="bg-light" id="dropdown-basic">
@@ -87,18 +88,19 @@ export default function EducationDetails() {
 
                                             <Dropdown.Menu key={currValue.id}>
                                                 <Dropdown.Item key={1} onClick={() => DeleteUserEducationData(currValue)}>Delete</Dropdown.Item>
-                                                <Dropdown.Item key={2} onClick={() => updateEducation(currValue.id)}>Edit</Dropdown.Item>
+                                                <Dropdown.Item key={2} onClick={() => updateEducation(currValue)}>Edit</Dropdown.Item>
                                             </Dropdown.Menu>
                                         </Dropdown>
+
                                     </Row>
                                     <Card.Title>{currValue.Institute_Name ? currValue.Institute_Name : null}</Card.Title>
-                                    <Card.Text>
-                                        <Row>
-                                            <Col sm={12} lg={4}><b>Type of Degree : </b>{currValue.Type_of_degree && currValue.Type_of_degree}</Col>
-                                            <Col sm={12} lg={4}><b>Specialization : </b>{currValue.Specialization && currValue.Specialization}</Col>
-                                            <Col sm={12} lg={4}><b>Passing year : </b>{currValue.Year && currValue.Year}</Col>
-                                        </Row>
-                                    </Card.Text>
+
+                                    <Row>
+                                        <Col sm={12} lg={4}><b>Type of Degree : </b>{currValue.Type_of_degree && currValue.Type_of_degree}</Col>
+                                        <Col sm={12} lg={4}><b>Specialization : </b>{currValue.Specialization && currValue.Specialization}</Col>
+                                        <Col sm={12} lg={4}><b>Passing year : </b>{currValue.Year && currValue.Year}</Col>
+                                    </Row>
+
                                 </Card.Body>
                             </Card>
                         </Col>
@@ -107,5 +109,6 @@ export default function EducationDetails() {
 
             </Row>
         </Col>
+
     )
 }

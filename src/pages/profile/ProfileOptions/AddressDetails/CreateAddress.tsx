@@ -1,4 +1,4 @@
-import React, { useImperativeHandle, useState, useContext } from "react";
+import React, { useImperativeHandle, useState, useContext, useEffect } from "react";
 import { useMutation, useQuery } from "@apollo/client";
 import ModalView from "../../../../components/modal";
 import {
@@ -37,6 +37,7 @@ function CreateAddress(props: any, ref: any) {
     const [operation, setOperation] = useState<Operation>({} as Operation);
     const [addressDetails, setAddressDetails] = useState<any>({});
 
+    console.log(operation.id);
     function FetchData() {
         useQuery(FETCH_USER_PROFILE_DATA, {
             skip: (operation.type === 'create'),
@@ -49,8 +50,11 @@ function CreateAddress(props: any, ref: any) {
 
                 let selectedAddressArrayToUpdate = r.usersPermissionsUser.data.attributes.addresses.data && r.usersPermissionsUser.data.attributes.addresses.data.length ? r.usersPermissionsUser.data.attributes.addresses.data.filter((currValue: any) => (currValue.id === operation.id)) : null;
 
+                console.log('flattenData', flattenData.usersPermissionsUser.addresses.filter((currValue: any) => currValue.id === operation.id));
+                
+                console.log('selectedAddressArrayToUpdate',selectedAddressArrayToUpdate)
                 // passing selected address details to prefill form
-                FillDetails(selectedAddressArrayToUpdate);
+                FillDetails(flattenData.usersPermissionsUser.addresses);
             },
         });
     }
@@ -60,7 +64,7 @@ function CreateAddress(props: any, ref: any) {
     });
 
     const [updateAddress] = useMutation(UPDATE_ADDRESS_DATA, {
-        onCompleted: (r: any) => { props.callback(); },
+        onCompleted: (r: any) => { props.callback();},
     });
 
     const [createAddress, { error }] = useMutation(CREATE_ADDRESS, {
@@ -92,26 +96,25 @@ function CreateAddress(props: any, ref: any) {
     useImperativeHandle(ref, () => ({
         TriggerForm: (msg: Operation) => {
             setOperation(msg);
-
-            if (msg && !msg.id) {
                 modalTrigger.next(true);
-            }
         },
     }));
 
     //Prefill details for form
-    function FillDetails(data: any) {
+    async function FillDetails(data: any) {
         let details: any = {};
 
-        details.address1 = data && data.length ? data[0].attributes.address1 : '';
-        details.address2 = data && data.length ? data[0].attributes.address2 : '';
-        details.city = data && data.length ? data[0].attributes.city : '';
-        details.country = data && data.length ? data[0].attributes.country : '';
-        details.state = data && data.length ? data[0].attributes.state : '';
-        details.zipcode = data && data.length ? data[0].attributes.zipcode : '';
-        details.type_address = data && data.length ? data[0].attributes.type_address : '';
-        details.House_Number = data && data.length ? data[0].attributes.House_Number : '';
-        details.Title = data && data.length ? data[0].attributes.Title : '';
+        let selectedAddress = await data && data.length ? data.filter((currValue: any) => currValue.id === operation.id) : null ;
+        
+        details.address1 = selectedAddress && selectedAddress.length ? selectedAddress[0].address1 : '';
+        details.address2 = selectedAddress && selectedAddress.length ? selectedAddress[0].address2 : '';
+        details.city = selectedAddress && selectedAddress.length ? selectedAddress[0].city : '';
+        details.country = selectedAddress && selectedAddress.length ? selectedAddress[0].country : '';
+        details.state = selectedAddress && selectedAddress.length ? selectedAddress[0].state : '';
+        details.zipcode = selectedAddress && selectedAddress.length ? selectedAddress[0].zipcode : '';
+        details.type_address = selectedAddress && selectedAddress.length ? selectedAddress[0].type_address : '';
+        details.House_Number = selectedAddress && selectedAddress.length ? selectedAddress[0].House_Number : '';
+        details.Title = selectedAddress && selectedAddress.length ? selectedAddress[0].Title : '';
 
         setAddressDetails(details);
 
@@ -159,16 +162,20 @@ function CreateAddress(props: any, ref: any) {
                 }
             },
         });
+        console.log('id inside update address function', operation.id)
+        
     }
 
     // submit function
     function OnSubmit(frm: any) {
+        console.log(operation.type)
         switch (operation.type) {
             case "create":
                 CreateUserAddress(frm);
                 break;
             case 'edit':
                 UpdateUserAddress(frm);
+                console.log('edit', frm);
                 break;
         }
     }
@@ -187,7 +194,7 @@ function CreateAddress(props: any, ref: any) {
             }}
             widgets={widgets}
             modalTrigger={modalTrigger}
-            formData={operation.type === 'create' ? emptyAddressState : addressDetails }
+            formData={ addressDetails }
         />
     );
 }
