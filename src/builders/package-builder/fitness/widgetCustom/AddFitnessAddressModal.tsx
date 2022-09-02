@@ -169,7 +169,7 @@ const AddFitnessAddressModal = (props: any) => {
             </Modal.Body>
             <Modal.Footer>
               <Button variant='danger' onClick={props.onHide}>Close</Button>
-              <Button variant='outline-success' onClick={handleAddressAdd} disabled={handleDisable()}>Update</Button>
+              <Button variant='outline-success' onClick={handleAddressAdd} disabled={handleDisable()}>Add</Button>
             </Modal.Footer>
           </Modal>
      );

@@ -7,6 +7,7 @@ import './fitness.css'
 import ActionButton from "../../../components/actionbutton";
 
 import CreateEditView from "./CreateEditView";
+import CreateEditViewPersonalTraining from './personal-training/CreateEditView';
 import CreateEditViewChannel from './create-edit/CreateEditView-Channel';
 import CreateEditViewCohort from "./create-edit/CreateEditView-Cohort";
 import { GET_FITNESS, GET_FITNESS_PACKAGE_TYPES } from "./graphQL/queries";
@@ -18,12 +19,19 @@ export default function FitnessTab(props) {
 
 
     const createEditViewRef = useRef<any>(null);
+    const createEditViewPersonalTrainingRef = useRef<any>(null);
     const createEditViewChannelRef = useRef<any>(null);
     const createEditViewCohortRef = useRef<any>(null);
     const [selectedDuration, setSelectedDuration] = useState<any>('');
     const [currentIndex, setCurrentIndex] = useState<any>('');
 
-
+    function handleModalRender(id: string | null, actionType: string, type: string){
+        console.log(id, actionType, type);
+        switch(type){
+            case 'Personal Training':
+                createEditViewPersonalTrainingRef.current.TriggerForm({id: id, type: actionType, actionType: type});
+        }
+    }
 
     const columns = useMemo<any>(() => [
         { accessor: "packagename", Header: "Package Name" },
@@ -132,7 +140,8 @@ export default function FitnessTab(props) {
             Header: "Actions",
             Cell: ({ row }: any) => {
                 const actionClick1 = () => {
-                    row.original.type === "Live Stream Channel" ? createEditViewChannelRef.current.TriggerForm({ id: row.original.id, type: 'edit', packageType: row.original.type }) : row.original.type === "Cohort" ? createEditViewCohortRef.current.TriggerForm({ id: row.original.id, type: 'edit', packageType: row.original.type }) : createEditViewRef.current.TriggerForm({ id: row.original.id, actionType: 'edit', packageType: row.original.type });
+                    handleModalRender(row.original.id, "edit", row.original.type);
+                    // row.original.type === "Live Stream Channel" ? createEditViewChannelRef.current.TriggerForm({ id: row.original.id, type: 'edit', packageType: row.original.type }) : row.original.type === "Cohort" ? createEditViewCohortRef.current.TriggerForm({ id: row.original.id, type: 'edit', packageType: row.original.type }) : createEditViewRef.current.TriggerForm({ id: row.original.id, actionType: 'edit', packageType: row.original.type });
                 };
                 const actionClick2 = () => {
                     row.original.type === "Live Stream Channel" ? createEditViewChannelRef.current.TriggerForm({ id: row.original.id, type: 'view', packageType: row.original.type }) : row.original.type === "Cohort" ? createEditViewCohortRef.current.TriggerForm({ id: row.original.id, type: 'view', packageType: row.original.type }) : createEditViewRef.current.TriggerForm({ id: row.original.id, actionType: 'view', packageType: row.original.type });
@@ -200,7 +209,8 @@ export default function FitnessTab(props) {
             <div className="justify-content-lg-center d-flex overflow-auto p-3">
                 <Button className='mx-3' variant={true ? "outline-secondary" : "light"} size="sm"
                     onClick={() => {
-                        createEditViewRef.current.TriggerForm({ id: null, actionType: 'create', type: 'Personal Training' });
+                        handleModalRender( null, 'create','Personal Training');
+                        // createEditViewRef.current.TriggerForm({ id: null, actionType: 'create', type: 'Personal Training' });
                     }}
                 >
                     <i className="fas fa-plus-circle"></i>{" "}Personal Training
@@ -248,6 +258,7 @@ export default function FitnessTab(props) {
                             <CreateEditView packageType={flattenObj({...data})} ref={createEditViewRef} callback={refetchQueryCallback}></CreateEditView>
                             <CreateEditViewChannel ref={createEditViewChannelRef} callback={refetchQueryCallback}></CreateEditViewChannel>
                             <CreateEditViewCohort ref={createEditViewCohortRef} callback={refetchQueryCallback}></CreateEditViewCohort>
+                            <CreateEditViewPersonalTraining ref={createEditViewPersonalTrainingRef} callback={refetchQueryCallback}/>
                         </Card.Title>
                     </Col>
                 </Row>
