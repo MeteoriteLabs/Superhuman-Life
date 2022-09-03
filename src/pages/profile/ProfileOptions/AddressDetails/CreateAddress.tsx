@@ -44,7 +44,7 @@ function CreateAddress(props: any, ref: any) {
             const flattenData = flattenObj({ ...r });
             const addressIds = flattenData.usersPermissionsUser.addresses && flattenData.usersPermissionsUser.addresses?.length ? flattenData.usersPermissionsUser.addresses.map((currentValue: any) => currentValue.id) : null;
             setAddressData(addressIds);
-            FillDetails(flattenData.usersPermissionsUser.addresses);
+            closeForm();
             setPrefill(flattenData.usersPermissionsUser.addresses);
         },
     });
@@ -109,29 +109,10 @@ function CreateAddress(props: any, ref: any) {
 
     }, [operation.id])
 
-    //Prefill details for form
-    function FillDetails(data: any) {
-        // let details: any = {};
-
-        // let selectedAddress = data && data.length ? data.filter((currValue: any) => currValue.id === operation.id) : null;
-
-        // details.address1 = selectedAddress && selectedAddress.length ? selectedAddress[0].address1 : null;
-        // details.address2 = selectedAddress && selectedAddress.length ? selectedAddress[0].address2 : null;
-        // details.city = selectedAddress && selectedAddress.length ? selectedAddress[0].city : null;
-        // details.country = selectedAddress && selectedAddress.length ? selectedAddress[0].country : null;
-        // details.state = selectedAddress && selectedAddress.length ? selectedAddress[0].state : null;
-        // details.zipcode = selectedAddress && selectedAddress.length ? selectedAddress[0].zipcode : null;
-        // details.type_address = selectedAddress && selectedAddress.length ? selectedAddress[0].type_address : null;
-        // details.House_Number = selectedAddress && selectedAddress.length ? selectedAddress[0].House_Number : null;
-        // details.Title = selectedAddress && selectedAddress.length ? selectedAddress[0].Title : null;
-
-        // setAddressDetails(details);
-
-        //if message exists - show form only for edit and view
+    //close form on update
+    function closeForm() {
         if (['edit'].indexOf(operation.type) > -1)
             modalTrigger.next(false);
-        else
-            OnSubmit(null);
     }
 
     // create address function
