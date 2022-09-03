@@ -78,7 +78,6 @@ export const UPDATE_USER_PROFILE_DATA = gql`
           LinkedIn_URL
           About_User
         }
-
       }
     }
   }
@@ -151,3 +150,102 @@ export const DELETE_EDUCATION_DETAILS = gql`
     }
   }
 `;
+
+export const FETCH_USERS_PROFILE_DATA = gql`
+  query fetchUsersProfileData {
+    usersPermissionsUsers(pagination: { pageSize: 100 }) {
+      data {
+        id
+        attributes {
+          First_Name
+          Last_Name
+          email
+          Phone_Number
+          Photo_ID
+          About_User
+          Website_URL
+          about_mini_description
+          designations{
+            data{
+              id
+              attributes{
+                Designation_title
+                description
+              }
+            }
+          }
+          instagram_url
+          Facebook_URL
+          Youtube_URL
+          LinkedIn_URL
+          Clubhouse_URL
+          Twitter_URL
+          Verification_ID
+          Photo_profile_banner_ID
+          educational_details(pagination:{pageSize:100}) {
+            data {
+              id
+              attributes {
+                Institute_Name
+                Type_of_degree
+                Specialization
+                Year
+              }
+            }
+          }
+          addresses(pagination:{pageSize:100}) {
+            data {
+              id
+              attributes {
+                city
+                address1
+                address2
+                type
+                zipcode
+                country
+                state
+                Title
+                type_address
+                House_Number
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+// query usersPermissionsUsers {
+//   usersPermissionsUsers(pagination: { pageSize: 100 }) {
+//     data {
+//       id
+//       attributes {
+//         username
+//         email
+//         Phone_Number
+//         Photo_ID
+//         Last_Name
+//         First_Name
+//         Facebook_URL
+//         addresses (pagination:{pageSize:100}){
+          
+//           data {
+//             id
+//             attributes {
+//               type
+//               state
+//               address1
+//               address2
+//               Title
+//               state
+//               city
+//               country
+//               zipcode
+//             }
+//           }
+//         }
+//       }
+//     }
+//   }
+// }

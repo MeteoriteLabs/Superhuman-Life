@@ -15,7 +15,7 @@ import { flattenObj } from "../../../../components/utils/responseFlatten";
 interface Operation {
     id: string;
     modal_status: boolean;
-    type: "create" | "edit" ;
+    type: "create" | "edit";
 }
 
 const emptyAddressState = {
@@ -36,44 +36,35 @@ function CreateAddress(props: any, ref: any) {
     const [addressData, setAddressData] = useState<any>([]);
     const [operation, setOperation] = useState<Operation>({} as Operation);
     const [addressDetails, setAddressDetails] = useState<any>({});
+    const [prefill, setPrefill] = useState<any>([]);
 
-    console.log(operation.id);
-    function FetchData() {
-        useQuery(FETCH_USER_PROFILE_DATA, {
-            skip: (operation.type === 'create'),
-            variables: { id: auth.userid },
-            onCompleted: (r: any) => {
-                const flattenData = flattenObj({ ...r });
-
-                const addressIds = flattenData.usersPermissionsUser.addresses && flattenData.usersPermissionsUser.addresses?.length ? flattenData.usersPermissionsUser.addresses.map((currentValue: any) => currentValue.id) : null;
-                setAddressData(addressIds);
-
-                let selectedAddressArrayToUpdate = r.usersPermissionsUser.data.attributes.addresses.data && r.usersPermissionsUser.data.attributes.addresses.data.length ? r.usersPermissionsUser.data.attributes.addresses.data.filter((currValue: any) => (currValue.id === operation.id)) : null;
-
-                console.log('flattenData', flattenData.usersPermissionsUser.addresses.filter((currValue: any) => currValue.id === operation.id));
-                
-                console.log('selectedAddressArrayToUpdate',selectedAddressArrayToUpdate)
-                // passing selected address details to prefill form
-                FillDetails(flattenData.usersPermissionsUser.addresses);
-            },
-        });
-    }
+    const fetch = useQuery(FETCH_USER_PROFILE_DATA, {
+        variables: { id: auth.userid },
+        onCompleted: (r: any) => {
+            const flattenData = flattenObj({ ...r });
+            const addressIds = flattenData.usersPermissionsUser.addresses && flattenData.usersPermissionsUser.addresses?.length ? flattenData.usersPermissionsUser.addresses.map((currentValue: any) => currentValue.id) : null;
+            setAddressData(addressIds);
+            FillDetails(flattenData.usersPermissionsUser.addresses);
+            setPrefill(flattenData.usersPermissionsUser.addresses);
+        },
+    });
 
     const [updateProfile] = useMutation(UPDATE_USER_PROFILE_DATA, {
-        onCompleted: (r: any) => { props.callback(); },
+        onCompleted: (r: any) => { props.callback(); fetch.refetch(); },
     });
 
     const [updateAddress] = useMutation(UPDATE_ADDRESS_DATA, {
-        onCompleted: (r: any) => { props.callback();},
+        onCompleted: (r: any) => { props.callback(); modalTrigger.next(false); fetch.refetch(); },
     });
 
     const [createAddress, { error }] = useMutation(CREATE_ADDRESS, {
         onCompleted: (r: any) => {
             modalTrigger.next(false);
             props.callback();
+            fetch.refetch();
 
             // concatenate previously stored address ids with currently added address id
-            let contatenatedAddressIdArray = addressData !== null ? addressData.concat([r.createAddress.data.id]) : [r.createAddress.data.id];
+            let contatenatedAddressIdArray = addressData && addressData.length ? addressData.concat([r.createAddress.data.id]) : [r.createAddress.data.id];
 
             updateProfile({
                 variables: {
@@ -96,16 +87,14 @@ function CreateAddress(props: any, ref: any) {
     useImperativeHandle(ref, () => ({
         TriggerForm: (msg: Operation) => {
             setOperation(msg);
-                modalTrigger.next(true);
+            modalTrigger.next(true);
         },
     }));
 
-    //Prefill details for form
-    async function FillDetails(data: any) {
-        let details: any = {};
+    useEffect(() => {
+        let selectedAddress = prefill && prefill.length ? prefill.filter((currValue: any) => currValue.id === operation.id) : null;
 
-        let selectedAddress = await data && data.length ? data.filter((currValue: any) => currValue.id === operation.id) : null ;
-        
+        let details: any = {};
         details.address1 = selectedAddress && selectedAddress.length ? selectedAddress[0].address1 : '';
         details.address2 = selectedAddress && selectedAddress.length ? selectedAddress[0].address2 : '';
         details.city = selectedAddress && selectedAddress.length ? selectedAddress[0].city : '';
@@ -118,15 +107,36 @@ function CreateAddress(props: any, ref: any) {
 
         setAddressDetails(details);
 
+    }, [operation.id])
+
+    //Prefill details for form
+    function FillDetails(data: any) {
+        // let details: any = {};
+
+        // let selectedAddress = data && data.length ? data.filter((currValue: any) => currValue.id === operation.id) : null;
+
+        // details.address1 = selectedAddress && selectedAddress.length ? selectedAddress[0].address1 : null;
+        // details.address2 = selectedAddress && selectedAddress.length ? selectedAddress[0].address2 : null;
+        // details.city = selectedAddress && selectedAddress.length ? selectedAddress[0].city : null;
+        // details.country = selectedAddress && selectedAddress.length ? selectedAddress[0].country : null;
+        // details.state = selectedAddress && selectedAddress.length ? selectedAddress[0].state : null;
+        // details.zipcode = selectedAddress && selectedAddress.length ? selectedAddress[0].zipcode : null;
+        // details.type_address = selectedAddress && selectedAddress.length ? selectedAddress[0].type_address : null;
+        // details.House_Number = selectedAddress && selectedAddress.length ? selectedAddress[0].House_Number : null;
+        // details.Title = selectedAddress && selectedAddress.length ? selectedAddress[0].Title : null;
+
+        // setAddressDetails(details);
+
         //if message exists - show form only for edit and view
         if (['edit'].indexOf(operation.type) > -1)
-            modalTrigger.next(true);
+            modalTrigger.next(false);
         else
             OnSubmit(null);
     }
 
     // create address function
     function CreateUserAddress(frm: any) {
+
         createAddress({
             variables: {
                 data: {
@@ -146,6 +156,7 @@ function CreateAddress(props: any, ref: any) {
 
     // update address function
     function UpdateUserAddress(frm: any) {
+
         updateAddress({
             variables: {
                 id: operation.id,
@@ -162,25 +173,20 @@ function CreateAddress(props: any, ref: any) {
                 }
             },
         });
-        console.log('id inside update address function', operation.id)
-        
     }
 
     // submit function
     function OnSubmit(frm: any) {
-        console.log(operation.type)
+
         switch (operation.type) {
             case "create":
                 CreateUserAddress(frm);
                 break;
             case 'edit':
                 UpdateUserAddress(frm);
-                console.log('edit', frm);
                 break;
         }
     }
-
-    FetchData();
 
     return (
         <ModalView
@@ -194,7 +200,7 @@ function CreateAddress(props: any, ref: any) {
             }}
             widgets={widgets}
             modalTrigger={modalTrigger}
-            formData={ addressDetails }
+            formData={operation.type === 'create' ? emptyAddressState : addressDetails}
         />
     );
 }

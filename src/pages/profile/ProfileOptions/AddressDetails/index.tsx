@@ -1,6 +1,6 @@
 import { useState, useContext, useRef, forwardRef } from 'react';
 import { Card, Row, Col, Button, Dropdown } from "react-bootstrap";
-import { FETCH_USER_PROFILE_DATA, DELETE_ADDRESS } from "../../queries/queries";
+import { FETCH_USERS_PROFILE_DATA, DELETE_ADDRESS } from "../../queries/queries";
 import AuthContext from "../../../../context/auth-context";
 import { useQuery, useMutation } from "@apollo/client";
 import { flattenObj } from "../../../../components/utils/responseFlatten";
@@ -11,18 +11,21 @@ function AddressDetails() {
   const [addressData, setAddressData] = useState<any>([]);
   const CreateAddressComponent = useRef<any>(null);
 
-  const fetch = useQuery(FETCH_USER_PROFILE_DATA, {
-    variables: { id: auth.userid },
+  const fetch = useQuery(FETCH_USERS_PROFILE_DATA, {
     onCompleted: (r: any) => {
       const flattenData = flattenObj({ ...r });
-      setAddressData(flattenData.usersPermissionsUser.addresses);
+      let usersData = flattenData.usersPermissionsUsers.filter((currValue: any) => currValue.id === auth.userid);
+      setAddressData(usersData[0].addresses);
     },
   });
 
-  const [deleteAddress] = useMutation(DELETE_ADDRESS, {
+  const [deleteAddress, { error }] = useMutation(DELETE_ADDRESS, {
     onCompleted: (data: any) => { fetch.refetch(); },
   });
 
+  if(error){
+    console.log("Oops! Error occured")
+  }
   function deleteUserAddress(data: any) {
     deleteAddress({
       variables: {

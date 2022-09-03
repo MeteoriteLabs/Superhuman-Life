@@ -1,6 +1,6 @@
 import { useState, useContext, useRef } from 'react';
 import { Card, Row, Col, Button, Dropdown } from "react-bootstrap";
-import { FETCH_USER_PROFILE_DATA, DELETE_EDUCATION_DETAILS } from "../../queries/queries";
+import { FETCH_USERS_PROFILE_DATA, DELETE_EDUCATION_DETAILS } from "../../queries/queries";
 import { useQuery, useMutation } from "@apollo/client";
 import AuthContext from "../../../../context/auth-context";
 import { flattenObj } from "../../../../components/utils/responseFlatten";
@@ -12,11 +12,12 @@ export default function EducationDetails() {
     const auth = useContext(AuthContext);
     const [educationData, setEducationData] = useState<any>([]);
 
-    const fetch = useQuery(FETCH_USER_PROFILE_DATA, {
-        variables: { id: auth.userid },
+    const fetch = useQuery(FETCH_USERS_PROFILE_DATA, {
+        
         onCompleted: (r: any) => {
             const flattenData = flattenObj({ ...r });
-            setEducationData(flattenData.usersPermissionsUser.educational_details);
+            let usersData = flattenData.usersPermissionsUsers.filter((currValue: any) => currValue.id === auth.userid);
+            setEducationData(usersData[0].educational_details);
         },
     });
 
@@ -50,7 +51,7 @@ export default function EducationDetails() {
 
         <Col md={{ span: 8, offset: 2 }}>
             <Col md={{ offset: 9, span: 3 }}>
-                {/* <Card.Title className="text-center"> */}
+                <Card.Title className="text-center">
                 <Button
                     variant={true ? "outline-secondary" : "light"}
                     size="sm"
@@ -65,7 +66,7 @@ export default function EducationDetails() {
                     <i className="fas fa-plus-circle"></i> Add Education
                 </Button>
                 <CreateEducation ref={CreateEducationComponent} callback={refetchQueryCallback}></CreateEducation>
-                {/* </Card.Title> */}
+                </Card.Title>
             </Col>
 
             <Row className="mt-4">

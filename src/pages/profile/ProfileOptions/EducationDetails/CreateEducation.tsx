@@ -1,4 +1,4 @@
-import React, { useImperativeHandle, useState, useContext } from "react";
+import React, { useImperativeHandle, useState, useContext, useEffect } from "react";
 import { useMutation, useQuery } from "@apollo/client";
 import ModalView from "../../../../components/modal";
 import {
@@ -10,6 +10,7 @@ import {
 import AuthContext from "../../../../context/auth-context";
 import { Subject } from "rxjs";
 import { schema, widgets } from "../../profileSchema";
+import { flattenObj } from "../../../../components/utils/responseFlatten";
 
 interface Operation {
      id: string;
@@ -30,58 +31,43 @@ function CreateEducation(props: any, ref: any) {
      const [educationID, setEducationID] = useState<any>([]);
      const [educationDetails, setEducationDetails] = useState<any>([]);
      const auth = useContext(AuthContext);
+     const [prefill, setPrefill] = useState<any>([]);
 
-     // Modal trigger
-     const modalTrigger = new Subject();
+     const fetch = useQuery(FETCH_USER_PROFILE_DATA, {
+          variables: { id: auth.userid },
+          skip: (operation.type === 'create'),
+          onCompleted: (r: any) => {
+               const flattenData = flattenObj({ ...r });
 
-     useImperativeHandle(ref, () => ({
-          TriggerForm: (msg: Operation) => {
-               setOperation(msg);
-               
-               if(msg){
-                    modalTrigger.next(true);
-               }
-               
+               // let selectedEducationArrayToUpdate = r.usersPermissionsUser.data.attributes.educational_details.data && r.usersPermissionsUser.data.attributes.educational_details.data.length ? r.usersPermissionsUser.data.attributes.educational_details.data.filter((currValue: any) => (currValue.id === operation.id)) : null;
+
+               CloseForm();
+               setPrefill(flattenData.usersPermissionsUser.educational_details);
+
+               setEducationID(r.usersPermissionsUser.data.attributes.educational_details.data && r.usersPermissionsUser.data.attributes.educational_details.data.length ? r.usersPermissionsUser.data.attributes.educational_details.data.map(
+                    (eduId: any) => eduId.id
+               ) : null
+               );
           },
-     }));
 
-     // function FetchData() {
-
-          useQuery(FETCH_USER_PROFILE_DATA, {
-               variables: { id: auth.userid },
-               // skip: (operation.type === 'create'),
-               onCompleted: (r: any) => {
-
-                    let selectedEducationArrayToUpdate = r.usersPermissionsUser.data.attributes.educational_details.data && r.usersPermissionsUser.data.attributes.educational_details.data.length ? r.usersPermissionsUser.data.attributes.educational_details.data.filter((currValue: any) => (currValue.id === operation.id)) : null;
-                    console.log(selectedEducationArrayToUpdate);
-                    // passing selected education details to prefill form
-                    FillDetails(selectedEducationArrayToUpdate);
-
-                    setEducationID(r.usersPermissionsUser.data.attributes.educational_details.data && r.usersPermissionsUser.data.attributes.educational_details.data.length ? r.usersPermissionsUser.data.attributes.educational_details.data.map(
-                         (eduId: any) => eduId.id
-                    ) : null
-                    );
-               },
-
-          });
-
-     // }
+     });
 
      const [updateProfile] = useMutation(UPDATE_USER_PROFILE_DATA, {
-          onCompleted: (r: any) => { props.callback(); },
+          onCompleted: (r: any) => { props.callback(); fetch.refetch(); },
      });
 
      const [updateEducationalDetail] = useMutation(UPDATE_EDUCATION_DETAILS, {
-          onCompleted: (r: any) => { modalTrigger.next(false); props.callback(); },
+          onCompleted: (r: any) => { modalTrigger.next(false); props.callback(); fetch.refetch(); },
      });
 
      const [createEducation] = useMutation(CREATE_EDUCATION_DETAILS, {
           onCompleted: (r: any) => {
                modalTrigger.next(false);
                props.callback();
+               fetch.refetch();
 
                // concatenate previously stored education details IDs with currently added educational details ID
-               let contatenatedEducationIdArray = educationID !== null ? educationID.concat([r.createEducationalDetail.data.id]) : [r.createEducationalDetail.data.id];
+               let contatenatedEducationIdArray = educationID && educationID.length ? educationID.concat([r.createEducationalDetail.data.id]) : [r.createEducationalDetail.data.id];
 
                updateProfile({
                     variables: {
@@ -94,25 +80,32 @@ function CreateEducation(props: any, ref: any) {
           },
      });
 
-     // Prefill details function for forms    
-     function FillDetails(data: any) {
-          console.log('data', data);
-          console.log('id', operation.id)
+     // Modal trigger
+     const modalTrigger = new Subject();
 
+     useImperativeHandle(ref, () => ({
+          TriggerForm: (msg: Operation) => {
+               setOperation(msg);
+               modalTrigger.next(true);
+          },
+     }));
+
+     useEffect(() => {
+          let data = prefill && prefill.length ? prefill.filter((currValue: any) => currValue.id === operation.id) : null;
           let details: any = {};
-
-          details.Institute_Name = data && data.length ? data[0].attributes.Institute_Name : '';
-          details.Type_of_degree = data && data.length ? data[0].attributes.Type_of_degree : '';
-          details.Specialization = data && data.length ? data[0].attributes.Specialization : '';
-          details.Year = data && data.length ? data[0].attributes.Year : '';
+          details.Institute_Name = data && data.length ? data[0].Institute_Name : '';
+          details.Type_of_degree = data && data.length ? data[0].Type_of_degree : '';
+          details.Specialization = data && data.length ? data[0].Specialization : '';
+          details.Year = data && data.length ? data[0].Year : '';
 
           setEducationDetails(details);
 
-          //if message exists - show form only for edit and view
+     }, [operation.id])
+
+     // Close form after update    
+     function CloseForm() {
           if (['edit'].indexOf(operation.type) > -1)
-               modalTrigger.next(true);
-          else
-               OnSubmit(null);
+               modalTrigger.next(false);
      }
 
      // Create Education Details
@@ -154,8 +147,6 @@ function CreateEducation(props: any, ref: any) {
                     break;
           }
      }
-
-     // FetchData();
 
      return (
           <ModalView
