@@ -14,6 +14,15 @@ interface Operation {
     current_status: boolean;
 }
 
+const emptyExerciseState = {
+    exercise: '',
+    level: 0,
+    discipline: '',
+    miniDescription: '',
+    equipment:'',
+    muscleGroup: ''
+};
+
 function CreateEditExercise(props: any, ref: any) {
     const auth = useContext(AuthContext);
     const exerciseSchema: { [name: string]: any; } = require("./exercises.json");
@@ -100,9 +109,10 @@ function CreateEditExercise(props: any, ref: any) {
     }
 
     function CreateExercise(frm: any) {
+        console.log(frm);
         createExercise({ variables: {
             exercisename: frm.exercise,
-            exerciselevel: ENUM_EXERCISES_EXERCISELEVEL[frm.level],
+            exerciselevel: ENUM_EXERCISES_EXERCISELEVEL[ frm.level],
             fitnessdisciplines: frm.discipline.split(","),
             exerciseminidescription: frm.miniDescription,
             exercisetext: (!frm.addExercise.AddText ? null : frm.addExercise.AddText),
@@ -181,7 +191,7 @@ function CreateEditExercise(props: any, ref: any) {
                     formUISchema={schema}
                     formSchema={exerciseSchema}
                     formSubmit={name === "View" ? () => { modalTrigger.next(false); } : (frm: any) => { OnSubmit(frm); }}
-                    formData={exerciseDetails}
+                    formData={ operation.type === 'create' ? emptyExerciseState: exerciseDetails}
                     widgets={widgets}
                     modalTrigger={modalTrigger}
                 />
