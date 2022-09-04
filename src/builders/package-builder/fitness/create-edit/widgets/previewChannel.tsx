@@ -157,9 +157,9 @@ const PreviewChannel = (props) => {
 
     return (
         <>
-        {props.formContext !== {} && <Carousel>
+        <Carousel>
             {handleCardRender()}
-        </Carousel>}
+        </Carousel>
 
             <SocialMediaComponent url={URL} />
         </>

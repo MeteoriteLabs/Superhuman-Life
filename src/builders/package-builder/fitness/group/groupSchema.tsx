@@ -1,18 +1,20 @@
-import Upload from '../../../../../components/upload/upload';
-import DatesConfig from '../../../../../components/customWidgets/datesConfig';
-import FitnessSelect from '../../../../../components/customWidgets/fitnessMultiSelect';
-import EquipmentSelect from '../../../../../components/customWidgets/equipmentListSelect';
-import PtProgramDetails from '../widgets/ptProgramDetails';
-import PTPricingTable from '../widgets/ptPricingTable';
-import PTPreview from '../widgets/ptPreview';
+import Upload from '../../../../components/upload/upload';
+import DatesConfig from '../../../../components/customWidgets/datesConfig';
+import FitnessSelect from '../../../../components/customWidgets/fitnessMultiSelect';
+import EquipmentSelect from '../../../../components/customWidgets/equipmentListSelect';
+import GroupProgramDetails from './groupProgramDetails';
+import GroupConfig from './groupConfig';
+import GroupPricingTable from './groupPricingTable';
+import GroupPreview from './groupPreview';
 
 export const widgets = {
      datesConfig: DatesConfig,
      fitnessSelect: FitnessSelect,
      equipmentSelect: EquipmentSelect,
-     ptProgramDetails: PtProgramDetails,
-     ptPricingTable: PTPricingTable,
-     ptPreview: PTPreview,
+     groupProgramDetails: GroupProgramDetails,
+     groupConfig: GroupConfig,
+     groupPricingTable: GroupPricingTable,
+     groupPreview: GroupPreview,
 }
 
 export const schema: any = {  
@@ -70,13 +72,16 @@ export const schema: any = {
           }
      },
      "programDetails": {
-          "ui:widget": "ptProgramDetails"
+          "ui:widget": "groupProgramDetails"
+     },
+     "groupinstantbooking": {
+          "ui:widget": "groupConfig"
      },
      "pricingDetail": {
-          "ui:widget": "ptPricingTable"
+          "ui:widget": "groupPricingTable"
      },
      "carousel": {
-          "ui:widget": "ptPreview"
+          "ui:widget": "groupPreview"
      },
      "visibility": {
           "ui:widget": "radio",

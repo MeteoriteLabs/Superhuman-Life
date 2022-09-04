@@ -10,7 +10,7 @@ const MultiSelect = (props: any) => {
      console.log(props);
 
      const [multiSelections, setMultiSelections] = useState(
-          props.value?.length > 0 ? props.value : []
+          props.value?.length > 0 ? JSON.parse(props.value) : []
         );
      const [fitnessdisciplines, setFitnessDisciplines] = useState<any[]>([]);
 
@@ -32,14 +32,14 @@ const MultiSelect = (props: any) => {
      }
 
      function OnChange(e){
-          let id = e.map(d => {return d.id}).join(',');
-          props.onChange(id);
+          // let id = e.map(d => {return d.id}).join(',');
+          // props.onChange(id);
           setMultiSelections(e);
      }
 
-     if(props.value === multiSelections){
-          props.onChange(multiSelections.map(d => {return d.id}).join(','));
-     }
+     // if(props.value === multiSelections){
+          props.onChange(JSON.stringify(multiSelections));
+     // }
 
      FetchData();
 

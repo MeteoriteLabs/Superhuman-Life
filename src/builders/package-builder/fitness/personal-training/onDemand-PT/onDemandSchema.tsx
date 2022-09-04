@@ -2,9 +2,9 @@ import Upload from '../../../../../components/upload/upload';
 import DatesConfig from '../../../../../components/customWidgets/datesConfig';
 import FitnessSelect from '../../../../../components/customWidgets/fitnessMultiSelect';
 import EquipmentSelect from '../../../../../components/customWidgets/equipmentListSelect';
-import PtProgramDetails from '../widgets/ptProgramDetails';
-import PTPricingTable from '../widgets/ptPricingTable';
-import PTPreview from '../widgets/ptPreview';
+import PtProgramDetails from './onDemandProgramDetails';
+import PTPricingTable from './onDemandPricingtable';
+import PTPreview from './onDemandPreview';
 
 export const widgets = {
      datesConfig: DatesConfig,

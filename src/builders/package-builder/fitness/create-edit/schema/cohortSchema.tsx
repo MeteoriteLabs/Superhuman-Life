@@ -5,7 +5,7 @@ import LanguageList from '../widgets/languageSelect';
 import ProgramDetails from '../widgets/programDetails';
 import CourseDetails from '../widgets/course_details';
 import Upload from '../../../../../components/upload/upload';
-import DatesConfig from '../widgets/datesConfig';
+import DatesConfig from '../../../../../components/customWidgets/datesConfig';
 import FitnessSelect from '../../../../../components/customWidgets/fitnessSelect';
 import EquipmentSelect from '../../../../../components/customWidgets/equipmentListSelect';
 

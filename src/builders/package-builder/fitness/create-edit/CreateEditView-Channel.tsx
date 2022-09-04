@@ -1,7 +1,7 @@
 import React, { useContext, useImperativeHandle, useState } from 'react';
 import { useQuery, useMutation } from "@apollo/client";
 import ModalView from "./widgets/Modal";
-import {CREATE_CHANNEL_PACKAGE, CREATE_BOOKING_CONFIG_AND_TAG_CHANNEL, DELETE_PACKAGE, UPDATE_PACKAGE_STATUS, UPDATE_CHANNEL_COHORT_PACKAGE} from '../graphQL/mutations';
+import {CREATE_CHANNEL_PACKAGE, CREATE_BOOKING_CONFIG, DELETE_PACKAGE, UPDATE_PACKAGE_STATUS, UPDATE_CHANNEL_COHORT_PACKAGE} from '../graphQL/mutations';
 import {GET_FITNESS_PACKAGE_TYPE, GET_SINGLE_PACKAGE_BY_ID} from '../graphQL/queries';
 import AuthContext from "../../../../context/auth-context";
 import { schema, widgets } from './schema/channelSchema';
@@ -40,9 +40,9 @@ function CreateEditChannel(props: any, ref: any) {
         props.callback();
     }});
     const [deletePackage] = useMutation(DELETE_PACKAGE, { refetchQueries: ["GET_TABLEDATA"], onCompleted: (data) => {props.callback()}});
-    const [bookingConfig] = useMutation(CREATE_BOOKING_CONFIG_AND_TAG_CHANNEL, {onCompleted: (r: any) => { 
+    const [bookingConfig] = useMutation(CREATE_BOOKING_CONFIG, {onCompleted: (r: any) => { 
         console.log(r); notifyCreated(); modalTrigger.next(false); props.callback();
-     }})
+    }})
     const [CreatePackage] = useMutation(CREATE_CHANNEL_PACKAGE, { onCompleted: (r: any) => {
         bookingConfig({
             variables: {
@@ -114,9 +114,9 @@ function CreateEditChannel(props: any, ref: any) {
         details.tag = msg?.tags === null ? "" : msg.tags;
         details.user_permissions_user = msg.users_permissions_user.id;
         details.visibility = msg.is_private === true ? 1 : 0;
-        booking.acceptBooking = msg.booking_config.isAuto === true ? 1 : 0;
-        booking.maxBookingDay = msg.booking_config.bookingsPerDay;
-        booking.maxBookingMonth = msg.booking_config.BookingsPerMonth;
+        booking.acceptBooking = msg.booking_config?.isAuto === true ? 1 : 0;
+        booking.maxBookingDay = msg.booking_config?.bookingsPerDay;
+        booking.maxBookingMonth = msg.booking_config?.BookingsPerMonth;
         details.config = booking;
         details.thumbnail = msg.Thumbnail_ID;
         details.Upload = msg.Upload_ID === null ? {"VideoUrl": msg.video_URL} : {"upload": msg.Upload_ID};

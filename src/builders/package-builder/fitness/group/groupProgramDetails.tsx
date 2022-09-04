@@ -3,9 +3,9 @@ import {Row, Col, Form, InputGroup, FormControl, Button} from 'react-bootstrap';
 import {Typeahead} from 'react-bootstrap-typeahead';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 import { useQuery, gql } from '@apollo/client';
-import AuthContext from '../../../../../context/auth-context';
-import { flattenObj } from '../../../../../components/utils/responseFlatten';
-import AddFitnessAddressModal from "../../widgetCustom/AddFitnessAddressModal";
+import AuthContext from '../../../../context/auth-context';
+import { flattenObj } from '../../../../components/utils/responseFlatten';
+import AddFitnessAddressModal from "../widgetCustom/AddFitnessAddressModal";
 
 const PtProgramDetails = (props) => {
     const existingData = props.value === undefined ? undefined : JSON.parse(props.value);

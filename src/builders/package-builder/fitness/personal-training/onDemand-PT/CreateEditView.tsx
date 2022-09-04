@@ -1,14 +1,14 @@
 import React, { useContext, useImperativeHandle, useState } from 'react';
 import { useQuery, useMutation } from "@apollo/client";
-import ModalView from "../../../../components/modal";
-import { GET_SINGLE_PACKAGE_BY_ID, GET_FITNESS_PACKAGE_TYPES, ADD_SUGGESTION_NEW } from '../graphQL/queries';
-import { CREATE_PACKAGE, DELETE_PACKAGE, EDIT_PACKAGE, UPDATE_PACKAGE_STATUS, CREATE_BOOKING_CONFIG } from '../graphQL/mutations';
+import ModalView from "../../../../../components/modal";
+import { GET_SINGLE_PACKAGE_BY_ID, GET_FITNESS_PACKAGE_TYPES, ADD_SUGGESTION_NEW } from '../../graphQL/queries';
+import { CREATE_PACKAGE, DELETE_PACKAGE, EDIT_PACKAGE, UPDATE_PACKAGE_STATUS, CREATE_BOOKING_CONFIG } from '../../graphQL/mutations';
 import { Modal, Button} from 'react-bootstrap';
-import AuthContext from "../../../../context/auth-context";
-import StatusModal from "../../../../components/StatusModal/exerciseStatusModal";
-import { schema, widgets } from './schema/personalTraining';
+import AuthContext from "../../../../../context/auth-context";
+import StatusModal from "../../../../../components/StatusModal/exerciseStatusModal";
+import { schema, widgets } from './onDemandSchema';
 import {Subject} from 'rxjs';
-import {flattenObj} from '../../../../components/utils/responseFlatten';
+import {flattenObj} from '../../../../../components/utils/responseFlatten';
 import moment from 'moment';
 
 interface Operation {
@@ -19,7 +19,7 @@ interface Operation {
 
 function CreateEditExercise(props: any, ref: any) {
     const auth = useContext(AuthContext);
-    const personalTrainingSchema: { [name: string]: any; } = require("./personal-training.json");
+    const personalTrainingSchema: { [name: string]: any; } = require("./onDemand-PT.json");
     const [personalTrainingDetails, setPersonalTrainingDetails] = useState<any>({});
     const [fitnessTypes, setFitnessType] = useState<any[]>([]);
     const [operation, setOperation] = useState<Operation>({} as Operation);
@@ -31,7 +31,7 @@ function CreateEditExercise(props: any, ref: any) {
     console.log(operation.type);
 
     useQuery(GET_FITNESS_PACKAGE_TYPES, {
-        variables: {type: "Personal Training"},
+        variables: {type: "On-Demand PT"},
         onCompleted: (r: any) => {
             const flattenData = flattenObj({...r});
             setFitnessType(flattenData.fitnessPackageTypes);
@@ -113,7 +113,7 @@ function CreateEditExercise(props: any, ref: any) {
         Family
     }
 
-    const PRICING_TABLE_DEFAULT = [ {mrp: null, suggestedPrice: null, voucher: 0, duration: 30, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 90, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 180, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 360, sapienPricing: null}];
+    const PRICING_TABLE_DEFAULT = [{mrp: null, suggestedPrice: null, voucher: 0, duration: 1, sapienPricing: null}];
 
     function FillDetails(data: any) {
         const flattenedData = flattenObj({...data});
@@ -169,8 +169,6 @@ function CreateEditExercise(props: any, ref: any) {
     }
 
     function CreatePackage(frm: any) {
-        console.log(frm);
-        debugger;
         frmDetails = frm;
         frm.equipmentList = JSON.parse(frm.equipmentList).map((x: any) => x.id).join(', ').split(', ');
         frm.disciplines = JSON.parse(frm.disciplines).map((x: any) => x.id).join(', ').split(', ');
@@ -189,11 +187,11 @@ function CreateEditExercise(props: any, ref: any) {
                 address: frm.programDetails?.address[0]?.id,
                 disciplines: frm.disciplines,
                 // duration: 
-                ptoffline: frm.programDetails?.offline,
-                ptonline: frm.programDetails?.online,
+                ptoffline: frm.programDetails.mode === "1" ? 1 : null,
+                is_private: frm.visibility === 1 ? true : false,
+                ptonline: frm.programDetails.mode === "0" ? 1 : null,
                 restdays: frm.programDetails?.rest,
                 bookingleadday: frm.bookingleaddat,
-                is_private: frm.visibility === 1 ? true : false,
                 fitness_package_type: fitnessTypes[0].id,
                 fitnesspackagepricing: JSON.parse(frm.pricingDetail).filter((item: any) => item.mrp !== null),
                 ptclasssize: ENUM_FITNESSPACKAGE_PTCLASSSIZE[frm.classSize],
@@ -228,9 +226,9 @@ function CreateEditExercise(props: any, ref: any) {
                 address: frm.programDetails?.address[0]?.id,
                 disciplines: frm.disciplines,
                 // duration: 
-                ptoffline: frm.programDetails?.offline,
+                ptoffline: frm.programDetails.mode === "1" ? 1 : null,
                 is_private: frm.visibility === 1 ? true : false,
-                ptonline: frm.programDetails?.online,
+                ptonline: frm.programDetails.mode === "0" ? 1 : null,
                 restdays: frm.programDetails?.rest,
                 bookingleadday: frm.bookingleaddat,
                 fitness_package_type: fitnessTypes[0].id,
@@ -292,7 +290,7 @@ function CreateEditExercise(props: any, ref: any) {
 
     let name = "";
     if(operation.type === 'create'){
-        name="Create Personal Training Package";
+        name="Create On Demand PT";
     }else if(operation.type === 'edit'){
         name="Edit";
     }else if(operation.type === 'view'){
@@ -309,7 +307,7 @@ function CreateEditExercise(props: any, ref: any) {
                     name={name}
                     isStepper={true}
                     formUISchema={schema}
-                    stepperValues={["Creator", "Details", "Program", "Schedule", "Pricing", "Config","Preview"]}
+                    stepperValues={["Creator", "Details", "Program", "Pricing", "Config","Preview"]}
                     formSchema={personalTrainingSchema}
                     formSubmit={name === "View" ? () => { modalTrigger.next(false); } : (frm: any) => { OnSubmit(frm); }}
                     formData={personalTrainingDetails}

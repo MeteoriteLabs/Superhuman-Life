@@ -6,7 +6,7 @@ import { CREATE_PACKAGE, DELETE_PACKAGE, EDIT_PACKAGE, UPDATE_PACKAGE_STATUS, CR
 import { Modal, Button} from 'react-bootstrap';
 import AuthContext from "../../../../context/auth-context";
 import StatusModal from "../../../../components/StatusModal/exerciseStatusModal";
-import { schema, widgets } from './schema/personalTraining';
+import { schema, widgets } from './groupSchema';
 import {Subject} from 'rxjs';
 import {flattenObj} from '../../../../components/utils/responseFlatten';
 import moment from 'moment';
@@ -19,7 +19,7 @@ interface Operation {
 
 function CreateEditExercise(props: any, ref: any) {
     const auth = useContext(AuthContext);
-    const personalTrainingSchema: { [name: string]: any; } = require("./personal-training.json");
+    const personalTrainingSchema: { [name: string]: any; } = require("./group.json");
     const [personalTrainingDetails, setPersonalTrainingDetails] = useState<any>({});
     const [fitnessTypes, setFitnessType] = useState<any[]>([]);
     const [operation, setOperation] = useState<Operation>({} as Operation);
@@ -31,7 +31,7 @@ function CreateEditExercise(props: any, ref: any) {
     console.log(operation.type);
 
     useQuery(GET_FITNESS_PACKAGE_TYPES, {
-        variables: {type: "Personal Training"},
+        variables: {type: "Group Class"},
         onCompleted: (r: any) => {
             const flattenData = flattenObj({...r});
             setFitnessType(flattenData.fitnessPackageTypes);
@@ -133,7 +133,7 @@ function CreateEditExercise(props: any, ref: any) {
         details.equipmentList = JSON.stringify(msg.equipment_lists);
         details.disciplines = JSON.stringify(msg.fitnessdisciplines);
         details.channelinstantBooking = msg.groupinstantbooking;
-        details.classSize = ENUM_FITNESSPACKAGE_PTCLASSSIZE[msg.classSize];
+        details.classSize = msg.classsize;
         details.expiryDate = moment(msg.expirydate).format('YYYY-MM-DD');
         details.level = ENUM_FITNESSPACKAGE_LEVEL[msg.level];
         details.intensity = ENUM_FITNESSPACKAGE_INTENSITY[msg.Intensity];
@@ -146,7 +146,7 @@ function CreateEditExercise(props: any, ref: any) {
         booking.maxBookingDay = msg.booking_config?.bookingsPerDay;
         booking.maxBookingMonth = msg.booking_config?.BookingsPerMonth;
         details.config = booking;
-        details.programDetails = JSON.stringify({addressTag: msg.address === null ? 'At Client Address' : 'At My Address', address: [msg.address], mode: ENUM_FITNESSPACKAGE_MODE[msg.mode], offline: msg.ptoffline, online: msg.ptonline, rest: msg.restdays});
+        details.programDetails = JSON.stringify({addressTag: msg.address === null ? 'At Client Address' : 'At My Address', address: [msg.address], mode: ENUM_FITNESSPACKAGE_MODE[msg.mode], offline: msg.groupoffline, online: msg.grouponline, rest: msg.restdays});
         details.thumbnail = msg.Thumbnail_ID;
         details.Upload = msg.Upload_ID === null ? {"VideoUrl": msg.video_URL} : {"upload": msg.Upload_ID};
         details.datesConfig = {"expiryDate": msg.expiry_date, "publishingDate": msg.publishing_date};
@@ -189,8 +189,9 @@ function CreateEditExercise(props: any, ref: any) {
                 address: frm.programDetails?.address[0]?.id,
                 disciplines: frm.disciplines,
                 // duration: 
-                ptoffline: frm.programDetails?.offline,
-                ptonline: frm.programDetails?.online,
+                groupoffline: frm.programDetails?.offline,
+                grouponline: frm.programDetails?.online,
+                classsize: frm.classsize,
                 restdays: frm.programDetails?.rest,
                 bookingleadday: frm.bookingleaddat,
                 is_private: frm.visibility === 1 ? true : false,
@@ -228,14 +229,14 @@ function CreateEditExercise(props: any, ref: any) {
                 address: frm.programDetails?.address[0]?.id,
                 disciplines: frm.disciplines,
                 // duration: 
-                ptoffline: frm.programDetails?.offline,
+                groupoffline: frm.programDetails?.offline,
+                grouponline: frm.programDetails?.online,
+                classsize: frm.classsize,
                 is_private: frm.visibility === 1 ? true : false,
-                ptonline: frm.programDetails?.online,
                 restdays: frm.programDetails?.rest,
                 bookingleadday: frm.bookingleaddat,
                 fitness_package_type: fitnessTypes[0].id,
                 fitnesspackagepricing: JSON.parse(frm.pricingDetail).filter((item: any) => item.mrp !== null),
-                ptclasssize: ENUM_FITNESSPACKAGE_PTCLASSSIZE[frm.classSize],
                 users_permissions_user: frm.user_permissions_user,
                 publishing_date: moment(frm.datesConfig?.publishingDate).toISOString(),
                 expiry_date: moment(frm.datesConfig?.expiry_date).toISOString(),
@@ -292,7 +293,7 @@ function CreateEditExercise(props: any, ref: any) {
 
     let name = "";
     if(operation.type === 'create'){
-        name="Create Personal Training Package";
+        name="Create Group Package";
     }else if(operation.type === 'edit'){
         name="Edit";
     }else if(operation.type === 'view'){
@@ -309,7 +310,7 @@ function CreateEditExercise(props: any, ref: any) {
                     name={name}
                     isStepper={true}
                     formUISchema={schema}
-                    stepperValues={["Creator", "Details", "Program", "Schedule", "Pricing", "Config","Preview"]}
+                    stepperValues={["Creator", "Details", "Program", "Schedule", "Pricing", "Config", "Preview"]}
                     formSchema={personalTrainingSchema}
                     formSubmit={name === "View" ? () => { modalTrigger.next(false); } : (frm: any) => { OnSubmit(frm); }}
                     formData={personalTrainingDetails}
