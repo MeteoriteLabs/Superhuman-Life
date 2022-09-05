@@ -40,7 +40,6 @@ export default function ChangePassword() {
 
   
     function onSubmit(formData: any) {
-        // console.log(formData);
         updatePassword({ variables: { password: formData.confirm, userid: auth.userid } });
     }
 

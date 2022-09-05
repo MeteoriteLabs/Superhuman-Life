@@ -97,8 +97,8 @@ function CreateEditExercise(props: any, ref: any) {
         //if message exists - show form only for edit and view
         if (['edit', 'view'].indexOf(operation.type) > -1)
             modalTrigger.next(true);
-        else
-            OnSubmit(null);
+        // else
+        //     OnSubmit(null);
     }
 
     console.log(operation.type);

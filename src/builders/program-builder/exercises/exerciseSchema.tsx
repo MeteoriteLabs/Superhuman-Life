@@ -33,9 +33,11 @@ export const schema: any = {
   },
   equipment: {
     "ui:widget": "equipmentSearch",
+    "ui:help" : "it is required field"
   },
   muscleGroup: {
     "ui:widget": "muscleGroupSearch",
+    "ui:help" : "it is required field"
   },
   discipline: {
     "ui:widget": "fitnessSelect",
@@ -46,7 +48,7 @@ export const schema: any = {
     },
     Upload: {
       "ui:widget": (props: any) => {
-        return <Upload allowImage={true} allowVideo={true} onChange={props.onChange} value={props.value} />;
+        return <Upload allowImage={false} allowVideo={true} onChange={props.onChange} value={props.value} />;
       },
     },
   },
