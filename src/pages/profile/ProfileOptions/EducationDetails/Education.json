@@ -1,0 +1,29 @@
+{
+    "1": {
+         "type": "object",
+         "properties": {
+              "Institute_Name": {
+                   "type": "string",
+                   "title": "Institute Name"
+              },
+              "Specialization": {
+                   "type": "string",
+                   "title": "Specialization"
+              },
+              "Type_of_degree": {
+                "type": "string",
+                "title": "Type of degree",
+                "enum": [
+                 "Bachelors",
+                 "Master",
+                 "Diploma",
+                 "Certification"
+               ]
+           },
+              "Year": {
+                   "type": "string",
+                   "title": "Year"
+              }
+         }
+    }
+}

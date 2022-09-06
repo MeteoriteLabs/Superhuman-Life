@@ -101,7 +101,6 @@ function CreateEditRestDay(props: any, ref: any) {
         }
 
         function updateTemplateSessionsFunc(id: any){
-            debugger;
             sessionIds_new.push(id);
             if(frm.day.length === sessionIds_new.length){
                  updateTemplateSessions({
@@ -125,8 +124,6 @@ function CreateEditRestDay(props: any, ref: any) {
                             changemaker: auth.userid
                         },
                         onCompleted: (data: any) => {
-                            console.log(data);
-                            debugger;
                             if(window.location.pathname.split('/')[1] === 'client'){
                                 createSessionBooking({
                                     variables: {

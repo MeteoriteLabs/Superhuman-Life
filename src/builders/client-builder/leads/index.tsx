@@ -192,7 +192,7 @@ export default function Leads() {
      }
      useEffect(() => {
           if (searchFilter) {
-               console.log("changed");
+               // console.log("changed");
                //    console.log(searchFilter);
                setDataTable(
                     data.flatMap((Detail: any) => {
