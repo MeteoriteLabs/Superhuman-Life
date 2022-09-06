@@ -76,6 +76,8 @@ const ExerciseList = (props: any) => {
           }
           setSelected(values);
      }
+     // values[a][type] = parseInt(event.target.value);
+    
 
      props.onChange(selected);
      

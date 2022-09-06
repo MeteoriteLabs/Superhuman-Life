@@ -228,3 +228,15 @@ export const GET_EQUIPMENTLIST = gql`
     }
   }
 `
+export const GET_MUSCLEGROUPS = gql`
+     query muscleGroupQuery{
+          muscleGroups{
+          data {
+               id
+               attributes {
+               name
+               }
+          }
+          }
+     }
+  `;

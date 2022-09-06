@@ -75,7 +75,7 @@ const MuscleGroupList = (props: any) => {
      
      props.onChange(selected.map((e) => {
           return e.id;
-     }).join(',').toString())
+     }).join(','))
 
      FetchMuscleGroupList({ filter: searchInput, skip: skipval});
 

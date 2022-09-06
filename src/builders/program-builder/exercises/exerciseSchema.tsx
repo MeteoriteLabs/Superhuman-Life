@@ -1,6 +1,6 @@
 import TextEditor from "../../../components/customWidgets/textEditor";
-import EquipmentSearch from "../../../components/customWidgets/equipmentList";
-import MuscleGroupSearch from "../../../components/customWidgets/muscleGroupList";
+import EquipmentSearch from "../../../components/customWidgets/equipmentListSelect";
+import MuscleGroupSearch from "../../../components/customWidgets/muscleGroupMultiSelect";
 import FitnessSelect from "../../../components/customWidgets/fitnessSelect";
 import Upload from '../../../components/upload/upload';
 

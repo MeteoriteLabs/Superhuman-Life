@@ -70,11 +70,6 @@ export default function EventsTab() {
 
     function loadData(data: any) {
         const flattenData = flattenObj({...data});
-<<<<<<< HEAD
-        // console.log(flattenData);
-=======
-
->>>>>>> master
         setTableData(
             [...flattenData.exercises].map((detail) => {
                 return {
@@ -85,11 +80,11 @@ export default function EventsTab() {
                     }),
                     level: detail.exerciselevel,
                     muscleGroup: detail.muscle_groups.map((muscle: any) => {
-                        return muscle.name
-                    }).join(", "),
+                        return muscle.name+'  '
+                    }),
                     equipment: detail.equipment_lists.map((equipment: any) => {
-                        return equipment.name
-                    }).join(", "),
+                        return equipment.name+' '
+                    }),
                     updatedOn: moment(getDate(Date.parse(detail.updatedAt))).format("Do MMM YYYY"),
                     type: (detail.exercisetext) ? "Text": "Video" ,
                 }
