@@ -1,10 +1,16 @@
 import PricingTableChannel from '../widgets/pricingTableChannel';
 import PreviewChannel from '../widgets/previewChannel';
 import Upload from '../../../../../components/upload/upload';
+import DatesConfig from '../widgets/datesConfig';
+import FitnessSelect from '../../../../../components/customWidgets/fitnessSelect';
+import EquipmentSelect from '../../../../../components/customWidgets/equipmentListSelect';
 
 export const widgets = {
     pricingTableChannel: PricingTableChannel,
     previewChannel: PreviewChannel,
+    datesConfig: DatesConfig,
+    fitnessSelect: FitnessSelect,
+    equipmentSelect: EquipmentSelect
 };
 
 export const schema: any = {
@@ -13,6 +19,18 @@ export const schema: any = {
             "ui:options": {
                 "inline": true
             }
+        },
+        "intensity": {
+            "ui:widget": "radio",
+            "ui:options": {
+                "inline": true
+            }
+        },
+        "discpline": {
+            "ui:widget": "fitnessSelect",
+        },
+        "equipment": {
+            "ui:widget": "equipmentSelect",
         },
         "About": {
             "ui:widget": "textarea",
@@ -26,15 +44,24 @@ export const schema: any = {
                 "rows": 3
             }
         },
+        "datesConfig": {
+            "ui:widget": "datesConfig"
+        },
         "thumbnail": {
             "ui:widget": (props: any) => {
                 return <Upload allowImage={true} allowVideo={true} onChange={props.onChange} value={props.value} title={'Thumbnail'} />;
             },
         },
-        "upload": {
-            "ui:widget": (props: any) => {
-                return <Upload allowImage={true} allowVideo={true} onChange={props.onChange} value={props.value} title={'upload picture or video'}/>;
-            },
+        "Upload": {
+            "upload": {
+                "ui:widget": (props: any) => {
+                    console.log(props)
+                    return <Upload allowImage={true} allowVideo={true} onChange={props.onChange} value={props.value} />;
+                },
+            },  
+            "VideoUrl": {
+                "ui:placeholder": "https://"
+            }
         },
         "visibility": {
             "ui:widget": "radio",

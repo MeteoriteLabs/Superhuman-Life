@@ -1,22 +1,31 @@
 import React from 'react';
 import {Carousel, Card} from 'react-bootstrap';
 import SocialMediaComponent from '../../widgetCustom/Preview/SocialMediaComponent';
+import DisplayImage from '../../../../../components/DisplayImage/index';
 
 const PreviewChannel = (props) => {
 
-    const formData = props.formContext;
-    formData.pricing = formData.pricing === "free" ? "free" : JSON.parse(formData.pricing);
+    console.log(props.formContext)
+
+    const formData = props?.formContext;
+    var pricing;
+    if(typeof(formData.pricing) === 'string'){
+        pricing = formData?.pricing === "free" ? "free" : JSON.parse(formData?.pricing).filter((item) => item.mrp !== null);
+    }else {
+        pricing = [...props?.formContext?.pricing];
+    }
 
     function handleCardRender(){
-        if(formData.pricing === 'free'){
+        if(pricing === 'free'){
             return (
                 <Carousel.Item key={1}>
                     <Card className="text-center mx-auto" style={{ borderRadius: '20px', width: '80%'}}>
                         <Card.Body className='pr-0 py-0'>
                             <div className='d-flex justify-content-between' style={{ borderBottom: '1px dashed gray' }}>
-                                <div className='pt-3'>
-                                    <img src="https://picsum.photos/200" style={{ borderRadius: '10px' }} alt="random" />
-                                </div>
+                                {/* <div className='pt-3'> */}
+                                    <DisplayImage imageName={props?.formContext?.thumbnail ? props?.formContext?.thumbnail : null} defaultImageUrl="https://picsum.photos/200" imageCSS="rounded-lg w-25 m-2"/>
+                                    {/* <img src="https://picsum.photos/200" style={{ borderRadius: '10px' }} alt="random" /> */}
+                                {/* </div> */}
                                 <div className='ml-4 pt-4 text-left d-flex flex-column justify-content-start'>
                                     <Card.Title>{formData.channelName}</Card.Title>
                                     <p>{formData.About}</p>
@@ -74,16 +83,18 @@ const PreviewChannel = (props) => {
             )
         }else {
             return (
-                formData.pricing.map((item, index) => {
+                pricing.map((item, index) => {
                     return (
                         console.log(item),
                         <Carousel.Item key={index}>
                             <Card className="text-center mx-auto" style={{ borderRadius: '20px', width: '80%'}}>
                                 <Card.Body className='pr-0 py-0'>
                                     <div className='d-flex justify-content-between' style={{ borderBottom: '1px dashed gray' }}>
-                                        <div className='pt-3'>
-                                            <img src="https://picsum.photos/200" style={{ borderRadius: '10px' }} alt="random" />
-                                        </div>
+                                        {/* <div className='pt-3 text-left mb-2'> */}
+                                            <DisplayImage imageName={props?.formContext?.thumbnail ? props?.formContext?.thumbnail : null} defaultImageUrl="https://picsum.photos/200"
+                                            imageCSS="rounded-lg w-25 m-2"/>
+                                            {/* <img src="https://picsum.photos/200" className='mb-2' style={{ borderRadius: '10px' }} alt="random" /> */}
+                                        {/* </div> */}
                                         <div className='ml-4 pt-4 text-left d-flex flex-column justify-content-start'>
                                             <Card.Title>{formData.channelName}</Card.Title>
                                             <p>{formData.About}</p>

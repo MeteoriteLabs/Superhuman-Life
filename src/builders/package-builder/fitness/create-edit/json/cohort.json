@@ -4,10 +4,9 @@
         "type": "object",
         "required": [
             "packageName",
-            "tag",
             "level",
-            "startDate",
-            "endDate"
+            "intensity",
+            "dates"
         ],
        "properties": {
             "packageName": {
@@ -17,6 +16,12 @@
             "tag": {
                 "type": "string",
                 "title": "Tags"
+            },
+            "discpline": {
+                "type": "string"
+            },
+            "equipment": {
+                "type": "string"
             },
            "level": {
                 "type": "number",
@@ -29,28 +34,32 @@
                     "No level"
                 ]
             },
-            "startDate": {
-                "type": "string",
-                "format": "date",
-                "title": "Start Date"
+            "intensity": {
+                "type": "number",
+                "title": "Intensity",
+                "enum": [0, 1, 2],
+                "enumNames": [
+                    "Low",
+                    "Moderate",
+                    "High"
+                ]
             },
-            "endDate": {
-                "type": "string",
-                "format": "date",
-                "title": "End Date"
+            "dates": {
+                "type": "string"
             }
+            
         }   
     },
     "2": {
        "title": "",
        "type": "object",
        "required": [
-           "About",
-           "Benifits",
-           "languages",
-           "classSize",
-           "upload",
-           "thumbnail"
+        "About",
+        "Benifits",
+        "languages",
+        "classSize",
+        "thumbnail",
+        "Upload"
        ],
        "properties": {
             "About": {
@@ -67,17 +76,41 @@
             },
             "classSize": {
                 "type": "number",
-                "title": "Class Size"
+                "title": "Class Size",
+                "minimum": 100,
+                "maximum": 200
             },
             "thumbnail": {
                 "type": "string"
             },
-            "upload": {
-                "type": "string"
-            },
-            "VideoUrl": {
-                "type": "string",
-                "title": "Add Vieo Url"
+            "Upload": {
+                "type": "object",
+                "oneOf": [
+                    {
+                        "title": "Upload picture or video", 
+                        "properties": {
+                            "upload": {
+                                "type": "string"
+                            }
+                      },
+                      "required": [
+                        "upload"
+                      ]
+                    },
+                    {
+                    "title": "Video URL", 
+                      "properties": {
+                        "VideoUrl": {
+                          "type": "string",
+                          "format": "uri"
+                        }
+                      },
+                      "required": [
+                        "VideoUrl"
+                      ]
+                    }
+                ]
+
             }
         }
     },
@@ -85,8 +118,8 @@
         "title": "",
        "type": "object",
        "required": [
-           "programDetails",
-           "courseDetails"
+            "programDetails",
+            "courseDetails"
        ],
        "properties": {
            "programDetails": {
@@ -110,7 +143,7 @@
         "title": "",
        "type": "object",
        "required": [
-           "pricing"
+        "pricing"
        ],
        "properties": {
             "pricing": {
@@ -122,10 +155,9 @@
         "title": "Package Settings",
        "type": "object",
        "required": [
-           "visibility",
-           "publishingDate",
-           "expiryDate",
-           "config"
+        "visibility",
+        "datesConfig",
+        "config"
        ],
        "properties": {
             "visibility": {
@@ -137,15 +169,8 @@
                     "Private"
                 ]
             },
-            "publishingDate": {
-                "type": "string",
-                "format": "date",
-                "title": "Publishing Date"
-            },
-            "expiryDate": {
-                "type": "string",
-                "format": "date",
-                "title": "Expiry Date"
+            "datesConfig": {
+                "type": "string"
             },
             "config": {
                 "title": "Booking Config",
@@ -167,11 +192,15 @@
                     },
                     "maxBookingMonth": {
                         "type": "number",
-                        "title": "Maximum booking/per month"
+                        "title": "Maximum booking/per month",
+                        "minimum": 2,
+                        "maximum": 50
                     },
                     "maxBookingDay": {
                         "type": "number",
-                        "title": "Maximum booking/per day"
+                        "title": "Maximum booking/per day",
+                        "minimum": 2,
+                        "maximum": 10
                     }
                 }
             }

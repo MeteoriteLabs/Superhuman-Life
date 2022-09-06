@@ -8,6 +8,8 @@ import { flattenObj } from '../../../../../components/utils/responseFlatten';
 
 const LocationList = (props) => {
 
+    console.log(props.value);
+
     const auth = useContext(AuthContext); 
     const [singleSelections, setSingleSelections] = useState<any[]>([]);
     const [addresses, setAddresses] = useState<any[]>([]);
