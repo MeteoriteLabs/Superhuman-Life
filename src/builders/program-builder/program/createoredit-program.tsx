@@ -23,7 +23,7 @@ function CreateEditProgram(props: any, ref: any) {
     
 
     const [createProgram] = useMutation(CREATE_PROGRAM, { onCompleted: (r: any) => {  modalTrigger.next(false); props.callback() } });
-    const [editProgram] = useMutation(UPDATE_PROGRAM, {onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); props.callback() } });
+    const [editProgram] = useMutation(UPDATE_PROGRAM, {onCompleted: (r: any) => { modalTrigger.next(false); props.callback() } });
     const [deleteProgram] = useMutation(DELETE_PROGRAM, { refetchQueries: ["GET_TABLEDATA"], onCompleted: () => {props.callback()} });
 
     const modalTrigger =  new Subject();
@@ -72,7 +72,7 @@ function CreateEditProgram(props: any, ref: any) {
     function CreateProgram(frm: any) {
         const sdate = moment().format("YYYY-MM-DD");
         const edate = moment().add(frm.duration, "days").format("YYYY-MM-DD");
-        console.log(frm);
+        
         createProgram({ variables: {
             title: frm.programName,
             fitnessdisciplines: frm.discipline.split(","),

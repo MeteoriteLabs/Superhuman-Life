@@ -66,10 +66,17 @@ function CreateEditExercise(props: any, ref: any) {
         const flattenedData = flattenObj({ ...data });
         let details: any = {};
         let msg = flattenedData.exercises;
+<<<<<<< HEAD
 
         details.exercise = msg[0].exercisename;
 
         details.level = ENUM_EXERCISES_EXERCISELEVEL[msg[0].exerciselevel];
+=======
+        
+        details.exercise = msg[0].exercisename;
+        
+        details.level = ENUM_EXERCISES_EXERCISELEVEL[ msg[0].exerciselevel];
+>>>>>>> master
         details.discipline = msg[0].fitnessdisciplines.map((val: any) => {
             return val;
         });
@@ -92,6 +99,7 @@ function CreateEditExercise(props: any, ref: any) {
     }
 
     function FetchData() {
+<<<<<<< HEAD
         useQuery(FETCH_DATA, { variables: { id: operation.id }, skip: (operation.type === 'create'), onCompleted: (e: any) => { FillDetails(e) } });
     }
 
@@ -111,10 +119,30 @@ function CreateEditExercise(props: any, ref: any) {
                 users_permissions_user: frm.user_permissions_user
             }
         });
+=======
+        useQuery(FETCH_DATA, { variables: { id: operation.id }, skip: (operation.type === 'create'),onCompleted: (e: any) => { FillDetails(e) } });
+    }
+
+    function CreateExercise(frm: any) {
+        
+        createExercise({ variables: {
+            exercisename: frm.exercise,
+            exerciselevel: ENUM_EXERCISES_EXERCISELEVEL[frm.level],
+            fitnessdisciplines: frm.discipline.split(","),
+            exerciseminidescription: frm.miniDescription,
+            exercisetext: (!frm.addExercise.AddText ? null : frm.addExercise.AddText),
+            exerciseurl: (!frm.addExercise.AddURL ? null: frm.addExercise.AddURL),
+            exerciseupload: (!frm.addExercise.Upload ? null : frm.addExercise.Upload),
+            equipment_lists: frm.equipment.split(","),
+            exercisemusclegroups: frm.muscleGroup.split(","),
+            users_permissions_user: frm.user_permissions_user
+        } });
+>>>>>>> master
     }
 
     function EditExercise(frm: any) {
 
+<<<<<<< HEAD
         editExercise({
             variables: {
                 exerciseid: operation.id,
@@ -129,6 +157,20 @@ function CreateEditExercise(props: any, ref: any) {
                 users_permissions_user: frm.user_permissions_user
             }
         });
+=======
+        editExercise({ variables: {
+            exerciseid: operation.id,
+            exercisename: frm.exercise,
+            exerciselevel: ENUM_EXERCISES_EXERCISELEVEL[frm.level],
+            fitnessdisciplines: frm.discipline.split(","),
+            exerciseminidescription: frm.miniDescription,
+            exercisetext: (!frm.addExercise.AddText ? null : frm.addExercise.AddText),
+            exerciseurl: (!frm.addExercise.AddURL ? null: frm.addExercise.AddURL),
+            equipment_lists: frm.equipment.split(","),
+            exercisemusclegroups: frm.muscleGroup.split(","),
+            users_permissions_user: frm.user_permissions_user
+        } });
+>>>>>>> master
     }
 
     function ViewExercise(frm: any) {
@@ -139,7 +181,11 @@ function CreateEditExercise(props: any, ref: any) {
 
     function DeleteExercise(id: any) {
 
+<<<<<<< HEAD
         deleteExercise({ variables: { id: id } });
+=======
+        deleteExercise({ variables: { id: id }});
+>>>>>>> master
     }
 
     function OnSubmit(frm: any) {
@@ -174,6 +220,7 @@ function CreateEditExercise(props: any, ref: any) {
 
     return (
         <>
+<<<<<<< HEAD
             <ModalView
                 name={name}
                 isStepper={false}
@@ -194,6 +241,28 @@ function CreateEditExercise(props: any, ref: any) {
                 buttonRight="Yes"
                 onClick={() => { DeleteExercise(operation.id) }}
             />}
+=======
+                <ModalView
+                    name={name}
+                    isStepper={false}
+                    formUISchema={schema}
+                    formSchema={exerciseSchema}
+                    formSubmit={name === "View" ? () => { modalTrigger.next(false); } : (frm: any) => { OnSubmit(frm); }}
+                    formData={exerciseDetails}
+                    widgets={widgets}
+                    modalTrigger={modalTrigger}
+                />
+                
+             {operation.type ==="delete" && <StatusModal
+             modalTitle="Delete"
+             EventConnectedDetails={workoutDetails}
+             ExistingEventId={operation.id}
+             modalBody="Do you want to delete this exercise?"
+             buttonLeft="Cancel"
+             buttonRight="Yes"
+             onClick={() => {DeleteExercise(operation.id)}}
+             />}  
+>>>>>>> master
         </>
     )
 }

@@ -34,7 +34,11 @@ export default function ProfileCard() {
                     {/* user information */}
                     <Col md={{ span: 7, offset: 1}} sm={12} className="p-4">
                             <h3 className="text-white">{profileData
+<<<<<<< HEAD
                             ? profileData.First_Name : null} {profileData? profileData.Last_Name
+=======
+                            ? `${profileData.First_Name} ${profileData.Last_Name}`
+>>>>>>> master
                             : null}
                             </h3>
                             <h5 className="text-white">{profileData && profileData.designations && (profileData.designations.data.length > 0) ? profileData.designations.data[0].attributes.Designation_title : null}</h5>

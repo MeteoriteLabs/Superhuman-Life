@@ -29,7 +29,7 @@ var tus: any = require("tus-js-client");
 
 const UploadImageToS3WithNativeSdk = (props: any) => {
 
-     console.log(props);
+     // console.log(props);
 
      const [progress, setProgress] = useState<any>(0);
      const [selectedFile, setSelectedFile] = useState<any>(null);
@@ -223,7 +223,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                );
           }
 
-          console.log(props.value.split(".")[1]);
+          // console.log(props.value.split(".")[1]);
      }
 
      if (props.value && !videoID) {
@@ -382,7 +382,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
           // eslint-disable-next-line react-hooks/exhaustive-deps
      }, [url]);
 
-     console.log(url);
+     // console.log(url);
 
      return (
           <div>

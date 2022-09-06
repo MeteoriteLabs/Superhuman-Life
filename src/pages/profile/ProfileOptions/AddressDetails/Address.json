@@ -1,0 +1,48 @@
+{
+    "1": {
+         "type": "object",
+         "properties": {
+              "House_Number": {
+                 "type": "string",
+                 "title": "House Number"
+              },
+              "address1": {
+                   "type": "string",
+                   "title": "Address 1"
+              },
+              "address2": {
+                   "type": "string",
+                   "title": "Address 2"
+              },
+              "city": {
+                   "type": "string",
+                   "title": "City"
+              },
+              "state": {
+                   "type": "string",
+                   "title": "State"
+              },
+              "country": {
+                   "type": "string",
+                   "title": "Country"
+              },
+              "zipcode": {
+                   "type": "string",
+                   "title": "Zipcode"
+              },
+              "Title": {
+               "type": "string",
+               "title": "Address Label"
+          },
+              "type_address": {
+                "type": "string",
+                "title": "Address type",
+                "enum": [
+                    "Home",
+                    "Work",
+                    "Other"
+                  ]
+              }
+         }
+    }
+}
