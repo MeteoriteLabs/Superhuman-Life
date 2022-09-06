@@ -11,7 +11,6 @@ import moment from 'moment';
 // import {AvailabilityCheck} from '../../../program-builder/program-template/availabilityCheck';
 import { Modal, Button } from 'react-bootstrap';
 // import StatusModal from "../../../../components/StatusModal/exerciseStatusModal";
-import toast, { Toaster } from 'react-hot-toast';
 
 interface Operation {
     id: string;
@@ -32,16 +31,14 @@ function CreateEditChannel(props: any, ref: any) {
     const [statusModalShow, setStatusModalShow] = useState(false);
     let frmDetails: any = {};
 
-    const notifyCreated = () => toast.success("Package Created Successfully!", { position: "top-right" });
-    const notifyUpdated = () => toast.success("Package Updated Successfully!", { position: "top-right" });
 
-    const [editPackageDetails] = useMutation(UPDATE_CHANNEL_COHORT_PACKAGE, {onCompleted: (data) => {modalTrigger.next(false); notifyUpdated(); props.callback();}})
+    const [editPackageDetails] = useMutation(UPDATE_CHANNEL_COHORT_PACKAGE, {onCompleted: (data) => {modalTrigger.next(false); props.callback();}})
     const [updatePackageStatus] = useMutation(UPDATE_PACKAGE_STATUS, {onCompleted: (data) => {
         props.callback();
     }});
     const [deletePackage] = useMutation(DELETE_PACKAGE, { refetchQueries: ["GET_TABLEDATA"], onCompleted: (data) => {props.callback()}});
     const [bookingConfig] = useMutation(CREATE_BOOKING_CONFIG_AND_TAG_CHANNEL, {onCompleted: (r: any) => { 
-        console.log(r); notifyCreated(); modalTrigger.next(false); props.callback();
+        console.log(r); modalTrigger.next(false); props.callback();
      }})
     const [CreatePackage] = useMutation(CREATE_CHANNEL_PACKAGE, { onCompleted: (r: any) => {
         bookingConfig({
@@ -311,8 +308,6 @@ function CreateEditChannel(props: any, ref: any) {
                         <Button variant='success' onClick={() => {updateChannelPackageStatus(operation.id, operation.current_status)}}>Yes</Button>
                     </Modal.Footer>
                     </Modal>
-
-            <Toaster />
 
         </>
     )
