@@ -19,9 +19,7 @@ export default function ProfilePage() {
     >
       <Tab eventKey="profile" title="Profile">
         <ProfileCard />
-        {/* <Container fluid> */}
           <ProfileNavTab />
-        {/* </Container> */}
       </Tab>
 
       <Tab eventKey="changemakerssettings" title="Changemaker Settings">
