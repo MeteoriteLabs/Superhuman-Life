@@ -98,7 +98,7 @@ function CreateEducation(props: any, ref: any) {
 
           setEducationDetails(details);
 
-     }, [operation.id])
+     }, [operation.id, prefill])
 
      // Close form after update    
      function CloseForm() {
