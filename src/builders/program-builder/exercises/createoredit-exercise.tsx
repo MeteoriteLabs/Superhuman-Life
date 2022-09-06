@@ -79,8 +79,10 @@ function CreateEditExercise(props: any, ref: any) {
         const flattenedData = flattenObj({ ...data });
         let details: any = {};
         let msg = flattenedData.exercises;
+        
         details.exercise = msg[0].exercisename;
-        details.level = ENUM_EXERCISES_EXERCISELEVEL[msg[0].exerciselevel];
+        
+        details.level = ENUM_EXERCISES_EXERCISELEVEL[ msg[0].exerciselevel];
         details.discipline = msg[0].fitnessdisciplines.map((val: any) => {
             return val;
         });
@@ -94,64 +96,58 @@ function CreateEditExercise(props: any, ref: any) {
         details.user_permissions_user = msg[0].users_permissions_user.id;
         details.addExercise = handleAddExerciseShowUp(msg[0]);
         setExerciseDetails(details);
-        console.log('details', details);
         //if message exists - show form only for edit and view
         if (['edit', 'view'].indexOf(operation.type) > -1)
             modalTrigger.next(true);
-        // else
-        //     OnSubmit(null);
+        else
+            OnSubmit(null);
     }
 
     function FetchData() {
-        useQuery(FETCH_DATA, { variables: { id: operation.id }, skip: (operation.type === 'create'), onCompleted: (e: any) => { FillDetails(e) } });
+        useQuery(FETCH_DATA, { variables: { id: operation.id }, skip: (operation.type === 'create'),onCompleted: (e: any) => { FillDetails(e) } });
     }
 
     function CreateExercise(frm: any) {
-        console.log(frm);
-        createExercise({
-            variables: {
-                exercisename: frm.exercise,
-                exerciselevel: ENUM_EXERCISES_EXERCISELEVEL[frm.level],
-                fitnessdisciplines: frm.discipline.split(","),
-                exerciseminidescription: frm.miniDescription,
-                exercisetext: (!frm.addExercise.AddText ? null : frm.addExercise.AddText),
-                exerciseurl: (!frm.addExercise.AddURL ? null : frm.addExercise.AddURL),
-                exerciseupload: (!frm.addExercise.Upload ? null : frm.addExercise.Upload),
-                equipment_lists: frm.equipment.split(","),
-                exercisemusclegroups: frm.muscleGroup.split(","),
-                users_permissions_user: frm.user_permissions_user
-            }
-        });
+        
+        createExercise({ variables: {
+            exercisename: frm.exercise,
+            exerciselevel: ENUM_EXERCISES_EXERCISELEVEL[frm.level],
+            fitnessdisciplines: frm.discipline.split(","),
+            exerciseminidescription: frm.miniDescription,
+            exercisetext: (!frm.addExercise.AddText ? null : frm.addExercise.AddText),
+            exerciseurl: (!frm.addExercise.AddURL ? null: frm.addExercise.AddURL),
+            exerciseupload: (!frm.addExercise.Upload ? null : frm.addExercise.Upload),
+            equipment_lists: frm.equipment.split(","),
+            exercisemusclegroups: frm.muscleGroup.split(","),
+            users_permissions_user: frm.user_permissions_user
+        } });
     }
 
     function EditExercise(frm: any) {
-        console.log('edit message', frm);
-        // useMutation(UPDATE_MESSAGE, { variables: frm, onCompleted: (d: any) => { console.log(d); } });
-        editExercise({
-            variables: {
-                exerciseid: operation.id,
-                exercisename: frm.exercise,
-                exerciselevel: ENUM_EXERCISES_EXERCISELEVEL[frm.level],
-                fitnessdisciplines: frm.discipline.split(","),
-                exerciseminidescription: frm.miniDescription,
-                exercisetext: (!frm.addExercise.AddText ? null : frm.addExercise.AddText),
-                exerciseurl: (!frm.addExercise.AddURL ? null : frm.addExercise.AddURL),
-                equipment_lists: frm.equipment.split(","),
-                exercisemusclegroups: frm.muscleGroup.split(","),
-                users_permissions_user: frm.user_permissions_user
-            }
-        });
+
+        editExercise({ variables: {
+            exerciseid: operation.id,
+            exercisename: frm.exercise,
+            exerciselevel: ENUM_EXERCISES_EXERCISELEVEL[frm.level],
+            fitnessdisciplines: frm.discipline.split(","),
+            exerciseminidescription: frm.miniDescription,
+            exercisetext: (!frm.addExercise.AddText ? null : frm.addExercise.AddText),
+            exerciseurl: (!frm.addExercise.AddURL ? null: frm.addExercise.AddURL),
+            equipment_lists: frm.equipment.split(","),
+            exercisemusclegroups: frm.muscleGroup.split(","),
+            users_permissions_user: frm.user_permissions_user
+        } });
     }
 
     function ViewExercise(frm: any) {
-        console.log('view message');
+
         //use a variable to set form to disabled/not editable
         useMutation(UPDATE_EXERCISE, { variables: frm, onCompleted: (d: any) => { console.log(d); } })
     }
 
     function DeleteExercise(id: any) {
-        console.log('delete message');
-        deleteExercise({ variables: { id: id } });
+
+        deleteExercise({ variables: { id: id }});
     }
 
     function OnSubmit(frm: any) {
@@ -186,28 +182,26 @@ function CreateEditExercise(props: any, ref: any) {
 
     return (
         <>
-            <ModalView
-                name={name}
-                isStepper={false}
-                formUISchema={schema}
-                formSchema={exerciseSchema}
-                formSubmit={name === "View" ? () => { modalTrigger.next(false); } : (frm: any) => { OnSubmit(frm); }}
-                formData={operation.type === 'create' ? emptyExerciseState : exerciseDetails}
-                widgets={widgets}
-                modalTrigger={modalTrigger}
-            />
-
-            {operation.type === "delete" && <StatusModal
-                modalTitle="Delete"
-                EventConnectedDetails={workoutDetails}
-                ExistingEventId={operation.id}
-                modalBody="Do you want to delete this exercise?"
-                buttonLeft="Cancel"
-                buttonRight="Yes"
-                onClick={() => { DeleteExercise(operation.id) }}
-            />}
-
-
+                <ModalView
+                    name={name}
+                    isStepper={false}
+                    formUISchema={schema}
+                    formSchema={exerciseSchema}
+                    formSubmit={name === "View" ? () => { modalTrigger.next(false); } : (frm: any) => { OnSubmit(frm); }}
+                    formData={operation.type === 'create' ? emptyExerciseState : exerciseDetails}
+                    widgets={widgets}
+                    modalTrigger={modalTrigger}
+                />
+                
+             {operation.type ==="delete" && <StatusModal
+             modalTitle="Delete"
+             EventConnectedDetails={workoutDetails}
+             ExistingEventId={operation.id}
+             modalBody="Do you want to delete this exercise?"
+             buttonLeft="Cancel"
+             buttonRight="Yes"
+             onClick={() => {DeleteExercise(operation.id)}}
+             />}  
         </>
     )
 }

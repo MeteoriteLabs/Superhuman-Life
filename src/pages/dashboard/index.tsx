@@ -26,8 +26,7 @@ export default function Dashboard() {
     return (
         <>
 
-        <Container fluid className="lobby__container pt-5 mt-3"  style={{overflow: 'hidden'}}>
-
+        <Container fluid className="lobby__container"  style={{overflow: 'hidden'}}>
             {/* main options on lobby for insights, blog, dashboard, website, support and learn */}
             <Row>
                 {ImageCaptions.map((data, index) => ( 

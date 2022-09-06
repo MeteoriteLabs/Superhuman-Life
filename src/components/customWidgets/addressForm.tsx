@@ -1,5 +1,4 @@
-import React from "react";
-import { Col, Container, Row, Form } from "react-bootstrap";
+import { Col, Row, Form } from "react-bootstrap";
 
 function AddressForm(props) {
   const handleChange = (e) => {
@@ -9,12 +8,10 @@ function AddressForm(props) {
     props.onChange(JSON.stringify({ ...formValues, [name]: value }));
   };
 
-  console.log(props);
   return (
-    <Container className="mt-3">
+    <>
       <h6>Address</h6>
 
-      <Form>
         <Row>
           <Col>
             {" "}
@@ -111,8 +108,7 @@ function AddressForm(props) {
             </Form.Group>
           </Col>
         </Row>
-      </Form>
-    </Container>
+    </>
   );
 }
 
