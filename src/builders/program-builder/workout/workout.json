@@ -48,7 +48,7 @@
              },
              "benefits": {
                 "type": "string",
-                "title": "Benifits"
+                "title": "Benefits"
             },
             "addWorkout": {
                 "title": "Workout Agenda",

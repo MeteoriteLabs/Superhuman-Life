@@ -5,6 +5,8 @@ import { GET_EXERCISELIST } from '../../builders/program-builder/exercises/queri
 import AuthContext from "../../context/auth-context";
 import {flattenObj} from '../utils/responseFlatten';
 
+const MIN_VALUE = 0;
+
 const ExerciseList = (props: any) => {
 
      const auth = useContext(AuthContext);
@@ -119,7 +121,7 @@ const ExerciseList = (props: any) => {
                                                   <InputGroup className="mb-3">
                                                        <FormControl
                                                             type="number"
-                                                            min="0"
+                                                            min={0}
                                                             placeholder="Enter reps"
                                                             value={val?.reps}
                                                             aria-describedby="basic-addon2"
@@ -134,7 +136,7 @@ const ExerciseList = (props: any) => {
                                                   <InputGroup className="mb-3">
                                                        <FormControl
                                                             type="number"
-                                                            min="0"
+                                                            min={0}
                                                             placeholder="Enter sets"
                                                             value={val?.sets}
                                                             aria-describedby="basic-addon2"
@@ -149,7 +151,7 @@ const ExerciseList = (props: any) => {
                                                   <InputGroup className="mb-3">
                                                        <FormControl
                                                             type="number"
-                                                            min="0"
+                                                            min={0}
                                                             placeholder="Enter rest time"
                                                             value={val?.restTime}
                                                             aria-describedby="basic-addon2"
@@ -167,7 +169,7 @@ const ExerciseList = (props: any) => {
                                              <InputGroup className="mb-3">
                                                   <FormControl
                                                        type="number"
-                                                       min="0"
+                                                       min={0}
                                                        placeholder="Weight"
                                                        value={val.weights}
                                                        aria-describedby="basic-addon2"
@@ -183,7 +185,7 @@ const ExerciseList = (props: any) => {
                                                   <InputGroup className="mb-3">
                                                        <FormControl
                                                             type="number"
-                                                            min="0"
+                                                            min={0}
                                                             placeholder="Duration"
                                                             value={val?.duration}
                                                             aria-describedby="basic-addon2"
