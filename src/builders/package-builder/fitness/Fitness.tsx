@@ -10,6 +10,7 @@ import CreateEditView from "./CreateEditView";
 import CreateEditViewPersonalTraining from './personal-training/CreateEditView';
 import CreateEditViewOnDemandPt from './personal-training/onDemand-PT/CreateEditView';
 import CreateEditViewGroupClass from './group/CreateEditView';
+import CreateEditViewClassicClass from './classic/CreateOrEdit';
 import CreateEditViewChannel from './create-edit/CreateEditView-Channel';
 import CreateEditViewCohort from "./create-edit/CreateEditView-Cohort";
 import { GET_FITNESS, GET_FITNESS_PACKAGE_TYPES } from "./graphQL/queries";
@@ -24,6 +25,7 @@ export default function FitnessTab(props) {
     const createEditViewPersonalTrainingRef = useRef<any>(null);
     const CreateEditViewOnDemandPtRef = useRef<any>(null);
     const CreateEditViewGroupClassRef = useRef<any>(null);
+    const CreateEditViewClassicClassRef = useRef<any>(null);
     const createEditViewChannelRef = useRef<any>(null);
     const createEditViewCohortRef = useRef<any>(null);
     const [selectedDuration, setSelectedDuration] = useState<any>('');
@@ -41,8 +43,9 @@ export default function FitnessTab(props) {
             case 'Group Class':
                 CreateEditViewGroupClassRef.current.TriggerForm({id: id, type: actionType, actionType: type, current_status: current_status});
                 break;
-            // case 'Classic Class':
-
+            case 'Classic Class':
+                CreateEditViewClassicClassRef.current.TriggerForm({id: id, type: actionType, actionType: type, current_status: current_status});
+                break;
             case 'Live Stream Channel':
                 createEditViewChannelRef.current.TriggerForm({id: id, type: actionType, actionType: type, current_status: current_status});
                 break;
@@ -293,6 +296,7 @@ export default function FitnessTab(props) {
                             <CreateEditViewPersonalTraining ref={createEditViewPersonalTrainingRef} callback={refetchQueryCallback}/>
                             <CreateEditViewOnDemandPt ref={CreateEditViewOnDemandPtRef}  callback={refetchQueryCallback}/>
                             <CreateEditViewGroupClass ref={CreateEditViewGroupClassRef}  callback={refetchQueryCallback}/>
+                            <CreateEditViewClassicClass ref={CreateEditViewClassicClassRef} callback={refetchQueryCallback}/>
                         </Card.Title>
                     </Col>
                 </Row>

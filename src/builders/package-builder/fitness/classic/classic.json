@@ -2,7 +2,7 @@
     "1": {
         "title": "",
         "type": "object",
-        "required": ["packagename","disciplines", "tags" ,"level","is_private", "equipmentList"],
+        "required": [],
         "properties": {
             "packagename": {
                 "type": "string",
@@ -20,26 +20,23 @@
                 "title": "Tags"
             },
             "level": {
-                "type": "string",
+                "type": "number",
                 "title": "Level",
-                "enum": [
+                "enum": [0, 1, 2],
+                "enumNames": [
                     "Beginner",
                     "Intermediate",
                     "Advanced"
                 ]
             },
-            "is_private": {
-                "type": "boolean",
-                "title": "Visiblity",
-                "oneOf": [
-                    {
-                        "title": "Public",
-                        "const": true
-                    },
-                    {
-                        "title": "Private",
-                        "const": false
-                    }
+            "intensity": {
+                "type": "number",
+                "title": "Intensity",
+                "enum": [0, 1, 2],
+                "enumNames": [
+                    "Low",
+                    "Moderate",
+                    "High"
                 ]
             }
         }
@@ -47,7 +44,7 @@
     "2": {
         "title": "",
         "type": "object",
-        "required": ["aboutpackage", "benefits", "upload", "thumbnail" ],
+        "required": [],
         "properties": {
             "aboutpackage": {
                 "type": "string",
@@ -60,49 +57,46 @@
             "thumbnail": {
                 "type": "string"
             },
-            "upload": {
-                "type": "string"
-            },
-            "introvideourl": {
-                "type": "string",
-                "title": "Or add video URL",
-                "format": "uri"
+            "Upload": {
+                "type": "object",
+                "oneOf": [
+                    {
+                        "title": "Upload picture or video", 
+                        "properties": {
+                            "upload": {
+                                "type": "string"
+                            }
+                      },
+                      "required": [
+                      ]
+                    },
+                    {
+                    "title": "Video URL", 
+                      "properties": {
+                        "VideoUrl": {
+                          "type": "string",
+                          "format": "uri"
+                        }
+                      },
+                      "required": [
+                      ]
+                    }
+                ]
+
             }
         }
     },
     "3": {
         "title": "Program Details",
         "type": "object",
-        "required": ["recordedclasses", "restdays"],
+        "required": [],
         "properties": {
-        "duration": {
-            "type": "number",
-            "title": "Duration",
-            "minimum":1,
-            "maximum":365,
-            "default": 30,
-            "value":30
-
-        },
-        "recordedclasses": {
-            "title": "Recorded",
-            "type": "number",
-            "minimum": 0,
-            "default": "0",
-            "value": ""
-        },
-        "restdays": {
-            "title": "Rest Days",
-            "type": "number",
-            "minimum": 0,
-            "maximum": 30,
-            "default": "",
-            "value": ""
-        }
+            "programDetails": {
+                "type": "string"
+            }
         }
     },
-    "4": {},
-    "5": {
+    "4": {
         "title": "Pricing Plan",
         "type": "object",
         "properties": {
@@ -113,16 +107,67 @@
             }
         }
     },
+    "5": {
+        "title": "Package Settings",
+       "type": "object",
+       "required": [
+        "visibility",
+        "datesConfig",
+        "config"
+       ],
+       "properties": {
+            "visibility": {
+                "type": "number",
+                "title": "Visibility",
+                "enum": [0, 1],
+                "enumNames": [
+                    "Public",
+                    "Private"
+                ]
+            },
+            "datesConfig": {
+                "type": "string"
+            },
+            "config": {
+                "title": "Booking Config",
+                "type": "object",
+                "required": [
+                    "acceptBooking",
+                    "maxBookingMonth",
+                    "maxBookingDay"
+                ],
+                "properties": {
+                    "acceptBooking": {
+                        "type": "number",
+                        "title": "",
+                        "enum": [0, 1],
+                        "enumNames": [
+                            "Manual",
+                            "Auto"
+                        ]
+                    },
+                    "maxBookingMonth": {
+                        "type": "number",
+                        "title": "Maximum booking/per month",
+                        "minimum": 2,
+                        "maximum": 50
+                    },
+                    "maxBookingDay": {
+                        "type": "number",
+                        "title": "Maximum booking/per day",
+                        "minimum": 2,
+                        "maximum": 10
+                    }
+                }
+            }
+        }
+    },
     "6": {
         "title": "Preview",
         "type": "object",
         "properties": {
             "carousel": {
                 "type": "string",
-                "title": "carousel"
-            },
-            "link": {
-                "type": "null",
                 "title": "carousel"
             }
         }
