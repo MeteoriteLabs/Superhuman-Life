@@ -55,7 +55,7 @@ function CreateEditWorkout(props: any, ref: any) {
     TriggerForm: (msg: Operation) => {
       setOperation(msg);
 
-      if (msg && !msg.id) //render form if no message id
+      // if (msg && !msg.id) //render form if no message id
         modalTrigger.next(true);
     }
   }));
@@ -75,7 +75,7 @@ function CreateEditWorkout(props: any, ref: any) {
 
   function FillDetails(data: any) {
     const flattenData = flattenObj({ ...data });
-    // console.log(flattenData);
+    // console.log('flattenData',flattenData);
     function handleAddWorkout(data: any) {
       if (data.workout_URL !== null) {
         return { AddWorkout: "Add URL", AddURL: data.workout_URL };
@@ -97,7 +97,7 @@ function CreateEditWorkout(props: any, ref: any) {
 
     let details: any = {};
     let msg = flattenData.workouts;
-    console.log(msg);
+    // console.log('msg',msg);
     details.workout = msg[0].workouttitle;
     details.benefits = msg[0].Benifits;
     details.about = msg[0].About;
@@ -121,7 +121,7 @@ function CreateEditWorkout(props: any, ref: any) {
     details.calories = msg[0].calories;
     details.addWorkout = handleAddWorkout(msg[0]);
     setWorkoutDetails(details);
-
+    // console.log('deatils', details);
     //if message exists - show form only for edit and view
     if (["edit", "view"].indexOf(operation.type) > -1) modalTrigger.next(true);
     else OnSubmit(null);

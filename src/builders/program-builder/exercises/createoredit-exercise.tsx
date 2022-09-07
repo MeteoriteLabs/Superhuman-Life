@@ -5,6 +5,7 @@ import { FETCH_DATA, CREATE_EXERCISE, UPDATE_EXERCISE, DELETE_EXERCISE, FETCH_WO
 import AuthContext from "../../../context/auth-context";
 import StatusModal from "../../../components/StatusModal/exerciseStatusModal";
 import { schema, widgets } from './exerciseSchema';
+import { schemaView, widgetsView } from './exerciseSchemaForView';
 import { Subject } from 'rxjs';
 import { flattenObj } from '../../../components/utils/responseFlatten';
 
@@ -50,9 +51,7 @@ function CreateEditExercise(props: any, ref: any) {
     useImperativeHandle(ref, () => ({
         TriggerForm: (msg: Operation) => {
             setOperation(msg);
-
-            if (msg && !msg.id) //render form if no message id
-                modalTrigger.next(true);
+            modalTrigger.next(true);
         }
     }));
 
@@ -154,7 +153,6 @@ function CreateEditExercise(props: any, ref: any) {
     }
 
     function OnSubmit(frm: any) {
-        console.log('frm on submit', frm)
         //bind user id
         if (frm)
             frm.user_permissions_user = auth.userid;
@@ -188,11 +186,11 @@ function CreateEditExercise(props: any, ref: any) {
             <ModalView
                 name={name}
                 isStepper={false}
-                formUISchema={schema}
+                formUISchema={operation.type === 'view' ? schemaView : schema}
                 formSchema={exerciseSchema}
                 formSubmit={name === "View" ? () => { modalTrigger.next(false); } : (frm: any) => { OnSubmit(frm); }}
                 formData={operation.type === 'create' ? emptyExerciseState : exerciseDetails}
-                widgets={widgets}
+                widgets={operation.type === 'view' ? widgetsView : widgets}
                 modalTrigger={modalTrigger}
             />
 

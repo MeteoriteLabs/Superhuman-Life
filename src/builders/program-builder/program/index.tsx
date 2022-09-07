@@ -78,9 +78,7 @@ export default function EventsTab() {
         }
     ], []);
 
-    // function FetchData(_variables: {} = {id: auth.userid}){
         const fetch = useQuery(GET_TABLEDATA, {variables: {id: auth.userid}, onCompleted: loadData});
-    // }
 
     function refetchQueryCallback() {
         fetch.refetch();
@@ -124,9 +122,6 @@ export default function EventsTab() {
             })
         )
     }
-
-    // FetchData();
-
 
     return (
         <TabContent>

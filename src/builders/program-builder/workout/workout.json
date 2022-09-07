@@ -1,52 +1,61 @@
 {
-     "1": {
-         "title": "",
-         "type": "object",
-         "required": [
-             "workout",
-             "intensity",
-             "level",
-             "discipline",
-             "about",
+    "1": {
+        "title": "",
+        "type": "object",
+        "required": [
+            "workout",
+            "intensity",
+            "level",
+            "discipline",
+            "about",
             "benefits",
             "calories",
             "equipment",
             "muscleGroup"
-         ],
-         "properties": {
-             "workout": {
-                 "type": "string",
-                 "title": "Workout name"
-             },
-             "intensity": {
-                 "type": "number",
-                 "title": "Intensity",
-                 "enum": [0, 1, 2],
-                 "enumNames": [
-                     "Low",
-                     "Medium",
-                     "High"
-                 ]
-             },
-             "level": {
-                 "type": "number",
-                 "title": "Level",
-                 "enum": [0, 1, 2, 3],
-                 "enumNames": [
-                     "Beginner",
-                     "Intermediate",
-                     "Advanced", 
-                     "No level"
-                 ]
-             },
-             "discipline": {
-                 "type": "string"
-             },
-             "about": {
-                 "type": "string",
-                 "title": "About"
-             },
-             "benefits": {
+        ],
+        "properties": {
+            "workout": {
+                "type": "string",
+                "title": "Workout name"
+            },
+            "intensity": {
+                "type": "number",
+                "title": "Intensity",
+                "enum": [
+                    0,
+                    1,
+                    2
+                ],
+                "enumNames": [
+                    "Low",
+                    "Medium",
+                    "High"
+                ]
+            },
+            "level": {
+                "type": "number",
+                "title": "Level",
+                "enum": [
+                    0,
+                    1,
+                    2,
+                    3
+                ],
+                "enumNames": [
+                    "Beginner",
+                    "Intermediate",
+                    "Advanced",
+                    "No level"
+                ]
+            },
+            "discipline": {
+                "type": "string"
+            },
+            "about": {
+                "type": "string",
+                "title": "About"
+            },
+            "benefits": {
                 "type": "string",
                 "title": "Benefits"
             },
@@ -57,16 +66,16 @@
             "calories": {
                 "type": "number",
                 "title": "Total calories",
-                "minimum": 1
+                "minimum": 0
             },
             "equipment": {
-               "type": "string"
-           },
-           "muscleGroup": {
-               "type": "string"
-           }
-         },
-         "definitions": {
+                "type": "string"
+            },
+            "muscleGroup": {
+                "type": "string"
+            }
+        },
+        "definitions": {
             "addWorkout": {
                 "title": "Add Workout",
                 "type": "object",
@@ -98,7 +107,8 @@
                                     },
                                     "AddURL": {
                                         "type": "string",
-                                        "title": "Add URL"
+                                        "title": "Add URL",
+                                        "format": "uri"
                                     }
                                 }
                             },
@@ -128,6 +138,10 @@
                                 }
                             },
                             {
+                                "required": [
+                                    "AddWorkout",
+                                    "build"
+                                ],
                                 "properties": {
                                     "AddWorkout": {
                                         "enum": [
@@ -144,6 +158,6 @@
                     }
                 }
             }
-            }
         }
-     }
+    }
+}

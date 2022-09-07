@@ -6,7 +6,7 @@ import { GET_TABLEDATA, CREATE_WORKOUT } from './queries';
 import AuthContext from "../../../context/auth-context";
 import ActionButton from "../../../components/actionbutton";
 import CreateEditWorkout from "./createoredit-workout";
-import {flattenObj} from '../../../components/utils/responseFlatten';
+import { flattenObj } from '../../../components/utils/responseFlatten';
 import moment from 'moment';
 
 export default function EventsTab() {
@@ -18,34 +18,36 @@ export default function EventsTab() {
     const [tableData, setTableData] = useState<any[]>([]);
     const createEditWorkoutComponent = useRef<any>(null);
 
-    const [createWorkout] = useMutation(CREATE_WORKOUT, {onCompleted: () => {refetchQueryCallback()}});
+    const [createWorkout] = useMutation(CREATE_WORKOUT, { onCompleted: () => { refetchQueryCallback() } });
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
-    function CreateWorkout(_variables: {} = {id: auth.userid, details: frm}) {
+    function CreateWorkout(_variables: {} = { id: auth.userid, details: frm }) {
         frm.rawDiscipline = frm.rawDiscipline.map((item: any) => item.id).join(", ").split(", ");
         frm.rawEquipment = frm.rawEquipment.map((item: any) => item.id).join(", ").split(", ");
         frm.rawMuscleGroup = frm.rawMuscleGroup.map((item: any) => item.id).join(", ").split(", ");
-        console.log(frm);
-        createWorkout({ variables: {
-            workouttitle: name,
-            intensity: frm.intensity,
-            level: frm.level,
-            fitnessdisciplines: frm.rawDiscipline,
-            About: frm.about,
-            Benifits: frm.benifits,
-            warmup: frm.warmup,
-            mainmovement: frm.mainmovement,
-            cooldown: frm.cooldown,
-            workout_text: frm.workout_text,
-            workout_URL: frm.workout_url,
-            Workout_Video_ID: frm.workout_video_id,
-            calories: frm.calories,
-            equipment_lists: frm.rawEquipment,
-            muscle_groups: frm.rawMuscleGroup,
-            users_permissions_user: frm.users_permissions_user
-        }});
+
+        createWorkout({
+            variables: {
+                workouttitle: name,
+                intensity: frm.intensity,
+                level: frm.level,
+                fitnessdisciplines: frm.rawDiscipline,
+                About: frm.about,
+                Benifits: frm.benifits,
+                warmup: frm.warmup,
+                mainmovement: frm.mainmovement,
+                cooldown: frm.cooldown,
+                workout_text: frm.workout_text,
+                workout_URL: frm.workout_url,
+                Workout_Video_ID: frm.workout_video_id,
+                calories: frm.calories,
+                equipment_lists: frm.rawEquipment,
+                muscle_groups: frm.rawMuscleGroup,
+                users_permissions_user: frm.users_permissions_user
+            }
+        });
     }
 
     const columns = useMemo<any>(() => [
@@ -62,22 +64,22 @@ export default function EventsTab() {
             Header: "Actions",
             Cell: ({ row }: any) => {
                 const actionClick1 = () => {
-                    createEditWorkoutComponent.current.TriggerForm({id: row.original.id, type: 'edit'});
+                    createEditWorkoutComponent.current.TriggerForm({ id: row.original.id, type: 'edit' });
                 };
                 const actionClick2 = () => {
-                    createEditWorkoutComponent.current.TriggerForm({id: row.original.id, type: 'view'});
+                    createEditWorkoutComponent.current.TriggerForm({ id: row.original.id, type: 'view' });
                 };
                 const actionClick3 = () => {
-                    setName(row.original.workoutName + " copy");setFrm(row.original);handleShow();
+                    setName(row.original.workoutName + " copy"); setFrm(row.original); handleShow();
                 };
                 const actionClick4 = () => {
-                    createEditWorkoutComponent.current.TriggerForm({id: row.original.id, type: 'delete'});
+                    createEditWorkoutComponent.current.TriggerForm({ id: row.original.id, type: 'delete' });
                 };
 
                 const arrayAction = [
                     { actionName: 'Edit', actionClick: actionClick1 },
                     { actionName: 'View', actionClick: actionClick2 },
-                    { actionName: 'Duplicate', actionClick: actionClick3},
+                    { actionName: 'Duplicate', actionClick: actionClick3 },
                     { actionName: 'Delete', actionClick: actionClick4 },
                 ];
 
@@ -86,9 +88,7 @@ export default function EventsTab() {
         }
     ], []);
 
-    // function FetchData(_variables: {} = { id: auth.userid }) {
-        const fetch = useQuery(GET_TABLEDATA, { variables: {id: auth.userid}, onCompleted: loadData })
-    // }
+    const fetch = useQuery(GET_TABLEDATA, { variables: { id: auth.userid }, onCompleted: loadData })
 
     function refetchQueryCallback() {
         fetch.refetch();
@@ -107,7 +107,7 @@ export default function EventsTab() {
     }
 
     function loadData(data: any) {
-        const flattenData = flattenObj({...data});
+        const flattenData = flattenObj({ ...data });
         setTableData(
             [...flattenData.workouts].map((detail) => {
                 return {
@@ -143,9 +143,6 @@ export default function EventsTab() {
         )
     }
 
-    // FetchData();
-
-
     return (
         <TabContent>
             <hr />
@@ -160,26 +157,26 @@ export default function EventsTab() {
                 <CreateEditWorkout ref={createEditWorkoutComponent} callback={refetchQueryCallback}></CreateEditWorkout>
                 {
                     <Modal show={show} onHide={handleClose}>
-                            <Modal.Header closeButton>
-                                <Modal.Title>Change name</Modal.Title>
-                            </Modal.Header>
-                            <Modal.Body>
-                                <FormControl
+                        <Modal.Header closeButton>
+                            <Modal.Title>Change name</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <FormControl
                                 value={name}
                                 onChange={(e: any) => setName(e.target.value)}
-                                />
-                            </Modal.Body>
-                            <Modal.Footer>
-                                <Button variant="danger" onClick={handleClose}>
+                            />
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="danger" onClick={handleClose}>
                                 Close
-                                </Button>
-                                <Button variant="success" onClick={() => {
-                                    handleClose();
-                                    CreateWorkout({id: auth.userid, frm: frm});
-                                }}>
+                            </Button>
+                            <Button variant="success" onClick={() => {
+                                handleClose();
+                                CreateWorkout({ id: auth.userid, frm: frm });
+                            }}>
                                 Save Changes
-                                </Button>
-                            </Modal.Footer>
+                            </Button>
+                        </Modal.Footer>
                     </Modal>
                 }
             </Card.Title>
