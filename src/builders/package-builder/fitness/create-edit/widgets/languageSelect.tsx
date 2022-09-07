@@ -7,6 +7,8 @@ import { flattenObj} from '../../../../../components/utils/responseFlatten';
 
 const MultiSelect = (props: any) => {
 
+     console.log(props);
+
      const [multiSelections, setMultiSelections] = useState<any>(props.value !== undefined ? JSON.parse(props.value) : []);
      const [languages, setlanguages] = useState<any[]>([]);
 
@@ -20,7 +22,7 @@ const MultiSelect = (props: any) => {
               [...flattenedData.languages].map((language) => {
                   return {
                       id: language.id,
-                      title: language.languages
+                      languages: language.languages
                   }
               })
           );
@@ -38,7 +40,7 @@ const MultiSelect = (props: any) => {
                <label>Languages</label>
                <Typeahead
                id="basic-typeahead-multiple"
-               labelKey="title"
+               labelKey="languages"
                onChange={OnChange}
                options={languages}
                placeholder="Select languages..."

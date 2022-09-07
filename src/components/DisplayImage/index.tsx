@@ -40,6 +40,8 @@ function DisplayImage(props: any) {
     );
   }
 
+  console.log(photoUrl);
+
   return (
     <img src={photoUrl} alt="profile" className={props.imageCSS} />
   )

@@ -187,7 +187,7 @@ mutation createBookingconfig($id: ID!, $isAuto: Boolean, $bookings_per_day: Int,
 `
 
 export const CREATE_BOOKING_CONFIG = gql`
-  mutation createBookingconfig($id: ID!, $isAuto: Boolean, $bookings_per_day: Int, $bookings_per_month: Int, $packageId: ID!, $tagName: String!) {
+  mutation createBookingconfig($id: ID!, $isAuto: Boolean, $bookings_per_day: Int, $bookings_per_month: Int) {
     createBookingConfig(data: { isAuto: $isAuto, fitnesspackage: $id, bookingsPerDay: $bookings_per_day, BookingsPerMonth: $bookings_per_month }) {
       data {
         id
@@ -227,9 +227,16 @@ export const UPDATE_CHANNEL_COHORT_PACKAGE = gql`
     $address: ID
     $mode: ENUM_FITNESSPACKAGE_MODE 
     $residential_type: ENUM_FITNESSPACKAGE_RESIDENTIAL_TYPE 
-    $languages: JSON
+    $languages: [ID]
     $End_date: DateTime
     $Start_date: DateTime
+    $Course_details: JSON
+    $thumbnail: String
+    $upload: String
+    $equipmentList: [ID]
+    $videoUrl: String
+    $fitnessdisciplines: [ID]
+    $Intensity: ENUM_FITNESSPACKAGE_INTENSITY
     ) {
       updateFitnesspackage(
         id: $id, 
@@ -253,6 +260,13 @@ export const UPDATE_CHANNEL_COHORT_PACKAGE = gql`
           languages: $languages
           Start_date: $Start_date
           End_date: $End_date
+          Course_details: $Course_details
+          Thumbnail_ID: $thumbnail
+          Upload_ID: $upload
+          equipment_lists: $equipmentList
+          video_URL: $videoUrl
+          fitnessdisciplines: $fitnessdisciplines
+          Intensity: $Intensity
       }){
         data{
           id
@@ -305,13 +319,16 @@ export const CREATE_CHANNEL_PACKAGE = gql`
     $address: ID
     $mode: ENUM_FITNESSPACKAGE_MODE 
     $residential_type: ENUM_FITNESSPACKAGE_RESIDENTIAL_TYPE 
-    $languages: JSON
+    $languages: [ID]
     $End_date: DateTime
     $Start_date: DateTime
     $Course_details: JSON
     $thumbnail: String
     $upload: String
     $equipmentList: [ID]
+    $videoUrl: String
+    $fitnessdisciplines: [ID]
+    $Intensity: ENUM_FITNESSPACKAGE_INTENSITY
   ){
     createFitnesspackage(data: {
       aboutpackage: $aboutpackage,
@@ -337,6 +354,9 @@ export const CREATE_CHANNEL_PACKAGE = gql`
       Thumbnail_ID: $thumbnail
       Upload_ID: $upload
       equipment_lists: $equipmentList
+      video_URL: $videoUrl
+      fitnessdisciplines: $fitnessdisciplines
+      Intensity: $Intensity
     }){
       data{
         id

@@ -32,10 +32,13 @@ function CreateEditCohort(props: any, ref: any) {
     let frmDetails: any = {};
     
     const [editPackageDetails] = useMutation(UPDATE_CHANNEL_COHORT_PACKAGE, {onCompleted: (data) => {modalTrigger.next(false);}})
-    const [updatePackageStatus] = useMutation(UPDATE_PACKAGE_STATUS, {onCompleted: (data) => {setStatusModalShow(false);}});
+    const [updatePackageStatus] = useMutation(UPDATE_PACKAGE_STATUS, {onCompleted: (data) => {setStatusModalShow(false); props.callback();}});
     const [deletePackage] = useMutation(DELETE_PACKAGE, { refetchQueries: ["GET_TABLEDATA"], onCompleted: (data) => {props.callback();}});
     const [bookingConfig] = useMutation(CREATE_BOOKING_CONFIG, {onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); props.callback();}})
     const [CreateCohortPackage] = useMutation(CREATE_CHANNEL_PACKAGE, { onCompleted: (r: any) => { 
+        console.log(r);
+        console.log(frmDetails);
+        debugger;
         bookingConfig({
             variables: {
                 isAuto: frmDetails.config.acceptBooking === 0 ? false : true,
@@ -85,6 +88,12 @@ function CreateEditCohort(props: any, ref: any) {
         Accommodation_Food
     }
 
+    enum ENUM_FITNESSPACKAGE_INTENSITY {
+        Low,
+        Moderate,
+        High
+    }
+
     function FillDetails(data: any) {
         const flattenData = flattenObj({...data});
         let msg: any = flattenData.fitnesspackages[0];
@@ -97,26 +106,29 @@ function CreateEditCohort(props: any, ref: any) {
         details.channelinstantBooking = msg.groupinstantbooking;
         details.expiryDate = moment(msg.expirydate).format('YYYY-MM-DD');
         details.level = ENUM_FITNESSPACKAGE_LEVEL[msg.level];
+        details.intensity = ENUM_FITNESSPACKAGE_INTENSITY[msg.Intensity];
+        details.equipment = JSON.stringify(msg.equipment_lists);
+        details.discpline = JSON.stringify(msg.fitnessdisciplines);
         details.pricing = msg.fitnesspackagepricing[0]?.mrp === 'free' ? 'free' : JSON.stringify(msg.fitnesspackagepricing);
         details.publishingDate = moment(msg.publishing_date).format('YYYY-MM-DD');
-        details.tag = msg.tags;
+        details.tag = msg?.tags === null ? '' : msg.tags;
         details.user_permissions_user = msg.users_permissions_user.id;
         details.visibility = msg.is_private === true ? 1 : 0;
-        booking.acceptBooking = msg.booking_config.isAuto === true ? 1 : 0;
-        booking.maxBookingDay = msg.booking_config.bookingsPerDay;
-        booking.maxBookingMonth = msg.booking_config.BookingsPerMonth;
+        booking.acceptBooking = msg.booking_config?.isAuto === true ? 1 : 0;
+        booking.maxBookingDay = msg.booking_config?.bookingsPerDay;
+        booking.maxBookingMonth = msg.booking_config?.BookingsPerMonth;
         details.config = booking;
         details.classSize = msg.classsize;
         details.mode = ENUM_FITNESSPACKAGE_MODE[msg.mode];
-        details.residential =  ENUM_FITNESSPACKAGE_RESIDENTIAL_TYPE[msg.residential_type];
+        details.residential = msg.residential_type !== null ?  ENUM_FITNESSPACKAGE_RESIDENTIAL_TYPE[msg.residential_type] : null;
         details.languages = JSON.stringify(msg.languages);
-        details.startDate = moment(msg.Start_date).format('YYYY-MM-DD');
-        details.endDate = moment(msg.End_date).format('YYYY-MM-DD');
         // {addressTag: addressTitle, address: singleSelections, mode: mode, residential: residential}
         details.courseDetails = courseDetails;
-        details.programDetails = JSON.stringify({addressTag: msg.address === null ? 'At Client Address' : 'At My Address', address: msg.address, mode: ENUM_FITNESSPACKAGE_MODE[msg.mode], residential: ENUM_FITNESSPACKAGE_RESIDENTIAL_TYPE[msg.residential_type]});
+        details.programDetails = JSON.stringify({addressTag: msg.address === null ? 'At Client Address' : 'At My Address', address: [msg.address], mode: ENUM_FITNESSPACKAGE_MODE[msg.mode], residential: msg.residential_type !== null ?  ENUM_FITNESSPACKAGE_RESIDENTIAL_TYPE[msg.residential_type] : null});
         details.thumbnail = msg.Thumbnail_ID;
-        details.upload = msg.Upload_ID;
+        details.Upload = msg.Upload_ID === null ? {"VideoUrl": msg?.video_URL} : {"upload": msg?.Upload_ID};
+        details.datesConfig = {"expiryDate": msg.expiry_date, "publishingDate": msg.publishing_date};
+        details.datesConfig = {"expiryDate": msg.End_date, "publishingDate": msg.Start_date};
         // let msg = data;
         // console.log(msg);
         setProgramDetails(details);
@@ -147,34 +159,48 @@ function CreateEditCohort(props: any, ref: any) {
 
 
     function createCohort(frm: any) {
+        console.log(frm);
+        debugger;
         frmDetails = frm;
         frm.programDetails = JSON.parse(frm.programDetails)
         frm.languages = JSON.parse(frm.languages)
         frm.courseDetails.details = JSON.parse(frm.courseDetails.details)
+        frm.dates = JSON.parse(frm.dates)
+        frm.datesConfig = JSON.parse(frm.datesConfig)
+        if(frm.equipment){
+            frm.equipment = JSON.parse(frm?.equipment);
+        }
+        if(frm.discpline){
+            frm.discpline = JSON.parse(frm?.discpline);
+        }
         CreateCohortPackage({
             variables: {
                 aboutpackage: frm.About,
                 benefits: frm.Benifits,
                 packagename: frm.packageName,
                 channelinstantBooking: frm.channelinstantBooking,
-                expiry_date: moment(frm.expiryDate).toISOString(),
+                expiry_date: moment(frm.datesConfig.expiryDate).toISOString(),
                 level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
-                fitnesspackagepricing: frm.pricing === "free" ? [{mrp: 'free', duration: calculateDuration(frm.startDate, frm.endDate)}] : JSON.parse(frm.pricing),
-                publishing_date: moment(frm.publishingDate).toISOString(),
+                Intensity: ENUM_FITNESSPACKAGE_INTENSITY[frm.intensity],
+                equipmentList: frm?.equipment?.length > 0 ? frm.equipment.map((item: any) => item.id).join(", ").split(", ") : [],
+                fitnessdisciplines: frm?.discpline?.length > 0 ? frm.discpline.map((item: any) => item.id).join(", ").split(", ") : [],
+                fitnesspackagepricing: frm.pricing === "free" ? [{mrp: 'free', duration: calculateDuration(frm.dates.publishingDate, frm.dates.expiryDate)}] : JSON.parse(frm.pricing),
+                publishing_date: moment(frm.datesConfig.publishingDate).toISOString(),
                 tags: frm.tag,
                 users_permissions_user: frm.user_permissions_user,
                 fitness_package_type: findPackageType(operation.packageType),
                 is_private: frm.visibility === 0 ? false : true,
                 classsize: frm.classSize,
-                address: frm.programDetails?.addressTag === 'At My Address' ? frm.programDetails?.address[0].id : null,
+                address: frm.programDetails?.addressTag === 'At My Address' ? frm.programDetails?.address[0]?.id : null,
                 mode: ENUM_FITNESSPACKAGE_MODE[frm.programDetails?.mode],
                 residential_type: ENUM_FITNESSPACKAGE_RESIDENTIAL_TYPE[frm.programDetails?.residential],
-                languages: frm.languages,
-                Start_date: moment(frm.startDate).toISOString(),
-                End_date: moment(frm.endDate).toISOString(),
+                languages: frm.languages.map((item: any) => item.id).join(", ").split(", "),
+                Start_date: moment(frm.dates.publishingDate).toISOString(),
+                End_date: moment(frm.dates.expiryDate).toISOString(),
                 Course_details: frm.courseDetails.details,
                 thumbnail: frm.thumbnail,
-                upload: frm.upload
+                upload: frm.Upload?.upload,
+                videoUrl: frm.Upload?.VideoUrl,
             }
         })
     }
@@ -184,6 +210,14 @@ function CreateEditCohort(props: any, ref: any) {
         frm.programDetails = JSON.parse(frm.programDetails)
         frm.languages = JSON.parse(frm.languages)
         frm.courseDetails.details = JSON.parse(frm.courseDetails.details)
+        frm.dates = JSON.parse(frm.dates)
+        frm.datesConfig = JSON.parse(frm.datesConfig)
+        if(frm.equipment){
+            frm.equipment = JSON.parse(frm?.equipment);
+        }
+        if(frm.discpline){
+            frm.discpline = JSON.parse(frm?.discpline);
+        }
         editPackageDetails({
             variables: {
                 id: operation.id,
@@ -193,22 +227,26 @@ function CreateEditCohort(props: any, ref: any) {
                 channelinstantBooking: frm.channelinstantBooking,
                 expiry_date: moment(frm.expiryDate).toISOString(),
                 level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
-                fitnesspackagepricing: frm.pricing === "free" ? [{mrp: 'free'}] : JSON.parse(frm.pricing),
+                Intensity: ENUM_FITNESSPACKAGE_INTENSITY[frm.intensity],
+                equipmentList: frm?.equipment?.length > 0 ? frm.equipment.map((item: any) => item.id).join(", ").split(", ") : [],
+                fitnessdisciplines: frm?.discpline?.length > 0 ? frm.discpline.map((item: any) => item.id).join(", ").split(", ") : [],
+                fitnesspackagepricing: frm.pricing === "free" ? [{mrp: 'free', duration: calculateDuration(frm.dates.publishingDate, frm.dates.expiryDate)}] : JSON.parse(frm.pricing),
                 publishing_date: moment(frm.publishingDate).toISOString(),
                 tags: frm.tag,
                 users_permissions_user: frm.user_permissions_user,
                 fitness_package_type: findPackageType(operation.packageType),
                 is_private: frm.visibility === 0 ? false : true,
                 classsize: frm.classSize,
-                address: frm.programDetails?.addressTag === 'At My Address' ? frm.location.address[0].id : null,
+                address: frm.programDetails?.addressTag === 'At My Address' ? frm.programDetails?.address[0]?.id : null,
                 mode: ENUM_FITNESSPACKAGE_MODE[frm.programDetails?.mode],
                 residential_type: ENUM_FITNESSPACKAGE_RESIDENTIAL_TYPE[frm.programDetails?.residential],
-                languages: frm.languages,
+                languages: frm.languages.map((item: any) => item.id).join(", ").split(", "),
                 Start_date: moment(frm.startDate).toISOString(),
                 End_date: moment(frm.endDate).toISOString(),
                 Course_details: frm.courseDetails.details,
                 thumbnail: frm.thumbnail,
-                upload: frm.upload
+                upload: frm.Upload?.upload,
+                videoUrl: frm.Upload?.VideoUrl,
             }
         })
     }
@@ -263,6 +301,7 @@ function CreateEditCohort(props: any, ref: any) {
                     name={name}
                     isStepper={true}
                     formUISchema={schema}
+                    showErrorList={false}
                     formSchema={programSchema}
                     formSubmit={name === "View" ? () => { modalTrigger.next(false); } : (frm: any) => { OnSubmit(frm); }}
                     formData={programDetails}

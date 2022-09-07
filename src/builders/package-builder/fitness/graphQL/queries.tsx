@@ -102,9 +102,33 @@ export const GET_SINGLE_PACKAGE_BY_ID = gql`
           tags
           level
           aboutpackage
+          Intensity
+          languages{
+            data{
+              id
+              attributes{
+                languages
+              }
+            }
+          }
+          fitnessdisciplines{
+            data{
+              id
+              attributes{
+                disciplinename
+              }
+            }
+          }
+          equipment_lists {
+            data{
+              id
+              attributes{
+                name
+              }
+            }
+          }
           benefits
           mode
-          languages
           Start_date
           Course_details
           End_date
@@ -114,6 +138,7 @@ export const GET_SINGLE_PACKAGE_BY_ID = gql`
           grouponline
           recordedclasses
           bookingleadday
+          video_URL
           Upload_ID
           Thumbnail_ID
           equipment_lists{

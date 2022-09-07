@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Tabs, Tab } from "react-bootstrap";
-import ChangePasswordPage from '../changePassword';
 import ProfileCard from "./ProfileOptions/ProfileCard";
 import ProfileNavTab from "./ProfileOptions/ProfileNavTab";
+import ChangemakersSettings from "./ChangemakersSettings";
+import OrganisationsSettings from "./OrganisationsSettings";
 import "./profile.css";
 
 export default function ProfilePage() {
@@ -18,25 +19,19 @@ export default function ProfilePage() {
     >
       <Tab eventKey="profile" title="Profile">
         <ProfileCard />
-        {/* <Container fluid> */}
           <ProfileNavTab />
-        {/* </Container> */}
       </Tab>
 
-      <Tab eventKey="collaborations" title="Collaborations">
-        Collaborations
+      <Tab eventKey="changemakerssettings" title="Changemaker Settings">
+        <ChangemakersSettings/>
+      </Tab>
+
+      <Tab eventKey="organisationssettings" title="Organisations Settings">
+        <OrganisationsSettings/>
       </Tab>
 
       <Tab eventKey="myclientapp" title=" My Client App">
         My Client App
-      </Tab>
-
-      <Tab eventKey="settings" title="Settings">
-        Settings
-      </Tab>
-
-      <Tab eventKey="password" title="Password">
-        <ChangePasswordPage />
       </Tab>
     </Tabs>
 

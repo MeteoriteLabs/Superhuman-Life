@@ -1,0 +1,23 @@
+{
+    "type":"object",
+    "required": [
+        "typeDelete",
+        "username",
+        "Reason_to_Delete"
+      ],
+    "properties":{
+    
+    "typeDelete": {
+        "type": "string",
+        "title": "Type the word 'DELETE'"
+    },
+    "username": {
+        "type": "string",
+        "title": "Type your username"
+    },
+    "Reason_to_Delete": {
+        "type": "string",
+        "title": "Reason for deleting"
+    }
+}
+}

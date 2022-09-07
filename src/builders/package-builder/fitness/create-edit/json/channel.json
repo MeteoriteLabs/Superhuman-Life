@@ -3,9 +3,9 @@
         "title": "",
         "type": "object",
         "required": [
-           "channelName",
-           "tag",
-           "level"
+            "channelName",
+            "level",
+            "intensity"
         ],
        "properties": {
             "channelName": {
@@ -15,6 +15,12 @@
             "tag": {
                 "type": "string",
                 "title": "Tags"
+            },
+            "discpline": {
+                "type": "string"
+            },
+            "equipment": {
+                "type": "string"
             },
            "level": {
                 "type": "number",
@@ -26,6 +32,16 @@
                     "Advanced", 
                     "No level"
                 ]
+            },
+            "intensity": {
+                "type": "number",
+                "title": "Intensity",
+                "enum": [0, 1, 2],
+                "enumNames": [
+                    "Low",
+                    "Moderate",
+                    "High"
+                ]
             }
         }   
     },
@@ -33,10 +49,10 @@
        "title": "",
        "type": "object",
        "required": [
-           "About",
-           "Benifits",
-           "upload",
-           "thumbnail"
+            "About",
+            "Benifits",
+            "thumbnail",
+            "Upload"
        ],
        "properties": {
             "About": {
@@ -50,19 +66,43 @@
             "thumbnail": {
                 "type": "string"
             },
-            "upload": {
-                "type": "string"
-            },
-            "VideoUrl": {
-                "type": "string",
-                "title": "Add Vieo Url"
+            "Upload": {
+                "type": "object",
+                "oneOf": [
+                    {
+                        "title": "Upload picture or video", 
+                        "properties": {
+                            "upload": {
+                                "type": "string"
+                            }
+                      },
+                      "required": [
+                        "upload"
+                      ]
+                    },
+                    {
+                    "title": "Video URL", 
+                      "properties": {
+                        "VideoUrl": {
+                          "type": "string",
+                          "format": "uri"
+                        }
+                      },
+                      "required": [
+                        "VideoUrl"
+                      ]
+                    }
+                ]
+
             }
         }
     },
     "3": {
         "title": "",
         "type": "object",
-        "required": ["channelinstantBooking"],
+        "required": [
+            "channelinstantBooking"
+        ],
         "properties": {
             "channelinstantBooking": {
                 "type": "boolean",
@@ -75,7 +115,7 @@
         "title": "",
        "type": "object",
        "required": [
-           "pricing"
+            "pricing"
        ],
        "properties": {
             "pricing": {
@@ -88,9 +128,7 @@
        "type": "object",
        "required": [
            "visibility",
-           "startDate",
-           "publishingDate",
-           "expiryDate",
+           "datesConfig",
            "config"
        ],
        "properties": {
@@ -103,20 +141,8 @@
                     "Private"
                 ]
             },
-            "startDate": {
-                "type": "string",
-                "format": "date",
-                "title": "Start Date"
-            },
-            "publishingDate": {
-                "type": "string",
-                "format": "date",
-                "title": "Publishing Date"
-            },
-            "expiryDate": {
-                "type": "string",
-                "format": "date",
-                "title": "Expiry Date"
+            "datesConfig": {
+                "type": "string"
             },
             "config": {
                 "title": "Booking Config",
@@ -138,11 +164,15 @@
                     },
                     "maxBookingMonth": {
                         "type": "number",
-                        "title": "Maximum booking/per month"
+                        "title": "Maximum booking/per month",
+                        "minimum": 2,
+                        "maximum": 50
                     },
                     "maxBookingDay": {
                         "type": "number",
-                        "title": "Maximum booking/per day"
+                        "title": "Maximum booking/per day",
+                        "minimum": 2,
+                        "maximum": 10
                     }
                 }
             }

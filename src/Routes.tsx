@@ -18,6 +18,7 @@ const ChatPage = React.lazy(() => import("./pages/chat"));
 
 const HomePage = React.lazy(() => import("./pages/home"));
 const LoginPage = React.lazy(() => import("./pages/login"));
+const DeactiveAccountPage = React.lazy(() => import("./pages/DeactiveAccount"));
 const ForgotPasswordPage = React.lazy(() => import("./pages/forgotPassword"));
 const ResetPasswordPage = React.lazy(() => import('./pages/resetPassword'));
 const ConfirmAccountPage = React.lazy(() => import("./pages/emailConfirmation"));
@@ -126,6 +127,7 @@ export default function Routes({ token }: any) {
                                    <Route path="/about" component={AboutPage} />
                                    <Route path="/contact" component={ContactPage} />
                                    <Route path="/faqs" component={FQAsPage} />
+                                   <Route path="/deactiveaccount" component={DeactiveAccountPage} />
                                    <Route path="*" component={NoMatch} />
                               </Switch>
                          </Suspense>
