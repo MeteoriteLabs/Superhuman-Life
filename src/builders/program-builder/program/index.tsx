@@ -57,6 +57,7 @@ export default function EventsTab() {
                 };
                 const actionClick3 = () => {
                     createEditProgramComponent.current.TriggerForm({id: row.original.id, type: 'delete'});
+                    handleClose();
                 };
                 const actionClick4 = () => {
                     handleRedirect(row.original.id);
@@ -98,7 +99,7 @@ export default function EventsTab() {
 
     function loadData(data: any) {
         const flattenData = flattenObj({...data});
-        console.log(flattenData);
+
         setTableData(
             [...flattenData.fitnessprograms].map((detail) => {
                 return {

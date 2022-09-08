@@ -5,6 +5,7 @@ import { CREATE_PROGRAM, DELETE_PROGRAM, GET_DATA, UPDATE_PROGRAM } from "./quer
 import AuthContext from "../../../context/auth-context";
 import StatusModal from "../../../components/StatusModal/StatusModal";
 import { schema, widgets } from './programSchema';
+import { schemaView } from './programSchemaForView';
 import { Subject } from 'rxjs';
 import { flattenObj } from '../../../components/utils/responseFlatten';
 import moment from 'moment';
@@ -39,8 +40,10 @@ function CreateEditProgram(props: any, ref: any) {
         TriggerForm: (msg: Operation) => {
             setOperation(msg);
 
-            // if (msg && !msg.id) //render form if no message id
+            //restrict form to render on delete
+            if(msg.type !== 'delete'){
                 modalTrigger.next(true);
+            }  
         }
     }));
 
@@ -151,13 +154,13 @@ function CreateEditProgram(props: any, ref: any) {
 
     FetchData();
 
-
     return (
         <>
+        
             <ModalView
                 name={name}
                 isStepper={false}
-                formUISchema={schema}
+                formUISchema={operation.type === 'view' ? schemaView : schema}
                 formSchema={programSchema}
                 formSubmit={name === "View" ? () => { modalTrigger.next(false); } : (frm: any) => { OnSubmit(frm); }}
                 formData={operation.type === 'create' ? emptyProgramState : programDetails}
@@ -165,7 +168,7 @@ function CreateEditProgram(props: any, ref: any) {
                 modalTrigger={modalTrigger}
                 type={operation.type}
             />
-
+           
             {operation.type === "delete" && <StatusModal
                 modalTitle="Delete"
                 modalBody="Do you want to delete this message?"

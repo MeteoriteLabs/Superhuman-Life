@@ -35,32 +35,36 @@ export const schemaView: any = {
         "ui:options": {
             rows: 3,
         },
-        "ui:readonly": true
+        "ui:readonly": true,
+        "ui:help": "Give a short and simple explanation for the user to understand the exercise."
     },
     equipment: {
         "ui:widget": "equipmentSearch",
-        "ui:help": "it is required field",
-        "ui:readonly": true
+        "ui:help" : "Add all equipments required to perform the exercise. Example - Pullup you can add a pullup bar and resistance bands. It is required field",
+        "readonly": true
     },
     muscleGroup: {
         "ui:widget": "muscleGroupSearch",
-        "ui:help": "it is required field",
-        "ui:readonly": true
+        "ui:help": "Muscles targeted by this exercise.It is required field",
+        "readonly": true
     },
     discipline: {
         "ui:widget": "fitnessSelect",
-        "ui:readonly": true
+        "readonly": true,
+        "ui:help": "Choose the relevant  discipline for the workout. It is required field"
     },
     addExercise: {
+        AddURL:{
+            "ui:readonly": true
+        },
         AddText: {
             "ui:widget": "textEditor",
-            "ui:readonly": true
+            "readonly": true
         },
         Upload: {
             "ui:widget": (props: any) => {
                 return <Upload allowImage={false} allowVideo={true} onChange={props.onChange} value={props.value} />;
             },
-            "ui:readonly": true
         },
     },
 };

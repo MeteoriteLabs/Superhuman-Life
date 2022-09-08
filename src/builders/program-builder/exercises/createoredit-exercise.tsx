@@ -5,7 +5,7 @@ import { FETCH_DATA, CREATE_EXERCISE, UPDATE_EXERCISE, DELETE_EXERCISE, FETCH_WO
 import AuthContext from "../../../context/auth-context";
 import StatusModal from "../../../components/StatusModal/exerciseStatusModal";
 import { schema, widgets } from './exerciseSchema';
-import { schemaView, widgetsView } from './exerciseSchemaForView';
+import { schemaView } from './exerciseSchemaForView';
 import { Subject } from 'rxjs';
 import { flattenObj } from '../../../components/utils/responseFlatten';
 
@@ -51,7 +51,11 @@ function CreateEditExercise(props: any, ref: any) {
     useImperativeHandle(ref, () => ({
         TriggerForm: (msg: Operation) => {
             setOperation(msg);
-            modalTrigger.next(true);
+
+            //restrict form to render on delete
+            if(msg.type !== 'delete'){
+                modalTrigger.next(true);
+            }     
         }
     }));
 
@@ -77,7 +81,7 @@ function CreateEditExercise(props: any, ref: any) {
         const flattenedData = flattenObj({ ...data });
         let details: any = {};
         let msg = flattenedData.exercises;
-
+        
         details.exercise = msg[0].exercisename;
 
         details.level = ENUM_EXERCISES_EXERCISELEVEL[msg[0].exerciselevel];
@@ -94,6 +98,7 @@ function CreateEditExercise(props: any, ref: any) {
         details.user_permissions_user = msg[0].users_permissions_user.id;
         details.addExercise = handleAddExerciseShowUp(msg[0]);
         setExerciseDetails(details);
+        
         //if message exists - show form only for edit and view
         if (['edit', 'view'].indexOf(operation.type) > -1)
             modalTrigger.next(true);
@@ -190,7 +195,7 @@ function CreateEditExercise(props: any, ref: any) {
                 formSchema={exerciseSchema}
                 formSubmit={name === "View" ? () => { modalTrigger.next(false); } : (frm: any) => { OnSubmit(frm); }}
                 formData={operation.type === 'create' ? emptyExerciseState : exerciseDetails}
-                widgets={operation.type === 'view' ? widgetsView : widgets}
+                widgets={widgets}
                 modalTrigger={modalTrigger}
             />
 

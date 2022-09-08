@@ -9,7 +9,6 @@
             "discipline",
             "about",
             "benefits",
-            "calories",
             "equipment",
             "muscleGroup"
         ],
@@ -53,11 +52,13 @@
             },
             "about": {
                 "type": "string",
-                "title": "About"
+                "title": "About",
+                "description" : " Explain in detail about the workout"
             },
             "benefits": {
                 "type": "string",
-                "title": "Benefits"
+                "title": "Benefits",
+                "description": "Explain the benefits of this workout"
             },
             "addWorkout": {
                 "title": "Workout Agenda",
@@ -108,7 +109,8 @@
                                     "AddURL": {
                                         "type": "string",
                                         "title": "Add URL",
-                                        "format": "uri"
+                                        "format": "uri",
+                                        "description": "upload link of the workout. You can add a youtube URL. Can be  used for Group, PT, Custom and Classic offerings."
                                     }
                                 }
                             },
@@ -121,7 +123,8 @@
                                     },
                                     "AddText": {
                                         "type": "string",
-                                        "title": "Add Text"
+                                        "title": "Add Text",
+                                        "description": "Explain in detail about the workout. Used for PT and Group"
                                     }
                                 }
                             },
@@ -133,7 +136,8 @@
                                         ]
                                     },
                                     "Upload": {
-                                        "type": "string"
+                                        "type": "string",
+                                        "description": "Add video of the Workout."
                                     }
                                 }
                             },
@@ -150,7 +154,8 @@
                                     },
                                     "build": {
                                         "title": "Build Workout",
-                                        "type": "string"
+                                        "type": "string",
+                                        "description": "Structure the workout for the user.Usually used for Classic type of offering."
                                     }
                                 }
                             }

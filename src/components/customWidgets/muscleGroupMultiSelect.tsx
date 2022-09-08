@@ -49,6 +49,7 @@ const MuscleGroupMultiSelect = (props: any) => {
              placeholder="Choose Discpline..."
              selected={multiSelections}
              multiple
+             disabled={props.uiSchema.readonly ? true : false}
              />
         </div>
    )

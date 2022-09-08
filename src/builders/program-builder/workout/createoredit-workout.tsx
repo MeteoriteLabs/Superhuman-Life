@@ -5,6 +5,7 @@ import { FETCH_DATA, CREATE_WORKOUT, UPDATE_WORKOUT, DELETE_WORKOUT, FETCH_FITNE
 import AuthContext from "../../../context/auth-context";
 import StatusModal from "../../../components/StatusModal/workoutStatusModal";
 import { schema, widgets } from './workoutSchema';
+import { schemaView } from './workoutSchemaView';
 import { Subject } from 'rxjs';
 import { flattenObj } from '../../../components/utils/responseFlatten';
 
@@ -55,8 +56,11 @@ function CreateEditWorkout(props: any, ref: any) {
     TriggerForm: (msg: Operation) => {
       setOperation(msg);
 
-      // if (msg && !msg.id) //render form if no message id
+      //restrict form to render on delete
+      if(msg.type !== 'delete'){
         modalTrigger.next(true);
+    }  
+
     }
   }));
 
@@ -75,7 +79,7 @@ function CreateEditWorkout(props: any, ref: any) {
 
   function FillDetails(data: any) {
     const flattenData = flattenObj({ ...data });
-    // console.log('flattenData',flattenData);
+
     function handleAddWorkout(data: any) {
       if (data.workout_URL !== null) {
         return { AddWorkout: "Add URL", AddURL: data.workout_URL };
@@ -97,7 +101,7 @@ function CreateEditWorkout(props: any, ref: any) {
 
     let details: any = {};
     let msg = flattenData.workouts;
-    // console.log('msg',msg);
+
     details.workout = msg[0].workouttitle;
     details.benefits = msg[0].Benifits;
     details.about = msg[0].About;
@@ -121,7 +125,7 @@ function CreateEditWorkout(props: any, ref: any) {
     details.calories = msg[0].calories;
     details.addWorkout = handleAddWorkout(msg[0]);
     setWorkoutDetails(details);
-    // console.log('deatils', details);
+
     //if message exists - show form only for edit and view
     if (["edit", "view"].indexOf(operation.type) > -1) modalTrigger.next(true);
     else OnSubmit(null);
@@ -158,8 +162,7 @@ function CreateEditWorkout(props: any, ref: any) {
   }
 
   function EditWorkout(frm: any) {
-    // console.log('edit message');
-    // useMutation(UPDATE_MESSAGE, { variables: frm, onCompleted: (d: any) => { console.log(d); } });
+
     if (frm.addWorkout.build) {
       frm.addWorkout.build = JSON.parse(frm.addWorkout.build);
     }
@@ -206,13 +209,11 @@ function CreateEditWorkout(props: any, ref: any) {
   }
 
   function ViewWorkout(frm: any) {
-    // console.log('view message');
     //use a variable to set form to disabled/not editable
     useMutation(UPDATE_WORKOUT, { variables: frm, onCompleted: (d: any) => { console.log(d); } })
   }
 
   function DeleteWorkout(id: any) {
-    // console.log('delete message');
     deleteWorkout({ variables: { id: id } });
   }
 
@@ -236,7 +237,6 @@ function CreateEditWorkout(props: any, ref: any) {
 
   FetchData();
 
-
   let name = "";
   if (operation.type === 'create') {
     name = "Create New Workout";
@@ -251,7 +251,7 @@ function CreateEditWorkout(props: any, ref: any) {
       <ModalView
         name={name}
         isStepper={false}
-        formUISchema={schema}
+        formUISchema={ operation.type === 'view' ? schemaView : schema }
         formSchema={workoutSchema}
         formSubmit={name === "View" ? () => { modalTrigger.next(false); } : (frm: any) => { OnSubmit(frm); }}
         formData={operation.type === 'create' ? emptyWorkoutState : workoutDetails}
@@ -268,7 +268,6 @@ function CreateEditWorkout(props: any, ref: any) {
         buttonRight="Yes"
         onClick={() => { DeleteWorkout(operation.id) }}
       />}
-
     </>
   )
 }

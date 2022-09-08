@@ -6,9 +6,6 @@ import { useQuery } from "@apollo/client";
 import { flattenObj } from '../utils/responseFlatten';
 
 const MultiSelect = (props: any) => {
-
-     console.log(props);
-
      const [multiSelections, setMultiSelections] = useState(
           props.value?.length > 0 ? props.value : []
         );
@@ -54,6 +51,7 @@ const MultiSelect = (props: any) => {
                placeholder="Choose multiple discplines..."
                selected={multiSelections}
                multiple
+               disabled={props.uiSchema.readonly ? true : false}
                />
           </div>
      )
