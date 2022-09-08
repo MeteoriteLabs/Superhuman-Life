@@ -26,13 +26,16 @@ export default function Dashboard() {
     return (
         <>
 
-        <Container fluid className="lobby__container pt-5 mt-3"  style={{overflow: 'hidden'}}>
+        <Container fluid className="lobby__container"  style={{overflow: 'hidden'}}>
+            {/* main options on lobby for insights, blog, dashboard, website, support and learn */}
             <Row>
                 {ImageCaptions.map((data, index) => ( 
-                        <Col as={Link} to={data.link} sm key={data.id} className="d-flex justify-content-center align-items-center lobby__card" style={{background: `${LobbyColors[((randomColorInArray + index ) < totalNumberOfColors) ? (randomColorInArray + index) : index ]}`}}>
+                        <Col as={Link} to={data.link} sm key={data.id} className="d-flex justify-content-center align-items-center lobby__card" style={{background: `${LobbyColors[((randomColorInArray + index ) < totalNumberOfColors) ? (randomColorInArray + index) : index ]}`, height: '100vh'}}>
                               <img style={{width: data.imageWidth}} src={data.image} alt="icon"/>
                         </Col>
                 ))}
+
+                {/* organisation display for large screen */}
                 {organizations.length > 0 && <Col className="d-lg-block d-md-block d-sm-none d-none">
                     {organizations.map((data: any, index: number) => {
                         return (
@@ -51,6 +54,8 @@ export default function Dashboard() {
                         )
                     })}         
                 </Col>  }   
+
+                {/* organisations display for small screen */}
                 {organizations.length > 0 && <Col className="d-lg-none d-md-none d-sm-block"  key={'asdfasdfa'}>
                     {organizations.map((data: any, index: number) => {
                         return (

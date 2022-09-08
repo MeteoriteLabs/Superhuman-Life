@@ -40,9 +40,9 @@ export default function HomePage() {
       text: "Network Community",
     },
   ];
-//eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwYjBjMjg2MjBjZDVkZWE1NzU5MWU0YSIsImlhdCI6MTYyMjQ1OTAxMiwiZXhwIjoxNjI1MDUxMDEyfQ.XV4vYaPW9QpuNhjqlYx0gT2gDXTzxhbtXv7BbVpl9QY
+  
   return (
-    <>
+    <div className="col-lg-12">
       <h3>Dashboard</h3>
       <hr />
       <CardDeck>
@@ -57,6 +57,6 @@ export default function HomePage() {
             </Card>
           ))}
       </CardDeck>
-    </>
+    </div>
   );
 }

@@ -16,8 +16,7 @@ export default function Layout({ token, children }: any) {
   }, [pathname]);
 
   const getSideNavStatus = () => {
-    const currentSideNavStatus: boolean =
-      pathname !== "/lobby" && pathname !== "/website" && pathname !== "/profile" &&  pathname !== "/insights" &&  pathname !== "/support" ? true : false;
+    const currentSideNavStatus: boolean = pathname !== "/lobby" && pathname !== "/website" && pathname !== "/profile" &&  pathname !== "/insights" &&  pathname !== "/support" ? true : false;
     setSideNavStatus(currentSideNavStatus);
   };
   return (
@@ -37,7 +36,7 @@ export default function Layout({ token, children }: any) {
                 </Col>
               </Row>
             ) : (
-              <div>{children}</div>
+              <div className="pt-5">{children}</div>
             )}
           </div>
         ) : (

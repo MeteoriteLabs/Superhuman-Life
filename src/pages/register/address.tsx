@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Form } from 'react-bootstrap';
 import Geocode from "react-geocode";
 import GooglePlacesAutocomplete, { geocodeByAddress, getLatLng} from 'react-google-places-autocomplete';
 
 const Address = (props: any) => {
 
-     console.log(props.value);
      const [address1, setAddress1] = useState(props.value === undefined ? '' : JSON.parse(props.value).address1);
      const [address2, setAddress2] = useState(props.value === undefined ? '' : JSON.parse(props.value).address2);
      const [city, setCity] = useState(props.value === undefined ? '' : JSON.parse(props.value).city);
@@ -33,7 +32,6 @@ const Address = (props: any) => {
      function getAddressFromCoordinates(lat: string, lng: string){
           Geocode.fromLatLng(lat, lng).then(
                (response) => {
-                    console.log(response)
                  const address = response.results[0].formatted_address;
                  let city, state, country, zip;
                  for (let i = 0; i < response.results[0].address_components.length; i++) {
@@ -59,8 +57,6 @@ const Address = (props: any) => {
                     setZip(zip);
                     setCountry(country);
                     setAddress1(address);
-               //   console.log(city, state, country, zip);
-               //   console.log(address);
                },
                (error) => {
                  console.error(error);
@@ -68,7 +64,6 @@ const Address = (props: any) => {
           );
      }
      
-
      function getLocation() {
           if (!navigator.geolocation) {
             console.log('Geolocation API not supported by this browser.');
@@ -78,7 +73,6 @@ const Address = (props: any) => {
           }
      }
      function success(position) {
-          // console.log(position);
           getAddressFromCoordinates(position.coords.latitude, position.coords.longitude);
      }
 
@@ -96,10 +90,6 @@ const Address = (props: any) => {
 
      return (
           <div>
-               {/* {googleAddressShow && <Form.Group controlId="formBasicEmail">
-                    <Form.Label>Address 1</Form.Label>
-                    
-               </Form.Group>} */}
                <Form.Group controlId="formBasicEmail">
                     <Form.Label>Address 1</Form.Label>
                     {!googleAddressShow && <Form.Control value={address1} onChange={(e) => setAddress1(e.target.value)} type="text" placeholder="" />}
