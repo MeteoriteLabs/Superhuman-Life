@@ -5,8 +5,8 @@ import { GET_SINGLE_PACKAGE_BY_ID, GET_FITNESS_PACKAGE_TYPES, ADD_SUGGESTION_NEW
 import { CREATE_PACKAGE, DELETE_PACKAGE, EDIT_PACKAGE, UPDATE_PACKAGE_STATUS, CREATE_BOOKING_CONFIG } from '../graphQL/mutations';
 import { Modal, Button} from 'react-bootstrap';
 import AuthContext from "../../../../context/auth-context";
-// import StatusModal from "../../../../components/StatusModal/exerciseStatusModal";
-import { schema, widgets } from './classicSchema';
+// import StatusModal from "../../../../../components/StatusModal/exerciseStatusModal";
+import { schema, widgets } from './onDemandSchema';
 import {Subject} from 'rxjs';
 import {flattenObj} from '../../../../components/utils/responseFlatten';
 import moment from 'moment';
@@ -17,9 +17,9 @@ interface Operation {
     current_status: boolean;
 }
 
-function CreateEditPackage(props: any, ref: any) {
+function CreateEditOnDemadPt(props: any, ref: any) {
     const auth = useContext(AuthContext);
-    const personalTrainingSchema: { [name: string]: any; } = require("./classic.json");
+    const personalTrainingSchema: { [name: string]: any; } = require("./onDemand-PT.json");
     const [personalTrainingDetails, setPersonalTrainingDetails] = useState<any>({});
     const [fitnessTypes, setFitnessType] = useState<any[]>([]);
     const [operation, setOperation] = useState<Operation>({} as Operation);
@@ -31,7 +31,7 @@ function CreateEditPackage(props: any, ref: any) {
     console.log(operation.type);
 
     useQuery(GET_FITNESS_PACKAGE_TYPES, {
-        variables: {type: "Classic Class"},
+        variables: {type: "On-Demand PT"},
         onCompleted: (r: any) => {
             const flattenData = flattenObj({...r});
             setFitnessType(flattenData.fitnessPackageTypes);
@@ -107,6 +107,12 @@ function CreateEditPackage(props: any, ref: any) {
         Residential
     }
 
+    enum ENUM_FITNESSPACKAGE_PTCLASSSIZE {
+        Solo,
+        Couple,
+        Family
+    }
+
     const PRICING_TABLE_DEFAULT = [{mrp: null, suggestedPrice: null, voucher: 0, duration: 1, sapienPricing: null}];
 
     function FillDetails(data: any) {
@@ -115,7 +121,6 @@ function CreateEditPackage(props: any, ref: any) {
         let msg = flattenedData.fitnesspackages[0];
         let booking: any = {};
         let details: any = {};
-        console.log(msg);
         for(var i =0; i<msg.fitnesspackagepricing.length; i++){
             PRICING_TABLE_DEFAULT[i].mrp = msg.fitnesspackagepricing[i].mrp;
             PRICING_TABLE_DEFAULT[i].suggestedPrice = msg.fitnesspackagepricing[i].suggestedPrice;
@@ -128,19 +133,20 @@ function CreateEditPackage(props: any, ref: any) {
         details.equipmentList = JSON.stringify(msg.equipment_lists);
         details.disciplines = JSON.stringify(msg.fitnessdisciplines);
         details.channelinstantBooking = msg.groupinstantbooking;
+        details.classSize = ENUM_FITNESSPACKAGE_PTCLASSSIZE[msg.Ptclasssize];
         details.expiryDate = moment(msg.expirydate).format('YYYY-MM-DD');
         details.level = ENUM_FITNESSPACKAGE_LEVEL[msg.level];
         details.intensity = ENUM_FITNESSPACKAGE_INTENSITY[msg.Intensity];
         details.pricingDetail = msg.fitnesspackagepricing[0]?.mrp === 'free' ? 'free' : JSON.stringify(PRICING_TABLE_DEFAULT);
         details.publishingDate = moment(msg.publishing_date).format('YYYY-MM-DD');
-        details.tag = msg?.tags === null ? "" : msg.tags;
+        details.tags = msg?.tags === null ? "" : msg.tags;
         details.user_permissions_user = msg.users_permissions_user.id;
         details.visibility = msg.is_private === true ? 1 : 0;
         booking.acceptBooking = msg.booking_config?.isAuto === true ? 1 : 0;
         booking.maxBookingDay = msg.booking_config?.bookingsPerDay;
         booking.maxBookingMonth = msg.booking_config?.BookingsPerMonth;
         details.config = booking;
-        details.programDetails = JSON.stringify({ duration: msg.duration, online: msg.recordedclasses, rest: msg.restdays});
+        details.programDetails = JSON.stringify({addressTag: msg.address === null ? 'At Client Address' : 'At My Address', address: [msg.address], mode: ENUM_FITNESSPACKAGE_MODE[msg.mode], offline: msg.ptoffline, online: msg.ptonline, rest: msg.restdays});
         details.thumbnail = msg.Thumbnail_ID;
         details.Upload = msg.Upload_ID === null ? {"VideoUrl": msg.video_URL} : {"upload": msg.Upload_ID};
         details.datesConfig = {"expiryDate": msg.expiry_date, "publishingDate": msg.publishing_date};
@@ -178,14 +184,17 @@ function CreateEditPackage(props: any, ref: any) {
                 aboutpackage: frm.About,
                 benefits: frm.Benifits,
                 mode: ENUM_FITNESSPACKAGE_MODE[frm.programDetails.mode],
+                address: frm.programDetails?.address[0]?.id,
                 disciplines: frm.disciplines,
-                duration: frm.programDetails?.duration,
-                recordedClasses: frm.programDetails?.onlineClasses,
-                restdays: frm.programDetails?.rest,
+                // duration: 
+                ptoffline: frm.programDetails.mode === "1" ? 1 : null,
                 is_private: frm.visibility === 1 ? true : false,
+                ptonline: frm.programDetails.mode === "0" ? 1 : null,
+                restdays: frm.programDetails?.rest,
                 bookingleadday: frm.bookingleaddat,
                 fitness_package_type: fitnessTypes[0].id,
-                fitnesspackagepricing: frm.pricingDetail === "free" ? [{mrp: 'free', duration: frm.programDetails.duration}] : JSON.parse(frm.pricingDetail),
+                fitnesspackagepricing: JSON.parse(frm.pricingDetail).filter((item: any) => item.mrp !== null),
+                ptclasssize: ENUM_FITNESSPACKAGE_PTCLASSSIZE[frm.classSize],
                 users_permissions_user: frm.user_permissions_user,
                 publishing_date: moment(frm.datesConfig?.publishingDate).toISOString(),
                 expiry_date: moment(frm.datesConfig?.expiry_date).toISOString(),
@@ -214,14 +223,17 @@ function CreateEditPackage(props: any, ref: any) {
                 aboutpackage: frm.About,
                 benefits: frm.Benifits,
                 mode: ENUM_FITNESSPACKAGE_MODE[frm.programDetails.mode],
+                address: frm.programDetails?.address[0]?.id,
                 disciplines: frm.disciplines,
-                duration: frm.programDetails?.duration,
-                recordedClasses: frm.programDetails?.onlineClasses,
-                restdays: frm.programDetails?.rest,
+                // duration: 
+                ptoffline: frm.programDetails.mode === "1" ? 1 : null,
                 is_private: frm.visibility === 1 ? true : false,
+                ptonline: frm.programDetails.mode === "0" ? 1 : null,
+                restdays: frm.programDetails?.rest,
                 bookingleadday: frm.bookingleaddat,
                 fitness_package_type: fitnessTypes[0].id,
-                fitnesspackagepricing: frm.pricingDetail === "free" ? [{mrp: 'free', duration: frm.programDetails.duration}] : JSON.parse(frm.pricingDetail),
+                fitnesspackagepricing: JSON.parse(frm.pricingDetail).filter((item: any) => item.mrp !== null),
+                ptclasssize: ENUM_FITNESSPACKAGE_PTCLASSSIZE[frm.classSize],
                 users_permissions_user: frm.user_permissions_user,
                 publishing_date: moment(frm.datesConfig?.publishingDate).toISOString(),
                 expiry_date: moment(frm.datesConfig?.expiry_date).toISOString(),
@@ -276,7 +288,7 @@ function CreateEditPackage(props: any, ref: any) {
 
     let name = "";
     if(operation.type === 'create'){
-        name="Create Classic Class";
+        name="Create On Demand PT";
     }else if(operation.type === 'edit'){
         name="Edit";
     }else if(operation.type === 'view'){
@@ -348,4 +360,4 @@ function CreateEditPackage(props: any, ref: any) {
     )
 }
 
-export default React.forwardRef(CreateEditPackage);
+export default React.forwardRef(CreateEditOnDemadPt);

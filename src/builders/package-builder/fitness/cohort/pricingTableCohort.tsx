@@ -1,4 +1,4 @@
-import React, {useState, useContext, useEffect} from 'react';
+import React, {useState, useContext} from 'react';
 import {Row, Col, Form, Table, FormControl, InputGroup, Button} from 'react-bootstrap';
 import {gql, useQuery, useLazyQuery} from '@apollo/client';
 import AuthContext from '../../../../context/auth-context';
@@ -7,10 +7,19 @@ import moment from 'moment';
 
 const PricingTable = (props) => {
 
+    function calculateDuration(sd, ed){
+        const start = moment(sd);
+        const end = moment(ed);
+        const duration = end.diff(start, 'days');
+        return duration;
+    }
+
+    console.log(props.formContext)
+
     const auth = useContext(AuthContext);
     const [vouchers, setVouchers] = useState<any>([]);
     const [show, setShow] = useState(props.value === 'free' ? true : false);
-    const [pricing, setPricing] = useState<any>(props.value !== undefined && props.value !== 'free' ? JSON.parse(props?.value) : [ {mrp: null, suggestedPrice: null, voucher: 0, duration: JSON.parse(props.formContext.programDetails).onlineClasses, sapienPricing: null}]);
+    const [pricing, setPricing] = useState<any>(props.value !== undefined && props.value !== 'free' ? JSON.parse(props.value) : [ {mrp: null, suggestedPrice: null, voucher: 0, duration: calculateDuration(JSON.parse(props.formContext.dates).publishingDate, JSON.parse(props.formContext.dates).expiryDate), sapienPricing: null}]);
 
     const GET_VOUCHERS = gql`
         query fetchVouchers($expiry: DateTime!, $id: ID!, $start: DateTime!, $status: String!) {
@@ -48,73 +57,55 @@ const PricingTable = (props) => {
         const flattenData = flattenObj({...data});
         setVouchers(flattenData.vouchers);
     }});
-    useEffect(() => {
-      getVouchers( {
-          variables: {expiry: moment().toISOString(), id: auth.userid, start: moment().toISOString(), status: 'Active'},
-      } );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    React.useEffect(() => {
+        getVouchers( {
+            variables: {expiry: moment().toISOString(), id: auth.userid, start: moment().toISOString(), status: 'Active'},
+        } );
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, []);
 
-      const SUGGESTED_PRICING = gql`
-      query fetchSapienPricing($id: ID!) {
-          suggestedPricings(filters: {
-              fitness_package_type: {
-                type: {
-                  eq: "Classic Class"
+    const SAPIEN_PRICING = gql`
+        query fetchSapienPricing($id: ID!) {
+            suggestedPricings(filters: {
+                fitness_package_type: {
+                  type: {
+                    eq: "Cohort"
+                  }
+                },
+                users_permissions_users:{
+                  id: {
+                    eq: $id
+                  }
                 }
-              },
-              users_permissions_users:{
-                id: {
-                  eq: $id
-                }
-              }
-            }){
-              data{
-                id
-                attributes{
-                  mrp
-                  Mode
-                  fitness_package_type{
-                       data{
-                       id
-                         attributes{
-                           type
-                         }
-                       }
-                     }
-                }
-              }
-            }
-          sapienPricings(
-          filters:{
-              fitness_package_type:{
-              type: {
-                  eq: "Classic Class"
-              }
-              }
-          }
-          ){
-              data{
+              }){
+                data{
                   id
                   attributes{
-                  mrp
-                  mode
-                  fitness_package_type{
-                       data{
-                       id
-                         attributes{
-                           type
-                         }
-                       }
-                     }
+                    mrp
                   }
+                }
               }
-          }
-      }
-  `;
+              sapienPricings(
+                filters:{
+                    fitness_package_type:{
+                    type: {
+                        eq: "Cohort"
+                    }
+                    }
+                }
+                ){
+                    data{
+                        id
+                        attributes{
+                        mrp
+                        }
+                    }
+                }
+        }
+    `;
 
     function FetchData(){
-        useQuery(SUGGESTED_PRICING, {variables: { id: auth.userid },onCompleted: (data) => {loadData(data)}})
+        useQuery(SAPIEN_PRICING, {variables: { id: auth.userid },onCompleted: (data) => {loadData(data)}})
     }
 
     function loadData(data){
@@ -132,14 +123,11 @@ const PricingTable = (props) => {
     }
 
 
-    useEffect(() => {
-      if(show){
+    if(show){
         props.onChange('free');
-      }else if(pricing[0].mrp !== null){
+    }else if(pricing[0].mrp !== null){
         props.onChange(JSON.stringify(pricing));    
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [pricing, show]);
+    }
 
     function handlePricingUpdate(value: any, id: any){
         let newPricing = [...pricing];

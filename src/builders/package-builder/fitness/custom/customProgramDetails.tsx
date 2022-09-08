@@ -7,7 +7,7 @@ import AuthContext from '../../../../context/auth-context';
 import { flattenObj } from '../../../../components/utils/responseFlatten';
 import AddFitnessAddressModal from "../../../../components/customWidgets/AddFitnessAddressModal";
 
-const GroupProgramDetails = (props) => {
+const CustomProgramDetails = (props) => {
     const existingData = props.value === undefined ? undefined : JSON.parse(props.value);
     if(existingData !== undefined && existingData.length > 0){
         existingData.address = {id: JSON.parse(existingData?.address)[0].id, title: JSON.parse(existingData?.address)[0].title};
@@ -24,24 +24,36 @@ const GroupProgramDetails = (props) => {
     const [singleSelections, setSingleSelections] = useState<any[]>(existingData?.address?.length !== 0 && props.value !== undefined ? existingData?.address : []);
     const [addresses, setAddresses] = useState<any[]>([]);
     const [addressTitle, setAddressTitle] = useState(props.value !== undefined ? existingData.addressTag : 'At My Address');
-    const [onlineClasses, setOnlineClasses] = useState<number>(existingData?.online ? existingData.online : 0);
-    const [offlineClasses, setOfflinceClasses] = useState<number>(existingData?.offline ? existingData.offline : 0);
+    const [ptOnlineClasses, setPtOnlineClasses] = useState<number>(existingData?.ptOnline ? existingData.ptOnline : 0);
+    const [groupOnlineClasses, setGroupOnlineClasses] = useState<number>(existingData?.groupOnline ? existingData.groupOnline : 0);
+    const [ptOfflineClasses, setPtOfflineClasses] = useState<number>(existingData?.ptOffline ? existingData.ptOffline : 0);
+    const [groupOfflineClasses, setGroupOfflineClasses] = useState<number>(existingData?.groupOffline ? existingData.groupOffline : 0);
+    const [recordedClasses, setRecordedClasses] = useState<number>(existingData?.recorded ? existingData.recorded : 0);
     const [restDays, setRestDays] = useState<number>(existingData?.rest ? existingData.rest : 0);
 
     console.log(singleSelections);
 
     useEffect(() => {
-        if(onlineClasses > 30){
-            setOnlineClasses(30);
+        if(ptOnlineClasses > 30){
+          setPtOnlineClasses(30);
         }
-        if(offlineClasses > 30){
-            setOfflinceClasses(30);
+        if(ptOfflineClasses > 30){
+          setPtOnlineClasses(30);
+        }
+        if(groupOnlineClasses > 30){
+          setGroupOnlineClasses(30);
+        }
+        if(groupOfflineClasses > 30){
+          setGroupOfflineClasses(30);
+        }
+        if(recordedClasses > 30){
+          setRecordedClasses(30);
         }
         if(restDays > handleMax(mode)){
-            setRestDays(handleMax(mode));
+          setRestDays(handleMax(mode));
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [onlineClasses, offlineClasses, restDays, mode]);
+    }, [ptOnlineClasses, ptOfflineClasses, restDays, mode, recordedClasses, groupOfflineClasses, groupOnlineClasses]);
 
 
     const FETCH_USER_ADDRESSES = gql`
@@ -87,73 +99,79 @@ const GroupProgramDetails = (props) => {
         mainQuery.refetch();
     }
 
+    console.log(ptOfflineClasses, ptOnlineClasses, groupOfflineClasses, groupOnlineClasses, recordedClasses, restDays);
+
     function handleValidation(mode: string){
-        //here we will check for online
+     //    here we will check for online
+          console.log(mode);
         if(mode === '0'){
-            if((onlineClasses + restDays) === 30){
-                return true;
+            if((ptOnlineClasses + groupOnlineClasses + recordedClasses + restDays) === 30){
+               return true;
             }else {
-                return false;
+               return false;
             }
         }
         //here we will check for offline
         if(mode === '1'){
-            if((restDays + offlineClasses) === 30){
-                if((addressTitle === 'At My Address' && singleSelections.length !== 0)){
-                    return true;
-                }
-                if(addressTitle === 'At Client Address'){
-                    return true;
-                }else {
-                    return false;
-                }
+            if((restDays + groupOfflineClasses + ptOfflineClasses + recordedClasses) === 30){
+               if((addressTitle === 'At My Address' && singleSelections.length !== 0)){
+               return true;
+               }
+               if(addressTitle === 'At Client Address'){
+               return true;
+               }else {
+               return false;
+               }
             }else {
-                return false;
+               return false;
             }
         }
         //here we will check for both(hybrid)
         if(mode === "2"){
-            if((restDays + offlineClasses + onlineClasses) === 30){
-                if(addressTitle === 'At My Address' && singleSelections.length !== 0){
+            if((restDays + ptOfflineClasses + ptOnlineClasses + groupOfflineClasses + groupOnlineClasses + recordedClasses) === 30){
+               if(addressTitle === 'At My Address' && singleSelections.length !== 0){
                     return true;
-                }
-                if(addressTitle === 'At Client Address'){
+               }
+               if(addressTitle === 'At Client Address'){
                     return true;
-                }else {
+               }else {
                     return false;
-                } 
+               } 
             }else {
-                return false;
+               return false;
             }
         }
     }
 
-    console.log(restDays, onlineClasses, offlineClasses);
+//     console.log(restDays, onlineClasses, offlineClasses);
 
     useEffect(() => {
-        if(mode === "0"){
-            setOfflinceClasses(0);
-            setSingleSelections([]);
-        }else if(mode === "1"){
-            setOnlineClasses(0);
-        }
+          if(mode === "0"){
+               setGroupOfflineClasses(0);
+               setPtOfflineClasses(0);
+               setSingleSelections([]);
+          }else if(mode === "1"){
+               setPtOnlineClasses(0);
+               setGroupOnlineClasses(0);
+          }
     }, [mode]);
 
     if(handleValidation(mode)){
-        props.onChange(JSON.stringify({addressTag: addressTitle, address: singleSelections, mode: mode, online: onlineClasses, offline: offlineClasses, rest: restDays}));
+        props.onChange(JSON.stringify({addressTag: addressTitle, address: singleSelections, mode: mode, ptOnline: ptOnlineClasses, ptOffline: ptOfflineClasses, groupOnline: groupOnlineClasses, groupOffline: groupOfflineClasses, recorded: recordedClasses ,rest: restDays}));
     }else {
         props.onChange(undefined);
     }
 
     function handleMax(mode: string){
+     console.log(ptOfflineClasses, ptOnlineClasses, recordedClasses);
         if(mode === '0'){
-            return 30 - onlineClasses;
+            return 30 - (ptOnlineClasses + recordedClasses + groupOnlineClasses);
         }
         if(mode === '1'){
-            return 30 - offlineClasses;
+            return 30 - (groupOnlineClasses + recordedClasses + ptOfflineClasses);
         }
         if(mode === "2"){
-            return 30 - (onlineClasses + offlineClasses);
+            return 30 - (ptOnlineClasses + ptOfflineClasses + groupOnlineClasses + recordedClasses + groupOfflineClasses);
         }
         return 0;
     }
@@ -209,7 +227,7 @@ const GroupProgramDetails = (props) => {
           </div>
           {mode !== "" && (mode === "0" || mode === "2") && <Row>
                <Col lg={1}>
-                    <img src='/assets/personal-training-online.svg' alt='personal-training'/>
+                    <img src='/assets/custompersonal-training-online.svg' alt='custom-training'/>
                </Col>
                <Col lg={2}>
                     <InputGroup className="mb-3">
@@ -219,15 +237,13 @@ const GroupProgramDetails = (props) => {
                               type='number'
                               min={0}
                               max={28}
-                              value={onlineClasses}
-                              onChange={(e: any) => setOnlineClasses(parseInt(e.target.value))}
+                              value={ptOnlineClasses}
+                              onChange={(e: any) => setPtOnlineClasses(parseInt(e.target.value))}
                          />
                     </InputGroup>
                </Col>
-          </Row>}
-          {mode !== "" && (mode === "1" || mode === "2") && <Row>
                <Col lg={1}>
-                    <img src='/assets/personal-training-offline.svg' alt='personal-training'/>
+                    <img src='/assets/customgroup-online.svg' alt='custom-training'/>
                </Col>
                <Col lg={2}>
                     <InputGroup className="mb-3">
@@ -237,8 +253,60 @@ const GroupProgramDetails = (props) => {
                               type='number'
                               min={2}
                               max={10}
-                              value={offlineClasses}
-                              onChange={(e: any) => setOfflinceClasses(parseInt(e.target.value))}
+                              value={groupOnlineClasses}
+                              onChange={(e: any) => setGroupOnlineClasses(parseInt(e.target.value))}
+                         />
+                    </InputGroup>
+               </Col>
+          </Row>}
+          {mode !== "" && (mode === "1" || mode === "2") && <Row>
+               <Col lg={1}>
+                    <img src='/assets/custompersonal-training-offline.svg' alt='custom-training'/>
+               </Col>
+               <Col lg={2}>
+                    <InputGroup className="mb-3">
+                         <FormControl
+                              aria-label="Default"
+                              aria-describedby="inputGroup-sizing-default"
+                              type='number'
+                              min={0}
+                              max={28}
+                              value={ptOfflineClasses}
+                              onChange={(e: any) => setPtOfflineClasses(parseInt(e.target.value))}
+                         />
+                    </InputGroup>
+               </Col>
+               <Col lg={1}>
+                    <img src='/assets/customgroup-offline.svg' alt='custom-training'/>
+               </Col>
+               <Col lg={2}>
+                    <InputGroup className="mb-3">
+                         <FormControl
+                              aria-label="Default"
+                              aria-describedby="inputGroup-sizing-default"
+                              type='number'
+                              min={2}
+                              max={10}
+                              value={groupOfflineClasses}
+                              onChange={(e: any) => setGroupOfflineClasses(parseInt(e.target.value))}
+                         />
+                    </InputGroup>
+               </Col>
+          </Row>}
+          {mode !== "" && <Row>
+               <Col lg={1}>
+                    <img src='/assets/customclassic.svg' alt='custom-training'/>
+               </Col>
+               <Col lg={2}>
+                    <InputGroup className="mb-3">
+                         <FormControl
+                              aria-label="Default"
+                              aria-describedby="inputGroup-sizing-default"
+                              type='number'
+                              min={2}
+                              max={10}
+                              value={recordedClasses}
+                              onChange={(e: any) => setRecordedClasses(parseInt(e.target.value))}
                          />
                     </InputGroup>
                </Col>
@@ -269,4 +337,4 @@ const GroupProgramDetails = (props) => {
     );
 }
 
-export default GroupProgramDetails;
+export default CustomProgramDetails;

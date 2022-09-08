@@ -3,36 +3,36 @@
         "title": "",
         "type": "object",
         "required": [
-            "packagename",
-            "disciplines",
-            "equipmentList",
+            "channelName",
+            "discpline",
+            "equipment",
             "level",
             "intensity"
         ],
-        "properties": {
-            "packagename": {
+       "properties": {
+            "channelName": {
                 "type": "string",
-                "title": "Name of Package"
+                "title": "Channel Name"
             },
-            "disciplines": {
-                "type": "string",
-                "title": "Disciplines"
-            },
-            "equipmentList": {
-                "type": "string"
-            },
-            "tags": {
+            "tag": {
                 "type": "string",
                 "title": "Tags"
             },
-            "level": {
+            "discpline": {
+                "type": "string"
+            },
+            "equipment": {
+                "type": "string"
+            },
+           "level": {
                 "type": "number",
                 "title": "Level",
-                "enum": [0, 1, 2],
+                "enum": [0, 1, 2, 3],
                 "enumNames": [
                     "Beginner",
                     "Intermediate",
-                    "Advanced"
+                    "Advanced", 
+                    "No level"
                 ]
             },
             "intensity": {
@@ -45,19 +45,18 @@
                     "High"
                 ]
             }
-        }
+        }   
     },
     "2": {
-        "title": "",
-        "type": "object",
-        "required": [
+       "title": "",
+       "type": "object",
+       "required": [
             "About",
             "Benifits",
-            "classsize",
             "thumbnail",
             "Upload"
-        ],
-        "properties": {
+       ],
+       "properties": {
             "About": {
                 "type": "string",
                 "title": "About"
@@ -65,11 +64,6 @@
             "Benifits": {
                 "type": "string",
                 "title": "Benefits"
-            },
-            "classsize": {
-                "type": "number",
-                "title": "Class Size",
-                "minimum": 2
             },
             "thumbnail": {
                 "type": "string"
@@ -106,44 +100,37 @@
         }
     },
     "3": {
-        "title": "Program Details",
+        "title": "",
         "type": "object",
-        "required": ["programDetails"],
+        "required": [
+            "channelinstantBooking"
+        ],
         "properties": {
-            "programDetails": {
-                "type": "string"
-            }
+            "channelinstantBooking": {
+                "type": "string",
+                "title": "Allow instant Bookings"
+              }
         }
     },
     "4": {
         "title": "",
-        "type": "object",
-        "required": ["groupinstantbooking"],
-        "properties": {
-            "groupinstantbooking": {
-                "type": "string",
-                "title": "Allow Consumers to book instant Workouts"
-              }
-        }
-    },
-    "5": {
-        "title": "Pricing Plan",
-        "type": "object",
-        "required": ["pricingDetail"],
-        "properties": {
-            "pricingDetail": {
+       "type": "object",
+       "required": [
+            "pricing"
+       ],
+       "properties": {
+            "pricing": {
                 "type": "string"
             }
         }
-
     },
-    "6": {
+    "5": {
         "title": "Package Settings",
        "type": "object",
        "required": [
-        "visibility",
-        "datesConfig",
-        "config"
+           "visibility",
+           "datesConfig",
+           "config"
        ],
        "properties": {
             "visibility": {
@@ -192,13 +179,14 @@
             }
         }
     },
-    "7": {
-        "title": "Preview",
-        "type": "object",
-        "properties": {
-            "carousel": {
-                "type": "string",
-                "title": "carousel"
+    "6": {
+        "title": "",
+       "type": "object",
+       "required": [
+       ],
+       "properties": {
+            "preview": {
+                "type": "string"
             }
         }
     }

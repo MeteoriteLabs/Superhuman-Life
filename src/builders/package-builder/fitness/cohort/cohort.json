@@ -3,36 +3,37 @@
         "title": "",
         "type": "object",
         "required": [
-            "packagename",
-            "disciplines",
-            "equipmentList",
+            "packageName",
+            "discpline",
+            "equipment",
             "level",
-            "intensity"
+            "intensity",
+            "dates"
         ],
-        "properties": {
-            "packagename": {
+       "properties": {
+            "packageName": {
                 "type": "string",
-                "title": "Name of Package"
+                "title": "Packge Name"
             },
-            "disciplines": {
-                "type": "string",
-                "title": "Disciplines"
-            },
-            "equipmentList": {
-                "type": "string"
-            },
-            "tags": {
+            "tag": {
                 "type": "string",
                 "title": "Tags"
             },
-            "level": {
+            "discpline": {
+                "type": "string"
+            },
+            "equipment": {
+                "type": "string"
+            },
+           "level": {
                 "type": "number",
                 "title": "Level",
-                "enum": [0, 1, 2],
+                "enum": [0, 1, 2, 3],
                 "enumNames": [
                     "Beginner",
                     "Intermediate",
-                    "Advanced"
+                    "Advanced", 
+                    "No level"
                 ]
             },
             "intensity": {
@@ -44,20 +45,25 @@
                     "Moderate",
                     "High"
                 ]
+            },
+            "dates": {
+                "type": "string"
             }
-        }
+            
+        }   
     },
     "2": {
-        "title": "",
-        "type": "object",
-        "required": [
-            "About",
-            "Benifits",
-            "classsize",
-            "thumbnail",
-            "Upload"
-        ],
-        "properties": {
+       "title": "",
+       "type": "object",
+       "required": [
+        "About",
+        "Benifits",
+        "languages",
+        "classSize",
+        "thumbnail",
+        "Upload"
+       ],
+       "properties": {
             "About": {
                 "type": "string",
                 "title": "About"
@@ -66,10 +72,15 @@
                 "type": "string",
                 "title": "Benefits"
             },
-            "classsize": {
+            "languages": {
+                "type": "string",
+                "title": "Languages"
+            },
+            "classSize": {
                 "type": "number",
                 "title": "Class Size",
-                "minimum": 2
+                "minimum": 100,
+                "maximum": 200
             },
             "thumbnail": {
                 "type": "string"
@@ -106,38 +117,43 @@
         }
     },
     "3": {
-        "title": "Program Details",
-        "type": "object",
-        "required": ["programDetails"],
-        "properties": {
-            "programDetails": {
+        "title": "",
+       "type": "object",
+       "required": [
+            "programDetails",
+            "courseDetails"
+       ],
+       "properties": {
+           "programDetails": {
                 "type": "string"
-            }
+           },
+           "courseDetails": {
+                "title": "Course Details",
+                "type": "object",
+                "required": [
+                    "details"
+                ],
+                "properties": {
+                    "details": {
+                        "type": "string"
+                    }
+                }
+        }
         }
     },
     "4": {
         "title": "",
-        "type": "object",
-        "required": ["groupinstantbooking"],
-        "properties": {
-            "groupinstantbooking": {
-                "type": "string",
-                "title": "Allow Consumers to book instant Workouts"
-              }
-        }
-    },
-    "5": {
-        "title": "Pricing Plan",
-        "type": "object",
-        "required": ["pricingDetail"],
-        "properties": {
-            "pricingDetail": {
+       "type": "object",
+       "required": [
+        "pricing"
+       ],
+       "properties": {
+            "pricing": {
                 "type": "string"
             }
         }
-
     },
-    "6": {
+    "5": {
         "title": "Package Settings",
        "type": "object",
        "required": [
@@ -192,13 +208,14 @@
             }
         }
     },
-    "7": {
-        "title": "Preview",
-        "type": "object",
-        "properties": {
-            "carousel": {
-                "type": "string",
-                "title": "carousel"
+    "6": {
+        "title": "",
+       "type": "object",
+       "required": [
+       ],
+       "properties": {
+            "preview": {
+                "type": "string"
             }
         }
     }

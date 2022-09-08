@@ -3,6 +3,11 @@
         "title": "",
         "type": "object",
         "required": [
+            "packagename",
+            "disciplines",
+            "equipmentList",
+            "level",
+            "intensity"
         ],
         "properties": {
             "packagename": {
@@ -45,7 +50,13 @@
     "2": {
         "title": "",
         "type": "object",
-        "required": [],
+        "required": [
+            "About",
+            "Benifits",
+            "classSize",
+            "thumbnail",
+            "Upload"
+        ],
         "properties": {
             "About": {
                 "type": "string",
@@ -112,6 +123,7 @@
     "4": {
         "title": "For Programs",
         "type": "object",
+        "required": ["bookingleadday"],
         "properties": {
             "bookingleadday": {
                 "type": "number",

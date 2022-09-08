@@ -6,7 +6,7 @@ import ClassicPreview from './ClassicPreview';
 import CustomPreview from './CustomPreview';
 import PTGroupPreview from './PTGroupPreview';
 import RecordedPreview from './RecordedPreview';
-import SocialMediaComponent from './SocialMediaComponent';
+import SocialMediaComponent from '../../../../../components/customWidgets/SocialMediaComponent';
 import { Fragment } from 'react';
 
 

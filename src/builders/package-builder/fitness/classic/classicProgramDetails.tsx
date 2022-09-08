@@ -1,35 +1,23 @@
-import React, {useState, useContext, useEffect} from 'react';
-import {Row, Col, Form, InputGroup, FormControl, Button} from 'react-bootstrap';
-import {Typeahead} from 'react-bootstrap-typeahead';
+import React, {useState} from 'react';
+import {Row, Col, Form, InputGroup, FormControl} from 'react-bootstrap';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
-import { useQuery, gql } from '@apollo/client';
-import AuthContext from '../../../../context/auth-context';
-import { flattenObj } from '../../../../components/utils/responseFlatten';
-import AddFitnessAddressModal from "../widgetCustom/AddFitnessAddressModal";
+// import { gql } from '@apollo/client';
+// import AuthContext from '../../../../context/auth-context';
+// import { flattenObj } from '../../../../components/utils/responseFlatten';
+// import AddFitnessAddressModal from "../widgetCustom/AddFitnessAddressModal";
 
-const PtProgramDetails = (props) => {
+const ClassicProgramDetails = (props) => {
+     console.log(props.value);
     const existingData = props.value === undefined ? undefined : JSON.parse(props.value);
     if(existingData !== undefined && existingData.length > 0){
         existingData.address = {id: JSON.parse(existingData?.address)[0].id, title: JSON.parse(existingData?.address)[0].title};
 
     }
 
-    console.log(props);
-    console.log(existingData);
-
-    const [mode, setMode] = useState(props.value === undefined ? '' : (existingData.mode).toString());
-    const [addressModal, setAddressModal] = useState(false);
-
-    const auth = useContext(AuthContext); 
-    const [singleSelections, setSingleSelections] = useState<any[]>(existingData?.address?.length !== 0 && props.value !== undefined ? existingData?.address : []);
-    const [addresses, setAddresses] = useState<any[]>([]);
-    const [addressTitle, setAddressTitle] = useState(props.value !== undefined ? existingData.addressTag : 'At My Address');
-    const [duration, setDuration] = useState(30);
+//     const auth = useContext(AuthContext); 
+    const [duration, setDuration] = useState(existingData?.duration ? existingData?.duration : 1);
     const [onlineClasses, setOnlineClasses] = useState<number>(existingData?.online ? existingData.online : 0);
-//     const [offlineClasses, setOfflinceClasses] = useState<number>(existingData?.offline ? existingData.offline : 0);
     const [restDays, setRestDays] = useState<number>(existingData?.rest ? existingData.rest : 0);
-
-    console.log(singleSelections);
 
 //     useEffect(() => {
 //           if(duration < 30){
@@ -41,48 +29,24 @@ const PtProgramDetails = (props) => {
 //     }, [duration]);
 
 
-    const FETCH_USER_ADDRESSES = gql`
-    query addresses($id: ID!) {
-        addresses(filters: {
-          users_permissions_user: {
-            id: {
-              eq: $id
-            }
-          }
-        }){
-          data{
-              id
-            attributes{
-              address1
-            }
-          }
-        }
-      }
-  `;
-
-     const mainQuery = useQuery(FETCH_USER_ADDRESSES, {variables: {id: auth.userid},onCompleted: loadData});
-
-    function loadData(data: any) {
-        const flattenedData = flattenObj({...data});
-        console.log(flattenedData);
-        setAddresses(
-              [...flattenedData.addresses].map((address) => {
-                  return {
-                      id: address.id,
-                      address1: address.address1
-                  }
-              })
-          );
-    }
-
-
-    function OnChange(e) {
-        setSingleSelections(e);
-    }
-
-    function handleCallback(){
-        mainQuery.refetch();
-    }
+//     const FETCH_USER_ADDRESSES = gql`
+//     query addresses($id: ID!) {
+//         addresses(filters: {
+//           users_permissions_user: {
+//             id: {
+//               eq: $id
+//             }
+//           }
+//         }){
+//           data{
+//               id
+//             attributes{
+//               address1
+//             }
+//           }
+//         }
+//       }
+//   `;
 
 //     function handleValidation(mode: string){
 //         //here we will check for online
@@ -130,12 +94,18 @@ const PtProgramDetails = (props) => {
 //         }
 //     }, [mode]);
 
-    if(mode === "0"){
-        props.onChange(JSON.stringify({addressTag: addressTitle, address: singleSelections, mode: mode}));
-    }else if((mode !== "" && (addressTitle === 'At My Address' && singleSelections.length !== 0)) || addressTitle === 'At Client Address') {
-          props.onChange(JSON.stringify({addressTag: addressTitle, address: singleSelections, mode: mode}));
+    // if(mode === "0"){
+    //     props.onChange(JSON.stringify({addressTag: addressTitle, address: singleSelections, mode: mode}));
+    // }else if((mode !== "" && (addressTitle === 'At My Address' && singleSelections.length !== 0)) || addressTitle === 'At Client Address') {
+    //       props.onChange(JSON.stringify({addressTag: addressTitle, address: singleSelections, mode: mode}));
+    // }else {
+    //  props.onChange(undefined)
+    // }
+    console.log(onlineClasses, restDays, duration);
+    if((onlineClasses + restDays) === duration) {
+        props.onChange(JSON.stringify({ duration: duration, onlineClasses: onlineClasses, restDays: restDays }));
     }else {
-     props.onChange(undefined)
+        props.onChange(undefined);
     }
 
     function handleMax(){
@@ -148,7 +118,7 @@ const PtProgramDetails = (props) => {
                 <label><b>Duration</b></label>
                 <Form.Group>
                     <Form.Control type="number" min={30} max={365} value={duration} onChange={(e: any) => {
-                         setDuration(e.target.value);
+                         setDuration(parseInt(e.target.value));
                     }} />
                 </Form.Group>
             </div>
@@ -166,7 +136,7 @@ const PtProgramDetails = (props) => {
                               aria-describedby="inputGroup-sizing-default"
                               type='number'
                               min={0}
-                              max={28}
+                              max={365}
                               value={onlineClasses}
                               onChange={(e: any) => setOnlineClasses(parseInt(e.target.value))}
                          />
@@ -199,4 +169,4 @@ const PtProgramDetails = (props) => {
     );
 }
 
-export default PtProgramDetails;
+export default ClassicProgramDetails;

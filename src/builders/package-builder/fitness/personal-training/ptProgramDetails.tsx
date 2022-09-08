@@ -7,7 +7,7 @@ import AuthContext from '../../../../context/auth-context';
 import { flattenObj } from '../../../../components/utils/responseFlatten';
 import AddFitnessAddressModal from "../../../../components/customWidgets/AddFitnessAddressModal";
 
-const GroupProgramDetails = (props) => {
+const PtProgramDetails = (props) => {
     const existingData = props.value === undefined ? undefined : JSON.parse(props.value);
     if(existingData !== undefined && existingData.length > 0){
         existingData.address = {id: JSON.parse(existingData?.address)[0].id, title: JSON.parse(existingData?.address)[0].title};
@@ -269,4 +269,4 @@ const GroupProgramDetails = (props) => {
     );
 }
 
-export default GroupProgramDetails;
+export default PtProgramDetails;

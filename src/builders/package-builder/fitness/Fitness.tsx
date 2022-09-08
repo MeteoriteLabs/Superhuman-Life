@@ -5,27 +5,25 @@ import Table from "../../../components/table";
 import AuthContext from "../../../context/auth-context";
 import './fitness.css'
 import ActionButton from "../../../components/actionbutton";
-
-import CreateEditView from "./CreateEditView";
 import CreateEditViewPersonalTraining from './personal-training/CreateEditView';
-import CreateEditViewOnDemandPt from './personal-training/onDemand-PT/CreateEditView';
+import CreateEditViewOnDemandPt from './onDemand-PT/CreateEditView';
 import CreateEditViewGroupClass from './group/CreateEditView';
 import CreateEditViewClassicClass from './classic/CreateOrEdit';
-import CreateEditViewChannel from './create-edit/CreateEditView-Channel';
-import CreateEditViewCohort from "./create-edit/CreateEditView-Cohort";
-import { GET_FITNESS, GET_FITNESS_PACKAGE_TYPES } from "./graphQL/queries";
+import CreateEditViewCustomFitness from './custom/CreateOrEdit';
+import CreateEditViewChannel from './live-stream/CreateEditView-Channel';
+import CreateEditViewCohort from "./cohort/CreateEditView-Cohort";
+import { GET_FITNESS } from "./graphQL/queries";
 import { flattenObj } from "../../../components/utils/responseFlatten";
 
 
 export default function FitnessTab(props) {
     const auth = useContext(AuthContext);
 
-
-    const createEditViewRef = useRef<any>(null);
     const createEditViewPersonalTrainingRef = useRef<any>(null);
     const CreateEditViewOnDemandPtRef = useRef<any>(null);
     const CreateEditViewGroupClassRef = useRef<any>(null);
     const CreateEditViewClassicClassRef = useRef<any>(null);
+    const CreateEditViewCustomFitnessRef = useRef<any>(null);
     const createEditViewChannelRef = useRef<any>(null);
     const createEditViewCohortRef = useRef<any>(null);
     const [selectedDuration, setSelectedDuration] = useState<any>('');
@@ -46,11 +44,14 @@ export default function FitnessTab(props) {
             case 'Classic Class':
                 CreateEditViewClassicClassRef.current.TriggerForm({id: id, type: actionType, actionType: type, current_status: current_status});
                 break;
+            case 'Custom Fitness':
+                CreateEditViewCustomFitnessRef.current.TriggerForm({id: id, type: actionType, actionType: type, current_status: current_status});
+                break;
             case 'Live Stream Channel':
-                createEditViewChannelRef.current.TriggerForm({id: id, type: actionType, actionType: type, current_status: current_status});
+                createEditViewChannelRef.current.TriggerForm({id: id, type: actionType, packageType: type, current_status: current_status});
                 break;
             case 'Cohort':
-                createEditViewCohortRef.current.TriggerForm({id: id, type: actionType, actionType: type, current_status: current_status});
+                createEditViewCohortRef.current.TriggerForm({id: id, type: actionType, packageType: type, current_status: current_status});
                 break;
         }
     }
@@ -76,10 +77,10 @@ export default function FitnessTab(props) {
                         <img src='./assets/CustomType.svg' alt="CustomType" />
                     </div> : ""}
                     {row.original.type === "Cohort" ? <div>
-                        <img src='./assets/CohortType.svg' alt="CohortType" />
+                        <img src='./assets/cohort.svg' alt="CohortType" />
                     </div> : ""}
                     {row.original.type === "Live Stream Channel" ? <div>
-                        <img src='./assets/ChannelType.svg' alt="ChannelType" />
+                        <img src='./assets/livestream.svg' alt="live stream" />
                     </div> : ""}
                 </div>
             }
@@ -90,28 +91,28 @@ export default function FitnessTab(props) {
                 console.log(row.values.details)
                 return <div className='d-flex justify-content-center align-items-center'>
                     {row.values.details[0] !== null && row.values.details[0] !== 0 ?
-                        <div>
+                        <div className="text-center">
                             <img src='./assets/custompersonal-training-Online.svg' alt="PT-Online" />
                             <p>{row.values.details[0] * currentIndex[row.index]}</p>
                         </div>
                         : ""}
                     {row.values.details[1] !== null && row.values.details[1] !== 0 ?
-                        <div>
+                        <div className="text-center">
                             <img src='./assets/custompersonal-training-Offline.svg' alt="PT-Offline" />
                             <p>{row.values.details[1] * currentIndex[row.index]}</p>
                         </div> : ""}
                     {row.values.details[2] !== null && row.values.details[2] !== 0 ?
-                        <div>
+                        <div className="text-center">
                             <img src='./assets/customgroup-Online.svg' alt="Group-Online" />
                             <p>{row.values.details[2] * currentIndex[row.index]}</p>
                         </div> : ""}
                     {row.values.details[3] !== null && row.values.details[3] !== 0 ?
-                        <div>
+                        <div className="text-center">
                             <img src='./assets/customgroup-Offline.svg' alt="GRoup-Offline" />
                             <p>{row.values.details[3] * currentIndex[row.index]}</p>
                         </div> : ""}
                     {row.values.details[4] !== null && row.values.details[4] !== 0 ?
-                        <div>
+                        <div className="text-center">
                             <img src='./assets/customclassic.svg' alt="Classic" />
                             <p>{row.values.details[4] * currentIndex[row.index]}</p>
                         </div> : ""}
@@ -167,19 +168,15 @@ export default function FitnessTab(props) {
             Cell: ({ row }: any) => {
                 const actionClick1 = () => {
                     handleModalRender(row.original.id, "edit", row.original.type);
-                    // row.original.type === "Live Stream Channel" ? createEditViewChannelRef.current.TriggerForm({ id: row.original.id, type: 'edit', packageType: row.original.type }) : row.original.type === "Cohort" ? createEditViewCohortRef.current.TriggerForm({ id: row.original.id, type: 'edit', packageType: row.original.type }) : createEditViewRef.current.TriggerForm({ id: row.original.id, actionType: 'edit', packageType: row.original.type });
                 };
                 const actionClick2 = () => {
                     handleModalRender(row.original.id, "view", row.original.type);
-                    // row.original.type === "Live Stream Channel" ? createEditViewChannelRef.current.TriggerForm({ id: row.original.id, type: 'view', packageType: row.original.type }) : row.original.type === "Cohort" ? createEditViewCohortRef.current.TriggerForm({ id: row.original.id, type: 'view', packageType: row.original.type }) : createEditViewRef.current.TriggerForm({ id: row.original.id, actionType: 'view', packageType: row.original.type });
                 };
                 const actionClick3 = () => {
                     handleModalRender(row.original.id, "toggle-status", row.original.type, row.original.Status === "Active" ? false : true);
-                    // row.original.type === "Live Stream Channel" ? createEditViewChannelRef.current.TriggerForm({ id: row.original.id, type: 'toggle-status', packageType: row.original.type, current_status: row.original.Status === "Active" ? false : true }) : row.original.type === "Cohort" ? createEditViewCohortRef.current.TriggerForm({ id: row.original.id, type: 'toggle-status', packageType: row.original.type, current_status: row.original.Status === "Active" ? false : true }) : createEditViewRef.current.TriggerForm({ id: row.original.id, actionType: 'toggle-status', packageType: row.original.type });
                 };
                 const actionClick4 = () => {
                     handleModalRender(row.original.id, "delete", row.original.type);
-                    // row.original.type === "Live Stream Channel" ? createEditViewChannelRef.current.TriggerForm({ id: row.original.id, type: 'delete', packageType: row.original.type }) : row.original.type === "Cohort" ? createEditViewCohortRef.current.TriggerForm({ id: row.original.id, type: 'delete', packageType: row.original.type }) : createEditViewRef.current.TriggerForm({ id: row.original.id, actionType: 'delete', packageType: row.original.type });
                 };
 
                 const arrayAction = [
@@ -197,22 +194,17 @@ export default function FitnessTab(props) {
 
     const [dataTable, setDataTable] = useState<any>([]);
 
-    const { data } = useQuery(GET_FITNESS_PACKAGE_TYPES);
-
-    // const FetchData = () => {
     const query = useQuery(GET_FITNESS, {
         variables: { id: auth.userid, },
         onCompleted: (data) => loadData(data),
         
     });
-    // }
 
     function refetchQueryCallback() {
         query.refetch();
     }
 
     const loadData = (data: any) => {
-    // console.log("🚀 ~ file: Fitness.tsx ~ line 155 ~ loadData ~ data", data)
         const flattenData = flattenObj({...data});
         console.log(flattenData);
         setDataTable(
@@ -231,7 +223,6 @@ export default function FitnessTab(props) {
         setSelectedDuration(new Array(flattenData.fitnesspackages.length).fill(0));
         setCurrentIndex(new Array(flattenData.fitnesspackages.length).fill(1))
     }
-    // FetchData()
 
     return (
         <TabContent>
@@ -251,7 +242,6 @@ export default function FitnessTab(props) {
                 <Button className='mx-3' variant={true ? "outline-secondary" : "light"} size="sm"
                     onClick={() => {
                         handleModalRender( null, 'create','Group Class');
-                        // createEditViewRef.current.TriggerForm({ id: null, actionType: 'create', type: 'Group Class' });
                     }}
                 >
                     <i className="fas fa-plus-circle"></i>{" "}Group
@@ -259,28 +249,27 @@ export default function FitnessTab(props) {
                 <Button className='mx-3' variant={true ? "outline-secondary" : "light"} size="sm"
                     onClick={() => {
                         handleModalRender( null, 'create','Classic Class');
-                        // createEditViewRef.current.TriggerForm({ id: null, actionType: 'create', type: 'Classic Class'});
                     }}
                 >
                     <i className="fas fa-plus-circle"></i>{" "}Classic
                 </Button>
                 <Button className='mx-3' variant={true ? "outline-secondary" : "light"} size="sm"
                     onClick={() => {
-                        createEditViewRef.current.TriggerForm({ id: null, actionType: 'create', type: 'Custom Fitness' });
+                        handleModalRender( null, 'create','Custom Fitness');
                     }}
                 >
                     <i className="fas fa-plus-circle"></i>{" "}Custom
                 </Button>
                 <Button className='mx-3' variant={true ? "outline-secondary" : "light"} size="sm"
                     onClick={() => {
-                        createEditViewChannelRef.current.TriggerForm({ id: null, type: 'create', packageType: 'Live Stream Channel', callback: refetchQueryCallback() });
+                        handleModalRender( null, 'create','Live Stream Channel');
                     }}
                 >
                     <i className="fas fa-plus-circle"></i>{" "}Live Stream
                 </Button>
                 <Button className='mx-3' variant={true ? "outline-secondary" : "light"} size="sm"
                     onClick={() => {
-                        createEditViewCohortRef.current.TriggerForm({ id: null, type: 'create', packageType: 'Cohort' });
+                        handleModalRender( null, 'create','Cohort');
                     }}
                 >
                     <i className="fas fa-plus-circle"></i>{" "}Cohort
@@ -290,13 +279,13 @@ export default function FitnessTab(props) {
                 <Row>
                     <Col>
                         <Card.Title className="text-center">
-                            {/* <CreateEditView packageType={flattenObj({...data})} ref={createEditViewRef} callback={refetchQueryCallback}></CreateEditView> */}
                             <CreateEditViewChannel ref={createEditViewChannelRef} callback={refetchQueryCallback}></CreateEditViewChannel>
                             <CreateEditViewCohort ref={createEditViewCohortRef} callback={refetchQueryCallback}></CreateEditViewCohort>
                             <CreateEditViewPersonalTraining ref={createEditViewPersonalTrainingRef} callback={refetchQueryCallback}/>
                             <CreateEditViewOnDemandPt ref={CreateEditViewOnDemandPtRef}  callback={refetchQueryCallback}/>
                             <CreateEditViewGroupClass ref={CreateEditViewGroupClassRef}  callback={refetchQueryCallback}/>
                             <CreateEditViewClassicClass ref={CreateEditViewClassicClassRef} callback={refetchQueryCallback}/>
+                            <CreateEditViewCustomFitness ref={CreateEditViewCustomFitnessRef} callback={refetchQueryCallback}/>
                         </Card.Title>
                     </Col>
                 </Row>

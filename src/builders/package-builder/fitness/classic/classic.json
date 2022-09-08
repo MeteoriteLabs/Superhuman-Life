@@ -2,7 +2,13 @@
     "1": {
         "title": "",
         "type": "object",
-        "required": [],
+        "required": [
+            "packagename",
+            "disciplines",
+            "equipmentList",
+            "level",
+            "intensity"
+        ],
         "properties": {
             "packagename": {
                 "type": "string",
@@ -44,13 +50,18 @@
     "2": {
         "title": "",
         "type": "object",
-        "required": [],
+        "required": [
+            "About",
+            "Benifits",
+            "thumbnail",
+            "Upload"
+        ],
         "properties": {
-            "aboutpackage": {
+            "About": {
                 "type": "string",
                 "title": "About"
             },
-            "benefits": {
+            "Benifits": {
                 "type": "string",
                 "title": "Benefits"
             },
@@ -68,6 +79,7 @@
                             }
                       },
                       "required": [
+                        "upload"
                       ]
                     },
                     {
@@ -79,6 +91,7 @@
                         }
                       },
                       "required": [
+                        "VideoUrl"
                       ]
                     }
                 ]
@@ -89,7 +102,7 @@
     "3": {
         "title": "Program Details",
         "type": "object",
-        "required": [],
+        "required": ["programDetails"],
         "properties": {
             "programDetails": {
                 "type": "string"
@@ -99,9 +112,10 @@
     "4": {
         "title": "Pricing Plan",
         "type": "object",
+        "required": ["pricingDetail"],
         "properties": {
             "pricingDetail": {
-                "type": "number",
+                "type": "string",
                 "title": "Pricing Plan",
                 "value": ""
             }

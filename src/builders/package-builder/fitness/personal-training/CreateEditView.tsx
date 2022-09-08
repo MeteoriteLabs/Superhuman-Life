@@ -5,8 +5,8 @@ import { GET_SINGLE_PACKAGE_BY_ID, GET_FITNESS_PACKAGE_TYPES, ADD_SUGGESTION_NEW
 import { CREATE_PACKAGE, DELETE_PACKAGE, EDIT_PACKAGE, UPDATE_PACKAGE_STATUS, CREATE_BOOKING_CONFIG } from '../graphQL/mutations';
 import { Modal, Button} from 'react-bootstrap';
 import AuthContext from "../../../../context/auth-context";
-import StatusModal from "../../../../components/StatusModal/exerciseStatusModal";
-import { schema, widgets } from './schema/personalTraining';
+// import StatusModal from "../../../../components/StatusModal/exerciseStatusModal";
+import { schema, widgets } from './personalTraining';
 import {Subject} from 'rxjs';
 import {flattenObj} from '../../../../components/utils/responseFlatten';
 import moment from 'moment';
@@ -17,7 +17,7 @@ interface Operation {
     current_status: boolean;
 }
 
-function CreateEditExercise(props: any, ref: any) {
+function CreateEditPt(props: any, ref: any) {
     const auth = useContext(AuthContext);
     const personalTrainingSchema: { [name: string]: any; } = require("./personal-training.json");
     const [personalTrainingDetails, setPersonalTrainingDetails] = useState<any>({});
@@ -117,10 +117,11 @@ function CreateEditExercise(props: any, ref: any) {
 
     function FillDetails(data: any) {
         const flattenedData = flattenObj({...data});
-        console.log(flattenedData);
         let msg = flattenedData.fitnesspackages[0];
         let booking: any = {};
         let details: any = {};
+        console.log(msg);
+        debugger;
         for(var i =0; i<msg.fitnesspackagepricing.length; i++){
             PRICING_TABLE_DEFAULT[i].mrp = msg.fitnesspackagepricing[i].mrp;
             PRICING_TABLE_DEFAULT[i].suggestedPrice = msg.fitnesspackagepricing[i].suggestedPrice;
@@ -133,13 +134,13 @@ function CreateEditExercise(props: any, ref: any) {
         details.equipmentList = JSON.stringify(msg.equipment_lists);
         details.disciplines = JSON.stringify(msg.fitnessdisciplines);
         details.channelinstantBooking = msg.groupinstantbooking;
-        details.classSize = ENUM_FITNESSPACKAGE_PTCLASSSIZE[msg.classSize];
+        details.classSize = ENUM_FITNESSPACKAGE_PTCLASSSIZE[msg.Ptclasssize];
         details.expiryDate = moment(msg.expirydate).format('YYYY-MM-DD');
         details.level = ENUM_FITNESSPACKAGE_LEVEL[msg.level];
         details.intensity = ENUM_FITNESSPACKAGE_INTENSITY[msg.Intensity];
         details.pricingDetail = msg.fitnesspackagepricing[0]?.mrp === 'free' ? 'free' : JSON.stringify(PRICING_TABLE_DEFAULT);
         details.publishingDate = moment(msg.publishing_date).format('YYYY-MM-DD');
-        details.tag = msg?.tags === null ? "" : msg.tags;
+        details.tags = msg?.tags === null ? "" : msg.tags;
         details.user_permissions_user = msg.users_permissions_user.id;
         details.visibility = msg.is_private === true ? 1 : 0;
         booking.acceptBooking = msg.booking_config?.isAuto === true ? 1 : 0;
@@ -259,8 +260,6 @@ function CreateEditExercise(props: any, ref: any) {
     }
 
     function updateChannelPackageStatus(id: any, status: any){
-        debugger;
-        console.log(id, status);
         updatePackageStatus({variables: {id: id, Status: status}});
         setStatusModalShow(false);
     }
@@ -308,6 +307,7 @@ function CreateEditExercise(props: any, ref: any) {
                 <ModalView
                     name={name}
                     isStepper={true}
+                    showErrorList={false}
                     formUISchema={schema}
                     stepperValues={["Creator", "Details", "Program", "Schedule", "Pricing", "Config","Preview"]}
                     formSchema={personalTrainingSchema}
@@ -364,4 +364,4 @@ function CreateEditExercise(props: any, ref: any) {
     )
 }
 
-export default React.forwardRef(CreateEditExercise);
+export default React.forwardRef(CreateEditPt);

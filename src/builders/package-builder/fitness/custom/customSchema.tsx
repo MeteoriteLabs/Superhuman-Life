@@ -2,17 +2,17 @@ import Upload from '../../../../components/upload/upload';
 import DatesConfig from '../../../../components/customWidgets/datesConfig';
 import FitnessSelect from '../../../../components/customWidgets/fitnessMultiSelect';
 import EquipmentSelect from '../../../../components/customWidgets/equipmentListSelect';
-import ClassicProgramDetails from './classicProgramDetails';
-import ClassicPricingTable from './classicPricingTable';
-import ClassicPreview from './classicPreview';
+import CustomProgramDetails from './customProgramDetails';
+import CustomPricingTable from './customPricingTable';
+import CustomPreview from './customPreview';
 
 export const widgets = {
      datesConfig: DatesConfig,
      fitnessSelect: FitnessSelect,
      equipmentSelect: EquipmentSelect,
-     classicProgramDetails: ClassicProgramDetails,
-     classPricingTable: ClassicPricingTable,
-     classicPreview: ClassicPreview,
+     customProgramDetails: CustomProgramDetails,
+     customPricingTable: CustomPricingTable,
+     customPreview: CustomPreview,
 }
 
 export const schema: any = {  
@@ -70,13 +70,13 @@ export const schema: any = {
           }
      },
      "programDetails": {
-          "ui:widget": "classicProgramDetails"
+          "ui:widget": "customProgramDetails"
      },
      "pricingDetail": {
-          "ui:widget": "classPricingTable"
+          "ui:widget": "customPricingTable"
      },
      "carousel": {
-          "ui:widget": "classicPreview"
+          "ui:widget": "customPreview"
      },
      "datesConfig": {
           "ui:widget": "datesConfig"

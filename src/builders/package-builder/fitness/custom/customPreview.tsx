@@ -3,12 +3,13 @@ import {Carousel, Card} from 'react-bootstrap';
 import SocialMediaComponent from '../../../../components/customWidgets/SocialMediaComponent';
 import DisplayImage from '../../../../components/DisplayImage/index';
 
-const PreviewGroup = (props) => {
+const PreviewCustom = (props) => {
 
     console.log(props.formContext)
 
     const formData = props?.formContext;
     const programDetails = JSON.parse(formData?.programDetails);
+    console.log(programDetails);
     var pricing;
     if(typeof(formData.pricingDetail) === 'string'){
         pricing = formData?.pricingDetail === "free" ? "free" : JSON.parse(formData?.pricingDetail).filter((item) => item.mrp !== null);
@@ -28,19 +29,60 @@ const PreviewGroup = (props) => {
         Family
     }
 
-    function handleImageRender(mode: string){
+    function handleImageRender(mode: string, duration: number){
         if(mode === "0"){
-            return <div><img src={`/assets/Grouponline.svg`} alt="personal-training" title="Personal Training Online" /><p>{programDetails.online}</p></div>
+            return (<>
+                <div>
+                    <img src={`/assets/custompersonal-training-online.svg`} alt="personal-training" title="Personal Training Online" />
+                    <p>{programDetails.ptOnline * (duration/30)}</p>
+                </div>
+                <div>
+                    <img src={`/assets/customgroup-online.svg`} alt="personal-training" title="Personal Training Online" />
+                    <p>{programDetails.groupOnline * (duration/30)}</p>
+                </div>
+                <div>
+                    <img src={`/assets/customclassic.svg`} alt="personal-training" title="Personal Training Online" />
+                    <p>{programDetails.recorded * (duration/30)}</p>
+                </div>
+            </>)
         }else if(mode === "1"){
-            return <div><img src={`/assets/Groupoffline.svg`} alt="personal-training" title="Personal Training Online" /><p>{programDetails.offline}</p></div>
+            return (<>
+                <div>
+                    <img src={`/assets/custompersonal-training-offline.svg`} alt="personal-training" title="Personal Training Online" />
+                    <p>{programDetails.ptOffline * (duration/30)}</p>
+                </div>
+                <div>
+                    <img src={`/assets/customgroup-offline.svg`} alt="personal-training" title="Personal Training Online" />
+                    <p>{programDetails.groupOffline * (duration/30)}</p>
+                </div>
+                <div>
+                    <img src={`/assets/customclassic.svg`} alt="personal-training" title="Personal Training Online" />
+                    <p>{programDetails.recorded * (duration/30)}</p>
+                </div>
+            </>)
         }else {
-            return <><div>
-                <img src={`/assets/Grouponline.svg`} alt="personal-training" title="Personal Training Online" />
-                <p>{programDetails.online}</p>
-            </div><div>
-                <img src={`/assets/Groupoffline.svg`} alt="personal-training" title="Personal Training Offline" />
-                <p>{programDetails.offline}</p>
-            </div></>
+            return (<>
+                <div>
+                    <img src={`/assets/custompersonal-training-online.svg`} alt="personal-training" title="Personal Training Online" />
+                    <p>{programDetails.ptOnline * (duration/30)}</p>
+                </div>
+                <div>
+                    <img src={`/assets/custompersonal-training-offline.svg`} alt="personal-training" title="Personal Training Offline" />
+                    <p>{programDetails.ptOffline * (duration/30)}</p>
+                </div>
+                <div>
+                    <img src={`/assets/customgroup-online.svg`} alt="personal-training" title="Personal Training Offline" />
+                    <p>{programDetails.groupOnline * (duration/30)}</p>
+                </div>
+                <div>
+                    <img src={`/assets/customgroup-offline.svg`} alt="personal-training" title="Personal Training Offline" />
+                    <p>{programDetails.groupOffline * (duration/30)}</p>
+                </div>
+                <div>
+                    <img src={`/assets/customclassic.svg`} alt="personal-training" title="Personal Training Offline" />
+                    <p>{programDetails.recorded * (duration/30)}</p>
+                </div>
+            </>)
         }
     }
 
@@ -76,7 +118,7 @@ const PreviewGroup = (props) => {
                                 </div>
                                 <div className='pt-3 d-flex justify-content-between align-items-center '>
                                     <div className='d-flex justify-content-center align-items-center'>
-                                        {handleImageRender(programDetails.mode)}
+                                        {handleImageRender(programDetails.mode, item.duration)}
                                         {/* <div className='px-4' style={{ borderRight: '1px solid black' }}></div> */}
                                         <div className='ml-4'>
                                             <h4>Class Size</h4>
@@ -107,4 +149,4 @@ const PreviewGroup = (props) => {
     );
 };
 
-export default PreviewGroup;
+export default PreviewCustom;

@@ -21,6 +21,7 @@ export const CREATE_PACKAGE = gql`
     $bookingleadday: Int
     $bookingleadtime: String
     $groupinstantbooking: Boolean
+    $Is_free_demo: Boolean
     $is_private: Boolean
     $fitness_package_type: ID
     $fitnesspackagepricing: JSON
@@ -56,6 +57,7 @@ export const CREATE_PACKAGE = gql`
         is_private: $is_private
         bookingleadtime: $bookingleadtime
         groupinstantbooking: $groupinstantbooking
+        Is_free_demo: $Is_free_demo
         fitness_package_type: $fitness_package_type
         fitnesspackagepricing: $fitnesspackagepricing
         Ptclasssize: $ptclasssize
@@ -118,6 +120,7 @@ export const EDIT_PACKAGE = gql`
     $bookingleadday: Int
     $bookingleadtime: String
     $groupinstantbooking: Boolean
+    $Is_free_demo: Boolean
     $is_private: Boolean
     $fitness_package_type: ID
     $fitnesspackagepricing: JSON
@@ -154,6 +157,7 @@ export const EDIT_PACKAGE = gql`
           bookingleadday: $bookingleadday
           bookingleadtime: $bookingleadtime
           groupinstantbooking: $groupinstantbooking
+          Is_free_demo: $Is_free_demo
           fitness_package_type: $fitness_package_type
           fitnesspackagepricing: $fitnesspackagepricing
           Ptclasssize: $ptclasssize

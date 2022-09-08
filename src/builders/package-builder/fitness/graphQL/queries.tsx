@@ -107,6 +107,7 @@ export const GET_SINGLE_PACKAGE_BY_ID = gql`
           level
           aboutpackage
           Intensity
+          Is_free_demo
           languages{
             data{
               id

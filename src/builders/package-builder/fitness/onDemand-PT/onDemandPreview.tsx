@@ -3,7 +3,7 @@ import {Carousel, Card} from 'react-bootstrap';
 import SocialMediaComponent from '../../../../components/customWidgets/SocialMediaComponent';
 import DisplayImage from '../../../../components/DisplayImage/index';
 
-const PreviewGroup = (props) => {
+const PreviewPt = (props) => {
 
     console.log(props.formContext)
 
@@ -30,17 +30,9 @@ const PreviewGroup = (props) => {
 
     function handleImageRender(mode: string){
         if(mode === "0"){
-            return <div><img src={`/assets/Grouponline.svg`} alt="personal-training" title="Personal Training Online" /><p>{programDetails.online}</p></div>
+            return <div><img src={`/assets/PTonline.svg`} alt="personal-training" title="Personal Training Online" /><p>1</p></div>
         }else if(mode === "1"){
-            return <div><img src={`/assets/Groupoffline.svg`} alt="personal-training" title="Personal Training Online" /><p>{programDetails.offline}</p></div>
-        }else {
-            return <><div>
-                <img src={`/assets/Grouponline.svg`} alt="personal-training" title="Personal Training Online" />
-                <p>{programDetails.online}</p>
-            </div><div>
-                <img src={`/assets/Groupoffline.svg`} alt="personal-training" title="Personal Training Offline" />
-                <p>{programDetails.offline}</p>
-            </div></>
+            return <div><img src={`/assets/PTonline.svg`} alt="personal-training" title="Personal Training Online" /><p>1</p></div>
         }
     }
 
@@ -107,4 +99,4 @@ const PreviewGroup = (props) => {
     );
 };
 
-export default PreviewGroup;
+export default PreviewPt;

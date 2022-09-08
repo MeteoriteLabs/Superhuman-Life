@@ -2,17 +2,17 @@ import Upload from '../../../../components/upload/upload';
 import DatesConfig from '../../../../components/customWidgets/datesConfig';
 import FitnessSelect from '../../../../components/customWidgets/fitnessMultiSelect';
 import EquipmentSelect from '../../../../components/customWidgets/equipmentListSelect';
-import ClassicProgramDetails from './classicProgramDetails';
-import ClassicPricingTable from './classicPricingTable';
-import ClassicPreview from './classicPreview';
+import PtProgramDetails from './onDemandProgramDetails';
+import PTPricingTable from './onDemandPricingtable';
+import PTPreview from './onDemandPreview';
 
 export const widgets = {
      datesConfig: DatesConfig,
      fitnessSelect: FitnessSelect,
      equipmentSelect: EquipmentSelect,
-     classicProgramDetails: ClassicProgramDetails,
-     classPricingTable: ClassicPricingTable,
-     classicPreview: ClassicPreview,
+     ptProgramDetails: PtProgramDetails,
+     ptPricingTable: PTPricingTable,
+     ptPreview: PTPreview,
 }
 
 export const schema: any = {  
@@ -70,22 +70,22 @@ export const schema: any = {
           }
      },
      "programDetails": {
-          "ui:widget": "classicProgramDetails"
+          "ui:widget": "ptProgramDetails"
      },
      "pricingDetail": {
-          "ui:widget": "classPricingTable"
+          "ui:widget": "ptPricingTable"
      },
      "carousel": {
-          "ui:widget": "classicPreview"
-     },
-     "datesConfig": {
-          "ui:widget": "datesConfig"
+          "ui:widget": "ptPreview"
      },
      "visibility": {
           "ui:widget": "radio",
-              "ui:options": {
-                  "inline": true
-              }
+          "ui:options": {
+              "inline": true
+          }
+      },
+     "datesConfig": {
+          "ui:widget": "datesConfig"
      },
      "config": {
           "acceptBooking": {
