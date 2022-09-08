@@ -65,7 +65,7 @@ function CreateEditCohort(props: any, ref: any) {
             schema.startDate = props.startDate;
             schema.duration = props.duration;
 
-            if (msg && !msg.id) //render form if no message id
+            // if (msg && !msg.id) //render form if no message id
                 modalTrigger.next(true);
         }
     }));

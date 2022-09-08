@@ -80,7 +80,7 @@ function CreateEditPt(props: any, ref: any) {
         TriggerForm: (msg: Operation) => {
             setOperation(msg);
 
-            if (msg && !msg.id) //render form if no message id
+            // if (msg && !msg.id) //render form if no message id
                 modalTrigger.next(true);
         }
     }));
