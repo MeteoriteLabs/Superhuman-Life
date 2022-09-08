@@ -1,4 +1,4 @@
-import React, { useContext, useImperativeHandle, useState } from 'react';
+import React, { useContext, useImperativeHandle, useState, useEffect } from 'react';
 import { useQuery, useMutation } from "@apollo/client";
 import ModalView from "../../../../components/modal";
 import { GET_SINGLE_PACKAGE_BY_ID, GET_FITNESS_PACKAGE_TYPES, ADD_SUGGESTION_NEW } from '../graphQL/queries';
@@ -164,6 +164,12 @@ function CreateEditPackage(props: any, ref: any) {
     }
 
     console.log(operation.type);
+
+    useEffect(() => {
+        if(operation.type === 'create'){
+            setCustomDetails({});
+        }
+    }, [operation.type]);
 
     function FetchData() {
         console.log('Fetch Data');

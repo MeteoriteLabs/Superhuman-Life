@@ -1,4 +1,4 @@
-import React, { useContext, useImperativeHandle, useState } from 'react';
+import React, { useContext, useImperativeHandle, useState, useEffect } from 'react';
 import { useQuery, useMutation } from "@apollo/client";
 import ModalView from "../../../../components/modal";
 import {CREATE_CHANNEL_PACKAGE, CREATE_BOOKING_CONFIG, DELETE_PACKAGE, UPDATE_PACKAGE_STATUS, UPDATE_CHANNEL_COHORT_PACKAGE} from '../graphQL/mutations';
@@ -139,6 +139,12 @@ function CreateEditChannel(props: any, ref: any) {
         else
             OnSubmit(null);
     }
+
+    useEffect(() => {
+        if(operation.type === 'create'){
+            setProgramDetails({});
+        }
+    }, [operation.type]);
 
     function FetchData() {
         useQuery(GET_SINGLE_PACKAGE_BY_ID, { variables: { id: operation.id }, skip: (operation.type === 'create'), onCompleted: (e: any) => { FillDetails(e) } });

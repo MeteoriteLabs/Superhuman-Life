@@ -1,4 +1,4 @@
-import React, { useContext, useImperativeHandle, useState } from 'react';
+import React, { useContext, useImperativeHandle, useState, useEffect } from 'react';
 import { useQuery, useMutation } from "@apollo/client";
 import ModalView from "../../../../components/modal";
 import { GET_SINGLE_PACKAGE_BY_ID, GET_FITNESS_PACKAGE_TYPES, ADD_SUGGESTION_NEW } from '../graphQL/queries';
@@ -20,7 +20,7 @@ interface Operation {
 function CreateEditPackage(props: any, ref: any) {
     const auth = useContext(AuthContext);
     const personalTrainingSchema: { [name: string]: any; } = require("./classic.json");
-    const [personalTrainingDetails, setPersonalTrainingDetails] = useState<any>({});
+    const [classicDetails, setClassicDetails] = useState<any>({});
     const [fitnessTypes, setFitnessType] = useState<any[]>([]);
     const [operation, setOperation] = useState<Operation>({} as Operation);
     const [deleteModalShow, setDeleteModalShow] = useState(false);
@@ -145,7 +145,7 @@ function CreateEditPackage(props: any, ref: any) {
         details.Upload = msg.Upload_ID === null ? {"VideoUrl": msg.video_URL} : {"upload": msg.Upload_ID};
         details.datesConfig = {"expiryDate": msg.expiry_date, "publishingDate": msg.publishing_date};
         details.bookingleadday = msg.bookingleadday;
-        setPersonalTrainingDetails (details);
+        setClassicDetails (details);
         // console.log(exerciseDetails);
 
         //if message exists - show form only for edit and view
@@ -156,6 +156,12 @@ function CreateEditPackage(props: any, ref: any) {
     }
 
     console.log(operation.type);
+
+    useEffect(() => {
+        if(operation.type === 'create'){
+            setClassicDetails({});
+        }
+    }, [operation.type]);
 
     function FetchData() {
         console.log('Fetch Data');
@@ -297,7 +303,7 @@ function CreateEditPackage(props: any, ref: any) {
                     stepperValues={["Creator", "Details", "Program", "Pricing", "Config","Preview"]}
                     formSchema={personalTrainingSchema}
                     formSubmit={name === "View" ? () => { modalTrigger.next(false); } : (frm: any) => { OnSubmit(frm); }}
-                    formData={personalTrainingDetails}
+                    formData={classicDetails}
                     widgets={widgets}
                     modalTrigger={modalTrigger}
                 />
