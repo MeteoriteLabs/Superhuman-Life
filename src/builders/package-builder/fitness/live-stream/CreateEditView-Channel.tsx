@@ -270,8 +270,8 @@ function CreateEditChannel(props: any, ref: any) {
                 <ModalView
                     name={name}
                     isStepper={true}
-                    formUISchema={schema}
                     showErrorList={false}
+                    formUISchema={schema}
                     formSchema={programSchema}
                     formSubmit={name === "View" ? () => { modalTrigger.next(false); } : (frm: any) => { OnSubmit(frm); }}
                     formData={programDetails}

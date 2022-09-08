@@ -30,7 +30,6 @@ export default function FitnessTab(props) {
     const [currentIndex, setCurrentIndex] = useState<any>('');
 
     function handleModalRender(id: string | null, actionType: string, type: string, current_status?: boolean){
-        console.log(id, actionType, type);
         switch(type){
             case 'Personal Training':
                 createEditViewPersonalTrainingRef.current.TriggerForm({id: id, type: actionType, actionType: type, current_status: current_status});
@@ -88,7 +87,7 @@ export default function FitnessTab(props) {
         {
             accessor: "details", Header: "Details",
             Cell: ({ row }: any) => {
-                console.log(row.values.details)
+                console.log(row.values)
                 return <div className='d-flex justify-content-center align-items-center'>
                     {row.values.details[0] !== null && row.values.details[0] !== 0 ?
                         <div className="text-center">
@@ -115,6 +114,11 @@ export default function FitnessTab(props) {
                         <div className="text-center">
                             <img src='./assets/customclassic.svg' alt="Classic" />
                             <p>{row.values.details[4] * currentIndex[row.index]}</p>
+                        </div> : ""}
+                    {row.values.details[5] !== null && row.values.details[5] !== 0 ?
+                        <div className="text-center">
+                            <img src={row.values.details[6] === "Online" ? './assets/cohort_online.svg' : './assets/cohort_offline.svg'} alt="Classic" />
+                            <p>{row.values.details[5] * currentIndex[row.index]}</p>
                         </div> : ""}
                 </div>
             }
@@ -156,7 +160,7 @@ export default function FitnessTab(props) {
             accessor: "mrp", Header: "MRP",
             Cell: ({ row }: any) => {
                 return <>
-                    <p>{row.values.mrp[selectedDuration[row.index]]}</p>
+                    <p>{"\u20B9"} {row.values.mrp[selectedDuration[row.index]]}</p>
                 </>
             }
         },
@@ -206,14 +210,14 @@ export default function FitnessTab(props) {
 
     const loadData = (data: any) => {
         const flattenData = flattenObj({...data});
-        console.log(flattenData);
         setDataTable(
             [...flattenData.fitnesspackages].map(item => {
+                console.log(item);
                 return {
                     id: item.id,
                     packagename: item.packagename,
                     type: item.fitness_package_type.type,
-                    details: [item.ptonline, item.ptoffline, item.grouponline, item.groupoffline, item.recordedclasses],
+                    details: [item.ptonline, item.ptoffline, item.grouponline, item.groupoffline, item.recordedclasses, item.duration, item.mode],
                     duration: item.fitnesspackagepricing.map(i => i.duration),
                     mrp: item.fitnesspackagepricing.map(i => i.mrp),
                     Status: item.Status ? "Active" : "Inactive",
@@ -229,12 +233,12 @@ export default function FitnessTab(props) {
             <div className="justify-content-lg-center d-flex overflow-auto p-3">
             <DropdownButton variant="outline-secondary" id="dropdown-basic-button" title={
                 <span>
-                    <i className='fas fa-plus-circle'></i> Personal Training
+                    <i className='fas fa-plus-circle'></i> One-On-One
                 </span>
             }>
                 <Dropdown.Item onClick={() => {
                     handleModalRender( null, 'create','Personal Training');
-                }}>Personal Training</Dropdown.Item>
+                }}>PT Package</Dropdown.Item>
                 <Dropdown.Item onClick={() => {
                     handleModalRender( null, 'create','On-Demand PT');
                 }}>On Demand - PT</Dropdown.Item>

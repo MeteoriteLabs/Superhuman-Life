@@ -184,6 +184,7 @@ function CreateEditCohort(props: any, ref: any) {
                 level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
                 Intensity: ENUM_FITNESSPACKAGE_INTENSITY[frm.intensity],
                 equipmentList: frm?.equipment?.length > 0 ? frm.equipment.map((item: any) => item.id).join(", ").split(", ") : [],
+                duration: calculateDuration(frm.dates.publishingDate, frm.dates.expiryDate),
                 fitnessdisciplines: frm?.discpline?.length > 0 ? frm.discpline.map((item: any) => item.id).join(", ").split(", ") : [],
                 fitnesspackagepricing: frm.pricing === "free" ? [{mrp: 'free', duration: calculateDuration(frm.dates.publishingDate, frm.dates.expiryDate)}] : JSON.parse(frm.pricing),
                 publishing_date: moment(frm.datesConfig.publishingDate).toISOString(),
@@ -234,6 +235,7 @@ function CreateEditCohort(props: any, ref: any) {
                 fitnesspackagepricing: frm.pricing === "free" ? [{mrp: 'free', duration: calculateDuration(frm.dates.publishingDate, frm.dates.expiryDate)}] : JSON.parse(frm.pricing),
                 publishing_date: moment(frm.publishingDate).toISOString(),
                 tags: frm.tag,
+                duration: calculateDuration(frm.dates.publishingDate, frm.dates.expiryDate),
                 users_permissions_user: frm.user_permissions_user,
                 fitness_package_type: findPackageType(operation.packageType),
                 is_private: frm.visibility === 0 ? false : true,
@@ -302,8 +304,8 @@ function CreateEditCohort(props: any, ref: any) {
                 <ModalView
                     name={name}
                     isStepper={true}
-                    formUISchema={schema}
                     showErrorList={false}
+                    formUISchema={schema}
                     formSchema={programSchema}
                     formSubmit={name === "View" ? () => { modalTrigger.next(false); } : (frm: any) => { OnSubmit(frm); }}
                     formData={programDetails}

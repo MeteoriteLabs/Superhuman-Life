@@ -292,6 +292,7 @@ function CreateEditPackage(props: any, ref: any) {
                 <ModalView
                     name={name}
                     isStepper={true}
+                    showErrorList={false}
                     formUISchema={schema}
                     stepperValues={["Creator", "Details", "Program", "Pricing", "Config","Preview"]}
                     formSchema={personalTrainingSchema}

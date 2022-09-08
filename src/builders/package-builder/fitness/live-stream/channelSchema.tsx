@@ -38,13 +38,15 @@ export const schema: any = {
             "ui:widget": "textarea",
             "ui:options": {
                 "rows": 3
-            }
+            },
+            "ui:placeholder": "About the program",
         },
         "Benifits": {
             "ui:widget": "textarea",
             "ui:options": {
                 "rows": 3
-            }
+            },
+            "ui:placeholder": "Benifits of the program",
         },
         "datesConfig": {
             "ui:widget": "datesConfig"

@@ -61,6 +61,7 @@ export const GET_FITNESS = gql`
           packagename
           ptoffline
           ptonline
+          mode
           groupoffline
           grouponline
           recordedclasses

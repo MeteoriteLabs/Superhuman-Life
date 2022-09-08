@@ -1,4 +1,4 @@
-import React, { useContext, useImperativeHandle, useState } from 'react';
+import React, { useContext, useImperativeHandle, useState, useEffect } from 'react';
 import { useQuery, useMutation } from "@apollo/client";
 import ModalView from "../../../../components/modal";
 import { GET_SINGLE_PACKAGE_BY_ID, GET_FITNESS_PACKAGE_TYPES, ADD_SUGGESTION_NEW } from '../graphQL/queries';
@@ -27,8 +27,7 @@ function CreateEditOnDemadPt(props: any, ref: any) {
     const [statusModalShow, setStatusModalShow] = useState(false);
 
     let frmDetails: any = {};
-
-    console.log(operation.type);
+    const modalTrigger =  new Subject();
 
     useQuery(GET_FITNESS_PACKAGE_TYPES, {
         variables: {type: "On-Demand PT"},
@@ -74,7 +73,6 @@ function CreateEditOnDemadPt(props: any, ref: any) {
     }});
     const [deletePackage] = useMutation(DELETE_PACKAGE, { refetchQueries: ["GET_TABLEDATA"], onCompleted: (data) => {props.callback()}});
 
-    const modalTrigger =  new Subject();
 
     useImperativeHandle(ref, () => ({
         TriggerForm: (msg: Operation) => {
@@ -152,7 +150,6 @@ function CreateEditOnDemadPt(props: any, ref: any) {
         details.datesConfig = {"expiryDate": msg.expiry_date, "publishingDate": msg.publishing_date};
         details.bookingleadday = msg.bookingleadday;
         setPersonalTrainingDetails (details);
-        // console.log(exerciseDetails);
 
         //if message exists - show form only for edit and view
         if (['edit', 'view'].indexOf(operation.type) > -1)
@@ -162,6 +159,12 @@ function CreateEditOnDemadPt(props: any, ref: any) {
     }
 
     console.log(operation.type);
+
+    useEffect(() => {
+        if(operation.type === 'create'){
+            setPersonalTrainingDetails({});
+        }
+    }, [operation.type]);
 
     function FetchData() {
         console.log('Fetch Data');
@@ -297,7 +300,6 @@ function CreateEditOnDemadPt(props: any, ref: any) {
 
     FetchData();
 
-
     return (
         <>
             {/* {render && */}
@@ -305,6 +307,7 @@ function CreateEditOnDemadPt(props: any, ref: any) {
                     name={name}
                     isStepper={true}
                     formUISchema={schema}
+                    showErrorList={false}
                     stepperValues={["Creator", "Details", "Program", "Pricing", "Config","Preview"]}
                     formSchema={personalTrainingSchema}
                     formSubmit={name === "View" ? () => { modalTrigger.next(false); } : (frm: any) => { OnSubmit(frm); }}

@@ -16,14 +16,17 @@
             },
             "disciplines": {
                 "type": "string",
-                "title": "Disciplines"
+                "title": "Disciplines",
+                "description": "it is a required field"
             },
             "equipmentList": {
-                "type": "string"
+                "type": "string",
+                "description": "it is a required field  "
             },
             "tags": {
                 "type": "string",
-                "title": "Tags"
+                "title": "Tags",
+                "description": "User hashtags to improve your listing"
             },
             "level": {
                 "type": "number",
@@ -77,7 +80,8 @@
                 ]
             },
             "thumbnail": {
-                "type": "string"
+                "type": "string",
+                "description": "Accepts only Image and size cannot exceed 5mb"
             },
             "Upload": {
                 "type": "object",
@@ -86,7 +90,8 @@
                         "title": "Upload picture or video", 
                         "properties": {
                             "upload": {
-                                "type": "string"
+                                "type": "string",
+                                "description": "Accepts only Image and size cannot exceed 5mb"
                             }
                       },
                       "required": [
@@ -168,7 +173,8 @@
                 "enumNames": [
                     "Public",
                     "Private"
-                ]
+                ],
+                "description": "The package will be save as draft and wait for you to publish it."
             },
             "datesConfig": {
                 "type": "string"
@@ -189,7 +195,8 @@
                         "enumNames": [
                             "Manual",
                             "Auto"
-                        ]
+                        ],
+                        "description": "In auto it will automatically accept all bookings"
                     },
                     "maxBookingMonth": {
                         "type": "number",
