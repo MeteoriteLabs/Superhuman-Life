@@ -53,7 +53,7 @@
             "about": {
                 "type": "string",
                 "title": "About",
-                "description" : " Explain in detail about the workout"
+                "description" : "Explain in detail about the workout"
             },
             "benefits": {
                 "type": "string",

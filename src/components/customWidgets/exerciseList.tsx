@@ -1,5 +1,5 @@
 import { useState, useRef, useContext } from 'react';
-import { InputGroup, FormControl, Container, Row, Col, Form } from 'react-bootstrap';
+import { InputGroup, FormControl, Container, Row, Col } from 'react-bootstrap';
 import { useQuery } from "@apollo/client";
 import { GET_EXERCISELIST } from '../../builders/program-builder/exercises/queries';
 import AuthContext from "../../context/auth-context";
@@ -14,11 +14,6 @@ const ExerciseList = (props: any) => {
      const [searchInput, setSearchInput] = useState(null);
      const [selected, setSelected] = useState<any[]>(props?.value[0]?.type === "exercise" ? props.value : []);
      const inputField = useRef<any>();
-     // const [isRepsEmpty, setIsRepsEmpty] = useState<boolean>(false);
-     // const [isSetsEmpty, setIsSetsEmpty] = useState<boolean>(false);
-     // const [isWeightEmpty, setIsWeightEmpty] = useState<boolean>(false);
-     // const [isRestTimeEmpty, setIsRestTimeEmpty] = useState<boolean>(false);
-     // const [isDurationEmpty, setIsDurationEmpty] = useState<boolean>(false);
      let skipval: Boolean = true;
 
      function FetchExerciseList(_variable: {} = { id: auth.userid, filter: " " }) {
@@ -68,10 +63,9 @@ const ExerciseList = (props: any) => {
           const values = [...selected];
           let a = values.findIndex((e) => i === e.id);
           values[a][type] = parseInt(event.target.value >= 0 ? event.target.value : null);
-          // if(event.target.value === null && type === 'reps'){
-          //      setIsRepsEmpty(true);
-          // }
+
           setSelected(values);
+
      }
 
      props.onChange(selected);
@@ -107,16 +101,16 @@ const ExerciseList = (props: any) => {
                     })}
                </>
                <>
-                    {selected.map((val) => {
+                    {selected.map((val, index) => {
                          return (
-                              <Container className="mt-2 p-2 shadow-lg rounded-lg bg-white">
+                              <Container className="mt-2 p-2 shadow-lg rounded-lg bg-white" key={index}>
                                    <span style={{ fontWeight: 'bold', fontSize: '20px' }} className="ml-2">
                                         {val.value.charAt(0).toUpperCase() + val.value.slice(1)}</span>
                                    <i className="close fas fa-times pr-2" style={{ fontSize: '16px' }} onClick={() => handleSelectedExerciseRemove(val.value)} />
                                    <div className="text-center mt-3 ml-2">
                                         <Row className="text-center">
                                              <Col className="text-center">
-                                                  <InputGroup className="mb-3" hasValidation>
+                                                  <InputGroup className="mb-3" >
                                                        <FormControl
                                                             type="number"
                                                             min={MIN_VALUE}
@@ -125,14 +119,11 @@ const ExerciseList = (props: any) => {
                                                             aria-describedby="basic-addon2"
                                                             onChange={e => handleDataChange(val.id, e, "reps")}
                                                             required
-                                                            // isInvalid={isRepsEmpty}
+
                                                        />
                                                        <InputGroup.Append>
                                                             <InputGroup.Text id="basic-addon2">Reps</InputGroup.Text>
                                                        </InputGroup.Append>
-                                                       <Form.Control.Feedback type="invalid">
-                                                            This is required field.
-                                                       </Form.Control.Feedback>
                                                   </InputGroup>
                                              </Col>
                                              <Col>
@@ -145,7 +136,6 @@ const ExerciseList = (props: any) => {
                                                             aria-describedby="basic-addon2"
                                                             onChange={e => handleDataChange(val.id, e, "sets")}
                                                             required
-                                                            // isInvalid={isSetsEmpty}
                                                        />
                                                        <InputGroup.Append>
                                                             <InputGroup.Text id="basic-addon2">Sets</InputGroup.Text>
@@ -162,7 +152,6 @@ const ExerciseList = (props: any) => {
                                                             aria-describedby="basic-addon2"
                                                             onChange={e => handleDataChange(val.id, e, "restTime")}
                                                             required
-                                                            // isInvalid={isRestTimeEmpty}
                                                        />
                                                        <InputGroup.Append>
                                                             <InputGroup.Text>min</InputGroup.Text>
@@ -182,7 +171,6 @@ const ExerciseList = (props: any) => {
                                                             aria-describedby="basic-addon2"
                                                             onChange={e => handleDataChange(val.id, e, "weights")}
                                                             required
-                                                            // isInvalid={isWeightEmpty}
                                                        />
                                                        <InputGroup.Append>
                                                             <InputGroup.Text>Kg</InputGroup.Text>
@@ -200,7 +188,6 @@ const ExerciseList = (props: any) => {
                                                             aria-describedby="basic-addon2"
                                                             onChange={e => handleDataChange(val.id, e, "duration")}
                                                             required
-                                                            // isInvalid={isDurationEmpty}
                                                        />
                                                        <InputGroup.Append>
                                                             <InputGroup.Text>min</InputGroup.Text>

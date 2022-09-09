@@ -57,7 +57,6 @@ export default function EventsTab() {
                 };
                 const actionClick3 = () => {
                     createEditProgramComponent.current.TriggerForm({id: row.original.id, type: 'delete'});
-                    handleClose();
                 };
                 const actionClick4 = () => {
                     handleRedirect(row.original.id);

@@ -17,6 +17,7 @@ const BuildWorkout = (props: any) => {
           build.warmup = e;
           const objectToString = JSON.stringify(build);
           props.onChange(objectToString);
+          
      }
 
      function OnChangeMainMovement(e: any){
