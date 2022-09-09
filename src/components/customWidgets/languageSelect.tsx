@@ -7,7 +7,7 @@ import { flattenObj} from '../utils/responseFlatten';
 
 const MultiSelect = (props: any) => {
 
-     console.log(props);
+     console.log(props.readonly);
 
      const [multiSelections, setMultiSelections] = useState<any>(props.value !== undefined ? JSON.parse(props.value) : []);
      const [languages, setlanguages] = useState<any[]>([]);
@@ -46,6 +46,7 @@ const MultiSelect = (props: any) => {
                placeholder="Select languages..."
                selected={multiSelections}
                multiple
+               disabled={props.readonly ? true : false}
                />
           </div>
      )

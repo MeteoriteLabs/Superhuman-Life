@@ -7,6 +7,7 @@ import moment from 'moment';
 
 const PricingTable = (props) => {
 
+    const inputDisabled = props.readonly;
     const bookingDetails = JSON.parse(props.formContext.channelinstantBooking);
 
     function handleReturnType(val: any) {
@@ -229,7 +230,7 @@ const PricingTable = (props) => {
                     {pricing.map((item, index) => {
                         return (
                             <td>
-                                <Form.Control as="select" value={item.voucher} onChange={(e) => handleUpdatePricing(index, e.target.value)}>
+                                <Form.Control as="select" disabled={inputDisabled} value={item.voucher} onChange={(e) => handleUpdatePricing(index, e.target.value)}>
                                     <option value={0}>Choose voucher</option>
                                     {vouchers.map((voucher, index) => {
                                         return (
@@ -267,7 +268,7 @@ const PricingTable = (props) => {
                                     className={`${pricing[index]?.mrp < pricing[index]?.sapienPricing && pricing[index]?.mrp !== null ? "is-invalid" : pricing[index]?.mrp >= pricing[index]?.sapienPricing ? "is-valid" : ""}`}
                                     aria-label="Default"
                                     type='number'
-                                    disabled={item.duration === 1 && bookingDetails.freeDemo ? true : false}
+                                    disabled={(item.duration === 1 && bookingDetails.freeDemo) || inputDisabled ? true : false}
                                     min={0} 
                                     aria-describedby="inputGroup-sizing-default"
                                     value={pricing[index]?.mrp}

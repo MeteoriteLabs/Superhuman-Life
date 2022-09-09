@@ -7,6 +7,9 @@ import 'react-bootstrap-typeahead/css/Typeahead.css';
 // import AddFitnessAddressModal from "../widgetCustom/AddFitnessAddressModal";
 
 const ClassicProgramDetails = (props) => {
+
+     const inputDisabled = props.readonly;
+
      console.log(props.value);
     const existingData = props.value === undefined ? undefined : JSON.parse(props.value);
     if(existingData !== undefined && existingData.length > 0){
@@ -117,7 +120,7 @@ const ClassicProgramDetails = (props) => {
             <div>
                 <label><b>Duration</b></label>
                 <Form.Group>
-                    <Form.Control type="number" min={30} max={365} value={duration} onChange={(e: any) => {
+                    <Form.Control disabled={inputDisabled} type="number" min={30} max={365} value={duration} onChange={(e: any) => {
                          setDuration(parseInt(e.target.value));
                     }} />
                 </Form.Group>
@@ -137,6 +140,7 @@ const ClassicProgramDetails = (props) => {
                               type='number'
                               min={0}
                               max={365}
+                              disabled={inputDisabled}
                               value={onlineClasses}
                               onChange={(e: any) => setOnlineClasses(parseInt(e.target.value))}
                          />
@@ -159,6 +163,7 @@ const ClassicProgramDetails = (props) => {
                               min={0}
                               max={handleMax()}
                               value={restDays}
+                              disabled={inputDisabled}
                               onChange={(e: any) => setRestDays(parseInt(e.target.value))}
                          />
                     </InputGroup>

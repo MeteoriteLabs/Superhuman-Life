@@ -7,6 +7,7 @@ import { Modal, Button} from 'react-bootstrap';
 import AuthContext from "../../../../context/auth-context";
 // import StatusModal from "../../../../components/StatusModal/exerciseStatusModal";
 import { schema, widgets } from './groupSchema';
+import { schemaView } from './schemaView';
 import {Subject} from 'rxjs';
 import {flattenObj} from '../../../../components/utils/responseFlatten';
 import moment from 'moment';
@@ -329,7 +330,7 @@ function CreateEditPackage(props: any, ref: any) {
                     name={name}
                     isStepper={true}
                     showErrorList={false}
-                    formUISchema={schema}
+                    formUISchema={operation.type === 'view' ? schemaView : schema}
                     stepperValues={["Creator", "Details", "Program", "Schedule", "Pricing", "Config", "Preview"]}
                     formSchema={personalTrainingSchema}
                     formSubmit={name === "View" ? () => { modalTrigger.next(false); } : (frm: any) => { OnSubmit(frm); }}

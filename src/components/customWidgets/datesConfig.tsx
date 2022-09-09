@@ -4,6 +4,7 @@ import moment from 'moment';
 
 const PackageDateConfig = (props: any) => {
 
+     const inputDisabled = props.readonly;
 
      const [publishingDate, setPublishingDate] = useState(props.value === undefined ? moment().add(props.title2 && 1, 'month').format("YYYY-MM-DD") : moment(props.value.publishingDate).format("YYYY-MM-DD"));
      const [expiryDate, setExpiryDate] = useState(props.value === undefined ? moment(publishingDate).add(1, 'year').format("YYYY-MM-DD") : moment(props.value.expiryDate).format("YYYY-MM-DD"));
@@ -25,6 +26,7 @@ const PackageDateConfig = (props: any) => {
                          min={moment().format("YYYY-MM-DD")}
                          value={publishingDate}
                          onChange={(e) => { setPublishingDate(e.target.value) }}
+                         disabled={inputDisabled}
                     />
                </InputGroup>
                <label>{props?.title2 ? props.title2 : "Expiry Date"}</label>
@@ -36,6 +38,7 @@ const PackageDateConfig = (props: any) => {
                          min={moment(publishingDate).add(1, props?.title2 ? 'month' : 'year').format("YYYY-MM-DD")}
                          value={expiryDate}
                          onChange={(e) => { setExpiryDate(e.target.value) }}
+                         disabled={inputDisabled}
                     />
                </InputGroup>
           </div>

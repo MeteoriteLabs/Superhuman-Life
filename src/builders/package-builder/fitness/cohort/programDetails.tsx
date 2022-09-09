@@ -7,6 +7,9 @@ import AuthContext from '../../../../context/auth-context';
 import { flattenObj } from '../../../../components/utils/responseFlatten';
 
 const ProgramDetails = (props) => {
+
+    const inputDisabled = props.readonly;
+
     const existingData = props.value === undefined ? undefined : JSON.parse(props.value);
     if(existingData !== undefined && existingData.length > 0){
         existingData.address = {id: JSON.parse(existingData?.address)[0].id, title: JSON.parse(existingData?.address)[0].title};
@@ -86,9 +89,9 @@ const ProgramDetails = (props) => {
             <div>
                 <label><b>Mode</b></label>
                 <Form>
-                    <Form.Check inline label="Online" value='0' defaultChecked={mode === '0' ? true : false} name="group1" type='radio' onClick={(e: any) => setMode(e.target.value)} />
-                    <Form.Check inline label="Offline" value='1' defaultChecked={mode === '1' ? true : false} name="group1" type='radio' onClick={(e: any) => setMode(e.target.value)}/>
-                    <Form.Check inline label="Residential" value='2' defaultChecked={mode === '2' ? true : false} name="group1" type='radio' onClick={(e: any) => setMode(e.target.value)}/>
+                    <Form.Check inline label="Online" disabled={inputDisabled} value='0' defaultChecked={mode === '0' ? true : false} name="group1" type='radio' onClick={(e: any) => setMode(e.target.value)} />
+                    <Form.Check inline label="Offline" disabled={inputDisabled} value='1' defaultChecked={mode === '1' ? true : false} name="group1" type='radio' onClick={(e: any) => setMode(e.target.value)}/>
+                    <Form.Check inline label="Residential" disabled={inputDisabled} value='2' defaultChecked={mode === '2' ? true : false} name="group1" type='radio' onClick={(e: any) => setMode(e.target.value)}/>
                 </Form>
             </div>
             {mode !== '0' && 
@@ -98,7 +101,7 @@ const ProgramDetails = (props) => {
                 <Row>
                     <Col lg={3}>
                         <Form.Group>
-                            <Form.Control as="select" value={addressTitle} onChange={(e: any) => {setAddressTitle(e.target.value)}}>
+                            <Form.Control as="select" disabled={inputDisabled} value={addressTitle} onChange={(e: any) => {setAddressTitle(e.target.value)}}>
                                 <option value="At My Address">At My Address</option>
                                 <option value="At Client Address">At Client Address</option>
                             </Form.Control>
@@ -112,6 +115,7 @@ const ProgramDetails = (props) => {
                             options={addresses}
                             placeholder="Search Address.."
                             selected={singleSelections}
+                            disabled={inputDisabled}
                         />
                     </Col>}
                 </Row>
@@ -119,8 +123,8 @@ const ProgramDetails = (props) => {
             {mode !== '' && mode === '2' && <div>
                 <label><b>Residential</b></label>
                 <Form>
-                    <Form.Check inline label="Accommodation" value='0' defaultChecked={residential === '0' ? true : false} name="group1" type='radio' onClick={(e: any) => setResidential(e.target.value)} />
-                    <Form.Check inline label="Accommodation + Food" value='1' defaultChecked={residential === '1' ? true : false} name="group1" type='radio' onClick={(e: any) => setResidential(e.target.value)}/>
+                    <Form.Check inline label="Accommodation" disabled={inputDisabled} value='0' defaultChecked={residential === '0' ? true : false} name="group1" type='radio' onClick={(e: any) => setResidential(e.target.value)} />
+                    <Form.Check inline label="Accommodation + Food" value='1' disabled={inputDisabled} defaultChecked={residential === '1' ? true : false} name="group1" type='radio' onClick={(e: any) => setResidential(e.target.value)}/>
                 </Form>
             </div>}
         </>}

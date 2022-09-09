@@ -7,6 +7,7 @@ import { Modal, Button} from 'react-bootstrap';
 import AuthContext from "../../../../context/auth-context";
 // import StatusModal from "../../../../components/StatusModal/exerciseStatusModal";
 import { schema, widgets } from './personalTraining';
+import { schemaView } from './schemaView';
 import {Subject} from 'rxjs';
 import {flattenObj} from '../../../../components/utils/responseFlatten';
 import moment from 'moment';
@@ -120,8 +121,6 @@ function CreateEditPt(props: any, ref: any) {
         let msg = flattenedData.fitnesspackages[0];
         let booking: any = {};
         let details: any = {};
-        console.log(msg);
-        debugger;
         for(var i =0; i<msg.fitnesspackagepricing.length; i++){
             PRICING_TABLE_DEFAULT[i].mrp = msg.fitnesspackagepricing[i].mrp;
             PRICING_TABLE_DEFAULT[i].suggestedPrice = msg.fitnesspackagepricing[i].suggestedPrice;
@@ -314,7 +313,7 @@ function CreateEditPt(props: any, ref: any) {
                     name={name}
                     isStepper={true}
                     showErrorList={false}
-                    formUISchema={schema}
+                    formUISchema={operation.type === 'view' ? schemaView : schema}
                     stepperValues={["Creator", "Details", "Program", "Schedule", "Pricing", "Config","Preview"]}
                     formSchema={personalTrainingSchema}
                     formSubmit={name === "View" ? () => { modalTrigger.next(false); } : (frm: any) => { OnSubmit(frm); }}

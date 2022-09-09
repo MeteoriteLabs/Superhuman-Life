@@ -38,7 +38,7 @@ const PreviewCohort = (props) => {
                                     <p>{props.formContext.About}</p>
                                     <div>
                                         <div className='d-flex justify-content-start align-items-center'>
-                                            {JSON.parse(formData.disciplines).map((item, index) => {
+                                            {JSON.parse(formData.discpline).map((item, index) => {
                                                 return <div key={index} className='mr-2 my-3' style={{ padding: '0.5rem 1rem', backgroundColor: '#F2E890', borderRadius: '20px' }}>
                                                     <p className='mb-0'>{item.disciplinename}</p>
                                                 </div>
@@ -84,7 +84,7 @@ const PreviewCohort = (props) => {
                                         <p>{props.formContext.About}</p>
                                         <div>
                                             <div className='d-flex justify-content-start align-items-center'>
-                                                {JSON.parse(formData.disciplines).map((item, index) => {
+                                                {JSON.parse(formData.discpline).map((item, index) => {
                                                     return <div key={index} className='mr-2 my-3' style={{ padding: '0.5rem 1rem', backgroundColor: '#F2E890', borderRadius: '20px' }}>
                                                         <p className='mb-0'>{item.disciplinename}</p>
                                                     </div>

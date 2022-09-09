@@ -7,6 +7,8 @@ import moment from 'moment';
 
 const PricingTable = (props) => {
 
+    const inputDisabled = props.readonly;
+
     function handleReturnType(val: any) {
         if (typeof(val) === 'string') {
             return JSON.parse(val);
@@ -259,7 +261,7 @@ const PricingTable = (props) => {
                     {pricing.map((item, index) => {
                         return (
                             <td>
-                                <Form.Control as="select" value={item.voucher} onChange={(e) => handleUpdatePricing(index, e.target.value)}>
+                                <Form.Control as="select" disabled={inputDisabled} value={item.voucher} onChange={(e) => handleUpdatePricing(index, e.target.value)}>
                                     <option value={0}>Choose voucher</option>
                                     {vouchers.map((voucher, index) => {
                                         return (
@@ -299,6 +301,7 @@ const PricingTable = (props) => {
                                     type='number'
                                     min={0}
                                     aria-describedby="inputGroup-sizing-default"
+                                    disabled={inputDisabled}
                                     value={pricing[index]?.mrp}
                                     onChange={(e) => {handlePricingUpdate(e.target.value, index)}}
                                     />

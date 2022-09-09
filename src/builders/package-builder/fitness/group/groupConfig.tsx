@@ -4,6 +4,7 @@ import { Form, Row, Col } from 'react-bootstrap';
 const PackageDateConfig = (props: any) => {
 
      console.log(props.value);
+     const inputDisabled = props.readonly;
 
      const [instantBooking, setInstantBooking] = useState(props.value !== undefined ? JSON.parse(props.value).instantBooking : true);
      const [freeDemo, setFreeDemo] = useState(props.value !== undefined ? JSON.parse(props.value).freeDemo : false);
@@ -27,6 +28,7 @@ const PackageDateConfig = (props: any) => {
                                     id="custom-switch"
                                     defaultChecked={instantBooking}
                                     onClick={() => setInstantBooking(!instantBooking)}
+                                    disabled={inputDisabled}
                                 />
                             </Form>
                             </Col>
@@ -51,6 +53,7 @@ const PackageDateConfig = (props: any) => {
                                    id="custom-switch2"
                                    defaultChecked={freeDemo}
                                    onClick={() => setFreeDemo(!freeDemo)}
+                                   disabled={inputDisabled}
                               />
                          </Form>
                          </Col>

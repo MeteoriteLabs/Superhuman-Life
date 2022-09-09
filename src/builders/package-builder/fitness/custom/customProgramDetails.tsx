@@ -8,6 +8,9 @@ import { flattenObj } from '../../../../components/utils/responseFlatten';
 import AddFitnessAddressModal from "../../../../components/customWidgets/AddFitnessAddressModal";
 
 const CustomProgramDetails = (props) => {
+
+     const inputDisabled = props.readonly;
+
     const existingData = props.value === undefined ? undefined : JSON.parse(props.value);
     if(existingData !== undefined && existingData.length > 0){
         existingData.address = {id: JSON.parse(existingData?.address)[0].id, title: JSON.parse(existingData?.address)[0].title};
@@ -181,9 +184,9 @@ const CustomProgramDetails = (props) => {
             <div>
                 <label><b>Mode</b></label>
                 <Form>
-                    <Form.Check inline label="Online" value='0' defaultChecked={mode === '0' ? true : false} name="group1" type='radio' onClick={(e: any) => setMode(e.target.value)} />
-                    <Form.Check inline label="Offline" value='1' defaultChecked={mode === '1' ? true : false} name="group1" type='radio' onClick={(e: any) => setMode(e.target.value)}/>
-                    <Form.Check inline label="Hybrid" value='2' defaultChecked={mode === '2' ? true : false} name="group1" type='radio' onClick={(e: any) => setMode(e.target.value)}/>
+                    <Form.Check inline label="Online" value='0' disabled={inputDisabled} defaultChecked={mode === '0' ? true : false} name="group1" type='radio' onClick={(e: any) => setMode(e.target.value)} />
+                    <Form.Check inline label="Offline" value='1' disabled={inputDisabled} defaultChecked={mode === '1' ? true : false} name="group1" type='radio' onClick={(e: any) => setMode(e.target.value)}/>
+                    <Form.Check inline label="Hybrid" value='2' disabled={inputDisabled} defaultChecked={mode === '2' ? true : false} name="group1" type='radio' onClick={(e: any) => setMode(e.target.value)}/>
                 </Form>
             </div>
             {mode !== '0' && 
@@ -193,7 +196,7 @@ const CustomProgramDetails = (props) => {
                 <Row>
                     <Col lg={3}>
                         <Form.Group>
-                            <Form.Control as="select" value={addressTitle} onChange={(e: any) => {setAddressTitle(e.target.value)}}>
+                            <Form.Control as="select" disabled={inputDisabled} value={addressTitle} onChange={(e: any) => {setAddressTitle(e.target.value)}}>
                                 <option value="At My Address">At My Address</option>
                                 <option value="At Client Address">At Client Address</option>
                             </Form.Control>
@@ -207,12 +210,13 @@ const CustomProgramDetails = (props) => {
                             options={addresses}
                             placeholder="Search Address.."
                             selected={singleSelections}
+                            disabled={inputDisabled}
                         />
                     </Col>}
                 </Row>
                 {addressTitle === 'At My Address' && <Row>
                     <Col lg={{offset: 3}}>
-                         <Button variant='outline-info' onClick={() => {setAddressModal(true)}}>+ Add New Address</Button>
+                         <Button variant='outline-info' disabled={inputDisabled} onClick={() => {setAddressModal(true)}}>+ Add New Address</Button>
                     </Col>
                </Row>}
 
@@ -238,6 +242,7 @@ const CustomProgramDetails = (props) => {
                               min={0}
                               max={28}
                               value={ptOnlineClasses}
+                              disabled={inputDisabled}
                               onChange={(e: any) => setPtOnlineClasses(parseInt(e.target.value))}
                          />
                     </InputGroup>
@@ -254,6 +259,7 @@ const CustomProgramDetails = (props) => {
                               min={2}
                               max={10}
                               value={groupOnlineClasses}
+                              disabled={inputDisabled}
                               onChange={(e: any) => setGroupOnlineClasses(parseInt(e.target.value))}
                          />
                     </InputGroup>
@@ -272,6 +278,7 @@ const CustomProgramDetails = (props) => {
                               min={0}
                               max={28}
                               value={ptOfflineClasses}
+                              disabled={inputDisabled}
                               onChange={(e: any) => setPtOfflineClasses(parseInt(e.target.value))}
                          />
                     </InputGroup>
@@ -288,6 +295,7 @@ const CustomProgramDetails = (props) => {
                               min={2}
                               max={10}
                               value={groupOfflineClasses}
+                              disabled={inputDisabled}
                               onChange={(e: any) => setGroupOfflineClasses(parseInt(e.target.value))}
                          />
                     </InputGroup>
@@ -306,6 +314,7 @@ const CustomProgramDetails = (props) => {
                               min={2}
                               max={10}
                               value={recordedClasses}
+                              disabled={inputDisabled}
                               onChange={(e: any) => setRecordedClasses(parseInt(e.target.value))}
                          />
                     </InputGroup>
@@ -327,6 +336,7 @@ const CustomProgramDetails = (props) => {
                               min={0}
                               max={handleMax(mode)}
                               value={restDays}
+                              disabled={inputDisabled}
                               onChange={(e: any) => setRestDays(parseInt(e.target.value))}
                          />
                     </InputGroup>

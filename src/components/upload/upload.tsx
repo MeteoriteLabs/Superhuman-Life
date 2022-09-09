@@ -403,6 +403,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                                         type="button"
                                         className="btn-sm btn-danger"
                                         onClick={() => deleteAllImages()}
+                                        disabled={props.readonly ? true : false}
                                    >
                                         Remove
                                    </button>

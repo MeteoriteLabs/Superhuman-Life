@@ -5,6 +5,7 @@ import {CREATE_CHANNEL_PACKAGE, CREATE_BOOKING_CONFIG, DELETE_PACKAGE, UPDATE_PA
 import {GET_FITNESS_PACKAGE_TYPE, GET_SINGLE_PACKAGE_BY_ID} from '../graphQL/queries';
 import AuthContext from "../../../../context/auth-context";
 import { schema, widgets } from './cohortSchema';
+import { schemaView } from './schemaView';
 import {Subject} from 'rxjs';
 import {flattenObj} from '../../../../components/utils/responseFlatten';
 import moment from 'moment';
@@ -311,7 +312,7 @@ function CreateEditCohort(props: any, ref: any) {
                     name={name}
                     isStepper={true}
                     showErrorList={false}
-                    formUISchema={schema}
+                    formUISchema={operation.type === 'view' ? schemaView : schema}
                     formSchema={programSchema}
                     formSubmit={name === "View" ? () => { modalTrigger.next(false); } : (frm: any) => { OnSubmit(frm); }}
                     formData={programDetails}

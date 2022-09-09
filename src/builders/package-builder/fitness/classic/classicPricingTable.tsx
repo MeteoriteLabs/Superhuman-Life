@@ -7,6 +7,8 @@ import moment from 'moment';
 
 const PricingTable = (props) => {
 
+    const inputDisabled = props.readonly;
+
     const auth = useContext(AuthContext);
     const [vouchers, setVouchers] = useState<any>([]);
     const [show, setShow] = useState(props.value === 'free' ? true : false);
@@ -182,6 +184,7 @@ const PricingTable = (props) => {
                                     id="custom-switch"
                                     defaultChecked={show}
                                     onClick={() => setShow(!show)}
+                                    disabled={inputDisabled}
                                 />
                             </Form>
                             </Col>
@@ -213,7 +216,7 @@ const PricingTable = (props) => {
                     <tr className='text-center'>
                     <td><b>Vouchers</b></td>
                     <td>
-                    <Form.Control as="select" value={pricing[0].voucher} onChange={(e) => handleUpdatePricing(0, e.target.value)}>
+                    <Form.Control as="select" disabled={inputDisabled} value={pricing[0].voucher} onChange={(e) => handleUpdatePricing(0, e.target.value)}>
                         <option value={0}>Choose voucher</option>
                         {vouchers.map((voucher, index) => {
                             return (
@@ -240,6 +243,7 @@ const PricingTable = (props) => {
                         aria-label="Default"
                         type='number'
                         min={0}
+                        disabled={inputDisabled}
                         aria-describedby="inputGroup-sizing-default"
                         value={pricing[0]?.mrp}
                         onChange={(e) => {handlePricingUpdate(e.target.value, 0)}}

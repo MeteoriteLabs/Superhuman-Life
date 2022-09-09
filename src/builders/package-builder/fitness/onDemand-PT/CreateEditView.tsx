@@ -7,6 +7,7 @@ import { Modal, Button} from 'react-bootstrap';
 import AuthContext from "../../../../context/auth-context";
 // import StatusModal from "../../../../../components/StatusModal/exerciseStatusModal";
 import { schema, widgets } from './onDemandSchema';
+import { schemaView } from './schemaView';
 import {Subject} from 'rxjs';
 import {flattenObj} from '../../../../components/utils/responseFlatten';
 import moment from 'moment';
@@ -306,7 +307,7 @@ function CreateEditOnDemadPt(props: any, ref: any) {
                 <ModalView
                     name={name}
                     isStepper={true}
-                    formUISchema={schema}
+                    formUISchema={operation.type === 'view' ? schemaView : schema}
                     showErrorList={false}
                     stepperValues={["Creator", "Details", "Program", "Pricing", "Config","Preview"]}
                     formSchema={personalTrainingSchema}
