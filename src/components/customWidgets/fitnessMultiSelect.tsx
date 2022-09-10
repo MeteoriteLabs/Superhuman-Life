@@ -8,6 +8,7 @@ import { flattenObj } from '../utils/responseFlatten';
 const MultiSelect = (props: any) => {
 
      console.log(props);
+     debugger;
 
      const [multiSelections, setMultiSelections] = useState(
           props.value?.length > 0 ? JSON.parse(props.value) : []

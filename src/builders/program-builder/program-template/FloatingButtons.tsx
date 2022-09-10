@@ -53,7 +53,7 @@ const FloatingButton = (props: any) => {
                               }}>Sessions</Dropdown.Item>}
                               <Dropdown.Item eventKey="1" onClick={(e) => {
                                    props.callback('block');
-                              }}>Program Template</Dropdown.Item>
+                              }}>Import Program Template</Dropdown.Item>
                               <Dropdown.Item eventKey="3" onClick={() => {
                                    createEditWorkoutTemplateComponent.current.TriggerForm({ id: null, type: 'create' });
                               }}>Workout Template</Dropdown.Item>
