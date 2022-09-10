@@ -5,9 +5,9 @@ import AuthContext from "../../../context/auth-context";
 import StatusModal from "../../../components/StatusModal/StatusModal";
 import { Subject } from "rxjs";
 import { schema } from "./schema";
+import { schemaView } from './notificationViewSchema';
 import ModalView from "../../../components/modal";
-
-import {flattenObj} from '../../../components/utils/responseFlatten';
+import { flattenObj } from '../../../components/utils/responseFlatten';
 
 interface Operation {
      id: string;
@@ -15,28 +15,50 @@ interface Operation {
      type: "create" | "edit" | "view" | "toggle-status" | "delete";
      current_status: boolean;
 }
+const notificationEmptyState = {
+     title: '',
+     prerecordedtype: '',
+     prerecordedtrigger: '',
+     description: '',
+     minidesc: '',
+     mediaurl: ''
+}
 
 function CreateEditMessage(props: any, ref: any) {
      const auth = useContext(AuthContext);
      const messageSchema: { [name: string]: any } = require("./message.json");
      const [messageDetails, setMessageDetails] = useState<any>({});
      const [operation, setOperation] = useState<Operation>({} as Operation);
+     // const [name, setName] = useState<string>('');
 
      const [createMessage] = useMutation(ADD_MESSAGE, {
           onCompleted: (r: any) => {
                modalTrigger.next(false);
+               props.callback();
           },
      });
+
      const [editMessage] = useMutation(UPDATE_MESSAGE, {
           onCompleted: (r: any) => {
                modalTrigger.next(false);
+               props.callback();
           },
      });
+
      const [deleteMessage] = useMutation(DELETE_MESSAGE, {
-          onCompleted: (e: any) => console.log(e),
           refetchQueries: ["GET_TRIGGERS"],
+          onCompleted: (e: any) => {
+               props.callback();
+               modalTrigger.next(false);
+          }
      });
-     const [updateStatus] = useMutation(UPDATE_STATUS);
+
+     const [updateStatus] = useMutation(UPDATE_STATUS, {
+          onCompleted: (e: any) => {
+               props.callback();
+               modalTrigger.next(false);
+          }
+     });
 
      const modalTrigger = new Subject();
 
@@ -44,12 +66,15 @@ function CreateEditMessage(props: any, ref: any) {
           TriggerForm: (msg: Operation) => {
                setOperation(msg);
 
-               if (msg && !msg.id) modalTrigger.next(true);
+               if (msg.type !== 'delete' && msg.type !== 'toggle-status') {
+                    modalTrigger.next(true);
+               }
           },
      }));
 
      function loadData(data: any) {
-          const flattenData = flattenObj({...data});
+          const flattenData = flattenObj({ ...data });
+
           messageSchema["1"].properties.prerecordedtype.enum = [...flattenData.prerecordedtypes].map((n) => n.id);
           messageSchema["1"].properties.prerecordedtype.enumNames = [...flattenData.prerecordedtypes].map((n) => n.name);
           messageSchema["1"].properties.prerecordedtrigger.enum = [...flattenData.prerecordedtriggers].map((n) => n.id);
@@ -58,7 +83,7 @@ function CreateEditMessage(props: any, ref: any) {
 
      function FillDetails(data: any) {
           let details: any = {};
-          const flattenData = flattenObj({...data});
+          const flattenData = flattenObj({ ...data });
           let msg = flattenData.notifications[0];
 
           let o = { ...operation };
@@ -79,6 +104,7 @@ function CreateEditMessage(props: any, ref: any) {
      }
 
      useQuery(GET_TRIGGERS, { onCompleted: loadData });
+
      useQuery(GET_MESSAGE, {
           variables: { id: operation.id },
           skip: !operation.id || operation.type === "toggle-status" || operation.type === "delete",
@@ -117,22 +143,29 @@ function CreateEditMessage(props: any, ref: any) {
           }
      }
 
+     let name="";
+          if (operation.type === 'create') {
+               name = "Create New Message";
+          } else if (operation.type === 'edit') {
+               name = "Edit";
+          } else if (operation.type === 'view') {
+               name = "View";
+          }
+     
+     
+
      return (
           <>
                <ModalView
-                    name={operation.type}
+                    name={name}
                     isStepper={false}
-                    formUISchema={schema}
+                    formUISchema={operation.type === 'view' ? schemaView : schema}
                     formSchema={messageSchema}
                     showing={operation.modal_status}
-                    formSubmit={(frm: any) => {
-                         OnSubmit(frm);
-                    }}
-                    formData={messageDetails}
-                    //widgets={widgets}
+                    formSubmit={name === "View" ? () => { modalTrigger.next(false); } : (frm: any) => { OnSubmit(frm); }}
+                    formData={operation.type === 'create' ? notificationEmptyState : messageDetails}
                     modalTrigger={modalTrigger}
                />
-
                {operation.type === "toggle-status" && (
                     <StatusModal
                          modalTitle="Change Status"
@@ -141,6 +174,7 @@ function CreateEditMessage(props: any, ref: any) {
                          buttonRight="Yes"
                          onClick={() => {
                               ToggleMessageStatus(operation.id, operation.current_status);
+                              console.log(operation.current_status)
                          }}
                     />
                )}

@@ -28,7 +28,8 @@
                },
                "mediaurl": {
                     "type": "string",
-                    "title": "Url (Picture or Video)"
+                    "title": "Url (Picture or Video)",
+                    "format": "uri"
                },
                "upload": {
                     "type": "string"

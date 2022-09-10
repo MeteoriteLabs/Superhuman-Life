@@ -1,6 +1,5 @@
 {
      "1": {
-          "title": "Notification",
           "type": "object",
           "required": ["title", "prerecordedtype", "prerecordedtrigger", "description", "minidesc"],
           "properties": {
@@ -30,7 +29,8 @@
                },
                "mediaurl": {
                     "title": "Url (Picture or Video)",
-                    "type": "string"
+                    "type": "string",
+                    "format": "uri"
                }
           }
      }

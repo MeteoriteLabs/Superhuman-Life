@@ -6,14 +6,23 @@ import AuthContext from "../../../context/auth-context";
 import StatusModal from "../../../components/StatusModal/StatusModal";
 import { Subject } from "rxjs";
 import { schema, widgets } from "./schema";
-
-import {flattenObj} from '../../../components/utils/responseFlatten';
+import { flattenObj } from '../../../components/utils/responseFlatten';
 
 interface Operation {
      id: string;
      modal_status: boolean;
      type: "create" | "edit" | "view" | "toggle-status" | "delete";
      current_status: boolean;
+}
+
+const messageEmptyState = {
+     title: '',
+     mindsetmessagetype: '',
+     tags: '',
+     description: '',
+     minidesc: '',
+     mediaurl: '',
+     upload:''
 }
 
 function CreateEditMessage(props: any, ref: any) {
@@ -25,20 +34,25 @@ function CreateEditMessage(props: any, ref: any) {
      const [createMessage] = useMutation(ADD_MESSAGE, {
           onCompleted: (r: any) => {
                modalTrigger.next(false);
+               props.callback();
           },
      });
+
      const [editMessage] = useMutation(UPDATE_MESSAGE, {
           onCompleted: (r: any) => {
                modalTrigger.next(false);
+               props.callback();
           },
      });
+
      const [deleteMessage] = useMutation(DELETE_MESSAGE, {
-          onCompleted: (e: any) => console.log(e),
+          onCompleted: (e: any) => { props.callback(); },
           refetchQueries: ["GET_TRIGGERS"],
      });
+
      const [updateStatus] = useMutation(UPDATE_STATUS, {
           onCompleted: (d: any) => {
-               console.log(d);
+               props.callback();
           },
      });
 
@@ -48,30 +62,33 @@ function CreateEditMessage(props: any, ref: any) {
           TriggerForm: (msg: Operation) => {
                setOperation(msg);
 
-               if (msg && !msg.id) modalTrigger.next(true);
+               if (msg.type !== 'delete' && msg.type !== 'toggle-status') {
+                    modalTrigger.next(true);
+               }
           },
      }));
 
      function loadData(data: any) {
-          const flattenData = flattenObj({...data});
+          const flattenData = flattenObj({ ...data });
           messageSchema["1"].properties.mindsetmessagetype.enum = [...flattenData.prerecordedtypes].map((n) => n.id);
-          messageSchema["1"].properties.mindsetmessagetype.enumNames = [...flattenData.prerecordedtypes].map((n) => n.type);
+          messageSchema["1"].properties.mindsetmessagetype.enumNames = [...flattenData.prerecordedtypes].map((n) => n.name);
      }
 
      function FillDetails(data: any) {
-          const flattenData = flattenObj({...data});
+          const flattenData = flattenObj({ ...data });
           let details: any = {};
           let msg = flattenData.prerecordedMessage;
 
-          let o = { ...operation };
-          details.name = o.type.toLowerCase();
+          console.log('msg', msg);
+          // let o = { ...operation };
+          // details.name = o.type.toLowerCase();
 
           details.title = msg.Title;
-          details.mindsetmessagetype = msg.resourcetype.id;
+          details.mindsetmessagetype = msg.resourcetype?.id;
           details.description = msg.Description;
           details.minidesc = msg.minidescription;
           details.tags = msg.tags;
-          details.mediaurl = msg.mediaurl;
+          details.mediaurl = msg.Image_URL;
           details.upload = msg.uploadID;
           details.messageid = msg.id;
 
@@ -83,6 +100,7 @@ function CreateEditMessage(props: any, ref: any) {
      }
 
      useQuery(GET_TRIGGERS, { onCompleted: loadData });
+
      useQuery(GET_MESSAGE, {
           variables: { id: operation.id },
           skip: !operation.id || operation.type === "toggle-status" || operation.type === "delete",
@@ -92,6 +110,7 @@ function CreateEditMessage(props: any, ref: any) {
      });
 
      function CreateMessage(frm: any) {
+          console.log(frm);
           createMessage({ variables: frm });
      }
 
@@ -132,7 +151,7 @@ function CreateEditMessage(props: any, ref: any) {
                     formSubmit={(frm: any) => {
                          OnSubmit(frm);
                     }}
-                    formData={messageDetails}
+                    formData={operation.type === 'create' ? messageEmptyState : messageDetails}
                     widgets={widgets}
                     modalTrigger={modalTrigger}
                />
@@ -144,7 +163,8 @@ function CreateEditMessage(props: any, ref: any) {
                          buttonLeft="Cancel"
                          buttonRight="Yes"
                          onClick={() => {
-                              ToggleMessageStatus(operation.id, operation.current_status);
+                              ToggleMessageStatus(operation.id, !operation.current_status);
+                              console.log(operation.current_status)
                          }}
                     />
                )}
