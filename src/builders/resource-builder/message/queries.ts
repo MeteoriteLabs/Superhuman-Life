@@ -88,6 +88,7 @@ export const ADD_MESSAGE = gql`
     }
   }
 `;
+
 export const UPDATE_MESSAGE = gql`
   mutation updatemsg(
     $title: String
@@ -139,6 +140,7 @@ export const UPDATE_STATUS = gql`
     }
   }
 `;
+
 export const GET_MESSAGE = gql`
   query getmessage($id: ID!) {
     prerecordedMessage(id: $id) {

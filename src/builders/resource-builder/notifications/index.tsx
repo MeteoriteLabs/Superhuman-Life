@@ -71,14 +71,10 @@ export default function MessagePage() {
 
      const [datatable, setDataTable] = useState<{}[]>([]);
 
-     // function FetchData(_variables: {} = { filter: " ", id: auth.userid }) {
-     //      useQuery(GET_NOTIFICATIONS, { variables: _variables, onCompleted: loadData });
-     // }
-
-     const fetch = useQuery(GET_NOTIFICATIONS, {variables: {filter: searchFilter, id: auth.userid}, onCompleted: loadData});
+     const fetch = useQuery(GET_NOTIFICATIONS, { variables: { filter: searchFilter, id: auth.userid }, onCompleted: loadData });
 
      function loadData(data: any) {
-          const flattenData = flattenObj({...data});
+          const flattenData = flattenObj({ ...data });
           setDataTable(
                [...flattenData.notifications].map((Detail) => {
                     return {
@@ -96,8 +92,6 @@ export default function MessagePage() {
      function refetchQueryCallback() {
           fetch.refetch();
      }
-
-     // FetchData({ filter: searchFilter, id: auth.userid });
 
      return (
           <TabContent>

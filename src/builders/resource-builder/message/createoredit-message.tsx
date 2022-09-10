@@ -61,7 +61,7 @@ function CreateEditMessage(props: any, ref: any) {
      useImperativeHandle(ref, () => ({
           TriggerForm: (msg: Operation) => {
                setOperation(msg);
-
+               
                if (msg.type !== 'delete' && msg.type !== 'toggle-status') {
                     modalTrigger.next(true);
                }
@@ -70,6 +70,7 @@ function CreateEditMessage(props: any, ref: any) {
 
      function loadData(data: any) {
           const flattenData = flattenObj({ ...data });
+          
           messageSchema["1"].properties.mindsetmessagetype.enum = [...flattenData.prerecordedtypes].map((n) => n.id);
           messageSchema["1"].properties.mindsetmessagetype.enumNames = [...flattenData.prerecordedtypes].map((n) => n.name);
      }
@@ -79,9 +80,8 @@ function CreateEditMessage(props: any, ref: any) {
           let details: any = {};
           let msg = flattenData.prerecordedMessage;
 
-          console.log('msg', msg);
-          // let o = { ...operation };
-          // details.name = o.type.toLowerCase();
+          let o = { ...operation };
+          details.name = o.type.toLowerCase();
 
           details.title = msg.Title;
           details.mindsetmessagetype = msg.resourcetype?.id;
@@ -110,7 +110,6 @@ function CreateEditMessage(props: any, ref: any) {
      });
 
      function CreateMessage(frm: any) {
-          console.log(frm);
           createMessage({ variables: frm });
      }
 
@@ -163,8 +162,7 @@ function CreateEditMessage(props: any, ref: any) {
                          buttonLeft="Cancel"
                          buttonRight="Yes"
                          onClick={() => {
-                              ToggleMessageStatus(operation.id, !operation.current_status);
-                              console.log(operation.current_status)
+                              ToggleMessageStatus(operation.id, operation.current_status);
                          }}
                     />
                )}

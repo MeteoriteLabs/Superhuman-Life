@@ -75,13 +75,11 @@ export default function MindsetPage() {
 
      const [datatable, setDataTable] = useState<{}[]>([]);
 
-     // function FetchData(_variables: {} = { filter: " ", id: auth.userid }) {
-          const fetch = useQuery(GET_MESSAGES, { variables: { filter: searchFilter, id: auth.userid }, onCompleted: loadData });
-     // }
+     const fetch = useQuery(GET_MESSAGES, { variables: { filter: searchFilter, id: auth.userid }, onCompleted: loadData });
 
      function loadData(data: any) {
           const flattenData = flattenObj({...data});
-          console.log('flattendata',flattenData)
+          
           setDataTable(
                [...flattenData.prerecordedMessages].map((Detail) => {
                     return {
@@ -90,14 +88,13 @@ export default function MindsetPage() {
                          tags: Detail.tags,
                          type: Detail.resourcetype.name,
                          minidesc: Detail.Description,
-                         status: Detail.status === true ? "Active" : "Inactive",
+                         status: Detail.Status ? "Active" : "Inactive",
                          updatedon: getDate(Date.parse(Detail.updatedAt)),
                     };
                })
           );
      }
 
-     // FetchData({ filter: searchFilter, id: auth.userid });
      function refetchQueryCallback() {
           fetch.refetch();
       }

@@ -29,7 +29,6 @@ function CreateEditMessage(props: any, ref: any) {
      const messageSchema: { [name: string]: any } = require("./message.json");
      const [messageDetails, setMessageDetails] = useState<any>({});
      const [operation, setOperation] = useState<Operation>({} as Operation);
-     // const [name, setName] = useState<string>('');
 
      const [createMessage] = useMutation(ADD_MESSAGE, {
           onCompleted: (r: any) => {
@@ -65,7 +64,7 @@ function CreateEditMessage(props: any, ref: any) {
      useImperativeHandle(ref, () => ({
           TriggerForm: (msg: Operation) => {
                setOperation(msg);
-
+               
                if (msg.type !== 'delete' && msg.type !== 'toggle-status') {
                     modalTrigger.next(true);
                }
@@ -85,7 +84,7 @@ function CreateEditMessage(props: any, ref: any) {
           let details: any = {};
           const flattenData = flattenObj({ ...data });
           let msg = flattenData.notifications[0];
-
+          
           let o = { ...operation };
           details.name = o.type.toLowerCase();
           details.title = msg.title;
@@ -152,8 +151,6 @@ function CreateEditMessage(props: any, ref: any) {
                name = "View";
           }
      
-     
-
      return (
           <>
                <ModalView
@@ -166,6 +163,7 @@ function CreateEditMessage(props: any, ref: any) {
                     formData={operation.type === 'create' ? notificationEmptyState : messageDetails}
                     modalTrigger={modalTrigger}
                />
+               
                {operation.type === "toggle-status" && (
                     <StatusModal
                          modalTitle="Change Status"
@@ -174,7 +172,6 @@ function CreateEditMessage(props: any, ref: any) {
                          buttonRight="Yes"
                          onClick={() => {
                               ToggleMessageStatus(operation.id, operation.current_status);
-                              console.log(operation.current_status)
                          }}
                     />
                )}
