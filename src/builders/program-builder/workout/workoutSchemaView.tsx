@@ -16,38 +16,38 @@ export const widgets = {
 
 export const schemaView: any = {
         "workout":{
-            "ui-readonly": true
+            "ui:readonly": true
         },
         "level": {
             "ui:widget": "radio",
             "ui:options": {
                 "inline": true
             },
-            "ui-readonly": true
+            "ui:readonly": true
         },
         "intensity": {
             "ui:widget": "radio",
             "ui:options": {
                 "inline": true
             },
-            "ui-readonly": true
+            "ui:readonly": true
         },
         "about": {
             "ui:widget": "textarea",
             "ui:options": {
                 "rows": 3
             },
-            "ui-readonly": true
+            "ui:readonly": true
         },
         "benefits": {
             "ui:widget": "textarea",
             "ui:options": {
                 "rows": 1
             },
-            "ui-readonly": true
+            "ui:readonly": true
         },
         "calories":{
-            "ui-readonly": true
+            "ui:readonly": true
         },
         "equipment": {
             "readonly": true,

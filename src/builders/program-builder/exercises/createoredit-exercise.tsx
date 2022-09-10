@@ -59,10 +59,11 @@ function CreateEditExercise(props: any, ref: any) {
         }
     }));
 
-    enum ENUM_EXERCISES_EXERCISELEVEL {
+    enum ENUM_EXERCISE_EXERCISELEVEL {
         Beginner,
         Intermediate,
         Advance,
+        All_Levels,
         None
     }
 
@@ -81,12 +82,10 @@ function CreateEditExercise(props: any, ref: any) {
         const flattenedData = flattenObj({ ...data });
         let details: any = {};
         let msg = flattenedData.exercises;
-        console.log(msg);
-        debugger;
         details.exercise = msg[0].exercisename;
 
-        details.level = ENUM_EXERCISES_EXERCISELEVEL[msg[0].exerciselevel];
-        details.discipline = JSON.stringify(msg[0].fitnessdisciplines);
+        details.level = ENUM_EXERCISE_EXERCISELEVEL[msg[0].exerciselevel];
+        details.discipline = msg[0].fitnessdisciplines;
         details.miniDescription = msg[0].exerciseminidescription;
         details.equipment = msg[0].equipment_lists.map((val: any) => {
             return val;
@@ -114,7 +113,7 @@ function CreateEditExercise(props: any, ref: any) {
         createExercise({
             variables: {
                 exercisename: frm.exercise,
-                exerciselevel: ENUM_EXERCISES_EXERCISELEVEL[frm.level],
+                exerciselevel: ENUM_EXERCISE_EXERCISELEVEL[frm.level],
                 fitnessdisciplines: frm.discipline.split(","),
                 exerciseminidescription: frm.miniDescription,
                 exercisetext: (!frm.addExercise.AddText ? null : frm.addExercise.AddText),
@@ -133,7 +132,7 @@ function CreateEditExercise(props: any, ref: any) {
             variables: {
                 exerciseid: operation.id,
                 exercisename: frm.exercise,
-                exerciselevel: ENUM_EXERCISES_EXERCISELEVEL[frm.level],
+                exerciselevel: ENUM_EXERCISE_EXERCISELEVEL[frm.level],
                 fitnessdisciplines: frm.discipline.split(","),
                 exerciseminidescription: frm.miniDescription,
                 exercisetext: (!frm.addExercise.AddText ? null : frm.addExercise.AddText),

@@ -1,6 +1,7 @@
 import React, { useState, useEffect} from 'react';
 import { Form, InputGroup, FormControl, Table } from 'react-bootstrap';
 import DaysInput from './daysInput';
+import TimeField from '../../../components/customWidgets/timeField';
 
 const TransferProgramTable = (props: any) => {
 
@@ -75,7 +76,8 @@ const TransferProgramTable = (props: any) => {
                                         <td><Form.Control value={val.workout === null ? val.activity.title : val.workout.workouttitle} disabled></Form.Control></td>
                                         <td>to</td>
                                         <td><DaysInput duration={props.duration.length} dayType={props.dayType} onChange={(e) => {handleDaysData(e, index)}} type="transfer"/></td>
-                                        <td><InputGroup>
+                                        <td><TimeField onChange={(e) => console.log(e)} /></td>
+                                        {/* <td><InputGroup>
                                              <FormControl
                                              placeholder="24Hr"
                                              type="number"
@@ -88,8 +90,8 @@ const TransferProgramTable = (props: any) => {
                                              onChange={(e) => {handleHourChange(e.target.value, index)}}
                                         />
                                         <InputGroup.Text id="basic-addon2">hr</InputGroup.Text>
-                                   </InputGroup></td>
-                                   <td>
+                                   </InputGroup></td> */}
+                                   {/* <td>
                                    <InputGroup>
                                         <Form.Control as="select" value={data[index].startTimeMin === undefined ? '' : data[index].startTimeMin} onChange={(e) => handleMinChange(e.target.value, index)}>
                                              <option>0</option>
@@ -99,7 +101,7 @@ const TransferProgramTable = (props: any) => {
                                         </Form.Control>
                                              <InputGroup.Text id="basic-addon2">m</InputGroup.Text>
                                         </InputGroup>
-                                   </td>
+                                   </td> */}
                                    </tr>
                                    )
                               })}
