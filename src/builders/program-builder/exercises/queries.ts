@@ -51,7 +51,7 @@ export const FETCH_DATA = gql`
 
 export const FETCH_WORKOUTS = gql`
   query fetchworkouts($id: ID!) {
-    workouts(filters: { users_permissions_user: { id: { eq: $id } } }) {
+    workouts(pagination: { pageSize: 100 },filters: { users_permissions_user: { id: { eq: $id } } }) {
       data {
         id
         attributes {
@@ -131,7 +131,7 @@ export const FETCH_FITNESSDISCPLINES = gql`
 
 export const GET_TABLEDATA = gql`
   query ExercisesQuery($id: ID!) {
-    exercises(filters: { users_permissions_user: { id: { eq: $id } } }) {
+    exercises(pagination: { pageSize: 100 }, filters: { users_permissions_user: { id: { eq: $id } } }) {
       data {
         id
         attributes {
@@ -176,41 +176,6 @@ export const GET_TABLEDATA = gql`
   }
 `;
 
-// export const GET_TABLEDATA = gql`
-//      query ExercisesQuery($id: String) {
-//           exercises(where: {users_permissions_user: { id: $id}}) {
-//                id
-//                updatedAt
-//                exercisename
-//                exerciselevel
-//                exercisetext
-//                exerciseurl
-//                exerciseupload {
-//                name
-//                }
-//                users_permissions_user {
-//                id
-//                }
-//                fitnessdisciplines {
-//                id
-//                disciplinename
-//                }
-//                equipment_lists {
-//                id
-//                updatedAt
-//                name
-//                image{
-//                id
-//                updatedAt
-//                }
-//                }
-//                exercisemusclegroups {
-//                name
-//                }
-//           }
-//      }
-// `
-
 export const CREATE_EXERCISE = gql`
   mutation createexercise(
     $exercisename: String
@@ -247,6 +212,7 @@ export const CREATE_EXERCISE = gql`
     }
   }
 `;
+
 export const UPDATE_EXERCISE = gql`
   mutation updateexercise(
     $exercisename: String
@@ -285,6 +251,7 @@ export const UPDATE_EXERCISE = gql`
     }
   }
 `;
+
 export const DELETE_EXERCISE = gql`
   mutation deleteexercise($id: ID!) {
     deleteExercise(id: $id) {

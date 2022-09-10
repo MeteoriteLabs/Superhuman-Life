@@ -1,54 +1,64 @@
 {
-     "1": {
-         "title": "",
-         "type": "object",
-         "required": [
-             "workout",
-             "intensity",
-             "level",
-             "discipline",
-             "about",
+    "1": {
+        "title": "",
+        "type": "object",
+        "required": [
+            "workout",
+            "intensity",
+            "level",
+            "discipline",
+            "about",
             "benefits",
-            "calories",
             "equipment",
             "muscleGroup"
-         ],
-         "properties": {
-             "workout": {
-                 "type": "string",
-                 "title": "Workout name"
-             },
-             "intensity": {
-                 "type": "number",
-                 "title": "Intensity",
-                 "enum": [0, 1, 2],
-                 "enumNames": [
-                     "Low",
-                     "Medium",
-                     "High"
-                 ]
-             },
-             "level": {
-                 "type": "number",
-                 "title": "Level",
-                 "enum": [0, 1, 2, 3],
-                 "enumNames": [
-                     "Beginner",
-                     "Intermediate",
-                     "Advanced", 
-                     "No level"
-                 ]
-             },
-             "discipline": {
-                 "type": "string"
-             },
-             "about": {
-                 "type": "string",
-                 "title": "About"
-             },
-             "benefits": {
+        ],
+        "properties": {
+            "workout": {
                 "type": "string",
-                "title": "Benifits"
+                "title": "Workout name"
+            },
+            "intensity": {
+                "type": "number",
+                "title": "Intensity",
+                "enum": [
+                    0,
+                    1,
+                    2
+                ],
+                "enumNames": [
+                    "Low",
+                    "Medium",
+                    "High"
+                ]
+            },
+            "level": {
+                "type": "number",
+                "title": "Level",
+                "enum": [
+                    0,
+                    1,
+                    2,
+                    3
+                ],
+                "enumNames": [
+                    "Beginner",
+                    "Intermediate",
+                    "Advanced",
+                    "No level"
+                ]
+            },
+            "discipline": {
+                "type": "string"
+            },
+            "about": {
+                "type": "string",
+                "title": "About",
+                "description" : "Explain in detail about the workout"
+            },
+            "benefits": {
+                "type": "string",
+                "title": "Benefits",
+                "description": "Explain the benefits of this workout"
             },
             "addWorkout": {
                 "title": "Workout Agenda",
@@ -57,16 +67,16 @@
             "calories": {
                 "type": "number",
                 "title": "Total calories",
-                "minimum": 1
+                "minimum": 0
             },
             "equipment": {
-               "type": "string"
-           },
-           "muscleGroup": {
-               "type": "string"
-           }
-         },
-         "definitions": {
+                "type": "string"
+            },
+            "muscleGroup": {
+                "type": "string"
+            }
+        },
+        "definitions": {
             "addWorkout": {
                 "title": "Add Workout",
                 "type": "object",
@@ -98,7 +108,9 @@
                                     },
                                     "AddURL": {
                                         "type": "string",
-                                        "title": "Add URL"
+                                        "title": "Add URL",
+                                        "format": "uri",
+                                        "description": "upload link of the workout. You can add a youtube URL. Can be  used for Group, PT, Custom and Classic offerings."
                                     }
                                 }
                             },
@@ -111,7 +123,8 @@
                                     },
                                     "AddText": {
                                         "type": "string",
-                                        "title": "Add Text"
+                                        "title": "Add Text",
+                                        "description": "Explain in detail about the workout. Used for PT and Group"
                                     }
                                 }
                             },
@@ -123,11 +136,16 @@
                                         ]
                                     },
                                     "Upload": {
-                                        "type": "string"
+                                        "type": "string",
+                                        "description": "Add video of the Workout."
                                     }
                                 }
                             },
                             {
+                                "required": [
+                                    "AddWorkout",
+                                    "build"
+                                ],
                                 "properties": {
                                     "AddWorkout": {
                                         "enum": [
@@ -136,7 +154,8 @@
                                     },
                                     "build": {
                                         "title": "Build Workout",
-                                        "type": "string"
+                                        "type": "string",
+                                        "description": "Structure the workout for the user.Usually used for Classic type of offering."
                                     }
                                 }
                             }
@@ -144,6 +163,6 @@
                     }
                 }
             }
-            }
         }
-     }
+    }
+}

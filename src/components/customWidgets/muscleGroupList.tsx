@@ -78,6 +78,7 @@ const MuscleGroupList = (props: any) => {
      }).join(','))
 
      FetchMuscleGroupList({ filter: searchInput, skip: skipval});
+
      return (
           <>
                <label style={{ fontSize: 17}}>Muscle group</label>
@@ -95,6 +96,7 @@ const MuscleGroupList = (props: any) => {
                                    <option style={{cursor: 'pointer'}}
                                         className="m-2 p-1 shadow-sm rounded bg-white"
                                         value={muscle.id}
+                                        key={muscle.id}
                                         onClick={(e) => {e.preventDefault(); handleSeletedMuscleGroupAdd(muscle.name, muscle.id);
                                              }}>
                                         {muscle.name}
@@ -104,9 +106,9 @@ const MuscleGroupList = (props: any) => {
                          })}
                     </>
                     <>
-                         {selected.map((val) => {
+                         {selected.map((val, index) => {
                               return (
-                                   <div className="text-center mt-2 mr-2" style={{ 
+                                   <div className="text-center mt-2 mr-2" key={index} style={{ 
                                         display: 'inline-block',
                                         height: '32px',
                                         padding: '0px 12px',

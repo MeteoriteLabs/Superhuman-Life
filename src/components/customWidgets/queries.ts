@@ -228,3 +228,17 @@ export const GET_EQUIPMENTLIST = gql`
     }
   }
 `
+export const GET_MUSCLEGROUPS = gql`
+     query muscleGroupQuery{
+          muscleGroups(pagination: {
+            pageSize:100
+          }){
+          data {
+               id
+               attributes {
+               name
+               }
+          }
+          }
+     }
+  `;

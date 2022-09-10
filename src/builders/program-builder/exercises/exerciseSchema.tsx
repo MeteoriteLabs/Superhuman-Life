@@ -1,11 +1,11 @@
 import TextEditor from "../../../components/customWidgets/textEditor";
-import EquipmentSearch from "../../../components/customWidgets/equipmentList";
-import MuscleGroupSearch from "../../../components/customWidgets/muscleGroupList";
-import FitnessSelect from "../../../components/customWidgets/fitnessSelect";
+import EquipmentSearch from "../../../components/customWidgets/equipmentListSelect";
+import MuscleGroupSearch from "../../../components/customWidgets/muscleGroupMultiSelect";
+import FitnessMultiSelect from '../../../components/customWidgets/fitnessMultiSelect';
 import Upload from '../../../components/upload/upload';
 
 export const widgets = {
-  fitnessSelect: FitnessSelect,
+  fitnessSelect: FitnessMultiSelect,
   equipmentSearch: EquipmentSearch,
   muscleGroupSearch: MuscleGroupSearch,
   textEditor: TextEditor,
@@ -30,15 +30,19 @@ export const schema: any = {
     "ui:options": {
       rows: 3,
     },
+    "ui:help": "Give a short and simple explanation for the user to understand the exercise."
   },
   equipment: {
     "ui:widget": "equipmentSearch",
+    "ui:help" : "Add all equipments required to perform the exercise. Example - Pullup you can add a pullup bar and resistance bands. It is required field"
   },
   muscleGroup: {
     "ui:widget": "muscleGroupSearch",
+    "ui:help" : "Add muscles targeted by this exercise. It is required field"
   },
   discipline: {
     "ui:widget": "fitnessSelect",
+    "ui:help": "Choose the relevant  discipline for the workout. It is required field"
   },
   addExercise: {
     AddText: {
@@ -46,8 +50,9 @@ export const schema: any = {
     },
     Upload: {
       "ui:widget": (props: any) => {
-        return <Upload allowImage={true} allowVideo={true} onChange={props.onChange} value={props.value} />;
+        return <Upload allowImage={false} allowVideo={true} onChange={props.onChange} value={props.value} />;
       },
-    },
+    }
+    
   },
 };
