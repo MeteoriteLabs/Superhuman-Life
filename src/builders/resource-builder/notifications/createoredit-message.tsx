@@ -1,4 +1,4 @@
-import React, { useContext, useImperativeHandle, useState } from "react";
+import React, { useContext, useImperativeHandle, useState, useEffect } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import { GET_TRIGGERS, ADD_MESSAGE, UPDATE_MESSAGE, GET_MESSAGE, DELETE_MESSAGE, UPDATE_STATUS } from "./queries";
 import AuthContext from "../../../context/auth-context";
@@ -29,6 +29,7 @@ function CreateEditMessage(props: any, ref: any) {
      const messageSchema: { [name: string]: any } = require("./message.json");
      const [messageDetails, setMessageDetails] = useState<any>({});
      const [operation, setOperation] = useState<Operation>({} as Operation);
+     const [name, setName] = useState('');
 
      const [createMessage] = useMutation(ADD_MESSAGE, {
           onCompleted: (r: any) => {
@@ -66,7 +67,7 @@ function CreateEditMessage(props: any, ref: any) {
                setOperation(msg);
 
                if (msg.type !== 'delete' && msg.type !== 'toggle-status') {
-               modalTrigger.next(true);
+                    modalTrigger.next(true);
                }
           },
      }));
@@ -142,22 +143,23 @@ function CreateEditMessage(props: any, ref: any) {
           }
      }
 
-     let name = "";
-     if (operation.type === 'create') {
-          name = "Create New Exercise";
-     } else if (operation.type === 'edit') {
-          name = "Edit";
-     } else if (operation.type === 'view') {
-          name = "View";
-     }
+     useEffect(() => {
+          if (operation.type === 'create') {
+               setName("Create New Message");
+          } else if (operation.type === 'edit') {
+               setName("Edit");
+          } else if (operation.type === 'view') {
+               setName("View");
+          }
+     }, [operation.type])
 
      return (
           <>
                {
                     <ModalView
-                         name={operation.type}
+                         name={name}
                          isStepper={false}
-                         formUISchema={operation.type === 'view' ? schemaView : schema}
+                         formUISchema={name === 'View' ? schemaView : schema}
                          formSchema={messageSchema}
                          showing={operation.modal_status}
                          formSubmit={name === 'View' ? () => { modalTrigger.next(false); } : (frm: any) => { OnSubmit(frm); }}

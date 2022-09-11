@@ -1,6 +1,5 @@
 {
      "1": {
-          "title": "Message",
           "type": "object",
           "required": ["title", "mindsetmessagetype", "minidesc"],
           "properties": {

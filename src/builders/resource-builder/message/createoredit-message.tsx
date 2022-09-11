@@ -1,4 +1,4 @@
-import React, { useContext, useImperativeHandle, useState } from "react";
+import React, { useContext, useEffect, useImperativeHandle, useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import ModalView from "../../../components/modal";
 import { GET_TRIGGERS, ADD_MESSAGE, UPDATE_MESSAGE, GET_MESSAGE, DELETE_MESSAGE, UPDATE_STATUS } from "./queries";
@@ -6,6 +6,7 @@ import AuthContext from "../../../context/auth-context";
 import StatusModal from "../../../components/StatusModal/StatusModal";
 import { Subject } from "rxjs";
 import { schema, widgets } from "./schema";
+import {schemaView} from "./messageViewSchema";
 import { flattenObj } from '../../../components/utils/responseFlatten';
 
 interface Operation {
@@ -22,7 +23,7 @@ const messageEmptyState = {
      description: '',
      minidesc: '',
      mediaurl: '',
-     upload:''
+     upload: ''
 }
 
 function CreateEditMessage(props: any, ref: any) {
@@ -30,6 +31,7 @@ function CreateEditMessage(props: any, ref: any) {
      const messageSchema: { [name: string]: any } = require("./mindset.json");
      const [messageDetails, setMessageDetails] = useState<any>({});
      const [operation, setOperation] = useState<Operation>({} as Operation);
+     const [name, setName] = useState('');
 
      const [createMessage] = useMutation(ADD_MESSAGE, {
           onCompleted: (r: any) => {
@@ -61,7 +63,7 @@ function CreateEditMessage(props: any, ref: any) {
      useImperativeHandle(ref, () => ({
           TriggerForm: (msg: Operation) => {
                setOperation(msg);
-               
+
                if (msg.type !== 'delete' && msg.type !== 'toggle-status') {
                     modalTrigger.next(true);
                }
@@ -70,7 +72,7 @@ function CreateEditMessage(props: any, ref: any) {
 
      function loadData(data: any) {
           const flattenData = flattenObj({ ...data });
-          
+
           messageSchema["1"].properties.mindsetmessagetype.enum = [...flattenData.prerecordedtypes].map((n) => n.id);
           messageSchema["1"].properties.mindsetmessagetype.enumNames = [...flattenData.prerecordedtypes].map((n) => n.name);
      }
@@ -114,7 +116,7 @@ function CreateEditMessage(props: any, ref: any) {
      }
 
      function EditMessage(frm: any) {
-          editMessage({ variables: frm});
+          editMessage({ variables: frm });
      }
 
      function ToggleMessageStatus(id: string, current_status: boolean) {
@@ -139,15 +141,25 @@ function CreateEditMessage(props: any, ref: any) {
           }
      }
 
+     useEffect(() => {
+          if (operation.type === 'create') {
+               setName("Create New Message");
+          } else if (operation.type === 'edit') {
+               setName("Edit");
+          } else if (operation.type === 'view') {
+               setName("View");
+          }
+     }, [operation.type])
+
      return (
           <>
                <ModalView
-                    name={operation.type}
+                    name={name}
                     isStepper={false}
-                    formUISchema={schema}
+                    formUISchema={name === 'View' ? schemaView : schema}
                     formSchema={messageSchema}
                     showing={operation.modal_status}
-                    formSubmit={(frm: any) => {
+                    formSubmit={name === 'View' ? () => { modalTrigger.next(false); } : (frm: any) => {
                          OnSubmit(frm);
                     }}
                     formData={operation.type === 'create' ? messageEmptyState : messageDetails}
