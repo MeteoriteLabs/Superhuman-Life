@@ -1,9 +1,7 @@
-
 import { Card, Tab, Tabs, TabContent } from "react-bootstrap";
 import MessagePage from "./notifications";
 import MindsetPage from "./message";
 // import InformationPage from "./information bank";
-
 
 export default function ResourcePage() {
 
@@ -19,7 +17,7 @@ export default function ResourcePage() {
                                 <MessagePage />
                             </TabContent>
                         </Tab>
-                        {/* this part is having error so commented out */}
+
                         <Tab eventKey="mindset" title="Notification Messages">
                             <TabContent>
                                 <hr />

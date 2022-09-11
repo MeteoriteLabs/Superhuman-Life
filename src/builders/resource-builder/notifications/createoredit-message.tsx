@@ -64,9 +64,9 @@ function CreateEditMessage(props: any, ref: any) {
      useImperativeHandle(ref, () => ({
           TriggerForm: (msg: Operation) => {
                setOperation(msg);
-               
+
                if (msg.type !== 'delete' && msg.type !== 'toggle-status') {
-                    modalTrigger.next(true);
+               modalTrigger.next(true);
                }
           },
      }));
@@ -84,7 +84,7 @@ function CreateEditMessage(props: any, ref: any) {
           let details: any = {};
           const flattenData = flattenObj({ ...data });
           let msg = flattenData.notifications[0];
-          
+
           let o = { ...operation };
           details.name = o.type.toLowerCase();
           details.title = msg.title;
@@ -142,28 +142,30 @@ function CreateEditMessage(props: any, ref: any) {
           }
      }
 
-     let name="";
-          if (operation.type === 'create') {
-               name = "Create New Message";
-          } else if (operation.type === 'edit') {
-               name = "Edit";
-          } else if (operation.type === 'view') {
-               name = "View";
-          }
-     
+     let name = "";
+     if (operation.type === 'create') {
+          name = "Create New Exercise";
+     } else if (operation.type === 'edit') {
+          name = "Edit";
+     } else if (operation.type === 'view') {
+          name = "View";
+     }
+
      return (
           <>
-               <ModalView
-                    name={name}
-                    isStepper={false}
-                    formUISchema={operation.type === 'view' ? schemaView : schema}
-                    formSchema={messageSchema}
-                    showing={operation.modal_status}
-                    formSubmit={name === "View" ? () => { modalTrigger.next(false); } : (frm: any) => { OnSubmit(frm); }}
-                    formData={operation.type === 'create' ? notificationEmptyState : messageDetails}
-                    modalTrigger={modalTrigger}
-               />
-               
+               {
+                    <ModalView
+                         name={operation.type}
+                         isStepper={false}
+                         formUISchema={operation.type === 'view' ? schemaView : schema}
+                         formSchema={messageSchema}
+                         showing={operation.modal_status}
+                         formSubmit={name === 'View' ? () => { modalTrigger.next(false); } : (frm: any) => { OnSubmit(frm); }}
+                         formData={operation.type === 'create' ? notificationEmptyState : messageDetails}
+                         modalTrigger={modalTrigger}
+                    />
+               }
+
                {operation.type === "toggle-status" && (
                     <StatusModal
                          modalTitle="Change Status"

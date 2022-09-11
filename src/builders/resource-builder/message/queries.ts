@@ -104,10 +104,10 @@ export const UPDATE_MESSAGE = gql`
     updatePrerecordedMessage(
       id: $messageid
       data: {
-        title: $title
-        description: $description
+        Title: $title
+        Description: $description
         minidescription: $minidesc
-        mediaurl: $mediaurl
+        Image_URL: $mediaurl
         tags: $tags
         resourcetype: $mindsetmessagetype
         users_permissions_user: $userpermission

@@ -114,7 +114,7 @@ function CreateEditMessage(props: any, ref: any) {
      }
 
      function EditMessage(frm: any) {
-          editMessage({ variables: frm });
+          editMessage({ variables: frm});
      }
 
      function ToggleMessageStatus(id: string, current_status: boolean) {

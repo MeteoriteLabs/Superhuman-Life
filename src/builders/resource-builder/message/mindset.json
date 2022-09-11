@@ -6,30 +6,36 @@
           "properties": {
                "title": {
                     "type": "string",
-                    "title": "Message Title"
+                    "title": "Message Title",
+                    "description": "Assign a heading "
                },
                "mindsetmessagetype": {
                     "type": "string",
                     "title": "Type",
                     "enum": [],
-                    "enumNames": []
+                    "enumNames": [],
+                    "description": "Choose category"
                },
                "tags": {
                     "type": "string",
-                    "title": "Tags"
+                    "title": "Tags",
+                    "description": "Add keywords"
                },
                "description": {
                     "type": "string",
-                    "title": "Description"
+                    "title": "Description",
+                    "description": "Explain in detail"
                },
                "minidesc": {
                     "type": "string",
-                    "title": "Mini Description"
+                    "title": "Mini Description",
+                    "description": "Write summary"
                },
                "mediaurl": {
                     "type": "string",
-                    "title": "Url (Picture or Video)",
-                    "format": "uri"
+                    "title": "Insert media",
+                    "format": "uri",
+                    "description": "Enter the url or upload an image or video. File size cannot exceed 5Mb"
                },
                "upload": {
                     "type": "string"
