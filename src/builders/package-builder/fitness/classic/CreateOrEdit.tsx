@@ -126,8 +126,8 @@ function CreateEditPackage(props: any, ref: any) {
         details.About = msg.aboutpackage;
         details.Benifits = msg.benefits;
         details.packagename = msg.packagename;
-        details.equipmentList = JSON.stringify(msg.equipment_lists);
-        details.disciplines = JSON.stringify(msg.fitnessdisciplines);
+        details.equipmentList = msg.equipment_lists
+        details.disciplines = msg.fitnessdisciplines
         details.channelinstantBooking = msg.groupinstantbooking;
         details.expiryDate = moment(msg.expirydate).format('YYYY-MM-DD');
         details.level = ENUM_FITNESSPACKAGE_LEVEL[msg.level];

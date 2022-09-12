@@ -93,6 +93,8 @@ function CreateEditChannel(props: any, ref: any) {
         let msg: any = flattenData.fitnesspackages[0];
         let booking: any = {};
         let details: any = {};
+        console.log(msg);
+        debugger;
         if(msg.groupinstantbooking){
             for(var i =0; i<msg.fitnesspackagepricing.length; i++){
                 PRICING_TABLE_DEFAULT_WITH_INSTANTBOOKING[i].mrp = msg.fitnesspackagepricing[i].mrp;
@@ -111,7 +113,7 @@ function CreateEditChannel(props: any, ref: any) {
         details.About = msg.aboutpackage;
         details.Benifits = msg.benefits;
         details.channelName = msg.packagename;
-        details.equipment = JSON.stringify(msg.equipment_lists);
+        details.equipment = msg.equipment_lists
         details.discpline = JSON.stringify(msg.fitnessdisciplines);
         details.channelinstantBooking = JSON.stringify({"instantBooking": msg.groupinstantbooking, "freeDemo": msg.Is_free_demo});
         details.expiryDate = moment(msg.expirydate).format('YYYY-MM-DD');

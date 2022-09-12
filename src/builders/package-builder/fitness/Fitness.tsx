@@ -115,9 +115,9 @@ export default function FitnessTab(props) {
                             <img src='./assets/customclassic.svg' alt="Classic" />
                             <p>{row.values.details[4] * currentIndex[row.index]}</p>
                         </div> : ""}
-                    {row.values.details[5] !== null && row.values.details[5] !== 0 ?
+                    {row.values.details[5] !== null && row.values.details[5] !== 0 && row.values.details[4] === null ?
                         <div className="text-center">
-                            <img src={row.values.details[6] === "Online" ? './assets/cohort_online.svg' : './assets/cohort_offline.svg'} alt="Classic" />
+                            <img src={row.values.details[6] === "Online" ? './assets/cohort_online.svg' : './assets/cohort_offline.svg'} alt="cohort" />
                             <p>{row.values.details[5] * currentIndex[row.index]}</p>
                         </div> : ""}
                 </div>
@@ -227,6 +227,8 @@ export default function FitnessTab(props) {
         setSelectedDuration(new Array(flattenData.fitnesspackages.length).fill(0));
         setCurrentIndex(new Array(flattenData.fitnesspackages.length).fill(1))
     }
+
+    console.log(dataTable);
 
     return (
         <TabContent>

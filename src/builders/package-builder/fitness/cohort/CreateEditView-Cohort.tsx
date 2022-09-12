@@ -108,8 +108,8 @@ function CreateEditCohort(props: any, ref: any) {
         details.expiryDate = moment(msg.expirydate).format('YYYY-MM-DD');
         details.level = ENUM_FITNESSPACKAGE_LEVEL[msg.level];
         details.intensity = ENUM_FITNESSPACKAGE_INTENSITY[msg.Intensity];
-        details.equipment = JSON.stringify(msg.equipment_lists);
-        details.discpline = JSON.stringify(msg.fitnessdisciplines);
+        details.equipment = msg.equipment_lists
+        details.discpline = msg.fitnessdisciplines
         details.pricing = msg.fitnesspackagepricing[0]?.mrp === 'free' ? 'free' : JSON.stringify(msg.fitnesspackagepricing);
         details.publishingDate = moment(msg.publishing_date).format('YYYY-MM-DD');
         details.tag = msg?.tags === null ? '' : msg.tags;
