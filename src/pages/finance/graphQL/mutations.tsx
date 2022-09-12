@@ -1,28 +1,11 @@
 import { gql } from '@apollo/client'
 
-
-
 export const CREATE_VOUCHER = gql`
     mutation createVoucher(
-        $voucher_name:String
-        $discount_percentage:Float
-        $expiry_date:DateTime
-        $Start_date:DateTime
-        $Usage_restriction:Int
-        $users_permissions_user:ID
-        $Status:String
+        $data:VoucherInput!
     ){
         createVoucher(
-            data:{
-                voucher_name: $voucher_name
-                discount_percentage: $discount_percentage
-                expiry_date: $expiry_date
-                Start_date: $Start_date
-                Usage_restriction:$Usage_restriction
-                users_permissions_user: $users_permissions_user
-                Status:$Status
-            }
-           
+            data: $data
         ){
             data{
                 id
@@ -89,13 +72,11 @@ export const DELETE_VOUCHER = gql`
 export const TOGGLE_STATUS = gql`
     mutation updateVoucher(
         $id:ID!
-        $Status:String
+        $data:VoucherInput!
     ){
         updateVoucher(
             id: $id
-            data:{ 
-                Status: $Status
-            }
+            data:$data
         ){
             data{
                 id
@@ -129,7 +110,6 @@ export const CREATE_FITNESS_PRICING_ASSIT = gql`
         }
     }
 `
-
 
 export const UPDATE_FITNESS_PRICING_ASSITS = gql`
     mutation updateSuggestedPricing(

@@ -1,6 +1,6 @@
 import React from 'react'
 import ActionButton from '../../../../components/actionbutton';
-import {  Row, Col } from "react-bootstrap";
+import { Row, Col } from "react-bootstrap";
 import { useContext, useMemo, useRef, useState } from 'react'
 import Table from '../../../../components/table/index'
 import { useQuery } from '@apollo/client';
@@ -17,20 +17,15 @@ export default function Fitness() {
     const [dataTable, setDataTable] = useState<any[]>([]);
     const pricingAssistAction = useRef<any>(null);
 
-
-
-      // get fitness package type
-    const {data:data2 } = useQuery(GET_FITNESS_PACKAGE_TYPES, {
+    // get fitness package type
+    const { data: data2 } = useQuery(GET_FITNESS_PACKAGE_TYPES, {
         variables: { id: auth.userid },
     })
-    
-
 
     const FetchData = () => useQuery(GET_ALL_SUGGESTED_PRICING, {
         variables: { id: auth.userid },
         onCompleted: data => loadData(data)
     })
-
 
     // const loadData = (data) => {
     //     setDataTable(
@@ -68,7 +63,7 @@ export default function Fitness() {
             [
                 {
                     id: personalTrainingOnline.length === 0 ? "" : personalTrainingOnline[0].id,
-                    packageTypeID:data2.fitnessPackageTypes.data.filter(item =>item.attributes.type === "Personal Training").map(item =>item.id),
+                    packageTypeID: data2.fitnessPackageTypes.data.filter(item => item.attributes.type === "Personal Training").map(item => item.id),
                     type: "Personal Training",
                     duration: 1,
                     mode: "Online",
@@ -77,7 +72,7 @@ export default function Fitness() {
                 },
                 {
                     id: personalTrainingOffline.length === 0 ? "" : personalTrainingOffline[0].id,
-                    packageTypeID:data2.fitnessPackageTypes.data.filter(item =>item.attributes.type === "Personal Training").map(item =>item.id),
+                    packageTypeID: data2.fitnessPackageTypes.data.filter(item => item.attributes.type === "Personal Training").map(item => item.id),
                     type: "Personal Training",
                     duration: 1,
                     mode: "Offline",
@@ -86,7 +81,7 @@ export default function Fitness() {
                 },
                 {
                     id: groupOnline.length === 0 ? "" : groupOnline[0].id,
-                    packageTypeID:data2.fitnessPackageTypes.data.filter(item =>item.attributes.type === "Group Class").map(item =>item.id),
+                    packageTypeID: data2.fitnessPackageTypes.data.filter(item => item.attributes.type === "Group Class").map(item => item.id),
                     type: "Group Class",
                     duration: 1,
                     mode: "Online",
@@ -95,7 +90,7 @@ export default function Fitness() {
                 },
                 {
                     id: groupOffline.length === 0 ? "" : groupOffline[0].id,
-                    packageTypeID:data2.fitnessPackageTypes.data.filter(item =>item.attributes.type === "Group Class").map(item =>item.id),
+                    packageTypeID: data2.fitnessPackageTypes.data.filter(item => item.attributes.type === "Group Class").map(item => item.id),
                     type: "Group Class",
                     duration: 1,
                     mode: "Offline",
@@ -104,7 +99,7 @@ export default function Fitness() {
                 },
                 {
                     id: classic.length === 0 ? "" : classic[0].id,
-                    packageTypeID:data2.fitnessPackageTypes.data.filter(item =>item.attributes.type === "Classic").map(item =>item.id),
+                    packageTypeID: data2.fitnessPackageTypes.data.filter(item => item.attributes.type === "Classic").map(item => item.id),
                     type: "Classic Class",
                     duration: 1,
                     mode: "Online",
@@ -113,7 +108,7 @@ export default function Fitness() {
                 },
                 {
                     id: CohortOnline.length === 0 ? "" : CohortOnline[0].id,
-                    packageTypeID:data2.fitnessPackageTypes.data.filter(item =>item.attributes.type === "Cohort").map(item =>item.id),
+                    packageTypeID: data2.fitnessPackageTypes.data.filter(item => item.attributes.type === "Cohort").map(item => item.id),
                     type: "Cohort",
                     duration: 1,
                     mode: "Online",
@@ -122,7 +117,7 @@ export default function Fitness() {
                 },
                 {
                     id: CohortOffline.length === 0 ? "" : CohortOffline[0].id,
-                    packageTypeID:data2.fitnessPackageTypes.data.filter(item =>item.attributes.type === "Cohort").map(item =>item.id),
+                    packageTypeID: data2.fitnessPackageTypes.data.filter(item => item.attributes.type === "Cohort").map(item => item.id),
                     type: "Cohort",
                     duration: 1,
                     mode: "Offline",
@@ -131,7 +126,7 @@ export default function Fitness() {
                 },
                 {
                     id: liveStream.length === 0 ? "" : liveStream[0].id,
-                    packageTypeID:data2.fitnessPackageTypes.data.filter(item =>item.attributes.type === "Live Stream Channel").map(item =>item.id),
+                    packageTypeID: data2.fitnessPackageTypes.data.filter(item => item.attributes.type === "Live Stream Channel").map(item => item.id),
                     type: "Live Stream Channel",
                     duration: 1,
                     mode: "Online",
@@ -144,11 +139,6 @@ export default function Fitness() {
 
     FetchData();
 
-    
-  
-
-
-
     const columns = useMemo(
         () => [
             {
@@ -159,13 +149,13 @@ export default function Fitness() {
                         case "Online": {
                             if (row.original.type === "Personal Training") {
                                 type = "custompersonal-training-Online.svg";
-                                name = "PT";
+                                name = "PT Online";
                             } else if (row.original.type === "Group Class") {
                                 type = "customgroup-Online.svg";
-                                name = "Group";
+                                name = "Group Online";
                             } else if (row.original.type === "Classic Class") {
                                 type = "customgroup-Online.svg";
-                                name = "Classic";
+                                name = "Classic Online";
                             }
                             break;
                         }
@@ -173,10 +163,10 @@ export default function Fitness() {
                         case "Offline": {
                             if (row.original.type === "Personal Training") {
                                 type = "custompersonal-training-Offline.svg";
-                                name = "PT";
+                                name = "PT Offline";
                             } else if (row.original.type === "Group Class") {
                                 type = "customgroup-Offline.svg";
-                                name = "Group";
+                                name = "Group Offline";
                             }
                             break;
                         }
@@ -227,6 +217,7 @@ export default function Fitness() {
 
     return (
         <div className="mt-5">
+            <p>This base pricing will be used to help you price your offerings. It will suggest you the calculated price based mode, duration and type of offering.</p>
             <Row>
                 <Col>
                     <Table columns={columns} data={dataTable} />
