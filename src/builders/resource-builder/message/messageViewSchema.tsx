@@ -6,34 +6,34 @@ export const widgets = {
 
 export const schemaView: any = {
     title:{
-        "ui-readonly": true
+        "ui:disabled": true
     },
     mindsetmessagetype:{
-        "ui-readonly": true
+        "ui:disabled": true
     },
     tags:{
-        "ui-readonly": true
+        "ui:disabled": true
     },
     description: {
-        "ui-readonly": true,
+        "ui:disabled": true,
         "ui:widget": "textarea",
         "ui:options": {
             rows: 4,
         },
     },
     minidesc: {
-        "ui-readonly": true,
+        "ui:disabled": true,
         "ui:widget": "textarea",
         "ui:options": {
             rows: 2,
         },
     },
     mediaurl: {
-        "ui-readonly": true
+        "ui:disabled": true
     },
     upload: {
         "ui:widget": (props: any) => {
-            return <Upload allowImage={true} allowVideo={true} onChange={props.onChange} value={props.value} />;
+            return <Upload allowImage={true} allowVideo={true} readonly={true} onChange={props.onChange} value={props.value} />;
         },
     }
 };

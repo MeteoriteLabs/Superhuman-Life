@@ -20,10 +20,10 @@ export const schemaView: any = {
         "ui:readonly": true
     },
     prerecordedtype:{
-        "ui:readonly": true
+        "ui:disabled": true
     },
     prerecordedtrigger: {
-        "ui:readonly": true
+        "ui:disabled": true
     }
 };
 
