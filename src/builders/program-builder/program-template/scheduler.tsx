@@ -250,6 +250,7 @@ const Schedular = (props: any) => {
         }
         setTemplateSessionsIds(existingTemplateIds);
 
+
         if (data?.length > 0) {
             data?.forEach((val) => {
                 var startTimeHour: any = `${val.start_time === null ? '0' : val.start_time.split(':')[0]}`;
@@ -1560,7 +1561,7 @@ const Schedular = (props: any) => {
                                 </Col>
                                 <Col lg={7}>
                                     <DaysInput dayType={window.location.pathname.split("/")[1] === 'programs' && "day"} startDate={props.startDate} duration={props.days} val={event.day} type="transfer" onChange={(e) => {
-                                        if(e === [] || e === undefined){
+                                        if(e === "[]" || e === undefined){
                                             setDuplicatedDay([]);
                                         }
                                         setDuplicatedDay(JSON.parse(e));

@@ -77,7 +77,7 @@ export default function ModalView({
             </Col>
             {isStepper &&
               stepper.map((item: string, id: number) => (
-                <Col xs={2} md={2} lg={2} key={id}>
+                <Col xs={2} md={2} lg={5} key={id}>
                   <ProgressBar
                     max={1}
                     now={step - (id + 1)}

@@ -18,6 +18,9 @@
      "2": {
         "title": "",
         "type": "object",
+        "required": [
+            "newActivity"
+         ],
         "properties": {
             "newActivity": {
                 "type": "string"

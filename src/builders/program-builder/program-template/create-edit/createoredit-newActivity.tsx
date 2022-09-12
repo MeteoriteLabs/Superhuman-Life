@@ -33,10 +33,10 @@ function CreateEditActivity(props: any, ref: any) {
           setTemplateSessionsIds(templateExistingValues);
      }});
 
-    useQuery(GET_SESSIONS, {variables: {id: program_id},onCompleted: (data: any) => {
+    useQuery(GET_SESSIONS, {variables: {id: program_id}, skip: (window.location.pathname.split('/')[1] === 'programs'),onCompleted: (data: any) => {
         const flattenData = flattenObj({...data});
         const sessionsExistingValues = [...sessionsIds];
-        for(var q=0; q<flattenData.tags[0].sessions.length; q++){
+        for(var q=0; q<flattenData.tags[0]?.sessions.length; q++){
             sessionsExistingValues.push(flattenData.tags[0].sessions[q].id);
         }
         setSessionsIds(sessionsExistingValues);
@@ -96,6 +96,7 @@ function CreateEditActivity(props: any, ref: any) {
      function UpdateProgram(frm: any) {
           var existingEvents = props.events === null ? [] : [...props.events];
           var daysArray: any = [];
+          var id: any;
           console.log(frm);
           if (frm.day && frm.newActivity) {
                frm.day = JSON.parse(frm.day);
@@ -103,7 +104,7 @@ function CreateEditActivity(props: any, ref: any) {
                frm.newActivity = JSON.parse(frm.newActivity);
                console.log(frm.newActivity)
                var name: any = frm.newActivity[0].activity;
-               var id: any = frm.newActivity[0].id;
+               id = frm.newActivity[0].id;
                delete frm.newActivity[0].activity;
                delete frm.newActivity[0].id;
                for (var i = 0; i < frm.day.length; i++) {
@@ -183,8 +184,6 @@ function CreateEditActivity(props: any, ref: any) {
                }
           }
 
-          console.log(frm.day);
-          
           for (var z = 0; z < frm.day.length; z++) {
                createSession({
                     variables: {
@@ -248,6 +247,7 @@ function CreateEditActivity(props: any, ref: any) {
                <ModalView
                     name={operation.type}
                     isStepper={true}
+                    showErrorList={false}
                     formUISchema={schema}
                     formSchema={programSchema}
                     //showing={operation.modal_status}

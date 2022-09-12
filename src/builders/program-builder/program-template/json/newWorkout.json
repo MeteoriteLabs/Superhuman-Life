@@ -69,15 +69,18 @@
                   ]
               },
               "discipline": {
-                  "type": "string"
+                  "type": "string",
+                  "description": "Choose the relevant discipline for the workout"
               },
               "about": {
                   "type": "string",
-                  "title": "About"
+                  "title": "About",
+                  "description": "Explain in detail about the workout"
               },
               "benefits": {
                  "type": "string",
-                 "title": "Benifits"
+                 "title": "Benifits",
+                 "description": "Explain the benefits for the workout"
              },
              "addWorkout": {
                  "title": "Workout Agenda",
@@ -89,10 +92,12 @@
                  "minimum": 1
              },
              "equipment": {
-                "type": "string"
+                "type": "string",
+                "description": "Add all equipments required to perform the exercises in the workout"
             },
             "muscleGroup": {
-                "type": "string"
+                "type": "string",
+                "description": "Search for muscles target by this workout"
             }
           },
           "definitions": {
@@ -127,7 +132,8 @@
                                      },
                                      "AddURL": {
                                          "type": "string",
-                                         "title": "Add URL"
+                                         "title": "Add URL",
+                                         "description": "upload link of the workout. You can add a youtube URL. can be used for Gorup, PT, Custom and Classic offerings"
                                      }
                                  }
                              },
@@ -140,7 +146,8 @@
                                      },
                                      "AddText": {
                                          "type": "string",
-                                         "title": "Add Text"
+                                         "title": "Add Text",
+                                         "description": "Explain in detail about the workout. Used for PT and Group"
                                      }
                                  }
                              },
@@ -154,7 +161,8 @@
                                      "Upload": {
                                          "type": "string",
                                          "format": "data-url",
-                                         "title": "Upload a Video file"
+                                         "title": "Upload a Video file",
+                                         "description": "Add video of the Workout. Can be use for all offerings"
                                      }
                                  }
                              },

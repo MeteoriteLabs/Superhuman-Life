@@ -61,11 +61,11 @@ function CreateEditNewWorkout(props: any, ref: any) {
         setTemplateSessionsIds(templateExistingValues);
     }});
 
-    useQuery(GET_SESSIONS, {variables: {id: program_id},onCompleted: (data: any) => {
+    useQuery(GET_SESSIONS, {variables: {id: program_id}, skip: (window.location.pathname.split('/')[1] === 'programs'),onCompleted: (data: any) => {
         const flattenData = flattenObj({...data});
         setClientId(flattenData.tags[0]?.client_packages[0]?.users_permissions_user.id);
         const sessionsExistingValues = [...sessionsIds];
-        for(var q=0; q<flattenData.tags[0].sessions.length; q++){
+        for(var q=0; q<flattenData.tags[0]?.sessions.length; q++){
             sessionsExistingValues.push(flattenData.tags[0].sessions[q].id);
         }
         setSessionsIds(sessionsExistingValues);
@@ -297,6 +297,7 @@ function CreateEditNewWorkout(props: any, ref: any) {
                 <ModalView
                     name={name}
                     isStepper={true}
+                    showErrorList={false}
                     formUISchema={schema}
                     formSchema={programSchema}
                     formSubmit={name === "View" ? () => { modalTrigger.next(false); } : (frm: any) => { OnSubmit(frm); }}

@@ -18,7 +18,6 @@ const TransferPrograms = (props: any) => {
      const [updateProgram] = useMutation(UPDATE_FITNESSPORGRAMS_SESSIONS, { onCompleted: (r: any) => { handleClose(); } });
      const program_id = window.location.pathname.split('/').pop();
 
-
      function handleCallbackTransfer(e: any) {
           setData(e);
      }
@@ -55,12 +54,14 @@ const TransferPrograms = (props: any) => {
      function handleTransferEventsSubmit() {
           // var allEvents: any[] = [...existingEvents[0].events];
           const eventsJson: any[] = [];
+          console.log(data);
+          debugger;
           data.forEach((e: any) => {
-               console.log(e);
-               if (e.day && e.startTimeHour) {
+               const oldData = existingEvents[0].events.find((val: any) => val.id === e.id);
+               if (e.day && e.startTime && (oldData.start_time !== e.startTime)) {
                     e.day = JSON.parse(e.day);
-                    var startTime: any = e.startTimeHour + ":" + (e.startTimeMin === undefined ? '0' : e.startTimeMin);
-                    var endTime: any = handleEndTime((e.startTimeHour + ":" + e.startTimeMin).toString(), e.id);
+                    var startTime: any = e.startTime;
+                    var endTime: any = handleEndTime(e.startTime, e.id);
                     for (var i = 0; i < e.day.length; i++) {
                          eventsJson.push({
                               day: parseInt(e.day[i].key),

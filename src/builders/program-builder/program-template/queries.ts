@@ -2,13 +2,13 @@ import { gql } from "@apollo/client";
 
 export const GET_TABLEDATA = gql`
   query getprogramdata($id: ID!) {
-    fitnessprograms(filters: { id: { eq: $id } }) {
+    fitnessprograms(filters: { id: { eq: $id } }, pagination:{pageSize: 100}) {
       data {
         id
         attributes {
           title
           duration_days
-          sessions{
+          sessions(pagination:{pageSize: 100}){
             data{
               id
               attributes{
@@ -162,9 +162,23 @@ export const GET_SCHEDULEREVENTS = gql`
       data {
         id
         attributes {
-          events
-          rest_days
-          renewal_dt
+          sessions(
+            pagination: { pageSize: 100 }
+          ) {
+            data {
+              id
+              attributes {
+                day_of_program
+                start_time
+                end_time
+                tag
+                Is_restday
+                type
+                mode
+                session_date
+              }
+            }
+          }
         }
       }
     }
@@ -337,7 +351,7 @@ export const GET_SESSIONS = gql`
           lte: $endDate
         }
       }
-    }){
+    }, pagination: {pageSize: 100}){
       data{
         id
         attributes{
@@ -355,7 +369,7 @@ export const GET_SESSIONS = gql`
             Is_restday: {
               eq: $Is_restday
             }
-          }){
+          }, pagination: {pageSize: 100}){
             data{
               id
               attributes{
@@ -633,9 +647,13 @@ query getTemplateSessions($id: ID!){
   	data{
       id
       attributes{
-        sessions{
+        sessions(pagination: {pageSize: 100}){
           data{
             id
+            attributes{
+              day_of_program
+              Is_restday
+            }
           }
         }
       }

@@ -7,7 +7,7 @@ import {flattenObj} from '../utils/responseFlatten';
 const ClassTypeSelect = (props: any) => {
 
     const [fitnessPackageTypes, setFitnessPackageTypes] = useState<any>([]);
-    const [selectedFitnessPackage, setSelectedFitnessPackage] = useState("");
+    const [selectedFitnessPackage, setSelectedFitnessPackage] = useState(props.value !== undefined ? props.value :"");
     const urlList = window.location.pathname.split("/");
 
     useQuery(GET_FITNESSPACKAGE_DETAILS, {onCompleted: (data) => {
@@ -27,11 +27,15 @@ const ClassTypeSelect = (props: any) => {
     },[]);
 
 
-    props.onChange(selectedFitnessPackage);
+    if(selectedFitnessPackage !== "" && selectedFitnessPackage !== "Choose Type"){
+        props.onChange(selectedFitnessPackage);
+    }else {
+        props.onChange(undefined);
+    }
 
     return (
         <div className="mr-5">
-            <span><b>Select Fitness Package type</b></span>
+            <span><b>Select Fitness Offering type</b></span>
             <FormControl value={selectedFitnessPackage} 
             disabled={urlList[1] === 'pt' || urlList[1] === 'group' || urlList[1] === 'classic'}  
             as="select" onChange={(e) => setSelectedFitnessPackage(e.target.value)}>
