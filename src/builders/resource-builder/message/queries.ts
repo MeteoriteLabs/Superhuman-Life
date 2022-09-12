@@ -16,6 +16,7 @@ export const GET_TRIGGERS = gql`
 export const GET_MESSAGES = gql`
   query FeedSearchQuery($filter: String!, $id: ID!) {
     prerecordedMessages(
+      pagination: { pageSize: 100 }
       sort: ["updatedAt"]
       filters: {
         Title: { containsi: $filter }
