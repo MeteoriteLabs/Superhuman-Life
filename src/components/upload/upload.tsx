@@ -29,7 +29,7 @@ var tus: any = require("tus-js-client");
 
 const UploadImageToS3WithNativeSdk = (props: any) => {
 
-     console.log(props);
+     // console.log(props);
 
      const [progress, setProgress] = useState<any>(0);
      const [selectedFile, setSelectedFile] = useState<any>(null);
