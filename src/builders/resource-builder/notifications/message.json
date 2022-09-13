@@ -1,36 +1,30 @@
 {
      "1": {
-          "title": "Notification",
           "type": "object",
           "required": ["title", "prerecordedtype", "prerecordedtrigger", "description", "minidesc"],
           "properties": {
                "title": {
                     "type": "string",
-                    "title": "Message Title"
+                    "title": "Notification Title"
                },
                "prerecordedtype": {
                     "type": "string",
                     "title": "Type",
                     "enum": [],
-                    "enumNames": []
+                    "enumNames": [],
+                    "description": " Choose category"
                },
                "prerecordedtrigger": {
                     "type": "string",
-                    "title": "Trigger for message",
+                    "title": "Trigger Notification",
                     "enum": [],
-                    "enumNames": []
-               },
-               "description": {
-                    "type": "string",
-                    "title": "Description"
+                    "enumNames": [],
+                    "description": "Select when to activate notification"
                },
                "minidesc": {
                     "type": "string",
-                    "title": "Mini Description"
-               },
-               "mediaurl": {
-                    "title": "Url (Picture or Video)",
-                    "type": "string"
+                    "title": "Mini Description",
+                    "description": "Write summary"
                }
           }
      }

@@ -6,7 +6,6 @@ import { useQuery } from "@apollo/client";
 import { flattenObj } from '../utils/responseFlatten';
 
 const MultiSelect = (props: any) => {
-
      const [multiSelections, setMultiSelections] = useState(
           props.value?.length > 0 ? props.value : []
         );

@@ -75,12 +75,11 @@ export default function MindsetPage() {
 
      const [datatable, setDataTable] = useState<{}[]>([]);
 
-     function FetchData(_variables: {} = { filter: " ", id: auth.userid }) {
-          useQuery(GET_MESSAGES, { variables: _variables, onCompleted: loadData });
-     }
+     const fetch = useQuery(GET_MESSAGES, { variables: { filter: searchFilter, id: auth.userid }, onCompleted: loadData });
 
      function loadData(data: any) {
           const flattenData = flattenObj({...data});
+          
           setDataTable(
                [...flattenData.prerecordedMessages].map((Detail) => {
                     return {
@@ -89,14 +88,17 @@ export default function MindsetPage() {
                          tags: Detail.tags,
                          type: Detail.resourcetype.name,
                          minidesc: Detail.Description,
-                         status: Detail.status ? "Active" : "Inactive",
+                         status: Detail.Status ? "Active" : "Inactive",
                          updatedon: getDate(Date.parse(Detail.updatedAt)),
                     };
                })
           );
      }
 
-     FetchData({ filter: searchFilter, id: auth.userid });
+     function refetchQueryCallback() {
+          fetch.refetch();
+      }
+
      return (
           <TabContent>
                <Container>
@@ -136,7 +138,7 @@ export default function MindsetPage() {
                                    >
                                         <i className="fas fa-plus-circle"></i> Create New
                                    </Button>
-                                   <CreateEditMessage ref={createEditMessageComponent}></CreateEditMessage>
+                                   <CreateEditMessage ref={createEditMessageComponent} callback={refetchQueryCallback}></CreateEditMessage>
                               </Card.Title>
                          </Col>
                     </Row>
