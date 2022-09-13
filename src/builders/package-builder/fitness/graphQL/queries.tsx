@@ -32,11 +32,15 @@ export const GET_FITNESS_DISCIPLINES = gql`
 `;
 
 export const GET_FITNESS_PACKAGE_TYPES = gql`
-  query fitnessPackageTypes {
-    fitnessPackageTypes {
-      data {
+  query fitnessPackageTypes($type: String) {
+    fitnessPackageTypes(filters: {
+      type: {
+        eq: $type
+      }
+    }){
+      data{
         id
-        attributes {
+        attributes{
           type
         }
       }
@@ -57,6 +61,7 @@ export const GET_FITNESS = gql`
           packagename
           ptoffline
           ptonline
+          mode
           groupoffline
           grouponline
           recordedclasses
@@ -103,6 +108,7 @@ export const GET_SINGLE_PACKAGE_BY_ID = gql`
           level
           aboutpackage
           Intensity
+          Is_free_demo
           languages{
             data{
               id
@@ -188,6 +194,7 @@ export const GET_SINGLE_PACKAGE_BY_ID = gql`
           fitnesspackagepricing
           duration
           Status
+          mode
           is_private
           expiry_date
           publishing_date

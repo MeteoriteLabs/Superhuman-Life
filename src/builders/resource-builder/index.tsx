@@ -1,12 +1,10 @@
-
 import { Card, Tab, Tabs, TabContent } from "react-bootstrap";
 import MessagePage from "./notifications";
 import MindsetPage from "./message";
-import InformationPage from "./information bank";
-
+// import InformationPage from "./information bank";
 
 export default function ResourcePage() {
-   
+
     return (
         <>
             <h3>Communications</h3>
@@ -15,27 +13,25 @@ export default function ResourcePage() {
                     <Tabs variant="pills" transition={false} defaultActiveKey="message">
                         <Tab eventKey="message" title="Notification">
                             <TabContent>
-                                <hr/>
-                                
-                                    
-                                        <MessagePage/>
+                                <hr />
+                                <MessagePage />
+                            </TabContent>
+                        </Tab>
 
-                                    
-                                
-                            </TabContent>
-                        </Tab>
-                        <Tab eventKey="mindset" title="Messages">
+                        <Tab eventKey="mindset" title="Notification Messages">
                             <TabContent>
-                                <hr/>
-                                <MindsetPage/>
+                                <hr />
+                                <MindsetPage />
                             </TabContent>
                         </Tab>
-                        <Tab eventKey="informationbank" title="Information Bank">
+
+                        {/* not required for beta version */}
+                        {/* <Tab eventKey="informationbank" title="Information Bank">
                             <TabContent>
                                 <hr/>
                                 <InformationPage/>
                             </TabContent>
-                        </Tab>
+                        </Tab> */}
                     </Tabs>
                 </Card.Body>
             </Card>

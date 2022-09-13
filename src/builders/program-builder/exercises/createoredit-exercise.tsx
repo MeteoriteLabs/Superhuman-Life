@@ -5,6 +5,7 @@ import { FETCH_DATA, CREATE_EXERCISE, UPDATE_EXERCISE, DELETE_EXERCISE, FETCH_WO
 import AuthContext from "../../../context/auth-context";
 import StatusModal from "../../../components/StatusModal/exerciseStatusModal";
 import { schema, widgets } from './exerciseSchema';
+import { schemaView } from './exerciseSchemaForView';
 import { Subject } from 'rxjs';
 import { flattenObj } from '../../../components/utils/responseFlatten';
 
@@ -13,6 +14,18 @@ interface Operation {
     type: 'create' | 'edit' | 'view' | 'toggle-status' | 'delete';
     current_status: boolean;
 }
+
+const emptyExerciseState = {
+    exercise: '',
+    level: 0,
+    discipline: '',
+    miniDescription: '',
+    equipment: '',
+    muscleGroup: '',
+    AddText: '',
+    AddURL: '',
+    Upload: ''
+};
 
 function CreateEditExercise(props: any, ref: any) {
     const auth = useContext(AuthContext);
@@ -39,15 +52,18 @@ function CreateEditExercise(props: any, ref: any) {
         TriggerForm: (msg: Operation) => {
             setOperation(msg);
 
-            if (msg && !msg.id) //render form if no message id
+            //restrict form to render on delete
+            if(msg.type !== 'delete'){
                 modalTrigger.next(true);
+            }     
         }
     }));
 
-    enum ENUM_EXERCISES_EXERCISELEVEL {
+    enum ENUM_EXERCISE_EXERCISELEVEL {
         Beginner,
         Intermediate,
         Advance,
+        All_Levels,
         None
     }
 
@@ -66,13 +82,10 @@ function CreateEditExercise(props: any, ref: any) {
         const flattenedData = flattenObj({ ...data });
         let details: any = {};
         let msg = flattenedData.exercises;
-
         details.exercise = msg[0].exercisename;
 
-        details.level = ENUM_EXERCISES_EXERCISELEVEL[msg[0].exerciselevel];
-        details.discipline = msg[0].fitnessdisciplines.map((val: any) => {
-            return val;
-        });
+        details.level = ENUM_EXERCISE_EXERCISELEVEL[msg[0].exerciselevel];
+        details.discipline = msg[0].fitnessdisciplines;
         details.miniDescription = msg[0].exerciseminidescription;
         details.equipment = msg[0].equipment_lists.map((val: any) => {
             return val;
@@ -83,7 +96,7 @@ function CreateEditExercise(props: any, ref: any) {
         details.user_permissions_user = msg[0].users_permissions_user.id;
         details.addExercise = handleAddExerciseShowUp(msg[0]);
         setExerciseDetails(details);
-
+        
         //if message exists - show form only for edit and view
         if (['edit', 'view'].indexOf(operation.type) > -1)
             modalTrigger.next(true);
@@ -100,7 +113,7 @@ function CreateEditExercise(props: any, ref: any) {
         createExercise({
             variables: {
                 exercisename: frm.exercise,
-                exerciselevel: ENUM_EXERCISES_EXERCISELEVEL[frm.level],
+                exerciselevel: ENUM_EXERCISE_EXERCISELEVEL[frm.level],
                 fitnessdisciplines: frm.discipline.split(","),
                 exerciseminidescription: frm.miniDescription,
                 exercisetext: (!frm.addExercise.AddText ? null : frm.addExercise.AddText),
@@ -119,7 +132,7 @@ function CreateEditExercise(props: any, ref: any) {
             variables: {
                 exerciseid: operation.id,
                 exercisename: frm.exercise,
-                exerciselevel: ENUM_EXERCISES_EXERCISELEVEL[frm.level],
+                exerciselevel: ENUM_EXERCISE_EXERCISELEVEL[frm.level],
                 fitnessdisciplines: frm.discipline.split(","),
                 exerciseminidescription: frm.miniDescription,
                 exercisetext: (!frm.addExercise.AddText ? null : frm.addExercise.AddText),
@@ -171,16 +184,15 @@ function CreateEditExercise(props: any, ref: any) {
 
     FetchData();
 
-
     return (
         <>
             <ModalView
                 name={name}
                 isStepper={false}
-                formUISchema={schema}
+                formUISchema={operation.type === 'view' ? schemaView : schema}
                 formSchema={exerciseSchema}
                 formSubmit={name === "View" ? () => { modalTrigger.next(false); } : (frm: any) => { OnSubmit(frm); }}
-                formData={exerciseDetails}
+                formData={operation.type === 'create' ? emptyExerciseState : exerciseDetails}
                 widgets={widgets}
                 modalTrigger={modalTrigger}
             />

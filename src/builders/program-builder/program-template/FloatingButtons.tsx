@@ -46,17 +46,17 @@ const FloatingButton = (props: any) => {
                               title={<img src={FitnessSvg} style={{ cursor: 'pointer'}} title="movement" alt="fitness"/>}
                               style={{ backgroundColor: 'white !important'}}
                          >
-                              <Dropdown.Header style={{ color: 'black', fontWeight: 'bold', letterSpacing: '1px'}}>Movement</Dropdown.Header>
+                              <Dropdown.Header style={{ color: 'black', fontWeight: 'bold', letterSpacing: '1px'}}>Fitness</Dropdown.Header>
                               <Dropdown.Divider/>
                               {window.location.pathname.split("/")[1] !== 'programs' && <Dropdown.Item eventKey="2" onClick={(e) => {
                                    props.callback2('block');
                               }}>Sessions</Dropdown.Item>}
                               <Dropdown.Item eventKey="1" onClick={(e) => {
                                    props.callback('block');
-                              }}>Program Template</Dropdown.Item>
+                              }}>Import Program Template</Dropdown.Item>
                               <Dropdown.Item eventKey="3" onClick={() => {
                                    createEditWorkoutTemplateComponent.current.TriggerForm({ id: null, type: 'create' });
-                              }}>Workout Template</Dropdown.Item>
+                              }}>Import Workout Template</Dropdown.Item>
                               <Dropdown.Item eventKey="4" onClick={() => {
                                    createEditNewWorkoutComponent.current.TriggerForm({ id: null, type: 'create' });
                               }}>New Workout</Dropdown.Item>
@@ -83,7 +83,7 @@ const FloatingButton = (props: any) => {
                               <Dropdown.Item eventKey="4">Add Food</Dropdown.Item>
                          </DropdownButton>
                          </Row> */}
-                         <Row className="mt-3" style={{ justifyContent: 'center'}}>
+                         {/* <Row className="mt-3" style={{ justifyContent: 'center'}}>
                          <DropdownButton
                               key={1}
                               drop='left'
@@ -96,8 +96,8 @@ const FloatingButton = (props: any) => {
                               <Dropdown.Item eventKey="2">Add Message</Dropdown.Item>
                               <Dropdown.Item eventKey="3">Add Information<br/>bank</Dropdown.Item>
                          </DropdownButton>
-                         </Row>
-                         <Row className="mt-3" style={{ justifyContent: 'center'}}>
+                         </Row> */}
+                         {/* <Row className="mt-3" style={{ justifyContent: 'center'}}>
                          <DropdownButton
                               key={1}
                               drop='left'
@@ -109,8 +109,8 @@ const FloatingButton = (props: any) => {
                               <Dropdown.Item eventKey="1">Request Photo</Dropdown.Item>
                               <Dropdown.Item eventKey="2">Request Feedback</Dropdown.Item>
                          </DropdownButton>
-                         </Row>
-                         <Row className="mt-3" style={{ justifyContent: 'center'}}>
+                         </Row> */}
+                         {/* <Row className="mt-3" style={{ justifyContent: 'center'}}>
                          <DropdownButton
                               key={1}
                               drop='left'
@@ -122,7 +122,7 @@ const FloatingButton = (props: any) => {
                               <Dropdown.Item eventKey="1">Master Time</Dropdown.Item>
                               <Dropdown.Item eventKey="2">Master Mode</Dropdown.Item>
                          </DropdownButton>
-                         </Row>
+                         </Row> */}
                     </Col>
                     <CreateEditProgramManager callback={props.callback3()} startDate={props.startDate} duration={props.duration} ref={createEditWorkoutTemplateComponent} events={existingEvents} renewalDate={renewalDate}></CreateEditProgramManager>
                     <CreateEditNewWorkout startDate={props.startDate} duration={props.duration} ref={createEditNewWorkoutComponent} events={existingEvents}></CreateEditNewWorkout>

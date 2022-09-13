@@ -52,6 +52,7 @@ const MultiSelect = (props: any) => {
                placeholder="Select languages..."
                selected={multiSelections}
                multiple
+               disabled={props.uiSchema.readonly ? true : false}
                />
           </div>
      )

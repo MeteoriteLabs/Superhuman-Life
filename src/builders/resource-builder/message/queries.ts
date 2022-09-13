@@ -16,6 +16,7 @@ export const GET_TRIGGERS = gql`
 export const GET_MESSAGES = gql`
   query FeedSearchQuery($filter: String!, $id: ID!) {
     prerecordedMessages(
+      pagination: { pageSize: 100 }
       sort: ["updatedAt"]
       filters: {
         Title: { containsi: $filter }
@@ -88,6 +89,7 @@ export const ADD_MESSAGE = gql`
     }
   }
 `;
+
 export const UPDATE_MESSAGE = gql`
   mutation updatemsg(
     $title: String
@@ -103,10 +105,10 @@ export const UPDATE_MESSAGE = gql`
     updatePrerecordedMessage(
       id: $messageid
       data: {
-        title: $title
-        description: $description
+        Title: $title
+        Description: $description
         minidescription: $minidesc
-        mediaurl: $mediaurl
+        Image_URL: $mediaurl
         tags: $tags
         resourcetype: $mindsetmessagetype
         users_permissions_user: $userpermission
@@ -139,6 +141,7 @@ export const UPDATE_STATUS = gql`
     }
   }
 `;
+
 export const GET_MESSAGE = gql`
   query getmessage($id: ID!) {
     prerecordedMessage(id: $id) {

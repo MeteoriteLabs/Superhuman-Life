@@ -13,12 +13,12 @@ export const schema: any = {
      effectiveDate: null,
      tag: {
           "ui:widget": (props) => {
-               return <ClassTypeSelect onChange={props.onChange} />
+               return <ClassTypeSelect onChange={props.onChange} value={props.value}/>
           }
      },
      day: {
           "ui:widget": (props) => {
-               return <DaysInput dayType={schema.type} startDate={schema.startDate} duration={schema.duration} id="newWorkout" onChange={props.onChange}/>
+               return <DaysInput dayType={schema.type} startDate={schema.startDate} duration={schema.duration} id="newWorkout" onChange={props.onChange} val={props.value}/>
            }
      },
      workoutEvent: {
@@ -26,7 +26,7 @@ export const schema: any = {
      },
      time: {
           "ui:widget": (props) => {
-               return <TimeField onChange={props.onChange}/>
+               return <TimeField onChange={props.onChange} value={props.value}/>
           }
      }
 }

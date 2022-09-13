@@ -2,7 +2,7 @@ import { useMemo, useContext, useState, useRef } from "react";
 import { Button, Card, TabContent, Modal, FormControl } from "react-bootstrap";
 import Table from "../../../components/table";
 import { useQuery, useMutation } from "@apollo/client";
-import { GET_TABLEDATA, CREATE_PROGRAM } from './queries';
+import { GET_TABLEDATA, CREATE_PROGRAM, CREATE_SESSION } from './queries';
 import AuthContext from "../../../context/auth-context";
 import ActionButton from "../../../components/actionbutton";
 import CreateEditProgram from './createoredit-program';
@@ -17,25 +17,49 @@ export default function EventsTab() {
     function handleRedirect(id: any) {
         window.location.href = `/programs/manage/${id}`
     };
+    var newSessionIds: any[] = [];
+    var sessionsCount: number = 0;
 
     const [show, setShow] = useState(false);
     const [name, setName] = useState("");
     const [frm, setFrm] = useState<any>();
-    const [createProgram] = useMutation(CREATE_PROGRAM, {onCompleted: () => {refetchQueryCallback()}});
+    const [createProgram] = useMutation(CREATE_PROGRAM, {onCompleted: (e: any) => {console.log(e); refetchQueryCallback()}});
+    const [createSession] = useMutation(CREATE_SESSION, {onCompleted: (e: any) => {
+        newSessionIds.push(e.createSession.data.id);
+        if(sessionsCount === newSessionIds.length) {
+            createProgram({ variables: {
+                title: name,
+                fitnessdisciplines: frm.disciplineId.split(","),
+                duration_days: frm.duration,
+                level: frm.level,
+                sessions: newSessionIds,
+                description: frm.description,
+                users_permissions_user: frm.user
+            }});
+        }
+    }});
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
     function CreateProgram(_variables: {} = {id: auth.userid, details: frm}) {
-        createProgram({ variables: {
-            title: name,
-            fitnessdisciplines: frm.disciplineId.split(","),
-            duration_days: frm.duration,
-            level: frm.level,
-            sessions: frm.sessionId.split(","),
-            description: frm.description,
-            users_permissions_user: frm.user
-        } });
+        sessionsCount = frm.sessions.length;
+        for(var i=0; i<frm.sessions.length; i++){
+            createSession({ variables: {
+                session_date: frm.sessions[i].session_date,
+                tag: frm.sessions[i].tag,
+                mode: frm.sessions[i].mode,
+                type: frm.sessions[i].type,
+                day_of_program: frm.sessions[i].day_of_program,
+                start_time: frm.sessions[i].start_time,
+                end_time: frm.sessions[i].end_time,
+                Is_restday: frm.sessions[i].Is_restday,
+                Is_program_template: frm.sessions[i].Is_program_template,
+                activity_target: frm.sessions[i].activity_target,
+                activity: frm.sessions[i].activity?.id,
+                workout: frm.sessions[i].workout?.id
+            }})   
+        }
     }
 
     const columns = useMemo<any>(() => [
@@ -78,9 +102,7 @@ export default function EventsTab() {
         }
     ], []);
 
-    // function FetchData(_variables: {} = {id: auth.userid}){
         const fetch = useQuery(GET_TABLEDATA, {variables: {id: auth.userid}, onCompleted: loadData});
-    // }
 
     function refetchQueryCallback() {
         fetch.refetch();
@@ -100,7 +122,7 @@ export default function EventsTab() {
 
     function loadData(data: any) {
         const flattenData = flattenObj({...data});
-        console.log(flattenData);
+
         setTableData(
             [...flattenData.fitnessprograms].map((detail) => {
                 return {
@@ -116,6 +138,7 @@ export default function EventsTab() {
                     sessionId: detail.sessions.map((val: any) => {
                         return val.id;
                     }).join(","),
+                    sessions: detail.sessions,
                     duration: detail.duration_days,
                     description: detail.description,
                     user: detail.users_permissions_user.id,
@@ -124,9 +147,6 @@ export default function EventsTab() {
             })
         )
     }
-
-    // FetchData();
-
 
     return (
         <TabContent>

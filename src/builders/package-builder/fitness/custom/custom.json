@@ -2,7 +2,13 @@
     "1": {
         "title": "",
         "type": "object",
-        "required": ["packagename","disciplines", "tags" ,"level","is_private", "equipmentList"],
+        "required": [
+            "packagename",
+            "disciplines",
+            "equipmentList",
+            "level",
+            "intensity"
+        ],
         "properties": {
             "packagename": {
                 "type": "string",
@@ -10,36 +16,36 @@
             },
             "disciplines": {
                 "type": "string",
-                "title": "Disciplines"
+                "title": "Disciplines",
+                "description": "it is a required field"
             },
             "equipmentList": {
-                "type": "string"
+                "type": "string",
+                "description": "it is a required field"
             },
             "tags": {
                 "type": "string",
-                "title": "Tags"
+                "title": "Tags",
+                "description": "User hashtags to improve your listing"
             },
             "level": {
-                "type": "string",
+                "type": "number",
                 "title": "Level",
-                "enum": [
+                "enum": [0, 1, 2],
+                "enumNames": [
                     "Beginner",
                     "Intermediate",
                     "Advanced"
                 ]
             },
-            "is_private": {
-                "type": "boolean",
-                "title": "Visiblity",
-                "oneOf": [
-                    {
-                        "title": "Public",
-                        "const": true
-                    },
-                    {
-                        "title": "Private",
-                        "const": false
-                    }
+            "intensity": {
+                "type": "number",
+                "title": "Intensity",
+                "enum": [0, 1, 2],
+                "enumNames": [
+                    "Low",
+                    "Moderate",
+                    "High"
                 ]
             }
         }
@@ -47,256 +53,84 @@
     "2": {
         "title": "",
         "type": "object",
-        "required": ["aboutpackage", "benefits", "upload", "thumbnail" ],
+        "required": [
+            "About",
+            "Benifits",
+            "thumbnail",
+            "Upload"
+        ],
         "properties": {
-            "aboutpackage": {
+            "About": {
                 "type": "string",
                 "title": "About"
             },
-            "benefits": {
+            "Benifits": {
                 "type": "string",
                 "title": "Benefits"
             },
             "thumbnail": {
-                "type": "string"
-            },
-            "upload": {
-                "type": "string"
-            },
-            "introvideourl": {
                 "type": "string",
-                "title": "Or add video URL",
-                "format": "uri"
+                "description": "Accepts only Image and size cannot exceed 5mb"
+            },
+            "Upload": {
+                "type": "object",
+                "oneOf": [
+                    {
+                        "title": "Upload picture or video", 
+                        "properties": {
+                            "upload": {
+                                "type": "string",
+                                "description": "Accepts only Image and size cannot exceed 5mb"
+                            }
+                      },
+                      "required": [
+                        "upload"
+                      ]
+                    },
+                    {
+                    "title": "Video URL", 
+                      "properties": {
+                        "VideoUrl": {
+                          "type": "string",
+                          "format": "uri"
+                        }
+                      },
+                      "required": [
+                        "VideoUrl"
+                      ]
+                    }
+                ]
+
             }
         }
     },
     "3": {
         "title": "Program Details",
         "type": "object",
-        "required": ["mode" ],
+        "required": ["programDetails"],
         "properties": {
-            "mode": {
-                "type": "string",
-                "title": "Mode",
-                "enum": [
-                    "Online",
-                    "Offline",
-                    "Hybrid"
-                ]
-            },
-            "customPTOnline": {
-                "title": "customePTOnline",
-                "type": "null",
-                "value": 0
-            },
-            "customPTOffline": {
-                "title": "customePTOffline",
-                "type": "null",
-                "value": 0
-            },
-            "customGroupOnline": {
-                "title": "customGroupOnline",
-                "type": "null",
-                "value": 0
-            },
-            "customGroupOffline": {
-                "title": "customGroupOffline",
-                "type": "null",
-                "value": 0
-            },
-            "record": {
-                "title": "recordedclasses",
-                "type": "null",
-                "value": 0
-            },
-            "duration": {
-                "type": "number",
-                "title": "Duration",
-                "default": 30,
-                "value": 30
-            },
-            "restDay": {
-                "title": "restDay",
-                "type": "null",
-                "value": 0
-            }
-        },
-        "dependencies": {
-            "mode": {
-                "oneOf": [
-                    {
-                        "properties": {
-                            "mode": {
-                                "title": "Online",
-                                "type": "string",
-                                "enum": [
-                                    "Online"
-                                ]
-                            },
-                            "ptonline": {
-                                "title": "Online",
-                                "type": "number",
-                                "minimum": 0,
-                                "maximum": 30,
-                                "default": "",
-                                "value":""
-                            },
-                            "grouponline": {
-                                "title": "Online",
-                                "type": "number",
-                                "minimum": 0,
-                                "maximum": 30,
-                                "default": "",
-                                "value":""
-                            },
-                            "recordedclasses": {
-                                "title": "Recorded",
-                                "type": "number",
-                                "minimum": 0,
-                                "default": "",
-                                "value":""
-                            },
-                            "restdays": {
-                                "title": "Rest Days",
-                                "type": "number",
-                                "minimum": 0,
-                                "maximum": 30,
-                                "default": "",
-                                "value":""
-                            }
-                        },
-                        "required": ["ptonline", "grouponline","recordedclasses","restdays" ]
-                    },
-                    {
-                        "properties": {
-                            "mode": {
-                                "title": "Offline",
-                                "type": "string",
-                                "enum": [
-                                    "Offline"
-                                ]
-                            },
-                            "address": {
-                                "title": "address",
-                                "type": "string"
-                            },
-                            "ptoffline": {
-                                "title": "Offline",
-                                "type": "number",
-                                "minimum": 0,
-                                "maximum": 30,
-                                "default": "",
-                                "value":""
-                            },
-                            "groupoffline": {
-                                "title": "Offline",
-                                "type": "number",
-                                "minimum": 0,
-                                "maximum": 30,
-                                "default": "",
-                                "value":""
-                            },
-                            "recordedclasses": {
-                                "title": "Recorded",
-                                "type": "number",
-                                "minimum": 0,
-                                "default": "",
-                                "value":""
-                            },
-                            "restdays": {
-                                "title": "Rest Days",
-                                "type": "number",
-                                "minimum": 0,
-                                "maximum": 30,
-                                "default": "",
-                                "value":""
-                            }
-                        },
-                        "required": ["address","ptoffline", "groupoffline","recordedclasses","restdays" ]
-                    },
-                    {
-                        "properties": {
-                            "mode": {
-                                "title": "Hybrid",
-                                "type": "string",
-                                "enum": [
-                                    "Hybrid"
-                                ],
-                                "default": "0"
-                            },
-                            "address": {
-                                "title": "address",
-                                "type": "string"
-                            },
-                            "ptonline": {
-                                "title": "Online",
-                                "type": "number",
-                                "minimum": 0,
-                                "maximum": 30,
-                                "default": "",
-                                "value":""
-                            },
-                            "ptoffline": {
-                                "title": "Offline",
-                                "type": "number",
-                                "minimum": 0,
-                                "maximum": 30,
-                                "default": "",
-                                "value":""
-                            },
-                            "grouponline": {
-                                "title": "Online",
-                                "type": "number",
-                                "minimum": 0,
-                                "maximum": 30,
-                                "default": "",
-                                "value":""
-                            },
-                            "groupoffline": {
-                                "title": "Offline",
-                                "type": "number",
-                                "minimum": 0,
-                                "maximum": 30,
-                                "default": "",
-                                "value":""
-                            },
-                            "recordedclasses": {
-                                "title": "Recorded",
-                                "type": "number",
-                                "minimum": 0,
-                                "default": "",
-                                "value":""
-                            },
-                            "restdays": {
-                                "title": "Rest Days",
-                                "type": "number",
-                                "minimum": 0,
-                                "maximum": 30,
-                                "default": "",
-                                "value":""
-                            }
-                        },
-                        "required": ["address","ptoffline", "ptoffline","grouponline","groupoffline","recordedclasses","restdays" ]
-                    }
-                ]
+            "programDetails": {
+                "type": "string"
             }
         }
     },
     "4": {
         "title": "For Programs",
         "type": "object",
+        "required": ["bookingleadday"],
         "properties": {
             "bookingleadday": {
                 "type": "number",
+                "description": "The lead time will allow you to discuss, understand, request data and then build a custom program.",
                 "title": "Consumer can choose start date, after",
-                "description": "This lead time will help you discuss, understand, request data and then build a custom program for the client.",
-                "enum": [
-                    1,
-                    2,
-                    3,
-                    4,
-                    5,
-                    6
+                "enum": [0, 1, 2, 3, 4, 5],
+                "enumNames": [
+                    "1 day",
+                    "2 days",
+                    "3 days",
+                    "4 days",
+                    "5 days",
+                    "6 days"
                 ]
             }
         }
@@ -307,13 +141,70 @@
         "required":["pricingDetail"],
         "properties": {
             "pricingDetail": {
-                "type": "number",
+                "type": "string",
                 "title": "Pricing Plan",
                 "value": ""
             }
         }
     },
     "6": {
+        "title": "Package Settings",
+       "type": "object",
+       "required": [
+        "visibility",
+        "datesConfig",
+        "config"
+       ],
+       "properties": {
+            "visibility": {
+                "type": "number",
+                "title": "Visibility",
+                "enum": [0, 1],
+                "enumNames": [
+                    "Public",
+                    "Private"
+                ],
+                "description": "The package will be save as draft and wait for you to publish it."
+            },
+            "datesConfig": {
+                "type": "string"
+            },
+            "config": {
+                "title": "Booking Config",
+                "type": "object",
+                "required": [
+                    "acceptBooking",
+                    "maxBookingMonth",
+                    "maxBookingDay"
+                ],
+                "properties": {
+                    "acceptBooking": {
+                        "type": "number",
+                        "title": "",
+                        "enum": [0, 1],
+                        "enumNames": [
+                            "Manual",
+                            "Auto"
+                        ],
+                        "description": "In auto it will automatically accept all bookings"
+                    },
+                    "maxBookingMonth": {
+                        "type": "number",
+                        "title": "Maximum booking/per month",
+                        "minimum": 2,
+                        "maximum": 50
+                    },
+                    "maxBookingDay": {
+                        "type": "number",
+                        "title": "Maximum booking/per day",
+                        "minimum": 2,
+                        "maximum": 10
+                    }
+                }
+            }
+        }
+    },
+    "7": {
         "title": "Preview",
         "type": "object",
         "properties": {

@@ -20,7 +20,6 @@ const Build = (props: any) => {
 
      useEffect(() => {
           if(props.value !== null && props.value !== undefined){
-               console.log(props);
                if(props?.value[0]?.type === 'upload'){
                     setUploadFields(props.value);
                     setCurrentTab('upload');
@@ -208,16 +207,13 @@ function OnChangeUpload(data: any){
                {uploadFields.map((field, idx) => {
                     return (
                          <div key={`${field}-${idx}`} className="m-2">
-                              <Upload allowImage={true} allowVideo={true} value={uploadFields.length > 0 && uploadFields[0]?.value} onChange={(e) => {
-                                   console.log(e);
+                              <Upload allowImage={false} allowVideo={true} value={uploadFields.length > 0 && uploadFields[0]?.value} onChange={(e) => {
+                                   
                                    if(e !== null && e !== uploadFields[0]?.value){
                                         handleUploadFieldChange(idx, e);
                                         OnChangeUpload(uploadFields);    
                                    }
                               }}/>
-                              {/* <input type="file" id="myFile" name="filename" onChange={e => {handleUploadFieldChange(idx, e);
-                                   OnChangeUpload(uploadFields);
-                              }}/> */}
                               <i className="far fa-trash-alt float-right" style={{cursor: 'pointer', color:'red'}} onClick={() => {handleUploadFieldRemove(idx); setCurrentTab(null);}}></i>
                          </div>
                     );

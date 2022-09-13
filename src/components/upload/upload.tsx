@@ -29,7 +29,7 @@ var tus: any = require("tus-js-client");
 
 const UploadImageToS3WithNativeSdk = (props: any) => {
 
-     // console.log(props);
+     console.log(props);
 
      const [progress, setProgress] = useState<any>(0);
      const [selectedFile, setSelectedFile] = useState<any>(null);
@@ -52,14 +52,12 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
      var albumPhotosKey = process.env.REACT_APP_S3_PREFIX_NAME;
 
      const onCropComplete = useCallback((croppedArea: Area, croppedAreaPixels: Area) => {
-          // console.log(croppedArea, croppedAreaPixels);
           setCroppedAreaPixels(croppedAreaPixels);
      }, []);
 
      const showCroppedImage = useCallback(async () => {
           try {
                const cropImage = await getCroppedImg(imageSrc, croppedAreaPixels);
-               //console.log("donee", { croppedImage });
                //setCroppedImage(cropImage);
                uploadFile(cropImage);
                setImageSrc(null);
@@ -69,7 +67,6 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
      }, [croppedAreaPixels, imageSrc]); // eslint-disable-line react-hooks/exhaustive-deps
 
      function handleCrop(file) {
-          //console.log(e.target.files[0]);
           //const file = e.target.files[0];
 
           if (allowedVideoFormats.indexOf(file.type) > -1) {
@@ -348,10 +345,10 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
           }
      }
 
-     function handleAspectRatio(data: String){
-          if(data !== undefined){
+     function handleAspectRatio(data: String) {
+          if (data !== undefined) {
                return parseInt(data.split(":")[0]) / parseInt(data.split(":")[1]);
-          }else {
+          } else {
                return 5 / 3;
           }
      }
@@ -403,6 +400,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                                         type="button"
                                         className="btn-sm btn-danger"
                                         onClick={() => deleteAllImages()}
+                                        disabled={props.readonly ? true : false}
                                    >
                                         Remove
                                    </button>
@@ -428,6 +426,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                                              type="button"
                                              className="btn-sm btn-danger"
                                              onClick={() => videoDelete()}
+                                             disabled={props.readonly ? true : false}
                                         >
                                              Remove
                                         </button>
@@ -466,6 +465,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                                         onClick={() => {
                                              showCroppedImage();
                                         }}
+                                        disabled={props.readonly ? true : false}
                                    >
                                         Upload
                                    </button>

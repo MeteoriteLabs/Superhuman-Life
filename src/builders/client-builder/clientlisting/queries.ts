@@ -9,8 +9,10 @@ query getClients($filter: String!, $id: ID!){
          }
        },
        fitnesspackages: {
-         id: {
-           eq: $id
+        users_permissions_user: {
+          id:{
+           	eq: $id
+          }
          }
        }
      }){

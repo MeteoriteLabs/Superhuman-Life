@@ -12,6 +12,8 @@ const ProgramList = (props: any) => {
      const [selected, setSelected] = useState<any[]>([]);
      const inputField = useRef<any>();
      let skipval: Boolean = true;
+
+     console.log(selected);
      
      const GET_WORKOUTLIST = gql`
      query workoutlistQuery($id: ID!, $filter: String!) {
@@ -109,13 +111,15 @@ const ProgramList = (props: any) => {
      }
 
      FetchEquipmentList({filter: searchInput, skip: skipval, id: auth.userid});
-     props.onChange(JSON.stringify(selected));
+     if(selected.length > 0){
+          props.onChange(JSON.stringify(selected));
+     }
 
      return (
           <>
           <label style={{ fontSize: 17}}>Import from existing workout</label>
                <InputGroup>
-                    <FormControl aria-describedby="basic-addon1" placeholder="Search for program" id="searchInput" ref={inputField}
+                    <FormControl aria-describedby="basic-addon1" placeholder="Search for workout" id="searchInput" ref={inputField}
                               onChange={(e) => {e.preventDefault();
                                    EquipmentSearch(e.target.value);
                          }} autoComplete="off" disabled={ selected.length > 0 ? true : false}

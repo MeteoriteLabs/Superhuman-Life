@@ -6,9 +6,6 @@ import { useQuery } from "@apollo/client";
 import { flattenObj } from '../utils/responseFlatten';
 
 const MultiSelect = (props: any) => {
-
-     console.log(props);
-
      const [multiSelections, setMultiSelections] = useState(
           props.value?.length > 0 ? props.value : []
         );
@@ -32,14 +29,14 @@ const MultiSelect = (props: any) => {
      }
 
      function OnChange(e){
-          let id = e.map(d => {return d.id}).join(',');
-          props.onChange(id);
+          // let id = e.map(d => {return d.id}).join(',');
+          // props.onChange(id);
           setMultiSelections(e);
      }
 
-     if(props.value === multiSelections){
-          props.onChange(multiSelections.map(d => {return d.id}).join(','));
-     }
+     // if(props.value === multiSelections){
+          props.onChange(JSON.stringify(multiSelections));
+     // }
 
      FetchData();
 
@@ -54,6 +51,7 @@ const MultiSelect = (props: any) => {
                placeholder="Choose multiple discplines..."
                selected={multiSelections}
                multiple
+               disabled={props.uiSchema.readonly ? true : false}
                />
           </div>
      )

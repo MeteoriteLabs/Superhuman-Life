@@ -11,12 +11,12 @@ export const widgets = {
 export const schema: any = {
      day: {
           "ui:widget": (props) => {
-               return <DaysInput dayType={schema.type} startDate={schema.startDate} duration={schema.duration} onChange={props.onChange}/>
+               return <DaysInput dayType={schema.type} startDate={schema.startDate} duration={schema.duration} onChange={props.onChange} val={props.value}/>
           }
      },
      time: {
           "ui:widget": (props) => {
-               return <TimeField onChange={props.onChange}/>
+               return <TimeField onChange={props.onChange} value={props.value}/>
           }
      },
      newActivity: {

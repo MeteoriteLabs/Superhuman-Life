@@ -2,7 +2,9 @@ import { gql } from "@apollo/client";
 
 export const GET_TABLEDATA = gql`
   query ProgramQuery($id: ID!) {
-    fitnessprograms(filters:{
+    fitnessprograms(pagination: {
+      pageSize: 100
+    }, filters:{
       users_permissions_user:{
         id: { eq: $id }
       }
@@ -17,9 +19,31 @@ export const GET_TABLEDATA = gql`
           level
           start_date
           end_date
-          sessions{
+          sessions(pagination: { pageSize: 100}){
             data{
               id
+                attributes{
+                session_date
+                tag
+                mode
+                type
+                day_of_program
+                start_time
+                end_time
+                Is_restday
+                Is_program_template
+                activity{
+                  data{
+                    id
+                  }
+                }
+                activity_target
+                workout{
+                  data{
+                    id
+                  }
+                }
+              }
             }
           }
           users_permissions_user{
@@ -70,6 +94,42 @@ export const GET_DATA = gql`
     }
   }
 `;
+
+export const CREATE_SESSION = gql`
+  mutation CreateSessions(
+    $session_date: Date
+    $tag: String
+    $mode: String
+    $type: String
+    $day_of_program: Int
+    $start_time: String
+    $end_time: String
+    $Is_restday: Boolean
+    $Is_program_template: Boolean
+    $activity_target: JSON
+    $activity: ID
+    $workout: ID
+  ){
+    createSession(data: {
+      session_date: $session_date,
+      tag: $tag,
+      mode: $mode,
+      type: $type,
+      day_of_program: $day_of_program,
+      start_time: $start_time,
+      end_time: $end_time,
+      Is_restday: $Is_restday,
+      Is_program_template: $Is_program_template,
+      activity: $activity,
+      workout: $workout,
+      activity_target: $activity_target
+    }){
+      data{
+        id
+      }
+    }
+  }
+`
 
 export const CREATE_PROGRAM = gql`
   mutation createprogram(

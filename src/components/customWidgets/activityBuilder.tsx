@@ -33,9 +33,17 @@ const ActivityBuilder = (props: any) => {
           values[0].activity = `${props.activity.title}`;
           values[0].id = `${props.activity.id}`;
           if(id === 1){
-               values[0].timeHr = parseInt(data);
+               if(data > 24 || data < 0){
+                    values[0].timeHr = 24
+               }else {
+                    values[0].timeHr = parseInt(data);
+               }
           }else if(id === 2){
-               values[0].timeMin = parseInt(data); 
+               if(data > 60 || data < 0){
+                    values[0].timeMin = 59     
+               }else {
+                    values[0].timeMin = parseInt(data); 
+               }
           }else if(id === 3){
                values[0].distance = parseInt(data);
           }else if(id === 4){
@@ -47,7 +55,26 @@ const ActivityBuilder = (props: any) => {
           }
           setSelected(values);
      }
-     props.onChange(selected);
+
+     // useEffect(() => {
+     //      const values = [...selected];
+     //      if(values[0]?.timeHr > 24){
+     //           values[0].timeHr = 24;
+     //      }
+     //      if(values[0]?.timeMin > 59){
+     //           values[0].timeMin = 59;
+     //      }
+     //      setSelected(values);
+     // }, [selected])
+
+     console.log(selected);
+
+     if(selected.length !== 0 && (none === true || time === true || distance === true || incline === true || speed === true || calories === true)){
+          props.onChange(selected);
+     }else {
+          props.onChange(undefined);
+     }
+
 
      return (
           <div className="m-2 shadow-sm" style={{ borderRadius: '10px', backgroundColor: 'white', display: `${props.activity.title === undefined ? 'none' : 'block'}`}}>
@@ -66,7 +93,7 @@ const ActivityBuilder = (props: any) => {
                          <Form.Row>
                               <Col>
                                    <InputGroup className="mb-3">
-                                        <FormControl type="number" onChange={(e) => handleDataChange(1, e.target.value)}/>
+                                        <FormControl type="number" value={selected[0].timeHr} min={0} max={24} onChange={(e) => handleDataChange(1, e.target.value)}/>
                                         <InputGroup.Append>
                                              <InputGroup.Text id="basic-addon2">Hrs</InputGroup.Text>
                                         </InputGroup.Append>
@@ -74,7 +101,7 @@ const ActivityBuilder = (props: any) => {
                               </Col>
                               <Col>
                               <InputGroup className="mb-3">
-                                        <FormControl type="number" onChange={e => handleDataChange(2, e.target.value)}/>
+                                        <FormControl type="number" value={selected[0].timeMin} min={0} max={60} onChange={e => handleDataChange(2, e.target.value)}/>
                                         <InputGroup.Append>
                                              <InputGroup.Text id="basic-addon2">mins</InputGroup.Text>
                                         </InputGroup.Append>
@@ -100,9 +127,9 @@ const ActivityBuilder = (props: any) => {
                     <Form.Row>
                          <Col>
                          <InputGroup className="mb-3">
-                         <FormControl placeholder="10km/hr" type="number" onChange={(e) => {handleDataChange(4, e.target.value)}}/>
+                         <FormControl placeholder="" type="number" onChange={(e) => {handleDataChange(4, e.target.value)}}/>
                          <InputGroup.Append>
-                              <InputGroup.Text id="basic-addon2">km/hr</InputGroup.Text>
+                              <InputGroup.Text id="basic-addon2">deg</InputGroup.Text>
                          </InputGroup.Append>
                          </InputGroup>
                          </Col>

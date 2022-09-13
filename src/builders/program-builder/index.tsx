@@ -4,7 +4,7 @@ import FitnessTab from './fitness/index';
 export default function ProgramPage() {
      return (
           <>
-              <h3>Program Templates</h3>
+              <h3>Resources</h3>
               <Card className="shadow-sm mt-3" border="light">
                   <Card.Body>
                       <Tabs variant="pills" transition={false} defaultActiveKey="fitness">

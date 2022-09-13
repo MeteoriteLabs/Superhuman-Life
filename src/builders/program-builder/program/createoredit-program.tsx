@@ -5,8 +5,9 @@ import { CREATE_PROGRAM, DELETE_PROGRAM, GET_DATA, UPDATE_PROGRAM } from "./quer
 import AuthContext from "../../../context/auth-context";
 import StatusModal from "../../../components/StatusModal/StatusModal";
 import { schema, widgets } from './programSchema';
-import {Subject} from 'rxjs';
-import {flattenObj} from '../../../components/utils/responseFlatten';
+import { schemaView } from './programSchemaForView';
+import { Subject } from 'rxjs';
+import { flattenObj } from '../../../components/utils/responseFlatten';
 import moment from 'moment';
 
 interface Operation {
@@ -15,25 +16,34 @@ interface Operation {
     current_status: boolean;
 }
 
+const emptyProgramState = {
+    programName:'',
+    duration:'',
+    level:0,
+    discipline:'',
+    details:''
+};
+
 function CreateEditProgram(props: any, ref: any) {
     const auth = useContext(AuthContext);
     const programSchema: { [name: string]: any; } = require("./program.json");
     const [programDetails, setProgramDetails] = useState<any>({});
     const [operation, setOperation] = useState<Operation>({} as Operation);
-    
 
-    const [createProgram] = useMutation(CREATE_PROGRAM, { onCompleted: (r: any) => {  modalTrigger.next(false); props.callback() } });
-    const [editProgram] = useMutation(UPDATE_PROGRAM, {onCompleted: (r: any) => { modalTrigger.next(false); props.callback() } });
-    const [deleteProgram] = useMutation(DELETE_PROGRAM, { refetchQueries: ["GET_TABLEDATA"], onCompleted: () => {props.callback()} });
+    const [createProgram] = useMutation(CREATE_PROGRAM, { onCompleted: (r: any) => { modalTrigger.next(false); props.callback() } });
+    const [editProgram] = useMutation(UPDATE_PROGRAM, { onCompleted: (r: any) => { modalTrigger.next(false); props.callback() } });
+    const [deleteProgram] = useMutation(DELETE_PROGRAM, { refetchQueries: ["GET_TABLEDATA"], onCompleted: () => { props.callback() } });
 
-    const modalTrigger =  new Subject();
+    const modalTrigger = new Subject();
 
     useImperativeHandle(ref, () => ({
         TriggerForm: (msg: Operation) => {
             setOperation(msg);
 
-            if (msg && !msg.id) //render form if no message id
+            //restrict form to render on delete
+            if(msg.type !== 'delete'){
                 modalTrigger.next(true);
+            }  
         }
     }));
 
@@ -45,7 +55,7 @@ function CreateEditProgram(props: any, ref: any) {
     }
 
     function FillDetails(data: any) {
-        const flattenData = flattenObj({...data});
+        const flattenData = flattenObj({ ...data });
         let details: any = {};
         let msg = flattenData.fitnessprograms;
 
@@ -54,15 +64,15 @@ function CreateEditProgram(props: any, ref: any) {
         details.level = ENUM_FITNESSPROGRAM_LEVEL[msg[0].level];
         details.details = msg[0].description;
         details.discipline = msg[0].fitnessdisciplines.map(
-        (val: any) => {
-            return val;
-        }
-    );
-    setProgramDetails(details);
+            (val: any) => {
+                return val;
+            }
+        );
+        setProgramDetails(details);
 
-    //if message exists - show form only for edit and view
-    if (["edit", "view"].indexOf(operation.type) > -1) modalTrigger.next(true);
-    else OnSubmit(null);
+        //if message exists - show form only for edit and view
+        if (["edit", "view"].indexOf(operation.type) > -1) modalTrigger.next(true);
+        else OnSubmit(null);
     }
 
     function FetchData() {
@@ -72,17 +82,19 @@ function CreateEditProgram(props: any, ref: any) {
     function CreateProgram(frm: any) {
         const sdate = moment().format("YYYY-MM-DD");
         const edate = moment().add(frm.duration, "days").format("YYYY-MM-DD");
-        
-        createProgram({ variables: {
-            title: frm.programName,
-            fitnessdisciplines: frm.discipline.split(","),
-            duration_days: frm.duration,
-            level: ENUM_FITNESSPROGRAM_LEVEL[frm.level],
-            description: frm.details,
-            users_permissions_user: frm.user_permissions_user,
-            startdate: sdate,
-            enddate: edate
-        } });
+
+        createProgram({
+            variables: {
+                title: frm.programName,
+                fitnessdisciplines: frm.discipline.split(","),
+                duration_days: frm.duration,
+                level: ENUM_FITNESSPROGRAM_LEVEL[frm.level],
+                description: frm.details,
+                users_permissions_user: frm.user_permissions_user,
+                startdate: sdate,
+                enddate: edate
+            }
+        });
     }
 
     function EditExercise(frm: any) {
@@ -110,13 +122,13 @@ function CreateEditProgram(props: any, ref: any) {
     }
 
     function DeleteExercise(id: any) {
-        deleteProgram({ variables: { id: id }});
+        deleteProgram({ variables: { id: id } });
     }
 
     function OnSubmit(frm: any) {
         //bind user id
-        if(frm)
-        frm.user_permissions_user = auth.userid;
+        if (frm)
+            frm.user_permissions_user = auth.userid;
 
         switch (operation.type) {
             case 'create':
@@ -132,42 +144,38 @@ function CreateEditProgram(props: any, ref: any) {
     }
 
     let name = "";
-    if(operation.type === 'create'){
-        name="Create New Program";
-    }else if(operation.type === 'edit'){
-        name="Edit";
-    }else if(operation.type === 'view'){
-        name="View";
+    if (operation.type === 'create') {
+        name = "Create New Program";
+    } else if (operation.type === 'edit') {
+        name = "Edit";
+    } else if (operation.type === 'view') {
+        name = "View";
     }
 
     FetchData();
 
-
     return (
         <>
-            {/* {render && */}
-                <ModalView
-                    name={name}
-                    isStepper={false}
-                    formUISchema={schema}
-                    formSchema={programSchema}
-                    formSubmit={name === "View" ? () => { modalTrigger.next(false); } : (frm: any) => { OnSubmit(frm); }}
-                    formData={programDetails}
-                    widgets={widgets}
-                    modalTrigger={modalTrigger}
-                    type={operation.type}
-                />
-                
-            {/* } */}
-             {operation.type ==="delete" && <StatusModal
-             modalTitle="Delete"
-             modalBody="Do you want to delete this message?"
-             buttonLeft="Cancel"
-             buttonRight="Yes"
-             onClick={() => {DeleteExercise(operation.id)}}
-             />}
         
-            
+            <ModalView
+                name={name}
+                isStepper={false}
+                formUISchema={operation.type === 'view' ? schemaView : schema}
+                formSchema={programSchema}
+                formSubmit={name === "View" ? () => { modalTrigger.next(false); } : (frm: any) => { OnSubmit(frm); }}
+                formData={operation.type === 'create' ? emptyProgramState : programDetails}
+                widgets={widgets}
+                modalTrigger={modalTrigger}
+                type={operation.type}
+            />
+           
+            {operation.type === "delete" && <StatusModal
+                modalTitle="Delete"
+                modalBody="Do you want to delete this message?"
+                buttonLeft="Cancel"
+                buttonRight="Yes"
+                onClick={() => { DeleteExercise(operation.id) }}
+            />}
         </>
     )
 }

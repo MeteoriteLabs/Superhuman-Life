@@ -10,6 +10,7 @@ export default function ModalView({
   formSchema,
   formData,
   isStepper,
+  showErrorList,
   widgets,
   modalTrigger,
   stepperValues,
@@ -76,7 +77,7 @@ export default function ModalView({
             </Col>
             {isStepper &&
               stepper.map((item: string, id: number) => (
-                <Col xs={2} md={2} lg={2} key={id}>
+                <Col xs={2} md={2} lg={5} key={id}>
                   <ProgressBar
                     max={1}
                     now={step - (id + 1)}
@@ -102,10 +103,11 @@ export default function ModalView({
                   uiSchema={formUISchema}
                   schema={formSchema[step.toString()]}
                   ref={formRef}
+                  showErrorList={showErrorList}
                   onSubmit={({ formData }: any) => submitHandler(formData)}
                   formData={formValues}
                   widgets={widgets}
-                  formContext={formData}
+                  formContext={formValues}
                 >
                   <div></div>
                 </Form>

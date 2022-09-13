@@ -1,6 +1,6 @@
 import TextEditor from '../../../components/customWidgets/textEditor';
-import EquipmentSearch from '../../../components/customWidgets/equipmentList';
-import MuscleGroupSearch from '../../../components/customWidgets/muscleGroupList';
+import EquipmentSearch from '../../../components/customWidgets/equipmentListSelect';
+import MuscleGroupSearch from '../../../components/customWidgets/muscleGroupMultiSelect';
 import FitnessMultiSelect from '../../../components/customWidgets/fitnessMultiSelect';
 import BuildWorkout from './buildWorkout';
 import Upload from '../../../components/upload/upload';
@@ -32,7 +32,7 @@ export const schema: any = {
             "ui:widget": "textarea",
             "ui:options": {
                 "rows": 3
-            }
+            },
         },
         "benefits": {
             "ui:widget": "textarea",
@@ -41,13 +41,16 @@ export const schema: any = {
             }
         },
         "equipment": {
-            "ui:widget": "equipmentSearch"
+            "ui:widget": "equipmentSearch",
+            "ui:help": "Add all equipments required to perform the exercise. Example - Pullup you can add a pullup bar and resistance bands.It is required field"
         },
         "muscleGroup": {
-            "ui:widget": "muscleGroupSearch"
+            "ui:widget": "muscleGroupSearch",
+            "ui:help": " Add all equipments required to perform the exercises in the workout.It is required field"
         },
         "discipline": {
-            "ui:widget": "fitnessSelect"
+            "ui:widget": "fitnessSelect",
+            "ui:help": "Choose the relevant  discipline for the workout .It is required field"
         },
         "addWorkout": {
             "AddText": {
