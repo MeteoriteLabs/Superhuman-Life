@@ -3,8 +3,6 @@ import React, { useContext, useEffect, useImperativeHandle, useState } from 'rea
 import { Subject } from 'rxjs';
 import PricingAssistEditIcon from '../../../components/customWidget/PricingAssistEditIcon';
 import FinanceModal from '../../../components/financeModal/FinanceModal'
-
-
 import authContext from '../../../context/auth-context';
 import { CREATE_FITNESS_PRICING_ASSIT, UPDATE_FITNESS_PRICING_ASSITS } from "../graphQL/mutations"
 
@@ -21,7 +19,6 @@ function PricingAssistAction(props, ref) {
     const modalTrigger = new Subject();
     const [formData, setFormData] = useState<any>();
     const formSchema = require("../PricingAssist/Fitness/fitness.json");
-
 
     const uiSchema: any = {
         "type": {
@@ -42,12 +39,10 @@ function PricingAssistAction(props, ref) {
         setFormData(updateFormData);
     }, [operation])
 
-
     // create price 
-    const [createFitnessPricingAssist] = useMutation(CREATE_FITNESS_PRICING_ASSIT, { onCompleted: (r: any) => { modalTrigger.next(false); } });
+    const [createFitnessPricingAssist] = useMutation(CREATE_FITNESS_PRICING_ASSIT, { onCompleted: (r: any) => { modalTrigger.next(false); props.callback(); } });
 
     const CreateFitnessPricingAssist = (form: any) => {
-        console.log(form);
         createFitnessPricingAssist({
             variables: {
                 data:{
@@ -61,13 +56,14 @@ function PricingAssistAction(props, ref) {
     }
 
     // update price
-    const [updateFitnessPricingAssist] = useMutation(UPDATE_FITNESS_PRICING_ASSITS, { onCompleted: (r: any) => { modalTrigger.next(false); } });
+    const [updateFitnessPricingAssist] = useMutation(UPDATE_FITNESS_PRICING_ASSITS, { onCompleted: (r: any) => { modalTrigger.next(false); props.callback(); } });
 
     const UpdateFitnessPricingAssist = (form: any) => {
+        console.log(form)
         updateFitnessPricingAssist({
             variables: {
                 id: operation.id,
-                mrp: form.mrp
+                mrp: form.mrp,
             }
         })
     }
@@ -104,6 +100,5 @@ function PricingAssistAction(props, ref) {
         </div>
     )
 }
-
 
 export default React.forwardRef(PricingAssistAction)
