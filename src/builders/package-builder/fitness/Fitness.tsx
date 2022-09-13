@@ -30,6 +30,7 @@ export default function FitnessTab(props) {
     const [currentIndex, setCurrentIndex] = useState<any>('');
 
     function handleModalRender(id: string | null, actionType: string, type: string, current_status?: boolean){
+        console.log(id);
         switch(type){
             case 'Personal Training':
                 createEditViewPersonalTrainingRef.current.TriggerForm({id: id, type: actionType, actionType: type, current_status: current_status});
