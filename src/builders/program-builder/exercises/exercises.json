@@ -22,12 +22,14 @@
                     0,
                     1,
                     2,
-                    3
+                    3,
+                    4
                 ],
                 "enumNames": [
                     "Beginner",
                     "Intermediate",
                     "Advance",
+                    "All levels",
                     "No level"
                 ]
             },

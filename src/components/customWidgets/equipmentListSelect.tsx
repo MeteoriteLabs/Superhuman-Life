@@ -32,7 +32,7 @@ const MultiSelect = (props: any) => {
           setMultiSelections(e);
         }
       
-     props.onChange(multiSelections.map((d) => {
+     props.onChange(multiSelections?.map((d) => {
           return d.id;
           }).join(",").toString()
      );

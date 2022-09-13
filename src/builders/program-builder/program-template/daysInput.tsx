@@ -5,7 +5,21 @@ import moment from 'moment';
 
 const DaysInput = (props: any) => {
 
-     const [selected, setSelected] = useState(props.dayType === "day" && props.val ? [`Day - ${props.val}`] : props.val ? [moment(props.startDate).add(props.val, 'days').format("Do, MMM YY")] : []);
+     console.log(props);
+
+     function handleReturnType(value: any){
+          debugger;
+          console.log(value.length);
+          if(typeof value === 'number'){
+               return [`Day - ${value}`];
+          }else if(value.length > 0 && typeof value !== 'string'){
+               return value;
+          }else {
+               return JSON.parse(value)
+          }
+     }
+
+     const [selected, setSelected]: any[] = useState(props.dayType === "day" && props.val ? handleReturnType(props.val)  : props.val ? [moment(props.startDate).add(props.val, 'days').format("Do, MMM YY")] : []);
 
      const days: any[] = [];
 
@@ -35,6 +49,7 @@ const DaysInput = (props: any) => {
                {props.type === 'transfer' ? null : <label>Select Day</label>}
                <Typeahead
                id="basic-typeahead-multiple"
+               clearButton={props.id ? props.id === 'newWorkout' || 'duplicateWorkout' ? true : false : false}
                labelKey="day"
                onChange={OnChange}
                options={days}

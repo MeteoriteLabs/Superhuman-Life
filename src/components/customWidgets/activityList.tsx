@@ -45,8 +45,12 @@ const ActivityField = (props: any) => {
      // }
 
      function OnChange(data: any){
-          const objectToString = JSON.stringify(data);
-          props.onChange(objectToString);
+          console.log(data);
+          if(data !== undefined){
+               const objectToString = JSON.stringify(data);
+
+               props.onChange(objectToString);
+          }
      }
 
      function handleSelect(data: any){  

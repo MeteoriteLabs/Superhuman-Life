@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Row, Col } from 'react-bootstrap';
 import moment from 'moment';
 import TimePicker from 'rc-time-picker';
@@ -7,9 +7,10 @@ import 'rc-time-picker/assets/index.css';
 
 
 const TimeFieldInput = (props: any) => {
-    
-    const [startTime, setStartTime] = useState("00:00"); 
-    const [endTime, setEndTime] = useState("00:00");
+
+    console.log(props.value);
+    const [startTime, setStartTime] = useState(props.value !== undefined ? JSON.parse(props.value).startTime : "00:00"); 
+    const [endTime, setEndTime] = useState(props.value !== undefined ? JSON.parse(props.value).endTime : "00:00");
 
     function handleStartTimeInput(val: any){
         var m = (Math.round(parseInt(val.slice(3,5))/15) * 15) % 60;
@@ -35,7 +36,7 @@ const TimeFieldInput = (props: any) => {
             }else if(parseInt(sh) === parseInt(eh) && parseInt(sm) > parseInt(em)) {
                 return <span id="timeErr" style={{color: 'red'}}>End Time Cannot be lesser than Start Time</span>
             }else {
-                return <span style={{color: 'green'}}>Valid Time</span>
+                return <span id="validTime" style={{color: 'green'}}>Valid Time</span>
             }
         }
     }
@@ -50,8 +51,25 @@ const TimeFieldInput = (props: any) => {
         return `${parseInt(inputTime[0]) < 10 ? inputTime[0].charAt(1) : inputTime[0]}:${inputTime[1] === '00' ? '0' : inputTime[1]}`; 
     }
 
-    const object = ({"startTime": handleFormatting(startTime), "endTime": handleFormatting(endTime)});
-    props.onChange(JSON.stringify(object));
+    function checkIfCorrectTime(){
+        var ele: any = document.getElementById("timeErr");
+
+        if(ele) {
+            return false;
+        }else {
+            return true;
+        }
+    }
+
+    useEffect(() => {
+        if(checkIfCorrectTime()){
+            const object = ({"startTime": handleFormatting(startTime), "endTime": handleFormatting(endTime)});
+            props.onChange(JSON.stringify(object));
+        }else {
+            props.onChange(undefined);
+        }
+        // eslint-disable-next-line
+    }, [startTime, endTime]);
      
     return (
         <>

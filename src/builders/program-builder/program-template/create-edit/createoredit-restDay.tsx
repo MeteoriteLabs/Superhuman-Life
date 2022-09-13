@@ -22,7 +22,11 @@ function CreateEditRestDay(props: any, ref: any) {
     const program_id = window.location.pathname.split('/').pop();
 
     const [sessionsIds, setSessionsIds] = useState<any>([]);
+    const [sessions, setSessions] = useState<any>([]);
     const [templateSessionsIds, setTemplateSessionsIds] =  useState<any>([]);
+    const [templateSessions, setTemplateSessions] = useState<any>([]);
+
+    console.log(window.location.pathname.split('/')[1]);
 
     useQuery(GET_TEMPLATE_SESSIONS, {variables: {id: program_id}, skip: (window.location.pathname.split('/')[1] !== 'programs'), onCompleted: (data: any) => {
         const flattenData = flattenObj({...data});
@@ -30,15 +34,17 @@ function CreateEditRestDay(props: any, ref: any) {
         for(var q=0; q<flattenData.fitnessprograms[0].sessions.length; q++){
             templateExistingValues.push(flattenData.fitnessprograms[0].sessions[q].id);
         }
+        setTemplateSessions(flattenData.fitnessprograms[0].sessions);
         setTemplateSessionsIds(templateExistingValues);
    }});
 
-    useQuery(GET_SESSIONS, {variables: {id: program_id},onCompleted: (data: any) => {
+    useQuery(GET_SESSIONS, {variables: {id: program_id}, skip: (window.location.pathname.split('/')[1] === 'programs'),onCompleted: (data: any) => {
         const flattenData = flattenObj({...data});
         const sessionsExistingValues = [...sessionsIds];
-        for(var q=0; q<flattenData.tags[0].sessions.length; q++){
+        for(var q=0; q<flattenData.tags[0]?.sessions.length; q++){
             sessionsExistingValues.push(flattenData.tags[0].sessions[q].id);
         }
+        setSessions(flattenData.tags[0]?.sessions);
         setSessionsIds(sessionsExistingValues);
     }});
     
@@ -66,12 +72,18 @@ function CreateEditRestDay(props: any, ref: any) {
     function FillDetails(data: any) {
         const flattenData = flattenObj({...data});
         let details: any = {};
+        let restDays: any[] = [];
         let msg = flattenData;
-        details.day = msg.fitnessprograms[0].rest_days?.map(
+        msg.fitnessprograms[0]?.sessions?.map(
+            // eslint-disable-next-line array-callback-return
             (val: any) => {
-                return { id: val.day, day: `Day-${val.day}` };
+                if(val.Is_restday){
+                    return restDays.push({ key: val.day_of_program, day: `Day - ${val.day_of_program}` });
+                }
             }
         );
+        details.day = [...restDays] 
+        console.log(details)
     setProgramDetails(details);
 
     //if message exists - show form only for edit and view
@@ -80,10 +92,12 @@ function CreateEditRestDay(props: any, ref: any) {
     }
 
     function FetchData() {
-        useQuery(GET_SCHEDULEREVENTS, { variables: { id: program_id }, skip: (!operation.id || operation.type === 'toggle-status'), onCompleted: (e: any) => { FillDetails(e) } });
+        useQuery(GET_SCHEDULEREVENTS, { variables: { id: program_id }, onCompleted: (e: any) => { FillDetails(e) } });
     }
 
     function UpdateProgram(frm: any) {
+        frm.day = JSON.parse(frm.day);
+
         const sessionIds_new: any = [];
         const sessionIds_old: string[] = [...sessionsIds];
         const templateIds_old: string[] = [...templateSessionsIds];
@@ -112,8 +126,25 @@ function CreateEditRestDay(props: any, ref: any) {
             }
        }
 
-        if(frm.day){
-               frm.day = JSON.parse(frm.day);
+       if(window.location.pathname.split('/')[1] === 'programs'){
+            for(var k=0; k<templateSessions.length; k++){
+                for(var j=0; j<frm.day.length; j++){
+                    if(templateSessions[k].day_of_program === frm.day[j].key && templateSessions[k].Is_restday === true){
+                        frm.day.splice(j, 1);
+                    }
+                }
+            }
+       }else if(window.location.pathname.split('/')[1] === 'client'){
+            for(var x=0; x<sessions.length; x++){
+                for(var y=0; y<frm.day.length; y++){
+                    if(sessions[x].day_of_program === frm.day[y].key && sessions[x].Is_restday === true){
+                        frm.day.splice(y, 1);
+                    }
+                }
+            }
+       }
+
+        if(frm.day.length > 0){
                for(var i=0; i<frm.day.length; i++){
                     createSession({
                         variables: {
@@ -141,6 +172,8 @@ function CreateEditRestDay(props: any, ref: any) {
                         }
                     });
                }
+        }else {
+            modalTrigger.next(false);
         }
     }
 
@@ -173,6 +206,7 @@ function CreateEditRestDay(props: any, ref: any) {
                 <ModalView
                     name={name}
                     isStepper={false}
+                    showErrorList={false}
                     formUISchema={schema}
                     formSchema={programSchema}
                     formSubmit={name === "View" ? () => { modalTrigger.next(false); } : (frm: any) => { OnSubmit(frm); }}

@@ -106,7 +106,6 @@ export default function Group(props) {
         // }
 
         const flattenData = flattenObj({...data});
-        console.log(flattenData)
 
         function handleUsers(data: any){
             let clients: any = [];
@@ -387,6 +386,8 @@ export default function Group(props) {
             userPackage.filter((item: any, index: any) => moment(item.expiry).isBefore(moment()) === true ? userPackage.splice(index, 1) : null);
         }
     }
+
+    console.log(userPackage);
 
     return (
         <div className="mt-5">

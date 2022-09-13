@@ -129,8 +129,8 @@ function CreateEditOnDemadPt(props: any, ref: any) {
         details.About = msg.aboutpackage;
         details.Benifits = msg.benefits;
         details.packagename = msg.packagename;
-        details.equipmentList = JSON.stringify(msg.equipment_lists);
-        details.disciplines = msg.fitnessdisciplines;
+        details.equipmentList = msg.equipment_lists
+        details.disciplines = msg.fitnessdisciplines
         details.channelinstantBooking = msg.groupinstantbooking;
         details.classSize = ENUM_FITNESSPACKAGE_PTCLASSSIZE[msg.Ptclasssize];
         details.expiryDate = moment(msg.expirydate).format('YYYY-MM-DD');
