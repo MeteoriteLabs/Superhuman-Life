@@ -71,12 +71,10 @@ export default function MessagePage() {
 
      const [datatable, setDataTable] = useState<{}[]>([]);
 
-     function FetchData(_variables: {} = { filter: " ", id: auth.userid }) {
-          useQuery(GET_NOTIFICATIONS, { variables: _variables, onCompleted: loadData });
-     }
+     const fetch = useQuery(GET_NOTIFICATIONS, { variables: { filter: searchFilter, id: auth.userid }, onCompleted: loadData });
 
      function loadData(data: any) {
-          const flattenData = flattenObj({...data});
+          const flattenData = flattenObj({ ...data });
           setDataTable(
                [...flattenData.notifications].map((Detail) => {
                     return {
@@ -91,7 +89,9 @@ export default function MessagePage() {
           );
      }
 
-     FetchData({ filter: searchFilter, id: auth.userid });
+     function refetchQueryCallback() {
+          fetch.refetch();
+     }
 
      return (
           <TabContent>
@@ -132,7 +132,7 @@ export default function MessagePage() {
                                    >
                                         <i className="fas fa-plus-circle"></i> Create New
                                    </Button>
-                                   <CreateEditMessage ref={createEditMessageComponent}></CreateEditMessage>
+                                   <CreateEditMessage ref={createEditMessageComponent} callback={refetchQueryCallback}></CreateEditMessage>
                               </Card.Title>
                          </Col>
                     </Row>

@@ -84,7 +84,7 @@ export const UPDATE_MESSAGE = gql`
 
 export const GET_MESSAGE = gql`
   query getmessage($id: ID!) {
-    notifications(filters: { id: { eq: $id } }) {
+    notifications(pagination: { pageSize: 100 }, filters: { id: { eq: $id } }) {
       data {
         id
         attributes {
