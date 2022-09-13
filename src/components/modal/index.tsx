@@ -10,6 +10,7 @@ export default function ModalView({
   formSchema,
   formData,
   isStepper,
+  showErrorList,
   widgets,
   modalTrigger,
   stepperValues,
@@ -102,10 +103,11 @@ export default function ModalView({
                   uiSchema={formUISchema}
                   schema={formSchema[step.toString()]}
                   ref={formRef}
+                  showErrorList={showErrorList}
                   onSubmit={({ formData }: any) => submitHandler(formData)}
                   formData={formValues}
                   widgets={widgets}
-                  formContext={formData}
+                  formContext={formValues}
                 >
                   <div></div>
                 </Form>

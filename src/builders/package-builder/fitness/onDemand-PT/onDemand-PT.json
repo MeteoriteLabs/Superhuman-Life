@@ -1,0 +1,204 @@
+{
+     "1": {
+         "title": "",
+         "type": "object",
+         "required": [
+            "packagename",
+            "disciplines",
+            "equipmentList",
+            "level",
+            "intensity"
+         ],
+         "properties": {
+             "packagename": {
+                 "type": "string",
+                 "title": "Name of Package"
+             },
+             "disciplines": {
+                 "type": "string",
+                 "title": "Disciplines",
+                 "description": "it is a required field"
+             },
+             "equipmentList": {
+                 "type": "string",
+                 "description": "it is a required field"
+             },
+             "tags": {
+                 "type": "string",
+                 "title": "Tags",
+                 "description": "User hashtags to improve your listing"
+             },
+             "level": {
+                 "type": "number",
+                 "title": "Level",
+                 "enum": [0, 1, 2],
+                 "enumNames": [
+                     "Beginner",
+                     "Intermediate",
+                     "Advanced"
+                 ]
+             },
+             "intensity": {
+                 "type": "number",
+                 "title": "Intensity",
+                 "enum": [0, 1, 2],
+                 "enumNames": [
+                     "Low",
+                     "Moderate",
+                     "High"
+                 ]
+             }
+         }
+     },
+     "2": {
+         "title": "",
+         "type": "object",
+         "required": [
+            "About",
+            "Benifits",
+            "classSize",
+            "thumbnail",
+            "Upload"
+         ],
+         "properties": {
+             "About": {
+                 "type": "string",
+                 "title": "About"
+             },
+             "Benifits": {
+                 "type": "string",
+                 "title": "Benefits"
+             },
+             "classSize": {
+                 "type": "number",
+                 "title": "PT Class Size",
+                 "enum": [0],
+                 "enumNames": [
+                    "Solo"
+                 ]
+             },
+             "thumbnail": {
+                 "type": "string",
+                 "description": "Accepts only Image and size cannot exceed 5mb"
+             },
+             "Upload": {
+                 "type": "object",
+                 "oneOf": [
+                     {
+                         "title": "Upload picture or video", 
+                         "properties": {
+                             "upload": {
+                                 "type": "string",
+                                 "description": "Accepts only Image and size cannot exceed 5mb"
+                             }
+                       },
+                       "required": [
+                         "upload"
+                       ]
+                     },
+                     {
+                     "title": "Video URL", 
+                       "properties": {
+                         "VideoUrl": {
+                           "type": "string",
+                           "format": "uri"
+                         }
+                       },
+                       "required": [
+                         "VideoUrl"
+                       ]
+                     }
+                 ]
+ 
+             }
+         }
+     },
+     "3": {
+         "title": "Program Details",
+         "type": "object",
+         "required": ["programDetails"],
+         "properties": {
+             "programDetails": {
+                 "type": "string"
+             }
+         }
+     },
+     "4": {
+         "title": "Pricing Plan",
+         "type": "object",
+         "required": ["pricingDetail"],
+         "properties": {
+             "pricingDetail": {
+                 "type": "string"
+             }
+         }
+ 
+     },
+     "5": {
+         "title": "Package Settings",
+        "type": "object",
+        "required": [
+         "visibility",
+         "datesConfig",
+         "config"
+        ],
+        "properties": {
+             "visibility": {
+                 "type": "number",
+                 "title": "Visibility",
+                 "enum": [0, 1],
+                 "enumNames": [
+                     "Public",
+                     "Private"
+                 ],
+                 "description": "The package will be save as draft and wait for you to publish it."
+             },
+             "datesConfig": {
+                 "type": "string"
+             },
+             "config": {
+                 "title": "Booking Config",
+                 "type": "object",
+                 "required": [
+                     "acceptBooking",
+                     "maxBookingMonth",
+                     "maxBookingDay"
+                 ],
+                 "properties": {
+                     "acceptBooking": {
+                         "type": "number",
+                         "title": "",
+                         "enum": [0, 1],
+                         "enumNames": [
+                             "Manual",
+                             "Auto"
+                         ],
+                         "description": "In auto it will automatically accept all bookings"
+                     },
+                     "maxBookingMonth": {
+                         "type": "number",
+                         "title": "Maximum booking/per month",
+                         "minimum": 2,
+                         "maximum": 50
+                     },
+                     "maxBookingDay": {
+                         "type": "number",
+                         "title": "Maximum booking/per day",
+                         "minimum": 2,
+                         "maximum": 10
+                     }
+                 }
+             }
+         }
+     },
+     "6": {
+         "title": "Preview",
+         "type": "object",
+         "properties": {
+             "carousel": {
+                 "type": "string",
+                 "title": "carousel"
+             }
+         }
+     }
+ }

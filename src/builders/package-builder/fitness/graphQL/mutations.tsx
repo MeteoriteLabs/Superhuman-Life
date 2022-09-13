@@ -5,6 +5,7 @@ export const CREATE_PACKAGE = gql`
     $packagename: String
     $tags: String
     $level: ENUM_FITNESSPACKAGE_LEVEL
+    $intensity: ENUM_FITNESSPACKAGE_INTENSITY
     $aboutpackage: String
     $benefits: String
     $mode: ENUM_FITNESSPACKAGE_MODE
@@ -20,6 +21,8 @@ export const CREATE_PACKAGE = gql`
     $bookingleadday: Int
     $bookingleadtime: String
     $groupinstantbooking: Boolean
+    $Is_free_demo: Boolean
+    $is_private: Boolean
     $fitness_package_type: ID
     $fitnesspackagepricing: JSON
     $ptclasssize: ENUM_FITNESSPACKAGE_PTCLASSSIZE
@@ -30,13 +33,14 @@ export const CREATE_PACKAGE = gql`
     $thumbnail: String
     $upload: String
     $equipmentList: [ID]
-
+    $videoUrl: String
   ) {
     createFitnesspackage(
       data:{
         packagename: $packagename
         tags: $tags
         level: $level
+        Intensity: $intensity
         aboutpackage: $aboutpackage
         benefits: $benefits
         mode: $mode
@@ -50,8 +54,10 @@ export const CREATE_PACKAGE = gql`
         recordedclasses: $recordedclasses
         restdays: $restdays
         bookingleadday: $bookingleadday
+        is_private: $is_private
         bookingleadtime: $bookingleadtime
         groupinstantbooking: $groupinstantbooking
+        Is_free_demo: $Is_free_demo
         fitness_package_type: $fitness_package_type
         fitnesspackagepricing: $fitnesspackagepricing
         Ptclasssize: $ptclasssize
@@ -62,6 +68,7 @@ export const CREATE_PACKAGE = gql`
         Thumbnail_ID: $thumbnail
         Upload_ID: $upload
         equipment_lists: $equipmentList
+        video_URL: $videoUrl
       }
     ) {
       data{
@@ -97,9 +104,9 @@ export const EDIT_PACKAGE = gql`
     $packagename: String
     $tags: String
     $level: ENUM_FITNESSPACKAGE_LEVEL
+    $intensity: ENUM_FITNESSPACKAGE_INTENSITY
     $aboutpackage: String
     $benefits: String
-    $introvideourl: String
     $mode: ENUM_FITNESSPACKAGE_MODE
     $address: ID
     $disciplines: [ID]
@@ -113,6 +120,8 @@ export const EDIT_PACKAGE = gql`
     $bookingleadday: Int
     $bookingleadtime: String
     $groupinstantbooking: Boolean
+    $Is_free_demo: Boolean
+    $is_private: Boolean
     $fitness_package_type: ID
     $fitnesspackagepricing: JSON
     $ptclasssize: ENUM_FITNESSPACKAGE_PTCLASSSIZE
@@ -123,6 +132,7 @@ export const EDIT_PACKAGE = gql`
     $thumbnail: String
     $upload: String
     $equipmentList: [ID]
+    $videoUrl: String
   ) {
     updateFitnesspackage(
         id: $id
@@ -130,35 +140,35 @@ export const EDIT_PACKAGE = gql`
           packagename: $packagename
           tags: $tags
           level: $level
+          Intensity: $intensity
           aboutpackage: $aboutpackage
           benefits: $benefits
-          introvideourl: $introvideourl
           mode: $mode
+          address: $address
+          fitnessdisciplines: $disciplines
+          duration: $duration
           ptoffline: $ptoffline
           ptonline: $ptonline
           grouponline: $grouponline
           groupoffline: $groupoffline
+          is_private: $is_private
           recordedclasses: $recordedclasses
           restdays: $restdays
           bookingleadday: $bookingleadday
           bookingleadtime: $bookingleadtime
-          fitnesspackagepricing: $fitnesspackagepricing
-          duration: $duration
-          groupstarttime: $groupstarttime
-          groupendtime: $groupendtime
           groupinstantbooking: $groupinstantbooking
-          address: $address
-          disciplines: $disciplines
-          ptclasssize: $ptclasssize
-          classsize: $classsize
-          groupdays: $groupdays
+          Is_free_demo: $Is_free_demo
           fitness_package_type: $fitness_package_type
+          fitnesspackagepricing: $fitnesspackagepricing
+          Ptclasssize: $ptclasssize
+          classsize: $classsize
           users_permissions_user: $users_permissions_user
-          Status: $Status
-          is_private: $is_private
+          publishing_date: $publishing_date
+          expiry_date: $expiry_date
           Thumbnail_ID: $thumbnail
           Upload_ID: $upload
           equipment_lists: $equipmentList
+          video_URL: $videoUrl
       }
     ) {
       data{
@@ -169,7 +179,7 @@ export const EDIT_PACKAGE = gql`
 `;
 
 export const CREATE_BOOKING_CONFIG_AND_TAG_CHANNEL = gql`
-mutation createBookingconfig($id: ID!, $isAuto: Boolean, $bookings_per_day: Int, $bookings_per_month: Int, $packageId: ID!, $tagName: String!) {
+mutation createBookingconfig($id: ID!, $isAuto: Boolean, $bookings_per_day: Int, $bookings_per_month: Int) {
   createBookingConfig(data: { isAuto: $isAuto, fitnesspackage: $id, bookingsPerDay: $bookings_per_day, BookingsPerMonth: $bookings_per_month }) {
     data {
       id

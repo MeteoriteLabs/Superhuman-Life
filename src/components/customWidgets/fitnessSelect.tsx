@@ -49,6 +49,7 @@ const FitnessSelect = (props: any) => {
                options={fitnessdisciplines}
                placeholder="Choose Discpline..."
                selected={singleSelections}
+               disabled={props.uiSchema.readonly ? true : false}
                />
           </div>
      )

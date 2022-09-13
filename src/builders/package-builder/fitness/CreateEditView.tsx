@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import AuthContext from '../../../context/auth-context';
-
 import FitnessClasses from './widgetCustom/FitnessClasses/FitnessClasses';
 import FitnessRestday from './widgetCustom/FitnessRestday';
 import { useMutation, useQuery } from '@apollo/client';

@@ -3,7 +3,7 @@ import { Fragment, useState, useContext } from 'react';
 import { Button } from 'react-bootstrap';
 import { flattenObj } from '../../../../components/utils/responseFlatten';
 import { GET_ADDRESS } from '../graphQL/queries';
-import AddFitnessAddressModal from './AddFitnessAddressModal';
+import AddFitnessAddressModal from '../../../../components/customWidgets/AddFitnessAddressModal';
 import authContext from '../../../../context/auth-context';
 
 export default function FitnessAddress(props) {
