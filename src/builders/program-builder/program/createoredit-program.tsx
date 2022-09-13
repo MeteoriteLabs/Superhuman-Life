@@ -83,10 +83,12 @@ function CreateEditProgram(props: any, ref: any) {
         const sdate = moment().format("YYYY-MM-DD");
         const edate = moment().add(frm.duration, "days").format("YYYY-MM-DD");
 
+        frm.discipline = JSON.parse(frm.discipline);
+
         createProgram({
             variables: {
                 title: frm.programName,
-                fitnessdisciplines: frm.discipline.split(","),
+                fitnessdisciplines: frm.discipline.map((item: any) => { return item.id }).join(',').split(','),
                 duration_days: frm.duration,
                 level: ENUM_FITNESSPROGRAM_LEVEL[frm.level],
                 description: frm.details,
@@ -100,11 +102,12 @@ function CreateEditProgram(props: any, ref: any) {
     function EditExercise(frm: any) {
         const sdate = moment().format("YYYY-MM-DD");
         const edate = moment().add(frm.duration, "days").format("YYYY-MM-DD");
+        frm.discipline = JSON.parse(frm.discipline);
         editProgram({
             variables: {
                 programid: operation.id,
                 title: frm.programName,
-                fitnessdisciplines: frm.discipline.split(","),
+                fitnessdisciplines: frm.discipline.map((item: any) => { return item.id }).join(',').split(','),
                 duration_days: frm.duration,
                 level: ENUM_FITNESSPROGRAM_LEVEL[frm.level],
                 description: frm.details,
