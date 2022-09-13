@@ -43,98 +43,99 @@ export default function Fitness() {
     // }
 
     const loadData = (data) => {
-        const personalTrainingOnline = data.suggestedPricings.data.filter(item => item.attributes.fitness_package_type.data.attributes.type === "Personal Training" && item.attributes.Mode === "Online");
+        console.log(data);
+        // const personalTrainingOnline = data.suggestedPricings && data.suggestedPricings.data && data.suggestedPricings.data.length ? data.suggestedPricings.data.filter(item => item.attributes.fitness_package_type.data.attributes.type === "Personal Training" && item.attributes.Mode === "Online") : null;
 
-        const personalTrainingOffline = data.suggestedPricings.data.filter(item => item.attributes.fitness_package_type.data.attributes.type === "Personal Training" && item.attributes.Mode === "Offline");
+        // const personalTrainingOffline = data.suggestedPricings.data && data.suggestedPricings.data.length ?  data.suggestedPricings.data.filter(item => item.attributes.fitness_package_type.data.attributes.type === "Personal Training" && item.attributes.Mode === "Offline") : null;
 
-        const groupOnline = data.suggestedPricings.data.filter(item => item.attributes.fitness_package_type.data.attributes.type === "Group Class" && item.attributes.Mode === "Online");
+        // const groupOnline = data.suggestedPricings.data && data.suggestedPricings.data.length ? data.suggestedPricings.data.filter(item => item.attributes.fitness_package_type.data.attributes.type === "Group Class" && item.attributes.Mode === "Online") : null;
 
-        const groupOffline = data.suggestedPricings.data.filter(item => item.attributes.fitness_package_type.data.attributes.type === "Group Class" && item.attributes.Mode === "Offline");
+        // const groupOffline = data.suggestedPricings.data && data.suggestedPricings.data.length ? data.suggestedPricings.data.filter(item => item.attributes.fitness_package_type.data.attributes.type === "Group Class" && item.attributes.Mode === "Offline") : null;
 
-        const classic = data.suggestedPricings.data.filter(item => item.attributes.fitness_package_type.data.attributes.type === "Classic" && item.attributes.Mode === "Online");
+        // const classic = data.suggestedPricings.data && data.suggestedPricings.data.length ?  data.suggestedPricings.data.filter(item => item.attributes.fitness_package_type.data.attributes.type === "Classic" && item.attributes.Mode === "Online") : null;
 
-        const CohortOnline = data.suggestedPricings.data.filter(item => item.attributes.fitness_package_type.data.attributes.type === "Cohort" && item.attributes.Mode === "Online");
+        // const CohortOnline = data.suggestedPricings.data && data.suggestedPricings.data.length ?  data.suggestedPricings.data.filter(item => item.attributes.fitness_package_type.data.attributes.type === "Cohort" && item.attributes.Mode === "Online") : null;
 
-        const CohortOffline = data.suggestedPricings.data.filter(item => item.attributes.fitness_package_type.data.attributes.type === "Cohort" && item.attributes.Mode === "Offline");
+        // const CohortOffline = data.suggestedPricings.data && data.suggestedPricings.data.length ? data.suggestedPricings.data.filter(item => item.attributes.fitness_package_type.data.attributes.type === "Cohort" && item.attributes.Mode === "Offline") : null;
 
-        const liveStream = data.suggestedPricings.data.filter(item => item.attributes.fitness_package_type.data.attributes.type === "Live Stream Channel" && item.attributes.Mode === "Online");
+        // const liveStream = data.suggestedPricings.data && data.suggestedPricings.data.length ? data.suggestedPricings.data.filter(item => item.attributes.fitness_package_type.data.attributes.type === "Live Stream Channel" && item.attributes.Mode === "Online") : null;
 
-        setDataTable(
-            [
-                {
-                    id: personalTrainingOnline.length === 0 ? "" : personalTrainingOnline[0].id,
-                    packageTypeID: data2.fitnessPackageTypes.data.filter(item => item.attributes.type === "Personal Training").map(item => item.id),
-                    type: "Personal Training",
-                    duration: 1,
-                    mode: "Online",
-                    mrp: personalTrainingOnline.length === 0 ? "--" : personalTrainingOnline[0].attributes.mrp,
-                    updatedAt: personalTrainingOnline.length === 0 ? "--" : moment(personalTrainingOnline[0].updateAt).format('MMMM DD,YYYY')
-                },
-                {
-                    id: personalTrainingOffline.length === 0 ? "" : personalTrainingOffline[0].id,
-                    packageTypeID: data2.fitnessPackageTypes.data.filter(item => item.attributes.type === "Personal Training").map(item => item.id),
-                    type: "Personal Training",
-                    duration: 1,
-                    mode: "Offline",
-                    mrp: personalTrainingOffline.length === 0 ? "--" : personalTrainingOffline[0].attributes.mrp,
-                    updatedAt: personalTrainingOffline.length === 0 ? "--" : moment(personalTrainingOffline[0].updateAt).format('MMMM DD,YYYY')
-                },
-                {
-                    id: groupOnline.length === 0 ? "" : groupOnline[0].id,
-                    packageTypeID: data2.fitnessPackageTypes.data.filter(item => item.attributes.type === "Group Class").map(item => item.id),
-                    type: "Group Class",
-                    duration: 1,
-                    mode: "Online",
-                    mrp: groupOnline.length === 0 ? "--" : groupOnline[0].attributes.mrp,
-                    updatedAt: groupOnline.length === 0 ? "--" : moment(groupOnline[0].updateAt).format('MMMM DD,YYYY')
-                },
-                {
-                    id: groupOffline.length === 0 ? "" : groupOffline[0].id,
-                    packageTypeID: data2.fitnessPackageTypes.data.filter(item => item.attributes.type === "Group Class").map(item => item.id),
-                    type: "Group Class",
-                    duration: 1,
-                    mode: "Offline",
-                    mrp: groupOffline.length === 0 ? "--" : groupOffline[0].attributes.mrp,
-                    updatedAt: groupOffline.length === 0 ? "--" : moment(groupOffline[0].updateAt).format('MMMM DD,YYYY')
-                },
-                {
-                    id: classic.length === 0 ? "" : classic[0].id,
-                    packageTypeID: data2.fitnessPackageTypes.data.filter(item => item.attributes.type === "Classic").map(item => item.id),
-                    type: "Classic Class",
-                    duration: 1,
-                    mode: "Online",
-                    mrp: classic.length === 0 ? "--" : classic[0].attributes.mrp,
-                    updatedAt: classic.length === 0 ? "--" : moment(classic[0].updateAt).format('MMMM DD,YYYY')
-                },
-                {
-                    id: CohortOnline.length === 0 ? "" : CohortOnline[0].id,
-                    packageTypeID: data2.fitnessPackageTypes.data.filter(item => item.attributes.type === "Cohort").map(item => item.id),
-                    type: "Cohort",
-                    duration: 1,
-                    mode: "Online",
-                    mrp: CohortOnline.length === 0 ? "--" : CohortOnline[0].attributes.mrp,
-                    updatedAt: CohortOnline.length === 0 ? "--" : moment(CohortOnline[0].updateAt).format('MMMM DD,YYYY')
-                },
-                {
-                    id: CohortOffline.length === 0 ? "" : CohortOffline[0].id,
-                    packageTypeID: data2.fitnessPackageTypes.data.filter(item => item.attributes.type === "Cohort").map(item => item.id),
-                    type: "Cohort",
-                    duration: 1,
-                    mode: "Offline",
-                    mrp: CohortOffline.length === 0 ? "--" : CohortOffline[0].attributes.mrp,
-                    updatedAt: CohortOffline.length === 0 ? "--" : moment(CohortOffline[0].updateAt).format('MMMM DD,YYYY')
-                },
-                {
-                    id: liveStream.length === 0 ? "" : liveStream[0].id,
-                    packageTypeID: data2.fitnessPackageTypes.data.filter(item => item.attributes.type === "Live Stream Channel").map(item => item.id),
-                    type: "Live Stream Channel",
-                    duration: 1,
-                    mode: "Online",
-                    mrp: liveStream.length === 0 ? "--" : liveStream[0].attributes.mrp,
-                    updatedAt: liveStream.length === 0 ? "--" : moment(liveStream[0].updateAt).format('MMMM DD,YYYY')
-                },
-            ]
-        )
+        // setDataTable(
+        //     [
+        //         {
+        //             id: personalTrainingOnline.length === 0 ? "" : personalTrainingOnline[0].id,
+        //             packageTypeID: data2.fitnessPackageTypes.data.filter(item => item.attributes.type === "Personal Training").map(item => item.id),
+        //             type: "Personal Training",
+        //             duration: 1,
+        //             mode: "Online",
+        //             mrp: personalTrainingOnline.length === 0 ? "--" : personalTrainingOnline[0].attributes.mrp,
+        //             updatedAt: personalTrainingOnline.length === 0 ? "--" : moment(personalTrainingOnline[0].updateAt).format('MMMM DD,YYYY')
+        //         },
+        //         {
+        //             id: personalTrainingOffline.length === 0 ? "" : personalTrainingOffline[0].id,
+        //             packageTypeID: data2.fitnessPackageTypes.data.filter(item => item.attributes.type === "Personal Training").map(item => item.id),
+        //             type: "Personal Training",
+        //             duration: 1,
+        //             mode: "Offline",
+        //             mrp: personalTrainingOffline.length === 0 ? "--" : personalTrainingOffline[0].attributes.mrp,
+        //             updatedAt: personalTrainingOffline.length === 0 ? "--" : moment(personalTrainingOffline[0].updateAt).format('MMMM DD,YYYY')
+        //         },
+        //         {
+        //             id: groupOnline.length === 0 ? "" : groupOnline[0].id,
+        //             packageTypeID: data2.fitnessPackageTypes.data.filter(item => item.attributes.type === "Group Class").map(item => item.id),
+        //             type: "Group Class",
+        //             duration: 1,
+        //             mode: "Online",
+        //             mrp: groupOnline.length === 0 ? "--" : groupOnline[0].attributes.mrp,
+        //             updatedAt: groupOnline.length === 0 ? "--" : moment(groupOnline[0].updateAt).format('MMMM DD,YYYY')
+        //         },
+        //         {
+        //             id: groupOffline.length === 0 ? "" : groupOffline[0].id,
+        //             packageTypeID: data2.fitnessPackageTypes.data.filter(item => item.attributes.type === "Group Class").map(item => item.id),
+        //             type: "Group Class",
+        //             duration: 1,
+        //             mode: "Offline",
+        //             mrp: groupOffline.length === 0 ? "--" : groupOffline[0].attributes.mrp,
+        //             updatedAt: groupOffline.length === 0 ? "--" : moment(groupOffline[0].updateAt).format('MMMM DD,YYYY')
+        //         },
+        //         {
+        //             id: classic.length === 0 ? "" : classic[0].id,
+        //             packageTypeID: data2.fitnessPackageTypes.data.filter(item => item.attributes.type === "Classic").map(item => item.id),
+        //             type: "Classic Class",
+        //             duration: 1,
+        //             mode: "Online",
+        //             mrp: classic.length === 0 ? "--" : classic[0].attributes.mrp,
+        //             updatedAt: classic.length === 0 ? "--" : moment(classic[0].updateAt).format('MMMM DD,YYYY')
+        //         },
+        //         {
+        //             id: CohortOnline.length === 0 ? "" : CohortOnline[0].id,
+        //             packageTypeID: data2.fitnessPackageTypes.data.filter(item => item.attributes.type === "Cohort").map(item => item.id),
+        //             type: "Cohort",
+        //             duration: 1,
+        //             mode: "Online",
+        //             mrp: CohortOnline.length === 0 ? "--" : CohortOnline[0].attributes.mrp,
+        //             updatedAt: CohortOnline.length === 0 ? "--" : moment(CohortOnline[0].updateAt).format('MMMM DD,YYYY')
+        //         },
+        //         {
+        //             id: CohortOffline.length === 0 ? "" : CohortOffline[0].id,
+        //             packageTypeID: data2.fitnessPackageTypes.data.filter(item => item.attributes.type === "Cohort").map(item => item.id),
+        //             type: "Cohort",
+        //             duration: 1,
+        //             mode: "Offline",
+        //             mrp: CohortOffline.length === 0 ? "--" : CohortOffline[0].attributes.mrp,
+        //             updatedAt: CohortOffline.length === 0 ? "--" : moment(CohortOffline[0].updateAt).format('MMMM DD,YYYY')
+        //         },
+        //         {
+        //             id: liveStream.length === 0 ? "" : liveStream[0].id,
+        //             packageTypeID: data2.fitnessPackageTypes.data.filter(item => item.attributes.type === "Live Stream Channel").map(item => item.id),
+        //             type: "Live Stream Channel",
+        //             duration: 1,
+        //             mode: "Online",
+        //             mrp: liveStream.length === 0 ? "--" : liveStream[0].attributes.mrp,
+        //             updatedAt: liveStream.length === 0 ? "--" : moment(liveStream[0].updateAt).format('MMMM DD,YYYY')
+        //         },
+        //     ]
+        // )
     }
 
     FetchData();
@@ -212,8 +213,6 @@ export default function Fitness() {
         ],
         []
     );
-
-
 
     return (
         <div className="mt-5">

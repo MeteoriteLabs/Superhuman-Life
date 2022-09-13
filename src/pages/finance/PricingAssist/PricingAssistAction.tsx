@@ -29,16 +29,12 @@ function PricingAssistAction(props, ref) {
         }
     }
 
-
     useImperativeHandle(ref, () => ({
         TriggerForm: (msg: Operation) => {
             setOperation(msg);
             modalTrigger.next(true);
         }
     }));
-
-
-
 
     useEffect(() => {
         let updateFormData: any = {};
@@ -51,16 +47,18 @@ function PricingAssistAction(props, ref) {
     const [createFitnessPricingAssist] = useMutation(CREATE_FITNESS_PRICING_ASSIT, { onCompleted: (r: any) => { modalTrigger.next(false); } });
 
     const CreateFitnessPricingAssist = (form: any) => {
+        console.log(form);
         createFitnessPricingAssist({
             variables: {
-                fitness_package_type: operation.rowData.packageTypeID[0],
-                users_permissions_users:form.users_permissions_users,
-                Mode: operation.rowData.mode,
-                mrp: form.mrp
+                data:{
+                    fitness_package_type: operation.rowData.packageTypeID[0],
+                    users_permissions_users:form.users_permissions_users,
+                    Mode: operation.rowData.mode,
+                    mrp: form.mrp
+                }
             }
         })
     }
-
 
     // update price
     const [updateFitnessPricingAssist] = useMutation(UPDATE_FITNESS_PRICING_ASSITS, { onCompleted: (r: any) => { modalTrigger.next(false); } });
@@ -73,8 +71,6 @@ function PricingAssistAction(props, ref) {
             }
         })
     }
-
-
 
     const OnSubmit = (frm: any) => {
         //bind user id
@@ -93,8 +89,6 @@ function PricingAssistAction(props, ref) {
                 break;
         }
     }
-
-
 
     return (
         <div>
