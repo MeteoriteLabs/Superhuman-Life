@@ -20,5 +20,5 @@ export const schema: any = {
           "ui:widget": (props: any) => {
                return <Upload allowImage={true} allowVideo={true} onChange={props.onChange} value={props.value} />;
           },
-     },
+     }
 };
