@@ -1,5 +1,5 @@
 {
-     "1": {
+    "1": {
         "title": "",
         "type": "object",
         "required": [
@@ -10,7 +10,7 @@
             "equipment",
             "muscleGroup"
         ],
-         "properties": {
+        "properties": {
             "exercise": {
                 "type": "string",
                 "title": "Name exercise"
@@ -18,11 +18,16 @@
             "level": {
                 "type": "number",
                 "title": "Level",
-                "enum": [0, 1, 2, 3],
+                "enum": [
+                    0,
+                    1,
+                    2,
+                    3
+                ],
                 "enumNames": [
                     "Beginner",
                     "Intermediate",
-                    "Advance", 
+                    "Advance",
                     "No level"
                 ]
             },
@@ -43,8 +48,8 @@
             "muscleGroup": {
                 "type": "string"
             }
-         },
-         "definitions": {
+        },
+        "definitions": {
             "addexercise": {
                 "title": "Add Exercise",
                 "type": "object",
@@ -75,7 +80,9 @@
                                     },
                                     "AddURL": {
                                         "type": "string",
-                                        "title": "Add URL"
+                                        "title": "Add URL",
+                                        "format": "uri",
+                                        "description": "You can add a youtube URL. Can be  used for Group, PT, Custom and Classic offerings."
                                     }
                                 }
                             },
@@ -87,7 +94,8 @@
                                         ]
                                     },
                                     "AddText": {
-                                        "type": "string"
+                                        "type": "string",
+                                        "description": "Explain in detail about the workout. Can be used for PT and Group"
                                     }
                                 }
                             },
@@ -99,7 +107,8 @@
                                         ]
                                     },
                                     "Upload": {
-                                        "type": "string"
+                                        "type": "string",
+                                        "description": " You can add a youtube URL. Can be  used for Group, PT, Custom and Classic offerings."
                                     }
                                 }
                             }
@@ -108,5 +117,5 @@
                 }
             }
         }
-     }
- }
+    }
+}

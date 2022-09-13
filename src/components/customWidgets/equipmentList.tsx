@@ -74,9 +74,7 @@ const EquipmentList = (props: any) => {
 
      props.onChange(selected.map((e) => {
           return e.id;
-     }).join(','))
-
-
+     }).join(',').toString())
 
      FetchEquipmentList({filter: searchInput, skip: skipval});
 
@@ -97,7 +95,8 @@ const EquipmentList = (props: any) => {
                                    <option 
                                         style={{cursor: 'pointer'}}
                                         className="m-2 p-1 shadow-sm rounded bg-white"
-                                        value={equipment.id} 
+                                        value={equipment.id}
+                                        key={equipment.id} 
                                         onClick={(e) => {e.preventDefault(); 
                                              handleSelectedEquipmentAdd(equipment.name, equipment.id);
                                              }}>
@@ -108,9 +107,9 @@ const EquipmentList = (props: any) => {
                     })}
                </>
                <> 
-                    {selected.map((val) => {
+                    {selected.map((val, index) => {
                          return (
-                              <div className="text-center mt-2 mr-2" style={{ 
+                              <div className="text-center mt-2 mr-2" key={index}  style={{ 
                                    display: 'inline-block',
                                    height: '32px',
                                    padding: '0px 12px',

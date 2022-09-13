@@ -7,8 +7,6 @@ import {flattenObj} from '../utils/responseFlatten';
 
 const FitnessSelect = (props: any) => {
 
-     console.log(props)
-
      const [singleSelections, setSingleSelections] = useState<any[]>(
           props.value?.length > 0 ? JSON.parse(props.value) : []
         );
@@ -20,6 +18,7 @@ const FitnessSelect = (props: any) => {
   
      function loadData(data: any) {
           const flattenedData = flattenObj({...data});
+          
           setFitnessDisciplines(
               [...flattenedData.fitnessdisciplines].map((discipline) => {
                   return {

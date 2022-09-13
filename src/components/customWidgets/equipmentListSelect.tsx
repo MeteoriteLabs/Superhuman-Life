@@ -7,46 +7,47 @@ import { flattenObj } from '../utils/responseFlatten';
 
 const MultiSelect = (props: any) => {
 
-     console.log(props);
-
-     const [multiSelections, setMultiSelections] = useState(
-          props.value?.length > 0 ? JSON.parse(props.value) : []
+     const [multiSelections, setMultiSelections] = useState<any[]>(
+          props.value?.length > 0 ? props.value : []
         );
-     const [equipmentList, setEquipmentList] = useState<any[]>([]);
+        const [equipmentList, setEquipmentList] = useState<any[]>([]);
 
      function FetchData(){
           useQuery(GET_EQUIPMENTLIST, {onCompleted: loadData})
       }
-  
+
      function loadData(data: any) {
-          const flattenedData = flattenObj({...data});
-          setEquipmentList(
-              [...flattenedData.equipmentLists].map((equipment) => {
-                  return {
-                      id: equipment.id,
-                      name: equipment.name
-                  }
-              })
-          );
-     }
+                    const flattenedData = flattenObj({...data});
+                    setEquipmentList(
+                        [...flattenedData.equipmentLists].map((equipment) => {
+                            return {
+                                id: equipment.id,
+                                name: equipment.name
+                            }
+                        })
+                    );
+               }
 
-     function OnChange(e){
-          // let id = e.map(d => {return d.id}).join(',');
-          props.onChange(JSON.stringify(e));
+     function OnChange(e) {
           setMultiSelections(e);
-     }
+        }
+      
+     props.onChange(multiSelections.map((d) => {
+          return d.id;
+          }).join(",").toString()
+     );
 
-     FetchData();
+    FetchData();
 
      return (
           <div>
-               <label>Equipment</label>
+               <label>Equipments</label>
                <Typeahead
                id="basic-typeahead-multiple"
                labelKey="name"
                onChange={OnChange}
                options={equipmentList}
-               placeholder="Choose multiple discplines..."
+               placeholder="Choose Discpline..."
                selected={multiSelections}
                multiple
                disabled={props.uiSchema.readonly ? true : false}
