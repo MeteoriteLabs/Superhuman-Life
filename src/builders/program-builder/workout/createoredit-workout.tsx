@@ -1,4 +1,4 @@
-import React, { useContext, useImperativeHandle, useState } from 'react';
+import React, { useContext, useImperativeHandle, useState, useEffect } from 'react';
 import { useQuery, useMutation } from "@apollo/client";
 import ModalView from "../../../components/modal";
 import { FETCH_DATA, CREATE_WORKOUT, UPDATE_WORKOUT, DELETE_WORKOUT, FETCH_FITNESS_PROGRAMS } from "./queries";
@@ -14,23 +14,6 @@ interface Operation {
   type: 'create' | 'edit' | 'view' | 'toggle-status' | 'delete';
   current_status: boolean;
 }
-
-const emptyWorkoutState = {
-  workout: '',
-  intensity: 0,
-  discipline: '',
-  about: '',
-  benefits: '',
-  warmup: '',
-  coolDown: '',
-  AddText: '',
-  AddURL: '',
-  level: 0,
-  Upload: '',
-  calories: '',
-  equipment: '',
-  muscleGroup: ''
-};
 
 function CreateEditWorkout(props: any, ref: any) {
   const auth = useContext(AuthContext);
@@ -76,6 +59,12 @@ function CreateEditWorkout(props: any, ref: any) {
     Medium,
     High
   }
+
+  useEffect(() => {
+    if(operation.type === 'create'){
+      setWorkoutDetails({});
+    }
+}, [operation.type]);
 
   function FillDetails(data: any) {
     const flattenData = flattenObj({ ...data });
@@ -258,7 +247,7 @@ function CreateEditWorkout(props: any, ref: any) {
         formUISchema={ operation.type === 'view' ? schemaView : schema }
         formSchema={workoutSchema}
         formSubmit={name === "View" ? () => { modalTrigger.next(false); } : (frm: any) => { OnSubmit(frm); }}
-        formData={operation.type === 'create' ? emptyWorkoutState : workoutDetails}
+        formData={workoutDetails}
         widgets={widgets}
         modalTrigger={modalTrigger}
       />
