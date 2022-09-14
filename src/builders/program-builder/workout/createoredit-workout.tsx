@@ -140,6 +140,7 @@ function CreateEditWorkout(props: any, ref: any) {
       frm.addWorkout.build = JSON.parse(frm.addWorkout.build);
     }
     frm.discipline = JSON.parse(frm.discipline);
+    frm.equipment = JSON.parse(frm.equipment);
     createWorkout({
       variables: {
         workouttitle: frm.workout,
@@ -155,7 +156,7 @@ function CreateEditWorkout(props: any, ref: any) {
         workout_URL: (frm.addWorkout.AddWorkout === "Add URL" ? frm.addWorkout.AddURL : null),
         Workout_Video_ID: (frm.addWorkout.AddWorkout === "Upload" ? frm.addWorkout.Upload : null),
         calories: frm.calories,
-        equipment_lists: frm.equipment.split(","),
+        equipment_lists: frm.equipment.map((item: any) => { return item.id }).join(',').split(','),
         muscle_groups: frm.muscleGroup.split(","),
         users_permissions_user: frm.user_permissions_user
       }
@@ -168,6 +169,7 @@ function CreateEditWorkout(props: any, ref: any) {
       frm.addWorkout.build = JSON.parse(frm.addWorkout.build);
     }
     frm.discipline = JSON.parse(frm.discipline);
+    frm.equipment = JSON.parse(frm.equipment);
     editWorkout({
       variables: {
         workoutid: operation.id,
@@ -203,7 +205,7 @@ function CreateEditWorkout(props: any, ref: any) {
             : null,
         Workout_Video_ID: (frm.addWorkout.AddWorkout === "Upload" ? frm.addWorkout.Upload : null),
         calories: frm.calories,
-        equipment_lists: frm.equipment.split(","),
+        equipment_lists: frm.equipment.map((item: any) => { return item.id }).join(',').split(','),
         muscle_groups: frm.muscleGroup.split(","),
         users_permissions_user: frm.user_permissions_user,
       },
