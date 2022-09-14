@@ -6,8 +6,17 @@ import { useQuery } from "@apollo/client";
 import { flattenObj } from '../utils/responseFlatten';
 
 const MultiSelect = (props: any) => {
+
+     function handleReturnType(value){
+          if(typeof value === 'string'){
+               return JSON.parse(value);
+          }else {
+               return value;
+          }
+     }
+     
      const [multiSelections, setMultiSelections] = useState(
-          props.value?.length > 0 ? props.value : []
+          props.value?.length > 0 ? handleReturnType(props.value) : []
         );
      const [fitnessdisciplines, setFitnessDisciplines] = useState<any[]>([]);
 

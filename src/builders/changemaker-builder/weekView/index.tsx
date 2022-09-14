@@ -37,7 +37,7 @@ const WeekView = (props: any) => {
   // useQuery(GET_ALL_CLIENT_PACKAGE_BY_TYPE, {
   //   variables: {
   //     id: auth.userid,
-  //     type_in: ["Personal Training", "Group Class", "Custom"],
+  //     type_in: ["One-On-One", "Group Class", "Custom"],
   //   },
   //   onCompleted: (data) => {
   //     LoadData(data);

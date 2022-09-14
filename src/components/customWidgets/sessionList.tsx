@@ -89,7 +89,7 @@ const ProgramList = (props: any) => {
 
     useEffect(() => {
         // if(urlList[3] === 'pt'){
-        //     setSelectedFitnessPackage('Personal Training');
+        //     setSelectedFitnessPackage("One-On-One");
         // }else if(urlList[3] === 'group'){
         //     setSelectedFitnessPackage('Group Class');
         // }else if(urlList[3] === 'classic'){

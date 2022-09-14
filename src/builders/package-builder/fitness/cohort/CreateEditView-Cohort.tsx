@@ -66,7 +66,9 @@ function CreateEditCohort(props: any, ref: any) {
             schema.duration = props.duration;
 
             // if (msg && !msg.id) //render form if no message id
+            if(msg.type !== 'delete'){
                 modalTrigger.next(true);
+            }
         }
     }));
 
@@ -159,7 +161,7 @@ function CreateEditCohort(props: any, ref: any) {
     function calculateDuration(sd, ed){
         const start = moment(sd);
         const end = moment(ed);
-        const duration = end.diff(start, 'days');
+        const duration: number = end.diff(start, 'days');
         return duration;
     }
 
@@ -187,7 +189,7 @@ function CreateEditCohort(props: any, ref: any) {
                 expiry_date: moment(frm.datesConfig.expiryDate).toISOString(),
                 level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
                 Intensity: ENUM_FITNESSPACKAGE_INTENSITY[frm.intensity],
-                equipmentList: frm?.equipment?.length > 0 ? frm.equipmentList.split(',') : [],
+                equipmentList: frm?.equipment?.length > 0 ? frm.equipment.map((x: any) => x.id).join(',').split(',') : [],
                 duration: calculateDuration(frm.dates.publishingDate, frm.dates.expiryDate),
                 fitnessdisciplines: frm?.discpline?.length > 0 ? frm.discpline.map((item: any) => item.id).join(", ").split(", ") : [],
                 fitnesspackagepricing: frm.pricing === "free" ? [{mrp: 'free', duration: calculateDuration(frm.dates.publishingDate, frm.dates.expiryDate)}] : JSON.parse(frm.pricing),
@@ -234,7 +236,7 @@ function CreateEditCohort(props: any, ref: any) {
                 expiry_date: moment(frm.expiryDate).toISOString(),
                 level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
                 Intensity: ENUM_FITNESSPACKAGE_INTENSITY[frm.intensity],
-                equipmentList: frm?.equipment?.length > 0 ? frm.equipmentList.split(',') : [],
+                equipmentList: frm?.equipment?.length > 0 ? frm.equipment.map((x: any) => x.id).join(',').split(',') : [],
                 fitnessdisciplines: frm?.discpline?.length > 0 ? frm.discpline.map((item: any) => item.id).join(", ").split(", ") : [],
                 fitnesspackagepricing: frm.pricing === "free" ? [{mrp: 'free', duration: calculateDuration(frm.dates.publishingDate, frm.dates.expiryDate)}] : JSON.parse(frm.pricing),
                 publishing_date: moment(frm.publishingDate).toISOString(),

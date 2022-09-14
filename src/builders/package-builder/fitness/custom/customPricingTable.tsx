@@ -91,7 +91,7 @@ const PricingTable = (props) => {
             suggestedPricings(filters: {
                 fitness_package_type: {
                   type: {
-                    in:["Personal Training", "Classic Class", "Group Class"]
+                    in:["One-On-One", "Classic Class", "Group Class"]
                   }
                 },
                 users_permissions_users:{
@@ -120,7 +120,7 @@ const PricingTable = (props) => {
             filters:{
                 fitness_package_type:{
                 type: {
-                    in:["Personal Training", "Classic Class", "Group Class"]
+                    in:["One-On-One", "Classic Class", "Group Class"]
                 }
                 }
             }
@@ -154,19 +154,19 @@ const PricingTable = (props) => {
           console.log(mode, item, suggestedPricings);
           var ptOnlinePrice: number, ptOfflinePrice: number, groupOnlinePrice: number, groupOfflinePrice: number, classicPrice: number;
           if(mode === 'Online'){
-               ptOnlinePrice = suggestedPricings[suggestedPricings.findIndex((x: any) => x.fitness_package_type.type === 'Personal Training')].mrp * ptOnlineClasses * (duration/30);
+               ptOnlinePrice = suggestedPricings[suggestedPricings.findIndex((x: any) => x.fitness_package_type.type === "One-On-One")].mrp * ptOnlineClasses * (duration/30);
                groupOnlinePrice = suggestedPricings[suggestedPricings.findIndex((x: any) => x.fitness_package_type.type === 'Group Class')].mrp * groupOnlineClasses * (duration/30);
                classicPrice = suggestedPricings[suggestedPricings.findIndex((x: any) => x.fitness_package_type.type === 'Classic Class')].mrp * recorded * (duration/30);
                return ptOnlinePrice + groupOnlinePrice + classicPrice;
           }else if(mode === 'Offline'){
-               ptOfflinePrice = suggestedPricings[suggestedPricings.findIndex((x: any) => x.fitness_package_type.type === 'Personal Training')].mrp * ptOfflineClasses * (duration/30);
+               ptOfflinePrice = suggestedPricings[suggestedPricings.findIndex((x: any) => x.fitness_package_type.type === "One-On-One")].mrp * ptOfflineClasses * (duration/30);
                groupOfflinePrice = suggestedPricings[suggestedPricings.findIndex((x: any) => x.fitness_package_type.type === 'Group Class')].mrp * groupOfflineClasses * (duration/30);
                classicPrice = suggestedPricings[suggestedPricings.findIndex((x: any) => x.fitness_package_type.type === 'Classic Class')].mrp * recorded * (duration/30);
                return ptOfflinePrice + groupOfflinePrice + classicPrice;
           }else if(mode === 'Hybrid'){
-               ptOnlinePrice = suggestedPricings[suggestedPricings.findIndex((x: any) => x.fitness_package_type.type === 'Personal Training' && x.Mode === 'Online')].mrp * ptOnlineClasses * (duration/30);
+               ptOnlinePrice = suggestedPricings[suggestedPricings.findIndex((x: any) => x.fitness_package_type.type === "One-On-One" && x.Mode === 'Online')].mrp * ptOnlineClasses * (duration/30);
                groupOnlinePrice = suggestedPricings[suggestedPricings.findIndex((x: any) => x.fitness_package_type.type === 'Group Class' && x.Mode === 'Online')].mrp * groupOnlineClasses * (duration/30);
-               ptOfflinePrice = suggestedPricings[suggestedPricings.findIndex((x: any) => x.fitness_package_type.type === 'Personal Training' && x.Mode === 'Offline')].mrp * ptOfflineClasses * (duration/30);
+               ptOfflinePrice = suggestedPricings[suggestedPricings.findIndex((x: any) => x.fitness_package_type.type === "One-On-One" && x.Mode === 'Offline')].mrp * ptOfflineClasses * (duration/30);
                groupOfflinePrice = suggestedPricings[suggestedPricings.findIndex((x: any) => x.fitness_package_type.type === 'Group Class' && x.Mode === 'Offline')].mrp * groupOfflineClasses * (duration/30);
                classicPrice = suggestedPricings[suggestedPricings.findIndex((x: any) => x.fitness_package_type.type === 'Classic Class')].mrp * recorded * (duration/30);
                return ptOnlinePrice + groupOnlinePrice + ptOfflinePrice + groupOfflinePrice + classicPrice;
@@ -176,19 +176,19 @@ const PricingTable = (props) => {
     function handleSapienPricingCalculation(mode: string, item: any, sapienPricings: any, duration: number){
           var ptOnlinePrice: number, ptOfflinePrice: number, groupOnlinePrice: number, groupOfflinePrice: number, classicPrice: number;
           if(mode === 'Online'){
-               ptOnlinePrice = sapienPricings[sapienPricings.findIndex((x: any) => x.fitness_package_type.type === 'Personal Training')].mrp * ptOnlineClasses * (duration/30);
+               ptOnlinePrice = sapienPricings[sapienPricings.findIndex((x: any) => x.fitness_package_type.type === "One-On-One")].mrp * ptOnlineClasses * (duration/30);
                const groupOnlinePrice = sapienPricings[sapienPricings.findIndex((x: any) => x.fitness_package_type.type === 'Group Class')].mrp * groupOnlineClasses * (duration/30);
                const classicPrice = sapienPricings[sapienPricings.findIndex((x: any) => x.fitness_package_type.type === 'Classic Class')].mrp * recorded * (duration/30);
                return ptOnlinePrice + groupOnlinePrice + classicPrice;
           }else if(mode === 'Offline'){
-               ptOfflinePrice = sapienPricings[sapienPricings.findIndex((x: any) => x.fitness_package_type.type === 'Personal Training')].mrp * ptOfflineClasses * (duration/30);
+               ptOfflinePrice = sapienPricings[sapienPricings.findIndex((x: any) => x.fitness_package_type.type === "One-On-One")].mrp * ptOfflineClasses * (duration/30);
                groupOfflinePrice = sapienPricings[sapienPricings.findIndex((x: any) => x.fitness_package_type.type === 'Group Class')].mrp * groupOfflineClasses * (duration/30);
                classicPrice = sapienPricings[sapienPricings.findIndex((x: any) => x.fitness_package_type.type === 'Classic Class')].mrp * recorded * (duration/30);
                return ptOfflinePrice + groupOfflinePrice + classicPrice;
           }else if(mode === 'Hybrid'){
-               ptOnlinePrice = sapienPricings[sapienPricings.findIndex((x: any) => x.fitness_package_type.type === 'Personal Training' && x.mode === 'Online')].mrp * ptOnlineClasses * (duration/30);
+               ptOnlinePrice = sapienPricings[sapienPricings.findIndex((x: any) => x.fitness_package_type.type === "One-On-One" && x.mode === 'Online')].mrp * ptOnlineClasses * (duration/30);
                groupOnlinePrice = sapienPricings[sapienPricings.findIndex((x: any) => x.fitness_package_type.type === 'Group Class' && x.mode === 'Online')].mrp * groupOnlineClasses * (duration/30);
-               ptOfflinePrice = sapienPricings[sapienPricings.findIndex((x: any) => x.fitness_package_type.type === 'Personal Training' && x.mode === 'Offline')].mrp * ptOfflineClasses * (duration/30);
+               ptOfflinePrice = sapienPricings[sapienPricings.findIndex((x: any) => x.fitness_package_type.type === "One-On-One" && x.mode === 'Offline')].mrp * ptOfflineClasses * (duration/30);
                groupOfflinePrice = sapienPricings[sapienPricings.findIndex((x: any) => x.fitness_package_type.type === 'Group Class' && x.mode === 'Offline')].mrp * groupOfflineClasses * (duration/30);
                classicPrice = sapienPricings[sapienPricings.findIndex((x: any) => x.fitness_package_type.type === 'Classic Class')].mrp * recorded * (duration/30);
                return ptOnlinePrice + groupOnlinePrice + ptOfflinePrice + groupOfflinePrice + classicPrice;

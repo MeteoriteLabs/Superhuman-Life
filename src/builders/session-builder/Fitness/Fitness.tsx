@@ -14,7 +14,7 @@ export default function Fitness() {
              <Card className="shadow-sm mt-2" border="light">
                 <Card.Body>
                     <Tabs  variant="pills" transition={false} defaultActiveKey="pt">
-                        <Tab eventKey="pt" title="Personal Training">
+                        <Tab eventKey="pt" title="One-On-One">
                             <PT/>
                         </Tab>
                         <Tab eventKey="group" title="Group">

@@ -33,7 +33,7 @@ export default function FitnessTab(props) {
         console.log(id);
         console.log(type);
         switch(type){
-            case 'Personal Training':
+            case 'One-On-One':
                 createEditViewPersonalTrainingRef.current.TriggerForm({id: id, type: actionType, actionType: type, current_status: current_status});
                 break;
             case 'On-Demand PT':
@@ -68,7 +68,7 @@ export default function FitnessTab(props) {
                     {row.original.type === "On-Demand PT" ? <div>
                         <img src='./assets/PTType.svg' alt="GroupType" />
                     </div> : ""}
-                    {row.original.type === "Personal Training" ? <div>
+                    {row.original.type === "One-On-One" ? <div>
                         <img src='./assets/PTType.svg' alt="PTType" />
                     </div> : ""}
                     {row.original.type === "Classic Class" ? <div>
@@ -89,7 +89,7 @@ export default function FitnessTab(props) {
         {
             accessor: "details", Header: "Details",
             Cell: ({ row }: any) => {
-                console.log(row.values)
+                console.log(row.values.details);
                 return <div className='d-flex justify-content-center align-items-center'>
                     {row.values.details[0] !== null && row.values.details[0] !== 0 ?
                         <div className="text-center">
@@ -241,7 +241,7 @@ export default function FitnessTab(props) {
                 </span>
             }>
                 <Dropdown.Item onClick={() => {
-                    handleModalRender( null, 'create','Personal Training');
+                    handleModalRender( null, 'create',"One-On-One");
                 }}>PT Package</Dropdown.Item>
                 <Dropdown.Item onClick={() => {
                     handleModalRender( null, 'create','On-Demand PT');

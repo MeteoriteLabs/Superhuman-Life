@@ -52,7 +52,7 @@ function Movement() {
                     Cell: (row: any) => {
                          return (
                               <>
-                                   {row.value === "Personal Training" ? <img src="/assets/PTtype.svg" alt="PT" /> : ""}
+                                   {row.value === "One-On-One" ? <img src="/assets/PTtype.svg" alt="PT" /> : ""}
                                    {row.value === "Group Class" ? <img src="/assets/Grouptype.svg" alt="Group" /> : ""}
                                    {row.value === "Custom Fitness" ? (
                                         <img src="/assets/Customtype.svg" alt="Custom" />
@@ -271,7 +271,7 @@ function Movement() {
                     <div className="m-1">
                          <Button variant="btn btn-light" size="sm" 
                               onClick={() => {
-                                   createEditViewRef.current.TriggerForm({ id: null, actionType: 'create', type: 'Personal Training' });
+                                   createEditViewRef.current.TriggerForm({ id: null, actionType: 'create', type: "One-On-One" });
                               }}>
                               <i className="fas fa-plus-circle"></i> PT
                          </Button>

@@ -160,7 +160,7 @@ const WorkHours = () => {
   // useQuery(GET_ALL_CLIENT_PACKAGE_BY_TYPE, {
   //   variables: {
   //     id: auth.userid,
-  //     type_in: ["Personal Training", "Group Class", "Custom", "Live Stream Channel", "Cohort"],
+  //     type_in: ["One-On-One", "Group Class", "Custom", "Live Stream Channel", "Cohort"],
   //     date: moment(value).format("YYYY-MM-DD"),
   //   },
   //   onCompleted: (data) => {

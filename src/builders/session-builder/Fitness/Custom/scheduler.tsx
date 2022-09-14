@@ -42,9 +42,9 @@ const Scheduler = () => {
         let total = [0,0,0,0,0];
         const values = [...flattenData.tags[0]?.sessions];
         for(let i = 0; i < values.length; i++){
-            if(values[i].tag === "Personal Training" && values[i].mode === "Online"){
+            if(values[i].tag === "One-On-One" && values[i].mode === "Online"){
                 total[0] += 1;
-            }else if(values[i].tag === "Personal Training" && values[i].mode === "Offline"){
+            }else if(values[i].tag === "One-On-One" && values[i].mode === "Offline"){
                 total[1] += 1;
             }else if(values[i].tag === "Group Class" && values[i].mode === "Online"){
                 total[2] += 1;
@@ -85,7 +85,7 @@ const Scheduler = () => {
         var classic: number = 0;
         if(data){
             for(var i=0; i<data.length; i++){
-                if(data[i].tag === 'Personal Training'){
+                if(data[i].tag === "One-On-One"){
                     if(data[i].mode === 'Online'){
                         ptonline++;
                     }else{

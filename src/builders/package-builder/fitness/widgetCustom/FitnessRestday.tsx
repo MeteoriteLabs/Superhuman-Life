@@ -29,7 +29,7 @@ export default function FitnessRestday(props: any) {
 
 
 
-        if (type === "Personal Training") {
+        if (type === "One-On-One") {
             dayAvailableRef.current = PTProps.properties.duration.value - (PTProps.properties.ptonlineClasses.value + PTProps.properties.ptofflineClasses.value + PTProps.properties.restDay.value);
         }
 

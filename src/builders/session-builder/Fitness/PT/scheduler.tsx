@@ -48,9 +48,9 @@ const Scheduler = () => {
         let total = [0,0,0,0,0];
         const values = [...flattenData.tags[0]?.sessions];
         for(let i = 0; i < values.length; i++){
-            if(values[i].tag === "Personal Training" && values[i].mode === "Online"){
+            if(values[i].tag === "One-On-One" && values[i].mode === "Online"){
                 total[0] += 1;
-            }else if(values[i].tag === "Personal Training" && values[i].mode === "Offline"){
+            }else if(values[i].tag === "One-On-One" && values[i].mode === "Offline"){
                 total[1] += 1;
             }else if(values[i].tag === "Group Class" && values[i].mode === "Online"){
                 total[2] += 1;
@@ -73,7 +73,7 @@ const Scheduler = () => {
     // const { data: data2 } = useQuery(GET_ALL_CLIENT_PACKAGE_BY_TYPE, {
     //     variables: {
     //         id: auth.userid,
-    //         type: 'Personal Training'
+    //         type: "One-On-One"
     //     },
     //     onCompleted: () => console.log()
     // });
@@ -84,7 +84,7 @@ const Scheduler = () => {
     //     var classic: number = 0;
     //     if(data){
     //         for(var i=0; i<data.length; i++){
-    //             if(data[i].tag === 'Personal Training'){
+    //             if(data[i].tag === "One-On-One"){
     //                 if(data[i].mode === 'Online'){
     //                     ptonline++;
     //                 }else{
@@ -310,7 +310,7 @@ const Scheduler = () => {
             <Row>
                 <Col lg={11} className="pl-0 pr-0">
                     <div className="mt-5">
-                        <SchedulerPage type="date" days={tag?.fitnesspackage?.duration} classType={'Personal Training'} restDays={tag?.sessions.filter((ses) => ses.type === "restday")} programId={tagId} startDate={tag?.client_packages[0].effective_date} clientId={tag.client_packages[0].users_permissions_user.id}/>
+                        <SchedulerPage type="date" days={tag?.fitnesspackage?.duration} classType={"One-On-One"} restDays={tag?.sessions.filter((ses) => ses.type === "restday")} programId={tagId} startDate={tag?.client_packages[0].effective_date} clientId={tag.client_packages[0].users_permissions_user.id}/>
                     </div>
                 </Col>
             </Row>

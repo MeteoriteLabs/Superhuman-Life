@@ -88,7 +88,7 @@ const PricingTable = (props) => {
             suggestedPricings(filters: {
                 fitness_package_type: {
                   type: {
-                    eq: "Personal Training"
+                    eq: "One-On-One"
                   }
                 },
                 users_permissions_users:{
@@ -117,7 +117,7 @@ const PricingTable = (props) => {
             filters:{
                 fitness_package_type:{
                 type: {
-                    eq: "Personal Training"
+                    eq: "One-On-One"
                 }
                 }
             }

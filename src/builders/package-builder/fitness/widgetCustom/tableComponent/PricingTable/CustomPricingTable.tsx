@@ -8,7 +8,7 @@ type Props ={
     groupoffline:number,
     recordedclasses:number,
     packageTypeName:string,
-    type: 'Personal Training' | 'Group Class' | 'Custom Fitness' | 'Classic Class';
+    type: "One-On-One" | 'Group Class' | 'Custom Fitness' | 'Classic Class';
     mode: "Online" | "Offline" | "Hybird" | "Workout" | "Online Workout" | "Offline Workout"
 }
 export default function CustomPricingTable({ptonline, ptoffline, grouponline, groupoffline,recordedclasses, packageTypeName, type, mode  }:Props) {
