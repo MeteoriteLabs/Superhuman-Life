@@ -139,12 +139,13 @@ function CreateEditWorkout(props: any, ref: any) {
     if (frm.addWorkout.build) {
       frm.addWorkout.build = JSON.parse(frm.addWorkout.build);
     }
+    frm.discipline = JSON.parse(frm.discipline);
     createWorkout({
       variables: {
         workouttitle: frm.workout,
         intensity: ENUM_WORKOUTS_INTENSITY[frm.intensity],
         level: ENUM_EXERCISES_EXERCISELEVEL[frm.level],
-        fitnessdisciplines: frm.discipline.split(","),
+        fitnessdisciplines: frm.discipline.map((item: any) => { return item.id }).join(',').split(','),
         About: frm.about,
         Benifits: frm.benefits,
         warmup: (frm.addWorkout.AddWorkout === "Build" ? (frm.addWorkout.build.warmup ? frm.addWorkout.build.warmup : null) : null),
@@ -166,13 +167,14 @@ function CreateEditWorkout(props: any, ref: any) {
     if (frm.addWorkout.build) {
       frm.addWorkout.build = JSON.parse(frm.addWorkout.build);
     }
+    frm.discipline = JSON.parse(frm.discipline);
     editWorkout({
       variables: {
         workoutid: operation.id,
         workouttitle: frm.workout,
         intensity: ENUM_WORKOUTS_INTENSITY[frm.intensity],
         level: ENUM_EXERCISES_EXERCISELEVEL[frm.level],
-        fitnessdisciplines: frm.discipline.split(","),
+        fitnessdisciplines: frm.discipline.map((item: any) => { return item.id }).join(',').split(','),
         About: frm.about,
         Benifits: frm.benefits,
         warmup:

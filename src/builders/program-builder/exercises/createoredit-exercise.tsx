@@ -109,12 +109,12 @@ function CreateEditExercise(props: any, ref: any) {
     }
 
     function CreateExercise(frm: any) {
-
+        frm.discipline = JSON.parse(frm.discipline);
         createExercise({
             variables: {
                 exercisename: frm.exercise,
                 exerciselevel: ENUM_EXERCISE_EXERCISELEVEL[frm.level],
-                fitnessdisciplines: frm.discipline.split(","),
+                fitnessdisciplines: frm.discipline.map((item: any) => { return item.id }).join(',').split(','),
                 exerciseminidescription: frm.miniDescription,
                 exercisetext: (!frm.addExercise.AddText ? null : frm.addExercise.AddText),
                 exerciseurl: (!frm.addExercise.AddURL ? null : frm.addExercise.AddURL),
@@ -128,12 +128,13 @@ function CreateEditExercise(props: any, ref: any) {
 
     function EditExercise(frm: any) {
 
+        frm.discipline = JSON.parse(frm.discipline);
         editExercise({
             variables: {
                 exerciseid: operation.id,
                 exercisename: frm.exercise,
                 exerciselevel: ENUM_EXERCISE_EXERCISELEVEL[frm.level],
-                fitnessdisciplines: frm.discipline.split(","),
+                fitnessdisciplines: frm.discipline.map((item: any) => { return item.id }).join(',').split(','),
                 exerciseminidescription: frm.miniDescription,
                 exercisetext: (!frm.addExercise.AddText ? null : frm.addExercise.AddText),
                 exerciseurl: (!frm.addExercise.AddURL ? null : frm.addExercise.AddURL),
