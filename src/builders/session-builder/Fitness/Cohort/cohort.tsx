@@ -243,7 +243,6 @@ export default function Cohort(props) {
                         accessor: "client",
                         Header: "Client",
                         Cell: (row) => {
-                            debugger;
                             console.log(row.value)
                             return <div >
                                 {row.value?.length === undefined ? <p className='text-center mb-0'>N/A</p> :

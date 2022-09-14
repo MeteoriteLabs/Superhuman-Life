@@ -579,7 +579,6 @@ const WorkHours = () => {
 
   function handleAddHoliday(date: any, event: any) {
     const values = availability.find((item: any) => item.date === date);
-    debugger;
     if (values) {
       if (values.booking_slots.length > 0) {
         // set a modal to display the error
@@ -695,7 +694,6 @@ const WorkHours = () => {
 
   function findHolidayIndex(id: any){
     const obj = allChangeMakerHolidays.findIndex((item: any) => moment(item.date).format("YYYY-MM-DD") === moment(id).format("YYYY-MM-DD"));
-    debugger;
     return obj;
   }
 

@@ -298,7 +298,6 @@ function CreateEditView(props: any, ref: any) {
         const packageDetail = flattedData.fitnesspackages[0];
 
         console.log(packageDetail);
-        debugger;
 
         // packageDetails?.equipment_lists = JSON.stringify(packageDetail?.equipment_lists);
 

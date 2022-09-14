@@ -123,7 +123,6 @@ function CreateEditPackage(props: any, ref: any) {
         let booking: any = {};
         let details: any = {};
         console.log(msg);
-        debugger;
         for(var i =0; i<msg.fitnesspackagepricing.length; i++){
             PRICING_TABLE_DEFAULT[i].mrp = msg.fitnesspackagepricing[i].mrp;
             PRICING_TABLE_DEFAULT[i].suggestedPrice = msg.fitnesspackagepricing[i].suggestedPrice;

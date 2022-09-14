@@ -94,7 +94,6 @@ function CreateEditChannel(props: any, ref: any) {
         let booking: any = {};
         let details: any = {};
         console.log(msg);
-        debugger;
         if(msg.groupinstantbooking){
             for(var i =0; i<msg.fitnesspackagepricing.length; i++){
                 PRICING_TABLE_DEFAULT_WITH_INSTANTBOOKING[i].mrp = msg.fitnesspackagepricing[i].mrp;

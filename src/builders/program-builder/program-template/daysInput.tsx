@@ -8,7 +8,6 @@ const DaysInput = (props: any) => {
      console.log(props);
 
      function handleReturnType(value: any){
-          debugger;
           console.log(value.length);
           if(typeof value === 'number'){
                return [`Day - ${value}`];

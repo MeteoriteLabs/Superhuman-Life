@@ -111,7 +111,6 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
         // get dicount vouchers from vouchers collection.
         let updatePrice = [...arraySapient];
         if (actionType === "edit") {
-            debugger;
             console.log(userData);
             if (userData.fitnesspackagepricing) {
                 const arrayVoucher = userData.fitnesspackagepricing.map(item => item.voucher);
@@ -177,7 +176,6 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
     //custom
     const customSuggestPrice = (data) => {
 
-        debugger;
         console.log(data);
 
         const arrayCustomPrice: number[] = []

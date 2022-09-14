@@ -31,6 +31,7 @@ export default function FitnessTab(props) {
 
     function handleModalRender(id: string | null, actionType: string, type: string, current_status?: boolean){
         console.log(id);
+        console.log(type);
         switch(type){
             case 'Personal Training':
                 createEditViewPersonalTrainingRef.current.TriggerForm({id: id, type: actionType, actionType: type, current_status: current_status});
@@ -276,7 +277,7 @@ export default function FitnessTab(props) {
                 </Button>
                 <Button className='mx-3' variant={true ? "outline-secondary" : "light"} size="sm"
                     onClick={() => {
-                        handleModalRender( null, 'create','Cohort');
+                        handleModalRender( null, 'create', 'Cohort');
                     }}
                 >
                     <i className="fas fa-plus-circle"></i>{" "}Cohort

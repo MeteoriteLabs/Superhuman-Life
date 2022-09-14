@@ -82,7 +82,9 @@ function CreateEditPt(props: any, ref: any) {
             setOperation(msg);
 
             // if (msg && !msg.id) //render form if no message id
+            if(operation.type !== 'delete'){
                 modalTrigger.next(true);
+            }
         }
     }));
 
@@ -176,7 +178,6 @@ function CreateEditPt(props: any, ref: any) {
 
     function CreatePackage(frm: any) {
         console.log(frm);
-        debugger;
         frmDetails = frm;
         frm.equipmentList = frm.equipmentList.split(',');
         frm.disciplines = JSON.parse(frm.disciplines).map((x: any) => x.id).join(', ').split(', ');

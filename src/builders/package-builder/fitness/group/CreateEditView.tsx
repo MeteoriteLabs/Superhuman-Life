@@ -189,7 +189,6 @@ function CreateEditPackage(props: any, ref: any) {
 
     function CreatePackage(frm: any) {
         frmDetails = frm;
-        debugger;
         frm.equipmentList = frm.equipmentList.split(',');
         frm.disciplines = JSON.parse(frm.disciplines).map((x: any) => x.id).join(',').split(',');
         frm.programDetails = JSON.parse(frm.programDetails)

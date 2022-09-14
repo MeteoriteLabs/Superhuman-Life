@@ -39,7 +39,6 @@ function CreateEditCohort(props: any, ref: any) {
     const [CreateCohortPackage] = useMutation(CREATE_CHANNEL_PACKAGE, { onCompleted: (r: any) => { 
         console.log(r);
         console.log(frmDetails);
-        debugger;
         bookingConfig({
             variables: {
                 isAuto: frmDetails.config.acceptBooking === 0 ? false : true,
@@ -152,7 +151,6 @@ function CreateEditCohort(props: any, ref: any) {
     }
 
     function findPackageType(creationType: any){
-        debugger;
         const foundType = fitnessPackageTypes.find((item: any) => item.type === creationType);
         return foundType.id;
     }
@@ -168,7 +166,6 @@ function CreateEditCohort(props: any, ref: any) {
 
     function createCohort(frm: any) {
         console.log(frm);
-        debugger;
         frmDetails = frm;
         frm.programDetails = JSON.parse(frm.programDetails)
         frm.languages = JSON.parse(frm.languages)
