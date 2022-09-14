@@ -82,7 +82,7 @@ function CreateEditPt(props: any, ref: any) {
             setOperation(msg);
 
             // if (msg && !msg.id) //render form if no message id
-            if(msg.type !== 'delete'){
+            if(msg.type !== 'delete' && msg.type !== 'toggle-status'){
                 modalTrigger.next(true);
             }
         }
@@ -199,7 +199,7 @@ function CreateEditPt(props: any, ref: any) {
                 ptoffline: frm.programDetails?.offline,
                 ptonline: frm.programDetails?.online,
                 restdays: frm.programDetails?.rest,
-                bookingleadday: frm.bookingleaddat,
+                bookingleadday: frm.bookingleadday,
                 is_private: frm.visibility === 1 ? true : false,
                 fitness_package_type: fitnessTypes[0].id,
                 fitnesspackagepricing: JSON.parse(frm.pricingDetail).filter((item: any) => item.mrp !== null),
@@ -239,7 +239,7 @@ function CreateEditPt(props: any, ref: any) {
                 is_private: frm.visibility === 1 ? true : false,
                 ptonline: frm.programDetails?.online,
                 restdays: frm.programDetails?.rest,
-                bookingleadday: frm.bookingleaddat,
+                bookingleadday: frm.bookingleadday,
                 fitness_package_type: fitnessTypes[0].id,
                 fitnesspackagepricing: JSON.parse(frm.pricingDetail).filter((item: any) => item.mrp !== null),
                 ptclasssize: ENUM_FITNESSPACKAGE_PTCLASSSIZE[frm.classSize],

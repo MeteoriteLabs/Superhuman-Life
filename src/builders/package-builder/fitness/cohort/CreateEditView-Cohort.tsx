@@ -66,7 +66,7 @@ function CreateEditCohort(props: any, ref: any) {
             schema.duration = props.duration;
 
             // if (msg && !msg.id) //render form if no message id
-            if(msg.type !== 'delete'){
+            if(msg.type !== 'delete' && msg.type !== 'toggle-status'){
                 modalTrigger.next(true);
             }
         }

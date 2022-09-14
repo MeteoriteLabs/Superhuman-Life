@@ -285,7 +285,7 @@ const PricingTable = (props) => {
                     <td><b>Suggested</b></td>
                     {pricing.map((item, index) => {
                         return (
-                            <td>₹ {item.suggestedPrice}</td>
+                            <td >{isNaN(item.suggestedPrice)  ? 'Base Price Not Set' : `₹ ${item.suggestedPrice}`}</td>
                         )
                     })}
                     </tr>

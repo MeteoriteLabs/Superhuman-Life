@@ -82,7 +82,7 @@ function CreateEditPackage(props: any, ref: any) {
             setOperation(msg);
 
             // if (msg && !msg.id) //render form if no message id
-            if(msg.type !== 'delete'){
+            if(msg.type !== 'delete' && msg.type !== 'toggle-status'){
                 modalTrigger.next(true);
             }
         }

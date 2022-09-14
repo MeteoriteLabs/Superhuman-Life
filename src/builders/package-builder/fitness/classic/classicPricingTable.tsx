@@ -232,7 +232,7 @@ const PricingTable = (props) => {
                     </tr>
                     <tr className='text-center'>
                     <td><b>Suggested</b></td>
-                    <td>₹ {pricing[0].suggestedPrice}</td>
+                    <td>{isNaN(pricing[0].suggestedPrice)  ? 'Base Price Not Set' : `₹ ${pricing[0].suggestedPrice}`}</td>
                     </tr>
                     <tr>
                     <td className='text-center'><b>Set MRP</b></td>
