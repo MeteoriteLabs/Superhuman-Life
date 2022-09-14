@@ -80,7 +80,9 @@ function CreateEditOnDemadPt(props: any, ref: any) {
             setOperation(msg);
 
             // if (msg && !msg.id) //render form if no message id
+            if(msg.type !== 'delete' && msg.type !== 'toggle-status'){
                 modalTrigger.next(true);
+            }
         }
     }));
 
@@ -174,7 +176,7 @@ function CreateEditOnDemadPt(props: any, ref: any) {
 
     function CreatePackage(frm: any) {
         frmDetails = frm;
-        frm.equipmentList = frm.equipmentList.split(',');
+        frm.equipmentList = JSON.parse(frm.equipmentList).map((x: any) => x.id).join(',').split(',');
         frm.disciplines = JSON.parse(frm.disciplines).map((x: any) => x.id).join(', ').split(', ');
         frm.programDetails = JSON.parse(frm.programDetails)
         frm.datesConfig = JSON.parse(frm.datesConfig)
@@ -213,7 +215,7 @@ function CreateEditOnDemadPt(props: any, ref: any) {
     function EditPackage(frm: any) {
         frmDetails = frm;
         console.log('edit message', frm);
-        frm.equipmentList = frm.equipmentList.split(',');
+        frm.equipmentList = JSON.parse(frm.equipmentList).map((x: any) => x.id).join(',').split(',');
         frm.disciplines = JSON.parse(frm.disciplines).map((x: any) => x.id).join(', ').split(', ');
         frm.programDetails = JSON.parse(frm.programDetails)
         frm.datesConfig = JSON.parse(frm.datesConfig)

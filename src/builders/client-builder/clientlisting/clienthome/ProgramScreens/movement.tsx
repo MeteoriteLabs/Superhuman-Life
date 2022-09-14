@@ -43,7 +43,7 @@ function Movement() {
                               Cell: (row: any) => {
                                    return (
                                         <>
-                                             {row.value === "Personal Training" ? (
+                                             {row.value === "One-On-One" ? (
                                                   <img src="/assets/PTtype.svg" alt="PT" />
                                              ) : (
                                                   ""

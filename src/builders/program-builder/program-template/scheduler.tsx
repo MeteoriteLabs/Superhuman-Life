@@ -1336,7 +1336,7 @@ const Schedular = (props: any) => {
                             </Col>
                             <Col lg={4}>
                                 <Form.Control value={tag === "" ? event.tag : tag} disabled={props.classType === 'Custom' ? false : true} as="select" onChange={(e) => {setTag(e.target.value)}}>
-                                    <option value="Personal Training">Personal Training</option>
+                                    <option value="One-On-One">Personal Training</option>
                                     <option value="Group Class">Group Class</option>
                                     <option value="Classic">Classic</option>
                                 </Form.Control>

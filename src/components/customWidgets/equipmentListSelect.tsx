@@ -7,8 +7,18 @@ import { flattenObj } from '../utils/responseFlatten';
 
 const MultiSelect = (props: any) => {
 
+     console.log(props);
+
+     function handleReturnType(value){
+          if(typeof value === 'string'){
+               return JSON.parse(value);
+          }else {
+               return value;
+          }
+     }
+
      const [multiSelections, setMultiSelections] = useState<any[]>(
-          props.value?.length > 0 ? props.value : []
+          props.value?.length > 0 ? handleReturnType(props.value) : []
         );
         const [equipmentList, setEquipmentList] = useState<any[]>([]);
 
@@ -30,12 +40,16 @@ const MultiSelect = (props: any) => {
 
      function OnChange(e) {
           setMultiSelections(e);
-        }
+     }
       
-     props.onChange(multiSelections?.map((d) => {
-          return d.id;
-          }).join(",").toString()
-     );
+     // if(multiSelections.length > 0){
+     //      props.onChange(multiSelections?.map((d) => {
+     //           return d.id;
+     //           }).join(",").toString()
+     //      );
+     // }
+
+     props.onChange(JSON.stringify(multiSelections));
 
     FetchData();
 

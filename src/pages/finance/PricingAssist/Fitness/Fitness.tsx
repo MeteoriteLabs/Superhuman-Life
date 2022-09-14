@@ -48,9 +48,9 @@ export default function Fitness() {
     // }
 
     const loadData = (data) => {
-        const personalTrainingOnline = data.suggestedPricings.data.filter(item => item.attributes.fitness_package_type.data.attributes.type === "Personal Training" && item.attributes.Mode === "Online");
+        const personalTrainingOnline = data.suggestedPricings.data.filter(item => item.attributes.fitness_package_type.data.attributes.type === "One-On-One" && item.attributes.Mode === "Online");
 
-        const personalTrainingOffline = data.suggestedPricings.data.filter(item => item.attributes.fitness_package_type.data.attributes.type === "Personal Training" && item.attributes.Mode === "Offline");
+        const personalTrainingOffline = data.suggestedPricings.data.filter(item => item.attributes.fitness_package_type.data.attributes.type === "One-On-One" && item.attributes.Mode === "Offline");
 
         const groupOnline = data.suggestedPricings.data.filter(item => item.attributes.fitness_package_type.data.attributes.type === "Group Class" && item.attributes.Mode === "Online");
 
@@ -68,8 +68,8 @@ export default function Fitness() {
             [
                 {
                     id: personalTrainingOnline.length === 0 ? "" : personalTrainingOnline[0].id,
-                    packageTypeID:data2.fitnessPackageTypes.data.filter(item =>item.attributes.type === "Personal Training").map(item =>item.id),
-                    type: "Personal Training",
+                    packageTypeID:data2.fitnessPackageTypes.data.filter(item =>item.attributes.type === "One-On-One").map(item =>item.id),
+                    type: "One-On-One",
                     duration: 1,
                     mode: "Online",
                     mrp: personalTrainingOnline.length === 0 ? "--" : personalTrainingOnline[0].attributes.mrp,
@@ -77,8 +77,8 @@ export default function Fitness() {
                 },
                 {
                     id: personalTrainingOffline.length === 0 ? "" : personalTrainingOffline[0].id,
-                    packageTypeID:data2.fitnessPackageTypes.data.filter(item =>item.attributes.type === "Personal Training").map(item =>item.id),
-                    type: "Personal Training",
+                    packageTypeID:data2.fitnessPackageTypes.data.filter(item =>item.attributes.type === "One-On-One").map(item =>item.id),
+                    type: "One-On-One",
                     duration: 1,
                     mode: "Offline",
                     mrp: personalTrainingOffline.length === 0 ? "--" : personalTrainingOffline[0].attributes.mrp,
@@ -157,7 +157,7 @@ export default function Fitness() {
                     let name = '';
                     switch (row.original.mode) {
                         case "Online": {
-                            if (row.original.type === "Personal Training") {
+                            if (row.original.type === "One-On-One") {
                                 type = "custompersonal-training-Online.svg";
                                 name = "PT";
                             } else if (row.original.type === "Group Class") {
@@ -171,7 +171,7 @@ export default function Fitness() {
                         }
 
                         case "Offline": {
-                            if (row.original.type === "Personal Training") {
+                            if (row.original.type === "One-On-One") {
                                 type = "custompersonal-training-Offline.svg";
                                 name = "PT";
                             } else if (row.original.type === "Group Class") {

@@ -139,7 +139,7 @@ const Roster = () => {
     });
 
     function handleIconRender(tag: any, mode: any) {
-        if (tag === 'Personal Training') {
+        if (tag === "One-On-One") {
             if (mode === 'Online') {
                 return <img src="/assets/PTonline.svg" alt="pt_online" />
             } else {

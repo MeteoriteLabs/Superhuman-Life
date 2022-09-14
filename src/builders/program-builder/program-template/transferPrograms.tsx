@@ -54,8 +54,6 @@ const TransferPrograms = (props: any) => {
      function handleTransferEventsSubmit() {
           // var allEvents: any[] = [...existingEvents[0].events];
           const eventsJson: any[] = [];
-          console.log(data);
-          debugger;
           data.forEach((e: any) => {
                const oldData = existingEvents[0].events.find((val: any) => val.id === e.id);
                if (e.day && e.startTime && (oldData.start_time !== e.startTime)) {

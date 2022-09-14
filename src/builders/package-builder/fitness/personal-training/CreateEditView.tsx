@@ -32,7 +32,7 @@ function CreateEditPt(props: any, ref: any) {
     console.log(operation.type);
 
     useQuery(GET_FITNESS_PACKAGE_TYPES, {
-        variables: {type: "Personal Training"},
+        variables: {type: "One-On-One"},
         onCompleted: (r: any) => {
             const flattenData = flattenObj({...r});
             setFitnessType(flattenData.fitnessPackageTypes);
@@ -82,7 +82,9 @@ function CreateEditPt(props: any, ref: any) {
             setOperation(msg);
 
             // if (msg && !msg.id) //render form if no message id
+            if(msg.type !== 'delete' && msg.type !== 'toggle-status'){
                 modalTrigger.next(true);
+            }
         }
     }));
 
@@ -176,9 +178,8 @@ function CreateEditPt(props: any, ref: any) {
 
     function CreatePackage(frm: any) {
         console.log(frm);
-        debugger;
         frmDetails = frm;
-        frm.equipmentList = frm.equipmentList.split(',');
+        frm.equipmentList = JSON.parse(frm.equipmentList).map((x: any) => x.id).join(',').split(',');
         frm.disciplines = JSON.parse(frm.disciplines).map((x: any) => x.id).join(', ').split(', ');
         frm.programDetails = JSON.parse(frm.programDetails)
         frm.datesConfig = JSON.parse(frm.datesConfig)
@@ -198,7 +199,7 @@ function CreateEditPt(props: any, ref: any) {
                 ptoffline: frm.programDetails?.offline,
                 ptonline: frm.programDetails?.online,
                 restdays: frm.programDetails?.rest,
-                bookingleadday: frm.bookingleaddat,
+                bookingleadday: frm.bookingleadday,
                 is_private: frm.visibility === 1 ? true : false,
                 fitness_package_type: fitnessTypes[0].id,
                 fitnesspackagepricing: JSON.parse(frm.pricingDetail).filter((item: any) => item.mrp !== null),
@@ -217,7 +218,7 @@ function CreateEditPt(props: any, ref: any) {
     function EditPackage(frm: any) {
         frmDetails = frm;
         console.log('edit message', frm);
-        frm.equipmentList = frm.equipmentList.split(',');
+        frm.equipmentList = JSON.parse(frm.equipmentList).map((x: any) => x.id).join(',').split(',');
         frm.disciplines = JSON.parse(frm.disciplines).map((x: any) => x.id).join(', ').split(', ');
         frm.programDetails = JSON.parse(frm.programDetails)
         frm.datesConfig = JSON.parse(frm.datesConfig)
@@ -238,7 +239,7 @@ function CreateEditPt(props: any, ref: any) {
                 is_private: frm.visibility === 1 ? true : false,
                 ptonline: frm.programDetails?.online,
                 restdays: frm.programDetails?.rest,
-                bookingleadday: frm.bookingleaddat,
+                bookingleadday: frm.bookingleadday,
                 fitness_package_type: fitnessTypes[0].id,
                 fitnesspackagepricing: JSON.parse(frm.pricingDetail).filter((item: any) => item.mrp !== null),
                 ptclasssize: ENUM_FITNESSPACKAGE_PTCLASSSIZE[frm.classSize],

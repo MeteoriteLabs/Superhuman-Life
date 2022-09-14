@@ -17,7 +17,7 @@ const ClassTypeSelect = (props: any) => {
 
     useEffect(() => {
         if(urlList[1] === "pt") {
-            setSelectedFitnessPackage('Personal Training');
+            setSelectedFitnessPackage("One-On-One");
         }else if(urlList[1] === "group") {
             setSelectedFitnessPackage('Group Class');
         }else if(urlList[1] === "Classic") {

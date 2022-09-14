@@ -122,7 +122,6 @@ export default function MRP(props) {
 
 
     const handleChange = (e, index) => {
-        debugger
         e.preventDefault();
 
         const valid = handleValidationError(e, index)

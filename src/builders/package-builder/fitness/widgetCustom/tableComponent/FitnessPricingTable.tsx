@@ -23,7 +23,7 @@ type FitnessPricing = {
 
 // interface UserData{
 //     mode: "Online" | "Offline" | "Hybird" | "Workout"
-//     type: 'Personal Training' | 'Group Class' | 'Custom Fitness' | 'Classic Class';
+//     type: "One-On-One" | 'Group Class' | 'Custom Fitness' | 'Classic Class';
 
 // }
 
@@ -111,7 +111,6 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
         // get dicount vouchers from vouchers collection.
         let updatePrice = [...arraySapient];
         if (actionType === "edit") {
-            debugger;
             console.log(userData);
             if (userData.fitnesspackagepricing) {
                 const arrayVoucher = userData.fitnesspackagepricing.map(item => item.voucher);
@@ -145,7 +144,7 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
 
     // PT
     const PTSuggestedPricing = (data:any) => {
-        const arrayPTdata = data.sapienPricings.filter((item: { fitness_package_type: { type: "Personal Training" | "Group Class" | "Classic Class"; }; }) => item.fitness_package_type.type === "Personal Training");
+        const arrayPTdata = data.sapienPricings.filter((item: { fitness_package_type: { type: "One-On-One" | "Group Class" | "Classic Class"; }; }) => item.fitness_package_type.type === "One-On-One");
         const arrayPTClasses = [ptonline, ptoffline];
         const sapientPrice = calculateSuggestPrice(arrayPTdata, arrayPTClasses);
 
@@ -156,7 +155,7 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
 
 
     const groupSuggestedPricing = (data: { sapienPricings: any[]; }) => {
-        const arrayGroupData = data.sapienPricings.filter((item: { fitness_package_type: { type: "Personal Training" | "Group Class" | "Classic Class"; }; }) => item.fitness_package_type.type === "Group Class");
+        const arrayGroupData = data.sapienPricings.filter((item: { fitness_package_type: { type: "One-On-One" | "Group Class" | "Classic Class"; }; }) => item.fitness_package_type.type === "Group Class");
         const arrayGroupClasses = [grouponline, groupoffline];
         const sapientPrice = calculateSuggestPrice(arrayGroupData, arrayGroupClasses);
 
@@ -166,7 +165,7 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
 
 
     const classicSuggestPricing = (data: { sapienPricings: any[]; }) => {
-        const arrayClassicData = data.sapienPricings.filter((item: { fitness_package_type: { type: "Personal Training" | "Group Class" | "Classic Class"; }; }) => item.fitness_package_type.type === "Classic Class");
+        const arrayClassicData = data.sapienPricings.filter((item: { fitness_package_type: { type: "One-On-One" | "Group Class" | "Classic Class"; }; }) => item.fitness_package_type.type === "Classic Class");
         const arrayClassic = [recordedclasses];
         const sapientPrice = calculateSuggestPrice(arrayClassicData, arrayClassic);
 
@@ -177,15 +176,14 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
     //custom
     const customSuggestPrice = (data) => {
 
-        debugger;
         console.log(data);
 
         const arrayCustomPrice: number[] = []
-        const arrayPTdata = data.sapienPricings.filter((item: { fitness_package_type: { type: "Personal Training" | "Group Class" | "Classic Class"; }; }) => item.fitness_package_type.type === "Personal Training");
+        const arrayPTdata = data.sapienPricings.filter((item: { fitness_package_type: { type: "One-On-One" | "Group Class" | "Classic Class"; }; }) => item.fitness_package_type.type === "One-On-One");
 
-        const arrayGroupData = data.sapienPricings.filter((item: { fitness_package_type: { type: "Personal Training" | "Group Class" | "Classic Class"; }; }) => item.fitness_package_type.type === "Group Class");
+        const arrayGroupData = data.sapienPricings.filter((item: { fitness_package_type: { type: "One-On-One" | "Group Class" | "Classic Class"; }; }) => item.fitness_package_type.type === "Group Class");
 
-        const arrayClassicData = data.sapienPricings.filter((item: { fitness_package_type: { type: "Personal Training" | "Group Class" | "Classic Class"; }; }) => item.fitness_package_type.type === "Classic Class");
+        const arrayClassicData = data.sapienPricings.filter((item: { fitness_package_type: { type: "One-On-One" | "Group Class" | "Classic Class"; }; }) => item.fitness_package_type.type === "Classic Class");
 
 
         for (let i = 0; i < arrayPTdata.length; i++) {
@@ -219,7 +217,7 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
         const flattenedData = flattenObj({...data});
         console.log("🚀 ~ file: FitnessPricingTable.tsx ~ line 211 ~ fetchData ~ flattenedData", flattenedData)
         console.log(fitness_package_type);
-        if (fitness_package_type === "Personal Training") {
+        if (fitness_package_type === "One-On-One") {
             PTSuggestedPricing(flattenedData)
         }
         //  group
@@ -276,7 +274,7 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
 
 
     useEffect(() => {
-        if (type === "Personal Training") {
+        if (type === "One-On-One") {
             setOnlineClassesType(ptonline);
             setOffineClassesType(ptoffline)
         } else if (type === "Group Class") {

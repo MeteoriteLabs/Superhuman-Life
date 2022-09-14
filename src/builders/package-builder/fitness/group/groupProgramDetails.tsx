@@ -213,7 +213,7 @@ const GroupProgramDetails = (props) => {
           </div>
           {mode !== "" && (mode === "0" || mode === "2") && <Row>
                <Col lg={1}>
-                    <img src='/assets/personal-training-online.svg' alt='personal-training'/>
+                    <img src='/assets/Group-Online.svg' alt='personal-training'/>
                </Col>
                <Col lg={2}>
                     <InputGroup className="mb-3">
@@ -232,7 +232,7 @@ const GroupProgramDetails = (props) => {
           </Row>}
           {mode !== "" && (mode === "1" || mode === "2") && <Row>
                <Col lg={1}>
-                    <img src='/assets/personal-training-offline.svg' alt='personal-training'/>
+                    <img src='/assets/Group-Offline.svg' alt='personal-training'/>
                </Col>
                <Col lg={2}>
                     <InputGroup className="mb-3">

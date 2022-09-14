@@ -6,7 +6,7 @@ import ProgramDetails from './programDetails';
 import CourseDetails from './course_details';
 import Upload from '../../../../components/upload/upload';
 import DatesConfig from '../../../../components/customWidgets/datesConfig';
-import FitnessSelect from '../../../../components/customWidgets/fitnessSelect';
+import FitnessSelect from '../../../../components/customWidgets/fitnessMultiSelect';
 import EquipmentSelect from '../../../../components/customWidgets/equipmentListSelect';
 
 export const widgets = {

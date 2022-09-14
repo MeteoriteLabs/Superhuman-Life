@@ -68,7 +68,9 @@ function CreateEditChannel(props: any, ref: any) {
             schema.duration = props.duration;
 
             // if (msg && !msg.id) //render form if no message id
+            if(msg.type !== 'delete' && msg.type !== 'toggle-status'){
                 modalTrigger.next(true);
+            }
         }
     }));
 
@@ -94,7 +96,6 @@ function CreateEditChannel(props: any, ref: any) {
         let booking: any = {};
         let details: any = {};
         console.log(msg);
-        debugger;
         if(msg.groupinstantbooking){
             for(var i =0; i<msg.fitnesspackagepricing.length; i++){
                 PRICING_TABLE_DEFAULT_WITH_INSTANTBOOKING[i].mrp = msg.fitnesspackagepricing[i].mrp;
@@ -179,7 +180,7 @@ function CreateEditChannel(props: any, ref: any) {
                 expiry_date: moment(frm.datesConfig?.expiryDate).toISOString(),
                 level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
                 Intensity: ENUM_FITNESSPACKAGE_INTENSITY[frm.intensity],
-                equipmentList: frm?.equipment?.length > 0 ? frm.equipmentList.split(',') : [],
+                equipmentList: frm?.equipment?.length > 0 ? frm.equipment.map((item: any) => item.id).join(", ").split(", ") : [],
                 fitnessdisciplines: frm?.discpline?.length > 0 ? frm.discpline.map((item: any) => item.id).join(", ").split(", ") : [],
                 fitnesspackagepricing: frm.pricing === "free" ? [{mrp: 'free'}] : JSON.parse(frm.pricing).filter((item: any) => item.mrp !== null),
                 publishing_date: moment(frm.datesConfig?.publishingDate).toISOString(),

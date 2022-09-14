@@ -71,13 +71,13 @@ export default function ModalView({
     <>
       <Modal size="xl" show={show} onHide={() => setShow(false)} centered>
         <Modal.Header closeButton>
-          <Modal.Title as={Row}>
+          <Modal.Title as={Row} className="w-100">
             <Col xs={12} md={12} lg={12}>
               <p className="lead">{name}</p>
             </Col>
             {isStepper &&
               stepper.map((item: string, id: number) => (
-                <Col xs={2} md={2} lg={5} key={id}>
+                <Col xs={2} md={2} lg={2} key={id}>
                   <ProgressBar
                     max={1}
                     now={step - (id + 1)}

@@ -146,6 +146,7 @@ const PricingTable = (props) => {
     function loadData(data){
         const flattenData = flattenObj({...data});
         const newValue = [...pricing];
+        console.log(flattenData);
         newValue.forEach((item, index) => {
             if(item.voucher !== 0 && item.price !== null){
                 item.suggestedPrice = parseInt(((item.sapienPricing * 100) / (100 - item.voucher)).toFixed(2))
@@ -201,6 +202,8 @@ const PricingTable = (props) => {
 
     FetchData();
 
+    console.log(pricing);
+
     return(
         <>
             <div>
@@ -254,7 +257,7 @@ const PricingTable = (props) => {
                     <td><b>Suggested</b></td>
                     {pricing.map((item, index) => {
                         return (
-                            <td>₹ {item.suggestedPrice}</td>
+                            <td>{isNaN(item.suggestedPrice)  ? 'Base Price Not Set' : `₹ ${item.suggestedPrice}`}</td>
                         )
                     })}
                     </tr>
