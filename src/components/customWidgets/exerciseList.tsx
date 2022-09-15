@@ -12,7 +12,7 @@ const ExerciseList = (props: any) => {
      const auth = useContext(AuthContext);
      const [exerciseList, setExerciseList] = useState<any[]>([]);
      const [searchInput, setSearchInput] = useState(null);
-     const [selected, setSelected] = useState<any[]>(props?.value[0]?.type === "exercise" ? props.value : []);
+     const [selected, setSelected] = useState<any[]>([]);
      const inputField = useRef<any>();
      let skipval: Boolean = true;
 
