@@ -181,7 +181,7 @@
                             "Manual",
                             "Auto"
                         ],
-                        "description": "In auto it will automatically accept all bookings"
+                        "description": "Public: The Offering will be visible to the user as soon as it is created, Private: The offering will be save as draft and wait for you to publish it."
                     },
                     "maxBookingMonth": {
                         "type": "number",

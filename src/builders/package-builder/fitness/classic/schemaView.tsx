@@ -5,6 +5,8 @@ import EquipmentSelect from '../../../../components/customWidgets/equipmentListS
 import ClassicProgramDetails from './classicProgramDetails';
 import ClassicPricingTable from './classicPricingTable';
 import ClassicPreview from './classicPreview';
+import LanguageSelect from '../../../../components/customWidgets/languageSelect';
+import ClassicBookingConfig from './bookingConfig';
 
 export const widgets = {
      datesConfig: DatesConfig,
@@ -13,6 +15,8 @@ export const widgets = {
      classicProgramDetails: ClassicProgramDetails,
      classPricingTable: ClassicPricingTable,
      classicPreview: ClassicPreview,
+     classicBookingConfig: ClassicBookingConfig,
+     classicLanguageSelect: LanguageSelect,
 }
 
 export const schemaView: any = {
@@ -112,19 +116,14 @@ export const schemaView: any = {
           "ui:widget": "datesConfig",
           "ui:readonly": true
      },
+     "languages": {
+          "ui:widget": "classicLanguageSelect",
+          "ui:readonly": true
+     },
      "config": {
-          "acceptBooking": {
-              "ui:widget": "radio",
-              "ui:options": {
-                  "inline": true
-              },
-              "ui:readonly": true,
-          },
-          "maxBookingMonth": {
-               "ui:readonly": true
-          },
-          "maxBookingDay": {
-               "ui:readonly": true
+          "bookingConfig": {
+              "ui:widget": "classicBookingConfig",
+              "readonly": true
           }
      },
 }

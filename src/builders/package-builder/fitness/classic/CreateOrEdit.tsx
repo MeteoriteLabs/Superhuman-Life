@@ -2,7 +2,7 @@ import React, { useContext, useImperativeHandle, useState, useEffect } from 'rea
 import { useQuery, useMutation } from "@apollo/client";
 import ModalView from "../../../../components/modal";
 import { GET_SINGLE_PACKAGE_BY_ID, GET_FITNESS_PACKAGE_TYPES, ADD_SUGGESTION_NEW } from '../graphQL/queries';
-import { CREATE_PACKAGE, DELETE_PACKAGE, EDIT_PACKAGE, UPDATE_PACKAGE_STATUS, CREATE_BOOKING_CONFIG } from '../graphQL/mutations';
+import { CREATE_PACKAGE, DELETE_PACKAGE, EDIT_PACKAGE, UPDATE_PACKAGE_STATUS, CREATE_BOOKING_CONFIG, UPDATE_BOOKING_CONFIG } from '../graphQL/mutations';
 import { Modal, Button} from 'react-bootstrap';
 import AuthContext from "../../../../context/auth-context";
 // import StatusModal from "../../../../components/StatusModal/exerciseStatusModal";
@@ -48,6 +48,10 @@ function CreateEditPackage(props: any, ref: any) {
         props.callback();
     }});
 
+    const [updateBookingConfig] = useMutation(UPDATE_BOOKING_CONFIG, {onCompleted: (r: any) => {
+        console.log(r); modalTrigger.next(false); props.callback();
+    }});
+
     const [createPackage] = useMutation(CREATE_PACKAGE, { onCompleted: (r: any) => { 
         // modalTrigger.next(false); props.callback();
         if(window.location.href.split('/')[3] === 'client'){
@@ -58,17 +62,28 @@ function CreateEditPackage(props: any, ref: any) {
                 }
             })
         }else {
+            const val = JSON.parse(frmDetails.config.bookingConfig);
             bookingConfig({
                 variables: {
-                    isAuto: frmDetails.config.acceptBooking === 0 ? false : true,
+                    isAuto: val.config === "Auto" ? true : false,
                     id: r.createFitnesspackage.data.id,
-                    bookings_per_day: frmDetails.config.maxBookingDay,
-                    bookings_per_month: frmDetails.config.maxBookingMonth,
+                    bookings_per_day: val.bookings,
+                    is_Fillmyslots: val.fillSchedule
                 }
             });
         }
     }});
-    const [editPackage] = useMutation(EDIT_PACKAGE,{onCompleted: (r: any) => { modalTrigger.next(false); props.callback(); } });
+    const [editPackage] = useMutation(EDIT_PACKAGE,{onCompleted: (r: any) => { 
+        const val = JSON.parse(frmDetails.config.bookingConfig);
+        updateBookingConfig({
+            variables: {
+                isAuto: val.config === "Auto" ? true : false,
+                id: frmDetails.bookingConfigId,
+                bookings_per_day: val.bookings,
+                is_Fillmyslots: val.fillSchedule
+            }
+        });
+    }});
 
     const [updatePackageStatus] = useMutation(UPDATE_PACKAGE_STATUS, {onCompleted: (data) => {
         props.callback();
@@ -93,7 +108,8 @@ function CreateEditPackage(props: any, ref: any) {
     enum ENUM_FITNESSPACKAGE_LEVEL {
         Beginner,
         Intermediate,
-        Advanced
+        Advanced,
+        No_Level
     }
     enum ENUM_FITNESSPACKAGE_INTENSITY {
         Low,
@@ -116,7 +132,7 @@ function CreateEditPackage(props: any, ref: any) {
         const flattenedData = flattenObj({...data});
         console.log(flattenedData);
         let msg = flattenedData.fitnesspackages[0];
-        let booking: any = {};
+        let bookingConfig: any = {};
         let details: any = {};
         console.log(msg);
         for(var i =0; i<msg.fitnesspackagepricing.length; i++){
@@ -124,6 +140,7 @@ function CreateEditPackage(props: any, ref: any) {
             PRICING_TABLE_DEFAULT[i].suggestedPrice = msg.fitnesspackagepricing[i].suggestedPrice;
             PRICING_TABLE_DEFAULT[i].voucher = msg.fitnesspackagepricing[i].voucher;
             PRICING_TABLE_DEFAULT[i].sapienPricing = msg.fitnesspackagepricing[i].sapienPricing;
+            PRICING_TABLE_DEFAULT[i].duration = msg.recordedclasses;
         }
         details.About = msg.aboutpackage;
         details.Benifits = msg.benefits;
@@ -136,18 +153,20 @@ function CreateEditPackage(props: any, ref: any) {
         details.intensity = ENUM_FITNESSPACKAGE_INTENSITY[msg.Intensity];
         details.pricingDetail = msg.fitnesspackagepricing[0]?.mrp === 'free' ? 'free' : JSON.stringify(PRICING_TABLE_DEFAULT);
         details.publishingDate = moment(msg.publishing_date).format('YYYY-MM-DD');
-        details.tag = msg?.tags === null ? "" : msg.tags;
+        details.tags = msg?.tags === null ? "" : msg.tags;
         details.user_permissions_user = msg.users_permissions_user.id;
         details.visibility = msg.is_private === true ? 1 : 0;
-        booking.acceptBooking = msg.booking_config?.isAuto === true ? 1 : 0;
-        booking.maxBookingDay = msg.booking_config?.bookingsPerDay;
-        booking.maxBookingMonth = msg.booking_config?.BookingsPerMonth;
-        details.config = booking;
+        bookingConfig.config = msg.booking_config?.isAuto === true ? "Auto" : "Manual";
+        bookingConfig.bookings = msg.booking_config?.bookingsPerDay;
+        bookingConfig.fillSchedule = msg.booking_config?.is_Fillmyslots;
+        details.config = {bookingConfig: JSON.stringify(bookingConfig)};
         details.programDetails = JSON.stringify({ duration: msg.duration, online: msg.recordedclasses, rest: msg.restdays});
         details.thumbnail = msg.Thumbnail_ID;
         details.Upload = msg.Upload_ID === null ? {"VideoUrl": msg.video_URL} : {"upload": msg.Upload_ID};
-        details.datesConfig = {"expiryDate": msg.expiry_date, "publishingDate": msg.publishing_date};
+        details.datesConfig = JSON.stringify({"expiryDate": msg.expiry_date, "publishingDate": msg.publishing_date});
         details.bookingleadday = msg.bookingleadday;
+        details.bookingConfigId = msg.booking_config?.id;
+        details.languages = JSON.stringify(msg.languages);
         setClassicDetails (details);
         // console.log(exerciseDetails);
 
@@ -177,6 +196,7 @@ function CreateEditPackage(props: any, ref: any) {
         frm.disciplines = JSON.parse(frm.disciplines).map((x: any) => x.id).join(', ').split(', ');
         frm.programDetails = JSON.parse(frm.programDetails)
         frm.datesConfig = JSON.parse(frm.datesConfig)
+        frm.languages = JSON.parse(frm.languages)
 
         createPackage({
             variables: {
@@ -201,7 +221,8 @@ function CreateEditPackage(props: any, ref: any) {
                 thumbnail: frm.thumbnail,
                 upload: frm?.Upload?.upload,
                 equipmentList: frm.equipmentList,
-                videoUrl: frm?.Upload?.VideoUrl
+                videoUrl: frm?.Upload?.VideoUrl,
+                languages: frm.languages.map((item: any) => item.id).join(", ").split(", "),
             }
         });
     }
@@ -213,6 +234,8 @@ function CreateEditPackage(props: any, ref: any) {
         frm.disciplines = JSON.parse(frm.disciplines).map((x: any) => x.id).join(', ').split(', ');
         frm.programDetails = JSON.parse(frm.programDetails)
         frm.datesConfig = JSON.parse(frm.datesConfig)
+        frm.languages = JSON.parse(frm.languages)
+
         editPackage({
             variables: {
                 id: operation.id,
@@ -237,7 +260,8 @@ function CreateEditPackage(props: any, ref: any) {
                 thumbnail: frm.thumbnail,
                 upload: frm?.Upload?.upload,
                 equipmentList: frm.equipmentList,
-                videoUrl: frm?.Upload?.VideoUrl
+                videoUrl: frm?.Upload?.VideoUrl,
+                languages: frm.languages.map((item: any) => item.id).join(", ").split(", "),
             }
         })
     }
