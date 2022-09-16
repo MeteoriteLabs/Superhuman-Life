@@ -2,10 +2,12 @@ import Upload from '../../../../components/upload/upload';
 import DatesConfig from '../../../../components/customWidgets/datesConfig';
 import FitnessSelect from '../../../../components/customWidgets/fitnessMultiSelect';
 import EquipmentSelect from '../../../../components/customWidgets/equipmentListSelect';
+import LanguageList from '../../../../components/customWidgets/languageSelect';
 import GroupProgramDetails from './groupProgramDetails';
 import GroupConfig from './groupConfig';
 import GroupPricingTable from './groupPricingTable';
 import GroupPreview from './groupPreview';
+import GroupBookingConfig from './bookingConfig';
 
 export const widgets = {
      datesConfig: DatesConfig,
@@ -15,6 +17,8 @@ export const widgets = {
      groupConfig: GroupConfig,
      groupPricingTable: GroupPricingTable,
      groupPreview: GroupPreview,
+     groupBookingConfig: GroupBookingConfig,
+     languageList: LanguageList
 }
 
 export const schema: any = {  
@@ -94,12 +98,12 @@ export const schema: any = {
      "datesConfig": {
           "ui:widget": "datesConfig"
      },
+     "languages": {
+          "ui:widget": "languageList",
+     },
      "config": {
-          "acceptBooking": {
-              "ui:widget": "radio",
-              "ui:options": {
-                  "inline": true
-              }
+          "bookingConfig": {
+              "ui:widget": "groupBookingConfig"
           }
      },
 }

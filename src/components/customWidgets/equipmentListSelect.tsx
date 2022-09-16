@@ -66,7 +66,7 @@ const MultiSelect = (props: any) => {
                labelKey="name"
                onChange={OnChange}
                options={equipmentList}
-               placeholder="Choose Discpline..."
+               placeholder="Choose Equipments..."
                selected={multiSelections}
                multiple
                disabled={props.uiSchema.readonly}

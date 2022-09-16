@@ -3,7 +3,6 @@ import { Form, Row, Col } from 'react-bootstrap';
 
 const PackageDateConfig = (props: any) => {
 
-     console.log(props.value);
      const inputDisabled = props.readonly;
 
      const [instantBooking, setInstantBooking] = useState(props.value !== undefined ? JSON.parse(props.value).instantBooking : true);
@@ -16,7 +15,7 @@ const PackageDateConfig = (props: any) => {
                <Row>
                     <Col>
                          <h4>Allow instant bookings</h4>
-                         <p className='small'>This will let people join this group class for a day on demand</p>
+                         <p className='small text-muted'>This will let people join this group class for a session on demand</p>
                     </Col>
                     <Col>
                         <Row>
