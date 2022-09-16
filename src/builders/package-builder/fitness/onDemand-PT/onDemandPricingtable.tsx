@@ -269,7 +269,7 @@ const PricingTable = (props) => {
                     <td><b>Total days</b></td>
                     {pricing.map((item, index) => {
                         return (
-                            <td>{item.duration} days</td>
+                            <td>{item.duration} session</td>
                         )
                     })}
                     </tr>

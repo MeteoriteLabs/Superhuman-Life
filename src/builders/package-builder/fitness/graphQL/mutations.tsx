@@ -11,6 +11,7 @@ export const CREATE_PACKAGE = gql`
     $mode: ENUM_FITNESSPACKAGE_MODE
     $address: ID
     $disciplines: [ID]
+    $languages: [ID]
     $duration: Int
     $ptoffline: Int
     $ptonline: Int
@@ -69,6 +70,8 @@ export const CREATE_PACKAGE = gql`
         Upload_ID: $upload
         equipment_lists: $equipmentList
         video_URL: $videoUrl
+        languages: $languages
+
       }
     ) {
       data{
@@ -110,6 +113,7 @@ export const EDIT_PACKAGE = gql`
     $mode: ENUM_FITNESSPACKAGE_MODE
     $address: ID
     $disciplines: [ID]
+    $languages: [ID]
     $duration: Int
     $ptoffline: Int
     $ptonline: Int
@@ -169,6 +173,7 @@ export const EDIT_PACKAGE = gql`
           Upload_ID: $upload
           equipment_lists: $equipmentList
           video_URL: $videoUrl
+          languages: $languages
       }
     ) {
       data{
@@ -197,14 +202,29 @@ mutation createBookingconfig($id: ID!, $isAuto: Boolean, $bookings_per_day: Int,
 `
 
 export const CREATE_BOOKING_CONFIG = gql`
-  mutation createBookingconfig($id: ID!, $isAuto: Boolean, $bookings_per_day: Int, $bookings_per_month: Int) {
-    createBookingConfig(data: { isAuto: $isAuto, fitnesspackage: $id, bookingsPerDay: $bookings_per_day, BookingsPerMonth: $bookings_per_month }) {
+  mutation createBookingconfig($id: ID!, $isAuto: Boolean, $bookings_per_day: Int, $bookings_per_month: Int, $is_Fillmyslots: Boolean) {
+    createBookingConfig(data: { isAuto: $isAuto,bookingsPerDay: $bookings_per_day, fitnesspackage: $id, BookingsPerMonth: $bookings_per_month, is_Fillmyslots: $is_Fillmyslots }) {
       data {
         id
       }
     }
   }
 `;
+
+export const UPDATE_BOOKING_CONFIG = gql`
+  mutation updateBookingconfig($id: ID!, $isAuto: Boolean, $bookings_per_day: Int,$bookings_per_month: Int, $is_Fillmyslots: Boolean) {
+    updateBookingConfig(id: $id, data: {
+      BookingsPerMonth: $bookings_per_month,
+      isAuto: $isAuto,
+      bookingsPerDay: $bookings_per_day,
+      is_Fillmyslots: $is_Fillmyslots
+    }){
+      data{
+        id
+      }
+    }
+  }
+`
 
 export const UPDATE_PACKAGE_STATUS = gql`
   mutation updateFitnesspackageStatus($id: ID!, $Status: Boolean) {

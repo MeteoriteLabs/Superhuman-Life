@@ -1,6 +1,6 @@
 import React from 'react';
 import {Carousel, Card} from 'react-bootstrap';
-import SocialMediaComponent from '../../../../components/customWidgets/SocialMediaComponent';
+// import SocialMediaComponent from '../../../../components/customWidgets/SocialMediaComponent';
 import DisplayImage from '../../../../components/DisplayImage/index';
 
 const PreviewPt = (props) => {
@@ -90,11 +90,14 @@ const PreviewPt = (props) => {
 
     return (
         <>
-        <Carousel>
+        <Carousel 
+            prevIcon={<i className='fa fa-chevron-left fa-lg' style={{ "color": "black"}}></i>}
+            nextIcon={<i className='fa fa-chevron-right fa-lg' style={{ "color": "black"}}></i>}
+        >
             {handleCardRender()}
         </Carousel>
 
-            <SocialMediaComponent url={URL} />
+            {/* <SocialMediaComponent url={URL} /> */}
         </>
     );
 };
