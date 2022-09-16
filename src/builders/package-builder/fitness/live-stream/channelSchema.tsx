@@ -4,7 +4,9 @@ import Upload from '../../../../components/upload/upload';
 import DatesConfig from '../../../../components/customWidgets/datesConfig';
 import FitnessSelect from '../../../../components/customWidgets/fitnessMultiSelect';
 import EquipmentSelect from '../../../../components/customWidgets/equipmentListSelect';
+import LanguageList from '../../../../components/customWidgets/languageSelect';
 import ChannelConfig from './channelConfig';
+import LiveBookingConfig from './bookingConfig';
 
 export const widgets = {
     pricingTableChannel: PricingTableChannel,
@@ -13,6 +15,8 @@ export const widgets = {
     fitnessSelect: FitnessSelect,
     equipmentSelect: EquipmentSelect,
     channelConfig: ChannelConfig,
+    liveBookingConfig: LiveBookingConfig,
+    liveChannelLanguageSelect: LanguageList,
 };
 
 export const schema: any = {
@@ -74,11 +78,8 @@ export const schema: any = {
             }
         },
         "config": {
-            "acceptBooking": {
-                "ui:widget": "radio",
-                "ui:options": {
-                    "inline": true
-                }
+            "bookingConfig": {
+                "ui:widget": "liveBookingConfig"
             }
         },
         "programSchedule": {
@@ -92,5 +93,8 @@ export const schema: any = {
         },
         "preview": {
             "ui:widget": "previewChannel"
+        },
+        "languages": {
+            "ui:widget": "liveChannelLanguageSelect"
         }
     }
