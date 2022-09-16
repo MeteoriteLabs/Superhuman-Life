@@ -257,6 +257,7 @@ function CreateEditChannel(props: any, ref: any) {
     function updateChannelPackageStatus(id: any, status: any){
         updatePackageStatus({variables: {id: id, Status: status}});
         setStatusModalShow(false);
+        operation.type = 'create';
     }
 
     function OnSubmit(frm: any) {
