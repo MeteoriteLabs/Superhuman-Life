@@ -14,6 +14,7 @@ import CreateEditViewChannel from './live-stream/CreateEditView-Channel';
 import CreateEditViewCohort from "./cohort/CreateEditView-Cohort";
 import { GET_FITNESS } from "./graphQL/queries";
 import { flattenObj } from "../../../components/utils/responseFlatten";
+import moment from 'moment';
 
 
 export default function FitnessTab(props) {
@@ -161,13 +162,19 @@ export default function FitnessTab(props) {
         {
             accessor: "mrp", Header: "MRP",
             Cell: ({ row }: any) => {
+                console.log(row);
                 return <>
                     <p>{"\u20B9"} {row.values.mrp[selectedDuration[row.index]]}</p>
                 </>
             }
         },
 
-        { accessor: "Status", Header: "Status", Cell: (v: any) => <Badge className='py-3 px-5' style={{ fontSize: '1rem' }} variant={v.value === "Active" ? "success" : "danger"}>{v.value === "Active" ? "Published" : "Draft"}</Badge> },
+        { accessor: "Status", Header: "Status", Cell: (v: any) => {
+            return <div><Badge className='py-3 px-5' style={{ fontSize: '1rem' }} variant={v.value === "Active" ? "success" : "danger"}>{v.value === "Active" ? "Published" : "Draft"}</Badge>
+                {moment(v?.row?.original?.publishingDate).isAfter(moment()) && <p className="small text-muted">This will be published on {moment(v?.row?.original?.publishingDate).format("Do, MMM-YY")}</p>}
+            </div>
+            }
+        },
         {
             id: "edit",
             Header: "Actions",
@@ -223,6 +230,7 @@ export default function FitnessTab(props) {
                     duration: item.fitnesspackagepricing.map(i => i.duration),
                     mrp: item.fitnesspackagepricing.map(i => i.mrp),
                     Status: item.Status ? "Active" : "Inactive",
+                    publishingDate: item.publishing_date
                 }
             })
         )

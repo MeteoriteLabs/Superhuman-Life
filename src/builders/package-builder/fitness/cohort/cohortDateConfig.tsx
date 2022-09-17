@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { InputGroup, FormControl } from 'react-bootstrap';
 import moment from 'moment';
 
@@ -6,12 +6,10 @@ const PackageDateConfig = (props: any) => {
 
      const inputDisabled = props.readonly;
 
-     const [publishingDate, setPublishingDate] = useState(props.value === undefined ? moment().add(props.title1 && 1, 'month').format("YYYY-MM-DD") : moment(JSON.parse(props.value).publishingDate).format("YYYY-MM-DD"));
-     const [expiryDate, setExpiryDate] = useState(props.value === undefined ? moment(publishingDate).add(1, 'year').format("YYYY-MM-DD") : moment(JSON.parse(props.value).expiryDate).format("YYYY-MM-DD"));
+     const cohortStartDate = JSON.parse(props.formContext.dates).publishingDate;
 
-     useEffect(() => {
-          setExpiryDate(moment(publishingDate).add(1, props?.title2 ? 'month' : 'year').format("YYYY-MM-DD"));
-     }, [publishingDate, props.title2]);
+     const [publishingDate, setPublishingDate] = useState(props.value === undefined ? moment().format("YYYY-MM-DD") : moment(JSON.parse(props.value).publishingDate).format("YYYY-MM-DD"));
+     const [expiryDate, setExpiryDate] = useState(moment(cohortStartDate).format("YYYY-MM-DD"));
 
      props.onChange(JSON.stringify({publishingDate, expiryDate}));
 
@@ -23,27 +21,26 @@ const PackageDateConfig = (props: any) => {
                          aria-label="Default"
                          aria-describedby="inputGroup-sizing-default"
                          type="date"
-                         min={props.type === 'Cohort' ? moment().add(1, 'month').format("YYYY-MM-DD") : moment().format("YYYY-MM-DD")}
+                         min={moment().format("YYYY-MM-DD")}
+                         max={moment(cohortStartDate).format("YYYY-MM-DD")}
                          value={publishingDate}
                          onChange={(e) => { setPublishingDate(e.target.value) }}
                          disabled={inputDisabled}
                     />
                </InputGroup>
-               {props?.title1 && <span className='small text-muted'>Set the date for this offering to be available for everyone</span>}
-               <br />
+               {props?.title1 && <span className='small'>Set the date for this offering to be available for everyone</span>}
                <label>{props?.title2 ? props.title2 : "Expiry Date"}</label>
                <InputGroup className="mb-3">
                     <FormControl
                          aria-label="Default"
                          aria-describedby="inputGroup-sizing-default"
                          type="date"
-                         min={moment(publishingDate).add(1, props?.title2 ? 'month' : 'year').format("YYYY-MM-DD")}
                          value={expiryDate}
                          onChange={(e) => { setExpiryDate(e.target.value) }}
-                         disabled={inputDisabled}
+                         disabled={true}
                     />
                </InputGroup>
-               {props?.title2 && <span className='small text-muted'>On the selected date this offering will be shifted to drafts</span>}
+               {props?.title2 && <span className='small'>On the selected date this offering will be shifted to drafts</span>}
           </div>
      );
 };

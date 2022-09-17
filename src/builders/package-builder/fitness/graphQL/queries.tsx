@@ -62,6 +62,7 @@ export const GET_FITNESS = gql`
           ptoffline
           ptonline
           mode
+          publishing_date
           groupoffline
           grouponline
           recordedclasses
@@ -107,6 +108,7 @@ export const GET_SINGLE_PACKAGE_BY_ID = gql`
           tags
           level
           aboutpackage
+          Accomdation_details
           Intensity
           Is_free_demo
           languages{

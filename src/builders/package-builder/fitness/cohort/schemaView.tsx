@@ -8,6 +8,8 @@ import Upload from '../../../../components/upload/upload';
 import DatesConfig from '../../../../components/customWidgets/datesConfig';
 import FitnessSelect from '../../../../components/customWidgets/fitnessMultiSelect';
 import EquipmentSelect from '../../../../components/customWidgets/equipmentListSelect';
+import BookingConfig from './bookingConfig';
+import CohortDateConfig from './cohortDateConfig';
 
 export const widgets = {
     pricingTableChannel: PricingTableChannel,
@@ -18,7 +20,9 @@ export const widgets = {
     courseDetails: CourseDetails,
     datesConfig: DatesConfig,
     fitnessSelect: FitnessSelect,
-    equipmentSelect: EquipmentSelect
+    equipmentSelect: EquipmentSelect,
+    cohortBookingConfig: BookingConfig,
+    cohortDateConfig: CohortDateConfig
 };
 
 export const schemaView: any = {
@@ -140,18 +144,9 @@ export const schemaView: any = {
             "ui:readonly": true
         },
         "config": {
-            "acceptBooking": {
-                "ui:widget": "radio",
-                "ui:options": {
-                    "inline": true
-                }
-            },
-            "ui:readonly": true,
-            "maxBookingMonth": {
-                "ui:readonly": true,
-            },
-            "maxBookingDay": {
-                "ui:readonly": true,
+            "bookingConfig": {
+                "ui:widget": "cohortBookingConfig",
+                "readonly": true
             }
         },
         "preview": {

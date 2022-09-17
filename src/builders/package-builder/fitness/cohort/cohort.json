@@ -13,20 +13,21 @@
        "properties": {
             "packageName": {
                 "type": "string",
-                "title": "Packge Name"
+                "title": "Name of Offering",
+                "description": "Enter the Title for Offering"
+            },
+            "discpline": {
+                "type": "string",
+                "description": "Choose the relevant discipline for the offering"
+            },
+            "equipment": {
+                "type": "string",
+                "description": "Add all equipments required for the offering"
             },
             "tag": {
                 "type": "string",
                 "title": "Tags",
-                "description": "User hashtags to improve your listing"
-            },
-            "discpline": {
-                "type": "string",
-                "description": "it is a required field"
-            },
-            "equipment": {
-                "type": "string",
-                "description": "it is a required field"
+                "description": "Use hashtags to improve your listing"
             },
            "level": {
                 "type": "number",
@@ -37,7 +38,8 @@
                     "Intermediate",
                     "Advanced", 
                     "No level"
-                ]
+                ],
+                "description": "Select the relevant level for the offering"
             },
             "intensity": {
                 "type": "number",
@@ -47,7 +49,8 @@
                     "Low",
                     "Moderate",
                     "High"
-                ]
+                ],
+                "description": "Set the relevant intensity for the level"
             },
             "dates": {
                 "type": "string"
@@ -93,6 +96,19 @@
                 "type": "object",
                 "oneOf": [
                     {
+                        "title": "Video URL", 
+                          "properties": {
+                            "VideoUrl": {
+                              "type": "string",
+                              "format": "uri",
+                              "description": "Add Youtube URL"
+                            }
+                          },
+                          "required": [
+                            "VideoUrl"
+                          ]
+                        },
+                    {
                         "title": "Upload picture or video", 
                         "properties": {
                             "upload": {
@@ -102,18 +118,6 @@
                       },
                       "required": [
                         "upload"
-                      ]
-                    },
-                    {
-                    "title": "Video URL", 
-                      "properties": {
-                        "VideoUrl": {
-                          "type": "string",
-                          "format": "uri"
-                        }
-                      },
-                      "required": [
-                        "VideoUrl"
                       ]
                     }
                 ]
@@ -175,7 +179,7 @@
                     "Public",
                     "Private"
                 ],
-                "description": "The package will be save as draft and wait for you to publish it."
+                "description": "Public: The Offering will be visible to the user as soon as it is created, Private: The offering will be save as draft and wait for you to publish it."
             },
             "datesConfig": {
                 "type": "string"
@@ -184,32 +188,11 @@
                 "title": "Booking Config",
                 "type": "object",
                 "required": [
-                    "acceptBooking",
-                    "maxBookingMonth",
-                    "maxBookingDay"
+                    "bookingConfig"
                 ],
                 "properties": {
-                    "acceptBooking": {
-                        "type": "number",
-                        "title": "",
-                        "enum": [0, 1],
-                        "enumNames": [
-                            "Manual",
-                            "Auto"
-                        ],
-                        "description": "In auto it will automatically accept all bookings"
-                    },
-                    "maxBookingMonth": {
-                        "type": "number",
-                        "title": "Maximum booking/per month",
-                        "minimum": 2,
-                        "maximum": 50
-                    },
-                    "maxBookingDay": {
-                        "type": "number",
-                        "title": "Maximum booking/per day",
-                        "minimum": 2,
-                        "maximum": 10
+                    "bookingConfig": {
+                        "type": "string"
                     }
                 }
             }
