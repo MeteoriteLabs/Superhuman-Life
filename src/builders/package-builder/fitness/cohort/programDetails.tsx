@@ -286,15 +286,17 @@ const ProgramDetails = (props) => {
                 <Row>
                     <Col>
                         <Form.Group controlId="formBasicEmail-2">
-                            <Form.Label>2 Sharing</Form.Label>
+                            <Form.Label>Dual Occupancy</Form.Label>
                             <Form.Control disabled={inputDisabled} type="number" min={0} value={twoSharing} onChange={(e: any) => {setTwoSharing(parseInt(e.target.value))}} />
                         </Form.Group> 
+                        <span className='small text-muted'>Dual Occupancy as One room will be shared by 2 participants</span>
                     </Col>
                     <Col>
                         <Form.Group controlId="formBasicEmail-3">
-                            <Form.Label>3 Sharing</Form.Label>
+                            <Form.Label>Triple  Occupancy</Form.Label>
                             <Form.Control disabled={inputDisabled} type="number" min={0} value={threeSharing} onChange={(e: any) => setThreeSharing(parseInt(e.target.value))} />
-                        </Form.Group> 
+                        </Form.Group>
+                        <span className='small text-muted'>Triple Occupancy as One room will be shared by 3 participants</span> 
                     </Col>       
                 </Row>   
             </div>}
