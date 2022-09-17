@@ -1,4 +1,4 @@
-import React, {useState, useContext} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import {Row, Col, Form, Table, FormControl, InputGroup, Button} from 'react-bootstrap';
 import {gql, useQuery, useLazyQuery} from '@apollo/client';
 import AuthContext from '../../../../context/auth-context';
@@ -8,6 +8,8 @@ import moment from 'moment';
 const PricingTable = (props) => {
 
     const inputDisabled = props.readonly;
+
+    console.log(props);
 
     const accomodationDetails = JSON.parse(props.formContext?.programDetails)?.accomodationDetails;
 
@@ -29,7 +31,19 @@ const PricingTable = (props) => {
     const auth = useContext(AuthContext);
     const [vouchers, setVouchers] = useState<any>([]);
     const [show, setShow] = useState(props.value === 'free' ? true : false);
-    const [pricing, setPricing] = useState<any>(props.value !== undefined && props.value !== 'free' ? JSON.parse(props.value) : [ {mrp: null, suggestedPrice: null, voucher: 0, duration: calculateDuration(JSON.parse(props.formContext.dates).publishingDate, JSON.parse(props.formContext.dates).expiryDate), sapienPricing: null, privateRoomPrice: null, twoSharingPrice: null, threeSharingPrice: null, foodPrice: null}]);
+    const [pricing, setPricing] = useState<any>(props.value !== undefined && props.value !== 'free' ? JSON.parse(props.value) : [ {mrp: null, suggestedPrice: null, voucher: 0, duration: calculateDuration(JSON.parse(props.formContext.dates).startDate, JSON.parse(props.formContext.dates).endDate), sapienPricing: null, privateRoomPrice: null, twoSharingPrice: null, threeSharingPrice: null, foodPrice: null}]);
+
+    useEffect(() => {
+        const newDuration = calculateDuration(JSON.parse(props.formContext.dates).startDate, JSON.parse(props.formContext.dates).endDate);
+        const newPricing = [...pricing];
+        if(JSON.parse(props.formContext.dates).startDate === JSON.parse(props.formContext.dates).endDate){
+            newPricing[0].duration = 1;
+        }else {
+            newPricing[0].duration = newDuration;
+        }
+        setPricing(newPricing);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const GET_VOUCHERS = gql`
         query fetchVouchers($expiry: DateTime!, $id: ID!, $start: DateTime!, $status: String!) {
@@ -133,6 +147,9 @@ const PricingTable = (props) => {
     }
 
     function handleValidation(){
+        if(parseInt(pricing[0].mrp) < pricing[0].sapienPricing){
+            return false;
+        }
         if(mode !== "2" && pricing[0].mrp !== null && parseInt(pricing[0].mrp) >= pricing[0].sapienPricing){
             return true;
         }else if(accomodationType === "0" && accomodationDetails.private && !accomodationDetails.sharing && pricing[0].privateRoomPrice !== 0 && !isNaN(pricing[0].privateRoomPrice)){
@@ -332,7 +349,7 @@ const PricingTable = (props) => {
                         </InputGroup>  </td>
                     </tr>}
                     <tr>
-                    <td className='text-center'><b>Cohort MRP</b></td>
+                    <td className='text-center'><b>Cohort Base Price</b></td>
                     <td>
                     <InputGroup>
                         <FormControl
@@ -351,8 +368,16 @@ const PricingTable = (props) => {
                     </tr>
                 </tbody>
                 </Table>
-                <hr/>
+                <hr className='my-0'/>
+                    <div className='text-center'>
+                        <label className='text-danger'><b>MRP</b></label>
+                    </div>
+                <hr className='my-0'/>
                 {accomodationType === '1' && <Row className="text-center">
+                    <Col>
+                        <label><b>Base Price + <span className='text-danger'>Food</span></b></label>
+                        <p>₹ {parseInt(pricing[0].mrp)}</p>
+                    </Col>
                     {accomodationDetails.private && <Col>
                         <label><b>Private Room + Base Price + <span className='text-danger'>Food</span></b></label>
                         <p>₹ {parseInt(pricing[0].mrp) + (isNaN(pricing[0].privateRoomPrice) ? 0 : pricing[0].privateRoomPrice) + (isNaN(pricing[0].foodPrice) ? 0 : pricing[0].foodPrice)}</p>
@@ -367,6 +392,10 @@ const PricingTable = (props) => {
                     </Col></>}
                 </Row>}
                 {accomodationType !== '1' && <Row className="text-center">
+                    <Col>
+                        <label><b>No Accomodation</b></label>
+                        <p>₹ {parseInt(pricing[0].mrp)}</p>
+                    </Col>
                     {accomodationDetails.private && <Col>
                         <label><b>Private Room + Base Price </b></label>
                         <p>₹ {parseInt(pricing[0].mrp) + (isNaN(pricing[0].privateRoomPrice) ? 0 : pricing[0].privateRoomPrice)}</p>
@@ -380,7 +409,6 @@ const PricingTable = (props) => {
                         <p>₹ {parseInt(pricing[0].mrp) + (isNaN(pricing[0].threeSharingPrice) ? 0 : pricing[0].threeSharingPrice)}</p>
                     </Col> </>}
                 </Row>}
-                <hr/>
             </div>}
         </>
     )

@@ -142,7 +142,7 @@ function CreateEditCohort(props: any, ref: any) {
         details.thumbnail = msg.Thumbnail_ID;
         details.Upload = msg.Upload_ID === null ? {"VideoUrl": msg?.video_URL} : {"upload": msg?.Upload_ID};
         details.datesConfig = JSON.stringify({"expiryDate": msg.expiry_date, "publishingDate": msg.publishing_date});
-        details.dates = JSON.stringify({"expiryDate": msg.End_date, "publishingDate": msg.Start_date});
+        details.dates = JSON.stringify({"endDate": msg.End_date, "startDate": msg.Start_date, "onDay": msg.End_date === msg.Start_date ? true : false});
         details.bookingConfigId = msg.booking_config?.id;
         // let msg = data;
         // console.log(msg);
@@ -203,7 +203,7 @@ function CreateEditCohort(props: any, ref: any) {
                 level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
                 Intensity: ENUM_FITNESSPACKAGE_INTENSITY[frm.intensity],
                 equipmentList: frm?.equipment?.length > 0 ? frm.equipment.map((x: any) => x.id).join(',').split(',') : [],
-                duration: calculateDuration(frm.dates.publishingDate, frm.dates.expiryDate),
+                duration: frm.dates.startDate === frm.dates.endDate ? 1 : calculateDuration(frm.dates.startDate, frm.dates.endDate),
                 fitnessdisciplines: frm?.discpline?.length > 0 ? frm.discpline.map((item: any) => item.id).join(", ").split(", ") : [],
                 fitnesspackagepricing: frm.pricing === "free" ? [{mrp: 'free', duration: calculateDuration(frm.dates.publishingDate, frm.dates.expiryDate)}] : JSON.parse(frm.pricing),
                 publishing_date: moment(frm.datesConfig.publishingDate).toISOString(),
@@ -216,8 +216,8 @@ function CreateEditCohort(props: any, ref: any) {
                 mode: ENUM_FITNESSPACKAGE_MODE[frm.programDetails?.mode],
                 residential_type: ENUM_FITNESSPACKAGE_RESIDENTIAL_TYPE[frm.programDetails?.residential],
                 languages: frm.languages.map((item: any) => item.id).join(", ").split(", "),
-                Start_date: moment(frm.dates.publishingDate).toISOString(),
-                End_date: moment(frm.dates.expiryDate).toISOString(),
+                Start_date: moment(frm.dates.startDate).toISOString(),
+                End_date: moment(frm.dates.endDate).toISOString(),
                 Course_details: frm.courseDetails.details,
                 thumbnail: frm.thumbnail,
                 upload: frm.Upload?.upload,
@@ -240,6 +240,8 @@ function CreateEditCohort(props: any, ref: any) {
         if(frm.discpline){
             frm.discpline = JSON.parse(frm?.discpline);
         }
+        console.log(frm);
+        debugger;
         editPackageDetails({
             variables: {
                 id: operation.id,
@@ -247,15 +249,15 @@ function CreateEditCohort(props: any, ref: any) {
                 benefits: frm.Benifits,
                 packagename: frm.packageName,
                 channelinstantBooking: frm.channelinstantBooking,
-                expiry_date: moment(frm.datesConfig.expiryDate).toISOString(),
                 level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
                 Intensity: ENUM_FITNESSPACKAGE_INTENSITY[frm.intensity],
                 equipmentList: frm?.equipment?.length > 0 ? frm.equipment.map((x: any) => x.id).join(',').split(',') : [],
                 fitnessdisciplines: frm?.discpline?.length > 0 ? frm.discpline.map((item: any) => item.id).join(", ").split(", ") : [],
                 fitnesspackagepricing: frm.pricing === "free" ? [{mrp: 'free', duration: calculateDuration(frm.dates.publishingDate, frm.dates.expiryDate)}] : JSON.parse(frm.pricing),
                 publishing_date: moment(frm.datesConfig.publishingDate).toISOString(),
+                expiry_date: moment(frm.datesConfig.expiryDate).toISOString(),
                 tags: frm.tag,
-                duration: calculateDuration(frm.dates.publishingDate, frm.dates.expiryDate),
+                duration: frm.dates.startDate === frm.dates.endDate ? 1 : calculateDuration(frm.dates.startDate, frm.dates.endDate),
                 users_permissions_user: frm.user_permissions_user,
                 fitness_package_type: findPackageType(operation.packageType),
                 is_private: frm.visibility === 0 ? false : true,
@@ -264,8 +266,8 @@ function CreateEditCohort(props: any, ref: any) {
                 mode: ENUM_FITNESSPACKAGE_MODE[frm.programDetails?.mode],
                 residential_type: ENUM_FITNESSPACKAGE_RESIDENTIAL_TYPE[frm.programDetails?.residential],
                 languages: frm.languages.map((item: any) => item.id).join(", ").split(", "),
-                Start_date: moment(frm.dates.publishingDate).toISOString(),
-                End_date: moment(frm.dates.expiryDate).toISOString(),
+                Start_date: moment(frm.dates.startDate).toISOString(),
+                End_date: moment(frm.dates.endDate).toISOString(),
                 Course_details: frm.courseDetails.details,
                 thumbnail: frm.thumbnail,
                 upload: frm.Upload?.upload,

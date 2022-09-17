@@ -10,6 +10,7 @@ import FitnessSelect from '../../../../components/customWidgets/fitnessMultiSele
 import EquipmentSelect from '../../../../components/customWidgets/equipmentListSelect';
 import BookingConfig from './bookingConfig';
 import CohortDateConfig from './cohortDateConfig';
+import CohortPrimaryDateConfig from './primaryDatesConfig';
 
 export const widgets = {
     pricingTableChannel: PricingTableChannel,
@@ -22,7 +23,7 @@ export const widgets = {
     fitnessSelect: FitnessSelect,
     equipmentSelect: EquipmentSelect,
     cohortBookingConfig: BookingConfig,
-    cohortDateConfig: CohortDateConfig
+    cohortDateConfig: CohortDateConfig,
 };
 
 export const schema: any = {
@@ -71,7 +72,7 @@ export const schema: any = {
         },
         "dates": {
             "ui:widget": (props: any) => {
-                return <DatesConfig title1={'Start Date'} title2={'End Date'} value={props.value} onChange={props.onChange} type={'Cohort'}/>
+                return <CohortPrimaryDateConfig title1={'Start Date'} title2={'End Date'} value={props.value} onChange={props.onChange} type={'Cohort'}/>
             }
         },
         "Upload": {

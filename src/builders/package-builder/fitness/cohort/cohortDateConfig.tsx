@@ -6,10 +6,12 @@ const PackageDateConfig = (props: any) => {
 
      const inputDisabled = props.readonly;
 
-     const cohortStartDate = JSON.parse(props.formContext.dates).publishingDate;
+     const cohortStartDate = JSON.parse(props.formContext.dates).startDate;
 
-     const [publishingDate, setPublishingDate] = useState(props.value === undefined ? moment().format("YYYY-MM-DD") : moment(JSON.parse(props.value).publishingDate).format("YYYY-MM-DD"));
-     const [expiryDate, setExpiryDate] = useState(moment(cohortStartDate).format("YYYY-MM-DD"));
+     const [publishingDate, setPublishingDate] = useState(props.value === undefined ? moment().format("YYYY-MM-DDTHH:mm") : moment(JSON.parse(props.value).publishingDate).format("YYYY-MM-DDTHH:mm"));
+     const [expiryDate, setExpiryDate] = useState(moment(cohortStartDate).format("YYYY-MM-DDTHH:mm"));
+
+     console.log(expiryDate);
 
      props.onChange(JSON.stringify({publishingDate, expiryDate}));
 
@@ -20,9 +22,9 @@ const PackageDateConfig = (props: any) => {
                     <FormControl
                          aria-label="Default"
                          aria-describedby="inputGroup-sizing-default"
-                         type="date"
-                         min={moment().format("YYYY-MM-DD")}
-                         max={moment(cohortStartDate).format("YYYY-MM-DD")}
+                         type="datetime-local"
+                         min={moment().format("YYYY-MM-DDTHH:mm")}
+                         max={moment(cohortStartDate).format("YYYY-MM-DDTHH:mm")}
                          value={publishingDate}
                          onChange={(e) => { setPublishingDate(e.target.value) }}
                          disabled={inputDisabled}
@@ -34,7 +36,7 @@ const PackageDateConfig = (props: any) => {
                     <FormControl
                          aria-label="Default"
                          aria-describedby="inputGroup-sizing-default"
-                         type="date"
+                         type="datetime-local"
                          value={expiryDate}
                          onChange={(e) => { setExpiryDate(e.target.value) }}
                          disabled={true}
