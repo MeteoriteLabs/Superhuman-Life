@@ -383,17 +383,17 @@ const PricingTable = (props) => {
                         <p>₹ {parseInt(pricing[0].mrp) + (isNaN(pricing[0].privateRoomPrice) ? 0 : pricing[0].privateRoomPrice) + (isNaN(pricing[0].foodPrice) ? 0 : pricing[0].foodPrice)}</p>
                     </Col>}
                     {accomodationDetails.sharing && <><Col>
-                        <label><b>2 Sharing + Base Price + <span className='text-danger'>Food</span></b></label>
+                        <label><b>Dual Occupancy + Base Price + <span className='text-danger'>Food</span></b></label>
                         <p>₹ {parseInt(pricing[0].mrp) + (isNaN(pricing[0].twoSharingPrice) ? 0 : pricing[0].twoSharingPrice) + (isNaN(pricing[0].foodPrice) ? 0 : pricing[0].foodPrice)}</p>
                     </Col>
                     <Col>
-                        <label><b>3 Sharing + Base Price + <span className='text-danger'>Food</span></b></label>
+                        <label><b>Triple Occupancy + Base Price + <span className='text-danger'>Food</span></b></label>
                         <p>₹ {parseInt(pricing[0].mrp) + (isNaN(pricing[0].threeSharingPrice) ? 0 : pricing[0].threeSharingPrice) + (isNaN(pricing[0].foodPrice) ? 0 : pricing[0].foodPrice)}</p>
                     </Col></>}
                 </Row>}
                 {accomodationType !== '1' && <Row className="text-center">
                     <Col>
-                        <label><b>No Accomodation</b></label>
+                        <label><b>Base Price</b></label>
                         <p>₹ {parseInt(pricing[0].mrp)}</p>
                     </Col>
                     {accomodationDetails.private && <Col>
@@ -401,11 +401,11 @@ const PricingTable = (props) => {
                         <p>₹ {parseInt(pricing[0].mrp) + (isNaN(pricing[0].privateRoomPrice) ? 0 : pricing[0].privateRoomPrice)}</p>
                     </Col>}
                     {accomodationDetails.sharing && <><Col>
-                        <label><b>2 Sharing + Base Price</b></label>
+                        <label><b>Dual Occupancy + Base Price</b></label>
                         <p>₹ {parseInt(pricing[0].mrp) + (isNaN(pricing[0].twoSharingPrice) ? 0 : pricing[0].twoSharingPrice)}</p>
                     </Col>
                     <Col>
-                        <label><b>3 Sharing + Base Price</b></label>
+                        <label><b>Triple Occupancy + Base Price</b></label>
                         <p>₹ {parseInt(pricing[0].mrp) + (isNaN(pricing[0].threeSharingPrice) ? 0 : pricing[0].threeSharingPrice)}</p>
                     </Col> </>}
                 </Row>}
