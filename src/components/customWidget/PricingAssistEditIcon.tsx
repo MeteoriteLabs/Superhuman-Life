@@ -6,7 +6,7 @@ export default function PricingAssistEditIcon(props) {
     let type = "";
     switch (rowData.mode) {
         case "Online": {
-            if (rowData.type === "Personal Training") {
+            if (rowData.type === "One-On-One") {
                 type = "custompersonal-training-Online.svg";
             } else if (rowData.type === "Group Class") {
                 type = "customgroup-Online.svg";
@@ -17,7 +17,7 @@ export default function PricingAssistEditIcon(props) {
         }
 
         case "Offline": {
-            if (rowData.type === "Personal Training") {
+            if (rowData.type === "One-On-One") {
                 type = "custompersonal-training-Offline.svg";
             } else if (rowData.type === "Group Class") {
                 type = "customgroup-Offline.svg";

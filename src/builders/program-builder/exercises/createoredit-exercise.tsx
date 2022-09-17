@@ -109,7 +109,7 @@ function CreateEditExercise(props: any, ref: any) {
     }
 
     function CreateExercise(frm: any) {
-
+        
         createExercise({
             variables: {
                 exercisename: frm.exercise,

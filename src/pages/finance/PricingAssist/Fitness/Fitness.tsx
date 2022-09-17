@@ -1,14 +1,15 @@
-import React from 'react'
+import React from 'react';
 import ActionButton from '../../../../components/actionbutton';
 import { Row, Col } from "react-bootstrap";
 import { useContext, useMemo, useRef, useState } from 'react'
 import Table from '../../../../components/table/index'
-import { useQuery } from '@apollo/client';
+import { useQuery, useLazyQuery } from '@apollo/client';
 import { GET_ALL_SUGGESTED_PRICING } from '../../graphQL/queries';
 import authContext from '../../../../context/auth-context';
 import moment from 'moment';
 import PricingAssistAction from '../PricingAssistAction'
 import { GET_FITNESS_PACKAGE_TYPES } from '../../../../builders/package-builder/fitness/graphQL/queries';
+import { flattenObj } from '../../../../components/utils/responseFlatten';
 
 export default function Fitness() {
 
@@ -17,143 +18,65 @@ export default function Fitness() {
     const pricingAssistAction = useRef<any>(null);
 
     // get fitness package type
-    const { data: data2 } = useQuery(GET_FITNESS_PACKAGE_TYPES, {
+    const { data: fitness_package } = useQuery(GET_FITNESS_PACKAGE_TYPES, {
         variables: { id: auth.userid },
+
+        onCompleted: data => {
+            //called suggested pricing useLazyquery function
+            getPackagePrice({ variables: { id: auth.userid } })
+        }
     })
 
-    // const FetchData = () => 
-    const fetch = useQuery(GET_ALL_SUGGESTED_PRICING, {
-        variables: { id: auth.userid },
+    // eslint-disable-next-line
+    const [getPackagePrice, { data }] = useLazyQuery(
+        GET_ALL_SUGGESTED_PRICING, {
         onCompleted: data => loadData(data)
     })
 
-    // const loadData = (data) => {
-    //     setDataTable(
-    //         [...data.suggestedPricings].map(item => {
-    //             return {
-    //                 id:item.id,
-    //                 type: item.fitness_package_type.type,
-    //                 duration: 1,
-    //                 mode: item.Mode,
-    //                 mrp: item.mrp,
-    //                 updatedAt: moment(item.updateAt).format('MMMM DD,YYYY')
-    //             }
-    //         })
-    //     )
-    // }
-
+    // load function for suggested price query
     const loadData = (data) => {
-        console.log(data);
-        const personalTrainingOnline = data.suggestedPricings && data.suggestedPricings.data && data.suggestedPricings.data.length ? data.suggestedPricings.data.filter(item => item.attributes.fitness_package_type.data && item.attributes.fitness_package_type.data.attributes.type === "Personal Training" && item.attributes.Mode === "Online") : null;
-         console.log(personalTrainingOnline)
-        const personalTrainingOffline = data.suggestedPricings && data.suggestedPricings.data && data.suggestedPricings.data.length ?  data.suggestedPricings.data.filter(item => item.attributes.fitness_package_type.data && item.attributes.fitness_package_type.data.attributes.type === "Personal Training" && item.attributes.Mode === "Offline") : null;
 
-        const groupOnline = data.suggestedPricings && data.suggestedPricings.data && data.suggestedPricings.data.length ? data.suggestedPricings.data.filter(item => item.attributes.fitness_package_type.data && item.attributes.fitness_package_type.data.attributes.type === "Group Class" && item.attributes.Mode === "Online") : null;
+        const flattenSuggestedPricing = flattenObj({ ...data });
 
-        const groupOffline = data.suggestedPricings && data.suggestedPricings.data && data.suggestedPricings.data.length ? data.suggestedPricings.data.filter(item => item.attributes.fitness_package_type.data && item.attributes.fitness_package_type.data.attributes.type === "Group Class" && item.attributes.Mode === "Offline") : null;
+        const flattenFitnessPackages = flattenObj({ ...fitness_package });
 
-        const classic = data.suggestedPricings && data.suggestedPricings.data && data.suggestedPricings.data.length ?  data.suggestedPricings.data.filter(item => item.attributes.fitness_package_type.data && item.attributes.fitness_package_type.data.attributes.type === "Classic" && item.attributes.Mode === "Online") : null;
+        const fitnessPackageObject = flattenFitnessPackages && flattenFitnessPackages.fitnessPackageTypes && flattenFitnessPackages.fitnessPackageTypes.length && flattenFitnessPackages.fitnessPackageTypes.filter((currentValue) => {
+            return currentValue.PricingRequired === true
+        }).map((currValue) => {
+            return currValue.Modes.Channel.map((channelMode: String[]) => {
 
-        const CohortOnline = data.suggestedPricings && data.suggestedPricings.data && data.suggestedPricings.data.length ?  data.suggestedPricings.data.filter(item => item.attributes.fitness_package_type.data && item.attributes.fitness_package_type.data.attributes.type === "Cohort" && item.attributes.Mode === "Online") : null;
+                const indexOfPackage = flattenSuggestedPricing.suggestedPricings.findIndex((element) => element.Mode === channelMode && element.fitness_package_type.type === currValue.type)
 
-        const CohortOffline = data.suggestedPricings && data.suggestedPricings.data && data.suggestedPricings.data.length ? data.suggestedPricings.data.filter(item => item.attributes.fitness_package_type.data && item.attributes.fitness_package_type.data.attributes.type === "Cohort" && item.attributes.Mode === "Offline") : null;
-
-        const liveStream = data.suggestedPricings && data.suggestedPricings.data && data.suggestedPricings.data.length ? data.suggestedPricings.data.filter(item => item.attributes.fitness_package_type.data && item.attributes.fitness_package_type.data.attributes.type === "Live Stream Channel" && item.attributes.Mode === "Online") : null;
-
-        setDataTable(
-            [
-                {
-                    id: personalTrainingOnline.length === 0 ? "" : personalTrainingOnline[0].id,
-                    packageTypeID: data2 && data2.fitnessPackageTypes && data2.fitnessPackageTypes.data && data2.fitnessPackageTypes.data.length ? data2.fitnessPackageTypes.data.filter(item => item.attributes.type === "Personal Training").map(item => item.id) : null,
-                    type: "Personal Training",
-                    duration: 1,
-                    mode: "Online",
-                    mrp: personalTrainingOnline.length === 0 ? "--" : personalTrainingOnline[0].attributes.mrp,
-                    updatedAt: personalTrainingOnline.length === 0 ? "--" : moment(personalTrainingOnline[0].updateAt).format('MMMM DD,YYYY')
-                },
-                {
-                    id: personalTrainingOffline.length === 0 ? "" : personalTrainingOffline[0].id,
-                    packageTypeID:  data2 && data2.fitnessPackageTypes && data2.fitnessPackageTypes.data && data2.fitnessPackageTypes.data.length ? data2.fitnessPackageTypes.data.filter(item => item.attributes.type === "Personal Training").map(item => item.id) : null,
-                    type: "Personal Training",
-                    duration: 1,
-                    mode: "Offline",
-                    mrp: personalTrainingOffline.length === 0 ? "--" : personalTrainingOffline[0].attributes.mrp,
-                    updatedAt: personalTrainingOffline.length === 0 ? "--" : moment(personalTrainingOffline[0].updateAt).format('MMMM DD,YYYY')
-                },
-                {
-                    id: groupOnline.length === 0 ? "" : groupOnline[0].id,
-                    packageTypeID: data2 && data2.fitnessPackageTypes && data2.fitnessPackageTypes.data && data2.fitnessPackageTypes.data.length ? data2.fitnessPackageTypes.data.filter(item => item.attributes.type === "Group Class").map(item => item.id) : null,
-                    type: "Group Class",
-                    duration: 1,
-                    mode: "Online",
-                    mrp: groupOnline.length === 0 ? "--" : groupOnline[0].attributes.mrp,
-                    updatedAt: groupOnline.length === 0 ? "--" : moment(groupOnline[0].updateAt).format('MMMM DD,YYYY')
-                },
-                {
-                    id: groupOffline.length === 0 ? "" : groupOffline[0].id,
-                    packageTypeID: data2 && data2.fitnessPackageTypes && data2.fitnessPackageTypes.data && data2.fitnessPackageTypes.data.length ? data2.fitnessPackageTypes.data.filter(item => item.attributes.type === "Group Class").map(item => item.id) : null,
-                    type: "Group Class",
-                    duration: 1,
-                    mode: "Offline",
-                    mrp: groupOffline.length === 0 ? "--" : groupOffline[0].attributes.mrp,
-                    updatedAt: groupOffline.length === 0 ? "--" : moment(groupOffline[0].updateAt).format('MMMM DD,YYYY')
-                },
-                {
-                    id: classic.length === 0 ? "" : classic[0].id,
-                    packageTypeID: data2 && data2.fitnessPackageTypes && data2.fitnessPackageTypes.data && data2.fitnessPackageTypes.data.length ? data2.fitnessPackageTypes.data.filter(item => item.attributes.type === "Classic").map(item => item.id) : null,
-                    type: "Classic Class",
-                    duration: 1,
-                    mode: "Online",
-                    mrp: classic.length === 0 ? "--" : classic[0].attributes.mrp,
-                    updatedAt: classic.length === 0 ? "--" : moment(classic[0].updateAt).format('MMMM DD,YYYY')
-                },
-                {
-                    id: CohortOnline.length === 0 ? "" : CohortOnline[0].id,
-                    packageTypeID: data2 && data2.fitnessPackageTypes && data2.fitnessPackageTypes.data && data2.fitnessPackageTypes.data.length ? data2.fitnessPackageTypes.data.filter(item => item.attributes.type === "Cohort").map(item => item.id) : null,
-                    type: "Cohort",
-                    duration: 1,
-                    mode: "Online",
-                    mrp: CohortOnline.length === 0 ? "--" : CohortOnline[0].attributes.mrp,
-                    updatedAt: CohortOnline.length === 0 ? "--" : moment(CohortOnline[0].updateAt).format('MMMM DD,YYYY')
-                },
-                {
-                    id: CohortOffline.length === 0 ? "" : CohortOffline[0].id,
-                    packageTypeID: data2 && data2.fitnessPackageTypes && data2.fitnessPackageTypes.data && data2.fitnessPackageTypes.data.length ? data2.fitnessPackageTypes.data.filter(item => item.attributes.type === "Cohort").map(item => item.id) : null,
-                    type: "Cohort",
-                    duration: 1,
-                    mode: "Offline",
-                    mrp: CohortOffline.length === 0 ? "--" : CohortOffline[0].attributes.mrp,
-                    updatedAt: CohortOffline.length === 0 ? "--" : moment(CohortOffline[0].updateAt).format('MMMM DD,YYYY')
-                },
-                {
-                    id: liveStream.length === 0 ? "" : liveStream[0].id,
-                    packageTypeID: data2 && data2.fitnessPackageTypes && data2.fitnessPackageTypes.data && data2.fitnessPackageTypes.data.length ? data2.fitnessPackageTypes.data.filter(item => item.attributes.type === "Live Stream Channel").map(item => item.id) : null,
-                    type: "Live Stream Channel",
-                    duration: 1,
-                    mode: "Online",
-                    mrp: liveStream.length === 0 ? "--" : liveStream[0].attributes.mrp,
-                    updatedAt: liveStream.length === 0 ? "--" : moment(liveStream[0].updateAt).format('MMMM DD,YYYY')
+                return {
+                    id: indexOfPackage !== -1 ? flattenSuggestedPricing.suggestedPricings[indexOfPackage].id : "",
+                    packageTypeId: currValue.id,
+                    type: currValue.type,
+                    modes: channelMode,
+                    mrp: indexOfPackage !== -1 ? flattenSuggestedPricing.suggestedPricings[indexOfPackage].mrp : "--",
+                    updatedAt: indexOfPackage !== -1 ? moment(flattenSuggestedPricing.suggestedPricings[indexOfPackage].updatedAt).format('MMMM DD,YYYY') : "",
+                    duration: currValue.Unit_Pricing_Calculation,
                 }
-            ]
-        )
+            })
+        });
+
+        const flattenPackage = fitnessPackageObject && fitnessPackageObject?.length && fitnessPackageObject.flat(1);
+
+        setDataTable(flattenPackage);
     }
 
-    // FetchData();
-    function refetchQueryCallback() {
-        fetch.refetch();
-   }
-
     const columns = useMemo(
+
         () => [
             {
                 accessor: "type", Header: "Type", Cell: ({ row }: any) => {
                     let type = '';
                     let name = '';
-                    switch (row.original.mode) {
+                    switch (row.original.modes) {
+
                         case "Online": {
-                            if (row.original.type === "Personal Training") {
+                            if (row.original.type === "One-On-One") {
                                 type = "custompersonal-training-Online.svg";
-                                name = "PT Online";
+                                name = "One on One Online";
                             } else if (row.original.type === "Group Class") {
                                 type = "customgroup-Online.svg";
                                 name = "Group Online";
@@ -161,21 +84,40 @@ export default function Fitness() {
                                 type = "customgroup-Online.svg";
                                 name = "Classic Online";
                             }
+                            else if (row.original.type === "Cohort") {
+                                type = "cohort_online.svg";
+                                name = "Cohort Online";
+                            }
+                            else if (row.original.type === "Live Stream Channel") {
+                                type = "livestream_online.svg";
+                                name = "Live Stream Channel";
+                            }
+                            else if (row.original.type === "On-Demand PT") {
+                                type = "customgroup-Online.svg";
+                                name = "On-Demand PT Online";
+                            }
                             break;
                         }
 
                         case "Offline": {
-                            if (row.original.type === "Personal Training") {
+                            if (row.original.type === "One-On-One") {
                                 type = "custompersonal-training-Offline.svg";
-                                name = "PT Offline";
+                                name = "One on One Offline";
                             } else if (row.original.type === "Group Class") {
                                 type = "customgroup-Offline.svg";
                                 name = "Group Offline";
                             }
+                            else if (row.original.type === "Cohort") {
+                                type = "cohort_offline.svg";
+                                name = "Cohort Offline";
+                            }
+                            else if (row.original.type === "On-Demand PT") {
+                                type = "customgroup-Offline.svg";
+                                name = "On-Demand PT Offline";
+                            }
                             break;
                         }
                     }
-
 
                     return <div className='d-flex justify-content-center align-items-center'>
                         <div>
@@ -187,11 +129,13 @@ export default function Fitness() {
             },
             {
                 accessor: 'duration', Header: 'Duration', Cell: ({ row }: any) => {
-                    return <p className='mb-0'>{row.values.duration} class</p>
+                    return <p className='mb-0'>{
+                        row.values.duration
+                    } </p>
                 }
             },
             {
-                accessor: 'mrp', Header: 'Mrp', Cell: ({ row }: any) => {
+                accessor: 'mrp', Header: 'MRP', Cell: ({ row }: any) => {
                     return <p className='mb-0'>Rs {row.values.mrp}</p>
                 }
             },
@@ -200,11 +144,13 @@ export default function Fitness() {
                 id: "edit",
                 Header: "Actions",
                 Cell: ({ row }: any) => {
-                    const actionClick1 = () => {
-                        pricingAssistAction.current.TriggerForm({ id: row.original.id, actionType: 'edit', rowData: row.original })
+                    const editPackagePricing = () => {
+                        pricingAssistAction.current.TriggerForm({ id: row.original.id, actionType: 'edit', rowData: row.original }
+                        )
+                        console.log(row.original.id);
                     };
                     const arrayAction = [
-                        { actionName: 'Edit', actionClick: actionClick1 },
+                        { actionName: 'Edit', actionClick: editPackagePricing },
                     ]
 
                     return <ActionButton
@@ -223,7 +169,7 @@ export default function Fitness() {
             <Row>
                 <Col>
                     <Table columns={columns} data={dataTable} />
-                    <PricingAssistAction ref={pricingAssistAction} callback={refetchQueryCallback}/>
+                    <PricingAssistAction ref={pricingAssistAction} />
                 </Col>
             </Row>
         </div>

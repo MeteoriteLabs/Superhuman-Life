@@ -25,7 +25,7 @@ export default function Vouchers() {
             [...data.vouchers.data].map(voucher => {
                 let todayDate: any = moment(new Date());
                 let expiryDate: any = moment(voucher.attributes.expiry_date);
-                let diff = expiryDate.diff(todayDate, 'day')
+                let diff = expiryDate.diff(todayDate)
                 return {
                     id: voucher.id,
                     voucher_name: voucher.attributes.voucher_name,

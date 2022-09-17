@@ -79,7 +79,7 @@ export default function MindsetPage() {
 
      function loadData(data: any) {
           const flattenData = flattenObj({...data});
-          
+          console.log(flattenData.prerecordedMessages);
           setDataTable(
                [...flattenData.prerecordedMessages].map((Detail) => {
                     return {
@@ -94,6 +94,7 @@ export default function MindsetPage() {
                })
           );
      }
+     
 
      function refetchQueryCallback() {
           fetch.refetch();

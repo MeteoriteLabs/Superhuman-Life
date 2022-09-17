@@ -57,7 +57,6 @@ export const EDIT_VOUCHER = gql`
     }
 `
 
-
 export const DELETE_VOUCHER = gql`
     mutation deleteVoucher($id: ID!){
         deleteVoucher(id: $id)
@@ -89,27 +88,6 @@ export const TOGGLE_STATUS = gql`
     }   
 `
 
-// export const CREATE_FITNESS_PRICING_ASSIT = gql`
-//     mutation createSuggestedPricing(
-//         $fitness_package_type:ID
-//         $users_permissions_users:[ID]
-//         $Mode:String
-//         $mrp:Float
-//     ){
-//         createSuggestedPricing(
-//             data:{
-//                 fitness_package_type:$fitness_package_type
-//                 users_permissions_users:$users_permissions_users
-//                 Mode: $Mode
-//                 mrp: $mrp
-//             }
-//         ){
-//             data{
-//                 id
-//             }
-//         }
-//     }
-// `
 export const CREATE_FITNESS_PRICING_ASSIT = gql`
     mutation createSuggestedPricing($data:SuggestedPricingInput!){
         createSuggestedPricing(

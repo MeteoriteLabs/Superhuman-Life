@@ -51,7 +51,6 @@ function VoucherAction(props, ref) {
         }
     }
 
-
     // View Voucher
     const FetchData = () => useQuery(GET_VOUCHERS_BY_ID, {
         variables: {
