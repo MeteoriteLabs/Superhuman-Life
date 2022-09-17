@@ -147,7 +147,6 @@ export default function Fitness() {
                     const editPackagePricing = () => {
                         pricingAssistAction.current.TriggerForm({ id: row.original.id, actionType: 'edit', rowData: row.original }
                         )
-                        console.log(row.original.id);
                     };
                     const arrayAction = [
                         { actionName: 'Edit', actionClick: editPackagePricing },
