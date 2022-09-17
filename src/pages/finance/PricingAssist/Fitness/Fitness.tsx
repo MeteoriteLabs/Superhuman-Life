@@ -34,18 +34,18 @@ export default function Fitness() {
     })
 
     // load function for suggested price query
-    const loadData = (data) => {
+    const loadData = (data: any) => {
 
         const flattenSuggestedPricing = flattenObj({ ...data });
 
         const flattenFitnessPackages = flattenObj({ ...fitness_package });
 
-        const fitnessPackageObject = flattenFitnessPackages && flattenFitnessPackages.fitnessPackageTypes && flattenFitnessPackages.fitnessPackageTypes.length && flattenFitnessPackages.fitnessPackageTypes.filter((currentValue) => {
+        const fitnessPackageObject = flattenFitnessPackages && flattenFitnessPackages.fitnessPackageTypes && flattenFitnessPackages.fitnessPackageTypes.length && flattenFitnessPackages.fitnessPackageTypes.filter((currentValue: any) => {
             return currentValue.PricingRequired === true
-        }).map((currValue) => {
+        }).map((currValue: any) => {
             return currValue.Modes.Channel.map((channelMode: String[]) => {
 
-                const indexOfPackage = flattenSuggestedPricing.suggestedPricings.findIndex((element) => element.Mode === channelMode && element.fitness_package_type.type === currValue.type)
+                const indexOfPackage = flattenSuggestedPricing.suggestedPricings.findIndex((element: any) => element.Mode === channelMode && element.fitness_package_type.type === currValue.type)
 
                 return {
                     id: indexOfPackage !== -1 ? flattenSuggestedPricing.suggestedPricings[indexOfPackage].id : "",
