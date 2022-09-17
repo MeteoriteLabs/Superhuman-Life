@@ -5,7 +5,7 @@ export default function PersonaTrainingMode({ type, actionType, widgetProps, PTP
 
 
     let arrMode = ["Online", "Offline", "Hybrid", "Online Workout", "Offline Workout"];
-    if (type !== "Personal Training") {
+    if (type !== "One-On-One") {
         arrMode = arrMode.slice(0, 3)
     }
 

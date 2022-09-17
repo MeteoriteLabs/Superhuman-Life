@@ -12,7 +12,7 @@ import { Subject } from 'rxjs';
 interface Operation {
     id: string;
     actionType: 'create' | 'manager' | 'details' | "allClients";
-    type: 'Personal Training' | 'Group Class' | 'Classic Class' | 'Custom Class';
+    type: "One-On-One" | 'Group Class' | 'Classic Class' | 'Custom Class';
     duration: number;
     rowData: any
 }

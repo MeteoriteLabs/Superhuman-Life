@@ -172,7 +172,6 @@ function CreateEditActivity(props: any, ref: any) {
           }
 
           function updateTemplateSessionsFunc(id: any){
-               debugger;
                sessionIds_new.push(id);
                if(frm.day.length === sessionIds_new.length){
                     updateTemplateSessions({

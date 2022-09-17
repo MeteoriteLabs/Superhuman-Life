@@ -82,7 +82,9 @@ function CreateEditPackage(props: any, ref: any) {
             setOperation(msg);
 
             // if (msg && !msg.id) //render form if no message id
+            if(msg.type !== 'delete' && msg.type !== 'toggle-status'){
                 modalTrigger.next(true);
+            }
         }
     }));
 
@@ -123,7 +125,6 @@ function CreateEditPackage(props: any, ref: any) {
         let booking: any = {};
         let details: any = {};
         console.log(msg);
-        debugger;
         for(var i =0; i<msg.fitnesspackagepricing.length; i++){
             PRICING_TABLE_DEFAULT[i].mrp = msg.fitnesspackagepricing[i].mrp;
             PRICING_TABLE_DEFAULT[i].suggestedPrice = msg.fitnesspackagepricing[i].suggestedPrice;
@@ -142,7 +143,7 @@ function CreateEditPackage(props: any, ref: any) {
         details.intensity = ENUM_FITNESSPACKAGE_INTENSITY[msg.Intensity];
         details.pricingDetail = msg.fitnesspackagepricing[0]?.mrp === 'free' ? 'free' : JSON.stringify(PRICING_TABLE_DEFAULT);
         details.publishingDate = moment(msg.publishing_date).format('YYYY-MM-DD');
-        details.tag = msg?.tags === null ? "" : msg.tags;
+        details.tags = msg?.tags === null ? "" : msg.tags;
         details.user_permissions_user = msg.users_permissions_user.id;
         details.visibility = msg.is_private === true ? 1 : 0;
         booking.acceptBooking = msg.booking_config?.isAuto === true ? 1 : 0;
@@ -179,7 +180,7 @@ function CreateEditPackage(props: any, ref: any) {
 
     function CreatePackage(frm: any) {
         frmDetails = frm;
-        frm.equipmentList = JSON.parse(frm.equipmentList).map((x: any) => x.id).join(', ').split(', ');
+        frm.equipmentList = JSON.parse(frm.equipmentList).map((item: any) => item.id).join(",").split(",");
         frm.disciplines = JSON.parse(frm.disciplines).map((x: any) => x.id).join(', ').split(', ');
         frm.programDetails = JSON.parse(frm.programDetails)
         frm.datesConfig = JSON.parse(frm.datesConfig)
@@ -203,7 +204,7 @@ function CreateEditPackage(props: any, ref: any) {
                 recordedclasses: frm.programDetails?.recorded,
                 restdays: frm.programDetails?.rest,
                 is_private: frm.visibility === 1 ? true : false,
-                bookingleadday: frm.bookingleaddat,
+                bookingleadday: frm.bookingleadday,
                 fitness_package_type: fitnessTypes[0].id,
                 fitnesspackagepricing: JSON.parse(frm.pricingDetail).filter((item: any) => item.mrp !== null),
                 ptclasssize: ENUM_FITNESSPACKAGE_PTCLASSSIZE[frm.classSize],
@@ -221,7 +222,7 @@ function CreateEditPackage(props: any, ref: any) {
     function EditPackage(frm: any) {
         frmDetails = frm;
         console.log('edit message', frm);
-        frm.equipmentList = JSON.parse(frm.equipmentList).map((x: any) => x.id).join(', ').split(', ');
+        frm.equipmentList = JSON.parse(frm.equipmentList).map((item: any) => item.id).join(",").split(",");
         frm.disciplines = JSON.parse(frm.disciplines).map((x: any) => x.id).join(', ').split(', ');
         frm.programDetails = JSON.parse(frm.programDetails)
         frm.datesConfig = JSON.parse(frm.datesConfig)
@@ -245,7 +246,7 @@ function CreateEditPackage(props: any, ref: any) {
                 recordedclasses: frm.programDetails?.recorded,
                 restdays: frm.programDetails?.rest,
                 is_private: frm.visibility === 1 ? true : false,
-                bookingleadday: frm.bookingleaddat,
+                bookingleadday: frm.bookingleadday,
                 fitness_package_type: fitnessTypes[0].id,
                 fitnesspackagepricing: JSON.parse(frm.pricingDetail).filter((item: any) => item.mrp !== null),
                 ptclasssize: ENUM_FITNESSPACKAGE_PTCLASSSIZE[frm.classSize],

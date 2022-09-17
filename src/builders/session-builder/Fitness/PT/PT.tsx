@@ -24,7 +24,7 @@ export default function Group(props) {
     const mainQuery = useQuery(GET_SESSIONS_FROM_TAGS, {
         variables: {
             id: auth.userid,
-            tagType: 'Personal Training'
+            tagType: "One-On-One"
         },
         onCompleted: (data) => { console.log(data); loadData(data) },
         fetchPolicy: 'no-cache'
@@ -33,7 +33,7 @@ export default function Group(props) {
     // useQuery(GET_ALL_CLIENT_PACKAGE_BY_TYPE, {
     //     variables: {
     //         id: auth.userid,
-    //         type: 'Personal Training',
+    //         type: "One-On-One",
     //     },
     //     onCompleted: (data) => loadData(data)
     // })
@@ -244,7 +244,7 @@ export default function Group(props) {
                             };
 
                             const actionClick2 = () => {
-                                fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'details', type: "Personal Training", rowData: row.original })
+                                fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'details', type: "One-On-One", rowData: row.original })
                             };
 
                             const arrayAction = [

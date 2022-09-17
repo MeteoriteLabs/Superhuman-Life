@@ -295,9 +295,9 @@ const Schedular = (props: any) => {
                     arr[calculateDay(props.startDate, val.session_date)][startTimeHour][startTimeMinute] = [];
                 }
                 arr[calculateDay(props.startDate, val.session_date)][startTimeHour][startTimeMinute].push({
-                    "title": val.activity === null ? val.workout.workouttitle : val.activity.title, "color": "skyblue",
+                    "title": val.activity === null ? val.workout?.workouttitle : val.activity.title, "color": "skyblue",
                     "day": calculateDay(props.startDate, val.session_date), "hour": startTimeHour, "min": startTimeMinute, "type": val.type,
-                    "endHour": endTimeHour, "endMin": endTimeMin, "id": val.activity === null ? val.workout.id : val.activity.id, "mode": val.mode,
+                    "endHour": endTimeHour, "endMin": endTimeMin, "id": val.activity === null ? val.workout?.id : val.activity.id, "mode": val.mode,
                     "tag": val.tag, "sessionId": val.id, "activityTarget": val.activity === null ? null : val.activity_target, "sessionDate": val.session_date,
                 });
             })
@@ -1336,7 +1336,7 @@ const Schedular = (props: any) => {
                             </Col>
                             <Col lg={4}>
                                 <Form.Control value={tag === "" ? event.tag : tag} disabled={props.classType === 'Custom' ? false : true} as="select" onChange={(e) => {setTag(e.target.value)}}>
-                                    <option value="Personal Training">Personal Training</option>
+                                    <option value="One-On-One">Personal Training</option>
                                     <option value="Group Class">Group Class</option>
                                     <option value="Classic">Classic</option>
                                 </Form.Control>

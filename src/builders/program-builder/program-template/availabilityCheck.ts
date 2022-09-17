@@ -22,7 +22,6 @@ export const AvailabilityCheck = (props: any) =>  {
     const oldTimeEnd = convertToMomnet(event.endHour + ":" + event.endMin);
     if(newTime.startTime === ""){
         for(var i=0; i<sessions.length; i++){
-            debugger
             if(convertToMomnet(sessions[i].start_time).isSameOrAfter(oldTimeStart) && convertToMomnet(sessions[i].start_time).isSameOrBefore(oldTimeEnd)){
                 return true;
             }

@@ -43,7 +43,7 @@ const DayView = (props: any) => {
   useQuery(GET_ALL_CLIENT_PACKAGE_BY_TYPE, {
     variables: {
       id: auth.userid,
-      type_in: ["Personal Training", "Group Class", "Custom"],
+      type_in: ["One-On-One", "Group Class", "Custom"],
     },
     onCompleted: (data) => {
       // loadData(data);
@@ -191,7 +191,7 @@ const DayView = (props: any) => {
     function handleIcon(tag: any) {
       if (tag === "Group Class") {
         return "group";
-      } else if (tag === "Personal Training") {
+      } else if (tag === "One-On-One") {
         return "pt";
       } else {
         return "classic";

@@ -4,7 +4,7 @@ import PTGroupPreview from './PTGroupPreview'
 import RecordedPreview from './RecordedPreview'
 
 type Props = {
-    type: 'Personal Training' | 'Group Class' | 'Custom Fitness' | 'Classic Class';
+    type: "One-On-One" | 'Group Class' | 'Custom Fitness' | 'Classic Class';
     disciplines: any,
     level: "Beginner" | "Intermediate" | "Advanced",
     packageType: "personal-training" | "group" | "classic" | "custom",

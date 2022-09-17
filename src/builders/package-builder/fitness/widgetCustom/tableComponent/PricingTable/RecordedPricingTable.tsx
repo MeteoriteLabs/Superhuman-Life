@@ -5,7 +5,7 @@ type Props = {
     recordedclasses: number,
     packageTypeName: string,
     mode: "Online" | "Offline" | "Hybird" | "Workout" | "Online Workout" | "Offline Workout"
-    type: 'Personal Training' | 'Group Class' | 'Custom Fitness' | 'Classic Class';
+    type: "One-On-One" | 'Group Class' | 'Custom Fitness' | 'Classic Class';
 }
 
 

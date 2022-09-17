@@ -69,7 +69,7 @@ const SchedulerScreen = (props: any) => {
                   <i className="fa fa-chevron-right ml-5" style={{ cursor: 'pointer'}}></i>
                 </span>
                </div>
-               <Schedular type="date" days={moment(scheduleDate).daysInMonth()} classType={'Personal Training'} restDays={restDays.sessionsBookings} programId={clientsSessions} startDate={moment(scheduleDate).startOf('month').format('YYYY-MM-DD')} clientId={1} clientSessions={true}/>
+               <Schedular type="date" days={moment(scheduleDate).daysInMonth()} classType={"One-On-One"} restDays={restDays.sessionsBookings} programId={clientsSessions} startDate={moment(scheduleDate).startOf('month').format('YYYY-MM-DD')} clientId={1} clientSessions={true}/>
           </div>
      );
 };

@@ -74,8 +74,9 @@ function CreateEditChannel(props: any, ref: any) {
             schema.startDate = props.startDate;
             schema.duration = props.duration;
 
-            // if (msg && !msg.id) //render form if no message id
-            modalTrigger.next(true);
+            if(msg.type !== 'delete' && msg.type !== 'toggle-status'){
+                modalTrigger.next(true);
+            }
         }
     }));
 
@@ -100,9 +101,9 @@ function CreateEditChannel(props: any, ref: any) {
         let msg: any = flattenData.fitnesspackages[0];
         let booking: any = {};
         let details: any = {};
-
-        if (msg.groupinstantbooking) {
-            for (var i = 0; i < msg.fitnesspackagepricing.length; i++) {
+        
+        if(msg.groupinstantbooking){
+            for(var i =0; i<msg.fitnesspackagepricing.length; i++){
                 PRICING_TABLE_DEFAULT_WITH_INSTANTBOOKING[i].mrp = msg.fitnesspackagepricing[i].mrp;
                 PRICING_TABLE_DEFAULT_WITH_INSTANTBOOKING[i].suggestedPrice = msg.fitnesspackagepricing[i].suggestedPrice;
                 PRICING_TABLE_DEFAULT_WITH_INSTANTBOOKING[i].voucher = msg.fitnesspackagepricing[i].voucher;

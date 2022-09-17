@@ -77,7 +77,7 @@ export default function SuggestedPricing({ type, mode, auth, fitnesspackageprici
     // PT
     const PTSuggestedPricing = (data:any) => {
         let ptDuration: number[] = [];
-        const arrayPTdata = data.suggestedPricings.filter((item => item.fitness_package_type.type === "Personal Training"));
+        const arrayPTdata = data.suggestedPricings.filter((item => item.fitness_package_type.type === "One-On-One"));
         const arrayPTClasses = [ptonline, ptoffline];
 
         const partnerSuggestPrice = calculateSuggestPrice(arrayPTdata, arrayPTClasses);
@@ -118,11 +118,11 @@ export default function SuggestedPricing({ type, mode, auth, fitnesspackageprici
         const arrayCustomPrice: number[] = []
         let num = 0;
         if(data?.suggestedPricings?.length > 0){
-            const arrayPTdata = data.suggestedPricings.filter((item: { fitness_package_type: { type: "Personal Training" | "Group Class" | "Classic Class"; }; }) => item.fitness_package_type.type === "Personal Training");
+            const arrayPTdata = data.suggestedPricings.filter((item: { fitness_package_type: { type: "One-On-One" | "Group Class" | "Classic Class"; }; }) => item.fitness_package_type.type === "One-On-One");
 
-            const arrayGroupData = data.suggestedPricings.filter((item: { fitness_package_type: { type: "Personal Training" | "Group Class" | "Classic Class"; }; }) => item.fitness_package_type.type === "Group Class");
+            const arrayGroupData = data.suggestedPricings.filter((item: { fitness_package_type: { type: "One-On-One" | "Group Class" | "Classic Class"; }; }) => item.fitness_package_type.type === "Group Class");
 
-            const arrayClassicData = data.suggestedPricings.filter((item: { fitness_package_type: { type: "Personal Training" | "Group Class" | "Classic Class"; }; }) => item.fitness_package_type.type === "Classic Class");
+            const arrayClassicData = data.suggestedPricings.filter((item: { fitness_package_type: { type: "One-On-One" | "Group Class" | "Classic Class"; }; }) => item.fitness_package_type.type === "Classic Class");
         
 
 
@@ -159,7 +159,7 @@ export default function SuggestedPricing({ type, mode, auth, fitnesspackageprici
         const flattenedData = flattenObj({...data});
         // console.log("🚀 ~ file: SuggestedPricing.tsx ~ line 165 ~ fillData ~ flattenedData", flattenedData)
         console.log(fitness_package_type);
-        if (fitness_package_type === "Personal Training") {
+        if (fitness_package_type === "One-On-One") {
             PTSuggestedPricing(flattenedData)
 
             // group

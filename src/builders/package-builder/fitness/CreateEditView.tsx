@@ -27,7 +27,7 @@ import {flattenObj} from '../../../components/utils/responseFlatten';
 interface Operation {
     id: string;
     actionType: 'create' | 'edit' | 'view' | 'toggle-status' | 'delete';
-    type: 'Personal Training' | 'Group Class' | 'Custom Fitness' | 'Classic Class';
+    type: 'One-On-One' | 'Group Class' | 'Custom Fitness' | 'Classic Class';
     current_status: boolean;
 }
 
@@ -58,7 +58,7 @@ function CreateEditView(props: any, ref: any) {
     useEffect(() => {
         const { actionType, type } = operation;
 
-        if (type === 'Personal Training') {
+        if (type === 'One-On-One') {
             setPackageTypeName("personal-training");
         } else if (type === 'Group Class') {
             setPackageTypeName("group");
@@ -88,8 +88,8 @@ function CreateEditView(props: any, ref: any) {
         fitness_package_type = formData?.fitness_package_type.type
     } 
     else if (operation.actionType === "create") {
-        if (operation.type === "Personal Training") {
-            fitness_package_type = "Personal Training";
+        if (operation.type === "One-On-One") {
+            fitness_package_type = "One-On-One";
         } else if (operation.type === "Group Class") {
             fitness_package_type = "Group Class";
         } else if (operation.type === "Custom Fitness") {
@@ -101,7 +101,7 @@ function CreateEditView(props: any, ref: any) {
     
     // before fixed
     // else if (operation.actionType === "create") {
-    //     if (operation.type === "Personal Training") {
+    //     if (operation.type === "One-On-One") {
     //         fitness_package_type = props.packageType.fitnessPackageTypes[0].id;
     //     } else if (operation.type === "Group Class") {
     //         fitness_package_type = props.packageType.fitnessPackageTypes[1].id;
@@ -298,7 +298,6 @@ function CreateEditView(props: any, ref: any) {
         const packageDetail = flattedData.fitnesspackages[0];
 
         console.log(packageDetail);
-        debugger;
 
         // packageDetails?.equipment_lists = JSON.stringify(packageDetail?.equipment_lists);
 

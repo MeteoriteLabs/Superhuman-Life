@@ -1,4 +1,4 @@
-import React, { useContext, useImperativeHandle, useState } from 'react';
+import React, { useContext, useImperativeHandle, useState, useEffect } from 'react';
 import { useQuery, useMutation } from "@apollo/client";
 import ModalView from "../../../components/modal";
 import { FETCH_DATA, CREATE_WORKOUT, UPDATE_WORKOUT, DELETE_WORKOUT, FETCH_FITNESS_PROGRAMS } from "./queries";
@@ -14,23 +14,6 @@ interface Operation {
   type: 'create' | 'edit' | 'view' | 'toggle-status' | 'delete';
   current_status: boolean;
 }
-
-const emptyWorkoutState = {
-  workout: '',
-  intensity: 0,
-  discipline: '',
-  about: '',
-  benefits: '',
-  warmup: '',
-  coolDown: '',
-  AddText: '',
-  AddURL: '',
-  level: 0,
-  Upload: '',
-  calories: '',
-  equipment: '',
-  muscleGroup: ''
-};
 
 function CreateEditWorkout(props: any, ref: any) {
   const auth = useContext(AuthContext);
@@ -76,6 +59,12 @@ function CreateEditWorkout(props: any, ref: any) {
     Medium,
     High
   }
+
+  useEffect(() => {
+    if(operation.type === 'create'){
+      setWorkoutDetails({});
+    }
+}, [operation.type]);
 
   function FillDetails(data: any) {
     const flattenData = flattenObj({ ...data });
@@ -139,12 +128,14 @@ function CreateEditWorkout(props: any, ref: any) {
     if (frm.addWorkout.build) {
       frm.addWorkout.build = JSON.parse(frm.addWorkout.build);
     }
+    frm.discipline = JSON.parse(frm.discipline);
+    frm.equipment = JSON.parse(frm.equipment);
     createWorkout({
       variables: {
         workouttitle: frm.workout,
         intensity: ENUM_WORKOUTS_INTENSITY[frm.intensity],
         level: ENUM_EXERCISES_EXERCISELEVEL[frm.level],
-        fitnessdisciplines: frm.discipline.split(","),
+        fitnessdisciplines: frm.discipline.map((item: any) => { return item.id }).join(',').split(','),
         About: frm.about,
         Benifits: frm.benefits,
         warmup: (frm.addWorkout.AddWorkout === "Build" ? (frm.addWorkout.build.warmup ? frm.addWorkout.build.warmup : null) : null),
@@ -154,7 +145,7 @@ function CreateEditWorkout(props: any, ref: any) {
         workout_URL: (frm.addWorkout.AddWorkout === "Add URL" ? frm.addWorkout.AddURL : null),
         Workout_Video_ID: (frm.addWorkout.AddWorkout === "Upload" ? frm.addWorkout.Upload : null),
         calories: frm.calories,
-        equipment_lists: frm.equipment.split(","),
+        equipment_lists: frm.equipment.map((item: any) => { return item.id }).join(',').split(','),
         muscle_groups: frm.muscleGroup.split(","),
         users_permissions_user: frm.user_permissions_user
       }
@@ -166,13 +157,15 @@ function CreateEditWorkout(props: any, ref: any) {
     if (frm.addWorkout.build) {
       frm.addWorkout.build = JSON.parse(frm.addWorkout.build);
     }
+    frm.discipline = JSON.parse(frm.discipline);
+    frm.equipment = JSON.parse(frm.equipment);
     editWorkout({
       variables: {
         workoutid: operation.id,
         workouttitle: frm.workout,
         intensity: ENUM_WORKOUTS_INTENSITY[frm.intensity],
         level: ENUM_EXERCISES_EXERCISELEVEL[frm.level],
-        fitnessdisciplines: frm.discipline.split(","),
+        fitnessdisciplines: frm.discipline.map((item: any) => { return item.id }).join(',').split(','),
         About: frm.about,
         Benifits: frm.benefits,
         warmup:
@@ -201,7 +194,7 @@ function CreateEditWorkout(props: any, ref: any) {
             : null,
         Workout_Video_ID: (frm.addWorkout.AddWorkout === "Upload" ? frm.addWorkout.Upload : null),
         calories: frm.calories,
-        equipment_lists: frm.equipment.split(","),
+        equipment_lists: frm.equipment.map((item: any) => { return item.id }).join(',').split(','),
         muscle_groups: frm.muscleGroup.split(","),
         users_permissions_user: frm.user_permissions_user,
       },
@@ -254,7 +247,7 @@ function CreateEditWorkout(props: any, ref: any) {
         formUISchema={ operation.type === 'view' ? schemaView : schema }
         formSchema={workoutSchema}
         formSubmit={name === "View" ? () => { modalTrigger.next(false); } : (frm: any) => { OnSubmit(frm); }}
-        formData={operation.type === 'create' ? emptyWorkoutState : workoutDetails}
+        formData={workoutDetails}
         widgets={widgets}
         modalTrigger={modalTrigger}
       />

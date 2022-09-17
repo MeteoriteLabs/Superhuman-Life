@@ -82,7 +82,7 @@ export default function Fitness() {
                     let name = '';
 
                     switch (row.original.type) {
-                        case "Personal Training": {
+                        case "One-On-One": {
                             switch (row.original.mode) {
                                 case "Online": {
                                     imgName = "custompersonal-training-Online.svg";

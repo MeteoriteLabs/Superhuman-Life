@@ -119,16 +119,18 @@ export default function Cohort(props) {
 
                     // proManagerId: packageItem.proManagerId,
                     // proManagerFitnessId: packageItem.proManagerFitnessId,
-                    client: packageItem.client_packages.length > 0 ? packageItem.client_packages : "N/A",
+                    client: packageItem.client_packages.length > 0 ? packageItem.client_packages : undefined,
                     // time: packageItem.published_at ? moment(packageItem.published_at).format('h:mm:ss a') : "N/A",
                     programName: packageItem.tag_name ? packageItem.tag_name : "N/A",
                     programStatus: packageItem.fitnesspackage.Status === true ? "Assigned" : "N/A",
-                    renewal: calculateProgramRenewal(packageItem.sessions),
+                    renewal: calculateProgramRenewal(packageItem?.sessions),
                 }
             })]
         )
 
     }
+
+    console.log(userPackage);
 
     function calculateProgramRenewal(sessions) {
         console.log(sessions);
@@ -241,6 +243,7 @@ export default function Cohort(props) {
                         accessor: "client",
                         Header: "Client",
                         Cell: (row) => {
+                            console.log(row.value)
                             return <div >
                                 {row.value?.length === undefined ? <p className='text-center mb-0'>N/A</p> :
                                     row.value?.length === 1 ?
@@ -331,7 +334,7 @@ export default function Cohort(props) {
 
                     // proManagerId: packageItem.proManagerId,
                     // proManagerFitnessId: packageItem.proManagerFitnessId,
-                    client: packageItem.client_packages.length > 0 ? packageItem.client_packages : "N/A",
+                    client: packageItem.client_packages.length > 0 ? packageItem.client_packages : undefined,
                     // time: packageItem.published_at ? moment(packageItem.published_at).format('h:mm:ss a') : "N/A",
                     programName: packageItem.tag_name ? packageItem.tag_name : "N/A",
                     programStatus: packageItem.fitnesspackage.Status === true ? "Assigned" : "N/A",

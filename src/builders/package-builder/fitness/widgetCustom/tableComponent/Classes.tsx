@@ -2,7 +2,7 @@ import React from 'react'
 
 
 type Props = {
-    type: 'Personal Training' | 'Group Class' | 'Custom Fitness' | 'Classic Class';
+    type: "One-On-One" | 'Group Class' | 'Custom Fitness' | 'Classic Class';
     numberClass:number
     // mode: "Online" | "Offline" | "Hybird" | "Workout" | "Online Workout" | "Offline Workout"
     mode: "Online" | "Offline" | "Hybird" | "Workout" | "Online Workout" | "Offline Workout"

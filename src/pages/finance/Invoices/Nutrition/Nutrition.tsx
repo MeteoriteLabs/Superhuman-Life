@@ -151,13 +151,13 @@ export default function Nutrition() {
                 Header: "Actions",
                 Cell: ({ row }: any) => {
                     const actionClick1 = () => {
-                        // fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'manage', type: "Personal Training", rowData: "" })
+                        // fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'manage', type: "One-On-One", rowData: "" })
                     };
                     const actionClick2 = () => {
-                        // fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'manage', type: "Personal Training", rowData: "" })
+                        // fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'manage', type: "One-On-One", rowData: "" })
                     };
                     const actionClick3 = () => {
-                        // fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'manage', type: "Personal Training", rowData: "" })
+                        // fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'manage', type: "One-On-One", rowData: "" })
                     };
                     const arrayAction = [
                         { actionName: 'View', actionClick: actionClick1 },
