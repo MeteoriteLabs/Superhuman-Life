@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { withTheme, utils } from "@rjsf/core";
 import { Theme as Bootstrap4Theme } from "@rjsf/bootstrap-4";
 import { Button, Col, Modal, ProgressBar, Row } from "react-bootstrap";
+import './modal.css';
 
 export default function ModalView({
   name,
@@ -58,7 +59,6 @@ export default function ModalView({
 
   //     setStep(step + 1);
   //     setFormValues({ ...formValues, ...data });
-  //     debugger;
   //   } else {
   //     // formSubmit({ ...formValues, ...data });
   //     formSubmit({ ...formValues, ...data });
@@ -68,8 +68,7 @@ export default function ModalView({
   // }
 
   return (
-    <>
-      <Modal size="xl" show={show} onHide={() => setShow(false)} centered>
+      <Modal show={show} onHide={() => setShow(false)} dialogClassName="custom-large-modal" centered>
         <Modal.Header closeButton>
           <Modal.Title as={Row} className="w-100">
             <Col xs={12} md={12} lg={12}>
@@ -167,6 +166,5 @@ export default function ModalView({
           )}
         </Modal.Footer>
       </Modal>
-    </>
   );
 }

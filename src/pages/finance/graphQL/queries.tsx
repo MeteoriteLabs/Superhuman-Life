@@ -1,7 +1,5 @@
 import { gql } from "@apollo/client"
 
-
-
 export const GET_ALL_SUGGESTED_PRICING = gql`
     query suggestedPricings($id:ID!){
         suggestedPricings(
@@ -16,6 +14,7 @@ export const GET_ALL_SUGGESTED_PRICING = gql`
           mrp
           fitness_package_type{
             data{
+              id
               attributes{
                 type
               }
@@ -48,7 +47,6 @@ export const GET_ALL_VOUCHERS = gql`
 }
 `
 
-
 export const GET_VOUCHERS_BY_ID = gql`
     query vouchers($id: ID!){
         vouchers(filters:{ id: {eq:$id}}){
@@ -65,9 +63,6 @@ export const GET_VOUCHERS_BY_ID = gql`
         }
 }
 `
-
-
-
 
 export const GET_ALL_BOOKINGS_FINANCE = gql `
 query clientBookings($id: ID!) {
@@ -137,5 +132,3 @@ query clientBookings($id: ID!) {
     }
   }
 `
-
-

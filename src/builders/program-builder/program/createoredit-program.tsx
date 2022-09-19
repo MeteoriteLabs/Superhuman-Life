@@ -1,4 +1,4 @@
-import React, { useContext, useImperativeHandle, useState } from 'react';
+import React, { useContext, useImperativeHandle, useState, useEffect } from 'react';
 import { useQuery, useMutation } from "@apollo/client";
 import ModalView from "../../../components/modal";
 import { CREATE_PROGRAM, DELETE_PROGRAM, GET_DATA, UPDATE_PROGRAM } from "./queries";
@@ -15,14 +15,6 @@ interface Operation {
     type: 'create' | 'edit' | 'view' | 'toggle-status' | 'delete';
     current_status: boolean;
 }
-
-const emptyProgramState = {
-    programName:'',
-    duration:'',
-    level:0,
-    discipline:'',
-    details:''
-};
 
 function CreateEditProgram(props: any, ref: any) {
     const auth = useContext(AuthContext);
@@ -53,6 +45,12 @@ function CreateEditProgram(props: any, ref: any) {
         Advanced,
         None
     }
+
+    useEffect(() => {
+        if(operation.type === 'create'){
+            setProgramDetails({});
+        }
+    }, [operation.type]);
 
     function FillDetails(data: any) {
         const flattenData = flattenObj({ ...data });
@@ -166,7 +164,7 @@ function CreateEditProgram(props: any, ref: any) {
                 formUISchema={operation.type === 'view' ? schemaView : schema}
                 formSchema={programSchema}
                 formSubmit={name === "View" ? () => { modalTrigger.next(false); } : (frm: any) => { OnSubmit(frm); }}
-                formData={operation.type === 'create' ? emptyProgramState : programDetails}
+                formData={programDetails}
                 widgets={widgets}
                 modalTrigger={modalTrigger}
                 type={operation.type}

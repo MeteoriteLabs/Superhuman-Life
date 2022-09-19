@@ -6,37 +6,41 @@
             "packagename",
             "disciplines",
             "equipmentList",
+            "tags",
             "level",
             "intensity"
         ],
         "properties": {
             "packagename": {
                 "type": "string",
-                "title": "Name of Package"
+                "title": "Name of Offering",
+                "description": "Enter the Title for Offering"
             },
             "disciplines": {
                 "type": "string",
                 "title": "Disciplines",
-                "description": "it is a required field"
+                "description": "Choose the relevant discipline for the offering"
             },
             "equipmentList": {
                 "type": "string",
-                "description": "it is a required field  "
+                "description": "Add all equipments required for the offering"
             },
             "tags": {
                 "type": "string",
                 "title": "Tags",
-                "description": "User hashtags to improve your listing"
+                "description": "Use hashtags to improve your listing"
             },
             "level": {
                 "type": "number",
                 "title": "Level",
-                "enum": [0, 1, 2],
+                "enum": [0, 1, 2, 3],
                 "enumNames": [
                     "Beginner",
                     "Intermediate",
-                    "Advanced"
-                ]
+                    "Advanced", 
+                    "No level"
+                ],
+                "description": "Select the relevant level for the offering"
             },
             "intensity": {
                 "type": "number",
@@ -46,7 +50,8 @@
                     "Low",
                     "Moderate",
                     "High"
-                ]
+                ],
+                "description": "Set the relevant intensity for the level"
             }
         }
     },
@@ -56,6 +61,7 @@
         "required": [
             "About",
             "Benifits",
+            "languages",
             "classSize",
             "thumbnail",
             "Upload"
@@ -68,6 +74,10 @@
             "Benifits": {
                 "type": "string",
                 "title": "Benefits"
+            },
+            "languages": {
+                "type": "string",
+                "title": "Languages"
             },
             "classSize": {
                 "type": "number",
@@ -85,7 +95,21 @@
             },
             "Upload": {
                 "type": "object",
+                "title": "Offering Screen Image/Video",
                 "oneOf": [
+                    {
+                        "title": "Video URL", 
+                          "properties": {
+                            "VideoUrl": {
+                              "type": "string",
+                              "format": "uri",
+                              "description": "Add Youtube URL"
+                            }
+                          },
+                          "required": [
+                            "VideoUrl"
+                          ]
+                        },
                     {
                         "title": "Upload picture or video", 
                         "properties": {
@@ -96,18 +120,6 @@
                       },
                       "required": [
                         "upload"
-                      ]
-                    },
-                    {
-                    "title": "Video URL", 
-                      "properties": {
-                        "VideoUrl": {
-                          "type": "string",
-                          "format": "uri"
-                        }
-                      },
-                      "required": [
-                        "VideoUrl"
                       ]
                     }
                 ]
@@ -133,7 +145,7 @@
             "bookingleadday": {
                 "type": "number",
                 "description": "The lead time will allow you to discuss, understand, request data and then build a custom program.",
-                "title": "Consumer can choose start date, after",
+                "title": "User can choose start date, after",
                 "enum": [0, 1, 2, 3, 4, 5],
                 "enumNames": [
                     "1 day",
@@ -158,7 +170,7 @@
 
     },
     "6": {
-        "title": "Package Settings",
+        "title": "Offering Settings",
        "type": "object",
        "required": [
         "visibility",
@@ -174,7 +186,7 @@
                     "Public",
                     "Private"
                 ],
-                "description": "The package will be save as draft and wait for you to publish it."
+                "description": "Public: The Offering will be visible to the user as soon as it is created, Private: The offering will be save as draft and wait for you to publish it."
             },
             "datesConfig": {
                 "type": "string"
@@ -183,32 +195,11 @@
                 "title": "Booking Config",
                 "type": "object",
                 "required": [
-                    "acceptBooking",
-                    "maxBookingMonth",
-                    "maxBookingDay"
+                    "bookingConfig"
                 ],
                 "properties": {
-                    "acceptBooking": {
-                        "type": "number",
-                        "title": "",
-                        "enum": [0, 1],
-                        "enumNames": [
-                            "Manual",
-                            "Auto"
-                        ],
-                        "description": "In auto it will automatically accept all bookings"
-                    },
-                    "maxBookingMonth": {
-                        "type": "number",
-                        "title": "Maximum booking/per month",
-                        "minimum": 2,
-                        "maximum": 50
-                    },
-                    "maxBookingDay": {
-                        "type": "number",
-                        "title": "Maximum booking/per day",
-                        "minimum": 2,
-                        "maximum": 10
+                    "bookingConfig": {
+                        "type": "string"
                     }
                 }
             }

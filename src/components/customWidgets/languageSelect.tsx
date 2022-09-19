@@ -29,11 +29,17 @@ const MultiSelect = (props: any) => {
      }
 
      function OnChange(e){
-        props.onChange(JSON.stringify(e));
-        setMultiSelections(e);
+          const unique = [...new Map(e.map((m) => [m.id, m])).values()];
+          setMultiSelections(unique);
      }
 
      FetchData();
+
+     if(multiSelections.length > 0){
+          props.onChange(JSON.stringify(multiSelections));
+     }else {
+          props.onChange(undefined);
+     }
 
      return (
           <div>
@@ -46,7 +52,7 @@ const MultiSelect = (props: any) => {
                placeholder="Select languages..."
                selected={multiSelections}
                multiple
-               disabled={props.readonly ? true : false}
+               disabled={props.readonly}
                />
           </div>
      )
