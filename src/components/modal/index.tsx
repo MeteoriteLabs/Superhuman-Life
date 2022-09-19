@@ -69,7 +69,7 @@ export default function ModalView({
   // }
 
   return (
-      <Modal show={show} onHide={() => setShow(false)} dialogClassName="modal-90w" centered>
+      <Modal show={show} onHide={() => setShow(false)} dialogClassName="custom-large-modal" centered>
         <Modal.Header closeButton>
           <Modal.Title as={Row} className="w-100">
             <Col xs={12} md={12} lg={12}>
