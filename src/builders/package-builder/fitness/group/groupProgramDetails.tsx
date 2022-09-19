@@ -40,9 +40,6 @@ const GroupProgramDetails = (props) => {
         if(offlineClasses > 30){
             setOfflinceClasses(30);
         }
-        if(restDays > handleMax(mode)){
-            setRestDays(handleMax(mode));
-        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [onlineClasses, offlineClasses, restDays, mode]);
 
@@ -92,6 +89,9 @@ const GroupProgramDetails = (props) => {
 
     function handleValidation(mode: string){
         //here we will check for online
+        if(restDays < 0){
+            return false;
+        }
         if(mode === '0'){
             if((onlineClasses + restDays) === 30){
                 return true;
@@ -148,18 +148,18 @@ const GroupProgramDetails = (props) => {
         props.onChange(undefined);
     }
 
-    function handleMax(mode: string){
+    useEffect(() => {
         if(mode === '0'){
-            return 30 - onlineClasses;
+            setRestDays(30 - onlineClasses);
         }
         if(mode === '1'){
-            return 30 - offlineClasses;
+            setRestDays(30 - offlineClasses);
         }
         if(mode === "2"){
-            return 30 - (onlineClasses + offlineClasses);
+            setRestDays(30 - (onlineClasses + offlineClasses));
         }
-        return 0;
-    }
+    }, [onlineClasses, offlineClasses, mode]);
+
 
     return (
         <>
@@ -263,14 +263,11 @@ const GroupProgramDetails = (props) => {
                               aria-describedby="inputGroup-sizing-default"
                               type='number'
                               min={0}
-                              max={handleMax(mode)}
                               value={restDays}
-                              disabled={inputDisabled}
-                              onChange={(e: any) => setRestDays(parseInt(e.target.value))}
+                              disabled={true}
                          />
                     </InputGroup>
                </Col>
-            <span className='small'>*It should add upto 30 classes per month</span>
           </Row>}
         </>
     );

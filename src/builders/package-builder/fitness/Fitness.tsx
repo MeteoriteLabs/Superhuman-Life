@@ -91,6 +91,7 @@ export default function FitnessTab(props) {
             accessor: "details", Header: "Details",
             Cell: ({ row }: any) => {
                 console.log(row.values.details);
+                console.log(currentIndex);
                 return <div className='d-flex justify-content-center align-items-center'>
                     {row.values.details[0] !== null && row.values.details[0] !== 0 ?
                         <div className="text-center">
@@ -138,7 +139,7 @@ export default function FitnessTab(props) {
                             onChange={(e) => {
                                 const updateSelectedDuration = [...selectedDuration];
                                 const updateCurrentindex = [...currentIndex];
-                                let value = 1
+                                let value = 1;
                                 if (e.target.value === "1") {
                                     value *= 3
                                 } else if (e.target.value === "2") {

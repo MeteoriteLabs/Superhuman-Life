@@ -50,7 +50,6 @@ function CreateClient(props: any, ref: any) {
      //       let details: any = {};
      //       let msg = data.UsersPermissionsUser;
      //       console.log(msg);
-     //       //debugger
      //       details.firstname = msg.username;
      //       details.email = msg.email;
      //       details.phone = msg.phone;

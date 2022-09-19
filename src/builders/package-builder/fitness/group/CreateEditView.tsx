@@ -2,7 +2,7 @@ import React, { useContext, useImperativeHandle, useState, useEffect } from 'rea
 import { useQuery, useMutation } from "@apollo/client";
 import ModalView from "../../../../components/modal";
 import { GET_SINGLE_PACKAGE_BY_ID, GET_FITNESS_PACKAGE_TYPES, ADD_SUGGESTION_NEW } from '../graphQL/queries';
-import { CREATE_PACKAGE, DELETE_PACKAGE, EDIT_PACKAGE, UPDATE_PACKAGE_STATUS, CREATE_BOOKING_CONFIG } from '../graphQL/mutations';
+import { CREATE_PACKAGE, DELETE_PACKAGE, EDIT_PACKAGE, UPDATE_PACKAGE_STATUS, CREATE_BOOKING_CONFIG, UPDATE_BOOKING_CONFIG } from '../graphQL/mutations';
 import { Modal, Button} from 'react-bootstrap';
 import AuthContext from "../../../../context/auth-context";
 // import StatusModal from "../../../../components/StatusModal/exerciseStatusModal";
@@ -43,6 +43,10 @@ function CreateEditPackage(props: any, ref: any) {
         console.log(r); modalTrigger.next(false); props.callback();
     }});
 
+    const [updateBookingConfig] = useMutation(UPDATE_BOOKING_CONFIG, {onCompleted: (r: any) => {
+        console.log(r); modalTrigger.next(false); props.callback();
+    }});
+
     const [createUserPackageSuggestion] = useMutation(ADD_SUGGESTION_NEW, {onCompleted: (data) => {
         modalTrigger.next(false);
         props.callback();
@@ -58,17 +62,28 @@ function CreateEditPackage(props: any, ref: any) {
                 }
             })
         }else {
+            const val = JSON.parse(frmDetails.config.bookingConfig);
             bookingConfig({
                 variables: {
-                    isAuto: frmDetails.config.acceptBooking === 0 ? false : true,
+                    isAuto: val.config === "Auto" ? true : false,
                     id: r.createFitnesspackage.data.id,
-                    bookings_per_day: frmDetails.config.maxBookingDay,
-                    bookings_per_month: frmDetails.config.maxBookingMonth,
+                    bookings_per_day: val.bookings,
+                    is_Fillmyslots: val.fillSchedule
                 }
             });
         }
     }});
-    const [editPackage] = useMutation(EDIT_PACKAGE,{onCompleted: (r: any) => { modalTrigger.next(false); props.callback(); } });
+    const [editPackage] = useMutation(EDIT_PACKAGE,{onCompleted: (r: any) => { 
+        const val = JSON.parse(frmDetails.config.bookingConfig);
+        updateBookingConfig({
+            variables: {
+                isAuto: val.config === "Auto" ? true : false,
+                id: frmDetails.bookingConfigId,
+                bookings_per_day: val.bookings,
+                is_Fillmyslots: val.fillSchedule
+            }
+        });
+    }});
 
     const [updatePackageStatus] = useMutation(UPDATE_PACKAGE_STATUS, {onCompleted: (data) => {
         props.callback();
@@ -124,7 +139,7 @@ function CreateEditPackage(props: any, ref: any) {
         const flattenedData = flattenObj({...data});
         console.log(flattenedData);
         let msg = flattenedData.fitnesspackages[0];
-        let booking: any = {};
+        let bookingConfig: any = {};
         let details: any = {};
         if(msg.groupinstantbooking){
             for(var i =0; i<msg.fitnesspackagepricing.length; i++){
@@ -151,21 +166,22 @@ function CreateEditPackage(props: any, ref: any) {
         details.expiryDate = moment(msg.expirydate).format('YYYY-MM-DD');
         details.level = ENUM_FITNESSPACKAGE_LEVEL[msg.level];
         details.intensity = ENUM_FITNESSPACKAGE_INTENSITY[msg.Intensity];
-        details.pricingDetail = msg.fitnesspackagepricing[0]?.mrp === 'free' ? 'free' : JSON.stringify(msg.groupinstantbooking ? PRICING_TABLE_DEFAULT_WITH_INSTANTBOOKING : PRICING_TABLE_DEFAULT);
+        details.pricingDetail = JSON.stringify(msg.groupinstantbooking ? PRICING_TABLE_DEFAULT_WITH_INSTANTBOOKING : PRICING_TABLE_DEFAULT);
         details.publishingDate = moment(msg.publishing_date).format('YYYY-MM-DD');
         details.tags = msg?.tags === null ? "" : msg.tags;
         details.user_permissions_user = msg.users_permissions_user.id;
         details.visibility = msg.is_private === true ? 1 : 0;
-        booking.acceptBooking = msg.booking_config?.isAuto === true ? 1 : 0;
-        booking.maxBookingDay = msg.booking_config?.bookingsPerDay;
-        booking.maxBookingMonth = msg.booking_config?.BookingsPerMonth;
-        details.config = booking;
+        bookingConfig.config = msg.booking_config?.isAuto === true ? "Auto" : "Manual";
+        bookingConfig.bookings = msg.booking_config?.bookingsPerDay;
+        bookingConfig.fillSchedule = msg.booking_config?.is_Fillmyslots;
+        details.config = {bookingConfig: JSON.stringify(bookingConfig)};
         details.programDetails = JSON.stringify({addressTag: msg.address === null ? 'At Client Address' : 'At My Address', address: [msg.address], mode: ENUM_FITNESSPACKAGE_MODE[msg.mode], offline: msg.groupoffline, online: msg.grouponline, rest: msg.restdays});
         details.thumbnail = msg.Thumbnail_ID;
         details.Upload = msg.Upload_ID === null ? {"VideoUrl": msg.video_URL} : {"upload": msg.Upload_ID};
-        details.datesConfig = {"expiryDate": msg.expiry_date, "publishingDate": msg.publishing_date};
+        details.datesConfig = JSON.stringify({"expiryDate": msg.expiry_date, "publishingDate": msg.publishing_date});
         details.bookingleadday = msg.bookingleadday;
-        console.log(details);
+        details.bookingConfigId = msg.booking_config?.id;
+        details.languages = JSON.stringify(msg.languages);
         setGroupDetails (details);
         // console.log(exerciseDetails);
 
@@ -196,6 +212,7 @@ function CreateEditPackage(props: any, ref: any) {
         frm.programDetails = JSON.parse(frm.programDetails)
         frm.datesConfig = JSON.parse(frm.datesConfig);
         frm.groupinstantbooking = JSON.parse(frm.groupinstantbooking);
+        frm.languages = JSON.parse(frm.languages)
 
         createPackage({
             variables: {
@@ -226,7 +243,8 @@ function CreateEditPackage(props: any, ref: any) {
                 thumbnail: frm.thumbnail,
                 upload: frm?.Upload?.upload,
                 equipmentList: frm.equipmentList,
-                videoUrl: frm?.Upload?.VideoUrl
+                videoUrl: frm?.Upload?.VideoUrl,
+                languages: frm.languages.map((item: any) => item.id).join(", ").split(", "),
             }
         });
     }
@@ -238,6 +256,9 @@ function CreateEditPackage(props: any, ref: any) {
         frm.disciplines = JSON.parse(frm.disciplines).map((x: any) => x.id).join(',').split(',');
         frm.programDetails = JSON.parse(frm.programDetails)
         frm.datesConfig = JSON.parse(frm.datesConfig)
+        frm.groupinstantbooking = JSON.parse(frm.groupinstantbooking);
+        frm.languages = JSON.parse(frm.languages)
+
         editPackage({
             variables: {
                 id: operation.id,
@@ -267,7 +288,8 @@ function CreateEditPackage(props: any, ref: any) {
                 thumbnail: frm.thumbnail,
                 upload: frm?.Upload?.upload,
                 equipmentList: frm.equipmentList,
-                videoUrl: frm?.Upload?.VideoUrl
+                videoUrl: frm?.Upload?.VideoUrl,
+                languages: frm.languages.map((item: any) => item.id).join(", ").split(", "),
             }
         })
     }

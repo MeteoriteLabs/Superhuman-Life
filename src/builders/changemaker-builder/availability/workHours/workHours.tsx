@@ -137,7 +137,6 @@ const WorkHours = () => {
       const changemakerSlots = flattenData.changemakerAvailabilties.length > 0 ? flattenData.changemakerAvailabilties[0]?.booking_slots : [];
       const sessionSlots = flattenData?.sessions;
       const mergedSlots = sessionSlots?.concat(changemakerSlots);
-      // debugger;
       // console.log(mergedSlots);
       // setAllChangeMakerHolidays(mergedSlots.filter((item: any) => item?.Is_Holiday === true));
       setSlots(mergedSlots);
