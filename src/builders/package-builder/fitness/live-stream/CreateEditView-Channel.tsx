@@ -6,8 +6,8 @@ import {GET_FITNESS_PACKAGE_TYPE, GET_SINGLE_PACKAGE_BY_ID} from '../graphQL/que
 import AuthContext from "../../../../context/auth-context";
 import { schema, widgets } from './channelSchema';
 import { schemaView } from './schemaView';
-import {Subject} from 'rxjs';
-import {flattenObj} from '../../../../components/utils/responseFlatten';
+import { Subject } from 'rxjs';
+import { flattenObj } from '../../../../components/utils/responseFlatten';
 import moment from 'moment';
 // import {AvailabilityCheck} from '../../../program-builder/program-template/availabilityCheck';
 import { Modal, Button } from 'react-bootstrap';
@@ -18,7 +18,6 @@ interface Operation {
     packageType: 'Cohort' | 'Live Stream Channel',
     type: 'create' | 'edit' | 'view' | 'toggle-status' | 'delete';
     current_status: boolean;
-    // callback: Function;
 }
 
 function CreateEditChannel(props: any, ref: any) {
@@ -65,23 +64,24 @@ function CreateEditChannel(props: any, ref: any) {
         })
      } });
     // const [updateProgram] = useMutation(UPDATE_FITNESSPROGRAMS, {onCompleted: (r: any) => { modalTrigger.next(false); } });
-    
+
     //     const [editExercise] = useMutation(UPDATE_EXERCISE,{variables: {exerciseid: operation.id}, onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
-//     const [deleteExercise] = useMutation(DELETE_EXERCISE, { onCompleted: (e: any) => console.log(e), refetchQueries: ["GET_TABLEDATA"] });
+    //     const [deleteExercise] = useMutation(DELETE_EXERCISE, { onCompleted: (e: any) => console.log(e), refetchQueries: ["GET_TABLEDATA"] });
 
-    useQuery(GET_FITNESS_PACKAGE_TYPE, {onCompleted: (data: any) => {
-        const flattenData = flattenObj({...data});
-        setFitnessPackageTypes(flattenData.fitnessPackageTypes);
-    }})
+    useQuery(GET_FITNESS_PACKAGE_TYPE, {
+        onCompleted: (data: any) => {
+            const flattenData = flattenObj({ ...data });
+            setFitnessPackageTypes(flattenData.fitnessPackageTypes);
+        }
+    })
 
-    const modalTrigger =  new Subject();
+    const modalTrigger = new Subject();
     useImperativeHandle(ref, () => ({
         TriggerForm: (msg: Operation) => {
             setOperation(msg);
             schema.startDate = props.startDate;
             schema.duration = props.duration;
 
-            // if (msg && !msg.id) //render form if no message id
             if(msg.type !== 'delete' && msg.type !== 'toggle-status'){
                 modalTrigger.next(true);
             }
@@ -100,16 +100,16 @@ function CreateEditChannel(props: any, ref: any) {
         High
     }
 
-    const PRICING_TABLE_DEFAULT = [{mrp: null, suggestedPrice: null, voucher: 0, duration: 30, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 90, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 180, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 360, sapienPricing: null}];
+    const PRICING_TABLE_DEFAULT = [{ mrp: null, suggestedPrice: null, voucher: 0, duration: 30, sapienPricing: null }, { mrp: null, suggestedPrice: null, voucher: 0, duration: 90, sapienPricing: null }, { mrp: null, suggestedPrice: null, voucher: 0, duration: 180, sapienPricing: null }, { mrp: null, suggestedPrice: null, voucher: 0, duration: 360, sapienPricing: null }];
 
-    const PRICING_TABLE_DEFAULT_WITH_INSTANTBOOKING = [ {mrp: null, suggestedPrice: null, voucher: 0, duration: 1, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 30, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 90, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 180, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 360, sapienPricing: null}];
+    const PRICING_TABLE_DEFAULT_WITH_INSTANTBOOKING = [{ mrp: null, suggestedPrice: null, voucher: 0, duration: 1, sapienPricing: null }, { mrp: null, suggestedPrice: null, voucher: 0, duration: 30, sapienPricing: null }, { mrp: null, suggestedPrice: null, voucher: 0, duration: 90, sapienPricing: null }, { mrp: null, suggestedPrice: null, voucher: 0, duration: 180, sapienPricing: null }, { mrp: null, suggestedPrice: null, voucher: 0, duration: 360, sapienPricing: null }];
 
     function FillDetails(data: any) {
-        const flattenData = flattenObj({...data});
+        const flattenData = flattenObj({ ...data });
         let msg: any = flattenData.fitnesspackages[0];
         let bookingConfig: any = {};
         let details: any = {};
-        console.log(msg);
+        
         if(msg.groupinstantbooking){
             for(var i =0; i<msg.fitnesspackagepricing.length; i++){
                 PRICING_TABLE_DEFAULT_WITH_INSTANTBOOKING[i].mrp = msg.fitnesspackagepricing[i].mrp;
@@ -117,8 +117,8 @@ function CreateEditChannel(props: any, ref: any) {
                 PRICING_TABLE_DEFAULT_WITH_INSTANTBOOKING[i].voucher = msg.fitnesspackagepricing[i].voucher;
                 PRICING_TABLE_DEFAULT_WITH_INSTANTBOOKING[i].sapienPricing = msg.fitnesspackagepricing[i].sapienPricing;
             }
-        }else {
-            for(var j =0; j<msg.fitnesspackagepricing.length; j++){
+        } else {
+            for (var j = 0; j < msg.fitnesspackagepricing.length; j++) {
                 PRICING_TABLE_DEFAULT[j].mrp = msg.fitnesspackagepricing[j].mrp;
                 PRICING_TABLE_DEFAULT[j].suggestedPrice = msg.fitnesspackagepricing[j].suggestedPrice;
                 PRICING_TABLE_DEFAULT[j].voucher = msg.fitnesspackagepricing[j].voucher;
@@ -130,7 +130,7 @@ function CreateEditChannel(props: any, ref: any) {
         details.channelName = msg.packagename;
         details.equipment = msg.equipment_lists
         details.discpline = JSON.stringify(msg.fitnessdisciplines);
-        details.channelinstantBooking = JSON.stringify({"instantBooking": msg.groupinstantbooking, "freeDemo": msg.Is_free_demo});
+        details.channelinstantBooking = JSON.stringify({ "instantBooking": msg.groupinstantbooking, "freeDemo": msg.Is_free_demo });
         details.expiryDate = moment(msg.expirydate).format('YYYY-MM-DD');
         details.level = ENUM_FITNESSPACKAGE_LEVEL[msg.level];
         details.intensity = ENUM_FITNESSPACKAGE_INTENSITY[msg.Intensity];
@@ -160,7 +160,7 @@ function CreateEditChannel(props: any, ref: any) {
     }
 
     useEffect(() => {
-        if(operation.type === 'create'){
+        if (operation.type === 'create') {
             setProgramDetails({});
         }
     }, [operation.type]);
@@ -169,23 +169,21 @@ function CreateEditChannel(props: any, ref: any) {
         useQuery(GET_SINGLE_PACKAGE_BY_ID, { variables: { id: operation.id }, skip: (operation.type === 'create'), onCompleted: (e: any) => { FillDetails(e) } });
     }
 
-    function findPackageType(creationType: any){
+    function findPackageType(creationType: any) {
         const foundType = fitnessPackageTypes.find((item: any) => item.type === creationType);
         return foundType.id;
     }
 
-
     function CreateChannelPackage(frm: any) {
         frmDetails = frm;
         frm.datesConfig = JSON.parse(frm.datesConfig);
-        if(frm.equipment){
+        if (frm.equipment) {
             frm.equipment = JSON.parse(frm?.equipment);
         }
-        if(frm.discpline){
+        if (frm.discpline) {
             frm.discpline = JSON.parse(frm?.discpline);
         }
         frm.languages = JSON.parse(frm.languages)
-        console.log(frm)
         CreatePackage({
             variables: {
                 aboutpackage: frm.About,
@@ -198,7 +196,7 @@ function CreateEditChannel(props: any, ref: any) {
                 Intensity: ENUM_FITNESSPACKAGE_INTENSITY[frm.intensity],
                 equipmentList: frm?.equipment?.length > 0 ? frm.equipment.map((item: any) => item.id).join(", ").split(", ") : [],
                 fitnessdisciplines: frm?.discpline?.length > 0 ? frm.discpline.map((item: any) => item.id).join(", ").split(", ") : [],
-                fitnesspackagepricing: frm.pricing === "free" ? [{mrp: 'free'}] : JSON.parse(frm.pricing).filter((item: any) => item.mrp !== null),
+                fitnesspackagepricing: frm.pricing === "free" ? [{ mrp: 'free' }] : JSON.parse(frm.pricing).filter((item: any) => item.mrp !== null),
                 publishing_date: moment(frm.datesConfig?.publishingDate).toISOString(),
                 tags: frm?.tag,
                 users_permissions_user: frm.user_permissions_user,
@@ -212,13 +210,13 @@ function CreateEditChannel(props: any, ref: any) {
         })
     }
 
-    function editChannelPackege(frm: any){
+    function editChannelPackege(frm: any) {
         frmDetails = frm;
         frm.datesConfig = JSON.parse(frm.datesConfig);
-        if(frm.equipment){
+        if (frm.equipment) {
             frm.equipment = JSON.parse(frm?.equipment);
         }
-        if(frm.discpline){
+        if (frm.discpline) {
             frm.discpline = JSON.parse(frm?.discpline);
         }
         frm.languages = JSON.parse(frm.languages)
@@ -235,7 +233,7 @@ function CreateEditChannel(props: any, ref: any) {
                 Intensity: ENUM_FITNESSPACKAGE_INTENSITY[frm.intensity],
                 equipmentList: frm?.equipment?.length > 0 ? frm.equipment.map((item: any) => item.id).join(", ").split(", ") : [],
                 fitnessdisciplines: frm?.discpline?.length > 0 ? frm.discpline.map((item: any) => item.id).join(", ").split(", ") : [],
-                fitnesspackagepricing: frm.pricing === "free" ? [{mrp: 'free'}] : JSON.parse(frm.pricing).filter((item: any) => item.mrp !== null),
+                fitnesspackagepricing: frm.pricing === "free" ? [{ mrp: 'free' }] : JSON.parse(frm.pricing).filter((item: any) => item.mrp !== null),
                 publishing_date: moment(frm.datesConfig?.publishingDate).toISOString(),
                 tags: frm.tag,
                 users_permissions_user: frm.user_permissions_user,
@@ -249,23 +247,23 @@ function CreateEditChannel(props: any, ref: any) {
         })
     }
 
-    function deleteChannelPackage(id: any){
-        deletePackage({variables: {id}});
+    function deleteChannelPackage(id: any) {
+        deletePackage({ variables: { id } });
         setDeleteModalShow(false);
     }
 
-    function updateChannelPackageStatus(id: any, status: any){
-        updatePackageStatus({variables: {id: id, Status: status}});
+    function updateChannelPackageStatus(id: any, status: any) {
+        updatePackageStatus({ variables: { id: id, Status: status } });
         setStatusModalShow(false);
         operation.type = 'create';
     }
 
     function OnSubmit(frm: any) {
         //bind user id
-        if(frm){
+        if (frm) {
             frm.user_permissions_user = auth.userid;
         }
-        console.log(operation.type);
+
         switch (operation.type) {
             case 'create':
                 CreateChannelPackage(frm);
@@ -285,71 +283,68 @@ function CreateEditChannel(props: any, ref: any) {
     FetchData();
 
     let name = "";
-    if(operation.type === 'create'){
-        name="New Live Stream Channel";
-    }else if(operation.type === 'edit'){
-        name="Edit";
-    }else if(operation.type === 'view'){
-        name="View";
+    if (operation.type === 'create') {
+        name = "New Live Stream Channel";
+    } else if (operation.type === 'edit') {
+        name = "Edit";
+    } else if (operation.type === 'view') {
+        name = "View";
     }
-
 
     return (
         <>
-            {/* {render && */}
-                <ModalView
-                    name={name}
-                    isStepper={true}
-                    showErrorList={false}
-                    formUISchema={operation.type === 'view' ? schemaView : schema}
-                    formSchema={programSchema}
-                    formSubmit={name === "View" ? () => { modalTrigger.next(false); } : (frm: any) => { OnSubmit(frm); }}
-                    formData={programDetails}
-                    widgets={widgets}
-                    stepperValues={["Creator", "Details", "Schedule", "Pricing", "Config", "Review"]}
-                    modalTrigger={modalTrigger}
-                />
-                
-            {/* } */}  
-            <Modal
-                    size="lg"
-                    aria-labelledby="contained-modal-title-vcenter"
-                    show={deleteModalShow}
-                    centered
-                    >
-                    <Modal.Header closeButton onHide={() => {setDeleteModalShow(false)}}>
-                        <Modal.Title id="contained-modal-title-vcenter">
-                            Delete Package
-                        </Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <p>Are you sure you want to delete this package</p>
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button variant='danger' onClick={() => {setDeleteModalShow(false)}}>No</Button>
-                        <Button variant='success' onClick={() => {deleteChannelPackage(operation.id)}}>Yes</Button>
-                    </Modal.Footer>
-                    </Modal>
+            <ModalView
+                name={name}
+                isStepper={true}
+                showErrorList={false}
+                formUISchema={operation.type === 'view' ? schemaView : schema}
+                formSchema={programSchema}
+                formSubmit={name === "View" ? () => { modalTrigger.next(false); } : (frm: any) => { OnSubmit(frm); }}
+                formData={programDetails}
+                widgets={widgets}
+                stepperValues={["Creator", "Details", "Schedule", "Pricing", "Config", "Review"]}
+                modalTrigger={modalTrigger}
+            />
 
-                    <Modal
-                    size="lg"
-                    aria-labelledby="contained-modal-title-vcenter"
-                    show={statusModalShow}
-                    centered
-                    >
-                    <Modal.Header closeButton onHide={() => {setStatusModalShow(false)}}>
-                        <Modal.Title id="contained-modal-title-vcenter">
-                            Update Status
-                        </Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <p>Are you sure you want to update the status of this package?</p>
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button variant='danger' onClick={() => {setStatusModalShow(false)}}>No</Button>
-                        <Button variant='success' onClick={() => {updateChannelPackageStatus(operation.id, operation.current_status)}}>Yes</Button>
-                    </Modal.Footer>
-                    </Modal>
+            <Modal
+                size="lg"
+                aria-labelledby="contained-modal-title-vcenter"
+                show={deleteModalShow}
+                centered
+            >
+                <Modal.Header closeButton onHide={() => { setDeleteModalShow(false) }}>
+                    <Modal.Title id="contained-modal-title-vcenter">
+                        Delete Package
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <p>Are you sure you want to delete this package</p>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant='danger' onClick={() => { setDeleteModalShow(false) }}>No</Button>
+                    <Button variant='success' onClick={() => { deleteChannelPackage(operation.id) }}>Yes</Button>
+                </Modal.Footer>
+            </Modal>
+
+            <Modal
+                size="lg"
+                aria-labelledby="contained-modal-title-vcenter"
+                show={statusModalShow}
+                centered
+            >
+                <Modal.Header closeButton onHide={() => { setStatusModalShow(false) }}>
+                    <Modal.Title id="contained-modal-title-vcenter">
+                        Update Status
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <p>Are you sure you want to update the status of this package?</p>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant='danger' onClick={() => { setStatusModalShow(false) }}>No</Button>
+                    <Button variant='success' onClick={() => { updateChannelPackageStatus(operation.id, operation.current_status) }}>Yes</Button>
+                </Modal.Footer>
+            </Modal>
 
         </>
     )

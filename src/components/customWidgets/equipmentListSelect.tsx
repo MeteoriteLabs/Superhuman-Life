@@ -39,7 +39,8 @@ const MultiSelect = (props: any) => {
                }
 
      function OnChange(e) {
-          setMultiSelections(e);
+          const unique = [...new Map(e.map((m) => [m.id, m])).values()];
+          setMultiSelections(unique);
      }
       
      // if(multiSelections.length > 0){
@@ -49,7 +50,11 @@ const MultiSelect = (props: any) => {
      //      );
      // }
 
-     props.onChange(JSON.stringify(multiSelections));
+     if(multiSelections.length > 0){
+          props.onChange(JSON.stringify(multiSelections));
+     }else {
+          props.onChange(undefined);
+     }
 
     FetchData();
 
@@ -61,10 +66,10 @@ const MultiSelect = (props: any) => {
                labelKey="name"
                onChange={OnChange}
                options={equipmentList}
-               placeholder="Choose Discpline..."
+               placeholder="Choose Equipments..."
                selected={multiSelections}
                multiple
-               disabled={props.uiSchema.readonly ? true : false}
+               disabled={props.uiSchema.readonly}
                />
           </div>
      )

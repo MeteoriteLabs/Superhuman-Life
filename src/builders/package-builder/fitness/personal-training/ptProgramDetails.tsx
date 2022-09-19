@@ -40,12 +40,8 @@ const PtProgramDetails = (props) => {
         if(offlineClasses > 30){
             setOfflinceClasses(30);
         }
-        if(restDays > handleMax(mode)){
-            setRestDays(handleMax(mode));
-        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [onlineClasses, offlineClasses, restDays, mode]);
-
 
     const FETCH_USER_ADDRESSES = gql`
     query addresses($id: ID!) {
@@ -148,18 +144,18 @@ const PtProgramDetails = (props) => {
         props.onChange(undefined);
     }
 
-    function handleMax(mode: string){
+    useEffect(() => {
         if(mode === '0'){
-            return 30 - onlineClasses;
+            setRestDays(30 - onlineClasses);
         }
         if(mode === '1'){
-            return 30 - offlineClasses;
+            setRestDays(30 - offlineClasses);
         }
         if(mode === "2"){
-            return 30 - (onlineClasses + offlineClasses);
+            setRestDays(30 - (onlineClasses + offlineClasses));
         }
-        return 0;
-    }
+    }, [onlineClasses, offlineClasses, mode]);
+
 
     return (
         <>
@@ -211,6 +207,9 @@ const PtProgramDetails = (props) => {
           <div className='m-5 p-2 text-center shadow-lg'>
                <h4>Set For One Month (30 Days)</h4>
           </div>
+          {mode !== "" && <div>
+            <label><b>Enter Number of classes</b></label>
+          </div>}
           {mode !== "" && (mode === "0" || mode === "2") && <Row>
                <Col lg={1}>
                     <img src='/assets/personal-training-online.svg' alt='personal-training'/>
@@ -249,12 +248,12 @@ const PtProgramDetails = (props) => {
                     </InputGroup>
                </Col>
           </Row>}
+          {mode !== "" && <div>
+            <label><b>Rest Days</b></label>
+          </div>}
           {mode !== "" && <Row>
                <Col lg={1}>
                     <img src='/assets/rest-icon.svg' alt='rest-icon'/>
-               </Col>
-               <Col lg={1}>
-                    <label><b>Rest Days</b></label>
                </Col>
                <Col lg={2}>
                     <InputGroup className="mb-3">
@@ -263,14 +262,11 @@ const PtProgramDetails = (props) => {
                               aria-describedby="inputGroup-sizing-default"
                               type='number'
                               min={0}
-                              max={handleMax(mode)}
                               value={restDays}
-                              disabled={inputDisabled}
-                              onChange={(e: any) => setRestDays(parseInt(e.target.value))}
+                              disabled={true}
                          />
                     </InputGroup>
                </Col>
-            <span className='small'>*It should add upto 30 classes per month</span>
           </Row>}
         </>
     );

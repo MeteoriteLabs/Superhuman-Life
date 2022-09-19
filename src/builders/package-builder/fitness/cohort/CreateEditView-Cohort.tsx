@@ -75,7 +75,8 @@ function CreateEditCohort(props: any, ref: any) {
     enum ENUM_FITNESSPACKAGE_LEVEL {
         Beginner,
         Intermediate,
-        Advanced
+        Advanced,
+        No_Level
     }
 
     enum ENUM_FITNESSPACKAGE_MODE {
