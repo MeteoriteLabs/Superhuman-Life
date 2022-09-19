@@ -2,8 +2,6 @@
     background-color: white;
     color: black;
     font-weight: bold;
-
-
 }
 
 .card-body .card-body {
@@ -18,7 +16,6 @@
     transition: all 0.5s
 }
 
-
 .card-body .card-body .nav-link{
     padding: 0.5rem 3rem;
 }
@@ -26,4 +23,3 @@
 .nav-pills a {
     color: #929292 ;
 }
-
