@@ -130,6 +130,8 @@ function CreateEditWorkout(props: any, ref: any) {
     }
     frm.discipline = JSON.parse(frm.discipline);
     frm.equipment = JSON.parse(frm.equipment);
+    console.log(frm);
+    debugger;
     createWorkout({
       variables: {
         workouttitle: frm.workout,

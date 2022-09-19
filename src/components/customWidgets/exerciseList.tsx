@@ -68,7 +68,8 @@ const ExerciseList = (props: any) => {
 
      }
 
-     props.onChange(selected);
+     console.log(selected);
+     props.onChange(JSON.stringify(selected));
 
      FetchExerciseList({ filter: searchInput, skip: skipval, id: auth.userid });
 

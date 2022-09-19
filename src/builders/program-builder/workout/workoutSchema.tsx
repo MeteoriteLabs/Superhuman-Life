@@ -3,7 +3,7 @@ import EquipmentSearch from '../../../components/customWidgets/equipmentListSele
 import MuscleGroupSearch from '../../../components/customWidgets/muscleGroupMultiSelect';
 import ExerciseList from '../../../components/customWidgets/exerciseList';
 import FitnessMultiSelect from '../../../components/customWidgets/fitnessMultiSelect';
-import BuildWorkout from './buildWorkout';
+import BuildExercise from './buildExercise';
 import Upload from '../../../components/upload/upload';
 
 
@@ -12,7 +12,7 @@ export const widgets = {
     equipmentSearch: EquipmentSearch,
     muscleGroupSearch: MuscleGroupSearch,
     textEditor: TextEditor,
-    buildWorkout: BuildWorkout,
+    buildExercise: BuildExercise,
     upload: Upload,
     exerciseList: ExerciseList
 };
