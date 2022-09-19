@@ -180,6 +180,7 @@ const PtProgramDetails = (props) => {
                     </Col>
                     {addressTitle === 'At My Address' && <Col>
                         <Typeahead
+                            clearButton
                             id="basic-typeahead-multiple"
                             labelKey="address1"
                             onChange={OnChange}

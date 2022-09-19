@@ -58,7 +58,6 @@ export default function ModalView({
 
   //     setStep(step + 1);
   //     setFormValues({ ...formValues, ...data });
-  //     debugger;
   //   } else {
   //     // formSubmit({ ...formValues, ...data });
   //     formSubmit({ ...formValues, ...data });

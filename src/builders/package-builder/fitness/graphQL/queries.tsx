@@ -201,10 +201,12 @@ export const GET_SINGLE_PACKAGE_BY_ID = gql`
           residential_type
           booking_config{
             data{
+              id
               attributes{
                 isAuto
-                bookingsPerDay
                 BookingsPerMonth
+                is_Fillmyslots
+                bookingsPerDay
               }
             }
           }

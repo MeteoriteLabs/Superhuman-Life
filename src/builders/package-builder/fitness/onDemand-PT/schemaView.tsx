@@ -5,6 +5,8 @@ import EquipmentSelect from '../../../../components/customWidgets/equipmentListS
 import PtProgramDetails from './onDemandProgramDetails';
 import PTPricingTable from './onDemandPricingtable';
 import PTPreview from './onDemandPreview';
+import LanguageList from '../../../../components/customWidgets/languageSelect';
+import PTBookingConfig from './bookingConfig';
 
 export const widgets = {
      datesConfig: DatesConfig,
@@ -13,6 +15,8 @@ export const widgets = {
      ptProgramDetails: PtProgramDetails,
      ptPricingTable: PTPricingTable,
      ptPreview: PTPreview,
+     ptBookingConfig: PTBookingConfig,
+     languageList: LanguageList
 }
 
 export const schemaView: any = {  
@@ -111,19 +115,14 @@ export const schemaView: any = {
           "ui:widget": "datesConfig",
           "ui:readonly": true
      },
+     "languages": {
+          "ui:widget": "languageList",
+          "ui:readonly": true
+     },
      "config": {
-          "acceptBooking": {
-              "ui:widget": "radio",
-              "ui:options": {
-                  "inline": true
-              }
-          },
-          "ui:readonly": true,
-          "maxBookingMonth": {
-               "ui:readonly": true
-          },
-          "maxBookingDay": {
-               "ui:readonly": true
+          "bookingConfig": {
+               "ui:widget": "ptBookingConfig",
+               "readonly": true
           }
      },
 }
