@@ -94,6 +94,7 @@ export default function MindsetPage() {
                })
           );
      }
+     
 
      function refetchQueryCallback() {
           fetch.refetch();

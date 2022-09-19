@@ -7,9 +7,6 @@ import authContext from '../../../context/auth-context';
 import { CREATE_VOUCHER, DELETE_VOUCHER, EDIT_VOUCHER, TOGGLE_STATUS } from '../graphQL/mutations';
 import { GET_VOUCHERS_BY_ID } from '../graphQL/queries';
 
-
-
-
 interface Operation {
     id: string;
     actionType: 'create' | 'edit' | 'view' | 'toggle-status' | 'delete' | 'bank' | 'upi';
@@ -25,19 +22,16 @@ function VoucherAction(props, ref) {
     const [formData, setFormData] = useState<any>();
     const formSchema = require("./voucher.json");
 
-
     useImperativeHandle(ref, () => ({
         TriggerForm: (msg: Operation) => {
             setOperation(msg);
-            //render form if no message id
-            if (msg && !msg.id) {
+
+            //restrict modal to render on delete and change status operation
+            if (msg.actionType !== 'delete' && msg.actionType !== 'toggle-status') {
                 modalTrigger.next(true);
             }
         }
     }));
-
- 
-
 
     let name = ""
     switch (operation.actionType) {
@@ -57,7 +51,6 @@ function VoucherAction(props, ref) {
         }
     }
 
-
     // View Voucher
     const FetchData = () => useQuery(GET_VOUCHERS_BY_ID, {
         variables: {
@@ -76,7 +69,6 @@ function VoucherAction(props, ref) {
         updateFormData.Start_date = data.vouchers.data[0].attributes.Start_date;
         updateFormData.Usage_restriction = data.vouchers.data[0].attributes.Usage_restriction;
 
-
         setFormData(updateFormData)
 
         if (['edit', 'view'].indexOf(operation.actionType) > -1) {
@@ -90,40 +82,54 @@ function VoucherAction(props, ref) {
     FetchData()
 
     // Create Voucher
-    const [createVoucher] = useMutation(CREATE_VOUCHER, { onCompleted: (r: any) => { modalTrigger.next(false); } })
+    const [createVoucher] = useMutation(CREATE_VOUCHER, { onCompleted: (r: any) => { modalTrigger.next(false); props.callback(); } })
     const CreateVoucher = (form: any) => {
         createVoucher({
             variables: {
-                voucher_name: form.voucher_name,
-                discount_percentage: form.discount_percentage,
-                expiry_date: form.expiry_date,
-                Start_date: form.Start_date,
-                Usage_restriction: form.Usage_restriction,
-                Status: "Active",
-                users_permissions_user: form.user_permissions_user
+                data: {
+                    voucher_name: form.voucher_name,
+                    discount_percentage: form.discount_percentage,
+                    expiry_date: form.expiry_date,
+                    Start_date: form.Start_date,
+                    Usage_restriction: form.Usage_restriction,
+                    Status: "Active",
+                    users_permissions_user: form.user_permissions_user
+                }
             }
         })
     }
 
     //Edit Voucher
-    const [editVoucher] = useMutation(EDIT_VOUCHER, { onCompleted: (r: any) => { modalTrigger.next(false); } });
+    const [editVoucher] = useMutation(EDIT_VOUCHER, { onCompleted: (r: any) => { modalTrigger.next(false); props.callback(); } });
     const EditVoucher = (form: any) => editVoucher({ variables: form })
 
-
     //delete Voucher 
-    const [deleteVoucher] = useMutation(DELETE_VOUCHER);
-    const DeleteVoucher = (id) => deleteVoucher({ variables: { id: id } });
-
-
-    //toggle status
-    const [toggleVoucherStatus] = useMutation(TOGGLE_STATUS);
-    const ToggleVoucherStatus = (id, Status) => toggleVoucherStatus({
-        variables: {
-            id: id,
-            Status: Status === "Active" ? "Disabled" : "Active"
+    const [deleteVoucher] = useMutation(DELETE_VOUCHER, {
+        onCompleted: (e: any) => {
+            props.callback();
+            modalTrigger.next(false);
         }
     });
+    const DeleteVoucher = (id) => deleteVoucher({ variables: { id: id } });
 
+    //toggle status
+    const [toggleVoucherStatus] = useMutation(TOGGLE_STATUS, {
+        onCompleted: (e: any) => {
+            props.callback();
+            modalTrigger.next(false);
+        }
+    });
+    const ToggleVoucherStatus = (id: String, Status) => {
+        toggleVoucherStatus(
+            {
+                variables: {
+                    id: id,
+                    data:{
+                        Status: Status === "Active" ? "Disabled" : "Active"
+                    }
+                }
+            })
+    };
 
     const OnSubmit = (frm: any) => {
         //bind user id
@@ -142,8 +148,6 @@ function VoucherAction(props, ref) {
         }
     }
 
-
-
     return (
         <div>
             <FinanceModal
@@ -154,6 +158,7 @@ function VoucherAction(props, ref) {
                 actionType={operation.actionType}
                 formData={operation.id && formData}
             />
+
             {operation.actionType === 'delete' &&
                 <StatusModal
                     modalTile="Delete"
@@ -175,6 +180,5 @@ function VoucherAction(props, ref) {
         </div>
     )
 }
-
 
 export default React.forwardRef(VoucherAction)

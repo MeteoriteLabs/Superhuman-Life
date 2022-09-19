@@ -1,28 +1,11 @@
 import { gql } from '@apollo/client'
 
-
-
 export const CREATE_VOUCHER = gql`
     mutation createVoucher(
-        $voucher_name:String
-        $discount_percentage:Float
-        $expiry_date:DateTime
-        $Start_date:DateTime
-        $Usage_restriction:Int
-        $users_permissions_user:ID
-        $Status:String
+        $data:VoucherInput!
     ){
         createVoucher(
-            data:{
-                voucher_name: $voucher_name
-                discount_percentage: $discount_percentage
-                expiry_date: $expiry_date
-                Start_date: $Start_date
-                Usage_restriction:$Usage_restriction
-                users_permissions_user: $users_permissions_user
-                Status:$Status
-            }
-           
+            data: $data
         ){
             data{
                 id
@@ -74,7 +57,6 @@ export const EDIT_VOUCHER = gql`
     }
 `
 
-
 export const DELETE_VOUCHER = gql`
     mutation deleteVoucher($id: ID!){
         deleteVoucher(id: $id)
@@ -89,13 +71,11 @@ export const DELETE_VOUCHER = gql`
 export const TOGGLE_STATUS = gql`
     mutation updateVoucher(
         $id:ID!
-        $Status:String
+        $data:VoucherInput!
     ){
         updateVoucher(
             id: $id
-            data:{ 
-                Status: $Status
-            }
+            data:$data
         ){
             data{
                 id
@@ -109,19 +89,9 @@ export const TOGGLE_STATUS = gql`
 `
 
 export const CREATE_FITNESS_PRICING_ASSIT = gql`
-    mutation createSuggestedPricing(
-        $fitness_package_type:ID
-        $users_permissions_users:[ID]
-        $Mode:String
-        $mrp:Float
-    ){
+    mutation createSuggestedPricing($data:SuggestedPricingInput!){
         createSuggestedPricing(
-            data:{
-                fitness_package_type:$fitness_package_type
-                users_permissions_users:$users_permissions_users
-                Mode: $Mode
-                mrp: $mrp
-            }
+            data: $data
         ){
             data{
                 id
@@ -129,7 +99,6 @@ export const CREATE_FITNESS_PRICING_ASSIT = gql`
         }
     }
 `
-
 
 export const UPDATE_FITNESS_PRICING_ASSITS = gql`
     mutation updateSuggestedPricing(

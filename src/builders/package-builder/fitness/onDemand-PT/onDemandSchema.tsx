@@ -2,8 +2,10 @@ import Upload from '../../../../components/upload/upload';
 import DatesConfig from '../../../../components/customWidgets/datesConfig';
 import FitnessSelect from '../../../../components/customWidgets/fitnessMultiSelect';
 import EquipmentSelect from '../../../../components/customWidgets/equipmentListSelect';
+import LanguageList from '../../../../components/customWidgets/languageSelect';
 import PtProgramDetails from './onDemandProgramDetails';
 import PTPricingTable from './onDemandPricingtable';
+import PTBookingConfig from './bookingConfig';
 import PTPreview from './onDemandPreview';
 
 export const widgets = {
@@ -13,6 +15,8 @@ export const widgets = {
      ptProgramDetails: PtProgramDetails,
      ptPricingTable: PTPricingTable,
      ptPreview: PTPreview,
+     ptBookingConfig: PTBookingConfig,
+     languageList: LanguageList
 }
 
 export const schema: any = {  
@@ -57,7 +61,7 @@ export const schema: any = {
       },
      "thumbnail": {
           "ui:widget": (props: any) => {
-               return <Upload allowImage={true} allowVideo={true} onChange={props.onChange} value={props.value} title={'Thumbnail'} />;
+               return <Upload allowImage={true} allowVideo={false} onChange={props.onChange} value={props.value} title={'Thumbnail'} />;
           },
       },
      "Upload": {
@@ -89,12 +93,12 @@ export const schema: any = {
      "datesConfig": {
           "ui:widget": "datesConfig"
      },
+     "languages": {
+          "ui:widget": "languageList",
+     },
      "config": {
-          "acceptBooking": {
-              "ui:widget": "radio",
-              "ui:options": {
-                  "inline": true
-              }
+          "bookingConfig": {
+               "ui:widget": "ptBookingConfig"
           }
      },
 }
