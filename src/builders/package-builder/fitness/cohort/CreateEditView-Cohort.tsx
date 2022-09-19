@@ -240,8 +240,6 @@ function CreateEditCohort(props: any, ref: any) {
         if(frm.discpline){
             frm.discpline = JSON.parse(frm?.discpline);
         }
-        console.log(frm);
-        debugger;
         editPackageDetails({
             variables: {
                 id: operation.id,
