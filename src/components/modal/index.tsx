@@ -93,7 +93,7 @@ export default function ModalView({
             <Col lg={12}>
               <div
                 style={{
-                  height: "400px",
+                  height: "50vh",
                   overflowX: "hidden",
                   overflowY: "auto",
                 }}
