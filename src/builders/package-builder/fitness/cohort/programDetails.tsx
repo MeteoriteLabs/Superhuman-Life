@@ -1,4 +1,4 @@
-import React, {useState, useContext} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import {Row, Col, Form} from 'react-bootstrap';
 import {Typeahead} from 'react-bootstrap-typeahead';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
@@ -37,11 +37,6 @@ const ProgramDetails = (props) => {
     const [threeSharing, setThreeSharing] = useState<number>(props.value === undefined ? null : existingData.accomodationDetails?.threeSharingRooms);
     const [foodDescription, setFoodDescription] = useState<string>(props.value === undefined ? "" : existingData.accomodationDetails?.foodDescription === undefined ? "" : existingData.accomodationDetails?.foodDescription);
     const [accomodationDetails] = useState<any>({});
-
-    console.log(foodDescription);
-
-    console.log(singleSelections);
-
 
     const FETCH_USER_ADDRESSES = gql`
     query addresses($id: ID!) {
@@ -115,79 +110,32 @@ const ProgramDetails = (props) => {
                         return true;
                     }
                 }
-                if(showSharing && (twoSharing! > 0 || threeSharing! > 0)){
+                if(showSharing && !showPrivate && (twoSharing! > 0 || threeSharing! > 0)){
                     if(calculateAccomodation({onePerRoom: privateRooms,twoPerRoom: twoSharing,threePerRoom: threeSharing})){
                         return true;
                     }
                 }
-                if(showPrivate && showSharing && privateRooms! > 0 && twoSharing! > 0 && threeSharing! > 0){
+                if(showPrivate && showSharing && privateRooms! > 0 && (twoSharing! > 0 || threeSharing! > 0)){
                     if(calculateAccomodation({onePerRoom: privateRooms,twoPerRoom: twoSharing,threePerRoom: threeSharing})){
                         return true;
                     }
                 }
-                // if(residential === "0"){
-                //     if(showPrivate && privateRooms! > 0 && !showSharing){
-                //         if(calculateAccomodation({onePerRoom: privateRooms,twoPerRoom: twoSharing,threePerRoom: threeSharing})){
-                //             return true;
-                //         }
-                //     }else if(showSharing && (twoSharing! > 0 || threeSharing! > 0)){
-                //         if(calculateAccomodation({onePerRoom: privateRooms,twoPerRoom: twoSharing,threePerRoom: threeSharing})){
-                //             return true;
-                //         }
-                //     }else if(showPrivate && showSharing && privateRooms! > 0 && twoSharing! > 0 && threeSharing! > 0){
-                //         if(calculateAccomodation({onePerRoom: privateRooms,twoPerRoom: twoSharing,threePerRoom: threeSharing})){
-                //             return true;
-                //         }
-                //     }
-                // }
-                // if(residential === "1"){
-                //     if(showPrivate && privateRooms! > 0 && !showSharing && foodDescription !== ""){
-                //         if(calculateAccomodation({onePerRoom: privateRooms,twoPerRoom: twoSharing,threePerRoom: threeSharing})){
-                //             return true;
-                //         }
-                //     }else if(showSharing && (twoSharing! > 0 || threeSharing! > 0) && foodDescription !== ""){
-                //         if(calculateAccomodation({onePerRoom: privateRooms,twoPerRoom: twoSharing,threePerRoom: threeSharing})){
-                //             return true;
-                //         }
-                //     }else if(showPrivate && showSharing && privateRooms! > 0 && twoSharing! > 0 && threeSharing! > 0 && foodDescription !== ""){
-                //         if(calculateAccomodation({onePerRoom: privateRooms,twoPerRoom: twoSharing,threePerRoom: threeSharing})){
-                //             return true;
-                //         }
-                //     }
-                // }
             }   
         }
     }
 
-
-
-    // useEffect(() => {
-        accomodationDetails.private = showPrivate;
-        accomodationDetails.sharing = showSharing;
-        accomodationDetails.privateRooms = privateRooms;
-        accomodationDetails.twoSharingRooms = twoSharing;
-        accomodationDetails.threeSharingRooms = threeSharing;
-        accomodationDetails.foodDescription = foodDescription;
-    // }, [showPrivate, privateRooms, foodDescription, showSharing, twoSharing, threeSharing, accomodationDetails]);
-
-    console.log(accomodationDetails);
+    accomodationDetails.private = showPrivate;
+    accomodationDetails.sharing = showSharing;
+    accomodationDetails.privateRooms = (showPrivate && privateRooms) || null;
+    accomodationDetails.twoSharingRooms = (showSharing && twoSharing) || null;
+    accomodationDetails.threeSharingRooms = (showSharing && threeSharing) || null;
+    accomodationDetails.foodDescription = foodDescription;
 
     if(handleValidation()){
         props.onChange(JSON.stringify({addressTag: addressTitle, address: singleSelections, mode: mode, residential: residential, accomodationDetails: accomodationDetails}));
     }else {
         props.onChange(undefined)
     }
-    // else if(mode === "1" && addressTitle === "At My Address" && singleSelections.length !== 0){
-    //     props.onChange(JSON.stringify({addressTag: addressTitle, address: singleSelections, mode: mode, residential: residential}));
-    // }else if(mode === "2" && addressTitle === "At My Address" && singleSelections.length !== 0 && residential !== ""){
-    //     props.onChange(JSON.stringify({addressTag: addressTitle, address: singleSelections, mode: mode, residential: residential}));
-    // }else if(mode === "1" && addressTitle === "At Client Address"){
-    //     props.onChange(JSON.stringify({addressTag: addressTitle, address: singleSelections, mode: mode, residential: residential}));
-    // }else if(mode === "2" && addressTitle === "At Client Address"){
-    //     props.onChange(JSON.stringify({addressTag: addressTitle, address: singleSelections, mode: mode, residential: residential}));
-    // }
-
-    console.log(twoSharing);
 
     return (
         <>
@@ -232,7 +180,7 @@ const ProgramDetails = (props) => {
                     <Form.Check inline label="Accommodation + Food" value='1' disabled={inputDisabled} defaultChecked={residential === '1' ? true : false} name="group1" type='radio' onClick={(e: any) => setResidential(e.target.value)}/>
                 </Form>
             </div>}
-            {residential !== "" && <div className='mt-3'>
+            {residential !== "" && mode === "2" && <div className='mt-3'>
             <Form.Check 
                 custom
                 inline
@@ -258,13 +206,13 @@ const ProgramDetails = (props) => {
                 }}
             />
             </div>}
-            {showPrivate && <div className='mt-3'>
+            {showPrivate && mode === "2" && <div className='mt-3'>
                 <label><b>Private Rooms</b></label>
                 <Form.Group controlId="formBasicEmail-1">
                     <Form.Control type="number" disabled={inputDisabled} value={privateRooms} min={0} onChange={(e: any) => setPrivateRooms(parseInt(e.target.value))} />
                 </Form.Group>    
             </div>}
-            {showSharing && <div>
+            {showSharing && mode === "2" && <div>
                 <label><b>Sharing Rooms</b></label>
                 <Row>
                     <Col>
@@ -283,7 +231,7 @@ const ProgramDetails = (props) => {
                     </Col>       
                 </Row>   
             </div>}
-            {residential === "1" && <div>
+            {residential === "1" && mode === "2" && <div>
                 <label><b>Food Description</b></label>
                 <Form.Group controlId="formBasictext">
                     <Form.Control as="textarea" disabled={inputDisabled} aria-label="With textarea" value={foodDescription} onChange={(e: any) => {

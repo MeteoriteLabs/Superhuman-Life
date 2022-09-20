@@ -31,7 +31,7 @@ const PricingTable = (props) => {
     const auth = useContext(AuthContext);
     const [vouchers, setVouchers] = useState<any>([]);
     const [show, setShow] = useState(props.value === 'free' ? true : false);
-    const [pricing, setPricing] = useState<any>(props.value !== undefined && props.value !== 'free' ? JSON.parse(props.value) : [ {mrp: null, suggestedPrice: null, voucher: 0, duration: calculateDuration(JSON.parse(props.formContext.dates).startDate, JSON.parse(props.formContext.dates).endDate), sapienPricing: null, privateRoomPrice: null, twoSharingPrice: null, threeSharingPrice: null, foodPrice: null}]);
+    const [pricing, setPricing] = useState<any>(props.value !== undefined && props.value !== 'free' ? JSON.parse(props.value) : [ {mrp: null, suggestedPrice: null, voucher: 0, duration: calculateDuration(JSON.parse(props.formContext.dates).startDate, JSON.parse(props.formContext.dates).endDate), sapienPricing: null, privateRoomPrice: 0, twoSharingPrice: 0, threeSharingPrice: 0, foodPrice: 0}]);
 
     useEffect(() => {
         const newDuration = calculateDuration(JSON.parse(props.formContext.dates).startDate, JSON.parse(props.formContext.dates).endDate);
@@ -147,26 +147,74 @@ const PricingTable = (props) => {
     }
 
     function handleValidation(){
+        //mode = 0 -> Online --- mode = 1 -> Offline --- mode = 2 -> Residential
+        //accomodationType = 0 -> Only Accomodation --- accomodationType = 1 -> Accomodation + Food
+        console.log(accomodationType, accomodationDetails, pricing);
         if(parseInt(pricing[0].mrp) < pricing[0].sapienPricing){
             return false;
         }
+        // here it means if the mode is not equal to residential in the previous step
         if(mode !== "2" && pricing[0].mrp !== null && parseInt(pricing[0].mrp) >= pricing[0].sapienPricing){
             return true;
-        }else if(accomodationType === "0" && accomodationDetails.private && !accomodationDetails.sharing && pricing[0].privateRoomPrice !== 0 && !isNaN(pricing[0].privateRoomPrice)){
-            return true;
-        }else if(accomodationType === "0" && accomodationDetails.sharing && !accomodationDetails.private && pricing[0].twoSharingPrice!== 0 && pricing[0].threeSharingPrice!== 0 && !isNaN(pricing[0].twoSharingPrice) && !isNaN(pricing[0].threeSharingPrice)){
-            return true;
-        }else if(accomodationType === "0" && accomodationDetails.sharing && accomodationDetails.private && pricing[0].twoSharingPrice!== 0 && pricing[0].threeSharingPrice!== 0 && !isNaN(pricing[0].twoSharingPrice) && !isNaN(pricing[0].threeSharingPrice) && !isNaN(pricing[0].privateRoomPrice) && pricing[0].privateRoomPrice !== 0){
-            return true;
-        }else if(accomodationType === "1" && accomodationDetails.private && !accomodationDetails.sharing && pricing[0].privateRoomPrice !== 0 && !isNaN(pricing[0].privateRoomPrice) && pricing[0].foodPrice && !isNaN(pricing[0].foodPrice)){
-            return true;
-        }else if(accomodationType === "1" && accomodationDetails.sharing && !accomodationDetails.private && pricing[0].twoSharingPrice!== 0 && pricing[0].threeSharingPrice!== 0 && !isNaN(pricing[0].twoSharingPrice) && !isNaN(pricing[0].threeSharingPrice) && !isNaN(pricing[0].foodPrice)){
-            return true;
-        }else if(accomodationType === "1" && accomodationDetails.sharing && accomodationDetails.private && pricing[0].twoSharingPrice!== 0 && pricing[0].threeSharingPrice!== 0 && !isNaN(pricing[0].twoSharingPrice) && !isNaN(pricing[0].threeSharingPrice) && !isNaN(pricing[0].foodPrice) && !isNaN(pricing[0].privateRoomPrice) && pricing[0].privateRoomPrice !== 0){
-            return true;
-        }else {
-            return false;
         }
+        if(accomodationType === "0" || accomodationType === "1"){
+            debugger;
+            if(accomodationType === "1" && isNaN(pricing[0].foodPrice) && pricing[0].foodPrice === 0){
+                return false;
+            }
+            if(accomodationDetails.private && !accomodationDetails.sharing && pricing[0].privateRoomPrice > 0){
+                return true;
+            }
+            if(accomodationDetails.sharing && !accomodationDetails.private){
+                if(accomodationDetails.twoSharingRooms !== null && accomodationDetails.threeSharingRooms !== null){
+                    if((accomodationDetails.sharing && !accomodationDetails.private) && ((pricing[0].twoSharingPrice > 0) && (pricing[0].threeSharingPrice > 0))){
+                        return true;
+                    }
+                }
+                if(accomodationDetails.twoSharingRooms !== null && accomodationDetails.threeSharingRooms === null){
+                    if(pricing[0].twoSharingPrice > 0){
+                        return true;
+                    }
+                }
+                if(accomodationDetails.threeSharingRooms !== null && accomodationDetails.twoSharingRooms === null){
+                    if((pricing[0].threeSharingPrice > 0)){
+                        return true;
+                    }
+                }
+            }
+            if(accomodationDetails.sharing && accomodationDetails.private){
+                if(accomodationDetails.threeSharingRooms !== null){
+                    if(pricing[0].privateRoomPrice > 0 && pricing[0].twoSharingPrice > 0 && pricing[0].threeSharingPrice > 0){
+                        return true;
+                    }   
+                }else {
+                    if(pricing[0].privateRoomPrice > 0 && pricing[0].twoSharingPrice > 0){
+                        return true;
+                    }  
+                }
+            }
+            // if((accomodationDetails.sharing && !accomodationDetails.private) && ((pricing[0].twoSharingPrice !== 0 && !isNaN(pricing[0].twoSharingPrice)) || (pricing[0].threeSharingPrice !== 0 && !isNaN(pricing[0].threeSharingPrice)))){
+            //     return true;
+            // }
+            // if((accomodationDetails.sharing && accomodationDetails.private) && ((pricing[0].twoSharingPrice !== 0 && !isNaN(pricing[0].twoSharingPrice)) || (pricing[0].threeSharingPrice !== 0 && !isNaN(pricing[0].threeSharingPrice))) && (pricing[0].privateRoomPrice !== 0 && !isNaN(pricing[0].privateRoomPrice))){
+            //     return true;
+            // }
+        }
+        // else if(accomodationType === "0" && accomodationDetails.private && !accomodationDetails.sharing && pricing[0].privateRoomPrice !== 0 && !isNaN(pricing[0].privateRoomPrice)){
+        //     return true;
+        // }else if(accomodationType === "0" && accomodationDetails.sharing && !accomodationDetails.private && pricing[0].twoSharingPrice!== 0 && pricing[0].threeSharingPrice!== 0 && !isNaN(pricing[0].twoSharingPrice) && !isNaN(pricing[0].threeSharingPrice)){
+        //     return true;
+        // }else if(accomodationType === "0" && accomodationDetails.sharing && accomodationDetails.private && pricing[0].twoSharingPrice!== 0 && pricing[0].threeSharingPrice!== 0 && !isNaN(pricing[0].twoSharingPrice) && !isNaN(pricing[0].threeSharingPrice) && !isNaN(pricing[0].privateRoomPrice) && pricing[0].privateRoomPrice !== 0){
+        //     return true;
+        // }else if(accomodationType === "1" && accomodationDetails.private && !accomodationDetails.sharing && pricing[0].privateRoomPrice !== 0 && !isNaN(pricing[0].privateRoomPrice) && pricing[0].foodPrice && !isNaN(pricing[0].foodPrice)){
+        //     return true;
+        // }else if(accomodationType === "1" && accomodationDetails.sharing && !accomodationDetails.private && pricing[0].twoSharingPrice!== 0 && pricing[0].threeSharingPrice!== 0 && !isNaN(pricing[0].twoSharingPrice) && !isNaN(pricing[0].threeSharingPrice) && !isNaN(pricing[0].foodPrice)){
+        //     return true;
+        // }else if(accomodationType === "1" && accomodationDetails.sharing && accomodationDetails.private && pricing[0].twoSharingPrice!== 0 && pricing[0].threeSharingPrice!== 0 && !isNaN(pricing[0].twoSharingPrice) && !isNaN(pricing[0].threeSharingPrice) && !isNaN(pricing[0].foodPrice) && !isNaN(pricing[0].privateRoomPrice) && pricing[0].privateRoomPrice !== 0){
+        //     return true;
+        // }else {
+        //     return false;
+        // }
     }
 
 
@@ -300,8 +348,8 @@ const PricingTable = (props) => {
                             />
                         </InputGroup>  </td>
                     </tr>}
-                    {accomodationDetails?.sharing && <><tr className='text-center'>
-                    <td><b>2 Sharing Price</b></td>
+                    {accomodationDetails?.sharing && accomodationDetails.twoSharingRooms !== null && <><tr className='text-center'>
+                    <td><b>Dual Occupancy Price</b></td>
                     <td>
                         <InputGroup>
                             <FormControl
@@ -316,8 +364,8 @@ const PricingTable = (props) => {
                             />
                         </InputGroup>  </td>
                     </tr>
-                    <tr className='text-center'>
-                    <td><b>3 Sharing Price</b></td>
+                    {accomodationDetails.threeSharingRooms !== null && <tr className='text-center'>
+                    <td><b>Triple Occupancy Price</b></td>
                     <td>
                         <InputGroup>
                             <FormControl
@@ -331,7 +379,7 @@ const PricingTable = (props) => {
                             onChange={(e) => {handleAccomodationPriceUpdate(parseInt(e.target.value), 0, "threeSharingPrice")}}
                             />
                         </InputGroup>  </td>
-                    </tr></>}
+                    </tr>}</>}
                     {accomodationType === '1' && <tr className='text-center'>
                     <td><b>Food Price</b></td>
                     <td>
@@ -368,7 +416,7 @@ const PricingTable = (props) => {
                     </tr>
                 </tbody>
                 </Table>
-                <hr className='my-0'/>
+                {(pricing[0].mrp !== null && pricing[0].mrp !== '') && <><hr className='my-0'/>
                     <div className='text-center'>
                         <label className='text-danger'><b>MRP</b></label>
                     </div>
@@ -382,14 +430,14 @@ const PricingTable = (props) => {
                         <label><b>Private Room + Base Price + <span className='text-danger'>Food</span></b></label>
                         <p>₹ {parseInt(pricing[0].mrp) + (isNaN(pricing[0].privateRoomPrice) ? 0 : pricing[0].privateRoomPrice) + (isNaN(pricing[0].foodPrice) ? 0 : pricing[0].foodPrice)}</p>
                     </Col>}
-                    {accomodationDetails.sharing && <><Col>
-                        <label><b>Dual Occupancy + Base Price + <span className='text-danger'>Food</span></b></label>
+                    {accomodationDetails.sharing && accomodationDetails.twoSharingRooms !== null && <><Col>
+                        <label><b>Base Price + Dual Occupancy + <span className='text-danger'>Food</span></b></label>
                         <p>₹ {parseInt(pricing[0].mrp) + (isNaN(pricing[0].twoSharingPrice) ? 0 : pricing[0].twoSharingPrice) + (isNaN(pricing[0].foodPrice) ? 0 : pricing[0].foodPrice)}</p>
                     </Col>
-                    <Col>
-                        <label><b>Triple Occupancy + Base Price + <span className='text-danger'>Food</span></b></label>
+                    {accomodationDetails.threeSharingRooms !== null && <Col>
+                        <label><b> Base Price + Triple Occupancy + <span className='text-danger'>Food</span></b></label>
                         <p>₹ {parseInt(pricing[0].mrp) + (isNaN(pricing[0].threeSharingPrice) ? 0 : pricing[0].threeSharingPrice) + (isNaN(pricing[0].foodPrice) ? 0 : pricing[0].foodPrice)}</p>
-                    </Col></>}
+                    </Col>}</>}
                 </Row>}
                 {accomodationType !== '1' && <Row className="text-center">
                     <Col>
@@ -397,18 +445,18 @@ const PricingTable = (props) => {
                         <p>₹ {parseInt(pricing[0].mrp)}</p>
                     </Col>
                     {accomodationDetails.private && <Col>
-                        <label><b>Private Room + Base Price </b></label>
+                        <label><b>Base Price + Private Room </b></label>
                         <p>₹ {parseInt(pricing[0].mrp) + (isNaN(pricing[0].privateRoomPrice) ? 0 : pricing[0].privateRoomPrice)}</p>
                     </Col>}
-                    {accomodationDetails.sharing && <><Col>
-                        <label><b>Dual Occupancy + Base Price</b></label>
+                    {accomodationDetails.sharing && accomodationDetails.twoSharingRooms !== null && <><Col>
+                        <label><b>Base Price + Dual Occupancy</b></label>
                         <p>₹ {parseInt(pricing[0].mrp) + (isNaN(pricing[0].twoSharingPrice) ? 0 : pricing[0].twoSharingPrice)}</p>
                     </Col>
-                    <Col>
-                        <label><b>Triple Occupancy + Base Price</b></label>
+                    {accomodationDetails.threeSharingRooms !== null && <Col>
+                        <label><b>+ Base Price + Triple Occupancy</b></label>
                         <p>₹ {parseInt(pricing[0].mrp) + (isNaN(pricing[0].threeSharingPrice) ? 0 : pricing[0].threeSharingPrice)}</p>
-                    </Col> </>}
-                </Row>}
+                    </Col>} </>}
+                </Row>}</>}
             </div>}
         </>
     )
