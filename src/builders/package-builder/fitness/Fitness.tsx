@@ -120,7 +120,7 @@ export default function FitnessTab(props) {
                         </div> : ""}
                     {row.values.details[4] !== null && row.values.details[4] !== 0 ?
                         <div className="text-center">
-                            <OfferingsDisaplyImage mode={row.original?.mode === null ? "Online" : row.original?.mode} packageType={row.original?.type}/>
+                            <OfferingsDisaplyImage mode={row.original?.mode} packageType={row.original?.type}/>
                             {/* <img src='./assets/customclassic.svg' alt="Classic" /> */}
                             <p>{row.values.details[4] * currentIndex[row.index]}</p>
                         </div> : ""}
