@@ -15,7 +15,7 @@ export default function Vouchers() {
     const [dataTable, setDataTable] = useState<any[]>([])
     const voucherActionRef = useRef<any>(null);
 
-    const FetchData = () => useQuery(GET_ALL_VOUCHERS, {
+    const fetch = useQuery(GET_ALL_VOUCHERS, {
         variables: { id: auth.userid },
         onCompleted: data => loadData(data)
     })
@@ -25,7 +25,7 @@ export default function Vouchers() {
             [...data.vouchers.data].map(voucher => {
                 let todayDate: any = moment(new Date());
                 let expiryDate: any = moment(voucher.attributes.expiry_date);
-                let diff = expiryDate.diff(todayDate, 'day')
+                let diff = expiryDate.diff(todayDate)
                 return {
                     id: voucher.id,
                     voucher_name: voucher.attributes.voucher_name,
@@ -38,7 +38,9 @@ export default function Vouchers() {
         )
     }
 
-    FetchData();
+    function refetchQueryCallback() {
+        fetch.refetch();
+   }
 
     const columns = useMemo(
         () => [
@@ -108,8 +110,6 @@ export default function Vouchers() {
         []
     );
 
-
-
     return (
         <div className="mt-5">
             <div className="d-flex justify-content-end mb-5 mr-5">
@@ -120,7 +120,7 @@ export default function Vouchers() {
             <Row>
                 <Col>
                     <Table columns={columns} data={dataTable} />
-                    <VoucherAction ref={voucherActionRef} />
+                    <VoucherAction ref={voucherActionRef} callback={refetchQueryCallback}/>
                 </Col>
             </Row>
         </div>

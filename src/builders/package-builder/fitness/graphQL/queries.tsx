@@ -42,6 +42,17 @@ export const GET_FITNESS_PACKAGE_TYPES = gql`
         id
         attributes{
           type
+          Modes
+          PricingRequired
+          Unit_Pricing_Calculation
+          suggested_pricings{
+            data{
+              id
+              attributes{
+                mrp
+              }
+            }
+          }
         }
       }
     }

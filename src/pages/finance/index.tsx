@@ -18,7 +18,7 @@ export default function index() {
                         <Tab eventKey="general" title="General">
                             <General />
                         </Tab>
-                        <Tab eventKey="pricingAssist" title="Pricing Assist">
+                        <Tab eventKey="pricingAssist" title="Base Price">
                             <PricingAssist />
                         </Tab>
                         <Tab eventKey="invoices" title="Invoices">

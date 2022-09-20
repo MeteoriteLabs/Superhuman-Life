@@ -146,7 +146,7 @@ export default function FitnessTab(props) {
                             onChange={(e) => {
                                 const updateSelectedDuration = [...selectedDuration];
                                 const updateCurrentindex = [...currentIndex];
-                                let value = 1
+                                let value = 1;
                                 if (e.target.value === "1") {
                                     value *= 3
                                 } else if (e.target.value === "2") {

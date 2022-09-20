@@ -39,7 +39,7 @@ function ToggleSideBarMenu() {
             <Nav.Link eventKey="7" className="nav-link text-white d-sm-block d-lg-none" href="/resources">
               <img src={ResourcesIcon} alt="resources icon" className="mr-sm-2" style={{ height: '20px', width: '20px', marginRight: '5px' }} />Resources
             </Nav.Link>
-            <Nav.Link eventKey="8" className="nav-link text-white d-sm-block d-lg-none" href="/finances">
+            <Nav.Link eventKey="8" className="nav-link text-white d-sm-block d-lg-none" href="/finance">
               <img src={FinancesIcon} alt="finances icon" className="mr-sm-2" style={{ height: '20px', width: '20px', marginRight: '5px' }} />Finances
             </Nav.Link>
             <Nav.Link eventKey="9" className="nav-link text-white d-sm-block d-lg-none" href="/communication">
