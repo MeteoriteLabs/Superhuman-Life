@@ -9,10 +9,14 @@ const PricingTable = (props) => {
 
     const inputDisabled = props.readonly;
 
+    console.log(JSON.parse(props.formContext.programDetails).online);
+
     const auth = useContext(AuthContext);
     const [vouchers, setVouchers] = useState<any>([]);
     const [show, setShow] = useState(props.value === 'free' ? true : false);
-    const [pricing, setPricing] = useState<any>(props.value !== undefined && props.value !== 'free' ? JSON.parse(props?.value) : [ {mrp: null, suggestedPrice: null, voucher: 0, duration: JSON.parse(props.formContext.programDetails).onlineClasses, sapienPricing: null}]);
+    const [pricing, setPricing] = useState<any>(props.value !== undefined && props.value !== 'free' ? JSON.parse(props?.value) : [ {mrp: null, suggestedPrice: null, voucher: 0, duration: JSON.parse(props.formContext.programDetails).online, sapienPricing: null}]);
+
+    console.log(pricing)
 
     const GET_VOUCHERS = gql`
         query fetchVouchers($expiry: DateTime!, $id: ID!, $start: DateTime!, $status: String!) {
@@ -165,6 +169,8 @@ const PricingTable = (props) => {
 
     FetchData();
 
+    console.log(pricing[0].duration)
+
     return(
         <>
             <div>
@@ -228,7 +234,7 @@ const PricingTable = (props) => {
                     </tr>
                     <tr className='text-center'>
                     <td><b>Total days</b></td>
-                    <td>{pricing[0].duration} days</td>
+                    <td>{pricing[0].duration} sessions</td>
                     </tr>
                     <tr className='text-center'>
                     <td><b>Suggested</b></td>

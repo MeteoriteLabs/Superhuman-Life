@@ -2,7 +2,9 @@ import Upload from '../../../../components/upload/upload';
 import DatesConfig from '../../../../components/customWidgets/datesConfig';
 import FitnessSelect from '../../../../components/customWidgets/fitnessMultiSelect';
 import EquipmentSelect from '../../../../components/customWidgets/equipmentListSelect';
+import LanguageSelect from '../../../../components/customWidgets/languageSelect';
 import ClassicProgramDetails from './classicProgramDetails';
+import ClassicBookingConfig from './bookingConfig';
 import ClassicPricingTable from './classicPricingTable';
 import ClassicPreview from './classicPreview';
 
@@ -13,6 +15,8 @@ export const widgets = {
      classicProgramDetails: ClassicProgramDetails,
      classPricingTable: ClassicPricingTable,
      classicPreview: ClassicPreview,
+     classicBookingConfig: ClassicBookingConfig,
+     classicLanguageSelect: LanguageSelect,
 }
 
 export const schema: any = {  
@@ -57,7 +61,7 @@ export const schema: any = {
       },
      "thumbnail": {
           "ui:widget": (props: any) => {
-               return <Upload allowImage={true} allowVideo={true} onChange={props.onChange} value={props.value} title={'Thumbnail'} />;
+               return <Upload allowImage={true} allowVideo={false} onChange={props.onChange} value={props.value} title={'Thumbnail'} />;
           },
       },
      "Upload": {
@@ -89,12 +93,12 @@ export const schema: any = {
                   "inline": true
               }
      },
+     "languages": {
+          "ui:widget": "classicLanguageSelect"
+     },
      "config": {
-          "acceptBooking": {
-              "ui:widget": "radio",
-              "ui:options": {
-                  "inline": true
-              }
+          "bookingConfig": {
+              "ui:widget": "classicBookingConfig"
           }
      },
 }
