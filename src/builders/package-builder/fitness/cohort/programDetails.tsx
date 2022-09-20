@@ -96,83 +96,66 @@ const ProgramDetails = (props) => {
     function handleValidation(){
         if(mode === "0"){
             return true;
-        }else if(mode === "1" && addressTitle === "At My Address" && singleSelections.length !== 0){
-            return true;
-        }else if(mode === "1" && addressTitle === "At Client Address"){
-            return true;
-        }else if(mode === "2" && addressTitle === "At My Address" && singleSelections.length !== 0 && residential !== ""){
-            if(residential === "0"){
+        }
+        if(mode === "1"){
+            if((addressTitle === "At My Address" && singleSelections.length !== 0) || addressTitle === "At Client Address"){
+                return true;
+            }
+        }
+        if(mode === "2" ){
+            if((addressTitle === "At My Address" && singleSelections.length !== 0 && residential !== "") || (mode === "2" && addressTitle === "At Client Address")){
                 if(!showPrivate && !showSharing){
+                    return false;
+                }
+                if(foodDescription === "" && residential === "1"){
                     return false;
                 }
                 if(showPrivate && privateRooms! > 0 && !showSharing){
                     if(calculateAccomodation({onePerRoom: privateRooms,twoPerRoom: twoSharing,threePerRoom: threeSharing})){
                         return true;
                     }
-                }else if(showSharing && (twoSharing! > 0 || threeSharing! > 0)){
-                    if(calculateAccomodation({onePerRoom: privateRooms,twoPerRoom: twoSharing,threePerRoom: threeSharing})){
-                        return true;
-                    }
-                }else if(showPrivate && showSharing && privateRooms! > 0 && twoSharing! > 0 && threeSharing! > 0){
+                }
+                if(showSharing && (twoSharing! > 0 || threeSharing! > 0)){
                     if(calculateAccomodation({onePerRoom: privateRooms,twoPerRoom: twoSharing,threePerRoom: threeSharing})){
                         return true;
                     }
                 }
-            }else if(residential === "1"){
-                if(!showPrivate && !showSharing){
-                    return false;
-                }
-                if(showPrivate && privateRooms! > 0 && !showSharing && foodDescription !== ""){
-                    if(calculateAccomodation({onePerRoom: privateRooms,twoPerRoom: twoSharing,threePerRoom: threeSharing})){
-                        return true;
-                    }
-                }else if(showSharing && (twoSharing! > 0 || threeSharing! > 0) && foodDescription !== ""){
-                    if(calculateAccomodation({onePerRoom: privateRooms,twoPerRoom: twoSharing,threePerRoom: threeSharing})){
-                        return true;
-                    }
-                }else if(showPrivate && showSharing && privateRooms! > 0 && twoSharing! > 0 && threeSharing! > 0 && foodDescription !== ""){
+                if(showPrivate && showSharing && privateRooms! > 0 && twoSharing! > 0 && threeSharing! > 0){
                     if(calculateAccomodation({onePerRoom: privateRooms,twoPerRoom: twoSharing,threePerRoom: threeSharing})){
                         return true;
                     }
                 }
-            }
-            
-        }else if(mode === "2" && addressTitle === "At Client Address"){
-            if(residential === "0"){
-                if(!showPrivate && !showSharing){
-                    return false;
-                }
-                if(showPrivate && privateRooms! > 0 && !showSharing){
-                    if(calculateAccomodation({onePerRoom: privateRooms,twoPerRoom: twoSharing,threePerRoom: threeSharing})){
-                        return true;
-                    }
-                }else if(showSharing && (twoSharing! > 0 || threeSharing! > 0)){
-                    if(calculateAccomodation({onePerRoom: privateRooms,twoPerRoom: twoSharing,threePerRoom: threeSharing})){
-                        return true;
-                    }
-                }else if(showPrivate && showSharing && privateRooms! > 0 && twoSharing! > 0 && threeSharing! > 0 && foodDescription !== ""){
-                    if(calculateAccomodation({onePerRoom: privateRooms,twoPerRoom: twoSharing,threePerRoom: threeSharing})){
-                        return true;
-                    }
-                }
-            }else if(residential === "1"){
-                if(!showPrivate && !showSharing){
-                    return false;
-                }
-                if(showPrivate && privateRooms! > 0 && !showSharing && foodDescription !== ""){
-                    if(calculateAccomodation({onePerRoom: privateRooms,twoPerRoom: twoSharing,threePerRoom: threeSharing})){
-                        return true;
-                    }
-                }else if(showSharing && (twoSharing! > 0 || threeSharing! > 0) && foodDescription !== ""){
-                    if(calculateAccomodation({onePerRoom: privateRooms,twoPerRoom: twoSharing,threePerRoom: threeSharing})){
-                        return true;
-                    }
-                }else if(showPrivate && showSharing && privateRooms! > 0 && twoSharing! > 0 && threeSharing! > 0 && foodDescription !== ""){
-                    if(calculateAccomodation({onePerRoom: privateRooms,twoPerRoom: twoSharing,threePerRoom: threeSharing})){
-                        return true;
-                    }
-                }
-            }
+                // if(residential === "0"){
+                //     if(showPrivate && privateRooms! > 0 && !showSharing){
+                //         if(calculateAccomodation({onePerRoom: privateRooms,twoPerRoom: twoSharing,threePerRoom: threeSharing})){
+                //             return true;
+                //         }
+                //     }else if(showSharing && (twoSharing! > 0 || threeSharing! > 0)){
+                //         if(calculateAccomodation({onePerRoom: privateRooms,twoPerRoom: twoSharing,threePerRoom: threeSharing})){
+                //             return true;
+                //         }
+                //     }else if(showPrivate && showSharing && privateRooms! > 0 && twoSharing! > 0 && threeSharing! > 0){
+                //         if(calculateAccomodation({onePerRoom: privateRooms,twoPerRoom: twoSharing,threePerRoom: threeSharing})){
+                //             return true;
+                //         }
+                //     }
+                // }
+                // if(residential === "1"){
+                //     if(showPrivate && privateRooms! > 0 && !showSharing && foodDescription !== ""){
+                //         if(calculateAccomodation({onePerRoom: privateRooms,twoPerRoom: twoSharing,threePerRoom: threeSharing})){
+                //             return true;
+                //         }
+                //     }else if(showSharing && (twoSharing! > 0 || threeSharing! > 0) && foodDescription !== ""){
+                //         if(calculateAccomodation({onePerRoom: privateRooms,twoPerRoom: twoSharing,threePerRoom: threeSharing})){
+                //             return true;
+                //         }
+                //     }else if(showPrivate && showSharing && privateRooms! > 0 && twoSharing! > 0 && threeSharing! > 0 && foodDescription !== ""){
+                //         if(calculateAccomodation({onePerRoom: privateRooms,twoPerRoom: twoSharing,threePerRoom: threeSharing})){
+                //             return true;
+                //         }
+                //     }
+                // }
+            }   
         }
     }
 
