@@ -1,6 +1,6 @@
 import React from 'react';
 import {Carousel, Card} from 'react-bootstrap';
-import SocialMediaComponent from '../../../../components/customWidgets/SocialMediaComponent';
+// import SocialMediaComponent from '../../../../components/customWidgets/SocialMediaComponent';
 import DisplayImage from '../../../../components/DisplayImage/index';
 
 const PreviewGroup = (props) => {
