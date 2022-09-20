@@ -9,6 +9,7 @@ import authContext from '../../../../context/auth-context';
 import moment from 'moment';
 import PricingAssistAction from '../PricingAssistAction'
 import { GET_FITNESS_PACKAGE_TYPES } from '../../../../builders/package-builder/fitness/graphQL/queries';
+import OfferingsDisaplyImage from '../../../../components/customWidgets/offeringsDisplayImage';
 
 
 export default function Fitness() {
@@ -153,40 +154,11 @@ export default function Fitness() {
         () => [
             {
                 accessor: "type", Header: "Type", Cell: ({ row }: any) => {
-                    let type = '';
-                    let name = '';
-                    switch (row.original.mode) {
-                        case "Online": {
-                            if (row.original.type === "One-On-One") {
-                                type = "custompersonal-training-Online.svg";
-                                name = "PT";
-                            } else if (row.original.type === "Group Class") {
-                                type = "customgroup-Online.svg";
-                                name = "Group";
-                            } else if (row.original.type === "Classic Class") {
-                                type = "customgroup-Online.svg";
-                                name = "Classic";
-                            }
-                            break;
-                        }
-
-                        case "Offline": {
-                            if (row.original.type === "One-On-One") {
-                                type = "custompersonal-training-Offline.svg";
-                                name = "PT";
-                            } else if (row.original.type === "Group Class") {
-                                type = "customgroup-Offline.svg";
-                                name = "Group";
-                            }
-                            break;
-                        }
-                    }
-
-
                     return <div className='d-flex justify-content-center align-items-center'>
                         <div>
-                            <img src={`./assets/${type}`} alt={name} />
-                            <p className='mb-0'>{name}</p>
+                            <OfferingsDisaplyImage mode={row.original?.mode} packageType={row.original?.type}/>
+                            {/* <img src={`./assets/${type}`} alt={name} /> */}
+                            <p className='mb-0'>{row.original?.type}</p>
                         </div>
                     </div>
                 }
