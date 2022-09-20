@@ -5,6 +5,8 @@ import DatesConfig from '../../../../components/customWidgets/datesConfig';
 import FitnessSelect from '../../../../components/customWidgets/fitnessMultiSelect';
 import EquipmentSelect from '../../../../components/customWidgets/equipmentListSelect';
 import ChannelConfig from './channelConfig';
+import LanguageList from '../../../../components/customWidgets/languageSelect';
+import LiveBookingConfig from './bookingConfig';
 
 export const widgets = {
     pricingTableChannel: PricingTableChannel,
@@ -13,6 +15,8 @@ export const widgets = {
     fitnessSelect: FitnessSelect,
     equipmentSelect: EquipmentSelect,
     channelConfig: ChannelConfig,
+    liveBookingConfig: LiveBookingConfig,
+    liveChannelLanguageSelect: LanguageList,
 };
 
 export const schemaView: any = {
@@ -89,18 +93,9 @@ export const schemaView: any = {
             "ui:readonly": true,
         },
         "config": {
-            "acceptBooking": {
-                "ui:widget": "radio",
-                "ui:options": {
-                    "inline": true
-                }
-            },
-            "ui:readonly": true,
-            "maxBookingMonth": {
-                "ui:readonly": true,
-            },
-            "maxBookingDay": {
-                "ui:readonly": true
+            "bookingConfig": {
+                "ui:widget": "liveBookingConfig",
+                "readonly": true
             }
         },
         "programSchedule": {
@@ -117,6 +112,10 @@ export const schemaView: any = {
         },
         "preview": {
             "ui:widget": "previewChannel",
+            "ui:readonly": true
+        },
+        "languages": {
+            "ui:widget": "liveChannelLanguageSelect",
             "ui:readonly": true
         }
     }

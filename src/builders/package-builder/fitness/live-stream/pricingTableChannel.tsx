@@ -1,5 +1,5 @@
 import React, {useState, useContext, useEffect} from 'react';
-import { Form, Table, FormControl, InputGroup, Button} from 'react-bootstrap';
+import { Form, Table, FormControl, InputGroup, Button, Row, Col} from 'react-bootstrap';
 import {gql, useQuery, useLazyQuery} from '@apollo/client';
 import AuthContext from '../../../../context/auth-context';
 import { flattenObj } from '../../../../components/utils/responseFlatten';
@@ -9,6 +9,10 @@ const PricingTable = (props) => {
 
     const inputDisabled = props.readonly;
     const bookingDetails = JSON.parse(props.formContext.channelinstantBooking);
+
+    console.log(props);
+
+    const [show, setShow] = useState(props.value === 'free' ? true : false);
 
     function handleReturnType(val: any) {
         if (typeof(val) === 'string') {
@@ -173,7 +177,9 @@ const PricingTable = (props) => {
     }
 
     useEffect(() => {
-        if((pricing[0].mrp !== null && pricing[0].mrp >= parseInt(pricing[0].sapienPricing)) || 
+        if(show){
+            props.onChange('free');
+        }else if((pricing[0].mrp !== null && pricing[0].mrp >= parseInt(pricing[0].sapienPricing)) || 
              (pricing[1].mrp !== null && pricing[1].mrp >= parseInt(pricing[1].sapienPricing)) || 
              (pricing[2].mrp !== null && pricing[2].mrp >= parseInt(pricing[2].sapienPricing)) || 
              (pricing[3].mrp !== null && pricing[3].mrp >= parseInt(pricing[3].sapienPricing))){
@@ -182,7 +188,7 @@ const PricingTable = (props) => {
              props.onChange(undefined)
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pricing]);
+  }, [pricing, show]);
 
 
     function handleUpdatePricing(id: any, value: any){
@@ -206,7 +212,35 @@ const PricingTable = (props) => {
 
     return(
         <>
-            <div>
+        <div>
+                <Row>
+                    <Col>
+                        <h5>Type of payment</h5>
+                    </Col>  
+                </Row>
+                <Row>
+                    <Col>
+                        <Row>
+                            <Col lg={2}><b>Setup Pricing</b></Col>
+                            <Col lg={1}>
+                            <Form>
+                                <Form.Check 
+                                    type="switch"
+                                    id="custom-switch"
+                                    defaultChecked={show}
+                                    onClick={() => setShow(!show)}
+                                    disabled={inputDisabled}
+                                />
+                            </Form>
+                            </Col>
+                            <Col lg={3}><b>Free (support Me Button)</b></Col>
+                        </Row>
+                    </Col>
+                </Row>
+            </div>
+            <br />
+            <br />
+            {!show && <div>
                 <div className="d-flex justify-content-between p-2">
                     <div>
                         <h4>Subscription Plan</h4>
@@ -285,7 +319,7 @@ const PricingTable = (props) => {
                     </tr>
                 </tbody>
                 </Table>
-            </div>
+            </div>}
         </>
     )
 };
