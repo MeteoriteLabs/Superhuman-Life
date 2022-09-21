@@ -7,7 +7,6 @@ const PackageDateConfig = (props: any) => {
      const inputDisabled = props.readonly;
 
      const [publishingDate, setPublishingDate] = useState(props.value === undefined ? moment().add(props.title1 && 1, 'month').format("YYYY-MM-DD") : moment(JSON.parse(props.value).publishingDate).format("YYYY-MM-DD"));
-
      const [expiryDate, setExpiryDate] = useState(props.value === undefined ? moment(publishingDate).add(1, 'year').format("YYYY-MM-DD") : moment(JSON.parse(props.value).expiryDate).format("YYYY-MM-DD"));
 
      useEffect(() => {
@@ -45,7 +44,6 @@ const PackageDateConfig = (props: any) => {
                     />
                </InputGroup>
                {props?.title2 && <span className='small text-muted'>On the selected date this offering will be shifted to drafts</span>}
-
           </div>
      );
 };

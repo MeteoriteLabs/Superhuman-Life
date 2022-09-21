@@ -151,7 +151,6 @@ const PricingTable = (props) => {
     console.log(classMode);
 
     function handleSuggestedPricingCalculation(mode: string, item: any, suggestedPricings: any, duration: number) {
-          debugger;
           console.log(mode, item, suggestedPricings);
           var ptOnlinePrice: number, ptOfflinePrice: number, groupOnlinePrice: number, groupOfflinePrice: number, classicPrice: number;
           if(mode === 'Online'){

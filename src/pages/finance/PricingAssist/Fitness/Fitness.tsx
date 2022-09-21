@@ -9,6 +9,8 @@ import authContext from '../../../../context/auth-context';
 import moment from 'moment';
 import PricingAssistAction from '../PricingAssistAction'
 import { GET_FITNESS_PACKAGE_TYPES } from '../../../../builders/package-builder/fitness/graphQL/queries';
+import OfferingsDisaplyImage from '../../../../components/customWidgets/offeringsDisplayImage';
+
 import { flattenObj } from '../../../../components/utils/responseFlatten';
 
 export default function Fitness() {
@@ -69,60 +71,12 @@ export default function Fitness() {
         () => [
             {
                 accessor: "type", Header: "Type", Cell: ({ row }: any) => {
-                    let type = '';
-                    let name = '';
-                    switch (row.original.modes) {
-
-                        case "Online": {
-                            if (row.original.type === "One-On-One") {
-                                type = "custompersonal-training-Online.svg";
-                                name = "One on One Online";
-                            } else if (row.original.type === "Group Class") {
-                                type = "customgroup-Online.svg";
-                                name = "Group Online";
-                            } else if (row.original.type === "Classic Class") {
-                                type = "customgroup-Online.svg";
-                                name = "Classic Online";
-                            }
-                            else if (row.original.type === "Cohort") {
-                                type = "cohort_online.svg";
-                                name = "Cohort Online";
-                            }
-                            else if (row.original.type === "Live Stream Channel") {
-                                type = "livestream_online.svg";
-                                name = "Live Stream Channel";
-                            }
-                            else if (row.original.type === "On-Demand PT") {
-                                type = "customgroup-Online.svg";
-                                name = "On-Demand PT Online";
-                            }
-                            break;
-                        }
-
-                        case "Offline": {
-                            if (row.original.type === "One-On-One") {
-                                type = "custompersonal-training-Offline.svg";
-                                name = "One on One Offline";
-                            } else if (row.original.type === "Group Class") {
-                                type = "customgroup-Offline.svg";
-                                name = "Group Offline";
-                            }
-                            else if (row.original.type === "Cohort") {
-                                type = "cohort_offline.svg";
-                                name = "Cohort Offline";
-                            }
-                            else if (row.original.type === "On-Demand PT") {
-                                type = "customgroup-Offline.svg";
-                                name = "On-Demand PT Offline";
-                            }
-                            break;
-                        }
-                    }
-
+                    console.log(row.original)
                     return <div className='d-flex justify-content-center align-items-center'>
                         <div>
-                            <img src={`./assets/${type}`} alt={name} />
-                            <p className='mb-0'>{name}</p>
+                            <OfferingsDisaplyImage mode={row.original?.modes} packageType={row.original?.type}/>
+                            {/* <img src={`./assets/${type}`} alt={name} /> */}
+                            <p className='mb-0'>{row.original?.type}</p>
                         </div>
                     </div>
                 }

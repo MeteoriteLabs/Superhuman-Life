@@ -15,6 +15,7 @@ import CreateEditViewCohort from "./cohort/CreateEditView-Cohort";
 import { GET_FITNESS } from "./graphQL/queries";
 import { flattenObj } from "../../../components/utils/responseFlatten";
 import moment from 'moment';
+import OfferingsDisaplyImage from "../../../components/customWidgets/offeringsDisplayImage";
 
 
 export default function FitnessTab(props) {
@@ -90,38 +91,44 @@ export default function FitnessTab(props) {
         {
             accessor: "details", Header: "Details",
             Cell: ({ row }: any) => {
-                console.log(row.values.details);
-                console.log(currentIndex);
+                console.log(row);
                 return <div className='d-flex justify-content-center align-items-center'>
                     {row.values.details[0] !== null && row.values.details[0] !== 0 ?
                         <div className="text-center">
-                            <img src='./assets/custompersonal-training-Online.svg' alt="PT-Online" />
+                            <OfferingsDisaplyImage mode={row.original?.mode} packageType={row.original?.type}/>
+                            {/* <img src='./assets/custompersonal-training-Online.svg' alt="PT-Online" /> */}
                             <p>{row.values.details[0] * currentIndex[row.index]}</p>
                         </div>
                         : ""}
                     {row.values.details[1] !== null && row.values.details[1] !== 0 ?
                         <div className="text-center">
-                            <img src='./assets/custompersonal-training-Offline.svg' alt="PT-Offline" />
+                            <OfferingsDisaplyImage mode={row.original?.mode} packageType={row.original?.type}/>
+                            {/* <img src='./assets/custompersonal-training-Offline.svg' alt="PT-Offline" /> */}
                             <p>{row.values.details[1] * currentIndex[row.index]}</p>
                         </div> : ""}
                     {row.values.details[2] !== null && row.values.details[2] !== 0 ?
                         <div className="text-center">
-                            <img src='./assets/customgroup-Online.svg' alt="Group-Online" />
+                            <OfferingsDisaplyImage mode={row.original?.mode === 'Hybrid' ? 'Online' : row.original?.mode} packageType={row.original?.type}/>
+                            {/* <img src='./assets/customgroup-Online.svg' alt="Group-Online" /> */}
                             <p>{row.values.details[2] * currentIndex[row.index]}</p>
                         </div> : ""}
                     {row.values.details[3] !== null && row.values.details[3] !== 0 ?
                         <div className="text-center">
-                            <img src='./assets/customgroup-Offline.svg' alt="GRoup-Offline" />
+                            <OfferingsDisaplyImage mode={row.original?.mode === 'Hybrid' ? 'Offline' : row.original?.mode} packageType={row.original?.type}/>
+                            {/* <img src='./assets/customgroup-Offline.svg' alt="GRoup-Offline" /> */}
                             <p>{row.values.details[3] * currentIndex[row.index]}</p>
                         </div> : ""}
                     {row.values.details[4] !== null && row.values.details[4] !== 0 ?
                         <div className="text-center">
-                            <img src='./assets/customclassic.svg' alt="Classic" />
+                            <OfferingsDisaplyImage mode={row.original?.mode} packageType={row.original?.type}/>
+                            {/* <img src='./assets/customclassic.svg' alt="Classic" /> */}
                             <p>{row.values.details[4] * currentIndex[row.index]}</p>
                         </div> : ""}
                     {row.values.details[5] !== null && row.values.details[4] === null ?
                         <div className="text-center">
-                            <img src={row.values.details[6] === "Online" ? './assets/cohort_online.svg' : './assets/cohort_offline.svg'} alt="cohort" />
+                            {/* <OfferingsDisaplyImage mode={row.original?.mode} packageType={row.original?.type}/> */}
+                            {row.values.details[6] === "Online" ? <OfferingsDisaplyImage mode={'Online'} packageType={row.original?.type}/> : <OfferingsDisaplyImage mode={'Offline'} packageType={row.original?.type}/>}
+                            {/* <img src={row.values.details[6] === "Online" ? './assets/cohort_online.svg' : './assets/cohort_offline.svg'} alt="cohort" /> */}
                             <p>{row.values.details[5] * currentIndex[row.index]}</p>
                         </div> : ""}
                 </div>
@@ -227,11 +234,13 @@ export default function FitnessTab(props) {
                     id: item.id,
                     packagename: item.packagename,
                     type: item.fitness_package_type.type,
-                    details: [item.ptonline, item.ptoffline, item.grouponline, item.groupoffline, item.recordedclasses, item.duration, item.mode],
+                    details: [item.ptonline,item.ptoffline,item.grouponline,item.groupoffline,item.recordedclasses,item.duration, item.mode],
                     duration: item.fitnesspackagepricing.map(i => i.duration),
                     mrp: item.fitnesspackagepricing.map(i => i.mrp),
                     Status: item.Status ? "Active" : "Inactive",
-                    publishingDate: item.publishing_date
+                    publishingDate: item.publishing_date,
+                    mode: item.mode,
+                    days: item.duration
                 }
             })
         )

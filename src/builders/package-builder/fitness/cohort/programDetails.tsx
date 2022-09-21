@@ -137,6 +137,36 @@ const ProgramDetails = (props) => {
         props.onChange(undefined)
     }
 
+
+
+    // useEffect(() => {
+        accomodationDetails.private = showPrivate;
+        accomodationDetails.sharing = showSharing;
+        accomodationDetails.privateRooms = privateRooms;
+        accomodationDetails.twoSharingRooms = twoSharing;
+        accomodationDetails.threeSharingRooms = threeSharing;
+        accomodationDetails.foodDescription = foodDescription;
+    // }, [showPrivate, privateRooms, foodDescription, showSharing, twoSharing, threeSharing, accomodationDetails]);
+
+    console.log(accomodationDetails);
+
+    if(handleValidation()){
+        props.onChange(JSON.stringify({addressTag: addressTitle, address: singleSelections, mode: mode, residential: residential, accomodationDetails: accomodationDetails}));
+    }else {
+        props.onChange(undefined)
+    }
+    // else if(mode === "1" && addressTitle === "At My Address" && singleSelections.length !== 0){
+    //     props.onChange(JSON.stringify({addressTag: addressTitle, address: singleSelections, mode: mode, residential: residential}));
+    // }else if(mode === "2" && addressTitle === "At My Address" && singleSelections.length !== 0 && residential !== ""){
+    //     props.onChange(JSON.stringify({addressTag: addressTitle, address: singleSelections, mode: mode, residential: residential}));
+    // }else if(mode === "1" && addressTitle === "At Client Address"){
+    //     props.onChange(JSON.stringify({addressTag: addressTitle, address: singleSelections, mode: mode, residential: residential}));
+    // }else if(mode === "2" && addressTitle === "At Client Address"){
+    //     props.onChange(JSON.stringify({addressTag: addressTitle, address: singleSelections, mode: mode, residential: residential}));
+    // }
+
+    console.log(twoSharing);
+
     return (
         <>
             <div>
