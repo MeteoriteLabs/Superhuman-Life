@@ -1,6 +1,6 @@
 import React from 'react';
 import {Carousel, Card} from 'react-bootstrap';
-import SocialMediaComponent from '../../../../components/customWidgets/SocialMediaComponent';
+// import SocialMediaComponent from '../../../../components/customWidgets/SocialMediaComponent';
 import DisplayImage from '../../../../components/DisplayImage/index';
 
 const PreviewCohort = (props) => {
@@ -102,7 +102,7 @@ const PreviewCohort = (props) => {
                                         <img src={`/assets/cohort_online.svg`} alt="custom-classic" title="Personal Training Online" />
                                         <p>{item.duration}</p>
                                     </div>}
-                                    {classMode === "1" && <div>
+                                    {(classMode === "1" || classMode === "2") && <div>
                                         <img src={`/assets/cohort_offline.svg`} alt="custom-classic" title="Personal Training Online" />
                                         <p>{item.duration}</p>
                                     </div>}
@@ -124,11 +124,14 @@ const PreviewCohort = (props) => {
 
     return (
         <>
-        <Carousel>
+        <Carousel
+            prevIcon={<i className='fa fa-chevron-left fa-lg' style={{ "color": "black"}}></i>}
+            nextIcon={<i className='fa fa-chevron-right fa-lg' style={{ "color": "black"}}></i>}
+        >
             {handleCardRender()}
         </Carousel>
 
-            <SocialMediaComponent url={URL} />
+            {/* <SocialMediaComponent url={URL} /> */}
         </>
     );
 };

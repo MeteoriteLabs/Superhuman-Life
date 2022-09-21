@@ -184,6 +184,7 @@ function CreateEditChannel(props: any, ref: any) {
             frm.discpline = JSON.parse(frm?.discpline);
         }
         frm.languages = JSON.parse(frm.languages)
+
         CreatePackage({
             variables: {
                 aboutpackage: frm.About,

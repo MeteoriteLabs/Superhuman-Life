@@ -266,7 +266,8 @@ export const UPDATE_CHANNEL_COHORT_PACKAGE = gql`
     $videoUrl: String
     $fitnessdisciplines: [ID]
     $Intensity: ENUM_FITNESSPACKAGE_INTENSITY
-    $duration: Int
+    $duration: Int,
+    $Accomdation_details: JSON
     ) {
       updateFitnesspackage(
         id: $id, 
@@ -298,6 +299,7 @@ export const UPDATE_CHANNEL_COHORT_PACKAGE = gql`
           fitnessdisciplines: $fitnessdisciplines
           Intensity: $Intensity
           duration: $duration
+          Accomdation_details: $Accomdation_details
       }){
         data{
           id
@@ -361,6 +363,7 @@ export const CREATE_CHANNEL_PACKAGE = gql`
     $fitnessdisciplines: [ID]
     $Intensity: ENUM_FITNESSPACKAGE_INTENSITY
     $duration: Int
+    $Accomdation_details: JSON
   ){
     createFitnesspackage(data: {
       aboutpackage: $aboutpackage,
@@ -390,6 +393,7 @@ export const CREATE_CHANNEL_PACKAGE = gql`
       fitnessdisciplines: $fitnessdisciplines
       Intensity: $Intensity
       duration: $duration
+      Accomdation_details: $Accomdation_details
     }){
       data{
         id

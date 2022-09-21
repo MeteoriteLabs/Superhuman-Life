@@ -6,7 +6,8 @@ const PackageDateConfig = (props: any) => {
 
      const inputDisabled = props.readonly;
 
-     const [publishingDate, setPublishingDate] = useState(props.value === undefined ? moment().add(props.title2 && 1, 'month').format("YYYY-MM-DD") : moment(JSON.parse(props.value).publishingDate).format("YYYY-MM-DD"));
+     const [publishingDate, setPublishingDate] = useState(props.value === undefined ? moment().add(props.title1 && 1, 'month').format("YYYY-MM-DD") : moment(JSON.parse(props.value).publishingDate).format("YYYY-MM-DD"));
+
      const [expiryDate, setExpiryDate] = useState(props.value === undefined ? moment(publishingDate).add(1, 'year').format("YYYY-MM-DD") : moment(JSON.parse(props.value).expiryDate).format("YYYY-MM-DD"));
 
      useEffect(() => {
@@ -23,13 +24,14 @@ const PackageDateConfig = (props: any) => {
                          aria-label="Default"
                          aria-describedby="inputGroup-sizing-default"
                          type="date"
-                         min={moment().format("YYYY-MM-DD")}
+                         min={props.type === 'Cohort' ? moment().add(1, 'month').format("YYYY-MM-DD") : moment().format("YYYY-MM-DD")}
                          value={publishingDate}
                          onChange={(e) => { setPublishingDate(e.target.value) }}
                          disabled={inputDisabled}
                     />
                </InputGroup>
-               {props?.title1 && <span className='small'>Set the date for this offering to be available for everyone</span>}
+               {props?.title1 && <span className='small text-muted'>Set the date for this offering to be available for everyone</span>}
+               <br />
                <label>{props?.title2 ? props.title2 : "Expiry Date"}</label>
                <InputGroup className="mb-3">
                     <FormControl
@@ -42,7 +44,8 @@ const PackageDateConfig = (props: any) => {
                          disabled={inputDisabled}
                     />
                </InputGroup>
-               {props?.title2 && <span className='small'>On the selected date this offering will be shifted to drafts</span>}
+               {props?.title2 && <span className='small text-muted'>On the selected date this offering will be shifted to drafts</span>}
+
           </div>
      );
 };
