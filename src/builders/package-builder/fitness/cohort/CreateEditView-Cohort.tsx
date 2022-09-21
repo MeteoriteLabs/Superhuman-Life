@@ -143,7 +143,7 @@ function CreateEditCohort(props: any, ref: any) {
         details.thumbnail = msg.Thumbnail_ID;
         details.Upload = msg.Upload_ID === null ? {"VideoUrl": msg?.video_URL} : {"upload": msg?.Upload_ID};
         details.datesConfig = JSON.stringify({"expiryDate": msg.expiry_date, "publishingDate": msg.publishing_date});
-        details.dates = JSON.stringify({"endDate": msg.End_date, "startDate": msg.Start_date, "onDay": msg.End_date === msg.Start_date ? true : false});
+        details.dates = JSON.stringify({"endDate": msg.End_date, "startDate": msg.Start_date, "oneDay": moment(msg.End_date).format("YYYY-MM-DD") === moment(msg.Start_date).format("YYYY-MM-DD")});
         details.bookingConfigId = msg.booking_config?.id;
         // let msg = data;
         // console.log(msg);
@@ -241,6 +241,8 @@ function CreateEditCohort(props: any, ref: any) {
         if(frm.discpline){
             frm.discpline = JSON.parse(frm?.discpline);
         }
+        console.log(frm);
+        debugger;
         editPackageDetails({
             variables: {
                 id: operation.id,

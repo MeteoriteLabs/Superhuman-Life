@@ -38,11 +38,6 @@ const ProgramDetails = (props) => {
     const [foodDescription, setFoodDescription] = useState<string>(props.value === undefined ? "" : existingData.accomodationDetails?.foodDescription === undefined ? "" : existingData.accomodationDetails?.foodDescription);
     const [accomodationDetails] = useState<any>({});
 
-    console.log(foodDescription);
-
-    console.log(singleSelections);
-
-
     const FETCH_USER_ADDRESSES = gql`
     query addresses($id: ID!) {
         addresses(filters: {
@@ -96,84 +91,50 @@ const ProgramDetails = (props) => {
     function handleValidation(){
         if(mode === "0"){
             return true;
-        }else if(mode === "1" && addressTitle === "At My Address" && singleSelections.length !== 0){
-            return true;
-        }else if(mode === "1" && addressTitle === "At Client Address"){
-            return true;
-        }else if(mode === "2" && addressTitle === "At My Address" && singleSelections.length !== 0 && residential !== ""){
-            if(residential === "0"){
-                if(!showPrivate && !showSharing){
-                    return false;
-                }
-                if(showPrivate && privateRooms! > 0 && !showSharing){
-                    if(calculateAccomodation({onePerRoom: privateRooms,twoPerRoom: twoSharing,threePerRoom: threeSharing})){
-                        return true;
-                    }
-                }else if(showSharing && (twoSharing! > 0 || threeSharing! > 0)){
-                    if(calculateAccomodation({onePerRoom: privateRooms,twoPerRoom: twoSharing,threePerRoom: threeSharing})){
-                        return true;
-                    }
-                }else if(showPrivate && showSharing && privateRooms! > 0 && twoSharing! > 0 && threeSharing! > 0){
-                    if(calculateAccomodation({onePerRoom: privateRooms,twoPerRoom: twoSharing,threePerRoom: threeSharing})){
-                        return true;
-                    }
-                }
-            }else if(residential === "1"){
-                if(!showPrivate && !showSharing){
-                    return false;
-                }
-                if(showPrivate && privateRooms! > 0 && !showSharing && foodDescription !== ""){
-                    if(calculateAccomodation({onePerRoom: privateRooms,twoPerRoom: twoSharing,threePerRoom: threeSharing})){
-                        return true;
-                    }
-                }else if(showSharing && (twoSharing! > 0 || threeSharing! > 0) && foodDescription !== ""){
-                    if(calculateAccomodation({onePerRoom: privateRooms,twoPerRoom: twoSharing,threePerRoom: threeSharing})){
-                        return true;
-                    }
-                }else if(showPrivate && showSharing && privateRooms! > 0 && twoSharing! > 0 && threeSharing! > 0 && foodDescription !== ""){
-                    if(calculateAccomodation({onePerRoom: privateRooms,twoPerRoom: twoSharing,threePerRoom: threeSharing})){
-                        return true;
-                    }
-                }
-            }
-            
-        }else if(mode === "2" && addressTitle === "At Client Address"){
-            if(residential === "0"){
-                if(!showPrivate && !showSharing){
-                    return false;
-                }
-                if(showPrivate && privateRooms! > 0 && !showSharing){
-                    if(calculateAccomodation({onePerRoom: privateRooms,twoPerRoom: twoSharing,threePerRoom: threeSharing})){
-                        return true;
-                    }
-                }else if(showSharing && (twoSharing! > 0 || threeSharing! > 0)){
-                    if(calculateAccomodation({onePerRoom: privateRooms,twoPerRoom: twoSharing,threePerRoom: threeSharing})){
-                        return true;
-                    }
-                }else if(showPrivate && showSharing && privateRooms! > 0 && twoSharing! > 0 && threeSharing! > 0 && foodDescription !== ""){
-                    if(calculateAccomodation({onePerRoom: privateRooms,twoPerRoom: twoSharing,threePerRoom: threeSharing})){
-                        return true;
-                    }
-                }
-            }else if(residential === "1"){
-                if(!showPrivate && !showSharing){
-                    return false;
-                }
-                if(showPrivate && privateRooms! > 0 && !showSharing && foodDescription !== ""){
-                    if(calculateAccomodation({onePerRoom: privateRooms,twoPerRoom: twoSharing,threePerRoom: threeSharing})){
-                        return true;
-                    }
-                }else if(showSharing && (twoSharing! > 0 || threeSharing! > 0) && foodDescription !== ""){
-                    if(calculateAccomodation({onePerRoom: privateRooms,twoPerRoom: twoSharing,threePerRoom: threeSharing})){
-                        return true;
-                    }
-                }else if(showPrivate && showSharing && privateRooms! > 0 && twoSharing! > 0 && threeSharing! > 0 && foodDescription !== ""){
-                    if(calculateAccomodation({onePerRoom: privateRooms,twoPerRoom: twoSharing,threePerRoom: threeSharing})){
-                        return true;
-                    }
-                }
+        }
+        if(mode === "1"){
+            if((addressTitle === "At My Address" && singleSelections.length !== 0) || addressTitle === "At Client Address"){
+                return true;
             }
         }
+        if(mode === "2" ){
+            if((addressTitle === "At My Address" && singleSelections.length !== 0 && residential !== "") || (mode === "2" && addressTitle === "At Client Address")){
+                if(!showPrivate && !showSharing){
+                    return false;
+                }
+                if(foodDescription === "" && residential === "1"){
+                    return false;
+                }
+                if(showPrivate && privateRooms! > 0 && !showSharing){
+                    if(calculateAccomodation({onePerRoom: privateRooms,twoPerRoom: twoSharing,threePerRoom: threeSharing})){
+                        return true;
+                    }
+                }
+                if(showSharing && !showPrivate && (twoSharing! > 0 || threeSharing! > 0)){
+                    if(calculateAccomodation({onePerRoom: privateRooms,twoPerRoom: twoSharing,threePerRoom: threeSharing})){
+                        return true;
+                    }
+                }
+                if(showPrivate && showSharing && privateRooms! > 0 && (twoSharing! > 0 || threeSharing! > 0)){
+                    if(calculateAccomodation({onePerRoom: privateRooms,twoPerRoom: twoSharing,threePerRoom: threeSharing})){
+                        return true;
+                    }
+                }
+            }   
+        }
+    }
+
+    accomodationDetails.private = showPrivate;
+    accomodationDetails.sharing = showSharing;
+    accomodationDetails.privateRooms = (showPrivate && privateRooms) || null;
+    accomodationDetails.twoSharingRooms = (showSharing && twoSharing) || null;
+    accomodationDetails.threeSharingRooms = (showSharing && threeSharing) || null;
+    accomodationDetails.foodDescription = foodDescription;
+
+    if(handleValidation()){
+        props.onChange(JSON.stringify({addressTag: addressTitle, address: singleSelections, mode: mode, residential: residential, accomodationDetails: accomodationDetails}));
+    }else {
+        props.onChange(undefined)
     }
 
 
@@ -249,7 +210,7 @@ const ProgramDetails = (props) => {
                     <Form.Check inline label="Accommodation + Food" value='1' disabled={inputDisabled} defaultChecked={residential === '1' ? true : false} name="group1" type='radio' onClick={(e: any) => setResidential(e.target.value)}/>
                 </Form>
             </div>}
-            {residential !== "" && <div className='mt-3'>
+            {residential !== "" && mode === "2" && <div className='mt-3'>
             <Form.Check 
                 custom
                 inline
@@ -275,13 +236,13 @@ const ProgramDetails = (props) => {
                 }}
             />
             </div>}
-            {showPrivate && <div className='mt-3'>
+            {showPrivate && mode === "2" && <div className='mt-3'>
                 <label><b>Private Rooms</b></label>
                 <Form.Group controlId="formBasicEmail-1">
                     <Form.Control type="number" disabled={inputDisabled} value={privateRooms} min={0} onChange={(e: any) => setPrivateRooms(parseInt(e.target.value))} />
                 </Form.Group>    
             </div>}
-            {showSharing && <div>
+            {showSharing && mode === "2" && <div>
                 <label><b>Sharing Rooms</b></label>
                 <Row>
                     <Col>
@@ -300,7 +261,7 @@ const ProgramDetails = (props) => {
                     </Col>       
                 </Row>   
             </div>}
-            {residential === "1" && <div>
+            {residential === "1" && mode === "2" && <div>
                 <label><b>Food Description</b></label>
                 <Form.Group controlId="formBasictext">
                     <Form.Control as="textarea" disabled={inputDisabled} aria-label="With textarea" value={foodDescription} onChange={(e: any) => {
