@@ -52,9 +52,6 @@ const CustomProgramDetails = (props) => {
         if(recordedClasses > 30){
           setRecordedClasses(30);
         }
-        if(restDays > handleMax(mode)){
-          setRestDays(handleMax(mode));
-        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ptOnlineClasses, ptOfflineClasses, restDays, mode, recordedClasses, groupOfflineClasses, groupOnlineClasses]);
 
@@ -165,19 +162,17 @@ const CustomProgramDetails = (props) => {
         props.onChange(undefined);
     }
 
-    function handleMax(mode: string){
-     console.log(ptOfflineClasses, ptOnlineClasses, recordedClasses);
-        if(mode === '0'){
-            return 30 - (ptOnlineClasses + recordedClasses + groupOnlineClasses);
-        }
-        if(mode === '1'){
-            return 30 - (groupOnlineClasses + recordedClasses + ptOfflineClasses);
-        }
-        if(mode === "2"){
-            return 30 - (ptOnlineClasses + ptOfflineClasses + groupOnlineClasses + recordedClasses + groupOfflineClasses);
-        }
-        return 0;
-    }
+    useEffect(() => {
+     if(mode === '0'){
+          setRestDays(30 - (ptOnlineClasses + recordedClasses + groupOnlineClasses))
+      }
+      if(mode === '1'){
+          setRestDays(30 - (groupOfflineClasses + recordedClasses + ptOfflineClasses))
+      }
+      if(mode === "2"){
+          setRestDays(30 - (ptOnlineClasses + ptOfflineClasses + groupOnlineClasses + recordedClasses + groupOfflineClasses))
+      }
+    }, [ptOnlineClasses, ptOfflineClasses, groupOnlineClasses, groupOfflineClasses, recordedClasses, mode]);
 
     return (
         <>
@@ -334,14 +329,12 @@ const CustomProgramDetails = (props) => {
                               aria-describedby="inputGroup-sizing-default"
                               type='number'
                               min={0}
-                              max={handleMax(mode)}
                               value={restDays}
-                              disabled={inputDisabled}
-                              onChange={(e: any) => setRestDays(parseInt(e.target.value))}
+                              disabled={true}
                          />
                     </InputGroup>
                </Col>
-            <span className='small'>*It should add upto 30 classes per month</span>
+            {/* <span className='small'>*It should add upto 30 classes per month</span> */}
           </Row>}
         </>
     );

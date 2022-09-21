@@ -71,7 +71,6 @@ export const CREATE_PACKAGE = gql`
         equipment_lists: $equipmentList
         video_URL: $videoUrl
         languages: $languages
-
       }
     ) {
       data{

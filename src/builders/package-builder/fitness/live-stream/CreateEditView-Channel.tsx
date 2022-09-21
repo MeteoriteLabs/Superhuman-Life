@@ -1,8 +1,8 @@
 import React, { useContext, useImperativeHandle, useState, useEffect } from 'react';
 import { useQuery, useMutation } from "@apollo/client";
 import ModalView from "../../../../components/modal";
-import { CREATE_CHANNEL_PACKAGE, CREATE_BOOKING_CONFIG, DELETE_PACKAGE, UPDATE_PACKAGE_STATUS, UPDATE_CHANNEL_COHORT_PACKAGE } from '../graphQL/mutations';
-import { GET_FITNESS_PACKAGE_TYPE, GET_SINGLE_PACKAGE_BY_ID } from '../graphQL/queries';
+import {CREATE_CHANNEL_PACKAGE, CREATE_BOOKING_CONFIG, DELETE_PACKAGE, UPDATE_PACKAGE_STATUS, UPDATE_CHANNEL_COHORT_PACKAGE, UPDATE_BOOKING_CONFIG} from '../graphQL/mutations';
+import {GET_FITNESS_PACKAGE_TYPE, GET_SINGLE_PACKAGE_BY_ID} from '../graphQL/queries';
 import AuthContext from "../../../../context/auth-context";
 import { schema, widgets } from './channelSchema';
 import { schemaView } from './schemaView';
@@ -31,30 +31,38 @@ function CreateEditChannel(props: any, ref: any) {
     const [statusModalShow, setStatusModalShow] = useState(false);
     let frmDetails: any = {};
 
-    const [editPackageDetails] = useMutation(UPDATE_CHANNEL_COHORT_PACKAGE, { onCompleted: (data) => { modalTrigger.next(false); props.callback(); } })
-    const [updatePackageStatus] = useMutation(UPDATE_PACKAGE_STATUS, {
-        onCompleted: (data) => {
-            props.callback();
-        }
-    });
-    const [deletePackage] = useMutation(DELETE_PACKAGE, { refetchQueries: ["GET_TABLEDATA"], onCompleted: (data) => { props.callback() } });
-    const [bookingConfig] = useMutation(CREATE_BOOKING_CONFIG, {
-        onCompleted: (r: any) => {
-            modalTrigger.next(false); props.callback();
-        }
-    })
-    const [CreatePackage] = useMutation(CREATE_CHANNEL_PACKAGE, {
-        onCompleted: (r: any) => {
-            bookingConfig({
-                variables: {
-                    isAuto: frmDetails.config.acceptBooking === 0 ? false : true,
-                    id: r.createFitnesspackage.data.id,
-                    bookings_per_day: frmDetails.config.maxBookingDay,
-                    bookings_per_month: frmDetails.config.maxBookingMonth,
-                }
-            })
-        }
-    });
+    const [editPackageDetails] = useMutation(UPDATE_CHANNEL_COHORT_PACKAGE, {onCompleted: (data) => {
+        const val = JSON.parse(frmDetails.config.bookingConfig);
+        updateBookingConfig({
+            variables: {
+                isAuto: val.config === "Auto" ? true : false,
+                id: frmDetails.bookingConfigId,
+                is_Fillmyslots: val.fillSchedule
+            }
+        });
+    }});
+    const [updatePackageStatus] = useMutation(UPDATE_PACKAGE_STATUS, {onCompleted: (data) => {
+        props.callback();
+    }});
+    const [deletePackage] = useMutation(DELETE_PACKAGE, { refetchQueries: ["GET_TABLEDATA"], onCompleted: (data) => {props.callback()}});
+    const [bookingConfig] = useMutation(CREATE_BOOKING_CONFIG, {onCompleted: (r: any) => { 
+        console.log(r); modalTrigger.next(false); props.callback();
+    }})
+
+    const [updateBookingConfig] = useMutation(UPDATE_BOOKING_CONFIG, {onCompleted: (r: any) => {
+        console.log(r); modalTrigger.next(false); props.callback();
+    }});
+
+    const [CreatePackage] = useMutation(CREATE_CHANNEL_PACKAGE, { onCompleted: (r: any) => {
+        const val = JSON.parse(frmDetails.config.bookingConfig);
+        bookingConfig({
+            variables: {
+                isAuto: val.config === "Auto" ? true : false,
+                id: r.createFitnesspackage.data.id,
+                is_Fillmyslots: val.fillSchedule
+            }
+        })
+     } });
     // const [updateProgram] = useMutation(UPDATE_FITNESSPROGRAMS, {onCompleted: (r: any) => { modalTrigger.next(false); } });
 
     //     const [editExercise] = useMutation(UPDATE_EXERCISE,{variables: {exerciseid: operation.id}, onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
@@ -99,7 +107,7 @@ function CreateEditChannel(props: any, ref: any) {
     function FillDetails(data: any) {
         const flattenData = flattenObj({ ...data });
         let msg: any = flattenData.fitnesspackages[0];
-        let booking: any = {};
+        let bookingConfig: any = {};
         let details: any = {};
         
         if(msg.groupinstantbooking){
@@ -131,14 +139,17 @@ function CreateEditChannel(props: any, ref: any) {
         details.tag = msg?.tags === null ? "" : msg.tags;
         details.user_permissions_user = msg.users_permissions_user.id;
         details.visibility = msg.is_private === true ? 1 : 0;
-        booking.acceptBooking = msg.booking_config?.isAuto === true ? 1 : 0;
-        booking.maxBookingDay = msg.booking_config?.bookingsPerDay;
-        booking.maxBookingMonth = msg.booking_config?.BookingsPerMonth;
-        details.config = booking;
+        bookingConfig.config = msg.booking_config?.isAuto === true ? "Auto" : "Manual";
+        bookingConfig.fillSchedule = msg.booking_config?.is_Fillmyslots;
+        details.config = {bookingConfig: JSON.stringify(bookingConfig)};
         details.thumbnail = msg.Thumbnail_ID;
-        details.Upload = msg.Upload_ID === null ? { "VideoUrl": msg.video_URL } : { "upload": msg.Upload_ID };
-        details.datesConfig = { "expiryDate": msg.expiry_date, "publishingDate": msg.publishing_date };
-
+        details.Upload = msg.Upload_ID === null ? {"VideoUrl": msg.video_URL} : {"upload": msg.Upload_ID};
+        details.datesConfig = JSON.stringify({"expiryDate": msg.expiry_date, "publishingDate": msg.publishing_date});
+        details.bookingConfigId = msg.booking_config?.id;
+        details.languages = JSON.stringify(msg.languages);
+        // details.visibility = 
+        // let msg = data;
+        // console.log(msg);
         setProgramDetails(details);
 
         //if message exists - show form only for edit and view
@@ -172,7 +183,7 @@ function CreateEditChannel(props: any, ref: any) {
         if (frm.discpline) {
             frm.discpline = JSON.parse(frm?.discpline);
         }
-
+        frm.languages = JSON.parse(frm.languages)
         CreatePackage({
             variables: {
                 aboutpackage: frm.About,
@@ -194,6 +205,7 @@ function CreateEditChannel(props: any, ref: any) {
                 thumbnail: frm.thumbnail,
                 upload: frm.Upload?.upload,
                 videoUrl: frm.Upload?.VideoUrl,
+                languages: frm.languages.map((item: any) => item.id).join(", ").split(", "),
             }
         })
     }
@@ -207,6 +219,7 @@ function CreateEditChannel(props: any, ref: any) {
         if (frm.discpline) {
             frm.discpline = JSON.parse(frm?.discpline);
         }
+        frm.languages = JSON.parse(frm.languages)
         editPackageDetails({
             variables: {
                 id: operation.id,
@@ -229,6 +242,7 @@ function CreateEditChannel(props: any, ref: any) {
                 thumbnail: frm.thumbnail,
                 upload: frm.Upload?.upload,
                 videoUrl: frm.Upload?.VideoUrl,
+                languages: frm.languages.map((item: any) => item.id).join(", ").split(", "),
             }
         })
     }
@@ -241,6 +255,7 @@ function CreateEditChannel(props: any, ref: any) {
     function updateChannelPackageStatus(id: any, status: any) {
         updatePackageStatus({ variables: { id: id, Status: status } });
         setStatusModalShow(false);
+        operation.type = 'create';
     }
 
     function OnSubmit(frm: any) {

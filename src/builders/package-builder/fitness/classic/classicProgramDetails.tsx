@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Row, Col, Form, InputGroup, FormControl} from 'react-bootstrap';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 // import { gql } from '@apollo/client';
@@ -106,14 +106,14 @@ const ClassicProgramDetails = (props) => {
     // }
     console.log(onlineClasses, restDays, duration);
     if((onlineClasses + restDays) === duration) {
-        props.onChange(JSON.stringify({ duration: duration, onlineClasses: onlineClasses, restDays: restDays }));
+        props.onChange(JSON.stringify({ duration: duration, online: onlineClasses, rest: restDays }));
     }else {
         props.onChange(undefined);
     }
 
-    function handleMax(){
-        return duration - onlineClasses;
-    }
+    useEffect(() => {
+          setRestDays(duration - onlineClasses);
+    }, [duration, onlineClasses]);
 
     return (
         <>
@@ -161,10 +161,8 @@ const ClassicProgramDetails = (props) => {
                               aria-describedby="inputGroup-sizing-default"
                               type='number'
                               min={0}
-                              max={handleMax()}
                               value={restDays}
-                              disabled={inputDisabled}
-                              onChange={(e: any) => setRestDays(parseInt(e.target.value))}
+                              disabled={true}
                          />
                     </InputGroup>
                </Col>
