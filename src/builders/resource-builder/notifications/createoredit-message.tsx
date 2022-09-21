@@ -145,7 +145,7 @@ function CreateEditMessage(props: any, ref: any) {
 
      useEffect(() => {
           if (operation.type === 'create') {
-               setName("Create New Message");
+               setName("Create New Notification");
           } else if (operation.type === 'edit') {
                setName("Edit");
           } else if (operation.type === 'view') {

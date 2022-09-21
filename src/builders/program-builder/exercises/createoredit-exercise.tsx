@@ -103,7 +103,7 @@ function CreateEditExercise(props: any, ref: any) {
     }
 
     function CreateExercise(frm: any) {
-
+console.log(frm);
         frm.discipline = JSON.parse(frm.discipline);
         frm.equipment = JSON.parse(frm.equipment);
         createExercise({

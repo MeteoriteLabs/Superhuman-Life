@@ -2,6 +2,9 @@ import React from 'react';
 import { Table, Button } from 'react-bootstrap';
 
 function Receipt() {
+  const printReciept = () => {
+    window.print();
+  }
   return (
     <div>
       <h4 className='text-center'>Payment Details</h4>
@@ -14,11 +17,6 @@ function Receipt() {
         </div>
         <div>
           <p><b>Date of Payment</b> : 19-09-2022</p>
-        </div>
-      </div>
-      <div className='d-flex'>
-        <div>
-
         </div>
       </div>
 
@@ -49,7 +47,7 @@ function Receipt() {
         <p className='float-right'><b>Rs. 30000</b></p>
       </div>
       <div className='text-center mt-5'>
-        <Button variant="dark">Print</Button>
+        <Button variant="dark" onClick={printReciept}>Print</Button>
 
       </div>
       

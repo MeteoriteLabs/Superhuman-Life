@@ -1,29 +1,33 @@
 import React, { useState } from 'react';
-import { Card } from 'react-bootstrap';
-import PayeeDetails from './PayeeDetails/PayeeDetails';
-import PaymentSettings from './PaymentSettings/PaymentSettings';
-import PayeePaymentMode from './PayeePaymentMode/PayeePaymentMode';
+import { Link } from 'react-router-dom';
+import { useHistory } from "react-router-dom";
+import { Card, ProgressBar, Button } from 'react-bootstrap';
+import StatusModal from '../../../components/StatusModal/StatusModal';
 
-function AddPayment() {
-    const [showPayeeDetails, setShowPayeeDetails] = useState(false);
-    const [showPaymentSetting, setShowPaymentSetting] = useState(false);
-    const [showPayeePaymentMode, setShowPayeePaymentMode] = useState(false);
+function ViewAddPayee() {
+    const [showConfirmationModal, setShowConfirmationModal] = useState(false);
 
-    const handleClosePayeeDetails = () => setShowPayeeDetails(false);
-    const handleShowPayeeDetails = () => setShowPayeeDetails(true);
+    const history = useHistory();
 
-    const handleClosePaymentSetting = () => setShowPaymentSetting(false);
-    const handleShowPaymentSetting = () => setShowPaymentSetting(true);
-
-    const handleClosePayeePaymentMode = () => setShowPayeePaymentMode(false);
-    const handleShowPayeePaymentMode = () => setShowPayeePaymentMode(true);
+    const routeChange = () => {
+        let path = `close_account`;
+        history.push(path);
+    }
 
     return (
         <>
-            {showPayeeDetails && <PayeeDetails show={showPayeeDetails} onHide={handleClosePayeeDetails} />}
-            {showPaymentSetting && <PaymentSettings show={showPaymentSetting} onHide={handleClosePaymentSetting} />}
-            {showPayeePaymentMode && <PayeePaymentMode show={showPayeePaymentMode} onHide={handleClosePayeePaymentMode} />}
             <div>
+                <Button variant="outline-danger" className='m-1' onClick={() => {setShowConfirmationModal(true)}}>Close Account</Button>
+                {
+                    showConfirmationModal && <StatusModal
+                    modalTitle="Make Settlement"
+                    modalBody="Do you want to make settlement?"
+                    buttonLeft="Cancel"
+                    buttonRight="Yes"
+                    onClick={routeChange}
+                />
+                }
+
                 <Card className="p-3">
                     <div className='d-flex justify-content-between flex-wrap'>
                         <div>
@@ -55,27 +59,28 @@ function AddPayment() {
                     </div>
                 </Card>
 
-                <div className='d-lg-flex flex-lg-row d-md-flex flex-md-row p-2 flex-sm-row justify-content-around' onClick={handleShowPayeeDetails} >
-                    <Card className='m-2 text-center p-5 shadow-lg p-3 mb-5 bg-white rounded' style={{cursor: 'pointer'}}>
+                <div className='d-lg-flex flex-lg-row d-md-flex flex-md-row p-2 flex-sm-row justify-content-around'>
+                    <Card as={Link} to={'payee_details'} className='m-2 text-center p-5 shadow-lg p-3 mb-5 bg-white rounded' style={{ cursor: 'pointer', width: '20vw' }}>
                         <Card.Body>
                             <img src="assets/payeeDetails.svg" alt="payee" />
                             <p><b>Payee details</b></p>
+                            <ProgressBar variant="success" now={40} />
                         </Card.Body>
                     </Card>
 
-                    <Card className='m-2 text-center p-5 shadow-lg p-3 mb-5 bg-white rounded' onClick={handleShowPaymentSetting} style={{cursor: 'pointer'}}>
+                    <Card className='m-2 text-center p-5 shadow-lg p-3 mb-5 bg-white rounded' style={{ cursor: 'pointer', width: '20vw' }}>
                         <Card.Body>
                             <img src="assets/setting.svg" alt="setting" />
                             <p><b>Payment Settings</b></p>
-                            
+                            <ProgressBar variant="success" now={40} />
                         </Card.Body>
                     </Card>
 
-                    <Card className='m-2 text-center p-5 shadow-lg p-3 mb-5 bg-white rounded' onClick={handleShowPayeePaymentMode} style={{cursor: 'pointer'}}>
+                    <Card as={Link} to={'payee_payment_mode'} className='m-2 text-center p-5 shadow-lg p-3 mb-5 bg-white rounded' style={{ cursor: 'pointer', width: '20vw' }}>
                         <Card.Body>
                             <img src="assets/payment-mode.svg" alt="payementmode" />
                             <p><b>Payee payment mode</b></p>
-                            
+                            <ProgressBar variant="success" now={40} />
                         </Card.Body>
                     </Card>
 
@@ -86,4 +91,5 @@ function AddPayment() {
     )
 }
 
-export default AddPayment;
+export default ViewAddPayee;
+

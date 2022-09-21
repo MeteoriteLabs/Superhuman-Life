@@ -1,22 +1,27 @@
 import React from 'react';
-import { Modal, Button } from 'react-bootstrap';
+import Form from "@rjsf/core";
+import { schema, widgets } from "./PayeePaymentModeSchema";
 
-function PayeePaymentMode(props: any) {
+function PayeePaymentMode() {
+  const payeePaymentModeJson: { [name: string]: any } = require("./PayeePaymentMode.json");
   return (
-    <Modal show={props.show} onHide={props.onHide} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>Modal heading</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={props.onHide}>
-            Close
-          </Button>
-          <Button variant="primary" >
-            Save Changes
-          </Button>
-        </Modal.Footer>
-      </Modal>
+    <div>
+      <div style={{background: '#0D6EBA'}} className="p-4">
+        <h4 className='text-light'>Payee Payment Mode</h4>
+      </div>
+      <div className='p-5'>
+      <Form
+          uiSchema={schema}
+          schema={payeePaymentModeJson}
+          // ref={formRef}
+          // onSubmit={(frm: any) => { OnSubmit(frm) }}
+          // formData={emptyPayeeDetails}
+          widgets={widgets}
+        />
+        </div>
+
+    </div>
+
   )
 }
 
