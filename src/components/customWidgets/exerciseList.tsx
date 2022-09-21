@@ -9,17 +9,23 @@ const MIN_VALUE = 0;
 
 const ExerciseList = (props: any) => {
 
+     const exerciseDetails: any[] = props.formContext?.addWorkout?.warmup?.length > 0 ? props.formContext?.addWorkout?.warmup : [];
+
+     const exerciseValues: any[] = ['reps', 'sets', 'restTime', 'weights', 'duration']; 
+
+     
      const auth = useContext(AuthContext);
      const [exerciseList, setExerciseList] = useState<any[]>([]);
      const [searchInput, setSearchInput] = useState(null);
-     const [selected, setSelected] = useState<any[]>([]);
+     const [selected, setSelected] = useState<any[]>(exerciseDetails);
      const inputField = useRef<any>();
      let skipval: Boolean = true;
-
+     
      function FetchExerciseList(_variable: {} = { id: auth.userid, filter: " " }) {
           useQuery(GET_EXERCISELIST, { variables: _variable, onCompleted: loadExerciseList, skip: !searchInput });
      }
-
+     
+     console.log(selected);
      function loadExerciseList(data: any) {
           const flattenedData = flattenObj({ ...data });
           setExerciseList(
@@ -68,8 +74,23 @@ const ExerciseList = (props: any) => {
 
      }
 
-     console.log(selected);
-     props.onChange(JSON.stringify(selected));
+     function handleValidation(){
+          var value: boolean = false;
+          for(var i=0; i<selected.length; i++){
+               for(var j=0; j<exerciseValues.length; j++){
+                    if(selected[i][exerciseValues[j]] > 0){
+                         value = true;
+                    }else {
+                         value = false;
+                    }
+               }
+          }
+          return value;
+     }
+
+     if(handleValidation()){
+          props.onChange(JSON.stringify(selected));
+     }
 
      FetchExerciseList({ filter: searchInput, skip: skipval, id: auth.userid });
 

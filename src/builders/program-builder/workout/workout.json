@@ -112,7 +112,10 @@
                                         "format": "uri",
                                         "description": "upload link of the workout. You can add a youtube URL. Can be  used for Group, PT, Custom and Classic offerings."
                                     }
-                                }
+                                },
+                                "required": [
+                                    "AddURL"
+                                ]
                             },
                             {
                                 "properties": {
@@ -126,7 +129,10 @@
                                         "title": "Add Text",
                                         "description": "Explain in detail about the workout. Used for PT and Group"
                                     }
-                                }
+                                },
+                                "required": [
+                                    "AddText"
+                                ]
                             },
                             {
                                 "properties": {
@@ -139,10 +145,16 @@
                                         "type": "string",
                                         "description": "Add video of the Workout."
                                     }
-                                }
+                                },
+                                "required": [
+                                    "Upload"
+                                ]
                             },
                             {
                                 "required": [
+                                    "warmup",
+                                    "mainmovement",
+                                    "cooldown"
                                 ],
                                 "properties": {
                                     "AddWorkout": {
