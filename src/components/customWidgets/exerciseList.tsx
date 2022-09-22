@@ -9,7 +9,7 @@ const MIN_VALUE = 0;
 
 const ExerciseList = (props: any) => {
 
-     const exerciseDetails: any[] = props.formContext?.addWorkout?.warmup?.length > 0 ? props.formContext?.addWorkout?.warmup : [];
+     const exerciseDetails: any[] = props.value === undefined ? [] : props.value;
 
      const exerciseValues: any[] = ['reps', 'sets', 'restTime', 'weights', 'duration']; 
 

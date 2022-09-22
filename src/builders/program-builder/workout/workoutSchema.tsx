@@ -3,7 +3,6 @@ import EquipmentSearch from '../../../components/customWidgets/equipmentListSele
 import MuscleGroupSearch from '../../../components/customWidgets/muscleGroupMultiSelect';
 import ExerciseList from '../../../components/customWidgets/exerciseList';
 import FitnessMultiSelect from '../../../components/customWidgets/fitnessMultiSelect';
-import BuildExercise from './buildExercise';
 import Upload from '../../../components/upload/upload';
 
 
@@ -12,7 +11,6 @@ export const widgets = {
     equipmentSearch: EquipmentSearch,
     muscleGroupSearch: MuscleGroupSearch,
     textEditor: TextEditor,
-    buildExercise: BuildExercise,
     upload: Upload,
     exerciseList: ExerciseList
 };
@@ -39,7 +37,7 @@ export const schema: any = {
         "benefits": {
             "ui:widget": "textarea",
             "ui:options": {
-                "rows": 1
+                "rows": 3
             }
         },
         "equipment": {

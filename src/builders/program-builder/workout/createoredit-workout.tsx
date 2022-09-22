@@ -126,10 +126,11 @@ function CreateEditWorkout(props: any, ref: any) {
   function CreateWorkout(frm: any) {
     frm.discipline = JSON.parse(frm.discipline);
     frm.equipment = JSON.parse(frm.equipment);
+    frm.muscleGroup = JSON.parse(frm.muscleGroup);
     if(frm.addWorkout.AddWorkout === 'Build'){
       console.log(frm.addWorkout.warmup);
       if(Object.keys(frm.addWorkout.warmup)[0] === "exercise"){
-        frm.addWorkout.warmup = JSON.parse(frm.addWorkout.warmup.exercise);
+        frm.addWorkout.warmup.exercise = JSON.parse(frm.addWorkout.warmup.exercise);
       }else {
         frm.addWorkout.warmup.type = Object.keys(frm.addWorkout.warmup)[0];
       }
@@ -144,6 +145,8 @@ function CreateEditWorkout(props: any, ref: any) {
         frm.addWorkout.cooldown.type = Object.keys(frm.addWorkout.cooldown)[0];
       }
     }
+    console.log(frm);
+    debugger;
     createWorkout({
       variables: {
         workouttitle: frm.workout,
@@ -160,7 +163,7 @@ function CreateEditWorkout(props: any, ref: any) {
         Workout_Video_ID: (frm.addWorkout.AddWorkout === "Upload" ? frm.addWorkout.Upload : null),
         calories: frm.calories,
         equipment_lists: frm.equipment.map((item: any) => { return item.id }).join(',').split(','),
-        muscle_groups: frm.muscleGroup.split(","),
+        muscle_groups: frm.muscleGroup.map((item: any) => { return item.id }).join(',').split(','),
         users_permissions_user: frm.user_permissions_user
       }
     });
@@ -170,11 +173,11 @@ function CreateEditWorkout(props: any, ref: any) {
 
     frm.discipline = JSON.parse(frm.discipline);
     frm.equipment = JSON.parse(frm.equipment);
+    frm.muscleGroup = JSON.parse(frm.muscleGroup);
     if(frm.addWorkout.AddWorkout === 'Build'){
       console.log(frm.addWorkout.warmup);
       if(Object.keys(frm.addWorkout.warmup)[0] === "exercise"){
-        frm.addWorkout.warmup = JSON.parse(frm.addWorkout.warmup.exercise);
-        delete frm.addWorkout.warmup.exercise
+        frm.addWorkout.warmup.exercise = JSON.parse(frm.addWorkout.warmup.exercise);
       }else {
         frm.addWorkout.warmup.type = Object.keys(frm.addWorkout.warmup)[0];
       }
@@ -190,7 +193,6 @@ function CreateEditWorkout(props: any, ref: any) {
       }
     }
     console.log(frm);
-    console.log(operation.id);
     debugger;
     editWorkout({
       variables: {
@@ -209,7 +211,7 @@ function CreateEditWorkout(props: any, ref: any) {
         Workout_Video_ID: (frm.addWorkout.AddWorkout === "Upload" ? frm.addWorkout.Upload : null),
         calories: frm.calories,
         equipment_lists: frm.equipment.map((item: any) => { return item.id }).join(',').split(','),
-        muscle_groups: frm.muscleGroup.split(","),
+        muscle_groups: frm.muscleGroup.map((item: any) => { return item.id }).join(',').split(','),
         users_permissions_user: frm.user_permissions_user,
       },
     });
