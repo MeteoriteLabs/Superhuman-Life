@@ -70,7 +70,6 @@ function CreateEditWorkout(props: any, ref: any) {
     const flattenData = flattenObj({ ...data });
 
     function handleAddWorkout(data: any) {
-      console.log(data);
       if (data.workout_URL !== null) {
         return { AddWorkout: "Add URL", AddURL: data.workout_URL };
       } else if (data.workout_text !== null) {
@@ -80,9 +79,9 @@ function CreateEditWorkout(props: any, ref: any) {
       } else {
         return {
           AddWorkout: "Build",
-          warmup: data.warmup,
-          cooldown: data.cooldown,
-          mainmovement: data.mainmovement,
+          warmup: data.warmup?.exercise ? {"exercise": JSON.stringify(data.warmup.exercise)} : data.warmup,
+          cooldown: data.cooldown?.exercise ? {"exercise": JSON.stringify(data.cooldown.exercise)} : data.cooldown,
+          mainmovement: data.mainmovement?.exercise ? {"exercise": JSON.stringify(data.mainmovement.exercise)} : data.mainmovement,
         };
       }
     }
@@ -145,8 +144,6 @@ function CreateEditWorkout(props: any, ref: any) {
         frm.addWorkout.cooldown.type = Object.keys(frm.addWorkout.cooldown)[0];
       }
     }
-    console.log(frm);
-    debugger;
     createWorkout({
       variables: {
         workouttitle: frm.workout,
@@ -192,8 +189,6 @@ function CreateEditWorkout(props: any, ref: any) {
         frm.addWorkout.cooldown.type = Object.keys(frm.addWorkout.cooldown)[0];
       }
     }
-    console.log(frm);
-    debugger;
     editWorkout({
       variables: {
         workoutid: operation.id,

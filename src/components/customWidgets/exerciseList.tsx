@@ -9,7 +9,7 @@ const MIN_VALUE = 0;
 
 const ExerciseList = (props: any) => {
 
-     const exerciseDetails: any[] = props.value === undefined ? [] : props.value;
+     const exerciseDetails: any[] = props.value === undefined ? [] : JSON.parse(props.value);
 
      const exerciseValues: any[] = ['reps', 'sets', 'restTime', 'weights', 'duration']; 
 
@@ -75,21 +75,23 @@ const ExerciseList = (props: any) => {
      }
 
      function handleValidation(){
-          var value: boolean = false;
+          var isValid: boolean = false;
           for(var i=0; i<selected.length; i++){
                for(var j=0; j<exerciseValues.length; j++){
                     if(selected[i][exerciseValues[j]] > 0){
-                         value = true;
+                         isValid = true;
                     }else {
-                         value = false;
+                         isValid = false;
                     }
                }
           }
-          return value;
+          return isValid;
      }
 
      if(handleValidation()){
           props.onChange(JSON.stringify(selected));
+     }else {
+          props.onChange(undefined);
      }
 
      FetchExerciseList({ filter: searchInput, skip: skipval, id: auth.userid });

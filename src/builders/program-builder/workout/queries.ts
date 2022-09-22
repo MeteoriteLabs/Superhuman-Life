@@ -34,6 +34,7 @@ export const FETCH_DATA = gql`
           }
           muscle_groups {
             data {
+              id
               attributes {
                 name
               }
