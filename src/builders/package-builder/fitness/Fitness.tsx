@@ -179,7 +179,7 @@ export default function FitnessTab(props) {
 
         { accessor: "Status", Header: "Status", Cell: (v: any) => {
             return <div><Badge className='py-3 px-5' style={{ fontSize: '1rem' }} variant={v.value === "Active" ? "success" : "danger"}>{v.value === "Active" ? "Published" : "Draft"}</Badge>
-                {moment(v?.row?.original?.publishingDate).isAfter(moment()) && <p className="small text-muted">This will be published on {moment(v?.row?.original?.publishingDate).format("Do, MMM-YY")}</p>}
+                {moment(v?.row?.original?.publishingDate).isAfter(moment()) && v.value === "Active" && <p className="small text-muted">This will be published on {moment(v?.row?.original?.publishingDate).format("Do, MMM-YY")}</p>}
             </div>
             }
         },

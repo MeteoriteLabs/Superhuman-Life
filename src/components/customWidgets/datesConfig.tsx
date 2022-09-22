@@ -22,7 +22,7 @@ const PackageDateConfig = (props: any) => {
                     <FormControl
                          aria-label="Default"
                          aria-describedby="inputGroup-sizing-default"
-                         type="date"
+                         type="datetime-local"
                          min={props.type === 'Cohort' ? moment().add(1, 'month').format("YYYY-MM-DDTHH:mm") : moment().format("YYYY-MM-DDTHH:mm")}
                          value={publishingDate}
                          onChange={(e) => { setPublishingDate(e.target.value) }}
@@ -36,7 +36,7 @@ const PackageDateConfig = (props: any) => {
                     <FormControl
                          aria-label="Default"
                          aria-describedby="inputGroup-sizing-default"
-                         type="date"
+                         type="datetime-local"
                          min={moment(publishingDate).add(1, props?.title2 ? 'month' : 'year').format("YYYY-MM-DDTHH:mm")}
                          value={expiryDate}
                          onChange={(e) => { setExpiryDate(e.target.value) }}
