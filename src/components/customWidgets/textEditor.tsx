@@ -4,7 +4,9 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 const TextEditor = (props: any) => {
 
-     const [value, setValue] = useState(props.val ? props.val : "");
+     console.log(props);
+
+     const [value, setValue] = useState(props.val ? props.val : props.value ? props.value : "");
 
      var richText: any = [{ "type": "text" }];
      if (props.type === "build") {

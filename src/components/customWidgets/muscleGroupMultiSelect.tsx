@@ -6,6 +6,9 @@ import { useQuery } from "@apollo/client";
 import { flattenObj } from '../utils/responseFlatten';
 
 const MuscleGroupMultiSelect = (props: any) => {
+
+    console.log(props);
+    
     const [multiSelections, setMultiSelections] = useState<any[]>(
         props.value?.length > 0 ? props.value : []
       );
@@ -29,12 +32,14 @@ const MuscleGroupMultiSelect = (props: any) => {
 
    function OnChange(e) {
         setMultiSelections(e);
-      }
+    }
     
-   props.onChange(multiSelections.map((d) => {
-        return d.id;
-        }).join(",").toString()
-   );
+    // props.onChange(multiSelections.map((d) => {
+    //     return d.id;
+    //     }).join(",").toString()
+    // );
+
+    props.onChange(JSON.stringify(multiSelections));
 
   FetchData();
 
