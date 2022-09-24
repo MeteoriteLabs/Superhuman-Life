@@ -237,19 +237,28 @@ const PricingTable = (props) => {
     }
 
      function handlePricingUpdate(value: any, id: any){
-          let newPricing = [...pricing];
-          newPricing[id].mrp = value;
-          setPricing(newPricing);
+      let newPricing = [...pricing];
+      newPricing[id].mrp = value;
+      setPricing(newPricing);
      }
 
+     function handleValidation(){
+      const values = [...pricing];
+      var res: boolean = false;
+      // eslint-disable-next-line
+      values.map((item: any) => {
+        if(item.mrp !== null && item.mrp >= parseInt(item.sapienPricing)){
+          res = true;
+        }
+      });
+      return res;
+    }
+
      useEffect(() => {
-      if((pricing[0].mrp !== null && pricing[0].mrp >= parseInt(pricing[0].sapienPricing)) || 
-            (pricing[1].mrp !== null && pricing[1].mrp >= parseInt(pricing[1].sapienPricing)) || 
-            (pricing[2].mrp !== null && pricing[2].mrp >= parseInt(pricing[2].sapienPricing)) || 
-            (pricing[3].mrp !== null && pricing[3].mrp >= parseInt(pricing[3].sapienPricing))){
-            props.onChange(JSON.stringify(pricing));    
+      if(handleValidation()){
+        props.onChange(JSON.stringify(pricing));    
       }else {
-            props.onChange(undefined)
+        props.onChange(undefined)
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
      }, [pricing]);

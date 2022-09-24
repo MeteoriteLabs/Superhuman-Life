@@ -190,13 +190,13 @@ const PtProgramDetails = (props) => {
                             disabled={inputDisabled}
                         />
                     </Col>}
+                    {addressTitle === 'At Client Address' && <span className='small text-muted'>*Within city limits</span>}
                 </Row>
                 {addressTitle === 'At My Address' && <Row>
                     <Col lg={{offset: 3}}>
                          <Button variant='outline-info' disabled={inputDisabled} onClick={() => {setAddressModal(true)}}>+ Add New Address</Button>
                     </Col>
                </Row>}
-
                <AddFitnessAddressModal
                     show={addressModal}
                     onHide={() => {setAddressModal(false); handleCallback()}}

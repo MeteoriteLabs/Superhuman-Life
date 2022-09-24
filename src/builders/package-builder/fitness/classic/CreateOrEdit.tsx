@@ -68,7 +68,8 @@ function CreateEditPackage(props: any, ref: any) {
                     isAuto: val.config === "Auto" ? true : false,
                     id: r.createFitnesspackage.data.id,
                     bookings_per_day: val.bookings,
-                    is_Fillmyslots: val.fillSchedule
+                    is_Fillmyslots: val.fillSchedule,
+                    tagName: frmDetails.packagename
                 }
             });
         }
@@ -209,7 +210,7 @@ function CreateEditPackage(props: any, ref: any) {
                 mode: ENUM_FITNESSPACKAGE_MODE[frm.programDetails.mode],
                 disciplines: frm.disciplines,
                 duration: frm.programDetails?.duration,
-                recordedclasses: frm.programDetails?.onlineClasses,
+                recordedclasses: frm.programDetails?.online,
                 restdays: frm.programDetails?.rest,
                 is_private: frm.visibility === 1 ? true : false,
                 bookingleadday: frm.bookingleaddat,
@@ -217,7 +218,7 @@ function CreateEditPackage(props: any, ref: any) {
                 fitnesspackagepricing: frm.pricingDetail === "free" ? [{mrp: 'free', duration: frm.programDetails.duration}] : JSON.parse(frm.pricingDetail),
                 users_permissions_user: frm.user_permissions_user,
                 publishing_date: moment(frm.datesConfig?.publishingDate).toISOString(),
-                expiry_date: moment(frm.datesConfig?.expiry_date).toISOString(),
+                expiry_date: moment(frm.datesConfig?.expiryDate).toISOString(),
                 thumbnail: frm.thumbnail,
                 upload: frm?.Upload?.upload,
                 equipmentList: frm.equipmentList,
@@ -248,7 +249,7 @@ function CreateEditPackage(props: any, ref: any) {
                 mode: ENUM_FITNESSPACKAGE_MODE[frm.programDetails.mode],
                 disciplines: frm.disciplines,
                 duration: frm.programDetails?.duration,
-                recordedclasses: frm.programDetails?.onlineClasses,
+                recordedclasses: frm.programDetails?.online,
                 restdays: frm.programDetails?.rest,
                 is_private: frm.visibility === 1 ? true : false,
                 bookingleadday: frm.bookingleaddat,
@@ -256,7 +257,7 @@ function CreateEditPackage(props: any, ref: any) {
                 fitnesspackagepricing: frm.pricingDetail === "free" ? [{mrp: 'free', duration: frm.programDetails.duration}] : JSON.parse(frm.pricingDetail),
                 users_permissions_user: frm.user_permissions_user,
                 publishing_date: moment(frm.datesConfig?.publishingDate).toISOString(),
-                expiry_date: moment(frm.datesConfig?.expiry_date).toISOString(),
+                expiry_date: moment(frm.datesConfig?.expiryDate).toISOString(),
                 thumbnail: frm.thumbnail,
                 upload: frm?.Upload?.upload,
                 equipmentList: frm.equipmentList,

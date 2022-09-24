@@ -660,6 +660,16 @@ query getTagsforGroup($id: ID!) {
             }
           }
         }
+        fitnesspackage{
+          data{
+            id
+            attributes{
+              packagename
+              expiry_date
+              Status
+            }
+          }
+        }
         client_packages{
           data{
             id
@@ -723,6 +733,7 @@ query getTagsforGroup($id: ID!) {
               duration
               mode
               Status
+              expiry_date
             }
           }
         }

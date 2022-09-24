@@ -7,6 +7,8 @@ import moment from 'moment';
 
 const PricingTable = (props) => {
 
+  console.log(props)
+
     const inputDisabled = props.readonly;
 
     console.log(JSON.parse(props.formContext.programDetails).online);

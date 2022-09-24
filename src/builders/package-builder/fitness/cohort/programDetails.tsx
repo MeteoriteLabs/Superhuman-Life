@@ -201,6 +201,7 @@ const ProgramDetails = (props) => {
                             disabled={inputDisabled}
                         />
                     </Col>}
+                    {addressTitle === 'At Client Address' && <span className='small text-muted'>*Within city limits</span>}
                 </Row>
             </div>}
             {mode !== '' && mode === '2' && <div>

@@ -92,6 +92,7 @@ export default function FitnessTab(props) {
             accessor: "details", Header: "Details",
             Cell: ({ row }: any) => {
                 console.log(row);
+                console.log(row.values)
                 return <div className='d-flex justify-content-center align-items-center'>
                     {row.values.details[0] !== null && row.values.details[0] !== 0 ?
                         <div className="text-center">
@@ -102,7 +103,7 @@ export default function FitnessTab(props) {
                         : ""}
                     {row.values.details[1] !== null && row.values.details[1] !== 0 ?
                         <div className="text-center">
-                            <OfferingsDisaplyImage mode={row.original?.mode} packageType={row.original?.type}/>
+                            <OfferingsDisaplyImage mode={row.original?.mode} packageType={row.original?.type === 'Custom Fitness' ? "One-On-One" : row.original?.type}/>
                             {/* <img src='./assets/custompersonal-training-Offline.svg' alt="PT-Offline" /> */}
                             <p>{row.values.details[1] * currentIndex[row.index]}</p>
                         </div> : ""}
@@ -114,13 +115,13 @@ export default function FitnessTab(props) {
                         </div> : ""}
                     {row.values.details[3] !== null && row.values.details[3] !== 0 ?
                         <div className="text-center">
-                            <OfferingsDisaplyImage mode={row.original?.mode === 'Hybrid' ? 'Offline' : row.original?.mode} packageType={row.original?.type}/>
+                            <OfferingsDisaplyImage mode={row.original?.mode === 'Hybrid' ? 'Offline' : row.original?.mode} packageType={row.original?.type === 'Custom Fitness' ? 'Group Class' : row.original?.type}/>
                             {/* <img src='./assets/customgroup-Offline.svg' alt="GRoup-Offline" /> */}
                             <p>{row.values.details[3] * currentIndex[row.index]}</p>
                         </div> : ""}
                     {row.values.details[4] !== null && row.values.details[4] !== 0 ?
                         <div className="text-center">
-                            <OfferingsDisaplyImage mode={row.original?.mode} packageType={row.original?.type}/>
+                            <OfferingsDisaplyImage mode={row.original?.type === 'Custom Fitness' ? 'Online' : row.original?.mode} packageType={row.original?.type === "Custom Fitness" ? "Classic Class" : row.original?.type}/>
                             {/* <img src='./assets/customclassic.svg' alt="Classic" /> */}
                             <p>{row.values.details[4] * currentIndex[row.index]}</p>
                         </div> : ""}
@@ -179,7 +180,7 @@ export default function FitnessTab(props) {
 
         { accessor: "Status", Header: "Status", Cell: (v: any) => {
             return <div><Badge className='py-3 px-5' style={{ fontSize: '1rem' }} variant={v.value === "Active" ? "success" : "danger"}>{v.value === "Active" ? "Published" : "Draft"}</Badge>
-                {moment(v?.row?.original?.publishingDate).isAfter(moment()) && <p className="small text-muted">This will be published on {moment(v?.row?.original?.publishingDate).format("Do, MMM-YY")}</p>}
+                {moment(v?.row?.original?.publishingDate).isAfter(moment()) && v.value === "Active" && <p className="small text-muted">This will be published on {moment(v?.row?.original?.publishingDate).format("Do, MMM-YY")}</p>}
             </div>
             }
         },

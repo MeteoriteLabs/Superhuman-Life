@@ -39,7 +39,7 @@ function CreateEditPackage(props: any, ref: any) {
         }
     });
 
-    const [bookingConfig] = useMutation(CREATE_BOOKING_CONFIG, {onCompleted: (r: any) => { 
+    const [createBookingConfig] = useMutation(CREATE_BOOKING_CONFIG, {onCompleted: (r: any) => { 
         console.log(r); modalTrigger.next(false); props.callback();
     }});
 
@@ -63,12 +63,13 @@ function CreateEditPackage(props: any, ref: any) {
             })
         }else {
             const val = JSON.parse(frmDetails.config.bookingConfig);
-            bookingConfig({
+            createBookingConfig({
                 variables: {
                     isAuto: val.config === "Auto" ? true : false,
                     id: r.createFitnesspackage.data.id,
                     bookings_per_day: val.bookings,
-                    is_Fillmyslots: val.fillSchedule
+                    is_Fillmyslots: val.fillSchedule,
+                    tagName: frmDetails.packagename
                 }
             });
         }
@@ -239,7 +240,7 @@ function CreateEditPackage(props: any, ref: any) {
                 ptclasssize: ENUM_FITNESSPACKAGE_PTCLASSSIZE[frm.classSize],
                 users_permissions_user: frm.user_permissions_user,
                 publishing_date: moment(frm.datesConfig?.publishingDate).toISOString(),
-                expiry_date: moment(frm.datesConfig?.expiry_date).toISOString(),
+                expiry_date: moment(frm.datesConfig?.expiryDate).toISOString(),
                 thumbnail: frm.thumbnail,
                 upload: frm?.Upload?.upload,
                 equipmentList: frm.equipmentList,
@@ -258,7 +259,6 @@ function CreateEditPackage(props: any, ref: any) {
         frm.datesConfig = JSON.parse(frm.datesConfig)
         frm.groupinstantbooking = JSON.parse(frm.groupinstantbooking);
         frm.languages = JSON.parse(frm.languages)
-
         editPackage({
             variables: {
                 id: operation.id,
@@ -284,7 +284,7 @@ function CreateEditPackage(props: any, ref: any) {
                 fitnesspackagepricing: JSON.parse(frm.pricingDetail).filter((item: any) => item.mrp !== null),
                 users_permissions_user: frm.user_permissions_user,
                 publishing_date: moment(frm.datesConfig?.publishingDate).toISOString(),
-                expiry_date: moment(frm.datesConfig?.expiry_date).toISOString(),
+                expiry_date: moment(frm.datesConfig?.expiryDate).toISOString(),
                 thumbnail: frm.thumbnail,
                 upload: frm?.Upload?.upload,
                 equipmentList: frm.equipmentList,

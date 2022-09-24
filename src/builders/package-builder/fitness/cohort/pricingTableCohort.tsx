@@ -158,7 +158,6 @@ const PricingTable = (props) => {
             return true;
         }
         if(accomodationType === "0" || accomodationType === "1"){
-            debugger;
             if(accomodationType === "1" && isNaN(pricing[0].foodPrice) && pricing[0].foodPrice === 0){
                 return false;
             }

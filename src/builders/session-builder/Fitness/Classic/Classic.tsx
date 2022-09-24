@@ -113,7 +113,7 @@ export default function Classic(props) {
                     id: packageItem.id,
                     packageName: packageItem.fitnesspackage.packagename,
                     duration: packageItem.fitnesspackage.duration,
-                    // expiry: moment(packageItem?.client_packages[0]?.expiry_date).format("MMMM DD,YYYY"),
+                    expiry: moment(packageItem?.fitnesspackage?.expiry_date).format("MMMM DD,YYYY"),
                     // packageStatus: packageItem.Status ? "Active" : "Inactive",
 
                     // proManagerId: packageItem.proManagerId,
@@ -310,7 +310,7 @@ export default function Classic(props) {
                     id: packageItem.id,
                     packageName: packageItem.fitnesspackage.packagename,
                     duration: packageItem.fitnesspackage.duration,
-                    // expiry: moment(packageItem?.client_packages[0]?.expiry_date).format("MMMM DD,YYYY"),
+                    expiry: moment(packageItem?.fitnesspackage?.expiry_date).format("MMMM DD,YYYY"),
                     // packageStatus: packageItem.Status ? "Active" : "Inactive",
 
                     // proManagerId: packageItem.proManagerId,

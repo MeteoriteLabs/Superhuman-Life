@@ -6,11 +6,13 @@ const PackageDateConfig = (props: any) => {
 
      const inputDisabled = props.readonly;
 
-     const [publishingDate, setPublishingDate] = useState(props.value === undefined ? moment().add(props.title1 && 1, 'month').format("YYYY-MM-DD") : moment(JSON.parse(props.value).publishingDate).format("YYYY-MM-DD"));
-     const [expiryDate, setExpiryDate] = useState(props.value === undefined ? moment(publishingDate).add(1, 'year').format("YYYY-MM-DD") : moment(JSON.parse(props.value).expiryDate).format("YYYY-MM-DD"));
+     console.log(props);
+
+     const [publishingDate, setPublishingDate] = useState(props.value === undefined ? moment().add(props.title1 && 1, 'month').format("YYYY-MM-DDTHH:mm") : moment(JSON.parse(props.value).publishingDate).format("YYYY-MM-DDTHH:mm"));
+     const [expiryDate, setExpiryDate] = useState(props.value === undefined ? moment(publishingDate).add(1, 'year').format("YYYY-MM-DDTHH:mm") : moment(JSON.parse(props.value).expiryDate).format("YYYY-MM-DDTHH:mm"));
 
      useEffect(() => {
-          setExpiryDate(moment(publishingDate).add(1, props?.title2 ? 'month' : 'year').format("YYYY-MM-DD"));
+          setExpiryDate(moment(publishingDate).add(1, props?.title2 ? 'month' : 'year').format("YYYY-MM-DDTHH:mm"));
      }, [publishingDate, props.title2]);
 
      props.onChange(JSON.stringify({publishingDate, expiryDate}));
@@ -22,8 +24,8 @@ const PackageDateConfig = (props: any) => {
                     <FormControl
                          aria-label="Default"
                          aria-describedby="inputGroup-sizing-default"
-                         type="date"
-                         min={props.type === 'Cohort' ? moment().add(1, 'month').format("YYYY-MM-DD") : moment().format("YYYY-MM-DD")}
+                         type="datetime-local"
+                         min={props.type === 'Cohort' ? moment().add(1, 'month').format("YYYY-MM-DDTHH:mm") : moment().format("YYYY-MM-DDTHH:mm")}
                          value={publishingDate}
                          onChange={(e) => { setPublishingDate(e.target.value) }}
                          disabled={inputDisabled}
@@ -36,8 +38,8 @@ const PackageDateConfig = (props: any) => {
                     <FormControl
                          aria-label="Default"
                          aria-describedby="inputGroup-sizing-default"
-                         type="date"
-                         min={moment(publishingDate).add(1, props?.title2 ? 'month' : 'year').format("YYYY-MM-DD")}
+                         type="datetime-local"
+                         min={moment(publishingDate).add(1, props?.title2 ? 'month' : 'year').format("YYYY-MM-DDTHH:mm")}
                          value={expiryDate}
                          onChange={(e) => { setExpiryDate(e.target.value) }}
                          disabled={inputDisabled}
