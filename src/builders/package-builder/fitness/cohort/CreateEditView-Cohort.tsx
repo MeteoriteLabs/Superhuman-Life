@@ -56,7 +56,8 @@ function CreateEditCohort(props: any, ref: any) {
                 variables: {
                     isAuto: val.config === "Auto" ? true : false,
                     id: r.createFitnesspackage.data.id,
-                    is_Fillmyslots: val.fillSchedule
+                    is_Fillmyslots: val.fillSchedule,
+                    tagName: frmDetails.packageName
                 }
         });
      }})

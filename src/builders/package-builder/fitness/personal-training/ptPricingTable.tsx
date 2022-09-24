@@ -199,6 +199,7 @@ const PricingTable = (props) => {
     function handleValidation(){
       const values = [...pricing];
       var res: boolean = false;
+      // eslint-disable-next-line
       values.map((item: any) => {
         if(item.mrp !== null && item.mrp >= parseInt(item.sapienPricing)){
           res = true;

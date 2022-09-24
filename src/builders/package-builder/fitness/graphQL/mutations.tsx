@@ -201,9 +201,17 @@ mutation createBookingconfig($id: ID!, $isAuto: Boolean, $bookings_per_day: Int,
 `
 
 export const CREATE_BOOKING_CONFIG = gql`
-  mutation createBookingconfig($id: ID!, $isAuto: Boolean, $bookings_per_day: Int, $bookings_per_month: Int, $is_Fillmyslots: Boolean) {
+  mutation createBookingconfig($id: ID!, $isAuto: Boolean, $bookings_per_day: Int, $bookings_per_month: Int, $is_Fillmyslots: Boolean, $tagName: String!) {
     createBookingConfig(data: { isAuto: $isAuto,bookingsPerDay: $bookings_per_day, fitnesspackage: $id, BookingsPerMonth: $bookings_per_month, is_Fillmyslots: $is_Fillmyslots }) {
       data {
+        id
+      }
+    }
+    createTag(data: {
+      tag_name: $tagName,
+      fitnesspackage: $id
+    }){
+      data{
         id
       }
     }

@@ -263,17 +263,26 @@ const PricingTable = (props) => {
         setPricing(newValue);
     }
 
-    function handlePricingUpdate(value: any, id: any){
-        let newPricing = [...pricing];
-        newPricing[id].mrp = value;
-        setPricing(newPricing);
-    }
+     function handlePricingUpdate(value: any, id: any){
+          let newPricing = [...pricing];
+          newPricing[id].mrp = value;
+          setPricing(newPricing);
+     }
+
+     function handleValidation(){
+          const values = [...pricing];
+          var res: boolean = false;
+          // eslint-disable-next-line
+          values.map((item: any) => {
+            if(item.mrp !== null && item.mrp >= parseInt(item.sapienPricing)){
+              res = true;
+            }
+          });
+          return res;
+     }
 
     useEffect(() => {
-          if((pricing[0].mrp !== null && pricing[0].mrp >= parseInt(pricing[0].sapienPricing)) || 
-               (pricing[1].mrp !== null && pricing[1].mrp >= parseInt(pricing[1].sapienPricing)) || 
-               (pricing[2].mrp !== null && pricing[2].mrp >= parseInt(pricing[2].sapienPricing)) || 
-               (pricing[3].mrp !== null && pricing[3].mrp >= parseInt(pricing[3].sapienPricing))){
+          if(handleValidation()){
                props.onChange(JSON.stringify(pricing));    
           }else {
                props.onChange(undefined)
@@ -372,7 +381,7 @@ const PricingTable = (props) => {
                     {pricing.map((item, index) => {
                         return (
                             <td>
-                                <InputGroup className="mb-3">
+                                <InputGroup>
                                     <FormControl
                                     className={`${pricing[index]?.mrp < pricing[index]?.sapienPricing && pricing[index]?.mrp !== null ? "is-invalid" : pricing[index]?.mrp >= pricing[index]?.sapienPricing ? "is-valid" : ""}`}
                                     aria-label="Default"
@@ -383,8 +392,8 @@ const PricingTable = (props) => {
                                     value={pricing[index]?.mrp}
                                     onChange={(e) => {handlePricingUpdate(e.target.value, index)}}
                                     />
-                                    {pricing[index]?.mrp < pricing[index]?.sapienPricing && pricing[index]?.mrp !== null && <span style={{ fontSize: '12px', color: 'red'}}>cannot be less than ₹ {pricing[index]?.sapienPricing}</span>}    
                                 </InputGroup>
+                                   {pricing[index]?.mrp < pricing[index]?.sapienPricing && pricing[index]?.mrp !== null && <span style={{ fontSize: '12px', color: 'red'}}>cannot be less than ₹ {pricing[index]?.sapienPricing}</span>}    
                             </td>
                         )
                     })}

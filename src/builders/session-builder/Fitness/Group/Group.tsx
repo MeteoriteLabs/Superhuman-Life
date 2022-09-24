@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useQuery, useMutation } from '@apollo/client';
 import { useContext, useMemo, useRef, useState } from 'react'
-import { Badge, Row, Col, Form } from "react-bootstrap";
+import { Badge, Row, Col, Form, Button } from "react-bootstrap";
 
 import AuthContext from "../../../../context/auth-context"
 import GroupTable from '../../../../components/table/GroupTable/GroupTable';
@@ -115,7 +115,7 @@ export default function Group(props) {
             // packageItem.client_packages[index]?.users_permissions_user
             return clients;
         }
-
+        console.log(flattenData.tags);
         setUserPackage(
             [...flattenData.tags.map((packageItem, index) => {
                 let renewDay: any = '';
@@ -126,10 +126,10 @@ export default function Group(props) {
                 return {
                     tagId: packageItem.id,
                     id: packageItem.client_packages[index]?.fitnesspackages[0].id,
-                    packageName: packageItem.client_packages[index]?.fitnesspackages[0].packagename,
+                    packageName: packageItem.fitnesspackage.packagename,
                     duration: packageItem.client_packages[index]?.fitnesspackages[0].duration,
-                    expiry: packageItem.client_packages[index]?.fitnesspackages[0].expiry_date ?  moment(packageItem.client_packages[index]?.fitnesspackages[0].expiry_date).format("MMMM DD,YYYY") : "N/A",
-                    packageStatus: packageItem.client_packages[index]?.fitnesspackages[0].Status ? "Active" : "Inactive",
+                    expiry: moment(packageItem?.fitnesspackage?.expiry_date, 'YYYY-MM-DDTHH:mm').format("MMMM DD, YYYY"),
+                    packageStatus: packageItem.fitnesspackage.Status ? "Active" : "Inactive",
 
                     // proManagerId: packageItem.proManagerId,
                     // proManagerFitnessId: packageItem.proManagerFitnessId,
@@ -144,6 +144,8 @@ export default function Group(props) {
             })]
         )
     }
+
+    console.log(userPackage);
 
     function handleStatus(sessions: any, effective_date: any, renewDay){
         let effectiveDate: any;
@@ -236,7 +238,7 @@ export default function Group(props) {
             // packageItem.client_packages[index]?.users_permissions_user
             return clients;
         }
-
+        
         setUserPackage(
             [...flattenData.tags.map((packageItem, index) => {
                 let renewDay: any = '';
@@ -247,10 +249,10 @@ export default function Group(props) {
                 return {
                     tagId: packageItem.id,
                     id: packageItem.client_packages[index]?.fitnesspackages[0].id,
-                    packageName: packageItem.client_packages[index]?.fitnesspackages[0].packagename,
+                    packageName: packageItem.fitnesspackage.packagename,
                     duration: packageItem.client_packages[index]?.fitnesspackages[0].duration,
-                    expiry: packageItem.client_packages[index]?.fitnesspackages[0].expiry_date ?  moment(packageItem.client_packages[index]?.fitnesspackages[0].expiry_date).format("MMMM DD,YYYY") : "N/A",
-                    packageStatus: packageItem.client_packages[index]?.fitnesspackages[0].Status ? "Active" : "Inactive",
+                    expiry: moment(packageItem?.fitnesspackage?.expiry_date, 'YYYY-MM-DDTHH:mm').format("MMMM DD, YYYY"),
+                    packageStatus: packageItem.fitnesspackage.Status ? "Active" : "Inactive",
 
                     // proManagerId: packageItem.proManagerId,
                     // proManagerFitnessId: packageItem.proManagerFitnessId,
@@ -291,9 +293,9 @@ export default function Group(props) {
                         accessor: "action", Header: "Action", enableRowSpan: true,
                         Cell: (row: any) => {
                             return <>
-                                <button className='text-nowrap' onClick={() => {
+                                <Button variant='info' size='sm' className='text-nowrap' onClick={() => {
                                     fitnessActionRef.current.TriggerForm({ id: row.row.original.id, actionType: 'create', type: 'Group Class', duration: row.row.original.duration })
-                                }}>Add new</button>
+                                }}>Add new</Button>
                             </>
                         }
                     }

@@ -1,12 +1,24 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Form, Row, Col } from 'react-bootstrap';
 
 const PackageDateConfig = (props: any) => {
 
-     const inputDisabled = props.readonly;
+     console.log(props);
+
+     var inputDisabled = props.readonly;
 
      const [instantBooking, setInstantBooking] = useState(props.value !== undefined ? JSON.parse(props.value).instantBooking : true);
      const [freeDemo, setFreeDemo] = useState(props.value !== undefined ? JSON.parse(props.value).freeDemo : false);
+
+     // const val = JSON.parse(props.formContext.programDetails);
+     // if(val.mode === "2"){
+     //      setInstantBooking(false);
+     //      setFreeDemo(false);
+     //      inputDisabled = true;
+     // }
+     // useEffect(() => {
+          
+     // }, [props]);
 
      props.onChange(JSON.stringify({instantBooking: instantBooking, freeDemo: freeDemo}));
 
