@@ -116,6 +116,14 @@ function CreateEditRestDay(props: any, ref: any) {
         }
 
         function updateTemplateSessionsFunc(id: any){
+            if(id === null){
+                updateTemplateSessions({
+                    variables: {
+                         id: program_id,
+                         sessions_ids: templateIds_old.concat(sessionIds_new)
+                    }
+               })
+            }
             sessionIds_new.push(id);
             if(frm.day.length === sessionIds_new.length){
                  updateTemplateSessions({
@@ -146,20 +154,12 @@ function CreateEditRestDay(props: any, ref: any) {
             }
        }
 
-       console.log(frm);
-       console.log(restDays_old);
-       console.log(templateSessions);
-       console.log(templateIds_old);
-
-       templateSessions.filter((item: any) => {
-        if(item.Is_restday){
-           return restDays_old.includes(item.id); 
+       templateSessions.map((item: any, index: number) => {
+        if(!restDays_old.includes(item.id) && item.Is_restday){
+            templateSessions.splice(index, 1);
+            templateIds_old.splice(index, 1);
         }
        });
-
-       console.log(templateSessions);
-
-       debugger;
 
         if(frm.day.length > 0){
                for(var i=0; i<frm.day.length; i++){
@@ -190,7 +190,7 @@ function CreateEditRestDay(props: any, ref: any) {
                     });
                }
         }else {
-            modalTrigger.next(false);
+            return updateTemplateSessionsFunc(null);
         }
     }
 
