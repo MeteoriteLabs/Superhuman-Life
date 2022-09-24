@@ -125,7 +125,7 @@ export default function Group(props) {
                 }
                 return {
                     tagId: packageItem.id,
-                    id: packageItem.client_packages[index]?.fitnesspackages[0].id,
+                    id: packageItem?.fitnesspackage?.id,
                     packageName: packageItem.fitnesspackage.packagename,
                     duration: packageItem.client_packages[index]?.fitnesspackages[0].duration,
                     expiry: moment(packageItem?.fitnesspackage?.expiry_date, 'YYYY-MM-DDTHH:mm').format("MMMM DD, YYYY"),
@@ -248,7 +248,7 @@ export default function Group(props) {
                 }
                 return {
                     tagId: packageItem.id,
-                    id: packageItem.client_packages[index]?.fitnesspackages[0].id,
+                    id: packageItem.fitnesspackage?.id,
                     packageName: packageItem.fitnesspackage.packagename,
                     duration: packageItem.client_packages[index]?.fitnesspackages[0].duration,
                     expiry: moment(packageItem?.fitnesspackage?.expiry_date, 'YYYY-MM-DDTHH:mm').format("MMMM DD, YYYY"),

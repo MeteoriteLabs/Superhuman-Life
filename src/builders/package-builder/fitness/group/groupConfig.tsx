@@ -5,20 +5,24 @@ const PackageDateConfig = (props: any) => {
 
      console.log(props);
 
-     var inputDisabled = props.readonly;
+     var inputDisabled = JSON.parse(props.formContext.programDetails).mode === "2" ? true : props.readonly;
 
-     const [instantBooking, setInstantBooking] = useState(props.value !== undefined ? JSON.parse(props.value).instantBooking : true);
-     const [freeDemo, setFreeDemo] = useState(props.value !== undefined ? JSON.parse(props.value).freeDemo : false);
+     const [instantBooking, setInstantBooking] = useState(props.value !== undefined ? JSON.parse(props.value).instantBooking : JSON.parse(props.formContext.programDetails).mode === "2" ? false : true);
+     const [freeDemo, setFreeDemo] = useState(props.value !== undefined ? JSON.parse(props.value).freeDemo : JSON.parse(props.formContext.programDetails).mode ? false : false);
 
-     // const val = JSON.parse(props.formContext.programDetails);
-     // if(val.mode === "2"){
-     //      setInstantBooking(false);
-     //      setFreeDemo(false);
-     //      inputDisabled = true;
-     // }
+     var isHybrid: boolean = false
+
      // useEffect(() => {
-          
-     // }, [props]);
+     //      const val = JSON.parse(props.formContext.programDetails);
+     //      console.log(val);
+     //      if(val.mode === "2"){
+     //           setInstantBooking(false);
+     //           setFreeDemo(false);
+     //           isHybrid = true;
+     //      } 
+     // }, []);
+
+     console.log(isHybrid);
 
      props.onChange(JSON.stringify({instantBooking: instantBooking, freeDemo: freeDemo}));
 
@@ -39,7 +43,7 @@ const PackageDateConfig = (props: any) => {
                                     id="custom-switch"
                                     defaultChecked={instantBooking}
                                     onClick={() => setInstantBooking(!instantBooking)}
-                                    disabled={inputDisabled}
+                                    disabled={inputDisabled || isHybrid}
                                 />
                             </Form>
                             </Col>
@@ -64,7 +68,7 @@ const PackageDateConfig = (props: any) => {
                                    id="custom-switch2"
                                    defaultChecked={freeDemo}
                                    onClick={() => setFreeDemo(!freeDemo)}
-                                   disabled={inputDisabled}
+                                   disabled={inputDisabled || isHybrid}
                               />
                          </Form>
                          </Col>
