@@ -391,7 +391,7 @@ const Schedular = (props: any) => {
                 }
             }
         }
-        else if (props.restDays) {
+        else if (props.restDays && props?.type !== 'day') {
             for (var i = 0; i < props.restDays.length; i++) {
                 if (val === calculateDay(props.startDate, props.restDays[i].session_date)) {
                     return 'rgba(255,165,0)';

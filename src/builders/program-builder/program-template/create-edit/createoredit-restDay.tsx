@@ -101,6 +101,7 @@ function CreateEditRestDay(props: any, ref: any) {
         const sessionIds_new: any = [];
         const sessionIds_old: string[] = [...sessionsIds];
         const templateIds_old: string[] = [...templateSessionsIds];
+        const restDays_old: any = [];
 
         function updateSessionFunc(id: any){
             sessionIds_new.push(id);
@@ -131,6 +132,7 @@ function CreateEditRestDay(props: any, ref: any) {
                 for(var j=0; j<frm.day.length; j++){
                     if(templateSessions[k].day_of_program === frm.day[j].key && templateSessions[k].Is_restday === true){
                         frm.day.splice(j, 1);
+                        restDays_old.push(templateSessions[k].id);
                     }
                 }
             }
@@ -143,6 +145,21 @@ function CreateEditRestDay(props: any, ref: any) {
                 }
             }
        }
+
+       console.log(frm);
+       console.log(restDays_old);
+       console.log(templateSessions);
+       console.log(templateIds_old);
+
+       templateSessions.filter((item: any) => {
+        if(item.Is_restday){
+           return restDays_old.includes(item.id); 
+        }
+       });
+
+       console.log(templateSessions);
+
+       debugger;
 
         if(frm.day.length > 0){
                for(var i=0; i<frm.day.length; i++){
