@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Card, ProgressBar } from 'react-bootstrap';
+import './AddPayee.css';
 
 function AddPayee() {
     return (
@@ -41,7 +42,7 @@ function AddPayee() {
                     <Card as={Link} to={'payee_details'} className='m-2 text-center p-5 shadow-lg p-3 mb-5 bg-white rounded' style={{cursor: 'pointer', width: '20vw'}}>
                         <Card.Body>
                             <img src="assets/payeeDetails.svg" alt="payee" />
-                            <p><b>Payee details</b></p>
+                            <p className='text-dark'><b>Payee details</b></p>
                             <ProgressBar variant="success" now={40} />
                         </Card.Body>
                     </Card>
@@ -49,7 +50,7 @@ function AddPayee() {
                     <Card className='m-2 text-center p-5 shadow-lg p-3 mb-5 bg-white rounded' style={{cursor: 'pointer', width: '20vw'}}>
                         <Card.Body>
                             <img src="assets/setting.svg" alt="setting" />
-                            <p><b>Payment Settings</b></p>
+                            <p className='text-dark'><b>Payment Settings</b></p>
                             <ProgressBar variant="success" now={40} />
                         </Card.Body>
                     </Card>
@@ -57,7 +58,7 @@ function AddPayee() {
                     <Card as={Link} to={'payee_payment_mode'} className='m-2 text-center p-5 shadow-lg p-3 mb-5 bg-white rounded' style={{cursor: 'pointer', width: '20vw'}}>
                         <Card.Body>
                             <img src="assets/payment-mode.svg" alt="payementmode" />
-                            <p><b>Payee payment mode</b></p>
+                            <p className='text-dark'><b>Payee payment mode</b></p>
                             <ProgressBar variant="success" now={40} />
                         </Card.Body>
                     </Card>

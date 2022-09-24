@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useHistory } from "react-router-dom";
-import { Card, ProgressBar, Button } from 'react-bootstrap';
-import StatusModal from '../../../components/StatusModal/StatusModal';
+import { Card, ProgressBar, Button, Modal } from 'react-bootstrap';
+import './ViewAddPayee.css';
 
 function ViewAddPayee() {
-    const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+
+    const [showSettlementConfirmationModal, setShowSettlementConfirmationModal] = useState(false);
+
+    const handleCloseSettlementModal = () => setShowSettlementConfirmationModal(false);
+    const handleShowSettlementModal = () => setShowSettlementConfirmationModal(true);
 
     const history = useHistory();
 
@@ -17,16 +21,23 @@ function ViewAddPayee() {
     return (
         <>
             <div>
-                <Button variant="outline-danger" className='m-1' onClick={() => {setShowConfirmationModal(true)}}>Close Account</Button>
-                {
-                    showConfirmationModal && <StatusModal
-                    modalTitle="Make Settlement"
-                    modalBody="Do you want to make settlement?"
-                    buttonLeft="Cancel"
-                    buttonRight="Yes"
-                    onClick={routeChange}
-                />
-                }
+                <Button variant="outline-danger" className='m-1' onClick={handleShowSettlementModal}>Close Account</Button>
+
+                {/* Confirmation modal */}
+                <Modal show={showSettlementConfirmationModal} onHide={handleCloseSettlementModal} centered>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Make Settlement</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>Do you want to make settlement?</Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="success" onClick={routeChange} >
+                            Yes
+                        </Button>
+                        <Button variant="danger" onClick={handleCloseSettlementModal} >
+                            No
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
 
                 <Card className="p-3">
                     <div className='d-flex justify-content-between flex-wrap'>
@@ -63,7 +74,7 @@ function ViewAddPayee() {
                     <Card as={Link} to={'payee_details'} className='m-2 text-center p-5 shadow-lg p-3 mb-5 bg-white rounded' style={{ cursor: 'pointer', width: '20vw' }}>
                         <Card.Body>
                             <img src="assets/payeeDetails.svg" alt="payee" />
-                            <p><b>Payee details</b></p>
+                            <p className='text-dark'><b>Payee details</b></p>
                             <ProgressBar variant="success" now={40} />
                         </Card.Body>
                     </Card>
@@ -71,7 +82,7 @@ function ViewAddPayee() {
                     <Card className='m-2 text-center p-5 shadow-lg p-3 mb-5 bg-white rounded' style={{ cursor: 'pointer', width: '20vw' }}>
                         <Card.Body>
                             <img src="assets/setting.svg" alt="setting" />
-                            <p><b>Payment Settings</b></p>
+                            <p className='text-dark'><b>Payment Settings</b></p>
                             <ProgressBar variant="success" now={40} />
                         </Card.Body>
                     </Card>
@@ -79,7 +90,7 @@ function ViewAddPayee() {
                     <Card as={Link} to={'payee_payment_mode'} className='m-2 text-center p-5 shadow-lg p-3 mb-5 bg-white rounded' style={{ cursor: 'pointer', width: '20vw' }}>
                         <Card.Body>
                             <img src="assets/payment-mode.svg" alt="payementmode" />
-                            <p><b>Payee payment mode</b></p>
+                            <p className='text-dark'><b>Payee payment mode</b></p>
                             <ProgressBar variant="success" now={40} />
                         </Card.Body>
                     </Card>

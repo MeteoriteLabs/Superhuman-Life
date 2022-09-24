@@ -1,0 +1,426 @@
+{
+  "1": {
+    "type": "object",
+    "properties": {
+      "PayeeCategory": {
+        "enum": [
+          "All contacts",
+          "New"
+        ]
+      }
+    },
+    "allOf": [
+      {
+        "if": {
+          "properties": {
+            "PayeeCategory": {
+              "const": "All contacts"
+            }
+          }
+        },
+        "then": {
+          "properties": {
+            "search": {
+              "type": "string",
+              "title": "Search Payee"
+            }
+          },
+          "required": [
+            "search"
+          ]
+        }
+      },
+      {
+        "if": {
+          "properties": {
+            "PayeeCategory": {
+              "const": "New"
+            }
+          }
+        },
+        "then": {
+          "properties": {
+            "TypeofPayee": {
+              "type": "string",
+              "title": "Type of payee",
+              "enum": [
+                "Individual",
+                "Business"
+              ]
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "TypeofPayee": {
+                    "const": "Business"
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "organisationName": {
+                    "type": "string",
+                    "title": "Organisation Name"
+                  },
+                  "GSTNumber": {
+                    "type": "string",
+                    "title": "GST Number"
+                  },
+                  "PayeeName": {
+                    "type": "string",
+                    "title": "Name of the payee"
+                  },
+                  "Email": {
+                    "type": "string",
+                    "title": "Email"
+                  },
+                  "Phone_Number": {
+                    "type": "string",
+                    "title": "Contact Number"
+                  },
+                  "addToContacts": {
+                    "type": "boolean",
+                    "title": "Add to contacts",
+                    "enum": [
+                      true,
+                      false
+                    ]
+                  }
+                },
+                "required": [
+                  "organisationName",
+                  "GSTNumber",
+                  "Email",
+                  "PayeeName",
+                  "Phone_Number"
+                ]
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "TypeofPayee": {
+                    "const": "Individual"
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "PayeeName": {
+                    "type": "string",
+                    "title": "Name of the payee"
+                  },
+                  "Email": {
+                    "type": "string",
+                    "title": "Email"
+                  },
+                  "Phone_Number": {
+                    "type": "string",
+                    "title": "Contact Number"
+                  },
+                  "addToContacts": {
+                    "type": "boolean",
+                    "title": "Add to contacts",
+                    "enum": [
+                      true,
+                      false
+                    ]
+                  }
+                },
+                "required": [
+                  "PayeeName",
+                  "Email",
+                  "Phone_Number",
+                  "addToContacts"
+                ]
+              }
+            },
+            {
+              "required": [
+                "TypeofPayee"
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "2": {
+    "title": "",
+    "type": "object",
+    "required": [
+      "PaymentCategory"
+    ],
+    "properties": {
+      "PaymentCategory": {
+        "title": "Payment Category",
+        "enum": [
+          "Vendor",
+          "Rental",
+          "Supplies",
+          "Marketing and Ads",
+          "Maintenance",
+          "Reimbursement",
+          "Consulting Services",
+          "Miscellaneous"
+        ]
+      },
+      "FrequencyOfPayment": {
+        "title": "Frequency of Payment",
+        "enum": [
+          "One Time",
+          "Monthly"
+        ]
+      }
+    },
+    "allOf": [
+      {
+        "if": {
+          "properties": {
+            "FrequencyOfPayment": {
+              "const": "One Time"
+            }
+          }
+        },
+        "then": {
+          "properties": {
+            "amountToBePaid": {
+              "type": "string",
+              "title": "Amount to be paid"
+            },
+            "paymentDueOn": {
+              "type": "string",
+              "title": "Payment due on",
+              "format": "date"
+            },
+            "setReminder": {
+              "type": "string",
+              "title": "Set Reminder",
+              "format": "date"
+            }
+          },
+          "required": [
+            "amountToBePaid",
+            "paymentDueOn",
+            "setReminder"
+          ]
+        }
+      },
+      {
+        "if": {
+          "properties": {
+            "FrequencyOfPayment": {
+              "const": "Monthly"
+            }
+          }
+        },
+        "then": {
+          "properties": {
+            "amountToBePaid": {
+              "type": "string",
+              "title": "Amount to be paid"
+            },
+            "effectiveDate": {
+              "type": "string",
+              "title": "Effective Date",
+              "format": "date"
+            },
+            "paymentCycle": {
+              "type": "string",
+              "title": "Payment Cycle",
+              "enum": [
+                "1",
+                "2",
+                "3",
+                "4",
+                "5"
+              ]
+            },
+            "payFromNextPaymentCycle": {
+              "type": "boolean",
+              "title": "Pay from next payment cycle",
+              "enum": [
+                true,
+                false
+              ],
+              "default": false
+            },
+            "setReminder": {
+              "type": "string",
+              "title": "Set Reminder",
+              "format": "date"
+            },
+            "provideBreakdown": {
+              "type": "string",
+              "title": "Provide Breakdown",
+              "enum": [
+                "Yes",
+                "No"
+              ]
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "payFromNextPaymentCycle": {
+                    "const": true
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "firstPayment": {
+                    "type": "string",
+                    "title": "First Payment"
+                  }
+                },
+                "required": [
+                  "firstPayment"
+                ]
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "provideBreakdown": {
+                    "const": "Yes"
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "basicPay": {
+                    "type": "string",
+                    "title": "Basic Pay"
+                  },
+                  "HRA": {
+                    "type": "string",
+                    "title": "HRA or HRR"
+                  },
+                  "Gratuity": {
+                    "type": "string",
+                    "title": "Gratuity"
+                  },
+                  "LTA": {
+                    "type": "string",
+                    "title": "LTA"
+                  },
+                  "ESI": {
+                    "type": "string",
+                    "title": "ESI"
+                  },
+                  "MedicalEmbruisment": {
+                    "type": "string",
+                    "title": "Medical Embruisment"
+                  },
+                  "ChildCare": {
+                    "type": "string",
+                    "title": "Child Care"
+                  },
+                  "SpecialAllowance": {
+                    "type": "string",
+                    "title": "Special Allowance"
+                  },
+                  "ProfessionalTax": {
+                    "type": "string",
+                    "title": "Professional Tax"
+                  },
+                  "TDS": {
+                    "type": "string",
+                    "title": "TDS"
+                  },
+                  "ProvidentFund": {
+                    "type": "string",
+                    "title": "Provident Fund"
+                  }
+                },
+                "required": [
+                  "basicPay",
+                  "HRA",
+                  "Gratuity",
+                  "ChildCare",
+                  "MedicalEmbruisment",
+                  "ESI",
+                  "LTA",
+                  "SpecialAllowance",
+                  "TDS",
+                  "ProvidentFund",
+                  "ProfessionalTax"
+                ]
+              }
+            },
+            {
+              "required": [
+                "provideBreakdown",
+                "payFromNextPaymentCycle"
+              ]
+            }
+          ],
+          "required": [
+            "amountToBePaid",
+            "effectiveDate"
+          ]
+        }
+      },
+      {
+        "required": [
+          "FrequencyOfPayment"
+        ]
+      }
+    ]
+  },
+  "3": {
+    "type": "object",
+    "title": "Mode of payment",
+    "properties": {
+      "PaymentMode": {
+        "type": "array",
+        "title": "Payment Mode",
+        "items": {
+          "type": "string",
+          "enum": [
+            "UPI",
+            "Bank Account"
+          ]
+        },
+        "uniqueItems": true
+      },
+      "UPI": {
+        "type": "string",
+        "title": "UPI ID"
+      },
+      "Phone": {
+        "type": "string",
+        "title": "Phone",
+        "minLength": 10
+      },
+      "Account Number": {
+        "type": "string",
+        "title": "Account Number"
+      },
+      "ifscCode": {
+        "type": "string",
+        "title": "IFSC Code"
+      },
+      "BankName": {
+        "type": "string",
+        "title": "Name of the Bank"
+      },
+      "Branch": {
+        "type": "string",
+        "title": "Branch"
+      },
+      "accountType": {
+        "type": "string",
+        "title": "Account Type",
+        "enum": [
+          "Current",
+          "Savings"
+        ]
+      }
+    }
+  }
+}

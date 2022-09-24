@@ -1,6 +1,6 @@
 import React from 'react'
 
-function Inflow() {
+function Earnings() {
   return (
     <div>
       inflow
@@ -8,4 +8,4 @@ function Inflow() {
   )
 }
 
-export default Inflow
+export default Earnings;

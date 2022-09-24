@@ -30,7 +30,7 @@ export default function Layout({ token, children }: any) {
                 <Col lg={collapse ? "1" : "2"} className="d-none d-lg-block">
                   <SideNav collapse={collapse} setCollapse={setCollapse} />
                 </Col>
-                <Col lg={collapse ? "11" : "10"} className="pr-2">
+                <Col lg={collapse ? "11" : "10"} className="pr-2 pl-3">
                   <hr />
                   {children}
                 </Col>

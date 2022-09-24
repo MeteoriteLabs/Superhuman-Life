@@ -2,14 +2,15 @@ import React from "react";
 import { Card, Tab, Tabs } from "react-bootstrap";
 // import General from "./General/General";
 import Summary from "./Summary/Summary";
-import Inflow from "./Inflow/Inflow";
-import Outflow from "./Outflow/Outflow";
+import Earnings from "./Earnings/Earnings";
+import Expenses from "./Outflow/Expenses";
 // import Invoices from "./Invoices/Invoices";
 import Vouchers from "./Vouchers/Vouchers";
 import PaymentMethods from "./PaymentMethods/PaymentMethods";
 // import Platform from "./Platform/Platform";
 import PricingAssist from "./PricingAssist/PricingAssist";
 import AllTransactions from "./AllTransactions/AllTransactions";
+import Payee from './Payee/Payee';
 
 export default function index() {
     return (
@@ -24,14 +25,18 @@ export default function index() {
                             <Summary />
                         </Tab>
 
-                        <Tab eventKey="inflow" title="Inflow">
-                            <Inflow />
+                        <Tab eventKey="earnings" title="Earnings">
+                            <Earnings />
                         </Tab>
 
-                        <Tab eventKey="outflow" title="Outflow">
-                            <Outflow />
+                        <Tab eventKey="expenses" title="Expenses">
+                            <Expenses />
                         </Tab>
 
+                        <Tab eventKey="payee" title="Payee">
+                            <Payee />
+                        </Tab>
+                        
                         <Tab eventKey="allTransactions" title="All Transactions">
                             <AllTransactions />
                         </Tab>

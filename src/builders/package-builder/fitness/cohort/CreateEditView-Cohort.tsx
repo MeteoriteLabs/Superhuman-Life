@@ -37,8 +37,7 @@ function CreateEditCohort(props: any, ref: any) {
     const [deletePackage] = useMutation(DELETE_PACKAGE, { refetchQueries: ["GET_TABLEDATA"], onCompleted: (data) => {props.callback();}});
     const [bookingConfig] = useMutation(CREATE_BOOKING_CONFIG, {onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); props.callback();}})
     const [CreateCohortPackage] = useMutation(CREATE_CHANNEL_PACKAGE, { onCompleted: (r: any) => { 
-        console.log(r);
-        console.log(frmDetails);
+        
         bookingConfig({
             variables: {
                 isAuto: frmDetails.config.acceptBooking === 0 ? false : true,
@@ -158,7 +157,6 @@ function CreateEditCohort(props: any, ref: any) {
         return foundType.id;
     }
 
-
     function calculateDuration(sd, ed){
         const start = moment(sd);
         const end = moment(ed);
@@ -166,9 +164,8 @@ function CreateEditCohort(props: any, ref: any) {
         return duration;
     }
 
-
     function createCohort(frm: any) {
-        console.log(frm);
+        
         frmDetails = frm;
         frm.programDetails = JSON.parse(frm.programDetails)
         frm.languages = JSON.parse(frm.languages)
@@ -271,7 +268,6 @@ function CreateEditCohort(props: any, ref: any) {
         setStatusModalShow(false);
     }
 
-
     function OnSubmit(frm: any) {
         //bind user id
         if(frm)
@@ -302,12 +298,10 @@ function CreateEditCohort(props: any, ref: any) {
         name="View";
     }
 
-
     FetchData();
 
     return (
         <>
-            {/* {render && */}
                 <ModalView
                     name={name}
                     isStepper={true}
@@ -321,7 +315,6 @@ function CreateEditCohort(props: any, ref: any) {
                     modalTrigger={modalTrigger}
                 />
                 
-            {/* } */}
             <Modal
                     size="lg"
                     aria-labelledby="contained-modal-title-vcenter"

@@ -16,9 +16,6 @@ const ProgramDetails = (props) => {
 
     }
 
-    console.log(props);
-    console.log(existingData);
-
     const [mode, setMode] = useState(props.value === undefined ? '' : (existingData.mode).toString());
     const [residential, setResidential] = useState(props.value === undefined || existingData.residential === null ? '' : (existingData.residential).toString());
 
@@ -26,9 +23,6 @@ const ProgramDetails = (props) => {
     const [singleSelections, setSingleSelections] = useState<any[]>(existingData?.address?.length !== 0 && props.value !== undefined ? existingData?.address : []);
     const [addresses, setAddresses] = useState<any[]>([]);
     const [addressTitle, setAddressTitle] = useState(props.value !== undefined ? existingData.addressTag : 'At My Address');
-
-    console.log(singleSelections);
-
 
     const FETCH_USER_ADDRESSES = gql`
     query addresses($id: ID!) {
@@ -55,7 +49,7 @@ const ProgramDetails = (props) => {
 
     function loadData(data: any) {
         const flattenedData = flattenObj({...data});
-        console.log(flattenedData);
+        
         setAddresses(
               [...flattenedData.addresses].map((address) => {
                   return {

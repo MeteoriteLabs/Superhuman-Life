@@ -48,7 +48,7 @@ const clientSchedulerPage = React.lazy(() => import("./builders/changemaker-buil
 const AvailabilityPage = React.lazy(() => import("./builders/changemaker-builder/availability"));
 const RosterPage = React.lazy(() => import('./builders/changemaker-builder/roster'));
 const Receipt = React.lazy(() => import('./pages/finance/Outflow/Receipt'));
-const AddPayee = React.lazy(() => import('./pages/finance/Outflow/AddPayee'));
+const AddPayee = React.lazy(() => import('./pages/finance/Payee/AddPayee'));
 const PayeeDetails = React.lazy(() => import('./pages/finance/Outflow/PayeeDetails/PayeeDetails'));
 const PayeePaymentMode = React.lazy(() => import('./pages/finance/Outflow/PayeePaymentMode/PayeePaymentMode'));
 const CloseAccount = React.lazy(() => import('./pages/finance/Outflow/CloseAccount/CloseAccount'));
