@@ -154,6 +154,7 @@ function CreateEditRestDay(props: any, ref: any) {
             }
        }
 
+       // eslint-disable-next-line array-callback-return
        templateSessions.map((item: any, index: number) => {
         if(!restDays_old.includes(item.id) && item.Is_restday){
             templateSessions.splice(index, 1);
