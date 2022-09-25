@@ -69,19 +69,28 @@ function CreateEditMessage(props: any, ref: any) {
 
      function FillDetails(data: any) {
           const flattenData = flattenObj({ ...data });
+
           let details: any = {};
           let msg = flattenData.prerecordedMessage;
+
+          function handleAddMediaShowUp(msg: any) {
+
+               if (msg.Image_URL !== null) {
+                    return { AddMedia: "Add URL", mediaurl: msg.Image_URL };
+               } else if (msg?.uploadID !== null) {
+                    return { AddMedia: "Upload", upload: msg.uploadID };
+               }
+          }
 
           let o = { ...operation };
           details.name = o.type.toLowerCase();
 
           details.title = msg.Title;
           details.mindsetmessagetype = msg.resourcetype?.id;
-          details.description = msg.Description;
+          details.description = msg.Description ? msg.Description : ' ';
           details.minidesc = msg.minidescription;
           details.tags = msg.tags;
-          details.mediaurl = msg.Image_URL;
-          details.upload = msg.uploadID;
+          details.addMedia = handleAddMediaShowUp(msg);
           details.messageid = msg.id;
 
           setMessageDetails(details);
@@ -119,7 +128,21 @@ function CreateEditMessage(props: any, ref: any) {
      }
 
      function EditMessage(frm: any) {
-          editMessage({ variables: frm });
+          editMessage({
+               variables: {
+                    id: frm.messageid,
+                    data: {
+                         Title: frm.title,
+                         Description: frm.description,
+                         minidescription: frm.minidesc,
+                         Image_URL: frm.addMedia.mediaurl,
+                         tags: frm.tags,
+                         resourcetype: frm.mindsetmessagetype,
+                         users_permissions_user: frm.user_permissions_user,
+                         uploadID: frm.addMedia.upload
+                    }
+               }
+          });
      }
 
      function ToggleMessageStatus(id: string, current_status: boolean) {
@@ -147,6 +170,7 @@ function CreateEditMessage(props: any, ref: any) {
 
      useEffect(() => {
           if (operation.type === 'create') {
+               setMessageDetails({});
                setName("Create New Message");
           } else if (operation.type === 'edit') {
                setName("Edit");
@@ -167,7 +191,7 @@ function CreateEditMessage(props: any, ref: any) {
                     formSubmit={name === 'View' ? () => { modalTrigger.next(false); } : (frm: any) => {
                          OnSubmit(frm);
                     }}
-                    formData={operation.type === 'create' ? {} : messageDetails}
+                    formData={messageDetails}
                     widgets={widgets}
                     modalTrigger={modalTrigger}
                />

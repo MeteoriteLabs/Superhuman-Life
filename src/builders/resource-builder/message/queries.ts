@@ -77,28 +77,12 @@ export const ADD_MESSAGE = gql`
 
 export const UPDATE_MESSAGE = gql`
   mutation updatemsg(
-    $title: String
-    $description: String
-    $minidesc: String
-    $mindsetmessagetype: ID
-    $tags: String
-    $mediaurl: String
-    $userpermission: ID
-    $messageid: ID!
-    $upload: String
+    $id: ID!
+    $data: PrerecordedMessageInput!
   ) {
     updatePrerecordedMessage(
-      id: $messageid
-      data: {
-        Title: $title
-        Description: $description
-        minidescription: $minidesc
-        Image_URL: $mediaurl
-        tags: $tags
-        resourcetype: $mindsetmessagetype
-        users_permissions_user: $userpermission
-        uploadID: $upload
-      }
+      id: $id
+      data: $data
     ) {
       data {
         id

@@ -138,6 +138,7 @@ function CreateEditMessage(props: any, ref: any) {
      useEffect(() => {
           if (operation.type === 'create') {
                setName("Create New Notification");
+               setMessageDetails({});
           } else if (operation.type === 'edit') {
                setName("Edit");
           } else if (operation.type === 'view') {
@@ -156,7 +157,7 @@ function CreateEditMessage(props: any, ref: any) {
                          formSchema={messageSchema}
                          showing={operation.modal_status}
                          formSubmit={name === 'View' ? () => { modalTrigger.next(false); } : (frm: any) => { OnSubmit(frm); }}
-                         formData={operation.type === 'create' ? {} : messageDetails}
+                         formData={messageDetails}
                          modalTrigger={modalTrigger}
                     />
                }
