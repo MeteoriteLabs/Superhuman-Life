@@ -240,6 +240,8 @@ function CreateEditOnDemadPt(props: any, ref: any) {
         frm.datesConfig = JSON.parse(frm.datesConfig)
         frm.languages = JSON.parse(frm.languages)
 
+        console.log(frm);
+        debugger;
     
         editPackage({
             variables: {

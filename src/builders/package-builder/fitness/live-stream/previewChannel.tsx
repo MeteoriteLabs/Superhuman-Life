@@ -16,7 +16,21 @@ const PreviewChannel = (props) => {
     enum ENUM_FITNESSPACKAGE_LEVEL {
         Beginner,
         Intermediate,
-        Advanced
+        Advanced,
+        No_Level
+    }
+
+    function handleLevelColor(level: string){
+        if(level === 'Beginner'){
+            return '#04BEBD';
+        }
+        if(level === 'Intermediate'){
+            return '#D7A72E';
+        }
+        if(level === 'Advanced'){
+            return '#DB5461';
+        }   
+        return '#FF0000';
     }
 
     function handleCardRender(){
@@ -44,13 +58,13 @@ const PreviewChannel = (props) => {
                                     </div>
                                 </div>
                                 <div>
-                                    <p className={`py-2 px-4 text-white`} style={{ borderTopRightRadius: '20px', borderBottomLeftRadius: '20px', backgroundColor: "#04BEBD" }}>{ENUM_FITNESSPACKAGE_LEVEL[props.formContext.level]}</p>
+                                    <p className={`py-2 px-4 text-white`} style={{ borderTopRightRadius: '20px', borderBottomLeftRadius: '20px', backgroundColor: handleLevelColor(ENUM_FITNESSPACKAGE_LEVEL[props.formContext.level]) }}>{ENUM_FITNESSPACKAGE_LEVEL[props.formContext.level]}</p>
                                 </div>
                             </div>
                             <div className='pt-3 d-flex justify-content-between align-items-center '>
                                 <div className='d-flex justify-content-center align-items-center'>
                                 <div>
-                                    <img src={`/assets/customclassic.svg`} alt="custom-classic" title="Personal Training Online" />
+                                    <img src={`/assets/offeringsImages/live-stream-channel-online.svg`} alt="custom-classic" title="Personal Training Online" />
                                     <p>{5}</p>
                                 </div>
                                     <div className='px-4' style={{ borderRight: '1px solid black' }}></div>
@@ -90,7 +104,7 @@ const PreviewChannel = (props) => {
                                         </div>
                                     </div>
                                     <div>
-                                        <p className={`py-2 px-4 text-white`} style={{ borderTopRightRadius: '20px', borderBottomLeftRadius: '20px', backgroundColor: "#04BEBD" }}>{ENUM_FITNESSPACKAGE_LEVEL[props.formContext.level]}</p>
+                                        <p className={`py-2 px-4 text-white`} style={{ borderTopRightRadius: '20px', borderBottomLeftRadius: '20px', backgroundColor: handleLevelColor(ENUM_FITNESSPACKAGE_LEVEL[props.formContext.level]) }}>{ENUM_FITNESSPACKAGE_LEVEL[props.formContext.level]}</p>
                                     </div>
                                 </div>
                                 <div className='pt-3 d-flex justify-content-between align-items-center '>

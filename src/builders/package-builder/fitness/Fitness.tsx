@@ -96,14 +96,14 @@ export default function FitnessTab(props) {
                 return <div className='d-flex justify-content-center align-items-center'>
                     {row.values.details[0] !== null && row.values.details[0] !== 0 ?
                         <div className="text-center">
-                            <OfferingsDisaplyImage mode={row.original?.mode} packageType={row.original?.type}/>
+                            <OfferingsDisaplyImage mode={row.original?.mode === 'Hybrid' ? 'Online' : row.original?.mode} packageType={row.original?.type}/>
                             {/* <img src='./assets/custompersonal-training-Online.svg' alt="PT-Online" /> */}
                             <p>{row.values.details[0] * currentIndex[row.index]}</p>
                         </div>
                         : ""}
                     {row.values.details[1] !== null && row.values.details[1] !== 0 ?
                         <div className="text-center">
-                            <OfferingsDisaplyImage mode={row.original?.mode} packageType={row.original?.type === 'Custom Fitness' ? "One-On-One" : row.original?.type}/>
+                            <OfferingsDisaplyImage mode={row.original?.mode === 'Hybrid' ? 'Offline' : row.original?.mode} packageType={row.original?.type === 'Custom Fitness' ? "One-On-One" : row.original?.type}/>
                             {/* <img src='./assets/custompersonal-training-Offline.svg' alt="PT-Offline" /> */}
                             <p>{row.values.details[1] * currentIndex[row.index]}</p>
                         </div> : ""}
@@ -264,7 +264,7 @@ export default function FitnessTab(props) {
                 }}>PT Package</Dropdown.Item>
                 <Dropdown.Item onClick={() => {
                     handleModalRender( null, 'create','On-Demand PT');
-                }}>On Demand - PT</Dropdown.Item>
+                }}>Private Session</Dropdown.Item>
             </DropdownButton>
                 <Button className='mx-3' variant={true ? "outline-secondary" : "light"} size="sm"
                     onClick={() => {
@@ -278,7 +278,7 @@ export default function FitnessTab(props) {
                         handleModalRender( null, 'create','Classic Class');
                     }}
                 >
-                    <i className="fas fa-plus-circle"></i>{" "}Classic
+                    <i className="fas fa-plus-circle"></i>{" "}Recorded
                 </Button>
                 <Button className='mx-3' variant={true ? "outline-secondary" : "light"} size="sm"
                     onClick={() => {

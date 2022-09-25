@@ -311,7 +311,7 @@ function CreateEditPackage(props: any, ref: any) {
 
     let name = "";
     if(operation.type === 'create'){
-        name="Create Classic Class";
+        name="Recorded Offering";
     }else if(operation.type === 'edit'){
         name="Edit";
     }else if(operation.type === 'view'){

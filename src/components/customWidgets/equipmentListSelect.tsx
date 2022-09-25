@@ -60,7 +60,7 @@ const MultiSelect = (props: any) => {
 
      return (
           <div>
-               <label>Equipments</label>
+               <label>Things you Need</label>
                <Typeahead
                id="basic-typeahead-multiple"
                labelKey="name"

@@ -31,7 +31,7 @@ const PackageDateConfig = (props: any) => {
                <Row>
                     <Col>
                          <h4>Allow instant bookings</h4>
-                         <p className='small text-muted'>This will let people join this group class for a session on demand</p>
+                         <p className='small text-muted'>This will allow participants join a session on demand</p>
                     </Col>
                     <Col>
                         <Row>
@@ -56,7 +56,7 @@ const PackageDateConfig = (props: any) => {
                <Row>
                     <Col>
                          <h4>Free Demo Booking</h4>
-                         <p className='small'>People can join one session for free</p>
+                         <p className='small'>Participants can join one session for free</p>
                     </Col>
                     <Col>
                     <Row>

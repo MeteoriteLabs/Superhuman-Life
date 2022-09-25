@@ -323,7 +323,7 @@ function CreateEditPackage(props: any, ref: any) {
 
     let name = "";
     if(operation.type === 'create'){
-        name="Create Custom Fitness";
+        name="Custom Offering";
     }else if(operation.type === 'edit'){
         name="Edit";
     }else if(operation.type === 'view'){

@@ -7,12 +7,12 @@ const BookingConfig = (props: any) => {
 
      const [fillSchedule, setFillSchedule] = useState(props.value !== undefined ? JSON.parse(props.value).fillSchedule : false);
      const [config, setConfig] = useState(props.value !== undefined ? JSON.parse(props.value).config : "");
-     const [bookings, setBookings] = useState(props.value !== undefined ? JSON.parse(props.value).bookings : 0);
+     // const [bookings, setBookings] = useState(props.value !== undefined ? JSON.parse(props.value).bookings : 0);
 
      function handleValidation(){
           if(config !== "" && config === "Manual"){
                return true;
-          }else if(config !== "Manual" && config === "Auto" && bookings !== 0 && !fillSchedule){
+          }else if(config !== "Manual" && config === "Auto" && !fillSchedule){
                return true;
           }else if(config === "Auto" && fillSchedule){
                return true;
@@ -30,16 +30,21 @@ const BookingConfig = (props: any) => {
           // }
      }
 
+     // useEffect(() => {
+     //      if(bookings > 20){
+     //           setBookings(20);
+     //      }
+     // }, [bookings]);
 
      useEffect(() => {
 
           if(handleValidation()){
-               props.onChange(JSON.stringify({fillSchedule: fillSchedule, config: config, bookings: bookings}));
+               props.onChange(JSON.stringify({fillSchedule: fillSchedule, config: config}));
           }else {
                props.onChange(undefined);
           }
           //eslint-disable-next-line
-     }, [fillSchedule, config, bookings]);
+     }, [fillSchedule, config]);
 
      return (
           <>
@@ -69,13 +74,13 @@ const BookingConfig = (props: any) => {
                     </Col>
                     <span className='small text-muted'>Will be based on class size</span>
                </div>}
-               {config === 'Auto' && !fillSchedule && <div className='mt-3'>
+               {/* {config === 'Auto' && !fillSchedule && <div className='mt-3'>
                     <Form.Label>Maximum Bookings per/day*</Form.Label>
                     <Form.Control type="number" disabled={inputDisabled} max={20} min={0} value={bookings} onChange={(e: any) => setBookings(parseInt(e.target.value))} />
-                    {/* <Form.Text className="text-muted">
+                    <Form.Text className="text-muted">
                          We'll never share your email with anyone else.
-                    </Form.Text> */}
-               </div>}
+                    </Form.Text>
+               </div>} */}
           </>
      );
 };

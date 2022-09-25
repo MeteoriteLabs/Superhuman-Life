@@ -217,7 +217,7 @@ const PricingTable = (props) => {
                          if(bookingDetails.freeDemo){
                               item.suggestedPrice = 'free';
                          }else {
-                              item.suggestedPrice = flattenData.suggestedPricings[0].mrp;
+                              item.suggestedPrice = flattenData.suggestedPricings[0]?.mrp;
                          }
                     }else {
                          item.suggestedPrice = flattenData.suggestedPricings[0]?.mrp * offlineClasses * (item.duration / 30);
@@ -313,7 +313,7 @@ const PricingTable = (props) => {
             {<div>
                 <div className="d-flex justify-content-end p-2">
                         
-                    <Button variant='outline-info' onClick={() => {window.location.href = '/finance'}}>Add suggest pricing</Button>
+                    <Button disabled={inputDisabled} variant='outline-info' onClick={() => {window.location.href = '/finance'}}>Add suggest pricing</Button>
                 </div>
                 <Table style={{ tableLayout: 'fixed'}}>
                 <thead>

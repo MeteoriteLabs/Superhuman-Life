@@ -104,15 +104,32 @@ const ClassicProgramDetails = (props) => {
     // }else {
     //  props.onChange(undefined)
     // }
-    console.log(onlineClasses, restDays, duration);
-    if((onlineClasses + restDays) === duration) {
+
+    function handleValidation(){
+          if(onlineClasses === 0){
+               return false;
+          }
+          if(restDays > (duration/2)){
+               return false;
+          }
+          if((onlineClasses + restDays) === duration){
+               return true;
+          }
+    }
+
+    if(handleValidation()) {
         props.onChange(JSON.stringify({ duration: duration, online: onlineClasses, rest: restDays }));
     }else {
         props.onChange(undefined);
     }
 
     useEffect(() => {
-          setRestDays(duration - onlineClasses);
+          if(duration - onlineClasses > 0){
+               setRestDays(duration - onlineClasses);
+          }
+          if(duration === 1){
+               setRestDays(0);
+          }
     }, [duration, onlineClasses]);
 
     return (

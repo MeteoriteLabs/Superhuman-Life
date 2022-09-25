@@ -20,13 +20,27 @@ const PreviewCustom = (props) => {
     enum ENUM_FITNESSPACKAGE_LEVEL {
         Beginner,
         Intermediate,
-        Advanced
+        Advanced,
+        No_Level
     }
 
     enum ENUM_FITNESSPACKAGE_PTCLASSSIZE {
         Solo,
         Couple,
         Family
+    }
+
+    function handleLevelColor(level: string){
+        if(level === 'Beginner'){
+            return '#04BEBD';
+        }
+        if(level === 'Intermediate'){
+            return '#D7A72E';
+        }
+        if(level === 'Advanced'){
+            return '#DB5461';
+        }   
+        return '#FF0000';
     }
 
     function handleImageRender(mode: string, duration: number){
@@ -86,6 +100,7 @@ const PreviewCustom = (props) => {
         }
     }
 
+
     function handleCardRender(){
             return (
                 pricing.map((item, index) => {
@@ -113,7 +128,7 @@ const PreviewCustom = (props) => {
                                         </div>
                                     </div>
                                     <div>
-                                        <p className={`py-2 px-4 text-white`} style={{ borderTopRightRadius: '20px', borderBottomLeftRadius: '20px', backgroundColor: "#04BEBD" }}>{ENUM_FITNESSPACKAGE_LEVEL[props.formContext.level]}</p>
+                                        <p className={`py-2 px-4 text-white`} style={{ borderTopRightRadius: '20px', borderBottomLeftRadius: '20px', backgroundColor: handleLevelColor(ENUM_FITNESSPACKAGE_LEVEL[props.formContext.level]) }}>{ENUM_FITNESSPACKAGE_LEVEL[props.formContext.level]}</p>
                                     </div>
                                 </div>
                                 <div className='pt-3 d-flex justify-content-between align-items-center '>

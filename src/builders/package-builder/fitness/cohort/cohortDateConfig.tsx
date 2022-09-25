@@ -30,7 +30,7 @@ const PackageDateConfig = (props: any) => {
                          disabled={inputDisabled}
                     />
                </InputGroup>
-               {props?.title1 && <span className='small'>Set the date for this offering to be available for everyone</span>}
+               {props?.title1 && <span className='small'>SOffering will be visible on the website and app only from the above date</span>}
                <label>{props?.title2 ? props.title2 : "Expiry Date"}</label>
                <InputGroup className="mb-3">
                     <FormControl
@@ -42,7 +42,7 @@ const PackageDateConfig = (props: any) => {
                          disabled={true}
                     />
                </InputGroup>
-               {props?.title2 && <span className='small'>On the selected date this offering will be shifted to drafts</span>}
+               {props?.title2 && <span className='small'>Offering will go into drafts and will be remove from listing on webiste and app</span>}
           </div>
      );
 };

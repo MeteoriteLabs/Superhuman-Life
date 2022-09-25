@@ -191,8 +191,7 @@ const PricingTable = (props) => {
     useEffect(() => {
         if(show){
             props.onChange('free');
-        }
-        if(handleValidation()){
+        }else if(handleValidation()){
             props.onChange(JSON.stringify(pricing));    
         }else {
             props.onChange(undefined)

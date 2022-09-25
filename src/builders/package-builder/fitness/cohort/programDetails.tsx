@@ -186,7 +186,6 @@ const ProgramDetails = (props) => {
                         <Form.Group>
                             <Form.Control as="select" disabled={inputDisabled} value={addressTitle} onChange={(e: any) => {setAddressTitle(e.target.value)}}>
                                 <option value="At My Address">At My Address</option>
-                                <option value="At Client Address">At Client Address</option>
                             </Form.Control>
                         </Form.Group>
                     </Col>
@@ -201,7 +200,6 @@ const ProgramDetails = (props) => {
                             disabled={inputDisabled}
                         />
                     </Col>}
-                    {addressTitle === 'At Client Address' && <span className='small text-muted'>*Within city limits</span>}
                 </Row>
             </div>}
             {mode !== '' && mode === '2' && <div>

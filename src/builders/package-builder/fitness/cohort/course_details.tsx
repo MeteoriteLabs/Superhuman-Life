@@ -40,11 +40,11 @@ const CourseDetails = (props) => {
                     return (
                         <Form key={index}>
                             <Form.Group controlId="exampleForm.ControlInput1">
-                                <Form.Label>Title</Form.Label>
+                                <Form.Label>Title - {index + 1}</Form.Label>
                                 <Form.Control type="text" disabled={inputDisabled} value={detail.title} onChange={(e: any) => handleCourseDetailsTitleUpdate(e.target.value, index)}/>
                             </Form.Group>
                             <Form.Group controlId="exampleForm.ControlTextarea1">
-                                <Form.Label>Description</Form.Label>
+                                <Form.Label>Description - {index + 1}</Form.Label>
                                 <Form.Control as="textarea" disabled={inputDisabled} rows={3} value={detail.description} onChange={(e: any) => handleCourseDetailsDescriptionUpdate(e.target.value, index)}/>
                             </Form.Group>
                         </Form>

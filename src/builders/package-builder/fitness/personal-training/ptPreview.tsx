@@ -19,7 +19,8 @@ const PreviewPt = (props) => {
     enum ENUM_FITNESSPACKAGE_LEVEL {
         Beginner,
         Intermediate,
-        Advanced
+        Advanced,
+        No_Level
     }
 
     enum ENUM_FITNESSPACKAGE_PTCLASSSIZE {
@@ -28,20 +29,33 @@ const PreviewPt = (props) => {
         Family
     }
 
-    function handleImageRender(mode: string){
+    function handleImageRender(mode: string, duration: number){
         if(mode === "0"){
-            return <div><img src={`/assets/PTonline.svg`} alt="personal-training" title="Personal Training Online" /><p>{programDetails.online}</p></div>
+            return <div><img src={`/assets/PTonline.svg`} alt="personal-training" title="Personal Training Online" /><p>{programDetails.online * duration}</p></div>
         }else if(mode === "1"){
-            return <div><img src={`/assets/PToffline.svg`} alt="personal-training" title="Personal Training Online" /><p>{programDetails.offline}</p></div>
+            return <div><img src={`/assets/PToffline.svg`} alt="personal-training" title="Personal Training Online" /><p>{programDetails.offline * duration}</p></div>
         }else {
             return <><div>
                 <img src={`/assets/PTonline.svg`} alt="personal-training" title="Personal Training Online" />
-                <p>{programDetails.online}</p>
+                <p>{programDetails.online * duration}</p>
             </div><div>
                 <img src={`/assets/PToffline.svg`} alt="personal-training" title="Personal Training Offline" />
-                <p>{programDetails.offline}</p>
+                <p>{programDetails.offline * duration}</p>
             </div></>
         }
+    }
+
+    function handleLevelColor(level: string){
+        if(level === 'Beginner'){
+            return '#04BEBD';
+        }
+        if(level === 'Intermediate'){
+            return '#D7A72E';
+        }
+        if(level === 'Advanced'){
+            return '#DB5461';
+        }   
+        return '#FF0000';
     }
 
     function handleCardRender(){
@@ -71,12 +85,12 @@ const PreviewPt = (props) => {
                                         </div>
                                     </div>
                                     <div>
-                                        <p className={`py-2 px-4 text-white`} style={{ borderTopRightRadius: '20px', borderBottomLeftRadius: '20px', backgroundColor: "#04BEBD" }}>{ENUM_FITNESSPACKAGE_LEVEL[props.formContext.level]}</p>
+                                        <p className={`py-2 px-4 text-white`} style={{ borderTopRightRadius: '20px', borderBottomLeftRadius: '20px', backgroundColor: handleLevelColor(ENUM_FITNESSPACKAGE_LEVEL[props.formContext.level]) }}>{ENUM_FITNESSPACKAGE_LEVEL[props.formContext.level]}</p>
                                     </div>
                                 </div>
                                 <div className='pt-3 d-flex justify-content-between align-items-center '>
                                     <div className='d-flex justify-content-center align-items-center'>
-                                        {handleImageRender(programDetails.mode)}
+                                        {handleImageRender(programDetails.mode, (parseInt(item.duration)/30))}
                                         {/* <div className='px-4' style={{ borderRight: '1px solid black' }}></div> */}
                                         <div className='ml-4'>
                                             <h4>Class Size</h4>

@@ -31,7 +31,7 @@ const PackageDateConfig = (props: any) => {
                          disabled={inputDisabled}
                     />
                </InputGroup>
-               {props?.title1 && <span className='small text-muted'>Set the date for this offering to be available for everyone</span>}
+               {props?.title1 && <span className='small text-muted'>Offering will be visible on the website and app only from the above date</span>}
                <br />
                <label>{props?.title2 ? props.title2 : "Expiry Date"}</label>
                <InputGroup className="mb-3">
@@ -45,7 +45,7 @@ const PackageDateConfig = (props: any) => {
                          disabled={inputDisabled}
                     />
                </InputGroup>
-               {props?.title2 && <span className='small text-muted'>On the selected date this offering will be shifted to drafts</span>}
+               {props?.title2 && <span className='small text-muted'>Offering will go into drafts and will be removed from listing on website and app</span>}
           </div>
      );
 };

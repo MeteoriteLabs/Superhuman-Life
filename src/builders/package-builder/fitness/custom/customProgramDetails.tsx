@@ -104,6 +104,9 @@ const CustomProgramDetails = (props) => {
     function handleValidation(mode: string){
      //    here we will check for online
           console.log(mode);
+          if(restDays < 0){
+               return false;
+          }
         if(mode === '0'){
             if((ptOnlineClasses + groupOnlineClasses + recordedClasses + restDays) === 30){
                return true;
@@ -144,6 +147,24 @@ const CustomProgramDetails = (props) => {
     }
 
 //     console.log(restDays, onlineClasses, offlineClasses);
+
+    useEffect(() => {
+          if(ptOnlineClasses < 0){
+               setPtOnlineClasses(0);
+          }
+          if(ptOfflineClasses < 0){
+               setPtOfflineClasses(0);
+          }
+          if(groupOnlineClasses < 0){
+               setGroupOnlineClasses(0);
+          }
+          if(groupOfflineClasses < 0){
+               setGroupOfflineClasses(0);
+          }
+          if(recordedClasses < 0){
+               setRecordedClasses(0);
+          }
+    }, [ptOnlineClasses, ptOfflineClasses, recordedClasses, groupOfflineClasses, groupOnlineClasses]);
 
     useEffect(() => {
           if(mode === "0"){

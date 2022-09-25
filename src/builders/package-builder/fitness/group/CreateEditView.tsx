@@ -67,7 +67,6 @@ function CreateEditPackage(props: any, ref: any) {
                 variables: {
                     isAuto: val.config === "Auto" ? true : false,
                     id: r.createFitnesspackage.data.id,
-                    bookings_per_day: val.bookings,
                     is_Fillmyslots: val.fillSchedule,
                     tagName: frmDetails.packagename
                 }
@@ -80,7 +79,6 @@ function CreateEditPackage(props: any, ref: any) {
             variables: {
                 isAuto: val.config === "Auto" ? true : false,
                 id: frmDetails.bookingConfigId,
-                bookings_per_day: val.bookings,
                 is_Fillmyslots: val.fillSchedule
             }
         });
@@ -173,7 +171,6 @@ function CreateEditPackage(props: any, ref: any) {
         details.user_permissions_user = msg.users_permissions_user.id;
         details.visibility = msg.is_private === true ? 1 : 0;
         bookingConfig.config = msg.booking_config?.isAuto === true ? "Auto" : "Manual";
-        bookingConfig.bookings = msg.booking_config?.bookingsPerDay;
         bookingConfig.fillSchedule = msg.booking_config?.is_Fillmyslots;
         details.config = {bookingConfig: JSON.stringify(bookingConfig)};
         details.programDetails = JSON.stringify({addressTag: msg.address === null ? 'At Client Address' : 'At My Address', address: [msg.address], mode: ENUM_FITNESSPACKAGE_MODE[msg.mode], offline: msg.groupoffline, online: msg.grouponline, rest: msg.restdays});
@@ -233,7 +230,6 @@ function CreateEditPackage(props: any, ref: any) {
                 grouponline: frm.programDetails?.online,
                 classsize: frm.classsize,
                 restdays: frm.programDetails?.rest,
-                bookingleadday: frm.bookingleaddat,
                 is_private: frm.visibility === 1 ? true : false,
                 fitness_package_type: fitnessTypes[0].id,
                 fitnesspackagepricing: JSON.parse(frm.pricingDetail).filter((item: any) => item.mrp !== null),
@@ -279,7 +275,6 @@ function CreateEditPackage(props: any, ref: any) {
                 classsize: frm.classsize,
                 is_private: frm.visibility === 1 ? true : false,
                 restdays: frm.programDetails?.rest,
-                bookingleadday: frm.bookingleaddat,
                 fitness_package_type: fitnessTypes[0].id,
                 fitnesspackagepricing: JSON.parse(frm.pricingDetail).filter((item: any) => item.mrp !== null),
                 users_permissions_user: frm.user_permissions_user,
@@ -337,7 +332,7 @@ function CreateEditPackage(props: any, ref: any) {
 
     let name = "";
     if(operation.type === 'create'){
-        name="Create Group Package";
+        name="Group Offering";
     }else if(operation.type === 'edit'){
         name="Edit";
     }else if(operation.type === 'view'){

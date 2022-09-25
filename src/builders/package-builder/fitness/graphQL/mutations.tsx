@@ -252,6 +252,7 @@ export const UPDATE_CHANNEL_COHORT_PACKAGE = gql`
     $benefits: String
     $packagename: String
     $channelinstantBooking: Boolean
+    $Is_free_demo: Boolean
     $expiry_date: DateTime
     $level: ENUM_FITNESSPACKAGE_LEVEL 
     $fitnesspackagepricing: JSON
@@ -284,6 +285,7 @@ export const UPDATE_CHANNEL_COHORT_PACKAGE = gql`
           benefits: $benefits,
           packagename: $packagename,
           groupinstantbooking: $channelinstantBooking,
+          Is_free_demo: $Is_free_demo
           expiry_date: $expiry_date,
           level: $level,
           fitnesspackagepricing: $fitnesspackagepricing,

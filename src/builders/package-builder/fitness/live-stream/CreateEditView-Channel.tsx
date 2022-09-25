@@ -92,13 +92,8 @@ function CreateEditChannel(props: any, ref: any) {
     enum ENUM_FITNESSPACKAGE_LEVEL {
         Beginner,
         Intermediate,
-        Advanced
-    }
-
-    enum ENUM_FITNESSPACKAGE_INTENSITY {
-        Low,
-        Moderate,
-        High
+        Advanced,
+        No_Level
     }
 
     const PRICING_TABLE_DEFAULT = [{ mrp: null, suggestedPrice: null, voucher: 0, duration: 30, sapienPricing: null }, { mrp: null, suggestedPrice: null, voucher: 0, duration: 90, sapienPricing: null }, { mrp: null, suggestedPrice: null, voucher: 0, duration: 180, sapienPricing: null }, { mrp: null, suggestedPrice: null, voucher: 0, duration: 360, sapienPricing: null }];
@@ -134,7 +129,6 @@ function CreateEditChannel(props: any, ref: any) {
         details.channelinstantBooking = JSON.stringify({ "instantBooking": msg.groupinstantbooking, "freeDemo": msg.Is_free_demo });
         details.expiryDate = moment(msg.expirydate).format('YYYY-MM-DD');
         details.level = ENUM_FITNESSPACKAGE_LEVEL[msg.level];
-        details.intensity = ENUM_FITNESSPACKAGE_INTENSITY[msg.Intensity];
         details.pricing = msg.fitnesspackagepricing[0]?.mrp === 'free' ? 'free' : JSON.stringify(msg.groupinstantbooking ? PRICING_TABLE_DEFAULT_WITH_INSTANTBOOKING : PRICING_TABLE_DEFAULT);
         details.publishingDate = moment(msg.publishing_date).format('YYYY-MM-DD');
         details.tag = msg?.tags === null ? "" : msg.tags;
@@ -195,7 +189,6 @@ function CreateEditChannel(props: any, ref: any) {
                 Is_free_demo: JSON.parse(frm.channelinstantBooking).freeDemo,
                 expiry_date: moment(frm.datesConfig?.expiryDate).toISOString(),
                 level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
-                Intensity: ENUM_FITNESSPACKAGE_INTENSITY[frm.intensity],
                 equipmentList: frm?.equipment?.length > 0 ? frm.equipment.map((item: any) => item.id).join(", ").split(", ") : [],
                 fitnessdisciplines: frm?.discpline?.length > 0 ? frm.discpline.map((item: any) => item.id).join(", ").split(", ") : [],
                 fitnesspackagepricing: frm.pricing === "free" ? [{ mrp: 'free' }] : JSON.parse(frm.pricing).filter((item: any) => item.mrp !== null),
@@ -221,7 +214,10 @@ function CreateEditChannel(props: any, ref: any) {
         if (frm.discpline) {
             frm.discpline = JSON.parse(frm?.discpline);
         }
-        frm.languages = JSON.parse(frm.languages)
+        frm.languages = JSON.parse(frm.languages);
+
+        console.log(frm);
+        debugger;
         editPackageDetails({
             variables: {
                 id: operation.id,
@@ -232,12 +228,11 @@ function CreateEditChannel(props: any, ref: any) {
                 Is_free_demo: JSON.parse(frm.channelinstantBooking).freeDemo,
                 expiry_date: moment(frm.datesConfig?.expiryDate).toISOString(),
                 level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
-                Intensity: ENUM_FITNESSPACKAGE_INTENSITY[frm.intensity],
                 equipmentList: frm?.equipment?.length > 0 ? frm.equipment.map((item: any) => item.id).join(", ").split(", ") : [],
                 fitnessdisciplines: frm?.discpline?.length > 0 ? frm.discpline.map((item: any) => item.id).join(", ").split(", ") : [],
                 fitnesspackagepricing: frm.pricing === "free" ? [{ mrp: 'free' }] : JSON.parse(frm.pricing).filter((item: any) => item.mrp !== null),
                 publishing_date: moment(frm.datesConfig?.publishingDate).toISOString(),
-                tags: frm.tag,
+                tags: frm?.tag,
                 users_permissions_user: frm.user_permissions_user,
                 fitness_package_type: findPackageType(operation.packageType),
                 is_private: frm.visibility === 0 ? false : true,
@@ -286,7 +281,7 @@ function CreateEditChannel(props: any, ref: any) {
 
     let name = "";
     if (operation.type === 'create') {
-        name = "New Live Stream Channel";
+        name = "Live Stream Offering";
     } else if (operation.type === 'edit') {
         name = "Edit";
     } else if (operation.type === 'view') {
