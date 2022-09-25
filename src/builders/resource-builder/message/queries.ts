@@ -33,6 +33,7 @@ export const GET_MESSAGES = gql`
           Image_URL
           uploadID
           updatedAt
+          minidescription
           users_permissions_user {
             data {
               id
@@ -62,26 +63,10 @@ export const GET_MESSAGES = gql`
 
 export const ADD_MESSAGE = gql`
   mutation msg(
-    $title: String
-    $tags: String
-    $description: String
-    $minidesc: String
-    $mindsetmessagetype: ID
-    $mediaurl: String
-    $user_permissions_user: ID
-    $upload: String
+    $data: PrerecordedMessageInput!
   ) {
     createPrerecordedMessage(
-      data: {
-        Title: $title
-        tags: $tags
-        resourcetype: $mindsetmessagetype
-        Description: $description
-        minidescription: $minidesc
-        Image_URL: $mediaurl
-        users_permissions_user: $user_permissions_user
-        uploadID: $upload
-      }
+      data: $data
     ) {
       data {
         id

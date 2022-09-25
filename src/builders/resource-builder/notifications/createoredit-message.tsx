@@ -15,14 +15,6 @@ interface Operation {
      type: "create" | "edit" | "view" | "toggle-status" | "delete";
      current_status: boolean;
 }
-const notificationEmptyState = {
-     title: '',
-     prerecordedtype: '',
-     prerecordedtrigger: '',
-     description: '',
-     minidesc: '',
-     mediaurl: ''
-}
 
 function CreateEditMessage(props: any, ref: any) {
      const auth = useContext(AuthContext);
@@ -145,7 +137,7 @@ function CreateEditMessage(props: any, ref: any) {
 
      useEffect(() => {
           if (operation.type === 'create') {
-               setName("Create New Message");
+               setName("Create New Notification");
           } else if (operation.type === 'edit') {
                setName("Edit");
           } else if (operation.type === 'view') {
@@ -160,10 +152,11 @@ function CreateEditMessage(props: any, ref: any) {
                          name={name}
                          isStepper={false}
                          formUISchema={name === 'View' ? schemaView : schema}
+                         showErrorList={false}
                          formSchema={messageSchema}
                          showing={operation.modal_status}
                          formSubmit={name === 'View' ? () => { modalTrigger.next(false); } : (frm: any) => { OnSubmit(frm); }}
-                         formData={operation.type === 'create' ? notificationEmptyState : messageDetails}
+                         formData={operation.type === 'create' ? {} : messageDetails}
                          modalTrigger={modalTrigger}
                     />
                }

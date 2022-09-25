@@ -87,7 +87,7 @@ export default function MindsetPage() {
                          title: Detail.Title,
                          tags: Detail.tags,
                          type: Detail.resourcetype.name,
-                         minidesc: Detail.Description,
+                         minidesc: Detail.minidescription,
                          status: Detail.Status ? "Active" : "Inactive",
                          updatedon: getDate(Date.parse(Detail.updatedAt)),
                     };

@@ -6,7 +6,7 @@ import AuthContext from "../../../context/auth-context";
 import StatusModal from "../../../components/StatusModal/StatusModal";
 import { Subject } from "rxjs";
 import { schema, widgets } from "./schema";
-import {schemaView} from "./messageViewSchema";
+import { schemaView } from "./messageViewSchema";
 import { flattenObj } from '../../../components/utils/responseFlatten';
 
 interface Operation {
@@ -14,16 +14,6 @@ interface Operation {
      modal_status: boolean;
      type: "create" | "edit" | "view" | "toggle-status" | "delete";
      current_status: boolean;
-}
-
-const messageEmptyState = {
-     title: '',
-     mindsetmessagetype: '',
-     tags: '',
-     description: '',
-     minidesc: '',
-     mediaurl: '',
-     upload: ''
 }
 
 function CreateEditMessage(props: any, ref: any) {
@@ -112,7 +102,20 @@ function CreateEditMessage(props: any, ref: any) {
      });
 
      function CreateMessage(frm: any) {
-          createMessage({ variables: frm });
+          createMessage({
+               variables: {
+                    data: {
+                         Title: frm.title,
+                         tags: frm.tags,
+                         resourcetype: frm.mindsetmessagetype,
+                         Description: frm.description,
+                         minidescription: frm.minidesc,
+                         Image_URL: frm.addMedia.mediaurl,
+                         users_permissions_user: frm.user_permissions_user,
+                         uploadID: frm.addMedia.upload
+                    }
+               }
+          });
      }
 
      function EditMessage(frm: any) {
@@ -128,6 +131,7 @@ function CreateEditMessage(props: any, ref: any) {
      }
 
      function OnSubmit(frm: any) {
+
           if (frm) frm.user_permissions_user = auth.userid;
           if (frm.name === "edit" || frm.name === "view") {
                if (frm.name === "edit") {
@@ -156,13 +160,14 @@ function CreateEditMessage(props: any, ref: any) {
                <ModalView
                     name={name}
                     isStepper={false}
+                    showErrorList={false}
                     formUISchema={name === 'View' ? schemaView : schema}
                     formSchema={messageSchema}
                     showing={operation.modal_status}
                     formSubmit={name === 'View' ? () => { modalTrigger.next(false); } : (frm: any) => {
                          OnSubmit(frm);
                     }}
-                    formData={operation.type === 'create' ? messageEmptyState : messageDetails}
+                    formData={operation.type === 'create' ? {} : messageDetails}
                     widgets={widgets}
                     modalTrigger={modalTrigger}
                />
