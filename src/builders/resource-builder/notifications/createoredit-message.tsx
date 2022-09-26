@@ -199,30 +199,6 @@ function CreateEditMessage(props: any, ref: any) {
                          }}
                     />
                )}
-
-               {/* {operation.type === "toggle-status" && (
-                    <StatusModal
-                         modalTitle="Change Status"
-                         modalBody="Do you want to change the status?"
-                         buttonLeft="Cancel"
-                         buttonRight="Yes"
-                         onClick={() => {
-                              ToggleMessageStatus(operation.id, operation.current_status);
-                         }}
-                    />
-               )}
-
-               {operation.type === "delete" && (
-                    <StatusModal
-                         modalTitle="Delete"
-                         modalBody="Do you want to delete this message?"
-                         buttonLeft="Cancel"
-                         buttonRight="Yes"
-                         onClick={() => {
-                              DeleteMessage(operation.id);
-                         }}
-                    />
-               )} */}
           </>
      );
 }
