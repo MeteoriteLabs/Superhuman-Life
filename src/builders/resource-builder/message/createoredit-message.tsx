@@ -22,6 +22,11 @@ function CreateEditMessage(props: any, ref: any) {
      const [messageDetails, setMessageDetails] = useState<any>({});
      const [operation, setOperation] = useState<Operation>({} as Operation);
      const [name, setName] = useState('');
+     const [showStatusModal, setShowStatusModal] = useState(false);
+     const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+     const handleCloseStatusModal = () => setShowStatusModal(false);
+
 
      const [createMessage] = useMutation(ADD_MESSAGE, {
           onCompleted: (r: any) => {
@@ -53,6 +58,15 @@ function CreateEditMessage(props: any, ref: any) {
      useImperativeHandle(ref, () => ({
           TriggerForm: (msg: Operation) => {
                setOperation(msg);
+               console.log(msg.type);
+
+               if (msg.type === 'toggle-status') {
+                    setShowStatusModal(true);
+               }
+
+               if (msg.type === 'delete') {
+                    setShowDeleteModal(true);
+               }
 
                if (msg.type !== 'delete' && msg.type !== 'toggle-status') {
                     modalTrigger.next(true);
@@ -196,20 +210,25 @@ function CreateEditMessage(props: any, ref: any) {
                     modalTrigger={modalTrigger}
                />
 
-               {operation.type === "toggle-status" && (
+               {showStatusModal && (
                     <StatusModal
+                         show={showStatusModal}
+                         onHide={() => setShowStatusModal(false)}
                          modalTitle="Change Status"
                          modalBody="Do you want to change the status?"
                          buttonLeft="Cancel"
                          buttonRight="Yes"
                          onClick={() => {
                               ToggleMessageStatus(operation.id, operation.current_status);
+                              // handleCloseStatusModal();
                          }}
                     />
                )}
 
-               {operation.type === "delete" && (
+               {showDeleteModal && (
                     <StatusModal
+                         show={showDeleteModal}
+                         onHide={() => setShowDeleteModal(false)}
                          modalTitle="Delete"
                          modalBody="Do you want to delete this message?"
                          buttonLeft="Cancel"
