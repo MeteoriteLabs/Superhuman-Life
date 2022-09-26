@@ -25,9 +25,6 @@ function CreateEditMessage(props: any, ref: any) {
      const [showStatusModal, setShowStatusModal] = useState(false);
      const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-     const handleCloseStatusModal = () => setShowStatusModal(false);
-
-
      const [createMessage] = useMutation(ADD_MESSAGE, {
           onCompleted: (r: any) => {
                modalTrigger.next(false);
@@ -58,7 +55,6 @@ function CreateEditMessage(props: any, ref: any) {
      useImperativeHandle(ref, () => ({
           TriggerForm: (msg: Operation) => {
                setOperation(msg);
-               console.log(msg.type);
 
                if (msg.type === 'toggle-status') {
                     setShowStatusModal(true);
@@ -220,7 +216,6 @@ function CreateEditMessage(props: any, ref: any) {
                          buttonRight="Yes"
                          onClick={() => {
                               ToggleMessageStatus(operation.id, operation.current_status);
-                              // handleCloseStatusModal();
                          }}
                     />
                )}
