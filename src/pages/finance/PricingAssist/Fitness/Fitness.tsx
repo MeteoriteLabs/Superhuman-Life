@@ -9,7 +9,7 @@ import authContext from '../../../../context/auth-context';
 import moment from 'moment';
 import PricingAssistAction from '../PricingAssistAction'
 import { GET_FITNESS_PACKAGE_TYPES } from '../../../../builders/package-builder/fitness/graphQL/queries';
-import OfferingsDisaplyImage from '../../../../components/customWidgets/offeringsDisplayImage';
+import OfferingsDisplayImage from '../../../../components/customWidgets/offeringsDisplayImage';
 
 import { flattenObj } from '../../../../components/utils/responseFlatten';
 
@@ -71,11 +71,9 @@ export default function Fitness() {
         () => [
             {
                 accessor: "type", Header: "Type", Cell: ({ row }: any) => {
-                    console.log(row.original)
                     return <div className='d-flex justify-content-center align-items-center'>
                         <div>
-                            <OfferingsDisaplyImage mode={row.original?.modes} packageType={row.original?.type}/>
-                            {/* <img src={`./assets/${type}`} alt={name} /> */}
+                            <OfferingsDisplayImage mode={row.original?.modes} packageType={row.original?.type}/>
                             <p className='mb-0'>{row.original?.type}</p>
                         </div>
                     </div>
