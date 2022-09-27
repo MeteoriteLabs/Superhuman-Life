@@ -20,7 +20,8 @@
         },
         "Phone_Number": {
             "type": "string",
-            "title": "Contact Number"
+            "title": "Contact Number",
+            "minLength": 10
         },
         "Photo_ID": {
             "type": "string",

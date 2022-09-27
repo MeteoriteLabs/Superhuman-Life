@@ -77,7 +77,6 @@ function PricingAssistAction(props, ref) {
                 fitness_package_type: operation.rowData.packageTypeID
             },
         })
-
     }
 
     const OnSubmit = (frm: any) => {

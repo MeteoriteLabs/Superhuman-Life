@@ -18,12 +18,12 @@ interface Operation {
      type: "create" | "edit";
 }
 
-const emptyEducationState = {
-     Institute_Name: '',
-     Specialization: '',
-     Type_of_degree: '',
-     Year: ''
-};
+// const emptyEducationState = {
+//      Institute_Name: '',
+//      Specialization: '',
+//      Type_of_degree: '',
+//      Year: ''
+// };
 
 function CreateEducation(props: any, ref: any) {
      const educationJson: { [name: string]: any } = require("./Education.json");
@@ -159,7 +159,7 @@ function CreateEducation(props: any, ref: any) {
                widgets={widgets}
                modalTrigger={modalTrigger}
                type={operation.type}
-               formData={operation.type === 'create' ? emptyEducationState : educationDetails}
+               formData={operation.type === 'create' ? {} : educationDetails}
           />
      );
 }
