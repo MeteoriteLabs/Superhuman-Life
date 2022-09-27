@@ -1,7 +1,12 @@
 {
      "1": {
           "type": "object",
-          "required": ["title", "mindsetmessagetype", "minidesc"],
+          "required": [
+               "title",
+               "mindsetmessagetype",
+               "minidesc",
+               "addMedia"
+          ],
           "properties": {
                "title": {
                     "type": "string",
@@ -30,14 +35,69 @@
                     "title": "Mini Description",
                     "description": "Write summary"
                },
-               "mediaurl": {
-                    "type": "string",
-                    "title": "Insert media",
-                    "format": "uri",
-                    "description": "Enter the url or upload an image or video. File size cannot exceed 5Mb"
-               },
-               "upload": {
-                    "type": "string"
+               "addMedia": {
+                    "title": "",
+                    "$ref": "#/definitions/addmedia"
+               }
+          },
+          "definitions": {
+               "addmedia": {
+                    "title": "Add Media",
+                    "type": "object",
+                    "properties": {
+                         "AddMedia": {
+                              "type": "string",
+                              "title": "Add media",
+                              "enum": [
+                                   "Add URL",
+                                   "Upload"
+                              ],
+                              "default": "Add URL"
+                         }
+                    },
+                    "required": [
+                         "AddMedia"
+                    ],
+                    "dependencies": {
+                         "AddMedia": {
+                              "oneOf": [
+                                   {
+                                        "properties": {
+                                             "AddMedia": {
+                                                  "enum": [
+                                                       "Add URL"
+                                                  ]
+                                             },
+                                             "mediaurl": {
+                                                  "type": "string",
+                                                  "title": "Insert media",
+                                                  "format": "uri",
+                                                  "description": "Enter the URL"
+                                             }
+                                        },
+                                        "required": [
+                                             "mediaurl"
+                                        ]
+                                   },
+                                   {
+                                        "properties": {
+                                             "AddMedia": {
+                                                  "enum": [
+                                                       "Upload"
+                                                  ]
+                                             },
+                                             "upload": {
+                                                  "type": "string",
+                                                  "description": "Upload an image or video. File size cannot exceed 5Mb"
+                                             }
+                                        },
+                                        "required": [
+                                             "upload"
+                                        ]
+                                   }
+                              ]
+                         }
+                    }
                }
           }
      }
