@@ -5,13 +5,13 @@ export const widgets = {
 };
 
 export const schemaView: any = {
-    title:{
+    title: {
         "ui:disabled": true
     },
-    mindsetmessagetype:{
+    mindsetmessagetype: {
         "ui:disabled": true
     },
-    tags:{
+    tags: {
         "ui:disabled": true
     },
     description: {
@@ -28,12 +28,15 @@ export const schemaView: any = {
             rows: 2,
         },
     },
-    mediaurl: {
-        "ui:disabled": true
-    },
-    upload: {
-        "ui:widget": (props: any) => {
-            return <Upload allowImage={true} allowVideo={true} readonly={true} onChange={props.onChange} value={props.value} />;
+    addMedia: {
+        "ui:disabled": true,
+        mediaurl: {
+            "ui:disabled": true
         },
+        upload: {
+            "ui:widget": (props: any) => {
+                return <Upload allowImage={true} allowVideo={true} readonly={true} onChange={props.onChange} value={props.value} />;
+            },
+        }
     }
 };

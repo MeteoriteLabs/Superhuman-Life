@@ -14,11 +14,16 @@ export const schema: any = {
           "ui:widget": "textarea",
           "ui:options": {
                rows: 2,
-          },
+          }
      },
-     upload: {
-          "ui:widget": (props: any) => {
-               return <Upload allowImage={true} allowVideo={true} onChange={props.onChange} value={props.value} />;
-          },
-     }
+     addMedia: {
+          upload: {
+               "ui:widget": (props: any) => {
+                    return <Upload allowImage={true} allowVideo={true} onChange={props.onChange} value={props.value} />;
+               },
+          }
+     },
+     mediaurl: {
+          "ui:placeholder": "Enter URL"
+     },
 };

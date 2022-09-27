@@ -6,7 +6,7 @@ import AuthContext from "../../../context/auth-context";
 import StatusModal from "../../../components/StatusModal/StatusModal";
 import { Subject } from "rxjs";
 import { schema, widgets } from "./schema";
-import {schemaView} from "./messageViewSchema";
+import { schemaView } from "./messageViewSchema";
 import { flattenObj } from '../../../components/utils/responseFlatten';
 
 interface Operation {
@@ -16,22 +16,14 @@ interface Operation {
      current_status: boolean;
 }
 
-const messageEmptyState = {
-     title: '',
-     mindsetmessagetype: '',
-     tags: '',
-     description: '',
-     minidesc: '',
-     mediaurl: '',
-     upload: ''
-}
-
 function CreateEditMessage(props: any, ref: any) {
      const auth = useContext(AuthContext);
      const messageSchema: { [name: string]: any } = require("./mindset.json");
      const [messageDetails, setMessageDetails] = useState<any>({});
      const [operation, setOperation] = useState<Operation>({} as Operation);
      const [name, setName] = useState('');
+     const [showStatusModal, setShowStatusModal] = useState(false);
+     const [showDeleteModal, setShowDeleteModal] = useState(false);
 
      const [createMessage] = useMutation(ADD_MESSAGE, {
           onCompleted: (r: any) => {
@@ -64,6 +56,14 @@ function CreateEditMessage(props: any, ref: any) {
           TriggerForm: (msg: Operation) => {
                setOperation(msg);
 
+               if (msg.type === 'toggle-status') {
+                    setShowStatusModal(true);
+               }
+
+               if (msg.type === 'delete') {
+                    setShowDeleteModal(true);
+               }
+
                if (msg.type !== 'delete' && msg.type !== 'toggle-status') {
                     modalTrigger.next(true);
                }
@@ -79,19 +79,28 @@ function CreateEditMessage(props: any, ref: any) {
 
      function FillDetails(data: any) {
           const flattenData = flattenObj({ ...data });
+
           let details: any = {};
           let msg = flattenData.prerecordedMessage;
+
+          function handleAddMediaShowUp(msg: any) {
+
+               if (msg.Image_URL !== null) {
+                    return { AddMedia: "Add URL", mediaurl: msg.Image_URL };
+               } else if (msg?.uploadID !== null) {
+                    return { AddMedia: "Upload", upload: msg.uploadID };
+               }
+          }
 
           let o = { ...operation };
           details.name = o.type.toLowerCase();
 
           details.title = msg.Title;
           details.mindsetmessagetype = msg.resourcetype?.id;
-          details.description = msg.Description;
+          details.description = msg.Description ? msg.Description : ' ';
           details.minidesc = msg.minidescription;
           details.tags = msg.tags;
-          details.mediaurl = msg.Image_URL;
-          details.upload = msg.uploadID;
+          details.addMedia = handleAddMediaShowUp(msg);
           details.messageid = msg.id;
 
           setMessageDetails(details);
@@ -112,11 +121,38 @@ function CreateEditMessage(props: any, ref: any) {
      });
 
      function CreateMessage(frm: any) {
-          createMessage({ variables: frm });
+          createMessage({
+               variables: {
+                    data: {
+                         Title: frm.title,
+                         tags: frm.tags,
+                         resourcetype: frm.mindsetmessagetype,
+                         Description: frm.description,
+                         minidescription: frm.minidesc,
+                         Image_URL: frm.addMedia.mediaurl,
+                         users_permissions_user: frm.user_permissions_user,
+                         uploadID: frm.addMedia.upload
+                    }
+               }
+          });
      }
 
      function EditMessage(frm: any) {
-          editMessage({ variables: frm });
+          editMessage({
+               variables: {
+                    id: frm.messageid,
+                    data: {
+                         Title: frm.title,
+                         Description: frm.description,
+                         minidescription: frm.minidesc,
+                         Image_URL: frm.addMedia.mediaurl,
+                         tags: frm.tags,
+                         resourcetype: frm.mindsetmessagetype,
+                         users_permissions_user: frm.user_permissions_user,
+                         uploadID: frm.addMedia.upload
+                    }
+               }
+          });
      }
 
      function ToggleMessageStatus(id: string, current_status: boolean) {
@@ -128,6 +164,7 @@ function CreateEditMessage(props: any, ref: any) {
      }
 
      function OnSubmit(frm: any) {
+
           if (frm) frm.user_permissions_user = auth.userid;
           if (frm.name === "edit" || frm.name === "view") {
                if (frm.name === "edit") {
@@ -143,6 +180,7 @@ function CreateEditMessage(props: any, ref: any) {
 
      useEffect(() => {
           if (operation.type === 'create') {
+               setMessageDetails({});
                setName("Create New Message");
           } else if (operation.type === 'edit') {
                setName("Edit");
@@ -156,19 +194,22 @@ function CreateEditMessage(props: any, ref: any) {
                <ModalView
                     name={name}
                     isStepper={false}
+                    showErrorList={false}
                     formUISchema={name === 'View' ? schemaView : schema}
                     formSchema={messageSchema}
                     showing={operation.modal_status}
                     formSubmit={name === 'View' ? () => { modalTrigger.next(false); } : (frm: any) => {
                          OnSubmit(frm);
                     }}
-                    formData={operation.type === 'create' ? messageEmptyState : messageDetails}
+                    formData={messageDetails}
                     widgets={widgets}
                     modalTrigger={modalTrigger}
                />
 
-               {operation.type === "toggle-status" && (
+               {showStatusModal && (
                     <StatusModal
+                         show={showStatusModal}
+                         onHide={() => setShowStatusModal(false)}
                          modalTitle="Change Status"
                          modalBody="Do you want to change the status?"
                          buttonLeft="Cancel"
@@ -179,8 +220,10 @@ function CreateEditMessage(props: any, ref: any) {
                     />
                )}
 
-               {operation.type === "delete" && (
+               {showDeleteModal && (
                     <StatusModal
+                         show={showDeleteModal}
+                         onHide={() => setShowDeleteModal(false)}
                          modalTitle="Delete"
                          modalBody="Do you want to delete this message?"
                          buttonLeft="Cancel"
