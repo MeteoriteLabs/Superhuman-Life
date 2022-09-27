@@ -92,14 +92,6 @@ function CardComp(props: any) {
      FetchData({ id: props.resourceid });
      FetchRating({ id: props.resourceid, clientid: last });
 
-     // <StatusModal
-     //         modalTitle="Delete"
-     //         modalBody="Do you want to delete this message?"
-     //         buttonLeft="Cancel"
-     //         buttonRight="Yes"
-     //         onClick={() => {DeleteMessage(operation.id)}}
-     //         />
-
      //deleteComment({ variables: { id: e.id } });
      //deleteNote({ variables: { id: props.id } });
      return (

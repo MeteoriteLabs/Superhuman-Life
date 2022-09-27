@@ -7,9 +7,6 @@ import AuthContext from '../../context/auth-context';
 import { flattenObj } from '../utils/responseFlatten';
 
 const LocationList = (props) => {
-
-    console.log(props.value);
-
     const auth = useContext(AuthContext); 
     const [singleSelections, setSingleSelections] = useState<any[]>([]);
     const [addresses, setAddresses] = useState<any[]>([]);

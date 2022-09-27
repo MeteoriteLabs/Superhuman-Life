@@ -56,14 +56,17 @@ function CreateEditMessage(props: any, ref: any) {
           TriggerForm: (msg: Operation) => {
                setOperation(msg);
 
+               // render status modal for toggle-status operation
                if (msg.type === 'toggle-status') {
                     setShowStatusModal(true);
                }
 
+               // render delete modal for delete operation
                if (msg.type === 'delete') {
                     setShowDeleteModal(true);
                }
 
+               // restrict modal to render for delete and toggle-status operation
                if (msg.type !== 'delete' && msg.type !== 'toggle-status') {
                     modalTrigger.next(true);
                }
@@ -191,6 +194,7 @@ function CreateEditMessage(props: any, ref: any) {
 
      return (
           <>
+               {/* Create, Edit , View Modal */}
                <ModalView
                     name={name}
                     isStepper={false}
@@ -206,6 +210,7 @@ function CreateEditMessage(props: any, ref: any) {
                     modalTrigger={modalTrigger}
                />
 
+               {/* Status Modal */}
                {showStatusModal && (
                     <StatusModal
                          show={showStatusModal}
@@ -220,6 +225,7 @@ function CreateEditMessage(props: any, ref: any) {
                     />
                )}
 
+               {/* Delete Modal */}
                {showDeleteModal && (
                     <StatusModal
                          show={showDeleteModal}

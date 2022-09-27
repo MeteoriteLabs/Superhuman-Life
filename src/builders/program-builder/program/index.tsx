@@ -23,7 +23,7 @@ export default function EventsTab() {
     const [show, setShow] = useState(false);
     const [name, setName] = useState("");
     const [frm, setFrm] = useState<any>();
-    const [createProgram] = useMutation(CREATE_PROGRAM, {onCompleted: (e: any) => {console.log(e); refetchQueryCallback()}});
+    const [createProgram] = useMutation(CREATE_PROGRAM, {onCompleted: (e: any) => {refetchQueryCallback()}});
     const [createSession] = useMutation(CREATE_SESSION, {onCompleted: (e: any) => {
         newSessionIds.push(e.createSession.data.id);
         if(sessionsCount === newSessionIds.length) {
@@ -73,28 +73,28 @@ export default function EventsTab() {
             id: "edit",
             Header: "Actions",
             Cell: ({ row }: any) => {
-                const actionClick1 = () => {
+                const editHandler = () => {
                     createEditProgramComponent.current.TriggerForm({id: row.original.id, type: 'edit'});
                 };
-                const actionClick2 = () => {
+                const viewHandler = () => {
                     createEditProgramComponent.current.TriggerForm({id: row.original.id, type: 'view'});
                 };
-                const actionClick3 = () => {
+                const deleteHandler = () => {
                     createEditProgramComponent.current.TriggerForm({id: row.original.id, type: 'delete'});
                 };
-                const actionClick4 = () => {
+                const manageHandler = () => {
                     handleRedirect(row.original.id);
                 };
-                const actionClick5 = () => {
+                const duplicateHandler = () => {
                     setName(row.original.programName + " copy");setFrm(row.original);handleShow();
                 };
 
                 const arrayAction = [
-                    { actionName: 'Edit', actionClick: actionClick1 },
-                    { actionName: 'View', actionClick: actionClick2 },
-                    { actionName: 'Delete', actionClick: actionClick3 },
-                    { actionName: 'Manage', actionClick: actionClick4 },
-                    { actionName: 'Duplicate', actionClick: actionClick5 },
+                    { actionName: 'Edit', actionClick: editHandler },
+                    { actionName: 'View', actionClick: viewHandler },
+                    { actionName: 'Delete', actionClick: deleteHandler },
+                    { actionName: 'Manage', actionClick: manageHandler },
+                    { actionName: 'Duplicate', actionClick: duplicateHandler },
                 ];
 
                 return <ActionButton arrayAction={arrayAction}></ActionButton>
