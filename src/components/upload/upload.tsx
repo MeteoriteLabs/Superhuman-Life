@@ -395,7 +395,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                                         type="button"
                                         className="btn-sm btn-danger"
                                         onClick={() => deleteAllImages()}
-                                        disabled={props.readonly ? true : false}
+                                        disabled={props.readonly}
                                    >
                                         Remove
                                    </button>
@@ -421,7 +421,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                                              type="button"
                                              className="btn-sm btn-danger"
                                              onClick={() => videoDelete()}
-                                             disabled={props.readonly ? true : false}
+                                             disabled={props.readonly}
                                         >
                                              Remove
                                         </button>
@@ -460,7 +460,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                                         onClick={() => {
                                              showCroppedImage();
                                         }}
-                                        disabled={props.readonly ? true : false}
+                                        disabled={props.readonly}
                                    >
                                         Upload
                                    </button>

@@ -1,7 +1,12 @@
 {
      "1": {
           "type": "object",
-          "required": ["title", "prerecordedtype", "prerecordedtrigger", "description", "minidesc"],
+          "required": [
+               "title",
+               "prerecordedtype",
+               "prerecordedtrigger",
+               "minidesc"
+          ],
           "properties": {
                "title": {
                     "type": "string",

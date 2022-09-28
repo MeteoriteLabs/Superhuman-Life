@@ -21,6 +21,7 @@ function CreateEditExercise(props: any, ref: any) {
     const [exerciseDetails, setExerciseDetails] = useState<any>({});
     const [workoutDetails, setWorkoutDetails] = useState<any[]>([]);
     const [operation, setOperation] = useState<Operation>({} as Operation);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
 
     useQuery(FETCH_WORKOUTS, {
         variables: { id: auth.userid },
@@ -40,10 +41,16 @@ function CreateEditExercise(props: any, ref: any) {
         TriggerForm: (msg: Operation) => {
             setOperation(msg);
 
+            //show delete modal
+            if (msg.type === 'delete') {
+                setShowDeleteModal(true);
+            }
+
             //restrict form to render on delete
-            if(msg.type !== 'delete'){
+            if (msg.type !== 'delete') {
                 modalTrigger.next(true);
-            }     
+            }
+
         }
     }));
 
@@ -56,7 +63,7 @@ function CreateEditExercise(props: any, ref: any) {
     }
 
     useEffect(() => {
-        if(operation.type === 'create'){
+        if (operation.type === 'create') {
             setExerciseDetails({});
         }
     }, [operation.type]);
@@ -90,7 +97,7 @@ function CreateEditExercise(props: any, ref: any) {
         details.user_permissions_user = msg[0].users_permissions_user.id;
         details.addExercise = handleAddExerciseShowUp(msg[0]);
         setExerciseDetails(details);
-        
+
         //if message exists - show form only for edit and view
         if (['edit', 'view'].indexOf(operation.type) > -1)
             modalTrigger.next(true);
@@ -184,6 +191,7 @@ function CreateEditExercise(props: any, ref: any) {
 
     return (
         <>
+            {/* Create , edit and view Modal */}
             <ModalView
                 name={name}
                 isStepper={false}
@@ -195,7 +203,10 @@ function CreateEditExercise(props: any, ref: any) {
                 modalTrigger={modalTrigger}
             />
 
-            {operation.type === "delete" && <StatusModal
+            {/* Delete Modal */}
+            {showDeleteModal && <StatusModal
+                show={showDeleteModal}
+                onHide={() => setShowDeleteModal(false)}
                 modalTitle="Delete"
                 EventConnectedDetails={workoutDetails}
                 ExistingEventId={operation.id}
@@ -204,6 +215,7 @@ function CreateEditExercise(props: any, ref: any) {
                 buttonRight="Yes"
                 onClick={() => { DeleteExercise(operation.id) }}
             />}
+
         </>
     )
 }

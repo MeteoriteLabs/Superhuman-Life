@@ -54,8 +54,6 @@ function ModalComp(props) {
     },
 
     onCompleted: (r: any) => {
-      console.log(r);
-
       setCount(templateId);
     },
     refetchQueries: [
@@ -66,7 +64,6 @@ function ModalComp(props) {
   const triggerUpdateDetailsMutation = () => {
     if (currentTemplateId !== templateId && websiteDataRecordId) {
       updateDetails();
-      console.log("trigger update");
     } else {
       return;
     }

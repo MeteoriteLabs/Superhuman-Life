@@ -101,6 +101,7 @@ function CreateEditRestDay(props: any, ref: any) {
         const sessionIds_new: any = [];
         const sessionIds_old: string[] = [...sessionsIds];
         const templateIds_old: string[] = [...templateSessionsIds];
+        const restDays_old: any = [];
 
         function updateSessionFunc(id: any){
             sessionIds_new.push(id);
@@ -115,6 +116,14 @@ function CreateEditRestDay(props: any, ref: any) {
         }
 
         function updateTemplateSessionsFunc(id: any){
+            if(id === null){
+                updateTemplateSessions({
+                    variables: {
+                         id: program_id,
+                         sessions_ids: templateIds_old.concat(sessionIds_new)
+                    }
+               })
+            }
             sessionIds_new.push(id);
             if(frm.day.length === sessionIds_new.length){
                  updateTemplateSessions({
@@ -131,6 +140,7 @@ function CreateEditRestDay(props: any, ref: any) {
                 for(var j=0; j<frm.day.length; j++){
                     if(templateSessions[k].day_of_program === frm.day[j].key && templateSessions[k].Is_restday === true){
                         frm.day.splice(j, 1);
+                        restDays_old.push(templateSessions[k].id);
                     }
                 }
             }
@@ -143,6 +153,14 @@ function CreateEditRestDay(props: any, ref: any) {
                 }
             }
        }
+
+       // eslint-disable-next-line array-callback-return
+       templateSessions.map((item: any, index: number) => {
+        if(!restDays_old.includes(item.id) && item.Is_restday){
+            templateSessions.splice(index, 1);
+            templateIds_old.splice(index, 1);
+        }
+       });
 
         if(frm.day.length > 0){
                for(var i=0; i<frm.day.length; i++){
@@ -173,7 +191,7 @@ function CreateEditRestDay(props: any, ref: any) {
                     });
                }
         }else {
-            modalTrigger.next(false);
+            return updateTemplateSessionsFunc(null);
         }
     }
 

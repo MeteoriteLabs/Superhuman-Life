@@ -11,17 +11,14 @@ export default function FinanceModal(props) {
     const defaultFileWidget = registry.widgets["FileWidget"];
     (Bootstrap4Theme as any).widgets["FileWidget"] = defaultFileWidget;
 
-
     const Form: any = withTheme(Bootstrap4Theme);
     const formRef = useRef<any>(null);
     const [show, setShow] = useState<boolean>(false);
     const [formValues, setFormValues] = useState<any>("");
 
-
     useEffect(() => {
         (actionType === "view" || actionType === "edit") ? setFormValues(formData) : setFormValues("")
     }, [formData, actionType])
-
 
     modalTrigger.subscribe((res: boolean) => {
         setShow(res);
@@ -29,7 +26,6 @@ export default function FinanceModal(props) {
 
     function submitHandler(formData: any) {
         setFormValues({ ...formValues, ...formData });
-
         formSubmit(formData);
     }
 

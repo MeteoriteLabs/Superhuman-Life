@@ -5,14 +5,14 @@ import moment from 'moment';
 
 const DaysInput = (props: any) => {
 
-     console.log(props);
-
      function handleReturnType(value: any){
-          console.log(value.length);
           if(typeof value === 'number'){
                return [`Day - ${value}`];
-          }else if(value.length > 0 && typeof value !== 'string'){
-               return value;
+          }
+          if(typeof value !== 'string'){
+               if(value.length > 0){
+                    return value;
+               }
           }else {
                return JSON.parse(value)
           }
