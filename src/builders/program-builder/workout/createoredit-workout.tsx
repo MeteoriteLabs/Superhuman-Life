@@ -21,6 +21,7 @@ function CreateEditWorkout(props: any, ref: any) {
   const [workoutDetails, setWorkoutDetails] = useState<any>({});
   const [programDetails, setProgramDetails] = useState<any[]>([]);
   const [operation, setOperation] = useState<Operation>({} as Operation);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   useQuery(FETCH_FITNESS_PROGRAMS, {
     variables: { id: auth.userid },
@@ -29,7 +30,7 @@ function CreateEditWorkout(props: any, ref: any) {
     }
   });
 
-  const [createWorkout] = useMutation(CREATE_WORKOUT, { onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); props.callback() } });
+  const [createWorkout] = useMutation(CREATE_WORKOUT, { onCompleted: (r: any) => { modalTrigger.next(false); props.callback() } });
   const [editWorkout] = useMutation(UPDATE_WORKOUT, { onCompleted: (r: any) => { modalTrigger.next(false); props.callback(); } });
   const [deleteWorkout] = useMutation(DELETE_WORKOUT, { refetchQueries: ["GET_TABLEDATA"], onCompleted: (r: any) => { modalTrigger.next(false); props.callback(); } });
 
@@ -39,10 +40,15 @@ function CreateEditWorkout(props: any, ref: any) {
     TriggerForm: (msg: Operation) => {
       setOperation(msg);
 
-      //restrict form to render on delete
-      if(msg.type !== 'delete'){
+      // render delete modal for delete operation
+      if (msg.type === 'delete') {
+        setShowDeleteModal(true);
+      }
+
+      //restrict form to render on delete operation
+      if (msg.type !== 'delete') {
         modalTrigger.next(true);
-    }  
+      }
 
     }
   }));
@@ -61,10 +67,10 @@ function CreateEditWorkout(props: any, ref: any) {
   }
 
   useEffect(() => {
-    if(operation.type === 'create'){
+    if (operation.type === 'create') {
       setWorkoutDetails({});
     }
-}, [operation.type]);
+  }, [operation.type]);
 
   function FillDetails(data: any) {
     const flattenData = flattenObj({ ...data });
@@ -79,16 +85,16 @@ function CreateEditWorkout(props: any, ref: any) {
       } else {
         return {
           AddWorkout: "Build",
-          warmup: data.warmup?.exercise ? {"exercise": JSON.stringify(data.warmup.exercise)} : data.warmup,
-          cooldown: data.cooldown?.exercise ? {"exercise": JSON.stringify(data.cooldown.exercise)} : data.cooldown,
-          mainmovement: data.mainmovement?.exercise ? {"exercise": JSON.stringify(data.mainmovement.exercise)} : data.mainmovement,
+          warmup: data.warmup?.exercise ? { "exercise": JSON.stringify(data.warmup.exercise) } : data.warmup,
+          cooldown: data.cooldown?.exercise ? { "exercise": JSON.stringify(data.cooldown.exercise) } : data.cooldown,
+          mainmovement: data.mainmovement?.exercise ? { "exercise": JSON.stringify(data.mainmovement.exercise) } : data.mainmovement,
         };
       }
     }
 
     let details: any = {};
     let msg = flattenData.workouts;
-    console.log(msg);
+
     details.workout = msg[0].workouttitle;
     details.benefits = msg[0].Benifits;
     details.about = msg[0].About;
@@ -126,21 +132,21 @@ function CreateEditWorkout(props: any, ref: any) {
     frm.discipline = JSON.parse(frm.discipline);
     frm.equipment = JSON.parse(frm.equipment);
     frm.muscleGroup = JSON.parse(frm.muscleGroup);
-    if(frm.addWorkout.AddWorkout === 'Build'){
-      console.log(frm.addWorkout.warmup);
-      if(Object.keys(frm.addWorkout.warmup)[0] === "exercise"){
+    if (frm.addWorkout.AddWorkout === 'Build') {
+
+      if (Object.keys(frm.addWorkout.warmup)[0] === "exercise") {
         frm.addWorkout.warmup.exercise = JSON.parse(frm.addWorkout.warmup.exercise);
-      }else {
+      } else {
         frm.addWorkout.warmup.type = Object.keys(frm.addWorkout.warmup)[0];
       }
-      if(Object.keys(frm.addWorkout.mainmovement)[0] === "exercise"){
+      if (Object.keys(frm.addWorkout.mainmovement)[0] === "exercise") {
         frm.addWorkout.mainmovement = JSON.parse(frm.addWorkout.mainmovement.exercise);
-      }else {
+      } else {
         frm.addWorkout.mainmovement.type = Object.keys(frm.addWorkout.mainmovement)[0];
       }
-      if(Object.keys(frm.addWorkout.cooldown)[0] === "exercise"){
+      if (Object.keys(frm.addWorkout.cooldown)[0] === "exercise") {
         frm.addWorkout.cooldown = JSON.parse(frm.addWorkout.cooldown.exercise);
-      }else {
+      } else {
         frm.addWorkout.cooldown.type = Object.keys(frm.addWorkout.cooldown)[0];
       }
     }
@@ -171,21 +177,21 @@ function CreateEditWorkout(props: any, ref: any) {
     frm.discipline = JSON.parse(frm.discipline);
     frm.equipment = JSON.parse(frm.equipment);
     frm.muscleGroup = JSON.parse(frm.muscleGroup);
-    if(frm.addWorkout.AddWorkout === 'Build'){
-      console.log(frm.addWorkout.warmup);
-      if(Object.keys(frm.addWorkout.warmup)[0] === "exercise"){
+    if (frm.addWorkout.AddWorkout === 'Build') {
+
+      if (Object.keys(frm.addWorkout.warmup)[0] === "exercise") {
         frm.addWorkout.warmup.exercise = JSON.parse(frm.addWorkout.warmup.exercise);
-      }else {
+      } else {
         frm.addWorkout.warmup.type = Object.keys(frm.addWorkout.warmup)[0];
       }
-      if(Object.keys(frm.addWorkout.mainmovement)[0] === "exercise"){
+      if (Object.keys(frm.addWorkout.mainmovement)[0] === "exercise") {
         frm.addWorkout.mainmovement = JSON.parse(frm.addWorkout.mainmovement.exercise);
-      }else {
+      } else {
         frm.addWorkout.mainmovement.type = Object.keys(frm.addWorkout.mainmovement)[0];
       }
-      if(Object.keys(frm.addWorkout.cooldown)[0] === "exercise"){
+      if (Object.keys(frm.addWorkout.cooldown)[0] === "exercise") {
         frm.addWorkout.cooldown = JSON.parse(frm.addWorkout.cooldown.exercise);
-      }else {
+      } else {
         frm.addWorkout.cooldown.type = Object.keys(frm.addWorkout.cooldown)[0];
       }
     }
@@ -213,7 +219,7 @@ function CreateEditWorkout(props: any, ref: any) {
   }
 
   function ViewWorkout(frm: any) {
-    
+
   }
 
   function DeleteWorkout(id: any) {
@@ -251,11 +257,12 @@ function CreateEditWorkout(props: any, ref: any) {
 
   return (
     <>
+      {/* Create , Edit and View Modal */}
       <ModalView
         name={name}
         isStepper={false}
         showErrorList={false}
-        formUISchema={ operation.type === 'view' ? schemaView : schema }
+        formUISchema={operation.type === 'view' ? schemaView : schema}
         formSchema={workoutSchema}
         formSubmit={name === "View" ? () => { modalTrigger.next(false); } : (frm: any) => { OnSubmit(frm); }}
         formData={workoutDetails}
@@ -263,11 +270,14 @@ function CreateEditWorkout(props: any, ref: any) {
         modalTrigger={modalTrigger}
       />
 
-      {operation.type === "delete" && <StatusModal
+      {/* Delete Modal */}
+      {showDeleteModal && <StatusModal
+        show={showDeleteModal}
+        onHide={() => setShowDeleteModal(false)}
         modalTitle="Delete"
         EventConnectedDetails={flattenObj({ ...programDetails })}
         ExistingEventId={operation.id}
-        modalBody="Do you want to delete this message?"
+        modalBody="Do you want to delete this workout?"
         buttonLeft="Cancel"
         buttonRight="Yes"
         onClick={() => { DeleteWorkout(operation.id) }}

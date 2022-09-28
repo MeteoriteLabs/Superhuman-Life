@@ -21,6 +21,7 @@ function CreateEditProgram(props: any, ref: any) {
     const programSchema: { [name: string]: any; } = require("./program.json");
     const [programDetails, setProgramDetails] = useState<any>({});
     const [operation, setOperation] = useState<Operation>({} as Operation);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
 
     const [createProgram] = useMutation(CREATE_PROGRAM, { onCompleted: (r: any) => { modalTrigger.next(false); props.callback() } });
     const [editProgram] = useMutation(UPDATE_PROGRAM, { onCompleted: (r: any) => { modalTrigger.next(false); props.callback() } });
@@ -32,10 +33,15 @@ function CreateEditProgram(props: any, ref: any) {
         TriggerForm: (msg: Operation) => {
             setOperation(msg);
 
-            //restrict form to render on delete
-            if(msg.type !== 'delete'){
+            // render delete modal for delete operation
+            if (msg.type === 'delete') {
+                setShowDeleteModal(true);
+            }
+
+            //restrict form to render on delete operation
+            if (msg.type !== 'delete') {
                 modalTrigger.next(true);
-            }  
+            }
         }
     }));
 
@@ -47,7 +53,7 @@ function CreateEditProgram(props: any, ref: any) {
     }
 
     useEffect(() => {
-        if(operation.type === 'create'){
+        if (operation.type === 'create') {
             setProgramDetails({});
         }
     }, [operation.type]);
@@ -157,7 +163,8 @@ function CreateEditProgram(props: any, ref: any) {
 
     return (
         <>
-        
+
+            {/* Create , Edit and View Modal */}
             <ModalView
                 name={name}
                 isStepper={false}
@@ -169,10 +176,13 @@ function CreateEditProgram(props: any, ref: any) {
                 modalTrigger={modalTrigger}
                 type={operation.type}
             />
-           
-            {operation.type === "delete" && <StatusModal
+
+            {/* Delete Modal */}
+            {showDeleteModal && <StatusModal
+                show={showDeleteModal}
+                onHide={() => setShowDeleteModal(false)}
                 modalTitle="Delete"
-                modalBody="Do you want to delete this message?"
+                modalBody="Do you want to delete this program?"
                 buttonLeft="Cancel"
                 buttonRight="Yes"
                 onClick={() => { DeleteExercise(operation.id) }}

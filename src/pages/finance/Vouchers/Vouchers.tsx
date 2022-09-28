@@ -32,7 +32,7 @@ export default function Vouchers() {
                     discount_percentage: voucher.attributes.discount_percentage,
                     expiry_date: moment(voucher.attributes.expiry_date).format('MMMM DD,YYYY'),
                     Usage_restriction: voucher.attributes.Usage_restriction,
-                    Status:( diff <= 0 || voucher.attributes.Usage_restriction <= 0 )? "Expired" : voucher.attributes.Status
+                    Status: (diff <= 0 || voucher.attributes.Usage_restriction <= 0) ? "Expired" : voucher.attributes.Status
                 }
             })
         )
@@ -40,7 +40,7 @@ export default function Vouchers() {
 
     function refetchQueryCallback() {
         fetch.refetch();
-   }
+    }
 
     const columns = useMemo(
         () => [
@@ -81,23 +81,23 @@ export default function Vouchers() {
                 id: "edit",
                 Header: "Actions",
                 Cell: ({ row }: any) => {
-                    const actionClick1 = () => {
+                    const viewHandler = () => {
                         voucherActionRef.current.TriggerForm({ id: row.original.id, actionType: 'view' })
                     };
-                    const actionClick2 = () => {
+                    const editHandler = () => {
                         voucherActionRef.current.TriggerForm({ id: row.original.id, actionType: 'edit' })
                     };
-                    const actionClick3 = () => {
+                    const deleteHandler = () => {
                         voucherActionRef.current.TriggerForm({ id: row.original.id, actionType: 'delete' })
                     };
-                    const actionClick4 = () => {
+                    const statusChangeHandler = () => {
                         voucherActionRef.current.TriggerForm({ id: row.original.id, actionType: 'toggle-status', current_status: row.original.Status })
                     };
                     const arrayAction = [
-                        { actionName: 'View', actionClick: actionClick1 },
-                        { actionName: 'Edit', actionClick: actionClick2 },
-                        { actionName: 'Delete', actionClick: actionClick3 },
-                        { actionName: 'Status', actionClick: actionClick4 },
+                        { actionName: 'View', actionClick: viewHandler },
+                        { actionName: 'Edit', actionClick: editHandler },
+                        { actionName: 'Delete', actionClick: deleteHandler },
+                        { actionName: 'Status', actionClick: statusChangeHandler },
                     ]
 
                     return <ActionButton
@@ -120,7 +120,7 @@ export default function Vouchers() {
             <Row>
                 <Col>
                     <Table columns={columns} data={dataTable} />
-                    <VoucherAction ref={voucherActionRef} callback={refetchQueryCallback}/>
+                    <VoucherAction ref={voucherActionRef} callback={refetchQueryCallback} />
                 </Col>
             </Row>
         </div>

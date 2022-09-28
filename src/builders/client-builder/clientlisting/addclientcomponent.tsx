@@ -19,6 +19,7 @@ function CreateClient(props: any, ref: any) {
      //const uiSchema: {} = require("./schema.tsx");
      //const [messageDetails, setMessageDetails] = useState<any>({});
      const [operation, setOperation] = useState<Operation>({} as Operation);
+     const [showDeleteModal, setShowDeleteModal] = useState(false);
 
      const [createClient] = useMutation(ADD_CLIENT_NEW, {
           onCompleted: (r: any) => {
@@ -33,7 +34,13 @@ function CreateClient(props: any, ref: any) {
           TriggerForm: (msg: Operation) => {
                setOperation(msg);
 
-               if (msg && !msg.id) {
+               // set show delete modal for delete operation
+               if (msg.type === 'delete') {
+                    setShowDeleteModal(true);
+               }
+
+               // restrict create modal to render for delete operation
+               if (msg.type !== 'delete') {
                     modalTrigger.next(true);
                }
           },
@@ -117,6 +124,7 @@ function CreateClient(props: any, ref: any) {
 
      return (
           <>
+               {/* Create Modal */}
                {operation.type === "create" && (
                     <ModalView
                          name="New Client"
@@ -132,8 +140,12 @@ function CreateClient(props: any, ref: any) {
                          modalTrigger={modalTrigger}
                     />
                )}
-               {operation.type === "delete" && (
+
+               {/* Delete Modal */}
+               {showDeleteModal && (
                     <StatusModal
+                         show={showDeleteModal}
+                         onHide={() => setShowDeleteModal(false)}
                          modalTitle="Delete"
                          modalBody="Do you want to delete this message?"
                          buttonLeft="Cancel"

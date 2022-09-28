@@ -2,13 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Row, Col } from 'react-bootstrap';
 import moment from 'moment';
 import TimePicker from 'rc-time-picker';
-
 import 'rc-time-picker/assets/index.css';
-
 
 const TimeFieldInput = (props: any) => {
 
-    console.log(props.value);
     const [startTime, setStartTime] = useState(props.value !== undefined ? JSON.parse(props.value).startTime : "00:00"); 
     const [endTime, setEndTime] = useState(props.value !== undefined ? JSON.parse(props.value).endTime : "00:00");
 

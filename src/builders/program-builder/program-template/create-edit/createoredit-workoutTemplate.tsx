@@ -60,8 +60,6 @@ function CreateEditWorkoutTemplate(props: any, ref: any) {
         setTemplateSessionsIds(templateExistingValues);
     }});
 
-    console.log(templateSessionsIds);
-
     useQuery(GET_SESSIONS, {variables: {id: program_id}, skip: (window.location.pathname.split('/')[1] === 'programs'),onCompleted: (data: any) => {
         const flattenData = flattenObj({...data});
         setClientId(flattenData.tags[0]?.client_packages[0]?.users_permissions_user.id);

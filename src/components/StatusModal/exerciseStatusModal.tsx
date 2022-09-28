@@ -1,15 +1,13 @@
 import { useState, useEffect } from 'react'
 import { Button, Col, Modal, Row } from "react-bootstrap";
 
-
 function StatusModal(props: any) {
-    const [show, setShow] = useState<boolean>(true);
     const [eventConnections, setEventConnections] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
 
     function handleClick() {
         props.onClick();
-        setShow(false);
+        props.onHide();
     }
 
     useEffect(() => {
@@ -82,7 +80,7 @@ function StatusModal(props: any) {
 
     return (
         <>
-        <Modal show={show} onHide={() => setShow(false)} aria-labelledby="contained-modal-title-vcenter" centered>
+        <Modal show={props.show} onHide={props.onHide} aria-labelledby="contained-modal-title-vcenter" centered>
             <Modal.Header closeButton>
             <Modal.Title id="contained-modal-title-vcenter">
                 {props.modalTitle}
@@ -95,7 +93,7 @@ function StatusModal(props: any) {
             <div>
                 <Row>
                 <Col xs={4} md={4} className="ml-4">
-                    <Button variant="danger" onClick={() => setShow(false)}>{props.buttonLeft}</Button>
+                    <Button variant="danger" onClick={props.onHide}>{props.buttonLeft}</Button>
                 </Col>
                 <Col xs={4} md={5} className="ml-4">
                     <Button variant="success" onClick={handleClick} disabled={linkedWorkouts.length !== 0 ? true : false}>{props.buttonRight}</Button>

@@ -20,9 +20,7 @@ import BookingLeadTime from './widgetCustom/FitnessBooking/BookingLeadTime';
 import { Subject } from 'rxjs';
 import CreateFitnessPackageModal from '../../../components/CreateFitnessPackageModal/CreateFitnessPackageModal';
 import Upload from '../../../components/upload/upload';
-import {flattenObj} from '../../../components/utils/responseFlatten';
-
-
+import { flattenObj } from '../../../components/utils/responseFlatten';
 
 interface Operation {
     id: string;
@@ -31,29 +29,23 @@ interface Operation {
     current_status: boolean;
 }
 
-
 function CreateEditView(props: any, ref: any) {
-    console.log("🚀 ~ file: CreateEditView.tsx ~ line 36 ~ CreateEditView ~ props", props)
     const auth = useContext(AuthContext);
     const [operation, setOperation] = useState<Operation>({} as Operation);
     const [userData, setUserData] = useState<any>('');
-
     const [packageTypeName, setPackageTypeName] = useState<string | null>('personal-training');
     const [actionName, setActionName] = useState<string>("")
     const [formData, setFormData] = useState<any>();
-
     const [sapienFitnessPackageTypes, setSapienFitnessPackageTypes] = useState<any>([]);
-
-
     const ptSchema = require("./personal-training/personal-training.json");
     const groupSchema = require("./group/group.json");
     const classicSchema = require("./classic/classic.json");
     const customSchema = require("./custom/custom.json");
-
     const jsonSchema = require(`./${packageTypeName}/${packageTypeName}.json`);
+    const [showStatusModal, setShowStatusModal] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+
     const modalTrigger = new Subject();
-
-
 
     useEffect(() => {
         const { actionType, type } = operation;
@@ -68,7 +60,6 @@ function CreateEditView(props: any, ref: any) {
             setPackageTypeName("custom");
         };
 
-
         if (actionType === 'create') {
             setActionName("Create New");
         } else if (actionType === 'edit') {
@@ -76,29 +67,24 @@ function CreateEditView(props: any, ref: any) {
         } else if (actionType === 'view') {
             setActionName("View");
         };
-
     }, [operation]);
-
-
-    console.log(formData);
-
 
     let fitness_package_type: string | undefined = ''
     if (operation.actionType === "view" || operation.actionType === 'edit') {
         fitness_package_type = formData?.fitness_package_type.type
-    } 
+    }
     else if (operation.actionType === "create") {
         if (operation.type === "One-On-One") {
             fitness_package_type = "One-On-One";
         } else if (operation.type === "Group Class") {
             fitness_package_type = "Group Class";
         } else if (operation.type === "Custom Fitness") {
-            fitness_package_type ="Custom Fitness";
+            fitness_package_type = "Custom Fitness";
         } else if (operation.type === "Classic Class") {
             fitness_package_type = "Classic Class";
         }
     }
-    
+
     // before fixed
     // else if (operation.actionType === "create") {
     //     if (operation.type === "One-On-One") {
@@ -112,25 +98,17 @@ function CreateEditView(props: any, ref: any) {
     //     }
     // }
 
-
-
-
     const widgets = {
     }
 
-
-
-
     const pricingDetailRef = useRef<{ getFitnessPackagePricing?: Function }>({});
 
-
-    console.log('userData', userData)
     const uiSchema: any = {
         "disciplines": {
             'ui:widget': (props) => <FitnessMultiSelect widgetProps={props} actionType={operation.actionType} />
         },
         "equipmentList": {
-            "ui:widget": (props) => <EquipmentListSelect  onChange={props.onChange} value={props.value}/>
+            "ui:widget": (props) => <EquipmentListSelect onChange={props.onChange} value={props.value} />
         },
         "address": {
             "ui:widget": (props) => <FitnessAddress actionType={operation.actionType} widgetProps={props} PTProps={ptSchema[3]} />
@@ -165,7 +143,6 @@ function CreateEditView(props: any, ref: any) {
 
         "restdays": {
             "ui:widget": (props: any) => <FitnessRestday actionType={operation.actionType} classicProps={classicSchema[3]} PTProps={ptSchema[3]} groupProps={groupSchema[3]} customProps={customSchema[3]} widgetProps={props} userData={userData} type={operation.type} />
-
         },
 
         "bookingleadday": {
@@ -188,7 +165,6 @@ function CreateEditView(props: any, ref: any) {
                 "inline": true,
             },
         },
-
 
         "aboutpackage": {
             "ui:widget": "textarea",
@@ -213,13 +189,13 @@ function CreateEditView(props: any, ref: any) {
 
         "thumbnail": {
             "ui:widget": (props: any) => {
-                return <Upload allowImage={true} allowVideo={false} onChange={props.onChange} value={props.value} title={'Thumbnail'}/>;
+                return <Upload allowImage={true} allowVideo={false} onChange={props.onChange} value={props.value} title={'Thumbnail'} />;
             },
         },
 
         "upload": {
             "ui:widget": (props: any) => {
-                return <Upload allowImage={true} allowVideo={true} onChange={props.onChange} value={props.value} title={'upload picture or video'}/>;
+                return <Upload allowImage={true} allowVideo={true} onChange={props.onChange} value={props.value} title={'upload picture or video'} />;
             },
         },
 
@@ -255,26 +231,21 @@ function CreateEditView(props: any, ref: any) {
             />,
         },
 
-
         "carousel": {
             "ui:widget": () => <ModalPreview
                 userData={userData}
                 type={operation.type}
                 actionType={operation.actionType}
                 packageType={packageTypeName}
-                fitnesspackagepricing={pricingDetailRef.current.getFitnessPackagePricing?.()} 
+                fitnesspackagepricing={pricingDetailRef.current.getFitnessPackagePricing?.()}
             />
         },
     }
 
-
-    console.log(auth.userid)
-
     const FetchData = () => {
-
         useQuery(GET_FITNESS_PACKAGE_TYPE, {
             onCompleted: (data) => {
-                const flattedData = flattenObj({...data});
+                const flattedData = flattenObj({ ...data });
                 setSapienFitnessPackageTypes(flattedData.fitnessPackageTypes);
             }
         })
@@ -292,12 +263,9 @@ function CreateEditView(props: any, ref: any) {
 
     FetchData()
 
-
     const FillDetails = (dataPackage: any) => {
-        const flattedData = flattenObj({...dataPackage});
+        const flattedData = flattenObj({ ...dataPackage });
         const packageDetail = flattedData.fitnesspackages[0];
-
-        console.log(packageDetail);
 
         // packageDetails?.equipment_lists = JSON.stringify(packageDetail?.equipment_lists);
 
@@ -317,10 +285,7 @@ function CreateEditView(props: any, ref: any) {
 
         const updateFormData = updateform.createUpdateForm(id, packagename, tags, disciplines, fitness_package_type, aboutpackage, benefits, level, mode, ptoffline, ptonline, grouponline, groupoffline, recordedclasses, restdays, fitnesspackagepricing, bookingleadday, bookingleadtime, duration, groupstarttime, groupendtime, groupinstantbooking, address, ptclasssize, classsize, groupdays, introvideourl, is_private, Upload_ID, Thumbnail_ID, equipment_lists);
 
-        console.log(updateFormData);
-
         setFormData(updateFormData);
-
 
         // if message exists - show form only for edit and view
         if (['edit', 'view'].indexOf(operation.actionType) > -1) {
@@ -331,37 +296,43 @@ function CreateEditView(props: any, ref: any) {
         }
     }
 
-   
-
-
     useImperativeHandle(ref, () => ({
         TriggerForm: (msg: Operation) => {
-            console.log(msg)
             setOperation(msg);
 
             handleSubmitName(msg.actionType);
-            //render form if no message id
-            if (msg && !msg.id) {
+
+            if (msg.actionType === 'toggle-status') {
+                setShowStatusModal(true);
+            }
+
+            if (msg.actionType === 'delete') {
+                setShowDeleteModal(true);
+            }
+
+            if (msg.actionType !== 'delete' && msg.actionType !== 'toggle-status') {
                 modalTrigger.next(true);
             }
         }
     }));
 
-    const [createUserPackageSuggestion] = useMutation(ADD_SUGGESTION_NEW, {onCompleted: (data) => {
-        modalTrigger.next(false);
-        props.callback();
-    }});
+    const [createUserPackageSuggestion] = useMutation(ADD_SUGGESTION_NEW, {
+        onCompleted: (data) => {
+            modalTrigger.next(false);
+            props.callback();
+        }
+    });
 
     const [createPackage] = useMutation(CREATE_PACKAGE, {
-        variables: { 
+        variables: {
             users_permissions_user: auth.userid,
-         },
+        },
         onCompleted: (r: any) => {
-            if(window.location.href.split('/')[3] === 'client'){
+            if (window.location.href.split('/')[3] === 'client') {
                 createUserPackageSuggestion({
                     variables: {
-                        id:  window.location.href.split('/').pop(),
-                        fitnesspackage: r.createFitnesspackage.data.id, 
+                        id: window.location.href.split('/').pop(),
+                        fitnesspackage: r.createFitnesspackage.data.id,
                     }
                 })
             }
@@ -373,9 +344,9 @@ function CreateEditView(props: any, ref: any) {
         }
     })
 
-    const [deletePackage] = useMutation(DELETE_PACKAGE, {onCompleted: (r: any) => {props.callback();}});
+    const [deletePackage] = useMutation(DELETE_PACKAGE, { onCompleted: (r: any) => { props.callback(); } });
 
-    const [updateStatus] = useMutation(UPDATE_PACKAGE_PRIVATE, {onCompleted: (r: any) => {props.callback();}});
+    const [updateStatus] = useMutation(UPDATE_PACKAGE_PRIVATE, { onCompleted: (r: any) => { props.callback(); } });
 
     const [editPackage] = useMutation(EDIT_PACKAGE, {
         onCompleted: (data: any) => {
@@ -397,7 +368,7 @@ function CreateEditView(props: any, ref: any) {
         const fitnessPackageId = sapienFitnessPackageTypes.find(x => x.type === frm.fitness_package_type).id;
         frm.fitness_package_type = fitnessPackageId;
         frm.equipmentList = JSON.parse(frm.equipmentList).map((x: any) => x.id).join(', ').split(', ');
-        createPackage({ variables: frm});
+        createPackage({ variables: frm });
     }
 
     function EditPackage(frm: any) {
@@ -407,11 +378,9 @@ function CreateEditView(props: any, ref: any) {
         editPackage({ variables: frm })
     }
 
-
     const DeletePackage = (id: any) => {
         deletePackage({ variables: { id: id } })
     }
-
 
     function OnSubmit(frm: any) {
         //bind user id
@@ -431,26 +400,23 @@ function CreateEditView(props: any, ref: any) {
         }
     }
 
-
     const handleSubmitName = (actionType: string) => {
         let action = ''
         switch (actionType) {
             case 'create':
                 action = "Create"
                 break
-    
+
             case 'edit':
                 action = "Update"
                 break
-    
+
             case 'view':
                 action = "Looks Good"
                 break
         }
         return action
     }
-    
-    console.log(formData);
 
     return (
         <>
@@ -479,19 +445,14 @@ function CreateEditView(props: any, ref: any) {
                     setOperation={setOperation}
                     type={operation.type}
                     submitName={(handleSubmitName(operation.actionType))}
-                  
-
                 />
             }
-            {operation.actionType === 'delete' && <StatusModal
-                modalTile="Delete"
-                modalBody="Do you want to delete this package ?"
-                buttonLeft="Cancel"
-                buttonRight="Yes"
-                onClick={() => DeletePackage(operation.id)}
-            />}
-            {operation.actionType === 'toggle-status' &&
+
+            {/* Status Modal */}
+            {showStatusModal &&
                 <StatusModal
+                    show={showStatusModal}
+                    onHide={() => setShowStatusModal(false)}
                     modalTile="Change Status"
                     modalBody="Do you want to change status ?"
                     buttonLeft="Cancel"
@@ -499,6 +460,18 @@ function CreateEditView(props: any, ref: any) {
                     onClick={() => TogglePackageStatus(operation.id, operation.current_status)}
                 />
             }
+
+            {/* Delete Modal */}
+            {showDeleteModal && <StatusModal
+                show={showDeleteModal}
+                onHide={() => setShowDeleteModal(false)}
+                modalTile="Delete"
+                modalBody="Do you want to delete this package ?"
+                buttonLeft="Cancel"
+                buttonRight="Yes"
+                onClick={() => DeletePackage(operation.id)}
+            />}
+
         </>
     )
 }

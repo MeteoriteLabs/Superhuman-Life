@@ -37,7 +37,6 @@ export default function TabsComponent() {
   useQuery(FETCH_WEBSITE_DATA, {
     variables: { id: auth.userid },
     onCompleted: (r: any) => {
-      console.log(r);
       if (r.websiteData.length) {
         setWebsiteData(r.websiteData[0]);
         setTemplateName(r.websiteData[0].website_template.template_name);

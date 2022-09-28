@@ -6,9 +6,6 @@ import { useQuery } from "@apollo/client";
 import { flattenObj } from '../utils/responseFlatten';
 
 const MultiSelect = (props: any) => {
-
-     console.log(props);
-
      function handleReturnType(value){
           if(typeof value === 'string'){
                return JSON.parse(value);

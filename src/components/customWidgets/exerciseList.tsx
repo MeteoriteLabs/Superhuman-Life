@@ -13,7 +13,6 @@ const ExerciseList = (props: any) => {
 
      const exerciseValues: any[] = ['reps', 'sets', 'restTime', 'weights', 'duration']; 
 
-     
      const auth = useContext(AuthContext);
      const [exerciseList, setExerciseList] = useState<any[]>([]);
      const [searchInput, setSearchInput] = useState(null);
@@ -25,7 +24,6 @@ const ExerciseList = (props: any) => {
           useQuery(GET_EXERCISELIST, { variables: _variable, onCompleted: loadExerciseList, skip: !searchInput });
      }
      
-     console.log(selected);
      function loadExerciseList(data: any) {
           const flattenedData = flattenObj({ ...data });
           setExerciseList(

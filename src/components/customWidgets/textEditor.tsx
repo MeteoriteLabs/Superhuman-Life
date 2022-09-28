@@ -4,8 +4,6 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 const TextEditor = (props: any) => {
 
-     console.log(props);
-
      const [value, setValue] = useState(props.val ? props.val : props.value ? props.value : "");
 
      var richText: any = [{ "type": "text" }];
@@ -17,7 +15,6 @@ const TextEditor = (props: any) => {
                props.onChange(value);
           }
      }
-
 
      return (
           <div id="editor1">

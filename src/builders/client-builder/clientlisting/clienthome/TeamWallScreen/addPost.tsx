@@ -28,14 +28,12 @@ interface Operation {
 function CreatePosts(props: any, ref: any) {
      const last = window.location.pathname.split("/").pop();
      const auth = useContext(AuthContext);
-
      const Schema: { [name: string]: any } = require("./post.json");
-
      const [messageDetails, setMessageDetails] = useState<any>({});
-
      const [deletion, setDeletion] = useState<any>(null);
-
      const [operation, setOperation] = useState<Operation>({} as Operation);
+     const [showDeleteNoteModal, setShowDeleteNoteModal] = useState(false);
+     const [showDeleteCommentModal, setShowDeleteCommentModal] = useState(false);
 
      const [createRating] = useMutation(ADD_RATING_NEW, {
           onCompleted: (r: any) => {
@@ -67,7 +65,18 @@ function CreatePosts(props: any, ref: any) {
           TriggerForm: (msg: Operation) => {
                setOperation(msg);
 
-               if (msg && !msg.id) {
+               // set show delete note modal for delete Note operation
+               if (msg.type === 'deleteNote') {
+                    setShowDeleteNoteModal(true);
+               }
+
+               // set show delete comment modal for delete Comment operation
+               if (msg.type === 'deleteComment') {
+                    setShowDeleteCommentModal(true);
+               }
+
+               // restrict modal to render for delete note and delete comment operation
+               if (msg.type !== 'deleteNote' && msg.type !== 'deleteComment') {
                     modalTrigger.next(true);
                }
           },
@@ -244,6 +253,7 @@ function CreatePosts(props: any, ref: any) {
      }
      return (
           <>
+               {/* Edit Modal */}
                <ModalView
                     name={operation.type}
                     isStepper={false}
@@ -257,8 +267,12 @@ function CreatePosts(props: any, ref: any) {
                     widgets={widgets}
                     modalTrigger={modalTrigger}
                />
-               {operation.type === "deleteNote" && (
+
+               {/* Delete Note Modal */}
+               {showDeleteNoteModal && (
                     <StatusModal
+                         show={showDeleteNoteModal}
+                         onHide={() => setShowDeleteNoteModal(false)}
                          modalTitle="Delete"
                          modalBody="Do you want to delete this Feedback?"
                          buttonLeft="Cancel"
@@ -269,8 +283,12 @@ function CreatePosts(props: any, ref: any) {
                          }}
                     />
                )}
-               {operation.type === "deleteComment" && (
+
+               {/* Delete Comment Modal */}
+               {showDeleteCommentModal && (
                     <StatusModal
+                         show={showDeleteCommentModal}
+                         onHide={() => setShowDeleteCommentModal(false)}
                          modalTitle="Delete"
                          modalBody="Do you want to delete this Comment?"
                          buttonLeft="Cancel"
