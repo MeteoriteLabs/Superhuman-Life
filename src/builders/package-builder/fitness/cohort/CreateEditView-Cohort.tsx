@@ -122,7 +122,7 @@ function CreateEditCohort(props: any, ref: any) {
         details.packageName = msg.packagename;
         details.channelinstantBooking = msg.groupinstantbooking;
         details.expiryDate = moment(msg.expirydate).format('YYYY-MM-DD');
-        details.level = ENUM_FITNESSPACKAGE_LEVEL[msg.level];
+        details.level = ENUM_FITNESSPACKAGE_LEVEL[msg?.level];
         details.intensity = ENUM_FITNESSPACKAGE_INTENSITY[msg.Intensity];
         details.equipment = msg.equipment_lists
         details.discpline = msg.fitnessdisciplines
@@ -202,7 +202,7 @@ function CreateEditCohort(props: any, ref: any) {
                 packagename: frm.packageName,
                 channelinstantBooking: frm.channelinstantBooking,
                 expiry_date: moment(frm.datesConfig.expiryDate).toISOString(),
-                level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
+                level: ENUM_FITNESSPACKAGE_LEVEL[frm?.level],
                 Intensity: ENUM_FITNESSPACKAGE_INTENSITY[frm.intensity],
                 equipmentList: frm?.equipment?.length > 0 ? frm.equipment.map((x: any) => x.id).join(',').split(',') : [],
                 duration: frm.dates.startDate === frm.dates.endDate ? 1 : calculateDuration(frm.dates.startDate, frm.dates.endDate),
@@ -249,7 +249,7 @@ function CreateEditCohort(props: any, ref: any) {
                 benefits: frm.Benifits,
                 packagename: frm.packageName,
                 channelinstantBooking: frm.channelinstantBooking,
-                level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
+                level: ENUM_FITNESSPACKAGE_LEVEL[frm?.level],
                 Intensity: ENUM_FITNESSPACKAGE_INTENSITY[frm.intensity],
                 equipmentList: frm?.equipment?.length > 0 ? frm.equipment.map((x: any) => x.id).join(',').split(',') : [],
                 fitnessdisciplines: frm?.discpline?.length > 0 ? frm.discpline.map((item: any) => item.id).join(", ").split(", ") : [],
@@ -314,9 +314,9 @@ function CreateEditCohort(props: any, ref: any) {
     if(operation.type === 'create'){
         name="Cohort Offering";
     }else if(operation.type === 'edit'){
-        name="Edit";
+        name=`Edit ${programDetails.packageName}`;
     }else if(operation.type === 'view'){
-        name="View";
+        name=`Viewing ${programDetails.packageName}`;
     }
 
 

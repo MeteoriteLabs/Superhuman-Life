@@ -42,9 +42,9 @@ const PricingTable = (props) => {
 
      function handleDefaultPricing(){
           if (bookingDetails.instantBooking) {
-               return [ {mrp: null, suggestedPrice: null, voucher: 0, duration: 1, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 30, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 90, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 180, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 360, sapienPricing: null}]
+               return [ {mrp: null, suggestedPrice: null, voucher: 0, duration: 1, sapienPricing: null, classes: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 30, sapienPricing: null, classes: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 90, sapienPricing: null, classes: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 180, sapienPricing: null, classes: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 360, sapienPricing: null, classes: null}]
           } else {
-               return [{mrp: null, suggestedPrice: null, voucher: 0, duration: 30, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 90, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 180, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 360, sapienPricing: null}]
+               return [{mrp: null, suggestedPrice: null, voucher: 0, duration: 30, sapienPricing: null, classes: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 90, sapienPricing: null, classes: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 180, sapienPricing: null, classes: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 360, sapienPricing: null, classes: null}]
           }
      }
 
@@ -58,6 +58,29 @@ const PricingTable = (props) => {
           values[0].mrp = 'free';
           setPricing(values);
      }
+     if(classMode === "Online"){
+          const values = [...pricing];
+          values.forEach((val, index) => {
+               if(val.duration === 1){
+                    val.classes = 1;
+               }else {
+                    val.classes = onlineClasses * (val.duration / 30);
+               }
+          });
+          setPricing(values);
+     }
+     if(classMode === "Offline"){
+          const values = [...pricing];
+          values.forEach((val, index) => {
+               if(val.duration === 1){
+                    val.classes = 1;
+               }else {
+                    val.classes = offlineClasses * (val.duration / 30);
+               }
+          });
+          setPricing(values);
+     }
+
      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [bookingDetails.freeDemo]);
 
@@ -315,7 +338,7 @@ const PricingTable = (props) => {
                         
                     <Button disabled={inputDisabled} variant='outline-info' onClick={() => {window.location.href = '/finance'}}>Add suggest pricing</Button>
                 </div>
-                <Table style={{ tableLayout: 'fixed'}}>
+                <Table responsive>
                 <thead>
                     <tr className='text-center'>
                     <th></th>
@@ -381,7 +404,10 @@ const PricingTable = (props) => {
                     {pricing.map((item, index) => {
                         return (
                             <td>
-                                <InputGroup>
+                                <InputGroup style={{ minWidth: '200px'}}>
+                                   <InputGroup.Prepend>
+                                        <InputGroup.Text id="basic-addon1">{"\u20B9"}</InputGroup.Text>
+                                   </InputGroup.Prepend>
                                     <FormControl
                                     className={`${pricing[index]?.mrp < pricing[index]?.sapienPricing && pricing[index]?.mrp !== null ? "is-invalid" : pricing[index]?.mrp >= pricing[index]?.sapienPricing ? "is-valid" : ""}`}
                                     aria-label="Default"

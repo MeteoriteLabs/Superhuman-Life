@@ -151,7 +151,7 @@ function CreateEditPackage(props: any, ref: any) {
         details.channelinstantBooking = msg.groupinstantbooking;
         details.classSize = ENUM_FITNESSPACKAGE_PTCLASSSIZE[msg.classSize];
         details.expiryDate = moment(msg.expirydate).format('YYYY-MM-DD');
-        details.level = ENUM_FITNESSPACKAGE_LEVEL[msg.level];
+        details.level = ENUM_FITNESSPACKAGE_LEVEL[msg?.level];
         details.intensity = ENUM_FITNESSPACKAGE_INTENSITY[msg.Intensity];
         details.pricingDetail = msg.fitnesspackagepricing[0]?.mrp === 'free' ? 'free' : JSON.stringify(PRICING_TABLE_DEFAULT);
         details.publishingDate = moment(msg.publishing_date).format('YYYY-MM-DD');
@@ -203,7 +203,7 @@ function CreateEditPackage(props: any, ref: any) {
             variables: {
                 packagename: frm.packagename,
                 tags: frm?.tags,
-                level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
+                level: ENUM_FITNESSPACKAGE_LEVEL[frm?.level],
                 intensity: ENUM_FITNESSPACKAGE_INTENSITY[frm.intensity],
                 aboutpackage: frm.About,
                 benefits: frm.Benifits,
@@ -248,7 +248,7 @@ function CreateEditPackage(props: any, ref: any) {
                 id: operation.id,
                 packagename: frm.packagename,
                 tags: frm?.tags,
-                level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
+                level: ENUM_FITNESSPACKAGE_LEVEL[frm?.level],
                 intensity: ENUM_FITNESSPACKAGE_INTENSITY[frm.intensity],
                 aboutpackage: frm.About,
                 benefits: frm.Benifits,
@@ -325,9 +325,9 @@ function CreateEditPackage(props: any, ref: any) {
     if(operation.type === 'create'){
         name="Custom Offering";
     }else if(operation.type === 'edit'){
-        name="Edit";
+        name=`Edit ${customDetails.packagename}`;
     }else if(operation.type === 'view'){
-        name="View";
+        name=`Viewing ${customDetails.packagename}`;
     }
 
     FetchData();

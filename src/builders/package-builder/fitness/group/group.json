@@ -6,7 +6,6 @@
             "packagename",
             "disciplines",
             "equipmentList",
-            "level",
             "intensity"
         ],
         "properties": {

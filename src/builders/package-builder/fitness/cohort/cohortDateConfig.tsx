@@ -9,7 +9,7 @@ const PackageDateConfig = (props: any) => {
      const cohortStartDate = JSON.parse(props.formContext.dates).startDate;
 
      const [publishingDate, setPublishingDate] = useState(props.value === undefined ? moment().format("YYYY-MM-DDTHH:mm") : moment(JSON.parse(props.value).publishingDate).format("YYYY-MM-DDTHH:mm"));
-     const [expiryDate, setExpiryDate] = useState(moment(cohortStartDate).format("YYYY-MM-DDTHH:mm"));
+     const [expiryDate, setExpiryDate] = useState(props.value === undefined ? moment(cohortStartDate).format("YYYY-MM-DDTHH:mm") : moment(JSON.parse(props.value).expiryDate).format("YYYY-MM-DDTHH:mm"));
 
      console.log(expiryDate);
 
@@ -38,8 +38,9 @@ const PackageDateConfig = (props: any) => {
                          aria-describedby="inputGroup-sizing-default"
                          type="datetime-local"
                          value={expiryDate}
+                         disabled={inputDisabled}
                          onChange={(e) => { setExpiryDate(e.target.value) }}
-                         disabled={true}
+                         max={moment(cohortStartDate).subtract(1, 'days').format("YYYY-MM-DDTHH:mm")}
                     />
                </InputGroup>
                {props?.title2 && <span className='small'>Offering will go into drafts and will be remove from listing on webiste and app</span>}

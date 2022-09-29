@@ -128,7 +128,7 @@ function CreateEditChannel(props: any, ref: any) {
         details.discpline = JSON.stringify(msg.fitnessdisciplines);
         details.channelinstantBooking = JSON.stringify({ "instantBooking": msg.groupinstantbooking, "freeDemo": msg.Is_free_demo });
         details.expiryDate = moment(msg.expirydate).format('YYYY-MM-DD');
-        details.level = ENUM_FITNESSPACKAGE_LEVEL[msg.level];
+        details.level = ENUM_FITNESSPACKAGE_LEVEL[msg?.level];
         details.pricing = msg.fitnesspackagepricing[0]?.mrp === 'free' ? 'free' : JSON.stringify(msg.groupinstantbooking ? PRICING_TABLE_DEFAULT_WITH_INSTANTBOOKING : PRICING_TABLE_DEFAULT);
         details.publishingDate = moment(msg.publishing_date).format('YYYY-MM-DD');
         details.tag = msg?.tags === null ? "" : msg.tags;
@@ -188,7 +188,7 @@ function CreateEditChannel(props: any, ref: any) {
                 channelinstantBooking: JSON.parse(frm.channelinstantBooking).instantBooking,
                 Is_free_demo: JSON.parse(frm.channelinstantBooking).freeDemo,
                 expiry_date: moment(frm.datesConfig?.expiryDate).toISOString(),
-                level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
+                level: ENUM_FITNESSPACKAGE_LEVEL[frm?.level],
                 equipmentList: frm?.equipment?.length > 0 ? frm.equipment.map((item: any) => item.id).join(", ").split(", ") : [],
                 fitnessdisciplines: frm?.discpline?.length > 0 ? frm.discpline.map((item: any) => item.id).join(", ").split(", ") : [],
                 fitnesspackagepricing: frm.pricing === "free" ? [{ mrp: 'free' }] : JSON.parse(frm.pricing).filter((item: any) => item.mrp !== null),
@@ -216,8 +216,6 @@ function CreateEditChannel(props: any, ref: any) {
         }
         frm.languages = JSON.parse(frm.languages);
 
-        console.log(frm);
-        debugger;
         editPackageDetails({
             variables: {
                 id: operation.id,
@@ -227,7 +225,7 @@ function CreateEditChannel(props: any, ref: any) {
                 channelinstantBooking: JSON.parse(frm.channelinstantBooking).instantBooking,
                 Is_free_demo: JSON.parse(frm.channelinstantBooking).freeDemo,
                 expiry_date: moment(frm.datesConfig?.expiryDate).toISOString(),
-                level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
+                level: ENUM_FITNESSPACKAGE_LEVEL[frm?.level],
                 equipmentList: frm?.equipment?.length > 0 ? frm.equipment.map((item: any) => item.id).join(", ").split(", ") : [],
                 fitnessdisciplines: frm?.discpline?.length > 0 ? frm.discpline.map((item: any) => item.id).join(", ").split(", ") : [],
                 fitnesspackagepricing: frm.pricing === "free" ? [{ mrp: 'free' }] : JSON.parse(frm.pricing).filter((item: any) => item.mrp !== null),
@@ -283,9 +281,9 @@ function CreateEditChannel(props: any, ref: any) {
     if (operation.type === 'create') {
         name = "Live Stream Offering";
     } else if (operation.type === 'edit') {
-        name = "Edit";
+        name = `Edit ${programDetails.channelName}`;
     } else if (operation.type === 'view') {
-        name = "View";
+        name = `Viewing ${programDetails.channelName}`;
     }
 
     return (

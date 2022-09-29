@@ -9,7 +9,7 @@ const CourseDetails = (props) => {
 
     function handleAddCourseDetails(data: any) {
         const newData = [...data];
-        newData.unshift({title: '', description: ''});
+        newData.push({title: '', description: ''});
         setDetails(newData);
     }
 

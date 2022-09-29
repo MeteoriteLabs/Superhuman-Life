@@ -41,7 +41,7 @@ const ClassicPreview = (props) => {
         if(pricing === 'free'){
             return (
                 <Carousel.Item key={1}>
-                    <Card className="text-center mx-auto" style={{ borderRadius: '20px', width: '80%'}}>
+                    <Card className="text-center mx-auto" style={{ borderRadius: '20px', width: '50%'}}>
                     <Card.Body className='pr-0 py-0'>
                         <div className='d-flex justify-content-between' style={{ borderBottom: '1px dashed gray' }}>
                             <DisplayImage imageName={props?.formContext?.thumbnail ? props?.formContext?.thumbnail : null} defaultImageUrl="https://picsum.photos/200" imageCSS="rounded-lg w-25 m-2"/>
@@ -136,8 +136,8 @@ const ClassicPreview = (props) => {
     return (
         <>
         <Carousel
-            prevIcon={<i className='fa fa-chevron-left fa-lg' style={{ "color": "black"}}></i>}
-            nextIcon={<i className='fa fa-chevron-right fa-lg' style={{ "color": "black"}}></i>}
+            prevIcon={<i className='fa fa-chevron-left fa-lg p-3' style={{borderRadius: '50%', "color": "white", backgroundColor: "black"}}></i>}
+            nextIcon={<i className='fa fa-chevron-right fa-lg p-3' style={{ borderRadius: '50%', "color": "white", backgroundColor: "black" }}></i>}
             controls={false}
         >
             {handleCardRender()}

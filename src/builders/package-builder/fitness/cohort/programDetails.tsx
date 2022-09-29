@@ -1,5 +1,5 @@
 import React, {useState, useContext} from 'react';
-import {Row, Col, Form} from 'react-bootstrap';
+import {Row, Col, Form, InputGroup} from 'react-bootstrap';
 import {Typeahead} from 'react-bootstrap-typeahead';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 import { useQuery, gql } from '@apollo/client';
@@ -237,25 +237,34 @@ const ProgramDetails = (props) => {
             </div>}
             {showPrivate && mode === "2" && <div className='mt-3'>
                 <label><b>Private Rooms</b></label>
-                <Form.Group controlId="formBasicEmail-1">
+                <InputGroup >
                     <Form.Control type="number" disabled={inputDisabled} value={privateRooms} min={0} onChange={(e: any) => setPrivateRooms(parseInt(e.target.value))} />
-                </Form.Group>    
+                    <InputGroup.Prepend>
+                        <InputGroup.Text id="basic-addon1">Rooms</InputGroup.Text>
+                    </InputGroup.Prepend>
+                </InputGroup>    
             </div>}
             {showSharing && mode === "2" && <div>
                 <label><b>Sharing Rooms</b></label>
                 <Row>
                     <Col>
-                        <Form.Group controlId="formBasicEmail-2">
-                            <Form.Label>Dual Occupancy</Form.Label>
+                        <label><b>Dual Occupancy</b></label>
+                        <InputGroup>
                             <Form.Control disabled={inputDisabled} type="number" min={0} value={twoSharing} onChange={(e: any) => {setTwoSharing(parseInt(e.target.value))}} />
-                        </Form.Group> 
+                            <InputGroup.Prepend>
+                                <InputGroup.Text id="basic-addon1">Rooms</InputGroup.Text>
+                            </InputGroup.Prepend>
+                        </InputGroup> 
                         <span className='small text-muted'>Dual Occupancy as One room will be shared by 2 participants</span>
                     </Col>
                     <Col>
-                        <Form.Group controlId="formBasicEmail-3">
-                            <Form.Label>Triple  Occupancy</Form.Label>
+                        <label><b>Triple Occupancy</b></label>
+                        <InputGroup>
                             <Form.Control disabled={inputDisabled} type="number" min={0} value={threeSharing} onChange={(e: any) => setThreeSharing(parseInt(e.target.value))} />
-                        </Form.Group>
+                            <InputGroup.Prepend>
+                                <InputGroup.Text id="basic-addon1">Rooms</InputGroup.Text>
+                            </InputGroup.Prepend>
+                        </InputGroup>
                         <span className='small text-muted'>Triple Occupancy as One room will be shared by 3 participants</span> 
                     </Col>       
                 </Row>   

@@ -6,7 +6,6 @@
             "channelName",
             "discpline",
             "equipment",
-            "level",
             "intensity"
         ],
        "properties": {
@@ -31,12 +30,11 @@
            "level": {
                 "type": "number",
                 "title": "Level",
-                "enum": [0, 1, 2, 3],
+                "enum": [0, 1, 2],
                 "enumNames": [
                     "Beginner",
                     "Intermediate",
-                    "Advanced",
-                    "No level"
+                    "Advanced"
                 ],
                 "description": "Select the appropriate difficulty"
             }
