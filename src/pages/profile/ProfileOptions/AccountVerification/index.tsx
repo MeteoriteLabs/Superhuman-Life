@@ -25,7 +25,7 @@ export default function SocialAccount() {
     });
 
     const [updateProfile, { error }] = useMutation(UPDATE_USER_PROFILE_DATA, {
-        onCompleted: (r: any) => { setIsFormSubmitted(!isFormSubmitted); fetch.refetch();},
+        onCompleted: (r: any) => { setIsFormSubmitted(!isFormSubmitted); fetch.refetch();},refetchQueries: [FETCH_USER_PROFILE_DATA]
     });
 
     if (error) {
@@ -56,7 +56,7 @@ export default function SocialAccount() {
     }
 
     return (
-        <Col md={{span:8, offset: 2}}>
+        <Col md={{span:8, offset: 2}} className="pb-3">
             <Form
                 uiSchema={schema}
                 schema={accountVerificationJson}
@@ -64,6 +64,7 @@ export default function SocialAccount() {
                 formData={webpageDetails}
                 widgets={widgets}
                 onSubmit={(frm: any) => { OnSubmit(frm); }}
+                showErrorList={false}
             />
 
             {/* success toaster notification */}

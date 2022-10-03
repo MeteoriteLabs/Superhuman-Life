@@ -6,13 +6,24 @@ import { useMutation, useQuery } from "@apollo/client";
 import { flattenObj } from "../../../../components/utils/responseFlatten";
 import Toaster from '../../../../components/Toaster';
 import { Col } from 'react-bootstrap';
+import { urlCustomFormats, urlTransformErrors } from '../../../../components/utils/ValidationPatterns';
+import { schema } from './SocialAccountSchema';
+
+const emptySocialAccount = {
+    instagram_url: 'https://',
+    Facebook_URL: 'https://',
+    Youtube_URL: 'https://',
+    LinkedIn_URL: 'https://',
+    Clubhouse_URL: 'https://',
+    Twitter_URL: 'https://'
+}
 
 export default function SocialAccount() {
     let [isFormSubmitted, setIsFormSubmitted] = useState(false);
     const formRef = useRef<any>(null);
     const socialAccountJson: { [name: string]: any } = require("./SocialAccount.json");
     const auth = useContext(AuthContext);
-    const [webpageDetails, setWebPageDetails] = useState<any>({});
+    const [webpageDetails, setWebPageDetails] = useState<any>(emptySocialAccount);
     const [profileData, setProfileData] = useState<any>();
 
     const fetch = useQuery(FETCH_USER_PROFILE_DATA, {
@@ -24,7 +35,7 @@ export default function SocialAccount() {
     });
 
     const [updateProfile, { error }] = useMutation(UPDATE_USER_PROFILE_DATA, {
-        onCompleted: (r: any) => { setIsFormSubmitted(!isFormSubmitted); fetch.refetch();},
+        onCompleted: (r: any) => { setIsFormSubmitted(!isFormSubmitted); fetch.refetch();}, refetchQueries: [FETCH_USER_PROFILE_DATA]
 
     });
 
@@ -37,12 +48,12 @@ export default function SocialAccount() {
             variables: {
                 id: auth.userid,
                 data: profileData ? profileData : {
-                    instagram_url: frm.formData.instagram_url,
-                    Facebook_URL: frm.formData.Facebook_URL,
-                    Youtube_URL: frm.formData.Youtube_URL,
-                    LinkedIn_URL: frm.formData.LinkedIn_URL,
-                    Clubhouse_URL: frm.formData.Clubhouse_URL,
-                    Twitter_URL: frm.formData.Twitter_URL
+                    instagram_url: frm.formData.instagram_url === '' ? null : frm.formData.instagram_url,
+                    Facebook_URL: frm.formData.Facebook_URL === '' ? null : frm.formData.Facebook_URL,
+                    Youtube_URL: frm.formData.Youtube_URL === '' ? null : frm.formData.Youtube_URL,
+                    LinkedIn_URL: frm.formData.LinkedIn_URL === '' ? null : frm.formData.LinkedIn_URL,
+                    Clubhouse_URL: frm.formData.Clubhouse_URL === '' ? null : frm.formData.Clubhouse_URL,
+                    Twitter_URL: frm.formData.Twitter_URL === '' ? null : frm.formData.Twitter_URL
                 },
             },
         });
@@ -61,7 +72,7 @@ export default function SocialAccount() {
     }
 
     return (
-        <Col md={{span:8, offset: 2}}>
+        <Col md={{span:8, offset: 2}} className="pb-3">
 
             {/* Social Account details form */}
             <Form
@@ -69,6 +80,10 @@ export default function SocialAccount() {
                 schema={socialAccountJson}
                 formData={webpageDetails}
                 onSubmit={(frm: any) => { OnSubmit(frm); }}
+                showErrorList={false}
+                customFormats={urlCustomFormats}
+                transformErrors={urlTransformErrors}
+                uiSchema={schema}
             />
             
             {/* success toaster notification */}

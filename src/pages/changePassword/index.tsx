@@ -73,7 +73,7 @@ export default function ChangePassword(props: any) {
           <h4>Change Password</h4>
           <p className="text-danger blockquote-footer">Enter New Password</p>
           <hr />
-          <Form uiSchema={uiSchema} validate={Validate} schema={loginSchema} onSubmit={({ formData }) => onSubmit(formData)}>
+          <Form uiSchema={uiSchema} validate={Validate} schema={loginSchema} showErrorList={false} onSubmit={({ formData }) => onSubmit(formData)}>
 
 
             <Row className="mb-2" style={{ justifyContent: 'center' }}>

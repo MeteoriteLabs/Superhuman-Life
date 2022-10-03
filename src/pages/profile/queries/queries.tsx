@@ -14,6 +14,7 @@ export const FETCH_USER_PROFILE_DATA = gql`
           About_User
           Website_URL
           about_mini_description
+          Document_Verified
           designations{
             data{
               id
@@ -215,37 +216,3 @@ export const FETCH_USERS_PROFILE_DATA = gql`
     }
   }
 `;
-
-// query usersPermissionsUsers {
-//   usersPermissionsUsers(pagination: { pageSize: 100 }) {
-//     data {
-//       id
-//       attributes {
-//         username
-//         email
-//         Phone_Number
-//         Photo_ID
-//         Last_Name
-//         First_Name
-//         Facebook_URL
-//         addresses (pagination:{pageSize:100}){
-          
-//           data {
-//             id
-//             attributes {
-//               type
-//               state
-//               address1
-//               address2
-//               Title
-//               state
-//               city
-//               country
-//               zipcode
-//             }
-//           }
-//         }
-//       }
-//     }
-//   }
-// }

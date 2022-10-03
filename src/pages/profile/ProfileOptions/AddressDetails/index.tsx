@@ -1,8 +1,8 @@
 import { useState, useContext, useRef, forwardRef } from 'react';
 import { Card, Row, Col, Button, Dropdown } from "react-bootstrap";
-import { FETCH_USERS_PROFILE_DATA, DELETE_ADDRESS } from "../../queries/queries";
+import { FETCH_USERS_PROFILE_DATA } from "../../queries/queries";
 import AuthContext from "../../../../context/auth-context";
-import { useQuery, useMutation } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { flattenObj } from "../../../../components/utils/responseFlatten";
 import CreateAddress from './CreateAddress';
 
@@ -19,29 +19,26 @@ function AddressDetails() {
     },
   });
 
-  const [deleteAddress, { error }] = useMutation(DELETE_ADDRESS, {
-    onCompleted: (data: any) => { fetch.refetch(); },
-  });
+  // function deleteUserAddress(data: any) {
+  //   deleteAddress({
+  //     variables: {
+  //       id: data.id
+  //     }
+  //   })
+  // }
 
-  if(error){
-    console.log("Oops! Error occured")
-  }
-  function deleteUserAddress(data: any) {
-    deleteAddress({
-      variables: {
-        id: data.id
-      }
-    })
-  }
+  const deleteUserAddress = (data: any) => {
+    CreateAddressComponent.current.TriggerForm({ id: data.id, type: 'delete' })
+  };
 
   // calling modal for update option
   function updateAddress(data: any) {
     CreateAddressComponent.current.TriggerForm({
-            id: data.id,
-            type: "edit",
-            modal_status: true,
-        });
-}
+      id: data.id,
+      type: "edit",
+      modal_status: true,
+    });
+  }
 
   function refetchQueryCallback() {
     fetch.refetch();
@@ -69,7 +66,7 @@ function AddressDetails() {
         </Card.Title>
       </Col>
 
-      <Row className="mt-4">
+      <Row className="mt-4 pb-3">
         {
           (addressData && addressData?.length) ? addressData?.length && addressData.map((currValue: any) =>
             <Col lg={12} key={currValue.id}>
@@ -96,18 +93,18 @@ function AddressDetails() {
                   </Row>
 
                   <Card.Title>{currValue.Title ? currValue.Title : null}<span className='text-white rounded bg-secondary p-1 ml-2'>{currValue.type_address ? currValue.type_address : null}</span></Card.Title>
-                  
-                    <Row className="p-1">
-                      <Col xs={12} lg={6}><b>Address 1 : </b>{currValue.House_Number ? currValue.House_Number : null} {currValue.address1 ? currValue.address1 : null}</Col>
-                      <Col xs={12} lg={6}>{currValue.address2 ? currValue.address2 : null}</Col>
-                    </Row>
-                    <Row className="p-1">
-                      <Col xs={12} lg={3}><b>City : </b>{currValue.city ? currValue.city : null}</Col>
-                      <Col xs={12} lg={3}><b>State : </b>{currValue.state ? currValue.state : null}</Col>
-                      <Col xs={12} lg={3}><b>Country : </b>{currValue.country ? currValue.country : null}</Col>
-                      <Col xs={12} lg={3}><b>Zipcode : </b>{currValue.zipcode ? currValue.zipcode : null}</Col>
-                    </Row>
-                  
+
+                  <Row className="p-1">
+                    <Col xs={12} lg={6}><b>Address 1 : </b>{currValue.House_Number ? currValue.House_Number : null} {currValue.address1 ? currValue.address1 : null}</Col>
+                    <Col xs={12} lg={6}>{currValue.address2 ? currValue.address2 : null}</Col>
+                  </Row>
+                  <Row className="p-1">
+                    <Col xs={12} lg={3}><b>City : </b>{currValue.city ? currValue.city : null}</Col>
+                    <Col xs={12} lg={3}><b>State : </b>{currValue.state ? currValue.state : null}</Col>
+                    <Col xs={12} lg={3}><b>Country : </b>{currValue.country ? currValue.country : null}</Col>
+                    <Col xs={12} lg={3}><b>Zipcode : </b>{currValue.zipcode ? currValue.zipcode : null}</Col>
+                  </Row>
+
                 </Card.Body>
               </Card>
             </Col>

@@ -9,27 +9,18 @@ function ChangemakersSettings() {
     const [showModuleSetting, setShowModuleSetting] = useState(false);
     const [showDeleteAccountSetting, setShowDeleteAccountSetting] = useState(false);
 
-    const handleClosePassword = () => setShowPasswordSetting(false);
-    const handleShowPassword = () => setShowPasswordSetting(true);
-
-    const handleCloseModule = () => setShowModuleSetting(false);
-    const handleShowModule = () => setShowModuleSetting(true);
-
-    const handleCloseDeleteAccount = () => setShowDeleteAccountSetting(false);
-    const handleShowDeleteAccount = () => setShowDeleteAccountSetting(true);
-    
     return (
         <>
             <Container>
                 <h3>Changemaker Settings</h3>
                 <hr style={{ height: '12px' }} />
-                {showPasswordSetting && <ChangePasswordPage show={showPasswordSetting} onHide={handleClosePassword}/>}
-                {showModuleSetting && <Modules show={showModuleSetting} onHide={handleCloseModule}/>}
-                {showDeleteAccountSetting && <DeleteAccountConfirmation show={showDeleteAccountSetting} onHide={handleCloseDeleteAccount}/>}
+                {showPasswordSetting && <ChangePasswordPage show={showPasswordSetting} onHide={() => setShowPasswordSetting(false)} />}
+                {showModuleSetting && <Modules show={showModuleSetting} onHide={() => setShowModuleSetting(false)} />}
+                {showDeleteAccountSetting && <DeleteAccountConfirmation show={showDeleteAccountSetting} onHide={() => setShowDeleteAccountSetting(false)} />}
                 <Row>
 
-                   {/* Reset Password */}
-                    <Col className="pb-1 pt-2" md={{ span: 4, offset: 2 }} sm={12} onClick={handleShowPassword} style={{cursor: 'pointer'}}>
+                    {/* Reset Password */}
+                    <Col className="pb-1 pt-2" md={{ span: 4, offset: 2 }} sm={12} onClick={() => setShowPasswordSetting(true)} style={{ cursor: 'pointer' }}>
                         <Card className="shadow-lg bg-white rounded p-3" >
 
                             <Card.Body className='text-center'>
@@ -42,7 +33,7 @@ function ChangemakersSettings() {
                             </Card.Body>
                         </Card>
                     </Col>
-                    
+
                     {/* Notification settings */}
                     <Col className="pb-1 pt-2" md={{ span: 4, offset: 1 }} sm={12}>
                         <Card className="shadow-lg bg-white rounded p-3">
@@ -61,7 +52,7 @@ function ChangemakersSettings() {
 
                 {/* Modules */}
                 <Row>
-                    <Col className="pb-1 pt-2" md={{ span: 4, offset: 2 }} sm={12} onClick={handleShowModule} style={{cursor: 'pointer'}}>
+                    <Col className="pb-1 pt-2" md={{ span: 4, offset: 2 }} sm={12} onClick={() => setShowModuleSetting(true)} style={{ cursor: 'pointer' }}>
                         <Card className="shadow-lg bg-white rounded p-3">
 
                             <Card.Body className='text-center'>
@@ -76,7 +67,7 @@ function ChangemakersSettings() {
                     </Col>
 
                     {/* Delete Account */}
-                    <Col className="pb-1 pt-2" md={{ span: 4, offset: 1 }} sm={12} onClick={handleShowDeleteAccount} style={{cursor: 'pointer'}}>
+                    <Col className="pb-1 pt-2" md={{ span: 4, offset: 1 }} sm={12} onClick={() => setShowDeleteAccountSetting(true)} style={{ cursor: 'pointer' }}>
                         <Card className="shadow-lg bg-white rounded p-3">
 
                             <Card.Body className='text-center'>

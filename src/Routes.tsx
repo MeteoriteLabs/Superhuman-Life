@@ -55,15 +55,21 @@ const SessionPage = React.lazy(() => import("./builders/session-builder/"));
 
 function NoMatch() {
      const location = useLocation();
-
+     
      return (
           <div>
                <h3>Error 404</h3>
                <p>
                     No match for <code>{location.pathname}</code>
                </p>
+               
           </div>
      );
+     
+}
+
+function NoAuthRedirect() {
+     return <Redirect to="/login" />
 }
 
 export default function Routes({ token }: any) {
@@ -128,7 +134,7 @@ export default function Routes({ token }: any) {
                                    <Route path="/contact" component={ContactPage} />
                                    <Route path="/faqs" component={FQAsPage} />
                                    <Route path="/deactiveaccount" component={DeactiveAccountPage} />
-                                   <Route path="*" component={NoMatch} />
+                                   <Route path="*" component={NoAuthRedirect} />
                               </Switch>
                          </Suspense>
                     )}

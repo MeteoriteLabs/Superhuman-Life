@@ -81,6 +81,8 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
           setUrl(null);
           setProgress(0);
           setRender(null);
+
+          props.remove();
      }
 
      const deleteFile = (keyName) => {
@@ -384,8 +386,8 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                          <div className="border bg-white border-dark p-4 ">
                               <Image
                                    src={url}
-                                   width="500px"
-                                   height="500px"
+                                   width="500vw"
+                                   height="500vh"
                                    className="img-thumbnail"
                                    alt="Image Preview"
                               />
@@ -442,6 +444,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                                         onCropChange={setCrop}
                                         onCropComplete={onCropComplete}
                                         onZoomChange={setZoom}
+                                        objectFit="contain"
                                    />
                               </div>
 

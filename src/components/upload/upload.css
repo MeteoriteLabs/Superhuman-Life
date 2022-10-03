@@ -2,46 +2,60 @@
      border: 2px dashed gray;
      box-shadow: 6px 5px 5px lightgray;
 }
+
 .dropArea {
-     width: 70%;
+     width: 60vw;
 }
 
 .crop-container {
      position: absolute;
-     width: 85%;
-     height: 120%;
-     top: 0px;
-     left: 0;
-     right: 0;
-     bottom: 0px;
-     margin-bottom: 10px;
-     background-color: black;
+     width: 70vw;
+     height: 40vh;
+     background-color: white;
 }
+
 .controls {
      position: absolute;
+     left: 35vw;
+     bottom: 5vh;
      padding: 5px;
-     margin-bottom: 30px;
-     top: 260px;
-     bottom: 0;
-     left: 30%;
-     width: 20%;
-     /* transform: translateX(-50%); */
+     width: 5vw;
      height: 10px;
-     display: flex;
-     align-items: center;
 }
+
 .uploadButton {
      position: absolute;
-     bottom: 15px;
-     left: 70%;
-     width: 6%;
-     /* transform: translateX(-50%); */
+     top: 95%;
+     right: 5vw;
+     width: 5vw;
      height: 30px;
-     display: flex;
+     text-align: center;
      align-items: center;
+     border-radius: 6px;
 }
+
 @media (max-width: 500px) {
      .dropArea {
           width: 100%;
+     }
+
+     .crop-container {
+          position: absolute;
+          width: 90vw;
+          height: 52vh;
+          background-color: white;
+     }
+
+     .uploadButton {
+          width: 30%;
+          border-radius: 5px;
+          position: absolute;
+          bottom: -3%;
+          right: 10%;
+     }
+
+     .controls {
+          width: 20%;
+          height: 10px;
      }
 }

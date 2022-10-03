@@ -5,30 +5,23 @@ import {
     FETCH_USER_PROFILE_DATA,
     UPDATE_ADDRESS_DATA,
     UPDATE_USER_PROFILE_DATA,
-    CREATE_ADDRESS
+    CREATE_ADDRESS,
+    DELETE_ADDRESS,
+    FETCH_USERS_PROFILE_DATA
 } from "../../queries/queries";
 import { Subject } from "rxjs";
 import { schema, widgets } from "../../profileSchema";
 import AuthContext from "../../../../context/auth-context";
 import { flattenObj } from "../../../../components/utils/responseFlatten";
+import StatusModal from "../../../../components/StatusModal/StatusModal";
+import { zipcodeCustomFormats, zipcodeTransformErrors } from "../../../../components/utils/ValidationPatterns";
+import Loader from '../../../../components/Loader/Loader';
 
 interface Operation {
     id: string;
     modal_status: boolean;
-    type: "create" | "edit";
+    type: "create" | "edit" | "delete";
 }
-
-const emptyAddressState = {
-    address1: '',
-    address2: '',
-    city: '',
-    country: '',
-    state: '',
-    zipcode: '',
-    type_address: '',
-    House_Number: '',
-    Title: ''
-};
 
 function CreateAddress(props: any, ref: any) {
     const auth = useContext(AuthContext);
@@ -37,6 +30,7 @@ function CreateAddress(props: any, ref: any) {
     const [operation, setOperation] = useState<Operation>({} as Operation);
     const [addressDetails, setAddressDetails] = useState<any>({});
     const [prefill, setPrefill] = useState<any>([]);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
 
     const fetch = useQuery(FETCH_USER_PROFILE_DATA, {
         variables: { id: auth.userid },
@@ -50,17 +44,20 @@ function CreateAddress(props: any, ref: any) {
     });
 
     const [updateProfile] = useMutation(UPDATE_USER_PROFILE_DATA, {
-        onCompleted: (r: any) => { props.callback(); fetch.refetch(); },
+        onCompleted: (r: any) => { props.callback(); fetch.refetch(); }, refetchQueries: [FETCH_USERS_PROFILE_DATA]
     });
 
     const [updateAddress] = useMutation(UPDATE_ADDRESS_DATA, {
-        onCompleted: (r: any) => { props.callback(); modalTrigger.next(false); fetch.refetch(); },
+        onCompleted: (r: any) => { props.callback(); modalTrigger.next(false); fetch.refetch(); }, refetchQueries: [FETCH_USERS_PROFILE_DATA]
     });
 
-    const [createAddress, { error }] = useMutation(CREATE_ADDRESS, {
+    const [deleteAddress] = useMutation(DELETE_ADDRESS, {
+        onCompleted: (data: any) => { fetch.refetch(); }, refetchQueries: [FETCH_USERS_PROFILE_DATA]
+    });
+
+    const [createAddress, { loading, error }] = useMutation(CREATE_ADDRESS, {
         onCompleted: (r: any) => {
             modalTrigger.next(false);
-            props.callback();
             fetch.refetch();
 
             // concatenate previously stored address ids with currently added address id
@@ -74,7 +71,7 @@ function CreateAddress(props: any, ref: any) {
                     },
                 },
             });
-        },
+        }
     });
 
     if (error) {
@@ -87,7 +84,16 @@ function CreateAddress(props: any, ref: any) {
     useImperativeHandle(ref, () => ({
         TriggerForm: (msg: Operation) => {
             setOperation(msg);
-            modalTrigger.next(true);
+
+            //show delete modal
+            if (msg.type === 'delete') {
+                setShowDeleteModal(true);
+            }
+
+            //restrict form to render on delete
+            if (msg.type !== 'delete') {
+                modalTrigger.next(true);
+            }
         },
     }));
 
@@ -156,6 +162,10 @@ function CreateAddress(props: any, ref: any) {
         });
     }
 
+    function DeleteAddress(id: any) {
+        deleteAddress({ variables: { id: id } });
+    }
+
     // submit function
     function OnSubmit(frm: any) {
 
@@ -169,20 +179,41 @@ function CreateAddress(props: any, ref: any) {
         }
     }
 
+    useEffect(() => {
+        <Loader/>
+    },[loading])
+
     return (
-        <ModalView
-            name={operation.type === 'create' ? "Create New Address" : "Edit Address Details"}
-            isStepper={false}
-            formUISchema={schema}
-            formSchema={addressJson}
-            showing={operation.modal_status}
-            formSubmit={(frm: any) => {
-                OnSubmit(frm);
-            }}
-            widgets={widgets}
-            modalTrigger={modalTrigger}
-            formData={operation.type === 'create' ? emptyAddressState : addressDetails}
-        />
+        <>
+            <ModalView
+                name={operation.type === 'create' ? "Create New Address" : "Edit Address Details"}
+                isStepper={false}
+                formUISchema={schema}
+                formSchema={addressJson}
+                showing={operation.modal_status}
+                formSubmit={(frm: any) => {
+                    OnSubmit(frm);
+                }}
+                widgets={widgets}
+                modalTrigger={modalTrigger}
+                formData={operation.type === 'create' ? {} : addressDetails}
+                showErrorList={false}
+                customFormats={zipcodeCustomFormats}
+                transformErrors={zipcodeTransformErrors}
+            />
+
+            {/* Delete Modal */}
+            {showDeleteModal && <StatusModal
+                show={showDeleteModal}
+                onHide={() => setShowDeleteModal(false)}
+                modalTitle="Delete"
+                modalBody="Do you want to delete this address detail?"
+                buttonLeft="Cancel"
+                buttonRight="Yes"
+                onClick={() => { DeleteAddress(operation.id) }}
+            />
+            }
+        </>
     );
 }
 

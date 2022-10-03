@@ -1,7 +1,7 @@
 import { useState, useContext, useRef } from 'react';
 import { Card, Row, Col, Button, Dropdown } from "react-bootstrap";
-import { FETCH_USERS_PROFILE_DATA, DELETE_EDUCATION_DETAILS } from "../../queries/queries";
-import { useQuery, useMutation } from "@apollo/client";
+import { FETCH_USERS_PROFILE_DATA } from "../../queries/queries";
+import { useQuery } from "@apollo/client";
 import AuthContext from "../../../../context/auth-context";
 import { flattenObj } from "../../../../components/utils/responseFlatten";
 import CreateEducation from './CreateEducation';
@@ -21,18 +21,10 @@ export default function EducationDetails() {
         },
     });
 
-    const [deleteEducationData] = useMutation(DELETE_EDUCATION_DETAILS, {
-        onCompleted: (data: any) => { fetch.refetch(); },
-    });
-
     //Delete User's Education Data function
-    function DeleteUserEducationData(data: any) {
-        deleteEducationData({
-            variables: {
-                id: data.id
-            }
-        })
-    }
+    const deleteHandler = (data: any) => {
+        CreateEducationComponent.current.TriggerForm({ id: data.id, type: 'delete' })
+    };
 
     // calling modal for update option
     function updateEducation(data: any) {
@@ -69,7 +61,7 @@ export default function EducationDetails() {
                 </Card.Title>
             </Col>
 
-            <Row className="mt-4">
+            <Row className="mt-4 pb-3">
                 {
                     (educationData && educationData?.length) ? educationData.map((currValue: any) =>
                         <Col lg={12} key={currValue.id}>
@@ -88,7 +80,7 @@ export default function EducationDetails() {
                                             </Dropdown.Toggle>
 
                                             <Dropdown.Menu key={currValue.id}>
-                                                <Dropdown.Item key={1} onClick={() => DeleteUserEducationData(currValue)}>Delete</Dropdown.Item>
+                                                <Dropdown.Item key={1} onClick={() => deleteHandler(currValue)}>Delete</Dropdown.Item>
                                                 <Dropdown.Item key={2} onClick={() => updateEducation(currValue)}>Edit</Dropdown.Item>
                                             </Dropdown.Menu>
                                         </Dropdown>

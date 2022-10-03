@@ -1,49 +1,24 @@
 import UploadImageToS3WithNativeSdk from "../../components/upload/upload";
-import AddressForm from "../../components/customWidgets/addressForm";
-import CustomEducationForm from "../../components/customWidgets/customEducationForm";
 
 export const widgets = {
   uploadImageToS3WithNativeSdk: UploadImageToS3WithNativeSdk,
 };
+
 export const schema: any = {
-  uploadProfilePicture: {
+
+  Photo_ID: {
     "ui:widget": (props: any) => (
       <UploadImageToS3WithNativeSdk
         value={props.value}
         onChange={(event: any) => {
           props.onChange(event);
         }}
-        allowImage={true}
-        allowVideo={false}
-        />
-        ),
-      },
-      Photo_ID: {
-        "ui:widget": (props: any) => (
-          <UploadImageToS3WithNativeSdk
-          value={props.value}
-          onChange={(event: any) => {
-            props.onChange(event);
-          }}
         aspectRatio={"4:4"}
         allowImage={true}
         allowVideo={false}
       />
     ),
-    "ui:help": "Upload Photo_ID",
-  },
-  Photo_profile_banner_ID: {
-    "ui:widget": (props: any) => (
-      <UploadImageToS3WithNativeSdk
-        value={props.value}
-        onChange={(event: any) => {
-          props.onChange(event);
-        }}
-        allowImage={true}
-        allowVideo={false}
-      />
-    ),
-    "ui:help": "Upload Profile Banner Photo",
+    "ui:help": "Upload Profile Picture",
   },
   Verification_ID: {
     "ui:widget": (props: any) => (
@@ -64,31 +39,42 @@ export const schema: any = {
       rows: 3,
     },
   },
+  Institute_Name: {
+    "ui:placeholder": "Enter Institute Name"
+  },
+  Specialization: {
+    "ui:placeholder": "Enter Specialization"
+  },
+  Type_of_degree: {
+    "ui:placeholder": "Select type of degree"
+  },
+  Year: {
+    "ui:placeholder": "Enter year"
+  },
+  House_Number: {
+    "ui:placeholder": "Enter house number"
+  },
+  address1: {
+    "ui:placeholder": "Enter address"
+  },
+  address2: {
+    "ui:placeholder": "Enter address"
+  },
+  city: {
+    "ui:placeholder": "Enter city"
+  },
+  state: {
+    "ui:placeholder": "Enter state"
+  },
+  country: {
+    "ui:placeholder": "Enter country"
+  },
+  zipcode: {
+    "ui:placeholder": "Enter valid zipcode of your area"
 
-  addresses: {
-    items: {
-      "ui:widget": (props: any) => (
-        <AddressForm
-          value={props.value ? JSON.parse(props.value) : ""}
-          id={props.id}
-          onChange={(event: any) => {
-            props.onChange(event);
-          }}
-        />
-      ),
-    },
   },
-  educational_details: {
-    items: {
-      "ui:widget": (props: any) => (
-        <CustomEducationForm
-          value={props.value ? JSON.parse(props.value) : ""}
-          id={props.id}
-          onChange={(event: any) => {
-            props.onChange(event);
-          }}
-        />
-      ),
-    },
-  },
+  Title: {
+    "ui:placeholder": "Enter address label eg: Permanent or Temporary"
+  }
+
 };

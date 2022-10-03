@@ -5,25 +5,23 @@ import {
      FETCH_USER_PROFILE_DATA,
      CREATE_EDUCATION_DETAILS,
      UPDATE_USER_PROFILE_DATA,
-     UPDATE_EDUCATION_DETAILS
+     UPDATE_EDUCATION_DETAILS,
+     DELETE_EDUCATION_DETAILS,
+     FETCH_USERS_PROFILE_DATA,
 } from "../../queries/queries";
 import AuthContext from "../../../../context/auth-context";
 import { Subject } from "rxjs";
 import { schema, widgets } from "../../profileSchema";
 import { flattenObj } from "../../../../components/utils/responseFlatten";
+import StatusModal from "../../../../components/StatusModal/StatusModal";
+import Loader from '../../../../components/Loader/Loader';
+import { yearCustomFormats, yearTransformErrors } from "../../../../components/utils/ValidationPatterns";
 
 interface Operation {
      id: string;
      modal_status: boolean;
-     type: "create" | "edit";
+     type: "create" | "edit" | "delete";
 }
-
-// const emptyEducationState = {
-//      Institute_Name: '',
-//      Specialization: '',
-//      Type_of_degree: '',
-//      Year: ''
-// };
 
 function CreateEducation(props: any, ref: any) {
      const educationJson: { [name: string]: any } = require("./Education.json");
@@ -32,6 +30,7 @@ function CreateEducation(props: any, ref: any) {
      const [educationDetails, setEducationDetails] = useState<any>([]);
      const auth = useContext(AuthContext);
      const [prefill, setPrefill] = useState<any>([]);
+     const [showDeleteModal, setShowDeleteModal] = useState(false);
 
      const fetch = useQuery(FETCH_USER_PROFILE_DATA, {
           variables: { id: auth.userid },
@@ -51,17 +50,21 @@ function CreateEducation(props: any, ref: any) {
      });
 
      const [updateProfile] = useMutation(UPDATE_USER_PROFILE_DATA, {
-          onCompleted: (r: any) => { props.callback(); fetch.refetch(); },
+          onCompleted: (r: any) => { props.callback(); fetch.refetch(); }, refetchQueries: [FETCH_USERS_PROFILE_DATA]
      });
 
      const [updateEducationalDetail] = useMutation(UPDATE_EDUCATION_DETAILS, {
-          onCompleted: (r: any) => { modalTrigger.next(false); props.callback(); fetch.refetch(); },
+          onCompleted: (r: any) => { modalTrigger.next(false); props.callback(); fetch.refetch(); }
      });
 
-     const [createEducation] = useMutation(CREATE_EDUCATION_DETAILS, {
+     const [deleteEducationData] = useMutation(DELETE_EDUCATION_DETAILS, {
+          onCompleted: (data: any) => { fetch.refetch(); }, refetchQueries: [FETCH_USERS_PROFILE_DATA]
+     });
+
+     const [createEducation, { loading }] = useMutation(CREATE_EDUCATION_DETAILS, {
           onCompleted: (r: any) => {
                modalTrigger.next(false);
-               props.callback();
+
                fetch.refetch();
 
                // concatenate previously stored education details IDs with currently added educational details ID
@@ -75,7 +78,7 @@ function CreateEducation(props: any, ref: any) {
                          },
                     },
                });
-          },
+          }
      });
 
      // Modal trigger
@@ -84,7 +87,16 @@ function CreateEducation(props: any, ref: any) {
      useImperativeHandle(ref, () => ({
           TriggerForm: (msg: Operation) => {
                setOperation(msg);
-               modalTrigger.next(true);
+
+               //show delete modal
+               if (msg.type === 'delete') {
+                    setShowDeleteModal(true);
+               }
+
+               //restrict form to render on delete
+               if (msg.type !== 'delete') {
+                    modalTrigger.next(true);
+               }
           },
      }));
 
@@ -116,7 +128,7 @@ function CreateEducation(props: any, ref: any) {
                          Type_of_degree: frm.Type_of_degree,
                          Year: frm.Year,
                     }
-               },
+               }
           });
      }
 
@@ -135,6 +147,10 @@ function CreateEducation(props: any, ref: any) {
           });
      }
 
+     function DeleteEducation(id: any) {
+          deleteEducationData({ variables: { id: id } });
+     }
+
      function OnSubmit(frm: any) {
           switch (operation.type) {
                case "create":
@@ -146,21 +162,42 @@ function CreateEducation(props: any, ref: any) {
           }
      }
 
+     useEffect(() => {
+          <Loader/>
+      },[loading])
+
      return (
-          <ModalView
-               name={operation.type === 'create' ? "Create New Education Detail" : "Edit Education Details"}
-               isStepper={false}
-               formUISchema={schema}
-               formSchema={educationJson}
-               showing={operation.modal_status}
-               formSubmit={(frm: any) => {
-                    OnSubmit(frm);
-               }}
-               widgets={widgets}
-               modalTrigger={modalTrigger}
-               type={operation.type}
-               formData={operation.type === 'create' ? {} : educationDetails}
-          />
+          <>
+               <ModalView
+                    name={operation.type === 'create' ? "Create New Education Detail" : "Edit Education Details"}
+                    isStepper={false}
+                    formUISchema={schema}
+                    formSchema={educationJson}
+                    showing={operation.modal_status}
+                    formSubmit={(frm: any) => {
+                         OnSubmit(frm);
+                    }}
+                    widgets={widgets}
+                    modalTrigger={modalTrigger}
+                    type={operation.type}
+                    formData={operation.type === 'create' ? {} : educationDetails}
+                    showErrorList={false}
+                    customFormats={yearCustomFormats}
+                    transformErrors={yearTransformErrors}
+               />
+
+               {/* Delete Modal */}
+               {showDeleteModal && <StatusModal
+                    show={showDeleteModal}
+                    onHide={() => setShowDeleteModal(false)}
+                    modalTitle="Delete"
+                    modalBody="Do you want to delete this education detail?"
+                    buttonLeft="Cancel"
+                    buttonRight="Yes"
+                    onClick={() => { DeleteEducation(operation.id) }}
+               />
+               }
+          </>
      );
 }
 

@@ -38,7 +38,9 @@ function DeleteAccountConfirmation(props: any) {
 
   const [updateProfile] = useMutation(UPDATE_USER_PROFILE_DATA, {
     onCompleted: (r: any) => {
+      // logout from session
       logout();
+      // redirect to deactivation page
       window.open(`deactiveAccount`, "_self");
     },
   });
