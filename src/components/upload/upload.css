@@ -33,6 +33,19 @@
      border-radius: 6px;
 }
 
+@media screen and (min-width: 1400px) {
+     .dropArea {
+          width: 60vw;
+          position: relative;
+     }
+     .crop-container {
+          position: absolute;
+          width: 70vw;
+          height: 22vh;
+          background-color: white;
+     }
+   }
+
 @media (max-width: 500px) {
      .dropArea {
           width: 100%;

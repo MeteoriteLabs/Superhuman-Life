@@ -17,7 +17,6 @@ export default function BasicProfileForm() {
   const profileJson: { [name: string]: any } = require("./BasicProfile.json");
   const [webpageDetails, setWebPageDetails] = useState<any>({});
   const [profileData, setProfileData] = useState<any>()
-  // const [profilePicture, setProfilePicture] = useState<any>(null);
 
   const schema: any = {
 
@@ -32,18 +31,14 @@ export default function BasicProfileForm() {
           allowImage={true}
           allowVideo={false}
           remove={() => {
-            // setProfilePicture(null);
             updateProfile({
               variables: {
                 id: auth.userid,
                 data: profileData ? profileData : {
                   Photo_ID: null
                 },
-              },
+              },refetchQueries: [FETCH_USER_PROFILE_DATA]
             });
-            // let temp = profileData;
-            // temp.Photo_ID = null;
-            // setProfileData(temp);
           }}
         />
       ),
@@ -91,7 +86,6 @@ export default function BasicProfileForm() {
   }
 
   function updateBasicDetails(frm: any) {
-    // setProfilePicture(frm.formData.Photo_ID)
     updateProfile({
       variables: {
         id: auth.userid,
