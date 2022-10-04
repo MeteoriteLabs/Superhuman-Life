@@ -16,7 +16,8 @@ export default function ProfileCard() {
             setProfileData(r.usersPermissionsUser.data.attributes);
         },
     });
-
+    console.log(profileData)
+    // "Photo_ID" in profileData && profileData.Photo_ID
     return (
         <Container className="justify-content-center rounded shadow-lg">
 
@@ -24,7 +25,7 @@ export default function ProfileCard() {
             <Row lg={12} sm={12} style={{ backgroundColor: "#000" }} className="pb-3 pt-3">
                 {/* profile picture */}
                 <Col className="pb-1" md={{ span: 2, offset: 1 }} sm={12}>
-                    <DisplayImage imageName={profileData ? profileData.Photo_ID : null } defaultImageUrl="assets/image_placeholder.svg" imageCSS="rounded-circle profile_picture text-center img-fluid" />
+                    <DisplayImage imageName={"Photo_ID" in profileData ? profileData.Photo_ID : null } defaultImageUrl="assets/image_placeholder.svg" imageCSS="rounded-circle profile_picture text-center img-fluid" />
                 </Col>
 
                 {/* user information */}

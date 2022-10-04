@@ -81,7 +81,6 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
           setUrl(null);
           setProgress(0);
           setRender(null);
-
           props.remove();
      }
 
@@ -448,9 +447,10 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                                    />
                               </div>
 
-                              <div className="mt-2">
+                              <div className="mt-2 controls">
                                    <Slider
-                                        className="controls"
+                                        // className="controls"
+                                        style={{width: '200px'}}
                                         min={1}
                                         max={3}
                                         step={0.1}

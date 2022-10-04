@@ -20,7 +20,7 @@ export default function BasicProfileForm() {
   // const [profilePicture, setProfilePicture] = useState<any>(null);
 
   const schema: any = {
-    
+
     Photo_ID: {
       "ui:widget": (props: any) => (
         <UploadImageToS3WithNativeSdk
@@ -31,7 +31,11 @@ export default function BasicProfileForm() {
           aspectRatio={"4:4"}
           allowImage={true}
           allowVideo={false}
-          // remove= {() => setProfilePicture(null)}
+          remove={() => {
+            let temp = profileData;
+            temp.Photo_ID = null;
+            setProfileData(temp);
+          }}
         />
       ),
       "ui:help": "Upload Profile Picture"
@@ -59,7 +63,7 @@ export default function BasicProfileForm() {
       "ui:placeholder": "Enter your 10 digit contact number",
     }
   };
-  
+
 
   const fetch = useQuery(FETCH_USER_PROFILE_DATA, {
     variables: { id: auth.userid },
@@ -70,7 +74,7 @@ export default function BasicProfileForm() {
   });
 
   const [updateProfile, { error }] = useMutation(UPDATE_USER_PROFILE_DATA, {
-    onCompleted: (r: any) => { setIsFormSubmitted(!isFormSubmitted); fetch.refetch();},refetchQueries: [FETCH_USER_PROFILE_DATA]
+    onCompleted: (r: any) => { setIsFormSubmitted(!isFormSubmitted); fetch.refetch(); }, refetchQueries: [FETCH_USER_PROFILE_DATA]
   });
 
   if (error) {

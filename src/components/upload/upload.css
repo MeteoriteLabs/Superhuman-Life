@@ -14,13 +14,29 @@
      background-color: white;
 }
 
-.controls {
+/* .controls {
      position: absolute;
      left: 35vw;
      bottom: 5vh;
      padding: 5px;
      width: 5vw;
      height: 10px;
+} */
+.controls {
+     /* position: absolute; */
+     /* margin: 0 auto; */
+     /* left: 70vh; */
+     /* bottom: 5vh; */
+     padding: 5px;
+     /* width: 5vw; */
+     /* height: 10px; */
+     /* margin-left: auto; */
+     /* margin-right: auto; */
+     /* left: 0; */
+     /* right: 0; */
+     width: 100%;
+     background-color: red;
+     text-align: center;
 }
 
 .uploadButton {
@@ -54,8 +70,8 @@
           right: 10%;
      }
 
-     .controls {
+     /* .controls {
           width: 20%;
           height: 10px;
-     }
+     } */
 }
