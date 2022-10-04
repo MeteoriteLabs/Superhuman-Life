@@ -16,8 +16,7 @@ export default function ProfileCard() {
             setProfileData(r.usersPermissionsUser.data.attributes);
         },
     });
-    console.log(profileData)
-    // "Photo_ID" in profileData && profileData.Photo_ID
+    
     return (
         <Container className="justify-content-center rounded shadow-lg">
 

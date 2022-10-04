@@ -5,6 +5,7 @@
 
 .dropArea {
      width: 60vw;
+     position: relative;
 }
 
 .crop-container {
@@ -14,36 +15,18 @@
      background-color: white;
 }
 
-/* .controls {
-     position: absolute;
-     left: 35vw;
-     bottom: 5vh;
-     padding: 5px;
-     width: 5vw;
-     height: 10px;
-} */
 .controls {
-     /* position: absolute; */
-     /* margin: 0 auto; */
-     /* left: 70vh; */
-     /* bottom: 5vh; */
-     padding: 5px;
-     /* width: 5vw; */
-     /* height: 10px; */
-     /* margin-left: auto; */
-     /* margin-right: auto; */
-     /* left: 0; */
-     /* right: 0; */
-     width: 100%;
-     background-color: red;
-     text-align: center;
+     width: 10vw;
+     position: absolute;
+     left: 50%;
+     bottom: 0%;
 }
 
 .uploadButton {
      position: absolute;
-     top: 95%;
-     right: 5vw;
-     width: 5vw;
+     bottom: -20%;
+     right: 0%;
+     width: 10vw;
      height: 30px;
      text-align: center;
      align-items: center;
@@ -53,6 +36,7 @@
 @media (max-width: 500px) {
      .dropArea {
           width: 100%;
+          position: relative;
      }
 
      .crop-container {
@@ -65,13 +49,12 @@
      .uploadButton {
           width: 30%;
           border-radius: 5px;
-          position: absolute;
-          bottom: -3%;
-          right: 10%;
      }
 
-     /* .controls {
-          width: 20%;
+     .controls {
+          position: absolute;
+          bottom: 1%;
+          width: 25%;
           height: 10px;
-     } */
+     }
 }

@@ -15,6 +15,7 @@ export const FETCH_USER_PROFILE_DATA = gql`
           Website_URL
           about_mini_description
           Document_Verified
+          updatedAt
           designations{
             data{
               id
