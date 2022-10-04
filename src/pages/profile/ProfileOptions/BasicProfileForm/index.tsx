@@ -32,9 +32,18 @@ export default function BasicProfileForm() {
           allowImage={true}
           allowVideo={false}
           remove={() => {
-            let temp = profileData;
-            temp.Photo_ID = null;
-            setProfileData(temp);
+            // setProfilePicture(null);
+            updateProfile({
+              variables: {
+                id: auth.userid,
+                data: profileData ? profileData : {
+                  Photo_ID: null
+                },
+              },
+            });
+            // let temp = profileData;
+            // temp.Photo_ID = null;
+            // setProfileData(temp);
           }}
         />
       ),
@@ -82,6 +91,7 @@ export default function BasicProfileForm() {
   }
 
   function updateBasicDetails(frm: any) {
+    // setProfilePicture(frm.formData.Photo_ID)
     updateProfile({
       variables: {
         id: auth.userid,
