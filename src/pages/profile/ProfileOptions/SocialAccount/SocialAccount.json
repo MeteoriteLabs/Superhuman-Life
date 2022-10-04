@@ -6,32 +6,32 @@
     "instagram_url": {
         "type": "string",
         "title": "Instagram URL",
-        "format": "uri"
+        "format": "url"
     },
     "Facebook_URL": {
         "type": "string",
         "title": "Facebook URL",
-        "format": "uri"
+        "format": "url"
     },
     "Youtube_URL": {
         "type": "string",
         "title": "Youtube URL",
-        "format": "uri"
+        "format": "url"
     },
     "LinkedIn_URL": {
         "type": "string",
         "title": "LinkedIn URL",
-        "format": "uri"
+        "format": "url"
     },
     "Clubhouse_URL": {
         "type": "string",
         "title": "Clubhouse URL",
-        "format": "uri"
+        "format": "url"
     },
     "Twitter_URL": {
         "type": "string",
         "title": "Twitter URL",
-        "format": "uri"
+        "format": "url"
     }
 }
 }

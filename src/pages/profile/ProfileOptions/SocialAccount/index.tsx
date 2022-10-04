@@ -9,21 +9,12 @@ import { Col } from 'react-bootstrap';
 import { urlCustomFormats, urlTransformErrors } from '../../../../components/utils/ValidationPatterns';
 import { schema } from './SocialAccountSchema';
 
-const emptySocialAccount = {
-    instagram_url: 'https://',
-    Facebook_URL: 'https://',
-    Youtube_URL: 'https://',
-    LinkedIn_URL: 'https://',
-    Clubhouse_URL: 'https://',
-    Twitter_URL: 'https://'
-}
-
 export default function SocialAccount() {
     let [isFormSubmitted, setIsFormSubmitted] = useState(false);
     const formRef = useRef<any>(null);
     const socialAccountJson: { [name: string]: any } = require("./SocialAccount.json");
     const auth = useContext(AuthContext);
-    const [webpageDetails, setWebPageDetails] = useState<any>(emptySocialAccount);
+    const [webpageDetails, setWebPageDetails] = useState<any>({});
     const [profileData, setProfileData] = useState<any>();
 
     const fetch = useQuery(FETCH_USER_PROFILE_DATA, {

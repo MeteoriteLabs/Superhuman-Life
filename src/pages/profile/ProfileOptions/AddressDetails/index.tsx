@@ -19,14 +19,6 @@ function AddressDetails() {
     },
   });
 
-  // function deleteUserAddress(data: any) {
-  //   deleteAddress({
-  //     variables: {
-  //       id: data.id
-  //     }
-  //   })
-  // }
-
   const deleteUserAddress = (data: any) => {
     CreateAddressComponent.current.TriggerForm({ id: data.id, type: 'delete' })
   };

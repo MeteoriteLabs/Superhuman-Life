@@ -81,7 +81,6 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
           setUrl(null);
           setProgress(0);
           setRender(null);
-          props.remove();
      }
 
      const deleteFile = (keyName) => {

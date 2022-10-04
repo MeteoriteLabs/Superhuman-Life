@@ -51,10 +51,8 @@ export const schema: any = {
   },
   zipcode: {
     "ui:placeholder": "Enter valid zipcode of your area"
-
   },
   Title: {
     "ui:placeholder": "Enter address label eg: Permanent or Temporary"
   }
-
 };
