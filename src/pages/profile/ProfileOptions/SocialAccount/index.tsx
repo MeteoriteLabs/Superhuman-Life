@@ -6,7 +6,6 @@ import { useMutation, useQuery } from "@apollo/client";
 import { flattenObj } from "../../../../components/utils/responseFlatten";
 import Toaster from '../../../../components/Toaster';
 import { Col } from 'react-bootstrap';
-import { urlCustomFormats, urlTransformErrors } from '../../../../components/utils/ValidationPatterns';
 import { schema } from './SocialAccountSchema';
 
 export default function SocialAccount() {
@@ -39,12 +38,12 @@ export default function SocialAccount() {
             variables: {
                 id: auth.userid,
                 data: profileData ? profileData : {
-                    instagram_url: frm.formData.instagram_url === '' ? null : frm.formData.instagram_url,
-                    Facebook_URL: frm.formData.Facebook_URL === '' ? null : frm.formData.Facebook_URL,
-                    Youtube_URL: frm.formData.Youtube_URL === '' ? null : frm.formData.Youtube_URL,
-                    LinkedIn_URL: frm.formData.LinkedIn_URL === '' ? null : frm.formData.LinkedIn_URL,
-                    Clubhouse_URL: frm.formData.Clubhouse_URL === '' ? null : frm.formData.Clubhouse_URL,
-                    Twitter_URL: frm.formData.Twitter_URL === '' ? null : frm.formData.Twitter_URL
+                    instagram_url: frm.formData.instagram_url,
+                    Facebook_URL: frm.formData.Facebook_URL,
+                    Youtube_URL: frm.formData.Youtube_URL,
+                    LinkedIn_URL: frm.formData.LinkedIn_URL,
+                    Clubhouse_URL: frm.formData.Clubhouse_URL,
+                    Twitter_URL: frm.formData.Twitter_URL
                 },
             },
         });
@@ -72,8 +71,6 @@ export default function SocialAccount() {
                 formData={webpageDetails}
                 onSubmit={(frm: any) => { OnSubmit(frm); }}
                 showErrorList={false}
-                customFormats={urlCustomFormats}
-                transformErrors={urlTransformErrors}
                 uiSchema={schema}
             />
             
