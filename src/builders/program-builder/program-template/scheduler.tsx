@@ -1140,6 +1140,8 @@ const Schedular = (props: any) => {
     }
 
     console.log(event);
+    console.log(arr2);
+    debugger;
 
     if (!show) {
         return <div className="text-center">
@@ -1307,20 +1309,27 @@ const Schedular = (props: any) => {
                             </Col>
                         </Row>
                         <hr style={{ marginTop: '0px', marginBottom: '20px', borderTop: '2px solid grey' }}></hr>
-                        <Row className="align-items-center">
-                            <Col lg={1}>
-                                <h6>Type: </h6>
+                        <Row>
+                            <Col lg={6}>
+                            <Row className="align-items-center">
+                                <Col lg={2}>
+                                    <h6>Type: </h6>
+                                </Col>
+                                <Col lg={6}>
+                                    <FormControl value={event.type} disabled />
+                                </Col>
+                            </Row>
+                            <Row className="pt-3 align-items-center">
+                                <Col lg={2}>
+                                    <h6>Day: </h6>
+                                </Col>
+                                <Col lg={6}>
+                                    <FormControl value={event.sessionDate && props.type !== 'day' ? moment(event.sessionDate).format("Do, MMM YY") : `Day - ${event.day}`} disabled />
+                                </Col>
+                            </Row>
                             </Col>
-                            <Col lg={4}>
-                                <FormControl value={event.type} disabled />
-                            </Col>
-                        </Row>
-                        <Row className="pt-3 align-items-center">
-                            <Col lg={1}>
-                                <h6>Day: </h6>
-                            </Col>
-                            <Col lg={4}>
-                                <FormControl value={event.sessionDate && props.type !== 'day' ? moment(event.sessionDate).format("Do, MMM YY") : `Day - ${event.day}`} disabled />
+                            <Col lg={6}>
+                                <TimeField eventType="edit" onChange={handleStart} endTime={event.endHour + ':' + event.endMin} startTime={event.hour + ':' + event.min} disabled={edit}/>
                             </Col>
                         </Row>
                         {window.location.pathname.split("/")[1] !== 'programs' && (tag || event.tag) !== 'Classic' && <Row className="pt-3 align-items-center">
@@ -1346,17 +1355,17 @@ const Schedular = (props: any) => {
                                 </Form.Control>
                             </Col>
                         </Row>}
-                        <Row className="pt-3 align-items-center">
+                        {/* <Row className="pt-3 align-items-center">
                             <Col>
                                 <TimeField eventType="edit" onChange={handleStart} endTime={event.endHour + ':' + event.endMin} startTime={event.hour + ':' + event.min} disabled={edit}/>
                             </Col>
-                        </Row>
+                        </Row> */}
                         {(event.type === "workout") && <Tabs defaultActiveKey="agenda" transition={false} id="noanim-tab-example" className="pt-4">
                             <Tab eventKey="agenda" title="Agenda">
-                                {/* <Row className="justify-content-end">
-                                    <Button className="mr-3 mt-2" variant="primary" size="sm" onClick={() => { handleClose(); setData([]); setEvent([]); createEditWorkoutComponent.current.TriggerForm({ type: 'edit' }); }}><i className="fas fa-pencil-alt"></i>{" "}Edit</Button>
+                                <Row className="justify-content-end">
+                                    <Button className="mr-3 mt-2" variant="primary" size="sm" onClick={() => { handleClose(); setData([]); setEvent([]); createEditWorkoutComponent.current.TriggerForm({ type: 'edit', id: event?.id }); }}><i className="fas fa-pencil-alt"></i>{" "}Edit</Button>
                                     <Button className="mr-3 mt-2" variant="warning" size="sm" onClick={() => {handleClose(); setData([]); setEvent([]); replaceWorkoutComponent.current.TriggerForm({type: 'edit' })}}><i className="fas fa-reply"></i>{" "}Replace</Button>
-                                </Row> */}
+                                </Row>
                                 {data.map(val => {
                                     debugger;
                                     console.log(val);
@@ -1395,7 +1404,7 @@ const Schedular = (props: any) => {
                                         <>
                                             <Row className="pt-3 align-items-center">
                                                 <Col lg={1}>
-                                                    <label>Intensity: </label>
+                                                    <label>Intensity:</label>
                                                 </Col>
                                                 <Col lg={3}>
                                                     <InputGroup>
