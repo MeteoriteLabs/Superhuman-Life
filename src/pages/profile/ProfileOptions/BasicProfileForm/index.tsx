@@ -30,16 +30,6 @@ export default function BasicProfileForm() {
           aspectRatio={"4:4"}
           allowImage={true}
           allowVideo={false}
-          remove={() => {
-            updateProfile({
-              variables: {
-                id: auth.userid,
-                data: profileData ? profileData : {
-                  Photo_ID: null
-                },
-              },refetchQueries: [FETCH_USER_PROFILE_DATA]
-            });
-          }}
         />
       ),
       "ui:help": "Upload Profile Picture"
@@ -84,8 +74,9 @@ export default function BasicProfileForm() {
   if (error) {
     return <Toaster heading="Failed" textColor="text-danger" headingCSS="mr-auto text-danger" msg="Basic Profile details has not been updated" />;
   }
-
+console.log(profileData)
   function updateBasicDetails(frm: any) {
+
     updateProfile({
       variables: {
         id: auth.userid,
