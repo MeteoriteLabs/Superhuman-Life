@@ -104,6 +104,9 @@ const CustomProgramDetails = (props) => {
     function handleValidation(mode: string){
      //    here we will check for online
           console.log(mode);
+          if(restDays < 0){
+               return false;
+          }
         if(mode === '0'){
             if((ptOnlineClasses + groupOnlineClasses + recordedClasses + restDays) === 30){
                return true;
@@ -144,6 +147,24 @@ const CustomProgramDetails = (props) => {
     }
 
 //     console.log(restDays, onlineClasses, offlineClasses);
+
+    useEffect(() => {
+          if(ptOnlineClasses < 0){
+               setPtOnlineClasses(0);
+          }
+          if(ptOfflineClasses < 0){
+               setPtOfflineClasses(0);
+          }
+          if(groupOnlineClasses < 0){
+               setGroupOnlineClasses(0);
+          }
+          if(groupOfflineClasses < 0){
+               setGroupOfflineClasses(0);
+          }
+          if(recordedClasses < 0){
+               setRecordedClasses(0);
+          }
+    }, [ptOnlineClasses, ptOfflineClasses, recordedClasses, groupOfflineClasses, groupOnlineClasses]);
 
     useEffect(() => {
           if(mode === "0"){
@@ -206,6 +227,7 @@ const CustomProgramDetails = (props) => {
                             placeholder="Search Address.."
                             selected={singleSelections}
                             disabled={inputDisabled}
+                            clearButton
                         />
                     </Col>}
                     {addressTitle === 'At Client Address' && <span className='small text-muted'>*Within city limits</span>}
@@ -225,6 +247,9 @@ const CustomProgramDetails = (props) => {
           <div className='m-5 p-2 text-center shadow-lg'>
                <h4>Set For One Month (30 Days)</h4>
           </div>
+          {mode !== "" && <div>
+            <label><b>Enter Number of Sessions</b></label>
+          </div>}
           {mode !== "" && (mode === "0" || mode === "2") && <Row>
                <Col lg={1}>
                     <img src='/assets/custompersonal-training-online.svg' alt='custom-training'/>
@@ -241,6 +266,9 @@ const CustomProgramDetails = (props) => {
                               disabled={inputDisabled}
                               onChange={(e: any) => setPtOnlineClasses(parseInt(e.target.value))}
                          />
+                         <InputGroup.Append>
+                            <InputGroup.Text id="basic-addon1">Sessions</InputGroup.Text>
+                        </InputGroup.Append>
                     </InputGroup>
                </Col>
                <Col lg={1}>
@@ -258,6 +286,9 @@ const CustomProgramDetails = (props) => {
                               disabled={inputDisabled}
                               onChange={(e: any) => setGroupOnlineClasses(parseInt(e.target.value))}
                          />
+                         <InputGroup.Append>
+                            <InputGroup.Text id="basic-addon1">Sessions</InputGroup.Text>
+                        </InputGroup.Append>
                     </InputGroup>
                </Col>
           </Row>}
@@ -277,6 +308,9 @@ const CustomProgramDetails = (props) => {
                               disabled={inputDisabled}
                               onChange={(e: any) => setPtOfflineClasses(parseInt(e.target.value))}
                          />
+                         <InputGroup.Append>
+                            <InputGroup.Text id="basic-addon1">Sessions</InputGroup.Text>
+                        </InputGroup.Append>
                     </InputGroup>
                </Col>
                <Col lg={1}>
@@ -294,6 +328,9 @@ const CustomProgramDetails = (props) => {
                               disabled={inputDisabled}
                               onChange={(e: any) => setGroupOfflineClasses(parseInt(e.target.value))}
                          />
+                         <InputGroup.Append>
+                            <InputGroup.Text id="basic-addon1">Sessions</InputGroup.Text>
+                        </InputGroup.Append>
                     </InputGroup>
                </Col>
           </Row>}
@@ -313,16 +350,14 @@ const CustomProgramDetails = (props) => {
                               disabled={inputDisabled}
                               onChange={(e: any) => setRecordedClasses(parseInt(e.target.value))}
                          />
+                         <InputGroup.Append>
+                            <InputGroup.Text id="basic-addon1">Sessions</InputGroup.Text>
+                        </InputGroup.Append>
                     </InputGroup>
                </Col>
           </Row>}
+          {mode !== "" && <label><b>Rest Days</b></label>}
           {mode !== "" && <Row>
-               <Col lg={1}>
-                    <img src='/assets/rest-icon.svg' alt='rest-icon'/>
-               </Col>
-               <Col lg={1}>
-                    <label><b>Rest Days</b></label>
-               </Col>
                <Col lg={2}>
                     <InputGroup className="mb-3">
                          <FormControl
@@ -333,6 +368,9 @@ const CustomProgramDetails = (props) => {
                               value={restDays}
                               disabled={true}
                          />
+                         <InputGroup.Append>
+                            <InputGroup.Text id="basic-addon1">Days</InputGroup.Text>
+                        </InputGroup.Append>
                     </InputGroup>
                </Col>
             {/* <span className='small'>*It should add upto 30 classes per month</span> */}

@@ -189,6 +189,7 @@ const PtProgramDetails = (props) => {
                             placeholder="Search Address.."
                             selected={singleSelections}
                             disabled={inputDisabled}
+                            clearButton
                         />
                     </Col>}
                     {addressTitle === 'At Client Address' && <span className='small text-muted'>*Within city limits</span>}
@@ -209,7 +210,7 @@ const PtProgramDetails = (props) => {
                <h4>Set For One Month (30 Days)</h4>
           </div>
           {mode !== "" && <div>
-            <label><b>Enter Number of classes</b></label>
+            <label><b>Enter Number of Sessions</b></label>
           </div>}
           {mode !== "" && (mode === "0" || mode === "2") && <Row>
                <Col lg={1}>
@@ -227,6 +228,9 @@ const PtProgramDetails = (props) => {
                               disabled={inputDisabled}
                               onChange={(e: any) => setOnlineClasses(parseInt(e.target.value))}
                          />
+                         <InputGroup.Append>
+                            <InputGroup.Text id="basic-addon1">Sessions</InputGroup.Text>
+                        </InputGroup.Append>
                     </InputGroup>
                </Col>
           </Row>}
@@ -246,6 +250,9 @@ const PtProgramDetails = (props) => {
                               value={offlineClasses}
                               onChange={(e: any) => setOfflinceClasses(parseInt(e.target.value))}
                          />
+                         <InputGroup.Append>
+                            <InputGroup.Text id="basic-addon1">Sessions</InputGroup.Text>
+                        </InputGroup.Append>
                     </InputGroup>
                </Col>
           </Row>}
@@ -253,9 +260,6 @@ const PtProgramDetails = (props) => {
             <label><b>Rest Days</b></label>
           </div>}
           {mode !== "" && <Row>
-               <Col lg={1}>
-                    <img src='/assets/rest-icon.svg' alt='rest-icon'/>
-               </Col>
                <Col lg={2}>
                     <InputGroup className="mb-3">
                          <FormControl
@@ -266,6 +270,9 @@ const PtProgramDetails = (props) => {
                               value={restDays}
                               disabled={true}
                          />
+                         <InputGroup.Append>
+                            <InputGroup.Text id="basic-addon1">Days</InputGroup.Text>
+                        </InputGroup.Append>
                     </InputGroup>
                </Col>
           </Row>}

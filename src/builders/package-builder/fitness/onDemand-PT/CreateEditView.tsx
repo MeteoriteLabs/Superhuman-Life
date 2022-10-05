@@ -67,7 +67,7 @@ function CreateEditOnDemadPt(props: any, ref: any) {
                     isAuto: val.config === "Auto" ? true : false,
                     id: r.createFitnesspackage.data.id,
                     bookings_per_day: val.bookings,
-                    is_Fillmyslots: val.fillSchedule
+                    is_Fillmyslots: val.fillSchedule,
                 }
             });
         }
@@ -152,7 +152,7 @@ function CreateEditOnDemadPt(props: any, ref: any) {
         details.channelinstantBooking = msg.groupinstantbooking;
         details.classSize = ENUM_FITNESSPACKAGE_PTCLASSSIZE[msg.Ptclasssize];
         details.expiryDate = moment(msg.expirydate).format('YYYY-MM-DD');
-        details.level = ENUM_FITNESSPACKAGE_LEVEL[msg.level];
+        details.level = ENUM_FITNESSPACKAGE_LEVEL[msg?.level];
         details.intensity = ENUM_FITNESSPACKAGE_INTENSITY[msg.Intensity];
         details.pricingDetail = msg.fitnesspackagepricing[0]?.mrp === 'free' ? 'free' : JSON.stringify(PRICING_TABLE_DEFAULT);
         details.publishingDate = moment(msg.publishing_date).format('YYYY-MM-DD');
@@ -204,7 +204,7 @@ function CreateEditOnDemadPt(props: any, ref: any) {
             variables: {
                 packagename: frm.packagename,
                 tags: frm?.tags,
-                level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
+                level: ENUM_FITNESSPACKAGE_LEVEL[frm?.level],
                 intensity: ENUM_FITNESSPACKAGE_INTENSITY[frm.intensity],
                 aboutpackage: frm.About,
                 benefits: frm.Benifits,
@@ -240,13 +240,12 @@ function CreateEditOnDemadPt(props: any, ref: any) {
         frm.datesConfig = JSON.parse(frm.datesConfig)
         frm.languages = JSON.parse(frm.languages)
 
-    
         editPackage({
             variables: {
                 id: operation.id,
                 packagename: frm.packagename,
                 tags: frm?.tags,
-                level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
+                level: ENUM_FITNESSPACKAGE_LEVEL[frm?.level],
                 intensity: ENUM_FITNESSPACKAGE_INTENSITY[frm.intensity],
                 aboutpackage: frm.About,
                 benefits: frm.Benifits,
@@ -318,11 +317,11 @@ function CreateEditOnDemadPt(props: any, ref: any) {
 
     let name = "";
     if(operation.type === 'create'){
-        name="Create On Demand PT";
+        name="Private Session Offering";
     }else if(operation.type === 'edit'){
-        name="Edit";
+        name=`Edit ${personalTrainingDetails.packagename}`;
     }else if(operation.type === 'view'){
-        name="View";
+        name=`Viewing ${personalTrainingDetails.packagename}`;
     }
 
     FetchData();
