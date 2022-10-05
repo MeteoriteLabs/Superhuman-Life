@@ -2,6 +2,7 @@ import React from 'react';
 import {Carousel, Card, Row, Col} from 'react-bootstrap';
 // import SocialMediaComponent from '../../../../components/customWidgets/SocialMediaComponent';
 import DisplayImage from '../../../../components/DisplayImage/index';
+import '../fitness.css';
 
 const PreviewChannel = (props) => {
 
@@ -18,19 +19,6 @@ const PreviewChannel = (props) => {
         Intermediate,
         Advanced,
         No_Level
-    }
-
-    function handleLevelColor(level: string){
-        if(level === 'Beginner'){
-            return '#04BEBD';
-        }
-        if(level === 'Intermediate'){
-            return '#D7A72E';
-        }
-        if(level === 'Advanced'){
-            return '#DB5461';
-        }   
-        return '#FF0000';
     }
 
     function handleCardRender(){
@@ -65,7 +53,7 @@ const PreviewChannel = (props) => {
                                         </Col>
                                         <Col lg={3}>
                                             <div className='align-right'>
-                                                <p className={`py-2 px-4 text-white`} style={{ borderTopRightRadius: '20px', borderBottomLeftRadius: '20px', backgroundColor: handleLevelColor(ENUM_FITNESSPACKAGE_LEVEL[props.formContext.level]) }}>{props.formContext?.level !== undefined ? ENUM_FITNESSPACKAGE_LEVEL[props.formContext.level] : 'All Levels'}</p>
+                                                <p className={`py-2 px-4 text-white ${ENUM_FITNESSPACKAGE_LEVEL[props.formContext.level] === undefined ? "All" : ENUM_FITNESSPACKAGE_LEVEL[props.formContext.level]}-level`} style={{ borderTopRightRadius: '20px', borderBottomLeftRadius: '20px' }}>{props.formContext?.level !== undefined ? ENUM_FITNESSPACKAGE_LEVEL[props.formContext.level] : 'All Levels'}</p>
                                             </div>
                                         </Col>
                                     </Row>
@@ -120,7 +108,7 @@ const PreviewChannel = (props) => {
                                         </Col>
                                         <Col lg={3}>
                                             <div className='align-right'>
-                                                <p className={`py-2 px-4 text-white`} style={{ borderTopRightRadius: '20px', borderBottomLeftRadius: '20px', backgroundColor: handleLevelColor(ENUM_FITNESSPACKAGE_LEVEL[props.formContext.level]) }}>{props.formContext?.level !== undefined ? ENUM_FITNESSPACKAGE_LEVEL[props.formContext.level] : 'All Levels'}</p>
+                                                <p className={`py-2 px-4 text-white ${ENUM_FITNESSPACKAGE_LEVEL[props.formContext.level] === undefined ? "All" : ENUM_FITNESSPACKAGE_LEVEL[props.formContext.level]}-level`} style={{ borderTopRightRadius: '20px', borderBottomLeftRadius: '20px'}}>{props.formContext?.level !== undefined ? ENUM_FITNESSPACKAGE_LEVEL[props.formContext.level] : 'All Levels'}</p>
                                             </div>
                                         </Col>
                                     </Row>
