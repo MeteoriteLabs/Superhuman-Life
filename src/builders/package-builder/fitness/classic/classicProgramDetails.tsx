@@ -145,6 +145,7 @@ const ClassicProgramDetails = (props) => {
             <div className='m-5 p-2 text-center shadow-lg'>
                <h4>Set For {duration} Days</h4>
           </div>
+          <label><b>Enter Number of Sessions</b></label>
           <Row>
                <Col lg={1}>
                     <img src='/assets/Classic.svg' alt='personal-training'/>
@@ -161,16 +162,14 @@ const ClassicProgramDetails = (props) => {
                               value={onlineClasses}
                               onChange={(e: any) => setOnlineClasses(parseInt(e.target.value))}
                          />
+                          <InputGroup.Append>
+                            <InputGroup.Text id="basic-addon1">Sessions</InputGroup.Text>
+                        </InputGroup.Append>
                     </InputGroup>
                </Col>
           </Row>
+          <label><b>Rest Days</b></label>
           <Row>
-               <Col lg={1}>
-                    <img src='/assets/rest-icon.svg' alt='rest-icon'/>
-               </Col>
-               <Col lg={1}>
-                    <label><b>Rest Days</b></label>
-               </Col>
                <Col lg={2}>
                     <InputGroup className="mb-3">
                          <FormControl
@@ -181,6 +180,9 @@ const ClassicProgramDetails = (props) => {
                               value={restDays}
                               disabled={true}
                          />
+                         <InputGroup.Append>
+                            <InputGroup.Text id="basic-addon1">Days</InputGroup.Text>
+                        </InputGroup.Append>
                     </InputGroup>
                </Col>
             {/* <span className='small'>*It should add upto 30 classes per month</span> */}

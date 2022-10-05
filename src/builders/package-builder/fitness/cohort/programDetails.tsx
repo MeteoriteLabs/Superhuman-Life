@@ -1,10 +1,11 @@
 import React, {useState, useContext} from 'react';
-import {Row, Col, Form, InputGroup} from 'react-bootstrap';
+import {Row, Col, Form, InputGroup, Button} from 'react-bootstrap';
 import {Typeahead} from 'react-bootstrap-typeahead';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 import { useQuery, gql } from '@apollo/client';
 import AuthContext from '../../../../context/auth-context';
 import { flattenObj } from '../../../../components/utils/responseFlatten';
+import AddFitnessAddressModal from "../../../../components/customWidgets/AddFitnessAddressModal";
 
 const ProgramDetails = (props) => {
 
@@ -24,6 +25,7 @@ const ProgramDetails = (props) => {
 
     const [mode, setMode] = useState(props.value === undefined ? '' : (existingData.mode).toString());
     const [residential, setResidential] = useState(props.value === undefined || existingData.residential === null ? '' : (existingData.residential).toString());
+    const [addressModal, setAddressModal] = useState(false);
 
     const auth = useContext(AuthContext); 
     const [singleSelections, setSingleSelections] = useState<any[]>(existingData?.address?.length !== 0 && props.value !== undefined ? existingData?.address : []);
@@ -57,8 +59,10 @@ const ProgramDetails = (props) => {
       }
   `;
 
-    function FetchData(){
-        useQuery(FETCH_USER_ADDRESSES, {variables: {id: auth.userid},onCompleted: loadData});
+    const mainQuery = useQuery(FETCH_USER_ADDRESSES, {variables: {id: auth.userid},onCompleted: loadData});
+
+    function handleCallback(){
+        mainQuery.refetch();
     }
 
     function loadData(data: any) {
@@ -74,7 +78,7 @@ const ProgramDetails = (props) => {
           );
     }
 
-    FetchData();
+    // FetchData();
 
     function OnChange(e) {
         setSingleSelections(e);
@@ -198,9 +202,19 @@ const ProgramDetails = (props) => {
                             placeholder="Search Address.."
                             selected={singleSelections}
                             disabled={inputDisabled}
+                            clearButton
                         />
                     </Col>}
                 </Row>
+                {addressTitle === 'At My Address' && <Row>
+                    <Col lg={{offset: 3}}>
+                         <Button variant='outline-info' disabled={inputDisabled} onClick={() => {setAddressModal(true)}}>+ Add New Address</Button>
+                    </Col>
+               </Row>}
+               <AddFitnessAddressModal
+                    show={addressModal}
+                    onHide={() => {setAddressModal(false); handleCallback()}}
+               />
             </div>}
             {mode !== '' && mode === '2' && <div>
                 <label><b>Residential</b></label>

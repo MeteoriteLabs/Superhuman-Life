@@ -1,5 +1,5 @@
 import React from 'react';
-import {Carousel, Card} from 'react-bootstrap';
+import {Carousel, Card, Row, Col} from 'react-bootstrap';
 // import SocialMediaComponent from '../../../../components/customWidgets/SocialMediaComponent';
 import DisplayImage from '../../../../components/DisplayImage/index';
 
@@ -42,26 +42,35 @@ const PreviewCohort = (props) => {
                         <Card className="text-center mx-auto" style={{ borderRadius: '20px', width: '50%'}}>
                         <Card.Body className='pr-0 py-0'>
                             <div className='d-flex justify-content-between' style={{ borderBottom: '1px dashed gray' }}>
-                                <DisplayImage imageName={props?.formContext?.thumbnail ? props?.formContext?.thumbnail : null} defaultImageUrl="https://picsum.photos/200" imageCSS="rounded-lg w-25 m-2"/>
-                                {/* <div className='pt-3'>
-                                    <img src="https://picsum.photos/200" style={{ borderRadius: '10px' }} alt="random" />
-                                </div> */}
-                                <div className='ml-4 pt-4 text-left d-flex flex-column justify-content-between'>
-                                    <Card.Title>{props.formContext.packagename}</Card.Title>
-                                    <p>{props.formContext.About}</p>
-                                    <div>
-                                        <div className='d-flex justify-content-start align-items-center'>
-                                            {JSON.parse(formData.discpline).map((item, index) => {
-                                                return <div key={index} className='mr-2 my-3' style={{ padding: '0.5rem 1rem', backgroundColor: '#F2E890', borderRadius: '20px' }}>
-                                                    <p className='mb-0'>{item.disciplinename}</p>
-                                                </div>
-                                            })}
+                            <Row>
+                                        <Col lg={4}>
+                                            {/* <DisplayImage imageName={props?.formContext?.thumbnail ? props?.formContext?.thumbnail : null} defaultImageUrl="https://picsum.photos/200" imageCSS="rounded-lg w-25 m-2"/> */}
+                                        <div className='pt-3'>
+                                            <DisplayImage imageName={props?.formContext?.thumbnail ? props?.formContext?.thumbnail : null} defaultImageUrl="https://picsum.photos/200" imageCSS="rounded-lg w-100 img-fluid img-thumbnail"/>
+                                            {/* <img src="https://picsum.photos/200" style={{ borderRadius: '10px' }} alt="random" /> */}
                                         </div>
-                                    </div>
-                                </div>
-                                <div>
-                                    <p className={`py-2 px-4 text-white`} style={{ borderTopRightRadius: '20px', borderBottomLeftRadius: '20px', backgroundColor: handleLevelColor(ENUM_FITNESSPACKAGE_LEVEL[props.formContext.level]) }}>{ENUM_FITNESSPACKAGE_LEVEL[props.formContext.level]}</p>
-                                </div>
+                                        </Col>
+                                        <Col>
+                                            <div className='text-left pt-4 d-flex flex-column justify-content-between'>
+                                            <Card.Title>{props.formContext.packageName}</Card.Title>
+                                            <p>{props.formContext.About}</p>
+                                            <div>
+                                                <div className='d-flex justify-content-start align-items-center'>
+                                                    {JSON.parse(formData.discpline).map((item, index) => {
+                                                        return <div key={index} className='mr-2 my-3' style={{ padding: '0.5rem 1rem', backgroundColor: '#F2E890', borderRadius: '20px' }}>
+                                                            <p className='mb-0'>{item.disciplinename}</p>
+                                                        </div>
+                                                    })}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        </Col>
+                                        <Col lg={3}>
+                                            <div className='align-right'>
+                                                <p className={`py-2 px-4 text-white`} style={{ borderTopRightRadius: '20px', borderBottomLeftRadius: '20px', backgroundColor: handleLevelColor(ENUM_FITNESSPACKAGE_LEVEL[props.formContext.level]) }}>{props.formContext?.level !== undefined ? ENUM_FITNESSPACKAGE_LEVEL[props.formContext.level] : 'All Levels'}</p>
+                                            </div>
+                                        </Col>
+                                    </Row>
                             </div>
                             <div className='pt-3 d-flex justify-content-between align-items-center '>
                                 <div className='d-flex justify-content-center align-items-center'>
@@ -72,7 +81,7 @@ const PreviewCohort = (props) => {
                                     <div className='px-4' style={{ borderRight: '1px solid black' }}></div>
                                 </div>
                                 <div>
-                                    <p className='mb-0 mr-3' style={{ color: '#72B54C', fontSize: '2rem' }}>free</p>
+                                    <p className='mb-0 mr-3 text-capitalize' style={{ color: '#72B54C', fontSize: '2rem' }}>free</p>
                                 </div>
                             </div>
                         </Card.Body>
@@ -85,29 +94,38 @@ const PreviewCohort = (props) => {
                     return (
                         console.log(item),
                         <Carousel.Item key={1}>
-                            <Card className="text-center mx-auto" style={{ borderRadius: '20px', width: '80%'}}>
+                            <Card className="text-center mx-auto" style={{ borderRadius: '20px', width: '50%'}}>
                             <Card.Body className='pr-0 py-0'>
                                 <div className='d-flex justify-content-between' style={{ borderBottom: '1px dashed gray' }}>
-                                    <DisplayImage imageName={props?.formContext?.thumbnail ? props?.formContext?.thumbnail : null} defaultImageUrl="https://picsum.photos/200" imageCSS="rounded-lg w-25 m-2"/>
-                                    {/* <div className='pt-3'>
-                                        <img src="https://picsum.photos/200" style={{ borderRadius: '10px' }} alt="random" />
-                                    </div> */}
-                                    <div className='ml-4 pt-4 text-left d-flex flex-column justify-content-between'>
-                                        <Card.Title>{props.formContext.packageName}</Card.Title>
-                                        <p>{props.formContext.About}</p>
-                                        <div>
-                                            <div className='d-flex justify-content-start align-items-center'>
-                                                {JSON.parse(formData.discpline).map((item, index) => {
-                                                    return <div key={index} className='mr-2 my-3' style={{ padding: '0.5rem 1rem', backgroundColor: '#F2E890', borderRadius: '20px' }}>
-                                                        <p className='mb-0'>{item.disciplinename}</p>
-                                                    </div>
-                                                })}
+                                <Row>
+                                        <Col lg={4}>
+                                            {/* <DisplayImage imageName={props?.formContext?.thumbnail ? props?.formContext?.thumbnail : null} defaultImageUrl="https://picsum.photos/200" imageCSS="rounded-lg w-25 m-2"/> */}
+                                        <div className='pt-3'>
+                                            <DisplayImage imageName={props?.formContext?.thumbnail ? props?.formContext?.thumbnail : null} defaultImageUrl="https://picsum.photos/200" imageCSS="rounded-lg w-100 img-fluid img-thumbnail"/>
+                                            {/* <img src="https://picsum.photos/200" style={{ borderRadius: '10px' }} alt="random" /> */}
+                                        </div>
+                                        </Col>
+                                        <Col>
+                                            <div className='text-left pt-4 d-flex flex-column justify-content-between'>
+                                            <Card.Title>{props.formContext.packageName}</Card.Title>
+                                            <p>{props.formContext.About}</p>
+                                            <div>
+                                                <div className='d-flex justify-content-start align-items-center'>
+                                                    {JSON.parse(formData.discpline).map((item, index) => {
+                                                        return <div key={index} className='mr-2 my-3' style={{ padding: '0.5rem 1rem', backgroundColor: '#F2E890', borderRadius: '20px' }}>
+                                                            <p className='mb-0'>{item.disciplinename}</p>
+                                                        </div>
+                                                    })}
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div>
-                                        <p className={`py-2 px-4 text-white`} style={{ borderTopRightRadius: '20px', borderBottomLeftRadius: '20px', backgroundColor: handleLevelColor(ENUM_FITNESSPACKAGE_LEVEL[props.formContext.level]) }}>{ENUM_FITNESSPACKAGE_LEVEL[props.formContext.level]}</p>
-                                    </div>
+                                        </Col>
+                                        <Col lg={3}>
+                                            <div className='align-right'>
+                                                <p className={`py-2 px-4 text-white`} style={{ borderTopRightRadius: '20px', borderBottomLeftRadius: '20px', backgroundColor: handleLevelColor(ENUM_FITNESSPACKAGE_LEVEL[props.formContext.level]) }}>{props.formContext?.level !== undefined ? ENUM_FITNESSPACKAGE_LEVEL[props.formContext.level] : 'All Levels'}</p>
+                                            </div>
+                                        </Col>
+                                    </Row>
                                 </div>
                                 <div className='pt-3 d-flex justify-content-between align-items-center '>
                                     <div className='d-flex justify-content-center align-items-center'>
@@ -119,7 +137,11 @@ const PreviewCohort = (props) => {
                                         <img src={`/assets/cohort_offline.svg`} alt="custom-classic" title="Personal Training Online" />
                                         <p>{item.duration}</p>
                                     </div>}
-                                        <div className='px-4' style={{ borderRight: '1px solid black' }}></div>
+                                        {/* <div className='px-4' style={{ borderRight: '1px solid black' }}></div> */}
+                                        <div className='ml-4'>
+                                            <h4>Class Size</h4>
+                                            <p className='mb-0' style={{ color: 'purple', fontSize: '1.3rem' }}>{props.formContext.classSize}</p>
+                                        </div>
                                     </div>
                                     <div>
                                         <p className='mb-0 mr-3' style={{ color: '#72B54C', fontSize: '2rem' }}>{"\u20B9"} {item.mrp}</p>

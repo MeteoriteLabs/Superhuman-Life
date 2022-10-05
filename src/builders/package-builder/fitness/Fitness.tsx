@@ -1,4 +1,4 @@
-import { useMemo, useState, useContext, useRef, useEffect } from "react";
+import { useMemo, useState, useContext, useRef } from "react";
 import { useQuery } from "@apollo/client";
 import { Badge, Button, Card, Col, Container, Form, Row, TabContent, DropdownButton, Dropdown } from "react-bootstrap";
 import Table from "../../../components/table";
@@ -162,7 +162,7 @@ export default function FitnessTab(props) {
                                 setCurrentIndex(updateCurrentindex)
                             }}>
                             {row.values.duration.map((item: number, index: number) => {
-                                return <option key={index} value={index}>{item} days</option>
+                                return <option key={index} value={index}>{item !== 0 && item} days</option>
                             })}
                         </Form.Control>
                     </Form.Group>

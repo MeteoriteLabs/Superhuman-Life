@@ -5,8 +5,7 @@
         "required": [
             "channelName",
             "discpline",
-            "equipment",
-            "intensity"
+            "equipment"
         ],
        "properties": {
             "channelName": {
