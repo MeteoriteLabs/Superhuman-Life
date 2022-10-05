@@ -9,6 +9,10 @@ const MIN_VALUE = 0;
 
 const ExerciseList = (props: any) => {
 
+     console.log(props);
+
+     const inputDisabled = props?.readonly;
+
      const exerciseDetails: any[] = props.value === undefined ? [] : JSON.parse(props.value);
 
      const exerciseValues: any[] = ['reps', 'sets', 'restTime', 'weights', 'duration']; 
@@ -97,7 +101,7 @@ const ExerciseList = (props: any) => {
      return (
           <>
                <InputGroup>
-                    <FormControl aria-describedby="basic-addon1" placeholder="Search for exercises" id="searchInput" ref={inputField}
+                    <FormControl aria-describedby="basic-addon1" disabled={inputDisabled} placeholder="Search for exercises" id="searchInput" ref={inputField}
                          onChange={(e) => {
                               e.preventDefault();
                               ExerciseSearch(e.target.value);
@@ -137,6 +141,7 @@ const ExerciseList = (props: any) => {
                                                             type="number"
                                                             min={MIN_VALUE}
                                                             placeholder="Enter reps"
+                                                            disabled={inputDisabled}
                                                             value={val?.reps}
                                                             aria-describedby="basic-addon2"
                                                             onChange={e => handleDataChange(val.id, e, "reps")}
@@ -154,6 +159,7 @@ const ExerciseList = (props: any) => {
                                                             type="number"
                                                             min={MIN_VALUE}
                                                             placeholder="Enter sets"
+                                                            disabled={inputDisabled}
                                                             value={val?.sets}
                                                             aria-describedby="basic-addon2"
                                                             onChange={e => handleDataChange(val.id, e, "sets")}
@@ -170,6 +176,7 @@ const ExerciseList = (props: any) => {
                                                             type="number"
                                                             min={MIN_VALUE}
                                                             placeholder="Enter rest time"
+                                                            disabled={inputDisabled}
                                                             value={val?.restTime}
                                                             aria-describedby="basic-addon2"
                                                             onChange={e => handleDataChange(val.id, e, "restTime")}
@@ -189,6 +196,7 @@ const ExerciseList = (props: any) => {
                                                             type="number"
                                                             min={MIN_VALUE}
                                                             placeholder="Weight"
+                                                            disabled={inputDisabled}
                                                             value={val.weights}
                                                             aria-describedby="basic-addon2"
                                                             onChange={e => handleDataChange(val.id, e, "weights")}
@@ -206,6 +214,7 @@ const ExerciseList = (props: any) => {
                                                             type="number"
                                                             min={MIN_VALUE}
                                                             placeholder="Duration"
+                                                            disabled={inputDisabled}
                                                             value={val?.duration}
                                                             aria-describedby="basic-addon2"
                                                             onChange={e => handleDataChange(val.id, e, "duration")}

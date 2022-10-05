@@ -90,10 +90,10 @@ export default function EventsTab() {
                 };
 
                 const arrayAction = [
+                    { actionName: 'Manage', actionClick: manageHandler },
                     { actionName: 'Edit', actionClick: editHandler },
                     { actionName: 'View', actionClick: viewHandler },
                     { actionName: 'Delete', actionClick: deleteHandler },
-                    { actionName: 'Manage', actionClick: manageHandler },
                     { actionName: 'Duplicate', actionClick: duplicateHandler },
                 ];
 

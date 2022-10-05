@@ -8,7 +8,8 @@
             "discipline",
             "miniDescription",
             "equipment",
-            "muscleGroup"
+            "muscleGroup",
+            "addExercise"
         ],
         "properties": {
             "exercise": {
@@ -21,16 +22,12 @@
                 "enum": [
                     0,
                     1,
-                    2,
-                    3,
-                    4
+                    2
                 ],
                 "enumNames": [
                     "Beginner",
                     "Intermediate",
-                    "Advance",
-                    "All levels",
-                    "No level"
+                    "Advance"
                 ]
             },
             "discipline": {
@@ -86,7 +83,10 @@
                                         "format": "uri",
                                         "description": "You can add a youtube URL. Can be  used for Group, PT, Custom and Classic offerings."
                                     }
-                                }
+                                },
+                                "required": [
+                                    "AddURL"
+                                ]
                             },
                             {
                                 "properties": {
@@ -99,7 +99,10 @@
                                         "type": "string",
                                         "description": "Explain in detail about the workout. Can be used for PT and Group"
                                     }
-                                }
+                                },
+                                "required": [
+                                    "AddText"
+                                ]
                             },
                             {
                                 "properties": {
@@ -112,7 +115,10 @@
                                         "type": "string",
                                         "description": " You can add a youtube URL. Can be  used for Group, PT, Custom and Classic offerings."
                                     }
-                                }
+                                },
+                                "required": [
+                                    "Upload"
+                                ]
                             }
                         ]
                     }

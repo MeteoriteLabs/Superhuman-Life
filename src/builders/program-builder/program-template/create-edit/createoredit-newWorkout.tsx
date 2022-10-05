@@ -131,6 +131,19 @@ function CreateEditNewWorkout(props: any, ref: any) {
         }
     }));
 
+    enum ENUM_EXERCISES_EXERCISELEVEL {
+        Beginner,
+        Intermediate,
+        Advanced,
+        None
+    }
+
+    enum ENUM_WORKOUTS_INTENSITY {
+        Low,
+        Medium,
+        High
+    }
+
     function FillDetails(data: any) {
         let details: any = {};
         // let msg = data;
@@ -215,14 +228,14 @@ function CreateEditNewWorkout(props: any, ref: any) {
             }
         }
 
+        debugger;
+        console.log(eventJson);
 
         createSession({
             variables: {
                 start_time: eventJson.startTime,
                 end_time: eventJson.endTime,
                 workout: eventJson.id,
-                tag: eventJson.tag,
-                mode: eventJson.mode,
                 day_of_program: eventJson.day,
                 type: eventJson.type,
                 session_date: moment(frm.day[0].day, 'Da, MMM YY').format('YYYY-MM-DD'),
@@ -234,38 +247,46 @@ function CreateEditNewWorkout(props: any, ref: any) {
 
     function UpdateProgram(frm: any) {
         frmDetails = frm;
-        if(frm.addWorkout.build){
-            frm.addWorkout.build = JSON.parse(frm.addWorkout.build);
+        frm.discipline = JSON.parse(frm.discipline);
+        frm.equipment = JSON.parse(frm.equipment);
+        frm.muscleGroup = JSON.parse(frm.muscleGroup);
+        if (frm.addWorkout.AddWorkout === 'Build') {
+            if (Object.keys(frm.addWorkout.warmup)[0] === "exercise") {
+                frm.addWorkout.warmup.exercise = JSON.parse(frm.addWorkout.warmup.exercise);
+            } else {
+                frm.addWorkout.warmup.type = Object.keys(frm.addWorkout.warmup)[0];
+            }
+            if (Object.keys(frm.addWorkout.mainmovement)[0] === "exercise") {
+                frm.addWorkout.mainmovement = JSON.parse(frm.addWorkout.mainmovement.exercise);
+            } else {
+                frm.addWorkout.mainmovement.type = Object.keys(frm.addWorkout.mainmovement)[0];
+            }
+            if (Object.keys(frm.addWorkout.cooldown)[0] === "exercise") {
+                frm.addWorkout.cooldown = JSON.parse(frm.addWorkout.cooldown.exercise);
+            } else {
+                frm.addWorkout.cooldown.type = Object.keys(frm.addWorkout.cooldown)[0];
+            }
         }
-        enum ENUM_EXERCISES_EXERCISELEVEL {
-            Beginner,
-            Intermediate,
-            Advanced,
-            None
-        }
-    
-        enum ENUM_WORKOUTS_INTENSITY {
-            Low,
-            Medium,
-            High
-        }
-        createWorkout({ variables: {
-            workouttitle: frm.workout,
-            intensity: ENUM_WORKOUTS_INTENSITY[frm.intensity],
-            level: ENUM_EXERCISES_EXERCISELEVEL[frm.level],
-            fitnessdisciplines: frm.discipline.split(","),
-            About: frm.about,
-            Benifits: frm.benefits,
-            warmup: (frm.addWorkout.AddWorkout === "Build" ? (frm.addWorkout.build.warmup ? frm.addWorkout.build.warmup : null) : null),
-            mainmovement: (frm.addWorkout.AddWorkout === "Build" ? (frm.addWorkout.build.mainMovement ? frm.addWorkout.build.mainMovement : null) : null),
-            cooldown: (frm.addWorkout.AddWorkout === "Build" ? (frm.addWorkout.build.coolDown ? frm.addWorkout.build.coolDown : null) : null),
-            workout_text: (frm.addWorkout.AddWorkout === "Text" ? frm.addWorkout.AddText : null),
-            workout_URL: (frm.addWorkout.AddWorkout === "Add URL" ? frm.addWorkout.AddURL : null),
-            calories: frm.calories,
-            equipment_lists: frm.equipment.split(","),
-            muscle_groups: frm.muscleGroup.split(","),
-            users_permissions_user: frm.user_permissions_user
-        }});
+        createWorkout({
+            variables: {
+              workouttitle: frm.workout,
+              intensity: ENUM_WORKOUTS_INTENSITY[frm.intensity],
+              level: ENUM_EXERCISES_EXERCISELEVEL[frm.level],
+              fitnessdisciplines: frm.discipline.map((item: any) => { return item.id }).join(',').split(','),
+              About: frm.about,
+              Benifits: frm.benefits,
+              warmup: (frm.addWorkout.AddWorkout === "Build" ? frm.addWorkout.warmup : null),
+              mainmovement: (frm.addWorkout.AddWorkout === "Build" ? frm.addWorkout.mainmovement : null),
+              cooldown: (frm.addWorkout.AddWorkout === "Build" ? frm.addWorkout.cooldown : null),
+              workout_text: (frm.addWorkout.AddWorkout === "Text" ? frm.addWorkout.AddText : null),
+              workout_URL: (frm.addWorkout.AddWorkout === "Add URL" ? frm.addWorkout.AddURL : null),
+              Workout_Video_ID: (frm.addWorkout.AddWorkout === "Upload" ? frm.addWorkout.Upload : null),
+              calories: frm.calories,
+              equipment_lists: frm.equipment.map((item: any) => { return item.id }).join(',').split(','),
+              muscle_groups: frm.muscleGroup.map((item: any) => { return item.id }).join(',').split(','),
+              users_permissions_user: frm.user_permissions_user
+            }
+        });
     }
 
     function OnSubmit(frm: any) {

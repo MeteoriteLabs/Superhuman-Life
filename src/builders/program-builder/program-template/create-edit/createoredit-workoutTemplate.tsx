@@ -226,8 +226,6 @@ function CreateEditWorkoutTemplate(props: any, ref: any) {
                     start_time: eventJson.startTime,
                     end_time: eventJson.endTime,
                     workout: eventJson.id,
-                    tag: eventJson.tag,
-                    mode: eventJson.mode,
                     type: eventJson.type,
                     day_of_program: eventJson.day,
                     changemaker: auth.userid,

@@ -113,6 +113,7 @@ function CreateEditExercise(props: any, ref: any) {
 
         frm.discipline = JSON.parse(frm.discipline);
         frm.equipment = JSON.parse(frm.equipment);
+        frm.muscleGroup = JSON.parse(frm.muscleGroup);
         createExercise({
             variables: {
                 exercisename: frm.exercise,
@@ -123,7 +124,7 @@ function CreateEditExercise(props: any, ref: any) {
                 exerciseurl: (!frm.addExercise.AddURL ? null : frm.addExercise.AddURL),
                 exerciseupload: (!frm.addExercise.Upload ? null : frm.addExercise.Upload),
                 equipment_lists: frm.equipment.map((item: any) => { return item.id }).join(',').split(','),
-                exercisemusclegroups: frm.muscleGroup.split(","),
+                exercisemusclegroups: frm.muscleGroup.map((item: any) => { return item.id }).join(',').split(','),
                 users_permissions_user: frm.user_permissions_user
             }
         });
@@ -133,6 +134,7 @@ function CreateEditExercise(props: any, ref: any) {
 
         frm.discipline = JSON.parse(frm.discipline);
         frm.equipment = JSON.parse(frm.equipment);
+        frm.muscleGroup = JSON.parse(frm.muscleGroup);
         editExercise({
             variables: {
                 exerciseid: operation.id,
@@ -143,7 +145,7 @@ function CreateEditExercise(props: any, ref: any) {
                 exercisetext: (!frm.addExercise.AddText ? null : frm.addExercise.AddText),
                 exerciseurl: (!frm.addExercise.AddURL ? null : frm.addExercise.AddURL),
                 equipment_lists: frm.equipment.map((item: any) => { return item.id }).join(',').split(','),
-                exercisemusclegroups: frm.muscleGroup.split(","),
+                exercisemusclegroups: frm.muscleGroup.map((item: any) => { return item.id }).join(',').split(','),
                 users_permissions_user: frm.user_permissions_user
             }
         });
@@ -195,6 +197,7 @@ function CreateEditExercise(props: any, ref: any) {
             <ModalView
                 name={name}
                 isStepper={false}
+                showErrorList={false}
                 formUISchema={operation.type === 'view' ? schemaView : schema}
                 formSchema={exerciseSchema}
                 formSubmit={name === "View" ? () => { modalTrigger.next(false); } : (frm: any) => { OnSubmit(frm); }}

@@ -75,6 +75,13 @@ function CreateEditWorkout(props: any, ref: any) {
   function FillDetails(data: any) {
     const flattenData = flattenObj({ ...data });
 
+    function handleOtherType(data: any){
+      const tempObj: any = {};
+      tempObj[data[0]?.type] = data[0].value;
+      tempObj.type = data[0].type;
+      return tempObj
+    }
+
     function handleAddWorkout(data: any) {
       if (data.workout_URL !== null) {
         return { AddWorkout: "Add URL", AddURL: data.workout_URL };
@@ -85,9 +92,9 @@ function CreateEditWorkout(props: any, ref: any) {
       } else {
         return {
           AddWorkout: "Build",
-          warmup: data.warmup?.exercise ? { "exercise": JSON.stringify(data.warmup.exercise) } : data.warmup,
-          cooldown: data.cooldown?.exercise ? { "exercise": JSON.stringify(data.cooldown.exercise) } : data.cooldown,
-          mainmovement: data.mainmovement?.exercise ? { "exercise": JSON.stringify(data.mainmovement.exercise) } : data.mainmovement,
+          warmup: data.warmup[0]?.type === "exercise" ? { "exercise": JSON.stringify(data.warmup) } : handleOtherType(data.warmup),
+          cooldown: data.cooldown[0]?.type === "exercise" ? { "exercise": JSON.stringify(data.cooldown.exercise) } : handleOtherType(data.cooldown),
+          mainmovement: data.mainmovement[0]?.type === "exercise" ? { "exercise": JSON.stringify(data.mainmovement.exercise) } : handleOtherType(data.mainmovement),
         };
       }
     }
@@ -135,21 +142,31 @@ function CreateEditWorkout(props: any, ref: any) {
     if (frm.addWorkout.AddWorkout === 'Build') {
 
       if (Object.keys(frm.addWorkout.warmup)[0] === "exercise") {
-        frm.addWorkout.warmup.exercise = JSON.parse(frm.addWorkout.warmup.exercise);
+        frm.addWorkout.warmup = JSON.parse(frm.addWorkout.warmup.exercise);
       } else {
         frm.addWorkout.warmup.type = Object.keys(frm.addWorkout.warmup)[0];
+        frm.addWorkout.warmup.value = frm.addWorkout.warmup[Object.keys(frm.addWorkout.warmup)[0]];
+        delete frm.addWorkout.warmup[Object.keys(frm.addWorkout.warmup)[0]];
+        frm.addWorkout.warmup = [frm.addWorkout.warmup]
       }
       if (Object.keys(frm.addWorkout.mainmovement)[0] === "exercise") {
         frm.addWorkout.mainmovement = JSON.parse(frm.addWorkout.mainmovement.exercise);
       } else {
         frm.addWorkout.mainmovement.type = Object.keys(frm.addWorkout.mainmovement)[0];
+        frm.addWorkout.mainmovement.value = frm.addWorkout.mainmovement[Object.keys(frm.addWorkout.mainmovement)[0]];
+        delete frm.addWorkout.mainmovement[Object.keys(frm.addWorkout.mainmovement)[0]];
+        frm.addWorkout.mainmovement = [frm.addWorkout.mainmovement]
       }
       if (Object.keys(frm.addWorkout.cooldown)[0] === "exercise") {
         frm.addWorkout.cooldown = JSON.parse(frm.addWorkout.cooldown.exercise);
       } else {
         frm.addWorkout.cooldown.type = Object.keys(frm.addWorkout.cooldown)[0];
+        frm.addWorkout.cooldown.value = frm.addWorkout.cooldown[Object.keys(frm.addWorkout.cooldown)[0]];
+        delete frm.addWorkout.cooldown[Object.keys(frm.addWorkout.cooldown)[0]];
+        frm.addWorkout.cooldown = [frm.addWorkout.cooldown]
       }
     }
+
     createWorkout({
       variables: {
         workouttitle: frm.workout,
@@ -178,23 +195,32 @@ function CreateEditWorkout(props: any, ref: any) {
     frm.equipment = JSON.parse(frm.equipment);
     frm.muscleGroup = JSON.parse(frm.muscleGroup);
     if (frm.addWorkout.AddWorkout === 'Build') {
-
       if (Object.keys(frm.addWorkout.warmup)[0] === "exercise") {
-        frm.addWorkout.warmup.exercise = JSON.parse(frm.addWorkout.warmup.exercise);
+        frm.addWorkout.warmup = JSON.parse(frm.addWorkout.warmup.exercise);
       } else {
         frm.addWorkout.warmup.type = Object.keys(frm.addWorkout.warmup)[0];
+        frm.addWorkout.warmup.value = frm.addWorkout.warmup[Object.keys(frm.addWorkout.warmup)[0]];
+        delete frm.addWorkout.warmup[Object.keys(frm.addWorkout.warmup)[0]];
+        frm.addWorkout.warmup = [frm.addWorkout.warmup]
       }
       if (Object.keys(frm.addWorkout.mainmovement)[0] === "exercise") {
         frm.addWorkout.mainmovement = JSON.parse(frm.addWorkout.mainmovement.exercise);
       } else {
         frm.addWorkout.mainmovement.type = Object.keys(frm.addWorkout.mainmovement)[0];
+        frm.addWorkout.mainmovement.value = frm.addWorkout.mainmovement[Object.keys(frm.addWorkout.mainmovement)[0]];
+        delete frm.addWorkout.mainmovement[Object.keys(frm.addWorkout.mainmovement)[0]];
+        frm.addWorkout.mainmovement = [frm.addWorkout.mainmovement]
       }
       if (Object.keys(frm.addWorkout.cooldown)[0] === "exercise") {
         frm.addWorkout.cooldown = JSON.parse(frm.addWorkout.cooldown.exercise);
       } else {
         frm.addWorkout.cooldown.type = Object.keys(frm.addWorkout.cooldown)[0];
+        frm.addWorkout.cooldown.value = frm.addWorkout.cooldown[Object.keys(frm.addWorkout.cooldown)[0]];
+        delete frm.addWorkout.cooldown[Object.keys(frm.addWorkout.cooldown)[0]];
+        frm.addWorkout.cooldown = [frm.addWorkout.cooldown]
       }
     }
+
     editWorkout({
       variables: {
         workoutid: operation.id,

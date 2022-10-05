@@ -14,11 +14,13 @@ import DaysInput from './daysInput';
 import moment from 'moment';
 import { flattenObj } from '../../../components/utils/responseFlatten';
 import AuthContext from '../../../context/auth-context';
+import sessionContext from '../../../context/session-context';
 import {AvailabilityCheck} from './availabilityCheck';
 
 const Schedular = (props: any) => {
 
     const auth = useContext(AuthContext);
+    const sessionContextData = useContext(sessionContext);
     const [show, setShow] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [onDragAndDrop, setOnDragAndDrop] = useState(false);
@@ -43,6 +45,7 @@ const Schedular = (props: any) => {
     const [sessionBookings, setSessionBooking] = useState<any>([]);
     const [clickedSessionId, setClickedSessionId] = useState("");
 
+    console.log(sessionContextData);
 
     const GET_SESSIONS_BY_DATE = gql`
         query getprogramdata($date: Date) {
@@ -517,6 +520,9 @@ const Schedular = (props: any) => {
                 }
             });
         }
+        
+        debugger;
+        console.log(timeInput, e, duplicatedDay);
 
         if(e.type === "workout"){
             createSession({
@@ -524,9 +530,7 @@ const Schedular = (props: any) => {
                     start_time: timeInput.startTime,
                     end_time: timeInput.endTime,
                     workout: e.id,
-                    tag: e.tag,
                     day_of_program: duplicatedDay[0].key,
-                    mode: e.mode,
                     type: e.type,
                     session_date: duplicatedDay.length === 0 ? e.sessionDate : moment(duplicatedDay[0].day, 'Do, MMMM YYYY').format('YYYY-MM-DD'),
                     changemaker: auth.userid
@@ -1319,7 +1323,7 @@ const Schedular = (props: any) => {
                                 <FormControl value={event.sessionDate && props.type !== 'day' ? moment(event.sessionDate).format("Do, MMM YY") : `Day - ${event.day}`} disabled />
                             </Col>
                         </Row>
-                        {(tag || event.tag) !== 'Classic' && <Row className="pt-3 align-items-center">
+                        {window.location.pathname.split("/")[1] !== 'programs' && (tag || event.tag) !== 'Classic' && <Row className="pt-3 align-items-center">
                             <Col lg={1}>
                                 <h6>Mode: </h6>
                             </Col>
@@ -1330,18 +1334,18 @@ const Schedular = (props: any) => {
                                 </Form.Control>
                             </Col>
                         </Row>}
-                        <Row className="pt-3 align-items-center">
+                        {window.location.pathname.split("/")[1] !== 'programs' && <Row className="pt-3 align-items-center">
                             <Col lg={1}>
                                 <h6>Class Type: </h6>
                             </Col>
                             <Col lg={4}>
                                 <Form.Control value={tag === "" ? event.tag : tag} disabled={props.classType === 'Custom' ? false : true} as="select" onChange={(e) => {setTag(e.target.value)}}>
-                                    <option value="One-On-One">Personal Training</option>
+                                    <option value="One-On-One">One-On-One</option>
                                     <option value="Group Class">Group Class</option>
                                     <option value="Classic">Classic</option>
                                 </Form.Control>
                             </Col>
-                        </Row>
+                        </Row>}
                         <Row className="pt-3 align-items-center">
                             <Col>
                                 <TimeField eventType="edit" onChange={handleStart} endTime={event.endHour + ':' + event.endMin} startTime={event.hour + ':' + event.min} disabled={edit}/>
@@ -1354,6 +1358,8 @@ const Schedular = (props: any) => {
                                     <Button className="mr-3 mt-2" variant="warning" size="sm" onClick={() => {handleClose(); setData([]); setEvent([]); replaceWorkoutComponent.current.TriggerForm({type: 'edit' })}}><i className="fas fa-reply"></i>{" "}Replace</Button>
                                 </Row> */}
                                 {data.map(val => {
+                                    debugger;
+                                    console.log(val);
                                     return (
                                         <>
                                             <Row>
@@ -1579,7 +1585,7 @@ const Schedular = (props: any) => {
                          <Button variant="danger" onClick={() => {setDuplicate(false); setData([]);}}>
                               Cancel
                          </Button>
-                         <Button disabled={document.getElementById('timeErr') ? true : false} variant="success" onClick={() => {handleDuplicate(event, changedTime);setDuplicate(false); setData([]);}}>
+                         <Button disabled={document.getElementById('timeErr') ? true : duplicatedDay.length === 0 ? true: false} variant="success" onClick={() => {handleDuplicate(event, changedTime);setDuplicate(false); setData([]);}}>
                               Duplicate
                          </Button>
                     </Modal.Footer>

@@ -67,19 +67,32 @@ const TimeFieldInput = (props: any) => {
         }
         // eslint-disable-next-line
     }, [startTime, endTime]);
-     
+
     return (
         <>
             <label>Start Time: </label>
             <Row>
                 <Col lg={4}>
-                        <TimePicker value={convertToMoment(startTime)} disabled={props.disabled ? props.disabled : false} showSecond={false} minuteStep={15} onChange={(e) => {handleStartTimeInput(moment(e).format("HH:mm"))}}/>
+                        <TimePicker value={convertToMoment(startTime)} disabled={props.disabled} showSecond={false} minuteStep={15} onChange={(e) => {
+                            if(!e) {
+                                setStartTime("00:00");
+                            }else {
+                                
+                                handleStartTimeInput(moment(e).format("HH:mm"))
+                            }
+                        }} />
                 </Col>
             </Row>
             <label>End Time: </label>
             <Row>
                 <Col lg={4}>
-                        <TimePicker value={convertToMoment(endTime)} disabled={props.disabled ? props.disabled : false} showSecond={false} minuteStep={15} onChange={(e) => {handleEndTimeInput(moment(e).format("HH:mm"))}}/>
+                        <TimePicker value={convertToMoment(endTime)} disabled={props.disabled} showSecond={false} minuteStep={15} onChange={(e) => {
+                            if(!e){
+                                setEndTime("00:00");
+                            }else {
+                                handleEndTimeInput(moment(e).format("HH:mm"));
+                            }
+                        }}/>
                 </Col>
             </Row>
             {handleTimeValidation()}

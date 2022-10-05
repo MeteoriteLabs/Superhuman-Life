@@ -3,6 +3,7 @@ import { useQuery } from "@apollo/client";
 import { GET_TABLEDATA } from './queries';
 import { Row, Col } from 'react-bootstrap';
 import Scheduler from './scheduler';
+import SessionContext from "../../../context/session-context";
 import { flattenObj } from '../../../components/utils/responseFlatten';
 
 const ProgramManager = (props: any) => {
@@ -69,7 +70,9 @@ const ProgramManager = (props: any) => {
                         </Col>
                     </div>
                     <div className="mt-5">
-                        <Scheduler templateSessions={data[0].sessions} callbackTemplate={queryCallback} days={data[0].duration} type={'day'} restDays={data[0].restDays} programId={last} />
+                        <SessionContext.Provider value={{sessions: data[0].sessions}}>
+                            <Scheduler templateSessions={data[0].sessions} callbackTemplate={queryCallback} days={data[0].duration} type={'day'} restDays={data[0].restDays} programId={last} />
+                        </SessionContext.Provider>
                     </div>
                 </Col>
             </Row>

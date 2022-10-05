@@ -39,6 +39,8 @@ const DaysInput = (props: any) => {
           props.onChange(objectToString);
           setSelected(e);
      }
+
+     console.log(selected);
      
      renderInputField();
 
