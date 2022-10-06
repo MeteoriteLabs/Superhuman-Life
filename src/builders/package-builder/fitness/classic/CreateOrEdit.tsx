@@ -97,14 +97,12 @@ function CreateEditPackage(props: any, ref: any) {
         TriggerForm: (msg: Operation) => {
             setOperation(msg);
 
-            // if (msg && !msg.id) //render form if no message id
+            // restrict to render for delete and toggle status operation
             if(msg.type !== 'delete' && msg.type !== 'toggle-status'){
                 modalTrigger.next(true);
             }
         }
     }));
-
-    // console.log(exerciseDetails);
 
     enum ENUM_FITNESSPACKAGE_LEVEL {
         Beginner,
@@ -135,7 +133,7 @@ function CreateEditPackage(props: any, ref: any) {
         let msg = flattenedData.fitnesspackages[0];
         let bookingConfig: any = {};
         let details: any = {};
-        console.log(msg);
+        
         for(var i =0; i<msg.fitnesspackagepricing.length; i++){
             PRICING_TABLE_DEFAULT[i].mrp = msg.fitnesspackagepricing[i].mrp;
             PRICING_TABLE_DEFAULT[i].suggestedPrice = msg.fitnesspackagepricing[i].suggestedPrice;
@@ -169,7 +167,6 @@ function CreateEditPackage(props: any, ref: any) {
         details.bookingConfigId = msg.booking_config?.id;
         details.languages = JSON.stringify(msg.languages);
         setClassicDetails (details);
-        // console.log(exerciseDetails);
 
         //if message exists - show form only for edit and view
         if (['edit', 'view'].indexOf(operation.type) > -1)
@@ -178,8 +175,6 @@ function CreateEditPackage(props: any, ref: any) {
             OnSubmit(null);
     }
 
-    console.log(operation.type);
-
     useEffect(() => {
         if(operation.type === 'create'){
             setClassicDetails({});
@@ -187,7 +182,6 @@ function CreateEditPackage(props: any, ref: any) {
     }, [operation.type]);
 
     function FetchData() {
-        console.log('Fetch Data');
         useQuery(GET_SINGLE_PACKAGE_BY_ID, { variables: { id: operation.id }, skip: (operation.type === 'create'),onCompleted: (e: any) => { FillDetails(e) } });
     }
 
@@ -320,10 +314,8 @@ function CreateEditPackage(props: any, ref: any) {
 
     FetchData();
 
-
     return (
         <>
-            {/* {render && */}
                 <ModalView
                     name={name}
                     isStepper={true}
@@ -337,8 +329,6 @@ function CreateEditPackage(props: any, ref: any) {
                     modalTrigger={modalTrigger}
                 />
                 
-            {/* } */}
-
             <Modal
                     size="lg"
                     aria-labelledby="contained-modal-title-vcenter"
