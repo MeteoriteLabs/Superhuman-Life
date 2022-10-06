@@ -38,12 +38,12 @@ function DisplayImage(props: any) {
           }
         },
         function (err) {
-          setPhotoUrl(props.defaultImageUrl);
           console.log("image not found");
         }
       );
     }
-  },[props.imageName])
+    // eslint-disable-next-line
+  },[props.imageName, props.defaultImageUrl])
   
   return (
     <img src={photoUrl} alt="profile" className={props.imageCSS} />

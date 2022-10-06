@@ -39,18 +39,3 @@ export function yearTransformErrors(errors) {
         return error;
     });
 }
-
-// URL validation
-export const urlCustomFormats = {
-    // eslint-disable-next-line
-    'url': /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/
-};
-
-export function urlTransformErrors(errors) {
-    return errors.map(error => {
-        if (error.name === "format") {
-            error.message = "Enter correct URL"
-        }
-        return error;
-    });
-}

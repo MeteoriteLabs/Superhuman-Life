@@ -379,18 +379,13 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
      }
 
      useEffect(() => {
-          
-          // if (url) {
-          //      props.onChange(imageid);
-          // } else {
-               
-               props.onChange(videoID);
-          // }
-          // eslint-disable-next-line react-hooks/exhaustive-deps
+          props.onChange(videoID);
+          // eslint-disable-next-line
      }, [videoID]);
 
      useEffect(() => {
           props.onChange(imageid);
+          // eslint-disable-next-line
      },[imageid])
 
      return (
