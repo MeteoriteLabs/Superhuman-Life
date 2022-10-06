@@ -1,7 +1,7 @@
 import { useState, useContext, useRef } from 'react';
 import Form from "@rjsf/core";
 import { widgets } from "../../profileSchema";
-import { FETCH_USER_PROFILE_DATA, UPDATE_USER_PROFILE_DATA } from "../../queries/queries";
+import { FETCH_USER_PROFILE_DATA, FETCH_USERS_PROFILE_DATA, UPDATE_USER_PROFILE_DATA } from "../../queries/queries";
 import AuthContext from "../../../../context/auth-context";
 import { useMutation, useQuery } from "@apollo/client";
 import { flattenObj } from "../../../../components/utils/responseFlatten";
@@ -35,12 +35,11 @@ export default function BasicProfileForm() {
               updateProfile({
                 variables: {
                   id: auth.userid,
-                  data: profileData ? profileData : {
+                  data: {
                     Photo_ID: null
                   },
-                },
+                },refetchQueries:[FETCH_USERS_PROFILE_DATA]
               });
-              setProfileData({formData: {Photo_ID: null}});
             }
           }
         />
@@ -98,7 +97,7 @@ export default function BasicProfileForm() {
           About_User: frm.formData.About_User,
           about_mini_description: frm.formData.about_mini_description,
           Phone_Number: frm.formData.Phone_Number,
-          Photo_ID: frm.formData.Photo_ID,
+          Photo_ID: frm.formData.Photo_ID === "" ? null : frm.formData.Photo_ID,
           Website_URL: frm.formData.Website_URL
         },
       },

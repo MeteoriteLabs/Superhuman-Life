@@ -33,7 +33,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
      const [selectedFile, setSelectedFile] = useState<any>(null);
      const [render, setRender] = useState<any>(null);
      const [url, setUrl] = useState<any>(null);
-     const [imageid, setImageid] = useState<any>(null);
+     const [imageid, setImageid] = useState<any>('');
      const [videoUpload, setVideoUpload] = useState<any>(false);
      const [videoID, setVideoID] = useState<any>(null);
      //const [renderCrop, setRenderCrop] = useState<any>(null);
@@ -80,6 +80,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                deleteFile(albumPhotosKey + "sm-" + imageid);
                deleteFile(albumPhotosKey + "md-" + imageid);
                deleteFile(albumPhotosKey + "lg-" + imageid);
+               setImageid(null);
                setUrl(null);
                setProgress(0);
                setRender(null); 
@@ -87,7 +88,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                deleteFile(albumPhotosKey + "sm-" + imageid);
                deleteFile(albumPhotosKey + "md-" + imageid);
                deleteFile(albumPhotosKey + "lg-" + imageid);
-               setUrl(null);
+               setUrl(undefined);
                setProgress(0);
                setRender(null);
           }
@@ -378,13 +379,19 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
      }
 
      useEffect(() => {
-          if (url) {
-               props.onChange(imageid);
-          } else {
+          
+          // if (url) {
+          //      props.onChange(imageid);
+          // } else {
+               
                props.onChange(videoID);
-          }
+          // }
           // eslint-disable-next-line react-hooks/exhaustive-deps
-     }, [url, videoID]);
+     }, [videoID]);
+
+     useEffect(() => {
+          props.onChange(imageid);
+     },[imageid])
 
      return (
           <div>
