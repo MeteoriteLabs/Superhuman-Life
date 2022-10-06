@@ -28,6 +28,12 @@ const BookingConfig = (props: any) => {
           // }
      }
 
+     useEffect(() => {
+          if(bookings > 30){
+               setBookings(30);
+          }
+     }, [bookings]);
+
 
      useEffect(() => {
 

@@ -9,7 +9,7 @@ const PackageDateConfig = (props: any) => {
      const cohortStartDate = JSON.parse(props.formContext.dates).startDate;
 
      const [publishingDate, setPublishingDate] = useState(props.value === undefined ? moment().format("YYYY-MM-DDTHH:mm") : moment(JSON.parse(props.value).publishingDate).format("YYYY-MM-DDTHH:mm"));
-     const [expiryDate, setExpiryDate] = useState(moment(cohortStartDate).format("YYYY-MM-DDTHH:mm"));
+     const [expiryDate, setExpiryDate] = useState(props.value === undefined ? moment(cohortStartDate).format("YYYY-MM-DDTHH:mm") : moment(JSON.parse(props.value).expiryDate).format("YYYY-MM-DDTHH:mm"));
 
      console.log(expiryDate);
 
@@ -30,7 +30,7 @@ const PackageDateConfig = (props: any) => {
                          disabled={inputDisabled}
                     />
                </InputGroup>
-               {props?.title1 && <span className='small'>Set the date for this offering to be available for everyone</span>}
+               {props?.title1 && <span className='small'>SOffering will be visible on the website and app only from the above date</span>}
                <label>{props?.title2 ? props.title2 : "Expiry Date"}</label>
                <InputGroup className="mb-3">
                     <FormControl
@@ -38,11 +38,12 @@ const PackageDateConfig = (props: any) => {
                          aria-describedby="inputGroup-sizing-default"
                          type="datetime-local"
                          value={expiryDate}
+                         disabled={inputDisabled}
                          onChange={(e) => { setExpiryDate(e.target.value) }}
-                         disabled={true}
+                         max={moment(cohortStartDate).subtract(1, 'days').format("YYYY-MM-DDTHH:mm")}
                     />
                </InputGroup>
-               {props?.title2 && <span className='small'>On the selected date this offering will be shifted to drafts</span>}
+               {props?.title2 && <span className='small'>Offering will go into drafts and will be remove from listing on webiste and app</span>}
           </div>
      );
 };

@@ -21,3 +21,19 @@
 .carousel-control-next-icon{
     background-image: url('https://c8.alamy.com/comp/P2D4A1/arrow-vector-icon-isolated-on-transparent-background-arrow-logo-concept-P2D4A1.jpg');
 }
+
+.Beginner-level{
+    background-color: #04BEBD;
+}
+
+.Intermediate-level{
+    background-color: #D7A72E;
+}
+
+.Advanced-level{
+    background-color: #DB5461;
+}
+
+.All-level{
+    background-color: #FF0000;
+}

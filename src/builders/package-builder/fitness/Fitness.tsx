@@ -92,18 +92,18 @@ export default function FitnessTab(props) {
             accessor: "details", Header: "Details",
             Cell: ({ row }: any) => {
                 console.log(row);
-                console.log(row.values)
+                console.log(row.original?.freeClass)
                 return <div className='d-flex justify-content-center align-items-center'>
                     {row.values.details[0] !== null && row.values.details[0] !== 0 ?
                         <div className="text-center">
-                            <OfferingsDisaplyImage mode={row.original?.mode} packageType={row.original?.type}/>
+                            <OfferingsDisaplyImage mode={row.original?.mode === 'Hybrid' ? 'Online' : row.original?.mode} packageType={row.original?.type}/>
                             {/* <img src='./assets/custompersonal-training-Online.svg' alt="PT-Online" /> */}
-                            <p>{row.values.details[0] * currentIndex[row.index]}</p>
+                            <p>{(row.original.details[0] * currentIndex[row.index])}</p>
                         </div>
                         : ""}
                     {row.values.details[1] !== null && row.values.details[1] !== 0 ?
                         <div className="text-center">
-                            <OfferingsDisaplyImage mode={row.original?.mode} packageType={row.original?.type === 'Custom Fitness' ? "One-On-One" : row.original?.type}/>
+                            <OfferingsDisaplyImage mode={row.original?.mode === 'Hybrid' ? 'Offline' : row.original?.mode} packageType={row.original?.type === 'Custom Fitness' ? "One-On-One" : row.original?.type}/>
                             {/* <img src='./assets/custompersonal-training-Offline.svg' alt="PT-Offline" /> */}
                             <p>{row.values.details[1] * currentIndex[row.index]}</p>
                         </div> : ""}
@@ -111,13 +111,13 @@ export default function FitnessTab(props) {
                         <div className="text-center">
                             <OfferingsDisaplyImage mode={row.original?.mode === 'Hybrid' ? 'Online' : row.original?.mode} packageType={row.original?.type}/>
                             {/* <img src='./assets/customgroup-Online.svg' alt="Group-Online" /> */}
-                            <p>{row.values.details[2] * currentIndex[row.index]}</p>
+                            <p>{row.original?.freeClass ? row.original.pricing[selectedDuration[row.index]]?.classes : row.values.details[2] * currentIndex[row.index]}</p>
                         </div> : ""}
                     {row.values.details[3] !== null && row.values.details[3] !== 0 ?
                         <div className="text-center">
                             <OfferingsDisaplyImage mode={row.original?.mode === 'Hybrid' ? 'Offline' : row.original?.mode} packageType={row.original?.type === 'Custom Fitness' ? 'Group Class' : row.original?.type}/>
                             {/* <img src='./assets/customgroup-Offline.svg' alt="GRoup-Offline" /> */}
-                            <p>{row.values.details[3] * currentIndex[row.index]}</p>
+                            <p>{row.original?.freeClass ? row.original.pricing[selectedDuration[row.index]]?.classes : row.values.details[3] * currentIndex[row.index]}</p>
                         </div> : ""}
                     {row.values.details[4] !== null && row.values.details[4] !== 0 ?
                         <div className="text-center">
@@ -147,6 +147,7 @@ export default function FitnessTab(props) {
                             onChange={(e) => {
                                 const updateSelectedDuration = [...selectedDuration];
                                 const updateCurrentindex = [...currentIndex];
+                                console.log(e.target.value);
                                 let value = 1;
                                 if (e.target.value === "1") {
                                     value *= 3
@@ -161,7 +162,7 @@ export default function FitnessTab(props) {
                                 setCurrentIndex(updateCurrentindex)
                             }}>
                             {row.values.duration.map((item: number, index: number) => {
-                                return <option key={index} value={index}>{item} days</option>
+                                return <option key={index} value={index}>{item !== 0 && item} days</option>
                             })}
                         </Form.Control>
                     </Form.Group>
@@ -171,9 +172,9 @@ export default function FitnessTab(props) {
         {
             accessor: "mrp", Header: "MRP",
             Cell: ({ row }: any) => {
-                console.log(row);
+                const pricing = row.values.mrp[selectedDuration[row.index]];
                 return <>
-                    <p>{"\u20B9"} {row.values.mrp[selectedDuration[row.index]]}</p>
+                    <p className={`text-capitalize ${pricing === "free" ? "text-success font-weight-bold" : ""}`}>{pricing === "free" ? "" : "\u20B9"} {pricing}</p>
                 </>
             }
         },
@@ -241,7 +242,9 @@ export default function FitnessTab(props) {
                     Status: item.Status ? "Active" : "Inactive",
                     publishingDate: item.publishing_date,
                     mode: item.mode,
-                    days: item.duration
+                    days: item.duration,
+                    pricing: item.fitnesspackagepricing,
+                    freeClass: item.groupinstantbooking
                 }
             })
         )
@@ -254,7 +257,7 @@ export default function FitnessTab(props) {
     return (
         <TabContent>
             <div className="justify-content-lg-center d-flex overflow-auto p-3">
-            <DropdownButton variant="outline-secondary" id="dropdown-basic-button" title={
+            <DropdownButton className='mx-3' variant="outline-secondary" id="dropdown-basic-button" title={
                 <span>
                     <i className='fas fa-plus-circle'></i> One-On-One
                 </span>
@@ -264,37 +267,37 @@ export default function FitnessTab(props) {
                 }}>PT Package</Dropdown.Item>
                 <Dropdown.Item onClick={() => {
                     handleModalRender( null, 'create','On-Demand PT');
-                }}>On Demand - PT</Dropdown.Item>
+                }}>Private Session</Dropdown.Item>
             </DropdownButton>
-                <Button className='mx-3' variant={true ? "outline-secondary" : "light"} size="sm"
+                <Button style={{ whiteSpace: 'nowrap', textAlign: 'center'}} className='mx-3' variant={true ? "outline-secondary" : "light"} size="sm"
                     onClick={() => {
                         handleModalRender( null, 'create','Group Class');
                     }}
                 >
-                    <i className="fas fa-plus-circle"></i>{" "}Group
+                    <i className="fas fa-plus-circle"></i> Group
                 </Button>
-                <Button className='mx-3' variant={true ? "outline-secondary" : "light"} size="sm"
+                <Button style={{ whiteSpace: 'nowrap', textAlign: 'center'}}  className='mx-3' variant={true ? "outline-secondary" : "light"} size="sm"
                     onClick={() => {
                         handleModalRender( null, 'create','Classic Class');
                     }}
                 >
-                    <i className="fas fa-plus-circle"></i>{" "}Classic
+                    <i className="fas fa-plus-circle"></i> Recorded
                 </Button>
-                <Button className='mx-3' variant={true ? "outline-secondary" : "light"} size="sm"
+                <Button style={{ whiteSpace: 'nowrap', textAlign: 'center'}}  className='mx-3' variant={true ? "outline-secondary" : "light"} size="sm"
                     onClick={() => {
                         handleModalRender( null, 'create','Custom Fitness');
                     }}
                 >
                     <i className="fas fa-plus-circle"></i>{" "}Custom
                 </Button>
-                <Button className='mx-3' variant={true ? "outline-secondary" : "light"} size="sm"
+                <Button style={{ whiteSpace: 'nowrap', textAlign: 'center'}}  className='mx-3' variant={true ? "outline-secondary" : "light"} size="sm"
                     onClick={() => {
                         handleModalRender( null, 'create','Live Stream Channel');
                     }}
                 >
                     <i className="fas fa-plus-circle"></i>{" "}Live Stream
                 </Button>
-                <Button className='mx-3' variant={true ? "outline-secondary" : "light"} size="sm"
+                <Button style={{ whiteSpace: 'nowrap', textAlign: 'center'}}  className='mx-3' variant={true ? "outline-secondary" : "light"} size="sm"
                     onClick={() => {
                         handleModalRender( null, 'create', 'Cohort');
                     }}

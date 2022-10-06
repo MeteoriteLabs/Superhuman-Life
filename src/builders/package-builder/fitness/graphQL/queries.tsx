@@ -78,6 +78,7 @@ export const GET_FITNESS = gql`
           grouponline
           recordedclasses
           bookingleadday
+          groupinstantbooking
           bookingleadtime
           fitness_package_type {
             data {

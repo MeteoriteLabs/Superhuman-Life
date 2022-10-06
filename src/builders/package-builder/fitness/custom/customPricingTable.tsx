@@ -285,9 +285,9 @@ const PricingTable = (props) => {
             {<div>
                 <div className="d-flex justify-content-end p-2">
                         
-                    <Button variant='outline-info' onClick={() => {window.location.href = '/finance'}}>Add suggest pricing</Button>
+                    <Button disabled={inputDisabled} variant='outline-info' onClick={() => {window.location.href = '/finance'}}>Add suggest pricing</Button>
                 </div>
-                <Table style={{ tableLayout: 'fixed'}}>
+                <Table responsive>
                 <thead>
                     <tr className='text-center'>
                     <th></th>
@@ -376,7 +376,10 @@ const PricingTable = (props) => {
                     {pricing.map((item, index) => {
                         return (
                             <td>
-                                <InputGroup className="mb-3">
+                                <InputGroup style={{ minWidth: '200px'}} className="mb-3">
+                                  <InputGroup.Prepend>
+                                    <InputGroup.Text id="basic-addon1">{"\u20B9"}</InputGroup.Text>
+                                  </InputGroup.Prepend>
                                     <FormControl
                                     className={`${pricing[index]?.mrp < pricing[index]?.sapienPricing && pricing[index]?.mrp !== null ? "is-invalid" : pricing[index]?.mrp >= pricing[index]?.sapienPricing ? "is-valid" : ""}`}
                                     aria-label="Default"

@@ -299,10 +299,10 @@ const PricingTable = (props) => {
                     </div>
                     <div>
                         
-                    <Button variant='outline-info' onClick={() => {window.location.href = '/finance'}}>Add suggest pricing</Button>
+                    <Button disabled={inputDisabled} variant='outline-info' onClick={() => {window.location.href = '/finance'}}>Add suggest pricing</Button>
                     </div>
                 </div>
-                <Table style={{ tableLayout: 'fixed'}}>
+                <Table responsive>
                 <thead>
                     <tr className='text-center'>
                     <th>Details</th>
@@ -334,7 +334,10 @@ const PricingTable = (props) => {
                     {accomodationDetails?.private && <tr className='text-center'>
                     <td><b>Private Room Price</b></td>
                     <td>
-                        <InputGroup>
+                        <InputGroup style={{ minWidth: '200px'}}>
+                        <InputGroup.Prepend>
+                            <InputGroup.Text id="basic-addon1">{"\u20B9"}</InputGroup.Text>
+                        </InputGroup.Prepend>
                             <FormControl
                             // className={`${pricing[0]?.mrp < pricing[0]?.sapienPricing && pricing[0]?.mrp !== null ? "is-invalid" : pricing[0]?.mrp >= pricing[0]?.sapienPricing ? "is-valid" : ""}`}
                             aria-label="Default"
@@ -350,7 +353,10 @@ const PricingTable = (props) => {
                     {accomodationDetails?.sharing && accomodationDetails.twoSharingRooms !== null && <><tr className='text-center'>
                     <td><b>Dual Occupancy Price</b></td>
                     <td>
-                        <InputGroup>
+                        <InputGroup style={{ minWidth: '200px'}}>
+                        <InputGroup.Prepend>
+                            <InputGroup.Text id="basic-addon1">{"\u20B9"}</InputGroup.Text>
+                        </InputGroup.Prepend>
                             <FormControl
                             // className={`${pricing[0]?.mrp < pricing[0]?.sapienPricing && pricing[0]?.mrp !== null ? "is-invalid" : pricing[0]?.mrp >= pricing[0]?.sapienPricing ? "is-valid" : ""}`}
                             aria-label="Default"
@@ -366,7 +372,7 @@ const PricingTable = (props) => {
                     {accomodationDetails.threeSharingRooms !== null && <tr className='text-center'>
                     <td><b>Triple Occupancy Price</b></td>
                     <td>
-                        <InputGroup>
+                        <InputGroup style={{ minWidth: '200px'}}>
                             <FormControl
                             // className={`${pricing[0]?.mrp < pricing[0]?.sapienPricing && pricing[0]?.mrp !== null ? "is-invalid" : pricing[0]?.mrp >= pricing[0]?.sapienPricing ? "is-valid" : ""}`}
                             aria-label="Default"
@@ -382,7 +388,10 @@ const PricingTable = (props) => {
                     {accomodationType === '1' && <tr className='text-center'>
                     <td><b>Food Price</b></td>
                     <td>
-                        <InputGroup>
+                        <InputGroup style={{ minWidth: '200px'}}>
+                        <InputGroup.Prepend>
+                            <InputGroup.Text id="basic-addon1">{"\u20B9"}</InputGroup.Text>
+                        </InputGroup.Prepend>
                             <FormControl
                             // className={`${pricing[0]?.mrp < pricing[0]?.sapienPricing && pricing[0]?.mrp !== null ? "is-invalid" : pricing[0]?.mrp >= pricing[0]?.sapienPricing ? "is-valid" : ""}`}
                             aria-label="Default"
@@ -398,7 +407,10 @@ const PricingTable = (props) => {
                     <tr>
                     <td className='text-center'><b>Cohort Base Price</b></td>
                     <td>
-                    <InputGroup>
+                    <InputGroup style={{ minWidth: '200px'}}>
+                    <InputGroup.Prepend>
+                            <InputGroup.Text id="basic-addon1">{"\u20B9"}</InputGroup.Text>
+                        </InputGroup.Prepend>
                         <FormControl
                         className={`${pricing[0]?.mrp < pricing[0]?.sapienPricing && pricing[0]?.mrp !== null ? "is-invalid" : pricing[0]?.mrp >= pricing[0]?.sapienPricing ? "is-valid" : ""}`}
                         aria-label="Default"

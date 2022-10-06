@@ -67,7 +67,6 @@ function CreateEditPackage(props: any, ref: any) {
                 variables: {
                     isAuto: val.config === "Auto" ? true : false,
                     id: r.createFitnesspackage.data.id,
-                    bookings_per_day: val.bookings,
                     is_Fillmyslots: val.fillSchedule,
                     tagName: frmDetails.packagename
                 }
@@ -80,7 +79,6 @@ function CreateEditPackage(props: any, ref: any) {
             variables: {
                 isAuto: val.config === "Auto" ? true : false,
                 id: frmDetails.bookingConfigId,
-                bookings_per_day: val.bookings,
                 is_Fillmyslots: val.fillSchedule
             }
         });
@@ -132,9 +130,9 @@ function CreateEditPackage(props: any, ref: any) {
         Family
     }
 
-    const PRICING_TABLE_DEFAULT = [ {mrp: null, suggestedPrice: null, voucher: 0, duration: 30, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 90, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 180, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 360, sapienPricing: null}];
+    const PRICING_TABLE_DEFAULT = [ {mrp: null, suggestedPrice: null, voucher: 0, duration: 30, sapienPricing: null, classes: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 90, sapienPricing: null, classes: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 180, sapienPricing: null, classes: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 360, sapienPricing: null, classes: null}];
 
-    const PRICING_TABLE_DEFAULT_WITH_INSTANTBOOKING = [ {mrp: null, suggestedPrice: null, voucher: 0, duration: 1, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 30, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 90, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 180, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 360, sapienPricing: null}];
+    const PRICING_TABLE_DEFAULT_WITH_INSTANTBOOKING = [ {mrp: null, suggestedPrice: null, voucher: 0, duration: 1, sapienPricing: null, classes: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 30, sapienPricing: null, classes: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 90, sapienPricing: null, classes: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 180, sapienPricing: null, classes: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 360, sapienPricing: null, classes: null}];
 
     function FillDetails(data: any) {
         const flattenedData = flattenObj({...data});
@@ -165,7 +163,7 @@ function CreateEditPackage(props: any, ref: any) {
         details.groupinstantbooking = JSON.stringify({"instantBooking": msg.groupinstantbooking, "freeDemo": msg.Is_free_demo});
         details.classsize = msg.classsize;
         details.expiryDate = moment(msg.expirydate).format('YYYY-MM-DD');
-        details.level = ENUM_FITNESSPACKAGE_LEVEL[msg.level];
+        details.level = ENUM_FITNESSPACKAGE_LEVEL[msg?.level];
         details.intensity = ENUM_FITNESSPACKAGE_INTENSITY[msg.Intensity];
         details.pricingDetail = JSON.stringify(msg.groupinstantbooking ? PRICING_TABLE_DEFAULT_WITH_INSTANTBOOKING : PRICING_TABLE_DEFAULT);
         details.publishingDate = moment(msg.publishing_date).format('YYYY-MM-DD');
@@ -173,7 +171,6 @@ function CreateEditPackage(props: any, ref: any) {
         details.user_permissions_user = msg.users_permissions_user.id;
         details.visibility = msg.is_private === true ? 1 : 0;
         bookingConfig.config = msg.booking_config?.isAuto === true ? "Auto" : "Manual";
-        bookingConfig.bookings = msg.booking_config?.bookingsPerDay;
         bookingConfig.fillSchedule = msg.booking_config?.is_Fillmyslots;
         details.config = {bookingConfig: JSON.stringify(bookingConfig)};
         details.programDetails = JSON.stringify({addressTag: msg.address === null ? 'At Client Address' : 'At My Address', address: [msg.address], mode: ENUM_FITNESSPACKAGE_MODE[msg.mode], offline: msg.groupoffline, online: msg.grouponline, rest: msg.restdays});
@@ -219,7 +216,7 @@ function CreateEditPackage(props: any, ref: any) {
             variables: {
                 packagename: frm.packagename,
                 tags: frm?.tags,
-                level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
+                level: ENUM_FITNESSPACKAGE_LEVEL[frm?.level],
                 intensity: ENUM_FITNESSPACKAGE_INTENSITY[frm.intensity],
                 aboutpackage: frm.About,
                 benefits: frm.Benifits,
@@ -233,7 +230,6 @@ function CreateEditPackage(props: any, ref: any) {
                 grouponline: frm.programDetails?.online,
                 classsize: frm.classsize,
                 restdays: frm.programDetails?.rest,
-                bookingleadday: frm.bookingleaddat,
                 is_private: frm.visibility === 1 ? true : false,
                 fitness_package_type: fitnessTypes[0].id,
                 fitnesspackagepricing: JSON.parse(frm.pricingDetail).filter((item: any) => item.mrp !== null),
@@ -258,13 +254,14 @@ function CreateEditPackage(props: any, ref: any) {
         frm.programDetails = JSON.parse(frm.programDetails)
         frm.datesConfig = JSON.parse(frm.datesConfig)
         frm.groupinstantbooking = JSON.parse(frm.groupinstantbooking);
-        frm.languages = JSON.parse(frm.languages)
+        frm.languages = JSON.parse(frm.languages);
+        console.log(JSON.parse(frm.pricingDetail));
         editPackage({
             variables: {
                 id: operation.id,
                 packagename: frm.packagename,
                 tags: frm?.tags,
-                level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
+                level: ENUM_FITNESSPACKAGE_LEVEL[frm?.level],
                 intensity: ENUM_FITNESSPACKAGE_INTENSITY[frm.intensity],
                 aboutpackage: frm.About,
                 benefits: frm.Benifits,
@@ -279,7 +276,6 @@ function CreateEditPackage(props: any, ref: any) {
                 classsize: frm.classsize,
                 is_private: frm.visibility === 1 ? true : false,
                 restdays: frm.programDetails?.rest,
-                bookingleadday: frm.bookingleaddat,
                 fitness_package_type: fitnessTypes[0].id,
                 fitnesspackagepricing: JSON.parse(frm.pricingDetail).filter((item: any) => item.mrp !== null),
                 users_permissions_user: frm.user_permissions_user,
@@ -337,11 +333,11 @@ function CreateEditPackage(props: any, ref: any) {
 
     let name = "";
     if(operation.type === 'create'){
-        name="Create Group Package";
+        name="Group Offering";
     }else if(operation.type === 'edit'){
-        name="Edit";
+        name=`Edit ${groupDetails.packagename}`;
     }else if(operation.type === 'view'){
-        name="View";
+        name=`Viewing ${groupDetails.packagename}`;
     }
 
     FetchData();

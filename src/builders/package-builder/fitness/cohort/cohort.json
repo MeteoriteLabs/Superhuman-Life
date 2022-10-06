@@ -6,7 +6,6 @@
             "packageName",
             "discpline",
             "equipment",
-            "level",
             "intensity",
             "dates"
         ],
@@ -22,7 +21,7 @@
             },
             "equipment": {
                 "type": "string",
-                "description": "Add all equipments required for the offering"
+                "description": "Add all tools required"
             },
             "tag": {
                 "type": "string",
@@ -32,14 +31,13 @@
            "level": {
                 "type": "number",
                 "title": "Level",
-                "enum": [0, 1, 2, 3],
+                "enum": [0, 1, 2],
                 "enumNames": [
                     "Beginner",
                     "Intermediate",
-                    "Advanced", 
-                    "No level"
+                    "Advanced" 
                 ],
-                "description": "Select the relevant level for the offering"
+                "description": "Select the appropriate difficulty"
             },
             "intensity": {
                 "type": "number",
@@ -50,7 +48,7 @@
                     "Moderate",
                     "High"
                 ],
-                "description": "Set the relevant intensity for the level"
+                "description": "Set the pace of the offering"
             },
             "dates": {
                 "type": "string"
@@ -72,11 +70,13 @@
        "properties": {
             "About": {
                 "type": "string",
-                "title": "About"
+                "title": "About",
+                "description": "Summarize the offering"
             },
             "Benifits": {
                 "type": "string",
-                "title": "Benefits"
+                "title": "Benefits",
+                "description": "List the advantages"
             },
             "languages": {
                 "type": "string",
@@ -85,18 +85,18 @@
             "classSize": {
                 "type": "number",
                 "title": "Class Size",
-                "minimum": 100,
+                "minimum": 1,
                 "maximum": 200
             },
             "thumbnail": {
                 "type": "string",
-                "description": "Accepts only Image and size cannot exceed 5mb"
+                "description": "This image will be seen in the listing screen"
             },
             "Upload": {
                 "type": "object",
                 "oneOf": [
                     {
-                        "title": "Video URL", 
+                        "title": "Add Youtube URL", 
                           "properties": {
                             "VideoUrl": {
                               "type": "string",
@@ -113,7 +113,7 @@
                         "properties": {
                             "upload": {
                                 "type": "string",
-                                "description": "Accepts only Image and size cannot exceed 5mb"
+                                "description": "This image will be seen in the details screen of the offering"
                             }
                       },
                       "required": [
@@ -179,7 +179,7 @@
                     "Public",
                     "Private"
                 ],
-                "description": "Public: The Offering will be visible to the user as soon as it is created, Private: The offering will be save as draft and wait for you to publish it."
+                "description": "Public: The Offering will be visible to the user as soon as it is created, Private: The offering will not ve seen by anyone until you share it with them"
             },
             "datesConfig": {
                 "type": "string"
