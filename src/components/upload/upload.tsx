@@ -75,14 +75,21 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
           }
      }
      function deleteAllImages() {
-          deleteFile(albumPhotosKey + "sm-" + imageid);
-          deleteFile(albumPhotosKey + "md-" + imageid);
-          deleteFile(albumPhotosKey + "lg-" + imageid);
-          setUrl(null);
-          setProgress(0);
-          setRender(null);
-          if(props.removePicture) {
+          if (props.removePicture) {
                props.removePicture();
+               deleteFile(albumPhotosKey + "sm-" + imageid);
+               deleteFile(albumPhotosKey + "md-" + imageid);
+               deleteFile(albumPhotosKey + "lg-" + imageid);
+               setUrl(null);
+               setProgress(0);
+               setRender(null); 
+          } else {
+               deleteFile(albumPhotosKey + "sm-" + imageid);
+               deleteFile(albumPhotosKey + "md-" + imageid);
+               deleteFile(albumPhotosKey + "lg-" + imageid);
+               setUrl(null);
+               setProgress(0);
+               setRender(null);
           }
      }
 
@@ -392,7 +399,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                                    className="img-thumbnail"
                                    alt="Image Preview"
                               />
-                              <p className="ml-2 mt-3 font-weight-bold text-success">Image Uploaded Successfully!!</p>
+                              <p className="ml-2 mt-3 font-weight-bold text-success">Image Uploaded</p>
                               <div className="mt-3 d-flex flex-row-reverse">
                                    <button
                                         type="button"

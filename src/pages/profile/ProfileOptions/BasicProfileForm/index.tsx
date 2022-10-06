@@ -30,17 +30,17 @@ export default function BasicProfileForm() {
           aspectRatio={"4:4"}
           allowImage={true}
           allowVideo={false}
-          removePicture = {
+          removePicture={
             () => {
               updateProfile({
                 variables: {
                   id: auth.userid,
                   data: profileData ? profileData : {
                     Photo_ID: null
-                    
                   },
                 },
               });
+              setProfileData({formData: {Photo_ID: null}});
             }
           }
         />
@@ -104,7 +104,6 @@ export default function BasicProfileForm() {
       },
     });
   }
-
 
   function OnSubmit(frm: any) {
     setProfileData(frm);
