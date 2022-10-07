@@ -33,7 +33,7 @@ function ChangemakersSettings() {
                 <Row>
 
                     {/* Reset Password */}
-                    <Col className="pb-1 pt-2" md={{ span: 4 }} sm={12} onClick={() => setShowPasswordSetting(true)} style={{ cursor: 'pointer' }}>
+                    <Col className="pb-1 pt-2" md={{ span: 4, offset: 1 }} sm={12} onClick={() => setShowPasswordSetting(true)} style={{ cursor: 'pointer' }}>
                         <Card className="shadow-lg bg-white rounded p-3" >
 
                             <Card.Body className='text-center'>
@@ -64,7 +64,7 @@ function ChangemakersSettings() {
 
 
                     {/* Modules */}
-                    <Col className="pb-1 pt-2" md={{ span: 4 }} sm={12} onClick={() => setShowModuleSetting(true)} style={{ cursor: 'pointer' }}>
+                    {/* <Col className="pb-1 pt-2" md={{ span: 4 }} sm={12} onClick={() => setShowModuleSetting(true)} style={{ cursor: 'pointer' }}>
                         <Card className="shadow-lg bg-white rounded p-3">
 
                             <Card.Body className='text-center'>
@@ -75,10 +75,10 @@ function ChangemakersSettings() {
                                 </Card.Text>
                             </Card.Body>
                         </Card>
-                    </Col>
+                    </Col> */}
 
                     {/* Delete Account */}
-                    <Col className="pb-1 pt-2" md={{ span: 4 }} sm={12} onClick={() => setShowDeleteAccountSetting(true)} style={{ cursor: 'pointer' }}>
+                    <Col className="pb-1 pt-2" md={{ span: 4, offset: 1 }} sm={12} onClick={() => setShowDeleteAccountSetting(true)} style={{ cursor: 'pointer' }}>
                         <Card className="shadow-lg bg-white rounded p-3">
 
                             <Card.Body className='text-center'>
