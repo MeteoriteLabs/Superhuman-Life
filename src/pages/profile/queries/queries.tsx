@@ -71,15 +71,8 @@ export const UPDATE_USER_PROFILE_DATA = gql`
   mutation updateUserProfileData($id: ID!, $data: UsersPermissionsUserInput!) {
     updateUsersPermissionsUser(id: $id, data: $data) {
       data {
-        attributes {
-          Phone_Number
-          First_Name
-          Last_Name
-          instagram_url
-          Facebook_URL
-          LinkedIn_URL
-          About_User
-        }
+        id
+        
       }
     }
   }

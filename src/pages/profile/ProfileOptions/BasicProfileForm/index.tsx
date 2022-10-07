@@ -10,13 +10,33 @@ import { Col } from 'react-bootstrap';
 import { phoneCustomFormats, phoneTransformErrors } from '../../../../components/utils/ValidationPatterns';
 import UploadImageToS3WithNativeSdk from "../../../../components/upload/upload";
 
+interface UserDetails {
+    Photo_ID: string,
+    About_User: string,
+    First_Name: string,
+    Last_Name: string,
+    about_mini_description: string,
+    Website_URL: string,
+    Phone_Number: string
+}
+
+// define initial object of type UserDetails
+let initialUserDetailsState: UserDetails = {
+  Photo_ID:'',
+  About_User:'',
+  First_Name: '',
+  Last_Name: '',
+  about_mini_description: '',
+  Website_URL: '',
+  Phone_Number: ''
+}
+
 export default function BasicProfileForm() {
   let [isFormSubmitted, setIsFormSubmitted] = useState(false);
   const formRef = useRef<any>(null);
   const auth = useContext(AuthContext);
   const profileJson: { [name: string]: any } = require("./BasicProfile.json");
-  const [webpageDetails, setWebPageDetails] = useState<any>({});
-  const [profileData, setProfileData] = useState<any>()
+  const [webpageDetails, setWebPageDetails] = useState<UserDetails>(initialUserDetailsState);
 
   const schema: any = {
 
@@ -91,21 +111,20 @@ export default function BasicProfileForm() {
     updateProfile({
       variables: {
         id: auth.userid,
-        data: profileData ? profileData : {
-          First_Name: frm.formData.First_Name,
-          Last_Name: frm.formData.Last_Name,
-          About_User: frm.formData.About_User,
-          about_mini_description: frm.formData.about_mini_description,
-          Phone_Number: frm.formData.Phone_Number,
-          Photo_ID: frm.formData.Photo_ID === "" ? null : frm.formData.Photo_ID,
-          Website_URL: frm.formData.Website_URL
+        data: {
+          First_Name: frm.formData.First_Name && frm.formData.First_Name !== '' ? frm.formData.First_Name : null,
+          Last_Name: frm.formData.Last_Name && frm.formData.Last_Name !== '' ? frm.formData.Last_Name : null,
+          About_User: frm.formData.About_User && frm.formData.About_User !== '' ? frm.formData.About_User : null,
+          about_mini_description: frm.formData.about_mini_description  && frm.formData.about_mini_description !== '' ? frm.formData.about_mini_description : null,
+          Phone_Number: frm.formData.Phone_Number && frm.formData.Phone_Number !== '' ? frm.formData.Phone_Number : null,
+          Photo_ID: frm.formData.Photo_ID && frm.formData.Photo_ID !== '' ? frm.formData.Photo_ID : null,
+          Website_URL: frm.formData.Website_URL && frm.formData.Website_URL !== '' ? frm.formData.Website_URL : null
         },
       },
     });
   }
 
   function OnSubmit(frm: any) {
-    setProfileData(frm);
     updateBasicDetails(frm);
   }
 

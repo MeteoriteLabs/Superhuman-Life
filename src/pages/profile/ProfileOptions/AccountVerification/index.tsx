@@ -1,20 +1,59 @@
 import { useContext, useState, useRef } from "react";
 import Form from "@rjsf/core";
-import { schema, widgets } from "../../profileSchema";
+import { widgets } from "../../profileSchema";
 import { FETCH_USER_PROFILE_DATA, UPDATE_USER_PROFILE_DATA } from "../../queries/queries";
 import { useMutation, useQuery } from "@apollo/client";
 import AuthContext from "../../../../context/auth-context";
 import { flattenObj } from "../../../../components/utils/responseFlatten";
 import Toaster from '../../../../components/Toaster';
 import { Col } from 'react-bootstrap';
+import UploadImageToS3WithNativeSdk from "../../../../components/upload/upload";
+
+interface AccountVerificationDetail {
+    Verification_ID: string
+}
+
+// initial object of type AccountVerificationDetail definition
+let initialAccountVerificationState: AccountVerificationDetail = {
+    Verification_ID: ''
+}
+
 
 export default function SocialAccount() {
     let [isFormSubmitted, setIsFormSubmitted] = useState(false);
     const formRef = useRef<any>(null);
     const accountVerificationJson: { [name: string]: any } = require("./AccountVerification.json");
     const auth = useContext(AuthContext);
-    const [webpageDetails, setWebPageDetails] = useState<any>({});
-    const [profileData, setProfileData] = useState<any>();
+    const [webpageDetails, setWebPageDetails] = useState<AccountVerificationDetail>(initialAccountVerificationState);
+
+    const schema: any = {
+
+        Verification_ID: {
+            "ui:widget": (props: any) => (
+                <UploadImageToS3WithNativeSdk
+                    value={props.value}
+                    onChange={(event: any) => {
+                        props.onChange(event);
+                    }}
+                    allowImage={true}
+                    allowVideo={false}
+                    removePicture={
+                        () => {
+                          updateProfile({
+                            variables: {
+                                id: auth.userid,
+                                data: {
+                                    Verification_ID: null
+                                },
+                            },
+                        });
+                        }
+                    }
+                />
+            ),
+            "ui:help": "Upload Verification ID photo",
+        }
+    };
 
     const fetch = useQuery(FETCH_USER_PROFILE_DATA, {
         variables: { id: auth.userid },
@@ -25,7 +64,7 @@ export default function SocialAccount() {
     });
 
     const [updateProfile, { error }] = useMutation(UPDATE_USER_PROFILE_DATA, {
-        onCompleted: (r: any) => { setIsFormSubmitted(!isFormSubmitted); fetch.refetch();},refetchQueries: [FETCH_USER_PROFILE_DATA]
+        onCompleted: (r: any) => { setIsFormSubmitted(!isFormSubmitted); fetch.refetch(); }, refetchQueries: [FETCH_USER_PROFILE_DATA]
     });
 
     if (error) {
@@ -36,8 +75,8 @@ export default function SocialAccount() {
         updateProfile({
             variables: {
                 id: auth.userid,
-                data: profileData ? profileData : {
-                    Verification_ID: frm.formData.Verification_ID,
+                data: {
+                    Verification_ID: frm.formData.Verification_ID && frm.formData.Verification_ID !== '' ? frm.formData.Verification_ID : null,
                 },
             },
         });
@@ -51,12 +90,11 @@ export default function SocialAccount() {
     }
 
     function OnSubmit(frm: any) {
-        setProfileData(frm);
         updateVerificationDetails(frm);
     }
 
     return (
-        <Col md={{span:8, offset: 2}} className="pb-3">
+        <Col md={{ span: 8, offset: 2 }} className="pb-3">
             <Form
                 uiSchema={schema}
                 schema={accountVerificationJson}
@@ -71,7 +109,7 @@ export default function SocialAccount() {
             {isFormSubmitted ?
                 <Toaster heading="Success" textColor="text-success" headingCSS="mr-auto text-success" msg="Verification document has been uploaded" />
                 : null}
-     
+
         </Col>
     )
 }

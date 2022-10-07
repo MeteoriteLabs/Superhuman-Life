@@ -6,19 +6,6 @@ export const widgets = {
 
 export const schema: any = {
 
-  Verification_ID: {
-    "ui:widget": (props: any) => (
-      <UploadImageToS3WithNativeSdk
-        value={props.value}
-        onChange={(event: any) => {
-          props.onChange(event);
-        }}
-        allowImage={true}
-        allowVideo={false}
-      />
-    ),
-    "ui:help": "Upload Verification ID photo",
-  },
   Institute_Name: {
     "ui:placeholder": "Enter Institute Name"
   },

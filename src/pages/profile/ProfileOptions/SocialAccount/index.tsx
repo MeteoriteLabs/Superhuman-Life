@@ -7,14 +7,33 @@ import { flattenObj } from "../../../../components/utils/responseFlatten";
 import Toaster from '../../../../components/Toaster';
 import { Col } from 'react-bootstrap';
 import { schema } from './SocialAccountSchema';
+import { urlCustomFormats, urlTransformErrors } from '../../../../components/utils/ValidationPatterns';
+
+interface SocialDetails {
+    instagram_url: string,
+    Facebook_URL: string,
+    Youtube_URL: string,
+    LinkedIn_URL: string,
+    Clubhouse_URL: string,
+    Twitter_URL: string
+}
+
+// initial object of type SocialDetails definition
+let initialSocialAccountState: SocialDetails = {
+    instagram_url: '',
+    Facebook_URL: '',
+    Youtube_URL: '',
+    LinkedIn_URL: '',
+    Clubhouse_URL: '',
+    Twitter_URL: ''
+}
 
 export default function SocialAccount() {
     let [isFormSubmitted, setIsFormSubmitted] = useState(false);
     const formRef = useRef<any>(null);
     const socialAccountJson: { [name: string]: any } = require("./SocialAccount.json");
     const auth = useContext(AuthContext);
-    const [webpageDetails, setWebPageDetails] = useState<any>({});
-    const [profileData, setProfileData] = useState<any>();
+    const [webpageDetails, setWebPageDetails] = useState<SocialDetails>(initialSocialAccountState);
 
     const fetch = useQuery(FETCH_USER_PROFILE_DATA, {
         variables: { id: auth.userid },
@@ -25,8 +44,7 @@ export default function SocialAccount() {
     });
 
     const [updateProfile, { error }] = useMutation(UPDATE_USER_PROFILE_DATA, {
-        onCompleted: (r: any) => { setIsFormSubmitted(!isFormSubmitted); fetch.refetch();}, refetchQueries: [FETCH_USER_PROFILE_DATA]
-
+        onCompleted: (r: any) => { setIsFormSubmitted(!isFormSubmitted); fetch.refetch(); }, refetchQueries: [FETCH_USER_PROFILE_DATA]
     });
 
     if (error) {
@@ -37,20 +55,19 @@ export default function SocialAccount() {
         updateProfile({
             variables: {
                 id: auth.userid,
-                data: profileData ? profileData : {
-                    instagram_url: frm.formData.instagram_url,
-                    Facebook_URL: frm.formData.Facebook_URL,
-                    Youtube_URL: frm.formData.Youtube_URL,
-                    LinkedIn_URL: frm.formData.LinkedIn_URL,
-                    Clubhouse_URL: frm.formData.Clubhouse_URL,
-                    Twitter_URL: frm.formData.Twitter_URL
+                data: {
+                    instagram_url: frm.formData.instagram_url && frm.formData.instagram_url !== '' ? frm.formData.instagram_url : null,
+                    Facebook_URL: frm.formData.Facebook_URL && frm.formData.Facebook_URL !== '' ? frm.formData.Facebook_URL : null,
+                    Youtube_URL: frm.formData.Youtube_URL && frm.formData.Youtube_URL !== '' ? frm.formData.Youtube_URL : null,
+                    LinkedIn_URL: frm.formData.LinkedIn_URL && frm.formData.LinkedIn_URL !== '' ? frm.formData.LinkedIn_URL : null,
+                    Clubhouse_URL: frm.formData.Clubhouse_URL && frm.formData.Clubhouse_URL !== '' ? frm.formData.Clubhouse_URL : null,
+                    Twitter_URL: frm.formData.Twitter_URL && frm.formData.Twitter_URL !== '' ? frm.formData.Twitter_URL : null
                 },
             },
         });
     }
 
     function OnSubmit(frm: any) {
-        setProfileData(frm);
         updateSocialAccountDetails(frm);
     }
 
@@ -62,7 +79,7 @@ export default function SocialAccount() {
     }
 
     return (
-        <Col md={{span:8, offset: 2}} className="pb-3">
+        <Col md={{ span: 8, offset: 2 }} className="pb-3">
 
             {/* Social Account details form */}
             <Form
@@ -72,8 +89,10 @@ export default function SocialAccount() {
                 onSubmit={(frm: any) => { OnSubmit(frm); }}
                 showErrorList={false}
                 uiSchema={schema}
+                customFormats={urlCustomFormats}
+                transformErrors={urlTransformErrors}
             />
-            
+
             {/* success toaster notification */}
             {isFormSubmitted ?
                 <Toaster heading="Success" textColor="text-success" headingCSS="mr-auto text-success" msg="Social account details has been updated" />
