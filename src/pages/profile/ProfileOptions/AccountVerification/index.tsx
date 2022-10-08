@@ -38,14 +38,14 @@ export default function SocialAccount() {
                     allowVideo={false}
                     removePicture={
                         () => {
-                          updateProfile({
-                            variables: {
-                                id: auth.userid,
-                                data: {
-                                    Verification_ID: null
+                            updateProfile({
+                                variables: {
+                                    id: auth.userid,
+                                    data: {
+                                        Verification_ID: null
+                                    },
                                 },
-                            },
-                        });
+                            });
                         }
                     }
                 />
