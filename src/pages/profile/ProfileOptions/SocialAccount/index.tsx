@@ -10,12 +10,12 @@ import { schema } from './SocialAccountSchema';
 import { urlCustomFormats, urlTransformErrors } from '../../../../components/utils/ValidationPatterns';
 
 interface SocialDetails {
-    instagram_url: string,
-    Facebook_URL: string,
-    Youtube_URL: string,
-    LinkedIn_URL: string,
-    Clubhouse_URL: string,
-    Twitter_URL: string
+    instagram_url?: string,
+    Facebook_URL?: string,
+    Youtube_URL?: string,
+    LinkedIn_URL?: string,
+    Clubhouse_URL?: string,
+    Twitter_URL?: string
 }
 
 // initial object of type SocialDetails definition

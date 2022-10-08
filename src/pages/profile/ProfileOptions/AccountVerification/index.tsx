@@ -10,14 +10,13 @@ import { Col } from 'react-bootstrap';
 import UploadImageToS3WithNativeSdk from "../../../../components/upload/upload";
 
 interface AccountVerificationDetail {
-    Verification_ID: string
+    Verification_ID?: string
 }
 
 // initial object of type AccountVerificationDetail definition
 let initialAccountVerificationState: AccountVerificationDetail = {
     Verification_ID: ''
 }
-
 
 export default function SocialAccount() {
     let [isFormSubmitted, setIsFormSubmitted] = useState(false);
