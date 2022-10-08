@@ -79,10 +79,6 @@ function CreatePosts(props: any, ref: any) {
                if (msg.type !== 'deleteNote' && msg.type !== 'deleteComment') {
                     modalTrigger.next(true);
                }
-
-               // if (msg && !msg.id) {
-               //      modalTrigger.next(true);
-               // }
           },
      }));
 
