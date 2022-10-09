@@ -61,6 +61,7 @@ const ProgramManager = (props: any) => {
                             </Row>
                             <Row className="mt-4">
                                 <span><b>Discpline</b></span>
+                                {/* <span><b>Discpline</b></span> */}
                                 <span className="ml-4">{data[0].discipline}</span>
                                 <div className="ml-3 mt-1" style={{ borderLeft: '1px solid black', height: '20px' }}></div>
                                 <span className="ml-4">{data[0].duration + " days"}</span>

@@ -66,12 +66,16 @@ export const schemaView: any = {
         },
         "addWorkout": {
             "AddText": {
-                "ui:widget": "textEditor"
+                "ui:widget": "textEditor",
+                "readonly": true
             },
             "Upload": {
                 "ui:widget": (props: any) => {
                     return <Upload allowImage={false} allowVideo={true} onChange={props.onChange} value={props.value} readonly={true}/>;
                 },
+            },
+            "AddURL": {
+                "ui:readonly": true
             },
             "build": {
                 "ui:widget": "buildWorkout"

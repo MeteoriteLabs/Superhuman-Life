@@ -135,7 +135,7 @@ const ExerciseList = (props: any) => {
                                    <i className="close fas fa-times pr-2" style={{ fontSize: '16px' }} onClick={() => handleSelectedExerciseRemove(val.value)} />
                                    <div className="text-center mt-3 ml-2">
                                         <Row className="text-center">
-                                             <Col className="text-center">
+                                             <Col sm={12} lg={4} className="text-center">
                                                   <InputGroup className="mb-3" >
                                                        <FormControl
                                                             type="number"
@@ -153,7 +153,7 @@ const ExerciseList = (props: any) => {
                                                        </InputGroup.Append>
                                                   </InputGroup>
                                              </Col>
-                                             <Col>
+                                             <Col sm={12} lg={4}>
                                                   <InputGroup className="mb-3">
                                                        <FormControl
                                                             type="number"
@@ -170,7 +170,7 @@ const ExerciseList = (props: any) => {
                                                        </InputGroup.Append>
                                                   </InputGroup>
                                              </Col>
-                                             <Col>
+                                             <Col sm={12} lg={4}>
                                                   <InputGroup className="mb-3">
                                                        <FormControl
                                                             type="number"
@@ -190,7 +190,7 @@ const ExerciseList = (props: any) => {
                                              </Col>
                                         </Row>
                                         <Row>
-                                             <Col>
+                                             <Col xs={12} lg={6}>
                                                   <InputGroup className="mb-3">
                                                        <FormControl
                                                             type="number"
@@ -208,7 +208,7 @@ const ExerciseList = (props: any) => {
                                                        </InputGroup.Append>
                                                   </InputGroup>
                                              </Col>
-                                             <Col>
+                                             <Col xs={12} lg={6}>
                                                   <InputGroup className="mb-3">
                                                        <FormControl
                                                             type="number"

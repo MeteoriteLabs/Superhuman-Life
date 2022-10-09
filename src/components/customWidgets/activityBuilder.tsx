@@ -67,9 +67,51 @@ const ActivityBuilder = (props: any) => {
      //      setSelected(values);
      // }, [selected])
 
-     console.log(selected);
+     function handleValidation(){
+          if(selected.length !== 0){
+               if(none){
+                    return true;
+               }
+               if(time){
+                    if(selected[0].timeHr > 0 || selected[0].timeMin > 0){
+                         return true;
+                    }else {
+                         return false;
+                    }
+               }
+               if(distance){
+                    if(selected[0].distance > 0){
+                         return true;
+                    }else {
+                         return false;
+                    }
+               }
+               if(incline){
+                    if(selected[0].incline > 0){
+                         return true;
+                    }else {
+                         return false;
+                    }
+               }
+               if(speed){
+                    if(selected[0].speed > 0){
+                         return true;
+                    }else {
+                         return false;
+                    }
+               }
+               if(calories){
+                    if(selected[0].calories > 0){
+                         return true;
+                    }else {
+                         return false;
+                    }
+               }
+          }
+          return false;
+     }
 
-     if(selected.length !== 0 && (none === true || time === true || distance === true || incline === true || speed === true || calories === true)){
+     if(handleValidation()){
           props.onChange(selected);
      }else {
           props.onChange(undefined);
@@ -114,7 +156,7 @@ const ActivityBuilder = (props: any) => {
                     <Form.Row>
                          <Col>
                          <InputGroup className="mb-3">
-                         <FormControl placeholder="10km" type="number" onChange={e => handleDataChange(3, e.target.value)}/>
+                         <FormControl placeholder="" type="number" onChange={e => handleDataChange(3, e.target.value)}/>
                          <InputGroup.Append>
                               <InputGroup.Text id="basic-addon2">Kms</InputGroup.Text>
                          </InputGroup.Append>
@@ -155,7 +197,7 @@ const ActivityBuilder = (props: any) => {
                          <InputGroup className="mb-3">
                          <FormControl type="number" onChange={(e) => {handleDataChange(6, e.target.value)}}/>
                          <InputGroup.Append>
-                              <InputGroup.Text id="basic-addon2"></InputGroup.Text>
+                              <InputGroup.Text id="basic-addon2">kcal</InputGroup.Text>
                          </InputGroup.Append>
                          </InputGroup>
                          </Col>

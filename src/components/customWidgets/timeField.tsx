@@ -32,8 +32,6 @@ const TimeFieldInput = (props: any) => {
                 return <span id="timeErr" style={{color: 'red'}}>End Time and start Time cannot be the same</span>
             }else if(parseInt(sh) === parseInt(eh) && parseInt(sm) > parseInt(em)) {
                 return <span id="timeErr" style={{color: 'red'}}>End Time Cannot be lesser than Start Time</span>
-            }else {
-                return <span id="validTime" style={{color: 'green'}}>Valid Time</span>
             }
         }
     }

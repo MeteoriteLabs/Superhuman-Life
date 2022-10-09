@@ -8,6 +8,7 @@ import { schema, widgets } from './workoutSchema';
 import { schemaView } from './workoutSchemaView';
 import { Subject } from 'rxjs';
 import { flattenObj } from '../../../components/utils/responseFlatten';
+import Toaster from '../../../components/Toaster';
 
 interface Operation {
   id: string;
@@ -19,20 +20,71 @@ function CreateEditWorkout(props: any, ref: any) {
   const auth = useContext(AuthContext);
   const workoutSchema: { [name: string]: any; } = require("./workout.json");
   const [workoutDetails, setWorkoutDetails] = useState<any>({});
-  const [programDetails, setProgramDetails] = useState<any[]>([]);
+  const [programDetails, setProgramDetails] = useState<any>({});
   const [operation, setOperation] = useState<Operation>({} as Operation);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  let [isFormSubmitted, setIsFormSubmitted] = useState(false);
+  const [toastHeading, setToastHeading] = useState('');
+  const [toastMessage, setToastMessage] = useState('');
+  const [toastColor, setToastColor] = useState('');
 
   useQuery(FETCH_FITNESS_PROGRAMS, {
-    variables: { id: auth.userid },
+    variables: { id: operation.id?.toString() },
+    skip: (operation.type !== 'delete'),
     onCompleted: (r: any) => {
-      setProgramDetails(r.fitnessprograms);
+      const flattenData = flattenObj({...r});
+      setProgramDetails(flattenData);
     }
   });
 
-  const [createWorkout] = useMutation(CREATE_WORKOUT, { onCompleted: (r: any) => { modalTrigger.next(false); props.callback() } });
-  const [editWorkout] = useMutation(UPDATE_WORKOUT, { onCompleted: (r: any) => { modalTrigger.next(false); props.callback(); } });
-  const [deleteWorkout] = useMutation(DELETE_WORKOUT, { refetchQueries: ["GET_TABLEDATA"], onCompleted: (r: any) => { modalTrigger.next(false); props.callback(); } });
+  const [createWorkout] = useMutation(CREATE_WORKOUT, { 
+    onCompleted: (r: any) => { 
+      modalTrigger.next(false); 
+      props.callback();
+      setIsFormSubmitted(!isFormSubmitted);
+      setToastHeading('Success');
+      setToastMessage('Workout created successfully');
+      setToastColor('text-success'); 
+    } ,
+    onError: (e: any) => {
+      setToastHeading('Error');
+      setIsFormSubmitted(!isFormSubmitted);
+      setToastMessage('Workout creation failed');
+      setToastColor('text-danger'); 
+    }
+  });
+  const [editWorkout] = useMutation(UPDATE_WORKOUT, { 
+    onCompleted: (r: any) => { 
+      modalTrigger.next(false); 
+      props.callback(); 
+      setIsFormSubmitted(!isFormSubmitted);
+      setToastHeading('Success');
+      setToastMessage('Workout updated successfully');
+      setToastColor('text-success'); 
+    } ,
+    onError: (e: any) => {
+      setToastHeading('Error');
+      setIsFormSubmitted(!isFormSubmitted);
+      setToastMessage('Workout updation failed');
+      setToastColor('text-danger'); 
+    }
+  });
+  const [deleteWorkout] = useMutation(DELETE_WORKOUT, { 
+    onCompleted: (r: any) => { 
+      modalTrigger.next(false); 
+      props.callback(); 
+      setIsFormSubmitted(!isFormSubmitted);
+      setToastHeading('Success');
+      setToastMessage('Workout deleted successfully');
+      setToastColor('text-success'); 
+    } ,
+    onError: (e: any) => {
+      setToastHeading('Error');
+      setIsFormSubmitted(!isFormSubmitted);
+      setToastMessage('Workout deletion failed');
+      setToastColor('text-danger'); 
+    }
+  });
 
   const modalTrigger = new Subject();
 
@@ -281,6 +333,10 @@ function CreateEditWorkout(props: any, ref: any) {
     name = "View";
   }
 
+  function handleToasCallback(){
+    setIsFormSubmitted(false);
+  }
+
   return (
     <>
       {/* Create , Edit and View Modal */}
@@ -301,13 +357,16 @@ function CreateEditWorkout(props: any, ref: any) {
         show={showDeleteModal}
         onHide={() => setShowDeleteModal(false)}
         modalTitle="Delete"
-        EventConnectedDetails={flattenObj({ ...programDetails })}
+        EventConnectedDetails={programDetails}
         ExistingEventId={operation.id}
         modalBody="Do you want to delete this workout?"
         buttonLeft="Cancel"
         buttonRight="Yes"
         onClick={() => { DeleteWorkout(operation.id) }}
       />}
+      {isFormSubmitted ?
+                <Toaster handleCallback={handleToasCallback} heading={toastHeading} textColor={toastColor} headingCSS={`mr-auto ${toastColor}`} msg={toastMessage} />
+                : null}
     </>
   )
 }

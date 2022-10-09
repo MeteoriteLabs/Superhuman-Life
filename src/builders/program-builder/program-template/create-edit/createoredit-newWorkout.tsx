@@ -228,9 +228,6 @@ function CreateEditNewWorkout(props: any, ref: any) {
             }
         }
 
-        debugger;
-        console.log(eventJson);
-
         createSession({
             variables: {
                 start_time: eventJson.startTime,
@@ -252,21 +249,30 @@ function CreateEditNewWorkout(props: any, ref: any) {
         frm.muscleGroup = JSON.parse(frm.muscleGroup);
         if (frm.addWorkout.AddWorkout === 'Build') {
             if (Object.keys(frm.addWorkout.warmup)[0] === "exercise") {
-                frm.addWorkout.warmup.exercise = JSON.parse(frm.addWorkout.warmup.exercise);
+              frm.addWorkout.warmup = JSON.parse(frm.addWorkout.warmup.exercise);
             } else {
-                frm.addWorkout.warmup.type = Object.keys(frm.addWorkout.warmup)[0];
+              frm.addWorkout.warmup.type = Object.keys(frm.addWorkout.warmup)[0];
+              frm.addWorkout.warmup.value = frm.addWorkout.warmup[Object.keys(frm.addWorkout.warmup)[0]];
+              delete frm.addWorkout.warmup[Object.keys(frm.addWorkout.warmup)[0]];
+              frm.addWorkout.warmup = [frm.addWorkout.warmup]
             }
             if (Object.keys(frm.addWorkout.mainmovement)[0] === "exercise") {
-                frm.addWorkout.mainmovement = JSON.parse(frm.addWorkout.mainmovement.exercise);
+              frm.addWorkout.mainmovement = JSON.parse(frm.addWorkout.mainmovement.exercise);
             } else {
-                frm.addWorkout.mainmovement.type = Object.keys(frm.addWorkout.mainmovement)[0];
+              frm.addWorkout.mainmovement.type = Object.keys(frm.addWorkout.mainmovement)[0];
+              frm.addWorkout.mainmovement.value = frm.addWorkout.mainmovement[Object.keys(frm.addWorkout.mainmovement)[0]];
+              delete frm.addWorkout.mainmovement[Object.keys(frm.addWorkout.mainmovement)[0]];
+              frm.addWorkout.mainmovement = [frm.addWorkout.mainmovement]
             }
             if (Object.keys(frm.addWorkout.cooldown)[0] === "exercise") {
-                frm.addWorkout.cooldown = JSON.parse(frm.addWorkout.cooldown.exercise);
+              frm.addWorkout.cooldown = JSON.parse(frm.addWorkout.cooldown.exercise);
             } else {
-                frm.addWorkout.cooldown.type = Object.keys(frm.addWorkout.cooldown)[0];
+              frm.addWorkout.cooldown.type = Object.keys(frm.addWorkout.cooldown)[0];
+              frm.addWorkout.cooldown.value = frm.addWorkout.cooldown[Object.keys(frm.addWorkout.cooldown)[0]];
+              delete frm.addWorkout.cooldown[Object.keys(frm.addWorkout.cooldown)[0]];
+              frm.addWorkout.cooldown = [frm.addWorkout.cooldown]
             }
-        }
+          }
         createWorkout({
             variables: {
               workouttitle: frm.workout,
