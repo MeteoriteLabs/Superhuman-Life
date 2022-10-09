@@ -173,13 +173,13 @@ function CreateEducation(props: any, ref: any) {
      }, [loading])
 
      if (createError) {
-          return <Toaster heading="Failed" textColor="text-danger" headingCSS="mr-auto text-danger" msg="Failed to add address details" />;
+          return <Toaster heading="Failed" textColor="text-danger" headingCSS="mr-auto text-danger" msg="Failed to add education details" />;
      }
      if (updateError) {
-          return <Toaster heading="Failed" textColor="text-danger" headingCSS="mr-auto text-danger" msg="Failed to update address details" />;
+          return <Toaster heading="Failed" textColor="text-danger" headingCSS="mr-auto text-danger" msg="Failed to update education details" />;
      }
      if (deleteError) {
-          return <Toaster heading="Failed" textColor="text-danger" headingCSS="mr-auto text-danger" msg="Failed to delete address details" />;
+          return <Toaster heading="Failed" textColor="text-danger" headingCSS="mr-auto text-danger" msg="Failed to delete education details" />;
      }
 
      return (
@@ -217,15 +217,15 @@ function CreateEducation(props: any, ref: any) {
 
                {/* success toaster notification */}
                {isFormSubmitted ?
-                    <Toaster handleCallback={() => { setIsFormSubmitted(!isFormSubmitted); }} heading="Success" textColor="text-success" headingCSS="mr-auto text-success" msg="New address has been added" />
+                    <Toaster handleCallback={() => setIsFormSubmitted(!isFormSubmitted)} heading="Success" textColor="text-success" headingCSS="mr-auto text-success" msg="New education detail has been added" />
                     : null}
 
                {isEducationDeleted ?
-                    <Toaster handleCallback={() => { setIsEducationDeleted(!isEducationDeleted); }} heading="Success" textColor="text-success" headingCSS="mr-auto text-success" msg="Address deleted successfully" />
+                    <Toaster handleCallback={() => setIsEducationDeleted(!isEducationDeleted)} heading="Success" textColor="text-success" headingCSS="mr-auto text-success" msg="Education Detail deleted successfully" />
                     : null}
 
                {isEducationUpdated ?
-                    <Toaster handleCallback={() => { setIsEducationUpdated(!isEducationUpdated); }} heading="Success" textColor="text-success" headingCSS="mr-auto text-success" msg="Address updated successfully" />
+                    <Toaster handleCallback={() => setIsEducationUpdated(!isEducationUpdated)} heading="Success" textColor="text-success" headingCSS="mr-auto text-success" msg="Education Detail updated successfully" />
                     : null}
           </>
      );

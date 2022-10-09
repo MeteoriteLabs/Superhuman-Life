@@ -11,13 +11,13 @@ import { phoneCustomFormats, phoneTransformErrors } from '../../../../components
 import UploadImageToS3WithNativeSdk from "../../../../components/upload/upload";
 
 interface UserDetails {
-    Photo_ID?: string,
-    About_User?: string,
-    First_Name?: string,
-    Last_Name?: string,
-    about_mini_description?: string,
-    Website_URL?: string,
-    Phone_Number?: string
+    Photo_ID: string,
+    About_User: string,
+    First_Name: string,
+    Last_Name: string,
+    about_mini_description: string,
+    Website_URL: string,
+    Phone_Number: string
 }
 
 // define initial object of type UserDetails
@@ -32,7 +32,7 @@ let initialUserDetailsState: UserDetails = {
 }
 
 export default function BasicProfileForm() {
-  let [isFormSubmitted, setIsFormSubmitted] = useState(false);
+  let [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
   const formRef = useRef<any>(null);
   const auth = useContext(AuthContext);
   const profileJson: { [name: string]: any } = require("./BasicProfile.json");
@@ -153,7 +153,7 @@ export default function BasicProfileForm() {
 
       {/* success toaster notification */}
       {isFormSubmitted ?
-        <Toaster handleCallback={() => {setIsFormSubmitted(!isFormSubmitted);}} heading="Success" textColor="text-success" headingCSS="mr-auto text-success" msg="Basic Profile details has been updated" />
+        <Toaster handleCallback={() => setIsFormSubmitted(!isFormSubmitted)} heading="Success" textColor="text-success" headingCSS="mr-auto text-success" msg="Basic Profile details has been updated" />
         : null}
 
     </>

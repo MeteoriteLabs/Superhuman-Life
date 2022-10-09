@@ -10,7 +10,7 @@ import { Col } from 'react-bootstrap';
 import UploadImageToS3WithNativeSdk from "../../../../components/upload/upload";
 
 interface AccountVerificationDetail {
-    Verification_ID?: string
+    Verification_ID: string
 }
 
 // initial object of type AccountVerificationDetail definition
@@ -106,7 +106,7 @@ export default function SocialAccount() {
 
             {/* success toaster notification */}
             {isFormSubmitted ?
-                <Toaster handleCallback={() => { setIsFormSubmitted(!isFormSubmitted); }} heading="Success" textColor="text-success" headingCSS="mr-auto text-success" msg="Verification document has been uploaded" />
+                <Toaster handleCallback={() => setIsFormSubmitted(!isFormSubmitted)} heading="Success" textColor="text-success" headingCSS="mr-auto text-success" msg="Verification document has been uploaded" />
                 : null}
 
         </Col>

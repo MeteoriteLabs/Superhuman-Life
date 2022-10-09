@@ -230,15 +230,15 @@ function CreateAddress(props: any, ref: any) {
 
             {/* success toaster notification */}
             {isFormSubmitted ?
-                <Toaster handleCallback={() => { setIsFormSubmitted(!isFormSubmitted); }} heading="Success" textColor="text-success" headingCSS="mr-auto text-success" msg="New address has been added" />
+                <Toaster handleCallback={() => setIsFormSubmitted(!isFormSubmitted)} heading="Success" textColor="text-success" headingCSS="mr-auto text-success" msg="New address has been added" />
                 : null}
 
             {isAddressDeleted ?
-                <Toaster handleCallback={() => { setIsAddressDeleted(!isAddressDeleted); }} heading="Success" textColor="text-success" headingCSS="mr-auto text-success" msg="Address deleted successfully" />
+                <Toaster handleCallback={() => setIsAddressDeleted(!isAddressDeleted)} heading="Success" textColor="text-success" headingCSS="mr-auto text-success" msg="Address deleted successfully" />
                 : null}
 
             {isAddressUpdated ?
-                <Toaster handleCallback={() => { setIsAddressUpdated(!isAddressUpdated); }} heading="Success" textColor="text-success" headingCSS="mr-auto text-success" msg="Address updated successfully" />
+                <Toaster handleCallback={() => setIsAddressUpdated(!isAddressUpdated)} heading="Success" textColor="text-success" headingCSS="mr-auto text-success" msg="Address updated successfully" />
                 : null}
 
         </>

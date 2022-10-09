@@ -10,12 +10,12 @@ import { schema } from './SocialAccountSchema';
 import { urlCustomFormats, urlTransformErrors } from '../../../../components/utils/ValidationPatterns';
 
 interface SocialDetails {
-    instagram_url?: string,
-    Facebook_URL?: string,
-    Youtube_URL?: string,
-    LinkedIn_URL?: string,
-    Clubhouse_URL?: string,
-    Twitter_URL?: string
+    instagram_url: string,
+    Facebook_URL: string,
+    Youtube_URL: string,
+    LinkedIn_URL: string,
+    Clubhouse_URL: string,
+    Twitter_URL: string
 }
 
 // initial object of type SocialDetails definition
@@ -29,7 +29,7 @@ let initialSocialAccountState: SocialDetails = {
 }
 
 export default function SocialAccount() {
-    let [isFormSubmitted, setIsFormSubmitted] = useState(false);
+    let [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
     const formRef = useRef<any>(null);
     const socialAccountJson: { [name: string]: any } = require("./SocialAccount.json");
     const auth = useContext(AuthContext);
@@ -95,7 +95,7 @@ export default function SocialAccount() {
 
             {/* success toaster notification */}
             {isFormSubmitted ?
-                <Toaster handleCallback={() => {setIsFormSubmitted(!isFormSubmitted);}} heading="Success" textColor="text-success" headingCSS="mr-auto text-success" msg="Social account details has been updated" />
+                <Toaster handleCallback={() => setIsFormSubmitted(!isFormSubmitted)} heading="Success" textColor="text-success" headingCSS="mr-auto text-success" msg="Social account details has been updated" />
                 : null
             }
 
