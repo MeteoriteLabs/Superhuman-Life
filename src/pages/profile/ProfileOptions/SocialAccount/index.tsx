@@ -95,7 +95,7 @@ export default function SocialAccount() {
 
             {/* success toaster notification */}
             {isFormSubmitted ?
-                <Toaster heading="Success" textColor="text-success" headingCSS="mr-auto text-success" msg="Social account details has been updated" />
+                <Toaster handleCallback={() => {setIsFormSubmitted(!isFormSubmitted);}} heading="Success" textColor="text-success" headingCSS="mr-auto text-success" msg="Social account details has been updated" />
                 : null
             }
 

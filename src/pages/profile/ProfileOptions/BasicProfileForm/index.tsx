@@ -153,7 +153,7 @@ export default function BasicProfileForm() {
 
       {/* success toaster notification */}
       {isFormSubmitted ?
-        <Toaster heading="Success" textColor="text-success" headingCSS="mr-auto text-success" msg="Basic Profile details has been updated" />
+        <Toaster handleCallback={() => {setIsFormSubmitted(!isFormSubmitted);}} heading="Success" textColor="text-success" headingCSS="mr-auto text-success" msg="Basic Profile details has been updated" />
         : null}
 
     </>

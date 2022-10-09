@@ -16,6 +16,7 @@ import { flattenObj } from "../../../../components/utils/responseFlatten";
 import StatusModal from "../../../../components/StatusModal/StatusModal";
 import { zipcodeCustomFormats, zipcodeTransformErrors } from "../../../../components/utils/ValidationPatterns";
 import Loader from '../../../../components/Loader/Loader';
+import Toaster from '../../../../components/Toaster/index';
 
 interface Operation {
     id: string;
@@ -30,7 +31,10 @@ function CreateAddress(props: any, ref: any) {
     const [operation, setOperation] = useState<Operation>({} as Operation);
     const [addressDetails, setAddressDetails] = useState<any>({});
     const [prefill, setPrefill] = useState<any>([]);
-    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+    let [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
+    let [isAddressDeleted, setIsAddressDeleted] = useState<boolean>(false);
+    let [isAddressUpdated, setIsAddressUpdated] = useState<boolean>(false);
 
     const fetch = useQuery(FETCH_USER_PROFILE_DATA, {
         variables: { id: auth.userid },
@@ -47,16 +51,17 @@ function CreateAddress(props: any, ref: any) {
         onCompleted: (r: any) => { props.callback(); fetch.refetch(); }, refetchQueries: [FETCH_USERS_PROFILE_DATA]
     });
 
-    const [updateAddress] = useMutation(UPDATE_ADDRESS_DATA, {
-        onCompleted: (r: any) => { props.callback(); modalTrigger.next(false); fetch.refetch(); }, refetchQueries: [FETCH_USERS_PROFILE_DATA]
+    const [updateAddress, { error: updateError }] = useMutation(UPDATE_ADDRESS_DATA, {
+        onCompleted: (r: any) => { props.callback(); modalTrigger.next(false); fetch.refetch(); setIsAddressUpdated(!isAddressUpdated); }, refetchQueries: [FETCH_USERS_PROFILE_DATA]
     });
 
-    const [deleteAddress] = useMutation(DELETE_ADDRESS, {
-        onCompleted: (data: any) => { fetch.refetch(); }, refetchQueries: [FETCH_USERS_PROFILE_DATA]
+    const [deleteAddress, { error: deleteError }] = useMutation(DELETE_ADDRESS, {
+        onCompleted: (data: any) => { fetch.refetch(); setIsAddressDeleted(!isAddressDeleted); }, refetchQueries: [FETCH_USERS_PROFILE_DATA]
     });
 
-    const [createAddress, { loading, error }] = useMutation(CREATE_ADDRESS, {
+    const [createAddress, { loading, error: createError }] = useMutation(CREATE_ADDRESS, {
         onCompleted: (r: any) => {
+            setIsFormSubmitted(!isFormSubmitted);
             modalTrigger.next(false);
             fetch.refetch();
 
@@ -73,10 +78,6 @@ function CreateAddress(props: any, ref: any) {
             });
         }
     });
-
-    if (error) {
-        console.log("Oops! Error occured");
-    }
 
     // modal trigger
     const modalTrigger = new Subject();
@@ -180,11 +181,24 @@ function CreateAddress(props: any, ref: any) {
     }
 
     useEffect(() => {
-        <Loader/>
-    },[loading])
+        if (loading) {
+            <Loader />
+        }
+    }, [loading])
+
+    if (createError) {
+        return <Toaster heading="Failed" textColor="text-danger" headingCSS="mr-auto text-danger" msg="Failed to add address details" />;
+    }
+    if (updateError) {
+        return <Toaster heading="Failed" textColor="text-danger" headingCSS="mr-auto text-danger" msg="Failed to update address details" />;
+    }
+    if (deleteError) {
+        return <Toaster heading="Failed" textColor="text-danger" headingCSS="mr-auto text-danger" msg="Failed to delete address details" />;
+    }
 
     return (
         <>
+            {/* Create and Edit Modal */}
             <ModalView
                 name={operation.type === 'create' ? "Create New Address" : "Edit Address Details"}
                 isStepper={false}
@@ -213,6 +227,20 @@ function CreateAddress(props: any, ref: any) {
                 onClick={() => { DeleteAddress(operation.id) }}
             />
             }
+
+            {/* success toaster notification */}
+            {isFormSubmitted ?
+                <Toaster handleCallback={() => { setIsFormSubmitted(!isFormSubmitted); }} heading="Success" textColor="text-success" headingCSS="mr-auto text-success" msg="New address has been added" />
+                : null}
+
+            {isAddressDeleted ?
+                <Toaster handleCallback={() => { setIsAddressDeleted(!isAddressDeleted); }} heading="Success" textColor="text-success" headingCSS="mr-auto text-success" msg="Address deleted successfully" />
+                : null}
+
+            {isAddressUpdated ?
+                <Toaster handleCallback={() => { setIsAddressUpdated(!isAddressUpdated); }} heading="Success" textColor="text-success" headingCSS="mr-auto text-success" msg="Address updated successfully" />
+                : null}
+
         </>
     );
 }

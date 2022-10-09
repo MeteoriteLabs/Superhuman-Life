@@ -19,7 +19,7 @@ let initialAccountVerificationState: AccountVerificationDetail = {
 }
 
 export default function SocialAccount() {
-    let [isFormSubmitted, setIsFormSubmitted] = useState(false);
+    let [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
     const formRef = useRef<any>(null);
     const accountVerificationJson: { [name: string]: any } = require("./AccountVerification.json");
     const auth = useContext(AuthContext);
@@ -106,7 +106,7 @@ export default function SocialAccount() {
 
             {/* success toaster notification */}
             {isFormSubmitted ?
-                <Toaster heading="Success" textColor="text-success" headingCSS="mr-auto text-success" msg="Verification document has been uploaded" />
+                <Toaster handleCallback={() => { setIsFormSubmitted(!isFormSubmitted); }} heading="Success" textColor="text-success" headingCSS="mr-auto text-success" msg="Verification document has been uploaded" />
                 : null}
 
         </Col>

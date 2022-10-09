@@ -15,6 +15,7 @@ import { schema, widgets } from "../../profileSchema";
 import { flattenObj } from "../../../../components/utils/responseFlatten";
 import StatusModal from "../../../../components/StatusModal/StatusModal";
 import Loader from '../../../../components/Loader/Loader';
+import Toaster from '../../../../components/Toaster/index';
 import { yearCustomFormats, yearTransformErrors } from "../../../../components/utils/ValidationPatterns";
 
 interface Operation {
@@ -30,7 +31,11 @@ function CreateEducation(props: any, ref: any) {
      const [educationDetails, setEducationDetails] = useState<any>([]);
      const auth = useContext(AuthContext);
      const [prefill, setPrefill] = useState<any>([]);
-     const [showDeleteModal, setShowDeleteModal] = useState(false);
+     const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+     let [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
+     let [isEducationDeleted, setIsEducationDeleted] = useState<boolean>(false);
+     let [isEducationUpdated, setIsEducationUpdated] = useState<boolean>(false);
+
 
      const fetch = useQuery(FETCH_USER_PROFILE_DATA, {
           variables: { id: auth.userid },
@@ -53,16 +58,17 @@ function CreateEducation(props: any, ref: any) {
           onCompleted: (r: any) => { props.callback(); fetch.refetch(); }, refetchQueries: [FETCH_USERS_PROFILE_DATA]
      });
 
-     const [updateEducationalDetail] = useMutation(UPDATE_EDUCATION_DETAILS, {
-          onCompleted: (r: any) => { modalTrigger.next(false); props.callback(); fetch.refetch(); }
+     const [updateEducationalDetail, { error: updateError }] = useMutation(UPDATE_EDUCATION_DETAILS, {
+          onCompleted: (r: any) => { modalTrigger.next(false); props.callback(); fetch.refetch(); setIsEducationUpdated(!isEducationUpdated); }
      });
 
-     const [deleteEducationData] = useMutation(DELETE_EDUCATION_DETAILS, {
-          onCompleted: (data: any) => { fetch.refetch(); }, refetchQueries: [FETCH_USERS_PROFILE_DATA]
+     const [deleteEducationData, { error: deleteError }] = useMutation(DELETE_EDUCATION_DETAILS, {
+          onCompleted: (data: any) => { fetch.refetch(); setIsEducationDeleted(!isEducationDeleted); }, refetchQueries: [FETCH_USERS_PROFILE_DATA]
      });
 
-     const [createEducation, { loading }] = useMutation(CREATE_EDUCATION_DETAILS, {
+     const [createEducation, { loading, error: createError }] = useMutation(CREATE_EDUCATION_DETAILS, {
           onCompleted: (r: any) => {
+               setIsFormSubmitted(!isFormSubmitted);
                modalTrigger.next(false);
 
                fetch.refetch();
@@ -163,11 +169,22 @@ function CreateEducation(props: any, ref: any) {
      }
 
      useEffect(() => {
-          <Loader/>
-      },[loading])
+          <Loader />
+     }, [loading])
+
+     if (createError) {
+          return <Toaster heading="Failed" textColor="text-danger" headingCSS="mr-auto text-danger" msg="Failed to add address details" />;
+     }
+     if (updateError) {
+          return <Toaster heading="Failed" textColor="text-danger" headingCSS="mr-auto text-danger" msg="Failed to update address details" />;
+     }
+     if (deleteError) {
+          return <Toaster heading="Failed" textColor="text-danger" headingCSS="mr-auto text-danger" msg="Failed to delete address details" />;
+     }
 
      return (
           <>
+               {/* Create and Edit Modal */}
                <ModalView
                     name={operation.type === 'create' ? "Create New Education Detail" : "Edit Education Details"}
                     isStepper={false}
@@ -197,6 +214,19 @@ function CreateEducation(props: any, ref: any) {
                     onClick={() => { DeleteEducation(operation.id) }}
                />
                }
+
+               {/* success toaster notification */}
+               {isFormSubmitted ?
+                    <Toaster handleCallback={() => { setIsFormSubmitted(!isFormSubmitted); }} heading="Success" textColor="text-success" headingCSS="mr-auto text-success" msg="New address has been added" />
+                    : null}
+
+               {isEducationDeleted ?
+                    <Toaster handleCallback={() => { setIsEducationDeleted(!isEducationDeleted); }} heading="Success" textColor="text-success" headingCSS="mr-auto text-success" msg="Address deleted successfully" />
+                    : null}
+
+               {isEducationUpdated ?
+                    <Toaster handleCallback={() => { setIsEducationUpdated(!isEducationUpdated); }} heading="Success" textColor="text-success" headingCSS="mr-auto text-success" msg="Address updated successfully" />
+                    : null}
           </>
      );
 }
