@@ -11,13 +11,13 @@ import { phoneCustomFormats, phoneTransformErrors } from '../../../../components
 import UploadImageToS3WithNativeSdk from "../../../../components/upload/upload";
 
 interface UserDetails {
-    Photo_ID: string,
-    About_User: string,
-    First_Name: string,
-    Last_Name: string,
-    about_mini_description: string,
-    Website_URL: string,
-    Phone_Number: string
+    Photo_ID: string;
+    About_User: string;
+    First_Name: string;
+    Last_Name: string;
+    about_mini_description: string;
+    Website_URL: string;
+    Phone_Number: string;
 }
 
 // define initial object of type UserDetails
