@@ -33,7 +33,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
      const [selectedFile, setSelectedFile] = useState<any>(null);
      const [render, setRender] = useState<any>(null);
      const [url, setUrl] = useState<any>(null);
-     const [imageid, setImageid] = useState<unknown>('');
+     const [imageid, setImageid] = useState<string | null>('');
      const [videoUpload, setVideoUpload] = useState<any>(false);
      const [videoID, setVideoID] = useState<any>(null);
      //const [renderCrop, setRenderCrop] = useState<any>(null);

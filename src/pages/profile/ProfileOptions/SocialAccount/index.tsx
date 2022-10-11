@@ -18,22 +18,12 @@ interface SocialDetails {
     Twitter_URL: string;
 }
 
-// initial object of type SocialDetails definition
-let initialSocialAccountState: SocialDetails = {
-    instagram_url: '',
-    Facebook_URL: '',
-    Youtube_URL: '',
-    LinkedIn_URL: '',
-    Clubhouse_URL: '',
-    Twitter_URL: ''
-}
-
 export default function SocialAccount() {
     let [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
     const formRef = useRef<any>(null);
     const socialAccountJson: { [name: string]: any } = require("./SocialAccount.json");
     const auth = useContext(AuthContext);
-    const [webpageDetails, setWebPageDetails] = useState<SocialDetails>(initialSocialAccountState);
+    const [webpageDetails, setWebPageDetails] = useState<SocialDetails>({} as SocialDetails);
 
     const fetch = useQuery(FETCH_USER_PROFILE_DATA, {
         variables: { id: auth.userid },

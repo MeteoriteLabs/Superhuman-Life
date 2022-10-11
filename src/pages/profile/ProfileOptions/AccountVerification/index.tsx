@@ -13,17 +13,12 @@ interface AccountVerificationDetail {
     Verification_ID: string;
 }
 
-// initial object of type AccountVerificationDetail definition
-let initialAccountVerificationState: AccountVerificationDetail = {
-    Verification_ID: ''
-}
-
 export default function SocialAccount() {
     let [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
     const formRef = useRef<any>(null);
     const accountVerificationJson: { [name: string]: any } = require("./AccountVerification.json");
     const auth = useContext(AuthContext);
-    const [webpageDetails, setWebPageDetails] = useState<AccountVerificationDetail>(initialAccountVerificationState);
+    const [webpageDetails, setWebPageDetails] = useState<AccountVerificationDetail>({} as AccountVerificationDetail);
 
     const schema: any = {
 
