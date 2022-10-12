@@ -312,9 +312,9 @@
                     "type": "string",
                     "title": "ESI"
                   },
-                  "MedicalEmbruisment": {
+                  "MedicalReimbrusement": {
                     "type": "string",
-                    "title": "Medical Embruisment"
+                    "title": "Medical Reimbrusement"
                   },
                   "ChildCare": {
                     "type": "string",

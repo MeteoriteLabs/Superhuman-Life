@@ -63,8 +63,8 @@ export const schema: any = {
     ESI: {
         "ui:placeholder": "Enter ESI"
     },
-    MedicalEmbruisment: {
-        "ui:placeholder": "Enter Medical Embruisment"
+    MedicalReimbrusement: {
+        "ui:placeholder": "Enter Medical Reimbrusement"
     },
     ChildCare: {
         "ui:placeholder": "Enter Child Care"
