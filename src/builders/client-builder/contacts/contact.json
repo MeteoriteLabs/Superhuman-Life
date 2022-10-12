@@ -1,0 +1,154 @@
+{
+    "1": {
+         "type": "object",
+         "required": ["firstname", "lastname", "phone", "email","type"],
+         "properties": {
+              "firstname": {
+                   "type": "string",
+                   "title": "First Name"
+              },
+              "lastname": {
+                   "type": "string",
+                   "title": "Last Name"
+              },
+              "phone": {
+                   "type": "string",
+                   "title": "Phone Number",
+                   "minLength": 10
+              },
+              "email": {
+                   "type": "string",
+                   "title": "Email ID",
+                   "format": "email"
+              },
+              "type": {
+               "title": "Type of contact",
+               "type": "string",
+               "enum": [
+                 "Changemaker",
+                 "Client",
+                 "Organization",
+                 "Community",
+                 "Service Provider",
+                 "Vendor"
+               ],
+               "default": "Changemaker"
+             },
+              "isPayee": {
+                   "type": "boolean",
+                   "title": "Do you want to setup Payee setting?",
+                   "enum": [true, false],
+                   "default": false
+              },
+              "​organisationDetails": {
+                "type": "boolean",
+                "title": "Do you want to add organisation?",
+                "enum": [true, false],
+                "default": false
+           },
+              "appDownloadStatus": {
+                "type": "boolean",
+                "title": "Do you want to invite contact?",
+                "enum": [true, false],
+                "default": false
+           },
+           
+               "allOf": [
+                 {
+                   "if": {
+                     "properties": {
+                       "​organisationDetails": {
+                         "const": true
+                       }
+                     }
+                   },
+                   "then": {
+                     "properties": {
+                       "organisationName": {
+                         "type": "string",
+                         "title": "Organisation Name"
+                       },
+                       "gst": {
+                         "type": "string",
+                         "title": "GST Number"
+                       },
+                       "organisationEmail": {
+                         "type": "string",
+                         "title": "Organisation Email",
+                         "format": "email"
+                       },
+                       "houseNumber": {
+                         "type": "string",
+                         "title": "House Number"
+                       },
+                       "address1": {
+                         "type": "string",
+                         "title": "Address 1"
+                       },
+                       "address2": {
+                         "type": "string",
+                         "title": "Address 2"
+                       },
+                       "city": {
+                         "type": "string",
+                         "title": "City"
+                       },
+                       "state": {
+                         "type": "string",
+                         "title": "State"
+                       },
+                       "country": {
+                         "type": "string",
+                         "title": "Country"
+                       },
+                       "zipcode": {
+                         "type": "string",
+                         "title": "Zipcode",
+                         "max-length": 6
+                       }
+                     },
+                     "required": [
+                         "organisationName",
+                         "gst",
+                         "organisationEmail"
+                     ]
+                   }
+                 },
+                 {
+                   "if": {
+                     "properties": {
+                       "isPayee": {
+                         "const": true
+                       }
+                     }
+                   },
+                   "then": {
+                     "properties": {
+                       "nameOfPayee": {
+                         "type": "string",
+                         "title": "Name of Payee"
+                       },
+                       "typeOfPayee": {
+                         "type": "string",
+                         "enum": [
+                           "Individual",
+                           "Organization"
+                         ]
+                       },
+                       "gstNumber": {
+                         "type": "string",
+                         "title": "GST Number"
+                       }
+                     },
+                     "required": [
+                       "nameOfPayee",
+                       "typeOfPayee"
+                     ]
+                   }
+                 }
+                 
+               ]
+             }
+         
+    }
+}
