@@ -293,9 +293,6 @@ function CreateEditPt(props: any, ref: any) {
         operation.type = 'create';
     }
 
-    console.log(statusModalShow);
-
-
     function OnSubmit(frm: any) {
         //bind user id
         if(frm)

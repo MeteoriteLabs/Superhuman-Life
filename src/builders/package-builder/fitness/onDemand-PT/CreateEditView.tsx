@@ -290,7 +290,6 @@ function CreateEditOnDemadPt(props: any, ref: any) {
         operation.type = 'create';
     }
 
-
     function OnSubmit(frm: any) {
         //bind user id
         if(frm)

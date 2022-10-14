@@ -29,8 +29,6 @@ function CreateEditPackage(props: any, ref: any) {
 
     let frmDetails: any = {};
 
-    console.log(operation.type);
-
     useQuery(GET_FITNESS_PACKAGE_TYPES, {
         variables: {type: "Custom Fitness"},
         onCompleted: (r: any) => {
