@@ -30,7 +30,7 @@ function StatusModal(props: any) {
     if(eventConnections.length !== 0){
         const values = [...eventConnections];
         for(var j=0; j<=values.length -1; j++){
-            if(values[j].warmup !== null && values[j].warmup[0].type === 'exercise'){
+            if(values[j].warmup !== null && values[j].warmup[0]?.type === 'exercise'){
                 for(var k=0; k<=values[j].warmup.length-1; k++){
                     if(values[j].warmup[k].id === props.ExistingEventId){
                         linkedWorkouts.push(values[j]);
@@ -38,7 +38,7 @@ function StatusModal(props: any) {
                     }
                 }
             }
-            if(values[j].mainmovement !== null && values[j].mainmovement[0].type === 'exercise'){
+            if(values[j].mainmovement !== null && values[j].mainmovement[0]?.type === 'exercise'){
                 for(var x=0; x<=values[j].mainmovement.length-1; x++){
                     if(values[j].mainmovement[x].id === props.ExistingEventId){
                         linkedWorkouts.push(values[j]);
@@ -46,7 +46,7 @@ function StatusModal(props: any) {
                     }
                 }
             }
-            if(values[j].cooldown !== null && values[j].cooldown[0].type === 'exercise'){
+            if(values[j].cooldown !== null && values[j].cooldown[0]?.type === 'exercise'){
                 for(var y=0; y<=values[j].cooldown.length-1; y++){
                     if(values[j].cooldown[y].id === props.ExistingEventId){
                         linkedWorkouts.push(values[j]);

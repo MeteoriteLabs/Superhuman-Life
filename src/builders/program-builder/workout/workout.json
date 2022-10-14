@@ -17,6 +17,20 @@
                 "type": "string",
                 "title": "Workout name"
             },
+            "level": {
+                "type": "number",
+                "title": "Level",
+                "enum": [
+                    0,
+                    1,
+                    2
+                ],
+                "enumNames": [
+                    "Beginner",
+                    "Intermediate",
+                    "Advanced"
+                ]
+            },
             "intensity": {
                 "type": "number",
                 "title": "Intensity",
@@ -29,22 +43,6 @@
                     "Low",
                     "Medium",
                     "High"
-                ]
-            },
-            "level": {
-                "type": "number",
-                "title": "Level",
-                "enum": [
-                    0,
-                    1,
-                    2,
-                    3
-                ],
-                "enumNames": [
-                    "Beginner",
-                    "Intermediate",
-                    "Advanced",
-                    "No level"
                 ]
             },
             "discipline": {
