@@ -41,7 +41,7 @@ function DeleteAccountConfirmation(props: any) {
       // logout from session
       logout();
       // redirect to deactivation page
-      window.open(`deactiveAccount`, "_self");
+      window.location.assign('/deactiveaccount');
     },
   });
 
