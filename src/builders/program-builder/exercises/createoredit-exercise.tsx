@@ -24,9 +24,8 @@ function CreateEditExercise(props: any, ref: any) {
     const [operation, setOperation] = useState<Operation>({} as Operation);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     let [isFormSubmitted, setIsFormSubmitted] = useState(false);
-    const [toastHeading, setToastHeading] = useState('');
+    const [toastType, setToastType] = useState('');
     const [toastMessage, setToastMessage] = useState('');
-    const [toastColor, setToastColor] = useState('');
 
     useQuery(FETCH_WORKOUTS, {
         variables: { id: auth.userid },
@@ -42,47 +41,43 @@ function CreateEditExercise(props: any, ref: any) {
             modalTrigger.next(false); 
             props.callback(); 
             setIsFormSubmitted(!isFormSubmitted); 
-            setToastHeading('Success');
-            setToastMessage('Exercise created successfully');
-            setToastColor('text-success');
+            setToastType('success');
+            setToastMessage('Exercise has been created successfully');
         },
         onError: (e: any) => {
-            setToastHeading('Error');
+            setToastType('error');
             setIsFormSubmitted(!isFormSubmitted); 
-            setToastMessage('Exercise creation failed');
-            setToastColor('text-danger');
+            setToastMessage('Exercise details has not been created');
         } 
     });
+
     const [editExercise] = useMutation(UPDATE_EXERCISE, { 
         onCompleted: (r: any) => { 
             modalTrigger.next(false);
             setIsFormSubmitted(!isFormSubmitted); 
             props.callback();
-            setToastHeading('Success');
-            setToastMessage('Exercise updated successfully');
-            setToastColor('text-success'); 
+            setToastType('success');
+            setToastMessage('Exercise details has been updated successfully'); 
         },
         onError: (e: any) => {
-            setToastHeading('Error');
+            setToastType('error');
             setIsFormSubmitted(!isFormSubmitted); 
-            setToastMessage('Exercise updation failed');
-            setToastColor('text-danger');
+            setToastMessage('Exercise details has not been updated');
         }
     });
+
     const [deleteExercise] = useMutation(DELETE_EXERCISE, {
         onCompleted: (r: any) => { 
             modalTrigger.next(false); 
             props.callback(); 
-            setToastHeading('Success');
+            setToastType('success');
             setIsFormSubmitted(!isFormSubmitted); 
-            setToastMessage('Exercise Deleted successfully');
-            setToastColor('text-success'); 
+            setToastMessage('Exercise details has been deleted successfully');
         },
         onError: (e: any) => {
-            setToastHeading('Error');
+            setToastType('error');
             setIsFormSubmitted(!isFormSubmitted); 
-            setToastMessage('Exercise Deletion failed');
-            setToastColor('text-danger');
+            setToastMessage('Exercise details has not been deleted');
         } 
     });
 
@@ -209,7 +204,6 @@ function CreateEditExercise(props: any, ref: any) {
     }
 
     function DeleteExercise(id: any) {
-
         deleteExercise({ variables: { id: id } });
     }
 
@@ -242,10 +236,6 @@ function CreateEditExercise(props: any, ref: any) {
 
     FetchData();
 
-    function handleToasCallback(){
-        setIsFormSubmitted(false);
-    }
-
     return (
         <>
             {/* Create , edit and view Modal */}
@@ -275,9 +265,8 @@ function CreateEditExercise(props: any, ref: any) {
             />}
 
             {isFormSubmitted ?
-                <Toaster handleCallback={handleToasCallback} heading={toastHeading} textColor={toastColor} headingCSS={`mr-auto ${toastColor}`} msg={toastMessage} />
+                <Toaster handleCallback={() => setIsFormSubmitted(false)} type={toastType} msg={toastMessage} />
                 : null}
-
         </>
     )
 }

@@ -34,8 +34,8 @@ function Toaster(props: any) {
                         <Toast.Header>
                             <h6 className={headingCSS}>{heading}</h6>
                         </Toast.Header>
-                        <Toast.Body className={textColor}>
-                            {props.type === 'success' ? <img src="assets/toasterSuccess.svg" alt="confirmed" height="25px" width="25px" style={{margin:'5px'}}/> : <img src="assets/failed.svg" alt="failed" height="25px" width="25px" style={{margin: '5px'}}/>}
+                        <Toast.Body className={textColor} style={{display: 'flex'}}>
+                            {props.type === 'success' ? <img src="assets/toasterSuccess.svg" alt="confirmed" height="25px" width="25px" /> : <img src="assets/failed.svg" alt="failed" height="25px" width="25px" />}
                             {props.msg}
                         </Toast.Body>
                     </Toast>
