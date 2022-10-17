@@ -19,12 +19,12 @@ const authLink = setContext((_, { headers }) => {
 });
 
 const defaultOptions: any = {
-	watchQuery: {
-		fetchPolicy: 'no-cache',
-	},
-	query: {
-		fetchPolicy: 'no-cache',
-	}
+  watchQuery: {
+    fetchPolicy: 'no-cache',
+  },
+  query: {
+    fetchPolicy: 'no-cache',
+  }
 }
 
 const client = new ApolloClient({
@@ -44,7 +44,7 @@ function App() {
           token: token,
           username: username,
           userid: userid,
-          login: (token: any, username: any,userid: any) => {
+          login: (token: any, username: any, userid: any) => {
 
             localStorage.setItem("token", token);
             localStorage.setItem("username", username);
@@ -57,6 +57,7 @@ function App() {
             localStorage.removeItem("token");
             localStorage.removeItem("username");
             localStorage.removeItem("userid");
+            window.location.assign('/login');
           },
         }}
       >

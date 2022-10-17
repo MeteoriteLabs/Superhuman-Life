@@ -1,154 +1,478 @@
 {
-    "1": {
-         "type": "object",
-         "required": ["firstname", "lastname", "phone", "email","type"],
-         "properties": {
-              "firstname": {
-                   "type": "string",
-                   "title": "First Name"
-              },
-              "lastname": {
-                   "type": "string",
-                   "title": "Last Name"
-              },
-              "phone": {
-                   "type": "string",
-                   "title": "Phone Number",
-                   "minLength": 10
-              },
-              "email": {
-                   "type": "string",
-                   "title": "Email ID",
-                   "format": "email"
-              },
-              "type": {
-               "title": "Type of contact",
-               "type": "string",
-               "enum": [
-                 "Changemaker",
-                 "Client",
-                 "Organization",
-                 "Community",
-                 "Service Provider",
-                 "Vendor"
-               ],
-               "default": "Changemaker"
-             },
-              "isPayee": {
-                   "type": "boolean",
-                   "title": "Do you want to setup Payee setting?",
-                   "enum": [true, false],
-                   "default": false
-              },
-              "​organisationDetails": {
-                "type": "boolean",
-                "title": "Do you want to add organisation?",
-                "enum": [true, false],
-                "default": false
-           },
-              "appDownloadStatus": {
-                "type": "boolean",
-                "title": "Do you want to invite contact?",
-                "enum": [true, false],
-                "default": false
-           },
-           
-               "allOf": [
-                 {
-                   "if": {
-                     "properties": {
-                       "​organisationDetails": {
-                         "const": true
-                       }
-                     }
-                   },
-                   "then": {
-                     "properties": {
-                       "organisationName": {
-                         "type": "string",
-                         "title": "Organisation Name"
-                       },
-                       "gst": {
-                         "type": "string",
-                         "title": "GST Number"
-                       },
-                       "organisationEmail": {
-                         "type": "string",
-                         "title": "Organisation Email",
-                         "format": "email"
-                       },
-                       "houseNumber": {
-                         "type": "string",
-                         "title": "House Number"
-                       },
-                       "address1": {
-                         "type": "string",
-                         "title": "Address 1"
-                       },
-                       "address2": {
-                         "type": "string",
-                         "title": "Address 2"
-                       },
-                       "city": {
-                         "type": "string",
-                         "title": "City"
-                       },
-                       "state": {
-                         "type": "string",
-                         "title": "State"
-                       },
-                       "country": {
-                         "type": "string",
-                         "title": "Country"
-                       },
-                       "zipcode": {
-                         "type": "string",
-                         "title": "Zipcode",
-                         "max-length": 6
-                       }
-                     },
-                     "required": [
-                         "organisationName",
-                         "gst",
-                         "organisationEmail"
-                     ]
-                   }
-                 },
-                 {
-                   "if": {
-                     "properties": {
-                       "isPayee": {
-                         "const": true
-                       }
-                     }
-                   },
-                   "then": {
-                     "properties": {
-                       "nameOfPayee": {
-                         "type": "string",
-                         "title": "Name of Payee"
-                       },
-                       "typeOfPayee": {
-                         "type": "string",
-                         "enum": [
-                           "Individual",
-                           "Organization"
-                         ]
-                       },
-                       "gstNumber": {
-                         "type": "string",
-                         "title": "GST Number"
-                       }
-                     },
-                     "required": [
-                       "nameOfPayee",
-                       "typeOfPayee"
-                     ]
-                   }
-                 }
-                 
-               ]
-             }
-         
+  "1": {
+    "type": "object",
+    "required": [
+      "firstname",
+      "lastname",
+      "phone",
+      "email",
+      "type"
+    ],
+    "properties": {
+      "firstname": {
+        "type": "string",
+        "title": "First Name"
+      },
+      "lastname": {
+        "type": "string",
+        "title": "Last Name"
+      },
+      "phone": {
+        "type": "string",
+        "title": "Phone Number",
+        "minLength": 10
+      },
+      "email": {
+        "type": "string",
+        "title": "Email ID",
+        "format": "email"
+      },
+      "type": {
+        "title": "Type of contact",
+        "type": "string",
+        "enum": [
+          "Changemaker",
+          "Client",
+          "Organization",
+          "Community",
+          "Service Provider",
+          "Vendor"
+        ],
+        "default": "Changemaker"
+      },
+      "appDownloadStatus": {
+        "type": "boolean",
+        "title": "Send invite to download the app, website link and social channels ?",
+        "enum": [
+          true,
+          false
+        ],
+        "default": false
+      }
     }
+  },
+  "2": {
+    "type": "object",
+    "properties": {
+      "organisationDetails": {
+        "type": "boolean",
+        "title": "Is this contact representing an organisation?",
+        "enum": [
+          true,
+          false
+        ],
+        "default": false
+      }
+    },
+    "allOf": [
+      {
+        "if": {
+          "properties": {
+            "organisationDetails": {
+              "title": "Organisation Details",
+              "const": true
+            }
+          }
+        },
+        "then": {
+          "properties": {
+            "organisationName": {
+              "type": "string",
+              "title": "Organisation Name"
+            },
+            "gst": {
+              "type": "string",
+              "title": "GST Number"
+            },
+            "organisationEmail": {
+              "type": "string",
+              "title": "Organisation Email",
+              "format": "email"
+            },
+            "address1": {
+              "type": "string",
+              "title": "Address 1"
+            },
+            "address2": {
+              "type": "string",
+              "title": "Address 2"
+            },
+            "city": {
+              "type": "string",
+              "title": "City"
+            },
+            "state": {
+              "type": "string",
+              "title": "State"
+            },
+            "country": {
+              "type": "string",
+              "title": "Country"
+            },
+            "zipcode": {
+              "type": "string",
+              "title": "Zipcode",
+              "max-length": 6
+            }
+          },
+          "required": [
+            "organisationName",
+            "gst",
+            "organisationEmail"
+          ]
+        }
+      }
+    ]
+  },
+  "3": {
+    "type": "object",
+    "properties": {
+      "isPayee": {
+        "type": "boolean",
+        "title": "Do you want to add Payment settings?",
+        "enum": [
+          true,
+          false
+        ],
+        "default": false
+      }
+    },
+    "allOf": [
+      {
+        "if": {
+          "properties": {
+            "isPayee": {
+              "title": "Payment Details",
+              "const": true
+            }
+          }
+        },
+        "then": {
+          "properties": {
+            "PaymentCategory": {
+              "title": "Payment Category",
+              "enum": [
+                "Vendor",
+                "Rental",
+                "Supplies",
+                "Marketing and Ads",
+                "Maintenance",
+                "Reimbursement",
+                "Consulting Services",
+                "Miscellaneous"
+              ],
+              "default": "Vendor"
+            },
+            "FrequencyOfPayment": {
+              "title": "Frequency of Payment",
+              "type": "number",
+              "enum": [
+                1,
+                30
+              ],
+              "enumNames": [
+                "One Time",
+                "Monthly"
+              ],
+              "default": 1
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "FrequencyOfPayment": {
+                    "const": 1
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "amountToBePaid": {
+                    "type": "number",
+                    "title": "Amount to be paid"
+                  },
+                  "paymentDueOn": {
+                    "type": "string",
+                    "title": "Payment due on",
+                    "format": "date-time"
+                  },
+                  "setReminder": {
+                    "type": "string",
+                    "title": "Set Reminder",
+                    "format": "date-time"
+                  }
+                },
+                "required": [
+                  "amountToBePaid",
+                  "paymentDueOn",
+                  "setReminder"
+                ]
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "FrequencyOfPayment": {
+                    "const": 30
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "amountToBePaid": {
+                    "type": "number",
+                    "title": "Amount to be paid"
+                  },
+                  "effectiveDate": {
+                    "type": "string",
+                    "title": "Effective Date",
+                    "format": "date-time"
+                  },
+                  "paymentCycle": {
+                    "type": "number",
+                    "title": "Payment Cycle",
+                    "enum": [
+                      1,
+                      2,
+                      3,
+                      4,
+                      5
+                    ],
+                    "enumNames": [
+                      "1 of every month",
+                      "2 of every month",
+                      "3 of every month",
+                      "4 of every month",
+                      "5 of every month"
+                    ],
+                    "default": 1
+                  },
+                  "payFromNextPaymentCycle": {
+                    "type": "boolean",
+                    "title": "Pay from next payment cycle",
+                    "enum": [
+                      true,
+                      false
+                    ],
+                    "default": false
+                  },
+                  "setReminder": {
+                    "type": "string",
+                    "title": "Set Reminder",
+                    "format": "date-time"
+                  },
+                  "provideBreakdown": {
+                    "type": "string",
+                    "title": "Provide Breakdown",
+                    "enum": [
+                      "Yes",
+                      "No"
+                    ],
+                    "default": "No"
+                  }
+                },
+                "allOf": [
+                  {
+                    "if": {
+                      "properties": {
+                        "payFromNextPaymentCycle": {
+                          "const": true
+                        }
+                      }
+                    },
+                    "then": {
+                      "properties": {
+                        "firstPayment": {
+                          "type": "string",
+                          "title": "First Payment"
+                        }
+                      },
+                      "required": [
+                        "firstPayment"
+                      ]
+                    }
+                  },
+                  {
+                    "if": {
+                      "properties": {
+                        "provideBreakdown": {
+                          "const": "Yes"
+                        }
+                      }
+                    },
+                    "then": {
+                      "properties": {
+                        "basicPay": {
+                          "type": "string",
+                          "title": "Basic Pay"
+                        },
+                        "HRA": {
+                          "type": "string",
+                          "title": "HRA or HRR"
+                        },
+                        "Gratuity": {
+                          "type": "string",
+                          "title": "Gratuity"
+                        },
+                        "LTA": {
+                          "type": "string",
+                          "title": "LTA"
+                        },
+                        "ESI": {
+                          "type": "string",
+                          "title": "ESI"
+                        },
+                        "MedicalReimbursement": {
+                          "type": "string",
+                          "title": "Medical Reimbursement"
+                        },
+                        "ChildCare": {
+                          "type": "string",
+                          "title": "Child Care"
+                        },
+                        "SpecialAllowance": {
+                          "type": "string",
+                          "title": "Special Allowance"
+                        },
+                        "ProfessionalTax": {
+                          "type": "string",
+                          "title": "Professional Tax"
+                        },
+                        "TDS": {
+                          "type": "string",
+                          "title": "TDS"
+                        },
+                        "ProvidentFund": {
+                          "type": "string",
+                          "title": "Provident Fund"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "required": [
+                      "provideBreakdown",
+                      "payFromNextPaymentCycle"
+                    ]
+                  }
+                ],
+                "required": [
+                  "amountToBePaid",
+                  "effectiveDate"
+                ]
+              }
+            },
+            {
+              "required": [
+                "FrequencyOfPayment"
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "4": {
+    "type": "object",
+    "title": "Mode of payment",
+    "properties": {
+      "upi": {
+        "type": "boolean",
+        "title": "UPI",
+        "enum": [
+          true,
+          false
+        ],
+        "default": true,
+        "description": "Select UPI to enter UPI details"
+      },
+      "bankAccount": {
+        "type": "boolean",
+        "title": "Bank Account",
+        "enum": [
+          true,
+          false
+        ],
+        "default": false,
+        "description": "Select Bank Account to enter Bank account details"
+      }
+    },
+    "allOf": [
+      {
+        "if": {
+          "properties": {
+            "upi": {
+              "title": "UPI Details",
+              "const": true
+            }
+          }
+        },
+        "then": {
+          "properties": {
+            "UPI_ID": {
+              "type": "string",
+              "title": "UPI ID"
+            },
+            "upiPhoneNumber": {
+              "type": "string",
+              "title": "Phone",
+              "minLength": 10
+            }
+          },
+          "required": [
+            "UPI_ID",
+            "upiPhoneNumber"
+          ]
+        }
+      },
+      {
+        "if": {
+          "properties": {
+            "bankAccount": {
+              "title": "Bank Account Details",
+              "const": true
+            }
+          }
+        },
+        "then": {
+          "properties": {
+            "AccountNumber": {
+              "type": "string",
+              "title": "Account Number"
+            },
+            "ifscCode": {
+              "type": "string",
+              "title": "IFSC Code"
+            },
+            "BankName": {
+              "type": "string",
+              "title": "Name of the Bank"
+            },
+            "Branch": {
+              "type": "string",
+              "title": "Branch"
+            },
+            "accountType": {
+              "type": "string",
+              "title": "Account Type",
+              "enum": [
+                "Current",
+                "Savings"
+              ],
+              "default": "Current",
+              "description": "Select Payee account type"
+            }
+          },
+          "required": [
+            "AccountNumber",
+            "ifscCode",
+            "BankName",
+            "Branch",
+            "accountType"
+          ]
+        }
+      }
+    ]
+  }
 }

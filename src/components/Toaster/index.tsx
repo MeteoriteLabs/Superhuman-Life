@@ -1,9 +1,25 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Row, Col, Toast } from 'react-bootstrap';
 
 function Toaster(props: any) {
-    const [showA, setShowA] = useState(true);
-    const toggleShowA = () => setShowA(!showA);
+    const [showToaster, setShowToaster] = useState<boolean>(true);
+    const [headingCSS, setHeadingCSS] = useState<string>('');
+    const [textColor, setTextColor] = useState<string>('');
+    const [heading, setHeading] = useState<string>('');
+
+    const toggleShowToaster = () => setShowToaster(!showToaster);
+
+    useEffect(() => {
+        if(props.type === 'error') {
+            setHeadingCSS('mr-auto text-danger');
+            setTextColor('text-danger');
+            setHeading('Failed');
+         } else if (props.type === 'success') {
+             setHeadingCSS('mr-auto text-success');
+             setTextColor('text-success');
+             setHeading('Success');
+         }
+    },[props.type])
 
     return (
         <div
@@ -13,12 +29,12 @@ function Toaster(props: any) {
         >
             <Row>
                 <Col xs={6} className="my-1 ml-auto">
-                    <Toast className="ml-auto" onClose={toggleShowA} show={showA} animation={false} delay={5000} autohide
+                    <Toast className="ml-auto" onClose={toggleShowToaster} show={showToaster} animation={false} delay={5000} autohide
                     >
                         <Toast.Header>
-                            <h6 className={props.headingCSS}>{props.heading}</h6>
+                            <h6 className={headingCSS}>{heading}</h6>
                         </Toast.Header>
-                        <Toast.Body className={props.textColor}>{props.msg}</Toast.Body>
+                        <Toast.Body className={textColor}>{props.msg}</Toast.Body>
                     </Toast>
                 </Col>
             </Row>

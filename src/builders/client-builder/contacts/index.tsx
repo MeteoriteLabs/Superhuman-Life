@@ -23,7 +23,24 @@ export default function Contacts() {
                { accessor: "number", Header: "Number" },
                { accessor: "email", Header: "Email" },
                { accessor: "type", Header: "Type" },
-               { accessor: "appStatus", Header: "App Status" },
+               {
+                    accessor: "appStatus", Header: "App Status", Cell: ({ row }: any) => {
+                        let statusColor = ""
+                        switch (row.values.appStatus) {
+                            case "Invited":
+                                statusColor = "success";
+                                break;
+    
+                            case "NotInvited":
+                                statusColor = "danger";
+                                break;
+    
+                        }
+                        return <>
+                            <Badge className='btn' style={{ fontSize: '1rem', borderRadius: '10px' }} variant={statusColor}>{row.values.appStatus === "NotInvited" ? "Not Invited" : "Invited"}</Badge>
+                        </>
+                    }
+                },
                {
                     id: "edit",
                     Header: "Actions",
@@ -79,11 +96,9 @@ export default function Contacts() {
      }
 
      function loadData(data: any) {
-          console.log(data);
           let namearr: any = [];
           const flattenData = flattenObj({ ...data });
-          console.log(flattenData);
-
+          
           setData([...flattenData.contacts]);
           setDataTable(
                [...flattenData.contacts].flatMap((Detail) => {

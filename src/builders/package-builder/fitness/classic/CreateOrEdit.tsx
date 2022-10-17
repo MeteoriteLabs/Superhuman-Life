@@ -29,8 +29,6 @@ function CreateEditPackage(props: any, ref: any) {
 
     let frmDetails: any = {};
 
-    console.log(operation.type);
-
     useQuery(GET_FITNESS_PACKAGE_TYPES, {
         variables: {type: "Classic Class"},
         onCompleted: (r: any) => {
@@ -40,7 +38,7 @@ function CreateEditPackage(props: any, ref: any) {
     });
 
     const [bookingConfig] = useMutation(CREATE_BOOKING_CONFIG, {onCompleted: (r: any) => { 
-        console.log(r); modalTrigger.next(false); props.callback();
+        modalTrigger.next(false); props.callback();
     }});
 
     const [createUserPackageSuggestion] = useMutation(ADD_SUGGESTION_NEW, {onCompleted: (data) => {
@@ -49,7 +47,7 @@ function CreateEditPackage(props: any, ref: any) {
     }});
 
     const [updateBookingConfig] = useMutation(UPDATE_BOOKING_CONFIG, {onCompleted: (r: any) => {
-        console.log(r); modalTrigger.next(false); props.callback();
+        modalTrigger.next(false); props.callback();
     }});
 
     const [createPackage] = useMutation(CREATE_PACKAGE, { onCompleted: (r: any) => { 
@@ -104,8 +102,6 @@ function CreateEditPackage(props: any, ref: any) {
         }
     }));
 
-    // console.log(exerciseDetails);
-
     enum ENUM_FITNESSPACKAGE_LEVEL {
         Beginner,
         Intermediate,
@@ -135,7 +131,7 @@ function CreateEditPackage(props: any, ref: any) {
         let msg = flattenedData.fitnesspackages[0];
         let bookingConfig: any = {};
         let details: any = {};
-        console.log(msg);
+       
         for(var i =0; i<msg.fitnesspackagepricing.length; i++){
             PRICING_TABLE_DEFAULT[i].mrp = msg.fitnesspackagepricing[i].mrp;
             PRICING_TABLE_DEFAULT[i].suggestedPrice = msg.fitnesspackagepricing[i].suggestedPrice;
@@ -169,7 +165,6 @@ function CreateEditPackage(props: any, ref: any) {
         details.bookingConfigId = msg.booking_config?.id;
         details.languages = JSON.stringify(msg.languages);
         setClassicDetails (details);
-        // console.log(exerciseDetails);
 
         //if message exists - show form only for edit and view
         if (['edit', 'view'].indexOf(operation.type) > -1)
@@ -178,8 +173,6 @@ function CreateEditPackage(props: any, ref: any) {
             OnSubmit(null);
     }
 
-    console.log(operation.type);
-
     useEffect(() => {
         if(operation.type === 'create'){
             setClassicDetails({});
@@ -187,7 +180,6 @@ function CreateEditPackage(props: any, ref: any) {
     }, [operation.type]);
 
     function FetchData() {
-        console.log('Fetch Data');
         useQuery(GET_SINGLE_PACKAGE_BY_ID, { variables: { id: operation.id }, skip: (operation.type === 'create'),onCompleted: (e: any) => { FillDetails(e) } });
     }
 
@@ -230,7 +222,6 @@ function CreateEditPackage(props: any, ref: any) {
 
     function EditPackage(frm: any) {
         frmDetails = frm;
-        console.log('edit message', frm);
         frm.equipmentList = JSON.parse(frm.equipmentList).map((x: any) => x.id).join(',').split(',');
         frm.disciplines = JSON.parse(frm.disciplines).map((x: any) => x.id).join(', ').split(', ');
         frm.programDetails = JSON.parse(frm.programDetails)
@@ -284,7 +275,6 @@ function CreateEditPackage(props: any, ref: any) {
         operation.type = 'create';
     }
 
-
     function OnSubmit(frm: any) {
         //bind user id
         if(frm)
@@ -319,7 +309,6 @@ function CreateEditPackage(props: any, ref: any) {
     }
 
     FetchData();
-
 
     return (
         <>

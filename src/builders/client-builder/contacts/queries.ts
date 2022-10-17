@@ -6,18 +6,43 @@ export const GET_CONTACTS = gql`
       data {
         id
         attributes {
-            firstname
-            lastname
-            email
-            type
-            phone
-            createdAt
-            ownedBy{
-              data{
-                id
-              }
+          firstname
+          lastname
+          email
+          type
+          phone
+          createdAt
+          ownedBy{
+            data{
+              id
             }
-            appDownloadStatus
+          }
+          appDownloadStatus
+          paymentDetails
+          organisationDetails
+          isPayee
+        }
+      }
+    }
+  }
+`;
+
+export const GET_PAYMENT_SCHEDULES = gql`
+  query PaymentSchedulesQuery{
+    paymentSchedules(pagination: { pageSize: 100 }) {
+      data{
+        id
+        attributes{
+          Payment_Cycle
+          PaymentCatagory
+          Payment_DateTime
+          Reminder_DateTime
+          frequency
+          Total_Amount
+          Total_Amount_Breakdown
+          Destination_Contacts_ID
+          Destination_User_ID
+          Source_User_ID
         }
       }
     }
@@ -25,45 +50,41 @@ export const GET_CONTACTS = gql`
 `;
 
 export const ADD_CONTACT = gql`
-     mutation contact($data: ContactInput!) {
-          createContact(
-               input: {
-                    data: $data
-               }
-          ) {
-               data {
-                    id
-               }
-          }
-     }
+  mutation contact($data: ContactInput!) {
+    createContact( data: $data ) {
+      data {
+        id
+      }
+    }
+  }
 `;
 
 export const UPDATE_CONTACT = gql`
-     mutation contact($id: ID!, $data: ContactInput!) {
-          updateContact(
-               input: {
-                    id: $id,
-                    data: $data
-               }
-          ) {
-               data {
-                    id
-               }
-          }
-     }
+  mutation contact($id: ID!, $data: ContactInput!) {
+    updateContact(input: { id: $id, data: $data }) {
+      data {
+        id
+      }
+    }
+  }
 `;
 
 export const DELETE_CONTACT = gql`
-     mutation deleteContact($id: ID!) {
-          deleteContact(
-               input: {
-                    id: $id
-               }
-          ) {
-               data {
-                    id
-               }
-          }
-     }
+  mutation deleteContact($id: ID!) {
+    deleteContact(id: $id) {
+      data {
+        id
+      }
+    }
+  }
 `;
 
+export const ADD_PAYMENT_SCHEDULE = gql`
+  mutation createPaymentSchedule($data: PaymentScheduleInput!) {
+    createPaymentSchedule( data: $data ) {
+      data {
+        id
+      }
+    }
+  }
+`;
