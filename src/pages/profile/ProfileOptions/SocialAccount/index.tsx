@@ -38,7 +38,7 @@ export default function SocialAccount() {
     });
 
     if (error) {
-        return <Toaster heading="Failed" textColor="text-danger" headingCSS="mr-auto text-danger" msg="Social account details has not been updated" />;
+        return <Toaster handleCallback={() => setIsFormSubmitted(!isFormSubmitted)} type="error" msg="Social account details has not been updated" />;
     }
 
     function updateSocialAccountDetails(frm: any) {
@@ -85,7 +85,7 @@ export default function SocialAccount() {
 
             {/* success toaster notification */}
             {isFormSubmitted ?
-                <Toaster handleCallback={() => setIsFormSubmitted(!isFormSubmitted)} heading="Success" textColor="text-success" headingCSS="mr-auto text-success" msg="Social account details has been updated" />
+                <Toaster handleCallback={() => setIsFormSubmitted(!isFormSubmitted)} type="success" msg="Social account details has been updated" />
                 : null
             }
 

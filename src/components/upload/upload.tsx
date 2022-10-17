@@ -378,9 +378,6 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
           setVideoUpload(false);
      }
 
-     console.log(typeof imageid, imageid);
-     console.log(typeof videoID, videoID);
-
      useEffect(() => {
           props.onChange(videoID);
           // eslint-disable-next-line

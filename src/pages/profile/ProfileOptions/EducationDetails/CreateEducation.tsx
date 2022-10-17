@@ -36,7 +36,6 @@ function CreateEducation(props: any, ref: any) {
      let [isEducationDeleted, setIsEducationDeleted] = useState<boolean>(false);
      let [isEducationUpdated, setIsEducationUpdated] = useState<boolean>(false);
 
-
      const fetch = useQuery(FETCH_USER_PROFILE_DATA, {
           variables: { id: auth.userid },
           skip: (operation.type === 'create'),
@@ -51,7 +50,6 @@ function CreateEducation(props: any, ref: any) {
                ) : null
                );
           },
-
      });
 
      const [updateProfile] = useMutation(UPDATE_USER_PROFILE_DATA, {
@@ -173,13 +171,13 @@ function CreateEducation(props: any, ref: any) {
      }, [loading])
 
      if (createError) {
-          return <Toaster heading="Failed" textColor="text-danger" headingCSS="mr-auto text-danger" msg="Failed to add education details" />;
+          return <Toaster handleCallback={() => setIsFormSubmitted(!isFormSubmitted)} type="error" msg="Failed to add education details" />;
      }
      if (updateError) {
-          return <Toaster heading="Failed" textColor="text-danger" headingCSS="mr-auto text-danger" msg="Failed to update education details" />;
+          return <Toaster handleCallback={() => setIsEducationUpdated(!isEducationUpdated)} type="error" msg="Failed to update education details" />;
      }
      if (deleteError) {
-          return <Toaster heading="Failed" textColor="text-danger" headingCSS="mr-auto text-danger" msg="Failed to delete education details" />;
+          return <Toaster handleCallback={() => setIsEducationDeleted(!isEducationDeleted)} type="error" msg="Failed to delete education details" />;
      }
 
      return (
@@ -217,15 +215,15 @@ function CreateEducation(props: any, ref: any) {
 
                {/* success toaster notification */}
                {isFormSubmitted ?
-                    <Toaster handleCallback={() => setIsFormSubmitted(!isFormSubmitted)} heading="Success" textColor="text-success" headingCSS="mr-auto text-success" msg="New education detail has been added" />
+                    <Toaster handleCallback={() => setIsFormSubmitted(!isFormSubmitted)} type="success" msg="New education detail has been added" />
                     : null}
 
                {isEducationDeleted ?
-                    <Toaster handleCallback={() => setIsEducationDeleted(!isEducationDeleted)} heading="Success" textColor="text-success" headingCSS="mr-auto text-success" msg="Education Detail deleted successfully" />
+                    <Toaster handleCallback={() => setIsEducationDeleted(!isEducationDeleted)} type="success" msg="Education Detail deleted successfully" />
                     : null}
 
                {isEducationUpdated ?
-                    <Toaster handleCallback={() => setIsEducationUpdated(!isEducationUpdated)} heading="Success" textColor="text-success" headingCSS="mr-auto text-success" msg="Education Detail updated successfully" />
+                    <Toaster handleCallback={() => setIsEducationUpdated(!isEducationUpdated)} type="success" msg="Education Detail updated successfully" />
                     : null}
           </>
      );

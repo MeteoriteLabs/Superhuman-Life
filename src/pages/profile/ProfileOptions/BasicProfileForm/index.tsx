@@ -92,7 +92,7 @@ export default function BasicProfileForm() {
   });
 
   if (error) {
-    return <Toaster heading="Failed" textColor="text-danger" headingCSS="mr-auto text-danger" msg="Basic Profile details has not been updated" />;
+    return <Toaster type="error" msg="Basic Profile details has not been updated" />;
   }
 
   function updateBasicDetails(frm: any) {
@@ -142,7 +142,7 @@ export default function BasicProfileForm() {
 
       {/* success toaster notification */}
       {isFormSubmitted ?
-        <Toaster handleCallback={() => setIsFormSubmitted(!isFormSubmitted)} heading="Success" textColor="text-success" headingCSS="mr-auto text-success" msg="Basic Profile details has been updated" />
+        <Toaster handleCallback={() => setIsFormSubmitted(!isFormSubmitted)} type="success" msg="Basic Profile details has been updated" />
         : null}
 
     </>

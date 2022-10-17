@@ -62,7 +62,7 @@ export default function SocialAccount() {
     });
 
     if (error) {
-        return <Toaster heading="Failed" textColor="text-danger" headingCSS="mr-auto text-danger" msg="Verification document has not been uploaded" />;
+        return <Toaster handleCallback={() => setIsFormSubmitted(!isFormSubmitted)} type="error" msg="Verification document has not been uploaded" />;
     }
 
     function updateVerificationDetails(frm: any) {
@@ -101,7 +101,7 @@ export default function SocialAccount() {
 
             {/* success toaster notification */}
             {isFormSubmitted ?
-                <Toaster handleCallback={() => setIsFormSubmitted(!isFormSubmitted)} heading="Success" textColor="text-success" headingCSS="mr-auto text-success" msg="Verification document has been uploaded" />
+                <Toaster handleCallback={() => setIsFormSubmitted(!isFormSubmitted)} type="success" msg="Verification document has been uploaded" />
                 : null}
 
         </Col>
