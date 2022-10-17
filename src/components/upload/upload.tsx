@@ -378,6 +378,9 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
           setVideoUpload(false);
      }
 
+     console.log(typeof imageid, imageid);
+     console.log(typeof videoID, videoID);
+
      useEffect(() => {
           props.onChange(videoID);
           // eslint-disable-next-line
@@ -555,7 +558,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                                         )}
 
                                         <p className="mt-3">OR</p>
-                                        <input type="file" className="pt-2" onChange={handleFileInput} />
+                                        <input type="file" className="pt-2" disabled={props.readonly} onChange={handleFileInput} />
 
                                         <div className="mt-3 d-flex flex-row-reverse">
                                              <button

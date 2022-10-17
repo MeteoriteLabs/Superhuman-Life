@@ -41,8 +41,6 @@ const TimeFieldInput = (props: any) => {
                     return <span id="timeErr" style={{color: 'red'}}>End Time and start Time cannot be the same</span>
                }else if(parseInt(sh) === parseInt(eh) && parseInt(sm) > parseInt(em)) {
                     return <span id="timeErr" style={{color: 'red'}}>End Time Cannot be lesser than Start Time</span>
-               }else {
-                    return <span style={{color: 'green'}}>Valid Time</span>
                }
           }
      }
@@ -89,19 +87,40 @@ const TimeFieldInput = (props: any) => {
      
      return (
           <>
-               <label>Start Time: </label>
                <Row>
                     <Col lg={4}>
-                         <TimePicker value={props.startTime && startTime === '' ? convertToMomnet(handleTimeFormat(props.startTime)) : startTimeValue} disabled={props.disabled ? props.disabled : false} showSecond={false} minuteStep={15} onChange={(e) => {handleStartTimeInput(moment(e).format("HH:mm"))}}/>
+                         <label><b>Start Time: </b></label>
                     </Col>
-               </Row>
-               <label>End Time: </label>
-               <Row>
                     <Col lg={4}>
-                         <TimePicker value={props.endTime && endTime === '' ? convertToMomnet(handleTimeFormat(props.endTime)) : endTimeValue} disabled={props.disabled ? props.disabled : false} showSecond={false} minuteStep={15} onChange={(e) => {handleEndTimeInput(moment(e).format("HH:mm"))}}/>
+                         <TimePicker value={props.startTime && startTime === '' ? convertToMomnet(handleTimeFormat(props.startTime)) : startTimeValue} disabled={props.disabled ? props.disabled : false} showSecond={false} minuteStep={15} onChange={(e) => {
+                            if(!e) {
+                                setStartTime("00:00");
+                            }else {
+                                
+                                handleStartTimeInput(moment(e).format("HH:mm"))
+                            }
+                        }}/>
                     </Col>
                </Row>
-               {handleTimeValidation()}
+               <Row className="mt-3">
+                    <Col lg={4}>
+               <label><b>End Time: </b></label>
+                    </Col>
+                    <Col lg={4}>
+                         <TimePicker value={props.endTime && endTime === '' ? convertToMomnet(handleTimeFormat(props.endTime)) : endTimeValue} disabled={props.disabled ? props.disabled : false} showSecond={false} minuteStep={15} onChange={(e) => {
+                            if(!e){
+                                setEndTime("00:00");
+                            }else {
+                                handleEndTimeInput(moment(e).format("HH:mm"));
+                            }
+                        }}/>
+                    </Col>
+               </Row>
+               <Row>
+                    <Col lg={{ offset: 4}}>
+                         {handleTimeValidation()}
+                    </Col>
+               </Row>
           </>
      )
 }

@@ -9,6 +9,7 @@ import { schemaView } from './programSchemaForView';
 import { Subject } from 'rxjs';
 import { flattenObj } from '../../../components/utils/responseFlatten';
 import moment from 'moment';
+import Toaster from '../../../components/Toaster';
 
 interface Operation {
     id: string;
@@ -22,10 +23,55 @@ function CreateEditProgram(props: any, ref: any) {
     const [programDetails, setProgramDetails] = useState<any>({});
     const [operation, setOperation] = useState<Operation>({} as Operation);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
+    let [isFormSubmitted, setIsFormSubmitted] = useState(false);
+    const [toastHeading, setToastHeading] = useState('');
+    const [toastMessage, setToastMessage] = useState('');
+    const [toastColor, setToastColor] = useState('');
 
-    const [createProgram] = useMutation(CREATE_PROGRAM, { onCompleted: (r: any) => { modalTrigger.next(false); props.callback() } });
-    const [editProgram] = useMutation(UPDATE_PROGRAM, { onCompleted: (r: any) => { modalTrigger.next(false); props.callback() } });
-    const [deleteProgram] = useMutation(DELETE_PROGRAM, { refetchQueries: ["GET_TABLEDATA"], onCompleted: () => { props.callback() } });
+    const [createProgram] = useMutation(CREATE_PROGRAM, { 
+        onCompleted: (r: any) => { 
+            modalTrigger.next(false); 
+            props.callback();
+            setIsFormSubmitted(!isFormSubmitted); 
+            setToastHeading('Success');
+            setToastMessage('Program created successfully');
+            setToastColor('text-success'); 
+        } ,
+        onError: (e: any) => {
+            setToastHeading('Error');
+            setToastMessage('Program creation failed');
+            setToastColor('text-danger'); 
+        }
+    });
+    const [editProgram] = useMutation(UPDATE_PROGRAM, { 
+        onCompleted: (r: any) => { 
+            modalTrigger.next(false); 
+            props.callback();
+            setIsFormSubmitted(!isFormSubmitted); 
+            setToastHeading('Success');
+            setToastMessage('Program updated successfully');
+            setToastColor('text-success'); 
+        } ,
+        onError: (e: any) => {
+            setToastHeading('Error');
+            setToastMessage('Program updation failed');
+            setToastColor('text-danger'); 
+        }
+    });
+    const [deleteProgram] = useMutation(DELETE_PROGRAM, { 
+        onCompleted: () => { 
+            props.callback();
+            setIsFormSubmitted(!isFormSubmitted); 
+            setToastHeading('Success');
+            setToastMessage('Program deleted successfully');
+            setToastColor('text-success'); 
+        },
+        onError: (e: any) => {
+            setToastHeading('Error');
+            setToastMessage('Program deletion failed');
+            setToastColor('text-danger'); 
+        } 
+    });
 
     const modalTrigger = new Subject();
 
@@ -161,6 +207,10 @@ function CreateEditProgram(props: any, ref: any) {
 
     FetchData();
 
+    function handleToasCallback(){
+        setIsFormSubmitted(false);
+    }
+
     return (
         <>
 
@@ -187,6 +237,10 @@ function CreateEditProgram(props: any, ref: any) {
                 buttonRight="Yes"
                 onClick={() => { DeleteExercise(operation.id) }}
             />}
+
+            {isFormSubmitted ?
+                <Toaster handleCallback={handleToasCallback} heading={toastHeading} textColor={toastColor} headingCSS={`mr-auto ${toastColor}`} msg={toastMessage} />
+                : null}
         </>
     )
 }

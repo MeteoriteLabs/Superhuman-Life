@@ -63,7 +63,7 @@ const TransferProgramTable = (props: any) => {
                     Is_restday: e[i].Is_restday,
                     activity: e[i].activity,
                     activity_target: e[i].activity_target,
-                    changemaker: e[i].changemaker.id,
+                    changemaker: e[i]?.changemaker.id,
                     day_of_program: e[i].day_of_program,
                     mode: e[i].mode,
                     tag: e[i].tag,
@@ -86,7 +86,7 @@ const TransferProgramTable = (props: any) => {
 
      if (!show) return <span style={{ color: 'red' }}>Loading...</span>;
           else return (
-               <Table responsive>
+               <Table responsive style={{ overflow: 'auto'}}>
                     <thead>
                          <tr className="text-center">
                               <th colSpan={1}>From template</th>
@@ -98,14 +98,20 @@ const TransferProgramTable = (props: any) => {
                                    console.log(val);
                                    return (
                                         <tr>
-                                        <td><Form.Control value={val.workout === null ? val.activity.title : val.workout.workouttitle} disabled></Form.Control></td>
+                                        <td><Form.Control style={{ minWidth: '150px'}} value={val.workout === null ? val.activity.title : val.workout.workouttitle} disabled></Form.Control></td>
                                         <td>to</td>
-                                        <td><DaysInput duration={props.duration.length} dayType={props.dayType} onChange={(e) => {handleDaysData(e, index)}} type="transfer"/></td>
+                                        <td style={{ minWidth: '150px'}}><DaysInput duration={props.duration.length} dayType={props.dayType} onChange={(e) => {handleDaysData(e, index)}} type="transfer"/></td>
                                         {/* <Row> */}
                                              {/* <Col lg={4}> */}
-                                             <td>
+                                             <td style={{ minWidth: '150px'}}>
 
-                                        <TimePicker value={convertToMoment(data[index].startTime)} disabled={props.disabled ? props.disabled : false} showSecond={false} minuteStep={15} onChange={(e) => {handleStartTimeInput(moment(e).format("HH:mm"), index)}}/>
+                                        <TimePicker value={convertToMoment(data[index].startTime)} disabled={props.disabled ? props.disabled : false} showSecond={false} minuteStep={15} onChange={(e) => {
+                                             if(e !== null){
+                                                  handleHourChange(e.format('HH:mm'), index);
+                                             }else {
+                                                  handleStartTimeInput("00:00", index)
+                                             }
+                                        }}/>
                                              </td>
                                              {/* </Col> */}
                                         {/* </Row> */}

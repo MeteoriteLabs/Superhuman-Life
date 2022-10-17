@@ -8,6 +8,7 @@ import { schema, widgets } from './exerciseSchema';
 import { schemaView } from './exerciseSchemaForView';
 import { Subject } from 'rxjs';
 import { flattenObj } from '../../../components/utils/responseFlatten';
+import Toaster from '../../../components/Toaster';
 
 interface Operation {
     id: string;
@@ -22,18 +23,68 @@ function CreateEditExercise(props: any, ref: any) {
     const [workoutDetails, setWorkoutDetails] = useState<any[]>([]);
     const [operation, setOperation] = useState<Operation>({} as Operation);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
+    let [isFormSubmitted, setIsFormSubmitted] = useState(false);
+    const [toastHeading, setToastHeading] = useState('');
+    const [toastMessage, setToastMessage] = useState('');
+    const [toastColor, setToastColor] = useState('');
 
     useQuery(FETCH_WORKOUTS, {
         variables: { id: auth.userid },
         skip: (operation.type !== "delete"),
         onCompleted: (r: any) => {
-            setWorkoutDetails(r.workouts);
+            const flattenedData = flattenObj({...r});
+            setWorkoutDetails(flattenedData.workouts);
         }
     });
 
-    const [createExercise] = useMutation(CREATE_EXERCISE, { onCompleted: (r: any) => { modalTrigger.next(false); props.callback(); } });
-    const [editExercise] = useMutation(UPDATE_EXERCISE, { onCompleted: (r: any) => { modalTrigger.next(false); props.callback(); } });
-    const [deleteExercise] = useMutation(DELETE_EXERCISE, { refetchQueries: ["GET_TABLEDATA"], onCompleted: (r: any) => { modalTrigger.next(false); props.callback(); } });
+    const [createExercise] = useMutation(CREATE_EXERCISE, { 
+        onCompleted: (r: any) => { 
+            modalTrigger.next(false); 
+            props.callback(); 
+            setIsFormSubmitted(!isFormSubmitted); 
+            setToastHeading('Success');
+            setToastMessage('Exercise created successfully');
+            setToastColor('text-success');
+        },
+        onError: (e: any) => {
+            setToastHeading('Error');
+            setIsFormSubmitted(!isFormSubmitted); 
+            setToastMessage('Exercise creation failed');
+            setToastColor('text-danger');
+        } 
+    });
+    const [editExercise] = useMutation(UPDATE_EXERCISE, { 
+        onCompleted: (r: any) => { 
+            modalTrigger.next(false);
+            setIsFormSubmitted(!isFormSubmitted); 
+            props.callback();
+            setToastHeading('Success');
+            setToastMessage('Exercise updated successfully');
+            setToastColor('text-success'); 
+        },
+        onError: (e: any) => {
+            setToastHeading('Error');
+            setIsFormSubmitted(!isFormSubmitted); 
+            setToastMessage('Exercise updation failed');
+            setToastColor('text-danger');
+        }
+    });
+    const [deleteExercise] = useMutation(DELETE_EXERCISE, {
+        onCompleted: (r: any) => { 
+            modalTrigger.next(false); 
+            props.callback(); 
+            setToastHeading('Success');
+            setIsFormSubmitted(!isFormSubmitted); 
+            setToastMessage('Exercise Deleted successfully');
+            setToastColor('text-success'); 
+        },
+        onError: (e: any) => {
+            setToastHeading('Error');
+            setIsFormSubmitted(!isFormSubmitted); 
+            setToastMessage('Exercise Deletion failed');
+            setToastColor('text-danger');
+        } 
+    });
 
     const modalTrigger = new Subject();
 
@@ -113,6 +164,7 @@ function CreateEditExercise(props: any, ref: any) {
 
         frm.discipline = JSON.parse(frm.discipline);
         frm.equipment = JSON.parse(frm.equipment);
+        frm.muscleGroup = JSON.parse(frm.muscleGroup);
         createExercise({
             variables: {
                 exercisename: frm.exercise,
@@ -123,7 +175,7 @@ function CreateEditExercise(props: any, ref: any) {
                 exerciseurl: (!frm.addExercise.AddURL ? null : frm.addExercise.AddURL),
                 exerciseupload: (!frm.addExercise.Upload ? null : frm.addExercise.Upload),
                 equipment_lists: frm.equipment.map((item: any) => { return item.id }).join(',').split(','),
-                exercisemusclegroups: frm.muscleGroup.split(","),
+                exercisemusclegroups: frm.muscleGroup.map((item: any) => { return item.id }).join(',').split(','),
                 users_permissions_user: frm.user_permissions_user
             }
         });
@@ -133,6 +185,7 @@ function CreateEditExercise(props: any, ref: any) {
 
         frm.discipline = JSON.parse(frm.discipline);
         frm.equipment = JSON.parse(frm.equipment);
+        frm.muscleGroup = JSON.parse(frm.muscleGroup);
         editExercise({
             variables: {
                 exerciseid: operation.id,
@@ -143,7 +196,7 @@ function CreateEditExercise(props: any, ref: any) {
                 exercisetext: (!frm.addExercise.AddText ? null : frm.addExercise.AddText),
                 exerciseurl: (!frm.addExercise.AddURL ? null : frm.addExercise.AddURL),
                 equipment_lists: frm.equipment.map((item: any) => { return item.id }).join(',').split(','),
-                exercisemusclegroups: frm.muscleGroup.split(","),
+                exercisemusclegroups: frm.muscleGroup.map((item: any) => { return item.id }).join(',').split(','),
                 users_permissions_user: frm.user_permissions_user
             }
         });
@@ -189,12 +242,17 @@ function CreateEditExercise(props: any, ref: any) {
 
     FetchData();
 
+    function handleToasCallback(){
+        setIsFormSubmitted(false);
+    }
+
     return (
         <>
             {/* Create , edit and view Modal */}
             <ModalView
                 name={name}
                 isStepper={false}
+                showErrorList={false}
                 formUISchema={operation.type === 'view' ? schemaView : schema}
                 formSchema={exerciseSchema}
                 formSubmit={name === "View" ? () => { modalTrigger.next(false); } : (frm: any) => { OnSubmit(frm); }}
@@ -215,6 +273,10 @@ function CreateEditExercise(props: any, ref: any) {
                 buttonRight="Yes"
                 onClick={() => { DeleteExercise(operation.id) }}
             />}
+
+            {isFormSubmitted ?
+                <Toaster handleCallback={handleToasCallback} heading={toastHeading} textColor={toastColor} headingCSS={`mr-auto ${toastColor}`} msg={toastMessage} />
+                : null}
 
         </>
     )

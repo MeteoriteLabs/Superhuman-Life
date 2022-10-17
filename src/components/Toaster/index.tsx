@@ -13,7 +13,7 @@ function Toaster(props: any) {
         >
             <Row>
                 <Col xs={6} className="my-1 ml-auto">
-                    <Toast className="ml-auto shadow-lg bg-white rounded border" onClose={() => {toggleShowA(); props.handleCallback();}} show={showA} animation={false} delay={5000} autohide
+                    <Toast className="ml-auto" onClose={() => {toggleShowA(); props.handleCallback();}} show={showA} animation={false} delay={5000} autohide
                     >
                         <Toast.Header>
                             <h6 className={props.headingCSS}>{props.heading}</h6>

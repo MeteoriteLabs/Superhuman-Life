@@ -1,60 +1,36 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Button, Col, Modal, Row } from "react-bootstrap";
 
 
 function StatusModal(props: any) {
-    const [eventConnections, setEventConnections] = useState<any[]>([]);
-    const [loading, setLoading] = useState(false);
+    const [eventConnections] = useState<any>(props.EventConnectedDetails);
 
     function handleClick() {
         props.onClick();
         props.onHide();
     }
 
-    useEffect(() => {
-        if(props.EventConnectedDetails.length !== 0){
-            const values = [...eventConnections];
-            for(var i=0; i<=props.EventConnectedDetails.length-1; i++){
-                if(props.EventConnectedDetails[i].events !== null){
-                    values.push(props.EventConnectedDetails[i]);
-                }
-            }
-            setEventConnections(values);
-        }
-        setTimeout(() => {
-            setLoading(true);
-        }, 500)
-    }, [props.EventConnectedDetails]);// eslint-disable-line react-hooks/exhaustive-deps
-
-    const linkedPrograms: any[] = [];
-
-    if(eventConnections.length !== 0){
-        const values = [...eventConnections];
-        for(var j=0; j<=values.length-1; j++){
-            for(var k=0; k<=values[j].events.length-1; k++){
-                if(values[j].events[k].id === props.ExistingEventId){
-                    linkedPrograms.push(values[j]);
-                    break;
-                }
-            }
-        }
-    }
-
     function handleBodyRender() {
-        
-        if (!loading) return <span style={{ color: 'red' }}>Loading...</span>;
-        else return (
+         return (
             <>
-                <div style={{ display: `${linkedPrograms.length !== 0 ? 'none' : 'block'}`}}>
+            
+                <div style={{ display: `${eventConnections?.fitnessprograms?.length !== 0 || eventConnections?.tags?.length !== 0 ? 'none' : 'block'}`}}>
                     <h5>{props.modalBody}</h5>
                 </div>
-            <div style={{ display: `${linkedPrograms.length !== 0 ? 'block' : 'none'}`}}>
+            <div style={{ display: `${eventConnections?.fitnessprograms?.length !== 0 || eventConnections?.tags?.length !== 0 ? 'block' : 'none'}`}}>
                 <p>The workout you are trying to delete is being used in the following programs: </p>
-                {linkedPrograms.length !== 0 && linkedPrograms.map((val, index) => {
-                    return (
-                        <h5 key={val.id}>{`${index+1})`}{` ${val.title}`}</h5>
-                    )
-                })}
+                {props.EventConnectedDetails?.fitnessprograms?.length > 0 && <div>
+                    <span><b>Program Templates: </b></span>
+                    {props.EventConnectedDetails?.fitnessprograms?.map((val: any, index: number) => {
+                        return <h5 key={val.id}>{`${index+1})`}{` ${val.title}`}</h5>
+                    })}
+                </div>}
+                {props.EventConnectedDetails?.tags?.length > 0 && <div>
+                    <span><b>Session Manager: </b></span>
+                    {props.EventConnectedDetails?.tags?.map((val: any, index: number) => {
+                        return <h5 key={val.id}>{`${index+1})`}{` ${val.tag_name}`}</h5>
+                    })}
+                </div>}
                 <span><i className="fas fa-info-circle"></i>{' '}Please Make sure you edit the program, and then try deleting.</span>
             </div>
             </>
@@ -79,7 +55,7 @@ function StatusModal(props: any) {
                         <Button variant="danger" onClick={props.onHide}>{props.buttonLeft}</Button>
                     </Col>
                     <Col xs={4} md={5} className="ml-4">
-                        <Button variant="success" onClick={handleClick} disabled={linkedPrograms.length !== 0 ? true : false}>{props.buttonRight}</Button>
+                        <Button variant="success" onClick={handleClick} disabled={eventConnections?.fitnessprograms?.length > 0 || eventConnections?.tags?.length > 0 ? true: false}>{props.buttonRight}</Button>
                     </Col>
                     </Row>
                 </div>

@@ -149,7 +149,9 @@ const ProgramList = (props: any) => {
                                                   </Col>
                                              </Row>
                                              <Row style={{ justifyContent: 'center' }} className="mt-2 mb-2">
-                                                  {workout.description}
+                                                  <Col className='text-center'>
+                                                       {workout.description}
+                                                  </Col>
                                              </Row>
                                              <Row>
                                                   <Col style={{ textAlign: 'start' }}>
@@ -197,7 +199,9 @@ const ProgramList = (props: any) => {
                                                             </Col>
                                                        </Row>
                                                        <Row style={{ justifyContent: 'center' }} className="mt-2 mb-2">
-                                                            {val.description}
+                                                            <Col className='text-center'>
+                                                                 {val.description}
+                                                            </Col>
                                                        </Row>
                                                        <Row>
                                                             <Col style={{ textAlign: 'start' }}>
