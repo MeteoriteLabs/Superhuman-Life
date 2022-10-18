@@ -11,9 +11,7 @@ import Layout from "./components/layout";
 const MainLobby = React.lazy(() => import("./pages/dashboard"));
 const WebsiteBuilder = React.lazy(() => import("./pages/website-builder"));
 const BookingPage = React.lazy(() => import("./pages/booking"));
-const BookingSetting = React.lazy(
-  () => import("./pages/booking/BookingSetting/BookingSetting")
-);
+const BookingSetting = React.lazy(() => import("./pages/booking/BookingSetting/BookingSetting"));
 const ChatPage = React.lazy(() => import("./pages/chat"));
 
 const HomePage = React.lazy(() => import("./pages/home"));
@@ -47,6 +45,7 @@ const ChannelProgramSchedulerPage = React.lazy(() => import("./builders/session-
 const clientSchedulerPage = React.lazy(() => import("./builders/changemaker-builder"));
 const AvailabilityPage = React.lazy(() => import("./builders/changemaker-builder/availability"));
 const RosterPage = React.lazy(() => import('./builders/changemaker-builder/roster'));
+const PaymentScheduleSettingsPage = React.lazy(() => import('./builders/client-builder/PaymentScheduleSettings'));
 
 //auth logins
 const GoogleAuthCallbackPage = React.lazy(() => import("./pages/register/oAuthLogins/googleAuthCallback"));
@@ -109,6 +108,7 @@ export default function Routes({ token }: any) {
               <Route path="/settings" component={SettingsPage} />
               <Route path="/finance" component={FinancePage} />
               <Route path="/change-password" component={ChangePasswordPage} />
+              <Route path="/payment_settings" component={PaymentScheduleSettingsPage} />
 
                                    <Route path="*" component={NoMatch} />
                               </Switch>

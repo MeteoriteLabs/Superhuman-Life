@@ -57,7 +57,6 @@ function App() {
             localStorage.removeItem("token");
             localStorage.removeItem("username");
             localStorage.removeItem("userid");
-            window.location.assign('/login');
           },
         }}
       >

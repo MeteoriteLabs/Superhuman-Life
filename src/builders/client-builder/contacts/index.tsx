@@ -7,6 +7,7 @@ import ActionButton from "../../../components/actionbutton/index";
 import CreateEditContact from "./createEditContact";
 import { GET_CONTACTS } from "./queries";
 import { flattenObj } from "../../../components/utils/responseFlatten";
+import { useHistory } from "react-router-dom";
 
 export default function Contacts() {
      const auth = useContext(AuthContext);
@@ -25,22 +26,22 @@ export default function Contacts() {
                { accessor: "type", Header: "Type" },
                {
                     accessor: "appStatus", Header: "App Status", Cell: ({ row }: any) => {
-                        let statusColor = ""
-                        switch (row.values.appStatus) {
-                            case "Invited":
-                                statusColor = "success";
-                                break;
-    
-                            case "NotInvited":
-                                statusColor = "danger";
-                                break;
-    
-                        }
-                        return <>
-                            <Badge className='btn' style={{ fontSize: '1rem', borderRadius: '10px' }} variant={statusColor}>{row.values.appStatus === "NotInvited" ? "Not Invited" : "Invited"}</Badge>
-                        </>
+                         let statusColor = ""
+                         switch (row.values.appStatus) {
+                              case "Invited":
+                                   statusColor = "success";
+                                   break;
+
+                              case "NotInvited":
+                                   statusColor = "danger";
+                                   break;
+
+                         }
+                         return <>
+                              <Badge className='px-3 py-1' style={{ fontSize: '1rem', borderRadius: '10px' }} variant={statusColor}>{row.values.appStatus === "NotInvited" ? "Not Invited" : "Invited"}</Badge>
+                         </>
                     }
-                },
+               },
                {
                     id: "edit",
                     Header: "Actions",
@@ -64,10 +65,17 @@ export default function Contacts() {
                               });
                          };
 
+                         const history = useHistory();
+                         const routeChange = () =>{ 
+                              let path = `payment_settings/?id=${row.original.id}`; 
+                              history.push(path);
+                            }
+
                          const arrayAction = [
                               { actionName: "Edit", actionClick: editHandler },
                               { actionName: "View", actionClick: viewHandler },
                               { actionName: "Delete", actionClick: deleteHandler },
+                              { actionName: "Payment Settings", actionClick: routeChange },
                          ];
 
                          return <ActionButton arrayAction={arrayAction}></ActionButton>;
@@ -98,7 +106,7 @@ export default function Contacts() {
      function loadData(data: any) {
           let namearr: any = [];
           const flattenData = flattenObj({ ...data });
-          
+
           setData([...flattenData.contacts]);
           setDataTable(
                [...flattenData.contacts].flatMap((Detail) => {
