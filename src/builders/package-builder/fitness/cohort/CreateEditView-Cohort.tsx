@@ -49,16 +49,16 @@ function CreateEditCohort(props: any, ref: any) {
     const [deletePackage] = useMutation(DELETE_PACKAGE, { refetchQueries: ["GET_TABLEDATA"], onCompleted: (data) => {props.callback();}});
     const [bookingConfig] = useMutation(CREATE_BOOKING_CONFIG, {onCompleted: (r: any) => { modalTrigger.next(false); props.callback();}})
     const [CreateCohortPackage] = useMutation(CREATE_CHANNEL_PACKAGE, { onCompleted: (r: any) => { 
-        console.log(r);
-        console.log(frmDetails);
-        bookingConfig({
-            variables: {
-                isAuto: frmDetails.config.acceptBooking === 0 ? false : true,
-                id: r.createFitnesspackage.data.id,
-                bookings_per_day: frmDetails.config.maxBookingDay,
-                bookings_per_month: frmDetails.config.maxBookingMonth
-            }
-        })
+        
+        const val = JSON.parse(frmDetails.config.bookingConfig);
+            bookingConfig({
+                variables: {
+                    isAuto: val.config === "Auto" ? true : false,
+                    id: r.createFitnesspackage.data.id,
+                    is_Fillmyslots: val.fillSchedule,
+                    tagName: frmDetails.packageName
+                }
+        });
      }})
     // const [CreateProgram] = useMutation(CREATE_PROGRAM, { onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
     // const [updateProgram] = useMutation(UPDATE_FITNESSPROGRAMS, {onCompleted: (r: any) => { modalTrigger.next(false); } });
@@ -171,7 +171,6 @@ function CreateEditCohort(props: any, ref: any) {
         return foundType.id;
     }
 
-
     function calculateDuration(sd, ed){
         const start = moment(sd);
         const end = moment(ed);
@@ -179,9 +178,7 @@ function CreateEditCohort(props: any, ref: any) {
         return duration;
     }
 
-
     function createCohort(frm: any) {
-        console.log(frm);
         frmDetails = frm;
         frm.programDetails = JSON.parse(frm.programDetails)
         frm.languages = JSON.parse(frm.languages)
@@ -287,7 +284,6 @@ function CreateEditCohort(props: any, ref: any) {
         operation.type = 'create';
     }
 
-
     function OnSubmit(frm: any) {
         //bind user id
         if(frm)
@@ -318,12 +314,10 @@ function CreateEditCohort(props: any, ref: any) {
         name=`Viewing ${programDetails.packageName}`;
     }
 
-
     FetchData();
 
     return (
         <>
-            {/* {render && */}
                 <ModalView
                     name={name}
                     isStepper={true}
@@ -337,7 +331,6 @@ function CreateEditCohort(props: any, ref: any) {
                     modalTrigger={modalTrigger}
                 />
                 
-            {/* } */}
             <Modal
                     size="lg"
                     aria-labelledby="contained-modal-title-vcenter"

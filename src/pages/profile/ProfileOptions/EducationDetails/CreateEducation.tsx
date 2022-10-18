@@ -5,8 +5,7 @@ import {
      FETCH_USER_PROFILE_DATA,
      CREATE_EDUCATION_DETAILS,
      UPDATE_USER_PROFILE_DATA,
-     UPDATE_EDUCATION_DETAILS,
-     FETCH_USERS_PROFILE_DATA
+     UPDATE_EDUCATION_DETAILS
 } from "../../queries/queries";
 import AuthContext from "../../../../context/auth-context";
 import { Subject } from "rxjs";
@@ -52,11 +51,11 @@ function CreateEducation(props: any, ref: any) {
      });
 
      const [updateProfile] = useMutation(UPDATE_USER_PROFILE_DATA, {
-          onCompleted: (r: any) => { props.callback(); fetch.refetch(); },refetchQueries: [FETCH_USERS_PROFILE_DATA] 
+          onCompleted: (r: any) => { props.callback(); fetch.refetch(); },
      });
 
      const [updateEducationalDetail] = useMutation(UPDATE_EDUCATION_DETAILS, {
-          onCompleted: (r: any) => { modalTrigger.next(false); props.callback(); fetch.refetch(); }
+          onCompleted: (r: any) => { modalTrigger.next(false); props.callback(); fetch.refetch(); },
      });
 
      const [createEducation] = useMutation(CREATE_EDUCATION_DETAILS, {
@@ -76,7 +75,7 @@ function CreateEducation(props: any, ref: any) {
                          },
                     },
                });
-          }, refetchQueries: [FETCH_USERS_PROFILE_DATA]
+          },
      });
 
      // Modal trigger

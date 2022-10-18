@@ -14,10 +14,6 @@ interface Operation {
      modal_status: boolean;
      type: "create" | "edit" | "view" | "toggle-status" | "delete";
      current_status: boolean;
-     hide: boolean;
-     show: boolean;
-     showVariable: boolean;
-
 }
 
 function CreateEditMessage(props: any, ref: any) {

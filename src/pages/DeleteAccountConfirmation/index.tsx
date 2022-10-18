@@ -107,7 +107,7 @@ function DeleteAccountConfirmation(props: any) {
           <Button variant="success" onClick={handleShow} >
             Yes
           </Button>
-          <Button variant="danger" onClick={props.onHide} >
+          <Button variant="danger" >
             No
           </Button>
         </Modal.Footer>
