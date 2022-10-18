@@ -3,7 +3,6 @@ import _ from 'lodash'
 
 export default function InvoiceModal(props) {
     const { rowData } = props;
-    console.log("rowData", rowData);
 
     const packageClasses = [
         {
@@ -51,8 +50,6 @@ export default function InvoiceModal(props) {
         </>
     }
 
-
-
     return (
         <div className=' container'>
             <div className='d-flex justify-content-between align-items-center px-4 py-3 ' style={{ backgroundColor: '#e4e4e499' }}>
@@ -81,7 +78,6 @@ export default function InvoiceModal(props) {
                     <p>{rowData.clientPhoneNumber || "No Phone Number"}</p>
                 </div>
             </div>
-
 
             <div className='px-4 my-4' >
                 <div className="d-flex justify-content-between align-items-center mt-5 mb-3" style={{ backgroundColor: '#e4e4e499' }}>

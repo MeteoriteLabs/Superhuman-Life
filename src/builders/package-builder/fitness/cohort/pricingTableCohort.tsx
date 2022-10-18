@@ -26,8 +26,6 @@ const PricingTable = (props) => {
         return duration;
     }
 
-    console.log(props.formContext)
-
     const auth = useContext(AuthContext);
     const [vouchers, setVouchers] = useState<any>([]);
     const [show, setShow] = useState(props.value === 'free' ? true : false);
