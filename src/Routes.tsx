@@ -51,6 +51,7 @@ const PayeeDetails = React.lazy(() => import('./pages/finance/Outflow/PayeeDetai
 const PayeePaymentMode = React.lazy(() => import('./pages/finance/Outflow/PayeePaymentMode/PayeePaymentMode'));
 const CloseAccount = React.lazy(() => import('./pages/finance/Outflow/CloseAccount/CloseAccount'));
 const ViewAddPayee = React.lazy(() => import('./pages/finance/Outflow/ViewAddPayee'));
+const PaymentScheduleSettingsPage = React.lazy(() => import('./builders/client-builder/PaymentScheduleSettings'));
 
 //auth logins
 const GoogleAuthCallbackPage = React.lazy(() => import("./pages/register/oAuthLogins/googleAuthCallback"));
@@ -113,6 +114,13 @@ export default function Routes({ token }: any) {
               <Route path="/settings" component={SettingsPage} />
               <Route path="/finance" component={FinancePage} />
               <Route path="/change-password" component={ChangePasswordPage} />
+              <Route path="/payment_settings" component={PaymentScheduleSettingsPage} />
+              <Route path="/receipt" component={Receipt} />
+              <Route path="/add_payee" component={AddPayee} />
+              <Route path="/payee_details" component={PayeeDetails} />
+              <Route path="/payee_payment_mode" component={PayeePaymentMode} />
+              <Route path="/close_account" component={CloseAccount} />
+              <Route path="/view_add_payee" component={ViewAddPayee} />
 
                                    <Route path="*" component={NoMatch} />
                               </Switch>
