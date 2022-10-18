@@ -46,17 +46,17 @@ const FloatingButton = (props: any) => {
                               title={<img src={FitnessSvg} style={{ cursor: 'pointer'}} title="movement" alt="fitness"/>}
                               style={{ backgroundColor: 'white !important'}}
                          >
-                              <Dropdown.Header style={{ color: 'black', fontWeight: 'bold', letterSpacing: '1px'}}>Fitness</Dropdown.Header>
+                              <Dropdown.Header style={{ overflow: 'auto' ,color: 'black', fontWeight: 'bold', letterSpacing: '1px'}}>Fitness</Dropdown.Header>
                               <Dropdown.Divider/>
                               {window.location.pathname.split("/")[1] !== 'programs' && <Dropdown.Item eventKey="2" onClick={(e) => {
                                    props.callback2('block');
                               }}>Sessions</Dropdown.Item>}
-                              <Dropdown.Item eventKey="1" onClick={(e) => {
+                              <Dropdown.Item className='text-wrap' eventKey="1" onClick={(e) => {
                                    props.callback('block');
                               }}>Import Program Template</Dropdown.Item>
                               <Dropdown.Item eventKey="3" onClick={() => {
                                    createEditWorkoutTemplateComponent.current.TriggerForm({ id: null, type: 'create' });
-                              }}>Import Workout Template</Dropdown.Item>
+                              }}>Import Workout</Dropdown.Item>
                               <Dropdown.Item eventKey="4" onClick={() => {
                                    createEditNewWorkoutComponent.current.TriggerForm({ id: null, type: 'create' });
                               }}>New Workout</Dropdown.Item>

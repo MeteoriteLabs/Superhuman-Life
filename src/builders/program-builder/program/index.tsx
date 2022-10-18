@@ -57,7 +57,8 @@ export default function EventsTab() {
                 Is_program_template: frm.sessions[i].Is_program_template,
                 activity_target: frm.sessions[i].activity_target,
                 activity: frm.sessions[i].activity?.id,
-                workout: frm.sessions[i].workout?.id
+                workout: frm.sessions[i].workout?.id,
+                changemaker: auth.userid
             }})   
         }
     }
@@ -90,10 +91,10 @@ export default function EventsTab() {
                 };
 
                 const arrayAction = [
+                    { actionName: 'Manage', actionClick: manageHandler },
                     { actionName: 'Edit', actionClick: editHandler },
                     { actionName: 'View', actionClick: viewHandler },
                     { actionName: 'Delete', actionClick: deleteHandler },
-                    { actionName: 'Manage', actionClick: manageHandler },
                     { actionName: 'Duplicate', actionClick: duplicateHandler },
                 ];
 

@@ -95,7 +95,7 @@ function CreateEditPackage(props: any, ref: any) {
         TriggerForm: (msg: Operation) => {
             setOperation(msg);
 
-            // if (msg && !msg.id) //render form if no message id
+            // restrict to render for delete and toggle status operation
             if(msg.type !== 'delete' && msg.type !== 'toggle-status'){
                 modalTrigger.next(true);
             }
@@ -131,7 +131,7 @@ function CreateEditPackage(props: any, ref: any) {
         let msg = flattenedData.fitnesspackages[0];
         let bookingConfig: any = {};
         let details: any = {};
-       
+        
         for(var i =0; i<msg.fitnesspackagepricing.length; i++){
             PRICING_TABLE_DEFAULT[i].mrp = msg.fitnesspackagepricing[i].mrp;
             PRICING_TABLE_DEFAULT[i].suggestedPrice = msg.fitnesspackagepricing[i].suggestedPrice;
@@ -312,7 +312,6 @@ function CreateEditPackage(props: any, ref: any) {
 
     return (
         <>
-            {/* {render && */}
                 <ModalView
                     name={name}
                     isStepper={true}
@@ -326,8 +325,6 @@ function CreateEditPackage(props: any, ref: any) {
                     modalTrigger={modalTrigger}
                 />
                 
-            {/* } */}
-
             <Modal
                     size="lg"
                     aria-labelledby="contained-modal-title-vcenter"

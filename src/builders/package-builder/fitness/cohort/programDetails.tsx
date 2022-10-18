@@ -20,9 +20,6 @@ const ProgramDetails = (props) => {
 
     }
 
-    console.log(props);
-    console.log(existingData);
-
     const [mode, setMode] = useState(props.value === undefined ? '' : (existingData.mode).toString());
     const [residential, setResidential] = useState(props.value === undefined || existingData.residential === null ? '' : (existingData.residential).toString());
     const [addressModal, setAddressModal] = useState(false);
@@ -67,7 +64,7 @@ const ProgramDetails = (props) => {
 
     function loadData(data: any) {
         const flattenedData = flattenObj({...data});
-        console.log(flattenedData);
+        
         setAddresses(
               [...flattenedData.addresses].map((address) => {
                   return {

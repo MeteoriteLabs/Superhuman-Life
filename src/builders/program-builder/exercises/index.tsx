@@ -74,7 +74,7 @@ export default function EventsTab() {
                     id: detail.id,
                     exerciseName: detail.exercisename,
                     discipline: detail.fitnessdisciplines.map((disc: any) => {
-                        return disc.disciplinename;
+                        return disc.disciplinename + ' ';
                     }),
                     level: detail.exerciselevel,
                     muscleGroup: detail.muscle_groups.map((muscle: any) => {
