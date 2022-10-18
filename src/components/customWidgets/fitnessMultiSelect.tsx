@@ -20,8 +20,6 @@ const MultiSelect = (props: any) => {
         );
      const [fitnessdisciplines, setFitnessDisciplines] = useState<any[]>([]);
 
-     console.log(multiSelections);
-
      // useEffect(() => {
      //      const unique = [...new Map(multiSelections.map((m) => [m.id, m])).values()];
      //      setMultiSelections(unique);
@@ -49,8 +47,6 @@ const MultiSelect = (props: any) => {
           const unique = [...new Map(e.map((m) => [m.id, m])).values()];
           setMultiSelections(unique);
      }
-
-     console.log(multiSelections.length);
 
      if(multiSelections.length > 0){
           props.onChange(JSON.stringify(multiSelections));

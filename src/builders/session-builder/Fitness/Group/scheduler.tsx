@@ -289,7 +289,7 @@ const Scheduler = () => {
                                 <Col lg={{ offset: 2}}>
                                     <Row>
                                     <div className="text-center ml-2">
-                                        {tag.client_packages[0].users_permissions_user === "N/A" ? <div className="mb-0"></div>:
+                                        {tag.client_packages[0]?.users_permissions_user === "N/A" ? <div className="mb-0"></div>:
                                             tag.client_packages.slice(0,4).map((item, index) => {
                                                 let postionLeft = 8;
                                                 return (
@@ -309,7 +309,7 @@ const Scheduler = () => {
                                     </div>
                                     </Row>
                                     <Row className="mt-1">
-                                        <span className="text-capitalize"><b style={{ color: 'gray'}}>{tag.client_packages[0].length === "N/A" ? 0 : tag.client_packages[0].length} people</b></span>
+                                        <span className="text-capitalize"><b style={{ color: 'gray'}}>{tag.client_packages[0]?.length === "N/A" ? 0 : tag.client_packages[0]?.length} people</b></span>
                                     </Row>
                                 </Col>
                                 </Col>
@@ -321,7 +321,7 @@ const Scheduler = () => {
                                                     <span>Date:</span>
                                                 </Col>
                                                 <Col lg={5} className="text-center">
-                                                    <span className="p-1 ml-2 scheduler-badge">{moment(tag.client_packages[0].effectiveDate).format('DD MMMM, YY')}</span>
+                                                    <span className="p-1 ml-2 scheduler-badge">{moment(tag.client_packages[0]?.effectiveDate).format('DD MMMM, YY')}</span>
                                                 </Col>
                                                     {/* to
                                                 <Col lg={5} className="text-center">
@@ -398,7 +398,7 @@ const Scheduler = () => {
                             days={30} 
                             restDays={[]} programId={tagId} 
                             classType={'Group Class'}
-                            startDate={tag?.client_packages[0].effective_date}
+                            startDate={tag?.client_packages[0]?.effective_date}
                         />
                     </div>
                 </Col>
@@ -410,7 +410,7 @@ const Scheduler = () => {
                         <label>Edit Start Date: </label>
                     <InputGroup className="mb-3">
                         <FormControl
-                            value={startDate === "" ? tag?.client_packages[0].effective_date : startDate}
+                            value={startDate === "" ? tag?.client_packages[0]?.effective_date : startDate}
                             onChange={(e) => {setStartDate(e.target.value)}}
                             type="date"
                         />

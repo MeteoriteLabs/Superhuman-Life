@@ -1,7 +1,7 @@
 import React, { useContext, useImperativeHandle, useState } from 'react';
-import { useQuery, useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import ModalView from "../../../../components/modal";
-import { UPDATE_FITNESSPROGRAMS, GET_SCHEDULEREVENTS } from "../queries";
+import { REPLACE_SESSION_WORKOUT } from "../queries";
 import AuthContext from "../../../../context/auth-context";
 import { schema, widgets } from '../schema/replaceWorkoutSchema';
 import {Subject} from 'rxjs';
@@ -10,20 +10,17 @@ interface Operation {
     id: string;
     type: 'create' | 'edit' | 'view' | 'toggle-status' | 'delete';
     current_status: boolean;
+    details: any;
+    title: string;
 }
 
 function CreateEditMessage(props: any, ref: any) {
     const auth = useContext(AuthContext);
     const programSchema: { [name: string]: any; } = require("../json/replaceWorkout.json");
-    const [programDetails, setProgramDetails] = useState<any>({});
+    const [programDetails] = useState<any>({});
     const [operation, setOperation] = useState<Operation>({} as Operation);
-    const program_id = window.location.pathname.split('/').pop();
-    
 
-    // const [CreateProgram] = useMutation(CREATE_PROGRAM, { onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
-    const [updateProgram] = useMutation(UPDATE_FITNESSPROGRAMS, {onCompleted: (r: any) => { modalTrigger.next(false); } });
-    //const [editExercise] = useMutation(UPDATE_EXERCISE,{variables: {exerciseid: operation.id}, onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
-    //const [deleteExercise] = useMutation(DELETE_EXERCISE, { onCompleted: (e: any) => console.log(e), refetchQueries: ["GET_TABLEDATA"] });
+    const [updateSession] = useMutation(REPLACE_SESSION_WORKOUT, {onCompleted: (r: any) => { modalTrigger.next(false); } });
 
     const modalTrigger =  new Subject();
 
@@ -36,42 +33,14 @@ function CreateEditMessage(props: any, ref: any) {
         }
     }));
 
-    function FillDetails(data: any) {
-        let details: any = {};
-        // let msg = data;
-        // console.log(msg);
-        setProgramDetails(details);
-
-        //if message exists - show form only for edit and view
-        if (['edit', 'view'].indexOf(operation.type) > -1)
-            modalTrigger.next(true);
-        else
-            OnSubmit(null);
-    }
-
-    function FetchData() {
-        useQuery(GET_SCHEDULEREVENTS, { variables: { id: program_id }, skip: (!operation.id || operation.type === 'toggle-status'), onCompleted: (e: any) => { FillDetails(e) } });
-    }
-
     function UpdateProgram(frm: any) {
-        var existingRestDays = (props.restDays === null ? [] : [...props.restDays]);
-        var daysArray: any = [];
-        if(frm.day){
-               frm.day = JSON.parse(frm.day);
-               for(var i=0; i<frm.day.length; i++){
-                    daysArray.push({
-                         day: parseInt(frm.day[i].day.substr(4)),
-                         type: 'restday'
-                    });
-               }
-               for(var j=0; j<daysArray.length; j++){
-                    existingRestDays.push(daysArray[j]);
-               }
-        }
-        updateProgram({ variables: {
-            programid: program_id,
-            rest_days: existingRestDays
-        }})
+        frm.workoutEvent = JSON.parse(frm.workoutEvent);
+        updateSession({
+            variables: {
+                id: operation.details.sessionId,
+                workoutId: frm.workoutEvent[0].id,
+            }
+        });
     }
 
     function OnSubmit(frm: any) {
@@ -83,6 +52,9 @@ function CreateEditMessage(props: any, ref: any) {
             case 'create':
                 UpdateProgram(frm);
                 break;
+            case 'edit':
+                UpdateProgram(frm);
+                break;
         }
     }
 
@@ -90,12 +62,10 @@ function CreateEditMessage(props: any, ref: any) {
     if(operation.type === 'create'){
         name="Rest Day";
     }else if(operation.type === 'edit'){
-        name="Edit";
+        name=`Replace ${operation.title}`;
     }else if(operation.type === 'view'){
         name="View";
     }
-
-    FetchData();
 
     return (
         <>

@@ -7,6 +7,8 @@ import moment from 'moment';
 
 const PricingTable = (props) => {
 
+  console.log(props)
+
     const inputDisabled = props.readonly;
 
     console.log(JSON.parse(props.formContext.programDetails).online);
@@ -211,7 +213,7 @@ const PricingTable = (props) => {
                     <Button variant='outline-info' onClick={() => {window.location.href = '/finance'}}>Add suggest pricing</Button>
                     </div>
                 </div>
-                <Table style={{ tableLayout: 'fixed'}}>
+                <Table responsive>
                 <thead>
                     <tr className='text-center'>
                     <th>Details</th>
@@ -244,6 +246,9 @@ const PricingTable = (props) => {
                     <td className='text-center'><b>Set MRP</b></td>
                     <td>
                     <InputGroup>
+                        <InputGroup.Prepend>
+                          <InputGroup.Text id="basic-addon1">{"\u20B9"}</InputGroup.Text>
+                        </InputGroup.Prepend>
                         <FormControl
                         className={`${pricing[0]?.mrp < pricing[0]?.sapienPricing && pricing[0]?.mrp !== null ? "is-invalid" : pricing[0]?.mrp >= pricing[0]?.sapienPricing ? "is-valid" : ""}`}
                         aria-label="Default"

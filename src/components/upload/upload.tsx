@@ -29,8 +29,6 @@ var tus: any = require("tus-js-client");
 
 const UploadImageToS3WithNativeSdk = (props: any) => {
 
-     console.log(props);
-
      const [progress, setProgress] = useState<any>(0);
      const [selectedFile, setSelectedFile] = useState<any>(null);
      const [render, setRender] = useState<any>(null);
@@ -228,7 +226,6 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                setVideoID(props.value);
                setVideoUpload(true);
           }
-          //console.log(props.value);
      }
 
      function uploadTOS3NoUrl(file, filename, filetype) {
@@ -370,6 +367,9 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
           setVideoUpload(false);
      }
 
+     console.log(typeof imageid, imageid);
+     console.log(typeof videoID, videoID);
+
      useEffect(() => {
           if (url) {
                props.onChange(imageid);
@@ -377,9 +377,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                props.onChange(videoID);
           }
           // eslint-disable-next-line react-hooks/exhaustive-deps
-     }, [url]);
-
-     // console.log(url);
+     }, [url, videoID]);
 
      return (
           <div>
@@ -400,7 +398,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                                         type="button"
                                         className="btn-sm btn-danger"
                                         onClick={() => deleteAllImages()}
-                                        disabled={props.readonly ? true : false}
+                                        disabled={props.readonly}
                                    >
                                         Remove
                                    </button>
@@ -426,7 +424,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                                              type="button"
                                              className="btn-sm btn-danger"
                                              onClick={() => videoDelete()}
-                                             disabled={props.readonly ? true : false}
+                                             disabled={props.readonly}
                                         >
                                              Remove
                                         </button>
@@ -465,7 +463,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                                         onClick={() => {
                                              showCroppedImage();
                                         }}
-                                        disabled={props.readonly ? true : false}
+                                        disabled={props.readonly}
                                    >
                                         Upload
                                    </button>
@@ -547,7 +545,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                                         )}
 
                                         <p className="mt-3">OR</p>
-                                        <input type="file" className="pt-2" onChange={handleFileInput} />
+                                        <input type="file" className="pt-2" disabled={props.readonly} onChange={handleFileInput} />
 
                                         <div className="mt-3 d-flex flex-row-reverse">
                                              <button

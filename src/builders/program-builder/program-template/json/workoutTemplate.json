@@ -3,23 +3,10 @@
          "title": "",
          "type": "object",
          "required": [
-            "assignMode",
             "day",
-            "time",
-            "tag"
+            "time"
          ],
         "properties": {
-            "tag": {
-                "type": "string"
-            },
-            "assignMode": {
-                "type": "string",
-                "title": "Mode",
-                "enum": [
-                    "Online",
-                    "Offline"
-                ]
-            },
             "day": {
                 "type": "string"
             },

@@ -29,28 +29,28 @@ export default function MessagePage() {
                     id: "edit",
                     Header: "Actions",
                     Cell: ({ row }: any) => {
-                         const actionClick1 = () => {
+                         const editHandler = () => {
                               createEditMessageComponent.current.TriggerForm({ id: row.original.id, type: "edit" });
                          };
-                         const actionClick2 = () => {
+                         const viewHandler = () => {
                               createEditMessageComponent.current.TriggerForm({ id: row.original.id, type: "view" });
                          };
-                         const actionClick3 = () => {
+                         const statusChangeHandler = () => {
                               createEditMessageComponent.current.TriggerForm({
                                    id: row.original.id,
                                    type: "toggle-status",
                                    current_status: row.original.status === "Active",
                               });
                          };
-                         const actionClick4 = () => {
+                         const deleteHandler = () => {
                               createEditMessageComponent.current.TriggerForm({ id: row.original.id, type: "delete" });
                          };
 
                          const arrayAction = [
-                              { actionName: "Edit", actionClick: actionClick1 },
-                              { actionName: "View", actionClick: actionClick2 },
-                              { actionName: "Status", actionClick: actionClick3 },
-                              { actionName: "Delete", actionClick: actionClick4 },
+                              { actionName: "Edit", actionClick: editHandler },
+                              { actionName: "View", actionClick: viewHandler },
+                              { actionName: "Status", actionClick: statusChangeHandler },
+                              { actionName: "Delete", actionClick: deleteHandler },
                          ];
 
                          return <ActionButton arrayAction={arrayAction}></ActionButton>;

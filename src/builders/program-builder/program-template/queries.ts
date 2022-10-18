@@ -95,6 +95,7 @@ export const FETCH_WORKOUT = gql`
           About
           workout_URL
           workout_text
+          Workout_Video_ID
           calories
           muscle_groups {
             data {
@@ -661,6 +662,18 @@ query getTemplateSessions($id: ID!){
   }
 }
 `;
+
+export const REPLACE_SESSION_WORKOUT = gql`
+mutation replaceSessionWorkout($id: ID!, $workoutId: ID!){
+  updateSession(id: $id, data: {
+    workout: $workoutId
+  }){
+    data{
+      id
+    }
+  }
+}
+`
 
 
 // export const GET_SESSIONS_ON_DATE = gql`

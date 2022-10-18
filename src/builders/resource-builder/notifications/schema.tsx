@@ -5,8 +5,8 @@ export const widgets = {
 };
 
 export const schema: any = {
-     title:{
-        "ui:help": " Assign a heading"
+     title: {
+          "ui:help": " Assign a heading"
      },
      description: {
           "ui:widget": "textarea",

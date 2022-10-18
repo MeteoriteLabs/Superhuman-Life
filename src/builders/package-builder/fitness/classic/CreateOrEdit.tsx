@@ -68,7 +68,8 @@ function CreateEditPackage(props: any, ref: any) {
                     isAuto: val.config === "Auto" ? true : false,
                     id: r.createFitnesspackage.data.id,
                     bookings_per_day: val.bookings,
-                    is_Fillmyslots: val.fillSchedule
+                    is_Fillmyslots: val.fillSchedule,
+                    tagName: frmDetails.packagename
                 }
             });
         }
@@ -96,14 +97,12 @@ function CreateEditPackage(props: any, ref: any) {
         TriggerForm: (msg: Operation) => {
             setOperation(msg);
 
-            // if (msg && !msg.id) //render form if no message id
+            // restrict to render for delete and toggle status operation
             if(msg.type !== 'delete' && msg.type !== 'toggle-status'){
                 modalTrigger.next(true);
             }
         }
     }));
-
-    // console.log(exerciseDetails);
 
     enum ENUM_FITNESSPACKAGE_LEVEL {
         Beginner,
@@ -134,7 +133,7 @@ function CreateEditPackage(props: any, ref: any) {
         let msg = flattenedData.fitnesspackages[0];
         let bookingConfig: any = {};
         let details: any = {};
-        console.log(msg);
+        
         for(var i =0; i<msg.fitnesspackagepricing.length; i++){
             PRICING_TABLE_DEFAULT[i].mrp = msg.fitnesspackagepricing[i].mrp;
             PRICING_TABLE_DEFAULT[i].suggestedPrice = msg.fitnesspackagepricing[i].suggestedPrice;
@@ -149,7 +148,7 @@ function CreateEditPackage(props: any, ref: any) {
         details.disciplines = msg.fitnessdisciplines
         details.channelinstantBooking = msg.groupinstantbooking;
         details.expiryDate = moment(msg.expirydate).format('YYYY-MM-DD');
-        details.level = ENUM_FITNESSPACKAGE_LEVEL[msg.level];
+        details.level = ENUM_FITNESSPACKAGE_LEVEL[msg?.level];
         details.intensity = ENUM_FITNESSPACKAGE_INTENSITY[msg.Intensity];
         details.pricingDetail = msg.fitnesspackagepricing[0]?.mrp === 'free' ? 'free' : JSON.stringify(PRICING_TABLE_DEFAULT);
         details.publishingDate = moment(msg.publishing_date).format('YYYY-MM-DD');
@@ -168,7 +167,6 @@ function CreateEditPackage(props: any, ref: any) {
         details.bookingConfigId = msg.booking_config?.id;
         details.languages = JSON.stringify(msg.languages);
         setClassicDetails (details);
-        // console.log(exerciseDetails);
 
         //if message exists - show form only for edit and view
         if (['edit', 'view'].indexOf(operation.type) > -1)
@@ -177,8 +175,6 @@ function CreateEditPackage(props: any, ref: any) {
             OnSubmit(null);
     }
 
-    console.log(operation.type);
-
     useEffect(() => {
         if(operation.type === 'create'){
             setClassicDetails({});
@@ -186,7 +182,6 @@ function CreateEditPackage(props: any, ref: any) {
     }, [operation.type]);
 
     function FetchData() {
-        console.log('Fetch Data');
         useQuery(GET_SINGLE_PACKAGE_BY_ID, { variables: { id: operation.id }, skip: (operation.type === 'create'),onCompleted: (e: any) => { FillDetails(e) } });
     }
 
@@ -202,14 +197,14 @@ function CreateEditPackage(props: any, ref: any) {
             variables: {
                 packagename: frm.packagename,
                 tags: frm?.tags,
-                level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
+                level: ENUM_FITNESSPACKAGE_LEVEL[frm?.level],
                 intensity: ENUM_FITNESSPACKAGE_INTENSITY[frm.intensity],
                 aboutpackage: frm.About,
                 benefits: frm.Benifits,
                 mode: ENUM_FITNESSPACKAGE_MODE[frm.programDetails.mode],
                 disciplines: frm.disciplines,
                 duration: frm.programDetails?.duration,
-                recordedclasses: frm.programDetails?.onlineClasses,
+                recordedclasses: frm.programDetails?.online,
                 restdays: frm.programDetails?.rest,
                 is_private: frm.visibility === 1 ? true : false,
                 bookingleadday: frm.bookingleaddat,
@@ -217,7 +212,7 @@ function CreateEditPackage(props: any, ref: any) {
                 fitnesspackagepricing: frm.pricingDetail === "free" ? [{mrp: 'free', duration: frm.programDetails.duration}] : JSON.parse(frm.pricingDetail),
                 users_permissions_user: frm.user_permissions_user,
                 publishing_date: moment(frm.datesConfig?.publishingDate).toISOString(),
-                expiry_date: moment(frm.datesConfig?.expiry_date).toISOString(),
+                expiry_date: moment(frm.datesConfig?.expiryDate).toISOString(),
                 thumbnail: frm.thumbnail,
                 upload: frm?.Upload?.upload,
                 equipmentList: frm.equipmentList,
@@ -241,14 +236,14 @@ function CreateEditPackage(props: any, ref: any) {
                 id: operation.id,
                 packagename: frm.packagename,
                 tags: frm?.tags,
-                level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
+                level: ENUM_FITNESSPACKAGE_LEVEL[frm?.level],
                 intensity: ENUM_FITNESSPACKAGE_INTENSITY[frm.intensity],
                 aboutpackage: frm.About,
                 benefits: frm.Benifits,
                 mode: ENUM_FITNESSPACKAGE_MODE[frm.programDetails.mode],
                 disciplines: frm.disciplines,
                 duration: frm.programDetails?.duration,
-                recordedclasses: frm.programDetails?.onlineClasses,
+                recordedclasses: frm.programDetails?.online,
                 restdays: frm.programDetails?.rest,
                 is_private: frm.visibility === 1 ? true : false,
                 bookingleadday: frm.bookingleaddat,
@@ -256,7 +251,7 @@ function CreateEditPackage(props: any, ref: any) {
                 fitnesspackagepricing: frm.pricingDetail === "free" ? [{mrp: 'free', duration: frm.programDetails.duration}] : JSON.parse(frm.pricingDetail),
                 users_permissions_user: frm.user_permissions_user,
                 publishing_date: moment(frm.datesConfig?.publishingDate).toISOString(),
-                expiry_date: moment(frm.datesConfig?.expiry_date).toISOString(),
+                expiry_date: moment(frm.datesConfig?.expiryDate).toISOString(),
                 thumbnail: frm.thumbnail,
                 upload: frm?.Upload?.upload,
                 equipmentList: frm.equipmentList,
@@ -310,19 +305,17 @@ function CreateEditPackage(props: any, ref: any) {
 
     let name = "";
     if(operation.type === 'create'){
-        name="Create Classic Class";
+        name="Recorded Offering";
     }else if(operation.type === 'edit'){
-        name="Edit";
+        name=`Edit ${classicDetails.packagename}`;
     }else if(operation.type === 'view'){
-        name="View";
+        name=`Viewing ${classicDetails.packagename}`;
     }
 
     FetchData();
 
-
     return (
         <>
-            {/* {render && */}
                 <ModalView
                     name={name}
                     isStepper={true}
@@ -336,8 +329,6 @@ function CreateEditPackage(props: any, ref: any) {
                     modalTrigger={modalTrigger}
                 />
                 
-            {/* } */}
-
             <Modal
                     size="lg"
                     aria-labelledby="contained-modal-title-vcenter"

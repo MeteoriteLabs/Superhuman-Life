@@ -26,7 +26,7 @@ export default function Fitness() {
                         <Tab eventKey="custom" title="Custom">
                             <Custom/>
                         </Tab>
-                        <Tab eventKey="channel" title="Channel">
+                        <Tab eventKey="liveStream" title="Live Stream">
                             <Channel />
                         </Tab>
                         <Tab eventKey="cohort" title="Cohort">

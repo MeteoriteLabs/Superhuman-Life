@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useContext } from 'react';
 import { Modal, Button, Row, Col, Tab, Tabs, InputGroup, FormControl, Badge, OverlayTrigger, Tooltip, Form, Spinner } from 'react-bootstrap';
 import './styles.css';
 import { FETCH_WORKOUT, FETCH_ACTIVITY, GET_SLOTS_TO_CHECK, UPDATE_CHANGEMAKER_AVAILABILITY_WORKHOURS, GET_SESSIONS, GET_CLIENT_SESSIONS, DELETE_SESSION, UPDATE_SESSION, CREATE_SESSION, UPDATE_TAG_SESSIONS, CREATE_SESSION_BOOKING, GET_SESSION_BOOKINGS, UPDATE_SESSION_BOOKING, UPDATE_FITNESSPORGRAMS_SESSIONS } from './queries';
+import ReactPlayer from 'react-player/youtube'
 import { useQuery, useMutation, gql } from "@apollo/client";
 import ProgramList from "../../../components/customWidgets/programList";
 import SessionList from '../../../components/customWidgets/sessionList';
@@ -14,11 +15,13 @@ import DaysInput from './daysInput';
 import moment from 'moment';
 import { flattenObj } from '../../../components/utils/responseFlatten';
 import AuthContext from '../../../context/auth-context';
+// import sessionContext from '../../../context/session-context';
 import {AvailabilityCheck} from './availabilityCheck';
 
 const Schedular = (props: any) => {
 
     const auth = useContext(AuthContext);
+    // const sessionContextData = useContext(sessionContext);
     const [show, setShow] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [onDragAndDrop, setOnDragAndDrop] = useState(false);
@@ -42,7 +45,6 @@ const Schedular = (props: any) => {
     const [groupDropConflict, setGroupDropConflict] = useState(false);
     const [sessionBookings, setSessionBooking] = useState<any>([]);
     const [clickedSessionId, setClickedSessionId] = useState("");
-
 
     const GET_SESSIONS_BY_DATE = gql`
         query getprogramdata($date: Date) {
@@ -391,7 +393,7 @@ const Schedular = (props: any) => {
                 }
             }
         }
-        else if (props.restDays) {
+        else if (props.restDays && props?.type !== 'day') {
             for (var i = 0; i < props.restDays.length; i++) {
                 if (val === calculateDay(props.startDate, props.restDays[i].session_date)) {
                     return 'rgba(255,165,0)';
@@ -472,7 +474,7 @@ const Schedular = (props: any) => {
     function handleUpdateFitnessPrograms(newId: any){
         setNewSessionId(newId);
         const values = [...templateSessionsIds];
-        const holidayIds = props.restDays.map((day: any) => day.id).join(",").split(",");
+        const holidayIds = props.restDays.length > 0 ? props.restDays.map((day: any) => day.id).join(",").split(",") : [];
         values.push(newId);
         updateFitnessProgramSessions({
             variables: {
@@ -517,16 +519,14 @@ const Schedular = (props: any) => {
                 }
             });
         }
-
+        
         if(e.type === "workout"){
             createSession({
                 variables: {
                     start_time: timeInput.startTime,
                     end_time: timeInput.endTime,
                     workout: e.id,
-                    tag: e.tag,
                     day_of_program: duplicatedDay[0].key,
-                    mode: e.mode,
                     type: e.type,
                     session_date: duplicatedDay.length === 0 ? e.sessionDate : moment(duplicatedDay[0].day, 'Do, MMMM YYYY').format('YYYY-MM-DD'),
                     changemaker: auth.userid
@@ -658,6 +658,7 @@ const Schedular = (props: any) => {
                 }
             });
         }
+
         // the first if block is incase of the template page. which works based on day.
         if(window.location.pathname.split('/')[1] === 'programs'){
             if(event.type === 'workout'){
@@ -893,12 +894,21 @@ const Schedular = (props: any) => {
                 </Row>
                 <Row>
                     <p>{d.type !== 'url' ? null : <Col >
+                        <ReactPlayer url={d.value} loop={false} height="300px"/>
+                        </Col>
+                        }
+                    </p>
+                </Row>
+                <Row>
+                    <p>{d.type !== 'upload' ? null : <Col >
+                        {/* <ReactPlayer url={d.value} loop={false} height="300px"/> */}
                         <InputGroup>
                             <FormControl
                                 disabled
                                 value={d.value}
                         />
-                            </InputGroup></Col>
+                            </InputGroup>
+                        </Col>
                         }
                     </p>
                 </Row>
@@ -1135,8 +1145,6 @@ const Schedular = (props: any) => {
         mainQuery.refetch();
     }
 
-    console.log(event);
-
     if (!show) {
         return <div className="text-center">
             <Spinner animation="border" variant="danger" />
@@ -1303,23 +1311,30 @@ const Schedular = (props: any) => {
                             </Col>
                         </Row>
                         <hr style={{ marginTop: '0px', marginBottom: '20px', borderTop: '2px solid grey' }}></hr>
-                        <Row className="align-items-center">
-                            <Col lg={1}>
-                                <h6>Type: </h6>
+                        <Row>
+                            <Col lg={6}>
+                            <Row className="align-items-center">
+                                <Col lg={2}>
+                                    <h6>Type: </h6>
+                                </Col>
+                                <Col lg={6}>
+                                    <FormControl value={event.type} disabled />
+                                </Col>
+                            </Row>
+                            <Row className="pt-3 align-items-center">
+                                <Col lg={2}>
+                                    <h6>Day: </h6>
+                                </Col>
+                                <Col lg={6}>
+                                    <FormControl value={event.sessionDate && props.type !== 'day' ? moment(event.sessionDate).format("Do, MMM YY") : `Day - ${event.day}`} disabled />
+                                </Col>
+                            </Row>
                             </Col>
-                            <Col lg={4}>
-                                <FormControl value={event.type} disabled />
+                            <Col lg={6}>
+                                <TimeField eventType="edit" onChange={handleStart} endTime={event.endHour + ':' + event.endMin} startTime={event.hour + ':' + event.min} disabled={edit}/>
                             </Col>
                         </Row>
-                        <Row className="pt-3 align-items-center">
-                            <Col lg={1}>
-                                <h6>Day: </h6>
-                            </Col>
-                            <Col lg={4}>
-                                <FormControl value={event.sessionDate && props.type !== 'day' ? moment(event.sessionDate).format("Do, MMM YY") : `Day - ${event.day}`} disabled />
-                            </Col>
-                        </Row>
-                        {(tag || event.tag) !== 'Classic' && <Row className="pt-3 align-items-center">
+                        {window.location.pathname.split("/")[1] !== 'programs' && (tag || event.tag) !== 'Classic' && <Row className="pt-3 align-items-center">
                             <Col lg={1}>
                                 <h6>Mode: </h6>
                             </Col>
@@ -1330,34 +1345,34 @@ const Schedular = (props: any) => {
                                 </Form.Control>
                             </Col>
                         </Row>}
-                        <Row className="pt-3 align-items-center">
+                        {window.location.pathname.split("/")[1] !== 'programs' && <Row className="pt-3 align-items-center">
                             <Col lg={1}>
                                 <h6>Class Type: </h6>
                             </Col>
                             <Col lg={4}>
                                 <Form.Control value={tag === "" ? event.tag : tag} disabled={props.classType === 'Custom' ? false : true} as="select" onChange={(e) => {setTag(e.target.value)}}>
-                                    <option value="One-On-One">Personal Training</option>
+                                    <option value="One-On-One">One-On-One</option>
                                     <option value="Group Class">Group Class</option>
                                     <option value="Classic">Classic</option>
                                 </Form.Control>
                             </Col>
-                        </Row>
-                        <Row className="pt-3 align-items-center">
+                        </Row>}
+                        {/* <Row className="pt-3 align-items-center">
                             <Col>
                                 <TimeField eventType="edit" onChange={handleStart} endTime={event.endHour + ':' + event.endMin} startTime={event.hour + ':' + event.min} disabled={edit}/>
                             </Col>
-                        </Row>
+                        </Row> */}
                         {(event.type === "workout") && <Tabs defaultActiveKey="agenda" transition={false} id="noanim-tab-example" className="pt-4">
                             <Tab eventKey="agenda" title="Agenda">
-                                {/* <Row className="justify-content-end">
-                                    <Button className="mr-3 mt-2" variant="primary" size="sm" onClick={() => { handleClose(); setData([]); setEvent([]); createEditWorkoutComponent.current.TriggerForm({ type: 'edit' }); }}><i className="fas fa-pencil-alt"></i>{" "}Edit</Button>
-                                    <Button className="mr-3 mt-2" variant="warning" size="sm" onClick={() => {handleClose(); setData([]); setEvent([]); replaceWorkoutComponent.current.TriggerForm({type: 'edit' })}}><i className="fas fa-reply"></i>{" "}Replace</Button>
-                                </Row> */}
+                                <Row className="justify-content-end">
+                                    <Button className="mr-3 mt-2" variant="primary" size="sm" onClick={() => { handleClose(); setData([]); setEvent([]); createEditWorkoutComponent.current.TriggerForm({ type: 'edit', id: event?.id }); }}><i className="fas fa-pencil-alt"></i>{" "}Edit</Button>
+                                    <Button className="mr-3 mt-2" variant="warning" size="sm" onClick={() => {handleClose(); setData([]); setEvent([]); replaceWorkoutComponent.current.TriggerForm({type: 'edit', details: event, title: event.title })}}><i className="fas fa-reply"></i>{" "}Replace</Button>
+                                </Row>
                                 {data.map(val => {
                                     return (
                                         <>
                                             <Row>
-                                                {val.warmup === null ? '' : <Col className="pt-2"><h5>Warmup: {val.warmup.map((d) => {
+                                                {val?.warmup === null ? '' : <Col className="pt-2"><h5>Warmup: {val.warmup?.map((d) => {
                                                     return (
                                                         handleAgenda(d)
                                                     )
@@ -1365,7 +1380,7 @@ const Schedular = (props: any) => {
                                             </Row>
                                             <hr style={{ marginTop: '0px', marginBottom: '20px', borderTop: '2px solid grey', display: `${val.mainmovement === null ? 'none' : 'block'}` }}></hr>
                                             <Row>
-                                                {val.mainmovement === null ? '' : <Col className="pt-2"><h5>Mainmovement {val.mainmovement.map((d) => {
+                                                {val?.mainmovement === null ? '' : <Col className="pt-2"><h5>Mainmovement {val?.mainmovement.map((d) => {
                                                     return (
                                                         handleAgenda(d)
                                                     )
@@ -1373,11 +1388,35 @@ const Schedular = (props: any) => {
                                             </Row>
                                             <hr style={{ marginTop: '0px', marginBottom: '20px', borderTop: '2px solid grey', display: `${val.cooldown === null ? 'none' : 'block'}` }}></hr>
                                             <Row>
-                                                {val.cooldown === null ? '' : <Col className="pt-2"><h5>Cooldown {val.cooldown.map((d) => {
+                                                {val?.cooldown === null ? '' : <Col className="pt-2"><h5>Cooldown {val?.cooldown.map((d) => {
                                                     return (
                                                         handleAgenda(d)
                                                     )
                                                 })}</h5></Col>}
+                                            </Row>
+                                            <Row>
+                                                {val?.workout_URL !== null &&
+                                                    <Col className='mt-3 mb-3'>
+                                                        <ReactPlayer url={val.workout_URL} loop={false} height="300px"/>
+                                                    </Col> 
+                                                }
+                                            </Row>
+                                            <Row>
+                                                {val?.workout_text !== null &&
+                                                    <Col className='mt-3 mb-3'>
+                                                        <TextEditor val={val?.workout_text} type="text"/>
+                                                    </Col> 
+                                                }
+                                            </Row>
+                                            <Row>
+                                                {val?.Workout_Video_ID !== null &&
+                                                    <Col className='mt-3 mb-3'>
+                                                        <FormControl 
+                                                            value={val?.Workout_Video_ID}
+                                                            disabled={true}
+                                                        />
+                                                    </Col> 
+                                                }
                                             </Row>
                                         </>
                                     )
@@ -1389,7 +1428,7 @@ const Schedular = (props: any) => {
                                         <>
                                             <Row className="pt-3 align-items-center">
                                                 <Col lg={1}>
-                                                    <label>Intensity: </label>
+                                                    <label>Intensity:</label>
                                                 </Col>
                                                 <Col lg={3}>
                                                     <InputGroup>
@@ -1579,7 +1618,7 @@ const Schedular = (props: any) => {
                          <Button variant="danger" onClick={() => {setDuplicate(false); setData([]);}}>
                               Cancel
                          </Button>
-                         <Button disabled={document.getElementById('timeErr') ? true : false} variant="success" onClick={() => {handleDuplicate(event, changedTime);setDuplicate(false); setData([]);}}>
+                         <Button disabled={document.getElementById('timeErr') ? true : duplicatedDay.length === 0 ? true: false} variant="success" onClick={() => {handleDuplicate(event, changedTime);setDuplicate(false); setData([]);}}>
                               Duplicate
                          </Button>
                     </Modal.Footer>

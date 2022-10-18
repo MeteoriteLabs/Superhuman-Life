@@ -19,14 +19,6 @@ interface Operation {
      showVariable: boolean;
 
 }
-const notificationEmptyState = {
-     title: '',
-     prerecordedtype: '',
-     prerecordedtrigger: '',
-     description: '',
-     minidesc: '',
-     mediaurl: ''
-}
 
 function CreateEditMessage(props: any, ref: any) {
      const auth = useContext(AuthContext);
@@ -34,6 +26,8 @@ function CreateEditMessage(props: any, ref: any) {
      const [messageDetails, setMessageDetails] = useState<any>({});
      const [operation, setOperation] = useState<Operation>({} as Operation);
      const [name, setName] = useState('');
+     const [showStatusModal, setShowStatusModal] = useState(false);
+     const [showDeleteModal, setShowDeleteModal] = useState(false);
 
      const [createMessage] = useMutation(ADD_MESSAGE, {
           onCompleted: (r: any) => {
@@ -69,6 +63,14 @@ function CreateEditMessage(props: any, ref: any) {
      useImperativeHandle(ref, () => ({
           TriggerForm: (msg: Operation) => {
                setOperation(msg);
+
+               if (msg.type === 'toggle-status') {
+                    setShowStatusModal(true);
+               }
+
+               if (msg.type === 'delete') {
+                    setShowDeleteModal(true);
+               }
 
                if (msg.type !== 'delete' && msg.type !== 'toggle-status') {
                     modalTrigger.next(true);
@@ -150,6 +152,7 @@ function CreateEditMessage(props: any, ref: any) {
      useEffect(() => {
           if (operation.type === 'create') {
                setName("Create New Notification");
+               setMessageDetails({});
           } else if (operation.type === 'edit') {
                setName("Edit");
           } else if (operation.type === 'view') {
@@ -164,16 +167,19 @@ function CreateEditMessage(props: any, ref: any) {
                          name={name}
                          isStepper={false}
                          formUISchema={name === 'View' ? schemaView : schema}
+                         showErrorList={false}
                          formSchema={messageSchema}
                          showing={operation.modal_status}
                          formSubmit={name === 'View' ? () => { modalTrigger.next(false); } : (frm: any) => { OnSubmit(frm); }}
-                         formData={operation.type === 'create' ? notificationEmptyState : messageDetails}
+                         formData={messageDetails}
                          modalTrigger={modalTrigger}
                     />
                }
 
-               {operation.type === "toggle-status" && (
+               {showStatusModal && (
                     <StatusModal
+                         show={showStatusModal}
+                         onHide={() => setShowStatusModal(false)}
                          modalTitle="Change Status"
                          modalBody="Do you want to change the status?"
                          buttonLeft="Cancel"
@@ -184,8 +190,10 @@ function CreateEditMessage(props: any, ref: any) {
                     />
                )}
 
-               {operation.type === "delete" && (
+               {showDeleteModal && (
                     <StatusModal
+                         show={showDeleteModal}
+                         onHide={() => setShowDeleteModal(false)}
                          modalTitle="Delete"
                          modalBody="Do you want to delete this message?"
                          buttonLeft="Cancel"
