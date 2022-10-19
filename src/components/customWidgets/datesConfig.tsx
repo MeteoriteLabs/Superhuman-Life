@@ -12,7 +12,10 @@ const PackageDateConfig = (props: any) => {
           setExpiryDate(moment(publishingDate).add(1, props?.title2 ? 'month' : 'year').format("YYYY-MM-DDTHH:mm"));
      }, [publishingDate, props.title2]);
 
+
      props.onChange(JSON.stringify({publishingDate, expiryDate}));
+
+     console.log(props);
 
      return (
           <div>
