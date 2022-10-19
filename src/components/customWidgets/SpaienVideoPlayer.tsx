@@ -6,7 +6,6 @@ const SapienVideoPlayer = (props: any) => {
      const [show, setShow] = useState(false);
      const [videoUrl, setVideoUrl] = useState(''); 
      const [errorMessage, setErrorMessage] = useState('');
-     const [showError, setShowError] = useState(false);
 
      //here we are getting the video id from the url
      function convertLinkToEmbedId(val: string) {
@@ -14,9 +13,14 @@ const SapienVideoPlayer = (props: any) => {
      };
 
      useEffect(() => {
-          if(props.url.includes('youtube')){
+          if(props.url.includes('https://www.youtube.com/')){
                //we are converting the youtube video url to embed from to display it using iframe
-               const embedUrl = `https://www.youtube.com/embed/${convertLinkToEmbedId(props.url)}`;
+               let embedUrl;
+               if(props.url.includes('https://www.youtube.com/shorts')){
+                    embedUrl = `https://www.youtube.com/embed/${props.url.split('/').pop()}`;
+               }else {
+                    embedUrl = `https://www.youtube.com/embed/${convertLinkToEmbedId(props.url)}`;
+               }
                setVideoUrl(embedUrl);
                setShow(true);
           }else {
@@ -33,7 +37,6 @@ const SapienVideoPlayer = (props: any) => {
                          setShow(true);
                     }else {
                          setErrorMessage('Video Not Found');
-                         setShowError(true);
                          setShow(true);
                     }
                });
@@ -51,8 +54,8 @@ const SapienVideoPlayer = (props: any) => {
           )
      }else return(
           <div>
-               {!showError && <iframe src={videoUrl} height="400" width="600" title="Iframe Example"></iframe>}
-               {showError && <div className='text-center'><b>{errorMessage}</b></div>}
+               {!errorMessage && <iframe src={videoUrl} height="400" width="600" title="Iframe Example"></iframe>}
+               {errorMessage && <div className='text-center'><b>{errorMessage}</b></div>}
           </div>
      );
 };
