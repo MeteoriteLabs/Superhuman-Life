@@ -8,14 +8,13 @@ const PackageDateConfig = (props: any) => {
      const [publishingDate, setPublishingDate] = useState(props.value === undefined ? moment().add(props.title1 && 1, 'month').format("YYYY-MM-DDTHH:mm") : moment(JSON.parse(props.value).publishingDate).format("YYYY-MM-DDTHH:mm"));
      const [expiryDate, setExpiryDate] = useState(props.value === undefined ? moment(publishingDate).add(1, 'year').format("YYYY-MM-DDTHH:mm") : moment(JSON.parse(props.value).expiryDate).format("YYYY-MM-DDTHH:mm"));
 
+     debugger;
+
      useEffect(() => {
           setExpiryDate(moment(publishingDate).add(1, props?.title2 ? 'month' : 'year').format("YYYY-MM-DDTHH:mm"));
      }, [publishingDate, props.title2]);
 
-
      props.onChange(JSON.stringify({publishingDate, expiryDate}));
-
-     console.log(props);
 
      return (
           <div>

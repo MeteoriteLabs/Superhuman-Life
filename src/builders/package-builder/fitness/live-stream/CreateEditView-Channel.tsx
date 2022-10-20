@@ -12,6 +12,7 @@ import moment from 'moment';
 // import {AvailabilityCheck} from '../../../program-builder/program-template/availabilityCheck';
 import { Modal, Button } from 'react-bootstrap';
 // import StatusModal from "../../../../components/StatusModal/exerciseStatusModal";
+import Toaster from '../../../../components/Toaster';
 
 interface Operation {
     id: string;
@@ -29,6 +30,10 @@ function CreateEditChannel(props: any, ref: any) {
     const [fitnessPackageTypes, setFitnessPackageTypes] = useState<any>([]);
     const [deleteModalShow, setDeleteModalShow] = useState(false);
     const [statusModalShow, setStatusModalShow] = useState(false);
+    let [isFormSubmitted, setIsFormSubmitted] = useState(false);
+    const [toastHeading, setToastHeading] = useState('');
+    const [toastMessage, setToastMessage] = useState('');
+    const [toastColor, setToastColor] = useState('');
     let frmDetails: any = {};
 
     const [editPackageDetails] = useMutation(UPDATE_CHANNEL_COHORT_PACKAGE, {onCompleted: (data) => {
@@ -43,15 +48,61 @@ function CreateEditChannel(props: any, ref: any) {
     }});
     const [updatePackageStatus] = useMutation(UPDATE_PACKAGE_STATUS, {onCompleted: (data) => {
         props.callback();
-    }});
-    const [deletePackage] = useMutation(DELETE_PACKAGE, { refetchQueries: ["GET_TABLEDATA"], onCompleted: (data) => {props.callback()}});
+        setIsFormSubmitted(!isFormSubmitted); 
+            setToastHeading('Success');
+            setToastMessage('Offering Status Updation successfully');
+            setToastColor('text-success'); 
+        },
+        onError: (e: any) => {
+            setToastHeading('Error');
+            setIsFormSubmitted(!isFormSubmitted); 
+            setToastMessage('Offering Status Updation failed');
+            setToastColor('text-danger');
+        }
+    });
+    const [deletePackage] = useMutation(DELETE_PACKAGE, { refetchQueries: ["GET_TABLEDATA"], onCompleted: (data) => {
+        props.callback();
+        setIsFormSubmitted(!isFormSubmitted); 
+            setToastHeading('Success');
+            setToastMessage('Offering Deleted successfully');
+            setToastColor('text-success'); 
+        },
+        onError: (e: any) => {
+            setToastHeading('Error');
+            setIsFormSubmitted(!isFormSubmitted); 
+            setToastMessage('Offering Deletion failed');
+            setToastColor('text-danger');
+        }
+    });
     const [bookingConfig] = useMutation(CREATE_BOOKING_CONFIG, {onCompleted: (r: any) => { 
         console.log(r); modalTrigger.next(false); props.callback();
-    }})
+        setIsFormSubmitted(!isFormSubmitted); 
+            setToastHeading('Success');
+            setToastMessage('Offering Created successfully');
+            setToastColor('text-success'); 
+        },
+        onError: (e: any) => {
+            setToastHeading('Error');
+            setIsFormSubmitted(!isFormSubmitted); 
+            setToastMessage('Offering Creation failed');
+            setToastColor('text-danger');
+        }
+    })
 
     const [updateBookingConfig] = useMutation(UPDATE_BOOKING_CONFIG, {onCompleted: (r: any) => {
         console.log(r); modalTrigger.next(false); props.callback();
-    }});
+        setIsFormSubmitted(!isFormSubmitted); 
+            setToastHeading('Success');
+            setToastMessage('Offering Updated successfully');
+            setToastColor('text-success'); 
+        },
+        onError: (e: any) => {
+            setToastHeading('Error');
+            setIsFormSubmitted(!isFormSubmitted); 
+            setToastMessage('Offering Updation failed');
+            setToastColor('text-danger');
+        }
+    });
 
     const [CreatePackage] = useMutation(CREATE_CHANNEL_PACKAGE, { onCompleted: (r: any) => {
         const val = JSON.parse(frmDetails.config.bookingConfig);
@@ -82,6 +133,14 @@ function CreateEditChannel(props: any, ref: any) {
             setOperation(msg);
             schema.startDate = props.startDate;
             schema.duration = props.duration;
+
+            if(msg.type === 'toggle-status'){
+                setStatusModalShow(true);
+            }
+
+            if(msg.type === 'delete'){
+                setDeleteModalShow(true);
+            }
 
             if(msg.type !== 'delete' && msg.type !== 'toggle-status'){
                 modalTrigger.next(true);
@@ -277,6 +336,10 @@ function CreateEditChannel(props: any, ref: any) {
 
     FetchData();
 
+    function handleToasCallback(){
+        setIsFormSubmitted(false);
+    }
+
     let name = "";
     if (operation.type === 'create') {
         name = "Live Stream Offering";
@@ -340,6 +403,9 @@ function CreateEditChannel(props: any, ref: any) {
                     <Button variant='success' onClick={() => { updateChannelPackageStatus(operation.id, operation.current_status) }}>Yes</Button>
                 </Modal.Footer>
             </Modal>
+            {isFormSubmitted ?
+                <Toaster handleCallback={handleToasCallback} heading={toastHeading} textColor={toastColor} headingCSS={`mr-auto ${toastColor}`} msg={toastMessage} />
+                : null}
 
         </>
     )

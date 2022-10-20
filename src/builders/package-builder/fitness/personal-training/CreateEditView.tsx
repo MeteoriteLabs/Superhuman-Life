@@ -11,6 +11,7 @@ import { schemaView } from './schemaView';
 import {Subject} from 'rxjs';
 import {flattenObj} from '../../../../components/utils/responseFlatten';
 import moment from 'moment';
+import Toaster from '../../../../components/Toaster';
 
 interface Operation {
     id: string;
@@ -26,6 +27,10 @@ function CreateEditPt(props: any, ref: any) {
     const [operation, setOperation] = useState<Operation>({} as Operation);
     const [deleteModalShow, setDeleteModalShow] = useState(false);
     const [statusModalShow, setStatusModalShow] = useState(false);
+    let [isFormSubmitted, setIsFormSubmitted] = useState(false);
+    const [toastHeading, setToastHeading] = useState('');
+    const [toastMessage, setToastMessage] = useState('');
+    const [toastColor, setToastColor] = useState('');
 
     let frmDetails: any = {};
 
@@ -41,16 +46,49 @@ function CreateEditPt(props: any, ref: any) {
 
     const [bookingConfig] = useMutation(CREATE_BOOKING_CONFIG, {onCompleted: (r: any) => { 
         console.log(r); modalTrigger.next(false); props.callback();
-    }});
+        setIsFormSubmitted(!isFormSubmitted); 
+            setToastHeading('Success');
+            setToastMessage('Offering Created successfully');
+            setToastColor('text-success'); 
+        },
+        onError: (e: any) => {
+            setToastHeading('Error');
+            setIsFormSubmitted(!isFormSubmitted); 
+            setToastMessage('Offering Creation failed');
+            setToastColor('text-danger');
+        }
+    });
 
     const [updateBookingConfig] = useMutation(UPDATE_BOOKING_CONFIG, {onCompleted: (r: any) => {
         console.log(r); modalTrigger.next(false); props.callback();
-    }});
+        setIsFormSubmitted(!isFormSubmitted); 
+            setToastHeading('Success');
+            setToastMessage('Offering Updated successfully');
+            setToastColor('text-success'); 
+        },
+        onError: (e: any) => {
+            setToastHeading('Error');
+            setIsFormSubmitted(!isFormSubmitted); 
+            setToastMessage('Offering Updation failed');
+            setToastColor('text-danger');
+        }
+    });
 
     const [createUserPackageSuggestion] = useMutation(ADD_SUGGESTION_NEW, {onCompleted: (data) => {
         modalTrigger.next(false);
         props.callback();
-    }});
+        setIsFormSubmitted(!isFormSubmitted); 
+            setToastHeading('Success');
+            setToastMessage('Offering Suggestion Created successfully');
+            setToastColor('text-success'); 
+        },
+        onError: (e: any) => {
+            setToastHeading('Error');
+            setIsFormSubmitted(!isFormSubmitted); 
+            setToastMessage('Offering Suggestion Creation failed');
+            setToastColor('text-danger');
+        }
+    });
 
     const [createPackage] = useMutation(CREATE_PACKAGE, { onCompleted: (r: any) => { 
         // modalTrigger.next(false); props.callback();
@@ -85,16 +123,46 @@ function CreateEditPt(props: any, ref: any) {
 
     const [updatePackageStatus] = useMutation(UPDATE_PACKAGE_STATUS, {onCompleted: (data) => {
         props.callback();
-    }});
-    const [deletePackage] = useMutation(DELETE_PACKAGE, { refetchQueries: ["GET_TABLEDATA"], onCompleted: (data) => {props.callback()}});
+        setIsFormSubmitted(!isFormSubmitted); 
+            setToastHeading('Success');
+            setToastMessage('Offering Status Updated successfully');
+            setToastColor('text-success'); 
+        },
+        onError: (e: any) => {
+            setToastHeading('Error');
+            setIsFormSubmitted(!isFormSubmitted); 
+            setToastMessage('Offering Status Updation failed');
+            setToastColor('text-danger');
+        }
+    });
+    const [deletePackage] = useMutation(DELETE_PACKAGE, { refetchQueries: ["GET_TABLEDATA"], onCompleted: (data) => {
+        props.callback();
+        setIsFormSubmitted(!isFormSubmitted); 
+            setToastHeading('Success');
+            setToastMessage('Offering Deleted successfully');
+            setToastColor('text-success'); 
+        },
+        onError: (e: any) => {
+            setToastHeading('Error');
+            setIsFormSubmitted(!isFormSubmitted); 
+            setToastMessage('Offering deletion failed');
+            setToastColor('text-danger');
+        }
+    });
 
     const modalTrigger =  new Subject();
-
-    console.log(operation);
 
     useImperativeHandle(ref, () => ({
         TriggerForm: (msg: Operation) => {
             setOperation(msg);
+
+            if(msg.type === 'toggle-status'){
+                setStatusModalShow(true);
+            }
+
+            if(msg.type === 'delete'){
+                setDeleteModalShow(true);
+            }
 
             // if (msg && !msg.id) //render form if no message id
             if(msg.type !== 'delete' && msg.type !== 'toggle-status'){
@@ -328,6 +396,9 @@ function CreateEditPt(props: any, ref: any) {
 
     FetchData();
 
+    function handleToasCallback(){
+        setIsFormSubmitted(false);
+    }
 
     return (
         <>
@@ -387,7 +458,9 @@ function CreateEditPt(props: any, ref: any) {
                     </Modal.Footer>
                     </Modal>
         
-            
+                    {isFormSubmitted ?
+                <Toaster handleCallback={handleToasCallback} heading={toastHeading} textColor={toastColor} headingCSS={`mr-auto ${toastColor}`} msg={toastMessage} />
+                : null}
         </>
     )
 }

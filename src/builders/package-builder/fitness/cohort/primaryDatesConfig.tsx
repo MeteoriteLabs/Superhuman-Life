@@ -26,6 +26,7 @@ const PackageDateConfig = (props: any) => {
           if(moment(startDate).isAfter(endDate)){
                setEndDate(startDate);
           }
+          // eslint-disable-next-line react-hooks/exhaustive-deps
      }, [startDate]);
 
      useEffect(() => {
