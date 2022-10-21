@@ -39,6 +39,7 @@ export const FETCH_CONTACT_DETAILS = gql`
               organisationDetails
               phone
               email
+              isPayee
             }
           }
     }

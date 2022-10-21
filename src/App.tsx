@@ -1,5 +1,6 @@
-import { useState } from "react";
-import { ApolloClient, ApolloProvider, createHttpLink, InMemoryCache } from "@apollo/client";
+import { useState } from "react";  
+import { ApolloClient, ApolloProvider, createHttpLink, InMemoryCache, ApolloLink, from } from "@apollo/client";
+import { onError } from '@apollo/client/link/error';
 import { setContext } from "@apollo/client/link/context";
 import AuthContext from "./context/auth-context";
 import Routes from "./Routes";
@@ -21,14 +22,65 @@ const authLink = setContext((_, { headers }) => {
 const defaultOptions: any = {
   watchQuery: {
     fetchPolicy: 'no-cache',
+    
   },
   query: {
     fetchPolicy: 'no-cache',
+    errorPolicy: 'all',
+    onError: (err) => console.log(err)
+  },
+  mutate: {
+    errorPolicy: 'all',
+    onError: (err) => console.log(err)
   }
+
 }
+// error handler
+const errorHandler = onError(({
+  graphQLErrors, networkError, operation, forward,
+}) => {
+  // handle graphQL errors
+  // if (graphQLErrors) {
+  //   // eslint-disable-next-line no-restricted-syntax
+  //   for (const err of graphQLErrors) {
+  //     // eslint-disable-next-line no-console
+  //     console.log('[graphQLErrors]', err.message);
+  //     // toaster({ type: 'error', msg: err.message });
+      
+
+  //     // return the error to the caller for local handling of the error
+  //     return forward(operation);
+  //   }
+  // }
+  // if (networkError) {
+  
+  //   // eslint-disable-next-line no-console
+  //   console.log(`[Network error]: ${networkError}`);
+  //   return forward(operation);
+  //   // if you would also like to retry automatically on
+  //   // network errors, we recommend that you use
+  //   // apollo-link-retry
+  // }
+
+  // return forward(operation);
+  debugger;
+  console.log(graphQLErrors, networkError, operation, forward)
+});
 
 const client = new ApolloClient({
   link: authLink.concat(httpLink),
+  // link : from([
+  //   authLink.concat(httpLink),
+  //   errorHandler
+  //   ]),
+  // link: ApolloLink.from([
+  //   authLink.concat(httpLink),
+  //   httpLink,
+  //   errorHandler
+    
+  // ]),
+  
+  
   cache: new InMemoryCache(),
   defaultOptions: defaultOptions
 });

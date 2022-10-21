@@ -60,8 +60,8 @@ export const ADD_CONTACT = gql`
 `;
 
 export const UPDATE_CONTACT = gql`
-  mutation contact($id: ID!, $data: ContactInput!) {
-    updateContact(input: { id: $id, data: $data }) {
+  mutation updateContact($id: ID!, $data: ContactInput!) {
+    updateContact(id: $id, data: $data ) {
       data {
         id
       }
