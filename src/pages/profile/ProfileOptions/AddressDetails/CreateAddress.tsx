@@ -15,7 +15,6 @@ import AuthContext from "../../../../context/auth-context";
 import { flattenObj } from "../../../../components/utils/responseFlatten";
 import StatusModal from "../../../../components/StatusModal/StatusModal";
 import { zipcodeCustomFormats, zipcodeTransformErrors } from "../../../../components/utils/ValidationPatterns";
-import Loader from '../../../../components/Loader/Loader';
 import Toaster from '../../../../components/Toaster/index';
 
 interface Operation {
@@ -70,7 +69,7 @@ function CreateAddress(props: any, ref: any) {
         refetchQueries: [FETCH_USERS_PROFILE_DATA]
     });
 
-    const [createAddress, { loading, error: createError }] = useMutation(CREATE_ADDRESS, {
+    const [createAddress, { error: createError }] = useMutation(CREATE_ADDRESS, {
         onCompleted: (r: any) => {
             setIsFormSubmitted(!isFormSubmitted);
             modalTrigger.next(false);
@@ -190,10 +189,6 @@ function CreateAddress(props: any, ref: any) {
                 break;
         }
     }
-
-    useEffect(() => {
-        <Loader />
-    }, [loading])
 
     if (createError) {
         return <Toaster type="error" msg="Failed to add address details" />;

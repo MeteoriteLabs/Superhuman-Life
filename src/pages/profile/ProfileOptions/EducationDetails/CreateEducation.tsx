@@ -14,7 +14,6 @@ import { Subject } from "rxjs";
 import { schema, widgets } from "../../profileSchema";
 import { flattenObj } from "../../../../components/utils/responseFlatten";
 import StatusModal from "../../../../components/StatusModal/StatusModal";
-import Loader from '../../../../components/Loader/Loader';
 import Toaster from '../../../../components/Toaster/index';
 import { yearCustomFormats, yearTransformErrors } from "../../../../components/utils/ValidationPatterns";
 
@@ -64,7 +63,7 @@ function CreateEducation(props: any, ref: any) {
           onCompleted: (data: any) => { fetch.refetch(); setIsEducationDeleted(!isEducationDeleted); }, refetchQueries: [FETCH_USERS_PROFILE_DATA]
      });
 
-     const [createEducation, { loading, error: createError }] = useMutation(CREATE_EDUCATION_DETAILS, {
+     const [createEducation, { error: createError }] = useMutation(CREATE_EDUCATION_DETAILS, {
           onCompleted: (r: any) => {
                setIsFormSubmitted(!isFormSubmitted);
                modalTrigger.next(false);
@@ -165,10 +164,6 @@ function CreateEducation(props: any, ref: any) {
                     break;
           }
      }
-
-     useEffect(() => {
-          <Loader />
-     }, [loading])
 
      if (createError) {
           return <Toaster handleCallback={() => setIsFormSubmitted(!isFormSubmitted)} type="error" msg="Failed to add education details" />;

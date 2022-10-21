@@ -5,6 +5,7 @@ import { useQuery } from "@apollo/client";
 import AuthContext from "../../../../context/auth-context";
 import { flattenObj } from "../../../../components/utils/responseFlatten";
 import CreateEducation from './CreateEducation';
+import Loader from '../../../../components/Loader/Loader';
 import './education.css';
 
 export default function EducationDetails() {
@@ -97,7 +98,7 @@ export default function EducationDetails() {
                                 </Card.Body>
                             </Card>
                         </Col>
-                    ) : null
+                    ) : <Loader/>
                 }
 
             </Row>

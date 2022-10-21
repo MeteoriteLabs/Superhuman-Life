@@ -5,6 +5,7 @@ import AuthContext from "../../../../context/auth-context";
 import { useQuery } from "@apollo/client";
 import { flattenObj } from "../../../../components/utils/responseFlatten";
 import CreateAddress from './CreateAddress';
+import Loader from '../../../../components/Loader/Loader';
 
 function AddressDetails() {
   const auth = useContext(AuthContext);
@@ -100,7 +101,7 @@ function AddressDetails() {
                 </Card.Body>
               </Card>
             </Col>
-          ) : null
+          ) : <Loader/>
         }
       </Row>
     </Col>
