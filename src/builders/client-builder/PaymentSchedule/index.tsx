@@ -79,7 +79,7 @@ export default function PaymentSchedule() {
 
      const [datatable, setDataTable] = useState<{}[]>([]);
 
-     const fetch = useQuery(GET_PAYMENT_SCHEDULES, { variables: {Destination_Contacts_ID:  Number(id) , Source_User_ID: Number(auth.userid) } , onCompleted: loadData });
+     const fetch = useQuery(GET_PAYMENT_SCHEDULES, { skip: !id, variables: {Destination_Contacts_ID:  Number(id) , Source_User_ID: Number(auth.userid) } , onCompleted: loadData });
 
      function refetchQueryCallback() {
           fetch.refetch();

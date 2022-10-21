@@ -43,3 +43,23 @@ function Toaster(props: any) {
 }
 
 export default Toaster;
+
+
+// import React from 'react';
+
+//   import { ToastContainer, toast } from 'react-toastify';
+//   import 'react-toastify/dist/ReactToastify.css';
+  
+//   function Toaster(props: any){
+//     const notify = () => toast("Wow so easy!");
+//     console.log(props);
+//     return (
+//       <div>
+//         <button onClick={notify}>Notify!</button>
+//         <ToastContainer />
+//       </div>
+//     );
+//   }
+
+// export default Toaster;
+

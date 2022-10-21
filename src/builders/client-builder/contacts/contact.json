@@ -51,7 +51,7 @@
       },
       "isPayee": {
         "type": "boolean",
-        "title": "Do you want to add Payment settings?",
+        "title": "Do you want to add as Payee?",
         "enum": [
           true,
           false
