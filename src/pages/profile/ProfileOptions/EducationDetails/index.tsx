@@ -98,7 +98,7 @@ export default function EducationDetails() {
                                 </Card.Body>
                             </Card>
                         </Col>
-                    ) : <Loader/>
+                    ) : <Loader msg={'Education Details loading'}/>
                 }
 
             </Row>

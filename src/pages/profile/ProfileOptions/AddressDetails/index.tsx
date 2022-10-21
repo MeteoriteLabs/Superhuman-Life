@@ -101,7 +101,7 @@ function AddressDetails() {
                 </Card.Body>
               </Card>
             </Col>
-          ) : <Loader/>
+          ) : <Loader  msg={'Address Details loading'}/>
         }
       </Row>
     </Col>

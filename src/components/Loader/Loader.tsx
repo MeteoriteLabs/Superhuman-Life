@@ -1,11 +1,18 @@
-import {Spinner} from 'react-bootstrap';
+import { Spinner } from 'react-bootstrap';
 import './loader.css';
 
-function Loader() {
+function Loader(props: any) {
     return (
-        <Spinner animation="border" role="status" className='loader'>
-            <span className="sr-only">Loading...</span>
-        </Spinner>
+        <>
+            <div className="row loader">
+                <div className="col-lg-12 ml-5">
+                <Spinner animation="border" role="status" variant="secondary"/>
+                </div>
+                <div className="col-lg-12">
+                <div className='text-muted small mt-2'>{props.msg}</div>
+                </div>
+            </div>
+        </>
     );
 }
 
