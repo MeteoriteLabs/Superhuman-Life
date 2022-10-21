@@ -6,14 +6,6 @@
   width: 24px;
 }
 
-/* @media (minmax-width: 800px) {
-  .profile_picture{
-    border: 4px solid white;
-    height: 100%;
-    width: 100%;
-  }
-} */
-
 @media (max-width: 500px) {
   .profile_picture{
     border: 4px solid white;
