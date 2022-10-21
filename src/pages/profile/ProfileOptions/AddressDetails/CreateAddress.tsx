@@ -48,15 +48,26 @@ function CreateAddress(props: any, ref: any) {
     });
 
     const [updateProfile] = useMutation(UPDATE_USER_PROFILE_DATA, {
-        onCompleted: (r: any) => { props.callback(); fetch.refetch(); }, refetchQueries: [FETCH_USERS_PROFILE_DATA]
+        onCompleted: (r: any) => {
+            props.callback();
+            fetch.refetch();
+        },
+        refetchQueries: [FETCH_USERS_PROFILE_DATA]
     });
 
     const [updateAddress, { error: updateError }] = useMutation(UPDATE_ADDRESS_DATA, {
-        onCompleted: (r: any) => { props.callback(); modalTrigger.next(false); fetch.refetch(); setIsAddressUpdated(!isAddressUpdated); }, refetchQueries: [FETCH_USERS_PROFILE_DATA]
+        onCompleted: (r: any) => {
+            props.callback();
+            modalTrigger.next(false);
+            fetch.refetch();
+            setIsFormSubmitted(!isFormSubmitted);
+        },
+        refetchQueries: [FETCH_USERS_PROFILE_DATA]
     });
 
     const [deleteAddress, { error: deleteError }] = useMutation(DELETE_ADDRESS, {
-        onCompleted: (data: any) => { fetch.refetch(); setIsAddressDeleted(!isAddressDeleted); }, refetchQueries: [FETCH_USERS_PROFILE_DATA]
+        onCompleted: (data: any) => { fetch.refetch(); },
+        refetchQueries: [FETCH_USERS_PROFILE_DATA]
     });
 
     const [createAddress, { loading, error: createError }] = useMutation(CREATE_ADDRESS, {
@@ -99,18 +110,18 @@ function CreateAddress(props: any, ref: any) {
     }));
 
     useEffect(() => {
-        let selectedAddress = prefill && prefill.length ? prefill.filter((currValue: any) => currValue.id === operation.id) : null;
+        let selectedAddress = prefill && prefill.length ? prefill.find((currValue: any) => currValue.id === operation.id) : null;
 
         let details: any = {};
-        details.address1 = selectedAddress && selectedAddress.length ? selectedAddress[0].address1 : '';
-        details.address2 = selectedAddress && selectedAddress.length ? selectedAddress[0].address2 : '';
-        details.city = selectedAddress && selectedAddress.length ? selectedAddress[0].city : '';
-        details.country = selectedAddress && selectedAddress.length ? selectedAddress[0].country : '';
-        details.state = selectedAddress && selectedAddress.length ? selectedAddress[0].state : '';
-        details.zipcode = selectedAddress && selectedAddress.length ? selectedAddress[0].zipcode : '';
-        details.type_address = selectedAddress && selectedAddress.length ? selectedAddress[0].type_address : '';
-        details.House_Number = selectedAddress && selectedAddress.length ? selectedAddress[0].House_Number : '';
-        details.Title = selectedAddress && selectedAddress.length ? selectedAddress[0].Title : '';
+        details.address1 = selectedAddress ? selectedAddress.address1 : '';
+        details.address2 = selectedAddress ? selectedAddress.address2 : '';
+        details.city = selectedAddress ? selectedAddress.city : '';
+        details.country = selectedAddress ? selectedAddress.country : '';
+        details.state = selectedAddress ? selectedAddress.state : '';
+        details.zipcode = selectedAddress ? selectedAddress.zipcode : '';
+        details.type_address = selectedAddress ? selectedAddress.type_address : '';
+        details.House_Number = selectedAddress ? selectedAddress.House_Number : '';
+        details.Title = selectedAddress ? selectedAddress.Title : '';
 
         setAddressDetails(details);
 
@@ -181,19 +192,17 @@ function CreateAddress(props: any, ref: any) {
     }
 
     useEffect(() => {
-        if (loading) {
-            <Loader />
-        }
+        <Loader />
     }, [loading])
 
     if (createError) {
-        return <Toaster heading="Failed" textColor="text-danger" headingCSS="mr-auto text-danger" msg="Failed to add address details" />;
+        return <Toaster type="error" msg="Failed to add address details" />;
     }
     if (updateError) {
-        return <Toaster heading="Failed" textColor="text-danger" headingCSS="mr-auto text-danger" msg="Failed to update address details" />;
+        return <Toaster type="error" msg="Failed to update address details" />;
     }
     if (deleteError) {
-        return <Toaster heading="Failed" textColor="text-danger" headingCSS="mr-auto text-danger" msg="Failed to delete address details" />;
+        return <Toaster type="error" msg="Failed to delete address details" />;
     }
 
     return (
@@ -230,15 +239,15 @@ function CreateAddress(props: any, ref: any) {
 
             {/* success toaster notification */}
             {isFormSubmitted ?
-                <Toaster handleCallback={() => setIsFormSubmitted(!isFormSubmitted)} heading="Success" textColor="text-success" headingCSS="mr-auto text-success" msg="New address has been added" />
+                <Toaster handleCallback={() => setIsFormSubmitted(false)} type="success" msg="Address has been added successfully" />
                 : null}
 
             {isAddressDeleted ?
-                <Toaster handleCallback={() => setIsAddressDeleted(!isAddressDeleted)} heading="Success" textColor="text-success" headingCSS="mr-auto text-success" msg="Address deleted successfully" />
+                <Toaster handleCallback={() => setIsAddressDeleted(!isAddressDeleted)} type="success" msg="Address has been deleted successfully" />
                 : null}
 
             {isAddressUpdated ?
-                <Toaster handleCallback={() => setIsAddressUpdated(!isAddressUpdated)} heading="Success" textColor="text-success" headingCSS="mr-auto text-success" msg="Address updated successfully" />
+                <Toaster handleCallback={() => setIsAddressUpdated(!isAddressUpdated)} type="success" msg="Address has been updated successfully" />
                 : null}
 
         </>

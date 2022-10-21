@@ -105,12 +105,12 @@ function CreateEducation(props: any, ref: any) {
      }));
 
      useEffect(() => {
-          let data = prefill && prefill.length ? prefill.filter((currValue: any) => currValue.id === operation.id) : null;
+          let data = prefill && prefill.length ? prefill.find((currValue: any) => currValue.id === operation.id) : null;
           let details: any = {};
-          details.Institute_Name = data && data.length ? data[0].Institute_Name : '';
-          details.Type_of_degree = data && data.length ? data[0].Type_of_degree : '';
-          details.Specialization = data && data.length ? data[0].Specialization : '';
-          details.Year = data && data.length ? data[0].Year : '';
+          details.Institute_Name = data ? data.Institute_Name : '';
+          details.Type_of_degree = data ? data.Type_of_degree : '';
+          details.Specialization = data ? data.Specialization : '';
+          details.Year = data ? data.Year : '';
 
           setEducationDetails(details);
 
@@ -219,11 +219,11 @@ function CreateEducation(props: any, ref: any) {
                     : null}
 
                {isEducationDeleted ?
-                    <Toaster handleCallback={() => setIsEducationDeleted(!isEducationDeleted)} type="success" msg="Education Detail deleted successfully" />
+                    <Toaster handleCallback={() => setIsEducationDeleted(!isEducationDeleted)} type="success" msg="Education Detail has been deleted successfully" />
                     : null}
 
                {isEducationUpdated ?
-                    <Toaster handleCallback={() => setIsEducationUpdated(!isEducationUpdated)} type="success" msg="Education Detail updated successfully" />
+                    <Toaster handleCallback={() => setIsEducationUpdated(!isEducationUpdated)} type="success" msg="Education Detail has been updated successfully" />
                     : null}
           </>
      );

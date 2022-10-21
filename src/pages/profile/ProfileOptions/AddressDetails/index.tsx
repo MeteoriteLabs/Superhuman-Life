@@ -14,8 +14,8 @@ function AddressDetails() {
   const fetch = useQuery(FETCH_USERS_PROFILE_DATA, {
     onCompleted: (r: any) => {
       const flattenData = flattenObj({ ...r });
-      let usersData = flattenData.usersPermissionsUsers.filter((currValue: any) => currValue.id === auth.userid);
-      setAddressData(usersData[0].addresses);
+      let usersData = flattenData.usersPermissionsUsers.find((currValue: any) => currValue.id === auth.userid);
+      setAddressData(usersData && usersData.addresses);
     },
   });
 

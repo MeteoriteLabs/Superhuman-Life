@@ -24,8 +24,8 @@ function CreateEditExercise(props: any, ref: any) {
     const [operation, setOperation] = useState<Operation>({} as Operation);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     let [isFormSubmitted, setIsFormSubmitted] = useState(false);
-    const [toastType, setToastType] = useState('');
-    const [toastMessage, setToastMessage] = useState('');
+    const [toastType, setToastType] = useState<string>('');
+    const [toastMessage, setToastMessage] = useState<string>('');
 
     useQuery(FETCH_WORKOUTS, {
         variables: { id: auth.userid },

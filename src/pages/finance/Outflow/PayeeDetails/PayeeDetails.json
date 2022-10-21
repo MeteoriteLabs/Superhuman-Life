@@ -1,0 +1,40 @@
+{
+    "type": "object",
+    "title": "",
+    "properties": {
+        "PayeeCategory": {
+            "type": "string",
+            "title": "Payee category",
+
+            "enum": [
+                "All contacts",
+                "New"
+            ]
+        },
+        "Photo_ID": {
+            "type": "string",
+            "title": "Upload Profile Picture"
+        },
+        "PayeeName": {
+            "type": "string",
+            "title": "Name of the payee"
+        },
+        "Email": {
+            "type": "string",
+            "title": "Email"
+        },
+        "Phone_Number": {
+            "type": "string",
+            "title": "Contact Number"
+        },
+        "TypeofPayee": {
+            "type": "string",
+            "title": "Type of payee",
+
+            "enum": [
+                "Individual",
+                "Business"
+            ]
+        }
+    }
+}

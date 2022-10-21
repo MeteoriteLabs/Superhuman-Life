@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef, useContext } from 'react';
 import { Modal, Button, Row, Col, Tab, Tabs, InputGroup, FormControl, Badge, OverlayTrigger, Tooltip, Form, Spinner } from 'react-bootstrap';
 import './styles.css';
 import { FETCH_WORKOUT, FETCH_ACTIVITY, GET_SLOTS_TO_CHECK, UPDATE_CHANGEMAKER_AVAILABILITY_WORKHOURS, GET_SESSIONS, GET_CLIENT_SESSIONS, DELETE_SESSION, UPDATE_SESSION, CREATE_SESSION, UPDATE_TAG_SESSIONS, CREATE_SESSION_BOOKING, GET_SESSION_BOOKINGS, UPDATE_SESSION_BOOKING, UPDATE_FITNESSPORGRAMS_SESSIONS } from './queries';
-import ReactPlayer from 'react-player/youtube'
 import { useQuery, useMutation, gql } from "@apollo/client";
 import ProgramList from "../../../components/customWidgets/programList";
 import SessionList from '../../../components/customWidgets/sessionList';
@@ -17,6 +16,7 @@ import { flattenObj } from '../../../components/utils/responseFlatten';
 import AuthContext from '../../../context/auth-context';
 // import sessionContext from '../../../context/session-context';
 import {AvailabilityCheck} from './availabilityCheck';
+import SapienVideoPlayer from '../../../components/customWidgets/SpaienVideoPlayer';
 
 const Schedular = (props: any) => {
 
@@ -894,20 +894,14 @@ const Schedular = (props: any) => {
                 </Row>
                 <Row>
                     <p>{d.type !== 'url' ? null : <Col >
-                        <ReactPlayer url={d.value} loop={false} height="300px"/>
+                            <SapienVideoPlayer url={d.value}/>
                         </Col>
                         }
                     </p>
                 </Row>
                 <Row>
                     <p>{d.type !== 'upload' ? null : <Col >
-                        {/* <ReactPlayer url={d.value} loop={false} height="300px"/> */}
-                        <InputGroup>
-                            <FormControl
-                                disabled
-                                value={d.value}
-                        />
-                            </InputGroup>
+                            <SapienVideoPlayer url={d.value}/>
                         </Col>
                         }
                     </p>
@@ -1397,7 +1391,7 @@ const Schedular = (props: any) => {
                                             <Row>
                                                 {val?.workout_URL !== null &&
                                                     <Col className='mt-3 mb-3'>
-                                                        <ReactPlayer url={val.workout_URL} loop={false} height="300px"/>
+                                                        <SapienVideoPlayer url={val.workout_URL}/>
                                                     </Col> 
                                                 }
                                             </Row>
@@ -1411,10 +1405,7 @@ const Schedular = (props: any) => {
                                             <Row>
                                                 {val?.Workout_Video_ID !== null &&
                                                     <Col className='mt-3 mb-3'>
-                                                        <FormControl 
-                                                            value={val?.Workout_Video_ID}
-                                                            disabled={true}
-                                                        />
+                                                        <SapienVideoPlayer url={val.Workout_Video_ID}/>
                                                     </Col> 
                                                 }
                                             </Row>
