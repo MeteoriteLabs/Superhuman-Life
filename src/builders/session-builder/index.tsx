@@ -5,7 +5,7 @@ import Fitness from "./Fitness/Fitness";
 export default function SessionPage() {
     return (
         <div>
-            <h1><span style={{borderBottom: "1px solid black", paddingBottom: "5px"}}>Sessi</span>on Manager</h1>
+            <h1><span style={{borderBottom: "1px solid black", paddingBottom: "5px"}}>Prog</span>ram Manager</h1>
     
             <Card className="shadow-sm mt-3" border="light">
                 <Card.Body>
