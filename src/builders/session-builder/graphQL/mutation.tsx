@@ -57,9 +57,10 @@ export const UPDATE_USERPACKAGE_EFFECTIVEDATE = gql`
 `;
 
 export const CREATE_TAG = gql`
-     mutation createTag($name: String!){
+     mutation createTag($name: String!, $fitnessPackageID: ID!) {
           createTag(data: {
-               tag_name: $name
+               tag_name: $name,
+               fitnesspackage: $fitnessPackageID
           }){
                data{
                     id

@@ -362,7 +362,7 @@ export default function Group(props) {
                             }
 
                             const actionClick3 = () => {
-                                fitnessActionRef.current.TriggerForm({ id: row.original.proManagerId, actionType: 'allClients', type: 'Group Class' })
+                                fitnessActionRef.current.TriggerForm({ id: row.original.proManagerId, actionType: 'allClients', type: 'Group Class', rowData: row.original })
                             }
 
 
@@ -391,6 +391,10 @@ export default function Group(props) {
 
     console.log(userPackage);
 
+    function refetchQueryCallback(){
+        mainQuery.refetch();
+    }
+
     return (
         <div className="mt-5">
             <div className='mb-3'>
@@ -409,7 +413,7 @@ export default function Group(props) {
             <Row>
                 <Col>
                     <GroupTable columns={columns} data={userPackage} />
-                    <FitnessAction ref={fitnessActionRef} />
+                    <FitnessAction ref={fitnessActionRef} callback={refetchQueryCallback}/>
                 </Col>
 
             </Row>

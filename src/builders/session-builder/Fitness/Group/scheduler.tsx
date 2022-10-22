@@ -256,6 +256,8 @@ const Scheduler = () => {
         var formattedSum = handleTimeFormatting(sum, duration);
         return formattedSum;
     }
+
+    console.log(tag);
     
     if (!show) return <span style={{ color: 'red' }}>Loading...</span>;
     else return (
@@ -370,7 +372,7 @@ const Scheduler = () => {
                                 </Row>
                                 <Row>
                                     <Col>
-                                        <span><b style={{ color: 'gray'}}>Status: </b> {handleTotalClasses(totalClasses, tag.fitnesspackage.duration)}/{tag.fitnesspackage.duration}</span>
+                                        <span><b style={{ color: 'gray'}}>Status: </b> {handleTotalClasses(totalClasses, tag.fitnesspackage.duration)}/{handleTimeFormatting(tag.fitnesspackage.duration, tag.fitnesspackage.duration)}</span>
                                     </Col>
                                     <Col>
                                         <span><b style={{ color: 'gray'}}>Rest-Days: </b>{tag.fitnesspackage.restdays } days</span>

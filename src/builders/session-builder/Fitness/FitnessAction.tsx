@@ -32,7 +32,8 @@ function FitnessAction(props, ref: any) {
     const [createTag] = useMutation(CREATE_TAG, {
         onCompleted: (data: any) => {
             // CreateProgramManager(data)
-            modalTrigger.next(true);
+            modalTrigger.next(false);
+            props.callback();
         }
     });
 
@@ -42,7 +43,8 @@ function FitnessAction(props, ref: any) {
     function CreateFitnessProgram(frm: any) {
         createTag({
             variables: {
-                name: frm.batchName
+                name: frm.batchName,
+                fitnessPackageID: operation.id
             }
         })
         // createFitnessProgram({
@@ -75,12 +77,11 @@ function FitnessAction(props, ref: any) {
         TriggerForm: (msg: Operation) => {
             setOperation(msg);
 
-
             if (msg.actionType === "create") {
                 const update: { duration: number } = { duration: 0 };
                 update.duration = msg.duration;
                 setProgramDetails(update);
-
+                
             } else if (msg.actionType === "details") {
                 setProgramDetails({ ...programDetails, ...msg.rowData })
             }
@@ -114,9 +115,6 @@ function FitnessAction(props, ref: any) {
 
     let name = "";
     operation.actionType === 'create' ? name = "Create New Batch" : name = "Manager";
-
-
-
 
     return (
         <div>
