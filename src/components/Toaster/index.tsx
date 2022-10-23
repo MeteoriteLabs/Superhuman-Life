@@ -1,25 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Row, Col, Toast } from 'react-bootstrap';
 
 function Toaster(props: any) {
     const [showToaster, setShowToaster] = useState<boolean>(true);
-    const [headingCSS, setHeadingCSS] = useState<string>('');
-    const [textColor, setTextColor] = useState<string>('');
-    const [heading, setHeading] = useState<string>('');
-
+    
     const toggleShowToaster = () => setShowToaster(!showToaster);
-
-    useEffect(() => {
-        if(props.type === 'error') {
-            setHeadingCSS('mr-auto text-danger');
-            setTextColor('text-danger');
-            setHeading('Failed');
-         } else if (props.type === 'success') {
-             setHeadingCSS('mr-auto text-success');
-             setTextColor('text-success');
-             setHeading('Success');
-         }
-    },[props.type])
 
     return (
         <div
@@ -29,12 +14,13 @@ function Toaster(props: any) {
         >
             <Row>
                 <Col xs={6} className="my-1 ml-auto">
-                    <Toast className="ml-auto" onClose={toggleShowToaster} show={showToaster} animation={false} delay={5000} autohide
-                    >
+                    <Toast className="ml-auto" onClose={ () => {toggleShowToaster(); props.handleCallback();} } show={showToaster} animation={false} delay={5000} autohide>
                         <Toast.Header>
-                            <h6 className={headingCSS}>{heading}</h6>
+                            <h6 className={props.type === 'success' ? 'mr-auto text-success' : 'mr-auto text-danger'}>
+                                {props.type === 'success' ? 'Success' : 'Failed'}
+                            </h6>
                         </Toast.Header>
-                        <Toast.Body className={textColor}>{props.msg}</Toast.Body>
+                        <Toast.Body className={props.type === 'success' ? 'text-success' : 'text-danger'}>{props.msg}</Toast.Body>
                     </Toast>
                 </Col>
             </Row>
@@ -43,23 +29,3 @@ function Toaster(props: any) {
 }
 
 export default Toaster;
-
-
-// import React from 'react';
-
-//   import { ToastContainer, toast } from 'react-toastify';
-//   import 'react-toastify/dist/ReactToastify.css';
-  
-//   function Toaster(props: any){
-//     const notify = () => toast("Wow so easy!");
-//     console.log(props);
-//     return (
-//       <div>
-//         <button onClick={notify}>Notify!</button>
-//         <ToastContainer />
-//       </div>
-//     );
-//   }
-
-// export default Toaster;
-

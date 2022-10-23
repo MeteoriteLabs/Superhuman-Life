@@ -133,7 +133,7 @@ function CreatePaymentSchedule(props: any, ref: any) {
 
           updatePaymentSchedule({
                variables: {
-                    // id: Number(operation.id),
+                    id: Number(operation.id),
                     data: {
                          isActive: paymentDetail.isActive ? false : true,
                     }
