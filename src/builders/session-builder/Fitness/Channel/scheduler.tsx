@@ -21,6 +21,7 @@ const Scheduler = () => {
     const [show, setShow] = useState(false);
     // const [totalClasses, setTotalClasses] = useState<any>([]);
     const [tag, setTag] = useState<any>();
+    const [scheduleDate, setScheduleDate] = useState(moment().startOf("month").format("YYYY-MM-DD"));
     let programIndex;
 
     const fitnessActionRef = useRef<any>(null);
@@ -63,8 +64,24 @@ const Scheduler = () => {
         return dailySessions.length >= 1 ? dailySessions.length : 'N/A';
     }
 
-    console.log(tag);
+    function calculateDays(date: string){
+        const days = moment(date).endOf('month').diff(moment(date).startOf('month'), 'days') + 1;
+        return days;
+    }
 
+    function handleDatePicked(date: string){
+        setScheduleDate(moment(date).startOf('month').format('YYYY-MM-DD'));
+    }
+
+    function handlePrevMonth(date: string){
+        setScheduleDate(moment(date).subtract(1, 'month').format('YYYY-MM-DD'));
+    }
+
+    function handleNextMonth(date: string){
+        setScheduleDate(moment(date).add(1, 'month').format('YYYY-MM-DD'));
+    }
+
+    console.log(moment(scheduleDate).diff(moment(), 'months'));
 
     if (!show) return <span style={{ color: 'red' }}>Loading...</span>;
     else return (
@@ -151,10 +168,51 @@ const Scheduler = () => {
                     </Row>
                 </Col>
             </Row>
+            <Row className='mt-3 mb-3'>
+                <Col lg={11}>
+                    <div className="text-center">
+                        <input
+                        min={moment().subtract(3, "months").format("YYYY-MM-DD")}
+                        max={moment().add(3, "months").format("YYYY-MM-DD")}
+                        className="p-1 rounded shadow-sm mb-3"
+                        type="date"
+                        style={{
+                            border: "none",
+                            backgroundColor: "rgba(211,211,211,0.8)",
+                        }}
+                        value={scheduleDate}
+                        onChange={(e) => handleDatePicked(e.target.value)}
+                        />{" "}
+                        <br />
+                        <span
+                        onClick={() => {
+                            handlePrevMonth(scheduleDate);
+                        }}
+                        className="rounded-circle"
+                        >
+                        <i className="fa fa-chevron-left mr-4"></i>
+                        </span>
+                        <span className="shadow-lg bg-white p-2 rounded-lg">
+                            <b>
+                                {moment(scheduleDate).startOf("month").format("Do, MMM")} -{" "}
+                                {moment(scheduleDate).endOf("month").format("Do, MMM")}
+                            </b>
+                        </span>
+                        <span
+                        style={{ display: `${moment(scheduleDate).diff(moment(), 'months') > 1 ? 'none' : '' }`}}
+                        onClick={() => {
+                            handleNextMonth(scheduleDate);
+                        }}
+                        >
+                        <i className="fa fa-chevron-right ml-4"></i>
+                        </span>
+                    </div>
+                </Col>
+            </Row>
             <Row>
                 <Col lg={11} className="pl-0 pr-0">
-                    <div className="mt-5">
-                        <SchedulerPage type="date" days={30} restDays={tag?.sessions.filter((ses) => ses.type === "restday")} classType={'Live Stream Channel'} programId={tagId} startDate={tag?.client_packages[0]?.effective_date} />
+                    <div className="mt-3">
+                        <SchedulerPage type="date" days={calculateDays(scheduleDate)} restDays={tag?.sessions.filter((ses) => ses.type === "restday")} classType={'Live Stream Channel'} programId={tagId} startDate={scheduleDate} />
                     </div>
                 </Col>
                 <FitnessAction ref={fitnessActionRef} />

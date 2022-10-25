@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useQuery, useMutation } from '@apollo/client';
 import { useContext, useMemo, useRef, useState } from 'react'
-import { Badge, Row, Col, Form, Button } from "react-bootstrap";
+import { Badge, Row, Col, Form, Button, Modal } from "react-bootstrap";
 
 import AuthContext from "../../../../context/auth-context"
 import GroupTable from '../../../../components/table/GroupTable/GroupTable';
 import { GET_ALL_FITNESS_PACKAGE_BY_TYPE, GET_ALL_PROGRAM_BY_TYPE, GET_ALL_CLIENT_PACKAGE, GET_TAGS_FOR_GROUP } from '../../graphQL/queries';
-import { UPDATE_STARTDATE } from '../../graphQL/mutation';
+import { UPDATE_STARTDATE, DELETE_TAG_BATCH } from '../../graphQL/mutation';
 import moment from 'moment';
 import ActionButton from '../../../../components/actionbutton';
 import FitnessAction from '../FitnessAction';
@@ -18,8 +18,11 @@ export default function Group(props) {
 
     const [userPackage, setUserPackage] = useState<any>([]);
     const [showHistory, setShowHistory] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [tagId, setTagId] = useState("");
     const fitnessActionRef = useRef<any>(null);
 
+    const [deleteBatch] = useMutation(DELETE_TAG_BATCH, {onCompleted: (r: any) => {mainQuery.refetch()}});
     const [updateDate] = useMutation(UPDATE_STARTDATE, {onCompleted: (r: any) => {console.log(r)}});
 
     const mainQuery = useQuery(GET_TAGS_FOR_GROUP, {
@@ -256,6 +259,7 @@ export default function Group(props) {
 
                     // proManagerId: packageItem.proManagerId,
                     // proManagerFitnessId: packageItem.proManagerFitnessId,
+                    clientData: packageItem.client_packages,
                     client: packageItem.client_packages[index]?.users_permissions_user.username ? handleUsers(packageItem.client_packages) : "N/A",
                     // start_dt: packageItem.effective_date,
                     // renewal_dt: packageItem.renewal_dt,
@@ -266,6 +270,14 @@ export default function Group(props) {
                 }
             })]
         )
+    }
+
+    function handleDeleteBatch(tagId: string){
+        deleteBatch({
+            variables: {
+                id: tagId
+            }
+        })
     }
 
     const columns = useMemo(
@@ -365,11 +377,19 @@ export default function Group(props) {
                                 fitnessActionRef.current.TriggerForm({ id: row.original.proManagerId, actionType: 'allClients', type: 'Group Class', rowData: row.original })
                             }
 
+                            const actionClick4 = () => {
+                                if(row.original.client === "N/A"){
+                                    setTagId(row.original.tagId);
+                                    setShowDeleteModal(true);
+                                }
+                                // console.log(row, userPackage);
+                            }
 
                             const arrayAction = [
                                 { actionName: 'Manage', actionClick: actionClick1 },
                                 { actionName: 'Details', actionClick: actionClick2 },
                                 { actionName: 'All Clients', actionClick: actionClick3 },
+                                { actionName: 'Delete Batch', actionClick: actionClick4 },
                             ]
 
                             return <ActionButton
@@ -396,6 +416,7 @@ export default function Group(props) {
     }
 
     return (
+        <>
         <div className="mt-5">
             <div className='mb-3'>
                 <Form>
@@ -418,5 +439,23 @@ export default function Group(props) {
 
             </Row>
         </div>
+        {<Modal
+            size="lg"
+            aria-labelledby="contained-modal-title-vcenter"
+            centered
+            show={showDeleteModal}
+          >
+            <Modal.Body>
+              <h4>Delete Batch</h4>
+              <p>
+                Are you sure you want to delete this batch?
+              </p>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button onClick={() => {setShowDeleteModal(false)}} variant="danger">No</Button>
+              <Button onClick={() => {handleDeleteBatch(tagId); setShowDeleteModal(false)}} variant="success">Yes</Button>
+            </Modal.Footer>
+          </Modal>}
+        </>
     )
 }

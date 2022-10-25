@@ -142,8 +142,17 @@ export const CREATE_PROGRAM = gql`
                } 
           }
      }
-`    
+`;    
 
+export const DELETE_TAG_BATCH = gql`
+mutation deleteBatch($id: ID!) {
+     deleteTag(id: $id){
+       data{
+         id
+       }
+     }
+   }
+`
 
 export const CREATE_PROGRAM_MANAGER = gql`
      mutation createProgramManager(
