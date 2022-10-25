@@ -46,11 +46,11 @@ function CreateEditChannel(props: any, ref: any) {
     }});
     const [deletePackage] = useMutation(DELETE_PACKAGE, { refetchQueries: ["GET_TABLEDATA"], onCompleted: (data) => {props.callback()}});
     const [bookingConfig] = useMutation(CREATE_BOOKING_CONFIG, {onCompleted: (r: any) => { 
-        console.log(r); modalTrigger.next(false); props.callback();
+        modalTrigger.next(false); props.callback();
     }})
 
     const [updateBookingConfig] = useMutation(UPDATE_BOOKING_CONFIG, {onCompleted: (r: any) => {
-        console.log(r); modalTrigger.next(false); props.callback();
+        modalTrigger.next(false); props.callback();
     }});
 
     const [CreatePackage] = useMutation(CREATE_CHANNEL_PACKAGE, { onCompleted: (r: any) => {
@@ -144,7 +144,6 @@ function CreateEditChannel(props: any, ref: any) {
         details.languages = JSON.stringify(msg.languages);
         // details.visibility = 
         // let msg = data;
-        // console.log(msg);
         setProgramDetails(details);
 
         //if message exists - show form only for edit and view
@@ -161,7 +160,7 @@ function CreateEditChannel(props: any, ref: any) {
     }, [operation.type]);
 
     function FetchData() {
-        useQuery(GET_SINGLE_PACKAGE_BY_ID, { variables: { id: operation.id }, skip: (operation.type === 'create'), onCompleted: (e: any) => { FillDetails(e) } });
+        useQuery(GET_SINGLE_PACKAGE_BY_ID, { variables: { id: operation.id }, skip: (operation.type === 'create' || !operation.id), onCompleted: (e: any) => { FillDetails(e) } });
     }
 
     function findPackageType(creationType: any) {

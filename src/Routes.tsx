@@ -126,6 +126,7 @@ export default function Routes({ token }: any) {
                                    <Route path="/payee_payment_mode" component={PayeePaymentMode} />
                                    <Route path="/close_account" component={CloseAccount} />
                                    <Route path="/view_add_payee" component={ViewAddPayee} />
+                                   <Route path="/payment_settings" component={PaymentScheduleSettingsPage} />
 
                                    <Route path="*" component={NoMatch} />
                               </Switch>

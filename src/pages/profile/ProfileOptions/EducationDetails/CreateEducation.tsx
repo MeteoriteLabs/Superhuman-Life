@@ -55,15 +55,15 @@ function CreateEducation(props: any, ref: any) {
           onCompleted: (r: any) => { props.callback(); fetch.refetch(); }, refetchQueries: [FETCH_USERS_PROFILE_DATA]
      });
 
-     const [updateEducationalDetail, { error: updateError }] = useMutation(UPDATE_EDUCATION_DETAILS, {
+     const [updateEducationalDetail ] = useMutation(UPDATE_EDUCATION_DETAILS, {
           onCompleted: (r: any) => { modalTrigger.next(false); props.callback(); fetch.refetch(); setIsEducationUpdated(!isEducationUpdated); }
      });
 
-     const [deleteEducationData, { error: deleteError }] = useMutation(DELETE_EDUCATION_DETAILS, {
+     const [deleteEducationData ] = useMutation(DELETE_EDUCATION_DETAILS, {
           onCompleted: (data: any) => { fetch.refetch(); setIsEducationDeleted(!isEducationDeleted); }, refetchQueries: [FETCH_USERS_PROFILE_DATA]
      });
 
-     const [createEducation, { error: createError }] = useMutation(CREATE_EDUCATION_DETAILS, {
+     const [createEducation ] = useMutation(CREATE_EDUCATION_DETAILS, {
           onCompleted: (r: any) => {
                setIsFormSubmitted(!isFormSubmitted);
                modalTrigger.next(false);
@@ -163,16 +163,6 @@ function CreateEducation(props: any, ref: any) {
                     UpdateUserEducation(frm);
                     break;
           }
-     }
-
-     if (createError) {
-          return <Toaster handleCallback={() => setIsFormSubmitted(!isFormSubmitted)} type="error" msg="Failed to add education details" />;
-     }
-     if (updateError) {
-          return <Toaster handleCallback={() => setIsEducationUpdated(!isEducationUpdated)} type="error" msg="Failed to update education details" />;
-     }
-     if (deleteError) {
-          return <Toaster handleCallback={() => setIsEducationDeleted(!isEducationDeleted)} type="error" msg="Failed to delete education details" />;
      }
 
      return (

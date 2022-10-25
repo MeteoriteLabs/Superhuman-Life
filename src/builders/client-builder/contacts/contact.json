@@ -31,7 +31,6 @@
         "title": "Type of contact",
         "type": "string",
         "enum": [
-          "Changemaker",
           "Client",
           "Organization",
           "Community",

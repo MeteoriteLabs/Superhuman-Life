@@ -132,7 +132,7 @@ export default function PaymentSchedule() {
     <TabContent>
       <Container>
         <Row>
-          <Col>
+          <Col md={{ span: 3, offset: 9 }}>
             <Card.Title className="text-center">
               <Button
                 variant={true ? "outline-secondary" : "light"}

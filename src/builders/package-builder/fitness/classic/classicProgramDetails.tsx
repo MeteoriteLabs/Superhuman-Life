@@ -8,9 +8,7 @@ import 'react-bootstrap-typeahead/css/Typeahead.css';
 
 const ClassicProgramDetails = (props) => {
 
-     const inputDisabled = props.readonly;
-
-     console.log(props.value);
+    const inputDisabled = props.readonly;
     const existingData = props.value === undefined ? undefined : JSON.parse(props.value);
     if(existingData !== undefined && existingData.length > 0){
         existingData.address = {id: JSON.parse(existingData?.address)[0].id, title: JSON.parse(existingData?.address)[0].title};

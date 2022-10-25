@@ -5,9 +5,6 @@ import moment from 'moment';
 const PackageDateConfig = (props: any) => {
 
      const inputDisabled = props.readonly;
-
-     console.log(props);
-
      const [startDate, setStartDate] = useState(props.value === undefined ? moment().add(1, 'days').format("YYYY-MM-DD") : moment(JSON.parse(props.value).startDate).format("YYYY-MM-DD"));
      const [endDate, setEndDate] = useState(props.value === undefined ? moment(startDate).format("YYYY-MM-DD") : moment(JSON.parse(props.value).endDate).format("YYYY-MM-DD"));
      const [oneDay, setOneDay] = useState(props.value === undefined ? false : JSON.parse(props.value).oneDay);

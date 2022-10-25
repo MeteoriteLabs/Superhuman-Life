@@ -38,7 +38,7 @@ function CreateEditPackage(props: any, ref: any) {
     });
 
     const [bookingConfig] = useMutation(CREATE_BOOKING_CONFIG, {onCompleted: (r: any) => { 
-        console.log(r); modalTrigger.next(false); props.callback();
+      modalTrigger.next(false); props.callback();
     }});
 
     const [createUserPackageSuggestion] = useMutation(ADD_SUGGESTION_NEW, {onCompleted: (data) => {
@@ -83,7 +83,7 @@ function CreateEditPackage(props: any, ref: any) {
     const [deletePackage] = useMutation(DELETE_PACKAGE, { refetchQueries: ["GET_TABLEDATA"], onCompleted: (data) => {props.callback()}});
 
     const [updateBookingConfig] = useMutation(UPDATE_BOOKING_CONFIG, {onCompleted: (r: any) => {
-        console.log(r); modalTrigger.next(false); props.callback();
+        modalTrigger.next(false); props.callback();
     }});
 
     const modalTrigger =  new Subject();
@@ -98,8 +98,6 @@ function CreateEditPackage(props: any, ref: any) {
             }
         }
     }));
-
-    // console.log(exerciseDetails);
 
     enum ENUM_FITNESSPACKAGE_LEVEL {
         Beginner,
@@ -131,7 +129,7 @@ function CreateEditPackage(props: any, ref: any) {
 
     function FillDetails(data: any) {
         const flattenedData = flattenObj({...data});
-        console.log(flattenedData);
+
         let msg = flattenedData.fitnesspackages[0];
         let bookingConfig: any = {};
         let details: any = {};
@@ -167,7 +165,6 @@ function CreateEditPackage(props: any, ref: any) {
         details.bookingConfigId = msg.booking_config?.id;
         details.languages = JSON.stringify(msg.languages);
         setCustomDetails (details);
-        // console.log(exerciseDetails);
 
         //if message exists - show form only for edit and view
         if (['edit', 'view'].indexOf(operation.type) > -1)
@@ -176,8 +173,6 @@ function CreateEditPackage(props: any, ref: any) {
             OnSubmit(null);
     }
 
-    console.log(operation.type);
-
     useEffect(() => {
         if(operation.type === 'create'){
             setCustomDetails({});
@@ -185,8 +180,7 @@ function CreateEditPackage(props: any, ref: any) {
     }, [operation.type]);
 
     function FetchData() {
-        console.log('Fetch Data');
-        useQuery(GET_SINGLE_PACKAGE_BY_ID, { variables: { id: operation.id }, skip: (operation.type === 'create'),onCompleted: (e: any) => { FillDetails(e) } });
+        useQuery(GET_SINGLE_PACKAGE_BY_ID, { variables: { id: operation.id }, skip: (operation.type === 'create' || !operation.id),onCompleted: (e: any) => { FillDetails(e) } });
     }
 
     function CreatePackage(frm: any) {
@@ -234,7 +228,6 @@ function CreateEditPackage(props: any, ref: any) {
 
     function EditPackage(frm: any) {
         frmDetails = frm;
-        console.log('edit message', frm);
         frm.equipmentList = JSON.parse(frm.equipmentList).map((item: any) => item.id).join(",").split(",");
         frm.disciplines = JSON.parse(frm.disciplines).map((x: any) => x.id).join(', ').split(', ');
         frm.programDetails = JSON.parse(frm.programDetails)
@@ -278,7 +271,6 @@ function CreateEditPackage(props: any, ref: any) {
     }
 
     function ViewPackage(frm: any) {
-        console.log('view message');
         //use a variable to set form to disabled/not editable
      //    useMutation(UPDATE_EXERCISE, { variables: frm, onCompleted: (d: any) => { console.log(d); } })
     }

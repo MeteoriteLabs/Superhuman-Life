@@ -163,7 +163,7 @@ function CreateEditCohort(props: any, ref: any) {
     }, [operation.type]);
 
     function FetchData() {
-        useQuery(GET_SINGLE_PACKAGE_BY_ID, { variables: { id: operation.id }, skip: (operation.type === 'create'), onCompleted: (e: any) => { FillDetails(e) } });
+        useQuery(GET_SINGLE_PACKAGE_BY_ID, { variables: { id: operation.id }, skip: (operation.type === 'create' || !operation.id), onCompleted: (e: any) => { FillDetails(e) } });
     }
 
     function findPackageType(creationType: any){

@@ -60,7 +60,7 @@ export const GET_FITNESS_PACKAGE_TYPES = gql`
 `;
 
 export const GET_FITNESS = gql`
-  query fitnesspackages($id: ID!) {
+  query fitnesspackages($id: ID) {
     fitnesspackages(
       sort: ["updatedAt"]
       filters: { users_permissions_user: { id: { eq: $id } } }
@@ -111,7 +111,7 @@ export const GET_FITNESS = gql`
 `;
 
 export const GET_SINGLE_PACKAGE_BY_ID = gql`
-  query fitnesspackage($id: ID!) {
+  query fitnesspackage($id: ID) {
     fitnesspackages(filters: { id: { eq: $id } }) {
       data {
         id

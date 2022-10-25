@@ -16,10 +16,7 @@ const PtProgramDetails = (props) => {
         existingData.address = {id: JSON.parse(existingData?.address)[0].id, title: JSON.parse(existingData?.address)[0].title};
 
     }
-
-    console.log(props);
-    console.log(existingData);
-
+    
     const [mode, setMode] = useState(props.value === undefined ? '' : (existingData.mode).toString());
     const [addressModal, setAddressModal] = useState(false);
 

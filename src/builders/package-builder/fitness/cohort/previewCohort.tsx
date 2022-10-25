@@ -8,7 +8,6 @@ const PreviewCohort = (props) => {
 
     const formData = props?.formContext;
     const classMode = JSON.parse(formData?.programDetails).mode;
-    console.log(props.formContext)
     var pricing;
     if(typeof(formData.pricing) === 'string'){
         pricing = formData?.pricing === "free" ? "free" : JSON.parse(formData?.pricing).filter((item) => item.mrp !== null);
@@ -80,7 +79,6 @@ const PreviewCohort = (props) => {
             return (
                 pricing.map((item, index) => {
                     return (
-                        console.log(item),
                         <Carousel.Item key={1}>
                             <Card className="text-center mx-auto" style={{ borderRadius: '20px', width: '50%'}}>
                             <Card.Body className='pr-0 py-0'>

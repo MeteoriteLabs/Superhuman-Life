@@ -39,11 +39,11 @@ function CreateEditOnDemadPt(props: any, ref: any) {
     });
 
     const [bookingConfig] = useMutation(CREATE_BOOKING_CONFIG, {onCompleted: (r: any) => { 
-        console.log(r); modalTrigger.next(false); props.callback();
+        modalTrigger.next(false); props.callback();
     }});
 
     const [updateBookingConfig] = useMutation(UPDATE_BOOKING_CONFIG, {onCompleted: (r: any) => {
-        console.log(r); modalTrigger.next(false); props.callback();
+        modalTrigger.next(false); props.callback();
     }});
 
     const [createUserPackageSuggestion] = useMutation(ADD_SUGGESTION_NEW, {onCompleted: (data) => {
@@ -101,8 +101,6 @@ function CreateEditOnDemadPt(props: any, ref: any) {
         }
     }));
 
-    // console.log(exerciseDetails);
-
     enum ENUM_FITNESSPACKAGE_LEVEL {
         Beginner,
         Intermediate,
@@ -134,7 +132,6 @@ function CreateEditOnDemadPt(props: any, ref: any) {
 
     function FillDetails(data: any) {
         const flattenedData = flattenObj({...data});
-        console.log(flattenedData);
         let msg = flattenedData.fitnesspackages[0];
         let bookingConfig: any = {};
         let details: any = {};
@@ -179,8 +176,6 @@ function CreateEditOnDemadPt(props: any, ref: any) {
             OnSubmit(null);
     }
 
-    console.log(operation.type);
-
     useEffect(() => {
         if(operation.type === 'create'){
             setPersonalTrainingDetails({});
@@ -188,8 +183,7 @@ function CreateEditOnDemadPt(props: any, ref: any) {
     }, [operation.type]);
 
     function FetchData() {
-        console.log('Fetch Data');
-        useQuery(GET_SINGLE_PACKAGE_BY_ID, { variables: { id: operation.id }, skip: (operation.type === 'create'),onCompleted: (e: any) => { FillDetails(e) } });
+        useQuery(GET_SINGLE_PACKAGE_BY_ID, { variables: { id: operation.id }, skip: (operation.type === 'create' || !operation.id ),onCompleted: (e: any) => { FillDetails(e) } });
     }
 
     function CreatePackage(frm: any) {
@@ -274,7 +268,6 @@ function CreateEditOnDemadPt(props: any, ref: any) {
     }
 
     function ViewPackage(frm: any) {
-        console.log('view message');
         //use a variable to set form to disabled/not editable
      //    useMutation(UPDATE_EXERCISE, { variables: frm, onCompleted: (d: any) => { console.log(d); } })
     }

@@ -54,7 +54,7 @@ function CreateAddress(props: any, ref: any) {
         refetchQueries: [FETCH_USERS_PROFILE_DATA]
     });
 
-    const [updateAddress, { error: updateError }] = useMutation(UPDATE_ADDRESS_DATA, {
+    const [updateAddress] = useMutation(UPDATE_ADDRESS_DATA, {
         onCompleted: (r: any) => {
             props.callback();
             modalTrigger.next(false);
@@ -64,7 +64,7 @@ function CreateAddress(props: any, ref: any) {
         refetchQueries: [FETCH_USERS_PROFILE_DATA]
     });
 
-    const [deleteAddress, { error: deleteError }] = useMutation(DELETE_ADDRESS, {
+    const [deleteAddress] = useMutation(DELETE_ADDRESS, {
         onCompleted: (data: any) => { 
             fetch.refetch(); 
             setIsAddressDeleted(!isAddressDeleted);
@@ -72,7 +72,7 @@ function CreateAddress(props: any, ref: any) {
         refetchQueries: [FETCH_USERS_PROFILE_DATA]
     });
 
-    const [createAddress, { error: createError }] = useMutation(CREATE_ADDRESS, {
+    const [createAddress] = useMutation(CREATE_ADDRESS, {
         onCompleted: (r: any) => {
             setIsFormSubmitted(!isFormSubmitted);
             modalTrigger.next(false);
@@ -191,16 +191,6 @@ function CreateAddress(props: any, ref: any) {
                 UpdateUserAddress(frm);
                 break;
         }
-    }
-
-    if (createError) {
-        return <Toaster type="error" msg="Failed to add address details" />;
-    }
-    if (updateError) {
-        return <Toaster type="error" msg="Failed to update address details" />;
-    }
-    if (deleteError) {
-        return <Toaster type="error" msg="Failed to delete address details" />;
     }
 
     return (
