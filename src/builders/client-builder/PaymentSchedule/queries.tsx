@@ -50,29 +50,6 @@ export const GET_PAYMENT_SCHEDULES = gql`
   }
 `;
 
-export const GET_PAYMENT_SCHEDULE = gql`
-  query PaymentScheduleQuery($id: ID){
-    paymentSchedule(id: $id) {
-      data{
-        id
-        attributes{
-          Payment_Cycle
-          PaymentCatagory
-          Payment_DateTime
-          Reminder_DateTime
-          frequency
-          Total_Amount
-          Total_Amount_Breakdown
-          Destination_Contacts_ID
-          Destination_User_ID
-          Source_User_ID
-          isActive
-        }
-      }
-    }
-  }
-`;
-
 export const ADD_PAYMENT_SCHEDULE = gql`
   mutation createPaymentSchedule($data: PaymentScheduleInput!) {
     createPaymentSchedule( data: $data ) {

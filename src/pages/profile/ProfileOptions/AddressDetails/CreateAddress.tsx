@@ -5,30 +5,23 @@ import {
     FETCH_USER_PROFILE_DATA,
     UPDATE_ADDRESS_DATA,
     UPDATE_USER_PROFILE_DATA,
-    CREATE_ADDRESS
+    CREATE_ADDRESS,
+    DELETE_ADDRESS,
+    FETCH_USERS_PROFILE_DATA
 } from "../../queries/queries";
 import { Subject } from "rxjs";
 import { schema, widgets } from "../../profileSchema";
 import AuthContext from "../../../../context/auth-context";
 import { flattenObj } from "../../../../components/utils/responseFlatten";
+import StatusModal from "../../../../components/StatusModal/StatusModal";
+import { zipcodeCustomFormats, zipcodeTransformErrors } from "../../../../components/utils/ValidationPatterns";
+import Toaster from '../../../../components/Toaster/index';
 
 interface Operation {
     id: string;
     modal_status: boolean;
-    type: "create" | "edit";
+    type: "create" | "edit" | "delete";
 }
-
-const emptyAddressState = {
-    address1: '',
-    address2: '',
-    city: '',
-    country: '',
-    state: '',
-    zipcode: '',
-    type_address: '',
-    House_Number: '',
-    Title: ''
-};
 
 function CreateAddress(props: any, ref: any) {
     const auth = useContext(AuthContext);
@@ -37,6 +30,10 @@ function CreateAddress(props: any, ref: any) {
     const [operation, setOperation] = useState<Operation>({} as Operation);
     const [addressDetails, setAddressDetails] = useState<any>({});
     const [prefill, setPrefill] = useState<any>([]);
+    const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+    let [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
+    let [isAddressDeleted, setIsAddressDeleted] = useState<boolean>(false);
+    let [isAddressUpdated, setIsAddressUpdated] = useState<boolean>(false);
 
     const fetch = useQuery(FETCH_USER_PROFILE_DATA, {
         variables: { id: auth.userid },
@@ -50,17 +47,35 @@ function CreateAddress(props: any, ref: any) {
     });
 
     const [updateProfile] = useMutation(UPDATE_USER_PROFILE_DATA, {
-        onCompleted: (r: any) => { props.callback(); fetch.refetch(); },
-    });
-
-    const [updateAddress] = useMutation(UPDATE_ADDRESS_DATA, {
-        onCompleted: (r: any) => { props.callback(); modalTrigger.next(false); fetch.refetch(); },
-    });
-
-    const [createAddress, { error }] = useMutation(CREATE_ADDRESS, {
         onCompleted: (r: any) => {
-            modalTrigger.next(false);
             props.callback();
+            fetch.refetch();
+        },
+        refetchQueries: [FETCH_USERS_PROFILE_DATA]
+    });
+
+    const [updateAddress, { error: updateError }] = useMutation(UPDATE_ADDRESS_DATA, {
+        onCompleted: (r: any) => {
+            props.callback();
+            modalTrigger.next(false);
+            fetch.refetch();
+            setIsAddressUpdated(!isAddressUpdated);
+        },
+        refetchQueries: [FETCH_USERS_PROFILE_DATA]
+    });
+
+    const [deleteAddress, { error: deleteError }] = useMutation(DELETE_ADDRESS, {
+        onCompleted: (data: any) => { 
+            fetch.refetch(); 
+            setIsAddressDeleted(!isAddressDeleted);
+        },
+        refetchQueries: [FETCH_USERS_PROFILE_DATA]
+    });
+
+    const [createAddress, { error: createError }] = useMutation(CREATE_ADDRESS, {
+        onCompleted: (r: any) => {
+            setIsFormSubmitted(!isFormSubmitted);
+            modalTrigger.next(false);
             fetch.refetch();
 
             // concatenate previously stored address ids with currently added address id
@@ -74,12 +89,8 @@ function CreateAddress(props: any, ref: any) {
                     },
                 },
             });
-        },
+        }
     });
-
-    if (error) {
-        console.log("Oops! Error occured");
-    }
 
     // modal trigger
     const modalTrigger = new Subject();
@@ -87,23 +98,32 @@ function CreateAddress(props: any, ref: any) {
     useImperativeHandle(ref, () => ({
         TriggerForm: (msg: Operation) => {
             setOperation(msg);
-            modalTrigger.next(true);
+
+            //show delete modal
+            if (msg.type === 'delete') {
+                setShowDeleteModal(true);
+            }
+
+            //restrict form to render on delete
+            if (msg.type !== 'delete') {
+                modalTrigger.next(true);
+            }
         },
     }));
 
     useEffect(() => {
-        let selectedAddress = prefill && prefill.length ? prefill.filter((currValue: any) => currValue.id === operation.id) : null;
+        let selectedAddress = prefill && prefill.length ? prefill.find((currValue: any) => currValue.id === operation.id) : null;
 
         let details: any = {};
-        details.address1 = selectedAddress && selectedAddress.length ? selectedAddress[0].address1 : '';
-        details.address2 = selectedAddress && selectedAddress.length ? selectedAddress[0].address2 : '';
-        details.city = selectedAddress && selectedAddress.length ? selectedAddress[0].city : '';
-        details.country = selectedAddress && selectedAddress.length ? selectedAddress[0].country : '';
-        details.state = selectedAddress && selectedAddress.length ? selectedAddress[0].state : '';
-        details.zipcode = selectedAddress && selectedAddress.length ? selectedAddress[0].zipcode : '';
-        details.type_address = selectedAddress && selectedAddress.length ? selectedAddress[0].type_address : '';
-        details.House_Number = selectedAddress && selectedAddress.length ? selectedAddress[0].House_Number : '';
-        details.Title = selectedAddress && selectedAddress.length ? selectedAddress[0].Title : '';
+        details.address1 = selectedAddress ? selectedAddress.address1 : '';
+        details.address2 = selectedAddress ? selectedAddress.address2 : '';
+        details.city = selectedAddress ? selectedAddress.city : '';
+        details.country = selectedAddress ? selectedAddress.country : '';
+        details.state = selectedAddress ? selectedAddress.state : '';
+        details.zipcode = selectedAddress ? selectedAddress.zipcode : '';
+        details.type_address = selectedAddress ? selectedAddress.type_address : '';
+        details.House_Number = selectedAddress ? selectedAddress.House_Number : '';
+        details.Title = selectedAddress ? selectedAddress.Title : '';
 
         setAddressDetails(details);
 
@@ -156,6 +176,10 @@ function CreateAddress(props: any, ref: any) {
         });
     }
 
+    function DeleteAddress(id: any) {
+        deleteAddress({ variables: { id: id } });
+    }
+
     // submit function
     function OnSubmit(frm: any) {
 
@@ -169,20 +193,62 @@ function CreateAddress(props: any, ref: any) {
         }
     }
 
+    if (createError) {
+        return <Toaster type="error" msg="Failed to add address details" />;
+    }
+    if (updateError) {
+        return <Toaster type="error" msg="Failed to update address details" />;
+    }
+    if (deleteError) {
+        return <Toaster type="error" msg="Failed to delete address details" />;
+    }
+
     return (
-        <ModalView
-            name={operation.type === 'create' ? "Create New Address" : "Edit Address Details"}
-            isStepper={false}
-            formUISchema={schema}
-            formSchema={addressJson}
-            showing={operation.modal_status}
-            formSubmit={(frm: any) => {
-                OnSubmit(frm);
-            }}
-            widgets={widgets}
-            modalTrigger={modalTrigger}
-            formData={operation.type === 'create' ? emptyAddressState : addressDetails}
-        />
+        <>
+            {/* Create and Edit Modal */}
+            <ModalView
+                name={operation.type === 'create' ? "Create New Address" : "Edit Address Details"}
+                isStepper={false}
+                formUISchema={schema}
+                formSchema={addressJson}
+                showing={operation.modal_status}
+                formSubmit={(frm: any) => {
+                    OnSubmit(frm);
+                }}
+                widgets={widgets}
+                modalTrigger={modalTrigger}
+                formData={operation.type === 'create' ? {} : addressDetails}
+                showErrorList={false}
+                customFormats={zipcodeCustomFormats}
+                transformErrors={zipcodeTransformErrors}
+            />
+
+            {/* Delete Modal */}
+            {showDeleteModal && <StatusModal
+                show={showDeleteModal}
+                onHide={() => setShowDeleteModal(false)}
+                modalTitle="Delete"
+                modalBody="Do you want to delete this address detail?"
+                buttonLeft="Cancel"
+                buttonRight="Yes"
+                onClick={() => { DeleteAddress(operation.id) }}
+            />
+            }
+
+            {/* success toaster notification */}
+            {isFormSubmitted ?
+                <Toaster handleCallback={() => setIsFormSubmitted(!isFormSubmitted)} type="success" msg="Address has been added successfully" />
+                : null}
+
+            {isAddressDeleted ?
+                <Toaster handleCallback={() => setIsAddressDeleted(!isAddressDeleted)} type="success" msg="Address has been deleted successfully" />
+                : null}
+
+            {isAddressUpdated ?
+                <Toaster handleCallback={() => setIsAddressUpdated(!isAddressUpdated)} type="success" msg="Address has been updated successfully" />
+                : null}
+
+        </>
     );
 }
 

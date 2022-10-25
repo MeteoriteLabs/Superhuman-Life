@@ -10,3 +10,8 @@
       width: 100%;
    }
 }
+.display_pic{
+   border: 1px solid white;
+   object-fit: contain;
+   height: 4.5vh;
+ }

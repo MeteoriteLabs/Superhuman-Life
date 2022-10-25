@@ -1,17 +1,19 @@
 import React, { Suspense } from "react";
 import {
-  BrowserRouter as Router,
-  Redirect,
-  Route,
-  Switch,
-  useLocation,
+     BrowserRouter as Router,
+     Redirect,
+     Route,
+     Switch,
+     useLocation,
 } from "react-router-dom";
 import Layout from "./components/layout";
 
 const MainLobby = React.lazy(() => import("./pages/dashboard"));
 const WebsiteBuilder = React.lazy(() => import("./pages/website-builder"));
 const BookingPage = React.lazy(() => import("./pages/booking"));
-const BookingSetting = React.lazy(() => import("./pages/booking/BookingSetting/BookingSetting"));
+const BookingSetting = React.lazy(
+     () => import("./pages/booking/BookingSetting/BookingSetting")
+);
 const ChatPage = React.lazy(() => import("./pages/chat"));
 
 const HomePage = React.lazy(() => import("./pages/home"));
@@ -71,56 +73,59 @@ function NoMatch() {
      );
 }
 
+function NoAuthRedirect() {
+     return <Redirect to="/login" />
+}
+
 export default function Routes({ token }: any) {
-  return (
-    <Router>
-      <Layout token={token}>
-        {token ? (
-          <Suspense fallback={<code>Loading...</code>}>
-            {/* <Helmet>
+     return (
+          <Router>
+               <Layout token={token}>
+                    {token ? (
+                         <Suspense fallback={<code>Loading...</code>}>
+                              {/* <Helmet>
               <meta charSet="utf-8" />
               <title>Sapien Dashboard | Dashboard</title>
               <link rel="canonical" href="https://sapien.systems/" />
             </Helmet> */}
 
-            <Switch>
-              <Redirect exact from="/" to="/lobby" />
-              <Redirect exact from="/login" to="/lobby" />
-              <Route path="/lobby" component={MainLobby} />
-              <Route path="/website" component={WebsiteBuilder} />
-              <Route path="/bookings" component={BookingPage} />
-              <Route exact path="/bookingSettings" component={BookingSetting} />
-              <Route path="/chats" component={ChatPage} />
-              <Route path="/clients" component={ClientPage} />
-              <Route path="/client/home" component={ClientHomePage} />
-              <Route path="/home" component={HomePage} />
-              <Route exact path="/offerings" component={PackagePage} />
-              <Route exact path="/resources" component={ProgramPage} />
-              <Route exact path="/session" component={SessionPage} />
-              {/* please do not change the below route /programs/manage!!! It is a very important route for program templates, any change could break the code. */}
-              <Route path="/programs/manage" component={ProgramManagerPage} />
-              <Route path="/classic/session/scheduler" component={ClassicProgramSchedulerPage} />
-              <Route path="/pt/session/scheduler" component={PTProgramSchedulerPage} />
-              <Route path="/group/session/scheduler" component={GroupProgramSchedulerPage} />
-              <Route path="/custom/session/scheduler" component={CustomProgramSchedulerPage} />
-              <Route path="/cohort/session/scheduler" component={CohortProgramSchedulerPage} />
-              <Route path="/channel/session/scheduler" component={ChannelProgramSchedulerPage} />
-              <Route path="/schedule" component={clientSchedulerPage} />
-              <Route path="/availability" component={AvailabilityPage} />
-              <Route path="/roster" component={RosterPage} />
-              <Route path="/profile" component={ProfilePage} />
-              <Route path="/communication" component={ResourcePage} />
-              <Route path="/schedule" component={SchedulePage} />
-              <Route path="/settings" component={SettingsPage} />
-              <Route path="/finance" component={FinancePage} />
-              <Route path="/change-password" component={ChangePasswordPage} />
-              <Route path="/payment_settings" component={PaymentScheduleSettingsPage} />
-              <Route path="/receipt" component={Receipt} />
-              <Route path="/add_payee" component={AddPayee} />
-              <Route path="/payee_details" component={PayeeDetails} />
-              <Route path="/payee_payment_mode" component={PayeePaymentMode} />
-              <Route path="/close_account" component={CloseAccount} />
-              <Route path="/view_add_payee" component={ViewAddPayee} />
+                              <Switch>
+                                   <Redirect exact from="/" to="/lobby" />
+                                   <Redirect exact from="/login" to="/lobby" />
+                                   <Route path="/lobby" component={MainLobby} />
+                                   <Route path="/website" component={WebsiteBuilder} />
+                                   <Route path="/bookings" component={BookingPage} />
+                                   <Route exact path="/bookingSettings" component={BookingSetting} />
+                                   <Route path="/chats" component={ChatPage} />
+                                   <Route path="/clients" component={ClientPage} />
+                                   <Route path="/client/home" component={ClientHomePage} />
+                                   <Route path="/home" component={HomePage} />
+                                   <Route exact path="/offerings" component={PackagePage} />
+                                   <Route exact path="/resources" component={ProgramPage} />
+                                   <Route exact path="/session" component={SessionPage} />
+                                   {/* please do not change the below route /programs/manage!!! It is a very important route for program templates, any change could break the code. */}
+                                   <Route path="/programs/manage" component={ProgramManagerPage} />
+                                   <Route path="/classic/session/scheduler" component={ClassicProgramSchedulerPage} />
+                                   <Route path="/pt/session/scheduler" component={PTProgramSchedulerPage} />
+                                   <Route path="/group/session/scheduler" component={GroupProgramSchedulerPage} />
+                                   <Route path="/custom/session/scheduler" component={CustomProgramSchedulerPage} />
+                                   <Route path="/cohort/session/scheduler" component={CohortProgramSchedulerPage} />
+                                   <Route path="/channel/session/scheduler" component={ChannelProgramSchedulerPage} />
+                                   <Route path="/schedule" component={clientSchedulerPage} />
+                                   <Route path="/availability" component={AvailabilityPage} />
+                                   <Route path="/roster" component={RosterPage} />
+                                   <Route path="/profile" component={ProfilePage} />
+                                   <Route path="/communication" component={ResourcePage} />
+                                   <Route path="/schedule" component={SchedulePage} />
+                                   <Route path="/settings" component={SettingsPage} />
+                                   <Route path="/finance" component={FinancePage} />
+                                   <Route path="/change-password" component={ChangePasswordPage} />
+                                   <Route path="/receipt" component={Receipt} />
+                                   <Route path="/add_payee" component={AddPayee} />
+                                   <Route path="/payee_details" component={PayeeDetails} />
+                                   <Route path="/payee_payment_mode" component={PayeePaymentMode} />
+                                   <Route path="/close_account" component={CloseAccount} />
+                                   <Route path="/view_add_payee" component={ViewAddPayee} />
 
                                    <Route path="*" component={NoMatch} />
                               </Switch>
@@ -134,13 +139,13 @@ export default function Routes({ token }: any) {
                                    <Route path="/forgot-password" component={ForgotPasswordPage} />
                                    <Route path="/resetpassword" component={ResetPasswordPage} />
                                    <Route path="/confirm-account" component={ConfirmAccountPage} />
-                                   <Route path="/api/auth/google/callback" component={GoogleAuthCallbackPage}/>
+                                   <Route path="/api/auth/google/callback" component={GoogleAuthCallbackPage} />
                                    <Route path="/register" component={RegisterPage} />
                                    <Route path="/about" component={AboutPage} />
                                    <Route path="/contact" component={ContactPage} />
                                    <Route path="/faqs" component={FQAsPage} />
                                    <Route path="/deactiveaccount" component={DeactiveAccountPage} />
-                                   <Route path="*" component={NoMatch} />
+                                   <Route path="*" component={NoAuthRedirect} />
                               </Switch>
                          </Suspense>
                     )}

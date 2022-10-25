@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { withTheme, utils } from "@rjsf/core";
 import { Theme as Bootstrap4Theme } from "@rjsf/bootstrap-4";
 import { Button, Col, Modal, ProgressBar, Row } from "react-bootstrap";
-import './modal.css';
+import "./modal.css";
 
 export default function ModalView({
   name,
@@ -15,7 +15,9 @@ export default function ModalView({
   widgets,
   modalTrigger,
   stepperValues,
-  actionType
+  customFormats,
+  transformErrors,
+  actionType,
 }: any) {
   const registry = utils.getDefaultRegistry();
   const defaultFileWidget = registry.widgets["FileWidget"];
@@ -69,7 +71,12 @@ export default function ModalView({
   // }
 
   return (
-    <Modal show={show} onHide={() => setShow(false)} dialogClassName="custom-large-modal" centered>
+    <Modal
+      show={show}
+      onHide={() => setShow(false)}
+      dialogClassName="custom-large-modal"
+      centered
+    >
       <Modal.Header closeButton>
         <Modal.Title as={Row} className="w-100">
           <Col xs={12} md={12} lg={12}>
@@ -108,7 +115,9 @@ export default function ModalView({
                 formData={formValues}
                 widgets={widgets}
                 formContext={formValues}
-                disabled={actionType === 'view' ? true : false}
+                customFormats={customFormats}
+                transformErrors={transformErrors}
+                disabled={actionType === "view" ? true : false}
               >
                 <div></div>
               </Form>
@@ -151,7 +160,7 @@ export default function ModalView({
               onClick={() => {
                 setShow(false);
               }}
-              className={actionType === "view" ? "d-none" : ""}
+              className={name === "View" ? "d-none" : ""}
             >
               Close
             </Button>
@@ -162,7 +171,7 @@ export default function ModalView({
                 formRef.current.onSubmit(event);
               }}
             >
-              {actionType === "view" ? "Close" : "Submit"}
+              {name === "View" ? "Close" : "Submit"}
             </Button>
           </>
         )}

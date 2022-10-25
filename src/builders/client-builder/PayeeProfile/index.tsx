@@ -17,7 +17,7 @@ function PayeeProfile() {
     const id = params.get('id');
 
     useQuery(GET_CONTACTS, { onCompleted: (e: any) => { let flattenData = flattenObj(e.contacts); FillDetails(flattenData) } });
-    const [updateContact] = useMutation(UPDATE_CONTACT, { onCompleted: (e: any) => { setIsFormSubmitted(!isFormSubmitted) } });
+    const [updateContact] = useMutation(UPDATE_CONTACT, { onCompleted: (e: any) => { setIsFormSubmitted(!isFormSubmitted) } , refetchQueries: [GET_CONTACTS]});
 
     function EditPaymentModeDetails(frm: any) {
 
@@ -100,7 +100,7 @@ function PayeeProfile() {
 
             {/* success toaster notification */}
             {isFormSubmitted ?
-                <Toaster type="success" msg="Payee details has been added successfully" />
+                <Toaster type="success" handleCallback={() => setIsFormSubmitted(!isFormSubmitted)} msg="Payee details has been added successfully" />
                 : null}
 
         </>

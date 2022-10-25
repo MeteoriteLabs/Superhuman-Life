@@ -33,7 +33,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
      const [selectedFile, setSelectedFile] = useState<any>(null);
      const [render, setRender] = useState<any>(null);
      const [url, setUrl] = useState<any>(null);
-     const [imageid, setImageid] = useState<any>(null);
+     const [imageid, setImageid] = useState<string | null>('');
      const [videoUpload, setVideoUpload] = useState<any>(false);
      const [videoID, setVideoID] = useState<any>(null);
      //const [renderCrop, setRenderCrop] = useState<any>(null);
@@ -75,12 +75,23 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
           }
      }
      function deleteAllImages() {
-          deleteFile(albumPhotosKey + "sm-" + imageid);
-          deleteFile(albumPhotosKey + "md-" + imageid);
-          deleteFile(albumPhotosKey + "lg-" + imageid);
-          setUrl(null);
-          setProgress(0);
-          setRender(null);
+          if (props.removePicture) {
+               props.removePicture();
+               deleteFile(albumPhotosKey + "sm-" + imageid);
+               deleteFile(albumPhotosKey + "md-" + imageid);
+               deleteFile(albumPhotosKey + "lg-" + imageid);
+               setImageid(null);
+               setUrl(null);
+               setProgress(0);
+               setRender(null); 
+          } else {
+               deleteFile(albumPhotosKey + "sm-" + imageid);
+               deleteFile(albumPhotosKey + "md-" + imageid);
+               deleteFile(albumPhotosKey + "lg-" + imageid);
+               setUrl(undefined);
+               setProgress(0);
+               setRender(null);
+          }
      }
 
      const deleteFile = (keyName) => {
@@ -367,17 +378,15 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
           setVideoUpload(false);
      }
 
-     console.log(typeof imageid, imageid);
-     console.log(typeof videoID, videoID);
+     useEffect(() => {
+          props.onChange(videoID);
+          // eslint-disable-next-line
+     }, [videoID]);
 
      useEffect(() => {
-          if (url) {
-               props.onChange(imageid);
-          } else {
-               props.onChange(videoID);
-          }
-          // eslint-disable-next-line react-hooks/exhaustive-deps
-     }, [url, videoID]);
+          props.onChange(imageid);
+          // eslint-disable-next-line
+     },[imageid])
 
      return (
           <div>
@@ -387,12 +396,12 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                          <div className="border bg-white border-dark p-4 ">
                               <Image
                                    src={url}
-                                   width="500px"
-                                   height="500px"
+                                   width="500vw"
+                                   height="500vh"
                                    className="img-thumbnail"
                                    alt="Image Preview"
                               />
-                              <p className="ml-2 mt-3 font-weight-bold text-success">Image Uploaded Successfully!!</p>
+                              <p className="ml-2 mt-3 font-weight-bold text-success">Image Uploaded</p>
                               <div className="mt-3 d-flex flex-row-reverse">
                                    <button
                                         type="button"
@@ -445,6 +454,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                                         onCropChange={setCrop}
                                         onCropComplete={onCropComplete}
                                         onZoomChange={setZoom}
+                                        objectFit="contain"
                                    />
                               </div>
 

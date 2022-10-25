@@ -17,7 +17,7 @@ function PaymentMode() {
     const id = params.get('id');
 
     useQuery(GET_CONTACTS, { onCompleted: (e: any) => { let flattenData = flattenObj(e.contacts); FillDetails(flattenData) } });
-    const [updateContact] = useMutation(UPDATE_CONTACT, { onCompleted: (e: any) => { setIsFormSubmitted(!isFormSubmitted) } });
+    const [updateContact] = useMutation(UPDATE_CONTACT, { onCompleted: (e: any) => { setIsFormSubmitted(!isFormSubmitted) }, refetchQueries: [GET_CONTACTS] });
 
     function EditPaymentModeDetails(frm: any) {
 
@@ -78,7 +78,7 @@ function PaymentMode() {
 
             {/* success toaster notification */}
             {isFormSubmitted ?
-                <Toaster type="success" msg="Payment details has been added successfully" />
+                <Toaster type="success" handleCallback={() => setIsFormSubmitted(!isFormSubmitted)} msg="Payment details has been added successfully" />
                 : null}
 
         </>
