@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 import Form from "@rjsf/core";
 import { schema } from "./payeeProfileSchema";
-import { GET_CONTACTS, UPDATE_CONTACT } from "../contacts/queries";
+import { GET_CONTACT, UPDATE_CONTACT } from "../contacts/queries";
 import { useMutation, useQuery } from "@apollo/client";
 import { flattenObj } from "../../../components/utils/responseFlatten";
 import { Col } from "react-bootstrap";
@@ -22,17 +22,27 @@ function PayeeProfile() {
   const params = new URLSearchParams(query);
   const id = params.get("id");
 
-  useQuery(GET_CONTACTS, {
+  // useQuery(GET_CONTACTS, {
+  //   onCompleted: (e: any) => {
+  //     let flattenData = flattenObj(e.contacts);
+  //     FillDetails(flattenData);
+  //   },
+  // });
+
+  useQuery(GET_CONTACT, {
+    variables: { id: id },
     onCompleted: (e: any) => {
-      let flattenData = flattenObj(e.contacts);
+      let flattenData = flattenObj(e);
+      console.log(flattenData);
       FillDetails(flattenData);
     },
   });
+
   const [updateContact] = useMutation(UPDATE_CONTACT, {
     onCompleted: (e: any) => {
       setIsFormSubmitted(!isFormSubmitted);
     },
-    refetchQueries: [GET_CONTACTS],
+    refetchQueries: [GET_CONTACT],
   });
 
   function EditPaymentModeDetails(frm: any) {
@@ -71,66 +81,61 @@ function PayeeProfile() {
 
   //fillDetails
   function FillDetails(data: any) {
-    const contactToUpdate =
-      data &&
-      data.length &&
-      data.find((currentValue) => currentValue.id === id);
-
     if (data) {
       setPaymentModeDetails({
-        id: contactToUpdate && contactToUpdate.id,
-        firstname: contactToUpdate && contactToUpdate.firstname,
-        lastname: contactToUpdate && contactToUpdate.lastname,
-        email: contactToUpdate && contactToUpdate.email,
-        phone: contactToUpdate && contactToUpdate.phone,
+        id: data.contact && data.contact.id,
+        firstname: data.contact && data.contact.firstname,
+        lastname: data.contact && data.contact.lastname,
+        email: data.contact && data.contact.email,
+        phone: data.contact && data.contact.phone,
         appDownloadStatus:
-          contactToUpdate && contactToUpdate.appDownloadStatus === "Invited"
+          data.contact && data.contact.appDownloadStatus === "Invited"
             ? true
             : false,
-        type: contactToUpdate && contactToUpdate.type,
-        isPayee: contactToUpdate && contactToUpdate.isPayee,
+        type: data.contact && data.contact.type,
+        isPayee: data.contact && data.contact.isPayee,
         organisationDetails:
-          contactToUpdate &&
-          contactToUpdate.organisationDetails &&
-          contactToUpdate.organisationDetails.organisationName
+          data.contact &&
+          data.contact.organisationDetails &&
+          data.contact.organisationDetails.organisationName
             ? true
             : false,
         organisationName:
-          contactToUpdate &&
-          contactToUpdate.organisationDetails &&
-          contactToUpdate.organisationDetails.organisationName,
+          data.contact &&
+          data.contact.organisationDetails &&
+          data.contact.organisationDetails.organisationName,
         gst:
-          contactToUpdate &&
-          contactToUpdate.organisationDetails &&
-          contactToUpdate.organisationDetails.gst,
+          data.contact &&
+          data.contact.organisationDetails &&
+          data.contact.organisationDetails.gst,
         address1:
-          contactToUpdate &&
-          contactToUpdate.organisationDetails &&
-          contactToUpdate.organisationDetails.address1,
+          data.contact &&
+          data.contact.organisationDetails &&
+          data.contact.organisationDetails.address1,
         address2:
-          contactToUpdate &&
-          contactToUpdate.organisationDetails &&
-          contactToUpdate.organisationDetails.address2,
+          data.contact &&
+          data.contact.organisationDetails &&
+          data.contact.organisationDetails.address2,
         city:
-          contactToUpdate &&
-          contactToUpdate.organisationDetails &&
-          contactToUpdate.organisationDetails.city,
+          data.contact &&
+          data.contact.organisationDetails &&
+          data.contact.organisationDetails.city,
         state:
-          contactToUpdate &&
-          contactToUpdate.organisationDetails &&
-          contactToUpdate.organisationDetails.state,
+          data.contact &&
+          data.contact.organisationDetails &&
+          data.contact.organisationDetails.state,
         country:
-          contactToUpdate &&
-          contactToUpdate.organisationDetails &&
-          contactToUpdate.organisationDetails.country,
+          data.contact &&
+          data.contact.organisationDetails &&
+          data.contact.organisationDetails.country,
         zipcode:
-          contactToUpdate &&
-          contactToUpdate.organisationDetails &&
-          contactToUpdate.organisationDetails.zipcode,
+          data.contact &&
+          data.contact.organisationDetails &&
+          data.contact.organisationDetails.zipcode,
         organisationEmail:
-          contactToUpdate &&
-          contactToUpdate.organisationDetails &&
-          contactToUpdate.organisationDetails.organisationEmail,
+          data.contact &&
+          data.contact.organisationDetails &&
+          data.contact.organisationDetails.organisationEmail,
       });
     }
   }

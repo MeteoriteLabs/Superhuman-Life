@@ -31,6 +31,34 @@ export const GET_CONTACTS = gql`
   }
 `;
 
+export const GET_CONTACT = gql`
+  query ContactQuery($id: ID){
+    contact(id: $id)
+    {
+      data {
+        id
+        attributes {
+          firstname
+          lastname
+          email
+          type
+          phone
+          createdAt
+          ownedBy{
+            data{
+              id
+            }
+          }
+          appDownloadStatus
+          paymentDetails
+          organisationDetails
+          isPayee
+        }
+      }
+    }
+  }
+`;
+
 export const GET_PAYMENT_SCHEDULES = gql`
   query PaymentSchedulesQuery{
     paymentSchedules(pagination: { pageSize: 100 }) {

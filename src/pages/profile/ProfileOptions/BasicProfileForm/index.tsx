@@ -87,13 +87,9 @@ export default function BasicProfileForm() {
     },
   });
 
-  const [updateProfile, { error }] = useMutation(UPDATE_USER_PROFILE_DATA, {
+  const [updateProfile] = useMutation(UPDATE_USER_PROFILE_DATA, {
     onCompleted: (r: any) => { setIsFormSubmitted(!isFormSubmitted); fetch.refetch(); }, refetchQueries: [FETCH_USER_PROFILE_DATA]
   });
-
-  if (error) {
-    return <Toaster type="error" msg="Basic Profile details has not been updated" />;
-  }
 
   function updateBasicDetails(frm: any) {
 

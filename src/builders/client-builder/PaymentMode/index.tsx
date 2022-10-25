@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 import Form from "@rjsf/core";
 import { schema } from "./paymentModeSchema";
-import { GET_CONTACTS, UPDATE_CONTACT } from "../contacts/queries";
+import { GET_CONTACT , UPDATE_CONTACT } from "../contacts/queries";
 import { useMutation, useQuery } from "@apollo/client";
 import { flattenObj } from "../../../components/utils/responseFlatten";
 import { Col } from "react-bootstrap";
@@ -9,7 +9,7 @@ import Toaster from "../../../components/Toaster";
 import {
     phoneCustomFormats,
     phoneTransformErrors,
-  } from "../../../components/utils/ValidationPatterns";  
+  } from "../../../components/utils/ValidationPatterns"; 
 
 function PaymentMode() {
   let [isFormSubmitted, setIsFormSubmitted] = useState(false);
@@ -22,17 +22,21 @@ function PaymentMode() {
   const params = new URLSearchParams(query);
   const id = params.get("id");
 
-  useQuery(GET_CONTACTS, {
+  useQuery(GET_CONTACT, {
+    variables: { id : id},
     onCompleted: (e: any) => {
-      let flattenData = flattenObj(e.contacts);
+      
+      let flattenData = flattenObj(e);
+      console.log(flattenData)
       FillDetails(flattenData);
     },
   });
+
   const [updateContact] = useMutation(UPDATE_CONTACT, {
     onCompleted: (e: any) => {
       setIsFormSubmitted(!isFormSubmitted);
     },
-    refetchQueries: [GET_CONTACTS],
+    refetchQueries: [GET_CONTACT],
   });
 
   function EditPaymentModeDetails(frm: any) {
@@ -60,39 +64,17 @@ function PaymentMode() {
 
   //fillDetails
   function FillDetails(data: any) {
-    const paymentDetailToUpdate =
-      data &&
-      data.length &&
-      data.find((currentValue) => currentValue.id === id);
 
     if (data) {
       setPaymentModeDetails({
-        UPI_ID:
-          paymentDetailToUpdate.paymentDetails &&
-          paymentDetailToUpdate.paymentDetails.upi,
-        upiPhoneNumber:
-          paymentDetailToUpdate.paymentDetails &&
-          paymentDetailToUpdate.paymentDetails.phoneNumber,
-        Branch:
-          paymentDetailToUpdate.paymentDetails &&
-          paymentDetailToUpdate.paymentDetails.upi,
-        ifscCode:
-          paymentDetailToUpdate.paymentDetails &&
-          paymentDetailToUpdate.paymentDetails.IFSCCode,
-        BankName:
-          paymentDetailToUpdate.paymentDetails &&
-          paymentDetailToUpdate.paymentDetails.bankName,
-        accountType:
-          paymentDetailToUpdate.paymentDetails &&
-          paymentDetailToUpdate.paymentDetails.accountType,
-        AccountNumber:
-          paymentDetailToUpdate.paymentDetails &&
-          paymentDetailToUpdate.paymentDetails.accountNumber,
-        bankAccount:
-          paymentDetailToUpdate.paymentDetails &&
-          paymentDetailToUpdate.paymentDetails.accountNumber
-            ? true
-            : false,
+        UPI_ID: data.contact && data.contact.paymentDetails && data.contact.paymentDetails.upi,
+        upiPhoneNumber: data.contact && data.contact.paymentDetails && data.contact.paymentDetails.phoneNumber,
+        Branch: data.contact && data.contact.paymentDetails && data.contact.paymentDetails.branch,
+        ifscCode: data.contact && data.contact.paymentDetails && data.contact.paymentDetails.IFSCCode,
+        BankName: data.contact && data.contact.paymentDetails && data.contact.paymentDetails.bankName,
+        accountType: data.contact && data.contact.paymentDetails && data.contact.paymentDetails.accountType,
+        AccountNumber: data.contact && data.contact.paymentDetails && data.contact.paymentDetails.accountNumber,
+        bankAccount: data.contact && data.contact.paymentDetails && data.contact.paymentDetails.accountNumber ? true : false,
       });
     }
   }

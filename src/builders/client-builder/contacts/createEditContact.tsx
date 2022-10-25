@@ -9,8 +9,8 @@ import ModalView from "../../../components/modal";
 import {
   ADD_CONTACT,
   DELETE_CONTACT,
-  GET_CONTACTS,
-  UPDATE_CONTACT,
+  GET_CONTACT,
+  UPDATE_CONTACT
 } from "./queries";
 import StatusModal from "../../../components/StatusModal/StatusModal";
 import { Subject } from "rxjs";
@@ -19,8 +19,9 @@ import { flattenObj } from "../../../components/utils/responseFlatten";
 import AuthContext from "../../../context/auth-context";
 import {
   phoneCustomFormats,
-  phoneTransformErrors
+  phoneTransformErrors,
 } from "../../../components/utils/ValidationPatterns";
+import Toaster from "../../../components/Toaster";
 
 interface Operation {
   id: string;
@@ -36,11 +37,13 @@ function CreateEditContact(props: any, ref: any) {
   const [operation, setOperation] = useState<Operation>({} as Operation);
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
   const [modalLabel, setModalLabel] = useState<string>("");
+  let [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
 
   const [createContact] = useMutation(ADD_CONTACT, {
     onCompleted: (r: any) => {
       modalTrigger.next(false);
       props.callback();
+      setIsFormSubmitted(!isFormSubmitted);
     },
   });
 
@@ -48,7 +51,7 @@ function CreateEditContact(props: any, ref: any) {
     onCompleted: (r: any) => {
       modalTrigger.next(false);
       props.callback();
-    },
+    }
   });
 
   const [deleteContact] = useMutation(DELETE_CONTACT, {
@@ -76,78 +79,37 @@ function CreateEditContact(props: any, ref: any) {
     },
   }));
 
-  useQuery(GET_CONTACTS, {
+  useQuery(GET_CONTACT, {
     variables: { id: operation.id },
     skip: !operation.id || operation.type === "delete",
     onCompleted: (e: any) => {
-      FillDetails(e);
+      FillDetails(e.contact);
     },
   });
 
   function FillDetails(data: any) {
     const flattenData = flattenObj({ ...data });
-    const contactToUpdate =
-      flattenData.contacts && flattenData.contacts.length
-        ? flattenData.contacts.find(
-            (currentValue) => Number(currentValue.id) === Number(operation.id)
-          )
-        : null;
 
     let detail: any = {};
 
-    detail.id = contactToUpdate && contactToUpdate.id;
-    detail.firstname = contactToUpdate && contactToUpdate.firstname;
-    detail.lastname = contactToUpdate && contactToUpdate.lastname;
-    detail.email = contactToUpdate && contactToUpdate.email;
-    detail.phone = contactToUpdate && contactToUpdate.phone;
-    detail.appDownloadStatus =
-      contactToUpdate && contactToUpdate.appDownloadStatus === "Invited"
-        ? true
-        : false;
-    detail.type = contactToUpdate && contactToUpdate.type;
-    detail.isPayee = contactToUpdate && contactToUpdate.isPayee;
-    detail.organisationDetails =
-      contactToUpdate &&
-      contactToUpdate.organisationDetails &&
-      contactToUpdate.organisationDetails.organisationName
-        ? true
-        : false;
-    detail.organisationName =
-      contactToUpdate &&
-      contactToUpdate.organisationDetails &&
-      contactToUpdate.organisationDetails.organisationName;
-    detail.gst =
-      contactToUpdate &&
-      contactToUpdate.organisationDetails &&
-      contactToUpdate.organisationDetails.gst;
-    detail.address1 =
-      contactToUpdate &&
-      contactToUpdate.organisationDetails &&
-      contactToUpdate.organisationDetails.address1;
-    detail.address2 =
-      contactToUpdate &&
-      contactToUpdate.organisationDetails &&
-      contactToUpdate.organisationDetails.address2;
-    detail.city =
-      contactToUpdate &&
-      contactToUpdate.organisationDetails &&
-      contactToUpdate.organisationDetails.city;
-    detail.state =
-      contactToUpdate &&
-      contactToUpdate.organisationDetails &&
-      contactToUpdate.organisationDetails.state;
-    detail.country =
-      contactToUpdate &&
-      contactToUpdate.organisationDetails &&
-      contactToUpdate.organisationDetails.country;
-    detail.zipcode =
-      contactToUpdate &&
-      contactToUpdate.organisationDetails &&
-      contactToUpdate.organisationDetails.zipcode;
-    detail.organisationEmail =
-      contactToUpdate &&
-      contactToUpdate.organisationDetails &&
-      contactToUpdate.organisationDetails.organisationEmail;
+    detail.id = flattenData && flattenData.id;
+    detail.firstname = flattenData && flattenData.firstname;
+    detail.lastname = flattenData && flattenData.lastname;
+    detail.email = flattenData && flattenData.email;
+    detail.phone = flattenData && flattenData.phone;
+    detail.appDownloadStatus = flattenData && flattenData.appDownloadStatus === "Invited" ? true : false;
+    detail.type = flattenData && flattenData.type;
+    detail.isPayee = flattenData && flattenData.isPayee;
+    detail.organisationDetails = flattenData && flattenData.organisationDetails && flattenData.organisationDetails ? true : false;
+    detail.organisationName = flattenData && flattenData.organisationDetails && flattenData.organisationDetails.organisationName;
+    detail.gst = flattenData && flattenData.organisationDetails && flattenData.organisationDetails.gst;
+    detail.address1 = flattenData && flattenData.organisationDetails && flattenData.organisationDetails.address1;
+    detail.address2 = flattenData && flattenData.organisationDetails && flattenData.organisationDetails.address2;
+    detail.city = flattenData && flattenData.organisationDetails && flattenData.organisationDetails.city;
+    detail.state = flattenData && flattenData.organisationDetails && flattenData.organisationDetails.state;
+    detail.country = flattenData && flattenData.organisationDetails && flattenData.organisationDetails.country;
+    detail.zipcode = flattenData && flattenData.organisationDetails && flattenData.organisationDetails.zipcode;
+    detail.organisationEmail = flattenData && flattenData.organisationDetails && flattenData.organisationDetails.organisationEmail;
 
     setContactDetails(detail);
 
@@ -167,25 +129,28 @@ function CreateEditContact(props: any, ref: any) {
           appDownloadStatus: frm.appDownloadStatus ? "Invited" : "NotInvited",
           isPayee: frm.isPayee,
           ownedBy: auth.userid,
-          organisationDetails: frm.organisationDetails
-            ? {
-                organisationEmail: frm.organisationEmail,
-                organisationName: frm.organisationName,
-                gst: frm.gst,
-                state: frm.state,
-                zipcode: frm.zipcode,
-                city: frm.city,
-                country: frm.country,
-                address1: frm.address1,
-                address2: frm.address2,
-              }
-            : null,
+          organisationDetails: {
+            organisationEmail: frm.organisationEmail
+              ? frm.organisationEmail
+              : null,
+            organisationName: frm.organisationName
+              ? frm.organisationName
+              : null,
+            gst: frm.gst ? frm.gst : null,
+            state: frm.state ? frm.state : null,
+            zipcode: frm.zipcode ? frm.zipcode : null,
+            city: frm.city ? frm.city : null,
+            country: frm.country ? frm.country : null,
+            address1: frm.address1 ? frm.address1 : null,
+            address2: frm.address2 ? frm.address2 : null,
+          },
         },
       },
     });
   }
 
   function EditContact(frm: any) {
+     console.log(frm);
     updateContact({
       variables: {
         id: Number(operation.id),
@@ -197,19 +162,17 @@ function CreateEditContact(props: any, ref: any) {
           type: frm.type ? frm.type : null,
           appDownloadStatus: frm.appDownloadStatus ? "Invited" : "NotInvited",
           isPayee: frm.isPayee,
-          organisationDetails: frm.organisationDetails
-            ? {
-                organisationEmail: frm.organisationEmail,
-                organisationName: frm.organisationName,
-                gst: frm.gst,
-                state: frm.state,
-                zipcode: frm.zipcode,
-                city: frm.city,
-                country: frm.country,
-                address1: frm.address1,
-                address2: frm.address2,
-              }
-            : null,
+          organisationDetails: {
+            organisationEmail: frm.organisationEmail,
+            organisationName: frm.organisationName,
+            gst: frm.gst,
+            state: frm.state,
+            zipcode: frm.zipcode,
+            city: frm.city,
+            country: frm.country,
+            address1: frm.address1,
+            address2: frm.address2,
+          },
         },
       },
     });
@@ -276,6 +239,15 @@ function CreateEditContact(props: any, ref: any) {
           }}
         />
       )}
+
+      {/* success toaster notification */}
+      {isFormSubmitted ? (
+        <Toaster
+          handleCallback={() => setIsFormSubmitted(!isFormSubmitted)}
+          type="success"
+          msg="Contact has been created"
+        />
+      ) : null}
     </>
   );
 }
