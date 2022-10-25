@@ -4,7 +4,6 @@ import {Button, Form} from 'react-bootstrap';
 const CourseDetails = (props) => {
 
     const inputDisabled = props.readonly;
-    
     const [details, setDetails] = useState<any>(props.value === undefined ? [{title: '', description: ''}] : JSON.parse(props.value));
 
     function handleAddCourseDetails(data: any) {

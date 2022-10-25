@@ -5,13 +5,9 @@ import moment from 'moment';
 const PackageDateConfig = (props: any) => {
 
      const inputDisabled = props.readonly;
-
      const cohortStartDate = JSON.parse(props.formContext.dates).startDate;
-
      const [publishingDate, setPublishingDate] = useState(props.value === undefined ? moment().format("YYYY-MM-DDTHH:mm") : moment(JSON.parse(props.value).publishingDate).format("YYYY-MM-DDTHH:mm"));
      const [expiryDate, setExpiryDate] = useState(props.value === undefined ? moment(cohortStartDate).format("YYYY-MM-DDTHH:mm") : moment(JSON.parse(props.value).expiryDate).format("YYYY-MM-DDTHH:mm"));
-
-     console.log(expiryDate);
 
      props.onChange(JSON.stringify({publishingDate, expiryDate}));
 

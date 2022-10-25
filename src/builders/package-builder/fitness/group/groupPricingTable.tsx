@@ -8,7 +8,6 @@ import moment from 'moment';
 const PricingTable = (props) => {
 
      const inputDisabled = props.readonly;
-     console.log(props);
      const classDetails = JSON.parse(props.formContext.programDetails);
      const bookingDetails = JSON.parse(props.formContext.groupinstantbooking);
 
@@ -137,9 +136,6 @@ const PricingTable = (props) => {
             }
         });
       },[pricing]);
-
-      console.log(pricing);
-
 
     const SUGGESTED_PRICING = gql`
         query fetchSapienPricing($id: ID!) {

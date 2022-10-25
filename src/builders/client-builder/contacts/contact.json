@@ -20,7 +20,8 @@
       "phone": {
         "type": "string",
         "title": "Phone Number",
-        "minLength": 10
+        "minLength": 10,
+        "format": "phone-in"
       },
       "email": {
         "type": "string",
@@ -90,7 +91,8 @@
             },
             "gst": {
               "type": "string",
-              "title": "GST Number"
+              "title": "GST Number",
+              "max-length": 15
             },
             "organisationEmail": {
               "type": "string",

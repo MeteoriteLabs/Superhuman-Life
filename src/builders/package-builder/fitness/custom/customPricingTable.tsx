@@ -16,10 +16,8 @@ const PricingTable = (props) => {
             return val;
         }
     }
-
-    console.log(props.formContext.programDetails);
     const classDetails = JSON.parse(props.formContext.programDetails);
-    console.log(classDetails);
+    
      const classMode = classDetails.mode === "0" ? "Online" : classDetails.mode === "1" ? "Offline" : "Hybrid";
      const ptOnlineClasses = classDetails.ptOnline;
      const ptOfflineClasses = classDetails.ptOffline;
@@ -148,10 +146,8 @@ const PricingTable = (props) => {
         useQuery(SUGGESTED_PRICING, {variables: { id: auth.userid },onCompleted: (data) => {loadData(data)}})
     }
 
-    console.log(classMode);
-
     function handleSuggestedPricingCalculation(mode: string, item: any, suggestedPricings: any, duration: number) {
-          console.log(mode, item, suggestedPricings);
+          
           var ptOnlinePrice: number, ptOfflinePrice: number, groupOnlinePrice: number, groupOfflinePrice: number, classicPrice: number;
           if(mode === 'Online'){
                ptOnlinePrice = suggestedPricings[suggestedPricings.findIndex((x: any) => x.fitness_package_type.type === "One-On-One")]?.mrp * ptOnlineClasses * (duration/30);
@@ -197,7 +193,7 @@ const PricingTable = (props) => {
 
     function loadData(data){
         const flattenData = flattenObj({...data});
-        console.log(flattenData);
+  
         const newValue = [...pricing];
         if(classMode === "Online"){
           flattenData.suggestedPricings = flattenData.suggestedPricings.filter((item) => item.Mode === classMode);

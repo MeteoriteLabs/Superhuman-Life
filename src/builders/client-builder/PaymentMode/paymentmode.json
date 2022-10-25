@@ -40,7 +40,8 @@
                     "upiPhoneNumber": {
                         "type": "string",
                         "title": "Phone",
-                        "minLength": 10
+                        "minLength": 10,
+                        "format": "phone-in"
                     }
                 },
                 "required": [
@@ -62,7 +63,9 @@
                 "properties": {
                     "AccountNumber": {
                         "type": "string",
-                        "title": "Account Number"
+                        "title": "Account Number",
+                        "max-length": 17,
+                        "minLength": 9
                     },
                     "ifscCode": {
                         "type": "string",
@@ -80,10 +83,10 @@
                         "type": "string",
                         "title": "Account Type",
                         "enum": [
-                            "Current",
-                            "Savings"
+                            " Current",
+                            " Savings"
                         ],
-                        "default": "Current"
+                        "default": " Current"
                     }
                 },
                 "required": [

@@ -6,11 +6,9 @@ import '../fitness.css';
 
 const ClassicPreview = (props) => {
 
-    console.log(props.formContext)
-
     const formData = props?.formContext;
     const programDetails = JSON.parse(formData?.programDetails);
-    console.log(programDetails);
+
     var pricing;
     if(typeof(formData.pricingDetail) === 'string'){
         pricing = formData?.pricingDetail === "free" ? "free" : JSON.parse(formData?.pricingDetail).filter((item) => item.mrp !== null);

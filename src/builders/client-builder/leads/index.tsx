@@ -159,7 +159,6 @@ export default function Leads() {
      }
 
      function loadData(data: any) {
-          // console.log(data);
           let namearr: any = [];
           const flattenData = flattenObj({ ...data });
           setData([...flattenData.websiteContactForms]);

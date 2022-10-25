@@ -19,7 +19,8 @@
         "phone": {
             "type": "string",
             "title": "Phone Number",
-            "minLength": 10
+            "minLength": 10,
+            "format": "phone-in"
         },
         "email": {
             "type": "string",
@@ -30,14 +31,13 @@
             "title": "Type of contact",
             "type": "string",
             "enum": [
-                "Changemaker",
                 "Client",
                 "Organization",
                 "Community",
                 "Service Provider",
                 "Vendor"
             ],
-            "default": "Changemaker"
+            "default": "Client"
         },
         "appDownloadStatus": {
             "type": "boolean",
@@ -85,7 +85,8 @@
                     },
                     "gst": {
                         "type": "string",
-                        "title": "GST Number"
+                        "title": "GST Number",
+                        "maxLength": 15
                     },
                     "organisationEmail": {
                         "type": "string",

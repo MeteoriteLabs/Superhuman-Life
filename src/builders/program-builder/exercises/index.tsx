@@ -9,7 +9,6 @@ import CreateEditExercise from "./createoredit-exercise";
 import { flattenObj } from '../../../components/utils/responseFlatten';
 import moment from 'moment';
 
-
 export default function EventsTab() {
 
     const auth = useContext(AuthContext);
