@@ -1,4 +1,4 @@
-import React, { useEffect, useImperativeHandle, useState } from "react";
+import React, { useEffect, useImperativeHandle, useState, useContext } from "react";
 import { useMutation, useQuery } from "@apollo/client";
 import ModalView from "../../../components/modal";
 import { ADD_CONTACT, DELETE_CONTACT, GET_CONTACTS, UPDATE_CONTACT } from "./queries";
@@ -6,6 +6,7 @@ import StatusModal from "../../../components/StatusModal/StatusModal";
 import { Subject } from "rxjs";
 import { schema } from "./contactsSchema";
 import { flattenObj } from "../../../components/utils/responseFlatten";
+import AuthContext from "../../../context/auth-context";
 
 interface Operation {
      id: string;
@@ -15,6 +16,7 @@ interface Operation {
 }
 
 function CreateEditContact(props: any, ref: any) {
+     const auth = useContext(AuthContext);
      const contactSchema: { [name: string]: any } = require("./contact.json");
      const [contactDetails, setContactDetails] = useState<any>({});
      const [operation, setOperation] = useState<Operation>({} as Operation);
@@ -108,6 +110,7 @@ function CreateEditContact(props: any, ref: any) {
                          type: frm.type ? frm.type : null,
                          appDownloadStatus: frm.appDownloadStatus ? "Invited" : "NotInvited",
                          isPayee: frm.isPayee,
+                         ownedBy: auth.userid,
                          organisationDetails: frm.organisationDetails ?
                               {
                                    organisationEmail: frm.organisationEmail,

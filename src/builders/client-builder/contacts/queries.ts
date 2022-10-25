@@ -1,8 +1,12 @@
 import { gql } from "@apollo/client";
 
 export const GET_CONTACTS = gql`
-  query ContactsQuery{
-    contacts(pagination: { pageSize: 100 }) {
+  query ContactsQuery($id: ID){
+    contacts(pagination: { pageSize: 100 }, filters:{
+      ownedBy:{
+        id: {eq: $id}
+      }
+    } ) {
       data {
         id
         attributes {

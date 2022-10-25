@@ -19,9 +19,6 @@ export const schema: any = {
         "ui:placeholder": "Enter payee phone number"
     },
     accountType: {
-        "ui:widget": "radio",
-        "ui:options": {
-            "inline": true
-        }
+        "ui:widget": "radio"
     }
 };

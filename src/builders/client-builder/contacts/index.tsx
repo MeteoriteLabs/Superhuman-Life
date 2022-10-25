@@ -1,4 +1,4 @@
-import { useMemo, useState, useRef } from "react";
+import { useMemo, useState, useRef, useContext } from "react";
 import {
   Badge,
   Button,
@@ -17,8 +17,10 @@ import CreateEditContact from "./createEditContact";
 import { GET_CONTACTS } from "./queries";
 import { flattenObj } from "../../../components/utils/responseFlatten";
 import { useHistory } from "react-router-dom";
+import AuthContext from "../../../context/auth-context";
 
 export default function Contacts() {
+  const auth = useContext(AuthContext);
   const searchInput = useRef<any>();
   const createEditContactComponent = useRef<any>(null);
 
@@ -113,7 +115,7 @@ export default function Contacts() {
 
   const [datatable, setDataTable] = useState<{}[]>([]);
 
-  const fetch = useQuery(GET_CONTACTS, { onCompleted: loadData });
+  const fetch = useQuery(GET_CONTACTS, { variables: {id: auth.userid} , onCompleted: loadData });
 
   function refetchQueryCallback() {
     fetch.refetch();
