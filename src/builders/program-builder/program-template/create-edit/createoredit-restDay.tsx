@@ -1,7 +1,7 @@
 import React, { useContext, useImperativeHandle, useState } from 'react';
 import { useQuery, useMutation } from "@apollo/client";
 import ModalView from "../../../../components/modal";
-import { GET_SCHEDULEREVENTS, CREATE_SESSION, GET_SESSIONS, UPDATE_TAG_SESSIONS, CREATE_SESSION_BOOKING, GET_TEMPLATE_SESSIONS, UPDATE_FITNESSPORGRAMS_SESSIONS } from "../queries";
+import { GET_SCHEDULEREVENTS, GET_SCHEDULEREVENTS_PROGRAM_MANAGER, CREATE_SESSION, GET_SESSIONS, UPDATE_TAG_SESSIONS, CREATE_SESSION_BOOKING, GET_TEMPLATE_SESSIONS, UPDATE_FITNESSPORGRAMS_SESSIONS } from "../queries";
 import AuthContext from "../../../../context/auth-context";
 import { schema, widgets } from '../schema/restDaySchema';
 import {Subject} from 'rxjs';
@@ -15,6 +15,7 @@ interface Operation {
 }
 
 function CreateEditRestDay(props: any, ref: any) {
+    console.log(props);
     const auth = useContext(AuthContext);
     const programSchema: { [name: string]: any; } = require("../json/restDay.json");
     const [programDetails, setProgramDetails] = useState<any>({});
@@ -71,17 +72,29 @@ function CreateEditRestDay(props: any, ref: any) {
 
     function FillDetails(data: any) {
         const flattenData = flattenObj({...data});
+        debugger;
         let details: any = {};
         let restDays: any[] = [];
         let msg = flattenData;
-        msg.fitnessprograms[0]?.sessions?.map(
-            // eslint-disable-next-line array-callback-return
-            (val: any) => {
-                if(val.Is_restday){
-                    return restDays.push({ key: val.day_of_program, day: `Day - ${val.day_of_program}` });
+        if(window.location.pathname.split('/')[1] === "programs" ){
+            msg?.fitnessprograms[0]?.sessions?.map(
+                // eslint-disable-next-line array-callback-return
+                (val: any) => {
+                    if(val.Is_restday){
+                        return restDays.push({ key: val.day_of_program, day: `Day - ${val.day_of_program}` });
+                    }
                 }
-            }
-        );
+            );
+        }
+        else {
+            msg.tags[0]?.sessions?.map(
+                (val: any) => {
+                    if(val.Is_restday){
+                        return restDays.push({ key: val.day_of_program, day: `${moment(val.session_date).format("Do, MMM YY")}`});
+                    }
+                }
+            )
+        }
         details.day = [...restDays] 
         console.log(details)
     setProgramDetails(details);
@@ -92,7 +105,7 @@ function CreateEditRestDay(props: any, ref: any) {
     }
 
     function FetchData() {
-        useQuery(GET_SCHEDULEREVENTS, { variables: { id: program_id }, onCompleted: (e: any) => { FillDetails(e) } });
+        useQuery(window.location.pathname.split('/')[1] === "programs" ? GET_SCHEDULEREVENTS : GET_SCHEDULEREVENTS_PROGRAM_MANAGER, { variables: { id: program_id }, onCompleted: (e: any) => { FillDetails(e) } });
     }
 
     function UpdateProgram(frm: any) {

@@ -7,7 +7,7 @@ import { schema, widgets } from '../schema/newWorkoutSchema';
 import {Subject} from 'rxjs';
 import {flattenObj} from '../../../../components/utils/responseFlatten';
 import moment from 'moment';
-import {AvailabilityCheck} from '../availabilityCheck';
+import {AvailabilityCheck} from './availabilityCheck';
 import { Modal, Button } from 'react-bootstrap';
 
 interface Operation {
@@ -36,6 +36,9 @@ function CreateEditNewWorkout(props: any, ref: any) {
             sessions(filters: {
                 session_date: {
                     eq: $date
+                },
+                type: {
+                    ne: "restday"
                 }
             }){
                 data{
@@ -171,8 +174,10 @@ function CreateEditNewWorkout(props: any, ref: any) {
 
     async function updateSchedulerEvents(frm: any, workout_id: any) {
         var existingEvents = (props.events === null ? [] : [...props.events]);
-        // AvailabilityCheck({...frm})
-
+        if (frm.day) {
+            frm.day = JSON.parse(frm.day);
+        }
+        
         if(window.location.pathname.split('/')[1] !== 'programs'){
             const variables = {
                 date: moment(frm.day[0].day, 'Do, MMM YY').format('YYYY-MM-DD')
@@ -185,10 +190,9 @@ function CreateEditNewWorkout(props: any, ref: any) {
                 return
             }
         }
-
+        
+        var eventJson: any = {};
         if(frm.day){
-            var eventJson: any = {};
-            frm.day = JSON.parse(frm.day);
             frm.time = JSON.parse(frm.time);
             eventJson.type = 'workout';
             eventJson.name = frm.workout;
@@ -228,17 +232,32 @@ function CreateEditNewWorkout(props: any, ref: any) {
             }
         }
 
-        createSession({
-            variables: {
-                start_time: eventJson.startTime,
-                end_time: eventJson.endTime,
-                workout: eventJson.id,
-                day_of_program: eventJson.day,
-                type: eventJson.type,
-                session_date: moment(frm.day[0].day, 'Da, MMM YY').format('YYYY-MM-DD'),
-                changemaker: auth.userid
-            }
-        })
+        if(window.location.pathname.split('/')[1] === 'programs'){
+            createSession({
+                variables: {
+                    start_time: eventJson.startTime,
+                    end_time: eventJson.endTime,
+                    workout: eventJson.id,
+                    type: eventJson.type,
+                    day_of_program: eventJson.day,
+                    changemaker: auth.userid,
+                    session_date: null
+                }
+            });
+        }else {
+            createSession({
+                variables: {
+                    start_time: eventJson.startTime,
+                    end_time: eventJson.endTime,
+                    workout: eventJson.id,
+                    tag: eventJson.tag,
+                    mode: eventJson.mode,
+                    type: eventJson.type,
+                    session_date: moment(frm.day[0].day, 'Do, MMM YY').format('YYYY-MM-DD'),
+                    changemaker: auth.userid
+                }
+            });
+        }
     }
     }
 
@@ -248,49 +267,50 @@ function CreateEditNewWorkout(props: any, ref: any) {
         frm.equipment = JSON.parse(frm.equipment);
         frm.muscleGroup = JSON.parse(frm.muscleGroup);
         if (frm.addWorkout.AddWorkout === 'Build') {
-            if (Object.keys(frm.addWorkout.warmup)[0] === "exercise") {
-              frm.addWorkout.warmup = JSON.parse(frm.addWorkout.warmup.exercise);
+
+        if (Object.keys(frm.addWorkout.warmup)[0] === "exercise") {
+            frm.addWorkout.warmup = JSON.parse(frm.addWorkout.warmup.exercise);
             } else {
-              frm.addWorkout.warmup.type = Object.keys(frm.addWorkout.warmup)[0];
-              frm.addWorkout.warmup.value = frm.addWorkout.warmup[Object.keys(frm.addWorkout.warmup)[0]];
-              delete frm.addWorkout.warmup[Object.keys(frm.addWorkout.warmup)[0]];
-              frm.addWorkout.warmup = [frm.addWorkout.warmup]
+                frm.addWorkout.warmup.type = Object.keys(frm.addWorkout.warmup)[0];
+                frm.addWorkout.warmup.value = frm.addWorkout.warmup[Object.keys(frm.addWorkout.warmup)[0]];
+                delete frm.addWorkout.warmup[Object.keys(frm.addWorkout.warmup)[0]];
+                frm.addWorkout.warmup = [frm.addWorkout.warmup]
             }
             if (Object.keys(frm.addWorkout.mainmovement)[0] === "exercise") {
-              frm.addWorkout.mainmovement = JSON.parse(frm.addWorkout.mainmovement.exercise);
+                frm.addWorkout.mainmovement = JSON.parse(frm.addWorkout.mainmovement.exercise);
             } else {
-              frm.addWorkout.mainmovement.type = Object.keys(frm.addWorkout.mainmovement)[0];
-              frm.addWorkout.mainmovement.value = frm.addWorkout.mainmovement[Object.keys(frm.addWorkout.mainmovement)[0]];
-              delete frm.addWorkout.mainmovement[Object.keys(frm.addWorkout.mainmovement)[0]];
-              frm.addWorkout.mainmovement = [frm.addWorkout.mainmovement]
+                frm.addWorkout.mainmovement.type = Object.keys(frm.addWorkout.mainmovement)[0];
+                frm.addWorkout.mainmovement.value = frm.addWorkout.mainmovement[Object.keys(frm.addWorkout.mainmovement)[0]];
+                delete frm.addWorkout.mainmovement[Object.keys(frm.addWorkout.mainmovement)[0]];
+                frm.addWorkout.mainmovement = [frm.addWorkout.mainmovement]
             }
             if (Object.keys(frm.addWorkout.cooldown)[0] === "exercise") {
-              frm.addWorkout.cooldown = JSON.parse(frm.addWorkout.cooldown.exercise);
+                frm.addWorkout.cooldown = JSON.parse(frm.addWorkout.cooldown.exercise);
             } else {
-              frm.addWorkout.cooldown.type = Object.keys(frm.addWorkout.cooldown)[0];
-              frm.addWorkout.cooldown.value = frm.addWorkout.cooldown[Object.keys(frm.addWorkout.cooldown)[0]];
-              delete frm.addWorkout.cooldown[Object.keys(frm.addWorkout.cooldown)[0]];
-              frm.addWorkout.cooldown = [frm.addWorkout.cooldown]
+                frm.addWorkout.cooldown.type = Object.keys(frm.addWorkout.cooldown)[0];
+                frm.addWorkout.cooldown.value = frm.addWorkout.cooldown[Object.keys(frm.addWorkout.cooldown)[0]];
+                delete frm.addWorkout.cooldown[Object.keys(frm.addWorkout.cooldown)[0]];
+                frm.addWorkout.cooldown = [frm.addWorkout.cooldown]
             }
-          }
+        }
         createWorkout({
             variables: {
-              workouttitle: frm.workout,
-              intensity: ENUM_WORKOUTS_INTENSITY[frm.intensity],
-              level: ENUM_EXERCISES_EXERCISELEVEL[frm.level],
-              fitnessdisciplines: frm.discipline.map((item: any) => { return item.id }).join(',').split(','),
-              About: frm.about,
-              Benifits: frm.benefits,
-              warmup: (frm.addWorkout.AddWorkout === "Build" ? frm.addWorkout.warmup : null),
-              mainmovement: (frm.addWorkout.AddWorkout === "Build" ? frm.addWorkout.mainmovement : null),
-              cooldown: (frm.addWorkout.AddWorkout === "Build" ? frm.addWorkout.cooldown : null),
-              workout_text: (frm.addWorkout.AddWorkout === "Text" ? frm.addWorkout.AddText : null),
-              workout_URL: (frm.addWorkout.AddWorkout === "Add URL" ? frm.addWorkout.AddURL : null),
-              Workout_Video_ID: (frm.addWorkout.AddWorkout === "Upload" ? frm.addWorkout.Upload : null),
-              calories: frm.calories,
-              equipment_lists: frm.equipment.map((item: any) => { return item.id }).join(',').split(','),
-              muscle_groups: frm.muscleGroup.map((item: any) => { return item.id }).join(',').split(','),
-              users_permissions_user: frm.user_permissions_user
+                workouttitle: frm.workout,
+                intensity: ENUM_WORKOUTS_INTENSITY[frm.intensity],
+                level: ENUM_EXERCISES_EXERCISELEVEL[frm.level],
+                fitnessdisciplines: frm.discipline.map((item: any) => { return item.id }).join(',').split(','),
+                About: frm.about,
+                Benifits: frm.benefits,
+                warmup: (frm.addWorkout.AddWorkout === "Build" ? frm.addWorkout.warmup : null),
+                mainmovement: (frm.addWorkout.AddWorkout === "Build" ? frm.addWorkout.mainmovement : null),
+                cooldown: (frm.addWorkout.AddWorkout === "Build" ? frm.addWorkout.cooldown : null),
+                workout_text: (frm.addWorkout.AddWorkout === "Text" ? frm.addWorkout.AddText : null),
+                workout_URL: (frm.addWorkout.AddWorkout === "Add URL" ? frm.addWorkout.AddURL : null),
+                Workout_Video_ID: (frm.addWorkout.AddWorkout === "Upload" ? frm.addWorkout.Upload : null),
+                calories: frm.calories,
+                equipment_lists: frm.equipment.map((item: any) => { return item.id }).join(',').split(','),
+                muscle_groups: frm.muscleGroup.map((item: any) => { return item.id }).join(',').split(','),
+                users_permissions_user: frm.user_permissions_user
             }
         });
     }

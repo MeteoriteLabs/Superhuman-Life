@@ -34,6 +34,9 @@ function CreateEditWorkoutTemplate(props: any, ref: any) {
             sessions(filters: {
                 session_date: {
                     eq: $date
+                },
+                type: {
+                  ne: "restday"
                 }
             }){
                 data{
