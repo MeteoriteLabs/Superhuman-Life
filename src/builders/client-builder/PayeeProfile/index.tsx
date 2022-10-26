@@ -22,18 +22,10 @@ function PayeeProfile() {
   const params = new URLSearchParams(query);
   const id = params.get("id");
 
-  // useQuery(GET_CONTACTS, {
-  //   onCompleted: (e: any) => {
-  //     let flattenData = flattenObj(e.contacts);
-  //     FillDetails(flattenData);
-  //   },
-  // });
-
   useQuery(GET_CONTACT, {
     variables: { id: id },
     onCompleted: (e: any) => {
       let flattenData = flattenObj(e);
-      console.log(flattenData);
       FillDetails(flattenData);
     },
   });

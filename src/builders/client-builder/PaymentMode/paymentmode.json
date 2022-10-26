@@ -4,7 +4,7 @@
     "properties": {
         "upi": {
             "type": "boolean",
-            "title": "UPI",
+            "title": " UPI",
             "enum": [
                 true,
                 false
@@ -13,7 +13,7 @@
         },
         "bankAccount": {
             "type": "boolean",
-            "title": "Bank Account",
+            "title": " Bank Account",
             "enum": [
                 true,
                 false
@@ -62,7 +62,7 @@
             "then": {
                 "properties": {
                     "AccountNumber": {
-                        "type": "string",
+                        "type": "number",
                         "title": "Account Number",
                         "max-length": 17,
                         "minLength": 9

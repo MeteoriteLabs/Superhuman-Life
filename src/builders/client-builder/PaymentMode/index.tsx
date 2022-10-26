@@ -27,7 +27,6 @@ function PaymentMode() {
     onCompleted: (e: any) => {
       
       let flattenData = flattenObj(e);
-      console.log(flattenData)
       FillDetails(flattenData);
     },
   });

@@ -37,13 +37,15 @@ function CreateEditContact(props: any, ref: any) {
   const [operation, setOperation] = useState<Operation>({} as Operation);
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
   const [modalLabel, setModalLabel] = useState<string>("");
-  let [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
+  let [isCreated, setIsCreated] = useState<boolean>(false);
+  const [isDeleted, setIsDeleted] = useState<boolean>(false);
+  const [isUpdated, setIsUpdated] = useState<boolean>(false);
 
   const [createContact] = useMutation(ADD_CONTACT, {
     onCompleted: (r: any) => {
       modalTrigger.next(false);
       props.callback();
-      setIsFormSubmitted(!isFormSubmitted);
+      setIsCreated(!isCreated);
     },
   });
 
@@ -51,6 +53,7 @@ function CreateEditContact(props: any, ref: any) {
     onCompleted: (r: any) => {
       modalTrigger.next(false);
       props.callback();
+      setIsUpdated(!isUpdated);
     }
   });
 
@@ -58,6 +61,7 @@ function CreateEditContact(props: any, ref: any) {
     onCompleted: (e: any) => {
       modalTrigger.next(false);
       props.callback();
+      setIsDeleted(!isDeleted);
     },
   });
 
@@ -163,15 +167,15 @@ function CreateEditContact(props: any, ref: any) {
           appDownloadStatus: frm.appDownloadStatus ? "Invited" : "NotInvited",
           isPayee: frm.isPayee,
           organisationDetails: {
-            organisationEmail: frm.organisationEmail,
-            organisationName: frm.organisationName,
-            gst: frm.gst,
-            state: frm.state,
-            zipcode: frm.zipcode,
-            city: frm.city,
-            country: frm.country,
-            address1: frm.address1,
-            address2: frm.address2,
+            organisationEmail: frm.organisationDetails ? frm.organisationEmail : null,
+            organisationName: frm.organisationDetails ? frm.organisationName : null,
+            gst: frm.organisationDetails ? frm.gst : null,
+            state: frm.organisationDetails ? frm.state : null,
+            zipcode: frm.organisationDetails ? frm.zipcode : null,
+            city: frm.organisationDetails ? frm.city : null,
+            country: frm.organisationDetails ? frm.country : null,
+            address1: frm.organisationDetails ? frm.address1 : null,
+            address2: frm.organisationDetails ? frm.address2 : null,
           },
         },
       },
@@ -241,13 +245,9 @@ function CreateEditContact(props: any, ref: any) {
       )}
 
       {/* success toaster notification */}
-      {isFormSubmitted ? (
-        <Toaster
-          handleCallback={() => setIsFormSubmitted(!isFormSubmitted)}
-          type="success"
-          msg="Contact has been created"
-        />
-      ) : null}
+      {isCreated && <Toaster handleCallback = {() => setIsCreated(!isCreated)} type = "success" msg = "Contact has been created successfully"/> }
+      {isUpdated && <Toaster handleCallback = {() => setIsUpdated(!isUpdated)} type = "success" msg = "Contact has been updated successfully"/> }
+      {isDeleted && <Toaster handleCallback = {() => setIsDeleted(!isDeleted)} type = "success" msg = "Contact has been deleted successfully"/> }
     </>
   );
 }
