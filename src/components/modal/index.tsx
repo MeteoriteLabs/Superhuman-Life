@@ -172,8 +172,6 @@ export default function ModalView({
               }}
             >
               {actionType === "view" ? "Close" : "Submit"}
-              
-              
             </Button>
           </>
         )}

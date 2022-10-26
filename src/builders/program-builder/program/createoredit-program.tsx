@@ -119,7 +119,7 @@ function CreateEditProgram(props: any, ref: any) {
     }
 
     function FetchData() {
-        useQuery(GET_DATA, { variables: { id: operation.id }, onCompleted: (e: any) => { FillDetails(e) } });
+        useQuery(GET_DATA, { variables: { id: operation.id }, skip: !operation.id ,onCompleted: (e: any) => { FillDetails(e) } });
     }
 
     function CreateProgram(frm: any) {

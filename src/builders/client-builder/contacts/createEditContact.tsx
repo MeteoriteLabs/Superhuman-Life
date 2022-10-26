@@ -184,15 +184,15 @@ function CreateEditContact(props: any, ref: any) {
   function DeleteContact(id: any) {
     deleteContact({
       variables: {
-        id,
-      },
+        id
+      }
     });
   }
 
   function OnSubmit(frm: any) {
     if (modalLabel === "Edit contact") {
       EditContact(frm);
-    } else {
+    } else if (modalLabel === "Create contact"){
       CreateContact(frm);
     }
   }
@@ -203,7 +203,7 @@ function CreateEditContact(props: any, ref: any) {
     } else if (operation.type === "edit") {
       setModalLabel("Edit contact");
     } else if (operation.type === "view") {
-      setModalLabel("View");
+      setModalLabel("View contact");
     }
   }, [operation]);
 
@@ -217,7 +217,7 @@ function CreateEditContact(props: any, ref: any) {
         formUISchema={schema}
         formSchema={contactSchema}
         showing={operation.modal_status}
-        formSubmit={(frm: any, id: string) => {
+        formSubmit={(frm: any) => {
           OnSubmit(frm);
         }}
         stepperValues={["Basic Contact Details", "Organisation Settings"]}
