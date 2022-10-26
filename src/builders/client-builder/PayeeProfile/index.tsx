@@ -14,7 +14,7 @@ import {
 function PayeeProfile() {
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
   const formRef = useRef<any>(null);
-  const payeeProfileJson: { } = require("./payeeProfile.json");
+  const payeeProfileJson: {} = require("./payeeProfile.json");
   const [paymentModeDetails, setPaymentModeDetails] = useState<any>({});
   const query = window.location.search;
   const params = new URLSearchParams(query);
@@ -71,59 +71,49 @@ function PayeeProfile() {
 
   //fillDetails
   function FillDetails(data: any) {
-    if (data) {
+    if (data && data.contact) {
       setPaymentModeDetails({
-        id: data.contact && data.contact.id,
-        firstname: data.contact && data.contact.firstname,
-        lastname: data.contact && data.contact.lastname,
-        email: data.contact && data.contact.email,
-        phone: data.contact && data.contact.phone,
+        id: data.contact.id,
+        firstname: data.contact.firstname,
+        lastname: data.contact.lastname,
+        email: data.contact.email,
+        phone: data.contact.phone,
         appDownloadStatus:
           data.contact && data.contact.appDownloadStatus === "Invited"
             ? true
             : false,
-        type: data.contact && data.contact.type,
-        isPayee: data.contact && data.contact.isPayee,
+        type: data.contact.type,
+        isPayee: data.contact.isPayee,
         organisationDetails:
-          data.contact &&
           data.contact.organisationDetails &&
           data.contact.organisationDetails.organisationName
             ? true
             : false,
         organisationName:
-          data.contact &&
           data.contact.organisationDetails &&
           data.contact.organisationDetails.organisationName,
         gst:
-          data.contact &&
           data.contact.organisationDetails &&
           data.contact.organisationDetails.gst,
         address1:
-          data.contact &&
           data.contact.organisationDetails &&
           data.contact.organisationDetails.address1,
         address2:
-          data.contact &&
           data.contact.organisationDetails &&
           data.contact.organisationDetails.address2,
         city:
-          data.contact &&
           data.contact.organisationDetails &&
           data.contact.organisationDetails.city,
         state:
-          data.contact &&
           data.contact.organisationDetails &&
           data.contact.organisationDetails.state,
         country:
-          data.contact &&
           data.contact.organisationDetails &&
           data.contact.organisationDetails.country,
         zipcode:
-          data.contact &&
           data.contact.organisationDetails &&
           data.contact.organisationDetails.zipcode,
         organisationEmail:
-          data.contact &&
           data.contact.organisationDetails &&
           data.contact.organisationDetails.organisationEmail,
       });

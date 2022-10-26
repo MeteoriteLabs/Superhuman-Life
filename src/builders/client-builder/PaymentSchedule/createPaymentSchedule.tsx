@@ -12,7 +12,7 @@ import {
   ADD_PAYMENT_SCHEDULE,
   FETCH_CONTACT_DETAILS,
   DELETE_PAYMENT_SCHEDULE,
-  UPDATE_PAYMENT_SCHEDULE
+  UPDATE_PAYMENT_SCHEDULE,
 } from "./queries";
 
 interface Operation {
@@ -27,12 +27,11 @@ function CreatePaymentSchedule(props: any, ref: any) {
   const params = new URLSearchParams(query);
   const id = params.get("id");
   const auth = useContext(AuthContext);
-  const paymentSchema: {
-    [name: string]: any;
-  } = require("./paymentSettings.json");
+  const paymentSchema: {} = require("./paymentSettings.json");
   const [operation, setOperation] = useState<Operation>({} as Operation);
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
-  const [showDeactivateModal, setShowDeactivateModal] = useState<boolean>(false);
+  const [showDeactivateModal, setShowDeactivateModal] =
+    useState<boolean>(false);
   const [usersDetails, setUserDetails] = useState<any>([]);
   const [contactData, setContactData] = useState<any>({});
   const [isDeleted, setIsDeleted] = useState<boolean>(false);
@@ -127,7 +126,7 @@ function CreatePaymentSchedule(props: any, ref: any) {
                 basicPay: frm.basicPay ? frm.basicPay : null,
                 HRA: frm.HRA ? frm.HRA : null,
                 Gratuity: frm.Gratuity ? frm.Gratuity : null,
-                LTA: frm.LTA ? frm.NTA : null,
+                LTA: frm.LTA ? frm.LTA : null,
                 ESI: frm.ESI ? frm.ESI : null,
                 MedicalReimbursement: frm.MedicalReimbursement
                   ? frm.MedicalReimbursement
@@ -220,9 +219,27 @@ function CreatePaymentSchedule(props: any, ref: any) {
       )}
 
       {/* success toaster notification */}
-      {isCreated && <Toaster handleCallback = {() => setIsCreated(!isCreated)} type = "success" msg = "Payment Schedule has been created successfully"/> }
-      {isDeactivated && <Toaster handleCallback = {() => setIsDeactivated(!isDeactivated)} type = "success" msg = "Payment Schedule has been deactivated successfully"/> }
-      {isDeleted && <Toaster handleCallback = {() => setIsDeleted(!isDeleted)} type = "success" msg = "Payment Schedule has been deleted successfully"/> }
+      {isCreated && (
+        <Toaster
+          handleCallback={() => setIsCreated(!isCreated)}
+          type="success"
+          msg="Payment Schedule has been created successfully"
+        />
+      )}
+      {isDeactivated && (
+        <Toaster
+          handleCallback={() => setIsDeactivated(!isDeactivated)}
+          type="success"
+          msg="Payment Schedule has been deactivated successfully"
+        />
+      )}
+      {isDeleted && (
+        <Toaster
+          handleCallback={() => setIsDeleted(!isDeleted)}
+          type="success"
+          msg="Payment Schedule has been deleted successfully"
+        />
+      )}
     </>
   );
 }

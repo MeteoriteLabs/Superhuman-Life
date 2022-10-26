@@ -32,7 +32,7 @@ interface Operation {
 
 function CreateEditContact(props: any, ref: any) {
   const auth = useContext(AuthContext);
-  const contactSchema: { [name: string]: any } = require("./contact.json");
+  const contactSchema: { } = require("./contact.json");
   const [contactDetails, setContactDetails] = useState<any>({});
   const [operation, setOperation] = useState<Operation>({} as Operation);
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
@@ -154,7 +154,6 @@ function CreateEditContact(props: any, ref: any) {
   }
 
   function EditContact(frm: any) {
-     console.log(frm);
     updateContact({
       variables: {
         id: Number(operation.id),

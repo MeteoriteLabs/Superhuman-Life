@@ -14,9 +14,7 @@ import {
 function PaymentMode() {
   let [isFormSubmitted, setIsFormSubmitted] = useState(false);
   const formRef = useRef<any>(null);
-  const paymentModeJson: {
-    [name: string]: any;
-  } = require("./paymentmode.json");
+  const paymentModeJson: { } = require("./paymentmode.json");
   const [paymentModeDetails, setPaymentModeDetails] = useState<any>({});
   const query = window.location.search;
   const params = new URLSearchParams(query);
@@ -64,16 +62,16 @@ function PaymentMode() {
   //fillDetails
   function FillDetails(data: any) {
 
-    if (data) {
+    if (data && data.contact && data.contact.paymentDetails) {
       setPaymentModeDetails({
-        UPI_ID: data.contact && data.contact.paymentDetails && data.contact.paymentDetails.upi,
-        upiPhoneNumber: data.contact && data.contact.paymentDetails && data.contact.paymentDetails.phoneNumber,
-        Branch: data.contact && data.contact.paymentDetails && data.contact.paymentDetails.branch,
-        ifscCode: data.contact && data.contact.paymentDetails && data.contact.paymentDetails.IFSCCode,
-        BankName: data.contact && data.contact.paymentDetails && data.contact.paymentDetails.bankName,
-        accountType: data.contact && data.contact.paymentDetails && data.contact.paymentDetails.accountType,
-        AccountNumber: data.contact && data.contact.paymentDetails && data.contact.paymentDetails.accountNumber,
-        bankAccount: data.contact && data.contact.paymentDetails && data.contact.paymentDetails.accountNumber ? true : false,
+        UPI_ID: data.contact.paymentDetails.upi,
+        upiPhoneNumber: data.contact.paymentDetails.phoneNumber,
+        Branch: data.contact.paymentDetails.branch,
+        ifscCode: data.contact.paymentDetails.IFSCCode,
+        BankName: data.contact.paymentDetails.bankName,
+        accountType: data.contact.paymentDetails.accountType,
+        AccountNumber: data.contact.paymentDetails.accountNumber,
+        bankAccount: data.contact.paymentDetails.accountNumber ? true : false,
       });
     }
   }
