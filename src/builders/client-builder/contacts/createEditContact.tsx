@@ -194,7 +194,7 @@ function CreateEditContact(props: any, ref: any) {
       EditContact(frm);
     } else if (modalLabel === "Create contact"){
       CreateContact(frm);
-    }
+    } 
   }
 
   useEffect(() => {

@@ -160,19 +160,38 @@ export default function ModalView({
               onClick={() => {
                 setShow(false);
               }}
-              className={name === "View" ? "d-none" : ""}
+              className={actionType === "view" ? "d-none" : ""}
             >
               Close
             </Button>
-            <Button
-              variant="success"
-              size="sm"
-              onClick={(event) => {
-                formRef.current.onSubmit(event);
-              }}
-            >
-              {actionType === "view" ? "Close" : "Submit"}
-            </Button>
+
+            {step < stepper?.length ? (
+              <>
+                <Button
+                  variant="success"
+                  size="sm"
+                  onClick={(event) => {
+                    formRef.current.onSubmit(event);
+                  }}
+                >
+                  {" "}
+                  Next<i className="ml-4 fas fa-arrow-right"></i>
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button
+                  variant="success"
+                  size="sm"
+                  onClick={() => {
+                    setShow(false);
+                  }}
+                >
+                  {" "}
+                  Close<i className="ml-4 fas fa-check"></i>
+                </Button>
+              </>
+            )}
           </>
         )}
       </Modal.Footer>
