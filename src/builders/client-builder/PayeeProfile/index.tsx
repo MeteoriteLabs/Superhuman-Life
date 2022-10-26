@@ -12,11 +12,9 @@ import {
 } from "../../../components/utils/ValidationPatterns";
 
 function PayeeProfile() {
-  let [isFormSubmitted, setIsFormSubmitted] = useState(false);
+  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
   const formRef = useRef<any>(null);
-  const payeeProfileJson: {
-    [name: string]: any;
-  } = require("./payeeProfile.json");
+  const payeeProfileJson: { } = require("./payeeProfile.json");
   const [paymentModeDetails, setPaymentModeDetails] = useState<any>({});
   const query = window.location.search;
   const params = new URLSearchParams(query);
