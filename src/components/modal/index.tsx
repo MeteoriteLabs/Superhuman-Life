@@ -126,7 +126,7 @@ export default function ModalView({
         </Row>
       </Modal.Body>
       <Modal.Footer>
-        {isStepper ? (
+        {isStepper && actionType !== "view" ? (
           <>
             <Button
               variant="light"
@@ -171,7 +171,9 @@ export default function ModalView({
                 formRef.current.onSubmit(event);
               }}
             >
-              {name === "View" ? "Close" : "Submit"}
+              {actionType === "view" ? "Close" : "Submit"}
+              
+              
             </Button>
           </>
         )}

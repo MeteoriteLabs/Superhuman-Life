@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
-import Form from "@rjsf/core";
+import { withTheme, utils } from "@rjsf/core";
+import { Theme as Bootstrap4Theme } from "@rjsf/bootstrap-4";
 import { schema } from "./payeeProfileSchema";
 import { GET_CONTACT, UPDATE_CONTACT } from "../contacts/queries";
 import { useMutation, useQuery } from "@apollo/client";
@@ -12,6 +13,10 @@ import {
 } from "../../../components/utils/ValidationPatterns";
 
 function PayeeProfile() {
+  const registry = utils.getDefaultRegistry();
+  const defaultFileWidget = registry.widgets["FileWidget"];
+  (Bootstrap4Theme as any).widgets["FileWidget"] = defaultFileWidget;
+  const Form: any = withTheme(Bootstrap4Theme);
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
   const formRef = useRef<any>(null);
   const payeeProfileJson: {} = require("./payeeProfile.json");

@@ -83,10 +83,10 @@
                         "type": "string",
                         "title": "Account Type",
                         "enum": [
-                            " Current",
-                            " Savings"
+                            "Current",
+                            "Savings"
                         ],
-                        "default": " Current"
+                        "default": "Current"
                     }
                 },
                 "required": [

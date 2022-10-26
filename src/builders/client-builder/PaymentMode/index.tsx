@@ -1,8 +1,9 @@
 import { useState, useRef } from "react";
-import Form from "@rjsf/core";
 import { schema } from "./paymentModeSchema";
 import { GET_CONTACT , UPDATE_CONTACT } from "../contacts/queries";
 import { useMutation, useQuery } from "@apollo/client";
+import { withTheme, utils } from "@rjsf/core";
+import { Theme as Bootstrap4Theme } from "@rjsf/bootstrap-4";
 import { flattenObj } from "../../../components/utils/responseFlatten";
 import { Col } from "react-bootstrap";
 import Toaster from "../../../components/Toaster";
@@ -12,6 +13,10 @@ import {
   } from "../../../components/utils/ValidationPatterns"; 
 
 function PaymentMode() {
+  const registry = utils.getDefaultRegistry();
+  const defaultFileWidget = registry.widgets["FileWidget"];
+  (Bootstrap4Theme as any).widgets["FileWidget"] = defaultFileWidget;
+  const Form: any = withTheme(Bootstrap4Theme);
   let [isFormSubmitted, setIsFormSubmitted] = useState(false);
   const formRef = useRef<any>(null);
   const paymentModeJson: { } = require("./paymentmode.json");
