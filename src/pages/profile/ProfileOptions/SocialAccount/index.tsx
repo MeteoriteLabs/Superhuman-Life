@@ -21,7 +21,7 @@ interface SocialDetails {
 export default function SocialAccount() {
     let [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
     const formRef = useRef<any>(null);
-    const socialAccountJson: { [name: string]: any } = require("./SocialAccount.json");
+    const socialAccountJson: { } = require("./SocialAccount.json");
     const auth = useContext(AuthContext);
     const [webpageDetails, setWebPageDetails] = useState<SocialDetails>({} as SocialDetails);
 
@@ -33,13 +33,9 @@ export default function SocialAccount() {
         },
     });
 
-    const [updateProfile, { error }] = useMutation(UPDATE_USER_PROFILE_DATA, {
+    const [updateProfile] = useMutation(UPDATE_USER_PROFILE_DATA, {
         onCompleted: (r: any) => { setIsFormSubmitted(!isFormSubmitted); fetch.refetch(); }, refetchQueries: [FETCH_USER_PROFILE_DATA]
     });
-
-    if (error) {
-        return <Toaster handleCallback={() => setIsFormSubmitted(!isFormSubmitted)} type="error" msg="Social account details has not been updated" />;
-    }
 
     function updateSocialAccountDetails(frm: any) {
         updateProfile({

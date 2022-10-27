@@ -64,7 +64,7 @@ export default function EducationDetails() {
 
             <Row className="mt-4 pb-3">
                 {
-                    (educationData && educationData?.length) ? educationData.map((currValue: any) =>
+                    educationData ? educationData.map((currValue: any) =>
                         <Col lg={12} key={currValue.id}>
                             <Card className="m-2" key={currValue.id}>
                                 <Card.Body key={currValue.id}>

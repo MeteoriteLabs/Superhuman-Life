@@ -23,11 +23,18 @@ interface Operation {
      type: "create" | "edit" | "delete";
 }
 
+export interface BasicEducationDetails {
+     Institute_Name: string;
+     Type_of_degree: string;
+     Specialization: string;
+     Year: string; 
+   }
+
 function CreateEducation(props: any, ref: any) {
-     const educationJson: { [name: string]: any } = require("./Education.json");
+     const educationJson: { } = require("./Education.json");
      const [operation, setOperation] = useState<Operation>({} as Operation);
      const [educationID, setEducationID] = useState<any>([]);
-     const [educationDetails, setEducationDetails] = useState<any>([]);
+     const [educationDetails, setEducationDetails] = useState({} as BasicEducationDetails);
      const auth = useContext(AuthContext);
      const [prefill, setPrefill] = useState<any>([]);
      const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
@@ -55,15 +62,15 @@ function CreateEducation(props: any, ref: any) {
           onCompleted: (r: any) => { props.callback(); fetch.refetch(); }, refetchQueries: [FETCH_USERS_PROFILE_DATA]
      });
 
-     const [updateEducationalDetail, { error: updateError }] = useMutation(UPDATE_EDUCATION_DETAILS, {
+     const [updateEducationalDetail] = useMutation(UPDATE_EDUCATION_DETAILS, {
           onCompleted: (r: any) => { modalTrigger.next(false); props.callback(); fetch.refetch(); setIsEducationUpdated(!isEducationUpdated); }
      });
 
-     const [deleteEducationData, { error: deleteError }] = useMutation(DELETE_EDUCATION_DETAILS, {
+     const [deleteEducationData] = useMutation(DELETE_EDUCATION_DETAILS, {
           onCompleted: (data: any) => { fetch.refetch(); setIsEducationDeleted(!isEducationDeleted); }, refetchQueries: [FETCH_USERS_PROFILE_DATA]
      });
 
-     const [createEducation, { error: createError }] = useMutation(CREATE_EDUCATION_DETAILS, {
+     const [createEducation] = useMutation(CREATE_EDUCATION_DETAILS, {
           onCompleted: (r: any) => {
                setIsFormSubmitted(!isFormSubmitted);
                modalTrigger.next(false);
@@ -105,7 +112,7 @@ function CreateEducation(props: any, ref: any) {
 
      useEffect(() => {
           let data = prefill && prefill.length ? prefill.find((currValue: any) => currValue.id === operation.id) : null;
-          let details: any = {};
+          let details = {} as BasicEducationDetails;
           details.Institute_Name = data ? data.Institute_Name : '';
           details.Type_of_degree = data ? data.Type_of_degree : '';
           details.Specialization = data ? data.Specialization : '';
@@ -163,16 +170,6 @@ function CreateEducation(props: any, ref: any) {
                     UpdateUserEducation(frm);
                     break;
           }
-     }
-
-     if (createError) {
-          return <Toaster handleCallback={() => setIsFormSubmitted(!isFormSubmitted)} type="error" msg="Failed to add education details" />;
-     }
-     if (updateError) {
-          return <Toaster handleCallback={() => setIsEducationUpdated(!isEducationUpdated)} type="error" msg="Failed to update education details" />;
-     }
-     if (deleteError) {
-          return <Toaster handleCallback={() => setIsEducationDeleted(!isEducationDeleted)} type="error" msg="Failed to delete education details" />;
      }
 
      return (

@@ -61,7 +61,7 @@ function AddressDetails() {
 
       <Row className="mt-4 pb-3">
         {
-          (addressData && addressData?.length) ? addressData?.length && addressData.map((currValue: any) =>
+          addressData ? addressData.map((currValue: any) =>
             <Col lg={12} key={currValue.id}>
               <Card key={currValue.id} className="m-2">
                 <Card.Body key={currValue.id}>
