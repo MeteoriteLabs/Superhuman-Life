@@ -331,6 +331,7 @@ function CreateEditPt(props: any, ref: any) {
                     formData={personalTrainingDetails}
                     widgets={widgets}
                     modalTrigger={modalTrigger}
+                    actionType={operation.type}
                 />
                 
             {/* } */}

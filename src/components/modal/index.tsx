@@ -141,7 +141,8 @@ export default function ModalView({
               size="sm"
               onClick={(event) => formRef.current.onSubmit(event)}
             >
-              {step < stepper.length ? (
+              {step <= stepper.length ? (
+               
                 <>
                   Next<i className="ml-4 fas fa-arrow-right"></i>
                 </>
@@ -164,8 +165,18 @@ export default function ModalView({
             >
               Close
             </Button>
+            <Button
+                variant="success"
+                size="sm"
+                onClick={(event) => {
+                  formRef.current.onSubmit(event);
+                }}
+                className={actionType === "view" ? "d-none" : ""}
+              >
+                {actionType === "view" && isStepper === false ? "Close" : "Submit"}
+              </Button>
 
-            {step < stepper?.length ? (
+            {step < stepper?.length && actionType === "view" ? (
               <>
                 <Button
                   variant="success"
@@ -186,6 +197,7 @@ export default function ModalView({
                   onClick={() => {
                     setShow(false);
                   }}
+                  className={actionType !== "view" ? "d-none" : ""}
                 >
                   {" "}
                   Close<i className="ml-4 fas fa-check"></i>

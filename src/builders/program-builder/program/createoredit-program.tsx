@@ -217,6 +217,7 @@ function CreateEditProgram(props: any, ref: any) {
                 widgets={widgets}
                 modalTrigger={modalTrigger}
                 type={operation.type}
+                actionType={operation.type}
             />
 
             {/* Delete Modal */}

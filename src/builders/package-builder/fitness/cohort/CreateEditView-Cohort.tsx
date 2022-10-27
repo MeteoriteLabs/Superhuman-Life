@@ -329,6 +329,7 @@ function CreateEditCohort(props: any, ref: any) {
                     stepperValues={["Creator", "Details", "Program", "Pricing", "config", "Review"]}
                     widgets={widgets}
                     modalTrigger={modalTrigger}
+                    actionType={operation.type}
                 />
                 
             <Modal

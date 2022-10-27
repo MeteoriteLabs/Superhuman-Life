@@ -298,6 +298,7 @@ function CreateEditChannel(props: any, ref: any) {
                 widgets={widgets}
                 stepperValues={["Creator", "Details", "Schedule", "Pricing", "Config", "Review"]}
                 modalTrigger={modalTrigger}
+                actionType={operation.type}
             />
 
             <Modal

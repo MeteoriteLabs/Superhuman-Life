@@ -346,6 +346,7 @@ function CreateEditWorkout(props: any, ref: any) {
         formData={workoutDetails}
         widgets={widgets}
         modalTrigger={modalTrigger}
+        actionType={operation.type}
       />
 
       {/* Delete Modal */}

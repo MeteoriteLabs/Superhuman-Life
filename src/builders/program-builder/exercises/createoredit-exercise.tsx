@@ -219,9 +219,9 @@ function CreateEditExercise(props: any, ref: any) {
             case 'edit':
                 EditExercise(frm);
                 break;
-            case 'view':
-                ViewExercise(frm);
-                break;
+            // case 'view':
+            //     ViewExercise(frm);
+            //     break;
         }
     }
 
@@ -249,6 +249,7 @@ function CreateEditExercise(props: any, ref: any) {
                 formData={exerciseDetails}
                 widgets={widgets}
                 modalTrigger={modalTrigger}
+                actionType={operation.type}
             />
 
             {/* Delete Modal */}

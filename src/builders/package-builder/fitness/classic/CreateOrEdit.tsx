@@ -321,6 +321,7 @@ function CreateEditPackage(props: any, ref: any) {
                     formData={classicDetails}
                     widgets={widgets}
                     modalTrigger={modalTrigger}
+                    actionType={operation.type}
                 />
                 
             <Modal
