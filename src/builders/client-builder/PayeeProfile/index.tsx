@@ -11,6 +11,7 @@ import {
   phoneCustomFormats,
   phoneTransformErrors,
 } from "../../../components/utils/ValidationPatterns";
+import { PaymentDetails } from "../contacts/PaymentDetailsInterface";
 
 function PayeeProfile() {
   const registry = utils.getDefaultRegistry();
@@ -20,7 +21,7 @@ function PayeeProfile() {
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
   const formRef = useRef<any>(null);
   const payeeProfileJson: {} = require("./payeeProfile.json");
-  const [paymentModeDetails, setPaymentModeDetails] = useState<any>({});
+  const [paymentModeDetails, setPaymentModeDetails] = useState<PaymentDetails>();
   const query = window.location.search;
   const params = new URLSearchParams(query);
   const id = params.get("id");
@@ -28,8 +29,7 @@ function PayeeProfile() {
   useQuery(GET_CONTACT, {
     variables: { id: id },
     onCompleted: (e: any) => {
-      let flattenData = flattenObj(e);
-      FillDetails(flattenData);
+      FillDetails(e.contact);
     },
   });
 
@@ -75,54 +75,35 @@ function PayeeProfile() {
   }
 
   //fillDetails
-  function FillDetails(data: any) {
-    if (data && data.contact) {
-      setPaymentModeDetails({
-        id: data.contact.id,
-        firstname: data.contact.firstname,
-        lastname: data.contact.lastname,
-        email: data.contact.email,
-        phone: data.contact.phone,
-        appDownloadStatus:
-          data.contact && data.contact.appDownloadStatus === "Invited"
-            ? true
-            : false,
-        type: data.contact.type,
-        isPayee: data.contact.isPayee,
-        organisationDetails:
-          data.contact.organisationDetails &&
-          data.contact.organisationDetails.organisationName
-            ? true
-            : false,
-        organisationName:
-          data.contact.organisationDetails &&
-          data.contact.organisationDetails.organisationName,
-        gst:
-          data.contact.organisationDetails &&
-          data.contact.organisationDetails.gst,
-        address1:
-          data.contact.organisationDetails &&
-          data.contact.organisationDetails.address1,
-        address2:
-          data.contact.organisationDetails &&
-          data.contact.organisationDetails.address2,
-        city:
-          data.contact.organisationDetails &&
-          data.contact.organisationDetails.city,
-        state:
-          data.contact.organisationDetails &&
-          data.contact.organisationDetails.state,
-        country:
-          data.contact.organisationDetails &&
-          data.contact.organisationDetails.country,
-        zipcode:
-          data.contact.organisationDetails &&
-          data.contact.organisationDetails.zipcode,
-        organisationEmail:
-          data.contact.organisationDetails &&
-          data.contact.organisationDetails.organisationEmail,
-      });
+  function FillDetails(contactDetail: any) {
+    const data = flattenObj({ ...contactDetail });
+   
+    let detail = {} as PaymentDetails;
+
+    if (data) {
+      detail.id = data.id;
+      detail.firstname = data.firstname;
+      detail.lastname = data.lastname;
+      detail.email = data.email;
+      detail.phone = data.phone;
+      detail.appDownloadStatus = data.appDownloadStatus === "Invited" ? true : false;
+      detail.type = data.type;
+      detail.isPayee = data.isPayee;
+      if (data.organisationDetails) {
+        detail.organisationDetails = data.organisationDetails ? true : false;
+        detail.organisationName = data.organisationDetails.organisationName;
+        detail.gst = data.organisationDetails.gst;
+        detail.address1 = data.organisationDetails.address1;
+        detail.address2 = data.organisationDetails.address2;
+        detail.city = data.organisationDetails.city;
+        detail.state = data.organisationDetails.state;
+        detail.country = data.organisationDetails.country;
+        detail.zipcode = data.organisationDetails.zipcode;
+        detail.organisationEmail = data.organisationDetails.organisationEmail;
+      }
     }
+
+    setPaymentModeDetails(detail);
   }
 
   return (

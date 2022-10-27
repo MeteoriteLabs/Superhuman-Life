@@ -141,7 +141,7 @@ export default function ModalView({
               size="sm"
               onClick={(event) => formRef.current.onSubmit(event)}
             >
-              {step <= stepper.length ? (
+              {step < stepper.length ? (
                
                 <>
                   Next<i className="ml-4 fas fa-arrow-right"></i>

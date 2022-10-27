@@ -10,7 +10,7 @@ import {
   ADD_CONTACT,
   DELETE_CONTACT,
   GET_CONTACT,
-  UPDATE_CONTACT
+  UPDATE_CONTACT,
 } from "./queries";
 import StatusModal from "../../../components/StatusModal/StatusModal";
 import { Subject } from "rxjs";
@@ -22,6 +22,7 @@ import {
   phoneTransformErrors,
 } from "../../../components/utils/ValidationPatterns";
 import Toaster from "../../../components/Toaster";
+import { PaymentDetails } from "./PaymentDetailsInterface";
 
 interface Operation {
   id: string;
@@ -32,8 +33,8 @@ interface Operation {
 
 function CreateEditContact(props: any, ref: any) {
   const auth = useContext(AuthContext);
-  const contactSchema: { } = require("./contact.json");
-  const [contactDetails, setContactDetails] = useState<any>({});
+  const contactSchema: {} = require("./contact.json");
+  const [contactDetails, setContactDetails] = useState({} as PaymentDetails);
   const [operation, setOperation] = useState<Operation>({} as Operation);
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
   const [modalLabel, setModalLabel] = useState<string>("");
@@ -94,26 +95,30 @@ function CreateEditContact(props: any, ref: any) {
   function FillDetails(data: any) {
     const flattenData = flattenObj({ ...data });
 
-    let detail: any = {};
+    let detail = {} as PaymentDetails;
 
-    detail.id = flattenData && flattenData.id;
-    detail.firstname = flattenData && flattenData.firstname;
-    detail.lastname = flattenData && flattenData.lastname;
-    detail.email = flattenData && flattenData.email;
-    detail.phone = flattenData && flattenData.phone;
-    detail.appDownloadStatus = flattenData && flattenData.appDownloadStatus === "Invited" ? true : false;
-    detail.type = flattenData && flattenData.type;
-    detail.isPayee = flattenData && flattenData.isPayee;
-    detail.organisationDetails = flattenData && flattenData.organisationDetails && flattenData.organisationDetails ? true : false;
-    detail.organisationName = flattenData && flattenData.organisationDetails && flattenData.organisationDetails.organisationName;
-    detail.gst = flattenData && flattenData.organisationDetails && flattenData.organisationDetails.gst;
-    detail.address1 = flattenData && flattenData.organisationDetails && flattenData.organisationDetails.address1;
-    detail.address2 = flattenData && flattenData.organisationDetails && flattenData.organisationDetails.address2;
-    detail.city = flattenData && flattenData.organisationDetails && flattenData.organisationDetails.city;
-    detail.state = flattenData && flattenData.organisationDetails && flattenData.organisationDetails.state;
-    detail.country = flattenData && flattenData.organisationDetails && flattenData.organisationDetails.country;
-    detail.zipcode = flattenData && flattenData.organisationDetails && flattenData.organisationDetails.zipcode;
-    detail.organisationEmail = flattenData && flattenData.organisationDetails && flattenData.organisationDetails.organisationEmail;
+    if (flattenData) {
+      detail.id = flattenData.id;
+      detail.firstname = flattenData.firstname;
+      detail.lastname = flattenData.lastname;
+      detail.email = flattenData.email;
+      detail.phone = flattenData.phone;
+      detail.appDownloadStatus = flattenData.appDownloadStatus === "Invited" ? true : false;
+      detail.type = flattenData.type;
+      detail.isPayee = flattenData.isPayee;
+      if (flattenData.organisationDetails) {
+        detail.organisationDetails = flattenData.organisationDetails ? true : false;
+        detail.organisationName = flattenData.organisationDetails.organisationName;
+        detail.gst = flattenData.organisationDetails.gst;
+        detail.address1 = flattenData.organisationDetails.address1;
+        detail.address2 = flattenData.organisationDetails.address2;
+        detail.city = flattenData.organisationDetails.city;
+        detail.state = flattenData.organisationDetails.state;
+        detail.country = flattenData.organisationDetails.country;
+        detail.zipcode = flattenData.organisationDetails.zipcode;
+        detail.organisationEmail = flattenData.organisationDetails.organisationEmail;
+      }
+    }
 
     setContactDetails(detail);
 
@@ -166,8 +171,12 @@ function CreateEditContact(props: any, ref: any) {
           appDownloadStatus: frm.appDownloadStatus ? "Invited" : "NotInvited",
           isPayee: frm.isPayee,
           organisationDetails: {
-            organisationEmail: frm.organisationDetails ? frm.organisationEmail : null,
-            organisationName: frm.organisationDetails ? frm.organisationName : null,
+            organisationEmail: frm.organisationDetails
+              ? frm.organisationEmail
+              : null,
+            organisationName: frm.organisationDetails
+              ? frm.organisationName
+              : null,
             gst: frm.organisationDetails ? frm.gst : null,
             state: frm.organisationDetails ? frm.state : null,
             zipcode: frm.organisationDetails ? frm.zipcode : null,
@@ -184,17 +193,17 @@ function CreateEditContact(props: any, ref: any) {
   function DeleteContact(id: any) {
     deleteContact({
       variables: {
-        id
-      }
+        id,
+      },
     });
   }
 
   function OnSubmit(frm: any) {
     if (modalLabel === "Edit contact") {
       EditContact(frm);
-    } else if (modalLabel === "Create contact"){
+    } else if (modalLabel === "Create contact") {
       CreateContact(frm);
-    } 
+    }
   }
 
   useEffect(() => {
@@ -244,9 +253,27 @@ function CreateEditContact(props: any, ref: any) {
       )}
 
       {/* success toaster notification */}
-      {isCreated && <Toaster handleCallback = {() => setIsCreated(!isCreated)} type = "success" msg = "Contact has been created successfully"/> }
-      {isUpdated && <Toaster handleCallback = {() => setIsUpdated(!isUpdated)} type = "success" msg = "Contact has been updated successfully"/> }
-      {isDeleted && <Toaster handleCallback = {() => setIsDeleted(!isDeleted)} type = "success" msg = "Contact has been deleted successfully"/> }
+      {isCreated && (
+        <Toaster
+          handleCallback={() => setIsCreated(!isCreated)}
+          type="success"
+          msg="Contact has been created successfully"
+        />
+      )}
+      {isUpdated && (
+        <Toaster
+          handleCallback={() => setIsUpdated(!isUpdated)}
+          type="success"
+          msg="Contact has been updated successfully"
+        />
+      )}
+      {isDeleted && (
+        <Toaster
+          handleCallback={() => setIsDeleted(!isDeleted)}
+          type="success"
+          msg="Contact has been deleted successfully"
+        />
+      )}
     </>
   );
 }

@@ -219,9 +219,9 @@ function CreateEditExercise(props: any, ref: any) {
             case 'edit':
                 EditExercise(frm);
                 break;
-            // case 'view':
-            //     ViewExercise(frm);
-            //     break;
+            case 'view':
+                ViewExercise(frm);
+                break;
         }
     }
 
