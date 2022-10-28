@@ -56,7 +56,7 @@ function CreateEditContact(props: any, ref: any) {
       modalTrigger.next(false);
       props.callback();
       setIsUpdated(!isUpdated);
-    }
+    }, refetchQueries: [GET_CONTACT]
   });
 
   const [deleteContact] = useMutation(DELETE_CONTACT, {
@@ -108,23 +108,20 @@ function CreateEditContact(props: any, ref: any) {
       detail.type = flattenData.type;
       detail.isPayee = flattenData.isPayee;
       if (flattenData.organisationDetails) {
-        detail.organisationDetails = flattenData.organisationDetails ? true : false;
+        detail.organisationDetails = flattenData.organisationDetails.organisationName ? true : false;
         detail.organisationName = flattenData.organisationDetails.organisationName;
         detail.gst = flattenData.organisationDetails.gst;
-        detail.address1 = flattenData.organisationDetails.address1;
-        detail.address2 = flattenData.organisationDetails.address2;
-        detail.city = flattenData.organisationDetails.city;
-        detail.state = flattenData.organisationDetails.state;
-        detail.country = flattenData.organisationDetails.country;
-        detail.zipcode = flattenData.organisationDetails.zipcode;
+        detail.address1 = flattenData.organisationDetails.address1 ? flattenData.organisationDetails.address1 : "";
+        detail.address2 = flattenData.organisationDetails.address2 ? flattenData.organisationDetails.address2 : "";
+        detail.city = flattenData.organisationDetails.city ? flattenData.organisationDetails.city : "";
+        detail.state = flattenData.organisationDetails.state ? flattenData.organisationDetails.state : "";
+        detail.country = flattenData.organisationDetails.country ? flattenData.organisationDetails.country : "";
+        detail.zipcode = flattenData.organisationDetails.zipcode ? flattenData.organisationDetails.zipcode : "";
         detail.organisationEmail = flattenData.organisationDetails.organisationEmail;
       }
     }
 
     setContactDetails(detail);
-
-    if (["edit", "view"].indexOf(operation.type) > -1) modalTrigger.next(true);
-    else OnSubmit(null);
   }
 
   function CreateContact(frm: any) {
