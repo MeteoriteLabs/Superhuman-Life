@@ -1,175 +1,207 @@
-// import React from 'react';
-// import { useHistory } from 'react-router-dom';
-// import { Button } from 'react-bootstrap';
-
-
-// function Payee() {
-//     const history = useHistory();
-
-//     const routeChange = () => {
-//         let path = `add_payee`;
-//         history.push(path);
-//     }
-//   return (
-//     <div>
-//         <Button variant="outline-dark" className='m-1' onClick={routeChange}><i className="fas fa-plus-circle"></i>  Add Payee</Button>
-//     </div>
-//   )
-// }
-
-// export default Payee;
-
 import { useMemo, useState, useRef, useContext } from "react";
-import { Badge, Button, TabContent, InputGroup, FormControl, Card, Container, Row, Col } from "react-bootstrap";
+import {
+  Badge,
+  Button,
+  TabContent,
+  InputGroup,
+  FormControl,
+  Card,
+  Container,
+  Row,
+  Col,
+} from "react-bootstrap";
 import Table from "../../../components/table";
-import { useQuery } from "@apollo/client";
+import { useQuery, useLazyQuery } from "@apollo/client";
 import AuthContext from "../../../context/auth-context";
 import ActionButton from "../../../components/actionbutton/index";
-// import CreateEditMessage from "./createoredit-message";
-// import { GET_NOTIFICATIONS } from "./queries";
+import { GET_CONTACTS, GET_PAYMENT_SCHEDULES } from "./queries";
 import { flattenObj } from "../../../components/utils/responseFlatten";
-import CreateEditPayee from './CreateEditPayee';
+import CreateEditPayee from "./CreateEditPayee";
 
 export default function Payee() {
-     const auth = useContext(AuthContext);
-     const [searchFilter, setSearchFilter] = useState("");
-     const searchInput = useRef<any>();
-     const createEditPayeeComponent = useRef<any>(null);
+  const auth = useContext(AuthContext);
+  const [searchFilter, setSearchFilter] = useState("");
+  const searchInput = useRef<any>();
+  const createEditPayeeComponent = useRef<any>(null);
 
-     const columns = useMemo<any>(
-          () => [
-               { accessor: "id", Header: "ID" },
-               { accessor: "payee", Header: "Payee" },
-               { accessor: "type", Header: "Type" },
-               {
-                    accessor: "toward",
-                    Header: "Toward",
-                    Cell: "Salary",
-               },
-               { accessor: "frequency", Header: "Frequency" },
-               { accessor: "active", Header: "Active" },
-               { accessor: "addedon", Header: "Added On" },
-               {
-                    id: "edit",
-                    Header: "Actions",
-                    Cell: ({ row }: any) => {
-                         const editAction = () => {
-                              createEditPayeeComponent.current.TriggerForm({ id: row.original.id, type: "edit" });
-                         };
-                         const viewAction = () => {
-                              createEditPayeeComponent.current.TriggerForm({ id: row.original.id, type: "view" });
-                         };
-                         const pauseAction = () => {
-                              createEditPayeeComponent.current.TriggerForm({
-                                   id: row.original.id,
-                                   type: "pause",
-                                   
-                              });
-                         };
-                         const closeAccountAction = () => {
-                              createEditPayeeComponent.current.TriggerForm({ id: row.original.id, type: "close account" });
-                         };
-                         const allTransactionsAction = () => {
-                              createEditPayeeComponent.current.TriggerForm({ id: row.original.id, type: "all transactions" });
-                         };
+  const columns = useMemo<any>(
+    () => [
+      { accessor: "id", Header: "ID" },
+      { accessor: "name", Header: "Payee" },
+      { accessor: "type", Header: "Type" },
+      {
+        accessor: "isActive",
+        Header: "Active",
+        Cell: ({ row }: any) => {
+          let statusColor = "";
+          switch (row.values.isActive) {
+            case true:
+              statusColor = "success";
+              break;
 
-                         const arrayAction = [
-                              { actionName: "Edit", actionClick: editAction },
-                              { actionName: "View", actionClick: viewAction },
-                              { actionName: "Pause", actionClick: pauseAction },
-                              { actionName: "Close", actionClick: closeAccountAction },
-                              { actionName: "All transactions", actionClick: allTransactionsAction }
-                         ];
+            case false:
+              statusColor = "danger";
+              break;
+          }
+          return (
+            <>
+              <Badge
+                className="px-3 py-1"
+                style={{ fontSize: "1rem", borderRadius: "10px" }}
+                variant={statusColor}
+              >
+                {row.values.isActive === true
+                  ? "Activated"
+                  : "Deactivated"}
+              </Badge>
+            </>
+          );
+        },
+      },
+      { accessor: "contactsdate", Header: "Added On" },
+      {
+        id: "edit",
+        Header: "Actions",
+        Cell: ({ row }: any) => {
+          const manageHandler = () => {
+            createEditPayeeComponent.current.TriggerForm({
+              id: row.original.id,
+              type: "edit",
+            });
+          };
+          const addPaymentScheduleHandler = () => {
+            createEditPayeeComponent.current.TriggerForm({
+              id: row.original.id,
+              type: "view",
+            });
+          };
+          const allTransactionsHandler = () => {
+            createEditPayeeComponent.current.TriggerForm({
+              id: row.original.id,
+              type: "all transactions",
+            });
+          };
 
-                         return <ActionButton arrayAction={arrayAction}></ActionButton>;
-                    },
-               },
-          ],
-          []
-     );
+          const arrayAction = [
+            {
+              actionName: "Manage",
+              actionClick: manageHandler,
+            },
+            {
+              actionName: "Add payment schedule",
+              actionClick: addPaymentScheduleHandler,
+            },
+            {
+              actionName: "All transactions",
+              actionClick: allTransactionsHandler,
+            },
+          ];
 
-     
-     const [datatable, setDataTable] = useState<{}[]>([]);
+          return <ActionButton arrayAction={arrayAction}></ActionButton>;
+        },
+      },
+    ],
+    []
+  );
 
-     // setDataTable([
-     //      {
-     //           id: 123,
-     //           payee: 'Nikita',
-     //           type: 'Individual',
-     //           toward: 'Salary',
-     //           frequency: 'Monthly',
-     //           active: 'Active',
-     //           addedon: '23-09-2022'
-     //      }
-     // ])
-    //  const fetch = useQuery(GET_NOTIFICATIONS, { variables: { filter: searchFilter, id: auth.userid }, onCompleted: loadData });
+  const [datatable, setDataTable] = useState<{}[]>([]);
 
-     // function loadData(data: any) {
-     //      const flattenData = flattenObj({ ...data });
-     //      setDataTable(
-     //           [...flattenData.notifications].map((Detail) => {
-     //                return {
-     //                     id: Detail.id,
-     //                     title: Detail.title,
-     //                     trigger: Detail.prerecordedtrigger.name,
-     //                     minidesc: Detail.minidescription,
-     //                     status: Detail.status ? "Active" : "Inactive",
-     //                     updatedon: getDate(Date.parse(Detail.updatedAt)),
-     //                };
-     //           })
-     //      );
-     // }
+  function getDate(time: any) {
+    let dateObj = new Date(time);
+    let month = dateObj.getMonth() + 1;
+    let year = dateObj.getFullYear();
+    let date = dateObj.getDate();
 
-    //  function refetchQueryCallback() {
-    //       fetch.refetch();
-    //  }
+    return `${date}/${month}/${year}`;
+  }
 
-     return (
-          <TabContent>
-               <Container>
-                    <Row>
-                         <Col>
-                              <InputGroup className="mb-3">
-                                   <FormControl
-                                        aria-describedby="basic-addon1"
-                                        placeholder="Search"
-                                        ref={searchInput}
-                                   />
-                                   <InputGroup.Prepend>
-                                        <Button
-                                             variant="outline-secondary"
-                                             onClick={(e: any) => {
-                                                  e.preventDefault();
-                                                  setSearchFilter(searchInput.current.value);
-                                             }}
-                                        >
-                                             <i className="fas fa-search"></i>
-                                        </Button>
-                                   </InputGroup.Prepend>
-                              </InputGroup>
-                         </Col>
-                         <Col>
-                              <Card.Title className="text-center">
-                                   <Button
-                                        variant={true ? "outline-secondary" : "light"}
-                                        size="sm"
-                                        onClick={() => {
-                                             createEditPayeeComponent.current.TriggerForm({
-                                                  // id: null,
-                                                  type: "create",
-                                                  modal_status: true,
-                                             });
-                                        }}
-                                   >
-                                        <i className="fas fa-plus-circle"></i> Add Payee
-                                   </Button>
-                                   <CreateEditPayee ref={createEditPayeeComponent} ></CreateEditPayee>
-                              </Card.Title>
-                         </Col>
-                    </Row>
-               </Container>
-               <Table columns={columns} data={datatable} />
-          </TabContent>
-     );
+  // eslint-disable-next-line
+  const [getStatus, { data: paymentSchedule }] = useLazyQuery(
+    GET_PAYMENT_SCHEDULES,
+    {
+      onCompleted: (data) => { loadData(data) }
+    }
+  );
+
+  const { data: get_contacts } = useQuery(GET_CONTACTS, {
+    variables: { id: auth.userid },
+    onCompleted: (data) => getStatus({ variables: { id: auth.userid } })
+  });
+
+  function loadData(data: any) {
+    
+    const flattenContactsData = flattenObj({ ...get_contacts });
+    console.log('flattenContactsData',flattenContactsData)
+    const flattenFinanceData = flattenObj({ ...data.paymentSchedules });
+    console.log('flattenFinanceData',flattenFinanceData);
+
+    setDataTable(
+      [...flattenContactsData.contacts].flatMap((Detail) => {
+
+        return {
+          id: Detail.id,
+          contactsdate: getDate(Date.parse(Detail.createdAt)),
+          name: Detail.firstname + " " + Detail.lastname,
+          type: Detail.type,
+          appDownloadStatus: Detail.appDownloadStatus,
+          isActive: flattenFinanceData.filter((currValue) => currValue.Destination_Contacts_ID == Detail.id).findIndex((currValue) => currValue.isActive === true) !== -1 ? true : false
+        };
+      })
+    );
+  }
+
+  // function refetchQueryCallback() {
+  //   fetch.refetch();
+  // }
+
+  return (
+    <TabContent>
+      <Container className="mt-3">
+        <Row>
+          <Col>
+            <InputGroup className="mb-3">
+              <FormControl
+                aria-describedby="basic-addon1"
+                placeholder="Search"
+                ref={searchInput}
+              />
+              <InputGroup.Prepend>
+                <Button
+                  variant="outline-secondary"
+                  onClick={(e: any) => {
+                    e.preventDefault();
+                    setSearchFilter(searchInput.current.value);
+                  }}
+                >
+                  <i className="fas fa-search"></i>
+                </Button>
+              </InputGroup.Prepend>
+            </InputGroup>
+          </Col>
+          <Col>
+            <Card.Title className="text-center">
+              <Button
+                variant={true ? "outline-secondary" : "light"}
+                size="sm"
+                onClick={() => {
+                  createEditPayeeComponent.current.TriggerForm({
+                    id: null,
+                    type: "create",
+                    modal_status: true,
+                  });
+                }}
+              >
+                <i className="fas fa-plus-circle"></i> Add Payee
+              </Button>
+              <CreateEditPayee
+                ref={createEditPayeeComponent}
+                // callback={refetchQueryCallback}
+              ></CreateEditPayee>
+            </Card.Title>
+          </Col>
+        </Row>
+      </Container>
+      <Table columns={columns} data={datatable} />
+    </TabContent>
+  );
 }
-
