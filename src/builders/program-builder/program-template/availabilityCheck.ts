@@ -3,9 +3,6 @@ import { flattenObj } from '../../../components/utils/responseFlatten';
 
 export const AvailabilityCheck = (props: any) =>  {
 
-    console.log(props);
-    debugger;
-
     if(props.event.tag === "Group Class"){
         return false;
     }

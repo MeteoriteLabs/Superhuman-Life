@@ -44,6 +44,8 @@ const ProgramList = (props: any) => {
 
     useQuery(GET_SESSIONS_BY_TAG, { variables: {id: selectedTag}, skip: (selectedTag === ""), onCompleted: (data) => {
         const flattenData = flattenObj({...data});
+        console.log(flattenData);
+        debugger;
         setStartDate(flattenData.tags[0]?.client_packages[0]?.effective_date);
         handleDatesRender(flattenData.tags[0]?.client_packages[0]?.effective_date, flattenData.tags[0]?.fitnesspackage?.duration);
         setPackageDuration(flattenData.tags[0]?.fitnesspackage?.duration);
@@ -108,7 +110,7 @@ const ProgramList = (props: any) => {
                     // disabled={urlList[3] === 'pt' || urlList[3] === 'group' || urlList[3] === 'classic'}  
                     as="select" onChange={(e) => setSelectedFitnessPackage(e.target.value)}>
                         <option>Choose Type</option>
-                        {fitnessPackageTypes.slice(0,4).map((item) => {
+                        {fitnessPackageTypes.slice(0,7).map((item) => {
                             return <option value={item.type}>{item.type}</option>
                         })}
                     </FormControl>

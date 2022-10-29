@@ -694,6 +694,12 @@ query getTemplateSessions($id: ID!){
 }
 `;
 
+// export const GET_PROGRAM_MANAGER_SESSIONS = gql`
+//   query getProgramManagerSessions($id: ID!){
+
+//   }
+// `
+
 export const REPLACE_SESSION_WORKOUT = gql`
 mutation replaceSessionWorkout($id: ID!, $workoutId: ID!){
   updateSession(id: $id, data: {

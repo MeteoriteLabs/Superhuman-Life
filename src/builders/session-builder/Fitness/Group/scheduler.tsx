@@ -398,7 +398,8 @@ const Scheduler = () => {
                         <SchedulerPage 
                             type="date" 
                             days={30} 
-                            restDays={[]} programId={tagId} 
+                            restDays={tag?.sessions.filter((ses) => ses.type === "restday")} 
+                            programId={tagId} 
                             classType={'Group Class'}
                             startDate={tag?.client_packages[0]?.effective_date}
                         />

@@ -72,7 +72,6 @@ function CreateEditRestDay(props: any, ref: any) {
 
     function FillDetails(data: any) {
         const flattenData = flattenObj({...data});
-        debugger;
         let details: any = {};
         let restDays: any[] = [];
         let msg = flattenData;
@@ -174,6 +173,10 @@ function CreateEditRestDay(props: any, ref: any) {
             templateIds_old.splice(index, 1);
         }
        });
+
+        console.log(templateSessions);
+        console.log(templateIds_old);
+        console.log(restDays_old);
 
         if(frm.day.length > 0){
                for(var i=0; i<frm.day.length; i++){

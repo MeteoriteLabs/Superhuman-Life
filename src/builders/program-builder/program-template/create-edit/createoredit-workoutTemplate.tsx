@@ -75,10 +75,10 @@ function CreateEditWorkoutTemplate(props: any, ref: any) {
 
     const [updateFitenssProgram] = useMutation(UPDATE_FITNESSPORGRAMS_SESSIONS, { onCompleted: (data: any) => {
         modalTrigger.next(false);
-        props.callback();
+        props?.callback();
     }})
 
-    const [createSessionBooking] = useMutation(CREATE_SESSION_BOOKING, { onCompleted: (data: any) => {modalTrigger.next(false); props.callback()} })
+    const [createSessionBooking] = useMutation(CREATE_SESSION_BOOKING, { onCompleted: (data: any) => {modalTrigger.next(false); props?.callback()} })
     const [upateSessions] = useMutation(UPDATE_TAG_SESSIONS, { onCompleted: (data: any) => {
         createSessionBooking({
             variables: {
@@ -129,7 +129,7 @@ function CreateEditWorkoutTemplate(props: any, ref: any) {
             setOperation(msg);
             schema.startDate = props.startDate;
             schema.duration = props.duration;
-            schema.type = window.location.pathname.split('/')[1] === "programs" ? 'day' : '';
+            schema.type = window.location.pathname.split('/')[1] === "programs" ? 'day' : window.location.pathname.includes('classic') ? 'day' : '';
 
             if (msg && !msg.id) //render form if no message id
                 modalTrigger.next(true);

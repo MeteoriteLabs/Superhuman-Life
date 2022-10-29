@@ -20,7 +20,7 @@ export default function Fitness() {
                         <Tab eventKey="group" title="Group">
                             <Group/>
                         </Tab>
-                        <Tab eventKey="classic" title="Classic">
+                        <Tab eventKey="classic" title="Recorded">
                             <Classic/>
                         </Tab>
                         <Tab eventKey="custom" title="Custom">
