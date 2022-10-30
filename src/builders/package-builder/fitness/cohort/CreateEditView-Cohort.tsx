@@ -30,10 +30,9 @@ function CreateEditCohort(props: any, ref: any) {
     const [fitnessPackageTypes, setFitnessPackageTypes] = useState<any>([]);
     const [deleteModalShow, setDeleteModalShow] = useState(false);
     const [statusModalShow, setStatusModalShow] = useState(false);
-    let [isFormSubmitted, setIsFormSubmitted] = useState(false);
-    const [toastHeading, setToastHeading] = useState('');
-    const [toastMessage, setToastMessage] = useState('');
-    const [toastColor, setToastColor] = useState('');
+    const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
+    const [isOffeeringDeleted, setisOffeeringDeleted] = useState<boolean>(false);
+    const [isOfferingUpdated, setisOfferingUpdated] = useState<boolean>(false);
     // const program_id = window.location.pathname.split('/').pop();
     let frmDetails: any = {};
     
@@ -49,58 +48,22 @@ function CreateEditCohort(props: any, ref: any) {
     }});
     const [updateBookingConfig] = useMutation(UPDATE_BOOKING_CONFIG, {onCompleted: (r: any) => {
         console.log(r); modalTrigger.next(false); props.callback();
-        setIsFormSubmitted(!isFormSubmitted); 
-            setToastHeading('Success');
-            setToastMessage('Offering Updated successfully');
-            setToastColor('text-success'); 
-        },
-        onError: (e: any) => {
-            setToastHeading('Error');
-            setIsFormSubmitted(!isFormSubmitted); 
-            setToastMessage('Offering Updation failed');
-            setToastColor('text-danger');
+            setisOfferingUpdated(!isOfferingUpdated);
         }
     });
     const [updatePackageStatus] = useMutation(UPDATE_PACKAGE_STATUS, {onCompleted: (data) => {
         setStatusModalShow(false); props.callback();
-        setIsFormSubmitted(!isFormSubmitted); 
-            setToastHeading('Success');
-            setToastMessage('Offering Status Updated successfully');
-            setToastColor('text-success'); 
-        },
-        onError: (e: any) => {
-            setToastHeading('Error');
-            setIsFormSubmitted(!isFormSubmitted); 
-            setToastMessage('Offering Status Updation failed');
-            setToastColor('text-danger');
+            setisOfferingUpdated(!isOfferingUpdated);
         }
     });
     const [deletePackage] = useMutation(DELETE_PACKAGE, { refetchQueries: ["GET_TABLEDATA"], onCompleted: (data) => {
         props.callback();
-        setIsFormSubmitted(!isFormSubmitted); 
-            setToastHeading('Success');
-            setToastMessage('Offering Deleted successfully');
-            setToastColor('text-success'); 
-        },
-        onError: (e: any) => {
-            setToastHeading('Error');
-            setIsFormSubmitted(!isFormSubmitted); 
-            setToastMessage('Offering deletion failed');
-            setToastColor('text-danger');
+            setisOffeeringDeleted(!isOffeeringDeleted);
         }
     });
     const [bookingConfig] = useMutation(CREATE_BOOKING_CONFIG, {onCompleted: (r: any) => { 
         modalTrigger.next(false); props.callback();
-        setIsFormSubmitted(!isFormSubmitted); 
-            setToastHeading('Success');
-            setToastMessage('Offering created successfully');
-            setToastColor('text-success'); 
-        },
-        onError: (e: any) => {
-            setToastHeading('Error');
-            setIsFormSubmitted(!isFormSubmitted); 
-            setToastMessage('Offering creation failed');
-            setToastColor('text-danger');
+            setIsFormSubmitted(!isFormSubmitted);
         }
     });
     const [CreateCohortPackage] = useMutation(CREATE_CHANNEL_PACKAGE, { onCompleted: (r: any) => { 
@@ -261,7 +224,7 @@ function CreateEditCohort(props: any, ref: any) {
                 packagename: frm.packageName,
                 channelinstantBooking: frm.channelinstantBooking,
                 expiry_date: moment(frm.datesConfig.expiryDate).toISOString(),
-                level: ENUM_FITNESSPACKAGE_LEVEL[frm?.level],
+                level: frm?.level ? ENUM_FITNESSPACKAGE_LEVEL[frm?.level] : null,
                 Intensity: ENUM_FITNESSPACKAGE_INTENSITY[frm.intensity],
                 equipmentList: frm?.equipment?.length > 0 ? frm.equipment.map((x: any) => x.id).join(',').split(',') : [],
                 duration: frm.dates.startDate === frm.dates.endDate ? 1 : calculateDuration(frm.dates.startDate, frm.dates.endDate),
@@ -379,10 +342,6 @@ function CreateEditCohort(props: any, ref: any) {
 
     FetchData();
 
-    function handleToasCallback(){
-        setIsFormSubmitted(false);
-    }
-
     return (
         <>
                 <ModalView
@@ -439,7 +398,15 @@ function CreateEditCohort(props: any, ref: any) {
                     </Modal>
 
                     {isFormSubmitted ?
-                <Toaster handleCallback={handleToasCallback} heading={toastHeading} textColor={toastColor} headingCSS={`mr-auto ${toastColor}`} msg={toastMessage} />
+                <Toaster handleCallback={() => setIsFormSubmitted(false)} type="success" msg="Offering has been Created successfully" />
+                : null}
+
+            {isOffeeringDeleted ?
+                <Toaster handleCallback={() => setisOffeeringDeleted(!isOffeeringDeleted)} type="success" msg="Offering has been deleted successfully" />
+                : null}
+
+            {isOfferingUpdated ?
+                <Toaster handleCallback={() => setisOfferingUpdated(!isOfferingUpdated)} type="success" msg="Offering has been updated successfully" />
                 : null}
         </>
     )

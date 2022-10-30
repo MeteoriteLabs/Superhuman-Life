@@ -27,10 +27,9 @@ function CreateEditPackage(props: any, ref: any) {
     const [operation, setOperation] = useState<Operation>({} as Operation);
     const [deleteModalShow, setDeleteModalShow] = useState(false);
     const [statusModalShow, setStatusModalShow] = useState(false);
-    let [isFormSubmitted, setIsFormSubmitted] = useState(false);
-    const [toastHeading, setToastHeading] = useState('');
-    const [toastMessage, setToastMessage] = useState('');
-    const [toastColor, setToastColor] = useState('');
+    const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
+    const [isOffeeringDeleted, setisOffeeringDeleted] = useState<boolean>(false);
+    const [isOfferingUpdated, setisOfferingUpdated] = useState<boolean>(false);
 
     let frmDetails: any = {};
 
@@ -44,32 +43,14 @@ function CreateEditPackage(props: any, ref: any) {
 
     const [bookingConfig] = useMutation(CREATE_BOOKING_CONFIG, {onCompleted: (r: any) => { 
         console.log(r); modalTrigger.next(false); props.callback();
-        setIsFormSubmitted(!isFormSubmitted); 
-            setToastHeading('Success');
-            setToastMessage('Offering Created successfully');
-            setToastColor('text-success'); 
-        },
-        onError: (e: any) => {
-            setToastHeading('Error');
             setIsFormSubmitted(!isFormSubmitted); 
-            setToastMessage('Offering Creation failed');
-            setToastColor('text-danger');
         }
     });
 
     const [createUserPackageSuggestion] = useMutation(ADD_SUGGESTION_NEW, {onCompleted: (data) => {
         modalTrigger.next(false);
         props.callback();
-        setIsFormSubmitted(!isFormSubmitted); 
-            setToastHeading('Success');
-            setToastMessage('Offering Suggestion Created successfully');
-            setToastColor('text-success'); 
-        },
-        onError: (e: any) => {
-            setToastHeading('Error');
             setIsFormSubmitted(!isFormSubmitted); 
-            setToastMessage('Offering Suggestion Creation failed');
-            setToastColor('text-danger');
         }
     });
 
@@ -106,45 +87,18 @@ function CreateEditPackage(props: any, ref: any) {
 
     const [updatePackageStatus] = useMutation(UPDATE_PACKAGE_STATUS, {onCompleted: (data) => {
         props.callback();
-        setIsFormSubmitted(!isFormSubmitted); 
-            setToastHeading('Success');
-            setToastMessage('Offering Status Updated successfully');
-            setToastColor('text-success'); 
-        },
-        onError: (e: any) => {
-            setToastHeading('Error');
-            setIsFormSubmitted(!isFormSubmitted); 
-            setToastMessage('Offering Status Updation failed');
-            setToastColor('text-danger');
+            setisOfferingUpdated(!isOfferingUpdated); 
         }
     });
     const [deletePackage] = useMutation(DELETE_PACKAGE, { refetchQueries: ["GET_TABLEDATA"], onCompleted: (data) => {
         props.callback();
-        setIsFormSubmitted(!isFormSubmitted); 
-            setToastHeading('Success');
-            setToastMessage('Offering Deleted successfully');
-            setToastColor('text-success'); 
-        },
-        onError: (e: any) => {
-            setToastHeading('Error');
-            setIsFormSubmitted(!isFormSubmitted); 
-            setToastMessage('Offering Deletion failed');
-            setToastColor('text-danger');
+            setisOffeeringDeleted(!isOffeeringDeleted);
         }
     });
 
     const [updateBookingConfig] = useMutation(UPDATE_BOOKING_CONFIG, {onCompleted: (r: any) => {
         console.log(r); modalTrigger.next(false); props.callback();
-        setIsFormSubmitted(!isFormSubmitted); 
-            setToastHeading('Success');
-            setToastMessage('Offering Updated successfully');
-            setToastColor('text-success'); 
-        },
-        onError: (e: any) => {
-            setToastHeading('Error');
-            setIsFormSubmitted(!isFormSubmitted); 
-            setToastMessage('Offering Updation failed');
-            setToastColor('text-danger');
+            setisOfferingUpdated(!isOfferingUpdated);
         }
     });
 
@@ -271,7 +225,7 @@ function CreateEditPackage(props: any, ref: any) {
             variables: {
                 packagename: frm.packagename,
                 tags: frm?.tags,
-                level: ENUM_FITNESSPACKAGE_LEVEL[frm?.level],
+                level: frm.level ? ENUM_FITNESSPACKAGE_LEVEL[frm?.level] : null,
                 intensity: ENUM_FITNESSPACKAGE_INTENSITY[frm.intensity],
                 aboutpackage: frm.About,
                 benefits: frm.Benifits,
@@ -400,10 +354,6 @@ function CreateEditPackage(props: any, ref: any) {
 
     FetchData();
 
-    function handleToasCallback(){
-        setIsFormSubmitted(false);
-    }
-
     return (
         <>
             {/* {render && */}
@@ -463,7 +413,15 @@ function CreateEditPackage(props: any, ref: any) {
                     </Modal>
         
                     {isFormSubmitted ?
-                <Toaster handleCallback={handleToasCallback} heading={toastHeading} textColor={toastColor} headingCSS={`mr-auto ${toastColor}`} msg={toastMessage} />
+                <Toaster handleCallback={() => setIsFormSubmitted(false)} type="success" msg="Offering has been Created successfully" />
+                : null}
+
+            {isOffeeringDeleted ?
+                <Toaster handleCallback={() => setisOffeeringDeleted(!isOffeeringDeleted)} type="success" msg="Offering has been deleted successfully" />
+                : null}
+
+            {isOfferingUpdated ?
+                <Toaster handleCallback={() => setisOfferingUpdated(!isOfferingUpdated)} type="success" msg="Offering has been updated successfully" />
                 : null}
         </>
     )

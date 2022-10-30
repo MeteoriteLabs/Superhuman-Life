@@ -30,10 +30,9 @@ function CreateEditChannel(props: any, ref: any) {
     const [fitnessPackageTypes, setFitnessPackageTypes] = useState<any>([]);
     const [deleteModalShow, setDeleteModalShow] = useState(false);
     const [statusModalShow, setStatusModalShow] = useState(false);
-    let [isFormSubmitted, setIsFormSubmitted] = useState(false);
-    const [toastHeading, setToastHeading] = useState('');
-    const [toastMessage, setToastMessage] = useState('');
-    const [toastColor, setToastColor] = useState('');
+    const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
+    const [isOffeeringDeleted, setisOffeeringDeleted] = useState<boolean>(false);
+    const [isOfferingUpdated, setisOfferingUpdated] = useState<boolean>(false);
     let frmDetails: any = {};
 
     const [editPackageDetails] = useMutation(UPDATE_CHANNEL_COHORT_PACKAGE, {onCompleted: (data) => {
@@ -48,59 +47,23 @@ function CreateEditChannel(props: any, ref: any) {
     }});
     const [updatePackageStatus] = useMutation(UPDATE_PACKAGE_STATUS, {onCompleted: (data) => {
         props.callback();
-        setIsFormSubmitted(!isFormSubmitted); 
-            setToastHeading('Success');
-            setToastMessage('Offering Status Updation successfully');
-            setToastColor('text-success'); 
-        },
-        onError: (e: any) => {
-            setToastHeading('Error');
-            setIsFormSubmitted(!isFormSubmitted); 
-            setToastMessage('Offering Status Updation failed');
-            setToastColor('text-danger');
+            setisOfferingUpdated(!isOfferingUpdated); 
         }
     });
     const [deletePackage] = useMutation(DELETE_PACKAGE, { refetchQueries: ["GET_TABLEDATA"], onCompleted: (data) => {
         props.callback();
-        setIsFormSubmitted(!isFormSubmitted); 
-            setToastHeading('Success');
-            setToastMessage('Offering Deleted successfully');
-            setToastColor('text-success'); 
-        },
-        onError: (e: any) => {
-            setToastHeading('Error');
-            setIsFormSubmitted(!isFormSubmitted); 
-            setToastMessage('Offering Deletion failed');
-            setToastColor('text-danger');
+            setisOffeeringDeleted(!isOffeeringDeleted); 
         }
     });
     const [bookingConfig] = useMutation(CREATE_BOOKING_CONFIG, {onCompleted: (r: any) => { 
         console.log(r); modalTrigger.next(false); props.callback();
-        setIsFormSubmitted(!isFormSubmitted); 
-            setToastHeading('Success');
-            setToastMessage('Offering Created successfully');
-            setToastColor('text-success'); 
-        },
-        onError: (e: any) => {
-            setToastHeading('Error');
-            setIsFormSubmitted(!isFormSubmitted); 
-            setToastMessage('Offering Creation failed');
-            setToastColor('text-danger');
+            setIsFormSubmitted(!isFormSubmitted);
         }
     })
 
     const [updateBookingConfig] = useMutation(UPDATE_BOOKING_CONFIG, {onCompleted: (r: any) => {
         console.log(r); modalTrigger.next(false); props.callback();
-        setIsFormSubmitted(!isFormSubmitted); 
-            setToastHeading('Success');
-            setToastMessage('Offering Updated successfully');
-            setToastColor('text-success'); 
-        },
-        onError: (e: any) => {
-            setToastHeading('Error');
-            setIsFormSubmitted(!isFormSubmitted); 
-            setToastMessage('Offering Updation failed');
-            setToastColor('text-danger');
+            setisOfferingUpdated(!isOfferingUpdated);
         }
     });
 
@@ -247,7 +210,7 @@ function CreateEditChannel(props: any, ref: any) {
                 channelinstantBooking: JSON.parse(frm.channelinstantBooking).instantBooking,
                 Is_free_demo: JSON.parse(frm.channelinstantBooking).freeDemo,
                 expiry_date: moment(frm.datesConfig?.expiryDate).toISOString(),
-                level: ENUM_FITNESSPACKAGE_LEVEL[frm?.level],
+                level: frm.level ? ENUM_FITNESSPACKAGE_LEVEL[frm?.level] : null,
                 equipmentList: frm?.equipment?.length > 0 ? frm.equipment.map((item: any) => item.id).join(", ").split(", ") : [],
                 fitnessdisciplines: frm?.discpline?.length > 0 ? frm.discpline.map((item: any) => item.id).join(", ").split(", ") : [],
                 fitnesspackagepricing: frm.pricing === "free" ? [{ mrp: 'free' }] : JSON.parse(frm.pricing).filter((item: any) => item.mrp !== null),
@@ -336,10 +299,6 @@ function CreateEditChannel(props: any, ref: any) {
 
     FetchData();
 
-    function handleToasCallback(){
-        setIsFormSubmitted(false);
-    }
-
     let name = "";
     if (operation.type === 'create') {
         name = "Live Stream Offering";
@@ -404,7 +363,15 @@ function CreateEditChannel(props: any, ref: any) {
                 </Modal.Footer>
             </Modal>
             {isFormSubmitted ?
-                <Toaster handleCallback={handleToasCallback} heading={toastHeading} textColor={toastColor} headingCSS={`mr-auto ${toastColor}`} msg={toastMessage} />
+                <Toaster handleCallback={() => setIsFormSubmitted(false)} type="success" msg="Offering has been Created successfully" />
+                : null}
+
+            {isOffeeringDeleted ?
+                <Toaster handleCallback={() => setisOffeeringDeleted(!isOffeeringDeleted)} type="success" msg="Offering has been deleted successfully" />
+                : null}
+
+            {isOfferingUpdated ?
+                <Toaster handleCallback={() => setisOfferingUpdated(!isOfferingUpdated)} type="success" msg="Offering has been updated successfully" />
                 : null}
 
         </>
