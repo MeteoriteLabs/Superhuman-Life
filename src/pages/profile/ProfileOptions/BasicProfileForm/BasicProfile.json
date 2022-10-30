@@ -18,17 +18,20 @@
             "type": "string",
             "title": "Mini description"
         },
+        "Website_URL": {
+            "type": "string",
+            "title": "Website URL",
+            "format": "uri"
+        },
         "Phone_Number": {
             "type": "string",
-            "title": "Contact Number"
+            "title": "Contact Number",
+            "minLength": 10,
+            "format": "phone-in"
         },
         "Photo_ID": {
             "type": "string",
             "title": "Upload Profile Picture"
-        },
-        "Photo_profile_banner_ID": {
-            "type": "string",
-            "title": "Profile Banner"
         }
     }
 }

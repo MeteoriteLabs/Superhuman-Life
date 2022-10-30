@@ -14,7 +14,9 @@ export default function ModalView({
   showErrorList,
   widgets,
   modalTrigger,
-  stepperValues
+  stepperValues,
+  customFormats,
+  transformErrors
 }: any) {
   const registry = utils.getDefaultRegistry();
   const defaultFileWidget = registry.widgets["FileWidget"];
@@ -107,6 +109,8 @@ export default function ModalView({
                   formData={formValues}
                   widgets={widgets}
                   formContext={formValues}
+                  customFormats={customFormats}
+                  transformErrors={transformErrors}
                 >
                   <div></div>
                 </Form>

@@ -12,7 +12,7 @@ function DeactiveAccount() {
         {/* Header */}
         <Row className="text-center bg-dark py-2">
                 <h3 className="text-light col-lg-12 col-sm-12">Your Account is Deactivated.</h3>
-               <h5 className="text-light col-lg-12 col-sm-12">All your data and account will be deleted in 7 days.</h5>
+               <h5 className="text-light col-lg-12 col-sm-12">All your data and account will be deleted 30 days.</h5>
         </Row>
 
         {/* contact details */}

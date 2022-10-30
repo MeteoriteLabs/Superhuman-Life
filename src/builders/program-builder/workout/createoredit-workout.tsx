@@ -22,11 +22,10 @@ function CreateEditWorkout(props: any, ref: any) {
   const [workoutDetails, setWorkoutDetails] = useState<any>({});
   const [programDetails, setProgramDetails] = useState<any>({});
   const [operation, setOperation] = useState<Operation>({} as Operation);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  let [isFormSubmitted, setIsFormSubmitted] = useState(false);
-  const [toastHeading, setToastHeading] = useState('');
-  const [toastMessage, setToastMessage] = useState('');
-  const [toastColor, setToastColor] = useState('');
+  const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+  let [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
+  const [toastType, setToastType] = useState<string>('');
+  const [toastMessage, setToastMessage] = useState<string>('');
 
   useQuery(FETCH_FITNESS_PROGRAMS, {
     variables: { id: operation.id?.toString() },
@@ -42,15 +41,13 @@ function CreateEditWorkout(props: any, ref: any) {
       modalTrigger.next(false); 
       props.callback();
       setIsFormSubmitted(!isFormSubmitted);
-      setToastHeading('Success');
-      setToastMessage('Workout created successfully');
-      setToastColor('text-success'); 
+      setToastType('success');
+      setToastMessage('Workout details created successfully');
     } ,
     onError: (e: any) => {
-      setToastHeading('Error');
+      setToastType('error');
       setIsFormSubmitted(!isFormSubmitted);
-      setToastMessage('Workout creation failed');
-      setToastColor('text-danger'); 
+      setToastMessage('Workout details has not been created');
     }
   });
   const [editWorkout] = useMutation(UPDATE_WORKOUT, { 
@@ -58,15 +55,13 @@ function CreateEditWorkout(props: any, ref: any) {
       modalTrigger.next(false); 
       props.callback(); 
       setIsFormSubmitted(!isFormSubmitted);
-      setToastHeading('Success');
-      setToastMessage('Workout updated successfully');
-      setToastColor('text-success'); 
+      setToastType('success');
+      setToastMessage('Workout details has been updated successfully'); 
     } ,
     onError: (e: any) => {
-      setToastHeading('Error');
+      setToastType('error');
       setIsFormSubmitted(!isFormSubmitted);
-      setToastMessage('Workout updation failed');
-      setToastColor('text-danger'); 
+      setToastMessage('Workout details has not been updated');
     }
   });
   const [deleteWorkout] = useMutation(DELETE_WORKOUT, { 
@@ -74,15 +69,13 @@ function CreateEditWorkout(props: any, ref: any) {
       modalTrigger.next(false); 
       props.callback(); 
       setIsFormSubmitted(!isFormSubmitted);
-      setToastHeading('Success');
-      setToastMessage('Workout deleted successfully');
-      setToastColor('text-success'); 
+      setToastType('success');
+      setToastMessage('Workout details has been deleted successfully');
     } ,
     onError: (e: any) => {
-      setToastHeading('Error');
+      setToastType('error');
       setIsFormSubmitted(!isFormSubmitted);
-      setToastMessage('Workout deletion failed');
-      setToastColor('text-danger'); 
+      setToastMessage('Workout details has not been deleted'); 
     }
   });
 
@@ -365,7 +358,7 @@ function CreateEditWorkout(props: any, ref: any) {
         onClick={() => { DeleteWorkout(operation.id) }}
       />}
       {isFormSubmitted ?
-                <Toaster handleCallback={handleToasCallback} heading={toastHeading} textColor={toastColor} headingCSS={`mr-auto ${toastColor}`} msg={toastMessage} />
+                <Toaster handleCallback={handleToasCallback} type={toastType} msg={toastMessage} />
                 : null}
     </>
   )

@@ -23,9 +23,6 @@ function DeleteAccountConfirmation(props: any) {
   const deleteAccountJson: { [name: string]: any } = require("./DeleteAccountVerification.json");
   const [show, setShow] = useState(false);
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-
   const uiSchema: any = {
     "typeDelete": {
       "ui:help": "Hint: Enter DELETE in capital letters."
@@ -41,8 +38,10 @@ function DeleteAccountConfirmation(props: any) {
 
   const [updateProfile] = useMutation(UPDATE_USER_PROFILE_DATA, {
     onCompleted: (r: any) => {
+      // logout from session
       logout();
-      window.open(`deactiveAccount`, "_self");
+      // redirect to deactivation page
+      window.location.assign('/deactiveaccount');
     },
   });
 
@@ -104,17 +103,17 @@ function DeleteAccountConfirmation(props: any) {
         </Modal.Header>
         <Modal.Body>Do you wish to delete the account?</Modal.Body>
         <Modal.Footer>
-          <Button variant="success" onClick={handleShow} >
+          <Button variant="success" onClick={() => setShow(true)} >
             Yes
           </Button>
-          <Button variant="danger" >
+          <Button variant="danger" onClick={props.onHide}  >
             No
           </Button>
         </Modal.Footer>
       </Modal>
 
       {/* Deleting account modal */}
-      <Modal show={show} onHide={handleClose} centered>
+      <Modal show={show} onHide={() => setShow(false)} centered>
         <Modal.Header closeButton>
           <Modal.Title>Account Deletion- Verification</Modal.Title>
         </Modal.Header>

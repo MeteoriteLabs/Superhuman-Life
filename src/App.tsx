@@ -57,6 +57,8 @@ function App() {
             localStorage.removeItem("token");
             localStorage.removeItem("username");
             localStorage.removeItem("userid");
+            // redirect to login page
+            window.location.assign('/login');
           },
         }}
       >
