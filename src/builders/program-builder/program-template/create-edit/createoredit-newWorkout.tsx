@@ -18,7 +18,7 @@ interface Operation {
 
 function CreateEditNewWorkout(props: any, ref: any) {
     const auth = useContext(AuthContext);
-    const programSchema: { [name: string]: any; } = require("../json/newWorkout.json");
+    const programSchema: { [name: string]: any; } = require(window.location.pathname.includes("session") ? "../json/sessionManager/newWorkout.json" :"../json/newWorkout.json");
     const [programDetails, setProgramDetails] = useState<any>({});
     // const [frmDetails, setFrmDetails] = useState<any>([]);
     const [operation, setOperation] = useState<Operation>({} as Operation);

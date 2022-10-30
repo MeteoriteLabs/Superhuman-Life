@@ -18,7 +18,7 @@ interface Operation {
 
 function CreateEditWorkoutTemplate(props: any, ref: any) {
     const auth = useContext(AuthContext);
-    const programSchema: { [name: string]: any; } = require("../json/workoutTemplate.json");
+    const programSchema: { [name: string]: any; } = require(window.location.pathname.includes("session") ? "../json/sessionManager/workoutTemplate.json" : "../json/workoutTemplate.json");
     const [programDetails, setProgramDetails] = useState<any>({});
     const [operation, setOperation] = useState<Operation>({} as Operation);
     const program_id = window.location.pathname.split('/').pop();

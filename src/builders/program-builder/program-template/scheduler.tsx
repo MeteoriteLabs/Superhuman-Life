@@ -1159,6 +1159,7 @@ const Schedular = (props: any) => {
     }
 
     const [deleteRestDay] = useMutation(DELETE_REST_DAY, {onCompleted: () => {
+        console.log('rest day deleted');
         mainQuery.refetch();
     }});
     const [createRestDay] = useMutation(CREATE_REST_DAY, {onCompleted: (r: any) => {
@@ -1363,7 +1364,7 @@ const Schedular = (props: any) => {
             <div className="wrapper shadow-lg">
                 <div className="schedular">
                     {showRestDay && <div className="day-row">
-                        <div className="cell" style={{backgroundColor: 'white', position: 'relative', minHeight: `${props.type === 'date' ? '70px' : '70px'}` }}><b>Actions</b></div>
+                        <div className="cell" style={{backgroundColor: 'white', position: 'relative', minHeight: `${props.type === 'date' ? '70px' : '70px'}` }}><b>Mark Rest Day</b></div>
                         {handleActionRender()}
                     </div>}
                     <div className="day-row">
