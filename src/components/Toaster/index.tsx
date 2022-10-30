@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import {useState } from 'react';
 import { Row, Col, Toast } from 'react-bootstrap';
 
 function Toaster(props: any) {

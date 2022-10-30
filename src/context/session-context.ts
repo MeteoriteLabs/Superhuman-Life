@@ -1,5 +1,5 @@
-import React, { createContext } from "react";
-import { SessionReducer } from '../reducers/sessionReducers';
+import { createContext } from "react";
+// import { SessionReducer } from '../reducers/sessionReducers';
 
 type SessionType = {
      id: string;
@@ -15,16 +15,16 @@ const initialState = {
      sessions: []
 }
 
-const AppContext = createContext<{
-     state: InitialStateType;
-     dispatch: React.Dispatch<any>;
-   }>({
-     state: initialState,
-     dispatch: () => null
-});
+// const AppContext = createContext<{
+//      state: InitialStateType;
+//      dispatch: React.Dispatch<any>;
+//    }>({
+//      state: initialState,
+//      dispatch: () => null
+// });
 
-const mainReducer = ({ sessions }, action) => ({
-     session: SessionReducer(sessions, action),
-});
+// const mainReducer = ({ sessions }, action) => ({
+//      session: SessionReducer(sessions, action),
+// });
 
 export default createContext<InitialStateType>(initialState);

@@ -87,6 +87,7 @@ function CreateEditRestDay(props: any, ref: any) {
         }
         else {
             msg.tags[0]?.sessions?.map(
+                // eslint-disable-next-line array-callback-return
                 (val: any) => {
                     if(val.Is_restday){
                         return restDays.push({ key: val.day_of_program, day: `${moment(val.session_date).format("Do, MMM YY")}`});
