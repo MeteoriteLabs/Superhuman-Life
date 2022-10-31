@@ -390,8 +390,8 @@ const PricingTable = (props) => {
                                     disabled={inputDisabled}
                                     onChange={(e) => {handlePricingUpdate(e.target.value, index)}}
                                     />
-                                    {pricing[index]?.mrp < pricing[index]?.sapienPricing && pricing[index]?.mrp !== null && <span style={{ fontSize: '12px', color: 'red'}}>cannot be less than ₹ {pricing[index]?.sapienPricing}</span>}    
                                 </InputGroup>
+                                {pricing[index]?.mrp < pricing[index]?.sapienPricing && pricing[index]?.mrp !== null && <span style={{ fontSize: '12px', color: 'red'}}>cannot be less than ₹ {pricing[index]?.sapienPricing}</span>}    
                             </td>
                         )
                     })}

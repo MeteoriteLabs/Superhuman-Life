@@ -62,7 +62,7 @@ const BookingConfig = (props: any) => {
                     <Form.Check inline label="Manual" value={"Manual"} disabled={inputDisabled} defaultChecked={config === "Manual" ? true : false} onClick={(e: any) => setConfig(e.target.value)} name="group1" type='radio' id={`inline-1`} />
                     <Form.Check inline label="Auto" value={"Auto"} disabled={inputDisabled} defaultChecked={config === "Auto" ? true : false} onClick={(e: any) => setConfig(e.target.value)} name="group1" type='radio' id={`inline-2`} />
                     <Form.Text className="text-muted">
-                         In auto it will automatically accept all bookings
+                         Manual: Allows you to accept or reject a user, Auto: it will automatically accept all bookings
                     </Form.Text>
                </div>
                {config === 'Auto' && <div className='mt-3'>
