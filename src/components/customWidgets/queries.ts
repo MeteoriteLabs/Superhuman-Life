@@ -242,3 +242,37 @@ export const GET_MUSCLEGROUPS = gql`
           }
      }
   `;
+
+  export const GET_CONTACTS = gql`
+  query ContactsQuery($id: ID){
+    contacts(pagination: { pageSize: 100 }, filters:{
+      ownedBy:{
+        id: {eq: $id}
+      },
+      isPayee:{
+        eq: true
+      }
+    } ) {
+      data {
+        id
+        attributes {
+          firstname
+          lastname
+          email
+          type
+          phone
+          createdAt
+          ownedBy{
+            data{
+              id
+            }
+          }
+          appDownloadStatus
+          paymentDetails
+          organisationDetails
+          isPayee
+        }
+      }
+    }
+  }
+`;

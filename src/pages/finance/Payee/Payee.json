@@ -21,8 +21,8 @@
         "then": {
           "properties": {
             "search": {
-              "type": "string",
-              "title": "Search Payee"
+              "title": "Search Contact",
+              "type": "string"
             }
           },
           "required": [
@@ -227,16 +227,25 @@
               "title": "Effective Date",
               "format": "date"
             },
+            
             "paymentCycle": {
-              "type": "string",
+              "type": "number",
               "title": "Payment Cycle",
               "enum": [
-                "1",
-                "2",
-                "3",
-                "4",
-                "5"
-              ]
+                1,
+                2,
+                3,
+                4,
+                5
+              ],
+              "enumNames": [
+                "1st of every month",
+                "2nd of every month",
+                "3rd of every month",
+                "4th of every month",
+                "5th of every month"
+              ],
+              "default": 1
             },
             "payFromNextPaymentCycle": {
               "type": "boolean",

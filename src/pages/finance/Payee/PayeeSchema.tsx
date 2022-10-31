@@ -1,4 +1,14 @@
+import FitnessMultiSelect from '../../../components/customWidgets/fitnessMultiSelect';
+import ContactList from '../../../components/customWidgets/ContactList';
+import Upload from '../../../components/upload/upload';
+
+export const widgets = {
+  fitnessSelect: FitnessMultiSelect,
+  contactList: ContactList,
+};
+
 export const schema: any = {
+    
     PaymentMode: {
         "ui:widget": "checkboxes"
     },
@@ -29,9 +39,22 @@ export const schema: any = {
     },
     PayeeCategory: {
         "ui:widget": "radio",
+        "ui:help": "Select all contact if contact already exist or select new to create new payee",
         "ui:options": {
             "inline": true
         }
+    },
+    // search:{
+    //     "ui:widget": (props: any) => {
+    //         return <Upload allowImage={false} allowVideo={true} onChange={props.onChange} value={props.value} />;
+    //       },
+    //     "ui:help": "hello1"
+    // },
+    search:{
+        "ui:widget": (props: any) => {
+            return <ContactList onChange={() => {}} />;
+          },
+        "ui:help": "Select Contact"
     },
     FrequencyOfPayment: {
         "ui:widget": "radio",

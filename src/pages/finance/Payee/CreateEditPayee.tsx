@@ -19,8 +19,8 @@ const emptyPayeeDetailsState = {
     TypeofPayee: "Individual",
     PaymentMode: "UPI",
     FrequencyOfPayment:"One Time",
-    provideBreakdown: "No"
-
+    provideBreakdown: "No",
+    search: ""
 }
 
 function CreateEditPayee(props: any, ref: any) {

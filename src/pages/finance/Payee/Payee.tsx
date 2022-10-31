@@ -116,7 +116,7 @@ export default function Payee() {
   }
 
   // eslint-disable-next-line
-  const [getStatus, { data: paymentSchedule }] = useLazyQuery(
+  const [getPaymentSchedules, { data: paymentSchedule }] = useLazyQuery(
     GET_PAYMENT_SCHEDULES,
     {
       onCompleted: (data) => { loadData(data) }
@@ -125,8 +125,15 @@ export default function Payee() {
 
   const { data: get_contacts } = useQuery(GET_CONTACTS, {
     variables: { id: auth.userid },
-    onCompleted: (data) => getStatus({ variables: { id: auth.userid } })
+    onCompleted: (data) => getPaymentSchedules({ variables: { id: auth.userid } })
   });
+
+  if(get_contacts) {
+    console.log('get_contacts',get_contacts);
+    const flattenContactsData = flattenObj({ ...get_contacts });
+    console.log('get_contacts',flattenContactsData);
+    // const contactIds = get_contacts
+  }
 
   function loadData(data: any) {
     
