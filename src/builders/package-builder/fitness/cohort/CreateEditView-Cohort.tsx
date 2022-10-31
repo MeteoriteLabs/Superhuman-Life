@@ -12,6 +12,7 @@ import moment from 'moment';
 // import {AvailabilityCheck} from '../../../program-builder/program-template/availabilityCheck';
 import { Modal, Button } from 'react-bootstrap';
 // import StatusModal from "../../../../components/StatusModal/exerciseStatusModal";
+import Toaster from '../../../../components/Toaster';
 
 interface Operation {
     id: string;
@@ -29,6 +30,9 @@ function CreateEditCohort(props: any, ref: any) {
     const [fitnessPackageTypes, setFitnessPackageTypes] = useState<any>([]);
     const [deleteModalShow, setDeleteModalShow] = useState(false);
     const [statusModalShow, setStatusModalShow] = useState(false);
+    const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
+    const [isOffeeringDeleted, setisOffeeringDeleted] = useState<boolean>(false);
+    const [isOfferingUpdated, setisOfferingUpdated] = useState<boolean>(false);
     // const program_id = window.location.pathname.split('/').pop();
     let frmDetails: any = {};
     
@@ -44,10 +48,24 @@ function CreateEditCohort(props: any, ref: any) {
     }});
     const [updateBookingConfig] = useMutation(UPDATE_BOOKING_CONFIG, {onCompleted: (r: any) => {
         console.log(r); modalTrigger.next(false); props.callback();
-    }});
-    const [updatePackageStatus] = useMutation(UPDATE_PACKAGE_STATUS, {onCompleted: (data) => {setStatusModalShow(false); props.callback();}});
-    const [deletePackage] = useMutation(DELETE_PACKAGE, { refetchQueries: ["GET_TABLEDATA"], onCompleted: (data) => {props.callback();}});
-    const [bookingConfig] = useMutation(CREATE_BOOKING_CONFIG, {onCompleted: (r: any) => { modalTrigger.next(false); props.callback();}})
+            setisOfferingUpdated(!isOfferingUpdated);
+        }
+    });
+    const [updatePackageStatus] = useMutation(UPDATE_PACKAGE_STATUS, {onCompleted: (data) => {
+        setStatusModalShow(false); props.callback();
+            setisOfferingUpdated(!isOfferingUpdated);
+        }
+    });
+    const [deletePackage] = useMutation(DELETE_PACKAGE, { refetchQueries: ["GET_TABLEDATA"], onCompleted: (data) => {
+        props.callback();
+            setisOffeeringDeleted(!isOffeeringDeleted);
+        }
+    });
+    const [bookingConfig] = useMutation(CREATE_BOOKING_CONFIG, {onCompleted: (r: any) => { 
+        modalTrigger.next(false); props.callback();
+            setIsFormSubmitted(!isFormSubmitted);
+        }
+    });
     const [CreateCohortPackage] = useMutation(CREATE_CHANNEL_PACKAGE, { onCompleted: (r: any) => { 
         
         const val = JSON.parse(frmDetails.config.bookingConfig);
@@ -76,6 +94,14 @@ function CreateEditCohort(props: any, ref: any) {
             setOperation(msg);
             schema.startDate = props.startDate;
             schema.duration = props.duration;
+
+            if(msg.type === 'toggle-status'){
+                setStatusModalShow(true);
+            }
+
+            if(msg.type === 'delete'){
+                setDeleteModalShow(true);
+            }
 
             // if (msg && !msg.id) //render form if no message id
             if(msg.type !== 'delete' && msg.type !== 'toggle-status'){
@@ -198,7 +224,7 @@ function CreateEditCohort(props: any, ref: any) {
                 packagename: frm.packageName,
                 channelinstantBooking: frm.channelinstantBooking,
                 expiry_date: moment(frm.datesConfig.expiryDate).toISOString(),
-                level: ENUM_FITNESSPACKAGE_LEVEL[frm?.level],
+                level: frm?.level ? ENUM_FITNESSPACKAGE_LEVEL[frm?.level] : null,
                 Intensity: ENUM_FITNESSPACKAGE_INTENSITY[frm.intensity],
                 equipmentList: frm?.equipment?.length > 0 ? frm.equipment.map((x: any) => x.id).join(',').split(',') : [],
                 duration: frm.dates.startDate === frm.dates.endDate ? 1 : calculateDuration(frm.dates.startDate, frm.dates.endDate),
@@ -370,6 +396,18 @@ function CreateEditCohort(props: any, ref: any) {
                         <Button variant='success' onClick={() => {updateChannelPackageStatus(operation.id, operation.current_status)}}>Yes</Button>
                     </Modal.Footer>
                     </Modal>
+
+                    {isFormSubmitted ?
+                <Toaster handleCallback={() => setIsFormSubmitted(false)} type="success" msg="Offering has been Created successfully" />
+                : null}
+
+            {isOffeeringDeleted ?
+                <Toaster handleCallback={() => setisOffeeringDeleted(!isOffeeringDeleted)} type="success" msg="Offering has been deleted successfully" />
+                : null}
+
+            {isOfferingUpdated ?
+                <Toaster handleCallback={() => setisOfferingUpdated(!isOfferingUpdated)} type="success" msg="Offering has been updated successfully" />
+                : null}
         </>
     )
 }

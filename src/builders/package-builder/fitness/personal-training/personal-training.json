@@ -186,7 +186,7 @@
                     "Public",
                     "Private"
                 ],
-                "description": "Public: The Offering will be visible to the user as soon as it is created, Private: The offering will not ve seen by anyone until you share it with them"
+                "description": "Public: The offering can be viewed by anyone to purchase, Private: The offering will not ve seen by anyone until you share it with them"
             },
             "datesConfig": {
                 "type": "string"

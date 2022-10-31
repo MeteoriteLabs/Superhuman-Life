@@ -12,6 +12,7 @@ import moment from 'moment';
 // import {AvailabilityCheck} from '../../../program-builder/program-template/availabilityCheck';
 import { Modal, Button } from 'react-bootstrap';
 // import StatusModal from "../../../../components/StatusModal/exerciseStatusModal";
+import Toaster from '../../../../components/Toaster';
 
 interface Operation {
     id: string;
@@ -29,6 +30,9 @@ function CreateEditChannel(props: any, ref: any) {
     const [fitnessPackageTypes, setFitnessPackageTypes] = useState<any>([]);
     const [deleteModalShow, setDeleteModalShow] = useState(false);
     const [statusModalShow, setStatusModalShow] = useState(false);
+    const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
+    const [isOffeeringDeleted, setisOffeeringDeleted] = useState<boolean>(false);
+    const [isOfferingUpdated, setisOfferingUpdated] = useState<boolean>(false);
     let frmDetails: any = {};
 
     const [editPackageDetails] = useMutation(UPDATE_CHANNEL_COHORT_PACKAGE, {onCompleted: (data) => {
@@ -43,15 +47,25 @@ function CreateEditChannel(props: any, ref: any) {
     }});
     const [updatePackageStatus] = useMutation(UPDATE_PACKAGE_STATUS, {onCompleted: (data) => {
         props.callback();
-    }});
-    const [deletePackage] = useMutation(DELETE_PACKAGE, { refetchQueries: ["GET_TABLEDATA"], onCompleted: (data) => {props.callback()}});
+            setisOfferingUpdated(!isOfferingUpdated); 
+        }
+    });
+    const [deletePackage] = useMutation(DELETE_PACKAGE, { refetchQueries: ["GET_TABLEDATA"], onCompleted: (data) => {
+        props.callback();
+            setisOffeeringDeleted(!isOffeeringDeleted); 
+        }
+    });
     const [bookingConfig] = useMutation(CREATE_BOOKING_CONFIG, {onCompleted: (r: any) => { 
         console.log(r); modalTrigger.next(false); props.callback();
-    }})
+            setIsFormSubmitted(!isFormSubmitted);
+        }
+    })
 
     const [updateBookingConfig] = useMutation(UPDATE_BOOKING_CONFIG, {onCompleted: (r: any) => {
         console.log(r); modalTrigger.next(false); props.callback();
-    }});
+            setisOfferingUpdated(!isOfferingUpdated);
+        }
+    });
 
     const [CreatePackage] = useMutation(CREATE_CHANNEL_PACKAGE, { onCompleted: (r: any) => {
         const val = JSON.parse(frmDetails.config.bookingConfig);
@@ -82,6 +96,14 @@ function CreateEditChannel(props: any, ref: any) {
             setOperation(msg);
             schema.startDate = props.startDate;
             schema.duration = props.duration;
+
+            if(msg.type === 'toggle-status'){
+                setStatusModalShow(true);
+            }
+
+            if(msg.type === 'delete'){
+                setDeleteModalShow(true);
+            }
 
             if(msg.type !== 'delete' && msg.type !== 'toggle-status'){
                 modalTrigger.next(true);
@@ -188,7 +210,7 @@ function CreateEditChannel(props: any, ref: any) {
                 channelinstantBooking: JSON.parse(frm.channelinstantBooking).instantBooking,
                 Is_free_demo: JSON.parse(frm.channelinstantBooking).freeDemo,
                 expiry_date: moment(frm.datesConfig?.expiryDate).toISOString(),
-                level: ENUM_FITNESSPACKAGE_LEVEL[frm?.level],
+                level: frm.level ? ENUM_FITNESSPACKAGE_LEVEL[frm?.level] : null,
                 equipmentList: frm?.equipment?.length > 0 ? frm.equipment.map((item: any) => item.id).join(", ").split(", ") : [],
                 fitnessdisciplines: frm?.discpline?.length > 0 ? frm.discpline.map((item: any) => item.id).join(", ").split(", ") : [],
                 fitnesspackagepricing: frm.pricing === "free" ? [{ mrp: 'free' }] : JSON.parse(frm.pricing).filter((item: any) => item.mrp !== null),
@@ -340,6 +362,17 @@ function CreateEditChannel(props: any, ref: any) {
                     <Button variant='success' onClick={() => { updateChannelPackageStatus(operation.id, operation.current_status) }}>Yes</Button>
                 </Modal.Footer>
             </Modal>
+            {isFormSubmitted ?
+                <Toaster handleCallback={() => setIsFormSubmitted(false)} type="success" msg="Offering has been Created successfully" />
+                : null}
+
+            {isOffeeringDeleted ?
+                <Toaster handleCallback={() => setisOffeeringDeleted(!isOffeeringDeleted)} type="success" msg="Offering has been deleted successfully" />
+                : null}
+
+            {isOfferingUpdated ?
+                <Toaster handleCallback={() => setisOfferingUpdated(!isOfferingUpdated)} type="success" msg="Offering has been updated successfully" />
+                : null}
 
         </>
     )

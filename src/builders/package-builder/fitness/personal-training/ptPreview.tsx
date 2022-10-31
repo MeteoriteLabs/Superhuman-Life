@@ -37,10 +37,10 @@ const PreviewPt = (props) => {
             return <div><img src={`/assets/offeringsImages/on-demand-pt-offline.svg`} alt="personal-training" title="Personal Training Online" /><p>{programDetails.offline * duration}</p></div>
         }else {
             return <><div>
-                <img src={`/assets/offeringsImages/on-demand-pt-online.svg.svg`} alt="personal-training" title="Personal Training Online" />
+                <img src={`/assets/offeringsImages/one-on-one-online.svg`} alt="personal-training" title="Personal Training Online" />
                 <p>{programDetails.online * duration}</p>
             </div><div>
-                <img src={`/assets/offeringsImages/on-demand-pt-offline.svg.svg`} alt="personal-training" title="Personal Training Offline" />
+                <img src={`/assets/offeringsImages/one-on-one-offline.svg`} alt="personal-training" title="Personal Training Offline" />
                 <p>{programDetails.offline * duration}</p>
             </div></>
         }
