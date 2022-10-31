@@ -101,7 +101,7 @@
                         "properties": {
                             "upload": {
                                 "type": "string",
-                                "description": "This image will be seen in the details screen of the offering"
+                                "description": "This Image/Video will be seen in the details screen of the offering"
                             }
                       },
                       "required": [

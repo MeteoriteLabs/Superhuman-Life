@@ -45,12 +45,56 @@ const Schedular = (props: any) => {
     const [groupDropConflict, setGroupDropConflict] = useState(false);
     const [sessionBookings, setSessionBooking] = useState<any>([]);
     const [clickedSessionId, setClickedSessionId] = useState("");
+    const [showRestDay, setShowRestDay] = useState(false);
+
+    const DELETE_REST_DAY = gql`
+        mutation deleteRestDay($id: ID!) {
+            deleteSession(id: $id){
+                data{
+                    id
+                }
+            }
+        }
+    `;
+
+    const CREATE_TEMPLATE_SESSION = gql`
+        mutation createTemplateSession($day: Int!, $id: ID! ) {
+            createSession(data:{
+                day_of_program: $day,
+                type:"restday",
+                Is_restday:true,
+                changemaker: $id,
+              }){
+                data{
+                  id
+                }
+              }
+        }
+    `
+
+    const CREATE_REST_DAY = gql`
+        mutation createRestDay($date: Date!, $id: ID!) {
+            createSession(data:{
+                session_date: $date,
+                type: "restday",
+                Is_restday: true,
+                changemaker: $id
+            }){
+                data{
+                    id
+                }
+            }
+        }
+    `;
 
     const GET_SESSIONS_BY_DATE = gql`
         query getprogramdata($date: Date) {
             sessions(filters: {
                 session_date: {
                     eq: $date
+                },
+                Is_restday: {
+                    eq:false
                 }
             }){
                 data{
@@ -154,7 +198,7 @@ const Schedular = (props: any) => {
 
     // ENTRY POINT
     // this is the entry point to the file.
-        const mainQuery = useQuery(!props?.clientSessions ? GET_SESSIONS : GET_CLIENT_SESSIONS, { variables: { id: props.programId, startDate: moment(props.startDate).format("YYYY-MM-DD"), endDate: moment(props.startDate).add(props.days - 1 , 'days').format("YYYY-MM-DD") }, onCompleted: !props?.clientSessions ? handleRenderTable : handleRenderClientTable });
+        const mainQuery = useQuery(!props?.clientSessions ? GET_SESSIONS : GET_CLIENT_SESSIONS, { variables: { id: props.programId, startDate: moment(props?.startDate).format("YYYY-MM-DD"), endDate: moment(props?.startDate).add(props.days - 1 , 'days').format("YYYY-MM-DD") }, onCompleted: !props?.clientSessions ? handleRenderTable : handleRenderClientTable });
 
     function draganddrop() {
         const draggable: any = document.querySelectorAll('.schedular-content');
@@ -274,6 +318,7 @@ const Schedular = (props: any) => {
 
     // this incase of the scheduler in the session manager page
     function handleRenderTable(data: any) {
+        console.log(data);
         const flattenData = flattenObj({...data});
         if(window.location.pathname.split('/')[1] === 'programs'){
             return handleTemplateTable(props?.templateSessions);
@@ -373,6 +418,7 @@ const Schedular = (props: any) => {
 
     // this handles the displaying of rest days on the scheduler
     function handleRestDays(val: any) {
+        // this if block is to check if we are in the program template page
         if(props?.type === 'day'){
             if (props.restDays) {
                 for (var j = 0; j < props.restDays.length; j++) {
@@ -401,6 +447,39 @@ const Schedular = (props: any) => {
             }
         }
         return 'white';
+    }
+
+    //this return the data for adding and removing the rest days
+    function handleRestDaysData(val: any) {
+        // this if block is to check if we are in the program template page
+        if(props?.type === 'day'){
+            if (props.restDays) {
+                for (var j = 0; j < props.restDays.length; j++) {
+                    if (val === props.restDays[j].day_of_program) {
+                        return {isRestDay: true, id: props.restDays[j].id, date: props.restDays[j].day_of_program};
+                    }
+                }
+            }
+        }
+        // the first if statement is to check if we are in the client scheduler page
+        // the else if block is to run if we are in the session scheduler page
+        if(props.clientSessions){
+            if (props.restDays) {
+                for (var k = 0; k < props.restDays.length; k++) {
+                    if (val === calculateDay(props.startDate, props.restDays[k].session.session_date)) {
+                        return {isRestDay: true, id: props.restDays[k].session.id, date: props.restDays[k].session.session_date};
+                    }
+                }
+            }
+        }
+        else if (props.restDays && props?.type !== 'day') {
+            for (var i = 0; i < props.restDays.length; i++) {
+                if (val === calculateDay(props.startDate, props.restDays[i].session_date)) {
+                    return {isRestDay: true, id: props.restDays[i].id, date: props.restDays[i].session_date};
+                }
+            }
+        }
+        return {isRestDay: false, id: null, date: null};
     }
 
     // handles the height of the event being displayed on the scheduler
@@ -445,7 +524,7 @@ const Schedular = (props: any) => {
 
     const [duplicatedDay, setDuplicatedDay] = useState<any>([]);
     const [updateSessionBooking] = useMutation(UPDATE_SESSION_BOOKING);
-    const [createSessionBooking] = useMutation(CREATE_SESSION_BOOKING, {onCompleted: (r: any) => {setEvent({})}})
+    const [createSessionBooking] = useMutation(CREATE_SESSION_BOOKING, {onCompleted: (r: any) => {setEvent({}); mainQuery.refetch()}})
     const [createSession] = useMutation(CREATE_SESSION, {onCompleted: (r: any) => {
         if(window.location.pathname.split('/')[1] === 'programs'){
             handleUpdateFitnessPrograms(r.createSession.data.id);
@@ -463,7 +542,8 @@ const Schedular = (props: any) => {
                 }
             });
         }else {
-            setEvent({})
+            setEvent({});
+            mainQuery.refetch();
         }
     }});
     const [updateFitnessProgramSessions] = useMutation(UPDATE_FITNESSPORGRAMS_SESSIONS, { onCompleted: () => {
@@ -658,7 +738,8 @@ const Schedular = (props: any) => {
                 }
             });
         }
-
+        console.log(event);
+        console.log(timeInput);
         // the first if block is incase of the template page. which works based on day.
         if(window.location.pathname.split('/')[1] === 'programs'){
             if(event.type === 'workout'){
@@ -1077,13 +1158,66 @@ const Schedular = (props: any) => {
         confirmVal = {};
     }
 
-    
+    const [deleteRestDay] = useMutation(DELETE_REST_DAY, {onCompleted: () => {
+        console.log('rest day deleted');
+        mainQuery.refetch();
+    }});
+    const [createRestDay] = useMutation(CREATE_REST_DAY, {onCompleted: (r: any) => {
+        const values = [...sessionIds];
+        values.push(r.createSession.data.id);
+        updateTagSessions({
+            variables: {
+                id: program_id,
+                sessions_ids: values
+            }
+        })
+    }});
 
-    // it helps render the first row in the calendar
+    const [createTemplateRestDay] = useMutation(CREATE_TEMPLATE_SESSION, {onCompleted: (r: any) => {
+        const values = [...props.sessionIds];
+        values.push(r.createSession.data.id);
+        updateTagSessions({
+            variables: {
+                id: program_id,
+                sessions_ids: values
+            }
+        })
+    }});
+    
+    function handleDeleteRestDayFunc(day: number) {
+        const restDayData: any = handleRestDaysData(day);
+        deleteRestDay({
+            variables: {
+                id: restDayData?.id
+            }
+        })
+    }
+
+    function handleAddRestDayFunc(day: number, type?: string) {
+        const restDayData: any = moment(props.startDate).add(day - 1, 'days').format('YYYY-MM-DD');
+        if(type === 'day'){
+            createTemplateRestDay({
+                variables: {
+                    day: day,
+                    id: auth.userid
+                }
+            })
+        }else {
+            createRestDay({
+                variables: {
+                    date: restDayData,
+                    id: auth.userid
+                }
+            });   
+        }
+    }
+
+    // it helps render the first row in the calendar(which displays the date and other data)
     function handleDaysRowRender() {
         if(props.type === "date"){
             return (
                 dates.map((val, index) => {
+                    console.log(val);
                     return (
                         <>
                             <div className="cell" style={{ backgroundColor: `${handleRestDays(index+1)}`, minHeight: '70px', paddingTop: '10px' }}>
@@ -1106,6 +1240,72 @@ const Schedular = (props: any) => {
                 days.map(val => {
                     return (
                         <div className="cell" style={{ backgroundColor: `${handleRestDays(val)}`, minHeight: '70px' }}>{`Day ${val}`}</div>
+                    )
+                })
+            )
+        }
+    }
+
+    // this function handles the rest day actions 
+    function handleActionRender() {
+        if(props.type === "date"){
+            return (
+                dates.map((val, index) => {
+                    console.log(val);
+                    return (
+                        <>
+                            <div className="cell" style={{ backgroundColor: `${handleRestDays(index+1)}`, minHeight: '70px', paddingTop: '10px' }}>
+                                <div className="event-dayOfWeek text-center mt-1">
+                                    {handleRestDaysData(index+1)?.isRestDay ? 
+                                    <Badge 
+                                        onClick={() => {handleDeleteRestDayFunc(index+1)}}  
+                                        style={{ fontSize: '10px', cursor: 'pointer'}} 
+                                        className='p-2' 
+                                        variant='danger'
+                                    >
+                                        Remove Rest Day {" "}
+                                        <i className='fa fa-minus'></i>
+                                    </Badge> :
+                                    <Badge 
+                                        onClick={() => {handleAddRestDayFunc(index+1)}}
+                                        style={{ fontSize: '10px', cursor: 'pointer'}} 
+                                        className='p-2' 
+                                        variant='success'
+                                    >
+                                        Add Rest Day {" "}
+                                        <i className='fa fa-plus'></i>
+                                    </Badge> }
+                                </div>
+                            </div>
+                        </>
+                    )
+                })
+            )
+        }else {
+            return (
+                days.map((val, index) => {
+                    return (
+                        <div className="cell" style={{ backgroundColor: `${handleRestDays(val)}`, minHeight: '70px' }}>
+                            {handleRestDaysData(index+1)?.isRestDay ? 
+                                    <Badge 
+                                onClick={() => {handleDeleteRestDayFunc(index+1)}}  
+                                style={{ fontSize: '10px', cursor: 'pointer'}} 
+                                className='p-2' 
+                                variant='danger'
+                            >
+                                Remove Rest Day {" "}
+                                <i className='fa fa-minus'></i>
+                            </Badge> :
+                            <Badge 
+                                onClick={() => {handleAddRestDayFunc(index+1, 'day')}}
+                                style={{ fontSize: '10px', cursor: 'pointer'}} 
+                                className='p-2' 
+                                variant='success'
+                            >
+                                Add Rest Day {" "}
+                                <i className='fa fa-plus'></i>
+                            </Badge> }
+                        </div>
                     )
                 })
             )
@@ -1139,6 +1339,10 @@ const Schedular = (props: any) => {
         mainQuery.refetch();
     }
 
+    function handleShowRestDay(){
+        setShowRestDay(!showRestDay);
+    }
+
     if (!show) {
         return <div className="text-center">
             <Spinner animation="border" variant="danger" />
@@ -1159,6 +1363,10 @@ const Schedular = (props: any) => {
 
             <div className="wrapper shadow-lg">
                 <div className="schedular">
+                    {showRestDay && <div className="day-row">
+                        <div className="cell" style={{backgroundColor: 'white', position: 'relative', minHeight: `${props.type === 'date' ? '70px' : '70px'}` }}><b>Mark Rest Day</b></div>
+                        {handleActionRender()}
+                    </div>}
                     <div className="day-row">
                         <div className="cell" style={{backgroundColor: 'white', position: 'relative', minHeight: `${props.type === 'date' ? '70px' : '70px'}` }}></div>
                         {handleDaysRowRender()}
@@ -1239,7 +1447,7 @@ const Schedular = (props: any) => {
                     })}
                 </div>
             </div>
-            {props?.clientSchedular !== 'client' && <FloatingButton startDate={props.startDate} duration={props.days} callback={handleFloatingActionProgramCallback} callback2={handleFloatingActionProgramCallback2} callback3={handleRefetch}/>}
+            {props?.clientSchedular !== 'client' && <FloatingButton startDate={props.startDate} duration={props.days} callback={handleFloatingActionProgramCallback} callback2={handleFloatingActionProgramCallback2} callback3={handleRefetch} restDayCallback={handleShowRestDay} showRestDayAction={showRestDay}/>}
             {
                 <Modal show={showModal} onHide={handleClose} backdrop="static" centered size="lg" >
                     <Modal.Body style={{ maxHeight: '600px', overflow: 'auto' }}>

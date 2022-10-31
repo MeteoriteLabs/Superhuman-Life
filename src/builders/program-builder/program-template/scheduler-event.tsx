@@ -92,6 +92,7 @@ const SchedulerEvent = (props: any) => {
           handleRenderTable([]);
      }, [props.programEvents]); // eslint-disable-line react-hooks/exhaustive-deps
 
+     console.log(props.programDays)
      
      if (!show) return <span style={{ color: 'red' }}>Loading...</span>;
      else return (

@@ -18,10 +18,18 @@ const ClassTypeSelect = (props: any) => {
     useEffect(() => {
         if(urlList[1] === "pt") {
             setSelectedFitnessPackage("One-On-One");
-        }else if(urlList[1] === "group") {
+        }
+        if(urlList[1] === "group") {
             setSelectedFitnessPackage('Group Class');
-        }else if(urlList[1] === "Classic") {
+        } 
+        if(urlList[1] === "classic") {
             setSelectedFitnessPackage('Classic Class');
+        }
+        if(urlList[1] === "cohort"){
+            setSelectedFitnessPackage('Cohort');
+        }
+        if(urlList[1] === "channel"){
+            setSelectedFitnessPackage('Live Stream Channel');
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     },[]);
@@ -37,10 +45,10 @@ const ClassTypeSelect = (props: any) => {
         <div className="mr-5">
             <span><b>Select Fitness Offering type</b></span>
             <FormControl value={selectedFitnessPackage} 
-            disabled={urlList[1] === 'pt' || urlList[1] === 'group' || urlList[1] === 'classic'}  
+            disabled={urlList[1] === 'pt' || urlList[1] === 'group' || urlList[1] === 'classic' || urlList[1] === 'cohort' || urlList[1] === 'channel'}  
             as="select" onChange={(e) => setSelectedFitnessPackage(e.target.value)}>
                 <option>Choose Type</option>
-                {fitnessPackageTypes.slice(0,4).map((item) => {
+                {fitnessPackageTypes.slice(0,7).map((item) => {
                     return <option value={item.type}>{item.type}</option>
                 })}
             </FormControl>

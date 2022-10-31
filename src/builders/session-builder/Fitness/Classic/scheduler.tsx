@@ -22,6 +22,8 @@ const Scheduler = () => {
     const [tagSeperation, setTagSeperation] = useState<any>([]);
     const [statusDays, setStatusDays] = useState();
     const [totalClasses, setTotalClasses] = useState<any>([]);
+    //im using this session ids from parent only in case of day wise session
+    const [sessionIds, setSessionIds] = useState<any>([]);
     const [tag, setTag] = useState<any>();
     let programIndex;
 
@@ -39,11 +41,14 @@ const Scheduler = () => {
         const flattenData = flattenObj({...data});
         let total = [0];
         const values = [...flattenData.tags[0]?.sessions];
+        const ids = [...sessionIds];
         for(let i = 0; i < values.length; i++){
+            ids.push(values[i].id);
             if(values[i].tag === "Classic"){
                 total[0] += 1;
             }
         }
+        setSessionIds(ids);
         setTotalClasses(total);
         setTag(flattenData.tags[0]);
     }
@@ -199,7 +204,6 @@ const Scheduler = () => {
         return (data).toLocaleString('en-US', { minimumIntegerDigits: digits.toString(), useGrouping: false });
     }
 
-
     if (!show) return <span style={{ color: 'red' }}>Loading...</span>;
     else return (
         <>
@@ -214,14 +218,14 @@ const Scheduler = () => {
                     <Row>
                         <Col xs={11} lg={6} className="pl-4" style={{paddingRight: '20%' }}>
                             <Row>
-                                <h3 className="text-capitalize">{tag.tag_name}</h3>
+                                <h3 className="text-capitalize">{tag?.tag_name}</h3>
                             </Row>
                             <Row>
                                 <span>{tag.fitnesspackage.packagename}</span>
                                 <div className="ml-3 mt-1" style={{ borderLeft: '1px solid black', height: '20px' }}></div>
-                                <span className="ml-4">{tag.fitnesspackage.packagename + " days"}</span>
+                                <span className="ml-4">{tag.fitnesspackage.duration + " days"}</span>
                                 <div className="ml-3" style={{ borderLeft: '1px solid black', height: '20px' }}></div>
-                                <span className="ml-4">{"Level: " + tag.fitnesspackage.packagename}</span>
+                                <span className="ml-4">{"Level: " + tag.fitnesspackage.level}</span>
                             </Row>
                             <Row className="p-1 mt-2" style={{ border: '2px solid gray', borderRadius: '10px'}}>
                                 <Col lg={12} className="pl-0 pr-0">
@@ -289,7 +293,7 @@ const Scheduler = () => {
             <Row>
                 <Col lg={11} className="pl-0 pr-0">
                     <div className="mt-5">
-                        <SchedulerPage type="day" days={30} restDays={[]} classType={'Classic Class'} programId={tagId} />
+                        <SchedulerPage type="day" sessionIds={sessionIds} days={tag.fitnesspackage.duration} restDays={tag?.sessions.filter((ses) => ses.type === "restday")} classType={'Classic Class'} programId={tagId} />
                     </div>
                 </Col>
                 <FitnessAction ref={fitnessActionRef} />
