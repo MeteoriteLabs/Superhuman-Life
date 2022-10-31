@@ -51,7 +51,7 @@ const ContactList = (props: any) => {
 
      return (
           <div>
-               <label>Things you Need</label>
+               <label>Add contact</label>
                <Typeahead
                id="basic-typeahead-multiple"
                labelKey="name"
@@ -59,7 +59,6 @@ const ContactList = (props: any) => {
                options={contactList}
                placeholder="Choose Contact..."
                selected={multiSelections}
-               // disabled={props.uiSchema.readonly}
                />
           </div>
      )

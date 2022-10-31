@@ -6,7 +6,7 @@ import React, {
 import ModalView from "../../../components/modal/index";
 // import { useQuery, useMutation } from "@apollo/client";
 import AuthContext from "../../../context/auth-context";
-import { schema } from "./PayeeSchema";
+import { schema, widgets } from "./PayeeSchema";
 import { Subject } from "rxjs";
 // import {flattenObj} from '../../../../components/utils/responseFlatten';
 
@@ -29,16 +29,13 @@ const emptyPayeeDetailsState = {
 function CreateEditPayee(props: any, ref: any) {
   const [operation, setOperation] = useState<Operation>({} as Operation);
   const auth = useContext(AuthContext);
-  const payeeJson: { [name: string]: any } = require("./Payee.json");
+  const payeeJson: { } = require("./Payee.json");
 
   const modalTrigger = new Subject();
   useImperativeHandle(ref, () => ({
     TriggerForm: (msg: Operation) => {
       setOperation(msg);
-
-      // if(msg.type !== 'delete' && msg.type !== 'toggle-status'){
       modalTrigger.next(true);
-      // }
     },
   }));
 
@@ -60,7 +57,7 @@ function CreateEditPayee(props: any, ref: any) {
         "Payment Settings",
         "Payment Mode",
       ]}
-      // widgets={widgets}
+      widgets={widgets}
       modalTrigger={modalTrigger}
     />
   );

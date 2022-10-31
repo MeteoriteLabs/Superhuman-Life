@@ -1,10 +1,7 @@
-import FitnessMultiSelect from '../../../components/customWidgets/fitnessMultiSelect';
 import ContactList from '../../../components/customWidgets/ContactList';
-import Upload from '../../../components/upload/upload';
 
 export const widgets = {
-  fitnessSelect: FitnessMultiSelect,
-  contactList: ContactList,
+  contactList: ContactList
 };
 
 export const schema: any = {
@@ -45,9 +42,7 @@ export const schema: any = {
         }
     },
     search:{
-        "ui:widget": (props: any) => {
-            return <ContactList onChange={() => {}} />;
-          },
+        "ui:widget": "contactList",
         "ui:help": "Select Contact"
     },
     FrequencyOfPayment: {
