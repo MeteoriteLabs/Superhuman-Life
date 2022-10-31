@@ -3,10 +3,7 @@ import { Form, Row, Col } from 'react-bootstrap';
 
 const PackageDateConfig = (props: any) => {
 
-     console.log(props.value);
-
      const inputDisable = props.readonly;
-
      const [instantBooking, setInstantBooking] = useState(props.value !== undefined ? JSON.parse(props.value).instantBooking : true);
      const [freeDemo, setFreeDemo] = useState(props.value !== undefined ? JSON.parse(props.value).freeDemo : false);
 

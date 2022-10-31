@@ -19,20 +19,20 @@
 
 // export default Payee;
 
-import { useMemo, useState, useRef, useContext } from "react";
-import { Badge, Button, TabContent, InputGroup, FormControl, Card, Container, Row, Col } from "react-bootstrap";
+import { useMemo, useState, useRef } from "react";
+import { Button, TabContent, InputGroup, FormControl, Card, Container, Row, Col } from "react-bootstrap";
 import Table from "../../../components/table";
-import { useQuery } from "@apollo/client";
-import AuthContext from "../../../context/auth-context";
+// import { useQuery } from "@apollo/client";
+// import AuthContext from "../../../context/auth-context";
 import ActionButton from "../../../components/actionbutton/index";
 // import CreateEditMessage from "./createoredit-message";
 // import { GET_NOTIFICATIONS } from "./queries";
-import { flattenObj } from "../../../components/utils/responseFlatten";
+// import { flattenObj } from "../../../components/utils/responseFlatten";
 import CreateEditPayee from './CreateEditPayee';
 
 export default function Payee() {
-     const auth = useContext(AuthContext);
-     const [searchFilter, setSearchFilter] = useState("");
+     // const auth = useContext(AuthContext);
+     // const [searchFilter, setSearchFilter] = useState("");
      const searchInput = useRef<any>();
      const createEditPayeeComponent = useRef<any>(null);
 
@@ -140,7 +140,7 @@ export default function Payee() {
                                              variant="outline-secondary"
                                              onClick={(e: any) => {
                                                   e.preventDefault();
-                                                  setSearchFilter(searchInput.current.value);
+                                                  // setSearchFilter(searchInput.current.value);
                                              }}
                                         >
                                              <i className="fas fa-search"></i>

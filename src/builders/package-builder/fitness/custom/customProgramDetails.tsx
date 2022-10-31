@@ -17,9 +17,6 @@ const CustomProgramDetails = (props) => {
 
     }
 
-    console.log(props);
-    console.log(existingData);
-
     const [mode, setMode] = useState(props.value === undefined ? '' : (existingData.mode).toString());
     const [addressModal, setAddressModal] = useState(false);
 
@@ -33,8 +30,6 @@ const CustomProgramDetails = (props) => {
     const [groupOfflineClasses, setGroupOfflineClasses] = useState<number>(existingData?.groupOffline ? existingData.groupOffline : 0);
     const [recordedClasses, setRecordedClasses] = useState<number>(existingData?.recorded ? existingData.recorded : 0);
     const [restDays, setRestDays] = useState<number>(existingData?.rest ? existingData.rest : 0);
-
-    console.log(singleSelections);
 
     useEffect(() => {
         if(ptOnlineClasses > 30){
@@ -79,7 +74,7 @@ const CustomProgramDetails = (props) => {
 
     function loadData(data: any) {
         const flattenedData = flattenObj({...data});
-        console.log(flattenedData);
+      
         setAddresses(
               [...flattenedData.addresses].map((address) => {
                   return {
@@ -99,11 +94,8 @@ const CustomProgramDetails = (props) => {
         mainQuery.refetch();
     }
 
-    console.log(ptOfflineClasses, ptOnlineClasses, groupOfflineClasses, groupOnlineClasses, recordedClasses, restDays);
-
     function handleValidation(mode: string){
      //    here we will check for online
-          console.log(mode);
           if(restDays < 0){
                return false;
           }
@@ -145,8 +137,6 @@ const CustomProgramDetails = (props) => {
             }
         }
     }
-
-//     console.log(restDays, onlineClasses, offlineClasses);
 
     useEffect(() => {
           if(ptOnlineClasses < 0){

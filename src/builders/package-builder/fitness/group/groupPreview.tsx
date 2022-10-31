@@ -6,8 +6,6 @@ import '../fitness.css';
 
 const PreviewGroup = (props) => {
 
-    console.log(props.formContext)
-
     const formData = props?.formContext;
     const programDetails = JSON.parse(formData?.programDetails);
     var pricing;
@@ -44,7 +42,7 @@ const PreviewGroup = (props) => {
             return (
                 pricing.map((item, index) => {
                     return (
-                        console.log(item),
+                        
                         <Carousel.Item key={index}>
                             <Card className="text-center mx-auto" style={{ borderRadius: '20px', width: '50%'}}>
                             <Card.Body className='pr-0 py-0'>

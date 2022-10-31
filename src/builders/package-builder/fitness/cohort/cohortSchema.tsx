@@ -78,7 +78,6 @@ export const schema: any = {
         "Upload": {
             "upload": {
                 "ui:widget": (props: any) => {
-                    console.log(props)
                     return <Upload allowImage={true} allowVideo={true} onChange={props.onChange} value={props.value} />;
                 },
             },  

@@ -1,43 +1,74 @@
 import { useState } from "react";
-import { ApolloClient, ApolloProvider, createHttpLink, InMemoryCache } from "@apollo/client";
+import {
+  ApolloClient,
+  ApolloProvider,
+  createHttpLink,
+  InMemoryCache,
+  ApolloLink,
+} from "@apollo/client";
+import { onError } from "@apollo/client/link/error";
 import { setContext } from "@apollo/client/link/context";
 import AuthContext from "./context/auth-context";
 import Routes from "./Routes";
-
-const httpLink = createHttpLink({
-  uri: `${process.env.REACT_APP_URL}/graphql`,
-});
-
-const authLink = setContext((_, { headers }) => {
-  const token = localStorage.getItem("token");
-  return {
-    headers: {
-      ...headers,
-      authorization: token ? `Bearer ${token}` : "",
-    },
-  };
-});
-
-const defaultOptions: any = {
-	watchQuery: {
-		fetchPolicy: 'no-cache',
-	},
-	query: {
-		fetchPolicy: 'no-cache',
-	}
-}
-
-const client = new ApolloClient({
-  link: authLink.concat(httpLink),
-  cache: new InMemoryCache(),
-  defaultOptions: defaultOptions
-});
+import Toaster from "../src/components/Toaster";
 
 function App() {
   const [token, setToken] = useState<any>(localStorage.getItem("token"));
-  const [username, setUsername] = useState<any>(localStorage.getItem("username"));
+  const [username, setUsername] = useState<any>(
+    localStorage.getItem("username")
+  );
   const [userid, setUserid] = useState<any>(localStorage.getItem("userid"));
+  const [errMsg, setErrMsg] = useState<string | null>();
+
+  const httpLink = createHttpLink({
+    uri: `${process.env.REACT_APP_URL}/graphql`,
+  });
+
+  const authLink = setContext((_, { headers }) => {
+    const token = localStorage.getItem("token");
+    return {
+      headers: {
+        ...headers,
+        authorization: token ? `Bearer ${token}` : "",
+      },
+    };
+  });
+
+  const defaultOptions: any = {
+    watchQuery: {
+      fetchPolicy: "no-cache",
+    },
+    query: {
+      fetchPolicy: "no-cache",
+    },
+  };
+
+  const errorHandler = onError(
+    ({ graphQLErrors, networkError, operation, forward }) => {
+      if (graphQLErrors) {
+        // eslint-disable-next-line no-restricted-syntax
+        for (const err of graphQLErrors) {
+          setErrMsg(err.message);
+          return forward(operation);
+        }
+      }
+      if (networkError) {
+        return forward(operation);
+      }
+
+      return forward(operation);
+    }
+  );
+
+  const client = new ApolloClient({
+    cache: new InMemoryCache(),
+    link: ApolloLink.from([errorHandler, authLink.concat(httpLink)]),
+
+    defaultOptions: defaultOptions,
+  });
+
   return (
+    <>
     <ApolloProvider client={client}>
       <AuthContext.Provider
         value={{
@@ -65,6 +96,8 @@ function App() {
         <Routes token={token} />
       </AuthContext.Provider>
     </ApolloProvider>
+    {errMsg && <Toaster handleCallback={ () => setErrMsg('') } type={'error'} msg={errMsg} />}
+    </>
   );
 }
 

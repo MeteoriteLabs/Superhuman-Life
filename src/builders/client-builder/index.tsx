@@ -1,6 +1,7 @@
 import { Card, Tab, Tabs, TabContent } from "react-bootstrap";
 import ClientListing from "./clientlisting";
 import Leads from "./leads/index";
+import Contacts from "./contacts/index";
 
 export default function ClientPage() {
      return (
@@ -19,6 +20,12 @@ export default function ClientPage() {
                                    <TabContent>
                                         <hr />
                                         <Leads />
+                                   </TabContent>
+                              </Tab>
+                              <Tab eventKey="contacts" title="Contacts">
+                                   <TabContent>
+                                        <hr />
+                                        <Contacts />
                                    </TabContent>
                               </Tab>
                          </Tabs>
