@@ -86,6 +86,9 @@ const PtProgramDetails = (props) => {
     function handleValidation(mode: string){
         //here we will check for online
         if(mode === '0'){
+            if(restDays < 0){
+                return false;
+            }
             if((onlineClasses + restDays) === 30){
                 return true;
             }else {
@@ -94,6 +97,9 @@ const PtProgramDetails = (props) => {
         }
         //here we will check for offline
         if(mode === '1'){
+            if(restDays < 0){
+                return false;
+            }
             if((restDays + offlineClasses) === 30){
                 if((addressTitle === 'At My Address' && singleSelections.length !== 0)){
                     return true;
@@ -109,6 +115,9 @@ const PtProgramDetails = (props) => {
         }
         //here we will check for both(hybrid)
         if(mode === "2"){
+            if(restDays < 0){
+                return false;
+            }
             if((restDays + offlineClasses + onlineClasses) === 30){
                 if(addressTitle === 'At My Address' && singleSelections.length !== 0){
                     return true;

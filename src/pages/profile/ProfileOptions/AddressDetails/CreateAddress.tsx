@@ -17,6 +17,18 @@ import StatusModal from "../../../../components/StatusModal/StatusModal";
 import { zipcodeCustomFormats, zipcodeTransformErrors } from "../../../../components/utils/ValidationPatterns";
 import Toaster from '../../../../components/Toaster/index';
 
+export interface BasicAddressDetails {
+    address1: string;
+    address2: string;
+    city: string;
+    country: string;
+    state: string;
+    zipcode: string;
+    type_address: string;
+    House_Number: string;
+    Title: string;
+  }
+
 interface Operation {
     id: string;
     modal_status: boolean;
@@ -25,10 +37,10 @@ interface Operation {
 
 function CreateAddress(props: any, ref: any) {
     const auth = useContext(AuthContext);
-    const addressJson: { [name: string]: any } = require("./Address.json");
+    const addressJson: { } = require("./Address.json");
     const [addressData, setAddressData] = useState<any>([]);
     const [operation, setOperation] = useState<Operation>({} as Operation);
-    const [addressDetails, setAddressDetails] = useState<any>({});
+    const [addressDetails, setAddressDetails] = useState({} as BasicAddressDetails);
     const [prefill, setPrefill] = useState<any>([]);
     const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
     let [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
@@ -114,7 +126,7 @@ function CreateAddress(props: any, ref: any) {
     useEffect(() => {
         let selectedAddress = prefill && prefill.length ? prefill.find((currValue: any) => currValue.id === operation.id) : null;
 
-        let details: any = {};
+        let details = {} as BasicAddressDetails;
         details.address1 = selectedAddress ? selectedAddress.address1 : '';
         details.address2 = selectedAddress ? selectedAddress.address2 : '';
         details.city = selectedAddress ? selectedAddress.city : '';
@@ -163,7 +175,7 @@ function CreateAddress(props: any, ref: any) {
                 id: operation.id,
                 data: {
                     address1: frm.address1,
-                    address2: frm.address2,
+                    address2: frm.address2 ? frm.address2 : null,
                     city: frm.city,
                     country: frm.country,
                     state: frm.state,

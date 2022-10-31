@@ -141,7 +141,7 @@ const ClassicPreview = (props) => {
         <Carousel
             prevIcon={<i className='fa fa-chevron-left fa-lg p-3' style={{borderRadius: '50%', "color": "white", backgroundColor: "black"}}></i>}
             nextIcon={<i className='fa fa-chevron-right fa-lg p-3' style={{ borderRadius: '50%', "color": "white", backgroundColor: "black" }}></i>}
-            controls={pricing === 'free' ? false : true}
+            controls={false}
         >
             {handleCardRender()}
         </Carousel>

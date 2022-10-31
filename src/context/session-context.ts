@@ -1,7 +1,30 @@
-import React from "react";
+import { createContext } from "react";
+// import { SessionReducer } from '../reducers/sessionReducers';
 
-const SessionData: any = {
+type SessionType = {
+     id: string;
+     name: string;
+     time: string;
+}
+
+type InitialStateType = {
+     sessions: SessionType[];
+}
+
+const initialState = {
      sessions: []
-}    
+}
 
-export default React.createContext(SessionData);
+// const AppContext = createContext<{
+//      state: InitialStateType;
+//      dispatch: React.Dispatch<any>;
+//    }>({
+//      state: initialState,
+//      dispatch: () => null
+// });
+
+// const mainReducer = ({ sessions }, action) => ({
+//      session: SessionReducer(sessions, action),
+// });
+
+export default createContext<InitialStateType>(initialState);

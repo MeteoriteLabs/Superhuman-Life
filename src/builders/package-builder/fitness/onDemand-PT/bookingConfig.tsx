@@ -32,7 +32,9 @@ const BookingConfig = (props: any) => {
 
 
      useEffect(() => {
-
+          if(bookings > 12 || bookings < 0){
+               setBookings(12);
+          }
           if(handleValidation()){
                props.onChange(JSON.stringify({fillSchedule: fillSchedule, config: config, bookings: bookings}));
           }else {
@@ -71,7 +73,7 @@ const BookingConfig = (props: any) => {
                </div>}
                {config === 'Auto' && !fillSchedule && <div className='mt-3'>
                     <Form.Label>Maximum Bookings per/day*</Form.Label>
-                    <Form.Control type="number" disabled={inputDisabled} max={20} min={0} value={bookings} onChange={(e: any) => setBookings(parseInt(e.target.value))} />
+                    <Form.Control type="number" disabled={inputDisabled} max={12} min={0} value={bookings} onChange={(e: any) => setBookings(parseInt(e.target.value))} />
                     {/* <Form.Text className="text-muted">
                          We'll never share your email with anyone else.
                     </Form.Text> */}

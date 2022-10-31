@@ -60,7 +60,8 @@
             "Benifits",
             "classsize",
             "thumbnail",
-            "Upload"
+            "Upload",
+            "languages"
         ],
         "properties": {
             "About": {

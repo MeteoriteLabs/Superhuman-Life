@@ -107,9 +107,9 @@ const ClassicProgramDetails = (props) => {
           if(onlineClasses === 0){
                return false;
           }
-          if(restDays > (duration/2)){
-               return false;
-          }
+          // if(restDays > (duration/2)){
+          //      return false;
+          // }
           if((onlineClasses + restDays) === duration){
                return true;
           }

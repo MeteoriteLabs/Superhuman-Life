@@ -11,6 +11,7 @@ import { schemaView } from './schemaView';
 import {Subject} from 'rxjs';
 import {flattenObj} from '../../../../components/utils/responseFlatten';
 import moment from 'moment';
+import Toaster from '../../../../components/Toaster';
 
 interface Operation {
     id: string;
@@ -26,6 +27,9 @@ function CreateEditPackage(props: any, ref: any) {
     const [operation, setOperation] = useState<Operation>({} as Operation);
     const [deleteModalShow, setDeleteModalShow] = useState(false);
     const [statusModalShow, setStatusModalShow] = useState(false);
+    const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
+    const [isOffeeringDeleted, setisOffeeringDeleted] = useState<boolean>(false);
+    const [isOfferingUpdated, setisOfferingUpdated] = useState<boolean>(false);
 
     let frmDetails: any = {};
 
@@ -38,13 +42,17 @@ function CreateEditPackage(props: any, ref: any) {
     });
 
     const [bookingConfig] = useMutation(CREATE_BOOKING_CONFIG, {onCompleted: (r: any) => { 
-      modalTrigger.next(false); props.callback();
-    }});
+        console.log(r); modalTrigger.next(false); props.callback();
+            setIsFormSubmitted(!isFormSubmitted); 
+        }
+    });
 
     const [createUserPackageSuggestion] = useMutation(ADD_SUGGESTION_NEW, {onCompleted: (data) => {
         modalTrigger.next(false);
         props.callback();
-    }});
+            setIsFormSubmitted(!isFormSubmitted); 
+        }
+    });
 
     const [createPackage] = useMutation(CREATE_PACKAGE, { onCompleted: (r: any) => { 
         // modalTrigger.next(false); props.callback();
@@ -79,18 +87,34 @@ function CreateEditPackage(props: any, ref: any) {
 
     const [updatePackageStatus] = useMutation(UPDATE_PACKAGE_STATUS, {onCompleted: (data) => {
         props.callback();
-    }});
-    const [deletePackage] = useMutation(DELETE_PACKAGE, { refetchQueries: ["GET_TABLEDATA"], onCompleted: (data) => {props.callback()}});
+            setisOfferingUpdated(!isOfferingUpdated); 
+        }
+    });
+    const [deletePackage] = useMutation(DELETE_PACKAGE, { refetchQueries: ["GET_TABLEDATA"], onCompleted: (data) => {
+        props.callback();
+            setisOffeeringDeleted(!isOffeeringDeleted);
+        }
+    });
 
     const [updateBookingConfig] = useMutation(UPDATE_BOOKING_CONFIG, {onCompleted: (r: any) => {
-        modalTrigger.next(false); props.callback();
-    }});
+        console.log(r); modalTrigger.next(false); props.callback();
+            setisOfferingUpdated(!isOfferingUpdated);
+        }
+    });
 
     const modalTrigger =  new Subject();
 
     useImperativeHandle(ref, () => ({
         TriggerForm: (msg: Operation) => {
             setOperation(msg);
+
+            if(msg.type === 'toggle-status'){
+                setStatusModalShow(true);
+            }
+
+            if(msg.type === 'delete'){
+                setDeleteModalShow(true);
+            }
 
             // if (msg && !msg.id) //render form if no message id
             if(msg.type !== 'delete' && msg.type !== 'toggle-status'){
@@ -195,7 +219,7 @@ function CreateEditPackage(props: any, ref: any) {
             variables: {
                 packagename: frm.packagename,
                 tags: frm?.tags,
-                level: ENUM_FITNESSPACKAGE_LEVEL[frm?.level],
+                level: frm.level ? ENUM_FITNESSPACKAGE_LEVEL[frm?.level] : null,
                 intensity: ENUM_FITNESSPACKAGE_INTENSITY[frm.intensity],
                 aboutpackage: frm.About,
                 benefits: frm.Benifits,
@@ -322,7 +346,6 @@ function CreateEditPackage(props: any, ref: any) {
 
     FetchData();
 
-
     return (
         <>
             {/* {render && */}
@@ -382,7 +405,17 @@ function CreateEditPackage(props: any, ref: any) {
                     </Modal.Footer>
                     </Modal>
         
-            
+                    {isFormSubmitted ?
+                <Toaster handleCallback={() => setIsFormSubmitted(false)} type="success" msg="Offering has been Created successfully" />
+                : null}
+
+            {isOffeeringDeleted ?
+                <Toaster handleCallback={() => setisOffeeringDeleted(!isOffeeringDeleted)} type="success" msg="Offering has been deleted successfully" />
+                : null}
+
+            {isOfferingUpdated ?
+                <Toaster handleCallback={() => setisOfferingUpdated(!isOfferingUpdated)} type="success" msg="Offering has been updated successfully" />
+                : null}
         </>
     )
 }

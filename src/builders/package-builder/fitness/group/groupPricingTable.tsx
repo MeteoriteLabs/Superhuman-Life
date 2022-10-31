@@ -213,7 +213,7 @@ const PricingTable = (props) => {
                          if(bookingDetails.freeDemo){
                               item.suggestedPrice = 'free';
                          }else {
-                              item.suggestedPrice = flattenData.suggestedPricings[0].mrp;
+                              item.suggestedPrice = flattenData.suggestedPricings[0]?.mrp;
                          }
                     }else {
                          item.suggestedPrice = flattenData.suggestedPricings[0]?.mrp * onlineClasses * (item.duration / 30);

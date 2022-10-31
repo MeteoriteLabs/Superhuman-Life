@@ -18,7 +18,7 @@ interface Operation {
 
 function CreateEditWorkoutTemplate(props: any, ref: any) {
     const auth = useContext(AuthContext);
-    const programSchema: { [name: string]: any; } = require("../json/workoutTemplate.json");
+    const programSchema: { [name: string]: any; } = require(window.location.pathname.includes("session") ? "../json/sessionManager/workoutTemplate.json" : "../json/workoutTemplate.json");
     const [programDetails, setProgramDetails] = useState<any>({});
     const [operation, setOperation] = useState<Operation>({} as Operation);
     const program_id = window.location.pathname.split('/').pop();
@@ -34,6 +34,9 @@ function CreateEditWorkoutTemplate(props: any, ref: any) {
             sessions(filters: {
                 session_date: {
                     eq: $date
+                },
+                type: {
+                  ne: "restday"
                 }
             }){
                 data{
@@ -72,10 +75,10 @@ function CreateEditWorkoutTemplate(props: any, ref: any) {
 
     const [updateFitenssProgram] = useMutation(UPDATE_FITNESSPORGRAMS_SESSIONS, { onCompleted: (data: any) => {
         modalTrigger.next(false);
-        props.callback();
+        props?.callback();
     }})
 
-    const [createSessionBooking] = useMutation(CREATE_SESSION_BOOKING, { onCompleted: (data: any) => {modalTrigger.next(false); props.callback()} })
+    const [createSessionBooking] = useMutation(CREATE_SESSION_BOOKING, { onCompleted: (data: any) => {modalTrigger.next(false); props?.callback()} })
     const [upateSessions] = useMutation(UPDATE_TAG_SESSIONS, { onCompleted: (data: any) => {
         createSessionBooking({
             variables: {
@@ -126,7 +129,7 @@ function CreateEditWorkoutTemplate(props: any, ref: any) {
             setOperation(msg);
             schema.startDate = props.startDate;
             schema.duration = props.duration;
-            schema.type = window.location.pathname.split('/')[1] === "programs" ? 'day' : '';
+            schema.type = window.location.pathname.split('/')[1] === "programs" ? 'day' : window.location.pathname.includes('classic') ? 'day' : '';
 
             if (msg && !msg.id) //render form if no message id
                 modalTrigger.next(true);
