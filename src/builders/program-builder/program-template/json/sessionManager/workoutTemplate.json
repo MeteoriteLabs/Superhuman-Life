@@ -1,0 +1,33 @@
+{
+     "1": {
+         "title": "",
+         "type": "object",
+         "required": [
+            "day",
+            "time"
+         ],
+        "properties": {
+          "tag": {
+               "type": "string"
+          },
+            "day": {
+                "type": "string"
+            },
+            "time": {
+                "type": "string"
+            }
+        }
+     },
+     "2": {
+        "title": "",
+        "type": "object",
+        "required": [
+            "workoutEvent"
+        ],
+        "properties": {
+            "workoutEvent": {
+                "type": "string"
+            }
+        }
+     }
+ }

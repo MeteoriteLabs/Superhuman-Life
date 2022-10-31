@@ -26,14 +26,14 @@ const FloatingButton = (props: any) => {
      const program_id = window.location.pathname.split('/').pop();
 
 
-     function FetchData() {
-          useQuery(GET_SCHEDULEREVENTS, { variables: { id: program_id }, onCompleted: (e: any) => { 
-               const flattenData = flattenObj({...e});
-               // setExistingEvents(flattenData.fitnessprograms[0].events); setRestDays(flattenData.fitnessprograms[0].rest_days); setRenewalDate(flattenData.fitnessprograms[0].renewal_dt)
-           } });
-     }
+     // function FetchData() {
+     //      useQuery(GET_SCHEDULEREVENTS, { variables: { id: program_id }, onCompleted: (e: any) => { 
+     //           const flattenData = flattenObj({...e});
+     //           // setExistingEvents(flattenData.fitnessprograms[0].events); setRestDays(flattenData.fitnessprograms[0].rest_days); setRenewalDate(flattenData.fitnessprograms[0].renewal_dt)
+     //       } });
+     // }
 
-     FetchData();
+     // FetchData();
 
      return (
           <>
@@ -64,8 +64,9 @@ const FloatingButton = (props: any) => {
                                    createEditNewActivityComponent.current.TriggerForm({ id: null, type: 'create' });
                               }}>New Activity</Dropdown.Item>
                               <Dropdown.Item eventKey="6" onClick={() => {
-                                   createEditRestDayComponent.current.TriggerForm({ id: null, type: 'create' });
-                              }}>Mark Rest Day</Dropdown.Item>
+                                   // createEditRestDayComponent.current.TriggerForm({ id: null, type: 'create' });
+                                   props.restDayCallback();
+                              }}><i style={{ display: `${props.showRestDayAction ? 'block' : 'none'}`}} className='fa fa-check text-success'></i>{' '}Mark Rest Day</Dropdown.Item>
                          </DropdownButton>
                          </Row>
                          {/* <Row className="mt-3" style={{ justifyContent: 'center'}}>
