@@ -8,7 +8,7 @@ import {
   Card,
   Container,
   Row,
-  Col,
+  Col
 } from "react-bootstrap";
 import Table from "../../../components/table";
 import { useQuery, useLazyQuery } from "@apollo/client";
@@ -50,9 +50,7 @@ export default function Payee() {
                 style={{ fontSize: "1rem", borderRadius: "10px" }}
                 variant={statusColor}
               >
-                {row.values.isActive === true
-                  ? "Activated"
-                  : "Deactivated"}
+                {row.values.isActive === true ? "Activated" : "Deactivated"}
               </Badge>
             </>
           );
@@ -119,39 +117,47 @@ export default function Payee() {
   const [getPaymentSchedules, { data: paymentSchedule }] = useLazyQuery(
     GET_PAYMENT_SCHEDULES,
     {
-      onCompleted: (data) => { loadData(data) }
+      onCompleted: (data) => {
+        loadData(data);
+      },
     }
   );
 
   const { data: get_contacts } = useQuery(GET_CONTACTS, {
     variables: { id: auth.userid },
-    onCompleted: (data) => getPaymentSchedules({ variables: { id: auth.userid } })
+    onCompleted: (data) => {
+      const flattenContactsData = flattenObj({ ...data });
+      const contactsArray = flattenContactsData.contacts.map((currentValue) =>
+        Number(currentValue.id)
+      );
+
+      // calling paymentSchedule's useLazyQuery function
+      getPaymentSchedules({
+        variables: {
+          Destination_Contacts_ID: contactsArray,
+          id: Number(auth.userid),
+        },
+      });
+    },
   });
 
-  if(get_contacts) {
-    console.log('get_contacts',get_contacts);
-    const flattenContactsData = flattenObj({ ...get_contacts });
-    console.log('get_contacts',flattenContactsData);
-    // const contactIds = get_contacts
-  }
-
   function loadData(data: any) {
-    
     const flattenContactsData = flattenObj({ ...get_contacts });
-    console.log('flattenContactsData',flattenContactsData)
     const flattenFinanceData = flattenObj({ ...data.paymentSchedules });
-    console.log('flattenFinanceData',flattenFinanceData);
 
     setDataTable(
       [...flattenContactsData.contacts].flatMap((Detail) => {
-
         return {
           id: Detail.id,
           contactsdate: getDate(Date.parse(Detail.createdAt)),
           name: Detail.firstname + " " + Detail.lastname,
           type: Detail.type,
           appDownloadStatus: Detail.appDownloadStatus,
-          isActive: flattenFinanceData.filter((currValue) => currValue.Destination_Contacts_ID == Detail.id).findIndex((currValue) => currValue.isActive === true) !== -1 ? true : false
+          isActive:
+            flattenFinanceData.findIndex(
+              (currValue) => currValue.Destination_Contacts_ID == Detail.id) !== -1
+              ? true
+              : false,
         };
       })
     );

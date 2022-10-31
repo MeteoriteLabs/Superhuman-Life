@@ -25,11 +25,12 @@ const ContactList = (props: any) => {
 
      function loadData(data: any) {
                     const flattenedData = flattenObj({...data});
+                    console.log(flattenedData);
                     setContactList(
                         [...flattenedData.contacts].map((currValue) => {
                             return {
                                 id: currValue.id,
-                                name: currValue.name
+                                name: currValue.firstname
                             }
                         })
                     );
@@ -39,13 +40,6 @@ const ContactList = (props: any) => {
           const unique = [...new Map(e.map((m) => [m.id, m])).values()];
           setMultiSelections(unique);
      }
-      
-     // if(multiSelections.length > 0){
-     //      props.onChange(multiSelections?.map((d) => {
-     //           return d.id;
-     //           }).join(",").toString()
-     //      );
-     // }
 
      if(multiSelections.length > 0){
           props.onChange(JSON.stringify(multiSelections));
@@ -65,7 +59,6 @@ const ContactList = (props: any) => {
                options={contactList}
                placeholder="Choose Contact..."
                selected={multiSelections}
-               multiple
                // disabled={props.uiSchema.readonly}
                />
           </div>

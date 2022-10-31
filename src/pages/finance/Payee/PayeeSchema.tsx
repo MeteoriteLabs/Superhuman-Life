@@ -44,12 +44,6 @@ export const schema: any = {
             "inline": true
         }
     },
-    // search:{
-    //     "ui:widget": (props: any) => {
-    //         return <Upload allowImage={false} allowVideo={true} onChange={props.onChange} value={props.value} />;
-    //       },
-    //     "ui:help": "hello1"
-    // },
     search:{
         "ui:widget": (props: any) => {
             return <ContactList onChange={() => {}} />;

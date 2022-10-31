@@ -63,8 +63,18 @@ export const GET_CONTACT = gql`
 `;
 
 export const GET_PAYMENT_SCHEDULES = gql`
-  query PaymentSchedulesQuery{
-    paymentSchedules(pagination: { pageSize: 100 }) {
+  query PaymentSchedulesQuery($Destination_Contacts_ID: [Int], $Source_User_ID: Int){
+    paymentSchedules(pagination: { pageSize: 100 },filters:{
+      Destination_Contacts_ID:{
+        in: $Destination_Contacts_ID
+      },
+      Source_User_ID:{
+        eq: $Source_User_ID
+      },
+      isActive:{
+        eq:true
+      }
+    }) {
       data{
         id
         attributes{
