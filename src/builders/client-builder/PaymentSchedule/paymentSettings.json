@@ -115,11 +115,11 @@
                         5
                       ],
                       "enumNames": [
-                        "1 of every month",
-                        "2 of every month",
-                        "3 of every month",
-                        "4 of every month",
-                        "5 of every month"
+                        "1st of every month",
+                        "2nd of every month",
+                        "3rd of every month",
+                        "4th of every month",
+                        "5th of every month"
                       ],
                       "default": 1
                     },
