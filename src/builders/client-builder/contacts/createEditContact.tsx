@@ -39,7 +39,7 @@ function CreateEditContact(props: any, ref: any) {
   const [operation, setOperation] = useState<Operation>({} as Operation);
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
   const [modalLabel, setModalLabel] = useState<string>("");
-  let [isCreated, setIsCreated] = useState<boolean>(false);
+  const [isCreated, setIsCreated] = useState<boolean>(false);
   const [isDeleted, setIsDeleted] = useState<boolean>(false);
   const [isUpdated, setIsUpdated] = useState<boolean>(false);
 
