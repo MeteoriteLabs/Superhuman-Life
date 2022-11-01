@@ -78,7 +78,6 @@ const PreviewChannel = (props) => {
             return (
                 pricing.map((item, index) => {
                     return (
-                        console.log(item),
                         <Carousel.Item key={index}>
                             <Card className="text-center mx-auto" style={{ borderRadius: '20px', width: '50%'}}>
                             <Card.Body className='pr-0 py-0'>

@@ -32,8 +32,7 @@ export default function FitnessTab(props) {
     const [currentIndex, setCurrentIndex] = useState<any>('');
 
     function handleModalRender(id: string | null, actionType: string, type: string, current_status?: boolean){
-        console.log(id);
-        console.log(type);
+
         switch(type){
             case 'One-On-One':
                 createEditViewPersonalTrainingRef.current.TriggerForm({id: id, type: actionType, actionType: type, current_status: current_status});
@@ -91,8 +90,7 @@ export default function FitnessTab(props) {
         {
             accessor: "details", Header: "Details",
             Cell: ({ row }: any) => {
-                console.log(row);
-                console.log(row.original?.freeClass)
+
                 return <div className='d-flex justify-content-center align-items-center'>
                     {row.values.details[0] !== null && row.values.details[0] !== 0 ?
                         <div className="text-center">
@@ -147,7 +145,7 @@ export default function FitnessTab(props) {
                             onChange={(e) => {
                                 const updateSelectedDuration = [...selectedDuration];
                                 const updateCurrentindex = [...currentIndex];
-                                console.log(e.target.value);
+
                                 let value = 1;
                                 if (e.target.value === "1") {
                                     value *= 3
@@ -231,7 +229,7 @@ export default function FitnessTab(props) {
         const flattenData = flattenObj({...data});
         setDataTable(
             [...flattenData.fitnesspackages].map(item => {
-                console.log(item);
+               
                 return {
                     id: item.id,
                     packagename: item.packagename,
@@ -251,8 +249,6 @@ export default function FitnessTab(props) {
         setSelectedDuration(new Array(flattenData.fitnesspackages.length).fill(0));
         setCurrentIndex(new Array(flattenData.fitnesspackages.length).fill(1))
     }
-
-    console.log(dataTable);
 
     return (
         <TabContent>

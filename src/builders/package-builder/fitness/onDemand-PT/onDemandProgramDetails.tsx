@@ -17,9 +17,6 @@ const PtProgramDetails = (props) => {
 
     }
 
-    console.log(props);
-    console.log(existingData);
-
     const [mode, setMode] = useState(props.value === undefined ? '' : (existingData.mode).toString());
     const [addressModal, setAddressModal] = useState(false);
 
@@ -30,8 +27,6 @@ const PtProgramDetails = (props) => {
 //     const [onlineClasses, setOnlineClasses] = useState<number>(existingData?.online ? existingData.online : 0);
 //     const [offlineClasses, setOfflinceClasses] = useState<number>(existingData?.offline ? existingData.offline : 0);
 //     const [restDays, setRestDays] = useState<number>(existingData?.rest ? existingData.rest : 0);
-
-    console.log(singleSelections);
 
 //     useEffect(() => {
 //         if(onlineClasses > 30){
@@ -69,7 +64,7 @@ const PtProgramDetails = (props) => {
 
     function loadData(data: any) {
         const flattenedData = flattenObj({...data});
-        console.log(flattenedData);
+      
         setAddresses(
               [...flattenedData.addresses].map((address) => {
                   return {
@@ -123,8 +118,6 @@ const PtProgramDetails = (props) => {
 //             }
 //         }
 //     }
-
-//     console.log(restDays, onlineClasses, offlineClasses);
 
 //     useEffect(() => {
 //         if(mode === "0"){

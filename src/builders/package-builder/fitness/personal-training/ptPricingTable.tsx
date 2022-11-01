@@ -17,7 +17,6 @@ const PricingTable = (props) => {
         }
     }
 
-    console.log(props.formContext.programDetails);
     const classDetails = JSON.parse(props.formContext.programDetails);
 
      const classMode = classDetails.mode === "0" ? "Online" : classDetails.mode === "1" ? "Offline" : "Hybrid";
@@ -81,9 +80,6 @@ const PricingTable = (props) => {
             }
         });
       },[pricing]);
-
-      console.log(pricing);
-
 
     const SUGGESTED_PRICING = gql`
         query fetchSapienPricing($id: ID!) {

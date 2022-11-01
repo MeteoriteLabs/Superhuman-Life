@@ -1,0 +1,251 @@
+{
+    "1": {
+      "type": "object",
+      "properties": {
+        "isPayee": {
+          "type": "boolean",
+          "title": "Do you want to add Payment settings?",
+          "enum": [
+            true,
+            false
+          ],
+          "default": false
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "isPayee": {
+                "title": "Payment Details",
+                "const": true
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "PaymentCategory": {
+                "title": "Payment Category",
+                "enum": [
+                  "Vendor",
+                  "Rental",
+                  "Supplies",
+                  "Marketing and Ads",
+                  "Maintenance",
+                  "Reimbursement",
+                  "Consulting Services",
+                  "Miscellaneous"
+                ],
+                "default": "Vendor"
+              },
+              "FrequencyOfPayment": {
+                "title": "Frequency of Payment",
+                "type": "number",
+                "enum": [
+                  0,
+                  1
+                ],
+                "enumNames": [
+                  "One Time",
+                  "Monthly"
+                ],
+                "default": 0
+              }
+            },
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "FrequencyOfPayment": {
+                      "const": 0
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "amountToBePaid": {
+                      "type": "number",
+                      "title": "Amount to be paid"
+                    },
+                    "paymentDueOn": {
+                      "type": "string",
+                      "title": "Payment due on",
+                      "format": "date-time"
+                    },
+                    "setReminder": {
+                      "type": "string",
+                      "title": "Set Reminder",
+                      "format": "date-time"
+                    }
+                  },
+                  "required": [
+                    "amountToBePaid",
+                    "paymentDueOn",
+                    "setReminder"
+                  ]
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "FrequencyOfPayment": {
+                      "const": 1
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "amountToBePaid": {
+                      "type": "number",
+                      "title": "Amount to be paid"
+                    },
+                    "effectiveDate": {
+                      "type": "string",
+                      "title": "Effective Date",
+                      "format": "date"
+                    },
+                    "paymentCycle": {
+                      "type": "number",
+                      "title": "Payment Cycle",
+                      "enum": [
+                        1,
+                        2,
+                        3,
+                        4,
+                        5
+                      ],
+                      "enumNames": [
+                        "1st of every month",
+                        "2nd of every month",
+                        "3rd of every month",
+                        "4th of every month",
+                        "5th of every month"
+                      ],
+                      "default": 1
+                    },
+                    "payFromNextPaymentCycle": {
+                      "type": "boolean",
+                      "title": "Pay from next payment cycle",
+                      "enum": [
+                        true,
+                        false
+                      ],
+                      "default": false
+                    },
+                    "setReminder": {
+                      "type": "string",
+                      "title": "Set Reminder",
+                      "format": "date-time"
+                    },
+                    "provideBreakdown": {
+                      "type": "string",
+                      "title": "Provide Breakdown",
+                      "enum": [
+                        "Yes",
+                        "No"
+                      ],
+                      "default": "No"
+                    }
+                  },
+                  "allOf": [
+                    {
+                      "if": {
+                        "properties": {
+                          "payFromNextPaymentCycle": {
+                            "const": true
+                          }
+                        }
+                      },
+                      "then": {
+                        "properties": {
+                          "firstPayment": {
+                            "type": "string",
+                            "title": "First Payment"
+                          }
+                        },
+                        "required": [
+                          "firstPayment"
+                        ]
+                      }
+                    },
+                    {
+                      "if": {
+                        "properties": {
+                          "provideBreakdown": {
+                            "const": "Yes"
+                          }
+                        }
+                      },
+                      "then": {
+                        "properties": {
+                          "basicPay": {
+                            "type": "string",
+                            "title": "Basic Pay"
+                          },
+                          "HRA": {
+                            "type": "string",
+                            "title": "HRA or HRR"
+                          },
+                          "Gratuity": {
+                            "type": "string",
+                            "title": "Gratuity"
+                          },
+                          "LTA": {
+                            "type": "string",
+                            "title": "LTA"
+                          },
+                          "ESI": {
+                            "type": "string",
+                            "title": "ESI"
+                          },
+                          "MedicalReimbursement": {
+                            "type": "string",
+                            "title": "Medical Reimbursement"
+                          },
+                          "ChildCare": {
+                            "type": "string",
+                            "title": "Child Care"
+                          },
+                          "SpecialAllowance": {
+                            "type": "string",
+                            "title": "Special Allowance"
+                          },
+                          "ProfessionalTax": {
+                            "type": "string",
+                            "title": "Professional Tax"
+                          },
+                          "TDS": {
+                            "type": "string",
+                            "title": "TDS"
+                          },
+                          "ProvidentFund": {
+                            "type": "string",
+                            "title": "Provident Fund"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "required": [
+                        "provideBreakdown",
+                        "payFromNextPaymentCycle"
+                      ]
+                    }
+                  ],
+                  "required": [
+                    "amountToBePaid",
+                    "effectiveDate"
+                  ]
+                }
+              },
+              {
+                "required": [
+                  "FrequencyOfPayment"
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }

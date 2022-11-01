@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 export const FETCH_DATA = gql`
-  query fetchdata($id: ID!) {
+  query fetchdata($id: ID) {
     exercises(filters: { id: { eq: $id } }) {
       data {
         id
@@ -109,7 +109,7 @@ export const FETCH_FITNESSDISCPLINES = gql`
 `;
 
 export const GET_TABLEDATA = gql`
-  query ExercisesQuery($id: ID!) {
+  query ExercisesQuery($id: ID) {
     exercises(pagination: { pageSize: 100 }, filters: { users_permissions_user: { id: { eq: $id } } }) {
       data {
         id

@@ -33,8 +33,6 @@ function CreateEditPackage(props: any, ref: any) {
 
     let frmDetails: any = {};
 
-    console.log(operation.type);
-
     useQuery(GET_FITNESS_PACKAGE_TYPES, {
         variables: {type: "Classic Class"},
         onCompleted: (r: any) => {
@@ -155,7 +153,6 @@ function CreateEditPackage(props: any, ref: any) {
 
     function FillDetails(data: any) {
         const flattenedData = flattenObj({...data});
-        console.log(flattenedData);
         let msg = flattenedData.fitnesspackages[0];
         let bookingConfig: any = {};
         let details: any = {};
@@ -208,7 +205,7 @@ function CreateEditPackage(props: any, ref: any) {
     }, [operation.type]);
 
     function FetchData() {
-        useQuery(GET_SINGLE_PACKAGE_BY_ID, { variables: { id: operation.id }, skip: (operation.type === 'create'),onCompleted: (e: any) => { FillDetails(e) } });
+        useQuery(GET_SINGLE_PACKAGE_BY_ID, { variables: { id: operation.id }, skip: (operation.type === 'create' || !operation.id ),onCompleted: (e: any) => { FillDetails(e) } });
     }
 
     function CreatePackage(frm: any) {
@@ -250,7 +247,6 @@ function CreateEditPackage(props: any, ref: any) {
 
     function EditPackage(frm: any) {
         frmDetails = frm;
-        console.log('edit message', frm);
         frm.equipmentList = JSON.parse(frm.equipmentList).map((x: any) => x.id).join(',').split(',');
         frm.disciplines = JSON.parse(frm.disciplines).map((x: any) => x.id).join(', ').split(', ');
         frm.programDetails = JSON.parse(frm.programDetails)
@@ -288,7 +284,6 @@ function CreateEditPackage(props: any, ref: any) {
     }
 
     function ViewPackage(frm: any) {
-        console.log('view message');
         //use a variable to set form to disabled/not editable
      //    useMutation(UPDATE_EXERCISE, { variables: frm, onCompleted: (d: any) => { console.log(d); } })
     }
@@ -303,7 +298,6 @@ function CreateEditPackage(props: any, ref: any) {
         setStatusModalShow(false);
         operation.type = 'create';
     }
-
 
     function OnSubmit(frm: any) {
         //bind user id
@@ -353,6 +347,7 @@ function CreateEditPackage(props: any, ref: any) {
                     formData={classicDetails}
                     widgets={widgets}
                     modalTrigger={modalTrigger}
+                    actionType={operation.type}
                 />
                 
             <Modal

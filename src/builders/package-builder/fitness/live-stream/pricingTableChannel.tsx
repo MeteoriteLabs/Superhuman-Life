@@ -10,8 +10,6 @@ const PricingTable = (props) => {
     const inputDisabled = props.readonly;
     const bookingDetails = JSON.parse(props.formContext.channelinstantBooking);
 
-    console.log(props);
-
     const [show, setShow] = useState(props.value === 'free' ? true : false);
 
     function handleReturnType(val: any) {
@@ -150,7 +148,7 @@ const PricingTable = (props) => {
     function loadData(data){
         const flattenData = flattenObj({...data});
         const newValue = [...pricing];
-        console.log(flattenData);
+        
         newValue.forEach((item, index) => {
             if(item.voucher !== 0 && item.price !== null){
                 item.suggestedPrice = parseInt(((item.sapienPricing * 100) / (100 - item.voucher)).toFixed(2))
@@ -216,8 +214,6 @@ const PricingTable = (props) => {
     }
 
     FetchData();
-
-    console.log(pricing);
 
     return(
         <>

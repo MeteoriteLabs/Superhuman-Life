@@ -1,0 +1,130 @@
+{
+    "type": "object",
+    "required": [
+        "firstname",
+        "lastname",
+        "phone",
+        "email",
+        "type"
+    ],
+    "properties": {
+        "firstname": {
+            "type": "string",
+            "title": "First Name"
+        },
+        "lastname": {
+            "type": "string",
+            "title": "Last Name"
+        },
+        "phone": {
+            "type": "string",
+            "title": "Phone Number",
+            "minLength": 10,
+            "format": "phone-in"
+        },
+        "email": {
+            "type": "string",
+            "title": "Email ID",
+            "format": "email"
+        },
+        "type": {
+            "title": "Type of contact",
+            "type": "string",
+            "enum": [
+                "Client",
+                "Organization",
+                "Community",
+                "Service Provider",
+                "Vendor"
+            ],
+            "default": "Client"
+        },
+        "appDownloadStatus": {
+            "type": "boolean",
+            "title": "Send invite to download the app, website link and social channels ?",
+            "enum": [
+                true,
+                false
+            ],
+            "default": false
+        },
+        "isPayee": {
+            "type": "boolean",
+            "title": "Do you want to add Payment settings?",
+            "enum": [
+                true,
+                false
+            ],
+            "default": false
+        },
+        "organisationDetails": {
+            "type": "boolean",
+            "title": "Is this contact representing an organisation?",
+            "enum": [
+                true,
+                false
+            ],
+            "default": false
+        }
+    },
+    "allOf": [
+        {
+            "if": {
+                "properties": {
+                    "organisationDetails": {
+                        "title": "Organisation Details",
+                        "const": true
+                    }
+                }
+            },
+            "then": {
+                "properties": {
+                    "organisationName": {
+                        "type": "string",
+                        "title": "Organisation Name"
+                    },
+                    "gst": {
+                        "type": "string",
+                        "title": "GST Number",
+                        "maxLength": 15
+                    },
+                    "organisationEmail": {
+                        "type": "string",
+                        "title": "Organisation Email",
+                        "format": "email"
+                    },
+                    "address1": {
+                        "type": "string",
+                        "title": "Address 1"
+                    },
+                    "address2": {
+                        "type": "string",
+                        "title": "Address 2"
+                    },
+                    "city": {
+                        "type": "string",
+                        "title": "City"
+                    },
+                    "state": {
+                        "type": "string",
+                        "title": "State"
+                    },
+                    "country": {
+                        "type": "string",
+                        "title": "Country"
+                    },
+                    "zipcode": {
+                        "type": "string",
+                        "title": "Zipcode",
+                        "max-length": 6
+                    }
+                },
+                "required": [
+                    "organisationName",
+                    "gst",
+                    "organisationEmail"
+                ]
+            }
+        }
+    ]
+}

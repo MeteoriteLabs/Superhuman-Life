@@ -71,13 +71,16 @@ function CreateAddress(props: any, ref: any) {
             props.callback();
             modalTrigger.next(false);
             fetch.refetch();
-            setIsFormSubmitted(!isFormSubmitted);
+            setIsAddressUpdated(!isAddressUpdated);
         },
         refetchQueries: [FETCH_USERS_PROFILE_DATA]
     });
 
     const [deleteAddress] = useMutation(DELETE_ADDRESS, {
-        onCompleted: (data: any) => { fetch.refetch(); },
+        onCompleted: (data: any) => { 
+            fetch.refetch(); 
+            setIsAddressDeleted(!isAddressDeleted);
+        },
         refetchQueries: [FETCH_USERS_PROFILE_DATA]
     });
 
@@ -236,7 +239,7 @@ function CreateAddress(props: any, ref: any) {
 
             {/* success toaster notification */}
             {isFormSubmitted ?
-                <Toaster handleCallback={() => setIsFormSubmitted(false)} type="success" msg="Address has been added successfully" />
+                <Toaster handleCallback={() => setIsFormSubmitted(!isFormSubmitted)} type="success" msg="Address has been added successfully" />
                 : null}
 
             {isAddressDeleted ?

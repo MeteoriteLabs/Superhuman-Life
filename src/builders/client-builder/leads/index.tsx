@@ -158,7 +158,6 @@ export default function Leads() {
           fetch.refetch();
      }
 
-
      function loadData(data: any) {
           let namearr: any = [];
           const flattenData = flattenObj({ ...data });

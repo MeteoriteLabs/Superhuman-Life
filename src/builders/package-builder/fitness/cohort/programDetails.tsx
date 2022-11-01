@@ -10,14 +10,11 @@ import AddFitnessAddressModal from "../../../../components/customWidgets/AddFitn
 const ProgramDetails = (props) => {
 
     const inputDisabled = props.readonly;
-
-    console.log(props.formContext.classSize);
     const cohortClassSize = props.formContext.classSize;
     const existingData = props.value === undefined ? undefined : JSON.parse(props.value);
-    console.log(existingData);
+  
     if(existingData !== undefined && existingData.length > 0){
         existingData.address = {id: JSON.parse(existingData?.address)[0].id, title: JSON.parse(existingData?.address)[0].title};
-
     }
 
     const [mode, setMode] = useState(props.value === undefined ? '' : (existingData.mode).toString());
@@ -138,8 +135,6 @@ const ProgramDetails = (props) => {
         props.onChange(undefined)
     }
 
-
-
     // useEffect(() => {
         accomodationDetails.private = showPrivate;
         accomodationDetails.sharing = showSharing;
@@ -148,8 +143,6 @@ const ProgramDetails = (props) => {
         accomodationDetails.threeSharingRooms = threeSharing;
         accomodationDetails.foodDescription = foodDescription;
     // }, [showPrivate, privateRooms, foodDescription, showSharing, twoSharing, threeSharing, accomodationDetails]);
-
-    console.log(accomodationDetails);
 
     if(handleValidation()){
         props.onChange(JSON.stringify({addressTag: addressTitle, address: singleSelections, mode: mode, residential: residential, accomodationDetails: accomodationDetails}));
@@ -165,8 +158,6 @@ const ProgramDetails = (props) => {
     // }else if(mode === "2" && addressTitle === "At Client Address"){
     //     props.onChange(JSON.stringify({addressTag: addressTitle, address: singleSelections, mode: mode, residential: residential}));
     // }
-
-    console.log(twoSharing);
 
     return (
         <>
