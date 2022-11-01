@@ -250,7 +250,7 @@ export const GET_MUSCLEGROUPS = gql`
         id: {eq: $id}
       },
       isPayee:{
-        eq: true
+        eq: false
       }
     } ) {
       data {

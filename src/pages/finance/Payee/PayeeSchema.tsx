@@ -5,7 +5,9 @@ export const widgets = {
 };
 
 export const schema: any = {
-    
+    PaymentCategory: {
+      "ui:help": "Select payment category"
+    },
     PaymentMode: {
         "ui:widget": "checkboxes"
     },
@@ -13,7 +15,7 @@ export const schema: any = {
         "ui:widget": "select"
     },
     PayeeName: {
-        "ui:placeholder": "Enter Payee name"
+        "ui:placeholder": "Enter Payee's name"
     },
     Email: {
         "ui:placeholder": "Enter Payee's email address"
@@ -92,5 +94,23 @@ export const schema: any = {
     },
     ProvidentFund: {
         "ui:placeholder": "Enter Provident Fund"
+    },
+    AccountNumber: {
+        "ui:placeholder": "Enter Payee's Account Number "
+    },
+    ifscCode: {
+        "ui:placeholder": "Enter the IFSC Code"
+    },
+    BankName: {
+        "ui:placeholder": "Enter the name of the Bank"
+    },
+    Branch: {
+        "ui:placeholder": "Enter the bank branch"
+    },
+    UPI_ID: {
+        "ui:placeholder": "Enter Payee's UPI ID"
+    },
+    upiPhoneNumber: {
+        "ui:placeholder": "Enter Payee's UPI phone number"
     }
 };

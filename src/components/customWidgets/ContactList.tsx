@@ -1,11 +1,13 @@
-import {useState} from 'react';
+import {useState, useContext} from 'react';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 import { GET_CONTACTS } from './queries';
 import { useQuery } from "@apollo/client";
 import { flattenObj } from '../utils/responseFlatten';
+import AuthContext from "../../context/auth-context";
 
 const ContactList = (props: any) => {
+     const auth = useContext(AuthContext);
      function handleReturnType(value){
           if(typeof value === 'string'){
                return JSON.parse(value);
@@ -20,7 +22,7 @@ const ContactList = (props: any) => {
         const [contactList, setContactList] = useState<any[]>([]);
 
      function FetchData(){
-          useQuery(GET_CONTACTS, {onCompleted: loadData})
+          useQuery(GET_CONTACTS, {variables: { id: auth.userid },onCompleted: loadData})
       }
 
      function loadData(data: any) {
@@ -30,7 +32,7 @@ const ContactList = (props: any) => {
                         [...flattenedData.contacts].map((currValue) => {
                             return {
                                 id: currValue.id,
-                                name: currValue.firstname
+                                name: currValue.firstname && currValue.firstname
                             }
                         })
                     );

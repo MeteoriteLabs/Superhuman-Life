@@ -69,9 +69,13 @@
                     "type": "string",
                     "title": "GST Number"
                   },
-                  "PayeeName": {
+                  "PayeeFirstName": {
                     "type": "string",
-                    "title": "Name of the payee"
+                    "title": "Enter first name of payee"
+                  },
+                  "PayeeLastName": {
+                    "type": "string",
+                    "title": "Enter last name of payee"
                   },
                   "Email": {
                     "type": "string",
@@ -80,21 +84,13 @@
                   "Phone_Number": {
                     "type": "string",
                     "title": "Contact Number"
-                  },
-                  "addToContacts": {
-                    "type": "boolean",
-                    "title": "Add to contacts",
-                    "enum": [
-                      true,
-                      false
-                    ]
                   }
                 },
                 "required": [
                   "organisationName",
                   "GSTNumber",
                   "Email",
-                  "PayeeName",
+                  
                   "Phone_Number"
                 ]
               }
@@ -109,9 +105,13 @@
               },
               "then": {
                 "properties": {
-                  "PayeeName": {
+                  "PayeeFirstName": {
                     "type": "string",
-                    "title": "Name of the payee"
+                    "title": "Enter first name of payee"
+                  },
+                  "PayeeLastName": {
+                    "type": "string",
+                    "title": "Enter last name of payee"
                   },
                   "Email": {
                     "type": "string",
@@ -119,22 +119,15 @@
                   },
                   "Phone_Number": {
                     "type": "string",
-                    "title": "Contact Number"
-                  },
-                  "addToContacts": {
-                    "type": "boolean",
-                    "title": "Add to contacts",
-                    "enum": [
-                      true,
-                      false
-                    ]
-                  }
+                    "title": "Contact Number",
+                    "format": "phone-in"
+                  } 
                 },
                 "required": [
-                  "PayeeName",
+                  "PayeeFirstName",
+                  "PayeeLastName",
                   "Email",
-                  "Phone_Number",
-                  "addToContacts"
+                  "Phone_Number"
                 ]
               }
             },
@@ -166,14 +159,21 @@
           "Reimbursement",
           "Consulting Services",
           "Miscellaneous"
-        ]
+        ],
+        "default": "Vendor"
       },
       "FrequencyOfPayment": {
         "title": "Frequency of Payment",
+        "type": "number",
         "enum": [
+          0,
+          1
+        ],
+        "enumNames": [
           "One Time",
           "Monthly"
-        ]
+        ],
+        "default": 0
       }
     },
     "allOf": [
@@ -181,7 +181,7 @@
         "if": {
           "properties": {
             "FrequencyOfPayment": {
-              "const": "One Time"
+              "const": 0
             }
           }
         },
@@ -194,12 +194,12 @@
             "paymentDueOn": {
               "type": "string",
               "title": "Payment due on",
-              "format": "date"
+              "format": "date-time"
             },
             "setReminder": {
               "type": "string",
               "title": "Set Reminder",
-              "format": "date"
+              "format": "date-time"
             }
           },
           "required": [
@@ -213,7 +213,7 @@
         "if": {
           "properties": {
             "FrequencyOfPayment": {
-              "const": "Monthly"
+              "const": 1
             }
           }
         },
@@ -260,7 +260,7 @@
             "setReminder": {
               "type": "string",
               "title": "Set Reminder",
-              "format": "date"
+              "format": "date-time"
             },
             "provideBreakdown": {
               "type": "string",
@@ -346,20 +346,7 @@
                     "type": "string",
                     "title": "Provident Fund"
                   }
-                },
-                "required": [
-                  "basicPay",
-                  "HRA",
-                  "Gratuity",
-                  "ChildCare",
-                  "MedicalEmbruisment",
-                  "ESI",
-                  "LTA",
-                  "SpecialAllowance",
-                  "TDS",
-                  "ProvidentFund",
-                  "ProfessionalTax"
-                ]
+                }   
               }
             },
             {
@@ -386,51 +373,102 @@
     "type": "object",
     "title": "Mode of payment",
     "properties": {
-      "PaymentMode": {
-        "type": "array",
-        "title": "Payment Mode",
-        "items": {
-          "type": "string",
+      "upi": {
+          "type": "boolean",
+          "title": " UPI",
           "enum": [
-            "UPI",
-            "Bank Account"
-          ]
-        },
-        "uniqueItems": true
+              true,
+              false
+          ],
+          "default": true
       },
-      "UPI": {
-        "type": "string",
-        "title": "UPI ID"
-      },
-      "Phone": {
-        "type": "string",
-        "title": "Phone",
-        "minLength": 10
-      },
-      "Account Number": {
-        "type": "string",
-        "title": "Account Number"
-      },
-      "ifscCode": {
-        "type": "string",
-        "title": "IFSC Code"
-      },
-      "BankName": {
-        "type": "string",
-        "title": "Name of the Bank"
-      },
-      "Branch": {
-        "type": "string",
-        "title": "Branch"
-      },
-      "accountType": {
-        "type": "string",
-        "title": "Account Type",
-        "enum": [
-          "Current",
-          "Savings"
-        ]
+      "bankAccount": {
+          "type": "boolean",
+          "title": " Bank Account",
+          "enum": [
+              true,
+              false
+          ],
+          "default": false
       }
-    }
-  }
+  },
+  "allOf": [
+      {
+          "if": {
+              "properties": {
+                  "upi": {
+                      "title": "UPI Details",
+                      "const": true
+                  }
+              }
+          },
+          "then": {
+              "properties": {
+                  "UPI_ID": {
+                      "type": "string",
+                      "title": "UPI ID"
+                  },
+                  "upiPhoneNumber": {
+                      "type": "string",
+                      "title": "Phone",
+                      "minLength": 10,
+                      "format": "phone-in"
+                  }
+              },
+              "required": [
+                  "UPI_ID",
+                  "upiPhoneNumber"
+              ]
+          }
+      },
+      {
+          "if": {
+              "properties": {
+                  "bankAccount": {
+                      "title": "Bank Account Details",
+                      "const": true
+                  }
+              }
+          },
+          "then": {
+              "properties": {
+                  "AccountNumber": {
+                      "type": "number",
+                      "title": "Account Number",
+                      "max-length": 17,
+                      "minLength": 9
+                  },
+                  "ifscCode": {
+                      "type": "string",
+                      "title": "IFSC Code"
+                  },
+                  "BankName": {
+                      "type": "string",
+                      "title": "Name of the Bank"
+                  },
+                  "Branch": {
+                      "type": "string",
+                      "title": "Branch"
+                  },
+                  "accountType": {
+                      "type": "string",
+                      "title": "Account Type",
+                      "enum": [
+                          "Current",
+                          "Savings"
+                      ],
+                      "default": "Current"
+                  }
+              },
+              "required": [
+                  "AccountNumber",
+                  "ifscCode",
+                  "BankName",
+                  "Branch",
+                  "accountType"
+              ]
+          }
+      }
+  ]
+}
 }
