@@ -152,7 +152,7 @@ function CreateEditExercise(props: any, ref: any) {
     }
 
     function FetchData() {
-        useQuery(FETCH_DATA, { variables: { id: operation.id }, skip: (operation.type === 'create'), onCompleted: (e: any) => { FillDetails(e) } });
+        useQuery(FETCH_DATA, { variables: { id: operation.id }, skip: (operation.type === 'create' || !operation.id), onCompleted: (e: any) => { FillDetails(e) } });
     }
 
     function CreateExercise(frm: any) {
@@ -249,6 +249,7 @@ function CreateEditExercise(props: any, ref: any) {
                 formData={exerciseDetails}
                 widgets={widgets}
                 modalTrigger={modalTrigger}
+                actionType={operation.type}
             />
 
             {/* Delete Modal */}

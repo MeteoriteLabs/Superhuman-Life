@@ -338,9 +338,6 @@ function CreateEditView(props: any, ref: any) {
             }
             modalTrigger.next(false);
             props.callback();
-        },
-        onError: (error: any) => {
-            console.log(error)
         }
     })
 

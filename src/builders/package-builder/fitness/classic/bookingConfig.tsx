@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { Form } from 'react-bootstrap';
 
 const BookingConfig = (props: any) => {
@@ -6,20 +6,19 @@ const BookingConfig = (props: any) => {
      const inputDisabled = props.uiSchema.readonly;
      const [config, setConfig] = useState(props.value !== undefined ? JSON.parse(props.value).config : "");
 
-     function handleValidation(){
-          if(config !== ""){
+     function handleValidation() {
+          if (config !== "") {
                return true;
-          }else {
+          } else {
                return false;
           }
      }
 
-
      useEffect(() => {
 
-          if(handleValidation()){
-               props.onChange(JSON.stringify({config: config}));
-          }else {
+          if (handleValidation()) {
+               props.onChange(JSON.stringify({ config: config }));
+          } else {
                props.onChange(undefined);
           }
           //eslint-disable-next-line

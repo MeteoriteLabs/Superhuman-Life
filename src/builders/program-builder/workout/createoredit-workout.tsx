@@ -118,9 +118,11 @@ function CreateEditWorkout(props: any, ref: any) {
   }, [operation.type]);
 
   function FillDetails(data: any) {
+    console.log(data);
     const flattenData = flattenObj({ ...data });
 
     function handleOtherType(data: any){
+      console.log(data);
       const tempObj: any = {};
       tempObj[data[0]?.type] = data[0].value;
       tempObj.type = data[0].type;
@@ -128,6 +130,7 @@ function CreateEditWorkout(props: any, ref: any) {
     }
 
     function handleAddWorkout(data: any) {
+      console.log(data);
       if (data.workout_URL !== null) {
         return { AddWorkout: "Add URL", AddURL: data.workout_URL };
       } else if (data.workout_text !== null) {
@@ -177,7 +180,7 @@ function CreateEditWorkout(props: any, ref: any) {
   }
 
   function FetchData() {
-    useQuery(FETCH_DATA, { variables: { id: operation.id }, skip: (operation.type === 'create' || operation.type === 'delete'), onCompleted: (e: any) => { FillDetails(e) } });
+    useQuery(FETCH_DATA, { variables: { id: operation.id }, skip: (operation.type === 'create' || operation.type === 'delete' || !operation.id), onCompleted: (e: any) => { FillDetails(e) } });
   }
 
   function CreateWorkout(frm: any) {
@@ -343,6 +346,7 @@ function CreateEditWorkout(props: any, ref: any) {
         formData={workoutDetails}
         widgets={widgets}
         modalTrigger={modalTrigger}
+        actionType={operation.type}
       />
 
       {/* Delete Modal */}

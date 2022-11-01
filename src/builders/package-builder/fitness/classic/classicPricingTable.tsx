@@ -7,18 +7,12 @@ import moment from 'moment';
 
 const PricingTable = (props) => {
 
-  console.log(props)
-
     const inputDisabled = props.readonly;
-
-    console.log(JSON.parse(props.formContext.programDetails).online);
 
     const auth = useContext(AuthContext);
     const [vouchers, setVouchers] = useState<any>([]);
     const [show, setShow] = useState(props.value === 'free' ? true : false);
     const [pricing, setPricing] = useState<any>(props.value !== undefined && props.value !== 'free' ? JSON.parse(props?.value) : [ {mrp: null, suggestedPrice: null, voucher: 0, duration: JSON.parse(props.formContext.programDetails).online, sapienPricing: null}]);
-
-    console.log(pricing)
 
     const GET_VOUCHERS = gql`
         query fetchVouchers($expiry: DateTime!, $id: ID!, $start: DateTime!, $status: String!) {
@@ -170,8 +164,6 @@ const PricingTable = (props) => {
     }
 
     FetchData();
-
-    console.log(pricing[0].duration)
 
     return(
         <>

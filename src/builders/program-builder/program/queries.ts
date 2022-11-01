@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 export const GET_TABLEDATA = gql`
-  query ProgramQuery($id: ID!) {
+  query ProgramQuery($id: ID) {
     fitnessprograms(pagination: {
       pageSize: 100
     }, filters:{
@@ -66,7 +66,7 @@ export const GET_TABLEDATA = gql`
 `;
 
 export const GET_DATA = gql`
-  query ProgramQuery($id: ID!) {
+  query ProgramQuery($id: ID) {
     fitnessprograms(filters: { id: { eq: $id } }) {
       data {
         id

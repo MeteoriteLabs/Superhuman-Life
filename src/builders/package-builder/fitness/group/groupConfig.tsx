@@ -3,8 +3,6 @@ import { Form, Row, Col } from 'react-bootstrap';
 
 const PackageDateConfig = (props: any) => {
 
-     console.log(props);
-
      var inputDisabled = JSON.parse(props.formContext.programDetails).mode === "2" ? true : props.readonly;
 
      const [instantBooking, setInstantBooking] = useState(props.value !== undefined ? JSON.parse(props.formContext.programDetails).mode === "2" ? false : JSON.parse(props.value).instantBooking : true);
@@ -21,9 +19,6 @@ const PackageDateConfig = (props: any) => {
      //           isHybrid = true;
      //      } 
      // }, []);
-
-     console.log(isHybrid);
-
      props.onChange(JSON.stringify({instantBooking: instantBooking, freeDemo: freeDemo}));
 
      return (<>

@@ -8,16 +8,9 @@ import moment from 'moment';
 const PricingTable = (props) => {
 
     const inputDisabled = props.readonly;
-
-    console.log(props);
-
     const accomodationDetails = JSON.parse(props.formContext?.programDetails)?.accomodationDetails;
-
     const accomodationType = JSON.parse(props.formContext.programDetails).residential;
     const mode = JSON.parse(props.formContext.programDetails).mode;
-    console.log(accomodationType);
-
-    console.log(accomodationDetails);
 
     function calculateDuration(sd, ed){
         const start = moment(sd);
@@ -147,7 +140,6 @@ const PricingTable = (props) => {
     function handleValidation(){
         //mode = 0 -> Online --- mode = 1 -> Offline --- mode = 2 -> Residential
         //accomodationType = 0 -> Only Accomodation --- accomodationType = 1 -> Accomodation + Food
-        console.log(accomodationType, accomodationDetails, pricing);
         if(parseInt(pricing[0].mrp) < pricing[0].sapienPricing){
             return false;
         }
@@ -230,13 +222,10 @@ const PricingTable = (props) => {
     }
 
     function handleAccomodationPriceUpdate(value: number, id: any, key: string){
-        console.log(value);
         let newPricing = [...pricing];
         newPricing[id][key] = value;
         setPricing(newPricing);
     }
-
-    console.log(pricing);
 
     // useEffect(() => {
     //     let newPricing = [...pricing];
