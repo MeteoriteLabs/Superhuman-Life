@@ -149,3 +149,7 @@
   -o-transition: all 0.4s 0.1s ease;
   transition: all 0.4s 0.1s ease;
 }
+
+#fitness-dropdown{
+  width: 200px;
+}

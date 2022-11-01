@@ -223,32 +223,34 @@ function CreateEditWorkoutTemplate(props: any, ref: any) {
             }
         }
 
+        let data: {} = {};
+
         if(window.location.pathname.split('/')[1] === 'programs'){
-            createSession({
-                variables: {
-                    start_time: eventJson.startTime,
-                    end_time: eventJson.endTime,
-                    workout: eventJson.id,
-                    type: eventJson.type,
-                    day_of_program: eventJson.day,
-                    changemaker: auth.userid,
-                    session_date: null
-                }
-            });
+            data = {
+                start_time: eventJson.startTime,
+                end_time: eventJson.endTime,
+                workout: eventJson.id,
+                type: eventJson.type,
+                day_of_program: eventJson.day,
+                changemaker: auth.userid,
+                session_date: null
+            }
         }else {
-            createSession({
-                variables: {
-                    start_time: eventJson.startTime,
-                    end_time: eventJson.endTime,
-                    workout: eventJson.id,
-                    tag: eventJson.tag,
-                    mode: eventJson.mode,
-                    type: eventJson.type,
-                    session_date: moment(frm.day[0].day, 'Do, MMM YY').format('YYYY-MM-DD'),
-                    changemaker: auth.userid
-                }
-            });
+            data = {
+                start_time: eventJson.startTime,
+                end_time: eventJson.endTime,
+                workout: eventJson.id,
+                tag: eventJson.tag,
+                mode: eventJson.mode,
+                type: eventJson.type,
+                session_date: moment(frm.day[0].day, 'Do, MMM YY').format('YYYY-MM-DD'),
+                changemaker: auth.userid
+            }
         }
+
+        createSession({
+            variables: data
+        });
     }
 
     function OnSubmit(frm: any) {

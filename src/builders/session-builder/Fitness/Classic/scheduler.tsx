@@ -35,7 +35,7 @@ const Scheduler = () => {
         }, 1500)
     }, [show]);
 
-    useQuery(GET_TAG_BY_ID, { variables: {id: tagId}, onCompleted: (data) => loadTagData(data) });
+    const mainQuery = useQuery(GET_TAG_BY_ID, { variables: {id: tagId}, onCompleted: (data) => loadTagData(data) });
 
     function loadTagData(data: any){
         const flattenData = flattenObj({...data});
@@ -204,6 +204,11 @@ const Scheduler = () => {
         return (data).toLocaleString('en-US', { minimumIntegerDigits: digits.toString(), useGrouping: false });
     }
 
+    function handleRestDayCallback(){
+        mainQuery.refetch();
+        setSessionIds([]);
+    }
+
     if (!show) return <span style={{ color: 'red' }}>Loading...</span>;
     else return (
         <>
@@ -290,10 +295,19 @@ const Scheduler = () => {
                     </Row>
                 </Col>
             </Row>
+            {/* Scheduler */}
             <Row>
                 <Col lg={11} className="pl-0 pr-0">
                     <div className="mt-5">
-                        <SchedulerPage type="day" sessionIds={sessionIds} days={tag.fitnesspackage.duration} restDays={tag?.sessions.filter((ses) => ses.type === "restday")} classType={'Classic Class'} programId={tagId} />
+                        <SchedulerPage 
+                            restDayCallback={handleRestDayCallback} 
+                            type="day" 
+                            sessionIds={sessionIds} 
+                            days={tag.fitnesspackage.duration} 
+                            restDays={tag?.sessions.filter((ses) => ses.type === "restday")} 
+                            classType={'Classic Class'} 
+                            programId={tagId} 
+                        />
                     </div>
                 </Col>
                 <FitnessAction ref={fitnessActionRef} />

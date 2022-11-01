@@ -410,10 +410,14 @@ const Schedular = (props: any) => {
 
     function handleFloatingActionProgramCallback(event: any) {
         setProgram(`${event}`);
+        mainQuery.refetch();
+        props?.restDayCallback();
     }
 
     function handleFloatingActionProgramCallback2(event: any) {
         setSessionFilter(`${event}`);
+        mainQuery.refetch();
+        props?.restDayCallback();
     }
 
     // this handles the displaying of rest days on the scheduler
@@ -534,7 +538,7 @@ const Schedular = (props: any) => {
     }});
     const [updateSession] = useMutation(UPDATE_SESSION, { onCompleted: () => {setEvent({})}});
     const [updateTagSessions] = useMutation(UPDATE_TAG_SESSIONS, { onCompleted: () => {
-        if(props.classType !== 'Group Class'){
+        if(props.classType !== 'Group Class' && newSessionId !== ""){
             createSessionBooking({
                 variables: {
                     session: newSessionId,
@@ -544,6 +548,7 @@ const Schedular = (props: any) => {
         }else {
             setEvent({});
             mainQuery.refetch();
+            props?.restDayCallback();
         }
     }});
     const [updateFitnessProgramSessions] = useMutation(UPDATE_FITNESSPORGRAMS_SESSIONS, { onCompleted: () => {
@@ -1160,10 +1165,12 @@ const Schedular = (props: any) => {
 
     const [deleteRestDay] = useMutation(DELETE_REST_DAY, {onCompleted: () => {
         console.log('rest day deleted');
-        mainQuery.refetch();
+        // mainQuery.refetch();
+        props.restDayCallback();
     }});
     const [createRestDay] = useMutation(CREATE_REST_DAY, {onCompleted: (r: any) => {
-        const values = [...sessionIds];
+        debugger;
+        const values = [...props?.sessionIds];
         values.push(r.createSession.data.id);
         updateTagSessions({
             variables: {
@@ -1257,24 +1264,24 @@ const Schedular = (props: any) => {
                             <div className="cell" style={{ backgroundColor: `${handleRestDays(index+1)}`, minHeight: '70px', paddingTop: '10px' }}>
                                 <div className="event-dayOfWeek text-center mt-1">
                                     {handleRestDaysData(index+1)?.isRestDay ? 
-                                    <Badge 
+                                    <Button 
                                         onClick={() => {handleDeleteRestDayFunc(index+1)}}  
                                         style={{ fontSize: '10px', cursor: 'pointer'}} 
+                                        size="sm"
                                         className='p-2' 
                                         variant='danger'
                                     >
-                                        Remove Rest Day {" "}
-                                        <i className='fa fa-minus'></i>
-                                    </Badge> :
-                                    <Badge 
+                                        Remove Rest Day
+                                    </Button> :
+                                    <Button 
                                         onClick={() => {handleAddRestDayFunc(index+1)}}
                                         style={{ fontSize: '10px', cursor: 'pointer'}} 
+                                        size="sm"
                                         className='p-2' 
                                         variant='success'
                                     >
-                                        Add Rest Day {" "}
-                                        <i className='fa fa-plus'></i>
-                                    </Badge> }
+                                        Mark Rest Day
+                                    </Button> }
                                 </div>
                             </div>
                         </>
@@ -1337,6 +1344,7 @@ const Schedular = (props: any) => {
 
     function handleRefetch(){
         mainQuery.refetch();
+        props?.restDayCallback();
     }
 
     function handleShowRestDay(){
@@ -1364,7 +1372,7 @@ const Schedular = (props: any) => {
             <div className="wrapper shadow-lg">
                 <div className="schedular">
                     {showRestDay && <div className="day-row">
-                        <div className="cell" style={{backgroundColor: 'white', position: 'relative', minHeight: `${props.type === 'date' ? '70px' : '70px'}` }}><b>Mark Rest Day</b></div>
+                        <div className="cell" style={{backgroundColor: 'white', position: 'relative', minHeight: `${props.type === 'date' ? '70px' : '70px'}` }}></div>
                         {handleActionRender()}
                     </div>}
                     <div className="day-row">

@@ -370,11 +370,13 @@ export default function Group(props) {
                                 handleRedirect(row.original.tagId)
                             }
                             const actionClick2 = () => {
+                                console.log(row);
                                 fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'details', type: "Group Class", rowData: row.original })
                             }
 
                             const actionClick3 = () => {
-                                fitnessActionRef.current.TriggerForm({ id: row.original.proManagerId, actionType: 'allClients', type: 'Group Class', rowData: row.original })
+                                console.log(row);
+                                fitnessActionRef.current.TriggerForm({ id: row.original.tagId, actionType: 'allClients', type: 'Group Class', rowData: row.original })
                             }
 
                             const actionClick4 = () => {

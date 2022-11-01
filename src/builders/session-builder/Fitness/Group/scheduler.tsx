@@ -29,6 +29,7 @@ const Scheduler = () => {
     const [editTimeModal, setEditTimeModal] = useState(false);
     const [startDate, setStartDate] = useState("");
     const [totalClasses, setTotalClasses] = useState<any>([]);
+    const [sessionIds, setSessionIds] = useState<any>([]);
     const [tagSeperation, setTagSeperation] = useState<any>([]);
     const [statusDays, setStatusDays] = useState();
     const [tag, setTag] = useState<any>();
@@ -52,19 +53,22 @@ const Scheduler = () => {
         }, 1500)
     }, [show]);
 
-    useQuery(GET_TAG_BY_ID, { variables: {id: tagId}, onCompleted: (data) => loadTagData(data) });
+    const mainQuery = useQuery(GET_TAG_BY_ID, { variables: {id: tagId}, onCompleted: (data) => loadTagData(data) });
 
     function loadTagData(data: any){
         const flattenData = flattenObj({...data});
         let total = [0,0];
         const values = [...flattenData.tags[0]?.sessions];
+        const ids = [...sessionIds];
         for(let i = 0; i < values.length; i++){
+            ids.push(values[i].id);
             if(values[i].tag === "Group Class" && values[i].mode === "Online"){
                 total[0] += 1;
             }else if(values[i].tag === "Group Class" && values[i].mode === "Offline"){
                 total[1] += 1;
             }
         }
+        setSessionIds(ids);
         setTotalClasses(total);
         setTag(flattenData.tags[0]);
     }
@@ -258,6 +262,11 @@ const Scheduler = () => {
     }
 
     console.log(tag);
+
+    function handleRestDayCallback(){
+        mainQuery.refetch();
+        setSessionIds([]);
+    }
     
     if (!show) return <span style={{ color: 'red' }}>Loading...</span>;
     else return (
@@ -392,14 +401,17 @@ const Scheduler = () => {
                     </Row>
                 </Col> 
             </Row>
+            {/* Scheduler */}
             <Row>
                 <Col lg={11} className="pl-0 pr-0">
                     <div className="mt-5">
                         <SchedulerPage 
                             type="date" 
                             days={30} 
+                            restDayCallback={handleRestDayCallback}
                             restDays={tag?.sessions.filter((ses) => ses.type === "restday")} 
                             programId={tagId} 
+                            sessionIds={sessionIds}
                             classType={'Group Class'}
                             startDate={tag?.client_packages[0]?.effective_date}
                         />

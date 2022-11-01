@@ -22,6 +22,7 @@ const Scheduler = () => {
     // const [totalClasses, setTotalClasses] = useState<any>([]);
     const [tag, setTag] = useState<any>();
     const [scheduleDate, setScheduleDate] = useState(moment().startOf("month").format("YYYY-MM-DD"));
+    const [sessionIds, setSessionIds] = useState<any>([]);
     let programIndex;
 
     const fitnessActionRef = useRef<any>(null);
@@ -32,18 +33,21 @@ const Scheduler = () => {
         }, 1500)
     }, [show]);
 
-    useQuery(GET_TAG_BY_ID, { variables: {id: tagId}, onCompleted: (data) => loadTagData(data) });
+    const mainQuery = useQuery(GET_TAG_BY_ID, { variables: {id: tagId}, onCompleted: (data) => loadTagData(data) });
 
     function loadTagData(data: any){
         const flattenData = flattenObj({...data});
         console.log(flattenData);
         let total = [0];
         const values = [...flattenData.tags[0]?.sessions];
+        const ids = [...sessionIds];
         for(let i = 0; i < values.length; i++){
+            ids.push(values[i].id);
             if(values[i].tag === "Classic"){
                 total[0] += 1;
             }
         }
+        setSessionIds(ids);
         // setTotalClasses(total);
         setTag(flattenData.tags[0]);
     }
@@ -82,6 +86,11 @@ const Scheduler = () => {
     }
 
     console.log(moment(scheduleDate).diff(moment(), 'months'));
+
+    function handleRestDayCallback(){
+        mainQuery.refetch();
+        setSessionIds([]);
+    }
 
     if (!show) return <span style={{ color: 'red' }}>Loading...</span>;
     else return (
@@ -209,10 +218,20 @@ const Scheduler = () => {
                     </div>
                 </Col>
             </Row>
+            {/* Scheduler */}
             <Row>
                 <Col lg={11} className="pl-0 pr-0">
                     <div className="mt-3">
-                        <SchedulerPage type="date" days={calculateDays(scheduleDate)} restDays={tag?.sessions.filter((ses) => ses.type === "restday")} classType={'Live Stream Channel'} programId={tagId} startDate={scheduleDate} />
+                        <SchedulerPage 
+                            type="date" 
+                            restDayCallback={handleRestDayCallback}
+                            sessionIds={sessionIds} 
+                            days={calculateDays(scheduleDate)} 
+                            restDays={tag?.sessions.filter((ses) => ses.type === "restday")} 
+                            classType={'Live Stream Channel'} 
+                            programId={tagId} 
+                            startDate={scheduleDate} 
+                        />
                     </div>
                 </Col>
                 <FitnessAction ref={fitnessActionRef} />
