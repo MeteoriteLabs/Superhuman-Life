@@ -1169,7 +1169,6 @@ const Schedular = (props: any) => {
         props.restDayCallback();
     }});
     const [createRestDay] = useMutation(CREATE_REST_DAY, {onCompleted: (r: any) => {
-        debugger;
         const values = [...props?.sessionIds];
         values.push(r.createSession.data.id);
         updateTagSessions({

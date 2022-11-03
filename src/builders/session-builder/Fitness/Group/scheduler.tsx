@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, {useState, useEffect, useRef, useContext} from 'react';
-import { GET_TABLEDATA, GET_ALL_FITNESS_PACKAGE_BY_TYPE, GET_ALL_PROGRAM_BY_TYPE, GET_ALL_CLIENT_PACKAGE, GET_TAG_BY_ID} from '../../graphQL/queries';
+import { GET_TABLEDATA, GET_ALL_FITNESS_PACKAGE_BY_TYPE, GET_ALL_CLIENT_PACKAGE, GET_TAG_BY_ID} from '../../graphQL/queries';
 import {UPDATE_STARTDATE} from '../../graphQL/mutation';
 import { useQuery, useMutation } from '@apollo/client';
 import {Row, Col, Button, Dropdown, Modal, InputGroup, FormControl} from 'react-bootstrap';
@@ -87,13 +87,13 @@ const Scheduler = () => {
 
     });
 
-    const { data: data2 } = useQuery(GET_ALL_PROGRAM_BY_TYPE, {
-        variables: {
-            id: auth.userid,
-            type: 'Group Class'
-        },
+    // const { data: data2 } = useQuery(GET_ALL_PROGRAM_BY_TYPE, {
+    //     variables: {
+    //         id: auth.userid,
+    //         type: 'Group Class'
+    //     },
 
-    });
+    // });
 
     const { data: data3 } = useQuery(GET_ALL_CLIENT_PACKAGE, {
         variables: {
@@ -129,7 +129,7 @@ const Scheduler = () => {
     const loadData = () => {
 
         const flattenData1 = flattenObj({...data1});
-        const flattenData2 = flattenObj({...data2});
+        // const flattenData2 = flattenObj({...data2});
         const flattenData3 = flattenObj({...data3});
         const flattenData4 = flattenObj({...data4});
 
@@ -154,19 +154,19 @@ const Scheduler = () => {
         let arrayFitnessPackage: any[] = [];
         let arrayData: any[] = []
 
-        let fitnessProgramItem: any = {};
-        for (let i = 0; i < flattenData1?.fitnesspackages.length; i++) {
-            for (let j = 0; j < flattenData2?.programManagers.length; j++) {
-                if (flattenData1.fitnesspackages[i].id === flattenData2.programManagers[j].fitnesspackages[0].id) {
-                    fitnessProgramItem.proManagerFitnessId = flattenData2.programManagers[j].fitnessprograms[0].id;
-                    fitnessProgramItem.title = flattenData2.programManagers[j].fitnessprograms[0].title;
-                    fitnessProgramItem.published_at = flattenData2.programManagers[j].fitnessprograms[0].published_at
-                    fitnessProgramItem.proManagerId = flattenData2.programManagers[j].id;
+        // let fitnessProgramItem: any = {};
+        // for (let i = 0; i < flattenData1?.fitnesspackages.length; i++) {
+        //     for (let j = 0; j < flattenData2?.programManagers.length; j++) {
+        //         if (flattenData1.fitnesspackages[i].id === flattenData2.programManagers[j].fitnesspackages[0].id) {
+        //             fitnessProgramItem.proManagerFitnessId = flattenData2.programManagers[j].fitnessprograms[0].id;
+        //             fitnessProgramItem.title = flattenData2.programManagers[j].fitnessprograms[0].title;
+        //             fitnessProgramItem.published_at = flattenData2.programManagers[j].fitnessprograms[0].published_at
+        //             fitnessProgramItem.proManagerId = flattenData2.programManagers[j].id;
 
-                    arrayData.push({ ...flattenData1.fitnesspackages[i], ...fitnessProgramItem });
-                }
-            }
-        }
+        //             arrayData.push({ ...flattenData1.fitnesspackages[i], ...fitnessProgramItem });
+        //         }
+        //     }
+        // }
 
         let arrayA = arrayData.map(item => item.id);
 

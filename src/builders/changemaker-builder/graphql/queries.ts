@@ -2,108 +2,72 @@ import { gql } from "@apollo/client";
 
 export const GET_ALL_CLIENT_PACKAGE_BY_TYPE = gql`
   query userPackages($id: ID!, $type: [String], $date: Date) {
-    clientPackages(
-      filters: {
-        fitnesspackages: {
-          users_permissions_user: { id: { eq: $id } }
-          fitness_package_type: { type: { or: $type } }
+    clientPackages(filters:{
+      fitnesspackages: {
+        users_permissions_user:{
+          id: {
+            eq: $id
+          }
+        },
+        fitness_package_type: {
+          type: {
+            or: $type
+          }
         }
       }
-    ) {
-      data {
+    }){
+      data{
         id
-        attributes {
-          users_permissions_user {
-            data {
+        attributes{
+          effective_date
+          package_duration
+          users_permissions_user{
+            data{
               id
-              attributes {
+              attributes{
                 username
+                email
+                Phone_Number
+                Gender
+                addresses{
+                  data{
+                    id
+                    attributes{
+                      city
+                    }
+                  }
+                }
               }
             }
-          }
-          effective_date
-          accepted_date
-          fitnesspackages {
-            data {
+          },
+          fitnesspackages{
+            data{
               id
-              attributes {
-                expiry_date
-                fitness_package_type {
-                  data {
+              attributes{
+                packagename
+                Status
+                fitness_package_type{
+                  data{
                     id
-                    attributes {
+                    attributes{
                       type
                     }
                   }
                 }
-                packagename
-                groupstarttime
-                groupendtime
-                restdays
+                users_permissions_user{
+                  data{
+                    id
+                    attributes{
+                      username
+                    }
+                  }
+                }
                 ptonline
                 ptoffline
                 grouponline
                 groupoffline
                 recordedclasses
-                duration
-                Status
-              }
-            }
-          }
-          program_managers {
-            data {
-              id
-              attributes {
-                fitnesspackages {
-                  data {
-                    id
-                    attributes {
-                      expiry_date
-                      fitness_package_type {
-                        data {
-                          id
-                          attributes {
-                            type
-                          }
-                        }
-                      }
-                      packagename
-                      groupstarttime
-                      groupendtime
-                      restdays
-                      ptonline
-                      ptoffline
-                      grouponline
-                      groupoffline
-                      recordedclasses
-                      duration
-                      Status
-                    }
-                  }
-                }
-                fitnessprograms {
-                  data {
-                    id
-                    attributes {
-                      title
-                      duration_days
-                      rest_days
-                      start_dt
-                      level
-                      events
-                      description
-                      renewal_dt
-                      fitnessdisciplines {
-                        data {
-                          id
-                          attributes {
-                            disciplinename
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
+                fitnesspackagepricing
               }
             }
           }
@@ -111,7 +75,9 @@ export const GET_ALL_CLIENT_PACKAGE_BY_TYPE = gql`
       }
     }
     changemakerAvailabilties(filters: {
-      date: { eq: $date }
+      date:{
+        eq: $date
+      },
       users_permissions_user: {
         id: {
           eq: $id
@@ -391,8 +357,8 @@ export const GET_ALL_CHANGEMAKER_AVAILABILITY_WORKHOURS = gql`
 
 export const GET_CHANGEMAKER_AVAILABILITY_AND_TAGS = gql`
 query changemakerAvailabilityAndTags($id: ID!, $date: Date!, $changemakerDate: Date!){
-  sessions(filters: {
-    changemaker: {
+  sessions(filters:{
+    changemaker:{
       id: {
         eq: $id
       }
@@ -411,8 +377,8 @@ query changemakerAvailabilityAndTags($id: ID!, $date: Date!, $changemakerDate: D
       }
     }
   }
-  changemakerAvailabilties(filters: {
-    date: {
+  changemakerAvailabilties(filters:{
+    date:{
       eq: $changemakerDate
     },
     users_permissions_user: {
@@ -428,7 +394,7 @@ query changemakerAvailabilityAndTags($id: ID!, $date: Date!, $changemakerDate: D
         booking_slots
         date
         holiday_title
-				users_permissions_user{
+        users_permissions_user{
           data{
             id
             attributes{
@@ -440,4 +406,4 @@ query changemakerAvailabilityAndTags($id: ID!, $date: Date!, $changemakerDate: D
     }
   }
 }
-`
+`;

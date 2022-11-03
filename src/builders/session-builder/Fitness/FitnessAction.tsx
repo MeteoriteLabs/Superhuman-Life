@@ -115,8 +115,6 @@ function FitnessAction(props, ref: any) {
 
     let name = "";
     operation.actionType === 'create' ? name = "Create New Batch" : name = "Manager";
-    debugger;
-    console.log(operation);
 
     return (
         <div>

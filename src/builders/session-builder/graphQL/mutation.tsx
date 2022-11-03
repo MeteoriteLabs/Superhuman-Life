@@ -152,24 +152,4 @@ mutation deleteBatch($id: ID!) {
        }
      }
    }
-`
-
-export const CREATE_PROGRAM_MANAGER = gql`
-     mutation createProgramManager(
-          $fitnesspackages: [ID]
-          $fitnessprograms: [ID]
-     ){
-          createProgramManager(
-               input:{
-                    data:{
-                         fitnesspackages: $fitnesspackages
-                         fitnessprograms: $fitnessprograms
-                    }
-               }
-          ){
-               programManager{
-                    id
-               }
-          }
-     }
 `;
