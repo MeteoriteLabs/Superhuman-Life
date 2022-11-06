@@ -153,3 +153,97 @@ export const FETCH_CONTACT_DETAILS = gql`
     }
   }
 `;
+
+export const FETCH_CHANGEMAKERS = gql`
+  query fetchUsersProfileData{
+    usersPermissionsUsers(pagination: { pageSize: 100 }
+      ) {
+      data {
+        id
+        attributes {
+          username
+          First_Name
+          Last_Name
+          email
+          Phone_Number
+          Photo_ID
+          About_User
+          Website_URL
+          about_mini_description
+          designations{
+            data{
+              id
+              attributes{
+                Designation_title
+                description
+              }
+            }
+          }
+          instagram_url
+          Facebook_URL
+          Youtube_URL
+          LinkedIn_URL
+          Clubhouse_URL
+          Twitter_URL
+          Verification_ID
+          Photo_profile_banner_ID
+          educational_details(pagination:{pageSize:100}) {
+            data {
+              id
+              attributes {
+                Institute_Name
+                Type_of_degree
+                Specialization
+                Year
+              }
+            }
+          }
+          addresses(pagination:{pageSize:100}) {
+            data {
+              id
+              attributes {
+                city
+                address1
+                address2
+                type
+                zipcode
+                country
+                state
+                Title
+                type_address
+                House_Number
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const GET_PAYMENT_SCHEDULES_FOR_CHANGEMAKER = gql`
+  query PaymentSchedulesQuery($Source_User_ID: Int){
+    paymentSchedules(pagination: { pageSize: 100 },filters: {
+      Source_User_ID: { eq: $Source_User_ID },
+      Destination_Contacts_ID: { null: true }
+    }) {
+      data {
+        id
+        attributes {
+          Destination_User_ID
+          Source_User_ID
+          Destination_Contacts_ID
+          createdAt
+          Payment_Cycle
+          PaymentCatagory
+          Payment_DateTime
+          frequency
+          Reminder_DateTime
+          Total_Amount 
+          isActive
+        }
+      }
+    }
+  }
+`;
+

@@ -23,13 +23,46 @@ export default function PaymentSchedule() {
   const query = window.location.search;
   const params = new URLSearchParams(query);
   const id = params.get("id");
+  const isChangemaker: boolean =
+    params.get("isChangemaker") === "false" ? false : true;
 
   const columns = useMemo<any>(
     () => [
-      { accessor: "id", Header: "ID" },
       { accessor: "category", Header: "Payment Category" },
       { accessor: "frequency", Header: "Frequency" },
-      { accessor: "cycle", Header: "Cycle" },
+      {
+        accessor: "cycle",
+        Header: "Cycle",
+        Cell: ({ row }: any) => {
+          let cycle: string;
+          switch (row.values.cycle) {
+            case 1:
+              cycle = "1st of every month";
+              break;
+
+            case 2:
+              cycle = "2nd of every month";
+              break;
+
+            case 3:
+              cycle = "3rd of every month";
+              break;
+
+            case 4:
+              cycle = "4th of every month";
+              break;
+
+            case 5:
+              cycle = "5th of every month";
+              break;
+
+            default:
+              cycle = "1st of every month";
+              break;
+          }
+          return <>{cycle}</>;
+        },
+      },
       { accessor: "amount", Header: "Amount" },
       { accessor: "paymentdate", Header: "Payment Date" },
       {
@@ -99,7 +132,6 @@ export default function PaymentSchedule() {
   const fetch = useQuery(GET_PAYMENT_SCHEDULES, {
     skip: !id,
     variables: {
-      Destination_Contacts_ID: Number(id),
       Source_User_ID: Number(auth.userid),
     },
     onCompleted: loadData,
@@ -110,16 +142,23 @@ export default function PaymentSchedule() {
   }
 
   function loadData(data: any) {
-    const flattenData = flattenObj({ ...data });
+    const flattenData = flattenObj({ ...data.paymentSchedules });
+
+    const getSchedule = flattenData.filter((currentValue) =>
+      !isChangemaker
+        ? currentValue.Destination_Contacts_ID === Number(id)
+        : currentValue.Destination_User_ID === Number(id)
+    );
+
     setDataTable(
-      [...flattenData.paymentSchedules].flatMap((Detail) => {
+      [...getSchedule].flatMap((Detail) => {
         return {
           id: Detail.id,
           category: Detail.PaymentCatagory,
           paymentdate: Detail.Payment_DateTime
             ? moment(Detail.Payment_DateTime).format("MMMM DD,YYYY")
             : "-",
-          frequency: Detail.frequency === 1 ? "One Time Payment" : "Monthly",
+          frequency: Detail.frequency === 1 ? "Monthly" : "One Time Payment",
           cycle: Detail.Payment_Cycle,
           amount: Detail.Total_Amount,
           status: Detail.isActive ? "Activated" : "Deactivated",

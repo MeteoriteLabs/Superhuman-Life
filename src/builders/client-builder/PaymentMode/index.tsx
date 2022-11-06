@@ -66,7 +66,7 @@ function PaymentMode() {
 
   //fillDetails
   function FillDetails(data: any) {
-
+    
     if (data && data.contact && data.contact.paymentDetails) {
       setPaymentModeDetails({
         UPI_ID: data.contact.paymentDetails.upi,

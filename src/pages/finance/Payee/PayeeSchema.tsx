@@ -1,7 +1,9 @@
 import ContactList from '../../../components/customWidgets/ContactList';
+import Changemaker from '../../../components/customWidgets/Changemakers';
 
 export const widgets = {
-  contactList: ContactList
+  contactList: ContactList,
+  changemaker: Changemaker
 };
 
 export const schema: any = {
@@ -29,12 +31,41 @@ export const schema: any = {
     organisationName: {
         "ui:placeholder": "Enter Organisation Name"
     },
-    TypeofPayee: {
-        "ui:widget": "radio",
-        "ui:placeholder": "Individual",
-        "ui:options": {
-            "inline": true
-        }
+    PayeeFirstName: {
+        "ui:placeholder": "Enter Payee's First Name"
+    },
+    PayeeLastName: {
+        "ui:placeholder": "Enter Payee's Last Name"
+    },
+    gstNumber: {
+        "ui:placeholder": "Enter GST number"
+    },
+    houseNumber: {
+        "ui:placeholder": "Enter House number"
+    },
+    address1: {
+        "ui:placeholder": "Enter address 1"
+    },
+    address2: {
+        "ui:placeholder": "Enter address 2"
+    },
+    city: {
+        "ui:placeholder": "Enter your city"
+    },
+    state: {
+        "ui:placeholder": "Enter your state"
+    },
+    country: {
+        "ui:placeholder": "Enter your country name"
+    },
+    zipcode: {
+        "ui:placeholder": "Enter your area's Zipcode"
+    },
+    gst: {
+        "ui:placeholder": "Enter your organisation's GST Number"
+    },
+    organisationEmail: {
+        "ui:placeholder": "Enter Organisation email address"
     },
     PayeeCategory: {
         "ui:widget": "radio",
@@ -43,7 +74,10 @@ export const schema: any = {
             "inline": true
         }
     },
-    search:{
+    TypeofPayee: {
+       
+    },
+    searchContact:{
         "ui:widget": "contactList",
         "ui:help": "Select Contact"
     },
@@ -77,8 +111,8 @@ export const schema: any = {
     ESI: {
         "ui:placeholder": "Enter ESI"
     },
-    MedicalReimbrusement: {
-        "ui:placeholder": "Enter Medical Reimbrusement"
+    MedicalReimbursement: {
+        "ui:placeholder": "Enter Medical Reimbursement"
     },
     ChildCare: {
         "ui:placeholder": "Enter Child Care"
@@ -112,5 +146,9 @@ export const schema: any = {
     },
     upiPhoneNumber: {
         "ui:placeholder": "Enter Payee's UPI phone number"
+    },
+    searchChangemaker: {
+        "ui:widget": "changemaker",
+        "ui:help": "Select Changemaker"
     }
 };

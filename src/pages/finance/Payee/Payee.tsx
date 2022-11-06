@@ -8,25 +8,33 @@ import {
   Card,
   Container,
   Row,
-  Col
+  Col,
 } from "react-bootstrap";
 import Table from "../../../components/table";
 import { useQuery, useLazyQuery } from "@apollo/client";
 import AuthContext from "../../../context/auth-context";
 import ActionButton from "../../../components/actionbutton/index";
-import { GET_CONTACTS, GET_PAYMENT_SCHEDULES } from "./queries";
+import {
+  GET_CONTACTS,
+  GET_PAYMENT_SCHEDULES,
+  FETCH_CHANGEMAKERS,
+  GET_PAYMENT_SCHEDULES_FOR_CHANGEMAKER,
+} from "./queries";
 import { flattenObj } from "../../../components/utils/responseFlatten";
 import CreateEditPayee from "./CreateEditPayee";
+import CreateChangemakerAsPayee from "./CreateChangemakerAsPayee";
+import CreateContactAsPayee from "./CreateContactAsPayee";
+import { useHistory } from "react-router-dom";
 
 export default function Payee() {
   const auth = useContext(AuthContext);
-  const [searchFilter, setSearchFilter] = useState("");
   const searchInput = useRef<any>();
   const createEditPayeeComponent = useRef<any>(null);
+  const createChangemakerAsPayeeComponent = useRef<any>(null);
+  const createContactAsPayeeComponent = useRef<any>(null);
 
   const columns = useMemo<any>(
     () => [
-      { accessor: "id", Header: "ID" },
       { accessor: "name", Header: "Payee" },
       { accessor: "type", Header: "Type" },
       {
@@ -61,37 +69,24 @@ export default function Payee() {
         id: "edit",
         Header: "Actions",
         Cell: ({ row }: any) => {
-          const manageHandler = () => {
-            createEditPayeeComponent.current.TriggerForm({
-              id: row.original.id,
-              type: "edit",
-            });
-          };
-          const addPaymentScheduleHandler = () => {
-            createEditPayeeComponent.current.TriggerForm({
-              id: row.original.id,
-              type: "view",
-            });
-          };
-          const allTransactionsHandler = () => {
-            createEditPayeeComponent.current.TriggerForm({
-              id: row.original.id,
-              type: "all transactions",
-            });
+          const history = useHistory();
+          const routeChange = () => {
+            let path = `payment_settings/?id=${row.original.id}&isChangemaker=${row.original.isChangemaker}`;
+            history.push(path);
           };
 
           const arrayAction = [
             {
               actionName: "Manage",
-              actionClick: manageHandler,
+              actionClick: routeChange,
             },
             {
               actionName: "Add payment schedule",
-              actionClick: addPaymentScheduleHandler,
+              actionClick: routeChange,
             },
             {
               actionName: "All transactions",
-              actionClick: allTransactionsHandler,
+              actionClick: routeChange,
             },
           ];
 
@@ -113,12 +108,31 @@ export default function Payee() {
     return `${date}/${month}/${year}`;
   }
 
-  // eslint-disable-next-line
-  const [getPaymentSchedules, { data: paymentSchedule }] = useLazyQuery(
+  const [users, { data: get_changemakers }] = useLazyQuery(FETCH_CHANGEMAKERS, {
+    onCompleted: (data) => {
+      loadData(data);
+    },
+  });
+
+  const [getChangeMakersSchedule, { data: get_changemakers_payment_schedule }] =
+    useLazyQuery(GET_PAYMENT_SCHEDULES_FOR_CHANGEMAKER, {
+      variables: { id: auth.userid },
+      onCompleted: (data) => {
+        // calling fetch changemaker's useLazyQuery function
+        users();
+      },
+    });
+
+  const [getPaymentSchedules, { data: payment_schedule }] = useLazyQuery(
     GET_PAYMENT_SCHEDULES,
     {
       onCompleted: (data) => {
-        loadData(data);
+        // calling changermaker's payment schedule uselazyquery function
+        getChangeMakersSchedule({
+          variables: {
+            id: Number(auth.userid),
+          },
+        });
       },
     }
   );
@@ -142,30 +156,71 @@ export default function Payee() {
   });
 
   function loadData(data: any) {
-    const flattenContactsData = flattenObj({ ...get_contacts });
-    const flattenFinanceData = flattenObj({ ...data.paymentSchedules });
+    const flattenContactsData = flattenObj({ ...get_contacts.contacts });
+
+    const flattenContactsFinanceData = flattenObj({
+      ...payment_schedule.paymentSchedules
+    });
+
+    const flattenChangemakersFinanceData = flattenObj({
+      ...get_changemakers_payment_schedule.paymentSchedules
+    });
+
+    const flattenUsers = flattenObj({
+      ...get_changemakers.usersPermissionsUsers
+    });
+
+    const concatenatedContactsAndFinanceArray = flattenContactsData.concat(
+      flattenChangemakersFinanceData
+    );
 
     setDataTable(
-      [...flattenContactsData.contacts].flatMap((Detail) => {
+      [...concatenatedContactsAndFinanceArray].flatMap((Detail) => {
         return {
-          id: Detail.id,
+          isChangemaker: Detail.firstname ? false : true,
+          id: Detail.firstname ? Detail.id : Detail.Destination_User_ID,
           contactsdate: getDate(Date.parse(Detail.createdAt)),
-          name: Detail.firstname + " " + Detail.lastname,
-          type: Detail.type,
-          appDownloadStatus: Detail.appDownloadStatus,
-          isActive:
-            flattenFinanceData.findIndex(
-              (currValue) => currValue.Destination_Contacts_ID == Detail.id) !== -1
+          name: Detail.firstname
+            ? Detail.firstname + " " + Detail.lastname
+            : flattenUsers.find(
+                (currValue) =>
+                  Number(currValue.id) === Number(Detail.Destination_User_ID)
+              )
+            ? (flattenUsers.find(
+                (currValue) =>
+                  Number(currValue.id) === Number(Detail.Destination_User_ID)
+              ).First_Name
+                ? flattenUsers.find(
+                    (currValue) =>
+                      Number(currValue.id) ===
+                      Number(Detail.Destination_User_ID)
+                  ).First_Name
+                : "-") +
+              " " +
+              (flattenUsers.find(
+                (currValue) =>
+                  Number(currValue.id) === Number(Detail.Destination_User_ID)
+              ).Last_Name
+                ? flattenUsers.find(
+                    (currValue) =>
+                      Number(currValue.id) ===
+                      Number(Detail.Destination_User_ID)
+                  ).Last_Name
+                : "-")
+            : null,
+          type: Detail.firstname ? Detail.type : "Changemaker",
+
+          isActive: Detail.firstname
+            ? flattenContactsFinanceData.findIndex(
+                (currValue) => Number(currValue.Destination_Contacts_ID) === Number(Detail.id)
+              ) !== -1
               ? true
-              : false,
+              : false
+            : true,
         };
       })
     );
   }
-
-  // function refetchQueryCallback() {
-  //   fetch.refetch();
-  // }
 
   return (
     <TabContent>
@@ -183,7 +238,6 @@ export default function Payee() {
                   variant="outline-secondary"
                   onClick={(e: any) => {
                     e.preventDefault();
-                    setSearchFilter(searchInput.current.value);
                   }}
                 >
                   <i className="fas fa-search"></i>
@@ -204,12 +258,45 @@ export default function Payee() {
                   });
                 }}
               >
-                <i className="fas fa-plus-circle"></i> Add Payee
+                <i className="fas fa-plus-circle"></i> Add New Payee
               </Button>
-              <CreateEditPayee
-                ref={createEditPayeeComponent}
-                // callback={refetchQueryCallback}
-              ></CreateEditPayee>
+              <CreateEditPayee ref={createEditPayeeComponent}></CreateEditPayee>
+            </Card.Title>
+          </Col>
+          <Col>
+            <Card.Title className="text-center">
+              <Button
+                variant={true ? "outline-secondary" : "light"}
+                size="sm"
+                onClick={() => {
+                  createChangemakerAsPayeeComponent.current.TriggerForm({
+                    id: null,
+                    type: "create",
+                    modal_status: true,
+                  });
+                }}
+              >
+                <i className="fas fa-plus-circle"></i> Add Changemaker as Payee
+              </Button>
+              <CreateChangemakerAsPayee ref={createChangemakerAsPayeeComponent}></CreateChangemakerAsPayee>
+            </Card.Title>
+          </Col>
+          <Col>
+            <Card.Title className="text-center">
+              <Button
+                variant={true ? "outline-secondary" : "light"}
+                size="sm"
+                onClick={() => {
+                  createContactAsPayeeComponent.current.TriggerForm({
+                    id: null,
+                    type: "create",
+                    modal_status: true,
+                  });
+                }}
+              >
+                <i className="fas fa-plus-circle"></i> Add Contact as Payee
+              </Button>
+              <CreateContactAsPayee ref={createContactAsPayeeComponent}></CreateContactAsPayee>
             </Card.Title>
           </Col>
         </Row>

@@ -1,16 +1,13 @@
 import React, { useContext, useImperativeHandle, useState } from "react";
-import { useMutation, useQuery } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import ModalView from "../../../components/modal";
-import { FETCH_USERS_PROFILE_DATA } from "../../../pages/profile/queries/queries";
 import AuthContext from "../../../context/auth-context";
 import StatusModal from "../../../components/StatusModal/StatusModal";
 import { Subject } from "rxjs";
 import { schema } from "./PaymentScheduleSettingSchema";
-import { flattenObj } from "../../../components/utils/responseFlatten";
 import Toaster from "../../../components/Toaster";
 import {
   ADD_PAYMENT_SCHEDULE,
-  FETCH_CONTACT_DETAILS,
   DELETE_PAYMENT_SCHEDULE,
   UPDATE_PAYMENT_SCHEDULE,
 } from "./queries";
@@ -25,34 +22,19 @@ interface Operation {
 function CreatePaymentSchedule(props: any, ref: any) {
   const query = window.location.search;
   const params = new URLSearchParams(query);
-  const id = params.get("id");
+  const id: string | null = params.get("id");
+  const isChangemaker: boolean =
+    params.get("isChangemaker") === "false" ? false : true;
+
   const auth = useContext(AuthContext);
   const paymentSchema: {} = require("./paymentSettings.json");
   const [operation, setOperation] = useState<Operation>({} as Operation);
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
   const [showDeactivateModal, setShowDeactivateModal] =
     useState<boolean>(false);
-  const [usersDetails, setUserDetails] = useState<any>([]);
-  const [contactData, setContactData] = useState<any>({});
   const [isDeleted, setIsDeleted] = useState<boolean>(false);
   const [isDeactivated, setIsDeactivated] = useState<boolean>(false);
   const [isCreated, setIsCreated] = useState<boolean>(false);
-
-  useQuery(FETCH_USERS_PROFILE_DATA, {
-    variables: { id: auth.userid },
-    onCompleted: (r: any) => {
-      const flattenUserData = flattenObj(r);
-      setUserDetails(flattenUserData.usersPermissionsUsers);
-    },
-  });
-
-  useQuery(FETCH_CONTACT_DETAILS, {
-    variables: { id: id },
-    onCompleted: (r: any) => {
-      let flattenDetail = flattenObj(r);
-      setContactData(flattenDetail.contact);
-    },
-  });
 
   const [createPaymentSchedule] = useMutation(ADD_PAYMENT_SCHEDULE, {
     onCompleted: (r: any) => {
@@ -102,19 +84,13 @@ function CreatePaymentSchedule(props: any, ref: any) {
   }));
 
   function CreatePaymentSchedule(frm: any) {
-    let existingUserId = usersDetails.find(
-      (currentValue) => currentValue.email === contactData.email
-    );
-
     createPaymentSchedule({
       variables: {
         data: {
           PaymentCatagory: frm.PaymentCategory ? frm.PaymentCategory : null,
           Source_User_ID: Number(auth.userid),
-          Destination_Contacts_ID: Number(id),
-          Destination_User_ID: existingUserId
-            ? Number(existingUserId.id)
-            : null,
+          Destination_Contacts_ID: isChangemaker ? null : Number(id),
+          Destination_User_ID: isChangemaker ? Number(id) : null,
           frequency: frm.FrequencyOfPayment,
           Payment_Cycle: frm.paymentCycle ? frm.paymentCycle : null,
           Total_Amount: frm.amountToBePaid ? Number(frm.amountToBePaid) : null,

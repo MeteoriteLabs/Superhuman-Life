@@ -2,140 +2,94 @@
   "1": {
     "type": "object",
     "properties": {
-      "PayeeCategory": {
-        "title": "Payee category",
+      "PayeeFirstName": {
+        "type": "string",
+        "title": "First Name"
+      },
+      "PayeeLastName": {
+        "type": "string",
+        "title": "Last Name"
+      },
+      "Email": {
+        "type": "string",
+        "title": "Email"
+      },
+      "Phone_Number": {
+        "type": "string",
+        "title": "Contact Number"
+      },
+      "type": {
+        "title": "Type of contact",
+        "type": "string",
         "enum": [
-          "All contacts",
-          "New"
-        ]
+          "Client",
+          "Organization",
+          "Community",
+          "Service Provider",
+          "Vendor"
+        ],
+        "default": "Client"
+      },
+      "TypeofPayee": {
+        "type": "boolean",
+        "title": "Do you own Business?",
+        "default": false
       }
     },
     "allOf": [
       {
         "if": {
           "properties": {
-            "PayeeCategory": {
-              "const": "All contacts"
+            "TypeofPayee": {
+              "const": true
             }
           }
         },
         "then": {
           "properties": {
-            "search": {
-              "title": "Search Contact",
-              "type": "string"
+            "organisationName": {
+              "type": "string",
+              "title": "Organisation Name"
+            },
+            "GSTNumber": {
+              "type": "string",
+              "title": "GST Number"
+            },
+            "organisationEmail": {
+              "type": "string",
+              "title": "Organisation Email",
+              "format": "email"
+            },
+            "address1": {
+              "type": "string",
+              "title": "Address 1"
+            },
+            "address2": {
+              "type": "string",
+              "title": "Address 2"
+            },
+            "city": {
+              "type": "string",
+              "title": "City"
+            },
+            "state": {
+              "type": "string",
+              "title": "State"
+            },
+            "country": {
+              "type": "string",
+              "title": "Country"
+            },
+            "zipcode": {
+              "type": "string",
+              "title": "Zipcode",
+              "max-length": 6
             }
           },
           "required": [
-            "search"
-          ]
-        }
-      },
-      {
-        "if": {
-          "properties": {
-            "PayeeCategory": {
-              "const": "New"
-            }
-          }
-        },
-        "then": {
-          "properties": {
-            "TypeofPayee": {
-              "type": "string",
-              "title": "Type of payee",
-              "enum": [
-                "Individual",
-                "Business"
-              ]
-            }
-          },
-          "allOf": [
-            {
-              "if": {
-                "properties": {
-                  "TypeofPayee": {
-                    "const": "Business"
-                  }
-                }
-              },
-              "then": {
-                "properties": {
-                  "organisationName": {
-                    "type": "string",
-                    "title": "Organisation Name"
-                  },
-                  "GSTNumber": {
-                    "type": "string",
-                    "title": "GST Number"
-                  },
-                  "PayeeFirstName": {
-                    "type": "string",
-                    "title": "Enter first name of payee"
-                  },
-                  "PayeeLastName": {
-                    "type": "string",
-                    "title": "Enter last name of payee"
-                  },
-                  "Email": {
-                    "type": "string",
-                    "title": "Email"
-                  },
-                  "Phone_Number": {
-                    "type": "string",
-                    "title": "Contact Number"
-                  }
-                },
-                "required": [
-                  "organisationName",
-                  "GSTNumber",
-                  "Email",
-                  
-                  "Phone_Number"
-                ]
-              }
-            },
-            {
-              "if": {
-                "properties": {
-                  "TypeofPayee": {
-                    "const": "Individual"
-                  }
-                }
-              },
-              "then": {
-                "properties": {
-                  "PayeeFirstName": {
-                    "type": "string",
-                    "title": "Enter first name of payee"
-                  },
-                  "PayeeLastName": {
-                    "type": "string",
-                    "title": "Enter last name of payee"
-                  },
-                  "Email": {
-                    "type": "string",
-                    "title": "Email"
-                  },
-                  "Phone_Number": {
-                    "type": "string",
-                    "title": "Contact Number",
-                    "format": "phone-in"
-                  } 
-                },
-                "required": [
-                  "PayeeFirstName",
-                  "PayeeLastName",
-                  "Email",
-                  "Phone_Number"
-                ]
-              }
-            },
-            {
-              "required": [
-                "TypeofPayee"
-              ]
-            }
+            "organisationName",
+            "GSTNumber",
+            "organisationEmail"
           ]
         }
       }
@@ -228,7 +182,6 @@
               "title": "Effective Date",
               "format": "date"
             },
-            
             "paymentCycle": {
               "type": "number",
               "title": "Payment Cycle",
@@ -322,9 +275,9 @@
                     "type": "string",
                     "title": "ESI"
                   },
-                  "MedicalReimbrusement": {
+                  "MedicalReimbursement": {
                     "type": "string",
-                    "title": "Medical Reimbrusement"
+                    "title": "Medical Reimbursement"
                   },
                   "ChildCare": {
                     "type": "string",
@@ -346,7 +299,7 @@
                     "type": "string",
                     "title": "Provident Fund"
                   }
-                }   
+                }
               }
             },
             {
@@ -374,101 +327,101 @@
     "title": "Mode of payment",
     "properties": {
       "upi": {
-          "type": "boolean",
-          "title": " UPI",
-          "enum": [
-              true,
-              false
-          ],
-          "default": true
+        "type": "boolean",
+        "title": " UPI",
+        "enum": [
+          true,
+          false
+        ],
+        "default": true
       },
       "bankAccount": {
-          "type": "boolean",
-          "title": " Bank Account",
-          "enum": [
-              true,
-              false
-          ],
-          "default": false
+        "type": "boolean",
+        "title": " Bank Account",
+        "enum": [
+          true,
+          false
+        ],
+        "default": false
       }
-  },
-  "allOf": [
+    },
+    "allOf": [
       {
-          "if": {
-              "properties": {
-                  "upi": {
-                      "title": "UPI Details",
-                      "const": true
-                  }
-              }
-          },
-          "then": {
-              "properties": {
-                  "UPI_ID": {
-                      "type": "string",
-                      "title": "UPI ID"
-                  },
-                  "upiPhoneNumber": {
-                      "type": "string",
-                      "title": "Phone",
-                      "minLength": 10,
-                      "format": "phone-in"
-                  }
-              },
-              "required": [
-                  "UPI_ID",
-                  "upiPhoneNumber"
-              ]
+        "if": {
+          "properties": {
+            "upi": {
+              "title": "UPI Details",
+              "const": true
+            }
           }
+        },
+        "then": {
+          "properties": {
+            "UPI_ID": {
+              "type": "string",
+              "title": "UPI ID"
+            },
+            "upiPhoneNumber": {
+              "type": "string",
+              "title": "Phone",
+              "minLength": 10,
+              "format": "phone-in"
+            }
+          },
+          "required": [
+            "UPI_ID",
+            "upiPhoneNumber"
+          ]
+        }
       },
       {
-          "if": {
-              "properties": {
-                  "bankAccount": {
-                      "title": "Bank Account Details",
-                      "const": true
-                  }
-              }
-          },
-          "then": {
-              "properties": {
-                  "AccountNumber": {
-                      "type": "number",
-                      "title": "Account Number",
-                      "max-length": 17,
-                      "minLength": 9
-                  },
-                  "ifscCode": {
-                      "type": "string",
-                      "title": "IFSC Code"
-                  },
-                  "BankName": {
-                      "type": "string",
-                      "title": "Name of the Bank"
-                  },
-                  "Branch": {
-                      "type": "string",
-                      "title": "Branch"
-                  },
-                  "accountType": {
-                      "type": "string",
-                      "title": "Account Type",
-                      "enum": [
-                          "Current",
-                          "Savings"
-                      ],
-                      "default": "Current"
-                  }
-              },
-              "required": [
-                  "AccountNumber",
-                  "ifscCode",
-                  "BankName",
-                  "Branch",
-                  "accountType"
-              ]
+        "if": {
+          "properties": {
+            "bankAccount": {
+              "title": "Bank Account Details",
+              "const": true
+            }
           }
+        },
+        "then": {
+          "properties": {
+            "AccountNumber": {
+              "type": "number",
+              "title": "Account Number",
+              "max-length": 17,
+              "minLength": 9
+            },
+            "ifscCode": {
+              "type": "string",
+              "title": "IFSC Code"
+            },
+            "BankName": {
+              "type": "string",
+              "title": "Name of the Bank"
+            },
+            "Branch": {
+              "type": "string",
+              "title": "Branch"
+            },
+            "accountType": {
+              "type": "string",
+              "title": "Account Type",
+              "enum": [
+                "Current",
+                "Savings"
+              ],
+              "default": "Current"
+            }
+          },
+          "required": [
+            "AccountNumber",
+            "ifscCode",
+            "BankName",
+            "Branch",
+            "accountType"
+          ]
+        }
       }
-  ]
-}
+    ]
+  }
 }

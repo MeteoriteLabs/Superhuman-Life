@@ -28,10 +28,10 @@ export const GET_CONTACTS = gql`
 `;
 
 export const GET_PAYMENT_SCHEDULES = gql`
-  query PaymentSchedulesQuery($Destination_Contacts_ID: Int, $Source_User_ID: Int){
+  query PaymentSchedulesQuery( $Source_User_ID: Int){
     paymentSchedules(pagination: { pageSize: 100 },filters: {
       Source_User_ID: { eq: $Source_User_ID },
-      Destination_Contacts_ID: { eq: $Destination_Contacts_ID }
+      
     }) {
       data {
         id
@@ -44,6 +44,8 @@ export const GET_PAYMENT_SCHEDULES = gql`
           Reminder_DateTime
           Total_Amount 
           isActive
+          Destination_Contacts_ID
+          Destination_User_ID
         }
       }
     }

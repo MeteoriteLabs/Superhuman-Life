@@ -1,12 +1,12 @@
 import { useState, useContext } from "react";
 import { Typeahead } from "react-bootstrap-typeahead";
 import "react-bootstrap-typeahead/css/Typeahead.css";
-import { GET_CONTACTS } from "./queries";
+import { FETCH_CHANGEMAKERS } from "./queries";
 import { useQuery } from "@apollo/client";
 import { flattenObj } from "../utils/responseFlatten";
 import AuthContext from "../../context/auth-context";
 
-const ContactList = (props: any) => {
+const Changemakers = (props: any) => {
   const auth = useContext(AuthContext);
   function handleReturnType(value) {
     if (typeof value === "string") {
@@ -19,29 +19,31 @@ const ContactList = (props: any) => {
   const [multiSelections, setMultiSelections] = useState<any[]>(
     props.value?.length > 0 ? handleReturnType(props.value) : []
   );
-  const [contactList, setContactList] = useState<any[]>([]);
+  const [changemakerList, setChangemakerList] = useState<any[]>([]);
 
   function FetchData() {
-    useQuery(GET_CONTACTS, {
-      variables: { id: Number(auth.userid) },
+    useQuery( FETCH_CHANGEMAKERS, {
+      variables: { id: auth.userid },
       onCompleted: loadData,
     });
   }
 
   function loadData(data: any) {
     const flattenedData = flattenObj({ ...data });
-    console.log(flattenedData.contacts);
-    setContactList(
-      [...flattenedData.contacts].map((currValue) => {
+    console.log(flattenedData);
+    setChangemakerList(
+      [...flattenedData.usersPermissionsUsers].map((currValue) => {
         return {
           id: currValue.id,
-          name: currValue.firstname && currValue.firstname,
-          email: currValue.email && currValue.email,
+          username: currValue.username,
+          // lastName: currValue.Last_Name && currValue.Last_Name,
+          // email: currValue.email && currValue.email,
+          // phoneNumber: currValue.Phone_Number && currValue.Phone_Number,
         };
       })
     );
   }
-  console.log(contactList);
+  console.log(changemakerList);
 
   function OnChange(e) {
     const unique = [...new Map(e.map((m) => [m.id, m])).values()];
@@ -58,17 +60,17 @@ const ContactList = (props: any) => {
 
   return (
     <div>
-      <label>Add contact</label>
+      <label>Add changemaker</label>
       <Typeahead
         id="basic-typeahead-multiple"
-        labelKey="name"
+        labelKey="username"
         onChange={OnChange}
-        options={contactList}
-        placeholder="Choose Contact..."
+        options={changemakerList}
+        placeholder="Choose Changemaker..."
         selected={multiSelections}
       />
     </div>
   );
 };
 
-export default ContactList;
+export default Changemakers;
