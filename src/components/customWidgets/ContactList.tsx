@@ -30,7 +30,7 @@ const ContactList = (props: any) => {
 
   function loadData(data: any) {
     const flattenedData = flattenObj({ ...data });
-    console.log(flattenedData.contacts);
+
     setContactList(
       [...flattenedData.contacts].map((currValue) => {
         return {
@@ -41,7 +41,6 @@ const ContactList = (props: any) => {
       })
     );
   }
-  console.log(contactList);
 
   function OnChange(e) {
     const unique = [...new Map(e.map((m) => [m.id, m])).values()];

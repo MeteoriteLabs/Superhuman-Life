@@ -22,7 +22,7 @@ const Changemakers = (props: any) => {
   const [changemakerList, setChangemakerList] = useState<any[]>([]);
 
   function FetchData() {
-    useQuery( FETCH_CHANGEMAKERS, {
+    useQuery(FETCH_CHANGEMAKERS, {
       variables: { id: auth.userid },
       onCompleted: loadData,
     });
@@ -30,20 +30,16 @@ const Changemakers = (props: any) => {
 
   function loadData(data: any) {
     const flattenedData = flattenObj({ ...data });
-    console.log(flattenedData);
+
     setChangemakerList(
       [...flattenedData.usersPermissionsUsers].map((currValue) => {
         return {
           id: currValue.id,
           username: currValue.username,
-          // lastName: currValue.Last_Name && currValue.Last_Name,
-          // email: currValue.email && currValue.email,
-          // phoneNumber: currValue.Phone_Number && currValue.Phone_Number,
         };
       })
     );
   }
-  console.log(changemakerList);
 
   function OnChange(e) {
     const unique = [...new Map(e.map((m) => [m.id, m])).values()];
