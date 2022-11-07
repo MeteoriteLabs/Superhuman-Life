@@ -502,8 +502,8 @@ const Scheduler = () => {
                         </span>
                         <span className="shadow-lg bg-white p-2 rounded-lg">
                             <b>
-                                {moment(prevDate).format("Do, MMM")} -{" "}
-                                {moment(nextDate).format("Do, MMM")}
+                                {moment(prevDate).format("MMMM, YYYY")} -{" "}
+                                {moment(nextDate).format("MMMM, YYYY")}
                             </b>
                         </span>
                         <span

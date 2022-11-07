@@ -210,8 +210,8 @@ const Scheduler = () => {
                         </span>
                         <span className="shadow-lg bg-white p-2 rounded-lg">
                             <b>
-                                {moment(scheduleDate).startOf("month").format("Do, MMM")} -{" "}
-                                {moment(scheduleDate).endOf("month").format("Do, MMM")}
+                                {moment(scheduleDate).startOf("month").format("MMMM, YYYY")} -{" "}
+                                {moment(scheduleDate).endOf("month").format("MMMM, YYYY")}
                             </b>
                         </span>
                         <span
