@@ -126,9 +126,34 @@ const FloatingButton = (props: any) => {
                          </DropdownButton>
                          </Row> */}
                     </Col>
-                    <CreateEditProgramManager callback={props.callback3} startDate={props.startDate} duration={props.duration} ref={createEditWorkoutTemplateComponent} events={existingEvents} renewalDate={renewalDate}></CreateEditProgramManager>
-                    <CreateEditNewWorkout startDate={props.startDate} duration={props.duration} ref={createEditNewWorkoutComponent} events={existingEvents}></CreateEditNewWorkout>
-                    <CreateEditNewActivity startDate={props.startDate} duration={props.duration} ref={createEditNewActivityComponent} events={existingEvents}></CreateEditNewActivity>
+                    <CreateEditProgramManager 
+                         clientIds={props.clientIds} 
+                         sessionIds={props.sessionIds} 
+                         callback={props.callback3} 
+                         startDate={props.startDate} 
+                         duration={props.duration} 
+                         ref={createEditWorkoutTemplateComponent} 
+                         events={existingEvents} 
+                         renewalDate={renewalDate}>
+                    </CreateEditProgramManager>
+                    <CreateEditNewWorkout
+                         clientIds={props.clientIds} 
+                         sessionIds={props.sessionIds} 
+                         callback={props.callback3}  
+                         startDate={props.startDate} 
+                         duration={props.duration} 
+                         ref={createEditNewWorkoutComponent} 
+                         events={existingEvents}>
+                    </CreateEditNewWorkout>
+                    <CreateEditNewActivity
+                         clientIds={props.clientIds} 
+                         sessionIds={props.sessionIds} 
+                         callback={props.callback3}  
+                         startDate={props.startDate} 
+                         duration={props.duration} 
+                         ref={createEditNewActivityComponent} 
+                         events={existingEvents}>
+                    </CreateEditNewActivity>
                     <CreateEditRestDay startDate={props.startDate} duration={props.duration} ref={createEditRestDayComponent} restDays={restDays}></CreateEditRestDay>
                </div>
           </>

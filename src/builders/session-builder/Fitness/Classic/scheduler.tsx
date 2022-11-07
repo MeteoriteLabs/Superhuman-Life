@@ -21,7 +21,10 @@ const Scheduler = () => {
     const [userPackage, setUserPackage] = useState<any>([]);
     const [tagSeperation, setTagSeperation] = useState<any>([]);
     const [statusDays, setStatusDays] = useState();
+    const [clientIds, setClientIds] = useState<any>([]);
     const [totalClasses, setTotalClasses] = useState<any>([]);
+    // these are the sessions that will passed onto the scheduler
+    const [schedulerSessions, setSchedulerSessions] = useState<any>([]);
     //im using this session ids from parent only in case of day wise session
     const [sessionIds, setSessionIds] = useState<any>([]);
     const [tag, setTag] = useState<any>();
@@ -38,8 +41,10 @@ const Scheduler = () => {
     const mainQuery = useQuery(GET_TAG_BY_ID, { variables: {id: tagId}, onCompleted: (data) => loadTagData(data) });
 
     function loadTagData(data: any){
+        setSchedulerSessions(data);
         const flattenData = flattenObj({...data});
         let total = [0];
+        const clientValues = [...clientIds];
         const values = [...flattenData.tags[0]?.sessions];
         const ids = [...sessionIds];
         for(let i = 0; i < values.length; i++){
@@ -48,6 +53,7 @@ const Scheduler = () => {
                 total[0] += 1;
             }
         }
+        setClientIds(clientValues);
         setSessionIds(ids);
         setTotalClasses(total);
         setTag(flattenData.tags[0]);
@@ -204,7 +210,7 @@ const Scheduler = () => {
         return (data).toLocaleString('en-US', { minimumIntegerDigits: digits.toString(), useGrouping: false });
     }
 
-    function handleRestDayCallback(){
+    function handleCallback(){
         mainQuery.refetch();
         setSessionIds([]);
     }
@@ -300,9 +306,11 @@ const Scheduler = () => {
                 <Col lg={11} className="pl-0 pr-0">
                     <div className="mt-5">
                         <SchedulerPage 
-                            restDayCallback={handleRestDayCallback} 
+                            callback={handleCallback}
                             type="day" 
                             sessionIds={sessionIds} 
+                            schedulerSessions={schedulerSessions}
+                            clientIds={clientIds}
                             days={tag.fitnesspackage.duration} 
                             restDays={tag?.sessions.filter((ses) => ses.type === "restday")} 
                             classType={'Classic Class'} 

@@ -23,6 +23,9 @@ const Scheduler = () => {
     const [tag, setTag] = useState<any>();
     const [scheduleDate, setScheduleDate] = useState(moment().startOf("month").format("YYYY-MM-DD"));
     const [sessionIds, setSessionIds] = useState<any>([]);
+    const [clientIds, setClientIds] = useState<any>([]);
+    // these are the sessions that will passed onto the scheduler
+    const [schedulerSessions, setSchedulerSessions] = useState<any>([]);
     let programIndex;
 
     const fitnessActionRef = useRef<any>(null);
@@ -36,9 +39,10 @@ const Scheduler = () => {
     const mainQuery = useQuery(GET_TAG_BY_ID, { variables: {id: tagId}, onCompleted: (data) => loadTagData(data) });
 
     function loadTagData(data: any){
+        setSchedulerSessions(data);
         const flattenData = flattenObj({...data});
-        console.log(flattenData);
         let total = [0];
+        const clientValues = [...clientIds];
         const values = [...flattenData.tags[0]?.sessions];
         const ids = [...sessionIds];
         for(let i = 0; i < values.length; i++){
@@ -48,6 +52,7 @@ const Scheduler = () => {
             }
         }
         setSessionIds(ids);
+        setClientIds(clientValues);
         // setTotalClasses(total);
         setTag(flattenData.tags[0]);
     }
@@ -69,8 +74,8 @@ const Scheduler = () => {
     }
 
     function calculateDays(date: string){
-        const days = moment(date).endOf('month').diff(moment(date).startOf('month'), 'days') + 1;
-        return days;
+        const days = moment(date).endOf('month').diff(moment(date).startOf('month'), 'days');
+        return days + 1;
     }
 
     function handleDatePicked(date: string){
@@ -87,7 +92,7 @@ const Scheduler = () => {
 
     console.log(moment(scheduleDate).diff(moment(), 'months'));
 
-    function handleRestDayCallback(){
+    function handleCallback(){
         mainQuery.refetch();
         setSessionIds([]);
     }
@@ -188,16 +193,18 @@ const Scheduler = () => {
                         style={{
                             border: "none",
                             backgroundColor: "rgba(211,211,211,0.8)",
+                            cursor: 'pointer'
                         }}
                         value={scheduleDate}
                         onChange={(e) => handleDatePicked(e.target.value)}
                         />{" "}
                         <br />
                         <span
-                        onClick={() => {
-                            handlePrevMonth(scheduleDate);
-                        }}
-                        className="rounded-circle"
+                            style={{ cursor: 'pointer'}}
+                            onClick={() => {
+                                handlePrevMonth(scheduleDate);
+                            }}
+                            className="rounded-circle"
                         >
                         <i className="fa fa-chevron-left mr-4"></i>
                         </span>
@@ -208,7 +215,7 @@ const Scheduler = () => {
                             </b>
                         </span>
                         <span
-                        style={{ display: `${moment(scheduleDate).diff(moment(), 'months') > 1 ? 'none' : '' }`}}
+                        style={{ display: `${moment(scheduleDate).diff(moment(), 'months') > 1 ? 'none' : '' }`, cursor: 'pointer'}}
                         onClick={() => {
                             handleNextMonth(scheduleDate);
                         }}
@@ -224,10 +231,12 @@ const Scheduler = () => {
                     <div className="mt-3">
                         <SchedulerPage 
                             type="date" 
-                            restDayCallback={handleRestDayCallback}
+                            callback={handleCallback}
                             sessionIds={sessionIds} 
                             days={calculateDays(scheduleDate)} 
-                            restDays={tag?.sessions.filter((ses) => ses.type === "restday")} 
+                            restDays={tag?.sessions.filter((ses) => ses.type === "restday")}
+                            schedulerSessions={schedulerSessions}
+                            clientIds={clientIds} 
                             classType={'Live Stream Channel'} 
                             programId={tagId} 
                             startDate={scheduleDate} 

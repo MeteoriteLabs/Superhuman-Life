@@ -30,6 +30,15 @@ const Scheduler = () => {
     const [startDate, setStartDate] = useState("");
     const [totalClasses, setTotalClasses] = useState<any>([]);
     const [sessionIds, setSessionIds] = useState<any>([]);
+    const [clientIds, setClientIds] = useState<any>([]);
+    // these are the sessions that will passed onto the scheduler
+    const [schedulerSessions, setSchedulerSessions] = useState<any>([]);
+    // the group end and start date are actual dates
+    const [groupStartDate, setGroupStartDate] = useState("");
+    const [groupEndDate, setGroupEndDate] = useState("");
+    // this is used for monthly toggle
+    const [prevDate, setPrevDate] = useState("");
+    const [nextDate, setNextDate] = useState("");
     const [tagSeperation, setTagSeperation] = useState<any>([]);
     const [statusDays, setStatusDays] = useState();
     const [tag, setTag] = useState<any>();
@@ -53,13 +62,29 @@ const Scheduler = () => {
         }, 1500)
     }, [show]);
 
-    const mainQuery = useQuery(GET_TAG_BY_ID, { variables: {id: tagId}, onCompleted: (data) => loadTagData(data) });
+    function handleRangeDates(startDate: string, endDate: string){
+        setPrevDate(moment(startDate).format('YYYY-MM-DD'));
+
+        if(moment(startDate).add(30, 'days').isBefore(moment(endDate))){
+            setNextDate(moment(startDate).add(30, 'days').format('YYYY-MM-DD'));
+        }else {
+            setNextDate(moment(endDate).format('YYYY-MM-DD'));
+        }
+
+    }
+
+    const mainQuery = useQuery(GET_TAG_BY_ID, { variables: { id: tagId }, onCompleted: (data) => loadTagData(data) });
 
     function loadTagData(data: any){
+        setSchedulerSessions(data);
         const flattenData = flattenObj({...data});
         let total = [0,0];
+        const clientValues = [...clientIds];
         const values = [...flattenData.tags[0]?.sessions];
         const ids = [...sessionIds];
+        for(var i=0; i < flattenData.tags[0].client_packages.length; i++){
+            clientValues.push(flattenData.tags[0].client_packages[i].users_permissions_user.id);
+        }
         for(let i = 0; i < values.length; i++){
             ids.push(values[i].id);
             if(values[i].tag === "Group Class" && values[i].mode === "Online"){
@@ -68,11 +93,16 @@ const Scheduler = () => {
                 total[1] += 1;
             }
         }
+        setGroupStartDate(moment(flattenData.tags[0].fitnesspackage.Start_date).format('YYYY-MM-DD'));
+        setGroupEndDate(moment(flattenData.tags[0].fitnesspackage.End_date).format('YYYY-MM-DD'));
+        handleRangeDates(flattenData.tags[0].fitnesspackage.Start_date, flattenData.tags[0].fitnesspackage.End_date);
+        setClientIds(clientValues);
         setSessionIds(ids);
         setTotalClasses(total);
         setTag(flattenData.tags[0]);
     }
 
+    
     const { data: data4 } = useQuery(GET_TABLEDATA, {
         variables: {
             id: last[0]
@@ -263,9 +293,53 @@ const Scheduler = () => {
 
     console.log(tag);
 
-    function handleRestDayCallback(){
+    function handleCallback(){
         mainQuery.refetch();
         setSessionIds([]);
+    }
+
+    function handleDatePicked(date: string){
+        // setGroupStartDate(moment(date).startOf('month').format('YYYY-MM-DD'));
+    }
+
+    function handlePrevMonth(date: string){
+        // setGroupStartDate(moment(date).subtract(1, 'month').format('YYYY-MM-DD'));
+        setNextDate(moment(date).format('YYYY-MM-DD'));
+
+        if(moment(date).subtract(30, 'days').isSameOrAfter(moment(groupStartDate))){
+            setPrevDate(moment(date).subtract(30, 'days').format('YYYY-MM-DD'));
+        }else {
+            setPrevDate(moment(groupStartDate).format('YYYY-MM-DD'));
+        }
+
+    }
+
+    function handleNextMonth(date: string){
+        // setGroupStartDate(moment(date).add(1, 'month').format('YYYY-MM-DD'));
+        setPrevDate(moment(date).format('YYYY-MM-DD'));
+
+        if(moment(date).add(30, 'days').isBefore(moment(groupEndDate))){
+            setNextDate(moment(date).add(30, 'days').format('YYYY-MM-DD'));
+        }else {
+            setNextDate(moment(groupEndDate).format('YYYY-MM-DD'));
+        }
+
+    }
+
+    // this is to handle the left chevron, if we have to display it or no.
+    function handlePrevDisplay(date: string){
+        return moment(date).isSame(moment(groupStartDate)) ? 'none' : '';
+    }
+    
+    // this is to handle the right chevron, if we have to display it or no.
+    function handleNextDisplay(date: string){
+        return moment(date).isSame(moment(groupEndDate)) ? 'none' : '';
+    }
+
+    // this is to calculate the number of days for the scheduler
+    function calculateDays(sd: string, ed: string){
+        var days = moment(ed).diff(moment(sd), 'days');
+        return days + 1;
     }
     
     if (!show) return <span style={{ color: 'red' }}>Loading...</span>;
@@ -287,7 +361,7 @@ const Scheduler = () => {
                             <Row>
                                 <span>{tag.fitnesspackage.packagename}</span>
                                 <div className="ml-3 mt-1" style={{ borderLeft: '1px solid black', height: '20px' }}></div>
-                                <span className="ml-4">{tag.fitnesspackage.duration + " days"}</span>
+                                <span className="ml-4">{moment(groupEndDate).diff(moment(groupStartDate), 'days') + " days"}</span>
                                 <div className="ml-3" style={{ borderLeft: '1px solid black', height: '20px' }}></div>
                                 <span className="ml-4">{"Level: " + tag.fitnesspackage.level}</span>
                             </Row>
@@ -332,7 +406,7 @@ const Scheduler = () => {
                                                     <span>Date:</span>
                                                 </Col>
                                                 <Col lg={5} className="text-center">
-                                                    <span className="p-1 ml-2 scheduler-badge">{moment(tag.client_packages[0]?.effectiveDate).format('DD MMMM, YY')}</span>
+                                                    <span className="p-1 ml-2 scheduler-badge">{moment(groupStartDate).format('DD MMMM, YY')}</span>
                                                 </Col>
                                                     {/* to
                                                 <Col lg={5} className="text-center">
@@ -401,19 +475,63 @@ const Scheduler = () => {
                     </Row>
                 </Col> 
             </Row>
+            <Row className='mt-5 mb-2'>
+                <Col lg={11}>
+                    <div className="text-center">
+                        {/* <input
+                        min={moment().subtract(3, "months").format("YYYY-MM-DD")}
+                        max={moment().add(3, "months").format("YYYY-MM-DD")}
+                        className="p-1 rounded shadow-sm mb-3"
+                        type="date"
+                        style={{
+                            border: "none",
+                            backgroundColor: "rgba(211,211,211,0.8)",
+                        }}
+                        value={groupStartDate}
+                        onChange={(e) => handleDatePicked(e.target.value)}
+                        />{" "} */}
+                        {/* <br /> */}
+                        <span
+                        style={{ display: `${handlePrevDisplay(prevDate)}`, cursor: 'pointer'}}
+                        onClick={() => {
+                            handlePrevMonth(prevDate);
+                        }}
+                        className="rounded-circle"
+                        >
+                        <i className="fa fa-chevron-left mr-4"></i>
+                        </span>
+                        <span className="shadow-lg bg-white p-2 rounded-lg">
+                            <b>
+                                {moment(prevDate).format("Do, MMM")} -{" "}
+                                {moment(nextDate).format("Do, MMM")}
+                            </b>
+                        </span>
+                        <span
+                        style={{ display: `${handleNextDisplay(nextDate)}`, cursor: 'pointer'}}
+                        onClick={() => {
+                            handleNextMonth(nextDate);
+                        }}
+                        >
+                        <i className="fa fa-chevron-right ml-4"></i>
+                        </span>
+                    </div>
+                </Col>
+            </Row>
             {/* Scheduler */}
             <Row>
                 <Col lg={11} className="pl-0 pr-0">
                     <div className="mt-5">
                         <SchedulerPage 
                             type="date" 
-                            days={30} 
-                            restDayCallback={handleRestDayCallback}
+                            days={calculateDays(prevDate, nextDate)} 
+                            callback={handleCallback}
                             restDays={tag?.sessions.filter((ses) => ses.type === "restday")} 
                             programId={tagId} 
+                            schedulerSessions={schedulerSessions}
                             sessionIds={sessionIds}
+                            clientIds={clientIds}
                             classType={'Group Class'}
-                            startDate={tag?.client_packages[0]?.effective_date}
+                            startDate={prevDate}
                         />
                     </div>
                 </Col>

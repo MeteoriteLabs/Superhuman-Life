@@ -20,6 +20,9 @@ const Scheduler = () => {
     const [show, setShow] = useState(false);
     // const [totalClasses, setTotalClasses] = useState<any>([]);
     const [sessionIds, setSessionIds] = useState<any>([]);
+    const [clientIds, setClientIds] = useState<any>([]);
+    // these are the sessions that will passed onto the scheduler
+    const [schedulerSessions, setSchedulerSessions] = useState<any>([]);
     const [tag, setTag] = useState<any>();
     let programIndex;
 
@@ -34,8 +37,10 @@ const Scheduler = () => {
     const mainQuery = useQuery(GET_TAG_BY_ID, { variables: {id: tagId}, onCompleted: (data) => loadTagData(data) });
 
     function loadTagData(data: any){
+        setSchedulerSessions(data);
         const flattenData = flattenObj({...data});
         let total = [0];
+        const clientValues = [...clientIds];
         const values = [...flattenData.tags[0]?.sessions];
         const ids = [...sessionIds];
         for(let i = 0; i < values.length; i++){
@@ -45,6 +50,7 @@ const Scheduler = () => {
             }
         }
         // setTotalClasses(total);
+        setClientIds(clientValues);
         setSessionIds(ids);
         setTag(flattenData.tags[0]);
     }
@@ -71,7 +77,7 @@ const Scheduler = () => {
         return dailySessions.length >= 1 ? dailySessions.length : 'N/A';
     }
 
-    function handleRestDayCallback(){
+    function handleCallback(){
         mainQuery.refetch();
         setSessionIds([]);
     }
@@ -166,9 +172,11 @@ const Scheduler = () => {
                     <div className="mt-5">
                         <SchedulerPage 
                             type="date" 
-                            restDayCallback={handleRestDayCallback} 
+                            callback={handleCallback}
                             sessionIds={sessionIds} 
-                            days={calculateDuration(tag?.fitnesspackage?.Start_date, tag?.fitnesspackage?.End_date)} restDays={tag?.sessions.filter((ses) => ses.type === "restday")} 
+                            days={calculateDuration(tag?.fitnesspackage?.Start_date, tag?.fitnesspackage?.End_date)} restDays={tag?.sessions.filter((ses) => ses.type === "restday")}
+                            schedulerSessions={schedulerSessions}
+                            clientIds={clientIds} 
                             classType={'Cohort'} 
                             programId={tagId} 
                             startDate={tag?.fitnesspackage?.Start_date} 

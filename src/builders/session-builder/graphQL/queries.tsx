@@ -569,10 +569,16 @@ query getTagsforGroup($id: ID!) {
 
 
 export const GET_TAG_BY_ID = gql`
-query getTagById($id: ID!) {
-  tags(filters: {
+query getTagById($id: ID, $startDate: Date, $endDate: Date) {
+  tags(filters:{
     id: {
       eq: $id
+    },
+    sessions:{
+      session_date: {
+        gte: $startDate,
+        lte: $endDate,
+      }
     }
   }){
     data{
@@ -602,7 +608,7 @@ query getTagById($id: ID!) {
             }
           }
         }
-        sessions{
+        sessions(pagination: {pageSize: 100}){
           data{
             id
             attributes{
@@ -612,6 +618,7 @@ query getTagById($id: ID!) {
               end_time
               start_time
               Is_restday
+              Is_program_template
               mode
               session_date
               activity{
@@ -645,6 +652,8 @@ query getTagById($id: ID!) {
                   id
                   attributes{
                     username
+                    First_Name
+                    Last_Name
                   }
                 }
               }

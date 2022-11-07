@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import { Modal, Button, Row, Col, Tab, Tabs, InputGroup, FormControl, Badge, OverlayTrigger, Tooltip, Form, Spinner } from 'react-bootstrap';
 import './styles.css';
-import { FETCH_WORKOUT, FETCH_ACTIVITY, GET_SLOTS_TO_CHECK, UPDATE_CHANGEMAKER_AVAILABILITY_WORKHOURS, GET_SESSIONS, GET_CLIENT_SESSIONS, DELETE_SESSION, UPDATE_SESSION, CREATE_SESSION, UPDATE_TAG_SESSIONS, CREATE_SESSION_BOOKING, GET_SESSION_BOOKINGS, UPDATE_SESSION_BOOKING, UPDATE_FITNESSPORGRAMS_SESSIONS } from './queries';
+import { FETCH_WORKOUT, FETCH_ACTIVITY, GET_SLOTS_TO_CHECK, UPDATE_CHANGEMAKER_AVAILABILITY_WORKHOURS, DELETE_SESSION, UPDATE_SESSION, CREATE_SESSION, UPDATE_TAG_SESSIONS, CREATE_SESSION_BOOKING, GET_SESSION_BOOKINGS, UPDATE_SESSION_BOOKING, UPDATE_FITNESSPORGRAMS_SESSIONS } from './queries';
 import { useQuery, useMutation, gql } from "@apollo/client";
 import ProgramList from "../../../components/customWidgets/programList";
 import SessionList from '../../../components/customWidgets/sessionList';
@@ -165,6 +165,7 @@ const Schedular = (props: any) => {
                         endMin: arr2.event?.endMin,
                         sessionId: arr2.event?.sessionId,
                         sessionDate: handleGroupConflictCheck(arr2.event?.sessionDate, props.startDate, props.days),
+                        isProgram: arr2.event?.isProgram,
                     });
                 }else {
                     setEvent({ 
@@ -180,6 +181,7 @@ const Schedular = (props: any) => {
                         endMin: handleEndTime(arr2.event?.hour + ':' + arr2.event?.min, arr2.event?.endHour + ':' + arr2.event?.endMin).split(':')[1],
                         sessionId: arr2.event?.sessionId,
                         sessionDate: moment(props.startDate).add(parseInt(arr2?.d) - 1, 'days').format("YYYY-MM-DD"),
+                        isProgram: arr2.event?.isProgram,
                     });
                 }
             }
@@ -195,10 +197,19 @@ const Schedular = (props: any) => {
             handleShow();
         }
     });
+    
+    // const mainQuery = useQuery(!props?.clientSessions ? GET_SESSIONS : GET_CLIENT_SESSIONS, { variables: { id: props.programId, startDate: moment(props?.startDate).format("YYYY-MM-DD"), endDate: moment(props?.startDate).add(props.days - 1 , 'days').format("YYYY-MM-DD") }, onCompleted: !props?.clientSessions ? handleRenderTable : handleRenderClientTable });
 
     // ENTRY POINT
-    // this is the entry point to the file.
-        const mainQuery = useQuery(!props?.clientSessions ? GET_SESSIONS : GET_CLIENT_SESSIONS, { variables: { id: props.programId, startDate: moment(props?.startDate).format("YYYY-MM-DD"), endDate: moment(props?.startDate).add(props.days - 1 , 'days').format("YYYY-MM-DD") }, onCompleted: !props?.clientSessions ? handleRenderTable : handleRenderClientTable });
+    // Props to this component must be passed from the parent component.
+    useEffect(() => {
+        if(!props?.clientSessions){
+            handleRenderTable(props.schedulerSessions);
+        }else {
+            handleRenderClientTable(props.schedulerSessions);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [props]);
 
     function draganddrop() {
         const draggable: any = document.querySelectorAll('.schedular-content');
@@ -318,22 +329,32 @@ const Schedular = (props: any) => {
 
     // this incase of the scheduler in the session manager page
     function handleRenderTable(data: any) {
-        console.log(data);
+        setSessionsIds(props.sessionIds);
         const flattenData = flattenObj({...data});
         if(window.location.pathname.split('/')[1] === 'programs'){
             return handleTemplateTable(props?.templateSessions);
         }
-        const sessionsExistingValues = [...sessionIds];
-        for(var q=0; q<flattenData.tags[0]?.sessions.length; q++){
-            sessionsExistingValues.push(flattenData.tags[0]?.sessions[q].id);
-        }
-        setSessionsIds(sessionsExistingValues);
+        // we dont need this as we are passing the previous session ids from the parent
+        // const sessionsExistingValues = [...sessionIds];
+        // for(var q=0; q<flattenData.tags[0]?.sessions.length; q++){
+        //     sessionsExistingValues.push(flattenData.tags[0]?.sessions[q].id);
+        // }
+        // setSessionsIds(sessionsExistingValues);
         for (var d = 1; d <= props.days; d++) {
             arr[d] = JSON.parse(JSON.stringify(schedulerDay));
         }
         console.log(flattenData.tags[0]?.sessions)
-        if (flattenData.tags[0]?.sessions?.length > 0) {
-            flattenData.tags[0]?.sessions?.filter((itm) => itm.Is_restday === false).forEach((val) => {
+        // flattenData.tags[0]?.sessions?.filter((data: any) => { return moment(props.startDate).isSameOrBefore(moment(data.session_date))});
+
+        const sessions: any = [];
+        // eslint-disable-next-line array-callback-return
+        flattenData.tags[0]?.sessions?.map((it: any, index: number) => {
+            if(moment(it.session_date).isSameOrAfter(moment(props.startDate))){
+                sessions.push(flattenData.tags[0]?.sessions[index]);
+            }
+        });
+        if (sessions.length > 0) {
+            sessions.filter((itm) => itm.Is_restday === false).forEach((val) => {
                 var startTimeHour: any = `${val.start_time === null ? '0' : val.start_time.split(':')[0]}`;
                 var startTimeMinute: any = `${val.start_time === null ? '0' : val.start_time.split(':')[1]}`;
                 var endTimeHour: any = `${val.end_time === null ? '0' : val.end_time.split(':')[0]}`;
@@ -345,7 +366,7 @@ const Schedular = (props: any) => {
                     "title": val.activity === null ? val.workout?.workouttitle : val.activity.title, "color": "skyblue",
                     "day": calculateDay(props.startDate, val.session_date), "hour": startTimeHour, "min": startTimeMinute, "type": val.type,
                     "endHour": endTimeHour, "endMin": endTimeMin, "id": val.activity === null ? val.workout?.id : val.activity.id, "mode": val.mode,
-                    "tag": val.tag, "sessionId": val.id, "activityTarget": val.activity === null ? null : val.activity_target, "sessionDate": val.session_date,
+                    "tag": val.tag, "sessionId": val.id, "activityTarget": val.activity === null ? null : val.activity_target, "sessionDate": val.session_date, "isProgram": val.Is_program_template
                 });
             })
         }
@@ -388,7 +409,7 @@ const Schedular = (props: any) => {
             }
         }
     }
-    
+
     handleDays();
 
     useEffect(() => {
@@ -410,14 +431,14 @@ const Schedular = (props: any) => {
 
     function handleFloatingActionProgramCallback(event: any) {
         setProgram(`${event}`);
-        mainQuery.refetch();
-        props?.restDayCallback();
+        // mainQuery.refetch();
+        props.callback();
     }
 
     function handleFloatingActionProgramCallback2(event: any) {
         setSessionFilter(`${event}`);
-        mainQuery.refetch();
-        props?.restDayCallback();
+        // mainQuery.refetch();
+        props.callback();
     }
 
     // this handles the displaying of rest days on the scheduler
@@ -528,7 +549,11 @@ const Schedular = (props: any) => {
 
     const [duplicatedDay, setDuplicatedDay] = useState<any>([]);
     const [updateSessionBooking] = useMutation(UPDATE_SESSION_BOOKING);
-    const [createSessionBooking] = useMutation(CREATE_SESSION_BOOKING, {onCompleted: (r: any) => {setEvent({}); mainQuery.refetch()}})
+    const [createSessionBooking] = useMutation(CREATE_SESSION_BOOKING, {onCompleted: (r: any) => {
+        setEvent({}); 
+        props.callback();
+        // mainQuery.refetch();
+    }});
     const [createSession] = useMutation(CREATE_SESSION, {onCompleted: (r: any) => {
         if(window.location.pathname.split('/')[1] === 'programs'){
             handleUpdateFitnessPrograms(r.createSession.data.id);
@@ -536,7 +561,7 @@ const Schedular = (props: any) => {
             handleUpdateTag(r.createSession.data.id)
         }
     }});
-    const [updateSession] = useMutation(UPDATE_SESSION, { onCompleted: () => {setEvent({})}});
+    const [updateSession] = useMutation(UPDATE_SESSION, { onCompleted: () => {setEvent({}); props.callback();} });
     const [updateTagSessions] = useMutation(UPDATE_TAG_SESSIONS, { onCompleted: () => {
         if(props.classType !== 'Group Class' && newSessionId !== ""){
             createSessionBooking({
@@ -547,8 +572,8 @@ const Schedular = (props: any) => {
             });
         }else {
             setEvent({});
-            mainQuery.refetch();
-            props?.restDayCallback();
+            // mainQuery.refetch();
+            props.callback();
         }
     }});
     const [updateFitnessProgramSessions] = useMutation(UPDATE_FITNESSPORGRAMS_SESSIONS, { onCompleted: () => {
@@ -776,7 +801,7 @@ const Schedular = (props: any) => {
                     }
                 })
             }
-        }else if(event.type === "workout"){
+        }else if(event.type === "workout" && event.isProgram === false){
             if(event.tag === 'Group Class'){
                 const values = [...sessionIds];
                 values.push(event.sessionId);
@@ -802,6 +827,19 @@ const Schedular = (props: any) => {
                     }
                 })
             }
+        }else if(event.type === "workout" && event.isProgram === true){
+            createSession({
+                variables: {
+                    start_time: event.hour + ':' + event.min,
+                    end_time: event.endHour + ':' + event.endMin,
+                    workout: event.id,
+                    tag: tag === "" ? event.tag : tag,
+                    mode: mode === "" ? event.mode : mode,
+                    type: event.type,
+                    session_date: moment(event.sessionDate).format('YYYY-MM-DD'),
+                    changemaker: auth.userid
+                }
+            });
         }else {
             if(event.tag === 'Group Class'){
                 const values = [...sessionIds];
@@ -996,7 +1034,7 @@ const Schedular = (props: any) => {
         )
     }
 
-    const [deleteSession] = useMutation(DELETE_SESSION, {onCompleted: () => {handleClose()}});
+    const [deleteSession] = useMutation(DELETE_SESSION, {onCompleted: () => {handleClose(); props.callback();}});
 
     function handleEventDelete(){
         // let values = [...currentProgram];
@@ -1166,10 +1204,10 @@ const Schedular = (props: any) => {
     const [deleteRestDay] = useMutation(DELETE_REST_DAY, {onCompleted: () => {
         console.log('rest day deleted');
         // mainQuery.refetch();
-        props.restDayCallback();
+        props.callback();
     }});
     const [createRestDay] = useMutation(CREATE_REST_DAY, {onCompleted: (r: any) => {
-        const values = [...props?.sessionIds];
+        const values = [...sessionIds];
         values.push(r.createSession.data.id);
         updateTagSessions({
             variables: {
@@ -1180,7 +1218,7 @@ const Schedular = (props: any) => {
     }});
 
     const [createTemplateRestDay] = useMutation(CREATE_TEMPLATE_SESSION, {onCompleted: (r: any) => {
-        const values = [...props.sessionIds];
+        const values = [...sessionIds];
         values.push(r.createSession.data.id);
         updateTagSessions({
             variables: {
@@ -1342,8 +1380,8 @@ const Schedular = (props: any) => {
     }
 
     function handleRefetch(){
-        mainQuery.refetch();
-        props?.restDayCallback();
+        // mainQuery.refetch();
+        props.callback();
     }
 
     function handleShowRestDay(){
@@ -1454,7 +1492,8 @@ const Schedular = (props: any) => {
                     })}
                 </div>
             </div>
-            {props?.clientSchedular !== 'client' && <FloatingButton startDate={props.startDate} duration={props.days} callback={handleFloatingActionProgramCallback} callback2={handleFloatingActionProgramCallback2} callback3={handleRefetch} restDayCallback={handleShowRestDay} showRestDayAction={showRestDay}/>}
+            {/* Floating Action Buttons */}
+            {props?.clientSchedular !== 'client' && <FloatingButton clientIds={props.clientIds} sessionIds={sessionIds} startDate={props.startDate} duration={props.days} callback={handleFloatingActionProgramCallback} callback2={handleFloatingActionProgramCallback2} callback3={handleRefetch} restDayCallback={handleShowRestDay} showRestDayAction={showRestDay}/>}
             {
                 <Modal show={showModal} onHide={handleClose} backdrop="static" centered size="lg" >
                     <Modal.Body style={{ maxHeight: '600px', overflow: 'auto' }}>

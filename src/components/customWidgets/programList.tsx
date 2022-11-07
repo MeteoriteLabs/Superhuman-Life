@@ -37,6 +37,7 @@ const ProgramList = (props: any) => {
                         end_time
                         tag
                         Is_restday
+                        Is_program_template
                         type
                         mode
                         activity{
