@@ -343,7 +343,6 @@ const Schedular = (props: any) => {
         for (var d = 1; d <= props.days; d++) {
             arr[d] = JSON.parse(JSON.stringify(schedulerDay));
         }
-        console.log(flattenData.tags[0]?.sessions)
         // flattenData.tags[0]?.sessions?.filter((data: any) => { return moment(props.startDate).isSameOrBefore(moment(data.session_date))});
 
         const sessions: any = [];
@@ -408,6 +407,8 @@ const Schedular = (props: any) => {
                 days.push(k);
             }
         }
+        console.log(days);
+        console.log(dates);
     }
 
     handleDays();
@@ -1387,6 +1388,8 @@ const Schedular = (props: any) => {
     function handleShowRestDay(){
         setShowRestDay(!showRestDay);
     }
+
+    console.log(arr)
 
     if (!show) {
         return <div className="text-center">
