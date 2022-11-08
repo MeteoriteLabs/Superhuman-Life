@@ -83,6 +83,10 @@ function CreatePaymentSchedule(props: any, ref: any) {
     },
   }));
 
+  const toastMessage = `Payment Schedule has been ${
+    operation.current_status === true ? "Deactivated" : "Reactivated"
+  } successfully`;
+
   function CreatePaymentSchedule(frm: any) {
     createPaymentSchedule({
       variables: {
@@ -169,8 +173,14 @@ function CreatePaymentSchedule(props: any, ref: any) {
         <StatusModal
           show={showDeactivateModal}
           onHide={() => setShowDeactivateModal(false)}
-          modalTitle="Deactivate"
-          modalBody="Do you want to deactivate this payment schedule?"
+          modalTitle={
+            operation.current_status === true ? "Deactivate" : "Reactivate"
+          }
+          modalBody={
+            operation.current_status === true
+              ? "Do you want to deactivate this payment schedule?"
+              : "Do you want to reactivate this payment schedule?"
+          }
           buttonLeft="Cancel"
           buttonRight="Yes"
           onClick={() => {
@@ -206,7 +216,7 @@ function CreatePaymentSchedule(props: any, ref: any) {
         <Toaster
           handleCallback={() => setIsDeactivated(!isDeactivated)}
           type="success"
-          msg="Payment Schedule has been deactivated successfully"
+          msg={toastMessage}
         />
       )}
       {isDeleted && (

@@ -2,11 +2,7 @@ import React, { useContext, useImperativeHandle, useState } from "react";
 import ModalView from "../../../components/modal/index";
 import {
   ADD_CONTACT,
-  ADD_PAYMENT_SCHEDULE,
-  GET_CONTACTS,
-  GET_PAYMENT_SCHEDULES,
-  FETCH_CHANGEMAKERS,
-  GET_PAYMENT_SCHEDULES_FOR_CHANGEMAKER,
+  ADD_PAYMENT_SCHEDULE
 } from "./queries";
 import { useMutation } from "@apollo/client";
 import AuthContext from "../../../context/auth-context";
@@ -115,13 +111,12 @@ function CreateEditPayee(props: any, ref: any) {
               },
             },
           },
-          refetchQueries: [
-            GET_CONTACTS,
-            GET_PAYMENT_SCHEDULES,
-            FETCH_CHANGEMAKERS,
-            GET_PAYMENT_SCHEDULES_FOR_CHANGEMAKER
-          ],
+          onCompleted: () => {
+            props.refetchContacts();
+            props.refetchChangemakersPaymentSchedules();
+          },
         });
+
         modalTrigger.next(false);
         setIsCreated(!isCreated);
       },

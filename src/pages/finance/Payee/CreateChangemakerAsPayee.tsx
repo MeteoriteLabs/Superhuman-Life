@@ -1,12 +1,6 @@
 import React, { useContext, useImperativeHandle, useState } from "react";
 import ModalView from "../../../components/modal/index";
-import {
-  ADD_PAYMENT_SCHEDULE,
-  GET_PAYMENT_SCHEDULES_FOR_CHANGEMAKER,
-  FETCH_CHANGEMAKERS,
-  GET_CONTACTS,
-  GET_PAYMENT_SCHEDULES,
-} from "./queries";
+import { ADD_PAYMENT_SCHEDULE } from "./queries";
 import { useMutation } from "@apollo/client";
 import AuthContext from "../../../context/auth-context";
 import { schema, widgets } from "./PayeeSchema";
@@ -41,6 +35,8 @@ function CreateChangemakerAsPayee(props: any, ref: any) {
   const [createPaymentSchedule] = useMutation(ADD_PAYMENT_SCHEDULE, {
     onCompleted: (r: any) => {
       modalTrigger.next(false);
+      props.refetchContacts();
+      props.refetchChangemakersPaymentSchedules();
     },
   });
 
@@ -87,12 +83,6 @@ function CreateChangemakerAsPayee(props: any, ref: any) {
           },
         },
       },
-      refetchQueries: [
-        GET_PAYMENT_SCHEDULES_FOR_CHANGEMAKER,
-        FETCH_CHANGEMAKERS,
-        GET_CONTACTS,
-        GET_PAYMENT_SCHEDULES
-      ],
     });
 
     modalTrigger.next(false);

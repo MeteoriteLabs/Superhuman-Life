@@ -109,23 +109,31 @@ export default function Payee() {
   }
 
   const [users, { data: get_changemakers }] = useLazyQuery(FETCH_CHANGEMAKERS, {
+    fetchPolicy: "cache-and-network",
     onCompleted: (data) => {
       loadData(data);
     },
   });
 
-  const [getChangeMakersSchedule, { data: get_changemakers_payment_schedule }] =
-    useLazyQuery(GET_PAYMENT_SCHEDULES_FOR_CHANGEMAKER, {
-      variables: { id: auth.userid },
-      onCompleted: (data) => {
-        // calling fetch changemaker's useLazyQuery function
-        users();
-      },
-    });
+  const [
+    getChangeMakersSchedule,
+    {
+      data: get_changemakers_payment_schedule,
+      refetch: refetch_changemakers_payment_schedule,
+    },
+  ] = useLazyQuery(GET_PAYMENT_SCHEDULES_FOR_CHANGEMAKER, {
+    fetchPolicy: "cache-and-network",
+    onCompleted: (data) => {
+      // calling fetch changemaker's useLazyQuery function
+      users();
+    },
+  });
 
   const [getPaymentSchedules, { data: payment_schedule }] = useLazyQuery(
     GET_PAYMENT_SCHEDULES,
     {
+      fetchPolicy: "network-only",
+
       onCompleted: (data) => {
         // calling changermaker's payment schedule uselazyquery function
         getChangeMakersSchedule({
@@ -137,37 +145,40 @@ export default function Payee() {
     }
   );
 
-  const { data: get_contacts } = useQuery(GET_CONTACTS, {
-    variables: { id: auth.userid },
-    onCompleted: (data) => {
-      const flattenContactsData = flattenObj({ ...data });
-      const contactsArray = flattenContactsData.contacts.map((currentValue) =>
-        Number(currentValue.id)
-      );
+  const { data: get_contacts, refetch: refetch_contacts } = useQuery(
+    GET_CONTACTS,
+    {
+      variables: { id: auth.userid },
+      onCompleted: (data) => {
+        const flattenContactsData = flattenObj({ ...data });
+        const contactsArray = flattenContactsData.contacts.map((currentValue) =>
+          Number(currentValue.id)
+        );
 
-      // calling paymentSchedule's useLazyQuery function
-      getPaymentSchedules({
-        variables: {
-          Destination_Contacts_ID: contactsArray,
-          id: Number(auth.userid),
-        },
-      });
-    },
-  });
+        // calling paymentSchedule's useLazyQuery function
+        getPaymentSchedules({
+          variables: {
+            Destination_Contacts_ID: contactsArray,
+            id: Number(auth.userid),
+          },
+        });
+      },
+    }
+  );
 
   function loadData(data: any) {
-    const flattenContactsData = flattenObj({ ...get_contacts.contacts });
+    const flattenContactsData = flattenObj({ ...get_contacts?.contacts });
 
     const flattenContactsFinanceData = flattenObj({
-      ...payment_schedule.paymentSchedules
+      ...payment_schedule?.paymentSchedules,
     });
 
     const flattenChangemakersFinanceData = flattenObj({
-      ...get_changemakers_payment_schedule.paymentSchedules
+      ...get_changemakers_payment_schedule?.paymentSchedules,
     });
 
     const flattenUsers = flattenObj({
-      ...get_changemakers.usersPermissionsUsers
+      ...get_changemakers?.usersPermissionsUsers,
     });
 
     const concatenatedContactsAndFinanceArray = flattenContactsData.concat(
@@ -186,11 +197,15 @@ export default function Payee() {
                 (currValue) =>
                   Number(currValue.id) === Number(Detail.Destination_User_ID)
               )
-            ? (flattenUsers.find(
+            ? (flattenUsers &&
+              flattenUsers.length &&
+              flattenUsers.find(
                 (currValue) =>
                   Number(currValue.id) === Number(Detail.Destination_User_ID)
               ).First_Name
-                ? flattenUsers.find(
+                ? flattenUsers &&
+                  flattenUsers.length &&
+                  flattenUsers.find(
                     (currValue) =>
                       Number(currValue.id) ===
                       Number(Detail.Destination_User_ID)
@@ -201,7 +216,9 @@ export default function Payee() {
                 (currValue) =>
                   Number(currValue.id) === Number(Detail.Destination_User_ID)
               ).Last_Name
-                ? flattenUsers.find(
+                ? flattenUsers &&
+                  flattenUsers.length &&
+                  flattenUsers.find(
                     (currValue) =>
                       Number(currValue.id) ===
                       Number(Detail.Destination_User_ID)
@@ -211,8 +228,12 @@ export default function Payee() {
           type: Detail.firstname ? Detail.type : "Changemaker",
 
           isActive: Detail.firstname
-            ? flattenContactsFinanceData.findIndex(
-                (currValue) => Number(currValue.Destination_Contacts_ID) === Number(Detail.id)
+            ? flattenContactsFinanceData &&
+              flattenContactsFinanceData.length &&
+              flattenContactsFinanceData.findIndex(
+                (currValue) =>
+                  Number(currValue.Destination_Contacts_ID) ===
+                  Number(Detail.id)
               ) !== -1
               ? true
               : false
@@ -260,7 +281,13 @@ export default function Payee() {
               >
                 <i className="fas fa-plus-circle"></i> Add New Payee
               </Button>
-              <CreateEditPayee ref={createEditPayeeComponent}></CreateEditPayee>
+              <CreateEditPayee
+                ref={createEditPayeeComponent}
+                refetchContacts={refetch_contacts}
+                refetchChangemakersPaymentSchedules={
+                  refetch_changemakers_payment_schedule
+                }
+              ></CreateEditPayee>
             </Card.Title>
           </Col>
           <Col>
@@ -278,7 +305,13 @@ export default function Payee() {
               >
                 <i className="fas fa-plus-circle"></i> Add Changemaker as Payee
               </Button>
-              <CreateChangemakerAsPayee ref={createChangemakerAsPayeeComponent}></CreateChangemakerAsPayee>
+              <CreateChangemakerAsPayee
+                ref={createChangemakerAsPayeeComponent}
+                refetchContacts={refetch_contacts}
+                refetchChangemakersPaymentSchedules={
+                  refetch_changemakers_payment_schedule
+                }
+              ></CreateChangemakerAsPayee>
             </Card.Title>
           </Col>
           <Col>
@@ -296,7 +329,13 @@ export default function Payee() {
               >
                 <i className="fas fa-plus-circle"></i> Add Contact as Payee
               </Button>
-              <CreateContactAsPayee ref={createContactAsPayeeComponent}></CreateContactAsPayee>
+              <CreateContactAsPayee
+                ref={createContactAsPayeeComponent}
+                refetchContacts={refetch_contacts}
+                refetchChangemakersPaymentSchedules={
+                  refetch_changemakers_payment_schedule
+                }
+              ></CreateContactAsPayee>
             </Card.Title>
           </Col>
         </Row>

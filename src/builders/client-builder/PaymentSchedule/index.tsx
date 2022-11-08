@@ -14,7 +14,6 @@ import ActionButton from "../../../components/actionbutton/index";
 import { GET_PAYMENT_SCHEDULES } from "./queries";
 import { flattenObj } from "../../../components/utils/responseFlatten";
 import CreatePaymentSchedule from "./createPaymentSchedule";
-import moment from "moment";
 import AuthContext from "../../../context/auth-context";
 
 export default function PaymentSchedule() {
@@ -57,14 +56,14 @@ export default function PaymentSchedule() {
               break;
 
             default:
-              cycle = "1st of every month";
+              cycle = "-NA-";
               break;
           }
           return <>{cycle}</>;
         },
       },
       { accessor: "amount", Header: "Amount" },
-      { accessor: "paymentdate", Header: "Payment Date" },
+      { accessor: "paymentdate", Header: "Next Payment Date" },
       {
         accessor: "status",
         Header: "Status",
@@ -115,7 +114,7 @@ export default function PaymentSchedule() {
           };
 
           const arrayAction = [
-            { actionName: "Deactivate", actionClick: deactivateHandler },
+            { actionName: row.original.status === "Activated" ? "Deactivate" : "Reactivate", actionClick: deactivateHandler },
             { actionName: "Delete", actionClick: deleteHandler },
           ];
 
@@ -141,6 +140,15 @@ export default function PaymentSchedule() {
     fetch.refetch();
   }
 
+  function getDate(time: any) {
+    let dateObj = new Date(time);
+    let month = dateObj.getMonth() + 1;
+    let year = dateObj.getFullYear();
+    let date = dateObj.getDate();
+
+    return `${date}/${month}/${year}`;
+  }
+
   function loadData(data: any) {
     const flattenData = flattenObj({ ...data.paymentSchedules });
 
@@ -155,12 +163,12 @@ export default function PaymentSchedule() {
         return {
           id: Detail.id,
           category: Detail.PaymentCatagory,
-          paymentdate: Detail.Payment_DateTime
-            ? moment(Detail.Payment_DateTime).format("MMMM DD,YYYY")
-            : "-",
+          paymentdate: Detail.isActive ? (Detail.Payment_DateTime
+            ? getDate(Date.parse(Detail.Payment_DateTime))
+            : Detail.Payment_Cycle +"/"+ (Number(new Date().getMonth() + 2) >= 13 ? 1 : Number(new Date().getMonth() + 2)) + "/" + (Number(new Date().getMonth() + 2) >= 13 ? Number(new Date().getFullYear()) + 1 : Number(new Date().getFullYear()) )) : '-NA-',
           frequency: Detail.frequency === 1 ? "Monthly" : "One Time Payment",
           cycle: Detail.Payment_Cycle,
-          amount: Detail.Total_Amount,
+          amount: `INR ${Detail.Total_Amount}`,
           status: Detail.isActive ? "Activated" : "Deactivated",
         };
       })

@@ -157,6 +157,7 @@ export const FETCH_CONTACT_DETAILS = gql`
 export const FETCH_CHANGEMAKERS = gql`
   query fetchUsersProfileData{
     usersPermissionsUsers(pagination: { pageSize: 100 }
+    
       ) {
       data {
         id
@@ -222,9 +223,9 @@ export const FETCH_CHANGEMAKERS = gql`
 `;
 
 export const GET_PAYMENT_SCHEDULES_FOR_CHANGEMAKER = gql`
-  query PaymentSchedulesQuery($Source_User_ID: Int){
+  query PaymentSchedulesQuery($id: Int){
     paymentSchedules(pagination: { pageSize: 100 },filters: {
-      Source_User_ID: { eq: $Source_User_ID },
+      Source_User_ID: { eq: $id },
       Destination_Contacts_ID: { null: true }
     }) {
       data {
