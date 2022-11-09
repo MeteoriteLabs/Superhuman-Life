@@ -23,7 +23,7 @@ function PaymentMode() {
   const [paymentModeDetails, setPaymentModeDetails] = useState<any>({});
   const query = window.location.search;
   const params = new URLSearchParams(query);
-  const id = params.get("id");
+  const id: string|null = params.get("id");
 
   useQuery(GET_CONTACT, {
     variables: { id : id},
