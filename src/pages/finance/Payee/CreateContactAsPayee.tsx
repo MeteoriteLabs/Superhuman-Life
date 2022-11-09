@@ -1,9 +1,6 @@
 import React, { useContext, useImperativeHandle, useState } from "react";
 import ModalView from "../../../components/modal/index";
-import {
-  ADD_PAYMENT_SCHEDULE,
-  UPDATE_CONTACT
-} from "./queries";
+import { ADD_PAYMENT_SCHEDULE, UPDATE_CONTACT } from "./queries";
 import { useMutation } from "@apollo/client";
 import AuthContext from "../../../context/auth-context";
 import { schema, widgets } from "./PayeeSchema";
@@ -37,11 +34,7 @@ function CreateContactAsPayee(props: any, ref: any) {
 
   const [updateContact] = useMutation(UPDATE_CONTACT);
 
-  const [createPaymentSchedule] = useMutation(ADD_PAYMENT_SCHEDULE, {
-    onCompleted: (r: any) => {
-      modalTrigger.next(false);
-    },
-  });
+  const [createPaymentSchedule] = useMutation(ADD_PAYMENT_SCHEDULE);
 
   function CreateContact(frm: any) {
     frm.searchContact = frm.searchContact
@@ -116,7 +109,7 @@ function CreateContactAsPayee(props: any, ref: any) {
             props.refetchChangemakersPaymentSchedules();
             modalTrigger.next(false);
             setIsCreated(!isCreated);
-          }
+          },
         });
       },
     });
@@ -165,7 +158,7 @@ function CreateContactAsPayee(props: any, ref: any) {
         <Toaster
           handleCallback={() => setIsCreated(!isCreated)}
           type="success"
-          msg="Payee has been created successfully"
+          msg="Existing contact has been added as Payee successfully"
         />
       )}
     </>

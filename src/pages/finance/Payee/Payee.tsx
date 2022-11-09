@@ -184,7 +184,7 @@ export default function Payee() {
     const concatenatedContactsAndFinanceArray = flattenContactsData.concat(
       flattenChangemakersFinanceData
     );
-
+    
     setDataTable(
       [...concatenatedContactsAndFinanceArray].flatMap((Detail) => {
         return {
@@ -237,7 +237,7 @@ export default function Payee() {
               ) !== -1
               ? true
               : false
-            : true,
+            : (Detail.Destination_Contacts_ID === null && Detail.isActive === true ? true : false )           ,
         };
       })
     );

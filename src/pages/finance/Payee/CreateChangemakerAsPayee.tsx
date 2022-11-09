@@ -128,7 +128,7 @@ function CreateChangemakerAsPayee(props: any, ref: any) {
         <Toaster
           handleCallback={() => setIsCreated(!isCreated)}
           type="success"
-          msg="Payee has been created successfully"
+          msg="Changemaker has been added as Payee successfully"
         />
       )}
     </>

@@ -1,9 +1,6 @@
 import React, { useContext, useImperativeHandle, useState } from "react";
 import ModalView from "../../../components/modal/index";
-import {
-  ADD_CONTACT,
-  ADD_PAYMENT_SCHEDULE
-} from "./queries";
+import { ADD_CONTACT, ADD_PAYMENT_SCHEDULE } from "./queries";
 import { useMutation } from "@apollo/client";
 import AuthContext from "../../../context/auth-context";
 import { schema, widgets } from "./PayeeSchema";
@@ -37,11 +34,7 @@ function CreateEditPayee(props: any, ref: any) {
 
   const [createContact] = useMutation(ADD_CONTACT);
 
-  const [createPaymentSchedule] = useMutation(ADD_PAYMENT_SCHEDULE, {
-    onCompleted: (r: any) => {
-      modalTrigger.next(false);
-    },
-  });
+  const [createPaymentSchedule] = useMutation(ADD_PAYMENT_SCHEDULE);
 
   function CreateContact(frm: any) {
     createContact({

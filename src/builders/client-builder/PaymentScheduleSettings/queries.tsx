@@ -18,4 +18,3 @@ export const FETCH_CONTACT_DETAILS = gql`
     }
   }
 `;
-
