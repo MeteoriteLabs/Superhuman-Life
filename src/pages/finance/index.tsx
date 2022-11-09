@@ -9,7 +9,7 @@ import Vouchers from "./Vouchers/Vouchers";
 import PaymentMethods from "./PaymentMethods/PaymentMethods";
 // import Platform from "./Platform/Platform";
 import PricingAssist from "./PricingAssist/PricingAssist";
-import AllTransactions from "../../builders/client-builder/AllTransactions/AllTransactions";
+// import AllTransactions from "../../builders/client-builder/AllTransactions/AllTransactions";
 import Payee from './Payee/Payee';
 
 export default function index() {

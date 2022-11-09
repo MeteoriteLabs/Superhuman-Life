@@ -208,6 +208,7 @@ function CreateEditExercise(props: any, ref: any) {
     }
 
     function OnSubmit(frm: any) {
+        
         //bind user id
         if (frm)
             frm.user_permissions_user = auth.userid;

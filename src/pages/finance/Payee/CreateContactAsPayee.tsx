@@ -1,6 +1,6 @@
 import React, { useContext, useImperativeHandle, useState } from "react";
 import ModalView from "../../../components/modal/index";
-import { ADD_CONTACT, ADD_PAYMENT_SCHEDULE } from "./queries";
+import { ADD_PAYMENT_SCHEDULE, UPDATE_CONTACT } from "./queries";
 import { useMutation } from "@apollo/client";
 import AuthContext from "../../../context/auth-context";
 import { schema, widgets } from "./PayeeSchema";
@@ -18,10 +18,10 @@ interface Operation {
   current_status: boolean;
 }
 
-function CreateEditPayee(props: any, ref: any) {
+function CreateContactAsPayee(props: any, ref: any) {
   const [operation, setOperation] = useState<Operation>({} as Operation);
   const auth = useContext(AuthContext);
-  const payeeJson: {} = require("./Payee.json");
+  const payeeJson: {} = require("./ContactPayee.json");
   const [isCreated, setIsCreated] = useState<boolean>(false);
 
   const modalTrigger = new Subject();
@@ -32,32 +32,26 @@ function CreateEditPayee(props: any, ref: any) {
     },
   }));
 
-  const [createContact] = useMutation(ADD_CONTACT);
+  const [updateContact] = useMutation(UPDATE_CONTACT);
 
   const [createPaymentSchedule] = useMutation(ADD_PAYMENT_SCHEDULE);
 
   function CreateContact(frm: any) {
-    createContact({
+    frm.searchContact = frm.searchContact
+      ? JSON.parse(frm.searchContact)
+      : null; //existing contact id
+
+    updateContact({
       variables: {
+        id: Number(
+          frm.searchContact
+            .map((item: any) => {
+              return item.id;
+            })
+            .toString()
+        ),
         data: {
-          firstname: frm.PayeeFirstName,
-          lastname: frm.PayeeLastName,
-          email: frm.Email,
-          phone: frm.Phone_Number,
           isPayee: true,
-          ownedBy: auth.userid,
-          type: frm.type,
-          organisationDetails: {
-            organisationEmail: frm.organisationEmail,
-            organisationName: frm.organisationName,
-            gst: frm.GSTNumber,
-            state: frm.state,
-            zipcode: frm.zipcode,
-            city: frm.city,
-            country: frm.country,
-            address1: frm.address1,
-            address2: frm.address2,
-          },
           paymentDetails: {
             upi: frm.UPI_ID ? frm.UPI_ID : null,
             phoneNumber: frm.upiPhoneNumber ? frm.upiPhoneNumber : null,
@@ -69,20 +63,26 @@ function CreateEditPayee(props: any, ref: any) {
           },
         },
       },
-      onCompleted: (data: any) => {
+      onCompleted: (r: any) => {
         createPaymentSchedule({
           variables: {
             data: {
-              PaymentCatagory: frm.PaymentCategory,
-              Source_User_ID: Number(auth.userid),
-              Destination_Contacts_ID: Number(data.createContact.data.id),
+              Destination_Contacts_ID: Number(
+                frm.searchContact
+                  .map((item: any) => {
+                    return item.id;
+                  })
+                  .toString()
+              ),
               Destination_User_ID: null,
-              frequency: frm.FrequencyOfPayment,
+              Effective_Date: frm.effectiveDate,
+              PaymentCatagory: frm.PaymentCategory,
               Payment_Cycle: frm.paymentCycle,
-              Total_Amount: Number(frm.amountToBePaid),
               Payment_DateTime: frm.paymentDueOn,
               Reminder_DateTime: frm.setReminder,
-              Effective_Date: frm.effectiveDate,
+              Source_User_ID: Number(auth.userid),
+              Total_Amount: Number(frm.amountToBePaid),
+              frequency: frm.FrequencyOfPayment,
               Total_Amount_Breakdown: {
                 basicPay: frm.basicPay ? frm.basicPay : null,
                 HRA: frm.HRA ? frm.HRA : null,
@@ -104,14 +104,13 @@ function CreateEditPayee(props: any, ref: any) {
               },
             },
           },
-          onCompleted: () => {
+          onCompleted: (data) => {
             props.refetchContacts();
             props.refetchChangemakersPaymentSchedules();
+            modalTrigger.next(false);
+            setIsCreated(!isCreated);
           },
         });
-
-        modalTrigger.next(false);
-        setIsCreated(!isCreated);
       },
     });
   }
@@ -124,7 +123,7 @@ function CreateEditPayee(props: any, ref: any) {
     <>
       {/* Payee create modal */}
       <ModalView
-        name={"Create Payee"}
+        name={"Create Contact as Payee"}
         isStepper={true}
         showErrorList={false}
         formUISchema={schema}
@@ -159,11 +158,11 @@ function CreateEditPayee(props: any, ref: any) {
         <Toaster
           handleCallback={() => setIsCreated(!isCreated)}
           type="success"
-          msg="Payee has been created successfully"
+          msg="Existing contact has been added as Payee successfully"
         />
       )}
     </>
   );
 }
 
-export default React.forwardRef(CreateEditPayee);
+export default React.forwardRef(CreateContactAsPayee);

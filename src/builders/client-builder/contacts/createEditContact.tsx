@@ -10,8 +10,7 @@ import {
   ADD_CONTACT,
   DELETE_CONTACT,
   GET_CONTACT,
-  UPDATE_CONTACT,
-  GET_CONTACTS
+  UPDATE_CONTACT
 } from "./queries";
 import StatusModal from "../../../components/StatusModal/StatusModal";
 import { Subject } from "rxjs";
