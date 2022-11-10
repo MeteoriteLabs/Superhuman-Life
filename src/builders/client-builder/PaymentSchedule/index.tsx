@@ -22,8 +22,7 @@ export default function PaymentSchedule() {
   const query = window.location.search;
   const params = new URLSearchParams(query);
   const id = params.get("id");
-  const isChangemaker: boolean =
-    params.get("isChangemaker") === "false" ? false : true;
+  const isChangemaker: boolean = params.get("isChangemaker") === "true";
 
   const columns = useMemo<any>(
     () => [
@@ -114,7 +113,13 @@ export default function PaymentSchedule() {
           };
 
           const arrayAction = [
-            { actionName: row.original.status === "Activated" ? "Deactivate" : "Reactivate", actionClick: deactivateHandler },
+            {
+              actionName:
+                row.original.status === "Activated"
+                  ? "Deactivate"
+                  : "Reactivate",
+              actionClick: deactivateHandler,
+            },
             { actionName: "Delete", actionClick: deleteHandler },
           ];
 
@@ -140,12 +145,11 @@ export default function PaymentSchedule() {
     fetch.refetch();
   }
 
-  function getDate(time: any) {
-    let dateObj = new Date(time);
-    let month = dateObj.getMonth() + 1;
-    let year = dateObj.getFullYear();
-    let date = dateObj.getDate();
-
+  function getDate(time: number) {
+    let dateObj = new Date(time),
+      month = dateObj.getMonth() + 1,
+      year = dateObj.getFullYear(),
+      date = dateObj.getDate();
     return `${date}/${month}/${year}`;
   }
 
@@ -163,9 +167,21 @@ export default function PaymentSchedule() {
         return {
           id: Detail.id,
           category: Detail.PaymentCatagory,
-          paymentdate: Detail.isActive ? (Detail.Payment_DateTime
-            ? getDate(Date.parse(Detail.Payment_DateTime))
-            : Detail.Payment_Cycle +"/"+ (Number(new Date().getMonth() + 2) >= 13 ? 1 : Number(new Date().getMonth() + 2)) + "/" + (Number(new Date().getMonth() + 2) >= 13 ? Number(new Date().getFullYear()) + 1 : Number(new Date().getFullYear()) )) : '-NA-',
+          paymentdate: Detail.isActive
+            ? Detail.Payment_DateTime
+              ? getDate(Date.parse(Detail.Payment_DateTime))
+              : `${Detail.Payment_Cycle}
+                /${
+                  Number(new Date().getMonth() + 2) >= 13
+                    ? 1
+                    : Number(new Date().getMonth() + 2)
+                }/
+                ${
+                  Number(new Date().getMonth() + 2) >= 13
+                    ? Number(new Date().getFullYear()) + 1
+                    : Number(new Date().getFullYear())
+                }`
+            : "-NA-",
           frequency: Detail.frequency === 1 ? "Monthly" : "One Time Payment",
           cycle: Detail.Payment_Cycle,
           amount: `INR ${Detail.Total_Amount}`,

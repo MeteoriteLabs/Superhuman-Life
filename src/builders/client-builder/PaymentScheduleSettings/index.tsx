@@ -15,8 +15,7 @@ const PaymentScheduleSettings = () => {
   const query = window.location.search;
   const params = new URLSearchParams(query);
   const id: string | null = params.get("id");
-  const isChangemaker: boolean =
-    params.get("isChangemaker") === "false" ? false : true;
+  const isChangemaker: boolean = params.get("isChangemaker") === "true" ;
 
   // eslint-disable-next-line
   const [users, { data: get_changemakers }] = useLazyQuery(
