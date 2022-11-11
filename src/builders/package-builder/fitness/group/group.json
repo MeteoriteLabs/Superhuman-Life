@@ -6,7 +6,8 @@
             "packagename",
             "disciplines",
             "equipmentList",
-            "intensity"
+            "intensity",
+            "dates"
         ],
         "properties": {
             "packagename": {
@@ -49,6 +50,9 @@
                     "High"
                 ],
                 "description": "Set the pace of the offering"
+            },
+            "dates": {
+                "type": "string"
             }
         }
     },
