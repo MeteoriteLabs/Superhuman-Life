@@ -34,25 +34,6 @@ export const GET_BOOKINGS = gql`
                          packagepricing
                     }
                }
-               program_managers {
-                    id
-                    fitnesspackages {
-                         id
-                         packagename
-                         tags
-                         aboutpackage
-                         fitness_package_type {
-                              type
-                         }
-                         ptonline
-                         ptoffline
-                         grouponline
-                         groupoffline
-                         recordedclasses
-                         fitnesspackagepricing {
-                              packagepricing
-                         }
-                    }
                     fitnessprograms {
                          id
                          title

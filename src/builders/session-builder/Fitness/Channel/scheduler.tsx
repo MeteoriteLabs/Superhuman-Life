@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, {useState, useEffect, useRef, useContext} from 'react';
-import { GET_TABLEDATA, GET_ALL_FITNESS_PACKAGE_BY_TYPE, GET_ALL_PROGRAM_BY_TYPE, GET_ALL_CLIENT_PACKAGE, GET_TAG_BY_ID } from '../../graphQL/queries';
+import { GET_TABLEDATA, GET_ALL_FITNESS_PACKAGE_BY_TYPE, GET_ALL_CLIENT_PACKAGE, GET_TAG_BY_ID } from '../../graphQL/queries';
 import { useQuery } from '@apollo/client';
 import {Row, Col, Button, Dropdown} from 'react-bootstrap';
 import SchedulerPage from '../../../program-builder/program-template/scheduler';
@@ -22,6 +22,15 @@ const Scheduler = () => {
     // const [totalClasses, setTotalClasses] = useState<any>([]);
     const [tag, setTag] = useState<any>();
     const [scheduleDate, setScheduleDate] = useState(moment().startOf("month").format("YYYY-MM-DD"));
+    const [channelStartDate, setChannelStartDate] = useState("");
+    const [channelEndDate, setChannelEndDate] = useState("");
+    // this is used for monthly toggle
+    const [prevDate, setPrevDate] = useState("");
+    const [nextDate, setNextDate] = useState("");
+    const [sessionIds, setSessionIds] = useState<any>([]);
+    const [clientIds, setClientIds] = useState<any>([]);
+    // these are the sessions that will passed onto the scheduler
+    const [schedulerSessions, setSchedulerSessions] = useState<any>([]);
     let programIndex;
 
     const fitnessActionRef = useRef<any>(null);
@@ -32,18 +41,37 @@ const Scheduler = () => {
         }, 1500)
     }, [show]);
 
-    useQuery(GET_TAG_BY_ID, { variables: {id: tagId}, onCompleted: (data) => loadTagData(data) });
+    function handleRangeDates(startDate: string, endDate: string){
+        setPrevDate(moment(startDate).format('YYYY-MM-DD'));
+
+        if(moment(startDate).add(30, 'days').isBefore(moment(endDate))){
+            setNextDate(moment(startDate).add(30, 'days').format('YYYY-MM-DD'));
+        }else {
+            setNextDate(moment(endDate).format('YYYY-MM-DD'));
+        }
+
+    }
+
+    const mainQuery = useQuery(GET_TAG_BY_ID, { variables: {id: tagId}, onCompleted: (data) => loadTagData(data) });
 
     function loadTagData(data: any){
+        setSchedulerSessions(data);
         const flattenData = flattenObj({...data});
-        console.log(flattenData);
         let total = [0];
+        const clientValues = [...clientIds];
         const values = [...flattenData.tags[0]?.sessions];
+        const ids = [...sessionIds];
         for(let i = 0; i < values.length; i++){
+            ids.push(values[i].id);
             if(values[i].tag === "Classic"){
                 total[0] += 1;
             }
         }
+        setChannelStartDate(moment(flattenData.tags[0].fitnesspackage.Start_date).format('YYYY-MM-DD'));
+        setChannelEndDate(moment(flattenData.tags[0].fitnesspackage.End_date).format('YYYY-MM-DD'));
+        handleRangeDates(flattenData.tags[0].fitnesspackage.Start_date, flattenData.tags[0].fitnesspackage.End_date);
+        setSessionIds(ids);
+        setClientIds(clientValues);
         // setTotalClasses(total);
         setTag(flattenData.tags[0]);
     }
@@ -64,24 +92,62 @@ const Scheduler = () => {
         return dailySessions.length >= 1 ? dailySessions.length : 'N/A';
     }
 
-    function calculateDays(date: string){
-        const days = moment(date).endOf('month').diff(moment(date).startOf('month'), 'days') + 1;
-        return days;
+    function calculateDays(sd: string, ed: string){
+        var days = moment(ed).diff(moment(sd), 'days');
+        return days + 1;
     }
 
     function handleDatePicked(date: string){
-        setScheduleDate(moment(date).startOf('month').format('YYYY-MM-DD'));
+        // setScheduleDate(moment(date).format('YYYY-MM-DD'));
+
+        setPrevDate(moment(date).format('YYYY-MM-DD'));
+
+        if(moment(date).add(30, 'days').isBefore(moment(channelEndDate))){
+            setNextDate(moment(date).add(30, 'days').format('YYYY-MM-DD'));
+        }else {
+            setNextDate(moment(channelEndDate).format('YYYY-MM-DD'));
+        }
+
+    }
+
+    // this is to handle the left chevron, if we have to display it or no.
+    function handlePrevDisplay(date: string){
+        return moment(date).isSame(moment(channelStartDate)) ? 'none' : '';
+    }
+    
+    // this is to handle the right chevron, if we have to display it or no.
+    function handleNextDisplay(date: string){
+        return moment(date).isSame(moment(channelEndDate)) ? 'none' : '';
     }
 
     function handlePrevMonth(date: string){
-        setScheduleDate(moment(date).subtract(1, 'month').format('YYYY-MM-DD'));
+        // setScheduleDate(moment(date).subtract(1, 'month').format('YYYY-MM-DD'));
+        setNextDate(moment(date).format('YYYY-MM-DD'));
+
+        if(moment(date).subtract(30, 'days').isSameOrAfter(moment(channelStartDate))){
+            setPrevDate(moment(date).subtract(30, 'days').format('YYYY-MM-DD'));
+        }else {
+            setPrevDate(moment(channelStartDate).format('YYYY-MM-DD'));
+        }
     }
 
     function handleNextMonth(date: string){
-        setScheduleDate(moment(date).add(1, 'month').format('YYYY-MM-DD'));
+        // setScheduleDate(moment(date).add(1, 'month').format('YYYY-MM-DD'));
+        setPrevDate(moment(date).format('YYYY-MM-DD'));
+        
+        if(moment(date).add(30, 'days').isBefore(moment(channelEndDate))){
+            setNextDate(moment(date).add(30, 'days').format('YYYY-MM-DD'));
+        }else {
+            setNextDate(moment(channelEndDate).format('YYYY-MM-DD'));
+        }
     }
 
     console.log(moment(scheduleDate).diff(moment(), 'months'));
+
+    function handleCallback(){
+        mainQuery.refetch();
+        setSessionIds([]);
+    }
 
     if (!show) return <span style={{ color: 'red' }}>Loading...</span>;
     else return (
@@ -168,40 +234,42 @@ const Scheduler = () => {
                     </Row>
                 </Col>
             </Row>
-            <Row className='mt-3 mb-3'>
+            <Row className='mt-5 mb-3'>
                 <Col lg={11}>
                     <div className="text-center">
                         <input
-                        min={moment().subtract(3, "months").format("YYYY-MM-DD")}
-                        max={moment().add(3, "months").format("YYYY-MM-DD")}
+                        min={moment(channelStartDate).format("YYYY-MM-DD")}
+                        max={moment(channelEndDate).format("YYYY-MM-DD")}
                         className="p-1 rounded shadow-sm mb-3"
                         type="date"
                         style={{
                             border: "none",
                             backgroundColor: "rgba(211,211,211,0.8)",
+                            cursor: 'pointer'
                         }}
-                        value={scheduleDate}
+                        value={prevDate}
                         onChange={(e) => handleDatePicked(e.target.value)}
                         />{" "}
                         <br />
                         <span
-                        onClick={() => {
-                            handlePrevMonth(scheduleDate);
-                        }}
-                        className="rounded-circle"
+                            style={{ display: `${handlePrevDisplay(prevDate)}`, cursor: 'pointer'}}
+                            onClick={() => {
+                                handlePrevMonth(prevDate);
+                            }}
+                            className="rounded-circle"
                         >
                         <i className="fa fa-chevron-left mr-4"></i>
                         </span>
                         <span className="shadow-lg bg-white p-2 rounded-lg">
                             <b>
-                                {moment(scheduleDate).startOf("month").format("Do, MMM")} -{" "}
-                                {moment(scheduleDate).endOf("month").format("Do, MMM")}
+                                {moment(prevDate).startOf("month").format("MMMM, YYYY")} -{" "}
+                                {moment(nextDate).endOf("month").format("MMMM, YYYY")}
                             </b>
                         </span>
                         <span
-                        style={{ display: `${moment(scheduleDate).diff(moment(), 'months') > 1 ? 'none' : '' }`}}
+                        style={{ display: `${handleNextDisplay(nextDate)}`, cursor: 'pointer'}}
                         onClick={() => {
-                            handleNextMonth(scheduleDate);
+                            handleNextMonth(nextDate);
                         }}
                         >
                         <i className="fa fa-chevron-right ml-4"></i>
@@ -209,10 +277,22 @@ const Scheduler = () => {
                     </div>
                 </Col>
             </Row>
+            {/* Scheduler */}
             <Row>
                 <Col lg={11} className="pl-0 pr-0">
                     <div className="mt-3">
-                        <SchedulerPage type="date" days={calculateDays(scheduleDate)} restDays={tag?.sessions.filter((ses) => ses.type === "restday")} classType={'Live Stream Channel'} programId={tagId} startDate={scheduleDate} />
+                        <SchedulerPage 
+                            type="date" 
+                            callback={handleCallback}
+                            sessionIds={sessionIds} 
+                            days={calculateDays(prevDate, nextDate)} 
+                            restDays={tag?.sessions.filter((ses) => ses.type === "restday")}
+                            schedulerSessions={schedulerSessions}
+                            clientIds={clientIds} 
+                            classType={'Live Stream Channel'} 
+                            programId={tagId} 
+                            startDate={prevDate} 
+                        />
                     </div>
                 </Col>
                 <FitnessAction ref={fitnessActionRef} />
