@@ -25,7 +25,7 @@ export default function HomePage() {
 
       {/* Add Client */}
       <Button
-        className="mr-2"
+        className="m-2"
         variant={true ? "outline-dark" : "light"}
         size="sm"
         onClick={() => {

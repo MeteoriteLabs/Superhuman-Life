@@ -1,4 +1,6 @@
 .scrollBar {
     max-height: 55vh;
     overflow-y: auto;
+    height: 50vh;
+    /* margin-top: 50px; */
 }

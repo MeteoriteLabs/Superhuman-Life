@@ -27,25 +27,27 @@ export const GET_LEADS = gql`
 `;
 
 export const GET_SESSIONS = gql`
-  query getSessions($id: ID){
-    sessions (filters: {changemaker:{id: {eq: $id}}, Is_restday:{eq:false}}){
-      data{
+  query getSessions($id: ID) {
+    sessions(
+      filters: { changemaker: { id: { eq: $id } }, Is_restday: { eq: false } }
+    ) {
+      data {
         id
-        attributes{
+        attributes {
           type
           start_time
-          activity{
-            data{
+          activity {
+            data {
               id
-              attributes{
+              attributes {
                 title
               }
             }
           }
-          workout{
-            data{
+          workout {
+            data {
               id
-              attributes{
+              attributes {
                 workouttitle
               }
             }
@@ -55,4 +57,3 @@ export const GET_SESSIONS = gql`
     }
   }
 `;
-

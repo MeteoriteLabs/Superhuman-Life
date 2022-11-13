@@ -4,34 +4,27 @@ import { useQuery } from "@apollo/client";
 import { GET_SESSIONS } from "./queries";
 import { flattenObj } from "../../../components/utils/responseFlatten";
 import AuthContext from "../../../context/auth-context";
-// import moment from "moment";
+import moment from "moment";
 import "../LeadCard/lead.css";
 
 function UpcomingCard() {
   const [leadData, setLeadData] = useState<any>([]);
   const auth = useContext(AuthContext);
 
-  // function getDate(currDate: any) {
-  //   let dateObj = new Date(currDate);
-  //   let month = dateObj.getMonth() + 1;
-  //   let year = dateObj.getFullYear();
-  //   let date = dateObj.getDate();
-
-  //   return `${year}-${month}-${date}`;
-  // }
-  // var now = moment().format('MMM DD h:mm A');
-  // var date = moment().set({"hour": 0, "minute": 0});
-  // alert(date);
-
-  //session_date:{eq: $date},
   useQuery(GET_SESSIONS, {
-    // variables: { id: Number(auth.userid) ,date: getDate(new Date())},
     variables: { id: Number(auth.userid) },
     onCompleted: (data) => {
       const flattenLeadsData = flattenObj({ ...data.sessions });
       setLeadData(flattenLeadsData);
     },
   });
+
+  function getStartTime(startTime: string): string {
+    let splitTime: string[] = startTime.split(":");
+    let date: moment.Moment = moment().set({"hour": Number(splitTime[0]), "minute": Number(splitTime[1])});
+    let time: string = moment(date).format('h:mm A');
+    return time;
+  }
 
   return (
     <Card>
@@ -67,7 +60,7 @@ function UpcomingCard() {
                         <br />
                         Starts:{" "}
                         {currentValue.start_time
-                          ? currentValue.start_time
+                          ? getStartTime(currentValue.start_time)
                           : null}
                       </Card.Text>
                     </Card.Body>
