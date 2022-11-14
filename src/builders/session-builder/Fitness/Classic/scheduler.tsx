@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, {useState, useEffect, useRef, useContext} from 'react';
-import { GET_TABLEDATA, GET_ALL_FITNESS_PACKAGE_BY_TYPE, GET_ALL_PROGRAM_BY_TYPE, GET_ALL_CLIENT_PACKAGE, GET_TAG_BY_ID } from '../../graphQL/queries';
+import { GET_TABLEDATA, GET_ALL_FITNESS_PACKAGE_BY_TYPE, GET_ALL_CLIENT_PACKAGE, GET_TAG_BY_ID } from '../../graphQL/queries';
 import { useQuery } from '@apollo/client';
 import {Row, Col, Button} from 'react-bootstrap';
 import SchedulerPage from '../../../program-builder/program-template/scheduler';
@@ -21,7 +21,10 @@ const Scheduler = () => {
     const [userPackage, setUserPackage] = useState<any>([]);
     const [tagSeperation, setTagSeperation] = useState<any>([]);
     const [statusDays, setStatusDays] = useState();
+    const [clientIds, setClientIds] = useState<any>([]);
     const [totalClasses, setTotalClasses] = useState<any>([]);
+    // these are the sessions that will passed onto the scheduler
+    const [schedulerSessions, setSchedulerSessions] = useState<any>([]);
     //im using this session ids from parent only in case of day wise session
     const [sessionIds, setSessionIds] = useState<any>([]);
     const [tag, setTag] = useState<any>();
@@ -35,11 +38,13 @@ const Scheduler = () => {
         }, 1500)
     }, [show]);
 
-    useQuery(GET_TAG_BY_ID, { variables: {id: tagId}, onCompleted: (data) => loadTagData(data) });
+    const mainQuery = useQuery(GET_TAG_BY_ID, { variables: {id: tagId}, onCompleted: (data) => loadTagData(data) });
 
     function loadTagData(data: any){
+        setSchedulerSessions(data);
         const flattenData = flattenObj({...data});
         let total = [0];
+        const clientValues = [...clientIds];
         const values = [...flattenData.tags[0]?.sessions];
         const ids = [...sessionIds];
         for(let i = 0; i < values.length; i++){
@@ -48,6 +53,7 @@ const Scheduler = () => {
                 total[0] += 1;
             }
         }
+        setClientIds(clientValues);
         setSessionIds(ids);
         setTotalClasses(total);
         setTag(flattenData.tags[0]);
@@ -68,13 +74,13 @@ const Scheduler = () => {
 
     });
 
-    const { data: data2 } = useQuery(GET_ALL_PROGRAM_BY_TYPE, {
-        variables: {
-            id: auth.userid,
-            type: 'Classic'
-        },
+    // const { data: data2 } = useQuery(GET_ALL_PROGRAM_BY_TYPE, {
+    //     variables: {
+    //         id: auth.userid,
+    //         type: 'Classic'
+    //     },
 
-    });
+    // });
 
     const { data: data3 } = useQuery(GET_ALL_CLIENT_PACKAGE, {
         variables: {
@@ -105,7 +111,7 @@ const Scheduler = () => {
     function loadData() {
 
         const flattenData1 = flattenObj({ ...data1 });
-        const flattenData2 = flattenObj({ ...data2 });
+        // const flattenData2 = flattenObj({ ...data2 });
         const flattenData3 = flattenObj({ ...data3 });
         const flattenData4 = flattenObj({ ...data4 });
 
@@ -129,21 +135,21 @@ const Scheduler = () => {
 
         const arrayData: any[] = []
 
-        let fitnessProgramItem: any = {};
-        for (let i = 0; i < flattenData1?.fitnesspackages.length; i++) {
-            for (let j = 0; j < flattenData2?.programManagers.length; j++) {
+        // let fitnessProgramItem: any = {};
+        // for (let i = 0; i < flattenData1?.fitnesspackages.length; i++) {
+        //     for (let j = 0; j < flattenData2?.programManagers.length; j++) {
             
-                if (flattenData1.fitnesspackages[i].id === flattenData2.programManagers[j].fitnesspackages[0].id) {
-                    fitnessProgramItem.proManagerFitnessId = flattenData2.programManagers[j].fitnessprograms[0].id;
-                    fitnessProgramItem.title = flattenData2.programManagers[j].fitnessprograms[0].title;
-                    fitnessProgramItem.published_at = flattenData2.programManagers[j].fitnessprograms[0].published_at;
-                    fitnessProgramItem.proManagerId = flattenData2.programManagers[j].id;
+        //         if (flattenData1.fitnesspackages[i].id === flattenData2.programManagers[j].fitnesspackages[0].id) {
+        //             fitnessProgramItem.proManagerFitnessId = flattenData2.programManagers[j].fitnessprograms[0].id;
+        //             fitnessProgramItem.title = flattenData2.programManagers[j].fitnessprograms[0].title;
+        //             fitnessProgramItem.published_at = flattenData2.programManagers[j].fitnessprograms[0].published_at;
+        //             fitnessProgramItem.proManagerId = flattenData2.programManagers[j].id;
 
-                    arrayData.push({ ...flattenData1.fitnesspackages[i], ...fitnessProgramItem });
-                }
+        //             arrayData.push({ ...flattenData1.fitnesspackages[i], ...fitnessProgramItem });
+        //         }
              
-            }
-        }
+        //     }
+        // }
 
         const arrayA = arrayData.map(item => item.id);
 
@@ -202,6 +208,11 @@ const Scheduler = () => {
     function handleTimeFormatting(data: any, duration: number){
         var digits = duration <= 30 ? 2 : 3;
         return (data).toLocaleString('en-US', { minimumIntegerDigits: digits.toString(), useGrouping: false });
+    }
+
+    function handleCallback(){
+        mainQuery.refetch();
+        setSessionIds([]);
     }
 
     if (!show) return <span style={{ color: 'red' }}>Loading...</span>;
@@ -290,10 +301,21 @@ const Scheduler = () => {
                     </Row>
                 </Col>
             </Row>
+            {/* Scheduler */}
             <Row>
                 <Col lg={11} className="pl-0 pr-0">
                     <div className="mt-5">
-                        <SchedulerPage type="day" sessionIds={sessionIds} days={tag.fitnesspackage.duration} restDays={tag?.sessions.filter((ses) => ses.type === "restday")} classType={'Classic Class'} programId={tagId} />
+                        <SchedulerPage 
+                            callback={handleCallback}
+                            type="day" 
+                            sessionIds={sessionIds} 
+                            schedulerSessions={schedulerSessions}
+                            clientIds={clientIds}
+                            days={tag.fitnesspackage.duration} 
+                            restDays={tag?.sessions.filter((ses) => ses.type === "restday")} 
+                            classType={'Classic Class'} 
+                            programId={tagId} 
+                        />
                     </div>
                 </Col>
                 <FitnessAction ref={fitnessActionRef} />

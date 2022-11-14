@@ -5,8 +5,6 @@ import moment from 'moment';
 
 const DaysInput = (props: any) => {
 
-     console.log(props.val, props.startDate);
-
      function handleReturnType(value: any){
           if(typeof value === 'number'){
                return [`Day - ${value}`];
@@ -20,9 +18,11 @@ const DaysInput = (props: any) => {
           }
      }
 
-     const [selected, setSelected]: any[] = useState(props.dayType === "day" && props.val ? handleReturnType(props.val)  : props.val ? props.val : []);
+     const [selected, setSelected]: any[] = useState(props.dayType === "day" && props.val ? handleReturnType(props.val)  : props.val ? handleReturnType(props.val) : []);
      //add this in the above line incase of error in the first arr moment(props.startDate).add(props.val, 'days').format("Do, MMM YY")
      const days: any[] = [];
+
+     console.log(selected);
 
      function renderInputField() {
           if(props?.dayType === 'day') {

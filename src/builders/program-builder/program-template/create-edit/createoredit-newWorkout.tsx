@@ -1,7 +1,7 @@
 import React, { useContext, useImperativeHandle, useState } from 'react';
 import { useQuery, useMutation, gql } from "@apollo/client";
 import ModalView from "../../../../components/modal";
-import { GET_SCHEDULEREVENTS, CREATE_WORKOUT, CREATE_SESSION, GET_SESSIONS, UPDATE_TAG_SESSIONS, CREATE_SESSION_BOOKING, GET_TEMPLATE_SESSIONS, UPDATE_FITNESSPORGRAMS_SESSIONS } from "../queries";
+import { GET_SCHEDULEREVENTS, CREATE_WORKOUT, CREATE_SESSION, UPDATE_TAG_SESSIONS, CREATE_SESSION_BOOKING, GET_TEMPLATE_SESSIONS, UPDATE_FITNESSPORGRAMS_SESSIONS } from "../queries";
 import AuthContext from "../../../../context/auth-context";
 import { schema, widgets } from '../schema/newWorkoutSchema';
 import {Subject} from 'rxjs';
@@ -17,6 +17,7 @@ interface Operation {
 }
 
 function CreateEditNewWorkout(props: any, ref: any) {
+    console.log(props);
     const auth = useContext(AuthContext);
     const programSchema: { [name: string]: any; } = require(window.location.pathname.includes("session") ? "../json/sessionManager/newWorkout.json" :"../json/newWorkout.json");
     const [programDetails, setProgramDetails] = useState<any>({});
@@ -24,11 +25,10 @@ function CreateEditNewWorkout(props: any, ref: any) {
     const [operation, setOperation] = useState<Operation>({} as Operation);
     const program_id = window.location.pathname.split('/').pop();
     let frmDetails: any;
-    const [sessionsIds, setSessionsIds] = useState<any>([]);
+    // const [sessionsIds, setSessionsIds] = useState<any>([]);
     const [templateSessionsIds, setTemplateSessionsIds] = useState<any>([]);
     // userId here is the new sessionID.
     const [userId, setUserId] = useState("");
-    const [clientId, setClientId] = useState("")
     const [dropConflict, setDropConflict] = useState(false);
 
     const GET_SESSIONS_BY_DATE = gql`
@@ -63,26 +63,26 @@ function CreateEditNewWorkout(props: any, ref: any) {
         }
         setTemplateSessionsIds(templateExistingValues);
     }});
-
-    useQuery(GET_SESSIONS, {variables: {id: program_id}, skip: (window.location.pathname.split('/')[1] === 'programs'),onCompleted: (data: any) => {
-        const flattenData = flattenObj({...data});
-        setClientId(flattenData.tags[0]?.client_packages[0]?.users_permissions_user.id);
-        const sessionsExistingValues = [...sessionsIds];
-        for(var q=0; q<flattenData.tags[0]?.sessions.length; q++){
-            sessionsExistingValues.push(flattenData.tags[0].sessions[q].id);
-        }
-        setSessionsIds(sessionsExistingValues);
-    }});
     
     const [createWorkout] = useMutation(CREATE_WORKOUT, { onCompleted: (r: any) => { updateSchedulerEvents(frmDetails, r.createWorkout.data.id); modalTrigger.next(false); } });
-    const [createSessionBooking] = useMutation(CREATE_SESSION_BOOKING, { onCompleted: (data: any) => {modalTrigger.next(false)} })
+    const [createSessionBooking] = useMutation(CREATE_SESSION_BOOKING, { onCompleted: (data: any) => {
+        modalTrigger.next(false);
+        props.callback();
+    } })
     const [upateSessions] = useMutation(UPDATE_TAG_SESSIONS, { onCompleted: (data: any) => {
-        createSessionBooking({
-            variables: {
-                session: userId,
-                client: clientId,
+        if(props?.clientIds.length > 0){
+            for(var i=0; i<props?.clientIds.length; i++){
+                createSessionBooking({
+                    variables: {
+                        session: userId,
+                        client: props.clientIds[i]
+                    }
+                });
             }
-        });
+        }else {
+            modalTrigger.next(false);
+            props.callback();
+        }
     }});
     const [updateFitenssProgram] = useMutation(UPDATE_FITNESSPORGRAMS_SESSIONS, { onCompleted: (data: any) => {
         modalTrigger.next(false);
@@ -108,7 +108,7 @@ function CreateEditNewWorkout(props: any, ref: any) {
                 }
             });
         }else if(window.location.pathname.split('/')[1] !== 'client' && window.location.pathname.split('/')[1] !== 'programs') {
-            const values = [...sessionsIds];
+            const values = [...props.sessionIds];
             // here userId refers to the sessionID
             setUserId(r.createSession.data.id);
             values.push(r.createSession.data.id);

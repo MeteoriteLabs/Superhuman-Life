@@ -31,7 +31,7 @@ export default function ClientModal(props) {
         if (type === 'Classic') {
             setQueryName("GET_ALL_CLASSIC_CLIENT_BY_ID")
         } else {
-            setQueryName("GET_ALL_GROUP_CLIENT_BY_ID")
+            // setQueryName("GET_ALL_GROUP_CLIENT_BY_ID")
         }
     }, [type]);
 

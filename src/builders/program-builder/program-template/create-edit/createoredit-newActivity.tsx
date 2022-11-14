@@ -1,7 +1,7 @@
 import React, { useContext, useImperativeHandle, useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import ModalView from "../../../../components/modal";
-import { GET_SCHEDULEREVENTS, CREATE_SESSION, GET_SESSIONS, UPDATE_TAG_SESSIONS, CREATE_SESSION_BOOKING, GET_TEMPLATE_SESSIONS, UPDATE_FITNESSPORGRAMS_SESSIONS } from "../queries";
+import { GET_SCHEDULEREVENTS, CREATE_SESSION, UPDATE_TAG_SESSIONS, CREATE_SESSION_BOOKING, GET_TEMPLATE_SESSIONS, UPDATE_FITNESSPORGRAMS_SESSIONS } from "../queries";
 import AuthContext from "../../../../context/auth-context";
 import { schema, widgets } from "../schema/newActivitySchema";
 import { Subject } from "rxjs";
@@ -21,7 +21,6 @@ function CreateEditActivity(props: any, ref: any) {
      const [operation, setOperation] = useState<Operation>({} as Operation);
      const program_id = window.location.pathname.split("/").pop();
 
-     const [sessionsIds, setSessionsIds] = useState<any>([]);
      const [templateSessionsIds, setTemplateSessionsIds] =  useState<any>([]);
 
      useQuery(GET_TEMPLATE_SESSIONS, {variables: {id: program_id}, skip: (window.location.pathname.split('/')[1] !== 'programs'), onCompleted: (data: any) => {
@@ -33,21 +32,17 @@ function CreateEditActivity(props: any, ref: any) {
           setTemplateSessionsIds(templateExistingValues);
      }});
 
-    useQuery(GET_SESSIONS, {variables: {id: program_id}, skip: (window.location.pathname.split('/')[1] === 'programs'),onCompleted: (data: any) => {
-        const flattenData = flattenObj({...data});
-        const sessionsExistingValues = [...sessionsIds];
-        for(var q=0; q<flattenData.tags[0]?.sessions.length; q++){
-            sessionsExistingValues.push(flattenData.tags[0].sessions[q].id);
-        }
-        setSessionsIds(sessionsExistingValues);
-    }});
-
-
-     const [createSessionBooking] = useMutation(CREATE_SESSION_BOOKING, { onCompleted: (data: any) => {modalTrigger.next(false)} })
-     const [upateSessions] = useMutation(UPDATE_TAG_SESSIONS, { onCompleted: (data: any) => {modalTrigger.next(false);}})
+     const [createSessionBooking] = useMutation(CREATE_SESSION_BOOKING, { onCompleted: (data: any) => {
+          modalTrigger.next(false); 
+          props.callback();
+     }});
+     const [upateSessions] = useMutation(UPDATE_TAG_SESSIONS, { onCompleted: (data: any) => {
+          modalTrigger.next(false);
+          props.callback();
+     }})
     const [createSession] = useMutation(CREATE_SESSION);
 
-     const [updateTemplateSessions] = useMutation(UPDATE_FITNESSPORGRAMS_SESSIONS, { onCompleted: (data: any) => {modalTrigger.next(false);} });
+     const [updateTemplateSessions] = useMutation(UPDATE_FITNESSPORGRAMS_SESSIONS, { onCompleted: (data: any) => {modalTrigger.next(false); props.callback()} });
 
      const modalTrigger = new Subject();
 
@@ -156,7 +151,7 @@ function CreateEditActivity(props: any, ref: any) {
           }
 
           const sessionIds_new: any = [];
-          const sessionIds_old: string[] = [...sessionsIds];
+          const sessionIds_old: string[] = [...props.sessionIds];
           const templateIds_old: string[] = [...templateSessionsIds];
 
           function updateSessionFunc(id: any){

@@ -25,7 +25,7 @@ function ToggleSideBarMenu() {
               <img src={CalendarIcon} alt="calendar icon" className="mr-sm-2" style={{ height: '20px', width: '20px', marginRight: '5px' }} />My Schedule
             </Nav.Link>
             <Nav.Link eventKey="3" className="nav-link text-white d-sm-block d-lg-none" href="/session">
-              <img src={SessionIcon} alt="session icon" className="mr-sm-2" style={{ height: '20px', width: '20px', marginRight: '5px' }} />Session Manager
+              <img src={SessionIcon} alt="session icon" className="mr-sm-2" style={{ height: '20px', width: '20px', marginRight: '5px' }} />Program Manager
             </Nav.Link>
             <Nav.Link eventKey="4" className="nav-link text-white d-sm-block d-lg-none" href="/clients">
               <img src={ClientIcon} alt="client icon" className="mr-sm-2" style={{ height: '20px', width: '20px', marginRight: '5px' }} />Clients

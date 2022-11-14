@@ -5,7 +5,7 @@ import { Badge, Row, Col, Form, Button, Modal } from "react-bootstrap";
 
 import AuthContext from "../../../../context/auth-context"
 import GroupTable from '../../../../components/table/GroupTable/GroupTable';
-import { GET_ALL_FITNESS_PACKAGE_BY_TYPE, GET_ALL_PROGRAM_BY_TYPE, GET_ALL_CLIENT_PACKAGE, GET_TAGS_FOR_GROUP } from '../../graphQL/queries';
+import { GET_ALL_FITNESS_PACKAGE_BY_TYPE, GET_ALL_CLIENT_PACKAGE, GET_TAGS_FOR_GROUP } from '../../graphQL/queries';
 import { UPDATE_STARTDATE, DELETE_TAG_BATCH } from '../../graphQL/mutation';
 import moment from 'moment';
 import ActionButton from '../../../../components/actionbutton';
@@ -41,13 +41,13 @@ export default function Group(props) {
 
     });
 
-    const { data: data2 } = useQuery(GET_ALL_PROGRAM_BY_TYPE, {
-        variables: {
-            id: auth.userid,
-            type: 'Group Class'
-        },
+    // const { data: data2 } = useQuery(GET_ALL_PROGRAM_BY_TYPE, {
+    //     variables: {
+    //         id: auth.userid,
+    //         type: 'Group Class'
+    //     },
 
-    });
+    // });
 
 
 
@@ -370,11 +370,13 @@ export default function Group(props) {
                                 handleRedirect(row.original.tagId)
                             }
                             const actionClick2 = () => {
+                                console.log(row);
                                 fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'details', type: "Group Class", rowData: row.original })
                             }
 
                             const actionClick3 = () => {
-                                fitnessActionRef.current.TriggerForm({ id: row.original.proManagerId, actionType: 'allClients', type: 'Group Class', rowData: row.original })
+                                console.log(row);
+                                fitnessActionRef.current.TriggerForm({ id: row.original.tagId, actionType: 'allClients', type: 'Group Class', rowData: row.original })
                             }
 
                             const actionClick4 = () => {

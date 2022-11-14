@@ -26,7 +26,7 @@ function StatusModal(props: any) {
                     })}
                 </div>}
                 {props.EventConnectedDetails?.tags?.length > 0 && <div>
-                    <span><b>Session Manager: </b></span>
+                    <span><b>Program Manager: </b></span>
                     {props.EventConnectedDetails?.tags?.map((val: any, index: number) => {
                         return <h5 key={val.id}>{`${index+1})`}{` ${val.tag_name}`}</h5>
                     })}
