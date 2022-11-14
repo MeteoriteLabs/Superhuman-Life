@@ -27,9 +27,9 @@ export const GET_LEADS = gql`
 `;
 
 export const GET_SESSIONS = gql`
-  query getSessions($id: ID) {
+  query getSessions($id: ID, $session_date: Date ) {
     sessions(
-      filters: { changemaker: { id: { eq: $id } }, Is_restday: { eq: false } }
+      filters: { changemaker: { id: { eq: $id } }, Is_restday: { eq: false } , session_date: { eq: $session_date } }
     ) {
       data {
         id

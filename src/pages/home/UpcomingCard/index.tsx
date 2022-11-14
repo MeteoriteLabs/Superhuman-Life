@@ -10,9 +10,45 @@ import "../LeadCard/lead.css";
 function UpcomingCard() {
   const [leadData, setLeadData] = useState<any>([]);
   const auth = useContext(AuthContext);
+  const currentDate = new Date();
+  console.log(currentDate);
+
+  function getDate(time: Date): string {
+    let dateObj: Date = new Date(time);
+    let month: number = dateObj.getMonth() + 1;
+    let year: number = dateObj.getFullYear();
+    let date: number = dateObj.getDate();
+
+    return `${year}-${month}-${date}`;
+  }
+
+  function getCurrentTime(): string {
+    let dateObj: Date = new Date();
+    let hours: number = dateObj.getHours();
+    let mins: number = dateObj.getMinutes();
+
+    return `${hours}:${mins}`;
+  }
+
+  function getNextOneHourTime(): string {
+    let dateObj: Date = new Date();
+    let hours: number = dateObj.getHours() + 1;
+    let mins: number = dateObj.getMinutes();
+
+    return `${hours}:${mins}`;
+  }
+
+  console.log(getCurrentTime())
+  console.log(getNextOneHourTime())
+
+  if("00:9" < "01:10"){
+    console.log("correct")
+  }
+
 
   useQuery(GET_SESSIONS, {
-    variables: { id: Number(auth.userid) },
+    variables: { id: Number(auth.userid), session_date: getDate(currentDate) },
+    pollInterval: 900000, //fetches data every 15 mins
     onCompleted: (data) => {
       const flattenLeadsData = flattenObj({ ...data.sessions });
       setLeadData(flattenLeadsData);
@@ -21,10 +57,15 @@ function UpcomingCard() {
 
   function getStartTime(startTime: string): string {
     let splitTime: string[] = startTime.split(":");
-    let date: moment.Moment = moment().set({"hour": Number(splitTime[0]), "minute": Number(splitTime[1])});
-    let time: string = moment(date).format('h:mm A');
+    let date: moment.Moment = moment().set({
+      hour: Number(splitTime[0]),
+      minute: Number(splitTime[1]),
+    });
+    let time: string = moment(date).format("h:mm A");
     return time;
   }
+
+
 
   return (
     <Card>
@@ -35,6 +76,7 @@ function UpcomingCard() {
         <Card.Body>
           {leadData && leadData.length
             ? leadData.map((currentValue) => {
+                
                 return (
                   <Card
                     key={currentValue.id}
@@ -66,7 +108,8 @@ function UpcomingCard() {
                     </Card.Body>
                   </Card>
                 );
-              })
+                  
+                })
             : null}
         </Card.Body>
       </div>

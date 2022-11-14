@@ -28,8 +28,7 @@ function Grid() {
       width={1200}
       allowOverlap={false}
       onLayoutChange={handlelayoutChange}
-      margin = {[10, 10]} 
-      
+      margin={[10, 10]}
     >
       <div key="lead">
         <LeadCard />
