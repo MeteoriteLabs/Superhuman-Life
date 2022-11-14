@@ -8,10 +8,9 @@ import moment from "moment";
 import "../LeadCard/lead.css";
 
 function UpcomingCard() {
-  const [leadData, setLeadData] = useState<any>([]);
+  const [sessionData, setSessionData] = useState<any>([]);
   const auth = useContext(AuthContext);
   const currentDate = new Date();
-  console.log(currentDate);
 
   function getDate(time: Date): string {
     let dateObj: Date = new Date(time);
@@ -37,21 +36,21 @@ function UpcomingCard() {
 
     return `${hours}:${mins}`;
   }
-
-  console.log(getCurrentTime())
-  console.log(getNextOneHourTime())
-
-  if("00:9" < "01:10"){
-    console.log("correct")
-  }
-
-
+  
   useQuery(GET_SESSIONS, {
     variables: { id: Number(auth.userid), session_date: getDate(currentDate) },
     pollInterval: 900000, //fetches data every 15 mins
     onCompleted: (data) => {
       const flattenLeadsData = flattenObj({ ...data.sessions });
-      setLeadData(flattenLeadsData);
+      const sessionsLessThanNextOneHour = flattenLeadsData.filter(
+        (currentValue) =>
+
+          // currentValue.start_time >= getCurrentTime() 
+          // &&
+          currentValue.start_time <= getNextOneHourTime()
+      );
+      console.log(sessionsLessThanNextOneHour);
+      setSessionData(sessionsLessThanNextOneHour);
     },
   });
 
@@ -65,8 +64,6 @@ function UpcomingCard() {
     return time;
   }
 
-
-
   return (
     <Card>
       <Card.Header as="h5" className="bg-dark text-light">
@@ -74,9 +71,8 @@ function UpcomingCard() {
       </Card.Header>
       <div className="scrollBar">
         <Card.Body>
-          {leadData && leadData.length
-            ? leadData.map((currentValue) => {
-                
+          {sessionData && sessionData.length
+            ? sessionData.map((currentValue) => {
                 return (
                   <Card
                     key={currentValue.id}
@@ -108,8 +104,7 @@ function UpcomingCard() {
                     </Card.Body>
                   </Card>
                 );
-                  
-                })
+              })
             : null}
         </Card.Body>
       </div>
