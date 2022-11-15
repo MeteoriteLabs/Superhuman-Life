@@ -25,6 +25,7 @@ export const GET_TRANSACTIONS = gql`
           TransactionDateTime
           TransactionStatus
           TransactionAmount
+          PaymentScheduleID
         }
       }
     }
@@ -60,15 +61,21 @@ export const GET_CONTACTS = gql`
           type
           phone
           createdAt
-          ownedBy {
-            data {
-              id
-            }
-          }
-          appDownloadStatus
-          paymentDetails
-          organisationDetails
-          isPayee
+        }
+      }
+    }
+  }
+`;
+
+export const GET_PAYMENT_SCHEDULE = gql`
+  query PaymentScheduleQuery{
+    paymentSchedules(pagination: { pageSize: 100 }) {
+      data {
+        id
+        attributes {
+          Reminder_DateTime
+          frequency
+          PaymentCatagory
         }
       }
     }

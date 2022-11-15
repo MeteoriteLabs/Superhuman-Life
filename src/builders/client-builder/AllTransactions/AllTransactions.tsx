@@ -104,12 +104,8 @@ export default function AllTransactions() {
 
   const [contacts, { data: get_contacts }] = useLazyQuery(GET_CONTACTS, {
     onCompleted: (data) => {
+      paymentSchedules();
       
-      contacts({
-        variables: {
-          id: id,
-        },
-      });
     },
   });
 
@@ -133,6 +129,9 @@ export default function AllTransactions() {
       });
     },
   });
+  if(get_transaction){
+    console.log(get_transaction);
+  }
 
   function loadData(data: any) {
     contacts({

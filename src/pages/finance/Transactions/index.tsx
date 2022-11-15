@@ -12,7 +12,7 @@ import {
 import Table from "../../../components/table/leads-table";
 import { useQuery, useLazyQuery } from "@apollo/client";
 import ActionButton from "../../../components/actionbutton/index";
-import { GET_TRANSACTIONS, GET_CONTACTS, FETCH_CHANGEMAKERS } from "./queries";
+import { GET_TRANSACTIONS, GET_CONTACTS, FETCH_CHANGEMAKERS, GET_PAYMENT_SCHEDULE } from "./queries";
 import { flattenObj } from "../../../components/utils/responseFlatten";
 import { useHistory } from "react-router-dom";
 import AuthContext from "../../../context/auth-context";
@@ -96,10 +96,18 @@ export default function Transactions() {
 
   const [datatable, setDataTable] = useState<{}[]>([]);
 
-  const [contacts, { data: get_contacts }] = useLazyQuery(GET_CONTACTS, {
+  const [paymentSchedule, { data: get_payment_schedule }] = useLazyQuery(GET_PAYMENT_SCHEDULE, {
     
     onCompleted: (data) => {
       loadData(data);
+    },
+  });
+
+
+  const [contacts, { data: get_contacts }] = useLazyQuery(GET_CONTACTS, {
+    
+    onCompleted: (data) => {
+      paymentSchedule();
     },
   });
 
@@ -135,6 +143,8 @@ export default function Transactions() {
     const flattenTransactionData = flattenObj({ ...get_transaction });
     const flattenChangemakerData = flattenObj({ ...get_changemakers });
     const flattenContactsData = flattenObj({ ...get_contacts });
+    const flattenPaymentScheduleData = flattenObj({ ...get_payment_schedule });
+    console.log(flattenPaymentScheduleData);
     console.log(flattenTransactionData);
     console.log(flattenChangemakerData.usersPermissionsUsers);
     console.log(flattenContactsData)
@@ -143,16 +153,15 @@ export default function Transactions() {
       [...flattenTransactionData.transactions].flatMap((Detail) => {
         const changemaker = Detail.ReceiverType === "Changemaker" ? flattenChangemakerData.usersPermissionsUsers.find((currentValue) => currentValue.id === Detail.ReceiverID): null;
         const contacts = Detail.ReceiverType === "Contacts" ? flattenContactsData.contacts.find((currentValue) => currentValue.id === Detail.ReceiverID) : null;
-
+        const paymentSchedule = flattenPaymentScheduleData.paymentSchedules.find((currentValue) => currentValue.id === Detail.PaymentScheduleID);
+        console.log(paymentSchedule)
         return {
           id: Detail.id,
-          //   contactsdate: getDate(Date.parse(Detail.createdAt)),
-          //   name: Detail.firstname + " " + Detail.lastname,
-          //   number: Detail.phone,
           name: Detail.ReceiverType === "Changemaker" ? `${changemaker.First_Name} ${changemaker.Last_Name}` : `${contacts.firstname} ${contacts.lastname}`,
           towards: Detail.ReceiverType,
           amount: `${Detail.Currency} ${Detail.TransactionAmount}`,
-
+          frequency: paymentSchedule.frequency === 0 ? "One Time" : "Monthly",
+          dueDate: getDate(paymentSchedule.Reminder_DateTime),
           transactionDate: moment(Detail.TransactionDateTime).format(
             "MMMM DD,YYYY HH:mm:ss"
           ),

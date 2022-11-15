@@ -67,8 +67,8 @@ export const GET_CONTACTS = gql`
 `;
 
 export const GET_PAYMENT_SCHEDULE = gql`
-  query PaymentScheduleQuery($id: ID) {
-    paymentSchedule(pagination: { pageSize: 100 }) {
+  query PaymentScheduleQuery{
+    paymentSchedules(pagination: { pageSize: 100 }) {
       data {
         id
         attributes {
