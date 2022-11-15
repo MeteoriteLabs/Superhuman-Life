@@ -21,36 +21,26 @@ function UpcomingCard() {
     return `${year}-${month}-${date}`;
   }
 
-  function getCurrentTime(): string {
-    let dateObj: Date = new Date();
-    let hours: number = dateObj.getHours();
-    let mins: number = dateObj.getMinutes();
-
-    return `${hours}:${mins}`;
-  }
-
-  function getNextOneHourTime(): string {
-    let dateObj: Date = new Date();
-    let hours: number = dateObj.getHours() + 1;
-    let mins: number = dateObj.getMinutes();
-
-    return `${hours}:${mins}`;
-  }
-  
   useQuery(GET_SESSIONS, {
     variables: { id: Number(auth.userid), session_date: getDate(currentDate) },
     pollInterval: 900000, //fetches data every 15 mins
     onCompleted: (data) => {
+      let currentTime = new Date();
       const flattenLeadsData = flattenObj({ ...data.sessions });
-      const sessionsLessThanNextOneHour = flattenLeadsData.filter(
-        (currentValue) =>
+      const nextUpcomingSessions = flattenLeadsData.filter((currentValue) => {
+        const [hours, minutes] = currentValue.start_time.split(":");
+        const date = new Date(
+          currentTime.getFullYear(),
+          currentTime.getMonth(),
+          currentTime.getDate(),
+          +hours,
+          +minutes,
+          0
+        );
 
-          // currentValue.start_time >= getCurrentTime() 
-          // &&
-          currentValue.start_time <= getNextOneHourTime()
-      );
-      console.log(sessionsLessThanNextOneHour);
-      setSessionData(sessionsLessThanNextOneHour);
+        return date >= currentTime;
+      });
+      setSessionData(nextUpcomingSessions);
     },
   });
 
@@ -71,41 +61,37 @@ function UpcomingCard() {
       </Card.Header>
       <div className="scrollBar">
         <Card.Body>
-          {sessionData && sessionData.length
-            ? sessionData.map((currentValue) => {
-                return (
-                  <Card
-                    key={currentValue.id}
-                    className="mt-2 bg-white rounded shadow"
-                  >
-                    {/* Offering name */}
-                    <Card.Body>
-                      <Row>
-                        <Col>
-                          <Card.Title>
-                            {currentValue.type === "workout"
-                              ? currentValue.workout &&
-                                currentValue.workout.workouttitle
-                              : currentValue.activity &&
-                                currentValue.activity.title}
-                          </Card.Title>
-                        </Col>
-                      </Row>
+          {sessionData && sessionData.length ? (
+            <Card
+              key={sessionData[0].id}
+              className="mt-2 bg-white rounded shadow"
+            >
+              {/* Offering name */}
+              <Card.Body>
+                <Row>
+                  <Col>
+                    <Card.Title>
+                      {sessionData[0].type === "workout"
+                        ? sessionData[0].workout &&
+                          sessionData[0].workout.workouttitle
+                        : sessionData[0].activity &&
+                          sessionData[0].activity.title}
+                    </Card.Title>
+                  </Col>
+                </Row>
 
-                      {/* type and start time */}
-                      <Card.Text>
-                        Type: {currentValue.type ? currentValue.type : null}
-                        <br />
-                        Starts:{" "}
-                        {currentValue.start_time
-                          ? getStartTime(currentValue.start_time)
-                          : null}
-                      </Card.Text>
-                    </Card.Body>
-                  </Card>
-                );
-              })
-            : null}
+                {/* type and start time */}
+                <Card.Text>
+                  Type: {sessionData[0].type ? sessionData[0].type : null}
+                  <br />
+                  Starts:{" "}
+                  {sessionData[0].start_time
+                    ? getStartTime(sessionData[0].start_time)
+                    : null}
+                </Card.Text>
+              </Card.Body>
+            </Card>
+          ) : null}
         </Card.Body>
       </div>
     </Card>
