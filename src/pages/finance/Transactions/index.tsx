@@ -12,23 +12,23 @@ import {
 import Table from "../../../components/table/leads-table";
 import { useQuery, useLazyQuery } from "@apollo/client";
 import ActionButton from "../../../components/actionbutton/index";
-import { GET_TRANSACTIONS, GET_CONTACTS, FETCH_CHANGEMAKERS, GET_PAYMENT_SCHEDULE } from "./queries";
+import { GET_TRANSACTIONS, GET_CONTACTS, FETCH_CHANGEMAKERS } from "./queries";
 import { flattenObj } from "../../../components/utils/responseFlatten";
 import { useHistory } from "react-router-dom";
 import AuthContext from "../../../context/auth-context";
 import moment from "moment";
 
-export default function AllTransactions() {
+export default function Transactions() {
   const auth = useContext(AuthContext);
-  const query = window.location.search;
-  const params = new URLSearchParams(query);
-  const id: string|null = params.get("id");
 
   const columns = useMemo<any>(
     () => [
-      { accessor: "transactionDate", Header: "Transaction Date" },
-      { accessor: "category", Header: "Category" },
+      { accessor: "name", Header: "Name" },
+      { accessor: "towards", Header: "Towards" },
+      { accessor: "frequency", Header: "Frequency" },
       { accessor: "amount", Header: "Amount" },
+      { accessor: "dueDate", Header: "Due Date" },
+      { accessor: "transactionDate", Header: "Transaction Date" },
       {
         accessor: "status",
         Header: "Status",
@@ -96,24 +96,15 @@ export default function AllTransactions() {
 
   const [datatable, setDataTable] = useState<{}[]>([]);
 
-  const [paymentSchedules, { data: get_payment_schedule }] = useLazyQuery(FETCH_CHANGEMAKERS, {
+  const [contacts, { data: get_contacts }] = useLazyQuery(GET_CONTACTS, {
+    
     onCompleted: (data) => {
       loadData(data);
     },
   });
 
-  const [contacts, { data: get_contacts }] = useLazyQuery(GET_CONTACTS, {
-    onCompleted: (data) => {
-      
-      contacts({
-        variables: {
-          id: id,
-        },
-      });
-    },
-  });
-
   const [users, { data: get_changemakers }] = useLazyQuery(FETCH_CHANGEMAKERS, {
+    
     onCompleted: (data) => {
       contacts({
         variables: {
@@ -124,7 +115,7 @@ export default function AllTransactions() {
   });
 
   const { data: get_transaction } = useQuery(GET_TRANSACTIONS, {
-    variables: { senderId: auth.userid, recieverId: id },
+    variables: { id: auth.userid },
     onCompleted: (data) => {
       users({
         variables: {
@@ -144,36 +135,21 @@ export default function AllTransactions() {
     const flattenTransactionData = flattenObj({ ...get_transaction });
     const flattenChangemakerData = flattenObj({ ...get_changemakers });
     const flattenContactsData = flattenObj({ ...get_contacts });
-    const flattenPaymentScheduleData = flattenObj({ ...data });
-    console.log(flattenPaymentScheduleData);
     console.log(flattenTransactionData);
     console.log(flattenChangemakerData.usersPermissionsUsers);
-    console.log(flattenContactsData);
+    console.log(flattenContactsData)
 
     setDataTable(
       [...flattenTransactionData.transactions].flatMap((Detail) => {
-        const changemaker =
-          Detail.ReceiverType === "Changemaker"
-            ? flattenChangemakerData.usersPermissionsUsers.find(
-                (currentValue) => currentValue.id === Detail.ReceiverID
-              )
-            : null;
-        const contacts =
-          Detail.ReceiverType === "Contacts"
-            ? flattenContactsData.contacts.find(
-                (currentValue) => currentValue.id === Detail.ReceiverID
-              )
-            : null;
+        const changemaker = Detail.ReceiverType === "Changemaker" ? flattenChangemakerData.usersPermissionsUsers.find((currentValue) => currentValue.id === Detail.ReceiverID): null;
+        const contacts = Detail.ReceiverType === "Contacts" ? flattenContactsData.contacts.find((currentValue) => currentValue.id === Detail.ReceiverID) : null;
 
         return {
           id: Detail.id,
           //   contactsdate: getDate(Date.parse(Detail.createdAt)),
           //   name: Detail.firstname + " " + Detail.lastname,
           //   number: Detail.phone,
-          name:
-            Detail.ReceiverType === "Changemaker"
-              ? `${changemaker.First_Name} ${changemaker.Last_Name}`
-              : `${contacts.firstname} ${contacts.lastname}`,
+          name: Detail.ReceiverType === "Changemaker" ? `${changemaker.First_Name} ${changemaker.Last_Name}` : `${contacts.firstname} ${contacts.lastname}`,
           towards: Detail.ReceiverType,
           amount: `${Detail.Currency} ${Detail.TransactionAmount}`,
 
