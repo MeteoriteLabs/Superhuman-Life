@@ -11,10 +11,13 @@ import {
 } from "react-bootstrap";
 import Table from "../../../components/table/leads-table";
 import { useQuery, useLazyQuery } from "@apollo/client";
-import ActionButton from "../../../components/actionbutton/index";
-import { GET_TRANSACTIONS, GET_CONTACTS, FETCH_CHANGEMAKERS, GET_PAYMENT_SCHEDULE } from "./queries";
+import {
+  GET_TRANSACTIONS,
+  GET_CONTACTS,
+  FETCH_CHANGEMAKERS,
+  GET_PAYMENT_SCHEDULE,
+} from "./queries";
 import { flattenObj } from "../../../components/utils/responseFlatten";
-import { useHistory } from "react-router-dom";
 import AuthContext from "../../../context/auth-context";
 import moment from "moment";
 
@@ -25,9 +28,35 @@ export default function Transactions() {
     () => [
       { accessor: "name", Header: "Name" },
       { accessor: "towards", Header: "Towards" },
-      { accessor: "frequency", Header: "Frequency" },
+      {
+        accessor: "type",
+        Header: "Type",
+        Cell: ({ row }: any) => {
+          let typeColor = "";
+          switch (row.values.type) {
+            case "Credited":
+              typeColor = "success";
+              break;
+
+            case "Debited":
+              typeColor = "warning";
+              break;
+          }
+          return (
+            <>
+              <Badge
+                className="px-3 py-1"
+                style={{ fontSize: "1rem", borderRadius: "10px" }}
+                variant={typeColor}
+              >
+                {row.values.type === "Credited" ? "Credited" : "Debited"}
+              </Badge>
+            </>
+          );
+        },
+      },
+      { accessor: "remark", Header: "Remark" },
       { accessor: "amount", Header: "Amount" },
-      { accessor: "dueDate", Header: "Due Date" },
       { accessor: "transactionDate", Header: "Transaction Date" },
       {
         accessor: "status",
@@ -37,6 +66,10 @@ export default function Transactions() {
           switch (row.values.status) {
             case "Success":
               statusColor = "success";
+              break;
+
+            case "Refund":
+              statusColor = "warning";
               break;
 
             case "Failed":
@@ -50,34 +83,14 @@ export default function Transactions() {
                 style={{ fontSize: "1rem", borderRadius: "10px" }}
                 variant={statusColor}
               >
-                {row.values.status === "Success" ? "Success" : "Failed"}
+                {row.values.status === "Success"
+                  ? "Success"
+                  : row.values.status === "Failed"
+                  ? "Failed"
+                  : "Refund"}
               </Badge>
             </>
           );
-        },
-      },
-      {
-        id: "edit",
-        Header: "Actions",
-        Cell: ({ row }: any) => {
-          const editHandler = () => {};
-          const viewHandler = () => {};
-          const deleteHandler = () => {};
-
-          const history = useHistory();
-          const routeChange = () => {
-            let path = `payment_settings/?id=${row.original.id}`;
-            history.push(path);
-          };
-
-          const arrayAction = [
-            { actionName: "Edit", actionClick: editHandler },
-            { actionName: "View", actionClick: viewHandler },
-            { actionName: "Delete", actionClick: deleteHandler },
-            { actionName: "Payment Settings", actionClick: routeChange },
-          ];
-
-          return <ActionButton arrayAction={arrayAction}></ActionButton>;
         },
       },
     ],
@@ -85,34 +98,25 @@ export default function Transactions() {
     []
   );
 
-  function getDate(time: any) {
-    let dateObj = new Date(time);
-    let month = dateObj.getMonth() + 1;
-    let year = dateObj.getFullYear();
-    let date = dateObj.getDate();
-
-    return `${date}/${month}/${year}`;
-  }
-
   const [datatable, setDataTable] = useState<{}[]>([]);
 
-  const [paymentSchedule, { data: get_payment_schedule }] = useLazyQuery(GET_PAYMENT_SCHEDULE, {
-    
-    onCompleted: (data) => {
-      loadData(data);
-    },
-  });
-
+  // const [paymentSchedule, { data: get_payment_schedule }] = useLazyQuery(
+  //   GET_PAYMENT_SCHEDULE,
+  //   {
+  //     onCompleted: (data) => {
+        
+  //     },
+  //   }
+  // );
 
   const [contacts, { data: get_contacts }] = useLazyQuery(GET_CONTACTS, {
-    
     onCompleted: (data) => {
-      paymentSchedule();
+      loadData(data);
+      // paymentSchedule();
     },
   });
 
   const [users, { data: get_changemakers }] = useLazyQuery(FETCH_CHANGEMAKERS, {
-    
     onCompleted: (data) => {
       contacts({
         variables: {
@@ -123,7 +127,7 @@ export default function Transactions() {
   });
 
   const { data: get_transaction } = useQuery(GET_TRANSACTIONS, {
-    variables: { id: auth.userid },
+    
     onCompleted: (data) => {
       users({
         variables: {
@@ -139,33 +143,45 @@ export default function Transactions() {
         id: Number(auth.userid),
       },
     });
-
+    
     const flattenTransactionData = flattenObj({ ...get_transaction });
     const flattenChangemakerData = flattenObj({ ...get_changemakers });
     const flattenContactsData = flattenObj({ ...get_contacts });
-    const flattenPaymentScheduleData = flattenObj({ ...get_payment_schedule });
-    console.log(flattenPaymentScheduleData);
-    console.log(flattenTransactionData);
-    console.log(flattenChangemakerData.usersPermissionsUsers);
-    console.log(flattenContactsData)
+    
+    const creditAndDebitTransactions =
+      flattenTransactionData.transactions.filter((currentValue) => {
+        
+        return (
+          currentValue.ReceiverID === auth.userid ||
+          currentValue.SenderID === auth.userid
+        );
+      });
 
     setDataTable(
-      [...flattenTransactionData.transactions].flatMap((Detail) => {
-        const changemaker = Detail.ReceiverType === "Changemaker" ? flattenChangemakerData.usersPermissionsUsers.find((currentValue) => currentValue.id === Detail.ReceiverID): null;
-        const contacts = Detail.ReceiverType === "Contacts" ? flattenContactsData.contacts.find((currentValue) => currentValue.id === Detail.ReceiverID) : null;
-        const paymentSchedule = flattenPaymentScheduleData.paymentSchedules.find((currentValue) => currentValue.id === Detail.PaymentScheduleID);
-        console.log(paymentSchedule)
+      [...creditAndDebitTransactions].flatMap((Detail) => {
+
         return {
           id: Detail.id,
-          // name: Detail.ReceiverType === "Changemaker" ? `${changemaker.First_Name} ${changemaker.Last_Name}` : `${contacts.firstname} ${contacts.lastname}`,
+          name:
+            Detail.ReceiverID === auth.userid
+              ? flattenChangemakerData.usersPermissionsUsers.find(
+                  (currentValue) => currentValue.id === Detail.ReceiverID
+                ).First_Name
+              : Detail.ReceiverType === "Changemaker"
+              ? flattenChangemakerData.usersPermissionsUsers.find(
+                  (currentValue) => currentValue.id === Detail.ReceiverID
+                ).First_Name
+              : flattenContactsData.contacts.find(
+                  (currentValue) => currentValue.id === Detail.ReceiverID
+                ).firstname,
           towards: Detail.ReceiverType,
           amount: `${Detail.Currency} ${Detail.TransactionAmount}`,
-          // frequency: paymentSchedule.frequency === 0 ? "One Time" : "Monthly",
-          // dueDate: getDate(paymentSchedule.Reminder_DateTime),
+          remark: Detail.TransactionRemarks,
           transactionDate: moment(Detail.TransactionDateTime).format(
             "MMMM DD,YYYY HH:mm:ss"
           ),
           status: Detail.TransactionStatus,
+          type: Detail.ReceiverID === auth.userid ? "Credited" : "Debited",
         };
       })
     );

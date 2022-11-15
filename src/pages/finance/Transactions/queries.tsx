@@ -1,10 +1,10 @@
 import { gql } from "@apollo/client";
 
 export const GET_TRANSACTIONS = gql`
-  query ContactsQuery($id: String) {
+  query TransactionsQuery{
     transactions(
       pagination: { pageSize: 100 }
-      filters: { SenderID: { eq: $id } }
+      
     ) {
       data {
         id
@@ -26,6 +26,7 @@ export const GET_TRANSACTIONS = gql`
           TransactionStatus
           TransactionAmount
           PaymentScheduleID
+          TransactionRemarks
         }
       }
     }
@@ -61,21 +62,6 @@ export const GET_CONTACTS = gql`
           type
           phone
           createdAt
-        }
-      }
-    }
-  }
-`;
-
-export const GET_PAYMENT_SCHEDULE = gql`
-  query PaymentScheduleQuery{
-    paymentSchedules(pagination: { pageSize: 100 }) {
-      data {
-        id
-        attributes {
-          Reminder_DateTime
-          frequency
-          PaymentCatagory
         }
       }
     }
