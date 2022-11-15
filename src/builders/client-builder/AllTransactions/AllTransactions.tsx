@@ -12,7 +12,7 @@ import {
 import Table from "../../../components/table/leads-table";
 import { useQuery, useLazyQuery } from "@apollo/client";
 import ActionButton from "../../../components/actionbutton/index";
-import { GET_TRANSACTIONS, GET_CONTACTS, FETCH_CHANGEMAKERS, GET_PAYMENT_SCHEDULE } from "./queries";
+import { GET_TRANSACTIONS, GET_PAYMENT_SCHEDULE } from "./queries";
 import { flattenObj } from "../../../components/utils/responseFlatten";
 import { useHistory } from "react-router-dom";
 import AuthContext from "../../../context/auth-context";
@@ -22,10 +22,11 @@ export default function AllTransactions() {
   const auth = useContext(AuthContext);
   const query = window.location.search;
   const params = new URLSearchParams(query);
-  const id: string|null = params.get("id");
+  const id: string | null = params.get("id");
 
   const columns = useMemo<any>(
     () => [
+      { accessor: "id", Header: "Transaction ID" },
       { accessor: "transactionDate", Header: "Transaction Date" },
       { accessor: "category", Header: "Category" },
       { accessor: "amount", Header: "Amount" },
@@ -60,21 +61,21 @@ export default function AllTransactions() {
         id: "edit",
         Header: "Actions",
         Cell: ({ row }: any) => {
-          const editHandler = () => {};
-          const viewHandler = () => {};
-          const deleteHandler = () => {};
-
           const history = useHistory();
           const routeChange = () => {
-            let path = `payment_settings/?id=${row.original.id}`;
+            let path = `receipt/?id=${row.original.id}`;
             history.push(path);
           };
 
           const arrayAction = [
-            { actionName: "Edit", actionClick: editHandler },
-            { actionName: "View", actionClick: viewHandler },
-            { actionName: "Delete", actionClick: deleteHandler },
-            { actionName: "Payment Settings", actionClick: routeChange },
+            {
+              actionName: "Receipt",
+              actionClick: routeChange,
+            },
+            {
+              actionName: "Help",
+              actionClick: routeChange,
+            },
           ];
 
           return <ActionButton arrayAction={arrayAction}></ActionButton>;
@@ -85,97 +86,38 @@ export default function AllTransactions() {
     []
   );
 
-  function getDate(time: any) {
-    let dateObj = new Date(time);
-    let month = dateObj.getMonth() + 1;
-    let year = dateObj.getFullYear();
-    let date = dateObj.getDate();
-
-    return `${date}/${month}/${year}`;
-  }
-
   const [datatable, setDataTable] = useState<{}[]>([]);
 
-  const [paymentSchedules, { data: get_payment_schedule }] = useLazyQuery(FETCH_CHANGEMAKERS, {
-    onCompleted: (data) => {
-      loadData(data);
-    },
-  });
-
-  const [contacts, { data: get_contacts }] = useLazyQuery(GET_CONTACTS, {
-    onCompleted: (data) => {
-      paymentSchedules();
-      
-    },
-  });
-
-  const [users, { data: get_changemakers }] = useLazyQuery(FETCH_CHANGEMAKERS, {
-    onCompleted: (data) => {
-      contacts({
-        variables: {
-          id: Number(auth.userid),
-        },
-      });
-    },
-  });
+  const [paymentSchedules, { data: get_payment_schedule }] = useLazyQuery(
+    GET_PAYMENT_SCHEDULE,
+    {
+      onCompleted: (data) => {
+        loadData(data);
+      },
+    }
+  );
 
   const { data: get_transaction } = useQuery(GET_TRANSACTIONS, {
-    variables: { senderId: auth.userid, recieverId: id },
+    variables: { senderId: auth.userid, receiverId: id },
     onCompleted: (data) => {
-      users({
-        variables: {
-          id: Number(auth.userid),
-        },
-      });
+      paymentSchedules();
     },
   });
-  if(get_transaction){
-    console.log(get_transaction);
-  }
+  console.log(auth.userid, id);
 
   function loadData(data: any) {
-    contacts({
-      variables: {
-        id: Number(auth.userid),
-      },
-    });
 
     const flattenTransactionData = flattenObj({ ...get_transaction });
-    const flattenChangemakerData = flattenObj({ ...get_changemakers });
-    const flattenContactsData = flattenObj({ ...get_contacts });
-    const flattenPaymentScheduleData = flattenObj({ ...data });
-    console.log(flattenPaymentScheduleData);
+    const flattenPaymentScheduleData = flattenObj({ ...get_payment_schedule });
     console.log(flattenTransactionData);
-    console.log(flattenChangemakerData.usersPermissionsUsers);
-    console.log(flattenContactsData);
 
     setDataTable(
       [...flattenTransactionData.transactions].flatMap((Detail) => {
-        const changemaker =
-          Detail.ReceiverType === "Changemaker"
-            ? flattenChangemakerData.usersPermissionsUsers.find(
-                (currentValue) => currentValue.id === Detail.ReceiverID
-              )
-            : null;
-        const contacts =
-          Detail.ReceiverType === "Contacts"
-            ? flattenContactsData.contacts.find(
-                (currentValue) => currentValue.id === Detail.ReceiverID
-              )
-            : null;
 
         return {
           id: Detail.id,
-          //   contactsdate: getDate(Date.parse(Detail.createdAt)),
-          //   name: Detail.firstname + " " + Detail.lastname,
-          //   number: Detail.phone,
-          name:
-            Detail.ReceiverType === "Changemaker"
-              ? `${changemaker.First_Name} ${changemaker.Last_Name}`
-              : `${contacts.firstname} ${contacts.lastname}`,
-          towards: Detail.ReceiverType,
+          category: flattenPaymentScheduleData.paymentSchedules.find((currentValue) => currentValue.id === Detail.PaymentScheduleID).PaymentCatagory,
           amount: `${Detail.Currency} ${Detail.TransactionAmount}`,
-
           transactionDate: moment(Detail.TransactionDateTime).format(
             "MMMM DD,YYYY HH:mm:ss"
           ),

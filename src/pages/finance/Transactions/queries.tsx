@@ -1,11 +1,8 @@
 import { gql } from "@apollo/client";
 
 export const GET_TRANSACTIONS = gql`
-  query TransactionsQuery{
-    transactions(
-      pagination: { pageSize: 100 }
-      
-    ) {
+  query TransactionsQuery {
+    transactions(pagination: { pageSize: 2000 }) {
       data {
         id
         attributes {
@@ -35,7 +32,7 @@ export const GET_TRANSACTIONS = gql`
 
 export const FETCH_CHANGEMAKERS = gql`
   query fetchUsersProfileData {
-    usersPermissionsUsers(pagination: { pageSize: 100 }) {
+    usersPermissionsUsers(pagination: { pageSize: 1000 }) {
       data {
         id
         attributes {
@@ -50,7 +47,7 @@ export const FETCH_CHANGEMAKERS = gql`
 export const GET_CONTACTS = gql`
   query ContactsQuery($id: ID) {
     contacts(
-      pagination: { pageSize: 100 }
+      pagination: { pageSize: 1000 }
       filters: { ownedBy: { id: { eq: $id } }, isPayee: { eq: true } }
     ) {
       data {

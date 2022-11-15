@@ -1,10 +1,10 @@
 import { gql } from "@apollo/client";
 
 export const GET_TRANSACTIONS = gql`
-  query ContactsQuery($senderId: String, $recieverId: String) {
+  query ContactsQuery($senderId: String, $receiverId: String) {
     transactions(
-      pagination: { pageSize: 100 }
-      filters: { SenderID: { eq: $senderId }, ReceiverID: { eq: $recieverId } }
+      pagination: { pageSize: 1000 }
+      filters: { SenderID: { eq: $senderId }, ReceiverID: { eq: $receiverId } }
     ) {
       data {
         id
@@ -25,41 +25,7 @@ export const GET_TRANSACTIONS = gql`
           TransactionDateTime
           TransactionStatus
           TransactionAmount
-        }
-      }
-    }
-  }
-`;
-
-export const FETCH_CHANGEMAKERS = gql`
-  query fetchUsersProfileData {
-    usersPermissionsUsers(pagination: { pageSize: 100 }) {
-      data {
-        id
-        attributes {
-          First_Name
-          Last_Name
-        }
-      }
-    }
-  }
-`;
-
-export const GET_CONTACTS = gql`
-  query ContactsQuery($id: ID) {
-    contacts(
-      pagination: { pageSize: 100 }
-      filters: { ownedBy: { id: { eq: $id } }, isPayee: { eq: true } }
-    ) {
-      data {
-        id
-        attributes {
-          firstname
-          lastname
-          email
-          type
-          phone
-          createdAt
+          PaymentScheduleID
         }
       }
     }
@@ -67,13 +33,11 @@ export const GET_CONTACTS = gql`
 `;
 
 export const GET_PAYMENT_SCHEDULE = gql`
-  query PaymentScheduleQuery{
-    paymentSchedules(pagination: { pageSize: 100 }) {
+  query PaymentScheduleQuery {
+    paymentSchedules(pagination: { pageSize: 1000 }) {
       data {
         id
         attributes {
-          Reminder_DateTime
-          frequency
           PaymentCatagory
         }
       }

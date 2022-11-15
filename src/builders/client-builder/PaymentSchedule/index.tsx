@@ -23,7 +23,6 @@ export default function PaymentSchedule() {
   const params = new URLSearchParams(query);
   const id = params.get("id");
   const isChangemaker: boolean = params.get("isChangemaker") === "true";
-  console.log(isChangemaker)
 
   const columns = useMemo<any>(
     () => [
@@ -156,7 +155,6 @@ export default function PaymentSchedule() {
 
   function loadData(data: any) {
     const flattenData = flattenObj({ ...data.paymentSchedules });
-    console.log(flattenData);
 
     const getSchedule = flattenData.filter((currentValue) =>
       !isChangemaker
