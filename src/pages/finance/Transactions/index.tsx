@@ -157,11 +157,11 @@ export default function Transactions() {
         console.log(paymentSchedule)
         return {
           id: Detail.id,
-          name: Detail.ReceiverType === "Changemaker" ? `${changemaker.First_Name} ${changemaker.Last_Name}` : `${contacts.firstname} ${contacts.lastname}`,
+          // name: Detail.ReceiverType === "Changemaker" ? `${changemaker.First_Name} ${changemaker.Last_Name}` : `${contacts.firstname} ${contacts.lastname}`,
           towards: Detail.ReceiverType,
           amount: `${Detail.Currency} ${Detail.TransactionAmount}`,
-          frequency: paymentSchedule.frequency === 0 ? "One Time" : "Monthly",
-          dueDate: getDate(paymentSchedule.Reminder_DateTime),
+          // frequency: paymentSchedule.frequency === 0 ? "One Time" : "Monthly",
+          // dueDate: getDate(paymentSchedule.Reminder_DateTime),
           transactionDate: moment(Detail.TransactionDateTime).format(
             "MMMM DD,YYYY HH:mm:ss"
           ),
