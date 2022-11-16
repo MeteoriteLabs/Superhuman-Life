@@ -5,6 +5,7 @@ export const GET_TRANSACTIONS = gql`
     transactions(
       pagination: { pageSize: 2000 }
       filters: { SenderID: { eq: $senderId } }
+      sort: ["TransactionDateTime:desc"]
     ) {
       data {
         id
