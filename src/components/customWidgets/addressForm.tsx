@@ -15,9 +15,12 @@ function AddressForm(props) {
         <Row>
           <Col>
             {" "}
+            <Form autoComplete="off">
             <Form.Group className="mb-3" controlId="typeId">
               <Form.Label>Type</Form.Label>
               <Form.Control
+                autoComplete="off"
+                autoCorrect="off"
                 type="text"
                 placeholder="Type"
                 onChange={handleChange}
@@ -25,6 +28,7 @@ function AddressForm(props) {
                 value={props.value.type}
               />
             </Form.Group>
+            </Form>
           </Col>
         </Row>
         <Row>
@@ -33,6 +37,7 @@ function AddressForm(props) {
             <Form.Group className="mb-3" controlId="address1Id">
               <Form.Label>Address1</Form.Label>
               <Form.Control
+                autoComplete="off"
                 type="text"
                 name="address1"
                 onChange={handleChange}
@@ -45,6 +50,7 @@ function AddressForm(props) {
             <Form.Group className="mb-3" controlId="address2Id">
               <Form.Label>Address2</Form.Label>
               <Form.Control
+                autoComplete="off"
                 type="text"
                 placeholder="Address2"
                 onChange={handleChange}
@@ -60,6 +66,7 @@ function AddressForm(props) {
             <Form.Group className="mb-3" controlId="cityIds">
               <Form.Label>City</Form.Label>
               <Form.Control
+                autoComplete="off"
                 type="text"
                 placeholder="City"
                 onChange={handleChange}
@@ -73,6 +80,7 @@ function AddressForm(props) {
             <Form.Group className="mb-3" controlId="stateIds">
               <Form.Label>State</Form.Label>
               <Form.Control
+                autoComplete="off"
                 type="text"
                 placeholder="State"
                 onChange={handleChange}
@@ -86,6 +94,7 @@ function AddressForm(props) {
             <Form.Group className="mb-3" controlId="countryIds">
               <Form.Label>Country</Form.Label>
               <Form.Control
+                autoComplete="off"
                 type="text"
                 placeholder="Country"
                 onChange={handleChange}
@@ -99,6 +108,7 @@ function AddressForm(props) {
             <Form.Group className="mb-3" controlId="cityIds">
               <Form.Label>Zipcode</Form.Label>
               <Form.Control
+                autoComplete="off"
                 type="text"
                 placeholder="Zipcode"
                 onChange={handleChange}

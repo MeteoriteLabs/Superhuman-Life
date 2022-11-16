@@ -103,7 +103,8 @@
                             "VideoUrl": {
                               "type": "string",
                               "format": "uri",
-                              "description": "Add Youtube URL"
+                              "description": "Add Youtube URL",
+                              "title": "Youtube URL"
                             }
                           },
                           "required": [

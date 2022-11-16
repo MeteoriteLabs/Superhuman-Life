@@ -190,9 +190,17 @@ function CreateEditChannel(props: any, ref: any) {
         return foundType.id;
     }
 
+    function calculateDuration(sd, ed){
+        const start = moment(sd);
+        const end = moment(ed);
+        const duration: number = end.diff(start, 'days');
+        return duration;
+    }
+
     function CreateChannelPackage(frm: any) {
         frmDetails = frm;
         frm.datesConfig = JSON.parse(frm.datesConfig);
+        frm.dates = JSON.parse(frm.dates)
         if (frm.equipment) {
             frm.equipment = JSON.parse(frm?.equipment);
         }
@@ -212,6 +220,7 @@ function CreateEditChannel(props: any, ref: any) {
                 level: frm.level ? ENUM_FITNESSPACKAGE_LEVEL[frm?.level] : null,
                 equipmentList: frm?.equipment?.length > 0 ? frm.equipment.map((item: any) => item.id).join(", ").split(", ") : [],
                 fitnessdisciplines: frm?.discpline?.length > 0 ? frm.discpline.map((item: any) => item.id).join(", ").split(", ") : [],
+                duration: frm.dates.startDate === frm.dates.endDate ? 1 : calculateDuration(frm.dates.startDate, frm.dates.endDate),
                 fitnesspackagepricing: frm.pricing === "free" ? [{ mrp: 'free' }] : JSON.parse(frm.pricing).filter((item: any) => item.mrp !== null),
                 publishing_date: moment(frm.datesConfig?.publishingDate).toISOString(),
                 tags: frm?.tag,
@@ -222,6 +231,8 @@ function CreateEditChannel(props: any, ref: any) {
                 upload: frm.Upload?.upload,
                 videoUrl: frm.Upload?.VideoUrl,
                 languages: frm.languages.map((item: any) => item.id).join(", ").split(", "),
+                Start_date: moment(frm.dates.startDate).toISOString(),
+                End_date: moment(frm.dates.endDate).toISOString(),
             }
         })
     }
@@ -229,6 +240,7 @@ function CreateEditChannel(props: any, ref: any) {
     function editChannelPackege(frm: any) {
         frmDetails = frm;
         frm.datesConfig = JSON.parse(frm.datesConfig);
+        frm.dates = JSON.parse(frm.dates)
         if (frm.equipment) {
             frm.equipment = JSON.parse(frm?.equipment);
         }
@@ -249,6 +261,7 @@ function CreateEditChannel(props: any, ref: any) {
                 level: ENUM_FITNESSPACKAGE_LEVEL[frm?.level],
                 equipmentList: frm?.equipment?.length > 0 ? frm.equipment.map((item: any) => item.id).join(", ").split(", ") : [],
                 fitnessdisciplines: frm?.discpline?.length > 0 ? frm.discpline.map((item: any) => item.id).join(", ").split(", ") : [],
+                duration: frm.dates.startDate === frm.dates.endDate ? 1 : calculateDuration(frm.dates.startDate, frm.dates.endDate),
                 fitnesspackagepricing: frm.pricing === "free" ? [{ mrp: 'free' }] : JSON.parse(frm.pricing).filter((item: any) => item.mrp !== null),
                 publishing_date: moment(frm.datesConfig?.publishingDate).toISOString(),
                 tags: frm?.tag,
@@ -259,6 +272,8 @@ function CreateEditChannel(props: any, ref: any) {
                 upload: frm.Upload?.upload,
                 videoUrl: frm.Upload?.VideoUrl,
                 languages: frm.languages.map((item: any) => item.id).join(", ").split(", "),
+                Start_date: moment(frm.dates.startDate).toISOString(),
+                End_date: moment(frm.dates.endDate).toISOString(),
             }
         })
     }

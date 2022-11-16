@@ -1,5 +1,5 @@
 import Upload from '../../../../components/upload/upload';
-import DatesConfig from '../../../../components/customWidgets/datesConfig';
+// import DatesConfig from '../../../../components/customWidgets/datesConfig';
 import FitnessSelect from '../../../../components/customWidgets/fitnessMultiSelect';
 import EquipmentSelect from '../../../../components/customWidgets/equipmentListSelect';
 import LanguageList from '../../../../components/customWidgets/languageSelect';
@@ -8,6 +8,8 @@ import GroupConfig from './groupConfig';
 import GroupPricingTable from './groupPricingTable';
 import GroupPreview from './groupPreview';
 import GroupBookingConfig from './bookingConfig';
+import GroupPrimaryDateConfig from './primaryDatesConfig';
+import DatesConfig from './groupDateConfig';
 
 export const widgets = {
      datesConfig: DatesConfig,
@@ -69,7 +71,7 @@ export const schema: any = {
      "Upload": {
           "upload": {
                "ui:widget": (props: any) => {
-                    return <Upload allowImage={true} allowVideo={true} onChange={props.onChange} value={props.value} />;
+                    return <Upload allowImage={true} allowVideo={true} offering={true} onChange={props.onChange} value={props.value} />;
                },
           },  
           "VideoUrl": {
@@ -103,6 +105,11 @@ export const schema: any = {
      "config": {
           "bookingConfig": {
               "ui:widget": "groupBookingConfig"
+          }
+     },
+     "dates": {
+          "ui:widget": (props: any) => {
+              return <GroupPrimaryDateConfig title1={'Start Date'} title2={'End Date'} value={props.value} onChange={props.onChange} type={'Cohort'}/>
           }
      },
 }

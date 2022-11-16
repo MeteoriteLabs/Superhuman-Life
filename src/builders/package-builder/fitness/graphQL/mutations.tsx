@@ -35,6 +35,8 @@ export const CREATE_PACKAGE = gql`
     $upload: String
     $equipmentList: [ID]
     $videoUrl: String
+    $End_date: DateTime
+    $Start_date: DateTime
   ) {
     createFitnesspackage(
       data:{
@@ -71,6 +73,8 @@ export const CREATE_PACKAGE = gql`
         equipment_lists: $equipmentList
         video_URL: $videoUrl
         languages: $languages
+        Start_date: $Start_date
+        End_date: $End_date
       }
     ) {
       data{
@@ -136,6 +140,8 @@ export const EDIT_PACKAGE = gql`
     $upload: String
     $equipmentList: [ID]
     $videoUrl: String
+    $End_date: DateTime
+    $Start_date: DateTime
   ) {
     updateFitnesspackage(
         id: $id
@@ -173,6 +179,8 @@ export const EDIT_PACKAGE = gql`
           equipment_lists: $equipmentList
           video_URL: $videoUrl
           languages: $languages
+          Start_date: $Start_date
+          End_date: $End_date
       }
     ) {
       data{

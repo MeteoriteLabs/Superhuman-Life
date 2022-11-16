@@ -216,6 +216,13 @@ function CreateEditPackage(props: any, ref: any) {
         useQuery(GET_SINGLE_PACKAGE_BY_ID, { variables: { id: operation.id }, skip: (operation.type === 'create' || !operation.id),onCompleted: (e: any) => { FillDetails(e) } });
     }
 
+    function calculateDuration(sd, ed){
+        const start = moment(sd);
+        const end = moment(ed);
+        const duration: number = end.diff(start, 'days');
+        return duration;
+    }
+
     function CreatePackage(frm: any) {
         frmDetails = frm;
         frm.equipmentList = JSON.parse(frm.equipmentList).map((x: any) => x.id).join(',').split(',');
@@ -223,7 +230,10 @@ function CreateEditPackage(props: any, ref: any) {
         frm.programDetails = JSON.parse(frm.programDetails)
         frm.datesConfig = JSON.parse(frm.datesConfig);
         frm.groupinstantbooking = JSON.parse(frm.groupinstantbooking);
-        frm.languages = JSON.parse(frm.languages)
+        frm.languages = JSON.parse(frm.languages);
+        frm.dates = JSON.parse(frm.dates)
+
+        debugger;
 
         createPackage({
             variables: {
@@ -236,7 +246,7 @@ function CreateEditPackage(props: any, ref: any) {
                 mode: ENUM_FITNESSPACKAGE_MODE[frm.programDetails.mode],
                 address: frm.programDetails?.address[0]?.id,
                 disciplines: frm.disciplines,
-                // duration: 
+                duration: frm.dates.startDate === frm.dates.endDate ? 1 : calculateDuration(frm.dates.startDate, frm.dates.endDate),
                 groupinstantbooking: frm.groupinstantbooking.instantBooking,
                 Is_free_demo: frm.groupinstantbooking.freeDemo,
                 groupoffline: frm.programDetails?.offline,
@@ -255,6 +265,8 @@ function CreateEditPackage(props: any, ref: any) {
                 equipmentList: frm.equipmentList,
                 videoUrl: frm?.Upload?.VideoUrl,
                 languages: frm.languages.map((item: any) => item.id).join(", ").split(", "),
+                Start_date: moment(frm.dates.startDate).toISOString(),
+                End_date: moment(frm.dates.endDate).toISOString(),
             }
         });
     }
@@ -268,6 +280,7 @@ function CreateEditPackage(props: any, ref: any) {
         frm.datesConfig = JSON.parse(frm.datesConfig)
         frm.groupinstantbooking = JSON.parse(frm.groupinstantbooking);
         frm.languages = JSON.parse(frm.languages);
+        frm.dates = JSON.parse(frm.dates)
         
         editPackage({
             variables: {
@@ -281,7 +294,7 @@ function CreateEditPackage(props: any, ref: any) {
                 mode: ENUM_FITNESSPACKAGE_MODE[frm.programDetails.mode],
                 address: frm.programDetails?.address[0]?.id,
                 disciplines: frm.disciplines,
-                // duration: 
+                duration: frm.dates.startDate === frm.dates.endDate ? 1 : calculateDuration(frm.dates.startDate, frm.dates.endDate),
                 groupinstantbooking: frm.groupinstantbooking.instantBooking,
                 Is_free_demo: frm.groupinstantbooking.freeDemo,
                 groupoffline: frm.programDetails?.offline,
@@ -299,6 +312,8 @@ function CreateEditPackage(props: any, ref: any) {
                 equipmentList: frm.equipmentList,
                 videoUrl: frm?.Upload?.VideoUrl,
                 languages: frm.languages.map((item: any) => item.id).join(", ").split(", "),
+                Start_date: moment(frm.dates.startDate).toISOString(),
+                End_date: moment(frm.dates.endDate).toISOString(),
             }
         })
     }

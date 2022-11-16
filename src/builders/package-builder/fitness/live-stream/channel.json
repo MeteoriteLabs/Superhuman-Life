@@ -5,7 +5,8 @@
         "required": [
             "channelName",
             "discpline",
-            "equipment"
+            "equipment",
+            "dates"
         ],
        "properties": {
             "channelName": {
@@ -36,6 +37,9 @@
                     "Advanced"
                 ],
                 "description": "Select the appropriate difficulty"
+            },
+            "dates": {
+                "type": "string"
             }
         }   
     },
