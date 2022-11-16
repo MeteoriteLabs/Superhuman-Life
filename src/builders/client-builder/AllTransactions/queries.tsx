@@ -1,10 +1,18 @@
 import { gql } from "@apollo/client";
 
 export const GET_TRANSACTIONS = gql`
-  query ContactsQuery($senderId: String, $receiverId: String, $receiverType: String) {
+  query ContactsQuery(
+    $senderId: String
+    $receiverId: String
+    $receiverType: String
+  ) {
     transactions(
       pagination: { pageSize: 1000 }
-      filters: { SenderID: { eq: $senderId }, ReceiverID: { eq: $receiverId }, ReceiverType: { eq: $receiverType } }
+      filters: {
+        SenderID: { eq: $senderId }
+        ReceiverID: { eq: $receiverId }
+        ReceiverType: { eq: $receiverType }
+      }
     ) {
       data {
         id
