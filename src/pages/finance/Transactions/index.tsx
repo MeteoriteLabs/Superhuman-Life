@@ -187,7 +187,7 @@ export default function Transactions() {
           name:
             Detail.ReceiverID === auth.userid
               ? flattenChangemakerData.usersPermissionsUsers.find(
-                  (currentValue) => currentValue.id === Detail.ReceiverID
+                  (currentValue) => currentValue.id === Detail.SenderID
                 ).First_Name
               : Detail.ReceiverType === "Changemaker"
               ? flattenChangemakerData.usersPermissionsUsers.find(
