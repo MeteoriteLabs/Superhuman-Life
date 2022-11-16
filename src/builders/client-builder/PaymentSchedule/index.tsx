@@ -26,7 +26,6 @@ export default function PaymentSchedule() {
 
   const columns = useMemo<any>(
     () => [
-      { accessor: "id", Header: "ID" },
       { accessor: "category", Header: "Payment Category" },
       { accessor: "frequency", Header: "Frequency" },
       {
