@@ -23,6 +23,7 @@ export default function AllTransactions() {
   const query = window.location.search;
   const params = new URLSearchParams(query);
   const id: string | null = params.get("id");
+  const isChangemaker: boolean = params.get("isChangemaker") === "true";
 
   const columns = useMemo<any>(
     () => [
@@ -98,25 +99,27 @@ export default function AllTransactions() {
   );
 
   const { data: get_transaction } = useQuery(GET_TRANSACTIONS, {
-    variables: { senderId: auth.userid, receiverId: id },
+    variables: {
+      senderId: auth.userid,
+      receiverId: id,
+      receiverType: isChangemaker ? "Changemaker" : "Contacts",
+    },
     onCompleted: (data) => {
       paymentSchedules();
     },
   });
-  console.log(auth.userid, id);
 
   function loadData(data: any) {
-
     const flattenTransactionData = flattenObj({ ...get_transaction });
     const flattenPaymentScheduleData = flattenObj({ ...get_payment_schedule });
-    console.log(flattenTransactionData);
 
     setDataTable(
       [...flattenTransactionData.transactions].flatMap((Detail) => {
-
         return {
           id: Detail.id,
-          category: flattenPaymentScheduleData.paymentSchedules.find((currentValue) => currentValue.id === Detail.PaymentScheduleID).PaymentCatagory,
+          category: flattenPaymentScheduleData.paymentSchedules.find(
+            (currentValue) => currentValue.id === Detail.PaymentScheduleID
+          ).PaymentCatagory,
           amount: `${Detail.Currency} ${Detail.TransactionAmount}`,
           transactionDate: moment(Detail.TransactionDateTime).format(
             "MMMM DD,YYYY HH:mm:ss"

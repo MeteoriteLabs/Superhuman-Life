@@ -85,7 +85,7 @@ export default function Contacts() {
 
           const history = useHistory();
           const routeChange = () => {
-            let path = `payment_settings/?id=${row.original.id}`;
+            let path = `payment_settings/?id=${row.original.id}&isChangemaker=false`;
             history.push(path);
           };
 

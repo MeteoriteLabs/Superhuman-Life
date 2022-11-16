@@ -55,7 +55,7 @@ export default function Transactions() {
       { accessor: "transactionDate", Header: "Transaction Date" },
       { accessor: "remark", Header: "Remark" },
       { accessor: "amount", Header: "Amount" },
-      { accessor: "towards", Header: "Towards" },
+      // { accessor: "towards", Header: "Towards" },
       {
         accessor: "outflow",
         Header: "Outflow",
@@ -193,10 +193,11 @@ export default function Transactions() {
               : Detail.ReceiverType === "Changemaker"
               ? flattenChangemakerData.usersPermissionsUsers.find(
                   (currentValue) => currentValue.id === Detail.ReceiverID
-                ).First_Name
-              : flattenContactsData.contacts.find(
+                )?.First_Name
+              : 
+                flattenContactsData.contacts.find(
                   (currentValue) => currentValue.id === Detail.ReceiverID
-                ).firstname,
+                )?.firstname,
           towards: Detail.ReceiverType,
           amount: `${Detail.Currency} ${Detail.TransactionAmount}`,
           inflow:
@@ -209,7 +210,7 @@ export default function Transactions() {
               : null,
           remark: Detail.TransactionRemarks,
           transactionDate: moment(Detail.TransactionDateTime).format(
-            "MMMM DD,YYYY HH:mm:ss"
+            "DD/MM/YYYY, hh:mm"
           ),
           status: Detail.TransactionStatus,
           type: Detail.ReceiverID === auth.userid ? "Credited" : "Debited",
