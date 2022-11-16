@@ -122,7 +122,7 @@ export default function AllTransactions() {
           ).PaymentCatagory,
           amount: `${Detail.Currency} ${Detail.TransactionAmount}`,
           transactionDate: moment(Detail.TransactionDateTime).format(
-            "MMMM DD,YYYY HH:mm:ss"
+            "DD/MM/YYYY, hh:mm"
           ),
           status: Detail.TransactionStatus,
         };
