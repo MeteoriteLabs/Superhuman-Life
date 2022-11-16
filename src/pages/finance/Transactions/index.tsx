@@ -55,7 +55,6 @@ export default function Transactions() {
       { accessor: "transactionDate", Header: "Transaction Date" },
       { accessor: "remark", Header: "Remark" },
       { accessor: "amount", Header: "Amount" },
-      // { accessor: "towards", Header: "Towards" },
       {
         accessor: "outflow",
         Header: "Outflow",
