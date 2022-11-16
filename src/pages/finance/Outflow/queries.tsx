@@ -27,6 +27,7 @@ export const GET_TRANSACTIONS = gql`
           TransactionAmount
           PaymentScheduleID
           TransactionRemarks
+          PaymentMode
         }
       }
     }

@@ -1,13 +1,11 @@
 import { gql } from "@apollo/client";
 
 export const GET_TRANSACTIONS = gql`
-  query TransactionsQuery(
-    $receiverId: String
-    
-  )  {
-    transactions(pagination: { pageSize: 2000 },filters: {
-        ReceiverID: { eq: $receiverId }
-      }) {
+  query TransactionsQuery($receiverId: String) {
+    transactions(
+      pagination: { pageSize: 2000 }
+      filters: { ReceiverID: { eq: $receiverId } }
+    ) {
       data {
         id
         attributes {
@@ -16,6 +14,7 @@ export const GET_TRANSACTIONS = gql`
           TransactionRemarks
           TransactionRefrenceID
           ReceiverID
+          PaymentMode
           ReceiverType
           ChangemakerAmount
           SenderID

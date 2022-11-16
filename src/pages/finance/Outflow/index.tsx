@@ -23,52 +23,12 @@ export default function Earnings() {
 
   const columns = useMemo<any>(
     () => [
-      { accessor: "id", Header: "Transaction ID" },
+      { accessor: "id", Header: "T ID" },
       { accessor: "name", Header: "Name" },
-      {
-        accessor: "type",
-        Header: "Type",
-        Cell: ({ row }: any) => {
-          let typeColor = "";
-          switch (row.values.type) {
-            case "Credited":
-              typeColor = "success";
-              break;
-
-            case "Debited":
-              typeColor = "warning";
-              break;
-          }
-          return (
-            <>
-              <Badge
-                className="px-3 py-1"
-                style={{ fontSize: "1rem", borderRadius: "10px" }}
-                variant={typeColor}
-              >
-                {row.values.type === "Credited" ? "Credited" : "Debited"}
-              </Badge>
-            </>
-          );
-        },
-      },
+      { accessor: "paymentMode", Header: "Payment Mode" },
       { accessor: "transactionDate", Header: "Transaction Date" },
       { accessor: "remark", Header: "Remark" },
       { accessor: "amount", Header: "Amount" },
-      // {
-      //   accessor: "outflow",
-      //   Header: "Outflow",
-      //   Cell: ({ row }: any) => {
-      //     return <b className="text-danger">{row.values.outflow}</b>;
-      //   },
-      // },
-      // {
-      //   accessor: "inflow",
-      //   Header: "Inflow",
-      //   Cell: ({ row }: any) => {
-      //     return <b className="text-success">{row.values.inflow}</b>;
-      //   },
-      // },
       {
         accessor: "status",
         Header: "Status",
@@ -175,47 +135,26 @@ export default function Earnings() {
     const flattenChangemakerData = flattenObj({ ...get_changemakers });
     const flattenContactsData = flattenObj({ ...get_contacts });
 
-    // const creditAndDebitTransactions =
-    //   flattenTransactionData.transactions.filter((currentValue) => {
-    //     return (
-    //       currentValue.ReceiverID === auth.userid ||
-    //       currentValue.SenderID === auth.userid
-    //     );
-    //   });
-
     setDataTable(
       [...flattenTransactionData.transactions].flatMap((Detail) => {
         return {
           id: Detail.id,
           name:
-            Detail.ReceiverID === auth.userid
-              ? flattenChangemakerData.usersPermissionsUsers.find(
-                  (currentValue) => currentValue.id === Detail.ReceiverID
-                ).First_Name
-              : Detail.ReceiverType === "Changemaker"
+            Detail.ReceiverType === "Changemaker"
               ? flattenChangemakerData.usersPermissionsUsers.find(
                   (currentValue) => currentValue.id === Detail.ReceiverID
                 )?.First_Name
-              : 
-                flattenContactsData.contacts.find(
+              : flattenContactsData.contacts.find(
                   (currentValue) => currentValue.id === Detail.ReceiverID
                 )?.firstname,
-          towards: Detail.ReceiverType,
+
           amount: `${Detail.Currency} ${Detail.TransactionAmount}`,
-          inflow:
-            Detail.ReceiverID === auth.userid
-              ? `+${Detail.Currency} ${Detail.TransactionAmount}`
-              : null,
-          outflow:
-            Detail.SenderID === auth.userid
-              ? `-${Detail.Currency} ${Detail.TransactionAmount}`
-              : null,
+          paymentMode: Detail.PaymentMode,
           remark: Detail.TransactionRemarks,
           transactionDate: moment(Detail.TransactionDateTime).format(
             "DD/MM/YYYY, hh:mm"
           ),
           status: Detail.TransactionStatus,
-          type: Detail.ReceiverID === auth.userid ? "Credited" : "Debited",
         };
       })
     );
@@ -250,4 +189,3 @@ export default function Earnings() {
     </TabContent>
   );
 }
-
