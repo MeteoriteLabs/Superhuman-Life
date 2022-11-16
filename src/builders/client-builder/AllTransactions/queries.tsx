@@ -8,6 +8,7 @@ export const GET_TRANSACTIONS = gql`
   ) {
     transactions(
       pagination: { pageSize: 1000 }
+      sort: ["TransactionDateTime:desc"]
       filters: {
         SenderID: { eq: $senderId }
         ReceiverID: { eq: $receiverId }
