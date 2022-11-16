@@ -8,7 +8,6 @@ import StatusModal from "../../../components/StatusModal/StatusModal";
 import { Subject } from "rxjs";
 import { schema } from "./schema";
 import { flattenObj } from "../../../components/utils/responseFlatten";
-//import {widgets} from "./schema"
 
 interface Operation {
      id: string;
@@ -22,6 +21,7 @@ function CreateEditMessage(props: any, ref: any) {
      const messageSchema: { [name: string]: any } = require("./leads.json");
      const [messageDetails, setMessageDetails] = useState<any>({});
      const [operation, setOperation] = useState<Operation>({} as Operation);
+     const [showDeleteModal, setShowDeleteModal] = useState(false);
 
      // let o = { ...operation };
 
@@ -52,7 +52,16 @@ function CreateEditMessage(props: any, ref: any) {
           TriggerForm: (msg: Operation) => {
                setOperation(msg);
 
-               if (msg && !msg.id) modalTrigger.next(true);
+               // set show delete modal to render for delete operation
+               if (msg.type === 'delete') {
+                    setShowDeleteModal(true);
+               }
+
+               // restrict create modal to render for delete operation
+               if (msg.type !== 'delete') {
+                    modalTrigger.next(true);
+               }
+
           },
      }));
 
@@ -121,6 +130,7 @@ function CreateEditMessage(props: any, ref: any) {
 
      return (
           <>
+               {/* Create , Edit and View Modal */}
                <ModalView
                     name={operation.type}
                     isStepper={false}
@@ -130,12 +140,15 @@ function CreateEditMessage(props: any, ref: any) {
                     formSubmit={(frm: any) => {
                          OnSubmit(frm);
                     }}
-                    formData={messageDetails}
-                    //widgets={widgets}
+                    formData={operation.type === 'create' ? {} : messageDetails}
                     modalTrigger={modalTrigger}
                />
-               {operation.type === "delete" && (
+
+               {/* Delete Modal */}
+               {showDeleteModal && (
                     <StatusModal
+                         show={showDeleteModal}
+                         onHide={() => setShowDeleteModal(false)}
                          modalTitle="Delete"
                          modalBody="Do you want to delete this message?"
                          buttonLeft="Cancel"

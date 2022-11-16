@@ -2,10 +2,12 @@ import Upload from '../../../../components/upload/upload';
 import DatesConfig from '../../../../components/customWidgets/datesConfig';
 import FitnessSelect from '../../../../components/customWidgets/fitnessMultiSelect';
 import EquipmentSelect from '../../../../components/customWidgets/equipmentListSelect';
+import LanguageList from '../../../../components/customWidgets/languageSelect';
 import GroupProgramDetails from './groupProgramDetails';
 import GroupConfig from './groupConfig';
 import GroupPricingTable from './groupPricingTable';
 import GroupPreview from './groupPreview';
+import GroupBookingConfig from './bookingConfig';
 
 export const widgets = {
      datesConfig: DatesConfig,
@@ -15,6 +17,8 @@ export const widgets = {
      groupConfig: GroupConfig,
      groupPricingTable: GroupPricingTable,
      groupPreview: GroupPreview,
+     groupBookingConfig: GroupBookingConfig,
+     languageList: LanguageList
 }
 
 export const schemaView: any = {
@@ -75,7 +79,6 @@ export const schemaView: any = {
           "ui:readonly": true,
           "upload": {
                "ui:widget": (props: any) => {
-                    console.log(props)
                     return <Upload allowImage={true} allowVideo={true} onChange={props.onChange} value={props.value} readonly={true}/>;
                },
           },  
@@ -111,19 +114,14 @@ export const schemaView: any = {
           "ui:widget": "datesConfig",
           "ui:readonly": true
      },
+     "languages": {
+          "ui:widget": "languageList",
+          "ui:readonly": true
+     },
      "config": {
-          "acceptBooking": {
-              "ui:widget": "radio",
-              "ui:options": {
-                  "inline": true
-              },
-              "ui:readonly": true,
-          },
-          "maxBookingMonth": {
-               "ui:readonly": true
-          },
-          "maxBookingDay": {
-               "ui:readonly": true
+          "bookingConfig": {
+              "ui:widget": "groupBookingConfig",
+              "readonly": true
           }
      },
 }

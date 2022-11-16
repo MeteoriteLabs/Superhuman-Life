@@ -25,7 +25,7 @@ function ToggleSideBarMenu() {
               <img src={CalendarIcon} alt="calendar icon" className="mr-sm-2" style={{ height: '20px', width: '20px', marginRight: '5px' }} />My Schedule
             </Nav.Link>
             <Nav.Link eventKey="3" className="nav-link text-white d-sm-block d-lg-none" href="/session">
-              <img src={SessionIcon} alt="session icon" className="mr-sm-2" style={{ height: '20px', width: '20px', marginRight: '5px' }} />Session Manager
+              <img src={SessionIcon} alt="session icon" className="mr-sm-2" style={{ height: '20px', width: '20px', marginRight: '5px' }} />Program Manager
             </Nav.Link>
             <Nav.Link eventKey="4" className="nav-link text-white d-sm-block d-lg-none" href="/clients">
               <img src={ClientIcon} alt="client icon" className="mr-sm-2" style={{ height: '20px', width: '20px', marginRight: '5px' }} />Clients
@@ -39,7 +39,7 @@ function ToggleSideBarMenu() {
             <Nav.Link eventKey="7" className="nav-link text-white d-sm-block d-lg-none" href="/resources">
               <img src={ResourcesIcon} alt="resources icon" className="mr-sm-2" style={{ height: '20px', width: '20px', marginRight: '5px' }} />Resources
             </Nav.Link>
-            <Nav.Link eventKey="8" className="nav-link text-white d-sm-block d-lg-none" href="/finances">
+            <Nav.Link eventKey="8" className="nav-link text-white d-sm-block d-lg-none" href="/finance">
               <img src={FinancesIcon} alt="finances icon" className="mr-sm-2" style={{ height: '20px', width: '20px', marginRight: '5px' }} />Finances
             </Nav.Link>
             <Nav.Link eventKey="9" className="nav-link text-white d-sm-block d-lg-none" href="/communication">

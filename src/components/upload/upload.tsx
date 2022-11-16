@@ -29,13 +29,11 @@ var tus: any = require("tus-js-client");
 
 const UploadImageToS3WithNativeSdk = (props: any) => {
 
-     console.log(props);
-
      const [progress, setProgress] = useState<any>(0);
      const [selectedFile, setSelectedFile] = useState<any>(null);
      const [render, setRender] = useState<any>(null);
      const [url, setUrl] = useState<any>(null);
-     const [imageid, setImageid] = useState<any>(null);
+     const [imageid, setImageid] = useState<string | null>('');
      const [videoUpload, setVideoUpload] = useState<any>(false);
      const [videoID, setVideoID] = useState<any>(null);
      //const [renderCrop, setRenderCrop] = useState<any>(null);
@@ -77,12 +75,23 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
           }
      }
      function deleteAllImages() {
-          deleteFile(albumPhotosKey + "sm-" + imageid);
-          deleteFile(albumPhotosKey + "md-" + imageid);
-          deleteFile(albumPhotosKey + "lg-" + imageid);
-          setUrl(null);
-          setProgress(0);
-          setRender(null);
+          if (props.removePicture) {
+               props.removePicture();
+               deleteFile(albumPhotosKey + "sm-" + imageid);
+               deleteFile(albumPhotosKey + "md-" + imageid);
+               deleteFile(albumPhotosKey + "lg-" + imageid);
+               setImageid(null);
+               setUrl(null);
+               setProgress(0);
+               setRender(null); 
+          } else {
+               deleteFile(albumPhotosKey + "sm-" + imageid);
+               deleteFile(albumPhotosKey + "md-" + imageid);
+               deleteFile(albumPhotosKey + "lg-" + imageid);
+               setUrl(undefined);
+               setProgress(0);
+               setRender(null);
+          }
      }
 
      const deleteFile = (keyName) => {
@@ -228,7 +237,6 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                setVideoID(props.value);
                setVideoUpload(true);
           }
-          //console.log(props.value);
      }
 
      function uploadTOS3NoUrl(file, filename, filetype) {
@@ -371,15 +379,14 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
      }
 
      useEffect(() => {
-          if (url) {
-               props.onChange(imageid);
-          } else {
-               props.onChange(videoID);
-          }
-          // eslint-disable-next-line react-hooks/exhaustive-deps
-     }, [url]);
+          props.onChange(videoID);
+          // eslint-disable-next-line
+     }, [videoID]);
 
-     // console.log(url);
+     useEffect(() => {
+          props.onChange(imageid);
+          // eslint-disable-next-line
+     },[imageid])
 
      return (
           <div>
@@ -389,18 +396,18 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                          <div className="border bg-white border-dark p-4 ">
                               <Image
                                    src={url}
-                                   width="500px"
-                                   height="500px"
+                                   width="500vw"
+                                   height="500vh"
                                    className="img-thumbnail"
                                    alt="Image Preview"
                               />
-                              <p className="ml-2 mt-3 font-weight-bold text-success">Image Uploaded Successfully!!</p>
+                              <p className="ml-2 mt-3 font-weight-bold text-success">Image Uploaded</p>
                               <div className="mt-3 d-flex flex-row-reverse">
                                    <button
                                         type="button"
                                         className="btn-sm btn-danger"
                                         onClick={() => deleteAllImages()}
-                                        disabled={props.readonly ? true : false}
+                                        disabled={props.readonly}
                                    >
                                         Remove
                                    </button>
@@ -426,7 +433,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                                              type="button"
                                              className="btn-sm btn-danger"
                                              onClick={() => videoDelete()}
-                                             disabled={props.readonly ? true : false}
+                                             disabled={props.readonly}
                                         >
                                              Remove
                                         </button>
@@ -447,6 +454,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                                         onCropChange={setCrop}
                                         onCropComplete={onCropComplete}
                                         onZoomChange={setZoom}
+                                        objectFit="contain"
                                    />
                               </div>
 
@@ -465,7 +473,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                                         onClick={() => {
                                              showCroppedImage();
                                         }}
-                                        disabled={props.readonly ? true : false}
+                                        disabled={props.readonly}
                                    >
                                         Upload
                                    </button>
@@ -547,7 +555,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                                         )}
 
                                         <p className="mt-3">OR</p>
-                                        <input type="file" className="pt-2" onChange={handleFileInput} />
+                                        <input type="file" className="pt-2" disabled={props.readonly} onChange={handleFileInput} />
 
                                         <div className="mt-3 d-flex flex-row-reverse">
                                              <button

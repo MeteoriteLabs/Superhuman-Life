@@ -7,7 +7,7 @@ import StatusModal from "../../../components/StatusModal/StatusModal";
 import { Subject } from "rxjs";
 import { schema, widgets } from "./schema";
 
-import {flattenObj} from '../../../components/utils/responseFlatten';
+import { flattenObj } from '../../../components/utils/responseFlatten';
 
 interface Operation {
      id: string;
@@ -21,21 +21,26 @@ function CreateEditMessage(props: any, ref: any) {
      const messageSchema: { [name: string]: any } = require("./informationbank.json");
      const [messageDetails, setMessageDetails] = useState<any>({});
      const [operation, setOperation] = useState<Operation>({} as Operation);
+     const [showStatusModal, setShowStatusModal] = useState(false);
+     const [showDeleteModal, setShowDeleteModal] = useState(false);
 
      const [createMessage] = useMutation(ADD_MESSAGE, {
           onCompleted: (r: any) => {
                modalTrigger.next(false);
           },
      });
+
      const [editMessage] = useMutation(UPDATE_MESSAGE, {
           onCompleted: (r: any) => {
                modalTrigger.next(false);
           },
      });
+
      const [deleteMessage] = useMutation(DELETE_MESSAGE, {
           onCompleted: (e: any) => console.log(e),
           refetchQueries: ["GET_TRIGGERS"],
      });
+
      const [updateStatus] = useMutation(UPDATE_STATUS, {
           onCompleted: (d: any) => {
                console.log(d);
@@ -48,12 +53,26 @@ function CreateEditMessage(props: any, ref: any) {
           TriggerForm: (msg: Operation) => {
                setOperation(msg);
 
-               if (msg && !msg.id) modalTrigger.next(true);
+               // render status modal for toggle-status operation
+               if (msg.type === 'toggle-status') {
+                    setShowStatusModal(true);
+               }
+
+               // render delete modal for delete operation
+               if (msg.type === 'delete') {
+                    setShowDeleteModal(true);
+               }
+
+               // restrict modal to render for delete and toggle-status operation
+               if (msg.type !== 'delete' && msg.type !== 'toggle-status') {
+                    modalTrigger.next(true);
+               }
+
           },
      }));
 
      function loadData(data: any) {
-          const flattenData = flattenObj({...data});
+          const flattenData = flattenObj({ ...data });
           messageSchema["1"].properties.infomessagetype.enum = [...flattenData.prerecordedtypes].map((n) => n.id);
           messageSchema["1"].properties.infomessagetype.enumNames = [...flattenData.prerecordedtypes].map(
                (n) => n.type
@@ -61,7 +80,7 @@ function CreateEditMessage(props: any, ref: any) {
      }
 
      function FillDetails(data: any) {
-          const flattenData = flattenObj({...data});
+          const flattenData = flattenObj({ ...data });
           let details: any = {};
           let msg: any = flattenData.informationbankmessages[0];
 
@@ -138,8 +157,11 @@ function CreateEditMessage(props: any, ref: any) {
                     modalTrigger={modalTrigger}
                />
 
-               {operation.type === "toggle-status" && (
+               {/* Status Modal */}
+               {showStatusModal && (
                     <StatusModal
+                         show={showStatusModal}
+                         onHide={() => setShowStatusModal(false)}
                          modalTitle="Change Status"
                          modalBody="Do you want to change the status?"
                          buttonLeft="Cancel"
@@ -150,8 +172,11 @@ function CreateEditMessage(props: any, ref: any) {
                     />
                )}
 
-               {operation.type === "delete" && (
+               {/* Delete Modal */}
+               {showDeleteModal && (
                     <StatusModal
+                         show={showDeleteModal}
+                         onHide={() => setShowDeleteModal(false)}
                          modalTitle="Delete"
                          modalBody="Do you want to delete this message?"
                          buttonLeft="Cancel"

@@ -2,11 +2,10 @@ import { useMutation } from '@apollo/client';
 import React, { useContext, useEffect, useImperativeHandle, useState } from 'react';
 import { Subject } from 'rxjs';
 import PricingAssistEditIcon from '../../../components/customWidget/PricingAssistEditIcon';
-import FinanceModal from '../../../components/financeModal/FinanceModal'
-
-
+import FinanceModal from '../../../components/financeModal/FinanceModal';
 import authContext from '../../../context/auth-context';
-import { CREATE_FITNESS_PRICING_ASSIT, UPDATE_FITNESS_PRICING_ASSITS } from "../graphQL/mutations"
+import { CREATE_FITNESS_PRICING_ASSIT, UPDATE_FITNESS_PRICING_ASSITS } from "../graphQL/mutations";
+import { GET_ALL_SUGGESTED_PRICING } from "../graphQL/queries";
 
 interface Operation {
     id: string;
@@ -22,13 +21,16 @@ function PricingAssistAction(props, ref) {
     const [formData, setFormData] = useState<any>();
     const formSchema = require("../PricingAssist/Fitness/fitness.json");
 
+    enum ENUM_SUGGESTEDPRICING_MODE {
+        Online,
+        Offline
+    }
 
     const uiSchema: any = {
         "type": {
             "ui:widget": () => <PricingAssistEditIcon rowData={operation.rowData} />
         }
     }
-
 
     useImperativeHandle(ref, () => ({
         TriggerForm: (msg: Operation) => {
@@ -37,44 +39,45 @@ function PricingAssistAction(props, ref) {
         }
     }));
 
-
-
-
     useEffect(() => {
         let updateFormData: any = {};
         updateFormData.mrp = operation?.rowData?.mrp;
-        setFormData(updateFormData);
+        if (operation?.rowData?.id === '') {
+            setFormData({});
+        } else {
+            setFormData(updateFormData);
+        }
     }, [operation])
 
-
     // create price 
-    const [createFitnessPricingAssist] = useMutation(CREATE_FITNESS_PRICING_ASSIT, { onCompleted: (r: any) => { modalTrigger.next(false); } });
+    const [createFitnessPricingAssist] = useMutation(CREATE_FITNESS_PRICING_ASSIT, { onCompleted: (r: any) => { modalTrigger.next(false); }, refetchQueries: [GET_ALL_SUGGESTED_PRICING] });
 
     const CreateFitnessPricingAssist = (form: any) => {
         createFitnessPricingAssist({
             variables: {
-                fitness_package_type: operation.rowData.packageTypeID[0],
-                users_permissions_users:form.users_permissions_users,
-                Mode: operation.rowData.mode,
-                mrp: form.mrp
-            }
+                data: {
+                    fitness_package_type: operation.rowData.packageTypeId,
+                    users_permissions_users: form.users_permissions_users,
+                    Mode: operation.rowData.modes === 'Online' ? ENUM_SUGGESTEDPRICING_MODE[0] : ENUM_SUGGESTEDPRICING_MODE[1],
+                    mrp: form.mrp,
+                }
+            },
         })
     }
 
-
     // update price
-    const [updateFitnessPricingAssist] = useMutation(UPDATE_FITNESS_PRICING_ASSITS, { onCompleted: (r: any) => { modalTrigger.next(false); } });
+    const [updateFitnessPricingAssist] = useMutation(UPDATE_FITNESS_PRICING_ASSITS, { onCompleted: (r: any) => { modalTrigger.next(false); }, refetchQueries: [GET_ALL_SUGGESTED_PRICING] });
 
     const UpdateFitnessPricingAssist = (form: any) => {
         updateFitnessPricingAssist({
             variables: {
                 id: operation.id,
-                mrp: form.mrp
-            }
+                mrp: form.mrp,
+                Duration: operation.rowData.duration,
+                fitness_package_type: operation.rowData.packageTypeID
+            },
         })
     }
-
-
 
     const OnSubmit = (frm: any) => {
         //bind user id
@@ -94,8 +97,6 @@ function PricingAssistAction(props, ref) {
         }
     }
 
-
-
     return (
         <div>
             <FinanceModal
@@ -110,6 +111,5 @@ function PricingAssistAction(props, ref) {
         </div>
     )
 }
-
 
 export default React.forwardRef(PricingAssistAction)

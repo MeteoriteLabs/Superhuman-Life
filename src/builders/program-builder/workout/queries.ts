@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 export const FETCH_DATA = gql`
-  query fetchdata($id: ID!) {
+  query fetchdata($id: ID) {
     workouts(filters: { id: { eq: $id } }) {
       data {
         id
@@ -34,6 +34,7 @@ export const FETCH_DATA = gql`
           }
           muscle_groups {
             data {
+              id
               attributes {
                 name
               }
@@ -64,13 +65,37 @@ export const FETCH_DATA = gql`
 `;
 
 export const FETCH_FITNESS_PROGRAMS = gql`
-  query programquery($id: ID) {
-    fitnessprograms(filters: { users_permissions_user: { id: { eq: $id } } }) {
-      data {
+  query checkSessionQuery($id: ID) {
+    fitnessprograms(filters:{
+      sessions:{
+        workout:{
+          id: {
+            eq: $id
+          }
+        }
+      }
+    }){
+      data{
         id
-        attributes {
+        attributes{
           title
-          events
+        }
+      }
+    }
+    
+    tags(filters: {
+      sessions: {
+        workout:{
+          id: {
+            eq: $id
+          }
+        }
+      }
+    }){
+      data{
+        id
+        attributes{
+          tag_name
         }
       }
     }
@@ -92,7 +117,7 @@ export const FETCH_FITNESSDISCPLINES = gql`
 `;
 
 export const GET_TABLEDATA = gql`
-  query fetchdata($id: ID!) {
+  query fetchdata($id: ID) {
     workouts(filters: { users_permissions_user: { id: { eq: $id } } }, pagination: {
       pageSize: 100
     }) {

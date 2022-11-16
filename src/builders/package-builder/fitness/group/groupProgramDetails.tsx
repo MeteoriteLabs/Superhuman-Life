@@ -10,15 +10,10 @@ import AddFitnessAddressModal from "../../../../components/customWidgets/AddFitn
 const GroupProgramDetails = (props) => {
 
     const inputDisabled = props.readonly;
-
     const existingData = props.value === undefined ? undefined : JSON.parse(props.value);
     if(existingData !== undefined && existingData.length > 0){
         existingData.address = {id: JSON.parse(existingData?.address)[0].id, title: JSON.parse(existingData?.address)[0].title};
-
     }
-
-    console.log(props);
-    console.log(existingData);
 
     const [mode, setMode] = useState(props.value === undefined ? '' : (existingData.mode).toString());
     const [addressModal, setAddressModal] = useState(false);
@@ -31,17 +26,12 @@ const GroupProgramDetails = (props) => {
     const [offlineClasses, setOfflinceClasses] = useState<number>(existingData?.offline ? existingData.offline : 0);
     const [restDays, setRestDays] = useState<number>(existingData?.rest ? existingData.rest : 0);
 
-    console.log(singleSelections);
-
     useEffect(() => {
         if(onlineClasses > 30){
             setOnlineClasses(30);
         }
         if(offlineClasses > 30){
             setOfflinceClasses(30);
-        }
-        if(restDays > handleMax(mode)){
-            setRestDays(handleMax(mode));
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [onlineClasses, offlineClasses, restDays, mode]);
@@ -70,7 +60,7 @@ const GroupProgramDetails = (props) => {
 
     function loadData(data: any) {
         const flattenedData = flattenObj({...data});
-        console.log(flattenedData);
+
         setAddresses(
               [...flattenedData.addresses].map((address) => {
                   return {
@@ -92,6 +82,9 @@ const GroupProgramDetails = (props) => {
 
     function handleValidation(mode: string){
         //here we will check for online
+        if(restDays < 0){
+            return false;
+        }
         if(mode === '0'){
             if((onlineClasses + restDays) === 30){
                 return true;
@@ -131,8 +124,6 @@ const GroupProgramDetails = (props) => {
         }
     }
 
-    console.log(restDays, onlineClasses, offlineClasses);
-
     useEffect(() => {
         if(mode === "0"){
             setOfflinceClasses(0);
@@ -148,18 +139,18 @@ const GroupProgramDetails = (props) => {
         props.onChange(undefined);
     }
 
-    function handleMax(mode: string){
+    useEffect(() => {
         if(mode === '0'){
-            return 30 - onlineClasses;
+            setRestDays(30 - onlineClasses);
         }
         if(mode === '1'){
-            return 30 - offlineClasses;
+            setRestDays(30 - offlineClasses);
         }
         if(mode === "2"){
-            return 30 - (onlineClasses + offlineClasses);
+            setRestDays(30 - (onlineClasses + offlineClasses));
         }
-        return 0;
-    }
+    }, [onlineClasses, offlineClasses, mode]);
+
 
     return (
         <>
@@ -193,8 +184,10 @@ const GroupProgramDetails = (props) => {
                             placeholder="Search Address.."
                             selected={singleSelections}
                             disabled={inputDisabled}
+                            clearButton
                         />
                     </Col>}
+                    {addressTitle === 'At Client Address' && <span className='small text-muted'>*Within city limits</span>}
                 </Row>
                 {addressTitle === 'At My Address' && <Row>
                     <Col lg={{offset: 3}}>
@@ -211,6 +204,9 @@ const GroupProgramDetails = (props) => {
           <div className='m-5 p-2 text-center shadow-lg'>
                <h4>Set For One Month (30 Days)</h4>
           </div>
+          {mode !== "" && <div>
+            <label><b>Enter Number of Sessions</b></label>
+          </div>}
           {mode !== "" && (mode === "0" || mode === "2") && <Row>
                <Col lg={1}>
                     <img src='/assets/Group-Online.svg' alt='personal-training'/>
@@ -227,6 +223,9 @@ const GroupProgramDetails = (props) => {
                               disabled={inputDisabled}
                               onChange={(e: any) => setOnlineClasses(parseInt(e.target.value))}
                          />
+                         <InputGroup.Append>
+                            <InputGroup.Text id="basic-addon1">Sessions</InputGroup.Text>
+                        </InputGroup.Append>
                     </InputGroup>
                </Col>
           </Row>}
@@ -246,16 +245,16 @@ const GroupProgramDetails = (props) => {
                               disabled={inputDisabled}
                               onChange={(e: any) => setOfflinceClasses(parseInt(e.target.value))}
                          />
+                         <InputGroup.Append>
+                            <InputGroup.Text id="basic-addon1">Sessions</InputGroup.Text>
+                        </InputGroup.Append>
                     </InputGroup>
                </Col>
           </Row>}
+          {mode !== "" && <div>
+            <label><b>Rest Days</b></label>
+          </div>}
           {mode !== "" && <Row>
-               <Col lg={1}>
-                    <img src='/assets/rest-icon.svg' alt='rest-icon'/>
-               </Col>
-               <Col lg={1}>
-                    <label><b>Rest Days</b></label>
-               </Col>
                <Col lg={2}>
                     <InputGroup className="mb-3">
                          <FormControl
@@ -263,14 +262,14 @@ const GroupProgramDetails = (props) => {
                               aria-describedby="inputGroup-sizing-default"
                               type='number'
                               min={0}
-                              max={handleMax(mode)}
                               value={restDays}
-                              disabled={inputDisabled}
-                              onChange={(e: any) => setRestDays(parseInt(e.target.value))}
+                              disabled={true}
                          />
+                         <InputGroup.Append>
+                            <InputGroup.Text id="basic-addon1">Days</InputGroup.Text>
+                        </InputGroup.Append>
                     </InputGroup>
                </Col>
-            <span className='small'>*It should add upto 30 classes per month</span>
           </Row>}
         </>
     );

@@ -1,62 +1,55 @@
-import { Link } from "react-router-dom";
-import { Card, CardDeck } from "react-bootstrap";
-
+import { Button } from "react-bootstrap";
+import { useHistory } from "react-router-dom";
 
 export default function HomePage() {
-  const shortcuts = [
-    {
-      icon: <i className="fas fa-user-plus"></i>,
-      link: "/clients",
-      text: "Add Client",
-    },
-    {
-      icon: <i className="far fa-lightbulb"></i>,
-      link: "/insights",
-      text: "My Insights",
-    },
-    {
-      icon: <i className="fas fa-rocket"></i>,
-      link: "/resources",
-      text: "My Resources",
-    },
-    {
-      icon: <i className="fas fa-tasks"></i>,
-      link: "/tasks",
-      text: "My Tasks",
-    },
-    {
-      icon: <i className="fas fa-tools"></i>,
-      link: "/packages",
-      text: "Packages",
-    },
-    {
-      icon: <i className="fas fa-inbox"></i>,
-      link: "/community",
-      text: "Community",
-    },
-    {
-      icon: <i className="fab fa-hive"></i>,
-      link: "/",
-      text: "Network Community",
-    },
-  ];
-  
+  const history = useHistory();
+
+  const redirectToClients = () => {
+    let path = "/clients";
+    history.push(path);
+  };
+
+  const redirectToFinance = () => {
+    let path = "/finance";
+    history.push(path);
+  };
+
   return (
     <div className="col-lg-12">
-      <h3>Dashboard</h3>
+      <h3>Home</h3>
       <hr />
-      <CardDeck>
-        {shortcuts &&
-          shortcuts.map((shortcut, id) => (
-            <Card key={id} className="shadow-sm text-center" border="light">
-              <Card.Body>
-                <Link to={shortcut.link}>{shortcut.icon}</Link>
-                <hr />
-                <Card.Text className="text-muted">{shortcut.text}</Card.Text>
-              </Card.Body>
-            </Card>
-          ))}
-      </CardDeck>
+
+      <Button
+        variant="outline-secondary"
+        className="mr-2"
+        onClick={redirectToClients}
+      >
+        <img src="assets/home_page_images/contacts.svg" alt="add_client"/> Add Client
+      </Button>
+
+      <Button
+        variant="outline-secondary"
+        className="mr-2 "
+        onClick={redirectToClients}
+      >
+        <img src="assets/home_page_images/add_lead.svg" alt="add_lead"/> Add Lead
+      </Button>
+
+      <Button
+        variant="outline-secondary"
+        className="mr-2"
+        onClick={redirectToClients}
+      >
+        <img src="assets/home_page_images/add_contact.svg" alt="add_contact"/> Add Contacts
+      </Button>
+
+      <Button
+        variant="outline-secondary"
+        className="mr-2"
+        onClick={redirectToFinance}
+      >
+        <img src="assets/home_page_images/rupee.svg" alt="paymentLink"/> Payment Link
+      </Button>
     </div>
   );
 }

@@ -8,6 +8,9 @@ import Upload from '../../../../components/upload/upload';
 import DatesConfig from '../../../../components/customWidgets/datesConfig';
 import FitnessSelect from '../../../../components/customWidgets/fitnessMultiSelect';
 import EquipmentSelect from '../../../../components/customWidgets/equipmentListSelect';
+import BookingConfig from './bookingConfig';
+import CohortDateConfig from './cohortDateConfig';
+import CohortPrimaryDateConfig from './primaryDatesConfig';
 
 export const widgets = {
     pricingTableChannel: PricingTableChannel,
@@ -18,7 +21,9 @@ export const widgets = {
     courseDetails: CourseDetails,
     datesConfig: DatesConfig,
     fitnessSelect: FitnessSelect,
-    equipmentSelect: EquipmentSelect
+    equipmentSelect: EquipmentSelect,
+    cohortBookingConfig: BookingConfig,
+    cohortDateConfig: CohortDateConfig,
 };
 
 export const schema: any = {
@@ -59,21 +64,20 @@ export const schema: any = {
         },
         "thumbnail": {
             "ui:widget": (props: any) => {
-                return <Upload allowImage={true} allowVideo={true} onChange={props.onChange} value={props.value} title={'Thumbnail'} />;
+                return <Upload allowImage={true} allowVideo={false} onChange={props.onChange} value={props.value} title={'Thumbnail'} />;
             },
         },
         "datesConfig": {
-            "ui:widget": "datesConfig"
+            "ui:widget": "cohortDateConfig"
         },
         "dates": {
             "ui:widget": (props: any) => {
-                return <DatesConfig title1={'Start Date'} title2={'End Date'} value={props.value} onChange={props.onChange}/>
+                return <CohortPrimaryDateConfig title1={'Start Date'} title2={'End Date'} value={props.value} onChange={props.onChange} type={'Cohort'}/>
             }
         },
         "Upload": {
             "upload": {
                 "ui:widget": (props: any) => {
-                    console.log(props)
                     return <Upload allowImage={true} allowVideo={true} onChange={props.onChange} value={props.value} />;
                 },
             },  
@@ -115,11 +119,8 @@ export const schema: any = {
             }
         },
         "config": {
-            "acceptBooking": {
-                "ui:widget": "radio",
-                "ui:options": {
-                    "inline": true
-                }
+            "bookingConfig": {
+                "ui:widget": "cohortBookingConfig"
             }
         },
         "preview": {

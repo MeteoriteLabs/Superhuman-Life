@@ -17,9 +17,6 @@ const PtProgramDetails = (props) => {
 
     }
 
-    console.log(props);
-    console.log(existingData);
-
     const [mode, setMode] = useState(props.value === undefined ? '' : (existingData.mode).toString());
     const [addressModal, setAddressModal] = useState(false);
 
@@ -30,8 +27,6 @@ const PtProgramDetails = (props) => {
 //     const [onlineClasses, setOnlineClasses] = useState<number>(existingData?.online ? existingData.online : 0);
 //     const [offlineClasses, setOfflinceClasses] = useState<number>(existingData?.offline ? existingData.offline : 0);
 //     const [restDays, setRestDays] = useState<number>(existingData?.rest ? existingData.rest : 0);
-
-    console.log(singleSelections);
 
 //     useEffect(() => {
 //         if(onlineClasses > 30){
@@ -69,7 +64,7 @@ const PtProgramDetails = (props) => {
 
     function loadData(data: any) {
         const flattenedData = flattenObj({...data});
-        console.log(flattenedData);
+      
         setAddresses(
               [...flattenedData.addresses].map((address) => {
                   return {
@@ -123,8 +118,6 @@ const PtProgramDetails = (props) => {
 //             }
 //         }
 //     }
-
-//     console.log(restDays, onlineClasses, offlineClasses);
 
 //     useEffect(() => {
 //         if(mode === "0"){
@@ -180,6 +173,7 @@ const PtProgramDetails = (props) => {
                     </Col>
                     {addressTitle === 'At My Address' && <Col>
                         <Typeahead
+                            clearButton
                             id="basic-typeahead-multiple"
                             labelKey="address1"
                             onChange={OnChange}
@@ -189,13 +183,13 @@ const PtProgramDetails = (props) => {
                             disabled={inputDisabled}
                         />
                     </Col>}
+                    {addressTitle === 'At Client Address' && <span className='small text-muted'>*Within city limits</span>}
                 </Row>
                 {addressTitle === 'At My Address' && <Row>
                     <Col lg={{offset: 3}}>
                          <Button variant='outline-info' disabled={inputDisabled} onClick={() => {setAddressModal(true)}}>+ Add New Address</Button>
                     </Col>
                </Row>}
-
                <AddFitnessAddressModal
                     show={addressModal}
                     onHide={() => {setAddressModal(false); handleCallback()}}

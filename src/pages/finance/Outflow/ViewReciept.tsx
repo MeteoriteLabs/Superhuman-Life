@@ -1,11 +1,11 @@
 import React from 'react'
 
-function Outflow() {
+function ViewReceipt() {
   return (
     <div>
-      Outflow
+      view
     </div>
   )
 }
 
-export default Outflow;
+export default ViewReceipt;

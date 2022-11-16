@@ -50,7 +50,7 @@ const SchedulerEvent = (props: any) => {
                     if(!values[val.day_of_program]){
                          values[val.day_of_program] = [];
                     }
-                    values[val.day_of_program].push({"import": "importedEvent","type": val.type, "mode": val.mode, "tag": val.tag,"type2": "transferEvent" , "title": val.activity === null ? val.workout?.workouttitle : val.activity.title, "color": "skyblue", "id":  val.activity === null ? val.workout.id : val.activity.id, "endHour": val.end_time.split(":")[0], "endMin": val.end_time.split(":")[1], "hour": val.start_time.split(":")[0], "min": val.start_time.split(":")[1], "activityTarget": val.activity === null ? null : val.activity_target, "activity": val.activity === null ? null : val.activity, "day": val.day_of_program, "sessionId": val.id, "sessionDate": val.session_date});
+                    values[val.day_of_program].push({"import": "importedEvent","type": val.type, "mode": val.mode, "tag": val.tag,"type2": "transferEvent" , "title": val.activity === null ? val.workout?.workouttitle : val.activity.title, "color": "skyblue", "id":  val.activity === null ? val.workout.id : val.activity.id, "endHour": val.end_time.split(":")[0], "endMin": val.end_time.split(":")[1], "hour": val.start_time.split(":")[0], "min": val.start_time.split(":")[1], "activityTarget": val.activity === null ? null : val.activity_target, "activity": val.activity === null ? null : val.activity, "day": val.day_of_program, "sessionId": val.id, "sessionDate": val.session_date, "isProgram": val?.Is_program_template});
                })
                setArr(values);
           }
@@ -92,6 +92,7 @@ const SchedulerEvent = (props: any) => {
           handleRenderTable([]);
      }, [props.programEvents]); // eslint-disable-line react-hooks/exhaustive-deps
 
+     console.log(props.programDays)
      
      if (!show) return <span style={{ color: 'red' }}>Loading...</span>;
      else return (

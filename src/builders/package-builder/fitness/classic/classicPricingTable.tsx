@@ -12,7 +12,7 @@ const PricingTable = (props) => {
     const auth = useContext(AuthContext);
     const [vouchers, setVouchers] = useState<any>([]);
     const [show, setShow] = useState(props.value === 'free' ? true : false);
-    const [pricing, setPricing] = useState<any>(props.value !== undefined && props.value !== 'free' ? JSON.parse(props?.value) : [ {mrp: null, suggestedPrice: null, voucher: 0, duration: JSON.parse(props.formContext.programDetails).onlineClasses, sapienPricing: null}]);
+    const [pricing, setPricing] = useState<any>(props.value !== undefined && props.value !== 'free' ? JSON.parse(props?.value) : [ {mrp: null, suggestedPrice: null, voucher: 0, duration: JSON.parse(props.formContext.programDetails).online, sapienPricing: null}]);
 
     const GET_VOUCHERS = gql`
         query fetchVouchers($expiry: DateTime!, $id: ID!, $start: DateTime!, $status: String!) {
@@ -205,7 +205,7 @@ const PricingTable = (props) => {
                     <Button variant='outline-info' onClick={() => {window.location.href = '/finance'}}>Add suggest pricing</Button>
                     </div>
                 </div>
-                <Table style={{ tableLayout: 'fixed'}}>
+                <Table responsive>
                 <thead>
                     <tr className='text-center'>
                     <th>Details</th>
@@ -228,7 +228,7 @@ const PricingTable = (props) => {
                     </tr>
                     <tr className='text-center'>
                     <td><b>Total days</b></td>
-                    <td>{pricing[0].duration} days</td>
+                    <td>{pricing[0].duration} sessions</td>
                     </tr>
                     <tr className='text-center'>
                     <td><b>Suggested</b></td>
@@ -238,6 +238,9 @@ const PricingTable = (props) => {
                     <td className='text-center'><b>Set MRP</b></td>
                     <td>
                     <InputGroup>
+                        <InputGroup.Prepend>
+                          <InputGroup.Text id="basic-addon1">{"\u20B9"}</InputGroup.Text>
+                        </InputGroup.Prepend>
                         <FormControl
                         className={`${pricing[0]?.mrp < pricing[0]?.sapienPricing && pricing[0]?.mrp !== null ? "is-invalid" : pricing[0]?.mrp >= pricing[0]?.sapienPricing ? "is-valid" : ""}`}
                         aria-label="Default"

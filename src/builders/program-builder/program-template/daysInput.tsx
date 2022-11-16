@@ -5,22 +5,24 @@ import moment from 'moment';
 
 const DaysInput = (props: any) => {
 
-     console.log(props);
-
      function handleReturnType(value: any){
-          console.log(value.length);
           if(typeof value === 'number'){
                return [`Day - ${value}`];
-          }else if(value.length > 0 && typeof value !== 'string'){
-               return value;
+          }
+          if(typeof value !== 'string'){
+               if(value.length > 0){
+                    return value;
+               }
           }else {
                return JSON.parse(value)
           }
      }
 
-     const [selected, setSelected]: any[] = useState(props.dayType === "day" && props.val ? handleReturnType(props.val)  : props.val ? [moment(props.startDate).add(props.val, 'days').format("Do, MMM YY")] : []);
-
+     const [selected, setSelected]: any[] = useState(props.dayType === "day" && props.val ? handleReturnType(props.val)  : props.val ? handleReturnType(props.val) : []);
+     //add this in the above line incase of error in the first arr moment(props.startDate).add(props.val, 'days').format("Do, MMM YY")
      const days: any[] = [];
+
+     console.log(selected);
 
      function renderInputField() {
           if(props?.dayType === 'day') {
@@ -39,6 +41,8 @@ const DaysInput = (props: any) => {
           props.onChange(objectToString);
           setSelected(e);
      }
+
+     console.log(selected);
      
      renderInputField();
 

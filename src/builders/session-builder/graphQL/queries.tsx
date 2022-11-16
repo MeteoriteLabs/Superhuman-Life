@@ -2,37 +2,42 @@ import { gql } from "@apollo/client";
 
 export const GET_ALL_CLIENT_PACKAGE_BY_TYPE = gql`
   query userPackages($id: ID!, $type: String) {
-    clientPackages(
-      filters: {
-        fitnesspackages: {
-          users_permissions_user: { id: { eq: $id } }
-          fitness_package_type: { type: { eq: $type } }
+    clientPackages(filters: {
+      fitnesspackages:{
+        users_permissions_user:{
+          id:{
+            eq: $id
+          }
+        },
+        fitness_package_type:{
+          type:{
+            eq: $type
+          }
         }
       }
-      sort: ["fitnesspackages.id"]
-    ) {
-      data {
+    }){
+      data{
         id
-        attributes {
-          users_permissions_user {
-            data {
+        attributes{
+          users_permissions_user{
+            data{
               id
-              attributes {
+              attributes{
                 username
               }
             }
           }
           effective_date
           accepted_date
-          fitnesspackages {
-            data {
+          fitnesspackages{
+            data{
               id
-              attributes {
+              attributes{
                 expiry_date
-                fitness_package_type {
-                  data {
+                fitness_package_type{
+                  data{
                     id
-                    attributes {
+                    attributes{
                       type
                     }
                   }
@@ -48,62 +53,6 @@ export const GET_ALL_CLIENT_PACKAGE_BY_TYPE = gql`
                 recordedclasses
                 duration
                 Status
-              }
-            }
-          }
-          program_managers {
-            data {
-              id
-              attributes {
-                fitnesspackages {
-                  data {
-                    id
-                    attributes {
-                      expiry_date
-                      fitness_package_type {
-                        data {
-                          id
-                          attributes {
-                            type
-                          }
-                        }
-                      }
-                      packagename
-                      groupstarttime
-                      groupendtime
-                      restdays
-                      ptonline
-                      ptoffline
-                      grouponline
-                      groupoffline
-                      recordedclasses
-                      duration
-                      Status
-                    }
-                  }
-                }
-                fitnessprograms {
-                  data {
-                    id
-                    attributes {
-                      title
-                      duration_days
-                      rest_days
-                      start_dt
-                      level
-                      description
-                      renewal_dt
-                      fitnessdisciplines {
-                        data {
-                          id
-                          attributes {
-                            disciplinename
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
               }
             }
           }
@@ -150,107 +99,45 @@ export const GET_ALL_FITNESS_PACKAGE_BY_TYPE = gql`
   }
 `;
 
-export const GET_ALL_PROGRAM_BY_TYPE = gql`
-  query programManagers($id: ID!, $type: String) {
-    programManagers(
-      filters: {
-        fitnesspackages: {
-          users_permissions_user: { id: { eq: $id } }
-          fitness_package_type: { type: { eq: $type } }
-        }
-      }
-    ) {
-      data {
-        id
-        attributes {
-          fitnesspackages {
-            data {
-              id
-              attributes {
-                packagename
-                expiry_date
-          Status
-          duration
-          ptonline
-          ptoffline
-          grouponline
-          groupoffline
-          restdays
-          recordedclasses
-          groupstarttime
-          groupendtime
-          fitness_package_type {
-            data {
-              id
-              attributes {
-                type
-              }
-            }
-          }
-              }
-            }
-          }
-          fitnessprograms {
-            data {
-              id
-              attributes {
-                title
-                duration_days
-                rest_days
-                start_dt
-                level
-                events
-                description
-                renewal_dt
-                fitnessdisciplines {
-                  data {
-                    id
-                    attributes {
-                      disciplinename
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-`;
 
 export const GET_ALL_CLIENT_PACKAGE = gql`
   query userPackages($id: ID!, $type: String) {
-    clientPackages(
-      filters: {
-        fitnesspackages: {
-          users_permissions_user: { id: { eq: $id } }
-          fitness_package_type: { type: { eq: $type } }
+    clientPackages(filters: {
+      fitnesspackages:{
+        users_permissions_user:{
+          id:{
+            eq: $id
+          }
+        },
+        fitness_package_type:{
+          type:{
+            eq: $type
+          }
         }
       }
-    ) {
-      data {
+    }){
+      data{
         id
-        attributes {
-          users_permissions_user {
-            data {
+        attributes{
+          users_permissions_user{
+            data{
               id
-              attributes {
+              attributes{
                 username
               }
             }
           }
           effective_date
           accepted_date
-          fitnesspackages {
-            data {
+          fitnesspackages{
+            data{
               id
-              attributes {
+              attributes{
                 expiry_date
-                fitness_package_type {
-                  data {
+                fitness_package_type{
+                  data{
                     id
-                    attributes {
+                    attributes{
                       type
                     }
                   }
@@ -266,62 +153,6 @@ export const GET_ALL_CLIENT_PACKAGE = gql`
                 recordedclasses
                 duration
                 Status
-              }
-            }
-          }
-          program_managers {
-            data {
-              id
-              attributes {
-                fitnesspackages {
-                  data {
-                    id
-                    attributes {
-                      expiry_date
-                      fitness_package_type {
-                        data {
-                          id
-                          attributes {
-                            type
-                          }
-                        }
-                      }
-                      packagename
-                      groupstarttime
-                      groupendtime
-                      restdays
-                      ptonline
-                      ptoffline
-                      grouponline
-                      groupoffline
-                      recordedclasses
-                      duration
-                      Status
-                    }
-                  }
-                }
-                fitnessprograms {
-                  data {
-                    id
-                    attributes {
-                      title
-                      duration_days
-                      rest_days
-                      start_dt
-                      level
-                      description
-                      renewal_dt
-                      fitnessdisciplines {
-                        data {
-                          id
-                          attributes {
-                            disciplinename
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
               }
             }
           }
@@ -333,134 +164,35 @@ export const GET_ALL_CLIENT_PACKAGE = gql`
 
 export const GET_ALL_CLASSIC_CLIENT_BY_ID = gql`
   query userPackages($id: ID!) {
-    clientPackages(filters: { fitnesspackages: { id: { eq: $id } } }) {
-      data {
-        id
-        attributes {
-          users_permissions_user {
-            data {
-              id
-              attributes {
-                username
-              }
-            }
-          }
-          effective_date
-          accepted_date
-          fitnesspackages {
-            data {
-              id
-              attributes {
-                expiry_date
-                fitness_package_type {
-                  data {
-                    id
-                    attributes {
-                      type
-                    }
-                  }
-                }
-                packagename
-                groupstarttime
-                groupendtime
-                restdays
-                ptonline
-                ptoffline
-                grouponline
-                groupoffline
-                recordedclasses
-                duration
-                Status
-              }
-            }
-          }
-          program_managers {
-            data {
-              id
-              attributes {
-                fitnesspackages {
-                  data {
-                    id
-                    attributes {
-                      expiry_date
-                      fitness_package_type {
-                        data {
-                          id
-                          attributes {
-                            type
-                          }
-                        }
-                      }
-                      packagename
-                      groupstarttime
-                      groupendtime
-                      restdays
-                      ptonline
-                      ptoffline
-                      grouponline
-                      groupoffline
-                      recordedclasses
-                      duration
-                      Status
-                    }
-                  }
-                }
-                fitnessprograms {
-                  data {
-                    id
-                    attributes {
-                      title
-                      duration_days
-                      rest_days
-                      start_dt
-                      level
-                      description
-                      renewal_dt
-                      fitnessdisciplines {
-                        data {
-                          id
-                          attributes {
-                            disciplinename
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
+    clientPackages(filters: {
+      fitnesspackages:{
+        id:{
+          eq: $id
         }
       }
-    }
-  }
-`;
-
-export const GET_ALL_GROUP_CLIENT_BY_ID = gql`
-  query userPackages($id: ID!) {
-    clientPackages(filters: { program_managers: { id: { eq: $id } } }) {
-      data {
+    }){
+      data{
         id
-        attributes {
-          users_permissions_user {
-            data {
+        attributes{
+          users_permissions_user{
+            data{
               id
-              attributes {
+              attributes{
                 username
               }
             }
           }
           effective_date
           accepted_date
-          fitnesspackages {
-            data {
+          fitnesspackages{
+            data{
               id
-              attributes {
+              attributes{
                 expiry_date
-                fitness_package_type {
-                  data {
+                fitness_package_type{
+                  data{
                     id
-                    attributes {
+                    attributes{
                       type
                     }
                   }
@@ -476,62 +208,6 @@ export const GET_ALL_GROUP_CLIENT_BY_ID = gql`
                 recordedclasses
                 duration
                 Status
-              }
-            }
-          }
-          program_managers {
-            data {
-              id
-              attributes {
-                fitnesspackages {
-                  data {
-                    id
-                    attributes {
-                      expiry_date
-                      fitness_package_type {
-                        data {
-                          id
-                          attributes {
-                            type
-                          }
-                        }
-                      }
-                      packagename
-                      groupstarttime
-                      groupendtime
-                      restdays
-                      ptonline
-                      ptoffline
-                      grouponline
-                      groupoffline
-                      recordedclasses
-                      duration
-                      Status
-                    }
-                  }
-                }
-                fitnessprograms {
-                  data {
-                    id
-                    attributes {
-                      title
-                      duration_days
-                      rest_days
-                      start_dt
-                      level
-                      description
-                      renewal_dt
-                      fitnessdisciplines {
-                        data {
-                          id
-                          attributes {
-                            disciplinename
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
               }
             }
           }
@@ -589,12 +265,8 @@ export const GET_TABLEDATA = gql`
         attributes {
           title
           duration_days
-          rest_days
-          start_dt
           level
           description
-          events
-          renewal_dt
           fitnessdisciplines {
             data {
               id
@@ -657,6 +329,16 @@ query getTagsforGroup($id: ID!) {
                   }
                 }
               }
+            }
+          }
+        }
+        fitnesspackage{
+          data{
+            id
+            attributes{
+              packagename
+              expiry_date
+              Status
             }
           }
         }
@@ -723,6 +405,7 @@ query getTagsforGroup($id: ID!) {
               duration
               mode
               Status
+              expiry_date
             }
           }
         }
@@ -886,10 +569,16 @@ query getTagsforGroup($id: ID!) {
 
 
 export const GET_TAG_BY_ID = gql`
-query getTagById($id: ID!) {
-  tags(filters: {
+query getTagById($id: ID, $startDate: Date, $endDate: Date) {
+  tags(filters:{
     id: {
       eq: $id
+    },
+    sessions:{
+      session_date: {
+        gte: $startDate,
+        lte: $endDate,
+      }
     }
   }){
     data{
@@ -919,7 +608,7 @@ query getTagById($id: ID!) {
             }
           }
         }
-        sessions{
+        sessions(pagination: {pageSize: 100}){
           data{
             id
             attributes{
@@ -929,6 +618,7 @@ query getTagById($id: ID!) {
               end_time
               start_time
               Is_restday
+              Is_program_template
               mode
               session_date
               activity{
@@ -962,6 +652,8 @@ query getTagById($id: ID!) {
                   id
                   attributes{
                     username
+                    First_Name
+                    Last_Name
                   }
                 }
               }

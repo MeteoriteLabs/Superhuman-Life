@@ -16,10 +16,7 @@ const PtProgramDetails = (props) => {
         existingData.address = {id: JSON.parse(existingData?.address)[0].id, title: JSON.parse(existingData?.address)[0].title};
 
     }
-
-    console.log(props);
-    console.log(existingData);
-
+    
     const [mode, setMode] = useState(props.value === undefined ? '' : (existingData.mode).toString());
     const [addressModal, setAddressModal] = useState(false);
 
@@ -40,12 +37,8 @@ const PtProgramDetails = (props) => {
         if(offlineClasses > 30){
             setOfflinceClasses(30);
         }
-        if(restDays > handleMax(mode)){
-            setRestDays(handleMax(mode));
-        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [onlineClasses, offlineClasses, restDays, mode]);
-
 
     const FETCH_USER_ADDRESSES = gql`
     query addresses($id: ID!) {
@@ -93,6 +86,9 @@ const PtProgramDetails = (props) => {
     function handleValidation(mode: string){
         //here we will check for online
         if(mode === '0'){
+            if(restDays < 0){
+                return false;
+            }
             if((onlineClasses + restDays) === 30){
                 return true;
             }else {
@@ -101,6 +97,9 @@ const PtProgramDetails = (props) => {
         }
         //here we will check for offline
         if(mode === '1'){
+            if(restDays < 0){
+                return false;
+            }
             if((restDays + offlineClasses) === 30){
                 if((addressTitle === 'At My Address' && singleSelections.length !== 0)){
                     return true;
@@ -116,6 +115,9 @@ const PtProgramDetails = (props) => {
         }
         //here we will check for both(hybrid)
         if(mode === "2"){
+            if(restDays < 0){
+                return false;
+            }
             if((restDays + offlineClasses + onlineClasses) === 30){
                 if(addressTitle === 'At My Address' && singleSelections.length !== 0){
                     return true;
@@ -148,18 +150,18 @@ const PtProgramDetails = (props) => {
         props.onChange(undefined);
     }
 
-    function handleMax(mode: string){
+    useEffect(() => {
         if(mode === '0'){
-            return 30 - onlineClasses;
+            setRestDays(30 - onlineClasses);
         }
         if(mode === '1'){
-            return 30 - offlineClasses;
+            setRestDays(30 - offlineClasses);
         }
         if(mode === "2"){
-            return 30 - (onlineClasses + offlineClasses);
+            setRestDays(30 - (onlineClasses + offlineClasses));
         }
-        return 0;
-    }
+    }, [onlineClasses, offlineClasses, mode]);
+
 
     return (
         <>
@@ -193,8 +195,10 @@ const PtProgramDetails = (props) => {
                             placeholder="Search Address.."
                             selected={singleSelections}
                             disabled={inputDisabled}
+                            clearButton
                         />
                     </Col>}
+                    {addressTitle === 'At Client Address' && <span className='small text-muted'>*Within city limits</span>}
                 </Row>
                 {addressTitle === 'At My Address' && <Row>
                     <Col lg={{offset: 3}}>
@@ -211,6 +215,9 @@ const PtProgramDetails = (props) => {
           <div className='m-5 p-2 text-center shadow-lg'>
                <h4>Set For One Month (30 Days)</h4>
           </div>
+          {mode !== "" && <div>
+            <label><b>Enter Number of Sessions</b></label>
+          </div>}
           {mode !== "" && (mode === "0" || mode === "2") && <Row>
                <Col lg={1}>
                     <img src='/assets/personal-training-online.svg' alt='personal-training'/>
@@ -227,6 +234,9 @@ const PtProgramDetails = (props) => {
                               disabled={inputDisabled}
                               onChange={(e: any) => setOnlineClasses(parseInt(e.target.value))}
                          />
+                         <InputGroup.Append>
+                            <InputGroup.Text id="basic-addon1">Sessions</InputGroup.Text>
+                        </InputGroup.Append>
                     </InputGroup>
                </Col>
           </Row>}
@@ -246,16 +256,16 @@ const PtProgramDetails = (props) => {
                               value={offlineClasses}
                               onChange={(e: any) => setOfflinceClasses(parseInt(e.target.value))}
                          />
+                         <InputGroup.Append>
+                            <InputGroup.Text id="basic-addon1">Sessions</InputGroup.Text>
+                        </InputGroup.Append>
                     </InputGroup>
                </Col>
           </Row>}
+          {mode !== "" && <div>
+            <label><b>Rest Days</b></label>
+          </div>}
           {mode !== "" && <Row>
-               <Col lg={1}>
-                    <img src='/assets/rest-icon.svg' alt='rest-icon'/>
-               </Col>
-               <Col lg={1}>
-                    <label><b>Rest Days</b></label>
-               </Col>
                <Col lg={2}>
                     <InputGroup className="mb-3">
                          <FormControl
@@ -263,14 +273,14 @@ const PtProgramDetails = (props) => {
                               aria-describedby="inputGroup-sizing-default"
                               type='number'
                               min={0}
-                              max={handleMax(mode)}
                               value={restDays}
-                              disabled={inputDisabled}
-                              onChange={(e: any) => setRestDays(parseInt(e.target.value))}
+                              disabled={true}
                          />
+                         <InputGroup.Append>
+                            <InputGroup.Text id="basic-addon1">Days</InputGroup.Text>
+                        </InputGroup.Append>
                     </InputGroup>
                </Col>
-            <span className='small'>*It should add upto 30 classes per month</span>
           </Row>}
         </>
     );

@@ -1,0 +1,18 @@
+{
+    "type": "object",
+    "title": "",
+    "properties": {
+        "ModeOfPayment": {
+            "type": "string",
+            "title": "Mode of Payment",
+            "enum": [
+                "UPI",
+                "Bank"
+            ]
+        },
+        "Amount": {
+            "type": "string",
+            "title": "Amount to be paid"
+        }
+    }
+}

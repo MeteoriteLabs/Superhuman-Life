@@ -13,6 +13,7 @@ import SettingSvg from './assets/settings.svg';
 import { GET_SCHEDULEREVENTS } from "./queries";
 import { useQuery } from "@apollo/client";
 import { flattenObj } from '../../../components/utils/responseFlatten';
+import './styles.css';
 
 const FloatingButton = (props: any) => {
 
@@ -26,14 +27,14 @@ const FloatingButton = (props: any) => {
      const program_id = window.location.pathname.split('/').pop();
 
 
-     function FetchData() {
-          useQuery(GET_SCHEDULEREVENTS, { variables: { id: program_id }, onCompleted: (e: any) => { 
-               const flattenData = flattenObj({...e});
-               // setExistingEvents(flattenData.fitnessprograms[0].events); setRestDays(flattenData.fitnessprograms[0].rest_days); setRenewalDate(flattenData.fitnessprograms[0].renewal_dt)
-           } });
-     }
+     // function FetchData() {
+     //      useQuery(GET_SCHEDULEREVENTS, { variables: { id: program_id }, onCompleted: (e: any) => { 
+     //           const flattenData = flattenObj({...e});
+     //           // setExistingEvents(flattenData.fitnessprograms[0].events); setRestDays(flattenData.fitnessprograms[0].rest_days); setRenewalDate(flattenData.fitnessprograms[0].renewal_dt)
+     //       } });
+     // }
 
-     FetchData();
+     // FetchData();
 
      return (
           <>
@@ -43,20 +44,20 @@ const FloatingButton = (props: any) => {
                          <DropdownButton
                               key={1}
                               drop='left'
-                              title={<img src={FitnessSvg} style={{ cursor: 'pointer'}} title="movement" alt="fitness"/>}
+                              title={<img src={FitnessSvg} style={{ cursor: 'pointer' }} title="movement" alt="fitness"/>}
                               style={{ backgroundColor: 'white !important'}}
                          >
-                              <Dropdown.Header style={{ color: 'black', fontWeight: 'bold', letterSpacing: '1px'}}>Fitness</Dropdown.Header>
+                              <Dropdown.Header style={{ overflow: 'auto' ,color: 'black', fontWeight: 'bold', letterSpacing: '1px'}}>Fitness</Dropdown.Header>
                               <Dropdown.Divider/>
                               {window.location.pathname.split("/")[1] !== 'programs' && <Dropdown.Item eventKey="2" onClick={(e) => {
                                    props.callback2('block');
                               }}>Sessions</Dropdown.Item>}
-                              <Dropdown.Item eventKey="1" onClick={(e) => {
+                              <Dropdown.Item className='text-wrap' eventKey="1" onClick={(e) => {
                                    props.callback('block');
                               }}>Import Program Template</Dropdown.Item>
                               <Dropdown.Item eventKey="3" onClick={() => {
                                    createEditWorkoutTemplateComponent.current.TriggerForm({ id: null, type: 'create' });
-                              }}>Import Workout Template</Dropdown.Item>
+                              }}>Import Workout</Dropdown.Item>
                               <Dropdown.Item eventKey="4" onClick={() => {
                                    createEditNewWorkoutComponent.current.TriggerForm({ id: null, type: 'create' });
                               }}>New Workout</Dropdown.Item>
@@ -64,8 +65,9 @@ const FloatingButton = (props: any) => {
                                    createEditNewActivityComponent.current.TriggerForm({ id: null, type: 'create' });
                               }}>New Activity</Dropdown.Item>
                               <Dropdown.Item eventKey="6" onClick={() => {
-                                   createEditRestDayComponent.current.TriggerForm({ id: null, type: 'create' });
-                              }}>Mark Rest Day</Dropdown.Item>
+                                   // createEditRestDayComponent.current.TriggerForm({ id: null, type: 'create' });
+                                   props.restDayCallback();
+                              }}><i style={{ display: `${props.showRestDayAction ? 'inline-block' : 'none'}`}} className='fa fa-check text-success'></i>{" "}Mark Rest Day</Dropdown.Item>
                          </DropdownButton>
                          </Row>
                          {/* <Row className="mt-3" style={{ justifyContent: 'center'}}>
@@ -124,9 +126,34 @@ const FloatingButton = (props: any) => {
                          </DropdownButton>
                          </Row> */}
                     </Col>
-                    <CreateEditProgramManager callback={props.callback3()} startDate={props.startDate} duration={props.duration} ref={createEditWorkoutTemplateComponent} events={existingEvents} renewalDate={renewalDate}></CreateEditProgramManager>
-                    <CreateEditNewWorkout startDate={props.startDate} duration={props.duration} ref={createEditNewWorkoutComponent} events={existingEvents}></CreateEditNewWorkout>
-                    <CreateEditNewActivity startDate={props.startDate} duration={props.duration} ref={createEditNewActivityComponent} events={existingEvents}></CreateEditNewActivity>
+                    <CreateEditProgramManager 
+                         clientIds={props.clientIds} 
+                         sessionIds={props.sessionIds} 
+                         callback={props.callback3} 
+                         startDate={props.startDate} 
+                         duration={props.duration} 
+                         ref={createEditWorkoutTemplateComponent} 
+                         events={existingEvents} 
+                         renewalDate={renewalDate}>
+                    </CreateEditProgramManager>
+                    <CreateEditNewWorkout
+                         clientIds={props.clientIds} 
+                         sessionIds={props.sessionIds} 
+                         callback={props.callback3}  
+                         startDate={props.startDate} 
+                         duration={props.duration} 
+                         ref={createEditNewWorkoutComponent} 
+                         events={existingEvents}>
+                    </CreateEditNewWorkout>
+                    <CreateEditNewActivity
+                         clientIds={props.clientIds} 
+                         sessionIds={props.sessionIds} 
+                         callback={props.callback3}  
+                         startDate={props.startDate} 
+                         duration={props.duration} 
+                         ref={createEditNewActivityComponent} 
+                         events={existingEvents}>
+                    </CreateEditNewActivity>
                     <CreateEditRestDay startDate={props.startDate} duration={props.duration} ref={createEditRestDayComponent} restDays={restDays}></CreateEditRestDay>
                </div>
           </>

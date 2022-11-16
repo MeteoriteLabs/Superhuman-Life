@@ -23,7 +23,7 @@ export function SideNav({ collapse, setCollapse }: any) {
           <img src={CalendarIcon} alt="calendar icon" className="mr-sm-2" style={{height: '20px', width: '20px'}}/>{!collapse && "My Schedule"}
         </NavLink>
         <NavLink className="nav-link text-white" to="/session">
-          <img src={SessionIcon} alt="session icon" className="mr-sm-2" style={{height: '20px', width: '20px'}}/>{!collapse && "Session Manager"}
+          <img src={SessionIcon} alt="session icon" className="mr-sm-2" style={{height: '20px', width: '20px'}}/>{!collapse && "Program Manager"}
         </NavLink>
         <NavLink className="nav-link text-white" to="/clients">
           <img src={ClientIcon} alt="client icon" className="mr-sm-2" style={{height: '20px', width: '20px'}}/>{!collapse && "Clients"}

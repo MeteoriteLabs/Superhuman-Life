@@ -5,6 +5,8 @@ import EquipmentSelect from '../../../../components/customWidgets/equipmentListS
 import CustomProgramDetails from './customProgramDetails';
 import CustomPricingTable from './customPricingTable';
 import CustomPreview from './customPreview';
+import LanguageList from '../../../../components/customWidgets/languageSelect';
+import CustomBookingConfig from './bookingConfig';
 
 export const widgets = {
      datesConfig: DatesConfig,
@@ -13,6 +15,8 @@ export const widgets = {
      customProgramDetails: CustomProgramDetails,
      customPricingTable: CustomPricingTable,
      customPreview: CustomPreview,
+     customBookingConfig: CustomBookingConfig,
+     customLanguageSelect: LanguageList,
 }
 
 export const schemaView: any = {  
@@ -76,7 +80,6 @@ export const schemaView: any = {
      "Upload": {
           "upload": {
                "ui:widget": (props: any) => {
-                    console.log(props)
                     return <Upload allowImage={true} allowVideo={true} onChange={props.onChange} value={props.value} readonly={true}/>;
                },
           },  
@@ -112,19 +115,14 @@ export const schemaView: any = {
           "ui:widget": "datesConfig",
           "ui:readonly": true
      },
+     "languages": {
+          "ui:widget": "customLanguageSelect",
+          "ui:readonly": true
+     },
      "config": {
-          "acceptBooking": {
-              "ui:widget": "radio",
-              "ui:options": {
-                  "inline": true
-              },
-              "ui:readonly": true,
-          },
-          "maxBookingMonth": {
-               "ui:readonly": true
-          },
-          "maxBookingDay": {
-               "ui:readonly": true
+          "bookingConfig": {
+              "ui:widget": "customBookingConfig",
+              "readonly": true
           }
      },
 }

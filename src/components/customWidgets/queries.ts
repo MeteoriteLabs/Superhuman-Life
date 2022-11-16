@@ -242,3 +242,105 @@ export const GET_MUSCLEGROUPS = gql`
           }
      }
   `;
+
+  export const GET_CONTACTS = gql`
+  query ContactsQuery($id: ID){
+    contacts(pagination: { pageSize: 100 }, filters:{
+      ownedBy:{
+        id: {eq: $id}
+      },
+      isPayee:{
+        eq: false
+      }
+    } ) {
+      data {
+        id
+        attributes {
+          firstname
+          lastname
+          email
+          type
+          phone
+          createdAt
+          ownedBy{
+            data{
+              id
+            }
+          }
+          appDownloadStatus
+          paymentDetails
+          organisationDetails
+          isPayee
+        }
+      }
+    }
+  }
+`;
+
+export const FETCH_CHANGEMAKERS = gql`
+  query fetchUsersProfileData{
+    usersPermissionsUsers(pagination: { pageSize: 100 }  
+      ) {
+      data {
+        id
+        attributes {
+          username
+          First_Name
+          Last_Name
+          email
+          Phone_Number
+          Photo_ID
+          About_User
+          Website_URL
+          about_mini_description
+          designations{
+            data{
+              id
+              attributes{
+                Designation_title
+                description
+              }
+            }
+          }
+          instagram_url
+          Facebook_URL
+          Youtube_URL
+          LinkedIn_URL
+          Clubhouse_URL
+          Twitter_URL
+          Verification_ID
+          Photo_profile_banner_ID
+          educational_details(pagination:{pageSize:100}) {
+            data {
+              id
+              attributes {
+                Institute_Name
+                Type_of_degree
+                Specialization
+                Year
+              }
+            }
+          }
+          addresses(pagination:{pageSize:100}) {
+            data {
+              id
+              attributes {
+                city
+                address1
+                address2
+                type
+                zipcode
+                country
+                state
+                Title
+                type_address
+                House_Number
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+

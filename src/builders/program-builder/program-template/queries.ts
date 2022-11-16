@@ -95,6 +95,7 @@ export const FETCH_WORKOUT = gql`
           About
           workout_URL
           workout_text
+          Workout_Video_ID
           calories
           muscle_groups {
             data {
@@ -155,6 +156,37 @@ export const PROGRAM_EVENTS = gql`
     }
   }
 `;
+
+export const GET_SCHEDULEREVENTS_PROGRAM_MANAGER = gql`
+query getSchedulereverntsForProgramManager($id: ID) {
+  tags(filters:{
+    id: {
+      eq: $id,
+    }
+  }){
+    data{
+      id
+      attributes{
+        sessions(pagination:{pageSize:100}){
+          data{
+            id
+            attributes{
+              day_of_program
+              start_time
+              end_time
+              tag
+              Is_restday
+              type
+              mode
+              session_date
+            }
+          }
+        }
+      }
+    }
+  }
+}
+`
 
 export const GET_SCHEDULEREVENTS = gql`
   query getschedulerevents($id: ID) {
@@ -661,6 +693,24 @@ query getTemplateSessions($id: ID!){
   }
 }
 `;
+
+// export const GET_PROGRAM_MANAGER_SESSIONS = gql`
+//   query getProgramManagerSessions($id: ID!){
+
+//   }
+// `
+
+export const REPLACE_SESSION_WORKOUT = gql`
+mutation replaceSessionWorkout($id: ID!, $workoutId: ID!){
+  updateSession(id: $id, data: {
+    workout: $workoutId
+  }){
+    data{
+      id
+    }
+  }
+}
+`
 
 
 // export const GET_SESSIONS_ON_DATE = gql`

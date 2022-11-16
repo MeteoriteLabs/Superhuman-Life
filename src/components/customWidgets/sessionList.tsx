@@ -108,7 +108,7 @@ const ProgramList = (props: any) => {
                     // disabled={urlList[3] === 'pt' || urlList[3] === 'group' || urlList[3] === 'classic'}  
                     as="select" onChange={(e) => setSelectedFitnessPackage(e.target.value)}>
                         <option>Choose Type</option>
-                        {fitnessPackageTypes.slice(0,4).map((item) => {
+                        {fitnessPackageTypes.slice(0,7).map((item) => {
                             return <option value={item.type}>{item.type}</option>
                         })}
                     </FormControl>

@@ -6,27 +6,27 @@
             "packagename",
             "disciplines",
             "equipmentList",
-            "level",
             "intensity"
         ],
         "properties": {
             "packagename": {
                 "type": "string",
-                "title": "Name of Package"
+                "title": "Name of Offering",
+                "description": "Enter the Title for Offering"
             },
             "disciplines": {
                 "type": "string",
                 "title": "Disciplines",
-                "description": "it is a required field"
+                "description": "Choose the relevant discipline for the offering"
             },
             "equipmentList": {
                 "type": "string",
-                "description": "it is a required field"
+                "description": "Add all equipments required for the offering"
             },
             "tags": {
                 "type": "string",
                 "title": "Tags",
-                "description": "User hashtags to improve your listing"
+                "description": "Use hashtags to improve your listing"
             },
             "level": {
                 "type": "number",
@@ -36,7 +36,8 @@
                     "Beginner",
                     "Intermediate",
                     "Advanced"
-                ]
+                ],
+                "description": "Select the relevant level for the offering"
             },
             "intensity": {
                 "type": "number",
@@ -46,7 +47,8 @@
                     "Low",
                     "Moderate",
                     "High"
-                ]
+                ],
+                "description": "Set the relevant intensity for the level"
             }
         }
     },
@@ -57,7 +59,8 @@
             "About",
             "Benifits",
             "thumbnail",
-            "Upload"
+            "Upload",
+            "languages"
         ],
         "properties": {
             "About": {
@@ -68,35 +71,41 @@
                 "type": "string",
                 "title": "Benefits"
             },
+            "languages": {
+                "type": "string",
+                "title": "Languages"
+            },
             "thumbnail": {
                 "type": "string",
-                "description": "Accepts only Image and size cannot exceed 5mb"
+                "description": "This image will be seen in the listing screen"
             },
             "Upload": {
                 "type": "object",
+                "title": "Offering Screen Image/Video",
                 "oneOf": [
+                    {
+                        "title": "Add Youtube URL", 
+                          "properties": {
+                            "VideoUrl": {
+                              "type": "string",
+                              "format": "uri",
+                              "description": "Add Youtube URL"
+                            }
+                          },
+                          "required": [
+                            "VideoUrl"
+                          ]
+                    },
                     {
                         "title": "Upload picture or video", 
                         "properties": {
                             "upload": {
                                 "type": "string",
-                                "description": "Accepts only Image and size cannot exceed 5mb"
+                                "description": "This Image/Video will be seen in the details screen of the offering"
                             }
                       },
                       "required": [
                         "upload"
-                      ]
-                    },
-                    {
-                    "title": "Video URL", 
-                      "properties": {
-                        "VideoUrl": {
-                          "type": "string",
-                          "format": "uri"
-                        }
-                      },
-                      "required": [
-                        "VideoUrl"
                       ]
                     }
                 ]
@@ -143,7 +152,7 @@
                     "Public",
                     "Private"
                 ],
-                "description": "The package will be save as draft and wait for you to publish it."
+                "description": "Public: The Offering will be visible to the user as soon as it is created, Private: The offering will not ve seen by anyone until you share it with them"
             },
             "datesConfig": {
                 "type": "string"
@@ -152,32 +161,11 @@
                 "title": "Booking Config",
                 "type": "object",
                 "required": [
-                    "acceptBooking",
-                    "maxBookingMonth",
-                    "maxBookingDay"
+                    "bookingConfig"
                 ],
                 "properties": {
-                    "acceptBooking": {
-                        "type": "number",
-                        "title": "",
-                        "enum": [0, 1],
-                        "enumNames": [
-                            "Manual",
-                            "Auto"
-                        ],
-                        "description": "In auto it will automatically accept all bookings"
-                    },
-                    "maxBookingMonth": {
-                        "type": "number",
-                        "title": "Maximum booking/per month",
-                        "minimum": 2,
-                        "maximum": 50
-                    },
-                    "maxBookingDay": {
-                        "type": "number",
-                        "title": "Maximum booking/per day",
-                        "minimum": 2,
-                        "maximum": 10
+                    "bookingConfig": {
+                        "type": "string"
                     }
                 }
             }

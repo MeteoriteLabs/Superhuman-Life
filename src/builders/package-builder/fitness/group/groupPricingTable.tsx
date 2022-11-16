@@ -8,7 +8,6 @@ import moment from 'moment';
 const PricingTable = (props) => {
 
      const inputDisabled = props.readonly;
-     console.log(props);
      const classDetails = JSON.parse(props.formContext.programDetails);
      const bookingDetails = JSON.parse(props.formContext.groupinstantbooking);
 
@@ -42,9 +41,9 @@ const PricingTable = (props) => {
 
      function handleDefaultPricing(){
           if (bookingDetails.instantBooking) {
-               return [ {mrp: null, suggestedPrice: null, voucher: 0, duration: 1, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 30, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 90, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 180, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 360, sapienPricing: null}]
+               return [ {mrp: null, suggestedPrice: null, voucher: 0, duration: 1, sapienPricing: null, classes: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 30, sapienPricing: null, classes: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 90, sapienPricing: null, classes: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 180, sapienPricing: null, classes: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 360, sapienPricing: null, classes: null}]
           } else {
-               return [{mrp: null, suggestedPrice: null, voucher: 0, duration: 30, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 90, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 180, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 360, sapienPricing: null}]
+               return [{mrp: null, suggestedPrice: null, voucher: 0, duration: 30, sapienPricing: null, classes: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 90, sapienPricing: null, classes: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 180, sapienPricing: null, classes: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 360, sapienPricing: null, classes: null}]
           }
      }
 
@@ -58,6 +57,29 @@ const PricingTable = (props) => {
           values[0].mrp = 'free';
           setPricing(values);
      }
+     if(classMode === "Online"){
+          const values = [...pricing];
+          values.forEach((val, index) => {
+               if(val.duration === 1){
+                    val.classes = 1;
+               }else {
+                    val.classes = onlineClasses * (val.duration / 30);
+               }
+          });
+          setPricing(values);
+     }
+     if(classMode === "Offline"){
+          const values = [...pricing];
+          values.forEach((val, index) => {
+               if(val.duration === 1){
+                    val.classes = 1;
+               }else {
+                    val.classes = offlineClasses * (val.duration / 30);
+               }
+          });
+          setPricing(values);
+     }
+
      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [bookingDetails.freeDemo]);
 
@@ -114,9 +136,6 @@ const PricingTable = (props) => {
             }
         });
       },[pricing]);
-
-      console.log(pricing);
-
 
     const SUGGESTED_PRICING = gql`
         query fetchSapienPricing($id: ID!) {
@@ -194,7 +213,7 @@ const PricingTable = (props) => {
                          if(bookingDetails.freeDemo){
                               item.suggestedPrice = 'free';
                          }else {
-                              item.suggestedPrice = flattenData.suggestedPricings[0].mrp;
+                              item.suggestedPrice = flattenData.suggestedPricings[0]?.mrp;
                          }
                     }else {
                          item.suggestedPrice = flattenData.suggestedPricings[0]?.mrp * onlineClasses * (item.duration / 30);
@@ -217,7 +236,7 @@ const PricingTable = (props) => {
                          if(bookingDetails.freeDemo){
                               item.suggestedPrice = 'free';
                          }else {
-                              item.suggestedPrice = flattenData.suggestedPricings[0].mrp;
+                              item.suggestedPrice = flattenData.suggestedPricings[0]?.mrp;
                          }
                     }else {
                          item.suggestedPrice = flattenData.suggestedPricings[0]?.mrp * offlineClasses * (item.duration / 30);
@@ -263,17 +282,26 @@ const PricingTable = (props) => {
         setPricing(newValue);
     }
 
-    function handlePricingUpdate(value: any, id: any){
-        let newPricing = [...pricing];
-        newPricing[id].mrp = value;
-        setPricing(newPricing);
-    }
+     function handlePricingUpdate(value: any, id: any){
+          let newPricing = [...pricing];
+          newPricing[id].mrp = value;
+          setPricing(newPricing);
+     }
+
+     function handleValidation(){
+          const values = [...pricing];
+          var res: boolean = false;
+          // eslint-disable-next-line
+          values.map((item: any) => {
+            if(item.mrp !== null && item.mrp >= parseInt(item.sapienPricing)){
+              res = true;
+            }
+          });
+          return res;
+     }
 
     useEffect(() => {
-          if((pricing[0].mrp !== null && pricing[0].mrp >= parseInt(pricing[0].sapienPricing)) || 
-               (pricing[1].mrp !== null && pricing[1].mrp >= parseInt(pricing[1].sapienPricing)) || 
-               (pricing[2].mrp !== null && pricing[2].mrp >= parseInt(pricing[2].sapienPricing)) || 
-               (pricing[3].mrp !== null && pricing[3].mrp >= parseInt(pricing[3].sapienPricing))){
+          if(handleValidation()){
                props.onChange(JSON.stringify(pricing));    
           }else {
                props.onChange(undefined)
@@ -304,9 +332,9 @@ const PricingTable = (props) => {
             {<div>
                 <div className="d-flex justify-content-end p-2">
                         
-                    <Button variant='outline-info' onClick={() => {window.location.href = '/finance'}}>Add suggest pricing</Button>
+                    <Button disabled={inputDisabled} variant='outline-info' onClick={() => {window.location.href = '/finance'}}>Add suggest pricing</Button>
                 </div>
-                <Table style={{ tableLayout: 'fixed'}}>
+                <Table responsive>
                 <thead>
                     <tr className='text-center'>
                     <th></th>
@@ -363,7 +391,7 @@ const PricingTable = (props) => {
                     <td><b>Suggested</b></td>
                     {pricing.map((item, index) => {
                         return (
-                            <td>{isNaN(item.suggestedPrice)  ? 'Base Price Not Set' : `₹ ${item.suggestedPrice}`}</td>
+                            <td>{isNaN(item.suggestedPrice)  ? item.suggestedPrice === 'free' ? 'free' :'Base Price Not Set' : `₹ ${item.suggestedPrice}`}</td>
                         )
                     })}
                     </tr>
@@ -372,7 +400,10 @@ const PricingTable = (props) => {
                     {pricing.map((item, index) => {
                         return (
                             <td>
-                                <InputGroup className="mb-3">
+                                <InputGroup style={{ minWidth: '200px'}}>
+                                   <InputGroup.Prepend>
+                                        <InputGroup.Text id="basic-addon1">{"\u20B9"}</InputGroup.Text>
+                                   </InputGroup.Prepend>
                                     <FormControl
                                     className={`${pricing[index]?.mrp < pricing[index]?.sapienPricing && pricing[index]?.mrp !== null ? "is-invalid" : pricing[index]?.mrp >= pricing[index]?.sapienPricing ? "is-valid" : ""}`}
                                     aria-label="Default"
@@ -383,8 +414,8 @@ const PricingTable = (props) => {
                                     value={pricing[index]?.mrp}
                                     onChange={(e) => {handlePricingUpdate(e.target.value, index)}}
                                     />
-                                    {pricing[index]?.mrp < pricing[index]?.sapienPricing && pricing[index]?.mrp !== null && <span style={{ fontSize: '12px', color: 'red'}}>cannot be less than ₹ {pricing[index]?.sapienPricing}</span>}    
                                 </InputGroup>
+                                   {pricing[index]?.mrp < pricing[index]?.sapienPricing && pricing[index]?.mrp !== null && <span style={{ fontSize: '12px', color: 'red'}}>cannot be less than ₹ {pricing[index]?.sapienPricing}</span>}    
                             </td>
                         )
                     })}

@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 export const GET_TABLEDATA = gql`
-  query ProgramQuery($id: ID!) {
+  query ProgramQuery($id: ID) {
     fitnessprograms(pagination: {
       pageSize: 100
     }, filters:{
@@ -66,7 +66,7 @@ export const GET_TABLEDATA = gql`
 `;
 
 export const GET_DATA = gql`
-  query ProgramQuery($id: ID!) {
+  query ProgramQuery($id: ID) {
     fitnessprograms(filters: { id: { eq: $id } }) {
       data {
         id
@@ -109,6 +109,7 @@ export const CREATE_SESSION = gql`
     $activity_target: JSON
     $activity: ID
     $workout: ID
+    $changemaker: ID!
   ){
     createSession(data: {
       session_date: $session_date,
@@ -122,7 +123,8 @@ export const CREATE_SESSION = gql`
       Is_program_template: $Is_program_template,
       activity: $activity,
       workout: $workout,
-      activity_target: $activity_target
+      activity_target: $activity_target,
+      changemaker: $changemaker
     }){
       data{
         id

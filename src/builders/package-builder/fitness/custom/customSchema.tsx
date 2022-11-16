@@ -2,9 +2,11 @@ import Upload from '../../../../components/upload/upload';
 import DatesConfig from '../../../../components/customWidgets/datesConfig';
 import FitnessSelect from '../../../../components/customWidgets/fitnessMultiSelect';
 import EquipmentSelect from '../../../../components/customWidgets/equipmentListSelect';
+import LanguageList from '../../../../components/customWidgets/languageSelect';
 import CustomProgramDetails from './customProgramDetails';
 import CustomPricingTable from './customPricingTable';
 import CustomPreview from './customPreview';
+import CustomBookingConfig from './bookingConfig';
 
 export const widgets = {
      datesConfig: DatesConfig,
@@ -13,6 +15,8 @@ export const widgets = {
      customProgramDetails: CustomProgramDetails,
      customPricingTable: CustomPricingTable,
      customPreview: CustomPreview,
+     customBookingConfig: CustomBookingConfig,
+     customLanguageSelect: LanguageList,
 }
 
 export const schema: any = {  
@@ -57,13 +61,12 @@ export const schema: any = {
       },
      "thumbnail": {
           "ui:widget": (props: any) => {
-               return <Upload allowImage={true} allowVideo={true} onChange={props.onChange} value={props.value} title={'Thumbnail'} />;
+               return <Upload allowImage={true} allowVideo={false} onChange={props.onChange} value={props.value} title={'Thumbnail'} />;
           },
       },
      "Upload": {
           "upload": {
                "ui:widget": (props: any) => {
-                    console.log(props)
                     return <Upload allowImage={true} allowVideo={true} onChange={props.onChange} value={props.value} />;
                },
           },  
@@ -89,12 +92,12 @@ export const schema: any = {
                   "inline": true
               }
      },
+     "languages": {
+          "ui:widget": "customLanguageSelect"
+     },
      "config": {
-          "acceptBooking": {
-              "ui:widget": "radio",
-              "ui:options": {
-                  "inline": true
-              }
+          "bookingConfig": {
+              "ui:widget": "customBookingConfig"
           }
      },
 }

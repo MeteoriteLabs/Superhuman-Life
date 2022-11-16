@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Row, Col, Form, InputGroup, FormControl} from 'react-bootstrap';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 // import { gql } from '@apollo/client';
@@ -8,9 +8,7 @@ import 'react-bootstrap-typeahead/css/Typeahead.css';
 
 const ClassicProgramDetails = (props) => {
 
-     const inputDisabled = props.readonly;
-
-     console.log(props.value);
+    const inputDisabled = props.readonly;
     const existingData = props.value === undefined ? undefined : JSON.parse(props.value);
     if(existingData !== undefined && existingData.length > 0){
         existingData.address = {id: JSON.parse(existingData?.address)[0].id, title: JSON.parse(existingData?.address)[0].title};
@@ -104,16 +102,33 @@ const ClassicProgramDetails = (props) => {
     // }else {
     //  props.onChange(undefined)
     // }
-    console.log(onlineClasses, restDays, duration);
-    if((onlineClasses + restDays) === duration) {
-        props.onChange(JSON.stringify({ duration: duration, onlineClasses: onlineClasses, restDays: restDays }));
+
+    function handleValidation(){
+          if(onlineClasses === 0){
+               return false;
+          }
+          // if(restDays > (duration/2)){
+          //      return false;
+          // }
+          if((onlineClasses + restDays) === duration){
+               return true;
+          }
+    }
+
+    if(handleValidation()) {
+        props.onChange(JSON.stringify({ duration: duration, online: onlineClasses, rest: restDays }));
     }else {
         props.onChange(undefined);
     }
 
-    function handleMax(){
-        return duration - onlineClasses;
-    }
+    useEffect(() => {
+          if(duration - onlineClasses > 0){
+               setRestDays(duration - onlineClasses);
+          }
+          if(duration === 1){
+               setRestDays(0);
+          }
+    }, [duration, onlineClasses]);
 
     return (
         <>
@@ -128,6 +143,7 @@ const ClassicProgramDetails = (props) => {
             <div className='m-5 p-2 text-center shadow-lg'>
                <h4>Set For {duration} Days</h4>
           </div>
+          <label><b>Enter Number of Sessions</b></label>
           <Row>
                <Col lg={1}>
                     <img src='/assets/Classic.svg' alt='personal-training'/>
@@ -144,16 +160,14 @@ const ClassicProgramDetails = (props) => {
                               value={onlineClasses}
                               onChange={(e: any) => setOnlineClasses(parseInt(e.target.value))}
                          />
+                          <InputGroup.Append>
+                            <InputGroup.Text id="basic-addon1">Sessions</InputGroup.Text>
+                        </InputGroup.Append>
                     </InputGroup>
                </Col>
           </Row>
+          <label><b>Rest Days</b></label>
           <Row>
-               <Col lg={1}>
-                    <img src='/assets/rest-icon.svg' alt='rest-icon'/>
-               </Col>
-               <Col lg={1}>
-                    <label><b>Rest Days</b></label>
-               </Col>
                <Col lg={2}>
                     <InputGroup className="mb-3">
                          <FormControl
@@ -161,11 +175,12 @@ const ClassicProgramDetails = (props) => {
                               aria-describedby="inputGroup-sizing-default"
                               type='number'
                               min={0}
-                              max={handleMax()}
                               value={restDays}
-                              disabled={inputDisabled}
-                              onChange={(e: any) => setRestDays(parseInt(e.target.value))}
+                              disabled={true}
                          />
+                         <InputGroup.Append>
+                            <InputGroup.Text id="basic-addon1">Days</InputGroup.Text>
+                        </InputGroup.Append>
                     </InputGroup>
                </Col>
             {/* <span className='small'>*It should add upto 30 classes per month</span> */}

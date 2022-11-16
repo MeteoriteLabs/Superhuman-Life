@@ -2,7 +2,7 @@ import React, { useContext, useImperativeHandle, useState, useEffect } from 'rea
 import { useQuery, useMutation } from "@apollo/client";
 import ModalView from "../../../../components/modal";
 import { GET_SINGLE_PACKAGE_BY_ID, GET_FITNESS_PACKAGE_TYPES, ADD_SUGGESTION_NEW } from '../graphQL/queries';
-import { CREATE_PACKAGE, DELETE_PACKAGE, EDIT_PACKAGE, UPDATE_PACKAGE_STATUS, CREATE_BOOKING_CONFIG } from '../graphQL/mutations';
+import { CREATE_PACKAGE, DELETE_PACKAGE, EDIT_PACKAGE, UPDATE_PACKAGE_STATUS, CREATE_BOOKING_CONFIG, UPDATE_BOOKING_CONFIG } from '../graphQL/mutations';
 import { Modal, Button} from 'react-bootstrap';
 import AuthContext from "../../../../context/auth-context";
 // import StatusModal from "../../../../components/StatusModal/exerciseStatusModal";
@@ -11,6 +11,7 @@ import { schemaView } from './schemaView';
 import {Subject} from 'rxjs';
 import {flattenObj} from '../../../../components/utils/responseFlatten';
 import moment from 'moment';
+import Toaster from '../../../../components/Toaster';
 
 interface Operation {
     id: string;
@@ -26,10 +27,11 @@ function CreateEditPackage(props: any, ref: any) {
     const [operation, setOperation] = useState<Operation>({} as Operation);
     const [deleteModalShow, setDeleteModalShow] = useState(false);
     const [statusModalShow, setStatusModalShow] = useState(false);
+    const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
+    const [isOffeeringDeleted, setisOffeeringDeleted] = useState<boolean>(false);
+    const [isOfferingUpdated, setisOfferingUpdated] = useState<boolean>(false);
 
     let frmDetails: any = {};
-
-    console.log(operation.type);
 
     useQuery(GET_FITNESS_PACKAGE_TYPES, {
         variables: {type: "Group Class"},
@@ -39,9 +41,17 @@ function CreateEditPackage(props: any, ref: any) {
         }
     });
 
-    const [bookingConfig] = useMutation(CREATE_BOOKING_CONFIG, {onCompleted: (r: any) => { 
+    const [createBookingConfig] = useMutation(CREATE_BOOKING_CONFIG, {onCompleted: (r: any) => { 
         console.log(r); modalTrigger.next(false); props.callback();
-    }});
+            setIsFormSubmitted(!isFormSubmitted); 
+        }
+    });
+
+    const [updateBookingConfig] = useMutation(UPDATE_BOOKING_CONFIG, {onCompleted: (r: any) => {
+        console.log(r); modalTrigger.next(false); props.callback();
+            setisOfferingUpdated(!isOfferingUpdated); 
+        }
+    });
 
     const [createUserPackageSuggestion] = useMutation(ADD_SUGGESTION_NEW, {onCompleted: (data) => {
         modalTrigger.next(false);
@@ -58,22 +68,38 @@ function CreateEditPackage(props: any, ref: any) {
                 }
             })
         }else {
-            bookingConfig({
+            const val = JSON.parse(frmDetails.config.bookingConfig);
+            createBookingConfig({
                 variables: {
-                    isAuto: frmDetails.config.acceptBooking === 0 ? false : true,
+                    isAuto: val.config === "Auto" ? true : false,
                     id: r.createFitnesspackage.data.id,
-                    bookings_per_day: frmDetails.config.maxBookingDay,
-                    bookings_per_month: frmDetails.config.maxBookingMonth,
+                    is_Fillmyslots: val.fillSchedule,
+                    tagName: frmDetails.packagename
                 }
             });
         }
     }});
-    const [editPackage] = useMutation(EDIT_PACKAGE,{onCompleted: (r: any) => { modalTrigger.next(false); props.callback(); } });
+    const [editPackage] = useMutation(EDIT_PACKAGE,{onCompleted: (r: any) => { 
+        const val = JSON.parse(frmDetails.config.bookingConfig);
+        updateBookingConfig({
+            variables: {
+                isAuto: val.config === "Auto" ? true : false,
+                id: frmDetails.bookingConfigId,
+                is_Fillmyslots: val.fillSchedule
+            }
+        });
+    }});
 
     const [updatePackageStatus] = useMutation(UPDATE_PACKAGE_STATUS, {onCompleted: (data) => {
         props.callback();
-    }});
-    const [deletePackage] = useMutation(DELETE_PACKAGE, { refetchQueries: ["GET_TABLEDATA"], onCompleted: (data) => {props.callback()}});
+            setisOfferingUpdated(!isOfferingUpdated);
+        }
+    });
+    const [deletePackage] = useMutation(DELETE_PACKAGE, { refetchQueries: ["GET_TABLEDATA"], onCompleted: (data) => {
+        props.callback();
+            setisOffeeringDeleted(!isOffeeringDeleted);
+        }
+    });
 
     const modalTrigger =  new Subject();
 
@@ -81,14 +107,20 @@ function CreateEditPackage(props: any, ref: any) {
         TriggerForm: (msg: Operation) => {
             setOperation(msg);
 
+            if(msg.type === 'toggle-status'){
+                setStatusModalShow(true);
+            }
+
+            if(msg.type === 'delete'){
+                setDeleteModalShow(true);
+            }
+
             // if (msg && !msg.id) //render form if no message id
             if(msg.type !== 'delete' && msg.type !== 'toggle-status'){
                 modalTrigger.next(true);
             }
         }
     }));
-
-    // console.log(exerciseDetails);
 
     enum ENUM_FITNESSPACKAGE_LEVEL {
         Beginner,
@@ -116,15 +148,14 @@ function CreateEditPackage(props: any, ref: any) {
         Family
     }
 
-    const PRICING_TABLE_DEFAULT = [ {mrp: null, suggestedPrice: null, voucher: 0, duration: 30, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 90, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 180, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 360, sapienPricing: null}];
+    const PRICING_TABLE_DEFAULT = [ {mrp: null, suggestedPrice: null, voucher: 0, duration: 30, sapienPricing: null, classes: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 90, sapienPricing: null, classes: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 180, sapienPricing: null, classes: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 360, sapienPricing: null, classes: null}];
 
-    const PRICING_TABLE_DEFAULT_WITH_INSTANTBOOKING = [ {mrp: null, suggestedPrice: null, voucher: 0, duration: 1, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 30, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 90, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 180, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 360, sapienPricing: null}];
+    const PRICING_TABLE_DEFAULT_WITH_INSTANTBOOKING = [ {mrp: null, suggestedPrice: null, voucher: 0, duration: 1, sapienPricing: null, classes: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 30, sapienPricing: null, classes: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 90, sapienPricing: null, classes: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 180, sapienPricing: null, classes: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 360, sapienPricing: null, classes: null}];
 
     function FillDetails(data: any) {
         const flattenedData = flattenObj({...data});
-        console.log(flattenedData);
         let msg = flattenedData.fitnesspackages[0];
-        let booking: any = {};
+        let bookingConfig: any = {};
         let details: any = {};
         if(msg.groupinstantbooking){
             for(var i =0; i<msg.fitnesspackagepricing.length; i++){
@@ -149,25 +180,24 @@ function CreateEditPackage(props: any, ref: any) {
         details.groupinstantbooking = JSON.stringify({"instantBooking": msg.groupinstantbooking, "freeDemo": msg.Is_free_demo});
         details.classsize = msg.classsize;
         details.expiryDate = moment(msg.expirydate).format('YYYY-MM-DD');
-        details.level = ENUM_FITNESSPACKAGE_LEVEL[msg.level];
+        details.level = ENUM_FITNESSPACKAGE_LEVEL[msg?.level];
         details.intensity = ENUM_FITNESSPACKAGE_INTENSITY[msg.Intensity];
-        details.pricingDetail = msg.fitnesspackagepricing[0]?.mrp === 'free' ? 'free' : JSON.stringify(msg.groupinstantbooking ? PRICING_TABLE_DEFAULT_WITH_INSTANTBOOKING : PRICING_TABLE_DEFAULT);
+        details.pricingDetail = JSON.stringify(msg.groupinstantbooking ? PRICING_TABLE_DEFAULT_WITH_INSTANTBOOKING : PRICING_TABLE_DEFAULT);
         details.publishingDate = moment(msg.publishing_date).format('YYYY-MM-DD');
         details.tags = msg?.tags === null ? "" : msg.tags;
         details.user_permissions_user = msg.users_permissions_user.id;
         details.visibility = msg.is_private === true ? 1 : 0;
-        booking.acceptBooking = msg.booking_config?.isAuto === true ? 1 : 0;
-        booking.maxBookingDay = msg.booking_config?.bookingsPerDay;
-        booking.maxBookingMonth = msg.booking_config?.BookingsPerMonth;
-        details.config = booking;
+        bookingConfig.config = msg.booking_config?.isAuto === true ? "Auto" : "Manual";
+        bookingConfig.fillSchedule = msg.booking_config?.is_Fillmyslots;
+        details.config = {bookingConfig: JSON.stringify(bookingConfig)};
         details.programDetails = JSON.stringify({addressTag: msg.address === null ? 'At Client Address' : 'At My Address', address: [msg.address], mode: ENUM_FITNESSPACKAGE_MODE[msg.mode], offline: msg.groupoffline, online: msg.grouponline, rest: msg.restdays});
         details.thumbnail = msg.Thumbnail_ID;
         details.Upload = msg.Upload_ID === null ? {"VideoUrl": msg.video_URL} : {"upload": msg.Upload_ID};
-        details.datesConfig = {"expiryDate": msg.expiry_date, "publishingDate": msg.publishing_date};
+        details.datesConfig = JSON.stringify({"expiryDate": msg.expiry_date, "publishingDate": msg.publishing_date});
         details.bookingleadday = msg.bookingleadday;
-        console.log(details);
+        details.bookingConfigId = msg.booking_config?.id;
+        details.languages = JSON.stringify(msg.languages);
         setGroupDetails (details);
-        // console.log(exerciseDetails);
 
         //if message exists - show form only for edit and view
         if (['edit', 'view'].indexOf(operation.type) > -1)
@@ -176,8 +206,6 @@ function CreateEditPackage(props: any, ref: any) {
             OnSubmit(null);
     }
 
-    console.log(operation.type);
-
     useEffect(() => {
         if(operation.type === 'create'){
             setGroupDetails({});
@@ -185,8 +213,7 @@ function CreateEditPackage(props: any, ref: any) {
     }, [operation.type]);
 
     function FetchData() {
-        console.log('Fetch Data');
-        useQuery(GET_SINGLE_PACKAGE_BY_ID, { variables: { id: operation.id }, skip: (operation.type === 'create'),onCompleted: (e: any) => { FillDetails(e) } });
+        useQuery(GET_SINGLE_PACKAGE_BY_ID, { variables: { id: operation.id }, skip: (operation.type === 'create' || !operation.id),onCompleted: (e: any) => { FillDetails(e) } });
     }
 
     function CreatePackage(frm: any) {
@@ -196,12 +223,13 @@ function CreateEditPackage(props: any, ref: any) {
         frm.programDetails = JSON.parse(frm.programDetails)
         frm.datesConfig = JSON.parse(frm.datesConfig);
         frm.groupinstantbooking = JSON.parse(frm.groupinstantbooking);
+        frm.languages = JSON.parse(frm.languages)
 
         createPackage({
             variables: {
                 packagename: frm.packagename,
                 tags: frm?.tags,
-                level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
+                level: frm.level ? ENUM_FITNESSPACKAGE_LEVEL[frm?.level] : null,
                 intensity: ENUM_FITNESSPACKAGE_INTENSITY[frm.intensity],
                 aboutpackage: frm.About,
                 benefits: frm.Benifits,
@@ -215,35 +243,38 @@ function CreateEditPackage(props: any, ref: any) {
                 grouponline: frm.programDetails?.online,
                 classsize: frm.classsize,
                 restdays: frm.programDetails?.rest,
-                bookingleadday: frm.bookingleaddat,
                 is_private: frm.visibility === 1 ? true : false,
                 fitness_package_type: fitnessTypes[0].id,
                 fitnesspackagepricing: JSON.parse(frm.pricingDetail).filter((item: any) => item.mrp !== null),
                 ptclasssize: ENUM_FITNESSPACKAGE_PTCLASSSIZE[frm.classSize],
                 users_permissions_user: frm.user_permissions_user,
                 publishing_date: moment(frm.datesConfig?.publishingDate).toISOString(),
-                expiry_date: moment(frm.datesConfig?.expiry_date).toISOString(),
+                expiry_date: moment(frm.datesConfig?.expiryDate).toISOString(),
                 thumbnail: frm.thumbnail,
                 upload: frm?.Upload?.upload,
                 equipmentList: frm.equipmentList,
-                videoUrl: frm?.Upload?.VideoUrl
+                videoUrl: frm?.Upload?.VideoUrl,
+                languages: frm.languages.map((item: any) => item.id).join(", ").split(", "),
             }
         });
     }
 
     function EditPackage(frm: any) {
         frmDetails = frm;
-        console.log('edit message', frm);
+        
         frm.equipmentList = JSON.parse(frm.equipmentList).map((x: any) => x.id).join(',').split(',');
         frm.disciplines = JSON.parse(frm.disciplines).map((x: any) => x.id).join(',').split(',');
         frm.programDetails = JSON.parse(frm.programDetails)
         frm.datesConfig = JSON.parse(frm.datesConfig)
+        frm.groupinstantbooking = JSON.parse(frm.groupinstantbooking);
+        frm.languages = JSON.parse(frm.languages);
+        
         editPackage({
             variables: {
                 id: operation.id,
                 packagename: frm.packagename,
                 tags: frm?.tags,
-                level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
+                level: ENUM_FITNESSPACKAGE_LEVEL[frm?.level],
                 intensity: ENUM_FITNESSPACKAGE_INTENSITY[frm.intensity],
                 aboutpackage: frm.About,
                 benefits: frm.Benifits,
@@ -258,22 +289,21 @@ function CreateEditPackage(props: any, ref: any) {
                 classsize: frm.classsize,
                 is_private: frm.visibility === 1 ? true : false,
                 restdays: frm.programDetails?.rest,
-                bookingleadday: frm.bookingleaddat,
                 fitness_package_type: fitnessTypes[0].id,
                 fitnesspackagepricing: JSON.parse(frm.pricingDetail).filter((item: any) => item.mrp !== null),
                 users_permissions_user: frm.user_permissions_user,
                 publishing_date: moment(frm.datesConfig?.publishingDate).toISOString(),
-                expiry_date: moment(frm.datesConfig?.expiry_date).toISOString(),
+                expiry_date: moment(frm.datesConfig?.expiryDate).toISOString(),
                 thumbnail: frm.thumbnail,
                 upload: frm?.Upload?.upload,
                 equipmentList: frm.equipmentList,
-                videoUrl: frm?.Upload?.VideoUrl
+                videoUrl: frm?.Upload?.VideoUrl,
+                languages: frm.languages.map((item: any) => item.id).join(", ").split(", "),
             }
         })
     }
 
     function ViewPackage(frm: any) {
-        console.log('view message');
         //use a variable to set form to disabled/not editable
      //    useMutation(UPDATE_EXERCISE, { variables: frm, onCompleted: (d: any) => { console.log(d); } })
     }
@@ -315,15 +345,14 @@ function CreateEditPackage(props: any, ref: any) {
 
     let name = "";
     if(operation.type === 'create'){
-        name="Create Group Package";
+        name="Group Offering";
     }else if(operation.type === 'edit'){
-        name="Edit";
+        name=`Edit ${groupDetails.packagename}`;
     }else if(operation.type === 'view'){
-        name="View";
+        name=`Viewing ${groupDetails.packagename}`;
     }
 
     FetchData();
-
 
     return (
         <>
@@ -339,6 +368,7 @@ function CreateEditPackage(props: any, ref: any) {
                     formData={groupDetails}
                     widgets={widgets}
                     modalTrigger={modalTrigger}
+                    actionType={operation.type}
                 />
                 
             {/* } */}
@@ -383,7 +413,17 @@ function CreateEditPackage(props: any, ref: any) {
                     </Modal.Footer>
                     </Modal>
         
-            
+                    {isFormSubmitted ?
+                <Toaster handleCallback={() => setIsFormSubmitted(false)} type="success" msg="Offering has been Created successfully" />
+                : null}
+
+            {isOffeeringDeleted ?
+                <Toaster handleCallback={() => setisOffeeringDeleted(!isOffeeringDeleted)} type="success" msg="Offering has been deleted successfully" />
+                : null}
+
+            {isOfferingUpdated ?
+                <Toaster handleCallback={() => setisOfferingUpdated(!isOfferingUpdated)} type="success" msg="Offering has been updated successfully" />
+                : null}
         </>
     )
 }

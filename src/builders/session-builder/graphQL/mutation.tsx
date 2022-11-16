@@ -57,9 +57,10 @@ export const UPDATE_USERPACKAGE_EFFECTIVEDATE = gql`
 `;
 
 export const CREATE_TAG = gql`
-     mutation createTag($name: String!){
+     mutation createTag($name: String!, $fitnessPackageID: ID!) {
           createTag(data: {
-               tag_name: $name
+               tag_name: $name,
+               fitnesspackage: $fitnessPackageID
           }){
                data{
                     id
@@ -141,25 +142,14 @@ export const CREATE_PROGRAM = gql`
                } 
           }
      }
-`    
+`;    
 
-
-export const CREATE_PROGRAM_MANAGER = gql`
-     mutation createProgramManager(
-          $fitnesspackages: [ID]
-          $fitnessprograms: [ID]
-     ){
-          createProgramManager(
-               input:{
-                    data:{
-                         fitnesspackages: $fitnesspackages
-                         fitnessprograms: $fitnessprograms
-                    }
-               }
-          ){
-               programManager{
-                    id
-               }
-          }
+export const DELETE_TAG_BATCH = gql`
+mutation deleteBatch($id: ID!) {
+     deleteTag(id: $id){
+       data{
+         id
+       }
      }
+   }
 `;

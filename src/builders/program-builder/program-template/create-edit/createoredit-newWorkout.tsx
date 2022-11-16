@@ -1,13 +1,13 @@
 import React, { useContext, useImperativeHandle, useState } from 'react';
 import { useQuery, useMutation, gql } from "@apollo/client";
 import ModalView from "../../../../components/modal";
-import { GET_SCHEDULEREVENTS, CREATE_WORKOUT, CREATE_SESSION, GET_SESSIONS, UPDATE_TAG_SESSIONS, CREATE_SESSION_BOOKING, GET_TEMPLATE_SESSIONS, UPDATE_FITNESSPORGRAMS_SESSIONS } from "../queries";
+import { GET_SCHEDULEREVENTS, CREATE_WORKOUT, CREATE_SESSION, UPDATE_TAG_SESSIONS, CREATE_SESSION_BOOKING, GET_TEMPLATE_SESSIONS, UPDATE_FITNESSPORGRAMS_SESSIONS } from "../queries";
 import AuthContext from "../../../../context/auth-context";
 import { schema, widgets } from '../schema/newWorkoutSchema';
 import {Subject} from 'rxjs';
 import {flattenObj} from '../../../../components/utils/responseFlatten';
 import moment from 'moment';
-import {AvailabilityCheck} from '../availabilityCheck';
+import {AvailabilityCheck} from './availabilityCheck';
 import { Modal, Button } from 'react-bootstrap';
 
 interface Operation {
@@ -17,18 +17,18 @@ interface Operation {
 }
 
 function CreateEditNewWorkout(props: any, ref: any) {
+    console.log(props);
     const auth = useContext(AuthContext);
-    const programSchema: { [name: string]: any; } = require("../json/newWorkout.json");
+    const programSchema: { [name: string]: any; } = require(window.location.pathname.includes("session") ? "../json/sessionManager/newWorkout.json" :"../json/newWorkout.json");
     const [programDetails, setProgramDetails] = useState<any>({});
     // const [frmDetails, setFrmDetails] = useState<any>([]);
     const [operation, setOperation] = useState<Operation>({} as Operation);
     const program_id = window.location.pathname.split('/').pop();
     let frmDetails: any;
-    const [sessionsIds, setSessionsIds] = useState<any>([]);
+    // const [sessionsIds, setSessionsIds] = useState<any>([]);
     const [templateSessionsIds, setTemplateSessionsIds] = useState<any>([]);
     // userId here is the new sessionID.
     const [userId, setUserId] = useState("");
-    const [clientId, setClientId] = useState("")
     const [dropConflict, setDropConflict] = useState(false);
 
     const GET_SESSIONS_BY_DATE = gql`
@@ -36,6 +36,9 @@ function CreateEditNewWorkout(props: any, ref: any) {
             sessions(filters: {
                 session_date: {
                     eq: $date
+                },
+                type: {
+                    ne: "restday"
                 }
             }){
                 data{
@@ -60,26 +63,26 @@ function CreateEditNewWorkout(props: any, ref: any) {
         }
         setTemplateSessionsIds(templateExistingValues);
     }});
-
-    useQuery(GET_SESSIONS, {variables: {id: program_id}, skip: (window.location.pathname.split('/')[1] === 'programs'),onCompleted: (data: any) => {
-        const flattenData = flattenObj({...data});
-        setClientId(flattenData.tags[0]?.client_packages[0]?.users_permissions_user.id);
-        const sessionsExistingValues = [...sessionsIds];
-        for(var q=0; q<flattenData.tags[0]?.sessions.length; q++){
-            sessionsExistingValues.push(flattenData.tags[0].sessions[q].id);
-        }
-        setSessionsIds(sessionsExistingValues);
-    }});
     
     const [createWorkout] = useMutation(CREATE_WORKOUT, { onCompleted: (r: any) => { updateSchedulerEvents(frmDetails, r.createWorkout.data.id); modalTrigger.next(false); } });
-    const [createSessionBooking] = useMutation(CREATE_SESSION_BOOKING, { onCompleted: (data: any) => {modalTrigger.next(false)} })
+    const [createSessionBooking] = useMutation(CREATE_SESSION_BOOKING, { onCompleted: (data: any) => {
+        modalTrigger.next(false);
+        props.callback();
+    } })
     const [upateSessions] = useMutation(UPDATE_TAG_SESSIONS, { onCompleted: (data: any) => {
-        createSessionBooking({
-            variables: {
-                session: userId,
-                client: clientId,
+        if(props?.clientIds.length > 0){
+            for(var i=0; i<props?.clientIds.length; i++){
+                createSessionBooking({
+                    variables: {
+                        session: userId,
+                        client: props.clientIds[i]
+                    }
+                });
             }
-        });
+        }else {
+            modalTrigger.next(false);
+            props.callback();
+        }
     }});
     const [updateFitenssProgram] = useMutation(UPDATE_FITNESSPORGRAMS_SESSIONS, { onCompleted: (data: any) => {
         modalTrigger.next(false);
@@ -105,7 +108,7 @@ function CreateEditNewWorkout(props: any, ref: any) {
                 }
             });
         }else if(window.location.pathname.split('/')[1] !== 'client' && window.location.pathname.split('/')[1] !== 'programs') {
-            const values = [...sessionsIds];
+            const values = [...props.sessionIds];
             // here userId refers to the sessionID
             setUserId(r.createSession.data.id);
             values.push(r.createSession.data.id);
@@ -130,6 +133,19 @@ function CreateEditNewWorkout(props: any, ref: any) {
                 modalTrigger.next(true);
         }
     }));
+
+    enum ENUM_EXERCISES_EXERCISELEVEL {
+        Beginner,
+        Intermediate,
+        Advanced,
+        None
+    }
+
+    enum ENUM_WORKOUTS_INTENSITY {
+        Low,
+        Medium,
+        High
+    }
 
     function FillDetails(data: any) {
         let details: any = {};
@@ -158,8 +174,10 @@ function CreateEditNewWorkout(props: any, ref: any) {
 
     async function updateSchedulerEvents(frm: any, workout_id: any) {
         var existingEvents = (props.events === null ? [] : [...props.events]);
-        // AvailabilityCheck({...frm})
-
+        if (frm.day) {
+            frm.day = JSON.parse(frm.day);
+        }
+        
         if(window.location.pathname.split('/')[1] !== 'programs'){
             const variables = {
                 date: moment(frm.day[0].day, 'Do, MMM YY').format('YYYY-MM-DD')
@@ -172,10 +190,9 @@ function CreateEditNewWorkout(props: any, ref: any) {
                 return
             }
         }
-
+        
+        var eventJson: any = {};
         if(frm.day){
-            var eventJson: any = {};
-            frm.day = JSON.parse(frm.day);
             frm.time = JSON.parse(frm.time);
             eventJson.type = 'workout';
             eventJson.name = frm.workout;
@@ -215,57 +232,87 @@ function CreateEditNewWorkout(props: any, ref: any) {
             }
         }
 
-
-        createSession({
-            variables: {
-                start_time: eventJson.startTime,
-                end_time: eventJson.endTime,
-                workout: eventJson.id,
-                tag: eventJson.tag,
-                mode: eventJson.mode,
-                day_of_program: eventJson.day,
-                type: eventJson.type,
-                session_date: moment(frm.day[0].day, 'Da, MMM YY').format('YYYY-MM-DD'),
-                changemaker: auth.userid
-            }
-        })
+        if(window.location.pathname.split('/')[1] === 'programs'){
+            createSession({
+                variables: {
+                    start_time: eventJson.startTime,
+                    end_time: eventJson.endTime,
+                    workout: eventJson.id,
+                    type: eventJson.type,
+                    day_of_program: eventJson.day,
+                    changemaker: auth.userid,
+                    session_date: null
+                }
+            });
+        }else {
+            createSession({
+                variables: {
+                    start_time: eventJson.startTime,
+                    end_time: eventJson.endTime,
+                    workout: eventJson.id,
+                    tag: eventJson.tag,
+                    mode: eventJson.mode,
+                    type: eventJson.type,
+                    session_date: moment(frm.day[0].day, 'Do, MMM YY').format('YYYY-MM-DD'),
+                    changemaker: auth.userid
+                }
+            });
+        }
     }
     }
 
     function UpdateProgram(frm: any) {
         frmDetails = frm;
-        if(frm.addWorkout.build){
-            frm.addWorkout.build = JSON.parse(frm.addWorkout.build);
+        frm.discipline = JSON.parse(frm.discipline);
+        frm.equipment = JSON.parse(frm.equipment);
+        frm.muscleGroup = JSON.parse(frm.muscleGroup);
+        if (frm.addWorkout.AddWorkout === 'Build') {
+
+        if (Object.keys(frm.addWorkout.warmup)[0] === "exercise") {
+            frm.addWorkout.warmup = JSON.parse(frm.addWorkout.warmup.exercise);
+            } else {
+                frm.addWorkout.warmup.type = Object.keys(frm.addWorkout.warmup)[0];
+                frm.addWorkout.warmup.value = frm.addWorkout.warmup[Object.keys(frm.addWorkout.warmup)[0]];
+                delete frm.addWorkout.warmup[Object.keys(frm.addWorkout.warmup)[0]];
+                frm.addWorkout.warmup = [frm.addWorkout.warmup]
+            }
+            if (Object.keys(frm.addWorkout.mainmovement)[0] === "exercise") {
+                frm.addWorkout.mainmovement = JSON.parse(frm.addWorkout.mainmovement.exercise);
+            } else {
+                frm.addWorkout.mainmovement.type = Object.keys(frm.addWorkout.mainmovement)[0];
+                frm.addWorkout.mainmovement.value = frm.addWorkout.mainmovement[Object.keys(frm.addWorkout.mainmovement)[0]];
+                delete frm.addWorkout.mainmovement[Object.keys(frm.addWorkout.mainmovement)[0]];
+                frm.addWorkout.mainmovement = [frm.addWorkout.mainmovement]
+            }
+            if (Object.keys(frm.addWorkout.cooldown)[0] === "exercise") {
+                frm.addWorkout.cooldown = JSON.parse(frm.addWorkout.cooldown.exercise);
+            } else {
+                frm.addWorkout.cooldown.type = Object.keys(frm.addWorkout.cooldown)[0];
+                frm.addWorkout.cooldown.value = frm.addWorkout.cooldown[Object.keys(frm.addWorkout.cooldown)[0]];
+                delete frm.addWorkout.cooldown[Object.keys(frm.addWorkout.cooldown)[0]];
+                frm.addWorkout.cooldown = [frm.addWorkout.cooldown]
+            }
         }
-        enum ENUM_EXERCISES_EXERCISELEVEL {
-            Beginner,
-            Intermediate,
-            Advanced,
-            None
-        }
-    
-        enum ENUM_WORKOUTS_INTENSITY {
-            Low,
-            Medium,
-            High
-        }
-        createWorkout({ variables: {
-            workouttitle: frm.workout,
-            intensity: ENUM_WORKOUTS_INTENSITY[frm.intensity],
-            level: ENUM_EXERCISES_EXERCISELEVEL[frm.level],
-            fitnessdisciplines: frm.discipline.split(","),
-            About: frm.about,
-            Benifits: frm.benefits,
-            warmup: (frm.addWorkout.AddWorkout === "Build" ? (frm.addWorkout.build.warmup ? frm.addWorkout.build.warmup : null) : null),
-            mainmovement: (frm.addWorkout.AddWorkout === "Build" ? (frm.addWorkout.build.mainMovement ? frm.addWorkout.build.mainMovement : null) : null),
-            cooldown: (frm.addWorkout.AddWorkout === "Build" ? (frm.addWorkout.build.coolDown ? frm.addWorkout.build.coolDown : null) : null),
-            workout_text: (frm.addWorkout.AddWorkout === "Text" ? frm.addWorkout.AddText : null),
-            workout_URL: (frm.addWorkout.AddWorkout === "Add URL" ? frm.addWorkout.AddURL : null),
-            calories: frm.calories,
-            equipment_lists: frm.equipment.split(","),
-            muscle_groups: frm.muscleGroup.split(","),
-            users_permissions_user: frm.user_permissions_user
-        }});
+        createWorkout({
+            variables: {
+                workouttitle: frm.workout,
+                intensity: ENUM_WORKOUTS_INTENSITY[frm.intensity],
+                level: ENUM_EXERCISES_EXERCISELEVEL[frm.level],
+                fitnessdisciplines: frm.discipline.map((item: any) => { return item.id }).join(',').split(','),
+                About: frm.about,
+                Benifits: frm.benefits,
+                warmup: (frm.addWorkout.AddWorkout === "Build" ? frm.addWorkout.warmup : null),
+                mainmovement: (frm.addWorkout.AddWorkout === "Build" ? frm.addWorkout.mainmovement : null),
+                cooldown: (frm.addWorkout.AddWorkout === "Build" ? frm.addWorkout.cooldown : null),
+                workout_text: (frm.addWorkout.AddWorkout === "Text" ? frm.addWorkout.AddText : null),
+                workout_URL: (frm.addWorkout.AddWorkout === "Add URL" ? frm.addWorkout.AddURL : null),
+                Workout_Video_ID: (frm.addWorkout.AddWorkout === "Upload" ? frm.addWorkout.Upload : null),
+                calories: frm.calories,
+                equipment_lists: frm.equipment.map((item: any) => { return item.id }).join(',').split(','),
+                muscle_groups: frm.muscleGroup.map((item: any) => { return item.id }).join(',').split(','),
+                users_permissions_user: frm.user_permissions_user
+            }
+        });
     }
 
     function OnSubmit(frm: any) {

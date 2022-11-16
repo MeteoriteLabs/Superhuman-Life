@@ -1,7 +1,7 @@
 import React, { useContext, useImperativeHandle, useState } from 'react';
 import { useQuery, useMutation } from "@apollo/client";
 import ModalView from "../../../../components/modal";
-import { GET_SCHEDULEREVENTS, CREATE_SESSION, GET_SESSIONS, UPDATE_TAG_SESSIONS, CREATE_SESSION_BOOKING, GET_TEMPLATE_SESSIONS, UPDATE_FITNESSPORGRAMS_SESSIONS } from "../queries";
+import { GET_SCHEDULEREVENTS, GET_SCHEDULEREVENTS_PROGRAM_MANAGER, CREATE_SESSION, GET_SESSIONS, UPDATE_TAG_SESSIONS, CREATE_SESSION_BOOKING, GET_TEMPLATE_SESSIONS, UPDATE_FITNESSPORGRAMS_SESSIONS } from "../queries";
 import AuthContext from "../../../../context/auth-context";
 import { schema, widgets } from '../schema/restDaySchema';
 import {Subject} from 'rxjs';
@@ -15,6 +15,7 @@ interface Operation {
 }
 
 function CreateEditRestDay(props: any, ref: any) {
+    console.log(props);
     const auth = useContext(AuthContext);
     const programSchema: { [name: string]: any; } = require("../json/restDay.json");
     const [programDetails, setProgramDetails] = useState<any>({});
@@ -74,14 +75,26 @@ function CreateEditRestDay(props: any, ref: any) {
         let details: any = {};
         let restDays: any[] = [];
         let msg = flattenData;
-        msg.fitnessprograms[0]?.sessions?.map(
-            // eslint-disable-next-line array-callback-return
-            (val: any) => {
-                if(val.Is_restday){
-                    return restDays.push({ key: val.day_of_program, day: `Day - ${val.day_of_program}` });
+        if(window.location.pathname.split('/')[1] === "programs" ){
+            msg?.fitnessprograms[0]?.sessions?.map(
+                // eslint-disable-next-line array-callback-return
+                (val: any) => {
+                    if(val.Is_restday){
+                        return restDays.push({ key: val.day_of_program, day: `Day - ${val.day_of_program}` });
+                    }
                 }
-            }
-        );
+            );
+        }
+        else {
+            msg.tags[0]?.sessions?.map(
+                // eslint-disable-next-line array-callback-return
+                (val: any) => {
+                    if(val.Is_restday){
+                        return restDays.push({ key: val.day_of_program, day: `${moment(val.session_date).format("Do, MMM YY")}`});
+                    }
+                }
+            )
+        }
         details.day = [...restDays] 
         console.log(details)
     setProgramDetails(details);
@@ -92,7 +105,7 @@ function CreateEditRestDay(props: any, ref: any) {
     }
 
     function FetchData() {
-        useQuery(GET_SCHEDULEREVENTS, { variables: { id: program_id }, onCompleted: (e: any) => { FillDetails(e) } });
+        useQuery(window.location.pathname.split('/')[1] === "programs" ? GET_SCHEDULEREVENTS : GET_SCHEDULEREVENTS_PROGRAM_MANAGER, { variables: { id: program_id }, onCompleted: (e: any) => { FillDetails(e) } });
     }
 
     function UpdateProgram(frm: any) {
@@ -101,6 +114,7 @@ function CreateEditRestDay(props: any, ref: any) {
         const sessionIds_new: any = [];
         const sessionIds_old: string[] = [...sessionsIds];
         const templateIds_old: string[] = [...templateSessionsIds];
+        const restDays_old: any = [];
 
         function updateSessionFunc(id: any){
             sessionIds_new.push(id);
@@ -115,6 +129,14 @@ function CreateEditRestDay(props: any, ref: any) {
         }
 
         function updateTemplateSessionsFunc(id: any){
+            if(id === null){
+                updateTemplateSessions({
+                    variables: {
+                         id: program_id,
+                         sessions_ids: templateIds_old.concat(sessionIds_new)
+                    }
+               })
+            }
             sessionIds_new.push(id);
             if(frm.day.length === sessionIds_new.length){
                  updateTemplateSessions({
@@ -131,6 +153,7 @@ function CreateEditRestDay(props: any, ref: any) {
                 for(var j=0; j<frm.day.length; j++){
                     if(templateSessions[k].day_of_program === frm.day[j].key && templateSessions[k].Is_restday === true){
                         frm.day.splice(j, 1);
+                        restDays_old.push(templateSessions[k].id);
                     }
                 }
             }
@@ -143,6 +166,18 @@ function CreateEditRestDay(props: any, ref: any) {
                 }
             }
        }
+
+       // eslint-disable-next-line array-callback-return
+       templateSessions.map((item: any, index: number) => {
+        if(!restDays_old.includes(item.id) && item.Is_restday){
+            templateSessions.splice(index, 1);
+            templateIds_old.splice(index, 1);
+        }
+       });
+
+        console.log(templateSessions);
+        console.log(templateIds_old);
+        console.log(restDays_old);
 
         if(frm.day.length > 0){
                for(var i=0; i<frm.day.length; i++){
@@ -173,7 +208,7 @@ function CreateEditRestDay(props: any, ref: any) {
                     });
                }
         }else {
-            modalTrigger.next(false);
+            return updateTemplateSessionsFunc(null);
         }
     }
 

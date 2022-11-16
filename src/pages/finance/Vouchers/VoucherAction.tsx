@@ -7,9 +7,6 @@ import authContext from '../../../context/auth-context';
 import { CREATE_VOUCHER, DELETE_VOUCHER, EDIT_VOUCHER, TOGGLE_STATUS } from '../graphQL/mutations';
 import { GET_VOUCHERS_BY_ID } from '../graphQL/queries';
 
-
-
-
 interface Operation {
     id: string;
     actionType: 'create' | 'edit' | 'view' | 'toggle-status' | 'delete' | 'bank' | 'upi';
@@ -24,20 +21,29 @@ function VoucherAction(props, ref) {
     const modalTrigger = new Subject();
     const [formData, setFormData] = useState<any>();
     const formSchema = require("./voucher.json");
-
+    const [showStatusModal, setShowStatusModal] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
 
     useImperativeHandle(ref, () => ({
         TriggerForm: (msg: Operation) => {
             setOperation(msg);
-            //render form if no message id
-            if (msg && !msg.id) {
+
+            // display status modal
+            if (msg.actionType === 'toggle-status') {
+                setShowStatusModal(true);
+            }
+
+            // display delete modal
+            if (msg.actionType === 'delete') {
+                setShowDeleteModal(true);
+            }
+
+            //restrict modal to render on delete and change status operation
+            if (msg.actionType !== 'delete' && msg.actionType !== 'toggle-status') {
                 modalTrigger.next(true);
             }
         }
     }));
-
- 
-
 
     let name = ""
     switch (operation.actionType) {
@@ -57,7 +63,6 @@ function VoucherAction(props, ref) {
         }
     }
 
-
     // View Voucher
     const FetchData = () => useQuery(GET_VOUCHERS_BY_ID, {
         variables: {
@@ -76,7 +81,6 @@ function VoucherAction(props, ref) {
         updateFormData.Start_date = data.vouchers.data[0].attributes.Start_date;
         updateFormData.Usage_restriction = data.vouchers.data[0].attributes.Usage_restriction;
 
-
         setFormData(updateFormData)
 
         if (['edit', 'view'].indexOf(operation.actionType) > -1) {
@@ -90,40 +94,55 @@ function VoucherAction(props, ref) {
     FetchData()
 
     // Create Voucher
-    const [createVoucher] = useMutation(CREATE_VOUCHER, { onCompleted: (r: any) => { modalTrigger.next(false); } })
+    const [createVoucher] = useMutation(CREATE_VOUCHER, { onCompleted: (r: any) => { modalTrigger.next(false); props.callback(); } })
     const CreateVoucher = (form: any) => {
         createVoucher({
             variables: {
-                voucher_name: form.voucher_name,
-                discount_percentage: form.discount_percentage,
-                expiry_date: form.expiry_date,
-                Start_date: form.Start_date,
-                Usage_restriction: form.Usage_restriction,
-                Status: "Active",
-                users_permissions_user: form.user_permissions_user
+                data: {
+                    voucher_name: form.voucher_name,
+                    discount_percentage: form.discount_percentage,
+                    expiry_date: form.expiry_date,
+                    Start_date: form.Start_date,
+                    Usage_restriction: form.Usage_restriction,
+                    Status: "Active",
+                    users_permissions_user: form.user_permissions_user
+                }
             }
         })
     }
 
     //Edit Voucher
-    const [editVoucher] = useMutation(EDIT_VOUCHER, { onCompleted: (r: any) => { modalTrigger.next(false); } });
+    const [editVoucher] = useMutation(EDIT_VOUCHER, { onCompleted: (r: any) => { modalTrigger.next(false); props.callback(); } });
     const EditVoucher = (form: any) => editVoucher({ variables: form })
 
-
-    //delete Voucher 
-    const [deleteVoucher] = useMutation(DELETE_VOUCHER);
+    //Delete Voucher 
+    const [deleteVoucher] = useMutation(DELETE_VOUCHER, {
+        onCompleted: (e: any) => {
+            props.callback();
+            modalTrigger.next(false);
+        }
+    });
     const DeleteVoucher = (id) => deleteVoucher({ variables: { id: id } });
 
-
-    //toggle status
-    const [toggleVoucherStatus] = useMutation(TOGGLE_STATUS);
-    const ToggleVoucherStatus = (id, Status) => toggleVoucherStatus({
-        variables: {
-            id: id,
-            Status: Status === "Active" ? "Disabled" : "Active"
+    //Toggle Status
+    const [toggleVoucherStatus] = useMutation(TOGGLE_STATUS, {
+        onCompleted: (e: any) => {
+            props.callback();
+            modalTrigger.next(false);
         }
     });
 
+    const ToggleVoucherStatus = (id: String, Status) => {
+        toggleVoucherStatus(
+            {
+                variables: {
+                    id: id,
+                    data: {
+                        Status: Status === "Active" ? "Disabled" : "Active"
+                    }
+                }
+            })
+    };
 
     const OnSubmit = (frm: any) => {
         //bind user id
@@ -142,10 +161,10 @@ function VoucherAction(props, ref) {
         }
     }
 
-
-
     return (
         <div>
+
+            {/* Edit and View Modal */}
             <FinanceModal
                 modalTrigger={modalTrigger}
                 formSchema={formSchema}
@@ -154,27 +173,35 @@ function VoucherAction(props, ref) {
                 actionType={operation.actionType}
                 formData={operation.id && formData}
             />
-            {operation.actionType === 'delete' &&
-                <StatusModal
-                    modalTile="Delete"
-                    modalBody="Do you want to delete this voucher ?"
-                    buttonLeft="Cancel"
-                    buttonRight="Yes"
-                    onClick={() => DeleteVoucher(operation.id)}
-                />}
 
-            {operation.actionType === 'toggle-status' &&
+            {/* Status Modal */}
+            {showStatusModal &&
                 <StatusModal
-                    modalTile="Change Status"
+                    show={showStatusModal}
+                    onHide={() => setShowStatusModal(false)}
+                    modalTitle="Change Status"
                     modalBody="Do you want to change status ?"
                     buttonLeft="Cancel"
                     buttonRight="Yes"
                     onClick={() => ToggleVoucherStatus(operation.id, operation.current_status)}
                 />
             }
+
+            {/* Delete Modal */}
+            {showDeleteModal &&
+                <StatusModal
+                    show={showDeleteModal}
+                    onHide={() => setShowDeleteModal(false)}
+                    modalTitle="Delete"
+                    modalBody="Do you want to delete this voucher ?"
+                    buttonLeft="Cancel"
+                    buttonRight="Yes"
+                    onClick={() => DeleteVoucher(operation.id)}
+                />
+            }
+
         </div>
     )
 }
-
 
 export default React.forwardRef(VoucherAction)

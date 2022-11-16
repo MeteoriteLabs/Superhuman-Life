@@ -1,5 +1,5 @@
 import React, {useState, useContext, useEffect} from 'react';
-import { Form, Table, FormControl, InputGroup, Button} from 'react-bootstrap';
+import { Form, Table, FormControl, InputGroup, Button, Row, Col} from 'react-bootstrap';
 import {gql, useQuery, useLazyQuery} from '@apollo/client';
 import AuthContext from '../../../../context/auth-context';
 import { flattenObj } from '../../../../components/utils/responseFlatten';
@@ -9,6 +9,8 @@ const PricingTable = (props) => {
 
     const inputDisabled = props.readonly;
     const bookingDetails = JSON.parse(props.formContext.channelinstantBooking);
+
+    const [show, setShow] = useState(props.value === 'free' ? true : false);
 
     function handleReturnType(val: any) {
         if (typeof(val) === 'string') {
@@ -146,7 +148,7 @@ const PricingTable = (props) => {
     function loadData(data){
         const flattenData = flattenObj({...data});
         const newValue = [...pricing];
-        console.log(flattenData);
+        
         newValue.forEach((item, index) => {
             if(item.voucher !== 0 && item.price !== null){
                 item.suggestedPrice = parseInt(((item.sapienPricing * 100) / (100 - item.voucher)).toFixed(2))
@@ -172,17 +174,28 @@ const PricingTable = (props) => {
         setPricing(newPricing);
     }
 
+    function handleValidation(){
+        const values = [...pricing];
+        var res: boolean = false;
+        // eslint-disable-next-line
+        values.map((item: any) => {
+          if(item.mrp !== null && item.mrp >= parseInt(item.sapienPricing)){
+            res = true;
+          }
+        });
+        return res;
+   }
+
     useEffect(() => {
-        if((pricing[0].mrp !== null && pricing[0].mrp >= parseInt(pricing[0].sapienPricing)) || 
-             (pricing[1].mrp !== null && pricing[1].mrp >= parseInt(pricing[1].sapienPricing)) || 
-             (pricing[2].mrp !== null && pricing[2].mrp >= parseInt(pricing[2].sapienPricing)) || 
-             (pricing[3].mrp !== null && pricing[3].mrp >= parseInt(pricing[3].sapienPricing))){
-             props.onChange(JSON.stringify(pricing));    
+        if(show){
+            props.onChange('free');
+        }else if(handleValidation()){
+            props.onChange(JSON.stringify(pricing));    
         }else {
-             props.onChange(undefined)
+            props.onChange(undefined)
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pricing]);
+  }, [pricing, show]);
 
 
     function handleUpdatePricing(id: any, value: any){
@@ -202,11 +215,37 @@ const PricingTable = (props) => {
 
     FetchData();
 
-    console.log(pricing);
-
     return(
         <>
-            <div>
+        <div>
+                <Row>
+                    <Col>
+                        <h5>Type of payment</h5>
+                    </Col>  
+                </Row>
+                <Row>
+                    <Col>
+                        <Row>
+                            <Col lg={2}><b>Setup Pricing</b></Col>
+                            <Col lg={1}>
+                            <Form>
+                                <Form.Check 
+                                    type="switch"
+                                    id="custom-switch"
+                                    defaultChecked={show}
+                                    onClick={() => setShow(!show)}
+                                    disabled={inputDisabled}
+                                />
+                            </Form>
+                            </Col>
+                            <Col lg={3}><b>Free (support Me Button)</b></Col>
+                        </Row>
+                    </Col>
+                </Row>
+            </div>
+            <br />
+            <br />
+            {!show && <div>
                 <div className="d-flex justify-content-between p-2">
                     <div>
                         <h4>Subscription Plan</h4>
@@ -216,7 +255,7 @@ const PricingTable = (props) => {
                     <Button variant='outline-info' onClick={() => {window.location.href = '/finance'}}>Add suggest pricing</Button>
                     </div>
                 </div>
-                <Table style={{ tableLayout: 'fixed'}}>
+                <Table responsive>
                 <thead>
                     <tr className='text-center'>
                     <th></th>
@@ -266,7 +305,10 @@ const PricingTable = (props) => {
                     {pricing.map((item, index) => {
                         return (
                             <td>
-                                <InputGroup className="mb-3">
+                                <InputGroup style={{ minWidth: '200px'}}>
+                                    <InputGroup.Prepend>
+                                        <InputGroup.Text id="basic-addon1">{"\u20B9"}</InputGroup.Text>
+                                    </InputGroup.Prepend>
                                     <FormControl
                                     className={`${pricing[index]?.mrp < pricing[index]?.sapienPricing && pricing[index]?.mrp !== null ? "is-invalid" : pricing[index]?.mrp >= pricing[index]?.sapienPricing ? "is-valid" : ""}`}
                                     aria-label="Default"
@@ -277,15 +319,15 @@ const PricingTable = (props) => {
                                     value={pricing[index]?.mrp}
                                     onChange={(e) => {handlePricingUpdate(e.target.value, index)}}
                                     />
-                                    {pricing[index]?.mrp < pricing[index]?.sapienPricing && pricing[index]?.mrp !== null && <span style={{ fontSize: '12px', color: 'red'}}>cannot be less than ₹ {pricing[index]?.sapienPricing}</span>}    
                                 </InputGroup>
+                                    {pricing[index]?.mrp < pricing[index]?.sapienPricing && pricing[index]?.mrp !== null && <span style={{ fontSize: '12px', color: 'red'}}>cannot be less than ₹ {pricing[index]?.sapienPricing}</span>}    
                             </td>
                         )
                     })}
                     </tr>
                 </tbody>
                 </Table>
-            </div>
+            </div>}
         </>
     )
 };

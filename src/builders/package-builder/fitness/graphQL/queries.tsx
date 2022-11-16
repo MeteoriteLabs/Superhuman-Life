@@ -42,6 +42,17 @@ export const GET_FITNESS_PACKAGE_TYPES = gql`
         id
         attributes{
           type
+          Modes
+          PricingRequired
+          Unit_Pricing_Calculation
+          suggested_pricings{
+            data{
+              id
+              attributes{
+                mrp
+              }
+            }
+          }
         }
       }
     }
@@ -49,7 +60,7 @@ export const GET_FITNESS_PACKAGE_TYPES = gql`
 `;
 
 export const GET_FITNESS = gql`
-  query fitnesspackages($id: ID!) {
+  query fitnesspackages($id: ID) {
     fitnesspackages(
       sort: ["updatedAt"]
       filters: { users_permissions_user: { id: { eq: $id } } }
@@ -62,10 +73,12 @@ export const GET_FITNESS = gql`
           ptoffline
           ptonline
           mode
+          publishing_date
           groupoffline
           grouponline
           recordedclasses
           bookingleadday
+          groupinstantbooking
           bookingleadtime
           fitness_package_type {
             data {
@@ -98,7 +111,7 @@ export const GET_FITNESS = gql`
 `;
 
 export const GET_SINGLE_PACKAGE_BY_ID = gql`
-  query fitnesspackage($id: ID!) {
+  query fitnesspackage($id: ID) {
     fitnesspackages(filters: { id: { eq: $id } }) {
       data {
         id
@@ -107,6 +120,7 @@ export const GET_SINGLE_PACKAGE_BY_ID = gql`
           tags
           level
           aboutpackage
+          Accomdation_details
           Intensity
           Is_free_demo
           languages{
@@ -201,10 +215,12 @@ export const GET_SINGLE_PACKAGE_BY_ID = gql`
           residential_type
           booking_config{
             data{
+              id
               attributes{
                 isAuto
-                bookingsPerDay
                 BookingsPerMonth
+                is_Fillmyslots
+                bookingsPerDay
               }
             }
           }

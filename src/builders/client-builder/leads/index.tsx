@@ -152,14 +152,11 @@ export default function Leads() {
 
      const [datatable, setDataTable] = useState<{}[]>([]);
 
-     // function FetchData(_variables: {} = { id: auth.userid }) {
      const fetch = useQuery(GET_LEADS_NEW, { variables: { filter: searchFilter, id: auth.userid }, onCompleted: loadData });
-     // }
 
      function refetchQueryCallback() {
           fetch.refetch();
      }
-
 
      function loadData(data: any) {
           let namearr: any = [];
@@ -192,13 +189,8 @@ export default function Leads() {
      }
      useEffect(() => {
           if (searchFilter) {
-               // console.log("changed");
-               //    console.log(searchFilter);
                setDataTable(
                     data.flatMap((Detail: any) => {
-                         //  console.log(Detail.details.username.toLowerCase());
-                         //  console.log(searchFilter.toLowerCase());
-                         console.log(nameArr);
                          if (
                               (nameArr.includes(searchFilter) &&
                                    Detail.Details?.leadsdetails?.name.toLowerCase() === searchFilter.toLowerCase()) ||
@@ -239,7 +231,6 @@ export default function Leads() {
           }
      }, [searchFilter, data, nameArr]);
 
-     // FetchData({ id: auth.userid });
      return (
           <TabContent>
                <Container>

@@ -17,7 +17,6 @@ const PricingTable = (props) => {
         }
     }
 
-    console.log(props.formContext.programDetails);
     const classDetails = JSON.parse(props.formContext.programDetails);
 
      const classMode = classDetails.mode === "0" ? "Online" : classDetails.mode === "1" ? "Offline" : "Hybrid";
@@ -79,9 +78,6 @@ const PricingTable = (props) => {
             }
         });
       },[pricing]);
-
-      console.log(pricing);
-
 
     const SUGGESTED_PRICING = gql`
         query fetchSapienPricing($id: ID!) {
@@ -224,7 +220,7 @@ const PricingTable = (props) => {
                         
                     <Button variant='outline-info' onClick={() => {window.location.href = '/finance'}}>Add suggest pricing</Button>
                 </div>
-                <Table style={{ tableLayout: 'fixed'}}>
+                <Table responsive>
                 <thead>
                     <tr className='text-center'>
                     <th></th>
@@ -269,7 +265,7 @@ const PricingTable = (props) => {
                     <td><b>Total days</b></td>
                     {pricing.map((item, index) => {
                         return (
-                            <td>{item.duration} days</td>
+                            <td>{item.duration} session</td>
                         )
                     })}
                     </tr>
@@ -286,7 +282,10 @@ const PricingTable = (props) => {
                     {pricing.map((item, index) => {
                         return (
                             <td>
-                                <InputGroup className="mb-3">
+                                <InputGroup className="mb-3" style={{ minWidth: '200px'}}>
+                                  <InputGroup.Prepend>
+                                    <InputGroup.Text id="basic-addon1">{"\u20B9"}</InputGroup.Text>
+                                  </InputGroup.Prepend>
                                     <FormControl
                                     className={`${pricing[index]?.mrp < pricing[index]?.sapienPricing && pricing[index]?.mrp !== null ? "is-invalid" : pricing[index]?.mrp >= pricing[index]?.sapienPricing ? "is-valid" : ""}`}
                                     aria-label="Default"

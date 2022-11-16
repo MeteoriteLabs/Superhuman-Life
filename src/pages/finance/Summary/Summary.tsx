@@ -8,4 +8,4 @@ function Summary() {
   )
 }
 
-export default Summary;
+export default Summary

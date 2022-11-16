@@ -1,0 +1,102 @@
+{
+    "type": "object",
+    "title": "Mode of payment",
+    "properties": {
+        "upi": {
+            "type": "boolean",
+            "title": " UPI",
+            "enum": [
+                true,
+                false
+            ],
+            "default": true
+        },
+        "bankAccount": {
+            "type": "boolean",
+            "title": " Bank Account",
+            "enum": [
+                true,
+                false
+            ],
+            "default": false
+        }
+    },
+    "allOf": [
+        {
+            "if": {
+                "properties": {
+                    "upi": {
+                        "title": "UPI Details",
+                        "const": true
+                    }
+                }
+            },
+            "then": {
+                "properties": {
+                    "UPI_ID": {
+                        "type": "string",
+                        "title": "UPI ID"
+                    },
+                    "upiPhoneNumber": {
+                        "type": "string",
+                        "title": "Phone",
+                        "minLength": 10,
+                        "format": "phone-in"
+                    }
+                },
+                "required": [
+                    "UPI_ID",
+                    "upiPhoneNumber"
+                ]
+            }
+        },
+        {
+            "if": {
+                "properties": {
+                    "bankAccount": {
+                        "title": "Bank Account Details",
+                        "const": true
+                    }
+                }
+            },
+            "then": {
+                "properties": {
+                    "AccountNumber": {
+                        "type": "number",
+                        "title": "Account Number",
+                        "max-length": 17,
+                        "minLength": 9
+                    },
+                    "ifscCode": {
+                        "type": "string",
+                        "title": "IFSC Code"
+                    },
+                    "BankName": {
+                        "type": "string",
+                        "title": "Name of the Bank"
+                    },
+                    "Branch": {
+                        "type": "string",
+                        "title": "Branch"
+                    },
+                    "accountType": {
+                        "type": "string",
+                        "title": "Account Type",
+                        "enum": [
+                            "Current",
+                            "Savings"
+                        ],
+                        "default": "Current"
+                    }
+                },
+                "required": [
+                    "AccountNumber",
+                    "ifscCode",
+                    "BankName",
+                    "Branch",
+                    "accountType"
+                ]
+            }
+        }
+    ]
+}

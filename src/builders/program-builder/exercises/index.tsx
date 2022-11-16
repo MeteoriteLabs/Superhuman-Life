@@ -2,13 +2,12 @@ import { useContext, useMemo, useState, useRef } from "react";
 import { Button, Card, TabContent } from "react-bootstrap";
 import Table from "../../../components/table";
 import { useQuery } from "@apollo/client";
-import { GET_TABLEDATA} from './queries';
+import { GET_TABLEDATA } from './queries';
 import AuthContext from "../../../context/auth-context";
 import ActionButton from "../../../components/actionbutton";
 import CreateEditExercise from "./createoredit-exercise";
-import {flattenObj} from '../../../components/utils/responseFlatten';
+import { flattenObj } from '../../../components/utils/responseFlatten';
 import moment from 'moment';
-
 
 export default function EventsTab() {
 
@@ -28,20 +27,20 @@ export default function EventsTab() {
             id: "edit",
             Header: "Actions",
             Cell: ({ row }: any) => {
-                const actionClick1 = () => {
-                    createEditExerciseComponent.current.TriggerForm({id: row.original.id, type: 'edit'})
+                const editHandler = () => {
+                    createEditExerciseComponent.current.TriggerForm({ id: row.original.id, type: 'edit' })
                 };
-                const actionClick2 = () => {
-                    createEditExerciseComponent.current.TriggerForm({id: row.original.id, type: 'view'})
+                const viewHandler = () => {
+                    createEditExerciseComponent.current.TriggerForm({ id: row.original.id, type: 'view' })
                 };
-                const actionClick3 = () => {
-                    createEditExerciseComponent.current.TriggerForm({id: row.original.id, type: 'delete'})
+                const deleteHandler = () => {
+                    createEditExerciseComponent.current.TriggerForm({ id: row.original.id, type: 'delete' })
                 };
 
                 const arrayAction = [
-                    {actionName: 'Edit', actionClick: actionClick1},
-                    {actionName: 'View', actionClick: actionClick2},
-                    {actionName: 'Delete', actionClick: actionClick3},
+                    { actionName: 'Edit', actionClick: editHandler },
+                    { actionName: 'View', actionClick: viewHandler },
+                    { actionName: 'Delete', actionClick: deleteHandler },
                 ];
                 return <ActionButton arrayAction={arrayAction}></ActionButton>
             },
@@ -60,42 +59,36 @@ export default function EventsTab() {
         return (`${date}-${month}-${year}`);
     }
 
-    // function FetchData(_variables: {} = {id: auth.userid}){
-        const fetch = useQuery(GET_TABLEDATA, {variables: {id: auth.userid}, onCompleted: loadData});
-    // }
+    const fetch = useQuery(GET_TABLEDATA, { variables: { id: auth.userid }, onCompleted: loadData });
 
     function refetchQueryCallback() {
         fetch.refetch();
     }
 
     function loadData(data: any) {
-        const flattenData = flattenObj({...data});
+        const flattenData = flattenObj({ ...data });
         setTableData(
             [...flattenData.exercises].map((detail) => {
                 return {
                     id: detail.id,
                     exerciseName: detail.exercisename,
-                    discipline: detail.fitnessdisciplines.map((disc:any) => {
-                        return disc.disciplinename;
+                    discipline: detail.fitnessdisciplines.map((disc: any) => {
+                        return disc.disciplinename + ' ';
                     }),
                     level: detail.exerciselevel,
                     muscleGroup: detail.muscle_groups.map((muscle: any) => {
-                        return muscle.name+'  '
+                        return muscle.name + '  '
                     }),
                     equipment: detail.equipment_lists.map((equipment: any) => {
-                        return equipment.name+' '
+                        return equipment.name + ' '
                     }),
                     updatedOn: moment(getDate(Date.parse(detail.updatedAt))).format("Do MMM YYYY"),
-                    type: (detail.exercisetext) ? "Text": "Video" ,
+                    type: (detail.exercisetext) ? "Text" : "Video",
                 }
             })
         );
     }
 
-
-    // FetchData({id: auth.userid});    
-    
-    
     return (
         <TabContent>
             <hr />

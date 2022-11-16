@@ -6,9 +6,6 @@ import { useQuery } from "@apollo/client";
 import { flattenObj } from '../utils/responseFlatten';
 
 const MultiSelect = (props: any) => {
-
-     console.log(props);
-
      function handleReturnType(value){
           if(typeof value === 'string'){
                return JSON.parse(value);
@@ -39,7 +36,8 @@ const MultiSelect = (props: any) => {
                }
 
      function OnChange(e) {
-          setMultiSelections(e);
+          const unique = [...new Map(e.map((m) => [m.id, m])).values()];
+          setMultiSelections(unique);
      }
       
      // if(multiSelections.length > 0){
@@ -49,22 +47,26 @@ const MultiSelect = (props: any) => {
      //      );
      // }
 
-     props.onChange(JSON.stringify(multiSelections));
+     if(multiSelections.length > 0){
+          props.onChange(JSON.stringify(multiSelections));
+     }else {
+          props.onChange(undefined);
+     }
 
     FetchData();
 
      return (
           <div>
-               <label>Equipments</label>
+               <label>Things you Need</label>
                <Typeahead
                id="basic-typeahead-multiple"
                labelKey="name"
                onChange={OnChange}
                options={equipmentList}
-               placeholder="Choose Discpline..."
+               placeholder="Choose Equipments..."
                selected={multiSelections}
                multiple
-               disabled={props.uiSchema.readonly ? true : false}
+               disabled={props.uiSchema.readonly}
                />
           </div>
      )

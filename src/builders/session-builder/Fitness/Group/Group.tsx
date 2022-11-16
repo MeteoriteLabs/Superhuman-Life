@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useQuery, useMutation } from '@apollo/client';
 import { useContext, useMemo, useRef, useState } from 'react'
-import { Badge, Row, Col, Form } from "react-bootstrap";
+import { Badge, Row, Col, Form, Button, Modal } from "react-bootstrap";
 
 import AuthContext from "../../../../context/auth-context"
 import GroupTable from '../../../../components/table/GroupTable/GroupTable';
-import { GET_ALL_FITNESS_PACKAGE_BY_TYPE, GET_ALL_PROGRAM_BY_TYPE, GET_ALL_CLIENT_PACKAGE, GET_TAGS_FOR_GROUP } from '../../graphQL/queries';
-import { UPDATE_STARTDATE } from '../../graphQL/mutation';
+import { GET_ALL_FITNESS_PACKAGE_BY_TYPE, GET_ALL_CLIENT_PACKAGE, GET_TAGS_FOR_GROUP } from '../../graphQL/queries';
+import { UPDATE_STARTDATE, DELETE_TAG_BATCH } from '../../graphQL/mutation';
 import moment from 'moment';
 import ActionButton from '../../../../components/actionbutton';
 import FitnessAction from '../FitnessAction';
@@ -18,8 +18,11 @@ export default function Group(props) {
 
     const [userPackage, setUserPackage] = useState<any>([]);
     const [showHistory, setShowHistory] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [tagId, setTagId] = useState("");
     const fitnessActionRef = useRef<any>(null);
 
+    const [deleteBatch] = useMutation(DELETE_TAG_BATCH, {onCompleted: (r: any) => {mainQuery.refetch()}});
     const [updateDate] = useMutation(UPDATE_STARTDATE, {onCompleted: (r: any) => {console.log(r)}});
 
     const mainQuery = useQuery(GET_TAGS_FOR_GROUP, {
@@ -38,13 +41,13 @@ export default function Group(props) {
 
     });
 
-    const { data: data2 } = useQuery(GET_ALL_PROGRAM_BY_TYPE, {
-        variables: {
-            id: auth.userid,
-            type: 'Group Class'
-        },
+    // const { data: data2 } = useQuery(GET_ALL_PROGRAM_BY_TYPE, {
+    //     variables: {
+    //         id: auth.userid,
+    //         type: 'Group Class'
+    //     },
 
-    });
+    // });
 
 
 
@@ -115,7 +118,7 @@ export default function Group(props) {
             // packageItem.client_packages[index]?.users_permissions_user
             return clients;
         }
-
+        console.log(flattenData.tags);
         setUserPackage(
             [...flattenData.tags.map((packageItem, index) => {
                 let renewDay: any = '';
@@ -125,11 +128,11 @@ export default function Group(props) {
                 }
                 return {
                     tagId: packageItem.id,
-                    id: packageItem.client_packages[index]?.fitnesspackages[0].id,
-                    packageName: packageItem.client_packages[index]?.fitnesspackages[0].packagename,
+                    id: packageItem?.fitnesspackage?.id,
+                    packageName: packageItem.fitnesspackage.packagename,
                     duration: packageItem.client_packages[index]?.fitnesspackages[0].duration,
-                    expiry: packageItem.client_packages[index]?.fitnesspackages[0].expiry_date ?  moment(packageItem.client_packages[index]?.fitnesspackages[0].expiry_date).format("MMMM DD,YYYY") : "N/A",
-                    packageStatus: packageItem.client_packages[index]?.fitnesspackages[0].Status ? "Active" : "Inactive",
+                    expiry: moment(packageItem?.fitnesspackage?.expiry_date, 'YYYY-MM-DDTHH:mm').format("MMMM DD, YYYY"),
+                    packageStatus: packageItem.fitnesspackage.Status ? "Active" : "Inactive",
 
                     // proManagerId: packageItem.proManagerId,
                     // proManagerFitnessId: packageItem.proManagerFitnessId,
@@ -144,6 +147,8 @@ export default function Group(props) {
             })]
         )
     }
+
+    console.log(userPackage);
 
     function handleStatus(sessions: any, effective_date: any, renewDay){
         let effectiveDate: any;
@@ -236,7 +241,7 @@ export default function Group(props) {
             // packageItem.client_packages[index]?.users_permissions_user
             return clients;
         }
-
+        
         setUserPackage(
             [...flattenData.tags.map((packageItem, index) => {
                 let renewDay: any = '';
@@ -246,14 +251,15 @@ export default function Group(props) {
                 }
                 return {
                     tagId: packageItem.id,
-                    id: packageItem.client_packages[index]?.fitnesspackages[0].id,
-                    packageName: packageItem.client_packages[index]?.fitnesspackages[0].packagename,
+                    id: packageItem.fitnesspackage?.id,
+                    packageName: packageItem.fitnesspackage.packagename,
                     duration: packageItem.client_packages[index]?.fitnesspackages[0].duration,
-                    expiry: packageItem.client_packages[index]?.fitnesspackages[0].expiry_date ?  moment(packageItem.client_packages[index]?.fitnesspackages[0].expiry_date).format("MMMM DD,YYYY") : "N/A",
-                    packageStatus: packageItem.client_packages[index]?.fitnesspackages[0].Status ? "Active" : "Inactive",
+                    expiry: moment(packageItem?.fitnesspackage?.expiry_date, 'YYYY-MM-DDTHH:mm').format("MMMM DD, YYYY"),
+                    packageStatus: packageItem.fitnesspackage.Status ? "Active" : "Inactive",
 
                     // proManagerId: packageItem.proManagerId,
                     // proManagerFitnessId: packageItem.proManagerFitnessId,
+                    clientData: packageItem.client_packages,
                     client: packageItem.client_packages[index]?.users_permissions_user.username ? handleUsers(packageItem.client_packages) : "N/A",
                     // start_dt: packageItem.effective_date,
                     // renewal_dt: packageItem.renewal_dt,
@@ -264,6 +270,14 @@ export default function Group(props) {
                 }
             })]
         )
+    }
+
+    function handleDeleteBatch(tagId: string){
+        deleteBatch({
+            variables: {
+                id: tagId
+            }
+        })
     }
 
     const columns = useMemo(
@@ -291,9 +305,9 @@ export default function Group(props) {
                         accessor: "action", Header: "Action", enableRowSpan: true,
                         Cell: (row: any) => {
                             return <>
-                                <button className='text-nowrap' onClick={() => {
+                                <Button variant='info' size='sm' className='text-nowrap' onClick={() => {
                                     fitnessActionRef.current.TriggerForm({ id: row.row.original.id, actionType: 'create', type: 'Group Class', duration: row.row.original.duration })
-                                }}>Add new</button>
+                                }}>Add new</Button>
                             </>
                         }
                     }
@@ -356,18 +370,28 @@ export default function Group(props) {
                                 handleRedirect(row.original.tagId)
                             }
                             const actionClick2 = () => {
+                                console.log(row);
                                 fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'details', type: "Group Class", rowData: row.original })
                             }
 
                             const actionClick3 = () => {
-                                fitnessActionRef.current.TriggerForm({ id: row.original.proManagerId, actionType: 'allClients', type: 'Group Class' })
+                                console.log(row);
+                                fitnessActionRef.current.TriggerForm({ id: row.original.tagId, actionType: 'allClients', type: 'Group Class', rowData: row.original })
                             }
 
+                            const actionClick4 = () => {
+                                if(row.original.client === "N/A"){
+                                    setTagId(row.original.tagId);
+                                    setShowDeleteModal(true);
+                                }
+                                // console.log(row, userPackage);
+                            }
 
                             const arrayAction = [
                                 { actionName: 'Manage', actionClick: actionClick1 },
                                 { actionName: 'Details', actionClick: actionClick2 },
                                 { actionName: 'All Clients', actionClick: actionClick3 },
+                                { actionName: 'Delete Batch', actionClick: actionClick4 },
                             ]
 
                             return <ActionButton
@@ -389,7 +413,12 @@ export default function Group(props) {
 
     console.log(userPackage);
 
+    function refetchQueryCallback(){
+        mainQuery.refetch();
+    }
+
     return (
+        <>
         <div className="mt-5">
             <div className='mb-3'>
                 <Form>
@@ -407,10 +436,28 @@ export default function Group(props) {
             <Row>
                 <Col>
                     <GroupTable columns={columns} data={userPackage} />
-                    <FitnessAction ref={fitnessActionRef} />
+                    <FitnessAction ref={fitnessActionRef} callback={refetchQueryCallback}/>
                 </Col>
 
             </Row>
         </div>
+        {<Modal
+            size="lg"
+            aria-labelledby="contained-modal-title-vcenter"
+            centered
+            show={showDeleteModal}
+          >
+            <Modal.Body>
+              <h4>Delete Batch</h4>
+              <p>
+                Are you sure you want to delete this batch?
+              </p>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button onClick={() => {setShowDeleteModal(false)}} variant="danger">No</Button>
+              <Button onClick={() => {handleDeleteBatch(tagId); setShowDeleteModal(false)}} variant="success">Yes</Button>
+            </Modal.Footer>
+          </Modal>}
+        </>
     )
 }

@@ -16,10 +16,8 @@ const PricingTable = (props) => {
             return val;
         }
     }
-
-    console.log(props.formContext.programDetails);
     const classDetails = JSON.parse(props.formContext.programDetails);
-    console.log(classDetails);
+    
      const classMode = classDetails.mode === "0" ? "Online" : classDetails.mode === "1" ? "Offline" : "Hybrid";
      const ptOnlineClasses = classDetails.ptOnline;
      const ptOfflineClasses = classDetails.ptOffline;
@@ -148,27 +146,25 @@ const PricingTable = (props) => {
         useQuery(SUGGESTED_PRICING, {variables: { id: auth.userid },onCompleted: (data) => {loadData(data)}})
     }
 
-    console.log(classMode);
-
     function handleSuggestedPricingCalculation(mode: string, item: any, suggestedPricings: any, duration: number) {
-          console.log(mode, item, suggestedPricings);
+          
           var ptOnlinePrice: number, ptOfflinePrice: number, groupOnlinePrice: number, groupOfflinePrice: number, classicPrice: number;
           if(mode === 'Online'){
-               ptOnlinePrice = suggestedPricings[suggestedPricings.findIndex((x: any) => x.fitness_package_type.type === "One-On-One")].mrp * ptOnlineClasses * (duration/30);
-               groupOnlinePrice = suggestedPricings[suggestedPricings.findIndex((x: any) => x.fitness_package_type.type === 'Group Class')].mrp * groupOnlineClasses * (duration/30);
-               classicPrice = suggestedPricings[suggestedPricings.findIndex((x: any) => x.fitness_package_type.type === 'Classic Class')].mrp * recorded * (duration/30);
+               ptOnlinePrice = suggestedPricings[suggestedPricings.findIndex((x: any) => x.fitness_package_type.type === "One-On-One")]?.mrp * ptOnlineClasses * (duration/30);
+               groupOnlinePrice = suggestedPricings[suggestedPricings.findIndex((x: any) => x.fitness_package_type.type === 'Group Class')]?.mrp * groupOnlineClasses * (duration/30);
+               classicPrice = suggestedPricings[suggestedPricings.findIndex((x: any) => x.fitness_package_type.type === 'Classic Class')]?.mrp * recorded * (duration/30);
                return ptOnlinePrice + groupOnlinePrice + classicPrice;
           }else if(mode === 'Offline'){
-               ptOfflinePrice = suggestedPricings[suggestedPricings.findIndex((x: any) => x.fitness_package_type.type === "One-On-One")].mrp * ptOfflineClasses * (duration/30);
-               groupOfflinePrice = suggestedPricings[suggestedPricings.findIndex((x: any) => x.fitness_package_type.type === 'Group Class')].mrp * groupOfflineClasses * (duration/30);
-               classicPrice = suggestedPricings[suggestedPricings.findIndex((x: any) => x.fitness_package_type.type === 'Classic Class')].mrp * recorded * (duration/30);
+               ptOfflinePrice = suggestedPricings[suggestedPricings.findIndex((x: any) => x.fitness_package_type.type === "One-On-One")]?.mrp * ptOfflineClasses * (duration/30);
+               groupOfflinePrice = suggestedPricings[suggestedPricings.findIndex((x: any) => x.fitness_package_type.type === 'Group Class')]?.mrp * groupOfflineClasses * (duration/30);
+               classicPrice = suggestedPricings[suggestedPricings.findIndex((x: any) => x.fitness_package_type.type === 'Classic Class')]?.mrp * recorded * (duration/30);
                return ptOfflinePrice + groupOfflinePrice + classicPrice;
           }else if(mode === 'Hybrid'){
-               ptOnlinePrice = suggestedPricings[suggestedPricings.findIndex((x: any) => x.fitness_package_type.type === "One-On-One" && x.Mode === 'Online')].mrp * ptOnlineClasses * (duration/30);
-               groupOnlinePrice = suggestedPricings[suggestedPricings.findIndex((x: any) => x.fitness_package_type.type === 'Group Class' && x.Mode === 'Online')].mrp * groupOnlineClasses * (duration/30);
-               ptOfflinePrice = suggestedPricings[suggestedPricings.findIndex((x: any) => x.fitness_package_type.type === "One-On-One" && x.Mode === 'Offline')].mrp * ptOfflineClasses * (duration/30);
-               groupOfflinePrice = suggestedPricings[suggestedPricings.findIndex((x: any) => x.fitness_package_type.type === 'Group Class' && x.Mode === 'Offline')].mrp * groupOfflineClasses * (duration/30);
-               classicPrice = suggestedPricings[suggestedPricings.findIndex((x: any) => x.fitness_package_type.type === 'Classic Class')].mrp * recorded * (duration/30);
+               ptOnlinePrice = suggestedPricings[suggestedPricings.findIndex((x: any) => x.fitness_package_type.type === "One-On-One" && x.Mode === 'Online')]?.mrp * ptOnlineClasses * (duration/30);
+               groupOnlinePrice = suggestedPricings[suggestedPricings.findIndex((x: any) => x.fitness_package_type.type === 'Group Class' && x.Mode === 'Online')]?.mrp * groupOnlineClasses * (duration/30);
+               ptOfflinePrice = suggestedPricings[suggestedPricings.findIndex((x: any) => x.fitness_package_type.type === "One-On-One" && x.Mode === 'Offline')]?.mrp * ptOfflineClasses * (duration/30);
+               groupOfflinePrice = suggestedPricings[suggestedPricings.findIndex((x: any) => x.fitness_package_type.type === 'Group Class' && x.Mode === 'Offline')]?.mrp * groupOfflineClasses * (duration/30);
+               classicPrice = suggestedPricings[suggestedPricings.findIndex((x: any) => x.fitness_package_type.type === 'Classic Class')]?.mrp * recorded * (duration/30);
                return ptOnlinePrice + groupOnlinePrice + ptOfflinePrice + groupOfflinePrice + classicPrice;
           }
     }
@@ -197,7 +193,7 @@ const PricingTable = (props) => {
 
     function loadData(data){
         const flattenData = flattenObj({...data});
-        console.log(flattenData);
+  
         const newValue = [...pricing];
         if(classMode === "Online"){
           flattenData.suggestedPricings = flattenData.suggestedPricings.filter((item) => item.Mode === classMode);
@@ -237,19 +233,28 @@ const PricingTable = (props) => {
     }
 
      function handlePricingUpdate(value: any, id: any){
-          let newPricing = [...pricing];
-          newPricing[id].mrp = value;
-          setPricing(newPricing);
+      let newPricing = [...pricing];
+      newPricing[id].mrp = value;
+      setPricing(newPricing);
      }
 
+     function handleValidation(){
+      const values = [...pricing];
+      var res: boolean = false;
+      // eslint-disable-next-line
+      values.map((item: any) => {
+        if(item.mrp !== null && item.mrp >= parseInt(item.sapienPricing)){
+          res = true;
+        }
+      });
+      return res;
+    }
+
      useEffect(() => {
-      if((pricing[0].mrp !== null && pricing[0].mrp >= parseInt(pricing[0].sapienPricing)) || 
-            (pricing[1].mrp !== null && pricing[1].mrp >= parseInt(pricing[1].sapienPricing)) || 
-            (pricing[2].mrp !== null && pricing[2].mrp >= parseInt(pricing[2].sapienPricing)) || 
-            (pricing[3].mrp !== null && pricing[3].mrp >= parseInt(pricing[3].sapienPricing))){
-            props.onChange(JSON.stringify(pricing));    
+      if(handleValidation()){
+        props.onChange(JSON.stringify(pricing));    
       }else {
-            props.onChange(undefined)
+        props.onChange(undefined)
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
      }, [pricing]);
@@ -276,9 +281,9 @@ const PricingTable = (props) => {
             {<div>
                 <div className="d-flex justify-content-end p-2">
                         
-                    <Button variant='outline-info' onClick={() => {window.location.href = '/finance'}}>Add suggest pricing</Button>
+                    <Button disabled={inputDisabled} variant='outline-info' onClick={() => {window.location.href = '/finance'}}>Add suggest pricing</Button>
                 </div>
-                <Table style={{ tableLayout: 'fixed'}}>
+                <Table responsive>
                 <thead>
                     <tr className='text-center'>
                     <th></th>
@@ -367,7 +372,10 @@ const PricingTable = (props) => {
                     {pricing.map((item, index) => {
                         return (
                             <td>
-                                <InputGroup className="mb-3">
+                                <InputGroup style={{ minWidth: '200px'}} className="mb-3">
+                                  <InputGroup.Prepend>
+                                    <InputGroup.Text id="basic-addon1">{"\u20B9"}</InputGroup.Text>
+                                  </InputGroup.Prepend>
                                     <FormControl
                                     className={`${pricing[index]?.mrp < pricing[index]?.sapienPricing && pricing[index]?.mrp !== null ? "is-invalid" : pricing[index]?.mrp >= pricing[index]?.sapienPricing ? "is-valid" : ""}`}
                                     aria-label="Default"
@@ -378,8 +386,8 @@ const PricingTable = (props) => {
                                     disabled={inputDisabled}
                                     onChange={(e) => {handlePricingUpdate(e.target.value, index)}}
                                     />
-                                    {pricing[index]?.mrp < pricing[index]?.sapienPricing && pricing[index]?.mrp !== null && <span style={{ fontSize: '12px', color: 'red'}}>cannot be less than ₹ {pricing[index]?.sapienPricing}</span>}    
                                 </InputGroup>
+                                {pricing[index]?.mrp < pricing[index]?.sapienPricing && pricing[index]?.mrp !== null && <span style={{ fontSize: '12px', color: 'red'}}>cannot be less than ₹ {pricing[index]?.sapienPricing}</span>}    
                             </td>
                         )
                     })}

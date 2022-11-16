@@ -6,7 +6,7 @@ import { useQuery } from "@apollo/client";
 import { flattenObj } from '../utils/responseFlatten';
 
 const MultiSelect = (props: any) => {
-
+     
      function handleReturnType(value){
           if(typeof value === 'string'){
                return JSON.parse(value);
@@ -20,6 +20,11 @@ const MultiSelect = (props: any) => {
         );
      const [fitnessdisciplines, setFitnessDisciplines] = useState<any[]>([]);
 
+     // useEffect(() => {
+     //      const unique = [...new Map(multiSelections.map((m) => [m.id, m])).values()];
+     //      setMultiSelections(unique);
+     // }, [multiSelections]);
+
      function FetchData(){
           useQuery(FETCH_FITNESSDISCPLINES, {onCompleted: loadData})
       }
@@ -30,8 +35,7 @@ const MultiSelect = (props: any) => {
               [...flattenedData.fitnessdisciplines].map((discipline) => {
                   return {
                       id: discipline.id,
-                      disciplinename: discipline.disciplinename,
-                      updatedAt: discipline.updatedAt
+                      disciplinename: discipline.disciplinename
                   }
               })
           );
@@ -39,13 +43,16 @@ const MultiSelect = (props: any) => {
 
      function OnChange(e){
           // let id = e.map(d => {return d.id}).join(',');
-          // props.onChange(id);
-          setMultiSelections(e);
+          // props.onChange(id);]
+          const unique = [...new Map(e.map((m) => [m.id, m])).values()];
+          setMultiSelections(unique);
      }
 
-     // if(props.value === multiSelections){
+     if(multiSelections.length > 0){
           props.onChange(JSON.stringify(multiSelections));
-     // }
+     }else {
+          props.onChange(undefined);
+     }
 
      FetchData();
 
@@ -57,10 +64,10 @@ const MultiSelect = (props: any) => {
                labelKey="disciplinename"
                onChange={OnChange}
                options={fitnessdisciplines}
-               placeholder="Choose multiple discplines..."
+               placeholder="You can Choose multiple discplines..."
                selected={multiSelections}
                multiple
-               disabled={props.uiSchema.readonly ? true : false}
+               disabled={props.uiSchema.readonly}
                />
           </div>
      )

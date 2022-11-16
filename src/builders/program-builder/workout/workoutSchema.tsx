@@ -1,8 +1,8 @@
 import TextEditor from '../../../components/customWidgets/textEditor';
 import EquipmentSearch from '../../../components/customWidgets/equipmentListSelect';
 import MuscleGroupSearch from '../../../components/customWidgets/muscleGroupMultiSelect';
+import ExerciseList from '../../../components/customWidgets/exerciseList';
 import FitnessMultiSelect from '../../../components/customWidgets/fitnessMultiSelect';
-import BuildWorkout from './buildWorkout';
 import Upload from '../../../components/upload/upload';
 
 
@@ -11,8 +11,8 @@ export const widgets = {
     equipmentSearch: EquipmentSearch,
     muscleGroupSearch: MuscleGroupSearch,
     textEditor: TextEditor,
-    buildWorkout: BuildWorkout,
-    upload: Upload
+    upload: Upload,
+    exerciseList: ExerciseList
 };
 
 export const schema: any = {
@@ -37,7 +37,7 @@ export const schema: any = {
         "benefits": {
             "ui:widget": "textarea",
             "ui:options": {
-                "rows": 1
+                "rows": 3
             }
         },
         "equipment": {
@@ -63,6 +63,60 @@ export const schema: any = {
             },
             "build": {
                 "ui:widget": "buildWorkout"
-            }
+            },
+            "warmup": {
+                "exercise": {
+                    "ui:widget": "exerciseList",
+                    "ui:options": {
+                     label: false
+                    }
+                },
+                "text": {
+                     "ui:widget": "textEditor"
+                }, 
+                "url": {
+                    "ui:placeholder": "https://"
+                },
+                "upload": {
+                     "ui:widget": (props: any) => {
+                          return <Upload allowImage={true} allowVideo={true} onChange={props.onChange} value={props.value} />;
+                     },
+                }
+            },
+            "mainmovement": {
+                "exercise": {
+                    "ui:widget": "exerciseList",
+                    "ui:options": {
+                        color: "yellow"
+                    }
+                },
+                "text": {
+                     "ui:widget": "textEditor"
+                }, 
+                "url": {
+                    "ui:placeholder": "https://"
+                },
+                "upload": {
+                     "ui:widget": (props: any) => {
+                          return <Upload allowImage={true} allowVideo={true} onChange={props.onChange} value={props.value} />;
+                     },
+                }
+           },
+           "cooldown": {
+                "exercise": {
+                    "ui:widget": "exerciseList"
+                },
+                "text": {
+                     "ui:widget": "textEditor"
+                }, 
+                "url": {
+                    "ui:placeholder": "https://"
+                },
+                "upload": {
+                     "ui:widget": (props: any) => {
+                          return <Upload allowImage={true} allowVideo={true} onChange={props.onChange} value={props.value} />;
+                     },
+                }
+           },
        }
     }

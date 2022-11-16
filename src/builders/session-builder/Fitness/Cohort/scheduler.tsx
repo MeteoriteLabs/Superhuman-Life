@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, {useState, useEffect, useRef, useContext} from 'react';
-import { GET_TABLEDATA, GET_ALL_FITNESS_PACKAGE_BY_TYPE, GET_ALL_PROGRAM_BY_TYPE, GET_ALL_CLIENT_PACKAGE, GET_TAG_BY_ID } from '../../graphQL/queries';
+import { GET_TABLEDATA, GET_ALL_FITNESS_PACKAGE_BY_TYPE, GET_ALL_CLIENT_PACKAGE, GET_TAG_BY_ID } from '../../graphQL/queries';
 import { useQuery } from '@apollo/client';
 import {Row, Col, Button, Dropdown} from 'react-bootstrap';
 import SchedulerPage from '../../../program-builder/program-template/scheduler';
@@ -19,6 +19,10 @@ const Scheduler = () => {
     const tagId = window.location.pathname.split('/').pop();
     const [show, setShow] = useState(false);
     // const [totalClasses, setTotalClasses] = useState<any>([]);
+    const [sessionIds, setSessionIds] = useState<any>([]);
+    const [clientIds, setClientIds] = useState<any>([]);
+    // these are the sessions that will passed onto the scheduler
+    const [schedulerSessions, setSchedulerSessions] = useState<any>([]);
     const [tag, setTag] = useState<any>();
     let programIndex;
 
@@ -30,18 +34,24 @@ const Scheduler = () => {
         }, 1500)
     }, [show]);
 
-    useQuery(GET_TAG_BY_ID, { variables: {id: tagId}, onCompleted: (data) => loadTagData(data) });
+    const mainQuery = useQuery(GET_TAG_BY_ID, { variables: {id: tagId}, onCompleted: (data) => loadTagData(data) });
 
     function loadTagData(data: any){
+        setSchedulerSessions(data);
         const flattenData = flattenObj({...data});
         let total = [0];
+        const clientValues = [...clientIds];
         const values = [...flattenData.tags[0]?.sessions];
+        const ids = [...sessionIds];
         for(let i = 0; i < values.length; i++){
+            ids.push(values[i].id);
             if(values[i].tag === "Classic"){
                 total[0] += 1;
             }
         }
         // setTotalClasses(total);
+        setClientIds(clientValues);
+        setSessionIds(ids);
         setTag(flattenData.tags[0]);
     }
 
@@ -65,6 +75,11 @@ const Scheduler = () => {
     function calculateDailySessions(sessions){
         const dailySessions = sessions.filter((ses: any) => ses.session_date === moment().format('YYYY-MM-DD'));
         return dailySessions.length >= 1 ? dailySessions.length : 'N/A';
+    }
+
+    function handleCallback(){
+        mainQuery.refetch();
+        setSessionIds([]);
     }
 
     if (!show) return <span style={{ color: 'red' }}>Loading...</span>;
@@ -151,10 +166,21 @@ const Scheduler = () => {
                     </Row>
                 </Col>
             </Row>
+            {/* Scheduler */}
             <Row>
                 <Col lg={11} className="pl-0 pr-0">
                     <div className="mt-5">
-                        <SchedulerPage type="date" days={calculateDuration(tag?.fitnesspackage?.Start_date, tag?.fitnesspackage?.End_date)} restDays={tag?.sessions.filter((ses) => ses.type === "restday")} classType={'Cohort'} programId={tagId} startDate={tag?.fitnesspackage?.Start_date} />
+                        <SchedulerPage 
+                            type="date" 
+                            callback={handleCallback}
+                            sessionIds={sessionIds} 
+                            days={calculateDuration(tag?.fitnesspackage?.Start_date, tag?.fitnesspackage?.End_date)} restDays={tag?.sessions.filter((ses) => ses.type === "restday")}
+                            schedulerSessions={schedulerSessions}
+                            clientIds={clientIds} 
+                            classType={'Cohort'} 
+                            programId={tagId} 
+                            startDate={tag?.fitnesspackage?.Start_date} 
+                        />
                     </div>
                 </Col>
                 <FitnessAction ref={fitnessActionRef} />

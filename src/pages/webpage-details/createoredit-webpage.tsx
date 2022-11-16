@@ -61,7 +61,7 @@ function CreateWebpageDetails(props: any, ref: any) {
   useImperativeHandle(ref, () => ({
     TriggerForm: (msg: Operation) => {
       setOperation(msg);
-      // console.log(msg);
+      console.log(msg);
       fetchTemplate();
 
       if (msg && !msg.id) modalTrigger.next(true);
@@ -75,7 +75,6 @@ function CreateWebpageDetails(props: any, ref: any) {
       FillDetails(r);
 
       if (r.websiteData[0]) {
-        console.log(r.websiteData[0].website_template.schema_json);
         setSchemaData(
           replaceSchema({ ...r.websiteData[0].website_template.schema_json })
         );
@@ -153,7 +152,6 @@ function CreateWebpageDetails(props: any, ref: any) {
 
   const [updateDetails] = useMutation(UPDATE_WEBSITE_DATA, {
     onCompleted: (r: any) => {
-      // console.log(r);
       modalTrigger.next(false);
     },
     refetchQueries: [
@@ -185,8 +183,6 @@ function CreateWebpageDetails(props: any, ref: any) {
   }
 
   function EditWebpage(data: any) {
-    console.log("edit message");
-
     updateDetails({
       variables: {
         record_id: websiteDataRecordId,
@@ -234,7 +230,7 @@ function CreateWebpageDetails(props: any, ref: any) {
 
   return (
     <>
-      {/* {render && */}
+
       {schemaData && formJsonData && (
         <ModalView
           name={name}
@@ -245,18 +241,18 @@ function CreateWebpageDetails(props: any, ref: any) {
           formSubmit={
             name === "View"
               ? () => {
-                  modalTrigger.next(false);
-                }
+                modalTrigger.next(false);
+              }
               : (frm: any) => {
-                  OnSubmit(frm);
-                }
+                OnSubmit(frm);
+              }
           }
           formData={webpageDetails}
           widgets={widgets}
           modalTrigger={modalTrigger}
         />
       )}
-      {/* } */}
+
       {operation.type === "delete" && (
         <StatusModal
           modalTitle="Delete"
