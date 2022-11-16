@@ -96,7 +96,7 @@ function CreatePaymentSchedule(props: any, ref: any) {
           Destination_Contacts_ID: isChangemaker ? null : Number(id),
           Destination_User_ID: isChangemaker ? Number(id) : null,
           frequency: frm.FrequencyOfPayment,
-          Payment_Cycle: frm.paymentCycle ? frm.paymentCycle : null,
+          Payment_Cycle: frm.FrequencyOfPayment === 0 ? 0 : frm.paymentCycle ,
           Total_Amount: frm.amountToBePaid ? Number(frm.amountToBePaid) : null,
           Payment_DateTime: frm.paymentDueOn ? frm.paymentDueOn : null,
           Reminder_DateTime: frm.setReminder ? frm.setReminder : null,
