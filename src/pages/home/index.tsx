@@ -87,6 +87,8 @@ export default function HomePage() {
         <img src="assets/home_page_images/rupee.svg" alt="paymentLink" />{" "}
         Payment Link
       </Button>
+
+      {/* grid */}
       <div className="mb-5">
         <Grid />
       </div>
