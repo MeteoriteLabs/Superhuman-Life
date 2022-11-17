@@ -218,7 +218,7 @@ const PricingTable = (props) => {
             {<div>
                 <div className="d-flex justify-content-end p-2">
                         
-                    <Button variant='outline-info' onClick={() => {window.location.href = '/finance'}}>Add suggest pricing</Button>
+                    {/* <Button variant='outline-info' onClick={() => {window.location.href = '/finance'}}>Add suggest pricing</Button> */}
                 </div>
                 <Table responsive>
                 <thead>

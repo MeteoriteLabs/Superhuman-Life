@@ -286,7 +286,7 @@ const PricingTable = (props) => {
                     </div>
                     <div>
                         
-                    <Button disabled={inputDisabled} variant='outline-info' onClick={() => {window.location.href = '/finance'}}>Add suggest pricing</Button>
+                    {/* <Button disabled={inputDisabled} variant='outline-info' onClick={() => {window.location.href = '/finance'}}>Add suggest pricing</Button> */}
                     </div>
                 </div>
                 <Table responsive>

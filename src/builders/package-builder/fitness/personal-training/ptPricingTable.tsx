@@ -239,7 +239,7 @@ const PricingTable = (props) => {
             {<div>
                 <div className="d-flex justify-content-end p-2">
                         
-                    <Button disabled={inputDisabled} variant='outline-info' onClick={() => {setModalShow(true)}}>Add suggest pricing</Button>
+                    {/* <Button disabled={inputDisabled} variant='outline-info' onClick={() => {setModalShow(true)}}>Add suggest pricing</Button> */}
                     <OfferingPricingAssist show={modalShow} type={'Personal Training'} imageURL={classMode === "Online" ? "/assets/personal-training-online.svg" : "/assets/personal-training-offline.svg"} onHide={() => setModalShow(false)} />
                 </div>
                 <Table responsive>
