@@ -53,9 +53,6 @@ const TransferPrograms = (props: any) => {
 
      function handleTransferEventsSubmit() {
           // var allEvents: any[] = [...existingEvents[0].events];
-          console.log(existingEvents);
-          console.log(data);
-          debugger;
           const eventsJson: any[] = [];
           data.forEach((e: any) => {
                // const oldData = existingEvents[0].events.find((val: any) => val.id === e.id);
@@ -83,8 +80,6 @@ const TransferPrograms = (props: any) => {
                     }
                }
           });
-
-          debugger;
 
           for(var i=0; i<eventsJson.length; i++){
                if(eventsJson[i].type === 'workout'){

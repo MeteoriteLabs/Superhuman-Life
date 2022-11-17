@@ -11,8 +11,6 @@ const SchedulerEvent = (props: any) => {
      const schedulerDay: any = require("./json/scheduler-day.json");
 
      console.log(props);
-     debugger;
-     
      function draganddrop(){
           const draggable: any = document.querySelectorAll('.draggable-event');
           const container: any = document.querySelectorAll('.event-container');

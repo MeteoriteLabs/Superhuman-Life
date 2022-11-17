@@ -15,8 +15,6 @@ const ProgramList = (props: any) => {
      const inputField = useRef<any>();
      let skipval: Boolean = true;
 
-     console.log(props);
-     debugger;
 
      const GET_PROGRAMLIST = gql`
      query programlistQuery($id: ID!, $filter: String!) {
