@@ -90,7 +90,7 @@ export default function FitnessTab(props) {
         {
             accessor: "details", Header: "Details",
             Cell: ({ row }: any) => {
-
+                console.log(row);
                 return <div className='d-flex justify-content-center align-items-center'>
                     {row.values.details[0] !== null && row.values.details[0] !== 0 ?
                         <div className="text-center">
@@ -123,7 +123,7 @@ export default function FitnessTab(props) {
                             {/* <img src='./assets/customclassic.svg' alt="Classic" /> */}
                             <p>{row.values.details[4] * currentIndex[row.index]}</p>
                         </div> : ""}
-                    {row.values.details[5] !== null && row.values.details[4] === null ?
+                    {row.values.details[5] !== null && row.values.details[4] === null && row.origianl?.type === "Group Class"  ?
                         <div className="text-center">
                             {/* <OfferingsDisaplyImage mode={row.original?.mode} packageType={row.original?.type}/> */}
                             {row.values.details[6] === "Online" ? <OfferingsDisaplyImage mode={'Online'} packageType={row.original?.type}/> : <OfferingsDisaplyImage mode={'Offline'} packageType={row.original?.type}/>}

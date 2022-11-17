@@ -36,6 +36,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
      const [imageid, setImageid] = useState<string | null>('');
      const [videoUpload, setVideoUpload] = useState<any>(false);
      const [videoID, setVideoID] = useState<any>(null);
+     const [videoSizeError, setVideoSizeError] = useState<any>(false);
      //const [renderCrop, setRenderCrop] = useState<any>(null);
 
      const [imageSrc, setImageSrc] = useState<any>(null);
@@ -113,7 +114,32 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
           }
      };
 
-     const handleFileInput = (e) => {
+     const getVideoDuration = (file) =>
+          new Promise((resolve, reject) => {
+          const reader: any = new FileReader();
+          reader.onload = () => {
+               const media = new Audio(reader.result);
+               media.onloadedmetadata = () => resolve(media.duration);
+          };
+          reader.readAsDataURL(file);
+          reader.onerror = (error) => reject(error);
+     });
+
+     const handleFileInput = async (e) => {
+          // if the video is being uploaded in offering then this function is called
+          if(props?.offering){
+               var file: any = e.target.files[0];
+               const duration: any  = await getVideoDuration(file);
+               if(parseInt(duration) > 60){
+                    setVideoSizeError(true);
+                    setRender(0);
+                    e.target.value = "";
+                    return;
+               }else {
+                    setVideoSizeError(false);
+               }
+          }
+
           if (props.allowImage && props.allowVideo) {
                if ([...allowedImageFormats, ...allowedVideoFormats].indexOf(e.target.files[0].type) === -1) {
                     setRender(0);
@@ -379,12 +405,16 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
      }
 
      useEffect(() => {
-          props.onChange(videoID);
+          if(videoID !== ""){
+               props.onChange(videoID);
+          }
           // eslint-disable-next-line
      }, [videoID]);
 
      useEffect(() => {
-          props.onChange(imageid);
+          if(imageid !== ""){
+               props.onChange(imageid);
+          }
           // eslint-disable-next-line
      },[imageid])
 
@@ -555,7 +585,8 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                                         )}
 
                                         <p className="mt-3">OR</p>
-                                        <input type="file" className="pt-2" disabled={props.readonly} onChange={handleFileInput} />
+                                        <input id="video-upload" type="file" className="pt-2" disabled={props.readonly} onChange={handleFileInput} />
+                                        {videoSizeError && <p className="mt-3 text-danger">The video duration must be lesser than 60 seconds.</p>}
 
                                         <div className="mt-3 d-flex flex-row-reverse">
                                              <button

@@ -9,7 +9,7 @@ import Vouchers from "./Vouchers/Vouchers";
 import PaymentMethods from "./PaymentMethods/PaymentMethods";
 // import Platform from "./Platform/Platform";
 import PricingAssist from "./PricingAssist/PricingAssist";
-// import AllTransactions from "../../builders/client-builder/AllTransactions/AllTransactions";
+import AllTransactions from "./Transactions";
 import Payee from './Payee/Payee';
 
 export default function index() {
@@ -37,9 +37,9 @@ export default function index() {
                             <Payee />
                         </Tab>
                         
-                        {/* <Tab eventKey="allTransactions" title="All Transactions">
+                        <Tab eventKey="allTransactions" title="All Transactions">
                             <AllTransactions />
-                        </Tab> */}
+                        </Tab>
                        
                         <Tab eventKey="vouchers" title="Vouchers">
                             <Vouchers />

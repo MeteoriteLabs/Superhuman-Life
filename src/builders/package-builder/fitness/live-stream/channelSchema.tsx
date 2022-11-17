@@ -1,12 +1,14 @@
 import PricingTableChannel from './pricingTableChannel';
 import PreviewChannel from './previewChannel';
 import Upload from '../../../../components/upload/upload';
-import DatesConfig from '../../../../components/customWidgets/datesConfig';
+// import DatesConfig from '../../../../components/customWidgets/datesConfig';
 import FitnessSelect from '../../../../components/customWidgets/fitnessMultiSelect';
 import EquipmentSelect from '../../../../components/customWidgets/equipmentListSelect';
 import LanguageList from '../../../../components/customWidgets/languageSelect';
 import ChannelConfig from './channelConfig';
 import LiveBookingConfig from './bookingConfig';
+import ChannelPrimaryDateConfig from './primaryDatesConfig';
+import DatesConfig from './channelDateConfig';
 
 export const widgets = {
     pricingTableChannel: PricingTableChannel,
@@ -95,5 +97,10 @@ export const schema: any = {
         },
         "languages": {
             "ui:widget": "liveChannelLanguageSelect"
-        }
+        },
+        "dates": {
+            "ui:widget": (props: any) => {
+                return <ChannelPrimaryDateConfig title1={'Start Date'} title2={'End Date'} value={props.value} onChange={props.onChange} type={'Cohort'}/>
+            }
+       },
     }

@@ -1,0 +1,5 @@
+.scrollBar {
+    max-height: 50vh;
+    overflow-y: auto;
+    height: 50vh;
+}
