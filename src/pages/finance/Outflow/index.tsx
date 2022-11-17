@@ -18,7 +18,7 @@ import AuthContext from "../../../context/auth-context";
 import moment from "moment";
 import { useHistory } from "react-router-dom";
 
-export default function Earnings() {
+export default function Expenses() {
   const auth = useContext(AuthContext);
 
   const columns = useMemo<any>(
