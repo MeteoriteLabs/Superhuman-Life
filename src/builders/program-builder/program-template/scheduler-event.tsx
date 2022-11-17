@@ -9,6 +9,9 @@ const SchedulerEvent = (props: any) => {
      const [arr, setArr] = useState<any>([]);
      const [show, setShow] = useState(false);
      const schedulerDay: any = require("./json/scheduler-day.json");
+
+     console.log(props);
+     debugger;
      
      function draganddrop(){
           const draggable: any = document.querySelectorAll('.draggable-event');
@@ -140,7 +143,7 @@ const SchedulerEvent = (props: any) => {
                </div>
                </div>
                {props.type !== 'sessions' && <Row className="justify-content-end mr-1">
-                    <TransferPrograms duration={props.programDays} events={props.programEvents} />
+                    <TransferPrograms callback={props.callback} sessionIds={props.sessionIds} program_id={props.program_id} duration={props.programDays} events={props.programEvents} />
                </Row>}
         </>
      )

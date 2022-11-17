@@ -15,6 +15,9 @@ const ProgramList = (props: any) => {
      const inputField = useRef<any>();
      let skipval: Boolean = true;
 
+     console.log(props);
+     debugger;
+
      const GET_PROGRAMLIST = gql`
      query programlistQuery($id: ID!, $filter: String!) {
           fitnessprograms(
@@ -92,7 +95,6 @@ const ProgramList = (props: any) => {
 
      function loadProgramList(data: any) {
           const flattenedData = flattenObj({ ...data });
-          console.log(flattenedData);
           setProgramList(
                [...flattenedData.fitnessprograms].map((program) => {
                     return {
@@ -136,7 +138,7 @@ const ProgramList = (props: any) => {
           if (selected.duration) {
                console.log(days);
                return (
-                    <SchedulerEvent dayType={props.dayType} programDays={days} programEvents={selected.events} />
+                    <SchedulerEvent callback={props.callback} sessionIds={props.sessionIds} program_id={selected.id} dayType={props.dayType} programDays={days} programEvents={selected.events} />
                )
           }
      }

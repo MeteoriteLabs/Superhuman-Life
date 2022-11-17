@@ -15,7 +15,7 @@ const TransferPrograms = (props: any) => {
 
      const handleClose = () => setShow(false);
      const handleShow = () => setShow(true);
-     const [updateProgram] = useMutation(UPDATE_FITNESSPORGRAMS_SESSIONS, { onCompleted: (r: any) => { handleClose(); } });
+     const [updateProgram] = useMutation(UPDATE_FITNESSPORGRAMS_SESSIONS, { onCompleted: (r: any) => { handleClose(); props.callback(); } });
      const program_id = window.location.pathname.split('/').pop();
 
      function handleCallbackTransfer(e: any) {
@@ -41,7 +41,7 @@ const TransferPrograms = (props: any) => {
      }
 
      const [createSession] = useMutation(CREATE_SESSION, {onCompleted: (r: any) => { 
-          const values = existingEvents[0].events.map((e: any) => {return e.id}).join(",").split(",");
+          const values = [...props.sessionIds];
           values.push(r.createSession.data.id);
           updateProgram({
                variables: {
@@ -53,10 +53,13 @@ const TransferPrograms = (props: any) => {
 
      function handleTransferEventsSubmit() {
           // var allEvents: any[] = [...existingEvents[0].events];
+          console.log(existingEvents);
+          console.log(data);
+          debugger;
           const eventsJson: any[] = [];
           data.forEach((e: any) => {
-               const oldData = existingEvents[0].events.find((val: any) => val.id === e.id);
-               if (e.day && e.startTime && (oldData.start_time !== e.startTime)) {
+               // const oldData = existingEvents[0].events.find((val: any) => val.id === e.id);
+               if (e.day && e.startTime) {
                     e.day = JSON.parse(e.day);
                     var startTime: any = e.startTime;
                     var endTime: any = handleEndTime(e.startTime, e.id);
@@ -80,6 +83,8 @@ const TransferPrograms = (props: any) => {
                     }
                }
           });
+
+          debugger;
 
           for(var i=0; i<eventsJson.length; i++){
                if(eventsJson[i].type === 'workout'){
@@ -113,7 +118,7 @@ const TransferPrograms = (props: any) => {
           }
      }
 
-     function FetchData(_variables: {} = { id: program_id }) {
+     function FetchData(_variables: {} = { id: props.program_id }) {
           useQuery(PROGRAM_EVENTS, { variables: _variables, onCompleted: loadData });
      }
 
@@ -128,7 +133,7 @@ const TransferPrograms = (props: any) => {
           )
      }
 
-     FetchData({ id: program_id });
+     FetchData({ id: props.program_id });
 
      function handleValidation() {
           // @ts-ignore: Object is possibly 'null'.
