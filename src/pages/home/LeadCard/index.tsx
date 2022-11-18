@@ -26,7 +26,7 @@ function LeadComponent() {
 
   return (
     <Card>
-      <Card.Header as="h5" className="bg-dark text-light">
+      <Card.Header as="h5" className="bg-dark text-light" style={{cursor: "pointer"}}>
         Lead
       </Card.Header>
       <div className="scrollBar">
@@ -35,6 +35,7 @@ function LeadComponent() {
             ? leadData.map((currentValue) => {
                 return (
                   <Card
+                    style={{cursor: "pointer"}}
                     key={currentValue.id}
                     className="mt-2 bg-white rounded shadow"
                     onClick={() => {
@@ -44,7 +45,7 @@ function LeadComponent() {
                           id: currentValue.id,
                         },
                       });
-                      console.log("click");
+                    
                     }}
                   >
                     {/* Lead name with mail and call option */}
