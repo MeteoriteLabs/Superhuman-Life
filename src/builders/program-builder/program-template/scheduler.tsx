@@ -124,7 +124,7 @@ const Schedular = (props: any) => {
 
     useQuery(GET_SESSION_BOOKINGS, {
         variables: {id: clickedSessionId}, 
-        skip: (event.type !== "workout"),
+        skip: (event.type !== "workout" || clickedSessionId === ""),
         onCompleted: (data: any) => {
             const flattenData = flattenObj({...data});
             setSessionBooking(flattenData.sessionsBookings);
