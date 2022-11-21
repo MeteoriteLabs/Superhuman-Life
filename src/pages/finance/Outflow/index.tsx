@@ -18,16 +18,16 @@ import AuthContext from "../../../context/auth-context";
 import moment from "moment";
 import { useHistory } from "react-router-dom";
 
-export default function Earnings() {
+export default function Expenses() {
   const auth = useContext(AuthContext);
 
   const columns = useMemo<any>(
     () => [
       { accessor: "id", Header: "T ID" },
       { accessor: "name", Header: "Name" },
+      { accessor: "paymentMode", Header: "Payment Mode" },
       { accessor: "transactionDate", Header: "Transaction Date" },
       { accessor: "remark", Header: "Remark" },
-      { accessor: "paymentMode", Header: "Payment Mode" },
       { accessor: "amount", Header: "Amount" },
       {
         accessor: "status",
@@ -113,7 +113,7 @@ export default function Earnings() {
 
   const { data: get_transaction } = useQuery(GET_TRANSACTIONS, {
     variables: {
-      receiverId: auth.userid,
+      senderId: auth.userid,
     },
     onCompleted: (data) => {
       users({
@@ -142,19 +142,19 @@ export default function Earnings() {
           name:
             Detail.ReceiverType === "Changemaker"
               ? flattenChangemakerData.usersPermissionsUsers.find(
-                  (currentValue) => currentValue.id === Detail.SenderID
+                  (currentValue) => currentValue.id === Detail.ReceiverID
                 )?.First_Name
               : flattenContactsData.contacts.find(
-                  (currentValue) => currentValue.id === Detail.SenderID
+                  (currentValue) => currentValue.id === Detail.ReceiverID
                 )?.firstname,
 
           amount: `${Detail.Currency} ${Detail.TransactionAmount}`,
+          paymentMode: Detail.PaymentMode,
           remark: Detail.TransactionRemarks,
           transactionDate: moment(Detail.TransactionDateTime).format(
             "DD/MM/YYYY, hh:mm"
           ),
           status: Detail.TransactionStatus,
-          paymentMode: Detail.PaymentMode,
         };
       })
     );
