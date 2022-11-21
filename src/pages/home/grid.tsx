@@ -1,12 +1,14 @@
 import UpcomingCard from "./UpcomingCard";
 import LeadCard from "./LeadCard/index";
 import { Responsive, WidthProvider } from "react-grid-layout";
+// import LinksCard from "./Links";
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
 function Grid() {
   var layout = [
     { i: "lead", x: 0, y: 0, w: 1, h: 1 },
     { i: "offerings", x: 1, y: 0, w: 1, h: 1 },
+    { i: "links", x: 2, y: 0, w: 1, h: 1 },
   ];
 
   const getLayouts = () => {
@@ -36,6 +38,9 @@ function Grid() {
       <div key="offerings">
         <UpcomingCard />
       </div>
+      {/* <div key="links">
+        <LinksCard />
+      </div> */}
     </ResponsiveGridLayout>
   );
 }
