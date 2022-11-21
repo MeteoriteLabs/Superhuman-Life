@@ -1,5 +1,5 @@
 import React, {useState, useContext, useEffect} from 'react';
-import { Form, Table, FormControl, InputGroup, Button, Row, Col} from 'react-bootstrap';
+import { Form, Table, FormControl, InputGroup, Row, Col} from 'react-bootstrap';
 import {gql, useQuery, useLazyQuery} from '@apollo/client';
 import AuthContext from '../../../../context/auth-context';
 import { flattenObj } from '../../../../components/utils/responseFlatten';
@@ -252,7 +252,7 @@ const PricingTable = (props) => {
                     </div>
                     <div>
                         
-                    <Button variant='outline-info' onClick={() => {window.location.href = '/finance'}}>Add suggest pricing</Button>
+                    {/* <Button variant='outline-info' onClick={() => {window.location.href = '/finance'}}>Add suggest pricing</Button> */}
                     </div>
                 </div>
                 <Table responsive>
