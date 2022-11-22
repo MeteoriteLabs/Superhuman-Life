@@ -10,6 +10,7 @@ const ProgramManager = (props: any) => {
     const last = window.location.pathname.split('/').pop();
     const [data, setData] = useState<any[]>([]);
     const [show, setShow] = useState(false);
+    const [sessionIds, setSessionIds] = useState<any[]>([]);
 
     useEffect(() => {
         setTimeout(() => {
@@ -25,6 +26,10 @@ const ProgramManager = (props: any) => {
         const flattenData = flattenObj({...data});
         const restDayData = flattenData.fitnessprograms[0].sessions.filter((session: any) => session.Is_restday === true);
         const sessionData = flattenData.fitnessprograms[0].sessions.filter((val: any) => !restDayData.includes(val));
+        const values = [...sessionIds]
+        flattenData.fitnessprograms[0].sessions.forEach((program: any) => {
+            values.push(program.id);
+        })
         setData(
             [...flattenData.fitnessprograms].map((detail) => {
                 return {
@@ -41,10 +46,12 @@ const ProgramManager = (props: any) => {
                 }
             })
         )
+        setSessionIds(values);
     }
 
     function queryCallback(){
         mainQuery.refetch();
+        setSessionIds([]);
     }
 
 
@@ -72,7 +79,15 @@ const ProgramManager = (props: any) => {
                     </div>
                     <div className="mt-5">
                         <SessionContext.Provider value={{sessions: data[0].sessions}}>
-                            <Scheduler templateSessions={data[0].sessions} callbackTemplate={queryCallback} days={data[0].duration} type={'day'} restDays={data[0].restDays} programId={last} />
+                            <Scheduler 
+                                templateSessions={data[0].sessions} 
+                                sessionIds={sessionIds}
+                                callback={queryCallback} 
+                                days={data[0].duration} 
+                                type={'day'} 
+                                restDays={data[0].restDays} 
+                                programId={last} 
+                            />
                         </SessionContext.Provider>
                     </div>
                 </Col>

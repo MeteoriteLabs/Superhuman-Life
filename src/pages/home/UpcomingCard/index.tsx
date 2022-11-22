@@ -56,7 +56,7 @@ function UpcomingCard() {
 
   return (
     <Card>
-      <Card.Header as="h5" className="bg-dark text-light">
+      <Card.Header as="h5" className="bg-dark text-light" style={{cursor: "pointer"}}>
         Upcoming
       </Card.Header>
       <div className="scrollBar">

@@ -1,8 +1,9 @@
 import React, {useState, useContext, useEffect} from 'react';
-import { Form, Table, FormControl, InputGroup, Button} from 'react-bootstrap';
+import { Form, Table, FormControl, InputGroup} from 'react-bootstrap';
 import {gql, useQuery, useLazyQuery} from '@apollo/client';
 import AuthContext from '../../../../context/auth-context';
 import { flattenObj } from '../../../../components/utils/responseFlatten';
+import OfferingPricingAssist from '../../../../components/customWidgets/offeringPricingAssist';
 import moment from 'moment';
 
 const PricingTable = (props) => {
@@ -26,6 +27,7 @@ const PricingTable = (props) => {
     const auth = useContext(AuthContext);
     const [vouchers, setVouchers] = useState<any>([]);
     const [pricing, setPricing] = useState<any>(props.value !== undefined && props.value !== 'free' ? handleReturnType(props.value) : [ {mrp: null, suggestedPrice: null, voucher: 0, duration: 30, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 90, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 180, sapienPricing: null}, {mrp: null, suggestedPrice: null, voucher: 0, duration: 360, sapienPricing: null}]);
+    const [modalShow, setModalShow] = useState(false);
 
     const GET_VOUCHERS = gql`
         query fetchVouchers($expiry: DateTime!, $id: ID!, $start: DateTime!, $status: String!) {
@@ -237,7 +239,8 @@ const PricingTable = (props) => {
             {<div>
                 <div className="d-flex justify-content-end p-2">
                         
-                    <Button disabled={inputDisabled} variant='outline-info' onClick={() => {window.location.href = '/finance'}}>Add suggest pricing</Button>
+                    {/* <Button disabled={inputDisabled} variant='outline-info' onClick={() => {setModalShow(true)}}>Add suggest pricing</Button> */}
+                    <OfferingPricingAssist show={modalShow} type={'Personal Training'} imageURL={classMode === "Online" ? "/assets/personal-training-online.svg" : "/assets/personal-training-offline.svg"} onHide={() => setModalShow(false)} />
                 </div>
                 <Table responsive>
                 <thead>
