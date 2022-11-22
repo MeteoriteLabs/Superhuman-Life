@@ -70,7 +70,9 @@ const Schedular = (props: any) => {
                 }
               }
         }
-    `
+    `;
+
+
 
     const CREATE_REST_DAY = gql`
         mutation createRestDay($date: Date!, $id: ID!) {
@@ -121,7 +123,7 @@ const Schedular = (props: any) => {
         return moment().set({"hour": arr2?.h, "minute": arr2?.m}).add(diff1, 'minutes').format("HH:mm")
     }
 
-
+    console.log(clickedSessionId);
     useQuery(GET_SESSION_BOOKINGS, {
         variables: {id: clickedSessionId}, 
         skip: (event.type !== "workout" || clickedSessionId === ""),
@@ -297,7 +299,8 @@ const Schedular = (props: any) => {
     // this incase of the scheduler in the template page
     // here it renders day wise
     function handleTemplateTable(data: any){
-        const existingTemplateIds = [...templateSessionsIds];
+        console.log(data);
+        const existingTemplateIds = [...props.sessionIds];
         for (var d = 1; d <= props.days; d++) {
             arr[d] = JSON.parse(JSON.stringify(schedulerDay));
         }
@@ -579,7 +582,7 @@ const Schedular = (props: any) => {
     }});
     const [updateFitnessProgramSessions] = useMutation(UPDATE_FITNESSPORGRAMS_SESSIONS, { onCompleted: () => {
         setEvent({});
-        props.callbackTemplate();
+        props.callback();
     }});
 
     function handleUpdateFitnessPrograms(newId: any){
@@ -1221,12 +1224,21 @@ const Schedular = (props: any) => {
     const [createTemplateRestDay] = useMutation(CREATE_TEMPLATE_SESSION, {onCompleted: (r: any) => {
         const values = [...sessionIds];
         values.push(r.createSession.data.id);
-        updateTagSessions({
-            variables: {
-                id: program_id,
-                sessions_ids: values
-            }
-        })
+        if(window.location.pathname.split("/")[1] === 'programs'){
+            updateFitnessProgramSessions({
+                variables: {
+                    id: program_id,
+                    sessions_ids: values
+                }
+            });
+        }else {
+            updateTagSessions({
+                variables: {
+                    id: program_id,
+                    sessions_ids: values
+                }
+            });
+        }
     }});
     
     function handleDeleteRestDayFunc(day: number) {
@@ -1389,8 +1401,6 @@ const Schedular = (props: any) => {
         setShowRestDay(!showRestDay);
     }
 
-    console.log(arr)
-
     if (!show) {
         return <div className="text-center">
             <Spinner animation="border" variant="danger" />
@@ -1402,7 +1412,7 @@ const Schedular = (props: any) => {
         <>
             {/* this program list is only for fitnesstemplate */}
             <div className="mb-5 shadow-lg p-3" style={{ display: `${program}`, borderRadius: '20px' }}>
-                <ProgramList dayType={'programs'} callback={handleFloatingActionProgramCallback} />
+                <ProgramList sessionIds={props.sessionIds} dayType={'programs'} callback={handleFloatingActionProgramCallback} />
             </div>
 
             <div className="mb-5 shadow-lg p-3" style={{ display: `${sessionFilter}`, borderRadius: '20px' }}>
