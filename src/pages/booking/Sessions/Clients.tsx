@@ -122,7 +122,6 @@ export default function Clients() {
     variables: { id: Number(auth.userid) },
     onCompleted: (data) => {
       const flattenClientsData = flattenObj({ ...data.clientPackages });
-      console.log(flattenClientsData);
       setClientsData(flattenClientsData);
     },
   });
@@ -149,7 +148,6 @@ export default function Clients() {
 
   function loadData(data: any) {
     const flattenBookingsData = flattenObj({ ...data.sessionsBookings });
-    console.log(flattenBookingsData);
     setDataTable(
       [...flattenBookingsData].flatMap((Detail) => {
         return {
