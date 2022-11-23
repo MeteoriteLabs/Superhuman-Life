@@ -350,14 +350,15 @@ const Schedular = (props: any) => {
         // flattenData.tags[0]?.sessions?.filter((data: any) => { return moment(props.startDate).isSameOrBefore(moment(data.session_date))});
 
         const sessions: any = [];
-        // eslint-disable-next-line array-callback-return
         if(!window.location.pathname.includes("classic")){
+            // eslint-disable-next-line array-callback-return
             flattenData.tags[0]?.sessions?.map((it: any, index: number) => {
                 if(moment(it.session_date).isSameOrAfter(moment(props.startDate))){
                     sessions.push(flattenData.tags[0]?.sessions[index]);
                 }
             });
         }else{
+            // eslint-disable-next-line array-callback-return
             flattenData.tags[0]?.sessions?.map((it: any, index: number) => {
                 sessions.push(flattenData.tags[0]?.sessions[index]);
             });
