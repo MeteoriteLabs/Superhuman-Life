@@ -1,4 +1,4 @@
-import { useMemo, useState, useContext } from "react";
+import { useMemo, useState, useContext, useRef } from "react";
 import { Badge, TabContent, Row, Col, Card } from "react-bootstrap";
 import Table from "../../../components/table/leads-table";
 import ActionButton from "../../../components/actionbutton/index";
@@ -8,12 +8,14 @@ import { flattenObj } from "../../../components/utils/responseFlatten";
 import AuthContext from "../../../context/auth-context";
 import moment from "moment";
 import { useHistory } from "react-router-dom";
+import CancelComponent from "./CancelComponent";
 
 export default function Program() {
   const auth = useContext(AuthContext);
   const [sessionData, setSessionData] = useState<any>([]);
   const [activeCard, setActiveCard] = useState<number>(0);
   const currentDate = new Date();
+  const cancelComponent = useRef<any>(null);
 
   function getDate(time: Date): string {
     let dateObj: Date = new Date(time);
@@ -78,6 +80,13 @@ export default function Program() {
             history.push(path);
           };
 
+          const cancelHandler = () => {
+            cancelComponent.current.TriggerForm({
+              id: row.original.id,
+              type: "cancel",
+            });
+          };
+
           const arrayAction = [
             {
               actionName: "Reschedule",
@@ -85,7 +94,7 @@ export default function Program() {
             },
             {
               actionName: "Cancel",
-              actionClick: routeChange,
+              actionClick: cancelHandler,
             },
             {
               actionName: "Manage Program",
@@ -136,7 +145,7 @@ export default function Program() {
   });
 
   // eslint-disable-next-line
-  const [getSessionBookings, { data: get_session_bookings }] = useLazyQuery(
+  const [getSessionBookings, { data: get_session_bookings, refetch: refetch_session_bookings }] = useLazyQuery(
     GET_SESSION_BOOKINGS,
     {
       onCompleted: (data) => {
@@ -172,49 +181,55 @@ export default function Program() {
   }
 
   return (
-    <div className="mt-3">
-      <h3>Program Details</h3>
+    <>
+      <div className="mt-3">
+        <h3>Program Details</h3>
 
-      <TabContent>
-        <Row className="mt-5">
-          <Col lg={3}>
-            <h6>Click on cards to get session booking details</h6>
-            {sessionData.map((currentValue: any) => (
-              <Card
-                style={{
-                  width: "18rem",
-                  cursor: "pointer",
-                  border: "3px solid ",
-                }}
-                className="mt-4 bg-white rounded shadow"
-                border={activeCard === currentValue.id ? "success" : "light"}
-                key={currentValue.id}
-                onClick={() => {
-                  setActiveCard(currentValue.id);
-                  getSessionBookings({ variables: { id: currentValue.id } });
-                }}
-              >
-                <Card.Body>
-                  <Card.Title>
-                    {currentValue.type === "activity"
-                      ? currentValue.activity.title
-                      : currentValue.workout.workouttitle}
-                  </Card.Title>
-                  <Card.Subtitle className="mb-2 text-muted">
-                    {getTime(currentValue.start_time)} to{" "}
-                    {getTime(currentValue.end_time)}
-                  </Card.Subtitle>
-                </Card.Body>
-              </Card>
-            ))}
-          </Col>
-          <div style={{ border: "1px solid black" }} />
+        <TabContent>
+          <Row className="mt-5">
+            <Col lg={3}>
+              <h6>Click on cards to get session booking details</h6>
+              {sessionData.map((currentValue: any) => (
+                <Card
+                  style={{
+                    width: "18rem",
+                    cursor: "pointer",
+                    border: "3px solid ",
+                  }}
+                  className="mt-4 bg-white rounded shadow"
+                  border={activeCard === currentValue.id ? "success" : "light"}
+                  key={currentValue.id}
+                  onClick={() => {
+                    setActiveCard(currentValue.id);
+                    getSessionBookings({ variables: { id: currentValue.id } });
+                  }}
+                >
+                  <Card.Body>
+                    <Card.Title>
+                      {currentValue.type === "activity"
+                        ? currentValue.activity.title
+                        : currentValue.workout.workouttitle}
+                    </Card.Title>
+                    <Card.Subtitle className="mb-2 text-muted">
+                      {getTime(currentValue.start_time)} to{" "}
+                      {getTime(currentValue.end_time)}
+                    </Card.Subtitle>
+                  </Card.Body>
+                </Card>
+              ))}
+            </Col>
+            <div style={{ border: "1px solid black" }} />
 
-          <Col lg={8}>
-            <Table columns={columns} data={datatable} />
-          </Col>
-        </Row>
-      </TabContent>
-    </div>
+            <Col lg={8}>
+              <Table columns={columns} data={datatable} />
+            </Col>
+          </Row>
+        </TabContent>
+      </div>
+      <CancelComponent
+        ref={cancelComponent}
+        callback={refetch_session_bookings}
+      ></CancelComponent>
+    </>
   );
 }

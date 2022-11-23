@@ -1,4 +1,4 @@
-import { useMemo, useState, useContext } from "react";
+import { useMemo, useState, useContext, useRef } from "react";
 import { Badge, TabContent, Row, Col, Card } from "react-bootstrap";
 import Table from "../../../components/table/leads-table";
 import ActionButton from "../../../components/actionbutton/index";
@@ -8,11 +8,13 @@ import { flattenObj } from "../../../components/utils/responseFlatten";
 import AuthContext from "../../../context/auth-context";
 import moment from "moment";
 import { useHistory } from "react-router-dom";
+import CancelComponent from "./CancelComponent";
 
 export default function Clients() {
   const auth = useContext(AuthContext);
   const [clientsData, setClientsData] = useState<any>([]);
   const [activeCard, setActiveCard] = useState<number>(0);
+  const cancelComponent = useRef<any>(null);
 
   const columns = useMemo<any>(
     () => [
@@ -69,6 +71,13 @@ export default function Clients() {
             history.push(path);
           };
 
+          // const cancelHandler = () => {
+
+          // }
+          const cancelHandler = () => {
+            cancelComponent.current.TriggerForm({ id: row.original.id, type: "cancel" });
+       };
+
           const arrayAction = [
             {
               actionName: "Reschedule",
@@ -76,7 +85,7 @@ export default function Clients() {
             },
             {
               actionName: "Cancel",
-              actionClick: routeChange,
+              actionClick: cancelHandler,
             },
             {
               actionName: "Manage Program",
@@ -127,7 +136,7 @@ export default function Clients() {
   });
 
   // eslint-disable-next-line
-  const [getSessionBookings, { data: get_session_bookings }] = useLazyQuery(
+  const [getSessionBookings, { data: get_session_bookings, refetch: refetch_session_bookings }] = useLazyQuery(
     GET_SESSION_BOOKINGS_FOR_CLIENTS,
     {
       onCompleted: (data) => {
@@ -165,6 +174,7 @@ export default function Clients() {
   }
 
   return (
+    <>
     <div className="mt-3">
       <h3>Clients</h3>
 
@@ -209,5 +219,7 @@ export default function Clients() {
         </Row>
       </TabContent>
     </div>
+    <CancelComponent ref={cancelComponent} callback={refetch_session_bookings}></CancelComponent>
+    </>
   );
 }

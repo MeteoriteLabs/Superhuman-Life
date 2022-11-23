@@ -150,3 +150,19 @@ export const GET_ALL_CLIENTS = gql`
     }
   }
 `;
+
+export const UPDATE_STATUS = gql`
+  mutation updateStatus(
+    $id: ID!
+    $data: SessionsBookingInput!
+  ) {
+    updateSessionsBooking(
+      id: $id
+      data: $data
+    ) {
+      data {
+        id
+      }
+    }
+  }
+`;
