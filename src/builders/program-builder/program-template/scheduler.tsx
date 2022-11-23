@@ -39,7 +39,7 @@ const Schedular = (props: any) => {
     const program_id = window.location.pathname.split('/').pop();
     const schedulerDay: any = require("./json/scheduler-day.json");
     const [changeMakerAvailability, setChangeMakerAvailability] = useState<any>([]);
-    const [sessionIds, setSessionsIds] = useState<any>([]);
+    const [sessionIds, setSessionsIds] = useState<any>(props.sessionIds);
     const [templateSessionsIds, setTemplateSessionsIds] = useState<any>([]);
     const [dropConflict, setDropConflict] = useState(false);
     const [groupDropConflict, setGroupDropConflict] = useState(false);
@@ -334,6 +334,7 @@ const Schedular = (props: any) => {
     function handleRenderTable(data: any) {
         setSessionsIds(props.sessionIds);
         const flattenData = flattenObj({...data});
+        debugger;
         if(window.location.pathname.split('/')[1] === 'programs'){
             return handleTemplateTable(props?.templateSessions);
         }
@@ -350,11 +351,17 @@ const Schedular = (props: any) => {
 
         const sessions: any = [];
         // eslint-disable-next-line array-callback-return
-        flattenData.tags[0]?.sessions?.map((it: any, index: number) => {
-            if(moment(it.session_date).isSameOrAfter(moment(props.startDate))){
+        if(!window.location.pathname.includes("classic")){
+            flattenData.tags[0]?.sessions?.map((it: any, index: number) => {
+                if(moment(it.session_date).isSameOrAfter(moment(props.startDate))){
+                    sessions.push(flattenData.tags[0]?.sessions[index]);
+                }
+            });
+        }else{
+            flattenData.tags[0]?.sessions?.map((it: any, index: number) => {
                 sessions.push(flattenData.tags[0]?.sessions[index]);
-            }
-        });
+            });
+        }
         if (sessions.length > 0) {
             sessions.filter((itm) => itm.Is_restday === false).forEach((val) => {
                 var startTimeHour: any = `${val.start_time === null ? '0' : val.start_time.split(':')[0]}`;
@@ -441,6 +448,7 @@ const Schedular = (props: any) => {
 
     function handleFloatingActionProgramCallback2(event: any) {
         setSessionFilter(`${event}`);
+        // setProgram(`${event}`);
         // mainQuery.refetch();
         props.callback();
     }
@@ -567,6 +575,7 @@ const Schedular = (props: any) => {
     }});
     const [updateSession] = useMutation(UPDATE_SESSION, { onCompleted: () => {setEvent({}); props.callback();} });
     const [updateTagSessions] = useMutation(UPDATE_TAG_SESSIONS, { onCompleted: () => {
+        debugger;
         if(props.classType !== 'Group Class' && newSessionId !== ""){
             createSessionBooking({
                 variables: {
@@ -598,12 +607,14 @@ const Schedular = (props: any) => {
         })
     }
 
-    console.log(sessionIds);
+    console.log(props.sessionIds);
 
     function handleUpdateTag(newId: any){
         setNewSessionId(newId);
-        const values = [...sessionIds];
+        console.log(props.sessionIds);
+        const values = [...props.sessionIds];
         values.push(newId);
+        debugger;
         updateTagSessions({
             variables: {
                 id: program_id,
@@ -774,22 +785,25 @@ const Schedular = (props: any) => {
         }
         console.log(event);
         console.log(timeInput);
-        // the first if block is incase of the template page. which works based on day.
+        debugger;
+
+        // if it is being imported from program template into a fitness program
         if(window.location.pathname.split('/')[1] === 'programs'){
             if(event.type === 'workout'){
                 createSession({
                     variables: {
-                        start_time: event.hour + ':' + event.min,
-                        end_time: event.endHour + ':' + event.endMin,
+                        start_time: timeInput.startTime === "" ? event.hour + ':' + event.min : timeInput.startTime,
+                        end_time: timeInput.endTime === "" ? event.endHour + ':' + event.endMin : timeInput.endTime,
                         workout: event.id,
                         tag: tag === "" ? event.tag : tag,
                         mode: mode === "" ? event.mode : mode,
                         type: event.type,
                         day_of_program: parseInt(event.day),
-                        changemaker: auth.userid
+                        changemaker: auth.userid,
+                        isProgram: true
                     }
                 })
-            }else {
+             }else {
                 createSession({
                     variables: {
                         day_of_program: parseInt(event.day),
@@ -800,78 +814,199 @@ const Schedular = (props: any) => {
                         tag: tag === "" ? event.tag : tag,
                         mode: mode === "" ? event.mode : mode,
                         type: e.type,
-                        session_date: moment(event.sessionDate).format('YYYY-MM-DD'),
-                        changemaker: auth.userid
-                    }
-                })
-            }
-        }else if(event.type === "workout" && event.isProgram === false){
-            if(event.tag === 'Group Class'){
-                const values = [...sessionIds];
-                values.push(event.sessionId);
-                updateTagSessions({
-                    variables: {
-                        id: program_id,
-                        sessions_ids: values
-                    }
-                });
-
-            }
-            else {
-                createSession({
-                    variables: {
-                        start_time: event.hour + ':' + event.min,
-                        end_time: event.endHour + ':' + event.endMin,
-                        workout: event.id,
-                        tag: tag === "" ? event.tag : tag,
-                        mode: mode === "" ? event.mode : mode,
-                        type: event.type,
-                        session_date: moment(event.sessionDate).format('YYYY-MM-DD'),
-                        changemaker: auth.userid
-                    }
-                })
-            }
-        }else if(event.type === "workout" && event.isProgram === true){
-            createSession({
-                variables: {
-                    start_time: event.hour + ':' + event.min,
-                    end_time: event.endHour + ':' + event.endMin,
-                    workout: event.id,
-                    tag: tag === "" ? event.tag : tag,
-                    mode: mode === "" ? event.mode : mode,
-                    type: event.type,
-                    session_date: moment(event.sessionDate).format('YYYY-MM-DD'),
-                    changemaker: auth.userid
-                }
-            });
-        }else {
-            if(event.tag === 'Group Class'){
-                const values = [...sessionIds];
-                values.push(event.sessionId);
-                updateTagSessions({
-                    variables: {
-                        id: program_id,
-                        sessions_ids: values
-                    }
-                });
-
-            }else {
-                createSession({
-                    variables: {
-                        day_of_program: parseInt(event.day),
-                        start_time: timeInput.startTime === "" ? event.hour + ':' + event.min : timeInput.startTime,
-                        end_time: timeInput.endTime === "" ? event.endHour + ':' + event.endMin : timeInput.endTime,
-                        activity: event.id,
-                        activity_target: event.activityTarget,
-                        tag: tag === "" ? event.tag : tag,
-                        mode: mode === "" ? event.mode : mode,
-                        type: e.type,
-                        session_date: moment(event.sessionDate).format('YYYY-MM-DD'),
-                        changemaker: auth.userid
+                        changemaker: auth.userid,
+                        isProgram: true
                     }
                 })
             }
         }
+
+        // if the program is true and being imported into sessions
+        if(event.isProgram === true && window.location.pathname.split('/')[1] !== 'programs'){
+            if(event.type === 'workout'){
+                createSession({
+                    variables: {
+                        start_time: timeInput.startTime === "" ? event.hour + ':' + event.min : timeInput.startTime,
+                        end_time: timeInput.endTime === "" ? event.endHour + ':' + event.endMin : timeInput.endTime,
+                        workout: event.id,
+                        tag: tag === "" ? event.tag : tag,
+                        mode: mode === "" ? event.mode : mode,
+                        type: event.type,
+                        day_of_program: parseInt(event.day),
+                        changemaker: auth.userid,
+                        session_date: moment(event.sessionDate).format('YYYY-MM-DD'),
+                        isProgram: false
+                    }
+                })
+             }else {
+                createSession({
+                    variables: {
+                        day_of_program: parseInt(event.day),
+                        start_time: timeInput.startTime === "" ? event.hour + ':' + event.min : timeInput.startTime,
+                        end_time: timeInput.endTime === "" ? event.endHour + ':' + event.endMin : timeInput.endTime,
+                        activity: event.id,
+                        activity_target: event.activityTarget,
+                        tag: tag === "" ? event.tag : tag,
+                        mode: mode === "" ? event.mode : mode,
+                        type: e.type,
+                        changemaker: auth.userid,
+                        session_date: moment(event.sessionDate).format('YYYY-MM-DD'),
+                        isProgram: false
+                    }
+                })
+            }
+        }
+
+        // if the program is false and being imported into sessions
+        if(event.isProgram === false && window.location.pathname.split('/')[1] !== 'programs'){
+            if(window.location.pathname.includes('custom') && event.tag === 'Group Class'){
+                const values = [...props.sessionIds];
+                values.push(event.sessionId);
+                updateTagSessions({
+                    variables: {
+                        id: program_id,
+                        sessions_ids: values
+                    }
+                });
+            }else {
+                if(event.type === 'workout'){
+                    createSession({
+                        variables: {
+                            start_time: timeInput.startTime === "" ? event.hour + ':' + event.min : timeInput.startTime,
+                            end_time: timeInput.endTime === "" ? event.endHour + ':' + event.endMin : timeInput.endTime,
+                            workout: event.id,
+                            tag: tag === "" ? event.tag : tag,
+                            mode: mode === "" ? event.mode : mode,
+                            type: event.type,
+                            day_of_program: parseInt(event.day),
+                            changemaker: auth.userid,
+                            session_date: moment(event.sessionDate).format('YYYY-MM-DD'),
+                            isProgram: false
+                        }
+                    })
+                 }else {
+                    createSession({
+                        variables: {
+                            day_of_program: parseInt(event.day),
+                            start_time: timeInput.startTime === "" ? event.hour + ':' + event.min : timeInput.startTime,
+                            end_time: timeInput.endTime === "" ? event.endHour + ':' + event.endMin : timeInput.endTime,
+                            activity: event.id,
+                            activity_target: event.activityTarget,
+                            tag: tag === "" ? event.tag : tag,
+                            mode: mode === "" ? event.mode : mode,
+                            type: e.type,
+                            changemaker: auth.userid,
+                            session_date: moment(event.sessionDate).format('YYYY-MM-DD'),
+                            isProgram: false
+                        }
+                    })
+                }
+            }
+        }
+        // the first if block is incase of the template page. which works based on day.
+        // if(window.location.pathname.split('/')[1] === 'programs'){
+        //     if(event.type === 'workout'){
+        //         createSession({
+        //             variables: {
+        //                 start_time: event.hour + ':' + event.min,
+        //                 end_time: event.endHour + ':' + event.endMin,
+        //                 workout: event.id,
+        //                 tag: tag === "" ? event.tag : tag,
+        //                 mode: mode === "" ? event.mode : mode,
+        //                 type: event.type,
+        //                 day_of_program: parseInt(event.day),
+        //                 changemaker: auth.userid,
+        //                 isProgram: true
+        //             }
+        //         })
+        //     }else {
+        //         createSession({
+        //             variables: {
+        //                 day_of_program: parseInt(event.day),
+        //                 start_time: timeInput.startTime === "" ? event.hour + ':' + event.min : timeInput.startTime,
+        //                 end_time: timeInput.endTime === "" ? event.endHour + ':' + event.endMin : timeInput.endTime,
+        //                 activity: event.id,
+        //                 activity_target: event.activityTarget,
+        //                 tag: tag === "" ? event.tag : tag,
+        //                 mode: mode === "" ? event.mode : mode,
+        //                 type: e.type,
+        //                 session_date: moment(event.sessionDate).format('YYYY-MM-DD'),
+        //                 changemaker: auth.userid,
+        //                 isProgram: false
+        //             }
+        //         })
+        //     }
+        // }else 
+        // if(event.type === "workout" && event.isProgram === false){
+        //     //create new
+        //     if(event.tag === 'Group Class'){
+        //         const values = [...props.sessionIds];
+        //         values.push(event.sessionId);
+        //         updateTagSessions({
+        //             variables: {
+        //                 id: program_id,
+        //                 sessions_ids: values
+        //             }
+        //         });
+        //     }
+        //     else {
+        //         createSession({
+        //             variables: {
+        //                 start_time: event.hour + ':' + event.min,
+        //                 end_time: event.endHour + ':' + event.endMin,
+        //                 workout: event.id,
+        //                 tag: tag === "" ? event.tag : tag,
+        //                 mode: mode === "" ? event.mode : mode,
+        //                 type: event.type,
+        //                 session_date: moment(event.sessionDate).format('YYYY-MM-DD'),
+        //                 changemaker: auth.userid,
+        //                 isProgram: false
+        //             }
+        //         })
+        //     }
+        // }else if(event.type === "workout" && event.isProgram === true){
+        //     createSession({
+        //         variables: {
+        //             start_time: event.hour + ':' + event.min,
+        //             end_time: event.endHour + ':' + event.endMin,
+        //             workout: event.id,
+        //             tag: tag === "" ? event.tag : tag,
+        //             mode: mode === "" ? event.mode : mode,
+        //             type: event.type,
+        //             session_date: moment(event.sessionDate).format('YYYY-MM-DD'),
+        //             changemaker: auth.userid,
+        //             isProgram: false
+        //         }
+        //     });
+        // }else {
+        //     if(event.tag === 'Group Class' && event.isProgram !== null){
+        //         const values = [...props.sessionIds];
+        //         values.push(event.sessionId);
+        //         updateTagSessions({
+        //             variables: {
+        //                 id: program_id,
+        //                 sessions_ids: values
+        //             }
+        //         });
+
+        //     }else {
+        //         createSession({
+        //             variables: {
+        //                 day_of_program: parseInt(event.day),
+        //                 start_time: timeInput.startTime === "" ? event.hour + ':' + event.min : timeInput.startTime,
+        //                 end_time: timeInput.endTime === "" ? event.endHour + ':' + event.endMin : timeInput.endTime,
+        //                 activity: event.id,
+        //                 activity_target: event.activityTarget,
+        //                 tag: tag === "" ? event.tag : tag,
+        //                 mode: mode === "" ? event.mode : mode,
+        //                 type: e.type,
+        //                 session_date: moment(event.sessionDate).format('YYYY-MM-DD'),
+        //                 changemaker: auth.userid,
+        //                 isProgram: false
+        //             }
+        //         })
+        //     }
+        // }
 
         setArr(values);
         setarr2([]);
@@ -1211,7 +1346,7 @@ const Schedular = (props: any) => {
         props.callback();
     }});
     const [createRestDay] = useMutation(CREATE_REST_DAY, {onCompleted: (r: any) => {
-        const values = [...sessionIds];
+        const values = [...props.sessionIds];
         values.push(r.createSession.data.id);
         updateTagSessions({
             variables: {
@@ -1222,7 +1357,7 @@ const Schedular = (props: any) => {
     }});
 
     const [createTemplateRestDay] = useMutation(CREATE_TEMPLATE_SESSION, {onCompleted: (r: any) => {
-        const values = [...sessionIds];
+        const values = [...props.sessionIds];
         values.push(r.createSession.data.id);
         if(window.location.pathname.split("/")[1] === 'programs'){
             updateFitnessProgramSessions({
@@ -1416,7 +1551,7 @@ const Schedular = (props: any) => {
             </div>
 
             <div className="mb-5 shadow-lg p-3" style={{ display: `${sessionFilter}`, borderRadius: '20px' }}>
-                <SessionList startDate={props.startDate} days={dates} callback2={handleFloatingActionProgramCallback2} />
+                <SessionList duration={props?.duration} sessionIds={props.sessionIds}  startDate={props.startDate} days={dates} callback2={handleFloatingActionProgramCallback2} />
             </div>
 
             <div className="wrapper shadow-lg">
@@ -1506,7 +1641,7 @@ const Schedular = (props: any) => {
                 </div>
             </div>
             {/* Floating Action Buttons */}
-            {props?.clientSchedular !== 'client' && <FloatingButton clientIds={props.clientIds} sessionIds={sessionIds} startDate={props.startDate} duration={props.days} callback={handleFloatingActionProgramCallback} callback2={handleFloatingActionProgramCallback2} callback3={handleRefetch} restDayCallback={handleShowRestDay} showRestDayAction={showRestDay}/>}
+            {props?.clientSchedular !== 'client' && <FloatingButton clientIds={props.clientIds} sessionIds={props.sessionIds} startDate={props.startDate} duration={props.days} callback={handleFloatingActionProgramCallback} callback2={handleFloatingActionProgramCallback2} callback3={handleRefetch} restDayCallback={handleShowRestDay} showRestDayAction={showRestDay}/>}
             {
                 <Modal show={showModal} onHide={handleClose} backdrop="static" centered size="lg" >
                     <Modal.Body style={{ maxHeight: '600px', overflow: 'auto' }}>

@@ -148,6 +148,7 @@ query getSessionsByTag($id: ID!) {
                 id
                 attributes{
                   duration
+                  Start_date
                   fitness_package_type{
                     data{
                       id
@@ -174,6 +175,7 @@ query getSessionsByTag($id: ID!) {
                   end_time
                   mode
                   activity_target
+                  Is_program_template
                   session_date
                   activity{
                     data{

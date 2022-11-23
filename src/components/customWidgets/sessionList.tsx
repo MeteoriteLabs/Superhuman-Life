@@ -44,9 +44,11 @@ const ProgramList = (props: any) => {
 
     useQuery(GET_SESSIONS_BY_TAG, { variables: {id: selectedTag}, skip: (selectedTag === ""), onCompleted: (data) => {
         const flattenData = flattenObj({...data});
-        setStartDate(flattenData.tags[0]?.client_packages[0]?.effective_date);
-        handleDatesRender(flattenData.tags[0]?.client_packages[0]?.effective_date, flattenData.tags[0]?.fitnesspackage?.duration);
-        setPackageDuration(flattenData.tags[0]?.fitnesspackage?.duration);
+        console.log(flattenData);
+        debugger
+        setStartDate(props.startDate);
+        handleDatesRender(props.startDate, props.duration);
+        setPackageDuration(props.duration);
         setProgramList(flattenData.tags[0].sessions);
     }})
 
@@ -65,7 +67,7 @@ const ProgramList = (props: any) => {
                         level: program.level,
                         description: program.description,
                         discpline: program.fitnessdisciplines,
-                        events: program.events
+                        events: program.sessions.filter((session: any) => session.Is_restday === false)
                 }
             })
         );
@@ -80,7 +82,7 @@ const ProgramList = (props: any) => {
     function renderEventsTable() {
         if(programList.length > 0){
             return (
-                <SchedulerEvent programDays={days} days={displayDates} startDate={startDate} programEvents={programList} type={'sessions'}/>
+                <SchedulerEvent callback={props.callback2} programDays={days} sessionIds={props.sessionIds} days={displayDates} startDate={startDate} programEvents={programList} type={'sessions'}/>
             )   
         }
     };
