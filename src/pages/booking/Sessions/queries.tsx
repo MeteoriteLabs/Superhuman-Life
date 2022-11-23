@@ -1,10 +1,119 @@
 import { gql } from "@apollo/client";
 
+export const GET_SESSIONS = gql`
+  query getSessions($id: ID, $session_date: Date) {
+    sessions(
+      filters: {
+        changemaker: { id: { eq: $id } }
+        Is_restday: { eq: false }
+        session_date: { eq: $session_date }
+      }
+    ) {
+      data {
+        id
+        attributes {
+          type
+          start_time
+          end_time
+          activity {
+            data {
+              id
+              attributes {
+                title
+              }
+            }
+          }
+          workout {
+            data {
+              id
+              attributes {
+                workouttitle
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const GET_SESSION_BOOKINGS = gql`
+  query getSessionBookings($id: ID) {
+    sessionsBookings(filters: { session: { id: { eq: $id } } }) {
+      data {
+        id
+        attributes {
+          session_date
+          session_time
+          Session_booking_status
+          client {
+            data {
+              id
+              attributes {
+                username
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const GET_SESSION_BOOKINGS_FOR_CLIENTS = gql`
+  query getSessionBookings($id: ID) {
+    sessionsBookings(filters: { client: { id: { eq: $id } } }) {
+      data {
+        id
+        attributes {
+          createdAt
+          session {
+            data {
+              id
+              attributes {
+                type
+                activity{
+                  data{
+                    id
+                    attributes{
+                      title
+                    }
+                  }
+                }
+                workout{
+                  data{
+                    id
+                    attributes{
+                      workouttitle
+                    }
+                  }
+                }
+                start_time
+                end_time
+                session_date
+              }
+            }
+          }
+          Session_booking_status
+          client {
+            data {
+              id
+              attributes {
+                username
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
 export const GET_ALL_TAGS = gql`
   query tags($id: ID!) {
     tags(
       filters: {
-        fitnesspackage: { users_permissions_user: { id: { eq: $id } } }
+        client_packages: { users_permissions_user: { id: { eq: $id } } }
       }
     ) {
       data {
@@ -59,19 +168,33 @@ export const GET_ALL_TAGS = gql`
 
 export const GET_ALL_CLIENTS = gql`
   query clientPackages($id: ID) {
-    clientPackages(filters: { users_permissions_user: { id: { eq: $id } } }) {
+    clientPackages(
+      filters: {
+        fitnesspackages: { users_permissions_user: { id: { eq: $id } } }
+      }
+    ) {
       data {
         id
-        attributes{
-          fitnesspackages{
-            data{
+        attributes {
+          users_permissions_user {
+            data {
               id
-              attributes{
+              attributes {
+                username
+                First_Name
+                Last_Name
+              }
+            }
+          }
+          fitnesspackages {
+            data {
+              id
+              attributes {
                 packagename
-                users_permissions_user{
-                  data{
+                users_permissions_user {
+                  data {
                     id
-                    attributes{
+                    attributes {
                       username
                     }
                   }
@@ -87,17 +210,16 @@ export const GET_ALL_CLIENTS = gql`
 
 export const GET_TAGS = gql`
   query tags($id: ID) {
-    tags(filters:{client_packages:{id:{eq: id}}}) {
-      data{
+    tags(filters: { client_packages: { id: { eq: id } } }) {
+      data {
         id
-        attributes{
+        attributes {
           tag_name
-          sessions{
-            data{
+          sessions {
+            data {
               id
-              attributes{
+              attributes {
                 type
-                
               }
             }
           }
@@ -106,4 +228,3 @@ export const GET_TAGS = gql`
     }
   }
 `;
-
