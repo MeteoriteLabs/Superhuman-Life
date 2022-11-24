@@ -17,7 +17,6 @@ export default function FitnessTab() {
           <Tab
             eventKey="exercises"
             title="Exercises"
-            style={{ background: "white" }}
           >
             <ExercisesTab />
           </Tab>
