@@ -5,7 +5,7 @@ export default function SettingsPage() {
 
     return (
         <div>
-            <h3>Settings Page</h3>
+            <h2>Settings Page</h2>
             <p>
                 No content available for <code>{location.pathname}</code>
             </p>

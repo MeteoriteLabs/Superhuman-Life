@@ -14,7 +14,7 @@ import Payee from "./Payee/Payee";
 export default function index() {
   return (
     <div>
-      <h1>Finance</h1>
+      <h2>Finance</h2>
 
       <Card className="shadow-sm mt-3" border="light">
         <Card.Body>
