@@ -229,7 +229,8 @@ function CreateEditWorkoutTemplate(props: any, ref: any) {
                 type: eventJson.type,
                 day_of_program: eventJson.day,
                 changemaker: auth.userid,
-                session_date: null
+                session_date: null,
+                isProgram: true
             }
         }else {
             data = {
@@ -240,7 +241,8 @@ function CreateEditWorkoutTemplate(props: any, ref: any) {
                 mode: eventJson.mode,
                 type: eventJson.type,
                 session_date: moment(frm.day[0].day, 'Do, MMM YY').format('YYYY-MM-DD'),
-                changemaker: auth.userid
+                changemaker: auth.userid,
+                isProgram: false
             }
         }
 

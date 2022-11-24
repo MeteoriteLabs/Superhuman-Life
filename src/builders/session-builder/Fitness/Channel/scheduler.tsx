@@ -146,7 +146,7 @@ const Scheduler = () => {
 
     function handleCallback(){
         mainQuery.refetch();
-        setSessionIds([]);
+        // setSessionIds([]);
     }
 
     if (!show) return <span style={{ color: 'red' }}>Loading...</span>;

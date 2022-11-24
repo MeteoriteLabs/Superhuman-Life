@@ -87,9 +87,9 @@ const Scheduler = () => {
         }
         for(let i = 0; i < values.length; i++){
             ids.push(values[i].id);
-            if(values[i].tag === "Group Class" && values[i].mode === "Online"){
+            if(values[i].mode === "Online"){
                 total[0] += 1;
-            }else if(values[i].tag === "Group Class" && values[i].mode === "Offline"){
+            }else if(values[i].mode === "Offline"){
                 total[1] += 1;
             }
         }
@@ -294,8 +294,8 @@ const Scheduler = () => {
     console.log(tag);
 
     function handleCallback(){
+        // setSessionIds([]);
         mainQuery.refetch();
-        setSessionIds([]);
     }
 
     function handleDatePicked(date: string){
@@ -341,6 +341,8 @@ const Scheduler = () => {
         var days = moment(ed).diff(moment(sd), 'days');
         return days + 1;
     }
+
+    console.log(tag);
     
     if (!show) return <span style={{ color: 'red' }}>Loading...</span>;
     else return (
@@ -408,10 +410,10 @@ const Scheduler = () => {
                                                 <Col lg={5} className="text-center">
                                                     <span className="p-1 ml-2 scheduler-badge">{moment(groupStartDate).format('DD MMMM, YY')}</span>
                                                 </Col>
-                                                    {/* to
+                                                    to
                                                 <Col lg={5} className="text-center">
-                                                    <span className="p-1 scheduler-badge">{moment(data[0].edate).format("MMMM DD, YY")}</span>
-                                                </Col> */}
+                                                    <span className="p-1 scheduler-badge">{moment(groupEndDate).format('DD MMMM, YY')}</span>
+                                                </Col>
                                             </Row>
                                         </div>
                                         {/* <div>
@@ -437,16 +439,16 @@ const Scheduler = () => {
                                 <Row>
                                     <Col>
                                     <Row style={{ justifyContent: 'space-around'}}>
-                                            <div>
+                                            {(tag.fitnesspackage.mode === "Online" || tag.fitnesspackage.mode === "Hybrid") && <div>
                                                 <img src='/assets/customgroup-Online.svg' alt="Group-Online" /><br/>
                                                 <span>{tag.fitnesspackage.grouponline} Group</span><br/>
                                                 <span><b>{handleTimeFormatting(totalClasses[0], tag.fitnesspackage.duration)}</b></span>
-                                            </div>
-                                            <div>
+                                            </div>}
+                                            {(tag.fitnesspackage.mode === "Offline" || tag.fitnesspackage.mode === "Hybrid") &&<div>
                                                 <img src='/assets/customgroup-Offline.svg' alt="GRoup-Offline" /><br/>
                                                 <span>{tag.fitnesspackage.groupoffline} Group</span><br/>
                                                 <span><b>{handleTimeFormatting(totalClasses[1], tag.fitnesspackage.duration)}</b></span>
-                                           </div>
+                                           </div>}
                                         </Row>
                                         <Row>
                                             
@@ -532,6 +534,7 @@ const Scheduler = () => {
                             clientIds={clientIds}
                             classType={'Group Class'}
                             startDate={prevDate}
+                            duration={moment(nextDate).diff(moment(prevDate), 'days')}
                         />
                     </div>
                 </Col>

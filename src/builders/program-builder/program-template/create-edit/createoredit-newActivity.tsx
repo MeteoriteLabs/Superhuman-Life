@@ -188,7 +188,8 @@ function CreateEditActivity(props: any, ref: any) {
                         day_of_program: frm.day[z].key,
                         type: "activity",
                         session_date: moment(frm.day[z].day, 'Do, MMM YY').format('YYYY-MM-DD'),
-                        changemaker: auth.userid
+                        changemaker: auth.userid,
+                        isProgram: true
                     },
                     onCompleted: (data: any) => {
                          if(window.location.pathname.split('/')[1] === 'client'){
