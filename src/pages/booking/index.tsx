@@ -12,7 +12,7 @@ export default function BookingPage() {
     return (
         <div>
             <div className='d-flex justify-content-between align-items-center'>
-                <h1><span style={{ borderBottom: "1px solid black", paddingBottom: "5px" }}>All Boo</span>kings</h1>
+                <h2>All Bookings</h2>
                 <div className='px-5'>
                     <NavLink to='/bookingSettings'><Icon.Gear style={{ fontSize: '2rem' }} /></NavLink>
                 </div>

@@ -5,7 +5,7 @@ export default function SchedulePage() {
 
   return (
     <div>
-      <h3>Schedules Page</h3>
+      <h2>Schedules Page</h2>
       <p>
         No content available for <code>{location.pathname}</code>
       </p>

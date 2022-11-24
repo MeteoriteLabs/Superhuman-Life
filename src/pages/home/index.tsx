@@ -20,7 +20,7 @@ export default function HomePage() {
 
   return (
     <div className="col-lg-12">
-      <h3>Home</h3>
+      <h2>Home</h2>
       <hr />
 
       {/* Add Client */}
