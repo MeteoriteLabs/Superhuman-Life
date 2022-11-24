@@ -13,9 +13,9 @@ export default function SessionPage() {
             className="pb-3"
             variant="pills"
             transition={false}
-            defaultActiveKey="fiteness"
+            defaultActiveKey="fitness"
           >
-            <Tab eventKey="fiteness" title="Fitness">
+            <Tab eventKey="fitness" title="Fitness">
               <Fitness />
             </Tab>
             <Tab eventKey="nutrition" title="Nutrition">
