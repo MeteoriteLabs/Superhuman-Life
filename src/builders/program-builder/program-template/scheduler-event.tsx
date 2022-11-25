@@ -72,7 +72,7 @@ const SchedulerEvent = (props: any) => {
                          values[calculateDay(props.startDate, val.session_date)] = [];
                     }
                     console.log(val);
-                    values[calculateDay(props.startDate, val.session_date)].push({"import": "importedEvent","type": val.type, "mode": val.mode, "tag": val.tag,"type2": "transferEvent" , "title": val.activity === null ? val.workout?.workouttitle : val.activity.title, "color": "skyblue", "id":  val.activity === null ? val.workout.id : val.activity.id, "endHour": val.end_time.split(":")[0], "endMin": val.end_time.split(":")[1], "hour": val.start_time.split(":")[0], "min": val.start_time.split(":")[1], "activityTarget": val.activity === null ? null : val.activity_target, "activity": val.activity === null ? null : val.activity, "day": calculateDay(props.startDate, val.session_date), "sessionId": val.id, "sessionDate": val.session_date});
+                    values[calculateDay(props.startDate, val.session_date)].push({"import": "importedEvent","type": val.type, "mode": val.mode, "tag": val.tag,"type2": "transferEvent" , "title": val.activity === null ? val.workout?.workouttitle : val.activity.title, "color": "skyblue", "id":  val.activity === null ? val.workout.id : val.activity.id, "endHour": val.end_time.split(":")[0], "endMin": val.end_time.split(":")[1], "hour": val.start_time.split(":")[0], "min": val.start_time.split(":")[1], "activityTarget": val.activity === null ? null : val.activity_target, "activity": val.activity === null ? null : val.activity, "day": calculateDay(props.startDate, val.session_date), "sessionId": val.id, "sessionDate": val.session_date, "isProgram": val?.Is_program_template});
                })
                setArr(values);
           }

@@ -14,7 +14,7 @@ export default function BookingPage() {
   return (
     <div>
       <div className="d-flex justify-content-between align-items-center">
-        <h1>All Bookings</h1>
+        <h2>All Bookings</h2>
         <div className="px-5">
           <Button onClick={routeChange} variant="outline-dark">
             Settings

@@ -472,7 +472,8 @@ export const CREATE_SESSION = gql`
     $Is_restday: Boolean,
     $session_date: Date,
     $changemaker: ID,
-    $day_of_program: Int
+    $day_of_program: Int,
+    $isProgram: Boolean
   ){
     createSession(data: {
       type: $type,
@@ -486,7 +487,8 @@ export const CREATE_SESSION = gql`
       Is_restday: $Is_restday,
       session_date: $session_date,
       changemaker: $changemaker,
-      day_of_program: $day_of_program
+      day_of_program: $day_of_program,
+      Is_program_template: $isProgram
     }){
       data{
         id
