@@ -1,5 +1,18 @@
 import { useMemo, useState, useContext, useRef } from "react";
-import { Badge, TabContent, Row, Col, Card } from "react-bootstrap";
+import {
+  Badge,
+  TabContent,
+  Row,
+  Col,
+  Card,
+  Container,
+  InputGroup,
+  FormControl,
+  Button,
+  Dropdown,
+  DropdownButton,
+  ButtonGroup,
+} from "react-bootstrap";
 import Table from "../../../components/table/leads-table";
 import ActionButton from "../../../components/actionbutton/index";
 import { useQuery, useLazyQuery } from "@apollo/client";
@@ -11,6 +24,10 @@ import { useHistory } from "react-router-dom";
 import CancelComponent from "./CancelComponent";
 
 export default function Program() {
+  const [searchFilter, setSearchFilter] = useState("");
+  const [startTimeFilter, setStartTimeFilter] = useState("");
+  const [endTimeFilter, setEndTimeFilter] = useState("");
+  const searchInput = useRef<any>();
   const auth = useContext(AuthContext);
   const [sessionData, setSessionData] = useState<any>([]);
   const [activeCard, setActiveCard] = useState<number>(0);
@@ -28,9 +45,11 @@ export default function Program() {
 
   const columns = useMemo<any>(
     () => [
+      // { accessor: "id", Header: "ID" },
+      // { accessor: "sessionId", Header: "Session ID" },
       { accessor: "name", Header: "Name" },
-      { accessor: "sessionDate", Header: "Session Date" },
-      { accessor: "sessionTime", Header: "Session Time" },
+      { accessor: "bookingTime", Header: "Booking Time" },
+      { accessor: "tag", Header: "Type" },
       {
         accessor: "status",
         Header: "Status",
@@ -80,6 +99,14 @@ export default function Program() {
             history.push(path);
           };
 
+          const rescheduleHandler = () => {
+            cancelComponent.current.TriggerForm({
+              id: row.original.sessionId,
+              type: "reschedule",
+              tag: row.original.tag,
+            });
+          };
+
           const cancelHandler = () => {
             cancelComponent.current.TriggerForm({
               id: row.original.id,
@@ -90,7 +117,7 @@ export default function Program() {
           const arrayAction = [
             {
               actionName: "Reschedule",
-              actionClick: routeChange,
+              actionClick: rescheduleHandler,
             },
             {
               actionName: "Cancel",
@@ -117,11 +144,30 @@ export default function Program() {
             },
           ];
 
+          const arrayActionForGroup = [
+            {
+              actionName: "Cancel",
+              actionClick: cancelHandler,
+            },
+            {
+              actionName: "Manage Program",
+              actionClick: routeChange,
+            },
+            {
+              actionName: "Go to client",
+              actionClick: routeChange,
+            },
+          ];
+
           return (
             <ActionButton
               arrayAction={
-                row.values.status === "Canceled" ||
-                row.values.status === "Attended"
+                row.values.tag === "Live Stream Channel" ||
+                row.values.tag === "Group Class" ||
+                row.values.tag === "Cohort"
+                  ? arrayActionForGroup
+                  : row.values.status === "Canceled" ||
+                    row.values.status === "Attended"
                   ? arrayActionForCancelledAndAttended
                   : arrayAction
               }
@@ -134,26 +180,6 @@ export default function Program() {
     []
   );
 
-  const [datatable, setDataTable] = useState<{}[]>([]);
-
-  useQuery(GET_SESSIONS, {
-    variables: { id: Number(auth.userid), session_date: getDate(currentDate) },
-    onCompleted: (data) => {
-      const flattenLeadsData = flattenObj({ ...data.sessions });
-      setSessionData(flattenLeadsData);
-    },
-  });
-
-  // eslint-disable-next-line
-  const [getSessionBookings, { data: get_session_bookings, refetch: refetch_session_bookings }] = useLazyQuery(
-    GET_SESSION_BOOKINGS,
-    {
-      onCompleted: (data) => {
-        loadData(data);
-      },
-    }
-  );
-
   function getTime(startTime: string): string {
     let splitTime: string[] = startTime.split(":");
     let date: moment.Moment = moment().set({
@@ -164,6 +190,48 @@ export default function Program() {
     return time;
   }
 
+  const [datatable, setDataTable] = useState<{}[]>([]);
+
+  useQuery(GET_SESSIONS, {
+    variables: {
+      filter: searchFilter,
+      id: Number(auth.userid),
+      session_date: getDate(currentDate),
+      start_time_filter: startTimeFilter,
+      end_time_filter: endTimeFilter,
+    },
+    onCompleted: (data) => {
+      const flattenSessionData = flattenObj({ ...data.sessions });
+
+      let currentTime = new Date();
+
+      const nextUpcomingSessions = flattenSessionData.filter((currentValue) => {
+        const [hours, minutes] = currentValue.start_time.split(":");
+        const date = new Date(
+          currentTime.getFullYear(),
+          currentTime.getMonth(),
+          currentTime.getDate(),
+          +hours,
+          +minutes,
+          0
+        );
+
+        return date >= currentTime;
+      });
+      setSessionData(nextUpcomingSessions);
+    },
+  });
+
+  const [
+    getSessionBookings,
+    // eslint-disable-next-line
+    { data: get_session_bookings, refetch: refetch_session_bookings },
+  ] = useLazyQuery(GET_SESSION_BOOKINGS, {
+    onCompleted: (data) => {
+      loadData(data);
+    },
+  });
+
   function loadData(data: any) {
     const flattenBookingsData = flattenObj({ ...data });
 
@@ -171,10 +239,11 @@ export default function Program() {
       [...flattenBookingsData.sessionsBookings].flatMap((Detail) => {
         return {
           id: Detail.id,
+          sessionId: Detail.session && Detail.session.id,
           name: Detail.client.username,
-          sessionDate: Detail.session_date,
-          sessionTime: getTime(Detail.session_time),
+          bookingTime: moment(Detail.createdAt).format("DD/MM/YY, hh:mm A"),
           status: Detail.Session_booking_status,
+          tag: Detail.session.tag,
         };
       })
     );
@@ -184,6 +253,72 @@ export default function Program() {
     <>
       <div className="mt-3">
         <h3>Program Details</h3>
+
+        <Container className="mt-3">
+          <Row>
+            <Col lg={6}>
+              <InputGroup className="mb-3 mt-3">
+                <FormControl
+                  aria-describedby="basic-addon1"
+                  placeholder="Search for session type name"
+                  ref={searchInput}
+                />
+                <InputGroup.Prepend>
+                  <Button
+                    variant="outline-secondary"
+                    onClick={(e: any) => {
+                      e.preventDefault();
+                      setSearchFilter(searchInput.current.value);
+                    }}
+                  >
+                    <i className="fas fa-search"></i>
+                  </Button>
+                </InputGroup.Prepend>
+              </InputGroup>
+            </Col>
+
+            <Col className="mt-3 mb-3 ">
+              <DropdownButton
+                as={ButtonGroup}
+                key={"starttime"}
+                id={`dropdown-button-drop-down`}
+                drop={"down"}
+                variant="secondary"
+                title={startTimeFilter === "" ? ` Start time ` : startTimeFilter}
+                style={{ marginRight: "25px" }}
+              >
+                {sessionData.map((currentValue) => (
+                  <Dropdown.Item
+                    key={currentValue.id}
+                    eventKey={currentValue.id}
+                    onSelect={() => setStartTimeFilter(currentValue.start_time)}
+                  >
+                    {currentValue.start_time}
+                  </Dropdown.Item>
+                ))}
+              </DropdownButton>
+
+              <DropdownButton
+                as={ButtonGroup}
+                key={"endtime"}
+                id={`dropdown-button-drop-down`}
+                drop={"down"}
+                variant="secondary"
+                title={ endTimeFilter === "" ? ` End time ` : endTimeFilter}
+              >
+                {sessionData.map((currentValue) => (
+                  <Dropdown.Item
+                    key={currentValue.id}
+                    eventKey={currentValue.id}
+                    onSelect={() => setEndTimeFilter(currentValue.end_time)}
+                  >
+                    {currentValue.end_time}
+                  </Dropdown.Item>
+                ))}
+              </DropdownButton>
+            </Col>
+          </Row>
+        </Container>
 
         <TabContent>
           <Row className="mt-5">
@@ -213,6 +348,10 @@ export default function Program() {
                     <Card.Subtitle className="mb-2 text-muted">
                       {getTime(currentValue.start_time)} to{" "}
                       {getTime(currentValue.end_time)}
+                      <br />
+                      Mode: {currentValue.mode}
+                      <br />
+                      Type: {currentValue.tag}
                     </Card.Subtitle>
                   </Card.Body>
                 </Card>

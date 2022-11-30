@@ -43,11 +43,13 @@ export default function Sessions() {
         {/* <Container className="mt-3">
           <Row>
             <Col lg={6}>
-              <InputGroup className="mb-3 mt-3">
+              { 
+                variableName === "Program" ? 
+                <InputGroup className="mb-3 mt-3">
                 <FormControl
                   aria-describedby="basic-addon1"
-                  placeholder="Search for users or offering name or program name"
-                  // ref={searchInput}
+                  placeholder="Search for session type name"
+                  ref={searchInput}
                 />
                 <InputGroup.Prepend>
                   <Button
@@ -59,7 +61,27 @@ export default function Sessions() {
                     <i className="fas fa-search"></i>
                   </Button>
                 </InputGroup.Prepend>
-              </InputGroup>
+              </InputGroup> 
+              : 
+              <InputGroup className="mb-3 mt-3">
+              <FormControl
+                aria-describedby="basic-addon1"
+                placeholder="Search for session client name"
+                // ref={searchInput}
+              />
+              <InputGroup.Prepend>
+                <Button
+                  variant="outline-secondary"
+                  onClick={(e: any) => {
+                    e.preventDefault();
+                  }}
+                >
+                  <i className="fas fa-search"></i>
+                </Button>
+              </InputGroup.Prepend>
+            </InputGroup>
+              }
+              
             </Col>
           </Row>
         </Container> */}

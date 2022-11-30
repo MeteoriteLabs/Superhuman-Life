@@ -21,7 +21,7 @@ interface UserDetails {
 }
 
 export default function BasicProfileForm() {
-  let [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
+  const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
   const formRef = useRef<any>(null);
   const auth = useContext(AuthContext);
   const profileJson: { } = require("./BasicProfile.json");

@@ -8,7 +8,6 @@ import TimeField from '../../../../components/customWidgets/timeField';
 import DaysInput from '../daysInput';
 import ClassTypeSelect from '../../../../components/customWidgets/classTypeSelect';
 
-
 export const widgets = {
     fitnessSelect: FitnessMultiSelect,
     equipmentSearch: EquipmentSearch,

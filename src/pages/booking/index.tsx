@@ -29,9 +29,10 @@ export default function BookingPage() {
             className="pb-3"
             transition={false}
             defaultActiveKey="fitness"
+            variant="pills"
           >
             <Tab eventKey="fitness" title="Fitness" className="mt-3">
-              <Tabs defaultActiveKey="offerings">
+              <Tabs defaultActiveKey="offerings" variant="pills">
                 <Tab eventKey="offerings" title="Offerings">
                   <Movement />
                 </Tab>
