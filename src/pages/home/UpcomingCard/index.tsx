@@ -16,7 +16,7 @@ function UpcomingCard() {
     let dateObj: Date = new Date(time);
     let month: number = dateObj.getMonth() + 1;
     let year: number = dateObj.getFullYear();
-    let date: number = dateObj.getDate();
+    let date: number|string = dateObj.getDate() < 10 ? `0${dateObj.getDate()}` : dateObj.getDate();
 
     return `${year}-${month}-${date}`;
   }

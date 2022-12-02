@@ -38,15 +38,14 @@ export default function Program() {
     let dateObj: Date = new Date(time);
     let month: number = dateObj.getMonth() + 1;
     let year: number = dateObj.getFullYear();
-    let date: number = dateObj.getDate();
+    let date: string | number =
+      dateObj.getDate() < 10 ? `0${dateObj.getDate()}` : dateObj.getDate();
 
     return `${year}-${month}-${date}`;
   }
 
   const columns = useMemo<any>(
     () => [
-      // { accessor: "id", Header: "ID" },
-      // { accessor: "sessionId", Header: "Session ID" },
       { accessor: "name", Header: "Name" },
       { accessor: "bookingTime", Header: "Booking Time" },
       { accessor: "tag", Header: "Type" },
@@ -219,6 +218,7 @@ export default function Program() {
         return date >= currentTime;
       });
       setSessionData(nextUpcomingSessions);
+      getSessionBookings({ variables: { id: nextUpcomingSessions[0].id } });
     },
   });
 
@@ -227,6 +227,7 @@ export default function Program() {
     // eslint-disable-next-line
     { data: get_session_bookings, refetch: refetch_session_bookings },
   ] = useLazyQuery(GET_SESSION_BOOKINGS, {
+    fetchPolicy: "network-only",
     onCompleted: (data) => {
       loadData(data);
     },
@@ -240,7 +241,7 @@ export default function Program() {
         return {
           id: Detail.id,
           sessionId: Detail.session && Detail.session.id,
-          name: Detail.client.username,
+          name: Detail.client ? Detail.client.username : null,
           bookingTime: moment(Detail.createdAt).format("DD/MM/YY, hh:mm A"),
           status: Detail.Session_booking_status,
           tag: Detail.session.tag,
@@ -254,37 +255,44 @@ export default function Program() {
       <div className="mt-3">
         <h3>Program Details</h3>
 
-        <Container className="mt-3">
-          <Row>
-            <Col lg={6}>
-              <InputGroup className="mb-3 mt-3">
-                <FormControl
-                  aria-describedby="basic-addon1"
-                  placeholder="Search for session type name"
-                  ref={searchInput}
-                />
-                <InputGroup.Prepend>
-                  <Button
-                    variant="outline-secondary"
-                    onClick={(e: any) => {
-                      e.preventDefault();
-                      setSearchFilter(searchInput.current.value);
-                    }}
-                  >
-                    <i className="fas fa-search"></i>
-                  </Button>
-                </InputGroup.Prepend>
-              </InputGroup>
-            </Col>
+        <Container className="mt-3 border">
+          {/* search bar for session*/}
+          <Col lg={6}>
+            <InputGroup className="mb-3 mt-3">
+              <FormControl
+                aria-describedby="basic-addon1"
+                placeholder="Search for session type name"
+                ref={searchInput}
+              />
+              <InputGroup.Prepend>
+                <Button
+                  variant="outline-secondary"
+                  onClick={(e: any) => {
+                    e.preventDefault();
+                    setSearchFilter(searchInput.current.value);
+                  }}
+                >
+                  <i className="fas fa-search"></i>
+                </Button>
+              </InputGroup.Prepend>
+            </InputGroup>
+          </Col>
 
-            <Col className="mt-3 mb-3 ">
+          {/* dropdowns for filtering session based on timings */}
+          <Col className="mt-3 mb-3 ">
+            <Row className="m-2 ">
+              <p className="mr-3">Filter Sessions based on timings</p>
+
+              {/* start time  */}
               <DropdownButton
                 as={ButtonGroup}
                 key={"starttime"}
                 id={`dropdown-button-drop-down`}
                 drop={"down"}
                 variant="secondary"
-                title={startTimeFilter === "" ? ` Start time ` : startTimeFilter}
+                title={
+                  startTimeFilter === "" ? ` Start time ` : startTimeFilter
+                }
                 style={{ marginRight: "25px" }}
               >
                 {sessionData.map((currentValue) => (
@@ -298,13 +306,14 @@ export default function Program() {
                 ))}
               </DropdownButton>
 
+              {/* end time */}
               <DropdownButton
                 as={ButtonGroup}
                 key={"endtime"}
                 id={`dropdown-button-drop-down`}
                 drop={"down"}
                 variant="secondary"
-                title={ endTimeFilter === "" ? ` End time ` : endTimeFilter}
+                title={endTimeFilter === "" ? ` End time ` : endTimeFilter}
               >
                 {sessionData.map((currentValue) => (
                   <Dropdown.Item
@@ -316,26 +325,27 @@ export default function Program() {
                   </Dropdown.Item>
                 ))}
               </DropdownButton>
-            </Col>
-          </Row>
+            </Row>
+          </Col>
         </Container>
 
         <TabContent>
           <Row className="mt-5">
-            <Col lg={3}>
-              <h6>Click on cards to get session booking details</h6>
-              {sessionData.map((currentValue: any) => (
+            {/* Session cards */}
+            <Col lg={3} className="mb-4">
+              <h3 className="mt-3">Sessions</h3>
+              {sessionData.map((currentValue: any, index: number) => (
                 <Card
                   style={{
-                    width: "18rem",
+                    width: "16rem",
                     cursor: "pointer",
                     border: "3px solid ",
                   }}
                   className="mt-4 bg-white rounded shadow"
-                  border={activeCard === currentValue.id ? "success" : "light"}
+                  border={activeCard === index ? "success" : "light"}
                   key={currentValue.id}
                   onClick={() => {
-                    setActiveCard(currentValue.id);
+                    setActiveCard(index);
                     getSessionBookings({ variables: { id: currentValue.id } });
                   }}
                 >
@@ -359,7 +369,9 @@ export default function Program() {
             </Col>
             <div style={{ border: "1px solid black" }} />
 
+            {/* Booking grid */}
             <Col lg={8}>
+              <h3>Booking Details</h3>
               <Table columns={columns} data={datatable} />
             </Col>
           </Row>

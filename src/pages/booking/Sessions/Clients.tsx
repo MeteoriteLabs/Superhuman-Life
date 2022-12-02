@@ -9,11 +9,7 @@ import {
   InputGroup,
   Button,
   FormControl,
-  DropdownButton,
-  Dropdown,
-  ButtonGroup,
 } from "react-bootstrap";
-import TimePicker from "rc-time-picker";
 import Table from "../../../components/table/leads-table";
 import ActionButton from "../../../components/actionbutton/index";
 import { useQuery, useLazyQuery } from "@apollo/client";
@@ -23,7 +19,8 @@ import AuthContext from "../../../context/auth-context";
 import moment from "moment";
 import { useHistory } from "react-router-dom";
 import CancelComponent from "./CancelComponent";
-import TimeFieldInput from "../../../components/customWidgets/timeField";
+import OfferingsDisplayImage from "../../../components/customWidgets/offeringsDisplayImage";
+import "./Client.css";
 
 export default function Clients() {
   const [searchFilter, setSearchFilter] = useState("");
@@ -32,17 +29,31 @@ export default function Clients() {
   const [clientsData, setClientsData] = useState<any>([]);
   const [activeCard, setActiveCard] = useState<number>(0);
   const cancelComponent = useRef<any>(null);
+  const [selectedCardId, setSelectedCardId] = useState<number | null>(null);
 
   const columns = useMemo<any>(
     () => [
-      // { accessor: "id", Header: "Booking ID" },
-      // { accessor: "sessionId", Header: "Session ID" },
-      { accessor: "name", Header: "Session Name" },
-      { accessor: "sessionDate", Header: "Session Date" },
-      { accessor: "sessionTime", Header: "Session Time" },
-      { accessor: "bookingTime", Header: "Booking Time" },
-      { accessor: "mode", Header: "Mode" },
-      { accessor: "tag", Header: "Type" },
+      { accessor: "name", Header: "Name" },
+      { accessor: "sessionDate", Header: "Date" },
+      { accessor: "sessionTime", Header: "Time" },
+      { accessor: "bookingTime", Header: "Booked On" },
+      {
+        accessor: "tag",
+        Header: "Type",
+        Cell: ({ row }: any) => {
+          return (
+            <div className="d-flex justify-content-center align-items-center">
+              <div>
+                <OfferingsDisplayImage
+                  mode={row.original?.mode}
+                  packageType={row.values?.tag}
+                />
+                <p className="mb-0">{row.values?.tag}</p>
+              </div>
+            </div>
+          );
+        },
+      },
       {
         accessor: "status",
         Header: "Status",
@@ -180,6 +191,13 @@ export default function Clients() {
     onCompleted: (data) => {
       const flattenClientsData = flattenObj({ ...data.clientPackages });
       setClientsData(flattenClientsData);
+      getSessionBookings({
+        variables: {
+          id: flattenClientsData[0].users_permissions_user.id,
+          loginUserId: auth.userid,
+          status: ["Booked"],
+        },
+      });
     },
   });
 
@@ -204,11 +222,10 @@ export default function Clients() {
   }
 
   function loadData(data: any) {
-    const flattenBookingsData = flattenObj({ ...data.sessionsBookings });
-    console.log(flattenBookingsData);
+    const flattenBookingsData = flattenObj({ ...data });
 
     setDataTable(
-      [...flattenBookingsData].flatMap((Detail) => {
+      [...flattenBookingsData.sessionsBookings].flatMap((Detail) => {
         return {
           id: Detail.id,
           sessionId:
@@ -241,13 +258,14 @@ export default function Clients() {
       <div className="mt-3">
         <h3>Clients</h3>
 
-        <Container className="mt-3">
+        {/* Search bar for clients based on their name */}
+        <Container className="mt-3 border">
           <Row>
             <Col lg={6}>
               <InputGroup className="mb-3 mt-3">
                 <FormControl
                   aria-describedby="basic-addon1"
-                  placeholder="Search for user name"
+                  placeholder="Search for client's name"
                   ref={searchInput}
                 />
                 <InputGroup.Prepend>
@@ -263,70 +281,32 @@ export default function Clients() {
                 </InputGroup.Prepend>
               </InputGroup>
             </Col>
-
-            <Col className="mt-3 mb-3 ">
-              <DropdownButton
-                as={ButtonGroup}
-                key={"starttime"}
-                id={`dropdown-button-drop-down`}
-                drop={"down"}
-                variant="secondary"
-                title={` Start time `}
-                style={{ marginRight: "25px" }}
-              >
-                <Dropdown.Item eventKey="1">Action</Dropdown.Item>
-                <Dropdown.Item eventKey="2">Another action</Dropdown.Item>
-                <Dropdown.Item eventKey="3">Something else here</Dropdown.Item>
-                <Dropdown.Divider />
-                <Dropdown.Item eventKey="4">Separated link</Dropdown.Item>
-              </DropdownButton>
-
-              <DropdownButton
-                as={ButtonGroup}
-                key={"endtime"}
-                id={`dropdown-button-drop-down`}
-                drop={"down"}
-                variant="secondary"
-                title={` End time `}
-              >
-                <Dropdown.Item eventKey="1">Action</Dropdown.Item>
-                <Dropdown.Item eventKey="2">Another action</Dropdown.Item>
-                <Dropdown.Item eventKey="3">Something else here</Dropdown.Item>
-                <Dropdown.Divider />
-                <Dropdown.Item eventKey="4">Separated link</Dropdown.Item>
-              </DropdownButton>
-            </Col>
-             {/* <TimePicker showHour={true} showMinute use12Hours defaultOpenValue={moment()}/> */}
-            {/* <TimePicker
-              // value={convertToMoment(fromTime)}
-              showSecond={false}
-              minuteStep={15}
-              onChange={(e) => {
-                // handleFromTimeInput(moment(e).format("HH:mm"));
-              }}
-            />  */}
-            {/* <TimeFieldInput onChange={props.onChange} value={props.value}/> */}
           </Row>
         </Container>
 
         <TabContent>
           <Row className="mt-5">
-            <Col lg={3}>
-              <h6>Click on cards to get session details</h6>
-              {clientsData.map((currentValue: any) => (
+            {/* Clients cards */}
+            <Col lg={3} className="mb-4">
+              {clientsData.map((currentValue: any, index: number) => (
                 <Card
                   style={{
-                    width: "18rem",
+                    width: "16rem",
                     cursor: "pointer",
                     border: "3px solid ",
                   }}
                   className="mt-4 bg-white rounded shadow"
                   key={currentValue.id}
-                  border={activeCard === currentValue.id ? "success" : "light"}
+                  border={activeCard === index ? "success" : "light"}
                   onClick={() => {
-                    setActiveCard(currentValue.id);
+                    setActiveCard(index);
+                    setSelectedCardId(currentValue.id);
                     getSessionBookings({
-                      variables: { id: currentValue.users_permissions_user.id },
+                      variables: {
+                        id: currentValue.users_permissions_user.id,
+                        loginUserId: auth.userid,
+                        status: ["Booked"],
+                      },
                     });
                   }}
                 >
@@ -344,12 +324,85 @@ export default function Clients() {
             </Col>
             <div style={{ border: "1px solid black" }} />
 
+            {/* Session grid */}
             <Col lg={8}>
+              <h3>Sessions</h3>
+
+              <Row>
+                <Col lg={4} className="pt-5">
+                  <h6>Filter based on session&apos;s range</h6>
+                </Col>
+
+                {/* session starts date picker */}
+                <Col className="mt-1" lg={4}>
+                  <label>Session&apos;s Start Date</label>
+                  <input
+                    className="date__input"
+                    name="sessionStartDate"
+                    onChange={(e) => {
+                      getSessionBookings({
+                        variables: {
+                          id: selectedCardId
+                            ? selectedCardId
+                            : clientsData && clientsData.length
+                            ? clientsData[0].users_permissions_user.id
+                            : null,
+                          session_starts_date_filter: e.target.value,
+                          loginUserId: auth.userid,
+                          status: [
+                            "Booked",
+                            "Rejected",
+                            "Canceled",
+                            "Attended",
+                            "Rescheduled",
+                          ],
+                        },
+                      });
+                    }}
+                    placeholder="Start Date"
+                    type="date"
+                  />
+                </Col>
+
+                {/* session end date picker */}
+                <Col className="mt-1" lg={4}>
+                  <label>Session&apos;s End Date</label>
+                  <input
+                    className="date__input"
+                    name="sessionEndDate"
+                    onChange={(e) => {
+                      getSessionBookings({
+                        variables: {
+                          id: selectedCardId
+                            ? selectedCardId
+                            : clientsData && clientsData.length
+                            ? clientsData[0].users_permissions_user.id
+                            : null,
+                          session_ends_date_filter: e.target.value,
+                          loginUserId: auth.userid,
+                          status: [
+                            "Booked",
+                            "Rejected",
+                            "Canceled",
+                            "Attended",
+                            "Rescheduled",
+                          ],
+                        },
+                      });
+                    }}
+                    placeholder="Start Date"
+                    type="date"
+                  />
+                </Col>
+              </Row>
+
+              {/* session booking grid */}
               <Table columns={columns} data={datatable} />
             </Col>
           </Row>
         </TabContent>
       </div>
+
       <CancelComponent
         ref={cancelComponent}
         callback={refetch_session_bookings}

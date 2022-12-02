@@ -1,7 +1,13 @@
 import { gql } from "@apollo/client";
 
 export const GET_SESSIONS = gql`
-  query getSessions($filter: String!, $id: ID, $session_date: Date , $start_time_filter: String , $end_time_filter: String ) {
+  query getSessions(
+    $filter: String!
+    $id: ID
+    $session_date: Date
+    $start_time_filter: String
+    $end_time_filter: String
+  ) {
     sessions(
       filters: {
         tag: { containsi: $filter }
@@ -48,6 +54,7 @@ export const GET_SESSION_BOOKINGS = gql`
   query getSessionBookings($id: ID) {
     sessionsBookings(
       filters: { session: { id: { eq: $id } } }
+      pagination: { pageSize: 100 }
     ) {
       data {
         id
@@ -82,8 +89,27 @@ export const GET_SESSION_BOOKINGS = gql`
 `;
 
 export const GET_SESSION_BOOKINGS_FOR_CLIENTS = gql`
-  query getSessionBookings($id: ID) {
-    sessionsBookings(pagination: { pageSize: 100 } filters: { client: { id: { eq: $id } } }) {
+  query getSessionBookings(
+    $id: ID
+    $session_starts_date_filter: Date
+    $session_ends_date_filter: Date
+    $loginUserId: ID
+    $status: [String]
+  ) {
+    sessionsBookings(
+      pagination: { pageSize: 500 }
+      filters: {
+        Session_booking_status: { in: $status }
+        session: {
+          session_date: {
+            gte: $session_starts_date_filter
+            lte: $session_ends_date_filter
+          }
+          changemaker: { id: { eq: $loginUserId } }
+        }
+        client: { id: { eq: $id } }
+      }
+    ) {
       data {
         id
         attributes {
@@ -137,7 +163,7 @@ export const GET_ALL_CLIENTS = gql`
     clientPackages(
       pagination: { pageSize: 100 }
       filters: {
-        users_permissions_user: { username: { containsi: $filter }}
+        users_permissions_user: { username: { containsi: $filter } }
         fitnesspackages: { users_permissions_user: { id: { eq: $id } } }
       }
     ) {
@@ -287,7 +313,7 @@ export const GET_SESSION = gql`
           workout {
             data {
               id
-              attributes{
+              attributes {
                 workouttitle
               }
             }
@@ -295,7 +321,7 @@ export const GET_SESSION = gql`
           activity {
             data {
               id
-              attributes{
+              attributes {
                 title
               }
             }
