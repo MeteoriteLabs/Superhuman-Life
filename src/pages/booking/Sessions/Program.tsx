@@ -218,7 +218,7 @@ export default function Program() {
         return date >= currentTime;
       });
       setSessionData(nextUpcomingSessions);
-      getSessionBookings({ variables: { id: nextUpcomingSessions[0].id } });
+      getSessionBookings({ variables: { id: nextUpcomingSessions && nextUpcomingSessions.length ? nextUpcomingSessions[0].id : null} });
     },
   });
 
