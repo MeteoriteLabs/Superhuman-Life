@@ -94,7 +94,6 @@ export default function HomePage() {
         <Grid />
       </div>
       <GraphSelector/>
-      {/* <LeadGraph/> */}
     </div>
   );
 }
