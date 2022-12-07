@@ -1,0 +1,50 @@
+import { useContext, useState } from "react";
+import BarGraph from "../../../components/Graphs/BarGraph/BarGraph";
+import { useQuery } from "@apollo/client";
+import { GET_LEADS } from "../LeadGraph/queries";
+import AuthContext from "../../../context/auth-context";
+import { flattenObj } from "../../../components/utils/responseFlatten";
+import moment from "moment";
+
+function WeeklyLeadsGraph() {
+  const [leadsData, setLeadData] = useState<any>([]);
+  const auth = useContext(AuthContext);
+
+  useQuery(GET_LEADS, {
+    variables: { id: Number(auth.userid) },
+    onCompleted: (data) => {
+      loadData(data);
+    },
+  });
+
+  const loadData = (data) => {
+    const flattenLeadsData = flattenObj({ ...data.websiteContactForms });
+
+    const arr: any[] = [];
+
+    for (let weekDay = 0; weekDay < 7; weekDay++) {
+      arr[weekDay] = {
+        index: `${moment().subtract(weekDay, "days").format("ddd,")} ${moment()
+          .subtract(weekDay, "days")
+          .format("DD/MMM")}`,
+        keys: flattenLeadsData.filter(
+          (currentValue) =>
+            moment(currentValue.createdAt).format("DD/MM/YYYY") ===
+            moment().subtract(weekDay, "days").format("DD/MM/YYYY")
+        ).length,
+      };
+    }
+
+    setLeadData(arr.reverse());
+  };
+
+  return (
+    <BarGraph
+      data={leadsData}
+      yAxis={"No. of Leads"}
+      title={"Leads Weekly Graph"}
+    />
+  );
+}
+
+export default WeeklyLeadsGraph;
