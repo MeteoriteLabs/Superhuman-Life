@@ -11,7 +11,11 @@ function MonthlySalesGraph() {
   const auth = useContext(AuthContext);
 
   useQuery(GET_CLIENTS, {
-    variables: { id: Number(auth.userid) },
+    variables: {
+      id: Number(auth.userid),
+      startDateTime: moment().subtract(1, "years").format(),
+      endDateTime: moment().format()
+    },
     onCompleted: (data) => {
       loadData(data);
     },
@@ -19,7 +23,7 @@ function MonthlySalesGraph() {
 
   const loadData = (data) => {
     const flattenClientsData = flattenObj({ ...data.clientPackages });
-    
+
     const arr: any[] = [];
 
     for (let month = 0; month < 12; month++) {
@@ -30,7 +34,7 @@ function MonthlySalesGraph() {
       );
       const initialValue = 0;
       arr[month] = {
-        x: `${moment().subtract(month, "months").format("MMM/YY")}`,
+        x: `${moment().subtract(month, "months").format("MMM YY")}`,
         y: sales.reduce(
           (acc, currentValue) => acc + currentValue.PackageMRP,
           initialValue
@@ -43,7 +47,13 @@ function MonthlySalesGraph() {
     ]);
   };
 
-  return <LineGraph data={clientsData} yAxis={"Sales"} title={"Sales Monthly Graph"}/>;
+  return (
+    <LineGraph
+      data={clientsData}
+      yAxis={"Sales (INR)"}
+      title={"Sales Monthly Graph"}
+    />
+  );
 }
 
 export default MonthlySalesGraph;

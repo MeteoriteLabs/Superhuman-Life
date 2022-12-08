@@ -11,7 +11,11 @@ function WeeklyLeadsGraph() {
   const auth = useContext(AuthContext);
 
   useQuery(GET_LEADS, {
-    variables: { id: Number(auth.userid) },
+    variables: {
+      id: Number(auth.userid),
+      startDateTime: moment().subtract(1, "years").format(),
+      endDateTime: moment().format(),
+    },
     onCompleted: (data) => {
       loadData(data);
     },
@@ -27,9 +31,9 @@ function WeeklyLeadsGraph() {
         index: `${moment().subtract(weekDay, "days").format("ddd,")} ${moment()
           .subtract(weekDay, "days")
           .format("DD/MMM")}`,
-        keys: flattenLeadsData.filter(
+        Leads: flattenLeadsData.filter(
           (currentValue) =>
-            moment(currentValue.createdAt).format("DD/MM/YYYY") ===
+            moment.utc(currentValue.createdAt).format("DD/MM/YYYY") ===
             moment().subtract(weekDay, "days").format("DD/MM/YYYY")
         ).length,
       };
@@ -43,6 +47,7 @@ function WeeklyLeadsGraph() {
       data={leadsData}
       yAxis={"No. of Leads"}
       title={"Leads Weekly Graph"}
+      keyName= {["Leads"]}
     />
   );
 }

@@ -11,7 +11,11 @@ function WeeklyClientGraph() {
   const auth = useContext(AuthContext);
 
   useQuery(GET_CLIENTS, {
-    variables: { id: Number(auth.userid) },
+    variables: {
+      id: Number(auth.userid),
+      startDateTime: moment().subtract(1, "years").format(),
+      endDateTime: moment().format(),
+    },
     onCompleted: (data) => {
       loadData(data);
     },
@@ -27,7 +31,7 @@ function WeeklyClientGraph() {
         index: `${moment().subtract(weekDay, "days").format("ddd,")} ${moment()
           .subtract(weekDay, "days")
           .format("DD/MMM")}`,
-        keys: flattenClientsData.filter(
+        Clients: flattenClientsData.filter(
           (currentValue) =>
             moment(currentValue.accepted_date).format("DD/MM/YYYY") ===
             moment().subtract(weekDay, "days").format("DD/MM/YYYY")
@@ -43,6 +47,7 @@ function WeeklyClientGraph() {
       data={clientsData}
       yAxis={"No. of Clients"}
       title={"Clients Weekly Graph"}
+      keyName= {["Clients"]}
     />
   );
 }

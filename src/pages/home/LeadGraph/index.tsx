@@ -13,7 +13,11 @@ function LeadGraph() {
   const auth = useContext(AuthContext);
 
   useQuery(GET_LEADS, {
-    variables: { id: Number(auth.userid) },
+    variables: {
+      id: Number(auth.userid),
+      startDateTime: moment().subtract(1, "years").format(),
+      endDateTime: moment().format()
+    },
     onCompleted: (data) => {
       loadData(data);
     },
@@ -26,8 +30,8 @@ function LeadGraph() {
 
     for (let month = 0; month < 12; month++) {
       arr[month] = {
-        index: `${moment().subtract(month, "months").format("MMM/YY")}`,
-        keys: flattenLeadsData.filter(
+        index: `${moment().subtract(month, "months").format("MMM YY")}`,
+        Leads: flattenLeadsData.filter(
           (currentValue) =>
             moment(currentValue.createdAt).format("MM/YY") ===
             moment().subtract(month, "months").format("MM/YY")
@@ -46,6 +50,7 @@ function LeadGraph() {
             data={leadsData}
             yAxis={"No. of Leads"}
             title={"Leads Monthly Graph"}
+            keyName= {["Leads"]}
           />
         </Tab>
         <Tab eventKey="weekly" title="Weekly">

@@ -11,7 +11,11 @@ function WeeklyOfferingBookingGraph() {
   const auth = useContext(AuthContext);
 
   useQuery(GET_BOOKINGS, {
-    variables: { id: Number(auth.userid) },
+    variables: {
+      id: Number(auth.userid),
+      startDateTime: moment().subtract(1, "years").format(),
+      endDateTime: moment().format(),
+    },
     onCompleted: (data) => {
       loadData(data);
     },
@@ -23,12 +27,15 @@ function WeeklyOfferingBookingGraph() {
     const arr: any[] = [];
 
     for (let weekDay = 0; weekDay < 7; weekDay++) {
+      const currentDay = moment().subtract(weekDay, "days");
       arr[weekDay] = {
-        x: `${moment().subtract(weekDay, "days").format("ddd,")}`,
+        x: `${moment().subtract(weekDay, "days").format("ddd,")} ${moment()
+          .subtract(weekDay, "days")
+          .format("DD/MMM")}`,
         y: flattenClientsData.filter(
           (currentValue) =>
-            moment(currentValue.booking_date).format("MM/YY") ===
-            moment().subtract(weekDay, "days").format("MM/YY")
+            moment.utc(currentValue.booking_date).format("DD/MM/YY") ===
+            currentDay.format("DD/MM/YY")
         ).length,
       };
     }

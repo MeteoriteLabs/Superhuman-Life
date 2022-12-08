@@ -1,13 +1,13 @@
 import { ResponsiveBar } from "@nivo/bar";
 import "./BarGraph.css";
 
-function BarGraph({ data, yAxis, title }) {
+function BarGraph({ data, yAxis, title, keyName }) {
   return (
     <div className="chart">
       <h6 className="text-center">{title}</h6>
       <ResponsiveBar
         data={data}
-        keys={["keys"]}
+        keys= {keyName}
         indexBy="index"
         margin={{
           top: 50,

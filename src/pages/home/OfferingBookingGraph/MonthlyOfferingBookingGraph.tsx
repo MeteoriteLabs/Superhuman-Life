@@ -11,7 +11,11 @@ function MonthlyOfferingBookingGraph() {
   const auth = useContext(AuthContext);
 
   useQuery(GET_BOOKINGS, {
-    variables: { id: Number(auth.userid) },
+    variables: {
+      id: Number(auth.userid),
+      startDateTime: moment().subtract(1, "years").format(),
+      endDateTime: moment().format()
+    },
     onCompleted: (data) => {
       loadData(data);
     },
@@ -24,7 +28,7 @@ function MonthlyOfferingBookingGraph() {
 
     for (let month = 0; month < 12; month++) {
       arr[month] = {
-        x: `${moment().subtract(month, "months").format("MMM/YY")}`,
+        x: `${moment().subtract(month, "months").format("MMM YY")}`,
         y: flattenClientsData.filter(
           (currentValue) =>
             moment(currentValue.booking_date).format("MM/YY") ===
@@ -38,7 +42,13 @@ function MonthlyOfferingBookingGraph() {
     ]);
   };
 
-  return <LineGraph data={clientsData} yAxis={"No. of Bookings"} title={"Bookings Monthly Graph"} />;
+  return (
+    <LineGraph
+      data={clientsData}
+      yAxis={"No. of Bookings"}
+      title={"Bookings Monthly Graph"}
+    />
+  );
 }
 
 export default MonthlyOfferingBookingGraph;

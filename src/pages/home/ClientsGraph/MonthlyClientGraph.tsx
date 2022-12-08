@@ -11,7 +11,11 @@ function MonthlyClientGraph() {
   const auth = useContext(AuthContext);
 
   useQuery(GET_CLIENTS, {
-    variables: { id: Number(auth.userid) },
+    variables: {
+      id: Number(auth.userid),
+      startDateTime: moment().subtract(1, "years").format(),
+      endDateTime: moment().format(),
+    },
     onCompleted: (data) => {
       loadData(data);
     },
@@ -19,13 +23,13 @@ function MonthlyClientGraph() {
 
   const loadData = (data) => {
     const flattenClientsData = flattenObj({ ...data.clientPackages });
-  
+
     const arr: any[] = [];
 
     for (let month = 0; month < 12; month++) {
       arr[month] = {
-        index: `${moment().subtract(month, "months").format("MMM/YY")}`,
-        keys: flattenClientsData.filter(
+        index: `${moment().subtract(month, "months").format("MMM YY")}`,
+        Clients: flattenClientsData.filter(
           (currentValue) =>
             moment(currentValue.accepted_date).format("MM/YY") ===
             moment().subtract(month, "months").format("MM/YY")
@@ -41,6 +45,8 @@ function MonthlyClientGraph() {
       data={clientsData}
       yAxis={"No. of Clients"}
       title={"Clients Monthly Graph"}
+      keyName= {["Clients"]}
+
     />
   );
 }

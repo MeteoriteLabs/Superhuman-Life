@@ -11,7 +11,11 @@ function WeeklySalesGraph() {
   const auth = useContext(AuthContext);
 
   useQuery(GET_CLIENTS, {
-    variables: { id: Number(auth.userid) },
+    variables: {
+      id: Number(auth.userid),
+      startDateTime: moment().subtract(1, "years").format(),
+      endDateTime: moment().format(),
+    },
     onCompleted: (data) => {
       loadData(data);
     },
@@ -23,18 +27,37 @@ function WeeklySalesGraph() {
     const arr: any[] = [];
 
     for (let weekDay = 0; weekDay < 7; weekDay++) {
+      const currentDay = moment().subtract(weekDay, "days");
       const sales = flattenClientsData.filter(
         (currentValue) =>
-          moment(currentValue.accepted_date).format("MM/YY") ===
-          moment().subtract(weekDay, "days").format("MM/YY")
+          moment(currentValue.accepted_date).format("DD/MM/YY") ===
+          currentDay.format("DD/MM/YY")
       );
+      // console.log(sales);
+      // console.log(flattenClientsData.filter(
+      //   (currentValue) =>
+      //     moment.utc(currentValue.accepted_date).format("DD/MM/YY") ===
+      //     currentDay.format("DD/MM/YY")
+      // ))
+      // console.log()
       const initialValue = 0;
       arr[weekDay] = {
-        x: `${moment().subtract(weekDay, "days").format("ddd,")}`,
-        y: sales.reduce(
-          (accumulator, currentValue) => accumulator + currentValue.PackageMRP,
-          initialValue
-        ),
+        x: `${currentDay.format("ddd,")} ${moment()
+          .subtract(weekDay, "days")
+          .format("DD/MMM")}`,
+        y: 
+        // flattenClientsData
+          // .filter(
+          //   (currentValue) =>
+          //     moment(currentValue.accepted_date).format("DD/MM/YY") ===
+          //     currentDay.format("DD/MM/YY")
+          // )
+          sales
+          .reduce(
+            (accumulator, currentValue) =>
+              accumulator + currentValue.PackageMRP,
+            initialValue
+          ),
       };
     }
 
@@ -46,7 +69,7 @@ function WeeklySalesGraph() {
   return (
     <LineGraph
       data={clientsData}
-      yAxis={"Sales"}
+      yAxis={"Sales (INR)"}
       title={"Sales Weekly Graph"}
     />
   );
