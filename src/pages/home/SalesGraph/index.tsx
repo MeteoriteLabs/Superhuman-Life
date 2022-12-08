@@ -1,6 +1,7 @@
 import { Tab, Tabs } from "react-bootstrap";
 import MonthlySalesGraph from "./MonthlySalesGraph";
 import WeeklySalesGraph from "./WeeklySalesGraph";
+import '../Styles/navTabStyles.css';
 
 function SalesGraph() {
   return (

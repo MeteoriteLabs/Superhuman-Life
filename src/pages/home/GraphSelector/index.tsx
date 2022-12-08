@@ -17,7 +17,7 @@ function GraphSelector() {
       <Row>
         <Col md={{ offset: "9", span: "3" }}>
           <Dropdown className="m-3">
-            <Dropdown.Toggle variant="secondary" id="dropdown-basic">
+            <Dropdown.Toggle variant="dark" id="dropdown-basic">
               {label}
             </Dropdown.Toggle>
 

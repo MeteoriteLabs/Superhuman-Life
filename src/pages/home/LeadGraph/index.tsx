@@ -7,6 +7,7 @@ import { flattenObj } from "../../../components/utils/responseFlatten";
 import moment from "moment";
 import { Tabs, Tab } from "react-bootstrap";
 import WeeklyLeadsGraph from "./WeeklyLeadsGraph";
+import '../Styles/navTabStyles.css';
 
 function LeadGraph() {
   const [leadsData, setLeadData] = useState<any>([]);
