@@ -31,6 +31,7 @@ const LineGraph = ({ data, yAxis, title }) => (
         legendOffset: 36,
         legendPosition: "middle",
       }}
+      colors={{ scheme: 'paired' }}
       axisLeft={{
         tickSize: 5,
         tickPadding: 5,

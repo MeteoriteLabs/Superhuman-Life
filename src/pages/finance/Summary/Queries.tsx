@@ -99,3 +99,35 @@ export const GET_EARNINGS_TRANSACTIONS_GRAPH = gql`
     }
   }
 `;
+
+export const GET_EXPENSES_TRANSACTIONS_GRAPH = gql`
+  query TransactionsQuery(
+    $senderId: String
+    $senderType: String
+    $transactionStatus: String
+    $transactionStartTime: DateTime
+    $transactionEndTime: DateTime
+  ) {
+    transactions(
+      pagination: { pageSize: 2000 }
+      filters: {
+        SenderID: { eq: $senderId }
+        SenderType: { eq: $senderType }
+        TransactionStatus: { eq: $transactionStatus }
+        TransactionDateTime: {
+          gte: $transactionStartTime
+          lte: $transactionEndTime
+        }
+      }
+    ) {
+      data {
+        id
+        attributes {
+          TransactionDateTime
+          TransactionAmount
+        }
+      }
+    }
+  }
+`;
+
