@@ -25,39 +25,23 @@ function WeeklySalesGraph() {
     const flattenClientsData = flattenObj({ ...data.clientPackages });
 
     const arr: any[] = [];
+    const initialValue = 0;
 
     for (let weekDay = 0; weekDay < 7; weekDay++) {
-      const currentDay = moment().subtract(weekDay, "days");
-      const sales = flattenClientsData.filter(
+      let currentDay = moment().subtract(weekDay, "days");
+
+      let sales = flattenClientsData.filter(
         (currentValue) =>
           moment(currentValue.accepted_date).format("DD/MM/YY") ===
           currentDay.format("DD/MM/YY")
       );
-      // console.log(sales);
-      // console.log(flattenClientsData.filter(
-      //   (currentValue) =>
-      //     moment.utc(currentValue.accepted_date).format("DD/MM/YY") ===
-      //     currentDay.format("DD/MM/YY")
-      // ))
-      // console.log()
-      const initialValue = 0;
+
       arr[weekDay] = {
-        x: `${currentDay.format("ddd,")} ${moment()
-          .subtract(weekDay, "days")
-          .format("DD/MMM")}`,
-        y: 
-        // flattenClientsData
-          // .filter(
-          //   (currentValue) =>
-          //     moment(currentValue.accepted_date).format("DD/MM/YY") ===
-          //     currentDay.format("DD/MM/YY")
-          // )
-          sales
-          .reduce(
-            (accumulator, currentValue) =>
-              accumulator + currentValue.PackageMRP,
-            initialValue
-          ),
+        x: `${currentDay.format("ddd,")} ${currentDay.format("DD/MMM")}`,
+        y: sales.reduce(
+          (accumulator, currentValue) => accumulator + currentValue.PackageMRP,
+          initialValue
+        ),
       };
     }
 

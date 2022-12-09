@@ -25,18 +25,21 @@ function MonthlySalesGraph() {
     const flattenClientsData = flattenObj({ ...data.clientPackages });
 
     const arr: any[] = [];
+    const initialValue = 0;
 
     for (let month = 0; month < 12; month++) {
-      const sales = flattenClientsData.filter(
+      let currentMonth = moment().subtract(month, "months");
+      
+      let sales = flattenClientsData.filter(
         (currentValue) =>
           moment(currentValue.accepted_date).format("MM/YY") ===
-          moment().subtract(month, "months").format("MM/YY")
+          currentMonth.format("MM/YY")
       );
-      const initialValue = 0;
+      
       arr[month] = {
-        x: `${moment().subtract(month, "months").format("MMM YY")}`,
+        x: `${currentMonth.format("MMM YY")}`,
         y: sales.reduce(
-          (acc, currentValue) => acc + currentValue.PackageMRP,
+          (accumulator, currentValue) => accumulator + currentValue.PackageMRP,
           initialValue
         ),
       };

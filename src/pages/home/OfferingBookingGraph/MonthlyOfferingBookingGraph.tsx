@@ -27,12 +27,13 @@ function MonthlyOfferingBookingGraph() {
     const arr: any[] = [];
 
     for (let month = 0; month < 12; month++) {
+      let currentMonth = moment().subtract(month, "months");
       arr[month] = {
-        x: `${moment().subtract(month, "months").format("MMM YY")}`,
+        x: `${currentMonth.format("MMM YY")}`,
         y: flattenClientsData.filter(
           (currentValue) =>
             moment(currentValue.booking_date).format("MM/YY") ===
-            moment().subtract(month, "months").format("MM/YY")
+            currentMonth.format("MM/YY")
         ).length,
       };
     }

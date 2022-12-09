@@ -27,9 +27,9 @@ function WeeklyOfferingBookingGraph() {
     const arr: any[] = [];
 
     for (let weekDay = 0; weekDay < 7; weekDay++) {
-      const currentDay = moment().subtract(weekDay, "days");
+      let currentDay = moment().subtract(weekDay, "days");
       arr[weekDay] = {
-        x: `${moment().subtract(weekDay, "days").format("ddd,")} ${moment()
+        x: `${currentDay.format("ddd,")} ${moment()
           .subtract(weekDay, "days")
           .format("DD/MMM")}`,
         y: flattenClientsData.filter(

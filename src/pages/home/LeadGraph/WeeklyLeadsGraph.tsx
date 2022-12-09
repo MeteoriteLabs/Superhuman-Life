@@ -27,14 +27,15 @@ function WeeklyLeadsGraph() {
     const arr: any[] = [];
 
     for (let weekDay = 0; weekDay < 7; weekDay++) {
+      let currentDay = moment().subtract(weekDay, "days");
       arr[weekDay] = {
-        index: `${moment().subtract(weekDay, "days").format("ddd,")} ${moment()
+        index: `${currentDay.format("ddd,")} ${moment()
           .subtract(weekDay, "days")
           .format("DD/MMM")}`,
         Leads: flattenLeadsData.filter(
           (currentValue) =>
             moment.utc(currentValue.createdAt).format("DD/MM/YYYY") ===
-            moment().subtract(weekDay, "days").format("DD/MM/YYYY")
+            currentDay.format("DD/MM/YYYY")
         ).length,
       };
     }

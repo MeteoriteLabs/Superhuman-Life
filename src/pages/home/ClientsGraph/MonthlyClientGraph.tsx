@@ -27,12 +27,13 @@ function MonthlyClientGraph() {
     const arr: any[] = [];
 
     for (let month = 0; month < 12; month++) {
+      let currentMonth = moment().subtract(month, "months");
       arr[month] = {
-        index: `${moment().subtract(month, "months").format("MMM YY")}`,
+        index: `${currentMonth.format("MMM YY")}`,
         Clients: flattenClientsData.filter(
           (currentValue) =>
             moment(currentValue.accepted_date).format("MM/YY") ===
-            moment().subtract(month, "months").format("MM/YY")
+            currentMonth.format("MM/YY")
         ).length,
       };
     }
