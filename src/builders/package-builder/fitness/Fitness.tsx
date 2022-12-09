@@ -90,7 +90,7 @@ export default function FitnessTab(props) {
         {
             accessor: "details", Header: "Details",
             Cell: ({ row }: any) => {
-                console.log(row);
+                
                 return <div className='d-flex justify-content-center align-items-center'>
                     {row.values.details[0] !== null && row.values.details[0] !== 0 ?
                         <div className="text-center">
@@ -227,6 +227,7 @@ export default function FitnessTab(props) {
 
     const loadData = (data: any) => {
         const flattenData = flattenObj({...data});
+       
         setDataTable(
             [...flattenData.fitnesspackages].map(item => {
                
