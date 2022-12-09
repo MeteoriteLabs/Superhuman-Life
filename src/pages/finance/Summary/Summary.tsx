@@ -7,6 +7,7 @@ import {
 import { Row, Col, Card } from "react-bootstrap";
 import { flattenObj } from "../../../components/utils/responseFlatten";
 import AuthContext from "../../../context/auth-context";
+import FinanceGraph from "./FinanceGraph";
 
 function Summary() {
   const auth = useContext(AuthContext);
@@ -56,6 +57,7 @@ function Summary() {
   );
 
   return (
+    <>
     <div className="mt-5">
       <Row>
         {/* Earnings */}
@@ -110,6 +112,8 @@ function Summary() {
         </Col>
       </Row>
     </div>
+    <FinanceGraph/>
+    </>
   );
 }
 

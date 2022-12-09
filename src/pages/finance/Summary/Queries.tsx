@@ -34,8 +34,6 @@ export const GET_EARNINGS_TRANSACTIONS = gql`
   }
 `;
 
-
-
 export const GET_EXPENSES_TRANSACTIONS = gql`
   query TransactionsQuery($senderId: String) {
     transactions(
@@ -64,6 +62,38 @@ export const GET_EXPENSES_TRANSACTIONS = gql`
           PaymentScheduleID
           TransactionRemarks
           PaymentMode
+        }
+      }
+    }
+  }
+`;
+
+export const GET_EARNINGS_TRANSACTIONS_GRAPH = gql`
+  query TransactionsQuery(
+    $receiverId: String
+    $receiverType: String
+    $transactionStatus: String
+    $transactionStartTime: DateTime
+    $transactionEndTime: DateTime
+  ) {
+    transactions(
+      pagination: { pageSize: 2000 }
+      filters: {
+        ReceiverID: { eq: $receiverId }
+        ReceiverType: { eq: $receiverType }
+        TransactionStatus: { eq: $transactionStatus }
+        TransactionDateTime: {
+          gte: $transactionStartTime
+          lte: $transactionEndTime
+        }
+      }
+    ) {
+      data {
+        id
+        attributes {
+          ChangemakerAmount
+          TransactionDateTime
+          TransactionAmount
         }
       }
     }
