@@ -13,7 +13,7 @@ function Summary() {
   const [totalEarning, setTotalEarning] = useState<number>(0);
   const [totalExpenses, setTotalExpenses] = useState<number>(0);
 
-  // eslint-disable-next-line
+  //eslint-disable-next-line
   const { data: get_earnings_transaction } = useQuery(
     GET_EARNINGS_TRANSACTIONS,
     {
@@ -34,7 +34,7 @@ function Summary() {
     }
   );
 
-  // eslint-disable-next-line
+  //eslint-disable-next-line
   const { data: get_expenses_transaction } = useQuery(
     GET_EXPENSES_TRANSACTIONS,
     {

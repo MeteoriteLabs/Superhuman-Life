@@ -6,6 +6,7 @@ import CreateEditContact from "../../builders/client-builder/contacts/createEdit
 import CreateClient from "../../builders/client-builder/clientlisting/addclientcomponent";
 import Grid from "./grid";
 import "./grid.css";
+import GraphSelector from "./GraphSelector";
 
 export default function HomePage() {
   const createEditMessageComponent = useRef<any>(null);
@@ -92,6 +93,7 @@ export default function HomePage() {
       <div className="mb-5">
         <Grid />
       </div>
+      <GraphSelector/>
     </div>
   );
 }
