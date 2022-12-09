@@ -45,7 +45,9 @@ function ClientListingPage() {
                     accessor: "status",
                     Header: "Status",
                     Cell: (v: any) => (
-                         <Badge className="p-2" variant={v.value === "Assigned" ? "success" : "danger"}>
+                         <Badge className="px-3 py-1"
+                         style={{ fontSize: "1rem", borderRadius: "10px" }}
+                         variant={v.value === "Assigned" ? "success" : "danger"}>
                               {v.value}
                          </Badge>
                     ),
