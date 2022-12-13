@@ -6,7 +6,7 @@ import '../Styles/navTabStyles.css';
 function SalesGraph() {
   return (
     <div>
-      <Tabs defaultActiveKey="monthly" id="uncontrolled-tab-example">
+      <Tabs defaultActiveKey="monthly">
         <Tab eventKey="monthly" title="Monthly">
           <MonthlySalesGraph />
         </Tab>

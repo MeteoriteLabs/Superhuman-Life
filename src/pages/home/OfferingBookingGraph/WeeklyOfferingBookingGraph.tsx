@@ -5,6 +5,7 @@ import { GET_BOOKINGS } from "./queries";
 import AuthContext from "../../../context/auth-context";
 import { flattenObj } from "../../../components/utils/responseFlatten";
 import moment from "moment";
+import { Col, Row } from "react-bootstrap";
 
 function WeeklyOfferingBookingGraph() {
   const [clientsData, setClientsData] = useState<any>([]);
@@ -46,11 +47,15 @@ function WeeklyOfferingBookingGraph() {
   };
 
   return (
-    <LineGraph
-      data={clientsData}
-      yAxis={"Offering Bookings"}
-      title={"Bookings Weekly Graph"}
-    />
+    <Row>
+      <Col style={{ overflowX: "scroll" }}>
+        <LineGraph
+          data={clientsData}
+          yAxis={"Offering Bookings"}
+          title={"Bookings Weekly Graph"}
+        />
+      </Col>
+    </Row>
   );
 }
 

@@ -5,6 +5,7 @@ import AuthContext from "../../../context/auth-context";
 import { flattenObj } from "../../../components/utils/responseFlatten";
 import moment from "moment";
 import LineGraph from "../../../components/Graphs/LineGraph/LineGraph";
+import { Row, Col } from "react-bootstrap";
 
 function MonthlyOfferingBookingGraph() {
   const [clientsData, setClientsData] = useState<any>([]);
@@ -14,7 +15,7 @@ function MonthlyOfferingBookingGraph() {
     variables: {
       id: Number(auth.userid),
       startDateTime: moment().subtract(1, "years").format(),
-      endDateTime: moment().format()
+      endDateTime: moment().format(),
     },
     onCompleted: (data) => {
       loadData(data);
@@ -44,11 +45,15 @@ function MonthlyOfferingBookingGraph() {
   };
 
   return (
-    <LineGraph
-      data={clientsData}
-      yAxis={"No. of Bookings"}
-      title={"Bookings Monthly Graph"}
-    />
+    <Row>
+      <Col style={{overflowX: 'scroll'}}>
+        <LineGraph
+          data={clientsData}
+          yAxis={"No. of Bookings"}
+          title={"Bookings Monthly Graph"}
+        />
+      </Col>
+    </Row>
   );
 }
 

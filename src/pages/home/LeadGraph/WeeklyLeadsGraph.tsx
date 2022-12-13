@@ -4,6 +4,7 @@ import { useQuery } from "@apollo/client";
 import { GET_LEADS } from "../LeadGraph/queries";
 import AuthContext from "../../../context/auth-context";
 import { flattenObj } from "../../../components/utils/responseFlatten";
+import { Row, Col } from "react-bootstrap";
 import moment from "moment";
 
 function WeeklyLeadsGraph() {
@@ -44,12 +45,16 @@ function WeeklyLeadsGraph() {
   };
 
   return (
-    <BarGraph
-      data={leadsData}
-      yAxis={"No. of Leads"}
-      title={"Leads Weekly Graph"}
-      keyName= {["Leads"]}
-    />
+    <Row>
+      <Col style={{ overflowX: "scroll" }}>
+        <BarGraph
+          data={leadsData}
+          yAxis={"No. of Leads"}
+          title={"Leads Weekly Graph"}
+          keyName={["Leads"]}
+        />
+      </Col>
+    </Row>
   );
 }
 

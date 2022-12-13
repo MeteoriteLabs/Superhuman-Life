@@ -4,6 +4,7 @@ import { useQuery } from "@apollo/client";
 import { GET_CLIENTS } from "./queries";
 import AuthContext from "../../../context/auth-context";
 import { flattenObj } from "../../../components/utils/responseFlatten";
+import { Row, Col } from "react-bootstrap";
 import moment from "moment";
 
 function MonthlyClientGraph() {
@@ -42,13 +43,16 @@ function MonthlyClientGraph() {
   };
 
   return (
-    <BarGraph
-      data={clientsData}
-      yAxis={"No. of Clients"}
-      title={"Clients Monthly Graph"}
-      keyName= {["Clients"]}
-
-    />
+    <Row>
+      <Col style={{ overflowX: "scroll" }}>
+        <BarGraph
+          data={clientsData}
+          yAxis={"No. of Clients"}
+          title={"Clients Monthly Graph"}
+          keyName={["Clients"]}
+        />
+      </Col>
+    </Row>
   );
 }
 

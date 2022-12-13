@@ -54,7 +54,7 @@ function LeadComponent() {
                         <Col md={{ span: 3, offset: 9 }}>
                           <a
                             href={`mailto:${
-                              currentValue.Details
+                              currentValue.Details 
                                 ? currentValue.Details.leadsdetails.email
                                 : null
                             }`}
@@ -67,7 +67,7 @@ function LeadComponent() {
                           </a>{" "}
                           <a
                             href={`tel:${
-                              currentValue.Details
+                              currentValue.Details 
                                 ? currentValue.Details.leadsdetails.phonenumber
                                 : null
                             }`}
@@ -83,7 +83,7 @@ function LeadComponent() {
                       <Row>
                         <Col>
                           <Card.Title>
-                            {currentValue.Details
+                            {currentValue.Details 
                               ? currentValue.Details.leadsdetails.name
                               : null}
                           </Card.Title>

@@ -4,6 +4,7 @@ import { useQuery } from "@apollo/client";
 import { GET_CLIENTS } from "./queries";
 import AuthContext from "../../../context/auth-context";
 import { flattenObj } from "../../../components/utils/responseFlatten";
+import { Col, Row } from "react-bootstrap";
 import moment from "moment";
 
 function WeeklySalesGraph() {
@@ -51,11 +52,15 @@ function WeeklySalesGraph() {
   };
 
   return (
-    <LineGraph
-      data={clientsData}
-      yAxis={"Sales (INR)"}
-      title={"Sales Weekly Graph"}
-    />
+    <Row>
+      <Col style={{ overflowX: "scroll" }}>
+        <LineGraph
+          data={clientsData}
+          yAxis={"Sales (INR)"}
+          title={"Sales Weekly Graph"}
+        />
+      </Col>
+    </Row>
   );
 }
 

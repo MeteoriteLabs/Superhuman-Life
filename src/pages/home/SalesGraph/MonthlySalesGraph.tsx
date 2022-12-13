@@ -4,6 +4,7 @@ import { useQuery } from "@apollo/client";
 import { GET_CLIENTS } from "./queries";
 import AuthContext from "../../../context/auth-context";
 import { flattenObj } from "../../../components/utils/responseFlatten";
+import { Col, Row } from "react-bootstrap";
 import moment from "moment";
 
 function MonthlySalesGraph() {
@@ -14,7 +15,7 @@ function MonthlySalesGraph() {
     variables: {
       id: Number(auth.userid),
       startDateTime: moment().subtract(1, "years").format(),
-      endDateTime: moment().format()
+      endDateTime: moment().format(),
     },
     onCompleted: (data) => {
       loadData(data);
@@ -29,13 +30,13 @@ function MonthlySalesGraph() {
 
     for (let month = 0; month < 12; month++) {
       let currentMonth = moment().subtract(month, "months");
-      
+
       let sales = flattenClientsData.filter(
         (currentValue) =>
           moment(currentValue.accepted_date).format("MM/YY") ===
           currentMonth.format("MM/YY")
       );
-      
+
       arr[month] = {
         x: `${currentMonth.format("MMM YY")}`,
         y: sales.reduce(
@@ -51,11 +52,15 @@ function MonthlySalesGraph() {
   };
 
   return (
-    <LineGraph
-      data={clientsData}
-      yAxis={"Sales (INR)"}
-      title={"Sales Monthly Graph"}
-    />
+    <Row>
+      <Col style={{ overflowX: "scroll" }}>
+        <LineGraph
+          data={clientsData}
+          yAxis={"Sales (INR)"}
+          title={"Sales Monthly Graph"}
+        />
+      </Col>
+    </Row>
   );
 }
 

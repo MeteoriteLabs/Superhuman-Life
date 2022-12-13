@@ -1,10 +1,20 @@
 import { gql } from "@apollo/client";
 
 export const GET_EARNINGS_TRANSACTIONS = gql`
-  query TransactionsQuery($receiverId: String) {
+  query TransactionsQuery($receiverId: String, $transactionStatus: String,
+    $transactionStartTime: DateTime,
+    $transactionEndTime: DateTime) {
     transactions(
       pagination: { pageSize: 2000 }
-      filters: { ReceiverID: { eq: $receiverId } }
+      filters: { 
+        ReceiverID: { eq: $receiverId } 
+        ReceiverType: { eq: $receiverType }
+        TransactionStatus: { eq: $transactionStatus }
+        TransactionDateTime: {
+          gte: $transactionStartTime
+          lte: $transactionEndTime
+        }
+      }
     ) {
       data {
         id
@@ -71,17 +81,15 @@ export const GET_EXPENSES_TRANSACTIONS = gql`
 export const GET_EARNINGS_TRANSACTIONS_GRAPH = gql`
   query TransactionsQuery(
     $receiverId: String
-    $receiverType: String
-    $transactionStatus: String
     $transactionStartTime: DateTime
     $transactionEndTime: DateTime
   ) {
     transactions(
       pagination: { pageSize: 2000 }
       filters: {
+        ReceiverType: {eq: "Changemaker"}
         ReceiverID: { eq: $receiverId }
-        ReceiverType: { eq: $receiverType }
-        TransactionStatus: { eq: $transactionStatus }
+        TransactionStatus: { eq: "Success" }
         TransactionDateTime: {
           gte: $transactionStartTime
           lte: $transactionEndTime
@@ -94,6 +102,7 @@ export const GET_EARNINGS_TRANSACTIONS_GRAPH = gql`
           ChangemakerAmount
           TransactionDateTime
           TransactionAmount
+          ReceiverID
         }
       }
     }
@@ -103,8 +112,6 @@ export const GET_EARNINGS_TRANSACTIONS_GRAPH = gql`
 export const GET_EXPENSES_TRANSACTIONS_GRAPH = gql`
   query TransactionsQuery(
     $senderId: String
-    $senderType: String
-    $transactionStatus: String
     $transactionStartTime: DateTime
     $transactionEndTime: DateTime
   ) {
@@ -112,8 +119,8 @@ export const GET_EXPENSES_TRANSACTIONS_GRAPH = gql`
       pagination: { pageSize: 2000 }
       filters: {
         SenderID: { eq: $senderId }
-        SenderType: { eq: $senderType }
-        TransactionStatus: { eq: $transactionStatus }
+        TransactionStatus: { eq: "Success" }
+        ReceiverType: {eq: "Changemaker"}
         TransactionDateTime: {
           gte: $transactionStartTime
           lte: $transactionEndTime
@@ -125,9 +132,22 @@ export const GET_EXPENSES_TRANSACTIONS_GRAPH = gql`
         attributes {
           TransactionDateTime
           TransactionAmount
+          SenderID
         }
       }
     }
   }
 `;
 
+export const GET_USERS_JOINED_DATE = gql`
+  query userPermissionUser($id: ID) {
+    usersPermissionsUser(id: $id) {
+      data {
+        id
+        attributes {
+          createdAt
+        }
+      }
+    }
+  }
+`;

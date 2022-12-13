@@ -1,10 +1,21 @@
 import { ResponsiveBar } from "@nivo/bar";
-import "./BarGraph.css";
+
+const Wrapper = (props) => (
+  <div
+    {...props}
+    style={{
+      height: "500px",
+      width: "100%",
+      minWidth: "900px",
+    }}
+  />
+);
 
 function BarGraph({ data, yAxis, title, keyName }) {
   return (
-    <div className="chart">
+    <>
       <h6 className="text-center">{title}</h6>
+      <Wrapper>
       <ResponsiveBar
         data={data}
         keys= {keyName}
@@ -20,7 +31,7 @@ function BarGraph({ data, yAxis, title, keyName }) {
         colorBy="id"
         borderColor="inherit:darker(1.6)"
         axisTop={null}
-        axisRight={null}
+        axisRight={null}     
         axisLeft={{
           tickSize: 5,
           tickPadding: 5,
@@ -34,8 +45,12 @@ function BarGraph({ data, yAxis, title, keyName }) {
         labelTextColor="inherit:darker(1.6)"
         animate={true}
       />
-    </div>
+      </Wrapper>
+    </>
   );
 }
 
 export default BarGraph;
+
+
+
