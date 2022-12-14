@@ -97,7 +97,7 @@ function FinanceGraph() {
       data: get_expenses_transaction,
     },
   ] = useLazyQuery(GET_EXPENSES_TRANSACTIONS, {
-    fetchPolicy: "cache-and-network",
+    fetchPolicy: "network-only",
     onCompleted: (data) => {
       const flattenExpensesTransactionsData = flattenObj({
         ...data.transactions,
@@ -173,7 +173,7 @@ function FinanceGraph() {
   useEffect(() => {
     getEarnings({
       variables: {
-        recieverId: auth.userid,
+        receiverId: auth.userid,
         transactionStartTime: moment(`${currentYear}-01-01`).format(),
         transactionEndTime: moment(`${currentYear}-12-31`).format(),
       },
@@ -182,8 +182,8 @@ function FinanceGraph() {
     getExpenses({
       variables: {
         senderId: auth.userid,
-        transactionStartTime: moment(`01/01/${currentYear}`).format(),
-        transactionEndTime: moment(`12/31/${currentYear}`).format(),
+        transactionStartTime: moment(`${currentYear}-01-01`).format(),
+        transactionEndTime: moment(`${currentYear}-12-31`).format(),
       },
     });
 
@@ -199,17 +199,17 @@ function FinanceGraph() {
 
     getEarnings({
       variables: {
-        recieverId: auth.userid,
-        transactionStartTime: moment(`01/01/${event.target.value}`).format(),
-        transactionEndTime: moment(`01/12/${event.target.value}`).format(),
+        receiverId: auth.userid,
+        transactionStartTime: moment(`${event.target.value}-01-01`).format(),
+        transactionEndTime: moment(`${event.target.value}-12-31`).format(),
       },
     });
 
     getExpenses({
       variables: {
         senderId: auth.userid,
-        transactionStartTime: moment(`01/01/${event.target.value}`).format(),
-        transactionEndTime: moment(`12/31/${event.target.value}`).format(),
+        transactionStartTime: moment(`${event.target.value}-01-01`).format(),
+        transactionEndTime: moment(`${event.target.value}-12-31`).format(),
       },
     });
   };

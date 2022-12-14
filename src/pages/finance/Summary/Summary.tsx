@@ -48,16 +48,9 @@ function Summary() {
         )
         .reduce(
           (accumulator, currentValue) =>
-           accumulator + currentValue.ChangemakerAmount,
+            accumulator + currentValue.ChangemakerAmount,
           initialEarningsValue
         );
-
-        console.log(flattenEarningsTransactionsData
-          .filter(
-            (currentValue) =>
-              moment.utc(currentValue.TransactionDateTime).format("YYYY-MM") ===
-              selectedMonthYear
-          ))
 
       // Revenue
       const selectedMonthsRevenue = flattenEarningsTransactionsData
@@ -81,10 +74,9 @@ function Summary() {
     getExpenses,
     {
       // eslint-disable-next-line
-      data: get_expenses_transaction
+      data: get_expenses_transaction,
     },
   ] = useLazyQuery(GET_EXPENSES_TRANSACTIONS, {
-    
     fetchPolicy: "network-only",
     nextFetchPolicy: "cache-and-network",
 
@@ -109,15 +101,6 @@ function Summary() {
               accumulator + currentValue.TransactionAmount,
             initialExpensesValue
           );
-      console.log(flattenExpensesTransactionsData &&
-        flattenExpensesTransactionsData.length &&
-        flattenExpensesTransactionsData
-          .filter(
-            (currentValue) =>
-              moment.utc(currentValue.TransactionDateTime).format("YYYY-MM") ===
-              selectedMonthYear
-          ))
-
 
       setTotalExpenses(selectedMonthsExpenses);
       getUsersJoinedDate({ variables: { id: auth.userid } });
@@ -131,7 +114,6 @@ function Summary() {
       data: get_users_joined_date,
     },
   ] = useLazyQuery(GET_USERS_JOINED_DATE, {
-
     onCompleted: (data) => {
       const flattenUsersData = flattenObj({
         ...data.usersPermissionsUser,
@@ -194,7 +176,6 @@ function Summary() {
                     senderId: auth.userid,
                   },
                 });
-
               }}
               defaultValue={moment().format("YYYY-MM")}
             />

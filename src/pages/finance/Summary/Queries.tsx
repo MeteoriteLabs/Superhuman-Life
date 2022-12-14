@@ -9,7 +9,7 @@ export const GET_EARNINGS_TRANSACTIONS = gql`
     transactions(
       pagination: { pageSize: 2000 }
       filters: {
-        ReceiverType: {eq: "Changemaker"}
+        ReceiverType: { eq: "Changemaker" }
         ReceiverID: { eq: $receiverId }
         TransactionStatus: { eq: "Success" }
         TransactionDateTime: {
@@ -42,7 +42,7 @@ export const GET_EXPENSES_TRANSACTIONS = gql`
       filters: {
         SenderID: { eq: $senderId }
         TransactionStatus: { eq: "Success" }
-        ReceiverType: {eq: "Changemaker"}
+        SenderType: { eq: "Changemaker" }
         TransactionDateTime: {
           gte: $transactionStartTime
           lte: $transactionEndTime
