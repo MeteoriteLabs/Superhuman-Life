@@ -24,7 +24,6 @@ export const GET_EARNINGS_TRANSACTIONS = gql`
           ChangemakerAmount
           TransactionDateTime
           TransactionAmount
-          ReceiverID
         }
       }
     }
@@ -54,7 +53,6 @@ export const GET_EXPENSES_TRANSACTIONS = gql`
         attributes {
           TransactionDateTime
           TransactionAmount
-          SenderID
         }
       }
     }
