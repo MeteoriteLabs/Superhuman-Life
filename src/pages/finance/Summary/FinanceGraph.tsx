@@ -1,18 +1,25 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, ChangeEvent } from "react";
 import { useLazyQuery } from "@apollo/client";
 import {
-  GET_EARNINGS_TRANSACTIONS_GRAPH,
-  GET_EXPENSES_TRANSACTIONS_GRAPH,
+  GET_EARNINGS_TRANSACTIONS,
+  GET_EXPENSES_TRANSACTIONS,
   GET_USERS_JOINED_DATE,
 } from "./Queries";
+import { Row, Col } from "react-bootstrap";
 import AuthContext from "../../../context/auth-context";
 import { flattenObj } from "../../../components/utils/responseFlatten";
-import moment from "moment";
 import LineGraph from "../../../components/Graphs/LineGraph/LineGraph";
-import { Row, Col } from "react-bootstrap";
+import moment from "moment";
+
+interface ArrayType {
+  x: string;
+  y: number;
+}
 
 function FinanceGraph() {
-  const [financeData, setFinanceData] = useState<any>([]);
+  const [earningsData, setEarningsData] = useState<ArrayType[]>([]);
+  const [expensesData, setExpensesData] = useState<ArrayType[]>([]);
+  const [revenueData, setRevenueData] = useState<ArrayType[]>([]);
   const auth = useContext(AuthContext);
   const [joinedYearArray, setJoinedYearArray] = useState<number[]>();
   const [selectedYear, setSelectedYear] = useState<number>(
@@ -27,16 +34,59 @@ function FinanceGraph() {
       // eslint-disable-next-line
       data: get_earnings_transaction,
     },
-  ] = useLazyQuery(GET_EARNINGS_TRANSACTIONS_GRAPH, {
-    fetchPolicy: "cache-and-network",
-    onCompleted: () => {
-      getExpenses({
-        variables: {
-          senderId: auth.userid,
-          transactionStartTime: moment(`01/01/${currentYear}`).format(),
-          transactionEndTime: moment().format(),
-        },
+  ] = useLazyQuery(GET_EARNINGS_TRANSACTIONS, {
+    fetchPolicy: "network-only",
+    onCompleted: (data) => {
+      const flattenEarningsTransactionsData = flattenObj({
+        ...data.transactions,
       });
+      const earningsArray: ArrayType[] = [];
+      const revenueArray: ArrayType[] = [];
+      const initialEarningsValue: number = 0;
+      const initialRevenueValue: number = 0;
+
+      for (let month: number = 0; month < 12; month++) {
+        let currentMonth = toMonthName(month).substring(0, 3);
+
+        earningsArray[month] = {
+          x: `${currentMonth} ${selectedYear}`,
+          y:
+            flattenEarningsTransactionsData &&
+            flattenEarningsTransactionsData.length &&
+            flattenEarningsTransactionsData
+              .filter(
+                (currentValue) =>
+                  moment(currentValue.TransactionDateTime).format("MM/YY") ===
+                  moment(`01/${currentMonth}/${selectedYear}`).format("MM/YY")
+              )
+              .reduce(
+                (accumulator, currentValue) =>
+                  accumulator + currentValue.ChangemakerAmount,
+                initialEarningsValue
+              ),
+        };
+
+        revenueArray[month] = {
+          x: `${currentMonth} ${selectedYear}`,
+          y:
+            flattenEarningsTransactionsData &&
+            flattenEarningsTransactionsData.length &&
+            flattenEarningsTransactionsData
+              .filter(
+                (currentValue) =>
+                  moment(currentValue.TransactionDateTime).format("MM/YY") ===
+                  moment(`01/${currentMonth}/${selectedYear}`).format("MM/YY")
+              )
+              .reduce(
+                (accumulator, currentValue) =>
+                  accumulator + currentValue.TransactionAmount,
+                initialRevenueValue
+              ),
+        };
+
+        setEarningsData(earningsArray);
+        setRevenueData(revenueArray);
+      }
     },
   });
 
@@ -46,10 +96,39 @@ function FinanceGraph() {
       // eslint-disable-next-line
       data: get_expenses_transaction,
     },
-  ] = useLazyQuery(GET_EXPENSES_TRANSACTIONS_GRAPH, {
+  ] = useLazyQuery(GET_EXPENSES_TRANSACTIONS, {
     fetchPolicy: "cache-and-network",
     onCompleted: (data) => {
-      getUsersJoinedDate({ variables: { id: auth.userid } });
+      const flattenExpensesTransactionsData = flattenObj({
+        ...data.transactions,
+      });
+
+      const expensesArray: ArrayType[] = [];
+      let initialExpensesValue = 0;
+
+      for (let month = 0; month < 12; month++) {
+        let currentMonth = toMonthName(month).substring(0, 3);
+
+        expensesArray[month] = {
+          x: `${currentMonth} ${selectedYear}`,
+          y:
+            flattenExpensesTransactionsData &&
+            flattenExpensesTransactionsData.length &&
+            flattenExpensesTransactionsData
+              .filter(
+                (currentValue) =>
+                  moment(currentValue.TransactionDateTime).format("MM/YY") ===
+                  moment(`01/${currentMonth}/${selectedYear}`).format("MM/YY")
+              )
+              .reduce(
+                (accumulator, currentValue) =>
+                  accumulator + currentValue.TransactionAmount,
+                initialExpensesValue
+              ),
+        };
+      }
+
+      setExpensesData(expensesArray);
     },
   });
 
@@ -62,11 +141,27 @@ function FinanceGraph() {
   ] = useLazyQuery(GET_USERS_JOINED_DATE, {
     fetchPolicy: "cache-and-network",
     onCompleted: (data) => {
-      loadData(data);
+      const flattenUsersData = flattenObj({
+        ...data.usersPermissionsUser,
+      });
+
+      const accountCreatedAt = moment(flattenUsersData.createdAt).format(
+        "YYYY"
+      );
+      const arr: number[] = [];
+
+      for (
+        let i = Number(accountCreatedAt);
+        i <= Number(moment().format("YYYY"));
+        i++
+      ) {
+        arr.push(i);
+      }
+      setJoinedYearArray(arr);
     },
   });
 
-  function toMonthName(monthNumber) {
+  function toMonthName(monthNumber: number) {
     const date = new Date();
     date.setMonth(monthNumber);
 
@@ -75,136 +170,46 @@ function FinanceGraph() {
     });
   }
 
-  const loadData = (data) => {
-    const flattenEarningsTransactionsData = flattenObj({
-      ...get_earnings_transaction?.transactions,
-    });
-
-    const flattenExpensesTransactionsData = flattenObj({
-      ...get_expenses_transaction?.transactions,
-    });
-
-    const flattenUsersData = flattenObj({
-      ...data.usersPermissionsUser,
-    });
-
-    const accountCreatedAt = moment(flattenUsersData.createdAt).format("YYYY");
-    const arr: any = [];
-
-    for (
-      let i = Number(accountCreatedAt);
-      i <= Number(moment().format("YYYY"));
-      i++
-    ) {
-      arr.push(i);
-    }
-    setJoinedYearArray(arr);
-
-    const earningsArray: any[] = [];
-    const revenueArray: any[] = [];
-    const expensesArray: any[] = [];
-
-    const initialEarningsValue = 0;
-    const initialRevenueValue = 0;
-    const initialExpensesValue = 0;
-
-    for (let month = 0; month < 12; month++) {
-      let currentMonth = toMonthName(month).substring(0, 3);
-      earningsArray[month] = {
-        x: `${currentMonth} ${selectedYear}`,
-        y:
-          flattenEarningsTransactionsData &&
-          flattenEarningsTransactionsData.length &&
-          flattenEarningsTransactionsData
-            .filter(
-              (currentValue) =>
-                moment(currentValue.TransactionDateTime).format("MM/YY") ===
-                moment(`01/${currentMonth}/${selectedYear}`).format("MM/YY")
-            )
-            .reduce(
-              (accumulator, currentValue) =>
-                accumulator + currentValue.ChangemakerAmount,
-              initialEarningsValue
-            ),
-      };
-
-      revenueArray[month] = {
-        x: `${currentMonth} ${selectedYear}`,
-        y:
-          flattenEarningsTransactionsData &&
-          flattenEarningsTransactionsData.length &&
-          flattenEarningsTransactionsData
-            .filter(
-              (currentValue) =>
-                moment(currentValue.TransactionDateTime).format("MM/YY") ===
-                moment(`01/${currentMonth}/${selectedYear}`).format("MM/YY")
-            )
-            .reduce(
-              (accumulator, currentValue) =>
-                accumulator + currentValue.TransactionAmount,
-              initialRevenueValue
-            ),
-      };
-
-      expensesArray[month] = {
-        x: `${currentMonth} ${selectedYear}`,
-        y:
-          flattenExpensesTransactionsData &&
-          flattenExpensesTransactionsData.length &&
-          flattenExpensesTransactionsData
-            .filter(
-              (currentValue) =>
-                moment(currentValue.TransactionDateTime).format("MM/YY") ===
-                moment(`01/${currentMonth}/${selectedYear}`).format("MM/YY")
-            )
-            .reduce(
-              (accumulator, currentValue) =>
-                accumulator + currentValue.TransactionAmount,
-              initialExpensesValue
-            ),
-      };
-    }
-
-    setFinanceData([
-      {
-        id: "Earnings",
-        color: "hsl(235, 70%, 50%)",
-        data: earningsArray,
-      },
-      {
-        id: "Revenue",
-        color: "hsl(235, 70%, 50%)",
-        data: revenueArray,
-      },
-      {
-        id: "Expenses",
-        color: "hsl(68, 70%, 50%)",
-        data: expensesArray,
-      },
-    ]);
-  };
-
   useEffect(() => {
     getEarnings({
       variables: {
         recieverId: auth.userid,
-
-        transactionStartTime: moment().subtract(1, "years").format(),
-        transactionEndTime: moment().format(),
+        transactionStartTime: moment(`${currentYear}-01-01`).format(),
+        transactionEndTime: moment(`${currentYear}-12-31`).format(),
       },
     });
+
+    getExpenses({
+      variables: {
+        senderId: auth.userid,
+        transactionStartTime: moment(`01/01/${currentYear}`).format(),
+        transactionEndTime: moment(`12/31/${currentYear}`).format(),
+      },
+    });
+
+    getUsersJoinedDate({ variables: { id: auth.userid } });
+
     //eslint-disable-next-line
   }, []);
 
-  const handleChange = (e) => {
-    setSelectedYear(e.target.value);
+  const selectYearChangeHandler = (
+    event: ChangeEvent<HTMLSelectElement>
+  ): void => {
+    setSelectedYear(Number(event.target.value));
 
     getEarnings({
       variables: {
         recieverId: auth.userid,
+        transactionStartTime: moment(`01/01/${event.target.value}`).format(),
+        transactionEndTime: moment(`01/12/${event.target.value}`).format(),
+      },
+    });
 
-        transactionStartTime: moment(`01/01/${e.target.value}`).format(),
-        transactionEndTime: moment(`01/12/${e.target.value}`).format(),
+    getExpenses({
+      variables: {
+        senderId: auth.userid,
+        transactionStartTime: moment(`01/01/${event.target.value}`).format(),
+        transactionEndTime: moment(`12/31/${event.target.value}`).format(),
       },
     });
   };
@@ -217,13 +222,26 @@ function FinanceGraph() {
             <b className="mr-3">Select Year</b>
             <select
               value={selectedYear || moment().format("YYYY")}
-              onChange={(e) => {
-                handleChange(e);
+              onChange={(e) => selectYearChangeHandler(e)}
+              style={{
+                padding: "5px",
+                borderRadius: "5px",
+                width: "20vw",
+                cursor: "pointer",
               }}
-              style={{ padding: "5px", borderRadius: "5px", width: "20vw" }}
             >
               {joinedYearArray?.map((currentValue, index) => (
-                <option key={index}>{currentValue} </option>
+                <option
+                  key={index}
+                  style={{
+                    padding: "5px",
+                    borderRadius: "5px",
+                    width: "20vw",
+                    cursor: "pointer",
+                  }}
+                >
+                  {currentValue}{" "}
+                </option>
               ))}
             </select>
           </span>
@@ -233,9 +251,25 @@ function FinanceGraph() {
       <Row>
         <Col style={{ overflowX: "scroll" }}>
           <LineGraph
-            data={financeData}
+            data={[
+              {
+                id: "Earnings",
+                color: "hsl(235, 70%, 50%)",
+                data: earningsData,
+              },
+              {
+                id: "Revenue",
+                color: "hsl(235, 70%, 50%)",
+                data: revenueData,
+              },
+              {
+                id: "Expenses",
+                color: "hsl(68, 70%, 50%)",
+                data: expensesData,
+              },
+            ]}
             yAxis={"Transaction amount (INR)"}
-            title={"Finance Monthly Graph"}
+            title={"Finance Year wise Graph"}
           />
         </Col>
       </Row>

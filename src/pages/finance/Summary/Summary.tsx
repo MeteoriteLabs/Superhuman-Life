@@ -1,8 +1,8 @@
 import { useContext, useEffect, useState } from "react";
 import { useLazyQuery } from "@apollo/client";
 import {
-  GET_EARNINGS_TRANSACTIONS_GRAPH,
-  GET_EXPENSES_TRANSACTIONS_GRAPH,
+  GET_EARNINGS_TRANSACTIONS,
+  GET_EXPENSES_TRANSACTIONS,
   GET_USERS_JOINED_DATE,
 } from "./Queries";
 import { Row, Col, Card } from "react-bootstrap";
@@ -10,7 +10,7 @@ import { flattenObj } from "../../../components/utils/responseFlatten";
 import AuthContext from "../../../context/auth-context";
 import FinanceGraph from "./FinanceGraph";
 import moment from "moment";
-import './Summary.css';
+import "./Summary.css";
 
 function Summary() {
   const auth = useContext(AuthContext);
@@ -18,7 +18,7 @@ function Summary() {
   const [totalEarning, setTotalEarning] = useState<number>(0);
   const [totalExpenses, setTotalExpenses] = useState<number>(0);
   const [joinedYear, setJoinedYear] = useState<string>("");
-  const [selectedMonthYear, setSelectedMonthYear] = useState<any>(
+  const [selectedMonthYear, setSelectedMonthYear] = useState<string>(
     moment().format("YYYY-MM")
   );
 
@@ -28,10 +28,9 @@ function Summary() {
       // eslint-disable-next-line
       data: get_earnings_transaction,
     },
-  ] = useLazyQuery(GET_EARNINGS_TRANSACTIONS_GRAPH, {
-    variables: {
-      receiverId: auth.userid,
-    },
+  ] = useLazyQuery(GET_EARNINGS_TRANSACTIONS, {
+    fetchPolicy: "cache-and-network",
+
     onCompleted: (data) => {
       const initialEarningsValue = 0;
       const initialRevenueValue = 0;
@@ -40,26 +39,33 @@ function Summary() {
         ...data.transactions,
       });
 
+      // Earnings
       const selectedMonthsEarnings = flattenEarningsTransactionsData
-        .filter((currentValue) => {
-          return (
+        .filter(
+          (currentValue) =>
             moment.utc(currentValue.TransactionDateTime).format("YYYY-MM") ===
             selectedMonthYear
-          );
-        })
+        )
         .reduce(
           (accumulator, currentValue) =>
-            accumulator + currentValue.ChangemakerAmount,
+           accumulator + currentValue.ChangemakerAmount,
           initialEarningsValue
         );
 
+        console.log(flattenEarningsTransactionsData
+          .filter(
+            (currentValue) =>
+              moment.utc(currentValue.TransactionDateTime).format("YYYY-MM") ===
+              selectedMonthYear
+          ))
+
+      // Revenue
       const selectedMonthsRevenue = flattenEarningsTransactionsData
-        .filter((currentValue) => {
-          return (
+        .filter(
+          (currentValue) =>
             moment.utc(currentValue.TransactionDateTime).format("YYYY-MM") ===
             selectedMonthYear
-          );
-        })
+        )
         .reduce(
           (accumulator, currentValue) =>
             accumulator + currentValue.TransactionAmount,
@@ -68,12 +74,6 @@ function Summary() {
 
       setTotalRevenue(selectedMonthsRevenue);
       setTotalEarning(selectedMonthsEarnings);
-
-      getExpenses({
-        variables: {
-          senderId: auth.userid,
-        },
-      });
     },
   });
 
@@ -81,11 +81,45 @@ function Summary() {
     getExpenses,
     {
       // eslint-disable-next-line
-      data: get_expenses_transaction,
+      data: get_expenses_transaction
     },
-  ] = useLazyQuery(GET_EXPENSES_TRANSACTIONS_GRAPH, {
-    fetchPolicy: "cache-and-network",
+  ] = useLazyQuery(GET_EXPENSES_TRANSACTIONS, {
+    
+    fetchPolicy: "network-only",
+    nextFetchPolicy: "cache-and-network",
+
     onCompleted: (data) => {
+      const flattenExpensesTransactionsData = flattenObj({
+        ...get_expenses_transaction?.transactions,
+      });
+
+      const initialExpensesValue = 0;
+
+      const selectedMonthsExpenses =
+        flattenExpensesTransactionsData &&
+        flattenExpensesTransactionsData.length &&
+        flattenExpensesTransactionsData
+          .filter(
+            (currentValue) =>
+              moment.utc(currentValue.TransactionDateTime).format("YYYY-MM") ===
+              selectedMonthYear
+          )
+          .reduce(
+            (accumulator, currentValue) =>
+              accumulator + currentValue.TransactionAmount,
+            initialExpensesValue
+          );
+      console.log(flattenExpensesTransactionsData &&
+        flattenExpensesTransactionsData.length &&
+        flattenExpensesTransactionsData
+          .filter(
+            (currentValue) =>
+              moment.utc(currentValue.TransactionDateTime).format("YYYY-MM") ===
+              selectedMonthYear
+          ))
+
+
+      setTotalExpenses(selectedMonthsExpenses);
       getUsersJoinedDate({ variables: { id: auth.userid } });
     },
   });
@@ -97,46 +131,17 @@ function Summary() {
       data: get_users_joined_date,
     },
   ] = useLazyQuery(GET_USERS_JOINED_DATE, {
-    fetchPolicy: "cache-and-network",
+
     onCompleted: (data) => {
-      loadData(data);
+      const flattenUsersData = flattenObj({
+        ...data.usersPermissionsUser,
+      });
+      const accountCreatedAt = moment(flattenUsersData.createdAt).format(
+        "YYYY"
+      );
+      setJoinedYear(accountCreatedAt);
     },
   });
-
-  const loadData = (data) => {
-    const flattenExpensesTransactionsData = flattenObj({
-      ...get_expenses_transaction?.transactions,
-    });
-
-    const flattenUsersData = flattenObj({
-      ...data.usersPermissionsUser,
-    });
-
-    console.log("expenses array", flattenExpensesTransactionsData);
-    const initialExpensesValue = 0;
-    const accountCreatedAt = moment(flattenUsersData.createdAt).format("YYYY");
-    setJoinedYear(accountCreatedAt);
-
-    const selectedMonthsExpenses = flattenExpensesTransactionsData
-      .filter((currentValue) => {
-        console.log(
-          moment.utc(currentValue.TransactionDateTime).format("YYYY-MM"),
-          selectedMonthYear
-        );
-
-        return (
-          moment.utc(currentValue.TransactionDateTime).format("YYYY-MM") ===
-          selectedMonthYear
-        );
-      })
-      .reduce(
-        (accumulator, currentValue) =>
-          accumulator + currentValue.TransactionAmount,
-        initialExpensesValue
-      );
-
-    setTotalExpenses(selectedMonthsExpenses);
-  };
 
   useEffect(() => {
     getEarnings({
@@ -144,8 +149,17 @@ function Summary() {
         receiverId: auth.userid,
       },
     });
-    //eslint-disable-next-line
-  }, []);
+
+    getExpenses({
+      variables: {
+        senderId: auth.userid,
+      },
+    });
+
+    getUsersJoinedDate({ variables: { id: auth.userid } });
+
+    // eslint-disable-next-line
+  }, [selectedMonthYear]);
 
   return (
     <>
@@ -158,27 +172,29 @@ function Summary() {
           </Col>
           <Col>
             <input
-              className= "date__input"
-              id= "finance-month"
-              type= "month"
-              name= "finance-month"
+              className="date__input"
+              id="finance-month"
+              type="month"
+              name="finance-month"
               min={`${joinedYear}-01`}
               max={moment().format("YYYY-MM")}
               onChange={(e) => {
                 setSelectedMonthYear(
                   moment(`${e.target.value}-01`).format("YYYY-MM")
                 );
-                console.log(e.target.value);
+
                 getEarnings({
                   variables: {
                     receiverId: auth.userid,
                   },
                 });
+
                 getExpenses({
                   variables: {
                     senderId: auth.userid,
                   },
                 });
+
               }}
               defaultValue={moment().format("YYYY-MM")}
             />
