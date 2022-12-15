@@ -57,7 +57,11 @@ function FinanceGraph() {
               .filter(
                 (currentValue) =>
                   moment(currentValue.TransactionDateTime).format("MM/YY") ===
-                  moment(`01/${currentMonth}/${selectedYear}`).format("MM/YY")
+                  moment(
+                    `${selectedYear}-${
+                      month + 1 < 10 ? `0${month}` : month + 1
+                    }-01`
+                  ).format("MM/YY")
               )
               .reduce(
                 (accumulator, currentValue) =>
@@ -75,7 +79,11 @@ function FinanceGraph() {
               .filter(
                 (currentValue) =>
                   moment(currentValue.TransactionDateTime).format("MM/YY") ===
-                  moment(`01/${currentMonth}/${selectedYear}`).format("MM/YY")
+                  moment(
+                    `${selectedYear}-${
+                      month + 1 < 10 ? `0${month}` : month + 1
+                    }-01`
+                  ).format("MM/YY")
               )
               .reduce(
                 (accumulator, currentValue) =>
@@ -118,7 +126,11 @@ function FinanceGraph() {
               .filter(
                 (currentValue) =>
                   moment(currentValue.TransactionDateTime).format("MM/YY") ===
-                  moment(`01/${currentMonth}/${selectedYear}`).format("MM/YY")
+                  moment(
+                    `${selectedYear}-${
+                      month + 1 < 10 ? `0${month}` : month + 1
+                    }-01`
+                  ).format("MM/YY")
               )
               .reduce(
                 (accumulator, currentValue) =>
@@ -128,7 +140,7 @@ function FinanceGraph() {
         };
       }
 
-      setExpensesData(expensesArray);
+      expensesArray && expensesArray.length && setExpensesData(expensesArray);
     },
   });
 
@@ -250,27 +262,34 @@ function FinanceGraph() {
 
       <Row>
         <Col style={{ overflowX: "scroll" }}>
-          <LineGraph
-            data={[
-              {
-                id: "Earnings",
-                color: "hsl(235, 70%, 50%)",
-                data: earningsData,
-              },
-              {
-                id: "Revenue",
-                color: "hsl(235, 70%, 50%)",
-                data: revenueData,
-              },
-              {
-                id: "Expenses",
-                color: "hsl(68, 70%, 50%)",
-                data: expensesData,
-              },
-            ]}
-            yAxis={"Transaction amount (INR)"}
-            title={"Finance Year wise Graph"}
-          />
+          {earningsData &&
+          earningsData.length &&
+          revenueData &&
+          revenueData.length &&
+          expensesData &&
+          expensesData.length ? (
+            <LineGraph
+              data={[
+                {
+                  id: "Earnings",
+                  color: "hsl(235, 70%, 50%)",
+                  data: earningsData,
+                },
+                {
+                  id: "Revenue",
+                  color: "hsl(235, 70%, 50%)",
+                  data: revenueData,
+                },
+                {
+                  id: "Expenses",
+                  color: "hsl(68, 70%, 50%)",
+                  data: expensesData,
+                },
+              ]}
+              yAxis={"Transaction amount (INR)"}
+              title={"Finance Year wise Graph"}
+            />
+          ) : null}
         </Col>
       </Row>
     </>
