@@ -57,11 +57,7 @@ function FinanceGraph() {
               .filter(
                 (currentValue) =>
                   moment(currentValue.TransactionDateTime).format("MM/YY") ===
-                  moment(
-                    `${selectedYear}-${
-                      month + 1 < 10 ? `0${month}` : month + 1
-                    }-01`
-                  ).format("MM/YY")
+                  moment(`${selectedYear}-${month + 1}-01`).format("MM/YY")
               )
               .reduce(
                 (accumulator, currentValue) =>
@@ -79,11 +75,7 @@ function FinanceGraph() {
               .filter(
                 (currentValue) =>
                   moment(currentValue.TransactionDateTime).format("MM/YY") ===
-                  moment(
-                    `${selectedYear}-${
-                      month + 1 < 10 ? `0${month}` : month + 1
-                    }-01`
-                  ).format("MM/YY")
+                  moment(`${selectedYear}-${month + 1}-01`).format("MM/YY")
               )
               .reduce(
                 (accumulator, currentValue) =>
@@ -123,15 +115,16 @@ function FinanceGraph() {
             flattenExpensesTransactionsData &&
             flattenExpensesTransactionsData.length &&
             flattenExpensesTransactionsData
-              .filter(
-                (currentValue) =>
+              .filter((currentValue) => {
+                console.log(
+                  moment(currentValue.TransactionDateTime).format("MM/YY"),
+                  moment(`${selectedYear}-${month + 1}-01`).format("MM/YY")
+                );
+                return (
                   moment(currentValue.TransactionDateTime).format("MM/YY") ===
-                  moment(
-                    `${selectedYear}-${
-                      month + 1 < 10 ? `0${month}` : month + 1
-                    }-01`
-                  ).format("MM/YY")
-              )
+                  moment(`${selectedYear}-${month + 1}-01`).format("MM/YY")
+                );
+              })
               .reduce(
                 (accumulator, currentValue) =>
                   accumulator + currentValue.TransactionAmount,
@@ -140,7 +133,7 @@ function FinanceGraph() {
         };
       }
 
-      expensesArray && expensesArray.length && setExpensesData(expensesArray);
+      setExpensesData(expensesArray);
     },
   });
 
