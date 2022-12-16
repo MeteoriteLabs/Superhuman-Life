@@ -53,7 +53,6 @@ function LeadGraph() {
               <BarGraph
                 data={leadsData}
                 yAxis={"No. of Leads"}
-                title={"Leads Monthly Graph"}
                 keyName={["Leads"]}
               />
             </Col>

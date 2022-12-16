@@ -50,7 +50,6 @@ function MonthlyOfferingBookingGraph() {
         <LineGraph
           data={clientsData}
           yAxis={"No. of Bookings"}
-          title={"Bookings Monthly Graph"}
         />
       </Col>
     </Row>

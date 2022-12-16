@@ -11,9 +11,8 @@ const Wrapper = (props) => (
   />
 );
 
-const LineGraph = ({ data, yAxis, title }) => (
+const LineGraph = ({ data, yAxis}) => (
   <>
-    <h6 className="text-center">{title}</h6>
     <Wrapper>
       <ResponsiveLine
         data={data}

@@ -57,7 +57,6 @@ function WeeklySalesGraph() {
         <LineGraph
           data={clientsData}
           yAxis={"Sales (INR)"}
-          title={"Sales Weekly Graph"}
         />
       </Col>
     </Row>

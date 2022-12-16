@@ -116,10 +116,6 @@ function FinanceGraph() {
             flattenExpensesTransactionsData.length &&
             flattenExpensesTransactionsData
               .filter((currentValue) => {
-                console.log(
-                  moment(currentValue.TransactionDateTime).format("MM/YY"),
-                  moment(`${selectedYear}-${month + 1}-01`).format("MM/YY")
-                );
                 return (
                   moment(currentValue.TransactionDateTime).format("MM/YY") ===
                   moment(`${selectedYear}-${month + 1}-01`).format("MM/YY")
@@ -280,7 +276,6 @@ function FinanceGraph() {
                 },
               ]}
               yAxis={"Transaction amount (INR)"}
-              title={"Finance Year wise Graph"}
             />
           ) : null}
         </Col>

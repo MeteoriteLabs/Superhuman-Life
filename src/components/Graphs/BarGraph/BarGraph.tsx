@@ -11,10 +11,9 @@ const Wrapper = (props) => (
   />
 );
 
-function BarGraph({ data, yAxis, title, keyName }) {
+function BarGraph({ data, yAxis, keyName }) {
   return (
     <>
-      <h6 className="text-center">{title}</h6>
       <Wrapper>
       <ResponsiveBar
         data={data}

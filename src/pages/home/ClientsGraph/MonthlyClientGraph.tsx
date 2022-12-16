@@ -48,7 +48,6 @@ function MonthlyClientGraph() {
         <BarGraph
           data={clientsData}
           yAxis={"No. of Clients"}
-          title={"Clients Monthly Graph"}
           keyName={["Clients"]}
         />
       </Col>

@@ -57,7 +57,6 @@ function MonthlySalesGraph() {
         <LineGraph
           data={clientsData}
           yAxis={"Sales (INR)"}
-          title={"Sales Monthly Graph"}
         />
       </Col>
     </Row>

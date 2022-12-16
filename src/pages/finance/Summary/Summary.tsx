@@ -161,10 +161,8 @@ function Summary() {
               min={`${joinedYear}-01`}
               max={moment().format("YYYY-MM")}
               onChange={(e) => {
-                console.log(e.target.value)
                 setSelectedMonthYear(
-                  e.target.value
-                  // moment(`${e.target.value}-01`).format("YYYY-MM")
+                  moment(`${e.target.value}-01`).format("YYYY-MM")
                 );
 
                 getEarnings({

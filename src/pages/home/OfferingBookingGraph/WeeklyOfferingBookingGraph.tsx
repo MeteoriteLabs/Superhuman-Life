@@ -52,7 +52,6 @@ function WeeklyOfferingBookingGraph() {
         <LineGraph
           data={clientsData}
           yAxis={"Offering Bookings"}
-          title={"Bookings Weekly Graph"}
         />
       </Col>
     </Row>

@@ -50,7 +50,6 @@ function WeeklyLeadsGraph() {
         <BarGraph
           data={leadsData}
           yAxis={"No. of Leads"}
-          title={"Leads Weekly Graph"}
           keyName={["Leads"]}
         />
       </Col>
