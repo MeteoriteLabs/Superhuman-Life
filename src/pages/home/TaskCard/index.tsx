@@ -3,7 +3,7 @@ import {Card} from 'react-bootstrap';
 function TaskCard() {
   return (
     <Card>
-      <Card.Header as="h5" className="bg-dark text-light" style={{cursor: "pointer"}}>
+      <Card.Header as="h5" className="bg-dark text-light">
         Task
       </Card.Header>
       <div className="scrollBar">

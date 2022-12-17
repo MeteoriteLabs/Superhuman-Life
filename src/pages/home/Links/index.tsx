@@ -7,7 +7,6 @@ function LinksCard() {
       <Card.Header
         as="h5"
         className="bg-dark text-light"
-        style={{ cursor: "pointer" }}
       >
         Links
       </Card.Header>

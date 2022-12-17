@@ -1,8 +1,0 @@
-.react-grid-layout {
-    position: relative;
-    transition: height 200ms ease;
-  }
-.react-grid-item {
-    transition: all 200ms ease;
-    transition-property: left, top;
-  }
