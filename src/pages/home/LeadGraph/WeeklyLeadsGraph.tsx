@@ -8,7 +8,7 @@ import { Row, Col } from "react-bootstrap";
 import moment from "moment";
 
 function WeeklyLeadsGraph() {
-  const [leadsData, setLeadData] = useState<any>([]);
+  const [leadsData, setLeadData] = useState<{}[]>([]);
   const auth = useContext(AuthContext);
 
   useQuery(GET_LEADS, {
@@ -25,7 +25,7 @@ function WeeklyLeadsGraph() {
   const loadData = (data) => {
     const flattenLeadsData = flattenObj({ ...data.websiteContactForms });
 
-    const arr: any[] = [];
+    const arr: {}[] = [];
 
     for (let weekDay = 0; weekDay < 7; weekDay++) {
       let currentDay = moment().subtract(weekDay, "days");

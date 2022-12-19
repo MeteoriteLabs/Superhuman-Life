@@ -8,7 +8,7 @@ import LineGraph from "../../../components/Graphs/LineGraph/LineGraph";
 import { Row, Col } from "react-bootstrap";
 
 function MonthlyOfferingBookingGraph() {
-  const [clientsData, setClientsData] = useState<any>([]);
+  const [clientsData, setClientsData] = useState<{}[]>([]);
   const auth = useContext(AuthContext);
 
   useQuery(GET_BOOKINGS, {
@@ -25,7 +25,7 @@ function MonthlyOfferingBookingGraph() {
   const loadData = (data) => {
     const flattenClientsData = flattenObj({ ...data.clientBookings });
 
-    const arr: any[] = [];
+    const arr: {}[] = [];
 
     for (let month = 0; month < 12; month++) {
       let currentMonth = moment().subtract(month, "months");
