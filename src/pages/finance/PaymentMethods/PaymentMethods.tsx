@@ -1,16 +1,15 @@
-import React, { useRef } from 'react'
-import PaymentMethodsAction from './PaymentMethodsAction'
-
+import { useRef } from "react";
+import PaymentMethodsAction from "./PaymentMethodsAction";
+import { Tabs, Tab, Row } from "react-bootstrap";
+import BankAccount from "./BankAccountDetails";
+import UPI from "./UPIDetails";
 
 export default function PaymentMethods() {
+  const paymentMethodActionRef = useRef<any>(null);
 
-
-    const paymentMethodActionRef = useRef<any>(null)
-
-
-    return (
-        <div>
-            <PaymentMethodsAction ref={paymentMethodActionRef} />
+  return (
+    <div>
+      {/* <PaymentMethodsAction ref={paymentMethodActionRef} />
 
             <div className='d-flex justify-content-around' style={{ marginTop: '10rem' }}>
                 <div className='text-center' style={{ cursor: 'pointer' }} onClick={() => {
@@ -33,8 +32,23 @@ export default function PaymentMethods() {
                     </div>
                     <p className="mt-4">Last Update: 06/06/2021</p>
                 </div>
-            </div>
+            </div> */}
 
-        </div>
-    )
+      <Tabs
+        style={{ borderBottom: "1px solid black" }}
+        className="pb-3"
+        variant="pills"
+        transition={false}
+        defaultActiveKey="bankAccount"
+      >
+        <Tab eventKey="bankAccount" title="Bank Account">
+          <BankAccount />
+        </Tab>
+
+        <Tab eventKey="upi" title="UPI">
+          <UPI />
+        </Tab>
+      </Tabs>
+    </div>
+  );
 }
