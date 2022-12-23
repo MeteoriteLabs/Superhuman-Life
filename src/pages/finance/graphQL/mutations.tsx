@@ -122,6 +122,8 @@ export const CREATE_UPI = gql`
           Full_Name
           phone_number
           UPI_ID
+          Is_Primary
+          
         }
       }
     }
@@ -166,6 +168,7 @@ export const CREATE_BANK_DETAIL = gql`
           GST_Number
           Company_Name
           Company_Address
+          Is_Primary
         }
       }
     }

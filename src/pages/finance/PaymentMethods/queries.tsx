@@ -46,6 +46,58 @@ export const GET_BANK_DETAILS = gql`
   }
 `;
 
+export const GET_BANK_DETAILS_IS_PRIMARY = gql`
+  query bankDetailsQuery($id: ID) {
+    bankDetails(
+      pagination: { pageSize: 100 }
+      filters: {
+        users_permissions_user: { id: { eq: $id } }
+        Is_Primary: { eq: true }
+      }
+    ) {
+      data {
+        id
+        attributes {
+          Full_Name
+          GST_Number
+          Bank_Name
+          PAN_Number
+          updatedAt
+          Account_Number
+          IFSC_Code
+          Company_Name
+          Company_Address
+          Is_Primary
+        }
+      }
+    }
+  }
+`;
+
+export const GET_UPI_DETAILS_IS_PRIMARY = gql`
+  query UPIQuery($id: ID) {
+    upiDetailsChangemakers(
+      pagination: { pageSize: 100 }
+      filters: {
+        users_permissions_user: { id: { eq: $id } }
+        Is_Primary: { eq: true }
+      }
+    ) {
+      data {
+        id
+        attributes {
+          Is_Primary
+          Full_Name
+          UPI_ID
+          createdAt
+          updatedAt
+          phone_number
+        }
+      }
+    }
+  }
+`;
+
 export const GET_BANK_DETAIL = gql`
   query bankDetailsQuery($id: ID) {
     bankDetail(id: $id) {
@@ -114,6 +166,9 @@ export const UPDATE_UPI = gql`
     updateUpiDetailsChangemaker(id: $id, data: $data) {
       data {
         id
+        attributes {
+          Is_Primary
+        }
       }
     }
   }
@@ -124,6 +179,9 @@ export const CREATE_BANK_DETAIL = gql`
     createBankDetail(data: $data) {
       data {
         id
+        attributes {
+          Is_Primary
+        }
       }
     }
   }

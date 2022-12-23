@@ -17,6 +17,8 @@ import {
   DELETE_BANK_DETAILS,
   UPDATE_BANK_DETAILS,
   GET_UPI_DETAIL,
+  GET_BANK_DETAILS_IS_PRIMARY,
+  GET_UPI_DETAILS_IS_PRIMARY,
 } from "./queries";
 import Toaster from "../../../components/Toaster";
 
@@ -33,7 +35,7 @@ interface Operation {
     | "editBankDetails"
     | "deleteBankDetails"
     | "viewBankDetails"
-    | "viewUPIDetails"
+    | "viewUPIDetails";
 }
 
 interface bankDetails {
@@ -73,6 +75,8 @@ function PaymentMethodsAction(props: any, ref: any) {
     useState<boolean>(false);
   let [isBankDetailsUpdated, setIsBankDetailsUpdated] =
     useState<boolean>(false);
+  let [isPrimaryBankDetails, setIsPrimaryBankDetails] = useState<any[]>([]);
+  let [isPrimaryUPIDetails, setIsPrimaryUPIDetails] = useState<any[]>([]);
 
   useImperativeHandle(ref, () => ({
     TriggerForm: (msg: Operation) => {
@@ -179,8 +183,43 @@ function PaymentMethodsAction(props: any, ref: any) {
           Is_Primary: form.Is_Primary ? true : false,
         },
       },
+      onCompleted: (data) => {
+        const flattenData = flattenObj({ ...data.createBankDetail.data });
+        const isPrimary = flattenData.Is_Primary;
+
+        const arr = isPrimaryBankDetails.splice(-1);
+        if (isPrimary && isPrimaryBankDetails.length >= 1) {
+          for (let currentValue of arr) {
+            updateBankDetail({
+              variables: {
+                id: currentValue.id,
+                data: {
+                  Is_Primary: false,
+                },
+              },
+            });
+          }
+        }
+      },
     });
   };
+
+  useQuery(GET_UPI_DETAILS_IS_PRIMARY, {
+    variables: { id: auth.userid },
+    onCompleted: (data: any) => {
+      const flattenUpiDetail = flattenObj({ ...data.upiDetailsChangemakers });
+      setIsPrimaryUPIDetails(flattenUpiDetail);
+      console.log(flattenUpiDetail);
+    },
+  });
+
+  useQuery(GET_BANK_DETAILS_IS_PRIMARY, {
+    variables: { id: auth.userid },
+    onCompleted: (data: any) => {
+      const flattenBankDetail = flattenObj({ ...data.bankDetails });
+      setIsPrimaryBankDetails(flattenBankDetail);
+    },
+  });
 
   useQuery(GET_BANK_DETAIL, {
     variables: { id: operation.id },
@@ -271,6 +310,21 @@ function PaymentMethodsAction(props: any, ref: any) {
       },
       onCompleted: (data) => {
         console.log(data);
+        const flattenData = flattenObj({ ...data.updateBankDetail.data });
+        console.log(flattenData, isPrimaryBankDetails);
+        const isPrimary = flattenData.Is_Primary;
+        if (isPrimary && isPrimaryBankDetails.length > 1) {
+          isPrimaryBankDetails.map((currentValue) =>
+            updateBankDetail({
+              variables: {
+                id: currentValue.id,
+                data: {
+                  Is_Primary: false,
+                },
+              },
+            })
+          );
+        }
       },
     });
   }
@@ -363,9 +417,11 @@ function PaymentMethodsAction(props: any, ref: any) {
         formData={
           operation.actionType === "upi" || operation.actionType === "bank"
             ? {}
-            : operation.actionType === "editBankDetails" || operation.actionType === "viewBankDetails"
+            : operation.actionType === "editBankDetails" ||
+              operation.actionType === "viewBankDetails"
             ? formBankData
-            : operation.actionType === "editUPI" || operation.actionType === "viewUPIDetails"
+            : operation.actionType === "editUPI" ||
+              operation.actionType === "viewUPIDetails"
             ? formUPIData
             : {}
         }
