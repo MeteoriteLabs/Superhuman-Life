@@ -1,12 +1,8 @@
-import { useRef } from "react";
-import PaymentMethodsAction from "./PaymentMethodsAction";
-import { Tabs, Tab, Row } from "react-bootstrap";
+import { Tabs, Tab } from "react-bootstrap";
 import BankAccount from "./BankAccountDetails";
 import UPI from "./UPIDetails";
 
 export default function PaymentMethods() {
-  const paymentMethodActionRef = useRef<any>(null);
-
   return (
     <div>
       {/* <PaymentMethodsAction ref={paymentMethodActionRef} />

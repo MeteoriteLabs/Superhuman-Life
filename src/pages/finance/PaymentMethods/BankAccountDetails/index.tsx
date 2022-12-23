@@ -12,6 +12,7 @@ function BankAccount() {
   const auth = useContext(AuthContext);
   const [bankDetails, setBankDetails] = useState<{}[]>([]);
 
+  // eslint-disable-next-line
   const { data: get_bank_details, refetch: refetch_contacts } = useQuery(
     GET_BANK_DETAILS,
     {
@@ -22,6 +23,24 @@ function BankAccount() {
       },
     }
   );
+
+  //Delete User's Education Data function
+  const deleteHandler = (data: any) => {
+    console.log("delete", data.id);
+    paymentMethodActionRef.current.TriggerForm({
+      id: data.id,
+      actionType: "deleteBankDetails",
+    });
+  };
+
+  // calling modal for update option
+  function updateBankDetails(data: any) {
+    paymentMethodActionRef.current.TriggerForm({
+      id: data.id,
+      actionType: "editBankDetails",
+      modal_status: true,
+    });
+  }
 
   return (
     <div>
@@ -48,27 +67,45 @@ function BankAccount() {
               <Card className="m-2" key={currValue.id}>
                 <Card.Body key={currValue.id}>
                   <Row className="justify-content-end mt-2" key={currValue.id}>
-                    <Col lg={11} xs={10}><Badge className="p-2" pill variant="primary">{currValue.Is_Primary ? "Primary" : null}</Badge></Col>
+                    <Col lg={11} xs={10}>
+                      <Badge className="p-2" pill variant="primary">
+                        {currValue.Is_Primary ? "Primary" : null}
+                      </Badge>
+                    </Col>
                     <Col lg={1} xs={2}>
-                    <Dropdown key={currValue.id}>
-                      <Dropdown.Toggle variant="bg-light" id="dropdown-basic">
-                        <img
-                          src="/assets/kebabcase.svg"
-                          alt="notification"
-                          className="img-responsive "
-                          style={{ height: "20px", width: "20px" }}
-                        />
-                      </Dropdown.Toggle>
+                      <Dropdown key={currValue.id}>
+                        <Dropdown.Toggle variant="bg-light" id="dropdown-basic">
+                          <img
+                            src="/assets/kebabcase.svg"
+                            alt="notification"
+                            className="img-responsive "
+                            style={{ height: "20px", width: "20px" }}
+                          />
+                        </Dropdown.Toggle>
 
-                      <Dropdown.Menu key={currValue.id}>
-                        <Dropdown.Item key={1}>Delete</Dropdown.Item>
-                        <Dropdown.Item key={2}>Edit</Dropdown.Item>
-                        <Dropdown.Item key={2}>View</Dropdown.Item>
-                      </Dropdown.Menu>
-                    </Dropdown>
+                        <Dropdown.Menu key={currValue.id}>
+                          {bankDetails.length > 1 ? (
+                            <Dropdown.Item
+                              key={1}
+                              onClick={() => deleteHandler(currValue)}
+                            >
+                              Delete
+                            </Dropdown.Item>
+                          ) : null}
+
+                          <Dropdown.Item
+                            key={2}
+                            onClick={() => updateBankDetails(currValue)}
+                          >
+                            Edit
+                          </Dropdown.Item>
+
+                          <Dropdown.Item key={3}>View</Dropdown.Item>
+                        </Dropdown.Menu>
+                      </Dropdown>
                     </Col>
                   </Row>
-                  
+
                   <Row>
                     <Col sm={12} lg={3}>
                       <b>Full Name: </b>
@@ -86,14 +123,7 @@ function BankAccount() {
                       <b>Account No. : </b>
                       {currValue.Account_Number && currValue.Account_Number}
                     </Col>
-                    {/* <Col sm={12} lg={3}>
-                      {currValue.Is_Primary ? (
-                        <Badge pill variant="primary" className="p-2">
-                          {" "}
-                          Primary{" "}
-                        </Badge>
-                      ) : null}
-                    </Col> */}
+                   
                   </Row>
                 </Card.Body>
               </Card>

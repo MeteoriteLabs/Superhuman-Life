@@ -1,132 +1,369 @@
-import { useMutation } from '@apollo/client';
-import React, { useContext, useImperativeHandle, useState } from 'react';
-import { Subject } from 'rxjs';
-import FinanceModal from '../../../components/financeModal/FinanceModal'
-import moment from 'moment';
-
-
-import authContext from '../../../context/auth-context';
-import { CREATE_BANK_DETAIL, CREAT_UPI } from "../graphQL/mutations"
+import { useMutation, useQuery } from "@apollo/client";
+import React, { useContext, useImperativeHandle, useState } from "react";
+import { Subject } from "rxjs";
+import FinanceModal from "../../../components/financeModal/FinanceModal";
+import moment from "moment";
+import StatusModal from "../../../components/StatusModal/StatusModal";
+import authContext from "../../../context/auth-context";
+import { CREATE_UPI } from "../graphQL/mutations";
+import { flattenObj } from "../../../components/utils/responseFlatten";
+import {
+  GET_UPI_DETAILS,
+  DELETE_UPI,
+  GET_BANK_DETAILS,
+  GET_BANK_DETAIL,
+  UPDATE_UPI,
+  CREATE_BANK_DETAIL,
+  DELETE_BANK_DETAILS,
+  UPDATE_BANK_DETAILS,
+} from "./queries";
+import Toaster from "../../../components/Toaster";
 
 interface Operation {
-    actionType: 'bank' | 'upi';
+  id: string;
+  modal_status: boolean;
+  actionType:
+    | "bank"
+    | "upi"
+    | "createUPI"
+    | "editUPI"
+    | "deleteUPI"
+    | "createBankDetails"
+    | "editBankDetails"
+    | "deleteBankDetails";
 }
 
-function PaymentMethodsAction(props, ref) {
+interface bankDetails {
+  Full_Name: string;
+  Account_Number: string;
+  IFSC_Code: string;
+  Is_Primary: boolean;
+  Bank_Name: string;
+  Company_Address: string;
+  Company_Name: string;
+}
 
-    const auth = useContext(authContext);
-    const [operation, setOperation] = useState<Operation>({} as Operation);
-    const modalTrigger = new Subject();
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [formData, setFormData] = useState<any>();
+function PaymentMethodsAction(props: any, ref: any) {
+  const auth = useContext(authContext);
+  const [operation, setOperation] = useState<Operation>({} as Operation);
+  const modalTrigger = new Subject();
+  const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+  let [formData, setFormData] = useState({} as bankDetails);
+  let [isUPIDeleted, setIsUPIDeleted] = useState<boolean>(false);
+  let [isUPIUpdated, setIsUPIUpdated] = useState<boolean>(false);
+  let [isBankDetailsDeleted, setIsBankDetailsDeleted] =
+    useState<boolean>(false);
+  let [isBankDetailsUpdated, setIsBankDetailsUpdated] =
+    useState<boolean>(false);
 
+  useImperativeHandle(ref, () => ({
+    TriggerForm: (msg: Operation) => {
+      setOperation(msg);
 
-    useImperativeHandle(ref, () => ({
-        TriggerForm: (msg: Operation) => {
-            setOperation(msg);
-            modalTrigger.next(true);
-        }
-    }));
+      //show delete modal
+      if (
+        msg.actionType === "deleteUPI" ||
+        msg.actionType === "deleteBankDetails"
+      ) {
+        setShowDeleteModal(true);
+      }
 
+      //restrict form to render on delete
+      if (
+        msg.actionType !== "deleteUPI" &&
+        msg.actionType !== "deleteBankDetails"
+      ) {
+        modalTrigger.next(true);
+      }
+    },
+  }));
 
+  // UPI
+  const [createUPI] = useMutation(CREATE_UPI, {
+    onCompleted: (r: any) => {
+      modalTrigger.next(false);
+    },
+    refetchQueries: [GET_UPI_DETAILS],
+  });
 
-    //Bank Account
-    const [createBankDetail] = useMutation(CREATE_BANK_DETAIL, { onCompleted: (r: any) => { modalTrigger.next(false); } });
+  const CreateUPI = (form: any) => {
+    createUPI({
+      variables: {
+        Full_Name: form.Full_Name,
+        phone_number: form.phone_number,
+        UPI_ID: form.UPI_ID,
+        users_permissions_user: form.user_permissions_user,
+        publishedAt: moment().format(),
+        Is_Primary: form.Is_Primary ? true : false,
+      },
+    });
+  };
 
-    const CreateBankDetail = (form: any) => {
-        createBankDetail({
-            variables: {
-                Full_Name: form.Full_Name,
-                Account_Number: form.Account_Number,
-                Bank_Name: form.Bank_Name,
-                IFSC_Code: form.IFSC_Code,
-                PAN_Number: form.PAN_Number,
-                GST_Number: form.GST_Number || "",
-                Company_Name: form.Company_Name  || "",
-                Company_Address: form.Company_Address  || "",
-                users_permissions_user: form.user_permissions_user,
-                publishedAt:moment().format()
-            }
-        })
-    };
+  const [updateUPIDetail] = useMutation(UPDATE_UPI, {
+    onCompleted: (data: any) => {
+      modalTrigger.next(false);
+      setIsUPIUpdated(!isUPIUpdated);
+    },
+    refetchQueries: [GET_UPI_DETAILS],
+  });
 
+  function UpdateUPI(form: any) {
+    updateUPIDetail({
+      variables: {
+        id: operation.id,
+        data: {
+          Full_Name: form.Full_Name,
+          phone_number: form.phone_number,
+          UPI_ID: form.UPI_ID,
+          users_permissions_user: form.user_permissions_user,
+          publishedAt: moment().format(),
+          Is_Primary: form.Is_Primary ? true : false,
+        },
+      },
+    });
+  }
 
+  const [deleteUPI] = useMutation(DELETE_UPI, {
+    onCompleted: (data: any) => {
+      setIsUPIDeleted(!isUPIDeleted);
+    },
+    refetchQueries: [GET_UPI_DETAILS],
+  });
 
-    // UPI
-    const [createUPI] = useMutation(CREAT_UPI, { onCompleted: (r: any) => { modalTrigger.next(false); } });
+  //Bank Account
+  const [deleteBankDetails] = useMutation(DELETE_BANK_DETAILS, {
+    onCompleted: (data: any) => {
+      setIsBankDetailsDeleted(!isBankDetailsDeleted);
+    },
+    refetchQueries: [GET_BANK_DETAILS],
+  });
 
-    const CreateUPI = (form: any) => {
-        createUPI({
-            variables: {
-                Full_Name: form.Full_Name,
-                phone_number: form.phone_number,
-                UPI_ID: form.UPI_ID,
-                users_permissions_user: form.user_permissions_user,
-                publishedAt:moment().format()
-            }
-        })
-    };
+  const [createBankDetail] = useMutation(CREATE_BANK_DETAIL, {
+    onCompleted: (r: any) => {
+      modalTrigger.next(false);
+    },
+    refetchQueries: [GET_BANK_DETAILS],
+  });
 
-    const OnSubmit = (frm: any) => {
-        //bind user id
-        if (frm) {
-            frm.user_permissions_user = auth.userid;
-        }
+  const CreateBankDetail = (form: any) => {
+    createBankDetail({
+      variables: {
+        data: {
+          Full_Name: form.Full_Name,
+          Account_Number: form.Account_Number,
+          Bank_Name: form.Bank_Name,
+          IFSC_Code: form.IFSC_Code,
+          PAN_Number: form.PAN_Number,
+          GST_Number: form.GST_Number || "",
+          Company_Name: form.Company_Name || "",
+          Company_Address: form.Company_Address || "",
+          users_permissions_user: form.user_permissions_user,
+          Is_Primary: form.Is_Primary ? true : false,
+        },
+      },
+    });
+  };
 
-        switch (operation.actionType) {
-            case 'bank':
-                CreateBankDetail(frm);
-                break;
+  useQuery(GET_BANK_DETAIL, {
+    variables: { id: operation.id },
+    skip: !operation.id || operation.actionType === "deleteUPI",
+    onCompleted: (e: any) => {
+      FillDetails(e);
+    },
+  });
 
-            case 'upi':
-                CreateUPI(frm);
-                break;
-        }
-    };
+  function FillDetails(data: any) {
+    const flattenData = flattenObj({ ...data.bankDetail });
+    
+    let detail = {} as bankDetails;
+  
+    detail.Full_Name = flattenData.Full_Name;
+    detail.Account_Number = flattenData.Account_Number;
+    detail.IFSC_Code = flattenData.IFSC_Code;
+    detail.Is_Primary = flattenData.Is_Primary;
+    detail.Bank_Name = flattenData.Bank_Name;
+    detail.Company_Address = flattenData.Company_Address;
+    detail.Company_Name = flattenData.Company_Name;
 
+    setFormData(detail);
 
-    let name = ""
-    let formSchema = ""
-    switch (operation.actionType) {
-        case "bank": {
-            name = "Bank Account"
-            formSchema = require("./bankAccount.json");
-            break;
-        }
+    // if (
+    //   ["editBankDetails", "viewBankDetails"].indexOf(operation.actionType) > -1
+    // )
+    //   modalTrigger.next(true);
+    // else OnSubmit(null);
+  }
 
-        case "upi": {
-            name = "UPI"
-            formSchema = require("./upi.json");
-            break;
-        }
-    };
+  const [updateBankDetail] = useMutation(UPDATE_BANK_DETAILS, {
+    onCompleted: (data: any) => {
+      setIsBankDetailsUpdated(!isBankDetailsUpdated);
+      modalTrigger.next(false);
+    },
+    refetchQueries: [GET_BANK_DETAILS],
+  });
 
+  function UpdateBank(form: any) {
+    
+    updateBankDetail({
+      variables: {
+        id: operation.id,
+        data: {
+          Full_Name: form.Full_Name,
+          Account_Number: form.Account_Number,
+          Bank_Name: form.Bank_Name,
+          IFSC_Code: form.IFSC_Code,
+          PAN_Number: form.PAN_Number,
+          GST_Number: form.GST_Number || "",
+          Company_Name: form.Company_Name || "",
+          Company_Address: form.Company_Address || "",
+          users_permissions_user: form.user_permissions_user,
+          Is_Primary: form.Is_Primary ? true : false,
+        },
+      },
+      onCompleted: (data) => {
+        console.log(data);
+      },
+    });
+  }
 
-    const uiSchema: any = {
-        "GST":{
-            "ui:widget": "radio",
-            "ui:options": {
-                "inline": true,
-            },
-        }
+  const OnSubmit = (frm: any) => {
+    console.log(frm);
+    //bind user id
+    if (frm) {
+      frm.user_permissions_user = auth.userid;
     }
 
+    switch (operation.actionType) {
+      case "bank":
+        CreateBankDetail(frm);
+        break;
 
+      case "upi":
+        CreateUPI(frm);
+        break;
 
-    return (
-        <div>
-            <FinanceModal
-                modalTrigger={modalTrigger}
-                formSchema={formSchema}
-                name={name}
-                formSubmit={(frm: any) => OnSubmit(frm)}
-                actionType={operation.actionType}
-                formData={formData}
-                formUISchema={uiSchema}
-            />
-        </div>
-    )
+      case "editUPI":
+        UpdateUPI(frm);
+        break;
+
+      case "editBankDetails":
+        UpdateBank(frm);
+        break;
+    }
+  };
+
+  let name = "";
+  let formSchema = {};
+  switch (operation.actionType) {
+    case "bank": {
+      name = "Bank Account";
+      formSchema = require("./bankAccount.json");
+      break;
+    }
+
+    case "upi": {
+      name = "UPI";
+      formSchema = require("./upi.json");
+      break;
+    }
+    case "editUPI": {
+      name = "Update UPI Details";
+      formSchema = require("./upi.json");
+      break;
+    }
+    case "editBankDetails": {
+      name = "Update bank Details";
+      formSchema = require("./bankAccount.json");
+      break;
+    }
+  }
+
+  const uiSchema: any = {
+    GST: {
+      "ui:widget": "radio",
+      "ui:options": {
+        inline: true,
+      },
+    },
+  };
+
+  function DeleteUPI(id: string) {
+    deleteUPI({ variables: { id: id } });
+  }
+
+  function DeleteBankAccountDetails(id: string) {
+    deleteBankDetails({ variables: { id: id } });
+  }
+  console.log(operation.actionType, formData);
+  return (
+    <div>
+      <FinanceModal
+        modalTrigger={modalTrigger}
+        formSchema={formSchema}
+        name={name}
+        formSubmit={(frm: any) => OnSubmit(frm)}
+        actionType={operation.actionType}
+        formData={
+          operation.actionType === "upi" || operation.actionType === "bank" ? {} : formData  
+        }
+        // formData={formData}
+        
+        formUISchema={uiSchema}
+      />
+      {/* Delete Modal */}
+      {showDeleteModal && (
+        <StatusModal
+          show={showDeleteModal}
+          onHide={() => setShowDeleteModal(false)}
+          modalTitle="Delete"
+          modalBody={
+            operation.actionType === "deleteUPI"
+              ? "Do you want to delete this UPI detail?"
+              : "Do you want to delete this bank account detail?"
+          }
+          buttonLeft="Cancel"
+          buttonRight="Yes"
+          onClick={() => {
+            operation.actionType === "deleteUPI"
+              ? DeleteUPI(operation.id)
+              : DeleteBankAccountDetails(operation.id);
+          }}
+        />
+      )}
+
+      {isUPIDeleted ? (
+        <Toaster
+          handleCallback={() => setIsUPIDeleted(!isUPIDeleted)}
+          type="success"
+          msg="UPI Detail has been deleted successfully"
+        />
+      ) : null}
+
+      {isUPIUpdated ? (
+        <Toaster
+          handleCallback={() => setIsUPIUpdated(!isUPIUpdated)}
+          type="success"
+          msg="UPI Detail has been updated successfully"
+        />
+      ) : null}
+
+      {isBankDetailsDeleted ? (
+        <Toaster
+          handleCallback={() => setIsBankDetailsDeleted(!isBankDetailsDeleted)}
+          type="success"
+          msg="Bank Details has been deleted successfully"
+        />
+      ) : null}
+
+      {isBankDetailsUpdated ? (
+        <Toaster
+          handleCallback={() => setIsBankDetailsUpdated(!isBankDetailsUpdated)}
+          type="success"
+          msg="Bank Details has been updated successfully"
+        />
+      ) : null}
+    </div>
+  );
 }
 
-
-export default React.forwardRef(PaymentMethodsAction)
+export default React.forwardRef(PaymentMethodsAction);

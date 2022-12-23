@@ -45,3 +45,87 @@ export const GET_BANK_DETAILS = gql`
     }
   }
 `;
+
+export const GET_BANK_DETAIL = gql`
+  query bankDetailsQuery($id: ID) {
+    bankDetail(id: $id) {
+      data {
+        id
+        attributes {
+          Full_Name
+          GST_Number
+          Bank_Name
+          PAN_Number
+          updatedAt
+          Account_Number
+          IFSC_Code
+          Company_Name
+          Company_Address
+          Is_Primary
+        }
+      }
+    }
+  }
+`;
+
+export const DELETE_UPI = gql`
+  mutation deleteUpiDetailsChangemaker($id: ID!) {
+    deleteUpiDetailsChangemaker(id: $id) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export const DELETE_BANK_DETAILS = gql`
+  mutation deleteBankDetails($id: ID!) {
+    deleteBankDetail(id: $id) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export const UPDATE_UPI = gql`
+  mutation updateUpiDetailsChangemaker($id: ID!, $data: UpiDetailsChangemakerInput!) {
+    updateUpiDetailsChangemaker(id: $id, data: $data) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export const CREATE_BANK_DETAIL = gql`
+  mutation createBankDetail($data: BankDetailInput!) {
+    createBankDetail(data: $data) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
+export const UPDATE_BANK_DETAILS = gql`
+  mutation updateBankDetail($id: ID!, $data: BankDetailInput!) {
+    updateBankDetail(id: $id, data: $data) {
+      data {
+        id
+        attributes {
+          Full_Name
+          GST_Number
+          Bank_Name
+          PAN_Number
+          updatedAt
+          Account_Number
+          IFSC_Code
+          Company_Name
+          Company_Address
+          Is_Primary
+        }
+      }
+    }
+  }
+`;

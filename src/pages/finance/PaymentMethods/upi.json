@@ -16,6 +16,10 @@
          "UPI_ID": {
             "type": "string",
             "title": "UPI ID"
+         },
+         "Is_Primary": {
+            "type": "boolean",
+            "title": "Primary"
          }
      
     }
