@@ -24,9 +24,8 @@ function BankAccount() {
     }
   );
 
-  //Delete User's Education Data function
+  //Delete Bank Details function
   const deleteHandler = (data: any) => {
-    console.log("delete", data.id);
     paymentMethodActionRef.current.TriggerForm({
       id: data.id,
       actionType: "deleteBankDetails",
@@ -100,7 +99,17 @@ function BankAccount() {
                             Edit
                           </Dropdown.Item>
 
-                          <Dropdown.Item key={3}>View</Dropdown.Item>
+                          <Dropdown.Item
+                            key={3}
+                            onClick={() => {
+                              paymentMethodActionRef.current.TriggerForm({
+                                id: currValue.id,
+                                actionType: "viewBankDetails",
+                              });
+                            }}
+                          >
+                            View
+                          </Dropdown.Item>
                         </Dropdown.Menu>
                       </Dropdown>
                     </Col>
@@ -123,7 +132,6 @@ function BankAccount() {
                       <b>Account No. : </b>
                       {currValue.Account_Number && currValue.Account_Number}
                     </Col>
-                   
                   </Row>
                 </Card.Body>
               </Card>

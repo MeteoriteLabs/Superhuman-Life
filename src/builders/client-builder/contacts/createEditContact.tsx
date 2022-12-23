@@ -196,7 +196,6 @@ function CreateEditContact(props: any, ref: any) {
   }
 
   function OnSubmit(frm: any) {
-    console.log(frm);
     if (modalLabel === "Edit contact") {
       EditContact(frm);
     } else if (modalLabel === "Create contact") {

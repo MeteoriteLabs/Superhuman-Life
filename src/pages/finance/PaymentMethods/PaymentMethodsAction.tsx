@@ -16,6 +16,7 @@ import {
   CREATE_BANK_DETAIL,
   DELETE_BANK_DETAILS,
   UPDATE_BANK_DETAILS,
+  GET_UPI_DETAIL,
 } from "./queries";
 import Toaster from "../../../components/Toaster";
 
@@ -30,7 +31,9 @@ interface Operation {
     | "deleteUPI"
     | "createBankDetails"
     | "editBankDetails"
-    | "deleteBankDetails";
+    | "deleteBankDetails"
+    | "viewBankDetails"
+    | "viewUPIDetails"
 }
 
 interface bankDetails {
@@ -41,6 +44,18 @@ interface bankDetails {
   Bank_Name: string;
   Company_Address: string;
   Company_Name: string;
+  PAN_Number?: string;
+  GST?: string;
+  GST_Number?: string;
+}
+
+interface upiDetails {
+  Full_Name: string;
+  phone_number: string;
+  UPI_ID: string;
+  users_permissions_user: string;
+  publishedAt: Date;
+  Is_Primary: boolean;
 }
 
 function PaymentMethodsAction(props: any, ref: any) {
@@ -48,7 +63,10 @@ function PaymentMethodsAction(props: any, ref: any) {
   const [operation, setOperation] = useState<Operation>({} as Operation);
   const modalTrigger = new Subject();
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
-  let [formData, setFormData] = useState({} as bankDetails);
+  let [formBankData, setFormBankData] = useState<bankDetails>(
+    {} as bankDetails
+  );
+  let [formUPIData, setUPIFormData] = useState<upiDetails>({} as upiDetails);
   let [isUPIDeleted, setIsUPIDeleted] = useState<boolean>(false);
   let [isUPIUpdated, setIsUPIUpdated] = useState<boolean>(false);
   let [isBankDetailsDeleted, setIsBankDetailsDeleted] =
@@ -168,30 +186,62 @@ function PaymentMethodsAction(props: any, ref: any) {
     variables: { id: operation.id },
     skip: !operation.id || operation.actionType === "deleteUPI",
     onCompleted: (e: any) => {
-      FillDetails(e);
+      FillBankDetails(e);
     },
   });
 
-  function FillDetails(data: any) {
+  function FillBankDetails(data: any) {
     const flattenData = flattenObj({ ...data.bankDetail });
-    
+
     let detail = {} as bankDetails;
-  
-    detail.Full_Name = flattenData.Full_Name;
-    detail.Account_Number = flattenData.Account_Number;
-    detail.IFSC_Code = flattenData.IFSC_Code;
-    detail.Is_Primary = flattenData.Is_Primary;
-    detail.Bank_Name = flattenData.Bank_Name;
-    detail.Company_Address = flattenData.Company_Address;
-    detail.Company_Name = flattenData.Company_Name;
 
-    setFormData(detail);
+    if (flattenData) {
+      detail.Full_Name = flattenData.Full_Name;
+      detail.Account_Number = flattenData.Account_Number;
+      detail.IFSC_Code = flattenData.IFSC_Code;
+      detail.Is_Primary = flattenData.Is_Primary;
+      detail.Bank_Name = flattenData.Bank_Name;
+      detail.Company_Address = flattenData.Company_Address;
+      detail.Company_Name = flattenData.Company_Name;
+      detail.PAN_Number = flattenData.PAN_Number;
+      detail.GST = flattenData.GST_Number ? "GST" : "None";
+      detail.GST_Number = flattenData.GST_Number
+        ? flattenData.GST_Number
+        : null;
+      detail.Company_Name = flattenData.Company_Name
+        ? flattenData.Company_Name
+        : null;
+      detail.Company_Address = flattenData.Company_Address
+        ? flattenData.Company_Address
+        : null;
+    }
 
-    // if (
-    //   ["editBankDetails", "viewBankDetails"].indexOf(operation.actionType) > -1
-    // )
-    //   modalTrigger.next(true);
-    // else OnSubmit(null);
+    setFormBankData(detail);
+  }
+
+  useQuery(GET_UPI_DETAIL, {
+    variables: { id: operation.id },
+    skip: !operation.id || operation.actionType === "deleteUPI",
+    onCompleted: (e: any) => {
+      FillUPIDetails(e);
+    },
+  });
+
+  function FillUPIDetails(data: any) {
+    const flattenData = flattenObj({ ...data.upiDetailsChangemaker });
+
+    let detail = {} as upiDetails;
+
+    if (flattenData) {
+      detail.Full_Name = flattenData.Full_Name;
+      detail.phone_number = flattenData.phone_number;
+      detail.UPI_ID = flattenData.UPI_ID;
+      detail.Is_Primary = flattenData.Is_Primary;
+      detail.publishedAt = flattenData.publishedAt;
+      detail.users_permissions_user = flattenData.users_permissions_user;
+    }
+
+    setUPIFormData(detail);
   }
 
   const [updateBankDetail] = useMutation(UPDATE_BANK_DETAILS, {
@@ -203,7 +253,6 @@ function PaymentMethodsAction(props: any, ref: any) {
   });
 
   function UpdateBank(form: any) {
-    
     updateBankDetail({
       variables: {
         id: operation.id,
@@ -227,7 +276,6 @@ function PaymentMethodsAction(props: any, ref: any) {
   }
 
   const OnSubmit = (frm: any) => {
-    console.log(frm);
     //bind user id
     if (frm) {
       frm.user_permissions_user = auth.userid;
@@ -260,7 +308,6 @@ function PaymentMethodsAction(props: any, ref: any) {
       formSchema = require("./bankAccount.json");
       break;
     }
-
     case "upi": {
       name = "UPI";
       formSchema = require("./upi.json");
@@ -274,6 +321,16 @@ function PaymentMethodsAction(props: any, ref: any) {
     case "editBankDetails": {
       name = "Update bank Details";
       formSchema = require("./bankAccount.json");
+      break;
+    }
+    case "viewBankDetails": {
+      name = "View bank Details";
+      formSchema = require("./bankAccount.json");
+      break;
+    }
+    case "viewUPIDetails": {
+      name = "View UPI Details";
+      formSchema = require("./upi.json");
       break;
     }
   }
@@ -294,7 +351,7 @@ function PaymentMethodsAction(props: any, ref: any) {
   function DeleteBankAccountDetails(id: string) {
     deleteBankDetails({ variables: { id: id } });
   }
-  console.log(operation.actionType, formData);
+
   return (
     <div>
       <FinanceModal
@@ -304,10 +361,14 @@ function PaymentMethodsAction(props: any, ref: any) {
         formSubmit={(frm: any) => OnSubmit(frm)}
         actionType={operation.actionType}
         formData={
-          operation.actionType === "upi" || operation.actionType === "bank" ? {} : formData  
+          operation.actionType === "upi" || operation.actionType === "bank"
+            ? {}
+            : operation.actionType === "editBankDetails" || operation.actionType === "viewBankDetails"
+            ? formBankData
+            : operation.actionType === "editUPI" || operation.actionType === "viewUPIDetails"
+            ? formUPIData
+            : {}
         }
-        // formData={formData}
-        
         formUISchema={uiSchema}
       />
       {/* Delete Modal */}

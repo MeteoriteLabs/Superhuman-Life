@@ -25,7 +25,7 @@ export const GET_BANK_DETAILS = gql`
   query bankDetailsQuery($id: ID) {
     bankDetails(
       pagination: { pageSize: 100 }
-      filters: { users_permissions_user: { id: { eq: $id } } } 
+      filters: { users_permissions_user: { id: { eq: $id } } }
     ) {
       data {
         id
@@ -68,6 +68,24 @@ export const GET_BANK_DETAIL = gql`
   }
 `;
 
+export const GET_UPI_DETAIL = gql`
+  query upiDetailQuery($id: ID) {
+    upiDetailsChangemaker(id: $id) {
+      data {
+        id
+        attributes {
+          Is_Primary
+          Full_Name
+          UPI_ID
+          createdAt
+          updatedAt
+          phone_number
+        }
+      }
+    }
+  }
+`;
+
 export const DELETE_UPI = gql`
   mutation deleteUpiDetailsChangemaker($id: ID!) {
     deleteUpiDetailsChangemaker(id: $id) {
@@ -89,7 +107,10 @@ export const DELETE_BANK_DETAILS = gql`
 `;
 
 export const UPDATE_UPI = gql`
-  mutation updateUpiDetailsChangemaker($id: ID!, $data: UpiDetailsChangemakerInput!) {
+  mutation updateUpiDetailsChangemaker(
+    $id: ID!
+    $data: UpiDetailsChangemakerInput!
+  ) {
     updateUpiDetailsChangemaker(id: $id, data: $data) {
       data {
         id

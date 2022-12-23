@@ -26,22 +26,27 @@ function UPIDetails() {
 
   //Delete User's Education Data function
   const deleteHandler = (data: any) => {
-    console.log('delete', data.id);
-    paymentMethodActionRef.current.TriggerForm({ id: data.id, actionType: 'deleteUPI' })
-};
-
-// calling modal for update option
-function updateUPI(data: any) {
-  paymentMethodActionRef.current.TriggerForm({
-        id: data.id,
-        actionType: "editUPI",
-        modal_status: true,
+    paymentMethodActionRef.current.TriggerForm({
+      id: data.id,
+      actionType: "deleteUPI",
     });
-}
+  };
+
+  // calling modal for update option
+  function updateUPI(data: any) {
+    paymentMethodActionRef.current.TriggerForm({
+      id: data.id,
+      actionType: "editUPI",
+      modal_status: true,
+    });
+  }
 
   return (
     <div>
-      <PaymentMethodsAction ref={paymentMethodActionRef} callback={refetch_contacts} />
+      <PaymentMethodsAction
+        ref={paymentMethodActionRef}
+        callback={refetch_contacts}
+      />
       <Row className="mt-3">
         <Col md={{ offset: 10 }}>
           <Button
@@ -73,9 +78,31 @@ function updateUPI(data: any) {
                       </Dropdown.Toggle>
 
                       <Dropdown.Menu key={currValue.id}>
-                        {upiDetails.length > 1 ? <Dropdown.Item key={1} onClick={() => deleteHandler(currValue)}>Delete</Dropdown.Item> : null}
-                        <Dropdown.Item key={2} onClick={() => updateUPI(currValue)}>Edit</Dropdown.Item>
-                        <Dropdown.Item key={3} >View</Dropdown.Item>
+                        {upiDetails.length > 1 ? (
+                          <Dropdown.Item
+                            key={1}
+                            onClick={() => deleteHandler(currValue)}
+                          >
+                            Delete
+                          </Dropdown.Item>
+                        ) : null}
+                        <Dropdown.Item
+                          key={2}
+                          onClick={() => updateUPI(currValue)}
+                        >
+                          Edit
+                        </Dropdown.Item>
+                        <Dropdown.Item
+                          key={3}
+                          onClick={() => {
+                            paymentMethodActionRef.current.TriggerForm({
+                              id: currValue.id,
+                              actionType: "viewUPIDetails",
+                            });
+                          }}
+                        >
+                          View
+                        </Dropdown.Item>
                       </Dropdown.Menu>
                     </Dropdown>
                   </Row>
