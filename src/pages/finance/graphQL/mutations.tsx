@@ -106,6 +106,7 @@ export const CREATE_UPI = gql`
     $UPI_ID: String
     $users_permissions_user: ID
     $publishedAt: DateTime
+    $Is_Primary: Boolean
   ) {
     createUpiDetailsChangemaker(
       data: {
@@ -114,6 +115,7 @@ export const CREATE_UPI = gql`
         UPI_ID: $UPI_ID
         users_permissions_user: $users_permissions_user
         publishedAt: $publishedAt
+        Is_Primary: $Is_Primary
       }
     ) {
       data {
