@@ -517,18 +517,23 @@ const WorkHours = () => {
 
   function handleUserConfig({ fromTime, toTime, classMode, date, dayIndex, isHoliday = false, desc = "", config }: NamedParameters): any {
 
+    debugger;
+    console.log(slotsValidation);
+
     const val = config;
     const values = slotsValidation.changemakerAvailabilties;
     const conflict = [...conflictSlots];
 
-    const holidayExists = values.find((item: any) => moment(item.date).format("dddd") === daysOfWeek[dayIndex] && item.Is_Holiday === true);
+    console.log(values);
+
+    const holidayExists = values?.find((item: any) => moment(item.date).format("dddd") === daysOfWeek[dayIndex] && item.Is_Holiday === true);
     if (holidayExists) {
       setWorkHourErr(true);
       setWorkHourConflict(holidayExists);
       return;
     }
 
-    for (var i = 0; i < values.length; i++) {
+    for (var i = 0; i < values?.length; i++) {
       const obj = values[i]?.booking_slots !== null ? [...values[i]?.booking_slots] : [];
       if (moment(values[i].date).format('dddd') === daysOfWeek[dayIndex] && values[i].Is_Holiday === false) {
         for (var j = 0; j < obj.length; j++) {
@@ -631,7 +636,8 @@ const WorkHours = () => {
   }
 
   function handleUserConfigSubmit(newConfig: any) {
-
+    console.log(newConfig);
+    debugger;
     const range = moment(endDate).diff(moment(startDate), "days");
 
     for (var i = 0; i < daysOfWeek.length; i++) {
@@ -641,8 +647,8 @@ const WorkHours = () => {
         for (var j = 0; j < range; j++) {
           if (moment(startDate).add(j, "days").format('dddd') === daysOfWeek[i]) {
             /* eslint-disable */
-            const obj = slotsValidation.changemakerAvailabilties.filter((item: any) => moment(item.date).format('dddd') === moment(startDate).add(j, "days").format('dddd'));
-            if (obj.length > 0) {
+            const obj = slotsValidation?.changemakerAvailabilties?.filter((item: any) => moment(item.date).format('dddd') === moment(startDate).add(j, "days").format('dddd'));
+            if (obj?.length > 0) {
               for (var x = 0; x < obj.length; x++) {
                 updateChangemakerAvailabilityHoliday({
                   variables: {
@@ -666,8 +672,8 @@ const WorkHours = () => {
         for (var k = 0; k < range; k++) {
           if (moment(startDate).add(k, "days").format('dddd') === daysOfWeek[i]) {
             /* eslint-disable */
-            const obj = slotsValidation.changemakerAvailabilties.filter((item: any) => moment(item.date).format('dddd') === moment(startDate).add(j, "days").format('dddd'));
-            if (obj.length > 0) {
+            const obj = slotsValidation?.changemakerAvailabilties?.filter((item: any) => moment(item.date).format('dddd') === moment(startDate).add(j, "days").format('dddd'));
+            if (obj?.length > 0) {
               for (var y = 0; y < obj.length; y++) {
                 const oldSlots = [...obj[y].booking_slots];
                 const newSlots = [...oldSlots, ...newConfig[daysOfWeek[i]].slots];
