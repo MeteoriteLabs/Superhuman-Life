@@ -490,7 +490,14 @@ export default function Program() {
                     />
                   </Col>
                   <Col className="mt-2">
-                    <Button disabled={selectedTagName !== "Show All" ? false : true}>Apply</Button>
+                    <Button disabled={selectedTagName !== "Show All" ? false : true} onClick = {() =>{
+                       getTags({variables: {
+                        id: Number(auth.userid),
+                        today: selectedFromDate,
+                        dayAfterTomorrow: selectedToDate,
+                        tag_name: selectedTagName
+                      }})
+                  }}>Apply</Button>
                   </Col>
                 </Row>
               </Container>

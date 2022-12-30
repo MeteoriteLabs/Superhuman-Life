@@ -1,12 +1,14 @@
 import { gql } from "@apollo/client";
 
 export const GET_TAGS = gql`
-  query getTags($id: ID, $today: Date, $dayAfterTomorrow: Date) {
+  query getTags($id: ID, $today: Date, $dayAfterTomorrow: Date, $tag_name: String) {
     tags(
       filters: {
+        tag_name:{eq: $tag_name } ,
         sessions: {
           changemaker: { id: { eq: $id } }
           session_date: { gte: $today, lte: $dayAfterTomorrow }
+          
         }
       }
     ) {
