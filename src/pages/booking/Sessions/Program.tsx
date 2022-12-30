@@ -13,8 +13,8 @@ import {
 } from "react-bootstrap";
 import Table from "../../../components/table/leads-table";
 import ActionButton from "../../../components/actionbutton/index";
-import { useQuery, useLazyQuery } from "@apollo/client";
-import { GET_SESSIONS, GET_SESSION_BOOKINGS, GET_TAGS } from "./queries";
+import { useLazyQuery } from "@apollo/client";
+import { GET_SESSION_BOOKINGS, GET_TAGS } from "./queries";
 import { flattenObj } from "../../../components/utils/responseFlatten";
 import AuthContext from "../../../context/auth-context";
 import moment from "moment";
@@ -24,26 +24,9 @@ import "./CardsStyle.css";
 import DropdownItem from "react-bootstrap/esm/DropdownItem";
 
 export default function Program() {
-  function getTime(startTime: string): string {
-    let splitTime: string[] = startTime.split(":");
-    let date: moment.Moment = moment().set({
-      hour: Number(splitTime[0]),
-      minute: Number(splitTime[1]),
-    });
-    let time: string = moment(date).format("h:mm A");
-    return time;
-  }
-
-  const [searchFilter, setSearchFilter] = useState("");
-  const [startTimeFilter, setStartTimeFilter] = useState("");
-  const [endTimeFilter, setEndTimeFilter] = useState("");
-  const searchInput = useRef<any>();
   const auth = useContext(AuthContext);
-  const [sessionData, setSessionData] = useState<any>([]);
   const [tagName, setTagName] = useState<string[]>([]);
-  const [selectedCardId, setSelectedCardId] = useState<number | null>(null);
   const [activeCard, setActiveCard] = useState<number>(0);
-
   const [selectedTagName, setSelectedTagName] = useState<string>("Show All");
   const [selectedFromDate, setSelectedFromDate] = useState<string>(
     moment().format("YYYY-MM-DD").toString()
@@ -51,27 +34,13 @@ export default function Program() {
   const [selectedToDate, setSelectedToDate] = useState<string>(
     moment().add(2, "days").format("YYYY-MM-DD").toString()
   );
-  const [selectedFromTime, setSelectedFromTime] = useState<string>(
-    "00:00"
-  );
-  const [selectedToTime, setSelectedToTime] = useState<string>(
-    "12:00"
-  );
+  const [selectedFromTime, setSelectedFromTime] = useState<string>("00:00");
+  const [selectedToTime, setSelectedToTime] = useState<string>("23:00");
   const [currentDaySessionData, setCurrentDaySessionData] = useState<any>([]);
   const [tomorrowDaySessionData, setTomorrowDaySessionData] = useState<any>([]);
   const [dayAfterTomorrowSessionData, setDayAfterTomorrowSessionData] =
     useState<any>([]);
   const cancelComponent = useRef<any>(null);
-
-  function getDate(time: Date): string {
-    let dateObj: Date = new Date(time);
-    let month: number = dateObj.getMonth() + 1;
-    let year: number = dateObj.getFullYear();
-    let date: string | number =
-      dateObj.getDate() < 10 ? `0${dateObj.getDate()}` : dateObj.getDate();
-
-    return `${year}-${month}-${date}`;
-  }
 
   const columns = useMemo<any>(
     () => [
@@ -210,13 +179,6 @@ export default function Program() {
 
   const [datatable, setDataTable] = useState<{}[]>([]);
 
-  console.log(
-    selectedFromDate,
-    selectedFromTime,
-    selectedToDate,
-    selectedToTime
-  );
-
   const [
     getTags,
     // eslint-disable-next-line
@@ -280,75 +242,8 @@ export default function Program() {
               : null,
         },
       });
-    
     },
   });
-
-  // useQuery(GET_TAGS, {
-  //   variables: {
-  //     id: Number(auth.userid),
-  //     today: selectedFromDate,
-  //     dayAfterTomorrow: selectedToDate,
-  //   },
-  //   onCompleted: (data) => {
-  //     const flattenTagData = flattenObj({ ...data.tags });
-
-  //     const sessions = flattenTagData.map(
-  //       (currentValue) => currentValue.sessions
-  //     );
-
-  //     const todaysSession =
-  //       sessions &&
-  //       sessions.length &&
-  //       sessions
-  //         .flat()
-  //         .filter(
-  //           (currentValue) =>
-  //             currentValue.session_date === moment().format("YYYY-MM-DD")
-  //         );
-
-  //     const tomorrowsSession =
-  //       sessions &&
-  //       sessions.length &&
-  //       sessions
-  //         .flat()
-  //         .filter(
-  //           (currentValue) =>
-  //             currentValue.session_date ===
-  //             moment().add(1, "days").format("YYYY-MM-DD")
-  //         );
-
-  //     const dayAfterTomorrowSession =
-  //       sessions &&
-  //       sessions.length &&
-  //       sessions
-  //         .flat()
-  //         .filter(
-  //           (currentValue) =>
-  //             currentValue.session_date ===
-  //             moment().add(2, "days").format("YYYY-MM-DD")
-  //         );
-
-  //     setCurrentDaySessionData(todaysSession);
-  //     setTomorrowDaySessionData(tomorrowsSession);
-  //     setDayAfterTomorrowSessionData(dayAfterTomorrowSession);
-  //     let arr = flattenTagData.map((currentValue) => currentValue.tag_name);
-  //     setTagName(arr);
-
-  //     getSessionBookings({
-  //       variables: {
-  //         id:
-  //           todaysSession && todaysSession.length
-  //             ? todaysSession[0].id
-  //             : tomorrowsSession && tomorrowsSession.length
-  //             ? tomorrowsSession[0].id
-  //             : dayAfterTomorrowSession && dayAfterTomorrowSession.length
-  //             ? dayAfterTomorrowSession[0].id
-  //             : null,
-  //       },
-  //     });
-  //   },
-  // });
 
   const [
     getSessionBookings,
@@ -388,13 +283,15 @@ export default function Program() {
     return time;
   }
 
-  useEffect(()=> {
-     getTags({variables: {
-      id: Number(auth.userid),
-      today: selectedFromDate,
-      dayAfterTomorrow: selectedToDate,
-    }})
-  },[])
+  useEffect(() => {
+    getTags({
+      variables: {
+        id: Number(auth.userid),
+        today: selectedFromDate,
+        dayAfterTomorrow: selectedToDate,
+      },
+    });
+  }, []);
 
   return (
     <>
@@ -490,14 +387,23 @@ export default function Program() {
                     />
                   </Col>
                   <Col className="mt-2">
-                    <Button disabled={selectedTagName !== "Show All" ? false : true} onClick = {() =>{
-                       getTags({variables: {
-                        id: Number(auth.userid),
-                        today: selectedFromDate,
-                        dayAfterTomorrow: selectedToDate,
-                        tag_name: selectedTagName
-                      }})
-                  }}>Apply</Button>
+                    <Button
+                      disabled={selectedTagName !== "Show All" ? false : true}
+                      onClick={() => {
+                        getTags({
+                          variables: {
+                            id: Number(auth.userid),
+                            today: selectedFromDate,
+                            dayAfterTomorrow: selectedToDate,
+                            tag_name: selectedTagName,
+                            start_time: selectedFromTime,
+                            end_time: selectedToTime,
+                          },
+                        });
+                      }}
+                    >
+                      Apply
+                    </Button>
                   </Col>
                 </Row>
               </Container>
@@ -529,7 +435,7 @@ export default function Program() {
                                 }
                                 onClick={() => {
                                   setActiveCard(index);
-                                  setSelectedCardId(currentValue.id);
+                                  
                                   getSessionBookings({
                                     variables: {
                                       id: currentValue.id,
@@ -587,7 +493,7 @@ export default function Program() {
                                       ? currentDaySessionData.length
                                       : 0
                                   );
-                                  setSelectedCardId(currentValue.id);
+                                  
                                   getSessionBookings({
                                     variables: {
                                       id: currentValue.id,
@@ -646,7 +552,7 @@ export default function Program() {
                                           tomorrowDaySessionData.length
                                       : 0
                                   );
-                                  setSelectedCardId(currentValue.id);
+                                 
                                   getSessionBookings({
                                     variables: {
                                       id: currentValue.id,
