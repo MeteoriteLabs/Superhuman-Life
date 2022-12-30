@@ -1,4 +1,4 @@
-import { useMemo, useState, useContext, useRef } from "react";
+import { useMemo, useState, useContext, useRef, useEffect } from "react";
 import {
   Badge,
   TabContent,
@@ -6,8 +6,6 @@ import {
   Col,
   Card,
   Container,
-  InputGroup,
-  FormControl,
   Button,
   Dropdown,
   DropdownButton,
@@ -16,22 +14,53 @@ import {
 import Table from "../../../components/table/leads-table";
 import ActionButton from "../../../components/actionbutton/index";
 import { useQuery, useLazyQuery } from "@apollo/client";
-import { GET_SESSIONS, GET_SESSION_BOOKINGS } from "./queries";
+import { GET_SESSIONS, GET_SESSION_BOOKINGS, GET_TAGS } from "./queries";
 import { flattenObj } from "../../../components/utils/responseFlatten";
 import AuthContext from "../../../context/auth-context";
 import moment from "moment";
 import { useHistory } from "react-router-dom";
 import CancelComponent from "./CancelComponent";
+import "./CardsStyle.css";
+import DropdownItem from "react-bootstrap/esm/DropdownItem";
 
 export default function Program() {
+  function getTime(startTime: string): string {
+    let splitTime: string[] = startTime.split(":");
+    let date: moment.Moment = moment().set({
+      hour: Number(splitTime[0]),
+      minute: Number(splitTime[1]),
+    });
+    let time: string = moment(date).format("h:mm A");
+    return time;
+  }
+
   const [searchFilter, setSearchFilter] = useState("");
   const [startTimeFilter, setStartTimeFilter] = useState("");
   const [endTimeFilter, setEndTimeFilter] = useState("");
   const searchInput = useRef<any>();
   const auth = useContext(AuthContext);
   const [sessionData, setSessionData] = useState<any>([]);
+  const [tagName, setTagName] = useState<string[]>([]);
+  const [selectedCardId, setSelectedCardId] = useState<number | null>(null);
   const [activeCard, setActiveCard] = useState<number>(0);
-  const currentDate = new Date();
+
+  const [selectedTagName, setSelectedTagName] = useState<string>("Show All");
+  const [selectedFromDate, setSelectedFromDate] = useState<string>(
+    moment().format("YYYY-MM-DD").toString()
+  );
+  const [selectedToDate, setSelectedToDate] = useState<string>(
+    moment().add(2, "days").format("YYYY-MM-DD").toString()
+  );
+  const [selectedFromTime, setSelectedFromTime] = useState<string>(
+    "00:00"
+  );
+  const [selectedToTime, setSelectedToTime] = useState<string>(
+    "12:00"
+  );
+  const [currentDaySessionData, setCurrentDaySessionData] = useState<any>([]);
+  const [tomorrowDaySessionData, setTomorrowDaySessionData] = useState<any>([]);
+  const [dayAfterTomorrowSessionData, setDayAfterTomorrowSessionData] =
+    useState<any>([]);
   const cancelComponent = useRef<any>(null);
 
   function getDate(time: Date): string {
@@ -179,48 +208,147 @@ export default function Program() {
     []
   );
 
-  function getTime(startTime: string): string {
-    let splitTime: string[] = startTime.split(":");
-    let date: moment.Moment = moment().set({
-      hour: Number(splitTime[0]),
-      minute: Number(splitTime[1]),
-    });
-    let time: string = moment(date).format("h:mm A");
-    return time;
-  }
-
   const [datatable, setDataTable] = useState<{}[]>([]);
 
-  useQuery(GET_SESSIONS, {
-    variables: {
-      filter: searchFilter,
-      id: Number(auth.userid),
-      session_date: getDate(currentDate),
-      start_time_filter: startTimeFilter,
-      end_time_filter: endTimeFilter,
-    },
+  console.log(
+    selectedFromDate,
+    selectedFromTime,
+    selectedToDate,
+    selectedToTime
+  );
+
+  const [
+    getTags,
+    // eslint-disable-next-line
+    { data: get_tags, refetch: refetch_tags },
+  ] = useLazyQuery(GET_TAGS, {
+    fetchPolicy: "network-only",
     onCompleted: (data) => {
-      const flattenSessionData = flattenObj({ ...data.sessions });
+      const flattenTagData = flattenObj({ ...data.tags });
 
-      let currentTime = new Date();
+      const sessions = flattenTagData.map(
+        (currentValue) => currentValue.sessions
+      );
 
-      const nextUpcomingSessions = flattenSessionData.filter((currentValue) => {
-        const [hours, minutes] = currentValue.start_time.split(":");
-        const date = new Date(
-          currentTime.getFullYear(),
-          currentTime.getMonth(),
-          currentTime.getDate(),
-          +hours,
-          +minutes,
-          0
-        );
+      const todaysSession =
+        sessions &&
+        sessions.length &&
+        sessions
+          .flat()
+          .filter(
+            (currentValue) =>
+              currentValue.session_date === moment().format("YYYY-MM-DD")
+          );
 
-        return date >= currentTime;
+      const tomorrowsSession =
+        sessions &&
+        sessions.length &&
+        sessions
+          .flat()
+          .filter(
+            (currentValue) =>
+              currentValue.session_date ===
+              moment().add(1, "days").format("YYYY-MM-DD")
+          );
+
+      const dayAfterTomorrowSession =
+        sessions &&
+        sessions.length &&
+        sessions
+          .flat()
+          .filter(
+            (currentValue) =>
+              currentValue.session_date ===
+              moment().add(2, "days").format("YYYY-MM-DD")
+          );
+
+      setCurrentDaySessionData(todaysSession);
+      setTomorrowDaySessionData(tomorrowsSession);
+      setDayAfterTomorrowSessionData(dayAfterTomorrowSession);
+      let arr = flattenTagData.map((currentValue) => currentValue.tag_name);
+      setTagName(arr);
+
+      getSessionBookings({
+        variables: {
+          id:
+            todaysSession && todaysSession.length
+              ? todaysSession[0].id
+              : tomorrowsSession && tomorrowsSession.length
+              ? tomorrowsSession[0].id
+              : dayAfterTomorrowSession && dayAfterTomorrowSession.length
+              ? dayAfterTomorrowSession[0].id
+              : null,
+        },
       });
-      setSessionData(nextUpcomingSessions);
-      getSessionBookings({ variables: { id: nextUpcomingSessions && nextUpcomingSessions.length ? nextUpcomingSessions[0].id : null} });
+    
     },
   });
+
+  // useQuery(GET_TAGS, {
+  //   variables: {
+  //     id: Number(auth.userid),
+  //     today: selectedFromDate,
+  //     dayAfterTomorrow: selectedToDate,
+  //   },
+  //   onCompleted: (data) => {
+  //     const flattenTagData = flattenObj({ ...data.tags });
+
+  //     const sessions = flattenTagData.map(
+  //       (currentValue) => currentValue.sessions
+  //     );
+
+  //     const todaysSession =
+  //       sessions &&
+  //       sessions.length &&
+  //       sessions
+  //         .flat()
+  //         .filter(
+  //           (currentValue) =>
+  //             currentValue.session_date === moment().format("YYYY-MM-DD")
+  //         );
+
+  //     const tomorrowsSession =
+  //       sessions &&
+  //       sessions.length &&
+  //       sessions
+  //         .flat()
+  //         .filter(
+  //           (currentValue) =>
+  //             currentValue.session_date ===
+  //             moment().add(1, "days").format("YYYY-MM-DD")
+  //         );
+
+  //     const dayAfterTomorrowSession =
+  //       sessions &&
+  //       sessions.length &&
+  //       sessions
+  //         .flat()
+  //         .filter(
+  //           (currentValue) =>
+  //             currentValue.session_date ===
+  //             moment().add(2, "days").format("YYYY-MM-DD")
+  //         );
+
+  //     setCurrentDaySessionData(todaysSession);
+  //     setTomorrowDaySessionData(tomorrowsSession);
+  //     setDayAfterTomorrowSessionData(dayAfterTomorrowSession);
+  //     let arr = flattenTagData.map((currentValue) => currentValue.tag_name);
+  //     setTagName(arr);
+
+  //     getSessionBookings({
+  //       variables: {
+  //         id:
+  //           todaysSession && todaysSession.length
+  //             ? todaysSession[0].id
+  //             : tomorrowsSession && tomorrowsSession.length
+  //             ? tomorrowsSession[0].id
+  //             : dayAfterTomorrowSession && dayAfterTomorrowSession.length
+  //             ? dayAfterTomorrowSession[0].id
+  //             : null,
+  //       },
+  //     });
+  //   },
+  // });
 
   const [
     getSessionBookings,
@@ -244,128 +372,303 @@ export default function Program() {
           name: Detail.client ? Detail.client.username : null,
           bookingTime: moment(Detail.createdAt).format("DD/MM/YY, hh:mm A"),
           status: Detail.Session_booking_status,
-          tag: Detail.session.tag,
+          tag: Detail.session?.tag,
         };
       })
     );
   }
+
+  function getStartTime(startTime: string): string {
+    let splitTime: string[] = startTime.split(":");
+    let date: moment.Moment = moment().set({
+      hour: Number(splitTime[0]),
+      minute: Number(splitTime[1]),
+    });
+    let time: string = moment(date).format("h:mm A");
+    return time;
+  }
+
+  useEffect(()=> {
+     getTags({variables: {
+      id: Number(auth.userid),
+      today: selectedFromDate,
+      dayAfterTomorrow: selectedToDate,
+    }})
+  },[])
 
   return (
     <>
       <div className="mt-3">
         <h3>Program Details</h3>
 
-        <Container className="mt-3 border">
-          {/* search bar for session*/}
-          <Col lg={6}>
-            <InputGroup className="mb-3 mt-3">
-              <FormControl
-                aria-describedby="basic-addon1"
-                placeholder="Search for session type name"
-                ref={searchInput}
-              />
-              <InputGroup.Prepend>
-                <Button
-                  variant="outline-secondary"
-                  onClick={(e: any) => {
-                    e.preventDefault();
-                    setSearchFilter(searchInput.current.value);
-                  }}
-                >
-                  <i className="fas fa-search"></i>
-                </Button>
-              </InputGroup.Prepend>
-            </InputGroup>
-          </Col>
-
-          {/* dropdowns for filtering session based on timings */}
-          <Col className="mt-3 mb-3 ">
-            <Row className="m-2 ">
-              <p className="mr-3">Filter Sessions based on timings</p>
-
-              {/* start time  */}
-              <DropdownButton
-                as={ButtonGroup}
-                key={"starttime"}
-                id={`dropdown-button-drop-down`}
-                drop={"down"}
-                variant="secondary"
-                title={
-                  startTimeFilter === "" ? ` Start time ` : startTimeFilter
-                }
-                style={{ marginRight: "25px" }}
-              >
-                {sessionData.map((currentValue) => (
-                  <Dropdown.Item
-                    key={currentValue.id}
-                    eventKey={currentValue.id}
-                    onSelect={() => setStartTimeFilter(currentValue.start_time)}
-                  >
-                    {currentValue.start_time}
-                  </Dropdown.Item>
-                ))}
-              </DropdownButton>
-
-              {/* end time */}
-              <DropdownButton
-                as={ButtonGroup}
-                key={"endtime"}
-                id={`dropdown-button-drop-down`}
-                drop={"down"}
-                variant="secondary"
-                title={endTimeFilter === "" ? ` End time ` : endTimeFilter}
-              >
-                {sessionData.map((currentValue) => (
-                  <Dropdown.Item
-                    key={currentValue.id}
-                    eventKey={currentValue.id}
-                    onSelect={() => setEndTimeFilter(currentValue.end_time)}
-                  >
-                    {currentValue.end_time}
-                  </Dropdown.Item>
-                ))}
-              </DropdownButton>
-            </Row>
-          </Col>
-        </Container>
-
         <TabContent>
           <Row className="mt-5">
             {/* Session cards */}
             <Col lg={3} className="mb-4">
               <h3 className="mt-3">Sessions</h3>
-              {sessionData.map((currentValue: any, index: number) => (
-                <Card
-                  style={{
-                    width: "16rem",
-                    cursor: "pointer",
-                    border: "3px solid ",
-                  }}
-                  className="mt-4 bg-white rounded shadow"
-                  border={activeCard === index ? "success" : "light"}
-                  key={currentValue.id}
-                  onClick={() => {
-                    setActiveCard(index);
-                    getSessionBookings({ variables: { id: currentValue.id } });
-                  }}
-                >
-                  <Card.Body>
-                    <Card.Title>
-                      {currentValue.type === "activity"
-                        ? currentValue.activity.title
-                        : currentValue.workout.workouttitle}
-                    </Card.Title>
-                    <Card.Subtitle className="mb-2 text-muted">
-                      {getTime(currentValue.start_time)} to{" "}
-                      {getTime(currentValue.end_time)}
-                      <br />
-                      Mode: {currentValue.mode}
-                      <br />
-                      Type: {currentValue.tag}
-                    </Card.Subtitle>
-                  </Card.Body>
-                </Card>
-              ))}
+
+              {/* filters for sessions */}
+              <Container className="mt-3 border p-3">
+                <Row>
+                  <Col lg={12}>
+                    {/* tag select list  */}
+                    <DropdownButton
+                      as={ButtonGroup}
+                      key={"tagName"}
+                      id={`dropdown-button-drop-down`}
+                      drop={"down"}
+                      title={
+                        selectedTagName === ""
+                          ? ` Select Program Name`
+                          : selectedTagName
+                      }
+                      style={{ marginRight: "25px" }}
+                      defaultValue={"Show All"}
+                    >
+                      {tagName.map((currentValue, index) => (
+                        <Dropdown.Item
+                          key={index}
+                          eventKey={currentValue}
+                          onSelect={() => setSelectedTagName(currentValue)}
+                        >
+                          {currentValue}
+                        </Dropdown.Item>
+                      ))}
+                      <DropdownItem>Show All</DropdownItem>
+                    </DropdownButton>
+                  </Col>
+
+                  {/* dates */}
+                  <Col className="mt-2">
+                    From Date
+                    <br />
+                    <input
+                      className="input"
+                      type="date"
+                      value={`${selectedFromDate}`}
+                      onChange={(e) => {
+                        setSelectedFromDate(e.target.value);
+                      }}
+                    />
+                  </Col>
+
+                  <Col className="mt-2">
+                    To Date
+                    <br />
+                    <input
+                      className="input"
+                      type="date"
+                      value={selectedToDate}
+                      onChange={(e) => {
+                        setSelectedToDate(e.target.value);
+                      }}
+                    />
+                  </Col>
+
+                  <Col lg={6} className="mt-2">
+                    From time <br />
+                    {/* start time  */}
+                    <input
+                      className="input"
+                      type="time"
+                      value={selectedFromTime}
+                      onChange={(e) => {
+                        setSelectedFromTime(e.target.value);
+                      }}
+                    />
+                  </Col>
+                  <Col lg={6} className="mt-2">
+                    {/* end time */}
+                    to time <br />
+                    <input
+                      className="input"
+                      type="time"
+                      value={selectedToTime}
+                      onChange={(e) => {
+                        setSelectedToTime(e.target.value);
+                      }}
+                    />
+                  </Col>
+                  <Col className="mt-2">
+                    <Button disabled={selectedTagName !== "Show All" ? false : true}>Apply</Button>
+                  </Col>
+                </Row>
+              </Container>
+
+              <div
+                className="container animated animated-done bootdey"
+                data-animate="fadeIn"
+                data-animate-delay="0.05"
+                style={{ animationDelay: "0.05s" }}
+              >
+                <hr className="hr-lg mt-0 mb-2 w-10 mx-auto hr-primary" />
+
+                <div className="timeline timeline-left mx-lg-3">
+                  {currentDaySessionData.length ? (
+                    <div className="timeline-breaker">
+                      {moment().format("DD-MM-YYYY")}
+                    </div>
+                  ) : null}
+                  {currentDaySessionData && currentDaySessionData.length
+                    ? currentDaySessionData.map(
+                        (currentValue, index: number) => {
+                          return (
+                            <>
+                              <Card
+                                className="bg-white rounded shadow timeline-item"
+                                key={currentValue.id}
+                                border={
+                                  activeCard === index ? "success" : "light"
+                                }
+                                onClick={() => {
+                                  setActiveCard(index);
+                                  setSelectedCardId(currentValue.id);
+                                  getSessionBookings({
+                                    variables: {
+                                      id: currentValue.id,
+                                      loginUserId: auth.userid,
+                                      status: ["Booked"],
+                                    },
+                                  });
+                                }}
+                              >
+                                <b>
+                                  {currentValue.type === "activity"
+                                    ? currentValue.activity.title
+                                    : currentValue.workout?.workouttitle}
+                                </b>
+                                {getStartTime(currentValue.start_time)}-
+                                {getStartTime(currentValue.end_time)}
+                                <br />
+                                Mode : {currentValue.mode}
+                                <br />
+                                Type:{" "}
+                                {currentValue.tag ? currentValue.tag : null}
+                              </Card>
+                            </>
+                          );
+                        }
+                      )
+                    : null}
+
+                  {tomorrowDaySessionData.length ? (
+                    <div className="timeline-breaker timeline-breaker-middle">
+                      {moment().add(1, "days").format("DD-MM-YYYY")}
+                    </div>
+                  ) : null}
+                  {tomorrowDaySessionData && tomorrowDaySessionData.length
+                    ? tomorrowDaySessionData.map(
+                        (currentValue, index: number) => {
+                          return (
+                            <>
+                              <Card
+                                className="bg-white rounded shadow timeline-item"
+                                key={currentValue.id}
+                                border={
+                                  activeCard ===
+                                  (currentDaySessionData &&
+                                  currentDaySessionData.length
+                                    ? currentDaySessionData.length
+                                    : 0)
+                                    ? "success"
+                                    : "light"
+                                }
+                                onClick={() => {
+                                  setActiveCard(
+                                    currentDaySessionData &&
+                                      currentDaySessionData.length
+                                      ? currentDaySessionData.length
+                                      : 0
+                                  );
+                                  setSelectedCardId(currentValue.id);
+                                  getSessionBookings({
+                                    variables: {
+                                      id: currentValue.id,
+                                      loginUserId: auth.userid,
+                                      status: ["Booked"],
+                                    },
+                                  });
+                                }}
+                              >
+                                <b>
+                                  {currentValue.type === "activity"
+                                    ? currentValue.activity.title
+                                    : currentValue.workout?.workouttitle}
+                                </b>
+                                {getStartTime(currentValue.start_time)}-
+                                {getStartTime(currentValue.end_time)}
+                                <br />
+                                Mode : {currentValue.mode}
+                                <br />
+                                Type:{" "}
+                                {currentValue.tag ? currentValue.tag : null}
+                              </Card>
+                            </>
+                          );
+                        }
+                      )
+                    : null}
+                  {dayAfterTomorrowSessionData.length ? (
+                    <div className="timeline-breaker timeline-breaker-middle">
+                      {moment().add(2, "days").format("DD-MM-YYYY")}
+                    </div>
+                  ) : null}
+                  {dayAfterTomorrowSessionData &&
+                  dayAfterTomorrowSessionData.length
+                    ? dayAfterTomorrowSessionData.map(
+                        (currentValue, index: number) => {
+                          return (
+                            <>
+                              <Card
+                                className="bg-white rounded shadow timeline-item"
+                                key={currentValue.id}
+                                border={
+                                  activeCard === tomorrowDaySessionData &&
+                                  tomorrowDaySessionData.length
+                                    ? currentDaySessionData.length +
+                                      tomorrowDaySessionData.length
+                                    : 0
+                                    ? "success"
+                                    : "light"
+                                }
+                                onClick={() => {
+                                  setActiveCard(
+                                    tomorrowDaySessionData &&
+                                      tomorrowDaySessionData.length
+                                      ? currentDaySessionData.length +
+                                          tomorrowDaySessionData.length
+                                      : 0
+                                  );
+                                  setSelectedCardId(currentValue.id);
+                                  getSessionBookings({
+                                    variables: {
+                                      id: currentValue.id,
+                                      loginUserId: auth.userid,
+                                      status: ["Booked"],
+                                    },
+                                  });
+                                }}
+                              >
+                                <b>
+                                  {currentValue.type === "activity"
+                                    ? currentValue.activity.title
+                                    : currentValue.workout?.workouttitle}
+                                </b>
+                                {getStartTime(currentValue.start_time)}-
+                                {getStartTime(currentValue.end_time)}
+                                <br />
+                                Mode : {currentValue.mode}
+                                <br />
+                                Type:{" "}
+                                {currentValue.tag ? currentValue.tag : null}
+                              </Card>
+                            </>
+                          );
+                        }
+                      )
+                    : null}
+                </div>
+              </div>
             </Col>
             <div style={{ border: "1px solid black" }} />
 
