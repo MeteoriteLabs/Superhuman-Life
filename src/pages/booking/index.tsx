@@ -32,14 +32,18 @@ export default function BookingPage() {
             variant="pills"
           >
             <Tab eventKey="fitness" title="Fitness" className="mt-3">
-              <Tabs defaultActiveKey="offerings" variant="pills">
-                <Tab eventKey="offerings" title="Offerings">
-                  <Movement />
-                </Tab>
-                <Tab eventKey="sessions" title="Sessions">
-                    <Sessions/>
-                </Tab>
-              </Tabs>
+              <Card className="shadow-sm mt-2" border="light">
+                <Card.Body>
+                  <Tabs defaultActiveKey="offerings" variant="pills">
+                    <Tab eventKey="offerings" title="Offerings">
+                      <Movement />
+                    </Tab>
+                    <Tab eventKey="sessions" title="Sessions">
+                      <Sessions />
+                    </Tab>
+                  </Tabs>
+                </Card.Body>
+              </Card>
             </Tab>
           </Tabs>
         </Card.Body>

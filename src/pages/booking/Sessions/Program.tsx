@@ -36,7 +36,7 @@ export default function Program() {
 
   function getDate(time: Date): string {
     let dateObj: Date = new Date(time);
-    let month: number = dateObj.getMonth() + 1;
+    let month: string | number = dateObj.getMonth() < 10 ?  `0${dateObj.getMonth() + 1}` : dateObj.getMonth() + 1;
     let year: number = dateObj.getFullYear();
     let date: string | number =
       dateObj.getDate() < 10 ? `0${dateObj.getDate()}` : dateObj.getDate();
@@ -244,7 +244,7 @@ export default function Program() {
           name: Detail.client ? Detail.client.username : null,
           bookingTime: moment(Detail.createdAt).format("DD/MM/YY, hh:mm A"),
           status: Detail.Session_booking_status,
-          tag: Detail.session.tag,
+          tag: Detail.session && Detail.session.tag ? Detail.session.tag : null,
         };
       })
     );

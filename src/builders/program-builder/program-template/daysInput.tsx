@@ -22,8 +22,6 @@ const DaysInput = (props: any) => {
      //add this in the above line incase of error in the first arr moment(props.startDate).add(props.val, 'days').format("Do, MMM YY")
      const days: any[] = [];
 
-     console.log(selected);
-
      function renderInputField() {
           if(props?.dayType === 'day') {
                for (var i=0; i<props?.duration;i++){
@@ -41,8 +39,6 @@ const DaysInput = (props: any) => {
           props.onChange(objectToString);
           setSelected(e);
      }
-
-     console.log(selected);
      
      renderInputField();
 

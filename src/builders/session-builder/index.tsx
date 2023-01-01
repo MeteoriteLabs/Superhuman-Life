@@ -18,12 +18,6 @@ export default function SessionPage() {
             <Tab eventKey="fitness" title="Fitness">
               <Fitness />
             </Tab>
-            <Tab eventKey="nutrition" title="Nutrition">
-              {/* <Fitness/> */}
-            </Tab>
-            <Tab eventKey="journey" title="Journey">
-              {/* <Fitness/> */}
-            </Tab>
           </Tabs>
         </Card.Body>
       </Card>

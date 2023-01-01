@@ -13,3 +13,38 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/* Tabs styling */
+.card-body .nav-pills .nav-link.active,
+.nav-pills .show > .nav-link {
+  background-color: white;
+  color: black;
+  font-weight: bold;
+}
+
+.card-body .card-body {
+  padding: 0.1rem 1.25rem 1.25rem !important;
+}
+
+.card-body .card-body .nav-pills .nav-link.active,
+.nav-pills .show > .nav-link {
+  background-color: #647a8c;
+  border-radius: 20px;
+  color: white;
+  padding: 0.5rem 3rem;
+  transition: all 0.5s;
+}
+
+.card-body .card-body .nav-link {
+  padding: 0.5rem 3rem;
+}
+
+.nav-pills a {
+  color: #929292;
+}
+
+.scheduler-badge {
+  border: 2px solid skyblue;
+  border-radius: 20px;
+}
+
