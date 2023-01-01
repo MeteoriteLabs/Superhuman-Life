@@ -5,7 +5,6 @@ import {
   Row,
   Col,
   Card,
-  Container,
   InputGroup,
   Button,
   FormControl,
@@ -333,10 +332,10 @@ export default function Clients() {
                 </Col>
 
                 {/* session starts date picker */}
-                <Col className="mt-1" lg={4}>
+                <Col className="m-1" lg={4}>
                   <label>Session&apos;s Start Date</label>
                   <input
-                    className="date__input"
+                    className="date__input m-1"
                     name="sessionStartDate"
                     onChange={(e) => {
                       getSessionBookings({
@@ -364,10 +363,10 @@ export default function Clients() {
                 </Col>
 
                 {/* session end date picker */}
-                <Col className="mt-1" lg={4}>
+                <Col className="m-1" lg={4}>
                   <label>Session&apos;s End Date</label>
                   <input
-                    className="date__input"
+                    className="date__input m-1"
                     name="sessionEndDate"
                     onChange={(e) => {
                       getSessionBookings({

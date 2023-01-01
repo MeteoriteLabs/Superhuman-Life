@@ -230,18 +230,24 @@ export default function Program() {
       let arr = flattenTagData.map((currentValue) => currentValue.tag_name);
       setTagName(arr);
 
-      getSessionBookings({
-        variables: {
-          id:
-            todaysSession && todaysSession.length
-              ? todaysSession[0].id
-              : tomorrowsSession && tomorrowsSession.length
-              ? tomorrowsSession[0].id
-              : dayAfterTomorrowSession && dayAfterTomorrowSession.length
-              ? dayAfterTomorrowSession[0].id
-              : null,
-        },
-      });
+      if (
+        (todaysSession && todaysSession.length) ||
+        (tomorrowsSession && tomorrowsSession.length) ||
+        (dayAfterTomorrowSession && dayAfterTomorrowSession.length)
+      ) {
+        getSessionBookings({
+          variables: {
+            id:
+              todaysSession && todaysSession.length
+                ? todaysSession[0].id
+                : tomorrowsSession && tomorrowsSession.length
+                ? tomorrowsSession[0].id
+                : dayAfterTomorrowSession && dayAfterTomorrowSession.length
+                ? dayAfterTomorrowSession[0].id
+                : null,
+          },
+        });
+      }
     },
   });
 
@@ -291,6 +297,7 @@ export default function Program() {
         dayAfterTomorrow: selectedToDate,
       },
     });
+    // eslint-disable-next-line
   }, []);
 
   return (
@@ -331,7 +338,7 @@ export default function Program() {
                           {currentValue}
                         </Dropdown.Item>
                       ))}
-                      <DropdownItem>Show All</DropdownItem>
+                      <DropdownItem key="show all" onClick={() => setSelectedTagName("Show All")}>Show All</DropdownItem>
                     </DropdownButton>
                   </Col>
 
@@ -395,7 +402,7 @@ export default function Program() {
                             id: Number(auth.userid),
                             today: selectedFromDate,
                             dayAfterTomorrow: selectedToDate,
-                            tag_name: selectedTagName,
+                            tag_name: selectedTagName === "Show All" ? null : selectedTagName,
                             start_time: selectedFromTime,
                             end_time: selectedToTime,
                           },
@@ -435,7 +442,7 @@ export default function Program() {
                                 }
                                 onClick={() => {
                                   setActiveCard(index);
-                                  
+
                                   getSessionBookings({
                                     variables: {
                                       id: currentValue.id,
@@ -493,7 +500,7 @@ export default function Program() {
                                       ? currentDaySessionData.length
                                       : 0
                                   );
-                                  
+
                                   getSessionBookings({
                                     variables: {
                                       id: currentValue.id,
@@ -552,7 +559,7 @@ export default function Program() {
                                           tomorrowDaySessionData.length
                                       : 0
                                   );
-                                 
+
                                   getSessionBookings({
                                     variables: {
                                       id: currentValue.id,
