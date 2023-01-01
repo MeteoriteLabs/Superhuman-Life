@@ -37,7 +37,7 @@ function CreateMovement(props: any, ref: any) {
      }));
 
      function CreateGoal(frm: any) {
-          console.log(frm);
+          
           //   let userName = frm.firstname.slice(0, 1) + " " + frm.lastname;
           //   createClient({
           //        variables: {

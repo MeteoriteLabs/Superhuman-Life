@@ -27,8 +27,6 @@ const DayView = (props: any) => {
       .format("YYYY-MM-DD")
   );
 
-  console.log(todaysEvents);
-
   useQuery(GET_ALL_DAILY_SESSIONS, {
     variables: {
       id: auth.userid,

@@ -137,7 +137,7 @@ const WorkHours = () => {
       const changemakerSlots = flattenData.changemakerAvailabilties.length > 0 ? flattenData.changemakerAvailabilties[0]?.booking_slots : [];
       const sessionSlots = flattenData?.sessions;
       const mergedSlots = sessionSlots?.concat(changemakerSlots);
-      // console.log(mergedSlots);
+      
       // setAllChangeMakerHolidays(mergedSlots.filter((item: any) => item?.Is_Holiday === true));
       setSlots(mergedSlots);
     }
@@ -695,8 +695,6 @@ const WorkHours = () => {
     const obj = allChangeMakerHolidays.findIndex((item: any) => moment(item.date).format("YYYY-MM-DD") === moment(id).format("YYYY-MM-DD"));
     return obj;
   }
-
-  console.log(holidays);
 
   if (!show)
     return (

@@ -23,7 +23,7 @@ export default function Group(props) {
     const fitnessActionRef = useRef<any>(null);
 
     const [deleteBatch] = useMutation(DELETE_TAG_BATCH, {onCompleted: (r: any) => {mainQuery.refetch()}});
-    const [updateDate] = useMutation(UPDATE_STARTDATE, {onCompleted: (r: any) => {console.log(r)}});
+    const [updateDate] = useMutation(UPDATE_STARTDATE, {onCompleted: (r: any) => {}});
 
     const mainQuery = useQuery(GET_TAGS_FOR_GROUP, {
         variables: {
@@ -118,7 +118,7 @@ export default function Group(props) {
             // packageItem.client_packages[index]?.users_permissions_user
             return clients;
         }
-        console.log(flattenData.tags);
+        
         setUserPackage(
             [...flattenData.tags.map((packageItem, index) => {
                 let renewDay: any = '';
@@ -148,8 +148,6 @@ export default function Group(props) {
         )
     }
 
-    console.log(userPackage);
-
     function handleStatus(sessions: any, effective_date: any, renewDay){
         let effectiveDate: any;
         if(sessions.length === 0){
@@ -175,7 +173,6 @@ export default function Group(props) {
     }
 
     function calculateProgramRenewal(effective_date, sessions) {
-        console.log(effective_date);
         let max: number = 0;
 
         for(var i=0; i<sessions?.length; i++){
@@ -210,7 +207,7 @@ export default function Group(props) {
     // }
 
     function handleRedirect(id: any){
-        // console.log(id, clientId, startDate, duration)
+        
         // if(value === undefined){
         //     alert("Please assign client to this program")
         //     return;
@@ -370,12 +367,10 @@ export default function Group(props) {
                                 handleRedirect(row.original.tagId)
                             }
                             const actionClick2 = () => {
-                                console.log(row);
                                 fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'details', type: "Group Class", rowData: row.original })
                             }
 
                             const actionClick3 = () => {
-                                console.log(row);
                                 fitnessActionRef.current.TriggerForm({ id: row.original.tagId, actionType: 'allClients', type: 'Group Class', rowData: row.original })
                             }
 
@@ -384,7 +379,6 @@ export default function Group(props) {
                                     setTagId(row.original.tagId);
                                     setShowDeleteModal(true);
                                 }
-                                // console.log(row, userPackage);
                             }
 
                             const arrayAction = [
@@ -410,8 +404,6 @@ export default function Group(props) {
             userPackage.filter((item: any, index: any) => moment(item.expiry).isBefore(moment()) === true ? userPackage.splice(index, 1) : null);
         }
     }
-
-    console.log(userPackage);
 
     function refetchQueryCallback(){
         mainQuery.refetch();

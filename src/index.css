@@ -20,6 +20,7 @@ code {
   background-color: white;
   color: black;
   font-weight: bold;
+  flex: nowrap;
 }
 
 .card-body .card-body {
@@ -36,7 +37,7 @@ code {
 }
 
 .card-body .card-body .nav-link {
-  padding: 0.5rem 3rem;
+  padding: 0.5rem 1rem;
 }
 
 .nav-pills a {
@@ -48,3 +49,9 @@ code {
   border-radius: 20px;
 }
 
+.cards{
+  flex-wrap: nowrap !important;
+  width: 100%;
+  min-width: 350px;
+  overflow-x: auto;
+}

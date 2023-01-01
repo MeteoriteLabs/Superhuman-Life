@@ -95,7 +95,7 @@ function FitnessAction(props, ref: any) {
 
     function OnSubmit(frm: any) {
         //bind user id
-        console.log(frm)
+        
         if (frm) {
             frm.user_permissions_user = auth.userid;
             frm.duration = operation.duration;

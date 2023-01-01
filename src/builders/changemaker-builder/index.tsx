@@ -8,7 +8,7 @@ export default function ProgramPage() {
       <h2>Schedule</h2>
       <Card>
         <Card.Body>
-          <Tabs defaultActiveKey="day" variant="pills">
+          <Tabs defaultActiveKey="day" variant="pills" className="pb-3 cards">
             <Tab eventKey="day" title="Day">
               <DayView />
             </Tab>

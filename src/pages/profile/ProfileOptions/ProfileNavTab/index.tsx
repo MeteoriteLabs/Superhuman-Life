@@ -18,9 +18,9 @@ function ProfileNavTab() {
           id="controlled-tab"
           activeKey={key}
           onSelect={(k: any) => setKey(k)}
-          className="mb-3 d-flex justify-content-center mt-5"
+          className="mb-3 d-flex justify-content-center mt-5 "
         >
-          <Tab eventKey="basicprofile" title="Basic Profile">
+          <Tab eventKey="basicprofile" title="Basic Profile" >
             <BasicProfileForm />
           </Tab>
           <Tab eventKey="education" title="Education">

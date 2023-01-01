@@ -66,7 +66,7 @@ function CreateClient(props: any, ref: any) {
      //  }
 
      function CreateClient(frm: any) {
-          console.log(frm);
+          
           let userName = frm.firstname.slice(0, 1) + " " + frm.lastname;
           createClient({
                variables: {

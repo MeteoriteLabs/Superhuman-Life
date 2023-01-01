@@ -19,7 +19,7 @@ export default function ProfilePage() {
           id="controlled-tab"
           activeKey={key}
           onSelect={(k: any) => setKey(k)}
-          className="mb-3 mt-5 d-flex justify-content-center"
+          className="mb-3 mt-5 d-flex justify-content-center cards"
         >
           <Tab eventKey="profile" title="Profile">
             <ProfileCard />
