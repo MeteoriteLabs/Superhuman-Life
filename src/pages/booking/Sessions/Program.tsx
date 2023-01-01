@@ -338,7 +338,12 @@ export default function Program() {
                           {currentValue}
                         </Dropdown.Item>
                       ))}
-                      <DropdownItem key="show all" onClick={() => setSelectedTagName("Show All")}>Show All</DropdownItem>
+                      <DropdownItem
+                        key="show all"
+                        onClick={() => setSelectedTagName("Show All")}
+                      >
+                        Show All
+                      </DropdownItem>
                     </DropdownButton>
                   </Col>
 
@@ -402,7 +407,10 @@ export default function Program() {
                             id: Number(auth.userid),
                             today: selectedFromDate,
                             dayAfterTomorrow: selectedToDate,
-                            tag_name: selectedTagName === "Show All" ? null : selectedTagName,
+                            tag_name:
+                              selectedTagName === "Show All"
+                                ? null
+                                : selectedTagName,
                             start_time: selectedFromTime,
                             end_time: selectedToTime,
                           },
@@ -433,39 +441,36 @@ export default function Program() {
                     ? currentDaySessionData.map(
                         (currentValue, index: number) => {
                           return (
-                            <>
-                              <Card
-                                className="bg-white rounded shadow timeline-item"
-                                key={currentValue.id}
-                                border={
-                                  activeCard === index ? "success" : "light"
-                                }
-                                onClick={() => {
-                                  setActiveCard(index);
+                            <Card
+                              className="bg-white rounded shadow timeline-item"
+                              key={currentValue.id}
+                              border={
+                                activeCard === index ? "success" : "light"
+                              }
+                              onClick={() => {
+                                setActiveCard(index);
 
-                                  getSessionBookings({
-                                    variables: {
-                                      id: currentValue.id,
-                                      loginUserId: auth.userid,
-                                      status: ["Booked"],
-                                    },
-                                  });
-                                }}
-                              >
-                                <b>
-                                  {currentValue.type === "activity"
-                                    ? currentValue.activity.title
-                                    : currentValue.workout?.workouttitle}
-                                </b>
-                                {getStartTime(currentValue.start_time)}-
-                                {getStartTime(currentValue.end_time)}
-                                <br />
-                                Mode : {currentValue.mode}
-                                <br />
-                                Type:{" "}
-                                {currentValue.tag ? currentValue.tag : null}
-                              </Card>
-                            </>
+                                getSessionBookings({
+                                  variables: {
+                                    id: currentValue.id,
+                                    loginUserId: auth.userid,
+                                    status: ["Booked"],
+                                  },
+                                });
+                              }}
+                            >
+                              <b>
+                                {currentValue.type === "activity"
+                                  ? currentValue.activity.title
+                                  : currentValue.workout?.workouttitle}
+                              </b>
+                              {getStartTime(currentValue.start_time)}-
+                              {getStartTime(currentValue.end_time)}
+                              <br />
+                              Mode : {currentValue.mode}
+                              <br />
+                              Type: {currentValue.tag ? currentValue.tag : null}
+                            </Card>
                           );
                         }
                       )
@@ -480,50 +485,47 @@ export default function Program() {
                     ? tomorrowDaySessionData.map(
                         (currentValue, index: number) => {
                           return (
-                            <>
-                              <Card
-                                className="bg-white rounded shadow timeline-item"
-                                key={currentValue.id}
-                                border={
-                                  activeCard ===
-                                  (currentDaySessionData &&
-                                  currentDaySessionData.length
+                            <Card
+                              className="bg-white rounded shadow timeline-item"
+                              key={currentValue.id}
+                              border={
+                                activeCard ===
+                                (currentDaySessionData &&
+                                currentDaySessionData.length
+                                  ? currentDaySessionData.length
+                                  : index)
+                                  ? "success"
+                                  : "light"
+                              }
+                              onClick={() => {
+                                setActiveCard(
+                                  currentDaySessionData &&
+                                    currentDaySessionData.length
                                     ? currentDaySessionData.length
-                                    : 0)
-                                    ? "success"
-                                    : "light"
-                                }
-                                onClick={() => {
-                                  setActiveCard(
-                                    currentDaySessionData &&
-                                      currentDaySessionData.length
-                                      ? currentDaySessionData.length
-                                      : 0
-                                  );
+                                    : 0
+                                );
 
-                                  getSessionBookings({
-                                    variables: {
-                                      id: currentValue.id,
-                                      loginUserId: auth.userid,
-                                      status: ["Booked"],
-                                    },
-                                  });
-                                }}
-                              >
-                                <b>
-                                  {currentValue.type === "activity"
-                                    ? currentValue.activity.title
-                                    : currentValue.workout?.workouttitle}
-                                </b>
-                                {getStartTime(currentValue.start_time)}-
-                                {getStartTime(currentValue.end_time)}
-                                <br />
-                                Mode : {currentValue.mode}
-                                <br />
-                                Type:{" "}
-                                {currentValue.tag ? currentValue.tag : null}
-                              </Card>
-                            </>
+                                getSessionBookings({
+                                  variables: {
+                                    id: currentValue.id,
+                                    loginUserId: auth.userid,
+                                    status: ["Booked"],
+                                  },
+                                });
+                              }}
+                            >
+                              <b>
+                                {currentValue.type === "activity"
+                                  ? currentValue.activity.title
+                                  : currentValue.workout?.workouttitle}
+                              </b>
+                              {getStartTime(currentValue.start_time)}-
+                              {getStartTime(currentValue.end_time)}
+                              <br />
+                              Mode : {currentValue.mode}
+                              <br />
+                              Type: {currentValue.tag ? currentValue.tag : null}
+                            </Card>
                           );
                         }
                       )
@@ -538,51 +540,48 @@ export default function Program() {
                     ? dayAfterTomorrowSessionData.map(
                         (currentValue, index: number) => {
                           return (
-                            <>
-                              <Card
-                                className="bg-white rounded shadow timeline-item"
-                                key={currentValue.id}
-                                border={
-                                  activeCard === tomorrowDaySessionData &&
-                                  tomorrowDaySessionData.length
+                            <Card
+                              className="bg-white rounded shadow timeline-item"
+                              key={currentValue.id}
+                              border={
+                                activeCard === tomorrowDaySessionData &&
+                                tomorrowDaySessionData.length
+                                  ? currentDaySessionData.length +
+                                    tomorrowDaySessionData.length
+                                  : index
+                                  ? "success"
+                                  : "light"
+                              }
+                              onClick={() => {
+                                setActiveCard(
+                                  tomorrowDaySessionData &&
+                                    tomorrowDaySessionData.length
                                     ? currentDaySessionData.length +
-                                      tomorrowDaySessionData.length
+                                        tomorrowDaySessionData.length
                                     : 0
-                                    ? "success"
-                                    : "light"
-                                }
-                                onClick={() => {
-                                  setActiveCard(
-                                    tomorrowDaySessionData &&
-                                      tomorrowDaySessionData.length
-                                      ? currentDaySessionData.length +
-                                          tomorrowDaySessionData.length
-                                      : 0
-                                  );
+                                );
 
-                                  getSessionBookings({
-                                    variables: {
-                                      id: currentValue.id,
-                                      loginUserId: auth.userid,
-                                      status: ["Booked"],
-                                    },
-                                  });
-                                }}
-                              >
-                                <b>
-                                  {currentValue.type === "activity"
-                                    ? currentValue.activity.title
-                                    : currentValue.workout?.workouttitle}
-                                </b>
-                                {getStartTime(currentValue.start_time)}-
-                                {getStartTime(currentValue.end_time)}
-                                <br />
-                                Mode : {currentValue.mode}
-                                <br />
-                                Type:{" "}
-                                {currentValue.tag ? currentValue.tag : null}
-                              </Card>
-                            </>
+                                getSessionBookings({
+                                  variables: {
+                                    id: currentValue.id,
+                                    loginUserId: auth.userid,
+                                    status: ["Booked"],
+                                  },
+                                });
+                              }}
+                            >
+                              <b>
+                                {currentValue.type === "activity"
+                                  ? currentValue.activity.title
+                                  : currentValue.workout?.workouttitle}
+                              </b>
+                              {getStartTime(currentValue.start_time)}-
+                              {getStartTime(currentValue.end_time)}
+                              <br />
+                              Mode : {currentValue.mode}
+                              <br />
+                              Type: {currentValue.tag ? currentValue.tag : null}
+                            </Card>
                           );
                         }
                       )
