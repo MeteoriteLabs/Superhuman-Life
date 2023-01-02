@@ -10,6 +10,7 @@ import PaymentMethods from "./PaymentMethods/PaymentMethods";
 import PricingAssist from "./PricingAssist/PricingAssist";
 import AllTransactions from "./Transactions";
 import Payee from "./Payee/Payee";
+import './finance.css';
 
 export default function index() {
   return (

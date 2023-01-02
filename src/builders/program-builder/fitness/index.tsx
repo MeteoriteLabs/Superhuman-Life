@@ -14,10 +14,7 @@ export default function FitnessTab() {
           transition={false}
           defaultActiveKey="exercises"
         >
-          <Tab
-            eventKey="exercises"
-            title="Exercises"
-          >
+          <Tab eventKey="exercises" title="Exercises">
             <ExercisesTab />
           </Tab>
           <Tab eventKey="workout" title="Workout">

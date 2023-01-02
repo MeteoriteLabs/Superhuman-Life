@@ -18,19 +18,19 @@ export default function Fitness() {
                 defaultActiveKey="pt"
                 className="cards"
               >
-                <Tab eventKey="pt" title="One-On-One">
+                <Tab eventKey="pt" title="One-On-One" style={{ whiteSpace: 'nowrap', textAlign: 'center'}}  >
                   <PT />
                 </Tab>
-                <Tab eventKey="group" title="Group">
+                <Tab eventKey="group" title="Group" style={{ whiteSpace: 'nowrap', textAlign: 'center'}} >
                   <Group />
                 </Tab>
-                <Tab eventKey="classic" title="Recorded">
+                <Tab eventKey="classic" title="Recorded" style={{ whiteSpace: 'nowrap', textAlign: 'center'}} >
                   <Classic />
                 </Tab>
                 <Tab eventKey="custom" title="Custom">
                   <Custom />
                 </Tab>
-                <Tab eventKey="liveStream" title="Live Stream">
+                <Tab eventKey="liveStream" title="Live Stream" style={{ whiteSpace: 'nowrap', textAlign: 'center'}} >
                   <Channel />
                 </Tab>
                 <Tab eventKey="cohort" title="Cohort">

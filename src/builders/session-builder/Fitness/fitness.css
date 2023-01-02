@@ -1,7 +1,7 @@
 .card-body .nav-pills .nav-link.active,
 .nav-pills .show > .nav-link {
-  background-color: white;
-  color: black;
+  color: white;
+  background-color: #343a40;
   font-weight: bold;
 }
 
@@ -11,7 +11,7 @@
 
 .card-body .card-body .nav-pills .nav-link.active,
 .nav-pills .show > .nav-link {
-  background-color: #647a8c;
+  background-color: #636363;
   border-radius: 20px;
   color: white;
   padding: 0.5rem 3rem;
@@ -23,7 +23,9 @@
 }
 
 .nav-pills a {
-  color: #929292;
+  color: #636363;
+  white-space: nowrap !important;
+  text-align: center !important;
 }
 
 .scheduler-badge {
