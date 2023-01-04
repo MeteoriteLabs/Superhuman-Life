@@ -1,6 +1,3 @@
-import React from "react";
-import { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 import {
   Container,
@@ -13,25 +10,10 @@ import {
 import { MiniLobbyComponent } from "../../pages/dashboard/mini-lobby/LobbyPopover";
 import { NotificationOption } from "./NavbarOptions/Notifications";
 import { ProfileOption } from "./NavbarOptions/ProfileOption";
-import ToggleSideBarMenu from "./NavbarOptions/ToggleSideBarMenu";
 import './topNavbar.css';
 
 export function AuthenticatedNav() {
-  const [sideNavStatus, setSideNavStatus] = useState<boolean>(false);
-
-  const { pathname } = useLocation<any>();
-
-  useEffect(() => {
-    getSideNavStatus();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname]);
-
-  const getSideNavStatus = () => {
-    const currentSideNavStatus: boolean =
-      pathname !== "/lobby" && pathname !== "/website" && pathname !== "/insights" && pathname !== "/support" && pathname !== "/profile" ? true : false;
-    setSideNavStatus(currentSideNavStatus);
-  };
-
+  
   return (
     <>
       <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark" fixed="top">
@@ -65,20 +47,6 @@ export function AuthenticatedNav() {
         <Nav.Item className="d-lg-none d-sm-block  ">
           <ProfileOption />
         </Nav.Item>
-
-        {/* sidebar menu options for small screen */}
-
-        {
-          sideNavStatus ? <Navbar.Toggle aria-controls="responsive-navbar-nav" /> : null}
-        {
-          sideNavStatus ?
-            <Navbar.Collapse id="responsive-navbar-nav navbarScroll" className="justify-content-end">
-              <Nav navbarScroll>
-                <ToggleSideBarMenu />
-              </Nav>
-            </Navbar.Collapse>
-            : null
-        }
 
         {/* notification, lobby and profile options for large screen */}
         <Navbar.Collapse className="justify-content-end text-white d-none d-lg-block ">

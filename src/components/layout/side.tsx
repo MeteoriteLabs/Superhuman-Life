@@ -75,7 +75,7 @@ export function SideNav({ collapse, setCollapse }: any) {
         <OverlayTrigger
           placement="right"
           delay={{ show: 250, hide: 400 }}
-          overlay={renderTooltip("Clients")}
+          overlay={renderTooltip("Users")}
         >
           <NavLink className="nav-link text-white" to="/clients">
             <img
@@ -84,7 +84,7 @@ export function SideNav({ collapse, setCollapse }: any) {
               className="mr-sm-2"
               style={{ height: "20px", width: "20px" }}
             />
-            {!collapse && "Clients"}
+            {!collapse && "Users"}
           </NavLink>
         </OverlayTrigger>
 
