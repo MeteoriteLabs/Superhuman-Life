@@ -1,10 +1,14 @@
 import { useState, useEffect } from "react";
-import { Col, Row } from "react-bootstrap";
+import { Col, Row, Navbar, Nav } from "react-bootstrap";
 import { SideNav } from "./side";
 import { AuthenticatedNav, UnauthenticatedNav } from "./top";
 import { useLocation } from "react-router-dom";
+import Icon from "../Icons/index";
+import "./bottomBar.css";
 
 export default function Layout({ token, children }: any) {
+  const location = useLocation();
+  let [selected, setSelected] = useState<String>(location.pathname.slice(1));
   const [collapse, setCollapse] = useState<boolean>(true);
   const [sideNavStatus, setSideNavStatus] = useState<boolean>(false);
 
@@ -16,9 +20,17 @@ export default function Layout({ token, children }: any) {
   }, [pathname]);
 
   const getSideNavStatus = () => {
-    const currentSideNavStatus: boolean = pathname !== "/lobby" && pathname !== "/website" && pathname !== "/profile" &&  pathname !== "/insights" &&  pathname !== "/support" ? true : false;
+    const currentSideNavStatus: boolean =
+      pathname !== "/lobby" &&
+      pathname !== "/website" &&
+      pathname !== "/profile" &&
+      pathname !== "/insights" &&
+      pathname !== "/support"
+        ? true
+        : false;
     setSideNavStatus(currentSideNavStatus);
   };
+  
   return (
     <>
       <header>{token ? <AuthenticatedNav /> : <UnauthenticatedNav />}</header>
@@ -30,13 +42,13 @@ export default function Layout({ token, children }: any) {
                 <Col lg={collapse ? "1" : "2"} className="d-none d-lg-block">
                   <SideNav collapse={collapse} setCollapse={setCollapse} />
                 </Col>
-                <Col lg={collapse ? "11" : "10"} className="pr-2 pl-3">
+                <Col lg={collapse ? "11" : "10"} className="pr-2 pl-3 mb-5">
                   <hr />
                   {children}
                 </Col>
               </Row>
             ) : (
-              <div className="pt-5">{children}</div>
+              <div className="pt-5 mb-5">{children}</div>
             )}
           </div>
         ) : (
@@ -45,15 +57,175 @@ export default function Layout({ token, children }: any) {
           </div>
         )}
       </main>
-      {/* <footer className="float-right p-2">
-        <p className="text-muted">
-          2021 ©{" "}
-          <a href="https://sapien.systems/" target="_blank" rel="noreferrer">
-            Sapien
-            </a>{" "}
-            - Partner Dashboard
-          </p>
-      </footer> */}
+
+      {/* small screen footer */}
+      {token ? (
+        <Navbar
+          expand="lg"
+          fixed="bottom"
+          bg="dark"
+          variant="dark"
+          className="d-lg-none d-sm-block mt-5"
+        >
+          {selected === "home" ? (
+            <Navbar.Brand
+              href="/home"
+              onClick={() => setSelected(location.pathname.slice(1))}
+            >
+              <Icon
+                name="home"
+                width={24}
+                height={24}
+                style={{ marginLeft: "5px" }}
+              />
+              <br />
+              <small>Home</small>
+            </Navbar.Brand>
+          ) : (
+            <Navbar.Brand
+              href="/home"
+              onClick={() => setSelected(location.pathname.slice(1))}
+            >
+              <Icon
+                name="lighthome"
+                width={24}
+                height={24}
+                style={{ marginLeft: "5px" }}
+              />
+              <br />
+              <small style={{ color: "#cebaa8" }}>Home</small>
+            </Navbar.Brand>
+          )}
+
+          {selected === "bookings" ? (
+            <Navbar.Brand
+              href="/bookings"
+              onClick={() => setSelected(location.pathname.slice(1))}
+            >
+              <Icon
+                name="booking"
+                width={24}
+                height={24}
+                style={{ marginLeft: "20px" }}
+              />
+              <br />
+              <small>Bookings</small>
+            </Navbar.Brand>
+          ) : (
+            <Navbar.Brand
+              href="/bookings"
+              onClick={() => setSelected(location.pathname.slice(1))}
+            >
+              <Icon
+                name="lightbooking"
+                width={24}
+                height={24}
+                style={{ marginLeft: "20px" }}
+              />
+              <br />
+              <small style={{ color: "#cebaa8" }}>Bookings</small>
+            </Navbar.Brand>
+          )}
+
+          {selected === "schedule" ? (
+            <Navbar.Brand
+              href="/schedule"
+              onClick={() => setSelected(location.pathname.slice(1))}
+            >
+              <Icon
+                name="schedule"
+                width={24}
+                height={24}
+                style={{ marginLeft: "15px" }}
+              />
+              <br />
+              <small>Schedule</small>
+            </Navbar.Brand>
+          ) : (
+            <Navbar.Brand
+              href="/schedule"
+              onClick={() => setSelected(location.pathname.slice(1))}
+            >
+              <Icon
+                name="lightschedule"
+                width={24}
+                height={24}
+                style={{ marginLeft: "15px" }}
+              />
+              <br />
+              <small style={{ color: "#cebaa8" }}>Schedule</small>
+            </Navbar.Brand>
+          )}
+
+          {selected === "clients" ? (
+            <Navbar.Brand
+              href="/clients"
+              onClick={() => setSelected(location.pathname.slice(1))}
+            >
+              <Icon
+                name="user"
+                width={24}
+                height={24}
+                style={{ marginLeft: "5px" }}
+              />
+              <br />
+              <small>Users</small>
+            </Navbar.Brand>
+          ) : (
+            <Navbar.Brand
+              href="/clients"
+              onClick={() => setSelected(location.pathname.slice(1))}
+            >
+              <Icon
+                name="lightuser"
+                width={24}
+                height={24}
+                style={{ marginLeft: "5px" }}
+              />
+              <br />
+              <small style={{ color: "#cebaa8" }}>Users</small>
+            </Navbar.Brand>
+          )}
+
+           {/* Toggle pop up */}
+          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navbar.Collapse id="basic-navbar-nav">
+            <Nav className="mr-auto ml-3">
+
+              <Nav.Link href="/session" style={{ color: "#cebaa8" }}>
+                <Icon name="lightprogramManager" width={24} height={24} />
+                <span className="ml-1">Program Manager</span>
+              </Nav.Link>
+
+              <Nav.Link href="/finance" style={{ color: "#cebaa8" }}>
+                <Icon name="lightfinance" width={24} height={24} />
+                <span className="ml-1">Finances</span>
+              </Nav.Link>
+
+              <Nav.Link href="/offerings" style={{ color: "#cebaa8" }}>
+                <Icon name="lightoffering" width={24} height={24} />
+                <span className="ml-1">Offerings</span>
+              </Nav.Link>
+
+              <Nav.Link href="/resources" style={{ color: "#cebaa8" }}>
+                <Icon name="lightresource" width={24} height={24} />
+                <span className="ml-1">Resources</span>
+              </Nav.Link>
+
+              <Nav.Link href="/communication" style={{ color: "#cebaa8" }}>
+                <Icon name="lightcommunication" width={24} height={24} />
+                <span className="ml-1">Communication</span>
+              </Nav.Link>
+
+              <Nav.Link href="/settings" style={{ color: "#cebaa8" }}>
+                <Icon name="lightsetting" width={24} height={24} />
+                <span className="ml-1">Settings</span>
+              </Nav.Link>
+
+            </Nav>
+          </Navbar.Collapse>
+        </Navbar>
+      ) : null}
     </>
   );
 }
