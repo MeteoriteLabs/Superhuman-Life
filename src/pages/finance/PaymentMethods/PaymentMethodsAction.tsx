@@ -21,6 +21,7 @@ import {
   GET_UPI_DETAILS_IS_PRIMARY,
 } from "./queries";
 import Toaster from "../../../components/Toaster";
+// import '../finance.css';
 
 interface Operation {
   id: string;
