@@ -5,7 +5,6 @@ import {
   Row,
   Col,
   Card,
-  Container,
   InputGroup,
   Button,
   FormControl,
@@ -258,36 +257,35 @@ export default function Clients() {
       <div className="mt-3">
         <h3>Clients</h3>
 
-        {/* Search bar for clients based on their name */}
-        <Container className="mt-3 border">
-          <Row>
-            <Col lg={6}>
-              <InputGroup className="mb-3 mt-3">
-                <FormControl
-                  aria-describedby="basic-addon1"
-                  placeholder="Search for client's name"
-                  ref={searchInput}
-                />
-                <InputGroup.Prepend>
-                  <Button
-                    variant="outline-secondary"
-                    onClick={(e: any) => {
-                      e.preventDefault();
-                      setSearchFilter(searchInput.current.value);
-                    }}
-                  >
-                    <i className="fas fa-search"></i>
-                  </Button>
-                </InputGroup.Prepend>
-              </InputGroup>
-            </Col>
-          </Row>
-        </Container>
-
         <TabContent>
           <Row className="mt-5">
-            {/* Clients cards */}
             <Col lg={3} className="mb-4">
+              {/* Search bar for clients based on their name */}
+
+              <Row>
+                <Col lg={12}>
+                  <InputGroup className="mb-3 mt-3">
+                    <FormControl
+                      aria-describedby="basic-addon1"
+                      placeholder="Search for client's name"
+                      ref={searchInput}
+                    />
+                    <InputGroup.Prepend>
+                      <Button
+                        variant="outline-secondary"
+                        onClick={(e: any) => {
+                          e.preventDefault();
+                          setSearchFilter(searchInput.current.value);
+                        }}
+                      >
+                        <i className="fas fa-search"></i>
+                      </Button>
+                    </InputGroup.Prepend>
+                  </InputGroup>
+                </Col>
+              </Row>
+
+              {/* Clients cards */}
               {clientsData.map((currentValue: any, index: number) => (
                 <Card
                   style={{
@@ -334,10 +332,10 @@ export default function Clients() {
                 </Col>
 
                 {/* session starts date picker */}
-                <Col className="mt-1" lg={4}>
+                <Col className="m-1" lg={4}>
                   <label>Session&apos;s Start Date</label>
                   <input
-                    className="date__input"
+                    className="date__input m-1"
                     name="sessionStartDate"
                     onChange={(e) => {
                       getSessionBookings({
@@ -365,10 +363,10 @@ export default function Clients() {
                 </Col>
 
                 {/* session end date picker */}
-                <Col className="mt-1" lg={4}>
+                <Col className="m-1" lg={4}>
                   <label>Session&apos;s End Date</label>
                   <input
-                    className="date__input"
+                    className="date__input m-1"
                     name="sessionEndDate"
                     onChange={(e) => {
                       getSessionBookings({

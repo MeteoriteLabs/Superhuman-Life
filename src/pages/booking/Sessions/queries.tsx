@@ -1,5 +1,79 @@
 import { gql } from "@apollo/client";
 
+export const GET_TAGS = gql`
+  query getTags(
+    $id: ID
+    $today: Date
+    $dayAfterTomorrow: Date
+    $tag_name: String
+    $start_time: String
+    $end_time: String
+  ) {
+    tags(
+      filters: {
+        tag_name: { eq: $tag_name }
+        sessions: {
+          changemaker: { id: { eq: $id } }
+          session_date: { gte: $today, lte: $dayAfterTomorrow }
+          start_time: { gte: $start_time }
+          end_time: { lte: $end_time }
+        }
+      }
+    ) {
+      data {
+        id
+        attributes {
+          tag_name
+          sessions {
+            data {
+              id
+              attributes {
+                start_time
+                end_time
+                session_date
+                tag
+                mode
+                activity {
+                  data {
+                    id
+                    attributes {
+                      title
+                    }
+                  }
+                }
+                workout {
+                  data {
+                    id
+                    attributes {
+                      workouttitle
+                    }
+                  }
+                }
+                sessions_bookings {
+                  data {
+                    id
+                    attributes {
+                      Session_booking_status
+                      session {
+                        data {
+                          id
+                          attributes {
+                            session_date
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
 export const GET_SESSIONS = gql`
   query getSessions(
     $filter: String!
