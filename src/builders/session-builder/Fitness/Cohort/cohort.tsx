@@ -103,7 +103,6 @@ export default function Cohort(props) {
         // }
 
         const flattenData = flattenObj({...data});
-        console.log(flattenData);
 
         setUserPackage(
             [...flattenData.tags.map((packageItem) => {
@@ -130,10 +129,7 @@ export default function Cohort(props) {
 
     }
 
-    console.log(userPackage);
-
     function calculateProgramRenewal(sessions) {
-        console.log(sessions);
 
         if(sessions.length === 0){
             return "N/A"
@@ -243,7 +239,7 @@ export default function Cohort(props) {
                         accessor: "client",
                         Header: "Client",
                         Cell: (row) => {
-                            console.log(row.value)
+                            
                             return <div >
                                 {row.value?.length === undefined ? <p className='text-center mb-0'>N/A</p> :
                                     row.value?.length === 1 ?

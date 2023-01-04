@@ -25,7 +25,6 @@ const PillarScreen = () => {
           setShow(true);
      }});
 
-     console.log(goalData);
 
 
 

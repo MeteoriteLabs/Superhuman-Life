@@ -14,6 +14,7 @@ function CreateSuggestion(props: any, ref: any) {
      const last = window.location.pathname.split("/").pop();
      const Schema: { [name: string]: any } = require("./suggest.json");
      //const [messageDetails, setMessageDetails] = useState<any>({});
+     // eslint-disable-next-line
      const [operation, setOperation] = useState<Operation>({} as Operation);
      const [createSuggestion] = useMutation(ADD_SUGGESTION_NEW, {
           onCompleted: (r: any) => {
@@ -34,7 +35,7 @@ function CreateSuggestion(props: any, ref: any) {
      }));
 
      function CreateSuggestion(frm: any) {
-          //console.log(frm);
+          
           let searchid: any = frm.packagesearch.split(",");
           for (let i = 0; i < searchid.length; i++) {
                createSuggestion({
@@ -46,7 +47,6 @@ function CreateSuggestion(props: any, ref: any) {
           }
      }
      function OnSubmit(frm: any) {
-          console.log(operation.type);
           CreateSuggestion(frm);
      }
 

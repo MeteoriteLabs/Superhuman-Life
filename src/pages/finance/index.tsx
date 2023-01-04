@@ -10,6 +10,7 @@ import PaymentMethods from "./PaymentMethods/PaymentMethods";
 import PricingAssist from "./PricingAssist/PricingAssist";
 import AllTransactions from "./Transactions";
 import Payee from "./Payee/Payee";
+import './finance.css';
 
 export default function index() {
   return (
@@ -20,7 +21,7 @@ export default function index() {
         <Card.Body>
           <Tabs
             style={{ borderBottom: "1px solid black" }}
-            className="pb-3"
+            className="pb-3 cards"
             variant="pills"
             transition={false}
             defaultActiveKey="summary"

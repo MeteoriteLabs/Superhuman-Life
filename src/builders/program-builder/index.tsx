@@ -9,7 +9,7 @@ export default function ProgramPage() {
         <Card.Body>
           <Tabs
             style={{ borderBottom: "1px solid black" }}
-            className="pb-3"
+            className="pb-3 cards"
             variant="pills"
             transition={false}
             defaultActiveKey="fitness"

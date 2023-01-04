@@ -6,23 +6,16 @@ export default function SessionPage() {
     <div>
       <h2>Program Manager</h2>
 
-      <Card className="shadow-sm mt-3" border="light">
+      <Card className="shadow-sm mt-3" border="light" >
         <Card.Body>
           <Tabs
-            style={{ borderBottom: "1px solid black" }}
-            className="pb-3"
+            className="pb-3 cards"
             variant="pills"
             transition={false}
             defaultActiveKey="fitness"
           >
             <Tab eventKey="fitness" title="Fitness">
               <Fitness />
-            </Tab>
-            <Tab eventKey="nutrition" title="Nutrition">
-              {/* <Fitness/> */}
-            </Tab>
-            <Tab eventKey="journey" title="Journey">
-              {/* <Fitness/> */}
             </Tab>
           </Tabs>
         </Card.Body>

@@ -57,10 +57,10 @@ const RosterAttendees = () => {
                 {clients.length === 0 && <div className='text-center mt-3 text-info p-3 shadow-lg rounded border border-secondary'><b>No Clients Available</b></div>}
                 {clients.length > 0 && <div className='mt-3'>
                     {clients?.map((item: any, index: any) => {
-                        console.log(item);
+                        
                         return (
                             <>
-                                <div className='text-left shadow-lg' style={{ borderRadius: '15px'}}>
+                                <div className='text-left shadow-lg' key={index} style={{ borderRadius: '15px'}}>
                                     <Row>
                                         <Col lg={4} style={{ borderRight: '2px dashed gray'}}>
                                             <div className='pl-3 pt-1 pb-1' style={{ backgroundColor: 'gray', maxWidth: '50px', borderTopLeftRadius: '15px', borderBottomRightRadius: '15px'}}>

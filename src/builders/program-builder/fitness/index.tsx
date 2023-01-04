@@ -9,15 +9,12 @@ export default function FitnessTab() {
       <Card.Body>
         <Tabs
           style={{ borderBottom: "1px solid black" }}
-          className="pb-3"
+          className="pb-3 cards"
           variant="pills"
           transition={false}
           defaultActiveKey="exercises"
         >
-          <Tab
-            eventKey="exercises"
-            title="Exercises"
-          >
+          <Tab eventKey="exercises" title="Exercises">
             <ExercisesTab />
           </Tab>
           <Tab eventKey="workout" title="Workout">
