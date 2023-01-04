@@ -4,10 +4,11 @@ import { useQuery } from "@apollo/client";
 import { GET_CLIENTS } from "./queries";
 import AuthContext from "../../../context/auth-context";
 import { flattenObj } from "../../../components/utils/responseFlatten";
+import { Row, Col } from "react-bootstrap";
 import moment from "moment";
 
 function WeeklyClientGraph() {
-  const [clientsData, setClientsData] = useState<any>([]);
+  const [clientsData, setClientsData] = useState<{}[]>([]);
   const auth = useContext(AuthContext);
 
   useQuery(GET_CLIENTS, {
@@ -24,17 +25,18 @@ function WeeklyClientGraph() {
   const loadData = (data) => {
     const flattenClientsData = flattenObj({ ...data.clientPackages });
 
-    const arr: any[] = [];
+    const arr: {}[] = [];
 
     for (let weekDay = 0; weekDay < 7; weekDay++) {
+      let currentDay = moment().subtract(weekDay, "days");
       arr[weekDay] = {
-        index: `${moment().subtract(weekDay, "days").format("ddd,")} ${moment()
+        index: `${currentDay.format("ddd,")} ${moment()
           .subtract(weekDay, "days")
           .format("DD/MMM")}`,
         Clients: flattenClientsData.filter(
           (currentValue) =>
             moment(currentValue.accepted_date).format("DD/MM/YYYY") ===
-            moment().subtract(weekDay, "days").format("DD/MM/YYYY")
+            currentDay.format("DD/MM/YYYY")
         ).length,
       };
     }
@@ -43,12 +45,15 @@ function WeeklyClientGraph() {
   };
 
   return (
-    <BarGraph
-      data={clientsData}
-      yAxis={"No. of Clients"}
-      title={"Clients Weekly Graph"}
-      keyName= {["Clients"]}
-    />
+    <Row>
+      <Col style={{ overflowX: "scroll" }}>
+        <BarGraph
+          data={clientsData}
+          yAxis={"No. of Clients"}
+          keyName={["Clients"]}
+        />
+      </Col>
+    </Row>
   );
 }
 

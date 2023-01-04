@@ -10,12 +10,12 @@ function GraphSelector() {
   const [isLeads, setIsLeads] = useState<boolean>(true);
   const [isClients, setIsClients] = useState<boolean>(false);
   const [isOfferingBooking, setIsOfferingBooking] = useState<boolean>(false);
-  const [label, setLabel] = useState<String>("Select Graph");
+  const [label, setLabel] = useState<String>("Leads");
 
   return (
-    <>
+    <div className="bg-white rounded shadow">
       <Row>
-        <Col md={{ offset: "9", span: "3" }}>
+        <Col md={{ offset: "5", span: "3" }}>
           <Dropdown className="m-3">
             <Dropdown.Toggle variant="dark" id="dropdown-basic">
               {label}
@@ -74,7 +74,7 @@ function GraphSelector() {
       {isLeads ? <LeadGraph /> : null}
       {isClients ? <ClientsGraph /> : null}
       {isOfferingBooking ? <OfferingBookingGraph /> : null}
-    </>
+    </div>
   );
 }
 

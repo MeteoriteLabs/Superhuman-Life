@@ -26,7 +26,7 @@ function LeadComponent() {
 
   return (
     <Card>
-      <Card.Header as="h5" className="bg-dark text-light" style={{cursor: "pointer"}}>
+      <Card.Header as="h5" className="bg-dark text-light">
         Lead
       </Card.Header>
       <div className="scrollBar">
@@ -54,7 +54,7 @@ function LeadComponent() {
                         <Col md={{ span: 3, offset: 9 }}>
                           <a
                             href={`mailto:${
-                              currentValue.Details
+                              currentValue.Details 
                                 ? currentValue.Details.leadsdetails.email
                                 : null
                             }`}

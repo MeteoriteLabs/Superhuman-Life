@@ -4,10 +4,11 @@ import { useQuery } from "@apollo/client";
 import { GET_CLIENTS } from "./queries";
 import AuthContext from "../../../context/auth-context";
 import { flattenObj } from "../../../components/utils/responseFlatten";
+import { Row, Col } from "react-bootstrap";
 import moment from "moment";
 
 function MonthlyClientGraph() {
-  const [clientsData, setClientsData] = useState<any>([]);
+  const [clientsData, setClientsData] = useState<{}[]>([]);
   const auth = useContext(AuthContext);
 
   useQuery(GET_CLIENTS, {
@@ -24,15 +25,16 @@ function MonthlyClientGraph() {
   const loadData = (data) => {
     const flattenClientsData = flattenObj({ ...data.clientPackages });
 
-    const arr: any[] = [];
+    const arr: {}[] = [];
 
     for (let month = 0; month < 12; month++) {
+      let currentMonth = moment().subtract(month, "months");
       arr[month] = {
-        index: `${moment().subtract(month, "months").format("MMM YY")}`,
+        index: `${currentMonth.format("MMM YY")}`,
         Clients: flattenClientsData.filter(
           (currentValue) =>
             moment(currentValue.accepted_date).format("MM/YY") ===
-            moment().subtract(month, "months").format("MM/YY")
+            currentMonth.format("MM/YY")
         ).length,
       };
     }
@@ -41,13 +43,15 @@ function MonthlyClientGraph() {
   };
 
   return (
-    <BarGraph
-      data={clientsData}
-      yAxis={"No. of Clients"}
-      title={"Clients Monthly Graph"}
-      keyName= {["Clients"]}
-
-    />
+    <Row>
+      <Col style={{ overflowX: "scroll" }}>
+        <BarGraph
+          data={clientsData}
+          yAxis={"No. of Clients"}
+          keyName={["Clients"]}
+        />
+      </Col>
+    </Row>
   );
 }
 

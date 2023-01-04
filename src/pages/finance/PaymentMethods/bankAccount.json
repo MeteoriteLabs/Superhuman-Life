@@ -30,6 +30,10 @@
          "type": "string",
          "title": "PAN CARD"
       },
+      "Is_Primary": {
+         "type": "boolean",
+         "title": "Primary"
+      },
       "GST": {
          "title": "",
          "type": "string",
@@ -40,7 +44,7 @@
       }
    },
    "dependencies": {
-      "GST":{
+      "GST": {
          "oneOf": [
             {
                "properties": {
