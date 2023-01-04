@@ -4,17 +4,18 @@ import { useQuery } from "@apollo/client";
 import { GET_CLIENTS } from "./queries";
 import AuthContext from "../../../context/auth-context";
 import { flattenObj } from "../../../components/utils/responseFlatten";
+import { Col, Row } from "react-bootstrap";
 import moment from "moment";
 
 function MonthlySalesGraph() {
-  const [clientsData, setClientsData] = useState<any>([]);
+  const [clientsData, setClientsData] = useState<{}[]>([]);
   const auth = useContext(AuthContext);
 
   useQuery(GET_CLIENTS, {
     variables: {
       id: Number(auth.userid),
       startDateTime: moment().subtract(1, "years").format(),
-      endDateTime: moment().format()
+      endDateTime: moment().format(),
     },
     onCompleted: (data) => {
       loadData(data);
@@ -24,19 +25,22 @@ function MonthlySalesGraph() {
   const loadData = (data) => {
     const flattenClientsData = flattenObj({ ...data.clientPackages });
 
-    const arr: any[] = [];
+    const arr: {}[] = [];
+    const initialValue = 0;
 
     for (let month = 0; month < 12; month++) {
-      const sales = flattenClientsData.filter(
+      let currentMonth = moment().subtract(month, "months");
+
+      let sales = flattenClientsData.filter(
         (currentValue) =>
           moment(currentValue.accepted_date).format("MM/YY") ===
-          moment().subtract(month, "months").format("MM/YY")
+          currentMonth.format("MM/YY")
       );
-      const initialValue = 0;
+
       arr[month] = {
-        x: `${moment().subtract(month, "months").format("MMM YY")}`,
+        x: `${currentMonth.format("MMM YY")}`,
         y: sales.reduce(
-          (acc, currentValue) => acc + currentValue.PackageMRP,
+          (accumulator, currentValue) => accumulator + currentValue.PackageMRP,
           initialValue
         ),
       };
@@ -48,11 +52,14 @@ function MonthlySalesGraph() {
   };
 
   return (
-    <LineGraph
-      data={clientsData}
-      yAxis={"Sales (INR)"}
-      title={"Sales Monthly Graph"}
-    />
+    <Row>
+      <Col style={{ overflowX: "scroll" }}>
+        <LineGraph
+          data={clientsData}
+          yAxis={"Sales (INR)"}
+        />
+      </Col>
+    </Row>
   );
 }
 

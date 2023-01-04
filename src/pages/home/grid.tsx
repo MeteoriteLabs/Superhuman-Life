@@ -1,47 +1,33 @@
+import { Row, Col } from "react-bootstrap";
 import UpcomingCard from "./UpcomingCard";
 import LeadCard from "./LeadCard/index";
-import { Responsive, WidthProvider } from "react-grid-layout";
+import GraphSelector from "./GraphSelector";
 // import LinksCard from "./Links";
-const ResponsiveGridLayout = WidthProvider(Responsive);
+// import TaskCard from "./TaskCard";
 
 function Grid() {
-  var layout = [
-    { i: "lead", x: 0, y: 0, w: 1, h: 1 },
-    { i: "offerings", x: 1, y: 0, w: 1, h: 1 },
-    { i: "links", x: 2, y: 0, w: 1, h: 1 },
-  ];
-
-  const getLayouts = () => {
-    const savedLayouts = localStorage.getItem("grid-layout");
-    return savedLayouts ? JSON.parse(savedLayouts) : { lg: layout };
-  };
-
-  const handlelayoutChange = (layout, layouts) => {
-    localStorage.setItem("grid-layout", JSON.stringify(layouts));
-  };
-
   return (
-    <ResponsiveGridLayout
-      className="layout"
-      layouts={getLayouts()}
-      breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-      cols={{ lg: 3, md: 4, sm: 3, xs: 2, xxs: 1 }}
-      rowHeight={420}
-      width={1200}
-      allowOverlap={false}
-      onLayoutChange={handlelayoutChange}
-      margin={[10, 10]}
-    >
-      <div key="lead">
-        <LeadCard />
-      </div>
-      <div key="offerings">
-        <UpcomingCard />
-      </div>
-      {/* <div key="links">
-        <LinksCard />
-      </div> */}
-    </ResponsiveGridLayout>
+    <>
+      <Row className="my-3">
+        <Col className="my-2" lg={3} sm={12}>
+          <LeadCard />
+        </Col>
+        <Col className="my-2" lg={3} sm={12}>
+          <UpcomingCard />
+        </Col>
+        {/* <Col className="my-2" lg={3} sm={12}>
+          <TaskCard />
+        </Col>
+        <Col className="my-2" lg={3} sm={12}>
+          <LinksCard />
+        </Col> */}
+      </Row>
+      <Row>
+        <Col>
+          <GraphSelector />  
+        </Col>
+      </Row>
+    </>
   );
 }
 

@@ -5,19 +5,19 @@ import { GET_LEADS } from "./queries";
 import AuthContext from "../../../context/auth-context";
 import { flattenObj } from "../../../components/utils/responseFlatten";
 import moment from "moment";
-import { Tabs, Tab } from "react-bootstrap";
+import { Tabs, Tab, Row, Col } from "react-bootstrap";
 import WeeklyLeadsGraph from "./WeeklyLeadsGraph";
-import '../Styles/navTabStyles.css';
+import "../Styles/navTabStyles.css";
 
 function LeadGraph() {
-  const [leadsData, setLeadData] = useState<any>([]);
+  const [leadsData, setLeadData] = useState<{}[]>([]);
   const auth = useContext(AuthContext);
 
   useQuery(GET_LEADS, {
     variables: {
       id: Number(auth.userid),
       startDateTime: moment().subtract(1, "years").format(),
-      endDateTime: moment().format()
+      endDateTime: moment().format(),
     },
     onCompleted: (data) => {
       loadData(data);
@@ -27,15 +27,16 @@ function LeadGraph() {
   const loadData = (data) => {
     const flattenLeadsData = flattenObj({ ...data.websiteContactForms });
 
-    const arr: any[] = [];
+    const arr: {}[] = [];
 
     for (let month = 0; month < 12; month++) {
+      let currentMonth = moment().subtract(month, "months");
       arr[month] = {
-        index: `${moment().subtract(month, "months").format("MMM YY")}`,
+        index: `${currentMonth.format("MMM YY")}`,
         Leads: flattenLeadsData.filter(
           (currentValue) =>
             moment(currentValue.createdAt).format("MM/YY") ===
-            moment().subtract(month, "months").format("MM/YY")
+            currentMonth.format("MM/YY")
         ).length,
       };
     }
@@ -45,14 +46,17 @@ function LeadGraph() {
 
   return (
     <>
-      <Tabs defaultActiveKey="monthly" id="uncontrolled-tab-example">
+      <Tabs defaultActiveKey="monthly">
         <Tab eventKey="monthly" title="Monthly">
-          <BarGraph
-            data={leadsData}
-            yAxis={"No. of Leads"}
-            title={"Leads Monthly Graph"}
-            keyName= {["Leads"]}
-          />
+          <Row>
+            <Col style={{ overflowX: "scroll" }}>
+              <BarGraph
+                data={leadsData}
+                yAxis={"No. of Leads"}
+                keyName={["Leads"]}
+              />
+            </Col>
+          </Row>
         </Tab>
         <Tab eventKey="weekly" title="Weekly">
           <WeeklyLeadsGraph />

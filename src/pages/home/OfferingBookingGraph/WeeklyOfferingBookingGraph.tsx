@@ -5,9 +5,10 @@ import { GET_BOOKINGS } from "./queries";
 import AuthContext from "../../../context/auth-context";
 import { flattenObj } from "../../../components/utils/responseFlatten";
 import moment from "moment";
+import { Col, Row } from "react-bootstrap";
 
 function WeeklyOfferingBookingGraph() {
-  const [clientsData, setClientsData] = useState<any>([]);
+  const [clientsData, setClientsData] = useState<{}[]>([]);
   const auth = useContext(AuthContext);
 
   useQuery(GET_BOOKINGS, {
@@ -24,12 +25,12 @@ function WeeklyOfferingBookingGraph() {
   const loadData = (data) => {
     const flattenClientsData = flattenObj({ ...data.clientBookings });
 
-    const arr: any[] = [];
+    const arr: {}[] = [];
 
     for (let weekDay = 0; weekDay < 7; weekDay++) {
-      const currentDay = moment().subtract(weekDay, "days");
+      let currentDay = moment().subtract(weekDay, "days");
       arr[weekDay] = {
-        x: `${moment().subtract(weekDay, "days").format("ddd,")} ${moment()
+        x: `${currentDay.format("ddd,")} ${moment()
           .subtract(weekDay, "days")
           .format("DD/MMM")}`,
         y: flattenClientsData.filter(
@@ -46,11 +47,14 @@ function WeeklyOfferingBookingGraph() {
   };
 
   return (
-    <LineGraph
-      data={clientsData}
-      yAxis={"Offering Bookings"}
-      title={"Bookings Weekly Graph"}
-    />
+    <Row>
+      <Col style={{ overflowX: "scroll" }}>
+        <LineGraph
+          data={clientsData}
+          yAxis={"Offering Bookings"}
+        />
+      </Col>
+    </Row>
   );
 }
 

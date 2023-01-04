@@ -14,7 +14,7 @@ import { Subject } from "rxjs";
 import { schema, widgets } from "../../profileSchema";
 import { flattenObj } from "../../../../components/utils/responseFlatten";
 import StatusModal from "../../../../components/StatusModal/StatusModal";
-import Toaster from '../../../../components/Toaster/index';
+import Toaster from '../../../../components/Toaster';
 import { yearCustomFormats, yearTransformErrors } from "../../../../components/utils/ValidationPatterns";
 
 interface Operation {
@@ -23,12 +23,12 @@ interface Operation {
      type: "create" | "edit" | "delete";
 }
 
-export interface BasicEducationDetails {
+interface BasicEducationDetails {
      Institute_Name: string;
      Type_of_degree: string;
      Specialization: string;
      Year: string; 
-   }
+}
 
 function CreateEducation(props: any, ref: any) {
      const educationJson: { } = require("./Education.json");

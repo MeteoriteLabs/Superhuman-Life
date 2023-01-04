@@ -4,10 +4,11 @@ import { useQuery } from "@apollo/client";
 import { GET_CLIENTS } from "./queries";
 import AuthContext from "../../../context/auth-context";
 import { flattenObj } from "../../../components/utils/responseFlatten";
+import { Col, Row } from "react-bootstrap";
 import moment from "moment";
 
 function WeeklySalesGraph() {
-  const [clientsData, setClientsData] = useState<any>([]);
+  const [clientsData, setClientsData] = useState<{}[]>([]);
   const auth = useContext(AuthContext);
 
   useQuery(GET_CLIENTS, {
@@ -24,40 +25,24 @@ function WeeklySalesGraph() {
   const loadData = (data) => {
     const flattenClientsData = flattenObj({ ...data.clientPackages });
 
-    const arr: any[] = [];
+    const arr: {}[] = [];
+    const initialValue = 0;
 
     for (let weekDay = 0; weekDay < 7; weekDay++) {
-      const currentDay = moment().subtract(weekDay, "days");
-      const sales = flattenClientsData.filter(
+      let currentDay = moment().subtract(weekDay, "days");
+
+      let sales = flattenClientsData.filter(
         (currentValue) =>
           moment(currentValue.accepted_date).format("DD/MM/YY") ===
           currentDay.format("DD/MM/YY")
       );
-      // console.log(sales);
-      // console.log(flattenClientsData.filter(
-      //   (currentValue) =>
-      //     moment.utc(currentValue.accepted_date).format("DD/MM/YY") ===
-      //     currentDay.format("DD/MM/YY")
-      // ))
-      // console.log()
-      const initialValue = 0;
+
       arr[weekDay] = {
-        x: `${currentDay.format("ddd,")} ${moment()
-          .subtract(weekDay, "days")
-          .format("DD/MMM")}`,
-        y: 
-        // flattenClientsData
-          // .filter(
-          //   (currentValue) =>
-          //     moment(currentValue.accepted_date).format("DD/MM/YY") ===
-          //     currentDay.format("DD/MM/YY")
-          // )
-          sales
-          .reduce(
-            (accumulator, currentValue) =>
-              accumulator + currentValue.PackageMRP,
-            initialValue
-          ),
+        x: `${currentDay.format("ddd,")} ${currentDay.format("DD/MMM")}`,
+        y: sales.reduce(
+          (accumulator, currentValue) => accumulator + currentValue.PackageMRP,
+          initialValue
+        ),
       };
     }
 
@@ -67,11 +52,14 @@ function WeeklySalesGraph() {
   };
 
   return (
-    <LineGraph
-      data={clientsData}
-      yAxis={"Sales (INR)"}
-      title={"Sales Weekly Graph"}
-    />
+    <Row>
+      <Col style={{ overflowX: "scroll" }}>
+        <LineGraph
+          data={clientsData}
+          yAxis={"Sales (INR)"}
+        />
+      </Col>
+    </Row>
   );
 }
 

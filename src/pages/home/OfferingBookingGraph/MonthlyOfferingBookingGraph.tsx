@@ -5,16 +5,17 @@ import AuthContext from "../../../context/auth-context";
 import { flattenObj } from "../../../components/utils/responseFlatten";
 import moment from "moment";
 import LineGraph from "../../../components/Graphs/LineGraph/LineGraph";
+import { Row, Col } from "react-bootstrap";
 
 function MonthlyOfferingBookingGraph() {
-  const [clientsData, setClientsData] = useState<any>([]);
+  const [clientsData, setClientsData] = useState<{}[]>([]);
   const auth = useContext(AuthContext);
 
   useQuery(GET_BOOKINGS, {
     variables: {
       id: Number(auth.userid),
       startDateTime: moment().subtract(1, "years").format(),
-      endDateTime: moment().format()
+      endDateTime: moment().format(),
     },
     onCompleted: (data) => {
       loadData(data);
@@ -24,15 +25,16 @@ function MonthlyOfferingBookingGraph() {
   const loadData = (data) => {
     const flattenClientsData = flattenObj({ ...data.clientBookings });
 
-    const arr: any[] = [];
+    const arr: {}[] = [];
 
     for (let month = 0; month < 12; month++) {
+      let currentMonth = moment().subtract(month, "months");
       arr[month] = {
-        x: `${moment().subtract(month, "months").format("MMM YY")}`,
+        x: `${currentMonth.format("MMM YY")}`,
         y: flattenClientsData.filter(
           (currentValue) =>
             moment(currentValue.booking_date).format("MM/YY") ===
-            moment().subtract(month, "months").format("MM/YY")
+            currentMonth.format("MM/YY")
         ).length,
       };
     }
@@ -43,11 +45,14 @@ function MonthlyOfferingBookingGraph() {
   };
 
   return (
-    <LineGraph
-      data={clientsData}
-      yAxis={"No. of Bookings"}
-      title={"Bookings Monthly Graph"}
-    />
+    <Row>
+      <Col style={{overflowX: 'scroll'}}>
+        <LineGraph
+          data={clientsData}
+          yAxis={"No. of Bookings"}
+        />
+      </Col>
+    </Row>
   );
 }
 
