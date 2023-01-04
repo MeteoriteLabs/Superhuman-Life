@@ -41,7 +41,7 @@ export default function Custom(props) {
 
     const loadData = (data) => {
         const flattenData = flattenObj({...data});
-        console.log(flattenData);
+        
         setUserPackage(
             [...flattenData.tags].map((packageItem) => {
                 let renewDay: any = '';
@@ -97,9 +97,6 @@ export default function Custom(props) {
     }
 
     function calculateProgramRenewal(sessions: any, effectiveDate: any) {
-        // console.log('calculateProgramRenewal', duration, effectiveDate, renewalDate);
-        
-        // const dates: string[] = []; 
 
         let max: number = 0;
         for(var i=0; i<sessions.length; i++){

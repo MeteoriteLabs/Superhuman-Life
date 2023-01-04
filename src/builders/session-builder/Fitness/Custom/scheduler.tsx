@@ -208,8 +208,6 @@ const Scheduler = () => {
     //     return 5;
     // }
 
-    // console.log(tag);
-
     if (!show) return <span style={{ color: 'red' }}>Loading...</span>;
     else return (
         <>

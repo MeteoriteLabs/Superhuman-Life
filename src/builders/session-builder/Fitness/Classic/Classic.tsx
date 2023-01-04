@@ -103,7 +103,6 @@ export default function Classic(props) {
         // }
 
         const flattenData = flattenObj({...data});
-        console.log(flattenData);
 
 
         setUserPackage(

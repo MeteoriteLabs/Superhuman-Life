@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import {useState, useEffect} from 'react';
 import { GET_TAG_BY_ID } from '../../graphQL/queries';
 import {UPDATE_USERPACKAGE_EFFECTIVEDATE} from '../../graphQL/mutation';
 import { useQuery, useMutation } from '@apollo/client';
@@ -185,10 +185,6 @@ const Scheduler = () => {
         var formattedSum = handleTimeFormatting(sum, duration);
         return formattedSum;
     }
-
-    console.log(tag)
-
-    console.log(tag?.sessions.filter((ses) => ses.type === "restday"));
 
     if (!show) return <span style={{ color: 'red' }}>Loading...</span>;
     else return (

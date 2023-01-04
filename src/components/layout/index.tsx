@@ -3,12 +3,6 @@ import { Col, Row, Navbar, Nav } from "react-bootstrap";
 import { SideNav } from "./side";
 import { AuthenticatedNav, UnauthenticatedNav } from "./top";
 import { useLocation } from "react-router-dom";
-import SessionIcon from "./Icons/Session.svg";
-import OfferingsIcon from "./Icons/Offerings.svg";
-import ResourcesIcon from "./Icons/Resources.svg";
-import FinancesIcon from "./Icons/Finances.svg";
-import CommunicationIcon from "./Icons/Communications.svg";
-import SettingsIcon from "./Icons/Settings.svg";
 import Icon from "../Icons/index";
 import "./bottomBar.css";
 
@@ -36,7 +30,7 @@ export default function Layout({ token, children }: any) {
         : false;
     setSideNavStatus(currentSideNavStatus);
   };
-  console.log(location, selected, location.pathname.slice(1));
+  
   return (
     <>
       <header>{token ? <AuthenticatedNav /> : <UnauthenticatedNav />}</header>
@@ -48,13 +42,13 @@ export default function Layout({ token, children }: any) {
                 <Col lg={collapse ? "1" : "2"} className="d-none d-lg-block">
                   <SideNav collapse={collapse} setCollapse={setCollapse} />
                 </Col>
-                <Col lg={collapse ? "11" : "10"} className="pr-2 pl-3">
+                <Col lg={collapse ? "11" : "10"} className="pr-2 pl-3 mb-5">
                   <hr />
                   {children}
                 </Col>
               </Row>
             ) : (
-              <div className="pt-5">{children}</div>
+              <div className="pt-5 mb-5">{children}</div>
             )}
           </div>
         ) : (
@@ -114,7 +108,6 @@ export default function Layout({ token, children }: any) {
                 height={24}
                 style={{ marginLeft: "20px" }}
               />
-
               <br />
               <small>Bookings</small>
             </Navbar.Brand>
@@ -133,6 +126,7 @@ export default function Layout({ token, children }: any) {
               <small style={{ color: "#cebaa8" }}>Bookings</small>
             </Navbar.Brand>
           )}
+
           {selected === "schedule" ? (
             <Navbar.Brand
               href="/schedule"
@@ -142,7 +136,7 @@ export default function Layout({ token, children }: any) {
                 name="schedule"
                 width={24}
                 height={24}
-                style={{ marginLeft: "5px" }}
+                style={{ marginLeft: "15px" }}
               />
               <br />
               <small>Schedule</small>
@@ -193,87 +187,41 @@ export default function Layout({ token, children }: any) {
             </Navbar.Brand>
           )}
 
+           {/* Toggle pop up */}
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="mr-auto ml-3">
-              <Nav.Link href="/session">
-                <img
-                  src={SessionIcon}
-                  alt="session icon"
-                  className="mr-sm-2"
-                  style={{
-                    height: "20px",
-                    width: "20px",
-                    marginRight: "5px",
-                  }}
-                />
-                Program Manager
+
+              <Nav.Link href="/session" style={{ color: "#cebaa8" }}>
+                <Icon name="lightprogramManager" width={24} height={24} />
+                <span className="ml-1">Program Manager</span>
               </Nav.Link>
-              <Nav.Link href="/finance">
-                <img
-                  src={FinancesIcon}
-                  alt="finances icon"
-                  className="mr-sm-2"
-                  style={{
-                    height: "20px",
-                    width: "20px",
-                    marginRight: "5px",
-                  }}
-                />
-                Finances
+
+              <Nav.Link href="/finance" style={{ color: "#cebaa8" }}>
+                <Icon name="lightfinance" width={24} height={24} />
+                <span className="ml-1">Finances</span>
               </Nav.Link>
-              <Nav.Link href="/offerings">
-                <img
-                  src={OfferingsIcon}
-                  alt="offering icon"
-                  className="mr-sm-2"
-                  style={{
-                    height: "20px",
-                    width: "20px",
-                    marginRight: "5px",
-                  }}
-                />
-                Offerings
+
+              <Nav.Link href="/offerings" style={{ color: "#cebaa8" }}>
+                <Icon name="lightoffering" width={24} height={24} />
+                <span className="ml-1">Offerings</span>
               </Nav.Link>
-              <Nav.Link href="/resources">
-                <img
-                  src={ResourcesIcon}
-                  alt="resources icon"
-                  className="mr-sm-2"
-                  style={{
-                    height: "20px",
-                    width: "20px",
-                    marginRight: "5px",
-                  }}
-                />
-                Resources
+
+              <Nav.Link href="/resources" style={{ color: "#cebaa8" }}>
+                <Icon name="lightresource" width={24} height={24} />
+                <span className="ml-1">Resources</span>
               </Nav.Link>
-              <Nav.Link href="/communication">
-                <img
-                  src={CommunicationIcon}
-                  alt="communication icon"
-                  className="mr-sm-2"
-                  style={{
-                    height: "20px",
-                    width: "20px",
-                    marginRight: "5px",
-                  }}
-                />
-                Communication
+
+              <Nav.Link href="/communication" style={{ color: "#cebaa8" }}>
+                <Icon name="lightcommunication" width={24} height={24} />
+                <span className="ml-1">Communication</span>
               </Nav.Link>
-              <Nav.Link href="/settings">
-                <img
-                  src={SettingsIcon}
-                  alt="settings icon"
-                  className="mr-sm-2"
-                  style={{
-                    height: "20px",
-                    width: "20px",
-                    marginRight: "5px",
-                  }}
-                />
-                Settings
+
+              <Nav.Link href="/settings" style={{ color: "#cebaa8" }}>
+                <Icon name="lightsetting" width={24} height={24} />
+                <span className="ml-1">Settings</span>
               </Nav.Link>
+
             </Nav>
           </Navbar.Collapse>
         </Navbar>

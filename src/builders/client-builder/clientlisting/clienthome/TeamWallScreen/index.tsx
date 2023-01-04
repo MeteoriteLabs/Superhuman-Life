@@ -22,7 +22,7 @@ function Index() {
      }
      function loadData(data: any) {
           const flattenData = flattenObj({...data})
-          console.log(flattenData);
+          
           let changemakers: any = [];
           let namearr: any = [];
           let flag: any;
@@ -123,7 +123,7 @@ function Index() {
 
                {notes &&
                     notes.map((e: any, index) => {
-                         // console.log(e);
+                         
                          return (
                               <CardComp
                                    key={index}

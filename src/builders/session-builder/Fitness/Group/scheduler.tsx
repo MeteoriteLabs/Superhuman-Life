@@ -291,8 +291,6 @@ const Scheduler = () => {
         return formattedSum;
     }
 
-    console.log(tag);
-
     function handleCallback(){
         // setSessionIds([]);
         mainQuery.refetch();
@@ -341,8 +339,6 @@ const Scheduler = () => {
         var days = moment(ed).diff(moment(sd), 'days');
         return days + 1;
     }
-
-    console.log(tag);
     
     if (!show) return <span style={{ color: 'red' }}>Loading...</span>;
     else return (

@@ -164,8 +164,6 @@ function CardComp(props: any) {
                                              <Button
                                                   variant="outline-secondary"
                                                   onClick={(e: any) => {
-                                                       console.log(props.id);
-                                                       //e.preventDefault();
                                                        addComment(comment.current.value);
                                                   }}
                                              >

@@ -1,5 +1,5 @@
 import { Button, Nav } from "react-bootstrap";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
@@ -7,12 +7,16 @@ import Icon from "../Icons/index";
 
 export function SideNav({ collapse, setCollapse }: any) {
   const location = useLocation();
-  let [selected, setSelected] = useState<String>(location.pathname.slice(1));
+  let [selectedOption, setSelectedOption] = useState<String>(location.pathname.slice(1));
   const renderTooltip = (props) => (
     <Tooltip id="button-tooltip" {...props}>
       {props}
     </Tooltip>
   );
+
+  useEffect(() => {
+    setSelectedOption(location.pathname.slice(1));
+  }, [location]);
 
   return (
     <aside style={{ position: "fixed", height: "100%" }} className="bg-dark">
@@ -23,24 +27,24 @@ export function SideNav({ collapse, setCollapse }: any) {
           delay={{ show: 250, hide: 400 }}
           overlay={renderTooltip("Home")}
         >
-          {selected === "home" ? (
+          {selectedOption === "home" ? (
             <NavLink
               className="nav-link text-white"
               to="/home"
-              onClick={() => setSelected(location.pathname.slice(1))}
+              onClick={() => setSelectedOption(location.pathname.slice(1))}
             >
               <Icon name="home" width={24} height={24} />
-              {!collapse && "Home"}
+              <span className="ml-1">{!collapse && "Home"}</span>
             </NavLink>
           ) : (
             <NavLink
               className="nav-link"
               style={{ color: "#cebaa8" }}
               to="/home"
-              onClick={() => setSelected(location.pathname.slice(1))}
+              onClick={() => setSelectedOption(location.pathname.slice(1))}
             >
               <Icon name="lighthome" width={24} height={24} />
-              {!collapse && "Home"}
+              <span className="ml-1">{!collapse && "Home"}</span>
             </NavLink>
           )}
         </OverlayTrigger>
@@ -50,23 +54,24 @@ export function SideNav({ collapse, setCollapse }: any) {
           delay={{ show: 250, hide: 400 }}
           overlay={renderTooltip("My Schedule")}
         >
-          {selected === "schedule" ? (
+          {selectedOption === "schedule" ? (
             <NavLink
-              className="nav-link"
+              className="nav-link text-white"
               to="/schedule"
-              onClick={() => setSelected(location.pathname.slice(1))}
+              onClick={() => setSelectedOption(location.pathname.slice(1))}
             >
               <Icon name="schedule" width={24} height={24} />
-              {!collapse && "My Schedule"}
+              <span className="ml-1">{!collapse && "My Schedule"}</span>
             </NavLink>
           ) : (
             <NavLink
               className="nav-link"
               to="/schedule"
-              onClick={() => setSelected(location.pathname.slice(1))}
+              onClick={() => setSelectedOption(location.pathname.slice(1))}
+              style={{ color: "#cebaa8" }}
             >
               <Icon name="lightschedule" width={24} height={24} />
-              {!collapse && "My Schedule"}
+              <span className="ml-1">{!collapse && "My Schedule"}</span>
             </NavLink>
           )}
         </OverlayTrigger>
@@ -76,23 +81,24 @@ export function SideNav({ collapse, setCollapse }: any) {
           delay={{ show: 250, hide: 400 }}
           overlay={renderTooltip("Program Manager")}
         >
-          {selected === "session" ? (
+          {selectedOption === "session" ? (
             <NavLink
-              className="nav-link"
+              className="nav-link text-white"
               to="/session"
-              onClick={() => setSelected(location.pathname.slice(1))}
+              onClick={() => setSelectedOption(location.pathname.slice(1))}
             >
               <Icon name="programManager" width={24} height={24} />
-              {!collapse && "Program Manager"}
+              <span className="ml-1">{!collapse && "Program Manager"}</span>
             </NavLink>
           ) : (
             <NavLink
               className="nav-link"
               to="/session"
-              onClick={() => setSelected(location.pathname.slice(1))}
+              onClick={() => setSelectedOption(location.pathname.slice(1))}
+              style={{ color: "#cebaa8" }}
             >
               <Icon name="lightprogramManager" width={24} height={24} />
-              {!collapse && "Program Manager"}
+              <span className="ml-1">{!collapse && "Program Manager"}</span>
             </NavLink>
           )}
         </OverlayTrigger>
@@ -102,26 +108,26 @@ export function SideNav({ collapse, setCollapse }: any) {
           delay={{ show: 250, hide: 400 }}
           overlay={renderTooltip("Users")}
         >
-          {selected === "clients" ? (
+          {selectedOption === "clients" ? (
             <NavLink
-              className="nav-link"
+              className="nav-link text-white"
               to="/clients"
-              onClick={() => setSelected(location.pathname.slice(1))}
+              onClick={() => setSelectedOption(location.pathname.slice(1))}
             >
               <Icon name="user" width={24} height={24} />
-              {!collapse && "Users"}
+              <span className="ml-1">{!collapse && "Users"}</span>
             </NavLink>
           ) : (
             <NavLink
               className="nav-link"
               to="/clients"
-              onClick={() => setSelected(location.pathname.slice(1))}
+              onClick={() => setSelectedOption(location.pathname.slice(1))}
+              style={{ color: "#cebaa8" }}
             >
               <Icon name="lightuser" width={24} height={24} />
-              {!collapse && "Users"}
+              <span className="ml-1">{!collapse && "Users"}</span>
             </NavLink>
           )}
-
         </OverlayTrigger>
 
         <OverlayTrigger
@@ -129,23 +135,24 @@ export function SideNav({ collapse, setCollapse }: any) {
           delay={{ show: 250, hide: 400 }}
           overlay={renderTooltip("Bookings")}
         >
-          {selected === "bookings" ? (
+          {selectedOption === "bookings" ? (
             <NavLink
-              className="nav-link"
+              className="nav-link text-white"
               to="/bookings"
-              onClick={() => setSelected(location.pathname.slice(1))}
+              onClick={() => setSelectedOption(location.pathname.slice(1))}
             >
               <Icon name="booking" width={24} height={24} />
-              {!collapse && "Bookings"}
+              <span className="ml-1">{!collapse && "Bookings"}</span>
             </NavLink>
           ) : (
             <NavLink
               className="nav-link"
               to="/bookings"
-              onClick={() => setSelected(location.pathname.slice(1))}
+              onClick={() => setSelectedOption(location.pathname.slice(1))}
+              style={{ color: "#cebaa8" }}
             >
               <Icon name="lightbooking" width={24} height={24} />
-              {!collapse && "Bookings"}
+              <span className="ml-1">{!collapse && "Bookings"}</span>
             </NavLink>
           )}
         </OverlayTrigger>
@@ -155,23 +162,24 @@ export function SideNav({ collapse, setCollapse }: any) {
           delay={{ show: 250, hide: 400 }}
           overlay={renderTooltip("Offerings")}
         >
-          {selected === "offerings" ? (
+          {selectedOption === "offerings" ? (
             <NavLink
-              className="nav-link"
+              className="nav-link text-white"
               to="/offerings"
-              onClick={() => setSelected(location.pathname.slice(1))}
+              onClick={() => setSelectedOption(location.pathname.slice(1))}
             >
               <Icon name="offering" width={24} height={24} />
-              {!collapse && "Offerings"}
+              <span className="ml-1">{!collapse && "Offerings"}</span>
             </NavLink>
           ) : (
             <NavLink
               className="nav-link"
               to="/offerings"
-              onClick={() => setSelected(location.pathname.slice(1))}
+              onClick={() => setSelectedOption(location.pathname.slice(1))}
+              style={{ color: "#cebaa8" }}
             >
               <Icon name="lightoffering" width={24} height={24} />
-              {!collapse && "Offerings"}
+              <span className="ml-1">{!collapse && "Offerings"}</span>
             </NavLink>
           )}
         </OverlayTrigger>
@@ -181,24 +189,24 @@ export function SideNav({ collapse, setCollapse }: any) {
           delay={{ show: 250, hide: 400 }}
           overlay={renderTooltip("Resources")}
         >
-          
-          {selected === "resources" ? (
+          {selectedOption === "resources" ? (
             <NavLink
-              className="nav-link"
+              className="nav-link text-white"
               to="/resources"
-              onClick={() => setSelected(location.pathname.slice(1))}
+              onClick={() => setSelectedOption(location.pathname.slice(1))}
             >
               <Icon name="resource" width={24} height={24} />
-              {!collapse && "Resources"}
+              <span className="ml-1">{!collapse && "Resources"}</span>
             </NavLink>
           ) : (
             <NavLink
               className="nav-link"
               to="/resources"
-              onClick={() => setSelected(location.pathname.slice(1))}
+              onClick={() => setSelectedOption(location.pathname.slice(1))}
+              style={{ color: "#cebaa8" }}
             >
               <Icon name="lightresource" width={24} height={24} />
-              {!collapse && "Resources"}
+              <span className="ml-1">{!collapse && "Resources"}</span>
             </NavLink>
           )}
         </OverlayTrigger>
@@ -208,26 +216,26 @@ export function SideNav({ collapse, setCollapse }: any) {
           delay={{ show: 250, hide: 400 }}
           overlay={renderTooltip("Finances")}
         >
-          {selected === "finance" ? (
+          {selectedOption === "finance" ? (
             <NavLink
-              className="nav-link"
+              className="nav-link text-white"
               to="/finance"
-              onClick={() => setSelected(location.pathname.slice(1))}
+              onClick={() => setSelectedOption(location.pathname.slice(1))}
             >
               <Icon name="finance" width={24} height={24} />
-              {!collapse && "Finance"}
+              <span className="ml-1">{!collapse && "Finance"}</span>
             </NavLink>
           ) : (
             <NavLink
               className="nav-link"
               to="/finance"
-              onClick={() => setSelected(location.pathname.slice(1))}
+              onClick={() => setSelectedOption(location.pathname.slice(1))}
+              style={{ color: "#cebaa8" }}
             >
               <Icon name="lightfinance" width={24} height={24} />
-              {!collapse && "Finance"}
+              <span className="ml-1">{!collapse && "Finance"}</span>
             </NavLink>
           )}
-
         </OverlayTrigger>
 
         <OverlayTrigger
@@ -235,27 +243,26 @@ export function SideNav({ collapse, setCollapse }: any) {
           delay={{ show: 250, hide: 400 }}
           overlay={renderTooltip("Communication")}
         >
-          {selected === "communication" ? (
+          {selectedOption === "communication" ? (
             <NavLink
-              className="nav-link"
-              to="/finance"
-              onClick={() => setSelected(location.pathname.slice(1))}
+              className="nav-link text-white"
+              to="/communication"
+              onClick={() => setSelectedOption(location.pathname.slice(1))}
             >
               <Icon name="communication" width={24} height={24} />
-              {!collapse && "Communication"}
+              <span className="ml-1">{!collapse && "Communication"}</span>
             </NavLink>
           ) : (
             <NavLink
               className="nav-link"
               to="/communication"
-              onClick={() => setSelected(location.pathname.slice(1))}
+              onClick={() => setSelectedOption(location.pathname.slice(1))}
+              style={{ color: "#cebaa8" }}
             >
               <Icon name="lightcommunication" width={24} height={24} />
-              {!collapse && "Communication"}
+              <span className="ml-1">{!collapse && "Communication"}</span>
             </NavLink>
           )}
-
-          
         </OverlayTrigger>
 
         <OverlayTrigger
@@ -263,27 +270,26 @@ export function SideNav({ collapse, setCollapse }: any) {
           delay={{ show: 250, hide: 400 }}
           overlay={renderTooltip("Settings")}
         >
-          {selected === "settings" ? (
+          {selectedOption === "settings" ? (
             <NavLink
-              className="nav-link"
+              className="nav-link text-white"
               to="/settings"
-              onClick={() => setSelected(location.pathname.slice(1))}
+              onClick={() => setSelectedOption(location.pathname.slice(1))}
             >
               <Icon name="setting" width={24} height={24} />
-              {!collapse && "Settings"}
+              <span className="ml-1">{!collapse && "Settings"}</span>
             </NavLink>
           ) : (
             <NavLink
               className="nav-link"
               to="/settings"
-              onClick={() => setSelected(location.pathname.slice(1))}
+              onClick={() => setSelectedOption(location.pathname.slice(1))}
+              style={{ color: "#cebaa8" }}
             >
               <Icon name="lightsetting" width={24} height={24} />
-              {!collapse && "Settings"}
+              <span className="ml-1">{!collapse && "Settings"}</span>
             </NavLink>
           )}
-         
-            
         </OverlayTrigger>
       </Nav>
       <Button

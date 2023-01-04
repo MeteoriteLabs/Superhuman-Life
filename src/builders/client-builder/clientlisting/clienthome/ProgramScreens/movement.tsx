@@ -9,7 +9,6 @@ import { flattenObj } from "../../../../../components/utils/responseFlatten";
 
 function Movement() {
      const last = window.location.pathname.split("/").pop();
-     //console.log(last);
      const auth = useContext(AuthContext);
      function getDate(time: any) {
           let dateObj = new Date(time);

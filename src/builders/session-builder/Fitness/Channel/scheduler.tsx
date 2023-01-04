@@ -142,8 +142,6 @@ const Scheduler = () => {
         }
     }
 
-    console.log(moment(scheduleDate).diff(moment(), 'months'));
-
     function handleCallback(){
         mainQuery.refetch();
         // setSessionIds([]);

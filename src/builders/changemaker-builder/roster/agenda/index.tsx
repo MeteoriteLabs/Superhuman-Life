@@ -12,8 +12,6 @@ const RosterAgenda = (props: any) => {
           setActive( id );
      }
 
-    console.log(data)
-
     return (
         <div className='text-left shadow-lg p-4' style={{ borderRadius: '15px'}}>
             <Row>

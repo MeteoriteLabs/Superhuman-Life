@@ -26,7 +26,7 @@ export default function Group(props) {
             id: auth.userid,
             tagType: "One-On-One"
         },
-        onCompleted: (data) => { console.log(data); loadData(data) },
+        onCompleted: (data) => { loadData(data) },
         fetchPolicy: 'no-cache'
     });
 
@@ -42,7 +42,7 @@ export default function Group(props) {
 
     const loadData = (data) => {
         const flattenData = flattenObj({ ...data });
-        console.log(flattenData);
+        
         setUserPackage(
             [...flattenData.tags].map((packageItem) => {
                 let renewDay: any = '';
@@ -98,9 +98,6 @@ export default function Group(props) {
     }
 
     function calculateProgramRenewal(sessions: any, effectiveDate: any) {
-        // console.log('calculateProgramRenewal', duration, effectiveDate, renewalDate);
-
-        // const dates: string[] = []; 
 
         let max: number = 0;
         for (var i = 0; i < sessions.length; i++) {
@@ -140,9 +137,6 @@ export default function Group(props) {
     //     });
     // });
 
-
-    // console.log("newData", dataTable2)
-
     function handleRedirect(id: any) {
         if (id === null) {
             alert("Please assign a program to this client first");
@@ -155,7 +149,7 @@ export default function Group(props) {
         if (val === "Not_Assigned") {
             return <Badge style={{ padding: '0.8rem 3rem', borderRadius: '10px', fontSize: '1rem' }} variant="danger">{val}</Badge>
         } else if (val === "Almost Ending") {
-            return <Badge style={{ padding: '0.8rem 3rem', borderRadius: '10px', fontSize: '1rem' }} variant="warning">{val}</Badge>
+            return <Badge variant="warning">{val}</Badge>
         } else if (val === "Assigned") {
             return <Badge style={{ padding: '0.8rem 3rem', borderRadius: '10px', fontSize: '1rem' }} variant="success">{val}</Badge>
         } else if (val === "Completed") {

@@ -115,7 +115,7 @@ const WeekScheduler = (props: any) => {
                                             {min.map((m, index) => {
                                                 return (
                                                     <div key={index} className="time">
-                                                        {(arr[d][h][m]) && arr[d][h][m].map((val, index) => {
+                                                        {(arr[d][h][m]) && arr[d][h][m].map((val, index: number) => {
                                                             val.index = index;
                                                             return (
                                                                 <div

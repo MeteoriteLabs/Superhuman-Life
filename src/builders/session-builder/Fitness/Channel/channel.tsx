@@ -102,7 +102,6 @@ export default function Channel(props) {
         // }
 
         const flattenData = flattenObj({...data});
-        console.log(flattenData);
 
         setUserPackage(
             [...flattenData.tags.map((packageItem) => {
@@ -236,7 +235,7 @@ export default function Channel(props) {
                         accessor: "client",
                         Header: "Client",
                         Cell: (row) => {
-                            console.log(row);
+                            
                             return <div>
                                 {row.value?.length === undefined ? <p className='text-center mb-0'>N/A</p> :
                                     row.value?.length === 1 ?

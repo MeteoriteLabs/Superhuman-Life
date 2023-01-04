@@ -26,20 +26,24 @@ export default function BookingPage() {
         <Card.Body>
           <Tabs
             style={{ borderBottom: "1px solid black" }}
-            className="pb-3"
+            className="pb-3 cards"
             transition={false}
             defaultActiveKey="fitness"
             variant="pills"
           >
             <Tab eventKey="fitness" title="Fitness" className="mt-3">
-              <Tabs defaultActiveKey="offerings" variant="pills">
-                <Tab eventKey="offerings" title="Offerings">
-                  <Movement />
-                </Tab>
-                <Tab eventKey="sessions" title="Sessions">
-                    <Sessions/>
-                </Tab>
-              </Tabs>
+              <Card className="shadow-sm mt-2" border="light">
+                <Card.Body>
+                  <Tabs defaultActiveKey="offerings" variant="pills" className="cards">
+                    <Tab eventKey="offerings" title="Offerings">
+                      <Movement />
+                    </Tab>
+                    <Tab eventKey="sessions" title="Sessions">
+                      <Sessions />
+                    </Tab>
+                  </Tabs>
+                </Card.Body>
+              </Card>
             </Tab>
           </Tabs>
         </Card.Body>
