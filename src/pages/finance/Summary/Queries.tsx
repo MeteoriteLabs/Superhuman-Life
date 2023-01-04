@@ -1,69 +1,71 @@
 import { gql } from "@apollo/client";
 
 export const GET_EARNINGS_TRANSACTIONS = gql`
-  query TransactionsQuery($receiverId: String) {
+  query TransactionsEarningsQuery(
+    $receiverId: String
+    $transactionStartTime: DateTime
+    $transactionEndTime: DateTime
+  ) {
     transactions(
       pagination: { pageSize: 2000 }
-      filters: { ReceiverID: { eq: $receiverId } }
+      filters: {
+        ReceiverType: { eq: "Changemaker" }
+        ReceiverID: { eq: $receiverId }
+        TransactionStatus: { eq: "Success" }
+        TransactionDateTime: {
+          gte: $transactionStartTime
+          lte: $transactionEndTime
+        }
+      }
     ) {
       data {
         id
         attributes {
-          Currency
-          TransactionStatus
-          TransactionRemarks
-          TransactionRefrenceID
-          ReceiverID
-          PaymentMode
-          ReceiverType
           ChangemakerAmount
-          SenderID
-          SenderType
-          SapienAmount
-          SapienGSTAmount
-          SapienGSTPercentage
-          createdAt
           TransactionDateTime
-          TransactionStatus
           TransactionAmount
-          PaymentScheduleID
-          TransactionRemarks
         }
       }
     }
   }
 `;
 
-
-
 export const GET_EXPENSES_TRANSACTIONS = gql`
-  query TransactionsQuery($senderId: String) {
+  query TransactionsExpensesQuery(
+    $senderId: String
+    $transactionStartTime: DateTime
+    $transactionEndTime: DateTime
+  ) {
     transactions(
       pagination: { pageSize: 2000 }
-      filters: { SenderID: { eq: $senderId } }
+      filters: {
+        SenderID: { eq: $senderId }
+        TransactionStatus: { eq: "Success" }
+        SenderType: { eq: "Changemaker" }
+        TransactionDateTime: {
+          gte: $transactionStartTime
+          lte: $transactionEndTime
+        }
+      }
     ) {
       data {
         id
         attributes {
-          Currency
-          TransactionStatus
-          TransactionRemarks
-          TransactionRefrenceID
-          ReceiverID
-          ReceiverType
-          ChangemakerAmount
-          SenderID
-          SenderType
-          SapienAmount
-          SapienGSTAmount
-          SapienGSTPercentage
-          createdAt
           TransactionDateTime
-          TransactionStatus
           TransactionAmount
-          PaymentScheduleID
-          TransactionRemarks
-          PaymentMode
+        }
+      }
+    }
+  }
+`;
+
+export const GET_USERS_JOINED_DATE = gql`
+  query userPermissionUser($id: ID) {
+    usersPermissionsUser(id: $id) {
+      data {
+        id
+        attributes {
+          createdAt
         }
       }
     }

@@ -4,10 +4,11 @@ import { useQuery } from "@apollo/client";
 import { GET_LEADS } from "../LeadGraph/queries";
 import AuthContext from "../../../context/auth-context";
 import { flattenObj } from "../../../components/utils/responseFlatten";
+import { Row, Col } from "react-bootstrap";
 import moment from "moment";
 
 function WeeklyLeadsGraph() {
-  const [leadsData, setLeadData] = useState<any>([]);
+  const [leadsData, setLeadData] = useState<{}[]>([]);
   const auth = useContext(AuthContext);
 
   useQuery(GET_LEADS, {
@@ -24,17 +25,18 @@ function WeeklyLeadsGraph() {
   const loadData = (data) => {
     const flattenLeadsData = flattenObj({ ...data.websiteContactForms });
 
-    const arr: any[] = [];
+    const arr: {}[] = [];
 
     for (let weekDay = 0; weekDay < 7; weekDay++) {
+      let currentDay = moment().subtract(weekDay, "days");
       arr[weekDay] = {
-        index: `${moment().subtract(weekDay, "days").format("ddd,")} ${moment()
+        index: `${currentDay.format("ddd,")} ${moment()
           .subtract(weekDay, "days")
           .format("DD/MMM")}`,
         Leads: flattenLeadsData.filter(
           (currentValue) =>
             moment.utc(currentValue.createdAt).format("DD/MM/YYYY") ===
-            moment().subtract(weekDay, "days").format("DD/MM/YYYY")
+            currentDay.format("DD/MM/YYYY")
         ).length,
       };
     }
@@ -43,12 +45,15 @@ function WeeklyLeadsGraph() {
   };
 
   return (
-    <BarGraph
-      data={leadsData}
-      yAxis={"No. of Leads"}
-      title={"Leads Weekly Graph"}
-      keyName= {["Leads"]}
-    />
+    <Row>
+      <Col style={{ overflowX: "scroll" }}>
+        <BarGraph
+          data={leadsData}
+          yAxis={"No. of Leads"}
+          keyName={["Leads"]}
+        />
+      </Col>
+    </Row>
   );
 }
 
