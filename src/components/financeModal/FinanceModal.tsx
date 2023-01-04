@@ -17,7 +17,7 @@ export default function FinanceModal(props) {
     const [formValues, setFormValues] = useState<any>("");
 
     useEffect(() => {
-        (actionType === "view" || actionType === "edit") ? setFormValues(formData) : setFormValues("")
+        (actionType === "view" || actionType === "viewUPIDetails" || actionType === "viewBankDetails" || actionType === "edit" || actionType === "editBankDetails" || actionType === "editUPI") ? setFormValues(formData) : setFormValues("")
     }, [formData, actionType])
 
     modalTrigger.subscribe((res: boolean) => {
@@ -46,7 +46,7 @@ export default function FinanceModal(props) {
                             <div style={{ height: '400px', overflowX: 'hidden', overflowY: 'auto' }}>
                                 <Form
                                     uiSchema={formUISchema}
-                                    disabled={actionType === 'view' ? true : false}
+                                    disabled={actionType === 'view'|| actionType === "viewUPIDetails" || actionType === "viewBankDetails" ? true : false}
                                     schema={formSchema}
                                     ref={formRef}
                                     onSubmit={({ formData }: any) => submitHandler(formData)}
