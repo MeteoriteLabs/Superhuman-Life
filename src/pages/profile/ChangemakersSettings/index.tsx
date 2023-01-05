@@ -25,7 +25,7 @@ function ChangemakersSettings() {
     return (
         <>
             <Container>
-                <h3>Changemaker Settings</h3>
+                <h3>Account Settings</h3>
                 <hr style={{ height: '12px' }} />
                 {showPasswordSetting && <ChangePasswordPage show={showPasswordSetting} onHide={() => setShowPasswordSetting(false)} />}
                 {showModuleSetting && <Modules show={showModuleSetting} onHide={() => setShowModuleSetting(false)} />}

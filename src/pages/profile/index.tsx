@@ -26,7 +26,7 @@ export default function ProfilePage() {
             <ProfileNavTab />
           </Tab>
 
-          <Tab eventKey="changemakerssettings" title="Changemaker Settings">
+          <Tab eventKey="accountssettings" title="Account Settings">
             <ChangemakersSettings />
           </Tab>
 
