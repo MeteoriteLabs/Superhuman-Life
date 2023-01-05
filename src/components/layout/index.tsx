@@ -3,7 +3,7 @@ import { Col, Row, Navbar, Nav } from "react-bootstrap";
 import { SideNav } from "./side";
 import { AuthenticatedNav, UnauthenticatedNav } from "./top";
 import { useLocation } from "react-router-dom";
-import Icon from "../Icons/index";
+import Icon from "../Icons";
 import "./bottomBar.css";
 
 export default function Layout({ token, children }: any) {
@@ -38,7 +38,7 @@ export default function Layout({ token, children }: any) {
         {token ? (
           <div>
             {sideNavStatus ? (
-              <Row noGutters className="bg-light mt-5 py-4  min-vh-100">
+              <Row noGutters className="bg-light mt-5 py-4 mb-5  min-vh-100">
                 <Col lg={collapse ? "1" : "2"} className="d-none d-lg-block">
                   <SideNav collapse={collapse} setCollapse={setCollapse} />
                 </Col>
