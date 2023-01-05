@@ -48,7 +48,7 @@ export default function Layout({ token, children }: any) {
                 </Col>
               </Row>
             ) : (
-              <div className="pt-5 mb-5">{children}</div>
+              <div className="pt-5 ">{children}</div>
             )}
           </div>
         ) : (
@@ -59,7 +59,7 @@ export default function Layout({ token, children }: any) {
       </main>
 
       {/* small screen footer */}
-      {token ? (
+      {token && sideNavStatus ? (
         <Navbar
           expand="lg"
           fixed="bottom"
