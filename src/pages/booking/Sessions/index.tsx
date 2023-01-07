@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Row, Card } from "react-bootstrap";
 import Clients from "./Clients";
 import Program from "./Program";
+import './style.css';
 
 export default function Sessions() {
   const [variableName, setVariableName] = useState<String>("Program");

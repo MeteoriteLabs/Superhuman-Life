@@ -66,8 +66,8 @@ function UPIDetails() {
             <Col lg={12} key={currValue.id}>
               <Card className="m-2" key={currValue.id}>
                 <Card.Body key={currValue.id}>
-                  <Row className="justify-content-end mt-2" key={currValue.id}>
-                  <Col xs={10} lg={11}>
+                  <Row className="mt-2" key={currValue.id}>
+                  <Col xs={9} lg={11}>
                       {currValue.Is_Primary ? (
                         <Badge pill variant="primary" className="p-2">
                           {" "}

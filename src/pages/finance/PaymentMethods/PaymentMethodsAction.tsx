@@ -255,13 +255,11 @@ function PaymentMethodsAction(props: any, ref: any) {
         },
       },
       onCompleted: (data) => {
-        console.log(data);
         const flattenData = flattenObj({ ...data.createBankDetail.data });
         const isPrimary: boolean = flattenData.Is_Primary;
 
         const arr: PrimaryBankDetails[] = isPrimaryBankDetails.splice(-1);
-        console.log(arr);
-
+        
         if (isPrimary) {
           for (let currentValue of arr) {
             updateBankDetail({

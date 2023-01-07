@@ -57,8 +57,3 @@ code {
   min-width: 350px;
   overflow-x: auto;
 }
-
-/* radio buttons */
-input[type=radio]#auto {
-  accent-color: black;
-}
