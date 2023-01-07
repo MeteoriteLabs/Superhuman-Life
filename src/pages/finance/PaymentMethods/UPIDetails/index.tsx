@@ -66,7 +66,16 @@ function UPIDetails() {
             <Col lg={12} key={currValue.id}>
               <Card className="m-2" key={currValue.id}>
                 <Card.Body key={currValue.id}>
-                  <Row className="justify-content-end" key={currValue.id}>
+                  <Row className="justify-content-end mt-2" key={currValue.id}>
+                  <Col xs={10} lg={11}>
+                      {currValue.Is_Primary ? (
+                        <Badge pill variant="primary" className="p-2">
+                          {" "}
+                          Primary{" "}
+                        </Badge>
+                      ) : null}
+                    </Col>
+                    <Col xs={2}>
                     <Dropdown key={currValue.id}>
                       <Dropdown.Toggle variant="bg-light" id="dropdown-basic">
                         <img
@@ -105,29 +114,23 @@ function UPIDetails() {
                         </Dropdown.Item>
                       </Dropdown.Menu>
                     </Dropdown>
+                    </Col>
                   </Row>
 
                   <Row>
-                    <Col sm={12} lg={3}>
+                    <Col sm={12} lg={4}>
                       <b>Full Name: </b>
                       {currValue.Full_Name ? currValue.Full_Name : null}
                     </Col>
-                    <Col sm={12} lg={3}>
+                    <Col sm={12} lg={4}>
                       <b>UPI ID : </b>
                       {currValue.UPI_ID && currValue.UPI_ID}
                     </Col>
-                    <Col sm={12} lg={3}>
+                    <Col sm={12} lg={4}>
                       <b>Phone no. : </b>
                       {currValue.phone_number && currValue.phone_number}
                     </Col>
-                    <Col sm={12} lg={3}>
-                      {currValue.Is_Primary ? (
-                        <Badge pill variant="primary" className="p-2">
-                          {" "}
-                          Primary{" "}
-                        </Badge>
-                      ) : null}
-                    </Col>
+                    
                   </Row>
                 </Card.Body>
               </Card>

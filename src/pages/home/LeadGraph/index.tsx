@@ -49,7 +49,7 @@ function LeadGraph() {
       <Tabs defaultActiveKey="monthly">
         <Tab eventKey="monthly" title="Monthly">
           <Row>
-            <Col style={{ overflowX: "scroll" }}>
+            <Col style={{ overflowX: "auto" }}>
               <BarGraph
                 data={leadsData}
                 yAxis={"No. of Leads"}

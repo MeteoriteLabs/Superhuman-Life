@@ -53,7 +53,7 @@ function MonthlySalesGraph() {
 
   return (
     <Row>
-      <Col style={{ overflowX: "scroll" }}>
+      <Col style={{ overflowX: "auto" }}>
         <LineGraph
           data={clientsData}
           yAxis={"Sales (INR)"}

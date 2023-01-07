@@ -44,7 +44,7 @@ function MonthlyClientGraph() {
 
   return (
     <Row>
-      <Col style={{ overflowX: "scroll" }}>
+      <Col style={{ overflowX: "auto" }}>
         <BarGraph
           data={clientsData}
           yAxis={"No. of Clients"}

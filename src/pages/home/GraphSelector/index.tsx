@@ -15,7 +15,7 @@ function GraphSelector() {
   return (
     <div className="bg-white rounded shadow">
       <Row>
-        <Col md={{ offset: "5", span: "3" }}>
+        <Col md={{ offset: "10", span: "1" }}>
           <Dropdown className="m-3">
             <Dropdown.Toggle variant="dark" id="dropdown-basic">
               {label}

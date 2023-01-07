@@ -217,8 +217,8 @@ function FinanceGraph() {
 
   return (
     <>
-      <Row className="m-5">
-        <Col className="text-center">
+      <Row className="mx-1 mt-5">
+        <Col>
           <span>
             <b className="mr-3">Select Year</b>
             <select
@@ -250,7 +250,7 @@ function FinanceGraph() {
       </Row>
 
       <Row>
-        <Col style={{ overflowX: "scroll" }}>
+        <Col style={{ overflowX: "auto" }}>
           {earningsData &&
           earningsData.length &&
           revenueData &&
