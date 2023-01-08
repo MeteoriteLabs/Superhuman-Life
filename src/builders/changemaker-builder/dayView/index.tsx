@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect } from "react";
 import moment from "moment";
 import { Row, Col, Button, Badge, Spinner } from "react-bootstrap";
 import {
@@ -8,9 +8,7 @@ import {
 import { GET_ALL_CLIENT_PACKAGE_BY_TYPE, GET_ALL_DAILY_SESSIONS } from "../graphql/queries";
 import { useQuery } from "@apollo/client";
 import AuthContext from "../../../context/auth-context";
-
 import "react-vertical-timeline-component/style.min.css";
-
 import { flattenObj } from "../../../components/utils/responseFlatten";
 
 const DayView = (props: any) => {
@@ -284,18 +282,6 @@ const DayView = (props: any) => {
   else return (
     <>
         <div>
-          <Row>
-            <Col>
-              <div style={{ textAlign: "end" }}>
-                <Button
-                  variant="outline-dark"
-                  onClick={() => (window.location.href = "/availability")}
-                >
-                  Availability
-                </Button>
-              </div>
-            </Col>
-          </Row>
           <Row className="mb-3 mt-3">
             <Col>
               <div className="text-center">

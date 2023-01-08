@@ -46,7 +46,7 @@ function MonthlyOfferingBookingGraph() {
 
   return (
     <Row>
-      <Col style={{overflowX: 'scroll'}}>
+      <Col style={{overflowX: 'auto'}}>
         <LineGraph
           data={clientsData}
           yAxis={"No. of Bookings"}

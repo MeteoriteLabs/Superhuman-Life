@@ -13,7 +13,7 @@ function UPIDetails() {
   const [upiDetails, setUpiDetails] = useState<{}[]>([]);
 
   // eslint-disable-next-line
-  const { data: get_upi_details, refetch: refetch_contacts } = useQuery(
+  const { data: get_upi_details, refetch: refetch_upi } = useQuery(
     GET_UPI_DETAILS,
     {
       variables: { id: auth.userid },
@@ -45,7 +45,7 @@ function UPIDetails() {
     <div>
       <PaymentMethodsAction
         ref={paymentMethodActionRef}
-        callback={refetch_contacts}
+        callback={refetch_upi}
       />
       <Row className="mt-3">
         <Col md={{ offset: 10 }}>
@@ -66,7 +66,16 @@ function UPIDetails() {
             <Col lg={12} key={currValue.id}>
               <Card className="m-2" key={currValue.id}>
                 <Card.Body key={currValue.id}>
-                  <Row className="justify-content-end" key={currValue.id}>
+                  <Row className="mt-2" key={currValue.id}>
+                  <Col xs={9} lg={11}>
+                      {currValue.Is_Primary ? (
+                        <Badge pill variant="primary" className="p-2">
+                          {" "}
+                          Primary{" "}
+                        </Badge>
+                      ) : null}
+                    </Col>
+                    <Col xs={2}>
                     <Dropdown key={currValue.id}>
                       <Dropdown.Toggle variant="bg-light" id="dropdown-basic">
                         <img
@@ -105,29 +114,23 @@ function UPIDetails() {
                         </Dropdown.Item>
                       </Dropdown.Menu>
                     </Dropdown>
+                    </Col>
                   </Row>
 
                   <Row>
-                    <Col sm={12} lg={3}>
+                    <Col sm={12} lg={4}>
                       <b>Full Name: </b>
                       {currValue.Full_Name ? currValue.Full_Name : null}
                     </Col>
-                    <Col sm={12} lg={3}>
+                    <Col sm={12} lg={4}>
                       <b>UPI ID : </b>
                       {currValue.UPI_ID && currValue.UPI_ID}
                     </Col>
-                    <Col sm={12} lg={3}>
+                    <Col sm={12} lg={4}>
                       <b>Phone no. : </b>
                       {currValue.phone_number && currValue.phone_number}
                     </Col>
-                    <Col sm={12} lg={3}>
-                      {currValue.Is_Primary ? (
-                        <Badge pill variant="primary" className="p-2">
-                          {" "}
-                          Primary{" "}
-                        </Badge>
-                      ) : null}
-                    </Col>
+                    
                   </Row>
                 </Card.Body>
               </Card>

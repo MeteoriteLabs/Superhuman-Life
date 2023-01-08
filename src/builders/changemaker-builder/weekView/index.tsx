@@ -1,11 +1,10 @@
-import React, { useState, useEffect, useContext } from "react";
-import { Row, Col, Button, Spinner } from "react-bootstrap";
+import { useState, useEffect, useContext } from "react";
+import { Row, Col, Spinner } from "react-bootstrap";
 import SchedulerPage from "./weekScheduler";
 import moment from "moment";
 import { GET_ALL_WEEKLY_SESSIONOS } from "../graphql/queries";
 import { useQuery } from "@apollo/client";
 import AuthContext from "../../../context/auth-context";
-
 import { flattenObj } from "../../../components/utils/responseFlatten";
 
 const WeekView = (props: any) => {
@@ -33,16 +32,6 @@ const WeekView = (props: any) => {
       setTodaysEvents(flattenData.sessions);
     }
   })
-
-  // useQuery(GET_ALL_CLIENT_PACKAGE_BY_TYPE, {
-  //   variables: {
-  //     id: auth.userid,
-  //     type_in: ["One-On-One", "Group Class", "Custom"],
-  //   },
-  //   onCompleted: (data) => {
-  //     LoadData(data);
-  //   },
-  // });
 
   /* eslint-disable */
   function LoadData(data: any) {
@@ -260,7 +249,7 @@ const WeekView = (props: any) => {
   if (!show)
     return (
       <div className="text-center mt-5">
-        <Spinner animation="border" variant="danger" />
+        <Spinner animation="border" variant="dark" />
         <h5 className="mt-5">
           <b>Please wait while we load your Schedule for the day...</b>
         </h5>
@@ -269,13 +258,6 @@ const WeekView = (props: any) => {
   else return (
       <>
         <div>
-          <Row>
-            <Col>
-              <div style={{ textAlign: "end" }}>
-                <Button variant="outline-dark" onClick={() => (window.location.href = "/availability")}>Availability</Button>
-              </div>
-            </Col>
-          </Row>
           <Row className="mb-3 mt-3">
             <Col>
               <div className="text-center">

@@ -46,7 +46,7 @@ function WeeklyLeadsGraph() {
 
   return (
     <Row>
-      <Col style={{ overflowX: "scroll" }}>
+      <Col style={{ overflowX: "auto" }}>
         <BarGraph
           data={leadsData}
           yAxis={"No. of Leads"}

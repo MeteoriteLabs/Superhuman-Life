@@ -321,6 +321,7 @@ export default function Program() {
                       key={"tagName"}
                       id={`dropdown-button-drop-down`}
                       drop={"down"}
+                      variant="dark"
                       title={
                         selectedTagName === ""
                           ? ` Select Program Name`
@@ -400,6 +401,7 @@ export default function Program() {
                   </Col>
                   <Col className="mt-2">
                     <Button
+                      variant="outline-dark"
                       disabled={selectedTagName !== "Show All" ? false : true}
                       onClick={() => {
                         getTags({

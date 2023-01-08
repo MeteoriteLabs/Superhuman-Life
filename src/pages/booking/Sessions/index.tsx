@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Row, Card } from "react-bootstrap";
 import Clients from "./Clients";
 import Program from "./Program";
+import './style.css';
 
 export default function Sessions() {
   const [variableName, setVariableName] = useState<String>("Program");
@@ -16,8 +17,8 @@ export default function Sessions() {
               className="form-check-input"
               type="radio"
               name="inlineRadioOptions"
-              id="inlineRadio1"
-              value="option1"
+              id="auto"
+              value="program"
               onChange={(e) => setVariableName("Program")}
               checked={variableName === "Program"}
             />
@@ -30,8 +31,8 @@ export default function Sessions() {
               className="form-check-input"
               type="radio"
               name="inlineRadioOptions"
-              id="inlineRadio2"
-              value="option2"
+              id="auto"
+              value="clients"
               onChange={(e) => setVariableName("Clients")}
               checked={variableName === "Clients"}
             />
@@ -40,59 +41,6 @@ export default function Sessions() {
             </label>
           </div>
         </Row>
-        {/* <Container className="mt-3">
-          <Row>
-            <Col lg={6}>
-              { 
-                variableName === "Program" ? 
-                <InputGroup className="mb-3 mt-3">
-                <FormControl
-                  aria-describedby="basic-addon1"
-                  placeholder="Search for session type name"
-                  ref={searchInput}
-                />
-                <InputGroup.Prepend>
-                  <Button
-                    variant="outline-secondary"
-                    onClick={(e: any) => {
-                      e.preventDefault();
-                    }}
-                  >
-                    <i className="fas fa-search"></i>
-                  </Button>
-                </InputGroup.Prepend>
-              </InputGroup> 
-              : 
-              <InputGroup className="mb-3 mt-3">
-              <FormControl
-                aria-describedby="basic-addon1"
-                placeholder="Search for session client name"
-                // ref={searchInput}
-              />
-              <InputGroup.Prepend>
-                <Button
-                  variant="outline-secondary"
-                  onClick={(e: any) => {
-                    e.preventDefault();
-                  }}
-                >
-                  <i className="fas fa-search"></i>
-                </Button>
-              </InputGroup.Prepend>
-            </InputGroup>
-              }
-              
-            </Col>
-          </Row>
-        </Container> */}
-
-        {/* <Row>
-          <Col lg={3}>
-            <button type="button" className="btn btn-success">
-              Apply
-            </button>
-          </Col>
-        </Row> */}
       </Card>
 
       {variableName === "Program" ? <Program /> : null}

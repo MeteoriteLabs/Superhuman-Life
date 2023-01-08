@@ -89,22 +89,51 @@ function PaymentMethodsAction(props: any, ref: any) {
   const [operation, setOperation] = useState<Operation>({} as Operation);
   const modalTrigger = new Subject();
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
-  let [formBankData, setFormBankData] = useState<bankDetails>(
+  const [formBankData, setFormBankData] = useState<bankDetails>(
     {} as bankDetails
   );
-  let [formUPIData, setUPIFormData] = useState<upiDetails>({} as upiDetails);
-  let [isUPIDeleted, setIsUPIDeleted] = useState<boolean>(false);
-  let [isUPIUpdated, setIsUPIUpdated] = useState<boolean>(false);
-  let [isBankDetailsDeleted, setIsBankDetailsDeleted] =
+  const [formUPIData, setUPIFormData] = useState<upiDetails>({} as upiDetails);
+  const [isUPIDeleted, setIsUPIDeleted] = useState<boolean>(false);
+  const [isUPIUpdated, setIsUPIUpdated] = useState<boolean>(false);
+  const [isBankDetailsDeleted, setIsBankDetailsDeleted] =
     useState<boolean>(false);
-  let [isBankDetailsUpdated, setIsBankDetailsUpdated] =
+  const [isBankDetailsUpdated, setIsBankDetailsUpdated] =
     useState<boolean>(false);
-  let [isPrimaryBankDetails, setIsPrimaryBankDetails] = useState<
+  const [isPrimaryBankDetails, setIsPrimaryBankDetails] = useState<
     PrimaryBankDetails[]
   >([]);
-  let [isPrimaryUPIDetails, setIsPrimaryUPIDetails] = useState<
+  const [isPrimaryUPIDetails, setIsPrimaryUPIDetails] = useState<
     PrimaryUPIDetails[]
   >([]);
+  const [bankDetails, setBankDetails] = useState<PrimaryBankDetails[]>([]);
+  const [upiDetails, setUpiDetails] = useState<PrimaryUPIDetails[]>([]);
+
+  // eslint-disable-next-line
+  const { data: get_upi_details } = useQuery(GET_UPI_DETAILS, {
+    variables: { id: auth.userid },
+    onCompleted: (data) => {
+      const flattenUPIData = flattenObj({ ...data.upiDetailsChangemakers });
+
+      const nonPrimaryUPIDetails = flattenUPIData.filter(
+        (currentValue) => currentValue.Is_Primary === false
+      );
+      setUpiDetails(nonPrimaryUPIDetails);
+    },
+  });
+
+  // eslint-disable-next-line
+  const { data: get_bank_details } = useQuery(GET_BANK_DETAILS, {
+    variables: { id: auth.userid },
+    onCompleted: (data) => {
+      const flattenBankData = flattenObj({ ...data.bankDetails });
+
+      const nonPrimaryBankDetails = flattenBankData.filter(
+        (currentValue) => currentValue.Is_Primary === false
+      );
+
+      setBankDetails(nonPrimaryBankDetails);
+    },
+  });
 
   useImperativeHandle(ref, () => ({
     TriggerForm: (msg: Operation) => {
@@ -193,15 +222,20 @@ function PaymentMethodsAction(props: any, ref: any) {
         },
       },
       onCompleted: (data) => {
-        
         const flattenData = flattenObj({
           ...data.updateUpiDetailsChangemaker.data,
         });
+        const isUpdatedUPIAlreadyPrimary = isPrimaryUPIDetails.filter(
+          (currentValue) => currentValue.id === flattenData.id
+        );
 
         const isPrimary: boolean = flattenData.Is_Primary;
 
-        if (isPrimary) {
-          for (let currentValue of isPrimaryUPIDetails) {
+        if (isPrimary && isUpdatedUPIAlreadyPrimary.length !== 1) {
+          const arr: PrimaryUPIDetails[] = isPrimaryUPIDetails.filter(
+            (currentValue) => currentValue.id !== flattenData.id
+          );
+          for (let currentValue of arr) {
             updateUPIDetail({
               variables: {
                 id: currentValue.id,
@@ -219,6 +253,23 @@ function PaymentMethodsAction(props: any, ref: any) {
   const [deleteUPI] = useMutation(DELETE_UPI, {
     onCompleted: (data: any) => {
       setIsUPIDeleted(!isUPIDeleted);
+
+      const flattenData = flattenObj({
+        ...data.deleteUpiDetailsChangemaker.data,
+      });
+      const isPrimary: boolean = flattenData.Is_Primary;
+      const lastUPIDetailIndex: number = upiDetails.length - 1;
+
+      if (isPrimary) {
+        updateUPIDetail({
+          variables: {
+            id: upiDetails[lastUPIDetailIndex].id,
+            data: {
+              Is_Primary: true,
+            },
+          },
+        });
+      }
     },
     refetchQueries: [GET_UPI_DETAILS],
   });
@@ -227,6 +278,20 @@ function PaymentMethodsAction(props: any, ref: any) {
   const [deleteBankDetails] = useMutation(DELETE_BANK_DETAILS, {
     onCompleted: (data: any) => {
       setIsBankDetailsDeleted(!isBankDetailsDeleted);
+      const flattenData = flattenObj({ ...data.deleteBankDetail.data });
+      const isPrimary: boolean = flattenData.Is_Primary;
+      const lastBankDetailIndex: number = bankDetails.length - 1;
+
+      if (isPrimary) {
+        updateBankDetail({
+          variables: {
+            id: bankDetails[lastBankDetailIndex].id,
+            data: {
+              Is_Primary: true,
+            },
+          },
+        });
+      }
     },
     refetchQueries: [GET_BANK_DETAILS],
   });
@@ -255,12 +320,10 @@ function PaymentMethodsAction(props: any, ref: any) {
         },
       },
       onCompleted: (data) => {
-        console.log(data);
         const flattenData = flattenObj({ ...data.createBankDetail.data });
         const isPrimary: boolean = flattenData.Is_Primary;
 
         const arr: PrimaryBankDetails[] = isPrimaryBankDetails.splice(-1);
-        console.log(arr);
 
         if (isPrimary) {
           for (let currentValue of arr) {
@@ -382,16 +445,27 @@ function PaymentMethodsAction(props: any, ref: any) {
         },
       },
       onCompleted: (data) => {
-        
-        for (let currentValue of isPrimaryBankDetails) {
-          updateBankDetail({
-            variables: {
-              id: currentValue.id,
-              data: {
-                Is_Primary: false,
+        const flattenData = flattenObj({
+          ...data.updateBankDetail.data,
+        });
+
+        const isUpdatedBankAlreadyPrimary = isPrimaryBankDetails.filter(
+          (currentValue) => currentValue.id === flattenData.id
+        );
+
+        const isPrimary: boolean = flattenData.Is_Primary;
+
+        if (isPrimary && isUpdatedBankAlreadyPrimary.length !== 1) {
+          for (let currentValue of isPrimaryBankDetails) {
+            updateBankDetail({
+              variables: {
+                id: currentValue.id,
+                data: {
+                  Is_Primary: false,
+                },
               },
-            },
-          });
+            });
+          }
         }
       },
     });

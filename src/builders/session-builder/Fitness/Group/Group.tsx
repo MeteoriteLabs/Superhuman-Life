@@ -412,6 +412,7 @@ export default function Group(props) {
     return (
         <>
         <div className="mt-5">
+            <Row>
             <div className='mb-3'>
                 <Form>
                     <Form.Check 
@@ -425,6 +426,7 @@ export default function Group(props) {
                     />
                 </Form>
             </div>
+            </Row>
             <Row>
                 <Col>
                     <GroupTable columns={columns} data={userPackage} />
