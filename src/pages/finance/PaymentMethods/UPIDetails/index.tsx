@@ -75,7 +75,7 @@ function UPIDetails() {
                         </Badge>
                       ) : null}
                     </Col>
-                    <Col xs={2}>
+                    <Col xs={2} lg={1}>
                     <Dropdown key={currValue.id}>
                       <Dropdown.Toggle variant="bg-light" id="dropdown-basic">
                         <img
