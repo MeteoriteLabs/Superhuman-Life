@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import { Row, Col, Button, Spinner } from "react-bootstrap";
+import { Row, Col, Spinner } from "react-bootstrap";
 import SchedulerPage from "./weekScheduler";
 import moment from "moment";
 import { GET_ALL_WEEKLY_SESSIONOS } from "../graphql/queries";

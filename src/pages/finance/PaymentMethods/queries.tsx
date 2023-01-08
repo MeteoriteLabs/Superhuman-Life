@@ -143,6 +143,14 @@ export const DELETE_UPI = gql`
     deleteUpiDetailsChangemaker(id: $id) {
       data {
         id
+        attributes {
+          Is_Primary
+          Full_Name
+          UPI_ID
+          createdAt
+          updatedAt
+          phone_number
+        }
       }
     }
   }
@@ -153,6 +161,18 @@ export const DELETE_BANK_DETAILS = gql`
     deleteBankDetail(id: $id) {
       data {
         id
+        attributes {
+          Full_Name
+          GST_Number
+          Bank_Name
+          PAN_Number
+          updatedAt
+          Account_Number
+          IFSC_Code
+          Company_Name
+          Company_Address
+          Is_Primary
+        }
       }
     }
   }

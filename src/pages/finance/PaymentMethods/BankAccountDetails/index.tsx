@@ -13,7 +13,7 @@ function BankAccount() {
   const [bankDetails, setBankDetails] = useState<{}[]>([]);
 
   // eslint-disable-next-line
-  const { data: get_bank_details, refetch: refetch_contacts } = useQuery(
+  const { data: get_bank_details, refetch: refetch_bank_details } = useQuery(
     GET_BANK_DETAILS,
     {
       variables: { id: auth.userid },
@@ -43,7 +43,7 @@ function BankAccount() {
 
   return (
     <div>
-      <PaymentMethodsAction ref={paymentMethodActionRef} />
+      <PaymentMethodsAction ref={paymentMethodActionRef} callback={refetch_bank_details}/>
       <Row className="mt-3">
         <Col md={{ offset: 10 }}>
           <Button

@@ -13,7 +13,7 @@ function UPIDetails() {
   const [upiDetails, setUpiDetails] = useState<{}[]>([]);
 
   // eslint-disable-next-line
-  const { data: get_upi_details, refetch: refetch_contacts } = useQuery(
+  const { data: get_upi_details, refetch: refetch_upi } = useQuery(
     GET_UPI_DETAILS,
     {
       variables: { id: auth.userid },
@@ -45,7 +45,7 @@ function UPIDetails() {
     <div>
       <PaymentMethodsAction
         ref={paymentMethodActionRef}
-        callback={refetch_contacts}
+        callback={refetch_upi}
       />
       <Row className="mt-3">
         <Col md={{ offset: 10 }}>
