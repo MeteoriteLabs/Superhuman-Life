@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import {useContext, useState} from 'react';
 import {Container, Row, Col} from "react-bootstrap";
 import { ImageCaptions } from "./dashboard-data/data";
 import { LobbyColors } from "./dashboard-data/colors";
