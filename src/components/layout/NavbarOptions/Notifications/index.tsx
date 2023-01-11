@@ -1,53 +1,94 @@
-import {
-  Row,
-  Alert,
-  NavDropdown
-} from "react-bootstrap";
-import './notification.css';
+import { Row, Col, Button, Card } from "react-bootstrap";
+import Icons from "../../../Icons";
 
-export function NotificationOption() {
-
+function Notifications() {
   return (
-    <NavDropdown title={<img
-      src="/assets/navbar_icons/notificationIcon.svg"
-      alt="notification"
-      className="img-responsive "
-      style={{ height: '20px', width: '20px' }}
-    />}
-      id="collasible-nav-dropdown"
-      className="position-static"
-    >
-      <NavDropdown.Item href="#action/3.1">
-        <Row className="justify-content-between">
-          <div className="float-left"><b>Notification</b></div>
-          <div className="float-right"><small>Clear All</small></div>
-        </Row>
-      </NavDropdown.Item>
-      <NavDropdown.Item href="#action/3.2">
-        <small>Today</small>
-      </NavDropdown.Item>
-      <NavDropdown.Item href="#action/3.3" className="overflow-hidden">
-        <Row>
+    <div>
+      <div className="d-flex justify-content-between align-items-center">
+        <h2>Notifications</h2>
+        <div className="px-5">
+          <Button variant="outline-dark">Settings</Button>
+        </div>
+      </div>
 
-          <Alert variant={'dark'}>
-            <Row className="justify-content-end">
-              <div className="float-right"><small><img src="/assets/close.svg" alt="close icon" /></small></div>
-            </Row>
-            <Row className="justify-content-between">
-              <div className="float-left"><small><b>@username</b></small></div>
-              <div className="float-right"><small>07:00 AM</small></div>
-            </Row>
-            <Row>
-              <div className="overflow-hidden">
-                This is a demo notification.
-              </div>
-            </Row>
-          </Alert>
+      
+      <div className="mt-5">
+        {/* Today */}
+        <Row className="my-3">
+          <Col lg={1}>
+            <b>Today</b>
+          </Col>
         </Row>
-      </NavDropdown.Item>
-      <NavDropdown.Divider />
-      <NavDropdown.Item href="#action/3.4">
-      </NavDropdown.Item>
-    </NavDropdown>
+        <Row className="mt-1">
+          <Col lg={9}>
+            <Card style={{borderLeft: "5px solid blue "}}>
+              <Row>
+                <Col md={{ offset: 11 }}>
+                  <small>08:32 PM</small>
+                </Col>
+              </Row>
+              <p className="ml-2">This is some text within a card body.</p>
+            </Card>
+          </Col>
+          <Col lg={1}>
+            <Icons name="close" width={24} height={24} />
+          </Col>
+        </Row>
+        <Row className="mt-1">
+          <Col lg={9}>
+            <Card style={{borderLeft: "5px solid blue "}}>
+              <Row>
+                <Col md={{ offset: 11 }}>
+                  <small>08:32 PM</small>
+                </Col>
+              </Row>
+              <p className="ml-2">This is some text within a card body.</p>
+            </Card>
+          </Col>
+          <Col lg={1}>
+            <Icons name="close" width={24} height={24} />
+          </Col>
+        </Row>
+
+        {/* 08-01-2023 */}
+        <Row className="my-3">
+          <Col lg={1}>
+            <b>08 Jan 2023</b>
+          </Col>
+        </Row>
+        <Row className="mt-1">
+          <Col lg={9}>
+            <Card style={{borderLeft: "5px solid green "}}>
+              <Row>
+                <Col md={{ offset: 11 }}>
+                  <small>08:32 PM</small>
+                </Col>
+              </Row>
+              <p className="ml-2">This is some text within a card body.</p>
+            </Card>
+          </Col>
+          <Col lg={1}>
+            <Icons name="close" width={24} height={24} />
+          </Col>
+        </Row>
+        <Row className="mt-1">
+          <Col lg={9}>
+            <Card style={{borderLeft: "5px solid red "}}>
+              <Row>
+                <Col md={{ offset: 11 }}>
+                  <small>08:32 PM</small>
+                </Col>
+              </Row>
+              <p className="ml-2">This is some text within a card body.</p>
+            </Card>
+          </Col>
+          <Col lg={1}>
+            <Icons name="close" width={24} height={24} />
+          </Col>
+        </Row>
+      </div>
+    </div>
   );
 }
+
+export default Notifications;

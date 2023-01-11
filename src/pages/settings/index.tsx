@@ -160,7 +160,10 @@ export default function SettingsPage() {
             sm={12}
             style={{ cursor: "pointer" }}
           >
-            <Card className="shadow-lg bg-white rounded p-3 text-dark text-decoration-none">
+            <Card className="shadow-lg bg-white rounded p-3 text-dark text-decoration-none"
+              as={Link}
+              to={"/notifications"}
+            >
               <Card.Body className="text-center">
                 <img
                   src="/assets/profile_icons/notification.svg"

@@ -49,6 +49,7 @@ const AvailabilityPage = React.lazy(() => import("./builders/changemaker-builder
 const RosterPage = React.lazy(() => import('./builders/changemaker-builder/roster'));
 const Receipt = React.lazy(() => import('./pages/finance/Outflow/Receipt'));
 const PaymentScheduleSettingsPage = React.lazy(() => import('./builders/client-builder/PaymentScheduleSettings'));
+const NotificationsPage = React.lazy(() => import('./components/layout/NavbarOptions/Notifications/index'));
 
 //auth logins
 const GoogleAuthCallbackPage = React.lazy(() => import("./pages/register/oAuthLogins/googleAuthCallback"));
@@ -117,6 +118,7 @@ export default function Routes({ token }: any) {
                                    <Route path="/change-password" component={ChangePasswordPage} />
                                    <Route path="/receipt" component={Receipt} />
                                    <Route path="/payment_settings" component={PaymentScheduleSettingsPage} />
+                                   <Route path="/notifications" component={NotificationsPage} />
 
                                    <Route path="*" component={NoMatch} />
                               </Switch>
