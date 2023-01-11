@@ -14,7 +14,7 @@ interface AccountVerificationDetail {
 }
 
 export default function SocialAccount() {
-    let [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
+    const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
     const formRef = useRef<any>(null);
     const accountVerificationJson: { [name: string]: any } = require("./AccountVerification.json");
     const auth = useContext(AuthContext);

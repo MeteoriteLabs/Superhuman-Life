@@ -107,6 +107,9 @@ function PaymentMethodsAction(props: any, ref: any) {
   >([]);
   const [bankDetails, setBankDetails] = useState<PrimaryBankDetails[]>([]);
   const [upiDetails, setUpiDetails] = useState<PrimaryUPIDetails[]>([]);
+  const [isBankDetailCreated, setIsBankDetailCreated] =
+    useState<boolean>(false);
+  const [isUPIDetailCreated, setIsUPIDetailCreated] = useState<boolean>(false);
 
   // eslint-disable-next-line
   const { data: get_upi_details } = useQuery(GET_UPI_DETAILS, {
@@ -176,6 +179,7 @@ function PaymentMethodsAction(props: any, ref: any) {
         Is_Primary: form.Is_Primary ? true : false,
       },
       onCompleted: (data) => {
+        setIsUPIDetailCreated(!isUPIDetailCreated);
         const flattenData = flattenObj({
           ...data.createUpiDetailsChangemaker.data,
         });
@@ -320,6 +324,7 @@ function PaymentMethodsAction(props: any, ref: any) {
         },
       },
       onCompleted: (data) => {
+        setIsBankDetailCreated(!isBankDetailCreated);
         const flattenData = flattenObj({ ...data.createBankDetail.data });
         const isPrimary: boolean = flattenData.Is_Primary;
 
@@ -606,6 +611,14 @@ function PaymentMethodsAction(props: any, ref: any) {
         />
       ) : null}
 
+      {isUPIDetailCreated ? (
+        <Toaster
+          handleCallback={() => setIsUPIDetailCreated(!isUPIDetailCreated)}
+          type="success"
+          msg="UPI Detail has been created successfully"
+        />
+      ) : null}
+
       {isBankDetailsDeleted ? (
         <Toaster
           handleCallback={() => setIsBankDetailsDeleted(!isBankDetailsDeleted)}
@@ -619,6 +632,14 @@ function PaymentMethodsAction(props: any, ref: any) {
           handleCallback={() => setIsBankDetailsUpdated(!isBankDetailsUpdated)}
           type="success"
           msg="Bank Details has been updated successfully"
+        />
+      ) : null}
+
+      {isBankDetailCreated ? (
+        <Toaster
+          handleCallback={() => setIsBankDetailCreated(!isBankDetailCreated)}
+          type="success"
+          msg="Bank Details has been created successfully"
         />
       ) : null}
     </div>
