@@ -13,7 +13,6 @@ export default function Custom(props) {
   const auth = useContext(AuthContext);
   const [userPackage, setUserPackage] = useState<any>([]);
   const [showHistory, setShowHistory] = useState(false);
-
   const fitnessActionRef = useRef<any>(null);
 
   const mainQuery = useQuery(GET_SESSIONS_FROM_TAGS, {
@@ -51,15 +50,10 @@ export default function Custom(props) {
             ? "Active"
             : "Inactive",
           packageRenewal: moment(renewDay).format("MMMM DD,YYYY"),
-
           client:
             packageItem.client_packages[0].users_permissions_user.username,
           clientId: packageItem.client_packages[0].users_permissions_user.id,
-          // level: packageItem.program_managers.length === 0 ? "" : packageItem?.program_managers[0]?.fitnessprograms[0].level,
-          // discipline: packageItem.program_managers.length === 0 ? "" : packageItem?.program_managers[0]?.fitnessprograms[0].fitnessdisciplines,
-          // description: packageItem.program_managers.length === 0 ? "" : packageItem?.program_managers[0]?.fitnessprograms[0].description,
           programName: packageItem.tag_name,
-          // programId: packageItem.program_managers.length === 0 ? null : packageItem.program_managers[0].fitnessprograms[0].id,
           programStatus: handleStatus(
             packageItem.sessions,
             packageItem.client_packages[0].effective_date,
@@ -129,20 +123,7 @@ export default function Custom(props) {
       {
         accessor: "client",
         Header: "Client",
-        Cell: (row: any) => {
-          return (
-            <div className="text-center">
-              <img
-                src="https://picsum.photos/200/100"
-                alt={row.value}
-                style={{ width: "60px", height: "60px", borderRadius: "50%" }}
-              />
-              <p className="mt-3">{row.value}</p>
-            </div>
-          );
-        },
       },
-
       {
         Header: "Package",
         columns: [
@@ -176,22 +157,16 @@ export default function Custom(props) {
                 <>
                   {row.value === "Assigned" ? (
                     <Badge
-                      style={{
-                        padding: "0.8rem 3rem",
-                        borderRadius: "10px",
-                        fontSize: "1rem",
-                      }}
+                      className="px-3 py-1"
+                      style={{ fontSize: "1rem", borderRadius: "10px" }}
                       variant="success"
                     >
                       {row.value}
                     </Badge>
                   ) : (
                     <Badge
-                      style={{
-                        padding: "0.8rem 3rem",
-                        borderRadius: "10px",
-                        fontSize: "1rem",
-                      }}
+                      className="px-3 py-1"
+                      style={{ fontSize: "1rem", borderRadius: "10px" }}
                       variant="danger"
                     >
                       {row.value}
@@ -206,11 +181,11 @@ export default function Custom(props) {
             id: "edit",
             Header: "Actions",
             Cell: ({ row }: any) => {
-              const actionClick1 = () => {
+              const manageHandler = () => {
                 handleRedirect(row.original.tagId);
               };
 
-              const actionClick2 = () => {
+              const detailsHandler = () => {
                 fitnessActionRef.current.TriggerForm({
                   id: row.original.id,
                   actionType: "details",
@@ -220,8 +195,8 @@ export default function Custom(props) {
               };
 
               const arrayAction = [
-                { actionName: "Manage", actionClick: actionClick1 },
-                { actionName: "Details", actionClick: actionClick2 },
+                { actionName: "Manage", actionClick: manageHandler },
+                { actionName: "Details", actionClick: detailsHandler },
               ];
 
               return <ActionButton arrayAction={arrayAction}></ActionButton>;
@@ -263,11 +238,7 @@ export default function Custom(props) {
           client:
             packageItem.client_packages[0].users_permissions_user.username,
           clientId: packageItem.client_packages[0].users_permissions_user.id,
-          // level: packageItem.program_managers.length === 0 ? "" : packageItem?.program_managers[0]?.fitnessprograms[0].level,
-          // discipline: packageItem.program_managers.length === 0 ? "" : packageItem?.program_managers[0]?.fitnessprograms[0].fitnessdisciplines,
-          // description: packageItem.program_managers.length === 0 ? "" : packageItem?.program_managers[0]?.fitnessprograms[0].description,
           programName: packageItem.tag_name,
-          // programId: packageItem.program_managers.length === 0 ? null : packageItem.program_managers[0].fitnessprograms[0].id,
           programStatus: handleStatus(
             packageItem.sessions,
             packageItem.client_packages[0].effective_date,

@@ -107,18 +107,6 @@ export default function Movement(props) {
       {
         accessor: "client",
         Header: "Client",
-        Cell: (row: any) => {
-          return (
-            <div className="text-center">
-              <img
-                src="https://picsum.photos/200/100"
-                alt={row.value}
-                style={{ width: "60px", height: "60px", borderRadius: "50%" }}
-              />
-              <p className="mt-3">{row.value}</p>
-            </div>
-          );
-        },
         disableSortBy: true,
       },
       {
@@ -189,22 +177,16 @@ export default function Movement(props) {
             <>
               {row.value === "Paid" ? (
                 <Badge
-                  style={{
-                    padding: "0.8rem 4rem",
-                    borderRadius: "10px",
-                    fontSize: "1rem",
-                  }}
+                  className="px-3 py-1"
+                  style={{ fontSize: "1rem", borderRadius: "10px" }}
                   variant="success"
                 >
                   {row.value}
                 </Badge>
               ) : (
                 <Badge
-                  style={{
-                    padding: "0.8rem 3rem",
-                    borderRadius: "10px",
-                    fontSize: "1rem",
-                  }}
+                  className="px-3 py-1"
+                  style={{ fontSize: "1rem", borderRadius: "10px" }}
                   variant="danger"
                 >
                   {row.value}
@@ -222,11 +204,8 @@ export default function Movement(props) {
             <>
               {row.value === "accepted" ? (
                 <Badge
-                  style={{
-                    padding: "0.8rem 4rem",
-                    borderRadius: "10px",
-                    fontSize: "1rem",
-                  }}
+                  className="px-3 py-1"
+                  style={{ fontSize: "1rem", borderRadius: "10px" }}
                   variant="success"
                 >
                   {row.value}
@@ -236,11 +215,8 @@ export default function Movement(props) {
               )}
               {row.value === "rejected" ? (
                 <Badge
-                  style={{
-                    padding: "0.8rem 4rem",
-                    borderRadius: "10px",
-                    fontSize: "1rem",
-                  }}
+                  className="px-3 py-1"
+                  style={{ fontSize: "1rem", borderRadius: "10px" }}
                   variant="danger"
                 >
                   {row.value}
@@ -250,11 +226,8 @@ export default function Movement(props) {
               )}
               {row.value === "pending" ? (
                 <Badge
-                  style={{
-                    padding: "0.8rem 4rem",
-                    borderRadius: "10px",
-                    fontSize: "1rem",
-                  }}
+                  className="px-3 py-1"
+                  style={{ fontSize: "1rem", borderRadius: "10px" }}
                   variant="warning"
                 >
                   {row.value}

@@ -169,26 +169,33 @@ export default function Group(props) {
     if (val === "Not_Assigned") {
       return (
         <Badge
-          style={{
-            padding: "0.8rem 3rem",
-            borderRadius: "10px",
-            fontSize: "1rem",
-          }}
+        className="px-3 py-1"
+                style={{ fontSize: "1rem", borderRadius: "10px" }}
+                // variant={statusColor}
+          // style={{
+          //   padding: "0.8rem 3rem",
+          //   borderRadius: "10px",
+          //   fontSize: "1rem",
+          // }}
           variant="danger"
         >
           {val}
         </Badge>
       );
     } else if (val === "Almost Ending") {
-      return <Badge variant="warning">{val}</Badge>;
+      return <Badge  className="px-3 py-1"
+      style={{ fontSize: "1rem", borderRadius: "10px" }} variant="warning">{val}</Badge>;
     } else if (val === "Assigned") {
       return (
         <Badge
-          style={{
-            padding: "0.8rem 3rem",
-            borderRadius: "10px",
-            fontSize: "1rem",
-          }}
+          // style={{
+          //   padding: "0.8rem 3rem",
+          //   borderRadius: "10px",
+          //   fontSize: "1rem",
+          // }}
+          className="px-3 py-1"
+                style={{ fontSize: "1rem", borderRadius: "10px" }}
+                
           variant="success"
         >
           {val}
@@ -217,59 +224,60 @@ export default function Group(props) {
         columns: [
           {
             accessor: "client",
-            Header: "Client",
-            Cell: (row) => {
-              return (
-                <>
-                  {row.value === "N/A" ? (
-                    <p className="text-center mb-0">N/A</p>
-                  ) : typeof row.value === "string" ? (
-                    <img
-                      src="https://picsum.photos/200/100"
-                      alt="profile-pic"
-                      style={{
-                        width: "60px",
-                        height: "60px",
-                        borderRadius: "50%",
-                      }}
-                    />
-                  ) : (
-                    <div
-                      className="position-relative mx-auto"
-                      style={{ width: "8rem", height: "5rem" }}
-                    >
-                      {row.value.slice(0, 4).map((item, index) => {
-                        let postionLeft = 20;
-                        return (
-                          <img
-                            key={index}
-                            src="https://picsum.photos/200/100"
-                            alt="profile-pic"
-                            style={{
-                              width: "60px",
-                              height: "60px",
-                              borderRadius: "50%",
-                              left: `${postionLeft * index}%`,
-                            }}
-                            className="position-absolute ml-2"
-                          />
-                        );
-                      })}
-                    </div>
-                  )}
+            Header: "Client"
+            // ,
+            // Cell: (row) => {
+            //   return (
+            //     <>
+            //       {row.value === "N/A" ? (
+            //         <p className="text-center mb-0">N/A</p>
+            //       ) : typeof row.value === "string" ? (
+            //         <img
+            //           src="https://picsum.photos/200/100"
+            //           alt="profile-pic"
+            //           style={{
+            //             width: "60px",
+            //             height: "60px",
+            //             borderRadius: "50%",
+            //           }}
+            //         />
+            //       ) : (
+            //         <div
+            //           className="position-relative mx-auto"
+            //           style={{ width: "8rem", height: "5rem" }}
+            //         >
+            //           {row.value.slice(0, 4).map((item, index) => {
+            //             let postionLeft = 20;
+            //             return (
+            //               <img
+            //                 key={index}
+            //                 src="https://picsum.photos/200/100"
+            //                 alt="profile-pic"
+            //                 style={{
+            //                   width: "60px",
+            //                   height: "60px",
+            //                   borderRadius: "50%",
+            //                   left: `${postionLeft * index}%`,
+            //                 }}
+            //                 className="position-absolute ml-2"
+            //               />
+            //             );
+            //           })}
+            //         </div>
+            //       )}
 
-                  {row.value === "N/A" ? (
-                    ""
-                  ) : row.value.length === 1 ? (
-                    <p className="text-center">{row.value}</p>
-                  ) : (
-                    <p className="text-center">{row.value}</p>
-                  )}
-                </>
-              );
-            },
+            //       {row.value === "N/A" ? (
+            //         ""
+            //       ) : row.value.length === 1 ? (
+            //         <p className="text-center">{row.value}</p>
+            //       ) : (
+            //         <p className="text-center">{row.value}</p>
+            //       )}
+            //     </>
+              // );
+            // },
           },
-          // { accessor: 'id', Header: "ID" },
+         
           { accessor: "packageName", Header: "Name", enableRowSpan: true },
           // {
           //     accessor: "packageStatus",
