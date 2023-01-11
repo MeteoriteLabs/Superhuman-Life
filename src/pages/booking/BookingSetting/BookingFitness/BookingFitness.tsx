@@ -85,22 +85,16 @@ export default function BookingFitness() {
             <>
               {row.value === "Auto Accept" ? (
                 <Badge
-                  style={{
-                    padding: "0.8rem 4rem",
-                    borderRadius: "10px",
-                    fontSize: "1rem",
-                  }}
+                  className="px-3 py-1"
+                  style={{ fontSize: "1rem", borderRadius: "10px" }}
                   variant="success"
                 >
                   {row.value}
                 </Badge>
               ) : (
                 <Badge
-                  style={{
-                    padding: "0.8rem 3rem",
-                    borderRadius: "10px",
-                    fontSize: "1rem",
-                  }}
+                  className="px-3 py-1"
+                  style={{ fontSize: "1rem", borderRadius: "10px" }}
                   variant="danger"
                 >
                   {row.value}
@@ -118,22 +112,16 @@ export default function BookingFitness() {
             <>
               {row.value === "Configured" ? (
                 <Badge
-                  style={{
-                    padding: "0.8rem 4rem",
-                    borderRadius: "10px",
-                    fontSize: "1rem",
-                  }}
+                  className="px-3 py-1"
+                  style={{ fontSize: "1rem", borderRadius: "10px" }}
                   variant="success"
                 >
                   {row.value}
                 </Badge>
               ) : (
                 <Badge
-                  style={{
-                    padding: "0.8rem 3rem",
-                    borderRadius: "10px",
-                    fontSize: "1rem",
-                  }}
+                  className="px-3 py-1"
+                  style={{ fontSize: "1rem", borderRadius: "10px" }}
                   variant="danger"
                 >
                   {row.value}
@@ -147,22 +135,25 @@ export default function BookingFitness() {
         id: "edit",
         Header: "Actions",
         Cell: ({ row }: any) => {
-          const actionClick1 = () => {
+          const bookingConfirmationHandler = () => {
             bookingFitnessActionRef.current.TriggerForm({
               actionType: "confirmation",
               formData: row.original,
             });
           };
 
-          const actionClick2 = () => {
+          const dataRequestHandler = () => {
             bookingFitnessActionRef.current.TriggerForm({
               actionType: "request",
             });
           };
 
           const arrayAction = [
-            { actionName: "Booking confirmation", actionClick: actionClick1 },
-            { actionName: "Data requests", actionClick: actionClick2 },
+            {
+              actionName: "Booking confirmation",
+              actionClick: bookingConfirmationHandler,
+            },
+            { actionName: "Data requests", actionClick: dataRequestHandler },
           ];
           return <ActionButton arrayAction={arrayAction}></ActionButton>;
         },
