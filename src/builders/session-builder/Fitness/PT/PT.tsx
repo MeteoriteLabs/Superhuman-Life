@@ -12,11 +12,8 @@ import { flattenObj } from "../../../../components/utils/responseFlatten";
 export default function Group(props) {
   const auth = useContext(AuthContext);
   const [userPackage, setUserPackage] = useState<any>([]);
-  const [showHistory, setShowHistory] = useState(false);
-
+  const [showHistory, setShowHistory] = useState<boolean>(false);
   const fitnessActionRef = useRef<any>(null);
-
-  // const FetchData = () => {
 
   const mainQuery = useQuery(GET_SESSIONS_FROM_TAGS, {
     variables: {
@@ -28,15 +25,6 @@ export default function Group(props) {
     },
     fetchPolicy: "no-cache",
   });
-
-  // useQuery(GET_ALL_CLIENT_PACKAGE_BY_TYPE, {
-  //     variables: {
-  //         id: auth.userid,
-  //         type: "One-On-One",
-  //     },
-  //     onCompleted: (data) => loadData(data)
-  // })
-  // }
 
   const loadData = (data) => {
     const flattenData = flattenObj({ ...data });
@@ -69,11 +57,7 @@ export default function Group(props) {
           client:
             packageItem.client_packages[0].users_permissions_user.username,
           clientId: packageItem.client_packages[0].users_permissions_user.id,
-          // level: packageItem.program_managers.length === 0 ? "" : packageItem?.program_managers[0]?.fitnessprograms[0].level,
-          // discipline: packageItem.program_managers.length === 0 ? "" : packageItem?.program_managers[0]?.fitnessprograms[0].fitnessdisciplines,
-          // description: packageItem.program_managers.length === 0 ? "" : packageItem?.program_managers[0]?.fitnessprograms[0].description,
           programName: packageItem.tag_name,
-          // programId: packageItem.program_managers.length === 0 ? null : packageItem.program_managers[0].fitnessprograms[0].id,
           programStatus: handleStatus(
             packageItem.sessions,
             packageItem.client_packages[0].effective_date,
@@ -128,34 +112,7 @@ export default function Group(props) {
     }
 
     return moment(effectiveDate).add(max, "days").format("MMMM DD,YYYY");
-
-    // for(var i=0; i<duration; i++){
-    //     const t = moment(effectiveDate).add(i, 'days').format("MMMM DD,YYYY");
-    //     dates.push(t);
-    // }
-    // return dates[renewalDate-1];
   }
-
-  // FetchData();
-
-  // const newData: Array<any> = [];
-
-  // dataTable.forEach(obj => {
-  //     obj.programs.forEach(program => {
-  //         newData.push({
-  //             id: obj.id,
-  //             packageName: obj.packageName,
-  //             packageStatus: obj.packageStatus,
-  //             startDate: obj.startDate,
-  //             packageRenewal: obj.packageRenewal,
-
-  //             client: program.client,
-  //             programName: program.programName,
-  //             programStatus: program.programStatus,
-  //             programRenewal: program.programRenewal,
-  //         });
-  //     });
-  // });
 
   function handleRedirect(id: any) {
     if (id === null) {
@@ -169,33 +126,28 @@ export default function Group(props) {
     if (val === "Not_Assigned") {
       return (
         <Badge
-        className="px-3 py-1"
-                style={{ fontSize: "1rem", borderRadius: "10px" }}
-                // variant={statusColor}
-          // style={{
-          //   padding: "0.8rem 3rem",
-          //   borderRadius: "10px",
-          //   fontSize: "1rem",
-          // }}
+          className="px-3 py-1"
+          style={{ fontSize: "1rem", borderRadius: "10px" }}
           variant="danger"
         >
           {val}
         </Badge>
       );
     } else if (val === "Almost Ending") {
-      return <Badge  className="px-3 py-1"
-      style={{ fontSize: "1rem", borderRadius: "10px" }} variant="warning">{val}</Badge>;
+      return (
+        <Badge
+          className="px-3 py-1"
+          style={{ fontSize: "1rem", borderRadius: "10px" }}
+          variant="warning"
+        >
+          {val}
+        </Badge>
+      );
     } else if (val === "Assigned") {
       return (
         <Badge
-          // style={{
-          //   padding: "0.8rem 3rem",
-          //   borderRadius: "10px",
-          //   fontSize: "1rem",
-          // }}
           className="px-3 py-1"
-                style={{ fontSize: "1rem", borderRadius: "10px" }}
-                
+          style={{ fontSize: "1rem", borderRadius: "10px" }}
           variant="success"
         >
           {val}
@@ -224,74 +176,10 @@ export default function Group(props) {
         columns: [
           {
             accessor: "client",
-            Header: "Client"
-            // ,
-            // Cell: (row) => {
-            //   return (
-            //     <>
-            //       {row.value === "N/A" ? (
-            //         <p className="text-center mb-0">N/A</p>
-            //       ) : typeof row.value === "string" ? (
-            //         <img
-            //           src="https://picsum.photos/200/100"
-            //           alt="profile-pic"
-            //           style={{
-            //             width: "60px",
-            //             height: "60px",
-            //             borderRadius: "50%",
-            //           }}
-            //         />
-            //       ) : (
-            //         <div
-            //           className="position-relative mx-auto"
-            //           style={{ width: "8rem", height: "5rem" }}
-            //         >
-            //           {row.value.slice(0, 4).map((item, index) => {
-            //             let postionLeft = 20;
-            //             return (
-            //               <img
-            //                 key={index}
-            //                 src="https://picsum.photos/200/100"
-            //                 alt="profile-pic"
-            //                 style={{
-            //                   width: "60px",
-            //                   height: "60px",
-            //                   borderRadius: "50%",
-            //                   left: `${postionLeft * index}%`,
-            //                 }}
-            //                 className="position-absolute ml-2"
-            //               />
-            //             );
-            //           })}
-            //         </div>
-            //       )}
-
-            //       {row.value === "N/A" ? (
-            //         ""
-            //       ) : row.value.length === 1 ? (
-            //         <p className="text-center">{row.value}</p>
-            //       ) : (
-            //         <p className="text-center">{row.value}</p>
-            //       )}
-            //     </>
-              // );
-            // },
+            Header: "Client",
           },
-         
+
           { accessor: "packageName", Header: "Name", enableRowSpan: true },
-          // {
-          //     accessor: "packageStatus",
-          //     Header: "Status",
-          //     Cell: (row: any) => {
-          //         return <>
-          //             {row.value === "Active" ?
-          //                 <Badge style={{ padding: '0.8rem 4rem', borderRadius: '10px', fontSize: '1rem' }} variant="success">{row.value}</Badge> :
-          //                 <Badge style={{ padding: '0.8rem 3rem', borderRadius: '10px', fontSize: '1rem' }} variant="danger">{row.value}</Badge>
-          //             }
-          //         </>
-          //     },
-          //     enableRowSpan: true
-          // },
           {
             accessor: "effectiveDate",
             Header: "Effective Date",
@@ -304,9 +192,6 @@ export default function Group(props) {
           },
         ],
       },
-
-      { accessor: " ", Header: "" },
-
       {
         Header: "Class Details",
         columns: [
@@ -380,11 +265,7 @@ export default function Group(props) {
           client:
             packageItem.client_packages[0].users_permissions_user.username,
           clientId: packageItem.client_packages[0].users_permissions_user.id,
-          // level: packageItem.program_managers.length === 0 ? "" : packageItem?.program_managers[0]?.fitnessprograms[0].level,
-          // discipline: packageItem.program_managers.length === 0 ? "" : packageItem?.program_managers[0]?.fitnessprograms[0].fitnessdisciplines,
-          // description: packageItem.program_managers.length === 0 ? "" : packageItem?.program_managers[0]?.fitnessprograms[0].description,
           programName: packageItem.tag_name,
-          // programId: packageItem.program_managers.length === 0 ? null : packageItem.program_managers[0].fitnessprograms[0].id,
           programStatus: handleStatus(
             packageItem.sessions,
             packageItem.client_packages[0].effective_date,
