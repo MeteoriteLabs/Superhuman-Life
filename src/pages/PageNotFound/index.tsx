@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import "./style.scss";
 
 function PageNotFound() {
-  const [todos, setTodos] = useState<number[]>([]);
+  const [star, setStar] = useState<number[]>([]);
 
   useEffect(() => {
     for (let i = 0; i < 100; i++) {
-      setTodos((todos) => [...todos, i]);
+      setStar((stars) => [...stars, i]);
     }
   }, []);
 
@@ -22,8 +22,8 @@ function PageNotFound() {
       <div className="window_group">
         <div className="window_404">
           <div className="stars">
-            {todos.length
-              ? todos.map(() => <div className="star"></div>)
+            {star.length
+              ? star.map(() => <div className="star"></div>)
               : null}
           </div>
         </div>
