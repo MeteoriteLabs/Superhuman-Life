@@ -36,7 +36,7 @@ const ClientsSelect = (props: any) => {
   
       function loadMuscleGroupList(data: any){
                const flattenedData = flattenObj({...data});
-               console.log(flattenedData);
+               
                setClients(
                     [...flattenedData.usersPermissionsUsers].map((client) => {
                          return {

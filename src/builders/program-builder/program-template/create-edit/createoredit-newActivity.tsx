@@ -61,9 +61,6 @@ function CreateEditActivity(props: any, ref: any) {
 
      function FillDetails(data: any) {
           let details: any = {};
-          // let msg = data;
-          // console.log(details);
-          // console.log(msg);
           setProgramDetails(details);
 
           //if message exists - show form only for edit and view
@@ -92,12 +89,12 @@ function CreateEditActivity(props: any, ref: any) {
           var existingEvents = props.events === null ? [] : [...props.events];
           var daysArray: any = [];
           var id: any;
-          console.log(frm);
+     
           if (frm.day && frm.newActivity) {
                frm.day = JSON.parse(frm.day);
                frm.time = JSON.parse(frm.time);
                frm.newActivity = JSON.parse(frm.newActivity);
-               console.log(frm.newActivity)
+               
                var name: any = frm.newActivity[0].activity;
                id = frm.newActivity[0].id;
                delete frm.newActivity[0].activity;
@@ -212,12 +209,11 @@ function CreateEditActivity(props: any, ref: any) {
      }
 
      function OnSubmit(frm: any) {
-          console.log(frm);
-          console.log(frm.name);
+          
           if (frm) frm.user_permissions_user = auth.userid;
           if (frm.name === "edit" || frm.name === "view") {
                if (frm.name === "edit") {
-                    //EditMessage(frm);
+                    
                }
                if (frm.name === "view") {
                     modalTrigger.next(false);

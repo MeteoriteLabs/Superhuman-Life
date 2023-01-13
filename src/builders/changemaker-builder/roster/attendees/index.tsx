@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react';
+import {useState, useRef} from 'react';
 import {Col, Row, FormControl, InputGroup, Button, Dropdown} from 'react-bootstrap';
 import './actionButton.css';
 import {GET_PARTICULAR_CLIENT} from '../graphql/queries';

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Form } from "react-bootstrap";
 import Editor from "./textEditor";
 import { GET_FITNESSSCALE_NEW, GET_MOODSCALE_NEW } from "./queries";

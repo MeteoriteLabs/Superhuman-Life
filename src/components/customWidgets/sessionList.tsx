@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { useState, useRef, useContext, useEffect } from 'react';
+
+import { useState, useContext, useEffect } from 'react';
 import { FormControl, Row, Button } from 'react-bootstrap';
 import { GET_PROGRAMLIST, GET_FITNESSPACKAGE_DETAILS, GET_TAGS_BY_TYPE, GET_SESSIONS_BY_TAG } from './queries';
 import { useQuery } from "@apollo/client";
@@ -13,7 +13,9 @@ const ProgramList = (props: any) => {
 
     const auth = useContext(AuthContext);
     const [programList, setProgramList] = useState<any[]>([]);
+    // eslint-disable-next-line
     const [searchInput, setSearchInput] = useState(null);
+    // eslint-disable-next-line
     const [selected, setSelected] = useState<any>({});
     const [fitnessPackageTypes, setFitnessPackageTypes] = useState<any>([]);
     const [selectedFitnessPackage, setSelectedFitnessPackage] = useState("");
@@ -44,8 +46,6 @@ const ProgramList = (props: any) => {
 
     useQuery(GET_SESSIONS_BY_TAG, { variables: {id: selectedTag}, skip: (selectedTag === ""), onCompleted: (data) => {
         const flattenData = flattenObj({...data});
-        console.log(flattenData);
-        debugger
         setStartDate(props.startDate);
         handleDatesRender(props.startDate, props.duration);
         setPackageDuration(props.duration);
