@@ -134,8 +134,7 @@ function CreateEditWorkoutTemplate(props: any, ref: any) {
 
     function FillDetails(data: any) {
         let details: any = {};
-        // let msg = data;
-        // console.log(msg);
+
         setProgramDetails(details);
 
         //if message exists - show form only for edit and view

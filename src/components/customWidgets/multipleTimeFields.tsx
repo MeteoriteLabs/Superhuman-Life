@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Row, Col } from 'react-bootstrap';
 import moment from 'moment';
 import TimePicker from 'rc-time-picker';
-
 import 'rc-time-picker/assets/index.css';
 
 
@@ -73,12 +72,6 @@ const TimeFieldInput = (props: any) => {
 
      const object = handleObjectFormat({"startTime": startTime, "endTime": endTime});
      props.onChange(JSON.stringify(object));
-
-     console.log(props.endTime, props.startTime);
-
-     // setTimeout(() => {
-     //      setShow(true);
-     // }, 2000);
 
      useEffect(() => {
           setStartTime(props.startTime);

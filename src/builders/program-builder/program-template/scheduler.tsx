@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useContext } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import {
   Modal,
   Button,
@@ -1853,6 +1853,7 @@ const Schedular = (props: any) => {
         return (
           <>
             <div
+              key={index}
               className="cell"
               style={{
                 backgroundColor: `${handleRestDays(index + 1)}`,
@@ -1897,9 +1898,10 @@ const Schedular = (props: any) => {
         );
       });
     } else {
-      return days.map((val) => {
+      return days.map((val, index) => {
         return (
           <div
+            key={index}
             className="cell"
             style={{
               backgroundColor: `${handleRestDays(val)}`,
@@ -1918,6 +1920,7 @@ const Schedular = (props: any) => {
         return (
           <>
             <div
+              key={index}
               className="cell"
               style={{
                 backgroundColor: `${handleRestDays(index + 1)}`,
@@ -1960,6 +1963,7 @@ const Schedular = (props: any) => {
       return days.map((val, index) => {
         return (
           <div
+            key={index}
             className="cell"
             style={{
               backgroundColor: `${handleRestDays(val)}`,
@@ -2019,7 +2023,6 @@ const Schedular = (props: any) => {
   }
 
   function handleRefetch() {
-    // mainQuery.refetch();
     props.callback();
   }
 
@@ -2030,9 +2033,9 @@ const Schedular = (props: any) => {
   if (!show) {
     return (
       <div className="text-center">
-        <Spinner animation="border" variant="danger" />
+        <Spinner animation="border" variant="secondary"/>
         <br />
-        <div className="mt-3" style={{ fontWeight: "bold" }}>
+        <div className="mt-3">
           Loading Schedule...
         </div>
       </div>
@@ -2091,9 +2094,9 @@ const Schedular = (props: any) => {
               ></div>
               {handleDaysRowRender()}
             </div>
-            {hours.map((h) => {
+            {hours.map((h, index) => {
               return (
-                <div className="time-row" style={{ backgroundColor: "white" }}>
+                <div key={index} className="time-row" style={{ backgroundColor: "white" }}>
                   <div className="cell" style={{ position: "relative" }}>
                     <span
                       style={{
@@ -2110,12 +2113,13 @@ const Schedular = (props: any) => {
                       }}
                     >{`${h}:00`}</span>
                   </div>
-                  {days.map((d) => {
+                  {days.map((d, index) => {
                     return (
-                      <div className="cell container">
-                        {min.map((m) => {
+                      <div key={index} className="cell container">
+                        {min.map((m, index) => {
                           return (
                             <div
+                              key={index}
                               className="time"
                               data-day={d}
                               data-hour={h}
@@ -2442,11 +2446,7 @@ const Schedular = (props: any) => {
                   </Col>
                 </Row>
               )}
-              {/* <Row className="pt-3 align-items-center">
-                            <Col>
-                                <TimeField eventType="edit" onChange={handleStart} endTime={event.endHour + ':' + event.endMin} startTime={event.hour + ':' + event.min} disabled={edit}/>
-                            </Col>
-                        </Row> */}
+             
               {event.type === "workout" && (
                 <Tabs
                   defaultActiveKey="agenda"
@@ -2490,14 +2490,14 @@ const Schedular = (props: any) => {
                         <i className="fas fa-reply"></i> Replace
                       </Button>
                     </Row>
-                    {data.map((val) => {
+                    {data.map((val, index) => {
                       return (
                         <>
-                          <Row>
+                          <Row key={index}>
                             {val?.warmup === null ? (
                               ""
                             ) : (
-                              <Col className="pt-2">
+                              <Col className="pt-2" key={index}>
                                 <h5>
                                   Warmup:{" "}
                                   {val.warmup?.map((d) => {
@@ -2584,10 +2584,10 @@ const Schedular = (props: any) => {
                     })}
                   </Tab>
                   <Tab eventKey="summary" title="Summary">
-                    {data.map((val) => {
+                    {data.map((val, index) => {
                       return (
                         <>
-                          <Row className="pt-3 align-items-center">
+                          <Row key={index} className="pt-3 align-items-center">
                             <Col lg={1}>
                               <label>Intensity:</label>
                             </Col>

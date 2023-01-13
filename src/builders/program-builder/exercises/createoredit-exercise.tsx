@@ -200,7 +200,7 @@ function CreateEditExercise(props: any, ref: any) {
     function ViewExercise(frm: any) {
 
         //use a variable to set form to disabled/not editable
-        useMutation(UPDATE_EXERCISE, { variables: frm, onCompleted: (d: any) => { console.log(d); } })
+        useMutation(UPDATE_EXERCISE, { variables: frm, onCompleted: (d: any) => { } })
     }
 
     function DeleteExercise(id: any) {

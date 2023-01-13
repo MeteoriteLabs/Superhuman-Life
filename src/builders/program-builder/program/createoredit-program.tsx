@@ -162,9 +162,7 @@ function CreateEditProgram(props: any, ref: any) {
     }
 
     function ViewExercise(frm: any) {
-        // console.log('view message');
-        //use a variable to set form to disabled/not editable
-        // useMutation(UPDATE_EXERCISE, { variables: frm, onCompleted: (d: any) => { console.log(d); } })
+       
     }
 
     function DeleteExercise(id: any) {

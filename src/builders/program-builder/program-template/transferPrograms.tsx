@@ -7,8 +7,6 @@ import { flattenObj } from '../../../components/utils/responseFlatten';
 
 const TransferPrograms = (props: any) => {
 
-     console.log(props);
-
      const [show, setShow] = useState(false);
      const [data, setData] = useState<any[]>([]);
      const [existingEvents, setExistingEvents] = useState<any[]>([]);

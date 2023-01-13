@@ -18,7 +18,6 @@ const MultiSelect = (props: any) => {
   
      function loadData(data: any) {
           const flattenedData = flattenObj({...data});
-          console.log(flattenedData);
           setDesignations(
               [...flattenedData.designations].map((designation) => {
                   return {

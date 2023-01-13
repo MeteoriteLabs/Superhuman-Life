@@ -3,6 +3,7 @@ import "./styles.css";
 import { Row } from "react-bootstrap";
 import TransferPrograms from "./transferPrograms";
 import moment from "moment";
+import Loader from "../../../components/Loader/Loader";
 
 const SchedulerEvent = (props: any) => {
   const [arr, setArr] = useState<any>([]);
@@ -138,7 +139,7 @@ const SchedulerEvent = (props: any) => {
     handleRenderTable([]);
   }, [props.programEvents]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  if (!show) return <span style={{ color: "red" }}>Loading...</span>;
+  if (!show) return <Loader/>;
   else
     return (
       <>
