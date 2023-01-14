@@ -1,5 +1,6 @@
 import { Row, Col, Button, Card } from "react-bootstrap";
 import Icons from "../../../Icons";
+import {Link} from 'react-router-dom';
 
 function Notifications() {
   return (
@@ -8,11 +9,10 @@ function Notifications() {
       <div className="d-flex justify-content-between align-items-center">
         <h2>Notifications</h2>
         <div className="px-5">
-          <Button variant="outline-dark">Settings</Button>
+          <Link to="/notificationSettings"><Button variant="outline-dark">Settings</Button></Link>
         </div>
       </div>
 
-      
       <div className="mt-5">
         {/* Today */}
         <Row className="my-3">

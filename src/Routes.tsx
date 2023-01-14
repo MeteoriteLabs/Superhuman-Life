@@ -79,6 +79,7 @@ const NotificationsPage = React.lazy(
   () => import("./components/layout/NavbarOptions/Notifications/index")
 );
 const NotFoundPage = React.lazy(() => import("./pages/PageNotFound"));
+const NotificationSettingsPage = React.lazy(() => import("./pages/notificationSettings"));
 
 //auth logins
 const GoogleAuthCallbackPage = React.lazy(
@@ -97,11 +98,6 @@ export default function Routes({ token }: any) {
       <Layout token={token}>
         {token ? (
           <Suspense fallback={<Loader/>}>
-            {/* <Helmet>
-              <meta charSet="utf-8" />
-              <title>Sapien Dashboard | Dashboard</title>
-              <link rel="canonical" href="https://sapien.systems/" />
-            </Helmet> */}
             
             <Switch>
               <Redirect exact from="/" to="/lobby" />
@@ -110,6 +106,7 @@ export default function Routes({ token }: any) {
               <Route path="/website" component={WebsiteBuilder} />
               <Route path="/bookings" component={BookingPage} />
               <Route exact path="/bookingSettings" component={BookingSetting} />
+              <Route exact path="/notificationSettings" component={NotificationSettingsPage} />
               <Route path="/chats" component={ChatPage} />
               <Route path="/clients" component={ClientPage} />
               <Route path="/client/home" component={ClientHomePage} />

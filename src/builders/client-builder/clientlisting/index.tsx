@@ -30,18 +30,6 @@ function ClientListingPage() {
 
   const columns = useMemo<any>(
     () => [
-      {
-        Header: "",
-        accessor: "clientpic",
-        Cell: (v: any) => (
-          <img
-            src={v.value}
-            height="42"
-            className="rounded-circle"
-            alt="avatar"
-          />
-        ),
-      },
       { accessor: "clientname", Header: "Name" },
       { accessor: "clientemail", Header: "Email" },
       { accessor: "clientphone", Header: "Phone" },
@@ -145,7 +133,6 @@ function ClientListingPage() {
           flag = false;
           return {
             id: Detail.users_permissions_user.id,
-            clientpic: "/assets/avatar-1.jpg",
             clientname: Detail.users_permissions_user.username,
             clientemail: Detail.users_permissions_user.email,
             clientphone: Detail.users_permissions_user.Phone,
