@@ -15,6 +15,7 @@ export const AvailabilityCheck = (props: any) =>  {
         return moment().set({"hour": timeSplit[0], "minute": timeSplit[1]});
     }
 
+    // const newTime = JSON.parse(newEventTime.startChange);
     const newTimeStart = convertToMomnet(newTime.startTime);
     const newTimeEnd = convertToMomnet(newTime.endTime);
     const oldTimeStart = convertToMomnet(event.hour + ":" + event.min);

@@ -19,6 +19,7 @@ const AddFitnessAddressModal = (props: any) => {
      const [value, setValue] = useState<any>(null);
 
      const [createAddress] = useMutation(CREATE_ADDRESS, { onCompleted: (data: any) => {
+          console.log(data);
           props.onHide();
      }});
 
@@ -26,6 +27,7 @@ const AddFitnessAddressModal = (props: any) => {
           geocodeByAddress(value.label)
                .then(results => getLatLng(results[0]))
                .then(({lat, lng}) => {
+                    // console.log('Successfully got latitude and longitude', coord)
                     getAddressFromCoordinates(lat.toString(), lng.toString());
                }
           );
@@ -37,6 +39,7 @@ const AddFitnessAddressModal = (props: any) => {
      function getAddressFromCoordinates(lat: string, lng: string){
           Geocode.fromLatLng(lat, lng).then(
                (response) => {
+                    console.log(response)
                     const address = response.results[0].formatted_address;
                     let city, state, country, zip;
                     for (let i = 0; i < response.results[0].address_components.length; i++) {
@@ -62,6 +65,8 @@ const AddFitnessAddressModal = (props: any) => {
                     setZip(zip);
                     setCountry(country);
                     setAddress1(address);
+               //   console.log(city, state, country, zip);
+               //   console.log(address);
                },
                (error) => {
                     console.error(error);
@@ -79,6 +84,7 @@ const AddFitnessAddressModal = (props: any) => {
           }
      }
      function success(position) {
+          // console.log(position);
           getAddressFromCoordinates(position.coords.latitude, position.coords.longitude);
      }
 
