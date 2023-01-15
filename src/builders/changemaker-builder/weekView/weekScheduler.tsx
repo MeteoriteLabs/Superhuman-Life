@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import moment from 'moment';
 import {Badge} from 'react-bootstrap';
 import './styles.css';

@@ -15,7 +15,7 @@ interface Operation {
 }
 
 function CreateEditRestDay(props: any, ref: any) {
-    
+    console.log(props);
     const auth = useContext(AuthContext);
     const programSchema: { [name: string]: any; } = require("../json/restDay.json");
     const [programDetails, setProgramDetails] = useState<any>({});
@@ -26,6 +26,8 @@ function CreateEditRestDay(props: any, ref: any) {
     const [sessions, setSessions] = useState<any>([]);
     const [templateSessionsIds, setTemplateSessionsIds] =  useState<any>([]);
     const [templateSessions, setTemplateSessions] = useState<any>([]);
+
+    console.log(window.location.pathname.split('/')[1]);
 
     useQuery(GET_TEMPLATE_SESSIONS, {variables: {id: program_id}, skip: (window.location.pathname.split('/')[1] !== 'programs'), onCompleted: (data: any) => {
         const flattenData = flattenObj({...data});
@@ -57,6 +59,7 @@ function CreateEditRestDay(props: any, ref: any) {
 
     useImperativeHandle(ref, () => ({
         TriggerForm: (msg: Operation) => {
+            // console.log(msg);
             setOperation(msg);
             schema.startDate = props.startDate;
             schema.duration = props.duration;
@@ -93,7 +96,7 @@ function CreateEditRestDay(props: any, ref: any) {
             )
         }
         details.day = [...restDays] 
-        
+        console.log(details)
     setProgramDetails(details);
 
     //if message exists - show form only for edit and view
@@ -171,6 +174,10 @@ function CreateEditRestDay(props: any, ref: any) {
             templateIds_old.splice(index, 1);
         }
        });
+
+        console.log(templateSessions);
+        console.log(templateIds_old);
+        console.log(restDays_old);
 
         if(frm.day.length > 0){
                for(var i=0; i<frm.day.length; i++){

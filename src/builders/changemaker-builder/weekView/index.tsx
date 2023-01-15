@@ -249,7 +249,7 @@ const WeekView = (props: any) => {
   if (!show)
     return (
       <div className="text-center mt-5">
-        <Spinner animation="border" variant="secondary" />
+        <Spinner animation="border" variant="dark" />
         <h5 className="mt-5">
           <b>Please wait while we load your Schedule for the day...</b>
         </h5>

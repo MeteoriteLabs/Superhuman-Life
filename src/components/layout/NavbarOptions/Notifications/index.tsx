@@ -3,8 +3,7 @@ import Icons from "../../../Icons";
 
 function Notifications() {
   return (
-    <div className="col-lg-12">
-    
+    <div>
       <div className="d-flex justify-content-between align-items-center">
         <h2>Notifications</h2>
         <div className="px-5">

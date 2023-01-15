@@ -18,7 +18,7 @@ const MultiSelect = (props: any) => {
   
      function loadData(data: any) {
           const flattenedData = flattenObj({...data});
-          
+          console.log('time zones',flattenedData)
           setTimeZone(
               [...flattenedData.timezones].map((zone) => {
                   return {
