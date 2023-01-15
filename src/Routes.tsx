@@ -3,7 +3,8 @@ import {
      BrowserRouter as Router,
      Redirect,
      Route,
-     Switch
+     Switch,
+     useLocation,
 } from "react-router-dom";
 import Layout from "./components/layout";
 
@@ -49,12 +50,24 @@ const RosterPage = React.lazy(() => import('./builders/changemaker-builder/roste
 const Receipt = React.lazy(() => import('./pages/finance/Outflow/Receipt'));
 const PaymentScheduleSettingsPage = React.lazy(() => import('./builders/client-builder/PaymentScheduleSettings'));
 const NotificationsPage = React.lazy(() => import('./components/layout/NavbarOptions/Notifications/index'));
-const NotFoundPage = React.lazy(() => import('./pages/PageNotFound'));
 
 //auth logins
 const GoogleAuthCallbackPage = React.lazy(() => import("./pages/register/oAuthLogins/googleAuthCallback"));
 
 const SessionPage = React.lazy(() => import("./builders/session-builder/"));
+
+function NoMatch() {
+     const location = useLocation();
+
+     return (
+          <div>
+               <h3>Error 404</h3>
+               <p>
+                    No match for <code>{location.pathname}</code>
+               </p>
+          </div>
+     );
+}
 
 function NoAuthRedirect() {
      return <Redirect to="/login" />
@@ -107,7 +120,7 @@ export default function Routes({ token }: any) {
                                    <Route path="/payment_settings" component={PaymentScheduleSettingsPage} />
                                    <Route path="/notifications" component={NotificationsPage} />
 
-                                   <Route path="*" component={NotFoundPage} />
+                                   <Route path="*" component={NoMatch} />
                               </Switch>
                          </Suspense>
                     ) : (
