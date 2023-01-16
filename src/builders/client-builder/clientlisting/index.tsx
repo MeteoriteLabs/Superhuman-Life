@@ -1,32 +1,23 @@
 import { useMemo, useContext, useRef, useState } from "react";
 import ActionButton from "../../../components/actionbutton/index";
-import {
-  Badge,
-  Button,
-  TabContent,
-  InputGroup,
-  FormControl,
-  Card,
-  Container,
-  Row,
-  Col,
-} from "react-bootstrap";
+import { Badge, Button, TabContent, InputGroup, FormControl, Card, Container, Row, Col } from "react-bootstrap";
 import AuthContext from "../../../context/auth-context";
 import { useQuery } from "@apollo/client";
 import { GET_CLIENT_NEW } from "./queries";
 import CreateClient from "./addclientcomponent";
 import Table from "../../../components/table";
-import { flattenObj } from "../../../components/utils/responseFlatten";
+import { flattenObj } from '../../../components/utils/responseFlatten';
+//import client from "./client";
 
 function ClientListingPage() {
-  const auth = useContext(AuthContext);
-  const [searchFilter, setSearchFilter] = useState("");
-  const searchInput = useRef<any>();
-  const CreateClientComponent = useRef<any>(null);
+     const auth = useContext(AuthContext);
+     const [searchFilter, setSearchFilter] = useState("");
+     const searchInput = useRef<any>();
+     const CreateClientComponent = useRef<any>(null);
 
-  function handleRedirect(id: any) {
-    window.location.href = `/client/home/${id}`;
-  }
+     function handleRedirect(id: any) {
+          window.location.href = `/client/home/${id}`;
+     }
 
   const columns = useMemo<any>(
     () => [
@@ -82,43 +73,56 @@ function ClientListingPage() {
             });
           };
 
-          const arrayAction = [
-            { actionName: "Go to client", actionClick: actionClick1 },
-            { actionName: "Build Program", actionClick: actionClick2 },
-            { actionName: "Chat", actionClick: actionClick3 },
-            { actionName: "Build Package", actionClick: actionClick4 },
-            { actionName: "Remove Client", actionClick: actionClick5 },
-          ];
+                         const arrayAction = [
+                              { actionName: "Go to client", actionClick: actionClick1 },
+                              { actionName: "Build Program", actionClick: actionClick2 },
+                              { actionName: "Chat", actionClick: actionClick3 },
+                              { actionName: "Build Package", actionClick: actionClick4 },
+                              { actionName: "Remove Client", actionClick: actionClick5 },
+                         ];
 
-          return <ActionButton arrayAction={arrayAction}></ActionButton>;
-        },
-      },
-    ],
-    []
-  );
+                         return <ActionButton arrayAction={arrayAction}></ActionButton>;
+                    },
+               },
+          ],
+          []
+     );
 
-  const [datatable, setDataTable] = useState<{}[]>([]);
+     // function getDate(time: any) {
+     //      let dateObj = new Date(time);
+     //      let month = dateObj.getMonth() + 1;
+     //      let year = dateObj.getFullYear();
+     //      let date = dateObj.getDate();
 
-  const fetch = useQuery(GET_CLIENT_NEW, {
-    variables: { filter: searchFilter, id: auth.userid },
-    onCompleted: loadData,
-  });
+     //      return `${date}/${month}/${year}`;
+     // }
+     // function getRenewalDate(time: any, duration: any) {
+     //      var date = new Date(time);
+     //      date.setDate(date.getDate() + duration);
+     //      return getDate(date);
+     // }
 
-  function refetchQueryCallback() {
-    fetch.refetch();
-  }
+     const [datatable, setDataTable] = useState<{}[]>([]);
 
-  function loadData(data: any) {
-    let clientnamecount = {};
-    let flag: any;
-    let namearr: any = [];
+     // function FetchData(_variables: {} = { filter: " ", id: auth.userid }) {
+     const fetch = useQuery(GET_CLIENT_NEW, { variables: { filter: searchFilter, id: auth.userid }, onCompleted: loadData });
+     // }
 
-    const flattenData = flattenObj({ ...data });
+     function refetchQueryCallback() {
+          fetch.refetch();
+     }
 
-    setDataTable(
-      [...flattenData.clientPackages].flatMap((Detail) => {
-        let clientname: any = Detail.users_permissions_user.username;
-        let clientemail: any = Detail.users_permissions_user.email;
+     function loadData(data: any) {
+          let clientnamecount = {};
+          let flag: any;
+          let namearr: any = [];
+
+          const flattenData = flattenObj({ ...data });
+
+          setDataTable(
+               [...flattenData.clientPackages].flatMap((Detail) => {
+                    let clientname: any = Detail.users_permissions_user.username;
+                    let clientemail: any = Detail.users_permissions_user.email;
 
         if (!clientnamecount[clientname]) {
           clientnamecount[clientname] = 1;
@@ -147,56 +151,54 @@ function ClientListingPage() {
     );
   }
 
-  return (
-    <TabContent>
-      <Container>
-        <Row>
-          <Col>
-            <InputGroup className="mb-3">
-              <FormControl
-                aria-describedby="basic-addon1"
-                placeholder="Search"
-                ref={searchInput}
-              />
-              <InputGroup.Prepend>
-                <Button
-                  variant="outline-secondary"
-                  onClick={(e: any) => {
-                    e.preventDefault();
-                    setSearchFilter(searchInput.current.value);
-                  }}
-                >
-                  <i className="fas fa-search"></i>
-                </Button>
-              </InputGroup.Prepend>
-            </InputGroup>
-          </Col>
-          <Col>
-            <Card.Title className="text-center">
-              <Button
-                variant={true ? "outline-secondary" : "light"}
-                size="sm"
-                onClick={() => {
-                  CreateClientComponent.current.TriggerForm({
-                    id: null,
-                    type: "create",
-                    modal_status: true,
-                  });
-                }}
-              >
-                <i className="fas fa-plus-circle"></i> Add Client
-              </Button>
-              <CreateClient
-                ref={CreateClientComponent}
-                callback={refetchQueryCallback}
-              ></CreateClient>
-            </Card.Title>
-          </Col>
-        </Row>
-      </Container>
-      <Table columns={columns} data={datatable} />
-    </TabContent>
-  );
+     // FetchData({ filter: searchFilter, id: auth.userid });
+     return (
+          <TabContent>
+               <Container>
+                    <Row>
+                         <Col>
+                              <InputGroup className="mb-3">
+                                   <FormControl
+                                        aria-describedby="basic-addon1"
+                                        placeholder="Search"
+                                        ref={searchInput}
+                                   />
+                                   <InputGroup.Prepend>
+                                        <Button
+                                             variant="outline-secondary"
+                                             onClick={(e: any) => {
+                                                  e.preventDefault();
+                                                  setSearchFilter(searchInput.current.value);
+                                             }}
+                                        >
+                                             <i className="fas fa-search"></i>
+                                        </Button>
+                                   </InputGroup.Prepend>
+                              </InputGroup>
+                         </Col>
+                         <Col>
+                              <Card.Title className="text-center">
+                                   <Button
+                                        variant={true ? "outline-secondary" : "light"}
+                                        size="sm"
+                                        onClick={() => {
+                                             CreateClientComponent.current.TriggerForm({
+                                                  id: null,
+                                                  type: "create",
+                                                  modal_status: true,
+                                             });
+                                        }}
+                                   >
+                                        <i className="fas fa-plus-circle"></i> Add Client
+                                   </Button>
+                                   <CreateClient ref={CreateClientComponent} callback={refetchQueryCallback}></CreateClient>
+                              </Card.Title>
+                         </Col>
+                    </Row>
+               </Container>
+               <Table columns={columns} data={datatable} />
+          </TabContent>
+     );
 }
 
 export default ClientListingPage;
