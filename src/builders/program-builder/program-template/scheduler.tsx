@@ -2030,7 +2030,7 @@ const Schedular = (props: any) => {
   if (!show) {
     return (
       <div className="text-center">
-        <Spinner animation="border" variant="danger" />
+        <Spinner animation="border" variant="secondary" />
         <br />
         <div className="mt-3" style={{ fontWeight: "bold" }}>
           Loading Schedule...

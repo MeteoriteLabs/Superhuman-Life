@@ -705,7 +705,7 @@ const WorkHours = () => {
   if (!show)
     return (
       <div className="text-center mt-5">
-        <Spinner animation="border" variant="danger" />
+        <Spinner animation="border" variant="secondary" />
         <h5 className="mt-5">
           <b>Please wait while we load your Schedule...</b>
         </h5>
