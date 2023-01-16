@@ -58,3 +58,7 @@ code {
   overflow-x: auto;
 }
 
+.form-check {
+  background-color: #343a40;
+}
+
