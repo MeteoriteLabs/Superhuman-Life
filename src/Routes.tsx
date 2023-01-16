@@ -8,6 +8,7 @@ import {
 } from "react-router-dom";
 import Layout from "./components/layout";
 import Loader from "./components/Loader/Loader";
+import PageNotFound from "./pages/PageNotFound";
 
 const MainLobby = React.lazy(() => import("./pages/dashboard"));
 const WebsiteBuilder = React.lazy(() => import("./pages/website-builder"));
@@ -58,15 +59,16 @@ const GoogleAuthCallbackPage = React.lazy(() => import("./pages/register/oAuthLo
 const SessionPage = React.lazy(() => import("./builders/session-builder/"));
 
 function NoMatch() {
-     const location = useLocation();
+     // const location = useLocation();
 
      return (
-          <div>
-               <h3>Error 404</h3>
-               <p>
-                    No match for <code>{location.pathname}</code>
-               </p>
-          </div>
+          <PageNotFound/>
+          // <div>
+          //      <h3>Error 404</h3>
+          //      <p>
+          //           No match for <code>{location.pathname}</code>
+          //      </p>
+          // </div>
      );
 }
 
