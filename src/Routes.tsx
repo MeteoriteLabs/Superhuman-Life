@@ -7,6 +7,7 @@ import {
      useLocation,
 } from "react-router-dom";
 import Layout from "./components/layout";
+import Loader from "./components/Loader/Loader";
 
 const MainLobby = React.lazy(() => import("./pages/dashboard"));
 const WebsiteBuilder = React.lazy(() => import("./pages/website-builder"));
@@ -78,7 +79,7 @@ export default function Routes({ token }: any) {
           <Router>
                <Layout token={token}>
                     {token ? (
-                         <Suspense fallback={<code>Loading...</code>}>
+                         <Suspense fallback={<Loader/>}>
                               {/* <Helmet>
               <meta charSet="utf-8" />
               <title>Sapien Dashboard | Dashboard</title>
@@ -124,7 +125,7 @@ export default function Routes({ token }: any) {
                               </Switch>
                          </Suspense>
                     ) : (
-                         <Suspense fallback={<code>Loading...</code>}>
+                         <Suspense fallback={<Loader/>}>
                               <Switch>
                                    <Redirect exact from="/" to="/login" />
                                    <Redirect exact from="/home" to="/login" />

@@ -47,7 +47,7 @@ const SapienVideoPlayer = (props: any) => {
      if(!show){
           return (
                <div className='text-center'>
-                    <Spinner animation="border" variant='danger'/>
+                    <Spinner animation="border" variant='secondary'/>
                     <br />
                     <span><b>Please wait while we load the content</b></span>
                </div>
