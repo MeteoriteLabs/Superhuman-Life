@@ -55,8 +55,34 @@ export const ADD_LEADS = gql`
           createWebsiteContactForm(input: { data: { users_permissions_user: $id, details: $details } }) {
                websiteContactForm {
                     id
+                    attributes{
+                      Details
+                    }
                }
           }
+     }
+`;
+
+export const CREATE_NOTIFICATION = gql`
+     mutation createChangemakerNotification($data: ChangemakerNotificationInput!) {
+      createChangemakerNotification(data: $data) {
+        data{
+          id
+          attributes{
+            IsRead
+            type
+            Title
+            DateTime
+            Body
+            OnClickRoute
+            users_permissions_user{
+              data{
+                id
+              }
+            }
+          }
+        }
+      }
      }
 `;
 
@@ -68,6 +94,9 @@ mutation addLead($id: ID, $details: JSON){
   }){
     data{
       id
+      attributes{
+        Details
+      }
     }
   }
 }

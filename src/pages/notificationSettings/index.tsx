@@ -1,13 +1,23 @@
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { useContext, useState } from "react";
 import authContext from "../../context/auth-context";
 import { Form, Card, Row, Col } from "react-bootstrap";
-import { CREATE_NOTIFICATION_SETTINGS } from "./queries";
+import { CREATE_NOTIFICATION_SETTINGS, GET_NOTIFICATION_SETTINGS } from "./queries";
+import { flattenObj } from "../../components/utils/responseFlatten";
 
 function NotificationSetting() {
   const auth = useContext(authContext);
-  const [showAllSettings, setShowAllSettings] = useState<boolean>(false);
-  const [isShowAllSettingsSelected, setIsShowAllSettingsSelected] = useState<string>("");
+  const [isSettingNotificationCreated, setIsSettingNotificationCreated] = useState<number>(0);
+
+  // eslint-disable-next-line
+  const { data: get_notifications, refetch : refetch_notifications } = useQuery(GET_NOTIFICATION_SETTINGS, { variables: { id: auth.userid },
+    onCompleted: (data) => {
+      console.log(data);
+      const flattenData = flattenObj({ ...data });
+        console.log(flattenData)
+        setIsSettingNotificationCreated(flattenData.notificationSettings?.length)
+    },
+  });
 
   //Notification  Settings
   const [createNotificationSetting] = useMutation(CREATE_NOTIFICATION_SETTINGS);
@@ -28,12 +38,15 @@ function NotificationSetting() {
           isFinanceEmail: true,
           isCommunicationPlatform: true,
           isCommunicationEmail: true,
+          isSchedulePlatform: true,
+          isScheduleEmail: true,
+          isProgramManagerEmail: true,
+          isProgramManagerPlatform: true,
           users_permissions_user: auth.userid,
         },
-      },
+      } 
     });
   };
-console.log(isShowAllSettingsSelected);
 
   return (
     <div>
@@ -51,12 +64,11 @@ console.log(isShowAllSettingsSelected);
                   type="switch"
                   id="custom-switch"
                   label="Enable Platform Notification and Email Notification"
-                  defaultChecked={false}
-                  value={isShowAllSettingsSelected}
-                  onClick={(e) => {
-                    setIsShowAllSettingsSelected('T')
+                  checked={isSettingNotificationCreated ? true : false}
+                  disabled={isSettingNotificationCreated !==0 ? true : false}
+                  onClick={() => {
                     createNotification();
-                    setShowAllSettings(true);
+                    refetch_notifications();
                   }}
                 />
               </Form>
@@ -65,7 +77,7 @@ console.log(isShowAllSettingsSelected);
         </Card>
         {/* Schedule */}
         {
-          showAllSettings ? 
+          isSettingNotificationCreated ? 
           <Card className="p-3">
           <Row>
             <Col>
@@ -95,10 +107,9 @@ console.log(isShowAllSettingsSelected);
         </Card> : null
         }
         
-
         {/* Program Manager */}
         {
-          showAllSettings ? 
+          isSettingNotificationCreated ? 
         <Card className="p-3">
           <Row>
             <Col>
@@ -141,7 +152,7 @@ console.log(isShowAllSettingsSelected);
 
         {/* Users */}
         {
-          showAllSettings ? 
+          isSettingNotificationCreated ? 
         <Card className="p-3">
           <Row>
             <Col>
@@ -184,7 +195,7 @@ console.log(isShowAllSettingsSelected);
 
         {/* Bookings */}
         {
-          showAllSettings ? 
+          isSettingNotificationCreated ? 
         <Card className="p-3">
           <Row>
             <Col>
@@ -227,7 +238,7 @@ console.log(isShowAllSettingsSelected);
 
         {/* Offerings */}
         {
-          showAllSettings ? 
+          isSettingNotificationCreated ? 
         <Card className="p-3">
           <Row>
             <Col>
@@ -270,7 +281,7 @@ console.log(isShowAllSettingsSelected);
 
         {/* Resources */}
         {
-          showAllSettings ? 
+          isSettingNotificationCreated ? 
         <Card className="p-3">
           <Row>
             <Col>
@@ -313,7 +324,7 @@ console.log(isShowAllSettingsSelected);
 
         {/* Finance */}
         {
-          showAllSettings ? 
+          isSettingNotificationCreated ? 
         <Card className="p-3">
           <Row>
             <Col>
@@ -356,7 +367,7 @@ console.log(isShowAllSettingsSelected);
 
         {/* Communication */}
         {
-          showAllSettings ? 
+          isSettingNotificationCreated ? 
         <Card className="p-3">
           <Row>
             <Col>
