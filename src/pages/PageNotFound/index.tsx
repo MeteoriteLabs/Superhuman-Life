@@ -4,8 +4,8 @@ import {Link} from 'react-router-dom';
 function PageNotFound() {
   return (
     <div>
-      <div className="wrapper">
-        <div className="landing-page">
+      <div className="page_not_found_wrapper">
+        <div className="page_not_found_landing-page">
           <div style={{ textAlign: "center" }} className="icon__download">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -208,8 +208,8 @@ function PageNotFound() {
           </div>
 
           <h1> 404 Error.</h1>
-          <p className="content"> We can't find the page you're looking for.</p>
-          <Link to="/home"><button className="back__btn">Back to home</button></Link>
+          <p className="page_not_found_content"> We can't find the page you're looking for.</p>
+          <Link to="/home"><button className="not_found_back__btn">Back to home</button></Link>
         </div>
       </div>
     </div>
