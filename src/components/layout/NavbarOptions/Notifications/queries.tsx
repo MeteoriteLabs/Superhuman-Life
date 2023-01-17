@@ -36,3 +36,15 @@ export const MARK_NOTIFICATION_AS_READ = gql`
   }
 `;
 
+export const DELETE_NOTIFICATION = gql`
+  mutation updateChangemakerNotification($id: ID!) {
+    deleteChangemakerNotification(
+      id: $id
+    ) {
+      data {
+        id
+      }
+    }
+  }
+`;
+

@@ -7,6 +7,7 @@ import authContext from "../../../../context/auth-context";
 import {
   GET_CHANGEMAKER_NOTIFICATION,
   MARK_NOTIFICATION_AS_READ,
+  DELETE_NOTIFICATION,
 } from "./queries";
 import { flattenObj } from "../../../../components/utils/responseFlatten";
 import moment from "moment";
@@ -36,7 +37,6 @@ function Notifications() {
     variables: { id: auth.userid },
     onCompleted: (data) => {
       const flattenData = flattenObj({ ...data });
-      console.log(flattenData);
       setNotifications(flattenData.changemakerNotifications);
     },
   });
@@ -46,6 +46,17 @@ function Notifications() {
   function markAsRead(id: String) {
     changeNotificationStatus({
       variables: { id: id, IsRead: true },
+      onCompleted: () => {
+        refetch_changemaker_notifications();
+      },
+    });
+  }
+
+  const [deleteNotification] = useMutation(DELETE_NOTIFICATION);
+
+  function deleteNoti(id: String) {
+    deleteNotification({
+      variables: { id: id },
       onCompleted: () => {
         refetch_changemaker_notifications();
       },
@@ -88,9 +99,10 @@ function Notifications() {
                       borderLeft: "5px solid black",
                       color: "black",
                       textDecoration: "none",
-                      background: `${currentValue.IsRead ? 'white' : '#f0f2f2'}`
+                      background: `${
+                        currentValue.IsRead ? "white" : "#f0f2f2"
+                      }`,
                     }}
-                    
                   >
                     <Row>
                       <Col md={{ offset: 11 }}>
@@ -137,7 +149,13 @@ function Notifications() {
                   </Card>
                 </Col>
                 <Col lg={1}>
-                  <Icons name="close" width={24} height={24} />
+                  <div
+                    title="delete notification"
+                    style={{ cursor: "pointer" }}
+                    onClick={() => deleteNoti(currentValue.id)}
+                  >
+                    <Icons name="close" width={24} height={24} />
+                  </div>
                 </Col>
               </Row>
             </div>
