@@ -93,7 +93,7 @@ function Notifications() {
                 </Col>
               </Row>
               <Row className="mt-1">
-                <Col lg={9}>
+                <Col lg={9} xs={10}>
                   <Card
                     style={{
                       borderLeft: "5px solid black",
@@ -103,26 +103,25 @@ function Notifications() {
                         currentValue.IsRead ? "white" : "#f0f2f2"
                       }`,
                     }}
+                    className="p-3"
                   >
                     <Row>
-                      <Col md={{ offset: 11 }}>
-                        <small>
-                          {moment(currentValue.DateTime).format("HH:mm A")}
-                        </small>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col lg={1}>
-                        <Icons name="avatar" width={45} height={45} />
+                      <Col lg={1} xs={4} className="pt-3">
+                        <img
+                          src="assets/notifications/users.svg"
+                          alt="users"
+                          style={{ width: "50px", height: "50px" }}
+                        />
                       </Col>
 
-                      <Col lg={10}>
+                      <Col lg={11} xs={8}>
                         <Link to={`${currentValue.OnClickRoute}`} className="a">
                           <p className="ml-2 text-dark">{currentValue.Body}</p>
                         </Link>
                       </Col>
-
-                      <Col lg={1}>
+                    </Row>
+                    <Row>
+                      <Col className="d-flex justify-content-end">
                         {currentValue.IsRead ? (
                           <div
                             title="mark as unread"
@@ -132,6 +131,9 @@ function Notifications() {
                             }}
                           >
                             <Icons name="readeye" width={24} height={24} />
+                            <small>
+                              {moment(currentValue.DateTime).format("HH:mm A")}
+                            </small>
                           </div>
                         ) : (
                           <div
@@ -142,13 +144,16 @@ function Notifications() {
                             }}
                           >
                             <Icons name="unreadeye" width={24} height={24} />
+                            <small className="ml-2">
+                              {moment(currentValue.DateTime).format("HH:mm A")}
+                            </small>
                           </div>
                         )}
                       </Col>
                     </Row>
                   </Card>
                 </Col>
-                <Col lg={1}>
+                <Col lg={1} xs={1} className="py-5">
                   <div
                     title="delete notification"
                     style={{ cursor: "pointer" }}
