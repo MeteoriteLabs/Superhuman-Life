@@ -10,7 +10,8 @@ import {
   ADD_CONTACT,
   DELETE_CONTACT,
   GET_CONTACT,
-  UPDATE_CONTACT
+  UPDATE_CONTACT,
+  CREATE_NOTIFICATION
 } from "./queries";
 import StatusModal from "../../../components/StatusModal/StatusModal";
 import { Subject } from "rxjs";
@@ -23,6 +24,7 @@ import {
 } from "../../../components/utils/ValidationPatterns";
 import Toaster from "../../../components/Toaster";
 import { PaymentDetails } from "./PaymentDetailsInterface";
+import moment from 'moment';
 
 interface Operation {
   id: string;
@@ -42,8 +44,26 @@ function CreateEditContact(props: any, ref: any) {
   const [isDeleted, setIsDeleted] = useState<boolean>(false);
   const [isUpdated, setIsUpdated] = useState<boolean>(false);
 
+  const [createContactNotification] = useMutation(CREATE_NOTIFICATION);
+
   const [createContact] = useMutation(ADD_CONTACT, {
     onCompleted: (r: any) => {
+      const flattenData = flattenObj({ ...r });
+      
+      createContactNotification({
+        variables: {
+          data: {
+            type: "Users",
+            Title: "New contact",
+            OnClickRoute: "/clients",
+            users_permissions_user: auth.userid,
+            Body: `New contact ${flattenData.createContact.firstname} ${flattenData.createContact.lastname} has been added ${flattenData.createContact.isPayee ? "as payee" : "as contact"}`,
+            DateTime: moment().format(),
+            IsRead: false,
+            ContactID: flattenData.createContact.id,
+          },
+        },
+      });
       modalTrigger.next(false);
       props.callback();
       setIsCreated(!isCreated);

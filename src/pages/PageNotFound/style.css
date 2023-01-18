@@ -1,10 +1,10 @@
-.wrapper {
+.page_not_found_wrapper {
   max-width: 960px;
   width: 100%;
   margin: 30px auto;
   transform: scale(0.8);
 }
-.landing-page {
+.page_not_found_landing-page {
   max-width: 960px;
   height: 475px;
   margin: 0;
@@ -23,13 +23,13 @@
   margin: 0 0 15px;
 }
 
-.content{
+.page_not_found_content{
   font-size: 20px;
   width: 35%;
   margin: 16px auto 24px;
   text-align: center;
 }
-.back__btn {
+.not_found_back__btn {
   border-radius: 50px;
   padding: 8px 24px;
   font-size: 16px;

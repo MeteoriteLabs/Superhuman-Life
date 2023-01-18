@@ -19,84 +19,59 @@ function ClientListingPage() {
           window.location.href = `/client/home/${id}`;
      }
 
-     const columns = useMemo<any>(
-          () => [
-               {
-                    Header: "",
-                    accessor: "clientpic",
-                    Cell: (v: any) => <img src={v.value} height="42" className="rounded-circle" alt="avatar" />,
-               },
-               { accessor: "clientname", Header: "Name" },
-               { accessor: "clientemail", Header: "Email" },
-               { accessor: "clientphone", Header: "Phone" },
-               { accessor: "clientlocation", Header: "Location" },
-               {
-                    Header: "No of Bookings",
-                    accessor: "bookings",
-                    Cell: (row: any) => {
-                         return (
-                              <>
-                                   <p className="ml-5 pl-4">{row.value[0][row.value[1]]}</p>
-                              </>
-                         );
-                    },
-               },
-               {
-                    accessor: "status",
-                    Header: "Status",
-                    Cell: (v: any) => (
-                         <Badge className="px-3 py-1"
-                         style={{ fontSize: "1rem", borderRadius: "10px" }}
-                         variant={v.value === "Assigned" ? "success" : "danger"}>
-                              {v.value}
-                         </Badge>
-                    ),
-               },
-               // {
-               //      id: "edit",
-               //      Header: "Action",
-               //      accessor: "action",
-               //      Cell: ({ row }: any) => (
-               //           <ActionButton
-               //                action1="Go to client"
-               //                actionClick1={() => {
-               //                     handleRedirect(row.original.id);
-               //                }}
-               //                action2="Build Program"
-               //                action3="Chat"
-               //                action4="Build Package"
-               //                action5="Remove Client"
-               //                actionClick5={() => {
-               //                     CreateClientComponent.current.TriggerForm({
-               //                          id: row.original.id,
-               //                          type: "delete",
-               //                     });
-               //                }}
-               //           />
-               //      ),
-               // },
-               {
-                    id: "edit",
-                    Header: "Actions",
-                    Cell: ({ row }: any) => {
-                         const actionClick1 = () => {
-                              handleRedirect(row.original.id);
-                         };
-                         const actionClick2 = () => {
-                              //CreateClientComponent.current.TriggerForm({id: row.original.id, type: 'view'})
-                         };
-                         const actionClick3 = () => {
-                              window.location.href = '/chats'
-                         };
-                         const actionClick4 = () => {
-                              window.location.href = '/packages';
-                         };
-                         const actionClick5 = () => {
-                              CreateClientComponent.current.TriggerForm({
-                                   id: row.original.id,
-                                   type: "delete",
-                              });
-                         };
+  const columns = useMemo<any>(
+    () => [
+      { accessor: "clientname", Header: "Name" },
+      { accessor: "clientemail", Header: "Email" },
+      { accessor: "clientphone", Header: "Phone" },
+      { accessor: "clientlocation", Header: "Location" },
+      {
+        Header: "No of Bookings",
+        accessor: "bookings",
+        Cell: (row: any) => {
+          return (
+            <>
+              <p className="ml-5 pl-4">{row.value[0][row.value[1]]}</p>
+            </>
+          );
+        },
+      },
+      {
+        accessor: "status",
+        Header: "Status",
+        Cell: (v: any) => (
+          <Badge
+            className="px-3 py-1"
+            style={{ fontSize: "1rem", borderRadius: "10px" }}
+            variant={v.value === "Assigned" ? "success" : "danger"}
+          >
+            {v.value}
+          </Badge>
+        ),
+      },
+
+      {
+        id: "edit",
+        Header: "Actions",
+        Cell: ({ row }: any) => {
+          const actionClick1 = () => {
+            handleRedirect(row.original.id);
+          };
+          const actionClick2 = () => {
+            //CreateClientComponent.current.TriggerForm({id: row.original.id, type: 'view'})
+          };
+          const actionClick3 = () => {
+            window.location.href = "/chats";
+          };
+          const actionClick4 = () => {
+            window.location.href = "/packages";
+          };
+          const actionClick5 = () => {
+            CreateClientComponent.current.TriggerForm({
+              id: row.original.id,
+              type: "delete",
+            });
+          };
 
                          const arrayAction = [
                               { actionName: "Go to client", actionClick: actionClick1 },
@@ -149,33 +124,32 @@ function ClientListingPage() {
                     let clientname: any = Detail.users_permissions_user.username;
                     let clientemail: any = Detail.users_permissions_user.email;
 
-                    if (!clientnamecount[clientname]) {
-                         clientnamecount[clientname] = 1;
-                    } else {
-                         clientnamecount[clientname] += 1;
-                    }
-                    if (!namearr.includes(clientemail)) {
-                         flag = true;
-                         namearr.push(clientemail);
-                    }
-                    if (flag) {
-                         flag = false;
-                         return {
-                              id: Detail.users_permissions_user.id,
-                              clientpic: "/assets/avatar-1.jpg",
-                              clientname: Detail.users_permissions_user.username,
-                              clientemail: Detail.users_permissions_user.email,
-                              clientphone: Detail.users_permissions_user.Phone,
-                              clientlocation: Detail.users_permissions_user?.addresses[0]?.city,
-                              bookings: [clientnamecount, Detail.users_permissions_user.username],
-                              status: "Assigned",
-                         };
-                    } else {
-                         return [];
-                    }
-               })
-          );
-     }
+        if (!clientnamecount[clientname]) {
+          clientnamecount[clientname] = 1;
+        } else {
+          clientnamecount[clientname] += 1;
+        }
+        if (!namearr.includes(clientemail)) {
+          flag = true;
+          namearr.push(clientemail);
+        }
+        if (flag) {
+          flag = false;
+          return {
+            id: Detail.users_permissions_user.id,
+            clientname: Detail.users_permissions_user.username,
+            clientemail: Detail.users_permissions_user.email,
+            clientphone: Detail.users_permissions_user.Phone,
+            clientlocation: Detail.users_permissions_user?.addresses[0]?.city,
+            bookings: [clientnamecount, Detail.users_permissions_user.username],
+            status: "Assigned",
+          };
+        } else {
+          return [];
+        }
+      })
+    );
+  }
 
      // FetchData({ filter: searchFilter, id: auth.userid });
      return (

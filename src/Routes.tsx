@@ -3,8 +3,7 @@ import {
      BrowserRouter as Router,
      Redirect,
      Route,
-     Switch,
-     useLocation,
+     Switch
 } from "react-router-dom";
 import Layout from "./components/layout";
 import Loader from "./components/Loader/Loader";
@@ -51,7 +50,8 @@ const AvailabilityPage = React.lazy(() => import("./builders/changemaker-builder
 const RosterPage = React.lazy(() => import('./builders/changemaker-builder/roster'));
 const Receipt = React.lazy(() => import('./pages/finance/Outflow/Receipt'));
 const PaymentScheduleSettingsPage = React.lazy(() => import('./builders/client-builder/PaymentScheduleSettings'));
-const NotificationsPage = React.lazy(() => import('./components/layout/NavbarOptions/Notifications/index'));
+const NotificationsPage = React.lazy(() => import('./components/layout/NavbarOptions/Notifications'));
+const NotificationsSettings = React.lazy(() => import('./pages/notificationSettings'));
 
 //auth logins
 const GoogleAuthCallbackPage = React.lazy(() => import("./pages/register/oAuthLogins/googleAuthCallback"));
@@ -114,6 +114,7 @@ export default function Routes({ token }: any) {
                                    <Route path="/receipt" component={Receipt} />
                                    <Route path="/payment_settings" component={PaymentScheduleSettingsPage} />
                                    <Route path="/notifications" component={NotificationsPage} />
+                                   <Route path="/notificationSettings" component={NotificationsSettings} />
 
                                    <Route path="*" component={NoMatch} />
                               </Switch>

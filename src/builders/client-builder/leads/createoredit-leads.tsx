@@ -1,4 +1,9 @@
-import React, { useContext, useImperativeHandle, useState, useEffect } from "react";
+import React, {
+  useContext,
+  useImperativeHandle,
+  useState,
+  useEffect,
+} from "react";
 import { useMutation, useQuery } from "@apollo/client";
 import ModalView from "../../../components/modal";
 import {
@@ -6,6 +11,7 @@ import {
   DELETE_LEAD_NEW,
   GET_LEADS_ID_NEW,
   UPDATE_LEADS_NEW,
+  CREATE_NOTIFICATION,
 } from "./queries";
 import AuthContext from "../../../context/auth-context";
 import StatusModal from "../../../components/StatusModal/StatusModal";
@@ -13,6 +19,7 @@ import { Subject } from "rxjs";
 import { schema } from "./schema";
 import { flattenObj } from "../../../components/utils/responseFlatten";
 import Toaster from "../../../components/Toaster";
+import moment from "moment";
 
 interface Operation {
   id: string;
@@ -33,7 +40,23 @@ function CreateEditMessage(props: any, ref: any) {
   const [name, setName] = useState("");
 
   const [createLeads] = useMutation(ADD_LEADS_NEW, {
-    onCompleted: (r: any) => {
+    onCompleted: (data: any) => {
+      const flattenData = flattenObj({ ...data });
+       console.log(moment().format());
+      createLeadNotification({
+        variables: {
+          data: {
+            type: "Users",
+            Title: "New lead",
+            OnClickRoute: "/clients",
+            users_permissions_user: auth.userid,
+            Body: `New lead ${flattenData.createWebsiteContactForm.Details.leadsdetails.name} has been added`,
+            DateTime: moment().format(),
+            IsRead: false,
+            ContactID: flattenData.createWebsiteContactForm.id,
+          },
+        },
+      });
       modalTrigger.next(false);
       props.callback();
       setIsLeadCreated(!isLeadCreated);
@@ -55,6 +78,8 @@ function CreateEditMessage(props: any, ref: any) {
       setIsLeadDeleted(!isLeadDeleted);
     },
   });
+
+  const [createLeadNotification] = useMutation(CREATE_NOTIFICATION);
 
   const modalTrigger = new Subject();
 
@@ -106,7 +131,9 @@ function CreateEditMessage(props: any, ref: any) {
   }
 
   function CreateMessage(frm: any) {
-    createLeads({ variables: { id: auth.userid, details: frm } });
+    createLeads({
+      variables: { id: auth.userid, details: frm },
+    });
   }
 
   function EditMessage(frm: any) {
@@ -131,14 +158,14 @@ function CreateEditMessage(props: any, ref: any) {
   }
 
   useEffect(() => {
-     if (operation.type === "create") {
-       setName("Create New Lead");
-     } else if (operation.type === "edit") {
-       setName("Edit lead");
-     } else if (operation.type === "view") {
-       setName("View Lead");
-     }
-   }, [operation.type]);
+    if (operation.type === "create") {
+      setName("Create New Lead");
+    } else if (operation.type === "edit") {
+      setName("Edit lead");
+    } else if (operation.type === "view") {
+      setName("View Lead");
+    }
+  }, [operation.type]);
 
   return (
     <>

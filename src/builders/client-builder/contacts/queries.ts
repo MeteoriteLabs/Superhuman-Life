@@ -86,6 +86,23 @@ export const ADD_CONTACT = gql`
     createContact( data: $data ) {
       data {
         id
+        attributes {
+          firstname
+          lastname
+          email
+          type
+          phone
+          createdAt
+          ownedBy{
+            data{
+              id
+            }
+          }
+          appDownloadStatus
+          paymentDetails
+          organisationDetails
+          isPayee
+        }
       }
     }
   }
@@ -119,4 +136,27 @@ export const ADD_PAYMENT_SCHEDULE = gql`
       }
     }
   }
+`;
+
+export const CREATE_NOTIFICATION = gql`
+     mutation createChangemakerNotification($data: ChangemakerNotificationInput!) {
+      createChangemakerNotification(data: $data) {
+        data{
+          id
+          attributes{
+            IsRead
+            type
+            Title
+            DateTime
+            Body
+            OnClickRoute
+            users_permissions_user{
+              data{
+                id
+              }
+            }
+          }
+        }
+      }
+     }
 `;
