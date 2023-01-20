@@ -7,6 +7,7 @@ import Upload from '../../../../components/upload/upload';
 import TimeField from '../../../../components/customWidgets/timeField';
 import DaysInput from '../daysInput';
 import ClassTypeSelect from '../../../../components/customWidgets/classTypeSelect';
+import Toaster from '../../../../components/Toaster';
 
 export const widgets = {
     fitnessSelect: FitnessMultiSelect,

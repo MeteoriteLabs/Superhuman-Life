@@ -23,7 +23,7 @@ function CreateEditProgram(props: any, ref: any) {
     const [programDetails, setProgramDetails] = useState<any>({});
     const [operation, setOperation] = useState<Operation>({} as Operation);
     const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
-    let [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
+    const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
     const [toastType, setToastType] = useState<string>('');
     const [toastMessage, setToastMessage] = useState<string>('');
 
@@ -161,18 +161,11 @@ function CreateEditProgram(props: any, ref: any) {
         });
     }
 
-    function ViewExercise(frm: any) {
-        // console.log('view message');
-        //use a variable to set form to disabled/not editable
-        // useMutation(UPDATE_EXERCISE, { variables: frm, onCompleted: (d: any) => { console.log(d); } })
-    }
-
     function DeleteExercise(id: any) {
         deleteProgram({ variables: { id: id } });
     }
 
     function OnSubmit(frm: any) {
-        //bind user id
         if (frm)
             frm.user_permissions_user = auth.userid;
 
@@ -182,9 +175,6 @@ function CreateEditProgram(props: any, ref: any) {
                 break;
             case 'edit':
                 EditExercise(frm);
-                break;
-            case 'view':
-                ViewExercise(frm);
                 break;
         }
     }

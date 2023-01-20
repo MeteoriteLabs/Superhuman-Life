@@ -19,11 +19,7 @@ export default function FitnessAddress(props) {
         const flattedData = flattenObj({...data});
         setAddressDetails(flattedData.addresses);
     }});
-    // console.log("🚀 ~ file: FitnessAddress.tsx ~ line 11 ~ FitnessAddress ~ data", data)
-
-
-    // if (loading) return <p>...loading</p>
-
+    
     const handleChange = (e) => {
         widgetProps.onChange(e.target.value)
     }

@@ -4,7 +4,6 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 const TextEditor = (props: any) => {
 
-     console.log(props);
      const inputDisabled = props?.uiSchema?.readonly;
 
      const [value, setValue] = useState(props.val ? props.val : props.value ? props.value : "");

@@ -28,8 +28,6 @@ const PtProgramDetails = (props) => {
     const [offlineClasses, setOfflinceClasses] = useState<number>(existingData?.offline ? existingData.offline : 0);
     const [restDays, setRestDays] = useState<number>(existingData?.rest ? existingData.rest : 0);
 
-    console.log(singleSelections);
-
     useEffect(() => {
         if(onlineClasses > 30){
             setOnlineClasses(30);
@@ -63,7 +61,7 @@ const PtProgramDetails = (props) => {
 
     function loadData(data: any) {
         const flattenedData = flattenObj({...data});
-        console.log(flattenedData);
+        
         setAddresses(
               [...flattenedData.addresses].map((address) => {
                   return {
@@ -132,8 +130,6 @@ const PtProgramDetails = (props) => {
             }
         }
     }
-
-    console.log(restDays, onlineClasses, offlineClasses);
 
     useEffect(() => {
         if(mode === "0"){

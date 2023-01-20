@@ -40,12 +40,8 @@ const ActivityField = (props: any) => {
 
      FetchData();
 
-     // if(selected === 'none'){
-     //      setDetailsDiv('block');
-     // }
-
      function OnChange(data: any){
-          console.log(data);
+          
           if(data !== undefined){
                const objectToString = JSON.stringify(data);
 

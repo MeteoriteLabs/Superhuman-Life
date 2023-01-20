@@ -43,13 +43,13 @@ function CreateEditOnDemadPt(props: any, ref: any) {
     });
 
     const [bookingConfig] = useMutation(CREATE_BOOKING_CONFIG, {onCompleted: (r: any) => { 
-        console.log(r); modalTrigger.next(false); props.callback();
+        modalTrigger.next(false); props.callback();
         setIsFormSubmitted(!isFormSubmitted); 
         }
     });
 
     const [updateBookingConfig] = useMutation(UPDATE_BOOKING_CONFIG, {onCompleted: (r: any) => {
-        console.log(r); modalTrigger.next(false); props.callback();
+        modalTrigger.next(false); props.callback();
             setisOfferingUpdated(!isOfferingUpdated);
         }
     });

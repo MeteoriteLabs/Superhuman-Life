@@ -46,25 +46,6 @@ function CreateClient(props: any, ref: any) {
           },
      }));
 
-     //function loadData(data: any) {
-     // messageSchema["1"].properties.prerecordedtype.enum = [...data.prerecordedtypes].map(n => (n.id));
-     // messageSchema["1"].properties.prerecordedtype.enumNames = [...data.prerecordedtypes].map(n => (n.name));
-     // messageSchema["1"].properties.prerecordedtrigger.enum = [...data.prerecordedtriggers].map(n => (n.id));
-     // messageSchema["1"].properties.prerecordedtrigger.enumNames = [...data.prerecordedtriggers].map(n => (n.name));
-     //}
-
-     //  function FillDetails(data: any) {
-     //       let details: any = {};
-     //       let msg = data.UsersPermissionsUser;
-     //       console.log(msg);
-     //       details.firstname = msg.username;
-     //       details.email = msg.email;
-     //       details.phone = msg.phone;
-     //       setMessageDetails(details);
-
-     //       OnSubmit(null);
-     //  }
-
      function CreateClient(frm: any) {
           
           let userName = frm.firstname.slice(0, 1) + " " + frm.lastname;

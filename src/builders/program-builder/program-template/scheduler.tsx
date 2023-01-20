@@ -44,6 +44,7 @@ import AuthContext from "../../../context/auth-context";
 // import sessionContext from '../../../context/session-context';
 import { AvailabilityCheck } from "./availabilityCheck";
 import SapienVideoPlayer from "../../../components/customWidgets/SpaienVideoPlayer";
+import Toaster from "../../../components/Toaster";
 
 const Schedular = (props: any) => {
   const auth = useContext(AuthContext);
@@ -73,7 +74,8 @@ const Schedular = (props: any) => {
   const [groupDropConflict, setGroupDropConflict] = useState(false);
   const [sessionBookings, setSessionBooking] = useState<any>([]);
   const [clickedSessionId, setClickedSessionId] = useState("");
-  const [showRestDay, setShowRestDay] = useState(false);
+  const [showRestDay, setShowRestDay] = useState<boolean>(false);
+  const [isUpdated, setIsUpdated] = useState<boolean>(false);
 
   const DELETE_REST_DAY = gql`
     mutation deleteRestDay($id: ID!) {
@@ -753,7 +755,6 @@ const Schedular = (props: any) => {
     onCompleted: (r: any) => {
       setEvent({});
       props.callback();
-      // mainQuery.refetch();
     },
   });
   const [createSession] = useMutation(CREATE_SESSION, {
@@ -769,6 +770,7 @@ const Schedular = (props: any) => {
     onCompleted: () => {
       setEvent({});
       props.callback();
+      setIsUpdated(!isUpdated);
     },
   });
   const [updateTagSessions] = useMutation(UPDATE_TAG_SESSIONS, {
@@ -1859,6 +1861,7 @@ const Schedular = (props: any) => {
                 minHeight: "70px",
                 paddingTop: "10px",
               }}
+              key={index}
             >
               <div className="event-dayOfWeek text-center mt-1">
                 <span style={{ fontSize: "14px" }}>
@@ -1897,9 +1900,10 @@ const Schedular = (props: any) => {
         );
       });
     } else {
-      return days.map((val) => {
+      return days.map((val, index) => {
         return (
           <div
+            key={index}
             className="cell"
             style={{
               backgroundColor: `${handleRestDays(val)}`,
@@ -1918,6 +1922,7 @@ const Schedular = (props: any) => {
         return (
           <>
             <div
+              key={index}
               className="cell"
               style={{
                 backgroundColor: `${handleRestDays(index + 1)}`,
@@ -1960,6 +1965,7 @@ const Schedular = (props: any) => {
       return days.map((val, index) => {
         return (
           <div
+            key={index}
             className="cell"
             style={{
               backgroundColor: `${handleRestDays(val)}`,
@@ -2091,9 +2097,9 @@ const Schedular = (props: any) => {
               ></div>
               {handleDaysRowRender()}
             </div>
-            {hours.map((h) => {
+            {hours.map((h, index) => {
               return (
-                <div className="time-row" style={{ backgroundColor: "white" }}>
+                <div className="time-row" style={{ backgroundColor: "white" }} key={index}>
                   <div className="cell" style={{ position: "relative" }}>
                     <span
                       style={{
@@ -2110,12 +2116,13 @@ const Schedular = (props: any) => {
                       }}
                     >{`${h}:00`}</span>
                   </div>
-                  {days.map((d) => {
+                  {days.map((d, index) => {
                     return (
-                      <div className="cell container">
-                        {min.map((m) => {
+                      <div className="cell container" key={index}>
+                        {min.map((m, index) => {
                           return (
                             <div
+                              key={index}
                               className="time"
                               data-day={d}
                               data-hour={h}
@@ -2145,7 +2152,7 @@ const Schedular = (props: any) => {
                               }}
                             >
                               {arr[d][h][m] &&
-                                arr[d][h][m]?.map((val, index) => {
+                                arr[d][h][m]?.map((val, index: number) => {
                                   val.index = index;
                                   return (
                                     <div
@@ -2490,17 +2497,17 @@ const Schedular = (props: any) => {
                         <i className="fas fa-reply"></i> Replace
                       </Button>
                     </Row>
-                    {data.map((val) => {
+                    {data.map((val, index) => {
                       return (
                         <>
-                          <Row>
+                          <Row key={index}>
                             {val?.warmup === null ? (
                               ""
                             ) : (
                               <Col className="pt-2">
                                 <h5>
                                   Warmup:{" "}
-                                  {val.warmup?.map((d) => {
+                                  {val.warmup?.map((d, index) => {
                                     return handleAgenda(d);
                                   })}
                                 </h5>
@@ -2584,10 +2591,10 @@ const Schedular = (props: any) => {
                     })}
                   </Tab>
                   <Tab eventKey="summary" title="Summary">
-                    {data.map((val) => {
+                    {data.map((val, index) => {
                       return (
                         <>
-                          <Row className="pt-3 align-items-center">
+                          <Row className="pt-3 align-items-center" key={index}>
                             <Col lg={1}>
                               <label>Intensity:</label>
                             </Col>
@@ -2637,13 +2644,14 @@ const Schedular = (props: any) => {
                               <label>Equipment: </label>
                             </Col>
                             <Col lg={10} className="pl-0">
-                              {val.equipment_lists.map((d) => {
+                              {val.equipment_lists.map((d, index) => {
                                 return (
                                   <>
                                     <Badge
                                       className="p-2"
                                       pill
                                       variant="secondary"
+                                      key={index}
                                     >
                                       {d.name}
                                     </Badge>{" "}
@@ -3044,6 +3052,14 @@ const Schedular = (props: any) => {
           ref={createEditWorkoutComponent}
         ></CreateoreditWorkout>
         <ReplaceWorkout ref={replaceWorkoutComponent}></ReplaceWorkout>
+        {/* update toaster */}
+        {isUpdated && (
+        <Toaster
+          handleCallback={() => setIsUpdated(!isUpdated)}
+          type="success"
+          msg="Schedule has been updated successfully"
+        />
+      )}
       </>
     );
 };

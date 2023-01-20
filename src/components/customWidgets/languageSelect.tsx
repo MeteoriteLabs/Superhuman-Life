@@ -7,13 +7,11 @@ import { flattenObj} from '../utils/responseFlatten';
 
 const MultiSelect = (props: any) => {
 
-     console.log(props.readonly);
-
      const [multiSelections, setMultiSelections] = useState<any>(props.value !== undefined ? JSON.parse(props.value) : []);
      const [languages, setlanguages] = useState<any[]>([]);
 
      function FetchData(){
-          useQuery(LANGUAGES, {onCompleted: loadData, onError: error => console.log(error)});
+          useQuery(LANGUAGES, {onCompleted: loadData});
       }
   
      function loadData(data: any) {

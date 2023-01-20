@@ -74,12 +74,6 @@ const TimeFieldInput = (props: any) => {
      const object = handleObjectFormat({"startTime": startTime, "endTime": endTime});
      props.onChange(JSON.stringify(object));
 
-     console.log(props.endTime, props.startTime);
-
-     // setTimeout(() => {
-     //      setShow(true);
-     // }, 2000);
-
      useEffect(() => {
           setStartTime(props.startTime);
           setEndTime(props.endTime);

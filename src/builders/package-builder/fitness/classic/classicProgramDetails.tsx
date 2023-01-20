@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {Row, Col, Form, InputGroup, FormControl} from 'react-bootstrap';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 // import { gql } from '@apollo/client';
@@ -12,104 +12,16 @@ const ClassicProgramDetails = (props) => {
     const existingData = props.value === undefined ? undefined : JSON.parse(props.value);
     if(existingData !== undefined && existingData.length > 0){
         existingData.address = {id: JSON.parse(existingData?.address)[0].id, title: JSON.parse(existingData?.address)[0].title};
-
     }
-
-//     const auth = useContext(AuthContext); 
     const [duration, setDuration] = useState(existingData?.duration ? existingData?.duration : 1);
     const [onlineClasses, setOnlineClasses] = useState<number>(existingData?.online ? existingData.online : 0);
     const [restDays, setRestDays] = useState<number>(existingData?.rest ? existingData.rest : 0);
-
-//     useEffect(() => {
-//           if(duration < 30){
-//                setDuration(30);
-//           }else if(duration > 365){
-//                setDuration(365);
-//           }
-
-//     }, [duration]);
-
-
-//     const FETCH_USER_ADDRESSES = gql`
-//     query addresses($id: ID!) {
-//         addresses(filters: {
-//           users_permissions_user: {
-//             id: {
-//               eq: $id
-//             }
-//           }
-//         }){
-//           data{
-//               id
-//             attributes{
-//               address1
-//             }
-//           }
-//         }
-//       }
-//   `;
-
-//     function handleValidation(mode: string){
-//         //here we will check for online
-//         if(mode === '0'){
-//             if((onlineClasses + restDays) === 30){
-//                 return true;
-//             }else {
-//                 return false;
-//             }
-//         }
-//         //here we will check for offline
-//         if(mode === '1'){
-//             if((restDays + offlineClasses) === 30){
-//                 if(addressTitle === 'At My Address' && singleSelections.length !== 0){
-//                     return true;
-//                 }else {
-//                     return false;
-//                 }
-//             }else {
-//                 return false;
-//             }
-//         }
-//         //here we will check for both(hybrid)
-//         if(mode === "2"){
-//             if((restDays + offlineClasses + onlineClasses) === 30){
-//                 if(addressTitle === 'At My Address' && singleSelections.length !== 0){
-//                     return true;
-//                 }else {
-//                     return false;
-//                 }
-//             }else {
-//                 return false;
-//             }
-//         }
-//     }
-
-//     console.log(restDays, onlineClasses, offlineClasses);
-
-//     useEffect(() => {
-//         if(mode === "0"){
-//             setOfflinceClasses(0);
-//             setSingleSelections([]);
-//         }else if(mode === "1"){
-//             setOnlineClasses(0);
-//         }
-//     }, [mode]);
-
-    // if(mode === "0"){
-    //     props.onChange(JSON.stringify({addressTag: addressTitle, address: singleSelections, mode: mode}));
-    // }else if((mode !== "" && (addressTitle === 'At My Address' && singleSelections.length !== 0)) || addressTitle === 'At Client Address') {
-    //       props.onChange(JSON.stringify({addressTag: addressTitle, address: singleSelections, mode: mode}));
-    // }else {
-    //  props.onChange(undefined)
-    // }
 
     function handleValidation(){
           if(onlineClasses === 0){
                return false;
           }
-          // if(restDays > (duration/2)){
-          //      return false;
-          // }
+          
           if((onlineClasses + restDays) === duration){
                return true;
           }
@@ -183,7 +95,6 @@ const ClassicProgramDetails = (props) => {
                         </InputGroup.Append>
                     </InputGroup>
                </Col>
-            {/* <span className='small'>*It should add upto 30 classes per month</span> */}
           </Row>
         </>
     );

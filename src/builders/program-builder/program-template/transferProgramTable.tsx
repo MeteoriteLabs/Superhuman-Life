@@ -95,7 +95,7 @@ const TransferProgramTable = (props: any) => {
                     </thead>
                     <tbody>
                               {props.events.map((val: any, index) => {
-                                   console.log(val);
+                                   
                                    return (
                                         <tr>
                                         <td><Form.Control style={{ minWidth: '150px'}} value={val.workout === null ? val.activity.title : val.workout.workouttitle} disabled></Form.Control></td>

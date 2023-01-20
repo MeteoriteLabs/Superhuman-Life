@@ -4,8 +4,6 @@ import moment from 'moment';
 
 const PackageDateConfig = (props: any) => {
 
-     console.log(props);
-
      const inputDisabled = props.readonly;
      const [publishingDate, setPublishingDate] = useState(props.value === undefined ? "" : moment(JSON.parse(props.value).publishingDate).format("YYYY-MM-DDTHH:mm"));
      const [expiryDate, setExpiryDate] = useState(props.value === undefined ? "" : moment(JSON.parse(props.value).expiryDate).format("YYYY-MM-DDTHH:mm"));

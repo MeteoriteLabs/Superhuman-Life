@@ -1,12 +1,8 @@
-
 import React, { useContext, useImperativeHandle, useState } from 'react';
 import { Subject } from 'rxjs';
 import FinanceModal from '../../../components/financeModal/FinanceModal';
 import authContext from '../../../context/auth-context';
 import InvoiceModal from './InvoiceModal';
-
-
-
 
 interface Operation {
     id: string;
@@ -42,13 +38,8 @@ function InvoicesAction(props, ref) {
         }
     }
 
-
-
-
-  
-
     const OnSubmit = (frm: any) => {
-        console.log(frm)
+
         //bind user id
         if (frm) {
             frm.id = operation.id;

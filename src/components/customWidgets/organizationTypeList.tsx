@@ -13,7 +13,7 @@ const MultiSelect = (props: any) => {
      const [org, setOrg] = useState<any[]>([]);
 
      function FetchData(){
-          useQuery(ORGANIZATION_TYPE, {onCompleted: loadData, onError: error => console.log(error)});
+          useQuery(ORGANIZATION_TYPE, {onCompleted: loadData});
       }
   
      function loadData(data: any) {

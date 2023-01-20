@@ -54,8 +54,7 @@ const Scheduler = () => {
     const handleShowTimeModal = () => setEditTimeModal(true);
 
     const [updateDate] = useMutation(UPDATE_STARTDATE);
-    // const [updateTime] = useMutation(UPDATE_FITNESSPACKAGE_GROUP_TIME);
-
+    
     useEffect(() => {
         setTimeout(() => {
             setShow(true);
@@ -117,20 +116,11 @@ const Scheduler = () => {
 
     });
 
-    // const { data: data2 } = useQuery(GET_ALL_PROGRAM_BY_TYPE, {
-    //     variables: {
-    //         id: auth.userid,
-    //         type: 'Group Class'
-    //     },
-
-    // });
-
     const { data: data3 } = useQuery(GET_ALL_CLIENT_PACKAGE, {
         variables: {
             id: auth.userid,
             type: 'Group Class'
-        },
-        onCompleted: () => console.log()
+        }
     });
 
     function handleEventsSeperation(data: any, rest_days: any){

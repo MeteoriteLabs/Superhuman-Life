@@ -61,7 +61,7 @@ function CreateWebpageDetails(props: any, ref: any) {
   useImperativeHandle(ref, () => ({
     TriggerForm: (msg: Operation) => {
       setOperation(msg);
-      console.log(msg);
+      
       fetchTemplate();
 
       if (msg && !msg.id) modalTrigger.next(true);

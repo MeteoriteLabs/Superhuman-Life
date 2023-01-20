@@ -13,12 +13,11 @@ const MultiSelect = (props: any) => {
      const [designations, setDesignations] = useState<any[]>([]);
 
      function FetchData(){
-          useQuery(DESIGNATIONS, {onCompleted: loadData, onError: error => console.log(error)});
+          useQuery(DESIGNATIONS, {onCompleted: loadData});
       }
   
      function loadData(data: any) {
           const flattenedData = flattenObj({...data});
-          console.log(flattenedData);
           setDesignations(
               [...flattenedData.designations].map((designation) => {
                   return {

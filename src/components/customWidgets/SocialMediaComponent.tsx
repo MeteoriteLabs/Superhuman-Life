@@ -7,7 +7,6 @@ export default function SocialMediaComponent({ url }) {
             <a className="text-dark" href={url}>{url}</a>
             <div>
                 <Button className='py-2 my-2 customButton'>Copy link</Button>
-                {/* <p className='d-block mx-auto' style={{ fontSize: '1.2rem' }}><a href="#1" className='text-dark'>Share the package</a></p> */}
             </div>
             <div className='mt-5'>
                 <span className='mr-4'>

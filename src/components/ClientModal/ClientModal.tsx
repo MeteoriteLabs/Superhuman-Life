@@ -67,7 +67,6 @@ export default function ClientModal(props) {
     }
 
     FetchData()
-    // console.log(dataTable)
 
     const columns = useMemo(
         () => [

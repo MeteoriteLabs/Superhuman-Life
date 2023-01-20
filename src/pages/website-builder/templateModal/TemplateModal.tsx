@@ -35,8 +35,7 @@ function ModalComp(props) {
   useQuery(FETCH_WEBSITE_DATA, {
     variables: { id: auth.userid },
     onCompleted: (r: any) => {
-      console.log("I am templateModal");
-      console.log(r);
+  
       if (r.websiteData[0] !== undefined) {
         setWebsiteDataRecordId(r.websiteData[0].id);
         setCurrentTemplateId(r.websiteData[0].website_template.id);

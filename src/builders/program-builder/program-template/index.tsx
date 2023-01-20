@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useQuery } from "@apollo/client";
 import { GET_TABLEDATA } from './queries';
 import { Row, Col } from 'react-bootstrap';
 import Scheduler from './scheduler';
 import SessionContext from "../../../context/session-context";
 import { flattenObj } from '../../../components/utils/responseFlatten';
+import Loader from '../../../components/Loader/Loader';
 
 const ProgramManager = (props: any) => {
     const last = window.location.pathname.split('/').pop();
@@ -18,9 +19,7 @@ const ProgramManager = (props: any) => {
         }, 1500)
     }, [show]);
 
-    // function FetchData(_variables: {} = { id: last }) {
-        const mainQuery = useQuery(GET_TABLEDATA, { variables: { id: last }, onCompleted: loadData });
-    // }
+    const mainQuery = useQuery(GET_TABLEDATA, { variables: { id: last }, onCompleted: loadData });
 
     function loadData(data: any) {
         const flattenData = flattenObj({...data});
@@ -54,11 +53,9 @@ const ProgramManager = (props: any) => {
         setSessionIds([]);
     }
 
-
-    // FetchData({ id: last });
-    if (!show) return <span style={{ color: 'red' }}>Loading...</span>;
+    if (!show) return <Loader/>;
     else return (
-        <>
+        <div className='col-lg-12'>
             <Row>
                 <Col lg={11}>
                     <div className="p-4 shadow-lg bg-white" style={{ borderRadius: '10px' }}>
@@ -68,7 +65,6 @@ const ProgramManager = (props: any) => {
                             </Row>
                             <Row className="mt-4">
                                 <span><b>Discpline</b></span>
-                                {/* <span><b>Discpline</b></span> */}
                                 <span className="ml-4">{data[0].discipline}</span>
                                 <div className="ml-3 mt-1" style={{ borderLeft: '1px solid black', height: '20px' }}></div>
                                 <span className="ml-4">{data[0].duration + " days"}</span>
@@ -92,7 +88,7 @@ const ProgramManager = (props: any) => {
                     </div>
                 </Col>
             </Row>
-        </>
+        </div>
     )
 };
 export default ProgramManager;

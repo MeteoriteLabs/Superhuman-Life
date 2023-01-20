@@ -1,4 +1,4 @@
-import React, {useState } from 'react';
+import {useState } from 'react';
 import { Form, Row, Col } from 'react-bootstrap';
 
 const PackageDateConfig = (props: any) => {
@@ -10,15 +10,6 @@ const PackageDateConfig = (props: any) => {
 
      var isHybrid: boolean = false
 
-     // useEffect(() => {
-     //      const val = JSON.parse(props.formContext.programDetails);
-     //      console.log(val);
-     //      if(val.mode === "2"){
-     //           setInstantBooking(false);
-     //           setFreeDemo(false);
-     //           isHybrid = true;
-     //      } 
-     // }, []);
      props.onChange(JSON.stringify({instantBooking: instantBooking, freeDemo: freeDemo}));
 
      return (<>
