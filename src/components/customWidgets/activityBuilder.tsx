@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
 import { InputGroup, Row, Col, Form, FormControl } from 'react-bootstrap';
 
 const ActivityBuilder = (props: any) => {

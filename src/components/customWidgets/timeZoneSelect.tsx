@@ -13,12 +13,11 @@ const MultiSelect = (props: any) => {
      const [timezone, setTimeZone] = useState<any[]>([]);
 
      function FetchData(){
-          useQuery(GET_TIMEZONES, {onCompleted: loadData, onError: error => console.log(error)});
+          useQuery(GET_TIMEZONES, {onCompleted: loadData});
       }
   
      function loadData(data: any) {
           const flattenedData = flattenObj({...data});
-          console.log('time zones',flattenedData)
           setTimeZone(
               [...flattenedData.timezones].map((zone) => {
                   return {

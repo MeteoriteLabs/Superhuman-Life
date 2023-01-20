@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
 import {Dropdown, Row, Col, Button, Modal, Form} from 'react-bootstrap';
 import {useMutation} from '@apollo/client';
 import {UPDATE_SESSION_TIME, UPDATE_SESSION_MODE, UPDATE_SESSION_BOOKING_STATUS, UPDATE_SESSION_DATE} from '../graphql/mutations';
@@ -33,10 +33,10 @@ const RosterSettings = (props: any) => {
     const handleCloseDate = () => setShowRescheduleDate(false);
     const handleShowDate = () => setShowRescheduleDate(true);
 
-    const [updateSessionTime] = useMutation(UPDATE_SESSION_TIME, {onCompleted: () => {console.log('updated successfully'); handleClose();}});
-    const [updateSessionMode] = useMutation(UPDATE_SESSION_MODE, {onCompleted: () => {console.log('updated successfully'); handleCloseMode();}});
-    const [updateSessionClassStatus] = useMutation(UPDATE_SESSION_BOOKING_STATUS, {onCompleted: () => {console.log('updated successfully'); handleCloseStatus();}});
-    const [updateSessionDate] = useMutation(UPDATE_SESSION_DATE, {onCompleted: () => {console.log('updated successfully'); handleCloseDate();}});
+    const [updateSessionTime] = useMutation(UPDATE_SESSION_TIME, {onCompleted: () => {handleClose();}});
+    const [updateSessionMode] = useMutation(UPDATE_SESSION_MODE, {onCompleted: () => {handleCloseMode();}});
+    const [updateSessionClassStatus] = useMutation(UPDATE_SESSION_BOOKING_STATUS, {onCompleted: () => {handleCloseStatus();}});
+    const [updateSessionDate] = useMutation(UPDATE_SESSION_DATE, {onCompleted: () => {handleCloseDate();}});
 
     function convertToMoment(time: string) {
         var timeSplit = time.split(":").map(Number);

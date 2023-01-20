@@ -29,8 +29,6 @@ export default function ForgotPassword() {
 
   
     function onSubmit(formData: any) {
-        console.log(formData.email);
-        console.log(formData);
         forgotPassword({ variables: { email: formData.email } });
     }
 

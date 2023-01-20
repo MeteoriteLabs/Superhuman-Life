@@ -47,7 +47,7 @@ function CreateEditCohort(props: any, ref: any) {
         });
     }});
     const [updateBookingConfig] = useMutation(UPDATE_BOOKING_CONFIG, {onCompleted: (r: any) => {
-        console.log(r); modalTrigger.next(false); props.callback();
+            modalTrigger.next(false); props.callback();
             setisOfferingUpdated(!isOfferingUpdated);
         }
     });
@@ -78,11 +78,7 @@ function CreateEditCohort(props: any, ref: any) {
                 }
         });
      }})
-    // const [CreateProgram] = useMutation(CREATE_PROGRAM, { onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
-    // const [updateProgram] = useMutation(UPDATE_FITNESSPROGRAMS, {onCompleted: (r: any) => { modalTrigger.next(false); } });
-    //     const [editExercise] = useMutation(UPDATE_EXERCISE,{variables: {exerciseid: operation.id}, onCompleted: (r: any) => { console.log(r); modalTrigger.next(false); } });
-//     const [deleteExercise] = useMutation(DELETE_EXERCISE, { onCompleted: (e: any) => console.log(e), refetchQueries: ["GET_TABLEDATA"] });
-
+   
     useQuery(GET_FITNESS_PACKAGE_TYPE, {onCompleted: (data: any) => {
         const flattenData = flattenObj({...data});
         setFitnessPackageTypes(flattenData.fitnessPackageTypes);

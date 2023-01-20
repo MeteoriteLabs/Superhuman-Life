@@ -7,15 +7,13 @@ import { flattenObj } from '../utils/responseFlatten';
 
 const MultiSelect = (props: any) => {
 
-     console.log(props);
-
      const [multiSelections, setMultiSelections] = useState(
           props.value?.length > 0 ? JSON.parse(props.value) : []
         );
      const [languages, setlanguages] = useState<any[]>([]);
 
      function FetchData(){
-          useQuery(LANGUAGES, {onCompleted: loadData, onError: error => console.log(error)});
+          useQuery(LANGUAGES, {onCompleted: loadData});
       }
   
      function loadData(data: any) {
@@ -31,9 +29,6 @@ const MultiSelect = (props: any) => {
      }
 
      function OnChange(e){
-          console.log(e);
-          // let id = e.map(d => {return d.id}).join(',');
-          // props.onChange(id);
           setMultiSelections(e);
      }
 

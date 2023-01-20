@@ -71,13 +71,10 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
         onCompleted: (data) => fetchData(data),
     });
 
-    console.log(fitnesspackagepricing);
-
     const arrayDuration = fitnesspackagepricing?.map(fitness => fitness.duration);
 
     const calculateSuggestPrice = (arrayData: { mode: "Online" | "Offline"; mrp: number; }[], arrayClasses: number[]) => {
-    console.log("🚀 ~ file: FitnessPricingTable.tsx ~ line 80 ~ calculateSuggestPrice ~ arrayClasses", arrayClasses)
-    console.log("🚀 ~ file: FitnessPricingTable.tsx ~ line 80 ~ calculateSuggestPrice ~ arrayData", arrayData)
+    
         const mrp: number[] = [];
 
         // eslint-disable-next-line array-callback-return
@@ -88,15 +85,12 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
                 mrp.push(item.mrp * arrayClasses[1])
             }
         })
-        console.log(mrp)
+    
         return mrp.reduce((acc, cur) => acc + cur)
     }
 
-
-
-
     const calculateArraySuggestPrice = (sapientPrice: number, arrayDuration: number[]) => {
-        console.log(sapientPrice, arrayDuration);
+        
         const arraySapient: number[] = [];
         arraySapient[0] = Number(sapientPrice);
         for (let i = 1; i < arrayDuration.length; i++) {
@@ -111,7 +105,7 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
         // get dicount vouchers from vouchers collection.
         let updatePrice = [...arraySapient];
         if (actionType === "edit") {
-            console.log(userData);
+            
             if (userData.fitnesspackagepricing) {
                 const arrayVoucher = userData.fitnesspackagepricing.map(item => item.voucher);
                 for (let i = 0; i < updatePrice.length; i++) {
@@ -176,15 +170,10 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
     //custom
     const customSuggestPrice = (data) => {
 
-        console.log(data);
-
         const arrayCustomPrice: number[] = []
         const arrayPTdata = data.sapienPricings.filter((item: { fitness_package_type: { type: "One-On-One" | "Group Class" | "Classic Class"; }; }) => item.fitness_package_type.type === "One-On-One");
-
         const arrayGroupData = data.sapienPricings.filter((item: { fitness_package_type: { type: "One-On-One" | "Group Class" | "Classic Class"; }; }) => item.fitness_package_type.type === "Group Class");
-
         const arrayClassicData = data.sapienPricings.filter((item: { fitness_package_type: { type: "One-On-One" | "Group Class" | "Classic Class"; }; }) => item.fitness_package_type.type === "Classic Class");
-
 
         for (let i = 0; i < arrayPTdata.length; i++) {
             if (arrayPTdata[i].mode === "Online") {
@@ -206,7 +195,6 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
             arrayCustomPrice.push(arrayClassicData[i].mrp * recordedclasses)
         }
 
-
         const totalCustomPrice = arrayCustomPrice.reduce((acc, cur) => acc + cur)
         calculateArraySuggestPrice(totalCustomPrice, arrayDuration)
 
@@ -215,8 +203,7 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
 
     const fetchData = (data) => {
         const flattenedData = flattenObj({...data});
-        console.log("🚀 ~ file: FitnessPricingTable.tsx ~ line 211 ~ fetchData ~ flattenedData", flattenedData)
-        console.log(fitness_package_type);
+        
         if (fitness_package_type === "One-On-One") {
             PTSuggestedPricing(flattenedData)
         }
@@ -234,8 +221,6 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
         }
     }
 
-
-
     useEffect(() => {
         if (pricingDetailRef) {
             pricingDetailRef.current = {
@@ -243,8 +228,6 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
             }
         }
     }, [pricingDetailRef, fitnesspackagepricing])
-
-
 
     useEffect(() => {
         let updatePricing: any = ''
@@ -270,9 +253,6 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
         setFitnesspackagepricing(updatePricing)
     }, [userData, actionType, duration, formData]) // eslint-disable-line react-hooks/exhaustive-deps
 
-    
-
-
     useEffect(() => {
         if (type === "One-On-One") {
             setOnlineClassesType(ptonline);
@@ -284,8 +264,6 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
 
         }
     }, [ptonline, ptoffline, groupoffline, grouponline, type])
-
-
 
     if (mode === "Online" && ptoffline > 0) {
         ptonline = 0;
@@ -329,7 +307,6 @@ export default function FitnessPricingTable({ userData, setUserData, actionType,
                             offlineClassesType={offlineClassesType}
                             packageTypeName={packageTypeName}
                         />
-
                     :
                     <CustomPricingTable
                         ptonline={ptonline}

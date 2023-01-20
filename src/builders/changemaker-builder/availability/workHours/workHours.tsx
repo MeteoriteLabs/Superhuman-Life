@@ -517,14 +517,9 @@ const WorkHours = () => {
 
   function handleUserConfig({ fromTime, toTime, classMode, date, dayIndex, isHoliday = false, desc = "", config }: NamedParameters): any {
 
-    debugger;
-    console.log(slotsValidation);
-
     const val = config;
     const values = slotsValidation.changemakerAvailabilties;
     const conflict = [...conflictSlots];
-
-    console.log(values);
 
     const holidayExists = values?.find((item: any) => moment(item.date).format("dddd") === daysOfWeek[dayIndex] && item.Is_Holiday === true);
     if (holidayExists) {
@@ -636,8 +631,6 @@ const WorkHours = () => {
   }
 
   function handleUserConfigSubmit(newConfig: any) {
-    console.log(newConfig);
-    debugger;
     const range = moment(endDate).diff(moment(startDate), "days");
 
     for (var i = 0; i < daysOfWeek.length; i++) {

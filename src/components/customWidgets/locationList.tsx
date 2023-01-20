@@ -37,7 +37,7 @@ const LocationList = (props) => {
 
     function loadData(data: any) {
         const flattenedData = flattenObj({...data});
-        console.log(flattenedData);
+        
         setAddresses(
               [...flattenedData.addresses].map((address) => {
                   return {

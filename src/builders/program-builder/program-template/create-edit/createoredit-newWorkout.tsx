@@ -17,7 +17,6 @@ interface Operation {
 }
 
 function CreateEditNewWorkout(props: any, ref: any) {
-    console.log(props);
     const auth = useContext(AuthContext);
     const programSchema: { [name: string]: any; } = require(window.location.pathname.includes("session") ? "../json/sessionManager/newWorkout.json" :"../json/newWorkout.json");
     const [programDetails, setProgramDetails] = useState<any>({});
@@ -149,8 +148,6 @@ function CreateEditNewWorkout(props: any, ref: any) {
 
     function FillDetails(data: any) {
         let details: any = {};
-        // let msg = data;
-        // console.log(msg);
         setProgramDetails(details);
 
         //if message exists - show form only for edit and view

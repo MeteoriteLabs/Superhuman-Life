@@ -7,6 +7,7 @@ import { schema, widgets } from "../schema/newActivitySchema";
 import { Subject } from "rxjs";
 import {flattenObj} from '../../../../components/utils/responseFlatten';
 import moment from 'moment';
+import Toaster from "../../../../components/Toaster";
 
 interface Operation {
      id: string;
@@ -20,6 +21,7 @@ function CreateEditActivity(props: any, ref: any) {
      const [programDetails, setProgramDetails] = useState<any>({});
      const [operation, setOperation] = useState<Operation>({} as Operation);
      const program_id = window.location.pathname.split("/").pop();
+     const [isCreated, setIsCreated] = useState<boolean>(false);
 
      const [templateSessionsIds, setTemplateSessionsIds] =  useState<any>([]);
 
@@ -35,6 +37,7 @@ function CreateEditActivity(props: any, ref: any) {
      const [createSessionBooking] = useMutation(CREATE_SESSION_BOOKING, { onCompleted: (data: any) => {
           modalTrigger.next(false); 
           props.callback();
+          setIsCreated(!isCreated);
      }});
      const [upateSessions] = useMutation(UPDATE_TAG_SESSIONS, { onCompleted: (data: any) => {
           modalTrigger.next(false);
@@ -61,9 +64,6 @@ function CreateEditActivity(props: any, ref: any) {
 
      function FillDetails(data: any) {
           let details: any = {};
-          // let msg = data;
-          // console.log(details);
-          // console.log(msg);
           setProgramDetails(details);
 
           //if message exists - show form only for edit and view
@@ -92,12 +92,12 @@ function CreateEditActivity(props: any, ref: any) {
           var existingEvents = props.events === null ? [] : [...props.events];
           var daysArray: any = [];
           var id: any;
-          console.log(frm);
+         
           if (frm.day && frm.newActivity) {
                frm.day = JSON.parse(frm.day);
                frm.time = JSON.parse(frm.time);
                frm.newActivity = JSON.parse(frm.newActivity);
-               console.log(frm.newActivity)
+               
                var name: any = frm.newActivity[0].activity;
                id = frm.newActivity[0].id;
                delete frm.newActivity[0].activity;
@@ -212,8 +212,7 @@ function CreateEditActivity(props: any, ref: any) {
      }
 
      function OnSubmit(frm: any) {
-          console.log(frm);
-          console.log(frm.name);
+         
           if (frm) frm.user_permissions_user = auth.userid;
           if (frm.name === "edit" || frm.name === "view") {
                if (frm.name === "edit") {
@@ -226,16 +225,6 @@ function CreateEditActivity(props: any, ref: any) {
                UpdateProgram(frm);
           }
      }
-     // let name = "";
-     // if(operation.type === 'create'){
-     //     name="New Activity";
-     // }else if(operation.type === 'edit'){
-     //     name="Edit";
-     // }else if(operation.type === 'view'){
-     //     name="View";
-     // }
-
-     //FetchData();
 
      return (
           <>
@@ -245,7 +234,6 @@ function CreateEditActivity(props: any, ref: any) {
                     showErrorList={false}
                     formUISchema={schema}
                     formSchema={programSchema}
-                    //showing={operation.modal_status}
                     formSubmit={(frm: any) => {
                          OnSubmit(frm);
                     }}
@@ -254,6 +242,23 @@ function CreateEditActivity(props: any, ref: any) {
                     widgets={widgets}
                     modalTrigger={modalTrigger}
                />
+               {/* success toaster notification */}
+      {isCreated && (
+        <Toaster
+          handleCallback={() => setIsCreated(!isCreated)}
+          type="success"
+          msg="Contact has been created successfully"
+        />
+      )}
+      {/* {isUpdated && (
+        <Toaster
+          handleCallback={() => setIsUpdated(!isUpdated)}
+          type="success"
+          msg="Contact has been updated successfully"
+        />
+      )} */}
+      
+      
           </>
      );
 }

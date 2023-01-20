@@ -44,8 +44,6 @@ const ProgramList = (props: any) => {
 
     useQuery(GET_SESSIONS_BY_TAG, { variables: {id: selectedTag}, skip: (selectedTag === ""), onCompleted: (data) => {
         const flattenData = flattenObj({...data});
-        console.log(flattenData);
-        debugger
         setStartDate(props.startDate);
         handleDatesRender(props.startDate, props.duration);
         setPackageDuration(props.duration);

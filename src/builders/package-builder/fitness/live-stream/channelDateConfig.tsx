@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { InputGroup, FormControl } from 'react-bootstrap';
 import moment from 'moment';
 
@@ -9,8 +9,6 @@ const PackageDateConfig = (props: any) => {
 
      const [publishingDate, setPublishingDate] = useState(props.value === undefined ? "" : moment(JSON.parse(props.value).publishingDate).format("YYYY-MM-DDTHH:mm"));
      const [expiryDate, setExpiryDate] = useState(props.value === undefined ? moment(cohortStartDate).format("YYYY-MM-DDTHH:mm") : moment(JSON.parse(props.value).expiryDate).format("YYYY-MM-DDTHH:mm"));
-
-     console.log(expiryDate);
 
      if(publishingDate && expiryDate) {
           props.onChange(JSON.stringify({publishingDate, expiryDate}));

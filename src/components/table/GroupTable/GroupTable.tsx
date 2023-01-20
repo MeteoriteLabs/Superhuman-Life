@@ -31,9 +31,6 @@ function GroupTable({ data, columns }: any) {
 
     }
 
-    // console.log('data', data);
-
-
     const {
         getTableProps,
         getTableBodyProps,

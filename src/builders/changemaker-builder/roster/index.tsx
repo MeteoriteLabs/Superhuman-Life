@@ -57,7 +57,7 @@ const Roster = () => {
 
     function handleDateChange(date){
         const checkingIfSessionExists = currentDateSessions?.filter(session => session.session_date === moment(date).format('YYYY-MM-DD') && session.type !== 'restday');
-        console.log(checkingIfSessionExists);
+        
         if (checkingIfSessionExists?.length > 0 && checkingIfSessionExists !== undefined) {
             window.location.href = `/roster/${checkingIfSessionExists[0].id}`;
         }else {
@@ -112,18 +112,8 @@ const Roster = () => {
         }
     })
 
-    // const currentDateData = useQuery(GET_SESSIONS_BASED_ON_DATE, {
-    //     variables: {
-    //         id: auth.userid,
-    //         date: scheduleDate === anotherDate ? scheduleDate : anotherDate 
-    //     },
-    //     onCompleted: (data) => {
-    //         const flattenData = flattenObj({...data});
-    //         handleSorting(flattenData.sessions);
-    //     }
-    // });
+   
 
-    console.log(sessionData);
 
     useQuery(GET_SESSION_AND_SESSION_BOOKINGS, {
         variables: {
@@ -131,7 +121,6 @@ const Roster = () => {
         },
         onCompleted: (data) => {
             const flattenedData = flattenObj({ ...data });
-            console.log(flattenedData);
             setAnotherDate(moment(flattenedData.sessionsBookings[0]?.session?.session_date).format("YYYY-MM-DD"));
             setSessionData(flattenedData.sessionsBookings);
             setShow(true);
@@ -154,29 +143,9 @@ const Roster = () => {
         }
     }
 
-    // function handleDatePicked(val: any) {
-    //     // console.log(val);
-    //     setScheduleDate(val);
-    //     setAnotherDate(val);
-    // }
+    
 
-    // function handleSubChangeDay(day: any) {
-    //     // setScheduleDay(day - 1);
-    //     // setScheduleDate(moment(day).subtract(1, 'days').format("YYYY-MM-DD"));
-    //     // setAnotherDate(moment(day).subtract(1, 'days').format("YYYY-MM-DD"));
-    //     // currentDateData.refetch();
-    //     const getChangeDateSessions = currentDateSessions.filter((sess: any) => moment(sess.session_date).format("YYYY-MM-DD") === moment(day).subtract(1, 'days').format("YYYY-MM-DD"));
-    //     window.location.href = `/roster/${getChangeDateSessions[0]?.id}`;
-    // }
-
-    // function handleAddChangeDay(day: any) {
-    //     // setScheduleDay(day + 1);
-    //     // setScheduleDate(moment(day).add(1, 'days').format("YYYY-MM-DD"));
-    //     // setAnotherDate(moment(day).add(1, 'days').format("YYYY-MM-DD"));
-    //     // currentDateData.refetch();
-    //     const getChangeDateSessions = currentDateSessions.filter((sess: any) => moment(sess.session_date).format("YYYY-MM-DD") === moment(day).add(1, 'days').format("YYYY-MM-DD"));
-    //     window.location.href = `/roster/${getChangeDateSessions[0]?.id}`;
-    // }
+    
 
     function toHoursAndMinutes(totalMinutes) {
         const minutes = totalMinutes % 60;
@@ -240,9 +209,6 @@ const Roster = () => {
     //     setScheduleDate(moment(scheduleDate).subtract(1, 'days').format("YYYY-MM-DD"));
     //     // currentDateData.refetch();
     // }
-
-    console.log(restDays);
-    console.log(sessionData);
 
     return (
         <>

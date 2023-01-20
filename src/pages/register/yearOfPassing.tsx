@@ -1,11 +1,8 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
 
 const YearOfPassing = (props: any) => {
-     console.log(props.value);
-
      const [date, setDate] = useState(props.value);
 
-     console.log(date);
      props.onChange(date);
 
      return (

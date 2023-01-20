@@ -11,7 +11,7 @@ import {
   DELETE_CONTACT,
   GET_CONTACT,
   UPDATE_CONTACT,
-  CREATE_NOTIFICATION
+  CREATE_NOTIFICATION,
 } from "./queries";
 import StatusModal from "../../../components/StatusModal/StatusModal";
 import { Subject } from "rxjs";
@@ -24,7 +24,7 @@ import {
 } from "../../../components/utils/ValidationPatterns";
 import Toaster from "../../../components/Toaster";
 import { PaymentDetails } from "./PaymentDetailsInterface";
-import moment from 'moment';
+import moment from "moment";
 
 interface Operation {
   id: string;
@@ -49,7 +49,7 @@ function CreateEditContact(props: any, ref: any) {
   const [createContact] = useMutation(ADD_CONTACT, {
     onCompleted: (r: any) => {
       const flattenData = flattenObj({ ...r });
-      
+
       createContactNotification({
         variables: {
           data: {
@@ -57,7 +57,11 @@ function CreateEditContact(props: any, ref: any) {
             Title: "New contact",
             OnClickRoute: "/clients",
             users_permissions_user: auth.userid,
-            Body: `New contact ${flattenData.createContact.firstname} ${flattenData.createContact.lastname} has been added ${flattenData.createContact.isPayee ? "as payee" : "as contact"}`,
+            Body: `New contact ${flattenData.createContact.firstname} ${
+              flattenData.createContact.lastname
+            } has been added ${
+              flattenData.createContact.isPayee ? "as payee" : "as contact"
+            }`,
             DateTime: moment().format(),
             IsRead: false,
             ContactID: flattenData.createContact.id,
@@ -75,7 +79,8 @@ function CreateEditContact(props: any, ref: any) {
       modalTrigger.next(false);
       props.callback();
       setIsUpdated(!isUpdated);
-    }, refetchQueries: [GET_CONTACT]
+    },
+    refetchQueries: [GET_CONTACT],
   });
 
   const [deleteContact] = useMutation(DELETE_CONTACT, {
@@ -123,20 +128,38 @@ function CreateEditContact(props: any, ref: any) {
       detail.lastname = flattenData.lastname;
       detail.email = flattenData.email;
       detail.phone = flattenData.phone;
-      detail.appDownloadStatus = flattenData.appDownloadStatus === "Invited" ? true : false;
+      detail.appDownloadStatus =
+        flattenData.appDownloadStatus === "Invited" ? true : false;
       detail.type = flattenData.type;
       detail.isPayee = flattenData.isPayee;
       if (flattenData.organisationDetails) {
-        detail.organisationDetails = flattenData.organisationDetails.organisationName ? true : false;
-        detail.organisationName = flattenData.organisationDetails.organisationName;
+        detail.organisationDetails = flattenData.organisationDetails
+          .organisationName
+          ? true
+          : false;
+        detail.organisationName =
+          flattenData.organisationDetails.organisationName;
         detail.gst = flattenData.organisationDetails.gst;
-        detail.address1 = flattenData.organisationDetails.address1 ? flattenData.organisationDetails.address1 : "";
-        detail.address2 = flattenData.organisationDetails.address2 ? flattenData.organisationDetails.address2 : "";
-        detail.city = flattenData.organisationDetails.city ? flattenData.organisationDetails.city : "";
-        detail.state = flattenData.organisationDetails.state ? flattenData.organisationDetails.state : "";
-        detail.country = flattenData.organisationDetails.country ? flattenData.organisationDetails.country : "";
-        detail.zipcode = flattenData.organisationDetails.zipcode ? flattenData.organisationDetails.zipcode : "";
-        detail.organisationEmail = flattenData.organisationDetails.organisationEmail;
+        detail.address1 = flattenData.organisationDetails.address1
+          ? flattenData.organisationDetails.address1
+          : "";
+        detail.address2 = flattenData.organisationDetails.address2
+          ? flattenData.organisationDetails.address2
+          : "";
+        detail.city = flattenData.organisationDetails.city
+          ? flattenData.organisationDetails.city
+          : "";
+        detail.state = flattenData.organisationDetails.state
+          ? flattenData.organisationDetails.state
+          : "";
+        detail.country = flattenData.organisationDetails.country
+          ? flattenData.organisationDetails.country
+          : "";
+        detail.zipcode = flattenData.organisationDetails.zipcode
+          ? flattenData.organisationDetails.zipcode
+          : "";
+        detail.organisationEmail =
+          flattenData.organisationDetails.organisationEmail;
       }
     }
 
