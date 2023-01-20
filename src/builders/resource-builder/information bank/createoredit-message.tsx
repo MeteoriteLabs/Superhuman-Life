@@ -13,7 +13,6 @@ import AuthContext from "../../../context/auth-context";
 import StatusModal from "../../../components/StatusModal/StatusModal";
 import { Subject } from "rxjs";
 import { schema, widgets } from "./schema";
-
 import { flattenObj } from "../../../components/utils/responseFlatten";
 
 interface Operation {

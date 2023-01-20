@@ -22,8 +22,8 @@ function CreateEditExercise(props: any, ref: any) {
     const [exerciseDetails, setExerciseDetails] = useState<any>({});
     const [workoutDetails, setWorkoutDetails] = useState<any[]>([]);
     const [operation, setOperation] = useState<Operation>({} as Operation);
-    const [showDeleteModal, setShowDeleteModal] = useState(false);
-    let [isFormSubmitted, setIsFormSubmitted] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+    const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
     const [toastType, setToastType] = useState<string>('');
     const [toastMessage, setToastMessage] = useState<string>('');
 
@@ -43,12 +43,7 @@ function CreateEditExercise(props: any, ref: any) {
             setIsFormSubmitted(!isFormSubmitted); 
             setToastType('success');
             setToastMessage('Exercise has been created successfully');
-        },
-        onError: (e: any) => {
-            setToastType('error');
-            setIsFormSubmitted(!isFormSubmitted); 
-            setToastMessage('Exercise details has not been created');
-        } 
+        }
     });
 
     const [editExercise] = useMutation(UPDATE_EXERCISE, { 
@@ -58,11 +53,6 @@ function CreateEditExercise(props: any, ref: any) {
             props.callback();
             setToastType('success');
             setToastMessage('Exercise details has been updated successfully'); 
-        },
-        onError: (e: any) => {
-            setToastType('error');
-            setIsFormSubmitted(!isFormSubmitted); 
-            setToastMessage('Exercise details has not been updated');
         }
     });
 
@@ -73,12 +63,7 @@ function CreateEditExercise(props: any, ref: any) {
             setToastType('success');
             setIsFormSubmitted(!isFormSubmitted); 
             setToastMessage('Exercise details has been deleted successfully');
-        },
-        onError: (e: any) => {
-            setToastType('error');
-            setIsFormSubmitted(!isFormSubmitted); 
-            setToastMessage('Exercise details has not been deleted');
-        } 
+        }
     });
 
     const modalTrigger = new Subject();
@@ -197,19 +182,12 @@ function CreateEditExercise(props: any, ref: any) {
         });
     }
 
-    function ViewExercise(frm: any) {
-
-        //use a variable to set form to disabled/not editable
-        useMutation(UPDATE_EXERCISE, { variables: frm, onCompleted: (d: any) => { console.log(d); } })
-    }
-
     function DeleteExercise(id: any) {
         deleteExercise({ variables: { id: id } });
     }
 
     function OnSubmit(frm: any) {
-        
-        //bind user id
+
         if (frm)
             frm.user_permissions_user = auth.userid;
 
@@ -219,9 +197,6 @@ function CreateEditExercise(props: any, ref: any) {
                 break;
             case 'edit':
                 EditExercise(frm);
-                break;
-            case 'view':
-                ViewExercise(frm);
                 break;
         }
     }

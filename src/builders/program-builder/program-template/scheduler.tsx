@@ -44,6 +44,7 @@ import AuthContext from "../../../context/auth-context";
 // import sessionContext from '../../../context/session-context';
 import { AvailabilityCheck } from "./availabilityCheck";
 import SapienVideoPlayer from "../../../components/customWidgets/SpaienVideoPlayer";
+import Toaster from "../../../components/Toaster";
 
 const Schedular = (props: any) => {
   const auth = useContext(AuthContext);
@@ -73,7 +74,8 @@ const Schedular = (props: any) => {
   const [groupDropConflict, setGroupDropConflict] = useState(false);
   const [sessionBookings, setSessionBooking] = useState<any>([]);
   const [clickedSessionId, setClickedSessionId] = useState("");
-  const [showRestDay, setShowRestDay] = useState(false);
+  const [showRestDay, setShowRestDay] = useState<boolean>(false);
+  const [isUpdated, setIsUpdated] = useState<boolean>(false);
 
   const DELETE_REST_DAY = gql`
     mutation deleteRestDay($id: ID!) {
@@ -753,7 +755,6 @@ const Schedular = (props: any) => {
     onCompleted: (r: any) => {
       setEvent({});
       props.callback();
-      // mainQuery.refetch();
     },
   });
   const [createSession] = useMutation(CREATE_SESSION, {
@@ -769,6 +770,7 @@ const Schedular = (props: any) => {
     onCompleted: () => {
       setEvent({});
       props.callback();
+      setIsUpdated(!isUpdated);
     },
   });
   const [updateTagSessions] = useMutation(UPDATE_TAG_SESSIONS, {
@@ -3050,6 +3052,14 @@ const Schedular = (props: any) => {
           ref={createEditWorkoutComponent}
         ></CreateoreditWorkout>
         <ReplaceWorkout ref={replaceWorkoutComponent}></ReplaceWorkout>
+        {/* update toaster */}
+        {isUpdated && (
+        <Toaster
+          handleCallback={() => setIsUpdated(!isUpdated)}
+          type="success"
+          msg="Schedule has been updated successfully"
+        />
+      )}
       </>
     );
 };

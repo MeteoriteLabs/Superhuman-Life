@@ -37,7 +37,6 @@ const AddFitnessAddressModal = (props: any) => {
      function getAddressFromCoordinates(lat: string, lng: string){
           Geocode.fromLatLng(lat, lng).then(
                (response) => {
-                    console.log(response)
                     const address = response.results[0].formatted_address;
                     let city, state, country, zip;
                     for (let i = 0; i < response.results[0].address_components.length; i++) {
@@ -63,8 +62,6 @@ const AddFitnessAddressModal = (props: any) => {
                     setZip(zip);
                     setCountry(country);
                     setAddress1(address);
-               //   console.log(city, state, country, zip);
-               //   console.log(address);
                },
                (error) => {
                     console.error(error);
@@ -82,7 +79,6 @@ const AddFitnessAddressModal = (props: any) => {
           }
      }
      function success(position) {
-          // console.log(position);
           getAddressFromCoordinates(position.coords.latitude, position.coords.longitude);
      }
 
