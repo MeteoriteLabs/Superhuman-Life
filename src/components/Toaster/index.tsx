@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Row, Col, Toast } from 'react-bootstrap';
+import Icon from '../Icons';
 
 function Toaster(props: any) {
     const [showToaster, setShowToaster] = useState<boolean>(true);
@@ -20,7 +21,7 @@ function Toaster(props: any) {
                             <h6 className={props.type === 'success' ? 'mr-auto text-success' : 'mr-auto text-danger'}>{props.type === 'success' ? 'Success' : 'Failed'}</h6>
                         </Toast.Header>
                         <Toast.Body className={props.type === 'success' ? 'text-success' : 'text-danger'} style={{display: 'flex'}}>
-                            {props.type === 'success' ? <img src="assets/toasterSuccess.svg" alt="confirmed" height="25px" width="25px" /> : <img src="assets/failed.svg" alt="failed" height="25px" width="25px" />}
+                            {props.type === 'success' ? <Icon name="done" width={24} height={24} /> : <Icon name="cancel" width={24} height={24} /> }
                             {props.msg}
                         </Toast.Body>
                     </Toast>
