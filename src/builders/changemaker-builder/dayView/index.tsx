@@ -5,7 +5,10 @@ import {
   VerticalTimeline,
   VerticalTimelineElement,
 } from "react-vertical-timeline-component";
-import { GET_ALL_CLIENT_PACKAGE_BY_TYPE, GET_ALL_DAILY_SESSIONS } from "../graphql/queries";
+import {
+  GET_ALL_CLIENT_PACKAGE_BY_TYPE,
+  GET_ALL_DAILY_SESSIONS,
+} from "../graphql/queries";
 import { useQuery } from "@apollo/client";
 import AuthContext from "../../../context/auth-context";
 import "react-vertical-timeline-component/style.min.css";
@@ -31,10 +34,10 @@ const DayView = (props: any) => {
       Date: scheduleDate,
     },
     onCompleted: (data: any) => {
-      const flattenData = flattenObj({...data});
+      const flattenData = flattenObj({ ...data });
       setTodaysEvents(flattenData.sessions);
-    }
-  })
+    },
+  });
 
   useQuery(GET_ALL_CLIENT_PACKAGE_BY_TYPE, {
     variables: {
@@ -53,17 +56,46 @@ const DayView = (props: any) => {
     var Values: any = {};
     for (var i = 0; i < flattenData.clientPackages.length; i++) {
       if (flattenData.clientPackages[i].program_managers.length !== 0) {
-        if (flattenData.clientPackages[i].fitnesspackages[0].fitness_package_type.type === "Group Class") {
-          for (var j = 0; j < flattenData.clientPackages[i].program_managers[0].fitnessprograms.length; j++) {
-            Values.effectiveDate = flattenData.clientPackages[i].program_managers[0].fitnessprograms[j].start_dt;
-            Values.program = flattenData.clientPackages[i].program_managers[0].fitnessprograms[j];
+        if (
+          flattenData.clientPackages[i].fitnesspackages[0].fitness_package_type
+            .type === "Group Class"
+        ) {
+          for (
+            var j = 0;
+            j <
+            flattenData.clientPackages[i].program_managers[0].fitnessprograms
+              .length;
+            j++
+          ) {
+            Values.effectiveDate =
+              flattenData.clientPackages[i].program_managers[0].fitnessprograms[
+                j
+              ].start_dt;
+            Values.program =
+              flattenData.clientPackages[i].program_managers[0].fitnessprograms[
+                j
+              ];
             sortedPrograms.push(Values);
             Values = {};
           }
         } else {
-          for (var k = 0; k < flattenData.clientPackages[i].program_managers[0].fitnessprograms.length; k++) {
-            Values.effectiveDate = flattenData.clientPackages[i].effective_date.substring(0,flattenData.clientPackages[i].effective_date.indexOf("T"));
-            Values.program = flattenData.clientPackages[i].program_managers[0].fitnessprograms[k];
+          for (
+            var k = 0;
+            k <
+            flattenData.clientPackages[i].program_managers[0].fitnessprograms
+              .length;
+            k++
+          ) {
+            Values.effectiveDate = flattenData.clientPackages[
+              i
+            ].effective_date.substring(
+              0,
+              flattenData.clientPackages[i].effective_date.indexOf("T")
+            );
+            Values.program =
+              flattenData.clientPackages[i].program_managers[0].fitnessprograms[
+                k
+              ];
             sortedPrograms.push(Values);
             Values = {};
           }
@@ -105,7 +137,10 @@ const DayView = (props: any) => {
     const todaysPrograms: any = [];
     for (var i = 0; i < data?.length; i++) {
       for (var j = 0; j < data[i]?.program.events?.length; j++) {
-        if (currentDay[i] === parseInt(data[i].program.events[j].day) && data[i].program.events[j].type === "workout") {
+        if (
+          currentDay[i] === parseInt(data[i].program.events[j].day) &&
+          data[i].program.events[j].type === "workout"
+        ) {
           todaysPrograms.push(data[i].program.events[j]);
         }
       }
@@ -140,7 +175,9 @@ const DayView = (props: any) => {
   }
 
   function handleDatePicked(date: any) {
-    if (moment().format("YYYY, DD, MM") === moment(date).format("YYYY, DD, MM")) {
+    if (
+      moment().format("YYYY, DD, MM") === moment(date).format("YYYY, DD, MM")
+    ) {
       setDays(immutableDays);
       setScheduleDay(1);
       setScheduleDate(moment().format("YYYY-MM-DD"));
@@ -224,7 +261,11 @@ const DayView = (props: any) => {
         <div className="text-center">
           <Row>
             <Col lg={12} xs={12}>
-              <h5>{event.activity === null ? event.workout.workouttitle : event.activity.title}</h5>
+              <h5>
+                {event.activity === null
+                  ? event.workout.workouttitle
+                  : event.activity.title}
+              </h5>
               <Badge variant="info">{event.tag}</Badge>{" "}
               {event.tag !== "Classic" && (
                 <Badge
@@ -269,7 +310,6 @@ const DayView = (props: any) => {
     );
   }
 
-
   if (!show)
     return (
       <div className="text-center mt-5">
@@ -279,8 +319,9 @@ const DayView = (props: any) => {
         </h5>
       </div>
     );
-  else return (
-    <>
+  else
+    return (
+      <>
         <div>
           <Row className="mb-3 mt-3">
             <Col>
@@ -349,8 +390,8 @@ const DayView = (props: any) => {
             </Row>
           )}
         </div>
-    </>
-  );
+      </>
+    );
 };
 
 export default DayView;

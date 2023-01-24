@@ -74,12 +74,6 @@ export default function Routes({ token }: any) {
                <Layout token={token}>
                     {token ? (
                          <Suspense fallback={<Loader/>}>
-                              {/* <Helmet>
-              <meta charSet="utf-8" />
-              <title>Sapien Dashboard | Dashboard</title>
-              <link rel="canonical" href="https://sapien.systems/" />
-            </Helmet> */}
-
                               <Switch>
                                    <Redirect exact from="/" to="/lobby" />
                                    <Redirect exact from="/login" to="/lobby" />

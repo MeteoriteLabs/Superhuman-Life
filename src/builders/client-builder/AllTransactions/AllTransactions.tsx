@@ -139,7 +139,6 @@ export default function AllTransactions() {
               <FormControl
                 aria-describedby="basic-addon1"
                 placeholder="Search"
-                // ref={searchInput}
               />
               <InputGroup.Prepend>
                 <Button

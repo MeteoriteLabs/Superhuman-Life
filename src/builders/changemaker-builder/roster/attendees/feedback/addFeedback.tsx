@@ -180,9 +180,6 @@ function CreatePosts(props: any, ref: any) {
      }
 
      function DeleteNote(id: any, comments: any) {
-          //FetchRating(resourceid);
-          //FetchRating({ id: resourceid });
-          //setDeletion(true);
           deleteNote({ variables: { id: id } });
 
           for (let i = 0; i < comments.length; i++) {
@@ -258,7 +255,6 @@ function CreatePosts(props: any, ref: any) {
                     isStepper={false}
                     formUISchema={schema}
                     formSchema={Schema}
-                    //showing={operation.modal_status}
                     formSubmit={(frm: any) => {
                          OnSubmit(frm);
                     }}
