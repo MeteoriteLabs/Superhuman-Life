@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Form from "@rjsf/bootstrap-4";
 import { Button, Modal, Row } from "react-bootstrap";
 import { useMutation, gql } from '@apollo/client';
@@ -57,7 +57,6 @@ export default function ForgotPassword() {
                 </Row>
                 <blockquote className="blockquote text-right">
                     <p className="text-danger blockquote-footer">Do not share your password with others</p>
-                    {/* <footer className="blockquote-footer">Someone famous in <cite title="Source Title">Source Title</cite></footer> */}
                 </blockquote>
                 <Row style={{ justifyContent: 'center', justifyItems: 'center'}}>
                     <Button onClick={() => window.location.href = '/login'} size="sm" variant="danger">
@@ -70,10 +69,6 @@ export default function ForgotPassword() {
         <p className="text-danger blockquote-footer">Enter New Password</p>
         <hr />
         <Form uiSchema={uiSchema} validate={Validate} schema={loginSchema} onSubmit={({ formData }) => onSubmit(formData)}>
-          {/* { error &&
-            <p className="text-danger">Incorrect email or password</p>
-          } */}
-
           <Row className="mb-2" style={{justifyContent: 'center'}}>
             <Button type="submit" size="sm" variant="danger">
                 Update

@@ -35,6 +35,22 @@ export const UPDATE_BOOKING_STATUS = gql`
     updateClientBooking(id: $id, data: { booking_status: $booking_status }) {
       data {
         id
+        attributes{
+          booking_date
+          package_duration
+          effective_date
+          booking_status
+          users_permissions_users{
+            data{
+              id
+            }
+          }
+          fitnesspackages{
+            data{
+              id
+            }
+          }
+        }
       }
     }
   }
@@ -42,22 +58,10 @@ export const UPDATE_BOOKING_STATUS = gql`
 
 export const CREATE_USER_PACKAGE = gql`
   mutation createUserPackage(
-    $users_permissions_user: ID
-    $fitnesspackages: [ID]
-    $accepted_date: DateTime!
-    $package_duration: Int!
-    $effective_date: DateTime!
-    $program_managers: [ID]
+    $data: ClientPackageInput!
   ) {
     createClientPackage(
-      data: {
-        users_permissions_user: $users_permissions_user
-        fitnesspackages: $fitnesspackages
-        accepted_date: $accepted_date
-        package_duration: $package_duration
-        effective_date: $effective_date
-        program_managers: $program_managers
-      }
+      data: $data
     ) {
       data {
         id

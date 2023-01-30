@@ -108,7 +108,7 @@ export const DELETE_CHANGEMAKER_AVAILABILITY_HOLIDAY = gql`
       }
     }
   }
-`; 
+`;
 
 export const CREATE_CHANGEMAKER_AVAILABILITY_WORKHOURS = gql`
   mutation createChangeMakerAvailabilityWorkHours($slots: JSON, $id: ID!, $date: Date) {

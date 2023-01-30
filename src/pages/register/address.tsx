@@ -20,7 +20,6 @@ const Address = (props: any) => {
           geocodeByAddress(value.label)
                .then(results => getLatLng(results[0]))
                .then(({lat, lng}) => {
-                    // console.log('Successfully got latitude and longitude', coord)
                     getAddressFromCoordinates(lat.toString(), lng.toString());
                }
           );

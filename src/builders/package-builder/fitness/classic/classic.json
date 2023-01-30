@@ -31,7 +31,11 @@
             "level": {
                 "type": "number",
                 "title": "Level",
-                "enum": [0, 1, 2],
+                "enum": [
+                    0,
+                    1,
+                    2
+                ],
                 "enumNames": [
                     "Beginner",
                     "Intermediate",
@@ -42,7 +46,11 @@
             "intensity": {
                 "type": "number",
                 "title": "Intensity",
-                "enum": [0, 1, 2],
+                "enum": [
+                    0,
+                    1,
+                    2
+                ],
                 "enumNames": [
                     "Low",
                     "Moderate",
@@ -84,39 +92,40 @@
                 "title": "Offering Screen Image/Video",
                 "oneOf": [
                     {
-                        "title": "Add Youtube URL", 
-                          "properties": {
+                        "title": "Add Youtube URL",
+                        "properties": {
                             "VideoUrl": {
-                              "type": "string",
-                              "format": "uri",
-                              "description": "Add Youtube URL"
+                                "type": "string",
+                                "format": "uri",
+                                "description": "Add Youtube URL"
                             }
-                          },
-                          "required": [
+                        },
+                        "required": [
                             "VideoUrl"
-                          ]
+                        ]
                     },
                     {
-                        "title": "Upload picture or video", 
+                        "title": "Upload picture or video",
                         "properties": {
                             "upload": {
                                 "type": "string",
                                 "description": "This Image/Video will be seen in the details screen of the offering"
                             }
-                      },
-                      "required": [
-                        "upload"
-                      ]
+                        },
+                        "required": [
+                            "upload"
+                        ]
                     }
                 ]
-
             }
         }
     },
     "3": {
         "title": "Program Details",
         "type": "object",
-        "required": ["programDetails"],
+        "required": [
+            "programDetails"
+        ],
         "properties": {
             "programDetails": {
                 "type": "string"
@@ -126,7 +135,9 @@
     "4": {
         "title": "Pricing Plan",
         "type": "object",
-        "required": ["pricingDetail"],
+        "required": [
+            "pricingDetail"
+        ],
         "properties": {
             "pricingDetail": {
                 "type": "string",
@@ -137,17 +148,20 @@
     },
     "5": {
         "title": "Package Settings",
-       "type": "object",
-       "required": [
-        "visibility",
-        "datesConfig",
-        "config"
-       ],
-       "properties": {
+        "type": "object",
+        "required": [
+            "visibility",
+            "datesConfig",
+            "config"
+        ],
+        "properties": {
             "visibility": {
                 "type": "number",
                 "title": "Visibility",
-                "enum": [0, 1],
+                "enum": [
+                    0,
+                    1
+                ],
                 "enumNames": [
                     "Public",
                     "Private"
