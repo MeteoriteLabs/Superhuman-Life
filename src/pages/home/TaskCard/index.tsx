@@ -5,6 +5,8 @@ import { useContext, useState, useRef } from "react";
 import { useQuery } from "@apollo/client";
 import { flattenObj } from "../../../components/utils/responseFlatten";
 import BookingAction from "../../booking/Movement/BookingAction";
+import moment from "moment";
+import "./style.css";
 
 function TaskCard() {
   const auth = useContext(authContext);
@@ -24,17 +26,13 @@ function TaskCard() {
 
   const loadData = (data: { clientBookings: any[] }) => {
     const flattenData = flattenObj({ ...data.clientBookings });
-    console.log(flattenData);
+
     let pendingBookingsArray = flattenData.filter(
       (currentValue) => currentValue.booking_status === "pending"
     );
-    console.log(pendingBookingsArray);
+
     setPendingBookings(pendingBookingsArray);
   };
-
-  if (pendingBookings && pendingBookings.length) {
-    console.log(pendingBookings);
-  }
 
   return (
     <>
@@ -53,42 +51,119 @@ function TaskCard() {
           >
             {pendingBookings && pendingBookings.length
               ? pendingBookings.map((currentValue, index) => (
-
                   <div key={index}>
-                    New booking from{" "}
-                    {
-                      currentValue.users_permissions_users.map((currentValue,index) =>  <b key={index}>{currentValue.username}</b>)
-                    }
-                    {" "}for{" "}
+                    
+                    {currentValue.users_permissions_users.map(
+                      (currentValue, index) => (
+                        <b key={index}>{currentValue.username}</b>
+                      )
+                    )}{" "}
+                    requested to book{" "}
                     {currentValue.fitnesspackages.map(
                       (currentElement, index) => (
                         <b key={index}>
-                           
                           {currentElement.fitness_package_type.type}{" "}
                         </b>
                       )
                     )}
                     <div className="d-flex space-in-between">
-                      <Button variant="outline-dark" onClick={handleShow} className="m-1">
+                      <Button
+                        variant="outline-dark"
+                        onClick={handleShow}
+                        className="m-1"
+                      >
                         Check Details
                       </Button>
-                      <Button variant="outline-dark" onClick={handleShow} className="m-1">
+                      <Button
+                        variant="outline-dark"
+                        onClick={handleShow}
+                        className="m-1"
+                      >
                         Remind me later
                       </Button>
 
                       <Modal show={show} onHide={handleClose} centered>
-                        <Modal.Header closeButton className="bg-dark text-light">
+                        <Modal.Header
+                          closeButton
+                          className="bg-dark text-light"
+                        >
                           <Modal.Title>Booking Details</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
-                          {}
+                          <div>
+                            Username:{" "}
+                            {currentValue.users_permissions_users.map(
+                              (currentValue, index) => (
+                                <b key={index}>{currentValue.username}</b>
+                              )
+                            )}
+                            <br />
+                            Name:{" "}
+                            {currentValue.users_permissions_users.map(
+                              (currentValue, index) => (
+                                <b key={index}>
+                                  {currentValue.First_Name +
+                                    " " +
+                                    currentValue.Last_Name}
+                                </b>
+                              )
+                            )}
+                          </div>
+                          <div>
+                            Email:{" "}
+                            {currentValue.users_permissions_users.map(
+                              (currentValue, index) => (
+                                <b key={index}>{currentValue.email}</b>
+                              )
+                            )}
+                            <br />
+                            Phone no.:{" "}
+                            {currentValue.users_permissions_users.map(
+                              (currentValue, index) => (
+                                <b key={index}>{currentValue.Phone_Number}</b>
+                              )
+                            )}
+                          </div>
+                          <div className="p-2 shadow p-3 mb-5 bg-white rounded border">
+                            <div className="d-flex">
+                              Offering:{" "}
+                              {currentValue.fitnesspackages.map(
+                                (currentElement, index) => (
+                                  <span key={index} className="d-flex">
+                                    {" "}
+                                    {
+                                      currentElement.fitness_package_type.type
+                                    }{" "}
+                                  </span>
+                                )
+                              )}
+                            </div>
+                            <br />
+                            Duration: {currentValue.package_duration}{" "}
+                            {currentValue.package_duration === 1
+                              ? "day"
+                              : "days"}
+                            <br />
+                            Start Date:{" "}
+                            {moment(currentValue.effective_date).format(
+                              "DD MMM YYYY"
+                            )}
+                            <br />
+                            End Date:{" "}
+                            {moment(currentValue.effective_date)
+                              .add(
+                                Number(currentValue.package_duration),
+                                "days"
+                              )
+                              .format("DD MMM YYYY")}
+                          </div>
+                          <div className="d-flex justify-content-between">
+                            Booking Status: {currentValue.booking_status}
+                          </div>
                         </Modal.Body>
                         <Modal.Footer>
                           <Button variant="secondary" onClick={handleClose}>
                             Close
-                          </Button>
-                          <Button variant="primary" onClick={handleClose}>
-                            Save Changes
                           </Button>
                         </Modal.Footer>
                       </Modal>
@@ -120,15 +195,14 @@ function TaskCard() {
                       </span>
                     </div>
                     <div className="d-flex">
-                    <p>#{currentValue.booking_status}{" "}</p>
-                    {currentValue.fitnesspackages.map(
-                      (currentElement, index) => (
-                        <p key={index}>
-                           
-                          #{currentElement.fitness_package_type.type}{" "}
-                        </p>
-                      )
-                    )}
+                      <p>#{currentValue.booking_status} </p>
+                      {currentValue.fitnesspackages.map(
+                        (currentElement, index) => (
+                          <p key={index}>
+                            #{currentElement.fitness_package_type.type}{" "}
+                          </p>
+                        )
+                      )}
                     </div>
                   </div>
                 ))
