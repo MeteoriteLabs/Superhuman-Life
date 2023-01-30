@@ -9,6 +9,10 @@
 @media screen and (min-width: 320px) and (max-width: 480px) {
   .lobby__card{
     padding: 30px;
+    display: none !important;
+  }
+  .lobby__card1{
+    padding: 30px;
   }
   .organisation__image >img{
     height: 20px;

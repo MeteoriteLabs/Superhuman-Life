@@ -1,6 +1,6 @@
- import { gql } from "@apollo/client";
+import { gql } from "@apollo/client";
 
- export const GET_CHANGEMAKERS_NEW = gql`
+export const GET_CHANGEMAKERS_NEW = gql`
 query getclient($clientid: ID){
      clientPackages(filters: {
        users_permissions_user: {

@@ -17,6 +17,10 @@ export const GET_ALL_BOOKINGS = gql`
               id
               attributes {
                 username
+                email
+                Phone_Number
+                First_Name
+                Last_Name
               }
             }
           }

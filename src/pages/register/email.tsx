@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
 import {Form} from 'react-bootstrap';
 import { gql, useQuery} from '@apollo/client';
 import { flattenObj } from "../../components/utils/responseFlatten";
