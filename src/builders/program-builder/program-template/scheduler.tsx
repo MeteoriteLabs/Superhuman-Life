@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useContext } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import {
   Modal,
   Button,
@@ -41,14 +41,12 @@ import DaysInput from "./daysInput";
 import moment from "moment";
 import { flattenObj } from "../../../components/utils/responseFlatten";
 import AuthContext from "../../../context/auth-context";
-// import sessionContext from '../../../context/session-context';
 import { AvailabilityCheck } from "./availabilityCheck";
 import SapienVideoPlayer from "../../../components/customWidgets/SpaienVideoPlayer";
 import Toaster from "../../../components/Toaster";
 
 const Schedular = (props: any) => {
   const auth = useContext(AuthContext);
-  // const sessionContextData = useContext(sessionContext);
   const [show, setShow] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [onDragAndDrop, setOnDragAndDrop] = useState(false);
@@ -597,14 +595,11 @@ const Schedular = (props: any) => {
 
   function handleFloatingActionProgramCallback(event: any) {
     setProgram(`${event}`);
-    // mainQuery.refetch();
     props.callback();
   }
 
   function handleFloatingActionProgramCallback2(event: any) {
     setSessionFilter(`${event}`);
-    // setProgram(`${event}`);
-    // mainQuery.refetch();
     props.callback();
   }
 
@@ -713,7 +708,6 @@ const Schedular = (props: any) => {
     return height;
   }
 
-  // const [updateProgram] = useMutation(UPDATE_FITNESSPROGRAMS);
   const [updateChangeMakerAvailability] = useMutation(
     UPDATE_CHANGEMAKER_AVAILABILITY_WORKHOURS
   );
@@ -784,7 +778,6 @@ const Schedular = (props: any) => {
         });
       } else {
         setEvent({});
-        // mainQuery.refetch();
         props.callback();
       }
     },
@@ -1232,110 +1225,6 @@ const Schedular = (props: any) => {
         }
       }
     }
-    // the first if block is incase of the template page. which works based on day.
-    // if(window.location.pathname.split('/')[1] === 'programs'){
-    //     if(event.type === 'workout'){
-    //         createSession({
-    //             variables: {
-    //                 start_time: event.hour + ':' + event.min,
-    //                 end_time: event.endHour + ':' + event.endMin,
-    //                 workout: event.id,
-    //                 tag: tag === "" ? event.tag : tag,
-    //                 mode: mode === "" ? event.mode : mode,
-    //                 type: event.type,
-    //                 day_of_program: parseInt(event.day),
-    //                 changemaker: auth.userid,
-    //                 isProgram: true
-    //             }
-    //         })
-    //     }else {
-    //         createSession({
-    //             variables: {
-    //                 day_of_program: parseInt(event.day),
-    //                 start_time: timeInput.startTime === "" ? event.hour + ':' + event.min : timeInput.startTime,
-    //                 end_time: timeInput.endTime === "" ? event.endHour + ':' + event.endMin : timeInput.endTime,
-    //                 activity: event.id,
-    //                 activity_target: event.activityTarget,
-    //                 tag: tag === "" ? event.tag : tag,
-    //                 mode: mode === "" ? event.mode : mode,
-    //                 type: e.type,
-    //                 session_date: moment(event.sessionDate).format('YYYY-MM-DD'),
-    //                 changemaker: auth.userid,
-    //                 isProgram: false
-    //             }
-    //         })
-    //     }
-    // }else
-    // if(event.type === "workout" && event.isProgram === false){
-    //     //create new
-    //     if(event.tag === 'Group Class'){
-    //         const values = [...props.sessionIds];
-    //         values.push(event.sessionId);
-    //         updateTagSessions({
-    //             variables: {
-    //                 id: program_id,
-    //                 sessions_ids: values
-    //             }
-    //         });
-    //     }
-    //     else {
-    //         createSession({
-    //             variables: {
-    //                 start_time: event.hour + ':' + event.min,
-    //                 end_time: event.endHour + ':' + event.endMin,
-    //                 workout: event.id,
-    //                 tag: tag === "" ? event.tag : tag,
-    //                 mode: mode === "" ? event.mode : mode,
-    //                 type: event.type,
-    //                 session_date: moment(event.sessionDate).format('YYYY-MM-DD'),
-    //                 changemaker: auth.userid,
-    //                 isProgram: false
-    //             }
-    //         })
-    //     }
-    // }else if(event.type === "workout" && event.isProgram === true){
-    //     createSession({
-    //         variables: {
-    //             start_time: event.hour + ':' + event.min,
-    //             end_time: event.endHour + ':' + event.endMin,
-    //             workout: event.id,
-    //             tag: tag === "" ? event.tag : tag,
-    //             mode: mode === "" ? event.mode : mode,
-    //             type: event.type,
-    //             session_date: moment(event.sessionDate).format('YYYY-MM-DD'),
-    //             changemaker: auth.userid,
-    //             isProgram: false
-    //         }
-    //     });
-    // }else {
-    //     if(event.tag === 'Group Class' && event.isProgram !== null){
-    //         const values = [...props.sessionIds];
-    //         values.push(event.sessionId);
-    //         updateTagSessions({
-    //             variables: {
-    //                 id: program_id,
-    //                 sessions_ids: values
-    //             }
-    //         });
-
-    //     }else {
-    //         createSession({
-    //             variables: {
-    //                 day_of_program: parseInt(event.day),
-    //                 start_time: timeInput.startTime === "" ? event.hour + ':' + event.min : timeInput.startTime,
-    //                 end_time: timeInput.endTime === "" ? event.endHour + ':' + event.endMin : timeInput.endTime,
-    //                 activity: event.id,
-    //                 activity_target: event.activityTarget,
-    //                 tag: tag === "" ? event.tag : tag,
-    //                 mode: mode === "" ? event.mode : mode,
-    //                 type: e.type,
-    //                 session_date: moment(event.sessionDate).format('YYYY-MM-DD'),
-    //                 changemaker: auth.userid,
-    //                 isProgram: false
-    //             }
-    //         })
-    //     }
-    // }
 
     setArr(values);
     setarr2([]);
@@ -1345,7 +1234,6 @@ const Schedular = (props: any) => {
 
   // this helps handle the changes of the event when click on it.
   function handleSaveChanges(e: any, mode: any, tag: any) {
-    // let values = currentProgram === null ? [] : [...currentProgram];
     let newEvent: any = {};
 
     if (arr2.event?.import === "importedEvent") {
@@ -1546,7 +1434,7 @@ const Schedular = (props: any) => {
   });
 
   function handleEventDelete() {
-    // let values = [...currentProgram];
+
     deleteSession({
       variables: {
         id: event.sessionId,
@@ -1779,7 +1667,6 @@ const Schedular = (props: any) => {
 
   const [deleteRestDay] = useMutation(DELETE_REST_DAY, {
     onCompleted: () => {
-      // mainQuery.refetch();
       props.callback();
     },
   });
@@ -1853,7 +1740,7 @@ const Schedular = (props: any) => {
     if (props.type === "date") {
       return dates.map((val, index) => {
         return (
-          <>
+          <div key={index}>
             <div
               className="cell"
               style={{
@@ -1896,7 +1783,7 @@ const Schedular = (props: any) => {
                 </Badge>
               </div>
             </div>
-          </>
+          </div>
         );
       });
     } else {
@@ -1920,7 +1807,7 @@ const Schedular = (props: any) => {
     if (props.type === "date") {
       return dates.map((val, index) => {
         return (
-          <>
+          <div key={index}>
             <div
               key={index}
               className="cell"
@@ -1958,7 +1845,7 @@ const Schedular = (props: any) => {
                 )}
               </div>
             </div>
-          </>
+          </div>
         );
       });
     } else {
@@ -2025,7 +1912,6 @@ const Schedular = (props: any) => {
   }
 
   function handleRefetch() {
-    // mainQuery.refetch();
     props.callback();
   }
 

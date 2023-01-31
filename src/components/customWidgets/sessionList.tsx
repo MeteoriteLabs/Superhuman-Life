@@ -105,11 +105,10 @@ const ProgramList = (props: any) => {
                 <div className="mr-5">
                     <span><b>Select Fitness Package type</b></span>
                     <FormControl value={selectedFitnessPackage} 
-                    // disabled={urlList[3] === 'pt' || urlList[3] === 'group' || urlList[3] === 'classic'}  
                     as="select" onChange={(e) => setSelectedFitnessPackage(e.target.value)}>
                         <option>Choose Type</option>
-                        {fitnessPackageTypes.slice(0,7).map((item) => {
-                            return <option value={item.type}>{item.type}</option>
+                        {fitnessPackageTypes.slice(0,7).map((item, index: number) => {
+                            return <option key={index} value={item.type}>{item.type}</option>
                         })}
                     </FormControl>
                 </div>
@@ -118,51 +117,12 @@ const ProgramList = (props: any) => {
                     <span><b>Select Class</b></span>
                     <FormControl as="select" onChange={(e) => setSelectedTag(e.target.value)}>
                         <option>Choose Class</option>
-                        {tagsList.map((item) => {
-                            return <option value={item.id}>{item.tag_name}</option>
+                        {tagsList.map((item, index: number) => {
+                            return <option key={index} value={item.id}>{item.tag_name}</option>
                         })}
                     </FormControl></>}
                 </div>
             </Row>
-            {/* {programList?.length !== 0 && <InputGroup>
-                <FormControl aria-describedby="basic-addon1" placeholder="Search for session" id="searchInput" ref={inputField}
-                    onChange={(e) => {
-                        setSelected({});
-                        e.preventDefault();
-                        EquipmentSearch(e.target.value);
-                    }} autoComplete="off"
-                />
-            </InputGroup>} */}
-            {/* <>
-                {programList.slice(0, 5).map((program) => {
-                        return (
-                            <Container className="pl-0">
-                                <div
-                                    style={{ cursor: 'pointer', maxWidth: '60%' }}
-                                    className="m-2 ml-5 p-2 shadow-sm rounded bg-white "
-                                    id={program.id}
-                                    onClick={(e) => {
-                                            e.preventDefault();
-                                            handleSelectedEquipmentAdd(program.name, program.id, program.duration, program.level, program.description, program.discpline, program.events);
-                                    }}>
-                                    <div>
-                                            <Row>
-                                                <Col style={{ textAlign: 'start', fontWeight: 'bold' }}>
-                                                    {program.tag}
-                                                </Col>
-                                                <Col style={{ textAlign: 'center' }}>
-                                                    {program.description}
-                                                </Col>
-                                                <Col style={{ textAlign: 'end' }}>
-                                                    {program.level}
-                                                </Col>
-                                            </Row>
-                                    </div>
-                                </div>
-                            </Container>
-                        );
-                })}
-            </> */}
             <>
                 <div className="mt-5">
                     {renderEventsTable()}
