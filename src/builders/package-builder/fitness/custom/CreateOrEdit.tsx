@@ -5,7 +5,6 @@ import { GET_SINGLE_PACKAGE_BY_ID, GET_FITNESS_PACKAGE_TYPES, ADD_SUGGESTION_NEW
 import { CREATE_PACKAGE, DELETE_PACKAGE, EDIT_PACKAGE, UPDATE_PACKAGE_STATUS, CREATE_BOOKING_CONFIG, UPDATE_BOOKING_CONFIG } from '../graphQL/mutations';
 import { Modal, Button} from 'react-bootstrap';
 import AuthContext from "../../../../context/auth-context";
-// import StatusModal from "../../../../components/StatusModal/exerciseStatusModal";
 import { schema, widgets } from './customSchema';
 import { schemaView } from './schemaView';
 import {Subject} from 'rxjs';
@@ -55,7 +54,7 @@ function CreateEditPackage(props: any, ref: any) {
     });
 
     const [createPackage] = useMutation(CREATE_PACKAGE, { onCompleted: (r: any) => { 
-        // modalTrigger.next(false); props.callback();
+        
         if(window.location.href.split('/')[3] === 'client'){
             createUserPackageSuggestion({
                 variables: {
@@ -226,7 +225,6 @@ function CreateEditPackage(props: any, ref: any) {
                 mode: ENUM_FITNESSPACKAGE_MODE[frm.programDetails.mode],
                 address: frm.programDetails?.address[0]?.id,
                 disciplines: frm.disciplines,
-                // duration: 
                 ptoffline: frm.programDetails?.ptOffline,
                 ptonline: frm.programDetails?.ptOnline,
                 grouponline: frm.programDetails?.groupOnline,
@@ -270,7 +268,6 @@ function CreateEditPackage(props: any, ref: any) {
                 mode: ENUM_FITNESSPACKAGE_MODE[frm.programDetails.mode],
                 address: frm.programDetails?.address[0]?.id,
                 disciplines: frm.disciplines,
-                // duration: 
                 ptoffline: frm.programDetails?.ptOffline,
                 ptonline: frm.programDetails?.ptOnline,
                 grouponline: frm.programDetails?.groupOnline,
@@ -292,11 +289,6 @@ function CreateEditPackage(props: any, ref: any) {
                 languages: frm.languages.map((item: any) => item.id).join(", ").split(", "),
             }
         })
-    }
-
-    function ViewPackage(frm: any) {
-        //use a variable to set form to disabled/not editable
-     //    useMutation(UPDATE_EXERCISE, { variables: frm, onCompleted: (d: any) => { console.log(d); } })
     }
 
     function deleteChannelPackage(id: any){
@@ -323,9 +315,6 @@ function CreateEditPackage(props: any, ref: any) {
             case 'edit':
                 EditPackage(frm);
                 break;
-            case 'view':
-                ViewPackage(frm);
-                break;
             case 'toggle-status':
                 setStatusModalShow(true);
                 break;
@@ -348,7 +337,6 @@ function CreateEditPackage(props: any, ref: any) {
 
     return (
         <>
-            {/* {render && */}
                 <ModalView
                     name={name}
                     isStepper={true}
@@ -362,8 +350,6 @@ function CreateEditPackage(props: any, ref: any) {
                     modalTrigger={modalTrigger}
                     actionType={operation.type}
                 />
-                
-            {/* } */}
 
             <Modal
                     size="lg"

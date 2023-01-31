@@ -9,9 +9,7 @@ import { schemaView } from './schemaView';
 import {Subject} from 'rxjs';
 import {flattenObj} from '../../../../components/utils/responseFlatten';
 import moment from 'moment';
-// import {AvailabilityCheck} from '../../../program-builder/program-template/availabilityCheck';
 import { Modal, Button } from 'react-bootstrap';
-// import StatusModal from "../../../../components/StatusModal/exerciseStatusModal";
 import Toaster from '../../../../components/Toaster';
 
 interface Operation {
@@ -25,7 +23,6 @@ function CreateEditCohort(props: any, ref: any) {
     const auth = useContext(AuthContext);
     const programSchema: { [name: string]: any; } = require("./cohort.json");
     const [programDetails, setProgramDetails] = useState<any>({});
-    // const [frmDetails, setFrmDetails] = useState<any>([]);
     const [operation, setOperation] = useState<Operation>({} as Operation);
     const [fitnessPackageTypes, setFitnessPackageTypes] = useState<any>([]);
     const [deleteModalShow, setDeleteModalShow] = useState(false);
@@ -33,7 +30,7 @@ function CreateEditCohort(props: any, ref: any) {
     const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
     const [isOffeeringDeleted, setisOffeeringDeleted] = useState<boolean>(false);
     const [isOfferingUpdated, setisOfferingUpdated] = useState<boolean>(false);
-    // const program_id = window.location.pathname.split('/').pop();
+    
     let frmDetails: any = {};
     
     const [editPackageDetails] = useMutation(UPDATE_CHANNEL_COHORT_PACKAGE, {onCompleted: (data) => {
@@ -159,7 +156,6 @@ function CreateEditCohort(props: any, ref: any) {
         details.mode = ENUM_FITNESSPACKAGE_MODE[msg.mode];
         details.residential = msg.residential_type !== null ?  ENUM_FITNESSPACKAGE_RESIDENTIAL_TYPE[msg.residential_type] : null;
         details.languages = JSON.stringify(msg.languages);
-        // {addressTag: addressTitle, address: singleSelections, mode: mode, residential: residential}
         details.courseDetails = courseDetails;
         details.programDetails = JSON.stringify({addressTag: msg.address === null ? 'At Client Address' : 'At My Address', address: [msg.address], mode: ENUM_FITNESSPACKAGE_MODE[msg.mode], residential: msg.residential_type !== null ?  ENUM_FITNESSPACKAGE_RESIDENTIAL_TYPE[msg.residential_type] : null, accomodationDetails: msg.Accomdation_details});
         details.thumbnail = msg.Thumbnail_ID;
@@ -167,7 +163,6 @@ function CreateEditCohort(props: any, ref: any) {
         details.datesConfig = JSON.stringify({"expiryDate": msg.expiry_date, "publishingDate": msg.publishing_date});
         details.dates = JSON.stringify({"endDate": msg.End_date, "startDate": msg.Start_date, "oneDay": moment(msg.End_date).format("YYYY-MM-DD") === moment(msg.Start_date).format("YYYY-MM-DD")});
         details.bookingConfigId = msg.booking_config?.id;
-        // let msg = data;
         
         setProgramDetails(details);
 

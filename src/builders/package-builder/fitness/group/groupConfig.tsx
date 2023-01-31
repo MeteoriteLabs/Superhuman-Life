@@ -2,9 +2,7 @@ import {useState } from 'react';
 import { Form, Row, Col } from 'react-bootstrap';
 
 const PackageDateConfig = (props: any) => {
-
      var inputDisabled = JSON.parse(props.formContext.programDetails).mode === "2" ? true : props.readonly;
-
      const [instantBooking, setInstantBooking] = useState(props.value !== undefined ? JSON.parse(props.formContext.programDetails).mode === "2" ? false : JSON.parse(props.value).instantBooking : true);
      const [freeDemo, setFreeDemo] = useState(props.value !== undefined ? JSON.parse(props.formContext.programDetails).mode === "2" ? false : JSON.parse(props.value).freeDemo : false);
 

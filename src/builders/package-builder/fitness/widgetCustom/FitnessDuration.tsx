@@ -1,11 +1,6 @@
-
-import React from 'react'
 import { Form } from 'react-bootstrap';
 
 export default function FitnessDuration({ widgetProps, type, actionType, userData }) {
-
- 
-
 
     return <>
         {(type === "Classic Class") &&

@@ -1,13 +1,10 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import { Form, Row, Col } from 'react-bootstrap';
 
 const BookingConfig = (props: any) => {
-
      const inputDisabled = props.uiSchema.readonly;
-
      const [fillSchedule, setFillSchedule] = useState(props.value !== undefined ? JSON.parse(props.value).fillSchedule : false);
      const [config, setConfig] = useState(props.value !== undefined ? JSON.parse(props.value).config : "");
-     // const [bookings, setBookings] = useState(props.value !== undefined ? JSON.parse(props.value).bookings : 0);
 
      function handleValidation(){
           if(config !== "" && config === "Manual"){
@@ -19,22 +16,7 @@ const BookingConfig = (props: any) => {
           }else {
                return false;
           }
-          // if(fillSchedule && config !== "" && config !== "Auto"){
-          //      return true;
-          // }else if(!fillSchedule && config !== "" && config !== "Auto"){
-          //      return true;
-          // }else if(config === "Auto" && bookings !== 0){
-          //      return true;
-          // }else {
-          //      return false;
-          // }
      }
-
-     // useEffect(() => {
-     //      if(bookings > 20){
-     //           setBookings(20);
-     //      }
-     // }, [bookings]);
 
      useEffect(() => {
 
@@ -74,13 +56,6 @@ const BookingConfig = (props: any) => {
                     </Col>
                     <span className='small text-muted'>Will be based on class size</span>
                </div>}
-               {/* {config === 'Auto' && !fillSchedule && <div className='mt-3'>
-                    <Form.Label>Maximum Bookings per/day*</Form.Label>
-                    <Form.Control type="number" disabled={inputDisabled} max={20} min={0} value={bookings} onChange={(e: any) => setBookings(parseInt(e.target.value))} />
-                    <Form.Text className="text-muted">
-                         We'll never share your email with anyone else.
-                    </Form.Text>
-               </div>} */}
           </>
      );
 };

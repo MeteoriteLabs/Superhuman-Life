@@ -6,11 +6,9 @@ import { flattenObj } from '../../../../components/utils/responseFlatten';
 import moment from 'moment';
 
 const PricingTable = (props) => {
-
      const inputDisabled = props.readonly;
      const classDetails = JSON.parse(props.formContext.programDetails);
      const bookingDetails = JSON.parse(props.formContext.groupinstantbooking);
-
      const classMode = classDetails.mode === "0" ? "Online" : classDetails.mode === "1" ? "Offline" : "Hybrid";
      const onlineClasses = classDetails.online;
      const offlineClasses = classDetails.offline;
@@ -314,7 +312,6 @@ const PricingTable = (props) => {
         if(parseInt(value) !== 0){
             let newValue = [...pricing];
             newValue[id].voucher = parseInt(value);
-            // ((arraySapient[i] * 100) / (100 - 10)).toFixed(2)
             newValue[id].suggestedPrice = parseInt(((newValue[id].sapienPricing * 100) / (100 - value)).toFixed(0));
             setPricing(newValue);
         }else {
@@ -330,10 +327,6 @@ const PricingTable = (props) => {
     return(
         <>
             {<div>
-                <div className="d-flex justify-content-end p-2">
-                        
-                    {/* <Button disabled={inputDisabled} variant='outline-info' onClick={() => {window.location.href = '/finance'}}>Add suggest pricing</Button> */}
-                </div>
                 <Table responsive>
                 <thead>
                     <tr className='text-center'>

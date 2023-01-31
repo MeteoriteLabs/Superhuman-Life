@@ -7,13 +7,10 @@ import AddFitnessAddressModal from '../../../../components/customWidgets/AddFitn
 import authContext from '../../../../context/auth-context';
 
 export default function FitnessAddress(props) {
-
     const auth = useContext(authContext);
     const { widgetProps, actionType } = props;
-
     const [addressModal, setAddressModal] = useState(false);
     const [addressDetails, setAddressDetails] = useState<any>([]);
-
 
     const addressQuery= useQuery(GET_ADDRESS, {variables: {userId: auth.userid}, onCompleted: (data: any) => {
         const flattedData = flattenObj({...data});
@@ -27,7 +24,6 @@ export default function FitnessAddress(props) {
     function handleCallback(){
         addressQuery.refetch();
     }
-
 
     return <Fragment>
 

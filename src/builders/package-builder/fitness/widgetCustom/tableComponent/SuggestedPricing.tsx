@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import React, { useState } from "react";
+import { useState } from "react";
 import { GET_SUGGESTIONS_PRICES } from "../../graphQL/queries";
 import { flattenObj } from "../../../../../components/utils/responseFlatten";
 

@@ -1,7 +1,6 @@
 import PricingTableChannel from './pricingTableChannel';
 import PreviewChannel from './previewChannel';
 import Upload from '../../../../components/upload/upload';
-// import DatesConfig from '../../../../components/customWidgets/datesConfig';
 import FitnessSelect from '../../../../components/customWidgets/fitnessMultiSelect';
 import EquipmentSelect from '../../../../components/customWidgets/equipmentListSelect';
 import LanguageList from '../../../../components/customWidgets/languageSelect';

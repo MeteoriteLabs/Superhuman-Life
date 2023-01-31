@@ -138,8 +138,7 @@ const PricingTable = (props) => {
     }
 
     function handleValidation(){
-        //mode = 0 -> Online --- mode = 1 -> Offline --- mode = 2 -> Residential
-        //accomodationType = 0 -> Only Accomodation --- accomodationType = 1 -> Accomodation + Food
+        
         if(parseInt(pricing[0].mrp) < pricing[0].sapienPricing){
             return false;
         }
@@ -182,28 +181,9 @@ const PricingTable = (props) => {
                     }  
                 }
             }
-            // if((accomodationDetails.sharing && !accomodationDetails.private) && ((pricing[0].twoSharingPrice !== 0 && !isNaN(pricing[0].twoSharingPrice)) || (pricing[0].threeSharingPrice !== 0 && !isNaN(pricing[0].threeSharingPrice)))){
-            //     return true;
-            // }
-            // if((accomodationDetails.sharing && accomodationDetails.private) && ((pricing[0].twoSharingPrice !== 0 && !isNaN(pricing[0].twoSharingPrice)) || (pricing[0].threeSharingPrice !== 0 && !isNaN(pricing[0].threeSharingPrice))) && (pricing[0].privateRoomPrice !== 0 && !isNaN(pricing[0].privateRoomPrice))){
-            //     return true;
-            // }
+            
         }
-        // else if(accomodationType === "0" && accomodationDetails.private && !accomodationDetails.sharing && pricing[0].privateRoomPrice !== 0 && !isNaN(pricing[0].privateRoomPrice)){
-        //     return true;
-        // }else if(accomodationType === "0" && accomodationDetails.sharing && !accomodationDetails.private && pricing[0].twoSharingPrice!== 0 && pricing[0].threeSharingPrice!== 0 && !isNaN(pricing[0].twoSharingPrice) && !isNaN(pricing[0].threeSharingPrice)){
-        //     return true;
-        // }else if(accomodationType === "0" && accomodationDetails.sharing && accomodationDetails.private && pricing[0].twoSharingPrice!== 0 && pricing[0].threeSharingPrice!== 0 && !isNaN(pricing[0].twoSharingPrice) && !isNaN(pricing[0].threeSharingPrice) && !isNaN(pricing[0].privateRoomPrice) && pricing[0].privateRoomPrice !== 0){
-        //     return true;
-        // }else if(accomodationType === "1" && accomodationDetails.private && !accomodationDetails.sharing && pricing[0].privateRoomPrice !== 0 && !isNaN(pricing[0].privateRoomPrice) && pricing[0].foodPrice && !isNaN(pricing[0].foodPrice)){
-        //     return true;
-        // }else if(accomodationType === "1" && accomodationDetails.sharing && !accomodationDetails.private && pricing[0].twoSharingPrice!== 0 && pricing[0].threeSharingPrice!== 0 && !isNaN(pricing[0].twoSharingPrice) && !isNaN(pricing[0].threeSharingPrice) && !isNaN(pricing[0].foodPrice)){
-        //     return true;
-        // }else if(accomodationType === "1" && accomodationDetails.sharing && accomodationDetails.private && pricing[0].twoSharingPrice!== 0 && pricing[0].threeSharingPrice!== 0 && !isNaN(pricing[0].twoSharingPrice) && !isNaN(pricing[0].threeSharingPrice) && !isNaN(pricing[0].foodPrice) && !isNaN(pricing[0].privateRoomPrice) && pricing[0].privateRoomPrice !== 0){
-        //     return true;
-        // }else {
-        //     return false;
-        // }
+        
     }
 
 
@@ -226,12 +206,6 @@ const PricingTable = (props) => {
         newPricing[id][key] = value;
         setPricing(newPricing);
     }
-
-    // useEffect(() => {
-    //     let newPricing = [...pricing];
-    //     newPricing[0].sapienPricing = newPricing[0].privateRoomPrice + newPricing[0].twoSharingPrice + newPricing[0].threeSharingPrice + newPricing[0].foodPrice + newPricing[0].sapienPricing;
-    //     setPricing(newPricing);
-    // }, [pricing[0].privateRoomPrice, pricing[0].twoSharingPrice, pricing[0].threeSharingPrice, pricing[0].foodPrice]);
 
     function handleUpdatePricing(id: any, value: any){
         if(parseInt(value) !== 1){
@@ -286,7 +260,6 @@ const PricingTable = (props) => {
                     </div>
                     <div>
                         
-                    {/* <Button disabled={inputDisabled} variant='outline-info' onClick={() => {window.location.href = '/finance'}}>Add suggest pricing</Button> */}
                     </div>
                 </div>
                 <Table responsive>
@@ -326,7 +299,6 @@ const PricingTable = (props) => {
                             <InputGroup.Text id="basic-addon1">{"\u20B9"}</InputGroup.Text>
                         </InputGroup.Prepend>
                             <FormControl
-                            // className={`${pricing[0]?.mrp < pricing[0]?.sapienPricing && pricing[0]?.mrp !== null ? "is-invalid" : pricing[0]?.mrp >= pricing[0]?.sapienPricing ? "is-valid" : ""}`}
                             aria-label="Default"
                             type='number'
                             min={0}
@@ -345,7 +317,6 @@ const PricingTable = (props) => {
                             <InputGroup.Text id="basic-addon1">{"\u20B9"}</InputGroup.Text>
                         </InputGroup.Prepend>
                             <FormControl
-                            // className={`${pricing[0]?.mrp < pricing[0]?.sapienPricing && pricing[0]?.mrp !== null ? "is-invalid" : pricing[0]?.mrp >= pricing[0]?.sapienPricing ? "is-valid" : ""}`}
                             aria-label="Default"
                             type='number'
                             min={0}
@@ -361,7 +332,6 @@ const PricingTable = (props) => {
                     <td>
                         <InputGroup style={{ minWidth: '200px'}}>
                             <FormControl
-                            // className={`${pricing[0]?.mrp < pricing[0]?.sapienPricing && pricing[0]?.mrp !== null ? "is-invalid" : pricing[0]?.mrp >= pricing[0]?.sapienPricing ? "is-valid" : ""}`}
                             aria-label="Default"
                             type='number'
                             min={0}
@@ -380,7 +350,6 @@ const PricingTable = (props) => {
                             <InputGroup.Text id="basic-addon1">{"\u20B9"}</InputGroup.Text>
                         </InputGroup.Prepend>
                             <FormControl
-                            // className={`${pricing[0]?.mrp < pricing[0]?.sapienPricing && pricing[0]?.mrp !== null ? "is-invalid" : pricing[0]?.mrp >= pricing[0]?.sapienPricing ? "is-valid" : ""}`}
                             aria-label="Default"
                             type='number'
                             min={0}

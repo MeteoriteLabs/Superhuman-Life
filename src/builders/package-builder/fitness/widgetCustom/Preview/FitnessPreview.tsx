@@ -1,15 +1,12 @@
 import { useEffect, useState } from 'react'
 import { Carousel, Card } from 'react-bootstrap';
 import './fitnessPreview.css'
-
 import ClassicPreview from './ClassicPreview';
 import CustomPreview from './CustomPreview';
 import PTGroupPreview from './PTGroupPreview';
 import RecordedPreview from './RecordedPreview';
 import SocialMediaComponent from '../../../../../components/customWidgets/SocialMediaComponent';
 import { Fragment } from 'react';
-
-
 
 export default function FitnessPreview(props) {
     let { userData, fitnesspackagepricing, packageType, type, actionType } = props;
@@ -25,15 +22,7 @@ export default function FitnessPreview(props) {
         setIndex(selectedIndex);
     };
 
-
-
-
-
-
     if (typeof disciplines !== "object") disciplines = JSON.parse(disciplines);
-
-
-
 
     useEffect(() => {
         if (packageType === "personal-training") {
@@ -47,8 +36,6 @@ export default function FitnessPreview(props) {
         }
 
     }, [packageType, actionType, ptonline, ptoffline, grouponline, groupoffline, classsize, ptclasssize])
-
-  
 
     return <Fragment>
         {(packageType === "classic" || mode === "Online Workout" || mode === "Offline Workout") ?
@@ -80,7 +67,6 @@ export default function FitnessPreview(props) {
                         advancedTag = 'advancedTag'
                     }
 
-           
                     return <Carousel.Item key={idx}>
                         <Card className="text-center mx-auto" style={{ borderRadius: '20px', width: '80%'}}>
                             <Card.Body className='pr-0 py-0'>

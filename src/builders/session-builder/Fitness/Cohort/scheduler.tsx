@@ -1,30 +1,24 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import React, {useState, useEffect, useRef, useContext} from 'react';
-import { GET_TABLEDATA, GET_ALL_FITNESS_PACKAGE_BY_TYPE, GET_ALL_CLIENT_PACKAGE, GET_TAG_BY_ID } from '../../graphQL/queries';
+import {useState, useEffect, useRef } from 'react';
+import { GET_TAG_BY_ID } from '../../graphQL/queries';
 import { useQuery } from '@apollo/client';
-import {Row, Col, Button, Dropdown} from 'react-bootstrap';
+import {Row, Col, Dropdown} from 'react-bootstrap';
 import SchedulerPage from '../../../program-builder/program-template/scheduler';
 import moment from 'moment';
 import FitnessAction from '../FitnessAction';
-import AuthContext from '../../../../context/auth-context';
 import { Link } from 'react-router-dom';
-
 import { flattenObj } from '../../../../components/utils/responseFlatten';
 import '../Group/actionButton.css'
+import Loader from '../../../../components/Loader/Loader';
 
 const Scheduler = () => {
-
-    const auth = useContext(AuthContext);
     const last = window.location.pathname.split('/').reverse();
     const tagId = window.location.pathname.split('/').pop();
     const [show, setShow] = useState(false);
-    // const [totalClasses, setTotalClasses] = useState<any>([]);
     const [sessionIds, setSessionIds] = useState<any>([]);
     const [clientIds, setClientIds] = useState<any>([]);
     // these are the sessions that will passed onto the scheduler
     const [schedulerSessions, setSchedulerSessions] = useState<any>([]);
     const [tag, setTag] = useState<any>();
-    let programIndex;
 
     const fitnessActionRef = useRef<any>(null);
     
@@ -49,7 +43,6 @@ const Scheduler = () => {
                 total[0] += 1;
             }
         }
-        // setTotalClasses(total);
         setClientIds(clientValues);
         setSessionIds(ids);
         setTag(flattenData.tags[0]);
@@ -82,7 +75,7 @@ const Scheduler = () => {
         // setSessionIds([]);
     }
 
-    if (!show) return <span style={{ color: 'red' }}>Loading...</span>;
+    if (!show) return <Loader/>;
     else return (
         <>
             <div className="mb-3">

@@ -1,10 +1,6 @@
-import React from 'react'
-
-
 type Props = {
     type: "One-On-One" | 'Group Class' | 'Custom Fitness' | 'Classic Class';
     numberClass:number
-    // mode: "Online" | "Offline" | "Hybird" | "Workout" | "Online Workout" | "Offline Workout"
     mode: "Online" | "Offline" | "Hybird" | "Workout" | "Online Workout" | "Offline Workout"
 }
 

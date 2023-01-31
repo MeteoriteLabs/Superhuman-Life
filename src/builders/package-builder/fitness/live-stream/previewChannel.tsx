@@ -1,6 +1,4 @@
-import React from 'react';
 import {Carousel, Card, Row, Col} from 'react-bootstrap';
-// import SocialMediaComponent from '../../../../components/customWidgets/SocialMediaComponent';
 import DisplayImage from '../../../../components/DisplayImage/index';
 import '../fitness.css';
 
@@ -30,10 +28,8 @@ const PreviewChannel = (props) => {
                             <div className='d-flex justify-content-between' style={{ borderBottom: '1px dashed gray' }}>
                             <Row>
                                         <Col lg={4}>
-                                            {/* <DisplayImage imageName={props?.formContext?.thumbnail ? props?.formContext?.thumbnail : null} defaultImageUrl="https://picsum.photos/200" imageCSS="rounded-lg w-25 m-2"/> */}
                                         <div className='pt-3'>
                                             <DisplayImage imageName={props?.formContext?.thumbnail ? props?.formContext?.thumbnail : null} defaultImageUrl="https://picsum.photos/200" imageCSS="rounded-lg w-100 img-fluid img-thumbnail"/>
-                                            {/* <img src="https://picsum.photos/200" style={{ borderRadius: '10px' }} alt="random" /> */}
                                         </div>
                                         </Col>
                                         <Col>
@@ -84,10 +80,10 @@ const PreviewChannel = (props) => {
                                 <div className='d-flex' style={{ borderBottom: '1px dashed gray' }}>
                                 <Row>
                                         <Col lg={4}>
-                                            {/* <DisplayImage imageName={props?.formContext?.thumbnail ? props?.formContext?.thumbnail : null} defaultImageUrl="https://picsum.photos/200" imageCSS="rounded-lg w-25 m-2"/> */}
+                                           
                                         <div className='pt-3'>
                                             <DisplayImage imageName={props?.formContext?.thumbnail ? props?.formContext?.thumbnail : null} defaultImageUrl="https://picsum.photos/200" imageCSS="rounded-lg w-100 img-fluid img-thumbnail"/>
-                                            {/* <img src="https://picsum.photos/200" style={{ borderRadius: '10px' }} alt="random" /> */}
+                                            
                                         </div>
                                         </Col>
                                         <Col>
@@ -143,8 +139,6 @@ const PreviewChannel = (props) => {
         >
             {handleCardRender()}
         </Carousel>
-
-            {/* <SocialMediaComponent url={URL} /> */}
         </>
     );
 };

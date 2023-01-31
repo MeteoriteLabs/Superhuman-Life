@@ -6,10 +6,8 @@ import { flattenObj } from '../../../../components/utils/responseFlatten';
 import moment from 'moment';
 
 const PricingTable = (props) => {
-
     const inputDisabled = props.readonly;
     const bookingDetails = JSON.parse(props.formContext.channelinstantBooking);
-
     const [show, setShow] = useState(props.value === 'free' ? true : false);
 
     function handleReturnType(val: any) {
@@ -202,7 +200,6 @@ const PricingTable = (props) => {
         if(parseInt(value) !== 0){
             let newValue = [...pricing];
             newValue[id].voucher = parseInt(value);
-            // ((arraySapient[i] * 100) / (100 - 10)).toFixed(2)
             newValue[id].suggestedPrice = parseInt(((newValue[id].sapienPricing * 100) / (100 - value)).toFixed(0));
             setPricing(newValue);
         }else {
@@ -249,10 +246,6 @@ const PricingTable = (props) => {
                 <div className="d-flex justify-content-between p-2">
                     <div>
                         <h4>Subscription Plan</h4>
-                    </div>
-                    <div>
-                        
-                    {/* <Button variant='outline-info' onClick={() => {window.location.href = '/finance'}}>Add suggest pricing</Button> */}
                     </div>
                 </div>
                 <Table responsive>

@@ -392,29 +392,29 @@ export default function FitnessTab(props) {
         id: "edit",
         Header: "Actions",
         Cell: ({ row }: any) => {
-          const actionClick1 = () => {
+          const editHandler = () => {
             handleModalRender(row.original.id, "edit", row.original.type);
           };
-          const actionClick2 = () => {
+          const viewHandler = () => {
             handleModalRender(row.original.id, "view", row.original.type);
           };
-          const actionClick3 = () => {
-            handleModalRender(
-              row.original.id,
-              "toggle-status",
-              row.original.type,
-              row.original.Status === "Active" ? false : true
-            );
-          };
-          const actionClick4 = () => {
+          // const statusHandler = () => {
+          //   handleModalRender(
+          //     row.original.id,
+          //     "toggle-status",
+          //     row.original.type,
+          //     row.original.Status === "Active" ? false : true
+          //   );
+          // };
+          const deleteHandler = () => {
             handleModalRender(row.original.id, "delete", row.original.type);
           };
 
           const arrayAction = [
-            { actionName: "Edit", actionClick: actionClick1 },
-            { actionName: "View", actionClick: actionClick2 },
-            { actionName: "Status", actionClick: actionClick3 },
-            { actionName: "Delete", actionClick: actionClick4 },
+            { actionName: "Edit", actionClick: editHandler },
+            { actionName: "View", actionClick: viewHandler },
+            // { actionName: "Status", actionClick: statusHandler },
+            { actionName: "Delete", actionClick: deleteHandler },
           ];
 
           return <ActionButton arrayAction={arrayAction}></ActionButton>;

@@ -1,11 +1,8 @@
-import React from 'react';
 import {Carousel, Card, Row, Col} from 'react-bootstrap';
-// import SocialMediaComponent from '../../../../components/customWidgets/SocialMediaComponent';
 import DisplayImage from '../../../../components/DisplayImage/index';
 import '../fitness.css';
 
 const PreviewGroup = (props) => {
-
     const formData = props?.formContext;
     const programDetails = JSON.parse(formData?.programDetails);
     var pricing;
@@ -49,10 +46,8 @@ const PreviewGroup = (props) => {
                                 <div className='d-flex' style={{ borderBottom: '1px dashed gray' }}>
                                     <Row>
                                         <Col lg={4}>
-                                            {/* <DisplayImage imageName={props?.formContext?.thumbnail ? props?.formContext?.thumbnail : null} defaultImageUrl="https://picsum.photos/200" imageCSS="rounded-lg w-25 m-2"/> */}
                                         <div className='pt-3'>
                                             <DisplayImage imageName={props?.formContext?.thumbnail ? props?.formContext?.thumbnail : null} defaultImageUrl="https://picsum.photos/200" imageCSS="rounded-lg w-100 img-fluid img-thumbnail"/>
-                                            {/* <img src="https://picsum.photos/200" style={{ borderRadius: '10px' }} alt="random" /> */}
                                         </div>
                                         </Col>
                                         <Col>
@@ -80,7 +75,6 @@ const PreviewGroup = (props) => {
                                 <div className='pt-3 d-flex justify-content-between align-items-center '>
                                     <div className='d-flex justify-content-center align-items-center'>
                                         {handleImageRender(programDetails.mode, (parseInt(item.duration)/30))}
-                                        {/* <div className='px-4' style={{ borderRight: '1px solid black' }}></div> */}
                                         <div className='ml-4'>
                                             <h4>Class Size</h4>
                                             <p className='mb-0' style={{ color: 'purple', fontSize: '1.3rem' }}>{props.formContext.classsize}</p>
@@ -107,8 +101,6 @@ const PreviewGroup = (props) => {
         >
             {handleCardRender()}
         </Carousel>
-
-            {/* <SocialMediaComponent url={URL} /> */}
         </>
     );
 };
