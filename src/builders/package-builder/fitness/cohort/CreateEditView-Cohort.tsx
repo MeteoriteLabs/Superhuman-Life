@@ -86,14 +86,12 @@ function CreateEditCohort(props: any, ref: any) {
       modalTrigger.next(false);
       props.callback();
       setIsFormSubmitted(!isFormSubmitted);
-      console.log(r);
-    //   window.open(`cohort/session/scheduler/${row.original.tagId}`)
+      window.open(`cohort/session/scheduler/${r.createTag.data.id}`, "_self");
     },
   });
 
   const [CreateCohortPackage] = useMutation(CREATE_CHANNEL_PACKAGE, {
     onCompleted: (r: any) => {
-      console.log(r);
       const val = JSON.parse(frmDetails.config.bookingConfig);
       bookingConfig({
         variables: {
@@ -211,10 +209,10 @@ function CreateEditCohort(props: any, ref: any) {
       msg.Upload_ID === null
         ? { VideoUrl: msg?.video_URL }
         : { upload: msg?.Upload_ID };
-    // details.datesConfig = JSON.stringify({
-    //   expiryDate: msg.expiry_date,
-    //   publishingDate: msg.publishing_date,
-    // });
+    details.datesConfig = JSON.stringify({
+      expiryDate: msg.expiry_date,
+      publishingDate: msg.publishing_date,
+    }) ;
     details.dates = JSON.stringify({
       endDate: msg.End_date,
       startDate: msg.Start_date,
@@ -222,7 +220,7 @@ function CreateEditCohort(props: any, ref: any) {
         moment(msg.End_date).format("YYYY-MM-DD") ===
         moment(msg.Start_date).format("YYYY-MM-DD"),
     });
-    // details.bookingConfigId = msg.booking_config?.id;
+    details.bookingConfigId = msg.booking_config?.id;
 
     setProgramDetails(details);
 
@@ -267,7 +265,7 @@ function CreateEditCohort(props: any, ref: any) {
     frm.languages = JSON.parse(frm.languages);
     frm.courseDetails.details = JSON.parse(frm.courseDetails.details);
     frm.dates = JSON.parse(frm.dates);
-    // frm.datesConfig = JSON.parse(frm.datesConfig);
+    frm.datesConfig = JSON.parse(frm.datesConfig);
     if (frm.equipment) {
       frm.equipment = JSON.parse(frm?.equipment);
     }
@@ -280,7 +278,7 @@ function CreateEditCohort(props: any, ref: any) {
         benefits: frm.Benifits,
         packagename: frm.packageName,
         channelinstantBooking: frm.channelinstantBooking,
-        // expiry_date: moment(frm.datesConfig.expiryDate).toISOString(),
+        expiry_date: moment(frm.datesConfig.expiryDate).toISOString(),
         level: frm?.level ? ENUM_FITNESSPACKAGE_LEVEL[frm?.level] : null,
         Intensity: ENUM_FITNESSPACKAGE_INTENSITY[frm.intensity],
         equipmentList:
@@ -313,7 +311,7 @@ function CreateEditCohort(props: any, ref: any) {
                 },
               ]
             : JSON.parse(frm.pricing),
-        // publishing_date: moment(frm.datesConfig.publishingDate).toISOString(),
+        publishing_date: moment(frm.datesConfig.publishingDate).toISOString(),
         tags: frm.tag,
         users_permissions_user: frm.user_permissions_user,
         fitness_package_type: findPackageType(operation.packageType),
@@ -347,7 +345,7 @@ function CreateEditCohort(props: any, ref: any) {
     frm.languages = JSON.parse(frm.languages);
     frm.courseDetails.details = JSON.parse(frm.courseDetails.details);
     frm.dates = JSON.parse(frm.dates);
-    // frm.datesConfig = JSON.parse(frm.datesConfig);
+    frm.datesConfig = JSON.parse(frm.datesConfig);
     if (frm.equipment) {
       frm.equipment = JSON.parse(frm?.equipment);
     }
@@ -389,8 +387,8 @@ function CreateEditCohort(props: any, ref: any) {
                 },
               ]
             : JSON.parse(frm.pricing),
-        // publishing_date: moment(frm.datesConfig.publishingDate).toISOString(),
-        // expiry_date: moment(frm.datesConfig.expiryDate).toISOString(),
+        publishing_date: moment(frm.datesConfig.publishingDate).toISOString(),
+        expiry_date: moment(frm.datesConfig.expiryDate).toISOString(),
         tags: frm.tag,
         duration:
           frm.dates.startDate === frm.dates.endDate

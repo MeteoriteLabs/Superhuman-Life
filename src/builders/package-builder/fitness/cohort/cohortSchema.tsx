@@ -68,8 +68,7 @@ export const schema: any = {
             },
         },
         "datesConfig": {
-            "ui:widget": "cohortDateConfig",
-            "readonly": true
+            "ui:widget": "cohortDateConfig"
         },
         "dates": {
             "ui:widget": (props: any) => {

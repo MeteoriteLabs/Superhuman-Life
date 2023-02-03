@@ -63,6 +63,7 @@ function CreateEditPackage(props: any, ref: any) {
       modalTrigger.next(false);
       props.callback();
       setIsFormSubmitted(!isFormSubmitted);
+      window.open(`group/session/scheduler/${r.createTag.data.id}`, "_self")
     },
   });
 

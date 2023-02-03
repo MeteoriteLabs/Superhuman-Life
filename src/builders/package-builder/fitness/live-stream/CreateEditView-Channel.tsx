@@ -55,6 +55,7 @@ function CreateEditChannel(props: any, ref: any) {
     const [bookingConfig] = useMutation(CREATE_BOOKING_CONFIG, {onCompleted: (r: any) => { 
          modalTrigger.next(false); props.callback();
             setIsFormSubmitted(!isFormSubmitted);
+            window.open(`channel/session/scheduler/${r.createTag.data.id}`, "_self")
         }
     })
 
