@@ -59,6 +59,88 @@ export const GET_FITNESS_PACKAGE_TYPES = gql`
   }
 `;
 
+export const GET_TAGS = gql`
+query getTags($id: ID!) {
+  tags(filters: {
+    fitnesspackage: {
+      users_permissions_user: {
+        id: {
+          eq: $id
+        }
+      }
+    }
+  }){
+    data{
+      id
+      attributes{
+        tag_name
+        sessions{
+          data{
+            id
+            attributes{
+              session_date
+              type
+            }
+          }
+        }
+        fitnesspackage{
+          data{
+            id
+            attributes{
+              packagename
+              duration
+              mode
+              Status
+              Start_date
+              End_date
+              fitnesspackagepricing
+              packagename
+          ptoffline
+          ptonline
+          mode
+          publishing_date
+          groupoffline
+          grouponline
+          recordedclasses
+          bookingleadday
+          groupinstantbooking
+          bookingleadtime
+          fitness_package_type {
+            data {
+              id
+              attributes {
+                type
+              }
+            }
+          }
+            }
+          }
+        }
+        client_packages{
+          data{
+            id
+            attributes{
+              effective_date
+              accepted_date
+              users_permissions_user{
+                data{
+                  id
+                  attributes{
+                    username
+                    First_Name
+                    Last_Name
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+`;
+
 export const GET_FITNESS = gql`
   query fitnesspackages($id: ID) {
     fitnesspackages(

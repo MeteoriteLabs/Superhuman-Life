@@ -296,49 +296,49 @@ const PricingTable = (props) => {
                 <tbody>
                     {(classMode === "Online" || classMode === "Hybrid") &&<tr className='text-center'>
                          <td><img src="/assets/personal-training-online.svg" alt="personal-training-online"/></td>
-                         {pricing.map((item, index) => {
+                         {pricing.map((item, index: number) => {
                               return (
-                                   <td>{ptOnlineClasses * (item.duration/30)} Classes</td>
+                                   <td key={index}>{ptOnlineClasses * (item.duration/30)} Classes</td>
                               )
                          })}
                     </tr>}
                     {(classMode === "Offline" || classMode === "Hybrid") &&<tr className='text-center'>
                          <td><img src="/assets/personal-training-offline.svg" alt="personal-training-online"/></td>
-                         {pricing.map((item, index) => {
+                         {pricing.map((item, index: number) => {
                               return (
-                                   <td>{ptOfflineClasses * (item.duration/30)} Classes</td>
+                                   <td key={index}>{ptOfflineClasses * (item.duration/30)} Classes</td>
                               )
                          })}
                     </tr>}
                     {(classMode === "Online" || classMode === "Hybrid") &&<tr className='text-center'>
                          <td><img src="/assets/Group-Online.svg" alt="personal-training-online"/></td>
-                         {pricing.map((item, index) => {
+                         {pricing.map((item, index: number) => {
                               return (
-                                   <td>{groupOnlineClasses * (item.duration/30)} Classes</td>
+                                   <td key={index}>{groupOnlineClasses * (item.duration/30)} Classes</td>
                               )
                          })}
                     </tr>}
                     {(classMode === "Offline" || classMode === "Hybrid") &&<tr className='text-center'>
                          <td><img src="/assets/Group-Offline.svg" alt="personal-training-online"/></td>
-                         {pricing.map((item, index) => {
+                         {pricing.map((item, index: number) => {
                               return (
-                                   <td>{groupOfflineClasses * (item.duration/30)} Classes</td>
+                                   <td key={index}>{groupOfflineClasses * (item.duration/30)} Classes</td>
                               )
                          })}
                     </tr>}
                     <tr className='text-center'>
                          <td> <img src="/assets/classic.svg" alt="personal-training-offline"/></td>
-                         {pricing.map((item, index) => {
+                         {pricing.map((item, index: number) => {
                               return (
-                                   <td>{recorded * (item.duration/30)} Classes</td>
+                                   <td key={index}>{recorded * (item.duration/30)} Classes</td>
                               )
                          })}
                     </tr>
                     <tr className='text-center'>
                     <td><b>Vouchers</b></td>
-                    {pricing.map((item, index) => {
+                    {pricing.map((item, index: number) => {
                         return (
-                            <td>
+                            <td key={index}>
                                 <Form.Control as="select" disabled={inputDisabled} value={item.voucher} onChange={(e) => handleUpdatePricing(index, e.target.value)}>
                                     <option value={0}>Choose voucher</option>
                                     {vouchers.map((voucher, index) => {
@@ -353,25 +353,25 @@ const PricingTable = (props) => {
                     </tr>
                     <tr className='text-center'>
                     <td><b>Total days</b></td>
-                    {pricing.map((item, index) => {
+                    {pricing.map((item, index: number) => {
                         return (
-                            <td>{item.duration} days</td>
+                            <td key={index}>{item.duration} days</td>
                         )
                     })}
                     </tr>
                     <tr className='text-center'>
                     <td><b>Suggested</b></td>
-                    {pricing.map((item, index) => {
+                    {pricing.map((item, index: number) => {
                         return (
-                            <td>{isNaN(item.suggestedPrice)  ? 'Base Price Not Set' : `₹ ${item.suggestedPrice}`}</td>
+                            <td key={index}>{isNaN(item.suggestedPrice)  ? 'Base Price Not Set' : `₹ ${item.suggestedPrice}`}</td>
                         )
                     })}
                     </tr>
                     <tr>
                     <td className='text-center'><b>Set MRP</b></td>
-                    {pricing.map((item, index) => {
+                    {pricing.map((item, index: number) => {
                         return (
-                            <td>
+                            <td key={index}>
                                 <InputGroup style={{ minWidth: '200px'}} className="mb-3">
                                   <InputGroup.Prepend>
                                     <InputGroup.Text id="basic-addon1">{"\u20B9"}</InputGroup.Text>

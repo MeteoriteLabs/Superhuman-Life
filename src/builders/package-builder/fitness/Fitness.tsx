@@ -1,5 +1,5 @@
 import { useMemo, useState, useContext, useRef } from "react";
-import { useQuery } from "@apollo/client";
+import { useQuery, useLazyQuery } from "@apollo/client";
 import {
   Badge,
   Button,
@@ -23,7 +23,7 @@ import CreateEditViewClassicClass from "./classic/CreateOrEdit";
 import CreateEditViewCustomFitness from "./custom/CreateOrEdit";
 import CreateEditViewChannel from "./live-stream/CreateEditView-Channel";
 import CreateEditViewCohort from "./cohort/CreateEditView-Cohort";
-import { GET_FITNESS } from "./graphQL/queries";
+import { GET_FITNESS, GET_TAGS } from "./graphQL/queries";
 import { flattenObj } from "../../../components/utils/responseFlatten";
 import moment from "moment";
 import OfferingsDisaplyImage from "../../../components/customWidgets/offeringsDisplayImage";
@@ -219,7 +219,7 @@ export default function FitnessTab(props) {
                     }
                     packageType={row.original?.type}
                   />
-                  
+
                   <p>
                     {row.original?.freeClass
                       ? row.original.pricing[selectedDuration[row.index]]
@@ -244,7 +244,7 @@ export default function FitnessTab(props) {
                         : row.original?.type
                     }
                   />
-                  
+
                   <p>
                     {row.original?.freeClass
                       ? row.original.pricing[selectedDuration[row.index]]
@@ -269,7 +269,7 @@ export default function FitnessTab(props) {
                         : row.original?.type
                     }
                   />
-                  
+
                   <p>{row.values.details[4] * currentIndex[row.index]}</p>
                 </div>
               ) : (
@@ -279,7 +279,6 @@ export default function FitnessTab(props) {
               row.values.details[4] === null &&
               row.origianl?.type === "Group Class" ? (
                 <div className="text-center">
-                  
                   {row.values.details[6] === "Online" ? (
                     <OfferingsDisaplyImage
                       mode={"Online"}
@@ -291,7 +290,7 @@ export default function FitnessTab(props) {
                       packageType={row.original?.type}
                     />
                   )}
-                  
+
                   <p>{row.values.details[5] * currentIndex[row.index]}</p>
                 </div>
               ) : (
@@ -410,12 +409,52 @@ export default function FitnessTab(props) {
             handleModalRender(row.original.id, "delete", row.original.type);
           };
 
-          const arrayAction = [
+          const manageHandler = (id: number, length: number, type: string) => {
+            let name: string = "";
+            if (type === "Classic Class") {
+              name = "classic";
+            } else if (type === "Live Stream Channel") {
+              name = "channel";
+            } else if (type === "Cohort") {
+              name = "cohort";
+            } else if (type === "Custom Fitness") {
+              name = "custom";
+            } else if (type === "One-On-One") {
+              name = "pt";
+            } else if (type === "On-Demand PT") {
+              name = "pt";
+            } else if (type === "Group Class") {
+              name = "group";
+            }
+            if (length > 1) {
+              window.open(`${name}/session/scheduler/${id}`);
+            } else {
+              window.open(`${name}/session/scheduler/${id}`);
+            }
+          };
+
+          let arrayAction = [
             { actionName: "Edit", actionClick: editHandler },
             { actionName: "View", actionClick: viewHandler },
             // { actionName: "Status", actionClick: statusHandler },
             { actionName: "Delete", actionClick: deleteHandler },
           ];
+
+          if (row.original.tagId.length >= 1) {
+            for (let i = 0; i < row.original.tagId.length; i++) {
+              arrayAction.push({
+                actionName: `Manage ${
+                  row.original.tagId.length === 1 ? "" : row.original.tagname[i]
+                }`,
+                actionClick: () =>
+                  manageHandler(
+                    row.original.tagId[i],
+                    row.original.tagId.length,
+                    row.original.type
+                  ),
+              });
+            }
+          }
 
           return <ActionButton arrayAction={arrayAction}></ActionButton>;
         },
@@ -426,47 +465,69 @@ export default function FitnessTab(props) {
 
   const [dataTable, setDataTable] = useState<any>([]);
 
-  const query = useQuery(GET_FITNESS, {
+  // eslint-disable-next-line
+  const [tags, { data: get_tags }] = useLazyQuery(GET_TAGS, {
     variables: { id: auth.userid },
-    onCompleted: (data) => loadData(data),
+    onCompleted: (data) => {
+      const tagsFlattenData = flattenObj({ ...data });
+      const fitnessFlattenData = flattenObj({ ...get_fitness });
+
+      setDataTable(
+        [...fitnessFlattenData.fitnesspackages].map((item) => {
+          return {
+            tagId: tagsFlattenData.tags
+              .filter(
+                (currentValue) => currentValue.fitnesspackage.id === item.id
+              )
+              .map((currentValue) => [currentValue.id]),
+            tagname: tagsFlattenData.tags
+              .filter(
+                (currentValue) => currentValue.fitnesspackage.id === item.id
+              )
+              .map((currentValue) => [currentValue.tag_name]),
+            id: item.id,
+            packagename: item.packagename,
+            type: item.fitness_package_type.type,
+            details: [
+              item.ptonline,
+              item.ptoffline,
+              item.grouponline,
+              item.groupoffline,
+              item.recordedclasses,
+              item.duration,
+              item.mode,
+            ],
+            duration: item.fitnesspackagepricing.map((i) => i.duration),
+            mrp: item.fitnesspackagepricing.map((i) => i.mrp),
+            Status: item.Status ? "Active" : "Inactive",
+            publishingDate: item.publishing_date,
+            mode: item.mode,
+            days: item.duration,
+            pricing: item.fitnesspackagepricing,
+            freeClass: item.groupinstantbooking,
+          };
+        })
+      );
+
+      setSelectedDuration(
+        new Array(fitnessFlattenData.fitnesspackages.length).fill(0)
+      );
+      setCurrentIndex(
+        new Array(fitnessFlattenData.fitnesspackages.length).fill(1)
+      );
+    },
+  });
+
+  const { data: get_fitness, refetch: refetchFitness } = useQuery(GET_FITNESS, {
+    variables: { id: auth.userid },
+    onCompleted: (data) => {
+      tags({ variables: { id: auth.userid } });
+    },
   });
 
   function refetchQueryCallback() {
-    query.refetch();
+    refetchFitness();
   }
-
-  const loadData = (data: any) => {
-    const flattenData = flattenObj({ ...data });
-
-    setDataTable(
-      [...flattenData.fitnesspackages].map((item) => {
-        return {
-          id: item.id,
-          packagename: item.packagename,
-          type: item.fitness_package_type.type,
-          details: [
-            item.ptonline,
-            item.ptoffline,
-            item.grouponline,
-            item.groupoffline,
-            item.recordedclasses,
-            item.duration,
-            item.mode,
-          ],
-          duration: item.fitnesspackagepricing.map((i) => i.duration),
-          mrp: item.fitnesspackagepricing.map((i) => i.mrp),
-          Status: item.Status ? "Active" : "Inactive",
-          publishingDate: item.publishing_date,
-          mode: item.mode,
-          days: item.duration,
-          pricing: item.fitnesspackagepricing,
-          freeClass: item.groupinstantbooking,
-        };
-      })
-    );
-    setSelectedDuration(new Array(flattenData.fitnesspackages.length).fill(0));
-    setCurrentIndex(new Array(flattenData.fitnesspackages.length).fill(1));
-  };
 
   return (
     <TabContent>

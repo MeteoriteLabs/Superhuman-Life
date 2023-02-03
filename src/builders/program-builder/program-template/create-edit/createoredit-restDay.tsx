@@ -230,7 +230,6 @@ function CreateEditRestDay(props: any, ref: any) {
 
     return (
         <>
-            {/* {render && */}
                 <ModalView
                     name={name}
                     isStepper={false}
@@ -243,8 +242,6 @@ function CreateEditRestDay(props: any, ref: any) {
                     widgets={widgets}
                     modalTrigger={modalTrigger}
                 />
-                
-            {/* } */}
         </>
     )
 }

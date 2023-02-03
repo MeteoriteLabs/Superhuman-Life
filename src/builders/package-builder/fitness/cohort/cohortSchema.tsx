@@ -68,7 +68,8 @@ export const schema: any = {
             },
         },
         "datesConfig": {
-            "ui:widget": "cohortDateConfig"
+            "ui:widget": "cohortDateConfig",
+            "readonly": true
         },
         "dates": {
             "ui:widget": (props: any) => {
@@ -120,7 +121,8 @@ export const schema: any = {
         },
         "config": {
             "bookingConfig": {
-                "ui:widget": "cohortBookingConfig"
+                "ui:widget": "cohortBookingConfig",
+                "ui:disabled": true
             }
         },
         "preview": {

@@ -167,7 +167,6 @@
        "type": "object",
        "required": [
         "visibility",
-        "datesConfig",
         "config"
        ],
        "properties": {
@@ -182,7 +181,9 @@
                 "description": "Public: The Offering will be visible to the user as soon as it is created, Private: The offering will not ve seen by anyone until you share it with them"
             },
             "datesConfig": {
-                "type": "string"
+                "type": "string",
+                "readOnly": true,
+                "description": "You will be able to publish it once you will create all programs"
             },
             "config": {
                 "title": "Booking Config",

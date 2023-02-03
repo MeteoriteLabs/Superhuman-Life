@@ -33,11 +33,9 @@ function CreateEditNewWorkout(props: any, ref: any) {
     ? "../json/sessionManager/newWorkout.json"
     : "../json/newWorkout.json");
   const [programDetails, setProgramDetails] = useState<any>({});
-  // const [frmDetails, setFrmDetails] = useState<any>([]);
   const [operation, setOperation] = useState<Operation>({} as Operation);
   const program_id = window.location.pathname.split("/").pop();
   let frmDetails: any;
-  // const [sessionsIds, setSessionsIds] = useState<any>([]);
   const [templateSessionsIds, setTemplateSessionsIds] = useState<any>([]);
   // userId here is the new sessionID.
   const [userId, setUserId] = useState("");

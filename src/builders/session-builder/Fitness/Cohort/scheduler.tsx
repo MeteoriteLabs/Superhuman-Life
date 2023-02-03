@@ -77,7 +77,6 @@ const Scheduler = () => {
 
   function handleCallback() {
     mainQuery.refetch();
-    // setSessionIds([]);
   }
 
   if (!show) return <Loader />;
