@@ -58,12 +58,13 @@ export default function Dashboard() {
               />
             </Col>
           ))}
-
+          
+          {/* lobby for small screen */}
           {ImageCaptions.map((data, index) => (
             <Col
               as={Link}
               to={data.link}
-              sm
+              sm={2}
               key={data.id}
               className="d-lg-none d-md-none d-sm-block d-flex justify-content-center align-items-center lobby__card1"
               style={{
@@ -134,12 +135,16 @@ export default function Dashboard() {
 
           {/* organisations display for small screen */}
           {organizations.length > 0 && (
-            <Col className="d-lg-none d-md-none d-sm-block" key={"asdfasdfa"}>
+            <Row className="d-lg-none d-md-none d-sm-block" key={"asdfasdfa"}>
               {organizations.map((data: any, index: number) => {
                 return (
-                  <Row
+                  <Col
+                    className="lobby__card1"
+                    
                     key={index}
                     style={{
+                      width: '54vw',
+                      height: '30vh',
                       background: `${
                         LobbyColors[
                           randomColorInArray + index + ImageCaptions.length
@@ -151,14 +156,15 @@ export default function Dashboard() {
                       as={Link}
                       to={"/lobby"}
                       key={index}
-                      sm
-                      className="d-flex justify-content-center align-items-center lobby__card1"
-                      style={{ height: '30vh' }}
+                      
+                      className="d-flex flex-direction-column justify-content-center"
+                    
                     >
-                      <div className="flex flex-row">
-                        <div className="text-center organisation__image">
+                      <div style={{ position: "relative" , top: "50%"}}>
+                        <div className=" text-center organisation__image">
                           <img
-                            style={{ width: "40px" }}
+                            
+                            style={{ width: "40px"}}
                             src="/assets/lobby_images/organisation.svg"
                             alt=""
                           />
@@ -173,10 +179,10 @@ export default function Dashboard() {
                         </div>
                       </div>
                     </Col>
-                  </Row>
+                  </Col>
                 );
               })}
-            </Col>
+            </Row>
           )}
         </Row>
       </Container>
