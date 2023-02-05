@@ -41,7 +41,8 @@ export default function FitnessTab() {
   const createEditViewCohortRef = useRef<any>(null);
   const [selectedDuration, setSelectedDuration] = useState<any>("");
   const [currentIndex, setCurrentIndex] = useState<any>("");
-  let [numberOfSessions, setNumberOfSessions] = useState<number>(0);
+  const [numberOfSessions, setNumberOfSessions] = useState<number>(0);
+  const [isPublished, setIsPublished] = useState<boolean>(false);
 
   function handleModalRender(
     id: string | null,
@@ -391,7 +392,14 @@ export default function FitnessTab() {
               }
               currentMoment.add(1, "days");
             }
+            
           }
+          let differenceBetweenStartDateandEndDate =
+              moment(v.row.original.endDate).add(1,
+              "days").diff(moment(v.row.original.startDate));
+              if(differenceBetweenStartDateandEndDate === numberOfSessions){
+                setIsPublished(true);
+              }
           return (
             <div>
               {/* <Badge
@@ -410,12 +418,27 @@ export default function FitnessTab() {
                     )}
                   </p>
                 )} */}
-              <ProgressBar
+              {
+                isPublished ?
+                <Badge
+                className="px-3 py-1"
+                style={{ fontSize: "1rem", borderRadius: "10px" }}
+                variant={"success"}
+              >
+                {"Published"}
+              </Badge>
+
+              :
+                <>
+                <ProgressBar
                 variant="success"
                 now={numberOfSessions}
                 label={`${numberOfSessions} program build`}
               />
               {numberOfSessions} program build
+              </>
+              }
+              
             </div>
           );
         },

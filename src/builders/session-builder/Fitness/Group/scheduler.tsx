@@ -16,6 +16,7 @@ import { flattenObj } from '../../../../components/utils/responseFlatten';
 
 import 'rc-time-picker/assets/index.css';
 import './actionButton.css';
+import Loader from '../../../../components/Loader/Loader';
 
 const Scheduler = () => {
 
@@ -330,7 +331,7 @@ const Scheduler = () => {
         return days + 1;
     }
     
-    if (!show) return <span style={{ color: 'red' }}>Loading...</span>;
+    if (!show) return <Loader/>;
     else return (
         <div className='col-lg-12'>
             <div className="mb-3">
