@@ -75,7 +75,7 @@ export default function Dashboard() {
                       : index
                   ]
                 }`,
-                height: "30vh",
+                height: "31vh",
               }}
             >
               <img
@@ -135,11 +135,11 @@ export default function Dashboard() {
 
           {/* organisations display for small screen */}
           {organizations.length > 0 && (
-            <Row className="d-lg-none d-md-none d-sm-block" key={"asdfasdfa"}>
+            <Row className="d-lg-none d-md-none d-sm-block " key={"asdfasdfa"}>
               {organizations.map((data: any, index: number) => {
                 return (
                   <Col
-                    className="lobby__card1"
+                    className="lobby__card1 d-flex align-items-center"
                     
                     key={index}
                     style={{
@@ -160,7 +160,7 @@ export default function Dashboard() {
                       className="d-flex flex-direction-column justify-content-center"
                     
                     >
-                      <div style={{ position: "relative" , top: "50%"}}>
+                      <div className="column align-items-center">
                         <div className=" text-center organisation__image">
                           <img
                             
