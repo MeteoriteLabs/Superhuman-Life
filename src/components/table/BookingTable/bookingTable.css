@@ -17,7 +17,7 @@ table {
   vertical-align: middle;
 }
 
-td:first-child {
+.bodyTd:first-child {
   border-left: 5px solid gray;
 }
 

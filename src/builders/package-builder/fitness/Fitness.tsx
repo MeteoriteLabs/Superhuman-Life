@@ -367,18 +367,27 @@ export default function FitnessTab() {
         accessor: "sessions",
         Header: "Session",
         Cell: (v: any) => {
-          
           if (v.row.original.sessions.length === 0) {
             setNumberOfSessions(0);
           } else {
             let currentMoment = moment(v.row.original.startDate);
-            let endMoment = moment(v.row.original.endDate).add(1, 'days');
+            let endMoment = moment(v.row.original.endDate).add(1, "days");
 
             while (currentMoment.isBefore(endMoment)) {
-              console.log(currentMoment.format('YYYY-MM-DD'), v.row.original.sessions, v.row.original.sessions.map(currentIndex => currentIndex).map(currentValue => currentValue.session_date))
-              if(currentMoment.format('YYYY-MM-DD') === (v.row.original.sessions.map(currentIndex => currentIndex.session_date))){
-              setNumberOfSessions(numberOfSessions + 1);
-                 
+              console.log(
+                currentMoment.format("YYYY-MM-DD"),
+                v.row.original.sessions,
+                v.row.original.sessions
+                  .map((currentIndex) => currentIndex)
+                  .map((currentValue) => currentValue.session_date)
+              );
+              if (
+                currentMoment.format("YYYY-MM-DD") ===
+                v.row.original.sessions.map(
+                  (currentIndex) => currentIndex.session_date
+                )
+              ) {
+                setNumberOfSessions(numberOfSessions + 1);
               }
               currentMoment.add(1, "days");
             }
@@ -530,7 +539,7 @@ export default function FitnessTab() {
             pricing: item.fitnesspackagepricing,
             freeClass: item.groupinstantbooking,
             startDate: item.Start_date,
-            endDate: item.End_date
+            endDate: item.End_date,
           };
         })
       );
