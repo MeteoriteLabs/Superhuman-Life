@@ -11,6 +11,7 @@ import {
   TabContent,
   DropdownButton,
   Dropdown,
+  ProgressBar,
 } from "react-bootstrap";
 import Table from "../../../components/table";
 import AuthContext from "../../../context/auth-context";
@@ -28,7 +29,7 @@ import { flattenObj } from "../../../components/utils/responseFlatten";
 import moment from "moment";
 import OfferingsDisaplyImage from "../../../components/customWidgets/offeringsDisplayImage";
 
-export default function FitnessTab(props) {
+export default function FitnessTab() {
   const auth = useContext(AuthContext);
 
   const createEditViewPersonalTrainingRef = useRef<any>(null);
@@ -40,6 +41,7 @@ export default function FitnessTab(props) {
   const createEditViewCohortRef = useRef<any>(null);
   const [selectedDuration, setSelectedDuration] = useState<any>("");
   const [currentIndex, setCurrentIndex] = useState<any>("");
+  let [numberOfSessions, setNumberOfSessions] = useState<number>(0);
 
   function handleModalRender(
     id: string | null,
@@ -277,7 +279,7 @@ export default function FitnessTab(props) {
               )}
               {row.values.details[5] !== null &&
               row.values.details[4] === null &&
-              row.origianl?.type === "Group Class" ? (
+              row.original?.type === "Group Class" ? (
                 <div className="text-center">
                   {row.values.details[6] === "Online" ? (
                     <OfferingsDisaplyImage
@@ -362,12 +364,28 @@ export default function FitnessTab(props) {
       },
 
       {
-        accessor: "Status",
-        Header: "Status",
+        accessor: "sessions",
+        Header: "Session",
         Cell: (v: any) => {
+          
+          if (v.row.original.sessions.length === 0) {
+            setNumberOfSessions(0);
+          } else {
+            let currentMoment = moment(v.row.original.startDate);
+            let endMoment = moment(v.row.original.endDate).add(1, 'days');
+
+            while (currentMoment.isBefore(endMoment)) {
+              console.log(currentMoment.format('YYYY-MM-DD'), v.row.original.sessions, v.row.original.sessions.map(currentIndex => currentIndex).map(currentValue => currentValue.session_date))
+              if(currentMoment.format('YYYY-MM-DD') === (v.row.original.sessions.map(currentIndex => currentIndex.session_date))){
+              setNumberOfSessions(numberOfSessions + 1);
+                 
+              }
+              currentMoment.add(1, "days");
+            }
+          }
           return (
             <div>
-              <Badge
+              {/* <Badge
                 className="px-3 py-1"
                 style={{ fontSize: "1rem", borderRadius: "10px" }}
                 variant={v.value === "Active" ? "success" : "danger"}
@@ -382,7 +400,13 @@ export default function FitnessTab(props) {
                       "Do, MMM-YY"
                     )}
                   </p>
-                )}
+                )} */}
+              <ProgressBar
+                variant="success"
+                now={numberOfSessions}
+                label={`${numberOfSessions} program build`}
+              />
+              {numberOfSessions} program build
             </div>
           );
         },
@@ -394,17 +418,11 @@ export default function FitnessTab(props) {
           const editHandler = () => {
             handleModalRender(row.original.id, "edit", row.original.type);
           };
+
           const viewHandler = () => {
             handleModalRender(row.original.id, "view", row.original.type);
           };
-          // const statusHandler = () => {
-          //   handleModalRender(
-          //     row.original.id,
-          //     "toggle-status",
-          //     row.original.type,
-          //     row.original.Status === "Active" ? false : true
-          //   );
-          // };
+
           const deleteHandler = () => {
             handleModalRender(row.original.id, "delete", row.original.type);
           };
@@ -436,7 +454,6 @@ export default function FitnessTab(props) {
           let arrayAction = [
             { actionName: "Edit", actionClick: editHandler },
             { actionName: "View", actionClick: viewHandler },
-            // { actionName: "Status", actionClick: statusHandler },
             { actionName: "Delete", actionClick: deleteHandler },
           ];
 
@@ -472,9 +489,16 @@ export default function FitnessTab(props) {
       const tagsFlattenData = flattenObj({ ...data });
       const fitnessFlattenData = flattenObj({ ...get_fitness });
 
+      // console.log(tagsFlattenData);
+      // console.log(fitnessFlattenData);
       setDataTable(
         [...fitnessFlattenData.fitnesspackages].map((item) => {
           return {
+            sessions: tagsFlattenData.tags
+              .filter(
+                (currentValue) => currentValue.fitnesspackage.id === item.id
+              )
+              .map((currentValue) => currentValue.sessions),
             tagId: tagsFlattenData.tags
               .filter(
                 (currentValue) => currentValue.fitnesspackage.id === item.id
@@ -505,6 +529,8 @@ export default function FitnessTab(props) {
             days: item.duration,
             pricing: item.fitnesspackagepricing,
             freeClass: item.groupinstantbooking,
+            startDate: item.Start_date,
+            endDate: item.End_date
           };
         })
       );
