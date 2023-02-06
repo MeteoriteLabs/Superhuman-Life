@@ -147,6 +147,8 @@ export const GET_FITNESS = gql`
           packagename
           ptoffline
           ptonline
+          Start_date
+          End_date
           mode
           publishing_date
           groupoffline

@@ -368,38 +368,74 @@ export default function FitnessTab() {
         accessor: "sessions",
         Header: "Session",
         Cell: (v: any) => {
-          if (v.row.original.sessions.length === 0) {
-            setNumberOfSessions(0);
-          } else {
-            let currentMoment = moment(v.row.original.startDate);
-            let endMoment = moment(v.row.original.endDate).add(1, "days");
+          let sessionsObj = {};
+          let endMoment = moment(v.row.original.endDate).add(1, "days");
 
-            while (currentMoment.isBefore(endMoment)) {
-              console.log(
-                currentMoment.format("YYYY-MM-DD"),
-                v.row.original.sessions,
-                v.row.original.sessions
-                  .map((currentIndex) => currentIndex)
-                  .map((currentValue) => currentValue.session_date)
-              );
-              if (
-                currentMoment.format("YYYY-MM-DD") ===
-                v.row.original.sessions.map(
-                  (currentIndex) => currentIndex.session_date
-                )
-              ) {
-                setNumberOfSessions(numberOfSessions + 1);
-              }
-              currentMoment.add(1, "days");
-            }
-            
+          for (
+            let currentMoment = moment(v.row.original.startDate);
+            currentMoment.isBefore(endMoment);
+            currentMoment.add(1, "days")
+          ) {
+            v.row.original.sessions.map((curr) => {
+              return curr.sessions.map((item) => {
+              
+                
+                if (
+                  moment(v.row.original.startDate).format("YYYY-MM-DD") ===
+                  item.session_date
+                ) {
+                  
+                  console.log(item.session_date, moment(v.row.original.startDate).format("YYYY-MM-DD") ===
+                  item.session_date ,moment(v.row.original.startDate).format("YYYY-MM-DD"))
+
+                  sessionsObj[currentMoment.format("YYYY-MM-DD")] =
+                    (sessionsObj[currentMoment.format("YYYY-MM-DD")] || 0) + 1;
+                }
+                return (sessionsObj);
+               } );
+            });
           }
-          let differenceBetweenStartDateandEndDate =
-              moment(v.row.original.endDate).add(1,
-              "days").diff(moment(v.row.original.startDate));
-              if(differenceBetweenStartDateandEndDate === numberOfSessions){
-                setIsPublished(true);
-              }
+
+          for (let i in sessionsObj) {
+            if (sessionsObj[i] >= 1) {
+              setIsPublished(true);
+            }
+          }
+
+          // for(let i = 0; i < v.row.original.sessions.sessions?.length; i++){
+          //   // sessionsObj[currentMoment.format('YYYY-MM-DD')] = (sessionsObj[currentMoment.format('YYYY-MM-DD')] || 0) + 1;
+
+          //   sessionsObj[v.row.original.sessions.sessions[0]] = (sessionsObj[v.row.original.sessions.sessions[0]] || 0) + 1;
+
+          // }
+
+          console.log(sessionsObj);
+          // if (v.row.original.sessions.length === 0) {
+          //   setNumberOfSessions(0);
+          // } else {
+          //   let currentMoment = moment(v.row.original.startDate);
+          //   let endMoment = moment(v.row.original.endDate).add(1, "days");
+
+          //   while (currentMoment.isBefore(endMoment)) {
+
+          //     if (
+          //       currentMoment.format("YYYY-MM-DD") ===
+          //       v.row.original.sessions.map(
+          //         (currentIndex) => currentIndex.session_date
+          //       )
+          //     ) {
+          //       setNumberOfSessions(numberOfSessions + 1);
+          //     }
+          //     currentMoment.add(1, "days");
+          //   }
+
+          // }
+          // let differenceBetweenStartDateandEndDate =
+          //     moment(v.row.original.endDate).add(1,
+          //     "days").diff(moment(v.row.original.startDate));
+          //     if(differenceBetweenStartDateandEndDate === numberOfSessions){
+          //       setIsPublished(true);
+          //     }
           return (
             <div>
               {/* <Badge
@@ -418,27 +454,24 @@ export default function FitnessTab() {
                     )}
                   </p>
                 )} */}
-              {
-                isPublished ?
+              {isPublished ? (
                 <Badge
-                className="px-3 py-1"
-                style={{ fontSize: "1rem", borderRadius: "10px" }}
-                variant={"success"}
-              >
-                {"Published"}
-              </Badge>
-
-              :
+                  className="px-3 py-1"
+                  style={{ fontSize: "1rem", borderRadius: "10px" }}
+                  variant={"success"}
+                >
+                  {"Published"}
+                </Badge>
+              ) : (
                 <>
-                <ProgressBar
-                variant="success"
-                now={numberOfSessions}
-                label={`${numberOfSessions} program build`}
-              />
-              {numberOfSessions} program build
-              </>
-              }
-              
+                  <ProgressBar
+                    variant="success"
+                    now={numberOfSessions}
+                    label={`${numberOfSessions} program build`}
+                  />
+                  {numberOfSessions} program build
+                </>
+              )}
             </div>
           );
         },
@@ -509,7 +542,7 @@ export default function FitnessTab() {
         },
       },
     ],
-    [selectedDuration, currentIndex]
+    [selectedDuration, currentIndex, isPublished, numberOfSessions]
   );
 
   const [dataTable, setDataTable] = useState<any>([]);
@@ -526,11 +559,9 @@ export default function FitnessTab() {
       setDataTable(
         [...fitnessFlattenData.fitnesspackages].map((item) => {
           return {
-            sessions: tagsFlattenData.tags
-              .filter(
-                (currentValue) => currentValue.fitnesspackage.id === item.id
-              )
-              .map((currentValue) => currentValue.sessions),
+            sessions: tagsFlattenData.tags.filter(
+              (currentValue) => currentValue.fitnesspackage.id === item.id
+            ),
             tagId: tagsFlattenData.tags
               .filter(
                 (currentValue) => currentValue.fitnesspackage.id === item.id
