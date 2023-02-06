@@ -1,8 +1,6 @@
-# Sapien Partner Dashboard
+# Changemaker Dashboard
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app) using [TypeScript](https://www.typescriptlang.org/) is a typed superset of JavaScript that compiles to plain JavaScript and [React Bootstrap](https://react-bootstrap.github.io/) the most popular front-end framework Rebuilt for React.
+Sapien is a community-based platform for influencers, professionals, businesses, and communities to launch their website, and mobile apps, build communities, run daily operations, and all the tools you need for scaling your brand with no code.
 
-This project is deployed over [Netlify](https://www.netlify.com/) link:
-[https://frosty-borg-2ff62d.netlify.app](https://frosty-borg-2ff62d.netlify.app)
 
 Currently deployed on : [https://dashboard.sapien.systems](https://dashboard.sapien.systems)
