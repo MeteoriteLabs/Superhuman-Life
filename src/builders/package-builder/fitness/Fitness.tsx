@@ -380,22 +380,16 @@ export default function FitnessTab() {
           });
 
           let lengthOfobject = Object.keys(sessionsObj).length;
-          
 
           let differenceBetweenStartDateandEndDate = endMoment.diff(
             startMoment,
             "days"
           );
 
-          console.log(differenceBetweenStartDateandEndDate);
-
-          
-
-          console.log(sessionsObj);
-
           return (
             <div>
-              {differenceBetweenStartDateandEndDate === Object.keys(sessionsObj).length ? (
+              {differenceBetweenStartDateandEndDate ===
+              Object.keys(sessionsObj).length ? (
                 <Badge
                   className="px-3 py-1"
                   style={{ fontSize: "1rem", borderRadius: "10px" }}
@@ -447,9 +441,9 @@ export default function FitnessTab() {
               name = "group";
             }
             if (length > 1) {
-              window.open(`${name}/session/scheduler/${id}`);
+              window.open(`${name}/session/scheduler/${id}`,"_self");
             } else {
-              window.open(`${name}/session/scheduler/${id}`);
+              window.open(`${name}/session/scheduler/${id}`,"_self");
             }
           };
 
@@ -479,7 +473,7 @@ export default function FitnessTab() {
         },
       },
     ],
-    [selectedDuration, currentIndex ]
+    [selectedDuration, currentIndex]
   );
 
   const [dataTable, setDataTable] = useState<any>([]);
