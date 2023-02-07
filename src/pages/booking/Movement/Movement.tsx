@@ -18,7 +18,7 @@ export default function Movement(props) {
   const dataLengthRef = useRef<number | null>(0);
   const bookingActionRef = useRef<any>(null);
 
-  useQuery(GET_ALL_BOOKINGS, {
+  const { data: get_bookings, refetch: refetchBookings } = useQuery(GET_ALL_BOOKINGS, {
     variables: {
       id: auth.userid,
       start: start,
@@ -299,7 +299,7 @@ export default function Movement(props) {
             newPackageCount={newPackageCount}
           />
 
-          <BookingAction ref={bookingActionRef} />
+          <BookingAction ref={bookingActionRef} refetchBookings={refetchBookings} />
         </Col>
       </Row>
     </div>

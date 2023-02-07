@@ -39,6 +39,7 @@ function BookingAction(props, ref: any) {
         effective_date: data.updateClientBooking.data.attributes.effective_date,
         }},
       });
+      props.refetchBookings();
     },
   });
 
