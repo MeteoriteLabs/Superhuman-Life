@@ -3,18 +3,12 @@ import _ from 'lodash'
 import { Form } from 'react-bootstrap'
 import './MRP.css'
 
-
-
-
-
 export default function MRP(props) {
     const { actionType, fitnesspackagepricing, setFitnesspackagepricing, type, mode, widgetProps, minPrice, index, userData } = props
     let numEle = (type === "Classic Class" || mode === "Online Workout" || mode === "Offline Workout") ? 1 : 4
 
-
     const inputRef = useRef([])
     const spanRef = useRef([])
-
 
     useEffect(() => {
         inputRef.current = inputRef.current.splice(0, fitnesspackagepricing.length);
@@ -47,8 +41,6 @@ export default function MRP(props) {
             }
         }
 
-
-
         if (valid) {
             if (widgetProps.rawErrors) {
                 widgetProps.rawErrors[0] = ""
@@ -56,7 +48,6 @@ export default function MRP(props) {
             widgetProps.onChange(123)
             inputRef.current[updateIndex].className = "input"
             spanRef.current[updateIndex].className = "d-none"
-
 
         } else {
             if (widgetProps.rawErrors) {
@@ -68,16 +59,7 @@ export default function MRP(props) {
             widgetProps.onChange(null)
         }
 
-
-
     }, [minPrice, fitnesspackagepricing]) // eslint-disable-line react-hooks/exhaustive-deps
-
-
-
-
-
-
-
 
     const handleValidationError = (e, index) => {
 
@@ -91,9 +73,7 @@ export default function MRP(props) {
 
         updateMRP[index].mrp = Number(e.target.value);
 
-
         setFitnesspackagepricing(updateMRP);
-
 
         for (let i = 0; i < updateMRP.length; i++) {
             if (updateMRP[i].mrp !== "") {
@@ -115,11 +95,8 @@ export default function MRP(props) {
 
         }
 
-
-
         return valid
     }
-
 
     const handleChange = (e, index) => {
         e.preventDefault();
@@ -132,7 +109,6 @@ export default function MRP(props) {
             }
             widgetProps.onChange(Number(e.target.value))
 
-
         } else {
             if (widgetProps.rawErrors) {
                 widgetProps.rawErrors[0] = `MRP can't be empty or less than &#8377; ${minPrice[index]}`
@@ -140,9 +116,6 @@ export default function MRP(props) {
 
             widgetProps.onChange(null)
         }
-
-
-
     }
 
     return <>
@@ -170,6 +143,5 @@ export default function MRP(props) {
                 </span>
             </td>
         })}
-
     </>
 }

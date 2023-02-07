@@ -47,28 +47,12 @@ export default function ModalView({
     formData = { ...formData, ...data };
 
     if (isStepper && step < stepper.length) {
-      console.log("Data submitted: ", data);
       setStep(step + 1);
       setFormValues({ ...formValues, ...data });
     } else {
       formSubmit({ ...formValues, ...data });
     }
   }
-
-  // function submitHandler(data: any) {
-  //   formData = { ...data };
-  //   if (isStepper && step < stepper.length) {
-  //     console.log("Data submitted: ", data);
-
-  //     setStep(step + 1);
-  //     setFormValues({ ...formValues, ...data });
-  //   } else {
-  //     // formSubmit({ ...formValues, ...data });
-  //     formSubmit({ ...formValues, ...data });
-  //   }
-  //   console.log(data);
-  //   // console.log(finalValues);
-  // }
 
   return (
     <Modal

@@ -1,5 +1,4 @@
 .timeInput {
-    /* display: block; */
     width: 100%;
     height: calc(1.5em + .75rem + 2px);
     padding: .375rem .75rem;
@@ -13,7 +12,6 @@
     border-radius: .25rem;
     transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
-
 
 .timeInput:focus{
     color: #495057;

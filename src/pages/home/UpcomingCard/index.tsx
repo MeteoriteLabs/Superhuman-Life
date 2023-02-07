@@ -91,7 +91,7 @@ function UpcomingCard() {
                 </Card.Text>
               </Card.Body>
             </Card>
-          ) : null}
+          ) : <p className="text-center">No upcoming cards to show</p>}
         </Card.Body>
       </div>
     </Card>

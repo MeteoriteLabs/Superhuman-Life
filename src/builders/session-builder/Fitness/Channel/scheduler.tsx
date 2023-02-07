@@ -17,6 +17,7 @@ import YouteubeActive from "./assets/youtube_active.svg";
 
 import { flattenObj } from "../../../../components/utils/responseFlatten";
 import "../Group/actionButton.css";
+import Loader from "../../../../components/Loader/Loader";
 
 const Scheduler = () => {
   const auth = useContext(AuthContext);
@@ -164,10 +165,10 @@ const Scheduler = () => {
     // setSessionIds([]);
   }
 
-  if (!show) return <span style={{ color: "red" }}>Loading...</span>;
+  if (!show) return <Loader/>;
   else
     return (
-      <>
+      <div className='col-lg-12'>
         <div className="mb-3">
           <span style={{ fontSize: "30px" }}>
             <Link to="/session">
@@ -391,7 +392,7 @@ const Scheduler = () => {
           </Col>
           <FitnessAction ref={fitnessActionRef} />
         </Row>
-      </>
+      </div>
     );
 };
 

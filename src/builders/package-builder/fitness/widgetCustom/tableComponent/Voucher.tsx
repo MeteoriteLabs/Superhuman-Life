@@ -1,13 +1,10 @@
 import React, {useState, useContext} from 'react';
 import * as _ from 'lodash'
 import { Form } from 'react-bootstrap'
-
 import {gql, useLazyQuery} from '@apollo/client';
 import AuthContext from '../../../../../context/auth-context';
 import { flattenObj } from '../../../../../components/utils/responseFlatten';
 import moment from 'moment';
-
-
 
 export default function Voucher({ actionType, setFitnesspackagepricing, fitnesspackagepricing, type, mode,minPrice  ,setMinPrice, arrSapientPrice,setIndex }) {
 

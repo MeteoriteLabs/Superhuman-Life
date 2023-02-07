@@ -63,6 +63,7 @@ function CreateEditPackage(props: any, ref: any) {
       modalTrigger.next(false);
       props.callback();
       setIsFormSubmitted(!isFormSubmitted);
+      window.open(`group/session/scheduler/${r.createTag.data.id}`, "_self")
     },
   });
 
@@ -478,11 +479,6 @@ function CreateEditPackage(props: any, ref: any) {
     });
   }
 
-  function ViewPackage(frm: any) {
-    //use a variable to set form to disabled/not editable
-    //    useMutation(UPDATE_EXERCISE, { variables: frm, onCompleted: (d: any) => { console.log(d); } })
-  }
-
   function deleteChannelPackage(id: any) {
     deletePackage({ variables: { id } });
     setDeleteModalShow(false);
@@ -503,9 +499,6 @@ function CreateEditPackage(props: any, ref: any) {
         break;
       case "edit":
         EditPackage(frm);
-        break;
-      case "view":
-        ViewPackage(frm);
         break;
       case "toggle-status":
         setStatusModalShow(true);

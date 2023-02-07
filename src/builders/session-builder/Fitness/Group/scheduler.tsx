@@ -16,6 +16,7 @@ import { flattenObj } from '../../../../components/utils/responseFlatten';
 
 import 'rc-time-picker/assets/index.css';
 import './actionButton.css';
+import Loader from '../../../../components/Loader/Loader';
 
 const Scheduler = () => {
 
@@ -330,9 +331,9 @@ const Scheduler = () => {
         return days + 1;
     }
     
-    if (!show) return <span style={{ color: 'red' }}>Loading...</span>;
+    if (!show) return <Loader/>;
     else return (
-        <>
+        <div className='col-lg-12'>
             <div className="mb-3">
                 <span style={{ fontSize: '30px'}}>
                     <Link to="/session"><i className="fa fa-arrow-circle-left" style={{ color: 'black'}}></i></Link>
@@ -573,7 +574,7 @@ const Scheduler = () => {
                     </Modal.Footer>
                 </Modal>
             }
-        </>
+        </div>
     );
 };
 

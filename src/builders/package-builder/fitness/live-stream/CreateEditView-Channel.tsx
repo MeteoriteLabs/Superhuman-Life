@@ -9,9 +9,7 @@ import { schemaView } from './schemaView';
 import { Subject } from 'rxjs';
 import { flattenObj } from '../../../../components/utils/responseFlatten';
 import moment from 'moment';
-// import {AvailabilityCheck} from '../../../program-builder/program-template/availabilityCheck';
 import { Modal, Button } from 'react-bootstrap';
-// import StatusModal from "../../../../components/StatusModal/exerciseStatusModal";
 import Toaster from '../../../../components/Toaster';
 
 interface Operation {
@@ -25,7 +23,6 @@ function CreateEditChannel(props: any, ref: any) {
     const auth = useContext(AuthContext);
     const programSchema: { [name: string]: any; } = require("./channel.json");
     const [programDetails, setProgramDetails] = useState<any>({});
-    // const [frmDetails, setFrmDetails] = useState<any>();
     const [operation, setOperation] = useState<Operation>({} as Operation);
     const [fitnessPackageTypes, setFitnessPackageTypes] = useState<any>([]);
     const [deleteModalShow, setDeleteModalShow] = useState(false);
@@ -58,6 +55,7 @@ function CreateEditChannel(props: any, ref: any) {
     const [bookingConfig] = useMutation(CREATE_BOOKING_CONFIG, {onCompleted: (r: any) => { 
          modalTrigger.next(false); props.callback();
             setIsFormSubmitted(!isFormSubmitted);
+            window.open(`channel/session/scheduler/${r.createTag.data.id}`, "_self")
         }
     })
 
@@ -160,8 +158,6 @@ function CreateEditChannel(props: any, ref: any) {
         details.datesConfig = JSON.stringify({"expiryDate": msg.expiry_date, "publishingDate": msg.publishing_date});
         details.bookingConfigId = msg.booking_config?.id;
         details.languages = JSON.stringify(msg.languages);
-        // details.visibility = 
-        // let msg = data;
         setProgramDetails(details);
 
         //if message exists - show form only for edit and view

@@ -1,10 +1,8 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import { Form, Row, Col } from 'react-bootstrap';
 
 const BookingConfig = (props: any) => {
-
      const inputDisabled = props.uiSchema.readonly;
-
      const [fillSchedule, setFillSchedule] = useState(props.value !== undefined ? JSON.parse(props.value).fillSchedule : false);
      const [config, setConfig] = useState(props.value !== undefined ? JSON.parse(props.value).config : "");
 

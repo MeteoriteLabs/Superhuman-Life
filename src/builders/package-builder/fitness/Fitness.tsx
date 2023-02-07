@@ -1,5 +1,5 @@
 import { useMemo, useState, useContext, useRef } from "react";
-import { useQuery } from "@apollo/client";
+import { useQuery, useLazyQuery } from "@apollo/client";
 import {
   Badge,
   Button,
@@ -11,6 +11,7 @@ import {
   TabContent,
   DropdownButton,
   Dropdown,
+  ProgressBar,
 } from "react-bootstrap";
 import Table from "../../../components/table";
 import AuthContext from "../../../context/auth-context";
@@ -23,12 +24,12 @@ import CreateEditViewClassicClass from "./classic/CreateOrEdit";
 import CreateEditViewCustomFitness from "./custom/CreateOrEdit";
 import CreateEditViewChannel from "./live-stream/CreateEditView-Channel";
 import CreateEditViewCohort from "./cohort/CreateEditView-Cohort";
-import { GET_FITNESS } from "./graphQL/queries";
+import { GET_FITNESS, GET_TAGS } from "./graphQL/queries";
 import { flattenObj } from "../../../components/utils/responseFlatten";
 import moment from "moment";
 import OfferingsDisaplyImage from "../../../components/customWidgets/offeringsDisplayImage";
 
-export default function FitnessTab(props) {
+export default function FitnessTab() {
   const auth = useContext(AuthContext);
 
   const createEditViewPersonalTrainingRef = useRef<any>(null);
@@ -219,7 +220,7 @@ export default function FitnessTab(props) {
                     }
                     packageType={row.original?.type}
                   />
-                  
+
                   <p>
                     {row.original?.freeClass
                       ? row.original.pricing[selectedDuration[row.index]]
@@ -244,7 +245,7 @@ export default function FitnessTab(props) {
                         : row.original?.type
                     }
                   />
-                  
+
                   <p>
                     {row.original?.freeClass
                       ? row.original.pricing[selectedDuration[row.index]]
@@ -269,7 +270,7 @@ export default function FitnessTab(props) {
                         : row.original?.type
                     }
                   />
-                  
+
                   <p>{row.values.details[4] * currentIndex[row.index]}</p>
                 </div>
               ) : (
@@ -277,9 +278,8 @@ export default function FitnessTab(props) {
               )}
               {row.values.details[5] !== null &&
               row.values.details[4] === null &&
-              row.origianl?.type === "Group Class" ? (
+              row.original?.type === "Group Class" ? (
                 <div className="text-center">
-                  
                   {row.values.details[6] === "Online" ? (
                     <OfferingsDisaplyImage
                       mode={"Online"}
@@ -291,7 +291,7 @@ export default function FitnessTab(props) {
                       packageType={row.original?.type}
                     />
                   )}
-                  
+
                   <p>{row.values.details[5] * currentIndex[row.index]}</p>
                 </div>
               ) : (
@@ -363,27 +363,46 @@ export default function FitnessTab(props) {
       },
 
       {
-        accessor: "Status",
-        Header: "Status",
+        accessor: "sessions",
+        Header: "Session",
         Cell: (v: any) => {
+          let sessionsObj = {};
+          let startMoment = moment(v.row.original.startDate);
+          let endMoment = moment(v.row.original.endDate).add(1, "days");
+
+          v.row.original.sessions.map((curr) => {
+            return curr.sessions.map((item) => {
+              sessionsObj[item.session_date] =
+                (sessionsObj[item.session_date] || 0) + 1;
+
+              return sessionsObj;
+            });
+          });
+
+          let lengthOfobject = Object.keys(sessionsObj).length;
+
+          let differenceBetweenStartDateandEndDate = endMoment.diff(
+            startMoment,
+            "days"
+          );
+
           return (
             <div>
-              <Badge
-                className="px-3 py-1"
-                style={{ fontSize: "1rem", borderRadius: "10px" }}
-                variant={v.value === "Active" ? "success" : "danger"}
-              >
-                {v.value === "Active" ? "Published" : "Draft"}
-              </Badge>
-              {moment(v?.row?.original?.publishingDate).isAfter(moment()) &&
-                v.value === "Active" && (
-                  <p className="small text-muted">
-                    This will be published on{" "}
-                    {moment(v?.row?.original?.publishingDate).format(
-                      "Do, MMM-YY"
-                    )}
-                  </p>
-                )}
+              {differenceBetweenStartDateandEndDate ===
+              Object.keys(sessionsObj).length ? (
+                <Badge
+                  className="px-3 py-1"
+                  style={{ fontSize: "1rem", borderRadius: "10px" }}
+                  variant={"success"}
+                >
+                  {"Published"}
+                </Badge>
+              ) : (
+                <>
+                  <ProgressBar variant="success" now={lengthOfobject} />
+                  {lengthOfobject} program build
+                </>
+              )}
             </div>
           );
         },
@@ -392,30 +411,63 @@ export default function FitnessTab(props) {
         id: "edit",
         Header: "Actions",
         Cell: ({ row }: any) => {
-          const actionClick1 = () => {
+          const editHandler = () => {
             handleModalRender(row.original.id, "edit", row.original.type);
           };
-          const actionClick2 = () => {
+
+          const viewHandler = () => {
             handleModalRender(row.original.id, "view", row.original.type);
           };
-          const actionClick3 = () => {
-            handleModalRender(
-              row.original.id,
-              "toggle-status",
-              row.original.type,
-              row.original.Status === "Active" ? false : true
-            );
-          };
-          const actionClick4 = () => {
+
+          const deleteHandler = () => {
             handleModalRender(row.original.id, "delete", row.original.type);
           };
 
-          const arrayAction = [
-            { actionName: "Edit", actionClick: actionClick1 },
-            { actionName: "View", actionClick: actionClick2 },
-            { actionName: "Status", actionClick: actionClick3 },
-            { actionName: "Delete", actionClick: actionClick4 },
+          const manageHandler = (id: number, length: number, type: string) => {
+            let name: string = "";
+            if (type === "Classic Class") {
+              name = "classic";
+            } else if (type === "Live Stream Channel") {
+              name = "channel";
+            } else if (type === "Cohort") {
+              name = "cohort";
+            } else if (type === "Custom Fitness") {
+              name = "custom";
+            } else if (type === "One-On-One") {
+              name = "pt";
+            } else if (type === "On-Demand PT") {
+              name = "pt";
+            } else if (type === "Group Class") {
+              name = "group";
+            }
+            if (length > 1) {
+              window.open(`${name}/session/scheduler/${id}`,"_self");
+            } else {
+              window.open(`${name}/session/scheduler/${id}`,"_self");
+            }
+          };
+
+          let arrayAction = [
+            { actionName: "Edit", actionClick: editHandler },
+            { actionName: "View", actionClick: viewHandler },
+            { actionName: "Delete", actionClick: deleteHandler },
           ];
+
+          if (row.original.tagId.length >= 1) {
+            for (let i = 0; i < row.original.tagId.length; i++) {
+              arrayAction.push({
+                actionName: `Manage ${
+                  row.original.tagId.length === 1 ? "" : row.original.tagname[i]
+                }`,
+                actionClick: () =>
+                  manageHandler(
+                    row.original.tagId[i],
+                    row.original.tagId.length,
+                    row.original.type
+                  ),
+              });
+            }
+          }
 
           return <ActionButton arrayAction={arrayAction}></ActionButton>;
         },
@@ -426,47 +478,76 @@ export default function FitnessTab(props) {
 
   const [dataTable, setDataTable] = useState<any>([]);
 
-  const query = useQuery(GET_FITNESS, {
+  // eslint-disable-next-line
+  const [tags, { data: get_tags }] = useLazyQuery(GET_TAGS, {
     variables: { id: auth.userid },
-    onCompleted: (data) => loadData(data),
+    onCompleted: (data) => {
+      const tagsFlattenData = flattenObj({ ...data });
+      const fitnessFlattenData = flattenObj({ ...get_fitness });
+
+      // console.log(tagsFlattenData);
+      // console.log(fitnessFlattenData);
+      setDataTable(
+        [...fitnessFlattenData.fitnesspackages].map((item) => {
+          return {
+            sessions: tagsFlattenData.tags.filter(
+              (currentValue) => currentValue.fitnesspackage.id === item.id
+            ),
+            tagId: tagsFlattenData.tags
+              .filter(
+                (currentValue) => currentValue.fitnesspackage.id === item.id
+              )
+              .map((currentValue) => [currentValue.id]),
+            tagname: tagsFlattenData.tags
+              .filter(
+                (currentValue) => currentValue.fitnesspackage.id === item.id
+              )
+              .map((currentValue) => [currentValue.tag_name]),
+            id: item.id,
+            packagename: item.packagename,
+            type: item.fitness_package_type.type,
+            details: [
+              item.ptonline,
+              item.ptoffline,
+              item.grouponline,
+              item.groupoffline,
+              item.recordedclasses,
+              item.duration,
+              item.mode,
+            ],
+            duration: item.fitnesspackagepricing.map((i) => i.duration),
+            mrp: item.fitnesspackagepricing.map((i) => i.mrp),
+            Status: item.Status ? "Active" : "Inactive",
+            publishingDate: item.publishing_date,
+            mode: item.mode,
+            days: item.duration,
+            pricing: item.fitnesspackagepricing,
+            freeClass: item.groupinstantbooking,
+            startDate: item.Start_date,
+            endDate: item.End_date,
+          };
+        })
+      );
+
+      setSelectedDuration(
+        new Array(fitnessFlattenData.fitnesspackages.length).fill(0)
+      );
+      setCurrentIndex(
+        new Array(fitnessFlattenData.fitnesspackages.length).fill(1)
+      );
+    },
+  });
+
+  const { data: get_fitness, refetch: refetchFitness } = useQuery(GET_FITNESS, {
+    variables: { id: auth.userid },
+    onCompleted: (data) => {
+      tags({ variables: { id: auth.userid } });
+    },
   });
 
   function refetchQueryCallback() {
-    query.refetch();
+    refetchFitness();
   }
-
-  const loadData = (data: any) => {
-    const flattenData = flattenObj({ ...data });
-
-    setDataTable(
-      [...flattenData.fitnesspackages].map((item) => {
-        return {
-          id: item.id,
-          packagename: item.packagename,
-          type: item.fitness_package_type.type,
-          details: [
-            item.ptonline,
-            item.ptoffline,
-            item.grouponline,
-            item.groupoffline,
-            item.recordedclasses,
-            item.duration,
-            item.mode,
-          ],
-          duration: item.fitnesspackagepricing.map((i) => i.duration),
-          mrp: item.fitnesspackagepricing.map((i) => i.mrp),
-          Status: item.Status ? "Active" : "Inactive",
-          publishingDate: item.publishing_date,
-          mode: item.mode,
-          days: item.duration,
-          pricing: item.fitnesspackagepricing,
-          freeClass: item.groupinstantbooking,
-        };
-      })
-    );
-    setSelectedDuration(new Array(flattenData.fitnesspackages.length).fill(0));
-    setCurrentIndex(new Array(flattenData.fitnesspackages.length).fill(1));
-  };
 
   return (
     <TabContent>

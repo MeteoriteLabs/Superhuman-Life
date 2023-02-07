@@ -939,7 +939,7 @@ const WorkHours = () => {
                 }}
               >
                 {slots[0] !== null &&
-                  slots?.map((item, index) => {
+                  slots?.map((item, index: number) => {
                     return (
                       <Row
                         id={item.id}
@@ -1029,7 +1029,7 @@ const WorkHours = () => {
                 <Form>
                   <Form.Check
                     type="switch"
-                    checked={checkState}
+                    defaultChecked={checkState}
                     onClick={() => setCheckState(!checkState)}
                     id="custom-switch"
                     label="Set Holiday"
@@ -1094,7 +1094,7 @@ const WorkHours = () => {
                 <Form>
                   <Form.Check
                     type="switch"
-                    checked={checkState}
+                    defaultChecked={checkState}
                     onClick={() => setCheckState(!checkState)}
                     id="custom-switch"
                     label="Set Holiday"
@@ -1289,9 +1289,9 @@ const WorkHours = () => {
               </div>
               <div className="text-center">
                 <Row style={{ justifyContent: "center" }}>
-                  {daysOfWeek.map((item: any, index: any) => {
+                  {daysOfWeek.map((item: any, index: number) => {
                     return (
-                      <>
+                      <div key={index}>
                         <Col
                           onClick={(e) => {
                             setDayIndex(index);
@@ -1310,7 +1310,7 @@ const WorkHours = () => {
                         >
                           {moment(item, "ddd").format("ddd")}
                         </Col>
-                      </>
+                      </div>
                     );
                   })}
                 </Row>
@@ -1335,7 +1335,7 @@ const WorkHours = () => {
                     <Form>
                       <Form.Check
                         type="switch"
-                        checked={userConfig[daysOfWeek[dayIndex]]?.isHoliday}
+                        defaultChecked={userConfig[daysOfWeek[dayIndex]]?.isHoliday}
                         onClick={() => {
                           setDayHoliday(!dayHoliday);
                           handleUserConfigHoliday({
@@ -1376,7 +1376,7 @@ const WorkHours = () => {
                 )}
                 {!userConfig[daysOfWeek[dayIndex]]?.isHoliday &&
                   userConfig[daysOfWeek[dayIndex]]?.slots?.map(
-                    (item, index) => {
+                    (item, index: number) => {
                       return (
                         <Row
                           key={index}
@@ -1739,7 +1739,7 @@ const WorkHours = () => {
                   <tr>
                     <th className="pl-3 pr-3">Date </th>
                   </tr>
-                  {holidayConflics?.map((slot, index) => {
+                  {holidayConflics?.map((slot, index: number) => {
                     return (
                       <tr key={index}>
                         <td className="pl-3 pr-3">

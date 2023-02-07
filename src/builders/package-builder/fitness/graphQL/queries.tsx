@@ -2,10 +2,10 @@ import { gql } from "@apollo/client";
 
 export const GET_ADDRESS = gql`
   query fitnessdisciplines($userId: ID) {
-    addresses(filters:{users_permissions_user: {id: {eq: $userId}}}){
-      data{
+    addresses(filters: { users_permissions_user: { id: { eq: $userId } } }) {
+      data {
         id
-        attributes{
+        attributes {
           address1
           address2
           city
@@ -33,23 +33,98 @@ export const GET_FITNESS_DISCIPLINES = gql`
 
 export const GET_FITNESS_PACKAGE_TYPES = gql`
   query fitnessPackageTypes($type: String) {
-    fitnessPackageTypes(filters: {
-      type: {
-        eq: $type
-      }
-    }){
-      data{
+    fitnessPackageTypes(filters: { type: { eq: $type } }) {
+      data {
         id
-        attributes{
+        attributes {
           type
           Modes
           PricingRequired
           Unit_Pricing_Calculation
-          suggested_pricings{
-            data{
+          suggested_pricings {
+            data {
               id
-              attributes{
+              attributes {
                 mrp
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const GET_TAGS = gql`
+  query getTags($id: ID!) {
+    tags(
+      filters: {
+        fitnesspackage: { users_permissions_user: { id: { eq: $id } } }
+      }
+    ) {
+      data {
+        id
+        attributes {
+          tag_name
+          sessions {
+            data {
+              id
+              attributes {
+                session_date
+                type
+              }
+            }
+          }
+          fitnesspackage {
+            data {
+              id
+              attributes {
+                packagename
+                duration
+                mode
+                Status
+                Start_date
+                End_date
+                fitnesspackagepricing
+                packagename
+                ptoffline
+                ptonline
+                mode
+                publishing_date
+                expiry_date
+                groupoffline
+                grouponline
+                recordedclasses
+                bookingleadday
+                groupinstantbooking
+                bookingleadtime
+                fitness_package_type {
+                  data {
+                    id
+                    attributes {
+                      type
+                    }
+                  }
+                }
+              }
+            }
+          }
+          client_packages {
+            data {
+              id
+              attributes {
+                effective_date
+                accepted_date
+                users_permissions_user {
+                  data {
+                    id
+                    attributes {
+                      username
+                      First_Name
+                      Last_Name
+                    }
+                  }
+                }
               }
             }
           }
@@ -64,7 +139,7 @@ export const GET_FITNESS = gql`
     fitnesspackages(
       sort: ["updatedAt"]
       filters: { users_permissions_user: { id: { eq: $id } } }
-      pagination: {pageSize: 1000}
+      pagination: { pageSize: 1000 }
     ) {
       data {
         id
@@ -72,6 +147,8 @@ export const GET_FITNESS = gql`
           packagename
           ptoffline
           ptonline
+          Start_date
+          End_date
           mode
           publishing_date
           groupoffline
@@ -123,26 +200,26 @@ export const GET_SINGLE_PACKAGE_BY_ID = gql`
           Accomdation_details
           Intensity
           Is_free_demo
-          languages{
-            data{
+          languages {
+            data {
               id
-              attributes{
+              attributes {
                 languages
               }
             }
           }
-          fitnessdisciplines{
-            data{
+          fitnessdisciplines {
+            data {
               id
-              attributes{
+              attributes {
                 disciplinename
               }
             }
           }
           equipment_lists {
-            data{
+            data {
               id
-              attributes{
+              attributes {
                 name
               }
             }
@@ -161,10 +238,10 @@ export const GET_SINGLE_PACKAGE_BY_ID = gql`
           video_URL
           Upload_ID
           Thumbnail_ID
-          equipment_lists{
-            data{
+          equipment_lists {
+            data {
               id
-              attributes{
+              attributes {
                 name
               }
             }
@@ -177,7 +254,7 @@ export const GET_SINGLE_PACKAGE_BY_ID = gql`
           address {
             data {
               id
-              attributes{
+              attributes {
                 address1
               }
             }
@@ -213,10 +290,10 @@ export const GET_SINGLE_PACKAGE_BY_ID = gql`
           expiry_date
           publishing_date
           residential_type
-          booking_config{
-            data{
+          booking_config {
+            data {
               id
-              attributes{
+              attributes {
                 isAuto
                 BookingsPerMonth
                 is_Fillmyslots
@@ -260,16 +337,16 @@ export const GET_SUGGESTIONS_PRICES = gql`
 
 export const GET_SAPIENT_PRICES = gql`
   query sapienPricings {
-    sapienPricings{
-      data{
+    sapienPricings {
+      data {
         id
-        attributes{
+        attributes {
           mode
           mrp
-          fitness_package_type{
-            data{
+          fitness_package_type {
+            data {
               id
-              attributes{
+              attributes {
                 type
               }
             }
@@ -282,10 +359,10 @@ export const GET_SAPIENT_PRICES = gql`
 
 export const GET_FITNESS_PACKAGE_TYPE = gql`
   query fitnessPackageType {
-    fitnessPackageTypes{
-      data{
+    fitnessPackageTypes {
+      data {
         id
-        attributes{
+        attributes {
           type
         }
       }
@@ -294,27 +371,26 @@ export const GET_FITNESS_PACKAGE_TYPE = gql`
 `;
 
 export const LANGUAGES = gql`
-    query fetchLanguages {
-        languages(pagination: {pageSize: 1000}){
-            data{
-              id
-              attributes{
-                languages
-              }
-            }
-          }
+  query fetchLanguages {
+    languages(pagination: { pageSize: 1000 }) {
+      data {
+        id
+        attributes {
+          languages
+        }
+      }
     }
+  }
 `;
 
 export const ADD_SUGGESTION_NEW = gql`
-mutation createSuggestion($id: ID, $fitnesspackage: ID){
-     createUserPackageSuggestion(data: {
-       users_permissions_user: $id,
-       fitnesspackage: $fitnesspackage
-     }){
-       data{
-         id
-       }
-     }
-   }
+  mutation createSuggestion($id: ID, $fitnesspackage: ID) {
+    createUserPackageSuggestion(
+      data: { users_permissions_user: $id, fitnesspackage: $fitnesspackage }
+    ) {
+      data {
+        id
+      }
+    }
+  }
 `;

@@ -1,6 +1,4 @@
-
-
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import { Form, Row, Col } from 'react-bootstrap';
 
 const BookingConfig = (props: any) => {
@@ -18,15 +16,6 @@ const BookingConfig = (props: any) => {
           }else {
                return false;
           }
-          // if(fillSchedule && config !== "" && config !== "Auto"){
-          //      return true;
-          // }else if(!fillSchedule && config !== "" && config !== "Auto"){
-          //      return true;
-          // }else if(config === "Auto" && bookings !== 0){
-          //      return true;
-          // }else {
-          //      return false;
-          // }
      }
 
 
@@ -42,17 +31,6 @@ const BookingConfig = (props: any) => {
 
      return (
           <>
-               {/* <div className='ml-3 mb-3'>
-                    <Row>
-                         <span>Fill My schedule &nbsp;</span>
-                         <Form.Check 
-                              type="switch"
-                              id="custom-switch"
-                              defaultChecked={fillSchedule}
-                              onChange={(e) => setFillSchedule(!fillSchedule)}
-                         />
-                    </Row>
-               </div> */}
                <div>
                     <Form.Check inline label="Manual" value={"Manual"} disabled={inputDisabled} defaultChecked={config === "Manual" ? true : false} onClick={(e: any) => setConfig(e.target.value)} name="group1" type='radio' id={`inline-1`} />
                     <Form.Check inline label="Auto" value={"Auto"} disabled={inputDisabled} defaultChecked={config === "Auto" ? true : false} onClick={(e: any) => setConfig(e.target.value)} name="group1" type='radio' id={`inline-2`} />

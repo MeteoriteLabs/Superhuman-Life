@@ -121,7 +121,7 @@ function LeadComponent() {
                   </Card>
                 );
               })
-            : null}
+            : <p className="text-center">No leads to show</p>}
         </Card.Body>
       </div>
     </Card>

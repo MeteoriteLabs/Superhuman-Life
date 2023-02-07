@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import { Fragment } from 'react'
 
 type Props = {
     packageType: "personal-training" | "group" | "classic" | "custom",

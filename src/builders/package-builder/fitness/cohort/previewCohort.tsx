@@ -1,6 +1,4 @@
-import React from 'react';
 import {Carousel, Card, Row, Col} from 'react-bootstrap';
-// import SocialMediaComponent from '../../../../components/customWidgets/SocialMediaComponent';
 import DisplayImage from '../../../../components/DisplayImage/index';
 import '../fitness.css';
 
@@ -31,10 +29,10 @@ const PreviewCohort = (props) => {
                             <div className='d-flex justify-content-between' style={{ borderBottom: '1px dashed gray' }}>
                             <Row>
                                         <Col lg={4}>
-                                            {/* <DisplayImage imageName={props?.formContext?.thumbnail ? props?.formContext?.thumbnail : null} defaultImageUrl="https://picsum.photos/200" imageCSS="rounded-lg w-25 m-2"/> */}
+                                            
                                         <div className='pt-3'>
                                             <DisplayImage imageName={props?.formContext?.thumbnail ? props?.formContext?.thumbnail : null} defaultImageUrl="https://picsum.photos/200" imageCSS="rounded-lg w-100 img-fluid img-thumbnail"/>
-                                            {/* <img src="https://picsum.photos/200" style={{ borderRadius: '10px' }} alt="random" /> */}
+                                            
                                         </div>
                                         </Col>
                                         <Col>
@@ -85,10 +83,10 @@ const PreviewCohort = (props) => {
                                 <div className='d-flex justify-content-between' style={{ borderBottom: '1px dashed gray' }}>
                                 <Row>
                                         <Col lg={4}>
-                                            {/* <DisplayImage imageName={props?.formContext?.thumbnail ? props?.formContext?.thumbnail : null} defaultImageUrl="https://picsum.photos/200" imageCSS="rounded-lg w-25 m-2"/> */}
+                                            
                                         <div className='pt-3'>
                                             <DisplayImage imageName={props?.formContext?.thumbnail ? props?.formContext?.thumbnail : null} defaultImageUrl="https://picsum.photos/200" imageCSS="rounded-lg w-100 img-fluid img-thumbnail"/>
-                                            {/* <img src="https://picsum.photos/200" style={{ borderRadius: '10px' }} alt="random" /> */}
+                                            
                                         </div>
                                         </Col>
                                         <Col>
@@ -123,7 +121,7 @@ const PreviewCohort = (props) => {
                                         <img src={`/assets/cohort_offline.svg`} alt="custom-classic" title="Personal Training Online" />
                                         <p>{item.duration}</p>
                                     </div>}
-                                        {/* <div className='px-4' style={{ borderRight: '1px solid black' }}></div> */}
+                                        
                                         <div className='ml-4'>
                                             <h4>Class Size</h4>
                                             <p className='mb-0' style={{ color: 'purple', fontSize: '1.3rem' }}>{props.formContext.classSize}</p>

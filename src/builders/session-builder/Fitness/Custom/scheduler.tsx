@@ -12,6 +12,7 @@ import '../Group/actionButton.css';
 
 import '../fitness.css';
 import { flattenObj } from '../../../../components/utils/responseFlatten';
+import Loader from '../../../../components/Loader/Loader';
 
 const Scheduler = () => {
 
@@ -208,9 +209,9 @@ const Scheduler = () => {
     //     return 5;
     // }
 
-    if (!show) return <span style={{ color: 'red' }}>Loading...</span>;
+    if (!show) return <Loader/>;
     else return (
-        <>
+        <div className='col-lg-12'>
             <div className="mb-3">
                 <span style={{ fontSize: '30px'}}>
                     <Link to="/session"><i className="fa fa-arrow-circle-left" style={{ color: 'black'}}></i></Link>
@@ -362,7 +363,7 @@ const Scheduler = () => {
                 </Button>
                 </Modal.Footer>
             </Modal>
-        </>
+        </div>
     );
 };
 

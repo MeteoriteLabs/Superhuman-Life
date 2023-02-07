@@ -120,7 +120,8 @@ export const schema: any = {
         },
         "config": {
             "bookingConfig": {
-                "ui:widget": "cohortBookingConfig"
+                "ui:widget": "cohortBookingConfig",
+                "ui:disabled": true
             }
         },
         "preview": {

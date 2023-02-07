@@ -90,7 +90,7 @@ const PricingTable = (props) => {
 
   useEffect(() => {
     // eslint-disable-next-line
-    pricing.map((item, index) => {
+    pricing.map((item, index: number) => {
       if (item.mrp === 0 || item.mrp === "") {
         const values = [...pricing];
         values[index].mrp = null;
@@ -273,8 +273,8 @@ const PricingTable = (props) => {
                       alt="personal-training-online"
                     />
                   </td>
-                  {pricing.map((item, index) => {
-                    return <td>{1 * item.duration} Classes</td>;
+                  {pricing.map((item, index: number) => {
+                    return <td key={index}>{1 * item.duration} Classes</td>;
                   })}
                 </tr>
               )}
@@ -287,8 +287,8 @@ const PricingTable = (props) => {
                       alt="personal-training-offline"
                     />
                   </td>
-                  {pricing.map((item, index) => {
-                    return <td>{1 * item.duration} Classes</td>;
+                  {pricing.map((item, index: number) => {
+                    return <td key={index}>{1 * item.duration} Classes</td>;
                   })}
                 </tr>
               )}
@@ -296,9 +296,9 @@ const PricingTable = (props) => {
                 <td>
                   <b>Vouchers</b>
                 </td>
-                {pricing.map((item, index) => {
+                {pricing.map((item, index: number) => {
                   return (
-                    <td>
+                    <td key={index}>
                       <Form.Control
                         as="select"
                         disabled={inputDisabled}
@@ -308,9 +308,9 @@ const PricingTable = (props) => {
                         }
                       >
                         <option value={0}>Choose voucher</option>
-                        {vouchers.map((voucher, index) => {
+                        {vouchers.map((voucher, index: number) => {
                           return (
-                            <option value={voucher.discount_percentage}>
+                            <option key={index} value={voucher.discount_percentage}>
                               {voucher.voucher_name}
                             </option>
                           );
@@ -324,17 +324,17 @@ const PricingTable = (props) => {
                 <td>
                   <b>Total days</b>
                 </td>
-                {pricing.map((item, index) => {
-                  return <td>{item.duration} session</td>;
+                {pricing.map((item, index: number) => {
+                  return <td key={index}>{item.duration} session</td>;
                 })}
               </tr>
               <tr className="text-center">
                 <td>
                   <b>Suggested</b>
                 </td>
-                {pricing.map((item, index) => {
+                {pricing.map((item, index: number) => {
                   return (
-                    <td>
+                    <td key={index}>
                       {isNaN(item.suggestedPrice)
                         ? "Base Price Not Set"
                         : `₹ ${item.suggestedPrice}`}
@@ -346,9 +346,9 @@ const PricingTable = (props) => {
                 <td className="text-center">
                   <b>Set MRP</b>
                 </td>
-                {pricing.map((item, index) => {
+                {pricing.map((item, index: number) => {
                   return (
-                    <td>
+                    <td key={index}>
                       <InputGroup
                         className="mb-3"
                         style={{ minWidth: "200px" }}

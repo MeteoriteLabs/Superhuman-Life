@@ -167,8 +167,8 @@
        "type": "object",
        "required": [
         "visibility",
-        "datesConfig",
-        "config"
+        "config",
+        "datesConfig"
        ],
        "properties": {
             "visibility": {

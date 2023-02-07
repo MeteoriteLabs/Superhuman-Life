@@ -246,9 +246,9 @@ const PricingTable = (props) => {
                     onChange={(e) => handleUpdatePricing(0, e.target.value)}
                   >
                     <option value={0}>Choose voucher</option>
-                    {vouchers.map((voucher, index) => {
+                    {vouchers.map((voucher, index: number) => {
                       return (
-                        <option value={voucher.discount_percentage}>
+                        <option key={index} value={voucher.discount_percentage}>
                           {voucher.voucher_name}
                         </option>
                       );

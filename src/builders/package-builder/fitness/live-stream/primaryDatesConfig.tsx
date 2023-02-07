@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { InputGroup, FormControl } from 'react-bootstrap';
 import moment from 'moment';
 
@@ -8,40 +8,10 @@ const PackageDateConfig = (props: any) => {
      const [startDate, setStartDate] = useState(props.value === undefined ? moment().format("YYYY-MM-DD") : moment(JSON.parse(props.value).startDate).format("YYYY-MM-DD"));
      const [endDate, setEndDate] = useState(props.value === undefined ? moment(startDate).add(30, 'days').format("YYYY-MM-DD") : moment(JSON.parse(props.value).endDate).format("YYYY-MM-DD"));
 
-     // if(oneDay === true){
-     //      setEndDate(startDate);
-     // }
-
-     // useEffect(() => {
-     //      if(moment(endDate).isBefore(startDate)){
-     //           setEndDate(startDate);
-     //      }
-     // }, [startDate]);
-
      useEffect(() => {
           setEndDate(moment(startDate).add(30, 'days').format("YYYY-MM-DD"));
      }, [startDate]);
 
-     // useEffect(() => {
-     //      if(oneDay === true){
-     //           setEndDate(moment(startDate).format("YYYY-MM-DD"));
-     //      }
-     //      // eslint-disable-next-line react-hooks/exhaustive-deps
-     // }, [oneDay]);
-
-     // useEffect(() => {
-     //      setEndDate(moment(startDate).add(1, props?.title2 ? 'month' : 'year').format("YYYY-MM-DD"));
-     // }, [startDate, props.title2]);
-
-     // useEffect(() => {
-     //      if(oneDay){
-     //           setEndDate(moment(startDate).format("YYYY-MM-DD"));
-     //      }else {
-     //           props.value === undefined ? setEndDate(moment(startDate).add(1, 'year').format("YYYY-MM-DD")) : setEndDate(moment(JSON.parse(props.value).endDate).format("YYYY-MM-DD"))
-     //      }
-     // }, [oneDay])
-
-     // if()
      props.onChange(JSON.stringify({startDate, endDate}));
 
      return (

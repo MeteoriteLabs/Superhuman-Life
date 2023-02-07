@@ -1,4 +1,4 @@
-import React, {useState, useContext, useEffect} from 'react';
+import {useState, useContext, useEffect} from 'react';
 import {Row, Col, Form, InputGroup, FormControl, Button} from 'react-bootstrap';
 import {Typeahead} from 'react-bootstrap-typeahead';
 import 'react-bootstrap-typeahead/css/Typeahead.css';

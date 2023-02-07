@@ -43,7 +43,7 @@ const WeekScheduler = (props: any) => {
   function handleDaysRowRender() {
     return dates.map((val, index) => {
       return (
-        <>
+        <div key={index}>
           <div key={index} className="cell" style={{ minHeight: "60px" }}>
             <div className="event-dayOfWeek text-center mt-2">
               <span style={{ fontSize: "14px" }}>
@@ -72,7 +72,7 @@ const WeekScheduler = (props: any) => {
               </Badge>
             </div>
           </div>
-        </>
+        </div>
       );
     });
   }

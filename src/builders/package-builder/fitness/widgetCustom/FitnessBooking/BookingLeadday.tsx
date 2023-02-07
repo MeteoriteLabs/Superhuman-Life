@@ -1,10 +1,6 @@
-import React from 'react'
 import Form from 'react-bootstrap/Form'
 
-
 export default function BookingLeadday({ widgetProps, actionType, userData }) {
-
-
 
     return <>
         {(userData.mode === "Online" || userData.mode === "Offline" || userData.mode === "Hybrid") ?
@@ -34,7 +30,5 @@ export default function BookingLeadday({ widgetProps, actionType, userData }) {
             </>
             : ""
         }
-
-
     </>
 }
