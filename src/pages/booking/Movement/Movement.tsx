@@ -18,6 +18,7 @@ export default function Movement(props) {
   const dataLengthRef = useRef<number | null>(0);
   const bookingActionRef = useRef<any>(null);
 
+   // eslint-disable-next-line
   const { data: get_bookings, refetch: refetchBookings } = useQuery(GET_ALL_BOOKINGS, {
     variables: {
       id: auth.userid,
