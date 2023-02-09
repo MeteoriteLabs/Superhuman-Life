@@ -1,6 +1,7 @@
 import { useQuery } from "@apollo/client";
 import moment from "moment";
-import { useContext, useEffect, useMemo, useRef, useState } from "react";
+import { useContext, useMemo, useRef, useState } from "react";
+import { useHistory } from "react-router-dom";
 import { Badge, Col, Row } from "react-bootstrap";
 import ActionButton from "../../../components/actionbutton";
 import BookingTable from "../../../components/table/BookingTable/BookingTable";
@@ -9,59 +10,24 @@ import { GET_ALL_BOOKINGS } from "../GraphQL/queries";
 import BookingAction from "./BookingAction";
 import { flattenObj } from "../../../components/utils/responseFlatten";
 
-export default function Movement(props) {
+export default function Movement() {
+  let history = useHistory();
   const auth = useContext(authContext);
   const [userPackage, setUserPackage] = useState<any>([]);
-  const [start, setStart] = useState(0);
-  const [page, setPage] = useState(0);
-  const limit = 2;
-  const dataLengthRef = useRef<number | null>(0);
   const bookingActionRef = useRef<any>(null);
 
-  useQuery(GET_ALL_BOOKINGS, {
-    variables: {
-      id: auth.userid,
-      start: start,
-      limit: limit,
-    },
-    onCompleted: (data) => loadData(data),
-  });
-
-  useEffect(() => {
-    const scrollFunction = () => {
-      if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
-        setPage(page + 1);
-        setStart(limit * page + 1);
-      }
-    };
-
-    if (userPackage.length > 1) {
-      for (let i = 0; i < userPackage.length; i++) {
-        for (let j = i + 1; j < userPackage.length; j++) {
-          if (userPackage[i].id === userPackage[j].id) {
-            userPackage.splice(j, 1);
-            break;
-          }
-        }
-      }
+  // eslint-disable-next-line
+  const { data: get_bookings, refetch: refetchBookings } = useQuery(
+    GET_ALL_BOOKINGS,
+    {
+      variables: {
+        id: auth.userid,
+      },
+      onCompleted: (data) => loadData(data),
     }
-    dataLengthRef.current = userPackage.length;
-
-    setTimeout(() => {
-      window.addEventListener("scroll", scrollFunction);
-    }, 1000);
-
-    return () => window.removeEventListener("scroll", scrollFunction);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page]);
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+  );
 
   const loadData = (data: { clientBookings: any[] }) => {
-    let existingData = [...userPackage];
     const flattenData = flattenObj({ ...data });
 
     let newData = [
@@ -85,22 +51,8 @@ export default function Movement(props) {
       }),
     ];
 
-    setUserPackage(existingData.concat(newData));
+    setUserPackage(newData);
   };
-
-  // New package count
-  let newPackageCount = 0;
-  userPackage.forEach((item: { booking_date: moment.MomentInput }) => {
-    let booking_date: any = new Date(
-      moment(item.booking_date).format("MM/DD/YYYY")
-    );
-    let currentDate: any = new Date(moment().format("MM/DD/YYYY"));
-    const diffTime = Math.abs(booking_date - currentDate);
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    if (diffDays <= 5) {
-      newPackageCount++;
-    }
-  });
 
   const columns = useMemo(
     () => [
@@ -244,17 +196,11 @@ export default function Movement(props) {
         Header: "Actions",
         Cell: ({ row }: any) => {
           const manageHandler = () => {
-            bookingActionRef.current.TriggerForm({
-              id: row.original.id,
-              actionType: "manage",
-            });
+            history.push("/clients");
           };
 
           const viewHandler = () => {
-            bookingActionRef.current.TriggerForm({
-              id: row.original.id,
-              actionType: "view",
-            });
+            history.push("/receipt");
           };
 
           const acceptHandler = () => {
@@ -293,13 +239,11 @@ export default function Movement(props) {
     <div className="mt-5">
       <Row>
         <Col>
-          <BookingTable
-            columns={columns}
-            data={userPackage}
-            newPackageCount={newPackageCount}
+          <BookingTable columns={columns} data={userPackage} />
+          <BookingAction
+            ref={bookingActionRef}
+            refetchBookings={refetchBookings}
           />
-
-          <BookingAction ref={bookingActionRef} />
         </Col>
       </Row>
     </div>

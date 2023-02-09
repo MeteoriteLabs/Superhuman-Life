@@ -20,11 +20,9 @@ function Table({
         data,
         initialState: {
           sortBy: [{ id: "purchase_date", desc: true }],
-          // pageIndex: 0,
-          // pageSize: 10
+          
         },
-        // manualPagination: true,
-        // pageCount: controlledPageCount,
+       
         isMultiSortEvent: (e) => {
           return true;
         },
@@ -244,3 +242,4 @@ function Table({
 }
 
 export default Table;
+

@@ -103,6 +103,7 @@ function CreateEditPt(props: any, ref: any) {
           },
         });
       }
+      props.callback();
     },
   });
   const [editPackage] = useMutation(EDIT_PACKAGE, {
@@ -146,7 +147,7 @@ function CreateEditPt(props: any, ref: any) {
         setDeleteModalShow(true);
       }
 
-      // if (msg && !msg.id) //render form if no message id
+      // render modal if msg type is not delete or toggle status
       if (msg.type !== "delete" && msg.type !== "toggle-status") {
         modalTrigger.next(true);
       }
@@ -549,7 +550,7 @@ function CreateEditPt(props: any, ref: any) {
         <Toaster
           handleCallback={() => setIsFormSubmitted(false)}
           type="success"
-          msg="Offering has been Created successfully"
+          msg="Offering has been created successfully"
         />
       ) : null}
 
