@@ -485,8 +485,6 @@ export default function FitnessTab() {
       const tagsFlattenData = flattenObj({ ...data });
       const fitnessFlattenData = flattenObj({ ...get_fitness });
 
-      // console.log(tagsFlattenData);
-      // console.log(fitnessFlattenData);
       setDataTable(
         [...fitnessFlattenData.fitnesspackages].map((item) => {
           return {

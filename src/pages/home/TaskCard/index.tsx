@@ -162,13 +162,15 @@ function TaskCard() {
                     >
                       <div>
                         <b>Create a program for {currentValue.packagename}</b>
+                        <p>Please create the whole program to publish this offering</p>
                         <p>#offering #{currentValue.type}</p>
-                        {/* {currentValue.tagId.length > 1 ? (
+                        {currentValue.tagId.length > 1 ? (
                           <ButtonGroup>
                             <DropdownButton
                               as={ButtonGroup}
-                              title="Dropdown"
+                              title="Create new"
                               id="bg-nested-dropdown"
+                              variant='success'
                             >
                               {currentValue.tagId.map((curr, index) => (
                                 <Dropdown.Item
@@ -198,20 +200,7 @@ function TaskCard() {
                           >
                             Create new
                           </Button>
-                        )} */}
-                        {currentValue.tagId.map((curr, index: number) => (
-                          <Button
-                            variant="success"
-                            key={index}
-                            onClick={() =>
-                              redirectHandler(curr[index], currentValue.type)
-                            }
-                          >
-                            {currentValue.tagId.length > 1
-                              ? currentValue.tagname[index]
-                              : "Create new"}
-                          </Button>
-                        ))}
+                        )}
                       </div>
                     </Card>
                   ))
