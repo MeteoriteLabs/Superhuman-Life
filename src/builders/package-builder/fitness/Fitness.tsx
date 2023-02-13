@@ -31,7 +31,6 @@ import OfferingsDisaplyImage from "../../../components/customWidgets/offeringsDi
 
 export default function FitnessTab() {
   const auth = useContext(AuthContext);
-
   const createEditViewPersonalTrainingRef = useRef<any>(null);
   const CreateEditViewOnDemandPtRef = useRef<any>(null);
   const CreateEditViewGroupClassRef = useRef<any>(null);
@@ -485,8 +484,6 @@ export default function FitnessTab() {
       const tagsFlattenData = flattenObj({ ...data });
       const fitnessFlattenData = flattenObj({ ...get_fitness });
 
-      // console.log(tagsFlattenData);
-      // console.log(fitnessFlattenData);
       setDataTable(
         [...fitnessFlattenData.fitnesspackages].map((item) => {
           return {
