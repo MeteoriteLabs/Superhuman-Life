@@ -1,6 +1,5 @@
 import { useMutation } from "@apollo/client";
 import React, { useImperativeHandle, useState } from "react";
-import AcceptRejectModal from "../../../components/AcceptRejectModal/AcceptRejectModal";
 import StatusModal from "../../../components/StatusModal/StatusModal";
 import {
   CREATE_USER_PACKAGE,

@@ -31,7 +31,6 @@ import OfferingsDisaplyImage from "../../../components/customWidgets/offeringsDi
 
 export default function FitnessTab() {
   const auth = useContext(AuthContext);
-
   const createEditViewPersonalTrainingRef = useRef<any>(null);
   const CreateEditViewOnDemandPtRef = useRef<any>(null);
   const CreateEditViewGroupClassRef = useRef<any>(null);

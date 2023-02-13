@@ -131,7 +131,7 @@ function Notifications() {
                             }}
                           >
                             <Icons name="readeye" width={24} height={24} />
-                            <small>
+                            <small className="ml-2">
                               {moment(currentValue.DateTime).format("HH:mm A")}
                             </small>
                           </div>
