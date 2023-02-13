@@ -23,6 +23,7 @@ import { Modal, Button } from "react-bootstrap";
 import AuthContext from "../../../../context/auth-context";
 import { schema, widgets } from "./groupSchema";
 import { schemaView } from "./schemaView";
+import { EditSchema } from "./groupEditSchema";
 import { Subject } from "rxjs";
 import { flattenObj } from "../../../../components/utils/responseFlatten";
 import moment from "moment";
@@ -49,7 +50,7 @@ function CreateEditPackage(props: any, ref: any) {
   const [isOfferingUpdated, setisOfferingUpdated] = useState<boolean>(false);
 
   let frmDetails: any = {};
-
+  
   useQuery(GET_FITNESS_PACKAGE_TYPES, {
     variables: { type: "Group Class" },
     onCompleted: (r: any) => {
@@ -63,7 +64,7 @@ function CreateEditPackage(props: any, ref: any) {
       modalTrigger.next(false);
       props.callback();
       setIsFormSubmitted(!isFormSubmitted);
-      window.open(`group/session/scheduler/${r.createTag.data.id}`, "_self")
+      window.open(`group/session/scheduler/${r.createTag.data.id}`, "_self");
     },
   });
 
@@ -359,6 +360,7 @@ function CreateEditPackage(props: any, ref: any) {
   }
 
   function CreatePackage(frm: any) {
+    console.log(frm);
     frmDetails = frm;
     frm.equipmentList = JSON.parse(frm.equipmentList)
       .map((x: any) => x.id)
@@ -413,7 +415,9 @@ function CreateEditPackage(props: any, ref: any) {
           .join(", ")
           .split(", "),
         Start_date: moment(frm.dates.startDate).toISOString(),
-        End_date: moment(frm.dates.endDate).toISOString(),
+        End_date: moment(frm.dates.startDate)
+          .add(360, "days")
+          .toISOString(),
       },
     });
   }
@@ -474,7 +478,9 @@ function CreateEditPackage(props: any, ref: any) {
           .join(", ")
           .split(", "),
         Start_date: moment(frm.dates.startDate).toISOString(),
-        End_date: moment(frm.dates.endDate).toISOString(),
+        End_date: moment(frm.dates.startDate)
+          .add(360, "days")
+          .toISOString(),
       },
     });
   }
@@ -526,7 +532,13 @@ function CreateEditPackage(props: any, ref: any) {
         name={name}
         isStepper={true}
         showErrorList={false}
-        formUISchema={operation.type === "view" ? schemaView : schema}
+        formUISchema={
+          operation.type === "view"
+            ? schemaView
+            : operation.type === "edit"
+            ? EditSchema
+            : schema
+        }
         stepperValues={[
           "Creator",
           "Details",

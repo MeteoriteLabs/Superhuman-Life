@@ -431,7 +431,7 @@ function TaskCard() {
                           padding: "5px",
                         }}
                       >
-                        <div>
+                        <div className="col-lg-12">
                           <b>Create a program for {currentValue.packagename}</b>
                           <p>
                             Please create the whole program to publish this
@@ -463,7 +463,7 @@ function TaskCard() {
                         padding: "5px",
                       }}
                     >
-                      <div key={index}>
+                      <div key={index} className="col-lg-12">
                         {currentValue.users_permissions_users.map(
                           (currentValue, index) => (
                             <b key={index}>{currentValue.username}</b>

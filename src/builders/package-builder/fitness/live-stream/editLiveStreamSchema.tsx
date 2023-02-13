@@ -20,9 +20,15 @@ export const widgets = {
   liveChannelLanguageSelect: LanguageList,
 };
 
-export const schema: any = {
+export const editLiveStreamSchema: any = {
   level: {
     "ui:widget": "radio",
+    "ui:options": {
+      inline: true,
+    },
+  },
+  durationOfOffering: {
+    "ui:widget": "checkboxes",
     "ui:options": {
       inline: true,
     },
@@ -112,12 +118,6 @@ export const schema: any = {
   languages: {
     "ui:widget": "liveChannelLanguageSelect",
   },
-  durationOfOffering: {
-    "ui:widget": "checkboxes",
-    "ui:options": {
-      inline: true,
-    },
-  },
   dates: {
     "ui:widget": (props: any) => {
       return (
@@ -127,6 +127,7 @@ export const schema: any = {
           value={props.value}
           onChange={props.onChange}
           type={"Cohort"}
+          readonly={true}
         />
       );
     },

@@ -430,19 +430,13 @@ export default function FitnessTab() {
               name = "channel";
             } else if (type === "Cohort") {
               name = "cohort";
-            } else if (type === "Custom Fitness") {
-              name = "custom";
-            } else if (type === "One-On-One") {
-              name = "pt";
-            } else if (type === "On-Demand PT") {
-              name = "pt";
             } else if (type === "Group Class") {
               name = "group";
             }
             if (length > 1) {
-              window.open(`${name}/session/scheduler/${id}`,"_self");
+              window.open(`${name}/session/scheduler/${id}`, "_self");
             } else {
-              window.open(`${name}/session/scheduler/${id}`,"_self");
+              window.open(`${name}/session/scheduler/${id}`, "_self");
             }
           };
 
@@ -452,7 +446,12 @@ export default function FitnessTab() {
             { actionName: "Delete", actionClick: deleteHandler },
           ];
 
-          if (row.original.tagId.length >= 1) {
+          if (
+            row.original.tagId.length >= 1 &&
+            row.original.type !== "One-On-One" &&
+            row.original.type !== "Custom Fitness" &&
+            row.original.type !== "On-Demand PT"
+          ) {
             for (let i = 0; i < row.original.tagId.length; i++) {
               arrayAction.push({
                 actionName: `Manage ${

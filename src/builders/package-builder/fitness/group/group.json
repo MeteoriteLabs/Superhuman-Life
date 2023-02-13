@@ -53,7 +53,22 @@
             },
             "dates": {
                 "type": "string"
-            }
+            },
+            "durationOfOffering": {
+                "type": "array",
+                "title": "Duration",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "1 day",
+                    "30 days",
+                    "60 days",
+                    "90 days",
+                    "360 days"
+                  ]
+                },
+                "uniqueItems": true
+              }
         }
     },
     "2": {

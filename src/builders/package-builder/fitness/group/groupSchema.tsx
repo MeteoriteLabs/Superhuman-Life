@@ -1,114 +1,144 @@
-import Upload from '../../../../components/upload/upload';
-import FitnessSelect from '../../../../components/customWidgets/fitnessMultiSelect';
-import EquipmentSelect from '../../../../components/customWidgets/equipmentListSelect';
-import LanguageList from '../../../../components/customWidgets/languageSelect';
-import GroupProgramDetails from './groupProgramDetails';
-import GroupConfig from './groupConfig';
-import GroupPricingTable from './groupPricingTable';
-import GroupPreview from './groupPreview';
-import GroupBookingConfig from './bookingConfig';
-import GroupPrimaryDateConfig from './primaryDatesConfig';
-import DatesConfig from './groupDateConfig';
+import Upload from "../../../../components/upload/upload";
+import FitnessSelect from "../../../../components/customWidgets/fitnessMultiSelect";
+import EquipmentSelect from "../../../../components/customWidgets/equipmentListSelect";
+import LanguageList from "../../../../components/customWidgets/languageSelect";
+import GroupProgramDetails from "./groupProgramDetails";
+import GroupConfig from "./groupConfig";
+import GroupPricingTable from "./groupPricingTable";
+import GroupPreview from "./groupPreview";
+import GroupBookingConfig from "./bookingConfig";
+import GroupPrimaryDateConfig from "./primaryDatesConfig";
+import DatesConfig from "./groupDateConfig";
 
 export const widgets = {
-     datesConfig: DatesConfig,
-     fitnessSelect: FitnessSelect,
-     equipmentSelect: EquipmentSelect,
-     groupProgramDetails: GroupProgramDetails,
-     groupConfig: GroupConfig,
-     groupPricingTable: GroupPricingTable,
-     groupPreview: GroupPreview,
-     groupBookingConfig: GroupBookingConfig,
-     languageList: LanguageList
-}
+  datesConfig: DatesConfig,
+  fitnessSelect: FitnessSelect,
+  equipmentSelect: EquipmentSelect,
+  groupProgramDetails: GroupProgramDetails,
+  groupConfig: GroupConfig,
+  groupPricingTable: GroupPricingTable,
+  groupPreview: GroupPreview,
+  groupBookingConfig: GroupBookingConfig,
+  languageList: LanguageList,
+};
 
-export const schema: any = {  
-     "disciplines": {
-          "ui:widget": "fitnessSelect",
-     },
-     "equipmentList": {
-          "ui:widget": "equipmentSelect",
-     },
-     "level": {
-          "ui:widget": "radio",
-          "ui:options": {
-              "inline": true
-          }
+export const schema: any = {
+  disciplines: {
+    "ui:widget": "fitnessSelect",
+  },
+  equipmentList: {
+    "ui:widget": "equipmentSelect",
+  },
+  level: {
+    "ui:widget": "radio",
+    "ui:options": {
+      inline: true,
+    },
+  },
+  intensity: {
+    "ui:widget": "radio",
+    "ui:options": {
+      inline: true,
+    },
+  },
+  classSize: {
+    "ui:widget": "radio",
+    "ui:options": {
+      inline: true,
+    },
+  },
+  About: {
+    "ui:widget": "textarea",
+    "ui:autofocus": true,
+    "ui:options": {
+      rows: 3,
+    },
+    "ui:placeholder": "About the program",
+  },
+  Benifits: {
+    "ui:widget": "textarea",
+    "ui:options": {
+      rows: 3,
+    },
+    "ui:placeholder": "Benifits of the program",
+  },
+  thumbnail: {
+    "ui:widget": (props: any) => {
+      return (
+        <Upload
+          allowImage={true}
+          allowVideo={false}
+          onChange={props.onChange}
+          value={props.value}
+          title={"Thumbnail"}
+        />
+      );
+    },
+  },
+  Upload: {
+    upload: {
+      "ui:widget": (props: any) => {
+        return (
+          <Upload
+            allowImage={true}
+            allowVideo={true}
+            offering={true}
+            onChange={props.onChange}
+            value={props.value}
+          />
+        );
       },
-     "intensity": {
-          "ui:widget": "radio",
-          "ui:options": {
-              "inline": true
-          }
-     },
-     "classSize": {
-          "ui:widget": "radio",
-          "ui:options": {
-               "inline": true
-          }
-     },
-     "About": {
-          "ui:widget": "textarea",
-          "ui:autofocus": true,
-          "ui:options": {
-              "rows": 3
-          },
-          "ui:placeholder": "About the program",
-      },
-      "Benifits": {
-          "ui:widget": "textarea",
-          "ui:options": {
-              "rows": 3,
-          },
-          "ui:placeholder": "Benifits of the program",
-      },
-     "thumbnail": {
-          "ui:widget": (props: any) => {
-               return <Upload allowImage={true} allowVideo={false} onChange={props.onChange} value={props.value} title={'Thumbnail'} />;
-          },
-      },
-     "Upload": {
-          "upload": {
-               "ui:widget": (props: any) => {
-                    return <Upload allowImage={true} allowVideo={true} offering={true} onChange={props.onChange} value={props.value} />;
-               },
-          },  
-          "VideoUrl": {
-               "ui:placeholder": "https://"
-          }
-     },
-     "programDetails": {
-          "ui:widget": "groupProgramDetails"
-     },
-     "groupinstantbooking": {
-          "ui:widget": "groupConfig"
-     },
-     "pricingDetail": {
-          "ui:widget": "groupPricingTable"
-     },
-     "carousel": {
-          "ui:widget": "groupPreview"
-     },
-     "visibility": {
-          "ui:widget": "radio",
-          "ui:options": {
-              "inline": true
-          }
-      },
-     "datesConfig": {
-          "ui:widget": "datesConfig"
-     },
-     "languages": {
-          "ui:widget": "languageList",
-     },
-     "config": {
-          "bookingConfig": {
-              "ui:widget": "groupBookingConfig"
-          }
-     },
-     "dates": {
-          "ui:widget": (props: any) => {
-              return <GroupPrimaryDateConfig title1={'Start Date'} title2={'End Date'} value={props.value} onChange={props.onChange} type={'Cohort'}/>
-          }
-     },
-}
+    },
+    VideoUrl: {
+      "ui:placeholder": "https://",
+    },
+  },
+  programDetails: {
+    "ui:widget": "groupProgramDetails",
+  },
+  groupinstantbooking: {
+    "ui:widget": "groupConfig",
+  },
+  pricingDetail: {
+    "ui:widget": "groupPricingTable",
+  },
+  carousel: {
+    "ui:widget": "groupPreview",
+  },
+  visibility: {
+    "ui:widget": "radio",
+    "ui:options": {
+      inline: true,
+    },
+  },
+  datesConfig: {
+    "ui:widget": "datesConfig",
+  },
+  durationOfOffering: {
+    "ui:widget": "checkboxes",
+    "ui:options": {
+      inline: true,
+    },
+  },
+  languages: {
+    "ui:widget": "languageList",
+  },
+  config: {
+    bookingConfig: {
+      "ui:widget": "groupBookingConfig",
+    },
+  },
+  dates: {
+    "ui:widget": (props: any) => {
+      return (
+        <GroupPrimaryDateConfig
+          title1={"Start Date"}
+          title2={"End Date"}
+          value={props.value}
+          onChange={props.onChange}
+          type={"Cohort"}
+        />
+      );
+    },
+  },
+};
