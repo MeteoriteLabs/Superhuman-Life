@@ -263,7 +263,7 @@ function CreateEditPackage(props: any, ref: any) {
     let bookingConfig: any = {};
     let details: any = {};
     if (msg.groupinstantbooking) {
-      for (var i = 0; i < msg.fitnesspackagepricing.length; i++) {
+      for (let i = 0; i < msg.fitnesspackagepricing.length; i++) {
         PRICING_TABLE_DEFAULT_WITH_INSTANTBOOKING[i].mrp =
           msg.fitnesspackagepricing[i].mrp;
         PRICING_TABLE_DEFAULT_WITH_INSTANTBOOKING[i].suggestedPrice =
@@ -274,7 +274,7 @@ function CreateEditPackage(props: any, ref: any) {
           msg.fitnesspackagepricing[i].sapienPricing;
       }
     } else {
-      for (var j = 0; j < msg.fitnesspackagepricing.length; j++) {
+      for (let j = 0; j < msg.fitnesspackagepricing.length; j++) {
         PRICING_TABLE_DEFAULT[j].mrp = msg.fitnesspackagepricing[j].mrp;
         PRICING_TABLE_DEFAULT[j].suggestedPrice =
           msg.fitnesspackagepricing[j].suggestedPrice;

@@ -201,8 +201,12 @@ function TaskCard() {
                                 id="bg-nested-dropdown"
                                 variant="success"
                               >
-                                {currentValue.tagId.map((curr, index) => (
+                                
+                                {currentValue.tagId.map((curr, index: number) => (
+                                  
                                   <Dropdown.Item
+                                    className="col-xs-12"
+                                    key={index}
                                     eventKey={curr[index]}
                                     onClick={() => {
                                       redirectHandler(
@@ -211,9 +215,12 @@ function TaskCard() {
                                       );
                                     }}
                                   >
+                                    
                                     Create {currentValue.tagname[index]}
                                   </Dropdown.Item>
+                                  
                                 ))}
+                               
                               </DropdownButton>{" "}
                             </ButtonGroup>
                             </Col>
@@ -471,7 +478,7 @@ function TaskCard() {
                         )}{" "}
                         requested to book{" "}
                         {currentValue.fitnesspackages.map(
-                          (currentElement, index) => (
+                          (currentElement, index: number) => (
                             <b key={index}>
                               {currentElement.fitness_package_type.type}{" "}
                             </b>

@@ -175,7 +175,7 @@ export default function Channel(props) {
   if (!showHistory) {
     if (userPackage.length > 0) {
       userPackage.filter((item: any, index: any) =>
-        moment(item.expiry).isBefore(moment()) === true
+        moment(item.endDate).isBefore(moment()) === true
           ? userPackage.splice(index, 1)
           : null
       );

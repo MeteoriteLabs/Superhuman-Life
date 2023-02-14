@@ -54,7 +54,12 @@
                     "360 days"
                   ]
                 },
-                "uniqueItems": true
+                "uniqueItems": true,
+                "default": ["1 day",
+                "30 days",
+                "60 days",
+                "90 days",
+                "360 days"]
               }
 
         }   
