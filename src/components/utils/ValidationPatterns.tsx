@@ -54,3 +54,18 @@ export function urlTransformErrors(errors) {
         return error;
     });
 }
+
+// Youtube URL validation
+export const youtubeUrlCustomFormats = {
+    // eslint-disable-next-line
+    'youtubeurl': /^(?:https?:\/\/)?(?:m\.|www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/
+};
+
+export function youtubeUrlTransformErrors(errors) {
+    return errors.map(error => {
+        if (error.name === "format") {
+            error.message = "Enter correct youtube video URL"
+        }
+        return error;
+    });
+}

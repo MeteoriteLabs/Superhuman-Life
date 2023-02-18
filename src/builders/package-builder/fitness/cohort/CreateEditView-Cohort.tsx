@@ -14,6 +14,7 @@ import {
   UPDATE_CHANNEL_COHORT_PACKAGE,
   UPDATE_BOOKING_CONFIG,
 } from "../graphQL/mutations";
+import { youtubeUrlCustomFormats, youtubeUrlTransformErrors } from "../../../../components/utils/ValidationPatterns";
 import {
   GET_FITNESS_PACKAGE_TYPE,
   GET_SINGLE_PACKAGE_BY_ID,
@@ -468,6 +469,8 @@ function CreateEditCohort(props: any, ref: any) {
         name={name}
         isStepper={true}
         showErrorList={false}
+        customFormats={youtubeUrlCustomFormats}
+        transformErrors={youtubeUrlTransformErrors}
         formUISchema={operation.type === "view" ? schemaView : schema}
         formSchema={programSchema}
         formSubmit={

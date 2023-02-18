@@ -9,7 +9,7 @@ import ActionButton from "../../../../components/actionbutton";
 import { flattenObj } from "../../../../components/utils/responseFlatten";
 import moment from "moment";
 
-export default function Cohort(props) {
+export default function Cohort() {
   const auth = useContext(AuthContext);
   const [userPackage, setUserPackage] = useState<any>([]);
   const [showHistory, setShowHistory] = useState(false);
@@ -22,7 +22,7 @@ export default function Cohort(props) {
 
   const loadData = (data: any) => {
     const flattenData = flattenObj({ ...data });
-     console.log(flattenData);
+     
     setUserPackage([
       ...flattenData.tags.map((packageItem) => {
         return {
@@ -38,8 +38,8 @@ export default function Cohort(props) {
           ),
           client:
             packageItem.client_packages.length > 0
-              ? packageItem.client_packages
-              : undefined,
+              ? packageItem.client_packages.length
+              : null,
           programName: packageItem.tag_name ? packageItem.tag_name : "N/A",
           programStatus:
             packageItem.fitnesspackage.Status === true ? "Assigned" : "N/A",
@@ -168,8 +168,8 @@ export default function Cohort(props) {
           ),
           client:
             packageItem.client_packages.length > 0
-              ? packageItem.client_packages
-              : undefined,
+              ? packageItem.client_packages.length
+              : null,
           programName: packageItem.tag_name ? packageItem.tag_name : "N/A",
           programStatus:
             packageItem.fitnesspackage.Status === true ? "Assigned" : "N/A",

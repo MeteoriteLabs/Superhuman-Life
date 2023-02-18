@@ -353,7 +353,7 @@ export const GET_TAGS_FOR_GROUP = gql`
 `;
 
 export const GET_TAGS_FOR_CLASSIC = gql`
-  query getTagsforGroup($id: ID!) {
+  query getTagsforRecorded($id: ID!) {
     tags(
       filters: {
         fitnesspackage: {
@@ -464,7 +464,7 @@ export const GET_TAGS_FOR_CHANNEL = gql`
 `;
 
 export const GET_TAGS_FOR_COHORT = gql`
-  query getTagsforGroup($id: ID!) {
+  query getTagsforCohort($id: ID!) {
     tags(
       filters: {
         fitnesspackage: {

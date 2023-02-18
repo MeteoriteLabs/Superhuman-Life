@@ -65,6 +65,40 @@ export const CREATE_USER_PACKAGE = gql`
     ) {
       data {
         id
+        attributes{
+          users_permissions_user{
+            data{
+              id
+              attributes{
+                username
+              }
+            }
+          }
+          fitnesspackages{
+            data{
+              id
+              attributes{
+                packagename
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const UPDATE_TAG = gql`
+  mutation updateTag(
+    $id: ID!
+    $data: TagInput!
+  ) {
+    updateTag(id: $id, data: $data) {
+      data {
+        id
+        attributes{
+         tag_name
+        }
       }
     }
   }

@@ -6,8 +6,9 @@ import { flattenObj } from "../../../../components/utils/responseFlatten";
 import moment from "moment";
 
 const PricingTable = (props) => {
-     console.log(props,props.formContext.programDetails, props.formContext.groupinstantbooking);
+    //  console.log(props,props.formContext.programDetails, props.formContext.groupinstantbooking);
   const inputDisabled = props.readonly;
+  // const durationOfOffering = props.formContext.durationOfOffering;
   const classDetails = JSON.parse(props.formContext.programDetails);
   const bookingDetails = JSON.parse(props.formContext.groupinstantbooking);
   const classMode =

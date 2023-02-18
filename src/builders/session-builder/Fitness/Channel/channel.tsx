@@ -9,11 +9,10 @@ import ActionButton from "../../../../components/actionbutton";
 import { flattenObj } from "../../../../components/utils/responseFlatten";
 import moment from "moment";
 
-export default function Channel(props) {
+export default function Channel() {
   const auth = useContext(AuthContext);
   const [userPackage, setUserPackage] = useState<any>([]);
-  const [showHistory, setShowHistory] = useState(false);
-
+  const [showHistory, setShowHistory] = useState<boolean>(false);
   const fitnessActionRef = useRef<any>(null);
 
   const mainQuery = useQuery(GET_TAGS_FOR_CHANNEL, {
@@ -36,8 +35,8 @@ export default function Channel(props) {
           ),
           client:
             packageItem.client_packages.length > 0
-              ? packageItem.client_packages
-              : undefined,
+              ? packageItem.client_packages.length
+              : null,
           programName: packageItem.tag_name ? packageItem.tag_name : "N/A",
           programStatus:
             packageItem.fitnesspackage.Status === true ? "Assigned" : "N/A",
@@ -70,9 +69,7 @@ export default function Channel(props) {
           { accessor: "packageName", Header: "Name", enableRowSpan: true },
         ],
       },
-
       { accessor: " ", Header: "" },
-
       {
         Header: "Program",
         columns: [
@@ -161,8 +158,8 @@ export default function Channel(props) {
           ),
           client:
             packageItem.client_packages.length > 0
-              ? packageItem.client_packages
-              : undefined,
+              ? packageItem.client_packages.length
+              : null,
           programName: packageItem.tag_name ? packageItem.tag_name : "N/A",
           programStatus:
             packageItem.fitnesspackage.Status === true ? "Assigned" : "N/A",

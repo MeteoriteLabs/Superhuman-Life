@@ -1,37 +1,27 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useQuery, useMutation } from "@apollo/client";
 import { useContext, useMemo, useRef, useState } from "react";
 import { Badge, Row, Col, Form, Button, Modal } from "react-bootstrap";
-
 import AuthContext from "../../../../context/auth-context";
 import GroupTable from "../../../../components/table/GroupTable/GroupTable";
-import {
-  GET_ALL_FITNESS_PACKAGE_BY_TYPE,
-  GET_ALL_CLIENT_PACKAGE,
-  GET_TAGS_FOR_GROUP,
-} from "../../graphQL/queries";
-import { UPDATE_STARTDATE, DELETE_TAG_BATCH } from "../../graphQL/mutation";
+import { GET_TAGS_FOR_GROUP } from "../../graphQL/queries";
+import { DELETE_TAG_BATCH } from "../../graphQL/mutation";
 import moment from "moment";
 import ActionButton from "../../../../components/actionbutton";
 import FitnessAction from "../FitnessAction";
 import { flattenObj } from "../../../../components/utils/responseFlatten";
 
-export default function Group(props) {
+export default function Group() {
   const auth = useContext(AuthContext);
-
   const [userPackage, setUserPackage] = useState<any>([]);
-  const [showHistory, setShowHistory] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [tagId, setTagId] = useState("");
+  const [showHistory, setShowHistory] = useState<boolean>(false);
+  const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+  const [tagId, setTagId] = useState<string>("");
   const fitnessActionRef = useRef<any>(null);
 
   const [deleteBatch] = useMutation(DELETE_TAG_BATCH, {
     onCompleted: (r: any) => {
       mainQuery.refetch();
     },
-  });
-  const [updateDate] = useMutation(UPDATE_STARTDATE, {
-    onCompleted: (r: any) => {},
   });
 
   const mainQuery = useQuery(GET_TAGS_FOR_GROUP, {
@@ -41,83 +31,8 @@ export default function Group(props) {
     onCompleted: (r: any) => loadData(r),
   });
 
-  const { data: data1 } = useQuery(GET_ALL_FITNESS_PACKAGE_BY_TYPE, {
-    variables: {
-      id: auth.userid,
-      type: "Group Class",
-    },
-  });
-
-  // const { data: data2 } = useQuery(GET_ALL_PROGRAM_BY_TYPE, {
-  //     variables: {
-  //         id: auth.userid,
-  //         type: 'Group Class'
-  //     },
-
-  // });
-
-  const { data: data3 } = useQuery(GET_ALL_CLIENT_PACKAGE, {
-    variables: {
-      id: auth.userid,
-      type: "Group Class",
-    },
-    // onCompleted: (data) => loadData()
-  });
-
   const loadData = (data: any) => {
-    // let arrayFitnessPackage: any[] = [];
-    // let arrayData: any[] = [];
-
-    // const flattenData1 = flattenObj({...data1});
-    // const flattenData2 = flattenObj({...data2});
-    // const flattenData3 = flattenObj({...data3});
-
-    // let fitnessProgramItem: any = {};
-    // for (let i = 0; i < flattenData1?.fitnesspackages.length; i++) {
-    //     for (let j = 0; j < flattenData2?.programManagers?.length; j++) {
-    //         if (flattenData1.fitnesspackages[i].id === flattenData2.programManagers[j].fitnesspackages[0].id) {
-    //             fitnessProgramItem.proManagerFitnessId = flattenData2.programManagers[j].fitnessprograms[0].id;
-    //             fitnessProgramItem.title = flattenData2.programManagers[j].fitnessprograms[0].title;
-    //             fitnessProgramItem.start_dt = flattenData2.programManagers[j].fitnessprograms[0].start_dt;
-    //             fitnessProgramItem.renewal_dt = flattenData2.programManagers[j].fitnessprograms[0].renewal_dt;
-    //             fitnessProgramItem.published_at = flattenData2.programManagers[j].fitnessprograms[0].published_at
-    //             fitnessProgramItem.proManagerId = flattenData2.programManagers[j].id;
-
-    //             arrayData.push({ ...flattenData1.fitnesspackages[i], ...fitnessProgramItem });
-    //         }
-    //     }
-    // }
-
-    // let arrayA = arrayData.map(item => item.id);
-
-    // const filterPackage = flattenData1?.fitnesspackages.filter((item: { id: string; }) => !arrayA.includes(item.id));
-    // filterPackage.forEach(item => {
-    //     arrayData.push(item)
-    // })
-
-    // for (let i = 0; i < arrayData.length; i++) {
-    //     for (let j = 0; j < flattenData3.clientPackages?.length; j++) {
-    //         if (flattenData3.clientPackages[j].program_managers.length > 0) {
-    //             if (arrayData[i].proManagerFitnessId === flattenData3.clientPackages[j].program_managers[0].fitnessprograms[0].id) {
-    //                 arrayFitnessPackage.push({ ...arrayData[i], ...flattenData3.clientPackages[j].users_permissions_user });
-    //             } else {
-    //                 arrayFitnessPackage.push(arrayData[i]);
-    //                 break;
-    //             }
-    //         }
-    //     }
-    // }
-
     const flattenData = flattenObj({ ...data });
-
-    function handleUsers(data: any) {
-      let clients: any = [];
-      for (var i = 0; i < data.length; i++) {
-        clients.push(data[i].users_permissions_user.username);
-      }
-      // packageItem.client_packages[index]?.users_permissions_user
-      return clients;
-    }
 
     setUserPackage([
       ...flattenData.tags.map((packageItem, index) => {
@@ -146,16 +61,9 @@ export default function Group(props) {
           packageStatus: packageItem.fitnesspackage.Status
             ? "Active"
             : "Inactive",
-
-          // proManagerId: packageItem.proManagerId,
-          // proManagerFitnessId: packageItem.proManagerFitnessId,
-          client: packageItem.client_packages[index]?.users_permissions_user
-            .username
-            ? handleUsers(packageItem.client_packages)
+          client: packageItem.client_packages.length
+            ? packageItem.client_packages.length
             : "N/A",
-          // start_dt: packageItem.effective_date,
-          // renewal_dt: packageItem.renewal_dt,
-          // time: packageItem.published_at ? moment(packageItem.published_at).format('h:mm:ss a') : "N/A",
           programName: packageItem.tag_name,
           programStatus: handleStatus(
             packageItem.sessions,
@@ -207,55 +115,16 @@ export default function Group(props) {
   function calculateProgramRenewal(effective_date, sessions) {
     let max: number = 0;
 
-    for (var i = 0; i < sessions?.length; i++) {
+    for (let i = 0; i < sessions?.length; i++) {
       if (sessions[i].day_of_program > max) {
         max = sessions[i].day_of_program;
       }
     }
 
     return moment(effective_date).add(max, "days").format("MMMM DD,YYYY");
-    // const dates: string[] = [];
-
-    // for(var i=0; i<duration; i++){
-    //     const t = moment(effectiveDate).add(i, 'days').format("MMMM DD,YYYY");
-    //     dates.push(t);
-    // }
-    // return dates[renewalDate-1];
   }
 
-  let arr: any = [];
-  // for (let i = 0; i < userPackage.length - 1; i++) {
-  //     if (userPackage[i].id === userPackage[i + 1].id) {
-  //         if (userPackage[i].proManagerFitnessId === userPackage[i + 1].proManagerFitnessId) {
-  //             if (typeof userPackage[i].client === "string") {
-  //                 arr[0] = userPackage[i].client;
-  //             };
-  //             arr.push(userPackage[i + 1].client);
-  //             userPackage[i + 1].client = arr
-  //             userPackage.splice(i, 1);
-  //             i--;
-  //         }
-  //     }
-  // }
-
   function handleRedirect(id: any) {
-    // if(value === undefined){
-    //     alert("Please assign client to this program")
-    //     return;
-    // }
-    // if (startDate === null){
-    //     let sdate = moment();
-    //     let edate = moment(sdate).add(duration, 'days');
-
-    //     updateDate({
-    //         variables: {
-    //             id: id,
-    //             startDate: moment(sdate).format("YYYY-MM-DD"),
-    //             endDate: moment(edate).format("YYYY-MM-DD")
-    //         }
-    //     });
-    // }
-
     window.location.href = `/group/session/scheduler/${id}`;
   }
 
@@ -263,10 +132,9 @@ export default function Group(props) {
     const flattenData = flattenObj({ ...data });
     function handleUsers(data: any) {
       let clients: any = [];
-      for (var i = 0; i < data.length; i++) {
+      for (let i = 0; i < data.length; i++) {
         clients.push(data[i].users_permissions_user.username);
       }
-      // packageItem.client_packages[index]?.users_permissions_user
       return clients;
     }
 
@@ -298,16 +166,11 @@ export default function Group(props) {
             ? "Active"
             : "Inactive",
 
-          // proManagerId: packageItem.proManagerId,
-          // proManagerFitnessId: packageItem.proManagerFitnessId,
           clientData: packageItem.client_packages,
           client: packageItem.client_packages[index]?.users_permissions_user
             .username
             ? handleUsers(packageItem.client_packages)
             : "N/A",
-          // start_dt: packageItem.effective_date,
-          // renewal_dt: packageItem.renewal_dt,
-          // time: packageItem.published_at ? moment(packageItem.published_at).format('h:mm:ss a') : "N/A",
           programName: packageItem.tag_name,
           programStatus: handleStatus(
             packageItem.sessions,
@@ -397,7 +260,6 @@ export default function Group(props) {
         ],
       },
       { accessor: " ", Header: "" },
-
       {
         Header: "Class Details",
         columns: [

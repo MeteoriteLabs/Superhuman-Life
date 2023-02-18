@@ -6,7 +6,7 @@ export const GET_ALL_BOOKINGS = gql`
       filters: {
         fitnesspackages: { users_permissions_user: { id: { eq: $id } } }
       }
-      
+      pagination: { pageSize: 100 }
       sort: ["booking_date"]
     ) {
       data {
@@ -45,6 +45,31 @@ export const GET_ALL_BOOKINGS = gql`
                     id
                   }
                 }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const GET_TAGS = gql`
+  query tags($id: ID!) {
+    tags(
+      filters: {
+        fitnesspackage: { users_permissions_user: { id: { eq: $id } } }
+      }
+      pagination: { pageSize: 100 }
+    ) {
+      data {
+        id
+        attributes {
+          fitnesspackage {
+            data {
+              id
+              attributes {
+                packagename
               }
             }
           }

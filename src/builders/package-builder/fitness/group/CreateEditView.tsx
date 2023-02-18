@@ -360,7 +360,7 @@ function CreateEditPackage(props: any, ref: any) {
   }
 
   function CreatePackage(frm: any) {
-    console.log(frm);
+    console.log(frm, frm.level);
     frmDetails = frm;
     frm.equipmentList = JSON.parse(frm.equipmentList)
       .map((x: any) => x.id)

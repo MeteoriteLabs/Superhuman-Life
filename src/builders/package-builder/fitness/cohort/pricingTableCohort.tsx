@@ -331,6 +331,9 @@ const PricingTable = (props) => {
                     <td><b>Triple Occupancy Price</b></td>
                     <td>
                         <InputGroup style={{ minWidth: '200px'}}>
+                        <InputGroup.Prepend>
+                            <InputGroup.Text id="basic-addon1">{"\u20B9"}</InputGroup.Text>
+                        </InputGroup.Prepend>
                             <FormControl
                             aria-label="Default"
                             type='number'
