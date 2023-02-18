@@ -3,7 +3,7 @@ import DisplayImage from "../../../../components/DisplayImage/index";
 import "../fitness.css";
 
 const PreviewGroup = (props) => {
-    console.log(props);
+  console.log(props);
   const formData = props?.formContext;
   const programDetails = JSON.parse(formData?.programDetails);
   let pricing;
@@ -73,7 +73,7 @@ const PreviewGroup = (props) => {
   }
 
   function handleCardRender() {
-    return pricing.map((item, index) => {
+    return pricing.map((item, index: number) => {
       return (
         <Carousel.Item key={index}>
           <Card
@@ -106,7 +106,7 @@ const PreviewGroup = (props) => {
                       <div>
                         <div className="d-flex justify-content-start align-items-center">
                           {JSON.parse(formData.disciplines).map(
-                            (item, index) => {
+                            (item, index: number) => {
                               return (
                                 <div
                                   key={index}

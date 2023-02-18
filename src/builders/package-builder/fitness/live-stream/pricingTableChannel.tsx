@@ -13,6 +13,7 @@ import { flattenObj } from "../../../../components/utils/responseFlatten";
 import moment from "moment";
 
 const PricingTable = (props) => {
+  const durationOfOffering = props.formContext.durationOfOffering;
   const inputDisabled = props.readonly;
   const bookingDetails = JSON.parse(props.formContext.channelinstantBooking);
   const [show, setShow] = useState(props.value === "free" ? true : false);
@@ -41,45 +42,160 @@ const PricingTable = (props) => {
     }
   }
 
+  let day: number = 0;
+      for(let i = 0 ; i <  durationOfOffering.length ; i++){
+        if(durationOfOffering[i] === "1 day"){
+          day = day > 1 ?  day : 1;
+        } else if (durationOfOffering[i] === "30 days"){
+          day= day > 30 ? day : 30;
+        } else if (durationOfOffering[i] === "90 days"){
+          day=  day > 90 ? day : 90;
+        } else if (durationOfOffering[i] === "180 days"){
+          day=  day > 180 ? day : 180;
+        } else if (durationOfOffering[i] === "360 days"){
+          day=  day >= 360 ? day : 360;
+        }
+      }
+
   function handleDefaultPricing() {
     if (bookingDetails.instantBooking) {
-      return [
-        {
-          mrp: null,
-          suggestedPrice: null,
-          voucher: 0,
-          duration: 1,
-          sapienPricing: null,
-        },
-        {
-          mrp: null,
-          suggestedPrice: null,
-          voucher: 0,
-          duration: 30,
-          sapienPricing: null,
-        },
-        {
-          mrp: null,
-          suggestedPrice: null,
-          voucher: 0,
-          duration: 90,
-          sapienPricing: null,
-        },
-        {
-          mrp: null,
-          suggestedPrice: null,
-          voucher: 0,
-          duration: 180,
-          sapienPricing: null,
-        },
-        {
-          mrp: null,
-          suggestedPrice: null,
-          voucher: 0,
-          duration: 360,
-          sapienPricing: null,
-        },
-      ];
+      if(day === 360){
+        return [
+          {
+            mrp: null,
+            suggestedPrice: null,
+            voucher: 0,
+            duration: 1,
+            sapienPricing: null,
+            classes: null,
+          },
+          {
+            mrp: null,
+            suggestedPrice: null,
+            voucher: 0,
+            duration: 30,
+            sapienPricing: null,
+            classes: null,
+          },
+          {
+            mrp: null,
+            suggestedPrice: null,
+            voucher: 0,
+            duration: 90,
+            sapienPricing: null,
+            classes: null,
+          },
+          {
+            mrp: null,
+            suggestedPrice: null,
+            voucher: 0,
+            duration: 180,
+            sapienPricing: null,
+            classes: null,
+          },
+          {
+            mrp: null,
+            suggestedPrice: null,
+            voucher: 0,
+            duration: 360,
+            sapienPricing: null,
+            classes: null,
+          },
+        ]
+      } else if (day === 180){
+        return [
+          {
+            mrp: null,
+            suggestedPrice: null,
+            voucher: 0,
+            duration: 1,
+            sapienPricing: null,
+            classes: null,
+          },
+          {
+            mrp: null,
+            suggestedPrice: null,
+            voucher: 0,
+            duration: 30,
+            sapienPricing: null,
+            classes: null,
+          },
+          {
+            mrp: null,
+            suggestedPrice: null,
+            voucher: 0,
+            duration: 90,
+            sapienPricing: null,
+            classes: null,
+          },
+          {
+            mrp: null,
+            suggestedPrice: null,
+            voucher: 0,
+            duration: 180,
+            sapienPricing: null,
+            classes: null,
+          }
+        ];
+      } else if (day === 90){
+        return [
+          {
+            mrp: null,
+            suggestedPrice: null,
+            voucher: 0,
+            duration: 1,
+            sapienPricing: null,
+            classes: null,
+          },
+          {
+            mrp: null,
+            suggestedPrice: null,
+            voucher: 0,
+            duration: 30,
+            sapienPricing: null,
+            classes: null,
+          },
+          {
+            mrp: null,
+            suggestedPrice: null,
+            voucher: 0,
+            duration: 90,
+            sapienPricing: null,
+            classes: null,
+          }
+        ];
+      } else if (day === 30){
+        return [
+          {
+            mrp: null,
+            suggestedPrice: null,
+            voucher: 0,
+            duration: 1,
+            sapienPricing: null,
+            classes: null,
+          },
+          {
+            mrp: null,
+            suggestedPrice: null,
+            voucher: 0,
+            duration: 30,
+            sapienPricing: null,
+            classes: null,
+          }
+        ];
+      } else {
+        return [
+          {
+            mrp: null,
+            suggestedPrice: null,
+            voucher: 0,
+            duration: 1,
+            sapienPricing: null,
+            classes: null,
+          }
+        ]
+
+      }
     } else {
       return [
         {
@@ -336,10 +452,12 @@ const PricingTable = (props) => {
               <tr className="text-center">
                 <th></th>
                 {bookingDetails.instantBooking && <th>One Day</th>}
-                <th>Monthly</th>
-                <th>Quaterly</th>
-                <th>Half Yearly</th>
-                <th>Yearly</th>
+                {bookingDetails.instantBooking && <th>One Day</th>}
+                {day >= 30 && <th>Monthly</th>}
+                {day >= 90 && <th>Quaterly</th>}
+                {day >= 180 && <th>Half Yearly</th>}
+                {day === 360 && <th>Yearly</th>}
+                
               </tr>
             </thead>
             <tbody>

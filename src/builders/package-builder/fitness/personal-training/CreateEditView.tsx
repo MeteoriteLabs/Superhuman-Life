@@ -27,6 +27,10 @@ import { Subject } from "rxjs";
 import { flattenObj } from "../../../../components/utils/responseFlatten";
 import moment from "moment";
 import Toaster from "../../../../components/Toaster";
+import {
+  youtubeUrlCustomFormats,
+  youtubeUrlTransformErrors,
+} from "../../../../components/utils/ValidationPatterns";
 
 interface Operation {
   id: string;
@@ -463,6 +467,8 @@ function CreateEditPt(props: any, ref: any) {
         widgets={widgets}
         modalTrigger={modalTrigger}
         actionType={operation.type}
+        customFormats={youtubeUrlCustomFormats}
+        transformErrors={youtubeUrlTransformErrors}
       />
 
       <Modal

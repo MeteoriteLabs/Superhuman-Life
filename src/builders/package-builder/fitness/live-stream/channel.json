@@ -49,16 +49,16 @@
                   "enum": [
                     "1 day",
                     "30 days",
-                    "60 days",
                     "90 days",
+                    "180 days",
                     "360 days"
                   ]
                 },
                 "uniqueItems": true,
                 "default": ["1 day",
                 "30 days",
-                "60 days",
                 "90 days",
+                "180 days",
                 "360 days"]
               }
 
@@ -100,7 +100,7 @@
                           "properties": {
                             "VideoUrl": {
                               "type": "string",
-                              "format": "uri",
+                              "format": "youtubeurl",
                               "description": "Add Youtube URL"
                             }
                           },

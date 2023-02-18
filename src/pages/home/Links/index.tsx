@@ -1,7 +1,10 @@
 import { Card, Row, Col } from "react-bootstrap";
 import "../LeadCard/lead.css";
 
-const websiteUrl = process.env.REACT_APP_WEBSITE_URL;
+const websiteUrl = process.env.WEBSITE_URL;
+const subdomainWebsiteUrl = process.env.SUBDOMAIN_WEBSITE_URL;
+const androidUrl = process.env.ENDUSER_ANDROID_APP_URL;
+const iosUrl = process.env.ENDUSER_IOS_APP_URL;
 
 function LinksCard() {
   return (
@@ -33,10 +36,10 @@ function LinksCard() {
             <img src="assets/home_page_images/links.svg" alt="links" />
           </Col>
           <Col lg={10} sm={8} xs={8}>
-            {websiteUrl}
+            {subdomainWebsiteUrl}
           </Col>
           <Col lg={1} sm={1} xs={1}>
-            <a href={`${websiteUrl}`} target="_blank" rel="noreferrer">
+            <a href={`${subdomainWebsiteUrl}`} target="_blank" rel="noreferrer">
               <img src="assets/home_page_images/redirect.svg" alt="redirect" />
             </a>
           </Col>
@@ -53,7 +56,7 @@ function LinksCard() {
             https://www.applinksAndroid.com
           </Col>
           <Col lg={1} sm={1} xs={1}>
-            <a href={`${websiteUrl}`} target="_blank" rel="noreferrer">
+            <a href={`${androidUrl}`} target="_blank" rel="noreferrer">
               <img src="assets/home_page_images/redirect.svg" alt="redirect" />
             </a>
           </Col>
@@ -68,7 +71,7 @@ function LinksCard() {
             https://www.applinksIOS.com
           </Col>
           <Col lg={1} sm={1} xs={1}>
-            <a href={`${websiteUrl}`} target="_blank" rel="noreferrer">
+            <a href={`${iosUrl}`} target="_blank" rel="noreferrer">
               <img src="assets/home_page_images/redirect.svg" alt="redirect" />
             </a>
           </Col>

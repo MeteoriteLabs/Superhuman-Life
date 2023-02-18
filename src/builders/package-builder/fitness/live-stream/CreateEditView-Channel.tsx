@@ -27,6 +27,10 @@ import { flattenObj } from "../../../../components/utils/responseFlatten";
 import moment from "moment";
 import { Modal, Button } from "react-bootstrap";
 import Toaster from "../../../../components/Toaster";
+import {
+  youtubeUrlCustomFormats,
+  youtubeUrlTransformErrors,
+} from "../../../../components/utils/ValidationPatterns";
 
 interface Operation {
   id: string;
@@ -511,6 +515,8 @@ function CreateEditChannel(props: any, ref: any) {
         ]}
         modalTrigger={modalTrigger}
         actionType={operation.type}
+        customFormats={youtubeUrlCustomFormats}
+        transformErrors={youtubeUrlTransformErrors}
       />
 
       <Modal

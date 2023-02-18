@@ -14,7 +14,10 @@ import {
   UPDATE_CHANNEL_COHORT_PACKAGE,
   UPDATE_BOOKING_CONFIG,
 } from "../graphQL/mutations";
-import { youtubeUrlCustomFormats, youtubeUrlTransformErrors } from "../../../../components/utils/ValidationPatterns";
+import {
+  youtubeUrlCustomFormats,
+  youtubeUrlTransformErrors,
+} from "../../../../components/utils/ValidationPatterns";
 import {
   GET_FITNESS_PACKAGE_TYPE,
   GET_SINGLE_PACKAGE_BY_ID,
@@ -213,7 +216,7 @@ function CreateEditCohort(props: any, ref: any) {
     details.datesConfig = JSON.stringify({
       expiryDate: msg.expiry_date,
       publishingDate: msg.publishing_date,
-    }) ;
+    });
     details.dates = JSON.stringify({
       endDate: msg.End_date,
       startDate: msg.Start_date,

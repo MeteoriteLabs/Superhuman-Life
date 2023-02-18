@@ -28,6 +28,10 @@ import { Subject } from "rxjs";
 import { flattenObj } from "../../../../components/utils/responseFlatten";
 import moment from "moment";
 import Toaster from "../../../../components/Toaster";
+import {
+  youtubeUrlCustomFormats,
+  youtubeUrlTransformErrors,
+} from "../../../../components/utils/ValidationPatterns";
 
 interface Operation {
   id: string;
@@ -50,7 +54,7 @@ function CreateEditPackage(props: any, ref: any) {
   const [isOfferingUpdated, setisOfferingUpdated] = useState<boolean>(false);
 
   let frmDetails: any = {};
-  
+
   useQuery(GET_FITNESS_PACKAGE_TYPES, {
     variables: { type: "Group Class" },
     onCompleted: (r: any) => {
@@ -415,9 +419,7 @@ function CreateEditPackage(props: any, ref: any) {
           .join(", ")
           .split(", "),
         Start_date: moment(frm.dates.startDate).toISOString(),
-        End_date: moment(frm.dates.startDate)
-          .add(360, "days")
-          .toISOString(),
+        End_date: moment(frm.dates.startDate).add(360, "days").toISOString(),
       },
     });
   }
@@ -478,9 +480,7 @@ function CreateEditPackage(props: any, ref: any) {
           .join(", ")
           .split(", "),
         Start_date: moment(frm.dates.startDate).toISOString(),
-        End_date: moment(frm.dates.startDate)
-          .add(360, "days")
-          .toISOString(),
+        End_date: moment(frm.dates.startDate).add(360, "days").toISOString(),
       },
     });
   }
@@ -529,6 +529,8 @@ function CreateEditPackage(props: any, ref: any) {
   return (
     <>
       <ModalView
+        customFormats={youtubeUrlCustomFormats}
+        transformErrors={youtubeUrlTransformErrors}
         name={name}
         isStepper={true}
         showErrorList={false}

@@ -5,10 +5,9 @@ import AuthContext from "../../../../context/auth-context";
 import { flattenObj } from "../../../../components/utils/responseFlatten";
 import moment from "moment";
 
-const PricingTable = (props) => {
-    //  console.log(props,props.formContext.programDetails, props.formContext.groupinstantbooking);
+const PricingTable = (props: any) => {
   const inputDisabled = props.readonly;
-  // const durationOfOffering = props.formContext.durationOfOffering;
+  const durationOfOffering = props.formContext.durationOfOffering;
   const classDetails = JSON.parse(props.formContext.programDetails);
   const bookingDetails = JSON.parse(props.formContext.groupinstantbooking);
   const classMode =
@@ -44,50 +43,164 @@ const PricingTable = (props) => {
     }
   }
 
+  let day: number = 0;
+      for(let i = 0 ; i <  durationOfOffering.length ; i++){
+        if(durationOfOffering[i] === "1 day"){
+          day = (day > 1) ? day : 1;
+        } else if (durationOfOffering[i] === "30 days"){
+          day=  (day > 30) ? day : 30;
+        } else if (durationOfOffering[i] === "90 days"){
+          day = (day > 90) ? day : 90;
+        } else if (durationOfOffering[i] === "180 days"){
+          day= (day > 180) ? day : 180;
+        } else if (durationOfOffering[i] === "360 days"){
+          day=  (day >= 360) ? day : 360;
+        }
+      }
+
   function handleDefaultPricing() {
+    
     if (bookingDetails.instantBooking) {
-      return [
-        {
-          mrp: null,
-          suggestedPrice: null,
-          voucher: 0,
-          duration: 1,
-          sapienPricing: null,
-          classes: null,
-        },
-        {
-          mrp: null,
-          suggestedPrice: null,
-          voucher: 0,
-          duration: 30,
-          sapienPricing: null,
-          classes: null,
-        },
-        {
-          mrp: null,
-          suggestedPrice: null,
-          voucher: 0,
-          duration: 90,
-          sapienPricing: null,
-          classes: null,
-        },
-        {
-          mrp: null,
-          suggestedPrice: null,
-          voucher: 0,
-          duration: 180,
-          sapienPricing: null,
-          classes: null,
-        },
-        {
-          mrp: null,
-          suggestedPrice: null,
-          voucher: 0,
-          duration: 360,
-          sapienPricing: null,
-          classes: null,
-        },
-      ];
+      
+    
+        if(day === 360){
+          return [
+            {
+              mrp: null,
+              suggestedPrice: null,
+              voucher: 0,
+              duration: 1,
+              sapienPricing: null,
+              classes: null,
+            },
+            {
+              mrp: null,
+              suggestedPrice: null,
+              voucher: 0,
+              duration: 30,
+              sapienPricing: null,
+              classes: null,
+            },
+            {
+              mrp: null,
+              suggestedPrice: null,
+              voucher: 0,
+              duration: 90,
+              sapienPricing: null,
+              classes: null,
+            },
+            {
+              mrp: null,
+              suggestedPrice: null,
+              voucher: 0,
+              duration: 180,
+              sapienPricing: null,
+              classes: null,
+            },
+            {
+              mrp: null,
+              suggestedPrice: null,
+              voucher: 0,
+              duration: 360,
+              sapienPricing: null,
+              classes: null,
+            },
+          ]
+        } else if (day === 180){
+          return [
+            {
+              mrp: null,
+              suggestedPrice: null,
+              voucher: 0,
+              duration: 1,
+              sapienPricing: null,
+              classes: null,
+            },
+            {
+              mrp: null,
+              suggestedPrice: null,
+              voucher: 0,
+              duration: 30,
+              sapienPricing: null,
+              classes: null,
+            },
+            {
+              mrp: null,
+              suggestedPrice: null,
+              voucher: 0,
+              duration: 90,
+              sapienPricing: null,
+              classes: null,
+            },
+            {
+              mrp: null,
+              suggestedPrice: null,
+              voucher: 0,
+              duration: 180,
+              sapienPricing: null,
+              classes: null,
+            }
+          ];
+        } else if (day === 90){
+          return [
+            {
+              mrp: null,
+              suggestedPrice: null,
+              voucher: 0,
+              duration: 1,
+              sapienPricing: null,
+              classes: null,
+            },
+            {
+              mrp: null,
+              suggestedPrice: null,
+              voucher: 0,
+              duration: 30,
+              sapienPricing: null,
+              classes: null,
+            },
+            {
+              mrp: null,
+              suggestedPrice: null,
+              voucher: 0,
+              duration: 90,
+              sapienPricing: null,
+              classes: null,
+            }
+          ];
+        } else if (day === 30){
+          return [
+            {
+              mrp: null,
+              suggestedPrice: null,
+              voucher: 0,
+              duration: 1,
+              sapienPricing: null,
+              classes: null,
+            },
+            {
+              mrp: null,
+              suggestedPrice: null,
+              voucher: 0,
+              duration: 30,
+              sapienPricing: null,
+              classes: null,
+            }
+          ];
+        } else {
+          return [
+            {
+              mrp: null,
+              suggestedPrice: null,
+              voucher: 0,
+              duration: 1,
+              sapienPricing: null,
+              classes: null,
+            }
+          ]
+
+        }
+      
     } else {
       return [
         {
@@ -215,7 +328,7 @@ const PricingTable = (props) => {
 
   useEffect(() => {
     // eslint-disable-next-line
-    pricing.map((item, index) => {
+    pricing.map((item, index: number) => {
       if (item.mrp === 0 || item.mrp === "") {
         const values = [...pricing];
         values[index].mrp = null;
@@ -289,7 +402,7 @@ const PricingTable = (props) => {
       flattenData.sapienPricings = flattenData.sapienPricings.filter(
         (item) => item.mode === classMode
       );
-      newValue.forEach((item, index) => {
+      newValue.forEach((item) => {
         if (item.voucher !== 0 && item.price !== null) {
           item.suggestedPrice = parseInt(
             ((item.sapienPricing * 100) / (100 - item.voucher)).toFixed(2)
@@ -454,10 +567,10 @@ const PricingTable = (props) => {
               <tr className="text-center">
                 <th></th>
                 {bookingDetails.instantBooking && <th>One Day</th>}
-                <th>Monthly</th>
-                <th>Quaterly</th>
-                <th>Half Yearly</th>
-                <th>Yearly</th>
+                {day >= 30 && <th>Monthly</th>}
+                {day >= 90 && <th>Quaterly</th>}
+                {day >= 180 && <th>Half Yearly</th>}
+                {day === 360 && <th>Yearly</th>}
               </tr>
             </thead>
             <tbody>
