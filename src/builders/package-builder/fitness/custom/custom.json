@@ -31,12 +31,14 @@
             "level": {
                 "type": "number",
                 "title": "Level",
-                "enum": [0, 1, 2],
+                "enum": [0, 1, 2, 3],
                 "enumNames": [
                     "Beginner",
                     "Intermediate",
-                    "Advanced"
+                    "Advanced",
+                    "No Level"
                 ],
+                "default": 3,
                 "description": "Select the appropriate difficulty"
             },
             "intensity": {
@@ -88,7 +90,7 @@
                           "properties": {
                             "VideoUrl": {
                               "type": "string",
-                              "format": "uri",
+                              "format": "youtubeurl",
                               "description": "Add Youtube URL"
                             }
                           },

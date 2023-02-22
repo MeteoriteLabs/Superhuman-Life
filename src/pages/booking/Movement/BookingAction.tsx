@@ -1,11 +1,15 @@
-import { useMutation } from "@apollo/client";
-import React, { useImperativeHandle, useState } from "react";
+import { useMutation, useQuery } from "@apollo/client";
+import React, { useImperativeHandle, useState, useContext } from "react";
 import StatusModal from "../../../components/StatusModal/StatusModal";
 import {
   CREATE_USER_PACKAGE,
   UPDATE_BOOKING_STATUS,
+  UPDATE_TAG,
 } from "../GraphQL/mutation";
+import { GET_TAGS } from "../GraphQL/queries";
+import authContext from "../../../context/auth-context";
 import { Subject } from "rxjs";
+import { flattenObj } from "../../../components/utils/responseFlatten";
 
 interface Operation {
   id: string;
@@ -17,6 +21,8 @@ function BookingAction(props, ref: any) {
   const [operation, setOperation] = useState<Operation>({} as Operation);
   const modalTrigger = new Subject();
   const [showStatusModal, setShowStatusModal] = useState<boolean>(false);
+  const auth = useContext(authContext);
+  const [tagsDetails, setTagsDetails] = useState<any>([]);
 
   useImperativeHandle(ref, () => ({
     TriggerForm: (msg: any) => {
@@ -27,6 +33,19 @@ function BookingAction(props, ref: any) {
       }
     },
   }));
+
+  // eslint-disable-next-line
+  const { data: get_tags } = useQuery(GET_TAGS, {
+    variables: {
+      id: auth.userid,
+    },
+    onCompleted: (data) => {
+      const flattenData = flattenObj({ ...data });
+      setTagsDetails(flattenData.tags);
+    },
+  });
+
+  const [updateTag] = useMutation(UPDATE_TAG);
 
   const [updateBookingStatus] = useMutation(UPDATE_BOOKING_STATUS, {
     onCompleted: (data) => {
@@ -49,13 +68,36 @@ function BookingAction(props, ref: any) {
               data.updateClientBooking.data.attributes.effective_date,
           },
         },
+        onCompleted: (data) => {
+          const flattenData = flattenObj({ ...data });
+
+          let tag =
+            tagsDetails &&
+            tagsDetails.length &&
+            tagsDetails.filter(
+              (currentValue) =>
+                currentValue.fitnesspackage.packagename ===
+                flattenData.createClientPackage.fitnesspackages[0].packagename
+            );
+
+          for (let i = 0; i < tag.length; i++) {
+            updateTag({
+              variables: {
+                id: tag[i].id,
+                data: {
+                  client_packages: [flattenData.createClientPackage.id],
+                },
+              },
+            });
+          }
+        },
       });
       props.refetchBookings();
     },
   });
 
   const [createUserPackage] = useMutation(CREATE_USER_PACKAGE, {
-    onCompleted: () => {
+    onCompleted: (data) => {
       props.refetchBookings();
     },
   });

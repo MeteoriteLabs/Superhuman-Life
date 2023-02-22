@@ -379,15 +379,37 @@ export default function FitnessTab() {
           });
 
           let lengthOfobject = Object.keys(sessionsObj).length;
-
+          
           let differenceBetweenStartDateandEndDate = endMoment.diff(
             startMoment,
             "days"
           );
 
           return (
+            ( v.row.original.type === "Group Class" || v.row.original.type === "Live Stream Channel" ? 
+              
+            Object.keys(sessionsObj).length === 3 ? (
+              <Badge
+                className="px-3 py-1"
+                style={{ fontSize: "1rem", borderRadius: "10px" }}
+                variant={"success"}
+              >
+                {"Published"}
+              </Badge>
+            ) : (
+              <>
+                <ProgressBar variant="success" now={lengthOfobject} />
+                {lengthOfobject} program build
+              </>
+            ): 
+            (
+              v.row.original.type !== "One-On-One" &&
+              v.row.original.type !== "Custom Fitness" &&
+              v.row.original.type !== "On-Demand PT"
+            ) ?
             <div>
-              {differenceBetweenStartDateandEndDate ===
+              {
+              differenceBetweenStartDateandEndDate ===
               Object.keys(sessionsObj).length ? (
                 <Badge
                   className="px-3 py-1"
@@ -400,9 +422,26 @@ export default function FitnessTab() {
                 <>
                   <ProgressBar variant="success" now={lengthOfobject} />
                   {lengthOfobject} program build
-                </>
-              )}
-            </div>
+                </>)
+              }  </div> :  
+              <div>
+              {
+                v.row.original.status ? <Badge
+                className="px-3 py-1"
+                style={{ fontSize: "1rem", borderRadius: "10px" }}
+                variant={"success"}
+              >
+                {"Published"}
+              </Badge> : <Badge
+                  className="px-3 py-1"
+                  style={{ fontSize: "1rem", borderRadius: "10px" }}
+                  variant={"danger"}
+                >
+                  {"Draft"}
+                </Badge>
+              }
+              </div>
+            )
           );
         },
       },
@@ -412,6 +451,10 @@ export default function FitnessTab() {
         Cell: ({ row }: any) => {
           const editHandler = () => {
             handleModalRender(row.original.id, "edit", row.original.type);
+          };
+
+          const statusChangeHandler = () => {
+            handleModalRender(row.original.id, "toggle-status", row.original.type, row.original.status);
           };
 
           const viewHandler = () => {
@@ -430,19 +473,13 @@ export default function FitnessTab() {
               name = "channel";
             } else if (type === "Cohort") {
               name = "cohort";
-            } else if (type === "Custom Fitness") {
-              name = "custom";
-            } else if (type === "One-On-One") {
-              name = "pt";
-            } else if (type === "On-Demand PT") {
-              name = "pt";
             } else if (type === "Group Class") {
               name = "group";
             }
             if (length > 1) {
-              window.open(`${name}/session/scheduler/${id}`,"_self");
+              window.open(`${name}/session/scheduler/${id}`, "_self");
             } else {
-              window.open(`${name}/session/scheduler/${id}`,"_self");
+              window.open(`${name}/session/scheduler/${id}`, "_self");
             }
           };
 
@@ -452,7 +489,12 @@ export default function FitnessTab() {
             { actionName: "Delete", actionClick: deleteHandler },
           ];
 
-          if (row.original.tagId.length >= 1) {
+          if (
+            row.original.tagId.length >= 1 &&
+            row.original.type !== "One-On-One" &&
+            row.original.type !== "Custom Fitness" &&
+            row.original.type !== "On-Demand PT"
+          ) {
             for (let i = 0; i < row.original.tagId.length; i++) {
               arrayAction.push({
                 actionName: `Manage ${
@@ -466,6 +508,14 @@ export default function FitnessTab() {
                   ),
               });
             }
+          } else if(row.original.type === "One-On-One" ||
+          row.original.type === "Custom Fitness" ||
+          row.original.type === "On-Demand PT"){
+            arrayAction.push({
+              actionName: "Status Change",
+              actionClick: statusChangeHandler
+            });
+
           }
 
           return <ActionButton arrayAction={arrayAction}></ActionButton>;
@@ -478,7 +528,7 @@ export default function FitnessTab() {
   const [dataTable, setDataTable] = useState<any>([]);
 
   // eslint-disable-next-line
-  const [tags, { data: get_tags }] = useLazyQuery(GET_TAGS, {
+  const [tags, { data: get_tags, refetch: refetch_tags }] = useLazyQuery(GET_TAGS, {
     variables: { id: auth.userid },
     onCompleted: (data) => {
       const tagsFlattenData = flattenObj({ ...data });
@@ -502,6 +552,7 @@ export default function FitnessTab() {
               .map((currentValue) => [currentValue.tag_name]),
             id: item.id,
             packagename: item.packagename,
+            status: item.Status,
             type: item.fitness_package_type.type,
             details: [
               item.ptonline,
@@ -645,6 +696,7 @@ export default function FitnessTab() {
               <CreateEditViewPersonalTraining
                 ref={createEditViewPersonalTrainingRef}
                 callback={refetchQueryCallback}
+                refetchTags={refetch_tags}
               />
               <CreateEditViewOnDemandPt
                 ref={CreateEditViewOnDemandPtRef}

@@ -15,6 +15,10 @@ import {
   UPDATE_BOOKING_CONFIG,
 } from "../graphQL/mutations";
 import {
+  youtubeUrlCustomFormats,
+  youtubeUrlTransformErrors,
+} from "../../../../components/utils/ValidationPatterns";
+import {
   GET_FITNESS_PACKAGE_TYPE,
   GET_SINGLE_PACKAGE_BY_ID,
 } from "../graphQL/queries";
@@ -170,7 +174,7 @@ function CreateEditCohort(props: any, ref: any) {
     details.packageName = msg.packagename;
     details.channelinstantBooking = msg.groupinstantbooking;
     details.expiryDate = moment(msg.expirydate).format("YYYY-MM-DD");
-    details.level = ENUM_FITNESSPACKAGE_LEVEL[msg?.level];
+    details.level = ENUM_FITNESSPACKAGE_LEVEL[msg.level];
     details.intensity = ENUM_FITNESSPACKAGE_INTENSITY[msg.Intensity];
     details.equipment = msg.equipment_lists;
     details.discpline = msg.fitnessdisciplines;
@@ -212,7 +216,7 @@ function CreateEditCohort(props: any, ref: any) {
     details.datesConfig = JSON.stringify({
       expiryDate: msg.expiry_date,
       publishingDate: msg.publishing_date,
-    }) ;
+    });
     details.dates = JSON.stringify({
       endDate: msg.End_date,
       startDate: msg.Start_date,
@@ -279,7 +283,7 @@ function CreateEditCohort(props: any, ref: any) {
         packagename: frm.packageName,
         channelinstantBooking: frm.channelinstantBooking,
         expiry_date: moment(frm.datesConfig.expiryDate).toISOString(),
-        level: frm?.level ? ENUM_FITNESSPACKAGE_LEVEL[frm?.level] : null,
+        level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
         Intensity: ENUM_FITNESSPACKAGE_INTENSITY[frm.intensity],
         equipmentList:
           frm?.equipment?.length > 0
@@ -359,7 +363,7 @@ function CreateEditCohort(props: any, ref: any) {
         benefits: frm.Benifits,
         packagename: frm.packageName,
         channelinstantBooking: frm.channelinstantBooking,
-        level: ENUM_FITNESSPACKAGE_LEVEL[frm?.level],
+        level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
         Intensity: ENUM_FITNESSPACKAGE_INTENSITY[frm.intensity],
         equipmentList:
           frm?.equipment?.length > 0
@@ -468,6 +472,8 @@ function CreateEditCohort(props: any, ref: any) {
         name={name}
         isStepper={true}
         showErrorList={false}
+        customFormats={youtubeUrlCustomFormats}
+        transformErrors={youtubeUrlTransformErrors}
         formUISchema={operation.type === "view" ? schemaView : schema}
         formSchema={programSchema}
         formSubmit={

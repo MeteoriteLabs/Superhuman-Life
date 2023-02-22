@@ -27,6 +27,10 @@ import { Subject } from "rxjs";
 import { flattenObj } from "../../../../components/utils/responseFlatten";
 import moment from "moment";
 import Toaster from "../../../../components/Toaster";
+import {
+  youtubeUrlCustomFormats,
+  youtubeUrlTransformErrors,
+} from "../../../../components/utils/ValidationPatterns";
 
 interface Operation {
   id: string;
@@ -116,6 +120,7 @@ function CreateEditPt(props: any, ref: any) {
           bookings_per_month: val.bookings,
         },
       });
+      props.callback();
     },
   });
 
@@ -126,7 +131,6 @@ function CreateEditPt(props: any, ref: any) {
     },
   });
   const [deletePackage] = useMutation(DELETE_PACKAGE, {
-    refetchQueries: ["GET_TABLEDATA"],
     onCompleted: (data) => {
       props.callback();
       setisOffeeringDeleted(!isOffeeringDeleted);
@@ -233,7 +237,7 @@ function CreateEditPt(props: any, ref: any) {
     details.channelinstantBooking = msg.groupinstantbooking;
     details.classSize = ENUM_FITNESSPACKAGE_PTCLASSSIZE[msg.Ptclasssize];
     details.expiryDate = moment(msg.expirydate).format("YYYY-MM-DD");
-    details.level = ENUM_FITNESSPACKAGE_LEVEL[msg?.level];
+    details.level = ENUM_FITNESSPACKAGE_LEVEL[msg.level];
     details.intensity = ENUM_FITNESSPACKAGE_INTENSITY[msg.Intensity];
     details.pricingDetail =
       msg.fitnesspackagepricing[0]?.mrp === "free"
@@ -308,7 +312,7 @@ function CreateEditPt(props: any, ref: any) {
       variables: {
         packagename: frm.packagename,
         tags: frm?.tags,
-        level: frm.level ? ENUM_FITNESSPACKAGE_LEVEL[frm?.level] : null,
+        level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
         intensity: ENUM_FITNESSPACKAGE_INTENSITY[frm.intensity],
         aboutpackage: frm.About,
         benefits: frm.Benifits,
@@ -320,7 +324,7 @@ function CreateEditPt(props: any, ref: any) {
         restdays: frm.programDetails?.rest,
         bookingleadday: frm.bookingleadday,
         is_private: frm.visibility === 1 ? true : false,
-        fitness_package_type: fitnessTypes[0].id,
+        fitness_package_type: fitnessTypes[0].type,
         fitnesspackagepricing: JSON.parse(frm.pricingDetail).filter(
           (item: any) => item.mrp !== null
         ),
@@ -359,7 +363,7 @@ function CreateEditPt(props: any, ref: any) {
         id: operation.id,
         packagename: frm.packagename,
         tags: frm?.tags,
-        level: ENUM_FITNESSPACKAGE_LEVEL[frm?.level],
+        level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
         intensity: ENUM_FITNESSPACKAGE_INTENSITY[frm.intensity],
         aboutpackage: frm.About,
         benefits: frm.Benifits,
@@ -371,7 +375,7 @@ function CreateEditPt(props: any, ref: any) {
         ptonline: frm.programDetails?.online,
         restdays: frm.programDetails?.rest,
         bookingleadday: frm.bookingleadday,
-        fitness_package_type: fitnessTypes[0].id,
+        fitness_package_type: fitnessTypes[0].type,
         fitnesspackagepricing: JSON.parse(frm.pricingDetail).filter(
           (item: any) => item.mrp !== null
         ),
@@ -396,8 +400,8 @@ function CreateEditPt(props: any, ref: any) {
     setDeleteModalShow(false);
   }
 
-  function updateChannelPackageStatus(id: any, status: any) {
-    updatePackageStatus({ variables: { id: id, Status: status } });
+  function updateChannelPackageStatus(id: string, status: boolean) {
+    updatePackageStatus({ variables: { id: id, Status: status ? false : true } });
     setStatusModalShow(false);
     operation.type = "create";
   }
@@ -463,6 +467,8 @@ function CreateEditPt(props: any, ref: any) {
         widgets={widgets}
         modalTrigger={modalTrigger}
         actionType={operation.type}
+        customFormats={youtubeUrlCustomFormats}
+        transformErrors={youtubeUrlTransformErrors}
       />
 
       <Modal

@@ -1,26 +1,34 @@
-import PricingTableChannel from "./pricingTableChannel";
-import PreviewChannel from "./previewChannel";
 import Upload from "../../../../components/upload/upload";
 import FitnessSelect from "../../../../components/customWidgets/fitnessMultiSelect";
 import EquipmentSelect from "../../../../components/customWidgets/equipmentListSelect";
 import LanguageList from "../../../../components/customWidgets/languageSelect";
-import ChannelConfig from "./channelConfig";
-import LiveBookingConfig from "./bookingConfig";
-import ChannelPrimaryDateConfig from "./primaryDatesConfig";
-import DatesConfig from "./channelDateConfig";
+import GroupProgramDetails from "./groupProgramDetails";
+import GroupConfig from "./groupConfig";
+import GroupPricingTable from "./groupPricingTable";
+import GroupPreview from "./groupPreview";
+import GroupBookingConfig from "./bookingConfig";
+import GroupPrimaryDateConfig from "./primaryDatesConfig";
+import DatesConfig from "./groupDateConfig";
 
 export const widgets = {
-  pricingTableChannel: PricingTableChannel,
-  previewChannel: PreviewChannel,
   datesConfig: DatesConfig,
   fitnessSelect: FitnessSelect,
   equipmentSelect: EquipmentSelect,
-  channelConfig: ChannelConfig,
-  liveBookingConfig: LiveBookingConfig,
-  liveChannelLanguageSelect: LanguageList,
+  groupProgramDetails: GroupProgramDetails,
+  groupConfig: GroupConfig,
+  groupPricingTable: GroupPricingTable,
+  groupPreview: GroupPreview,
+  groupBookingConfig: GroupBookingConfig,
+  languageList: LanguageList,
 };
 
-export const schema: any = {
+export const EditSchema: any = {
+  disciplines: {
+    "ui:widget": "fitnessSelect",
+  },
+  equipmentList: {
+    "ui:widget": "equipmentSelect",
+  },
   level: {
     "ui:widget": "radio",
     "ui:options": {
@@ -33,14 +41,15 @@ export const schema: any = {
       inline: true,
     },
   },
-  discpline: {
-    "ui:widget": "fitnessSelect",
-  },
-  equipment: {
-    "ui:widget": "equipmentSelect",
+  classSize: {
+    "ui:widget": "radio",
+    "ui:options": {
+      inline: true,
+    },
   },
   About: {
     "ui:widget": "textarea",
+    "ui:autofocus": true,
     "ui:options": {
       rows: 3,
     },
@@ -52,9 +61,6 @@ export const schema: any = {
       rows: 3,
     },
     "ui:placeholder": "Benifits of the program",
-  },
-  datesConfig: {
-    "ui:widget": "datesConfig",
   },
   thumbnail: {
     "ui:widget": (props: any) => {
@@ -76,6 +82,7 @@ export const schema: any = {
           <Upload
             allowImage={true}
             allowVideo={true}
+            offering={true}
             onChange={props.onChange}
             value={props.value}
           />
@@ -86,31 +93,26 @@ export const schema: any = {
       "ui:placeholder": "https://",
     },
   },
+  programDetails: {
+    "ui:widget": "groupProgramDetails",
+  },
+  groupinstantbooking: {
+    "ui:widget": "groupConfig",
+  },
+  pricingDetail: {
+    "ui:widget": "groupPricingTable",
+  },
+  carousel: {
+    "ui:widget": "groupPreview",
+  },
   visibility: {
     "ui:widget": "radio",
     "ui:options": {
       inline: true,
     },
   },
-  config: {
-    bookingConfig: {
-      "ui:widget": "liveBookingConfig",
-    },
-  },
-  programSchedule: {
-    "ui:widget": "checkboxes",
-  },
-  channelinstantBooking: {
-    "ui:widget": "channelConfig",
-  },
-  pricing: {
-    "ui:widget": "pricingTableChannel",
-  },
-  preview: {
-    "ui:widget": "previewChannel",
-  },
-  languages: {
-    "ui:widget": "liveChannelLanguageSelect",
+  datesConfig: {
+    "ui:widget": "datesConfig",
   },
   durationOfOffering: {
     "ui:widget": "checkboxes",
@@ -118,15 +120,24 @@ export const schema: any = {
       inline: true,
     },
   },
+  languages: {
+    "ui:widget": "languageList",
+  },
+  config: {
+    bookingConfig: {
+      "ui:widget": "groupBookingConfig",
+    },
+  },
   dates: {
     "ui:widget": (props: any) => {
       return (
-        <ChannelPrimaryDateConfig
+        <GroupPrimaryDateConfig
           title1={"Start Date"}
           title2={"End Date"}
           value={props.value}
           onChange={props.onChange}
           type={"Cohort"}
+          readonly={true}
         />
       );
     },

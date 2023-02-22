@@ -27,6 +27,10 @@ import { Subject } from "rxjs";
 import { flattenObj } from "../../../../components/utils/responseFlatten";
 import moment from "moment";
 import Toaster from "../../../../components/Toaster";
+import {
+  youtubeUrlCustomFormats,
+  youtubeUrlTransformErrors,
+} from "../../../../components/utils/ValidationPatterns";
 
 interface Operation {
   id: string;
@@ -42,8 +46,8 @@ function CreateEditPackage(props: any, ref: any) {
   const [classicDetails, setClassicDetails] = useState<any>({});
   const [fitnessTypes, setFitnessType] = useState<any[]>([]);
   const [operation, setOperation] = useState<Operation>({} as Operation);
-  const [deleteModalShow, setDeleteModalShow] = useState(false);
-  const [statusModalShow, setStatusModalShow] = useState(false);
+  const [deleteModalShow, setDeleteModalShow] = useState<boolean>(false);
+  const [statusModalShow, setStatusModalShow] = useState<boolean>(false);
   const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
   const [isOffeeringDeleted, setisOffeeringDeleted] = useState<boolean>(false);
   const [isOfferingUpdated, setisOfferingUpdated] = useState<boolean>(false);
@@ -210,7 +214,7 @@ function CreateEditPackage(props: any, ref: any) {
     details.disciplines = msg.fitnessdisciplines;
     details.channelinstantBooking = msg.groupinstantbooking;
     details.expiryDate = moment(msg.expirydate).format("YYYY-MM-DD");
-    details.level = ENUM_FITNESSPACKAGE_LEVEL[msg?.level];
+    details.level = ENUM_FITNESSPACKAGE_LEVEL[msg.level];
     details.intensity = ENUM_FITNESSPACKAGE_INTENSITY[msg.Intensity];
     details.pricingDetail =
       msg.fitnesspackagepricing[0]?.mrp === "free"
@@ -283,7 +287,7 @@ function CreateEditPackage(props: any, ref: any) {
       variables: {
         packagename: frm.packagename,
         tags: frm?.tags,
-        level: frm?.level ? ENUM_FITNESSPACKAGE_LEVEL[frm?.level] : null,
+        level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
         intensity: ENUM_FITNESSPACKAGE_INTENSITY[frm.intensity],
         aboutpackage: frm.About,
         benefits: frm.Benifits,
@@ -333,7 +337,7 @@ function CreateEditPackage(props: any, ref: any) {
         id: operation.id,
         packagename: frm.packagename,
         tags: frm?.tags,
-        level: ENUM_FITNESSPACKAGE_LEVEL[frm?.level],
+        level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
         intensity: ENUM_FITNESSPACKAGE_INTENSITY[frm.intensity],
         aboutpackage: frm.About,
         benefits: frm.Benifits,
@@ -435,6 +439,8 @@ function CreateEditPackage(props: any, ref: any) {
         widgets={widgets}
         modalTrigger={modalTrigger}
         actionType={operation.type}
+        customFormats={youtubeUrlCustomFormats}
+        transformErrors={youtubeUrlTransformErrors}
       />
 
       <Modal

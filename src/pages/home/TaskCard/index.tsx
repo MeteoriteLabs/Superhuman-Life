@@ -201,8 +201,12 @@ function TaskCard() {
                                 id="bg-nested-dropdown"
                                 variant="success"
                               >
-                                {currentValue.tagId.map((curr, index) => (
+                                
+                                {currentValue.tagId.map((curr, index: number) => (
+                                  
                                   <Dropdown.Item
+                                    className="col-xs-12"
+                                    key={index}
                                     eventKey={curr[index]}
                                     onClick={() => {
                                       redirectHandler(
@@ -211,9 +215,12 @@ function TaskCard() {
                                       );
                                     }}
                                   >
+                                    
                                     Create {currentValue.tagname[index]}
                                   </Dropdown.Item>
+                                  
                                 ))}
+                               
                               </DropdownButton>{" "}
                             </ButtonGroup>
                             </Col>
@@ -431,7 +438,7 @@ function TaskCard() {
                           padding: "5px",
                         }}
                       >
-                        <div>
+                        <div className="col-lg-12">
                           <b>Create a program for {currentValue.packagename}</b>
                           <p>
                             Please create the whole program to publish this
@@ -463,7 +470,7 @@ function TaskCard() {
                         padding: "5px",
                       }}
                     >
-                      <div key={index}>
+                      <div key={index} className="col-lg-12">
                         {currentValue.users_permissions_users.map(
                           (currentValue, index) => (
                             <b key={index}>{currentValue.username}</b>
@@ -471,7 +478,7 @@ function TaskCard() {
                         )}{" "}
                         requested to book{" "}
                         {currentValue.fitnesspackages.map(
-                          (currentElement, index) => (
+                          (currentElement, index: number) => (
                             <b key={index}>
                               {currentElement.fitness_package_type.type}{" "}
                             </b>

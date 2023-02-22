@@ -144,6 +144,7 @@ export const GET_FITNESS = gql`
       data {
         id
         attributes {
+          SubscriptionDuration
           packagename
           ptoffline
           ptonline
@@ -193,6 +194,7 @@ export const GET_SINGLE_PACKAGE_BY_ID = gql`
       data {
         id
         attributes {
+          SubscriptionDuration
           packagename
           tags
           level

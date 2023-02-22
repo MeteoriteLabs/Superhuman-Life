@@ -3,7 +3,7 @@ import { Tabs, Card, Tab } from "react-bootstrap";
 import ProfileCard from "./ProfileOptions/ProfileCard";
 import ProfileNavTab from "./ProfileOptions/ProfileNavTab";
 import ChangemakersSettings from "./ChangemakersSettings";
-import OrganisationsSettings from "./OrganisationsSettings";
+// import OrganisationsSettings from "./OrganisationsSettings";
 import "./profile.css";
 
 export default function ProfilePage() {
@@ -30,13 +30,13 @@ export default function ProfilePage() {
             <ChangemakersSettings />
           </Tab>
 
-          <Tab eventKey="organisationssettings" title="Organisations Settings">
+          {/* <Tab eventKey="organisationssettings" title="Organisations Settings">
             <OrganisationsSettings />
-          </Tab>
+          </Tab> */}
 
-          <Tab eventKey="myclientapp" title=" My Client App">
+          {/* <Tab eventKey="myclientapp" title=" My Client App">
             My Client App
-          </Tab>
+          </Tab> */}
         </Tabs>
       </Card.Body>
     </Card>

@@ -30,17 +30,40 @@
            "level": {
                 "type": "number",
                 "title": "Level",
-                "enum": [0, 1, 2],
+                "enum": [0, 1, 2, 3],
                 "enumNames": [
                     "Beginner",
                     "Intermediate",
-                    "Advanced"
+                    "Advanced",
+                    "No Level"
                 ],
+                "default": 3,
                 "description": "Select the appropriate difficulty"
             },
             "dates": {
                 "type": "string"
-            }
+            },
+            "durationOfOffering": {
+                "type": "array",
+                "title": "Duration",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "1 day",
+                    "30 days",
+                    "90 days",
+                    "180 days",
+                    "360 days"
+                  ]
+                },
+                "uniqueItems": true,
+                "default": ["1 day",
+                "30 days",
+                "90 days",
+                "180 days",
+                "360 days"]
+              }
+
         }   
     },
     "2": {
@@ -79,7 +102,7 @@
                           "properties": {
                             "VideoUrl": {
                               "type": "string",
-                              "format": "uri",
+                              "format": "youtubeurl",
                               "description": "Add Youtube URL"
                             }
                           },

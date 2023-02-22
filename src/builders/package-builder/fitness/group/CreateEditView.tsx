@@ -23,10 +23,15 @@ import { Modal, Button } from "react-bootstrap";
 import AuthContext from "../../../../context/auth-context";
 import { schema, widgets } from "./groupSchema";
 import { schemaView } from "./schemaView";
+import { EditSchema } from "./groupEditSchema";
 import { Subject } from "rxjs";
 import { flattenObj } from "../../../../components/utils/responseFlatten";
 import moment from "moment";
 import Toaster from "../../../../components/Toaster";
+import {
+  youtubeUrlCustomFormats,
+  youtubeUrlTransformErrors,
+} from "../../../../components/utils/ValidationPatterns";
 
 interface Operation {
   id: string;
@@ -63,7 +68,7 @@ function CreateEditPackage(props: any, ref: any) {
       modalTrigger.next(false);
       props.callback();
       setIsFormSubmitted(!isFormSubmitted);
-      window.open(`group/session/scheduler/${r.createTag.data.id}`, "_self")
+      window.open(`group/session/scheduler/${r.createTag.data.id}`, "_self");
     },
   });
 
@@ -261,8 +266,9 @@ function CreateEditPackage(props: any, ref: any) {
     let msg = flattenedData.fitnesspackages[0];
     let bookingConfig: any = {};
     let details: any = {};
+    console.log(msg);
     if (msg.groupinstantbooking) {
-      for (var i = 0; i < msg.fitnesspackagepricing.length; i++) {
+      for (let i = 0; i < msg.fitnesspackagepricing.length; i++) {
         PRICING_TABLE_DEFAULT_WITH_INSTANTBOOKING[i].mrp =
           msg.fitnesspackagepricing[i].mrp;
         PRICING_TABLE_DEFAULT_WITH_INSTANTBOOKING[i].suggestedPrice =
@@ -273,7 +279,7 @@ function CreateEditPackage(props: any, ref: any) {
           msg.fitnesspackagepricing[i].sapienPricing;
       }
     } else {
-      for (var j = 0; j < msg.fitnesspackagepricing.length; j++) {
+      for (let j = 0; j < msg.fitnesspackagepricing.length; j++) {
         PRICING_TABLE_DEFAULT[j].mrp = msg.fitnesspackagepricing[j].mrp;
         PRICING_TABLE_DEFAULT[j].suggestedPrice =
           msg.fitnesspackagepricing[j].suggestedPrice;
@@ -291,9 +297,10 @@ function CreateEditPackage(props: any, ref: any) {
       instantBooking: msg.groupinstantbooking,
       freeDemo: msg.Is_free_demo,
     });
+    details.dates = JSON.stringify(moment(msg.Start_date).format("YYYY-MM-DD"));
     details.classsize = msg.classsize;
     details.expiryDate = moment(msg.expirydate).format("YYYY-MM-DD");
-    details.level = ENUM_FITNESSPACKAGE_LEVEL[msg?.level];
+    details.level = ENUM_FITNESSPACKAGE_LEVEL[msg.level];
     details.intensity = ENUM_FITNESSPACKAGE_INTENSITY[msg.Intensity];
     details.pricingDetail = JSON.stringify(
       msg.groupinstantbooking
@@ -325,6 +332,11 @@ function CreateEditPackage(props: any, ref: any) {
       expiryDate: msg.expiry_date,
       publishingDate: msg.publishing_date,
     });
+    details.durationOfOffering = msg.SubscriptionDuration ? msg.SubscriptionDuration : [ "1 day",
+    "30 days",
+    "90 days",
+    "180 days",
+    "360 days"];
     details.bookingleadday = msg.bookingleadday;
     details.bookingConfigId = msg.booking_config?.id;
     details.languages = JSON.stringify(msg.languages);
@@ -359,6 +371,7 @@ function CreateEditPackage(props: any, ref: any) {
   }
 
   function CreatePackage(frm: any) {
+    
     frmDetails = frm;
     frm.equipmentList = JSON.parse(frm.equipmentList)
       .map((x: any) => x.id)
@@ -376,9 +389,10 @@ function CreateEditPackage(props: any, ref: any) {
 
     createPackage({
       variables: {
+        SubscriptionDuration: frm.durationOfOffering,
         packagename: frm.packagename,
         tags: frm?.tags,
-        level: frm.level ? ENUM_FITNESSPACKAGE_LEVEL[frm?.level] : null,
+        level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
         intensity: ENUM_FITNESSPACKAGE_INTENSITY[frm.intensity],
         aboutpackage: frm.About,
         benefits: frm.Benifits,
@@ -413,12 +427,13 @@ function CreateEditPackage(props: any, ref: any) {
           .join(", ")
           .split(", "),
         Start_date: moment(frm.dates.startDate).toISOString(),
-        End_date: moment(frm.dates.endDate).toISOString(),
+        End_date: moment(frm.dates.startDate).add(360, "days").toISOString(),
       },
     });
   }
 
   function EditPackage(frm: any) {
+    
     frmDetails = frm;
 
     frm.equipmentList = JSON.parse(frm.equipmentList)
@@ -440,7 +455,7 @@ function CreateEditPackage(props: any, ref: any) {
         id: operation.id,
         packagename: frm.packagename,
         tags: frm?.tags,
-        level: ENUM_FITNESSPACKAGE_LEVEL[frm?.level],
+        level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
         intensity: ENUM_FITNESSPACKAGE_INTENSITY[frm.intensity],
         aboutpackage: frm.About,
         benefits: frm.Benifits,
@@ -473,8 +488,9 @@ function CreateEditPackage(props: any, ref: any) {
           .map((item: any) => item.id)
           .join(", ")
           .split(", "),
+        SubscriptionDuration: frm.durationOfOffering,
         Start_date: moment(frm.dates.startDate).toISOString(),
-        End_date: moment(frm.dates.endDate).toISOString(),
+        End_date: moment(frm.dates.startDate).add(360, "days").toISOString(),
       },
     });
   }
@@ -523,10 +539,18 @@ function CreateEditPackage(props: any, ref: any) {
   return (
     <>
       <ModalView
+        customFormats={youtubeUrlCustomFormats}
+        transformErrors={youtubeUrlTransformErrors}
         name={name}
         isStepper={true}
         showErrorList={false}
-        formUISchema={operation.type === "view" ? schemaView : schema}
+        formUISchema={
+          operation.type === "view"
+            ? schemaView
+            : operation.type === "edit"
+            ? EditSchema
+            : schema
+        }
         stepperValues={[
           "Creator",
           "Details",

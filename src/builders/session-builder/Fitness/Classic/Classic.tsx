@@ -9,7 +9,7 @@ import ActionButton from "../../../../components/actionbutton";
 import { flattenObj } from "../../../../components/utils/responseFlatten";
 import moment from "moment";
 
-export default function Classic(props) {
+export default function Classic() {
   const auth = useContext(AuthContext);
   const [userPackage, setUserPackage] = useState<any>([]);
   const [showHistory, setShowHistory] = useState(false);
@@ -28,6 +28,9 @@ export default function Classic(props) {
         return {
           tagId: packageItem.id,
           id: packageItem.id,
+          client: packageItem.client_packages.length
+            ? packageItem.client_packages.length
+            : null,
           packageName: packageItem.fitnesspackage.packagename,
           duration: packageItem.fitnesspackage.duration,
           expiry: moment(packageItem?.fitnesspackage?.expiry_date).format(
