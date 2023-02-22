@@ -3,7 +3,7 @@ import DisplayImage from "../../../../components/DisplayImage/index";
 import "../fitness.css";
 
 const PreviewGroup = (props) => {
-  console.log(props);
+  
   const formData = props?.formContext;
   const programDetails = JSON.parse(formData?.programDetails);
   let pricing;
