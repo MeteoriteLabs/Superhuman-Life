@@ -13,6 +13,7 @@ import {
   UPDATE_PACKAGE_STATUS,
   UPDATE_CHANNEL_COHORT_PACKAGE,
   UPDATE_BOOKING_CONFIG,
+  CREATE_NOTIFICATION
 } from "../graphQL/mutations";
 import {
   youtubeUrlCustomFormats,
@@ -94,8 +95,27 @@ function CreateEditCohort(props: any, ref: any) {
     },
   });
 
+  const [createCohortNotification] = useMutation(CREATE_NOTIFICATION);
+
   const [CreateCohortPackage] = useMutation(CREATE_CHANNEL_PACKAGE, {
     onCompleted: (r: any) => {
+      const flattenData = flattenObj({ ...r });
+
+      createCohortNotification({
+          variables: {
+            data: {
+              type: "Offerings",
+              Title: "New offering",
+              OnClickRoute: "/offerings",
+              users_permissions_user: auth.userid,
+              Body: `New cohort offering ${flattenData.createFitnesspackage.packagename} has been added`,
+              DateTime: moment().format(),
+              IsRead: false,
+              ContactID: flattenData.createFitnesspackage.id,
+            },
+          },
+        });
+
       const val = JSON.parse(frmDetails.config.bookingConfig);
       bookingConfig({
         variables: {
@@ -105,6 +125,7 @@ function CreateEditCohort(props: any, ref: any) {
           tagName: frmDetails.packageName,
         },
       });
+     
     },
   });
 
@@ -130,7 +151,7 @@ function CreateEditCohort(props: any, ref: any) {
         setDeleteModalShow(true);
       }
 
-      // if (msg && !msg.id) //render form if no message id
+      // restrict to render when type is delete or toggle status
       if (msg.type !== "delete" && msg.type !== "toggle-status") {
         modalTrigger.next(true);
       }

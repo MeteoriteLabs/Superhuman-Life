@@ -13,6 +13,11 @@ import { flattenObj } from "../../../../components/utils/responseFlatten";
 import moment from "moment";
 import "./style.css";
 
+const images = {
+  "/offerings": "assets/notifications/offerings.svg",
+  "/clients": "assets/notifications/users.svg"
+}
+
 interface Notification {
   id: String;
   DateTime: Date;
@@ -108,7 +113,7 @@ function Notifications() {
                     <Row>
                       <Col lg={1} xs={4} className="pt-3">
                         <img
-                          src="assets/notifications/users.svg"
+                          src={images[`${currentValue.OnClickRoute}`]}
                           alt="users"
                           style={{ width: "50px", height: "50px" }}
                         />

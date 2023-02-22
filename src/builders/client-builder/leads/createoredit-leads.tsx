@@ -37,7 +37,7 @@ function CreateEditMessage(props: any, ref: any) {
   const [isLeadUpdated, setIsLeadUpdated] = useState<boolean>(false);
   const [isLeadCreated, setIsLeadCreated] = useState<boolean>(false);
   const [isLeadDeleted, setIsLeadDeleted] = useState<boolean>(false);
-  const [name, setName] = useState("");
+  const [name, setName] = useState<string>("");
 
   const [createLeads] = useMutation(ADD_LEADS_NEW, {
     onCompleted: (data: any) => {

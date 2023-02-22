@@ -13,6 +13,7 @@ import {
   UPDATE_PACKAGE_STATUS,
   UPDATE_CHANNEL_COHORT_PACKAGE,
   UPDATE_BOOKING_CONFIG,
+  CREATE_NOTIFICATION
 } from "../graphQL/mutations";
 import {
   GET_FITNESS_PACKAGE_TYPE,
@@ -96,9 +97,28 @@ function CreateEditChannel(props: any, ref: any) {
       setisOfferingUpdated(!isOfferingUpdated);
     },
   });
+  const [createLiveStreamNotification] = useMutation(CREATE_NOTIFICATION);
 
   const [CreatePackage] = useMutation(CREATE_CHANNEL_PACKAGE, {
     onCompleted: (r: any) => {
+
+      const flattenData = flattenObj({ ...r });
+
+      createLiveStreamNotification({
+          variables: {
+            data: {
+              type: "Offerings",
+              Title: "New offering",
+              OnClickRoute: "/offerings",
+              users_permissions_user: auth.userid,
+              Body: `New live stream offering ${flattenData.createFitnesspackage.packagename} has been added`,
+              DateTime: moment().format(),
+              IsRead: false,
+              ContactID: flattenData.createFitnesspackage.id,
+            },
+          },
+        });
+
       const val = JSON.parse(frmDetails.config.bookingConfig);
       bookingConfig({
         variables: {
