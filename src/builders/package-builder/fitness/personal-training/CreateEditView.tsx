@@ -18,6 +18,7 @@ import {
   UPDATE_PACKAGE_STATUS,
   CREATE_BOOKING_CONFIG,
   UPDATE_BOOKING_CONFIG,
+  CREATE_NOTIFICATION
 } from "../graphQL/mutations";
 import { Modal, Button } from "react-bootstrap";
 import AuthContext from "../../../../context/auth-context";
@@ -88,8 +89,27 @@ function CreateEditPt(props: any, ref: any) {
     },
   });
 
+  const [createOneOnOneNotification] = useMutation(CREATE_NOTIFICATION);
+
   const [createPackage] = useMutation(CREATE_PACKAGE, {
     onCompleted: (r: any) => {
+      const flattenData = flattenObj({ ...r });
+
+      createOneOnOneNotification({
+          variables: {
+            data: {
+              type: "Offerings",
+              Title: "New offering",
+              OnClickRoute: "/offerings",
+              users_permissions_user: auth.userid,
+              Body: `New one on one offering ${flattenData.createFitnesspackage.packagename} has been added`,
+              DateTime: moment().format(),
+              IsRead: false,
+              ContactID: flattenData.createFitnesspackage.id,
+            },
+          },
+        });
+
       if (window.location.href.split("/")[3] === "client") {
         createUserPackageSuggestion({
           variables: {
@@ -110,6 +130,7 @@ function CreateEditPt(props: any, ref: any) {
       props.callback();
     },
   });
+
   const [editPackage] = useMutation(EDIT_PACKAGE, {
     onCompleted: (r: any) => {
       const val = JSON.parse(frmDetails.config.bookingConfig);

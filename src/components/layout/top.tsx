@@ -1,11 +1,37 @@
 import { NavLink } from "react-router-dom";
-import { Container, Nav, Navbar } from "react-bootstrap";
+import { useQuery } from "@apollo/client";
+import { useContext, useEffect, useState } from "react";
+import authContext from "../../context/auth-context";
+import { Container, Nav, Navbar, Badge } from "react-bootstrap";
 import { MiniLobbyComponent } from "../../pages/dashboard/mini-lobby/LobbyPopover";
 import { ProfileOption } from "./NavbarOptions/ProfileOption";
 import { Link } from "react-router-dom";
 import "./topNavbar.css";
+import { GET_CHANGEMAKER_NOTIFICATION } from "./queries";
+import { flattenObj } from "../../components/utils/responseFlatten";
 
 export function AuthenticatedNav() {
+  const auth = useContext(authContext);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+
+  const {
+    // eslint-disable-next-line
+    data: get_changemaker_notifications,
+    // eslint-disable-next-line
+    refetch: refetch_changemaker_notifications,
+  } = useQuery(GET_CHANGEMAKER_NOTIFICATION, {
+    variables: { id: auth.userid },
+    onCompleted: (data) => {
+      const flattenData = flattenObj({ ...data });
+      setNotifications(flattenData.changemakerNotifications);
+    },
+  });
+
+  useEffect(()=>{
+    refetch_changemaker_notifications();
+     // eslint-disable-next-line
+  },[notifications]);
+  
   return (
     <>
       <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark" fixed="top">
@@ -40,8 +66,20 @@ export function AuthenticatedNav() {
             <img
               src="/assets/navbar_icons/notificationIcon.svg"
               alt="notification"
-              style={{height: "20px"}}
+              style={{ height: "20px" }}
             />
+             {notifications.length ?
+            <Badge
+              className="bg-danger text-white ml-3 rounded-circle"
+              style={{
+                fontSize: "1rem",
+                position: "absolute",
+                left: "34vw",
+                top: "1vh",
+              }}
+            >
+              {notifications.length}
+            </Badge> : null}
           </Link>
         </Nav.Item>
 
@@ -61,6 +99,18 @@ export function AuthenticatedNav() {
               alt="notification"
               style={{ height: "20px", width: "25px" }}
             />
+            {notifications.length ?
+            <Badge
+              className="bg-danger text-white ml-3 rounded-circle"
+              style={{
+                fontSize: "1rem",
+                position: "absolute",
+                right: "8vw",
+                top: "1vh",
+              }}
+            >
+              {notifications.length}
+            </Badge> : null}
           </Link>
           <MiniLobbyComponent />
           <ProfileOption />

@@ -18,6 +18,7 @@ import {
   UPDATE_PACKAGE_STATUS,
   CREATE_BOOKING_CONFIG,
   UPDATE_BOOKING_CONFIG,
+  CREATE_NOTIFICATION
 } from "../graphQL/mutations";
 import { Modal, Button } from "react-bootstrap";
 import AuthContext from "../../../../context/auth-context";
@@ -78,8 +79,27 @@ function CreateEditPackage(props: any, ref: any) {
     },
   });
 
+  const [createCustomNotification] = useMutation(CREATE_NOTIFICATION);
+
   const [createPackage] = useMutation(CREATE_PACKAGE, {
     onCompleted: (r: any) => {
+      const flattenData = flattenObj({ ...r });
+
+      createCustomNotification({
+          variables: {
+            data: {
+              type: "Offerings",
+              Title: "New offering",
+              OnClickRoute: "/offerings",
+              users_permissions_user: auth.userid,
+              Body: `New custom offering ${flattenData.createFitnesspackage.packagename} has been added`,
+              DateTime: moment().format(),
+              IsRead: false,
+              ContactID: flattenData.createFitnesspackage.id,
+            },
+          },
+        });
+
       if (window.location.href.split("/")[3] === "client") {
         createUserPackageSuggestion({
           variables: {

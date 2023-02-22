@@ -81,6 +81,9 @@ export const CREATE_PACKAGE = gql`
     ) {
       data {
         id
+        attributes{
+          packagename
+        }
       }
     }
   }
@@ -101,6 +104,29 @@ export const UPDATE_PACKAGE_PRIVATE = gql`
     updateFitnesspackage(id: $id, data: { is_private: $is_private }) {
       data {
         id
+      }
+    }
+  }
+`;
+
+export const CREATE_NOTIFICATION = gql`
+  mutation createChangemakerNotification($data: ChangemakerNotificationInput!) {
+    createChangemakerNotification(data: $data) {
+      data {
+        id
+        attributes {
+          IsRead
+          type
+          Title
+          DateTime
+          Body
+          OnClickRoute
+          users_permissions_user {
+            data {
+              id
+            }
+          }
+        }
       }
     }
   }
