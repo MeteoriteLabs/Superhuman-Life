@@ -266,6 +266,7 @@ function CreateEditPackage(props: any, ref: any) {
     let msg = flattenedData.fitnesspackages[0];
     let bookingConfig: any = {};
     let details: any = {};
+    console.log(msg);
     if (msg.groupinstantbooking) {
       for (let i = 0; i < msg.fitnesspackagepricing.length; i++) {
         PRICING_TABLE_DEFAULT_WITH_INSTANTBOOKING[i].mrp =
@@ -296,9 +297,10 @@ function CreateEditPackage(props: any, ref: any) {
       instantBooking: msg.groupinstantbooking,
       freeDemo: msg.Is_free_demo,
     });
+    details.dates = JSON.stringify(moment(msg.Start_date).format("YYYY-MM-DD"));
     details.classsize = msg.classsize;
     details.expiryDate = moment(msg.expirydate).format("YYYY-MM-DD");
-    details.level = ENUM_FITNESSPACKAGE_LEVEL[msg?.level];
+    details.level = ENUM_FITNESSPACKAGE_LEVEL[msg.level];
     details.intensity = ENUM_FITNESSPACKAGE_INTENSITY[msg.Intensity];
     details.pricingDetail = JSON.stringify(
       msg.groupinstantbooking
@@ -330,6 +332,11 @@ function CreateEditPackage(props: any, ref: any) {
       expiryDate: msg.expiry_date,
       publishingDate: msg.publishing_date,
     });
+    details.durationOfOffering = msg.SubscriptionDuration ? msg.SubscriptionDuration : [ "1 day",
+    "30 days",
+    "90 days",
+    "180 days",
+    "360 days"];
     details.bookingleadday = msg.bookingleadday;
     details.bookingConfigId = msg.booking_config?.id;
     details.languages = JSON.stringify(msg.languages);
@@ -364,7 +371,7 @@ function CreateEditPackage(props: any, ref: any) {
   }
 
   function CreatePackage(frm: any) {
-    console.log(frm, frm.level);
+    
     frmDetails = frm;
     frm.equipmentList = JSON.parse(frm.equipmentList)
       .map((x: any) => x.id)
@@ -382,9 +389,10 @@ function CreateEditPackage(props: any, ref: any) {
 
     createPackage({
       variables: {
+        SubscriptionDuration: frm.durationOfOffering,
         packagename: frm.packagename,
         tags: frm?.tags,
-        level: frm.level ? ENUM_FITNESSPACKAGE_LEVEL[frm?.level] : null,
+        level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
         intensity: ENUM_FITNESSPACKAGE_INTENSITY[frm.intensity],
         aboutpackage: frm.About,
         benefits: frm.Benifits,
@@ -425,6 +433,7 @@ function CreateEditPackage(props: any, ref: any) {
   }
 
   function EditPackage(frm: any) {
+    
     frmDetails = frm;
 
     frm.equipmentList = JSON.parse(frm.equipmentList)
@@ -446,7 +455,7 @@ function CreateEditPackage(props: any, ref: any) {
         id: operation.id,
         packagename: frm.packagename,
         tags: frm?.tags,
-        level: ENUM_FITNESSPACKAGE_LEVEL[frm?.level],
+        level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
         intensity: ENUM_FITNESSPACKAGE_INTENSITY[frm.intensity],
         aboutpackage: frm.About,
         benefits: frm.Benifits,
@@ -479,6 +488,7 @@ function CreateEditPackage(props: any, ref: any) {
           .map((item: any) => item.id)
           .join(", ")
           .split(", "),
+        SubscriptionDuration: frm.durationOfOffering,
         Start_date: moment(frm.dates.startDate).toISOString(),
         End_date: moment(frm.dates.startDate).add(360, "days").toISOString(),
       },

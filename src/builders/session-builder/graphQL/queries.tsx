@@ -621,12 +621,12 @@ export const GET_SESSIONS_FROM_TAGS = gql`
   query getSessionsFromTags($id: ID!, $tagType: String!) {
     tags(
       filters: {
-        client_packages: {
-          fitnesspackages: {
+        
+          fitnesspackage: {
             users_permissions_user: { id: { eq: $id } }
             fitness_package_type: { type: { eq: $tagType } }
           }
-        }
+        
       }
     ) {
       data {

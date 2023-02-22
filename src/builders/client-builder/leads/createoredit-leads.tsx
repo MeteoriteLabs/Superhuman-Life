@@ -42,7 +42,7 @@ function CreateEditMessage(props: any, ref: any) {
   const [createLeads] = useMutation(ADD_LEADS_NEW, {
     onCompleted: (data: any) => {
       const flattenData = flattenObj({ ...data });
-       console.log(moment().format());
+
       createLeadNotification({
         variables: {
           data: {

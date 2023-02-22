@@ -46,6 +46,7 @@ import SapienVideoPlayer from "../../../components/customWidgets/SpaienVideoPlay
 import Toaster from "../../../components/Toaster";
 
 const Schedular = (props: any) => {
+  
   const auth = useContext(AuthContext);
   const [show, setShow] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -468,9 +469,9 @@ const Schedular = (props: any) => {
     const sessions: any = [];
     if (!window.location.pathname.includes("classic")) {
       // eslint-disable-next-line array-callback-return
-      flattenData.tags[0]?.sessions?.map((it: any, index: number) => {
+      flattenData?.tags[0]?.sessions?.map((it: any, index: number) => {
         if (moment(it.session_date).isSameOrAfter(moment(props.startDate))) {
-          sessions.push(flattenData.tags[0]?.sessions[index]);
+          sessions.push(flattenData?.tags[0]?.sessions[index]);
         }
       });
     } else {

@@ -14,9 +14,7 @@ import {
 import SchedulerPage from "../../../program-builder/program-template/scheduler";
 import moment from "moment";
 import { Link } from "react-router-dom";
-
 import { flattenObj } from "../../../../components/utils/responseFlatten";
-
 import "../fitness.css";
 import "../Group/actionButton.css";
 import Loader from "../../../../components/Loader/Loader";
@@ -238,20 +236,20 @@ const Scheduler = () => {
                   <h3 className="text-capitalize">{tag?.tag_name}</h3>
                 </Row>
                 <Row>
-                  <span>{tag.fitnesspackage.packagename}</span>
+                  <span>{tag.fitnesspackage?.packagename}</span>
                   <div
                     className="ml-3 mt-1"
                     style={{ borderLeft: "1px solid black", height: "20px" }}
                   ></div>
                   <span className="ml-4">
-                    {tag.fitnesspackage.duration + " days"}
+                    {tag.fitnesspackage?.duration + " days"}
                   </span>
                   <div
                     className="ml-3"
                     style={{ borderLeft: "1px solid black", height: "20px" }}
                   ></div>
                   <span className="ml-4">
-                    {"Level: " + tag.fitnesspackage.level}
+                    {"Level: " + tag.fitnesspackage?.level}
                   </span>
                 </Row>
                 <Row>
@@ -309,7 +307,7 @@ const Scheduler = () => {
                         <Col lg={5} className="text-center">
                           <span className="p-1 scheduler-badge">
                             {moment(tag.client_packages[0].effective_date)
-                              .add(tag.fitnesspackage.duration - 1, "days")
+                              .add(tag.fitnesspackage?.duration - 1, "days")
                               .format("DD MMMM, YY")}
                           </span>
                         </Col>
@@ -335,13 +333,13 @@ const Scheduler = () => {
                             alt="PT-Online"
                           />
                           <br />
-                          <span>{tag.fitnesspackage.ptonline} PT</span>
+                          <span>{tag.fitnesspackage?.ptonline} PT</span>
                           <br />
                           <span>
                             <b>
                               {handleTimeFormatting(
                                 totalClasses[0],
-                                tag.fitnesspackage.duration
+                                tag.fitnesspackage?.duration
                               )}
                             </b>
                           </span>
@@ -352,13 +350,13 @@ const Scheduler = () => {
                             alt="PT-Offline"
                           />
                           <br />
-                          <span>{tag.fitnesspackage.ptoffline} PT</span>
+                          <span>{tag.fitnesspackage?.ptoffline} PT</span>
                           <br />
                           <span>
                             <b>
                               {handleTimeFormatting(
                                 totalClasses[1],
-                                tag.fitnesspackage.duration
+                                tag.fitnesspackage?.duration
                               )}
                             </b>
                           </span>
@@ -370,13 +368,13 @@ const Scheduler = () => {
                               alt="Group-Online"
                             />
                             <br />
-                            <span>{tag.fitnesspackage.grouponline} Group</span>
+                            <span>{tag.fitnesspackage?.grouponline} Group</span>
                             <br />
                             <span>
                               <b>
                                 {handleTimeFormatting(
                                   totalClasses[2],
-                                  tag.fitnesspackage.duration
+                                  tag.fitnesspackage?.duration
                                 )}
                               </b>
                             </span>
@@ -389,13 +387,13 @@ const Scheduler = () => {
                               alt="GRoup-Offline"
                             />
                             <br />
-                            <span>{tag.fitnesspackage.groupoffline} Group</span>
+                            <span>{tag.fitnesspackage?.groupoffline} Group</span>
                             <br />
                             <span>
                               <b>
                                 {handleTimeFormatting(
                                   totalClasses[3],
-                                  tag.fitnesspackage.duration
+                                  tag.fitnesspackage?.duration
                                 )}
                               </b>
                             </span>
@@ -409,14 +407,14 @@ const Scheduler = () => {
                             />
                             <br />
                             <span>
-                              {tag.fitnesspackage.recordedclasses} Recorded
+                              {tag.fitnesspackage?.recordedclasses} Recorded
                             </span>
                             <br />
                             <span>
                               <b>
                                 {handleTimeFormatting(
                                   totalClasses[4],
-                                  tag.fitnesspackage.duration
+                                  tag.fitnesspackage?.duration
                                 )}
                               </b>
                             </span>
@@ -432,15 +430,15 @@ const Scheduler = () => {
                         <b style={{ color: "gray" }}>Status: </b>{" "}
                         {handleTotalClasses(
                           totalClasses,
-                          tag.fitnesspackage.duration
+                          tag.fitnesspackage?.duration
                         )}
-                        /{tag.fitnesspackage.duration}
+                        /{tag.fitnesspackage?.duration}
                       </span>
                     </Col>
                     <Col>
                       <span>
                         <b style={{ color: "gray" }}>Rest-Days: </b>
-                        {tag.fitnesspackage.restdays} days
+                        {tag.fitnesspackage?.restdays} days
                       </span>
                     </Col>
                   </Row>
@@ -473,7 +471,7 @@ const Scheduler = () => {
                 restDays={tag?.sessions.filter((ses) => ses.type === "restday")}
                 programId={tagId}
                 startDate={tag?.client_packages[0].effective_date}
-                clientId={tag.client_packages[0].users_permissions_user.id}
+                clientId={tag && tag.client_packages && tag?.client_packages[0].users_permissions_user.id}
               />
             </div>
           </Col>

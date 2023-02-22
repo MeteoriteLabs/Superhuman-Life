@@ -1,10 +1,10 @@
 import { Card, Row, Col } from "react-bootstrap";
 import "../LeadCard/lead.css";
 
-const websiteUrl = process.env.WEBSITE_URL;
-const subdomainWebsiteUrl = process.env.SUBDOMAIN_WEBSITE_URL;
-const androidUrl = process.env.ENDUSER_ANDROID_APP_URL;
-const iosUrl = process.env.ENDUSER_IOS_APP_URL;
+const websiteUrl = process.env.REACT_APP_WEBSITE_URL;
+const subdomainWebsiteUrl = process.env.REACT_APP_SUBDOMAIN_WEBSITE_URL;
+const androidUrl = process.env.REACT_APP_ENDUSER_ANDROID_APP_URL;
+const iosUrl = process.env.REACT_APP_ENDUSER_IOS_APP_URL;
 
 function LinksCard() {
   return (

@@ -343,11 +343,6 @@ export default function Register() {
       </Modal.Body>
     </Modal.Dialog>}
         {!successScreen && <Row noGutters>
-            {/* <Helmet>
-                <meta charSet="utf-8" />
-                <title>Sapien Dashboard | Register</title>
-                <link rel="canonical" href="https://sapien.systems/" />
-            </Helmet> */}
             <Col>
                 <Container>
                     <Row>

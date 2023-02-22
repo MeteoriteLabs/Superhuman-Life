@@ -407,7 +407,7 @@ function CreateEditPackage(props: any, ref: any) {
   }
 
   function updateChannelPackageStatus(id: any, status: any) {
-    updatePackageStatus({ variables: { id: id, Status: status } });
+    updatePackageStatus({ variables: { id: id, Status: status ? false : true } });
     setStatusModalShow(false);
     operation.type = "create";
   }

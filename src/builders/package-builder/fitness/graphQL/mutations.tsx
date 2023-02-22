@@ -2,6 +2,7 @@ import { gql } from "@apollo/client";
 
 export const CREATE_PACKAGE = gql`
   mutation createFitnesspackage(
+    $SubscriptionDuration: JSON
     $packagename: String
     $tags: String
     $level: ENUM_FITNESSPACKAGE_LEVEL
@@ -40,6 +41,7 @@ export const CREATE_PACKAGE = gql`
   ) {
     createFitnesspackage(
       data: {
+        SubscriptionDuration: $SubscriptionDuration
         packagename: $packagename
         tags: $tags
         level: $level
@@ -313,10 +315,12 @@ export const UPDATE_CHANNEL_COHORT_PACKAGE = gql`
     $Intensity: ENUM_FITNESSPACKAGE_INTENSITY
     $duration: Int
     $Accomdation_details: JSON
+    $SubscriptionDuration: JSON
   ) {
     updateFitnesspackage(
       id: $id
       data: {
+        SubscriptionDuration: $SubscriptionDuration
         aboutpackage: $aboutpackage
         benefits: $benefits
         packagename: $packagename
@@ -413,9 +417,11 @@ export const CREATE_CHANNEL_PACKAGE = gql`
     $Intensity: ENUM_FITNESSPACKAGE_INTENSITY
     $duration: Int
     $Accomdation_details: JSON
+    $SubscriptionDuration: JSON
   ) {
     createFitnesspackage(
       data: {
+        SubscriptionDuration: $SubscriptionDuration
         aboutpackage: $aboutpackage
         benefits: $benefits
         packagename: $packagename

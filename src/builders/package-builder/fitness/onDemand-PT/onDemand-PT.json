@@ -31,12 +31,14 @@
              "level": {
                 "type": "number",
                 "title": "Level",
-                "enum": [0, 1, 2],
+                "enum": [0, 1, 2,3],
                 "enumNames": [
                     "Beginner",
                     "Intermediate",
-                    "Advanced"
+                    "Advanced",
+                    "No Level"
                 ],
+                "default": 3,
                  "description": "Select the appropriate difficulty" 
              },
              "intensity": {
@@ -48,6 +50,7 @@
                      "Moderate",
                      "High"
                  ],
+                 "default": 0,
                  "description": "Set the pace of the offering"
              }
          }

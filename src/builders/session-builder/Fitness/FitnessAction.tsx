@@ -22,6 +22,7 @@ function FitnessAction(props, ref: any) {
   const [operation, setOperation] = useState<Operation>({} as Operation);
   const modalTrigger = new Subject();
   const [showClientModal, setShowClientModal] = useState<boolean>(false);
+  const [showDetailsModal, setShowDetailsModal] = useState<boolean>(false);
 
   const [createTag] = useMutation(CREATE_TAG, {
     onCompleted: (data: any) => {
@@ -40,29 +41,7 @@ function FitnessAction(props, ref: any) {
         fitnessPackageID: operation.id,
       },
     });
-    // createFitnessProgram({
-    //     variables: {
-    //         title: frm.programName,
-    //         fitnessdisciplines: frm.discipline.split(","),
-    //         duration_days: Number(operation.duration),
-    //         level: frm.level,
-    //         description: frm.details,
-    //         Is_program: true,
-    //         renewal_dt: 0,
-    //         users_permissions_user: frm.user_permissions_user
-    //     }
-    // });
   }
-
-  // const CreateProgramManager = (data) => {
-  //     const { fitnessprogram } = data.createFitnessprogram;
-  //     createProgramManager({
-  //         variables: {
-  //             fitnesspackages: operation.id,
-  //             fitnessprograms: fitnessprogram.id
-  //         }
-  //     })
-  // }
 
   useImperativeHandle(ref, () => ({
     TriggerForm: (msg: Operation) => {
@@ -77,8 +56,10 @@ function FitnessAction(props, ref: any) {
         const update: { duration: number } = { duration: 0 };
         update.duration = msg.duration;
         setProgramDetails(update);
+        setShowDetailsModal(true);
       } else if (msg.actionType === "details") {
         setProgramDetails({ ...programDetails, ...msg.rowData });
+        setShowDetailsModal(true);
       }
        //restrict form to render on delete operation
        if (msg.actionType !== 'allClients') {
@@ -113,9 +94,10 @@ function FitnessAction(props, ref: any) {
 
   return (
     <div>
-      {(operation.actionType === "create" ||
-        operation.actionType === "details") && (
+      {showDetailsModal && (
         <SessionModal
+        show={showDetailsModal}
+        onHide={() => setShowDetailsModal(false)}
           name={name}
           isStepper={false}
           formUISchema={schema}

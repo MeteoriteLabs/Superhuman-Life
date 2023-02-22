@@ -9,7 +9,7 @@ import ActionButton from "../../../../components/actionbutton";
 import FitnessAction from "../FitnessAction";
 import { flattenObj } from "../../../../components/utils/responseFlatten";
 
-export default function Group(props) {
+export default function PT() {
   const auth = useContext(AuthContext);
   const [userPackage, setUserPackage] = useState<any>([]);
   const [showHistory, setShowHistory] = useState<boolean>(false);
@@ -28,11 +28,11 @@ export default function Group(props) {
 
   const loadData = (data) => {
     const flattenData = flattenObj({ ...data });
-
+    
     setUserPackage(
       [...flattenData.tags].map((packageItem) => {
         let renewDay: any = "";
-        if (packageItem.client_packages[0].fitnesspackages[0].length !== 0) {
+        if (packageItem.client_packages && packageItem.client_packages.length && packageItem.client_packages[0].fitnesspackages && packageItem.client_packages[0].fitnesspackages.length && packageItem.client_packages[0].fitnesspackages[0].length !== 0) {
           renewDay = new Date(packageItem.client_packages[0].effective_date);
           renewDay.setDate(
             renewDay.getDate() +
@@ -41,31 +41,31 @@ export default function Group(props) {
         }
         return {
           tagId: packageItem.id,
-          id: packageItem.client_packages[0].fitnesspackages[0].id,
+          id: packageItem.client_packages && packageItem.client_packages.length && packageItem.client_packages[0].fitnesspackages && packageItem.client_packages[0].fitnesspackages.length ? packageItem.client_packages[0].fitnesspackages[0].id : null,
           packageName:
-            packageItem.client_packages[0].fitnesspackages[0].packagename,
-          duration: packageItem.client_packages[0].fitnesspackages[0].duration,
-          effectiveDate: moment(
+          packageItem.client_packages && packageItem.client_packages.length && packageItem.client_packages[0].fitnesspackages && packageItem.client_packages[0].fitnesspackages.length ? packageItem.client_packages[0].fitnesspackages[0].packagename : null,
+          duration: packageItem.client_packages && packageItem.client_packages.length && packageItem.client_packages[0].fitnesspackages && packageItem.client_packages[0].fitnesspackages.length ? packageItem.client_packages[0].fitnesspackages[0].duration : null,
+          effectiveDate: packageItem.client_packages && packageItem.client_packages.length && packageItem.client_packages[0].effective_date ? moment(
             packageItem.client_packages[0].effective_date
-          ).format("MMMM DD,YYYY"),
-          packageStatus: packageItem.client_packages[0].fitnesspackages[0]
+          ).format("MMMM DD,YYYY") : 'N/A',
+          packageStatus: packageItem.client_packages && packageItem.client_packages.length && packageItem.client_packages[0].fitnesspackages ? packageItem.client_packages[0].fitnesspackages.length && packageItem.client_packages[0].fitnesspackages[0]
             .Status
             ? "Active"
-            : "Inactive",
-          packageRenewal: moment(renewDay).format("MMMM DD,YYYY"),
+            : "Inactive" : null,
+          packageRenewal: renewDay ? moment(renewDay).format("MMMM DD,YYYY") : 'N/A',
 
           client:
-            packageItem.client_packages[0].users_permissions_user.username,
-          clientId: packageItem.client_packages[0].users_permissions_user.id,
+          packageItem.client_packages && packageItem.client_packages.length ? packageItem.client_packages[0].users_permissions_user.username : null,
+          clientId: packageItem.client_packages && packageItem.client_packages.length ? packageItem.client_packages[0].users_permissions_user.id : null,
           programName: packageItem.tag_name,
           programStatus: handleStatus(
             packageItem.sessions,
-            packageItem.client_packages[0].effective_date,
+            packageItem.client_packages && packageItem.client_packages.length ? packageItem.client_packages[0].effective_date : null,
             renewDay
           ),
           programRenewal: calculateProgramRenewal(
             packageItem.sessions,
-            packageItem.client_packages[0].effective_date
+            packageItem.client_packages && packageItem.client_packages.length ? packageItem.client_packages[0].effective_date : null
           ),
         };
       })
@@ -237,6 +237,7 @@ export default function Group(props) {
 
   function handleHistoryPackage(data: any) {
     const flattenData = flattenObj({ ...data });
+    console.log(flattenData);
     setUserPackage(
       [...flattenData.tags].map((packageItem) => {
         let renewDay: any = "";

@@ -251,8 +251,9 @@ function CreateEditChannel(props: any, ref: any) {
       instantBooking: msg.groupinstantbooking,
       freeDemo: msg.Is_free_demo,
     });
+    details.dates = JSON.stringify(moment(msg.Start_date).format("YYYY-MM-DD"));
     details.expiryDate = moment(msg.expirydate).format("YYYY-MM-DD");
-    details.level = ENUM_FITNESSPACKAGE_LEVEL[msg?.level];
+    details.level = ENUM_FITNESSPACKAGE_LEVEL[msg.level];
     details.pricing =
       msg.fitnesspackagepricing[0]?.mrp === "free"
         ? "free"
@@ -261,6 +262,11 @@ function CreateEditChannel(props: any, ref: any) {
               ? PRICING_TABLE_DEFAULT_WITH_INSTANTBOOKING
               : PRICING_TABLE_DEFAULT
           );
+    details.durationOfOffering = msg.SubscriptionDuration ? msg.SubscriptionDuration : [ "1 day",
+    "30 days",
+    "90 days",
+    "180 days",
+    "360 days"];
     details.publishingDate = moment(msg.publishing_date).format("YYYY-MM-DD");
     details.tag = msg?.tags === null ? "" : msg.tags;
     details.user_permissions_user = msg.users_permissions_user.id;
@@ -331,6 +337,7 @@ function CreateEditChannel(props: any, ref: any) {
 
     CreatePackage({
       variables: {
+        SubscriptionDuration: frm.durationOfOffering,
         aboutpackage: frm.About,
         benefits: frm.Benifits,
         packagename: frm.channelName,
@@ -338,7 +345,7 @@ function CreateEditChannel(props: any, ref: any) {
           .instantBooking,
         Is_free_demo: JSON.parse(frm.channelinstantBooking).freeDemo,
         expiry_date: moment(frm.datesConfig?.expiryDate).toISOString(),
-        level: frm.level ? ENUM_FITNESSPACKAGE_LEVEL[frm?.level] : null,
+        level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
         equipmentList:
           frm?.equipment?.length > 0
             ? frm.equipment
@@ -393,6 +400,7 @@ function CreateEditChannel(props: any, ref: any) {
 
     editPackageDetails({
       variables: {
+        SubscriptionDuration: frm.durationOfOffering,
         id: operation.id,
         aboutpackage: frm.About,
         benefits: frm.Benifits,
@@ -401,7 +409,7 @@ function CreateEditChannel(props: any, ref: any) {
           .instantBooking,
         Is_free_demo: JSON.parse(frm.channelinstantBooking).freeDemo,
         expiry_date: moment(frm.datesConfig?.expiryDate).toISOString(),
-        level: ENUM_FITNESSPACKAGE_LEVEL[frm?.level],
+        level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
         equipmentList:
           frm?.equipment?.length > 0
             ? frm.equipment
