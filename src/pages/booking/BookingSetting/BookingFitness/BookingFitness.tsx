@@ -25,7 +25,7 @@ export default function BookingFitness() {
   const loadData = (data) => {
     const flattenData = flattenObj({ ...data });
     setBookingPackage([
-      ...flattenData.bookingConfigs?.map((fitnessPackage, index) => {
+      ...flattenData.bookingConfigs?.map((fitnessPackage) => {
         return {
           id: fitnessPackage.id,
           packageName: fitnessPackage.fitnesspackage.packagename,
@@ -147,14 +147,29 @@ export default function BookingFitness() {
               actionType: "request",
             });
           };
+          let arrayAction;
 
-          const arrayAction = [
-            {
-              actionName: "Booking confirmation",
-              actionClick: bookingConfirmationHandler,
-            },
-            { actionName: "Data requests", actionClick: dataRequestHandler },
-          ];
+          row.original.fitness_package_type !== "Group Class" &&
+          row.original.fitness_package_type !== "Cohort" &&
+          row.original.fitness_package_type !== "Live Stream Channel" &&
+          row.original.fitness_package_type !== "Classic Class"
+            ? (arrayAction = [
+                {
+                  actionName: "Booking confirmation",
+                  actionClick: bookingConfirmationHandler,
+                },
+                {
+                  actionName: "Data requests",
+                  actionClick: dataRequestHandler,
+                },
+              ])
+            : (arrayAction = [
+                {
+                  actionName: "Data requests",
+                  actionClick: dataRequestHandler,
+                },
+              ]);
+
           return <ActionButton arrayAction={arrayAction}></ActionButton>;
         },
       },

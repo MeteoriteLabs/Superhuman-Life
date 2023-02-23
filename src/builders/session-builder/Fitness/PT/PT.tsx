@@ -3,7 +3,7 @@ import { useContext, useMemo, useRef, useState } from "react";
 import { Badge, Row, Col, Form } from "react-bootstrap";
 import AuthContext from "../../../../context/auth-context";
 import PTTable from "../../../../components/table/PtTable/PTTable";
-import { GET_SESSIONS_FROM_TAGS } from "../../graphQL/queries";
+import { GET_SESSIONS_FROM_TAGS, GET_SESSIONS_FROM_TAGS_FOR_ONE_ON_ONE_OR_ON_DEMAND} from "../../graphQL/queries";
 import moment from "moment";
 import ActionButton from "../../../../components/actionbutton";
 import FitnessAction from "../FitnessAction";
@@ -15,10 +15,11 @@ export default function PT() {
   const [showHistory, setShowHistory] = useState<boolean>(false);
   const fitnessActionRef = useRef<any>(null);
 
-  const mainQuery = useQuery(GET_SESSIONS_FROM_TAGS, {
+  const mainQuery = useQuery(GET_SESSIONS_FROM_TAGS_FOR_ONE_ON_ONE_OR_ON_DEMAND, {
     variables: {
       id: auth.userid,
-      tagType: "One-On-One",
+      // tagType: "One-On-One",
+      // tagType: ["One-On-One", "On-Demand PT"],
     },
     onCompleted: (data) => {
       loadData(data);

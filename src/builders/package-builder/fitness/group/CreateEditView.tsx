@@ -17,7 +17,6 @@ import {
   EDIT_PACKAGE,
   UPDATE_PACKAGE_STATUS,
   CREATE_BOOKING_CONFIG,
-  UPDATE_BOOKING_CONFIG,
   CREATE_NOTIFICATION
 } from "../graphQL/mutations";
 import { Modal, Button } from "react-bootstrap";
@@ -73,14 +72,6 @@ function CreateEditPackage(props: any, ref: any) {
     },
   });
 
-  const [updateBookingConfig] = useMutation(UPDATE_BOOKING_CONFIG, {
-    onCompleted: (r: any) => {
-      modalTrigger.next(false);
-      props.callback();
-      setisOfferingUpdated(!isOfferingUpdated);
-    },
-  });
-
   const [createUserPackageSuggestion] = useMutation(ADD_SUGGESTION_NEW, {
     onCompleted: (data) => {
       modalTrigger.next(false);
@@ -103,8 +94,7 @@ function CreateEditPackage(props: any, ref: any) {
               users_permissions_user: auth.userid,
               Body: `New group offering ${flattenData.createFitnesspackage.packagename} has been added`,
               DateTime: moment().format(),
-              IsRead: false,
-              ContactID: flattenData.createFitnesspackage.id,
+              IsRead: false
             },
           },
         });
@@ -117,28 +107,22 @@ function CreateEditPackage(props: any, ref: any) {
           },
         });
       } else {
-        const val = JSON.parse(frmDetails.config.bookingConfig);
         createBookingConfig({
           variables: {
-            isAuto: val.config === "Auto" ? true : false,
+            isAuto: true,
             id: r.createFitnesspackage.data.id,
-            is_Fillmyslots: val.fillSchedule,
+            is_Fillmyslots: true,
             tagName: frmDetails.packagename,
           },
         });
       }
     },
   });
+
   const [editPackage] = useMutation(EDIT_PACKAGE, {
-    onCompleted: (r: any) => {
-      const val = JSON.parse(frmDetails.config.bookingConfig);
-      updateBookingConfig({
-        variables: {
-          isAuto: val.config === "Auto" ? true : false,
-          id: frmDetails.bookingConfigId,
-          is_Fillmyslots: val.fillSchedule,
-        },
-      });
+    onCompleted: (data) => {
+      props.callback();
+      setisOfferingUpdated(!isOfferingUpdated);
     },
   });
 
@@ -148,6 +132,7 @@ function CreateEditPackage(props: any, ref: any) {
       setisOfferingUpdated(!isOfferingUpdated);
     },
   });
+
   const [deletePackage] = useMutation(DELETE_PACKAGE, {
     refetchQueries: ["GET_TABLEDATA"],
     onCompleted: (data) => {
@@ -284,9 +269,9 @@ function CreateEditPackage(props: any, ref: any) {
   function FillDetails(data: any) {
     const flattenedData = flattenObj({ ...data });
     let msg = flattenedData.fitnesspackages[0];
-    let bookingConfig: any = {};
+    
     let details: any = {};
-    console.log(msg);
+  
     if (msg.groupinstantbooking) {
       for (let i = 0; i < msg.fitnesspackagepricing.length; i++) {
         PRICING_TABLE_DEFAULT_WITH_INSTANTBOOKING[i].mrp =
@@ -331,10 +316,6 @@ function CreateEditPackage(props: any, ref: any) {
     details.tags = msg?.tags === null ? "" : msg.tags;
     details.user_permissions_user = msg.users_permissions_user.id;
     details.visibility = msg.is_private === true ? 1 : 0;
-    bookingConfig.config =
-      msg.booking_config?.isAuto === true ? "Auto" : "Manual";
-    bookingConfig.fillSchedule = msg.booking_config?.is_Fillmyslots;
-    details.config = { bookingConfig: JSON.stringify(bookingConfig) };
     details.programDetails = JSON.stringify({
       addressTag: msg.address === null ? "At Client Address" : "At My Address",
       address: [msg.address],

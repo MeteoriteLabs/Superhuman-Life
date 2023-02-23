@@ -94,8 +94,7 @@ function CreateEditPackage(props: any, ref: any) {
               users_permissions_user: auth.userid,
               Body: `New custom offering ${flattenData.createFitnesspackage.packagename} has been added`,
               DateTime: moment().format(),
-              IsRead: false,
-              ContactID: flattenData.createFitnesspackage.id,
+              IsRead: false
             },
           },
         });

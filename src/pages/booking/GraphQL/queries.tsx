@@ -109,6 +109,7 @@ export const FILTER_PACKAGES = gql`
 export const BOOKING_CONFIG = gql`
   query bookingConfigs($id: ID!) {
     bookingConfigs(
+      pagination: {pageSize: 100},
       filters: {
         fitnesspackage: { users_permissions_user: { id: { eq: $id } } }
       }

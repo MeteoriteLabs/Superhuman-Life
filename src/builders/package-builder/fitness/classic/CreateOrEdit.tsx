@@ -105,8 +105,7 @@ function CreateEditPackage(props: any, ref: any) {
               users_permissions_user: auth.userid,
               Body: `New recorded offering ${flattenData.createFitnesspackage.packagename} has been added`,
               DateTime: moment().format(),
-              IsRead: false,
-              ContactID: flattenData.createFitnesspackage.id,
+              IsRead: false
             },
           },
         });
@@ -122,10 +121,10 @@ function CreateEditPackage(props: any, ref: any) {
         const val = JSON.parse(frmDetails.config.bookingConfig);
         bookingConfig({
           variables: {
-            isAuto: val.config === "Auto" ? true : false,
+            isAuto: true,
             id: r.createFitnesspackage.data.id,
             bookings_per_day: val.bookings,
-            is_Fillmyslots: val.fillSchedule,
+            is_Fillmyslots: true,
             tagName: frmDetails.packagename,
           },
         });
@@ -137,10 +136,10 @@ function CreateEditPackage(props: any, ref: any) {
       const val = JSON.parse(frmDetails.config.bookingConfig);
       updateBookingConfig({
         variables: {
-          isAuto: val.config === "Auto" ? true : false,
+          isAuto: true,
           id: frmDetails.bookingConfigId,
           bookings_per_day: val.bookings,
-          is_Fillmyslots: val.fillSchedule,
+          is_Fillmyslots: true,
         },
       });
     },
@@ -152,6 +151,7 @@ function CreateEditPackage(props: any, ref: any) {
       setisOfferingUpdated(!isOfferingUpdated);
     },
   });
+  
   const [deletePackage] = useMutation(DELETE_PACKAGE, {
     refetchQueries: ["GET_TABLEDATA"],
     onCompleted: (data) => {

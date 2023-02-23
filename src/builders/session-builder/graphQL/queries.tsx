@@ -700,6 +700,100 @@ export const GET_SESSIONS_FROM_TAGS = gql`
   }
 `;
 
+export const GET_SESSIONS_FROM_TAGS_FOR_ONE_ON_ONE_OR_ON_DEMAND = gql`
+  query getSessionsFromTags($id: ID!) {
+    tags(
+      filters: { 
+          fitnesspackage: {
+            users_permissions_user: { id: { eq: $id } },
+            or:[
+              {fitness_package_type: {
+                type: {
+                  eq: "One-On-One"
+                }
+              }},
+              {fitness_package_type: {
+                type: {
+                  eq:"On-Demand PT"
+                }
+              }}
+            ]
+            
+          }
+        
+      }
+    ) {
+      data {
+        id
+        attributes {
+          tag_name
+          sessions {
+            data {
+              id
+              attributes {
+                day_of_program
+                tag
+                type
+                end_time
+                start_time
+                Is_restday
+                mode
+                session_date
+                activity {
+                  data {
+                    id
+                    attributes {
+                      title
+                    }
+                  }
+                }
+                activity_target
+                workout {
+                  data {
+                    id
+                    attributes {
+                      workouttitle
+                    }
+                  }
+                }
+              }
+            }
+          }
+          client_packages {
+            data {
+              id
+              attributes {
+                effective_date
+                accepted_date
+                users_permissions_user {
+                  data {
+                    id
+                    attributes {
+                      username
+                    }
+                  }
+                }
+                fitnesspackages {
+                  data {
+                    id
+                    attributes {
+                      packagename
+                      duration
+                      mode
+                      Status
+                      expiry_date
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
 export const GET_CLIENTS_BY_TAG = gql`
   query getClientsGroup($id: ID!) {
     tags(filters: { id: { eq: $id } }) {

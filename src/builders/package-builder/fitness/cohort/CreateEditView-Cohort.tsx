@@ -55,23 +55,10 @@ function CreateEditCohort(props: any, ref: any) {
 
   const [editPackageDetails] = useMutation(UPDATE_CHANNEL_COHORT_PACKAGE, {
     onCompleted: (data) => {
-      const val = JSON.parse(frmDetails.config.bookingConfig);
-      updateBookingConfig({
-        variables: {
-          isAuto: val.config === "Auto" ? true : false,
-          id: frmDetails.bookingConfigId,
-          is_Fillmyslots: val.fillSchedule,
-        },
-      });
+     
     },
   });
-  const [updateBookingConfig] = useMutation(UPDATE_BOOKING_CONFIG, {
-    onCompleted: (r: any) => {
-      modalTrigger.next(false);
-      props.callback();
-      setisOfferingUpdated(!isOfferingUpdated);
-    },
-  });
+ 
   const [updatePackageStatus] = useMutation(UPDATE_PACKAGE_STATUS, {
     onCompleted: (data) => {
       setStatusModalShow(false);
@@ -82,10 +69,14 @@ function CreateEditCohort(props: any, ref: any) {
   const [deletePackage] = useMutation(DELETE_PACKAGE, {
     refetchQueries: ["GET_TABLEDATA"],
     onCompleted: (data) => {
+      // add mutation for delete booking config
+
+
       props.callback();
       setisOffeeringDeleted(!isOffeeringDeleted);
     },
   });
+
   const [bookingConfig] = useMutation(CREATE_BOOKING_CONFIG, {
     onCompleted: (r: any) => {
       modalTrigger.next(false);
@@ -110,22 +101,19 @@ function CreateEditCohort(props: any, ref: any) {
               users_permissions_user: auth.userid,
               Body: `New cohort offering ${flattenData.createFitnesspackage.packagename} has been added`,
               DateTime: moment().format(),
-              IsRead: false,
-              ContactID: flattenData.createFitnesspackage.id,
+              IsRead: false
             },
           },
         });
 
-      const val = JSON.parse(frmDetails.config.bookingConfig);
       bookingConfig({
         variables: {
-          isAuto: val.config === "Auto" ? true : false,
+          isAuto: true,
           id: r.createFitnesspackage.data.id,
-          is_Fillmyslots: val.fillSchedule,
+          is_Fillmyslots: true,
           tagName: frmDetails.packageName,
         },
       });
-     
     },
   });
 
@@ -186,7 +174,6 @@ function CreateEditCohort(props: any, ref: any) {
   function FillDetails(data: any) {
     const flattenData = flattenObj({ ...data });
     let msg: any = flattenData.fitnesspackages[0];
-    let bookingConfig: any = {};
     let details: any = {};
     let courseDetails = { details: JSON.stringify(msg.Course_details) };
     details.packageType = msg.fitness_package_type.type;
@@ -207,10 +194,6 @@ function CreateEditCohort(props: any, ref: any) {
     details.tag = msg?.tags === null ? "" : msg.tags;
     details.user_permissions_user = msg.users_permissions_user.id;
     details.visibility = msg.is_private === true ? 1 : 0;
-    bookingConfig.config =
-      msg.booking_config?.isAuto === true ? "Auto" : "Manual";
-    bookingConfig.fillSchedule = msg.booking_config?.is_Fillmyslots;
-    details.config = { bookingConfig: JSON.stringify(bookingConfig) };
     details.classSize = msg.classsize;
     details.mode = ENUM_FITNESSPACKAGE_MODE[msg.mode];
     details.residential =

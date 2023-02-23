@@ -171,8 +171,87 @@ function TaskCard() {
                 ? dataTable
                     .filter(
                       (current) =>
+                       current.type == "One_On_One" && current.Status === false
+                       || current.type === "On-Demand PT" && current.Status === false
+                    )
+                    .map((currentValue, index: number) => (
+                      <Card
+                        key={index}
+                        style={{
+                          borderLeft: "5px solid grey",
+                          borderRadius: "5px",
+                          margin: "5px",
+                          padding: "5px",
+                        }}
+                      >
+                        <div className="col-lg-12">
+                          <b>Create a program for {currentValue.packagename}</b>
+                          <p>
+                            Please create the whole program to publish this
+                            offering
+                          </p>
+                          <p>#offering #{currentValue.type}</p>
+                          {/* {currentValue.tagId.length > 1 ? (
+                            <Row>
+                            <Col md={{offset: 9}}>
+                            <ButtonGroup>
+                              <DropdownButton
+                                as={ButtonGroup}
+                                title="Create new"
+                                id="bg-nested-dropdown"
+                                variant="success"
+                              >
+                                
+                                {currentValue.tagId.map((curr, index: number) => (
+                                  <Dropdown.Item
+                                    className="col-xs-12"
+                                    key={index}
+                                    eventKey={curr[index]}
+                                    onClick={() => {
+                                      redirectHandler(
+                                        curr[index],
+                                        currentValue.type
+                                      );
+                                    }}
+                                  >
+                                    
+                                    Create {currentValue.tagname[index]}
+                                  </Dropdown.Item>
+                                  
+                                ))}
+                               
+                              </DropdownButton>{" "}
+                            </ButtonGroup>
+                            </Col>
+                            </Row>
+                          ) : (
+                            <Row>
+                              <Col md={{offset: 9}}>
+                            <Button
+                              variant="success"
+                              key={index}
+                              onClick={() =>
+                                redirectHandler(
+                                  currentValue.tagId[0],
+                                  currentValue.type
+                                )
+                              }
+                            >
+                              Create new
+                            </Button>
+                            </Col>
+                            </Row>
+                          )} */}
+                        </div>
+                      </Card>
+                    ))
+                : null}
+              {dataTable && dataTable.length
+                ? dataTable
+                    .filter(
+                      (current) =>
                         Object.keys(current.sessionsObject).length !==
-                        current.endDate.diff(current.startDate, "days")
+                        current.endDate.diff(current.startDate, "days") && current.type !== "One_On_One" && current.type !== "On-Demand PT"
                     )
                     .map((currentValue, index: number) => (
                       <Card
@@ -203,7 +282,6 @@ function TaskCard() {
                               >
                                 
                                 {currentValue.tagId.map((curr, index: number) => (
-                                  
                                   <Dropdown.Item
                                     className="col-xs-12"
                                     key={index}
@@ -247,6 +325,7 @@ function TaskCard() {
                       </Card>
                     ))
                 : null}
+                {/* Bookings in pending stage*/}
               {pendingBookings && pendingBookings.length
                 ? pendingBookings.map((currentValue, index: number) => (
                     <Card
@@ -419,8 +498,12 @@ function TaskCard() {
                 : null}
             </div>
           </Tab>
+
+          {/* completed tab */}
           <Tab eventKey="profile" title="Completed">
             <div className="scrollBar pt-3 ">
+
+              {/* sessions(offerings) */}
               {dataTable && dataTable.length
                 ? dataTable
                     .filter(
@@ -459,6 +542,8 @@ function TaskCard() {
               {notPendingBookings && notPendingBookings.length === 0 ? (
                 <p className="text-center mt-5">No task to show</p>
               ) : null}
+
+              {/* bookings which are booked */}
               {notPendingBookings && notPendingBookings.length
                 ? notPendingBookings.map((currentValue, index: number) => (
                     <Card
