@@ -86,9 +86,9 @@ function CreateEditCohort(props: any, ref: any) {
       let bookingConfigId = bookingsConfigInfo.find(
         (currentValue) => currentValue.fitnesspackage.id === offeringsId
       );
-
+      
       deleteBookingConfig({
-        variables: { id: bookingConfigId.fitnesspackage.id },
+        variables: { id: bookingConfigId.id },
       });
 
       props.callback();
