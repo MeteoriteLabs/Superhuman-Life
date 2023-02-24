@@ -369,6 +369,8 @@ export default function FitnessTab() {
           let startMoment = moment(v.row.original.startDate);
           let endMoment = moment(v.row.original.endDate).add(1, "days");
 
+          console.log(startMoment, endMoment,  v.row.original.type)
+
           v.row.original.sessions.map((curr) => {
             return curr.sessions.map((item) => {
               sessionsObj[item.session_date] =
@@ -399,13 +401,13 @@ export default function FitnessTab() {
             ) : (
               <>
                 <ProgressBar variant="success" now={lengthOfobject} />
-                {lengthOfobject} program build
+                {lengthOfobject}/3 program build
               </>
             ): 
             (
               v.row.original.type !== "One-On-One" &&
               v.row.original.type !== "Custom Fitness" &&
-              v.row.original.type !== "On-Demand PT"
+              v.row.original.type !== "On-Demand PT" 
             ) ?
             <div>
               {
@@ -421,7 +423,7 @@ export default function FitnessTab() {
               ) : (
                 <>
                   <ProgressBar variant="success" now={lengthOfobject} />
-                  {lengthOfobject} program build
+                  {lengthOfobject}/{differenceBetweenStartDateandEndDate} program build
                 </>)
               }  </div> :  
               <div>
