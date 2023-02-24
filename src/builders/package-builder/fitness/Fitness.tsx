@@ -369,8 +369,6 @@ export default function FitnessTab() {
           let startMoment = moment(v.row.original.startDate);
           let endMoment = moment(v.row.original.endDate).add(1, "days");
 
-          console.log(startMoment, endMoment,  v.row.original.type)
-
           v.row.original.sessions.map((curr) => {
             return curr.sessions.map((item) => {
               sessionsObj[item.session_date] =
