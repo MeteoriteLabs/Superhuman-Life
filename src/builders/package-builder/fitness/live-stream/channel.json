@@ -157,8 +157,7 @@
        "type": "object",
        "required": [
            "visibility",
-           "datesConfig",
-           "config"
+           "datesConfig"
        ],
        "properties": {
             "visibility": {
@@ -173,18 +172,6 @@
             },
             "datesConfig": {
                 "type": "string"
-            },
-            "config": {
-                "title": "Booking Config",
-                "type": "object",
-                "required": [
-                    "bookingConfig"
-                ],
-                "properties": {
-                    "bookingConfig": {
-                        "type": "string"
-                    }
-                }
             }
         }
     },

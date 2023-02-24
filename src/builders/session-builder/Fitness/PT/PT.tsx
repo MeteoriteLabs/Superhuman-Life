@@ -3,7 +3,7 @@ import { useContext, useMemo, useRef, useState } from "react";
 import { Badge, Row, Col, Form } from "react-bootstrap";
 import AuthContext from "../../../../context/auth-context";
 import PTTable from "../../../../components/table/PtTable/PTTable";
-import { GET_SESSIONS_FROM_TAGS } from "../../graphQL/queries";
+import { GET_SESSIONS_FROM_TAGS_FOR_ONE_ON_ONE_OR_ON_DEMAND } from "../../graphQL/queries";
 import moment from "moment";
 import ActionButton from "../../../../components/actionbutton";
 import FitnessAction from "../FitnessAction";
@@ -15,24 +15,32 @@ export default function PT() {
   const [showHistory, setShowHistory] = useState<boolean>(false);
   const fitnessActionRef = useRef<any>(null);
 
-  const mainQuery = useQuery(GET_SESSIONS_FROM_TAGS, {
-    variables: {
-      id: auth.userid,
-      tagType: "One-On-One",
-    },
-    onCompleted: (data) => {
-      loadData(data);
-    },
-    fetchPolicy: "no-cache",
-  });
+  const mainQuery = useQuery(
+    GET_SESSIONS_FROM_TAGS_FOR_ONE_ON_ONE_OR_ON_DEMAND,
+    {
+      variables: {
+        id: auth.userid,
+      },
+      onCompleted: (data) => {
+        loadData(data);
+      },
+      fetchPolicy: "no-cache",
+    }
+  );
 
   const loadData = (data) => {
     const flattenData = flattenObj({ ...data });
-    
+
     setUserPackage(
       [...flattenData.tags].map((packageItem) => {
         let renewDay: any = "";
-        if (packageItem.client_packages && packageItem.client_packages.length && packageItem.client_packages[0].fitnesspackages && packageItem.client_packages[0].fitnesspackages.length && packageItem.client_packages[0].fitnesspackages[0].length !== 0) {
+        if (
+          packageItem.client_packages &&
+          packageItem.client_packages.length &&
+          packageItem.client_packages[0].fitnesspackages &&
+          packageItem.client_packages[0].fitnesspackages.length &&
+          packageItem.client_packages[0].fitnesspackages[0].length !== 0
+        ) {
           renewDay = new Date(packageItem.client_packages[0].effective_date);
           renewDay.setDate(
             renewDay.getDate() +
@@ -41,31 +49,69 @@ export default function PT() {
         }
         return {
           tagId: packageItem.id,
-          id: packageItem.client_packages && packageItem.client_packages.length && packageItem.client_packages[0].fitnesspackages && packageItem.client_packages[0].fitnesspackages.length ? packageItem.client_packages[0].fitnesspackages[0].id : null,
+          id:
+            packageItem.client_packages &&
+            packageItem.client_packages.length &&
+            packageItem.client_packages[0].fitnesspackages &&
+            packageItem.client_packages[0].fitnesspackages.length
+              ? packageItem.client_packages[0].fitnesspackages[0].id
+              : null,
           packageName:
-          packageItem.client_packages && packageItem.client_packages.length && packageItem.client_packages[0].fitnesspackages && packageItem.client_packages[0].fitnesspackages.length ? packageItem.client_packages[0].fitnesspackages[0].packagename : null,
-          duration: packageItem.client_packages && packageItem.client_packages.length && packageItem.client_packages[0].fitnesspackages && packageItem.client_packages[0].fitnesspackages.length ? packageItem.client_packages[0].fitnesspackages[0].duration : null,
-          effectiveDate: packageItem.client_packages && packageItem.client_packages.length && packageItem.client_packages[0].effective_date ? moment(
+            packageItem.client_packages &&
+            packageItem.client_packages.length &&
+            packageItem.client_packages[0].fitnesspackages &&
+            packageItem.client_packages[0].fitnesspackages.length
+              ? packageItem.client_packages[0].fitnesspackages[0].packagename
+              : null,
+          duration:
+            packageItem.client_packages &&
+            packageItem.client_packages.length &&
+            packageItem.client_packages[0].fitnesspackages &&
+            packageItem.client_packages[0].fitnesspackages.length
+              ? packageItem.client_packages[0].fitnesspackages[0].duration
+              : null,
+          effectiveDate:
+            packageItem.client_packages &&
+            packageItem.client_packages.length &&
             packageItem.client_packages[0].effective_date
-          ).format("MMMM DD,YYYY") : 'N/A',
-          packageStatus: packageItem.client_packages && packageItem.client_packages.length && packageItem.client_packages[0].fitnesspackages ? packageItem.client_packages[0].fitnesspackages.length && packageItem.client_packages[0].fitnesspackages[0]
-            .Status
-            ? "Active"
-            : "Inactive" : null,
-          packageRenewal: renewDay ? moment(renewDay).format("MMMM DD,YYYY") : 'N/A',
+              ? moment(packageItem.client_packages[0].effective_date).format(
+                  "MMMM DD,YYYY"
+                )
+              : "N/A",
+          packageStatus:
+            packageItem.client_packages &&
+            packageItem.client_packages.length &&
+            packageItem.client_packages[0].fitnesspackages
+              ? packageItem.client_packages[0].fitnesspackages.length &&
+                packageItem.client_packages[0].fitnesspackages[0].Status
+                ? "Active"
+                : "Inactive"
+              : null,
+          packageRenewal: renewDay
+            ? moment(renewDay).format("MMMM DD,YYYY")
+            : "N/A",
 
           client:
-          packageItem.client_packages && packageItem.client_packages.length ? packageItem.client_packages[0].users_permissions_user.username : null,
-          clientId: packageItem.client_packages && packageItem.client_packages.length ? packageItem.client_packages[0].users_permissions_user.id : null,
+            packageItem.client_packages && packageItem.client_packages.length
+              ? packageItem.client_packages[0].users_permissions_user.username
+              : null,
+          clientId:
+            packageItem.client_packages && packageItem.client_packages.length
+              ? packageItem.client_packages[0].users_permissions_user.id
+              : null,
           programName: packageItem.tag_name,
           programStatus: handleStatus(
             packageItem.sessions,
-            packageItem.client_packages && packageItem.client_packages.length ? packageItem.client_packages[0].effective_date : null,
+            packageItem.client_packages && packageItem.client_packages.length
+              ? packageItem.client_packages[0].effective_date
+              : null,
             renewDay
           ),
           programRenewal: calculateProgramRenewal(
             packageItem.sessions,
-            packageItem.client_packages && packageItem.client_packages.length ? packageItem.client_packages[0].effective_date : null
+            packageItem.client_packages && packageItem.client_packages.length
+              ? packageItem.client_packages[0].effective_date
+              : null
           ),
         };
       })

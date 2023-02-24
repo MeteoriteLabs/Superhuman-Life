@@ -12,12 +12,13 @@ import {
   DELETE_PACKAGE,
   UPDATE_PACKAGE_STATUS,
   UPDATE_CHANNEL_COHORT_PACKAGE,
-  UPDATE_BOOKING_CONFIG,
-  CREATE_NOTIFICATION
+  CREATE_NOTIFICATION,
+  DELETE_BOOKING_CONFIG,
 } from "../graphQL/mutations";
 import {
   GET_FITNESS_PACKAGE_TYPE,
   GET_SINGLE_PACKAGE_BY_ID,
+  GET_BOOKINGS_CONFIG,
 } from "../graphQL/queries";
 import AuthContext from "../../../../context/auth-context";
 import { schema, widgets } from "./channelSchema";
@@ -51,18 +52,14 @@ function CreateEditChannel(props: any, ref: any) {
   const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
   const [isOffeeringDeleted, setisOffeeringDeleted] = useState<boolean>(false);
   const [isOfferingUpdated, setisOfferingUpdated] = useState<boolean>(false);
+  const [bookingsConfigInfo, setBookingsConfigInfo] = useState<any[]>([]);
+
   let frmDetails: any = {};
 
   const [editPackageDetails] = useMutation(UPDATE_CHANNEL_COHORT_PACKAGE, {
     onCompleted: (data) => {
-      const val = JSON.parse(frmDetails.config.bookingConfig);
-      updateBookingConfig({
-        variables: {
-          isAuto: val.config === "Auto" ? true : false,
-          id: frmDetails.bookingConfigId,
-          is_Fillmyslots: val.fillSchedule,
-        },
-      });
+      props.callback();
+      setisOfferingUpdated(!isOfferingUpdated);
     },
   });
 
@@ -73,9 +70,31 @@ function CreateEditChannel(props: any, ref: any) {
     },
   });
 
+  // eslint-disable-next-line
+  const { data: get_bookings_config } = useQuery(GET_BOOKINGS_CONFIG, {
+    variables: { userId: auth.userid },
+    onCompleted: (data) => {
+      const bookingsConfigFlattenData = flattenObj({ ...data });
+      setBookingsConfigInfo(bookingsConfigFlattenData.bookingConfigs);
+    },
+  });
+
+  const [deleteBookingConfig] = useMutation(DELETE_BOOKING_CONFIG);
+
   const [deletePackage] = useMutation(DELETE_PACKAGE, {
     refetchQueries: ["GET_TABLEDATA"],
     onCompleted: (data) => {
+
+      // delete booking config
+      let offeringsId = data.deleteFitnesspackage.data.id;
+      let bookingConfigId = bookingsConfigInfo.find(
+        (currentValue) => currentValue.fitnesspackage.id === offeringsId
+      );
+
+      deleteBookingConfig({
+        variables: { id: bookingConfigId.id },
+      });
+      
       props.callback();
       setisOffeeringDeleted(!isOffeeringDeleted);
     },
@@ -90,13 +109,7 @@ function CreateEditChannel(props: any, ref: any) {
     },
   });
 
-  const [updateBookingConfig] = useMutation(UPDATE_BOOKING_CONFIG, {
-    onCompleted: (r: any) => {
-      modalTrigger.next(false);
-      props.callback();
-      setisOfferingUpdated(!isOfferingUpdated);
-    },
-  });
+  
   const [createLiveStreamNotification] = useMutation(CREATE_NOTIFICATION);
 
   const [CreatePackage] = useMutation(CREATE_CHANNEL_PACKAGE, {
@@ -119,12 +132,11 @@ function CreateEditChannel(props: any, ref: any) {
           },
         });
 
-      const val = JSON.parse(frmDetails.config.bookingConfig);
       bookingConfig({
         variables: {
-          isAuto: val.config === "Auto" ? true : false,
+          isAuto: true,
           id: r.createFitnesspackage.data.id,
-          is_Fillmyslots: val.fillSchedule,
+          is_Fillmyslots: true,
           tagName: frmDetails.channelName,
         },
       });
@@ -238,7 +250,6 @@ function CreateEditChannel(props: any, ref: any) {
   function FillDetails(data: any) {
     const flattenData = flattenObj({ ...data });
     let msg: any = flattenData.fitnesspackages[0];
-    let bookingConfig: any = {};
     let details: any = {};
 
     if (msg.groupinstantbooking) {
@@ -291,10 +302,6 @@ function CreateEditChannel(props: any, ref: any) {
     details.tag = msg?.tags === null ? "" : msg.tags;
     details.user_permissions_user = msg.users_permissions_user.id;
     details.visibility = msg.is_private === true ? 1 : 0;
-    bookingConfig.config =
-      msg.booking_config?.isAuto === true ? "Auto" : "Manual";
-    bookingConfig.fillSchedule = msg.booking_config?.is_Fillmyslots;
-    details.config = { bookingConfig: JSON.stringify(bookingConfig) };
     details.thumbnail = msg.Thumbnail_ID;
     details.Upload =
       msg.Upload_ID === null

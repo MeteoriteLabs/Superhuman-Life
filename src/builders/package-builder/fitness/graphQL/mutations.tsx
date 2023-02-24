@@ -99,6 +99,16 @@ export const DELETE_PACKAGE = gql`
   }
 `;
 
+export const DELETE_BOOKING_CONFIG = gql`
+  mutation deleteBookingConfig($id: ID!) {
+    deleteBookingConfig(id: $id) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
 export const UPDATE_PACKAGE_PRIVATE = gql`
   mutation updateFitnesspackage($id: ID!, $is_private: Boolean) {
     updateFitnesspackage(id: $id, data: { is_private: $is_private }) {

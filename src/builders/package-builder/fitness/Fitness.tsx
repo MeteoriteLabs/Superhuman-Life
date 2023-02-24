@@ -399,13 +399,13 @@ export default function FitnessTab() {
             ) : (
               <>
                 <ProgressBar variant="success" now={lengthOfobject} />
-                {lengthOfobject} program build
+                {lengthOfobject}/3 program build
               </>
             ): 
             (
               v.row.original.type !== "One-On-One" &&
               v.row.original.type !== "Custom Fitness" &&
-              v.row.original.type !== "On-Demand PT"
+              v.row.original.type !== "On-Demand PT" 
             ) ?
             <div>
               {
@@ -421,7 +421,7 @@ export default function FitnessTab() {
               ) : (
                 <>
                   <ProgressBar variant="success" now={lengthOfobject} />
-                  {lengthOfobject} program build
+                  {lengthOfobject}/{differenceBetweenStartDateandEndDate} program build
                 </>)
               }  </div> :  
               <div>

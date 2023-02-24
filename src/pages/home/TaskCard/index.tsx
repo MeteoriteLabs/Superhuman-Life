@@ -9,7 +9,7 @@ import {
   Dropdown,
   ButtonGroup,
   Row,
-  Col
+  Col,
 } from "react-bootstrap";
 import { GET_ALL_BOOKINGS } from "../../booking/GraphQL/queries";
 import {
@@ -23,6 +23,7 @@ import { flattenObj } from "../../../components/utils/responseFlatten";
 import BookingAction from "../../booking/Movement/BookingAction";
 import moment from "moment";
 import "./style.css";
+import { Link } from "react-router-dom";
 
 function TaskCard() {
   const auth = useContext(authContext);
@@ -167,12 +168,62 @@ function TaskCard() {
               dataTable.length === 0 ? (
                 <p className="text-center mt-5">No task to show</p>
               ) : null}
+
+              {/* One-on-One and On-Demand PT */}
+              {dataTable && dataTable.length
+                ? dataTable
+                    .filter(
+                      (current) =>
+                        (current.type === "One-On-One" &&
+                          current.Status === "Inactive") ||
+                        (current.type === "On-Demand PT" &&
+                          current.Status === "Inactive") ||
+                        (current.type === "Custom Fitness" &&
+                          current.Status === "Inactive")
+                    )
+                    .map((currentValue, index: number) => (
+                      <Card
+                        key={index}
+                        style={{
+                          borderLeft: "5px solid grey",
+                          borderRadius: "5px",
+                          margin: "5px",
+                          padding: "5px",
+                        }}
+                      >
+                        <div className="col-lg-12">
+                          <b>Change status for {currentValue.packagename}</b>
+                          <p>
+                            Please change the status to publish this offering
+                          </p>
+                          <p>
+                            #offering #{currentValue.type} #
+                            {currentValue.Status}
+                          </p>
+
+                          <Badge variant="danger" className="p-2">
+                            Draft
+                          </Badge>
+
+                          <div className="d-flex justify-content-end">
+                            <Link to={"/offerings"}>
+                              <Button variant="success">Change Status</Button>
+                            </Link>
+                          </div>
+                        </div>
+                      </Card>
+                    ))
+                : null}
+
               {dataTable && dataTable.length
                 ? dataTable
                     .filter(
                       (current) =>
                         Object.keys(current.sessionsObject).length !==
-                        current.endDate.diff(current.startDate, "days")
+                          current.endDate.diff(current.startDate, "days") &&
+                        current.type !== "One-On-One" &&
+                        current.type !== "On-Demand PT" &&
+                        current.type !== "Custom Fitness"
                     )
                     .map((currentValue, index: number) => (
                       <Card
@@ -193,60 +244,58 @@ function TaskCard() {
                           <p>#offering #{currentValue.type}</p>
                           {currentValue.tagId.length > 1 ? (
                             <Row>
-                            <Col md={{offset: 9}}>
-                            <ButtonGroup>
-                              <DropdownButton
-                                as={ButtonGroup}
-                                title="Create new"
-                                id="bg-nested-dropdown"
-                                variant="success"
-                              >
-                                
-                                {currentValue.tagId.map((curr, index: number) => (
-                                  
-                                  <Dropdown.Item
-                                    className="col-xs-12"
-                                    key={index}
-                                    eventKey={curr[index]}
-                                    onClick={() => {
-                                      redirectHandler(
-                                        curr[index],
-                                        currentValue.type
-                                      );
-                                    }}
+                              <Col md={{ offset: 9 }}>
+                                <ButtonGroup>
+                                  <DropdownButton
+                                    as={ButtonGroup}
+                                    title="Create new"
+                                    id="bg-nested-dropdown"
+                                    variant="success"
                                   >
-                                    
-                                    Create {currentValue.tagname[index]}
-                                  </Dropdown.Item>
-                                  
-                                ))}
-                               
-                              </DropdownButton>{" "}
-                            </ButtonGroup>
-                            </Col>
+                                    {currentValue.tagId.map(
+                                      (curr, index: number) => (
+                                        <Dropdown.Item
+                                          className="col-xs-12"
+                                          key={index}
+                                          eventKey={curr[index]}
+                                          onClick={() => {
+                                            redirectHandler(
+                                              curr[index],
+                                              currentValue.type
+                                            );
+                                          }}
+                                        >
+                                          Create {currentValue.tagname[index]}
+                                        </Dropdown.Item>
+                                      )
+                                    )}
+                                  </DropdownButton>{" "}
+                                </ButtonGroup>
+                              </Col>
                             </Row>
                           ) : (
                             <Row>
-                              <Col md={{offset: 9}}>
-                            <Button
-                              variant="success"
-                              key={index}
-                              onClick={() =>
-                                redirectHandler(
-                                  currentValue.tagId[0],
-                                  currentValue.type
-                                )
-                              }
-                            >
-                              Create new
-                            </Button>
-                            </Col>
+                              <Col md={{ offset: 9 }}>
+                                <Button
+                                  variant="success"
+                                  key={index}
+                                  onClick={() =>
+                                    redirectHandler(
+                                      currentValue.tagId[0],
+                                      currentValue.type
+                                    )
+                                  }
+                                >
+                                  Create new
+                                </Button>
+                              </Col>
                             </Row>
                           )}
                         </div>
                       </Card>
                     ))
                 : null}
+              {/* Bookings in pending stage*/}
               {pendingBookings && pendingBookings.length
                 ? pendingBookings.map((currentValue, index: number) => (
                     <Card
@@ -419,8 +468,51 @@ function TaskCard() {
                 : null}
             </div>
           </Tab>
+
+          {/* completed tab */}
           <Tab eventKey="profile" title="Completed">
             <div className="scrollBar pt-3 ">
+              {dataTable && dataTable.length
+                ? dataTable
+                    .filter(
+                      (current) =>
+                        (current.type === "One-On-One" &&
+                          current.Status === "Active") ||
+                        (current.type === "On-Demand PT" &&
+                          current.Status === "Active") ||
+                        (current.type === "Custom Fitness" &&
+                          current.Status === "Active")
+                    )
+                    .map((currentValue, index: number) => (
+                      <Card
+                        key={index}
+                        style={{
+                          borderLeft: "5px solid grey",
+                          borderRadius: "5px",
+                          margin: "5px",
+                          padding: "5px",
+                        }}
+                      >
+                        <div className="col-lg-12">
+                          <b>
+                            Program is created for {currentValue.packagename}
+                          </b>
+                          <p>Program is published for this offering</p>
+                          <p>
+                            #offering #{currentValue.type} #
+                            {currentValue.Status}
+                          </p>
+                          <div className="d-flex justify-content-end">
+                            <Badge variant="success" className="p-2">
+                              Published
+                            </Badge>
+                          </div>
+                        </div>
+                      </Card>
+                    ))
+                : null}
+
+              {/* sessions(offerings) */}
               {dataTable && dataTable.length
                 ? dataTable
                     .filter(
@@ -446,11 +538,11 @@ function TaskCard() {
                           </p>
                           <p>#offering #{currentValue.type}</p>
                           <Row>
-                          <Col md={{offset: 10}}>
-                          <Badge variant="success" className="p-2">
-                            Published
-                          </Badge>
-                          </Col>
+                            <Col md={{ offset: 10 }}>
+                              <Badge variant="success" className="p-2">
+                                Published
+                              </Badge>
+                            </Col>
                           </Row>
                         </div>
                       </Card>
@@ -459,6 +551,8 @@ function TaskCard() {
               {notPendingBookings && notPendingBookings.length === 0 ? (
                 <p className="text-center mt-5">No task to show</p>
               ) : null}
+
+              {/* bookings which are booked */}
               {notPendingBookings && notPendingBookings.length
                 ? notPendingBookings.map((currentValue, index: number) => (
                     <Card
@@ -600,11 +694,11 @@ function TaskCard() {
                           )}
                         </div>
                         <Row>
-                          <Col md={{offset: 10}}>
-                        <Badge variant="success" className="p-2">
-                          Booked
-                        </Badge>
-                        </Col>
+                          <Col md={{ offset: 10 }}>
+                            <Badge variant="success" className="p-2">
+                              Booked
+                            </Badge>
+                          </Col>
                         </Row>
                       </div>
                     </Card>
