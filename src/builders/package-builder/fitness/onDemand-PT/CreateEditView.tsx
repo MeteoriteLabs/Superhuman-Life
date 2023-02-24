@@ -170,12 +170,13 @@ function CreateEditOnDemadPt(props: any, ref: any) {
   const [deletePackage] = useMutation(DELETE_PACKAGE, {
     refetchQueries: ["GET_TABLEDATA"],
     onCompleted: (data) => {
+      
        // delete booking config
        let offeringsId = data.deleteFitnesspackage.data.id;
        let bookingConfigId = bookingsConfigInfo.find(
          (currentValue) => currentValue.fitnesspackage.id === offeringsId
        );
-       console.log(offeringsId, bookingConfigId)
+       
        deleteBookingConfig({
          variables: { id: bookingConfigId.id },
        });

@@ -10,6 +10,7 @@ import {
   GET_SINGLE_PACKAGE_BY_ID,
   GET_FITNESS_PACKAGE_TYPES,
   ADD_SUGGESTION_NEW,
+  GET_BOOKINGS_CONFIG,
 } from "../graphQL/queries";
 import {
   CREATE_PACKAGE,
@@ -18,7 +19,8 @@ import {
   UPDATE_PACKAGE_STATUS,
   CREATE_BOOKING_CONFIG,
   UPDATE_BOOKING_CONFIG,
-  CREATE_NOTIFICATION
+  CREATE_NOTIFICATION,
+  DELETE_BOOKING_CONFIG
 } from "../graphQL/mutations";
 import { Modal, Button } from "react-bootstrap";
 import AuthContext from "../../../../context/auth-context";
@@ -52,6 +54,7 @@ function CreateEditPackage(props: any, ref: any) {
   const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
   const [isOffeeringDeleted, setisOffeeringDeleted] = useState<boolean>(false);
   const [isOfferingUpdated, setisOfferingUpdated] = useState<boolean>(false);
+  const [bookingsConfigInfo, setBookingsConfigInfo] = useState<any[]>([]);
 
   let frmDetails: any = {};
 
@@ -62,6 +65,17 @@ function CreateEditPackage(props: any, ref: any) {
       setFitnessType(flattenData.fitnessPackageTypes);
     },
   });
+
+  // eslint-disable-next-line
+  const { data: get_bookings_config } = useQuery(GET_BOOKINGS_CONFIG, {
+    variables: { userId: auth.userid },
+    onCompleted: (data) => {
+      const bookingsConfigFlattenData = flattenObj({ ...data });
+      setBookingsConfigInfo(bookingsConfigFlattenData.bookingConfigs);
+    },
+  });
+
+  const [deleteBookingConfig] = useMutation(DELETE_BOOKING_CONFIG);
 
   const [bookingConfig] = useMutation(CREATE_BOOKING_CONFIG, {
     onCompleted: (r: any) => {
@@ -118,6 +132,7 @@ function CreateEditPackage(props: any, ref: any) {
       }
     },
   });
+
   const [editPackage] = useMutation(EDIT_PACKAGE, {
     onCompleted: (r: any) => {
       const val = JSON.parse(frmDetails.config.bookingConfig);
@@ -137,9 +152,20 @@ function CreateEditPackage(props: any, ref: any) {
       setisOfferingUpdated(!isOfferingUpdated);
     },
   });
+
   const [deletePackage] = useMutation(DELETE_PACKAGE, {
     refetchQueries: ["GET_TABLEDATA"],
     onCompleted: (data) => {
+      // delete booking config
+      let offeringsId = data.deleteFitnesspackage.data.id;
+      let bookingConfigId = bookingsConfigInfo.find(
+        (currentValue) => currentValue.fitnesspackage.id === offeringsId
+      );
+
+      deleteBookingConfig({
+        variables: { id: bookingConfigId.id },
+      });
+      
       props.callback();
       setisOffeeringDeleted(!isOffeeringDeleted);
     },

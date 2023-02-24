@@ -13,6 +13,7 @@ import {
   GET_SINGLE_PACKAGE_BY_ID,
   GET_FITNESS_PACKAGE_TYPE,
   ADD_SUGGESTION_NEW,
+  GET_BOOKINGS_CONFIG,
 } from "./graphQL/queries";
 import ModalPreview from "./widgetCustom/Preview/FitnessPreview";
 import "./CreateEditView.css";
@@ -21,6 +22,7 @@ import {
   DELETE_PACKAGE,
   EDIT_PACKAGE,
   UPDATE_PACKAGE_PRIVATE,
+  DELETE_BOOKING_CONFIG,
 } from "./graphQL/mutations";
 import StatusModal from "../../../components/StatusModal/StatusModal";
 import FitnessMultiSelect from "./widgetCustom/FitnessMultiSelect";
@@ -60,8 +62,9 @@ function CreateEditView(props: any, ref: any) {
   const classicSchema = require("./classic/classic.json");
   const customSchema = require("./custom/custom.json");
   const jsonSchema = require(`./${packageTypeName}/${packageTypeName}.json`);
-  const [showStatusModal, setShowStatusModal] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showStatusModal, setShowStatusModal] = useState<boolean>(false);
+  const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+  const [bookingsConfigInfo, setBookingsConfigInfo] = useState<any[]>([]);
 
   const modalTrigger = new Subject();
 
@@ -531,8 +534,30 @@ function CreateEditView(props: any, ref: any) {
     },
   });
 
+  // eslint-disable-next-line
+  const { data: get_bookings_config } = useQuery(GET_BOOKINGS_CONFIG, {
+    variables: { userId: auth.userid },
+    onCompleted: (data) => {
+      const bookingsConfigFlattenData = flattenObj({ ...data });
+      setBookingsConfigInfo(bookingsConfigFlattenData.bookingConfigs);
+    },
+  });
+
+  const [deleteBookingConfig] = useMutation(DELETE_BOOKING_CONFIG);
+
   const [deletePackage] = useMutation(DELETE_PACKAGE, {
     onCompleted: (r: any) => {
+
+      // delete booking config
+      let offeringsId = r.deleteFitnesspackage.data.id;
+      let bookingConfigId = bookingsConfigInfo.find(
+        (currentValue) => currentValue.fitnesspackage.id === offeringsId
+      );
+
+      deleteBookingConfig({
+        variables: { id: bookingConfigId.id },
+      });
+
       props.callback();
     },
   });

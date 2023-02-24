@@ -12,11 +12,13 @@ import {
   DELETE_PACKAGE,
   UPDATE_PACKAGE_STATUS,
   UPDATE_CHANNEL_COHORT_PACKAGE,
-  CREATE_NOTIFICATION
+  CREATE_NOTIFICATION,
+  DELETE_BOOKING_CONFIG,
 } from "../graphQL/mutations";
 import {
   GET_FITNESS_PACKAGE_TYPE,
   GET_SINGLE_PACKAGE_BY_ID,
+  GET_BOOKINGS_CONFIG,
 } from "../graphQL/queries";
 import AuthContext from "../../../../context/auth-context";
 import { schema, widgets } from "./channelSchema";
@@ -50,6 +52,8 @@ function CreateEditChannel(props: any, ref: any) {
   const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
   const [isOffeeringDeleted, setisOffeeringDeleted] = useState<boolean>(false);
   const [isOfferingUpdated, setisOfferingUpdated] = useState<boolean>(false);
+  const [bookingsConfigInfo, setBookingsConfigInfo] = useState<any[]>([]);
+
   let frmDetails: any = {};
 
   const [editPackageDetails] = useMutation(UPDATE_CHANNEL_COHORT_PACKAGE, {
@@ -66,9 +70,31 @@ function CreateEditChannel(props: any, ref: any) {
     },
   });
 
+  // eslint-disable-next-line
+  const { data: get_bookings_config } = useQuery(GET_BOOKINGS_CONFIG, {
+    variables: { userId: auth.userid },
+    onCompleted: (data) => {
+      const bookingsConfigFlattenData = flattenObj({ ...data });
+      setBookingsConfigInfo(bookingsConfigFlattenData.bookingConfigs);
+    },
+  });
+
+  const [deleteBookingConfig] = useMutation(DELETE_BOOKING_CONFIG);
+
   const [deletePackage] = useMutation(DELETE_PACKAGE, {
     refetchQueries: ["GET_TABLEDATA"],
     onCompleted: (data) => {
+
+      // delete booking config
+      let offeringsId = data.deleteFitnesspackage.data.id;
+      let bookingConfigId = bookingsConfigInfo.find(
+        (currentValue) => currentValue.fitnesspackage.id === offeringsId
+      );
+
+      deleteBookingConfig({
+        variables: { id: bookingConfigId.id },
+      });
+      
       props.callback();
       setisOffeeringDeleted(!isOffeeringDeleted);
     },
