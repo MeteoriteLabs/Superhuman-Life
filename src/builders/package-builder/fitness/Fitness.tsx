@@ -576,7 +576,7 @@ export default function FitnessTab() {
           };
         })
       );
-console.log(fitnessFlattenData)
+
       setSelectedDuration(
         new Array(fitnessFlattenData.fitnesspackages.length).fill(0)
       );
@@ -585,7 +585,7 @@ console.log(fitnessFlattenData)
       );
     },
   });
-console.log(dataTable);
+
   const { data: get_fitness, refetch: refetchFitness } = useQuery(GET_FITNESS, {
     variables: { id: auth.userid },
     onCompleted: (data) => {

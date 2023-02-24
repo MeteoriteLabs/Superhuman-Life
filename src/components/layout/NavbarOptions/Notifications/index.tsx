@@ -15,8 +15,8 @@ import "./style.css";
 
 const images = {
   "/offerings": "assets/notifications/offerings.svg",
-  "/clients": "assets/notifications/users.svg"
-}
+  "/clients": "assets/notifications/users.svg",
+};
 
 interface Notification {
   id: String;
@@ -77,19 +77,64 @@ function Notifications() {
     });
   }
 
+  const readAll = () => {
+    for(let i = 0; i < notifications.length; i++){
+      console.log(i,notifications[i].id)
+      changeNotificationStatus({
+        variables: { id: notifications[i].id, IsRead: true },
+        onCompleted: () => {
+          refetch_changemaker_notifications();
+        },
+      });
+    }
+  };
+
+  const deleteAll = () => {
+    for(let i = 0; i < notifications.length; i++) {
+      deleteNotification({
+        variables: { id: notifications[i].id },
+        onCompleted: () => {
+          refetch_changemaker_notifications();
+        },
+      });
+    }
+  };
+
   return (
     <div>
       <div className="d-flex justify-content-between align-items-center">
         <h2>Notifications</h2>
-        <div className="px-5">
+
+        <div className="px-5 mx-2">
+          {/* delete all button */}
+          <Button
+            className="mx-2"
+            variant="outline-dark"
+            onClick={() => deleteAll()}
+          >
+            Delete All
+          </Button>
+
+          {/* read all notifications */}
+          <Button
+            className="mx-2"
+            variant="outline-dark"
+            onClick={() => readAll()}
+          >
+            Read All
+          </Button>
+
+          {/* Settings */}
           <Link to="/notificationSettings">
-            <Button variant="outline-dark">Settings</Button>
+            <Button className="mx-2" variant="outline-dark">
+              Settings
+            </Button>
           </Link>
         </div>
       </div>
 
       <div className="mt-5 col-lg-12">
-        {notifications.map((currentValue) => {
+        {notifications && notifications.length ? notifications.map((currentValue) => {
           return (
             <div key={`${currentValue.id}`}>
               <Row className="my-3">
@@ -170,7 +215,7 @@ function Notifications() {
               </Row>
             </div>
           );
-        })}
+        }) : <h3 className="text-center">No notifications to show</h3>}
       </div>
     </div>
   );

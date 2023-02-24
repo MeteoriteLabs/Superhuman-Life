@@ -171,8 +171,8 @@ function TaskCard() {
                 ? dataTable
                     .filter(
                       (current) =>
-                       current.type == "One_On_One" && current.Status === false
-                       || current.type === "On-Demand PT" && current.Status === false
+                       (current.type === "One_On_One" && current.Status === false)
+                       || (current.type === "On-Demand PT" && current.Status === false)
                     )
                     .map((currentValue, index: number) => (
                       <Card

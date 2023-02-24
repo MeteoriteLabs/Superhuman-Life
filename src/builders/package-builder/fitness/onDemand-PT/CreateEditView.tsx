@@ -18,7 +18,8 @@ import {
   UPDATE_PACKAGE_STATUS,
   CREATE_BOOKING_CONFIG,
   UPDATE_BOOKING_CONFIG,
-  CREATE_NOTIFICATION
+  CREATE_NOTIFICATION,
+  DELETE_BOOKING_CONFIG,
 } from "../graphQL/mutations";
 import { Modal, Button } from "react-bootstrap";
 import AuthContext from "../../../../context/auth-context";
