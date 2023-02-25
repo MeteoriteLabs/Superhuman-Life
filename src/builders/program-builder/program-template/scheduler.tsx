@@ -483,9 +483,7 @@ const Schedular = (props: any) => {
 			sessions
 				.filter((itm) => itm.Is_restday === false)
 				.forEach((val) => {
-					console.log(arr);
-					console.log(val);
-					debugger;
+					
 					var startTimeHour: any = `${
 						val.start_time === null ? "0" : val.start_time.split(":")[0]
 					}`;
