@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 
 const headerStyle = {
     backgroundImage: "linear-gradient(15deg, #4568dc 0%, #b06ab3 100%)",
-    color: "#FFF"
+    color: "red"
 }
 
 export default function HomeTopNav() {

@@ -51,11 +51,6 @@ export default function Login() {
 
   return (
     <Modal.Dialog>
-      {/* <Helmet>
-        <meta charSet="utf-8" />
-        <title>Sapien Dashboard | Login</title>
-        <link rel="canonical" href="https://sapien.systems/" />
-      </Helmet> */}
       <Modal.Body>
         <h4>Welcome Back!</h4>
         <p className="text-danger blockquote-footer">Sign In Using</p>
