@@ -6,6 +6,8 @@ import { GoogleLogin } from "@react-oauth/google";
 import { useLinkedIn } from "react-linkedin-login-oauth2";
 import linkedin from "react-linkedin-login-oauth2/assets/linkedin.png";
 import { InstagramLogin } from "@amraneze/react-instagram-login";
+import { useGoogleLogin } from "@react-oauth/google";
+import "./socialLogin.css";
 
 const linkedinClientId = process.env.REACT_APP_LINKEDIN_CLIENT_ID;
 const redirectUriForLinkedin = process.env.REACT_APP_LINKEDIN_REDIRECT_URI;
@@ -61,42 +63,58 @@ const SocialLogin = (props: any) => {
   return (
     <div>
       <label>Or</label>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-        }}
-      >
-        <div>
+      <div>
+        <div
+          className=" py-2"
+          style={{ display: "flex", justifyContent: "center" }}
+        >
           <img
             onClick={linkedInLogin}
             src={linkedin}
             alt="Sign in with Linked In"
-            style={{ maxWidth: "180px", cursor: "pointer" }}
+            style={{ height: "50px", width: "200px", cursor: "pointer" }}
           />
         </div>
-        <div>
+        <div
+          className="py-2"
+          style={{ display: "flex", justifyContent: "center" }}
+        >
           <InstagramLogin
             clientId={`${instagramClientId}`}
             buttonText="Login"
             onSuccess={responseInstagram}
             onFailure={responseInstagram}
+            style={{ height: "50px", cursor: "pointer", width: "200px" }}
           />
         </div>
 
-        {!login && (
-          <FacebookLogin
-            appId={`${facebookAppId}`}
-            autoLoad={false}
-            fields="name,email,picture"
-            scope="public_profile,email,user_friends"
-            callback={responseFacebook}
-            icon="fa-facebook"
-          />
-        )}
+        <div
+          className="py-2"
+          style={{ display: "flex", justifyContent: "center" }}
+        >
+          {!login && (
+            <FacebookLogin
+              appId={`${facebookAppId}`}
+              autoLoad={false}
+              fields="name,email,picture"
+              scope="public_profile,email,user_friends"
+              callback={responseFacebook}
+              icon="fa-facebook"
+              cssClass="my-facebook-button-class"
+              style={{
+                height: "10px",
+                cursor: "pointer",
+                width: "100px",
+                borderRadius: "10px",
+              }}
+            />
+          )}
+        </div>
 
-        <div>
+        <div
+          className="w-100 py-2"
+          style={{ display: "flex", justifyContent: "center" }}
+        >
           <GoogleOAuthProvider clientId={`${googleClientId}`}>
             <GoogleLogin
               onSuccess={(credentialResponse) => {
