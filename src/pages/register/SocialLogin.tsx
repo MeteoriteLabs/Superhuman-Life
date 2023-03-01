@@ -5,6 +5,7 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import { GoogleLogin } from "@react-oauth/google";
 import { useLinkedIn } from "react-linkedin-login-oauth2";
 import linkedin from "react-linkedin-login-oauth2/assets/linkedin.png";
+import { InstagramLogin } from "@amraneze/react-instagram-login";
 
 const SocialLogin = (props: any) => {
   const [login, setLogin] = useState(false);
@@ -36,7 +37,7 @@ const SocialLogin = (props: any) => {
   //linkedin
   const { linkedInLogin } = useLinkedIn({
     clientId: "863m1h8lmozyrr",
-    redirectUri: "https://dashboard.sapien.systems/login/linkedin", // for Next.js, you can use `${typeof window === 'object' && window.location.origin}/linkedin`
+    redirectUri: `${window.location.origin}/linkedin`,
     onSuccess: (code) => {
       console.log(code);
     },
@@ -44,6 +45,11 @@ const SocialLogin = (props: any) => {
       console.log(error);
     },
   });
+
+  //instagram
+  const responseInstagram = (response) => {
+    console.log(response);
+  };
 
   return (
     <div>
@@ -72,14 +78,20 @@ const SocialLogin = (props: any) => {
           /> */}
         </div>
         <div>
-          <img
+          <InstagramLogin
+            clientId="579933617392054"
+            buttonText="Login"
+            onSuccess={responseInstagram}
+            onFailure={responseInstagram}
+          />
+          {/* <img
             src="/assets/insta_signin.svg"
             style={{ cursor: "pointer" }}
             height="70px"
             className="d-block w-100"
             alt="sapien-exercise"
             onClick={() => console.log("instagram")}
-          />
+          /> */}
         </div>
 
         {!login && (
