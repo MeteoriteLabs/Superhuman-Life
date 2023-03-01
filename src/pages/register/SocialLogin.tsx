@@ -98,7 +98,7 @@ const SocialLogin = (props: any) => {
           <FacebookLogin
             appId="1189245355056803"
             autoLoad={false}
-            fields="name,email,picture,city"
+            fields="name,email,picture"
             scope="public_profile,email,user_friends"
             callback={responseFacebook}
             icon="fa-facebook"
