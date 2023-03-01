@@ -6,12 +6,21 @@ import { GoogleLogin } from "@react-oauth/google";
 import { useLinkedIn } from "react-linkedin-login-oauth2";
 import linkedin from "react-linkedin-login-oauth2/assets/linkedin.png";
 import { InstagramLogin } from "@amraneze/react-instagram-login";
+import { useGoogleLogin } from "@react-oauth/google";
+import "./socialLogin.css";
+
+const linkedinClientId = process.env.REACT_APP_LINKEDIN_CLIENT_ID;
+const redirectUriForLinkedin = process.env.REACT_APP_LINKEDIN_REDIRECT_URI;
+const googleClientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+const instagramClientId = process.env.REACT_APP_INSTAGRAM_CLIENT_ID;
+const facebookAppId = process.env.REACT_APP_FACEBOOK_APP_ID;
 
 const SocialLogin = (props: any) => {
   const [login, setLogin] = useState(false);
   const [data, setData] = useState({});
   const [picture, setPicture] = useState("");
 
+  //Facebook
   const responseFacebook = (response) => {
     console.log(response);
     // Login failed
@@ -36,8 +45,8 @@ const SocialLogin = (props: any) => {
 
   //linkedin
   const { linkedInLogin } = useLinkedIn({
-    clientId: "863m1h8lmozyrr",
-    redirectUri: `${window.location.origin}/linkedin`,
+    clientId: `${linkedinClientId}`,
+    redirectUri: `${redirectUriForLinkedin}`,
     onSuccess: (code) => {
       console.log(code);
     },
@@ -54,59 +63,59 @@ const SocialLogin = (props: any) => {
   return (
     <div>
       <label>Or</label>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-        }}
-      >
-        <div>
+      <div>
+        <div
+          className=" py-2"
+          style={{ display: "flex", justifyContent: "center" }}
+        >
           <img
             onClick={linkedInLogin}
             src={linkedin}
             alt="Sign in with Linked In"
-            style={{ maxWidth: "180px", cursor: "pointer" }}
+            style={{ height: "50px", width: "200px", cursor: "pointer" }}
           />
-          {/* <img
-            src="/assets/linkedin_signin.svg"
-            style={{ cursor: "pointer" }}
-            height="70px"
-            className="d-block w-100"
-            alt="sapien-exercise"
-            onClick={() => console.log("linkedin")}
-          /> */}
         </div>
-        <div>
+        <div
+          className="py-2"
+          style={{ display: "flex", justifyContent: "center" }}
+        >
           <InstagramLogin
-            clientId="579933617392054"
+            clientId={`${instagramClientId}`}
             buttonText="Login"
             onSuccess={responseInstagram}
             onFailure={responseInstagram}
+            style={{ height: "50px", cursor: "pointer", width: "200px" }}
           />
-          {/* <img
-            src="/assets/insta_signin.svg"
-            style={{ cursor: "pointer" }}
-            height="70px"
-            className="d-block w-100"
-            alt="sapien-exercise"
-            onClick={() => console.log("instagram")}
-          /> */}
         </div>
 
-        {!login && (
-          <FacebookLogin
-            appId="1189245355056803"
-            autoLoad={false}
-            fields="name,email,picture"
-            scope="public_profile,email,user_friends"
-            callback={responseFacebook}
-            icon="fa-facebook"
-          />
-        )}
+        <div
+          className="py-2"
+          style={{ display: "flex", justifyContent: "center" }}
+        >
+          {!login && (
+            <FacebookLogin
+              appId={`${facebookAppId}`}
+              autoLoad={false}
+              fields="name,email,picture"
+              scope="public_profile,email,user_friends"
+              callback={responseFacebook}
+              icon="fa-facebook"
+              cssClass="my-facebook-button-class"
+              style={{
+                height: "10px",
+                cursor: "pointer",
+                width: "100px",
+                borderRadius: "10px",
+              }}
+            />
+          )}
+        </div>
 
-        <div>
-          <GoogleOAuthProvider clientId="914717417975-huef6bdt4iu0if5nigu7n87sa9eu50hg.apps.googleusercontent.com">
+        <div
+          className="w-100 py-2"
+          style={{ display: "flex", justifyContent: "center" }}
+        >
+          <GoogleOAuthProvider clientId={`${googleClientId}`}>
             <GoogleLogin
               onSuccess={(credentialResponse) => {
                 console.log(credentialResponse);
@@ -116,16 +125,6 @@ const SocialLogin = (props: any) => {
               }}
             />
           </GoogleOAuthProvider>
-          {/* <img
-            src="/assets/google_signin.svg"
-            style={{ cursor: "pointer" }}
-            height="70px"
-            className="d-block w-100"
-            alt="sapien-exercise"
-            onClick={() =>
-              (window.location.href = "http://localhost:3000/connect/")
-            }
-          /> */}
         </div>
       </div>
       <br />

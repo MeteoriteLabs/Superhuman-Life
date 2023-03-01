@@ -1,0 +1,9 @@
+.my-facebook-button-class{
+    cursor: pointer;
+    border: none;
+    width: 100%;
+    border-radius: 5px;
+    padding: 15px 20px;
+    background-color: rgb(80, 80, 220);
+    color: white;
+}
