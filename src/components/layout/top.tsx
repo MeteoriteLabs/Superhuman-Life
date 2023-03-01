@@ -1,4 +1,3 @@
-import { NavLink } from "react-router-dom";
 import { useQuery } from "@apollo/client";
 import { useContext, useEffect, useState } from "react";
 import authContext from "../../context/auth-context";

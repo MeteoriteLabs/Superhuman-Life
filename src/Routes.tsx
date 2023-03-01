@@ -28,9 +28,6 @@ const ProfilePage = React.lazy(() => import("./pages/profile"));
 const RegisterPage = React.lazy(() => import("./pages/register"));
 const SchedulePage = React.lazy(() => import("./pages/schedule"));
 const SettingsPage = React.lazy(() => import("./pages/settings"));
-const AboutPage = React.lazy(() => import("./pages/about"));
-const ContactPage = React.lazy(() => import("./pages/contact"));
-const FQAsPage = React.lazy(() => import("./pages/faqs"));
 const FinancePage = React.lazy(() => import("./pages/finance"))
 
 const ClientHomePage = React.lazy(() => import("./builders/client-builder/clientlisting/client"));
@@ -52,11 +49,12 @@ const Receipt = React.lazy(() => import('./pages/finance/Outflow/Receipt'));
 const PaymentScheduleSettingsPage = React.lazy(() => import('./builders/client-builder/PaymentScheduleSettings'));
 const NotificationsPage = React.lazy(() => import('./components/layout/NavbarOptions/Notifications'));
 const NotificationsSettings = React.lazy(() => import('./pages/notificationSettings'));
+const PrivacyPolicy = React.lazy(() => import('./pages/privacyPolicy'));
+const TermsOfService = React.lazy(() => import('./pages/termsOfService'));
+const SessionPage = React.lazy(() => import("./builders/session-builder/"));
 
 //auth logins
 const GoogleAuthCallbackPage = React.lazy(() => import("./pages/register/oAuthLogins/googleAuthCallback"));
-
-const SessionPage = React.lazy(() => import("./builders/session-builder/"));
 
 function NoMatch() {
      return (
@@ -124,9 +122,8 @@ export default function Routes({ token }: any) {
                                    <Route path="/confirm-account" component={ConfirmAccountPage} />
                                    <Route path="/api/auth/google/callback" component={GoogleAuthCallbackPage} />
                                    <Route path="/register" component={RegisterPage} />
-                                   <Route path="/about" component={AboutPage} />
-                                   <Route path="/contact" component={ContactPage} />
-                                   <Route path="/faqs" component={FQAsPage} />
+                                   <Route path="/termsofservice" component={TermsOfService} />
+                                   <Route path="/privacypolicy" component={PrivacyPolicy} />
                                    <Route path="/deactiveaccount" component={DeactiveAccountPage} />
                                    <Route path="*" component={NoAuthRedirect} />
                               </Switch>
