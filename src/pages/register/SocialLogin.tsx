@@ -1,18 +1,15 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import FacebookLogin from "react-facebook-login";
 import Toaster from "../../components/Toaster";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { GoogleLogin } from "@react-oauth/google";
 import { useLinkedIn } from "react-linkedin-login-oauth2";
 import linkedin from "react-linkedin-login-oauth2/assets/linkedin.png";
-import { InstagramLogin } from "@amraneze/react-instagram-login";
-import { useGoogleLogin } from "@react-oauth/google";
 import "./socialLogin.css";
 
 const linkedinClientId = process.env.REACT_APP_LINKEDIN_CLIENT_ID;
 const redirectUriForLinkedin = process.env.REACT_APP_LINKEDIN_REDIRECT_URI;
 const googleClientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
-const instagramClientId = process.env.REACT_APP_INSTAGRAM_CLIENT_ID;
 const facebookAppId = process.env.REACT_APP_FACEBOOK_APP_ID;
 
 const SocialLogin = (props: any) => {
@@ -55,14 +52,13 @@ const SocialLogin = (props: any) => {
     },
   });
 
-  //instagram
-  const responseInstagram = (response) => {
-    console.log(response);
-  };
+ 
+
+  useEffect(() => { localStorage.setItem('dataKey', JSON. stringify(data)); }, [data]);
 
   return (
     <div>
-      <label>Or</label>
+      <label>Select any from below for autofill</label>
       <div>
         <div
           className=" py-2"
@@ -72,22 +68,10 @@ const SocialLogin = (props: any) => {
             onClick={linkedInLogin}
             src={linkedin}
             alt="Sign in with Linked In"
-            style={{ height: "50px", width: "200px", cursor: "pointer" }}
+            style={{ height: "40px", width: "180px", cursor: "pointer" }}
           />
         </div>
-        <div
-          className="py-2"
-          style={{ display: "flex", justifyContent: "center" }}
-        >
-          <InstagramLogin
-            clientId={`${instagramClientId}`}
-            buttonText="Login"
-            onSuccess={responseInstagram}
-            onFailure={responseInstagram}
-            style={{ height: "50px", cursor: "pointer", width: "200px" }}
-          />
-        </div>
-
+        
         <div
           className="py-2"
           style={{ display: "flex", justifyContent: "center" }}
@@ -101,12 +85,6 @@ const SocialLogin = (props: any) => {
               callback={responseFacebook}
               icon="fa-facebook"
               cssClass="my-facebook-button-class"
-              style={{
-                height: "10px",
-                cursor: "pointer",
-                width: "100px",
-                borderRadius: "10px",
-              }}
             />
           )}
         </div>

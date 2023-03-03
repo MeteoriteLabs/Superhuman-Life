@@ -2,6 +2,15 @@
     "1": {
         "title": "Sign Up",
         "type": "object",
+        "properties": {
+            "socialLogins": {
+                "type": "string"
+            }
+        }
+    },
+    "2": {
+        "title": "Sign Up",
+        "type": "object",
         "required": [
             "email",
             "password",
@@ -22,13 +31,10 @@
                 "type": "string",
                 "title": "Confirm Password",
                 "minLength": 8
-            },
-            "socialLogins": {
-                "type": "string"
             }
         }
     },
-    "2": {
+    "3": {
         "title": "Sign Up",
         "type": "object",
         "required": [
@@ -82,10 +88,10 @@
             }
         }
     },
-    "3": {
+    "4": {
         "title": "Sign Up",
         "type": "object",
-        "required": [    
+        "required": [
             "changemaker",
             "education",
             "language",
@@ -112,15 +118,15 @@
                             "title": "Institute Name",
                             "type": "string"
                         },
-                        "specialization":{
+                        "specialization": {
                             "title": "Specialization",
                             "type": "string"
                         },
-                        "yearOfPassing":{
+                        "yearOfPassing": {
                             "title": "Year of Passing",
                             "type": "string"
                         },
-                        "typeOfDegree":{
+                        "typeOfDegree": {
                             "type": "string",
                             "title": "Type of Degree",
                             "enum": [
@@ -149,98 +155,27 @@
             }
         }
     },
-    "4": {
+    "5": {
         "title": "Sign Up",
         "type": "object",
         "required": [
-            "multipleChoicesList",
-            "organization"
+            "multipleChoicesList"
         ],
         "properties": {
             "multipleChoicesList": {
                 "type": "array",
                 "title": "Select the Modules (for Changemaker dashboard)",
                 "items": {
-                  "type": "string",
-                  "enum": [
-                    "Fitness",
-                    "Nutrition",
-                    "Mental Health",
-                    "Activities",
-                    "Teach"
-                  ]
+                    "type": "string",
+                    "enum": [
+                        "Fitness",
+                        "Nutrition",
+                        "Mental Health",
+                        "Activities",
+                        "Teach"
+                    ]
                 },
                 "uniqueItems": true
-              },
-              "organization": {
-                "type": "array",
-                "title": "Organization Details",
-                "items": [
-                    {
-                        "title": "",
-                        "$ref": "#/definitions/org_details"
-                    }
-                ]
-            }
-        },
-        "definitions": {
-            "org_details": {
-                "title": "Do you have an organization",
-                "type": "object",
-                "properties": {
-                    "Do_you_have_an_organization": {
-                        "type": "string",
-                        "title": "Do you own an organization?",
-                        "enum": [
-                            "Yes",
-                            "No"
-                        ]
-                    }
-                },
-                "required": [
-                    "Do_you_have_an_organization"
-                ],
-                "dependencies": {
-                    "Do_you_have_an_organization": {
-                        "oneOf": [
-                            {
-                                "properties": {
-                                    "Do_you_have_an_organization": {
-                                        "enum": [
-                                            "No"
-                                        ]
-                                    }
-                                }
-                            },
-                            {
-                                "properties": {
-                                    "Do_you_have_an_organization": {
-                                        "enum": [
-                                            "Yes"
-                                        ]
-                                    },
-                                    "Organization_Name": {
-                                        "type": "string",
-                                        "title": "Name of Organization"
-                                    },
-                                    "Organization_Type": {
-                                        "type": "string",
-                                        "title": "Type of Organization"
-                                    },
-                                    "Organization_Description": {
-                                        "type": "string",
-                                        "title": "About Organizations"
-                                    }
-                                },
-                                "required": [
-                                    "Organization_Name",
-                                    "Organization_Type",
-                                    "Organization_Description"
-                                ]
-                            }
-                        ]
-                    }
-                }
             }
         }
     }
