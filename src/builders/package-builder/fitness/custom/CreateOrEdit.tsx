@@ -20,7 +20,7 @@ import {
   CREATE_BOOKING_CONFIG,
   UPDATE_BOOKING_CONFIG,
   CREATE_NOTIFICATION,
-  DELETE_BOOKING_CONFIG
+  DELETE_BOOKING_CONFIG,
 } from "../graphQL/mutations";
 import { Modal, Button } from "react-bootstrap";
 import AuthContext from "../../../../context/auth-context";
@@ -31,9 +31,9 @@ import { flattenObj } from "../../../../components/utils/responseFlatten";
 import moment from "moment";
 import Toaster from "../../../../components/Toaster";
 import {
-    youtubeUrlCustomFormats,
-    youtubeUrlTransformErrors,
-  } from "../../../../components/utils/ValidationPatterns";
+  youtubeUrlCustomFormats,
+  youtubeUrlTransformErrors,
+} from "../../../../components/utils/ValidationPatterns";
 
 interface Operation {
   id: string;
@@ -100,18 +100,18 @@ function CreateEditPackage(props: any, ref: any) {
       const flattenData = flattenObj({ ...r });
 
       createCustomNotification({
-          variables: {
-            data: {
-              type: "Offerings",
-              Title: "New offering",
-              OnClickRoute: "/offerings",
-              users_permissions_user: auth.userid,
-              Body: `New custom offering ${flattenData.createFitnesspackage.packagename} has been added`,
-              DateTime: moment().format(),
-              IsRead: false
-            },
+        variables: {
+          data: {
+            type: "Offerings",
+            Title: "New offering",
+            OnClickRoute: "/offerings",
+            users_permissions_user: auth.userid,
+            Body: `New custom offering ${flattenData.createFitnesspackage.packagename} has been added`,
+            DateTime: moment().format(),
+            IsRead: false,
           },
-        });
+        },
+      });
 
       if (window.location.href.split("/")[3] === "client") {
         createUserPackageSuggestion({
@@ -165,7 +165,7 @@ function CreateEditPackage(props: any, ref: any) {
       deleteBookingConfig({
         variables: { id: bookingConfigId.id },
       });
-      
+
       props.callback();
       setisOffeeringDeleted(!isOffeeringDeleted);
     },
@@ -193,7 +193,7 @@ function CreateEditPackage(props: any, ref: any) {
         setDeleteModalShow(true);
       }
 
-      // if (msg && !msg.id) //render form if no message id
+      //render form if msg type isnot delete and toggle status
       if (msg.type !== "delete" && msg.type !== "toggle-status") {
         modalTrigger.next(true);
       }
@@ -205,6 +205,7 @@ function CreateEditPackage(props: any, ref: any) {
     Intermediate,
     Advanced,
   }
+
   enum ENUM_FITNESSPACKAGE_INTENSITY {
     Low,
     Moderate,
@@ -261,9 +262,10 @@ function CreateEditPackage(props: any, ref: any) {
     const flattenedData = flattenObj({ ...data });
 
     let msg = flattenedData.fitnesspackages[0];
+    console.log(msg);
     let bookingConfig: any = {};
     let details: any = {};
-    for (var i = 0; i < msg.fitnesspackagepricing.length; i++) {
+    for (let i = 0; i < msg.fitnesspackagepricing.length; i++) {
       PRICING_TABLE_DEFAULT[i].mrp = msg.fitnesspackagepricing[i].mrp;
       PRICING_TABLE_DEFAULT[i].suggestedPrice =
         msg.fitnesspackagepricing[i].suggestedPrice;
@@ -278,7 +280,7 @@ function CreateEditPackage(props: any, ref: any) {
     details.disciplines = msg.fitnessdisciplines;
     details.channelinstantBooking = msg.groupinstantbooking;
     details.classSize = ENUM_FITNESSPACKAGE_PTCLASSSIZE[msg.classSize];
-    details.expiryDate = moment(msg.expirydate).format("YYYY-MM-DD");
+    details.expiryDate = msg.expiry_date;
     details.level = ENUM_FITNESSPACKAGE_LEVEL[msg?.level];
     details.intensity = ENUM_FITNESSPACKAGE_INTENSITY[msg.Intensity];
     details.pricingDetail =
@@ -318,6 +320,13 @@ function CreateEditPackage(props: any, ref: any) {
     details.languages = JSON.stringify(msg.languages);
     setCustomDetails(details);
 
+    console.log(
+      details,
+      msg.datesConfig?.expiryDate,
+      msg.datesConfig,
+      moment(msg.datesConfig?.expiryDate).format("YYYY-MM-DDTHH:mm"),
+      moment(msg.expiry_date).format("YYYY-MM-DDTHH:mm")
+    );
     //if message exists - show form only for edit and view
     if (["edit", "view"].indexOf(operation.type) > -1) modalTrigger.next(true);
     else OnSubmit(null);
@@ -379,7 +388,7 @@ function CreateEditPackage(props: any, ref: any) {
         ptclasssize: ENUM_FITNESSPACKAGE_PTCLASSSIZE[frm.classSize],
         users_permissions_user: frm.user_permissions_user,
         publishing_date: moment(frm.datesConfig?.publishingDate).toISOString(),
-        expiry_date: moment(frm.datesConfig?.expiry_date).toISOString(),
+        expiry_date: moment(frm.datesConfig?.expiryDate).toISOString(),
         thumbnail: frm.thumbnail,
         upload: frm?.Upload?.upload,
         equipmentList: frm.equipmentList,
@@ -405,7 +414,10 @@ function CreateEditPackage(props: any, ref: any) {
     frm.programDetails = JSON.parse(frm.programDetails);
     frm.datesConfig = JSON.parse(frm.datesConfig);
     frm.languages = JSON.parse(frm.languages);
-
+    console.log(
+      frm.datesConfig,
+      moment(frm.datesConfig?.expiryDate).toISOString()
+    );
     editPackage({
       variables: {
         id: operation.id,
@@ -433,7 +445,7 @@ function CreateEditPackage(props: any, ref: any) {
         ptclasssize: ENUM_FITNESSPACKAGE_PTCLASSSIZE[frm.classSize],
         users_permissions_user: frm.user_permissions_user,
         publishing_date: moment(frm.datesConfig?.publishingDate).toISOString(),
-        expiry_date: moment(frm.datesConfig?.expiry_date).toISOString(),
+        expiry_date: moment(frm.datesConfig?.expiryDate).toISOString(),
         thumbnail: frm.thumbnail,
         upload: frm?.Upload?.upload,
         equipmentList: frm.equipmentList,
@@ -452,7 +464,9 @@ function CreateEditPackage(props: any, ref: any) {
   }
 
   function updateChannelPackageStatus(id: any, status: any) {
-    updatePackageStatus({ variables: { id: id, Status: status ? false : true } });
+    updatePackageStatus({
+      variables: { id: id, Status: status ? false : true },
+    });
     setStatusModalShow(false);
     operation.type = "create";
   }

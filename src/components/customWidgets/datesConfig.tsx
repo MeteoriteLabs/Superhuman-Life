@@ -5,25 +5,25 @@ import moment from "moment";
 const PackageDateConfig = (props: any) => {
   const inputDisabled = props.readonly;
   const [publishingDate, setPublishingDate] = useState(
-    props.value === undefined
-      ? ""
-      : moment(JSON.parse(props.value).publishingDate).format(
+    props.value
+      ? moment(JSON.parse(props.value).publishingDate).format(
           "YYYY-MM-DDTHH:mm"
         )
+      : ""
   );
   const [expiryDate, setExpiryDate] = useState(
-    props.value === undefined
-      ? ""
-      : moment(JSON.parse(props.value).expiryDate).format("YYYY-MM-DDTHH:mm")
+    props.value
+      ? moment(JSON.parse(props.value).expiryDate).format("YYYY-MM-DDTHH:mm")
+      : ""
   );
 
-  useEffect(() => {
-    setExpiryDate(
-      moment(publishingDate)
-        .add(1, props?.title2 ? "month" : "year")
-        .format("YYYY-MM-DDTHH:mm")
-    );
-  }, [publishingDate, props.title2]);
+  // useEffect(() => {
+  //   setExpiryDate(
+  //     moment(publishingDate)
+  //       .add(1, props?.title2 ? "month" : "year")
+  //       .format("YYYY-MM-DDTHH:mm")
+  //   );
+  // }, [publishingDate, props.title2]);
 
   if (publishingDate && expiryDate) {
     props.onChange(JSON.stringify({ publishingDate, expiryDate }));
