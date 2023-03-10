@@ -174,8 +174,7 @@ function CreateEditChannel(props: any, ref: any) {
   enum ENUM_FITNESSPACKAGE_LEVEL {
     Beginner,
     Intermediate,
-    Advanced,
-    No_Level,
+    Advanced
   }
 
   const PRICING_TABLE_DEFAULT = [

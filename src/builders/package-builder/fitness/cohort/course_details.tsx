@@ -2,9 +2,9 @@ import {useState} from 'react';
 import {Button, Form} from 'react-bootstrap';
 
 const CourseDetails = (props) => {
-
+    
     const inputDisabled = props.readonly;
-    const [details, setDetails] = useState<any>(props.value === undefined ? [{title: '', description: ''}] : JSON.parse(props.value));
+    const [details, setDetails] = useState<any>(props.value ? [JSON.parse(props.value)] : [{title: '', description: ''}]);
 
     function handleAddCourseDetails(data: any) {
         const newData = [...data];
@@ -29,7 +29,7 @@ const CourseDetails = (props) => {
     }
 
     return (
-        <>
+        
         <div>
             <div className="text-right" style={{ justifyContent: 'end'}}>
                 <Button variant='outline-info' disabled={inputDisabled} onClick={() => {handleAddCourseDetails(details)}}><i className="fa fa-plus-circle"></i>&nbsp;Add</Button>
@@ -37,7 +37,7 @@ const CourseDetails = (props) => {
             <div>
                 {details.map((detail, index) => {
                     return (
-                        <Form key={index}>
+                        <div key={index}>
                             <Form.Group controlId="exampleForm.ControlInput1">
                                 <Form.Label>Title - {index + 1}</Form.Label>
                                 <Form.Control type="text" disabled={inputDisabled} value={detail.title} onChange={(e: any) => handleCourseDetailsTitleUpdate(e.target.value, index)}/>
@@ -46,12 +46,12 @@ const CourseDetails = (props) => {
                                 <Form.Label>Description - {index + 1}</Form.Label>
                                 <Form.Control as="textarea" disabled={inputDisabled} rows={3} value={detail.description} onChange={(e: any) => handleCourseDetailsDescriptionUpdate(e.target.value, index)}/>
                             </Form.Group>
-                        </Form>
+                        </div>
                     )
                 })}
             </div>
         </div>
-        </>
+        
     );
 };
 

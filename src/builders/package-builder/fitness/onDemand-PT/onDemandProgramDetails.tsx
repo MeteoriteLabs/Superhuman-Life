@@ -12,7 +12,7 @@ const PtProgramDetails = (props) => {
 
   const existingData =
     props.value === undefined ? undefined : JSON.parse(props.value);
-  if (existingData !== undefined && existingData.length > 0) {
+  if (existingData && existingData.length > 0) {
     existingData.address = {
       id: JSON.parse(existingData?.address)[0].id,
       title: JSON.parse(existingData?.address)[0].title,
@@ -20,19 +20,19 @@ const PtProgramDetails = (props) => {
   }
 
   const [mode, setMode] = useState(
-    props.value === undefined ? "" : existingData.mode.toString()
+    props.value ? existingData.mode.toString() : "0" 
   );
-  const [addressModal, setAddressModal] = useState(false);
+  const [addressModal, setAddressModal] = useState<boolean>(false);
 
   const auth = useContext(AuthContext);
   const [singleSelections, setSingleSelections] = useState<any[]>(
-    existingData?.address?.length !== 0 && props.value !== undefined
+    existingData?.address?.length && props.value 
       ? existingData?.address
       : []
   );
   const [addresses, setAddresses] = useState<any[]>([]);
   const [addressTitle, setAddressTitle] = useState(
-    props.value !== undefined ? existingData.addressTag : "At My Address"
+    props.value ? existingData.addressTag : "At My Address"
   );
 
   const FETCH_USER_ADDRESSES = gql`

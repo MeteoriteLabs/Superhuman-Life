@@ -5,7 +5,7 @@ import "../fitness.css";
 const PreviewPt = (props) => {
   const formData = props?.formContext;
   const programDetails = JSON.parse(formData?.programDetails);
-  var pricing;
+  let pricing;
   if (typeof formData.pricingDetail === "string") {
     pricing =
       formData?.pricingDetail === "free"
@@ -21,7 +21,6 @@ const PreviewPt = (props) => {
     Beginner,
     Intermediate,
     Advanced,
-    No_Level,
   }
 
   enum ENUM_FITNESSPACKAGE_PTCLASSSIZE {
@@ -57,12 +56,12 @@ const PreviewPt = (props) => {
   }
 
   function handleCardRender() {
-    return pricing.map((item, index) => {
+    return pricing.map((item, index: number) => {
       return (
         <Carousel.Item key={index}>
           <Card
             className="text-center mx-auto"
-            style={{ borderRadius: "20px", width: "50%" }}
+            style={{ borderRadius: "20px" }}
           >
             <Card.Body className="pr-0 py-0">
               <div
@@ -90,7 +89,7 @@ const PreviewPt = (props) => {
                       <div>
                         <div className="d-flex justify-content-start align-items-center">
                           {JSON.parse(formData.disciplines).map(
-                            (item, index) => {
+                            (item, index: number) => {
                               return (
                                 <div
                                   key={index}

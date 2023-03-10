@@ -22,7 +22,6 @@ const ClassicPreview = (props) => {
     Beginner,
     Intermediate,
     Advanced,
-    No_Level,
   }
 
   function handleCardRender() {
@@ -31,7 +30,7 @@ const ClassicPreview = (props) => {
         <Carousel.Item key={1}>
           <Card
             className="text-center mx-auto"
-            style={{ borderRadius: "20px", width: "50%" }}
+            style={{ borderRadius: "20px" }}
           >
             <Card.Body className="pr-0 py-0">
               <div
@@ -130,12 +129,12 @@ const ClassicPreview = (props) => {
         </Carousel.Item>
       );
     } else {
-      return pricing.map((item, index) => {
+      return pricing.map((item, index: number) => {
         return (
           <Carousel.Item key={index}>
             <Card
               className="text-center mx-auto"
-              style={{ borderRadius: "20px", width: "50%" }}
+              style={{ borderRadius: "20px" }}
             >
               <Card.Body className="pr-0 py-0">
                 <div
