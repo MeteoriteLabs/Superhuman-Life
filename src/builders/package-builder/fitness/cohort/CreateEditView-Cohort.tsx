@@ -56,7 +56,9 @@ function CreateEditCohort(props: any, ref: any) {
   let frmDetails: any = {};
 
   const [editPackageDetails] = useMutation(UPDATE_CHANNEL_COHORT_PACKAGE, {
-    onCompleted: (data) => {},
+    onCompleted: (data) => {
+      modalTrigger.next(false);
+    },
   });
 
   const [updatePackageStatus] = useMutation(UPDATE_PACKAGE_STATUS, {
@@ -168,8 +170,7 @@ function CreateEditCohort(props: any, ref: any) {
   enum ENUM_FITNESSPACKAGE_LEVEL {
     Beginner,
     Intermediate,
-    Advanced,
-    No_Level,
+    Advanced
   }
 
   enum ENUM_FITNESSPACKAGE_MODE {

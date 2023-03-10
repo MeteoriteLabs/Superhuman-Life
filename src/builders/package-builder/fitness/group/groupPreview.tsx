@@ -21,8 +21,7 @@ const PreviewGroup = (props) => {
   enum ENUM_FITNESSPACKAGE_LEVEL {
     Beginner,
     Intermediate,
-    Advanced,
-    No_Level,
+    Advanced
   }
 
   function handleImageRender(mode: string, duration: number) {
@@ -78,7 +77,7 @@ const PreviewGroup = (props) => {
         <Carousel.Item key={index}>
           <Card
             className="text-center mx-auto"
-            style={{ borderRadius: "20px", width: "50%" }}
+            style={{ borderRadius: "20px" }}
           >
             <Card.Body className="pr-0 py-0">
               <div

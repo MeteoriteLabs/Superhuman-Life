@@ -13,7 +13,7 @@ const ProgramDetails = (props) => {
   const existingData =
     props.value === undefined ? undefined : JSON.parse(props.value);
 
-  if (existingData !== undefined && existingData.length > 0) {
+  if (existingData && existingData.length > 0) {
     existingData.address = {
       id: JSON.parse(existingData?.address)[0].id,
       title: JSON.parse(existingData?.address)[0].title,
@@ -21,7 +21,7 @@ const ProgramDetails = (props) => {
   }
 
   const [mode, setMode] = useState(
-    props.value === undefined ? "" : existingData.mode.toString()
+    props.value ? existingData.mode.toString() : "0"
   );
   const [residential, setResidential] = useState(
     props.value === undefined || existingData.residential === null
@@ -32,39 +32,27 @@ const ProgramDetails = (props) => {
 
   const auth = useContext(AuthContext);
   const [singleSelections, setSingleSelections] = useState<any[]>(
-    existingData?.address?.length !== 0 && props.value !== undefined
-      ? existingData?.address
-      : []
+    existingData?.address?.length && props.value ? existingData?.address : []
   );
   const [addresses, setAddresses] = useState<any[]>([]);
   const [addressTitle, setAddressTitle] = useState(
-    props.value !== undefined ? existingData.addressTag : "At My Address"
+    props.value ? existingData.addressTag : "At My Address"
   );
 
   const [showPrivate, setShowPrivate] = useState(
-    props.value === undefined
-      ? false
-      : existingData.accomodationDetails?.private
+    props.value ? existingData.accomodationDetails?.private : false
   );
   const [showSharing, setShowSharing] = useState(
-    props.value === undefined
-      ? false
-      : existingData.accomodationDetails?.sharing
+    props.value ? existingData.accomodationDetails?.sharing : false
   );
   const [privateRooms, setPrivateRooms] = useState<number>(
-    props.value === undefined
-      ? null
-      : existingData.accomodationDetails?.privateRooms
+    props.value ? existingData.accomodationDetails?.privateRooms : null
   );
   const [twoSharing, setTwoSharing] = useState<number>(
-    props.value === undefined
-      ? null
-      : existingData.accomodationDetails?.twoSharingRooms
+    props.value ? existingData.accomodationDetails?.twoSharingRooms : null
   );
   const [threeSharing, setThreeSharing] = useState<number>(
-    props.value === undefined
-      ? null
-      : existingData.accomodationDetails?.threeSharingRooms
+    props.value ? existingData.accomodationDetails?.threeSharingRooms : null
   );
   const [foodDescription, setFoodDescription] = useState<string>(
     props.value === undefined

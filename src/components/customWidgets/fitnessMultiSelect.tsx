@@ -65,7 +65,7 @@ const MultiSelect = (props: any) => {
         options={fitnessdisciplines}
         placeholder="You can Choose multiple discplines..."
         selected={multiSelections}
-        multiple
+        // multiple
         disabled={props.uiSchema.readonly}
       />
     </div>

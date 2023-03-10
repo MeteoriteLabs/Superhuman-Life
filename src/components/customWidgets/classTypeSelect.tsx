@@ -7,7 +7,7 @@ import { flattenObj } from "../utils/responseFlatten";
 const ClassTypeSelect = (props: any) => {
   const [fitnessPackageTypes, setFitnessPackageTypes] = useState<any>([]);
   const [selectedFitnessPackage, setSelectedFitnessPackage] = useState(
-    props.value !== undefined ? props.value : ""
+    props.value ? props.value : ""
   );
   const urlList = window.location.pathname.split("/");
 
@@ -64,8 +64,12 @@ const ClassTypeSelect = (props: any) => {
         onChange={(e) => setSelectedFitnessPackage(e.target.value)}
       >
         <option>Choose Type</option>
-        {fitnessPackageTypes.slice(0, 7).map((item) => {
-          return <option value={item.type}>{item.type}</option>;
+        {fitnessPackageTypes.slice(0, 7).map((item, index: number) => {
+          return (
+            <option key={index} value={item.type}>
+              {item.type}
+            </option>
+          );
         })}
       </FormControl>
     </div>

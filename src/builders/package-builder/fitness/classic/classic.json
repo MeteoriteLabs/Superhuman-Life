@@ -34,15 +34,13 @@
                 "enum": [
                     0,
                     1,
-                    2,
-                    3
+                    2
                 ],
-                "default": 3,
+                "default": 0,
                 "enumNames": [
                     "Beginner",
                     "Intermediate",
-                    "Advanced",
-                    "No Level"
+                    "Advanced"
                 ],
                 "description": "Select the relevant level for the offering"
             },

@@ -4,7 +4,7 @@ import "../fitness.css";
 
 const PreviewChannel = (props) => {
   const formData = props?.formContext;
-  var pricing;
+  let pricing;
   if (typeof formData.pricing === "string") {
     pricing =
       formData?.pricing === "free"
@@ -18,7 +18,6 @@ const PreviewChannel = (props) => {
     Beginner,
     Intermediate,
     Advanced,
-    No_Level,
   }
 
   function handleCardRender() {
@@ -27,7 +26,7 @@ const PreviewChannel = (props) => {
         <Carousel.Item key={1}>
           <Card
             className="text-center mx-auto"
-            style={{ borderRadius: "20px", width: "50%" }}
+            style={{ borderRadius: "20px" }}
           >
             <Card.Body className="pr-0 py-0">
               <div
@@ -54,21 +53,23 @@ const PreviewChannel = (props) => {
                       <p>{props.formContext.About}</p>
                       <div>
                         <div className="d-flex justify-content-start align-items-center">
-                          {JSON.parse(formData.discpline).map((item, index) => {
-                            return (
-                              <div
-                                key={index}
-                                className="mr-2 my-3"
-                                style={{
-                                  padding: "0.5rem 1rem",
-                                  backgroundColor: "#F2E890",
-                                  borderRadius: "20px",
-                                }}
-                              >
-                                <p className="mb-0">{item.disciplinename}</p>
-                              </div>
-                            );
-                          })}
+                          {JSON.parse(formData.discpline).map(
+                            (item, index: number) => {
+                              return (
+                                <div
+                                  key={index}
+                                  className="mr-2 my-3"
+                                  style={{
+                                    padding: "0.5rem 1rem",
+                                    backgroundColor: "#F2E890",
+                                    borderRadius: "20px",
+                                  }}
+                                >
+                                  <p className="mb-0">{item.disciplinename}</p>
+                                </div>
+                              );
+                            }
+                          )}
                         </div>
                       </div>
                     </div>
@@ -87,7 +88,7 @@ const PreviewChannel = (props) => {
                           borderBottomLeftRadius: "20px",
                         }}
                       >
-                        {props.formContext?.level !== undefined
+                        {props.formContext?.level
                           ? ENUM_FITNESSPACKAGE_LEVEL[props.formContext.level]
                           : "All Levels"}
                       </p>
@@ -124,12 +125,12 @@ const PreviewChannel = (props) => {
         </Carousel.Item>
       );
     } else {
-      return pricing.map((item, index) => {
+      return pricing.map((item, index: number) => {
         return (
           <Carousel.Item key={index}>
             <Card
               className="text-center mx-auto"
-              style={{ borderRadius: "20px", width: "50%" }}
+              style={{ borderRadius: "20px" }}
             >
               <Card.Body className="pr-0 py-0">
                 <div
@@ -157,7 +158,7 @@ const PreviewChannel = (props) => {
                         <div>
                           <div className="d-flex justify-content-start align-items-center">
                             {JSON.parse(formData.discpline).map(
-                              (item, index) => {
+                              (item, index: number) => {
                                 return (
                                   <div
                                     key={index}
@@ -196,7 +197,7 @@ const PreviewChannel = (props) => {
                             borderBottomLeftRadius: "20px",
                           }}
                         >
-                          {props.formContext?.level !== undefined
+                          {props.formContext?.level
                             ? ENUM_FITNESSPACKAGE_LEVEL[props.formContext.level]
                             : "All Levels"}
                         </p>

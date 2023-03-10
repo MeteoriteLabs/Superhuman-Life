@@ -30,14 +30,13 @@
            "level": {
                 "type": "number",
                 "title": "Level",
-                "enum": [0, 1, 2, 3],
+                "enum": [0, 1, 2],
                 "enumNames": [
                     "Beginner",
                     "Intermediate",
-                    "Advanced",
-                    "No Level"
+                    "Advanced"
                 ],
-                "default": 3,
+                "default": 0,
                 "description": "Select the appropriate difficulty"
             },
             "dates": {

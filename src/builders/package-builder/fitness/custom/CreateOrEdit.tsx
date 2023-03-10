@@ -60,8 +60,8 @@ function CreateEditPackage(props: any, ref: any) {
 
   useQuery(GET_FITNESS_PACKAGE_TYPES, {
     variables: { type: "Custom Fitness" },
-    onCompleted: (r: any) => {
-      const flattenData = flattenObj({ ...r });
+    onCompleted: (data: any) => {
+      const flattenData = flattenObj({ ...data });
       setFitnessType(flattenData.fitnessPackageTypes);
     },
   });
@@ -78,7 +78,7 @@ function CreateEditPackage(props: any, ref: any) {
   const [deleteBookingConfig] = useMutation(DELETE_BOOKING_CONFIG);
 
   const [bookingConfig] = useMutation(CREATE_BOOKING_CONFIG, {
-    onCompleted: (r: any) => {
+    onCompleted: (data: any) => {
       modalTrigger.next(false);
       props.callback();
       setIsFormSubmitted(!isFormSubmitted);
@@ -96,8 +96,8 @@ function CreateEditPackage(props: any, ref: any) {
   const [createCustomNotification] = useMutation(CREATE_NOTIFICATION);
 
   const [createPackage] = useMutation(CREATE_PACKAGE, {
-    onCompleted: (r: any) => {
-      const flattenData = flattenObj({ ...r });
+    onCompleted: (data: any) => {
+      const flattenData = flattenObj({ ...data });
 
       createCustomNotification({
         variables: {
@@ -117,7 +117,7 @@ function CreateEditPackage(props: any, ref: any) {
         createUserPackageSuggestion({
           variables: {
             id: window.location.href.split("/").pop(),
-            fitnesspackage: r.createFitnesspackage.data.id,
+            fitnesspackage: data.createFitnesspackage.data.id,
           },
         });
       } else {
@@ -125,7 +125,7 @@ function CreateEditPackage(props: any, ref: any) {
         bookingConfig({
           variables: {
             isAuto: val.config === "Auto" ? true : false,
-            id: r.createFitnesspackage.data.id,
+            id: data.createFitnesspackage.data.id,
             bookings_per_month: val.bookings,
           },
         });
@@ -134,7 +134,7 @@ function CreateEditPackage(props: any, ref: any) {
   });
 
   const [editPackage] = useMutation(EDIT_PACKAGE, {
-    onCompleted: (r: any) => {
+    onCompleted: (data: any) => {
       const val = JSON.parse(frmDetails.config.bookingConfig);
       updateBookingConfig({
         variables: {
@@ -172,7 +172,7 @@ function CreateEditPackage(props: any, ref: any) {
   });
 
   const [updateBookingConfig] = useMutation(UPDATE_BOOKING_CONFIG, {
-    onCompleted: (r: any) => {
+    onCompleted: (data: any) => {
       modalTrigger.next(false);
       props.callback();
       setisOfferingUpdated(!isOfferingUpdated);
@@ -203,7 +203,7 @@ function CreateEditPackage(props: any, ref: any) {
   enum ENUM_FITNESSPACKAGE_LEVEL {
     Beginner,
     Intermediate,
-    Advanced,
+    Advanced
   }
 
   enum ENUM_FITNESSPACKAGE_INTENSITY {
@@ -262,7 +262,7 @@ function CreateEditPackage(props: any, ref: any) {
     const flattenedData = flattenObj({ ...data });
 
     let msg = flattenedData.fitnesspackages[0];
-    console.log(msg);
+  
     let bookingConfig: any = {};
     let details: any = {};
     for (let i = 0; i < msg.fitnesspackagepricing.length; i++) {
@@ -281,7 +281,7 @@ function CreateEditPackage(props: any, ref: any) {
     details.channelinstantBooking = msg.groupinstantbooking;
     details.classSize = ENUM_FITNESSPACKAGE_PTCLASSSIZE[msg.classSize];
     details.expiryDate = msg.expiry_date;
-    details.level = ENUM_FITNESSPACKAGE_LEVEL[msg?.level];
+    details.level = ENUM_FITNESSPACKAGE_LEVEL[msg.level];
     details.intensity = ENUM_FITNESSPACKAGE_INTENSITY[msg.Intensity];
     details.pricingDetail =
       msg.fitnesspackagepricing[0]?.mrp === "free"
@@ -320,13 +320,6 @@ function CreateEditPackage(props: any, ref: any) {
     details.languages = JSON.stringify(msg.languages);
     setCustomDetails(details);
 
-    console.log(
-      details,
-      msg.datesConfig?.expiryDate,
-      msg.datesConfig,
-      moment(msg.datesConfig?.expiryDate).format("YYYY-MM-DDTHH:mm"),
-      moment(msg.expiry_date).format("YYYY-MM-DDTHH:mm")
-    );
     //if message exists - show form only for edit and view
     if (["edit", "view"].indexOf(operation.type) > -1) modalTrigger.next(true);
     else OnSubmit(null);
@@ -366,7 +359,7 @@ function CreateEditPackage(props: any, ref: any) {
       variables: {
         packagename: frm.packagename,
         tags: frm?.tags,
-        level: frm.level ? ENUM_FITNESSPACKAGE_LEVEL[frm?.level] : null,
+        level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
         intensity: ENUM_FITNESSPACKAGE_INTENSITY[frm.intensity],
         aboutpackage: frm.About,
         benefits: frm.Benifits,
@@ -414,16 +407,13 @@ function CreateEditPackage(props: any, ref: any) {
     frm.programDetails = JSON.parse(frm.programDetails);
     frm.datesConfig = JSON.parse(frm.datesConfig);
     frm.languages = JSON.parse(frm.languages);
-    console.log(
-      frm.datesConfig,
-      moment(frm.datesConfig?.expiryDate).toISOString()
-    );
+    
     editPackage({
       variables: {
         id: operation.id,
         packagename: frm.packagename,
         tags: frm?.tags,
-        level: ENUM_FITNESSPACKAGE_LEVEL[frm?.level],
+        level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
         intensity: ENUM_FITNESSPACKAGE_INTENSITY[frm.intensity],
         aboutpackage: frm.About,
         benefits: frm.Benifits,

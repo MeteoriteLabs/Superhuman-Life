@@ -167,6 +167,7 @@ function CreateEditPackage(props: any, ref: any) {
     Intermediate,
     Advanced,
   }
+  
   enum ENUM_FITNESSPACKAGE_INTENSITY {
     Low,
     Moderate,
