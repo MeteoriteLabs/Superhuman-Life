@@ -59,7 +59,7 @@ const Email = (props: any) => {
           }}
           placeholder=""
         />
-        {userEmail !== undefined && user.length !== 0 ? (
+        {userEmail && user.length ? (
           <span style={{ fontSize: "13px", color: "red" }}>
             This email is already taken try another.
           </span>

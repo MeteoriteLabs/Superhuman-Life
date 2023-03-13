@@ -67,7 +67,7 @@ function CreateEditPt(props: any, ref: any) {
       setFitnessType(flattenData.fitnessPackageTypes);
     },
   });
-
+console.log(fitnessTypes);
   const [bookingConfig] = useMutation(CREATE_BOOKING_CONFIG, {
     onCompleted: (r: any) => {
       modalTrigger.next(false);
@@ -370,7 +370,7 @@ function CreateEditPt(props: any, ref: any) {
         restdays: frm.programDetails?.rest,
         bookingleadday: frm.bookingleadday,
         is_private: frm.visibility === 1 ? true : false,
-        fitness_package_type: fitnessTypes[0].type,
+        fitness_package_type: "One-On-One",
         fitnesspackagepricing: JSON.parse(frm.pricingDetail).filter(
           (item: any) => item.mrp !== null
         ),

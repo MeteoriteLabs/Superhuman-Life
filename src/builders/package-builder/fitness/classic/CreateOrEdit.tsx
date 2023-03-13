@@ -106,6 +106,7 @@ function CreateEditPackage(props: any, ref: any) {
 
   const [createPackage] = useMutation(CREATE_PACKAGE, {
     onCompleted: (r: any) => {
+      modalTrigger.next(false);
       const flattenData = flattenObj({ ...r });
 
       createCohortNotification({

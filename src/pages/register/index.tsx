@@ -55,7 +55,7 @@ export default function Register() {
   const [userFormData, setUserFormData] = useState<any>([]);
   const [successScreen, setSuccessScreen] = useState(false);
 
-  const [login, setLogin] = useState(false);
+  const [login, setLogin] = useState<boolean>(false);
   const [data, setData] = useState({});
 
   const redirectToLinkedinPage = () =>{ 
@@ -285,7 +285,7 @@ export default function Register() {
     },
   };
 
-  const [newUserId, setNewUserId] = useState("");
+  const [newUserId, setNewUserId] = useState<string>("");
 
   const [registerUser] = useMutation(REGISTER_USER, {
     onCompleted: (data: any) => {

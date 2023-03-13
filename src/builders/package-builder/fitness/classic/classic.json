@@ -163,6 +163,7 @@
                     0,
                     1
                 ],
+                "default":0,
                 "enumNames": [
                     "Public",
                     "Private"

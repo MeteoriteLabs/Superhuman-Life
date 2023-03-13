@@ -96,13 +96,13 @@ function NotificationSetting() {
           </Row>
         </Card>
         {/* Schedule */}
-        {/* {isSettingNotificationCreated ? (
+        {isSettingNotificationCreated ? (
           <Card className="p-3">
             <Row>
               <Col sm={12}>
                 <h6>Schedule</h6>
               </Col>
-              <Col sm={12}>
+              <Col lg={6} sm={12}>
                 <Form>
                   <Form.Check
                     type="switch"
@@ -112,7 +112,7 @@ function NotificationSetting() {
                   />
                 </Form>
               </Col>
-              <Col sm={12}>
+              <Col lg={6} sm={12}>
                 <Form>
                   <Form.Check
                     type="switch"
@@ -124,16 +124,16 @@ function NotificationSetting() {
               </Col>
             </Row>
           </Card>
-        ) : null} */}
+        ) : null}
 
         {/* Program Manager */}
-        {/* {isSettingNotificationCreated ? (
+        {isSettingNotificationCreated ? (
           <Card className="p-3">
             <Row>
               <Col sm={12}>
                 <h6>Program Manager</h6>
               </Col>
-              <Col sm={12}>
+              <Col lg={6} sm={12}>
                 <Form>
                   <Form.Check
                     type="switch"
@@ -143,7 +143,7 @@ function NotificationSetting() {
                   />
                 </Form>
               </Col>
-              <Col sm={12}>
+              <Col lg={6} sm={12}>
                 <Form>
                   <Form.Check
                     type="switch"
@@ -155,7 +155,7 @@ function NotificationSetting() {
               </Col>
             </Row>
           </Card>
-        ) : null} */}
+        ) : null}
 
         {/* Users */}
         {isSettingNotificationCreated ? (
@@ -164,7 +164,7 @@ function NotificationSetting() {
               <Col sm={12}>
                 <h6>Users</h6>
               </Col>
-              <Col sm={12}>
+              <Col lg={6} sm={12}>
                 <Form>
                   <Form.Check
                     type="switch"
@@ -174,7 +174,7 @@ function NotificationSetting() {
                   />
                 </Form>
               </Col>
-              <Col sm={12}>
+              <Col lg={6} sm={12}>
                 <Form>
                   <Form.Check
                     type="switch"
@@ -189,13 +189,13 @@ function NotificationSetting() {
         ) : null}
 
         {/* Bookings */}
-        {/* {isSettingNotificationCreated ? (
+        {isSettingNotificationCreated ? (
           <Card className="p-3">
             <Row>
               <Col sm={12}>
                 <h6>Bookings</h6>
               </Col>
-              <Col sm={12}>
+              <Col lg={6} sm={12}>
                 <Form>
                   <Form.Check
                     type="switch"
@@ -205,7 +205,7 @@ function NotificationSetting() {
                   />
                 </Form>
               </Col>
-              <Col sm={12}>
+              <Col lg={6} sm={12}>
                 <Form>
                   <Form.Check
                     type="switch"
@@ -217,16 +217,16 @@ function NotificationSetting() {
               </Col>
             </Row>
           </Card>
-        ) : null} */}
+        ) : null}
 
         {/* Offerings */}
-        {/* {isSettingNotificationCreated ? (
+        {isSettingNotificationCreated ? (
           <Card className="p-3">
             <Row>
               <Col sm={12}>
                 <h6>Offerings</h6>
               </Col>
-              <Col sm={12}>
+              <Col lg={6} sm={12}>
                 <Form>
                   <Form.Check
                     type="switch"
@@ -236,7 +236,7 @@ function NotificationSetting() {
                   />
                 </Form>
               </Col>
-              <Col sm={12}>
+              <Col lg={6} sm={12}>
                 <Form>
                   <Form.Check
                     type="switch"
@@ -248,16 +248,16 @@ function NotificationSetting() {
               </Col>
             </Row>
           </Card>
-        ) : null} */}
+        ) : null}
 
         {/* Resources */}
-        {/* {isSettingNotificationCreated ? (
+        {isSettingNotificationCreated ? (
           <Card className="p-3">
             <Row>
               <Col sm={12}>
                 <h6>Resources</h6>
               </Col>
-              <Col sm={12}>
+              <Col lg={6} sm={12}>
                 <Form>
                   <Form.Check
                     type="switch"
@@ -267,7 +267,7 @@ function NotificationSetting() {
                   />
                 </Form>
               </Col>
-              <Col sm={12}>
+              <Col lg={6} sm={12}>
                 <Form>
                   <Form.Check
                     type="switch"
@@ -279,16 +279,16 @@ function NotificationSetting() {
               </Col>
             </Row>
           </Card>
-        ) : null} */}
+        ) : null}
 
         {/* Finance */}
-        {/* {isSettingNotificationCreated ? (
+        {isSettingNotificationCreated ? (
           <Card className="p-3">
             <Row>
               <Col sm={12}>
                 <h6>Finance</h6>
               </Col>
-              <Col sm={12}>
+              <Col lg={6} sm={12}>
                 <Form>
                   <Form.Check
                     type="switch"
@@ -298,7 +298,7 @@ function NotificationSetting() {
                   />
                 </Form>
               </Col>
-              <Col sm={12}>
+              <Col lg={6} sm={12}>
                 <Form>
                   <Form.Check
                     type="switch"
@@ -310,16 +310,16 @@ function NotificationSetting() {
               </Col>
             </Row>
           </Card>
-        ) : null} */}
+        ) : null}
 
         {/* Communication */}
-        {/* {isSettingNotificationCreated ? (
+        {isSettingNotificationCreated ? (
           <Card className="p-3">
             <Row>
               <Col sm={12}>
                 <h6>Communication</h6>
               </Col>
-              <Col sm={12}>
+              <Col lg={6} sm={12}>
                 <Form>
                   <Form.Check
                     type="switch"
@@ -329,7 +329,7 @@ function NotificationSetting() {
                   />
                 </Form>
               </Col>
-              <Col sm={12}>
+              <Col lg={6} sm={12}>
                 <Form>
                   <Form.Check
                     type="switch"
@@ -341,7 +341,7 @@ function NotificationSetting() {
               </Col>
             </Row>
           </Card>
-        ) : null} */}
+        ) : null}
       </div>
     </div>
   );
