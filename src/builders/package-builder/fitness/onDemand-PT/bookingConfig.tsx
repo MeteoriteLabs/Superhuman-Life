@@ -5,13 +5,13 @@ const BookingConfig = (props: any) => {
   const inputDisabled = props.uiSchema.readonly;
 
   const [fillSchedule, setFillSchedule] = useState(
-    props.value !== undefined ? JSON.parse(props.value).fillSchedule : false
+    props.value ? JSON.parse(props.value).fillSchedule : false
   );
   const [config, setConfig] = useState(
-    props.value !== undefined ? JSON.parse(props.value).config : "Manual"
+    props.value ? JSON.parse(props.value).config : "Manual"
   );
   const [bookings, setBookings] = useState(
-    props.value !== undefined ? JSON.parse(props.value).bookings : 0
+    props.value ? JSON.parse(props.value).bookings : 0
   );
 
   function handleValidation() {
