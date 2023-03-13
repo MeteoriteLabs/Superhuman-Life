@@ -79,8 +79,6 @@ function CreateEditPackage(props: any, ref: any) {
     onCompleted: (data) => {
       modalTrigger.next(false);
       props.callback();
-      modalTrigger.next(false);
-      props.callback();
       setIsFormSubmitted(!isFormSubmitted);
     },
   });

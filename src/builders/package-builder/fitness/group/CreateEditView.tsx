@@ -121,6 +121,7 @@ function CreateEditPackage(props: any, ref: any) {
 
   const [editPackage] = useMutation(EDIT_PACKAGE, {
     onCompleted: (data) => {
+      modalTrigger.next(false);
       props.callback();
       setisOfferingUpdated(!isOfferingUpdated);
     },
@@ -541,6 +542,7 @@ function CreateEditPackage(props: any, ref: any) {
   return (
     <>
       <ModalView
+        type={operation.type}
         customFormats={youtubeUrlCustomFormats}
         transformErrors={youtubeUrlTransformErrors}
         name={name}
