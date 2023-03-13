@@ -3,9 +3,10 @@ import DisplayImage from "../../../../components/DisplayImage/index";
 import "../fitness.css";
 
 const ClassicPreview = (props) => {
+  
   const formData = props?.formContext;
   const programDetails = JSON.parse(formData?.programDetails);
-
+  
   var pricing;
   if (typeof formData.pricingDetail === "string") {
     pricing =
@@ -162,7 +163,7 @@ const ClassicPreview = (props) => {
                         <div>
                           <div className="d-flex justify-content-start align-items-center">
                             {JSON.parse(formData.disciplines).map(
-                              (item, index) => {
+                              (item, index: number) => {
                                 return (
                                   <div
                                     key={index}

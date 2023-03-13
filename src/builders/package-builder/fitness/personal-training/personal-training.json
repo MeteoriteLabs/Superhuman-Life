@@ -189,6 +189,7 @@
                     "Public",
                     "Private"
                 ],
+                "default": 0,
                 "description": "Public: The offering can be viewed by anyone to purchase, Private: The offering will not ve seen by anyone until you share it with them"
             },
             "datesConfig": {

@@ -54,7 +54,7 @@ const PreviewCohort = (props) => {
                       <p>{props.formContext.About}</p>
                       <div>
                         <div className="d-flex justify-content-start align-items-center">
-                          {JSON.parse(formData.discpline).map((item, index) => {
+                          {JSON.parse(formData.discpline).map((item, index: number) => {
                             return (
                               <div
                                 key={index}
@@ -157,7 +157,7 @@ const PreviewCohort = (props) => {
                         <div>
                           <div className="d-flex justify-content-start align-items-center">
                             {JSON.parse(formData.discpline).map(
-                              (item, index) => {
+                              (item, index: number) => {
                                 return (
                                   <div
                                     key={index}
@@ -196,7 +196,7 @@ const PreviewCohort = (props) => {
                             borderBottomLeftRadius: "20px",
                           }}
                         >
-                          {props.formContext?.level !== undefined
+                          {props.formContext?.level
                             ? ENUM_FITNESSPACKAGE_LEVEL[props.formContext.level]
                             : "All Levels"}
                         </p>

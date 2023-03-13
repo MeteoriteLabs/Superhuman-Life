@@ -58,6 +58,7 @@ function CreateEditChannel(props: any, ref: any) {
 
   const [editPackageDetails] = useMutation(UPDATE_CHANNEL_COHORT_PACKAGE, {
     onCompleted: (data) => {
+      modalTrigger.next(false);
       props.callback();
       setisOfferingUpdated(!isOfferingUpdated);
     },
@@ -523,6 +524,7 @@ function CreateEditChannel(props: any, ref: any) {
   return (
     <>
       <ModalView
+        type={operation.type}
         name={name}
         isStepper={true}
         showErrorList={false}
