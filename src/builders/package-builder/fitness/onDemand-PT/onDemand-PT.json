@@ -85,6 +85,7 @@
                     "Couple",
                     "Family"
                 ],
+                "default": 0,
                 "description": "Solo - Single user, Couple - Two users, Family - Usually 3 - 4 users"
             },
             "languages": {
@@ -168,6 +169,7 @@
                      "Public",
                      "Private"
                  ],
+                 "default": 0,
                  "description": "Public: The Offering will be visible to the user as soon as it is created, Private: The offering will not ve seen by anyone until you share it with them"
              },
              "datesConfig": {

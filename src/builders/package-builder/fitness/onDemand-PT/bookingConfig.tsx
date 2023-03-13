@@ -8,7 +8,7 @@ const BookingConfig = (props: any) => {
     props.value !== undefined ? JSON.parse(props.value).fillSchedule : false
   );
   const [config, setConfig] = useState(
-    props.value !== undefined ? JSON.parse(props.value).config : ""
+    props.value !== undefined ? JSON.parse(props.value).config : "Manual"
   );
   const [bookings, setBookings] = useState(
     props.value !== undefined ? JSON.parse(props.value).bookings : 0

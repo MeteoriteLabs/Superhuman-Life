@@ -4,7 +4,7 @@ import { Form } from "react-bootstrap";
 const BookingConfig = (props: any) => {
   const inputDisabled = props.uiSchema.readonly;
   const [config, setConfig] = useState(
-    props.value !== undefined ? JSON.parse(props.value).config : ""
+    props.value !== undefined ? JSON.parse(props.value).config : "Manual"
   );
   const [bookings, setBookings] = useState(
     props.value !== undefined ? JSON.parse(props.value).bookings : 0
