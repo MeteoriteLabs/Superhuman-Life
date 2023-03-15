@@ -42,7 +42,7 @@ const PreviewChannel = (props) => {
                             ? props?.formContext?.thumbnail
                             : null
                         }
-                        defaultImageUrl="https://picsum.photos/200"
+                        defaultImageUrl="assets/placeholder.svg"
                         imageCSS="rounded-lg w-100 img-fluid img-thumbnail"
                       />
                     </div>
@@ -146,7 +146,7 @@ const PreviewChannel = (props) => {
                               ? props?.formContext?.thumbnail
                               : null
                           }
-                          defaultImageUrl="https://picsum.photos/200"
+                          defaultImageUrl="assets/placeholder.svg"
                           imageCSS="rounded-lg w-100 img-fluid img-thumbnail"
                         />
                       </div>

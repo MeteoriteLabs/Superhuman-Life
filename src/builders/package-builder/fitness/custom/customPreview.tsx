@@ -154,7 +154,7 @@ const PreviewCustom = (props) => {
                             ? props?.formContext?.thumbnail
                             : null
                         }
-                        defaultImageUrl="https://picsum.photos/200"
+                        defaultImageUrl="assets/placeholder.svg"
                         imageCSS="rounded-lg w-100 img-fluid img-thumbnail"
                       />
                     </div>
@@ -186,8 +186,8 @@ const PreviewCustom = (props) => {
                       </div>
                     </div>
                   </Col>
-                  <Col lg={3}>
-                    <div className="align-right">
+                  <Col md={{offset: 3, span: 3}}>
+                    <div>
                       <p
                         className={`py-2 px-4 text-white ${
                           ENUM_FITNESSPACKAGE_LEVEL[props.formContext.level] ===
