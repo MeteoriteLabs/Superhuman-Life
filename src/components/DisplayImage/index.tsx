@@ -46,7 +46,7 @@ function DisplayImage(props: any) {
   },[props.imageName, props.defaultImageUrl])
   
   return (
-    <img src={photoUrl} alt="profile" className={props.imageCSS} />
+    <img src={photoUrl} alt="profile" className={props.imageCSS} onError={() => setPhotoUrl('assets/image_placeholder.svg')} /> 
   )
 }
 
