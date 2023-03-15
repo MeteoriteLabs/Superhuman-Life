@@ -4,7 +4,6 @@ import LocationList from '../../../../components/customWidgets/locationList';
 import LanguageList from '../../../../components/customWidgets/languageSelect';
 import ProgramDetails from './programDetails';
 import CourseDetails from './course_details';
-// import Upload from '../../../../components/upload/upload';
 import Upload from '../../../../components/upload/upload';
 import DatesConfig from '../../../../components/customWidgets/datesConfig';
 import FitnessSelect from '../../../../components/customWidgets/fitnessMultiSelect';
