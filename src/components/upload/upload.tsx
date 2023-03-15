@@ -36,7 +36,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
      const [imageid, setImageid] = useState<string | null>('');
      const [videoUpload, setVideoUpload] = useState<any>(false);
      const [videoID, setVideoID] = useState<any>(null);
-     const [videoSizeError, setVideoSizeError] = useState<any>(false);
+     const [videoSizeError, setVideoSizeError] = useState<boolean>(false);
      //const [renderCrop, setRenderCrop] = useState<any>(null);
 
      const [imageSrc, setImageSrc] = useState<any>(null);
@@ -380,7 +380,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
      }
 
      function handleAspectRatio(data: String) {
-          if (data !== undefined) {
+          if (data) {
                return parseInt(data.split(":")[0]) / parseInt(data.split(":")[1]);
           } else {
                return 5 / 3;
