@@ -47,7 +47,7 @@ const ClassicPreview = (props) => {
                             ? props?.formContext?.thumbnail
                             : null
                         }
-                        defaultImageUrl="https://picsum.photos/200"
+                        defaultImageUrl="assets/placeholder.svg"
                         imageCSS="rounded-lg w-100 img-fluid img-thumbnail"
                       />
                     </div>
@@ -59,7 +59,7 @@ const ClassicPreview = (props) => {
                       <div>
                         <div className="d-flex justify-content-start align-items-center">
                           {JSON.parse(formData.disciplines).map(
-                            (item, index) => {
+                            (item, index: number) => {
                               return (
                                 <div
                                   key={index}
@@ -83,10 +83,9 @@ const ClassicPreview = (props) => {
                     <div className="align-right">
                       <p
                         className={`py-2 px-4 text-white ${
-                          ENUM_FITNESSPACKAGE_LEVEL[props.formContext.level] ===
-                          undefined
-                            ? "All"
-                            : ENUM_FITNESSPACKAGE_LEVEL[props.formContext.level]
+                          ENUM_FITNESSPACKAGE_LEVEL[props.formContext.level]
+                            ? ENUM_FITNESSPACKAGE_LEVEL[props.formContext.level]
+                            : "All"
                         }-level`}
                         style={{
                           borderTopRightRadius: "20px",
@@ -151,7 +150,7 @@ const ClassicPreview = (props) => {
                               ? props?.formContext?.thumbnail
                               : null
                           }
-                          defaultImageUrl="https://picsum.photos/200"
+                          defaultImageUrl="assets/placeholder.svg"
                           imageCSS="rounded-lg w-100 img-fluid img-thumbnail"
                         />
                       </div>
@@ -191,18 +190,18 @@ const ClassicPreview = (props) => {
                           className={`py-2 px-4 text-white ${
                             ENUM_FITNESSPACKAGE_LEVEL[
                               props.formContext.level
-                            ] === undefined
-                              ? "All"
-                              : ENUM_FITNESSPACKAGE_LEVEL[
-                                  props.formContext.level
-                                ]
+                            ] 
+                              ? ENUM_FITNESSPACKAGE_LEVEL[
+                                props.formContext.level
+                              ]
+                              : "All"
                           }-level`}
                           style={{
                             borderTopRightRadius: "20px",
                             borderBottomLeftRadius: "20px",
                           }}
                         >
-                          {props.formContext?.level !== undefined
+                          {props.formContext?.level
                             ? ENUM_FITNESSPACKAGE_LEVEL[props.formContext.level]
                             : "All Levels"}
                         </p>

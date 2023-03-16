@@ -79,7 +79,6 @@ function Notifications() {
 
   const readAll = () => {
     for(let i = 0; i < notifications.length; i++){
-      console.log(i,notifications[i].id)
       changeNotificationStatus({
         variables: { id: notifications[i].id, IsRead: true },
         onCompleted: () => {

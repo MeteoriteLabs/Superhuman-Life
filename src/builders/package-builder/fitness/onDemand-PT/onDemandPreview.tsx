@@ -77,7 +77,7 @@ const PreviewPt = (props) => {
                             ? props?.formContext?.thumbnail
                             : null
                         }
-                        defaultImageUrl="https://picsum.photos/200"
+                        defaultImageUrl="assets/placeholder.svg"
                         imageCSS="rounded-lg w-100 img-fluid img-thumbnail"
                       />
                     </div>
@@ -109,7 +109,7 @@ const PreviewPt = (props) => {
                       </div>
                     </div>
                   </Col>
-                  <Col lg={3}>
+                  <Col lg={12}>
                     <div className="align-right">
                       <p
                         className={`py-2 px-4 text-white ${

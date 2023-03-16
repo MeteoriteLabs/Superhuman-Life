@@ -99,7 +99,7 @@ const PreviewPt = (props) => {
                             ? props?.formContext?.thumbnail
                             : null
                         }
-                        defaultImageUrl="https://picsum.photos/200"
+                        defaultImageUrl="assets/placeholder.svg"
                         imageCSS="rounded-lg w-100 img-fluid img-thumbnail"
                       />
                     </div>
@@ -145,7 +145,7 @@ const PreviewPt = (props) => {
                           borderBottomLeftRadius: "20px",
                         }}
                       >
-                        {props.formContext?.level !== undefined
+                        {props.formContext?.level
                           ? ENUM_FITNESSPACKAGE_LEVEL[props.formContext.level]
                           : "All Levels"}
                       </p>

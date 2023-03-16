@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 import AWS from "aws-sdk";
 
 const S3_BUCKET: any = process.env.REACT_APP_S3_BUCKET_NAME;
@@ -12,14 +12,13 @@ AWS.config.update({
 const myBucket = new AWS.S3({
   params: { Bucket: S3_BUCKET },
   region: REGION,
-
 });
 
 var albumPhotosKey = process.env.REACT_APP_S3_PREFIX_NAME;
 
 function DisplayImage(props: any) {
   const [photoUrl, setPhotoUrl] = useState<string>(props.defaultImageUrl);
-  var imageName = 'sm-' + props.imageName;
+  var imageName = "sm-" + props.imageName;
 
   const paramUrl = {
     Bucket: S3_BUCKET,
@@ -30,7 +29,7 @@ function DisplayImage(props: any) {
     setPhotoUrl(props.defaultImageUrl);
     if (props.imageName && props.imageName.length) {
       var promise = myBucket.getSignedUrlPromise("getObject", paramUrl);
-      
+
       promise.then(
         function (url) {
           if (url) {
@@ -43,11 +42,16 @@ function DisplayImage(props: any) {
       );
     }
     // eslint-disable-next-line
-  },[props.imageName, props.defaultImageUrl])
-  
+  }, [props.imageName, props.defaultImageUrl]);
+
   return (
-    <img src={photoUrl} alt="profile" className={props.imageCSS} onError={() => setPhotoUrl('assets/image_placeholder.svg')} /> 
-  )
+    <img
+      src={photoUrl}
+      alt="profile"
+      className={props.imageCSS}
+      onError={() => setPhotoUrl("assets/image_placeholder.svg")}
+    />
+  );
 }
 
 export default DisplayImage;

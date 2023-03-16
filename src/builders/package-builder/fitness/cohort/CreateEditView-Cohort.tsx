@@ -213,11 +213,11 @@ function CreateEditCohort(props: any, ref: any) {
     details.publishingDate = moment(msg.publishing_date).format("YYYY-MM-DD");
     details.tag = msg?.tags === null ? "" : msg.tags;
     details.user_permissions_user = msg.users_permissions_user.id;
-    details.visibility = msg.is_private === true ? 1 : 0;
+    details.visibility = msg.is_private ? 1 : 0;
     details.classSize = msg.classsize;
     details.mode = ENUM_FITNESSPACKAGE_MODE[msg.mode];
     details.residential =
-      msg.residential_type !== null
+      msg.residential_type 
         ? ENUM_FITNESSPACKAGE_RESIDENTIAL_TYPE[msg.residential_type]
         : null;
     details.languages = JSON.stringify(msg.languages);

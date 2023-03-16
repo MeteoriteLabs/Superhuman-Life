@@ -65,7 +65,7 @@ const Scheduler = () => {
   function loadTagData(data: any) {
     setSchedulerSessions(data);
     const flattenData = flattenObj({ ...data });
-    console.log(flattenData);
+    
     let total = [0];
     const clientValues = [...clientIds];
     const values = [...flattenData.tags[0]?.sessions];

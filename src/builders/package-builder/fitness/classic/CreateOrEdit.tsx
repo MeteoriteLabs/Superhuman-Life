@@ -105,7 +105,10 @@ function CreateEditPackage(props: any, ref: any) {
   const [deleteBookingConfig] = useMutation(DELETE_BOOKING_CONFIG);
 
   const [createPackage] = useMutation(CREATE_PACKAGE, {
+    refetchQueries: [GET_FITNESS_PACKAGE_TYPES],
     onCompleted: (r: any) => {
+      modalTrigger.next(false);
+      props.callback();
       const flattenData = flattenObj({ ...r });
 
       createCohortNotification({
@@ -121,28 +124,19 @@ function CreateEditPackage(props: any, ref: any) {
             },
           },
         });
-
-      if (window.location.href.split("/")[3] === "client") {
-        createUserPackageSuggestion({
-          variables: {
-            id: window.location.href.split("/").pop(),
-            fitnesspackage: r.createFitnesspackage.data.id,
-          },
-        });
-      } else {
-        const val = JSON.parse(frmDetails.config.bookingConfig);
+        
         bookingConfig({
           variables: {
             isAuto: true,
             id: r.createFitnesspackage.data.id,
-            bookings_per_day: val.bookings,
             is_Fillmyslots: true,
-            tagName: frmDetails.packagename,
+            tagName: frmDetails.packageName,
           },
         });
-      }
+
     },
-  });
+  }
+  );
 
   const [editPackage] = useMutation(EDIT_PACKAGE, {
     onCompleted: (r: any) => {

@@ -283,7 +283,7 @@ export default function PT() {
 
   function handleHistoryPackage(data: any) {
     const flattenData = flattenObj({ ...data });
-    console.log(flattenData);
+    
     setUserPackage(
       [...flattenData.tags].map((packageItem) => {
         let renewDay: any = "";

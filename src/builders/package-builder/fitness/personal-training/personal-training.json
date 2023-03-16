@@ -89,6 +89,7 @@
                     "Couple",
                     "Family"
                 ],
+                "default": 0,
                 "description": "Solo - Single user, Couple - Two users, Family - Usually 3 - 4 users"
             },
             "thumbnail": {

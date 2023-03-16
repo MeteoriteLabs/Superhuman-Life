@@ -13,7 +13,7 @@ import Loader from "../../../../components/Loader/Loader";
 const Scheduler = () => {
   const last = window.location.pathname.split("/").reverse();
   const tagId = window.location.pathname.split("/").pop();
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState<boolean>(false);
   const [sessionIds, setSessionIds] = useState<any>([]);
   const [clientIds, setClientIds] = useState<any>([]);
   // these are the sessions that will passed onto the scheduler
@@ -72,7 +72,7 @@ const Scheduler = () => {
     const dailySessions = sessions.filter(
       (ses: any) => ses.session_date === moment().format("YYYY-MM-DD")
     );
-    return dailySessions.length >= 1 ? dailySessions.length : "N/A";
+    return dailySessions.length ? dailySessions.length : "N/A";
   }
 
   function handleCallback() {
@@ -138,15 +138,13 @@ const Scheduler = () => {
                   <Col lg={7}>
                     <Row style={{ justifyContent: "center" }}>
                       <div className="position-relative">
-                        {tag.client_packages.length === 0 ? (
-                          <span>N/A</span>
-                        ) : (
+                        {tag.client_packages.length ? (
                           tag.client_packages.slice(0, 4).map((item, index: number) => {
                             let postionLeft = 8;
                             return (
                               <img
                                 key={index}
-                                src="https://picsum.photos/200/100"
+                                src="assets/image_placeholder.svg"
                                 alt="profile-pic"
                                 style={{
                                   width: "40px",
@@ -157,6 +155,9 @@ const Scheduler = () => {
                               />
                             );
                           })
+                          
+                        ) : (
+                          <span>N/A</span>
                         )}
                       </div>
                     </Row>
@@ -186,7 +187,7 @@ const Scheduler = () => {
                 </Row>
                 <div>
                   <b>Status:</b>{" "}
-                  {tag.fitnesspackage.Status === true ? (
+                  {tag.fitnesspackage.Status ? (
                     <span className="text-success">Active</span>
                   ) : (
                     <span className="text-danger">Inactive</span>

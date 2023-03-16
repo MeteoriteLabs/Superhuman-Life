@@ -175,7 +175,7 @@ export default function FitnessTab() {
         Cell: ({ row }: any) => {
           return (
             <div className="d-flex justify-content-center align-items-center">
-              {row.values.details[0] !== null && row.values.details[0] !== 0 ? (
+              {row.values.details[0] && row.values.details[0] ? (
                 <div className="text-center">
                   <OfferingsDisaplyImage
                     mode={
@@ -190,7 +190,7 @@ export default function FitnessTab() {
               ) : (
                 ""
               )}
-              {row.values.details[1] !== null && row.values.details[1] !== 0 ? (
+              {row.values.details[1] && row.values.details[1] ? (
                 <div className="text-center">
                   <OfferingsDisaplyImage
                     mode={
@@ -379,15 +379,14 @@ export default function FitnessTab() {
           });
 
           let lengthOfobject = Object.keys(sessionsObj).length;
-          
+
           let differenceBetweenStartDateandEndDate = endMoment.diff(
             startMoment,
             "days"
           );
 
-          return (
-            ( v.row.original.type === "Group Class" || v.row.original.type === "Live Stream Channel" ? 
-              
+          return v.row.original.type === "Group Class" ||
+            v.row.original.type === "Live Stream Channel" ? (
             Object.keys(sessionsObj).length === 3 ? (
               <Badge
                 className="px-3 py-1"
@@ -401,15 +400,14 @@ export default function FitnessTab() {
                 <ProgressBar variant="success" now={lengthOfobject} />
                 {lengthOfobject}/3 program build
               </>
-            ): 
-            (
-              v.row.original.type !== "One-On-One" &&
-              v.row.original.type !== "Custom Fitness" &&
-              v.row.original.type !== "On-Demand PT" 
-            ) ?
+            )
+          ) : v.row.original.type !== "One-On-One" &&
+            v.row.original.type !== "Custom Fitness" &&
+            v.row.original.type !== "On-Demand PT" ? (
             <div>
-              {
-              differenceBetweenStartDateandEndDate ===
+              {(v.row.original.type === "Classic Class"
+                ? v.row.original.duration[0]
+                : differenceBetweenStartDateandEndDate) ===
               Object.keys(sessionsObj).length ? (
                 <Badge
                   className="px-3 py-1"
@@ -421,27 +419,34 @@ export default function FitnessTab() {
               ) : (
                 <>
                   <ProgressBar variant="success" now={lengthOfobject} />
-                  {lengthOfobject}/{differenceBetweenStartDateandEndDate} program build
-                </>)
-              }  </div> :  
-              <div>
-              {
-                v.row.original.status ? <Badge
-                className="px-3 py-1"
-                style={{ fontSize: "1rem", borderRadius: "10px" }}
-                variant={"success"}
-              >
-                {"Published"}
-              </Badge> : <Badge
+                  {lengthOfobject}/
+                  {v.row.original.type === "Classic Class"
+                    ? v.row.original.duration[0]
+                    : differenceBetweenStartDateandEndDate}{" "}
+                  program build
+                </>
+              )}{" "}
+            </div>
+          ) : (
+            <div>
+              {v.row.original.status ? (
+                <Badge
+                  className="px-3 py-1"
+                  style={{ fontSize: "1rem", borderRadius: "10px" }}
+                  variant={"success"}
+                >
+                  {"Published"}
+                </Badge>
+              ) : (
+                <Badge
                   className="px-3 py-1"
                   style={{ fontSize: "1rem", borderRadius: "10px" }}
                   variant={"danger"}
                 >
                   {"Draft"}
                 </Badge>
-              }
-              </div>
-            )
+              )}
+            </div>
           );
         },
       },
@@ -454,7 +459,12 @@ export default function FitnessTab() {
           };
 
           const statusChangeHandler = () => {
-            handleModalRender(row.original.id, "toggle-status", row.original.type, row.original.status);
+            handleModalRender(
+              row.original.id,
+              "toggle-status",
+              row.original.type,
+              row.original.status
+            );
           };
 
           const viewHandler = () => {
@@ -508,14 +518,15 @@ export default function FitnessTab() {
                   ),
               });
             }
-          } else if(row.original.type === "One-On-One" ||
-          row.original.type === "Custom Fitness" ||
-          row.original.type === "On-Demand PT"){
+          } else if (
+            row.original.type === "One-On-One" ||
+            row.original.type === "Custom Fitness" ||
+            row.original.type === "On-Demand PT"
+          ) {
             arrayAction.push({
               actionName: "Status Change",
-              actionClick: statusChangeHandler
+              actionClick: statusChangeHandler,
             });
-
           }
 
           return <ActionButton arrayAction={arrayAction}></ActionButton>;
@@ -528,64 +539,67 @@ export default function FitnessTab() {
   const [dataTable, setDataTable] = useState<any>([]);
 
   // eslint-disable-next-line
-  const [tags, { data: get_tags, refetch: refetch_tags }] = useLazyQuery(GET_TAGS, {
-    variables: { id: auth.userid },
-    onCompleted: (data) => {
-      const tagsFlattenData = flattenObj({ ...data });
-      const fitnessFlattenData = flattenObj({ ...get_fitness });
-
-      setDataTable(
-        [...fitnessFlattenData?.fitnesspackages].map((item) => {
-          return {
-            sessions: tagsFlattenData.tags.filter(
-              (currentValue) => currentValue.fitnesspackage.id === item.id
-            ),
-            tagId: tagsFlattenData.tags
-              .filter(
+  const [tags, { data: get_tags, refetch: refetch_tags }] = useLazyQuery(
+    GET_TAGS,
+    {
+      variables: { id: auth.userid },
+      onCompleted: (data) => {
+        const tagsFlattenData = flattenObj({ ...data });
+        const fitnessFlattenData = flattenObj({ ...get_fitness });
+        
+        setDataTable(
+          [...fitnessFlattenData?.fitnesspackages].map((item) => {
+            return {
+              sessions: tagsFlattenData.tags.filter(
                 (currentValue) => currentValue.fitnesspackage.id === item.id
-              )
-              .map((currentValue) => [currentValue.id]),
-            tagname: tagsFlattenData.tags
-              .filter(
-                (currentValue) => currentValue.fitnesspackage.id === item.id
-              )
-              .map((currentValue) => [currentValue.tag_name]),
-            id: item.id,
-            packagename: item.packagename,
-            status: item.Status,
-            type: item.fitness_package_type.type,
-            details: [
-              item.ptonline,
-              item.ptoffline,
-              item.grouponline,
-              item.groupoffline,
-              item.recordedclasses,
-              item.duration,
-              item.mode,
-            ],
-            duration: item.fitnesspackagepricing.map((i) => i.duration),
-            mrp: item.fitnesspackagepricing.map((i) => i.mrp),
-            Status: item.Status ? "Active" : "Inactive",
-            publishingDate: item.publishing_date,
-            mode: item.mode,
-            days: item.duration,
-            pricing: item.fitnesspackagepricing,
-            freeClass: item.groupinstantbooking,
-            startDate: item.Start_date,
-            endDate: item.End_date,
-          };
-        })
-      );
+              ),
+              tagId: tagsFlattenData.tags
+                .filter(
+                  (currentValue) => currentValue.fitnesspackage.id === item.id
+                )
+                .map((currentValue) => [currentValue.id]),
+              tagname: tagsFlattenData.tags
+                .filter(
+                  (currentValue) => currentValue.fitnesspackage.id === item.id
+                )
+                .map((currentValue) => [currentValue.tag_name]),
+              id: item.id,
+              packagename: item.packagename,
+              status: item.Status,
+              type: item.fitness_package_type.type,
+              details: [
+                item.ptonline,
+                item.ptoffline,
+                item.grouponline,
+                item.groupoffline,
+                item.recordedclasses,
+                item.duration,
+                item.mode,
+              ],
+              duration: item.fitnesspackagepricing.map((i) => i.duration),
+              mrp: item.fitnesspackagepricing.map((i) => i.mrp),
+              Status: item.Status ? "Active" : "Inactive",
+              publishingDate: item.publishing_date,
+              mode: item.mode,
+              days: item.duration,
+              pricing: item.fitnesspackagepricing,
+              freeClass: item.groupinstantbooking,
+              startDate: item.Start_date,
+              endDate: item.End_date,
+            };
+          })
+        );
 
-      setSelectedDuration(
-        new Array(fitnessFlattenData.fitnesspackages.length).fill(0)
-      );
-      setCurrentIndex(
-        new Array(fitnessFlattenData.fitnesspackages.length).fill(1)
-      );
-    },
-  });
-
+        setSelectedDuration(
+          new Array(fitnessFlattenData.fitnesspackages.length).fill(0)
+        );
+        setCurrentIndex(
+          new Array(fitnessFlattenData.fitnesspackages.length).fill(1)
+        );
+      },
+    }
+  );
+  
   const { data: get_fitness, refetch: refetchFitness } = useQuery(GET_FITNESS, {
     variables: { id: auth.userid },
     onCompleted: (data) => {

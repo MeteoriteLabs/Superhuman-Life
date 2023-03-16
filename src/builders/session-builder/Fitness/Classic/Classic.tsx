@@ -22,7 +22,7 @@ export default function Classic() {
 
   const loadData = (data: any) => {
     const flattenData = flattenObj({ ...data });
-
+    
     setUserPackage([
       ...flattenData.tags.map((packageItem) => {
         return {
