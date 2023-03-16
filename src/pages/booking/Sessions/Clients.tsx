@@ -192,7 +192,7 @@ export default function Clients() {
       setClientsData(flattenClientsData);
       getSessionBookings({
         variables: {
-          id: flattenClientsData[0].users_permissions_user.id,
+          id: flattenClientsData[0]?.users_permissions_user?.id,
           loginUserId: auth.userid,
           status: ["Booked"],
         },

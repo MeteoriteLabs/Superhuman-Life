@@ -31,6 +31,10 @@ export default function Layout({ token, children }: any) {
     setSideNavStatus(currentSideNavStatus);
   };
   
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
+
   return (
     <>
       <header>{token ? <AuthenticatedNav /> : <UnauthenticatedNav />}</header>
