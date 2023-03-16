@@ -125,7 +125,6 @@ function CreateEditPt(props: any, ref: any) {
         });
 
       if (window.location.href.split("/")[3] === "client") {
-        console.log("hello from if")
         createUserPackageSuggestion({
           variables: {
             id: window.location.href.split("/").pop(),
@@ -133,7 +132,6 @@ function CreateEditPt(props: any, ref: any) {
           },
         });
       } else {
-        console.log("hello from else")
         const val = JSON.parse(frmDetails.config.bookingConfig);
         bookingConfig({
           variables: {
