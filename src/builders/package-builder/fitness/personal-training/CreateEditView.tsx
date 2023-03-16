@@ -67,7 +67,7 @@ function CreateEditPt(props: any, ref: any) {
       setFitnessType(flattenData.fitnessPackageTypes);
     },
   });
-console.log(fitnessTypes);
+
   const [bookingConfig] = useMutation(CREATE_BOOKING_CONFIG, {
     onCompleted: (r: any) => {
       modalTrigger.next(false);
