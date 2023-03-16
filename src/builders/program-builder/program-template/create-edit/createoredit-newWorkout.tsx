@@ -38,7 +38,7 @@ function CreateEditNewWorkout(props: any, ref: any) {
 	let frmDetails: any;
 	const [templateSessionsIds, setTemplateSessionsIds] = useState<any>([]);
 	// userId here is the new sessionID.
-	const [userId, setUserId] = useState("");
+	const [userId, setUserId] = useState<string>("");
 	const [dropConflict, setDropConflict] = useState<boolean>(false);
 	const [isCreated, setIsCreated] = useState<boolean>(false);
 
@@ -91,7 +91,7 @@ function CreateEditNewWorkout(props: any, ref: any) {
 	const [upateSessions] = useMutation(UPDATE_TAG_SESSIONS, {
 		onCompleted: (data: any) => {
 			if (props?.clientIds.length > 0) {
-				for (var i = 0; i < props?.clientIds.length; i++) {
+				for (let i = 0; i < props?.clientIds.length; i++) {
 					createSessionBooking({
 						variables: {
 							session: userId,

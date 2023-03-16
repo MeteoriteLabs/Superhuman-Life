@@ -20,12 +20,17 @@ export const GET_ADDRESS = gql`
 
 export const GET_BOOKINGS_CONFIG = gql`
   query bookingConfigs($userId: ID) {
-    bookingConfigs(pagination: {pageSize: 1000} ,filters: { fitnesspackage: {users_permissions_user: { id: { eq: $userId } } } }) {
+    bookingConfigs(
+      pagination: { pageSize: 1000 }
+      filters: {
+        fitnesspackage: { users_permissions_user: { id: { eq: $userId } } }
+      }
+    ) {
       data {
         id
         attributes {
-          fitnesspackage{
-            data{
+          fitnesspackage {
+            data {
               id
               attributes {
                 packagename

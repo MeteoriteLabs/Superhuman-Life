@@ -79,6 +79,14 @@ export const CREATE_USER_PACKAGE = gql`
               id
               attributes{
                 packagename
+                fitness_package_type{
+                  data{
+                    id
+                    attributes{
+                      type
+                    }
+                  }
+                }
               }
             }
           }

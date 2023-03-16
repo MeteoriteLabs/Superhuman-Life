@@ -241,8 +241,6 @@ const Scheduler = () => {
 		// setSessionIds([]);
 	}
 
-	console.log(tag);
-
 	if (!show) return <Loader />;
 	else
 		return (

@@ -44,6 +44,7 @@
                         1,
                         2
                     ],
+                    "default": 0,
                     "enumNames": [
                         "Beginner",
                         "Intermediate",
@@ -58,6 +59,7 @@
                         1,
                         2
                     ],
+                    "default": 0,
                     "enumNames": [
                         "Low",
                         "Medium",
