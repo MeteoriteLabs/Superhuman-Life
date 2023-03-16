@@ -30,7 +30,7 @@ export default function PT() {
 
   const loadData = (data) => {
     const flattenData = flattenObj({ ...data });
-
+    console.log(flattenData);
     setUserPackage(
       [...flattenData.tags].map((packageItem) => {
         let renewDay: any = "";
