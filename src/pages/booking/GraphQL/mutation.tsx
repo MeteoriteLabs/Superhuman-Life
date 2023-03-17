@@ -56,6 +56,17 @@ export const UPDATE_BOOKING_STATUS = gql`
   }
 `;
 
+
+export const CREATE_TAG = gql`
+  mutation createTag($name: String!, $fitnessPackageID: ID!) {
+    createTag(data: { tag_name: $name, fitnesspackage: $fitnessPackageID }) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
 export const CREATE_USER_PACKAGE = gql`
   mutation createUserPackage(
     $data: ClientPackageInput!

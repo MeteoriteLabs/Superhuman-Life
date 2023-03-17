@@ -17,10 +17,10 @@ import {
   DELETE_PACKAGE,
   EDIT_PACKAGE,
   UPDATE_PACKAGE_STATUS,
-  CREATE_BOOKING_CONFIG,
   UPDATE_BOOKING_CONFIG,
   CREATE_NOTIFICATION,
   DELETE_BOOKING_CONFIG,
+  CREATE_BOOKING_CONFIG_FOR_ONE_ON_ONE_AND_CUSTOM,
 } from "../graphQL/mutations";
 import { Modal, Button } from "react-bootstrap";
 import AuthContext from "../../../../context/auth-context";
@@ -49,8 +49,8 @@ function CreateEditPackage(props: any, ref: any) {
   const [customDetails, setCustomDetails] = useState<any>({});
   const [fitnessTypes, setFitnessType] = useState<any[]>([]);
   const [operation, setOperation] = useState<Operation>({} as Operation);
-  const [deleteModalShow, setDeleteModalShow] = useState(false);
-  const [statusModalShow, setStatusModalShow] = useState(false);
+  const [deleteModalShow, setDeleteModalShow] = useState<boolean>(false);
+  const [statusModalShow, setStatusModalShow] = useState<boolean>(false);
   const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
   const [isOffeeringDeleted, setisOffeeringDeleted] = useState<boolean>(false);
   const [isOfferingUpdated, setisOfferingUpdated] = useState<boolean>(false);
@@ -77,7 +77,7 @@ function CreateEditPackage(props: any, ref: any) {
 
   const [deleteBookingConfig] = useMutation(DELETE_BOOKING_CONFIG);
 
-  const [bookingConfig] = useMutation(CREATE_BOOKING_CONFIG, {
+  const [bookingConfig] = useMutation(CREATE_BOOKING_CONFIG_FOR_ONE_ON_ONE_AND_CUSTOM, {
     onCompleted: (data: any) => {
       modalTrigger.next(false);
       props.callback();
@@ -96,6 +96,7 @@ function CreateEditPackage(props: any, ref: any) {
   const [createCustomNotification] = useMutation(CREATE_NOTIFICATION);
 
   const [createPackage] = useMutation(CREATE_PACKAGE, {
+    refetchQueries:[GET_FITNESS_PACKAGE_TYPES],
     onCompleted: (data: any) => {
       const flattenData = flattenObj({ ...data });
 

@@ -75,6 +75,7 @@ function CreateEditPackage(props: any, ref: any) {
     },
   });
 
+  // eslint-disable-next-line
   const [createUserPackageSuggestion] = useMutation(ADD_SUGGESTION_NEW, {
     onCompleted: (data) => {
       modalTrigger.next(false);

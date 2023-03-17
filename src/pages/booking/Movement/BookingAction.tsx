@@ -5,6 +5,7 @@ import {
   CREATE_USER_PACKAGE,
   UPDATE_BOOKING_STATUS,
   UPDATE_TAG,
+  CREATE_TAG,
 } from "../GraphQL/mutation";
 import { GET_TAGS } from "../GraphQL/queries";
 import authContext from "../../../context/auth-context";
@@ -13,6 +14,7 @@ import { flattenObj } from "../../../components/utils/responseFlatten";
 
 interface Operation {
   id: string;
+  type: string;
   actionType: "manage" | "view" | "request" | "accept" | "reject";
   formData: any;
 }
@@ -46,6 +48,7 @@ function BookingAction(props, ref: any) {
   });
 
   const [updateTag] = useMutation(UPDATE_TAG);
+  const [createTag] = useMutation(CREATE_TAG);
 
   const [updateBookingStatus] = useMutation(UPDATE_BOOKING_STATUS, {
     onCompleted: (data) => {
@@ -71,24 +74,38 @@ function BookingAction(props, ref: any) {
         onCompleted: (data) => {
           const flattenData = flattenObj({ ...data });
 
-          let tag =
-            tagsDetails &&
-            tagsDetails.length &&
-            tagsDetails.filter(
-              (currentValue) =>
-                currentValue.fitnesspackage.packagename ===
-                flattenData.createClientPackage.fitnesspackages[0].packagename
-            );
-
-          for (let i = 0; i < tag.length; i++) {
-            updateTag({
+          if (
+            operation.type === "On-Demand PT" ||
+            operation.type === "One-On-One" ||
+            operation.type === "Custom Fitness"
+          ) {
+            createTag({
               variables: {
-                id: tag[i].id,
-                data: {
-                  client_packages: [flattenData.createClientPackage.id],
-                },
+                name: `${flattenData?.createClientPackage.users_permissions_user?.username}_${flattenData?.createClientPackage.fitnesspackages[0]?.packagename}`,
+                fitnessPackageID:
+                  flattenData?.createClientPackage.fitnesspackages[0]?.id,
               },
             });
+          } else {
+            let tag =
+              tagsDetails &&
+              tagsDetails.length &&
+              tagsDetails.filter(
+                (currentValue) =>
+                  currentValue.fitnesspackage.packagename ===
+                  flattenData.createClientPackage.fitnesspackages[0].packagename
+              );
+
+            for (let i = 0; i < tag.length; i++) {
+              updateTag({
+                variables: {
+                  id: tag[i].id,
+                  data: {
+                    client_packages: [flattenData.createClientPackage.id],
+                  },
+                },
+              });
+            }
           }
         },
       });

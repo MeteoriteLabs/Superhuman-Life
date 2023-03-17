@@ -9,10 +9,10 @@ import ActionButton from "../../../../components/actionbutton";
 import FitnessAction from "../FitnessAction";
 import { flattenObj } from "../../../../components/utils/responseFlatten";
 
-export default function Custom(props) {
+export default function Custom() {
   const auth = useContext(AuthContext);
   const [userPackage, setUserPackage] = useState<any>([]);
-  const [showHistory, setShowHistory] = useState(false);
+  const [showHistory, setShowHistory] = useState<boolean>(false);
   const fitnessActionRef = useRef<any>(null);
 
   const mainQuery = useQuery(GET_SESSIONS_FROM_TAGS, {
@@ -140,7 +140,7 @@ export default function Custom(props) {
 
   function calculateProgramRenewal(sessions: any, effectiveDate: any) {
     let max: number = 0;
-    for (var i = 0; i < sessions.length; i++) {
+    for (let i = 0; i < sessions.length; i++) {
       if (sessions[i].day_of_program > max) {
         max = sessions[i].day_of_program;
       }

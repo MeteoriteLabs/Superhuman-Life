@@ -17,10 +17,10 @@ import {
   DELETE_PACKAGE,
   EDIT_PACKAGE,
   UPDATE_PACKAGE_STATUS,
-  CREATE_BOOKING_CONFIG,
   UPDATE_BOOKING_CONFIG,
   CREATE_NOTIFICATION,
   DELETE_BOOKING_CONFIG,
+  CREATE_BOOKING_CONFIG_FOR_ONE_ON_ONE_AND_CUSTOM,
 } from "../graphQL/mutations";
 import { Modal, Button } from "react-bootstrap";
 import AuthContext from "../../../../context/auth-context";
@@ -51,8 +51,8 @@ function CreateEditOnDemadPt(props: any, ref: any) {
   );
   const [fitnessTypes, setFitnessType] = useState<any[]>([]);
   const [operation, setOperation] = useState<Operation>({} as Operation);
-  const [deleteModalShow, setDeleteModalShow] = useState(false);
-  const [statusModalShow, setStatusModalShow] = useState(false);
+  const [deleteModalShow, setDeleteModalShow] = useState<boolean>(false);
+  const [statusModalShow, setStatusModalShow] = useState<boolean>(false);
   const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
   const [isOffeeringDeleted, setisOffeeringDeleted] = useState<boolean>(false);
   const [isOfferingUpdated, setisOfferingUpdated] = useState<boolean>(false);
@@ -69,7 +69,7 @@ function CreateEditOnDemadPt(props: any, ref: any) {
     },
   });
 
-  const [bookingConfig] = useMutation(CREATE_BOOKING_CONFIG, {
+  const [bookingConfig] = useMutation(CREATE_BOOKING_CONFIG_FOR_ONE_ON_ONE_AND_CUSTOM, {
     onCompleted: (r: any) => {
       modalTrigger.next(false);
       props.callback();
@@ -107,9 +107,10 @@ function CreateEditOnDemadPt(props: any, ref: any) {
   const [createOnDemandNotification] = useMutation(CREATE_NOTIFICATION);
 
   const [createPackage] = useMutation(CREATE_PACKAGE, {
+    refetchQueries:[GET_FITNESS_PACKAGE_TYPES],
     onCompleted: (r: any) => {
       const flattenData = flattenObj({ ...r });
-
+     
       createOnDemandNotification({
           variables: {
             data: {
@@ -143,6 +144,7 @@ function CreateEditOnDemadPt(props: any, ref: any) {
           },
         });
       }
+      props.callback();
     },
   });
 
