@@ -59,14 +59,16 @@ function CreateEditChannel(props: any, ref: any) {
   const [editPackageDetails] = useMutation(UPDATE_CHANNEL_COHORT_PACKAGE, {
     onCompleted: (data) => {
       modalTrigger.next(false);
-      props.callback();
+      props.refetchTags();
+      props.refetchOfferings();
       setisOfferingUpdated(!isOfferingUpdated);
     },
   });
 
   const [updatePackageStatus] = useMutation(UPDATE_PACKAGE_STATUS, {
     onCompleted: (data) => {
-      props.callback();
+      props.refetchTags();
+      props.refetchOfferings();
       setisOfferingUpdated(!isOfferingUpdated);
     },
   });
@@ -83,7 +85,6 @@ function CreateEditChannel(props: any, ref: any) {
   const [deleteBookingConfig] = useMutation(DELETE_BOOKING_CONFIG);
 
   const [deletePackage] = useMutation(DELETE_PACKAGE, {
-    refetchQueries: ["GET_TABLEDATA"],
     onCompleted: (data) => {
 
       // delete booking config
@@ -96,7 +97,8 @@ function CreateEditChannel(props: any, ref: any) {
         variables: { id: bookingConfigId.id },
       });
       
-      props.callback();
+      props.refetchTags();
+      props.refetchOfferings();
       setisOffeeringDeleted(!isOffeeringDeleted);
     },
   });
@@ -104,7 +106,8 @@ function CreateEditChannel(props: any, ref: any) {
   const [bookingConfig] = useMutation(CREATE_BOOKING_CONFIG, {
     onCompleted: (r: any) => {
       modalTrigger.next(false);
-      props.callback();
+      props.refetchTags();
+      props.refetchOfferings();
       setIsFormSubmitted(!isFormSubmitted);
       window.open(`channel/session/scheduler/${r.createTag.data.id}`, "_self");
     },
@@ -253,7 +256,7 @@ function CreateEditChannel(props: any, ref: any) {
     let details: any = {};
 
     if (msg.groupinstantbooking) {
-      for (var i = 0; i < msg.fitnesspackagepricing.length; i++) {
+      for (let i = 0; i < msg.fitnesspackagepricing.length; i++) {
         PRICING_TABLE_DEFAULT_WITH_INSTANTBOOKING[i].mrp =
           msg.fitnesspackagepricing[i].mrp;
         PRICING_TABLE_DEFAULT_WITH_INSTANTBOOKING[i].suggestedPrice =
@@ -264,7 +267,7 @@ function CreateEditChannel(props: any, ref: any) {
           msg.fitnesspackagepricing[i].sapienPricing;
       }
     } else {
-      for (var j = 0; j < msg.fitnesspackagepricing.length; j++) {
+      for (let j = 0; j < msg.fitnesspackagepricing.length; j++) {
         PRICING_TABLE_DEFAULT[j].mrp = msg.fitnesspackagepricing[j].mrp;
         PRICING_TABLE_DEFAULT[j].suggestedPrice =
           msg.fitnesspackagepricing[j].suggestedPrice;
@@ -512,7 +515,7 @@ function CreateEditChannel(props: any, ref: any) {
 
   FetchData();
 
-  let name = "";
+  let name: string = "";
   if (operation.type === "create") {
     name = "Live Stream Offering";
   } else if (operation.type === "edit") {

@@ -543,6 +543,7 @@ export default function FitnessTab() {
     GET_TAGS,
     {
       variables: { id: auth.userid },
+      fetchPolicy: "cache-and-network",
       onCompleted: (data) => {
         const tagsFlattenData = flattenObj({ ...data });
         const fitnessFlattenData = flattenObj({ ...get_fitness });
@@ -701,32 +702,38 @@ export default function FitnessTab() {
             <Card.Title className="text-center">
               <CreateEditViewChannel
                 ref={createEditViewChannelRef}
-                callback={refetchQueryCallback}
+                refetchTags={refetch_tags}
+                refetchOfferings={refetchFitness}
               ></CreateEditViewChannel>
               <CreateEditViewCohort
                 ref={createEditViewCohortRef}
-                callback={refetchQueryCallback}
+                refetchTags={refetch_tags}
+                refetchOfferings={refetchFitness}
               ></CreateEditViewCohort>
               <CreateEditViewPersonalTraining
                 ref={createEditViewPersonalTrainingRef}
-                callback={refetchQueryCallback}
                 refetchTags={refetch_tags}
+                refetchOfferings={refetchFitness}
               />
               <CreateEditViewOnDemandPt
                 ref={CreateEditViewOnDemandPtRef}
-                callback={refetchQueryCallback}
+                refetchTags={refetch_tags}
+                refetchOfferings={refetchFitness}
               />
               <CreateEditViewGroupClass
                 ref={CreateEditViewGroupClassRef}
-                callback={refetchQueryCallback}
+                refetchTags={refetch_tags}
+                refetchOfferings={refetchFitness}
               />
               <CreateEditViewClassicClass
                 ref={CreateEditViewClassicClassRef}
-                callback={refetchQueryCallback}
+                refetchTags={refetch_tags}
+                refetchOfferings={refetchFitness}
               />
               <CreateEditViewCustomFitness
                 ref={CreateEditViewCustomFitnessRef}
-                callback={refetchQueryCallback}
+                refetchTags={refetch_tags}
+                refetchOfferings={refetchFitness}
               />
             </Card.Title>
           </Col>

@@ -17,10 +17,10 @@ import {
   DELETE_PACKAGE,
   EDIT_PACKAGE,
   UPDATE_PACKAGE_STATUS,
-  CREATE_BOOKING_CONFIG,
   UPDATE_BOOKING_CONFIG,
   CREATE_NOTIFICATION,
   DELETE_BOOKING_CONFIG,
+  CREATE_BOOKING_CONFIG_FOR_ONE_ON_ONE_AND_CUSTOM,
 } from "../graphQL/mutations";
 import { Modal, Button } from "react-bootstrap";
 import AuthContext from "../../../../context/auth-context";
@@ -49,8 +49,8 @@ function CreateEditPackage(props: any, ref: any) {
   const [customDetails, setCustomDetails] = useState<any>({});
   const [fitnessTypes, setFitnessType] = useState<any[]>([]);
   const [operation, setOperation] = useState<Operation>({} as Operation);
-  const [deleteModalShow, setDeleteModalShow] = useState(false);
-  const [statusModalShow, setStatusModalShow] = useState(false);
+  const [deleteModalShow, setDeleteModalShow] = useState<boolean>(false);
+  const [statusModalShow, setStatusModalShow] = useState<boolean>(false);
   const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
   const [isOffeeringDeleted, setisOffeeringDeleted] = useState<boolean>(false);
   const [isOfferingUpdated, setisOfferingUpdated] = useState<boolean>(false);
@@ -77,10 +77,11 @@ function CreateEditPackage(props: any, ref: any) {
 
   const [deleteBookingConfig] = useMutation(DELETE_BOOKING_CONFIG);
 
-  const [bookingConfig] = useMutation(CREATE_BOOKING_CONFIG, {
+  const [bookingConfig] = useMutation(CREATE_BOOKING_CONFIG_FOR_ONE_ON_ONE_AND_CUSTOM, {
     onCompleted: (data: any) => {
       modalTrigger.next(false);
-      props.callback();
+      props.refetchTags();
+      props.refetchOfferings();
       setIsFormSubmitted(!isFormSubmitted);
     },
   });
@@ -88,7 +89,8 @@ function CreateEditPackage(props: any, ref: any) {
   const [createUserPackageSuggestion] = useMutation(ADD_SUGGESTION_NEW, {
     onCompleted: (data) => {
       modalTrigger.next(false);
-      props.callback();
+      props.refetchTags();
+      props.refetchOfferings();
       setIsFormSubmitted(!isFormSubmitted);
     },
   });
@@ -97,6 +99,8 @@ function CreateEditPackage(props: any, ref: any) {
 
   const [createPackage] = useMutation(CREATE_PACKAGE, {
     onCompleted: (data: any) => {
+      props.refetchTags();
+      props.refetchOfferings();
       const flattenData = flattenObj({ ...data });
 
       createCustomNotification({
@@ -148,13 +152,14 @@ function CreateEditPackage(props: any, ref: any) {
 
   const [updatePackageStatus] = useMutation(UPDATE_PACKAGE_STATUS, {
     onCompleted: (data) => {
-      props.callback();
+      props.refetchTags();
+      props.refetchOfferings();
       setisOfferingUpdated(!isOfferingUpdated);
     },
   });
 
   const [deletePackage] = useMutation(DELETE_PACKAGE, {
-    refetchQueries: ["GET_TABLEDATA"],
+    
     onCompleted: (data) => {
       // delete booking config
       let offeringsId = data.deleteFitnesspackage.data.id;
@@ -166,7 +171,8 @@ function CreateEditPackage(props: any, ref: any) {
         variables: { id: bookingConfigId.id },
       });
 
-      props.callback();
+      props.refetchTags();
+      props.refetchOfferings();
       setisOffeeringDeleted(!isOffeeringDeleted);
     },
   });
@@ -174,7 +180,8 @@ function CreateEditPackage(props: any, ref: any) {
   const [updateBookingConfig] = useMutation(UPDATE_BOOKING_CONFIG, {
     onCompleted: (data: any) => {
       modalTrigger.next(false);
-      props.callback();
+      props.refetchTags();
+      props.refetchOfferings();
       setisOfferingUpdated(!isOfferingUpdated);
     },
   });

@@ -254,11 +254,11 @@ export default function PT() {
             id: "edit",
             Header: "Actions",
             Cell: ({ row }: any) => {
-              const actionClick1 = () => {
+              const manageHandler = () => {
                 handleRedirect(row.original.tagId);
               };
 
-              const actionClick2 = () => {
+              const detailsHandler = () => {
                 fitnessActionRef.current.TriggerForm({
                   id: row.original.id,
                   actionType: "details",
@@ -268,8 +268,8 @@ export default function PT() {
               };
 
               const arrayAction = [
-                { actionName: "Manage", actionClick: actionClick1 },
-                { actionName: "Details", actionClick: actionClick2 },
+                { actionName: "Manage", actionClick: manageHandler },
+                { actionName: "Details", actionClick: detailsHandler },
               ];
 
               return <ActionButton arrayAction={arrayAction}></ActionButton>;

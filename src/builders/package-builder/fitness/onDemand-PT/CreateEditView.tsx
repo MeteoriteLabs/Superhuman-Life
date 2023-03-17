@@ -17,10 +17,10 @@ import {
   DELETE_PACKAGE,
   EDIT_PACKAGE,
   UPDATE_PACKAGE_STATUS,
-  CREATE_BOOKING_CONFIG,
   UPDATE_BOOKING_CONFIG,
   CREATE_NOTIFICATION,
   DELETE_BOOKING_CONFIG,
+  CREATE_BOOKING_CONFIG_FOR_ONE_ON_ONE_AND_CUSTOM,
 } from "../graphQL/mutations";
 import { Modal, Button } from "react-bootstrap";
 import AuthContext from "../../../../context/auth-context";
@@ -51,8 +51,8 @@ function CreateEditOnDemadPt(props: any, ref: any) {
   );
   const [fitnessTypes, setFitnessType] = useState<any[]>([]);
   const [operation, setOperation] = useState<Operation>({} as Operation);
-  const [deleteModalShow, setDeleteModalShow] = useState(false);
-  const [statusModalShow, setStatusModalShow] = useState(false);
+  const [deleteModalShow, setDeleteModalShow] = useState<boolean>(false);
+  const [statusModalShow, setStatusModalShow] = useState<boolean>(false);
   const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
   const [isOffeeringDeleted, setisOffeeringDeleted] = useState<boolean>(false);
   const [isOfferingUpdated, setisOfferingUpdated] = useState<boolean>(false);
@@ -69,13 +69,17 @@ function CreateEditOnDemadPt(props: any, ref: any) {
     },
   });
 
-  const [bookingConfig] = useMutation(CREATE_BOOKING_CONFIG, {
-    onCompleted: (r: any) => {
-      modalTrigger.next(false);
-      props.callback();
-      setIsFormSubmitted(!isFormSubmitted);
-    },
-  });
+  const [bookingConfig] = useMutation(
+    CREATE_BOOKING_CONFIG_FOR_ONE_ON_ONE_AND_CUSTOM,
+    {
+      onCompleted: (r: any) => {
+        modalTrigger.next(false);
+        props.refetchTags();
+        props.refetchOfferings();
+        setIsFormSubmitted(!isFormSubmitted);
+      },
+    }
+  );
 
   // eslint-disable-next-line
   const { data: get_bookings_config } = useQuery(GET_BOOKINGS_CONFIG, {
@@ -91,7 +95,8 @@ function CreateEditOnDemadPt(props: any, ref: any) {
   const [updateBookingConfig] = useMutation(UPDATE_BOOKING_CONFIG, {
     onCompleted: (r: any) => {
       modalTrigger.next(false);
-      props.callback();
+      props.refetchTags();
+      props.refetchOfferings();
       setisOfferingUpdated(!isOfferingUpdated);
     },
   });
@@ -99,7 +104,8 @@ function CreateEditOnDemadPt(props: any, ref: any) {
   const [createUserPackageSuggestion] = useMutation(ADD_SUGGESTION_NEW, {
     onCompleted: (data) => {
       modalTrigger.next(false);
-      props.callback();
+      props.refetchTags();
+      props.refetchOfferings();
       setIsFormSubmitted(!isFormSubmitted);
     },
   });
@@ -111,19 +117,19 @@ function CreateEditOnDemadPt(props: any, ref: any) {
       const flattenData = flattenObj({ ...r });
 
       createOnDemandNotification({
-          variables: {
-            data: {
-              type: "Offerings",
-              Title: "New offering",
-              OnClickRoute: "/offerings",
-              users_permissions_user: auth.userid,
-              Body: `New on demand PT offering ${flattenData.createFitnesspackage.packagename} has been added`,
-              DateTime: moment().format(),
-              IsRead: false,
-              ContactID: flattenData.createFitnesspackage.id,
-            },
+        variables: {
+          data: {
+            type: "Offerings",
+            Title: "New offering",
+            OnClickRoute: "/offerings",
+            users_permissions_user: auth.userid,
+            Body: `New on demand PT offering ${flattenData.createFitnesspackage.packagename} has been added`,
+            DateTime: moment().format(),
+            IsRead: false,
+            ContactID: flattenData.createFitnesspackage.id,
           },
-        });
+        },
+      });
 
       if (window.location.href.split("/")[3] === "client") {
         createUserPackageSuggestion({
@@ -143,6 +149,8 @@ function CreateEditOnDemadPt(props: any, ref: any) {
           },
         });
       }
+      props.refetchTags();
+      props.refetchOfferings();
     },
   });
 
@@ -162,26 +170,26 @@ function CreateEditOnDemadPt(props: any, ref: any) {
 
   const [updatePackageStatus] = useMutation(UPDATE_PACKAGE_STATUS, {
     onCompleted: (data) => {
-      props.callback();
+      props.refetchTags();
+      props.refetchOfferings();
       setisOfferingUpdated(!isOfferingUpdated);
     },
   });
 
   const [deletePackage] = useMutation(DELETE_PACKAGE, {
-    refetchQueries: ["GET_TABLEDATA"],
     onCompleted: (data) => {
-      
-       // delete booking config
-       let offeringsId = data.deleteFitnesspackage.data.id;
-       let bookingConfigId = bookingsConfigInfo.find(
-         (currentValue) => currentValue.fitnesspackage.id === offeringsId
-       );
-       
-       deleteBookingConfig({
-         variables: { id: bookingConfigId.id },
-       });
- 
-      props.callback();
+      // delete booking config
+      let offeringsId = data.deleteFitnesspackage.data.id;
+      let bookingConfigId = bookingsConfigInfo.find(
+        (currentValue) => currentValue.fitnesspackage.id === offeringsId
+      );
+
+      deleteBookingConfig({
+        variables: { id: bookingConfigId.id },
+      });
+
+      props.refetchTags();
+      props.refetchOfferings();
       setisOffeeringDeleted(!isOffeeringDeleted);
     },
   });
@@ -208,9 +216,9 @@ function CreateEditOnDemadPt(props: any, ref: any) {
   enum ENUM_FITNESSPACKAGE_LEVEL {
     Beginner,
     Intermediate,
-    Advanced
+    Advanced,
   }
-  
+
   enum ENUM_FITNESSPACKAGE_INTENSITY {
     Low,
     Moderate,
@@ -247,7 +255,7 @@ function CreateEditOnDemadPt(props: any, ref: any) {
     let msg = flattenedData.fitnesspackages[0];
     let bookingConfig: any = {};
     let details: any = {};
-    for (var i = 0; i < msg.fitnesspackagepricing.length; i++) {
+    for (let i = 0; i < msg.fitnesspackagepricing.length; i++) {
       PRICING_TABLE_DEFAULT[i].mrp = msg.fitnesspackagepricing[i].mrp;
       PRICING_TABLE_DEFAULT[i].suggestedPrice =
         msg.fitnesspackagepricing[i].suggestedPrice;
@@ -428,7 +436,9 @@ function CreateEditOnDemadPt(props: any, ref: any) {
   }
 
   function updateChannelPackageStatus(id: string, status: boolean) {
-    updatePackageStatus({ variables: { id: id, Status: status ? false : true } });
+    updatePackageStatus({
+      variables: { id: id, Status: status ? false : true },
+    });
     setStatusModalShow(false);
     operation.type = "create";
   }

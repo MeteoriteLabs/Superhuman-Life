@@ -17,10 +17,10 @@ import {
   DELETE_PACKAGE,
   EDIT_PACKAGE,
   UPDATE_PACKAGE_STATUS,
-  CREATE_BOOKING_CONFIG,
   UPDATE_BOOKING_CONFIG,
   CREATE_NOTIFICATION,
   DELETE_BOOKING_CONFIG,
+  CREATE_BOOKING_CONFIG_FOR_ONE_ON_ONE_AND_CUSTOM,
 } from "../graphQL/mutations";
 import { Modal, Button } from "react-bootstrap";
 import AuthContext from "../../../../context/auth-context";
@@ -51,8 +51,8 @@ function CreateEditPt(props: any, ref: any) {
   );
   const [fitnessTypes, setFitnessType] = useState<any[]>([]);
   const [operation, setOperation] = useState<Operation>({} as Operation);
-  const [deleteModalShow, setDeleteModalShow] = useState(false);
-  const [statusModalShow, setStatusModalShow] = useState(false);
+  const [deleteModalShow, setDeleteModalShow] = useState<boolean>(false);
+  const [statusModalShow, setStatusModalShow] = useState<boolean>(false);
   const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
   const [isOffeeringDeleted, setisOffeeringDeleted] = useState<boolean>(false);
   const [isOfferingUpdated, setisOfferingUpdated] = useState<boolean>(false);
@@ -68,10 +68,11 @@ function CreateEditPt(props: any, ref: any) {
     },
   });
 
-  const [bookingConfig] = useMutation(CREATE_BOOKING_CONFIG, {
+  const [bookingConfig] = useMutation(CREATE_BOOKING_CONFIG_FOR_ONE_ON_ONE_AND_CUSTOM, {
     onCompleted: (r: any) => {
       modalTrigger.next(false);
-      props.callback();
+      props.refetchTags();
+      props.refetchOfferings();
       setIsFormSubmitted(!isFormSubmitted);
     },
   });
@@ -79,7 +80,8 @@ function CreateEditPt(props: any, ref: any) {
   const [updateBookingConfig] = useMutation(UPDATE_BOOKING_CONFIG, {
     onCompleted: (r: any) => {
       modalTrigger.next(false);
-      props.callback();
+      props.refetchTags();
+      props.refetchOfferings();
       setIsFormSubmitted(!isFormSubmitted);
     },
   });
@@ -98,7 +100,8 @@ function CreateEditPt(props: any, ref: any) {
   const [createUserPackageSuggestion] = useMutation(ADD_SUGGESTION_NEW, {
     onCompleted: (data) => {
       modalTrigger.next(false);
-      props.callback();
+      props.refetchTags();
+      props.refetchOfferings();
       setIsFormSubmitted(!isFormSubmitted);
     },
   });
@@ -106,9 +109,11 @@ function CreateEditPt(props: any, ref: any) {
   const [createOneOnOneNotification] = useMutation(CREATE_NOTIFICATION);
 
   const [createPackage] = useMutation(CREATE_PACKAGE, {
+   
     onCompleted: (r: any) => {
       const flattenData = flattenObj({ ...r });
-
+      props.refetchTags();
+      props.refetchOfferings();
       createOneOnOneNotification({
           variables: {
             data: {
@@ -141,7 +146,7 @@ function CreateEditPt(props: any, ref: any) {
           },
         });
       }
-      props.callback();
+      
     },
   });
 
@@ -155,13 +160,17 @@ function CreateEditPt(props: any, ref: any) {
           bookings_per_month: val.bookings,
         },
       });
-      props.callback();
+      
+      props.refetchTags();
+      props.refetchOfferings();
     },
   });
 
   const [updatePackageStatus] = useMutation(UPDATE_PACKAGE_STATUS, {
     onCompleted: (data) => {
-      props.callback();
+      
+      props.refetchTags();
+      props.refetchOfferings();
       setisOfferingUpdated(!isOfferingUpdated);
     },
   });
@@ -178,7 +187,8 @@ function CreateEditPt(props: any, ref: any) {
         variables: { id: bookingConfigId.id },
       });
       
-      props.callback();
+      props.refetchTags();
+      props.refetchOfferings();
       setisOffeeringDeleted(!isOffeeringDeleted);
     },
   });
@@ -292,9 +302,9 @@ function CreateEditPt(props: any, ref: any) {
     details.publishingDate = moment(msg.publishing_date).format("YYYY-MM-DD");
     details.tags = msg?.tags === null ? "" : msg.tags;
     details.user_permissions_user = msg.users_permissions_user.id;
-    details.visibility = msg.is_private === true ? 1 : 0;
+    details.visibility = msg.is_private ? 1 : 0;
     bookingConfig.config =
-      msg.booking_config?.isAuto === true ? "Auto" : "Manual";
+      msg.booking_config?.isAuto ? "Auto" : "Manual";
     bookingConfig.bookings = msg.booking_config?.BookingsPerMonth;
     details.config = { bookingConfig: JSON.stringify(bookingConfig) };
     details.programDetails = JSON.stringify({
@@ -472,7 +482,7 @@ function CreateEditPt(props: any, ref: any) {
     }
   }
 
-  let name = "";
+  let name: string = "";
   if (operation.type === "create") {
     name = "Personal Training Offering";
   } else if (operation.type === "edit") {
