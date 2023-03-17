@@ -64,7 +64,8 @@ function CreateEditCohort(props: any, ref: any) {
   const [updatePackageStatus] = useMutation(UPDATE_PACKAGE_STATUS, {
     onCompleted: (data) => {
       setStatusModalShow(false);
-      props.callback();
+      props.refetchTags();
+      props.refetchOfferings();
       setisOfferingUpdated(!isOfferingUpdated);
     },
   });
@@ -93,7 +94,8 @@ function CreateEditCohort(props: any, ref: any) {
         variables: { id: bookingConfigId.id },
       });
 
-      props.callback();
+      props.refetchTags();
+      props.refetchOfferings();
       setisOffeeringDeleted(!isOffeeringDeleted);
     },
   });
@@ -101,7 +103,8 @@ function CreateEditCohort(props: any, ref: any) {
   const [bookingConfig] = useMutation(CREATE_BOOKING_CONFIG, {
     onCompleted: (r: any) => {
       modalTrigger.next(false);
-      props.callback();
+      props.refetchTags();
+      props.refetchOfferings();
       setIsFormSubmitted(!isFormSubmitted);
       window.open(`cohort/session/scheduler/${r.createTag.data.id}`, "_self");
     },

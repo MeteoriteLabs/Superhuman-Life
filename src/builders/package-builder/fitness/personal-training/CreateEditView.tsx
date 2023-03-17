@@ -71,7 +71,8 @@ function CreateEditPt(props: any, ref: any) {
   const [bookingConfig] = useMutation(CREATE_BOOKING_CONFIG_FOR_ONE_ON_ONE_AND_CUSTOM, {
     onCompleted: (r: any) => {
       modalTrigger.next(false);
-      props.callback();
+      props.refetchTags();
+      props.refetchOfferings();
       setIsFormSubmitted(!isFormSubmitted);
     },
   });
@@ -79,7 +80,8 @@ function CreateEditPt(props: any, ref: any) {
   const [updateBookingConfig] = useMutation(UPDATE_BOOKING_CONFIG, {
     onCompleted: (r: any) => {
       modalTrigger.next(false);
-      props.callback();
+      props.refetchTags();
+      props.refetchOfferings();
       setIsFormSubmitted(!isFormSubmitted);
     },
   });
@@ -98,7 +100,8 @@ function CreateEditPt(props: any, ref: any) {
   const [createUserPackageSuggestion] = useMutation(ADD_SUGGESTION_NEW, {
     onCompleted: (data) => {
       modalTrigger.next(false);
-      props.callback();
+      props.refetchTags();
+      props.refetchOfferings();
       setIsFormSubmitted(!isFormSubmitted);
     },
   });
@@ -106,10 +109,11 @@ function CreateEditPt(props: any, ref: any) {
   const [createOneOnOneNotification] = useMutation(CREATE_NOTIFICATION);
 
   const [createPackage] = useMutation(CREATE_PACKAGE, {
-    refetchQueries:[GET_FITNESS_PACKAGE_TYPES],
+   
     onCompleted: (r: any) => {
       const flattenData = flattenObj({ ...r });
-
+      props.refetchTags();
+      props.refetchOfferings();
       createOneOnOneNotification({
           variables: {
             data: {
@@ -142,7 +146,7 @@ function CreateEditPt(props: any, ref: any) {
           },
         });
       }
-      props.callback();
+      
     },
   });
 
@@ -156,13 +160,17 @@ function CreateEditPt(props: any, ref: any) {
           bookings_per_month: val.bookings,
         },
       });
-      props.callback();
+      
+      props.refetchTags();
+      props.refetchOfferings();
     },
   });
 
   const [updatePackageStatus] = useMutation(UPDATE_PACKAGE_STATUS, {
     onCompleted: (data) => {
-      props.callback();
+      
+      props.refetchTags();
+      props.refetchOfferings();
       setisOfferingUpdated(!isOfferingUpdated);
     },
   });
@@ -179,7 +187,8 @@ function CreateEditPt(props: any, ref: any) {
         variables: { id: bookingConfigId.id },
       });
       
-      props.callback();
+      props.refetchTags();
+      props.refetchOfferings();
       setisOffeeringDeleted(!isOffeeringDeleted);
     },
   });

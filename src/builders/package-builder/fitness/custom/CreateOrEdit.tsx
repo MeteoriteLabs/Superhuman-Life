@@ -80,7 +80,8 @@ function CreateEditPackage(props: any, ref: any) {
   const [bookingConfig] = useMutation(CREATE_BOOKING_CONFIG_FOR_ONE_ON_ONE_AND_CUSTOM, {
     onCompleted: (data: any) => {
       modalTrigger.next(false);
-      props.callback();
+      props.refetchTags();
+      props.refetchOfferings();
       setIsFormSubmitted(!isFormSubmitted);
     },
   });
@@ -88,7 +89,8 @@ function CreateEditPackage(props: any, ref: any) {
   const [createUserPackageSuggestion] = useMutation(ADD_SUGGESTION_NEW, {
     onCompleted: (data) => {
       modalTrigger.next(false);
-      props.callback();
+      props.refetchTags();
+      props.refetchOfferings();
       setIsFormSubmitted(!isFormSubmitted);
     },
   });
@@ -96,8 +98,9 @@ function CreateEditPackage(props: any, ref: any) {
   const [createCustomNotification] = useMutation(CREATE_NOTIFICATION);
 
   const [createPackage] = useMutation(CREATE_PACKAGE, {
-    refetchQueries:[GET_FITNESS_PACKAGE_TYPES],
     onCompleted: (data: any) => {
+      props.refetchTags();
+      props.refetchOfferings();
       const flattenData = flattenObj({ ...data });
 
       createCustomNotification({
@@ -149,13 +152,14 @@ function CreateEditPackage(props: any, ref: any) {
 
   const [updatePackageStatus] = useMutation(UPDATE_PACKAGE_STATUS, {
     onCompleted: (data) => {
-      props.callback();
+      props.refetchTags();
+      props.refetchOfferings();
       setisOfferingUpdated(!isOfferingUpdated);
     },
   });
 
   const [deletePackage] = useMutation(DELETE_PACKAGE, {
-    refetchQueries: ["GET_TABLEDATA"],
+    
     onCompleted: (data) => {
       // delete booking config
       let offeringsId = data.deleteFitnesspackage.data.id;
@@ -167,7 +171,8 @@ function CreateEditPackage(props: any, ref: any) {
         variables: { id: bookingConfigId.id },
       });
 
-      props.callback();
+      props.refetchTags();
+      props.refetchOfferings();
       setisOffeeringDeleted(!isOffeeringDeleted);
     },
   });
@@ -175,7 +180,8 @@ function CreateEditPackage(props: any, ref: any) {
   const [updateBookingConfig] = useMutation(UPDATE_BOOKING_CONFIG, {
     onCompleted: (data: any) => {
       modalTrigger.next(false);
-      props.callback();
+      props.refetchTags();
+      props.refetchOfferings();
       setisOfferingUpdated(!isOfferingUpdated);
     },
   });

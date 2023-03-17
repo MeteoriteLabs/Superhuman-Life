@@ -69,7 +69,8 @@ function CreateEditPackage(props: any, ref: any) {
   const [bookingConfig] = useMutation(CREATE_BOOKING_CONFIG, {
     onCompleted: (r: any) => {
       modalTrigger.next(false);
-      props.callback();
+      props.refetchTags();
+      props.refetchOfferings();
       setIsFormSubmitted(!isFormSubmitted);
       window.open(`classic/session/scheduler/${r.createTag.data.id}`, "_self")
     },
@@ -79,7 +80,8 @@ function CreateEditPackage(props: any, ref: any) {
   const [createUserPackageSuggestion] = useMutation(ADD_SUGGESTION_NEW, {
     onCompleted: (data) => {
       modalTrigger.next(false);
-      props.callback();
+      props.refetchTags();
+      props.refetchOfferings();
       setIsFormSubmitted(!isFormSubmitted);
     },
   });
@@ -87,7 +89,8 @@ function CreateEditPackage(props: any, ref: any) {
   const [updateBookingConfig] = useMutation(UPDATE_BOOKING_CONFIG, {
     onCompleted: (r: any) => {
       modalTrigger.next(false);
-      props.callback();
+      props.refetchTags();
+      props.refetchOfferings();
       setisOfferingUpdated(!isOfferingUpdated);
     },
   });
@@ -106,10 +109,11 @@ function CreateEditPackage(props: any, ref: any) {
   const [deleteBookingConfig] = useMutation(DELETE_BOOKING_CONFIG);
 
   const [createPackage] = useMutation(CREATE_PACKAGE, {
-    refetchQueries: [GET_FITNESS_PACKAGE_TYPES],
+   
     onCompleted: (r: any) => {
       modalTrigger.next(false);
-      props.callback();
+      props.refetchTags();
+      props.refetchOfferings();
       const flattenData = flattenObj({ ...r });
 
       createCohortNotification({
@@ -155,13 +159,13 @@ function CreateEditPackage(props: any, ref: any) {
 
   const [updatePackageStatus] = useMutation(UPDATE_PACKAGE_STATUS, {
     onCompleted: (data) => {
-      props.callback();
+      props.refetchTags();
+      props.refetchOfferings();
       setisOfferingUpdated(!isOfferingUpdated);
     },
   });
   
   const [deletePackage] = useMutation(DELETE_PACKAGE, {
-    refetchQueries: ["GET_TABLEDATA"],
     onCompleted: (data) => {
       // delete booking config
       let offeringsId = data.deleteFitnesspackage.data.id;
@@ -173,7 +177,8 @@ function CreateEditPackage(props: any, ref: any) {
         variables: { id: bookingConfigId.id },
       });
       
-      props.callback();
+      props.refetchTags();
+      props.refetchOfferings();
       setisOffeeringDeleted(!isOffeeringDeleted);
     },
   });
