@@ -5,6 +5,8 @@ import CreateEditMessage from "../../builders/client-builder/leads/createoredit-
 import CreateEditContact from "../../builders/client-builder/contacts/createEditContact";
 import CreateClient from "../../builders/client-builder/clientlisting/addclientcomponent";
 import Grid from "./grid";
+// import { StyledEngineProvider } from '@mui/material/styles';
+import TimePicker from "../../components/TimePicker/index";
 
 export default function HomePage() {
   const createEditMessageComponent = useRef<any>(null);
@@ -21,7 +23,10 @@ export default function HomePage() {
     <div className="col-lg-12">
       <h2>Home</h2>
       <hr />
-
+      <TimePicker/>
+      {/* <StyledEngineProvider injectFirst> */}
+        {/* <TimePicker/> */}
+      {/* </StyledEngineProvider> */}
       {/* Add Client */}
       <Button
         className="m-2"

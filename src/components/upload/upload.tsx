@@ -232,11 +232,6 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                });
      }
 
-     // if (props.value && !imageid) {
-     //      console.log(props.value);
-     //      console.log(props.value.split(".")[1]);
-     // }
-
      if (props.value && !imageid) {
           if (props.value.split(".")[1] === "jpeg") {
                setImageid(props.value);
@@ -254,8 +249,6 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                     }
                );
           }
-
-          // console.log(props.value.split(".")[1]);
      }
 
      if (props.value && !videoID) {

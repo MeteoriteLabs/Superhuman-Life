@@ -277,7 +277,7 @@ function CreateEditPt(props: any, ref: any) {
     let msg = flattenedData.fitnesspackages[0];
     let bookingConfig: any = {};
     let details: any = {};
-    for (var i = 0; i < msg.fitnesspackagepricing.length; i++) {
+    for (let i = 0; i < msg.fitnesspackagepricing.length; i++) {
       PRICING_TABLE_DEFAULT[i].mrp = msg.fitnesspackagepricing[i].mrp;
       PRICING_TABLE_DEFAULT[i].suggestedPrice =
         msg.fitnesspackagepricing[i].suggestedPrice;
