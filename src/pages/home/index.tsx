@@ -5,6 +5,7 @@ import CreateEditMessage from "../../builders/client-builder/leads/createoredit-
 import CreateEditContact from "../../builders/client-builder/contacts/createEditContact";
 import CreateClient from "../../builders/client-builder/clientlisting/addclientcomponent";
 import Grid from "./grid";
+import TimePicker from "../../components/TimePicker";
 
 export default function HomePage() {
   const createEditMessageComponent = useRef<any>(null);
@@ -21,8 +22,7 @@ export default function HomePage() {
     <div className="col-lg-12">
       <h2>Home</h2>
       <hr />
-
-      {/* Add Client */}
+      <TimePicker/>
       <Button
         className="m-2"
         variant={true ? "outline-dark" : "light"}

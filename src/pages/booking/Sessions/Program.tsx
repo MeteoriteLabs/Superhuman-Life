@@ -22,6 +22,7 @@ import { useHistory } from "react-router-dom";
 import CancelComponent from "./CancelComponent";
 import "./CardsStyle.css";
 import DropdownItem from "react-bootstrap/esm/DropdownItem";
+import TimePicker from "../../../components/TimePicker/index";
 
 export default function Program() {
   const auth = useContext(AuthContext);
@@ -375,29 +376,31 @@ export default function Program() {
                     />
                   </Col>
 
-                  <Col lg={6} className="mt-2">
+                  <Col lg={12} className="mt-2">
                     From time <br />
                     {/* start time  */}
-                    <input
+                    <TimePicker/>
+                    {/* <input
                       className="input"
                       type="time"
                       value={selectedFromTime}
                       onChange={(e) => {
                         setSelectedFromTime(e.target.value);
                       }}
-                    />
+                    /> */}
                   </Col>
-                  <Col lg={6} className="mt-2">
+                  <Col lg={12} className="mt-2">
                     {/* end time */}
                     to time <br />
-                    <input
+                    <TimePicker/>
+                    {/* <input
                       className="input"
                       type="time"
                       value={selectedToTime}
                       onChange={(e) => {
                         setSelectedToTime(e.target.value);
                       }}
-                    />
+                    /> */}
                   </Col>
                   <Col className="mt-2">
                     <Button
