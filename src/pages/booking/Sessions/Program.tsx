@@ -35,13 +35,15 @@ export default function Program() {
   const [selectedToDate, setSelectedToDate] = useState<string>(
     moment().add(2, "days").format("YYYY-MM-DD").toString()
   );
-  const [selectedFromTime, setSelectedFromTime] = useState<string>("00:00");
-  const [selectedToTime, setSelectedToTime] = useState<string>("23:00");
+  // const [selectedFromTime, setSelectedFromTime] = useState<string>("00:00");
+  // const [selectedToTime, setSelectedToTime] = useState<string>("23:00");
   const [currentDaySessionData, setCurrentDaySessionData] = useState<any>([]);
   const [tomorrowDaySessionData, setTomorrowDaySessionData] = useState<any>([]);
   const [dayAfterTomorrowSessionData, setDayAfterTomorrowSessionData] =
     useState<any>([]);
   const cancelComponent = useRef<any>(null);
+  const [selectedFromTime, setSelectedFromTime]  = useState<any>(new Date());
+  const [selectedToTime, setSelectedToTime] = useState<any>(new Date());
 
   const columns = useMemo<any>(
     () => [
@@ -379,7 +381,10 @@ export default function Program() {
                   <Col lg={12} className="mt-2">
                     From time <br />
                     {/* start time  */}
-                    <TimePicker/>
+                    <TimePicker value={selectedFromTime} setValue={(dateObject) => {
+                      console.log(dateObject?.toString(), typeof(dateObject?.toString()));
+                      setSelectedFromTime(dateObject)
+                    }}/>
                     {/* <input
                       className="input"
                       type="time"
@@ -392,7 +397,10 @@ export default function Program() {
                   <Col lg={12} className="mt-2">
                     {/* end time */}
                     to time <br />
-                    <TimePicker/>
+                    <TimePicker value={selectedToTime} setValue={(dateObject) => {
+                      console.log(dateObject?.toString(), typeof(dateObject?.toString()));
+                      setSelectedToTime(dateObject)
+                    }}/>
                     {/* <input
                       className="input"
                       type="time"

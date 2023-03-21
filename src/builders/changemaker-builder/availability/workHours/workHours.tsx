@@ -79,35 +79,35 @@ const WorkHours = () => {
   const auth = useContext(AuthContext);
   const [value, onChange] = useState(new Date());
   const [holidays, setHolidays] = useState<any>([]);
-  const [month, setMonth] = useState(0);
-  const [showDaysModal, setShowDaysModal] = useState(false);
-  const [showDatesModal, setShowDatesModal] = useState(false);
+  const [month, setMonth] = useState<number>(0);
+  const [showDaysModal, setShowDaysModal] = useState<boolean>(false);
+  const [showDatesModal, setShowDatesModal] = useState<boolean>(false);
   const [showDatesRangeModal, setShowDatesRangeModal] = useState(false);
   const [masterSettings, setMasterSettings] = useState<any>([]);
   const [slots, setSlots] = useState<any>([]);
-  const [toast, setToast] = useState(false);
-  const [deleteToast, setDeleteToast] = useState(false);
-  const [show, setShow] = useState(false);
+  const [toast, setToast] = useState<boolean>(false);
+  const [deleteToast, setDeleteToast] = useState<boolean>(false);
+  const [show, setShow] = useState<boolean>(false);
   const [date, setDate] = useState(moment().format("YYYY-MM-DD"));
   const [allChangeMakerHolidays, setAllChangeMakerHolidays] = useState<any>([]);
-  const [errModal, setErrModal] = useState(false);
+  const [errModal, setErrModal] = useState<boolean>(false);
   const [startDate, setStartDate] = useState(moment().format("YYYY-MM-DD"));
   const [endDate, setEndDate] = useState(
     moment().add(1, "months").format("YYYY-MM-DD")
   );
   const [userConfig, setUserConfig] = useState<any>(configTemplate);
-  const [checkState, setCheckState] = useState(false);
-  const [holidayCheckState, setHolidayCheckState] = useState(false);
-  const [dayHoliday, setDayHoliday] = useState(false);
-  const [desc, setDesc] = useState("");
+  const [checkState, setCheckState] = useState<boolean>(false);
+  const [holidayCheckState, setHolidayCheckState] = useState<boolean>(false);
+  const [dayHoliday, setDayHoliday] = useState<boolean>(false);
+  const [desc, setDesc] = useState<string>("");
   const [rangeValue, rangeOnChange] = useState([new Date(), new Date()]);
   const [slotsValidation] = useState<any>([]);
   const [conflictSlots, setConflictSlots] = useState<any>([]);
   const [availability, setAvailability] = useState<any>([]);
-  const [fromTime, setFromTime] = useState("00:00");
-  const [toTime, setToTime] = useState("00:00");
-  const [disableAdd, setDisableAdd] = useState(false);
-  const [classMode, setClassMode] = useState("");
+  const [fromTime, setFromTime] = useState<string>("00:00");
+  const [toTime, setToTime] = useState<string>("00:00");
+  const [disableAdd, setDisableAdd] = useState<boolean>(false);
+  const [classMode, setClassMode] = useState<string>("");
 
   useEffect(() => {
     setDate(moment(value).format("YYYY-MM-DD"));
@@ -600,8 +600,8 @@ const WorkHours = () => {
             const slotDate = { date: values[i].date };
             const obj1: any = { ...slotDate, ...obj[j] };
             conflict.push(obj1);
-          } else if (val[daysOfWeek[dayIndex]]?.slots?.length !== 0) {
-            for (var k = 0; k < val[daysOfWeek[dayIndex]].slots?.length; k++) {
+          } else if (val[daysOfWeek[dayIndex]]?.slots?.length) {
+            for (let k = 0; k < val[daysOfWeek[dayIndex]].slots?.length; k++) {
               if (
                 moment(fromTime, "hh:mm:ss").isSameOrAfter(
                   moment(
@@ -627,7 +627,7 @@ const WorkHours = () => {
           }
         }
       } else {
-        for (var x = 0; x < val[daysOfWeek[dayIndex]].slots?.length; x++) {
+        for (let x = 0; x < val[daysOfWeek[dayIndex]].slots?.length; x++) {
           if (
             moment(fromTime, "hh:mm:ss").isSameOrAfter(
               moment(
@@ -710,7 +710,7 @@ const WorkHours = () => {
 
   function handleCustomDates(data: any, date: any) {
     const diff = moment(date[1]).diff(moment(date[0]), "days") + 1;
-    for (var i = 0; i < diff; i++) {
+    for (let i = 0; i < diff; i++) {
       createChangeMakerHoliday({
         variables: {
           date: `${moment(date[0]).add(i, "days").format("YYYY-MM-DD")}`,
@@ -726,7 +726,7 @@ const WorkHours = () => {
   function handleUserConfigSubmit(newConfig: any) {
     const range = moment(endDate).diff(moment(startDate), "days");
 
-    for (var i = 0; i < daysOfWeek.length; i++) {
+    for (let i = 0; i < daysOfWeek.length; i++) {
       if (
         newConfig[daysOfWeek[i]].isHoliday === false &&
         newConfig[daysOfWeek[i]].slots.length === 0
