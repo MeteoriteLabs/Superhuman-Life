@@ -5,15 +5,22 @@ import { useQuery } from "@apollo/client";
 import AuthContext from "../../../../context/auth-context";
 import { flattenObj } from "../../../../components/utils/responseFlatten";
 import CreateEducation from './CreateEducation';
-import Loader from '../../../../components/Loader/Loader';
+import NoDataFound from '../../../../components/NoDataFound';
 import './education.css';
+import Loader from '../../../../components/Loader/Loader';
 
 export default function EducationDetails() {
     const CreateEducationComponent = useRef<any>(null);
     const auth = useContext(AuthContext);
     const [educationData, setEducationData] = useState<any>([]);
 
-    const fetch = useQuery(FETCH_USERS_PROFILE_DATA, {
+    const {
+        // eslint-disable-next-line
+        data: get_educational_details,
+        // eslint-disable-next-line
+        loading: loading_educational_details,
+        refetch: refetch_educational_details,
+      } = useQuery(FETCH_USERS_PROFILE_DATA, {
         
         onCompleted: (r: any) => {
             const flattenData = flattenObj({ ...r });
@@ -37,7 +44,11 @@ export default function EducationDetails() {
     }
 
     function refetchQueryCallback() {
-        fetch.refetch();
+        refetch_educational_details();
+    }
+
+    if(loading_educational_details){
+        return <Loader msg={"Loading educational details ..."} />
     }
 
     return (
@@ -64,7 +75,7 @@ export default function EducationDetails() {
 
             <Row className="mt-4 pb-3">
                 {
-                    educationData ? educationData.map((currValue: any) =>
+                    educationData && educationData.length ? educationData.map((currValue: any) =>
                         <Col lg={12} key={currValue.id}>
                             <Card className="m-2" key={currValue.id}>
                                 <Card.Body key={currValue.id}>
@@ -98,7 +109,7 @@ export default function EducationDetails() {
                                 </Card.Body>
                             </Card>
                         </Col>
-                    ) : <Loader msg={'Education Details loading'}/>
+                    ) : <NoDataFound msg={"Oops! No educational details found"}/>
                 }
 
             </Row>

@@ -12,6 +12,8 @@ import {
 import { flattenObj } from "../../../../components/utils/responseFlatten";
 import moment from "moment";
 import "./style.css";
+import NoDataFound from "../../../NoDataFound";
+import Loader from "../../../Loader/Loader";
 
 const images = {
   "/offerings": "assets/notifications/offerings.svg",
@@ -37,6 +39,7 @@ function Notifications() {
     // eslint-disable-next-line
     data: get_changemaker_notifications,
     // eslint-disable-next-line
+    loading: loading_notifications,
     refetch: refetch_changemaker_notifications,
   } = useQuery(GET_CHANGEMAKER_NOTIFICATION, {
     variables: { id: auth.userid },
@@ -98,6 +101,10 @@ function Notifications() {
       });
     }
   };
+  
+  if(loading_notifications){
+    return <Loader msg={"Loading notifications..."}/>
+  }
 
   return (
     <div>
@@ -133,6 +140,7 @@ function Notifications() {
       </div>
 
       <div className="mt-5 col-lg-12">
+        
         {notifications && notifications.length ? notifications.map((currentValue) => {
           return (
             <div key={`${currentValue.id}`}>
@@ -214,7 +222,7 @@ function Notifications() {
               </Row>
             </div>
           );
-        }) : <h3 className="text-center">No notifications to show</h3>}
+        }) : <NoDataFound msg={"Opps ! Notifications not found"}/> }
       </div>
     </div>
   );

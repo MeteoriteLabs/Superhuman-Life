@@ -22,7 +22,6 @@ import { useHistory } from "react-router-dom";
 import CancelComponent from "./CancelComponent";
 import "./CardsStyle.css";
 import DropdownItem from "react-bootstrap/esm/DropdownItem";
-import TimePicker from "../../../components/TimePicker/index";
 
 export default function Program() {
   const auth = useContext(AuthContext);
@@ -35,15 +34,13 @@ export default function Program() {
   const [selectedToDate, setSelectedToDate] = useState<string>(
     moment().add(2, "days").format("YYYY-MM-DD").toString()
   );
-  // const [selectedFromTime, setSelectedFromTime] = useState<string>("00:00");
-  // const [selectedToTime, setSelectedToTime] = useState<string>("23:00");
+  const [selectedFromTime, setSelectedFromTime] = useState<string>("00:00");
+  const [selectedToTime, setSelectedToTime] = useState<string>("23:00");
   const [currentDaySessionData, setCurrentDaySessionData] = useState<any>([]);
   const [tomorrowDaySessionData, setTomorrowDaySessionData] = useState<any>([]);
   const [dayAfterTomorrowSessionData, setDayAfterTomorrowSessionData] =
     useState<any>([]);
   const cancelComponent = useRef<any>(null);
-  const [selectedFromTime, setSelectedFromTime]  = useState<any>(new Date());
-  const [selectedToTime, setSelectedToTime] = useState<any>(new Date());
 
   const columns = useMemo<any>(
     () => [
@@ -381,34 +378,26 @@ export default function Program() {
                   <Col lg={12} className="mt-2">
                     From time <br />
                     {/* start time  */}
-                    <TimePicker value={selectedFromTime} setValue={(dateObject) => {
-                      console.log(dateObject?.toString(), typeof(dateObject?.toString()));
-                      setSelectedFromTime(dateObject)
-                    }}/>
-                    {/* <input
+                    <input
                       className="input"
                       type="time"
                       value={selectedFromTime}
                       onChange={(e) => {
                         setSelectedFromTime(e.target.value);
                       }}
-                    /> */}
+                    />
                   </Col>
                   <Col lg={12} className="mt-2">
                     {/* end time */}
                     to time <br />
-                    <TimePicker value={selectedToTime} setValue={(dateObject) => {
-                      console.log(dateObject?.toString(), typeof(dateObject?.toString()));
-                      setSelectedToTime(dateObject)
-                    }}/>
-                    {/* <input
+                    <input
                       className="input"
                       type="time"
                       value={selectedToTime}
                       onChange={(e) => {
                         setSelectedToTime(e.target.value);
                       }}
-                    /> */}
+                    />
                   </Col>
                   <Col className="mt-2">
                     <Button

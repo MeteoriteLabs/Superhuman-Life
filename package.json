@@ -38,7 +38,6 @@
         "react-google-places-autocomplete": "^3.4.0",
         "react-helmet": "^6.1.0",
         "react-linkedin-login-oauth2": "^2.0.1",
-        "react-multi-date-picker": "^3.3.4",
         "react-phone-input-2": "^2.15.1",
         "react-rangeslider": "^2.2.0",
         "react-router-dom": "^5.2.0",

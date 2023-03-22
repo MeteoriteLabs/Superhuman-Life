@@ -64,32 +64,6 @@ export default function Movement() {
       {
         accessor: "fitness_package_type",
         Header: "Type"
-        // Cell: (row: any) => {
-        //   return (
-        //     <>
-        //       {row.value === "One-On-One" ? (
-        //         <img src="./assets/PTType.svg" alt="PT" />
-        //       ) : (
-        //         ""
-        //       )}
-        //       {row.value === "Group Class" ? (
-        //         <img src="./assets/GroupType.svg" alt="group" />
-        //       ) : (
-        //         ""
-        //       )}
-        //       {row.value === "Custom Fitness" ? (
-        //         <img src="./assets/CustomType.svg" alt="custom" />
-        //       ) : (
-        //         ""
-        //       )}
-        //       {row.value === "Classic Class" ? (
-        //         <img src="./assets/ClassicType.svg" alt="classic" />
-        //       ) : (
-        //         ""
-        //       )}
-        //     </>
-        //   );
-        // },
       },
       { accessor: "packageName", Header: "Package Name", disableSortBy: true },
       {
