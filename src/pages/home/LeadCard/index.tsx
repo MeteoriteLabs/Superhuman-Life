@@ -4,6 +4,7 @@ import { useQuery, useMutation } from "@apollo/client";
 import { UPDATE_SEEN_NEW } from "../../../builders/client-builder/leads/queries";
 import { GET_LEADS } from "./queries";
 import { flattenObj } from "../../../components/utils/responseFlatten";
+import NoDataInCard from "../../../components/NoDataInCard";
 import AuthContext from "../../../context/auth-context";
 import moment from "moment";
 import "./lead.css";
@@ -121,7 +122,7 @@ function LeadComponent() {
                   </Card>
                 );
               })
-            : <p className="text-center">No leads to show</p>}
+            : <NoDataInCard msg={"No Leads cards to show"} />}
         </Card.Body>
       </div>
     </Card>

@@ -24,6 +24,7 @@ import BookingAction from "../../booking/Movement/BookingAction";
 import moment from "moment";
 import "./style.css";
 import { Link } from "react-router-dom";
+import NoDataInCard from "../../../components/NoDataInCard";
 
 function TaskCard() {
   const auth = useContext(authContext);
@@ -166,7 +167,7 @@ function TaskCard() {
               pendingBookings.length === 0 &&
               dataTable &&
               dataTable.length === 0 ? (
-                <p className="text-center mt-5">No task to show</p>
+                <NoDataInCard msg={"No pending bookings and offerings to show"}/>
               ) : null}
 
               {/* One-on-One and On-Demand PT */}
@@ -295,6 +296,7 @@ function TaskCard() {
                       </Card>
                     ))
                 : null}
+
               {/* Bookings in pending stage*/}
               {pendingBookings && pendingBookings.length
                 ? pendingBookings.map((currentValue, index: number) => (
@@ -472,6 +474,11 @@ function TaskCard() {
           {/* completed tab */}
           <Tab eventKey="profile" title="Completed">
             <div className="scrollBar pt-3 ">
+            {notPendingBookings && notPendingBookings.length === 0 &&
+              dataTable &&
+              dataTable.length === 0 ? (
+                <NoDataInCard msg={"No accepted / rejected bookings and offerings to show"}/>
+              ) : null}
               {dataTable && dataTable.length
                 ? dataTable
                     .filter(
@@ -548,9 +555,6 @@ function TaskCard() {
                       </Card>
                     ))
                 : null}
-              {notPendingBookings && notPendingBookings.length === 0 ? (
-                <p className="text-center mt-5">No task to show</p>
-              ) : null}
 
               {/* bookings which are booked */}
               {notPendingBookings && notPendingBookings.length

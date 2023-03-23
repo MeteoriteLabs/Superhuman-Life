@@ -6,6 +6,7 @@ import { flattenObj } from "../../../components/utils/responseFlatten";
 import AuthContext from "../../../context/auth-context";
 import moment from "moment";
 import "../LeadCard/lead.css";
+import NoDataInCard from "../../../components/NoDataInCard";
 
 function UpcomingCard() {
   const [sessionData, setSessionData] = useState<any>([]);
@@ -91,7 +92,7 @@ function UpcomingCard() {
                 </Card.Text>
               </Card.Body>
             </Card>
-          ) : <p className="text-center">No upcoming cards to show</p>}
+          ) : <NoDataInCard msg={"No upcoming cards to show"}/>}
         </Card.Body>
       </div>
     </Card>

@@ -5,6 +5,7 @@ import { useTable } from "react-table";
 import { useSortBy, usePagination } from "react-table";
 import "./bookingTable.css";
 import * as Icon from "react-bootstrap-icons";
+import NoDataInCard from "../../NoDataInCard";
 
 function Table({
   data,
@@ -101,7 +102,8 @@ function Table({
           })}
           {!rows.length && (
             <tr className="rowCard text-center">
-              <td colSpan={columns.length}>No data</td>
+             <td></td> 
+               <td colSpan={columns.length}><NoDataInCard msg={"No data to show"}/></td> 
             </tr>
           )}
         </thead>

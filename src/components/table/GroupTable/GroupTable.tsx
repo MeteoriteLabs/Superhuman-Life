@@ -1,4 +1,5 @@
 import { useTable } from "react-table";
+import NoDataInCard from "../../NoDataInCard";
 import "./groupTable.css";
 
 function GroupTable({ data, columns }: any) {
@@ -50,7 +51,7 @@ function GroupTable({ data, columns }: any) {
           ))}
           {!rows.length && (
             <tr className="rowCard text-center">
-              <td colSpan={columns.length}>No data</td>
+              <td colSpan={9}><NoDataInCard msg={"No data to show"}/></td>
             </tr>
           )}
         </thead>
