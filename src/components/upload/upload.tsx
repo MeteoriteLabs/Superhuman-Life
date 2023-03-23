@@ -36,13 +36,11 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
   const [videoUpload, setVideoUpload] = useState<any>(false);
   const [videoID, setVideoID] = useState<any>(null);
   const [videoSizeError, setVideoSizeError] = useState<boolean>(false);
-  //const [renderCrop, setRenderCrop] = useState<any>(null);
-console.log(props);
+
   const [imageSrc, setImageSrc] = useState<any>(null);
   const [crop, setCrop] = useState<Point>({ x: 0, y: 0 });
   const [zoom, setZoom] = useState<any>(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<any>(null);
-  //const [croppedImage, setCroppedImage] = useState<any>(null);
 
   let allowedImageFormats = ["image/png", "image/jpeg", "image/jpg"];
   let allowedVideoFormats = ["video/mp4"];
@@ -157,7 +155,6 @@ console.log(props);
       if (allowedImageFormats.indexOf(e.target.files[0].type) === -1) {
         setRender(0);
         e.target.value = "";
-        // handleCrop(e.target.files[0])
         return;
       }
     } else if (!props.allowImage && props.allowVideo) {
@@ -470,7 +467,6 @@ console.log(props);
           <>
             <div className="border bg-white border-dark p-4 ">
               <Image
-                //https://videodelivery.net/513a6654dd41d64604f50eda381ff2d8/thumbnails/thumbnail.jpg?time=0s
                 src={`https://videodelivery.net/${videoID}/thumbnails/thumbnail.jpg?time=0s`}
                 width="500px"
                 height="500px"
@@ -635,16 +631,18 @@ console.log(props);
                 )}
 
                 <div className="mt-3 d-flex flex-row-reverse">
+                {selectedFile &&
+                    allowedVideoFormats.indexOf(selectedFile.type) > -1
+                      ?
                   <button
                     type="button"
                     className={render ? "btn-sm btn-success ml-5" : "d-none"}
                     onClick={() => handleCrop(selectedFile)}
                   >
-                    {selectedFile &&
-                    allowedVideoFormats.indexOf(selectedFile.type) > -1
-                      ? "Upload"
-                      : "Crop"}
+                     Upload
+                      
                   </button>
+                  : null}
                 </div>
 
                 {url || videoUpload ? (

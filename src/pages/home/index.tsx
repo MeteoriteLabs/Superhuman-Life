@@ -21,7 +21,7 @@ export default function HomePage() {
     <div className="col-lg-12">
       <h2>Home</h2>
       <hr />
-      
+
       {/* Add Client */}
       <Button
         className="m-2"
