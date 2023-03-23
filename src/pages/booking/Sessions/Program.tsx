@@ -375,7 +375,7 @@ export default function Program() {
                     />
                   </Col>
 
-                  <Col lg={12} className="mt-2">
+                  <Col lg={6} className="mt-2">
                     From time <br />
                     {/* start time  */}
                     <input
@@ -387,7 +387,7 @@ export default function Program() {
                       }}
                     />
                   </Col>
-                  <Col lg={12} className="mt-2">
+                  <Col lg={6} className="mt-2">
                     {/* end time */}
                     to time <br />
                     <input

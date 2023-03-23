@@ -11,7 +11,7 @@ export const UploadImageToS3WithNativeSdkComponent = (props: any) => {
   return (
     <UploadImageToS3WithNativeSdk
       value={props.value}
-      onChange={(event: any) => {
+      onChange={(event: React.FormEvent<EventTarget>) => {
         props.onChange(event);
       }}
       allowImage={true}

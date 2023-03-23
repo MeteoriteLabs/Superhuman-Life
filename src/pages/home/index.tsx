@@ -21,7 +21,12 @@ export default function HomePage() {
     <div className="col-lg-12">
       <h2>Home</h2>
       <hr />
+<<<<<<< HEAD
       
+=======
+
+      {/* Add Client */}
+>>>>>>> parent of cb5e12f (feat: add analog time pciker, refs: #340)
       <Button
         className="m-2"
         variant={true ? "outline-dark" : "light"}

@@ -608,6 +608,10 @@ export default function FitnessTab() {
     },
   });
 
+  function refetchQueryCallback() {
+    refetchFitness();
+  }
+
   return (
     <TabContent>
       <div className="justify-content-lg-center d-flex overflow-auto p-3">
