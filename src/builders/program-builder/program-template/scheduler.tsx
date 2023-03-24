@@ -460,7 +460,7 @@ const Schedular = (props: any) => {
 		//     sessionsExistingValues.push(flattenData.tags[0]?.sessions[q].id);
 		// }
 		// setSessionsIds(sessionsExistingValues);
-		for (var d = 1; d <= props.days; d++) {
+		for (let d = 1; d <= props.days; d++) {
 			arr[d] = JSON.parse(JSON.stringify(schedulerDay));
 		}
 		// flattenData.tags[0]?.sessions?.filter((data: any) => { return moment(props.startDate).isSameOrBefore(moment(data.session_date))});
@@ -468,18 +468,18 @@ const Schedular = (props: any) => {
 		const sessions: any = [];
 		if (!window.location.pathname.includes("classic")) {
 			// eslint-disable-next-line array-callback-return
-			flattenData?.tags[0]?.sessions?.map((it: any, index: number) => {
+			flattenData && flattenData.tags && flattenData.tags.length && flattenData?.tags[0]?.sessions?.map((it: any, index: number) => {
 				if (moment(it.session_date).isSameOrAfter(moment(props.startDate))) {
 					sessions.push(flattenData?.tags[0]?.sessions[index]);
 				}
 			});
 		} else {
 			// eslint-disable-next-line array-callback-return
-			flattenData.tags[0]?.sessions?.map((it: any, index: number) => {
+			flattenData && flattenData.tags && flattenData.tags.length && flattenData.tags[0]?.sessions?.map((it: any, index: number) => {
 				sessions.push(flattenData.tags[0]?.sessions[index]);
 			});
 		}
-		if (sessions.length > 0) {
+		if (sessions.length) {
 			sessions
 				.filter((itm) => itm.Is_restday === false)
 				.forEach((val) => {
