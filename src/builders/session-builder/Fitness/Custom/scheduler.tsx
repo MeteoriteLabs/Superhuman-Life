@@ -23,7 +23,7 @@ const Scheduler = () => {
   const last = window.location.pathname.split("/").reverse();
   const tagId = window.location.pathname.split("/").pop();
   const [show, setShow] = useState(false);
-  //disable-ESlint
+  // eslint-disable-next-line
   const [userPackage, setUserPackage] = useState<any>([]);
   const [editDatesModal, setEditdatesModal] = useState<boolean>(false);
   const [startDate, setStartDate] = useState<string>("");
