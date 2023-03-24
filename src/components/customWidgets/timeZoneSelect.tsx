@@ -7,7 +7,7 @@ import { flattenObj } from "../utils/responseFlatten";
 
 const MultiSelect = (props: any) => {
   const [multiSelections, setMultiSelections] = useState(
-    props.value?.length > 0 ? JSON.parse(props.value) : []
+    props.value?.length ? JSON.parse(props.value) : []
   );
   const [timezone, setTimeZone] = useState<any[]>([]);
 

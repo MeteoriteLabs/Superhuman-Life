@@ -87,7 +87,7 @@ const ProgramList = (props: any) => {
   }
 
   function EquipmentSearch(data: any) {
-    if (data.length > 0) {
+    if (data.length) {
       setSearchInput(data);
       skipval = false;
     } else {

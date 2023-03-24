@@ -7,7 +7,7 @@ const ClientsSelect = (props: any) => {
   const [clients, setClients] = useState<any[]>([]);
   const [searchInput, setSearchInput] = useState(null);
   const [selected, setSelected] = useState<any[]>(
-    props.value?.length > 0 ? props.value : []
+    props.value?.length ? props.value : []
   );
   const inputField = useRef<any>();
   let skipval: Boolean = true;
@@ -47,7 +47,7 @@ const ClientsSelect = (props: any) => {
   }
 
   function muscleGroupSearch(data: any) {
-    if (data.length > 0) {
+    if (data.length) {
       setSearchInput(data);
       skipval = false;
     } else {
@@ -74,6 +74,7 @@ const ClientsSelect = (props: any) => {
   }
 
   FetchMuscleGroupList({ filter: searchInput, skip: skipval });
+  
   return (
     <>
       <div className="p-3" style={{ width: "100%" }}>

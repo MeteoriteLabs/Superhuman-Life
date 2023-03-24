@@ -11,13 +11,13 @@ import authContext from "../../context/auth-context";
 
 const AddFitnessAddressModal = (props: any) => {
   const auth = useContext(authContext);
-  const [googleAddressShow, setGoogleAddressShow] = useState(false);
-  const [address1, setAddress1] = useState("");
-  const [city, setCity] = useState("");
-  const [state, setState] = useState("");
-  const [zip, setZip] = useState("");
-  const [country, setCountry] = useState("");
-  const [title, setTitle] = useState("");
+  const [googleAddressShow, setGoogleAddressShow] = useState<boolean>(false);
+  const [address1, setAddress1] = useState<string>("");
+  const [city, setCity] = useState<string>("");
+  const [state, setState] = useState<string>("");
+  const [zip, setZip] = useState<string>("");
+  const [country, setCountry] = useState<string>("");
+  const [title, setTitle] = useState<string>("");
   const [value, setValue] = useState<any>(null);
 
   const [createAddress] = useMutation(CREATE_ADDRESS, {
