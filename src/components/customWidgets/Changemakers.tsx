@@ -17,7 +17,7 @@ const Changemakers = (props: any) => {
   }
 
   const [multiSelections, setMultiSelections] = useState<any[]>(
-    props.value?.length > 0 ? handleReturnType(props.value) : []
+    props.value?.length ? handleReturnType(props.value) : []
   );
   const [changemakerList, setChangemakerList] = useState<any[]>([]);
 
@@ -46,7 +46,7 @@ const Changemakers = (props: any) => {
     setMultiSelections(unique);
   }
 
-  if (multiSelections.length > 0) {
+  if (multiSelections.length) {
     props.onChange(JSON.stringify(multiSelections));
   } else {
     props.onChange(undefined);

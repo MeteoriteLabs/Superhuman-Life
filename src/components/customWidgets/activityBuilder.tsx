@@ -2,12 +2,12 @@ import { useState } from "react";
 import { InputGroup, Row, Col, Form, FormControl } from "react-bootstrap";
 
 const ActivityBuilder = (props: any) => {
-  const [none, setNone] = useState(false);
-  const [time, setTime] = useState(false);
-  const [distance, setDistance] = useState(false);
-  const [incline, setIncline] = useState(false);
-  const [speed, setSpeed] = useState(false);
-  const [calories, setCalories] = useState(false);
+  const [none, setNone] = useState<boolean>(false);
+  const [time, setTime] = useState<boolean>(false);
+  const [distance, setDistance] = useState<boolean>(false);
+  const [incline, setIncline] = useState<boolean>(false);
+  const [speed, setSpeed] = useState<boolean>(false);
+  const [calories, setCalories] = useState<boolean>(false);
   const [selected, setSelected] = useState<any>([{}]);
 
   function renderOptions() {

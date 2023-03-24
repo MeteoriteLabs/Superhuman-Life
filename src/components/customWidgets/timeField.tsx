@@ -6,10 +6,10 @@ import "rc-time-picker/assets/index.css";
 
 const TimeFieldInput = (props: any) => {
   const [startTime, setStartTime] = useState(
-    props.value !== undefined ? JSON.parse(props.value).startTime : "00:00"
+    props.value ? JSON.parse(props.value).startTime : "00:00"
   );
   const [endTime, setEndTime] = useState(
-    props.value !== undefined ? JSON.parse(props.value).endTime : "00:00"
+    props.value ? JSON.parse(props.value).endTime : "23:00"
   );
 
   function handleStartTimeInput(val: any) {
@@ -99,6 +99,7 @@ const TimeFieldInput = (props: any) => {
             disabled={props.disabled}
             showSecond={false}
             minuteStep={15}
+            use12Hours={true}
             onChange={(e) => {
               if (!e) {
                 setStartTime("00:00");
@@ -116,10 +117,11 @@ const TimeFieldInput = (props: any) => {
             value={convertToMoment(endTime)}
             disabled={props.disabled}
             showSecond={false}
+            use12Hours={true}
             minuteStep={15}
             onChange={(e) => {
               if (!e) {
-                setEndTime("00:00");
+                setEndTime("23:00");
               } else {
                 handleEndTimeInput(moment(e).format("HH:mm"));
               }
