@@ -238,7 +238,7 @@ const Scheduler = () => {
 									<h3 className="text-capitalize">{tag?.tag_name}</h3>
 								</Row>
 								<Row>
-									<span>{tag.fitnesspackage?.packagename}</span>
+									<span>{tag && tag.fitnesspackage?.packagename}</span>
 									<div
 										className="ml-3 mt-1"
 										style={{ borderLeft: "1px solid black", height: "20px" }}
@@ -283,8 +283,7 @@ const Scheduler = () => {
 													<span className="text-capitalize">
 														<b style={{ color: "gray" }}>
 															{
-																tag.client_packages[0].users_permissions_user
-																	.username
+																tag && tag.client_packages && tag.client_packages.length ? tag.client_packages[0]?.users_permissions_user?.username : null
 															}
 														</b>
 													</span>
@@ -300,17 +299,17 @@ const Scheduler = () => {
 												</Col>
 												<Col lg={5} className="text-center">
 													<span className="p-1 ml-2 scheduler-badge">
-														{moment(
+														{tag && tag.client_packages && tag.client_packages.length ? moment(
 															tag.client_packages[0].effective_date
-														).format("DD MMMM, YY")}
+														).format("DD MMMM, YY") : null}
 													</span>
 												</Col>
 												to
 												<Col lg={5} className="text-center">
 													<span className="p-1 scheduler-badge">
-														{moment(tag.client_packages[0].effective_date)
+														{tag && tag.client_packages && tag.client_packages.length ? moment(tag.client_packages[0].effective_date)
 															.add(tag.fitnesspackage?.duration - 1, "days")
-															.format("DD MMMM, YY")}
+															.format("DD MMMM, YY") : null}
 													</span>
 												</Col>
 											</Row>
@@ -376,7 +375,7 @@ const Scheduler = () => {
 															<b>
 																{handleTimeFormatting(
 																	totalClasses[2],
-																	tag.fitnesspackage?.duration
+																	tag?.fitnesspackage?.duration
 																)}
 															</b>
 														</span>
@@ -475,10 +474,11 @@ const Scheduler = () => {
 								restDays={tag?.sessions.filter((ses) => ses.type === "restday")}
 								schedulerSessions={schedulerSessions}
 								programId={tagId}
-								startDate={tag?.client_packages[0].effective_date}
+								startDate={tag &&
+									tag.client_packages && tag.client_packages.length && tag?.client_packages[0].effective_date}
 								clientId={
 									tag &&
-									tag.client_packages &&
+									tag.client_packages && tag.client_packages.length &&
 									tag?.client_packages[0].users_permissions_user.id
 								}
 							/>
@@ -492,7 +492,8 @@ const Scheduler = () => {
 							<FormControl
 								value={
 									startDate === ""
-										? moment(tag?.client_packages[0].effective_date).format(
+										? tag &&
+										tag.client_packages && tag.client_packages.length && moment(tag?.client_packages[0].effective_date).format(
 												"YYYY-MM-DD"
 										  )
 										: startDate
