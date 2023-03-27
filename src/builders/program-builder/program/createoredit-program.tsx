@@ -221,6 +221,7 @@ function CreateEditProgram(props: any, ref: any) {
                 onClick={() => { DeleteExercise(operation.id) }}
             />}
 
+            {/* success toast notification */}
             {isFormSubmitted ?
                 <Toaster handleCallback={handleToastCallback} type={toastType} msg={toastMessage} />
                 : null}

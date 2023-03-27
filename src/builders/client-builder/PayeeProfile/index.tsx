@@ -18,7 +18,7 @@ function PayeeProfile() {
   const defaultFileWidget = registry.widgets["FileWidget"];
   (Bootstrap4Theme as any).widgets["FileWidget"] = defaultFileWidget;
   const Form: any = withTheme(Bootstrap4Theme);
-  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
+  const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
   const formRef = useRef<any>(null);
   const payeeProfileJson: {} = require("./payeeProfile.json");
   const [paymentModeDetails, setPaymentModeDetails] = useState<PaymentDetails>();

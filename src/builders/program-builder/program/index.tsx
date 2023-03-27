@@ -54,7 +54,7 @@ export default function EventsTab() {
 
   function CreateProgram(_variables: {} = { id: auth.userid, details: frm }) {
     sessionsCount = frm.sessions.length;
-    for (var i = 0; i < frm.sessions.length; i++) {
+    for (let i = 0; i < frm.sessions.length; i++) {
       createSession({
         variables: {
           session_date: frm.sessions[i].session_date,

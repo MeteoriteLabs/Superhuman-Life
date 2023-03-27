@@ -82,7 +82,6 @@ export const schema: any = {
           <Upload
             allowImage={true}
             allowVideo={true}
-            offering={true}
             onChange={props.onChange}
             value={props.value}
           />
