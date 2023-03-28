@@ -11,17 +11,17 @@ const GroupProgramDetails = (props) => {
 
     const inputDisabled = props.readonly;
     const existingData = props.value === undefined ? undefined : JSON.parse(props.value);
-    if(existingData !== undefined && existingData.length > 0){
+    if(existingData && existingData.length){
         existingData.address = {id: JSON.parse(existingData?.address)[0].id, title: JSON.parse(existingData?.address)[0].title};
     }
 
-    const [mode, setMode] = useState(props.value === undefined ? '' : (existingData.mode).toString());
-    const [addressModal, setAddressModal] = useState(false);
+    const [mode, setMode] = useState(props.value ? (existingData.mode).toString() : '0');
+    const [addressModal, setAddressModal] = useState<boolean>(false);
 
     const auth = useContext(AuthContext); 
-    const [singleSelections, setSingleSelections] = useState<any[]>(existingData?.address?.length !== 0 && props.value !== undefined ? existingData?.address : []);
+    const [singleSelections, setSingleSelections] = useState<any[]>(existingData?.address?.length && props.value  ? existingData?.address : []);
     const [addresses, setAddresses] = useState<any[]>([]);
-    const [addressTitle, setAddressTitle] = useState(props.value !== undefined ? existingData.addressTag : 'At My Address');
+    const [addressTitle, setAddressTitle] = useState(props.value ? existingData.addressTag : 'At My Address');
     const [onlineClasses, setOnlineClasses] = useState<number>(existingData?.online ? existingData.online : 0);
     const [offlineClasses, setOfflinceClasses] = useState<number>(existingData?.offline ? existingData.offline : 0);
     const [restDays, setRestDays] = useState<number>(existingData?.rest ? existingData.rest : 0);
@@ -95,7 +95,7 @@ const GroupProgramDetails = (props) => {
         //here we will check for offline
         if(mode === '1'){
             if((restDays + offlineClasses) === 30){
-                if((addressTitle === 'At My Address' && singleSelections.length !== 0)){
+                if((addressTitle === 'At My Address' && singleSelections.length )){
                     return true;
                 }
                 if(addressTitle === 'At Client Address'){
@@ -110,7 +110,7 @@ const GroupProgramDetails = (props) => {
         //here we will check for both(hybrid)
         if(mode === "2"){
             if((restDays + offlineClasses + onlineClasses) === 30){
-                if(addressTitle === 'At My Address' && singleSelections.length !== 0){
+                if(addressTitle === 'At My Address' && singleSelections.length){
                     return true;
                 }
                 if(addressTitle === 'At Client Address'){

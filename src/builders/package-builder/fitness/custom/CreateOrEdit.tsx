@@ -200,7 +200,7 @@ function CreateEditPackage(props: any, ref: any) {
         setDeleteModalShow(true);
       }
 
-      //render form if msg type isnot delete and toggle status
+      //render form if msg type is not delete and toggle status
       if (msg.type !== "delete" && msg.type !== "toggle-status") {
         modalTrigger.next(true);
       }
@@ -359,7 +359,14 @@ function CreateEditPackage(props: any, ref: any) {
       .join(", ")
       .split(", ");
     frm.programDetails = JSON.parse(frm.programDetails);
-    frm.datesConfig = JSON.parse(frm.datesConfig);
+    frm.datesConfig = frm.datesConfig ? JSON.parse(frm.datesConfig) : {
+      publishingDate: `${moment()
+        .add(1, "days")
+        .format("YYYY-MM-DDTHH:mm")}`,
+      expiry_date: `${moment()
+        .add({ days: 1, year: 1 })
+        .format("YYYY-MM-DDTHH:mm")}`,
+    };
     frm.languages = JSON.parse(frm.languages);
 
     createPackage({

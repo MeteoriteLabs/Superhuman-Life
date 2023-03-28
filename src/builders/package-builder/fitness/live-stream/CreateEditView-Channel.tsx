@@ -86,7 +86,6 @@ function CreateEditChannel(props: any, ref: any) {
 
   const [deletePackage] = useMutation(DELETE_PACKAGE, {
     onCompleted: (data) => {
-
       // delete booking config
       let offeringsId = data.deleteFitnesspackage.data.id;
       let bookingConfigId = bookingsConfigInfo.find(
@@ -96,7 +95,7 @@ function CreateEditChannel(props: any, ref: any) {
       deleteBookingConfig({
         variables: { id: bookingConfigId.id },
       });
-      
+
       props.refetchTags();
       props.refetchOfferings();
       setisOffeeringDeleted(!isOffeeringDeleted);
@@ -113,28 +112,26 @@ function CreateEditChannel(props: any, ref: any) {
     },
   });
 
-  
   const [createLiveStreamNotification] = useMutation(CREATE_NOTIFICATION);
 
   const [CreatePackage] = useMutation(CREATE_CHANNEL_PACKAGE, {
     onCompleted: (r: any) => {
-
       const flattenData = flattenObj({ ...r });
 
       createLiveStreamNotification({
-          variables: {
-            data: {
-              type: "Offerings",
-              Title: "New offering",
-              OnClickRoute: "/offerings",
-              users_permissions_user: auth.userid,
-              Body: `New live stream offering ${flattenData.createFitnesspackage.packagename} has been added`,
-              DateTime: moment().format(),
-              IsRead: false,
-              ContactID: flattenData.createFitnesspackage.id,
-            },
+        variables: {
+          data: {
+            type: "Offerings",
+            Title: "New offering",
+            OnClickRoute: "/offerings",
+            users_permissions_user: auth.userid,
+            Body: `New live stream offering ${flattenData.createFitnesspackage.packagename} has been added`,
+            DateTime: moment().format(),
+            IsRead: false,
+            ContactID: flattenData.createFitnesspackage.id,
           },
-        });
+        },
+      });
 
       bookingConfig({
         variables: {
@@ -178,7 +175,7 @@ function CreateEditChannel(props: any, ref: any) {
   enum ENUM_FITNESSPACKAGE_LEVEL {
     Beginner,
     Intermediate,
-    Advanced
+    Advanced,
   }
 
   const PRICING_TABLE_DEFAULT = [
@@ -296,11 +293,9 @@ function CreateEditChannel(props: any, ref: any) {
               ? PRICING_TABLE_DEFAULT_WITH_INSTANTBOOKING
               : PRICING_TABLE_DEFAULT
           );
-    details.durationOfOffering = msg.SubscriptionDuration ? msg.SubscriptionDuration : [ "1 day",
-    "30 days",
-    "90 days",
-    "180 days",
-    "360 days"];
+    details.durationOfOffering = msg.SubscriptionDuration
+      ? msg.SubscriptionDuration
+      : ["1 day", "30 days", "90 days", "180 days", "360 days"];
     details.publishingDate = moment(msg.publishing_date).format("YYYY-MM-DD");
     details.tag = msg?.tags === null ? "" : msg.tags;
     details.user_permissions_user = msg.users_permissions_user.id;
@@ -355,7 +350,15 @@ function CreateEditChannel(props: any, ref: any) {
 
   function CreateChannelPackage(frm: any) {
     frmDetails = frm;
-    frm.datesConfig = JSON.parse(frm.datesConfig);
+    frm.datesConfig = 
+    frm.datesConfig ? JSON.parse(frm.datesConfig) : {
+      publishingDate: `${moment()
+        .add(1, "days")
+        .format("YYYY-MM-DDTHH:mm")}`,
+      expiry_date: `${moment()
+        .add({ days: 1, year: 1 })
+        .format("YYYY-MM-DDTHH:mm")}`,
+    };
     frm.dates = JSON.parse(frm.dates);
     if (frm.equipment) {
       frm.equipment = JSON.parse(frm?.equipment);
@@ -411,7 +414,7 @@ function CreateEditChannel(props: any, ref: any) {
           .join(", ")
           .split(", "),
         Start_date: moment(frm.dates.startDate).toISOString(),
-        End_date: moment(frm.dates.startDate).add(360, 'days').toISOString(),
+        End_date: moment(frm.dates.startDate).add(360, "days").toISOString(),
       },
     });
   }
@@ -475,7 +478,7 @@ function CreateEditChannel(props: any, ref: any) {
           .join(", ")
           .split(", "),
         Start_date: moment(frm.dates.startDate).toISOString(),
-        End_date: moment(frm.dates.startDate).add(360, 'days').toISOString(),
+        End_date: moment(frm.dates.startDate).add(360, "days").toISOString(),
       },
     });
   }
@@ -531,7 +534,13 @@ function CreateEditChannel(props: any, ref: any) {
         name={name}
         isStepper={true}
         showErrorList={false}
-        formUISchema={operation.type === "view" ? schemaView : operation.type === "edit" ? editLiveStreamSchema : schema}
+        formUISchema={
+          operation.type === "view"
+            ? schemaView
+            : operation.type === "edit"
+            ? editLiveStreamSchema
+            : schema
+        }
         formSchema={programSchema}
         formSubmit={
           name === "View"

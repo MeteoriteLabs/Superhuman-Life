@@ -69,7 +69,7 @@ function CreateEditPackage(props: any, ref: any) {
       props.refetchTags();
       props.refetchOfferings();
       setIsFormSubmitted(!isFormSubmitted);
-      window.open(`group/session/scheduler/${r.createTag.data.id}`, "_self");
+      // window.open(`group/session/scheduler/${r.createTag.data.id}`, "_self");
     },
   });
 
@@ -275,7 +275,7 @@ function CreateEditPackage(props: any, ref: any) {
   function FillDetails(data: any) {
     const flattenedData = flattenObj({ ...data });
     let msg = flattenedData.fitnesspackages[0];
-    
+    console.log(data,msg);
     let details: any = {};
   
     if (msg.groupinstantbooking) {
@@ -308,7 +308,7 @@ function CreateEditPackage(props: any, ref: any) {
       instantBooking: msg.groupinstantbooking,
       freeDemo: msg.Is_free_demo,
     });
-    details.dates = JSON.stringify(moment(msg.Start_date).format("YYYY-MM-DD"));
+    details.dates = JSON.stringify(moment(msg.Start_date).toISOString());
     details.classsize = msg.classsize;
     details.expiryDate = moment(msg.expirydate).format("YYYY-MM-DD");
     details.level = ENUM_FITNESSPACKAGE_LEVEL[msg.level];
@@ -321,7 +321,7 @@ function CreateEditPackage(props: any, ref: any) {
     details.publishingDate = moment(msg.publishing_date).format("YYYY-MM-DD");
     details.tags = msg?.tags === null ? "" : msg.tags;
     details.user_permissions_user = msg.users_permissions_user.id;
-    details.visibility = msg.is_private === true ? 1 : 0;
+    details.visibility = msg.is_private ? 1 : 0;
     details.programDetails = JSON.stringify({
       addressTag: msg.address === null ? "At Client Address" : "At My Address",
       address: [msg.address],
@@ -376,7 +376,7 @@ function CreateEditPackage(props: any, ref: any) {
     const duration: number = end.diff(start, "days");
     return duration;
   }
-
+  
   function CreatePackage(frm: any) {
     
     frmDetails = frm;
@@ -389,10 +389,21 @@ function CreateEditPackage(props: any, ref: any) {
       .join(",")
       .split(",");
     frm.programDetails = JSON.parse(frm.programDetails);
-    frm.datesConfig = JSON.parse(frm.datesConfig);
+    frm.datesConfig = frm.datesConfig ? JSON.parse(frm.datesConfig) : {
+      publishingDate: `${moment()
+        .add(1, "days")
+        .format("YYYY-MM-DDTHH:mm")}`,
+      expiry_date: `${moment()
+        .add({ days: 1, year: 1 })
+        .format("YYYY-MM-DDTHH:mm")}`,
+    };
     frm.groupinstantbooking = JSON.parse(frm.groupinstantbooking);
     frm.languages = JSON.parse(frm.languages);
-    frm.dates = JSON.parse(frm.dates);
+    console.log(frm.dates);
+    frm.dates = frm.dates ? JSON.parse(frm.dates) : {startDate: `${moment()
+      .add(1, "days")
+      .format("YYYY-MM-DD")}`, endDate: `${moment(frm.dates.startDate).add(360, "days")}`};
+    console.log(frm.dates, frm.dates.startDate, moment(frm.dates.startDate).format());
 
     createPackage({
       variables: {
@@ -433,7 +444,7 @@ function CreateEditPackage(props: any, ref: any) {
           .map((item: any) => item.id)
           .join(", ")
           .split(", "),
-        Start_date: moment(frm.dates.startDate).toISOString(),
+        Start_date: moment(frm.dates.startDate).format(),
         End_date: moment(frm.dates.startDate).add(360, "days").toISOString(),
       },
     });

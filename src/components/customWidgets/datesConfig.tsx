@@ -9,13 +9,15 @@ const PackageDateConfig = (props: any) => {
       ? moment(JSON.parse(props.value).publishingDate).format(
           "YYYY-MM-DDTHH:mm"
         )
-      : ""
+      : `${ moment().add(1, "days").format("YYYY-MM-DDTHH:mm")}`
   );
   const [expiryDate, setExpiryDate] = useState(
     props.value
       ? moment(JSON.parse(props.value).expiryDate).format("YYYY-MM-DDTHH:mm")
-      : ""
+      : `${ moment().add({days:1,year:1}).format("YYYY-MM-DDTHH:mm")}`
   );
+  console.log(moment().add({days:1,year:1}).format("YYYY-MM-DDTHH:mm"))
+  // {"publishingDate":`${ moment().add(1, "days").format("YYYY-MM-DDTHH:mm")}`,"expiryDate":`${ moment().add({days:1,year:1}).format("YYYY-MM-DDTHH:mm")}`}
 
   // useEffect(() => {
   //   setExpiryDate(
@@ -40,7 +42,7 @@ const PackageDateConfig = (props: any) => {
           min={
             props.type === "Cohort"
               ? moment().add(1, "month").format("YYYY-MM-DDTHH:mm")
-              : moment().format("YYYY-MM-DDTHH:mm")
+              : moment().add(1, "days").format("YYYY-MM-DDTHH:mm")
           }
           value={publishingDate}
           onChange={(e) => {

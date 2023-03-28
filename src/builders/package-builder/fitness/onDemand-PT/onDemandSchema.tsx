@@ -20,6 +20,12 @@ export const widgets = {
 };
 
 export const schema: any = {
+  tags: {
+    "ui:placeholder": "Enter tag name",
+  },
+  packagename: {
+    "ui:placeholder": "Enter package name",
+  },
   disciplines: {
     "ui:widget": "fitnessSelect",
   },

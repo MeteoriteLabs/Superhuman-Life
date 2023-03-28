@@ -60,7 +60,7 @@ export const schema: any = {
     "ui:options": {
       rows: 3,
     },
-    "ui:placeholder": "Benifits of the program",
+    "ui:placeholder": "Benefits of the program",
   },
   thumbnail: {
     "ui:widget": (props: any) => {
@@ -91,6 +91,12 @@ export const schema: any = {
     VideoUrl: {
       "ui:placeholder": "https://",
     },
+  },
+  tags: {
+    "ui:placeholder": "Enter tag name",
+  },
+  packagename: {
+    "ui:placeholder": "Enter package name",
   },
   programDetails: {
     "ui:widget": "groupProgramDetails",

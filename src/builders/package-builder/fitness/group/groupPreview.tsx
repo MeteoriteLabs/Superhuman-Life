@@ -182,7 +182,7 @@ const PreviewGroup = (props) => {
 
   return (
     <>
-      <Carousel
+      {/* <Carousel
         prevIcon={
           <i
             className="fa fa-chevron-left fa-lg p-3"
@@ -205,7 +205,58 @@ const PreviewGroup = (props) => {
         }
       >
         {handleCardRender()}
-      </Carousel>
+      </Carousel> */}
+      <Card className="rounded w-50 d-flex">
+        <Row>
+          <Col lg={12}>
+        <DisplayImage
+                        imageName={
+                          props?.formContext?.thumbnail
+                            ? props?.formContext?.thumbnail
+                            : null
+                        }
+                        defaultImageUrl="assets/placeholder.svg"
+                        imageCSS="rounded-lg w-100 img-fluid img-thumbnail"
+                      />
+</Col>
+        </Row>
+        <Row>
+           <Col lg={5} className="ml-3">
+           {JSON.parse(formData.disciplines).map(
+                            (item, index: number) => {
+                              return (
+                                <div
+                                  key={index}
+                                  className="mr-2 "
+                                >
+                                  <h4 className="mb-1 px-2">{item.disciplinename}</h4>
+                                </div>
+                              );
+                            }
+                          )}
+           </Col>
+        </Row>
+        <Row>
+          <Col lg={4} className="ml-3">
+            <p className="bg-primary text-white bold rounded-pill text-center">
+            {props.formContext?.level 
+                          ? ENUM_FITNESSPACKAGE_LEVEL[props.formContext.level]
+                          : "All Levels"}
+            </p>
+          
+          </Col>
+          <Col md={{offset: 4}}>
+            <p >
+              Rs. 1275(monthly one)
+            {/* {props.formContext?.level 
+                          ? ENUM_FITNESSPACKAGE_LEVEL[props.formContext.level]
+                          : "All Levels"} */}
+            </p>
+          
+          </Col>
+        </Row>
+
+      </Card>
     </>
   );
 };
