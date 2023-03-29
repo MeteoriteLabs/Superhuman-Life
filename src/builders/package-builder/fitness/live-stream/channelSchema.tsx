@@ -21,6 +21,12 @@ export const widgets = {
 };
 
 export const schema: any = {
+  tag: {
+    "ui:placeholder": "Enter tag name",
+  },
+  channelName: {
+    "ui:placeholder": "Enter package name",
+  },
   level: {
     "ui:widget": "radio",
     "ui:options": {
