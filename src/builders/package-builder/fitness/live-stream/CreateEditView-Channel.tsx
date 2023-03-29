@@ -282,8 +282,10 @@ function CreateEditChannel(props: any, ref: any) {
       instantBooking: msg.groupinstantbooking,
       freeDemo: msg.Is_free_demo,
     });
-    details.dates = JSON.stringify(moment(msg.Start_date).format("YYYY-MM-DD"));
-    details.expiryDate = moment(msg.expirydate).format("YYYY-MM-DD");
+    details.dates = JSON.stringify({
+      startDate: moment(msg.Start_date).format("YYYY-MM-DD"),
+      endDate: moment(msg.End_date).format("YYYY-MM-DD"),
+    });
     details.level = ENUM_FITNESSPACKAGE_LEVEL[msg.level];
     details.pricing =
       msg.fitnesspackagepricing[0]?.mrp === "free"
@@ -350,16 +352,23 @@ function CreateEditChannel(props: any, ref: any) {
 
   function CreateChannelPackage(frm: any) {
     frmDetails = frm;
-    frm.datesConfig = 
-    frm.datesConfig ? JSON.parse(frm.datesConfig) : {
-      publishingDate: `${moment()
-        .add(1, "days")
-        .format("YYYY-MM-DDTHH:mm")}`,
-      expiry_date: `${moment()
-        .add({ days: 1, year: 1 })
-        .format("YYYY-MM-DDTHH:mm")}`,
-    };
-    frm.dates = JSON.parse(frm.dates);
+    frm.datesConfig = frm.datesConfig
+      ? JSON.parse(frm.datesConfig)
+      : {
+          publishingDate: `${moment()
+            .add(1, "days")
+            .format("YYYY-MM-DDTHH:mm")}`,
+          expiry_date: `${moment()
+            .add({ days: 1, year: 1 })
+            .format("YYYY-MM-DDTHH:mm")}`,
+        };
+    frm.dates = frm.dates
+      ? JSON.parse(frm.dates)
+      : {
+          startDate: `${moment().add(1, "days").format("YYYY-MM-DD")}`,
+          endDate: `${moment(frm.dates.startDate).add(360, "days")}`,
+        };
+
     if (frm.equipment) {
       frm.equipment = JSON.parse(frm?.equipment);
     }
@@ -413,7 +422,7 @@ function CreateEditChannel(props: any, ref: any) {
           .map((item: any) => item.id)
           .join(", ")
           .split(", "),
-        Start_date: moment(frm.dates.startDate).toISOString(),
+        Start_date: moment.utc(frm.dates.startDate).format(),
         End_date: moment(frm.dates.startDate).add(360, "days").toISOString(),
       },
     });

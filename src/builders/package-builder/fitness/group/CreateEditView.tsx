@@ -69,7 +69,7 @@ function CreateEditPackage(props: any, ref: any) {
       props.refetchTags();
       props.refetchOfferings();
       setIsFormSubmitted(!isFormSubmitted);
-      // window.open(`group/session/scheduler/${r.createTag.data.id}`, "_self");
+      window.open(`group/session/scheduler/${r.createTag.data.id}`, "_self");
     },
   });
 
@@ -275,7 +275,7 @@ function CreateEditPackage(props: any, ref: any) {
   function FillDetails(data: any) {
     const flattenedData = flattenObj({ ...data });
     let msg = flattenedData.fitnesspackages[0];
-    console.log(data,msg);
+    
     let details: any = {};
   
     if (msg.groupinstantbooking) {
@@ -308,7 +308,8 @@ function CreateEditPackage(props: any, ref: any) {
       instantBooking: msg.groupinstantbooking,
       freeDemo: msg.Is_free_demo,
     });
-    details.dates = JSON.stringify(moment(msg.Start_date).toISOString());
+    details.dates = JSON.stringify({startDate: moment(msg.Start_date).format("YYYY-MM-DD"), endDate: moment(msg.End_date
+      ).format("YYYY-MM-DD")});
     details.classsize = msg.classsize;
     details.expiryDate = moment(msg.expirydate).format("YYYY-MM-DD");
     details.level = ENUM_FITNESSPACKAGE_LEVEL[msg.level];
@@ -399,11 +400,10 @@ function CreateEditPackage(props: any, ref: any) {
     };
     frm.groupinstantbooking = JSON.parse(frm.groupinstantbooking);
     frm.languages = JSON.parse(frm.languages);
-    console.log(frm.dates);
+    
     frm.dates = frm.dates ? JSON.parse(frm.dates) : {startDate: `${moment()
       .add(1, "days")
       .format("YYYY-MM-DD")}`, endDate: `${moment(frm.dates.startDate).add(360, "days")}`};
-    console.log(frm.dates, frm.dates.startDate, moment(frm.dates.startDate).format());
 
     createPackage({
       variables: {
@@ -444,7 +444,7 @@ function CreateEditPackage(props: any, ref: any) {
           .map((item: any) => item.id)
           .join(", ")
           .split(", "),
-        Start_date: moment(frm.dates.startDate).format(),
+        Start_date: moment.utc(frm.dates.startDate).format(),
         End_date: moment(frm.dates.startDate).add(360, "days").toISOString(),
       },
     });
