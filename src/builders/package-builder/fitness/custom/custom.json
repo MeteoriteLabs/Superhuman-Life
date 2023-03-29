@@ -142,7 +142,8 @@
                     "4 days",
                     "5 days",
                     "6 days"
-                ]
+                ],
+                "default": 0
             }
         }
     },
@@ -163,7 +164,6 @@
        "type": "object",
        "required": [
         "visibility",
-        "datesConfig",
         "config"
        ],
        "properties": {

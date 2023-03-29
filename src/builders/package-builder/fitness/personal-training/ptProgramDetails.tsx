@@ -19,7 +19,7 @@ const PtProgramDetails = (props) => {
 
   const existingData =
     props.value === undefined ? undefined : JSON.parse(props.value);
-  if (existingData && existingData.length > 0) {
+  if (existingData && existingData.length) {
     existingData.address = {
       id: JSON.parse(existingData?.address)[0].id,
       title: JSON.parse(existingData?.address)[0].title,
@@ -116,7 +116,7 @@ const PtProgramDetails = (props) => {
         return false;
       }
       if (restDays + offlineClasses === 30) {
-        if (addressTitle === "At My Address" && singleSelections.length !== 0) {
+        if (addressTitle === "At My Address" && singleSelections.length) {
           return true;
         }
         if (addressTitle === "At Client Address") {
@@ -134,7 +134,7 @@ const PtProgramDetails = (props) => {
         return false;
       }
       if (restDays + offlineClasses + onlineClasses === 30) {
-        if (addressTitle === "At My Address" && singleSelections.length !== 0) {
+        if (addressTitle === "At My Address" && singleSelections.length) {
           return true;
         }
         if (addressTitle === "At Client Address") {

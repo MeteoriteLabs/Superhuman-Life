@@ -21,6 +21,12 @@ export const widgets = {
 };
 
 export const schema: any = {
+  tag: {
+    "ui:placeholder": "Enter tag name",
+  },
+  channelName: {
+    "ui:placeholder": "Enter package name",
+  },
   level: {
     "ui:widget": "radio",
     "ui:options": {
@@ -51,7 +57,7 @@ export const schema: any = {
     "ui:options": {
       rows: 3,
     },
-    "ui:placeholder": "Benifits of the program",
+    "ui:placeholder": "Benefits of the program",
   },
   datesConfig: {
     "ui:widget": "datesConfig",

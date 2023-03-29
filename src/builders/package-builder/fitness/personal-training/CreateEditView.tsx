@@ -68,14 +68,17 @@ function CreateEditPt(props: any, ref: any) {
     },
   });
 
-  const [bookingConfig] = useMutation(CREATE_BOOKING_CONFIG_FOR_ONE_ON_ONE_AND_CUSTOM, {
-    onCompleted: (r: any) => {
-      modalTrigger.next(false);
-      props.refetchTags();
-      props.refetchOfferings();
-      setIsFormSubmitted(!isFormSubmitted);
-    },
-  });
+  const [bookingConfig] = useMutation(
+    CREATE_BOOKING_CONFIG_FOR_ONE_ON_ONE_AND_CUSTOM,
+    {
+      onCompleted: (r: any) => {
+        modalTrigger.next(false);
+        props.refetchTags();
+        props.refetchOfferings();
+        setIsFormSubmitted(!isFormSubmitted);
+      },
+    }
+  );
 
   const [updateBookingConfig] = useMutation(UPDATE_BOOKING_CONFIG, {
     onCompleted: (r: any) => {
@@ -109,25 +112,24 @@ function CreateEditPt(props: any, ref: any) {
   const [createOneOnOneNotification] = useMutation(CREATE_NOTIFICATION);
 
   const [createPackage] = useMutation(CREATE_PACKAGE, {
-   
     onCompleted: (r: any) => {
       const flattenData = flattenObj({ ...r });
       props.refetchTags();
       props.refetchOfferings();
       createOneOnOneNotification({
-          variables: {
-            data: {
-              type: "Offerings",
-              Title: "New offering",
-              OnClickRoute: "/offerings",
-              users_permissions_user: auth.userid,
-              Body: `New one on one offering ${flattenData.createFitnesspackage.packagename} has been added`,
-              DateTime: moment().format(),
-              IsRead: false,
-              ContactID: flattenData.createFitnesspackage.id,
-            },
+        variables: {
+          data: {
+            type: "Offerings",
+            Title: "New offering",
+            OnClickRoute: "/offerings",
+            users_permissions_user: auth.userid,
+            Body: `New one on one offering ${flattenData.createFitnesspackage.packagename} has been added`,
+            DateTime: moment().format(),
+            IsRead: false,
+            ContactID: flattenData.createFitnesspackage.id,
           },
-        });
+        },
+      });
 
       if (window.location.href.split("/")[3] === "client") {
         createUserPackageSuggestion({
@@ -146,7 +148,6 @@ function CreateEditPt(props: any, ref: any) {
           },
         });
       }
-      
     },
   });
 
@@ -160,7 +161,7 @@ function CreateEditPt(props: any, ref: any) {
           bookings_per_month: val.bookings,
         },
       });
-      
+
       props.refetchTags();
       props.refetchOfferings();
     },
@@ -168,7 +169,6 @@ function CreateEditPt(props: any, ref: any) {
 
   const [updatePackageStatus] = useMutation(UPDATE_PACKAGE_STATUS, {
     onCompleted: (data) => {
-      
       props.refetchTags();
       props.refetchOfferings();
       setisOfferingUpdated(!isOfferingUpdated);
@@ -186,7 +186,7 @@ function CreateEditPt(props: any, ref: any) {
       deleteBookingConfig({
         variables: { id: bookingConfigId.id },
       });
-      
+
       props.refetchTags();
       props.refetchOfferings();
       setisOffeeringDeleted(!isOffeeringDeleted);
@@ -217,9 +217,9 @@ function CreateEditPt(props: any, ref: any) {
   enum ENUM_FITNESSPACKAGE_LEVEL {
     Beginner,
     Intermediate,
-    Advanced
+    Advanced,
   }
-  
+
   enum ENUM_FITNESSPACKAGE_INTENSITY {
     Low,
     Moderate,
@@ -303,8 +303,7 @@ function CreateEditPt(props: any, ref: any) {
     details.tags = msg?.tags === null ? "" : msg.tags;
     details.user_permissions_user = msg.users_permissions_user.id;
     details.visibility = msg.is_private ? 1 : 0;
-    bookingConfig.config =
-      msg.booking_config?.isAuto ? "Auto" : "Manual";
+    bookingConfig.config = msg.booking_config?.isAuto ? "Auto" : "Manual";
     bookingConfig.bookings = msg.booking_config?.BookingsPerMonth;
     details.config = { bookingConfig: JSON.stringify(bookingConfig) };
     details.programDetails = JSON.stringify({
@@ -361,7 +360,16 @@ function CreateEditPt(props: any, ref: any) {
       .join(", ")
       .split(", ");
     frm.programDetails = JSON.parse(frm.programDetails);
-    frm.datesConfig = JSON.parse(frm.datesConfig);
+    frm.datesConfig = frm.datesConfig
+      ? JSON.parse(frm.datesConfig)
+      : {
+          publishingDate: `${moment()
+            .add(1, "days")
+            .format("YYYY-MM-DDTHH:mm")}`,
+          expiry_date: `${moment()
+            .add({ days: 1, year: 1 })
+            .format("YYYY-MM-DDTHH:mm")}`,
+        };
     frm.languages = JSON.parse(frm.languages);
 
     createPackage({
@@ -457,7 +465,9 @@ function CreateEditPt(props: any, ref: any) {
   }
 
   function updateChannelPackageStatus(id: string, status: boolean) {
-    updatePackageStatus({ variables: { id: id, Status: status ? false : true } });
+    updatePackageStatus({
+      variables: { id: id, Status: status ? false : true },
+    });
     setStatusModalShow(false);
     operation.type = "create";
   }

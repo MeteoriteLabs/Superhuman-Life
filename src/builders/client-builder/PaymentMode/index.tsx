@@ -17,7 +17,7 @@ function PaymentMode() {
   const defaultFileWidget = registry.widgets["FileWidget"];
   (Bootstrap4Theme as any).widgets["FileWidget"] = defaultFileWidget;
   const Form: any = withTheme(Bootstrap4Theme);
-  let [isFormSubmitted, setIsFormSubmitted] = useState(false);
+  let [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
   const formRef = useRef<any>(null);
   const paymentModeJson: { } = require("./paymentmode.json");
   const [paymentModeDetails, setPaymentModeDetails] = useState<any>({});

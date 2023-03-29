@@ -52,6 +52,12 @@ export const schema: any = {
     },
     "ui:placeholder": "About the program",
   },
+  tags: {
+    "ui:placeholder": "Enter tag name",
+  },
+  packagename: {
+    "ui:placeholder": "Enter package name",
+  },
   Benifits: {
     "ui:widget": "textarea",
     "ui:options": {

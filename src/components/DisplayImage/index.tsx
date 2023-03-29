@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import AWS from "aws-sdk";
 
 const S3_BUCKET: any = process.env.REACT_APP_S3_BUCKET_NAME;
@@ -16,7 +16,7 @@ const myBucket = new AWS.S3({
 
 var albumPhotosKey = process.env.REACT_APP_S3_PREFIX_NAME;
 
-function DisplayImage(props: any) {
+const DisplayImage: React.FC<{imageName: string, defaultImageUrl: string, imageCSS: string}> = (props) => {
   const [photoUrl, setPhotoUrl] = useState<string>(props.defaultImageUrl);
   var imageName = "sm-" + props.imageName;
 

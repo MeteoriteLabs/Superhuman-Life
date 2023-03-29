@@ -60,7 +60,7 @@ export const EditSchema: any = {
     "ui:options": {
       rows: 3,
     },
-    "ui:placeholder": "Benifits of the program",
+    "ui:placeholder": "Benefits of the program",
   },
   thumbnail: {
     "ui:widget": (props: any) => {

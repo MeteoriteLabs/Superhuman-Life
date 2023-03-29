@@ -25,7 +25,7 @@ const ProgramDetails = (props) => {
   );
   const [residential, setResidential] = useState(
     props.value === undefined || existingData.residential === null
-      ? ""
+      ? "0"
       : existingData.residential.toString()
   );
   const [addressModal, setAddressModal] = useState(false);

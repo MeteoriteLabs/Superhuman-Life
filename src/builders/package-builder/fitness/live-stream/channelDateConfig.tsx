@@ -6,16 +6,20 @@ const PackageDateConfig = (props: any) => {
   const inputDisabled = props.readonly;
   const cohortStartDate = JSON.parse(props.formContext.dates).startDate;
   const [publishingDate, setPublishingDate] = useState(
-    props.value === undefined
-      ? ""
-      : moment(JSON.parse(props.value).publishingDate).format(
+    props.value 
+      ? moment(JSON.parse(props.value).publishingDate).format(
           "YYYY-MM-DDTHH:mm"
         )
+      : `${moment()
+          .add(1, "days")
+          .format("YYYY-MM-DDTHH:mm")}`
   );
   const [expiryDate, setExpiryDate] = useState(
-    props.value === undefined
-      ? moment(cohortStartDate).format("YYYY-MM-DDTHH:mm")
-      : moment(JSON.parse(props.value).expiryDate).format("YYYY-MM-DDTHH:mm")
+    props.value 
+      ?  moment(JSON.parse(props.value).expiryDate).format("YYYY-MM-DDTHH:mm")
+      : `${moment()
+          .add({ days: 1, year: 1 })
+          .format("YYYY-MM-DDTHH:mm")}`
   );
 
   if (publishingDate && expiryDate) {

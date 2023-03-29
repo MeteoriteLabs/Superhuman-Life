@@ -125,7 +125,7 @@ export default function FitnessTab() {
               )}
               {row.original.type === "On-Demand PT" ? (
                 <div>
-                  <img src="./assets/PTType.svg" alt="GroupType" />
+                  <img src="./assets/PTType.svg" alt="on demand pt" />
                 </div>
               ) : (
                 ""
