@@ -19,7 +19,7 @@ const CustomProgramDetails = (props) => {
 
   const existingData =
     props.value === undefined ? undefined : JSON.parse(props.value);
-  if (existingData && existingData.length > 0) {
+  if (existingData && existingData.length) {
     existingData.address = {
       id: JSON.parse(existingData?.address)[0].id,
       title: JSON.parse(existingData?.address)[0].title,
@@ -33,7 +33,7 @@ const CustomProgramDetails = (props) => {
 
   const auth = useContext(AuthContext);
   const [singleSelections, setSingleSelections] = useState<any[]>(
-    existingData?.address?.length !== 0 && props.value !== undefined
+    existingData?.address?.length && props.value
       ? existingData?.address
       : []
   );
@@ -147,7 +147,7 @@ const CustomProgramDetails = (props) => {
         restDays + groupOfflineClasses + ptOfflineClasses + recordedClasses ===
         30
       ) {
-        if (addressTitle === "At My Address" && singleSelections.length !== 0) {
+        if (addressTitle === "At My Address" && singleSelections.length) {
           return true;
         }
         if (addressTitle === "At Client Address") {
@@ -170,7 +170,7 @@ const CustomProgramDetails = (props) => {
           recordedClasses ===
         30
       ) {
-        if (addressTitle === "At My Address" && singleSelections.length !== 0) {
+        if (addressTitle === "At My Address" && singleSelections.length) {
           return true;
         }
         if (addressTitle === "At Client Address") {
@@ -536,7 +536,6 @@ const CustomProgramDetails = (props) => {
               </InputGroup.Append>
             </InputGroup>
           </Col>
-          {/* <span className='small'>*It should add upto 30 classes per month</span> */}
         </Row>
       )}
     </>

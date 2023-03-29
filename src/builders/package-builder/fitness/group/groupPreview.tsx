@@ -206,7 +206,19 @@ const PreviewGroup = (props) => {
       >
         {handleCardRender()}
       </Carousel> */}
-      <Card className="rounded w-50 d-flex">
+      {/* <img src="assets/phonescreen.svg" alt="mobile screen"> */}
+      {/* <div style={{height: "600vh"}}> */}
+      <div style={{ 
+        background:"no-repeat url(assets/phonescreen.svg)",
+        backgroundAttachment: "scroll",
+        paddingTop: "15px",
+        paddingLeft: "20px",
+        backgroundSize: "100% 100%"
+
+        // backgroundImage: `url(assets/phonescreen.svg)`, backgroundRepeat: "no-repeat",
+        //  height:"100%",  , textAlign: "center"
+  }}>
+      <Card className="rounded ml-5 mt-5 d-flex" style={{width: "10vw"}}>
         <Row>
           <Col lg={12}>
         <DisplayImage
@@ -221,7 +233,7 @@ const PreviewGroup = (props) => {
 </Col>
         </Row>
         <Row>
-           <Col lg={5} className="ml-3">
+           <Col lg={12} className="ml-3">
            {JSON.parse(formData.disciplines).map(
                             (item, index: number) => {
                               return (
@@ -237,7 +249,7 @@ const PreviewGroup = (props) => {
            </Col>
         </Row>
         <Row>
-          <Col lg={4} className="ml-3">
+          <Col lg={12} className="ml-3">
             <p className="bg-primary text-white bold rounded-pill text-center">
             {props.formContext?.level 
                           ? ENUM_FITNESSPACKAGE_LEVEL[props.formContext.level]
@@ -248,15 +260,17 @@ const PreviewGroup = (props) => {
           <Col md={{offset: 4}}>
             <p >
               Rs. 1275(monthly one)
-            {/* {props.formContext?.level 
+             {/* {props.formContext?.level 
                           ? ENUM_FITNESSPACKAGE_LEVEL[props.formContext.level]
-                          : "All Levels"} */}
+                          : "All Levels"}  */}
             </p>
           
           </Col>
         </Row>
 
       </Card>
+      </div>
+      {/* </div> */}
     </>
   );
 };

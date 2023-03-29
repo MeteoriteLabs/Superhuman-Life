@@ -1,7 +1,7 @@
 const OfferingsDisaplyImage = (props: any) => {
   return (
     <img
-      src={`./assets/offeringsImages/${props.packageType
+      src={`./assets/offeringImages/${props.packageType
         ?.replaceAll(" ", "-")
         ?.toLowerCase()}-${
         props?.mode === null ? "Online" : props.mode?.toLowerCase()

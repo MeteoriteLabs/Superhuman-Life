@@ -1,3 +1,6 @@
+.preview__container{
+    background-image: "assets/phonescreen.svg";
+}
 .select-basic{
     background: transparent !important;
     color:black !important
