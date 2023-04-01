@@ -576,8 +576,7 @@ function CreateEditPackage(props: any, ref: any) {
           "Program",
           "Schedule",
           "Pricing",
-          "Config",
-          "Preview",
+          "Config"
         ]}
         formSchema={personalTrainingSchema}
         formSubmit={

@@ -7,7 +7,7 @@ const PackageDateConfig = (props: any) => {
     props.value !== undefined ? JSON.parse(props.value).instantBooking : true
   );
   const [freeDemo, setFreeDemo] = useState(
-    props.value !== undefined ? JSON.parse(props.value).freeDemo : false
+    props.value ? JSON.parse(props.value).freeDemo : false
   );
 
   props.onChange(

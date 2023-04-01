@@ -567,8 +567,7 @@ function CreateEditChannel(props: any, ref: any) {
           "Details",
           "Schedule",
           "Pricing",
-          "Config",
-          "Review",
+          "Config"
         ]}
         modalTrigger={modalTrigger}
         actionType={operation.type}

@@ -1,5 +1,4 @@
 import PricingTableChannel from "./pricingTableChannel";
-import PreviewChannel from "./previewChannel";
 import Upload from "../../../../components/upload/upload";
 import DatesConfig from "../../../../components/customWidgets/datesConfig";
 import FitnessSelect from "../../../../components/customWidgets/fitnessMultiSelect";
@@ -10,7 +9,6 @@ import LiveBookingConfig from "./bookingConfig";
 
 export const widgets = {
   pricingTableChannel: PricingTableChannel,
-  previewChannel: PreviewChannel,
   datesConfig: DatesConfig,
   fitnessSelect: FitnessSelect,
   equipmentSelect: EquipmentSelect,
@@ -67,7 +65,7 @@ export const schemaView: any = {
     "ui:options": {
       rows: 3,
     },
-    "ui:placeholder": "Benifits of the program",
+    "ui:placeholder": "Benefits of the program",
     "ui:readonly": true,
   },
   datesConfig: {
@@ -130,10 +128,6 @@ export const schemaView: any = {
   },
   pricing: {
     "ui:widget": "pricingTableChannel",
-    "ui:readonly": true,
-  },
-  preview: {
-    "ui:widget": "previewChannel",
     "ui:readonly": true,
   },
   languages: {

@@ -71,7 +71,7 @@ export default function ModalView({
               <Col xs={2} md={2} lg={2} key={id}>
                 <ProgressBar
                   max={1}
-                  now={step - (id + 1)}
+                  now={step - (id)}
                   style={{ height: "5px" }}
                   variant="danger"
                 />

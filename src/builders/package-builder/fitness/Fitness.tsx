@@ -28,6 +28,9 @@ import { GET_FITNESS, GET_TAGS } from "./graphQL/queries";
 import { flattenObj } from "../../../components/utils/responseFlatten";
 import moment from "moment";
 import OfferingsDisaplyImage from "../../../components/customWidgets/offeringsDisplayImage";
+import Drawer from "../../../components/Drawer";
+import DrawerTrigger from "../../../components/Drawer/DrawerTrigger";
+import Backdrop from "../../../components/Drawer/Backdrop";
 
 export default function FitnessTab() {
   const auth = useContext(AuthContext);
@@ -40,6 +43,8 @@ export default function FitnessTab() {
   const createEditViewCohortRef = useRef<any>(null);
   const [selectedDuration, setSelectedDuration] = useState<any>("");
   const [currentIndex, setCurrentIndex] = useState<any>("");
+  const [showDrawer, setShowDrawer] = useState<boolean>(false);
+  const [triggeredDetails, setTriggeredDetails] = useState<any>({});
 
   function handleModalRender(
     id: string | null,
@@ -110,6 +115,36 @@ export default function FitnessTab() {
   const columns = useMemo<any>(
     () => [
       { accessor: "packagename", Header: "Package Name" },
+      {
+        accessor: "Preview",
+        Header: "Preview",
+        Cell: ({ row }: any) => {
+          return (
+            <>
+              <DrawerTrigger
+                toggle={() => {
+                  setShowDrawer(!showDrawer);
+                  setTriggeredDetails({
+                    type: row.original.type,
+                    name: row.original.packagename,
+                    level: row.original.level,
+                    thumbnailId: row.original.thumbnailId,
+                    pricing: row.original.pricing,
+                    address: row.original.address,
+                    firstName: row.original.firstName,
+                    lastName: row.original.lastName,
+                    ptonline: row.original.ptonline,
+                    ptoffline: row.original.ptoffline,
+                    grouponline: row.original.grouponline,
+                    groupoffline: row.original.groupoffline,
+                    recordedclasses: row.original.recordedclasses
+                  });
+                }}
+              />
+            </>
+          );
+        },
+      },
       {
         accessor: "type",
         Header: "Type",
@@ -533,6 +568,7 @@ export default function FitnessTab() {
         },
       },
     ],
+    // eslint-disable-next-line
     [selectedDuration, currentIndex]
   );
 
@@ -547,7 +583,7 @@ export default function FitnessTab() {
       onCompleted: (data) => {
         const tagsFlattenData = flattenObj({ ...data });
         const fitnessFlattenData = flattenObj({ ...get_fitness });
-        
+        console.log(fitnessFlattenData);
         setDataTable(
           [...fitnessFlattenData?.fitnesspackages].map((item) => {
             return {
@@ -564,8 +600,18 @@ export default function FitnessTab() {
                   (currentValue) => currentValue.fitnesspackage.id === item.id
                 )
                 .map((currentValue) => [currentValue.tag_name]),
+              thumbnailId: item.Thumbnail_ID,
+              level: item.level,
               id: item.id,
+              address: item.address,
               packagename: item.packagename,
+              firstName: item.users_permissions_user.First_Name,
+              lastName: item.users_permissions_user.Last_Name,
+              ptonline: item.ptonline,
+              ptoffline: item.ptoffline,
+              grouponline: item.grouponline,
+              groupoffline: item.groupoffline,
+              recordedclasses: item.recordedclasses,
               status: item.Status,
               type: item.fitness_package_type.type,
               details: [
@@ -600,7 +646,7 @@ export default function FitnessTab() {
       },
     }
   );
-  
+
   const { data: get_fitness, refetch: refetchFitness } = useQuery(GET_FITNESS, {
     variables: { id: auth.userid },
     onCompleted: (data) => {
@@ -609,133 +655,142 @@ export default function FitnessTab() {
   });
 
   return (
-    <TabContent>
-      <div className="justify-content-lg-center d-flex overflow-auto p-3">
-        <DropdownButton
-          className="mx-3"
-          variant="outline-secondary"
-          id="dropdown-basic-button"
-          title={
-            <span>
-              <i className="fas fa-plus-circle"></i> One-On-One
-            </span>
-          }
-        >
-          <Dropdown.Item
+    <>
+      <Drawer
+        show={showDrawer}
+        close={() => setShowDrawer(false)}
+        details={triggeredDetails}
+      />
+
+      {showDrawer ? <Backdrop close={() => setShowDrawer(false)} /> : null}
+      <TabContent>
+        <div className="justify-content-lg-center d-flex overflow-auto p-3">
+          <DropdownButton
+            className="mx-3"
+            variant="outline-secondary"
+            id="dropdown-basic-button"
+            title={
+              <span>
+                <i className="fas fa-plus-circle"></i> One-On-One
+              </span>
+            }
+          >
+            <Dropdown.Item
+              onClick={() => {
+                handleModalRender(null, "create", "One-On-One");
+              }}
+            >
+              PT Package
+            </Dropdown.Item>
+            <Dropdown.Item
+              onClick={() => {
+                handleModalRender(null, "create", "On-Demand PT");
+              }}
+            >
+              Private Session
+            </Dropdown.Item>
+          </DropdownButton>
+          <Button
+            style={{ whiteSpace: "nowrap", textAlign: "center" }}
+            className="mx-3"
+            variant={true ? "outline-secondary" : "light"}
+            size="sm"
             onClick={() => {
-              handleModalRender(null, "create", "One-On-One");
+              handleModalRender(null, "create", "Group Class");
             }}
           >
-            PT Package
-          </Dropdown.Item>
-          <Dropdown.Item
+            <i className="fas fa-plus-circle"></i> Group
+          </Button>
+          <Button
+            style={{ whiteSpace: "nowrap", textAlign: "center" }}
+            className="mx-3"
+            variant={true ? "outline-secondary" : "light"}
+            size="sm"
             onClick={() => {
-              handleModalRender(null, "create", "On-Demand PT");
+              handleModalRender(null, "create", "Classic Class");
             }}
           >
-            Private Session
-          </Dropdown.Item>
-        </DropdownButton>
-        <Button
-          style={{ whiteSpace: "nowrap", textAlign: "center" }}
-          className="mx-3"
-          variant={true ? "outline-secondary" : "light"}
-          size="sm"
-          onClick={() => {
-            handleModalRender(null, "create", "Group Class");
-          }}
-        >
-          <i className="fas fa-plus-circle"></i> Group
-        </Button>
-        <Button
-          style={{ whiteSpace: "nowrap", textAlign: "center" }}
-          className="mx-3"
-          variant={true ? "outline-secondary" : "light"}
-          size="sm"
-          onClick={() => {
-            handleModalRender(null, "create", "Classic Class");
-          }}
-        >
-          <i className="fas fa-plus-circle"></i> Recorded
-        </Button>
-        <Button
-          style={{ whiteSpace: "nowrap", textAlign: "center" }}
-          className="mx-3"
-          variant={true ? "outline-secondary" : "light"}
-          size="sm"
-          onClick={() => {
-            handleModalRender(null, "create", "Custom Fitness");
-          }}
-        >
-          <i className="fas fa-plus-circle"></i> Custom
-        </Button>
-        <Button
-          style={{ whiteSpace: "nowrap", textAlign: "center" }}
-          className="mx-3"
-          variant={true ? "outline-secondary" : "light"}
-          size="sm"
-          onClick={() => {
-            handleModalRender(null, "create", "Live Stream Channel");
-          }}
-        >
-          <i className="fas fa-plus-circle"></i> Live Stream
-        </Button>
-        <Button
-          style={{ whiteSpace: "nowrap", textAlign: "center" }}
-          className="mx-3"
-          variant={true ? "outline-secondary" : "light"}
-          size="sm"
-          onClick={() => {
-            handleModalRender(null, "create", "Cohort");
-          }}
-        >
-          <i className="fas fa-plus-circle"></i> Cohort
-        </Button>
-      </div>
-      <Container>
-        <Row>
-          <Col>
-            <Card.Title className="text-center">
-              <CreateEditViewChannel
-                ref={createEditViewChannelRef}
-                refetchTags={refetch_tags}
-                refetchOfferings={refetchFitness}
-              ></CreateEditViewChannel>
-              <CreateEditViewCohort
-                ref={createEditViewCohortRef}
-                refetchTags={refetch_tags}
-                refetchOfferings={refetchFitness}
-              ></CreateEditViewCohort>
-              <CreateEditViewPersonalTraining
-                ref={createEditViewPersonalTrainingRef}
-                refetchTags={refetch_tags}
-                refetchOfferings={refetchFitness}
-              />
-              <CreateEditViewOnDemandPt
-                ref={CreateEditViewOnDemandPtRef}
-                refetchTags={refetch_tags}
-                refetchOfferings={refetchFitness}
-              />
-              <CreateEditViewGroupClass
-                ref={CreateEditViewGroupClassRef}
-                refetchTags={refetch_tags}
-                refetchOfferings={refetchFitness}
-              />
-              <CreateEditViewClassicClass
-                ref={CreateEditViewClassicClassRef}
-                refetchTags={refetch_tags}
-                refetchOfferings={refetchFitness}
-              />
-              <CreateEditViewCustomFitness
-                ref={CreateEditViewCustomFitnessRef}
-                refetchTags={refetch_tags}
-                refetchOfferings={refetchFitness}
-              />
-            </Card.Title>
-          </Col>
-        </Row>
-      </Container>
-      <Table columns={columns} data={dataTable} />
-    </TabContent>
+            <i className="fas fa-plus-circle"></i> Recorded
+          </Button>
+          <Button
+            style={{ whiteSpace: "nowrap", textAlign: "center" }}
+            className="mx-3"
+            variant={true ? "outline-secondary" : "light"}
+            size="sm"
+            onClick={() => {
+              handleModalRender(null, "create", "Custom Fitness");
+            }}
+          >
+            <i className="fas fa-plus-circle"></i> Custom
+          </Button>
+          <Button
+            style={{ whiteSpace: "nowrap", textAlign: "center" }}
+            className="mx-3"
+            variant={true ? "outline-secondary" : "light"}
+            size="sm"
+            onClick={() => {
+              handleModalRender(null, "create", "Live Stream Channel");
+            }}
+          >
+            <i className="fas fa-plus-circle"></i> Live Stream
+          </Button>
+          <Button
+            style={{ whiteSpace: "nowrap", textAlign: "center" }}
+            className="mx-3"
+            variant={true ? "outline-secondary" : "light"}
+            size="sm"
+            onClick={() => {
+              handleModalRender(null, "create", "Cohort");
+            }}
+          >
+            <i className="fas fa-plus-circle"></i> Cohort
+          </Button>
+        </div>
+        <Container>
+          <Row>
+            <Col>
+              <Card.Title className="text-center">
+                <CreateEditViewChannel
+                  ref={createEditViewChannelRef}
+                  refetchTags={refetch_tags}
+                  refetchOfferings={refetchFitness}
+                ></CreateEditViewChannel>
+                <CreateEditViewCohort
+                  ref={createEditViewCohortRef}
+                  refetchTags={refetch_tags}
+                  refetchOfferings={refetchFitness}
+                ></CreateEditViewCohort>
+                <CreateEditViewPersonalTraining
+                  ref={createEditViewPersonalTrainingRef}
+                  refetchTags={refetch_tags}
+                  refetchOfferings={refetchFitness}
+                />
+                <CreateEditViewOnDemandPt
+                  ref={CreateEditViewOnDemandPtRef}
+                  refetchTags={refetch_tags}
+                  refetchOfferings={refetchFitness}
+                />
+                <CreateEditViewGroupClass
+                  ref={CreateEditViewGroupClassRef}
+                  refetchTags={refetch_tags}
+                  refetchOfferings={refetchFitness}
+                />
+                <CreateEditViewClassicClass
+                  ref={CreateEditViewClassicClassRef}
+                  refetchTags={refetch_tags}
+                  refetchOfferings={refetchFitness}
+                />
+                <CreateEditViewCustomFitness
+                  ref={CreateEditViewCustomFitnessRef}
+                  refetchTags={refetch_tags}
+                  refetchOfferings={refetchFitness}
+                />
+              </Card.Title>
+            </Col>
+          </Row>
+        </Container>
+        <Table columns={columns} data={dataTable} />
+      </TabContent>
+    </>
   );
 }

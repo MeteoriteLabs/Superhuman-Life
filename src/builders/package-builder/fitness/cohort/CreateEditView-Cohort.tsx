@@ -518,8 +518,7 @@ function CreateEditCohort(props: any, ref: any) {
           "Details",
           "Program",
           "Pricing",
-          "config",
-          "Review",
+          "config"
         ]}
         widgets={widgets}
         modalTrigger={modalTrigger}

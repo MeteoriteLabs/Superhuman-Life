@@ -169,6 +169,7 @@ export const GET_FITNESS = gql`
       data {
         id
         attributes {
+          Thumbnail_ID
           SubscriptionDuration
           packagename
           ptoffline
@@ -183,6 +184,27 @@ export const GET_FITNESS = gql`
           bookingleadday
           groupinstantbooking
           bookingleadtime
+          level
+          users_permissions_user{
+            data{
+              id
+              attributes{
+                First_Name
+                Last_Name
+                username
+              }
+            }
+          }
+          address{
+            data{
+              id
+              attributes{
+                address1
+                city
+                state
+              }
+            }
+          }
           fitness_package_type {
             data {
               id

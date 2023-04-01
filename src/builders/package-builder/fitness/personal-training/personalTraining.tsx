@@ -6,7 +6,6 @@ import LanguageList from "../../../../components/customWidgets/languageSelect";
 import PtProgramDetails from "./ptProgramDetails";
 import PTPricingTable from "./ptPricingTable";
 import PTBookingConfig from "./bookingConfig";
-import PTPreview from "./ptPreview";
 
 export const widgets = {
   datesConfig: DatesConfig,
@@ -14,7 +13,6 @@ export const widgets = {
   equipmentSelect: EquipmentSelect,
   ptProgramDetails: PtProgramDetails,
   ptPricingTable: PTPricingTable,
-  ptPreview: PTPreview,
   ptBookingConfig: PTBookingConfig,
   languageList: LanguageList,
 };
@@ -100,9 +98,6 @@ export const schema: any = {
   },
   pricingDetail: {
     "ui:widget": "ptPricingTable",
-  },
-  carousel: {
-    "ui:widget": "ptPreview",
   },
   visibility: {
     "ui:widget": "radio",

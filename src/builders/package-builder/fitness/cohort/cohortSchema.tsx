@@ -1,5 +1,4 @@
 import PricingTableChannel from "./pricingTableCohort";
-import PreviewCohort from "./previewCohort";
 import LocationList from "../../../../components/customWidgets/locationList";
 import LanguageList from "../../../../components/customWidgets/languageSelect";
 import ProgramDetails from "./programDetails";
@@ -14,7 +13,6 @@ import CohortPrimaryDateConfig from "./primaryDatesConfig";
 
 export const widgets = {
   pricingTableChannel: PricingTableChannel,
-  previewCohort: PreviewCohort,
   locationList: LocationList,
   languageList: LanguageList,
   programDetails: ProgramDetails,
@@ -152,9 +150,6 @@ export const schema: any = {
       "ui:widget": "cohortBookingConfig",
       "ui:disabled": true,
     },
-  },
-  preview: {
-    "ui:widget": "previewCohort",
   },
   programDetails: {
     "ui:widget": "programDetails",

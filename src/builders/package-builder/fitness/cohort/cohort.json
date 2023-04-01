@@ -188,16 +188,5 @@
                 "type": "string"
             }
         }
-    },
-    "6": {
-        "title": "",
-       "type": "object",
-       "required": [
-       ],
-       "properties": {
-            "preview": {
-                "type": "string"
-            }
-        }
     }
 }

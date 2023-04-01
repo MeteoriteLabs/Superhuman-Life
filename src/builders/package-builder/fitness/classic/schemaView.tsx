@@ -4,7 +4,6 @@ import FitnessSelect from "../../../../components/customWidgets/fitnessMultiSele
 import EquipmentSelect from "../../../../components/customWidgets/equipmentListSelect";
 import ClassicProgramDetails from "./classicProgramDetails";
 import ClassicPricingTable from "./classicPricingTable";
-import ClassicPreview from "./classicPreview";
 import LanguageSelect from "../../../../components/customWidgets/languageSelect";
 import ClassicBookingConfig from "./bookingConfig";
 
@@ -14,7 +13,6 @@ export const widgets = {
   equipmentSelect: EquipmentSelect,
   classicProgramDetails: ClassicProgramDetails,
   classPricingTable: ClassicPricingTable,
-  classicPreview: ClassicPreview,
   classicBookingConfig: ClassicBookingConfig,
   classicLanguageSelect: LanguageSelect,
 };
@@ -115,10 +113,6 @@ export const schemaView: any = {
   },
   pricingDetail: {
     "ui:widget": "classPricingTable",
-    "ui:readonly": true,
-  },
-  carousel: {
-    "ui:widget": "classicPreview",
     "ui:readonly": true,
   },
   visibility: {
