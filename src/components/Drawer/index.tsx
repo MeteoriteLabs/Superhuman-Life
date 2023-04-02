@@ -4,10 +4,24 @@ import { Row, Col, Card } from "react-bootstrap";
 import DisplayImage from "../DisplayImage";
 import Icons from "../Icons";
 
+interface Details {
+  type: string;
+  name: string;
+  level: string;
+  thumbnailId: string;
+  pricing: any;
+  address: string;
+  ptonline: string;
+  ptoffline: string;
+  grouponline: string;
+  groupoffline: string;
+  recordedclasses: string;
+}
+
 const Drawer: React.FC<{
   show: boolean;
-  close: any;
-  details: any;
+  close: () => void;
+  details: Details;
 }> = (props) => {
   console.log(props);
 
@@ -39,7 +53,7 @@ const Drawer: React.FC<{
                 }}
               >
                 <div style={{ height: "100vh", width: "40vh" }}>
-                  {props.details.type !== "Cohort" ||
+                  {props.details.type !== "Cohort" &&
                     props.details.type !== "Classic Class"}
                   <Card
                     className="rounded ml-5 mt-5 d-flex"
@@ -95,55 +109,57 @@ const Drawer: React.FC<{
                       <Col lg={6} className="ml-1 d-flex">
                         <Row>
                           <Col lg={12}>
-                            {
-                              props.details?.type === "Group Class" ? 
+                            {props.details?.type === "Group Class" ? (
                               <>
-                              <img
-                              loading="lazy"
-                              src={"assets/Group-Offline.svg"}
-                              alt="group-offline"
-                              height={25}
-                            />
-                            +
-                            <img
-                              loading="lazy"
-                              src="assets/Group-Online.svg"
-                              height={25}
-                              alt="group-online"
-                            /> </>: null
-                            }
-                            {
-                              props.details?.type === "One-On-One" ? 
-                              <>
-                              <>
-                               <img
-                              loading="lazy"
-                              src={"assets/personal-training-offline.svg"}
-                              alt="pt-offline"
-                              height={25}
-                            /><br/><p>{props.details.ptoffline}</p></>
-                            +{" "}
-                            <>
-                            <img
-                              loading="lazy"
-                              src="assets/personal-training-online.svg"
-                              height={25}
-                              alt="ptonline"
-                            /><br/><p>{props.details.ptonline}</p></>
+                                <img
+                                  loading="lazy"
+                                  src={"assets/Group-Offline.svg"}
+                                  alt="group-offline"
+                                  height={25}
+                                />
+                                +
+                                <img
+                                  loading="lazy"
+                                  src="assets/Group-Online.svg"
+                                  height={25}
+                                  alt="group-online"
+                                />{" "}
                               </>
-                              : null
-                            }
-                           
+                            ) : null}
+                            {props.details?.type === "One-On-One" ? (
+                              <>
+                                <>
+                                  <img
+                                    loading="lazy"
+                                    src={"assets/personal-training-offline.svg"}
+                                    alt="pt-offline"
+                                    height={25}
+                                  />
+                                  <br />
+                                  <p>{props.details.ptoffline}</p>
+                                </>
+                                +{" "}
+                                <>
+                                  <img
+                                    loading="lazy"
+                                    src="assets/personal-training-online.svg"
+                                    height={25}
+                                    alt="ptonline"
+                                  />
+                                  <br />
+                                  <p>{props.details.ptonline}</p>
+                                </>
+                              </>
+                            ) : null}
                           </Col>
                           <Col lg={12}>
                             <span style={{ fontSize: "0.7rem" }}>
-                            {
-                              props.details?.type === "One-On-One" ? 
-                              <>
-                              {props.details.ptoffline} 
-                              + " "+
-                              {props.details.ptonline}
-                              </> : null}
+                              {props.details?.type === "One-On-One" ? (
+                                <>
+                                  {props.details.ptoffline}+ " "+
+                                  {props.details.ptonline}
+                                </>
+                              ) : null}
                               {/* {
                               props.details?.type === "Group Class" ? 
                               <>

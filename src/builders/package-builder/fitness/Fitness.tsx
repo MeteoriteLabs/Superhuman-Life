@@ -131,8 +131,6 @@ export default function FitnessTab() {
                     thumbnailId: row.original.thumbnailId,
                     pricing: row.original.pricing,
                     address: row.original.address,
-                    firstName: row.original.firstName,
-                    lastName: row.original.lastName,
                     ptonline: row.original.ptonline,
                     ptoffline: row.original.ptoffline,
                     grouponline: row.original.grouponline,
