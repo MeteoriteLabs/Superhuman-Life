@@ -4,7 +4,6 @@ import FitnessSelect from "../../../../components/customWidgets/fitnessMultiSele
 import EquipmentSelect from "../../../../components/customWidgets/equipmentListSelect";
 import PtProgramDetails from "./onDemandProgramDetails";
 import PTPricingTable from "./onDemandPricingtable";
-import PTPreview from "./onDemandPreview";
 import LanguageList from "../../../../components/customWidgets/languageSelect";
 import PTBookingConfig from "./bookingConfig";
 
@@ -14,7 +13,6 @@ export const widgets = {
   equipmentSelect: EquipmentSelect,
   ptProgramDetails: PtProgramDetails,
   ptPricingTable: PTPricingTable,
-  ptPreview: PTPreview,
   ptBookingConfig: PTBookingConfig,
   languageList: LanguageList,
 };
@@ -72,7 +70,7 @@ export const schemaView: any = {
     "ui:options": {
       rows: 3,
     },
-    "ui:placeholder": "Benifits of the program",
+    "ui:placeholder": "Benefits of the program",
     "ui:readonly": true,
   },
   thumbnail: {
@@ -116,9 +114,6 @@ export const schemaView: any = {
   pricingDetail: {
     "ui:widget": "ptPricingTable",
     "ui:readonly": true,
-  },
-  carousel: {
-    "ui:widget": "ptPreview",
   },
   visibility: {
     "ui:widget": "radio",

@@ -33,9 +33,7 @@ const CustomProgramDetails = (props) => {
 
   const auth = useContext(AuthContext);
   const [singleSelections, setSingleSelections] = useState<any[]>(
-    existingData?.address?.length && props.value
-      ? existingData?.address
-      : []
+    existingData?.address?.length && props.value ? existingData?.address : []
   );
   const [addresses, setAddresses] = useState<any[]>([]);
   const [addressTitle, setAddressTitle] = useState(

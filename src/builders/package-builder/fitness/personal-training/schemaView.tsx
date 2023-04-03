@@ -4,7 +4,6 @@ import FitnessSelect from "../../../../components/customWidgets/fitnessMultiSele
 import EquipmentSelect from "../../../../components/customWidgets/equipmentListSelect";
 import PtProgramDetails from "./ptProgramDetails";
 import PTPricingTable from "./ptPricingTable";
-import PTPreview from "./ptPreview";
 import LanguageList from "../../../../components/customWidgets/languageSelect";
 import PTBookingConfig from "./bookingConfig";
 
@@ -14,7 +13,6 @@ export const widgets = {
   equipmentSelect: EquipmentSelect,
   ptProgramDetails: PtProgramDetails,
   ptPricingTable: PTPricingTable,
-  ptPreview: PTPreview,
   ptBookingConfig: PTBookingConfig,
   languageList: LanguageList,
 };

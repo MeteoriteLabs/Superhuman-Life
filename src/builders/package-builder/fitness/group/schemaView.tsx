@@ -6,7 +6,6 @@ import LanguageList from "../../../../components/customWidgets/languageSelect";
 import GroupProgramDetails from "./groupProgramDetails";
 import GroupConfig from "./groupConfig";
 import GroupPricingTable from "./groupPricingTable";
-import GroupPreview from "./groupPreview";
 import GroupBookingConfig from "./bookingConfig";
 
 export const widgets = {
@@ -16,7 +15,6 @@ export const widgets = {
   groupProgramDetails: GroupProgramDetails,
   groupConfig: GroupConfig,
   groupPricingTable: GroupPricingTable,
-  groupPreview: GroupPreview,
   groupBookingConfig: GroupBookingConfig,
   languageList: LanguageList,
 };
@@ -114,10 +112,6 @@ export const schemaView: any = {
   },
   pricingDetail: {
     "ui:widget": "groupPricingTable",
-    "ui:readonly": true,
-  },
-  carousel: {
-    "ui:widget": "groupPreview",
     "ui:readonly": true,
   },
   visibility: {

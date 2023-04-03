@@ -6,7 +6,6 @@ import LanguageSelect from "../../../../components/customWidgets/languageSelect"
 import ClassicProgramDetails from "./classicProgramDetails";
 import ClassicBookingConfig from "./bookingConfig";
 import ClassicPricingTable from "./classicPricingTable";
-import ClassicPreview from "./classicPreview";
 
 export const widgets = {
   datesConfig: DatesConfig,
@@ -14,7 +13,6 @@ export const widgets = {
   equipmentSelect: EquipmentSelect,
   classicProgramDetails: ClassicProgramDetails,
   classPricingTable: ClassicPricingTable,
-  classicPreview: ClassicPreview,
   classicBookingConfig: ClassicBookingConfig,
   classicLanguageSelect: LanguageSelect,
 };
@@ -100,9 +98,6 @@ export const schema: any = {
   },
   pricingDetail: {
     "ui:widget": "classPricingTable",
-  },
-  carousel: {
-    "ui:widget": "classicPreview",
   },
   datesConfig: {
     "ui:widget": "datesConfig",

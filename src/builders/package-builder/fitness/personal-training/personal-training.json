@@ -209,15 +209,5 @@
                 }
             }
         }
-    },
-    "7": {
-        "title": "Preview",
-        "type": "object",
-        "properties": {
-            "carousel": {
-                "type": "string",
-                "title": "carousel"
-            }
-        }
     }
 }
