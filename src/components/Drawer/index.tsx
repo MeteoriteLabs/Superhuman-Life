@@ -23,7 +23,6 @@ const Drawer: React.FC<{
   close: () => void;
   details: Details;
 }> = (props) => {
-  console.log(props);
 
   return (
     <>
@@ -55,15 +54,7 @@ const Drawer: React.FC<{
                 <div style={{ height: "100vh", width: "40vh" }}>
                   {props.details.type !== "Cohort" &&
                     props.details.type !== "Classic Class"}
-                  <Card
-                    className="rounded ml-5 mt-5 d-flex"
-                    style={{
-                      width: "30%",
-                      position: "absolute",
-                      top: "15%",
-                      left: "33%",
-                    }}
-                  >
+                  <Card className="rounded ml-5 mt-5 d-flex preview__card">
                     <Row>
                       <Col lg={12}>
                         <DisplayImage
@@ -78,7 +69,7 @@ const Drawer: React.FC<{
                       </Col>
                     </Row>
                     <Row>
-                      <Col lg={5} className="ml-1">
+                      <Col lg={5} sm={5} className="ml-1">
                         <p style={{ fontSize: "0.7rem" }}>
                           {props.details.name}
                         </p>
@@ -89,7 +80,7 @@ const Drawer: React.FC<{
                           {props.details.level}
                         </p>
                       </Col>
-                      <Col lg={5} className="ml-1 d-flex">
+                      <Col lg={5} sm={5} className="ml-1 d-flex">
                         {props.details.address ? (
                           <>
                             <img
@@ -106,9 +97,9 @@ const Drawer: React.FC<{
                     </Row>
                     {props.details?.type === "Classic Class" ? null : <hr />}
                     <Row>
-                      <Col lg={6} className="ml-1 d-flex">
+                      <Col lg={6} sm={6} className="ml-1 d-flex">
                         <Row>
-                          <Col lg={12}>
+                          <Col lg={12} sm={12}>
                             {props.details?.type === "Group Class" ? (
                               <>
                                 <img
@@ -126,46 +117,107 @@ const Drawer: React.FC<{
                                 />{" "}
                               </>
                             ) : null}
-                            {props.details?.type === "One-On-One" ? (
+                            {props.details?.type === "Custom Fitness" ? (
                               <>
-                                <>
-                                  <img
-                                    loading="lazy"
-                                    src={"assets/personal-training-offline.svg"}
-                                    alt="pt-offline"
-                                    height={25}
-                                  />
-                                  <br />
-                                  <p>{props.details.ptoffline}</p>
-                                </>
-                                +{" "}
-                                <>
-                                  <img
-                                    loading="lazy"
-                                    src="assets/personal-training-online.svg"
-                                    height={25}
-                                    alt="ptonline"
-                                  />
-                                  <br />
-                                  <p>{props.details.ptonline}</p>
-                                </>
+                                <img
+                                  loading="lazy"
+                                  src="assets/personal-training-online.svg"
+                                  height={20}
+                                  alt="ptonline"
+                                />
+                                <img
+                                  loading="lazy"
+                                  src={"assets/Group-Offline.svg"}
+                                  alt="group-offline"
+                                  height={20}
+                                />
+                                <img
+                                  loading="lazy"
+                                  src="assets/Group-Online.svg"
+                                  height={20}
+                                  alt="group-online"
+                                />
+                                <img
+                                  loading="lazy"
+                                  src="assets/offeringImages/classic-class-online.svg"
+                                  height={20}
+                                  alt="recorded"
+                                />
                               </>
                             ) : null}
-                          </Col>
-                          <Col lg={12}>
-                            <span style={{ fontSize: "0.7rem" }}>
-                              {props.details?.type === "One-On-One" ? (
-                                <>
-                                  {props.details.ptoffline}+ " "+
-                                  {props.details.ptonline}
-                                </>
-                              ) : null}
-                              {/* {
-                              props.details?.type === "Group Class" ? 
+                            {props.details?.type === "One-On-One" ||
+                            props.details?.type === "On-Demand PT" ? (
                               <>
-                              {`${props.details.groupoffline} ${props.details.grouponline}`}
-                              </> : null} */}
-                            </span>
+                                <img
+                                  loading="lazy"
+                                  src={"assets/personal-training-offline.svg"}
+                                  alt="pt-offline"
+                                  height={20}
+                                />
+                                +{" "}
+                                <img
+                                  loading="lazy"
+                                  src="assets/personal-training-online.svg"
+                                  height={20}
+                                  alt="ptonline"
+                                />
+                              </>
+                            ) : null}
+                            {props.details?.type === "Cohort" ? (
+                              <>
+                                <img
+                                  loading="lazy"
+                                  src={"assets/home.svg"}
+                                  alt="home"
+                                  height={20}
+                                  style={{ paddingRight: "2px" }}
+                                />
+
+                                <img
+                                  loading="lazy"
+                                  src="assets/food.svg"
+                                  height={20}
+                                  alt="ptonline"
+                                  style={{ paddingLeft: "2px" }}
+                                />
+                              </>
+                            ) : null}
+                            <br />
+                            {props.details?.type === "One-On-One" ||
+                            props.details?.type === "On-Demand PT" ? (
+                              <div
+                                className="d-flex "
+                                style={{ fontSize: "0.7rem" }}
+                              >
+                                <div className="px-2">
+                                  {props.details.ptoffline
+                                    ? props.details.ptoffline
+                                    : 0}
+                                </div>
+                                <div className="px-3">
+                                  {props.details.ptonline
+                                    ? props.details.ptonline
+                                    : 0}
+                                </div>
+                              </div>
+                            ) : null}
+                            {props.details?.type === "Group Class" ? (
+                              <div
+                                className="d-flex "
+                                style={{ fontSize: "0.7rem" }}
+                              >
+                                <div className="px-2">
+                                  {props.details.groupoffline
+                                    ? props.details.groupoffline
+                                    : 0}
+                                </div>
+                                <div className="px-3">
+                                  {props.details.grouponline
+                                    ? props.details.grouponline
+                                    : 0}
+                                </div>
+                              </div>
+                            ) : null}
                           </Col>
                         </Row>
                       </Col>
@@ -188,9 +240,11 @@ const Drawer: React.FC<{
                             props.details?.type === "Live Stream Channel") &&
                           props.details?.pricing &&
                           props.details?.pricing.length
-                            ? props.details.pricing.find(
-                                (curr) => curr.duration === 30
-                              ).mrp
+                            ? `${
+                                props.details.pricing.find(
+                                  (curr) => curr.duration === 30
+                                ).mrp
+                              } Monthly`
                             : null}
                         </p>
                       </Col>
