@@ -38,9 +38,11 @@ export const CREATE_PACKAGE = gql`
     $videoUrl: String
     $End_date: DateTime
     $Start_date: DateTime
+    $client_address: String
   ) {
     createFitnesspackage(
       data: {
+        client_address: $client_address,
         SubscriptionDuration: $SubscriptionDuration
         packagename: $packagename
         tags: $tags
@@ -144,6 +146,7 @@ export const CREATE_NOTIFICATION = gql`
 
 export const EDIT_PACKAGE = gql`
   mutation fitnesspackages(
+    $SubscriptionDuration: JSON
     $id: ID!
     $packagename: String
     $tags: String
@@ -180,10 +183,13 @@ export const EDIT_PACKAGE = gql`
     $videoUrl: String
     $End_date: DateTime
     $Start_date: DateTime
+    $client_address: String
   ) {
     updateFitnesspackage(
       id: $id
       data: {
+        client_address: $client_address,
+        SubscriptionDuration: $SubscriptionDuration
         packagename: $packagename
         tags: $tags
         level: $level
@@ -428,9 +434,13 @@ export const CREATE_ADDRESS = gql`
     $zipcode: String
     $title: String
     $users_permissions_user: ID
+    $latitude: String,
+    $longitude: String
   ) {
     createAddress(
       data: {
+        latitude: $latitude
+        longitude: $longitude
         address1: $address
         city: $city
         state: $state

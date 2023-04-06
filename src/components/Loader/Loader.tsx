@@ -1,7 +1,8 @@
+import React from "react";
 import { Spinner } from 'react-bootstrap';
 import './loader.css';
 
-function Loader(props: any) {
+const Loader: React.FC<{msg?: string}> = (props) => {
     return (
         <>
             <div className="row loader">

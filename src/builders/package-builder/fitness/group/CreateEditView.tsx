@@ -50,7 +50,7 @@ function CreateEditPackage(props: any, ref: any) {
   const [deleteModalShow, setDeleteModalShow] = useState(false);
   const [statusModalShow, setStatusModalShow] = useState(false);
   const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
-  const [isOffeeringDeleted, setisOffeeringDeleted] = useState<boolean>(false);
+  const [isOfferingDeleted, setisOfferingDeleted] = useState<boolean>(false);
   const [isOfferingUpdated, setisOfferingUpdated] = useState<boolean>(false);
 
   let frmDetails: any = {};
@@ -142,7 +142,7 @@ function CreateEditPackage(props: any, ref: any) {
     onCompleted: (data) => {
       props.refetchTags();
       props.refetchOfferings();
-      setisOffeeringDeleted(!isOffeeringDeleted);
+      setisOfferingDeleted(!isOfferingDeleted);
     },
   });
 
@@ -160,7 +160,7 @@ function CreateEditPackage(props: any, ref: any) {
         setDeleteModalShow(true);
       }
 
-      // if (msg && !msg.id) //render form if no message id
+      // restrict to render form if type is delete ot toggle-status
       if (msg.type !== "delete" && msg.type !== "toggle-status") {
         modalTrigger.next(true);
       }
@@ -683,9 +683,9 @@ function CreateEditPackage(props: any, ref: any) {
         />
       ) : null}
 
-      {isOffeeringDeleted ? (
+      {isOfferingDeleted ? (
         <Toaster
-          handleCallback={() => setisOffeeringDeleted(!isOffeeringDeleted)}
+          handleCallback={() => setisOfferingDeleted(!isOfferingDeleted)}
           type="success"
           msg="Offering has been deleted successfully"
         />

@@ -24,7 +24,7 @@ const SocialLogin = (props: any) => {
     if (response.status === "unknown") {
       alert("Login failed!");
       setLogin(false);
-      return <Toaster type="danger" msg="Login failed" />;
+      return <Toaster type="danger" msg="Login failed" handleCallback={()=> false}/>;
     }
     setData(response);
     setPicture(response.picture.data.url);

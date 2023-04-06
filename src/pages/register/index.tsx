@@ -36,6 +36,7 @@ import { GoogleLogin } from "@react-oauth/google";
 import { useLinkedIn } from "react-linkedin-login-oauth2";
 import linkedin from "react-linkedin-login-oauth2/assets/linkedin.png";
 import "./socialLogin.css";
+import Geocode from "react-geocode";
 
 const linkedinClientId = process.env.REACT_APP_LINKEDIN_CLIENT_ID;
 const redirectUriForLinkedin = process.env.REACT_APP_LINKEDIN_REDIRECT_URI;
@@ -53,22 +54,27 @@ export default function Register() {
   const [step, setStep] = useState<number>(1);
   const [formValues, setFormValues] = useState<any>({});
   const [userFormData, setUserFormData] = useState<any>([]);
-  const [successScreen, setSuccessScreen] = useState(false);
+  const [successScreen, setSuccessScreen] = useState<boolean>(false);
+  const [longitude, setLongitude] = useState<string>("");
+  const [latitude, setLatitude] = useState<string>("");
+
+  Geocode.setApiKey("AIzaSyDDvAlVrvbBYMW08BBosDFM_x2inY-XQ-w");
+  Geocode.setLanguage("en");
 
   const [login, setLogin] = useState<boolean>(false);
   const [data, setData] = useState({});
 
-  const redirectToLinkedinPage = () =>{ 
+  const redirectToLinkedinPage = () => {
     window.open(linkedinPageUrl);
-  }
+  };
 
-  const redirectToInstagramPage = () =>{
+  const redirectToInstagramPage = () => {
     window.open(instagramPageUrl);
-  }
+  };
 
-  const redirectToFacebookPage = () =>{ 
-   window.open(facebookPageUrl);
-  }
+  const redirectToFacebookPage = () => {
+    window.open(facebookPageUrl);
+  };
 
   //Facebook
   const responseFacebook = (response) => {
@@ -76,7 +82,7 @@ export default function Register() {
     if (response.status === "unknown") {
       alert("Login failed!");
       setLogin(false);
-      return <Toaster type="danger" msg="Login failed" />;
+      return <Toaster type="danger" msg="Login failed" handleCallback={()=> false}/>;
     }
     setData(response);
     // setPicture(response.picture.data.url);
@@ -86,7 +92,7 @@ export default function Register() {
       setLogin(false);
     }
   };
-   // eslint-disable-next-line 
+  // eslint-disable-next-line
   const logout = () => {
     setLogin(false);
     setData({});
@@ -266,7 +272,7 @@ export default function Register() {
                       console.log(credentialResponse);
                     }}
                     onError={() => {
-                      <Toaster type="danger" msg="Login Failed" />;
+                      <Toaster type="danger" msg="Login Failed" handleCallback={()=> false}/>;
                     }}
                   />
                 </GoogleOAuthProvider>
@@ -333,23 +339,25 @@ export default function Register() {
       //     },
       //   });
       // } else {
-        createAddress({
-          variables: {
-            address1: JSON.parse(userFormData.address).address1,
-            address2: JSON.parse(userFormData.address).address2,
-            city: JSON.parse(userFormData.address).city,
-            state: JSON.parse(userFormData.address).state,
-            zipcode: JSON.parse(userFormData.address).zip,
-            country: JSON.parse(userFormData.address).country,
-            Title: JSON.parse(userFormData.address).addressTitle,
-            user: newUserId,
-          },
-        });
-      }
+      createAddress({
+        variables: {
+          address1: JSON.parse(userFormData.address).address1,
+          address2: JSON.parse(userFormData.address).address2,
+          city: JSON.parse(userFormData.address).city,
+          state: JSON.parse(userFormData.address).state,
+          zipcode: JSON.parse(userFormData.address).zip,
+          country: JSON.parse(userFormData.address).country,
+          Title: JSON.parse(userFormData.address).addressTitle,
+          user: newUserId,
+          longitude: longitude,
+          latitude: latitude,
+        },
+      });
+    },
     // },
   });
 
-   // eslint-disable-next-line 
+  // eslint-disable-next-line
   const [createOrganization] = useMutation(CREATE_ORGANIZATION, {
     onCompleted: (data: any) => {
       createAddress({
@@ -362,6 +370,8 @@ export default function Register() {
           country: userFormData.country,
           Title: userFormData.title,
           user: newUserId,
+          longitude: longitude,
+          latitude: latitude,
         },
       });
     },
@@ -403,6 +413,7 @@ export default function Register() {
       // JSON.parse(values.language)
       // JSON.parse(values.organization[0]?.Organization_Type)
       // JSON.parse(values.timezone)
+
       await setUserFormData(values);
 
       registerUser({
@@ -439,6 +450,29 @@ export default function Register() {
     }
     return errors;
   }
+
+  function getLocation() {
+    if (!navigator.geolocation) {
+      console.log("Geolocation API not supported by this browser.");
+    } else {
+      console.log("Checking location...");
+      navigator.geolocation.getCurrentPosition(success, error);
+    }
+  }
+
+  function success(position) {
+    setLatitude(position.coords.latitude.toString());
+    setLongitude(position.coords.longitude.toString());
+  }
+
+  function error() {
+    console.log("Geolocation error!");
+  }
+
+  useEffect(() => {
+    getLocation();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>

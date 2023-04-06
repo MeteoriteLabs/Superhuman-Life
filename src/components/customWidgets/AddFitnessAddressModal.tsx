@@ -19,6 +19,8 @@ const AddFitnessAddressModal = (props: any) => {
   const [country, setCountry] = useState<string>("");
   const [title, setTitle] = useState<string>("");
   const [value, setValue] = useState<any>(null);
+  const [longitude, setLongitude] = useState<string>("");
+  const [latitude, setLatitude] = useState<string>("");
 
   const [createAddress] = useMutation(CREATE_ADDRESS, {
     onCompleted: (data: any) => {
@@ -89,6 +91,8 @@ const AddFitnessAddressModal = (props: any) => {
     }
   }
   function success(position) {
+    setLatitude((position.coords.latitude).toString());
+    setLongitude((position.coords.longitude).toString());
     getAddressFromCoordinates(
       position.coords.latitude,
       position.coords.longitude
@@ -130,6 +134,8 @@ const AddFitnessAddressModal = (props: any) => {
         country: country,
         title: title,
         users_permissions_user: auth.userid,
+        longitude: longitude,
+        latitude: latitude
       },
     });
   }

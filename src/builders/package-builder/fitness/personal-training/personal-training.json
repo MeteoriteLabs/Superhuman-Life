@@ -51,7 +51,26 @@
                 ],
                 "default": 0,
                 "description": "Set the pace of the offering"
-            }
+            },
+            "durationOfOffering": {
+                "type": "array",
+                "title": "Duration",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "30 days",
+                    "90 days",
+                    "180 days",
+                    "360 days"
+                  ]
+                },
+                "uniqueItems": true,
+                "default": [
+                "30 days",
+                "90 days",
+                "180 days",
+                "360 days"]
+              }
         }
     },
     "2": {

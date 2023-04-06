@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import React, { useState, useContext } from "react";
 import { Typeahead } from "react-bootstrap-typeahead";
 import "react-bootstrap-typeahead/css/Typeahead.css";
 import { GET_CONTACTS } from "./queries";
@@ -6,7 +6,7 @@ import { useQuery } from "@apollo/client";
 import { flattenObj } from "../utils/responseFlatten";
 import AuthContext from "../../context/auth-context";
 
-const ContactList = (props: any) => {
+const ContactList: React.FC<{value: string; onChange: (params: string|null) => void;}> = (props) => {
   const auth = useContext(AuthContext);
   function handleReturnType(value) {
     if (typeof value === "string") {
@@ -50,7 +50,7 @@ const ContactList = (props: any) => {
   if (multiSelections.length > 0) {
     props.onChange(JSON.stringify(multiSelections));
   } else {
-    props.onChange(undefined);
+    props.onChange(null);
   }
 
   FetchData();

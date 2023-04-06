@@ -28,7 +28,8 @@ const Address = (props: any) => {
   const [addressTitle, setAddressTitle] = useState(
     props.value ? JSON.parse(props.value).addressTitle : ""
   );
-  const [googleAddressShow, setGoogleAddressShow] = useState(false);
+  
+  const [googleAddressShow, setGoogleAddressShow] = useState<boolean>(false);
 
   const [value, setValue] = useState<any>(null);
 
@@ -94,6 +95,7 @@ const Address = (props: any) => {
       navigator.geolocation.getCurrentPosition(success, error);
     }
   }
+
   function success(position) {
     getAddressFromCoordinates(
       position.coords.latitude,
@@ -119,7 +121,7 @@ const Address = (props: any) => {
       state: state,
       zip: zip,
       country: country,
-      addressTitle: addressTitle,
+      addressTitle: addressTitle
     })
   );
 

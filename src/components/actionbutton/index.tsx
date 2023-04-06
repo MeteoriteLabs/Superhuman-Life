@@ -1,6 +1,16 @@
+import React from "react";
 import { Dropdown } from "react-bootstrap";
 import "./button.css";
-function ActionButton(props: any) {
+
+interface ArrayAction {
+  actionClick: () => void;
+  actionName: string;
+}
+
+const ActionButton: React.FC<{
+  status?: string;
+  arrayAction: ArrayAction[];
+}> = (props) => {
   const { status, arrayAction } = props;
 
   const renderItemAction = () => {
@@ -30,6 +40,6 @@ function ActionButton(props: any) {
       <Dropdown.Menu>{renderItemAction()}</Dropdown.Menu>
     </Dropdown>
   );
-}
+};
 
 export default ActionButton;

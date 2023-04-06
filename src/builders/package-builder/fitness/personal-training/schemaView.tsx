@@ -18,6 +18,12 @@ export const widgets = {
 };
 
 export const schemaView: any = {
+  durationOfOffering: {
+    "ui:widget": "checkboxes",
+    "ui:options": {
+      inline: true,
+    },
+  },
   packagename: {
     "ui:readonly": true,
   },
@@ -113,9 +119,6 @@ export const schemaView: any = {
   pricingDetail: {
     "ui:widget": "ptPricingTable",
     "ui:readonly": true,
-  },
-  carousel: {
-    "ui:widget": "ptPreview",
   },
   visibility: {
     "ui:widget": "radio",

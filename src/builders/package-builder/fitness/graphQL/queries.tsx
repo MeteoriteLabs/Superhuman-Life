@@ -241,6 +241,7 @@ export const GET_SINGLE_PACKAGE_BY_ID = gql`
       data {
         id
         attributes {
+          client_address
           SubscriptionDuration
           packagename
           tags

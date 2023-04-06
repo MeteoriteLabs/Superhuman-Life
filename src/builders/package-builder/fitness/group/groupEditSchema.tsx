@@ -80,7 +80,6 @@ export const EditSchema: any = {
           <Upload
             allowImage={true}
             allowVideo={true}
-            offering={true}
             onChange={props.onChange}
             value={props.value}
           />

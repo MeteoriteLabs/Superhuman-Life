@@ -100,7 +100,9 @@ export const CREATE_ADDRESS = gql`
         $country: String, 
         $zipcode: String, 
         $Title: String,
-        $user: ID 
+        $user: ID,
+        $latitude: String,
+        $longitude: String
     ) {
         createAddress(
         data: {
@@ -111,7 +113,9 @@ export const CREATE_ADDRESS = gql`
         country: $country,
         zipcode: $zipcode,
         Title: $Title,
-        users_permissions_user: $user
+        users_permissions_user: $user,
+        longitude: $longitude,
+        latitude: $latitude
         }){
         data{
             id
