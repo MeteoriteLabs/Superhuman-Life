@@ -14,7 +14,11 @@ import AuthContext from "../../../../context/auth-context";
 import { flattenObj } from "../../../../components/utils/responseFlatten";
 import AddFitnessAddressModal from "../../../../components/customWidgets/AddFitnessAddressModal";
 
-const PtProgramDetails: React.FC<{value: string; readonly: boolean; onChange: any }> = (props) => {
+const PtProgramDetails: React.FC<{
+  value: string;
+  readonly: boolean;
+  onChange: (args: string | null) => void;
+}> = (props) => {
   const inputDisabled = props.readonly;
 
   const existingData =
@@ -177,7 +181,7 @@ const PtProgramDetails: React.FC<{value: string; readonly: boolean; onChange: an
       })
     );
   } else {
-    props.onChange(undefined);
+    props.onChange(null);
   }
 
   useEffect(() => {
@@ -414,6 +418,7 @@ const PtProgramDetails: React.FC<{value: string; readonly: boolean; onChange: an
             <img
               src="/assets/personal-training-online.svg"
               alt="personal-training"
+              loading="lazy"
             />
           </Col>
           <Col lg={2}>
@@ -443,6 +448,7 @@ const PtProgramDetails: React.FC<{value: string; readonly: boolean; onChange: an
             <img
               src="/assets/personal-training-offline.svg"
               alt="personal-training"
+              loading="lazy"
             />
           </Col>
           <Col lg={2}>

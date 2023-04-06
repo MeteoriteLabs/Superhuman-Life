@@ -255,6 +255,7 @@ function CreateEditOnDemadPt(props: any, ref: any) {
     let msg = flattenedData.fitnesspackages[0];
     let bookingConfig: any = {};
     let details: any = {};
+    const clientAddressArray = msg.client_address ? msg.client_address.split("Km") : [];
     for (let i = 0; i < msg.fitnesspackagepricing.length; i++) {
       PRICING_TABLE_DEFAULT[i].mrp = msg.fitnesspackagepricing[i].mrp;
       PRICING_TABLE_DEFAULT[i].suggestedPrice =
@@ -293,6 +294,8 @@ function CreateEditOnDemadPt(props: any, ref: any) {
       offline: msg.ptoffline,
       online: msg.ptonline,
       rest: msg.restdays,
+      distance: msg.client_address ? `${clientAddressArray[0]}Km` : null,
+      clientAddress: msg.client_address ? clientAddressArray[1]  : null,
     });
     details.thumbnail = msg.Thumbnail_ID;
     details.Upload =
@@ -370,6 +373,13 @@ function CreateEditOnDemadPt(props: any, ref: any) {
         fitnesspackagepricing: JSON.parse(frm.pricingDetail).filter(
           (item: any) => item.mrp !== null
         ),
+        client_address: `${
+          frm.programDetails.distance ? frm.programDetails.distance : null
+        } ${
+          frm.programDetails.clientAddress
+            ? frm.programDetails.clientAddress
+            : null
+        }`,
         ptclasssize: ENUM_FITNESSPACKAGE_PTCLASSSIZE[frm.classSize],
         users_permissions_user: frm.user_permissions_user,
         publishing_date: moment(frm.datesConfig?.publishingDate).toISOString(),
@@ -405,6 +415,9 @@ function CreateEditOnDemadPt(props: any, ref: any) {
         id: operation.id,
         packagename: frm.packagename,
         tags: frm?.tags,
+        client_address: `${frm.programDetails.distance ? frm.programDetails.distance : null} ${
+          frm.programDetails.clientAddress ? frm.programDetails.clientAddress : null
+        }`,
         level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
         intensity: ENUM_FITNESSPACKAGE_INTENSITY[frm.intensity],
         aboutpackage: frm.About,
