@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useState, useEffect, useRef, useContext } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import {
 	GET_TABLEDATA,
 	GET_ALL_FITNESS_PACKAGE_BY_TYPE,

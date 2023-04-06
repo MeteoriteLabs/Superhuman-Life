@@ -275,9 +275,10 @@ function CreateEditPt(props: any, ref: any) {
   function FillDetails(data: any) {
     const flattenedData = flattenObj({ ...data });
     let msg = flattenedData.fitnesspackages[0];
+  
     let bookingConfig: any = {};
     let details: any = {};
-    for (var i = 0; i < msg.fitnesspackagepricing.length; i++) {
+    for (let i = 0; i < msg.fitnesspackagepricing.length; i++) {
       PRICING_TABLE_DEFAULT[i].mrp = msg.fitnesspackagepricing[i].mrp;
       PRICING_TABLE_DEFAULT[i].suggestedPrice =
         msg.fitnesspackagepricing[i].suggestedPrice;
@@ -285,6 +286,7 @@ function CreateEditPt(props: any, ref: any) {
       PRICING_TABLE_DEFAULT[i].sapienPricing =
         msg.fitnesspackagepricing[i].sapienPricing;
     }
+    const clientAddressArray = msg.client_address ? msg.client_address.split("Km") : [];
     details.About = msg.aboutpackage;
     details.Benifits = msg.benefits;
     details.packagename = msg.packagename;
@@ -313,6 +315,8 @@ function CreateEditPt(props: any, ref: any) {
       offline: msg.ptoffline,
       online: msg.ptonline,
       rest: msg.restdays,
+      distance: msg.client_address ? `${clientAddressArray[0]}Km` : null,
+      clientAddress: msg.client_address ? clientAddressArray[1]  : null,
     });
     details.thumbnail = msg.Thumbnail_ID;
     details.Upload =
@@ -323,6 +327,9 @@ function CreateEditPt(props: any, ref: any) {
       expiryDate: msg.expiry_date,
       publishingDate: msg.publishing_date,
     });
+    details.durationOfOffering = msg.SubscriptionDuration
+      ? msg.SubscriptionDuration
+      : ["30 days", "90 days", "180 days", "360 days"];
     details.bookingleadday = msg.bookingleadday;
     details.bookingConfigId = msg.booking_config?.id;
     details.languages = JSON.stringify(msg.languages);
@@ -377,6 +384,7 @@ function CreateEditPt(props: any, ref: any) {
         packagename: frm.packagename,
         tags: frm?.tags,
         level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
+        SubscriptionDuration: frm.durationOfOffering,
         intensity: ENUM_FITNESSPACKAGE_INTENSITY[frm.intensity],
         aboutpackage: frm.About,
         benefits: frm.Benifits,
@@ -400,6 +408,13 @@ function CreateEditPt(props: any, ref: any) {
         upload: frm?.Upload?.upload,
         equipmentList: frm.equipmentList,
         videoUrl: frm?.Upload?.VideoUrl,
+        client_address: `${
+          frm.programDetails.distance ? frm.programDetails.distance : null
+        } ${
+          frm.programDetails.clientAddress
+            ? frm.programDetails.clientAddress
+            : null
+        }`,
         languages: frm.languages
           .map((item: any) => item.id)
           .join(", ")
@@ -426,7 +441,11 @@ function CreateEditPt(props: any, ref: any) {
       variables: {
         id: operation.id,
         packagename: frm.packagename,
+        SubscriptionDuration: frm.durationOfOffering,
         tags: frm?.tags,
+        client_address: `${frm.programDetails.distance ? frm.programDetails.distance : null} ${
+          frm.programDetails.clientAddress ? frm.programDetails.clientAddress : null
+        }`,
         level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
         intensity: ENUM_FITNESSPACKAGE_INTENSITY[frm.intensity],
         aboutpackage: frm.About,
@@ -516,7 +535,7 @@ function CreateEditPt(props: any, ref: any) {
           "Program",
           "Schedule",
           "Pricing",
-          "Config"
+          "Config",
         ]}
         formSchema={personalTrainingSchema}
         formSubmit={

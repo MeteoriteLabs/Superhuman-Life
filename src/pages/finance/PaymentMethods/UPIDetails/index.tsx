@@ -1,7 +1,7 @@
 import { useRef, useContext, useState } from "react";
 import { Button, Row, Col, Card, Dropdown, Badge } from "react-bootstrap";
 import PaymentMethodsAction from "../PaymentMethodsAction";
-import Loader from "../../../../components/Toaster";
+import Loader from "../../../../components/Loader/Loader";
 import { useQuery } from "@apollo/client";
 import { GET_UPI_DETAILS } from "../queries";
 import { flattenObj } from "../../../../components/utils/responseFlatten";

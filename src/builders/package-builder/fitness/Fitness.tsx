@@ -678,14 +678,14 @@ export default function FitnessTab() {
                 handleModalRender(null, "create", "One-On-One");
               }}
             >
-              PT Package
+              Package subscription
             </Dropdown.Item>
             <Dropdown.Item
               onClick={() => {
                 handleModalRender(null, "create", "On-Demand PT");
               }}
             >
-              Private Session
+              On-Demand
             </Dropdown.Item>
           </DropdownButton>
           <Button

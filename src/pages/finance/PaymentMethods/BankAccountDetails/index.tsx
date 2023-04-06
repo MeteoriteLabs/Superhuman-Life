@@ -1,7 +1,7 @@
 import { useRef, useContext, useState } from "react";
 import { Button, Row, Col, Card, Dropdown, Badge } from "react-bootstrap";
 import PaymentMethodsAction from "../PaymentMethodsAction";
-import Loader from "../../../../components/Toaster";
+import Loader from "../../../../components/Loader/Loader";
 import { useQuery } from "@apollo/client";
 import { GET_BANK_DETAILS } from "../queries";
 import { flattenObj } from "../../../../components/utils/responseFlatten";
@@ -43,7 +43,10 @@ function BankAccount() {
 
   return (
     <div>
-      <PaymentMethodsAction ref={paymentMethodActionRef} callback={refetch_bank_details}/>
+      <PaymentMethodsAction
+        ref={paymentMethodActionRef}
+        callback={refetch_bank_details}
+      />
       <Row className="mt-3">
         <Col md={{ offset: 10 }}>
           <Button
@@ -137,9 +140,11 @@ function BankAccount() {
               </Card>
             </Col>
           ))
-        ) : (
+        ) : 
+         (
           <Loader msg={"UPI Details loading"} />
-        )}
+        )
+        }
       </Row>
     </div>
   );

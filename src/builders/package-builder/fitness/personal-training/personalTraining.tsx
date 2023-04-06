@@ -116,4 +116,10 @@ export const schema: any = {
       "ui:widget": "ptBookingConfig",
     },
   },
+  durationOfOffering: {
+    "ui:widget": "checkboxes",
+    "ui:options": {
+      inline: true,
+    },
+  }
 };

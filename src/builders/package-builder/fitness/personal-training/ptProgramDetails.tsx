@@ -14,7 +14,11 @@ import AuthContext from "../../../../context/auth-context";
 import { flattenObj } from "../../../../components/utils/responseFlatten";
 import AddFitnessAddressModal from "../../../../components/customWidgets/AddFitnessAddressModal";
 
-const PtProgramDetails = (props) => {
+const PtProgramDetails: React.FC<{
+  value: string;
+  readonly: boolean;
+  onChange: (args: string | null) => void;
+}> = (props) => {
   const inputDisabled = props.readonly;
 
   const existingData =
@@ -26,6 +30,12 @@ const PtProgramDetails = (props) => {
     };
   }
 
+  const [clientAddress, setClientAddress] = useState<string>(
+    existingData?.clientAddress ? existingData.clientAddress : ""
+  );
+  const [distance, setDistance] = useState<string>(
+    existingData?.distance ? existingData.distance : "5 Km"
+  );
   const [mode, setMode] = useState(
     props.value ? existingData.mode.toString() : "0"
   );
@@ -40,10 +50,10 @@ const PtProgramDetails = (props) => {
     props.value ? existingData.addressTag : "At My Address"
   );
   const [onlineClasses, setOnlineClasses] = useState<number>(
-    existingData?.online ? existingData.online : 0
+    existingData?.online ? existingData.online : 1
   );
-  const [offlineClasses, setOfflinceClasses] = useState<number>(
-    existingData?.offline ? existingData.offline : 0
+  const [offlineClasses, setOfflineClasses] = useState<number>(
+    existingData?.offline ? existingData.offline : 1
   );
   const [restDays, setRestDays] = useState<number>(
     existingData?.rest ? existingData.rest : 0
@@ -54,7 +64,7 @@ const PtProgramDetails = (props) => {
       setOnlineClasses(30);
     }
     if (offlineClasses > 30) {
-      setOfflinceClasses(30);
+      setOfflineClasses(30);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [onlineClasses, offlineClasses, restDays, mode]);
@@ -150,7 +160,7 @@ const PtProgramDetails = (props) => {
 
   useEffect(() => {
     if (mode === "0") {
-      setOfflinceClasses(0);
+      setOfflineClasses(0);
       setSingleSelections([]);
     } else if (mode === "1") {
       setOnlineClasses(0);
@@ -166,10 +176,12 @@ const PtProgramDetails = (props) => {
         online: onlineClasses,
         offline: offlineClasses,
         rest: restDays,
+        clientAddress: clientAddress,
+        distance: distance,
       })
     );
   } else {
-    props.onChange(undefined);
+    props.onChange(null);
   }
 
   useEffect(() => {
@@ -263,7 +275,104 @@ const PtProgramDetails = (props) => {
                   </Col>
                 )}
                 {addressTitle === "At Client Address" && (
-                  <span className="small text-muted">*Within city limits</span>
+                  <>
+                    <div className="p-3">
+                      <label>
+                        <b>Distance</b>
+                      </label>
+                      <Form>
+                        <Form.Check
+                          inline
+                          label="5 Km"
+                          value="5 Km"
+                          checked={distance === "5 Km" ? true : false}
+                          name="group1"
+                          type="radio"
+                          onClick={(e: any) => setDistance(e.target.value)}
+                          disabled={inputDisabled}
+                        />
+                        <Form.Check
+                          inline
+                          label="10 Km"
+                          value="10 Km"
+                          checked={distance === "10 Km" ? true : false}
+                          name="group1"
+                          type="radio"
+                          onClick={(e: any) => setDistance(e.target.value)}
+                          disabled={inputDisabled}
+                        />
+                        <Form.Check
+                          inline
+                          label="15 Km"
+                          value="15 Km"
+                          checked={distance === "15 Km" ? true : false}
+                          name="group1"
+                          type="radio"
+                          onClick={(e: any) => setDistance(e.target.value)}
+                          disabled={inputDisabled}
+                        />
+                        <Form.Check
+                          inline
+                          label="20 Km"
+                          value="20 Km"
+                          checked={distance === "20 Km" ? true : false}
+                          name="group1"
+                          type="radio"
+                          onClick={(e: any) => setDistance(e.target.value)}
+                          disabled={inputDisabled}
+                        />
+                        <Form.Check
+                          inline
+                          label="25 Km"
+                          value="25 Km"
+                          checked={distance === "25 Km" ? true : false}
+                          name="group1"
+                          type="radio"
+                          onClick={(e: any) => setDistance(e.target.value)}
+                          disabled={inputDisabled}
+                        />
+                        <Form.Check
+                          inline
+                          label="30 Km"
+                          value="30 Km"
+                          checked={distance === "30 Km" ? true : false}
+                          name="group1"
+                          type="radio"
+                          onClick={(e: any) => setDistance(e.target.value)}
+                          disabled={inputDisabled}
+                        />
+                        <Form.Check
+                          inline
+                          label="40 Km"
+                          value="40 Km"
+                          checked={distance === "40 Km" ? true : false}
+                          name="group1"
+                          type="radio"
+                          onClick={(e: any) => setDistance(e.target.value)}
+                          disabled={inputDisabled}
+                        />
+                        <Form.Check
+                          inline
+                          label="50 Km"
+                          value="50 Km"
+                          checked={distance === "50 Km" ? true : false}
+                          name="group1"
+                          type="radio"
+                          onClick={(e: any) => setDistance(e.target.value)}
+                          disabled={inputDisabled}
+                        />
+
+                        <InputGroup className="mb-3">
+                          <FormControl
+                            aria-describedby="basic-addon1"
+                            value={clientAddress}
+                            onChange={(e) => setClientAddress(e.target.value)}
+                            placeholder="Enter client's address"
+                          />
+                        </InputGroup>
+                      </Form>
+                    </div>
+                  </>
                 )}
               </Row>
               {addressTitle === "At My Address" && (
@@ -293,8 +402,8 @@ const PtProgramDetails = (props) => {
           )}
         </>
       )}
-      <div className="m-5 p-2 text-center shadow-lg">
-        <h4>Set For One Month (30 Days)</h4>
+      <div className="m-5 p-1 text-center shadow-lg">
+        <h6>Set For One Month (30 Days)</h6>
       </div>
       {mode !== "" && (
         <div>
@@ -309,6 +418,7 @@ const PtProgramDetails = (props) => {
             <img
               src="/assets/personal-training-online.svg"
               alt="personal-training"
+              loading="lazy"
             />
           </Col>
           <Col lg={2}>
@@ -338,6 +448,7 @@ const PtProgramDetails = (props) => {
             <img
               src="/assets/personal-training-offline.svg"
               alt="personal-training"
+              loading="lazy"
             />
           </Col>
           <Col lg={2}>
@@ -351,7 +462,7 @@ const PtProgramDetails = (props) => {
                 disabled={inputDisabled}
                 value={offlineClasses}
                 onChange={(e: any) =>
-                  setOfflinceClasses(parseInt(e.target.value))
+                  setOfflineClasses(parseInt(e.target.value))
                 }
               />
               <InputGroup.Append>
@@ -378,7 +489,6 @@ const PtProgramDetails = (props) => {
                 type="number"
                 min={0}
                 value={restDays}
-                disabled={true}
               />
               <InputGroup.Append>
                 <InputGroup.Text id="basic-addon1">Days</InputGroup.Text>

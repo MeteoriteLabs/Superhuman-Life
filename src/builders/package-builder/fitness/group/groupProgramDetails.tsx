@@ -35,6 +35,7 @@ const GroupProgramDetails = (props) => {
     existingData?.address?.length && props.value ? existingData?.address : []
   );
   const [addresses, setAddresses] = useState<any[]>([]);
+  // eslint-disable-next-line 
   const [addressTitle, setAddressTitle] = useState(
     props.value ? existingData.addressTag : "At My Address"
   );
@@ -224,25 +225,7 @@ const GroupProgramDetails = (props) => {
                 <b>Location</b>
               </label>
               <Row>
-                <Col lg={3}>
-                  <Form.Group>
-                    <Form.Control
-                      disabled={inputDisabled}
-                      as="select"
-                      value={addressTitle}
-                      onChange={(e: any) => {
-                        setAddressTitle(e.target.value);
-                      }}
-                    >
-                      <option value="At My Address">At My Address</option>
-                      <option value="At Client Address">
-                        At Client Address
-                      </option>
-                    </Form.Control>
-                  </Form.Group>
-                </Col>
-                {addressTitle === "At My Address" && (
-                  <Col>
+                  <Col lg={6} sm={12}>
                     <Typeahead
                       id="basic-typeahead-multiple"
                       labelKey="address1"
@@ -254,10 +237,6 @@ const GroupProgramDetails = (props) => {
                       clearButton
                     />
                   </Col>
-                )}
-                {addressTitle === "At Client Address" && (
-                  <span className="small text-muted">*Within city limits</span>
-                )}
               </Row>
               {addressTitle === "At My Address" && (
                 <Row>
@@ -286,8 +265,8 @@ const GroupProgramDetails = (props) => {
           )}
         </>
       )}
-      <div className="m-5 p-2 text-center shadow-lg">
-        <h4>Set For One Month (30 Days)</h4>
+      <div className="m-5 p-1 text-center shadow-lg">
+        <h6>Set For One Month (30 Days)</h6>
       </div>
       {mode !== "" && (
         <div>
@@ -307,7 +286,7 @@ const GroupProgramDetails = (props) => {
                 aria-label="Default"
                 aria-describedby="inputGroup-sizing-default"
                 type="number"
-                min={0}
+                min={1}
                 max={28}
                 value={onlineClasses}
                 disabled={inputDisabled}
@@ -365,7 +344,7 @@ const GroupProgramDetails = (props) => {
                 type="number"
                 min={0}
                 value={restDays}
-                disabled={true}
+                // disabled={true}
               />
               <InputGroup.Append>
                 <InputGroup.Text id="basic-addon1">Days</InputGroup.Text>
