@@ -44,7 +44,7 @@ const Scheduler = () => {
 
   function loadTagData(data: any) {
     const flattenData = flattenObj({ ...data });
-    let total = [0, 0, 0, 0, 0];
+    const total = [0, 0, 0, 0, 0];
     const values = [...flattenData?.tags[0]?.sessions];
     for (let i = 0; i < values.length; i++) {
       if (values[i].tag === "One-On-One" && values[i].mode === "Online") {
@@ -96,7 +96,7 @@ const Scheduler = () => {
   }
 
   function handleTimeFormatting(data: any, duration: number) {
-    var digits = duration <= 30 ? 2 : 3;
+    const digits = duration <= 30 ? 2 : 3;
     return data.toLocaleString("en-US", {
       minimumIntegerDigits: digits.toString(),
       useGrouping: false,
@@ -108,7 +108,7 @@ const Scheduler = () => {
     for (let i = 0; i < data.length; i++) {
       sum += data[i];
     }
-    var formattedSum = handleTimeFormatting(sum, duration);
+    const formattedSum = handleTimeFormatting(sum, duration);
     return formattedSum;
   }
 

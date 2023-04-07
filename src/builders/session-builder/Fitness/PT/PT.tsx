@@ -123,8 +123,8 @@ export default function PT() {
     if (sessions.length === 0) {
       return "Not_Assigned";
     } else if (sessions.length > 0) {
-      let max: number = 0;
-      for (var i = 0; i < sessions.length; i++) {
+      let max = 0;
+      for (let i = 0; i < sessions.length; i++) {
         if (sessions[i].day_of_program > max) {
           max = sessions[i].day_of_program;
         }
@@ -150,8 +150,8 @@ export default function PT() {
   }
 
   function calculateProgramRenewal(sessions: any, effectiveDate: any) {
-    let max: number = 0;
-    for (var i = 0; i < sessions.length; i++) {
+    let max = 0;
+    for (let i = 0; i < sessions.length; i++) {
       if (sessions[i].day_of_program > max) {
         max = sessions[i].day_of_program;
       }

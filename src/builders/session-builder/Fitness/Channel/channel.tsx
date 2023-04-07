@@ -51,8 +51,8 @@ export default function Channel() {
       return "N/A";
     }
 
-    let moments = sessions.map((d) => moment(d.session_date)),
-      maxDate = moment.max(moments);
+    const moments = sessions.map((d) => moment(d.session_date));
+    const maxDate = moment.max(moments);
 
     return maxDate.format("MMM Do,YYYY");
   }

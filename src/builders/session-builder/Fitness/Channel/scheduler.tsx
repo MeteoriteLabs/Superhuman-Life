@@ -66,7 +66,7 @@ const Scheduler = () => {
     setSchedulerSessions(data);
     const flattenData = flattenObj({ ...data });
     
-    let total = [0];
+    const total = [0];
     const clientValues = [...clientIds];
     const values = [...flattenData.tags[0]?.sessions];
     const ids = [...sessionIds];
@@ -97,8 +97,8 @@ const Scheduler = () => {
       return "N/A";
     }
 
-    let moments = sessions.map((d) => moment(d.session_date)),
-      maxDate = moment.max(moments);
+    const moments = sessions.map((d) => moment(d.session_date));
+    const maxDate = moment.max(moments);
 
     return maxDate.format("MMM Do,YYYY");
   }
@@ -111,7 +111,7 @@ const Scheduler = () => {
   }
 
   function calculateDays(sd: string, ed: string) {
-    var days = moment(ed).diff(moment(sd), "days");
+    const days = moment(ed).diff(moment(sd), "days");
     return days + 1;
   }
 
@@ -218,7 +218,7 @@ const Scheduler = () => {
                           <span>N/A</span>
                         ) : (
                           tag.client_packages.slice(0, 4).map((item, index) => {
-                            let postionLeft = 8;
+                            const postionLeft = 8;
                             return (
                               <img
                                 key={index}

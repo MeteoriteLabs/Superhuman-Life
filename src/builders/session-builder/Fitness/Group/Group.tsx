@@ -86,8 +86,8 @@ export default function Group() {
     if (sessions.length === 0) {
       return "Not_Assigned";
     } else if (sessions.length > 0) {
-      let max: number = 0;
-      for (var i = 0; i < sessions.length; i++) {
+      let max = 0;
+      for (let i = 0; i < sessions.length; i++) {
         if (sessions[i].day_of_program > max) {
           max = sessions[i].day_of_program;
         }
@@ -113,7 +113,7 @@ export default function Group() {
   }
 
   function calculateProgramRenewal(effective_date, sessions) {
-    let max: number = 0;
+    let max = 0;
 
     for (let i = 0; i < sessions?.length; i++) {
       if (sessions[i].day_of_program > max) {
@@ -131,7 +131,7 @@ export default function Group() {
   function handleHistoryPackage(data: any) {
     const flattenData = flattenObj({ ...data });
     function handleUsers(data: any) {
-      let clients: any = [];
+      const clients: any = [];
       for (let i = 0; i < data.length; i++) {
         clients.push(data[i].users_permissions_user.username);
       }
@@ -341,7 +341,7 @@ export default function Group() {
         ],
       },
     ],
-    [] // eslint-disable-line react-hooks/exhaustive-deps
+    [] 
   );
 
   if (!showHistory) {

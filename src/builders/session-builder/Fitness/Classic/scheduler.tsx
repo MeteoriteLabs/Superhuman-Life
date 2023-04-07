@@ -51,7 +51,7 @@ const Scheduler = () => {
 	function loadTagData(data: any) {
 		setSchedulerSessions(data);
 		const flattenData = flattenObj({ ...data });
-		let total = [0];
+		const total = [0];
 		const clientValues = [...clientIds];
 		const values = [...flattenData.tags[0]?.sessions];
 		const ids = [...sessionIds];
@@ -97,20 +97,20 @@ const Scheduler = () => {
 	});
 
 	function handleEventsSeperation(data: any, rest_days: any) {
-		var classic: number = 0;
+		let classic = 0;
 		if (data) {
-			for (var i = 0; i < data.length; i++) {
+			for (let i = 0; i < data.length; i++) {
 				if (data[i].tag === "Classic") {
 					classic++;
 				}
 			}
 			setTagSeperation([classic]);
-			var arr: any = [];
-			for (var j = 0; j < data.length; j++) {
+			const arr: any = [];
+			for (let j = 0; j < data.length; j++) {
 				if (arr.includes(parseInt(data[j].day)) === false)
 					arr.push(parseInt(data[j].day));
 			}
-			var restDays = rest_days === null ? 0 : rest_days.length;
+			const restDays = rest_days === null ? 0 : rest_days.length;
 			setStatusDays(arr.length + restDays);
 		}
 	}
@@ -168,7 +168,7 @@ const Scheduler = () => {
 		});
 
 		const arrayFitnessPackage = arrayData.map((fitnessPackage) => {
-			let client: string[] = [];
+			const client: string[] = [];
 
 			flattenData3.clientPackages.forEach(
 				(userPackage: {
@@ -229,7 +229,7 @@ const Scheduler = () => {
 	// }
 
 	function handleTimeFormatting(data: any, duration: number) {
-		var digits = duration <= 30 ? 2 : 3;
+		const digits = duration <= 30 ? 2 : 3;
 		return data.toLocaleString("en-US", {
 			minimumIntegerDigits: digits.toString(),
 			useGrouping: false,
@@ -306,7 +306,7 @@ const Scheduler = () => {
 														{tag.client_packages
 															.slice(0, 4)
 															.map((item, index) => {
-																let postionLeft = 8;
+																const postionLeft = 8;
 																return (
 																	<img
 																		key={index}

@@ -1,4 +1,4 @@
-import { useState, useContext, useRef } from "react";
+import React, { useState, useContext, useRef } from "react";
 import "./templateModal.css";
 import { useQuery, useMutation } from "@apollo/client";
 import { Container, Row, Col, Button, Modal, Image } from "react-bootstrap";
@@ -12,7 +12,7 @@ import CreateWebpageDetails from "../../webpage-details/createoredit-webpage";
 
 import AuthContext from "../../../context/auth-context";
 
-function ModalComp(props) {
+const ModalComp: React.FC<{setReceivedData: any; setModalShow: any; setCount: any;}> = (props) => {
   const [showTemplate, setShowTemplate] = useState<any>([]);
   const [templateId, setTemplateId] = useState<any>(null);
   const [websiteDataRecordId, setWebsiteDataRecordId] = useState<any>();
@@ -131,7 +131,7 @@ function ModalComp(props) {
 
             <Row className="mt-4">
               <Col className="p-0" md={{ span: 4, offset: 4 }}>
-                <span>Don't like the template?</span> <br />
+                <span>Don{`&apos;`}t like the template?</span> <br />
                 <span>Contact us for customized website </span>
               </Col>
               <Col md={{ span: 3, offset: 1 }} className="px-1 ">
@@ -154,16 +154,14 @@ function ModalComp(props) {
   );
 }
 
-export default function WebsiteModalComponent({
-  setTemplateId,
-  setNewTemplateId,
-}) {
+const WebsiteModalComponent: React.FC<{setTemplateId: any;
+  setNewTemplateId: any;}> = (props) => {
   const [modalShow, setModalShow] = useState<boolean>(false);
   const [receivedData, setReceivedData] = useState<any>();
   const [changeInTemplateId, setChangeInTemplateId] = useState<any>();
 
-  setTemplateId(receivedData);
-  setNewTemplateId(changeInTemplateId);
+  props.setTemplateId(receivedData);
+  props.setNewTemplateId(changeInTemplateId);
 
   return (
     <>
@@ -176,8 +174,8 @@ export default function WebsiteModalComponent({
       </Button>
 
       <ModalComp
-        show={modalShow}
-        onHide={() => setModalShow(false)}
+        // show={modalShow}
+        // onHide={() => setModalShow(false)}
         setReceivedData={setReceivedData}
         setModalShow={setModalShow}
         setCount={setChangeInTemplateId}
@@ -185,3 +183,5 @@ export default function WebsiteModalComponent({
     </>
   );
 }
+
+export default WebsiteModalComponent;

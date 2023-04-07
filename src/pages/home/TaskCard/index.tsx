@@ -37,14 +37,14 @@ function TaskCard() {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  useQuery(GET_ALL_BOOKINGS, {
+  const { data: get_booking, refetch: refetchBookings } = useQuery(GET_ALL_BOOKINGS, {
     variables: {
       id: auth.userid,
     },
     onCompleted: (data) => loadData(data),
   });
 
-  let sessionsObj = {};
+  const sessionsObj = {};
 
   //offerings
   // eslint-disable-next-line
@@ -118,11 +118,11 @@ function TaskCard() {
   const loadData = (data: { clientBookings: any[] }) => {
     const flattenData = flattenObj({ ...data.clientBookings });
 
-    let pendingBookingsArray = flattenData.filter(
+    const pendingBookingsArray = flattenData.filter(
       (currentValue) => currentValue.booking_status === "pending"
     );
 
-    let notPendingBookingsArray = flattenData.filter(
+    const notPendingBookingsArray = flattenData.filter(
       (currentValue) => currentValue.booking_status !== "pending"
     );
     setNotPendingBookings(notPendingBookingsArray);
@@ -130,7 +130,7 @@ function TaskCard() {
   };
 
   const redirectHandler = (id, type) => {
-    let name: string = "";
+    let name = "";
     if (type === "Classic Class") {
       name = "classic";
     } else if (type === "Live Stream Channel") {
@@ -712,7 +712,7 @@ function TaskCard() {
           </Tab>
         </Tabs>
       </Card>
-      <BookingAction ref={bookingActionRef} />
+      <BookingAction ref={bookingActionRef} refetchBookings={refetchBookings}/>
     </>
   );
 }

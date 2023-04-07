@@ -276,7 +276,7 @@ export default function TabsComponent() {
                           className="d-flex mt-3 mb-5"
                         >
                           {templateData.map((data) => (
-                            <Col>
+                            <Col key={data.id}>
                               <div key={data.id} className="d-flex p-2 gap-4">
                                 <Image fluid src={data.image} />
                                 <h6 className="d-flex align-items-center px-3">

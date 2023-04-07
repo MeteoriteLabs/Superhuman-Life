@@ -6,7 +6,7 @@ import { useLocation } from "react-router-dom";
 
 export default function ForgotPassword() {
 
-    let query = new URLSearchParams(useLocation().search);
+    const query = new URLSearchParams(useLocation().search);
     const code = query.get("code");
     const [emailSent, setEmailSent] = useState(false);
     const loginSchema: any = require("./resetPassword.json");

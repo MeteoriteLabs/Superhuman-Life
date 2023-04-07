@@ -111,11 +111,11 @@ function CreateEditMessage(props: any, ref: any) {
   }
 
   function FillDetails(data: any) {
-    let details: any = {};
+    const details: any = {};
     const flattenData = flattenObj({ ...data });
-    let msg = flattenData.notifications[0];
+    const msg = flattenData.notifications[0];
 
-    let o = { ...operation };
+    const o = { ...operation };
     details.name = o.type.toLowerCase();
     details.title = msg.title;
     details.prerecordedtype = msg.prerecordedtype?.id;

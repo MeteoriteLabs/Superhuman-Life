@@ -49,18 +49,18 @@ export default function Cohort() {
     ]);
   };
 
-  function calculateProgramRenewal(sessions) {
+  const calculateProgramRenewal = (sessions) => {
     if (sessions.length === 0) {
       return "N/A";
     }
 
-    let moments = sessions.map((d) => moment(d.session_date)),
-      maxDate = moment.max(moments);
+    const moments = sessions.map((d) => moment(d.session_date));
+    const maxDate = moment.max(moments);
 
     return maxDate.format("MMM Do,YYYY");
   }
 
-  function handleRedirect(id: any) {
+  const handleRedirect = (id: any) => {
     window.location.href = `/cohort/session/scheduler/${id}`;
   }
 
@@ -210,7 +210,7 @@ export default function Cohort() {
       <Row>
         <Col>
           <Table columns={columns} data={userPackage} />
-          <FitnessAction ref={fitnessActionRef} />
+          <FitnessAction ref={fitnessActionRef} callback={mainQuery}/>
         </Col>
       </Row>
     </div>

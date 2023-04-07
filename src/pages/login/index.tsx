@@ -72,7 +72,7 @@ export default function Login() {
             </Col>
             <Col>
               <Link className="float-right" to="/register">
-                Don't have an account? Sign Up
+                Don{`&apos;`}t have an account? Sign Up
               </Link>
             </Col>
           </Row>

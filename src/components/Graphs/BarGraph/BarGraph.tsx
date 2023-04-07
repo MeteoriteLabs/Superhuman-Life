@@ -1,6 +1,6 @@
 import { ResponsiveBar } from "@nivo/bar";
 
-const Wrapper = (props) => (
+const Wrapper = (props: any) => (
   <div
     {...props}
     style={{
@@ -11,13 +11,13 @@ const Wrapper = (props) => (
   />
 );
 
-function BarGraph({ data, yAxis, keyName }) {
+const BarGraph = (props: { data: any; yAxis: string; keyName: string[]; }) => {
   return (
     <>
       <Wrapper>
       <ResponsiveBar
-        data={data}
-        keys= {keyName}
+        data={props.data}
+        keys= {props.keyName}
         indexBy="index"
         margin={{
           top: 50,
@@ -35,7 +35,7 @@ function BarGraph({ data, yAxis, keyName }) {
           tickSize: 5,
           tickPadding: 5,
           tickRotation: 0,
-          legend: `${yAxis}`,
+          legend: `${props.yAxis}`,
           legendPosition: "middle",
           legendOffset: -40,
         }}

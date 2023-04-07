@@ -13,20 +13,20 @@ const TimeFieldInput = (props: any) => {
   );
 
   function handleStartTimeInput(val: any) {
-    var m = (Math.round(parseInt(val.slice(3, 5)) / 15) * 15) % 60;
+    const m = (Math.round(parseInt(val.slice(3, 5)) / 15) * 15) % 60;
     setStartTime(val.slice(0, 2) + ":" + (m === 0 ? "00" : m));
   }
 
   function handleEndTimeInput(val: any) {
-    var m = (Math.round(parseInt(val.slice(3, 5)) / 15) * 15) % 60;
+    const m = (Math.round(parseInt(val.slice(3, 5)) / 15) * 15) % 60;
     setEndTime(val.slice(0, 2) + ":" + (m === 0 ? "00" : m));
   }
 
   function handleTimeValidation() {
-    var sh = startTime.split(":")[0];
-    var sm = startTime.split(":")[1];
-    var eh = endTime.split(":")[0];
-    var em = endTime.split(":")[1];
+    const sh = startTime.split(":")[0];
+    const sm = startTime.split(":")[1];
+    const eh = endTime.split(":")[0];
+    const em = endTime.split(":")[1];
 
     if (!props.disabled) {
       if (parseInt(sh) > parseInt(eh)) {
@@ -55,19 +55,19 @@ const TimeFieldInput = (props: any) => {
   }
 
   function convertToMoment(time: string) {
-    var timeSplit = time.split(":").map(Number);
+    const timeSplit = time.split(":").map(Number);
     return moment().set({ hour: timeSplit[0], minute: timeSplit[1] });
   }
 
   function handleFormatting(time) {
-    var inputTime: any = time.split(":");
+    const inputTime: any = time.split(":");
     return `${
       parseInt(inputTime[0]) < 10 ? inputTime[0].charAt(1) : inputTime[0]
     }:${inputTime[1] === "00" ? "0" : inputTime[1]}`;
   }
 
   function checkIfCorrectTime() {
-    var ele: any = document.getElementById("timeErr");
+    const ele: any = document.getElementById("timeErr");
 
     if (ele) {
       return false;

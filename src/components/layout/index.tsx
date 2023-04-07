@@ -8,7 +8,7 @@ import "./bottomBar.css";
 
 export default function Layout({ token, children }: any) {
   const location = useLocation();
-  let [selected, setSelected] = useState<String>(location.pathname.slice(1));
+  const [selected, setSelected] = useState<string>(location.pathname.slice(1));
   const [collapse, setCollapse] = useState<boolean>(true);
   const [sideNavStatus, setSideNavStatus] = useState<boolean>(false);
 
@@ -16,7 +16,6 @@ export default function Layout({ token, children }: any) {
 
   useEffect(() => {
     getSideNavStatus();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
   const getSideNavStatus = () => {

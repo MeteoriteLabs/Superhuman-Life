@@ -1,6 +1,6 @@
 import { ResponsiveLine } from "@nivo/line";
 
-const Wrapper = (props) => (
+const Wrapper = (props: any) => (
   <div
     {...props}
     style={{
@@ -11,11 +11,11 @@ const Wrapper = (props) => (
   />
 );
 
-const LineGraph = ({ data, yAxis}) => (
+const LineGraph = (props: { data: any; yAxis: string;}) => (
   <>
     <Wrapper>
       <ResponsiveLine
-        data={data}
+        data={props.data}
         margin={{
           top: 50,
           right: 110,
@@ -47,7 +47,7 @@ const LineGraph = ({ data, yAxis}) => (
           tickSize: 5,
           tickPadding: 5,
           tickRotation: 0,
-          legend: `${yAxis}`,
+          legend: `${props.yAxis}`,
           legendOffset: -40,
           legendPosition: "middle",
         }}

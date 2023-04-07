@@ -8,7 +8,7 @@ import { Col, Row } from "react-bootstrap";
 import moment from "moment";
 
 function WeeklySalesGraph() {
-  const [clientsData, setClientsData] = useState<{}[]>([]);
+  const [clientsData, setClientsData] = useState<Record<string, unknown>[]>([]);
   const auth = useContext(AuthContext);
 
   useQuery(GET_CLIENTS, {
@@ -25,13 +25,13 @@ function WeeklySalesGraph() {
   const loadData = (data) => {
     const flattenClientsData = flattenObj({ ...data.clientPackages });
 
-    const arr: {}[] = [];
+    const arr: Record<string, unknown>[] = [];
     const initialValue = 0;
 
     for (let weekDay = 0; weekDay < 7; weekDay++) {
-      let currentDay = moment().subtract(weekDay, "days");
+      const currentDay = moment().subtract(weekDay, "days");
 
-      let sales = flattenClientsData.filter(
+      const sales = flattenClientsData.filter(
         (currentValue) =>
           moment(currentValue.accepted_date).format("DD/MM/YY") ===
           currentDay.format("DD/MM/YY")

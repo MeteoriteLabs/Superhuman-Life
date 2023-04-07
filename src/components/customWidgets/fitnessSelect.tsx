@@ -1,11 +1,11 @@
-import { useState } from "react";
-import { Typeahead } from "react-bootstrap-typeahead";
-import "react-bootstrap-typeahead/css/Typeahead.css";
-import { FETCH_FITNESSDISCPLINES } from "../../builders/program-builder/exercises/queries";
-import { useQuery } from "@apollo/client";
-import { flattenObj } from "../utils/responseFlatten";
+import React, { useState } from 'react';
+import { Typeahead } from 'react-bootstrap-typeahead';
+import 'react-bootstrap-typeahead/css/Typeahead.css';
+import { FETCH_FITNESSDISCPLINES } from '../../builders/program-builder/exercises/queries';
+import { useQuery } from '@apollo/client';
+import { flattenObj } from '../utils/responseFlatten';
 
-const FitnessSelect = (props: any) => {
+const FitnessSelect: React.FC<{onChange: (args: string) => void; value: string[]; uiSchema: any;}> = (props) => {
   const [singleSelections, setSingleSelections] = useState<any[]>(
     props.value?.length > 0 ? props.value : []
   );
@@ -23,7 +23,7 @@ const FitnessSelect = (props: any) => {
         return {
           id: discipline.id,
           disciplinename: discipline.disciplinename,
-          updatedAt: discipline.updatedAt,
+          updatedAt: discipline.updatedAt
         };
       })
     );

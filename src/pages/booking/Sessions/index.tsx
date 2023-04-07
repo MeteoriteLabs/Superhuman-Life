@@ -5,7 +5,7 @@ import Program from "./Program";
 import './style.css';
 
 export default function Sessions() {
-  const [variableName, setVariableName] = useState<String>("Program");
+  const [variableName, setVariableName] = useState<string>("Program");
 
   return (
     <>

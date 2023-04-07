@@ -7,7 +7,7 @@ export default function BookingPage() {
   const history = useHistory();
 
   const routeChange = () => {
-    let path = `/bookingSettings`;
+    const path = `/bookingSettings`;
     history.push(path);
   };
 

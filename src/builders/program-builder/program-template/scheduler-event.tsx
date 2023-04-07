@@ -2,11 +2,12 @@ import React, { useState, useEffect } from "react";
 import "./styles.css";
 import { Row } from "react-bootstrap";
 import TransferPrograms from "./transferPrograms";
+import Loader from "../../../components/Loader/Loader";
 import moment from "moment";
 
 const SchedulerEvent = (props: any) => {
   const [arr, setArr] = useState<any>([]);
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState<boolean>(false);
   const schedulerDay: any = require("./json/scheduler-day.json");
 
   function draganddrop() {
@@ -40,7 +41,7 @@ const SchedulerEvent = (props: any) => {
 
   function handleTemplteRenderTable(data: any) {
     const values = [...data];
-    for (var d = 1; d <= props.programDays; d++) {
+    for (let d = 1; d <= props.programDays; d++) {
       values[d] = JSON.parse(JSON.stringify(schedulerDay));
     }
 
@@ -83,7 +84,7 @@ const SchedulerEvent = (props: any) => {
       return handleTemplteRenderTable(data);
     }
     const values = [...data];
-    for (var d = 1; d <= props.programDays; d++) {
+    for (let d = 1; d <= props.programDays; d++) {
       values[d] = JSON.parse(JSON.stringify(schedulerDay));
     }
     if (props.programEvents) {
@@ -136,9 +137,9 @@ const SchedulerEvent = (props: any) => {
 
   useEffect(() => {
     handleRenderTable([]);
-  }, [props.programEvents]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [props.programEvents]); 
 
-  if (!show) return <span style={{ color: "red" }}>Loading...</span>;
+  if (!show) return <Loader/>;
   else
     return (
       <>
@@ -152,9 +153,10 @@ const SchedulerEvent = (props: any) => {
             className="schedular mt-5 mb-3"
           >
             <div className="day-row">
-              {props?.programDays?.map((val) => {
+              {props?.programDays?.map((val, index) => {
                 return (
                   <div
+                    key={index}
                     className="cell"
                     style={{ backgroundColor: "white" }}
                   >{`Day - ${val}`}</div>
@@ -162,13 +164,14 @@ const SchedulerEvent = (props: any) => {
               })}
             </div>
             <div className="events-row">
-              {props.programDays.map((val) => {
+              {props.programDays.map((val, index) => {
                 return (
-                  <div className="event-cell">
+                  <div className="event-cell" key={index}>
                     {arr[val] &&
-                      arr[val].map((val) => {
+                      arr[val].map((val, index) => {
                         return (
                           <div
+                            key={index}
                             style={{
                               backgroundColor: `${val.color}`,
                               height: "50px",
@@ -183,7 +186,7 @@ const SchedulerEvent = (props: any) => {
                                 "scheduler-event",
                                 JSON.stringify(val)
                               );
-                              var el: any = e.target;
+                              const el: any = e.target;
                               el.id = "rem";
                             }}
                           >

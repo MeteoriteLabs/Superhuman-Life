@@ -24,7 +24,7 @@ export default function EducationDetails() {
         
         onCompleted: (r: any) => {
             const flattenData = flattenObj({ ...r });
-            let usersData = flattenData.usersPermissionsUsers.filter((currValue: any) => currValue.id === auth.userid);
+            const usersData = flattenData.usersPermissionsUsers.filter((currValue: any) => currValue.id === auth.userid);
             setEducationData(usersData[0].educational_details);
         },
     });
@@ -57,7 +57,7 @@ export default function EducationDetails() {
             <Col md={{ offset: 9, span: 3 }}>
                 <Card.Title className="text-center">
                 <Button
-                    variant={true ? "outline-secondary" : "light"}
+                    variant="outline-secondary"
                     size="sm"
                     onClick={() => {
                         CreateEducationComponent.current.TriggerForm({

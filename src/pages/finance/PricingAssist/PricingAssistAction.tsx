@@ -50,7 +50,7 @@ function PricingAssistAction(props, ref) {
   }));
 
   useEffect(() => {
-    let updateFormData: any = {};
+    const updateFormData: any = {};
     updateFormData.mrp = operation?.rowData?.mrp;
     if (operation?.rowData?.id === "") {
       setFormData({});

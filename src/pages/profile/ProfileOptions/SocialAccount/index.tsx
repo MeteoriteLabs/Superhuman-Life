@@ -25,7 +25,7 @@ interface SocialDetails {
 }
 
 export default function SocialAccount() {
-  let [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
+  const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
   const formRef = useRef<any>(null);
   const socialAccountJson: {
     [name: string]: any;

@@ -1,7 +1,7 @@
-import { useState } from "react";
+import React,{ useState } from "react";
 import { Modal, Col, Row, Container, Button } from "react-bootstrap";
 
-function HelpModal(props) {
+const HelpModal: React.FC<{onHide: ()=>void; show: boolean;}> = (props) => {
   return (
     <Modal {...props} aria-labelledby="contained-modal-title-vcenter">
       <Modal.Header className="p-0 d-flex justify-content-center bg-dark">
@@ -81,7 +81,7 @@ function HelpModal(props) {
 }
 
 export default function DomainHelpModalComponent() {
-  const [modalShow, setModalShow] = useState(false);
+  const [modalShow, setModalShow] = useState<boolean>(false);
 
   return (
     <>

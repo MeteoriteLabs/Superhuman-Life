@@ -21,14 +21,14 @@ const images = {
 };
 
 interface Notification {
-  id: String;
+  id: string;
   DateTime: Date;
-  Title: String;
-  Body: String;
-  OnClickRoute: String;
-  ContactID: String | Number;
-  type: String;
-  IsRead: Boolean;
+  Title: string;
+  Body: string;
+  OnClickRoute: string;
+  ContactID: string | number;
+  type: string;
+  IsRead: boolean;
 }
 
 function Notifications() {
@@ -51,7 +51,7 @@ function Notifications() {
 
   const [changeNotificationStatus] = useMutation(MARK_NOTIFICATION_AS_READ);
 
-  function markAsRead(id: String) {
+  function markAsRead(id: string) {
     changeNotificationStatus({
       variables: { id: id, IsRead: true },
       onCompleted: () => {
@@ -62,7 +62,7 @@ function Notifications() {
 
   const [deleteNotification] = useMutation(DELETE_NOTIFICATION);
 
-  function deleteNoti(id: String) {
+  function deleteNoti(id: string) {
     deleteNotification({
       variables: { id: id },
       onCompleted: () => {
@@ -71,7 +71,7 @@ function Notifications() {
     });
   }
 
-  function markAsUnread(id: String) {
+  function markAsUnread(id: string) {
     changeNotificationStatus({
       variables: { id: id, IsRead: false },
       onCompleted: () => {

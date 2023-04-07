@@ -10,12 +10,13 @@ function Table({ data, columns }: any) {
     <div className="table-responsive">
       <table {...getTableProps()} className="table">
         <thead>
-          {headerGroups.map((headerGroup) => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column) => (
+          {headerGroups.map((headerGroup, index) => (
+            <tr {...headerGroup.getHeaderGroupProps()} key={index}>
+              {headerGroup.headers.map((column, index) => (
                 <th
                   className="tableHeader text-center"
                   {...column.getHeaderProps()}
+                  key={index}
                 >
                   {column.render("Header")}
                 </th>
@@ -37,8 +38,8 @@ function Table({ data, columns }: any) {
             return (
               <Fragment key={rowProps.key}>
                 <tr className="rowCard text-center" {...row.getRowProps()}>
-                  {row.cells.map((cell) => (
-                    <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                  {row.cells.map((cell, index) => (
+                    <td {...cell.getCellProps()} key={index}>{cell.render("Cell")}</td>
                   ))}
                 </tr>
               </Fragment>

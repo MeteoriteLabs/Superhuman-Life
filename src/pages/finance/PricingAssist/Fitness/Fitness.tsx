@@ -45,7 +45,7 @@ export default function Fitness() {
         const fitnessPackageObject = flattenFitnessPackages && flattenFitnessPackages.fitnessPackageTypes && flattenFitnessPackages.fitnessPackageTypes.length && flattenFitnessPackages.fitnessPackageTypes.filter((currentValue: any) => {
             return currentValue.PricingRequired === true
         }).map((currValue: any) => {
-            return currValue.Modes.Channel.map((channelMode: String[]) => {
+            return currValue.Modes.Channel.map((channelMode: string[]) => {
 
                 const indexOfPackage = flattenSuggestedPricing.suggestedPricings.findIndex((element: any) => element.Mode === channelMode && element.fitness_package_type.type === currValue.type)
 

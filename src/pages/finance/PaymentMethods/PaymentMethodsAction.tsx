@@ -189,7 +189,7 @@ function PaymentMethodsAction(props: any, ref: any) {
         const arr: PrimaryUPIDetails[] = isPrimaryUPIDetails.splice(-1);
 
         if (isPrimary) {
-          for (let currentValue of arr) {
+          for (const currentValue of arr) {
             updateUPIDetail({
               variables: {
                 id: currentValue.id,
@@ -239,7 +239,7 @@ function PaymentMethodsAction(props: any, ref: any) {
           const arr: PrimaryUPIDetails[] = isPrimaryUPIDetails.filter(
             (currentValue) => currentValue.id !== flattenData.id
           );
-          for (let currentValue of arr) {
+          for (const currentValue of arr) {
             updateUPIDetail({
               variables: {
                 id: currentValue.id,
@@ -331,7 +331,7 @@ function PaymentMethodsAction(props: any, ref: any) {
         const arr: PrimaryBankDetails[] = isPrimaryBankDetails.splice(-1);
 
         if (isPrimary) {
-          for (let currentValue of arr) {
+          for (const currentValue of arr) {
             updateBankDetail({
               variables: {
                 id: currentValue.id,
@@ -373,7 +373,7 @@ function PaymentMethodsAction(props: any, ref: any) {
   function FillBankDetails(data: any) {
     const flattenData = flattenObj({ ...data.bankDetail });
 
-    let detail = {} as bankDetails;
+    const detail = {} as bankDetails;
 
     if (flattenData) {
       detail.Full_Name = flattenData.Full_Name;
@@ -410,7 +410,7 @@ function PaymentMethodsAction(props: any, ref: any) {
   function FillUPIDetails(data: any) {
     const flattenData = flattenObj({ ...data.upiDetailsChangemaker });
 
-    let detail = {} as upiDetails;
+    const detail = {} as upiDetails;
 
     if (flattenData) {
       detail.Full_Name = flattenData.Full_Name;
@@ -461,7 +461,7 @@ function PaymentMethodsAction(props: any, ref: any) {
         const isPrimary: boolean = flattenData.Is_Primary;
 
         if (isPrimary && isUpdatedBankAlreadyPrimary.length !== 1) {
-          for (let currentValue of isPrimaryBankDetails) {
+          for (const currentValue of isPrimaryBankDetails) {
             updateBankDetail({
               variables: {
                 id: currentValue.id,

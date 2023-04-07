@@ -110,7 +110,6 @@ const Address = (props: any) => {
 
   useEffect(() => {
     getLocation();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   props.onChange(

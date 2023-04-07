@@ -15,7 +15,7 @@ interface Operation {
   rowData: any;
 }
 
-function FitnessAction(props, ref: any) {
+function FitnessAction(props:{callback: () => void;} , ref: any) {
   const auth = useContext(authContext);
   const programSchema: { [name: string]: any } = require("./program.json");
   const [programDetails, setProgramDetails] = useState<any>({});

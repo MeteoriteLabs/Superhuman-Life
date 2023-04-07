@@ -27,14 +27,14 @@ interface Operation {
   rowData: any;
 }
 
-function VoucherAction(props, ref) {
+function VoucherAction(props: any, ref) {
   const auth = useContext(authContext);
   const [operation, setOperation] = useState<Operation>({} as Operation);
   const modalTrigger = new Subject();
   const [formData, setFormData] = useState<any>();
   const formSchema = require("./voucher.json");
-  const [showStatusModal, setShowStatusModal] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showStatusModal, setShowStatusModal] = useState<boolean>(false);
+  const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
   const [isVoucherCreated, setIsVoucherCreated] = useState<boolean>(false);
   const [isVoucherDeleted, setIsVoucherDeleted] = useState<boolean>(false);
   const [isVoucherUpdated, setIsVoucherUpdated] = useState<boolean>(false);
@@ -92,7 +92,7 @@ function VoucherAction(props, ref) {
     });
 
   const FillData = (data: any) => {
-    let updateFormData: any = {};
+    const updateFormData: any = {};
     updateFormData.voucher_name = data.vouchers.data[0].attributes.voucher_name;
     updateFormData.discount_percentage =
       data.vouchers.data[0].attributes.discount_percentage;
@@ -168,7 +168,7 @@ function VoucherAction(props, ref) {
     },
   });
 
-  const ToggleVoucherStatus = (id: String, Status) => {
+  const ToggleVoucherStatus = (id: string, Status) => {
     toggleVoucherStatus({
       variables: {
         id: id,

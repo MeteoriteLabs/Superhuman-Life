@@ -42,11 +42,11 @@ function FinanceGraph() {
       });
       const earningsArray: ArrayType[] = [];
       const revenueArray: ArrayType[] = [];
-      const initialEarningsValue: number = 0;
-      const initialRevenueValue: number = 0;
+      const initialEarningsValue = 0;
+      const initialRevenueValue = 0;
 
-      for (let month: number = 0; month < 12; month++) {
-        let currentMonth = toMonthName(month).substring(0, 3);
+      for (let month = 0; month < 12; month++) {
+        const currentMonth = toMonthName(month).substring(0, 3);
 
         earningsArray[month] = {
           x: `${currentMonth} ${selectedYear}`,
@@ -104,10 +104,10 @@ function FinanceGraph() {
       });
 
       const expensesArray: ArrayType[] = [];
-      let initialExpensesValue = 0;
+      const initialExpensesValue = 0;
 
       for (let month = 0; month < 12; month++) {
-        let currentMonth = toMonthName(month).substring(0, 3);
+        const currentMonth = toMonthName(month).substring(0, 3);
 
         expensesArray[month] = {
           x: `${currentMonth} ${selectedYear}`,

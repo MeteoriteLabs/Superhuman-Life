@@ -8,7 +8,7 @@ import moment from "moment";
 import FitnessAction from "../../builders/session-builder/Fitness/FitnessAction";
 import { flattenObj } from "../../components/utils/responseFlatten";
 
-export default function ClientModal(props) {
+export default function ClientModal(props: {id: string; type: string; show: boolean; onHide: () => void; modalTrigger: any;}) {
   const { id, type } = props;
   const [dataTable, setDataTable] = useState<any[]>([]);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -124,7 +124,7 @@ export default function ClientModal(props) {
         </Modal.Header>
 
         <Table columns={columns} data={dataTable} />
-        <FitnessAction ref={fitnessActionRef} />
+        <FitnessAction ref={fitnessActionRef} callback={FetchData}/>
         <Modal.Footer>
           <Button variant="danger" onClick={props.onHide}>
             Close

@@ -9,7 +9,7 @@ const TextEditor = (props: any) => {
     props.val ? props.val : props.value ? props.value : ""
   );
 
-  var richText: any = [{ type: "text" }];
+  const richText: any = [{ type: "text" }];
   if (props.type === "build") {
     richText[0].value = value;
     props.onChangebuild(richText);

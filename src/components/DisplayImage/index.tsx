@@ -14,11 +14,11 @@ const myBucket = new AWS.S3({
   region: REGION,
 });
 
-var albumPhotosKey = process.env.REACT_APP_S3_PREFIX_NAME;
+const albumPhotosKey = process.env.REACT_APP_S3_PREFIX_NAME;
 
 const DisplayImage: React.FC<{imageName: string, defaultImageUrl: string, imageCSS: string}> = (props) => {
   const [photoUrl, setPhotoUrl] = useState<string>(props.defaultImageUrl);
-  var imageName = "sm-" + props.imageName;
+  const imageName = "sm-" + props.imageName;
 
   const paramUrl = {
     Bucket: S3_BUCKET,
@@ -28,7 +28,7 @@ const DisplayImage: React.FC<{imageName: string, defaultImageUrl: string, imageC
   useEffect(() => {
     setPhotoUrl(props.defaultImageUrl);
     if (props.imageName && props.imageName.length) {
-      var promise = myBucket.getSignedUrlPromise("getObject", paramUrl);
+      const promise = myBucket.getSignedUrlPromise("getObject", paramUrl);
 
       promise.then(
         function (url) {

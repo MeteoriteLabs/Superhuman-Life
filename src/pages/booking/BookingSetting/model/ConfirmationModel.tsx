@@ -10,20 +10,20 @@ interface FormValue {
   bookingsPerDay: number;
 }
 
-export default function ConfirmationModel(props) {
-  const { formData, modalTrigger } = props;
+const ConfirmationModel = (props: any) => {
+  // const { formData, modalTrigger } = props;
   const [isSwitchOn, setIsSwitchOn] = useState<boolean>(false);
   const [show, setShow] = useState<boolean>(false);
 
-  modalTrigger.subscribe((res: boolean) => {
+  props.modalTrigger.subscribe((res: boolean) => {
     setShow(res);
   });
 
   const [formValue, setFormValue] = useState<FormValue>({
-    id: formData.id,
+    id: props.formData.id,
     isAuto: isSwitchOn,
-    BookingsPerMonth: formData.bookingPerMonth,
-    bookingsPerDay: formData.bookingPerDay,
+    BookingsPerMonth: props.formData.bookingPerMonth,
+    bookingsPerDay: props.formData.bookingPerDay,
   });
 
   const onSwitchAction = () => {
@@ -35,7 +35,7 @@ export default function ConfirmationModel(props) {
   };
 
   const [updateBooking] = useMutation(UPDATE_BOOKING_CONFIG, {
-    onCompleted: (data: any) => modalTrigger.next(false),
+    onCompleted: (data: any) => props.modalTrigger.next(false),
   });
 
   const handleSubmit = (e: { preventDefault: () => void }) => {
@@ -54,10 +54,10 @@ export default function ConfirmationModel(props) {
   };
 
   useEffect(() => {
-    formData.confirmations === "Auto Accept"
+    props.formData.confirmations === "Auto Accept"
       ? setIsSwitchOn(false)
       : setIsSwitchOn(true);
-  }, [formData]);
+  }, [props.formData]);
 
   return (
     <>
@@ -86,7 +86,7 @@ export default function ConfirmationModel(props) {
               <Form.Label className="font-weight-bold">
                 Package Name:
               </Form.Label>
-              <p>{formData.packageName}</p>
+              <p>{props.formData.packageName}</p>
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formBasicEmail">
@@ -96,7 +96,7 @@ export default function ConfirmationModel(props) {
               <FormControl
                 type="number"
                 name="BookingsPerMonth"
-                defaultValue={formData.bookingPerMonth}
+                defaultValue={props.formData.bookingPerMonth}
                 onChange={(e) => handleChange(e)}
               />
             </Form.Group>
@@ -107,7 +107,7 @@ export default function ConfirmationModel(props) {
               </Form.Label>
               <FormControl
                 name="bookingsPerDay"
-                defaultValue={formData.bookingPerDay}
+                defaultValue={props.formData.bookingPerDay}
                 onChange={(e) => handleChange(e)}
               />
             </Form.Group>
@@ -116,7 +116,7 @@ export default function ConfirmationModel(props) {
               <Button
                 type="submit"
                 onClick={() => {
-                  modalTrigger.next(false);
+                  props.modalTrigger.next(false);
                 }}
               >
                 Submit
@@ -124,7 +124,7 @@ export default function ConfirmationModel(props) {
               <Button
                 className="btn btn-danger"
                 onClick={() => {
-                  modalTrigger.next(false);
+                  props.modalTrigger.next(false);
                 }}
               >
                 Close
@@ -136,3 +136,5 @@ export default function ConfirmationModel(props) {
     </>
   );
 }
+
+export default ConfirmationModel;

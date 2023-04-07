@@ -13,7 +13,7 @@ const _Jimp = require("jimp/browser/lib/jimp");
 const S3_BUCKET: any = process.env.REACT_APP_S3_BUCKET_NAME;
 const REGION: any = process.env.REACT_APP_S3_BUCKET_REGION;
 
-var reader = new FileReader();
+const reader = new FileReader();
 
 AWS.config.update({
   accessKeyId: process.env.REACT_APP_S3_ACCESS_KEY,
@@ -25,7 +25,7 @@ const myBucket = new AWS.S3({
   region: REGION,
 });
 
-var tus: any = require("tus-js-client");
+const tus: any = require("tus-js-client");
 
 const UploadImageToS3WithNativeSdk = (props: any) => {
   const [progress, setProgress] = useState<number>(0);
@@ -42,10 +42,10 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
   const [zoom, setZoom] = useState<any>(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<any>(null);
 
-  let allowedImageFormats = ["image/png", "image/jpeg", "image/jpg"];
-  let allowedVideoFormats = ["video/mp4"];
+  const allowedImageFormats = ["image/png", "image/jpeg", "image/jpg"];
+  const allowedVideoFormats = ["video/mp4"];
 
-  var albumPhotosKey = process.env.REACT_APP_S3_PREFIX_NAME;
+  const albumPhotosKey = process.env.REACT_APP_S3_PREFIX_NAME;
 
   const onCropComplete = useCallback(
     (croppedArea: Area, croppedAreaPixels: Area) => {
@@ -63,7 +63,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
     } catch (e) {
       console.error(e);
     }
-  }, [croppedAreaPixels, imageSrc]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [croppedAreaPixels, imageSrc]); 
 
   function handleCrop(file) {
     //const file = e.target.files[0];
@@ -97,7 +97,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
   }
 
   const deleteFile = (keyName) => {
-    var deleteparams = {
+    const deleteparams = {
       Bucket: S3_BUCKET,
       Key: keyName,
     };
@@ -129,7 +129,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
   const handleFileInput = async (e) => {
     // if the video is being uploaded in offering then this function is called
     if (props?.offering) {
-      var file: any = e.target.files[0];
+      const file: any = e.target.files[0];
       const duration: any = await getVideoDuration(file);
       if (parseInt(duration) > 60) {
         setVideoSizeError(true);
@@ -176,7 +176,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
         .resize(500, _Jimp.AUTO)
         .quality(100)
         .getBase64(_Jimp.AUTO, (err, pic) => {
-          let photoKey = albumPhotosKey + fileName;
+          const photoKey = albumPhotosKey + fileName;
           setRender(1);
           setImageid(photoKey.split("/")[1].slice(3));
           uploadTOS3NoUrl(pic, photoKey, filetype);
@@ -189,7 +189,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
         .resize(750, _Jimp.AUTO)
         .quality(100)
         .getBase64(_Jimp.AUTO, (err, pic) => {
-          let photoKey = albumPhotosKey + fileName;
+          const photoKey = albumPhotosKey + fileName;
           setRender(1);
           uploadTOS3NoUrl(pic, photoKey, filetype);
         });
@@ -201,7 +201,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
         .resize(1000, _Jimp.AUTO)
         .quality(100)
         .getBase64(_Jimp.AUTO, (err, pic) => {
-          let photoKey = albumPhotosKey + fileName;
+          const photoKey = albumPhotosKey + fileName;
           setRender(1);
           uploadTOS3(pic, photoKey, filetype);
         });
@@ -209,7 +209,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
   }
 
   function uploadTOS3(file, filename, filetype) {
-    let buf = Buffer.from(
+    const buf = Buffer.from(
       file.replace(/^data:image\/\w+;base64,/, ""),
       "base64"
     );
@@ -232,7 +232,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
       })
       .send(() => {
         //get the url of uploaded image
-        var promise = myBucket.getSignedUrlPromise("getObject", paramUrl);
+        const promise = myBucket.getSignedUrlPromise("getObject", paramUrl);
         promise.then(
           function (url) {
             setUrl(url);
@@ -251,7 +251,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
         Bucket: S3_BUCKET,
         Key: albumPhotosKey + "lg-" + props.value,
       };
-      var promise = myBucket.getSignedUrlPromise("getObject", paramUrl);
+      const promise = myBucket.getSignedUrlPromise("getObject", paramUrl);
       promise.then(
         function (url) {
           setUrl(url);
@@ -271,7 +271,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
   }
 
   function uploadTOS3NoUrl(file, filename, filetype) {
-    let buf = Buffer.from(
+    const buf = Buffer.from(
       file.replace(/^data:image\/\w+;base64,/, ""),
       "base64"
     );
@@ -299,9 +299,9 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
     }
 
     if (allowedImageFormats.indexOf(file.type) > -1) {
-      let fileType = "." + file.type.split("/")[1];
+      const fileType = "." + file.type.split("/")[1];
 
-      var fileName = uuidv4() + fileType;
+      const fileName = uuidv4() + fileType;
       reader.onload = function (e) {
         onImageLoadedSmall("sm-" + fileName, file.type);
         onImageLoadedMedium("md-" + fileName, file.type);
@@ -359,7 +359,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
 
   function VideoUpload(file: any) {
     if (allowedVideoFormats.indexOf(file.type) > -1) {
-      var options = {
+      const options = {
         endpoint: process.env.REACT_APP_CLOUDFLARE_URL,
         chunkSize: 5242880,
         metadata: {
@@ -378,19 +378,19 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
         },
         onAfterResponse: function (req, res) {
           if (res.getHeader("stream-media-id")) {
-            var value = res.getHeader("stream-media-id");
+            const value = res.getHeader("stream-media-id");
             setVideoID(value);
           }
         },
       };
-      var upload = new tus.Upload(file, options);
+      const upload = new tus.Upload(file, options);
       upload.start();
     } else {
       setRender(0);
     }
   }
 
-  function handleAspectRatio(data: String) {
+  function handleAspectRatio(data: string) {
     if (data) {
       return parseInt(data.split(":")[0]) / parseInt(data.split(":")[1]);
     } else {

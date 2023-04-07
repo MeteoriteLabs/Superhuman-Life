@@ -30,7 +30,7 @@ interface Operation {
 
 interface WebsiteData {
   users_permissions_user: string;
-  form_data: {};
+  form_data: unknown;
   website_template: string;
 }
 
@@ -43,17 +43,16 @@ function CreateWebpageDetails(props: any, ref: any) {
   const [websiteTemplateId, setWebsiteTemplateId] = useState<string>("");
   const [operation, setOperation] = useState<Operation>({} as Operation);
   const [websiteDataRecordId, setWebsiteDataRecordId] = useState<any>();
+  const [name, setName] = useState<string>("Webpage Details");
 
   const { templateId, newTemplateId } = props;
 
   useEffect(() => {
     fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [newTemplateId]);
 
   useEffect(() => {
     fetchTemplate();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const modalTrigger = new Subject();
@@ -116,8 +115,8 @@ function CreateWebpageDetails(props: any, ref: any) {
   });
 
   function replaceSchema(schema1) {
-    let schema = {};
-    let keys = Object.keys(schema1);
+    const schema = {};
+    const keys = Object.keys(schema1);
 
     if (keys.length) {
       keys.forEach((key) => {
@@ -161,7 +160,7 @@ function CreateWebpageDetails(props: any, ref: any) {
 
   function FillDetails(data: any) {
     if (data.websiteData.length) {
-      let msg = { ...data.websiteData[0].form_data.data };
+      const msg = { ...data.websiteData[0].form_data.data };
       msg.website_template = data.websiteData[0].website_template.id;
 
       setWebPageDetails(msg);
@@ -221,12 +220,13 @@ function CreateWebpageDetails(props: any, ref: any) {
         EditWebpage(data);
         break;
       case "view":
+        {
+          setName("View");
+        }
         ViewWebpage(frm);
         break;
     }
   }
-
-  let name = "Webpage Details";
 
   return (
     <>

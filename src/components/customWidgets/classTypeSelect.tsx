@@ -34,7 +34,6 @@ const ClassTypeSelect = (props: any) => {
     if (urlList[1] === "channel") {
       setSelectedFitnessPackage("Live Stream Channel");
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (

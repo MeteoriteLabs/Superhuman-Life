@@ -19,7 +19,7 @@ import { GET_MESSAGES } from "./queries";
 import { flattenObj } from "../../../components/utils/responseFlatten";
 
 export default function MindsetPage() {
-  const [searchFilter, setSearchFilter] = useState("");
+  const [searchFilter, setSearchFilter] = useState<string>("");
   const searchInput = useRef<any>();
   const auth = useContext(AuthContext);
   const createEditMessageComponent = useRef<any>(null);
@@ -92,15 +92,15 @@ export default function MindsetPage() {
   );
 
   function getDate(time: any) {
-    let dateObj = new Date(time);
-    let month = dateObj.getMonth() + 1;
-    let year = dateObj.getFullYear();
-    let date = dateObj.getDate();
+    const dateObj = new Date(time);
+    const month = dateObj.getMonth() + 1;
+    const year = dateObj.getFullYear();
+    const date = dateObj.getDate();
 
     return `${date}/${month}/${year}`;
   }
 
-  const [datatable, setDataTable] = useState<{}[]>([]);
+  const [datatable, setDataTable] = useState<Record<string, unknown>[]>([]);
 
   const fetch = useQuery(GET_MESSAGES, {
     variables: { filter: searchFilter, id: auth.userid },
@@ -156,7 +156,7 @@ export default function MindsetPage() {
           <Col>
             <Card.Title className="text-center">
               <Button
-                variant={true ? "outline-secondary" : "light"}
+                variant= "outline-secondary"
                 size="sm"
                 onClick={() => {
                   createEditMessageComponent.current.TriggerForm({

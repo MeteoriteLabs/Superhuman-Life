@@ -1,6 +1,6 @@
-import React from 'react'
+import React from 'react';
 
-export default function PricingAssistEditIcon(props) {
+const PricingAssistEditIcon : React.FC<{rowData: any;}> = (props) => {
     const { rowData } = props;
     
     let type = "";
@@ -29,8 +29,10 @@ export default function PricingAssistEditIcon(props) {
         <div className='d-flex  align-items-center'>
             <p>Type:</p>
             <div className='ml-5'>
-                <img src={`./assets/${type}`} alt={rowData.type} />
+                <img loading="lazy" src={`./assets/${type}`} alt={rowData.type} />
             </div>
         </div>
     )
 }
+
+export default PricingAssistEditIcon;

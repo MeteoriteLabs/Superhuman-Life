@@ -10,7 +10,7 @@ function GraphSelector() {
   const [isLeads, setIsLeads] = useState<boolean>(true);
   const [isClients, setIsClients] = useState<boolean>(false);
   const [isOfferingBooking, setIsOfferingBooking] = useState<boolean>(false);
-  const [label, setLabel] = useState<String>("Leads");
+  const [label, setLabel] = useState<string>("Leads");
 
   return (
     <div className="bg-white rounded shadow">

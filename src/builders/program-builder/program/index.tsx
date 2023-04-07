@@ -17,8 +17,8 @@ export default function EventsTab() {
   function handleRedirect(id: any) {
     window.location.href = `/programs/manage/${id}`;
   }
-  var newSessionIds: any[] = [];
-  var sessionsCount: number = 0;
+  let newSessionIds: any[] = [];
+  let sessionsCount: number = 0;
   const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
   const [show, setShow] = useState<boolean>(false);
   const [name, setName] = useState<string>("");
@@ -52,7 +52,7 @@ export default function EventsTab() {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  function CreateProgram(_variables: {} = { id: auth.userid, details: frm }) {
+  function CreateProgram(_variables: Record<string, unknown> = { id: auth.userid, details: frm }) {
     sessionsCount = frm.sessions.length;
     for (let i = 0; i < frm.sessions.length; i++) {
       createSession({
@@ -153,10 +153,10 @@ export default function EventsTab() {
       "Nov",
       "Dec",
     ];
-    let dateObj = new Date(time);
-    let month = monthNames[dateObj.getMonth()];
-    let year = dateObj.getFullYear();
-    let date = dateObj.getDate();
+    const dateObj = new Date(time);
+    const month = monthNames[dateObj.getMonth()];
+    const year = dateObj.getFullYear();
+    const date = dateObj.getDate();
 
     return `${date}-${month}-${year}`;
   }
@@ -202,7 +202,7 @@ export default function EventsTab() {
       <hr />
       <Card.Title className="text-right">
         <Button
-          variant={true ? "outline-secondary" : "light"}
+          variant= "outline-secondary"
           size="sm"
           onClick={() => {
             createEditProgramComponent.current.TriggerForm({

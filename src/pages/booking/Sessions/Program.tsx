@@ -92,7 +92,7 @@ export default function Program() {
         Cell: ({ row }: any) => {
           const history = useHistory();
           const routeChange = () => {
-            let path = `clients`;
+            const path = `clients`;
             history.push(path);
           };
 
@@ -173,11 +173,10 @@ export default function Program() {
         },
       },
     ],
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
 
-  const [datatable, setDataTable] = useState<{}[]>([]);
+  const [datatable, setDataTable] = useState<Record<string, unknown>[]>([]);
 
   const [
     getTags,
@@ -227,7 +226,7 @@ export default function Program() {
       setCurrentDaySessionData(todaysSession);
       setTomorrowDaySessionData(tomorrowsSession);
       setDayAfterTomorrowSessionData(dayAfterTomorrowSession);
-      let arr = flattenTagData.map((currentValue) => currentValue.tag_name);
+      const arr = flattenTagData.map((currentValue) => currentValue.tag_name);
       setTagName(arr);
 
       if (
@@ -280,12 +279,12 @@ export default function Program() {
   }
 
   function getStartTime(startTime: string): string {
-    let splitTime: string[] = startTime.split(":");
-    let date: moment.Moment = moment().set({
+    const splitTime: string[] = startTime.split(":");
+    const date: moment.Moment = moment().set({
       hour: Number(splitTime[0]),
       minute: Number(splitTime[1]),
     });
-    let time: string = moment(date).format("h:mm A");
+    const time: string = moment(date).format("h:mm A");
     return time;
   }
 

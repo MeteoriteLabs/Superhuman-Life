@@ -21,7 +21,7 @@ interface Operation {
 function CreateChangemakerAsPayee(props: any, ref: any) {
   const [operation, setOperation] = useState<Operation>({} as Operation);
   const auth = useContext(AuthContext);
-  const payeeJson: {} = require("./ChangemakerPayee.json");
+  const payeeJson: Record<string, unknown> = require("./ChangemakerPayee.json");
   const [isCreated, setIsCreated] = useState<boolean>(false);
 
   const modalTrigger = new Subject();

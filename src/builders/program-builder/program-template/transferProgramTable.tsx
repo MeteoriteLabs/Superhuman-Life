@@ -6,39 +6,38 @@ import DaysInput from './daysInput';
 // import { Row, Col } from 'react-bootstrap';
 import moment from 'moment';
 import TimePicker from 'rc-time-picker';
-
 import 'rc-time-picker/assets/index.css';
 
 const TransferProgramTable = (props: any) => {
 
-     const [show, setShow] = useState(false);
+     const [show, setShow] = useState<boolean>(false);
      const [data, setData] = useState<any[]>([]);
 
     function handleStartTimeInput(val: any, index: any){
-        var m = (Math.round(parseInt(val.slice(3,5))/15) * 15) % 60;
+        const m = (Math.round(parseInt(val.slice(3,5))/15) * 15) % 60;
         handleHourChange(val.slice(0,2) + ':' + (m === 0 ? '00' : m), index);
     }
 
     function convertToMoment(time: string) {
-        var timeSplit = time.split(":").map(Number);
+        const timeSplit = time.split(":").map(Number);
         return moment().set({"hour": timeSplit[0], "minute": timeSplit[1]});
     }
 
     function handleFormatting(time){
-        var inputTime: any = time.split(':');
+        const inputTime: any = time.split(':');
         return `${parseInt(inputTime[0]) < 10 ? inputTime[0].charAt(1) : inputTime[0]}:${inputTime[1] === '00' ? '0' : inputTime[1]}`; 
     }
 
      function handleDaysData(e: any, index: any) {
           const values = [...data];
-          let a = values.find(e => e.transferId === index);
+          const a = values.find(e => e.transferId === index);
           a.day = e;
           setData(values); 
      }
 
      function handleHourChange(e: any, index: any){
           const values = [...data];
-          let a = values.find(e => e.transferId === index);
+          const a = values.find(e => e.transferId === index);
           a.startTime = handleFormatting(e);
           setData(values);
      }
@@ -52,7 +51,7 @@ const TransferProgramTable = (props: any) => {
 
      function handleTransfer(e: any){
           const values = [...data];
-          for(var i=0; i<e.length; i++){
+          for(let i=0; i<e.length; i++){
                values.push({
                     name: e[i].workout === null ? e[i].activity.title : e[i].workout.workouttitle, 
                     transferId: i, 
@@ -78,11 +77,11 @@ const TransferProgramTable = (props: any) => {
           setTimeout(() => {
                setShow(true);
           }, 500);
-     }, []); // eslint-disable-line react-hooks/exhaustive-deps
+     }, []); 
 
      useEffect(() => {
           props.onChange(data);
-     }, [data]); // eslint-disable-line react-hooks/exhaustive-deps
+     }, [data]); 
 
      if (!show) return <span style={{ color: 'red' }}>Loading...</span>;
           else return (
@@ -97,7 +96,7 @@ const TransferProgramTable = (props: any) => {
                               {props.events.map((val: any, index) => {
                                    
                                    return (
-                                        <tr>
+                                        <tr key={index}>
                                         <td><Form.Control style={{ minWidth: '150px'}} value={val.workout === null ? val.activity.title : val.workout.workouttitle} disabled></Form.Control></td>
                                         <td>to</td>
                                         <td style={{ minWidth: '150px'}}><DaysInput duration={props.duration.length} dayType={props.dayType} onChange={(e) => {handleDaysData(e, index)}} type="transfer"/></td>

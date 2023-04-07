@@ -21,7 +21,7 @@ interface Operation {
 function CreateEditPayee(props: any, ref: any) {
   const [operation, setOperation] = useState<Operation>({} as Operation);
   const auth = useContext(AuthContext);
-  const payeeJson: {} = require("./Payee.json");
+  const payeeJson: Record<string, unknown> = require("./Payee.json");
   const [isCreated, setIsCreated] = useState<boolean>(false);
 
   const modalTrigger = new Subject();

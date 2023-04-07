@@ -24,7 +24,7 @@ export default function BasicProfileForm() {
   const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
   const formRef = useRef<any>(null);
   const auth = useContext(AuthContext);
-  const profileJson: { } = require("./BasicProfile.json");
+  const profileJson: any = require("./BasicProfile.json");
   const [webpageDetails, setWebPageDetails] = useState<UserDetails>({} as UserDetails);
 
   const schema: any = {

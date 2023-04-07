@@ -45,7 +45,7 @@ interface Operation {
 
 function CreateAddress(props: any, ref: any) {
   const auth = useContext(AuthContext);
-  const addressJson: {} = require("./Address.json");
+  const addressJson: any = require("./Address.json");
   const [addressData, setAddressData] = useState<any>([]);
   const [operation, setOperation] = useState<Operation>({} as Operation);
   const [addressDetails, setAddressDetails] = useState(
@@ -53,9 +53,9 @@ function CreateAddress(props: any, ref: any) {
   );
   const [prefill, setPrefill] = useState<any>([]);
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
-  let [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
-  let [isAddressDeleted, setIsAddressDeleted] = useState<boolean>(false);
-  let [isAddressUpdated, setIsAddressUpdated] = useState<boolean>(false);
+  const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
+  const [isAddressDeleted, setIsAddressDeleted] = useState<boolean>(false);
+  const [isAddressUpdated, setIsAddressUpdated] = useState<boolean>(false);
 
   const fetch = useQuery(FETCH_USER_PROFILE_DATA, {
     variables: { id: auth.userid },
@@ -107,7 +107,7 @@ function CreateAddress(props: any, ref: any) {
       fetch.refetch();
 
       // concatenate previously stored address ids with currently added address id
-      let contatenatedAddressIdArray =
+      const contatenatedAddressIdArray =
         addressData && addressData.length
           ? addressData.concat([r.createAddress.data.id])
           : [r.createAddress.data.id];
@@ -143,12 +143,12 @@ function CreateAddress(props: any, ref: any) {
   }));
 
   useEffect(() => {
-    let selectedAddress =
+    const selectedAddress =
       prefill && prefill.length
         ? prefill.find((currValue: any) => currValue.id === operation.id)
         : null;
 
-    let details = {} as BasicAddressDetails;
+    const details = {} as BasicAddressDetails;
     details.address1 = selectedAddress ? selectedAddress.address1 : "";
     details.address2 = selectedAddress ? selectedAddress.address2 : "";
     details.city = selectedAddress ? selectedAddress.city : "";

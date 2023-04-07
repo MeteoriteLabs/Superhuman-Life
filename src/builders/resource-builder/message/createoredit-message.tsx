@@ -108,8 +108,8 @@ function CreateEditMessage(props: any, ref: any) {
   function FillDetails(data: any) {
     const flattenData = flattenObj({ ...data });
 
-    let details: any = {};
-    let msg = flattenData.prerecordedMessage;
+    const details: any = {};
+    const msg = flattenData.prerecordedMessage;
 
     function handleAddMediaShowUp(msg: any) {
       if (msg.Image_URL !== null) {
@@ -119,7 +119,7 @@ function CreateEditMessage(props: any, ref: any) {
       }
     }
 
-    let o = { ...operation };
+    const o = { ...operation };
     details.name = o.type.toLowerCase();
 
     details.title = msg.Title;

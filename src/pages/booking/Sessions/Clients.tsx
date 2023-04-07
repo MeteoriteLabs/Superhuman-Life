@@ -98,7 +98,7 @@ export default function Clients() {
         Cell: ({ row }: any) => {
           const history = useHistory();
           const routeChange = () => {
-            let path = `clients`;
+            const path = `clients`;
             history.push(path);
           };
 
@@ -179,11 +179,10 @@ export default function Clients() {
         },
       },
     ],
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
 
-  const [datatable, setDataTable] = useState<{}[]>([]);
+  const [datatable, setDataTable] = useState<Record<string, unknown>[]>([]);
 
   useQuery(GET_ALL_CLIENTS, {
     variables: { filter: searchFilter, id: Number(auth.userid) },
@@ -211,12 +210,12 @@ export default function Clients() {
   });
 
   function getTime(startTime: string): string {
-    let splitTime: string[] = startTime.split(":");
-    let date: moment.Moment = moment().set({
+    const splitTime: string[] = startTime.split(":");
+    const date: moment.Moment = moment().set({
       hour: Number(splitTime[0]),
       minute: Number(splitTime[1]),
     });
-    let time: string = moment(date).format("h:mm A");
+    const time: string = moment(date).format("h:mm A");
     return time;
   }
 

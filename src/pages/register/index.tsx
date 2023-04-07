@@ -118,7 +118,7 @@ export default function Register() {
   useEffect(() => {
     const items = localStorage.getItem("dataKey");
     if (items) {
-      let a = JSON.parse(items);
+      const a = JSON.parse(items);
       setFormValues({ email: a.email, fname: a.name });
     }
   }, [data]);
@@ -379,7 +379,7 @@ export default function Register() {
 
   const [createAddress] = useMutation(CREATE_ADDRESS, {
     onCompleted: (data: any) => {
-      for (var i = 0; i < userFormData.education.length; i++) {
+      for (let i = 0; i < userFormData.education.length; i++) {
         createEducationDetail({
           variables: {
             Institute_Name: userFormData.education[i].instituteName,
@@ -427,9 +427,9 @@ export default function Register() {
   }
 
   function Validate(formData, errors) {
-    var ele = document.getElementsByClassName("invalidEmail");
-    var ele2 = document.getElementsByClassName("invalidUname");
-    var ele3 = document.getElementsByClassName("invalidNumber");
+    const ele = document.getElementsByClassName("invalidEmail");
+    const ele2 = document.getElementsByClassName("invalidUname");
+    const ele3 = document.getElementsByClassName("invalidNumber");
     if (formData.email) {
       if (ele.length !== 0) {
         errors.email.addError("Please enter a valid email address");
@@ -471,7 +471,6 @@ export default function Register() {
 
   useEffect(() => {
     getLocation();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

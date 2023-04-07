@@ -11,7 +11,7 @@ function GroupTable({ data, columns }: any) {
     allColumns.forEach((column: any, i: any) => {
       const { id, enableRowSpan } = column;
 
-      if (enableRowSpan !== undefined) {
+      if (enableRowSpan) {
         rowSpanHeaders = [
           ...rowSpanHeaders,
           { id, topCellValue: null, topCellIndex: 0 },
@@ -37,12 +37,13 @@ function GroupTable({ data, columns }: any) {
     <div className="table-responsive">
       <table {...getTableProps()} className="group table text-center">
         <thead>
-          {headerGroups.map((headerGroup) => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column) => (
+          {headerGroups.map((headerGroup, index) => (
+            <tr {...headerGroup.getHeaderGroupProps()} key={index}>
+              {headerGroup.headers.map((column, index) => (
                 <th
                   className="tableHeader text-center"
                   {...column.getHeaderProps()}
+                  key={index}
                 >
                   {column.render("Header")}
                 </th>
@@ -70,7 +71,7 @@ function GroupTable({ data, columns }: any) {
             }
 
             for (let j = 0; j < row.cells.length; j++) {
-              let cell = row.allCells[j];
+              const cell = row.allCells[j];
               if (!samePackage || j > 4) {
                 cell.isRowSpanned = false;
                 cell.rowSpan = 1;
@@ -80,9 +81,9 @@ function GroupTable({ data, columns }: any) {
               }
             }
           })}
-          {rows.map((row) => {
+          {rows.map((row, index) => {
             return (
-              <tr className="rowCard" {...row.getRowProps()}>
+              <tr className="rowCard" {...row.getRowProps()} key={index}>
                 {row.cells.map((cell) => {
                   if (cell.isRowSpanned) return null;
                   else

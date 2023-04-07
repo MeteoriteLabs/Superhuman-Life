@@ -70,7 +70,7 @@ export default function Expenses() {
         Cell: ({ row }: any) => {
           const history = useHistory();
           const routeChange = () => {
-            let path = `receipt/?id=${row.original.id}`;
+            const path = `receipt/?id=${row.original.id}`;
             history.push(path);
           };
 
@@ -89,11 +89,10 @@ export default function Expenses() {
         },
       },
     ],
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
 
-  const [datatable, setDataTable] = useState<{}[]>([]);
+  const [datatable, setDataTable] = useState<Record<string, unknown>[]>([]);
 
   const [contacts, { data: get_contacts }] = useLazyQuery(GET_CONTACTS, {
     onCompleted: (data) => {

@@ -74,10 +74,10 @@ function CancelComponent(props: any, ref: any) {
   });
 
   function getDate(time: Date): string {
-    let dateObj: Date = new Date(time);
-    let month: number = dateObj.getMonth() + 1;
-    let year: number = dateObj.getFullYear();
-    let date: number | string =
+    const dateObj: Date = new Date(time);
+    const month: number = dateObj.getMonth() + 1;
+    const year: number = dateObj.getFullYear();
+    const date: number | string =
       dateObj.getDate() < 10 ? `0${dateObj.getDate()}` : dateObj.getDate();
 
     return `${year}-${month}-${date}`;
@@ -100,7 +100,7 @@ function CancelComponent(props: any, ref: any) {
     },
     skip: !operation.tag,
     onCompleted: (data) => {
-      let currentTime = new Date();
+      const currentTime = new Date();
       const flattenSessionsData = flattenObj({ ...data.sessions });
       const nextUpcomingSessions = flattenSessionsData.filter(
         (currentValue) => {
@@ -129,16 +129,16 @@ function CancelComponent(props: any, ref: any) {
   };
 
   function getTime(startTime: string): string {
-    let splitTime: string[] = startTime.split(":");
-    let date: moment.Moment = moment().set({
+    const splitTime: string[] = startTime.split(":");
+    const date: moment.Moment = moment().set({
       hour: Number(splitTime[0]),
       minute: Number(splitTime[1]),
     });
-    let time: string = moment(date).format("h:mm A");
+    const time: string = moment(date).format("h:mm A");
     return time;
   }
 
-  const changeScheduleHandler = (id: String, selectedTime: any) => {
+  const changeScheduleHandler = (id: string, selectedTime: any) => {
     const selectedSession = sessionData.find(
       (currentValue: any) => currentValue.id === id
     );

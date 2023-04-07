@@ -1,10 +1,11 @@
-import { Button } from "react-bootstrap";
+import React from 'react';
+import { Button } from 'react-bootstrap';
 
-export default function SocialMediaComponent({ url }) {
+const SocialMediaComponent: React.FC<{ url: string }> = (props) => {
   return (
     <div className="text-center font-weight-bold mt-5">
-      <a className="text-dark" href={url}>
-        {url}
+      <a className="text-dark" href={props.url}>
+        {props.url}
       </a>
       <div>
         <Button className="py-2 my-2 customButton">Copy link</Button>
@@ -13,7 +14,8 @@ export default function SocialMediaComponent({ url }) {
         <span className="mr-4">
           <a href="31212">
             <img
-              src={process.env.PUBLIC_URL + "/assets/instagram.svg"}
+              loading="lazy"
+              src={process.env.PUBLIC_URL + '/assets/instagram.svg'}
               alt="instagram"
             />
           </a>
@@ -21,7 +23,8 @@ export default function SocialMediaComponent({ url }) {
         <span className="mr-4">
           <a href="31212">
             <img
-              src={process.env.PUBLIC_URL + "/assets/facebook.svg"}
+              loading="lazy"
+              src={process.env.PUBLIC_URL + '/assets/facebook.svg'}
               alt="facebook"
             />
           </a>
@@ -29,7 +32,8 @@ export default function SocialMediaComponent({ url }) {
         <span className="mr-4">
           <a href="31212">
             <img
-              src={process.env.PUBLIC_URL + "/assets/whatsapp.svg"}
+              loading="lazy"
+              src={process.env.PUBLIC_URL + '/assets/whatsapp.svg'}
               alt="whatsapp"
             />
           </a>
@@ -37,7 +41,8 @@ export default function SocialMediaComponent({ url }) {
         <span>
           <a href="31212">
             <img
-              src={process.env.PUBLIC_URL + "/assets/telegram.svg"}
+              loading="lazy"
+              src={process.env.PUBLIC_URL + '/assets/telegram.svg'}
               alt="telegram"
             />
           </a>
@@ -45,4 +50,6 @@ export default function SocialMediaComponent({ url }) {
       </div>
     </div>
   );
-}
+};
+
+export default SocialMediaComponent;

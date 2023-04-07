@@ -8,7 +8,7 @@ import moment from "moment";
 import { Col, Row } from "react-bootstrap";
 
 function WeeklyOfferingBookingGraph() {
-  const [clientsData, setClientsData] = useState<{}[]>([]);
+  const [clientsData, setClientsData] = useState<Record<string, unknown>[]>([]);
   const auth = useContext(AuthContext);
 
   useQuery(GET_BOOKINGS, {
@@ -25,10 +25,10 @@ function WeeklyOfferingBookingGraph() {
   const loadData = (data) => {
     const flattenClientsData = flattenObj({ ...data.clientBookings });
 
-    const arr: {}[] = [];
+    const arr: Record<string, unknown>[] = [];
 
     for (let weekDay = 0; weekDay < 7; weekDay++) {
-      let currentDay = moment().subtract(weekDay, "days");
+      const currentDay = moment().subtract(weekDay, "days");
       arr[weekDay] = {
         x: `${currentDay.format("ddd,")} ${moment()
           .subtract(weekDay, "days")

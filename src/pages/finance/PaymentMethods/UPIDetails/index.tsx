@@ -10,7 +10,7 @@ import AuthContext from "../../../../context/auth-context";
 function UPIDetails() {
   const paymentMethodActionRef = useRef<any>(null);
   const auth = useContext(AuthContext);
-  const [upiDetails, setUpiDetails] = useState<{}[]>([]);
+  const [upiDetails, setUpiDetails] = useState<Record<string, unknown>[]>([]);
 
   // eslint-disable-next-line
   const { data: get_upi_details, refetch: refetch_upi } = useQuery(
@@ -50,7 +50,7 @@ function UPIDetails() {
       <Row className="mt-3">
         <Col md={{ offset: 10 }}>
           <Button
-            variant={true ? "outline-secondary" : "light"}
+            variant="outline-secondary"
             size="sm"
             onClick={() => {
               paymentMethodActionRef.current.TriggerForm({ actionType: "upi" });

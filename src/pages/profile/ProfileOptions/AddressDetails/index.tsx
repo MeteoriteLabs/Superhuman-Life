@@ -21,7 +21,7 @@ function AddressDetails() {
   } = useQuery(FETCH_USERS_PROFILE_DATA, {
     onCompleted: (r: any) => {
       const flattenData = flattenObj({ ...r });
-      let usersData = flattenData.usersPermissionsUsers.find(
+      const usersData = flattenData.usersPermissionsUsers.find(
         (currValue: any) => currValue.id === auth.userid
       );
       setAddressData(usersData && usersData.addresses);
@@ -54,7 +54,7 @@ function AddressDetails() {
       <Col md={{ offset: 9, span: 3 }}>
         <Card.Title className="text-center">
           <Button
-            variant={true ? "outline-secondary" : "light"}
+            variant="outline-secondary"
             size="sm"
             onClick={() => {
               CreateAddressComponent.current.TriggerForm({
