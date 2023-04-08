@@ -6,7 +6,7 @@ export const widgets = {
 
 export const schema: any = {
   day: {
-    "ui:widget": (props) => {
+    "ui:widget": (props: {onChange: () => void; value: string;}) => {
       return (
         <DaysInput
           dayType={schema.type}

@@ -17,8 +17,8 @@ export default function EventsTab() {
   function handleRedirect(id: any) {
     window.location.href = `/programs/manage/${id}`;
   }
-  let newSessionIds: any[] = [];
-  let sessionsCount: number = 0;
+  const newSessionIds: any[] = [];
+  let sessionsCount = 0;
   const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
   const [show, setShow] = useState<boolean>(false);
   const [name, setName] = useState<string>("");

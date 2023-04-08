@@ -12,12 +12,12 @@ export const widgets = {
 export const schema: any = {
   effectiveDate: null,
   tag: {
-    "ui:widget": (props) => {
+    "ui:widget": (props: {onChange: () => void; value: string;}) => {
       return <ClassTypeSelect onChange={props.onChange} value={props.value} />;
     },
   },
   day: {
-    "ui:widget": (props) => {
+    "ui:widget": (props: {onChange: () => void; value: string;}) => {
       return (
         <DaysInput
           dayType={schema.type}
@@ -34,7 +34,7 @@ export const schema: any = {
     "ui:widget": "workoutList",
   },
   time: {
-    "ui:widget": (props) => {
+    "ui:widget": (props: {onChange: () => void; value: string;}) => {
       return <TimeField onChange={props.onChange} value={props.value} />;
     },
   },
