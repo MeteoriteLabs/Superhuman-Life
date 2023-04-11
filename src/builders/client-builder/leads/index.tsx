@@ -173,7 +173,7 @@ export default function Leads() {
     return `${date}/${month}/${year}`;
   }
 
-  const [datatable, setDataTable] = useState<{}[]>([]);
+  const [datatable, setDataTable] = useState<Record<string, unknown>[]>([]);
 
   const fetch = useQuery(GET_LEADS_NEW, {
     variables: { filter: searchFilter, id: auth.userid },
@@ -185,7 +185,7 @@ export default function Leads() {
   }
 
   function loadData(data: any) {
-    let namearr: any = [];
+    const namearr: any = [];
     const flattenData = flattenObj({ ...data });
     setData([...flattenData.websiteContactForms]);
     setDataTable(
@@ -286,7 +286,7 @@ export default function Leads() {
           <Col>
             <Card.Title className="text-center">
               <Button
-                variant={true ? "outline-secondary" : "light"}
+                variant="outline-secondary"
                 size="sm"
                 onClick={() => {
                   createEditMessageComponent.current.TriggerForm({

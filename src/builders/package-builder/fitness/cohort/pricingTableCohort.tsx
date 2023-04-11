@@ -61,7 +61,6 @@ const PricingTable: React.FC<{
       newPricing[0].duration = newDuration;
     }
     setPricing(newPricing);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const GET_VOUCHERS = gql`
@@ -103,7 +102,6 @@ const PricingTable: React.FC<{
         status: 'Active'
       }
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const SAPIEN_PRICING = gql`
@@ -251,7 +249,7 @@ const PricingTable: React.FC<{
 
   function handleUpdatePricing(id: any, value: any) {
     if (parseInt(value) !== 1) {
-      let newValue = [...pricing];
+      const newValue = [...pricing];
       newValue[id].voucher = parseInt(value);
       newValue[id].suggestedPrice = parseInt(
         ((newValue[id].sapienPricing * 100) / (100 - value)).toFixed(2)

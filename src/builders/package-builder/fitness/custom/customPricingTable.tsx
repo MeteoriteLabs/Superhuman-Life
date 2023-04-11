@@ -82,7 +82,6 @@ const PricingTable: React.FC<{
         status: 'Active'
       }
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -159,7 +158,7 @@ const PricingTable: React.FC<{
     suggestedPricings: any,
     duration: number
   ) {
-    var ptOnlinePrice: number,
+    let ptOnlinePrice: number,
       ptOfflinePrice: number,
       groupOnlinePrice: number,
       groupOfflinePrice: number,
@@ -253,7 +252,7 @@ const PricingTable: React.FC<{
     sapienPricings: any,
     duration: number
   ) {
-    var ptOnlinePrice: number,
+    let ptOnlinePrice: number,
       ptOfflinePrice: number,
       groupOnlinePrice: number,
       groupOfflinePrice: number,
@@ -427,14 +426,14 @@ const PricingTable: React.FC<{
   }
 
   function handlePricingUpdate(value: any, id: any) {
-    let newPricing = [...pricing];
+    const newPricing = [...pricing];
     newPricing[id].mrp = value;
     setPricing(newPricing);
   }
 
   function handleValidation() {
     const values = [...pricing];
-    var res: boolean = false;
+    let res = false;
     // eslint-disable-next-line
     values.map((item: any) => {
       if (item.mrp !== null && item.mrp >= parseInt(item.sapienPricing)) {
@@ -454,7 +453,7 @@ const PricingTable: React.FC<{
 
   function handleUpdatePricing(id: any, value: any) {
     if (parseInt(value) !== 0) {
-      let newValue = [...pricing];
+      const newValue = [...pricing];
       newValue[id].voucher = parseInt(value);
       // ((arraySapient[i] * 100) / (100 - 10)).toFixed(2)
       newValue[id].suggestedPrice = parseInt(
@@ -462,7 +461,7 @@ const PricingTable: React.FC<{
       );
       setPricing(newValue);
     } else {
-      let newValue = [...pricing];
+      const newValue = [...pricing];
       newValue[id].voucher = parseInt(value);
       newValue[id].suggestedPrice = newValue[id].sapienPricing;
       setPricing(newValue);
@@ -561,7 +560,7 @@ const PricingTable: React.FC<{
                         <option value={0}>Choose voucher</option>
                         {vouchers.map((voucher, index) => {
                           return (
-                            <option value={voucher.discount_percentage}>
+                            <option key={index} value={voucher.discount_percentage}>
                               {voucher.voucher_name}
                             </option>
                           );

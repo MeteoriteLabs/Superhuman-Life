@@ -8,7 +8,7 @@ const FitnessClasses: React.FC<{
   PTProps: any;
   widgetProps: any;
   actionType: string;
-  packageTypeName: string;
+  packageTypeName: string|null;
   classicProps: any;
   groupProps: any;
   customProps: any;

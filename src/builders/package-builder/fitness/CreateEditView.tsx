@@ -107,7 +107,7 @@ function CreateEditView(props: any, ref: any) {
 
   const widgets = {};
 
-  const pricingDetailRef = useRef<{ getFitnessPackagePricing?: Function }>({});
+  const pricingDetailRef = useRef<{ getFitnessPackagePricing?: any }>({});
 
   const uiSchema: any = {
     disciplines: {
@@ -119,7 +119,7 @@ function CreateEditView(props: any, ref: any) {
       ),
     },
     equipmentList: {
-      "ui:widget": (props) => (
+      "ui:widget": (props: {onChange: () => void; value: string;}) => (
         <EquipmentListSelect onChange={props.onChange} value={props.value} />
       ),
     },

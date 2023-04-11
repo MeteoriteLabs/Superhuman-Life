@@ -108,7 +108,6 @@ const PricingTable: React.FC<Props> = (props) => {
         status: 'Active'
       }
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -241,14 +240,14 @@ const PricingTable: React.FC<Props> = (props) => {
   }
 
   function handlePricingUpdate(value: any, id: any) {
-    let newPricing = [...pricing];
+    const newPricing = [...pricing];
     newPricing[id].mrp = value;
     setPricing(newPricing);
   }
 
   function handleValidation() {
     const values = [...pricing];
-    var res: boolean = false;
+    let res = false;
     // eslint-disable-next-line
     values.map((item: any) => {
       if (item.mrp !== null && item.mrp >= parseInt(item.sapienPricing)) {
@@ -266,14 +265,14 @@ const PricingTable: React.FC<Props> = (props) => {
 
   function handleUpdatePricing(id: any, value: any) {
     if (parseInt(value) !== 0) {
-      let newValue = [...pricing];
+      const newValue = [...pricing];
       newValue[id].voucher = parseInt(value);
       newValue[id].suggestedPrice = parseInt(
         ((newValue[id].sapienPricing * 100) / (100 - value)).toFixed(0)
       );
       setPricing(newValue);
     } else {
-      let newValue = [...pricing];
+      const newValue = [...pricing];
       newValue[id].voucher = parseInt(value);
       newValue[id].suggestedPrice = newValue[id].sapienPricing;
       setPricing(newValue);

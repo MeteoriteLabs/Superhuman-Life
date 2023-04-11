@@ -1,31 +1,33 @@
-import { useState, useContext } from "react";
-import { Row, Col, Form, InputGroup, Button } from "react-bootstrap";
-import { Typeahead } from "react-bootstrap-typeahead";
-import "react-bootstrap-typeahead/css/Typeahead.css";
-import { useQuery, gql } from "@apollo/client";
-import AuthContext from "../../../../context/auth-context";
-import { flattenObj } from "../../../../components/utils/responseFlatten";
-import AddFitnessAddressModal from "../../../../components/customWidgets/AddFitnessAddressModal";
+import React, { useState, useContext } from 'react';
+import { Row, Col, Form, InputGroup, Button } from 'react-bootstrap';
+import { Typeahead } from 'react-bootstrap-typeahead';
+import 'react-bootstrap-typeahead/css/Typeahead.css';
+import { useQuery, gql } from '@apollo/client';
+import AuthContext from '../../../../context/auth-context';
+import { flattenObj } from '../../../../components/utils/responseFlatten';
+import AddFitnessAddressModal from '../../../../components/customWidgets/AddFitnessAddressModal';
 
-const ProgramDetails = (props) => {
+const ProgramDetails: React.FC<{
+  readonly: boolean;
+  value: string;
+  onChange: (args: string | null) => void;
+  formContext: any;
+}> = (props) => {
   const inputDisabled = props.readonly;
   const cohortClassSize = props.formContext.classSize;
-  const existingData =
-    props.value === undefined ? undefined : JSON.parse(props.value);
+  const existingData = props.value === undefined ? undefined : JSON.parse(props.value);
 
   if (existingData && existingData.length > 0) {
     existingData.address = {
       id: JSON.parse(existingData?.address)[0].id,
-      title: JSON.parse(existingData?.address)[0].title,
+      title: JSON.parse(existingData?.address)[0].title
     };
   }
 
-  const [mode, setMode] = useState(
-    props.value ? existingData.mode.toString() : "0"
-  );
+  const [mode, setMode] = useState(props.value ? existingData.mode.toString() : '0');
   const [residential, setResidential] = useState(
     props.value === undefined || existingData.residential === null
-      ? "0"
+      ? '0'
       : existingData.residential.toString()
   );
   const [addressModal, setAddressModal] = useState(false);
@@ -36,7 +38,7 @@ const ProgramDetails = (props) => {
   );
   const [addresses, setAddresses] = useState<any[]>([]);
   const [addressTitle, setAddressTitle] = useState(
-    props.value ? existingData.addressTag : "At My Address"
+    props.value ? existingData.addressTag : 'At My Address'
   );
 
   const [showPrivate, setShowPrivate] = useState(
@@ -56,9 +58,9 @@ const ProgramDetails = (props) => {
   );
   const [foodDescription, setFoodDescription] = useState<string>(
     props.value === undefined
-      ? ""
+      ? ''
       : existingData.accomodationDetails?.foodDescription === undefined
-      ? ""
+      ? ''
       : existingData.accomodationDetails?.foodDescription
   );
   const [accomodationDetails] = useState<any>({});
@@ -78,7 +80,7 @@ const ProgramDetails = (props) => {
 
   const mainQuery = useQuery(FETCH_USER_ADDRESSES, {
     variables: { id: auth.userid },
-    onCompleted: loadData,
+    onCompleted: loadData
   });
 
   function handleCallback() {
@@ -92,7 +94,7 @@ const ProgramDetails = (props) => {
       [...flattenedData.addresses].map((address) => {
         return {
           id: address.id,
-          address1: address.address1,
+          address1: address.address1
         };
       })
     );
@@ -105,7 +107,7 @@ const ProgramDetails = (props) => {
   function calculateAccomodation({
     onePerRoom = 0,
     twoPerRoom = 0,
-    threePerRoom = 0,
+    threePerRoom = 0
   }: {
     onePerRoom?: number;
     twoPerRoom?: number;
@@ -119,28 +121,26 @@ const ProgramDetails = (props) => {
   }
 
   function handleValidation() {
-    if (mode === "0") {
+    if (mode === '0') {
       return true;
     }
-    if (mode === "1") {
+    if (mode === '1') {
       if (
-        (addressTitle === "At My Address" && singleSelections.length !== 0) ||
-        addressTitle === "At Client Address"
+        (addressTitle === 'At My Address' && singleSelections.length !== 0) ||
+        addressTitle === 'At Client Address'
       ) {
         return true;
       }
     }
-    if (mode === "2") {
+    if (mode === '2') {
       if (
-        (addressTitle === "At My Address" &&
-          singleSelections.length !== 0 &&
-          residential !== "") ||
-        (mode === "2" && addressTitle === "At Client Address")
+        (addressTitle === 'At My Address' && singleSelections.length !== 0 && residential !== '') ||
+        (mode === '2' && addressTitle === 'At Client Address')
       ) {
         if (!showPrivate && !showSharing) {
           return false;
         }
-        if (foodDescription === "" && residential === "1") {
+        if (foodDescription === '' && residential === '1') {
           return false;
         }
         if (showPrivate && privateRooms! > 0 && !showSharing) {
@@ -148,22 +148,18 @@ const ProgramDetails = (props) => {
             calculateAccomodation({
               onePerRoom: privateRooms,
               twoPerRoom: twoSharing,
-              threePerRoom: threeSharing,
+              threePerRoom: threeSharing
             })
           ) {
             return true;
           }
         }
-        if (
-          showSharing &&
-          !showPrivate &&
-          (twoSharing! > 0 || threeSharing! > 0)
-        ) {
+        if (showSharing && !showPrivate && (twoSharing! > 0 || threeSharing! > 0)) {
           if (
             calculateAccomodation({
               onePerRoom: privateRooms,
               twoPerRoom: twoSharing,
-              threePerRoom: threeSharing,
+              threePerRoom: threeSharing
             })
           ) {
             return true;
@@ -179,7 +175,7 @@ const ProgramDetails = (props) => {
             calculateAccomodation({
               onePerRoom: privateRooms,
               twoPerRoom: twoSharing,
-              threePerRoom: threeSharing,
+              threePerRoom: threeSharing
             })
           ) {
             return true;
@@ -203,11 +199,11 @@ const ProgramDetails = (props) => {
         address: singleSelections,
         mode: mode,
         residential: residential,
-        accomodationDetails: accomodationDetails,
+        accomodationDetails: accomodationDetails
       })
     );
   } else {
-    props.onChange(undefined);
+    props.onChange(null);
   }
 
   accomodationDetails.private = showPrivate;
@@ -224,11 +220,11 @@ const ProgramDetails = (props) => {
         address: singleSelections,
         mode: mode,
         residential: residential,
-        accomodationDetails: accomodationDetails,
+        accomodationDetails: accomodationDetails
       })
     );
   } else {
-    props.onChange(undefined);
+    props.onChange(null);
   }
 
   return (
@@ -243,7 +239,7 @@ const ProgramDetails = (props) => {
             label="Online"
             disabled={inputDisabled}
             value="0"
-            defaultChecked={mode === "0" ? true : false}
+            defaultChecked={mode === '0' ? true : false}
             name="group1"
             type="radio"
             onClick={(e: any) => setMode(e.target.value)}
@@ -253,7 +249,7 @@ const ProgramDetails = (props) => {
             label="Offline"
             disabled={inputDisabled}
             value="1"
-            defaultChecked={mode === "1" ? true : false}
+            defaultChecked={mode === '1' ? true : false}
             name="group1"
             type="radio"
             onClick={(e: any) => setMode(e.target.value)}
@@ -263,16 +259,16 @@ const ProgramDetails = (props) => {
             label="Residential"
             disabled={inputDisabled}
             value="2"
-            defaultChecked={mode === "2" ? true : false}
+            defaultChecked={mode === '2' ? true : false}
             name="group1"
             type="radio"
             onClick={(e: any) => setMode(e.target.value)}
           />
         </Form>
       </div>
-      {mode !== "0" && (
+      {mode !== '0' && (
         <>
-          {mode !== "" && (
+          {mode !== '' && (
             <div>
               <label>
                 <b>Location</b>
@@ -286,13 +282,12 @@ const ProgramDetails = (props) => {
                       value={addressTitle}
                       onChange={(e: any) => {
                         setAddressTitle(e.target.value);
-                      }}
-                    >
+                      }}>
                       <option value="At My Address">At My Address</option>
                     </Form.Control>
                   </Form.Group>
                 </Col>
-                {addressTitle === "At My Address" && (
+                {addressTitle === 'At My Address' && (
                   <Col>
                     <Typeahead
                       id="basic-typeahead-multiple"
@@ -307,7 +302,7 @@ const ProgramDetails = (props) => {
                   </Col>
                 )}
               </Row>
-              {addressTitle === "At My Address" && (
+              {addressTitle === 'At My Address' && (
                 <Row>
                   <Col lg={{ offset: 3 }}>
                     <Button
@@ -315,8 +310,7 @@ const ProgramDetails = (props) => {
                       disabled={inputDisabled}
                       onClick={() => {
                         setAddressModal(true);
-                      }}
-                    >
+                      }}>
                       + Add New Address
                     </Button>
                   </Col>
@@ -331,7 +325,7 @@ const ProgramDetails = (props) => {
               />
             </div>
           )}
-          {mode !== "" && mode === "2" && (
+          {mode !== '' && mode === '2' && (
             <div>
               <label>
                 <b>Residential</b>
@@ -342,7 +336,7 @@ const ProgramDetails = (props) => {
                   label="Accommodation"
                   disabled={inputDisabled}
                   value="0"
-                  defaultChecked={residential === "0" ? true : false}
+                  defaultChecked={residential === '0' ? true : false}
                   name="group1"
                   type="radio"
                   onClick={(e: any) => setResidential(e.target.value)}
@@ -352,7 +346,7 @@ const ProgramDetails = (props) => {
                   label="Accommodation + Food"
                   value="1"
                   disabled={inputDisabled}
-                  defaultChecked={residential === "1" ? true : false}
+                  defaultChecked={residential === '1' ? true : false}
                   name="group1"
                   type="radio"
                   onClick={(e: any) => setResidential(e.target.value)}
@@ -360,7 +354,7 @@ const ProgramDetails = (props) => {
               </Form>
             </div>
           )}
-          {residential !== "" && mode === "2" && (
+          {residential !== '' && mode === '2' && (
             <div className="mt-3">
               <Form.Check
                 custom
@@ -388,7 +382,7 @@ const ProgramDetails = (props) => {
               />
             </div>
           )}
-          {showPrivate && mode === "2" && (
+          {showPrivate && mode === '2' && (
             <div className="mt-3">
               <label>
                 <b>Private Rooms</b>
@@ -399,9 +393,7 @@ const ProgramDetails = (props) => {
                   disabled={inputDisabled}
                   value={privateRooms}
                   min={0}
-                  onChange={(e: any) =>
-                    setPrivateRooms(parseInt(e.target.value))
-                  }
+                  onChange={(e: any) => setPrivateRooms(parseInt(e.target.value))}
                 />
                 <InputGroup.Prepend>
                   <InputGroup.Text id="basic-addon1">Rooms</InputGroup.Text>
@@ -409,7 +401,7 @@ const ProgramDetails = (props) => {
               </InputGroup>
             </div>
           )}
-          {showSharing && mode === "2" && (
+          {showSharing && mode === '2' && (
             <div>
               <label>
                 <b>Sharing Rooms</b>
@@ -447,23 +439,20 @@ const ProgramDetails = (props) => {
                       type="number"
                       min={0}
                       value={threeSharing}
-                      onChange={(e: any) =>
-                        setThreeSharing(parseInt(e.target.value))
-                      }
+                      onChange={(e: any) => setThreeSharing(parseInt(e.target.value))}
                     />
                     <InputGroup.Prepend>
                       <InputGroup.Text id="basic-addon1">Rooms</InputGroup.Text>
                     </InputGroup.Prepend>
                   </InputGroup>
                   <span className="small text-muted">
-                    Triple Occupancy as One room will be shared by 3
-                    participants
+                    Triple Occupancy as One room will be shared by 3 participants
                   </span>
                 </Col>
               </Row>
             </div>
           )}
-          {residential === "1" && mode === "2" && (
+          {residential === '1' && mode === '2' && (
             <div>
               <label>
                 <b>Food Description</b>

@@ -10,7 +10,7 @@ interface Properties {
 
 const GroupClasses: React.FC<{
   widgetProps: any;
-  packageTypeName: string;
+  packageTypeName: string|null;
   groupProps: Properties;
   actionType: string;
   userData: any;
@@ -94,7 +94,7 @@ const GroupClasses: React.FC<{
       {props.widgetProps.schema.title === 'Online' ? (
         <img
           src={`/assets/${props.packageTypeName}-online.svg`}
-          alt={props.packageTypeName}
+          alt={props.packageTypeName ? props.packageTypeName : ""}
           title={`${props.packageTypeName} online`}
         />
       ) : (

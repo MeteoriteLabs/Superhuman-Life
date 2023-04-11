@@ -7,7 +7,7 @@ const PackageDateConfig: React.FC<{
   value: string;
   onChange: (args: string) => void;
 }> = (props) => {
-  var inputDisabled =
+  const inputDisabled =
     JSON.parse(props.formContext.programDetails).mode === '2' ? true : props.readonly;
   const [instantBooking, setInstantBooking] = useState(
     props.value
@@ -24,7 +24,7 @@ const PackageDateConfig: React.FC<{
       : false
   );
 
-  var isHybrid: boolean = false;
+  const isHybrid = false;
 
   props.onChange(JSON.stringify({ instantBooking: instantBooking, freeDemo: freeDemo }));
 

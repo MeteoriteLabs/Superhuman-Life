@@ -205,7 +205,7 @@ const PricingTable: React.FC<{
   }
 
   function handlePricingUpdate(value: any, id: any) {
-    let newPricing = [...pricing];
+    const newPricing = [...pricing];
     newPricing[id].mrp = value;
     setPricing(newPricing);
   }
@@ -218,14 +218,14 @@ const PricingTable: React.FC<{
 
   function handleUpdatePricing(id: any, value: any) {
     if (parseInt(value) !== 0) {
-      let newValue = [...pricing];
+      const newValue = [...pricing];
       newValue[id].voucher = parseInt(value);
       newValue[id].suggestedPrice = parseInt(
         ((newValue[id].sapienPricing * 100) / (100 - value)).toFixed(0)
       );
       setPricing(newValue);
     } else {
-      let newValue = [...pricing];
+      const newValue = [...pricing];
       newValue[id].voucher = parseInt(value);
       newValue[id].suggestedPrice = newValue[id].sapienPricing;
       setPricing(newValue);

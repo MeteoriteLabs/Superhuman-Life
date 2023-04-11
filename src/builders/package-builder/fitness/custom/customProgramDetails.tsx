@@ -66,7 +66,6 @@ const CustomProgramDetails: React.FC<{
     if (recordedClasses > 30) {
       setRecordedClasses(30);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     ptOnlineClasses,
     ptOfflineClasses,
