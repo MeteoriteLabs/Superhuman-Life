@@ -51,10 +51,10 @@ export default function EventsTab() {
         const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
             "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"
         ];
-        let dateObj = new Date(time);
-        let month = monthNames[dateObj.getMonth()];
-        let year = dateObj.getFullYear();
-        let date = dateObj.getDate();
+        const dateObj = new Date(time);
+        const month = monthNames[dateObj.getMonth()];
+        const year = dateObj.getFullYear();
+        const date = dateObj.getDate();
 
         return (`${date}-${month}-${year}`);
     }
@@ -93,7 +93,7 @@ export default function EventsTab() {
         <TabContent>
             <hr />
             <Card.Title className="text-right">
-                <Button variant={true ? "outline-secondary" : "light"} size="sm"
+                <Button variant="outline-secondary" size="sm"
                     onClick={() => {
                         createEditExerciseComponent.current.TriggerForm({ id: null, type: 'create' });
                     }}

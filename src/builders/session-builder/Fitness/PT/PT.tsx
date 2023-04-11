@@ -15,7 +15,7 @@ export default function PT() {
   const [showHistory, setShowHistory] = useState<boolean>(false);
   const fitnessActionRef = useRef<any>(null);
 
-  const mainQuery = useQuery(
+  const {data: get_tags, refetch: refetch_tags } = useQuery(
     GET_SESSIONS_FROM_TAGS_FOR_ONE_ON_ONE_OR_ON_DEMAND,
     {
       variables: {
@@ -349,7 +349,7 @@ export default function PT() {
               defaultChecked={showHistory}
               onClick={() => {
                 setShowHistory(!showHistory);
-                mainQuery.refetch().then((res: any) => {
+                refetch_tags().then((res: any) => {
                   handleHistoryPackage(res.data);
                 });
               }}
@@ -360,7 +360,7 @@ export default function PT() {
       <Row>
         <Col>
           <PTTable columns={columns} data={userPackage} />
-          <FitnessAction ref={fitnessActionRef} />
+          <FitnessAction ref={fitnessActionRef} callback={refetch_tags()}/>
         </Col>
       </Row>
     </div>

@@ -1,21 +1,24 @@
-import { useState } from "react";
-import { Form, Row, Col } from "react-bootstrap";
+import React, { useState } from 'react';
+import { Form, Row, Col } from 'react-bootstrap';
 
-const PackageDateConfig = (props: any) => {
+const PackageDateConfig: React.FC<{
+  formContext: any;
+  readonly: boolean;
+  value: string;
+  onChange: (args: string) => void;
+}> = (props) => {
   var inputDisabled =
-    JSON.parse(props.formContext.programDetails).mode === "2"
-      ? true
-      : props.readonly;
+    JSON.parse(props.formContext.programDetails).mode === '2' ? true : props.readonly;
   const [instantBooking, setInstantBooking] = useState(
     props.value
-      ? JSON.parse(props.formContext.programDetails).mode === "2"
+      ? JSON.parse(props.formContext.programDetails).mode === '2'
         ? false
         : JSON.parse(props.value).instantBooking
       : true
   );
   const [freeDemo, setFreeDemo] = useState(
     props.value
-      ? JSON.parse(props.formContext.programDetails).mode === "2"
+      ? JSON.parse(props.formContext.programDetails).mode === '2'
         ? false
         : JSON.parse(props.value).freeDemo
       : false
@@ -23,9 +26,7 @@ const PackageDateConfig = (props: any) => {
 
   var isHybrid: boolean = false;
 
-  props.onChange(
-    JSON.stringify({ instantBooking: instantBooking, freeDemo: freeDemo })
-  );
+  props.onChange(JSON.stringify({ instantBooking: instantBooking, freeDemo: freeDemo }));
 
   return (
     <>
@@ -65,9 +66,7 @@ const PackageDateConfig = (props: any) => {
           <Row>
             <Col>
               <h4>Free Demo Booking</h4>
-              <p className="small">
-                Participants can join one session for free
-              </p>
+              <p className="small">Participants can join one session for free</p>
             </Col>
             <Col>
               <Row>

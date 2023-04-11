@@ -1,8 +1,8 @@
-import { Fragment, useState } from "react";
-import TimeField from "react-simple-timefield";
-import "./bookingleadtime.css";
+import React, { Fragment, useState } from 'react';
+import TimeField from 'react-simple-timefield';
+import './bookingleadtime.css';
 
-export default function BookingLeadTime({ widgetProps, actionType, userData }) {
+const BookingLeadTime: React.FC<{ widgetProps: any; actionType: any; userData: any; }> = (props) => {
   const [time] = useState();
 
   const handleChange = (e, widgetProps) => {
@@ -11,18 +11,17 @@ export default function BookingLeadTime({ widgetProps, actionType, userData }) {
 
   return (
     <Fragment>
-      {userData.mode === "Online Workout" ||
-      userData.mode === "Offline Workout" ? (
+      {props.userData.mode === 'Online Workout' || props.userData.mode === 'Offline Workout' ? (
         <Fragment>
           <h2>For Workout</h2>
           <p>Consumer can choose start time, Before</p>
           <TimeField
-            value={userData.bookingleadtime ? userData.bookingleadtime : time}
-            onChange={(e) => handleChange(e, widgetProps)}
+            value={props.userData.bookingleadtime ? props.userData.bookingleadtime : time}
+            onChange={(e) => handleChange(e, props.widgetProps)}
             input={
               <input
                 type="text"
-                disabled={actionType === "view" ? true : false}
+                disabled={props.actionType === 'view' ? true : false}
                 className="timeInput"
               />
             }
@@ -30,15 +29,14 @@ export default function BookingLeadTime({ widgetProps, actionType, userData }) {
             showSeconds={false}
           />
           <div>
-            <p>
-              You can change this from the schdeule later - Avaliability
-              settings
-            </p>
+            <p>You can change this from the schdeule later - Avaliability settings</p>
           </div>
         </Fragment>
       ) : (
-        ""
+        ''
       )}
     </Fragment>
   );
-}
+};
+
+export default BookingLeadTime;

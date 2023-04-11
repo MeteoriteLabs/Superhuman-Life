@@ -109,10 +109,10 @@ function CreateEditMessage(props: any, ref: any) {
 
   function FillDetails(data: any) {
     const flattenData = flattenObj({ ...data });
-    let detail: any = { leadsdetails: {} };
-    let msg: any = flattenData.websiteContactForms[0];
+    const detail: any = { leadsdetails: {} };
+    const msg: any = flattenData.websiteContactForms[0];
 
-    let o = { ...operation };
+    const o = { ...operation };
     detail.name = o.type.toLowerCase();
     detail.status = msg.Details.status;
     detail.source = msg.Details.source;

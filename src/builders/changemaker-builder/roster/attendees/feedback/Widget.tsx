@@ -1,21 +1,19 @@
-import { useState } from "react";
-import { Form } from "react-bootstrap";
-import Editor from "./textEditor";
-import { GET_FITNESSSCALE_NEW, GET_MOODSCALE_NEW } from "./queries";
-import { useQuery } from "@apollo/client";
-import Rating from "./Rating";
-import { flattenObj } from "../../../../../components/utils/responseFlatten";
+import React, { useState } from 'react';
+import { Form } from 'react-bootstrap';
+import Editor from './textEditor';
+import { GET_FITNESSSCALE_NEW, GET_MOODSCALE_NEW } from './queries';
+import { useQuery } from '@apollo/client';
+import Rating from './Rating';
+import { flattenObj } from '../../../../../components/utils/responseFlatten';
 
-function Widget(props: any) {
-  let Data = props.value !== undefined && JSON.parse(props.value);
-  const [editor, setEditor] = useState<any>(false);
-  const [rating, setRating] = useState<any>(false);
+const Widget: React.FC<{onChange: () => void; value: string;}> = (props) => {
+  const Data = props.value && JSON.parse(props.value);
+  const [editor, setEditor] = useState<boolean>(false);
+  const [rating, setRating] = useState<boolean>(false);
   const [rate1, setRate1] = useState<any>();
   const [img, setImg] = useState<any>();
-  const [value, setValue] = useState<any>(props.value ? Data.rpm.rating : "");
-  const [value2, setValue2] = useState<any>(
-    props.value ? Data.mood.rating : ""
-  );
+  const [value, setValue] = useState<string>(props.value ? Data.rpm.rating : '');
+  const [value2, setValue2] = useState<string>(props.value ? Data.mood.rating : '');
   const [render, setRender] = useState<any>();
   const [icon, setIcon] = useState<any>();
 
@@ -54,26 +52,20 @@ function Widget(props: any) {
       return {};
     });
   }
+
   Fetch();
+
   return (
     <div>
       <div className="d-flex">
         <div>
           <Form.Group controlId="formBasicCheckbox">
-            <Form.Check
-              type="checkbox"
-              label="Notes"
-              onChange={() => setEditor(!editor)}
-            />
+            <Form.Check type="checkbox" label="Notes" onChange={() => setEditor(!editor)} />
           </Form.Group>
         </div>
         <div className="ml-3">
           <Form.Group controlId="formBasicCheckbox">
-            <Form.Check
-              type="checkbox"
-              label="Rating"
-              onChange={() => setRating(!rating)}
-            />
+            <Form.Check type="checkbox" label="Rating" onChange={() => setRating(!rating)} />
           </Form.Group>
         </div>
       </div>
@@ -84,11 +76,11 @@ function Widget(props: any) {
             value1={value}
             value2={value2}
             sendValue={setData}
-            value={props.value ? Data.note : ""}
+            value={props.value ? Data.note : ''}
           />
         </div>
       ) : (
-        " "
+        ' '
       )}
       {rating ? (
         <div className="">
@@ -112,10 +104,10 @@ function Widget(props: any) {
           />
         </div>
       ) : (
-        ""
+        ''
       )}
     </div>
   );
-}
+};
 
 export default Widget;

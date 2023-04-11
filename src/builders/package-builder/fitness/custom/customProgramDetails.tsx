@@ -1,34 +1,28 @@
-import { useState, useContext, useEffect } from "react";
-import {
-  Row,
-  Col,
-  Form,
-  InputGroup,
-  FormControl,
-  Button,
-} from "react-bootstrap";
-import { Typeahead } from "react-bootstrap-typeahead";
-import "react-bootstrap-typeahead/css/Typeahead.css";
-import { useQuery, gql } from "@apollo/client";
-import AuthContext from "../../../../context/auth-context";
-import { flattenObj } from "../../../../components/utils/responseFlatten";
-import AddFitnessAddressModal from "../../../../components/customWidgets/AddFitnessAddressModal";
+import React, { useState, useContext, useEffect } from 'react';
+import { Row, Col, Form, InputGroup, FormControl, Button } from 'react-bootstrap';
+import { Typeahead } from 'react-bootstrap-typeahead';
+import 'react-bootstrap-typeahead/css/Typeahead.css';
+import { useQuery, gql } from '@apollo/client';
+import AuthContext from '../../../../context/auth-context';
+import { flattenObj } from '../../../../components/utils/responseFlatten';
+import AddFitnessAddressModal from '../../../../components/customWidgets/AddFitnessAddressModal';
 
-const CustomProgramDetails = (props) => {
+const CustomProgramDetails: React.FC<{
+  readonly: boolean;
+  value: string;
+  onChange: (args: string | null) => void;
+}> = (props) => {
   const inputDisabled = props.readonly;
 
-  const existingData =
-    props.value === undefined ? undefined : JSON.parse(props.value);
+  const existingData = props.value === undefined ? undefined : JSON.parse(props.value);
   if (existingData && existingData.length) {
     existingData.address = {
       id: JSON.parse(existingData?.address)[0].id,
-      title: JSON.parse(existingData?.address)[0].title,
+      title: JSON.parse(existingData?.address)[0].title
     };
   }
 
-  const [mode, setMode] = useState(
-    props.value ? existingData.mode.toString() : "0"
-  );
+  const [mode, setMode] = useState(props.value ? existingData.mode.toString() : '0');
   const [addressModal, setAddressModal] = useState(false);
 
   const auth = useContext(AuthContext);
@@ -37,7 +31,7 @@ const CustomProgramDetails = (props) => {
   );
   const [addresses, setAddresses] = useState<any[]>([]);
   const [addressTitle, setAddressTitle] = useState(
-    props.value ? existingData.addressTag : "At My Address"
+    props.value ? existingData.addressTag : 'At My Address'
   );
   const [ptOnlineClasses, setPtOnlineClasses] = useState<number>(
     existingData?.ptOnline ? existingData.ptOnline : 0
@@ -54,9 +48,7 @@ const CustomProgramDetails = (props) => {
   const [recordedClasses, setRecordedClasses] = useState<number>(
     existingData?.recorded ? existingData.recorded : 0
   );
-  const [restDays, setRestDays] = useState<number>(
-    existingData?.rest ? existingData.rest : 0
-  );
+  const [restDays, setRestDays] = useState<number>(existingData?.rest ? existingData.rest : 0);
 
   useEffect(() => {
     if (ptOnlineClasses > 30) {
@@ -82,7 +74,7 @@ const CustomProgramDetails = (props) => {
     mode,
     recordedClasses,
     groupOfflineClasses,
-    groupOnlineClasses,
+    groupOnlineClasses
   ]);
 
   const FETCH_USER_ADDRESSES = gql`
@@ -100,7 +92,7 @@ const CustomProgramDetails = (props) => {
 
   const mainQuery = useQuery(FETCH_USER_ADDRESSES, {
     variables: { id: auth.userid },
-    onCompleted: loadData,
+    onCompleted: loadData
   });
 
   function loadData(data: any) {
@@ -110,7 +102,7 @@ const CustomProgramDetails = (props) => {
       [...flattenedData.addresses].map((address) => {
         return {
           id: address.id,
-          address1: address.address1,
+          address1: address.address1
         };
       })
     );
@@ -129,26 +121,20 @@ const CustomProgramDetails = (props) => {
     if (restDays < 0) {
       return false;
     }
-    if (mode === "0") {
-      if (
-        ptOnlineClasses + groupOnlineClasses + recordedClasses + restDays ===
-        30
-      ) {
+    if (mode === '0') {
+      if (ptOnlineClasses + groupOnlineClasses + recordedClasses + restDays === 30) {
         return true;
       } else {
         return false;
       }
     }
     //here we will check for offline
-    if (mode === "1") {
-      if (
-        restDays + groupOfflineClasses + ptOfflineClasses + recordedClasses ===
-        30
-      ) {
-        if (addressTitle === "At My Address" && singleSelections.length) {
+    if (mode === '1') {
+      if (restDays + groupOfflineClasses + ptOfflineClasses + recordedClasses === 30) {
+        if (addressTitle === 'At My Address' && singleSelections.length) {
           return true;
         }
-        if (addressTitle === "At Client Address") {
+        if (addressTitle === 'At Client Address') {
           return true;
         } else {
           return false;
@@ -158,7 +144,7 @@ const CustomProgramDetails = (props) => {
       }
     }
     //here we will check for both(hybrid)
-    if (mode === "2") {
+    if (mode === '2') {
       if (
         restDays +
           ptOfflineClasses +
@@ -168,10 +154,10 @@ const CustomProgramDetails = (props) => {
           recordedClasses ===
         30
       ) {
-        if (addressTitle === "At My Address" && singleSelections.length) {
+        if (addressTitle === 'At My Address' && singleSelections.length) {
           return true;
         }
-        if (addressTitle === "At Client Address") {
+        if (addressTitle === 'At Client Address') {
           return true;
         } else {
           return false;
@@ -198,20 +184,14 @@ const CustomProgramDetails = (props) => {
     if (recordedClasses < 0) {
       setRecordedClasses(0);
     }
-  }, [
-    ptOnlineClasses,
-    ptOfflineClasses,
-    recordedClasses,
-    groupOfflineClasses,
-    groupOnlineClasses,
-  ]);
+  }, [ptOnlineClasses, ptOfflineClasses, recordedClasses, groupOfflineClasses, groupOnlineClasses]);
 
   useEffect(() => {
-    if (mode === "0") {
+    if (mode === '0') {
       setGroupOfflineClasses(0);
       setPtOfflineClasses(0);
       setSingleSelections([]);
-    } else if (mode === "1") {
+    } else if (mode === '1') {
       setPtOnlineClasses(0);
       setGroupOnlineClasses(0);
     }
@@ -228,25 +208,21 @@ const CustomProgramDetails = (props) => {
         groupOnline: groupOnlineClasses,
         groupOffline: groupOfflineClasses,
         recorded: recordedClasses,
-        rest: restDays,
+        rest: restDays
       })
     );
   } else {
-    props.onChange(undefined);
+    props.onChange(null);
   }
 
   useEffect(() => {
-    if (mode === "0") {
-      setRestDays(
-        30 - (ptOnlineClasses + recordedClasses + groupOnlineClasses)
-      );
+    if (mode === '0') {
+      setRestDays(30 - (ptOnlineClasses + recordedClasses + groupOnlineClasses));
     }
-    if (mode === "1") {
-      setRestDays(
-        30 - (groupOfflineClasses + recordedClasses + ptOfflineClasses)
-      );
+    if (mode === '1') {
+      setRestDays(30 - (groupOfflineClasses + recordedClasses + ptOfflineClasses));
     }
-    if (mode === "2") {
+    if (mode === '2') {
       setRestDays(
         30 -
           (ptOnlineClasses +
@@ -262,7 +238,7 @@ const CustomProgramDetails = (props) => {
     groupOnlineClasses,
     groupOfflineClasses,
     recordedClasses,
-    mode,
+    mode
   ]);
 
   return (
@@ -277,7 +253,7 @@ const CustomProgramDetails = (props) => {
             label="Online"
             value="0"
             disabled={inputDisabled}
-            defaultChecked={mode === "0" ? true : false}
+            defaultChecked={mode === '0' ? true : false}
             name="group1"
             type="radio"
             onClick={(e: any) => setMode(e.target.value)}
@@ -287,7 +263,7 @@ const CustomProgramDetails = (props) => {
             label="Offline"
             value="1"
             disabled={inputDisabled}
-            defaultChecked={mode === "1" ? true : false}
+            defaultChecked={mode === '1' ? true : false}
             name="group1"
             type="radio"
             onClick={(e: any) => setMode(e.target.value)}
@@ -297,16 +273,16 @@ const CustomProgramDetails = (props) => {
             label="Hybrid"
             value="2"
             disabled={inputDisabled}
-            defaultChecked={mode === "2" ? true : false}
+            defaultChecked={mode === '2' ? true : false}
             name="group1"
             type="radio"
             onClick={(e: any) => setMode(e.target.value)}
           />
         </Form>
       </div>
-      {mode !== "0" && (
+      {mode !== '0' && (
         <>
-          {mode !== "" && (
+          {mode !== '' && (
             <div>
               <label>
                 <b>Location</b>
@@ -320,16 +296,13 @@ const CustomProgramDetails = (props) => {
                       value={addressTitle}
                       onChange={(e: any) => {
                         setAddressTitle(e.target.value);
-                      }}
-                    >
+                      }}>
                       <option value="At My Address">At My Address</option>
-                      <option value="At Client Address">
-                        At Client Address
-                      </option>
+                      <option value="At Client Address">At Client Address</option>
                     </Form.Control>
                   </Form.Group>
                 </Col>
-                {addressTitle === "At My Address" && (
+                {addressTitle === 'At My Address' && (
                   <Col>
                     <Typeahead
                       id="basic-typeahead-multiple"
@@ -343,11 +316,11 @@ const CustomProgramDetails = (props) => {
                     />
                   </Col>
                 )}
-                {addressTitle === "At Client Address" && (
+                {addressTitle === 'At Client Address' && (
                   <span className="small text-muted">*Within city limits</span>
                 )}
               </Row>
-              {addressTitle === "At My Address" && (
+              {addressTitle === 'At My Address' && (
                 <Row>
                   <Col lg={{ offset: 3 }}>
                     <Button
@@ -355,8 +328,7 @@ const CustomProgramDetails = (props) => {
                       disabled={inputDisabled}
                       onClick={() => {
                         setAddressModal(true);
-                      }}
-                    >
+                      }}>
                       + Add New Address
                     </Button>
                   </Col>
@@ -377,20 +349,17 @@ const CustomProgramDetails = (props) => {
       <div className="m-5 p-2 text-center shadow-lg">
         <h4>Set For One Month (30 Days)</h4>
       </div>
-      {mode !== "" && (
+      {mode !== '' && (
         <div>
           <label>
             <b>Enter Number of Sessions</b>
           </label>
         </div>
       )}
-      {mode !== "" && (mode === "0" || mode === "2") && (
+      {mode !== '' && (mode === '0' || mode === '2') && (
         <Row>
           <Col lg={1}>
-            <img
-              src="/assets/custompersonal-training-online.svg"
-              alt="custom-training"
-            />
+            <img src="/assets/custompersonal-training-online.svg" alt="custom-training" />
           </Col>
           <Col lg={2}>
             <InputGroup className="mb-3">
@@ -402,9 +371,7 @@ const CustomProgramDetails = (props) => {
                 max={28}
                 value={ptOnlineClasses}
                 disabled={inputDisabled}
-                onChange={(e: any) =>
-                  setPtOnlineClasses(parseInt(e.target.value))
-                }
+                onChange={(e: any) => setPtOnlineClasses(parseInt(e.target.value))}
               />
               <InputGroup.Append>
                 <InputGroup.Text id="basic-addon1">Sessions</InputGroup.Text>
@@ -424,9 +391,7 @@ const CustomProgramDetails = (props) => {
                 max={10}
                 value={groupOnlineClasses}
                 disabled={inputDisabled}
-                onChange={(e: any) =>
-                  setGroupOnlineClasses(parseInt(e.target.value))
-                }
+                onChange={(e: any) => setGroupOnlineClasses(parseInt(e.target.value))}
               />
               <InputGroup.Append>
                 <InputGroup.Text id="basic-addon1">Sessions</InputGroup.Text>
@@ -435,13 +400,10 @@ const CustomProgramDetails = (props) => {
           </Col>
         </Row>
       )}
-      {mode !== "" && (mode === "1" || mode === "2") && (
+      {mode !== '' && (mode === '1' || mode === '2') && (
         <Row>
           <Col lg={1}>
-            <img
-              src="/assets/custompersonal-training-offline.svg"
-              alt="custom-training"
-            />
+            <img src="/assets/custompersonal-training-offline.svg" alt="custom-training" />
           </Col>
           <Col lg={2}>
             <InputGroup className="mb-3">
@@ -453,9 +415,7 @@ const CustomProgramDetails = (props) => {
                 max={28}
                 value={ptOfflineClasses}
                 disabled={inputDisabled}
-                onChange={(e: any) =>
-                  setPtOfflineClasses(parseInt(e.target.value))
-                }
+                onChange={(e: any) => setPtOfflineClasses(parseInt(e.target.value))}
               />
               <InputGroup.Append>
                 <InputGroup.Text id="basic-addon1">Sessions</InputGroup.Text>
@@ -475,9 +435,7 @@ const CustomProgramDetails = (props) => {
                 max={10}
                 value={groupOfflineClasses}
                 disabled={inputDisabled}
-                onChange={(e: any) =>
-                  setGroupOfflineClasses(parseInt(e.target.value))
-                }
+                onChange={(e: any) => setGroupOfflineClasses(parseInt(e.target.value))}
               />
               <InputGroup.Append>
                 <InputGroup.Text id="basic-addon1">Sessions</InputGroup.Text>
@@ -486,7 +444,7 @@ const CustomProgramDetails = (props) => {
           </Col>
         </Row>
       )}
-      {mode !== "" && (
+      {mode !== '' && (
         <Row>
           <Col lg={1}>
             <img src="/assets/customclassic.svg" alt="custom-training" />
@@ -501,9 +459,7 @@ const CustomProgramDetails = (props) => {
                 max={10}
                 value={recordedClasses}
                 disabled={inputDisabled}
-                onChange={(e: any) =>
-                  setRecordedClasses(parseInt(e.target.value))
-                }
+                onChange={(e: any) => setRecordedClasses(parseInt(e.target.value))}
               />
               <InputGroup.Append>
                 <InputGroup.Text id="basic-addon1">Sessions</InputGroup.Text>
@@ -512,12 +468,12 @@ const CustomProgramDetails = (props) => {
           </Col>
         </Row>
       )}
-      {mode !== "" && (
+      {mode !== '' && (
         <label>
           <b>Rest Days</b>
         </label>
       )}
-      {mode !== "" && (
+      {mode !== '' && (
         <Row>
           <Col lg={2}>
             <InputGroup className="mb-3">

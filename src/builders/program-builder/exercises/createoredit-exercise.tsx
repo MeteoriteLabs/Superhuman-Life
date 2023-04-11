@@ -112,8 +112,8 @@ function CreateEditExercise(props: any, ref: any) {
         }
 
         const flattenedData = flattenObj({ ...data });
-        let details: any = {};
-        let msg = flattenedData.exercises;
+        const details: any = {};
+        const msg = flattenedData.exercises;
         details.exercise = msg[0].exercisename;
 
         details.level = ENUM_EXERCISE_EXERCISELEVEL[msg[0].exerciselevel];

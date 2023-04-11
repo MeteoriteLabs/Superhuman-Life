@@ -7,32 +7,29 @@ import { GET_NOTES_NEW } from "./queries";
 import { useQuery } from "@apollo/client";
 import "./Styles.css";
 import { flattenObj } from "../../../../../components/utils/responseFlatten";
-//import AuthContext from "../../../../../context/auth-context";
 
 function Index() {
      const last = window.location.pathname.split("/").pop();
-     //const auth = useContext(AuthContext);
      const CreatePostComponent = useRef<any>(null);
      const [changemaker, setChangemaker] = useState<any>([]);
      const [notes, setNotes] = useState<any>();
-     //const noteFetch: any = [];
 
-     function FetchData(_variables: {} = { clientid: last }) {
+     function FetchData(_variables: Record<string, unknown> = { clientid: last }) {
           useQuery(GET_CHANGEMAKERS_NEW, { variables: _variables, onCompleted: loadData });
      }
      function loadData(data: any) {
           const flattenData = flattenObj({...data})
           
-          let changemakers: any = [];
-          let namearr: any = [];
+          const changemakers: any = [];
+          const namearr: any = [];
           let flag: any;
 
           [...flattenData.clientPackages].map((Detail) => {
-               let changemakerValue = {};
-               let img = "img";
-               let type = "type";
-               let id = "id";
-               let name = Detail.fitnesspackages[0].users_permissions_user.username;
+               const changemakerValue = {};
+               const img = "img";
+               const type = "type";
+               const id = "id";
+               const name = Detail.fitnesspackages[0].users_permissions_user.username;
                if (!namearr.includes(name)) {
                     flag = true;
                     namearr.push(name);
@@ -53,7 +50,7 @@ function Index() {
           });
      }
 
-     function FetchNotes(_variables: {} = { id: last }) {
+     function FetchNotes(_variables: Record<string, unknown> = { id: last }) {
           useQuery(GET_NOTES_NEW, { variables: _variables, onCompleted: LoadNotes });
      }
 

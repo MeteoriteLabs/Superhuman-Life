@@ -11,7 +11,7 @@ const PackageSearch = (props: any) => {
      const [searchInput, setSearchInput] = useState(null);
      const [selected, setSelected] = useState<any[]>([]);
      const inputField = useRef<any>();
-     let skipval: Boolean = true;
+     let skipval = true;
 
      const GET_PACKAGELIST = gql`
           query packageListQuery($filter: String!, $id: ID) {
@@ -35,7 +35,7 @@ const PackageSearch = (props: any) => {
           }
      `;
 
-     function FetchPackageList(_variable: {} = { filter: " ", id: auth.userid }) {
+     function FetchPackageList(_variable: Record<string, unknown> = { filter: " ", id: auth.userid }) {
           useQuery(GET_PACKAGELIST, { variables: _variable, onCompleted: loadPackageList, skip: !searchInput });
      }
 
@@ -62,7 +62,7 @@ const PackageSearch = (props: any) => {
 
      function handleSelectedPackageAdd(name: any, id: any) {
           const values = [...selected];
-          let a = values.find((e) => e.id === id);
+          const a = values.find((e) => e.id === id);
           if (!a) {
                values.push({ value: name, id: id });
                setSelected(values);
@@ -111,9 +111,9 @@ const PackageSearch = (props: any) => {
                     />
                </InputGroup>
                <>
-                    {packageLists.slice(0, 5).map((p) => {
+                    {packageLists.slice(0, 5).map((p, index) => {
                          return (
-                              <Container className="pl-0">
+                              <Container className="pl-0" key={index}>
                                    <option
                                         style={{ cursor: "pointer" }}
                                         className="m-2 p-1 shadow-sm rounded bg-white"
@@ -130,10 +130,11 @@ const PackageSearch = (props: any) => {
                     })}
                </>
                <>
-                    {selected.map((val) => {
+                    {selected.map((val, index) => {
                          return (
                               <div
                                    className="text-center mt-2 mr-2"
+                                   key={index}
                                    style={{
                                         display: "inline-block",
                                         height: "32px",

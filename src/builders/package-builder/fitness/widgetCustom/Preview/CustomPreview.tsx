@@ -1,79 +1,79 @@
-import { Fragment } from "react";
+import React, { Fragment } from "react";
 import { Col, Row } from "react-bootstrap";
 
-export default function CustomPreview(props) {
-  const {
-    packageType,
-    ptonline,
-    ptoffline,
-    grouponline,
-    groupoffline,
-    recordedclasses,
-  } = props;
+const CustomPreview: React.FC<{packageType,
+  ptonline: any;
+  ptoffline: any;
+  grouponline: any;
+  groupoffline: any;
+  recordedclasses: any;}> = (props) => {
+  
   return (
     <Row>
       <Col>
-        {ptonline !== undefined && ptonline !== 0 && (
+        {props.ptonline !== undefined && props.ptonline !== 0 && (
           <Fragment>
             <img
-              src={`/assets/preview-${packageType}-personal-training-online.svg`}
-              alt={`${packageType}`}
-              title={`${packageType} personal training online`}
+              src={`/assets/preview-${props.packageType}-personal-training-online.svg`}
+              alt={`${props.packageType}`}
+              title={`${props.packageType} personal training online`}
             />
-            <p className="text-nowrap">{ptonline}</p>
+            <p className="text-nowrap">{props.ptonline}</p>
           </Fragment>
         )}
       </Col>
       <Col>
-        {ptoffline !== undefined && ptoffline !== 0 && (
+        {props.ptoffline !== undefined && props.ptoffline !== 0 && (
           <Fragment>
             <img
-              src={`/assets/preview-${packageType}-personal-training-offline.svg`}
-              alt={`${packageType}`}
-              title={`${packageType} personal training offline`}
+              src={`/assets/preview-${props.packageType}-personal-training-offline.svg`}
+              alt={`${props.packageType}`}
+              title={`${props.packageType} personal training offline`}
             />
-            <p className="text-nowrap">{ptoffline}</p>
+            <p className="text-nowrap">{props.ptoffline}</p>
           </Fragment>
         )}
       </Col>
       <Col>
-        {grouponline !== undefined && grouponline !== 0 && (
+        {props.grouponline !== undefined && props.grouponline !== 0 && (
           <Fragment>
             <img
-              src={`/assets/preview-${packageType}-group-online.svg`}
-              alt={`${packageType}`}
-              title={`${packageType} group online`}
+              src={`/assets/preview-${props.packageType}-group-online.svg`}
+              alt={`${props.packageType}`}
+              title={`${props.packageType} group online`}
             />
-            <p className="text-nowrap">{grouponline}</p>
+            <p className="text-nowrap">{props.grouponline}</p>
           </Fragment>
         )}
       </Col>
       <Col>
-        {groupoffline !== undefined && groupoffline !== 0 && (
+        {props.groupoffline !== undefined && props.groupoffline !== 0 && (
           <Fragment>
             <img
-              src={`/assets/preview-${packageType}-group-offline.svg`}
-              alt={`${packageType}`}
-              title={`${packageType} group offline`}
+              src={`/assets/preview-${props.packageType}-group-offline.svg`}
+              alt={`${props.packageType}`}
+              title={`${props.packageType} group offline`}
             />
-            <p className="text-nowrap">{groupoffline}</p>
+            <p className="text-nowrap">{props.groupoffline}</p>
           </Fragment>
         )}
       </Col>
 
       {/* preview-custom-classic */}
       <Col>
-        {recordedclasses !== undefined && recordedclasses !== 0 && (
+        {props.recordedclasses && props.recordedclasses.length && (
           <Fragment>
             <img
-              src={`/assets/preview-${packageType}-classic.svg`}
-              alt={`${packageType}`}
-              title={packageType}
+              src={`/assets/preview-${props.packageType}-classic.svg`}
+              alt={`${props.packageType}`}
+              title={props.packageType}
             />
-            <p className="text-nowrap">{recordedclasses}</p>
+            <p className="text-nowrap">{props.recordedclasses}</p>
           </Fragment>
         )}
       </Col>
     </Row>
   );
 }
+
+export default CustomPreview;

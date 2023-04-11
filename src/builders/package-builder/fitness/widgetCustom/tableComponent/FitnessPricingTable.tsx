@@ -1,5 +1,4 @@
-import React, { Fragment, useState } from "react";
-import { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Table } from "react-bootstrap";
 import "./fitnessPricing.css";
 import Voucher from "./Voucher";
@@ -20,28 +19,29 @@ type FitnessPricing = {
   mrp: number | string;
 };
 
-export default function FitnessPricingTable({
-  userData,
-  setUserData,
-  actionType,
-  type,
-  formData,
-  packageTypeName,
-  pricingDetailRef,
-  widgetProps,
-  auth,
-}) {
-  let {
-    ptonline,
-    ptoffline,
-    mode,
-    grouponline,
-    groupoffline,
-    recordedclasses,
-    duration,
-    fitness_package_type,
-  } = userData;
-
+interface UserData{
+  ptonline: any;
+    ptoffline: any;
+    mode: any;
+    grouponline: any;
+    groupoffline: any;
+    recordedclasses: any;
+    duration: any;
+    fitness_package_type: any;
+    fitnesspackagepricing: any;
+}
+const FitnessPricingTable: React.FC<{
+  userData: UserData;
+  setUserData: any;
+  actionType: any;
+  type: any;
+  formData: any;
+  packageTypeName: any;
+  pricingDetailRef: any;
+  widgetProps: any;
+  auth: any;
+}> = (props) => {
+  
   const [fitnesspackagepricing, setFitnesspackagepricing] = useState<
     FitnessPricing[]
   >([
@@ -116,10 +116,10 @@ export default function FitnessPricingTable({
     }
 
     // get dicount vouchers from vouchers collection.
-    let updatePrice = [...arraySapient];
-    if (actionType === "edit") {
-      if (userData.fitnesspackagepricing) {
-        const arrayVoucher = userData.fitnesspackagepricing.map(
+    const updatePrice = [...arraySapient];
+    if (props.actionType === "edit") {
+      if (props.userData.fitnesspackagepricing) {
+        const arrayVoucher = props.userData.fitnesspackagepricing.map(
           (item) => item.voucher
         );
         for (let i = 0; i < updatePrice.length; i++) {
@@ -156,7 +156,7 @@ export default function FitnessPricingTable({
         };
       }) => item.fitness_package_type.type === "One-On-One"
     );
-    const arrayPTClasses = [ptonline, ptoffline];
+    const arrayPTClasses = [props.userData.ptonline, props.userData.ptoffline];
     const sapientPrice = calculateSuggestPrice(arrayPTdata, arrayPTClasses);
 
     calculateArraySuggestPrice(sapientPrice, arrayDuration);
@@ -170,7 +170,7 @@ export default function FitnessPricingTable({
         };
       }) => item.fitness_package_type.type === "Group Class"
     );
-    const arrayGroupClasses = [grouponline, groupoffline];
+    const arrayGroupClasses = [props.userData.grouponline, props.userData.groupoffline];
     const sapientPrice = calculateSuggestPrice(
       arrayGroupData,
       arrayGroupClasses
@@ -187,10 +187,10 @@ export default function FitnessPricingTable({
         };
       }) => item.fitness_package_type.type === "Classic Class"
     );
-    const arrayClassic = [recordedclasses];
+    const arrayClassic = [props.userData.recordedclasses];
     const sapientPrice = calculateSuggestPrice(arrayClassicData, arrayClassic);
 
-    calculateArraySuggestPrice(sapientPrice, [duration]);
+    calculateArraySuggestPrice(sapientPrice, [props.userData.duration]);
   };
 
   //custom
@@ -220,22 +220,22 @@ export default function FitnessPricingTable({
 
     for (let i = 0; i < arrayPTdata.length; i++) {
       if (arrayPTdata[i].mode === "Online") {
-        arrayCustomPrice.push(arrayPTdata[i].mrp * ptonline);
+        arrayCustomPrice.push(arrayPTdata[i].mrp * props.userData.ptonline);
       } else {
-        arrayCustomPrice.push(arrayPTdata[i].mrp * ptoffline);
+        arrayCustomPrice.push(arrayPTdata[i].mrp * props.userData.ptoffline);
       }
     }
 
     for (let i = 0; i < arrayGroupData.length; i++) {
       if (arrayGroupData[i].mode === "Online") {
-        arrayCustomPrice.push(arrayGroupData[i].mrp * grouponline);
+        arrayCustomPrice.push(arrayGroupData[i].mrp * props.userData.grouponline);
       } else {
-        arrayCustomPrice.push(arrayGroupData[i].mrp * groupoffline);
+        arrayCustomPrice.push(arrayGroupData[i].mrp * props.userData.groupoffline);
       }
     }
 
     for (let i = 0; i < arrayClassicData.length; i++) {
-      arrayCustomPrice.push(arrayClassicData[i].mrp * recordedclasses);
+      arrayCustomPrice.push(arrayClassicData[i].mrp * props.userData.recordedclasses);
     }
 
     const totalCustomPrice = arrayCustomPrice.reduce((acc, cur) => acc + cur);
@@ -245,71 +245,70 @@ export default function FitnessPricingTable({
   const fetchData = (data) => {
     const flattenedData = flattenObj({ ...data });
 
-    if (fitness_package_type === "One-On-One") {
+    if (props.userData.fitness_package_type === "One-On-One") {
       PTSuggestedPricing(flattenedData);
     }
     //  group
-    else if (fitness_package_type === "Group Class") {
+    else if (props.userData.fitness_package_type === "Group Class") {
       groupSuggestedPricing(flattenedData);
     }
     //record/ classic
-    else if (fitness_package_type === "Classic Class") {
+    else if (props.userData.fitness_package_type === "Classic Class") {
       classicSuggestPricing(flattenedData);
     }
     // custom
-    else if (fitness_package_type === "Custom Fitness") {
+    else if (props.userData.fitness_package_type === "Custom Fitness") {
       customSuggestPrice(flattenedData);
     }
   };
 
   useEffect(() => {
-    if (pricingDetailRef) {
-      pricingDetailRef.current = {
+    if (props.pricingDetailRef) {
+      props.pricingDetailRef.current = {
         getFitnessPackagePricing: () => fitnesspackagepricing,
       };
     }
-  }, [pricingDetailRef, fitnesspackagepricing]);
+  }, [props.pricingDetailRef, fitnesspackagepricing]);
 
   useEffect(() => {
     let updatePricing: any = "";
 
-    if (actionType === "create") {
-      if (userData.fitnesspackagepricing) {
-        updatePricing = _.cloneDeep(userData.fitnesspackagepricing);
+    if (props.actionType === "create") {
+      if (props.userData.fitnesspackagepricing) {
+        updatePricing = _.cloneDeep(props.userData.fitnesspackagepricing);
       } else {
         updatePricing = [...fitnesspackagepricing];
       }
 
-      updatePricing[0].duration = duration;
-    } else if (actionType === "view") {
-      if (formData.fitnesspackagepricing) {
-        updatePricing = formData.fitnesspackagepricing;
+      updatePricing[0].duration = props.userData.duration;
+    } else if (props.actionType === "view") {
+      if (props.formData.fitnesspackagepricing) {
+        updatePricing = props.formData.fitnesspackagepricing;
       }
     } else {
-      if (userData.fitnesspackagepricing) {
-        updatePricing = userData.fitnesspackagepricing;
+      if (props.userData.fitnesspackagepricing) {
+        updatePricing = props.userData.fitnesspackagepricing;
       }
     }
     setFitnesspackagepricing(updatePricing);
-  }, [userData, actionType, duration, formData]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [props.userData, props.actionType, props.userData.duration, props.formData]);
 
   useEffect(() => {
-    if (type === "One-On-One") {
-      setOnlineClassesType(ptonline);
-      setOffineClassesType(ptoffline);
-    } else if (type === "Group Class") {
-      setOnlineClassesType(grouponline);
-      setOffineClassesType(groupoffline);
-    } else if (type === "Custom Fitness") {
+    if (props.type === "One-On-One") {
+      setOnlineClassesType(props.userData.ptonline);
+      setOffineClassesType(props.userData.ptoffline);
+    } else if (props.type === "Group Class") {
+      setOnlineClassesType(props.userData.grouponline);
+      setOffineClassesType(props.userData.groupoffline);
     }
-  }, [ptonline, ptoffline, groupoffline, grouponline, type]);
+  }, [props.userData.ptonline, props.userData.ptoffline, props.userData.groupoffline, props.userData.grouponline, props.type]);
 
-  if (mode === "Online" && ptoffline > 0) {
-    ptonline = 0;
-    setUserData({ ...userData, ptoffline });
-  } else if (mode === "Offline" && ptonline > 0) {
-    ptonline = 0;
-    setUserData({ ...userData, ptonline });
+  if (props.userData.mode === "Online" && props.userData.ptoffline > 0) {
+    const ptoffline = 0;
+    props.setUserData({ ...props.userData, ptoffline });
+  } else if (props.userData.mode === "Offline" && props.userData.ptonline > 0) {
+    const ptonline = 0;
+    props.setUserData({ ...props.userData, ptonline });
   }
 
   return (
@@ -318,10 +317,10 @@ export default function FitnessPricingTable({
         <thead>
           <tr>
             <th>Details</th>
-            {type === "Classic Class" ||
-            userData.mode === "Online Workout" ||
-            userData.mode === "Offline Workout" ? (
-              <th>{duration} days</th>
+            {props.type === "Classic Class" ||
+            props.userData.mode === "Online Workout" ||
+            props.userData.mode === "Offline Workout" ? (
+              <th>{props.userData.duration} days</th>
             ) : (
               <>
                 <th>Monthly</th>
@@ -333,42 +332,42 @@ export default function FitnessPricingTable({
           </tr>
         </thead>
         <tbody>
-          {type !== "Custom Fitness" ? (
-            type === "Classic Class" ? (
+          {props.type !== "Custom Fitness" ? (
+            props.type === "Classic Class" ? (
               <RecordedPricingTable
-                recordedclasses={recordedclasses}
-                packageTypeName={packageTypeName}
-                type={type}
-                mode={mode}
+                recordedclasses={props.userData.recordedclasses}
+                packageTypeName={props.packageTypeName}
+                type={props.type}
+                mode={props.userData.mode}
               />
             ) : (
               <PTGroupPricingTable
-                type={type}
-                mode={mode}
+                type={props.type}
+                mode={props.userData.mode}
                 onlineClassesType={onlineClassesType}
                 offlineClassesType={offlineClassesType}
-                packageTypeName={packageTypeName}
+                packageTypeName={props.packageTypeName}
               />
             )
           ) : (
             <CustomPricingTable
-              ptonline={ptonline}
-              ptoffline={ptoffline}
-              grouponline={grouponline}
-              groupoffline={groupoffline}
-              recordedclasses={recordedclasses}
-              packageTypeName={packageTypeName}
-              type={type}
-              mode={mode}
+              ptonline={props.userData.ptonline}
+              ptoffline={props.userData.ptoffline}
+              grouponline={props.userData.grouponline}
+              groupoffline={props.userData.groupoffline}
+              recordedclasses={props.userData.recordedclasses}
+              packageTypeName={props.packageTypeName}
+              type={props.type}
+              mode={props.userData.mode}
             />
           )}
 
           <tr>
             <td></td>
             <Voucher
-              type={type}
-              mode={mode}
-              actionType={actionType}
+              type={props.type}
+              mode={props.userData.mode}
+              actionType={props.actionType}
               minPrice={minPrice}
               setMinPrice={setMinPrice}
               fitnesspackagepricing={fitnesspackagepricing}
@@ -380,39 +379,38 @@ export default function FitnessPricingTable({
           <tr>
             <td className="font-weight-bold">Total Sessions</td>
             <ClassesSessions
-              type={type}
-              mode={mode}
-              ptonline={ptonline}
-              ptoffline={ptoffline}
-              grouponline={grouponline}
-              groupoffline={groupoffline}
-              recordedclasses={recordedclasses}
-              classicClasses={recordedclasses}
+              type={props.type}
+              mode={props.userData.mode}
+              ptonline={props.userData.ptonline}
+              ptoffline={props.userData.ptoffline}
+              grouponline={props.userData.grouponline}
+              groupoffline={props.userData.groupoffline}
+              recordedclasses={props.userData.recordedclasses}
+              classicClasses={props.userData.recordedclasses}
             />
           </tr>
           <tr>
             <td>Suggested Pricing</td>
             <SuggestedPricing
-              type={type}
-              mode={mode}
-              auth={auth}
+              type={props.type}
+              mode={props.userData.mode}
+              auth={props.auth}
               fitnesspackagepricing={fitnesspackagepricing}
-              userData={userData}
+              userData={props.userData}
             />
           </tr>
           <tr>
             <td>Set MRP</td>
             <MRP
               index={index}
-              type={type}
-              mode={mode}
-              actionType={actionType}
+              type={props.type}
+              mode={props.userData.mode}
+              actionType={props.actionType}
               fitnesspackagepricing={fitnesspackagepricing}
               setFitnesspackagepricing={setFitnesspackagepricing}
-              widgetProps={widgetProps}
+              widgetProps={props.widgetProps}
               minPrice={minPrice}
-              setMinPrice={setMinPrice}
-              userData={userData}
+              userData={props.userData}
             />
           </tr>
         </tbody>
@@ -420,3 +418,5 @@ export default function FitnessPricingTable({
     </>
   );
 }
+
+export default FitnessPricingTable;

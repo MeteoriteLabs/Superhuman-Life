@@ -35,7 +35,7 @@ interface Operation {
 
 function CreateEditContact(props: any, ref: any) {
   const auth = useContext(AuthContext);
-  const contactSchema: {} = require("./contact.json");
+  const contactSchema: Record<string, unknown> = require("./contact.json");
   const [contactDetails, setContactDetails] = useState({} as PaymentDetails);
   const [operation, setOperation] = useState<Operation>({} as Operation);
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
@@ -120,7 +120,7 @@ function CreateEditContact(props: any, ref: any) {
   function FillDetails(data: any) {
     const flattenData = flattenObj({ ...data });
 
-    let detail = {} as PaymentDetails;
+    const detail = {} as PaymentDetails;
 
     if (flattenData) {
       detail.id = flattenData.id;

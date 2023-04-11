@@ -27,7 +27,7 @@ function CreatePaymentSchedule(props: any, ref: any) {
     params.get("isChangemaker") === "false" ? false : true;
 
   const auth = useContext(AuthContext);
-  const paymentSchema: {} = require("./paymentSettings.json");
+  const paymentSchema: Record<string, unknown> = require("./paymentSettings.json");
   const [operation, setOperation] = useState<Operation>({} as Operation);
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
   const [showDeactivateModal, setShowDeactivateModal] =

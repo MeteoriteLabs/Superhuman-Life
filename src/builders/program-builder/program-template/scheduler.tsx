@@ -845,22 +845,24 @@ const Schedular = (props: any) => {
     newEvent.endTime =
       timeInput.endTime === '' ? event.endHour + ':' + event.endMin : timeInput.endTime;
 
-    let existingValues = currentProgram === null ? [] : [...currentProgram];
+    const existingValues = currentProgram === null ? [] : [...currentProgram];
     if (arr2.event.type2 === 'transferEvent') {
       if (existingValues.length === 0) {
         existingValues.push(newEvent);
       } else {
-        var timeStartTransfer: any = new Date('01/01/2007 ' + handleTimeFormat(newEvent.startTime));
-        var timeEndTransfer: any = new Date('01/01/2007 ' + handleTimeFormat(newEvent.endTime));
-        var diff1Transfer = timeEndTransfer - timeStartTransfer;
-        for (var j = 0; j <= existingValues.length - 1; j++) {
-          var startTimeHourTransfer: any = new Date(
+        const timeStartTransfer: any = new Date(
+          '01/01/2007 ' + handleTimeFormat(newEvent.startTime)
+        );
+        const timeEndTransfer: any = new Date('01/01/2007 ' + handleTimeFormat(newEvent.endTime));
+        const diff1Transfer = timeEndTransfer - timeStartTransfer;
+        for (let j = 0; j <= existingValues.length - 1; j++) {
+          const startTimeHourTransfer: any = new Date(
             '01/01/2007 ' + handleTimeFormat(existingValues[j].startTime)
           );
-          var endTimeHourTransfer: any = new Date(
+          const endTimeHourTransfer: any = new Date(
             '01/01/2007 ' + handleTimeFormat(existingValues[j].endTime)
           );
-          var diff2Transfer = endTimeHourTransfer - startTimeHourTransfer;
+          const diff2Transfer = endTimeHourTransfer - startTimeHourTransfer;
 
           if (diff2Transfer < diff1Transfer) {
             existingValues.splice(j, 0, newEvent);
@@ -873,7 +875,7 @@ const Schedular = (props: any) => {
         }
       }
     } else {
-      let a = existingValues.findIndex(
+      const a = existingValues.findIndex(
         (val) =>
           val.id === arr2.event.id &&
           val.day === arr2.event.day &&
@@ -884,17 +886,17 @@ const Schedular = (props: any) => {
       if (existingValues.length === 0) {
         existingValues.push(newEvent);
       } else {
-        var timeStart: any = new Date('01/01/2007 ' + handleTimeFormat(newEvent.startTime));
-        var timeEnd: any = new Date('01/01/2007 ' + handleTimeFormat(newEvent.endTime));
-        var diff1 = timeEnd - timeStart;
-        for (var k = 0; k <= existingValues.length - 1; k++) {
-          var startTimeHour: any = new Date(
+        const timeStart: any = new Date('01/01/2007 ' + handleTimeFormat(newEvent.startTime));
+        const timeEnd: any = new Date('01/01/2007 ' + handleTimeFormat(newEvent.endTime));
+        const diff1 = timeEnd - timeStart;
+        for (let k = 0; k <= existingValues.length - 1; k++) {
+          const startTimeHour: any = new Date(
             '01/01/2007 ' + handleTimeFormat(existingValues[k].startTime)
           );
-          var endTimeHour: any = new Date(
+          const endTimeHour: any = new Date(
             '01/01/2007 ' + handleTimeFormat(existingValues[k].endTime)
           );
-          var diff2 = endTimeHour - startTimeHour;
+          const diff2 = endTimeHour - startTimeHour;
 
           if (diff2 < diff1) {
             existingValues.splice(k, 0, newEvent);
@@ -908,9 +910,9 @@ const Schedular = (props: any) => {
       }
     }
 
-    let lastEventDay: number = 0;
+    let lastEventDay = 0;
 
-    for (var m = 0; m <= existingValues.length - 1; m++) {
+    for (let m = 0; m <= existingValues.length - 1; m++) {
       if (existingValues[m].day > lastEventDay) {
         lastEventDay = parseInt(existingValues[m].day);
       }
@@ -920,8 +922,8 @@ const Schedular = (props: any) => {
       date: moment(event.sessionDate).format('YYYY-MM-DD')
     };
 
-    let result = await query.refetch(variables);
-    let filterResult = await AvailabilityCheck({
+    const result = await query.refetch(variables);
+    const filterResult = await AvailabilityCheck({
       sessions: result.data.sessions,
       event: event,
       time: e
@@ -939,7 +941,7 @@ const Schedular = (props: any) => {
     );
     const availabilitySlots = availability ? [...availability.booking_slots] : [];
     if (availabilitySlots.length > 0) {
-      for (var x = 0; x < availabilitySlots.length; x++) {
+      for (let x = 0; x < availabilitySlots.length; x++) {
         if (
           moment(newEvent.endTime, 'hh:mm:ss').isSameOrAfter(
             moment(availabilitySlots[x].startTime, 'hh:mm:ss')
@@ -1097,7 +1099,7 @@ const Schedular = (props: any) => {
 
   // this helps handle the changes of the event when click on it.
   function handleSaveChanges(e: any, mode: any, tag: any) {
-    let newEvent: any = {};
+    const newEvent: any = {};
 
     if (arr2.event?.import === 'importedEvent') {
       handleImportedEvent(e, mode, tag);
@@ -1110,7 +1112,7 @@ const Schedular = (props: any) => {
       );
       const availabilitySlots = availability ? [...availability.booking_slots] : [];
       if (availabilitySlots.length > 0) {
-        for (var x = 0; x < availabilitySlots.length; x++) {
+        for (let x = 0; x < availabilitySlots.length; x++) {
           if (
             moment(newEvent.endTime, 'hh:mm:ss').isSameOrAfter(
               moment(availabilitySlots[x].startTime, 'hh:mm:ss')
@@ -1141,10 +1143,10 @@ const Schedular = (props: any) => {
       });
     }
   }
-  var changedDay;
-  var changedHour;
-  var changedEvent;
-  var changedMin;
+  let changedDay;
+  let changedHour;
+  let changedEvent;
+  let changedMin;
   const handleClose = () => {
     setData([]);
     setShowModal(false);
@@ -1300,9 +1302,9 @@ const Schedular = (props: any) => {
       values[arr2.d][arr2.h][arr2.m] = [];
     }
     const diff = handleHeight(arr2.event) / 15;
-    var sh = parseInt(arr2.h);
-    var sm = parseInt(arr2.m);
-    for (var i = 0; i < diff; i++) {
+    let sh = parseInt(arr2.h);
+    let sm = parseInt(arr2.m);
+    for (let i = 0; i < diff; i++) {
       sm += 15;
       if (sm === 60) {
         sh++;
@@ -1310,7 +1312,7 @@ const Schedular = (props: any) => {
       }
     }
 
-    let localEvent: any = {};
+    const localEvent: any = {};
     localEvent.id = arr2.event.id;
     localEvent.day = arr2.d;
     localEvent.hour = arr2.h;
@@ -1322,7 +1324,7 @@ const Schedular = (props: any) => {
     localEvent.type = arr2.event.type;
     localEvent.title = arr2.event.title;
 
-    let newEvent: any = {};
+    const newEvent: any = {};
     newEvent.id = arr2.event.id;
     newEvent.name = arr2.event.title;
     newEvent.startTime = arr2.h + ':' + arr2.m;
@@ -1331,19 +1333,19 @@ const Schedular = (props: any) => {
     newEvent.mode = arr2.event.mode;
     newEvent.tag = arr2.event.tag;
     newEvent.day = arr2.d;
-    let existingValues = currentProgram === null ? [] : [...currentProgram];
+    const existingValues = currentProgram === null ? [] : [...currentProgram];
     if (arr2.event.type2 === 'transferEvent') {
-      var timeStartTransfer: any = new Date('01/01/2007 ' + handleTimeFormat(newEvent.startTime));
-      var timeEndTransfer: any = new Date('01/01/2007 ' + handleTimeFormat(newEvent.endTime));
-      var diff1Transfer = timeEndTransfer - timeStartTransfer;
-      for (var j = 0; j <= existingValues.length - 1; j++) {
-        var startTimeHourTransfer: any = new Date(
+      const timeStartTransfer: any = new Date('01/01/2007 ' + handleTimeFormat(newEvent.startTime));
+      const timeEndTransfer: any = new Date('01/01/2007 ' + handleTimeFormat(newEvent.endTime));
+      const diff1Transfer = timeEndTransfer - timeStartTransfer;
+      for (let j = 0; j <= existingValues.length - 1; j++) {
+        const startTimeHourTransfer: any = new Date(
           '01/01/2007 ' + handleTimeFormat(existingValues[j].startTime)
         );
-        var endTimeHourTransfer: any = new Date(
+        const endTimeHourTransfer: any = new Date(
           '01/01/2007 ' + handleTimeFormat(existingValues[j].endTime)
         );
-        var diff2Transfer = endTimeHourTransfer - startTimeHourTransfer;
+        const diff2Transfer = endTimeHourTransfer - startTimeHourTransfer;
 
         if (diff2Transfer < diff1Transfer) {
           existingValues.splice(j, 0, newEvent);
@@ -1355,7 +1357,7 @@ const Schedular = (props: any) => {
         }
       }
     } else {
-      let a = existingValues.findIndex(
+      const a = existingValues.findIndex(
         (val) =>
           val.id === arr2.event.id &&
           val.day === arr2.event.day &&
@@ -1366,17 +1368,17 @@ const Schedular = (props: any) => {
       if (existingValues.length === 0) {
         existingValues.push(newEvent);
       } else {
-        var timeStart: any = new Date('01/01/2007 ' + handleTimeFormat(newEvent.startTime));
-        var timeEnd: any = new Date('01/01/2007 ' + handleTimeFormat(newEvent.endTime));
-        var diff1 = timeEnd - timeStart;
-        for (var k = 0; k <= existingValues.length - 1; k++) {
-          var startTimeHour: any = new Date(
+        const timeStart: any = new Date('01/01/2007 ' + handleTimeFormat(newEvent.startTime));
+        const timeEnd: any = new Date('01/01/2007 ' + handleTimeFormat(newEvent.endTime));
+        const diff1 = timeEnd - timeStart;
+        for (let k = 0; k <= existingValues.length - 1; k++) {
+          const startTimeHour: any = new Date(
             '01/01/2007 ' + handleTimeFormat(existingValues[k].startTime)
           );
-          var endTimeHour: any = new Date(
+          const endTimeHour: any = new Date(
             '01/01/2007 ' + handleTimeFormat(existingValues[k].endTime)
           );
-          var diff2 = endTimeHour - startTimeHour;
+          const diff2 = endTimeHour - startTimeHour;
 
           if (diff2 < diff1) {
             existingValues.splice(k, 0, newEvent);
@@ -1390,9 +1392,9 @@ const Schedular = (props: any) => {
       }
     }
 
-    let lastEventDay: number = 0;
+    let lastEventDay = 0;
 
-    for (var m = 0; m <= existingValues.length - 1; m++) {
+    for (let m = 0; m <= existingValues.length - 1; m++) {
       if (existingValues[m].day > lastEventDay) {
         lastEventDay = parseInt(existingValues[m].day);
       }
@@ -1405,7 +1407,7 @@ const Schedular = (props: any) => {
     );
     const availabilitySlots = availability ? [...availability.booking_slots] : [];
     if (availabilitySlots.length > 0) {
-      for (var x = 0; x < availabilitySlots.length; x++) {
+      for (let x = 0; x < availabilitySlots.length; x++) {
         if (
           moment(newEvent.endTime, 'hh:mm:ss').isSameOrAfter(
             moment(availabilitySlots[x].startTime, 'hh:mm:ss')
@@ -1451,17 +1453,17 @@ const Schedular = (props: any) => {
         tag: arr2.event.tag
       });
     } else {
-      var timeStartArr: any = new Date('01/01/2007 ' + handleTimeFormat(newEvent.startTime));
-      var timeEndArr: any = new Date('01/01/2007 ' + handleTimeFormat(newEvent.endTime));
-      var diff1Arr = timeEndArr - timeStartArr;
-      for (var l = 0; l < values[arr2.d][arr2.h][arr2.m].length; l++) {
-        var startTimeHourArr: any = new Date(
+      const timeStartArr: any = new Date('01/01/2007 ' + handleTimeFormat(newEvent.startTime));
+      const timeEndArr: any = new Date('01/01/2007 ' + handleTimeFormat(newEvent.endTime));
+      const diff1Arr = timeEndArr - timeStartArr;
+      for (let l = 0; l < values[arr2.d][arr2.h][arr2.m].length; l++) {
+        const startTimeHourArr: any = new Date(
           '01/01/2007 ' +
             handleTimeFormat(
               values[arr2.d][arr2.h][arr2.m][l].hour + ':' + values[arr2.d][arr2.h][arr2.m][l].min
             )
         );
-        var endTimeHourArr: any = new Date(
+        const endTimeHourArr: any = new Date(
           '01/01/2007 ' +
             handleTimeFormat(
               values[arr2.d][arr2.h][arr2.m][l].endHour +
@@ -1469,7 +1471,7 @@ const Schedular = (props: any) => {
                 values[arr2.d][arr2.h][arr2.m][l].endMin
             )
         );
-        var diff2Arr = endTimeHourArr - startTimeHourArr;
+        const diff2Arr = endTimeHourArr - startTimeHourArr;
 
         if (diff2Arr < diff1Arr) {
           values[arr2.d][arr2.h][arr2.m].splice(l, 0, localEvent);

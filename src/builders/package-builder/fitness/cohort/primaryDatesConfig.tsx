@@ -22,14 +22,12 @@ const PackageDateConfig = (props: any) => {
     if (moment(startDate).isAfter(endDate)) {
       setEndDate(startDate);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [startDate]);
 
   useEffect(() => {
     if (oneDay === true) {
       setEndDate(moment(startDate).format("YYYY-MM-DD"));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [oneDay]);
 
   props.onChange(JSON.stringify({ startDate, endDate, oneDay }));

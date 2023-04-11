@@ -1,31 +1,29 @@
-import { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { withTheme, utils } from '@rjsf/core';
 import { Theme as Bootstrap4Theme } from '@rjsf/bootstrap-4';
 import { Button, Col, Modal, ProgressBar, Row } from 'react-bootstrap';
 import _ from 'lodash';
 import moment from 'moment';
 
-export default function CreateFitnessPackageModal({
-  name,
-  formUISchema,
-  formSubmit,
-  formSchema,
-  formData,
-  isStepper,
-  userData,
-  setUserData,
-  widgets,
-  setRender,
-  fitness_package_type,
-  PTProps,
-  actionType,
-  groupProps,
-  customProps,
-  stepperValues,
-  pricingDetailRef,
-  submitName,
-  modalTrigger
-}: any) {
+const CreateFitnessPackageModal: React.FC<{name: any;
+  formUISchema: any;
+  formSubmit: any;
+  formSchema: any;
+  formData: any;
+  isStepper: any;
+  userData: any;
+  setUserData: any;
+  widgets: any;
+  setRender: any;
+  fitness_package_type: any;
+  PTProps: any;
+  actionType: any;
+  groupProps: any;
+  customProps: any;
+  stepperValues: any;
+  pricingDetailRef: any;
+  submitName: any;
+  modalTrigger: any;}> = (props) => {
   const registry = utils.getDefaultRegistry();
   const defaultFileWidget = registry.widgets['FileWidget'];
   (Bootstrap4Theme as any).widgets['FileWidget'] = defaultFileWidget;
@@ -35,16 +33,16 @@ export default function CreateFitnessPackageModal({
   const [step, setStep] = useState<number>(1);
   const [show, setShow] = useState<boolean>(false);
 
-  const [formValues, setFormValues] = useState<any>(formData);
-  const stepper: string[] = stepperValues;
+  const [formValues, setFormValues] = useState<any>(props.formData);
+  const stepper: string[] = props.stepperValues;
 
-  modalTrigger.subscribe((res: boolean) => {
+  props.modalTrigger.subscribe((res: boolean) => {
     setShow(res);
   });
 
   useEffect(() => {
-    setFormValues(formData);
-  }, [formData]);
+    setFormValues(props.formData);
+  }, [props.formData]);
 
   const updatePrice = (
     formData: {
@@ -55,8 +53,8 @@ export default function CreateFitnessPackageModal({
     actionType: string
   ) => {
     let updateFinesspackagepricing: any = '';
-    if (pricingDetailRef.current.getFitnessPackagePricing?.()) {
-      updateFinesspackagepricing = pricingDetailRef.current.getFitnessPackagePricing?.();
+    if (props.pricingDetailRef.current.getFitnessPackagePricing?.()) {
+      updateFinesspackagepricing = props.pricingDetailRef.current.getFitnessPackagePricing?.();
 
       if (
         formData.fitness_package_type === '60e045867df648b0f5756c32' ||
@@ -70,9 +68,9 @@ export default function CreateFitnessPackageModal({
     if (actionType === 'edit') {
       if (formData) {
         updateFinesspackagepricing = _.cloneDeep(formData?.fitnesspackagepricing);
-        if (pricingDetailRef.current.getFitnessPackagePricing?.()) {
+        if (props.pricingDetailRef.current.getFitnessPackagePricing?.()) {
           updateFinesspackagepricing[0].packagepricing =
-            pricingDetailRef.current.getFitnessPackagePricing?.();
+            props.pricingDetailRef.current.getFitnessPackagePricing?.();
           delete updateFinesspackagepricing[0].__typename;
         }
       }
@@ -98,61 +96,58 @@ export default function CreateFitnessPackageModal({
     mode: 'Online Workout' | 'Offline Workout';
     duration?: number;
   }) => {
-    let { duration, mode } = formData;
+    
     if (formData.mode) {
-      if (mode === 'Online Workout' || mode === 'Offline Workout') {
-        duration = 1;
+      if (formData.mode === 'Online Workout' || formData.mode === 'Offline Workout') {
+        formData.duration = 1;
       } else {
-        duration = 30;
+        formData.duration = 30;
       }
     }
-    return duration;
+    return formData.duration;
   };
+interface UserData {
+  ptonline: number;
+  ptoffline: number;
+  grouponline: number;
+  groupoffline: number;
+  recordedclasses: number;
+  duration: number;
+  mode: string;
+  fitness_package_type: any;
+  restdays: number;
+}
+  const resetClassesValue = ({ptonline,
+    ptoffline,
+    grouponline,
+    groupoffline,
+    recordedclasses,
+    duration,
+    mode,
+    fitness_package_type,
+    restdays}: UserData) => {
 
-  const resetClassesValue = (userData: {
-    ptonline: number;
-    ptoffline: number;
-    grouponline: number;
-    groupoffline: number;
-    recordedclasses: number;
-    duration: number;
-    mode: string;
-    fitness_package_type: string;
-    restdays: number;
-  }) => {
-    let {
-      ptonline,
-      ptoffline,
-      grouponline,
-      groupoffline,
-      recordedclasses,
-      duration,
-      mode,
-      fitness_package_type,
-      restdays
-    } = userData;
+    props.PTProps.properties.ptonlineClasses.value = ptonline;
+    props.PTProps.properties.ptofflineClasses.value = ptoffline;
+    props.groupProps.properties.grouponlineClasses.value = grouponline;
+    props.groupProps.properties.groupofflineClasses.value = groupoffline;
+    props.PTProps.properties.restDay.value = restdays;
+    props.groupProps.properties.restDay.value = restdays;
+    props.customProps.properties.restDay.value = restdays;
 
-    PTProps.properties.ptonlineClasses.value = ptonline;
-    PTProps.properties.ptofflineClasses.value = ptoffline;
-    groupProps.properties.grouponlineClasses.value = grouponline;
-    groupProps.properties.groupofflineClasses.value = groupoffline;
-    PTProps.properties.restDay.value = restdays;
-    groupProps.properties.restDay.value = restdays;
-    customProps.properties.restDay.value = restdays;
-
-    if (PTProps.properties.duration.value === 1 || groupProps.properties.duration.value === 1) {
-      PTProps.properties.restDay.maximum = 0;
-      groupProps.properties.restDay.maximum = 0;
+    if (props.PTProps.properties.duration.value === 1 || props.groupProps.properties.duration.value === 1) {
+      props.PTProps.properties.restDay.maximum = 0;
+      props.groupProps.properties.restDay.maximum = 0;
     }
 
     if (mode === 'Online Workout' || mode === 'Offline Workout') {
       duration = 1;
     }
-    if (fitness_package_type !== '60e045867df648b0f5756c32') {
+    if (props.fitness_package_type !== '60e045867df648b0f5756c32') {
       duration = 30;
     }
-    // duration = (mode === "Online Workout" || mode === "Offline Workout") ? 1 : 30;
-    setUserData({ ...userData, duration, recordedclasses });
+    duration = (mode === "Online Workout" || mode === "Offline Workout") ? 1 : 30;
+    props.setUserData({ ...props.userData, duration, recordedclasses });
     setFormValues({ ...formValues, duration, recordedclasses });
   };
 
@@ -163,15 +158,15 @@ export default function CreateFitnessPackageModal({
     grouponline: number;
   }) => {
     const update = { ...formData };
-    if (userData.mode === 'Online') {
+    if (props.userData.mode === 'Online') {
       update.ptoffline = 0;
       update.groupoffline = 0;
-    } else if (userData.mode === 'Offline') {
+    } else if (props.userData.mode === 'Offline') {
       update.ptonline = 0;
       update.grouponline = 0;
-    } else if (userData.mode === 'Online Workout') {
+    } else if (props.userData.mode === 'Online Workout') {
       update.ptoffline = 0;
-    } else if (userData.mode === 'Offline Workout') {
+    } else if (props.userData.mode === 'Offline Workout') {
       update.ptonline = 0;
     }
 
@@ -179,27 +174,27 @@ export default function CreateFitnessPackageModal({
   };
 
   function submitHandler(formData: any) {
-    const updateFinesspackagepricing = updatePrice(formData, actionType);
+    const updateFinesspackagepricing = updatePrice(formData, props.actionType);
     const updateMode = updateModeName(formData);
     const updateDuration = updateFormDuration(formData);
     const publishing_date = moment();
     const expiry_date = moment(moment().add(365, 'days').calendar());
 
-    if (isStepper && step < stepper.length) {
+    if (props.isStepper && step < stepper.length) {
       const update = updateInputValue(formData);
 
       setStep(step + 1);
       setFormValues({
         ...formValues,
         ...update,
-        fitness_package_type,
+        // fitness_package_type,
         fitnesspackagepricing: updateFinesspackagepricing,
         duration: updateDuration
       });
-      setUserData({
+      props.setUserData({
         ...formValues,
         ...update,
-        fitness_package_type,
+        // fitness_package_type,
         fitnesspackagepricing: updateFinesspackagepricing,
         duration: updateDuration
       });
@@ -214,9 +209,9 @@ export default function CreateFitnessPackageModal({
         publishing_date,
         expiry_date
       };
-      formSubmit(formData);
+      props.formSubmit(formData);
 
-      actionType === 'view' && setRender(false);
+      props.actionType === 'view' && props.setRender(false);
     }
   }
 
@@ -228,7 +223,7 @@ export default function CreateFitnessPackageModal({
             <Col xs={12} md={12} lg={12}>
               <p className="lead">{name}</p>
             </Col>
-            {isStepper &&
+            {props.isStepper &&
               stepper.map((item: string, id: number) => (
                 <Col xs={2} md={2} lg={2} key={id}>
                   <ProgressBar
@@ -247,13 +242,13 @@ export default function CreateFitnessPackageModal({
             <Col lg={12}>
               <div style={{ height: '400px', overflowX: 'hidden', overflowY: 'auto' }}>
                 <Form
-                  disabled={actionType === 'view' ? true : false}
-                  uiSchema={formUISchema}
-                  schema={formSchema[step.toString()]}
+                  disabled={props.actionType === 'view' ? true : false}
+                  uiSchema={props.formUISchema}
+                  schema={props.formSchema[step.toString()]}
                   ref={formRef}
                   onSubmit={({ formData }: any) => submitHandler(formData)}
                   formData={formValues}
-                  widget={widgets}>
+                  widget={props.widgets}>
                   <div></div>
                 </Form>
               </div>
@@ -261,7 +256,7 @@ export default function CreateFitnessPackageModal({
           </Row>
         </Modal.Body>
         <Modal.Footer>
-          {isStepper && (
+          {props.isStepper && (
             <>
               <Button
                 variant="light"
@@ -269,8 +264,8 @@ export default function CreateFitnessPackageModal({
                 onClick={() => {
                   setStep(step - 1);
                   if (step === 4) {
-                    if (actionType === 'create') {
-                      resetClassesValue(userData);
+                    if (props.actionType === 'create') {
+                      resetClassesValue(props.userData);
                     }
                   }
                 }}
@@ -289,7 +284,7 @@ export default function CreateFitnessPackageModal({
                   </>
                 ) : (
                   <>
-                    {submitName}
+                    {props.submitName}
                     <i className="ml-4 fas fa-check"></i>
                   </>
                 )}
@@ -301,3 +296,5 @@ export default function CreateFitnessPackageModal({
     </>
   );
 }
+
+export default CreateFitnessPackageModal;

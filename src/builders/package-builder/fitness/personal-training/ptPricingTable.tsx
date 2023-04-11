@@ -1,16 +1,23 @@
-import React, { useState, useContext, useEffect } from "react";
-import { Form, Table, FormControl, InputGroup } from "react-bootstrap";
-import { gql, useQuery, useLazyQuery } from "@apollo/client";
-import AuthContext from "../../../../context/auth-context";
-import { flattenObj } from "../../../../components/utils/responseFlatten";
-import OfferingPricingAssist from "../../../../components/customWidgets/offeringPricingAssist";
-import moment from "moment";
+import React, { useState, useContext, useEffect } from 'react';
+import { Form, Table, FormControl, InputGroup } from 'react-bootstrap';
+import { gql, useQuery, useLazyQuery } from '@apollo/client';
+import AuthContext from '../../../../context/auth-context';
+import { flattenObj } from '../../../../components/utils/responseFlatten';
+import OfferingPricingAssist from '../../../../components/customWidgets/offeringPricingAssist';
+import moment from 'moment';
 
-const PricingTable = (props) => {
+interface Props {
+  readonly: boolean;
+  value: string;
+  onChange: (args: string | null) => void;
+  formContext: any;
+}
+
+const PricingTable: React.FC<Props> = (props) => {
   const inputDisabled = props.readonly;
 
   function handleReturnType(val: any) {
-    if (typeof val === "string") {
+    if (typeof val === 'string') {
       return JSON.parse(val);
     } else {
       return val;
@@ -20,18 +27,14 @@ const PricingTable = (props) => {
   const classDetails = JSON.parse(props.formContext.programDetails);
 
   const classMode =
-    classDetails.mode === "0"
-      ? "Online"
-      : classDetails.mode === "1"
-      ? "Offline"
-      : "Hybrid";
+    classDetails.mode === '0' ? 'Online' : classDetails.mode === '1' ? 'Offline' : 'Hybrid';
   const onlineClasses = classDetails.online;
   const offlineClasses = classDetails.offline;
 
   const auth = useContext(AuthContext);
   const [vouchers, setVouchers] = useState<any>([]);
   const [pricing, setPricing] = useState<any>(
-    props.value !== undefined && props.value !== "free"
+    props.value !== undefined && props.value !== 'free'
       ? handleReturnType(props.value)
       : [
           {
@@ -39,40 +42,35 @@ const PricingTable = (props) => {
             suggestedPrice: null,
             voucher: 0,
             duration: 30,
-            sapienPricing: null,
+            sapienPricing: null
           },
           {
             mrp: null,
             suggestedPrice: null,
             voucher: 0,
             duration: 90,
-            sapienPricing: null,
+            sapienPricing: null
           },
           {
             mrp: null,
             suggestedPrice: null,
             voucher: 0,
             duration: 180,
-            sapienPricing: null,
+            sapienPricing: null
           },
           {
             mrp: null,
             suggestedPrice: null,
             voucher: 0,
             duration: 360,
-            sapienPricing: null,
-          },
+            sapienPricing: null
+          }
         ]
   );
   const [modalShow, setModalShow] = useState(false);
 
   const GET_VOUCHERS = gql`
-    query fetchVouchers(
-      $expiry: DateTime!
-      $id: ID!
-      $start: DateTime!
-      $status: String!
-    ) {
+    query fetchVouchers($expiry: DateTime!, $id: ID!, $start: DateTime!, $status: String!) {
       vouchers(
         filters: {
           expiry_date: { gte: $expiry }
@@ -99,7 +97,7 @@ const PricingTable = (props) => {
     onCompleted: (data) => {
       const flattenData = flattenObj({ ...data });
       setVouchers(flattenData.vouchers);
-    },
+    }
   });
   React.useEffect(() => {
     getVouchers({
@@ -107,8 +105,8 @@ const PricingTable = (props) => {
         expiry: moment().toISOString(),
         id: auth.userid,
         start: moment().toISOString(),
-        status: "Active",
-      },
+        status: 'Active'
+      }
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -116,7 +114,7 @@ const PricingTable = (props) => {
   useEffect(() => {
     // eslint-disable-next-line
     pricing.map((item, index: number) => {
-      if (item.mrp === 0 || item.mrp === "") {
+      if (item.mrp === 0 || item.mrp === '') {
         const values = [...pricing];
         values[index].mrp = null;
         setPricing(values);
@@ -148,9 +146,7 @@ const PricingTable = (props) => {
           }
         }
       }
-      sapienPricings(
-        filters: { fitness_package_type: { type: { eq: "One-On-One" } } }
-      ) {
+      sapienPricings(filters: { fitness_package_type: { type: { eq: "One-On-One" } } }) {
         data {
           id
           attributes {
@@ -175,14 +171,14 @@ const PricingTable = (props) => {
       variables: { id: auth.userid },
       onCompleted: (data) => {
         loadData(data);
-      },
+      }
     });
   }
 
   function loadData(data) {
     const flattenData = flattenObj({ ...data });
     const newValue = [...pricing];
-    if (classMode === "Online") {
+    if (classMode === 'Online') {
       flattenData.suggestedPricings = flattenData.suggestedPricings.filter(
         (item) => item.Mode === classMode
       );
@@ -196,16 +192,12 @@ const PricingTable = (props) => {
           );
         } else {
           item.suggestedPrice =
-            flattenData.suggestedPricings[0]?.mrp *
-            onlineClasses *
-            (item.duration / 30);
+            flattenData.suggestedPricings[0]?.mrp * onlineClasses * (item.duration / 30);
         }
         item.sapienPricing =
-          flattenData.sapienPricings[0]?.mrp *
-          onlineClasses *
-          (item.duration / 30);
+          flattenData.sapienPricings[0]?.mrp * onlineClasses * (item.duration / 30);
       });
-    } else if (classMode === "Offline") {
+    } else if (classMode === 'Offline') {
       flattenData.suggestedPricings = flattenData.suggestedPricings.filter(
         (item) => item.Mode === classMode
       );
@@ -219,16 +211,12 @@ const PricingTable = (props) => {
           );
         } else {
           item.suggestedPrice =
-            flattenData.suggestedPricings[0]?.mrp *
-            offlineClasses *
-            (item.duration / 30);
+            flattenData.suggestedPricings[0]?.mrp * offlineClasses * (item.duration / 30);
         }
         item.sapienPricing =
-          flattenData.sapienPricings[0]?.mrp *
-          offlineClasses *
-          (item.duration / 30);
+          flattenData.sapienPricings[0]?.mrp * offlineClasses * (item.duration / 30);
       });
-    } else if (classMode === "Hybrid") {
+    } else if (classMode === 'Hybrid') {
       newValue.forEach((item, index) => {
         if (item.voucher !== 0 && item.price !== null) {
           item.suggestedPrice = parseInt(
@@ -236,23 +224,15 @@ const PricingTable = (props) => {
           );
         } else {
           const onlinePrice =
-            flattenData.suggestedPricings[0]?.mrp *
-            onlineClasses *
-            (item.duration / 30);
+            flattenData.suggestedPricings[0]?.mrp * onlineClasses * (item.duration / 30);
           const offlinePrice =
-            flattenData.suggestedPricings[1]?.mrp *
-            offlineClasses *
-            (item.duration / 30);
+            flattenData.suggestedPricings[1]?.mrp * offlineClasses * (item.duration / 30);
           item.suggestedPrice = onlinePrice + offlinePrice;
         }
         const onlinePrice =
-          flattenData.sapienPricings[0]?.mrp *
-          onlineClasses *
-          (item.duration / 30);
+          flattenData.sapienPricings[0]?.mrp * onlineClasses * (item.duration / 30);
         const offlinePrice =
-          flattenData.sapienPricings[1]?.mrp *
-          offlineClasses *
-          (item.duration / 30);
+          flattenData.sapienPricings[1]?.mrp * offlineClasses * (item.duration / 30);
         item.sapienPricing = onlinePrice + offlinePrice;
       });
     }
@@ -281,7 +261,7 @@ const PricingTable = (props) => {
   if (handleValidation()) {
     props.onChange(JSON.stringify(pricing));
   } else {
-    props.onChange(undefined);
+    props.onChange(null);
   }
 
   function handleUpdatePricing(id: any, value: any) {
@@ -309,11 +289,11 @@ const PricingTable = (props) => {
           <div className="d-flex justify-content-end p-2">
             <OfferingPricingAssist
               show={modalShow}
-              type={"Personal Training"}
+              type={'Personal Training'}
               imageURL={
-                classMode === "Online"
-                  ? "/assets/personal-training-online.svg"
-                  : "/assets/personal-training-offline.svg"
+                classMode === 'Online'
+                  ? '/assets/personal-training-online.svg'
+                  : '/assets/personal-training-offline.svg'
               }
               onHide={() => setModalShow(false)}
             />
@@ -329,7 +309,7 @@ const PricingTable = (props) => {
               </tr>
             </thead>
             <tbody>
-              {(classMode === "Online" || classMode === "Hybrid") && (
+              {(classMode === 'Online' || classMode === 'Hybrid') && (
                 <tr className="text-center">
                   <td>
                     <img
@@ -338,25 +318,21 @@ const PricingTable = (props) => {
                     />
                   </td>
                   {pricing.map((item, index: number) => {
-                    return (
-                      <td key={index}>{onlineClasses * (item.duration / 30)} Classes</td>
-                    );
+                    return <td key={index}>{onlineClasses * (item.duration / 30)} Classes</td>;
                   })}
                 </tr>
               )}
-              {(classMode === "Offline" || classMode === "Hybrid") && (
+              {(classMode === 'Offline' || classMode === 'Hybrid') && (
                 <tr className="text-center">
                   <td>
-                    {" "}
+                    {' '}
                     <img
                       src="/assets/personal-training-offline.svg"
                       alt="personal-training-offline"
                     />
                   </td>
                   {pricing.map((item, index: number) => {
-                    return (
-                      <td key={index}>{offlineClasses * (item.duration / 30)} Classes</td>
-                    );
+                    return <td key={index}>{offlineClasses * (item.duration / 30)} Classes</td>;
                   })}
                 </tr>
               )}
@@ -371,10 +347,7 @@ const PricingTable = (props) => {
                         as="select"
                         disabled={inputDisabled}
                         value={item.voucher}
-                        onChange={(e) =>
-                          handleUpdatePricing(index, e.target.value)
-                        }
-                      >
+                        onChange={(e) => handleUpdatePricing(index, e.target.value)}>
                         <option value={0}>Choose voucher</option>
                         {vouchers.map((voucher, index: number) => {
                           return (
@@ -404,7 +377,7 @@ const PricingTable = (props) => {
                   return (
                     <td key={index}>
                       {isNaN(item.suggestedPrice)
-                        ? "Base Price Not Set"
+                        ? 'Base Price Not Set'
                         : `₹ ${item.suggestedPrice}`}
                     </td>
                   );
@@ -417,22 +390,18 @@ const PricingTable = (props) => {
                 {pricing.map((item, index: number) => {
                   return (
                     <td key={index}>
-                      <InputGroup style={{ minWidth: "200px" }}>
+                      <InputGroup style={{ minWidth: '200px' }}>
                         <InputGroup.Prepend>
-                          <InputGroup.Text id="basic-addon1">
-                            {"\u20B9"}
-                          </InputGroup.Text>
+                          <InputGroup.Text id="basic-addon1">{'\u20B9'}</InputGroup.Text>
                         </InputGroup.Prepend>
                         <FormControl
                           className={`${
-                            pricing[index]?.mrp <
-                              pricing[index]?.sapienPricing &&
+                            pricing[index]?.mrp < pricing[index]?.sapienPricing &&
                             pricing[index]?.mrp !== null
-                              ? "is-invalid"
-                              : pricing[index]?.mrp >=
-                                pricing[index]?.sapienPricing
-                              ? "is-valid"
-                              : ""
+                              ? 'is-invalid'
+                              : pricing[index]?.mrp >= pricing[index]?.sapienPricing
+                              ? 'is-valid'
+                              : ''
                           }`}
                           aria-label="Default"
                           type="number"
@@ -447,9 +416,8 @@ const PricingTable = (props) => {
                       </InputGroup>
                       {pricing[index]?.mrp < pricing[index]?.sapienPricing &&
                         pricing[index]?.mrp !== null && (
-                          <span style={{ fontSize: "12px", color: "red" }}>
-                            cannot be less than ₹{" "}
-                            {pricing[index]?.sapienPricing}
+                          <span style={{ fontSize: '12px', color: 'red' }}>
+                            cannot be less than ₹ {pricing[index]?.sapienPricing}
                           </span>
                         )}
                     </td>

@@ -87,8 +87,8 @@ function CreateEditChannel(props: any, ref: any) {
   const [deletePackage] = useMutation(DELETE_PACKAGE, {
     onCompleted: (data) => {
       // delete booking config
-      let offeringsId = data.deleteFitnesspackage.data.id;
-      let bookingConfigId = bookingsConfigInfo.find(
+      const offeringsId = data.deleteFitnesspackage.data.id;
+      const bookingConfigId = bookingsConfigInfo.find(
         (currentValue) => currentValue.fitnesspackage.id === offeringsId
       );
 
@@ -249,8 +249,8 @@ function CreateEditChannel(props: any, ref: any) {
 
   function FillDetails(data: any) {
     const flattenData = flattenObj({ ...data });
-    let msg: any = flattenData.fitnesspackages[0];
-    let details: any = {};
+    const msg: any = flattenData.fitnesspackages[0];
+    const details: any = {};
 
     if (msg.groupinstantbooking) {
       for (let i = 0; i < msg.fitnesspackagepricing.length; i++) {
@@ -527,7 +527,7 @@ function CreateEditChannel(props: any, ref: any) {
 
   FetchData();
 
-  let name: string = "";
+  let name = "";
   if (operation.type === "create") {
     name = "Live Stream Offering";
   } else if (operation.type === "edit") {

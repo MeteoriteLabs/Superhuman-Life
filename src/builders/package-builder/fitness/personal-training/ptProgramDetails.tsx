@@ -1,18 +1,11 @@
-import { useState, useContext, useEffect } from "react";
-import {
-  Row,
-  Col,
-  Form,
-  InputGroup,
-  FormControl,
-  Button,
-} from "react-bootstrap";
-import { Typeahead } from "react-bootstrap-typeahead";
-import "react-bootstrap-typeahead/css/Typeahead.css";
-import { useQuery, gql } from "@apollo/client";
-import AuthContext from "../../../../context/auth-context";
-import { flattenObj } from "../../../../components/utils/responseFlatten";
-import AddFitnessAddressModal from "../../../../components/customWidgets/AddFitnessAddressModal";
+import React, { useState, useContext, useEffect } from 'react';
+import { Row, Col, Form, InputGroup, FormControl, Button } from 'react-bootstrap';
+import { Typeahead } from 'react-bootstrap-typeahead';
+import 'react-bootstrap-typeahead/css/Typeahead.css';
+import { useQuery, gql } from '@apollo/client';
+import AuthContext from '../../../../context/auth-context';
+import { flattenObj } from '../../../../components/utils/responseFlatten';
+import AddFitnessAddressModal from '../../../../components/customWidgets/AddFitnessAddressModal';
 
 const PtProgramDetails: React.FC<{
   value: string;
@@ -21,24 +14,21 @@ const PtProgramDetails: React.FC<{
 }> = (props) => {
   const inputDisabled = props.readonly;
 
-  const existingData =
-    props.value === undefined ? undefined : JSON.parse(props.value);
+  const existingData = props.value === undefined ? undefined : JSON.parse(props.value);
   if (existingData && existingData.length) {
     existingData.address = {
       id: JSON.parse(existingData?.address)[0].id,
-      title: JSON.parse(existingData?.address)[0].title,
+      title: JSON.parse(existingData?.address)[0].title
     };
   }
 
   const [clientAddress, setClientAddress] = useState<string>(
-    existingData?.clientAddress ? existingData.clientAddress : ""
+    existingData?.clientAddress ? existingData.clientAddress : ''
   );
   const [distance, setDistance] = useState<string>(
-    existingData?.distance ? existingData.distance : "5 Km"
+    existingData?.distance ? existingData.distance : '5 Km'
   );
-  const [mode, setMode] = useState(
-    props.value ? existingData.mode.toString() : "0"
-  );
+  const [mode, setMode] = useState(props.value ? existingData.mode.toString() : '0');
   const [addressModal, setAddressModal] = useState<boolean>(false);
 
   const auth = useContext(AuthContext);
@@ -47,7 +37,7 @@ const PtProgramDetails: React.FC<{
   );
   const [addresses, setAddresses] = useState<any[]>([]);
   const [addressTitle, setAddressTitle] = useState(
-    props.value ? existingData.addressTag : "At My Address"
+    props.value ? existingData.addressTag : 'At My Address'
   );
   const [onlineClasses, setOnlineClasses] = useState<number>(
     existingData?.online ? existingData.online : 1
@@ -55,9 +45,7 @@ const PtProgramDetails: React.FC<{
   const [offlineClasses, setOfflineClasses] = useState<number>(
     existingData?.offline ? existingData.offline : 1
   );
-  const [restDays, setRestDays] = useState<number>(
-    existingData?.rest ? existingData.rest : 0
-  );
+  const [restDays, setRestDays] = useState<number>(existingData?.rest ? existingData.rest : 0);
 
   useEffect(() => {
     if (onlineClasses > 30) {
@@ -66,7 +54,6 @@ const PtProgramDetails: React.FC<{
     if (offlineClasses > 30) {
       setOfflineClasses(30);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [onlineClasses, offlineClasses, restDays, mode]);
 
   const FETCH_USER_ADDRESSES = gql`
@@ -84,7 +71,7 @@ const PtProgramDetails: React.FC<{
 
   const mainQuery = useQuery(FETCH_USER_ADDRESSES, {
     variables: { id: auth.userid },
-    onCompleted: loadData,
+    onCompleted: loadData
   });
 
   function loadData(data: any) {
@@ -94,7 +81,7 @@ const PtProgramDetails: React.FC<{
       [...flattenedData.addresses].map((address) => {
         return {
           id: address.id,
-          address1: address.address1,
+          address1: address.address1
         };
       })
     );
@@ -110,7 +97,7 @@ const PtProgramDetails: React.FC<{
 
   function handleValidation(mode: string) {
     //here we will check for online
-    if (mode === "0") {
+    if (mode === '0') {
       if (restDays < 0) {
         return false;
       }
@@ -121,15 +108,15 @@ const PtProgramDetails: React.FC<{
       }
     }
     //here we will check for offline
-    if (mode === "1") {
+    if (mode === '1') {
       if (restDays < 0) {
         return false;
       }
       if (restDays + offlineClasses === 30) {
-        if (addressTitle === "At My Address" && singleSelections.length) {
+        if (addressTitle === 'At My Address' && singleSelections.length) {
           return true;
         }
-        if (addressTitle === "At Client Address") {
+        if (addressTitle === 'At Client Address') {
           return true;
         } else {
           return false;
@@ -139,15 +126,15 @@ const PtProgramDetails: React.FC<{
       }
     }
     //here we will check for both(hybrid)
-    if (mode === "2") {
+    if (mode === '2') {
       if (restDays < 0) {
         return false;
       }
       if (restDays + offlineClasses + onlineClasses === 30) {
-        if (addressTitle === "At My Address" && singleSelections.length) {
+        if (addressTitle === 'At My Address' && singleSelections.length) {
           return true;
         }
-        if (addressTitle === "At Client Address") {
+        if (addressTitle === 'At Client Address') {
           return true;
         } else {
           return false;
@@ -159,10 +146,10 @@ const PtProgramDetails: React.FC<{
   }
 
   useEffect(() => {
-    if (mode === "0") {
+    if (mode === '0') {
       setOfflineClasses(0);
       setSingleSelections([]);
-    } else if (mode === "1") {
+    } else if (mode === '1') {
       setOnlineClasses(0);
     }
   }, [mode]);
@@ -177,7 +164,7 @@ const PtProgramDetails: React.FC<{
         offline: offlineClasses,
         rest: restDays,
         clientAddress: clientAddress,
-        distance: distance,
+        distance: distance
       })
     );
   } else {
@@ -185,13 +172,13 @@ const PtProgramDetails: React.FC<{
   }
 
   useEffect(() => {
-    if (mode === "0") {
+    if (mode === '0') {
       setRestDays(30 - onlineClasses);
     }
-    if (mode === "1") {
+    if (mode === '1') {
       setRestDays(30 - offlineClasses);
     }
-    if (mode === "2") {
+    if (mode === '2') {
       setRestDays(30 - (onlineClasses + offlineClasses));
     }
   }, [onlineClasses, offlineClasses, mode]);
@@ -207,7 +194,7 @@ const PtProgramDetails: React.FC<{
             inline
             label="Online"
             value="0"
-            defaultChecked={mode === "0" ? true : false}
+            defaultChecked={mode === '0' ? true : false}
             name="group1"
             type="radio"
             onClick={(e: any) => setMode(e.target.value)}
@@ -217,7 +204,7 @@ const PtProgramDetails: React.FC<{
             inline
             label="Offline"
             value="1"
-            defaultChecked={mode === "1" ? true : false}
+            defaultChecked={mode === '1' ? true : false}
             name="group1"
             type="radio"
             onClick={(e: any) => setMode(e.target.value)}
@@ -227,7 +214,7 @@ const PtProgramDetails: React.FC<{
             inline
             label="Hybrid"
             value="2"
-            defaultChecked={mode === "2" ? true : false}
+            defaultChecked={mode === '2' ? true : false}
             name="group1"
             type="radio"
             onClick={(e: any) => setMode(e.target.value)}
@@ -235,9 +222,9 @@ const PtProgramDetails: React.FC<{
           />
         </Form>
       </div>
-      {mode !== "0" && (
+      {mode !== '0' && (
         <>
-          {mode !== "" && (
+          {mode !== '' && (
             <div>
               <label>
                 <b>Location</b>
@@ -251,16 +238,13 @@ const PtProgramDetails: React.FC<{
                       value={addressTitle}
                       onChange={(e: any) => {
                         setAddressTitle(e.target.value);
-                      }}
-                    >
+                      }}>
                       <option value="At My Address">At My Address</option>
-                      <option value="At Client Address">
-                        At Client Address
-                      </option>
+                      <option value="At Client Address">At Client Address</option>
                     </Form.Control>
                   </Form.Group>
                 </Col>
-                {addressTitle === "At My Address" && (
+                {addressTitle === 'At My Address' && (
                   <Col>
                     <Typeahead
                       id="basic-typeahead-multiple"
@@ -274,7 +258,7 @@ const PtProgramDetails: React.FC<{
                     />
                   </Col>
                 )}
-                {addressTitle === "At Client Address" && (
+                {addressTitle === 'At Client Address' && (
                   <>
                     <div className="p-3">
                       <label>
@@ -285,7 +269,7 @@ const PtProgramDetails: React.FC<{
                           inline
                           label="5 Km"
                           value="5 Km"
-                          checked={distance === "5 Km" ? true : false}
+                          checked={distance === '5 Km' ? true : false}
                           name="group1"
                           type="radio"
                           onClick={(e: any) => setDistance(e.target.value)}
@@ -295,7 +279,7 @@ const PtProgramDetails: React.FC<{
                           inline
                           label="10 Km"
                           value="10 Km"
-                          checked={distance === "10 Km" ? true : false}
+                          checked={distance === '10 Km' ? true : false}
                           name="group1"
                           type="radio"
                           onClick={(e: any) => setDistance(e.target.value)}
@@ -305,7 +289,7 @@ const PtProgramDetails: React.FC<{
                           inline
                           label="15 Km"
                           value="15 Km"
-                          checked={distance === "15 Km" ? true : false}
+                          checked={distance === '15 Km' ? true : false}
                           name="group1"
                           type="radio"
                           onClick={(e: any) => setDistance(e.target.value)}
@@ -315,7 +299,7 @@ const PtProgramDetails: React.FC<{
                           inline
                           label="20 Km"
                           value="20 Km"
-                          checked={distance === "20 Km" ? true : false}
+                          checked={distance === '20 Km' ? true : false}
                           name="group1"
                           type="radio"
                           onClick={(e: any) => setDistance(e.target.value)}
@@ -325,7 +309,7 @@ const PtProgramDetails: React.FC<{
                           inline
                           label="25 Km"
                           value="25 Km"
-                          checked={distance === "25 Km" ? true : false}
+                          checked={distance === '25 Km' ? true : false}
                           name="group1"
                           type="radio"
                           onClick={(e: any) => setDistance(e.target.value)}
@@ -335,7 +319,7 @@ const PtProgramDetails: React.FC<{
                           inline
                           label="30 Km"
                           value="30 Km"
-                          checked={distance === "30 Km" ? true : false}
+                          checked={distance === '30 Km' ? true : false}
                           name="group1"
                           type="radio"
                           onClick={(e: any) => setDistance(e.target.value)}
@@ -345,7 +329,7 @@ const PtProgramDetails: React.FC<{
                           inline
                           label="40 Km"
                           value="40 Km"
-                          checked={distance === "40 Km" ? true : false}
+                          checked={distance === '40 Km' ? true : false}
                           name="group1"
                           type="radio"
                           onClick={(e: any) => setDistance(e.target.value)}
@@ -355,7 +339,7 @@ const PtProgramDetails: React.FC<{
                           inline
                           label="50 Km"
                           value="50 Km"
-                          checked={distance === "50 Km" ? true : false}
+                          checked={distance === '50 Km' ? true : false}
                           name="group1"
                           type="radio"
                           onClick={(e: any) => setDistance(e.target.value)}
@@ -375,7 +359,7 @@ const PtProgramDetails: React.FC<{
                   </>
                 )}
               </Row>
-              {addressTitle === "At My Address" && (
+              {addressTitle === 'At My Address' && (
                 <Row>
                   <Col lg={{ offset: 3 }}>
                     <Button
@@ -383,8 +367,7 @@ const PtProgramDetails: React.FC<{
                       disabled={inputDisabled}
                       onClick={() => {
                         setAddressModal(true);
-                      }}
-                    >
+                      }}>
                       + Add New Address
                     </Button>
                   </Col>
@@ -405,14 +388,14 @@ const PtProgramDetails: React.FC<{
       <div className="m-5 p-1 text-center shadow-lg">
         <h6>Set For One Month (30 Days)</h6>
       </div>
-      {mode !== "" && (
+      {mode !== '' && (
         <div>
           <label>
             <b>Enter Number of Sessions</b>
           </label>
         </div>
       )}
-      {mode !== "" && (mode === "0" || mode === "2") && (
+      {mode !== '' && (mode === '0' || mode === '2') && (
         <Row>
           <Col lg={1}>
             <img
@@ -431,9 +414,7 @@ const PtProgramDetails: React.FC<{
                 max={28}
                 value={onlineClasses}
                 disabled={inputDisabled}
-                onChange={(e: any) =>
-                  setOnlineClasses(parseInt(e.target.value))
-                }
+                onChange={(e: any) => setOnlineClasses(parseInt(e.target.value))}
               />
               <InputGroup.Append>
                 <InputGroup.Text id="basic-addon1">Sessions</InputGroup.Text>
@@ -442,7 +423,7 @@ const PtProgramDetails: React.FC<{
           </Col>
         </Row>
       )}
-      {mode !== "" && (mode === "1" || mode === "2") && (
+      {mode !== '' && (mode === '1' || mode === '2') && (
         <Row>
           <Col lg={1}>
             <img
@@ -461,9 +442,7 @@ const PtProgramDetails: React.FC<{
                 max={10}
                 disabled={inputDisabled}
                 value={offlineClasses}
-                onChange={(e: any) =>
-                  setOfflineClasses(parseInt(e.target.value))
-                }
+                onChange={(e: any) => setOfflineClasses(parseInt(e.target.value))}
               />
               <InputGroup.Append>
                 <InputGroup.Text id="basic-addon1">Sessions</InputGroup.Text>
@@ -472,14 +451,14 @@ const PtProgramDetails: React.FC<{
           </Col>
         </Row>
       )}
-      {mode !== "" && (
+      {mode !== '' && (
         <div>
           <label>
             <b>Rest Days</b>
           </label>
         </div>
       )}
-      {mode !== "" && (
+      {mode !== '' && (
         <Row>
           <Col lg={2}>
             <InputGroup className="mb-3">

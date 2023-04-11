@@ -179,8 +179,8 @@ function CreateEditOnDemadPt(props: any, ref: any) {
   const [deletePackage] = useMutation(DELETE_PACKAGE, {
     onCompleted: (data) => {
       // delete booking config
-      let offeringsId = data.deleteFitnesspackage.data.id;
-      let bookingConfigId = bookingsConfigInfo.find(
+      const offeringsId = data.deleteFitnesspackage.data.id;
+      const bookingConfigId = bookingsConfigInfo.find(
         (currentValue) => currentValue.fitnesspackage.id === offeringsId
       );
 
@@ -252,9 +252,9 @@ function CreateEditOnDemadPt(props: any, ref: any) {
 
   function FillDetails(data: any) {
     const flattenedData = flattenObj({ ...data });
-    let msg = flattenedData.fitnesspackages[0];
-    let bookingConfig: any = {};
-    let details: any = {};
+    const msg = flattenedData.fitnesspackages[0];
+    const bookingConfig: any = {};
+    const details: any = {};
     const clientAddressArray = msg.client_address ? msg.client_address.split("Km") : [];
     for (let i = 0; i < msg.fitnesspackagepricing.length; i++) {
       PRICING_TABLE_DEFAULT[i].mrp = msg.fitnesspackagepricing[i].mrp;

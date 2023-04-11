@@ -1,15 +1,19 @@
-import { useState } from "react";
-import { Button, Form } from "react-bootstrap";
+import React, { useState } from 'react';
+import { Button, Form } from 'react-bootstrap';
 
-const CourseDetails = (props) => {
+const CourseDetails: React.FC<{
+  readonly: boolean;
+  value: string;
+  onChange: (args: string) => void;
+}> = (props) => {
   const inputDisabled = props.readonly;
   const [details, setDetails] = useState<any>(
-    props.value ? [JSON.parse(props.value)] : [{ title: "", description: "" }]
+    props.value ? [JSON.parse(props.value)] : [{ title: '', description: '' }]
   );
 
   function handleAddCourseDetails(data: any) {
     const newData = [...data];
-    newData.push({ title: "", description: "" });
+    newData.push({ title: '', description: '' });
     setDetails(newData);
   }
 
@@ -25,20 +29,19 @@ const CourseDetails = (props) => {
     setDetails(newDetails);
   }
 
-  if (details[0].title !== "" && details[0].description !== "") {
+  if (details[0].title !== '' && details[0].description !== '') {
     props.onChange(JSON.stringify(details));
   }
 
   return (
     <div>
-      <div className="text-right" style={{ justifyContent: "end" }}>
+      <div className="text-right" style={{ justifyContent: 'end' }}>
         <Button
           variant="outline-info"
           disabled={inputDisabled}
           onClick={() => {
             handleAddCourseDetails(details);
-          }}
-        >
+          }}>
           <i className="fa fa-plus-circle"></i>&nbsp;Add
         </Button>
       </div>
@@ -52,9 +55,7 @@ const CourseDetails = (props) => {
                   type="text"
                   disabled={inputDisabled}
                   value={detail.title}
-                  onChange={(e: any) =>
-                    handleCourseDetailsTitleUpdate(e.target.value, index)
-                  }
+                  onChange={(e: any) => handleCourseDetailsTitleUpdate(e.target.value, index)}
                 />
               </Form.Group>
               <Form.Group controlId="exampleForm.ControlTextarea1">
@@ -64,9 +65,7 @@ const CourseDetails = (props) => {
                   disabled={inputDisabled}
                   rows={3}
                   value={detail.description}
-                  onChange={(e: any) =>
-                    handleCourseDetailsDescriptionUpdate(e.target.value, index)
-                  }
+                  onChange={(e: any) => handleCourseDetailsDescriptionUpdate(e.target.value, index)}
                 />
               </Form.Group>
             </div>

@@ -1,48 +1,47 @@
-import { useEffect } from "react";
-import { useRef } from "react";
-import { Form } from "react-bootstrap";
+import React, { useEffect } from 'react';
+import { useRef } from 'react';
+import { Form } from 'react-bootstrap';
 
-export default function CustomClasses({
-  customProps: { properties },
-  widgetProps,
-  packageTypeName,
-  actionType,
-  userData,
-}) {
-  const {
-    customPTOnline,
-    customPTOffline,
-    customGroupOnline,
-    customGroupOffline,
-    record,
-    restDay,
-    duration,
-  } = properties;
-
+interface Properties {
+  customPTOnline: any;
+  customPTOffline: any;
+  customGroupOnline: any;
+  customGroupOffline: any;
+  record: any;
+  restDay: any;
+  duration: any;
+}
+const CustomClasses: React.FC<{
+  customProps: Properties;
+  widgetProps: any;
+  packageTypeName: any;
+  actionType: any;
+  userData: any;
+}> = (props) => {
   const dayAvailableRef = useRef<any>(null);
 
   useEffect(() => {
     const setValue = () => {
-      if (userData.ptonline) {
-        customPTOnline.value = userData.ptonline;
+      if (props.userData.ptonline) {
+        props.userData.customPTOnline.value = props.userData.ptonline;
       }
 
-      if (userData.ptoffline) {
-        customPTOffline.value = userData.ptoffline;
+      if (props.userData.ptoffline) {
+        props.userData.customPTOffline.value = props.userData.ptoffline;
       }
 
-      if (userData.grouponline) {
-        customGroupOnline.value = userData.grouponline;
+      if (props.userData.grouponline) {
+        props.userData.customGroupOnline.value = props.userData.grouponline;
       }
 
-      if (userData.groupoffline) {
-        customGroupOffline.value = userData.groupoffline;
+      if (props.userData.groupoffline) {
+        props.userData.customGroupOffline.value = props.userData.groupoffline;
       }
-      if (userData.recordedclasses) {
-        record.value = userData.recordedclasses;
+      if (props.userData.recordedclasses) {
+        props.userData.record.value = props.userData.recordedclasses;
       }
-      if (userData.restDay) {
-        restDay.value = userData.restdays;
+      if (props.userData.restDay) {
+        props.userData.restDay.value = props.userData.restdays;
       }
     };
     setValue();
@@ -50,84 +49,84 @@ export default function CustomClasses({
 
   const showErrorMessage = (e: { target: { value: string } }) => {
     if (dayAvailableRef.current < 0) {
-      widgetProps.schema.maximum = 0;
-      if (widgetProps.rawErrors) {
-        widgetProps.rawErrors[0] = `should be <= ${
+      props.widgetProps.schema.maximum = 0;
+      if (props.widgetProps.rawErrors) {
+        props.widgetProps.rawErrors[0] = `should be <= ${
           parseInt(e.target.value) - dayAvailableRef.current * -1
         }`;
       }
     } else if (dayAvailableRef.current >= 0) {
-      widgetProps.schema.maximum = 30;
-      if (widgetProps.rawErrors) {
-        widgetProps.rawErrors[0] = "";
+      props.widgetProps.schema.maximum = 30;
+      if (props.widgetProps.rawErrors) {
+        props.widgetProps.rawErrors[0] = '';
       }
     }
   };
 
   const handleValidation = (e: { target: { value: string } }) => {
-    dayAvailableRef.current = duration.value;
-    if (widgetProps.id === "root_ptonline") {
-      customPTOnline.value = parseInt(e.target.value);
+    dayAvailableRef.current = props.userData.duration.value;
+    if (props.userData.widgetProps.id === 'root_ptonline') {
+      props.userData.customPTOnline.value = parseInt(e.target.value);
 
       dayAvailableRef.current -=
         parseInt(e.target.value) +
-        customPTOffline.value +
-        customGroupOnline.value +
-        customGroupOffline.value +
-        record.value +
-        restDay.value;
+        props.userData.customPTOffline.value +
+        props.userData.customGroupOnline.value +
+        props.userData.customGroupOffline.value +
+        props.userData.record.value +
+        props.userData.restDay.value;
 
       // error message
       showErrorMessage(e);
-    } else if (widgetProps.id === "root_ptoffline") {
-      customPTOffline.value = parseInt(e.target.value);
+    } else if (props.widgetProps.id === 'root_ptoffline') {
+      props.userData.customPTOffline.value = parseInt(e.target.value);
 
       dayAvailableRef.current -=
         parseInt(e.target.value) +
-        customPTOnline.value +
-        customGroupOnline.value +
-        customGroupOffline.value +
-        record.value +
-        restDay.value;
+        props.userData.customPTOnline.value +
+        props.userData.customGroupOnline.value +
+        props.userData.customGroupOffline.value +
+        props.userData.record.value +
+        props.userData.restDay.value;
 
       // error message
       showErrorMessage(e);
-    } else if (widgetProps.id === "root_grouponline") {
-      customGroupOnline.value = parseInt(e.target.value);
+    } else if (props.widgetProps.id === 'root_grouponline') {
+      props.userData.customGroupOnline.value = parseInt(e.target.value);
 
       dayAvailableRef.current -=
         parseInt(e.target.value) +
-        customPTOnline.value +
-        customPTOffline.value +
-        customGroupOffline.value +
-        record.value +
-        restDay.value;
+        props.userData.customPTOnline.value +
+        props.userData.customPTOffline.value +
+        props.userData.customGroupOffline.value +
+        props.userData.record.value +
+        props.userData.restDay.value;
 
       // error message
       showErrorMessage(e);
-    } else if (widgetProps.id === "root_groupoffline") {
-      customGroupOffline.value = parseInt(e.target.value);
+    } else if (props.widgetProps.id === 'root_groupoffline') {
+      props.userData.customGroupOffline.value = parseInt(e.target.value);
 
       dayAvailableRef.current -=
         parseInt(e.target.value) +
-        customPTOnline.value +
-        customPTOffline.value +
-        customGroupOnline.value +
-        record.value +
-        restDay.value;
+        props.userData.customPTOnline.value +
+        props.userData.customPTOffline.value +
+        props.userData.customGroupOnline.value +
+        props.userData.record.value +
+        props.userData.restDay.value;
 
       // error message
       showErrorMessage(e);
-    } else if (widgetProps.id === "root_recordedclasses") {
-      record.value = parseInt(e.target.value);
+    } else if (props.widgetProps.id === 'root_recordedclasses') {
+      props.userData.record.value = parseInt(e.target.value);
 
       dayAvailableRef.current -=
         parseInt(e.target.value) +
-        customPTOnline.value +
-        customPTOffline.value +
-        customGroupOffline.value +
-        customGroupOnline.value +
-        restDay.value;
+        props.userData.customPTOnline.value +
+        props.userData.customPTOffline.value +
+        props.userData.customGroupOffline.value +
+        props.userData.customGroupOnline.value +
+        props.userData.restDay.value;
 
       // error message
       showErrorMessage(e);
@@ -144,64 +143,64 @@ export default function CustomClasses({
 
   return (
     <div className="d-flex justify-content-center aligns-items-center">
-      {widgetProps.schema.title === "Online" ? (
-        widgetProps.id === "root_ptonline" ? (
+      {props.widgetProps.schema.title === 'Online' ? (
+        props.widgetProps.id === 'root_ptonline' ? (
           <img
-            src={`/assets/${packageTypeName}personal-training-online.svg`}
+            src={`/assets/${props.packageTypeName}personal-training-online.svg`}
             alt="123"
-            title={`${packageTypeName} personal training online`}
+            title={`${props.packageTypeName} personal training online`}
           />
         ) : (
           <img
-            src={`/assets/${packageTypeName}group-online.svg`}
+            src={`/assets/${props.packageTypeName}group-online.svg`}
             alt="123"
-            title={`${packageTypeName} group online`}
+            title={`${props.packageTypeName} group online`}
           />
         )
       ) : (
-        ""
+        ''
       )}
-      {widgetProps.schema.title === "Offline" ? (
-        widgetProps.id === "root_ptoffline" ? (
+      {props.widgetProps.schema.title === 'Offline' ? (
+        props.widgetProps.id === 'root_ptoffline' ? (
           <img
-            src={`/assets/${packageTypeName}personal-training-offline.svg`}
+            src={`/assets/${props.packageTypeName}personal-training-offline.svg`}
             alt="123"
-            title={`${packageTypeName} personal training offline`}
+            title={`${props.packageTypeName} personal training offline`}
           />
         ) : (
           <img
-            src={`/assets/${packageTypeName}group-offline.svg`}
+            src={`/assets/${props.packageTypeName}group-offline.svg`}
             alt="123"
-            title={`${packageTypeName} group offline`}
+            title={`${props.packageTypeName} group offline`}
           />
         )
       ) : (
-        ""
+        ''
       )}
-      {widgetProps.schema.title === "Recorded" ? (
+      {props.widgetProps.schema.title === 'Recorded' ? (
         <img
-          src={`/assets/${packageTypeName}classic.svg`}
+          src={`/assets/${props.packageTypeName}classic.svg`}
           alt="123"
-          title={`${packageTypeName} classic`}
+          title={`${props.packageTypeName} classic`}
         />
       ) : (
-        ""
+        ''
       )}
 
       <Form.Control
         className="text-center"
         width="100%"
-        disabled={actionType === "view" ? true : false}
-        value={widgetProps.value && widgetProps.value}
+        disabled={props.actionType === 'view' ? true : false}
+        value={props.widgetProps.value && props.widgetProps.value}
         ref={dayAvailableRef}
         pattern="[0-9]+"
-        onChange={(e: { target: { value: string } }) =>
-          handleChange(e, widgetProps)
-        }
+        onChange={(e: { target: { value: string } }) => handleChange(e, props.widgetProps)}
         type="number"
         min="0"
         max="30"
       />
     </div>
   );
-}
+};
+
+export default CustomClasses;

@@ -7,7 +7,7 @@ import Rating from "./Rating";
 import {flattenObj} from '../../../../../components/utils/responseFlatten';
 
 function Widget(props: any) {
-     let Data = props.value !== undefined && JSON.parse(props.value);
+     const Data = props.value !== undefined && JSON.parse(props.value);
      const [editor, setEditor] = useState<any>(false);
      const [rating, setRating] = useState<any>(false);
      const [rate1, setRate1] = useState<any>();

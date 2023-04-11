@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import moment from "moment";
 import { Badge } from "react-bootstrap";
 import "./styles.css";
 
-const WeekScheduler = (props: any) => {
+const WeekScheduler: React.FC<{days: number; startDate: Date; assignedEvents: any;}> = (props) => {
   const arr: any = [];
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState<boolean>(false);
   const schedulerDay: any = require("./table.json");
 
   const hours: number[] = [
@@ -17,10 +17,10 @@ const WeekScheduler = (props: any) => {
   const min: number[] = [0, 15, 30, 45];
 
   function handleDays() {
-    for (var l = 1; l <= props.days; l++) {
+    for (let l = 1; l <= props.days; l++) {
       days.push(l);
     }
-    for (var j = 0; j < props.days; j++) {
+    for (let j = 0; j < props.days; j++) {
       const t = moment(props.startDate).add(j, "days").format("DD MMM YY");
       dates.push(t);
     }
@@ -29,14 +29,14 @@ const WeekScheduler = (props: any) => {
   handleDays();
 
   function handleHeight(val: any) {
-    var starth = parseInt(val.hour);
-    var startm = parseInt(val.min);
-    var endh = parseInt(val.endHour);
-    var endm = parseInt(val.endMin);
+    const starth = parseInt(val.hour);
+    const startm = parseInt(val.min);
+    const endh = parseInt(val.endHour);
+    const endm = parseInt(val.endMin);
 
-    var calculatedH = endh - starth;
-    var calculatedM = endm - startm;
-    var height = calculatedH * 4 * 15 + calculatedM;
+    const calculatedH = endh - starth;
+    const calculatedM = endm - startm;
+    const height = calculatedH * 4 * 15 + calculatedM;
     return height;
   }
 
@@ -80,20 +80,20 @@ const WeekScheduler = (props: any) => {
   function handleTableRender() {
     const values =
       props.assignedEvents === null ? [] : [...props.assignedEvents];
-    for (var d = 1; d <= props.days; d++) {
+    for (let d = 1; d <= props.days; d++) {
       arr[d] = JSON.parse(JSON.stringify(schedulerDay));
     }
     values.forEach((val) => {
-      var startTimeHour: any = `${
+      const startTimeHour: any = `${
         val.start_time === undefined ? "0" : val.start_time.split(":")[0]
       }`;
-      var startTimeMinute: any = `${
+      const startTimeMinute: any = `${
         val.start_time === undefined ? "0" : val.start_time.split(":")[1]
       }`;
-      var endTimeHour: any = `${
+      const endTimeHour: any = `${
         val.end_time === undefined ? "0" : val.end_time.split(":")[0]
       }`;
-      var endTimeMin: any = `${
+      const endTimeMin: any = `${
         val.end_time === undefined ? "0" : val.end_time.split(":")[1]
       }`;
       if (

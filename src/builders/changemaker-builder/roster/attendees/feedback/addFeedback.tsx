@@ -91,12 +91,12 @@ function CreatePosts(props: any, ref: any) {
      });
 
      function FillDetails(data: any) {
-          let details: any = {};
-          let msg = data.feedbackNotes[0];
-          let rate1 = data.ratings[0];
-          let rate2 = data.ratings[1];
+          const details: any = {};
+          const msg = data.feedbackNotes[0];
+          const rate1 = data.ratings[0];
+          const rate2 = data.ratings[1];
 
-          let o = { ...operation };
+          const o = { ...operation };
           details.name = o.type.toLowerCase();
 
           details.packagesearch = msg.resource_id;
@@ -113,8 +113,8 @@ function CreatePosts(props: any, ref: any) {
      }
 
      function CreatePost(frm: any) {
-          let searchid: any = frm.packagesearch.split(",");
-          let widget: any = JSON.parse(frm.widget);
+          const searchid: any = frm.packagesearch.split(",");
+          const widget: any = JSON.parse(frm.widget);
 
           if (widget.rpm > 0) {
                createRating({
@@ -191,8 +191,8 @@ function CreatePosts(props: any, ref: any) {
      }
 
      function EditNote(frm: any) {
-          let searchid: any = frm.packagesearch.split(",");
-          let widget: any = JSON.parse(frm.widget);
+          const searchid: any = frm.packagesearch.split(",");
+          const widget: any = JSON.parse(frm.widget);
 
           if (widget.rpm > 0) {
                updaterating({

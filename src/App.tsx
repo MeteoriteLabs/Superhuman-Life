@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import {
   ApolloClient,
   ApolloProvider,
@@ -12,7 +12,7 @@ import AuthContext from "./context/auth-context";
 import Routes from "./Routes";
 import Toaster from "../src/components/Toaster";
 
-function App() {
+const App: React.FC = () => {
   const [token, setToken] = useState<any>(localStorage.getItem("token"));
   const [username, setUsername] = useState<any>(
     localStorage.getItem("username")

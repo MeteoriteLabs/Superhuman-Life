@@ -204,8 +204,8 @@ function CreateEditWorkoutTemplate(props: any, ref: any) {
         date: moment(frm.day[0].day, 'Do, MMM YY').format('YYYY-MM-DD')
       };
 
-      let result = await query.refetch(variables);
-      let filterResult = await AvailabilityCheck({
+      const result = await query.refetch(variables);
+      const filterResult = await AvailabilityCheck({
         sessions: result.data.sessions,
         event: frm
       });
@@ -262,7 +262,7 @@ function CreateEditWorkoutTemplate(props: any, ref: any) {
       }
     }
 
-    let data: {} = {};
+    let data: Record<string, unknown> = {};
 
     if (window.location.pathname.split('/')[1] === 'programs') {
       data = {
