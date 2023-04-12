@@ -1,6 +1,7 @@
-import { useLocation } from "react-router-dom";
+import React from 'react';
+import { useLocation } from 'react-router-dom';
 
-export default function SchedulePage() {
+const SchedulePage: React.FC = () => {
   const location = useLocation();
 
   return (
@@ -11,4 +12,6 @@ export default function SchedulePage() {
       </p>
     </div>
   );
-}
+};
+
+export default SchedulePage;

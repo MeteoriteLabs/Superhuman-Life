@@ -1,6 +1,12 @@
+import React from "react";
 import { ResponsiveLine } from "@nivo/line";
 
-const Wrapper = (props: any) => (
+interface ArrayType {
+  x: string;
+  y: number;
+}
+
+const Wrapper = (props) => (
   <div
     {...props}
     style={{
@@ -11,7 +17,7 @@ const Wrapper = (props: any) => (
   />
 );
 
-const LineGraph = (props: { data: any; yAxis: string;}) => (
+const LineGraph: React.FC<{data: {id: string; color: string; data: ArrayType[];}[]; yAxis: string;}> = (props) => (
   <>
     <Wrapper>
       <ResponsiveLine

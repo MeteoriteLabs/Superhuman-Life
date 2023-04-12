@@ -1,13 +1,15 @@
-import { useContext } from "react";
+import React, { useContext } from "react";
 import Form from "@rjsf/bootstrap-4";
 import { Link } from "react-router-dom";
 import { Button, Modal, Row, Col } from "react-bootstrap";
 import authContext from "../../context/auth-context";
 import { useMutation, gql } from '@apollo/client';
 
-export default function Login() {
+const Login: React.FC = () => {
   const auth = useContext(authContext);
+  // eslint-disable-next-line
   const loginSchema: any = require("./login.json");
+  // eslint-disable-next-line
   const uiSchema: any = {
     "password": {
       "ui:widget": "password",
@@ -72,7 +74,7 @@ export default function Login() {
             </Col>
             <Col>
               <Link className="float-right" to="/register">
-                Don{`&apos;`}t have an account? Sign Up
+                Don&apos;t have an account? Sign Up
               </Link>
             </Col>
           </Row>
@@ -81,3 +83,5 @@ export default function Login() {
     </Modal.Dialog>
   );
 }
+
+export default Login;

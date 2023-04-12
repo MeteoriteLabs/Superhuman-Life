@@ -6,7 +6,7 @@ import { GET_ADDRESS } from '../graphQL/queries';
 import AddFitnessAddressModal from '../../../../components/customWidgets/AddFitnessAddressModal';
 import authContext from '../../../../context/auth-context';
 
-const FitnessAddress: React.FC<{ widgetProps: any; actionType: any }> = (props) => {
+const FitnessAddress: React.FC<{ widgetProps: any; actionType: any; PTProps?: any; }> = (props) => {
   const auth = useContext(authContext);
   const [addressModal, setAddressModal] = useState<boolean>(false);
   const [addressDetails, setAddressDetails] = useState<any>([]);

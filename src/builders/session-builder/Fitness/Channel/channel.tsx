@@ -202,7 +202,7 @@ export default function Channel() {
       <Row>
         <Col>
           <Table columns={columns} data={userPackage} />
-          <FitnessAction ref={fitnessActionRef} />
+          <FitnessAction ref={fitnessActionRef} callback={() => mainQuery}/>
         </Col>
       </Row>
     </div>

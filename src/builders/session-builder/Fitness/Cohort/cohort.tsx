@@ -210,7 +210,7 @@ export default function Cohort() {
       <Row>
         <Col>
           <Table columns={columns} data={userPackage} />
-          <FitnessAction ref={fitnessActionRef} callback={mainQuery}/>
+          <FitnessAction ref={fitnessActionRef} callback={() => mainQuery}/>
         </Col>
       </Row>
     </div>

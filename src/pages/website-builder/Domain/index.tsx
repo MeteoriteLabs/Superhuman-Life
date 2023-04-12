@@ -80,7 +80,7 @@ const HelpModal: React.FC<{onHide: ()=>void; show: boolean;}> = (props) => {
   );
 }
 
-export default function DomainHelpModalComponent() {
+const DomainHelpModalComponent: React.FC = () => {
   const [modalShow, setModalShow] = useState<boolean>(false);
 
   return (
@@ -97,3 +97,5 @@ export default function DomainHelpModalComponent() {
     </>
   );
 }
+
+export default DomainHelpModalComponent;

@@ -39,7 +39,7 @@ const FinanceModal = (props: any) => {
         <Modal.Header closeButton>
           <Modal.Title as={Row}>
             <Col xs={12} md={12} lg={12}>
-              <p className="lead">{name}</p>
+              <p className="lead">{props.name}</p>
             </Col>
           </Modal.Title>
         </Modal.Header>

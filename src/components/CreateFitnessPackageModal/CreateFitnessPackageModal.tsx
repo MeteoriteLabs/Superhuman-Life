@@ -5,29 +5,30 @@ import { Button, Col, Modal, ProgressBar, Row } from 'react-bootstrap';
 import _ from 'lodash';
 import moment from 'moment';
 
-const CreateFitnessPackageModal: React.FC<{name: any;
+const CreateFitnessPackageModal: React.FC<{
+  name: any;
   formUISchema: any;
   formSubmit: any;
   formSchema: any;
   formData: any;
   isStepper: any;
-  userData: any;
-  setUserData: any;
-  widgets: any;
+  userData?: any;
+  setUserData?: any;
+  widgets?: any;
   setRender?: any;
-  fitness_package_type: any;
+  fitness_package_type?: any;
   PTProps: any;
-  actionType: any;
-  groupProps: any;
-  customProps: any;
+  actionType?: any;
+  groupProps?: any;
+  customProps?: any;
   stepperValues: any;
-  pricingDetailRef: any;
-  submitName: any;
-  classicProps: any;
-  setOperation: any;
-  type: any;
-  operation: any;
-  modalTrigger: any;}> = (props) => {
+  pricingDetailRef?: any;
+  submitName?: any;
+  classicProps?: any;
+  setOperation?: any;
+  type?: any;
+  operation?: any;
+  modalTrigger?: any;}> = (props) => {
   const registry = utils.getDefaultRegistry();
   const defaultFileWidget = registry.widgets['FileWidget'];
   (Bootstrap4Theme as any).widgets['FileWidget'] = defaultFileWidget;
@@ -224,8 +225,8 @@ interface UserData {
       <Modal size="xl" show={show} onHide={() => setShow(false)} centered>
         <Modal.Header closeButton>
           <Modal.Title as={Row}>
-            <Col xs={12} md={12} lg={12}>
-              <p className="lead">{name}</p>
+            <Col xs={12} md={12} >
+              <p className="lead">{props.name}</p>
             </Col>
             {props.isStepper &&
               stepper.map((item: string, id: number) => (

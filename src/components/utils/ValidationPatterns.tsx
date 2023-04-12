@@ -3,7 +3,7 @@ export const phoneCustomFormats = {
     'phone-in': /^[6-9]{1}[0-9]{9}$/
 };
 
-export function phoneTransformErrors(errors) {
+export const phoneTransformErrors = (errors: any[]): any[] => {
     return errors.map(error => {
         if (error.name === "format") {
             error.message = "Phone number must be valid and contains 10 digits"

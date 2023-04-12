@@ -11,7 +11,7 @@ interface Props {
   widgetProps: any;
   classicProps: Properties;
   actionType: string;
-  packageTypeName: string;
+  packageTypeName: string|null;
 }
 
 const ClassicClasses: React.FC<Props> = (props) => {

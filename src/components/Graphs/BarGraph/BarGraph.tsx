@@ -1,6 +1,7 @@
+import React from "react";
 import { ResponsiveBar } from "@nivo/bar";
 
-const Wrapper = (props: any) => (
+const Wrapper = (props) => (
   <div
     {...props}
     style={{
@@ -11,7 +12,7 @@ const Wrapper = (props: any) => (
   />
 );
 
-const BarGraph = (props: { data: any; yAxis: string; keyName: string[]; }) => {
+const BarGraph: React.FC<{ data: {index: string; Clients?: number; Leads?: number;}[]; yAxis: string; keyName: string[]; }> = (props) => {
   return (
     <>
       <Wrapper>

@@ -1,8 +1,18 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Col, Modal, Row } from 'react-bootstrap';
 import Loader from '../../components/Loader/Loader';
 
-function StatusModal(props: any) {
+const StatusModal: React.FC<{
+  buttonRight: string;
+  buttonLeft: string;
+  modalTitle: string;
+  show: boolean;
+  modalBody: string;
+  onClick: () => void;
+  onHide: () => void;
+  EventConnectedDetails: any[];
+  ExistingEventId: string;
+}> = (props) => {
   const [eventConnections, setEventConnections] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -123,6 +133,6 @@ function StatusModal(props: any) {
       </Modal>
     </>
   );
-}
+};
 
 export default StatusModal;

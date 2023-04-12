@@ -3,7 +3,7 @@ import moment from "moment";
 import { Badge } from "react-bootstrap";
 import "./styles.css";
 
-const WeekScheduler: React.FC<{days: number; startDate: Date; assignedEvents: any;}> = (props) => {
+const WeekScheduler: React.FC<{days: number; startDate: any; assignedEvents: any;}> = (props) => {
   const arr: any = [];
   const [show, setShow] = useState<boolean>(false);
   const schedulerDay: any = require("./table.json");

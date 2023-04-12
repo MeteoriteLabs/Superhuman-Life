@@ -1,4 +1,4 @@
-import { useState, useRef, useContext } from "react";
+import React,{ useState, useRef, useContext } from "react";
 import {
   Tabs,
   Tab,
@@ -24,22 +24,23 @@ import {
 } from "../../webpage-details/queries";
 import AuthContext from "../../../context/auth-context";
 
-export default function TabsComponent() {
-  const [key, setKey] = useState("professional");
+const TabsComponent: React.FC = () => {
+  const [key, setKey] = useState<string>("professional");
   const auth = useContext(AuthContext);
+  // eslint-disable-next-line 
   const createWebpageDetailsComponent = useRef<any>(null);
-  const [websiteData, setWebsiteData] = useState<any>({});
+  const [websiteData, setWebsiteData] = useState<Record<string, unknown>|null>({});
   const [templateName, setTemplateName] = useState<string>("");
   const [formSwitch] = useState<boolean>(true);
-  const [templateId, setTemplateId] = useState<any>(null);
-  const [newTemplateId, setNewTemplateId] = useState<any>();
+  const [templateId, setTemplateId] = useState<string|null>(null);
+  const [newTemplateId, setNewTemplateId] = useState<string|null>(null);
 
   useQuery(FETCH_WEBSITE_DATA, {
     variables: { id: auth.userid },
-    onCompleted: (r: any) => {
-      if (r.websiteData.length) {
-        setWebsiteData(r.websiteData[0]);
-        setTemplateName(r.websiteData[0].website_template.template_name);
+    onCompleted: (response) => {
+      if (response.websiteData && response.websiteData.length) {
+        setWebsiteData(response.websiteData[0]);
+        setTemplateName(response.websiteData[0].website_template.template_name);
       } else {
         setWebsiteData(null);
       }
@@ -49,8 +50,8 @@ export default function TabsComponent() {
   useQuery(FETCH_TEMPLATE_SCHEMA_FORM, {
     variables: { id: templateId },
     skip: templateId === null,
-    onCompleted: (r: any) => {
-      setTemplateName(r.websiteTemplate.template_name);
+    onCompleted: (response) => {
+      setTemplateName(response.websiteTemplate.template_name);
     },
   });
 
@@ -59,6 +60,7 @@ export default function TabsComponent() {
       <Tabs
         id="controlled-tab-example"
         activeKey={key}
+        // eslint-disable-next-line
         onSelect={(k: any) => setKey(k)}
         className="mb-3 d-flex justify-content-center"
       >
@@ -345,3 +347,5 @@ const DomainPopover = () => (
     </Button>
   </OverlayTrigger>
 );
+
+export default TabsComponent;

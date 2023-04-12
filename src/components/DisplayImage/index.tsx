@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import AWS from "aws-sdk";
 
-const S3_BUCKET: any = process.env.REACT_APP_S3_BUCKET_NAME;
-const REGION: any = process.env.REACT_APP_S3_BUCKET_REGION;
+const S3_BUCKET = process.env.REACT_APP_S3_BUCKET_NAME;
+const REGION = process.env.REACT_APP_S3_BUCKET_REGION;
 
 AWS.config.update({
   accessKeyId: process.env.REACT_APP_S3_ACCESS_KEY,
@@ -37,7 +37,7 @@ const DisplayImage: React.FC<{imageName: string, defaultImageUrl: string, imageC
           }
         },
         function (err) {
-          console.log("image not found");
+          console.log(err,"image not found");
         }
       );
     }

@@ -3,11 +3,12 @@ import Icons from "../Icons";
 
 const DrawerTrigger: React.FC<{ toggle: () => void}> = (props) => {
   return (
+    <div onClick={props.toggle}>
     <Icons
       name="unreadeye"
-      onClick={props.toggle}
       style={{ cursor: "pointer" }}
     />
+    </div>
   );
 };
 

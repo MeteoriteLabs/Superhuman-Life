@@ -194,7 +194,7 @@ const RosterAttendees = () => {
                           <span>
                             Lorem Ipsum is simply dummy text of the printing and
                             typesetting industry. Lorem Ipsum has been the
-                            industry{`&apos;`}s standard dummy text ever since the 1500s
+                            industry&apos;s standard dummy text ever since the 1500s
                           </span>
                         </div>
                         <div

@@ -1,13 +1,17 @@
-import { useState } from "react";
-import { Typeahead } from "react-bootstrap-typeahead";
-import "react-bootstrap-typeahead/css/Typeahead.css";
-import { FETCH_FITNESSDISCPLINES } from "../../builders/program-builder/workout/queries";
-import { useQuery } from "@apollo/client";
-import { flattenObj } from "../utils/responseFlatten";
+import React, { useState } from 'react';
+import { Typeahead } from 'react-bootstrap-typeahead';
+import 'react-bootstrap-typeahead/css/Typeahead.css';
+import { FETCH_FITNESSDISCPLINES } from '../../builders/program-builder/workout/queries';
+import { useQuery } from '@apollo/client';
+import { flattenObj } from '../utils/responseFlatten';
 
-const MultiSelect = (props: any) => {
+const MultiSelect: React.FC<{
+  value: string;
+  onChange: (args: string | null) => void;
+  uiSchema: any;
+}> = (props) => {
   function handleReturnType(value) {
-    if (typeof value === "string") {
+    if (typeof value === 'string') {
       return JSON.parse(value);
     } else {
       return value;
@@ -34,7 +38,7 @@ const MultiSelect = (props: any) => {
       [...flattenedData.fitnessdisciplines].map((discipline) => {
         return {
           id: discipline.id,
-          disciplinename: discipline.disciplinename,
+          disciplinename: discipline.disciplinename
         };
       })
     );
@@ -50,7 +54,7 @@ const MultiSelect = (props: any) => {
   if (multiSelections.length > 0) {
     props.onChange(JSON.stringify(multiSelections));
   } else {
-    props.onChange(undefined);
+    props.onChange(null);
   }
 
   FetchData();

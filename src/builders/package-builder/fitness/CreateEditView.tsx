@@ -46,6 +46,40 @@ interface Operation {
   current_status: boolean;
 }
 
+interface Details {
+  id: string;
+      packagename: string;
+      tags: string;
+      disciplines: string;
+      fitness_package_type: string;
+      aboutpackage: string;
+      benefits: string;
+      level: number;
+      mode: string;
+      ptoffline: any;
+      ptonline: any;
+      grouponline: any;
+      groupoffline: any;
+      recordedclasses: any;
+      restdays: any;
+      fitnesspackagepricing: any;
+      bookingleadday: any;
+      bookingleadtime: any;
+      duration: any;
+      groupstarttime: any;
+      groupendtime: any;
+      groupinstantbooking: any;
+      address: any;
+      ptclasssize: any;
+      classsize: any;
+      groupdays: any;
+      introvideourl: any;
+      is_private: any;
+      Upload_ID: any;
+      Thumbnail_ID: any;
+      equipment_lists: any;
+}
+
 function CreateEditView(props: any, ref: any) {
   const auth = useContext(AuthContext);
   const [operation, setOperation] = useState<Operation>({} as Operation);
@@ -124,7 +158,7 @@ function CreateEditView(props: any, ref: any) {
       ),
     },
     address: {
-      "ui:widget": (props) => (
+      "ui:widget": (props: any) => (
         <FitnessAddress
           actionType={operation.actionType}
           widgetProps={props}
@@ -399,87 +433,87 @@ function CreateEditView(props: any, ref: any) {
     const flattedData = flattenObj({ ...dataPackage });
     const packageDetail = flattedData.fitnesspackages[0];
 
-    let {
-      id,
-      packagename,
-      tags,
-      disciplines,
-      fitness_package_type,
-      aboutpackage,
-      benefits,
-      level,
-      mode,
-      ptoffline,
-      ptonline,
-      grouponline,
-      groupoffline,
-      recordedclasses,
-      restdays,
-      fitnesspackagepricing,
-      bookingleadday,
-      bookingleadtime,
-      duration,
-      groupstarttime,
-      groupendtime,
-      groupinstantbooking,
-      address,
-      ptclasssize,
-      classsize,
-      groupdays,
-      introvideourl,
-      is_private,
-      Upload_ID,
-      Thumbnail_ID,
-      equipment_lists,
-    } = packageDetail;
+    // let {
+    //   id,
+    //   packagename,
+    //   tags,
+    //   disciplines,
+    //   fitness_package_type,
+    //   aboutpackage,
+    //   benefits,
+    //   level,
+    //   mode,
+    //   ptoffline,
+    //   ptonline,
+    //   grouponline,
+    //   groupoffline,
+    //   recordedclasses,
+    //   restdays,
+    //   fitnesspackagepricing,
+    //   bookingleadday,
+    //   bookingleadtime,
+    //   duration,
+    //   groupstarttime,
+    //   groupendtime,
+    //   groupinstantbooking,
+    //   address,
+    //   ptclasssize,
+    //   classsize,
+    //   groupdays,
+    //   introvideourl,
+    //   is_private,
+    //   Upload_ID,
+    //   Thumbnail_ID,
+    //   equipment_lists,
+    // } = packageDetail;
 
-    if (mode === "Offline_workout") {
-      mode = "Offline Workout";
-    } else if (mode === "Online_workout") {
-      mode = "Online Workout";
-    }
+    // if (mode === "Offline_workout") {
+    //   mode = "Offline Workout";
+    // } else if (mode === "Online_workout") {
+    //   mode = "Online Workout";
+    // }
 
-    if (bookingleadtime) {
-      bookingleadday = 0;
-    } else if (bookingleadday) {
-      bookingleadtime = "";
-    }
+    // if (bookingleadtime) {
+    //   bookingleadday = 0;
+    // } else if (bookingleadday) {
+    //   bookingleadtime = "";
+    // }
 
-    const updateFormData = updateform.createUpdateForm(
-      id,
-      packagename,
-      tags,
-      disciplines,
-      fitness_package_type,
-      aboutpackage,
-      benefits,
-      level,
-      mode,
-      ptoffline,
-      ptonline,
-      grouponline,
-      groupoffline,
-      recordedclasses,
-      restdays,
-      fitnesspackagepricing,
-      bookingleadday,
-      bookingleadtime,
-      duration,
-      groupstarttime,
-      groupendtime,
-      groupinstantbooking,
-      address,
-      ptclasssize,
-      classsize,
-      groupdays,
-      introvideourl,
-      is_private,
-      Upload_ID,
-      Thumbnail_ID,
-      equipment_lists
-    );
+    // const updateFormData = updateform.createUpdateForm(
+    //   id,
+    //   packagename,
+    //   tags,
+    //   disciplines,
+    //   fitness_package_type,
+    //   aboutpackage,
+    //   benefits,
+    //   level,
+    //   mode,
+    //   ptoffline,
+    //   ptonline,
+    //   grouponline,
+    //   groupoffline,
+    //   recordedclasses,
+    //   restdays,
+    //   fitnesspackagepricing,
+    //   bookingleadday,
+    //   bookingleadtime,
+    //   duration,
+    //   groupstarttime,
+    //   groupendtime,
+    //   groupinstantbooking,
+    //   address,
+    //   ptclasssize,
+    //   classsize,
+    //   groupdays,
+    //   introvideourl,
+    //   is_private,
+    //   Upload_ID,
+    //   Thumbnail_ID,
+    //   equipment_lists
+    // );
 
-    setFormData(updateFormData);
+    // setFormData(updateFormData);
 
     // if message exists - show form only for edit and view
     if (["edit", "view"].indexOf(operation.actionType) > -1) {
@@ -549,8 +583,8 @@ function CreateEditView(props: any, ref: any) {
     onCompleted: (r: any) => {
 
       // delete booking config
-      let offeringsId = r.deleteFitnesspackage.data.id;
-      let bookingConfigId = bookingsConfigInfo.find(
+      const offeringsId = r.deleteFitnesspackage.data.id;
+      const bookingConfigId = bookingsConfigInfo.find(
         (currentValue) => currentValue.fitnesspackage.id === offeringsId
       );
 
@@ -685,7 +719,7 @@ function CreateEditView(props: any, ref: any) {
         <StatusModal
           show={showStatusModal}
           onHide={() => setShowStatusModal(false)}
-          modalTile="Change Status"
+          modalTitle="Change Status"
           modalBody="Do you want to change status ?"
           buttonLeft="Cancel"
           buttonRight="Yes"
@@ -700,7 +734,7 @@ function CreateEditView(props: any, ref: any) {
         <StatusModal
           show={showDeleteModal}
           onHide={() => setShowDeleteModal(false)}
-          modalTile="Delete"
+          modalTitle="Delete"
           modalBody="Do you want to delete this package ?"
           buttonLeft="Cancel"
           buttonRight="Yes"

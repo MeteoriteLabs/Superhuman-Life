@@ -422,7 +422,7 @@ const Scheduler = () => {
 							/>
 						</div>
 					</Col>
-					<FitnessAction ref={fitnessActionRef} callback={mainQuery}/>
+					<FitnessAction ref={fitnessActionRef} callback={() => mainQuery}/>
 				</Row>
 			</div>
 		);

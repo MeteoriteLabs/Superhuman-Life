@@ -1,31 +1,37 @@
-import React, { useState, useContext, useRef } from "react";
-import "./templateModal.css";
-import { useQuery, useMutation } from "@apollo/client";
-import { Container, Row, Col, Button, Modal, Image } from "react-bootstrap";
-import { PaginationBasic } from "./PaginationModal";
+import React, { useState, useContext, useRef } from 'react';
+import './templateModal.css';
+import { useQuery, useMutation } from '@apollo/client';
+import { Container, Row, Col, Button, Modal, Image } from 'react-bootstrap';
+import { PaginationBasic } from './PaginationModal';
 import {
   FETCH_PUBLISHED_TEMPLATES,
   FETCH_WEBSITE_DATA,
-  UPDATE_WEBSITE_DATA_TO_EMPTY,
-} from "../../webpage-details/queries";
-import CreateWebpageDetails from "../../webpage-details/createoredit-webpage";
+  UPDATE_WEBSITE_DATA_TO_EMPTY
+} from '../../webpage-details/queries';
+import CreateWebpageDetails from '../../webpage-details/createoredit-webpage';
 
-import AuthContext from "../../../context/auth-context";
+import AuthContext from '../../../context/auth-context';
 
-const ModalComp: React.FC<{setReceivedData: any; setModalShow: any; setCount: any;}> = (props) => {
-  const [showTemplate, setShowTemplate] = useState<any>([]);
-  const [templateId, setTemplateId] = useState<any>(null);
-  const [websiteDataRecordId, setWebsiteDataRecordId] = useState<any>();
-  const [currentTemplateId, setCurrentTemplateId] = useState<any>();
+const ModalComp: React.FC<{
+  setReceivedData: React.Dispatch<React.SetStateAction<string | null>>;
+  setModalShow: React.Dispatch<React.SetStateAction<boolean>>;
+  setCount: React.Dispatch<React.SetStateAction<string | null>>;
+  show: boolean;
+  onHide: () => void;
+}> = (props) => {
+  const [showTemplate, setShowTemplate] = useState<Record<string, string>[]>([]);
+  const [templateId, setTemplateId] = useState<string | null>(null);
+  const [websiteDataRecordId, setWebsiteDataRecordId] = useState<string | null>(null);
+  const [currentTemplateId, setCurrentTemplateId] = useState<string | null>(null);
 
-  const auth = useContext(AuthContext);
+  const auth = useContext<Record<string, string>>(AuthContext);
 
-  const passTemplateId = useRef<any>(null);
+  const passTemplateId = useRef<string | null>(null);
 
   useQuery(FETCH_PUBLISHED_TEMPLATES, {
-    onCompleted: (data: any) => {
+    onCompleted: (data) => {
       setShowTemplate(data.websiteTemplates);
-    },
+    }
   });
 
   const { setReceivedData, setModalShow, setCount } = props;
@@ -34,30 +40,28 @@ const ModalComp: React.FC<{setReceivedData: any; setModalShow: any; setCount: an
 
   useQuery(FETCH_WEBSITE_DATA, {
     variables: { id: auth.userid },
-    onCompleted: (r: any) => {
-  
-      if (r.websiteData[0] !== undefined) {
-        setWebsiteDataRecordId(r.websiteData[0].id);
-        setCurrentTemplateId(r.websiteData[0].website_template.id);
+    onCompleted: (response) => {
+      if (response.websiteData && response.websiteData.length) {
+        setWebsiteDataRecordId(response.websiteData[0].id);
+        setCurrentTemplateId(response.websiteData[0].website_template.id);
       } else {
         return;
       }
-    },
+    }
   });
 
   const [updateDetails] = useMutation(UPDATE_WEBSITE_DATA_TO_EMPTY, {
     variables: {
       record_id: websiteDataRecordId,
       user: auth.userid,
-      form_data: {},
+      form_data: {}
     },
 
-    onCompleted: (r: any) => {
+    // eslint-disable-next-line
+    onCompleted: (response) => {
       setCount(templateId);
     },
-    refetchQueries: [
-      { query: FETCH_WEBSITE_DATA, variables: { id: auth.userid } },
-    ],
+    refetchQueries: [{ query: FETCH_WEBSITE_DATA, variables: { id: auth.userid } }]
   });
 
   const triggerUpdateDetailsMutation = () => {
@@ -70,17 +74,9 @@ const ModalComp: React.FC<{setReceivedData: any; setModalShow: any; setCount: an
 
   return (
     <>
-      <Modal
-        {...props}
-        aria-labelledby="contained-modal-title-vcenter"
-        size="lg"
-      >
+      <Modal {...props} aria-labelledby="contained-modal-title-vcenter" size="lg">
         <Modal.Header className="d-flex justify-content-center p-0 bg-dark">
-          <Modal.Title
-            as="h2"
-            id="contained-modal-title-vcenter"
-            className=" fw-bold text-white "
-          >
+          <Modal.Title as="h2" id="contained-modal-title-vcenter" className=" fw-bold text-white ">
             Web Template
           </Modal.Title>
         </Modal.Header>
@@ -105,10 +101,9 @@ const ModalComp: React.FC<{setReceivedData: any; setModalShow: any; setCount: an
                   }}
                   key={data.id}
                   className={`p-3 m-0 hover-effect ${
-                    templateId === data.id ? "active_template" : ""
+                    templateId === data.id ? 'active_template' : ''
                   }`}
-                  md={{ span: 4, offset: 0 }}
-                >
+                  md={{ span: 4, offset: 0 }}>
                   <Image fluid src="assets/website_images/template.svg" />
                   <div className="button-wrapper">
                     <Button className="border rounded">Preview</Button>
@@ -121,17 +116,14 @@ const ModalComp: React.FC<{setReceivedData: any; setModalShow: any; setCount: an
             </Row>
 
             <Row className="mt-2">
-              <Col
-                className="d-flex justify-content-around"
-                md={{ span: 4, offset: 4 }}
-              >
+              <Col className="d-flex justify-content-around" md={{ span: 4, offset: 4 }}>
                 <PaginationBasic />
               </Col>
             </Row>
 
             <Row className="mt-4">
               <Col className="p-0" md={{ span: 4, offset: 4 }}>
-                <span>Don{`&apos;`}t like the template?</span> <br />
+                <span>Don&apos;t like the template?</span> <br />
                 <span>Contact us for customized website </span>
               </Col>
               <Col md={{ span: 3, offset: 1 }} className="px-1 ">
@@ -140,8 +132,7 @@ const ModalComp: React.FC<{setReceivedData: any; setModalShow: any; setCount: an
                   className="m-0"
                   onClick={() => {
                     setModalShow(false);
-                  }}
-                >
+                  }}>
                   Select Template
                 </Button>
               </Col>
@@ -152,36 +143,34 @@ const ModalComp: React.FC<{setReceivedData: any; setModalShow: any; setCount: an
       <CreateWebpageDetails ref={passTemplateId}></CreateWebpageDetails>
     </>
   );
-}
+};
 
-const WebsiteModalComponent: React.FC<{setTemplateId: any;
-  setNewTemplateId: any;}> = (props) => {
+const WebsiteModalComponent: React.FC<{
+  setTemplateId: React.Dispatch<React.SetStateAction<string | null>>;
+  setNewTemplateId: (args: string | null) => void;
+}> = (props) => {
   const [modalShow, setModalShow] = useState<boolean>(false);
-  const [receivedData, setReceivedData] = useState<any>();
-  const [changeInTemplateId, setChangeInTemplateId] = useState<any>();
+  const [receivedData, setReceivedData] = useState<string | null>(null);
+  const [changeInTemplateId, setChangeInTemplateId] = useState<string | null>(null);
 
   props.setTemplateId(receivedData);
   props.setNewTemplateId(changeInTemplateId);
 
   return (
     <>
-      <Button
-        className="px-2 border"
-        variant="dark"
-        onClick={() => setModalShow(true)}
-      >
+      <Button className="px-2 border" variant="dark" onClick={() => setModalShow(true)}>
         Show Templates
       </Button>
 
       <ModalComp
-        // show={modalShow}
-        // onHide={() => setModalShow(false)}
+        show={modalShow}
+        onHide={() => setModalShow(false)}
         setReceivedData={setReceivedData}
         setModalShow={setModalShow}
         setCount={setChangeInTemplateId}
       />
     </>
   );
-}
+};
 
 export default WebsiteModalComponent;

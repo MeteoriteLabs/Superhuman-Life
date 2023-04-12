@@ -10,7 +10,7 @@ import WeeklyLeadsGraph from "./WeeklyLeadsGraph";
 import "../Styles/navTabStyles.css";
 
 function LeadGraph() {
-  const [leadsData, setLeadData] = useState<Record<string, unknown>[]>([]);
+  const [leadsData, setLeadData] = useState<{index: string; Leads: number;}[]>([]);
   const auth = useContext(AuthContext);
 
   useQuery(GET_LEADS, {
@@ -27,7 +27,7 @@ function LeadGraph() {
   const loadData = (data) => {
     const flattenLeadsData = flattenObj({ ...data.websiteContactForms });
 
-    const arr: Record<string, unknown>[] = [];
+    const arr: {index: string; Leads: number;}[] = [];
 
     for (let month = 0; month < 12; month++) {
       const currentMonth = moment().subtract(month, "months");

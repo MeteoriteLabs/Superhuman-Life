@@ -7,11 +7,11 @@ export const widgets = {
   uploadVideoToS3WithNativeSdk: UploadImageToS3WithNativeSdk,
 };
 
-export const UploadImageToS3WithNativeSdkComponent = (props: any) => {
+export const UploadImageToS3WithNativeSdkComponent = (props: {value: string; onChange: (args: string) => void}): unknown => {
   return (
     <UploadImageToS3WithNativeSdk
       value={props.value}
-      onChange={(event: React.FormEvent<EventTarget>) => {
+      onChange={(event: string) => {
         props.onChange(event);
       }}
       allowImage={true}
@@ -19,11 +19,11 @@ export const UploadImageToS3WithNativeSdkComponent = (props: any) => {
     />
   );
 };
-export const UploadVideoToS3WithNativeSdkComponent = (props: any) => {
+export const UploadVideoToS3WithNativeSdkComponent = (props: {value: string; onChange: (args: string) => void}): unknown => {
   return (
     <UploadImageToS3WithNativeSdk
       value={props.value}
-      onChange={(event: any) => {
+      onChange={(event: string) => {
         props.onChange(event);
       }}
       allowImage={false}

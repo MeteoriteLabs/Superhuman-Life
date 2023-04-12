@@ -360,7 +360,7 @@ export default function PT() {
       <Row>
         <Col>
           <PTTable columns={columns} data={userPackage} />
-          <FitnessAction ref={fitnessActionRef} callback={refetch_tags()}/>
+          <FitnessAction ref={fitnessActionRef} callback={() => refetch_tags()}/>
         </Col>
       </Row>
     </div>

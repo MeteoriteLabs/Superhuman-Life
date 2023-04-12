@@ -189,6 +189,7 @@ export default function EventsTab() {
           formSchema={eventSchema}
           formSubmit={onSubmit}
           formData={{}}
+          PTProps={""}
           stepperValues={[
             "Creator",
             "Details",

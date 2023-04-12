@@ -156,7 +156,7 @@ const MRP: React.FC<{
               ref={(el) => (spanRef.current[index] = el)}
               className="d-none"
               style={{ fontSize: '0.9rem' }}>
-              Can{`&apos;`}t be empty or less than &#8377; {props.minPrice[index]}
+              Can&apos;t be empty or less than &#8377; {props.minPrice[index]}
             </span>
           </td>
         );

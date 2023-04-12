@@ -1,7 +1,8 @@
+import React from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import TabsComponent from "./Tabs/TabsComponent";
 
-export default function WebsiteBuilder() {
+const WebsiteBuilder: React.FC = () => {
   return (
     <>
       <Container fluid className="mt-5">
@@ -19,3 +20,5 @@ export default function WebsiteBuilder() {
     </>
   );
 }
+
+export default WebsiteBuilder;

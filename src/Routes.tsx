@@ -54,7 +54,7 @@ const TermsOfService = React.lazy(() => import('./pages/termsOfService'));
 const SessionPage = React.lazy(() => import("./builders/session-builder/"));
 
 //auth logins
-const GoogleAuthCallbackPage = React.lazy(() => import("./pages/register/oAuthLogins/googleAuthCallback"));
+// const GoogleAuthCallbackPage = React.lazy(() => import("./pages/register/oAuthLogins/googleAuthCallback"));
 
 function NoMatch() {
      return (
@@ -120,7 +120,7 @@ export default function Routes({ token }: any) {
                                    <Route path="/forgot-password" component={ForgotPasswordPage} />
                                    <Route path="/resetpassword" component={ResetPasswordPage} />
                                    <Route path="/confirm-account" component={ConfirmAccountPage} />
-                                   <Route path="/api/auth/google/callback" component={GoogleAuthCallbackPage} />
+                                   {/* <Route path="/api/auth/google/callback" component={GoogleAuthCallbackPage} /> */}
                                    <Route path="/register" component={RegisterPage} />
                                    <Route path="/termsofservice" component={TermsOfService} />
                                    <Route path="/privacypolicy" component={PrivacyPolicy} />

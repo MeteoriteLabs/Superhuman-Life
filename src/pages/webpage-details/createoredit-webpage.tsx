@@ -34,7 +34,7 @@ interface WebsiteData {
   website_template: string;
 }
 
-function CreateWebpageDetails(props: any, ref: any) {
+const CreateWebpageDetails = (props: any, ref: any) => {
   const auth = useContext(AuthContext);
   const [webpageDetails, setWebPageDetails] = useState<any>({});
   const [schemaData, setSchemaData] = useState<any>(null);
@@ -150,7 +150,7 @@ function CreateWebpageDetails(props: any, ref: any) {
   });
 
   const [updateDetails] = useMutation(UPDATE_WEBSITE_DATA, {
-    onCompleted: (r: any) => {
+    onCompleted: () => {
       modalTrigger.next(false);
     },
     refetchQueries: [
@@ -255,9 +255,11 @@ function CreateWebpageDetails(props: any, ref: any) {
 
       {operation.type === "delete" && (
         <StatusModal
+          show={true}
+          onHide={()=>{true}}
           modalTitle="Delete"
-          EventConnectedDetails={webpageDetails}
-          ExistingEventId={operation.id}
+          // EventConnectedDetails={webpageDetails}
+          // ExistingEventId={operation.id}
           modalBody="Do you want to delete this message?"
           buttonLeft="Cancel"
           buttonRight="Yes"
