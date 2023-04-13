@@ -120,7 +120,7 @@ export default function FitnessTab() {
         Header: "Preview",
         Cell: ({ row }: any) => {
           return (
-            <>
+            <div>
               <DrawerTrigger
                 toggle={() => {
                   setShowDrawer(!showDrawer);
@@ -139,7 +139,7 @@ export default function FitnessTab() {
                   });
                 }}
               />
-            </>
+            </div>
           );
         },
       },
