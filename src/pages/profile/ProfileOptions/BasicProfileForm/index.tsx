@@ -1,4 +1,4 @@
-import { useState, useContext, useRef } from 'react';
+import React, { useState, useContext, useRef } from 'react';
 import Form from "@rjsf/core";
 import { widgets } from "../../profileSchema";
 import { FETCH_USER_PROFILE_DATA, FETCH_USERS_PROFILE_DATA, UPDATE_USER_PROFILE_DATA } from "../../queries/queries";
@@ -20,7 +20,7 @@ interface UserDetails {
     Phone_Number: string;
 }
 
-export default function BasicProfileForm() {
+const BasicProfileForm: React.FC = () => {
   const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
   const formRef = useRef<any>(null);
   const auth = useContext(AuthContext);
@@ -145,3 +145,4 @@ export default function BasicProfileForm() {
   )
 }
 
+export default BasicProfileForm;

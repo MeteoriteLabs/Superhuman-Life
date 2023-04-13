@@ -38,7 +38,6 @@ const ProfileCard: React.FC = () => {
     variables: { id: auth.userid },
     onCompleted: (response) => {
       setProfileData(response.usersPermissionsUser.data.attributes);
-      console.log(response.usersPermissionsUser.data.attributes);
     },
   });
 
