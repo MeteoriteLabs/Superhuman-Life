@@ -8,7 +8,7 @@ import { Row, Col } from "react-bootstrap";
 import moment from "moment";
 
 function MonthlyClientGraph() {
-  const [clientsData, setClientsData] = useState<{}[]>([]);
+  const [clientsData, setClientsData] = useState<{index: string; Clients: number;}[]>([]);
   const auth = useContext(AuthContext);
 
   useQuery(GET_CLIENTS, {
@@ -25,10 +25,10 @@ function MonthlyClientGraph() {
   const loadData = (data) => {
     const flattenClientsData = flattenObj({ ...data.clientPackages });
 
-    const arr: {}[] = [];
+    const arr: {index: string; Clients: number;}[] = [];
 
     for (let month = 0; month < 12; month++) {
-      let currentMonth = moment().subtract(month, "months");
+      const currentMonth = moment().subtract(month, "months");
       arr[month] = {
         index: `${currentMonth.format("MMM YY")}`,
         Clients: flattenClientsData.filter(

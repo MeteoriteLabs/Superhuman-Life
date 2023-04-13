@@ -1,3 +1,4 @@
+// eslint-disable-next-line
 export const schema: any = {
     instagram_url: {
         "ui:placeholder": "https://www.instagram.com/username/"

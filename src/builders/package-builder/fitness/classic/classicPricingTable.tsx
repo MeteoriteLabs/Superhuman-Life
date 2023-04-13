@@ -1,25 +1,23 @@
-import { useState, useContext, useEffect } from "react";
-import {
-  Row,
-  Col,
-  Form,
-  Table,
-  FormControl,
-  InputGroup,
-} from "react-bootstrap";
-import { gql, useQuery, useLazyQuery } from "@apollo/client";
-import AuthContext from "../../../../context/auth-context";
-import { flattenObj } from "../../../../components/utils/responseFlatten";
-import moment from "moment";
+import React, { useState, useContext, useEffect } from 'react';
+import { Row, Col, Form, Table, FormControl, InputGroup } from 'react-bootstrap';
+import { gql, useQuery, useLazyQuery } from '@apollo/client';
+import AuthContext from '../../../../context/auth-context';
+import { flattenObj } from '../../../../components/utils/responseFlatten';
+import moment from 'moment';
 
-const PricingTable = (props) => {
+const PricingTable: React.FC<{
+  readonly: boolean;
+  value: string;
+  onChange: (args: string | null) => void;
+  formContext: any;
+}> = (props) => {
   const inputDisabled = props.readonly;
 
   const auth = useContext(AuthContext);
   const [vouchers, setVouchers] = useState<any>([]);
-  const [show, setShow] = useState(props.value === "free" ? true : false);
+  const [show, setShow] = useState(props.value === 'free' ? true : false);
   const [pricing, setPricing] = useState<any>(
-    props.value !== undefined && props.value !== "free"
+    props.value !== undefined && props.value !== 'free'
       ? JSON.parse(props?.value)
       : [
           {
@@ -27,18 +25,13 @@ const PricingTable = (props) => {
             suggestedPrice: null,
             voucher: 0,
             duration: JSON.parse(props.formContext.programDetails).online,
-            sapienPricing: null,
-          },
+            sapienPricing: null
+          }
         ]
   );
 
   const GET_VOUCHERS = gql`
-    query fetchVouchers(
-      $expiry: DateTime!
-      $id: ID!
-      $start: DateTime!
-      $status: String!
-    ) {
+    query fetchVouchers($expiry: DateTime!, $id: ID!, $start: DateTime!, $status: String!) {
       vouchers(
         filters: {
           expiry_date: { gte: $expiry }
@@ -65,7 +58,7 @@ const PricingTable = (props) => {
     onCompleted: (data) => {
       const flattenData = flattenObj({ ...data });
       setVouchers(flattenData.vouchers);
-    },
+    }
   });
   useEffect(() => {
     getVouchers({
@@ -73,10 +66,9 @@ const PricingTable = (props) => {
         expiry: moment().toISOString(),
         id: auth.userid,
         start: moment().toISOString(),
-        status: "Active",
-      },
+        status: 'Active'
+      }
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const SUGGESTED_PRICING = gql`
@@ -103,9 +95,7 @@ const PricingTable = (props) => {
           }
         }
       }
-      sapienPricings(
-        filters: { fitness_package_type: { type: { eq: "Classic Class" } } }
-      ) {
+      sapienPricings(filters: { fitness_package_type: { type: { eq: "Classic Class" } } }) {
         data {
           id
           attributes {
@@ -130,7 +120,7 @@ const PricingTable = (props) => {
       variables: { id: auth.userid },
       onCompleted: (data) => {
         loadData(data);
-      },
+      }
     });
   }
 
@@ -143,8 +133,7 @@ const PricingTable = (props) => {
           ((item.sapienPricing * 100) / (100 - item.voucher)).toFixed(2)
         );
       } else {
-        item.suggestedPrice =
-          flattenData.suggestedPricings[0]?.mrp * item.duration;
+        item.suggestedPrice = flattenData.suggestedPricings[0]?.mrp * item.duration;
       }
       item.sapienPricing = flattenData.sapienPricings[0]?.mrp * item.duration;
     });
@@ -153,29 +142,28 @@ const PricingTable = (props) => {
 
   useEffect(() => {
     if (show) {
-      props.onChange("free");
+      props.onChange('free');
     } else if (pricing[0].mrp !== null) {
       props.onChange(JSON.stringify(pricing));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pricing, show]);
 
   function handlePricingUpdate(value: any, id: any) {
-    let newPricing = [...pricing];
+    const newPricing = [...pricing];
     newPricing[id].mrp = value;
     setPricing(newPricing);
   }
 
   function handleUpdatePricing(id: any, value: any) {
     if (parseInt(value) !== 1) {
-      let newValue = [...pricing];
+      const newValue = [...pricing];
       newValue[id].voucher = parseInt(value);
       newValue[id].suggestedPrice = parseInt(
         ((newValue[id].sapienPricing * 100) / (100 - value)).toFixed(2)
       );
       setPricing(newValue);
     } else {
-      let newValue = [...pricing];
+      const newValue = [...pricing];
       newValue[id].voucher = parseInt(value);
       newValue[id].suggestedPrice = newValue[id].sapienPricing;
       setPricing(newValue);
@@ -243,8 +231,7 @@ const PricingTable = (props) => {
                     as="select"
                     disabled={inputDisabled}
                     value={pricing[0].voucher}
-                    onChange={(e) => handleUpdatePricing(0, e.target.value)}
-                  >
+                    onChange={(e) => handleUpdatePricing(0, e.target.value)}>
                     <option value={0}>Choose voucher</option>
                     {vouchers.map((voucher, index: number) => {
                       return (
@@ -268,7 +255,7 @@ const PricingTable = (props) => {
                 </td>
                 <td>
                   {isNaN(pricing[0].suggestedPrice)
-                    ? "Base Price Not Set"
+                    ? 'Base Price Not Set'
                     : `₹ ${pricing[0].suggestedPrice}`}
                 </td>
               </tr>
@@ -279,18 +266,15 @@ const PricingTable = (props) => {
                 <td>
                   <InputGroup>
                     <InputGroup.Prepend>
-                      <InputGroup.Text id="basic-addon1">
-                        {"\u20B9"}
-                      </InputGroup.Text>
+                      <InputGroup.Text id="basic-addon1">{'\u20B9'}</InputGroup.Text>
                     </InputGroup.Prepend>
                     <FormControl
                       className={`${
-                        pricing[0]?.mrp < pricing[0]?.sapienPricing &&
-                        pricing[0]?.mrp !== null
-                          ? "is-invalid"
+                        pricing[0]?.mrp < pricing[0]?.sapienPricing && pricing[0]?.mrp !== null
+                          ? 'is-invalid'
                           : pricing[0]?.mrp >= pricing[0]?.sapienPricing
-                          ? "is-valid"
-                          : ""
+                          ? 'is-valid'
+                          : ''
                       }`}
                       aria-label="Default"
                       type="number"
@@ -303,12 +287,11 @@ const PricingTable = (props) => {
                       }}
                     />
                   </InputGroup>
-                  {pricing[0]?.mrp < pricing[0]?.sapienPricing &&
-                    pricing[0]?.mrp !== null && (
-                      <span style={{ fontSize: "12px", color: "red" }}>
-                        cannot be less than ₹ {pricing[0]?.sapienPricing}
-                      </span>
-                    )}
+                  {pricing[0]?.mrp < pricing[0]?.sapienPricing && pricing[0]?.mrp !== null && (
+                    <span style={{ fontSize: '12px', color: 'red' }}>
+                      cannot be less than ₹ {pricing[0]?.sapienPricing}
+                    </span>
+                  )}
                 </td>
               </tr>
             </tbody>

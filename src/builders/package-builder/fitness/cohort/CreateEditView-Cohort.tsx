@@ -85,8 +85,8 @@ function CreateEditCohort(props: any, ref: any) {
     refetchQueries: ["GET_TABLEDATA"],
     onCompleted: (data) => {
       // delete booking config
-      let offeringsId = data.deleteFitnesspackage.data.id;
-      let bookingConfigId = bookingsConfigInfo.find(
+      const offeringsId = data.deleteFitnesspackage.data.id;
+      const bookingConfigId = bookingsConfigInfo.find(
         (currentValue) => currentValue.fitnesspackage.id === offeringsId
       );
       
@@ -196,9 +196,9 @@ function CreateEditCohort(props: any, ref: any) {
 
   function FillDetails(data: any) {
     const flattenData = flattenObj({ ...data });
-    let msg: any = flattenData.fitnesspackages[0];
-    let details: any = {};
-    let courseDetails = { details: JSON.stringify(msg.Course_details[0]) };
+    const msg: any = flattenData.fitnesspackages[0];
+    const details: any = {};
+    const courseDetails = { details: JSON.stringify(msg.Course_details[0]) };
     details.packageType = msg.fitness_package_type.type;
     details.About = msg.aboutpackage;
     details.Benifits = msg.benefits;

@@ -13,7 +13,7 @@ const TagSearch = (props: any) => {
   const [selected, setSelected] = useState<any[]>([]);
   const inputField = useRef<any>();
   const auth = useContext(AuthContext);
-  let skipval: Boolean = true;
+  let skipval = true;
   const Arr: any = [];
   const [idArray, setIdArray] = useState<any>();
 
@@ -61,7 +61,7 @@ const TagSearch = (props: any) => {
     ]);
   }
 
-  function FetchPackageList(_variable: {} = { filter: " ", id: auth.userid }) {
+  function FetchPackageList(_variable: Record<string, unknown> = { filter: " ", id: auth.userid }) {
     useQuery(GET_GOALLIST, {
       variables: _variable,
       onCompleted: loadPackageList,
@@ -83,7 +83,7 @@ const TagSearch = (props: any) => {
       })
     );
   }
-  function FetchNotes(_variable: {} = { id: auth.userid, clientid: last }) {
+  function FetchNotes(_variable: Record<string, unknown> = { id: auth.userid, clientid: last }) {
     useQuery(CHECK_NOTES_NEW, { variables: _variable, onCompleted: loadNotes });
   }
   function loadNotes(d: any) {
@@ -108,7 +108,7 @@ const TagSearch = (props: any) => {
     if (values.length === 1) {
       setErrorMsg("(Only One Tag Allowed)");
     } else {
-      let a = values.find((e) => e.id === id);
+      const a = values.find((e) => e.id === id);
       if (!a) {
         values.push({ value: name, id: id });
         setSelected(values);
@@ -182,10 +182,11 @@ const TagSearch = (props: any) => {
         })}
       </>
       <>
-        {selected.map((val) => {
+        {selected.map((val, index) => {
           return (
             <div
               className="text-center mt-2 mr-2"
+              key={index}
               style={{
                 display: "inline-block",
                 height: "32px",

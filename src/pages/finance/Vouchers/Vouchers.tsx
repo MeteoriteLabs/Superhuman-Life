@@ -22,9 +22,9 @@ export default function Vouchers() {
   const loadData = (data) => {
     setDataTable(
       [...data.vouchers.data].map((voucher) => {
-        let todayDate: any = moment(new Date());
-        let expiryDate: any = moment(voucher.attributes.expiry_date);
-        let diff = expiryDate.diff(todayDate);
+        const todayDate = moment(new Date());
+        const expiryDate = moment(voucher.attributes.expiry_date);
+        const diff = expiryDate.diff(todayDate);
         return {
           id: voucher.id,
           voucher_name: voucher.attributes.voucher_name,
@@ -142,7 +142,7 @@ export default function Vouchers() {
     <div className="mt-3">
       <div className="d-flex justify-content-end mb-3 mr-5">
         <Button
-          variant={true ? "outline-secondary" : "light"}
+          variant="outline-secondary"
           size="sm"
           onClick={() => {
             voucherActionRef.current.TriggerForm({ actionType: "create" });

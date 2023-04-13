@@ -20,7 +20,7 @@ function PayeeProfile() {
   const Form: any = withTheme(Bootstrap4Theme);
   const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
   const formRef = useRef<any>(null);
-  const payeeProfileJson: {} = require("./payeeProfile.json");
+  const payeeProfileJson: Record<string, unknown> = require("./payeeProfile.json");
   const [paymentModeDetails, setPaymentModeDetails] = useState<PaymentDetails>();
   const query = window.location.search;
   const params = new URLSearchParams(query);
@@ -78,7 +78,7 @@ function PayeeProfile() {
   function FillDetails(contactDetail: any) {
     const data = flattenObj({ ...contactDetail });
    
-    let detail = {} as PaymentDetails;
+    const detail = {} as PaymentDetails;
 
     if (data) {
       detail.id = data.id;

@@ -1,43 +1,36 @@
-export default function PersonaTrainingMode({
-  type,
-  actionType,
-  widgetProps,
-  PTProps,
-  groupProps,
-  userData,
-}) {
-  let arrMode = [
-    "Online",
-    "Offline",
-    "Hybrid",
-    "Online Workout",
-    "Offline Workout",
-  ];
-  if (type !== "One-On-One") {
+import React from 'react';
+
+const PersonaTrainingMode: React.FC<{
+  type: string;
+  actionType: string;
+  widgetProps: any;
+  PTProps: any;
+  groupProps: any;
+  userData: any;
+}> = (props) => {
+  let arrMode = ['Online', 'Offline', 'Hybrid', 'Online Workout', 'Offline Workout'];
+  if (props.type !== 'One-On-One') {
     arrMode = arrMode.slice(0, 3);
   }
 
   const handleChange = (e) => {
-    widgetProps.onChange(e.target.value);
-    if (
-      e.target.value === "Online Workout" ||
-      e.target.value === "Offline Workout"
-    ) {
-      PTProps.properties.duration.value = 1;
-      PTProps.properties.duration.default = 1;
-      userData.duration = 1;
+    props.widgetProps.onChange(e.target.value);
+    if (e.target.value === 'Online Workout' || e.target.value === 'Offline Workout') {
+      props.PTProps.properties.duration.value = 1;
+      props.PTProps.properties.duration.default = 1;
+      props.userData.duration = 1;
     } else {
-      PTProps.properties.duration.value = 30;
-      PTProps.properties.duration.default = 30;
-      groupProps.properties.duration.value = 30;
-      groupProps.properties.duration.default = 30;
-      userData.duration = 30;
+      props.PTProps.properties.duration.value = 30;
+      props.PTProps.properties.duration.default = 30;
+      props.groupProps.properties.duration.value = 30;
+      props.groupProps.properties.duration.default = 30;
+      props.userData.duration = 30;
     }
 
-    PTProps.properties.ptonlineClasses.value = 0;
-    PTProps.properties.ptofflineClasses.value = 0;
-    groupProps.properties.grouponlineClasses.value = 0;
-    groupProps.properties.groupofflineClasses.value = 0;
+    props.PTProps.properties.ptonlineClasses.value = 0;
+    props.PTProps.properties.ptofflineClasses.value = 0;
+    props.groupProps.properties.grouponlineClasses.value = 0;
+    props.groupProps.properties.groupofflineClasses.value = 0;
   };
 
   return (
@@ -48,8 +41,8 @@ export default function PersonaTrainingMode({
             <div className="radio mr-3" key={index}>
               <label>
                 <input
-                  disabled={actionType === "view" ? true : false}
-                  checked={widgetProps.value === item}
+                  disabled={props.actionType === 'view' ? true : false}
+                  checked={props.widgetProps.value === item}
                   className="mr-1"
                   type="radio"
                   value={item}
@@ -63,4 +56,6 @@ export default function PersonaTrainingMode({
       </div>
     </div>
   );
-}
+};
+
+export default PersonaTrainingMode;

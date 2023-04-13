@@ -178,8 +178,8 @@ function CreateEditPt(props: any, ref: any) {
   const [deletePackage] = useMutation(DELETE_PACKAGE, {
     onCompleted: (data) => {
       // delete booking config
-      let offeringsId = data.deleteFitnesspackage.data.id;
-      let bookingConfigId = bookingsConfigInfo.find(
+      const offeringsId = data.deleteFitnesspackage.data.id;
+      const bookingConfigId = bookingsConfigInfo.find(
         (currentValue) => currentValue.fitnesspackage.id === offeringsId
       );
 
@@ -274,10 +274,10 @@ function CreateEditPt(props: any, ref: any) {
 
   function FillDetails(data: any) {
     const flattenedData = flattenObj({ ...data });
-    let msg = flattenedData.fitnesspackages[0];
+    const msg = flattenedData.fitnesspackages[0];
   
-    let bookingConfig: any = {};
-    let details: any = {};
+    const bookingConfig: any = {};
+    const details: any = {};
     for (let i = 0; i < msg.fitnesspackagepricing.length; i++) {
       PRICING_TABLE_DEFAULT[i].mrp = msg.fitnesspackagepricing[i].mrp;
       PRICING_TABLE_DEFAULT[i].suggestedPrice =
@@ -511,7 +511,7 @@ function CreateEditPt(props: any, ref: any) {
     }
   }
 
-  let name: string = "";
+  let name = "";
   if (operation.type === "create") {
     name = "Personal Training Offering";
   } else if (operation.type === "edit") {

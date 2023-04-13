@@ -64,7 +64,7 @@ export default function AllTransactions() {
         Cell: ({ row }: any) => {
           const history = useHistory();
           const routeChange = () => {
-            let path = `receipt/?id=${row.original.id}`;
+            const path = `receipt/?id=${row.original.id}`;
             history.push(path);
           };
 
@@ -83,11 +83,10 @@ export default function AllTransactions() {
         },
       },
     ],
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
 
-  const [datatable, setDataTable] = useState<{}[]>([]);
+  const [datatable, setDataTable] = useState<Record<string, unknown>[]>([]);
 
   const [paymentSchedules, { data: get_payment_schedule }] = useLazyQuery(
     GET_PAYMENT_SCHEDULE,

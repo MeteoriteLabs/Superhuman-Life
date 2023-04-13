@@ -99,8 +99,8 @@ function CreateEditProgram(props: any, ref: any) {
 
     function FillDetails(data: any) {
         const flattenData = flattenObj({ ...data });
-        let details: any = {};
-        let msg = flattenData.fitnessprograms;
+        const details: any = {};
+        const msg = flattenData.fitnessprograms;
 
         details.programName = msg[0].title;
         details.duration = msg[0].duration_days;

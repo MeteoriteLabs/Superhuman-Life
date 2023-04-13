@@ -11,10 +11,10 @@ function ClientTable({ data, columns }: any) {
     <div className="table-responsive">
       <table {...getTableProps()} className="table">
         <thead className="tableHeader">
-          {headerGroups.map((headerGroup) => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column) => (
-                <th className="tableHeader" {...column.getHeaderProps()}>
+          {headerGroups.map((headerGroup, index) => (
+            <tr {...headerGroup.getHeaderGroupProps()} key={index}>
+              {headerGroup.headers.map((column, index) => (
+                <th className="tableHeader" {...column.getHeaderProps()} key={index}>
                   {column.render("Header")}
                 </th>
               ))}
@@ -35,8 +35,8 @@ function ClientTable({ data, columns }: any) {
             return (
               <Fragment key={rowProps.key}>
                 <tr className="rowCard" {...row.getRowProps()}>
-                  {row.cells.map((cell) => (
-                    <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                  {row.cells.map((cell, index) => (
+                    <td {...cell.getCellProps()} key={index}>{cell.render("Cell")}</td>
                   ))}
                 </tr>
               </Fragment>

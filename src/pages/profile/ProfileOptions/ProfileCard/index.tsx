@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import React, { useContext, useState } from "react";
 import { Container, Col, Row } from "react-bootstrap";
 import AuthContext from "../../../../context/auth-context";
 import { useQuery } from "@apollo/client";
@@ -6,14 +6,38 @@ import { FETCH_USER_PROFILE_DATA } from "../../queries/queries";
 import DisplayImage from "../../../../components/DisplayImage/index";
 import "./profilecard.css";
 
-export default function ProfileCard() {
+interface UserData {
+  About_User: string;
+  Clubhouse_URL: string;
+  Document_Verified: boolean;
+  Facebook_URL: string;
+  First_Name: string;
+  Last_Name: string;
+  LinkedIn_URL: string;
+  Phone_Number: string;
+  Photo_ID: string;
+  Photo_profile_banner_ID: string;
+  Twitter_URL: string;
+  Verification_ID: string;
+  Website_URL: string;
+  Youtube_URL: string;
+  about_mini_description: string;
+   // eslint-disable-next-line
+  addresses: any;designations: any;educational_details: any;
+  email: string;
+  instagram_url: string;
+  updatedAt: string;
+  __typename: string;
+}
+
+const ProfileCard: React.FC = () => {
   const auth = useContext(AuthContext);
-  const [profileData, setProfileData] = useState<any>({});
+  const [profileData, setProfileData] = useState<UserData>({} as UserData);
 
   useQuery(FETCH_USER_PROFILE_DATA, {
     variables: { id: auth.userid },
-    onCompleted: (r: any) => {
-      setProfileData(r.usersPermissionsUser.data.attributes);
+    onCompleted: (response) => {
+      setProfileData(response.usersPermissionsUser.data.attributes);
     },
   });
 
@@ -121,3 +145,5 @@ export default function ProfileCard() {
     </Container>
   );
 }
+
+export default ProfileCard;

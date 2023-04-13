@@ -208,7 +208,7 @@ function PageNotFound() {
           </div>
 
           <h1> 404 Error.</h1>
-          <p className="page_not_found_content"> We can't find the page you're looking for.</p>
+          <p className="page_not_found_content"> We can&apos;t find the page you&apos;re looking for.</p>
           <Link to="/home"><button className="not_found_back__btn">Back to home</button></Link>
         </div>
       </div>

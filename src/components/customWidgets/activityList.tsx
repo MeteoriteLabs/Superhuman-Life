@@ -49,7 +49,7 @@ const ActivityField = (props: any) => {
 
   function handleSelect(data: any) {
     const values = [...activity];
-    let a = values.find((e) => e.title === data);
+    const a = values.find((e) => e.title === data);
     setSelected(a);
   }
 

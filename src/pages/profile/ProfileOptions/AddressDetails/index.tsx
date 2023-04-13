@@ -19,21 +19,21 @@ function AddressDetails() {
     loading: loading_address_details,
     refetch: refetch_address,
   } = useQuery(FETCH_USERS_PROFILE_DATA, {
-    onCompleted: (r: any) => {
+    onCompleted: (r) => {
       const flattenData = flattenObj({ ...r });
-      let usersData = flattenData.usersPermissionsUsers.find(
-        (currValue: any) => currValue.id === auth.userid
+      const usersData = flattenData.usersPermissionsUsers.find(
+        (currValue) => currValue.id === auth.userid
       );
       setAddressData(usersData && usersData.addresses);
     },
   });
 
-  const deleteUserAddress = (data: any) => {
+  const deleteUserAddress = (data) => {
     CreateAddressComponent.current.TriggerForm({ id: data.id, type: "delete" });
   };
 
   // calling modal for update option
-  function updateAddress(data: any) {
+  function updateAddress(data) {
     CreateAddressComponent.current.TriggerForm({
       id: data.id,
       type: "edit",
@@ -54,7 +54,7 @@ function AddressDetails() {
       <Col md={{ offset: 9, span: 3 }}>
         <Card.Title className="text-center">
           <Button
-            variant={true ? "outline-secondary" : "light"}
+            variant="outline-secondary"
             size="sm"
             onClick={() => {
               CreateAddressComponent.current.TriggerForm({

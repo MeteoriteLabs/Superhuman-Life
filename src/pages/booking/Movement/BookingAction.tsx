@@ -19,7 +19,7 @@ interface Operation {
   formData: any;
 }
 
-function BookingAction(props, ref: any) {
+const BookingAction = (props:{refetchBookings: () => void;}, ref: any) => {
   const [operation, setOperation] = useState<Operation>({} as Operation);
   const modalTrigger = new Subject();
   const [showStatusModal, setShowStatusModal] = useState<boolean>(false);
@@ -87,7 +87,7 @@ function BookingAction(props, ref: any) {
               },
             });
           } else {
-            let tag =
+            const tag =
               tagsDetails &&
               tagsDetails.length &&
               tagsDetails.filter(

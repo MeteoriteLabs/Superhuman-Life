@@ -1,26 +1,25 @@
-import { useEffect, useState } from "react";
-import { Row, Col, Form, InputGroup, FormControl } from "react-bootstrap";
-import "react-bootstrap-typeahead/css/Typeahead.css";
+import React, { useEffect, useState } from 'react';
+import { Row, Col, Form, InputGroup, FormControl } from 'react-bootstrap';
+import 'react-bootstrap-typeahead/css/Typeahead.css';
 
-const ClassicProgramDetails = (props) => {
+const ClassicProgramDetails: React.FC<{
+  readonly: boolean;
+  value: string;
+  onChange: (args: string | null) => void;
+}> = (props) => {
   const inputDisabled = props.readonly;
-  const existingData =
-    props.value === undefined ? undefined : JSON.parse(props.value);
-  if (existingData !== undefined && existingData.length > 0) {
+  const existingData = props.value === undefined ? undefined : JSON.parse(props.value);
+  if (existingData && existingData.length > 0) {
     existingData.address = {
       id: JSON.parse(existingData?.address)[0].id,
-      title: JSON.parse(existingData?.address)[0].title,
+      title: JSON.parse(existingData?.address)[0].title
     };
   }
-  const [duration, setDuration] = useState(
-    existingData?.duration ? existingData?.duration : 1
-  );
+  const [duration, setDuration] = useState(existingData?.duration ? existingData?.duration : 1);
   const [onlineClasses, setOnlineClasses] = useState<number>(
     existingData?.online ? existingData.online : 0
   );
-  const [restDays, setRestDays] = useState<number>(
-    existingData?.rest ? existingData.rest : 0
-  );
+  const [restDays, setRestDays] = useState<number>(existingData?.rest ? existingData.rest : 0);
 
   function handleValidation() {
     if (onlineClasses === 0) {
@@ -37,11 +36,11 @@ const ClassicProgramDetails = (props) => {
       JSON.stringify({
         duration: duration,
         online: onlineClasses,
-        rest: restDays,
+        rest: restDays
       })
     );
   } else {
-    props.onChange(undefined);
+    props.onChange(null);
   }
 
   useEffect(() => {

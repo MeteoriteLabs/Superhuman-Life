@@ -36,7 +36,7 @@ const Scheduler = () => {
   function loadTagData(data: any) {
     setSchedulerSessions(data);
     const flattenData = flattenObj({ ...data });
-    let total = [0];
+    const total = [0];
     const clientValues = [...clientIds];
     const values = [...flattenData.tags[0]?.sessions];
     const ids = [...sessionIds];
@@ -56,15 +56,15 @@ const Scheduler = () => {
       return "N/A";
     }
 
-    let moments = sessions.map((d) => moment(d.session_date)),
+    const moments = sessions.map((d) => moment(d.session_date)),
       maxDate = moment.max(moments);
 
     return maxDate.format("MMM Do,YYYY");
   }
 
   function calculateDuration(sd: any, ed: any) {
-    let start = moment(sd);
-    let end = moment(ed);
+    const start = moment(sd);
+    const end = moment(ed);
     return end.diff(start, "days") + 1;
   }
 
@@ -140,7 +140,7 @@ const Scheduler = () => {
                       <div className="position-relative">
                         {tag.client_packages.length ? (
                           tag.client_packages.slice(0, 4).map((item, index: number) => {
-                            let postionLeft = 8;
+                            const postionLeft = 8;
                             return (
                               <img
                                 key={index}
@@ -261,7 +261,7 @@ const Scheduler = () => {
               />
             </div>
           </Col>
-          <FitnessAction ref={fitnessActionRef} />
+          <FitnessAction ref={fitnessActionRef} callback={() => mainQuery}/>
         </Row>
       </div>
     );

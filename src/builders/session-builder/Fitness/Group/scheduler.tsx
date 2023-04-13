@@ -90,11 +90,11 @@ const Scheduler = () => {
   function loadTagData(data: any) {
     setSchedulerSessions(data);
     const flattenData = flattenObj({ ...data });
-    let total = [0, 0];
+    const total = [0, 0];
     const clientValues = [...clientIds];
     const values = [...flattenData.tags[0]?.sessions];
     const ids = [...sessionIds];
-    for (var i = 0; i < flattenData.tags[0].client_packages.length; i++) {
+    for (let i = 0; i < flattenData.tags[0].client_packages.length; i++) {
       clientValues.push(
         flattenData.tags[0].client_packages[i].users_permissions_user.id
       );
@@ -144,10 +144,10 @@ const Scheduler = () => {
   });
 
   function handleEventsSeperation(data: any, rest_days: any) {
-    var grouponline: number = 0;
-    var groupoffline: number = 0;
+    let grouponline = 0;
+    let groupoffline = 0;
     if (data) {
-      for (var i = 0; i < data.length; i++) {
+      for (let i = 0; i < data.length; i++) {
         if (data[i].tag === "Group Class") {
           if (data[i].mode === "Online") {
             grouponline++;
@@ -157,12 +157,12 @@ const Scheduler = () => {
         }
       }
       setTagSeperation([grouponline, groupoffline]);
-      var arr: any = [];
-      for (var j = 0; j < data.length; j++) {
+      const arr: any = [];
+      for (let j = 0; j < data.length; j++) {
         if (arr.includes(parseInt(data[j].day)) === false)
           arr.push(parseInt(data[j].day));
       }
-      var restDays = rest_days === null ? 0 : rest_days.length;
+      const restDays = rest_days === null ? 0 : rest_days.length;
       setStatusDays(arr.length + restDays);
     }
   }
@@ -193,24 +193,10 @@ const Scheduler = () => {
         };
       })
     );
-    let arrayFitnessPackage: any[] = [];
-    let arrayData: any[] = [];
+    const arrayFitnessPackage: any[] = [];
+    const arrayData: any[] = [];
 
-    // let fitnessProgramItem: any = {};
-    // for (let i = 0; i < flattenData1?.fitnesspackages.length; i++) {
-    //     for (let j = 0; j < flattenData2?.programManagers.length; j++) {
-    //         if (flattenData1.fitnesspackages[i].id === flattenData2.programManagers[j].fitnesspackages[0].id) {
-    //             fitnessProgramItem.proManagerFitnessId = flattenData2.programManagers[j].fitnessprograms[0].id;
-    //             fitnessProgramItem.title = flattenData2.programManagers[j].fitnessprograms[0].title;
-    //             fitnessProgramItem.published_at = flattenData2.programManagers[j].fitnessprograms[0].published_at
-    //             fitnessProgramItem.proManagerId = flattenData2.programManagers[j].id;
-
-    //             arrayData.push({ ...flattenData1.fitnesspackages[i], ...fitnessProgramItem });
-    //         }
-    //     }
-    // }
-
-    let arrayA = arrayData.map((item) => item.id);
+    const arrayA = arrayData.map((item) => item.id);
 
     const filterPackage = flattenData1?.fitnesspackages.filter(
       (item: { id: string }) => !arrayA.includes(item.id)
@@ -272,7 +258,7 @@ const Scheduler = () => {
     ]);
   };
 
-  let arr: any = [];
+  const arr: any = [];
   for (let i = 0; i < userPackage.length - 1; i++) {
     if (userPackage[i].id === userPackage[i + 1].id) {
       if (
@@ -298,7 +284,7 @@ const Scheduler = () => {
   }
 
   function handleDateEdit() {
-    let edate = moment(startDate).add(
+    const edate = moment(startDate).add(
       moment(data[0].edate).diff(data[0].sdate, "days"),
       "days"
     );
@@ -315,7 +301,7 @@ const Scheduler = () => {
   }
 
   function handleTimeFormatting(data: any, duration: number) {
-    var digits = duration <= 30 ? 2 : 3;
+    const digits = duration <= 30 ? 2 : 3;
     return data.toLocaleString("en-US", {
       minimumIntegerDigits: digits.toString(),
       useGrouping: false,
@@ -323,11 +309,11 @@ const Scheduler = () => {
   }
 
   function handleTotalClasses(data: any, duration: number) {
-    var sum = 0;
-    for (var i = 0; i < data.length; i++) {
+    let sum = 0;
+    for (let i = 0; i < data.length; i++) {
       sum += data[i];
     }
-    var formattedSum = handleTimeFormatting(sum, duration);
+    const formattedSum = handleTimeFormatting(sum, duration);
     return formattedSum;
   }
 
@@ -376,7 +362,7 @@ const Scheduler = () => {
 
   // this is to calculate the number of days for the scheduler
   function calculateDays(sd: string, ed: string) {
-    var days = moment(ed).diff(moment(sd), "days");
+    const days = moment(ed).diff(moment(sd), "days");
     return days + 1;
   }
 
@@ -445,12 +431,12 @@ const Scheduler = () => {
                               tag.client_packages
                                 .slice(0, 4)
                                 .map((item, index) => {
-                                  let postionLeft = 8;
+                                  const postionLeft = 8;
                                   return (
-                                    <div>
+                                    <div key={index}>
                                       <img
                                         key={index}
-                                        src="https://picsum.photos/200/100"
+                                        src="assets/image_placeholder.svg"
                                         alt="profile-pic"
                                         style={{
                                           width: "40px",
@@ -511,20 +497,6 @@ const Scheduler = () => {
                         </Col>
                       </Row>
                     </div>
-                    {/* <div>
-                                            <Row>
-                                                <Col lg={1}>
-                                                    <span>Time:</span>
-                                                </Col>
-                                                <Col lg={5} className="text-center">
-                                                    <span className="p-1 scheduler-badge">{userPackage[programIndex].groupStart?.slice(0,2) + ":" + userPackage[programIndex].groupStart?.slice(2,4)}</span>
-                                                </Col>
-                                                    to
-                                                <Col lg={5} className="text-center">
-                                                    <span className="p-1 scheduler-badge">{userPackage[programIndex].groupEnd?.slice(0,2) + ":" + userPackage[programIndex].groupEnd?.slice(2,4)}</span>
-                                                </Col>
-                                            </Row>
-                                        </div> */}
                   </Col>
                 </Row>
               </Col>
@@ -630,19 +602,6 @@ const Scheduler = () => {
         <Row className="mt-5 mb-2">
           <Col lg={11}>
             <div className="text-center">
-              {/* <input
-                        min={moment().subtract(3, "months").format("YYYY-MM-DD")}
-                        max={moment().add(3, "months").format("YYYY-MM-DD")}
-                        className="p-1 rounded shadow-sm mb-3"
-                        type="date"
-                        style={{
-                            border: "none",
-                            backgroundColor: "rgba(211,211,211,0.8)",
-                        }}
-                        value={groupStartDate}
-                        onChange={(e) => handleDatePicked(e.target.value)}
-                        />{" "} */}
-              {/* <br /> */}
               <span
                 style={{
                   display: `${handlePrevDisplay(prevDate)}`,
@@ -694,7 +653,7 @@ const Scheduler = () => {
               />
             </div>
           </Col>
-          <FitnessAction ref={fitnessActionRef} />
+          <FitnessAction ref={fitnessActionRef} callback={() => mainQuery}/>
         </Row>
         {
           <Modal show={editDatesModal} onHide={handleCloseDatesModal}>
@@ -739,7 +698,7 @@ const Scheduler = () => {
                   <TimePicker
                     showSecond={false}
                     minuteStep={15}
-                    onChange={(e) => {}}
+                    // onChange={(e) => {}}
                   />
                 </Col>
               </Row>
@@ -749,7 +708,7 @@ const Scheduler = () => {
                   <TimePicker
                     showSecond={false}
                     minuteStep={15}
-                    onChange={(e) => {}}
+                    // onChange={(e) => {}}
                   />
                 </Col>
               </Row>

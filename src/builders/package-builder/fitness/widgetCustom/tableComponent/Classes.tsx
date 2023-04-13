@@ -6,7 +6,7 @@ type Props = {
 
 export default function OnlineClasses({type, numberClass, mode}:Props) {
 
-    let arrayNumberClass: number[] = [];
+    const arrayNumberClass: number[] = [];
 
     if(type === "Classic Class" || mode === "Online Workout" ||  mode === "Offline Workout" ){
         arrayNumberClass.push(numberClass)

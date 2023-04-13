@@ -68,13 +68,14 @@ function Table({
 
       <table {...getTableProps()} className="table text-center">
         <thead>
-          {headerGroups.map((headerGroup) => {
+          {headerGroups.map((headerGroup, index) => {
             return (
-              <tr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map((column) => (
+              <tr {...headerGroup.getHeaderGroupProps()} key={index}>
+                {headerGroup.headers.map((column, index) => (
                   <th
                     className="tableHeader text-center"
                     {...column.getHeaderProps(column.getSortByToggleProps())}
+                    key={index}
                   >
                     {column.render("Header")}
                     <span>
@@ -109,11 +110,11 @@ function Table({
         </thead>
 
         <tbody {...getTableBodyProps()}>
-          {rows.map((row) => {
-            let bookingDate: Date = new Date(
+          {rows.map((row, index) => {
+            const bookingDate: Date = new Date(
               moment(row.values.booking_date).format("MM/DD/YYYY")
             );
-            let currentDate: Date = new Date(moment().format("MM/DD/YYYY"));
+            const currentDate: Date = new Date(moment().format("MM/DD/YYYY"));
             const diffTime = Math.abs(
               Number(bookingDate) - Number(currentDate)
             );
@@ -132,9 +133,9 @@ function Table({
                     }}
                     {...row.getRowProps()}
                   >
-                    {row.cells.map((cell) => {
+                    {row.cells.map((cell, index) => {
                       return (
-                        <td className="bodyTd ml-3" {...cell.getCellProps()}>
+                        <td className="bodyTd ml-3" {...cell.getCellProps()} key={index}>
                           {cell.render("Cell")}
                         </td>
                       );
@@ -142,9 +143,9 @@ function Table({
                   </tr>
                 ) : (
                   <tr className="bookingRowCard " {...row.getRowProps()}>
-                    {row.cells.map((cell) => {
+                    {row.cells.map((cell, index) => {
                       return (
-                        <td className="bodyTd ml-3" {...cell.getCellProps()}>
+                        <td className="bodyTd ml-3" {...cell.getCellProps()} key={index}>
                           {cell.render("Cell")}
                         </td>
                       );

@@ -1,11 +1,11 @@
-import { useState } from "react";
-import { Form } from "react-bootstrap";
-import { gql, useQuery } from "@apollo/client";
-import { flattenObj } from "../../components/utils/responseFlatten";
+import React, { useState } from 'react';
+import { Form } from 'react-bootstrap';
+import { gql, useQuery } from '@apollo/client';
+import { flattenObj } from '../../components/utils/responseFlatten';
 
-const Email = (props: any) => {
-  const [userEmail, setUserEmail] = useState(props.value);
-  const [user, setUser] = useState<any>([]);
+const Email: React.FC<{ value: string; onChange: (args: string) => void }> = (props) => {
+  const [userEmail, setUserEmail] = useState<string>(props.value);
+  const [user, setUser] = useState<{ id: string; email: string }[]>([]);
 
   const FETCH_USER = gql`
     query fetchUsers($email: String) {
@@ -23,16 +23,16 @@ const Email = (props: any) => {
   useQuery(FETCH_USER, {
     variables: { email: userEmail },
     skip: userEmail === undefined,
-    onCompleted: loadData,
+    onCompleted: loadData
   });
 
-  function loadData(data: any) {
+  function loadData(data) {
     const flattenedData = flattenObj({ ...data });
     setUser(
       [...flattenedData.usersPermissionsUsers].map((user) => {
         return {
           id: user.id,
-          email: user.email,
+          email: user.email
         };
       })
     );
@@ -47,10 +47,8 @@ const Email = (props: any) => {
         <Form.Control
           className={`${
             user.length === 0
-              ? `${
-                  userEmail === "" || userEmail === undefined ? "" : "is-valid"
-                }`
-              : "is-invalid invalidEmail"
+              ? `${userEmail === '' || userEmail === undefined ? '' : 'is-valid'}`
+              : 'is-invalid invalidEmail'
           }`}
           type="email"
           value={userEmail}
@@ -60,11 +58,11 @@ const Email = (props: any) => {
           placeholder=""
         />
         {userEmail && user.length ? (
-          <span style={{ fontSize: "13px", color: "red" }}>
+          <span style={{ fontSize: '13px', color: 'red' }}>
             This email is already taken try another.
           </span>
         ) : (
-          ""
+          ''
         )}
       </Form.Group>
     </div>

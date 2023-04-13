@@ -30,10 +30,10 @@ const TransferPrograms = (props: any) => {
   }
 
   function handleTimeFormat(time: string) {
-    let timeArray = time.split(":");
-    let hours = timeArray[0];
-    let minutes = timeArray[1];
-    let timeString =
+    const timeArray = time.split(":");
+    const hours = timeArray[0];
+    const minutes = timeArray[1];
+    const timeString =
       (parseInt(hours) < 10 ? "0" + hours : hours) +
       ":" +
       (parseInt(minutes) === 0 ? "0" + minutes : minutes);
@@ -42,13 +42,13 @@ const TransferPrograms = (props: any) => {
 
   function handleEndTime(newStartTime: any, index: any) {
     const oldData = existingEvents[0].events.find((e: any) => e.id === index);
-    var timeStart: any = new Date(
+    const timeStart: any = new Date(
       "01/01/2007 " + handleTimeFormat(oldData.start_time)
     );
-    var timeEnd: any = new Date(
+    const timeEnd: any = new Date(
       "01/01/2007 " + handleTimeFormat(oldData.end_time)
     );
-    var diff1 = timeEnd - timeStart;
+    const diff1 = timeEnd - timeStart;
     const d = new Date("01/01/2007 " + handleTimeFormat(newStartTime));
     d.setMinutes(d.getMinutes() + diff1 / 1000 / 60);
     return (d.getHours() + ":" + d.getMinutes()).toString();
@@ -75,9 +75,9 @@ const TransferPrograms = (props: any) => {
       // const oldData = existingEvents[0].events.find((val: any) => val.id === e.id);
       if (e.day && e.startTime) {
         e.day = JSON.parse(e.day);
-        var startTime: any = e.startTime;
-        var endTime: any = handleEndTime(e.startTime, e.id);
-        for (var i = 0; i < e.day.length; i++) {
+        const startTime: any = e.startTime;
+        const endTime: any = handleEndTime(e.startTime, e.id);
+        for (let i = 0; i < e.day.length; i++) {
           eventsJson.push({
             day: parseInt(e.day[i].key),
             name: e.name,
@@ -98,7 +98,7 @@ const TransferPrograms = (props: any) => {
       }
     });
 
-    for (var i = 0; i < eventsJson.length; i++) {
+    for (let i = 0; i < eventsJson.length; i++) {
       if (eventsJson[i].type === "workout") {
         createSession({
           variables: {
@@ -130,7 +130,7 @@ const TransferPrograms = (props: any) => {
     }
   }
 
-  function FetchData(_variables: {} = { id: props.program_id }) {
+  function FetchData(_variables: Record<string, unknown> = { id: props.program_id }) {
     useQuery(PROGRAM_EVENTS, { variables: _variables, onCompleted: loadData });
   }
 
@@ -148,7 +148,6 @@ const TransferPrograms = (props: any) => {
   FetchData({ id: props.program_id });
 
   function handleValidation() {
-    // @ts-ignore: Object is possibly 'null'.
     const el = document.getElementsByClassName("is-invalid");
     if (el.length === 0) {
       return false;

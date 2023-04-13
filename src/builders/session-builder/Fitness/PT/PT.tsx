@@ -15,7 +15,7 @@ export default function PT() {
   const [showHistory, setShowHistory] = useState<boolean>(false);
   const fitnessActionRef = useRef<any>(null);
 
-  const mainQuery = useQuery(
+  const {data: get_tags, refetch: refetch_tags } = useQuery(
     GET_SESSIONS_FROM_TAGS_FOR_ONE_ON_ONE_OR_ON_DEMAND,
     {
       variables: {
@@ -123,8 +123,8 @@ export default function PT() {
     if (sessions.length === 0) {
       return "Not_Assigned";
     } else if (sessions.length > 0) {
-      let max: number = 0;
-      for (var i = 0; i < sessions.length; i++) {
+      let max = 0;
+      for (let i = 0; i < sessions.length; i++) {
         if (sessions[i].day_of_program > max) {
           max = sessions[i].day_of_program;
         }
@@ -150,8 +150,8 @@ export default function PT() {
   }
 
   function calculateProgramRenewal(sessions: any, effectiveDate: any) {
-    let max: number = 0;
-    for (var i = 0; i < sessions.length; i++) {
+    let max = 0;
+    for (let i = 0; i < sessions.length; i++) {
       if (sessions[i].day_of_program > max) {
         max = sessions[i].day_of_program;
       }
@@ -349,7 +349,7 @@ export default function PT() {
               defaultChecked={showHistory}
               onClick={() => {
                 setShowHistory(!showHistory);
-                mainQuery.refetch().then((res: any) => {
+                refetch_tags().then((res: any) => {
                   handleHistoryPackage(res.data);
                 });
               }}
@@ -360,7 +360,7 @@ export default function PT() {
       <Row>
         <Col>
           <PTTable columns={columns} data={userPackage} />
-          <FitnessAction ref={fitnessActionRef} />
+          <FitnessAction ref={fitnessActionRef} callback={() => refetch_tags()}/>
         </Col>
       </Row>
     </div>

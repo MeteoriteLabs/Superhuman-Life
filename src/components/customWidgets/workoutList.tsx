@@ -17,7 +17,7 @@ const ProgramList = (props: any) => {
   const [searchInput, setSearchInput] = useState(null);
   const [selected, setSelected] = useState<any[]>([]);
   const inputField = useRef<any>();
-  let skipval: Boolean = true;
+  let skipval = true;
 
   const GET_WORKOUTLIST = gql`
     query workoutlistQuery($id: ID!, $filter: String!) {
@@ -60,7 +60,7 @@ const ProgramList = (props: any) => {
   `;
 
   function FetchEquipmentList(
-    _variable: {} = { id: auth.userid, filter: " " }
+    _variable: Record<string, unknown> = { id: auth.userid, filter: " " }
   ) {
     useQuery(GET_WORKOUTLIST, {
       variables: _variable,
@@ -105,8 +105,8 @@ const ProgramList = (props: any) => {
     discipline: any
   ) {
     const values = [...selected];
-    let a = values.find((e) => e.id === id);
-    let b = values.length === 0;
+    const a = values.find((e) => e.id === id);
+    const b = values.length === 0;
     if (!a && b) {
       values.push({
         name: name,
@@ -169,7 +169,7 @@ const ProgramList = (props: any) => {
       <>
         {workoutList.slice(0, 5).map((workout, index: number) => {
           return (
-            <Container className="pl-0">
+            <Container className="pl-0" key={index}>
               <div
                 key={index}
                 style={{ cursor: "pointer" }}
@@ -227,9 +227,9 @@ const ProgramList = (props: any) => {
         })}
       </>
       <>
-        {selected.map((val) => {
+        {selected.map((val, index) => {
           return (
-            <div>
+            <div key={index}>
               <Row>
                 <Col lg={8}>
                   <div

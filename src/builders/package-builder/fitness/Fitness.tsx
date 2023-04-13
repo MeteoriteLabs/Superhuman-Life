@@ -120,7 +120,7 @@ export default function FitnessTab() {
         Header: "Preview",
         Cell: ({ row }: any) => {
           return (
-            <>
+            <div>
               <DrawerTrigger
                 toggle={() => {
                   setShowDrawer(!showDrawer);
@@ -139,7 +139,7 @@ export default function FitnessTab() {
                   });
                 }}
               />
-            </>
+            </div>
           );
         },
       },
@@ -398,9 +398,9 @@ export default function FitnessTab() {
         accessor: "sessions",
         Header: "Session",
         Cell: (v: any) => {
-          let sessionsObj = {};
-          let startMoment = moment(v.row.original.startDate);
-          let endMoment = moment(v.row.original.endDate).add(1, "days");
+          const sessionsObj = {};
+          const startMoment = moment(v.row.original.startDate);
+          const endMoment = moment(v.row.original.endDate).add(1, "days");
 
           v.row.original.sessions.map((curr) => {
             return curr.sessions.map((item) => {
@@ -411,9 +411,9 @@ export default function FitnessTab() {
             });
           });
 
-          let lengthOfobject = Object.keys(sessionsObj).length;
+          const lengthOfobject = Object.keys(sessionsObj).length;
 
-          let differenceBetweenStartDateandEndDate = endMoment.diff(
+          const differenceBetweenStartDateandEndDate = endMoment.diff(
             startMoment,
             "days"
           );
@@ -509,7 +509,7 @@ export default function FitnessTab() {
           };
 
           const manageHandler = (id: number, length: number, type: string) => {
-            let name: string = "";
+            let name = "";
             if (type === "Classic Class") {
               name = "classic";
             } else if (type === "Live Stream Channel") {
@@ -526,7 +526,7 @@ export default function FitnessTab() {
             }
           };
 
-          let arrayAction = [
+          const arrayAction = [
             { actionName: "Edit", actionClick: editHandler },
             { actionName: "View", actionClick: viewHandler },
             { actionName: "Delete", actionClick: deleteHandler },
@@ -691,7 +691,7 @@ export default function FitnessTab() {
           <Button
             style={{ whiteSpace: "nowrap", textAlign: "center" }}
             className="mx-3"
-            variant={true ? "outline-secondary" : "light"}
+            variant="outline-secondary"
             size="sm"
             onClick={() => {
               handleModalRender(null, "create", "Group Class");
@@ -702,7 +702,7 @@ export default function FitnessTab() {
           <Button
             style={{ whiteSpace: "nowrap", textAlign: "center" }}
             className="mx-3"
-            variant={true ? "outline-secondary" : "light"}
+            variant="outline-secondary"
             size="sm"
             onClick={() => {
               handleModalRender(null, "create", "Classic Class");
@@ -713,7 +713,7 @@ export default function FitnessTab() {
           <Button
             style={{ whiteSpace: "nowrap", textAlign: "center" }}
             className="mx-3"
-            variant={true ? "outline-secondary" : "light"}
+            variant="outline-secondary"
             size="sm"
             onClick={() => {
               handleModalRender(null, "create", "Custom Fitness");
@@ -724,7 +724,7 @@ export default function FitnessTab() {
           <Button
             style={{ whiteSpace: "nowrap", textAlign: "center" }}
             className="mx-3"
-            variant={true ? "outline-secondary" : "light"}
+            variant="outline-secondary"
             size="sm"
             onClick={() => {
               handleModalRender(null, "create", "Live Stream Channel");
@@ -735,7 +735,7 @@ export default function FitnessTab() {
           <Button
             style={{ whiteSpace: "nowrap", textAlign: "center" }}
             className="mx-3"
-            variant={true ? "outline-secondary" : "light"}
+            variant="outline-secondary"
             size="sm"
             onClick={() => {
               handleModalRender(null, "create", "Cohort");

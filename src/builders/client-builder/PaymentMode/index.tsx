@@ -17,9 +17,9 @@ function PaymentMode() {
   const defaultFileWidget = registry.widgets["FileWidget"];
   (Bootstrap4Theme as any).widgets["FileWidget"] = defaultFileWidget;
   const Form: any = withTheme(Bootstrap4Theme);
-  let [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
+  const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
   const formRef = useRef<any>(null);
-  const paymentModeJson: { } = require("./paymentmode.json");
+  const paymentModeJson: Record<string, unknown> = require("./paymentmode.json");
   const [paymentModeDetails, setPaymentModeDetails] = useState<any>({});
   const query = window.location.search;
   const params = new URLSearchParams(query);
@@ -29,7 +29,7 @@ function PaymentMode() {
     variables: { id : id},
     onCompleted: (e: any) => {
       
-      let flattenData = flattenObj(e);
+      const flattenData = flattenObj(e);
       FillDetails(flattenData);
     },
   });

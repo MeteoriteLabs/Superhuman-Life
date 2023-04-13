@@ -19,7 +19,7 @@ function Client() {
      function handleRedirect() {
           window.location.href = `/clients`;
      }
-     function FetchData(_variables: {} = { id: auth.userid, clientid: last }) {
+     function FetchData(_variables: Record<string, unknown> = { id: auth.userid, clientid: last }) {
           useQuery(GET_CLIENT_DATA_NEW, { variables: _variables, onCompleted: loadData });
      }
      function loadData(data: any) {

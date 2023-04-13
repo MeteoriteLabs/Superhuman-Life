@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Tabs, Card, Tab } from "react-bootstrap";
 import ProfileCard from "./ProfileOptions/ProfileCard";
 import ProfileNavTab from "./ProfileOptions/ProfileNavTab";
@@ -6,7 +6,7 @@ import ChangemakersSettings from "./ChangemakersSettings";
 // import OrganisationsSettings from "./OrganisationsSettings";
 import "./profile.css";
 
-export default function ProfilePage() {
+const ProfilePage: React.FC = () => {
   const [key, setKey] = useState("profile");
 
   return (
@@ -18,6 +18,7 @@ export default function ProfilePage() {
           transition={false}
           id="controlled-tab"
           activeKey={key}
+          // eslint-disable-next-line
           onSelect={(k: any) => setKey(k)}
           className="mb-3 mt-5 d-flex justify-content-center"
         >
@@ -42,3 +43,5 @@ export default function ProfilePage() {
     </Card>
   );
 }
+
+export default ProfilePage;

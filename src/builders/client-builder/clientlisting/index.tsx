@@ -102,7 +102,7 @@ function ClientListingPage() {
      //      return getDate(date);
      // }
 
-     const [datatable, setDataTable] = useState<{}[]>([]);
+     const [datatable, setDataTable] = useState<Record<string, unknown>[]>([]);
 
      // function FetchData(_variables: {} = { filter: " ", id: auth.userid }) {
      const fetch = useQuery(GET_CLIENT_NEW, { variables: { filter: searchFilter, id: auth.userid }, onCompleted: loadData });
@@ -113,16 +113,16 @@ function ClientListingPage() {
      }
 
      function loadData(data: any) {
-          let clientnamecount = {};
+          const clientnamecount = {};
           let flag: any;
-          let namearr: any = [];
+          const namearr: any = [];
 
           const flattenData = flattenObj({ ...data });
 
           setDataTable(
                [...flattenData.clientPackages].flatMap((Detail) => {
-                    let clientname: any = Detail.users_permissions_user.username;
-                    let clientemail: any = Detail.users_permissions_user.email;
+                    const clientname: any = Detail.users_permissions_user.username;
+                    const clientemail: any = Detail.users_permissions_user.email;
 
         if (!clientnamecount[clientname]) {
           clientnamecount[clientname] = 1;
@@ -179,7 +179,7 @@ function ClientListingPage() {
                          <Col>
                               <Card.Title className="text-center">
                                    <Button
-                                        variant={true ? "outline-secondary" : "light"}
+                                        variant= "outline-secondary"
                                         size="sm"
                                         onClick={() => {
                                              CreateClientComponent.current.TriggerForm({

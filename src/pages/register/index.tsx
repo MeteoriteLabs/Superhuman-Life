@@ -1,42 +1,39 @@
-import { useRef, useState, useEffect } from "react";
-import { withTheme } from "@rjsf/core";
-import { Theme as Bootstrap4Theme } from "@rjsf/bootstrap-4";
-import {
-  Button,
-  Carousel,
-  Col,
-  Container,
-  Modal,
-  ProgressBar,
-  Row,
-} from "react-bootstrap";
+import React, { useRef, useState, useEffect } from 'react';
+import { withTheme } from '@rjsf/core';
+import { Theme as Bootstrap4Theme } from '@rjsf/bootstrap-4';
+import { Button, Carousel, Col, Container, Modal, ProgressBar, Row } from 'react-bootstrap';
 // import SocialLogin from "./SocialLogin";
-import ChangeMakerSelect from "../../components/customWidgets/changeMakerList";
-import LanguageSelect from "../../components/customWidgets/languagesList";
+import ChangeMakerSelect from '../../components/customWidgets/changeMakerList';
+import LanguageSelect from '../../components/customWidgets/languagesList';
 // import OrganizationSelect from "../../components/customWidgets/organizationTypeList";
-import TimeZoneSelect from "../../components/customWidgets/timeZoneSelect";
-import { useMutation } from "@apollo/client";
+import TimeZoneSelect from '../../components/customWidgets/timeZoneSelect';
+import { useMutation } from '@apollo/client';
 import {
   CREATE_ADDRESS,
   CREATE_ORGANIZATION,
   CREATE_EDUCATION_DETAIL,
   UPDATE_USER,
-  REGISTER_USER,
-} from "./mutations";
+  REGISTER_USER
+} from './mutations';
 // import LocationForm from './Location';
-import EmailForm from "./email";
-import UserNameForm from "./userName";
-import PhoneNumberForm from "./number";
-import YearOfPassingForm from "./yearOfPassing";
-import AddressForm from "./address";
-import FacebookLogin from "react-facebook-login";
-import Toaster from "../../components/Toaster";
-import { GoogleOAuthProvider } from "@react-oauth/google";
-import { GoogleLogin } from "@react-oauth/google";
-import { useLinkedIn } from "react-linkedin-login-oauth2";
-import linkedin from "react-linkedin-login-oauth2/assets/linkedin.png";
-import "./socialLogin.css";
-import Geocode from "react-geocode";
+import EmailForm from './email';
+import UserNameForm from './userName';
+import PhoneNumberForm from './number';
+import YearOfPassingForm from './yearOfPassing';
+import AddressForm from './address';
+import FacebookLogin from 'react-facebook-login';
+import Toaster from '../../components/Toaster';
+import { GoogleOAuthProvider } from '@react-oauth/google';
+import { GoogleLogin } from '@react-oauth/google';
+import { useLinkedIn } from 'react-linkedin-login-oauth2';
+import linkedin from 'react-linkedin-login-oauth2/assets/linkedin.png';
+import './socialLogin.css';
+import Geocode from 'react-geocode';
+
+interface FormValue {
+  email: string;
+  fname: string;
+}
 
 const linkedinClientId = process.env.REACT_APP_LINKEDIN_CLIENT_ID;
 const redirectUriForLinkedin = process.env.REACT_APP_LINKEDIN_REDIRECT_URI;
@@ -46,20 +43,24 @@ const facebookPageUrl = process.env.REACT_APP_FACEBOOK_PAGE_URL;
 const instagramPageUrl = process.env.REACT_APP_INSTAGRAM_PAGE_URL;
 const linkedinPageUrl = process.env.REACT_APP_LINKEDIN_PAGE_URL;
 
-export default function Register() {
-  const registerSchema: any = require("./register.json");
+const Register: React.FC = () => {
+  const registerSchema = require('./register.json');
+  // eslint-disable-next-line
   const Form: any = withTheme(Bootstrap4Theme);
+  // eslint-disable-next-line
   const formRef = useRef<any>(null);
-  const carouselRef = useRef<any>(null);
+  // eslint-disable-next-line
+  const carouselRef = useRef<any>();
   const [step, setStep] = useState<number>(1);
-  const [formValues, setFormValues] = useState<any>({});
+  const [formValues, setFormValues] = useState<FormValue>({} as FormValue);
+  // eslint-disable-next-line
   const [userFormData, setUserFormData] = useState<any>([]);
   const [successScreen, setSuccessScreen] = useState<boolean>(false);
-  const [longitude, setLongitude] = useState<string>("");
-  const [latitude, setLatitude] = useState<string>("");
+  const [longitude, setLongitude] = useState<string>('');
+  const [latitude, setLatitude] = useState<string>('');
 
-  Geocode.setApiKey("AIzaSyDDvAlVrvbBYMW08BBosDFM_x2inY-XQ-w");
-  Geocode.setLanguage("en");
+  Geocode.setApiKey('AIzaSyDDvAlVrvbBYMW08BBosDFM_x2inY-XQ-w');
+  Geocode.setLanguage('en');
 
   const [login, setLogin] = useState<boolean>(false);
   const [data, setData] = useState({});
@@ -79,10 +80,10 @@ export default function Register() {
   //Facebook
   const responseFacebook = (response) => {
     // Login failed
-    if (response.status === "unknown") {
-      alert("Login failed!");
+    if (response.status === 'unknown') {
+      alert('Login failed!');
       setLogin(false);
-      return <Toaster type="danger" msg="Login failed" handleCallback={()=> false}/>;
+      return <Toaster type="danger" msg="Login failed" handleCallback={() => false} />;
     }
     setData(response);
     // setPicture(response.picture.data.url);
@@ -108,92 +109,93 @@ export default function Register() {
     },
     onError: (error) => {
       console.log(error);
-    },
+    }
   });
 
   useEffect(() => {
-    localStorage.setItem("dataKey", JSON.stringify(data));
+    localStorage.setItem('dataKey', JSON.stringify(data));
   }, [data]);
 
   useEffect(() => {
-    const items = localStorage.getItem("dataKey");
+    const items = localStorage.getItem('dataKey');
     if (items) {
-      let a = JSON.parse(items);
+      const a = JSON.parse(items);
       setFormValues({ email: a.email, fname: a.name });
     }
   }, [data]);
 
+  // eslint-disable-next-line
   const uiSchema: any = {
     email: {
-      "ui:widget": (props) => {
+      'ui:widget': (props) => {
         return <EmailForm {...props} />;
-      },
+      }
     },
     userName: {
-      "ui:widget": (props) => {
+      'ui:widget': (props) => {
         return <UserNameForm {...props} />;
-      },
+      }
     },
     password: {
-      "ui:widget": "password",
-      "ui:help": "Hint: Make it strong! minimum password length should be 8.",
+      'ui:widget': 'password',
+      'ui:help': 'Hint: Make it strong! minimum password length should be 8.'
     },
     confirm: {
-      "ui:widget": "password",
+      'ui:widget': 'password'
     },
     gender: {
-      "ui:widget": "radio",
-      "ui:options": {
-        inline: true,
-      },
+      'ui:widget': 'radio',
+      'ui:options': {
+        inline: true
+      }
     },
     changemaker: {
       specialist: {
-        "ui:widget": (props) => {
+        'ui:widget': (props) => {
           return <ChangeMakerSelect {...props} />;
-        },
-      },
+        }
+      }
     },
     language: {
-      "ui:widget": (props) => {
+      'ui:widget': (props) => {
         return <LanguageSelect {...props} />;
-      },
+      }
     },
     education: {
-      "ui:options": {
-        orderable: false,
+      'ui:options': {
+        orderable: false
       },
       items: {
-        "ui:emptyValue": "",
-        "ui:placeholder": "e.g. Masters in Yoga Therapy",
+        'ui:emptyValue': '',
+        'ui:placeholder': 'e.g. Masters in Yoga Therapy',
         yearOfPassing: {
-          "ui:widget": (props) => {
+          'ui:widget': (props) => {
             return <YearOfPassingForm {...props} />;
-          },
-        },
-      },
+          }
+        }
+      }
     },
     contact: {
-      "ui:widget": (props) => {
+      'ui:widget': (props) => {
         return <PhoneNumberForm {...props} />;
-      },
+      }
     },
     address: {
-      "ui:widget": (props) => {
+      'ui:widget': (props) => {
         return <AddressForm {...props} />;
-      },
+      }
     },
     specification: {
-      "ui:placeholder": "e.g. Yoga Trainer or General Physician",
+      'ui:placeholder': 'e.g. Yoga Trainer or General Physician'
     },
     aboutMe: {
-      "ui:widget": "textarea",
-      "ui:options": {
-        rows: 3,
-      },
+      'ui:widget': 'textarea',
+      'ui:options': {
+        rows: 3
+      }
     },
     multipleChoicesList: {
-      "ui:widget": "checkboxes",
+      'ui:widget': 'checkboxes'
     },
     // organization: {
     //   items: {
@@ -211,9 +213,9 @@ export default function Register() {
     //   },
     // },
     timezone: {
-      "ui:widget": (props) => {
+      'ui:widget': (props) => {
         return <TimeZoneSelect {...props} />;
-      },
+      }
     },
     // "location": {
     //     "ui:widget": (props) => {
@@ -221,34 +223,28 @@ export default function Register() {
     //     }
     // },
     challenge: {
-      "ui:widget": "textarea",
-      "ui:placeholder": "Try to explain the challenges you are facing (if any)",
-      "ui:options": {
-        rows: 3,
-      },
+      'ui:widget': 'textarea',
+      'ui:placeholder': 'Try to explain the challenges you are facing (if any)',
+      'ui:options': {
+        rows: 3
+      }
     },
     socialLogins: {
-      "ui:widget": (props) => {
+      'ui:widget': () => {
         return (
           <div>
             <label>Select any from below for autofill</label>
             <div>
-              <div
-                className=" py-2"
-                style={{ display: "flex", justifyContent: "center" }}
-              >
+              <div className=" py-2" style={{ display: 'flex', justifyContent: 'center' }}>
                 <img
                   onClick={linkedInLogin}
                   src={linkedin}
                   alt="Sign in with Linked In"
-                  style={{ height: "40px", width: "180px", cursor: "pointer" }}
+                  style={{ height: '40px', width: '180px', cursor: 'pointer' }}
                 />
               </div>
 
-              <div
-                className="py-2"
-                style={{ display: "flex", justifyContent: "center" }}
-              >
+              <div className="py-2" style={{ display: 'flex', justifyContent: 'center' }}>
                 {!login && (
                   <FacebookLogin
                     appId={`${facebookAppId}`}
@@ -262,17 +258,14 @@ export default function Register() {
                 )}
               </div>
 
-              <div
-                className="w-100 py-2"
-                style={{ display: "flex", justifyContent: "center" }}
-              >
+              <div className="w-100 py-2" style={{ display: 'flex', justifyContent: 'center' }}>
                 <GoogleOAuthProvider clientId={`${googleClientId}`}>
                   <GoogleLogin
                     onSuccess={(credentialResponse) => {
                       console.log(credentialResponse);
                     }}
                     onError={() => {
-                      <Toaster type="danger" msg="Login Failed" handleCallback={()=> false}/>;
+                      <Toaster type="danger" msg="Login Failed" handleCallback={() => false} />;
                     }}
                   />
                 </GoogleOAuthProvider>
@@ -280,21 +273,21 @@ export default function Register() {
             </div>
             <br />
             <span>
-              Have an account already?{" "}
-              <a href="/login" style={{ color: "red" }}>
+              Have an account already?{' '}
+              <a href="/login" style={{ color: 'red' }}>
                 Sign In
               </a>
             </span>
           </div>
         );
-      },
-    },
+      }
+    }
   };
 
-  const [newUserId, setNewUserId] = useState<string>("");
+  const [newUserId, setNewUserId] = useState<string>('');
 
   const [registerUser] = useMutation(REGISTER_USER, {
-    onCompleted: (data: any) => {
+    onCompleted: (data) => {
       setNewUserId(data.register.user.id);
 
       updateUser({
@@ -315,16 +308,16 @@ export default function Register() {
             .map((d) => {
               return d.id;
             })
-            .join(", ")
-            .split(", "),
-          timezone: JSON.parse(userFormData.timezone)[0].id,
-        },
+            .join(', ')
+            .split(', '),
+          timezone: JSON.parse(userFormData.timezone)[0].id
+        }
       });
-    },
+    }
   });
 
   const [updateUser] = useMutation(UPDATE_USER, {
-    onCompleted: (data: any) => {
+    onCompleted: () => {
       // if (userFormData.organization[0]?.Do_you_have_an_organization === "Yes") {
       //   createOrganization({
       //     variables: {
@@ -350,16 +343,16 @@ export default function Register() {
           Title: JSON.parse(userFormData.address).addressTitle,
           user: newUserId,
           longitude: longitude,
-          latitude: latitude,
-        },
+          latitude: latitude
+        }
       });
-    },
+    }
     // },
   });
 
   // eslint-disable-next-line
   const [createOrganization] = useMutation(CREATE_ORGANIZATION, {
-    onCompleted: (data: any) => {
+    onCompleted: () => {
       createAddress({
         variables: {
           address1: userFormData.address1,
@@ -371,35 +364,40 @@ export default function Register() {
           Title: userFormData.title,
           user: newUserId,
           longitude: longitude,
-          latitude: latitude,
-        },
+          latitude: latitude
+        }
       });
-    },
+    }
   });
 
   const [createAddress] = useMutation(CREATE_ADDRESS, {
-    onCompleted: (data: any) => {
-      for (var i = 0; i < userFormData.education.length; i++) {
+    onCompleted: () => {
+      for (
+        let educationDetails = 0;
+        educationDetails < userFormData.education.length;
+        educationDetails++
+      ) {
         createEducationDetail({
           variables: {
-            Institute_Name: userFormData.education[i].instituteName,
-            Type_of_degree: userFormData.education[i].typeOfDegree,
-            Specialization: userFormData.education[i].specialization,
-            year_of_passing: userFormData.education[i].yearOfPassing,
-            user: newUserId,
-          },
+            Institute_Name: userFormData.education[educationDetails].instituteName,
+            Type_of_degree: userFormData.education[educationDetails].typeOfDegree,
+            Specialization: userFormData.education[educationDetails].specialization,
+            year_of_passing: userFormData.education[educationDetails].yearOfPassing,
+            user: newUserId
+          }
         });
       }
-    },
+    }
   });
 
   const [createEducationDetail] = useMutation(CREATE_EDUCATION_DETAIL, {
-    onCompleted: (data: any) => {
+    onCompleted: () => {
       setSuccessScreen(true);
       localStorage.clear();
-    },
+    }
   });
 
+  // eslint-disable-next-line
   async function submitHandler(formData: any) {
     if (step < 4) {
       setStep(step + 1);
@@ -420,29 +418,29 @@ export default function Register() {
         variables: {
           email: values.email,
           name: values.userName,
-          password: values.password,
-        },
+          password: values.password
+        }
       });
     }
   }
 
   function Validate(formData, errors) {
-    var ele = document.getElementsByClassName("invalidEmail");
-    var ele2 = document.getElementsByClassName("invalidUname");
-    var ele3 = document.getElementsByClassName("invalidNumber");
+    const ele = document.getElementsByClassName('invalidEmail');
+    const ele2 = document.getElementsByClassName('invalidUname');
+    const ele3 = document.getElementsByClassName('invalidNumber');
     if (formData.email) {
       if (ele.length !== 0) {
-        errors.email.addError("Please enter a valid email address");
+        errors.email.addError('Please enter a valid email address');
       }
     }
     if (formData.userName) {
       if (ele2.length !== 0) {
-        errors.userName.addError("Please enter some other username");
+        errors.userName.addError('Please enter some other username');
       }
     }
     if (formData.contact) {
       if (ele3.length !== 0) {
-        errors.contact.addError("Please enter a valid phone number");
+        errors.contact.addError('Please enter a valid phone number');
       }
     }
     if (formData.password !== formData.confirm) {
@@ -453,9 +451,9 @@ export default function Register() {
 
   function getLocation() {
     if (!navigator.geolocation) {
-      console.log("Geolocation API not supported by this browser.");
+      console.log('Geolocation API not supported by this browser.');
     } else {
-      console.log("Checking location...");
+      console.log('Checking location...');
       navigator.geolocation.getCurrentPosition(success, error);
     }
   }
@@ -466,12 +464,11 @@ export default function Register() {
   }
 
   function error() {
-    console.log("Geolocation error!");
+    console.log('Geolocation error!');
   }
 
   useEffect(() => {
     getLocation();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -480,49 +477,41 @@ export default function Register() {
         <Modal.Dialog>
           <Modal.Body>
             <div>
-              <Row style={{ justifyContent: "center" }}>
+              <Row style={{ justifyContent: 'center' }}>
                 <h1>Congratulations!</h1>
               </Row>
-              <Row style={{ justifyContent: "center", justifyItems: "center" }}>
+              <Row style={{ justifyContent: 'center', justifyItems: 'center' }}>
                 <h5>
-                  <img
-                    height="32px"
-                    src="/assets/confirmed.svg"
-                    alt="confirmed"
-                  ></img>
+                  <img height="32px" src="/assets/confirmed.svg" alt="confirmed"></img>
                   Confirmation Email Sent
                 </h5>
               </Row>
               <blockquote className="blockquote text-right">
-                <p className="text-danger blockquote-footer">
-                  Please Confirm your email address
-                </p>
+                <p className="text-danger blockquote-footer">Please Confirm your email address</p>
               </blockquote>
               <ul>
                 <li>You will receive an email with the confirmation link.</li>
                 <li>
-                  Please click the link in your mail to confirm and then login
-                  into your account
+                  Please click the link in your mail to confirm and then login into your account
                 </li>
               </ul>
-              <Row style={{ justifyContent: "center", justifyItems: "center" }}>
+              <Row style={{ justifyContent: 'center', justifyItems: 'center' }}>
                 <Button
-                  onClick={() => (window.location.href = "/login")}
+                  onClick={() => (window.location.href = '/login')}
                   size="sm"
-                  variant="danger"
-                >
+                  variant="danger">
                   Sign in
                 </Button>
               </Row>
-              <Row className="mt-5" style={{ justifyContent: "center" }}>
+              <Row className="mt-5" style={{ justifyContent: 'center' }}>
                 <h6>Follow us</h6>
               </Row>
-              <Row style={{ justifyContent: "center" }}>
-                <div style={{ display: "flex", flexDirection: "row" }}>
+              <Row style={{ justifyContent: 'center' }}>
+                <div style={{ display: 'flex', flexDirection: 'row' }}>
                   <div>
                     <img
                       src="/assets/linkedin_signin.svg"
-                      style={{ cursor: "pointer" }}
+                      style={{ cursor: 'pointer' }}
                       height="70px"
                       className="d-block w-100"
                       alt="sapien-exercise"
@@ -532,7 +521,7 @@ export default function Register() {
                   <div>
                     <img
                       src="/assets/insta_signin.svg"
-                      style={{ cursor: "pointer" }}
+                      style={{ cursor: 'pointer' }}
                       height="70px"
                       className="d-block w-100"
                       alt="sapien-exercise"
@@ -542,7 +531,7 @@ export default function Register() {
                   <div>
                     <img
                       src="/assets/facebook_signin.svg"
-                      style={{ cursor: "pointer" }}
+                      style={{ cursor: 'pointer' }}
                       height="70px"
                       className="d-block w-100"
                       alt="sapien-exercise"
@@ -561,39 +550,19 @@ export default function Register() {
             <Container>
               <Row>
                 <Col xs={3} md={3} lg={3}>
-                  <ProgressBar
-                    max={1}
-                    now={step - 1}
-                    style={{ height: "5px" }}
-                    variant="danger"
-                  />
+                  <ProgressBar max={1} now={step - 1} style={{ height: '5px' }} variant="danger" />
                   <small className="text-muted">Step 1</small>
                 </Col>
                 <Col xs={3} md={3} lg={3}>
-                  <ProgressBar
-                    max={1}
-                    now={step - 2}
-                    style={{ height: "5px" }}
-                    variant="danger"
-                  />
+                  <ProgressBar max={1} now={step - 2} style={{ height: '5px' }} variant="danger" />
                   <small className="text-muted">Step 2</small>
                 </Col>
                 <Col xs={3} md={3} lg={3}>
-                  <ProgressBar
-                    max={1}
-                    now={step - 3}
-                    style={{ height: "5px" }}
-                    variant="danger"
-                  />
+                  <ProgressBar max={1} now={step - 3} style={{ height: '5px' }} variant="danger" />
                   <small className="text-muted">Step 3</small>
                 </Col>
                 <Col xs={3} md={3} lg={3}>
-                  <ProgressBar
-                    max={1}
-                    now={step - 4}
-                    style={{ height: "5px" }}
-                    variant="danger"
-                  />
+                  <ProgressBar max={1} now={step - 4} style={{ height: '5px' }} variant="danger" />
                   <small className="text-muted">Step 4</small>
                 </Col>
               </Row>
@@ -605,6 +574,7 @@ export default function Register() {
                     ref={formRef}
                     showErrorList={false}
                     validate={Validate}
+                    // eslint-disable-next-line
                     onSubmit={({ formData }: any) => submitHandler(formData)}
                     formData={formValues}
                     // onChange={HandleChange}
@@ -620,15 +590,13 @@ export default function Register() {
                       setStep(step - 1);
                       carouselRef.current.prev();
                     }}
-                    disabled={step === 1 ? true : false}
-                  >
+                    disabled={step === 1 ? true : false}>
                     <i className="mr-2 fas fa-arrow-left"></i>
                   </Button>
                   <Button
                     variant="danger"
                     size="sm"
-                    onClick={(event) => formRef.current.onSubmit(event)}
-                  >
+                    onClick={(event) => formRef.current.onSubmit(event)}>
                     {step < 4 ? (
                       <>
                         Next<i className="ml-4 fas fa-arrow-right"></i>
@@ -649,8 +617,7 @@ export default function Register() {
               interval={8000}
               indicators={false}
               fade={true}
-              controls={false}
-            >
+              controls={false}>
               <Carousel.Item>
                 <img
                   src="/assets/step-1.svg"
@@ -689,4 +656,6 @@ export default function Register() {
       )}
     </>
   );
-}
+};
+
+export default Register;

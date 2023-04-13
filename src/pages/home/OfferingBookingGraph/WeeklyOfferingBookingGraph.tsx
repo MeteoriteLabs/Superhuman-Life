@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import React, { useContext, useState } from "react";
 import LineGraph from "../../../components/Graphs/LineGraph/LineGraph";
 import { useQuery } from "@apollo/client";
 import { GET_BOOKINGS } from "./queries";
@@ -7,8 +7,13 @@ import { flattenObj } from "../../../components/utils/responseFlatten";
 import moment from "moment";
 import { Col, Row } from "react-bootstrap";
 
-function WeeklyOfferingBookingGraph() {
-  const [clientsData, setClientsData] = useState<{}[]>([]);
+interface ArrayType {
+  x: string;
+  y: number;
+}
+
+const WeeklyOfferingBookingGraph: React.FC = () => {
+  const [clientsData, setClientsData] = useState<{id: string; color: string; data: ArrayType[]}[]>([]);
   const auth = useContext(AuthContext);
 
   useQuery(GET_BOOKINGS, {
@@ -25,10 +30,10 @@ function WeeklyOfferingBookingGraph() {
   const loadData = (data) => {
     const flattenClientsData = flattenObj({ ...data.clientBookings });
 
-    const arr: {}[] = [];
+    const arr: ArrayType[] = [];
 
     for (let weekDay = 0; weekDay < 7; weekDay++) {
-      let currentDay = moment().subtract(weekDay, "days");
+      const currentDay = moment().subtract(weekDay, "days");
       arr[weekDay] = {
         x: `${currentDay.format("ddd,")} ${moment()
           .subtract(weekDay, "days")

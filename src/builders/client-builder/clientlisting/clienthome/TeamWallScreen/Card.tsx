@@ -40,23 +40,23 @@ function CardComp(props: any) {
      ];
 
      function getDate(time: any) {
-          let dateObj = new Date(time);
-          let month = dateObj.getMonth() + 1;
-          let year = dateObj.getFullYear();
-          let date = dateObj.getDate();
+          const dateObj = new Date(time);
+          const month = dateObj.getMonth() + 1;
+          const year = dateObj.getFullYear();
+          const date = dateObj.getDate();
 
           return `${date}-${month}-${year}`;
      }
      const [createComment] = useMutation(ADD_COMMENT, {});
 
-     function FetchData(_variables: {} = { id: props.resourceid }) {
+     function FetchData(_variables: unknown = { id: props.resourceid }) {
           useQuery(GET_TAGNAME, { variables: _variables, onCompleted: loadName });
      }
 
      function loadName(d: any) {
           setName(d.workouts[0].workouttitle);
      }
-     function FetchRating(_variables: {} = { id: props.resourceid, clientid: last }) {
+     function FetchRating(_variables: unknown = { id: props.resourceid, clientid: last }) {
           useQuery(GET_RATING_NOTES, { variables: _variables, onCompleted: loadRating });
      }
      function loadRating(d: any) {
@@ -127,8 +127,8 @@ function CardComp(props: any) {
                                    {rating &&
                                         rating.map((d) => {
                                              if (d.type === "rpm") {
-                                                  let word = rate1[d.rating - 1];
-                                                  let string = word.split("-");
+                                                  const word = rate1[d.rating - 1];
+                                                  const string = word.split("-");
                                                   return (
                                                        <div className="rounded border border-dark p-2">
                                                             <h6 className="ml-2">Rate Of Perceived Exertion</h6>
@@ -178,7 +178,7 @@ function CardComp(props: any) {
                               </div>
                          </Card.Body>
 
-                         {props.comments.map((e) => {
+                         {props.comments.map((e, index) => {
                               const actionClick1 = () => {
                                    //handleRedirect(row.original.id);
                               };
@@ -193,7 +193,7 @@ function CardComp(props: any) {
                                    { actionName: "Delete", actionClick: actionClick2 },
                               ];
                               return (
-                                   <Card.Body className="cardBorder">
+                                   <Card.Body className="cardBorder" key={index}>
                                         <Row>
                                              <img
                                                   src="/assets/avatar-1.jpg"

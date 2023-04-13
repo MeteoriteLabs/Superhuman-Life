@@ -105,7 +105,7 @@ export default function NutritionTab() {
         <TabContent>
             <hr />
             <Card.Title className="text-center">
-                <CreateFitnessPackageModal
+                {/* <CreateFitnessPackageModal
                     stepperValues={["Creator", "Details", "Program", "Schedule", "Pricing", "Preview"]}
                     name="New Classic Meal Package"
                     isStepper={true}
@@ -144,7 +144,7 @@ export default function NutritionTab() {
                     formSchema={customMealSchema}
                     formSubmit={onSubmit}
                     formData={{}}
-                />
+                /> */}
             </Card.Title>
             <Table columns={columns} data={data} />
         </TabContent>

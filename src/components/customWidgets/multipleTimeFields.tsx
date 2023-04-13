@@ -7,17 +7,17 @@ import "rc-time-picker/assets/index.css";
 
 const TimeFieldInput = (props: any) => {
   const [startTime, setStartTime] = useState(
-    props.eventType === "duplicate" || "edit" ? props.startTime : ""
+    (props.eventType === "duplicate" || props.eventType === "edit") ? props.startTime : ""
   );
   const [endTime, setEndTime] = useState(
-    props.eventType === "duplicate" || "edit" ? props.endTime : ""
+    (props.eventType === "duplicate" || props.eventType === "edit") ? props.endTime : ""
   );
 
   function handleTimeFormat(time: string) {
-    let timeArray = time.split(":");
-    let hours = timeArray[0];
-    let minutes = timeArray[1];
-    let timeString =
+    const timeArray = time.split(":");
+    const hours = timeArray[0];
+    const minutes = timeArray[1];
+    const timeString =
       (parseInt(hours) < 10 && parseInt(hours) !== 0 ? "0" + hours : hours) +
       ":" +
       (parseInt(minutes) === 0 ? "0" + minutes : minutes);
@@ -25,20 +25,20 @@ const TimeFieldInput = (props: any) => {
   }
 
   function handleStartTimeInput(val: any) {
-    var m = (Math.round(parseInt(val.slice(3, 5)) / 15) * 15) % 60;
+    const m = (Math.round(parseInt(val.slice(3, 5)) / 15) * 15) % 60;
     setStartTime(val.slice(0, 2) + ":" + (m === 0 ? "00" : m));
   }
 
   function handleEndTimeInput(val: any) {
-    var m = (Math.round(parseInt(val.slice(3, 5)) / 15) * 15) % 60;
+    const m = (Math.round(parseInt(val.slice(3, 5)) / 15) * 15) % 60;
     setEndTime(val.slice(0, 2) + ":" + (m === 0 ? "00" : m));
   }
 
   function handleTimeValidation() {
-    var sh = startTime.split(":")[0];
-    var sm = startTime.split(":")[1];
-    var eh = endTime.split(":")[0];
-    var em = endTime.split(":")[1];
+    const sh = startTime.split(":")[0];
+    const sm = startTime.split(":")[1];
+    const eh = endTime.split(":")[0];
+    const em = endTime.split(":")[1];
 
     if (!props.disabled) {
       if (parseInt(sh) > parseInt(eh)) {
@@ -66,23 +66,23 @@ const TimeFieldInput = (props: any) => {
     }
   }
 
-  var startTimeSplit = startTime?.split(":").map(Number);
-  var endTimeSplit = endTime?.split(":").map(Number);
-  var startTimeValue = moment().set({
+  const startTimeSplit = startTime?.split(":").map(Number);
+  const endTimeSplit = endTime?.split(":").map(Number);
+  const startTimeValue = moment().set({
     hour: startTimeSplit[0],
     minute: startTimeSplit[1],
   });
-  var endTimeValue = moment().set({
+  const endTimeValue = moment().set({
     hour: endTimeSplit[0],
     minute: endTimeSplit[1],
   });
   function convertToMomnet(time: string) {
-    var timeSplit = time.split(":").map(Number);
+    const timeSplit = time.split(":").map(Number);
     return moment().set({ hour: timeSplit[0], minute: timeSplit[1] });
   }
 
   function handleFormatting(time) {
-    var inputTime: any = time.split(":");
+    const inputTime: any = time.split(":");
     return `${
       parseInt(inputTime[0]) < 10 ? inputTime[0].charAt(1) : inputTime[0]
     }:${inputTime[1] === "00" ? "0" : inputTime[1]}`;

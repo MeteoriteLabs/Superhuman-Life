@@ -19,12 +19,12 @@ export default function ClassesSessions({
   recordedclasses,
   mode,
 }: Props) {
-  let arr = [ptonline, ptoffline, grouponline, groupoffline, recordedclasses];
+  const arr = [ptonline, ptoffline, grouponline, groupoffline, recordedclasses];
   let totalClasses = arr
     .filter((item) => item !== undefined)
     .reduce((acc, cur) => acc + cur);
 
-  let arrNumberClass: number[] = [];
+  const arrNumberClass: number[] = [];
   if (type === "Classic Class") {
     arrNumberClass.push(classicClasses);
   } else if (mode === "Online Workout" || mode === "Offline Workout") {

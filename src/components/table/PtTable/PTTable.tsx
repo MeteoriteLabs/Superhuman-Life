@@ -37,12 +37,13 @@ function PTTable({ data, columns }: any) {
     <div className="table-responsive">
       <table {...getTableProps()} className="pt table text-center">
         <thead>
-          {headerGroups.map((headerGroup) => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column) => (
+          {headerGroups.map((headerGroup, index) => (
+            <tr {...headerGroup.getHeaderGroupProps()} key={index}>
+              {headerGroup.headers.map((column, index) => (
                 <th
                   className="tableHeader text-center"
                   {...column.getHeaderProps()}
+                  key={index}
                 >
                   {column.render("Header")}
                 </th>
@@ -61,14 +62,14 @@ function PTTable({ data, columns }: any) {
           {rows.forEach((row, i) => {
             prepareRow(row);
 
-            let samePackage = false;
+            const samePackage = false;
 
             if (!samePackage) {
               currentRowsIndex = i;
             }
 
             for (let j = 0; j < row.cells.length; j++) {
-              let cell = row.allCells[j];
+              const cell = row.allCells[j];
 
               if (!samePackage || j > 4) {
                 cell.rowSpan = 1;
@@ -91,9 +92,9 @@ function PTTable({ data, columns }: any) {
               // }
             }
           })}
-          {rows.map((row) => {
+          {rows.map((row, index) => {
             return (
-              <tr className="rowCard" {...row.getRowProps()}>
+              <tr className="rowCard" {...row.getRowProps()} key={index}>
                 {row.cells.map((cell) => {
                   if (cell.isRowSpanned) return null;
                   else {

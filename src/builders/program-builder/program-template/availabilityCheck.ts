@@ -11,7 +11,7 @@ export const AvailabilityCheck = (props: any) => {
     const newTime = JSON.parse(props.time.startChange);
 
     function convertToMomnet(time: string) {
-        var timeSplit = time.split(":").map(Number);
+        const timeSplit = time.split(":").map(Number);
         return moment().set({ "hour": timeSplit[0], "minute": timeSplit[1] });
     }
 
@@ -20,13 +20,13 @@ export const AvailabilityCheck = (props: any) => {
     const oldTimeStart = convertToMomnet(event.hour + ":" + event.min);
     const oldTimeEnd = convertToMomnet(event.endHour + ":" + event.endMin);
     if (newTime.startTime === "") {
-        for (var i = 0; i < sessions.length; i++) {
+        for (let i = 0; i < sessions.length; i++) {
             if (convertToMomnet(sessions[i].start_time).isSameOrAfter(oldTimeStart) && convertToMomnet(sessions[i].start_time).isSameOrBefore(oldTimeEnd)) {
                 return true;
             }
         }
     } else {
-        for (var j = 0; j < sessions.length; j++) {
+        for (let j = 0; j < sessions.length; j++) {
             if (convertToMomnet(sessions[j].start_time).isSameOrAfter(newTimeStart) && convertToMomnet(sessions[j].start_time).isSameOrBefore(newTimeEnd)) {
                 return true;
             }

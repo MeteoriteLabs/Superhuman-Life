@@ -21,7 +21,7 @@ interface Operation {
 function CreateContactAsPayee(props: any, ref: any) {
   const [operation, setOperation] = useState<Operation>({} as Operation);
   const auth = useContext(AuthContext);
-  const payeeJson: {} = require("./ContactPayee.json");
+  const payeeJson: Record<string, unknown> = require("./ContactPayee.json");
   const [isCreated, setIsCreated] = useState<boolean>(false);
 
   const modalTrigger = new Subject();

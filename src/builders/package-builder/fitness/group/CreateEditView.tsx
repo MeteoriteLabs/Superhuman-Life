@@ -274,9 +274,9 @@ function CreateEditPackage(props: any, ref: any) {
 
   function FillDetails(data: any) {
     const flattenedData = flattenObj({ ...data });
-    let msg = flattenedData.fitnesspackages[0];
+    const msg = flattenedData.fitnesspackages[0];
     
-    let details: any = {};
+    const details: any = {};
   
     if (msg.groupinstantbooking) {
       for (let i = 0; i < msg.fitnesspackagepricing.length; i++) {

@@ -10,7 +10,7 @@ import AuthContext from "../../../../context/auth-context";
 function BankAccount() {
   const paymentMethodActionRef = useRef<any>(null);
   const auth = useContext(AuthContext);
-  const [bankDetails, setBankDetails] = useState<{}[]>([]);
+  const [bankDetails, setBankDetails] = useState<Record<string, unknown>[]>([]);
 
   // eslint-disable-next-line
   const { data: get_bank_details, refetch: refetch_bank_details } = useQuery(
@@ -50,7 +50,7 @@ function BankAccount() {
       <Row className="mt-3">
         <Col md={{ offset: 10 }}>
           <Button
-            variant={true ? "outline-secondary" : "light"}
+            variant="outline-secondary"
             size="sm"
             onClick={() => {
               paymentMethodActionRef.current.TriggerForm({

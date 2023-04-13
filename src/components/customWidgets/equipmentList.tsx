@@ -1,9 +1,9 @@
-import { useState, useRef } from "react";
+import React, { useState, useRef } from "react";
 import { InputGroup, FormControl, Container } from "react-bootstrap";
 import { gql, useQuery } from "@apollo/client";
 import { flattenObj } from "../utils/responseFlatten";
 
-const EquipmentList = (props: any) => {
+const EquipmentList: React.FC<{value: string[]; onChange: (args: string) => void; }> = (props) => {
   const [fitnessEquipments, setFitnessEquipments] = useState<any[]>([]);
   const [searchInput, setSearchInput] = useState(null);
   const [selected, setSelected] = useState<any[]>(
@@ -48,7 +48,7 @@ const EquipmentList = (props: any) => {
     );
   }
 
-  function EquipmentSearch(data: any) {
+  function EquipmentSearch(data: any): void {
     if (data.length > 0) {
       setSearchInput(data);
       skipval = false;

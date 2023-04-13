@@ -32,7 +32,7 @@ export class UpdateForm {
     Thumbnail_ID,
     equipment_lists
   ) => {
-    let updateFormData: any = {};
+    const updateFormData: any = {};
     updateFormData.id = id;
     updateFormData.packagename = packagename;
     updateFormData.tags = tags;

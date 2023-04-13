@@ -4,6 +4,7 @@ export const widgets = {
   uploadImageToS3WithNativeSdk: UploadImageToS3WithNativeSdk,
 };
 
+// eslint-disable-next-line
 export const schema: any = {
 
   Institute_Name: {

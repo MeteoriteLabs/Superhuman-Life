@@ -1,7 +1,8 @@
 import { Pagination } from "react-bootstrap";
 
-let active = 1;
-let items: any = [];
+const active = 1;
+// eslint-disable-next-line
+const items: any[] = [];
 for (let number = 1; number <= 2; number++) {
   items.push(
     <Pagination.Item key={number} active={number === active}>
@@ -9,7 +10,7 @@ for (let number = 1; number <= 2; number++) {
     </Pagination.Item>
   );
 }
-export const PaginationBasic = () => {
+export const PaginationBasic: React.FC = () => {
   return (
     <div>
       <Pagination>{items}</Pagination>

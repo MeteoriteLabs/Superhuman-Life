@@ -1,8 +1,8 @@
-import { useState } from "react";
-import { Modal, Col, Row, Form, Button } from "react-bootstrap";
-import "./SetUpDomain.css";
+import React, { useState } from 'react';
+import { Modal, Col, Row, Form, Button } from 'react-bootstrap';
+import './SetUpDomain.css';
 
-function HelpModal(props) {
+const HelpModal: React.FC<{ show?: boolean; onHide?: () => void }> = (props) => {
   return (
     <Modal {...props} aria-labelledby="contained-modal-title-vcenter">
       <Modal.Header className="p-0 d-flex justify-content-center bg-dark">
@@ -14,10 +14,7 @@ function HelpModal(props) {
         <Form>
           <Form.Group>
             <Row>
-              <Col
-                md={{ span: 4, offset: 0 }}
-                className="d-flex align-items-center"
-              >
+              <Col md={{ span: 4, offset: 0 }} className="d-flex align-items-center">
                 <Form.Label>Sapien Address</Form.Label>
               </Col>
               <Col md={{ span: 8, offset: 0 }}>
@@ -30,10 +27,7 @@ function HelpModal(props) {
           </Form.Group>
           <Form.Group>
             <Row>
-              <Col
-                md={{ span: 4, offset: 0 }}
-                className="d-flex align-items-center"
-              >
+              <Col md={{ span: 4, offset: 0 }} className="d-flex align-items-center">
                 <Form.Label>Web Address</Form.Label>
               </Col>
               <Col md={{ span: 8, offset: 0 }}>
@@ -50,10 +44,10 @@ function HelpModal(props) {
       </Modal.Footer>
     </Modal>
   );
-}
+};
 
-export default function SetUpDomain() {
-  const [modalShow, setModalShow] = useState(false);
+export const SetUpDomain: React.FC = () => {
+  const [modalShow, setModalShow] = useState<boolean>(false);
 
   return (
     <>
@@ -64,4 +58,6 @@ export default function SetUpDomain() {
       <HelpModal show={modalShow} onHide={() => setModalShow(false)} />
     </>
   );
-}
+};
+
+export default HelpModal;

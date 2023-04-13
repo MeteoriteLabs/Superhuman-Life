@@ -127,11 +127,10 @@ export default function PaymentSchedule() {
         },
       },
     ],
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
 
-  const [datatable, setDataTable] = useState<{}[]>([]);
+  const [datatable, setDataTable] = useState<Record<string, unknown>[]>([]);
 
   const fetch = useQuery(GET_PAYMENT_SCHEDULES, {
     skip: !id,
@@ -146,10 +145,10 @@ export default function PaymentSchedule() {
   }
 
   function getDate(time: number) {
-    let dateObj = new Date(time),
-      month = dateObj.getMonth() + 1,
-      year = dateObj.getFullYear(),
-      date = dateObj.getDate();
+    const dateObj = new Date(time);
+    const  month = dateObj.getMonth() + 1;
+    const year = dateObj.getFullYear();
+    const date = dateObj.getDate();
     return `${date}/${month}/${year}`;
   }
 
@@ -198,7 +197,7 @@ export default function PaymentSchedule() {
           <Col md={{ span: 3, offset: 9 }}>
             <Card.Title className="text-center">
               <Button
-                variant={true ? "outline-secondary" : "light"}
+                variant="outline-secondary"
                 size="sm"
                 onClick={() => {
                   createPaymentScheduleComponent.current.TriggerForm({

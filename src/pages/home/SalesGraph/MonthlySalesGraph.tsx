@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import React, { useContext, useState } from "react";
 import LineGraph from "../../../components/Graphs/LineGraph/LineGraph";
 import { useQuery } from "@apollo/client";
 import { GET_CLIENTS } from "./queries";
@@ -7,8 +7,13 @@ import { flattenObj } from "../../../components/utils/responseFlatten";
 import { Col, Row } from "react-bootstrap";
 import moment from "moment";
 
-function MonthlySalesGraph() {
-  const [clientsData, setClientsData] = useState<{}[]>([]);
+interface ArrayType {
+  x: string;
+  y: number;
+}
+
+const MonthlySalesGraph: React.FC = () => {
+  const [clientsData, setClientsData] = useState<{id: string; color: string; data: ArrayType[]}[]>([]);
   const auth = useContext(AuthContext);
 
   useQuery(GET_CLIENTS, {
@@ -25,13 +30,13 @@ function MonthlySalesGraph() {
   const loadData = (data) => {
     const flattenClientsData = flattenObj({ ...data.clientPackages });
 
-    const arr: {}[] = [];
+    const arr: ArrayType[] = [];
     const initialValue = 0;
 
     for (let month = 0; month < 12; month++) {
-      let currentMonth = moment().subtract(month, "months");
+      const currentMonth = moment().subtract(month, "months");
 
-      let sales = flattenClientsData.filter(
+      const sales = flattenClientsData.filter(
         (currentValue) =>
           moment(currentValue.accepted_date).format("MM/YY") ===
           currentMonth.format("MM/YY")

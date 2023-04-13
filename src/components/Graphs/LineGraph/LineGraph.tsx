@@ -1,4 +1,10 @@
+import React from "react";
 import { ResponsiveLine } from "@nivo/line";
+
+interface ArrayType {
+  x: string;
+  y: number;
+}
 
 const Wrapper = (props) => (
   <div
@@ -11,11 +17,11 @@ const Wrapper = (props) => (
   />
 );
 
-const LineGraph = ({ data, yAxis}) => (
+const LineGraph: React.FC<{data: {id: string; color: string; data: ArrayType[];}[]; yAxis: string;}> = (props) => (
   <>
     <Wrapper>
       <ResponsiveLine
-        data={data}
+        data={props.data}
         margin={{
           top: 50,
           right: 110,
@@ -47,7 +53,7 @@ const LineGraph = ({ data, yAxis}) => (
           tickSize: 5,
           tickPadding: 5,
           tickRotation: 0,
-          legend: `${yAxis}`,
+          legend: `${props.yAxis}`,
           legendOffset: -40,
           legendPosition: "middle",
         }}

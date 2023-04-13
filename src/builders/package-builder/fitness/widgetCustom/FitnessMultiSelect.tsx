@@ -1,13 +1,13 @@
 import { useQuery } from '@apollo/client';
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Typeahead } from 'react-bootstrap-typeahead';
 import { GET_FITNESS_DISCIPLINES } from '../graphQL/queries';
 import { flattenObj } from '../../../../components/utils/responseFlatten';
 
-export default function FitnessMultiSelect(props) {
-    const { widgetProps, actionType } = props;
-    const [fitnessdisciplines, setFitnessdisciplines] = useState([]);
-    const [multiSelections, setMultiSelections] = useState([]);
+const FitnessMultiSelect: React.FC<{widgetProps: any; actionType: string;}> = (props) => {
+    // const { widgetProps, actionType } = props;
+    const [fitnessdisciplines, setFitnessdisciplines] = useState<string[]>([]);
+    const [multiSelections, setMultiSelections] = useState<string[]>([]);
 
     const FetchData = () => {
         useQuery(GET_FITNESS_DISCIPLINES, {
@@ -18,48 +18,49 @@ export default function FitnessMultiSelect(props) {
     const loadData = (data) => {
         const flattenData = flattenObj({...data});
         setFitnessdisciplines(
-            [...flattenData.fitnessdisciplines].map(discipline => {
+            flattenData?.fitnessdisciplines.map(discipline => {
                 return {
                     id: discipline.id,
                     disciplinename: discipline.disciplinename,
                 }
-            })
+    })
         )
     }
 
     useEffect(() => {
-        if (widgetProps.value && typeof (widgetProps.value) !== "object") {
-            if (typeof (widgetProps.value) === "string") {
-                setMultiSelections(JSON.parse(widgetProps.value))
+        if (props.widgetProps.value && typeof (props.widgetProps.value) !== "object") {
+            if (typeof (props.widgetProps.value) === "string") {
+                setMultiSelections(JSON.parse(props.widgetProps.value))
             
             } else {
-                setMultiSelections(JSON.stringify(widgetProps.value))
+                setMultiSelections([JSON.stringify(props.widgetProps.value)])
             }
         } 
         
         return () => {
-            setMultiSelections()
+            setMultiSelections([])
         }
 
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     FetchData()
     return <div>
-        <label>{widgetProps.label}</label>
+        <label>{props.widgetProps.label}</label>
         {fitnessdisciplines && <Typeahead
-            required
-            disabled={actionType === "view" ? true : false}
+            // required
+            disabled={props.actionType === "view" ? true : false}
             selected={multiSelections}
-            labelKey="disciplinename"
+            // labelKey="disciplinename"
             id="basic-typeahead-multiple"
             options={fitnessdisciplines}
             placeholder="Choose your discpline ... "
             onChange={(e) => {
                 setMultiSelections(e)
-                widgetProps.onChange(JSON.stringify(e))
+                props.widgetProps.onChange(JSON.stringify(e))
             }}
             multiple />}
 
     </div>
 }
+
+export default FitnessMultiSelect;

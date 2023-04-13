@@ -12,7 +12,7 @@ import moment from 'moment';
 export default function EventsTab() {
 
     const auth = useContext(AuthContext);
-    const [show, setShow] = useState(false);
+    const [show, setShow] = useState<boolean>(false);
     const [name, setName] = useState("");
     const [frm, setFrm] = useState<any>();
     const [tableData, setTableData] = useState<any[]>([]);
@@ -23,7 +23,7 @@ export default function EventsTab() {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
-    function CreateWorkout(_variables: {} = { id: auth.userid, details: frm }) {
+    function CreateWorkout(_variables: Record<string, unknown> = { id: auth.userid, details: frm }) {
         frm.rawDiscipline = frm.rawDiscipline.map((item: any) => item.id).join(", ").split(", ");
         frm.rawEquipment = frm.rawEquipment.map((item: any) => item.id).join(", ").split(", ");
         frm.rawMuscleGroup = frm.rawMuscleGroup.map((item: any) => item.id).join(", ").split(", ");
@@ -98,10 +98,10 @@ export default function EventsTab() {
         const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
             "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"
         ];
-        let dateObj = new Date(time);
-        let month = monthNames[dateObj.getMonth()];
-        let year = dateObj.getFullYear();
-        let date = dateObj.getDate();
+        const dateObj = new Date(time);
+        const month = monthNames[dateObj.getMonth()];
+        const year = dateObj.getFullYear();
+        const date = dateObj.getDate();
 
         return (`${date}-${month}-${year}`);
     }
@@ -147,7 +147,7 @@ export default function EventsTab() {
         <TabContent>
             <hr />
             <Card.Title className="text-right">
-                <Button variant={true ? "outline-secondary" : "light"} size="sm"
+                <Button variant= "outline-secondary" size="sm"
                     onClick={() => {
                         createEditWorkoutComponent.current.TriggerForm({ id: null, type: 'create' });
                     }}

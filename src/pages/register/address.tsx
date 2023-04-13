@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Form } from "react-bootstrap";
 import Geocode from "react-geocode";
 import GooglePlacesAutocomplete, {
@@ -6,31 +6,31 @@ import GooglePlacesAutocomplete, {
   getLatLng,
 } from "react-google-places-autocomplete";
 
-const Address = (props: any) => {
-  const [address1, setAddress1] = useState(
+const Address: React.FC<{value: string; onChange: (args: string) => void;}> = (props) => {
+  const [address1, setAddress1] = useState<string>(
     props.value ? JSON.parse(props.value).address1 : ""
   );
-  const [address2, setAddress2] = useState(
+  const [address2, setAddress2] = useState<string>(
     props.value ? JSON.parse(props.value).address2 : ""
   );
-  const [city, setCity] = useState(
+  const [city, setCity] = useState<string>(
     props.value ? JSON.parse(props.value).city : ""
   );
-  const [state, setState] = useState(
+  const [state, setState] = useState<string>(
     props.value ? JSON.parse(props.value).state : ""
   );
-  const [zip, setZip] = useState(
+  const [zip, setZip] = useState<string>(
     props.value ? JSON.parse(props.value).zip : ""
   );
-  const [country, setCountry] = useState(
+  const [country, setCountry] = useState<string>(
     props.value ? JSON.parse(props.value).country : ""
   );
-  const [addressTitle, setAddressTitle] = useState(
+  const [addressTitle, setAddressTitle] = useState<string>(
     props.value ? JSON.parse(props.value).addressTitle : ""
   );
   
   const [googleAddressShow, setGoogleAddressShow] = useState<boolean>(false);
-
+  // eslint-disable-next-line 
   const [value, setValue] = useState<any>(null);
 
   if (value !== null) {
@@ -110,7 +110,6 @@ const Address = (props: any) => {
 
   useEffect(() => {
     getLocation();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   props.onChange(
@@ -142,6 +141,7 @@ const Address = (props: any) => {
             apiKey="AIzaSyDDvAlVrvbBYMW08BBosDFM_x2inY-XQ-w"
             selectProps={{
               value,
+              // eslint-disable-next-line
               onChange: (e: any) => {
                 setValue(e);
                 setAddress1(e.label);

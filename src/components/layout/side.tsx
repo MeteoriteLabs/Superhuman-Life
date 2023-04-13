@@ -7,8 +7,8 @@ import Icon from "../Icons/index";
 
 export function SideNav({ collapse, setCollapse }: any) {
   const location = useLocation();
-  let [selectedOption, setSelectedOption] = useState<String>(location.pathname.slice(1));
-  const renderTooltip = (props) => (
+  const [selectedOption, setSelectedOption] = useState<string>(location.pathname.slice(1));
+  const renderTooltip = (props: any) => (
     <Tooltip id="button-tooltip" {...props}>
       {props}
     </Tooltip>

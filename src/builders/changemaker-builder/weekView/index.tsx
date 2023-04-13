@@ -351,10 +351,8 @@ const WeekView = (props: any) => {
           </Row>
           <Row>
             <SchedulerPage
-              type="date"
               days={7}
               assignedEvents={todaysEvents}
-              startDates={days}
               startDate={scheduleDate}
             />
           </Row>

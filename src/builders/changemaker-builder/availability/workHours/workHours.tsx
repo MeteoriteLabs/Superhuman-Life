@@ -175,8 +175,8 @@ const WorkHours = () => {
 
     const values = todaysEvents.concat(currentDateWorkHours);
     values.sort((a: any, b: any) => {
-      var btime1: any = moment(a.start_time, "HH:mm a");
-      var btime2: any = moment(b.start_time, "HH:mm a");
+      const btime1: any = moment(a.start_time, "HH:mm a");
+      const btime2: any = moment(b.start_time, "HH:mm a");
       return btime1 - btime2;
     });
     setSlots(values);

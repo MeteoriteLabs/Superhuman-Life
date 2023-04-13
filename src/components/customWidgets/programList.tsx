@@ -19,7 +19,7 @@ const ProgramList = (props: any) => {
   const [searchInput, setSearchInput] = useState(null);
   const [selected, setSelected] = useState<any>({});
   const inputField = useRef<any>();
-  let skipval: Boolean = true;
+  let skipval = true;
 
   const GET_PROGRAMLIST = gql`
     query programlistQuery($id: ID!, $filter: String!) {
@@ -93,7 +93,7 @@ const ProgramList = (props: any) => {
   `;
 
   function FetchEquipmentList(
-    _variable: {} = { id: auth.userid, filter: " " }
+    _variable: Record<string, unknown> = { id: auth.userid, filter: " " }
   ) {
     useQuery(GET_PROGRAMLIST, {
       variables: _variable,
@@ -153,9 +153,9 @@ const ProgramList = (props: any) => {
     skipval = true;
   }
 
-  var days: any = [];
+  const days: any = [];
 
-  for (var i = 1; i <= selected.duration; i++) {
+  for (let i = 1; i <= selected.duration; i++) {
     days.push(i);
   }
 

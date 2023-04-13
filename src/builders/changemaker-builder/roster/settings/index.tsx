@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React,{ useState } from "react";
 import { Dropdown, Row, Col, Button, Modal, Form } from "react-bootstrap";
 import { useMutation } from "@apollo/client";
 import {
@@ -11,19 +11,19 @@ import moment from "moment";
 import TimePicker from "rc-time-picker";
 import "rc-time-picker/assets/index.css";
 
-const RosterSettings = (props: any) => {
+const RosterSettings: React.FC<{data: any[]}> = (props) => {
   const data = props.data[0];
 
   const [startTime, setStartTime] = useState(data?.session?.start_time);
   const [endTime, setEndTime] = useState(data?.session?.end_time);
   const [newMode, setNewMode] = useState(data?.session?.mode);
   const [newDate, setNewDate] = useState(data?.session?.session_date);
-  const [classCancel, setClassCancel] = useState("");
-  const [classCancellationReason, setClassCancellationReason] = useState("");
-  const [showRescheduleTime, setShowRescheduleTime] = useState(false);
-  const [showChangeMode, setShowChangeMode] = useState(false);
-  const [showCancelStatus, setShowCancelStatus] = useState(false);
-  const [showRescheduleDate, setShowRescheduleDate] = useState(false);
+  const [classCancel, setClassCancel] = useState<string>("");
+  const [classCancellationReason, setClassCancellationReason] = useState<string>("");
+  const [showRescheduleTime, setShowRescheduleTime] = useState<boolean>(false);
+  const [showChangeMode, setShowChangeMode] = useState<boolean>(false);
+  const [showCancelStatus, setShowCancelStatus] = useState<boolean>(false);
+  const [showRescheduleDate, setShowRescheduleDate] = useState<boolean>(false);
 
   const handleClose = () => setShowRescheduleTime(false);
   const handleShow = () => setShowRescheduleTime(true);
@@ -62,25 +62,25 @@ const RosterSettings = (props: any) => {
   });
 
   function convertToMoment(time: string) {
-    var timeSplit = time.split(":").map(Number);
+    const timeSplit = time.split(":").map(Number);
     return moment().set({ hour: timeSplit[0], minute: timeSplit[1] });
   }
 
   function handleFromTimeInput(val: any) {
-    var m = (Math.round(parseInt(val.slice(3, 5)) / 15) * 15) % 60;
+    const m = (Math.round(parseInt(val.slice(3, 5)) / 15) * 15) % 60;
     setStartTime(val.slice(0, 2) + ":" + (m === 0 ? "00" : m));
   }
 
   function handleToTimeInput(val: any) {
-    var m = (Math.round(parseInt(val.slice(3, 5)) / 15) * 15) % 60;
+    const m = (Math.round(parseInt(val.slice(3, 5)) / 15) * 15) % 60;
     setEndTime(val.slice(0, 2) + ":" + (m === 0 ? "00" : m));
   }
 
   function handleTimeValidation() {
-    var sh = startTime.split(":")[0];
-    var sm = startTime.split(":")[1];
-    var eh = endTime.split(":")[0];
-    var em = endTime.split(":")[1];
+    const sh = startTime.split(":")[0];
+    const sm = startTime.split(":")[1];
+    const eh = endTime.split(":")[0];
+    const em = endTime.split(":")[1];
 
     if (startTime !== "00:00" || endTime !== "00:00") {
       if (parseInt(sh) > parseInt(eh)) {

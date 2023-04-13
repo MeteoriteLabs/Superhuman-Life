@@ -1,6 +1,6 @@
-import React from 'react'
+import React from 'react';
 
-function TermsOfService() {
+const TermsOfService: React.FC = () => {
   return (
     <div>
       TermsOfService
@@ -8,4 +8,4 @@ function TermsOfService() {
   )
 }
 
-export default TermsOfService
+export default TermsOfService;

@@ -85,7 +85,7 @@ export default function Contacts() {
 
           const history = useHistory();
           const routeChange = () => {
-            let path = `payment_settings/?id=${row.original.id}&isChangemaker=false`;
+            const path = `payment_settings/?id=${row.original.id}&isChangemaker=false`;
             history.push(path);
           };
 
@@ -100,20 +100,19 @@ export default function Contacts() {
         },
       },
     ],
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
 
   function getDate(time: any) {
-    let dateObj = new Date(time);
-    let month = dateObj.getMonth() + 1;
-    let year = dateObj.getFullYear();
-    let date = dateObj.getDate();
+    const dateObj = new Date(time);
+    const month = dateObj.getMonth() + 1;
+    const year = dateObj.getFullYear();
+    const date = dateObj.getDate();
 
     return `${date}/${month}/${year}`;
   }
 
-  const [datatable, setDataTable] = useState<{}[]>([]);
+  const [datatable, setDataTable] = useState<Record<string, unknown>[]>([]);
 
   const fetch = useQuery(GET_CONTACTS, { variables: {id: auth.userid} , onCompleted: loadData });
 
@@ -165,7 +164,7 @@ export default function Contacts() {
           <Col>
             <Card.Title className="text-center">
               <Button
-                variant={true ? "outline-secondary" : "light"}
+                variant="outline-secondary"
                 size="sm"
                 onClick={() => {
                   createEditContactComponent.current.TriggerForm({

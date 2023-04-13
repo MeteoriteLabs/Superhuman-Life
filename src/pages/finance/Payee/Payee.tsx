@@ -71,7 +71,7 @@ export default function Payee() {
         Cell: ({ row }: any) => {
           const history = useHistory();
           const routeChange = () => {
-            let path = `payment_settings/?id=${row.original.id}&isChangemaker=${row.original.isChangemaker}`;
+            const path = `payment_settings/?id=${row.original.id}&isChangemaker=${row.original.isChangemaker}`;
             history.push(path);
           };
 
@@ -97,13 +97,13 @@ export default function Payee() {
     []
   );
 
-  const [datatable, setDataTable] = useState<{}[]>([]);
+  const [datatable, setDataTable] = useState<Record<string, unknown>[]>([]);
 
   function getDate(time: any) {
-    let dateObj = new Date(time);
-    let month = dateObj.getMonth() + 1;
-    let year = dateObj.getFullYear();
-    let date = dateObj.getDate();
+    const dateObj = new Date(time);
+    const month = dateObj.getMonth() + 1;
+    const year = dateObj.getFullYear();
+    const date = dateObj.getDate();
 
     return `${date}/${month}/${year}`;
   }
@@ -272,7 +272,7 @@ export default function Payee() {
           <Col>
             <Card.Title className="text-center">
               <Button
-                variant={true ? "outline-secondary" : "light"}
+                variant="outline-secondary"
                 size="sm"
                 onClick={() => {
                   createEditPayeeComponent.current.TriggerForm({
@@ -296,7 +296,7 @@ export default function Payee() {
           <Col>
             <Card.Title className="text-center">
               <Button
-                variant={true ? "outline-secondary" : "light"}
+                variant="outline-secondary"
                 size="sm"
                 onClick={() => {
                   createChangemakerAsPayeeComponent.current.TriggerForm({
@@ -320,7 +320,7 @@ export default function Payee() {
           <Col>
             <Card.Title className="text-center">
               <Button
-                variant={true ? "outline-secondary" : "light"}
+                variant="outline-secondary"
                 size="sm"
                 onClick={() => {
                   createContactAsPayeeComponent.current.TriggerForm({

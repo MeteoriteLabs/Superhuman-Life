@@ -1,15 +1,20 @@
-import React, { useState, useContext, useEffect } from "react";
-import { Form, Table, FormControl, InputGroup } from "react-bootstrap";
-import { gql, useQuery, useLazyQuery } from "@apollo/client";
-import AuthContext from "../../../../context/auth-context";
-import { flattenObj } from "../../../../components/utils/responseFlatten";
-import moment from "moment";
+import React, { useState, useContext, useEffect } from 'react';
+import { Form, Table, FormControl, InputGroup } from 'react-bootstrap';
+import { gql, useQuery, useLazyQuery } from '@apollo/client';
+import AuthContext from '../../../../context/auth-context';
+import { flattenObj } from '../../../../components/utils/responseFlatten';
+import moment from 'moment';
 
-const PricingTable = (props) => {
+const PricingTable: React.FC<{
+  readonly: boolean;
+  formContext: any;
+  value: string;
+  onChange: (args: string | null) => void;
+}> = (props) => {
   const inputDisabled = props.readonly;
 
   function handleReturnType(val: any) {
-    if (typeof val === "string") {
+    if (typeof val === 'string') {
       return JSON.parse(val);
     } else {
       return val;
@@ -19,16 +24,12 @@ const PricingTable = (props) => {
   const classDetails = JSON.parse(props.formContext.programDetails);
 
   const classMode =
-    classDetails.mode === "0"
-      ? "Online"
-      : classDetails.mode === "1"
-      ? "Offline"
-      : "Hybrid";
+    classDetails.mode === '0' ? 'Online' : classDetails.mode === '1' ? 'Offline' : 'Hybrid';
 
   const auth = useContext(AuthContext);
   const [vouchers, setVouchers] = useState<any>([]);
   const [pricing, setPricing] = useState<any>(
-    props.value !== undefined && props.value !== "free"
+    props.value !== undefined && props.value !== 'free'
       ? handleReturnType(props.value)
       : [
           {
@@ -36,18 +37,13 @@ const PricingTable = (props) => {
             suggestedPrice: null,
             voucher: 0,
             duration: 1,
-            sapienPricing: null,
-          },
+            sapienPricing: null
+          }
         ]
   );
 
   const GET_VOUCHERS = gql`
-    query fetchVouchers(
-      $expiry: DateTime!
-      $id: ID!
-      $start: DateTime!
-      $status: String!
-    ) {
+    query fetchVouchers($expiry: DateTime!, $id: ID!, $start: DateTime!, $status: String!) {
       vouchers(
         filters: {
           expiry_date: { gte: $expiry }
@@ -74,7 +70,7 @@ const PricingTable = (props) => {
     onCompleted: (data) => {
       const flattenData = flattenObj({ ...data });
       setVouchers(flattenData.vouchers);
-    },
+    }
   });
   React.useEffect(() => {
     getVouchers({
@@ -82,16 +78,15 @@ const PricingTable = (props) => {
         expiry: moment().toISOString(),
         id: auth.userid,
         start: moment().toISOString(),
-        status: "Active",
-      },
+        status: 'Active'
+      }
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     // eslint-disable-next-line
     pricing.map((item, index: number) => {
-      if (item.mrp === 0 || item.mrp === "") {
+      if (item.mrp === 0 || item.mrp === '') {
         const values = [...pricing];
         values[index].mrp = null;
         setPricing(values);
@@ -123,9 +118,7 @@ const PricingTable = (props) => {
           }
         }
       }
-      sapienPricings(
-        filters: { fitness_package_type: { type: { eq: "One-On-One" } } }
-      ) {
+      sapienPricings(filters: { fitness_package_type: { type: { eq: "One-On-One" } } }) {
         data {
           id
           attributes {
@@ -150,14 +143,14 @@ const PricingTable = (props) => {
       variables: { id: auth.userid },
       onCompleted: (data) => {
         loadData(data);
-      },
+      }
     });
   }
 
   function loadData(data) {
     const flattenData = flattenObj({ ...data });
     const newValue = [...pricing];
-    if (classMode === "Online") {
+    if (classMode === 'Online') {
       flattenData.suggestedPricings = flattenData.suggestedPricings.filter(
         (item) => item.Mode === classMode
       );
@@ -170,13 +163,11 @@ const PricingTable = (props) => {
             ((item.sapienPricing * 100) / (100 - item.voucher)).toFixed(2)
           );
         } else {
-          item.suggestedPrice =
-            flattenData.suggestedPricings[0]?.mrp * 1 * item.duration;
+          item.suggestedPrice = flattenData.suggestedPricings[0]?.mrp * 1 * item.duration;
         }
-        item.sapienPricing =
-          flattenData.sapienPricings[0]?.mrp * 1 * item.duration;
+        item.sapienPricing = flattenData.sapienPricings[0]?.mrp * 1 * item.duration;
       });
-    } else if (classMode === "Offline") {
+    } else if (classMode === 'Offline') {
       flattenData.suggestedPricings = flattenData.suggestedPricings.filter(
         (item) => item.Mode === classMode
       );
@@ -189,29 +180,23 @@ const PricingTable = (props) => {
             ((item.sapienPricing * 100) / (100 - item.voucher)).toFixed(2)
           );
         } else {
-          item.suggestedPrice =
-            flattenData.suggestedPricings[0]?.mrp * 1 * item.duration;
+          item.suggestedPrice = flattenData.suggestedPricings[0]?.mrp * 1 * item.duration;
         }
-        item.sapienPricing =
-          flattenData.sapienPricings[0]?.mrp * 1 * item.duration;
+        item.sapienPricing = flattenData.sapienPricings[0]?.mrp * 1 * item.duration;
       });
-    } else if (classMode === "Hybrid") {
+    } else if (classMode === 'Hybrid') {
       newValue.forEach((item, index) => {
         if (item.voucher !== 0 && item.price !== null) {
           item.suggestedPrice = parseInt(
             ((item.sapienPricing * 100) / (100 - item.voucher)).toFixed(2)
           );
         } else {
-          const onlinePrice =
-            flattenData.suggestedPricings[0]?.mrp * 1 * item.duration;
-          const offlinePrice =
-            flattenData.suggestedPricings[1]?.mrp * 1 * item.duration;
+          const onlinePrice = flattenData.suggestedPricings[0]?.mrp * 1 * item.duration;
+          const offlinePrice = flattenData.suggestedPricings[1]?.mrp * 1 * item.duration;
           item.suggestedPrice = onlinePrice + offlinePrice;
         }
-        const onlinePrice =
-          flattenData.sapienPricings[0]?.mrp * 1 * item.duration;
-        const offlinePrice =
-          flattenData.sapienPricings[1]?.mrp * 1 * item.duration;
+        const onlinePrice = flattenData.sapienPricings[0]?.mrp * 1 * item.duration;
+        const offlinePrice = flattenData.sapienPricings[1]?.mrp * 1 * item.duration;
         item.sapienPricing = onlinePrice + offlinePrice;
       });
     }
@@ -220,30 +205,27 @@ const PricingTable = (props) => {
   }
 
   function handlePricingUpdate(value: any, id: any) {
-    let newPricing = [...pricing];
+    const newPricing = [...pricing];
     newPricing[id].mrp = value;
     setPricing(newPricing);
   }
 
-  if (
-    pricing[0].mrp !== null &&
-    pricing[0].mrp >= parseInt(pricing[0].sapienPricing)
-  ) {
+  if (pricing[0].mrp !== null && pricing[0].mrp >= parseInt(pricing[0].sapienPricing)) {
     props.onChange(JSON.stringify(pricing));
   } else {
-    props.onChange(undefined);
+    props.onChange(null);
   }
 
   function handleUpdatePricing(id: any, value: any) {
     if (parseInt(value) !== 0) {
-      let newValue = [...pricing];
+      const newValue = [...pricing];
       newValue[id].voucher = parseInt(value);
       newValue[id].suggestedPrice = parseInt(
         ((newValue[id].sapienPricing * 100) / (100 - value)).toFixed(0)
       );
       setPricing(newValue);
     } else {
-      let newValue = [...pricing];
+      const newValue = [...pricing];
       newValue[id].voucher = parseInt(value);
       newValue[id].suggestedPrice = newValue[id].sapienPricing;
       setPricing(newValue);
@@ -265,7 +247,7 @@ const PricingTable = (props) => {
               </tr>
             </thead>
             <tbody>
-              {(classMode === "Online" || classMode === "Hybrid") && (
+              {(classMode === 'Online' || classMode === 'Hybrid') && (
                 <tr className="text-center">
                   <td>
                     <img
@@ -278,10 +260,10 @@ const PricingTable = (props) => {
                   })}
                 </tr>
               )}
-              {(classMode === "Offline" || classMode === "Hybrid") && (
+              {(classMode === 'Offline' || classMode === 'Hybrid') && (
                 <tr className="text-center">
                   <td>
-                    {" "}
+                    {' '}
                     <img
                       src="/assets/personal-training-offline.svg"
                       alt="personal-training-offline"
@@ -303,10 +285,7 @@ const PricingTable = (props) => {
                         as="select"
                         disabled={inputDisabled}
                         value={item.voucher}
-                        onChange={(e) =>
-                          handleUpdatePricing(index, e.target.value)
-                        }
-                      >
+                        onChange={(e) => handleUpdatePricing(index, e.target.value)}>
                         <option value={0}>Choose voucher</option>
                         {vouchers.map((voucher, index: number) => {
                           return (
@@ -336,7 +315,7 @@ const PricingTable = (props) => {
                   return (
                     <td key={index}>
                       {isNaN(item.suggestedPrice)
-                        ? "Base Price Not Set"
+                        ? 'Base Price Not Set'
                         : `₹ ${item.suggestedPrice}`}
                     </td>
                   );
@@ -349,25 +328,18 @@ const PricingTable = (props) => {
                 {pricing.map((item, index: number) => {
                   return (
                     <td key={index}>
-                      <InputGroup
-                        className="mb-3"
-                        style={{ minWidth: "200px" }}
-                      >
+                      <InputGroup className="mb-3" style={{ minWidth: '200px' }}>
                         <InputGroup.Prepend>
-                          <InputGroup.Text id="basic-addon1">
-                            {"\u20B9"}
-                          </InputGroup.Text>
+                          <InputGroup.Text id="basic-addon1">{'\u20B9'}</InputGroup.Text>
                         </InputGroup.Prepend>
                         <FormControl
                           className={`${
-                            pricing[index]?.mrp <
-                              pricing[index]?.sapienPricing &&
+                            pricing[index]?.mrp < pricing[index]?.sapienPricing &&
                             pricing[index]?.mrp !== null
-                              ? "is-invalid"
-                              : pricing[index]?.mrp >=
-                                pricing[index]?.sapienPricing
-                              ? "is-valid"
-                              : ""
+                              ? 'is-invalid'
+                              : pricing[index]?.mrp >= pricing[index]?.sapienPricing
+                              ? 'is-valid'
+                              : ''
                           }`}
                           aria-label="Default"
                           type="number"
@@ -382,9 +354,8 @@ const PricingTable = (props) => {
                       </InputGroup>
                       {pricing[index]?.mrp < pricing[index]?.sapienPricing &&
                         pricing[index]?.mrp !== null && (
-                          <span style={{ fontSize: "12px", color: "red" }}>
-                            cannot be less than ₹{" "}
-                            {pricing[index]?.sapienPricing}
+                          <span style={{ fontSize: '12px', color: 'red' }}>
+                            cannot be less than ₹ {pricing[index]?.sapienPricing}
                           </span>
                         )}
                     </td>

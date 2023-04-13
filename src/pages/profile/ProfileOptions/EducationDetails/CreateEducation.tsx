@@ -31,16 +31,16 @@ interface BasicEducationDetails {
 }
 
 function CreateEducation(props: any, ref: any) {
-     const educationJson: { } = require("./Education.json");
+     const educationJson: unknown = require("./Education.json");
      const [operation, setOperation] = useState<Operation>({} as Operation);
      const [educationID, setEducationID] = useState<any>([]);
      const [educationDetails, setEducationDetails] = useState({} as BasicEducationDetails);
      const auth = useContext(AuthContext);
      const [prefill, setPrefill] = useState<any>([]);
      const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
-     let [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
-     let [isEducationDeleted, setIsEducationDeleted] = useState<boolean>(false);
-     let [isEducationUpdated, setIsEducationUpdated] = useState<boolean>(false);
+     const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
+     const [isEducationDeleted, setIsEducationDeleted] = useState<boolean>(false);
+     const [isEducationUpdated, setIsEducationUpdated] = useState<boolean>(false);
 
      const fetch = useQuery(FETCH_USER_PROFILE_DATA, {
           variables: { id: auth.userid },
@@ -78,7 +78,7 @@ function CreateEducation(props: any, ref: any) {
                fetch.refetch();
 
                // concatenate previously stored education details IDs with currently added educational details ID
-               let contatenatedEducationIdArray = educationID && educationID.length ? educationID.concat([r.createEducationalDetail.data.id]) : [r.createEducationalDetail.data.id];
+               const contatenatedEducationIdArray = educationID && educationID.length ? educationID.concat([r.createEducationalDetail.data.id]) : [r.createEducationalDetail.data.id];
 
                updateProfile({
                     variables: {
@@ -111,8 +111,8 @@ function CreateEducation(props: any, ref: any) {
      }));
 
      useEffect(() => {
-          let data = prefill && prefill.length ? prefill.find((currValue: any) => currValue.id === operation.id) : null;
-          let details = {} as BasicEducationDetails;
+          const data = prefill && prefill.length ? prefill.find((currValue: any) => currValue.id === operation.id) : null;
+          const details = {} as BasicEducationDetails;
           details.Institute_Name = data ? data.Institute_Name : '';
           details.Type_of_degree = data ? data.Type_of_degree : '';
           details.Specialization = data ? data.Specialization : '';

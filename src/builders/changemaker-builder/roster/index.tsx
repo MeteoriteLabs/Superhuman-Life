@@ -47,7 +47,7 @@ const Roster = () => {
   });
 
   function tileContent({ date, view }) {
-    for (var i = 0; i < currentDateSessions?.length; i++) {
+    for (let i = 0; i < currentDateSessions?.length; i++) {
       if (
         moment(currentDateSessions[i]?.session_date).format("YYYY-MM-DD") ===
           moment(date).format("YYYY-MM-DD") &&
@@ -85,8 +85,8 @@ const Roster = () => {
 
   function handleSorting(data: any) {
     data?.sort((a: any, b: any) => {
-      var btime1: any = moment(a.start_time, "HH:mm a");
-      var btime2: any = moment(b.start_time, "HH:mm a");
+      const btime1: any = moment(a.start_time, "HH:mm a");
+      const btime2: any = moment(b.start_time, "HH:mm a");
       return btime1 - btime2;
     });
     data?.sort(function (a: any, b: any) {

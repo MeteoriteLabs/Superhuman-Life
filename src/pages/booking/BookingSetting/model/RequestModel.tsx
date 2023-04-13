@@ -1,9 +1,9 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 
-export default function RequestModel(props) {
+const RequestModel: React.FC<{render: boolean; setRender: (args: boolean) => void;}> = (props) => {
   const { render, setRender } = props;
-  const [isSwitchOn, setIsSwitchOn] = useState(false);
+  const [isSwitchOn, setIsSwitchOn] = useState<boolean>(false);
   const [state, setState] = useState<any>({
     people: [
       {
@@ -123,7 +123,7 @@ export default function RequestModel(props) {
           </Form.Group>
 
           <Modal.Footer>
-            <Button type="submit" onClick={() => {}}>
+            <Button type="submit">
               Submit
             </Button>
             <Button
@@ -140,3 +140,5 @@ export default function RequestModel(props) {
     </Modal>
   );
 }
+
+export default RequestModel;

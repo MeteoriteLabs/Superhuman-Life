@@ -88,15 +88,15 @@ export default function MessagePage() {
   );
 
   function getDate(time: any) {
-    let dateObj = new Date(time);
-    let month = dateObj.getMonth() + 1;
-    let year = dateObj.getFullYear();
-    let date = dateObj.getDate();
+    const dateObj = new Date(time);
+    const month = dateObj.getMonth() + 1;
+    const year = dateObj.getFullYear();
+    const date = dateObj.getDate();
 
     return `${date}/${month}/${year}`;
   }
 
-  const [datatable, setDataTable] = useState<{}[]>([]);
+  const [datatable, setDataTable] = useState<Record<string, unknown>[]>([]);
 
   const fetch = useQuery(GET_NOTIFICATIONS, {
     variables: { filter: searchFilter, id: auth.userid },
@@ -150,7 +150,7 @@ export default function MessagePage() {
           <Col>
             <Card.Title className="text-center">
               <Button
-                variant={true ? "outline-secondary" : "light"}
+                variant="outline-secondary"
                 size="sm"
                 onClick={() => {
                   createEditMessageComponent.current.TriggerForm({

@@ -1,42 +1,47 @@
-import { useRef, useEffect } from "react";
-import { Form } from "react-bootstrap";
+import React, { useRef, useEffect } from 'react';
+import { Form } from 'react-bootstrap';
 
-export default function GroupClasses({
-  widgetProps,
-  packageTypeName,
-  groupProps: { properties },
-  actionType,
-  userData,
-}) {
+interface Properties {
+  grouponlineClasses: any;
+  groupofflineClasses: any;
+  restDay: any;
+  duration: any;
+}
+
+const GroupClasses: React.FC<{
+  widgetProps: any;
+  packageTypeName: string|null;
+  groupProps: Properties;
+  actionType: string;
+  userData: any;
+}> = (props) => {
   const dayAvailableRef = useRef<any>(null);
 
-  const { grouponlineClasses, groupofflineClasses, restDay, duration } =
-    properties;
   useEffect(() => {
-    if (userData.grouponline) {
-      grouponlineClasses.value = userData.grouponline;
+    if (props.userData.grouponline) {
+      props.groupProps.grouponlineClasses.value = props.userData.grouponline;
     }
 
-    if (userData.groupoffline) {
-      groupofflineClasses.value = userData.groupoffline;
+    if (props.userData.groupoffline) {
+      props.groupProps.groupofflineClasses.value = props.userData.groupoffline;
     }
-    if (userData.restDay) {
-      restDay.value = userData.restdays;
+    if (props.userData.restDay) {
+      props.groupProps.restDay.value = props.userData.restdays;
     }
   });
 
   const showErrorMessage = (e: { target: any }) => {
     if (dayAvailableRef.current < 0) {
-      widgetProps.schema.maximum = 0;
-      if (widgetProps.rawErrors) {
-        widgetProps.rawErrors[0] = `should be <= ${
+      props.widgetProps.schema.maximum = 0;
+      if (props.widgetProps.rawErrors) {
+        props.widgetProps.rawErrors[0] = `should be <= ${
           parseInt(e.target.value) - dayAvailableRef.current * -1
         }`;
       }
     } else if (dayAvailableRef.current >= 0) {
-      widgetProps.schema.maximum = 30;
-      if (widgetProps.rawErrors) {
-        widgetProps.rawErrors[0] = "";
+      props.widgetProps.schema.maximum = 30;
+      if (props.widgetProps.rawErrors) {
+        props.widgetProps.rawErrors[0] = '';
       }
     }
   };
@@ -46,21 +51,25 @@ export default function GroupClasses({
     widgetProps: { onChange?: (arg0: number) => void; label?: any }
   ) => {
     // online
-    if (widgetProps.label === "Online") {
-      grouponlineClasses.value = parseInt(e.target.value);
+    if (widgetProps.label === 'Online') {
+      props.groupProps.grouponlineClasses.value = parseInt(e.target.value);
 
       dayAvailableRef.current -=
-        parseInt(e.target.value) + groupofflineClasses.value + restDay.value;
+        parseInt(e.target.value) +
+        props.groupProps.groupofflineClasses.value +
+        props.groupProps.restDay.value;
 
       // error message
       showErrorMessage(e);
 
       // offline
-    } else if (widgetProps.label === "Offline") {
-      groupofflineClasses.value = parseInt(e.target.value);
+    } else if (widgetProps.label === 'Offline') {
+      props.groupProps.groupofflineClasses.value = parseInt(e.target.value);
 
       dayAvailableRef.current -=
-        parseInt(e.target.value) + grouponlineClasses.value + restDay.value;
+        parseInt(e.target.value) +
+        props.groupProps.grouponlineClasses.value +
+        props.groupProps.restDay.value;
 
       // error message
       showErrorMessage(e);
@@ -71,47 +80,44 @@ export default function GroupClasses({
     e: { target: any },
     widgetProps: { onChange: (arg0: number) => void }
   ) => {
-    dayAvailableRef.current = duration.value;
+    dayAvailableRef.current = props.groupProps.duration.value;
     handleValidationFor30Day(e, widgetProps);
   };
 
-  const handleChange = (
-    e: { target: any },
-    widgetProps: { onChange: (arg0: number) => void }
-  ) => {
+  const handleChange = (e: { target: any }, widgetProps: { onChange: (arg0: number) => void }) => {
     handleValidation(e, widgetProps);
     widgetProps.onChange(parseInt(e.target.value));
   };
 
   return (
     <div className="d-flex justify-content-center aligns-items-center">
-      {widgetProps.schema.title === "Online" ? (
+      {props.widgetProps.schema.title === 'Online' ? (
         <img
-          src={`/assets/${packageTypeName}-online.svg`}
-          alt={packageTypeName}
-          title={`${packageTypeName} online`}
+          src={`/assets/${props.packageTypeName}-online.svg`}
+          alt={props.packageTypeName ? props.packageTypeName : ""}
+          title={`${props.packageTypeName} online`}
         />
       ) : (
         <img
-          src={`/assets/${packageTypeName}-offline.svg`}
+          src={`/assets/${props.packageTypeName}-offline.svg`}
           alt="123"
-          title={`${packageTypeName} offline`}
+          title={`${props.packageTypeName} offline`}
         />
       )}
 
       <Form.Control
         className="text-center"
-        disabled={actionType === "view" ? true : false}
-        value={widgetProps.value && widgetProps.value}
+        disabled={props.actionType === 'view' ? true : false}
+        value={props.widgetProps.value && props.widgetProps.value}
         ref={dayAvailableRef}
         pattern="[0-9]+"
-        onChange={(e: { target: { value: string } }) =>
-          handleChange(e, widgetProps)
-        }
+        onChange={(e: { target: { value: string } }) => handleChange(e, props.widgetProps)}
         type="number"
         min="0"
         max="30"
       />
     </div>
   );
-}
+};
+
+export default GroupClasses;

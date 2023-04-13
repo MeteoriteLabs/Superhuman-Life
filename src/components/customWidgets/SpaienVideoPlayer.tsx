@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react";
-import { Spinner } from "react-bootstrap";
+import React, { useState, useEffect } from "react";
+import Loader from "../Loader/Loader";
 
-const SapienVideoPlayer = (props: any) => {
-  const [show, setShow] = useState(false);
-  const [videoUrl, setVideoUrl] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
+const SapienVideoPlayer: React.FC<{url: string;}> = (props) => {
+  const [show, setShow] = useState<boolean>(false);
+  const [videoUrl, setVideoUrl] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   //here we are getting the video id from the url
   function convertLinkToEmbedId(val: string) {
@@ -14,7 +14,7 @@ const SapienVideoPlayer = (props: any) => {
   useEffect(() => {
     if (props.url.includes("https://www.youtube.com/")) {
       //we are converting the youtube video url to embed from to display it using iframe
-      let embedUrl;
+      let embedUrl: string;
       if (props.url.includes("https://www.youtube.com/shorts")) {
         embedUrl = `https://www.youtube.com/embed/${props.url
           .split("/")
@@ -46,18 +46,11 @@ const SapienVideoPlayer = (props: any) => {
           }
         });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (!show) {
     return (
-      <div className="text-center">
-        <Spinner animation="border" variant="secondary" />
-        <br />
-        <span>
-          <b>Please wait while we load the content</b>
-        </span>
-      </div>
+      <Loader/>
     );
   } else
     return (

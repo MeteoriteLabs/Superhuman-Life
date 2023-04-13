@@ -6,7 +6,7 @@ import {
   BOOKING_CONFIG,
   FETCH_USER_PROFILE_DATA,
 } from "./queries";
-import { useContext, useState } from "react";
+import React, { useContext, useState } from "react";
 import AuthContext from "../../context/auth-context";
 import moment from "moment";
 import { flattenObj } from "../../components/utils/responseFlatten";
@@ -15,7 +15,7 @@ interface Profile {
   updatedAt: string;
 }
 
-export default function SettingsPage() {
+const SettingsPage: React.FC = () => {
   const auth = useContext(AuthContext);
   const [changemakerAvailabilityData, setChangemakerAvailabilityData] =
     useState<string>();
@@ -24,14 +24,15 @@ export default function SettingsPage() {
 
   useQuery(FETCH_USER_PROFILE_DATA, {
     variables: { id: auth.userid },
-    onCompleted: (r: any) => {
-      setProfileData(r.usersPermissionsUser.data.attributes);
+    onCompleted: (response) => {
+      console.log(response, typeof response)
+      setProfileData(response.usersPermissionsUser.data.attributes);
     },
   });
 
   useQuery(GET_AVAILABILITY, {
     variables: { id: auth.userid },
-    onCompleted: (data: any) => {
+    onCompleted: (data) => {
       const flattenChangemakerAvailabilityData = flattenObj({
         ...data.changemakerAvailabilties,
       });
@@ -48,7 +49,7 @@ export default function SettingsPage() {
 
   useQuery(BOOKING_CONFIG, {
     variables: { id: auth.userid },
-    onCompleted: (data: any) => {
+    onCompleted: (data) => {
       const flattenBookingsData = flattenObj({ ...data.bookingConfigs });
 
       if (flattenBookingsData.length) {
@@ -182,3 +183,5 @@ export default function SettingsPage() {
     </div>
   );
 }
+
+export default SettingsPage;

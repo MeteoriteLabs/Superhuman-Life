@@ -106,7 +106,6 @@ const AddFitnessAddressModal = (props: any) => {
 
   useEffect(() => {
     getLocation();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function handleDisable() {

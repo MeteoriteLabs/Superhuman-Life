@@ -26,9 +26,9 @@ const ExerciseList = (props: any) => {
   const [searchInput, setSearchInput] = useState(null);
   const [selected, setSelected] = useState<any[]>(exerciseDetails);
   const inputField = useRef<any>();
-  let skipval: Boolean = true;
+  let skipval = true;
 
-  function FetchExerciseList(_variable: {} = { id: auth.userid, filter: " " }) {
+  function FetchExerciseList(_variable: Record<string, unknown> = { id: auth.userid, filter: " " }) {
     useQuery(GET_EXERCISELIST, {
       variables: _variable,
       onCompleted: loadExerciseList,
@@ -59,7 +59,7 @@ const ExerciseList = (props: any) => {
 
   function handleSelectedExerciseAdd(name: any, id: any) {
     const values = [...selected];
-    let a = values.find((e) => e.id === id);
+    const a = values.find((e) => e.id === id);
     if (!a) {
       values.push({ value: name, id: id, type: "exercise" });
       setSelected(values);
@@ -77,7 +77,7 @@ const ExerciseList = (props: any) => {
 
   function handleDataChange(i: string, event: any, type: string) {
     const values = [...selected];
-    let a = values.findIndex((e) => i === e.id);
+    const a = values.findIndex((e) => i === e.id);
     values[a][type] = parseInt(
       event.target.value >= 0 ? event.target.value : null
     );
@@ -86,9 +86,9 @@ const ExerciseList = (props: any) => {
   }
 
   function handleValidation() {
-    var isValid: boolean = false;
-    for (var i = 0; i < selected.length; i++) {
-      for (var j = 0; j < exerciseValues.length; j++) {
+    let isValid = false;
+    for (let i = 0; i < selected.length; i++) {
+      for (let j = 0; j < exerciseValues.length; j++) {
         if (selected[i][exerciseValues[j]] > 0) {
           isValid = true;
         } else {
@@ -124,9 +124,9 @@ const ExerciseList = (props: any) => {
         />
       </InputGroup>
       <>
-        {exerciseList.slice(0, 5).map((exercise) => {
+        {exerciseList.slice(0, 5).map((exercise, index) => {
           return (
-            <Container className="pl-0">
+            <Container className="pl-0" key={index}>
               <option
                 style={{ cursor: "pointer" }}
                 className="m-2 p-1 shadow-lg rounded bg-white"

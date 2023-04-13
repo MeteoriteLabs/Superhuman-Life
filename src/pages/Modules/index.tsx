@@ -1,13 +1,13 @@
 import React from 'react';
 import { Modal, Button } from 'react-bootstrap';
 
-function Modules(props: any) {
+const Modules: React.FC<{show: boolean; onHide: () => void}> = (props) => {
   return (
     <Modal show={props.show} onHide={props.onHide} centered>
         <Modal.Header closeButton>
           <Modal.Title>Modal heading</Modal.Title>
         </Modal.Header>
-        <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
+        <Modal.Body>Woohoo, you{`&apos;`}re reading this text in a modal!</Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={props.onHide}>
             Close

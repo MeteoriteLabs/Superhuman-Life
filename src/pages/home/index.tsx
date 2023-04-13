@@ -13,7 +13,7 @@ export default function HomePage() {
   const history = useHistory();
 
   const redirectToFinance = () => {
-    let path = "/finance";
+    const path = "/finance";
     history.push(path);
   };
 
@@ -25,7 +25,7 @@ export default function HomePage() {
       {/* Add Client */}
       <Button
         className="m-2"
-        variant={true ? "outline-dark" : "light"}
+        variant="outline-dark"
         size="sm"
         onClick={() => {
           CreateClientComponent.current.TriggerForm({
@@ -43,7 +43,7 @@ export default function HomePage() {
       {/* Add Lead */}
       <Button
         className="mr-2 "
-        variant={true ? "outline-dark" : "light"}
+        variant="outline-dark"
         size="sm"
         onClick={() => {
           createEditMessageComponent.current.TriggerForm({
@@ -53,7 +53,7 @@ export default function HomePage() {
           });
         }}
       >
-        <img src="assets/home_page_images/add_lead.svg" alt="add_lead" /> Add
+        <img loading="lazy" src="assets/home_page_images/add_lead.svg" alt="add_lead" /> Add
         Lead
       </Button>
       <CreateEditMessage ref={createEditMessageComponent} />
@@ -61,7 +61,7 @@ export default function HomePage() {
       {/* Add Contact */}
       <Button
         className="mr-2"
-        variant={true ? "outline-dark" : "light"}
+        variant="outline-dark"
         size="sm"
         onClick={() => {
           createEditContactComponent.current.TriggerForm({
@@ -71,7 +71,7 @@ export default function HomePage() {
           });
         }}
       >
-        <img src="assets/home_page_images/add_contact.svg" alt="add_contact" />{" "}
+        <img  loading="lazy" src="assets/home_page_images/add_contact.svg" alt="add_contact" />{" "}
         Add Contacts
       </Button>
       <CreateEditContact ref={createEditContactComponent} />

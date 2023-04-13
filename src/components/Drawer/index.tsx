@@ -9,6 +9,7 @@ interface Details {
   name: string;
   level: string;
   thumbnailId: string;
+  // eslint-disable-next-line
   pricing: any;
   address: string;
   ptonline: string;
@@ -36,11 +37,12 @@ const Drawer: React.FC<{
         >
           <Row>
             <Col lg={1}>
+              <div onClick={props.close}>
               <Icons
                 name={"close"}
-                onClick={props.close}
                 style={{ cursor: "pointer" }}
               />
+              </div>
             </Col>
 
             <Col lg={11}>

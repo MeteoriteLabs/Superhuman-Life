@@ -1,3 +1,4 @@
+import React from "react";
 import { ResponsiveBar } from "@nivo/bar";
 
 const Wrapper = (props) => (
@@ -11,13 +12,13 @@ const Wrapper = (props) => (
   />
 );
 
-function BarGraph({ data, yAxis, keyName }) {
+const BarGraph: React.FC<{ data: {index: string; Clients?: number; Leads?: number;}[]; yAxis: string; keyName: string[]; }> = (props) => {
   return (
     <>
       <Wrapper>
       <ResponsiveBar
-        data={data}
-        keys= {keyName}
+        data={props.data}
+        keys= {props.keyName}
         indexBy="index"
         margin={{
           top: 50,
@@ -35,7 +36,7 @@ function BarGraph({ data, yAxis, keyName }) {
           tickSize: 5,
           tickPadding: 5,
           tickRotation: 0,
-          legend: `${yAxis}`,
+          legend: `${props.yAxis}`,
           legendPosition: "middle",
           legendOffset: -40,
         }}

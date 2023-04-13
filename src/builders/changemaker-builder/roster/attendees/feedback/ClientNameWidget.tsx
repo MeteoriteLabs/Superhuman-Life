@@ -8,7 +8,7 @@ function ClientNameWidget() {
   const auth = useContext(AuthContext);
   const [clientName, setClientName] = useState<any>(" ");
 
-  function FetchData(_variables: {} = { id: auth.userid, clientid: last }) {
+  function FetchData(_variables: Record<string, unknown> = { id: auth.userid, clientid: last }) {
     useQuery(GET_CLIENT_DATA, { variables: _variables, onCompleted: loadData });
   }
   function loadData(data: any) {

@@ -24,11 +24,11 @@ const DaysInput = (props: any) => {
 
      function renderInputField() {
           if(props?.dayType === 'day') {
-               for (var i=0; i<props?.duration;i++){
+               for (let i=0; i<props?.duration;i++){
                     days.push({"key": i+1,"day": `Day - ${i+1}`})
                }
           }else {
-               for (var j=0; j<props?.duration;j++){
+               for (let j=0; j<props?.duration;j++){
                     days.push({"key": j+1,"day": `${moment(props?.startDate).add(j, 'days').format("Do, MMM YY")}`})
                }  
           }
@@ -48,13 +48,13 @@ const DaysInput = (props: any) => {
                {props.type === 'transfer' ? null : <label>Select Day</label>}
                <Typeahead
                id="basic-typeahead-multiple"
-               clearButton={props.id ? props.id === 'newWorkout' || 'duplicateWorkout' ? true : false : false}
+               clearButton={props.id ? props.id === 'newWorkout' || props.id === 'duplicateWorkout' ? true : false : false}
                labelKey="day"
                onChange={OnChange}
                options={days}
-               placeholder={props.id ? props.id === 'newWorkout' || 'duplicateWorkout' ? 'Choose a day...' : 'Choose days...' : 'Choose days...'}
+               placeholder={props.id ? props.id === 'newWorkout' || props.id === 'duplicateWorkout' ? 'Choose a day...' : 'Choose days...' : 'Choose days...'}
                selected={selected}
-               multiple={props.id ? props.id === 'newWorkout' || 'duplicateWorkout' ? false : true : true}
+               multiple={props.id ? props.id === 'newWorkout' || props.id === 'duplicateWorkout' ? false : true : true}
                />
           </div>
           </>

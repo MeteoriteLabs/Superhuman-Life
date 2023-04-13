@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Badge, Button, Modal } from "react-bootstrap";
 import Table from "../table/index";
 import { GET_CLIENTS_BY_TAG } from "../../builders/session-builder/graphQL/queries";
@@ -8,8 +8,10 @@ import moment from "moment";
 import FitnessAction from "../../builders/session-builder/Fitness/FitnessAction";
 import { flattenObj } from "../../components/utils/responseFlatten";
 
-export default function ClientModal(props) {
+ // eslint-disable-next-line
+const ClientModal: React.FC<{id: string; type: string; show: boolean; onHide: () => void; modalTrigger: any;}> = (props) => {
   const { id, type } = props;
+   // eslint-disable-next-line
   const [dataTable, setDataTable] = useState<any[]>([]);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [queryName, setQueryName] = useState<any>("");
@@ -124,7 +126,7 @@ export default function ClientModal(props) {
         </Modal.Header>
 
         <Table columns={columns} data={dataTable} />
-        <FitnessAction ref={fitnessActionRef} />
+        <FitnessAction ref={fitnessActionRef} callback={FetchData}/>
         <Modal.Footer>
           <Button variant="danger" onClick={props.onHide}>
             Close
@@ -134,3 +136,5 @@ export default function ClientModal(props) {
     </>
   );
 }
+
+export default ClientModal;

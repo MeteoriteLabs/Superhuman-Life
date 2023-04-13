@@ -12,7 +12,7 @@ import AuthContext from "../../../../context/auth-context";
 import { flattenObj } from "../../../../components/utils/responseFlatten";
 import moment from "moment";
 
-const PricingTable = (props) => {
+const PricingTable = (props: any) => {
   const durationOfOffering = props.formContext.durationOfOffering;
   const inputDisabled = props.readonly;
   const bookingDetails = JSON.parse(props.formContext.channelinstantBooking);
@@ -42,7 +42,7 @@ const PricingTable = (props) => {
     }
   }
 
-  let day: number = 0;
+  let day = 0;
       for(let i = 0 ; i <  durationOfOffering.length ; i++){
         if(durationOfOffering[i] === "1 day"){
           day = day > 1 ?  day : 1;
@@ -244,7 +244,6 @@ const PricingTable = (props) => {
       values[0].mrp = "free";
       setPricing(values);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bookingDetails.freeDemo]);
 
   const GET_VOUCHERS = gql`
@@ -291,7 +290,6 @@ const PricingTable = (props) => {
         status: "Active",
       },
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const SUGGESTED_PRICING = gql`
@@ -360,14 +358,14 @@ const PricingTable = (props) => {
   }
 
   function handlePricingUpdate(value: any, id: any) {
-    let newPricing = [...pricing];
+    const newPricing = [...pricing];
     newPricing[id].mrp = value;
     setPricing(newPricing);
   }
 
   function handleValidation() {
     const values = [...pricing];
-    var res: boolean = false;
+    let res = false;
     // eslint-disable-next-line
     values.map((item: any) => {
       if (item.mrp !== null && item.mrp >= parseInt(item.sapienPricing)) {
@@ -385,19 +383,18 @@ const PricingTable = (props) => {
     } else {
       props.onChange(undefined);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pricing, show]);
 
   function handleUpdatePricing(id: any, value: any) {
     if (parseInt(value) !== 0) {
-      let newValue = [...pricing];
+      const newValue = [...pricing];
       newValue[id].voucher = parseInt(value);
       newValue[id].suggestedPrice = parseInt(
         ((newValue[id].sapienPricing * 100) / (100 - value)).toFixed(0)
       );
       setPricing(newValue);
     } else {
-      let newValue = [...pricing];
+      const newValue = [...pricing];
       newValue[id].voucher = parseInt(value);
       newValue[id].suggestedPrice = newValue[id].sapienPricing;
       setPricing(newValue);

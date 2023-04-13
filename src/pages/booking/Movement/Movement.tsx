@@ -11,7 +11,7 @@ import BookingAction from "./BookingAction";
 import { flattenObj } from "../../../components/utils/responseFlatten";
 
 export default function Movement() {
-  let history = useHistory();
+  const history = useHistory();
   const auth = useContext(authContext);
   const [userPackage, setUserPackage] = useState<any>([]);
   const bookingActionRef = useRef<any>(null);
@@ -30,7 +30,7 @@ export default function Movement() {
   const loadData = (data: { clientBookings: any[] }) => {
     const flattenData = flattenObj({ ...data });
     
-    let newData = [
+    const newData = [
       ...flattenData.clientBookings.map((packageItem) => {
         const renewDay: Date = new Date(packageItem.effective_date);
         renewDay.setDate(renewDay.getDate() + packageItem.package_duration);

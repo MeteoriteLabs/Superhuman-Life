@@ -26,7 +26,7 @@ const ProgramList = (props: any) => {
   const [packageDuration, setPackageDuration] = useState<any>();
   const [displayDates, setDisplayDate] = useState<any>([]);
   const [startDate, setStartDate] = useState<any>();
-  let skipval: Boolean = true;
+  const skipval = true;
 
   useQuery(GET_FITNESSPACKAGE_DETAILS, {
     onCompleted: (data) => {
@@ -65,7 +65,7 @@ const ProgramList = (props: any) => {
   });
 
   function FetchEquipmentList(
-    _variable: {} = { id: auth.userid, filter: " " }
+    _variable: Record<string, unknown> = { id: auth.userid, filter: " " }
   ) {
     useQuery(GET_PROGRAMLIST, {
       variables: _variable,
@@ -93,9 +93,9 @@ const ProgramList = (props: any) => {
     );
   }
 
-  var days: any = [];
+  const days: any = [];
 
-  for (var i = 1; i <= packageDuration; i++) {
+  for (let i = 1; i <= packageDuration; i++) {
     days.push(i);
   }
 

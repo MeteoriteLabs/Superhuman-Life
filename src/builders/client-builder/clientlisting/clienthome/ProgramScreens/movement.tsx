@@ -11,21 +11,21 @@ function Movement() {
      const last = window.location.pathname.split("/").pop();
      const auth = useContext(AuthContext);
      function getDate(time: any) {
-          let dateObj = new Date(time);
-          let month = dateObj.getMonth() + 1;
-          let year = dateObj.getFullYear();
-          let date = dateObj.getDate();
+          const dateObj = new Date(time);
+          const month = dateObj.getMonth() + 1;
+          const year = dateObj.getFullYear();
+          const date = dateObj.getDate();
 
           return `${date}/${month}/${year}`;
      }
      function getRenewalDate(time: any, duration: any) {
-          var date = new Date(time);
+          const date = new Date(time);
           date.setDate(date.getDate() + duration);
           return getDate(date);
      }
      function compareDates(time: any) {
-          var date = new Date(time);
-          var currentdate = new Date();
+          const date = new Date(time);
+          const currentdate = new Date();
           if (date.getTime() < currentdate.getTime()) {
                return true;
           }
@@ -124,10 +124,10 @@ function Movement() {
           []
      );
 
-     const [dataActivetable, setActiveDataTable] = useState<{}[]>([]);
-     const [dataHistorytable, setHistoryDataTable] = useState<{}[]>([]);
+     const [dataActivetable, setActiveDataTable] = useState<Record<string, unknown>[]>([]);
+     const [dataHistorytable, setHistoryDataTable] = useState<Record<string, unknown>[]>([]);
 
-     function FetchData(_variables: {} = { id: auth.userid, clientid: last }) {
+     function FetchData(_variables: Record<string, unknown> = { id: auth.userid, clientid: last }) {
           useQuery(GET_CLIENT_DATA_NEW, { variables: _variables, onCompleted: loadData });
      }
 

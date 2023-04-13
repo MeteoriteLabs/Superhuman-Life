@@ -196,7 +196,7 @@ export default function JourneyTab() {
         <TabContent>
             <hr />
             <Card.Title className="text-center">
-                <CreateFitnessPackageModal
+                {/* <CreateFitnessPackageModal
              
                     stepperValues={["Creator", "Details", "Program", "Schedule", "Pricing", "Preview"]}
                     name="Journey Package"
@@ -207,7 +207,7 @@ export default function JourneyTab() {
                     formSubmit={onSubmit}
                     formData={{}}
                     formFields={fields}
-                />
+                /> */}
             </Card.Title>
             <Table columns={columns} data={data} />
         </TabContent>
