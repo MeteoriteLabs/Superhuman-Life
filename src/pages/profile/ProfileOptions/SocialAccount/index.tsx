@@ -1,4 +1,4 @@
-import { useState, useContext, useRef } from "react";
+import React, { useState, useContext, useRef } from "react";
 import Form from "@rjsf/core";
 import {
   FETCH_USER_PROFILE_DATA,
@@ -24,7 +24,7 @@ interface SocialDetails {
   Twitter_URL: string;
 }
 
-export default function SocialAccount() {
+const SocialAccount: React.FC = () => {
   const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
   const formRef = useRef<any>(null);
   const socialAccountJson: {
@@ -137,3 +137,5 @@ export default function SocialAccount() {
     </Col>
   );
 }
+
+export default SocialAccount;

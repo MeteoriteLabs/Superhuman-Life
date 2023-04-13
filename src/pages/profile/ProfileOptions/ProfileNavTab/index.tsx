@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Tabs, Tab, Card } from "react-bootstrap";
 import BasicProfileForm from "../BasicProfileForm";
 import AddressDetails from "../AddressDetails";
@@ -6,7 +6,7 @@ import EducationDetails from "../EducationDetails";
 import SocialAccount from "../SocialAccount";
 import AccountVerification from "../AccountVerification";
 
-function ProfileNavTab() {
+const ProfileNavTab: React.FC = () => {
   const [key, setKey] = useState("basicprofile");
 
   return (
@@ -17,6 +17,7 @@ function ProfileNavTab() {
           transition={false}
           id="controlled-tab"
           activeKey={key}
+          // eslint-disable-next-line
           onSelect={(k: any) => setKey(k)}
           className="mb-3 d-flex justify-content-center mt-5 "
         >

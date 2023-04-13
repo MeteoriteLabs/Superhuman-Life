@@ -16,7 +16,7 @@ const myBucket = new AWS.S3({
 
 const albumPhotosKey = process.env.REACT_APP_S3_PREFIX_NAME;
 
-const DisplayImage: React.FC<{imageName: string, defaultImageUrl: string, imageCSS: string}> = (props) => {
+const DisplayImage: React.FC<{imageName: string|null, defaultImageUrl: string, imageCSS: string}> = (props) => {
   const [photoUrl, setPhotoUrl] = useState<string>(props.defaultImageUrl);
   const imageName = "sm-" + props.imageName;
 

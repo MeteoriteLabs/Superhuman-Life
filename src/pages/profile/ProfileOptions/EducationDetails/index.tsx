@@ -1,119 +1,136 @@
-import { useState, useContext, useRef } from 'react';
-import { Card, Row, Col, Button, Dropdown } from "react-bootstrap";
-import { FETCH_USERS_PROFILE_DATA } from "../../queries/queries";
-import { useQuery } from "@apollo/client";
-import AuthContext from "../../../../context/auth-context";
-import { flattenObj } from "../../../../components/utils/responseFlatten";
+import React, { useState, useContext, useRef } from 'react';
+import { Card, Row, Col, Button, Dropdown } from 'react-bootstrap';
+import { FETCH_USERS_PROFILE_DATA } from '../../queries/queries';
+import { useQuery } from '@apollo/client';
+import AuthContext from '../../../../context/auth-context';
+import { flattenObj } from '../../../../components/utils/responseFlatten';
 import CreateEducation from './CreateEducation';
 import NoDataFound from '../../../../components/NoDataFound';
 import './education.css';
 import Loader from '../../../../components/Loader/Loader';
 
-export default function EducationDetails() {
-    const CreateEducationComponent = useRef<any>(null);
-    const auth = useContext(AuthContext);
-    const [educationData, setEducationData] = useState<any>([]);
+const EducationDetails: React.FC = () => {
+  // eslint-disable-next-line
+  const CreateEducationComponent = useRef<any>(null);
+  const auth = useContext(AuthContext);
+  // eslint-disable-next-line
+  const [educationData, setEducationData] = useState<any>([]);
 
-    const {
-        // eslint-disable-next-line
-        data: get_educational_details,
-        // eslint-disable-next-line
-        loading: loading_educational_details,
-        refetch: refetch_educational_details,
-      } = useQuery(FETCH_USERS_PROFILE_DATA, {
-        
-        onCompleted: (r: any) => {
-            const flattenData = flattenObj({ ...r });
-            const usersData = flattenData.usersPermissionsUsers.filter((currValue: any) => currValue.id === auth.userid);
-            setEducationData(usersData[0].educational_details);
-        },
+  const {
+    // eslint-disable-next-line
+    data: get_educational_details,
+    // eslint-disable-next-line
+    loading: loading_educational_details,
+    refetch: refetch_educational_details
+  } = useQuery(FETCH_USERS_PROFILE_DATA, {
+    onCompleted: (r) => {
+      const flattenData = flattenObj({ ...r });
+      const usersData = flattenData.usersPermissionsUsers.filter(
+        (currValue) => currValue.id === auth.userid
+      );
+      setEducationData(usersData[0].educational_details);
+    }
+  });
+
+  //Delete User's Education Data function
+  const deleteHandler = (data) => {
+    CreateEducationComponent.current.TriggerForm({ id: data.id, type: 'delete' });
+  };
+
+  // calling modal for update option
+  function updateEducation(data) {
+    CreateEducationComponent.current.TriggerForm({
+      id: data.id,
+      type: 'edit',
+      modal_status: true
     });
+  }
 
-    //Delete User's Education Data function
-    const deleteHandler = (data: any) => {
-        CreateEducationComponent.current.TriggerForm({ id: data.id, type: 'delete' })
-    };
+  function refetchQueryCallback() {
+    refetch_educational_details();
+  }
 
-    // calling modal for update option
-    function updateEducation(data: any) {
-        CreateEducationComponent.current.TriggerForm({
-            id: data.id,
-            type: "edit",
-            modal_status: true,
-        });
-    }
+  if (loading_educational_details) {
+    return <Loader msg={'Loading educational details ...'} />;
+  }
 
-    function refetchQueryCallback() {
-        refetch_educational_details();
-    }
+  return (
+    <Col md={{ span: 8, offset: 2 }}>
+      <Col md={{ offset: 9, span: 3 }}>
+        <Card.Title className="text-center">
+          <Button
+            variant="outline-secondary"
+            size="sm"
+            onClick={() => {
+              CreateEducationComponent.current.TriggerForm({
+                id: null,
+                type: 'create',
+                modal_status: true
+              });
+            }}>
+            <i className="fas fa-plus-circle"></i> Add Education
+          </Button>
+          <CreateEducation
+            ref={CreateEducationComponent}
+            callback={refetchQueryCallback}></CreateEducation>
+        </Card.Title>
+      </Col>
 
-    if(loading_educational_details){
-        return <Loader msg={"Loading educational details ..."} />
-    }
+      <Row className="mt-4 pb-3">
+        {educationData && educationData.length ? (
+          educationData.map((currValue) => (
+            <Col lg={12} key={currValue.id}>
+              <Card className="m-2" key={currValue.id}>
+                <Card.Body key={currValue.id}>
+                  <Row className="justify-content-end" key={currValue.id}>
+                    <Dropdown key={currValue.id}>
+                      <Dropdown.Toggle variant="bg-light" id="dropdown-basic">
+                        <img
+                          src="/assets/kebabcase.svg"
+                          alt="notification"
+                          className="img-responsive "
+                          style={{ height: '20px', width: '20px' }}
+                        />
+                      </Dropdown.Toggle>
 
-    return (
+                      <Dropdown.Menu key={currValue.id}>
+                        <Dropdown.Item key={1} onClick={() => deleteHandler(currValue)}>
+                          Delete
+                        </Dropdown.Item>
+                        <Dropdown.Item key={2} onClick={() => updateEducation(currValue)}>
+                          Edit
+                        </Dropdown.Item>
+                      </Dropdown.Menu>
+                    </Dropdown>
+                  </Row>
+                  <Card.Title>
+                    {currValue.Institute_Name ? currValue.Institute_Name : null}
+                  </Card.Title>
 
-        <Col md={{ span: 8, offset: 2 }}>
-            <Col md={{ offset: 9, span: 3 }}>
-                <Card.Title className="text-center">
-                <Button
-                    variant="outline-secondary"
-                    size="sm"
-                    onClick={() => {
-                        CreateEducationComponent.current.TriggerForm({
-                            id: null,
-                            type: "create",
-                            modal_status: true,
-                        });
-                    }}
-                >
-                    <i className="fas fa-plus-circle"></i> Add Education
-                </Button>
-                <CreateEducation ref={CreateEducationComponent} callback={refetchQueryCallback}></CreateEducation>
-                </Card.Title>
+                  <Row>
+                    <Col sm={12} lg={4}>
+                      <b>Type of Degree : </b>
+                      {currValue.Type_of_degree && currValue.Type_of_degree}
+                    </Col>
+                    <Col sm={12} lg={4}>
+                      <b>Specialization : </b>
+                      {currValue.Specialization && currValue.Specialization}
+                    </Col>
+                    <Col sm={12} lg={4}>
+                      <b>Passing year : </b>
+                      {currValue.Year && currValue.Year}
+                    </Col>
+                  </Row>
+                </Card.Body>
+              </Card>
             </Col>
+          ))
+        ) : (
+          <NoDataFound msg={'Oops! No educational details found'} />
+        )}
+      </Row>
+    </Col>
+  );
+};
 
-            <Row className="mt-4 pb-3">
-                {
-                    educationData && educationData.length ? educationData.map((currValue: any) =>
-                        <Col lg={12} key={currValue.id}>
-                            <Card className="m-2" key={currValue.id}>
-                                <Card.Body key={currValue.id}>
-                                    <Row className='justify-content-end' key={currValue.id}>
-
-                                        <Dropdown key={currValue.id}>
-                                            <Dropdown.Toggle variant="bg-light" id="dropdown-basic">
-                                                <img
-                                                    src="/assets/kebabcase.svg"
-                                                    alt="notification"
-                                                    className="img-responsive "
-                                                    style={{ height: '20px', width: '20px' }}
-                                                />
-                                            </Dropdown.Toggle>
-
-                                            <Dropdown.Menu key={currValue.id}>
-                                                <Dropdown.Item key={1} onClick={() => deleteHandler(currValue)}>Delete</Dropdown.Item>
-                                                <Dropdown.Item key={2} onClick={() => updateEducation(currValue)}>Edit</Dropdown.Item>
-                                            </Dropdown.Menu>
-                                        </Dropdown>
-
-                                    </Row>
-                                    <Card.Title>{currValue.Institute_Name ? currValue.Institute_Name : null}</Card.Title>
-
-                                    <Row>
-                                        <Col sm={12} lg={4}><b>Type of Degree : </b>{currValue.Type_of_degree && currValue.Type_of_degree}</Col>
-                                        <Col sm={12} lg={4}><b>Specialization : </b>{currValue.Specialization && currValue.Specialization}</Col>
-                                        <Col sm={12} lg={4}><b>Passing year : </b>{currValue.Year && currValue.Year}</Col>
-                                    </Row>
-
-                                </Card.Body>
-                            </Card>
-                        </Col>
-                    ) : <NoDataFound msg={"Oops! No educational details found"}/>
-                }
-
-            </Row>
-        </Col>
-
-    )
-}
+export default EducationDetails;

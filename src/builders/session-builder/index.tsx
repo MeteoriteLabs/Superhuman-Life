@@ -1,7 +1,9 @@
+
+import React from "react";
 import { Card, Tab, Tabs } from "react-bootstrap";
 import Fitness from "./Fitness/Fitness";
 
-export default function SessionPage() {
+const SessionPage: React.FC = () => {
   return (
     <div>
       <h2>Program Manager</h2>
@@ -23,3 +25,5 @@ export default function SessionPage() {
     </div>
   );
 }
+
+export default SessionPage;
