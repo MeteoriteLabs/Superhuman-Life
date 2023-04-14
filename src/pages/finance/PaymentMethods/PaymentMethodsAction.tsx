@@ -185,8 +185,9 @@ function PaymentMethodsAction(props: any, ref: any) {
         });
 
         const isPrimary: boolean = flattenData.Is_Primary;
-
+        console.log(isPrimaryUPIDetails);
         const arr: PrimaryUPIDetails[] = isPrimaryUPIDetails.splice(-1);
+        console.log(arr);
 
         if (isPrimary) {
           for (const currentValue of arr) {
@@ -350,7 +351,9 @@ function PaymentMethodsAction(props: any, ref: any) {
     variables: { id: auth.userid },
     onCompleted: (data: any) => {
       const flattenUpiDetail = flattenObj({ ...data.upiDetailsChangemakers });
+      console.log(data, flattenUpiDetail);
       setIsPrimaryUPIDetails(flattenUpiDetail);
+      console.log(isPrimaryUPIDetails);
     },
   });
 

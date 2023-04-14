@@ -1,4 +1,4 @@
-import { useRef, useContext, useState } from "react";
+import React, { useRef, useContext, useState } from "react";
 import { Button, Row, Col, Card, Dropdown, Badge } from "react-bootstrap";
 import PaymentMethodsAction from "../PaymentMethodsAction";
 import Loader from "../../../../components/Loader/Loader";
@@ -7,7 +7,7 @@ import { GET_UPI_DETAILS } from "../queries";
 import { flattenObj } from "../../../../components/utils/responseFlatten";
 import AuthContext from "../../../../context/auth-context";
 
-function UPIDetails() {
+const UPIDetails: React.FC = () => {
   const paymentMethodActionRef = useRef<any>(null);
   const auth = useContext(AuthContext);
   const [upiDetails, setUpiDetails] = useState<Record<string, unknown>[]>([]);

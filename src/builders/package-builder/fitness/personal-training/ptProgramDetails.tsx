@@ -6,6 +6,8 @@ import { useQuery, gql } from '@apollo/client';
 import AuthContext from '../../../../context/auth-context';
 import { flattenObj } from '../../../../components/utils/responseFlatten';
 import AddFitnessAddressModal from '../../../../components/customWidgets/AddFitnessAddressModal';
+import { ADDRESSES_IS_PRIMARY } from '../../../../pages/profile/queries/queries';
+import { BasicAddressDetails } from '../../../../pages/profile/ProfileOptions/AddressDetails/CreateAddress';
 
 const PtProgramDetails: React.FC<{
   value: string;
@@ -32,6 +34,7 @@ const PtProgramDetails: React.FC<{
   const [addressModal, setAddressModal] = useState<boolean>(false);
 
   const auth = useContext(AuthContext);
+  const [primaryAddress, setPrimaryAddress] = useState<BasicAddressDetails[]>([]);
   const [singleSelections, setSingleSelections] = useState<any[]>(
     existingData?.address?.length && props.value ? existingData?.address : []
   );
@@ -68,6 +71,21 @@ const PtProgramDetails: React.FC<{
       }
     }
   `;
+
+  // get primary addresses
+  useQuery(ADDRESSES_IS_PRIMARY, {
+    variables: { id: auth.userid, is_primary: true },
+    onCompleted: (response) => {
+      const flattenDetail = flattenObj({ ...response.addresses });
+
+      setPrimaryAddress(flattenDetail);
+      const address = flattenDetail.map(
+        (currentValue) =>
+          `${currentValue.House_Number}, ${currentValue.address1}, ${currentValue.address2}, ${currentValue.city}, ${currentValue.state}, ${currentValue.country}`
+      );
+      setClientAddress(address);
+    }
+  });
 
   const mainQuery = useQuery(FETCH_USER_ADDRESSES, {
     variables: { id: auth.userid },
@@ -346,14 +364,16 @@ const PtProgramDetails: React.FC<{
                           disabled={inputDisabled}
                         />
 
-                        <InputGroup className="mb-3">
-                          <FormControl
-                            aria-describedby="basic-addon1"
-                            value={clientAddress}
-                            onChange={(e) => setClientAddress(e.target.value)}
-                            placeholder="Enter client's address"
-                          />
-                        </InputGroup>
+                        <div>
+                          {primaryAddress
+                            ? primaryAddress.map((currentValue, index) => (
+                                <b
+                                  key={
+                                    index
+                                  }>{`${currentValue.House_Number}, ${currentValue.address1}, ${currentValue.address2}, ${currentValue.city}, ${currentValue.state}, ${currentValue.country}`}</b>
+                              ))
+                            : null}
+                        </div>
                       </Form>
                     </div>
                   </>

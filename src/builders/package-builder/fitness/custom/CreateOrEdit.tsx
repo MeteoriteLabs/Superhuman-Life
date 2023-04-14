@@ -272,6 +272,7 @@ function CreateEditPackage(props: any, ref: any) {
   
     const bookingConfig: any = {};
     const details: any = {};
+    const clientAddressArray = msg.client_address ? msg.client_address.split("Km") : [];
     for (let i = 0; i < msg.fitnesspackagepricing.length; i++) {
       PRICING_TABLE_DEFAULT[i].mrp = msg.fitnesspackagepricing[i].mrp;
       PRICING_TABLE_DEFAULT[i].suggestedPrice =
@@ -312,6 +313,8 @@ function CreateEditPackage(props: any, ref: any) {
       groupOnline: msg.grouponline,
       groupOffline: msg.groupoffline,
       recorded: msg.recordedclasses,
+      distance: msg.client_address ? `${clientAddressArray[0]}Km` : null,
+      clientAddress: msg.client_address ? clientAddressArray[1]  : null,
     });
     details.thumbnail = msg.Thumbnail_ID;
     details.Upload =
@@ -371,6 +374,13 @@ function CreateEditPackage(props: any, ref: any) {
 
     createPackage({
       variables: {
+        client_address: `${
+          frm.programDetails.distance ? frm.programDetails.distance : null
+        } ${
+          frm.programDetails.clientAddress
+            ? frm.programDetails.clientAddress
+            : null
+        }`,
         packagename: frm.packagename,
         tags: frm?.tags,
         level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
@@ -424,6 +434,9 @@ function CreateEditPackage(props: any, ref: any) {
     
     editPackage({
       variables: {
+        client_address: `${frm.programDetails.distance ? frm.programDetails.distance : null} ${
+          frm.programDetails.clientAddress ? frm.programDetails.clientAddress : null
+        }`,
         id: operation.id,
         packagename: frm.packagename,
         tags: frm?.tags,

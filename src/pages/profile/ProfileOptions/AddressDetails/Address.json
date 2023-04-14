@@ -54,7 +54,11 @@
                          "Work",
                          "Other"
                     ]
-               }
+               },
+               "is_primary": {
+                    "type": "boolean",
+                    "title": "Primary"
+                 }
           }
      }
 }
