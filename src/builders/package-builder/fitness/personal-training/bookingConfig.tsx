@@ -1,19 +1,19 @@
-import { useEffect, useState } from "react";
-import { Form } from "react-bootstrap";
+import React, { useEffect, useState } from 'react';
+import { Form } from 'react-bootstrap';
 
-const BookingConfig = (props: any) => {
+const BookingConfig: React.FC<{
+  uiSchema: any;
+  value: string;
+  onChange: (args: string | null) => void;
+}> = (props) => {
   const inputDisabled = props.uiSchema.readonly;
-  const [config, setConfig] = useState(
-    props.value !== undefined ? JSON.parse(props.value).config : "Manual"
-  );
-  const [bookings, setBookings] = useState(
-    props.value !== undefined ? JSON.parse(props.value).bookings : 0
-  );
+  const [config, setConfig] = useState(props.value ? JSON.parse(props.value).config : 'Manual');
+  const [bookings, setBookings] = useState(props.value ? JSON.parse(props.value).bookings : 0);
 
   function handleValidation() {
-    if (config !== "" && config === "Manual") {
+    if (config !== '' && config === 'Manual') {
       return true;
-    } else if (config === "Auto" && bookings !== 0) {
+    } else if (config === 'Auto' && bookings !== 0) {
       return true;
     } else {
       return false;
@@ -30,7 +30,7 @@ const BookingConfig = (props: any) => {
     if (handleValidation()) {
       props.onChange(JSON.stringify({ config: config, bookings: bookings }));
     } else {
-      props.onChange(undefined);
+      props.onChange(null);
     }
     //eslint-disable-next-line
   }, [config, bookings]);
@@ -41,9 +41,9 @@ const BookingConfig = (props: any) => {
         <Form.Check
           inline
           label="Manual"
-          value={"Manual"}
+          value={'Manual'}
           disabled={inputDisabled}
-          defaultChecked={config === "Manual" ? true : false}
+          defaultChecked={config === 'Manual' ? true : false}
           onClick={(e: any) => setConfig(e.target.value)}
           name="group1"
           type="radio"
@@ -52,20 +52,20 @@ const BookingConfig = (props: any) => {
         <Form.Check
           inline
           label="Auto"
-          value={"Auto"}
+          value={'Auto'}
           disabled={inputDisabled}
-          defaultChecked={config === "Auto" ? true : false}
+          defaultChecked={config === 'Auto' ? true : false}
           onClick={(e: any) => setConfig(e.target.value)}
           name="group1"
           type="radio"
           id={`inline-2`}
         />
         <Form.Text className="text-muted">
-          Manual: Allows you to accept or reject a user, Auto: it will
-          automatically accept all bookings
+          Manual: Allows you to accept or reject a user, Auto: it will automatically accept all
+          bookings
         </Form.Text>
       </div>
-      {config === "Auto" && (
+      {config === 'Auto' && (
         <div className="mt-3">
           <Form.Label>Maximum Bookings per/month*</Form.Label>
           <Form.Control

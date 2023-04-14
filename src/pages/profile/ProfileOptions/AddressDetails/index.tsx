@@ -1,43 +1,42 @@
-import { useState, useContext, useRef, forwardRef } from "react";
-import { Card, Row, Col, Button, Dropdown } from "react-bootstrap";
-import { FETCH_USERS_PROFILE_DATA } from "../../queries/queries";
-import AuthContext from "../../../../context/auth-context";
-import { useQuery } from "@apollo/client";
-import { flattenObj } from "../../../../components/utils/responseFlatten";
-import CreateAddress from "./CreateAddress";
-import Loader from "../../../../components/Loader/Loader";
-import NoDataFound from "../../../../components/NoDataFound";
+import { useState, useContext, useRef, forwardRef } from 'react';
+import { Card, Row, Col, Button, Dropdown } from 'react-bootstrap';
+import { ADDRESSES } from '../../queries/queries';
+import AuthContext from '../../../../context/auth-context';
+import { useQuery } from '@apollo/client';
+import { flattenObj } from '../../../../components/utils/responseFlatten';
+import CreateAddress from './CreateAddress';
+import Loader from '../../../../components/Loader/Loader';
+import NoDataFound from '../../../../components/NoDataFound';
+import { BasicAddressDetails } from './CreateAddress';
 
-function AddressDetails() {
+const AddressDetails = () => {
   const auth = useContext(AuthContext);
-  const [addressData, setAddressData] = useState<any>([]);
+  const [addressData, setAddressData] = useState<BasicAddressDetails[]>([]);
   const CreateAddressComponent = useRef<any>(null);
 
   const {
     // eslint-disable-next-line
     data: get_address,
     loading: loading_address_details,
-    refetch: refetch_address,
-  } = useQuery(FETCH_USERS_PROFILE_DATA, {
-    onCompleted: (r) => {
-      const flattenData = flattenObj({ ...r });
-      const usersData = flattenData.usersPermissionsUsers.find(
-        (currValue) => currValue.id === auth.userid
-      );
-      setAddressData(usersData && usersData.addresses);
-    },
+    refetch: refetch_address
+  } = useQuery(ADDRESSES, {
+    variables: { id: auth.userid },
+    onCompleted: (response) => {
+      const flattenData = flattenObj({ ...response.addresses });
+      setAddressData(flattenData);
+    }
   });
 
   const deleteUserAddress = (data) => {
-    CreateAddressComponent.current.TriggerForm({ id: data.id, type: "delete" });
+    CreateAddressComponent.current.TriggerForm({ id: data.id, type: 'delete' });
   };
 
   // calling modal for update option
   function updateAddress(data) {
     CreateAddressComponent.current.TriggerForm({
       id: data.id,
-      type: "edit",
-      modal_status: true,
+      type: 'edit',
+      modal_status: true
     });
   }
 
@@ -46,7 +45,7 @@ function AddressDetails() {
   }
 
   if (loading_address_details) {
-    return <Loader msg={"Loading educational details ..."} />;
+    return <Loader msg={'Loading address details ...'} />;
   }
 
   return (
@@ -59,23 +58,21 @@ function AddressDetails() {
             onClick={() => {
               CreateAddressComponent.current.TriggerForm({
                 id: null,
-                type: "create",
-                modal_status: true,
+                type: 'create',
+                modal_status: true
               });
-            }}
-          >
+            }}>
             <i className="fas fa-plus-circle"></i> Add Address
           </Button>
           <CreateAddress
             ref={CreateAddressComponent}
-            callback={refetchQueryCallback}
-          ></CreateAddress>
+            callback={refetchQueryCallback}></CreateAddress>
         </Card.Title>
       </Col>
 
       <Row className="mt-4 pb-3">
         {addressData && addressData.length ? (
-          addressData.map((currValue: any) => (
+          addressData.map((currValue) => (
             <Col lg={12} key={currValue.id}>
               <Card key={currValue.id} className="m-2">
                 <Card.Body key={currValue.id}>
@@ -86,21 +83,19 @@ function AddressDetails() {
                           src="/assets/kebabcase.svg"
                           alt="notification"
                           className="img-responsive "
-                          style={{ height: "20px", width: "20px" }}
+                          style={{ height: '20px', width: '20px' }}
                         />
                       </Dropdown.Toggle>
 
                       <Dropdown.Menu>
-                        <Dropdown.Item
-                          key={1}
-                          onClick={() => deleteUserAddress(currValue)}
-                        >
+                        {
+                          addressData.length !== 1 ? 
+                          <Dropdown.Item key={1} onClick={() => deleteUserAddress(currValue)}>
                           Delete
-                        </Dropdown.Item>
-                        <Dropdown.Item
-                          key={2}
-                          onClick={() => updateAddress(currValue)}
-                        >
+                        </Dropdown.Item> : null
+                        }
+                        
+                        <Dropdown.Item key={2} onClick={() => updateAddress(currValue)}>
                           Edit
                         </Dropdown.Item>
                       </Dropdown.Menu>
@@ -109,17 +104,20 @@ function AddressDetails() {
 
                   <Card.Title>
                     {currValue.Title ? currValue.Title : null}
-                    <span className="text-white rounded bg-secondary p-1 ml-2">
-                      {currValue.type_address ? currValue.type_address : null}
-                    </span>
+                    {currValue.type_address ? (
+                      <span className="text-white rounded bg-secondary p-1 ml-2">
+                        {currValue.type_address}
+                      </span>
+                    ) : null}
+                    {currValue.is_primary ? (
+                      <span className="text-white rounded bg-primary p-1 ml-2">Primary</span>
+                    ) : null}
                   </Card.Title>
 
                   <Row className="p-1">
                     <Col xs={12} lg={6}>
                       <b>Address 1 : </b>
-                      {currValue.House_Number
-                        ? currValue.House_Number
-                        : null}{" "}
+                      {currValue.House_Number ? currValue.House_Number : null}{' '}
                       {currValue.address1 ? currValue.address1 : null}
                     </Col>
                     <Col xs={12} lg={6}>
@@ -149,11 +147,11 @@ function AddressDetails() {
             </Col>
           ))
         ) : (
-          <NoDataFound msg={"Oops! No address found"} />
+          <NoDataFound msg={'Oops! No address found'} />
         )}
       </Row>
     </Col>
   );
-}
+};
 
 export default forwardRef(AddressDetails);

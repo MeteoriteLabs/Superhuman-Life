@@ -185,7 +185,6 @@ function PaymentMethodsAction(props: any, ref: any) {
         });
 
         const isPrimary: boolean = flattenData.Is_Primary;
-
         const arr: PrimaryUPIDetails[] = isPrimaryUPIDetails.splice(-1);
 
         if (isPrimary) {

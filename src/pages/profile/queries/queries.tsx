@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 export const FETCH_USER_PROFILE_DATA = gql`
   query fetchUserProfileData($id: ID!) {
@@ -16,10 +16,10 @@ export const FETCH_USER_PROFILE_DATA = gql`
           about_mini_description
           Document_Verified
           updatedAt
-          designations{
-            data{
+          designations {
+            data {
               id
-              attributes{
+              attributes {
                 Designation_title
                 description
               }
@@ -58,6 +58,7 @@ export const FETCH_USER_PROFILE_DATA = gql`
                 Title
                 type_address
                 House_Number
+                is_primary
               }
             }
           }
@@ -72,7 +73,6 @@ export const UPDATE_USER_PROFILE_DATA = gql`
     updateUsersPermissionsUser(id: $id, data: $data) {
       data {
         id
-        
       }
     }
   }
@@ -83,6 +83,9 @@ export const UPDATE_ADDRESS_DATA = gql`
     updateAddress(id: $id, data: $data) {
       data {
         id
+        attributes {
+          is_primary
+        }
       }
     }
   }
@@ -93,13 +96,14 @@ export const CREATE_ADDRESS = gql`
     createAddress(data: $data) {
       data {
         id
-        attributes{
+        attributes {
           address1
           address2
           city
           country
           zipcode
           state
+          is_primary
         }
       }
     }
@@ -111,6 +115,9 @@ export const DELETE_ADDRESS = gql`
     deleteAddress(id: $id) {
       data {
         id
+        attributes {
+          is_primary
+        }
       }
     }
   }
@@ -141,14 +148,17 @@ export const DELETE_EDUCATION_DETAILS = gql`
     deleteEducationalDetail(id: $id) {
       data {
         id
+        attributes {
+          is_primary
+        }
       }
     }
   }
 `;
 
 export const FETCH_USERS_PROFILE_DATA = gql`
-  query fetchUsersProfileData {
-    usersPermissionsUsers(pagination: { pageSize: 100 }) {
+  query fetchUsersProfileData($id: ID) {
+    usersPermissionsUsers(pagination: { pageSize: 100 }, filters: { id: { eq: $id } }) {
       data {
         id
         attributes {
@@ -160,10 +170,10 @@ export const FETCH_USERS_PROFILE_DATA = gql`
           About_User
           Website_URL
           about_mini_description
-          designations{
-            data{
+          designations {
+            data {
               id
-              attributes{
+              attributes {
                 Designation_title
                 description
               }
@@ -177,7 +187,7 @@ export const FETCH_USERS_PROFILE_DATA = gql`
           Twitter_URL
           Verification_ID
           Photo_profile_banner_ID
-          educational_details(pagination:{pageSize:100}) {
+          educational_details(pagination: { pageSize: 100 }) {
             data {
               id
               attributes {
@@ -188,7 +198,7 @@ export const FETCH_USERS_PROFILE_DATA = gql`
               }
             }
           }
-          addresses(pagination:{pageSize:100}) {
+          addresses(pagination: { pageSize: 100 }) {
             data {
               id
               attributes {
@@ -202,9 +212,87 @@ export const FETCH_USERS_PROFILE_DATA = gql`
                 Title
                 type_address
                 House_Number
+                is_primary
               }
             }
           }
+        }
+      }
+    }
+  }
+`;
+
+export const ADDRESSES_IS_PRIMARY = gql`
+  query addresses($id: ID, $is_primary: Boolean) {
+    addresses(
+      pagination: { pageSize: 1000 }
+      filters: { users_permissions_user: { id: { eq: $id } }, is_primary: { eq: $is_primary } }
+    ) {
+      data {
+        id
+        attributes {
+          city
+          address1
+          address2
+          type
+          zipcode
+          country
+          state
+          Title
+          type_address
+          House_Number
+          is_primary
+        }
+      }
+    }
+  }
+`;
+
+export const ADDRESS = gql`
+  query address($id: ID) {
+    address(
+      id: $id 
+    ) {
+      data {
+        id
+        attributes {
+          city
+          address1
+          address2
+          type
+          zipcode
+          country
+          state
+          Title
+          type_address
+          House_Number
+          is_primary
+        }
+      }
+    }
+  }
+`;
+
+export const ADDRESSES = gql`
+  query Addresses($id: ID) {
+    addresses(
+      pagination: { pageSize: 100 }
+      filters: { users_permissions_user: { id: { eq: $id } } }
+    ) {
+      data {
+        id
+        attributes {
+          city
+          address1
+          address2
+          type
+          zipcode
+          country
+          state
+          Title
+          type_address
+          House_Number
+          is_primary
         }
       }
     }

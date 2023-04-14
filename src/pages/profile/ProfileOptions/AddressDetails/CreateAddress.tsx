@@ -1,31 +1,27 @@
-import React, {
-  useImperativeHandle,
-  useState,
-  useContext,
-  useEffect,
-} from "react";
-import { useMutation, useQuery } from "@apollo/client";
-import ModalView from "../../../../components/modal";
+import React, { useImperativeHandle, useState, useContext, useEffect } from 'react';
+import { useMutation, useQuery } from '@apollo/client';
+import ModalView from '../../../../components/modal';
 import {
-  FETCH_USER_PROFILE_DATA,
   UPDATE_ADDRESS_DATA,
-  UPDATE_USER_PROFILE_DATA,
   CREATE_ADDRESS,
   DELETE_ADDRESS,
-  FETCH_USERS_PROFILE_DATA,
-} from "../../queries/queries";
-import { Subject } from "rxjs";
-import { schema, widgets } from "../../profileSchema";
-import AuthContext from "../../../../context/auth-context";
-import { flattenObj } from "../../../../components/utils/responseFlatten";
-import StatusModal from "../../../../components/StatusModal/StatusModal";
+  ADDRESSES_IS_PRIMARY,
+  ADDRESS,
+  ADDRESSES
+} from '../../queries/queries';
+import { Subject } from 'rxjs';
+import { schema, widgets } from '../../profileSchema';
+import AuthContext from '../../../../context/auth-context';
+import { flattenObj } from '../../../../components/utils/responseFlatten';
+import StatusModal from '../../../../components/StatusModal/StatusModal';
 import {
   zipcodeCustomFormats,
-  zipcodeTransformErrors,
-} from "../../../../components/utils/ValidationPatterns";
-import Toaster from "../../../../components/Toaster/index";
+  zipcodeTransformErrors
+} from '../../../../components/utils/ValidationPatterns';
+import Toaster from '../../../../components/Toaster/index';
 
 export interface BasicAddressDetails {
+  id: string;
   address1: string;
   address2: string;
   city: string;
@@ -35,93 +31,95 @@ export interface BasicAddressDetails {
   type_address: string;
   House_Number: string;
   Title: string;
+  is_primary: boolean;
 }
 
 interface Operation {
   id: string;
   modal_status: boolean;
-  type: "create" | "edit" | "delete";
+  type: 'create' | 'edit' | 'delete';
 }
 
 function CreateAddress(props: any, ref: any) {
   const auth = useContext(AuthContext);
-  const addressJson: any = require("./Address.json");
-  const [addressData, setAddressData] = useState<any>([]);
+  const addressJson: any = require('./Address.json');
   const [operation, setOperation] = useState<Operation>({} as Operation);
-  const [addressDetails, setAddressDetails] = useState(
-    {} as BasicAddressDetails
-  );
-  const [prefill, setPrefill] = useState<any>([]);
+  const [addressDetails, setAddressDetails] = useState({} as BasicAddressDetails);
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
   const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
   const [isAddressDeleted, setIsAddressDeleted] = useState<boolean>(false);
   const [isAddressUpdated, setIsAddressUpdated] = useState<boolean>(false);
+  const [nonPrimaryAddressDetails, setNonPrimaryAddressDetails] = useState<BasicAddressDetails[]>(
+    []
+  );
+  const [isPrimaryAddressDetails, setIsPrimaryAddressDetails] = useState<BasicAddressDetails[]>([]);
 
-  const fetch = useQuery(FETCH_USER_PROFILE_DATA, {
-    variables: { id: auth.userid },
-    onCompleted: (r: any) => {
-      const flattenData = flattenObj({ ...r });
-      const addressIds =
-        flattenData.usersPermissionsUser.addresses &&
-        flattenData.usersPermissionsUser.addresses?.length
-          ? flattenData.usersPermissionsUser.addresses.map(
-              (currentValue: any) => currentValue.id
-            )
-          : null;
-      setAddressData(addressIds);
-      closeForm();
-      setPrefill(flattenData.usersPermissionsUser.addresses);
-    },
+  const {
+    // eslint-disable-next-line
+    data: get_address,
+    loading: loading_address_details,
+    refetch: refetch_address
+  } = useQuery(ADDRESS, {
+    variables: { id: operation.id },
+    skip: !operation.id || operation.type === 'delete',
+    onCompleted: (response) => {
+      const flattenData = flattenObj({ ...response.address });
+      FillDetails(flattenData);
+    }
   });
 
-  const [updateProfile] = useMutation(UPDATE_USER_PROFILE_DATA, {
-    onCompleted: (r: any) => {
-      props.callback();
-      fetch.refetch();
-    },
-    refetchQueries: [FETCH_USERS_PROFILE_DATA],
+  // get primary addresses
+  useQuery(ADDRESSES_IS_PRIMARY, {
+    variables: { id: auth.userid, is_primary: true },
+    onCompleted: (response) => {
+      const flattenDetail = flattenObj({ ...response.addresses });
+      setIsPrimaryAddressDetails(flattenDetail);
+    }
+  });
+
+  // get non primary addresses
+  useQuery(ADDRESSES_IS_PRIMARY, {
+    variables: { id: auth.userid, is_primary: false },
+    onCompleted: (response) => {
+      const flattenDetail = flattenObj({ ...response.addresses });
+      setNonPrimaryAddressDetails(flattenDetail);
+    }
   });
 
   const [updateAddress] = useMutation(UPDATE_ADDRESS_DATA, {
-    onCompleted: (r: any) => {
+    onCompleted: () => {
       props.callback();
       modalTrigger.next(false);
-      fetch.refetch();
       setIsAddressUpdated(!isAddressUpdated);
     },
-    refetchQueries: [FETCH_USERS_PROFILE_DATA],
+    refetchQueries: [ADDRESSES]
   });
 
   const [deleteAddress] = useMutation(DELETE_ADDRESS, {
-    onCompleted: (data: any) => {
-      fetch.refetch();
+    onCompleted: (response) => {
       setIsAddressDeleted(!isAddressDeleted);
-    },
-    refetchQueries: [FETCH_USERS_PROFILE_DATA],
-  });
 
-  const [createAddress] = useMutation(CREATE_ADDRESS, {
-    onCompleted: (r: any) => {
-      setIsFormSubmitted(!isFormSubmitted);
-      modalTrigger.next(false);
-      fetch.refetch();
-
-      // concatenate previously stored address ids with currently added address id
-      const contatenatedAddressIdArray =
-        addressData && addressData.length
-          ? addressData.concat([r.createAddress.data.id])
-          : [r.createAddress.data.id];
-
-      updateProfile({
-        variables: {
-          id: auth.userid,
-          data: {
-            addresses: contatenatedAddressIdArray,
-          },
-        },
+      const flattenData = flattenObj({
+        ...response.deleteAddress.data
       });
+      const isPrimary = flattenData.is_primary;
+      const lastAddressDetailIndex = nonPrimaryAddressDetails.length - 1;
+
+      if (isPrimary) {
+        updateAddress({
+          variables: {
+            id: nonPrimaryAddressDetails[lastAddressDetailIndex].id,
+            data: {
+              is_primary: true
+            }
+          }
+        });
+      }
     },
+    refetchQueries: [ADDRESSES]
   });
+
+  const [createAddress] = useMutation(CREATE_ADDRESS);
 
   // modal trigger
   const modalTrigger = new Subject();
@@ -131,40 +129,30 @@ function CreateAddress(props: any, ref: any) {
       setOperation(msg);
 
       //show delete modal
-      if (msg.type === "delete") {
+      if (msg.type === 'delete') {
         setShowDeleteModal(true);
       }
 
       //restrict form to render on delete
-      if (msg.type !== "delete") {
+      if (msg.type !== 'delete') {
         modalTrigger.next(true);
       }
-    },
+    }
   }));
 
-  useEffect(() => {
-    const selectedAddress =
-      prefill && prefill.length
-        ? prefill.find((currValue: any) => currValue.id === operation.id)
-        : null;
-
+  function FillDetails(selectedAddress: any) {
     const details = {} as BasicAddressDetails;
-    details.address1 = selectedAddress ? selectedAddress.address1 : "";
-    details.address2 = selectedAddress ? selectedAddress.address2 : "";
-    details.city = selectedAddress ? selectedAddress.city : "";
-    details.country = selectedAddress ? selectedAddress.country : "";
-    details.state = selectedAddress ? selectedAddress.state : "";
-    details.zipcode = selectedAddress ? selectedAddress.zipcode : "";
-    details.type_address = selectedAddress ? selectedAddress.type_address : "";
-    details.House_Number = selectedAddress ? selectedAddress.House_Number : "";
-    details.Title = selectedAddress ? selectedAddress.Title : "";
-
-    setAddressDetails(details);
-  }, [operation.id, prefill]);
-
-  //close form on update
-  function closeForm() {
-    if (["edit"].indexOf(operation.type) > -1) modalTrigger.next(false);
+    details.address1 = selectedAddress ? selectedAddress.address1 : '';
+    details.address2 = selectedAddress ? selectedAddress.address2 : '';
+    details.city = selectedAddress ? selectedAddress.city : '';
+    details.country = selectedAddress ? selectedAddress.country : '';
+    details.state = selectedAddress ? selectedAddress.state : '';
+    details.zipcode = selectedAddress ? selectedAddress.zipcode : '';
+    details.type_address = selectedAddress ? selectedAddress.type_address : '';
+    details.House_Number = selectedAddress ? selectedAddress.House_Number : '';
+    details.Title = selectedAddress ? selectedAddress.Title : '';
+    (details.is_primary = selectedAddress && selectedAddress.is_primary ? true : false),
+      setAddressDetails(details);
   }
 
   // create address function
@@ -172,6 +160,7 @@ function CreateAddress(props: any, ref: any) {
     createAddress({
       variables: {
         data: {
+          users_permissions_user: auth.userid,
           address1: frm.address1,
           address2: frm.address2,
           city: frm.city,
@@ -181,8 +170,35 @@ function CreateAddress(props: any, ref: any) {
           type_address: frm.type_address,
           House_Number: frm.House_Number,
           Title: frm.Title,
-        },
+          is_primary: frm.is_primary
+        }
       },
+      onCompleted: (data) => {
+        setIsFormSubmitted(!isFormSubmitted);
+        modalTrigger.next(false);
+
+        const flattenData = flattenObj({
+          ...data.createAddress.data
+        });
+
+        const isPrimary = flattenData.is_primary;
+
+        const arr: BasicAddressDetails[] = isPrimaryAddressDetails.splice(-1);
+
+        if (isPrimary) {
+          for (const currentValue of arr) {
+            updateAddress({
+              variables: {
+                id: currentValue.id,
+                data: {
+                  is_primary: false
+                }
+              }
+            });
+          }
+        }
+      },
+      refetchQueries: [ADDRESSES]
     });
   }
 
@@ -201,8 +217,35 @@ function CreateAddress(props: any, ref: any) {
           type_address: frm.type_address,
           House_Number: frm.House_Number,
           Title: frm.Title,
-        },
+          is_primary: frm.is_primary ? true : false
+        }
       },
+      onCompleted: (data) => {
+        const flattenData = flattenObj({
+          ...data.updateAddress.data
+        });
+        const isUpdatedAddressAlreadyPrimary = isPrimaryAddressDetails.filter(
+          (currentValue) => currentValue.id === flattenData.id
+        );
+
+        const isPrimary: boolean = flattenData.is_primary;
+
+        if (isPrimary && isUpdatedAddressAlreadyPrimary.length !== 1) {
+          const arr: BasicAddressDetails[] = isPrimaryAddressDetails.filter(
+            (currentValue) => currentValue.id !== flattenData.id
+          );
+          for (const currentValue of arr) {
+            updateAddress({
+              variables: {
+                id: currentValue.id,
+                data: {
+                  is_primary: false
+                }
+              }
+            });
+          }
+        }
+      }
     });
   }
 
@@ -213,10 +256,10 @@ function CreateAddress(props: any, ref: any) {
   // submit function
   function OnSubmit(frm: any) {
     switch (operation.type) {
-      case "create":
+      case 'create':
         CreateUserAddress(frm);
         break;
-      case "edit":
+      case 'edit':
         UpdateUserAddress(frm);
         break;
     }
@@ -226,11 +269,7 @@ function CreateAddress(props: any, ref: any) {
     <>
       {/* Create and Edit Modal */}
       <ModalView
-        name={
-          operation.type === "create"
-            ? "Create New Address"
-            : "Edit Address Details"
-        }
+        name={operation.type === 'create' ? 'Create New Address' : 'Edit Address Details'}
         isStepper={false}
         formUISchema={schema}
         formSchema={addressJson}
@@ -240,7 +279,7 @@ function CreateAddress(props: any, ref: any) {
         }}
         widgets={widgets}
         modalTrigger={modalTrigger}
-        formData={operation.type === "create" ? {} : addressDetails}
+        formData={operation.type === 'create' ? {} : addressDetails}
         showErrorList={false}
         customFormats={zipcodeCustomFormats}
         transformErrors={zipcodeTransformErrors}
