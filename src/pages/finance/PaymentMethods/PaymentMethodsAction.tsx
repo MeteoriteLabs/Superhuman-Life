@@ -349,9 +349,7 @@ function PaymentMethodsAction(props: any, ref: any) {
     variables: { id: auth.userid },
     onCompleted: (data: any) => {
       const flattenUpiDetail = flattenObj({ ...data.upiDetailsChangemakers });
-      console.log(data, flattenUpiDetail);
       setIsPrimaryUPIDetails(flattenUpiDetail);
-      console.log(isPrimaryUPIDetails);
     },
   });
 
