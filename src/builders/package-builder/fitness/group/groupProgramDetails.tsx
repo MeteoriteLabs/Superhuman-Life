@@ -322,6 +322,13 @@ const GroupProgramDetails: React.FC<{
       )}
       {mode !== '' && (
         <Row>
+          <Col lg={1}>
+            <img
+              src="/assets/offeringImages/restdays.svg"
+              alt="rest days"
+              loading="lazy"
+            />
+          </Col>
           <Col lg={2}>
             <InputGroup className="mb-3">
               <FormControl
@@ -330,7 +337,7 @@ const GroupProgramDetails: React.FC<{
                 type="number"
                 min={0}
                 value={restDays}
-                // disabled={true}
+                disabled={true}
               />
               <InputGroup.Append>
                 <InputGroup.Text id="basic-addon1">Days</InputGroup.Text>

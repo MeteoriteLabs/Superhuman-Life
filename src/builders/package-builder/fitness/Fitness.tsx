@@ -115,34 +115,7 @@ export default function FitnessTab() {
   const columns = useMemo<any>(
     () => [
       { accessor: "packagename", Header: "Package Name" },
-      {
-        accessor: "Preview",
-        Header: "Preview",
-        Cell: ({ row }: any) => {
-          return (
-            <div>
-              <DrawerTrigger
-                toggle={() => {
-                  setShowDrawer(!showDrawer);
-                  setTriggeredDetails({
-                    type: row.original.type,
-                    name: row.original.packagename,
-                    level: row.original.level,
-                    thumbnailId: row.original.thumbnailId,
-                    pricing: row.original.pricing,
-                    address: row.original.address,
-                    ptonline: row.original.ptonline,
-                    ptoffline: row.original.ptoffline,
-                    grouponline: row.original.grouponline,
-                    groupoffline: row.original.groupoffline,
-                    recordedclasses: row.original.recordedclasses
-                  });
-                }}
-              />
-            </div>
-          );
-        },
-      },
+      
       {
         accessor: "type",
         Header: "Type",
@@ -480,6 +453,34 @@ export default function FitnessTab() {
                 </Badge>
               )}
             </div>
+          );
+        },
+      },
+      {
+        accessor: "Preview",
+        Header: "Preview",
+        Cell: ({ row }: any) => {
+          return (
+            
+              <DrawerTrigger
+                toggle={() => {
+                  setShowDrawer(!showDrawer);
+                  setTriggeredDetails({
+                    type: row.original.type,
+                    name: row.original.packagename,
+                    level: row.original.level,
+                    thumbnailId: row.original.thumbnailId,
+                    pricing: row.original.pricing,
+                    address: row.original.address,
+                    ptonline: row.original.ptonline,
+                    ptoffline: row.original.ptoffline,
+                    grouponline: row.original.grouponline,
+                    groupoffline: row.original.groupoffline,
+                    recordedclasses: row.original.recordedclasses
+                  });
+                }}
+              />
+            
           );
         },
       },

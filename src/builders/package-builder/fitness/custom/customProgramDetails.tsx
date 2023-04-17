@@ -598,6 +598,13 @@ const CustomProgramDetails: React.FC<{
       )}
       {mode !== '' && (
         <Row>
+          <Col lg={1}>
+            <img
+              src="/assets/offeringImages/restdays.svg"
+              alt="rest days"
+              loading="lazy"
+            />
+          </Col>
           <Col lg={2}>
             <InputGroup className="mb-3">
               <FormControl
