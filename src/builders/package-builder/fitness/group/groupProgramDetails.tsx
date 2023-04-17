@@ -267,8 +267,9 @@ const GroupProgramDetails: React.FC<{
       )}
       {mode !== '' && (mode === '0' || mode === '2') && (
         <Row>
-          <Col lg={1}>
+          <Col lg={2}>
             <img src="/assets/Group-Online.svg" alt="group-online" />
+            <p>Group online</p>
           </Col>
           <Col lg={2}>
             <InputGroup className="mb-3">
@@ -291,8 +292,9 @@ const GroupProgramDetails: React.FC<{
       )}
       {mode !== '' && (mode === '1' || mode === '2') && (
         <Row>
-          <Col lg={1}>
+          <Col lg={2}>
             <img src="/assets/Group-Offline.svg" alt="group offline" />
+            <p>Group offline</p>
           </Col>
           <Col lg={2}>
             <InputGroup className="mb-3">
@@ -313,21 +315,16 @@ const GroupProgramDetails: React.FC<{
           </Col>
         </Row>
       )}
-      {mode !== '' && (
-        <div>
-          <label>
-            <b>Rest Days</b>
-          </label>
-        </div>
-      )}
+      
       {mode !== '' && (
         <Row>
-          <Col lg={1}>
+          <Col lg={2}>
             <img
               src="/assets/offeringImages/restdays.svg"
               alt="rest days"
               loading="lazy"
             />
+            <p>Rest days</p>
           </Col>
           <Col lg={2}>
             <InputGroup className="mb-3">

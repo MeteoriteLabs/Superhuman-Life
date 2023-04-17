@@ -417,12 +417,13 @@ const PtProgramDetails: React.FC<{
       )}
       {mode !== '' && (mode === '0' || mode === '2') && (
         <Row>
-          <Col lg={1}>
+          <Col lg={2}>
             <img
               src="/assets/personal-training-online.svg"
               alt="personal-training"
               loading="lazy"
             />
+            <p>One-on-One online</p>
           </Col>
           <Col lg={2}>
             <InputGroup className="mb-3">
@@ -445,12 +446,13 @@ const PtProgramDetails: React.FC<{
       )}
       {mode !== '' && (mode === '1' || mode === '2') && (
         <Row>
-          <Col lg={1}>
+          <Col lg={2}>
             <img
               src="/assets/personal-training-offline.svg"
               alt="personal-training"
               loading="lazy"
             />
+            <p>One-on-One offline</p>
           </Col>
           <Col lg={2}>
             <InputGroup className="mb-3">
@@ -471,21 +473,12 @@ const PtProgramDetails: React.FC<{
           </Col>
         </Row>
       )}
-      {mode !== '' && (
-        <div>
-          <label>
-            <b>Rest Days</b>
-          </label>
-        </div>
-      )}
+      
       {mode !== '' && (
         <Row>
-          <Col lg={1}>
-            <img
-              src="/assets/offeringImages/restdays.svg"
-              alt="rest days"
-              loading="lazy"
-            />
+          <Col lg={2}>
+            <img src="/assets/offeringImages/restdays.svg" alt="rest days" loading="lazy" />
+            <p>Rest days</p>
           </Col>
           <Col lg={2}>
             <InputGroup className="mb-3">
@@ -495,6 +488,7 @@ const PtProgramDetails: React.FC<{
                 type="number"
                 min={0}
                 value={restDays}
+                disabled={true}
               />
               <InputGroup.Append>
                 <InputGroup.Text id="basic-addon1">Days</InputGroup.Text>

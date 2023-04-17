@@ -24,8 +24,8 @@ const CustomProgramDetails: React.FC<{
     };
   }
 
-  const [mode, setMode] = useState(props.value ? existingData.mode.toString() : '0');
-  const [addressModal, setAddressModal] = useState(false);
+  const [mode, setMode] = useState<string>(props.value ? existingData.mode.toString() : '0');
+  const [addressModal, setAddressModal] = useState<boolean>(false);
 
   const auth = useContext(AuthContext);
   const [singleSelections, setSingleSelections] = useState<any[]>(
@@ -481,8 +481,9 @@ const CustomProgramDetails: React.FC<{
       )}
       {mode !== '' && (mode === '0' || mode === '2') && (
         <Row>
-          <Col lg={1}>
+          <Col lg={2}>
             <img src="/assets/custompersonal-training-online.svg" alt="custom-training" />
+            <p>One-on-One online</p>
           </Col>
           <Col lg={2}>
             <InputGroup className="mb-3">
@@ -501,8 +502,9 @@ const CustomProgramDetails: React.FC<{
               </InputGroup.Append>
             </InputGroup>
           </Col>
-          <Col lg={1}>
+          <Col lg={2} md={{offset: 2}}>
             <img src="/assets/customgroup-online.svg" alt="custom-training" />
+            <p>Group online</p>
           </Col>
           <Col lg={2}>
             <InputGroup className="mb-3">
@@ -525,8 +527,9 @@ const CustomProgramDetails: React.FC<{
       )}
       {mode !== '' && (mode === '1' || mode === '2') && (
         <Row>
-          <Col lg={1}>
+          <Col lg={2}>
             <img src="/assets/custompersonal-training-offline.svg" alt="custom-training" />
+            <p>One-on-One offline</p>
           </Col>
           <Col lg={2}>
             <InputGroup className="mb-3">
@@ -545,8 +548,9 @@ const CustomProgramDetails: React.FC<{
               </InputGroup.Append>
             </InputGroup>
           </Col>
-          <Col lg={1}>
+          <Col lg={2} md={{offset: 2}}>
             <img src="/assets/customgroup-offline.svg" alt="custom-training" />
+            <p>Group offline</p>
           </Col>
           <Col lg={2}>
             <InputGroup className="mb-3">
@@ -569,8 +573,9 @@ const CustomProgramDetails: React.FC<{
       )}
       {mode !== '' && (
         <Row>
-          <Col lg={1}>
+          <Col lg={2}>
             <img src="/assets/customclassic.svg" alt="custom-training" />
+            <p>Recorded class</p>
           </Col>
           <Col lg={2}>
             <InputGroup className="mb-3">
@@ -591,19 +596,16 @@ const CustomProgramDetails: React.FC<{
           </Col>
         </Row>
       )}
-      {mode !== '' && (
-        <label>
-          <b>Rest Days</b>
-        </label>
-      )}
+     
       {mode !== '' && (
         <Row>
-          <Col lg={1}>
+          <Col lg={2}>
             <img
               src="/assets/offeringImages/restdays.svg"
               alt="rest days"
               loading="lazy"
             />
+             <p>Rest Days</p>
           </Col>
           <Col lg={2}>
             <InputGroup className="mb-3">

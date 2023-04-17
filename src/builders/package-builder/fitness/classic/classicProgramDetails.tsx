@@ -8,7 +8,7 @@ const ClassicProgramDetails: React.FC<{
   onChange: (args: string | null) => void;
 }> = (props) => {
   const inputDisabled = props.readonly;
-  const existingData = props.value === undefined ? undefined : JSON.parse(props.value);
+  const existingData = props.value ? JSON.parse(props.value) : null;
   if (existingData && existingData.length > 0) {
     existingData.address = {
       id: JSON.parse(existingData?.address)[0].id,
@@ -78,8 +78,9 @@ const ClassicProgramDetails: React.FC<{
         <b>Enter Number of Sessions</b>
       </label>
       <Row>
-        <Col lg={1}>
-          <img src="/assets/Classic.svg" alt="personal-training" />
+        <Col lg={2}>
+          <img src="/assets/Classic.svg" alt="recorded" />
+          <p>Recorded class</p>
         </Col>
         <Col lg={2}>
           <InputGroup className="mb-3">
@@ -99,10 +100,13 @@ const ClassicProgramDetails: React.FC<{
           </InputGroup>
         </Col>
       </Row>
-      <label>
-        <b>Rest Days</b>
-      </label>
+      
       <Row>
+      <Col lg={2}>
+          <img src="/assets/offeringImages/restdays.svg" alt="rest days" />
+          <p>Rest days</p>
+        </Col>
+        
         <Col lg={2}>
           <InputGroup className="mb-3">
             <FormControl
