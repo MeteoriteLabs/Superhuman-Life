@@ -343,104 +343,104 @@ const CustomProgramDetails: React.FC<{
                 )}
                 {addressTitle === 'At Client Address' && (
                   <>
-                  <div className="p-3">
-                    <label>
-                      <b>Distance</b>
-                    </label>
-                    <Form>
-                      <Form.Check
-                        inline
-                        label="5 Km"
-                        value="5 Km"
-                        checked={distance === '5 Km' ? true : false}
-                        name="group1"
-                        type="radio"
-                        onClick={(e: any) => setDistance(e.target.value)}
-                        disabled={inputDisabled}
-                      />
-                      <Form.Check
-                        inline
-                        label="10 Km"
-                        value="10 Km"
-                        checked={distance === '10 Km' ? true : false}
-                        name="group1"
-                        type="radio"
-                        onClick={(e: any) => setDistance(e.target.value)}
-                        disabled={inputDisabled}
-                      />
-                      <Form.Check
-                        inline
-                        label="15 Km"
-                        value="15 Km"
-                        checked={distance === '15 Km' ? true : false}
-                        name="group1"
-                        type="radio"
-                        onClick={(e: any) => setDistance(e.target.value)}
-                        disabled={inputDisabled}
-                      />
-                      <Form.Check
-                        inline
-                        label="20 Km"
-                        value="20 Km"
-                        checked={distance === '20 Km' ? true : false}
-                        name="group1"
-                        type="radio"
-                        onClick={(e: any) => setDistance(e.target.value)}
-                        disabled={inputDisabled}
-                      />
-                      <Form.Check
-                        inline
-                        label="25 Km"
-                        value="25 Km"
-                        checked={distance === '25 Km' ? true : false}
-                        name="group1"
-                        type="radio"
-                        onClick={(e: any) => setDistance(e.target.value)}
-                        disabled={inputDisabled}
-                      />
-                      <Form.Check
-                        inline
-                        label="30 Km"
-                        value="30 Km"
-                        checked={distance === '30 Km' ? true : false}
-                        name="group1"
-                        type="radio"
-                        onClick={(e: any) => setDistance(e.target.value)}
-                        disabled={inputDisabled}
-                      />
-                      <Form.Check
-                        inline
-                        label="40 Km"
-                        value="40 Km"
-                        checked={distance === '40 Km' ? true : false}
-                        name="group1"
-                        type="radio"
-                        onClick={(e: any) => setDistance(e.target.value)}
-                        disabled={inputDisabled}
-                      />
-                      <Form.Check
-                        inline
-                        label="50 Km"
-                        value="50 Km"
-                        checked={distance === '50 Km' ? true : false}
-                        name="group1"
-                        type="radio"
-                        onClick={(event: any) => setDistance(event.target.value)}
-                        disabled={inputDisabled}
-                      />
-                    </Form>
-                    <div>
-                      {primaryAddress
-                        ? primaryAddress.map((currentValue, index) => (
-                            <b
-                              key={
-                                index
-                              }>{`${currentValue.House_Number}, ${currentValue.address1}, ${currentValue.address2}, ${currentValue.city}, ${currentValue.state}, ${currentValue.country}`}</b>
-                          ))
-                        : null}
+                    <div className="p-3">
+                      <label>
+                        <b>Distance</b>
+                      </label>
+                      <Form>
+                        <Form.Check
+                          inline
+                          label="5 Km"
+                          value="5 Km"
+                          checked={distance === '5 Km' ? true : false}
+                          name="group1"
+                          type="radio"
+                          onClick={(e: any) => setDistance(e.target.value)}
+                          disabled={inputDisabled}
+                        />
+                        <Form.Check
+                          inline
+                          label="10 Km"
+                          value="10 Km"
+                          checked={distance === '10 Km' ? true : false}
+                          name="group1"
+                          type="radio"
+                          onClick={(e: any) => setDistance(e.target.value)}
+                          disabled={inputDisabled}
+                        />
+                        <Form.Check
+                          inline
+                          label="15 Km"
+                          value="15 Km"
+                          checked={distance === '15 Km' ? true : false}
+                          name="group1"
+                          type="radio"
+                          onClick={(e: any) => setDistance(e.target.value)}
+                          disabled={inputDisabled}
+                        />
+                        <Form.Check
+                          inline
+                          label="20 Km"
+                          value="20 Km"
+                          checked={distance === '20 Km' ? true : false}
+                          name="group1"
+                          type="radio"
+                          onClick={(e: any) => setDistance(e.target.value)}
+                          disabled={inputDisabled}
+                        />
+                        <Form.Check
+                          inline
+                          label="25 Km"
+                          value="25 Km"
+                          checked={distance === '25 Km' ? true : false}
+                          name="group1"
+                          type="radio"
+                          onClick={(e: any) => setDistance(e.target.value)}
+                          disabled={inputDisabled}
+                        />
+                        <Form.Check
+                          inline
+                          label="30 Km"
+                          value="30 Km"
+                          checked={distance === '30 Km' ? true : false}
+                          name="group1"
+                          type="radio"
+                          onClick={(e: any) => setDistance(e.target.value)}
+                          disabled={inputDisabled}
+                        />
+                        <Form.Check
+                          inline
+                          label="40 Km"
+                          value="40 Km"
+                          checked={distance === '40 Km' ? true : false}
+                          name="group1"
+                          type="radio"
+                          onClick={(e: any) => setDistance(e.target.value)}
+                          disabled={inputDisabled}
+                        />
+                        <Form.Check
+                          inline
+                          label="50 Km"
+                          value="50 Km"
+                          checked={distance === '50 Km' ? true : false}
+                          name="group1"
+                          type="radio"
+                          onClick={(event: any) => setDistance(event.target.value)}
+                          disabled={inputDisabled}
+                        />
+                      </Form>
+                      <div>
+                        {primaryAddress
+                          ? primaryAddress.map((currentValue, index) => (
+                              <b
+                                key={
+                                  index
+                                }>{`${currentValue.House_Number}, ${currentValue.address1}, ${currentValue.address2}, ${currentValue.city}, ${currentValue.state}, ${currentValue.country}`}</b>
+                            ))
+                          : null}
+                      </div>
                     </div>
-                  </div>
-                </>
+                  </>
                 )}
               </Row>
               {addressTitle === 'At My Address' && (
@@ -502,7 +502,7 @@ const CustomProgramDetails: React.FC<{
               </InputGroup.Append>
             </InputGroup>
           </Col>
-          <Col lg={2} md={{offset: 2}}>
+          <Col lg={2} md={{ offset: 2 }}>
             <img src="/assets/customgroup-online.svg" alt="custom-training" />
             <p>Group online</p>
           </Col>
@@ -548,7 +548,7 @@ const CustomProgramDetails: React.FC<{
               </InputGroup.Append>
             </InputGroup>
           </Col>
-          <Col lg={2} md={{offset: 2}}>
+          <Col lg={2} md={{ offset: 2 }}>
             <img src="/assets/customgroup-offline.svg" alt="custom-training" />
             <p>Group offline</p>
           </Col>
@@ -596,16 +596,12 @@ const CustomProgramDetails: React.FC<{
           </Col>
         </Row>
       )}
-     
+
       {mode !== '' && (
         <Row>
           <Col lg={2}>
-            <img
-              src="/assets/offeringImages/restdays.svg"
-              alt="rest days"
-              loading="lazy"
-            />
-             <p>Rest Days</p>
+            <img src="/assets/offeringImages/restdays.svg" alt="rest days" loading="lazy" />
+            <p>Rest Days</p>
           </Col>
           <Col lg={2}>
             <InputGroup className="mb-3">

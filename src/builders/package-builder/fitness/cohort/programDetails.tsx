@@ -24,13 +24,13 @@ const ProgramDetails: React.FC<{
     };
   }
 
-  const [mode, setMode] = useState(props.value ? existingData.mode.toString() : '0');
-  const [residential, setResidential] = useState(
-    props.value === undefined || existingData.residential === null
-      ? '0'
-      : existingData.residential.toString()
+  const [mode, setMode] = useState<string>(props.value ? existingData.mode.toString() : '0');
+  const [residential, setResidential] = useState<string>('0'
+    // (props?.value === undefined || existingData?.residential === null)
+    //   ? '0'
+    //   : existingData?.residential?.toString()
   );
-  const [addressModal, setAddressModal] = useState(false);
+  const [addressModal, setAddressModal] = useState<boolean>(false);
 
   const auth = useContext(AuthContext);
   const [singleSelections, setSingleSelections] = useState<any[]>(
@@ -41,10 +41,10 @@ const ProgramDetails: React.FC<{
     props.value ? existingData.addressTag : 'At My Address'
   );
 
-  const [showPrivate, setShowPrivate] = useState(
+  const [showPrivate, setShowPrivate] = useState<boolean>(
     props.value ? existingData.accomodationDetails?.private : false
   );
-  const [showSharing, setShowSharing] = useState(
+  const [showSharing, setShowSharing] = useState<boolean>(
     props.value ? existingData.accomodationDetails?.sharing : false
   );
   const [privateRooms, setPrivateRooms] = useState<number>(
@@ -57,11 +57,11 @@ const ProgramDetails: React.FC<{
     props.value ? existingData.accomodationDetails?.threeSharingRooms : null
   );
   const [foodDescription, setFoodDescription] = useState<string>(
-    props.value === undefined
+    props?.value === undefined
       ? ''
-      : existingData.accomodationDetails?.foodDescription === undefined
+      : existingData?.accomodationDetails?.foodDescription === undefined
       ? ''
-      : existingData.accomodationDetails?.foodDescription
+      : existingData?.accomodationDetails?.foodDescription
   );
   const [accomodationDetails] = useState<any>({});
 
