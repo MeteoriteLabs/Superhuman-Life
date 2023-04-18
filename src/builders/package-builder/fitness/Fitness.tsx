@@ -181,93 +181,204 @@ export default function FitnessTab() {
         Cell: ({ row }: any) => {
           return (
             <div className="d-flex justify-content-center align-items-center">
-              {row.values.details[0] && row.values.details[0] ? (
-                <div className="text-center">
-                  <OfferingsDisplayImage
-                    mode={row.original?.mode === 'Hybrid' ? 'Online' : row.original?.mode}
-                    packageType={row.original?.type}
+              {row.original.type === 'Custom Fitness' ? (
+                row.original.mode === 'Online' ? (
+                  <>
+                    <div>
+                      <img
+                        src="./assets/offeringImages/one-on-one-online.svg"
+                        alt="one on one online"
+                      />
+                      <br />
+                      <p> {row.original.ptonline * currentIndex[row.index]} </p>
+                    </div>
+                    <div>
+                      <img
+                        src="./assets/offeringImages/group-class-online.svg"
+                        alt="one on one online"
+                      />
+                      <br />
+                      <p> {row.original.grouponline * currentIndex[row.index]} </p>
+                    </div>
+                    <div>
+                      <img
+                        src="./assets/offeringImages/classic-class-online.svg"
+                        alt="recorded online"
+                      />
+                      <br />
+                      <p> {row.original.recordedclasses * currentIndex[row.index]} </p>
+                    </div>
+                  </>
+                ) : row.original.mode === 'Offline' ? (
+                  <>
+                    <div>
+                      <img
+                        src="./assets/offeringImages/one-on-one-offline.svg"
+                        alt="one on one offline"
+                      />
+                      <br />
+                      <p> {row.original.ptoffline * currentIndex[row.index]} </p>
+                    </div>
+                    <div>
+                      <img
+                        src="./assets/offeringImages/group-class-offline.svg"
+                        alt="group offline"
+                      />
+                      <br />
+                      <p> {row.original.groupoffline * currentIndex[row.index]} </p>
+                    </div>
+                    <div>
+                      <img
+                        src="./assets/offeringImages/classic-class-online.svg"
+                        alt="recorded online"
+                      />
+                      <br />
+                      <p> {row.original.recordedclasses * currentIndex[row.index]} </p>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div>
+                      <img
+                        src="./assets/offeringImages/one-on-one-online.svg"
+                        alt="one on one online"
+                      />
+                      <br />
+                      <p>{row.original.ptonline * currentIndex[row.index]}</p>
+                    </div>
+                    <div>
+                      <img
+                        src="./assets/offeringImages/one-on-one-offline.svg"
+                        alt="one on one offline"
+                      />
+                      <br />
+                      <p> {row.original.ptoffline * currentIndex[row.index]} </p>
+                    </div>
+                    <div>
+                      <img
+                        src="./assets/offeringImages/group-class-online.svg"
+                        alt="group online"
+                      />
+                      <br />
+                      <p> {row.original.grouponline * currentIndex[row.index]} </p>
+                    </div>
+                    <div>
+                      <img
+                        src="./assets/offeringImages/group-class-offline.svg"
+                        alt="group offline"
+                      />
+                      <br />
+                      <p> {row.original.groupoffline * currentIndex[row.index]} </p>
+                    </div>
+                    <div>
+                      <img
+                        src="./assets/offeringImages/classic-class-online.svg"
+                        alt="recorded online"
+                      />
+                      <br />
+                      <p> {row.original.recordedclasses * currentIndex[row.index]}</p>
+                    </div>
+                  </>
+                )
+              ) : null}
+              {row.original.type === 'Group Class' ? (
+                row.original.mode === 'Online' ? (
+                  <>
+                    <div>
+                      <img
+                        src="./assets/offeringImages/group-class-online.svg"
+                        alt="group online"
+                      />
+                      <br />
+                      <p> {row.original.grouponline * currentIndex[row.index]} </p>
+                    </div>
+                  </>
+                ) : row.original.mode === 'Offline' ? (
+                  <>
+                    <div>
+                      <img
+                        src="./assets/offeringImages/group-class-offline.svg"
+                        alt="group offline"
+                      />
+                      <br />
+                      <p> {row.original.groupoffline * currentIndex[row.index]} </p>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div>
+                      <img
+                        src="./assets/offeringImages/group-class-online.svg"
+                        alt="group online"
+                      />
+                      <br />
+                      <p> {row.original.grouponline * currentIndex[row.index]} </p>
+                    </div>
+                    <div>
+                      <img
+                        src="./assets/offeringImages/group-class-offline.svg"
+                        alt="group offline"
+                      />
+                      <br />
+                      <p> {row.original.groupoffline * currentIndex[row.index]} </p>
+                    </div>
+                  </>
+                )
+              ) : null}
+              {row.original.type === 'Classic Class' ? (
+                <div>
+                  <img
+                    src="./assets/offeringImages/classic-class-online.svg"
+                    alt="recorded online"
                   />
-                  <p>{row.original.details[0] * currentIndex[row.index]}</p>
+                  <br />
+                  <p> {row.original.recordedclasses * currentIndex[row.index]}</p>
                 </div>
-              ) : (
-                ''
-              )}
-              {row.values.details[1] && row.values.details[1] ? (
-                <div className="text-center">
-                  <OfferingsDisplayImage
-                    mode={row.original?.mode === 'Hybrid' ? 'Offline' : row.original?.mode}
-                    packageType={
-                      row.original?.type === 'Custom Fitness' ? 'One-On-One' : row.original?.type
-                    }
-                  />
-                  <p>{row.values.details[1] * currentIndex[row.index]}</p>
-                </div>
-              ) : (
-                ''
-              )}
-              {row.values.details[2] !== null && row.values.details[2] !== 0 ? (
-                <div className="text-center">
-                  <OfferingsDisplayImage
-                    mode={row.original?.mode === 'Hybrid' ? 'Online' : row.original?.mode}
-                    packageType={row.original?.type}
-                  />
-
-                  <p>
-                    {row.original?.freeClass
-                      ? row.original.pricing[selectedDuration[row.index]]?.classes
-                      : row.values.details[2] * currentIndex[row.index]}
-                  </p>
-                </div>
-              ) : (
-                ''
-              )}
-              {row.values.details[3] !== null && row.values.details[3] !== 0 ? (
-                <div className="text-center">
-                  <OfferingsDisplayImage
-                    mode={row.original?.mode === 'Hybrid' ? 'Offline' : row.original?.mode}
-                    packageType={
-                      row.original?.type === 'Custom Fitness' ? 'Group Class' : row.original?.type
-                    }
-                  />
-
-                  <p>
-                    {row.original?.freeClass
-                      ? row.original.pricing[selectedDuration[row.index]]?.classes
-                      : row.values.details[3] * currentIndex[row.index]}
-                  </p>
-                </div>
-              ) : (
-                ''
-              )}
-              {row.values.details[4] !== null && row.values.details[4] !== 0 ? (
-                <div className="text-center">
-                  <OfferingsDisplayImage
-                    mode={row.original?.type === 'Custom Fitness' ? 'Online' : row.original?.mode}
-                    packageType={
-                      row.original?.type === 'Custom Fitness' ? 'Classic Class' : row.original?.type
-                    }
-                  />
-
-                  <p>{row.values.details[4] * currentIndex[row.index]}</p>
-                </div>
-              ) : (
-                ''
-              )}
-              {row.values.details[5] !== null &&
-              row.values.details[4] === null &&
-              row.original?.type === 'Group Class' ? (
-                <div className="text-center">
-                  {row.values.details[6] === 'Online' ? (
-                    <OfferingsDisplayImage mode={'Online'} packageType={row.original?.type} />
-                  ) : (
-                    <OfferingsDisplayImage mode={'Offline'} packageType={row.original?.type} />
-                  )}
-
-                  <p>{row.values.details[5] * currentIndex[row.index]}</p>
-                </div>
-              ) : (
-                ''
-              )}
+              ) : null}
+              {row.original.type === 'One-On-One' ? (
+                row.original.mode === 'Online' ? (
+                  <>
+                    <div>
+                      <img
+                        src="./assets/offeringImages/one-on-one-online.svg"
+                        alt="one on one online"
+                      />
+                      <br />
+                      <p> {row.original.ptonline * currentIndex[row.index]} </p>
+                    </div>
+                  </>
+                ) : row.original.mode === 'Offline' ? (
+                  <>
+                    <div>
+                      <img
+                        src="./assets/offeringImages/one-on-one-offline.svg"
+                        alt="one on one offline"
+                      />
+                      <br />
+                      <p> {row.original.ptoffline * currentIndex[row.index]} </p>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div>
+                      <img
+                        src="./assets/offeringImages/one-on-one-online.svg"
+                        alt="one on one online"
+                      />
+                      <br />
+                      <p>{row.original.ptonline * currentIndex[row.index]}</p>
+                    </div>
+                    <div>
+                      <img
+                        src="./assets/offeringImages/one-on-one-offline.svg"
+                        alt="one on one offline"
+                      />
+                      <br />
+                      <p> {row.original.ptoffline * currentIndex[row.index]} </p>
+                    </div>
+                  </>
+                )
+              ) : null}
             </div>
           );
         }
@@ -303,7 +414,7 @@ export default function FitnessTab() {
                   {row.values.duration.map((item: number, index: number) => {
                     return (
                       <option key={index} value={index}>
-                        {item !== 0 && item} {item === 1 ? "day" : "days"}
+                        {item !== 0 && item} {item === 1 ? 'day' : 'days'}
                       </option>
                     );
                   })}

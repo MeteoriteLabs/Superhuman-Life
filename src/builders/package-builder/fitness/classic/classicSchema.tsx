@@ -95,6 +95,7 @@ export const schema: any = {
   },
   programDetails: {
     "ui:widget": "classicProgramDetails",
+    "ui:help": "Sum of sessions and rest days should be less than or equal to duration",
   },
   pricingDetail: {
     "ui:widget": "classPricingTable",

@@ -115,6 +115,7 @@ export const schemaView: any = {
   programDetails: {
     "ui:widget": "ptProgramDetails",
     "ui:readonly": true,
+    "ui:help": "Sum of all sessions and rest days should be less than or equal to 30 days",
   },
   pricingDetail: {
     "ui:widget": "ptPricingTable",

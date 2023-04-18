@@ -88,7 +88,8 @@ export const schemaView: any = {
      },
      "programDetails": {
           "ui:widget": "customProgramDetails",
-          "ui:readonly": true
+          "ui:readonly": true,
+          "ui:help": "Sum of all sessions and rest days should be less than or equal to 30 days",
      },
      "groupinstantbooking": {
           "ui:widget": "groupConfig",
