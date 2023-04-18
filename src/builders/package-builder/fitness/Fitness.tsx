@@ -27,7 +27,6 @@ import CreateEditViewCohort from './cohort/CreateEditView-Cohort';
 import { GET_FITNESS, GET_TAGS } from './graphQL/queries';
 import { flattenObj } from '../../../components/utils/responseFlatten';
 import moment from 'moment';
-import OfferingsDisplayImage from '../../../components/customWidgets/offeringsDisplayImage';
 import Drawer from '../../../components/Drawer';
 import DrawerTrigger from '../../../components/Drawer/DrawerTrigger';
 import Backdrop from '../../../components/Drawer/Backdrop';
