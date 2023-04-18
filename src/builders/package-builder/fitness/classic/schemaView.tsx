@@ -106,6 +106,7 @@ export const schemaView: any = {
   programDetails: {
     "ui:widget": "classicProgramDetails",
     "ui:readonly": true,
+    "ui:help": "Sum of sessions and rest days should be less than or equal to duration",
   },
   groupinstantbooking: {
     "ui:widget": "groupConfig",

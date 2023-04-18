@@ -1,14 +1,9 @@
-import React from "react";
-import Icons from "../Icons";
+import React from 'react';
+import { Button } from 'react-bootstrap';
 
-const DrawerTrigger: React.FC<{ toggle: () => void}> = (props) => {
+const DrawerTrigger: React.FC<{ toggle: () => void }> = (props) => {
   return (
-    <div onClick={props.toggle} style={{paddingLeft: "45%"}}>
-    <Icons
-      name="unreadeye"
-      style={{ cursor: "pointer" }}
-    />
-    </div>
+    <Button onClick={props.toggle} variant='outline-dark'>Preview</Button>
   );
 };
 
