@@ -11,6 +11,7 @@ import { setContext } from "@apollo/client/link/context";
 import AuthContext from "./context/auth-context";
 import Routes from "./Routes";
 import Toaster from "../src/components/Toaster";
+import ErrorBoundary from "./components/ErrorBoundaries";
 
 const App: React.FC = () => {
   const [token, setToken] = useState<any>(localStorage.getItem("token"));
@@ -68,7 +69,7 @@ const App: React.FC = () => {
   });
 
   return (
-    <>
+    <ErrorBoundary>
     <ApolloProvider client={client}>
       <AuthContext.Provider
         value={{
@@ -97,7 +98,7 @@ const App: React.FC = () => {
       </AuthContext.Provider>
     </ApolloProvider>
     {errMsg && <Toaster handleCallback={ () => setErrMsg('') } type={'error'} msg={errMsg} />}
-    </>
+    </ErrorBoundary>
   );
 }
 
