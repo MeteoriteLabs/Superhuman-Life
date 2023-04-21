@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import React, { useState, useRef } from "react";
 import { schema } from "./paymentModeSchema";
 import { GET_CONTACT , UPDATE_CONTACT } from "../contacts/queries";
 import { useMutation, useQuery } from "@apollo/client";
@@ -12,7 +12,7 @@ import {
     phoneTransformErrors,
   } from "../../../components/utils/ValidationPatterns"; 
 
-function PaymentMode() {
+const PaymentMode: React.FC = () => {
   const registry = utils.getDefaultRegistry();
   const defaultFileWidget = registry.widgets["FileWidget"];
   (Bootstrap4Theme as any).widgets["FileWidget"] = defaultFileWidget;

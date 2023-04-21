@@ -1,4 +1,79 @@
-export const schema: any = {
+interface Schema {
+    firstname: {
+        "ui:placeholder": string;
+    },
+    lastname: {
+        "ui:placeholder": string;
+    },
+    phone: {
+        "ui:placeholder": string;
+    },
+    email: {
+        "ui:placeholder": string;
+    },
+    nameOfPayee: {
+        "ui:placeholder": string;
+    },
+    gstNumber: {
+        "ui:placeholder": string;
+    },
+    houseNumber: {
+        "ui:placeholder": string;
+    },
+    address1: {
+        "ui:placeholder": string;
+    },
+    address2: {
+        "ui:placeholder": string;
+    },
+    city: {
+        "ui:placeholder": string;
+    },
+    state: {
+        "ui:placeholder": string;
+    },
+    country: {
+        "ui:placeholder": string;
+    },
+    zipcode: {
+        "ui:placeholder": string;
+    },
+    gst: {
+        "ui:placeholder": string;
+    },
+    organisationName: {
+        "ui:placeholder": string;
+    },
+    organisationEmail: {
+        "ui:placeholder": string;
+    },
+    typeOfPayee: {
+        "ui:widget": string;
+        "ui:placeholder": string;
+        "ui:options": {
+            "inline": boolean;
+        }
+    },
+    appDownloadStatus: {
+        "ui:widget": string;
+        "ui:options": {
+            "inline": boolean;
+        }
+    },
+    organisationDetails: {
+        "ui:widget": string,
+        "ui:options": {
+            "inline": boolean;
+        }
+    },
+    isPayee: {
+        "ui:widget": "radio",
+        "ui:options": {
+            "inline": boolean
+        }
+    }
+}
+export const schema: Schema = {
     firstname: {
         "ui:placeholder": "Enter First Name"
     },

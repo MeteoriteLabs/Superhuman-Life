@@ -5,7 +5,7 @@ export const GET_BOOKINGS = gql`
     clientBookings(
       filters: {
         booking_status: { eq: "accepted" }
-        users_permissions_users: { id: { eq: $id } }
+        ClientUser: { id: { eq: $id } }
         booking_date: { gte: $startDateTime, lte: $endDateTime }
       }
     ) {

@@ -196,11 +196,13 @@ const CreateWebpageDetails = (props: any, ref: any) => {
     console.log("view message");
   }
 
+   // eslint-disable-next-line
   function DeleteWebpage(id: any) {
     console.log("delete message");
     // deleteExercise({ variables: { id: id }});
   }
 
+   // eslint-disable-next-line
   function OnSubmit(frm: any) {
     //bind user id
 
@@ -243,6 +245,7 @@ const CreateWebpageDetails = (props: any, ref: any) => {
               ? () => {
                 modalTrigger.next(false);
               }
+               // eslint-disable-next-line
               : (frm: any) => {
                 OnSubmit(frm);
               }

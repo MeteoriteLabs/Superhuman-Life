@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import AuthContext from "../../../context/auth-context";
 import { Container, Row, Col, Card } from 'react-bootstrap';
 import ChangePasswordPage from '../../changePassword';
@@ -8,20 +8,44 @@ import { FETCH_USER_PROFILE_DATA  } from "../queries/queries";
 import { useQuery } from "@apollo/client";
 import moment from 'moment';
 
-function ChangemakersSettings() {
+interface ProfileData {
+    About_User: string;
+    Clubhouse_URL: string;
+    Document_Verified: boolean;
+    Facebook_URL: string;
+    First_Name: string;
+Last_Name: string;
+LinkedIn_URL: string;
+Phone_Number: string;
+Photo_ID: string;
+Photo_profile_banner_ID: string;
+Twitter_URL: string;
+Verification_ID: string;
+Website_URL: string;
+Youtube_URL: string;
+about_mini_description: string;
+addresses: unknown;
+designations: unknown;
+educational_details: unknown;
+email: string;
+instagram_url: string;
+updatedAt: string;
+}
+
+const ChangemakersSettings: React.FC = () => {
     const [showPasswordSetting, setShowPasswordSetting] = useState(false);
     const [showModuleSetting, setShowModuleSetting] = useState(false);
     const [showDeleteAccountSetting, setShowDeleteAccountSetting] = useState(false);
     const auth = useContext(AuthContext);
-    const [profileData, setProfileData] = useState<any>({});
+    const [profileData, setProfileData] = useState<ProfileData>({} as ProfileData);
 
     useQuery(FETCH_USER_PROFILE_DATA, {
         variables: { id: auth.userid },
-        onCompleted: (r: any) => {
-            setProfileData(r.usersPermissionsUser.data.attributes);
+        onCompleted: (response) => {
+            setProfileData(response.usersPermissionsUser.data.attributes);
         },
     });
-
+console.log(profileData);
     return (
         <>
             <Container>

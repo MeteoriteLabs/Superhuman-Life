@@ -1,19 +1,16 @@
-import { useState, useRef, useContext } from "react";
-import {
-  InputGroup,
-  FormControl,
-  Container,
-  Col,
-  Row,
-  Button,
-} from "react-bootstrap";
-import { gql, useQuery } from "@apollo/client";
-import AuthContext from "../../context/auth-context";
-import "../../builders/program-builder/program-template/styles.css";
-import SchedulerEvent from "../../builders/program-builder/program-template/scheduler-event";
-import { flattenObj } from "../utils/responseFlatten";
+import React, { useState, useRef, useContext } from 'react';
+import { InputGroup, FormControl, Container, Col, Row, Button } from 'react-bootstrap';
+import { gql, useQuery } from '@apollo/client';
+import AuthContext from '../../context/auth-context';
+import '../../builders/program-builder/program-template/styles.css';
+import SchedulerEvent from '../../builders/program-builder/program-template/scheduler-event';
+import { flattenObj } from '../utils/responseFlatten';
 
-const ProgramList = (props: any) => {
+const ProgramList: React.FC<{
+  callback: (args: string) => void;
+  sessionIds: string;
+  dayType: string;
+}> = (props) => {
   const auth = useContext(AuthContext);
   const [programList, setProgramList] = useState<any[]>([]);
   const [searchInput, setSearchInput] = useState(null);
@@ -24,10 +21,7 @@ const ProgramList = (props: any) => {
   const GET_PROGRAMLIST = gql`
     query programlistQuery($id: ID!, $filter: String!) {
       fitnessprograms(
-        filters: {
-          users_permissions_user: { id: { eq: $id } }
-          title: { containsi: $filter }
-        }
+        filters: { users_permissions_user: { id: { eq: $id } }, title: { containsi: $filter } }
       ) {
         data {
           id
@@ -93,12 +87,12 @@ const ProgramList = (props: any) => {
   `;
 
   function FetchEquipmentList(
-    _variable: Record<string, unknown> = { id: auth.userid, filter: " " }
+    _variable: Record<string, unknown> = { id: auth.userid, filter: ' ' }
   ) {
     useQuery(GET_PROGRAMLIST, {
       variables: _variable,
       onCompleted: loadProgramList,
-      skip: !searchInput,
+      skip: !searchInput
     });
   }
 
@@ -113,9 +107,7 @@ const ProgramList = (props: any) => {
           level: program.level,
           description: program.description,
           discpline: program.fitnessdisciplines,
-          events: program.sessions.filter(
-            (session: any) => session.Is_restday === false
-          ),
+          events: program.sessions.filter((session: any) => session.Is_restday === false)
         };
       })
     );
@@ -146,17 +138,17 @@ const ProgramList = (props: any) => {
       level: level,
       description: description,
       discpline: discpline,
-      events: events,
+      events: events
     });
-    inputField.current.value = "";
+    inputField.current.value = '';
     setProgramList([]);
     skipval = true;
   }
 
   const days: any = [];
 
-  for (let i = 1; i <= selected.duration; i++) {
-    days.push(i);
+  for (let duration = 1; duration <= selected.duration; duration++) {
+    days.push(duration);
   }
 
   function renderEventsTable() {
@@ -183,10 +175,9 @@ const ProgramList = (props: any) => {
         variant="outline-danger"
         className="float-right mb-3"
         onClick={() => {
-          props.callback("none");
+          props.callback('none');
           setSelected({});
-        }}
-      >
+        }}>
         close
       </Button>
       <InputGroup>
@@ -208,7 +199,7 @@ const ProgramList = (props: any) => {
           return (
             <Container className="pl-0" key={index}>
               <div
-                style={{ cursor: "pointer", maxWidth: "60%" }}
+                style={{ cursor: 'pointer', maxWidth: '60%' }}
                 className="m-2 ml-5 p-2 shadow-sm rounded bg-white "
                 id={program.id}
                 onClick={(e) => {
@@ -222,17 +213,12 @@ const ProgramList = (props: any) => {
                     program.discpline,
                     program.events
                   );
-                }}
-              >
+                }}>
                 <div>
                   <Row>
-                    <Col style={{ textAlign: "start", fontWeight: "bold" }}>
-                      {program.name}
-                    </Col>
-                    <Col style={{ textAlign: "center" }}>
-                      {program.description}
-                    </Col>
-                    <Col style={{ textAlign: "end" }}>{program.level}</Col>
+                    <Col style={{ textAlign: 'start', fontWeight: 'bold' }}>{program.name}</Col>
+                    <Col style={{ textAlign: 'center' }}>{program.description}</Col>
+                    <Col style={{ textAlign: 'end' }}>{program.level}</Col>
                   </Row>
                 </div>
               </div>

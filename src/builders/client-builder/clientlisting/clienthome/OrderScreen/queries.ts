@@ -4,13 +4,18 @@ export const GET_BOOKINGS = gql`
           clientBookings(
                where: {
                     fitnesspackages: { users_permissions_user: { id: $id } }
-                    users_permissions_user: { id: $clientid }
+                    ClientUser: { id: $clientid }
                }
                sort: "booking_date:desc"
           ) {
                id
-               users_permissions_user {
-                    username
+               ClientUser {
+                    data{
+                      id
+                      attributes{
+                        username
+                      }
+                    }
                }
                effective_date
                booking_status
@@ -54,7 +59,7 @@ query clientBookings($id: ID!, $clientid: ID){
            }
          }
        },
-       users_permissions_users: {
+       ClientUser: {
          id: {
            eq: $clientid
          }
@@ -63,7 +68,7 @@ query clientBookings($id: ID!, $clientid: ID){
        data{
          id
          attributes{
-           users_permissions_users{
+          ClientUser{
              data{
                id
                attributes{

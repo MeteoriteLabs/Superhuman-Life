@@ -1,7 +1,8 @@
+import React from "react";
 import "./style.css";
 import {Link} from 'react-router-dom';
 
-function PageNotFound() {
+const PageNotFound: React.FC = () => {
   return (
     <div>
       <div className="page_not_found_wrapper">

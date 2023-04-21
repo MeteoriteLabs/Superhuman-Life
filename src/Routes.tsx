@@ -52,6 +52,7 @@ const NotificationsSettings = React.lazy(() => import('./pages/notificationSetti
 const PrivacyPolicy = React.lazy(() => import('./pages/privacyPolicy'));
 const TermsOfService = React.lazy(() => import('./pages/termsOfService'));
 const SessionPage = React.lazy(() => import("./builders/session-builder/"));
+const AddClient = React.lazy(() => import("./builders/client-builder/addClient"));
 
 //auth logins
 // const GoogleAuthCallbackPage = React.lazy(() => import("./pages/register/oAuthLogins/googleAuthCallback"));
@@ -107,6 +108,7 @@ export default function Routes({ token }: any) {
                                    <Route path="/payment_settings" component={PaymentScheduleSettingsPage} />
                                    <Route path="/notifications" component={NotificationsPage} />
                                    <Route path="/notificationSettings" component={NotificationsSettings} />
+                                   <Route path="/add_client" component={AddClient} />
 
                                    <Route path="*" component={NoMatch} />
                               </Switch>

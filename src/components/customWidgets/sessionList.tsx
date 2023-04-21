@@ -117,16 +117,6 @@ const ProgramList = (props: any) => {
 
   FetchEquipmentList({ filter: searchInput, skip: skipval, id: auth.userid });
 
-  useEffect(() => {
-    // if(urlList[3] === 'pt'){
-    //     setSelectedFitnessPackage("One-On-One");
-    // }else if(urlList[3] === 'group'){
-    //     setSelectedFitnessPackage('Group Class');
-    // }else if(urlList[3] === 'classic'){
-    //     setSelectedFitnessPackage('Classic Class');
-    // }
-  }, []);
-
   return (
     <>
       <label style={{ fontSize: 17 }}>Import from existing session</label>

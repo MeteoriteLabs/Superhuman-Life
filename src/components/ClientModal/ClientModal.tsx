@@ -14,7 +14,7 @@ const ClientModal: React.FC<{id: string; type: string; show: boolean; onHide: ()
    // eslint-disable-next-line
   const [dataTable, setDataTable] = useState<any[]>([]);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [queryName, setQueryName] = useState<any>("");
+  const [queryName, setQueryName] = useState<string>("");
   const fitnessActionRef = useRef<any>(null);
 
   useEffect(() => {

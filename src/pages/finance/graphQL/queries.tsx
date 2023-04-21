@@ -66,11 +66,11 @@ export const GET_VOUCHERS_BY_ID = gql`
 
 export const GET_ALL_BOOKINGS_FINANCE = gql `
 query clientBookings($id: ID!) {
-  clientBookings( filters: {users_permissions_users: { id: {eq:$id} } }) 
+  clientBookings( filters: {ClientUser: { id: {eq:$id} } }) 
     {
       data{
         attributes{
-          users_permissions_users {
+          ClientUser {
             data{
               attributes{
                 username
@@ -95,7 +95,6 @@ query clientBookings($id: ID!) {
           booking_date
           package_duration
           fitnesspackages {
-          
             data{
               attributes{
                 packagename
@@ -109,7 +108,6 @@ query clientBookings($id: ID!) {
                 }
                 fitnesspackagepricing
                 users_permissions_user {
-                 
                   data{
                     attributes{
                       Phone_Number

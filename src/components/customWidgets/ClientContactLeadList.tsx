@@ -1,12 +1,13 @@
 import React, { useState, useContext } from "react";
 import { Typeahead } from "react-bootstrap-typeahead";
 import "react-bootstrap-typeahead/css/Typeahead.css";
-import { GET_CONTACTS } from "./queries";
+import { GET_CONTACTS, FETCH_CHANGEMAKERS } from "./queries";
 import { useQuery } from "@apollo/client";
 import { flattenObj } from "../utils/responseFlatten";
 import AuthContext from "../../context/auth-context";
+import { String } from "aws-sdk/clients/batch";
 
-const ContactList: React.FC<{value: string; onChange: (params: string|null) => void;}> = (props) => {
+const ClientContactLeadList: React.FC<{value: string; onChange: (params: string|null) => void;}> = (props) => {
   const auth = useContext(AuthContext);
   function handleReturnType(value) {
     if (typeof value === "string") {
@@ -27,6 +28,14 @@ const ContactList: React.FC<{value: string; onChange: (params: string|null) => v
       onCompleted: loadData,
     });
   }
+
+  
+    useQuery(FETCH_CHANGEMAKERS, {
+      variables: { id: auth.userid },
+      onCompleted: loadData,
+    });
+  
+
 
   function loadData(data: any) {
     const flattenedData = flattenObj({ ...data });
@@ -56,8 +65,8 @@ const ContactList: React.FC<{value: string; onChange: (params: string|null) => v
   FetchData();
 
   return (
-    <div>
-      <label>Add contact</label>
+    <>
+     
       <Typeahead
         id="basic-typeahead-multiple"
         labelKey="name"
@@ -66,8 +75,8 @@ const ContactList: React.FC<{value: string; onChange: (params: string|null) => v
         placeholder="Choose Contact..."
         selected={multiSelections}
       />
-    </div>
+    </>
   );
 };
 
-export default ContactList;
+export default ClientContactLeadList;

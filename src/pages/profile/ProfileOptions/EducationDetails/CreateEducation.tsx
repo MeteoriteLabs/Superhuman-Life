@@ -30,12 +30,14 @@ interface BasicEducationDetails {
      Year: string; 
 }
 
-function CreateEducation(props: any, ref: any) {
+// eslint-disable-next-line
+const CreateEducation = (props: {callback: () => void;}, ref: any) => {
      const educationJson: unknown = require("./Education.json");
      const [operation, setOperation] = useState<Operation>({} as Operation);
-     const [educationID, setEducationID] = useState<any>([]);
+     const [educationID, setEducationID] = useState<string[]>([]);
      const [educationDetails, setEducationDetails] = useState({} as BasicEducationDetails);
      const auth = useContext(AuthContext);
+     // eslint-disable-next-line
      const [prefill, setPrefill] = useState<any>([]);
      const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
      const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
@@ -45,40 +47,40 @@ function CreateEducation(props: any, ref: any) {
      const fetch = useQuery(FETCH_USER_PROFILE_DATA, {
           variables: { id: auth.userid },
           skip: (operation.type === 'create'),
-          onCompleted: (r: any) => {
-               const flattenData = flattenObj({ ...r });
+          onCompleted: (response) => {
+               const flattenData = flattenObj({ ...response });
 
                CloseForm();
                setPrefill(flattenData.usersPermissionsUser.educational_details);
 
-               setEducationID(r.usersPermissionsUser.data.attributes.educational_details.data && r.usersPermissionsUser.data.attributes.educational_details.data.length ? r.usersPermissionsUser.data.attributes.educational_details.data.map(
-                    (eduId: any) => eduId.id
+               setEducationID(response.usersPermissionsUser.data.attributes.educational_details.data && response.usersPermissionsUser.data.attributes.educational_details.data.length ? response.usersPermissionsUser.data.attributes.educational_details.data.map(
+                    (eduId) => eduId.id
                ) : null
                );
           },
      });
 
      const [updateProfile] = useMutation(UPDATE_USER_PROFILE_DATA, {
-          onCompleted: (r: any) => { props.callback(); fetch.refetch(); }, refetchQueries: [FETCH_USERS_PROFILE_DATA]
+          onCompleted: () => { props.callback(); fetch.refetch(); }, refetchQueries: [FETCH_USERS_PROFILE_DATA]
      });
 
      const [updateEducationalDetail] = useMutation(UPDATE_EDUCATION_DETAILS, {
-          onCompleted: (r: any) => { modalTrigger.next(false); props.callback(); fetch.refetch(); setIsEducationUpdated(!isEducationUpdated); }
+          onCompleted: () => { modalTrigger.next(false); props.callback(); fetch.refetch(); setIsEducationUpdated(!isEducationUpdated); }
      });
 
      const [deleteEducationData] = useMutation(DELETE_EDUCATION_DETAILS, {
-          onCompleted: (data: any) => { fetch.refetch(); setIsEducationDeleted(!isEducationDeleted); }, refetchQueries: [FETCH_USERS_PROFILE_DATA]
+          onCompleted: () => { fetch.refetch(); setIsEducationDeleted(!isEducationDeleted); }, refetchQueries: [FETCH_USERS_PROFILE_DATA]
      });
 
      const [createEducation] = useMutation(CREATE_EDUCATION_DETAILS, {
-          onCompleted: (r: any) => {
+          onCompleted: (response) => {
                setIsFormSubmitted(!isFormSubmitted);
                modalTrigger.next(false);
 
                fetch.refetch();
 
                // concatenate previously stored education details IDs with currently added educational details ID
-               const contatenatedEducationIdArray = educationID && educationID.length ? educationID.concat([r.createEducationalDetail.data.id]) : [r.createEducationalDetail.data.id];
+               const contatenatedEducationIdArray = educationID && educationID.length ? educationID.concat([response.createEducationalDetail.data.id]) : [response.createEducationalDetail.data.id];
 
                updateProfile({
                     variables: {
@@ -111,7 +113,7 @@ function CreateEducation(props: any, ref: any) {
      }));
 
      useEffect(() => {
-          const data = prefill && prefill.length ? prefill.find((currValue: any) => currValue.id === operation.id) : null;
+          const data = prefill && prefill.length ? prefill.find((currValue) => currValue.id === operation.id) : null;
           const details = {} as BasicEducationDetails;
           details.Institute_Name = data ? data.Institute_Name : '';
           details.Type_of_degree = data ? data.Type_of_degree : '';
@@ -129,7 +131,7 @@ function CreateEducation(props: any, ref: any) {
      }
 
      // Create Education Details
-     function CreateUserEducation(frm: any) {
+     function CreateUserEducation(frm) {
           createEducation({
                variables: {
                     data: {
@@ -143,7 +145,7 @@ function CreateEducation(props: any, ref: any) {
      }
 
      // Update Education Details
-     function UpdateUserEducation(frm: any) {
+     function UpdateUserEducation(frm) {
           updateEducationalDetail({
                variables: {
                     id: operation.id,
@@ -157,11 +159,11 @@ function CreateEducation(props: any, ref: any) {
           });
      }
 
-     function DeleteEducation(id: any) {
+     function DeleteEducation(id: string) {
           deleteEducationData({ variables: { id: id } });
      }
 
-     function OnSubmit(frm: any) {
+     function OnSubmit(frm) {
           switch (operation.type) {
                case "create":
                     CreateUserEducation(frm);
@@ -181,7 +183,7 @@ function CreateEducation(props: any, ref: any) {
                     formUISchema={schema}
                     formSchema={educationJson}
                     showing={operation.modal_status}
-                    formSubmit={(frm: any) => {
+                    formSubmit={(frm) => {
                          OnSubmit(frm);
                     }}
                     widgets={widgets}

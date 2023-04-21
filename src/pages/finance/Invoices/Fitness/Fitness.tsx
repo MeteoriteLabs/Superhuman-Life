@@ -38,18 +38,18 @@ export default function Fitness() {
 
         return {
           client:
-            fitnessPackage.attributes.users_permissions_users.data.length > 0
-              ? fitnessPackage.attributes.users_permissions_users.data[0]
+            fitnessPackage.attributes.ClientUser.data.length > 0
+              ? fitnessPackage.attributes.ClientUser.data[0]
                   .attributes.username
               : "N/A",
           clientPhoneNumber:
-            fitnessPackage.attributes.users_permissions_users.data.length > 0
-              ? fitnessPackage.attributes.users_permissions_users.data[0]
+            fitnessPackage.attributes.ClientUser.data.length > 0
+              ? fitnessPackage.attributes.ClientUser.data[0]
                   .Phone_Number
               : "N/A",
           clientAddress:
-            fitnessPackage.attributes.users_permissions_users.data.length > 0
-              ? fitnessPackage.attributes.users_permissions_users.data[0]
+            fitnessPackage.attributes.ClientUser.data.length > 0
+              ? fitnessPackage.attributes.ClientUser.data[0]
                   .addresses
               : "N/A",
 
