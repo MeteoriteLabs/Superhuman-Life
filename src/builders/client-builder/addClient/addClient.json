@@ -25,30 +25,15 @@
                     "existingEmail": {
                         "type": "string",
                         "title": "Email ID"
-                        
                     },
                     "offerings": {
                         "title": "Select Offerings",
                         "type": "string"
-                        
-                    },
-                    "duration": {
-                        "type": "string",
-                        "title": "Duration",
-                        "enum": [
-                            "1 day",
-                            "30 days",
-                            "90 days",
-                            "180 days",
-                            "360 days"
-                        ],
-                        "default": "1 day"
                     }
                 },
                 "required": [
                     "email",
-                    "offering",
-                    "duration"
+                    "offering"
                 ]
             }
         },
@@ -84,19 +69,6 @@
                     "offerings": {
                         "title": "Select offering",
                         "type": "string"
-                       
-                    },
-                    "duration": {
-                        "type": "string",
-                        "title": "Duration",
-                        "enum": [
-                            "1 day",
-                            "30 days",
-                            "90 days",
-                            "180 days",
-                            "360 days"
-                        ],
-                        "default": "1 day"
                     }
                 },
                 "required": [
@@ -104,8 +76,7 @@
                     "lastname",
                     "phone",
                     "email",
-                    "offerings",
-                    "duration"
+                    "offerings"
                 ]
             }
         },

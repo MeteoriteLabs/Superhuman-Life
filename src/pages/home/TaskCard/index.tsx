@@ -310,7 +310,7 @@ function TaskCard() {
                       }}
                     >
                       <div key={index}>
-                        {currentValue.users_permissions_users.map(
+                        {currentValue.ClientUser.map(
                           (currentValue, index: number) => (
                             <b key={index}>{currentValue.username}</b>
                           )
@@ -349,14 +349,14 @@ function TaskCard() {
                             <Modal.Body>
                               <div>
                                 Username:{" "}
-                                {currentValue.users_permissions_users.map(
+                                {currentValue.ClientUser.map(
                                   (currentValue, index: number) => (
                                     <b key={index}>{currentValue.username}</b>
                                   )
                                 )}
                                 <br />
                                 Name:{" "}
-                                {currentValue.users_permissions_users.map(
+                                {currentValue.ClientUser.map(
                                   (currentValue, index: number) => (
                                     <b key={index}>
                                       {currentValue.First_Name +
@@ -368,14 +368,14 @@ function TaskCard() {
                               </div>
                               <div>
                                 Email:{" "}
-                                {currentValue.users_permissions_users.map(
+                                {currentValue.ClientUser.map(
                                   (currentValue, index: number) => (
                                     <b key={index}>{currentValue.email}</b>
                                   )
                                 )}
                                 <br />
                                 Phone no.:{" "}
-                                {currentValue.users_permissions_users.map(
+                                {currentValue.ClientUser.map(
                                   (currentValue, index: number) => (
                                     <b key={index}>
                                       {currentValue.Phone_Number}
@@ -569,7 +569,7 @@ function TaskCard() {
                       }}
                     >
                       <div key={index} className="col-lg-12">
-                        {currentValue.users_permissions_users.map(
+                        {currentValue.ClientUser.map(
                           (currentValue, index) => (
                             <b key={index}>{currentValue.username}</b>
                           )
@@ -608,14 +608,14 @@ function TaskCard() {
                             <Modal.Body>
                               <div>
                                 Username:{" "}
-                                {currentValue.users_permissions_users.map(
+                                {currentValue.ClientUser.map(
                                   (currentValue, index: number) => (
                                     <b key={index}>{currentValue.username}</b>
                                   )
                                 )}
                                 <br />
                                 Name:{" "}
-                                {currentValue.users_permissions_users.map(
+                                {currentValue.ClientUser.map(
                                   (currentValue, index: number) => (
                                     <b key={index}>
                                       {currentValue.First_Name +
@@ -627,14 +627,14 @@ function TaskCard() {
                               </div>
                               <div>
                                 Email:{" "}
-                                {currentValue.users_permissions_users.map(
+                                {currentValue.ClientUser.map(
                                   (currentValue, index: number) => (
                                     <b key={index}>{currentValue.email}</b>
                                   )
                                 )}
                                 <br />
                                 Phone no.:{" "}
-                                {currentValue.users_permissions_users.map(
+                                {currentValue.ClientUser.map(
                                   (currentValue, index: number) => (
                                     <b key={index}>
                                       {currentValue.Phone_Number}

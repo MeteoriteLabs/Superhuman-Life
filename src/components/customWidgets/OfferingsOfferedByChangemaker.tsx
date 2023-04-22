@@ -1,4 +1,4 @@
-import React, { useState, useContext, Fragment } from "react";
+import React, { useState, useContext, Fragment, useEffect } from "react";
 // import { Typeahead } from "react-bootstrap-typeahead";
 import { DropdownButton, Dropdown } from "react-bootstrap";
 import "react-bootstrap-typeahead/css/Typeahead.css";
@@ -33,7 +33,7 @@ const OfferingList: React.FC<{value: string; onChange: (params: string|null) => 
 
   function loadData(data: any) {
     const flattenedData = flattenObj({ ...data });
-    
+    // console.log(flattenedData);
     setOfferingList(
       [...flattenedData?.fitnesspackages].map((currValue) => {
         return {
@@ -44,7 +44,7 @@ const OfferingList: React.FC<{value: string; onChange: (params: string|null) => 
       })
     );
   }
-
+// console.log(offeringList);
   function OnChangeHandler(e) {
 
     // const unique = [...new Map(e.map((m) => [m.id, m])).values()];
@@ -57,7 +57,10 @@ const OfferingList: React.FC<{value: string; onChange: (params: string|null) => 
     props.onChange(null);
   }
 
-  refetchFitness();
+  useEffect(() => {
+    refetchFitness();
+
+  }, [get_fitness])
 
   return (
     // <div>
@@ -74,7 +77,7 @@ const OfferingList: React.FC<{value: string; onChange: (params: string|null) => 
     <Fragment>
     <DropdownButton title="Select offering">
       {
-        offeringList.map(currentOffering => <Dropdown.Item key={currentOffering.id} onClick={() => {setMultiSelections(currentOffering.id)}}>{currentOffering.packagename}</Dropdown.Item>)
+        offeringList.map(currentOffering => <Dropdown.Item key={currentOffering.id} onClick={() => {setMultiSelections(currentOffering.id)}}>{currentOffering.name}</Dropdown.Item>)
       }
   
   

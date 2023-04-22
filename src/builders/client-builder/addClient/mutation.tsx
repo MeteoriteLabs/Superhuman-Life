@@ -1,7 +1,7 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 export const CREATE_CLIENT = gql`
-  mutation createClient(data: UsersPermissionsUserInput!) {
+  mutation createClient($data: UsersPermissionsUserInput!) {
     createUsersPermissionsUser(data: $data){
         data{
           id

@@ -20,11 +20,14 @@ const AddClient: React.FC = () => {
   const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
   const formRef = useRef<any>(null);
   const addClientJson: Record<string, unknown> = require('./addClient.json');
-  const [clientDetails, setClientDetails] = useState<any>({});
+  const [clients, setClients] = useState<any>({});
 
-
+  const createClient = useMutation(CREATE_CLIENT);
 
   function OnSubmit(frm: any) {
+    // createClient(
+      
+    // )
     // EditPaymentModeDetails(frm.formData);
   }
 
@@ -42,7 +45,7 @@ const AddClient: React.FC = () => {
             onSubmit={(frm: any) => {
               OnSubmit(frm);
             }}
-            formData={clientDetails}
+            formData={clients}
             showErrorList={false}
             customFormats={phoneCustomFormats}
             transformErrors={phoneTransformErrors}
