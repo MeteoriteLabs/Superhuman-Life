@@ -12,7 +12,7 @@ export const GET_ALL_BOOKINGS = gql`
       data {
         id
         attributes {
-          users_permissions_users {
+          ClientUser {
             data {
               id
               attributes {

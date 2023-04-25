@@ -1,3 +1,4 @@
+import React from "react";
 import { Row, Col } from "react-bootstrap";
 import UpcomingCard from "./UpcomingCard";
 import LeadCard from "./LeadCard/index";
@@ -5,7 +6,7 @@ import GraphSelector from "./GraphSelector";
 import LinksCard from "./Links";
 import TaskCard from "./TaskCard";
 
-function Grid() {
+const Grid: React.FC = () => {
   return (
     <>
       <Row className="my-3">

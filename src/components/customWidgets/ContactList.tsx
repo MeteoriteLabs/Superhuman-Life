@@ -19,7 +19,7 @@ const ContactList: React.FC<{value: string; onChange: (params: string|null) => v
   const [multiSelections, setMultiSelections] = useState<any[]>(
     props.value?.length > 0 ? handleReturnType(props.value) : []
   );
-  const [contactList, setContactList] = useState<any[]>([]);
+  const [contactList, setContactList] = useState<{id: string; name: string; email: string;}[]>([]);
 
   function FetchData() {
     useQuery(GET_CONTACTS, {

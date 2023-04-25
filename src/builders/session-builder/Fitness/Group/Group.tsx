@@ -1,5 +1,5 @@
 import { useQuery, useMutation } from "@apollo/client";
-import { useContext, useMemo, useRef, useState } from "react";
+import React, { useContext, useMemo, useRef, useState } from "react";
 import { Badge, Row, Col, Form, Button, Modal } from "react-bootstrap";
 import AuthContext from "../../../../context/auth-context";
 import GroupTable from "../../../../components/table/GroupTable/GroupTable";
@@ -10,16 +10,16 @@ import ActionButton from "../../../../components/actionbutton";
 import FitnessAction from "../FitnessAction";
 import { flattenObj } from "../../../../components/utils/responseFlatten";
 
-export default function Group() {
+const Group: React.FC = () => {
   const auth = useContext(AuthContext);
-  const [userPackage, setUserPackage] = useState<any>([]);
+  const [userPackage, setUserPackage] = useState<unknown[]>([]);
   const [showHistory, setShowHistory] = useState<boolean>(false);
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
   const [tagId, setTagId] = useState<string>("");
   const fitnessActionRef = useRef<any>(null);
 
   const [deleteBatch] = useMutation(DELETE_TAG_BATCH, {
-    onCompleted: (r: any) => {
+    onCompleted: () => {
       mainQuery.refetch();
     },
   });
@@ -28,7 +28,7 @@ export default function Group() {
     variables: {
       id: auth.userid,
     },
-    onCompleted: (r: any) => loadData(r),
+    onCompleted: (response) => loadData(response),
   });
 
   const loadData = (data: any) => {
@@ -424,3 +424,5 @@ export default function Group() {
     </>
   );
 }
+
+export default Group;

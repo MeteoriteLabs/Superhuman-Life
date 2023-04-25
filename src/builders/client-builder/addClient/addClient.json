@@ -1,0 +1,107 @@
+{
+    "type": "object",
+    "properties": {
+        "type": {
+            "title": "Is user a contact, lead or existing client?",
+            "type": "string",
+            "enum": [
+                "Existing",
+                "New"
+            ],
+            "default": "New"
+        }
+    },
+    "allOf": [
+        {
+            "if": {
+                "properties": {
+                    "type": {
+                        "const": "Existing"
+                    }
+                }
+            },
+            "then": {
+                "properties": {
+                    "existingEmail": {
+                        "type": "string",
+                        "title": "Email ID"
+                    },
+                    "offeringFilter": {
+                        "title": "Filter offering based on : ",
+                        "type": "string",
+                        "enum": [
+                            "Class",
+                            "Program"
+                        ],
+                        "default": "Program"
+                    },
+                    "offerings": {
+                        "title": "Select Offerings",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "email",
+                    "offering"
+                ]
+            }
+        },
+        {
+            "if": {
+                "properties": {
+                    "type": {
+                        "const": "New"
+                    }
+                }
+            },
+            "then": {
+                "properties": {
+                    "firstname": {
+                        "type": "string",
+                        "title": "First Name"
+                    },
+                    "lastname": {
+                        "type": "string",
+                        "title": "Last Name"
+                    },
+                    "phone": {
+                        "type": "string",
+                        "title": "Phone Number",
+                        "minLength": 10,
+                        "format": "phone-in"
+                    },
+                    "email": {
+                        "type": "string",
+                        "title": "Email ID",
+                        "format": "email"
+                    },
+                    "offeringFilter": {
+                        "title": "Filter offering based on : ",
+                        "type": "string",
+                        "enum": [
+                            "Class",
+                            "Program"
+                        ],
+                        "default": "Program"
+                    },
+                    "offerings": {
+                        "title": "Select offering",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "firstname",
+                    "lastname",
+                    "phone",
+                    "email",
+                    "offerings"
+                ]
+            }
+        },
+        {
+            "required": [
+                "type"
+            ]
+        }
+    ]
+}

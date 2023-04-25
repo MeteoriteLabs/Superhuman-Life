@@ -182,11 +182,12 @@ function ClientListingPage() {
                                         variant= "outline-secondary"
                                         size="sm"
                                         onClick={() => {
-                                             CreateClientComponent.current.TriggerForm({
-                                                  id: null,
-                                                  type: "create",
-                                                  modal_status: true,
-                                             });
+                                             // CreateClientComponent.current.TriggerForm({
+                                             //      id: null,
+                                             //      type: "create",
+                                             //      modal_status: true,
+                                             // });
+                                             window.open("/add_client");
                                         }}
                                    >
                                         <i className="fas fa-plus-circle"></i> Add Client

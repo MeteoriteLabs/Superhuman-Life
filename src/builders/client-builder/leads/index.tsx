@@ -112,26 +112,26 @@ export default function Leads() {
         id: "edit",
         Header: "Actions",
         Cell: ({ row }: any) => {
-          const actionClick1 = () => {
+          const editHandler = () => {
             createEditMessageComponent.current.TriggerForm({
               id: row.original.id,
               type: "edit",
             });
           };
-          const actionClick2 = () => {
+          const viewHandler = () => {
             createEditMessageComponent.current.TriggerForm({
               id: row.original.id,
               type: "view",
             });
           };
-          const actionClick3 = () => {
+          const deleteHandler = () => {
             createEditMessageComponent.current.TriggerForm({
               id: row.original.id,
               type: "delete",
             });
           };
 
-          const actionClick4 = () => {
+          const markAsUnreadHandler = () => {
             updateSeenStatus({
               variables: {
                 seen: false,
@@ -140,7 +140,7 @@ export default function Leads() {
             });
           };
 
-          const actionClick5 = () => {
+          const markAsReadHandler = () => {
             updateSeenStatus({
               variables: {
                 seen: true,
@@ -150,11 +150,11 @@ export default function Leads() {
           };
 
           const arrayAction = [
-            { actionName: "Edit", actionClick: actionClick1 },
-            { actionName: "View", actionClick: actionClick2 },
-            { actionName: "Mark as Unread", actionClick: actionClick4 },
-            { actionName: "Mark as Read", actionClick: actionClick5 },
-            { actionName: "Delete", actionClick: actionClick3 },
+            { actionName: "Edit", actionClick: editHandler },
+            { actionName: "View", actionClick: viewHandler },
+            { actionName: "Mark as Unread", actionClick: markAsUnreadHandler },
+            { actionName: "Mark as Read", actionClick: markAsReadHandler },
+            { actionName: "Delete", actionClick: deleteHandler },
           ];
 
           return <ActionButton arrayAction={arrayAction}></ActionButton>;

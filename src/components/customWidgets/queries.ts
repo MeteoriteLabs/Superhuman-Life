@@ -346,3 +346,46 @@ export const FETCH_CHANGEMAKERS = gql`
   }
 `;
 
+export const FETCH_CLIENTS = gql`
+  query clientBookingsTogetClient($id: ID){
+    clientBookings(filters: { OfferingOwner: {id: {eq: $id}}}){
+      data{
+        id
+        attributes{
+          BookingID
+          fitnesspackages{
+            data{
+              id
+              attributes{
+                classsize
+              }
+            }
+          }
+          OfferingOwner{
+            data{
+              id
+              attributes{
+                email
+              }
+            }
+          }
+          ClientUser{
+            data{
+              id
+              attributes{
+                username
+                email
+                Phone_Number
+              }
+            }
+          }
+          
+        }
+      }
+    }
+  }
+  
+  
+`;
+
+

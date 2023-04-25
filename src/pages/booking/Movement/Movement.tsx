@@ -37,7 +37,7 @@ export default function Movement() {
         return {
           id: packageItem.id,
           booking_date: packageItem.booking_date,
-          client: packageItem.users_permissions_users[0]?.username,
+          client: packageItem.ClientUser[0]?.username,
           packageName: packageItem.fitnesspackages[0].packagename,
           fitness_package_type:
             packageItem.fitnesspackages[0].fitness_package_type.type,

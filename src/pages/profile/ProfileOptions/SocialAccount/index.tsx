@@ -26,10 +26,10 @@ interface SocialDetails {
 
 const SocialAccount: React.FC = () => {
   const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
+   // eslint-disable-next-line
   const formRef = useRef<any>(null);
-  const socialAccountJson: {
-    [name: string]: any;
-  } = require("./SocialAccount.json");
+  // eslint-disable-next-line
+  const socialAccountJson: any = require("./SocialAccount.json");
   const auth = useContext(AuthContext);
   const [webpageDetails, setWebPageDetails] = useState<SocialDetails>({
     instagram_url: "",
@@ -42,21 +42,21 @@ const SocialAccount: React.FC = () => {
 
   const fetch = useQuery(FETCH_USER_PROFILE_DATA, {
     variables: { id: auth.userid },
-    onCompleted: (r: any) => {
-      const flattenData = flattenObj({ ...r });
+    onCompleted: (response) => {
+      const flattenData = flattenObj({ ...response });
       FillDetails(flattenData.usersPermissionsUser);
     },
   });
 
   const [updateProfile] = useMutation(UPDATE_USER_PROFILE_DATA, {
-    onCompleted: (r: any) => {
+    onCompleted: () => {
       setIsFormSubmitted(!isFormSubmitted);
       fetch.refetch();
     },
     refetchQueries: [FETCH_USER_PROFILE_DATA],
   });
 
-  function updateSocialAccountDetails(frm: any) {
+  function updateSocialAccountDetails(frm) {
     
     updateProfile({
       variables: {
@@ -91,12 +91,12 @@ const SocialAccount: React.FC = () => {
     });
   }
 
-  function OnSubmit(frm: any) {
+  function OnSubmit(frm) {
     updateSocialAccountDetails(frm);
   }
 
   //fillDetails
-  function FillDetails(data: any) {
+  function FillDetails(data) {
     
     if (data) {
         data.Clubhouse_URL = data.Clubhouse_URL || ""; 
@@ -117,7 +117,7 @@ const SocialAccount: React.FC = () => {
         ref={formRef}
         schema={socialAccountJson}
         formData={webpageDetails}
-        onSubmit={(frm: any) => {
+        onSubmit={(frm) => {
           OnSubmit(frm);
         }}
         showErrorList={false}

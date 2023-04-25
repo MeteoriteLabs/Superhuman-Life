@@ -12,6 +12,7 @@ import { BasicAddressDetails } from './CreateAddress';
 const AddressDetails = () => {
   const auth = useContext(AuthContext);
   const [addressData, setAddressData] = useState<BasicAddressDetails[]>([]);
+  // eslint-disable-next-line
   const CreateAddressComponent = useRef<any>(null);
 
   const {

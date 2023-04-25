@@ -343,6 +343,7 @@ const ErrorFallback: React.FC = () => {
   <h2 className="error-subtitle">
    Have you tried turning it off and on again?
   </h2>
+  <button onClick={() => window.open("/home")} style={{cursor: "pointer"}}>Go To home</button>
 
  
 </div>

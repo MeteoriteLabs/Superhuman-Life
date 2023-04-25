@@ -1,4 +1,4 @@
-import React, { useImperativeHandle, useState, useContext, useEffect } from 'react';
+import React, { useImperativeHandle, useState, useContext } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
 import ModalView from '../../../../components/modal';
 import {
