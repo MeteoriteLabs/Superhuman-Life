@@ -9,7 +9,8 @@ import {
   UPDATE_CHANNEL_COHORT_PACKAGE,
   CREATE_NOTIFICATION,
   DELETE_BOOKING_CONFIG,
-  CREATE_OFFERING_INVENTORY
+  CREATE_OFFERING_INVENTORY,
+  UPDATE_OFFERING_INVENTORY
 } from '../graphQL/mutations';
 import {
   youtubeUrlCustomFormats,
@@ -57,15 +58,11 @@ function CreateEditCohort(props: any, ref: any) {
       modalTrigger.next(false);
       const flattenData = flattenObj({...data});
       
-      createOfferingInventory({
+      updateOfferingInventory({
         variables: {
           id: operation.inventoryId,
           data: {
-            fitnesspackage: flattenData.updateFitnesspackage.id,
-            ActiveBookings: 0,
             ClassSize: flattenData.updateFitnesspackage.classsize,
-            ClassAvailability: flattenData.updateFitnesspackage.classsize,
-            changemaker_id: auth.userid,
             InstantBooking: flattenData.updateFitnesspackage.groupinstantbooking     
           }
         }
@@ -83,6 +80,7 @@ function CreateEditCohort(props: any, ref: any) {
   });
 
   const [createOfferingInventory] = useMutation(CREATE_OFFERING_INVENTORY);
+  const [updateOfferingInventory] = useMutation(UPDATE_OFFERING_INVENTORY);
 
   // eslint-disable-next-line
   const { data: get_bookings_config } = useQuery(GET_BOOKINGS_CONFIG, {

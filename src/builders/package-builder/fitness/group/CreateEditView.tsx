@@ -137,22 +137,19 @@ function CreateEditPackage(props: any, ref: any) {
 
   const [editPackage] = useMutation(EDIT_PACKAGE, {
     onCompleted: (data) => {
-      const flattenData = flattenObj({...data});
-      console.log(flattenData);
+      
       modalTrigger.next(false);
       props.refetchTags();
       props.refetchOfferings();
       setisOfferingUpdated(!isOfferingUpdated);
 
-      createOfferingInventory({
+      const flattenData = flattenObj({...data});
+      
+      updateOfferingInventory({
         variables: {
           id: operation.inventoryId,
           data: {
-            fitnesspackage: flattenData.updateFitnesspackage.id,
-            ActiveBookings: 0,
             ClassSize: flattenData.updateFitnesspackage.classsize,
-            ClassAvailability: flattenData.updateFitnesspackage.classsize,
-            changemaker_id: auth.userid,
             InstantBooking: flattenData.updateFitnesspackage.groupinstantbooking     
           }
         }

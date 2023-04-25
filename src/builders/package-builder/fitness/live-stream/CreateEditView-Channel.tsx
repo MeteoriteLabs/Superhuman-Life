@@ -9,7 +9,8 @@ import {
   UPDATE_CHANNEL_COHORT_PACKAGE,
   CREATE_NOTIFICATION,
   DELETE_BOOKING_CONFIG,
-  CREATE_OFFERING_INVENTORY
+  CREATE_OFFERING_INVENTORY,
+  UPDATE_OFFERING_INVENTORY
 } from '../graphQL/mutations';
 import {
   GET_FITNESS_PACKAGE_TYPE,
@@ -61,15 +62,11 @@ function CreateEditChannel(props: any, ref: any) {
       setisOfferingUpdated(!isOfferingUpdated);
       const flattenData = flattenObj({...data});
       
-      createOfferingInventory({
+      updateOfferingInventory({
         variables: {
           id: operation.inventoryId,
           data: {
-            fitnesspackage: flattenData.updateFitnesspackage.id,
-            ActiveBookings: 0,
             ClassSize: flattenData.updateFitnesspackage.classsize,
-            ClassAvailability: flattenData.updateFitnesspackage.classsize,
-            changemaker_id: auth.userid,
             InstantBooking: flattenData.updateFitnesspackage.groupinstantbooking     
           }
         }
@@ -126,6 +123,7 @@ function CreateEditChannel(props: any, ref: any) {
 
   const [createLiveStreamNotification] = useMutation(CREATE_NOTIFICATION);
   const [createOfferingInventory] = useMutation(CREATE_OFFERING_INVENTORY);
+  const [updateOfferingInventory] = useMutation(UPDATE_OFFERING_INVENTORY);
 
   const [CreatePackage] = useMutation(CREATE_CHANNEL_PACKAGE, {
     onCompleted: (response) => {

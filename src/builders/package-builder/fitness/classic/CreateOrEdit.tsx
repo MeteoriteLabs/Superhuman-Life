@@ -21,7 +21,8 @@ import {
   UPDATE_BOOKING_CONFIG,
   CREATE_NOTIFICATION,
   DELETE_BOOKING_CONFIG,
-  CREATE_OFFERING_INVENTORY
+  CREATE_OFFERING_INVENTORY,
+  UPDATE_OFFERING_INVENTORY
 } from "../graphQL/mutations";
 import { Modal, Button } from "react-bootstrap";
 import AuthContext from "../../../../context/auth-context";
@@ -99,6 +100,7 @@ function CreateEditPackage(props: any, ref: any) {
 
   const [createCohortNotification] = useMutation(CREATE_NOTIFICATION);
   const [createOfferingInventory] = useMutation(CREATE_OFFERING_INVENTORY);
+  const [updateOfferingInventory] = useMutation(UPDATE_OFFERING_INVENTORY);
 
   // eslint-disable-next-line
   const { data: get_bookings_config } = useQuery(GET_BOOKINGS_CONFIG, {
@@ -162,15 +164,11 @@ function CreateEditPackage(props: any, ref: any) {
     onCompleted: (data) => {
       const flattenData = flattenObj({...data});
       
-      createOfferingInventory({
+      updateOfferingInventory({
         variables: {
           id: operation.inventoryId,
           data: {
-            fitnesspackage: flattenData.updateFitnesspackage.id,
-            ActiveBookings: 0,
             ClassSize: flattenData.updateFitnesspackage.classsize,
-            ClassAvailability: flattenData.updateFitnesspackage.classsize,
-            changemaker_id: auth.userid,
             InstantBooking: flattenData.updateFitnesspackage.groupinstantbooking     
           }
         }
