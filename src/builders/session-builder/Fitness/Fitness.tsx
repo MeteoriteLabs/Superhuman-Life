@@ -1,3 +1,4 @@
+import React from "react";
 import { Card, Tab, Tabs } from "react-bootstrap";
 import Group from "./Group/Group";
 import PT from "./PT/PT";
@@ -7,7 +8,7 @@ import Channel from "./Channel/channel";
 import Cohort from "./Cohort/cohort";
 import "./fitness.css";
 
-export default function Fitness() {
+const Fitness: React.FC = () => {
   return (
     <div>
       <Card className="shadow-sm mt-2" border="light">
@@ -58,3 +59,5 @@ export default function Fitness() {
     </div>
   );
 }
+
+export default Fitness;

@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 export const GET_ADDRESS = gql`
   query fitnessdisciplines($userId: ID) {
@@ -22,9 +22,7 @@ export const GET_BOOKINGS_CONFIG = gql`
   query bookingConfigs($userId: ID) {
     bookingConfigs(
       pagination: { pageSize: 1000 }
-      filters: {
-        fitnesspackage: { users_permissions_user: { id: { eq: $userId } } }
-      }
+      filters: { fitnesspackage: { users_permissions_user: { id: { eq: $userId } } } }
     ) {
       data {
         id
@@ -82,11 +80,7 @@ export const GET_FITNESS_PACKAGE_TYPES = gql`
 
 export const GET_TAGS = gql`
   query getTags($id: ID!) {
-    tags(
-      filters: {
-        fitnesspackage: { users_permissions_user: { id: { eq: $id } } }
-      }
-    ) {
+    tags(filters: { fitnesspackage: { users_permissions_user: { id: { eq: $id } } } }) {
       data {
         id
         attributes {
@@ -185,20 +179,20 @@ export const GET_FITNESS = gql`
           groupinstantbooking
           bookingleadtime
           level
-          users_permissions_user{
-            data{
+          users_permissions_user {
+            data {
               id
-              attributes{
+              attributes {
                 First_Name
                 Last_Name
                 username
               }
             }
           }
-          address{
-            data{
+          address {
+            data {
               id
-              attributes{
+              attributes {
                 address1
                 city
                 state
@@ -229,6 +223,19 @@ export const GET_FITNESS = gql`
           duration
           Status
           is_private
+        }
+      }
+    }
+  }
+`;
+
+export const GET_OFFERING_INVENTORY = gql`
+  query offeringInventories($id: String) {
+    offeringInventories(filters: {changemaker_id: {eq: $id }}) {
+      data {
+        id
+        attributes {
+          ActiveBookings
         }
       }
     }
@@ -359,9 +366,7 @@ export const GET_SINGLE_PACKAGE_BY_ID = gql`
 
 export const GET_SUGGESTIONS_PRICES = gql`
   query suggestedPricings($id: ID) {
-    suggestedPricings(
-      filters: { users_permissions_users: { id: { eq: $id } } }
-    ) {
+    suggestedPricings(filters: { users_permissions_users: { id: { eq: $id } } }) {
       data {
         id
         attributes {

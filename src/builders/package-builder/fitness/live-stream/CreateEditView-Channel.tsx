@@ -1,11 +1,6 @@
-import React, {
-  useContext,
-  useImperativeHandle,
-  useState,
-  useEffect,
-} from "react";
-import { useQuery, useMutation } from "@apollo/client";
-import ModalView from "../../../../components/modal";
+import React, { useContext, useImperativeHandle, useState, useEffect } from 'react';
+import { useQuery, useMutation } from '@apollo/client';
+import ModalView from '../../../../components/modal';
 import {
   CREATE_CHANNEL_PACKAGE,
   CREATE_BOOKING_CONFIG,
@@ -14,36 +9,37 @@ import {
   UPDATE_CHANNEL_COHORT_PACKAGE,
   CREATE_NOTIFICATION,
   DELETE_BOOKING_CONFIG,
-} from "../graphQL/mutations";
+  CREATE_OFFERING_INVENTORY
+} from '../graphQL/mutations';
 import {
   GET_FITNESS_PACKAGE_TYPE,
   GET_SINGLE_PACKAGE_BY_ID,
-  GET_BOOKINGS_CONFIG,
-} from "../graphQL/queries";
-import AuthContext from "../../../../context/auth-context";
-import { schema, widgets } from "./channelSchema";
-import { schemaView } from "./schemaView";
-import { editLiveStreamSchema } from "./editLiveStreamSchema";
-import { Subject } from "rxjs";
-import { flattenObj } from "../../../../components/utils/responseFlatten";
-import moment from "moment";
-import { Modal, Button } from "react-bootstrap";
-import Toaster from "../../../../components/Toaster";
+  GET_BOOKINGS_CONFIG
+} from '../graphQL/queries';
+import AuthContext from '../../../../context/auth-context';
+import { schema, widgets } from './channelSchema';
+import { schemaView } from './schemaView';
+import { editLiveStreamSchema } from './editLiveStreamSchema';
+import { Subject } from 'rxjs';
+import { flattenObj } from '../../../../components/utils/responseFlatten';
+import moment from 'moment';
+import { Modal, Button } from 'react-bootstrap';
+import Toaster from '../../../../components/Toaster';
 import {
   youtubeUrlCustomFormats,
-  youtubeUrlTransformErrors,
-} from "../../../../components/utils/ValidationPatterns";
+  youtubeUrlTransformErrors
+} from '../../../../components/utils/ValidationPatterns';
 
 interface Operation {
   id: string;
-  packageType: "Cohort" | "Live Stream Channel";
-  type: "create" | "edit" | "view" | "toggle-status" | "delete";
+  packageType: 'Cohort' | 'Live Stream Channel';
+  type: 'create' | 'edit' | 'view' | 'toggle-status' | 'delete';
   current_status: boolean;
 }
 
 function CreateEditChannel(props: any, ref: any) {
   const auth = useContext(AuthContext);
-  const programSchema: { [name: string]: any } = require("./channel.json");
+  const programSchema: { [name: string]: any } = require('./channel.json');
   const [programDetails, setProgramDetails] = useState<any>({});
   const [operation, setOperation] = useState<Operation>({} as Operation);
   const [fitnessPackageTypes, setFitnessPackageTypes] = useState<any>([]);
@@ -62,7 +58,7 @@ function CreateEditChannel(props: any, ref: any) {
       props.refetchTags();
       props.refetchOfferings();
       setisOfferingUpdated(!isOfferingUpdated);
-    },
+    }
   });
 
   const [updatePackageStatus] = useMutation(UPDATE_PACKAGE_STATUS, {
@@ -70,7 +66,7 @@ function CreateEditChannel(props: any, ref: any) {
       props.refetchTags();
       props.refetchOfferings();
       setisOfferingUpdated(!isOfferingUpdated);
-    },
+    }
   });
 
   // eslint-disable-next-line
@@ -79,7 +75,7 @@ function CreateEditChannel(props: any, ref: any) {
     onCompleted: (data) => {
       const bookingsConfigFlattenData = flattenObj({ ...data });
       setBookingsConfigInfo(bookingsConfigFlattenData.bookingConfigs);
-    },
+    }
   });
 
   const [deleteBookingConfig] = useMutation(DELETE_BOOKING_CONFIG);
@@ -93,62 +89,76 @@ function CreateEditChannel(props: any, ref: any) {
       );
 
       deleteBookingConfig({
-        variables: { id: bookingConfigId.id },
+        variables: { id: bookingConfigId.id }
       });
 
       props.refetchTags();
       props.refetchOfferings();
       setisOffeeringDeleted(!isOffeeringDeleted);
-    },
+    }
   });
 
   const [bookingConfig] = useMutation(CREATE_BOOKING_CONFIG, {
-    onCompleted: (r: any) => {
+    onCompleted: (response) => {
       modalTrigger.next(false);
       props.refetchTags();
       props.refetchOfferings();
       setIsFormSubmitted(!isFormSubmitted);
-      window.open(`channel/session/scheduler/${r.createTag.data.id}`, "_self");
-    },
+      // window.open(`channel/session/scheduler/${response.createTag.data.id}`, '_self');
+    }
   });
 
   const [createLiveStreamNotification] = useMutation(CREATE_NOTIFICATION);
+  const [createOfferingInventory] = useMutation(CREATE_OFFERING_INVENTORY);
 
   const [CreatePackage] = useMutation(CREATE_CHANNEL_PACKAGE, {
-    onCompleted: (r: any) => {
-      const flattenData = flattenObj({ ...r });
+    onCompleted: (response) => {
+      const flattenData = flattenObj({ ...response });
+
+      createOfferingInventory({
+        variables: {
+          data: {
+            fitnesspackage: flattenData.createFitnesspackage.id,
+            ActiveBookings: 0,
+            ClassSize: flattenData.createFitnesspackage.classsize,
+            ClassAvailability: flattenData.createFitnesspackage.classsize,
+            changemaker_id: auth.userid,
+            InstantBooking: flattenData.createFitnesspackage.groupinstantbooking
+          }
+        }
+      });
 
       createLiveStreamNotification({
         variables: {
           data: {
-            type: "Offerings",
-            Title: "New offering",
-            OnClickRoute: "/offerings",
+            type: 'Offerings',
+            Title: 'New offering',
+            OnClickRoute: '/offerings',
             users_permissions_user: auth.userid,
             Body: `New live stream offering ${flattenData.createFitnesspackage.packagename} has been added`,
             DateTime: moment().format(),
             IsRead: false,
-            ContactID: flattenData.createFitnesspackage.id,
-          },
-        },
+            ContactID: flattenData.createFitnesspackage.id
+          }
+        }
       });
 
       bookingConfig({
         variables: {
           isAuto: true,
-          id: r.createFitnesspackage.data.id,
+          id: response.createFitnesspackage.data.id,
           is_Fillmyslots: true,
-          tagName: frmDetails.channelName,
-        },
+          tagName: frmDetails.channelName
+        }
       });
-    },
+    }
   });
 
   useQuery(GET_FITNESS_PACKAGE_TYPE, {
-    onCompleted: (data: any) => {
+    onCompleted: (data) => {
       const flattenData = flattenObj({ ...data });
       setFitnessPackageTypes(flattenData.fitnessPackageTypes);
-    },
+    }
   });
 
   const modalTrigger = new Subject();
@@ -158,24 +168,24 @@ function CreateEditChannel(props: any, ref: any) {
       schema.startDate = props.startDate;
       schema.duration = props.duration;
 
-      if (msg.type === "toggle-status") {
+      if (msg.type === 'toggle-status') {
         setStatusModalShow(true);
       }
 
-      if (msg.type === "delete") {
+      if (msg.type === 'delete') {
         setDeleteModalShow(true);
       }
 
-      if (msg.type !== "delete" && msg.type !== "toggle-status") {
+      if (msg.type !== 'delete' && msg.type !== 'toggle-status') {
         modalTrigger.next(true);
       }
-    },
+    }
   }));
 
   enum ENUM_FITNESSPACKAGE_LEVEL {
     Beginner,
     Intermediate,
-    Advanced,
+    Advanced
   }
 
   const PRICING_TABLE_DEFAULT = [
@@ -184,29 +194,29 @@ function CreateEditChannel(props: any, ref: any) {
       suggestedPrice: null,
       voucher: 0,
       duration: 30,
-      sapienPricing: null,
+      sapienPricing: null
     },
     {
       mrp: null,
       suggestedPrice: null,
       voucher: 0,
       duration: 90,
-      sapienPricing: null,
+      sapienPricing: null
     },
     {
       mrp: null,
       suggestedPrice: null,
       voucher: 0,
       duration: 180,
-      sapienPricing: null,
+      sapienPricing: null
     },
     {
       mrp: null,
       suggestedPrice: null,
       voucher: 0,
       duration: 360,
-      sapienPricing: null,
-    },
+      sapienPricing: null
+    }
   ];
 
   const PRICING_TABLE_DEFAULT_WITH_INSTANTBOOKING = [
@@ -215,36 +225,36 @@ function CreateEditChannel(props: any, ref: any) {
       suggestedPrice: null,
       voucher: 0,
       duration: 1,
-      sapienPricing: null,
+      sapienPricing: null
     },
     {
       mrp: null,
       suggestedPrice: null,
       voucher: 0,
       duration: 30,
-      sapienPricing: null,
+      sapienPricing: null
     },
     {
       mrp: null,
       suggestedPrice: null,
       voucher: 0,
       duration: 90,
-      sapienPricing: null,
+      sapienPricing: null
     },
     {
       mrp: null,
       suggestedPrice: null,
       voucher: 0,
       duration: 180,
-      sapienPricing: null,
+      sapienPricing: null
     },
     {
       mrp: null,
       suggestedPrice: null,
       voucher: 0,
       duration: 360,
-      sapienPricing: null,
-    },
+      sapienPricing: null
+    }
   ];
 
   function FillDetails(data: any) {
@@ -254,23 +264,19 @@ function CreateEditChannel(props: any, ref: any) {
 
     if (msg.groupinstantbooking) {
       for (let i = 0; i < msg.fitnesspackagepricing.length; i++) {
-        PRICING_TABLE_DEFAULT_WITH_INSTANTBOOKING[i].mrp =
-          msg.fitnesspackagepricing[i].mrp;
+        PRICING_TABLE_DEFAULT_WITH_INSTANTBOOKING[i].mrp = msg.fitnesspackagepricing[i].mrp;
         PRICING_TABLE_DEFAULT_WITH_INSTANTBOOKING[i].suggestedPrice =
           msg.fitnesspackagepricing[i].suggestedPrice;
-        PRICING_TABLE_DEFAULT_WITH_INSTANTBOOKING[i].voucher =
-          msg.fitnesspackagepricing[i].voucher;
+        PRICING_TABLE_DEFAULT_WITH_INSTANTBOOKING[i].voucher = msg.fitnesspackagepricing[i].voucher;
         PRICING_TABLE_DEFAULT_WITH_INSTANTBOOKING[i].sapienPricing =
           msg.fitnesspackagepricing[i].sapienPricing;
       }
     } else {
       for (let j = 0; j < msg.fitnesspackagepricing.length; j++) {
         PRICING_TABLE_DEFAULT[j].mrp = msg.fitnesspackagepricing[j].mrp;
-        PRICING_TABLE_DEFAULT[j].suggestedPrice =
-          msg.fitnesspackagepricing[j].suggestedPrice;
+        PRICING_TABLE_DEFAULT[j].suggestedPrice = msg.fitnesspackagepricing[j].suggestedPrice;
         PRICING_TABLE_DEFAULT[j].voucher = msg.fitnesspackagepricing[j].voucher;
-        PRICING_TABLE_DEFAULT[j].sapienPricing =
-          msg.fitnesspackagepricing[j].sapienPricing;
+        PRICING_TABLE_DEFAULT[j].sapienPricing = msg.fitnesspackagepricing[j].sapienPricing;
       }
     }
     details.About = msg.aboutpackage;
@@ -280,16 +286,16 @@ function CreateEditChannel(props: any, ref: any) {
     details.discpline = JSON.stringify(msg.fitnessdisciplines);
     details.channelinstantBooking = JSON.stringify({
       instantBooking: msg.groupinstantbooking,
-      freeDemo: msg.Is_free_demo,
+      freeDemo: msg.Is_free_demo
     });
     details.dates = JSON.stringify({
-      startDate: moment(msg.Start_date).format("YYYY-MM-DD"),
-      endDate: moment(msg.End_date).format("YYYY-MM-DD"),
+      startDate: moment(msg.Start_date).format('YYYY-MM-DD'),
+      endDate: moment(msg.End_date).format('YYYY-MM-DD')
     });
     details.level = ENUM_FITNESSPACKAGE_LEVEL[msg.level];
     details.pricing =
-      msg.fitnesspackagepricing[0]?.mrp === "free"
-        ? "free"
+      msg.fitnesspackagepricing[0]?.mrp === 'free'
+        ? 'free'
         : JSON.stringify(
             msg.groupinstantbooking
               ? PRICING_TABLE_DEFAULT_WITH_INSTANTBOOKING
@@ -297,31 +303,29 @@ function CreateEditChannel(props: any, ref: any) {
           );
     details.durationOfOffering = msg.SubscriptionDuration
       ? msg.SubscriptionDuration
-      : ["1 day", "30 days", "90 days", "180 days", "360 days"];
-    details.publishingDate = moment(msg.publishing_date).format("YYYY-MM-DD");
-    details.tag = msg?.tags === null ? "" : msg.tags;
+      : ['1 day', '30 days', '90 days', '180 days', '360 days'];
+    details.publishingDate = moment(msg.publishing_date).format('YYYY-MM-DD');
+    details.tag = msg?.tags === null ? '' : msg.tags;
     details.user_permissions_user = msg.users_permissions_user.id;
     details.visibility = msg.is_private === true ? 1 : 0;
     details.thumbnail = msg.Thumbnail_ID;
     details.Upload =
-      msg.Upload_ID === null
-        ? { VideoUrl: msg.video_URL }
-        : { upload: msg.Upload_ID };
+      msg.Upload_ID === null ? { VideoUrl: msg.video_URL } : { upload: msg.Upload_ID };
     details.datesConfig = JSON.stringify({
       expiryDate: msg.expiry_date,
-      publishingDate: msg.publishing_date,
+      publishingDate: msg.publishing_date
     });
     details.bookingConfigId = msg.booking_config?.id;
     details.languages = JSON.stringify(msg.languages);
     setProgramDetails(details);
 
     //if message exists - show form only for edit and view
-    if (["edit", "view"].indexOf(operation.type) > -1) modalTrigger.next(true);
+    if (['edit', 'view'].indexOf(operation.type) > -1) modalTrigger.next(true);
     else OnSubmit(null);
   }
 
   useEffect(() => {
-    if (operation.type === "create") {
+    if (operation.type === 'create') {
       setProgramDetails({});
     }
   }, [operation.type]);
@@ -329,24 +333,22 @@ function CreateEditChannel(props: any, ref: any) {
   function FetchData() {
     useQuery(GET_SINGLE_PACKAGE_BY_ID, {
       variables: { id: operation.id },
-      skip: operation.type === "create" || !operation.id,
+      skip: operation.type === 'create' || !operation.id,
       onCompleted: (e: any) => {
         FillDetails(e);
-      },
+      }
     });
   }
 
   function findPackageType(creationType: any) {
-    const foundType = fitnessPackageTypes.find(
-      (item: any) => item.type === creationType
-    );
+    const foundType = fitnessPackageTypes.find((item: any) => item.type === creationType);
     return foundType.id;
   }
 
   function calculateDuration(sd, ed) {
     const start = moment(sd);
     const end = moment(ed);
-    const duration: number = end.diff(start, "days");
+    const duration: number = end.diff(start, 'days');
     return duration;
   }
 
@@ -355,18 +357,14 @@ function CreateEditChannel(props: any, ref: any) {
     frm.datesConfig = frm.datesConfig
       ? JSON.parse(frm.datesConfig)
       : {
-          publishingDate: `${moment()
-            .add(1, "days")
-            .format("YYYY-MM-DDTHH:mm")}`,
-          expiry_date: `${moment()
-            .add({ days: 1, year: 1 })
-            .format("YYYY-MM-DDTHH:mm")}`,
+          publishingDate: `${moment().add(1, 'days').format('YYYY-MM-DDTHH:mm')}`,
+          expiry_date: `${moment().add({ days: 1, year: 1 }).format('YYYY-MM-DDTHH:mm')}`
         };
     frm.dates = frm.dates
       ? JSON.parse(frm.dates)
       : {
-          startDate: `${moment().add(1, "days").format("YYYY-MM-DD")}`,
-          endDate: `${moment(frm.dates.startDate).add(360, "days")}`,
+          startDate: `${moment().add(1, 'days').format('YYYY-MM-DD')}`,
+          endDate: `${moment(frm.dates.startDate).add(360, 'days')}`
         };
 
     if (frm.equipment) {
@@ -383,8 +381,7 @@ function CreateEditChannel(props: any, ref: any) {
         aboutpackage: frm.About,
         benefits: frm.Benifits,
         packagename: frm.channelName,
-        channelinstantBooking: JSON.parse(frm.channelinstantBooking)
-          .instantBooking,
+        channelinstantBooking: JSON.parse(frm.channelinstantBooking).instantBooking,
         Is_free_demo: JSON.parse(frm.channelinstantBooking).freeDemo,
         expiry_date: moment(frm.datesConfig?.expiryDate).toISOString(),
         level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
@@ -392,23 +389,23 @@ function CreateEditChannel(props: any, ref: any) {
           frm?.equipment?.length > 0
             ? frm.equipment
                 .map((item: any) => item.id)
-                .join(", ")
-                .split(", ")
+                .join(', ')
+                .split(', ')
             : [],
         fitnessdisciplines:
           frm?.discpline?.length > 0
             ? frm.discpline
                 .map((item: any) => item.id)
-                .join(", ")
-                .split(", ")
+                .join(', ')
+                .split(', ')
             : [],
         duration:
           frm.dates.startDate === frm.dates.endDate
             ? 1
             : calculateDuration(frm.dates.startDate, frm.dates.endDate),
         fitnesspackagepricing:
-          frm.pricing === "free"
-            ? [{ mrp: "free" }]
+          frm.pricing === 'free'
+            ? [{ mrp: 'free' }]
             : JSON.parse(frm.pricing).filter((item: any) => item.mrp !== null),
         publishing_date: moment(frm.datesConfig?.publishingDate).toISOString(),
         tags: frm?.tag,
@@ -420,11 +417,11 @@ function CreateEditChannel(props: any, ref: any) {
         videoUrl: frm.Upload?.VideoUrl,
         languages: frm.languages
           .map((item: any) => item.id)
-          .join(", ")
-          .split(", "),
+          .join(', ')
+          .split(', '),
         Start_date: moment.utc(frm.dates.startDate).format(),
-        End_date: moment(frm.dates.startDate).add(360, "days").toISOString(),
-      },
+        End_date: moment(frm.dates.startDate).add(360, 'days').toISOString()
+      }
     });
   }
 
@@ -447,8 +444,7 @@ function CreateEditChannel(props: any, ref: any) {
         aboutpackage: frm.About,
         benefits: frm.Benifits,
         packagename: frm.channelName,
-        channelinstantBooking: JSON.parse(frm.channelinstantBooking)
-          .instantBooking,
+        channelinstantBooking: JSON.parse(frm.channelinstantBooking).instantBooking,
         Is_free_demo: JSON.parse(frm.channelinstantBooking).freeDemo,
         expiry_date: moment(frm.datesConfig?.expiryDate).toISOString(),
         level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
@@ -456,23 +452,23 @@ function CreateEditChannel(props: any, ref: any) {
           frm?.equipment?.length > 0
             ? frm.equipment
                 .map((item: any) => item.id)
-                .join(", ")
-                .split(", ")
+                .join(', ')
+                .split(', ')
             : [],
         fitnessdisciplines:
           frm?.discpline?.length > 0
             ? frm.discpline
                 .map((item: any) => item.id)
-                .join(", ")
-                .split(", ")
+                .join(', ')
+                .split(', ')
             : [],
         duration:
           frm.dates.startDate === frm.dates.endDate
             ? 1
             : calculateDuration(frm.dates.startDate, frm.dates.endDate),
         fitnesspackagepricing:
-          frm.pricing === "free"
-            ? [{ mrp: "free" }]
+          frm.pricing === 'free'
+            ? [{ mrp: 'free' }]
             : JSON.parse(frm.pricing).filter((item: any) => item.mrp !== null),
         publishing_date: moment(frm.datesConfig?.publishingDate).toISOString(),
         tags: frm?.tag,
@@ -484,11 +480,11 @@ function CreateEditChannel(props: any, ref: any) {
         videoUrl: frm.Upload?.VideoUrl,
         languages: frm.languages
           .map((item: any) => item.id)
-          .join(", ")
-          .split(", "),
+          .join(', ')
+          .split(', '),
         Start_date: moment(frm.dates.startDate).toISOString(),
-        End_date: moment(frm.dates.startDate).add(360, "days").toISOString(),
-      },
+        End_date: moment(frm.dates.startDate).add(360, 'days').toISOString()
+      }
     });
   }
 
@@ -500,7 +496,7 @@ function CreateEditChannel(props: any, ref: any) {
   function updateChannelPackageStatus(id: any, status: any) {
     updatePackageStatus({ variables: { id: id, Status: status } });
     setStatusModalShow(false);
-    operation.type = "create";
+    operation.type = 'create';
   }
 
   function OnSubmit(frm: any) {
@@ -510,16 +506,16 @@ function CreateEditChannel(props: any, ref: any) {
     }
 
     switch (operation.type) {
-      case "create":
+      case 'create':
         CreateChannelPackage(frm);
         break;
-      case "edit":
+      case 'edit':
         editChannelPackege(frm);
         break;
-      case "toggle-status":
+      case 'toggle-status':
         setStatusModalShow(true);
         break;
-      case "delete":
+      case 'delete':
         setDeleteModalShow(true);
         break;
     }
@@ -527,12 +523,12 @@ function CreateEditChannel(props: any, ref: any) {
 
   FetchData();
 
-  let name = "";
-  if (operation.type === "create") {
-    name = "Live Stream Offering";
-  } else if (operation.type === "edit") {
+  let name = '';
+  if (operation.type === 'create') {
+    name = 'Live Stream Offering';
+  } else if (operation.type === 'edit') {
     name = `Edit ${programDetails.channelName}`;
-  } else if (operation.type === "view") {
+  } else if (operation.type === 'view') {
     name = `Viewing ${programDetails.channelName}`;
   }
 
@@ -544,15 +540,15 @@ function CreateEditChannel(props: any, ref: any) {
         isStepper={true}
         showErrorList={false}
         formUISchema={
-          operation.type === "view"
+          operation.type === 'view'
             ? schemaView
-            : operation.type === "edit"
+            : operation.type === 'edit'
             ? editLiveStreamSchema
             : schema
         }
         formSchema={programSchema}
         formSubmit={
-          name === "View"
+          name === 'View'
             ? () => {
                 modalTrigger.next(false);
               }
@@ -562,13 +558,7 @@ function CreateEditChannel(props: any, ref: any) {
         }
         formData={programDetails}
         widgets={widgets}
-        stepperValues={[
-          "Creator",
-          "Details",
-          "Schedule",
-          "Pricing",
-          "Config"
-        ]}
+        stepperValues={['Creator', 'Details', 'Schedule', 'Pricing', 'Config']}
         modalTrigger={modalTrigger}
         actionType={operation.type}
         customFormats={youtubeUrlCustomFormats}
@@ -579,17 +569,13 @@ function CreateEditChannel(props: any, ref: any) {
         size="lg"
         aria-labelledby="contained-modal-title-vcenter"
         show={deleteModalShow}
-        centered
-      >
+        centered>
         <Modal.Header
           closeButton
           onHide={() => {
             setDeleteModalShow(false);
-          }}
-        >
-          <Modal.Title id="contained-modal-title-vcenter">
-            Delete Package
-          </Modal.Title>
+          }}>
+          <Modal.Title id="contained-modal-title-vcenter">Delete Package</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <p>Are you sure you want to delete this package</p>
@@ -599,16 +585,14 @@ function CreateEditChannel(props: any, ref: any) {
             variant="danger"
             onClick={() => {
               setDeleteModalShow(false);
-            }}
-          >
+            }}>
             No
           </Button>
           <Button
             variant="success"
             onClick={() => {
               deleteChannelPackage(operation.id);
-            }}
-          >
+            }}>
             Yes
           </Button>
         </Modal.Footer>
@@ -618,17 +602,13 @@ function CreateEditChannel(props: any, ref: any) {
         size="lg"
         aria-labelledby="contained-modal-title-vcenter"
         show={statusModalShow}
-        centered
-      >
+        centered>
         <Modal.Header
           closeButton
           onHide={() => {
             setStatusModalShow(false);
-          }}
-        >
-          <Modal.Title id="contained-modal-title-vcenter">
-            Update Status
-          </Modal.Title>
+          }}>
+          <Modal.Title id="contained-modal-title-vcenter">Update Status</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <p>Are you sure you want to update the status of this package?</p>
@@ -638,19 +618,14 @@ function CreateEditChannel(props: any, ref: any) {
             variant="danger"
             onClick={() => {
               setStatusModalShow(false);
-            }}
-          >
+            }}>
             No
           </Button>
           <Button
             variant="success"
             onClick={() => {
-              updateChannelPackageStatus(
-                operation.id,
-                operation.current_status
-              );
-            }}
-          >
+              updateChannelPackageStatus(operation.id, operation.current_status);
+            }}>
             Yes
           </Button>
         </Modal.Footer>

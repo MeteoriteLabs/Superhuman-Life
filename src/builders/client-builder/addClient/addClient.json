@@ -26,6 +26,15 @@
                         "type": "string",
                         "title": "Email ID"
                     },
+                    "offeringFilter": {
+                        "title": "Filter offering based on : ",
+                        "type": "string",
+                        "enum": [
+                            "Class",
+                            "Program"
+                        ],
+                        "default": "Program"
+                    },
                     "offerings": {
                         "title": "Select Offerings",
                         "type": "string"
@@ -65,6 +74,15 @@
                         "type": "string",
                         "title": "Email ID",
                         "format": "email"
+                    },
+                    "offeringFilter": {
+                        "title": "Filter offering based on : ",
+                        "type": "string",
+                        "enum": [
+                            "Class",
+                            "Program"
+                        ],
+                        "default": "Program"
                     },
                     "offerings": {
                         "title": "Select offering",

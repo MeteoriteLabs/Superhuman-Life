@@ -5,7 +5,7 @@ import GraphSelector from "./GraphSelector";
 import LinksCard from "./Links";
 import TaskCard from "./TaskCard";
 
-function Grid() {
+const Grid: React.FC = () => {
   return (
     <>
       <Row className="my-3">

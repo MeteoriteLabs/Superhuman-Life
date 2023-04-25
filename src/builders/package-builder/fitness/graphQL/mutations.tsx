@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 export const CREATE_PACKAGE = gql`
   mutation createFitnesspackage(
@@ -42,7 +42,7 @@ export const CREATE_PACKAGE = gql`
   ) {
     createFitnesspackage(
       data: {
-        client_address: $client_address,
+        client_address: $client_address
         SubscriptionDuration: $SubscriptionDuration
         packagename: $packagename
         tags: $tags
@@ -83,8 +83,19 @@ export const CREATE_PACKAGE = gql`
     ) {
       data {
         id
-        attributes{
+        attributes {
           packagename
+          groupinstantbooking
+          fitness_package_type{
+            data{
+              id 
+              attributes{
+                type
+              }
+            }
+          }
+          classsize
+          duration
         }
       }
     }
@@ -144,6 +155,16 @@ export const CREATE_NOTIFICATION = gql`
   }
 `;
 
+export const CREATE_OFFERING_INVENTORY = gql`
+  mutation createOfferingInventory($data: OfferingInventoryInput!) {
+    createOfferingInventory(data: $data) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
 export const EDIT_PACKAGE = gql`
   mutation fitnesspackages(
     $SubscriptionDuration: JSON
@@ -188,7 +209,7 @@ export const EDIT_PACKAGE = gql`
     updateFitnesspackage(
       id: $id
       data: {
-        client_address: $client_address,
+        client_address: $client_address
         SubscriptionDuration: $SubscriptionDuration
         packagename: $packagename
         tags: $tags
@@ -434,7 +455,7 @@ export const CREATE_ADDRESS = gql`
     $zipcode: String
     $title: String
     $users_permissions_user: ID
-    $latitude: String,
+    $latitude: String
     $longitude: String
   ) {
     createAddress(
@@ -526,6 +547,17 @@ export const CREATE_CHANNEL_PACKAGE = gql`
         id
         attributes {
           packagename
+          fitness_package_type{
+            data{
+              id 
+              attributes{
+                type
+              }
+            }
+          }
+          classsize
+          duration
+          groupinstantbooking
         }
       }
     }

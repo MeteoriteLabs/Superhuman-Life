@@ -24,7 +24,7 @@ import CreateEditViewClassicClass from './classic/CreateOrEdit';
 import CreateEditViewCustomFitness from './custom/CreateOrEdit';
 import CreateEditViewChannel from './live-stream/CreateEditView-Channel';
 import CreateEditViewCohort from './cohort/CreateEditView-Cohort';
-import { GET_FITNESS, GET_TAGS } from './graphQL/queries';
+import { GET_FITNESS, GET_TAGS, GET_OFFERING_INVENTORY } from './graphQL/queries';
 import { flattenObj } from '../../../components/utils/responseFlatten';
 import moment from 'moment';
 import Drawer from '../../../components/Drawer';
@@ -698,6 +698,15 @@ export default function FitnessTab() {
     variables: { id: auth.userid },
     onCompleted: (data) => {
       tags({ variables: { id: auth.userid } });
+    }
+  });
+
+  const { data: get_inventory, refetch: refetchInventory } = useQuery(GET_OFFERING_INVENTORY, {
+    variables: { id: auth.userid },
+    onCompleted: (data) => {
+      console.log(data);
+      const inventoryFlattenData = flattenObj({ data });
+      console.log(inventoryFlattenData);
     }
   });
 

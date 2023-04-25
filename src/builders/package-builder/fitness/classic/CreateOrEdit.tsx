@@ -20,7 +20,8 @@ import {
   CREATE_BOOKING_CONFIG,
   UPDATE_BOOKING_CONFIG,
   CREATE_NOTIFICATION,
-  DELETE_BOOKING_CONFIG
+  DELETE_BOOKING_CONFIG,
+  CREATE_OFFERING_INVENTORY
 } from "../graphQL/mutations";
 import { Modal, Button } from "react-bootstrap";
 import AuthContext from "../../../../context/auth-context";
@@ -60,19 +61,19 @@ function CreateEditPackage(props: any, ref: any) {
 
   useQuery(GET_FITNESS_PACKAGE_TYPES, {
     variables: { type: "Classic Class" },
-    onCompleted: (r: any) => {
-      const flattenData = flattenObj({ ...r });
+    onCompleted: (response) => {
+      const flattenData = flattenObj({ ...response });
       setFitnessType(flattenData.fitnessPackageTypes);
     },
   });
 
   const [bookingConfig] = useMutation(CREATE_BOOKING_CONFIG, {
-    onCompleted: (r: any) => {
+    onCompleted: (response) => {
       modalTrigger.next(false);
       props.refetchTags();
       props.refetchOfferings();
       setIsFormSubmitted(!isFormSubmitted);
-      window.open(`classic/session/scheduler/${r.createTag.data.id}`, "_self")
+      window.open(`classic/session/scheduler/${response.createTag.data.id}`, "_self")
     },
   });
 
@@ -87,7 +88,7 @@ function CreateEditPackage(props: any, ref: any) {
   });
 
   const [updateBookingConfig] = useMutation(UPDATE_BOOKING_CONFIG, {
-    onCompleted: (r: any) => {
+    onCompleted: (response) => {
       modalTrigger.next(false);
       props.refetchTags();
       props.refetchOfferings();
@@ -96,6 +97,7 @@ function CreateEditPackage(props: any, ref: any) {
   });
 
   const [createCohortNotification] = useMutation(CREATE_NOTIFICATION);
+  const [createOfferingInventory] = useMutation(CREATE_OFFERING_INVENTORY);
 
   // eslint-disable-next-line
   const { data: get_bookings_config } = useQuery(GET_BOOKINGS_CONFIG, {
@@ -110,11 +112,23 @@ function CreateEditPackage(props: any, ref: any) {
 
   const [createPackage] = useMutation(CREATE_PACKAGE, {
    
-    onCompleted: (r: any) => {
+    onCompleted: (response) => {
       modalTrigger.next(false);
       props.refetchTags();
       props.refetchOfferings();
-      const flattenData = flattenObj({ ...r });
+      const flattenData = flattenObj({ ...response });
+
+      createOfferingInventory({
+        variables: {
+          data: {
+            fitnesspackage: flattenData.createFitnesspackage.id,
+            ClassSize: 5000,
+            ClassAvailability: 5000,
+            ActiveBookings: 0,
+            changemaker_id: auth.userid
+          }
+        }
+      });
 
       createCohortNotification({
           variables: {
@@ -133,7 +147,7 @@ function CreateEditPackage(props: any, ref: any) {
         bookingConfig({
           variables: {
             isAuto: true,
-            id: r.createFitnesspackage.data.id,
+            id: response.createFitnesspackage.data.id,
             is_Fillmyslots: true,
             tagName: frmDetails.packageName,
           },
@@ -144,7 +158,7 @@ function CreateEditPackage(props: any, ref: any) {
   );
 
   const [editPackage] = useMutation(EDIT_PACKAGE, {
-    onCompleted: (r: any) => {
+    onCompleted: (r) => {
       const val = JSON.parse(frmDetails.config.bookingConfig);
       updateBookingConfig({
         variables: {
