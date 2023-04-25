@@ -62,15 +62,11 @@ function CreateEditChannel(props: any, ref: any) {
       setisOfferingUpdated(!isOfferingUpdated);
       const flattenData = flattenObj({...data});
       
-      createOfferingInventory({
+      updateOfferingInventory({
         variables: {
           id: operation.inventoryId,
           data: {
-            fitnesspackage: flattenData.updateFitnesspackage.id,
-            ActiveBookings: 0,
             ClassSize: flattenData.updateFitnesspackage.classsize,
-            ClassAvailability: flattenData.updateFitnesspackage.classsize,
-            changemaker_id: auth.userid,
             InstantBooking: flattenData.updateFitnesspackage.groupinstantbooking     
           }
         }
@@ -133,10 +129,14 @@ function CreateEditChannel(props: any, ref: any) {
     onCompleted: (response) => {
       const flattenData = flattenObj({ ...response });
 
-      updateOfferingInventory({
+      createOfferingInventory({
         variables: {
           data: {
+            fitnesspackage: flattenData.createFitnesspackage.id,
+            ActiveBookings: 0,
             ClassSize: flattenData.createFitnesspackage.classsize,
+            ClassAvailability: flattenData.createFitnesspackage.classsize,
+            changemaker_id: auth.userid,
             InstantBooking: flattenData.createFitnesspackage.groupinstantbooking
           }
         }
