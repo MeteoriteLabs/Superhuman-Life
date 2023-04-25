@@ -24,7 +24,7 @@ import CreateEditViewClassicClass from './classic/CreateOrEdit';
 import CreateEditViewCustomFitness from './custom/CreateOrEdit';
 import CreateEditViewChannel from './live-stream/CreateEditView-Channel';
 import CreateEditViewCohort from './cohort/CreateEditView-Cohort';
-import { GET_FITNESS, GET_TAGS, GET_OFFERING_INVENTORY } from './graphQL/queries';
+import { GET_FITNESS, GET_TAGS, GET_INVENTORY } from './graphQL/queries';
 import { flattenObj } from '../../../components/utils/responseFlatten';
 import moment from 'moment';
 import Drawer from '../../../components/Drawer';
@@ -44,6 +44,7 @@ export default function FitnessTab() {
   const [currentIndex, setCurrentIndex] = useState<any>('');
   const [showDrawer, setShowDrawer] = useState<boolean>(false);
   const [triggeredDetails, setTriggeredDetails] = useState<any>({});
+  const [inventoryId, setInventoryId] = useState<string | null>(null);
 
   function handleModalRender(
     id: string | null,
@@ -552,7 +553,13 @@ export default function FitnessTab() {
         Header: 'Actions',
         Cell: ({ row }: any) => {
           const editHandler = () => {
-            handleModalRender(row.original.id, 'edit', row.original.type);
+            handleModalRender(inventoryId, row.original.id, 'edit', row.original.type);
+            if (
+              row.original.type !== 'One-On-One' &&
+              row.original.type !== 'Custom Fitness' &&
+              row.original.type !== 'On-Demand PT'
+            )
+              get_inventory({ variables: { id: row.original.id } });
           };
 
           const statusChangeHandler = () => {
@@ -701,14 +708,28 @@ export default function FitnessTab() {
     }
   });
 
-  const { data: get_inventory, refetch: refetchInventory } = useQuery(GET_OFFERING_INVENTORY, {
-    variables: { id: auth.userid },
-    onCompleted: (data) => {
-      console.log(data);
-      const inventoryFlattenData = flattenObj({ data });
-      console.log(inventoryFlattenData);
+  // const { data: get_inventory, refetch: refetchInventory } = useQuery(GET_OFFERING_INVENTORY, {
+  //   variables: { id: auth.userid },
+  //   onCompleted: (data) => {
+  //     console.log(data);
+  //     const inventoryFlattenData = flattenObj({ data });
+  //     console.log(inventoryFlattenData);
+  //   }
+  // });
+
+  const [get_inventory, { data: get_inventory_data, refetch: refetch_inventory }] = useLazyQuery(
+    GET_INVENTORY,
+    {
+      // variables: { id: operation.id },
+      // skip: operation.id === undefined,
+      onCompleted: (response) => {
+        console.log(response);
+        const flattenInventoryResponse = flattenObj({ ...response.offeringInventories });
+        console.log(flattenInventoryResponse, flattenInventoryResponse.find((curr) => curr.id).id);
+        setInventoryId(flattenInventoryResponse.find((curr) => curr.id).id);
+      }
     }
-  });
+  );
 
   return (
     <>

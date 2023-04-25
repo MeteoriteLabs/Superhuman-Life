@@ -1,3 +1,4 @@
+import React from "react";
 import { Row, Col } from "react-bootstrap";
 import UpcomingCard from "./UpcomingCard";
 import LeadCard from "./LeadCard/index";

@@ -37,6 +37,7 @@ import {
 } from "../../../../components/utils/ValidationPatterns";
 
 interface Operation {
+  inventoryId: string|null;
   id: string;
   type: "create" | "edit" | "view" | "toggle-status" | "delete";
   current_status: boolean;
@@ -158,7 +159,23 @@ function CreateEditPackage(props: any, ref: any) {
   );
 
   const [editPackage] = useMutation(EDIT_PACKAGE, {
-    onCompleted: (r) => {
+    onCompleted: (data) => {
+      const flattenData = flattenObj({...data});
+      
+      createOfferingInventory({
+        variables: {
+          id: operation.inventoryId,
+          data: {
+            fitnesspackage: flattenData.updateFitnesspackage.id,
+            ActiveBookings: 0,
+            ClassSize: flattenData.updateFitnesspackage.classsize,
+            ClassAvailability: flattenData.updateFitnesspackage.classsize,
+            changemaker_id: auth.userid,
+            InstantBooking: flattenData.updateFitnesspackage.groupinstantbooking     
+          }
+        }
+      });
+
       const val = JSON.parse(frmDetails.config.bookingConfig);
       updateBookingConfig({
         variables: {

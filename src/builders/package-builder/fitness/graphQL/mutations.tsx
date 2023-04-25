@@ -132,6 +132,16 @@ export const UPDATE_PACKAGE_PRIVATE = gql`
   }
 `;
 
+export const UPDATE_OFFERING_INVENTORY = gql`
+  mutation updateOfferingInventory($id: ID!, $data: OfferingInventoryInput!) {
+    updateOfferingInventory(id: $id, data: $data) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
 export const CREATE_NOTIFICATION = gql`
   mutation createChangemakerNotification($data: ChangemakerNotificationInput!) {
     createChangemakerNotification(data: $data) {
@@ -250,6 +260,11 @@ export const EDIT_PACKAGE = gql`
     ) {
       data {
         id
+        attributes{
+          classsize
+          groupinstantbooking 
+          duration
+        }
       }
     }
   }
@@ -441,6 +456,11 @@ export const UPDATE_CHANNEL_COHORT_PACKAGE = gql`
     ) {
       data {
         id
+        attributes{
+          classsize
+          duration
+          groupinstantbooking
+        }
       }
     }
   }

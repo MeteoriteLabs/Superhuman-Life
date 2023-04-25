@@ -30,6 +30,7 @@ import { Modal, Button } from 'react-bootstrap';
 import Toaster from '../../../../components/Toaster';
 
 interface Operation {
+  inventoryId: string|null;
   id: string;
   packageType: 'Cohort' | 'Live Stream Channel';
   type: 'create' | 'edit' | 'view' | 'toggle-status' | 'delete';
@@ -54,6 +55,21 @@ function CreateEditCohort(props: any, ref: any) {
   const [editPackageDetails] = useMutation(UPDATE_CHANNEL_COHORT_PACKAGE, {
     onCompleted: (data) => {
       modalTrigger.next(false);
+      const flattenData = flattenObj({...data});
+      
+      createOfferingInventory({
+        variables: {
+          id: operation.inventoryId,
+          data: {
+            fitnesspackage: flattenData.updateFitnesspackage.id,
+            ActiveBookings: 0,
+            ClassSize: flattenData.updateFitnesspackage.classsize,
+            ClassAvailability: flattenData.updateFitnesspackage.classsize,
+            changemaker_id: auth.userid,
+            InstantBooking: flattenData.updateFitnesspackage.groupinstantbooking     
+          }
+        }
+      });
     }
   });
 
@@ -76,6 +92,17 @@ function CreateEditCohort(props: any, ref: any) {
       setBookingsConfigInfo(bookingsConfigFlattenData.bookingConfigs);
     }
   });
+
+  // eslint-disable-next-line
+  // const { data: get_inventory } = useQuery(GET_INVENTORY, {
+  //   variables: { id: operation.id },
+  //   skip: operation.id === undefined,
+  //   onCompleted: (data) => {
+  //     console.log(data);
+  //   }
+  // });
+
+// console.log(operation.id);
 
   const [deleteBookingConfig] = useMutation(DELETE_BOOKING_CONFIG);
 

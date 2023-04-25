@@ -229,6 +229,28 @@ export const GET_FITNESS = gql`
   }
 `;
 
+export const GET_INVENTORY = gql`
+query offeringInventories($id: ID) {
+offeringInventories(filters: {fitnesspackage: {id: {eq: $id}}}){
+  data{
+    id
+    attributes{
+      ActiveBookings
+      fitnesspackage{
+        data
+        {
+          id
+          attributes{
+            packagename
+          }
+        }
+      }
+    }
+  }
+}
+}
+`
+
 export const GET_OFFERING_INVENTORY = gql`
   query offeringInventories($id: String) {
     offeringInventories(filters: {changemaker_id: {eq: $id }}) {

@@ -31,6 +31,7 @@ import {
 } from '../../../../components/utils/ValidationPatterns';
 
 interface Operation {
+  inventoryId: string|null;
   id: string;
   packageType: 'Cohort' | 'Live Stream Channel';
   type: 'create' | 'edit' | 'view' | 'toggle-status' | 'delete';
@@ -58,6 +59,21 @@ function CreateEditChannel(props: any, ref: any) {
       props.refetchTags();
       props.refetchOfferings();
       setisOfferingUpdated(!isOfferingUpdated);
+      const flattenData = flattenObj({...data});
+      
+      createOfferingInventory({
+        variables: {
+          id: operation.inventoryId,
+          data: {
+            fitnesspackage: flattenData.updateFitnesspackage.id,
+            ActiveBookings: 0,
+            ClassSize: flattenData.updateFitnesspackage.classsize,
+            ClassAvailability: flattenData.updateFitnesspackage.classsize,
+            changemaker_id: auth.userid,
+            InstantBooking: flattenData.updateFitnesspackage.groupinstantbooking     
+          }
+        }
+      });
     }
   });
 
@@ -104,7 +120,7 @@ function CreateEditChannel(props: any, ref: any) {
       props.refetchTags();
       props.refetchOfferings();
       setIsFormSubmitted(!isFormSubmitted);
-      // window.open(`channel/session/scheduler/${response.createTag.data.id}`, '_self');
+      window.open(`channel/session/scheduler/${response.createTag.data.id}`, '_self');
     }
   });
 

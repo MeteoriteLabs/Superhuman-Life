@@ -13,7 +13,8 @@ import {
   UPDATE_PACKAGE_STATUS,
   CREATE_BOOKING_CONFIG,
   CREATE_NOTIFICATION,
-  CREATE_OFFERING_INVENTORY
+  CREATE_OFFERING_INVENTORY,
+  UPDATE_OFFERING_INVENTORY
 } from '../graphQL/mutations';
 import { Modal, Button } from 'react-bootstrap';
 import AuthContext from '../../../../context/auth-context';
@@ -30,6 +31,7 @@ import {
 } from '../../../../components/utils/ValidationPatterns';
 
 interface Operation {
+  inventoryId: string|null;
   id: string;
   type: 'create' | 'edit' | 'view' | 'toggle-status' | 'delete';
   current_status: boolean;
@@ -80,11 +82,12 @@ function CreateEditPackage(props: any, ref: any) {
   const [createGroupNotification] = useMutation(CREATE_NOTIFICATION);
 
   const [createOfferingInventory] = useMutation(CREATE_OFFERING_INVENTORY);
+  const [updateOfferingInventory] = useMutation(UPDATE_OFFERING_INVENTORY);
 
   const [createPackage] = useMutation(CREATE_PACKAGE, {
     onCompleted: (response) => {
       const flattenData = flattenObj({ ...response });
-console.log(flattenData, flattenData.createFitnesspackage.groupinstantbooking , typeof flattenData.createFitnesspackage.groupinstantbooking )
+
       createOfferingInventory({
         variables: {
           data: {
@@ -134,10 +137,27 @@ console.log(flattenData, flattenData.createFitnesspackage.groupinstantbooking , 
 
   const [editPackage] = useMutation(EDIT_PACKAGE, {
     onCompleted: (data) => {
+      const flattenData = flattenObj({...data});
+      console.log(flattenData);
       modalTrigger.next(false);
       props.refetchTags();
       props.refetchOfferings();
       setisOfferingUpdated(!isOfferingUpdated);
+
+      createOfferingInventory({
+        variables: {
+          id: operation.inventoryId,
+          data: {
+            fitnesspackage: flattenData.updateFitnesspackage.id,
+            ActiveBookings: 0,
+            ClassSize: flattenData.updateFitnesspackage.classsize,
+            ClassAvailability: flattenData.updateFitnesspackage.classsize,
+            changemaker_id: auth.userid,
+            InstantBooking: flattenData.updateFitnesspackage.groupinstantbooking     
+          }
+        }
+      });
+
     }
   });
 
