@@ -31,7 +31,8 @@ import { Modal, Button } from 'react-bootstrap';
 import Toaster from '../../../../components/Toaster';
 
 interface Operation {
-  inventoryId: string|null;
+  classAvailability: number | null;
+  inventoryId: string | null;
   id: string;
   packageType: 'Cohort' | 'Live Stream Channel';
   type: 'create' | 'edit' | 'view' | 'toggle-status' | 'delete';
@@ -45,6 +46,7 @@ function CreateEditCohort(props: any, ref: any) {
   const [operation, setOperation] = useState<Operation>({} as Operation);
   const [fitnessPackageTypes, setFitnessPackageTypes] = useState<any>([]);
   const [deleteModalShow, setDeleteModalShow] = useState<boolean>(false);
+  const [deleteValidationModalShow, setDeleteValidationModalShow] = useState<boolean>(false);
   const [statusModalShow, setStatusModalShow] = useState<boolean>(false);
   const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
   const [isOffeeringDeleted, setisOffeeringDeleted] = useState<boolean>(false);
@@ -56,14 +58,14 @@ function CreateEditCohort(props: any, ref: any) {
   const [editPackageDetails] = useMutation(UPDATE_CHANNEL_COHORT_PACKAGE, {
     onCompleted: (data) => {
       modalTrigger.next(false);
-      const flattenData = flattenObj({...data});
-      
+      const flattenData = flattenObj({ ...data });
+
       updateOfferingInventory({
         variables: {
           id: operation.inventoryId,
           data: {
             ClassSize: flattenData.updateFitnesspackage.classsize,
-            InstantBooking: flattenData.updateFitnesspackage.groupinstantbooking     
+            InstantBooking: flattenData.updateFitnesspackage.groupinstantbooking
           }
         }
       });
@@ -100,7 +102,7 @@ function CreateEditCohort(props: any, ref: any) {
   //   }
   // });
 
-// console.log(operation.id);
+  // console.log(operation.id);
 
   const [deleteBookingConfig] = useMutation(DELETE_BOOKING_CONFIG);
 
@@ -159,7 +161,7 @@ function CreateEditCohort(props: any, ref: any) {
             ActiveBookings: 0,
             ClassSize: flattenData.createFitnesspackage.classsize,
             ClassAvailability: flattenData.createFitnesspackage.classsize,
-            changemaker_id: auth.userid,
+            changemaker_id: auth.userid
           }
         }
       });
@@ -194,7 +196,8 @@ function CreateEditCohort(props: any, ref: any) {
       }
 
       if (msg.type === 'delete') {
-        setDeleteModalShow(true);
+        if (msg.classAvailability === 0) setDeleteModalShow(true);
+        else setDeleteValidationModalShow(true);
       }
 
       // restrict to render when type is delete or toggle status
@@ -494,7 +497,8 @@ function CreateEditCohort(props: any, ref: any) {
         editCohort(frm);
         break;
       case 'delete':
-        setDeleteModalShow(true);
+        if (operation.classAvailability === 0) setDeleteModalShow(true);
+        else setDeleteValidationModalShow(true);
         break;
       case 'toggle-status':
         setStatusModalShow(true);
@@ -572,6 +576,39 @@ function CreateEditCohort(props: any, ref: any) {
         </Modal.Footer>
       </Modal>
 
+      {/* Delete modal validation (if classAvailability is greater than zero show this dailouge box) */}
+      <Modal
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        show={deleteValidationModalShow}
+        centered>
+        <Modal.Header
+          closeButton
+          onHide={() => {
+            setDeleteValidationModalShow(false);
+          }}>
+          <Modal.Title id="contained-modal-title-vcenter">
+            Oops!! Can&apos;t delete this Package
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>
+            Oops !! You are having <strong>active clients</strong> for this offering , So, you
+            can&apos;t delete it.
+          </p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="success"
+            onClick={() => {
+              setDeleteValidationModalShow(false);
+            }}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Delete modal */}
       <Modal
         size="lg"
         aria-labelledby="contained-modal-title-vcenter"

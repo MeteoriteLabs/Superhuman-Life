@@ -32,7 +32,8 @@ import {
 } from '../../../../components/utils/ValidationPatterns';
 
 interface Operation {
-  inventoryId: string|null;
+  classAvailability: number | null;
+  inventoryId: string | null;
   id: string;
   packageType: 'Cohort' | 'Live Stream Channel';
   type: 'create' | 'edit' | 'view' | 'toggle-status' | 'delete';
@@ -46,6 +47,7 @@ function CreateEditChannel(props: any, ref: any) {
   const [operation, setOperation] = useState<Operation>({} as Operation);
   const [fitnessPackageTypes, setFitnessPackageTypes] = useState<any>([]);
   const [deleteModalShow, setDeleteModalShow] = useState<boolean>(false);
+  const [deleteValidationModalShow, setDeleteValidationModalShow] = useState<boolean>(false);
   const [statusModalShow, setStatusModalShow] = useState<boolean>(false);
   const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
   const [isOffeeringDeleted, setisOffeeringDeleted] = useState<boolean>(false);
@@ -60,14 +62,14 @@ function CreateEditChannel(props: any, ref: any) {
       props.refetchTags();
       props.refetchOfferings();
       setisOfferingUpdated(!isOfferingUpdated);
-      const flattenData = flattenObj({...data});
-      
+      const flattenData = flattenObj({ ...data });
+
       updateOfferingInventory({
         variables: {
           id: operation.inventoryId,
           data: {
             ClassSize: flattenData.updateFitnesspackage.classsize,
-            InstantBooking: flattenData.updateFitnesspackage.groupinstantbooking     
+            InstantBooking: flattenData.updateFitnesspackage.groupinstantbooking
           }
         }
       });
@@ -134,8 +136,8 @@ function CreateEditChannel(props: any, ref: any) {
           data: {
             fitnesspackage: flattenData.createFitnesspackage.id,
             ActiveBookings: 0,
-            ClassSize: flattenData.createFitnesspackage.classsize,
-            ClassAvailability: flattenData.createFitnesspackage.classsize,
+            ClassSize: 5000,
+            ClassAvailability: 5000,
             changemaker_id: auth.userid,
             InstantBooking: flattenData.createFitnesspackage.groupinstantbooking
           }
@@ -187,7 +189,8 @@ function CreateEditChannel(props: any, ref: any) {
       }
 
       if (msg.type === 'delete') {
-        setDeleteModalShow(true);
+        if (msg.classAvailability === 0) setDeleteModalShow(true);
+        else setDeleteValidationModalShow(true);
       }
 
       if (msg.type !== 'delete' && msg.type !== 'toggle-status') {
@@ -530,7 +533,8 @@ function CreateEditChannel(props: any, ref: any) {
         setStatusModalShow(true);
         break;
       case 'delete':
-        setDeleteModalShow(true);
+        if (operation.classAvailability === 0) setDeleteModalShow(true);
+        else setDeleteValidationModalShow(true);
         break;
     }
   }
@@ -578,7 +582,39 @@ function CreateEditChannel(props: any, ref: any) {
         customFormats={youtubeUrlCustomFormats}
         transformErrors={youtubeUrlTransformErrors}
       />
+      {/* Delete modal validation (if classAvailability is greater than zero show this dailouge box) */}
+      <Modal
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        show={deleteValidationModalShow}
+        centered>
+        <Modal.Header
+          closeButton
+          onHide={() => {
+            setDeleteValidationModalShow(false);
+          }}>
+          <Modal.Title id="contained-modal-title-vcenter">
+            Oops!! Can&apos;t delete this Package
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>
+            Oops !! You are having <strong>active clients</strong> for this offering , So, you
+            can&apos;t delete it.
+          </p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="success"
+            onClick={() => {
+              setDeleteValidationModalShow(false);
+            }}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
 
+      {/* Delete modal */}
       <Modal
         size="lg"
         aria-labelledby="contained-modal-title-vcenter"
@@ -612,6 +648,7 @@ function CreateEditChannel(props: any, ref: any) {
         </Modal.Footer>
       </Modal>
 
+      {/* Change status modal */}
       <Modal
         size="lg"
         aria-labelledby="contained-modal-title-vcenter"

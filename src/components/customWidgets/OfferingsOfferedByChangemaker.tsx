@@ -2,7 +2,7 @@ import React, { useState, useContext, Fragment, useEffect } from "react";
 // import { Typeahead } from "react-bootstrap-typeahead";
 import { DropdownButton, Dropdown } from "react-bootstrap";
 import "react-bootstrap-typeahead/css/Typeahead.css";
-import { GET_FITNESS } from "../../builders/package-builder/fitness/graphQL/queries";
+import { FETCH_FITNESS_PACKAGE } from "./queries";
 import { useQuery } from "@apollo/client";
 import { flattenObj } from "../utils/responseFlatten";
 import AuthContext from "../../context/auth-context";
@@ -23,7 +23,7 @@ const OfferingList: React.FC<{value: string; onChange: (params: string|null) => 
   const [offeringList, setOfferingList] = useState<any[]>([]);
 
   // eslint-disable-next-line
-  const { data: get_fitness, refetch: refetchFitness } = useQuery(GET_FITNESS, {
+  const { data: get_fitness, refetch: refetchFitness } = useQuery(FETCH_FITNESS_PACKAGE, {
     variables: { id: auth.userid },
     onCompleted: (data) => {
         loadData(data)
@@ -33,13 +33,12 @@ const OfferingList: React.FC<{value: string; onChange: (params: string|null) => 
 
   function loadData(data: any) {
     const flattenedData = flattenObj({ ...data });
-    // console.log(flattenedData);
+    console.log(flattenedData);
     setOfferingList(
-      [...flattenedData?.fitnesspackages].map((currValue) => {
+      [...flattenedData?.offeringInventories].map((currValue) => {
         return {
           id: currValue.id,
-          name: currValue.packagename && currValue.packagename,
-        //   email: currValue.email && currValue.email,
+          name: currValue.fitnesspackage.packagename && currValue.fitnesspackage.packagename,
         };
       })
     );
@@ -63,17 +62,6 @@ const OfferingList: React.FC<{value: string; onChange: (params: string|null) => 
   }, [get_fitness])
 
   return (
-    // <div>
-    //   <label>Add offering</label>
-    //   <Typeahead
-    //     id="basic-typeahead-multiple"
-    //     labelKey="name"
-    //     onChange={OnChange}
-    //     options={offeringList}
-    //     placeholder="Choose offerings..."
-    //     selected={multiSelections}
-    //   />
-    // </div>
     <Fragment>
     <DropdownButton title="Select offering">
       {

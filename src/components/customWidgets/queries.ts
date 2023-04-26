@@ -345,6 +345,27 @@ export const FETCH_CHANGEMAKERS = gql`
     }
   }
 `;
+export const FETCH_FITNESS_PACKAGE = gql`
+query offeringInventories($Changemakerid: String){
+  offeringInventories(filters: {changemaker_id: {eq: $Changemakerid}, ClassAvailability: {gt: 0}}){
+    data{
+      id
+      attributes{
+        ActiveBookings
+        fitnesspackage{
+          data
+          {
+            id
+            attributes{
+              packagename
+            }
+          }
+        }
+      }
+    }
+  }
+}
+`;
 
 export const FETCH_CLIENTS = gql`
   query clientBookingsTogetClient($id: ID){

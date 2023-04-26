@@ -30,5 +30,11 @@ export const schema: any = {
     'ui:options': {
       inline: true
     }
+  },
+  offeringFilter:{
+    'ui:widget': 'radio',
+    'ui:options': {
+      inline: true
+    }
   }
 };

@@ -87,6 +87,15 @@
                     "offerings": {
                         "title": "Select offering",
                         "type": "string"
+                    },
+                    "effectiveDate": {
+                        "title": "Effective Date",
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "packageDuration": {
+                        "title": "Package Duration",
+                        "type": "number"
                     }
                 },
                 "required": [

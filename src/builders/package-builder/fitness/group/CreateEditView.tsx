@@ -31,7 +31,8 @@ import {
 } from '../../../../components/utils/ValidationPatterns';
 
 interface Operation {
-  inventoryId: string|null;
+  classAvailability: number | null;
+  inventoryId: string | null;
   id: string;
   type: 'create' | 'edit' | 'view' | 'toggle-status' | 'delete';
   current_status: boolean;
@@ -45,8 +46,9 @@ function CreateEditPackage(props: any, ref: any) {
   const [groupDetails, setGroupDetails] = useState<any>({});
   const [fitnessTypes, setFitnessType] = useState<any[]>([]);
   const [operation, setOperation] = useState<Operation>({} as Operation);
-  const [deleteModalShow, setDeleteModalShow] = useState(false);
-  const [statusModalShow, setStatusModalShow] = useState(false);
+  const [deleteModalShow, setDeleteModalShow] = useState<boolean>(false);
+  const [deleteValidationModalShow, setDeleteValidationModalShow] = useState<boolean>(false);
+  const [statusModalShow, setStatusModalShow] = useState<boolean>(false);
   const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
   const [isOfferingDeleted, setisOfferingDeleted] = useState<boolean>(false);
   const [isOfferingUpdated, setisOfferingUpdated] = useState<boolean>(false);
@@ -96,7 +98,7 @@ function CreateEditPackage(props: any, ref: any) {
             ClassSize: flattenData.createFitnesspackage.classsize,
             ClassAvailability: flattenData.createFitnesspackage.classsize,
             changemaker_id: auth.userid,
-            InstantBooking: flattenData.createFitnesspackage.groupinstantbooking     
+            InstantBooking: flattenData.createFitnesspackage.groupinstantbooking
           }
         }
       });
@@ -137,24 +139,22 @@ function CreateEditPackage(props: any, ref: any) {
 
   const [editPackage] = useMutation(EDIT_PACKAGE, {
     onCompleted: (data) => {
-      
       modalTrigger.next(false);
       props.refetchTags();
       props.refetchOfferings();
       setisOfferingUpdated(!isOfferingUpdated);
 
-      const flattenData = flattenObj({...data});
-      
+      const flattenData = flattenObj({ ...data });
+
       updateOfferingInventory({
         variables: {
           id: operation.inventoryId,
           data: {
             ClassSize: flattenData.updateFitnesspackage.classsize,
-            InstantBooking: flattenData.updateFitnesspackage.groupinstantbooking     
+            InstantBooking: flattenData.updateFitnesspackage.groupinstantbooking
           }
         }
       });
-
     }
   });
 
@@ -185,7 +185,8 @@ function CreateEditPackage(props: any, ref: any) {
       }
 
       if (msg.type === 'delete') {
-        setDeleteModalShow(true);
+        if (msg.classAvailability === 0) setDeleteModalShow(true);
+        else setDeleteValidationModalShow(true);
       }
 
       // restrict to render form if type is delete ot toggle-status
@@ -557,7 +558,8 @@ function CreateEditPackage(props: any, ref: any) {
         setStatusModalShow(true);
         break;
       case 'delete':
-        setDeleteModalShow(true);
+        if (operation.classAvailability === 0) setDeleteModalShow(true);
+        else setDeleteValidationModalShow(true);
         break;
     }
   }
@@ -602,6 +604,39 @@ function CreateEditPackage(props: any, ref: any) {
         actionType={operation.type}
       />
 
+      {/* Delete modal validation (if classAvailability is greater than zero show this dailouge box) */}
+      <Modal
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        show={deleteValidationModalShow}
+        centered>
+        <Modal.Header
+          closeButton
+          onHide={() => {
+            setDeleteValidationModalShow(false);
+          }}>
+          <Modal.Title id="contained-modal-title-vcenter">
+            Oops!! Can&apos;t delete this Package
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>
+            Oops !! You are having <strong>active clients</strong> for this offering , So, you
+            can&apos;t delete it.
+          </p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="success"
+            onClick={() => {
+              setDeleteValidationModalShow(false);
+            }}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Delete Package modal */}
       <Modal
         size="lg"
         aria-labelledby="contained-modal-title-vcenter"
@@ -635,6 +670,7 @@ function CreateEditPackage(props: any, ref: any) {
         </Modal.Footer>
       </Modal>
 
+      {/* Change Status Modal */}
       <Modal
         size="lg"
         aria-labelledby="contained-modal-title-vcenter"

@@ -236,6 +236,8 @@ offeringInventories(filters: {fitnesspackage: {id: {eq: $id}}}){
     id
     attributes{
       ActiveBookings
+      ClassAvailability
+      ClassSize
       fitnesspackage{
         data
         {
