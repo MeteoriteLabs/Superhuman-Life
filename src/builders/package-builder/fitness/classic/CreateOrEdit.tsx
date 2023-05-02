@@ -130,7 +130,8 @@ function CreateEditPackage(props: any, ref: any) {
             ClassSize: 5000,
             ClassAvailability: 5000,
             ActiveBookings: 0,
-            changemaker_id: auth.userid
+            changemaker_id: auth.userid,
+            ClientBookingDetails: []
           }
         }
       });

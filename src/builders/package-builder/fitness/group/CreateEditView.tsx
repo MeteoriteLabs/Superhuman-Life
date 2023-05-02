@@ -98,7 +98,8 @@ function CreateEditPackage(props: any, ref: any) {
             ClassSize: flattenData.createFitnesspackage.classsize,
             ClassAvailability: flattenData.createFitnesspackage.classsize,
             changemaker_id: auth.userid,
-            InstantBooking: flattenData.createFitnesspackage.groupinstantbooking
+            InstantBooking: flattenData.createFitnesspackage.groupinstantbooking,
+            ClientBookingDetails: []
           }
         }
       });

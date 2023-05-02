@@ -1,6 +1,6 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useContext } from 'react';
 import { schema, widgets } from './AddClientSchema';
-import { CREATE_CLIENT } from './mutation';
+import { CREATE_CLIENT, CREATE_CLIENT_BOOKING } from './mutation';
 import { useMutation } from '@apollo/client';
 import { withTheme, utils } from '@rjsf/core';
 import { Theme as Bootstrap4Theme } from '@rjsf/bootstrap-4';
@@ -11,8 +11,11 @@ import {
   phoneCustomFormats,
   phoneTransformErrors
 } from '../../../components/utils/ValidationPatterns';
+import AuthContext from '../../../context/auth-context';
+import moment from 'moment';
 
 const AddClient: React.FC = () => {
+  const auth = useContext(AuthContext);
   const registry = utils.getDefaultRegistry();
   const defaultFileWidget = registry.widgets['FileWidget'];
   (Bootstrap4Theme as any).widgets['FileWidget'] = defaultFileWidget;
@@ -20,15 +23,47 @@ const AddClient: React.FC = () => {
   const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
   const formRef = useRef<any>(null);
   const addClientJson: Record<string, unknown> = require('./addClient.json');
-  const [clients, setClients] = useState<any>({});
 
-  const createClient = useMutation(CREATE_CLIENT);
+  const [createClientBooking] = useMutation(CREATE_CLIENT_BOOKING, {
+    onCompleted: (response) => {
+      const flattenReponse = flattenObj({ ...response.createClientBooking });
+         window.open(`/summary/?id=${flattenReponse.id}`, "_self");
+    }
+  });
+
+  const [createClient] = useMutation(CREATE_CLIENT);
 
   function OnSubmit(frm: any) {
-    // createClient(
-      
-    // )
-    // EditPaymentModeDetails(frm.formData);
+    
+    createClient({
+      variables: {
+        data: {
+          email: frm.formData.email,
+          First_Name: frm.formData.firstname,
+          Last_Name: frm.formData.lastname,
+          Phone_Number: frm.formData.phone,
+          username: `${frm.formData.firstname}${frm.formData.lastname}`,
+          password: `${frm.formData.phone}${frm.formData.firstname}`,
+          role: '4'
+        }
+      },
+      onCompleted: (response) => {
+        const flattenReponse = flattenObj({ ...response.createUsersPermissionsUser });
+
+        createClientBooking({
+          variables: {
+            data: {
+              ClientUser: flattenReponse.id,
+              booking_date: new Date(),
+              package_duration: frm.formData.packageDuration,
+              OfferingOwner: auth.userid,
+              effective_date: moment(frm.formData.effectiveDate),
+              fitnesspackages: frm.formData.offerings
+            }
+          }
+        });
+      }
+    });
   }
 
   return (
@@ -45,7 +80,6 @@ const AddClient: React.FC = () => {
             onSubmit={(frm: any) => {
               OnSubmit(frm);
             }}
-            formData={clients}
             showErrorList={false}
             customFormats={phoneCustomFormats}
             transformErrors={phoneTransformErrors}

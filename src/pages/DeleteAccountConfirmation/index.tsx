@@ -15,13 +15,13 @@ const emptyAccountDeleteState = {
   typeDelete: ''
 };
 
-function DeleteAccountConfirmation(props: any) {
+const DeleteAccountConfirmation: React.FC<{show: boolean; onHide: () => void;}> = (props) => {
 
   const auth = useContext(AuthContext);
   const [username, setUsername] = useState(null);
   const [email, setEmail] = useState(null);
   const deleteAccountJson: { [name: string]: any } = require("./DeleteAccountVerification.json");
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState<boolean>(false);
 
   const uiSchema: any = {
     "typeDelete": {
@@ -37,7 +37,7 @@ function DeleteAccountConfirmation(props: any) {
   }
 
   const [updateProfile] = useMutation(UPDATE_USER_PROFILE_DATA, {
-    onCompleted: (r: any) => {
+    onCompleted: () => {
       // logout from session
       logout();
       // redirect to deactivation page
@@ -47,9 +47,9 @@ function DeleteAccountConfirmation(props: any) {
 
   useQuery(FETCH_USER_PROFILE_DATA, {
     variables: { id: auth.userid },
-    onCompleted: (r: any) => {
-      setUsername(r.usersPermissionsUser.data.attributes.username);
-      setEmail(r.usersPermissionsUser.data.attributes.email);
+    onCompleted: (response) => {
+      setUsername(response.usersPermissionsUser.data.attributes.username);
+      setEmail(response.usersPermissionsUser.data.attributes.email);
     },
   });
 
@@ -64,7 +64,7 @@ function DeleteAccountConfirmation(props: any) {
   }
 
   const [createDeleteAccount] = useMutation(CREATE_DELETE_ACCOUNT, {
-    onCompleted: (r: any) => {
+    onCompleted: () => {
       updateProfile({
         variables: {
           id: auth.userid,

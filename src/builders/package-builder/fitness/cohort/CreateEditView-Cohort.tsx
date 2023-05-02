@@ -161,7 +161,8 @@ function CreateEditCohort(props: any, ref: any) {
             ActiveBookings: 0,
             ClassSize: flattenData.createFitnesspackage.classsize,
             ClassAvailability: flattenData.createFitnesspackage.classsize,
-            changemaker_id: auth.userid
+            changemaker_id: auth.userid,
+            ClientBookingDetails: []
           }
         }
       });

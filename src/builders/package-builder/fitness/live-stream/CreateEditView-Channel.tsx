@@ -139,7 +139,8 @@ function CreateEditChannel(props: any, ref: any) {
             ClassSize: 5000,
             ClassAvailability: 5000,
             changemaker_id: auth.userid,
-            InstantBooking: flattenData.createFitnesspackage.groupinstantbooking
+            InstantBooking: flattenData.createFitnesspackage.groupinstantbooking,
+            ClientBookingDetails: []
           }
         }
       });

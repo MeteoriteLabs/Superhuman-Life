@@ -318,20 +318,6 @@ const Register: React.FC = () => {
 
   const [updateUser] = useMutation(UPDATE_USER, {
     onCompleted: () => {
-      // if (userFormData.organization[0]?.Do_you_have_an_organization === "Yes") {
-      //   createOrganization({
-      //     variables: {
-      //       Organization_Name: userFormData.organization[0]?.Organization_Name,
-      //       organization_type: [
-      //         JSON.parse(userFormData.organization[0]?.Organization_Type)[0]
-      //           ?.id,
-      //       ],
-      //       Organization_description:
-      //         userFormData.organization[0]?.Organization_Description,
-      //       users: [newUserId],
-      //     },
-      //   });
-      // } else {
       createAddress({
         variables: {
           address1: JSON.parse(userFormData.address).address1,
@@ -347,7 +333,6 @@ const Register: React.FC = () => {
         }
       });
     }
-    // },
   });
 
   // eslint-disable-next-line

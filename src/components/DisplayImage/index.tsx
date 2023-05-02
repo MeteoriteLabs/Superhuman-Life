@@ -49,7 +49,7 @@ const DisplayImage: React.FC<{imageName: string|null, defaultImageUrl: string, i
       src={photoUrl}
       alt="profile"
       className={props.imageCSS}
-      onError={() => setPhotoUrl("assets/image_placeholder.svg")}
+      onError={() => setPhotoUrl("/assets/image_placeholder.svg")}
     />
   );
 }
