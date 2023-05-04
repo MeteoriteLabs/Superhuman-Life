@@ -15,8 +15,7 @@ import {
 import {
   GET_FITNESS_PACKAGE_TYPE,
   GET_SINGLE_PACKAGE_BY_ID,
-  GET_BOOKINGS_CONFIG,
-  GET_INVENTORY
+  GET_BOOKINGS_CONFIG
 } from '../graphQL/queries';
 import AuthContext from '../../../../context/auth-context';
 import { schema, widgets } from './channelSchema';
@@ -33,6 +32,8 @@ import {
 } from '../../../../components/utils/ValidationPatterns';
 
 interface Operation {
+  inventoryId: string|null;
+  activeBooking: number|null;
   id: string;
   packageType: 'Cohort' | 'Live Stream Channel';
   type: 'create' | 'edit' | 'view' | 'toggle-status' | 'delete';
@@ -52,20 +53,8 @@ function CreateEditChannel(props: any, ref: any) {
   const [isOffeeringDeleted, setisOffeeringDeleted] = useState<boolean>(false);
   const [isOfferingUpdated, setisOfferingUpdated] = useState<boolean>(false);
   const [bookingsConfigInfo, setBookingsConfigInfo] = useState<any[]>([]);
-  const [activeBooking, setActiveBooking] = useState<number | null>(null);
-  const [inventoryId, setInventoryId] = useState<string | null>(null);
 
   let frmDetails: any = {};
-
-  useQuery(GET_INVENTORY, {
-    variables: { changemaker_id: auth.userid, id: operation.id },
-    skip: !operation.id,
-    onCompleted: async (response) => {
-      const flattenData = await flattenObj({ ...response });
-      setActiveBooking(flattenData.offeringInventories[0].ActiveBookings);
-      setInventoryId(flattenData.offeringInventories[0].id);
-    }
-  });
 
   const [editPackageDetails] = useMutation(UPDATE_CHANNEL_COHORT_PACKAGE, {
     onCompleted: (data) => {
@@ -77,7 +66,7 @@ function CreateEditChannel(props: any, ref: any) {
 
       updateOfferingInventory({
         variables: {
-          id: inventoryId,
+          id: operation.inventoryId,
           data: {
             InstantBooking: flattenData.updateFitnesspackage.groupinstantbooking
           }
@@ -200,7 +189,7 @@ function CreateEditChannel(props: any, ref: any) {
       }
 
       if (msg.type === 'delete') {
-        if (activeBooking === 0) setDeleteModalShow(true);
+        if (msg.activeBooking === 0 ) setDeleteModalShow(true);
         else setDeleteValidationModalShow(true);
       }
 
@@ -544,7 +533,7 @@ function CreateEditChannel(props: any, ref: any) {
         setStatusModalShow(true);
         break;
       case 'delete':
-        if (activeBooking === 0) setDeleteModalShow(true);
+        if (operation.activeBooking === 0) setDeleteModalShow(true);
         else setDeleteValidationModalShow(true);
         break;
     }
