@@ -1,5 +1,5 @@
 import React, { useContext, useImperativeHandle, useState, useEffect } from 'react';
-import { useQuery, useMutation, useLazyQuery } from '@apollo/client';
+import { useQuery, useMutation } from '@apollo/client';
 import ModalView from '../../../../components/modal';
 import {
   CREATE_CHANNEL_PACKAGE,
@@ -19,8 +19,7 @@ import {
 import {
   GET_FITNESS_PACKAGE_TYPE,
   GET_SINGLE_PACKAGE_BY_ID,
-  GET_BOOKINGS_CONFIG,
-  GET_INVENTORY
+  GET_BOOKINGS_CONFIG
 } from '../graphQL/queries';
 import AuthContext from '../../../../context/auth-context';
 import { schema, widgets } from './cohortSchema';

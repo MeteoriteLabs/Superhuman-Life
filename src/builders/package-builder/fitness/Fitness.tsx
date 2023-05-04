@@ -44,7 +44,7 @@ export default function FitnessTab() {
   const [currentIndex, setCurrentIndex] = useState<any>('');
   const [showDrawer, setShowDrawer] = useState<boolean>(false);
   const [triggeredDetails, setTriggeredDetails] = useState<any>({});
-  const [inventoriesDetails, setInventoriesDetails] = useState<any>();
+  const [inventoriesDetails, setInventoriesDetails] = useState<any[]>([]);
 
   function handleModalRender(
     inventoryId: string | null,
@@ -662,6 +662,7 @@ export default function FitnessTab() {
 
   const [dataTable, setDataTable] = useState<any>([]);
 
+   // eslint-disable-next-line
   const { data: inventories, refetch: refetch_inventories } = useQuery(GET_INVENTORY, {
     variables: { changemaker_id: auth.userid },
     onCompleted: (response) => {
@@ -685,12 +686,14 @@ export default function FitnessTab() {
             sessions: tagsFlattenData.tags.filter(
               (currentValue) => currentValue.fitnesspackage.id === item.id
             ),
-            inventoryId: inventoriesDetails.find((curr) => curr.fitnesspackage.id === item.id)
+            inventoryId: inventoriesDetails && inventoriesDetails.length && inventoriesDetails.find((curr) => curr.fitnesspackage.id === item.id)
               ? inventoriesDetails.find((curr) => curr.fitnesspackage.id === item.id).id
-              : null,
-            activeBooking: inventoriesDetails.find((curr) => curr.fitnesspackage.id === item.id)
+              : null
+              ,
+            activeBooking: inventoriesDetails && inventoriesDetails.length && inventoriesDetails.find((curr) => curr.fitnesspackage.id === item.id)
               ? inventoriesDetails.find((curr) => curr.fitnesspackage.id === item.id).ActiveBookings
-              : null,
+              : null
+              ,
             tagId: tagsFlattenData.tags
               .filter((currentValue) => currentValue.fitnesspackage.id === item.id)
               .map((currentValue) => [currentValue.id]),

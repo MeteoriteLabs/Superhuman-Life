@@ -1,5 +1,5 @@
 import React, { useContext, useImperativeHandle, useState, useEffect } from 'react';
-import { useQuery, useMutation, useLazyQuery } from '@apollo/client';
+import { useQuery, useMutation } from '@apollo/client';
 import ModalView from '../../../../components/modal';
 import {
   CREATE_CHANNEL_PACKAGE,
@@ -15,8 +15,7 @@ import {
 import {
   GET_FITNESS_PACKAGE_TYPE,
   GET_SINGLE_PACKAGE_BY_ID,
-  GET_BOOKINGS_CONFIG,
-  GET_INVENTORY
+  GET_BOOKINGS_CONFIG
 } from '../graphQL/queries';
 import AuthContext from '../../../../context/auth-context';
 import { schema, widgets } from './channelSchema';
@@ -534,7 +533,6 @@ function CreateEditChannel(props: any, ref: any) {
         setStatusModalShow(true);
         break;
       case 'delete':
-        // get_inventory({variables: { changemaker_id: auth.userid, id: operation.id }});
         if (operation.activeBooking === 0) setDeleteModalShow(true);
         else setDeleteValidationModalShow(true);
         break;

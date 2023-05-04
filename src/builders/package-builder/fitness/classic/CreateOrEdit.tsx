@@ -4,14 +4,13 @@ import React, {
   useState,
   useEffect,
 } from "react";
-import { useQuery, useMutation, useLazyQuery } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client";
 import ModalView from "../../../../components/modal";
 import {
   GET_SINGLE_PACKAGE_BY_ID,
   GET_FITNESS_PACKAGE_TYPES,
   ADD_SUGGESTION_NEW,
-  GET_BOOKINGS_CONFIG,
-  GET_INVENTORY
+  GET_BOOKINGS_CONFIG
 } from "../graphQL/queries";
 import {
   CREATE_PACKAGE,

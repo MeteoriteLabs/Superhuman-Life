@@ -1,11 +1,10 @@
 import React, { useContext, useImperativeHandle, useState, useEffect } from 'react';
-import { useQuery, useMutation, useLazyQuery } from '@apollo/client';
+import { useQuery, useMutation } from '@apollo/client';
 import ModalView from '../../../../components/modal';
 import {
   GET_SINGLE_PACKAGE_BY_ID,
   GET_FITNESS_PACKAGE_TYPES,
   ADD_SUGGESTION_NEW,
-  GET_INVENTORY
 } from '../graphQL/queries';
 import {
   CREATE_PACKAGE,
@@ -63,14 +62,6 @@ function CreateEditPackage(props: any, ref: any) {
       setFitnessType(flattenData.fitnessPackageTypes);
     }
   });
-
-  // const [get_inventory, { data: inventories, refetch: refetch_inventories }] = useLazyQuery(GET_INVENTORY, {
-  //   onCompleted: async (response) => {
-  //         const flattenData = await flattenObj({ ...response });
-  //         setActiveBooking(flattenData.offeringInventories[0].ActiveBookings);
-  //         setInventoryId(flattenData.offeringInventories[0].id);
-  //       }
-  // })
 
   const [createBookingConfig] = useMutation(CREATE_BOOKING_CONFIG, {
     onCompleted: (response) => {
