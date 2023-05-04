@@ -1,5 +1,5 @@
 import React, { useContext, useImperativeHandle, useState, useEffect } from 'react';
-import { useQuery, useMutation } from '@apollo/client';
+import { useQuery, useMutation, useLazyQuery } from '@apollo/client';
 import ModalView from '../../../../components/modal';
 import {
   CREATE_CHANNEL_PACKAGE,
@@ -32,6 +32,8 @@ import { Modal, Button } from 'react-bootstrap';
 import Toaster from '../../../../components/Toaster';
 
 interface Operation {
+  inventoryId: string | null;
+  activeBooking: number | null;
   id: string;
   packageType: 'Cohort' | 'Live Stream Channel';
   type: 'create' | 'edit' | 'view' | 'toggle-status' | 'delete';
@@ -51,8 +53,6 @@ function CreateEditCohort(props: any, ref: any) {
   const [isOffeeringDeleted, setisOffeeringDeleted] = useState<boolean>(false);
   const [isOfferingUpdated, setisOfferingUpdated] = useState<boolean>(false);
   const [bookingsConfigInfo, setBookingsConfigInfo] = useState<any[]>([]);
-  const [inventoryId, setInventoryId] = useState<string|null>(null);
-  const [activeBooking, setActiveBooking] = useState<number|null>(null);
 
   let frmDetails: any = {};
 
@@ -63,7 +63,7 @@ function CreateEditCohort(props: any, ref: any) {
 
       updateOfferingInventory({
         variables: {
-          id: inventoryId,
+          id: operation.inventoryId,
           data: {
             ClassSize: flattenData.updateFitnesspackage.classsize,
             InstantBooking: flattenData.updateFitnesspackage.groupinstantbooking
@@ -91,16 +91,6 @@ function CreateEditCohort(props: any, ref: any) {
     onCompleted: (data) => {
       const bookingsConfigFlattenData = flattenObj({ ...data });
       setBookingsConfigInfo(bookingsConfigFlattenData.bookingConfigs);
-    }
-  });
-
-  useQuery(GET_INVENTORY, {
-    variables: { changemaker_id: auth.userid, id: operation.id },
-    skip: !operation.id,
-    onCompleted: async (response) => {
-      const flattenData = await flattenObj({ ...response });
-      setActiveBooking(flattenData.offeringInventories[0].ActiveBookings);
-      setInventoryId(flattenData.offeringInventories[0].id);
     }
   });
 
@@ -197,7 +187,7 @@ function CreateEditCohort(props: any, ref: any) {
       }
 
       if (msg.type === 'delete') {
-        if (activeBooking === 0) setDeleteModalShow(true);
+        if (msg.activeBooking === 0) setDeleteModalShow(true);
         else setDeleteValidationModalShow(true);
       }
 
@@ -498,7 +488,7 @@ function CreateEditCohort(props: any, ref: any) {
         editCohort(frm);
         break;
       case 'delete':
-        if (activeBooking === 0) setDeleteModalShow(true);
+        if (operation.activeBooking === 0) setDeleteModalShow(true);
         else setDeleteValidationModalShow(true);
         break;
       case 'toggle-status':

@@ -1,5 +1,5 @@
 import React, { useContext, useImperativeHandle, useState, useEffect } from 'react';
-import { useQuery, useMutation } from '@apollo/client';
+import { useQuery, useMutation, useLazyQuery } from '@apollo/client';
 import ModalView from '../../../../components/modal';
 import {
   GET_SINGLE_PACKAGE_BY_ID,
@@ -32,6 +32,8 @@ import {
 } from '../../../../components/utils/ValidationPatterns';
 
 interface Operation {
+  inventoryId: string|null;
+  activeBooking: number|null;
   id: string;
   type: 'create' | 'edit' | 'view' | 'toggle-status' | 'delete';
   current_status: boolean;
@@ -51,8 +53,6 @@ function CreateEditPackage(props: any, ref: any) {
   const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
   const [isOfferingDeleted, setisOfferingDeleted] = useState<boolean>(false);
   const [isOfferingUpdated, setisOfferingUpdated] = useState<boolean>(false);
-  const [activeBooking, setActiveBooking] = useState<number|null>(null);
-  const [inventoryId, setInventoryId] = useState<number|null|string>(null);
 
   let frmDetails: any = {};
 
@@ -64,15 +64,13 @@ function CreateEditPackage(props: any, ref: any) {
     }
   });
 
-  useQuery(GET_INVENTORY, {
-    variables: { changemaker_id: auth.userid, id: operation.id },
-    skip: !operation.id,
-    onCompleted: async (response) => {
-      const flattenData = await flattenObj({ ...response });
-      setActiveBooking(flattenData.offeringInventories[0].ActiveBookings);
-      setInventoryId(flattenData.offeringInventories[0].id);
-    }
-  });
+  // const [get_inventory, { data: inventories, refetch: refetch_inventories }] = useLazyQuery(GET_INVENTORY, {
+  //   onCompleted: async (response) => {
+  //         const flattenData = await flattenObj({ ...response });
+  //         setActiveBooking(flattenData.offeringInventories[0].ActiveBookings);
+  //         setInventoryId(flattenData.offeringInventories[0].id);
+  //       }
+  // })
 
   const [createBookingConfig] = useMutation(CREATE_BOOKING_CONFIG, {
     onCompleted: (response) => {
@@ -85,7 +83,7 @@ function CreateEditPackage(props: any, ref: any) {
   });
 
   const [createUserPackageSuggestion] = useMutation(ADD_SUGGESTION_NEW, {
-    onCompleted: (data) => {
+    onCompleted: () => {
       modalTrigger.next(false);
       props.refetchTags();
       props.refetchOfferings();
@@ -160,7 +158,7 @@ function CreateEditPackage(props: any, ref: any) {
 
       updateOfferingInventory({
         variables: {
-          id: inventoryId,
+          id: operation.inventoryId,
           data: {
             ClassSize: flattenData.updateFitnesspackage.classsize,
             InstantBooking: flattenData.updateFitnesspackage.groupinstantbooking
@@ -197,7 +195,7 @@ function CreateEditPackage(props: any, ref: any) {
       }
 
       if (msg.type === 'delete') {
-        if (activeBooking === 0) setDeleteModalShow(true);
+        if (msg.activeBooking === 0 ) setDeleteModalShow(true);
         else setDeleteValidationModalShow(true);
       }
 
@@ -569,7 +567,7 @@ function CreateEditPackage(props: any, ref: any) {
         setStatusModalShow(true);
         break;
       case 'delete':
-        if (activeBooking === 0) setDeleteModalShow(true);
+        if (operation.activeBooking === 0) setDeleteModalShow(true);
         else setDeleteValidationModalShow(true);
         break;
     }
