@@ -15,7 +15,8 @@ import {
 import {
   GET_FITNESS_PACKAGE_TYPE,
   GET_SINGLE_PACKAGE_BY_ID,
-  GET_BOOKINGS_CONFIG
+  GET_BOOKINGS_CONFIG,
+  GET_INVENTORY
 } from '../graphQL/queries';
 import AuthContext from '../../../../context/auth-context';
 import { schema, widgets } from './channelSchema';
@@ -32,8 +33,6 @@ import {
 } from '../../../../components/utils/ValidationPatterns';
 
 interface Operation {
-  classAvailability: number | null;
-  inventoryId: string | null;
   id: string;
   packageType: 'Cohort' | 'Live Stream Channel';
   type: 'create' | 'edit' | 'view' | 'toggle-status' | 'delete';
@@ -53,8 +52,20 @@ function CreateEditChannel(props: any, ref: any) {
   const [isOffeeringDeleted, setisOffeeringDeleted] = useState<boolean>(false);
   const [isOfferingUpdated, setisOfferingUpdated] = useState<boolean>(false);
   const [bookingsConfigInfo, setBookingsConfigInfo] = useState<any[]>([]);
+  const [activeBooking, setActiveBooking] = useState<number | null>(null);
+  const [inventoryId, setInventoryId] = useState<string | null>(null);
 
   let frmDetails: any = {};
+
+  useQuery(GET_INVENTORY, {
+    variables: { changemaker_id: auth.userid, id: operation.id },
+    skip: !operation.id,
+    onCompleted: async (response) => {
+      const flattenData = await flattenObj({ ...response });
+      setActiveBooking(flattenData.offeringInventories[0].ActiveBookings);
+      setInventoryId(flattenData.offeringInventories[0].id);
+    }
+  });
 
   const [editPackageDetails] = useMutation(UPDATE_CHANNEL_COHORT_PACKAGE, {
     onCompleted: (data) => {
@@ -66,9 +77,8 @@ function CreateEditChannel(props: any, ref: any) {
 
       updateOfferingInventory({
         variables: {
-          id: operation.inventoryId,
+          id: inventoryId,
           data: {
-            ClassSize: flattenData.updateFitnesspackage.classsize,
             InstantBooking: flattenData.updateFitnesspackage.groupinstantbooking
           }
         }
@@ -139,7 +149,8 @@ function CreateEditChannel(props: any, ref: any) {
             ClassSize: 5000,
             ClassAvailability: 5000,
             changemaker_id: auth.userid,
-            InstantBooking: flattenData.createFitnesspackage.groupinstantbooking
+            InstantBooking: flattenData.createFitnesspackage.groupinstantbooking,
+            ClientBookingDetails: []
           }
         }
       });
@@ -189,7 +200,7 @@ function CreateEditChannel(props: any, ref: any) {
       }
 
       if (msg.type === 'delete') {
-        if (msg.classAvailability === 0) setDeleteModalShow(true);
+        if (activeBooking === 0) setDeleteModalShow(true);
         else setDeleteValidationModalShow(true);
       }
 
@@ -533,7 +544,7 @@ function CreateEditChannel(props: any, ref: any) {
         setStatusModalShow(true);
         break;
       case 'delete':
-        if (operation.classAvailability === 0) setDeleteModalShow(true);
+        if (activeBooking === 0) setDeleteModalShow(true);
         else setDeleteValidationModalShow(true);
         break;
     }
@@ -582,6 +593,7 @@ function CreateEditChannel(props: any, ref: any) {
         customFormats={youtubeUrlCustomFormats}
         transformErrors={youtubeUrlTransformErrors}
       />
+
       {/* Delete modal validation (if classAvailability is greater than zero show this dailouge box) */}
       <Modal
         size="lg"

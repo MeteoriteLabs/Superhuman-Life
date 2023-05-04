@@ -19,7 +19,8 @@ import {
 import {
   GET_FITNESS_PACKAGE_TYPE,
   GET_SINGLE_PACKAGE_BY_ID,
-  GET_BOOKINGS_CONFIG
+  GET_BOOKINGS_CONFIG,
+  GET_INVENTORY
 } from '../graphQL/queries';
 import AuthContext from '../../../../context/auth-context';
 import { schema, widgets } from './cohortSchema';
@@ -31,8 +32,6 @@ import { Modal, Button } from 'react-bootstrap';
 import Toaster from '../../../../components/Toaster';
 
 interface Operation {
-  classAvailability: number | null;
-  inventoryId: string | null;
   id: string;
   packageType: 'Cohort' | 'Live Stream Channel';
   type: 'create' | 'edit' | 'view' | 'toggle-status' | 'delete';
@@ -52,6 +51,8 @@ function CreateEditCohort(props: any, ref: any) {
   const [isOffeeringDeleted, setisOffeeringDeleted] = useState<boolean>(false);
   const [isOfferingUpdated, setisOfferingUpdated] = useState<boolean>(false);
   const [bookingsConfigInfo, setBookingsConfigInfo] = useState<any[]>([]);
+  const [inventoryId, setInventoryId] = useState<string|null>(null);
+  const [activeBooking, setActiveBooking] = useState<number|null>(null);
 
   let frmDetails: any = {};
 
@@ -62,7 +63,7 @@ function CreateEditCohort(props: any, ref: any) {
 
       updateOfferingInventory({
         variables: {
-          id: operation.inventoryId,
+          id: inventoryId,
           data: {
             ClassSize: flattenData.updateFitnesspackage.classsize,
             InstantBooking: flattenData.updateFitnesspackage.groupinstantbooking
@@ -93,16 +94,15 @@ function CreateEditCohort(props: any, ref: any) {
     }
   });
 
-  // eslint-disable-next-line
-  // const { data: get_inventory } = useQuery(GET_INVENTORY, {
-  //   variables: { id: operation.id },
-  //   skip: operation.id === undefined,
-  //   onCompleted: (data) => {
-  //     console.log(data);
-  //   }
-  // });
-
-  // console.log(operation.id);
+  useQuery(GET_INVENTORY, {
+    variables: { changemaker_id: auth.userid, id: operation.id },
+    skip: !operation.id,
+    onCompleted: async (response) => {
+      const flattenData = await flattenObj({ ...response });
+      setActiveBooking(flattenData.offeringInventories[0].ActiveBookings);
+      setInventoryId(flattenData.offeringInventories[0].id);
+    }
+  });
 
   const [deleteBookingConfig] = useMutation(DELETE_BOOKING_CONFIG);
 
@@ -125,12 +125,12 @@ function CreateEditCohort(props: any, ref: any) {
   });
 
   const [bookingConfig] = useMutation(CREATE_BOOKING_CONFIG, {
-    onCompleted: (r: any) => {
+    onCompleted: (response) => {
       modalTrigger.next(false);
       props.refetchTags();
       props.refetchOfferings();
       setIsFormSubmitted(!isFormSubmitted);
-      window.open(`cohort/session/scheduler/${r.createTag.data.id}`, '_self');
+      window.open(`cohort/session/scheduler/${response.createTag.data.id}`, '_self');
     }
   });
 
@@ -161,7 +161,8 @@ function CreateEditCohort(props: any, ref: any) {
             ActiveBookings: 0,
             ClassSize: flattenData.createFitnesspackage.classsize,
             ClassAvailability: flattenData.createFitnesspackage.classsize,
-            changemaker_id: auth.userid
+            changemaker_id: auth.userid,
+            ClientBookingDetails: []
           }
         }
       });
@@ -196,7 +197,7 @@ function CreateEditCohort(props: any, ref: any) {
       }
 
       if (msg.type === 'delete') {
-        if (msg.classAvailability === 0) setDeleteModalShow(true);
+        if (activeBooking === 0) setDeleteModalShow(true);
         else setDeleteValidationModalShow(true);
       }
 
@@ -497,7 +498,7 @@ function CreateEditCohort(props: any, ref: any) {
         editCohort(frm);
         break;
       case 'delete':
-        if (operation.classAvailability === 0) setDeleteModalShow(true);
+        if (activeBooking === 0) setDeleteModalShow(true);
         else setDeleteValidationModalShow(true);
         break;
       case 'toggle-status':

@@ -10,7 +10,8 @@ import {
   GET_SINGLE_PACKAGE_BY_ID,
   GET_FITNESS_PACKAGE_TYPES,
   ADD_SUGGESTION_NEW,
-  GET_BOOKINGS_CONFIG
+  GET_BOOKINGS_CONFIG,
+  GET_INVENTORY
 } from "../graphQL/queries";
 import {
   CREATE_PACKAGE,
@@ -38,8 +39,6 @@ import {
 } from "../../../../components/utils/ValidationPatterns";
 
 interface Operation {
-  classAvailability: number | null;
-  inventoryId: string|null;
   id: string;
   type: "create" | "edit" | "view" | "toggle-status" | "delete";
   current_status: boolean;
@@ -60,8 +59,20 @@ function CreateEditPackage(props: any, ref: any) {
   const [isOffeeringDeleted, setisOffeeringDeleted] = useState<boolean>(false);
   const [isOfferingUpdated, setisOfferingUpdated] = useState<boolean>(false);
   const [bookingsConfigInfo, setBookingsConfigInfo] = useState<any[]>([]);
+  const [activeBooking, setActiveBooking] = useState<number|null>(null);
+  const [inventoryId, setInventoryId] = useState<string|null>(null);
 
   let frmDetails: any = {};
+
+  useQuery(GET_INVENTORY, {
+    variables: { changemaker_id: auth.userid, id: operation.id },
+    skip: !operation.id,
+    onCompleted: async (response) => {
+      const flattenData = await flattenObj({ ...response });
+      setActiveBooking(flattenData.offeringInventories[0].ActiveBookings);
+      setInventoryId(flattenData.offeringInventories[0].id);
+    }
+  });
 
   useQuery(GET_FITNESS_PACKAGE_TYPES, {
     variables: { type: "Classic Class" },
@@ -130,7 +141,8 @@ function CreateEditPackage(props: any, ref: any) {
             ClassSize: 5000,
             ClassAvailability: 5000,
             ActiveBookings: 0,
-            changemaker_id: auth.userid
+            changemaker_id: auth.userid,
+            ClientBookingDetails: []
           }
         }
       });
@@ -168,7 +180,7 @@ function CreateEditPackage(props: any, ref: any) {
       
       updateOfferingInventory({
         variables: {
-          id: operation.inventoryId,
+          id: inventoryId,
           data: {
             ClassSize: flattenData.updateFitnesspackage.classsize,
             InstantBooking: flattenData.updateFitnesspackage.groupinstantbooking     
@@ -225,7 +237,7 @@ function CreateEditPackage(props: any, ref: any) {
       }
 
       if (msg.type === "delete") {
-        if (msg.classAvailability === 0) setDeleteModalShow(true);
+        if (activeBooking === 0) setDeleteModalShow(true);
         else setDeleteValidationModalShow(true);
       }
 
@@ -476,7 +488,7 @@ function CreateEditPackage(props: any, ref: any) {
         setStatusModalShow(true);
         break;
       case "delete":
-        if (operation.classAvailability === 0) setDeleteModalShow(true);
+        if (activeBooking === 0) setDeleteModalShow(true);
         else setDeleteValidationModalShow(true);
         break;
     }

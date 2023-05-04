@@ -28,7 +28,8 @@ const ProfilePage = React.lazy(() => import("./pages/profile"));
 const RegisterPage = React.lazy(() => import("./pages/register"));
 const SchedulePage = React.lazy(() => import("./pages/schedule"));
 const SettingsPage = React.lazy(() => import("./pages/settings"));
-const FinancePage = React.lazy(() => import("./pages/finance"))
+const FinancePage = React.lazy(() => import("./pages/finance"));
+const SummaryPage = React.lazy(() => import("./pages/Summary"))
 
 const ClientHomePage = React.lazy(() => import("./builders/client-builder/clientlisting/client"));
 const PackagePage = React.lazy(() => import("./builders/package-builder"));
@@ -53,6 +54,7 @@ const PrivacyPolicy = React.lazy(() => import('./pages/privacyPolicy'));
 const TermsOfService = React.lazy(() => import('./pages/termsOfService'));
 const SessionPage = React.lazy(() => import("./builders/session-builder/"));
 const AddClient = React.lazy(() => import("./builders/client-builder/addClient"));
+const SuccessfulBooking = React.lazy(() => import("./pages/SuccessfulBooking"));
 
 //auth logins
 // const GoogleAuthCallbackPage = React.lazy(() => import("./pages/register/oAuthLogins/googleAuthCallback"));
@@ -109,6 +111,8 @@ export default function Routes({ token }: any) {
                                    <Route path="/notifications" component={NotificationsPage} />
                                    <Route path="/notificationSettings" component={NotificationsSettings} />
                                    <Route path="/add_client" component={AddClient} />
+                                   <Route path="/summary" component={SummaryPage} />
+                                   <Route path="/success" component={SuccessfulBooking} />
 
                                    <Route path="*" component={NoMatch} />
                               </Switch>

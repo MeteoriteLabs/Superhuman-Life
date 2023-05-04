@@ -225,6 +225,13 @@ const Drawer: React.FC<{
                       </Col>
 
                       <Col lg={4} className="ml-1">
+                      {props.details &&
+                    props.details?.pricing &&
+                    props.details?.pricing.length &&
+                    
+                    props.details?.pricing[0].mrp === 'free' ? (
+                      <p style={{ fontSize: "0.7rem" }}>Free</p>
+                    ) : (
                         <p style={{ fontSize: "0.7rem" }}>
                           Rs.{" "}
                           {(props.details?.type === "On-Demand PT" ||
@@ -248,7 +255,7 @@ const Drawer: React.FC<{
                                 ).mrp
                               } Monthly`
                             : null}
-                        </p>
+                        </p>)}
                       </Col>
                     </Row>
                   </Card>

@@ -25,7 +25,7 @@ export const GET_ALL_BOOKINGS = gql`
             }
           }
           effective_date
-          booking_status
+          Booking_status
           booking_date
           package_duration
           fitnesspackages {

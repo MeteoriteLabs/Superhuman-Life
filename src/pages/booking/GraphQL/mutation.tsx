@@ -28,19 +28,20 @@ export const UPDATE_BOOKING_CONFIG = gql`
 `;
 
 export const UPDATE_BOOKING_STATUS = gql`
-  mutation updateClientBooking(
+  mutation updateClientBookingQuery(
     $id: ID!
-    $booking_status: ENUM_CLIENTBOOKING_BOOKING_STATUS
+    $Booking_status: ENUM_CLIENTBOOKING_BOOKING_STATUS
+    $BookingID: String
   ) {
-    updateClientBooking(id: $id, data: { booking_status: $booking_status }) {
+    updateClientBooking(id: $id, data: { Booking_status: $Booking_status, BookingID: $BookingID }) {
       data {
         id
         attributes{
           booking_date
           package_duration
           effective_date
-          booking_status
-          users_permissions_users{
+          Booking_status
+          ClientUser{
             data{
               id
             }

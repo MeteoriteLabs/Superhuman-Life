@@ -16,9 +16,10 @@ const OfferingList: React.FC<{value: string; onChange: (params: string|null) => 
       return value;
     }
   }
+  console.log(props);
 
-  const [multiSelections, setMultiSelections] = useState<any[]>(
-    props.value?.length > 0 ? handleReturnType(props.value) : []
+  const [multiSelections, setMultiSelections] = useState<string|null>(null
+    // props.value ? handleReturnType(props.value) : null
   );
   const [offeringList, setOfferingList] = useState<any[]>([]);
 
@@ -37,7 +38,7 @@ const OfferingList: React.FC<{value: string; onChange: (params: string|null) => 
     setOfferingList(
       [...flattenedData?.offeringInventories].map((currValue) => {
         return {
-          id: currValue.id,
+          id: currValue.fitnesspackage.id && currValue.fitnesspackage.id,
           name: currValue.fitnesspackage.packagename && currValue.fitnesspackage.packagename,
         };
       })
@@ -50,8 +51,8 @@ const OfferingList: React.FC<{value: string; onChange: (params: string|null) => 
     // setMultiSelections(unique);
   }
 
-  if (multiSelections.length > 0) {
-    props.onChange(JSON.stringify(multiSelections));
+  if (multiSelections) {
+    props.onChange(multiSelections);
   } else {
     props.onChange(null);
   }

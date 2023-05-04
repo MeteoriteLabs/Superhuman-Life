@@ -15,3 +15,13 @@ export const CREATE_CLIENT = gql`
       }
   }
 `;
+
+export const CREATE_CLIENT_BOOKING = gql`
+  mutation createClientBooking($data: ClientBookingInput!) {
+    createClientBooking(data: $data){
+        data{
+          id
+        }
+      }
+  }
+`;

@@ -230,32 +230,33 @@ export const GET_FITNESS = gql`
 `;
 
 export const GET_INVENTORY = gql`
-query offeringInventories($id: ID) {
-offeringInventories(filters: {fitnesspackage: {id: {eq: $id}}}){
-  data{
-    id
-    attributes{
-      ActiveBookings
-      ClassAvailability
-      ClassSize
-      fitnesspackage{
-        data
-        {
-          id
-          attributes{
-            packagename
+  query offeringInventories($id: ID, $changemaker_id: String) {
+    offeringInventories(
+      filters: { changemaker_id: { eq: $changemaker_id }, fitnesspackage: { id: { eq: $id } } }
+    ) {
+      data {
+        id
+        attributes {
+          ActiveBookings
+          ClassAvailability
+          ClassSize
+          fitnesspackage {
+            data {
+              id
+              attributes {
+                packagename
+              }
+            }
           }
         }
       }
     }
   }
-}
-}
-`
+`;
 
 export const GET_OFFERING_INVENTORY = gql`
   query offeringInventories($id: String) {
-    offeringInventories(filters: {changemaker_id: {eq: $id }}) {
+    offeringInventories(filters: { changemaker_id: { eq: $id } }) {
       data {
         id
         attributes {

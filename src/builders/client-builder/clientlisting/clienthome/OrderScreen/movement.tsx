@@ -229,7 +229,7 @@ function Movement() {
               effectivedate: getDate(Date.parse(Detail.effective_date)),
               enddate: getRenewalDate(Detail.effective_date, Detail.package_duration),
               cost: Detail.fitnesspackages[0]?.fitnesspackagepricing[0]?.mrp,
-              bookingstatus: Detail.booking_status,
+              bookingstatus: Detail.Booking_status,
               payment: ''
             }
           : []

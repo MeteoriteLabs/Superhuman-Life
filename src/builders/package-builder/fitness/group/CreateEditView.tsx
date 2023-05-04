@@ -4,7 +4,8 @@ import ModalView from '../../../../components/modal';
 import {
   GET_SINGLE_PACKAGE_BY_ID,
   GET_FITNESS_PACKAGE_TYPES,
-  ADD_SUGGESTION_NEW
+  ADD_SUGGESTION_NEW,
+  GET_INVENTORY
 } from '../graphQL/queries';
 import {
   CREATE_PACKAGE,
@@ -31,8 +32,6 @@ import {
 } from '../../../../components/utils/ValidationPatterns';
 
 interface Operation {
-  classAvailability: number | null;
-  inventoryId: string | null;
   id: string;
   type: 'create' | 'edit' | 'view' | 'toggle-status' | 'delete';
   current_status: boolean;
@@ -52,6 +51,8 @@ function CreateEditPackage(props: any, ref: any) {
   const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
   const [isOfferingDeleted, setisOfferingDeleted] = useState<boolean>(false);
   const [isOfferingUpdated, setisOfferingUpdated] = useState<boolean>(false);
+  const [activeBooking, setActiveBooking] = useState<number|null>(null);
+  const [inventoryId, setInventoryId] = useState<number|null|string>(null);
 
   let frmDetails: any = {};
 
@@ -60,6 +61,16 @@ function CreateEditPackage(props: any, ref: any) {
     onCompleted: (response) => {
       const flattenData = flattenObj({ ...response });
       setFitnessType(flattenData.fitnessPackageTypes);
+    }
+  });
+
+  useQuery(GET_INVENTORY, {
+    variables: { changemaker_id: auth.userid, id: operation.id },
+    skip: !operation.id,
+    onCompleted: async (response) => {
+      const flattenData = await flattenObj({ ...response });
+      setActiveBooking(flattenData.offeringInventories[0].ActiveBookings);
+      setInventoryId(flattenData.offeringInventories[0].id);
     }
   });
 
@@ -98,7 +109,8 @@ function CreateEditPackage(props: any, ref: any) {
             ClassSize: flattenData.createFitnesspackage.classsize,
             ClassAvailability: flattenData.createFitnesspackage.classsize,
             changemaker_id: auth.userid,
-            InstantBooking: flattenData.createFitnesspackage.groupinstantbooking
+            InstantBooking: flattenData.createFitnesspackage.groupinstantbooking,
+            ClientBookingDetails: []
           }
         }
       });
@@ -148,7 +160,7 @@ function CreateEditPackage(props: any, ref: any) {
 
       updateOfferingInventory({
         variables: {
-          id: operation.inventoryId,
+          id: inventoryId,
           data: {
             ClassSize: flattenData.updateFitnesspackage.classsize,
             InstantBooking: flattenData.updateFitnesspackage.groupinstantbooking
@@ -159,7 +171,7 @@ function CreateEditPackage(props: any, ref: any) {
   });
 
   const [updatePackageStatus] = useMutation(UPDATE_PACKAGE_STATUS, {
-    onCompleted: (data) => {
+    onCompleted: () => {
       props.refetchTags();
       props.refetchOfferings();
       setisOfferingUpdated(!isOfferingUpdated);
@@ -167,7 +179,7 @@ function CreateEditPackage(props: any, ref: any) {
   });
 
   const [deletePackage] = useMutation(DELETE_PACKAGE, {
-    onCompleted: (data) => {
+    onCompleted: () => {
       props.refetchTags();
       props.refetchOfferings();
       setisOfferingDeleted(!isOfferingDeleted);
@@ -185,7 +197,7 @@ function CreateEditPackage(props: any, ref: any) {
       }
 
       if (msg.type === 'delete') {
-        if (msg.classAvailability === 0) setDeleteModalShow(true);
+        if (activeBooking === 0) setDeleteModalShow(true);
         else setDeleteValidationModalShow(true);
       }
 
@@ -375,7 +387,6 @@ function CreateEditPackage(props: any, ref: any) {
     if (['edit', 'view'].indexOf(operation.type) > -1) modalTrigger.next(true);
     else OnSubmit(null);
   }
-
   useEffect(() => {
     if (operation.type === 'create') {
       setGroupDetails({});
@@ -558,7 +569,7 @@ function CreateEditPackage(props: any, ref: any) {
         setStatusModalShow(true);
         break;
       case 'delete':
-        if (operation.classAvailability === 0) setDeleteModalShow(true);
+        if (activeBooking === 0) setDeleteModalShow(true);
         else setDeleteValidationModalShow(true);
         break;
     }

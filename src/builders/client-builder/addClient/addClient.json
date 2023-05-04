@@ -91,7 +91,7 @@
                     "effectiveDate": {
                         "title": "Effective Date",
                         "type": "string",
-                        "format": "date"
+                        "format": "date-time"
                     },
                     "packageDuration": {
                         "title": "Package Duration",

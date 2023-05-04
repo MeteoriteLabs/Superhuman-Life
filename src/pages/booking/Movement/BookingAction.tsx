@@ -122,7 +122,7 @@ const BookingAction = (props:{refetchBookings: () => void;}, ref: any) => {
   const statusChangeHandler = () => {
     const updateValue = {
       id: operation.id,
-      booking_status:
+      Booking_status:
         operation.actionType === "accept" ? "accepted" : "rejected",
     };
 

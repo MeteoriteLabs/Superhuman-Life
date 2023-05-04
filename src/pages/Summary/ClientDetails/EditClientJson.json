@@ -1,0 +1,30 @@
+{
+    "type": "object",
+    "required": [
+        "firstname",
+        "lastname",
+        "phone",
+        "email"
+    ],
+    "properties": {
+        "firstname": {
+            "type": "string",
+            "title": "First Name"
+        },
+        "lastname": {
+            "type": "string",
+            "title": "Last Name"
+        },
+        "phone": {
+            "type": "string",
+            "title": "Phone Number",
+            "minLength": 10,
+            "format": "phone-in"
+        },
+        "email": {
+            "type": "string",
+            "title": "Email ID",
+            "format": "email"
+        }
+    }
+}

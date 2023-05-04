@@ -18,9 +18,8 @@ export const GET_BOOKINGS = gql`
                     }
                }
                effective_date
-               booking_status
+               Booking_status
                booking_date
-               booking_status
                package_duration
                fitnesspackages {
                     id
@@ -78,7 +77,7 @@ query clientBookings($id: ID!, $clientid: ID){
            }
            effective_date
            booking_date
-           booking_status
+           Booking_status
            package_duration
            fitnesspackages{
              data{

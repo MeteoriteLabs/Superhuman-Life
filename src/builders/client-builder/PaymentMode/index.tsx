@@ -23,19 +23,19 @@ const PaymentMode: React.FC = () => {
   const [paymentModeDetails, setPaymentModeDetails] = useState<any>({});
   const query = window.location.search;
   const params = new URLSearchParams(query);
-  const id: string|null = params.get("id");
+  const id = params.get("id");
 
   useQuery(GET_CONTACT, {
     variables: { id : id},
-    onCompleted: (e: any) => {
+    onCompleted: (response) => {
       
-      const flattenData = flattenObj(e);
+      const flattenData = flattenObj(response);
       FillDetails(flattenData);
     },
   });
 
   const [updateContact] = useMutation(UPDATE_CONTACT, {
-    onCompleted: (e: any) => {
+    onCompleted: () => {
       setIsFormSubmitted(!isFormSubmitted);
     },
     refetchQueries: [GET_CONTACT],

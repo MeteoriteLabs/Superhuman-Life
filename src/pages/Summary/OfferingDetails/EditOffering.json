@@ -1,0 +1,23 @@
+{
+    "type": "object",
+    "required": [
+        "offerings",
+        "effectiveDate",
+        "packageDuration"
+    ],
+    "properties": {
+        "offerings": {
+            "title": "Select offering",
+            "type": "string"
+        },
+        "effectiveDate": {
+            "title": "Effective Date",
+            "type": "string",
+            "format": "date-time"
+        },
+        "packageDuration": {
+            "title": "Package Duration",
+            "type": "number"
+        }
+    }
+}
