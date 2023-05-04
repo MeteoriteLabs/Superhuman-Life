@@ -5,11 +5,10 @@ export const widgets = {
 };
 
 export const schema: any = {
-  
   offerings: {
     'ui:widget': 'offerings'
   },
   packageDuration: {
     'ui:placeholder': 'Enter Package Duration'
-}
+  }
 };

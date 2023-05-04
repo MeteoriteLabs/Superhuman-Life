@@ -4,7 +4,7 @@ export const GET_BOOKINGS = gql`
   query Sessions($id: ID, $startDateTime: DateTime, $endDateTime: DateTime) {
     clientBookings(
       filters: {
-        booking_status: { eq: "accepted" }
+        Booking_status: { eq: "accepted" }
         ClientUser: { id: { eq: $id } }
         booking_date: { gte: $startDateTime, lte: $endDateTime }
       }

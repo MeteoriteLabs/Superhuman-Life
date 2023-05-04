@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Modal } from 'react-bootstrap';
 import { schema } from './EditClientSchema';
 import Form from '@rjsf/core';
-import {useMutation} from "@apollo/client";
+import { useMutation } from '@apollo/client';
 import { UPDATE_USER } from '../../register/mutations';
 
 interface UserDetail {
@@ -12,13 +12,25 @@ interface UserDetail {
   email: string;
 }
 
-const EditClient: React.FC<{ show: boolean; onHide: () => void; Client: { First_Name: string; Last_Name: string; Phone_Number: string; email: string; id: string|number;}[]; }> = ({ show, onHide, Client }) => {
+const EditClient: React.FC<{
+  show: boolean;
+  onHide: () => void;
+  Client: {
+    First_Name: string;
+    Last_Name: string;
+    Phone_Number: string;
+    email: string;
+    id: string | number;
+  }[];
+}> = ({ show, onHide, Client }) => {
   const editClientJson: { [name: string]: any } = require('./EditClientJson.json');
-  // eslint-disable-next-line
-  const [formData, setFormData] = useState<UserDetail>({firstname: Client[0].First_Name,
+
+  const formData: UserDetail = {
+    firstname: Client[0].First_Name,
     lastname: Client[0].Last_Name,
     email: Client[0].email,
-    phone: Client[0].Phone_Number});
+    phone: Client[0].Phone_Number
+  };
 
   const [updateUser] = useMutation(UPDATE_USER);
 
@@ -31,9 +43,11 @@ const EditClient: React.FC<{ show: boolean; onHide: () => void; Client: { First_
         email: frm.formData.email,
         password: `${frm.formData.phone}${frm.formData.firstname}`,
         phone: frm.formData.phone,
-        uname: `${frm.formData.firstname}${frm.formData.lastname}`}})
+        uname: `${frm.formData.firstname}${frm.formData.lastname}`
+      }
+    });
 
-        onHide();
+    onHide();
   };
 
   return (

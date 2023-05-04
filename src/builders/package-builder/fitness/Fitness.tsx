@@ -24,7 +24,7 @@ import CreateEditViewClassicClass from './classic/CreateOrEdit';
 import CreateEditViewCustomFitness from './custom/CreateOrEdit';
 import CreateEditViewChannel from './live-stream/CreateEditView-Channel';
 import CreateEditViewCohort from './cohort/CreateEditView-Cohort';
-import { GET_FITNESS, GET_TAGS, GET_INVENTORY } from './graphQL/queries';
+import { GET_FITNESS, GET_TAGS } from './graphQL/queries';
 import { flattenObj } from '../../../components/utils/responseFlatten';
 import moment from 'moment';
 import Drawer from '../../../components/Drawer';
@@ -44,12 +44,8 @@ export default function FitnessTab() {
   const [currentIndex, setCurrentIndex] = useState<any>('');
   const [showDrawer, setShowDrawer] = useState<boolean>(false);
   const [triggeredDetails, setTriggeredDetails] = useState<any>({});
-  const [inventoryId, setInventoryId] = useState<string | null>(null);
-  const [availableClass, setAvailableClass] = useState<number | null>(null);
 
   function handleModalRender(
-    ClassAvailability: number | null,
-    inventoryId: string | null,
     id: string | null,
     actionType: string,
     type: string,
@@ -74,8 +70,6 @@ export default function FitnessTab() {
         break;
       case 'Group Class':
         CreateEditViewGroupClassRef.current.TriggerForm({
-          ClassAvailability: availableClass,
-          inventoryId: inventoryId,
           id: id,
           type: actionType,
           actionType: type,
@@ -84,8 +78,6 @@ export default function FitnessTab() {
         break;
       case 'Classic Class':
         CreateEditViewClassicClassRef.current.TriggerForm({
-          ClassAvailability: availableClass,
-          inventoryId: inventoryId,
           id: id,
           type: actionType,
           actionType: type,
@@ -102,8 +94,6 @@ export default function FitnessTab() {
         break;
       case 'Live Stream Channel':
         createEditViewChannelRef.current.TriggerForm({
-          ClassAvailability: availableClass,
-          inventoryId: inventoryId,
           id: id,
           type: actionType,
           packageType: type,
@@ -112,8 +102,6 @@ export default function FitnessTab() {
         break;
       case 'Cohort':
         createEditViewCohortRef.current.TriggerForm({
-          ClassAvailability: availableClass,
-          inventoryId: inventoryId,
           id: id,
           type: actionType,
           packageType: type,
@@ -563,20 +551,11 @@ export default function FitnessTab() {
         Header: 'Actions',
         Cell: ({ row }: any) => {
           const editHandler = () => {
-            handleModalRender(availableClass, inventoryId, row.original.id, 'edit', row.original.type);
-            if (
-              row.original.type !== 'One-On-One' &&
-              row.original.type !== 'Custom Fitness' &&
-              row.original.type !== 'On-Demand PT'
-            ) {
-              get_inventory({ variables: { id: row.original.id } });
-            }
+            handleModalRender(row.original.id, 'edit', row.original.type);
           };
 
           const statusChangeHandler = () => {
             handleModalRender(
-              null,
-              null,
               row.original.id,
               'toggle-status',
               row.original.type,
@@ -585,18 +564,11 @@ export default function FitnessTab() {
           };
 
           const viewHandler = () => {
-            handleModalRender(null, null, row.original.id, 'view', row.original.type);
+            handleModalRender(row.original.id, 'view', row.original.type);
           };
 
           const deleteHandler = () => {
-            if (
-              row.original.type !== 'One-On-One' &&
-              row.original.type !== 'Custom Fitness' &&
-              row.original.type !== 'On-Demand PT'
-            ) {
-              get_inventory({ variables: { id: row.original.id } });
-            }
-            handleModalRender(availableClass, inventoryId, row.original.id, 'delete', row.original.type);
+            handleModalRender(row.original.id, 'delete', row.original.type);
           };
 
           const manageHandler = (id: number, length: number, type: string) => {
@@ -728,25 +700,7 @@ export default function FitnessTab() {
     }
   });
 
-  // const { data: get_all_inventory, refetch: refetchInventory } = useQuery(GET_OFFERING_INVENTORY, {
-  //   variables: { id: auth.userid },
-  //   onCompleted: (data) => {
-  //     console.log(data);
-  //     const inventoryFlattenData = flattenObj({ data });
-  //     console.log(inventoryFlattenData);
-  //   }
-  // });
-
-  const [get_inventory, { data: get_inventory_data, refetch: refetch_inventory }] = useLazyQuery(
-    GET_INVENTORY,
-    {
-      onCompleted: (response) => {
-        const flattenInventoryResponse = flattenObj({ ...response.offeringInventories });
-        setInventoryId(flattenInventoryResponse.find((curr) => curr.id).id);
-        setAvailableClass(flattenInventoryResponse.find((curr) => curr.id).ClassAvailability);
-      }
-    }
-  );
+  
 
   return (
     <>
@@ -766,13 +720,13 @@ export default function FitnessTab() {
             }>
             <Dropdown.Item
               onClick={() => {
-                handleModalRender(null, null, null, 'create', 'One-On-One');
+                handleModalRender(null, 'create', 'One-On-One');
               }}>
               Package subscription
             </Dropdown.Item>
             <Dropdown.Item
               onClick={() => {
-                handleModalRender(null, null, null, 'create', 'On-Demand PT');
+                handleModalRender(null, 'create', 'On-Demand PT');
               }}>
               On-Demand
             </Dropdown.Item>
@@ -783,7 +737,7 @@ export default function FitnessTab() {
             variant="outline-secondary"
             size="sm"
             onClick={() => {
-              handleModalRender(null, null, null, 'create', 'Group Class');
+              handleModalRender(null, 'create', 'Group Class');
             }}>
             <i className="fas fa-plus-circle"></i> Group
           </Button>
@@ -793,7 +747,7 @@ export default function FitnessTab() {
             variant="outline-secondary"
             size="sm"
             onClick={() => {
-              handleModalRender(null, null, null, 'create', 'Classic Class');
+              handleModalRender(null, 'create', 'Classic Class');
             }}>
             <i className="fas fa-plus-circle"></i> Recorded
           </Button>
@@ -803,7 +757,7 @@ export default function FitnessTab() {
             variant="outline-secondary"
             size="sm"
             onClick={() => {
-              handleModalRender(null, null, null, 'create', 'Custom Fitness');
+              handleModalRender(null, 'create', 'Custom Fitness');
             }}>
             <i className="fas fa-plus-circle"></i> Custom
           </Button>
@@ -813,7 +767,7 @@ export default function FitnessTab() {
             variant="outline-secondary"
             size="sm"
             onClick={() => {
-              handleModalRender(null, null, null, 'create', 'Live Stream Channel');
+              handleModalRender(null, 'create', 'Live Stream Channel');
             }}>
             <i className="fas fa-plus-circle"></i> Live Stream
           </Button>
@@ -823,7 +777,7 @@ export default function FitnessTab() {
             variant="outline-secondary"
             size="sm"
             onClick={() => {
-              handleModalRender(null, null, null, 'create', 'Cohort');
+              handleModalRender(null, 'create', 'Cohort');
             }}>
             <i className="fas fa-plus-circle"></i> Cohort
           </Button>

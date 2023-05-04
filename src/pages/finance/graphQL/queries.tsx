@@ -91,7 +91,7 @@ query clientBookings($id: ID!) {
           }
           package_duration
           effective_date
-          booking_status
+          Booking_status
           booking_date
           package_duration
           fitnesspackages {

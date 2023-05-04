@@ -119,11 +119,11 @@ function TaskCard() {
     const flattenData = flattenObj({ ...data.clientBookings });
 
     const pendingBookingsArray = flattenData.filter(
-      (currentValue) => currentValue.booking_status === "pending"
+      (currentValue) => currentValue.Booking_status === "pending"
     );
 
     const notPendingBookingsArray = flattenData.filter(
-      (currentValue) => currentValue.booking_status !== "pending"
+      (currentValue) => currentValue.Booking_status !== "pending"
     );
     setNotPendingBookings(notPendingBookingsArray);
     setPendingBookings(pendingBookingsArray);
@@ -418,7 +418,7 @@ function TaskCard() {
                                   .format("DD MMM YYYY")}
                               </div>
                               <div className="d-flex justify-content-between">
-                                Booking Status: {currentValue.booking_status}
+                                Booking Status: {currentValue.Booking_status}
                               </div>
                             </Modal.Body>
                             <Modal.Footer>
@@ -455,7 +455,7 @@ function TaskCard() {
                           </span>
                         </div>
                         <div className="d-flex">
-                          <p>#{currentValue.booking_status} </p>
+                          <p>#{currentValue.Booking_status} </p>
                           {currentValue.fitnesspackages.map(
                             (currentElement, index: number) => (
                               <p key={index}>
@@ -677,7 +677,7 @@ function TaskCard() {
                                   .format("DD MMM YYYY")}
                               </div>
                               <div className="d-flex justify-content-between">
-                                Booking Status: {currentValue.booking_status}
+                                Booking Status: {currentValue.Booking_status}
                               </div>
                             </Modal.Body>
                             <Modal.Footer>
@@ -688,7 +688,7 @@ function TaskCard() {
                           </Modal>
                         </div>
                         <div className="d-flex">
-                          <p>#{currentValue.booking_status} </p>
+                          <p>#{currentValue.Booking_status} </p>
                           {currentValue.fitnesspackages.map(
                             (currentElement, index: number) => (
                               <p key={index}>

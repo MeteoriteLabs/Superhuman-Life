@@ -9,7 +9,7 @@ export const UPDATE_CLIENT_BOOKING = gql`
           booking_date
           package_duration
           effective_date
-          booking_status
+          Booking_status
         }
       }
     }
@@ -118,10 +118,9 @@ export const GET_OFFERING_INVENTORIES = gql`
           ActiveBookings
           ClassAvailability
           ClassSize
+          ClientBookingDetails
         }
       }
     }
   }
 `;
-
-

@@ -10,7 +10,8 @@ import OfferingDetails from './OfferingDetails';
 import { UPDATE_OFFERING_INVENTORY } from '../../builders/package-builder/fitness/graphQL/mutations';
 import AuthContext from '../../context/auth-context';
 import { UPDATE_BOOKING_STATUS } from '../booking/GraphQL/mutation';
-import moment from "moment";
+import moment from 'moment';
+import { CREATE_USER_PACKAGE } from '../booking/GraphQL/mutation';
 
 const Summary: React.FC = () => {
   const auth = useContext(AuthContext);
@@ -28,14 +29,14 @@ const Summary: React.FC = () => {
       setPackageDetails(flattenBookingResponse);
     }
   });
-console.log(packageDetails)
+
   // eslint-disable-next-line
-  const [offeringInventory, { data: get_offering_inventories }] =
-    useLazyQuery(GET_OFFERING_INVENTORIES, {
+  const [offeringInventory, { data: get_offering_inventories }] = useLazyQuery(
+    GET_OFFERING_INVENTORIES,
+    {
       onCompleted: (response) => {
-        console.log(response);
         const flattenOfferingInventories = flattenObj(response.offeringInventories);
-        console.log(flattenOfferingInventories, moment().format());
+
         updateOfferingInventory({
           variables: {
             id: flattenOfferingInventories[0].id,
@@ -43,53 +44,70 @@ console.log(packageDetails)
               ActiveBookings: flattenOfferingInventories[0].ActiveBookings + 1,
               ClassAvailability: flattenOfferingInventories[0].ClassAvailability - 1,
               ClassAvailabilityUpdatedAt: moment().format(),
-              ClientBookingDetails: flattenOfferingInventories[0].ClientBookingDetails.concat({"ClientId": packageDetails && packageDetails.ClientUser.length && packageDetails.ClientUser[0].id , "Duration": packageDetails && packageDetails.package_duration
-              , "Effective_Date": packageDetails && packageDetails.effective_date })
+              ClientBookingDetails: [
+                ...flattenOfferingInventories[0].ClientBookingDetails,
+                {
+                  ClientId:
+                    packageDetails &&
+                    packageDetails.ClientUser.length &&
+                    packageDetails.ClientUser[0].id,
+                  Duration: packageDetails && packageDetails.package_duration,
+                  Effective_Date: packageDetails && packageDetails.effective_date,
+                  ExpiryOfPackage: moment(packageDetails && packageDetails.effective_date).add(
+                    packageDetails && packageDetails.package_duration, 'days'
+                  )
+                  
+                }
+              ]
             }
           }
         });
       }
-    });
+    }
+  );
 
-  const [updateOfferingInventory] = useMutation(UPDATE_OFFERING_INVENTORY);
+  const [updateOfferingInventory] = useMutation(UPDATE_OFFERING_INVENTORY, {
+    onCompleted: () => {
+      window.open('/success', '_self');
+    }
+  });
 
-  // const [updateBooking] = useMutation(UPDATE_CLIENT_BOOKING, {
-  //   onCompleted: (response) => {
-  //     console.log(response);
-  //     // const flattenBookingResponse = flattenObj(response);
-  //     // console.log(flattenBookingResponse);
-  //     // offeringInventory({variables: {changemaker_id: auth.userid, fitnessPackage_id: flattenBookingResponse.updateClientBooking. }})
-  //     // updateOfferingInventory({
-  //     //   variables: {
-  //     //     id: operation.inventoryId,
-  //     //     data: {
-  //     //       ClassSize: flattenData.updateFitnesspackage.classsize,
-  //     //       InstantBooking: flattenData.updateFitnesspackage.groupinstantbooking
-  //     //     }
-  //     //   }
-  //     // });
-  //     window.open('/success', '_self');
-  //   }
-  // });
-
-  console.log(packageDetails);
+  const [createUserPackage] = useMutation(CREATE_USER_PACKAGE, {
+    onCompleted: (response) => {
+      const flattenUserPackageResponse = flattenObj(response.createClientPackage);
+      offeringInventory({
+        variables: {
+          changemaker_id: auth.userid,
+          fitnessPackage_id: flattenUserPackageResponse.fitnesspackages[0].id
+        }
+      });
+    }
+  });
 
   const [updateBookingStatus] = useMutation(UPDATE_BOOKING_STATUS, {
     onCompleted: (response) => {
-      console.log(response);
       const flattenBookingResponse = flattenObj(response.updateClientBooking);
-      console.log(flattenBookingResponse, flattenBookingResponse.fitnesspackages[0].id);
-      offeringInventory({variables: {changemaker_id: auth.userid, fitnessPackage_id: flattenBookingResponse.fitnesspackages[0].id }})
-      
-      // window.open('/success', '_self');
+
+      createUserPackage({
+        variables: {
+          data: {
+            users_permissions_user: flattenBookingResponse.ClientUser[0].id,
+            fitnesspackages: flattenBookingResponse.fitnesspackages[0].id,
+            accepted_date: flattenBookingResponse.booking_date,
+            package_duration: flattenBookingResponse.package_duration,
+            effective_date: flattenBookingResponse.effective_date,
+            PackageMRP: 0
+          }
+        }
+      });
     }
   });
-  console.log(auth.userid);
+
   const completeBooking = () => {
     updateBookingStatus({
       variables: {
         id: bookingId,
-        booking_status: 'accepted',
+        Booking_status: 'booked',
         BookingID: `BK${
           packageDetails && packageDetails.ClientUser && packageDetails.ClientUser.length
             ? packageDetails.ClientUser[0].First_Name.substring(0, 3)
