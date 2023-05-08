@@ -449,13 +449,13 @@ const Schedular = (props: any) => {
         .filter((itm) => itm.Is_restday === false)
         .forEach((val) => {
           const startTimeHour: any = `${
-            val.start_time === null ? '0' : val.start_time.split(':')[0]
+            val.start_time === null ? '00' : val.start_time.split(':')[0]
           }`;
           const startTimeMinute: any = `${
-            val.start_time === null ? '0' : val.start_time.split(':')[1]
+            val.start_time === null ? '00' : val.start_time.split(':')[1]
           }`;
-          const endTimeHour: any = `${val.end_time === null ? '0' : val.end_time.split(':')[0]}`;
-          const endTimeMin: any = `${val.end_time === null ? '0' : val.end_time.split(':')[1]}`;
+          const endTimeHour: any = `${val.end_time === null ? '00' : val.end_time.split(':')[0]}`;
+          const endTimeMin: any = `${val.end_time === null ? '00' : val.end_time.split(':')[1]}`;
           if (!arr[val.day_of_program][startTimeHour][startTimeMinute]) {
             arr[val.day_of_program][startTimeHour][startTimeMinute] = [];
           }

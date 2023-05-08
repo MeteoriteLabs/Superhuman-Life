@@ -245,7 +245,7 @@ export const GET_MUSCLEGROUPS = gql`
      }
   `;
 
-  export const GET_CONTACTS = gql`
+export const GET_CONTACTS = gql`
   query ContactsQuery($id: ID){
     contacts(pagination: { pageSize: 100 }, filters:{
       ownedBy:{
@@ -364,6 +364,73 @@ query offeringInventories($Changemakerid: String){
       }
     }
   }
+}
+`;
+
+export const FETCH_FITNESS_PACKAGE_ON_DEMAND_PT = gql`
+query fitnessPackagesForOnDemandPT($id: ID){
+  fitnesspackages(filters: {users_permissions_user:{id: {eq: $id}}, fitness_package_type:{type: {eq: "On-Demand PT"}} }){
+    data{
+      id
+      attributes{
+        packagename
+    }
+  }
+}
+}
+`;
+
+export const FETCH_FITNESS_PACKAGE_GROUP_AND_LIVESTREAM_INSTANT_BOOKING = gql`
+query fitnessPackagesForOnDemandPT($id: ID){
+  fitnesspackages(filters: {users_permissions_user:{id: {eq: $id}}, groupinstantbooking:{eq: true}, fitness_package_type:{type: {in: [ "Group Class", "Live Stream Channel"]}} }){
+    data{
+      id
+      attributes{
+        packagename
+    }
+  }
+}
+}
+`;
+
+export const FETCH_FITNESS_PACKAGE_RECORDED_WITH_DURATION_ONE = gql`
+query fitnessPackagesForOnDemandPT($id: ID){
+  fitnesspackages(filters: {users_permissions_user:{id: {eq: $id}} , duration: {eq: 1}, recordedclasses:{eq: 1},    fitness_package_type:{type: {eq: "Classic Class"}} }){
+    data{
+      id
+      attributes{
+        packagename
+    }
+  }
+}
+}
+`;
+
+export const FETCH_SESSIONS = gql`
+query tags($id: ID){
+  tags(filters: {fitnesspackage: {
+    id: {
+      eq: $id
+    }
+  }  }){
+    data{
+      id
+      attributes{
+        tag_name
+        sessions {
+          data {
+            id
+            attributes {
+               tag
+              start_time
+              end_time
+              session_date
+            }
+          }
+        }
+    }
+  }
+}
 }
 `;
 

@@ -41,7 +41,7 @@
                     }
                 },
                 "required": [
-                    "email",
+                    "existingEmail",
                     "offering"
                 ]
             }
@@ -83,27 +83,81 @@
                             "Program"
                         ],
                         "default": "Program"
-                    },
-                    "offerings": {
-                        "title": "Select offering",
-                        "type": "string"
-                    },
-                    "effectiveDate": {
-                        "title": "Effective Date",
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "packageDuration": {
-                        "title": "Package Duration",
-                        "type": "number"
                     }
+                   
+                    
                 },
+                "allOf": [
+                    {
+                      "if": {
+                        "properties": {
+                          "offeringFilter": {
+                            "const": "Class"
+                          }
+                        }
+                      },
+                      "then": {
+                        "properties": {
+                            "classBasedOfferings": {
+                                "title": "Select offering",
+                                "type": "string"
+                            },
+                            "effectiveDate": {
+                                "title": "Effective Date",
+                                "type": "string",
+                                "format": "date-time"
+                            }
+                            
+                        },
+                        "required": [
+                          "classBasedOfferings",
+                          "effectiveDate"
+                        ]
+                      }
+                    },
+                    {
+                      "if": {
+                        "properties": {
+                          "offeringFilter": {
+                            "const": "Program"
+                          }
+                        }
+                      },
+                      "then": {
+                        "properties": {
+                            "offerings": {
+                                "title": "Select offering",
+                                "type": "string"
+                            },
+                            "effectiveDate": {
+                                "title": "Effective Date",
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            "packageDuration": {
+                                "title": "Package Duration",
+                                "type": "number"
+                            }
+
+                        },
+                        "required": [
+                            "offerings",
+                            "effectiveDate",
+                            "packageDuration"
+                        ]
+                      }
+                    },
+                    {
+                      "required": [
+                        "offeringFilter"
+                      ]
+                    }
+                  ],
                 "required": [
                     "firstname",
                     "lastname",
                     "phone",
-                    "email",
-                    "offerings"
+                    "email"
                 ]
             }
         },
