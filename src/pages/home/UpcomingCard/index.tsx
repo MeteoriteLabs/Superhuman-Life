@@ -30,10 +30,10 @@ function UpcomingCard() {
     onCompleted: (data) => {
       const currentTime = new Date();
       const flattenLeadsData = flattenObj({ ...data.sessions });
-      console.log(flattenLeadsData);
+      
       const nextUpcomingSessions = flattenLeadsData.filter((currentValue) => {
         const [hours, minutes] = currentValue.start_time.split(':');
-        console.log(hours, minutes);
+        
         const date = new Date(
           currentTime.getFullYear(),
           currentTime.getMonth(),
@@ -42,9 +42,7 @@ function UpcomingCard() {
           +minutes,
           0
         );
-console.log(date);
-const a = moment(date).format('h:mm a');
-console.log(a);
+
         return date >= currentTime;
       });
       setSessionData(nextUpcomingSessions);
