@@ -187,9 +187,9 @@ function CreateEditWorkoutTemplate(props: any, ref: any) {
     const hours = timeArray[0];
     const minutes = timeArray[1];
     const timeString =
-      (parseInt(hours) < 10 ? '0' + hours : hours) +
+      (parseInt(hours) < 10 ? `0${hours}` : hours) +
       ':' +
-      (parseInt(minutes) === 0 ? '0' + minutes : minutes);
+      (parseInt(minutes) === 0 ? `0${minutes}` : minutes);
     return timeString.toString();
   }
 
@@ -224,8 +224,8 @@ function CreateEditWorkoutTemplate(props: any, ref: any) {
       eventJson.tag = frm.tag;
       eventJson.name = frm.workoutEvent[0].name;
       eventJson.id = frm.workoutEvent[0].id;
-      eventJson.startTime = frm.time.startTime;
-      eventJson.endTime = frm.time.endTime;
+      eventJson.startTime = handleTimeFormat(frm.time.startTime);
+      eventJson.endTime = handleTimeFormat(frm.time.endTime);
       eventJson.day = parseInt(frm.day[0].key);
       if (existingEvents.length === 0) {
         existingEvents.push(eventJson);

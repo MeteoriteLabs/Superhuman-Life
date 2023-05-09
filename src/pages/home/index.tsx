@@ -5,7 +5,6 @@ import CreateEditMessage from "../../builders/client-builder/leads/createoredit-
 import CreateEditContact from "../../builders/client-builder/contacts/createEditContact";
 import CreateClient from "../../builders/client-builder/clientlisting/addclientcomponent";
 import Grid from "./grid";
-import OfferingList from "../../components/customWidgets/OfferingsOfferedByChangemaker";
 
 export default function HomePage() {
   const createEditMessageComponent = useRef<any>(null);
@@ -22,7 +21,7 @@ export default function HomePage() {
     <div className="col-lg-12">
       <h2>Home</h2>
       <hr />
-
+      
       {/* Add Client */}
       <Button
         className="m-2"
@@ -30,11 +29,6 @@ export default function HomePage() {
         size="sm"
         onClick={() => {
           window.open("/add_client");
-          // CreateClientComponent.current.TriggerForm({
-          //   id: null,
-          //   type: "create",
-          //   modal_status: true,
-          // });
         }}
       >
         <img src="assets/home_page_images/contacts.svg" alt="add_client" /> Add

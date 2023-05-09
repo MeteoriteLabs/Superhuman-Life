@@ -38,7 +38,7 @@ function CreateEditActivity(props: any, ref: any) {
   useQuery(GET_TEMPLATE_SESSIONS, {
     variables: { id: program_id },
     skip: window.location.pathname.split('/')[1] !== 'programs',
-    onCompleted: (data: any) => {
+    onCompleted: (data) => {
       const flattenData = flattenObj({ ...data });
       const templateExistingValues = [...templateSessionsIds];
       for (let q = 0; q < flattenData.fitnessprograms[0].sessions.length; q++) {
@@ -49,26 +49,26 @@ function CreateEditActivity(props: any, ref: any) {
   });
 
   const [createSessionBooking] = useMutation(CREATE_SESSION_BOOKING, {
-    onCompleted: (data: any) => {
+    onCompleted: () => {
       modalTrigger.next(false);
       props.callback();
     }
   });
   const [upateSessions] = useMutation(UPDATE_TAG_SESSIONS, {
-    onCompleted: (data: any) => {
+    onCompleted: () => {
       modalTrigger.next(false);
       props.callback();
       setIsFormUpdated(!isFormUpdated);
     }
   });
   const [createSession] = useMutation(CREATE_SESSION, {
-    onCompleted: (data: any) => {
+    onCompleted: () => {
       setIsCreated(!isCreated);
     }
   });
 
   const [updateTemplateSessions] = useMutation(UPDATE_FITNESSPORGRAMS_SESSIONS, {
-    onCompleted: (data: any) => {
+    onCompleted: () => {
       modalTrigger.next(false);
       props.callback();
     }
@@ -111,9 +111,9 @@ function CreateEditActivity(props: any, ref: any) {
     const hours = timeArray[0];
     const minutes = timeArray[1];
     const timeString =
-      (parseInt(hours) < 10 ? '0' + hours : hours) +
+      (parseInt(hours) < 10 ? `0${hours}` : hours) +
       ':' +
-      (parseInt(minutes) === 0 ? '0' + minutes : minutes);
+      (parseInt(minutes) === 0 ? `0${minutes}` : minutes);
     return timeString.toString();
   }
 
@@ -208,10 +208,11 @@ function CreateEditActivity(props: any, ref: any) {
     }
 
     for (let z = 0; z < frm.day.length; z++) {
+
       createSession({
         variables: {
-          start_time: frm.time.startTime,
-          end_time: frm.time.endTime,
+          start_time: handleTimeFormat(frm.time.startTime),
+          end_time: handleTimeFormat(frm.time.endTime),
           activity: id,
           activity_target: frm.newActivity[0],
           day_of_program: frm.day[z].key,
@@ -220,7 +221,7 @@ function CreateEditActivity(props: any, ref: any) {
           changemaker: auth.userid,
           isProgram: true
         },
-        onCompleted: (data: any) => {
+        onCompleted: (data) => {
           if (window.location.pathname.split('/')[1] === 'client') {
             createSessionBooking({
               variables: {
@@ -270,6 +271,7 @@ function CreateEditActivity(props: any, ref: any) {
         widgets={widgets}
         modalTrigger={modalTrigger}
       />
+
       {/* success toaster notification */}
       {isCreated && (
         <Toaster

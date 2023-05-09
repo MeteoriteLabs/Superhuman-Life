@@ -390,10 +390,10 @@ const Scheduler = () => {
             <Row>
               <Col lg={7}>
                 <Row>
-                  <h3 className="text-capitalize">{tag.tag_name}</h3>
+                  <h3 className="text-capitalize">{tag?.tag_name}</h3>
                 </Row>
                 <Row>
-                  <span>{tag.fitnesspackage.packagename}</span>
+                  <span>{tag?.fitnesspackage.packagename}</span>
                   <div
                     className="ml-3 mt-1"
                     style={{ borderLeft: "1px solid black", height: "20px" }}

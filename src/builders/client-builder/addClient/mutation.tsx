@@ -21,6 +21,13 @@ export const CREATE_CLIENT_BOOKING = gql`
     createClientBooking(data: $data){
         data{
           id
+          attributes{
+            ClientUser{
+              data{
+                id
+              }
+            }
+          }
         }
       }
   }

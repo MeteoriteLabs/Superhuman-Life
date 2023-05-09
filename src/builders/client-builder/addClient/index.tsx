@@ -27,14 +27,13 @@ const AddClient: React.FC = () => {
   const [createClientBooking] = useMutation(CREATE_CLIENT_BOOKING, {
     onCompleted: (response) => {
       const flattenReponse = flattenObj({ ...response.createClientBooking });
-         window.open(`/summary/?id=${flattenReponse.id}`, "_self");
+      window.open(`/summary/?id=${flattenReponse.id}`, '_self');
     }
   });
 
   const [createClient] = useMutation(CREATE_CLIENT);
 
   function OnSubmit(frm: any) {
-    
     createClient({
       variables: {
         data: {
@@ -49,16 +48,35 @@ const AddClient: React.FC = () => {
       },
       onCompleted: (response) => {
         const flattenReponse = flattenObj({ ...response.createUsersPermissionsUser });
-
+        const sessionDetails = JSON.parse(frm.formData.classBasedOfferings);
         createClientBooking({
           variables: {
             data: {
               ClientUser: flattenReponse.id,
               booking_date: new Date(),
-              package_duration: frm.formData.packageDuration,
+              package_duration:
+                frm.formData.offeringFilter === 'Class' ? 1 : frm.formData.packageDuration,
               OfferingOwner: auth.userid,
               effective_date: moment(frm.formData.effectiveDate),
-              fitnesspackages: frm.formData.offerings
+              fitnesspackages:
+                frm.formData.offeringFilter === 'Class'
+                  ? sessionDetails.offeringSelected
+                  : frm.formData.offerings
+            }
+          },
+          onCompleted: (response) => {
+            if (frm.formData.offeringFilter === 'Class') {
+              localStorage.setItem(
+                'sessionBookingDetails',
+                JSON.stringify({
+                  session: sessionDetails.sessionId,
+                  client: response.createClientBooking.data.id,
+                  sessionDate: sessionDetails.sessionDate,
+                  Session_booking_status: 'Booked',
+                  session_time: sessionDetails.sessionStartTime,
+                  session_end_time: sessionDetails.sessionEndTime
+                })
+              );
             }
           }
         });

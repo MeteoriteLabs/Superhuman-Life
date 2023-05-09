@@ -34,7 +34,7 @@ function CancelComponent(props: any, ref: any) {
   const [operation, setOperation] = useState<Operation>({} as Operation);
   const [showCancelModal, setShowCancelModal] = useState<boolean>(false);
   const [selectedTime, setSelectedTime] = useState<string | null | any>(null);
-  const [showRescheduleModal, setShowRescheduleModal] = useState(false);
+  const [showRescheduleModal, setShowRescheduleModal] = useState<boolean>(false);
   const [sessionData, setSessionData] = useState<any>([]);
   const [currentSessionData, setCurrentSessionData] = useState<any>([]);
   const auth = useContext(AuthContext);
@@ -56,7 +56,7 @@ function CancelComponent(props: any, ref: any) {
   }));
 
   const [updateStatus] = useMutation(UPDATE_STATUS, {
-    onCompleted: (d: any) => {
+    onCompleted: () => {
       props.callback();
     },
   });
@@ -68,7 +68,7 @@ function CancelComponent(props: any, ref: any) {
   });
 
   const [createSchedule] = useMutation(CREATE_SCHEDULE, {
-    onCompleted: (d: any) => {
+    onCompleted: () => {
       props.callback();
     },
   });

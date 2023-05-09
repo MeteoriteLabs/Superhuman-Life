@@ -124,3 +124,13 @@ export const GET_OFFERING_INVENTORIES = gql`
     }
   }
 `;
+
+export const CREATE_SESSION_BOOKING = gql`
+  mutation createSessionsBooking($data: SessionsBookingInput!) {
+    createSessionsBooking(data: $data){
+        data{
+          id
+        }
+      }
+  }
+`;

@@ -1,9 +1,11 @@
 import OfferingsList from '../../../components/customWidgets/OfferingsOfferedByChangemaker';
 import ClientContactLeadList from '../../../components/customWidgets/ClientContactLeadList';
+import classBasedOffering from '../../../components/customWidgets/classBasedOffering';
 
 export const widgets = {
   offerings: OfferingsList,
-  contactList: ClientContactLeadList
+  contactList: ClientContactLeadList,
+  classBasedOffering: classBasedOffering
 };
 
 export const schema: any = {
@@ -36,5 +38,8 @@ export const schema: any = {
     'ui:options': {
       inline: true
     }
+  },
+  classBasedOfferings: {
+    'ui:widget': 'classBasedOffering'
   }
 };

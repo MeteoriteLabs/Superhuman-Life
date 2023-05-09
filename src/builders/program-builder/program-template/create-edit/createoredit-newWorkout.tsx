@@ -62,7 +62,7 @@ function CreateEditNewWorkout(props: any, ref: any) {
   useQuery(GET_TEMPLATE_SESSIONS, {
     variables: { id: program_id },
     skip: window.location.pathname.split('/')[1] !== 'programs',
-    onCompleted: (data: any) => {
+    onCompleted: (data) => {
       const flattenData = flattenObj({ ...data });
       const templateExistingValues = [...templateSessionsIds];
       for (let q = 0; q < flattenData.fitnessprograms[0].sessions.length; q++) {
@@ -73,19 +73,19 @@ function CreateEditNewWorkout(props: any, ref: any) {
   });
 
   const [createWorkout] = useMutation(CREATE_WORKOUT, {
-    onCompleted: (r: any) => {
-      updateSchedulerEvents(frmDetails, r.createWorkout.data.id);
+    onCompleted: (response) => {
+      updateSchedulerEvents(frmDetails, response.createWorkout.data.id);
       modalTrigger.next(false);
     }
   });
   const [createSessionBooking] = useMutation(CREATE_SESSION_BOOKING, {
-    onCompleted: (data: any) => {
+    onCompleted: () => {
       modalTrigger.next(false);
       props.callback();
     }
   });
   const [upateSessions] = useMutation(UPDATE_TAG_SESSIONS, {
-    onCompleted: (data: any) => {
+    onCompleted: () => {
       if (props?.clientIds.length > 0) {
         for (let i = 0; i < props?.clientIds.length; i++) {
           createSessionBooking({
@@ -102,18 +102,18 @@ function CreateEditNewWorkout(props: any, ref: any) {
     }
   });
   const [updateFitenssProgram] = useMutation(UPDATE_FITNESSPORGRAMS_SESSIONS, {
-    onCompleted: (data: any) => {
+    onCompleted: () => {
       modalTrigger.next(false);
       props.callback();
     }
   });
   const [createSession] = useMutation(CREATE_SESSION, {
-    onCompleted: (r: any) => {
+    onCompleted: (response) => {
       setIsCreated(!isCreated);
       if (window.location.pathname.split('/')[1] === 'programs') {
         const templateValues = [...templateSessionsIds];
-        setUserId(r.createSession.data.id);
-        templateValues.push(r.createSession.data.id);
+        setUserId(response.createSession.data.id);
+        templateValues.push(response.createSession.data.id);
         updateFitenssProgram({
           variables: {
             id: program_id,
@@ -124,7 +124,7 @@ function CreateEditNewWorkout(props: any, ref: any) {
       if (window.location.pathname.split('/')[1] === 'client') {
         createSessionBooking({
           variables: {
-            session: r.createSession.data.id,
+            session: response.createSession.data.id,
             client: program_id
           }
         });
@@ -134,8 +134,8 @@ function CreateEditNewWorkout(props: any, ref: any) {
       ) {
         const values = [...props.sessionIds];
         // here userId refers to the sessionID
-        setUserId(r.createSession.data.id);
-        values.push(r.createSession.data.id);
+        setUserId(response.createSession.data.id);
+        values.push(response.createSession.data.id);
         upateSessions({
           variables: {
             id: program_id,
@@ -186,8 +186,8 @@ function CreateEditNewWorkout(props: any, ref: any) {
     useQuery(GET_SCHEDULEREVENTS, {
       variables: { id: program_id },
       skip: !operation.id || operation.type === 'toggle-status',
-      onCompleted: (e: any) => {
-        FillDetails(e);
+      onCompleted: (response) => {
+        FillDetails(response);
       }
     });
   }
@@ -197,9 +197,9 @@ function CreateEditNewWorkout(props: any, ref: any) {
     const hours = timeArray[0];
     const minutes = timeArray[1];
     const timeString =
-      (parseInt(hours) < 10 ? '0' + hours : hours) +
+      (parseInt(hours) < 10 ? `0${hours}` : hours) +
       ':' +
-      (parseInt(minutes) === 0 ? '0' + minutes : minutes);
+      (parseInt(minutes) === 0 ? `0${minutes}` : minutes);
     return timeString.toString();
   }
 
@@ -233,8 +233,8 @@ function CreateEditNewWorkout(props: any, ref: any) {
       eventJson.mode = frm.assignMode;
       eventJson.tag = frm.tag;
       eventJson.id = workout_id;
-      eventJson.startTime = frm.time.startTime;
-      eventJson.endTime = frm.time.endTime;
+      eventJson.startTime = handleTimeFormat(frm.time.startTime);
+      eventJson.endTime = handleTimeFormat(frm.time.endTime);
       eventJson.day = parseInt(frm.day[0].key);
       if (existingEvents.length === 0) {
         existingEvents.push(eventJson);
