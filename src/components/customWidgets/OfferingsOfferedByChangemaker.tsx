@@ -31,7 +31,7 @@ const OfferingList: React.FC<{ value: string; onChange: (params: string | null) 
 
   // eslint-disable-next-line
   const { data: get_fitness, refetch: refetchFitness } = useQuery(FETCH_FITNESS_PACKAGE, {
-    variables: { id: auth.userid },
+    variables: { Changemakerid: auth.userid },
     onCompleted: (data) => {
       loadData(data);
     }
