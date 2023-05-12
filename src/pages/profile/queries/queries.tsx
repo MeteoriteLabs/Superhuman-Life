@@ -250,9 +250,7 @@ export const ADDRESSES_IS_PRIMARY = gql`
 
 export const ADDRESS = gql`
   query address($id: ID) {
-    address(
-      id: $id 
-    ) {
+    address(id: $id) {
       data {
         id
         attributes {
@@ -274,9 +272,9 @@ export const ADDRESS = gql`
 `;
 
 export const ADDRESSES = gql`
-  query Addresses($id: ID) {
+  query Addresses($id: ID, $start: Int, $limit: Int) {
     addresses(
-      pagination: { pageSize: 100 }
+      pagination: { start: $start, limit: $limit }
       filters: { users_permissions_user: { id: { eq: $id } } }
     ) {
       data {
@@ -293,6 +291,25 @@ export const ADDRESSES = gql`
           type_address
           House_Number
           is_primary
+        }
+      }
+    }
+  }
+`;
+
+export const EDUCATIONAL_DETAILS = gql`
+  query educationalDetails($id: ID, $start: Int, $limit: Int) {
+    educationalDetails(
+      pagination: { start: $start, limit: $limit }
+      filters: { users_permissions_user: { id: { eq: $id } } }
+    ) {
+      data {
+        id
+        attributes {
+          Institute_Name
+          Type_of_degree
+          Specialization
+          Year
         }
       }
     }

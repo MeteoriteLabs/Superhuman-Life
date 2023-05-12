@@ -14,6 +14,7 @@ const AddressDetails = () => {
   const [addressData, setAddressData] = useState<BasicAddressDetails[]>([]);
   // eslint-disable-next-line
   const CreateAddressComponent = useRef<any>(null);
+  const [page, setPage] = useState<number>(1);
 
   const {
     // eslint-disable-next-line
@@ -21,7 +22,7 @@ const AddressDetails = () => {
     loading: loading_address_details,
     refetch: refetch_address
   } = useQuery(ADDRESSES, {
-    variables: { id: auth.userid },
+    variables: { id: auth.userid, start: page * 10 - 10, limit: page * 10 },
     onCompleted: (response) => {
       const flattenData = flattenObj({ ...response.addresses });
       setAddressData(flattenData);
@@ -48,6 +49,10 @@ const AddressDetails = () => {
   if (loading_address_details) {
     return <Loader msg={'Loading address details ...'} />;
   }
+
+  const pageHandler = (selectedPageNumber: number) => {
+    setPage(selectedPageNumber);
+  };
 
   return (
     <Col md={{ span: 8, offset: 2 }}>
@@ -89,13 +94,12 @@ const AddressDetails = () => {
                       </Dropdown.Toggle>
 
                       <Dropdown.Menu>
-                        {
-                          addressData.length !== 1 ? 
+                        {addressData.length !== 1 ? (
                           <Dropdown.Item key={1} onClick={() => deleteUserAddress(currValue)}>
-                          Delete
-                        </Dropdown.Item> : null
-                        }
-                        
+                            Delete
+                          </Dropdown.Item>
+                        ) : null}
+
                         <Dropdown.Item key={2} onClick={() => updateAddress(currValue)}>
                           Edit
                         </Dropdown.Item>
@@ -151,6 +155,29 @@ const AddressDetails = () => {
           <NoDataFound msg={'Oops! No address found'} />
         )}
       </Row>
+      {/* Pagination */}
+      {addressData && addressData.length ? (
+        <Row className="justify-content-center">
+          <Button
+            variant="outline-dark"
+            className="m-2"
+            onClick={() => pageHandler(page - 1)}
+            disabled={page === 1 ? true : false}>
+            Previous
+          </Button>
+
+          <Button
+            variant="outline-dark"
+            className="m-2"
+            onClick={() => pageHandler(page + 1)}
+            disabled={addressData.length % 10 === 0 ? false : true}>
+            Next
+          </Button>
+          <span className="m-2 bold pt-2">{`${page * 10 - 10} - ${
+            page * 10 - 10 + addressData.length
+          }`}</span>
+        </Row>
+      ) : null}
     </Col>
   );
 };
