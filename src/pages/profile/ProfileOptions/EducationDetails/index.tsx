@@ -1,6 +1,6 @@
 import React, { useState, useContext, useRef } from 'react';
 import { Card, Row, Col, Button, Dropdown } from 'react-bootstrap';
-import { FETCH_USERS_PROFILE_DATA } from '../../queries/queries';
+import { EDUCATIONAL_DETAILS } from '../../queries/queries';
 import { useQuery } from '@apollo/client';
 import AuthContext from '../../../../context/auth-context';
 import { flattenObj } from '../../../../components/utils/responseFlatten';
@@ -15,6 +15,7 @@ const EducationDetails: React.FC = () => {
   const auth = useContext(AuthContext);
   // eslint-disable-next-line
   const [educationData, setEducationData] = useState<any>([]);
+  const [page, setPage] = useState<number>(1);
 
   const {
     // eslint-disable-next-line
@@ -22,15 +23,15 @@ const EducationDetails: React.FC = () => {
     // eslint-disable-next-line
     loading: loading_educational_details,
     refetch: refetch_educational_details
-  } = useQuery(FETCH_USERS_PROFILE_DATA, {
-    onCompleted: (r) => {
-      const flattenData = flattenObj({ ...r });
-      const usersData = flattenData.usersPermissionsUsers.filter(
-        (currValue) => currValue.id === auth.userid
-      );
-      setEducationData(usersData[0].educational_details);
+  } = useQuery(EDUCATIONAL_DETAILS, {
+    variables: { id: auth.userid, start: page * 10 - 10, limit: page * 10 },
+    onCompleted: (response) => {
+      const flattenData = flattenObj({ ...response.educationalDetails });
+      setEducationData(flattenData);
     }
   });
+
+console.log(educationData);
 
   //Delete User's Education Data function
   const deleteHandler = (data) => {
@@ -49,6 +50,10 @@ const EducationDetails: React.FC = () => {
   function refetchQueryCallback() {
     refetch_educational_details();
   }
+
+  const pageHandler = (selectedPageNumber: number) => {
+    setPage(selectedPageNumber);
+  };
 
   if (loading_educational_details) {
     return <Loader msg={'Loading educational details ...'} />;
@@ -129,6 +134,31 @@ const EducationDetails: React.FC = () => {
           <NoDataFound msg={'Oops! No educational details found'} />
         )}
       </Row>
+
+      {/* Pagination */}
+      {educationData && educationData.length ? (
+        <Row className="justify-content-center">
+          <Button
+            variant="outline-dark"
+            className="m-2"
+            onClick={() => pageHandler(page - 1)}
+            disabled={page === 1 ? true : false}>
+            Previous
+          </Button>
+
+          <Button
+            variant="outline-dark"
+            className="m-2"
+            onClick={() => pageHandler(page + 1)}
+            disabled={educationData.length % 10 === 0 ? false : true}>
+            Next
+          </Button>
+          <span className="m-2 bold pt-2">{`${page * 10 - 10} - ${
+            page * 10 - 10 + educationData.length
+          }`}</span>
+        </Row>
+      ) : null}
+
     </Col>
   );
 };
