@@ -31,8 +31,6 @@ const EducationDetails: React.FC = () => {
     }
   });
 
-console.log(educationData);
-
   //Delete User's Education Data function
   const deleteHandler = (data) => {
     CreateEducationComponent.current.TriggerForm({ id: data.id, type: 'delete' });

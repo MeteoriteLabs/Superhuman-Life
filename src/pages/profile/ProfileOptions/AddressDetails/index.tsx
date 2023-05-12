@@ -8,7 +8,6 @@ import CreateAddress from './CreateAddress';
 import Loader from '../../../../components/Loader/Loader';
 import NoDataFound from '../../../../components/NoDataFound';
 import { BasicAddressDetails } from './CreateAddress';
-import Icon from '../../../../components/Icons';
 
 const AddressDetails = () => {
   const auth = useContext(AuthContext);
