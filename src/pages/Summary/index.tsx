@@ -12,8 +12,15 @@ import AuthContext from '../../context/auth-context';
 import { UPDATE_BOOKING_STATUS } from '../booking/GraphQL/mutation';
 import moment from 'moment';
 import { CREATE_USER_PACKAGE } from '../booking/GraphQL/mutation';
+import {load} from '@cashfreepayments/cashfree-js';
 
-const Summary: React.FC = () => {
+const Summary:React.FC = () => {
+  
+
+//   const cashfree = Cashfree({
+//     mode:"production" //or production
+// });
+
   const auth = useContext(AuthContext);
   const [packageDetails, setPackageDetails] = useState<any>();
   const [paymentMode, setpaymentMode] = useState<string>('UPI');
@@ -116,6 +123,15 @@ const Summary: React.FC = () => {
       }
     });
   };
+
+  const proceedToPayment = async() => {
+   console.log("hello");
+   const cashfree = await load({
+    mode: "production" //or production
+});
+const version = cashfree.version();
+console.log(version);
+  }
 
   return (
     <Fragment>
@@ -400,7 +416,7 @@ const Summary: React.FC = () => {
             />
             <label htmlFor="link">Payment thru link</label>
             <br />
-            <Button className="mt-3">Proceed to Payment</Button>
+            <Button className="mt-3" onClick={() => proceedToPayment()}>Proceed to Payment</Button>
           </div>
         )}
       </div>

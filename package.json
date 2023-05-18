@@ -5,6 +5,7 @@
     "dependencies": {
         "@amraneze/react-instagram-login": "^3.0.3",
         "@apollo/client": "^3.3.17",
+        "@cashfreepayments/cashfree-js": "^1.0.4",
         "@ckeditor/ckeditor5-build-classic": "^28.0.0",
         "@ckeditor/ckeditor5-react": "^3.0.2",
         "@nivo/bar": "^0.80.0",

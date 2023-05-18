@@ -48,7 +48,7 @@ const AddClient: React.FC = () => {
       },
       onCompleted: (response) => {
         const flattenReponse = flattenObj({ ...response.createUsersPermissionsUser });
-        const sessionDetails = JSON.parse(frm.formData.classBasedOfferings);
+        const sessionDetails = frm.formData.classBasedOfferings ? JSON.parse(frm.formData.classBasedOfferings) : null;
         createClientBooking({
           variables: {
             data: {
