@@ -1,15 +1,15 @@
-import { useState, useRef, useContext } from "react";
-import { InputGroup, FormControl, Container } from "react-bootstrap";
-import { gql, useQuery } from "@apollo/client";
-import AuthContext from "../../../../../context/auth-context";
-import { CHECK_NOTES_NEW } from "./queries";
-import { flattenObj } from "../../../../../components/utils/responseFlatten";
+import { useState, useRef, useContext } from 'react';
+import { InputGroup, FormControl, Container } from 'react-bootstrap';
+import { gql, useQuery } from '@apollo/client';
+import AuthContext from '../../../../../context/auth-context';
+import { CHECK_NOTES_NEW } from './queries';
+import { flattenObj } from '../../../../../components/utils/responseFlatten';
 
 const TagSearch = (props: any) => {
-  const last = window.location.pathname.split("/").pop();
+  const last = window.location.pathname.split('/').pop();
   const [packageLists, setPackageLists] = useState<any[]>([]);
   const [searchInput, setSearchInput] = useState(null);
-  const [errorMsg, setErrorMsg] = useState("");
+  const [errorMsg, setErrorMsg] = useState('');
   const [selected, setSelected] = useState<any[]>([]);
   const inputField = useRef<any>();
   const auth = useContext(AuthContext);
@@ -52,20 +52,18 @@ const TagSearch = (props: any) => {
   useQuery(GET_GOALLIST_ID, {
     variables: { id: props.value },
     onCompleted: storeName,
-    skip: !props.value,
+    skip: !props.value
   });
   function storeName(e: any) {
     const flattenData = flattenObj({ ...e });
-    setSelected([
-      { value: flattenData.workouts[0].workouttitle, id: props.value },
-    ]);
+    setSelected([{ value: flattenData.workouts[0].workouttitle, id: props.value }]);
   }
 
-  function FetchPackageList(_variable: Record<string, unknown> = { filter: " ", id: auth.userid }) {
+  function FetchPackageList(_variable: Record<string, unknown> = { filter: ' ', id: auth.userid }) {
     useQuery(GET_GOALLIST, {
       variables: _variable,
       onCompleted: loadPackageList,
-      skip: !searchInput,
+      skip: !searchInput
     });
   }
 
@@ -76,7 +74,7 @@ const TagSearch = (props: any) => {
         if (!idArray.includes(p.id)) {
           return {
             id: p.id,
-            name: p.workouttitle,
+            name: p.workouttitle
           };
         }
         return {};
@@ -106,7 +104,7 @@ const TagSearch = (props: any) => {
   function handleSelectedPackageAdd(name: any, id: any) {
     const values = [...selected];
     if (values.length === 1) {
-      setErrorMsg("(Only One Tag Allowed)");
+      setErrorMsg('(Only One Tag Allowed)');
     } else {
       const a = values.find((e) => e.id === id);
       if (!a) {
@@ -118,9 +116,9 @@ const TagSearch = (props: any) => {
           .map((e) => {
             return e.id;
           })
-          .join(",")
+          .join(',')
       );
-      inputField.current.value = "";
+      inputField.current.value = '';
       setPackageLists([]);
       skipval = true;
     }
@@ -130,13 +128,13 @@ const TagSearch = (props: any) => {
     const values = [...selected];
     values.splice(name, 1);
     setSelected(values);
-    setErrorMsg("");
+    setErrorMsg('');
     props.onChange(
       values
         .map((e) => {
           return e.id;
         })
-        .join(",")
+        .join(',')
     );
   }
   FetchNotes({ id: auth.userid, clientid: last });
@@ -163,22 +161,21 @@ const TagSearch = (props: any) => {
         {packageLists.slice(0, 5).map((p) => {
           if (p.id) {
             return (
-              <Container className="pl-0">
+              <Container className="pl-0" key={p.name}>
                 <option
-                  style={{ cursor: "pointer" }}
+                  style={{ cursor: 'pointer' }}
                   className="m-2 p-1 shadow-sm rounded bg-white"
                   value={p.id}
                   onClick={(e) => {
                     e.preventDefault();
                     handleSelectedPackageAdd(p.name, p.id);
-                  }}
-                >
+                  }}>
                   {p.name}
                 </option>
               </Container>
             );
           }
-          return "";
+          return '';
         })}
       </>
       <>
@@ -188,29 +185,27 @@ const TagSearch = (props: any) => {
               className="text-center mt-2 mr-2"
               key={index}
               style={{
-                display: "inline-block",
-                height: "32px",
-                padding: "0px 12px",
-                fontSize: "14px",
-                lineHeight: "32px",
-                borderRadius: "16px",
-                color: "rgba(0,0,0,0.8)",
-                backgroundColor: "#bebdb8",
-              }}
-            >
+                display: 'inline-block',
+                height: '32px',
+                padding: '0px 12px',
+                fontSize: '14px',
+                lineHeight: '32px',
+                borderRadius: '16px',
+                color: 'rgba(0,0,0,0.8)',
+                backgroundColor: '#bebdb8'
+              }}>
               {val.value}
               <i
                 className="close fas fa-times"
                 style={{
-                  fontSize: "14px",
-                  cursor: "pointer",
-                  float: "right",
-                  paddingLeft: "8px",
-                  lineHeight: "32px",
-                  height: "32px",
+                  fontSize: '14px',
+                  cursor: 'pointer',
+                  float: 'right',
+                  paddingLeft: '8px',
+                  lineHeight: '32px',
+                  height: '32px'
                 }}
-                onClick={() => handleSelectedPackageRemove(val.value)}
-              ></i>
+                onClick={() => handleSelectedPackageRemove(val.value)}></i>
             </div>
           );
         })}
