@@ -8,7 +8,7 @@ import { Point, Area } from 'react-easy-crop/types';
 import 'react-rangeslider/lib/index.css';
 import getCroppedImg from './cropImage';
 import './upload.css';
-const _Jimp = require('jimp');
+import _Jimp from 'jimp';
 
 const S3_BUCKET: any = process.env.REACT_APP_S3_BUCKET_NAME;
 const REGION: any = process.env.REACT_APP_S3_BUCKET_REGION;
@@ -164,11 +164,16 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
   };
 
   function onImageLoadedSmall(fileName, filetype) {
+    console.log(reader.result);
+    console.log(filetype);
+    console.log(fileName);
+    if (reader.result === null) return;
+
     _Jimp.read(reader.result).then((img) => {
       img
         .resize(500, _Jimp.AUTO)
         .quality(100)
-        .getBase64(_Jimp.AUTO, (err, pic) => {
+        .getBase64(_Jimp.MIME_JPEG, (err, pic) => {
           const photoKey = albumPhotosKey + fileName;
           setRender(1);
           setImageid(photoKey.split('/')[1].slice(3));
@@ -177,11 +182,12 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
     });
   }
   function onImageLoadedMedium(fileName, filetype) {
+    if (reader.result === null) return;
     _Jimp.read(reader.result).then((img) => {
       img
         .resize(750, _Jimp.AUTO)
         .quality(100)
-        .getBase64(_Jimp.AUTO, (err, pic) => {
+        .getBase64(_Jimp.MIME_JPEG, (err, pic) => {
           const photoKey = albumPhotosKey + fileName;
           setRender(1);
           uploadTOS3NoUrl(pic, photoKey, filetype);
@@ -189,11 +195,12 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
     });
   }
   function onImageLoadedLarge(fileName, filetype) {
+    if (reader.result === null) return;
     _Jimp.read(reader.result).then((img) => {
       img
         .resize(1000, _Jimp.AUTO)
         .quality(100)
-        .getBase64(_Jimp.AUTO, (err, pic) => {
+        .getBase64(_Jimp.MIME_JPEG, (err, pic) => {
           const photoKey = albumPhotosKey + fileName;
           setRender(1);
           uploadTOS3(pic, photoKey, filetype);
