@@ -1,4 +1,4 @@
-import { useMemo, useState, useContext } from "react";
+import { useMemo, useState, useContext, useRef } from 'react';
 import {
   Badge,
   Button,
@@ -7,87 +7,107 @@ import {
   FormControl,
   Container,
   Row,
-  Col,
-} from "react-bootstrap";
-import Table from "../../../components/table/leads-table";
-import ActionButton from "../../../components/actionbutton/index";
-import { useQuery, useLazyQuery } from "@apollo/client";
-import { GET_TRANSACTIONS, GET_CONTACTS, FETCH_CHANGEMAKERS } from "./queries";
-import { flattenObj } from "../../../components/utils/responseFlatten";
-import AuthContext from "../../../context/auth-context";
-import moment from "moment";
-import { useHistory } from "react-router-dom";
+  Col
+} from 'react-bootstrap';
+import Table from '../../../components/table/leads-table';
+import ActionButton from '../../../components/actionbutton/index';
+import { useQuery, useLazyQuery } from '@apollo/client';
+import { GET_TRANSACTIONS, GET_CONTACTS, FETCH_CHANGEMAKERS } from './queries';
+import { flattenObj } from '../../../components/utils/responseFlatten';
+import AuthContext from '../../../context/auth-context';
+import moment from 'moment';
+import { useHistory } from 'react-router-dom';
 
-export default function Earnings() {
+export default function Earnings(): JSX.Element {
   const auth = useContext(AuthContext);
+  const searchInput = useRef<HTMLInputElement | null>(null);
+  const [searchFilter, setSearchFilter] = useState('');
 
-  const columns = useMemo<any>(
+  interface Row {
+    values: {
+      status: string;
+    };
+    original: {
+      id: number;
+    };
+  }
+
+  interface Column {
+    accessor?: string;
+    Header: string;
+    Cell?: ({ row }: { row: Row }) => JSX.Element;
+  }
+  interface Action {
+    actionName: string;
+    actionClick: () => void;
+  }
+
+  const columns: Column[] = useMemo(
     () => [
-      { accessor: "id", Header: "T ID" },
-      { accessor: "name", Header: "Name" },
-      { accessor: "transactionDate", Header: "Transaction Date" },
-      { accessor: "remark", Header: "Remark" },
-      { accessor: "paymentMode", Header: "Payment Mode" },
-      { accessor: "amount", Header: "Amount" },
+      { accessor: 'id', Header: 'T ID' },
+      { accessor: 'name', Header: 'Name' },
+      { accessor: 'transactionDate', Header: 'Transaction Date' },
+      { accessor: 'remark', Header: 'Remark' },
+      { accessor: 'paymentMode', Header: 'Payment Mode' },
+      { accessor: 'amount', Header: 'Amount' },
       {
-        accessor: "status",
-        Header: "Status",
-        Cell: ({ row }: any) => {
-          let statusColor = "";
+        accessor: 'status',
+        Header: 'Status',
+        Cell: ({ row }: { row: Row }) => {
+          let statusColor = '';
           switch (row.values.status) {
-            case "Success":
-              statusColor = "success";
+            case 'Success':
+              statusColor = 'success';
               break;
 
-            case "Refund":
-              statusColor = "warning";
+            case 'Refund':
+              statusColor = 'warning';
               break;
 
-            case "Failed":
-              statusColor = "danger";
+            case 'Failed':
+              statusColor = 'danger';
               break;
           }
           return (
             <>
               <Badge
                 className="px-3 py-1"
-                style={{ fontSize: "1rem", borderRadius: "10px" }}
-                variant={statusColor}
-              >
-                {row.values.status === "Success"
-                  ? "Success"
-                  : row.values.status === "Failed"
-                  ? "Failed"
-                  : "Refund"}
+                style={{ fontSize: '1rem', borderRadius: '10px' }}
+                variant={statusColor}>
+                {row.values.status === 'Success'
+                  ? 'Success'
+                  : row.values.status === 'Failed'
+                  ? 'Failed'
+                  : 'Refund'}
               </Badge>
             </>
           );
-        },
+        }
       },
       {
-        id: "edit",
-        Header: "Actions",
-        Cell: ({ row }: any) => {
+        id: 'edit',
+        Header: 'Actions',
+        Cell: ({ row }: { row: Row }) => {
           const history = useHistory();
           const routeChange = () => {
             const path = `receipt/?id=${row.original.id}`;
             history.push(path);
           };
 
-          const arrayAction = [
+          const arrayAction: Action[] = [
             {
-              actionName: "Receipt",
-              actionClick: routeChange,
+              actionName: 'Receipt',
+              actionClick: routeChange
             },
             {
-              actionName: "Help",
-              actionClick: routeChange,
-            },
+              actionName: 'Help',
+              actionClick: routeChange
+            }
           ];
 
           return <ActionButton arrayAction={arrayAction}></ActionButton>;
-        },
-      },
+        }
+      }
     ],
     []
   );
@@ -95,39 +115,40 @@ export default function Earnings() {
   const [datatable, setDataTable] = useState<Record<string, unknown>[]>([]);
 
   const [contacts, { data: get_contacts }] = useLazyQuery(GET_CONTACTS, {
-    onCompleted: (data) => {
-      loadData(data);
-    },
+    onCompleted: () => {
+      loadData();
+    }
   });
 
   const [users, { data: get_changemakers }] = useLazyQuery(FETCH_CHANGEMAKERS, {
-    onCompleted: (data) => {
+    onCompleted: () => {
       contacts({
         variables: {
-          id: Number(auth.userid),
-        },
+          id: Number(auth.userid)
+        }
       });
-    },
+    }
   });
 
   const { data: get_transaction } = useQuery(GET_TRANSACTIONS, {
     variables: {
       receiverId: auth.userid,
+      filter: searchFilter
     },
-    onCompleted: (data) => {
+    onCompleted: () => {
       users({
         variables: {
-          id: Number(auth.userid),
-        },
+          id: Number(auth.userid)
+        }
       });
-    },
+    }
   });
 
-  function loadData(data: any) {
+  function loadData() {
     contacts({
       variables: {
-        id: Number(auth.userid),
-      },
+        id: Number(auth.userid)
+      }
     });
 
     const flattenTransactionData = flattenObj({ ...get_transaction });
@@ -139,7 +160,7 @@ export default function Earnings() {
         return {
           id: Detail.id,
           name:
-            Detail.ReceiverType === "Changemaker"
+            Detail.ReceiverType === 'Changemaker'
               ? flattenChangemakerData.usersPermissionsUsers.find(
                   (currentValue) => currentValue.id === Detail.SenderID
                 )?.First_Name
@@ -149,11 +170,9 @@ export default function Earnings() {
 
           amount: `${Detail.Currency} ${Detail.TransactionAmount}`,
           remark: Detail.TransactionRemarks,
-          transactionDate: moment(Detail.TransactionDateTime).format(
-            "DD/MM/YYYY, hh:mm"
-          ),
+          transactionDate: moment(Detail.TransactionDateTime).format('DD/MM/YYYY, hh:mm'),
           status: Detail.TransactionStatus,
-          paymentMode: Detail.PaymentMode,
+          paymentMode: Detail.PaymentMode
         };
       })
     );
@@ -173,10 +192,10 @@ export default function Earnings() {
               <InputGroup.Prepend>
                 <Button
                   variant="outline-secondary"
-                  onClick={(e: any) => {
+                  onClick={(e) => {
                     e.preventDefault();
-                  }}
-                >
+                    searchInput.current && setSearchFilter(searchInput.current.value);
+                  }}>
                   <i className="fas fa-search"></i>
                 </Button>
               </InputGroup.Prepend>

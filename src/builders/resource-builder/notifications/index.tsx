@@ -1,4 +1,11 @@
-import { useMemo, useState, useRef, useContext } from "react";
+import { useMemo, useState, useRef, useContext } from 'react';
+import Table from '../../../components/table';
+import { useQuery } from '@apollo/client';
+import AuthContext from '../../../context/auth-context';
+import ActionButton from '../../../components/actionbutton/index';
+import CreateEditMessage from './createoredit-message';
+import { GET_NOTIFICATIONS } from './queries';
+import { flattenObj } from '../../../components/utils/responseFlatten';
 import {
   Badge,
   Button,
@@ -8,81 +15,73 @@ import {
   Card,
   Container,
   Row,
-  Col,
-} from "react-bootstrap";
-import Table from "../../../components/table";
-import { useQuery } from "@apollo/client";
-import AuthContext from "../../../context/auth-context";
-import ActionButton from "../../../components/actionbutton/index";
-import CreateEditMessage from "./createoredit-message";
-import { GET_NOTIFICATIONS } from "./queries";
-import { flattenObj } from "../../../components/utils/responseFlatten";
+  Col
+} from 'react-bootstrap';
 
 export default function MessagePage() {
   const auth = useContext(AuthContext);
-  const [searchFilter, setSearchFilter] = useState("");
+  const [searchFilter, setSearchFilter] = useState('');
   const searchInput = useRef<any>();
   const createEditMessageComponent = useRef<any>(null);
 
   const columns = useMemo<any>(
     () => [
-      { accessor: "title", Header: "Title" },
-      { accessor: "trigger", Header: "Trigger" },
-      { accessor: "minidesc", Header: "Mini Description" },
+      { accessor: 'title', Header: 'Title' },
+      { accessor: 'trigger', Header: 'Trigger' },
+      { accessor: 'minidesc', Header: 'Mini Description' },
       {
-        accessor: "status",
-        Header: "Status",
+        accessor: 'status',
+        Header: 'Status',
         Cell: (v: any) => (
           <Badge
             className="px-3 py-1"
-            style={{ fontSize: "1rem", borderRadius: "10px" }}
-            variant={v.value === "Active" ? "success" : "danger"}
-          >
+            style={{ fontSize: '1rem', borderRadius: '10px' }}
+            variant={v.value === 'Active' ? 'success' : 'danger'}>
             {v.value}
           </Badge>
-        ),
+        )
       },
-      { accessor: "updatedon", Header: "Updated On" },
+      { accessor: 'updatedon', Header: 'Updated On' },
       {
-        id: "edit",
-        Header: "Actions",
+        id: 'edit',
+        Header: 'Actions',
         Cell: ({ row }: any) => {
           const editHandler = () => {
             createEditMessageComponent.current.TriggerForm({
               id: row.original.id,
-              type: "edit",
+              type: 'edit'
             });
           };
           const viewHandler = () => {
             createEditMessageComponent.current.TriggerForm({
               id: row.original.id,
-              type: "view",
+              type: 'view'
             });
           };
           const statusChangeHandler = () => {
             createEditMessageComponent.current.TriggerForm({
               id: row.original.id,
-              type: "toggle-status",
-              current_status: row.original.status === "Active",
+              type: 'toggle-status',
+              current_status: row.original.status === 'Active'
             });
           };
           const deleteHandler = () => {
             createEditMessageComponent.current.TriggerForm({
               id: row.original.id,
-              type: "delete",
+              type: 'delete'
             });
           };
 
           const arrayAction = [
-            { actionName: "Edit", actionClick: editHandler },
-            { actionName: "View", actionClick: viewHandler },
-            { actionName: "Status", actionClick: statusChangeHandler },
-            { actionName: "Delete", actionClick: deleteHandler },
+            { actionName: 'Edit', actionClick: editHandler },
+            { actionName: 'View', actionClick: viewHandler },
+            { actionName: 'Status', actionClick: statusChangeHandler },
+            { actionName: 'Delete', actionClick: deleteHandler }
           ];
 
           return <ActionButton arrayAction={arrayAction}></ActionButton>;
-        },
-      },
+        }
+      }
     ],
     []
   );
@@ -100,7 +99,7 @@ export default function MessagePage() {
 
   const fetch = useQuery(GET_NOTIFICATIONS, {
     variables: { filter: searchFilter, id: auth.userid },
-    onCompleted: loadData,
+    onCompleted: loadData
   });
 
   function loadData(data: any) {
@@ -112,8 +111,8 @@ export default function MessagePage() {
           title: Detail.title,
           trigger: Detail.prerecordedtrigger.name,
           minidesc: Detail.minidescription,
-          status: Detail.status ? "Active" : "Inactive",
-          updatedon: getDate(Date.parse(Detail.updatedAt)),
+          status: Detail.status ? 'Active' : 'Inactive',
+          updatedon: getDate(Date.parse(Detail.updatedAt))
         };
       })
     );
@@ -129,19 +128,14 @@ export default function MessagePage() {
         <Row>
           <Col>
             <InputGroup className="mb-3">
-              <FormControl
-                aria-describedby="basic-addon1"
-                placeholder="Search"
-                ref={searchInput}
-              />
+              <FormControl aria-describedby="basic-addon1" placeholder="Search" ref={searchInput} />
               <InputGroup.Prepend>
                 <Button
                   variant="outline-secondary"
                   onClick={(e: any) => {
                     e.preventDefault();
                     setSearchFilter(searchInput.current.value);
-                  }}
-                >
+                  }}>
                   <i className="fas fa-search"></i>
                 </Button>
               </InputGroup.Prepend>
@@ -155,17 +149,15 @@ export default function MessagePage() {
                 onClick={() => {
                   createEditMessageComponent.current.TriggerForm({
                     id: null,
-                    type: "create",
-                    modal_status: true,
+                    type: 'create',
+                    modal_status: true
                   });
-                }}
-              >
+                }}>
                 <i className="fas fa-plus-circle"></i> Create New
               </Button>
               <CreateEditMessage
                 ref={createEditMessageComponent}
-                callback={refetchQueryCallback}
-              ></CreateEditMessage>
+                callback={refetchQueryCallback}></CreateEditMessage>
             </Card.Title>
           </Col>
         </Row>
