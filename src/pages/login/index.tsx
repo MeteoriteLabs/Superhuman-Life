@@ -34,7 +34,6 @@ const Login: React.FC = () => {
   const [login, { error }] = useMutation(LOGIN, { onCompleted: loginSuccess });
 
   function onSubmit(formData: any) {
-    console.log(formData);
     login({
       variables: {
         identifier: formData.email,
