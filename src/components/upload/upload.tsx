@@ -13,7 +13,7 @@ import _Jimp from 'jimp';
 const S3_BUCKET: any = process.env.REACT_APP_S3_BUCKET_NAME;
 const REGION: any = process.env.REACT_APP_S3_BUCKET_REGION;
 
-const reader = new FileReader();
+const reader = new FileReader() as any;
 
 AWS.config.update({
   accessKeyId: process.env.REACT_APP_S3_ACCESS_KEY,
@@ -164,11 +164,6 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
   };
 
   function onImageLoadedSmall(fileName, filetype) {
-    console.log(reader.result);
-    console.log(filetype);
-    console.log(fileName);
-    if (reader.result === null) return;
-
     _Jimp.read(reader.result).then((img) => {
       img
         .resize(500, _Jimp.AUTO)
@@ -182,7 +177,6 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
     });
   }
   function onImageLoadedMedium(fileName, filetype) {
-    if (reader.result === null) return;
     _Jimp.read(reader.result).then((img) => {
       img
         .resize(750, _Jimp.AUTO)
@@ -195,7 +189,6 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
     });
   }
   function onImageLoadedLarge(fileName, filetype) {
-    if (reader.result === null) return;
     _Jimp.read(reader.result).then((img) => {
       img
         .resize(1000, _Jimp.AUTO)
