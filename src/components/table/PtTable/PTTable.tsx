@@ -1,6 +1,6 @@
-import { useTable } from "react-table";
-import NoDataInCard from "../../NoDataInCard";
-import "./ptTable.css";
+import { useTable } from 'react-table';
+import NoDataInCard from '../../NoDataInCard';
+import './ptTable.css';
 
 function PTTable({ data, columns }: any) {
   function useInstance(instance) {
@@ -12,25 +12,19 @@ function PTTable({ data, columns }: any) {
       const { id, enableRowSpan } = column;
 
       if (enableRowSpan) {
-        rowSpanHeaders = [
-          ...rowSpanHeaders,
-          { id, topCellValue: null, topCellIndex: 0 },
-        ];
+        rowSpanHeaders = [...rowSpanHeaders, { id, topCellValue: null, topCellIndex: 0 }];
       }
     });
 
     Object.assign(instance, { rowSpanHeaders });
   }
 
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    rows,
-    prepareRow,
-  }: any = useTable({ columns, data }, (hooks) => {
-    hooks.useInstance.push(useInstance);
-  });
+  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow }: any = useTable(
+    { columns, data },
+    (hooks) => {
+      hooks.useInstance.push(useInstance);
+    }
+  );
 
   let currentRowsIndex = 0;
   return (
@@ -40,12 +34,8 @@ function PTTable({ data, columns }: any) {
           {headerGroups.map((headerGroup, index) => (
             <tr {...headerGroup.getHeaderGroupProps()} key={index}>
               {headerGroup.headers.map((column, index) => (
-                <th
-                  className="tableHeader text-center"
-                  {...column.getHeaderProps()}
-                  key={index}
-                >
-                  {column.render("Header")}
+                <th className="tableHeader text-center" {...column.getHeaderProps()} key={index}>
+                  {column.render('Header')}
                 </th>
               ))}
             </tr>
@@ -53,7 +43,7 @@ function PTTable({ data, columns }: any) {
           {!rows.length && (
             <tr className="rowCard text-center">
               <td colSpan={8}>
-                <NoDataInCard msg={"No data"} />{" "}
+                <NoDataInCard msg={'No data'} />{' '}
               </td>
             </tr>
           )}
@@ -103,8 +93,8 @@ function PTTable({ data, columns }: any) {
                         rowSpan={cell.rowSpan}
                         className="bodyTd ml-3"
                         {...cell.getCellProps()}
-                      >
-                        {cell.render("Cell")}
+                        key={cell.name}>
+                        {cell.render('Cell')}
                       </td>
                     );
                   }

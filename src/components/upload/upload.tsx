@@ -1,38 +1,38 @@
-import { useState, useCallback, useEffect } from "react";
-import { v4 as uuidv4 } from "uuid";
-import { Image, ProgressBar } from "react-bootstrap";
-import AWS from "aws-sdk";
-import Cropper from "react-easy-crop";
-import Slider from "react-rangeslider";
-import { Point, Area } from "react-easy-crop/types";
-import "react-rangeslider/lib/index.css";
-import getCroppedImg from "./cropImage";
-import "./upload.css";
-const _Jimp = require("jimp/browser/lib/jimp");
+import { useState, useCallback, useEffect } from 'react';
+import { v4 as uuidv4 } from 'uuid';
+import { Image, ProgressBar } from 'react-bootstrap';
+import AWS from 'aws-sdk';
+import Cropper from 'react-easy-crop';
+import Slider from 'react-rangeslider';
+import { Point, Area } from 'react-easy-crop/types';
+import 'react-rangeslider/lib/index.css';
+import getCroppedImg from './cropImage';
+import './upload.css';
+import _Jimp from 'jimp';
 
 const S3_BUCKET: any = process.env.REACT_APP_S3_BUCKET_NAME;
 const REGION: any = process.env.REACT_APP_S3_BUCKET_REGION;
 
-const reader = new FileReader();
+const reader = new FileReader() as any;
 
 AWS.config.update({
   accessKeyId: process.env.REACT_APP_S3_ACCESS_KEY,
-  secretAccessKey: process.env.REACT_APP_S3_SECRET_KEY,
+  secretAccessKey: process.env.REACT_APP_S3_SECRET_KEY
 });
 
 const myBucket = new AWS.S3({
   params: { Bucket: S3_BUCKET },
-  region: REGION,
+  region: REGION
 });
 
-const tus: any = require("tus-js-client");
+const tus: any = require('tus-js-client');
 
 const UploadImageToS3WithNativeSdk = (props: any) => {
   const [progress, setProgress] = useState<number>(0);
   const [selectedFile, setSelectedFile] = useState<any>(null);
   const [render, setRender] = useState<any>(null);
   const [url, setUrl] = useState<any>(null);
-  const [imageid, setImageid] = useState<string | null>("");
+  const [imageid, setImageid] = useState<string | null>('');
   const [videoUpload, setVideoUpload] = useState<any>(false);
   const [videoID, setVideoID] = useState<any>(null);
   const [videoSizeError, setVideoSizeError] = useState<boolean>(false);
@@ -42,17 +42,14 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
   const [zoom, setZoom] = useState<any>(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<any>(null);
 
-  const allowedImageFormats = ["image/png", "image/jpeg", "image/jpg"];
-  const allowedVideoFormats = ["video/mp4"];
+  const allowedImageFormats = ['image/png', 'image/jpeg', 'image/jpg'];
+  const allowedVideoFormats = ['video/mp4'];
 
   const albumPhotosKey = process.env.REACT_APP_S3_PREFIX_NAME;
 
-  const onCropComplete = useCallback(
-    (croppedArea: Area, croppedAreaPixels: Area) => {
-      setCroppedAreaPixels(croppedAreaPixels);
-    },
-    []
-  );
+  const onCropComplete = useCallback((croppedArea: Area, croppedAreaPixels: Area) => {
+    setCroppedAreaPixels(croppedAreaPixels);
+  }, []);
 
   const showCroppedImage = useCallback(async () => {
     try {
@@ -63,7 +60,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
     } catch (e) {
       console.error(e);
     }
-  }, [croppedAreaPixels, imageSrc]); 
+  }, [croppedAreaPixels, imageSrc]);
 
   function handleCrop(file) {
     //const file = e.target.files[0];
@@ -79,17 +76,17 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
   function deleteAllImages() {
     if (props.removePicture) {
       props.removePicture();
-      deleteFile(albumPhotosKey + "sm-" + imageid);
-      deleteFile(albumPhotosKey + "md-" + imageid);
-      deleteFile(albumPhotosKey + "lg-" + imageid);
+      deleteFile(albumPhotosKey + 'sm-' + imageid);
+      deleteFile(albumPhotosKey + 'md-' + imageid);
+      deleteFile(albumPhotosKey + 'lg-' + imageid);
       setImageid(null);
       setUrl(null);
       setProgress(0);
       setRender(null);
     } else {
-      deleteFile(albumPhotosKey + "sm-" + imageid);
-      deleteFile(albumPhotosKey + "md-" + imageid);
-      deleteFile(albumPhotosKey + "lg-" + imageid);
+      deleteFile(albumPhotosKey + 'sm-' + imageid);
+      deleteFile(albumPhotosKey + 'md-' + imageid);
+      deleteFile(albumPhotosKey + 'lg-' + imageid);
       setUrl(undefined);
       setProgress(0);
       setRender(null);
@@ -99,19 +96,19 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
   const deleteFile = (keyName) => {
     const deleteparams = {
       Bucket: S3_BUCKET,
-      Key: keyName,
+      Key: keyName
     };
     try {
       myBucket.headObject(deleteparams).promise();
-      console.log("File Found in S3");
+      console.log('File Found in S3');
       try {
         myBucket.deleteObject(deleteparams).promise();
-        console.log("file deleted Successfully");
+        console.log('file deleted Successfully');
       } catch (err) {
-        console.log("ERROR in file Deleting : " + JSON.stringify(err));
+        console.log('ERROR in file Deleting : ' + JSON.stringify(err));
       }
     } catch (err: any) {
-      console.log("File not Found ERROR : " + err.code);
+      console.log('File not Found ERROR : ' + err.code);
     }
   };
 
@@ -134,7 +131,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
       if (parseInt(duration) > 60) {
         setVideoSizeError(true);
         setRender(0);
-        e.target.value = "";
+        e.target.value = '';
         return;
       } else {
         setVideoSizeError(false);
@@ -142,32 +139,28 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
     }
 
     if (props.allowImage && props.allowVideo) {
-      if (
-        [...allowedImageFormats, ...allowedVideoFormats].indexOf(
-          e.target.files[0].type
-        ) === -1
-      ) {
+      if ([...allowedImageFormats, ...allowedVideoFormats].indexOf(e.target.files[0].type) === -1) {
         setRender(0);
-        e.target.value = "";
+        e.target.value = '';
         return;
       }
     } else if (props.allowImage && !props.allowVideo) {
       if (allowedImageFormats.indexOf(e.target.files[0].type) === -1) {
         setRender(0);
-        e.target.value = "";
+        e.target.value = '';
         return;
       }
     } else if (!props.allowImage && props.allowVideo) {
       if (allowedVideoFormats.indexOf(e.target.files[0].type) === -1) {
         setRender(0);
-        e.target.value = "";
+        e.target.value = '';
         return;
       }
     }
 
     setRender(1);
     setSelectedFile(e.target.files[0]);
-    handleCrop(e.target.files[0])
+    handleCrop(e.target.files[0]);
   };
 
   function onImageLoadedSmall(fileName, filetype) {
@@ -175,10 +168,10 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
       img
         .resize(500, _Jimp.AUTO)
         .quality(100)
-        .getBase64(_Jimp.AUTO, (err, pic) => {
+        .getBase64(_Jimp.MIME_JPEG, (err, pic) => {
           const photoKey = albumPhotosKey + fileName;
           setRender(1);
-          setImageid(photoKey.split("/")[1].slice(3));
+          setImageid(photoKey.split('/')[1].slice(3));
           uploadTOS3NoUrl(pic, photoKey, filetype);
         });
     });
@@ -188,7 +181,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
       img
         .resize(750, _Jimp.AUTO)
         .quality(100)
-        .getBase64(_Jimp.AUTO, (err, pic) => {
+        .getBase64(_Jimp.MIME_JPEG, (err, pic) => {
           const photoKey = albumPhotosKey + fileName;
           setRender(1);
           uploadTOS3NoUrl(pic, photoKey, filetype);
@@ -200,7 +193,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
       img
         .resize(1000, _Jimp.AUTO)
         .quality(100)
-        .getBase64(_Jimp.AUTO, (err, pic) => {
+        .getBase64(_Jimp.MIME_JPEG, (err, pic) => {
           const photoKey = albumPhotosKey + fileName;
           setRender(1);
           uploadTOS3(pic, photoKey, filetype);
@@ -209,30 +202,27 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
   }
 
   function uploadTOS3(file, filename, filetype) {
-    const buf = Buffer.from(
-      file.replace(/^data:image\/\w+;base64,/, ""),
-      "base64"
-    );
+    const buf = Buffer.from(file.replace(/^data:image\/\w+;base64,/, ''), 'base64');
     const params = {
       Body: buf,
       Bucket: S3_BUCKET,
       Key: filename,
-      ContentEncoding: "base64",
-      ContentType: filetype,
+      ContentEncoding: 'base64',
+      ContentType: filetype
     };
     const paramUrl = {
       Bucket: S3_BUCKET,
-      Key: filename,
+      Key: filename
     };
 
     myBucket
       .putObject(params)
-      .on("httpUploadProgress", (evt) => {
+      .on('httpUploadProgress', (evt) => {
         setProgress(Math.round((evt.loaded / evt.total) * 100));
       })
       .send(() => {
         //get the url of uploaded image
-        const promise = myBucket.getSignedUrlPromise("getObject", paramUrl);
+        const promise = myBucket.getSignedUrlPromise('getObject', paramUrl);
         promise.then(
           function (url) {
             setUrl(url);
@@ -245,13 +235,13 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
   }
 
   if (props.value && !imageid) {
-    if (props.value.split(".")[1] === "jpeg") {
+    if (props.value.split('.')[1] === 'jpeg') {
       setImageid(props.value);
       const paramUrl = {
         Bucket: S3_BUCKET,
-        Key: albumPhotosKey + "lg-" + props.value,
+        Key: albumPhotosKey + 'lg-' + props.value
       };
-      const promise = myBucket.getSignedUrlPromise("getObject", paramUrl);
+      const promise = myBucket.getSignedUrlPromise('getObject', paramUrl);
       promise.then(
         function (url) {
           setUrl(url);
@@ -264,27 +254,24 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
   }
 
   if (props.value && !videoID) {
-    if (!props.value.split(".")[1]) {
+    if (!props.value.split('.')[1]) {
       setVideoID(props.value);
       setVideoUpload(true);
     }
   }
 
   function uploadTOS3NoUrl(file, filename, filetype) {
-    const buf = Buffer.from(
-      file.replace(/^data:image\/\w+;base64,/, ""),
-      "base64"
-    );
+    const buf = Buffer.from(file.replace(/^data:image\/\w+;base64,/, ''), 'base64');
     const params = {
       Body: buf,
       Bucket: S3_BUCKET,
       Key: filename,
-      ContentEncoding: "base64",
-      ContentType: filetype,
+      ContentEncoding: 'base64',
+      ContentType: filetype
     };
     myBucket
       .putObject(params)
-      .on("httpUploadProgress", (evt) => {
+      .on('httpUploadProgress', (evt) => {
         setProgress(Math.round((evt.loaded / evt.total) * 100));
       })
       .send((err) => {
@@ -299,13 +286,13 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
     }
 
     if (allowedImageFormats.indexOf(file.type) > -1) {
-      const fileType = "." + file.type.split("/")[1];
+      const fileType = '.' + file.type.split('/')[1];
 
       const fileName = uuidv4() + fileType;
       reader.onload = function (e) {
-        onImageLoadedSmall("sm-" + fileName, file.type);
-        onImageLoadedMedium("md-" + fileName, file.type);
-        onImageLoadedLarge("lg-" + fileName, file.type);
+        onImageLoadedSmall('sm-' + fileName, file.type);
+        onImageLoadedMedium('md-' + fileName, file.type);
+        onImageLoadedLarge('lg-' + fileName, file.type);
       };
       reader.readAsArrayBuffer(file);
       return;
@@ -314,11 +301,8 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
   };
 
   function handleVideoOrImageInputDragDrop(e): void {
-    
     if (props.allowImage && props.allowVideo) {
-      if (
-        [...allowedImageFormats, ...allowedVideoFormats].indexOf(e.type) === -1
-      ) {
+      if ([...allowedImageFormats, ...allowedVideoFormats].indexOf(e.type) === -1) {
         setRender(0);
         return;
       }
@@ -363,7 +347,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
         endpoint: process.env.REACT_APP_CLOUDFLARE_URL,
         chunkSize: 5242880,
         metadata: {
-          name: file.name,
+          name: file.name
         },
         onError: function (error) {
           throw error;
@@ -372,16 +356,16 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
           setProgress(Number(((bytesUploaded / bytesTotal) * 100).toFixed(2)));
         },
         onSuccess: function () {
-          console.log("Upload finished");
+          console.log('Upload finished');
           setVideoUpload(true);
           setRender(1);
         },
         onAfterResponse: function (req, res) {
-          if (res.getHeader("stream-media-id")) {
-            const value = res.getHeader("stream-media-id");
+          if (res.getHeader('stream-media-id')) {
+            const value = res.getHeader('stream-media-id');
             setVideoID(value);
           }
-        },
+        }
       };
       const upload = new tus.Upload(file, options);
       upload.start();
@@ -392,7 +376,7 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
 
   function handleAspectRatio(data: string) {
     if (data) {
-      return parseInt(data.split(":")[0]) / parseInt(data.split(":")[1]);
+      return parseInt(data.split(':')[0]) / parseInt(data.split(':')[1]);
     } else {
       return 5 / 3;
     }
@@ -416,14 +400,14 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
   }
 
   useEffect(() => {
-    if (videoID !== "") {
+    if (videoID !== '') {
       props.onChange(videoID);
     }
     // eslint-disable-next-line
   }, [videoID]);
 
   useEffect(() => {
-    if (imageid !== "") {
+    if (imageid !== '') {
       props.onChange(imageid);
     }
     // eslint-disable-next-line
@@ -446,22 +430,19 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
               className="img-thumbnail"
               alt="Image Preview"
             />
-            <p className="ml-2 mt-3 font-weight-bold text-success">
-              Image Uploaded
-            </p>
+            <p className="ml-2 mt-3 font-weight-bold text-success">Image Uploaded</p>
             <div className="mt-3 d-flex flex-row-reverse">
               <button
                 type="button"
                 className="btn-sm btn-danger"
                 onClick={() => deleteAllImages()}
-                disabled={props.readonly}
-              >
+                disabled={props.readonly}>
                 Remove
               </button>
             </div>
           </div>
         ) : (
-          " "
+          ' '
         )}
         {videoUpload ? (
           <>
@@ -473,24 +454,20 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                 className="img-thumbnail"
                 alt="Image Preview For Video"
               />
-              <p className="text-success font-weight-bold mt-2">
-                {" "}
-                Video Uploaded Successfully!!
-              </p>
+              <p className="text-success font-weight-bold mt-2"> Video Uploaded Successfully!!</p>
               <div className="mt-3 d-flex flex-row-reverse">
                 <button
                   type="button"
                   className="btn-sm btn-danger"
                   onClick={() => videoDelete()}
-                  disabled={props.readonly}
-                >
+                  disabled={props.readonly}>
                   Remove
                 </button>
               </div>
             </div>
           </>
         ) : (
-          " "
+          ' '
         )}
         {imageSrc ? (
           <div className="">
@@ -522,60 +499,45 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                 onClick={() => {
                   showCroppedImage();
                 }}
-                disabled={props.readonly}
-              >
+                disabled={props.readonly}>
                 Upload
               </button>
             </div>
           </div>
         ) : (
-          " "
+          ' '
         )}
         <div>
           {props.allowImage && !props.allowVideo ? (
             <>
-              {render === 0 ? (
-                <p className="text-danger">Supported Formats (png/jpeg/jpg)</p>
-              ) : (
-                " "
-              )}
+              {render === 0 ? <p className="text-danger">Supported Formats (png/jpeg/jpg)</p> : ' '}
             </>
           ) : (
-            " "
+            ' '
           )}
           {!props.allowImage && props.allowVideo ? (
-            <>
-              {render === 0 ? (
-                <p className="text-danger">Supported Formats (mp4)</p>
-              ) : (
-                " "
-              )}
-            </>
+            <>{render === 0 ? <p className="text-danger">Supported Formats (mp4)</p> : ' '}</>
           ) : (
-            " "
+            ' '
           )}
           {props.allowImage && props.allowVideo ? (
             <>
               {render === 0 ? (
-                <p className="text-danger">
-                  Supported Formats (png/jpeg/jpg/mp4)
-                </p>
+                <p className="text-danger">Supported Formats (png/jpeg/jpg/mp4)</p>
               ) : (
-                " "
+                ' '
               )}
             </>
           ) : (
-            " "
+            ' '
           )}
           {!props.allowImage && !props.allowVideo ? (
-            <p className="text-danger">
-              upload component cannot have both values as false{" "}
-            </p>
+            <p className="text-danger">upload component cannot have both values as false </p>
           ) : (
-            " "
+            ' '
           )}
           {url || videoUpload ? (
-            " "
+            ' '
           ) : (
             <div className="bg-white">
               <div
@@ -586,15 +548,14 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                 onDrop={(e) => {
                   e.preventDefault();
                   handleVideoOrImageInputDragDrop(e.dataTransfer.files[0]);
-                }}
-              >
+                }}>
                 {props.allowImage && !props.allowVideo ? (
                   <>
                     <p className="d-inline">Drag & Drop Image</p>
                     <p className="font-weight-bold d-inline"> (png/jpeg/jpg)</p>
                   </>
                 ) : (
-                  " "
+                  ' '
                 )}
                 {!props.allowImage && props.allowVideo ? (
                   <>
@@ -602,18 +563,15 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                     <p className="font-weight-bold d-inline"> (mp4)</p>
                   </>
                 ) : (
-                  " "
+                  ' '
                 )}
                 {props.allowImage && props.allowVideo ? (
                   <>
                     <p className="d-inline">Drag & Drop Image Or Video</p>
-                    <p className="font-weight-bold d-inline">
-                      {" "}
-                      (png/jpeg/jpg/mp4)
-                    </p>
+                    <p className="font-weight-bold d-inline"> (png/jpeg/jpg/mp4)</p>
                   </>
                 ) : (
-                  " "
+                  ' '
                 )}
 
                 <p className="mt-3">OR</p>
@@ -631,29 +589,21 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
                 )}
 
                 <div className="mt-3 d-flex flex-row-reverse">
-                {selectedFile &&
-                    allowedVideoFormats.indexOf(selectedFile.type) > -1
-                      ?
-                  <button
-                    type="button"
-                    className={render ? "btn-sm btn-success ml-5" : "d-none"}
-                    onClick={() => handleCrop(selectedFile)}
-                  >
-                     Upload
-                      
-                  </button>
-                  : null}
+                  {selectedFile && allowedVideoFormats.indexOf(selectedFile.type) > -1 ? (
+                    <button
+                      type="button"
+                      className={render ? 'btn-sm btn-success ml-5' : 'd-none'}
+                      onClick={() => handleCrop(selectedFile)}>
+                      Upload
+                    </button>
+                  ) : null}
                 </div>
 
                 {url || videoUpload ? (
-                  " "
+                  ' '
                 ) : (
-                  <div className={render ? "pt-2" : "d-none"}>
-                    <ProgressBar
-                      animated
-                      now={progress}
-                      label={`${progress}%`}
-                    />
+                  <div className={render ? 'pt-2' : 'd-none'}>
+                    <ProgressBar animated now={progress} label={`${progress}%`} />
                   </div>
                 )}
               </div>

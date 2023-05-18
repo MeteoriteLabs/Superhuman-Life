@@ -1,8 +1,8 @@
-import React from "react";
-import { Dropdown } from "react-bootstrap";
-import "./button.css";
+import React from 'react';
+import { Dropdown } from 'react-bootstrap';
+import './button.css';
 
-interface ArrayAction {
+export interface ArrayAction {
   actionClick: () => void;
   actionName: string;
 }
@@ -14,7 +14,7 @@ const ActionButton: React.FC<{
   const { status, arrayAction } = props;
 
   const renderItemAction = () => {
-    return status !== "accepted" && status !== "rejected"
+    return status !== 'accepted' && status !== 'rejected'
       ? arrayAction.map((item, index) => {
           return (
             <Dropdown.Item key={index} onClick={item.actionClick}>

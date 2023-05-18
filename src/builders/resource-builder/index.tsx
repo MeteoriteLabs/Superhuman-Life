@@ -1,6 +1,6 @@
-import { Card, Tab, Tabs, TabContent } from "react-bootstrap";
-import MessagePage from "./notifications";
-import MindsetPage from "./message";
+import { Card, Tab, Tabs, TabContent } from 'react-bootstrap';
+import MessagePage from './notifications';
+import MindsetPage from './message';
 // import InformationPage from "./information bank";
 
 export default function ResourcePage() {
@@ -9,7 +9,11 @@ export default function ResourcePage() {
       <h2>Communications</h2>
       <Card className="shadow-sm mt-3" border="light">
         <Card.Body>
-          <Tabs variant="pills" transition={false} defaultActiveKey="message" className="pb-3 cards">
+          <Tabs
+            variant="pills"
+            transition={false}
+            defaultActiveKey="message"
+            className="pb-3 cards">
             <Tab eventKey="message" title="Notification">
               <TabContent>
                 <hr />

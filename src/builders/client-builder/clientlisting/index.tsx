@@ -1,58 +1,67 @@
-import { useMemo, useContext, useRef, useState } from "react";
-import ActionButton from "../../../components/actionbutton/index";
-import { Badge, Button, TabContent, InputGroup, FormControl, Card, Container, Row, Col } from "react-bootstrap";
-import AuthContext from "../../../context/auth-context";
-import { useQuery } from "@apollo/client";
-import { GET_CLIENT_NEW } from "./queries";
-import CreateClient from "./addclientcomponent";
-import Table from "../../../components/table";
+import { useMemo, useContext, useRef, useState } from 'react';
+import ActionButton from '../../../components/actionbutton/index';
+import {
+  Badge,
+  Button,
+  TabContent,
+  InputGroup,
+  FormControl,
+  Card,
+  Container,
+  Row,
+  Col
+} from 'react-bootstrap';
+import AuthContext from '../../../context/auth-context';
+import { useQuery } from '@apollo/client';
+import { GET_CLIENT_NEW } from './queries';
+import CreateClient from './addclientcomponent';
+import Table from '../../../components/table';
 import { flattenObj } from '../../../components/utils/responseFlatten';
 //import client from "./client";
 
 function ClientListingPage() {
-     const auth = useContext(AuthContext);
-     const [searchFilter, setSearchFilter] = useState("");
-     const searchInput = useRef<any>();
-     const CreateClientComponent = useRef<any>(null);
+  const auth = useContext(AuthContext);
+  const [searchFilter, setSearchFilter] = useState('');
+  const searchInput = useRef<any>();
+  const CreateClientComponent = useRef<any>(null);
 
-     function handleRedirect(id: any) {
-          window.location.href = `/client/home/${id}`;
-     }
+  function handleRedirect(id: any) {
+    window.location.href = `/client/home/${id}`;
+  }
 
   const columns = useMemo<any>(
     () => [
-      { accessor: "clientname", Header: "Name" },
-      { accessor: "clientemail", Header: "Email" },
-      { accessor: "clientphone", Header: "Phone" },
-      { accessor: "clientlocation", Header: "Location" },
+      { accessor: 'clientname', Header: 'Name' },
+      { accessor: 'clientemail', Header: 'Email' },
+      { accessor: 'clientphone', Header: 'Phone' },
+      { accessor: 'clientlocation', Header: 'Location' },
       {
-        Header: "No of Bookings",
-        accessor: "bookings",
+        Header: 'No of Bookings',
+        accessor: 'bookings',
         Cell: (row: any) => {
           return (
             <>
               <p className="ml-5 pl-4">{row.value[0][row.value[1]]}</p>
             </>
           );
-        },
+        }
       },
       {
-        accessor: "status",
-        Header: "Status",
+        accessor: 'status',
+        Header: 'Status',
         Cell: (v: any) => (
           <Badge
             className="px-3 py-1"
-            style={{ fontSize: "1rem", borderRadius: "10px" }}
-            variant={v.value === "Assigned" ? "success" : "danger"}
-          >
+            style={{ fontSize: '1rem', borderRadius: '10px' }}
+            variant={v.value === 'Assigned' ? 'success' : 'danger'}>
             {v.value}
           </Badge>
-        ),
+        )
       },
 
       {
-        id: "edit",
-        Header: "Actions",
+        id: 'edit',
+        Header: 'Actions',
         Cell: ({ row }: any) => {
           const actionClick1 = () => {
             handleRedirect(row.original.id);
@@ -61,68 +70,71 @@ function ClientListingPage() {
             //CreateClientComponent.current.TriggerForm({id: row.original.id, type: 'view'})
           };
           const actionClick3 = () => {
-            window.location.href = "/chats";
+            window.location.href = '/chats';
           };
           const actionClick4 = () => {
-            window.location.href = "/packages";
+            window.location.href = '/packages';
           };
           const actionClick5 = () => {
             CreateClientComponent.current.TriggerForm({
               id: row.original.id,
-              type: "delete",
+              type: 'delete'
             });
           };
 
-                         const arrayAction = [
-                              { actionName: "Go to client", actionClick: actionClick1 },
-                              { actionName: "Build Program", actionClick: actionClick2 },
-                              { actionName: "Chat", actionClick: actionClick3 },
-                              { actionName: "Build Package", actionClick: actionClick4 },
-                              { actionName: "Remove Client", actionClick: actionClick5 },
-                         ];
+          const arrayAction = [
+            { actionName: 'Go to client', actionClick: actionClick1 },
+            { actionName: 'Build Program', actionClick: actionClick2 },
+            { actionName: 'Chat', actionClick: actionClick3 },
+            { actionName: 'Build Package', actionClick: actionClick4 },
+            { actionName: 'Remove Client', actionClick: actionClick5 }
+          ];
 
-                         return <ActionButton arrayAction={arrayAction}></ActionButton>;
-                    },
-               },
-          ],
-          []
-     );
+          return <ActionButton arrayAction={arrayAction}></ActionButton>;
+        }
+      }
+    ],
+    []
+  );
 
-     // function getDate(time: any) {
-     //      let dateObj = new Date(time);
-     //      let month = dateObj.getMonth() + 1;
-     //      let year = dateObj.getFullYear();
-     //      let date = dateObj.getDate();
+  // function getDate(time: any) {
+  //      let dateObj = new Date(time);
+  //      let month = dateObj.getMonth() + 1;
+  //      let year = dateObj.getFullYear();
+  //      let date = dateObj.getDate();
 
-     //      return `${date}/${month}/${year}`;
-     // }
-     // function getRenewalDate(time: any, duration: any) {
-     //      var date = new Date(time);
-     //      date.setDate(date.getDate() + duration);
-     //      return getDate(date);
-     // }
+  //      return `${date}/${month}/${year}`;
+  // }
+  // function getRenewalDate(time: any, duration: any) {
+  //      var date = new Date(time);
+  //      date.setDate(date.getDate() + duration);
+  //      return getDate(date);
+  // }
 
-     const [datatable, setDataTable] = useState<Record<string, unknown>[]>([]);
+  const [datatable, setDataTable] = useState<Record<string, unknown>[]>([]);
 
-     // function FetchData(_variables: {} = { filter: " ", id: auth.userid }) {
-     const fetch = useQuery(GET_CLIENT_NEW, { variables: { filter: searchFilter, id: auth.userid }, onCompleted: loadData });
-     // }
+  // function FetchData(_variables: {} = { filter: " ", id: auth.userid }) {
+  const fetch = useQuery(GET_CLIENT_NEW, {
+    variables: { filter: searchFilter, id: auth.userid },
+    onCompleted: loadData
+  });
+  // }
 
-     function refetchQueryCallback() {
-          fetch.refetch();
-     }
+  function refetchQueryCallback() {
+    fetch.refetch();
+  }
 
-     function loadData(data: any) {
-          const clientnamecount = {};
-          let flag: any;
-          const namearr: any = [];
+  function loadData(data: any) {
+    const clientnamecount = {};
+    let flag: any;
+    const namearr: any = [];
 
-          const flattenData = flattenObj({ ...data });
+    const flattenData = flattenObj({ ...data });
 
-          setDataTable(
-               [...flattenData.clientPackages].flatMap((Detail) => {
-                    const clientname: any = Detail.users_permissions_user.username;
-                    const clientemail: any = Detail.users_permissions_user.email;
+    setDataTable(
+      [...flattenData.clientPackages].flatMap((Detail) => {
+        const clientname: any = Detail.users_permissions_user.username;
+        const clientemail: any = Detail.users_permissions_user.email;
 
         if (!clientnamecount[clientname]) {
           clientnamecount[clientname] = 1;
@@ -142,7 +154,7 @@ function ClientListingPage() {
             clientphone: Detail.users_permissions_user.Phone,
             clientlocation: Detail.users_permissions_user?.addresses[0]?.city,
             bookings: [clientnamecount, Detail.users_permissions_user.username],
-            status: "Assigned",
+            status: 'Assigned'
           };
         } else {
           return [];
@@ -151,50 +163,46 @@ function ClientListingPage() {
     );
   }
 
-     // FetchData({ filter: searchFilter, id: auth.userid });
-     return (
-          <TabContent>
-               <Container>
-                    <Row>
-                         <Col>
-                              <InputGroup className="mb-3">
-                                   <FormControl
-                                        aria-describedby="basic-addon1"
-                                        placeholder="Search"
-                                        ref={searchInput}
-                                   />
-                                   <InputGroup.Prepend>
-                                        <Button
-                                             variant="outline-secondary"
-                                             onClick={(e: any) => {
-                                                  e.preventDefault();
-                                                  setSearchFilter(searchInput.current.value);
-                                             }}
-                                        >
-                                             <i className="fas fa-search"></i>
-                                        </Button>
-                                   </InputGroup.Prepend>
-                              </InputGroup>
-                         </Col>
-                         <Col>
-                              <Card.Title className="text-center">
-                                   <Button
-                                        variant= "outline-secondary"
-                                        size="sm"
-                                        onClick={() => {
-                                             window.open("/add_client", "_self");
-                                        }}
-                                   >
-                                        <i className="fas fa-plus-circle"></i> Add Client
-                                   </Button>
-                                   <CreateClient ref={CreateClientComponent} callback={refetchQueryCallback}></CreateClient>
-                              </Card.Title>
-                         </Col>
-                    </Row>
-               </Container>
-               <Table columns={columns} data={datatable} />
-          </TabContent>
-     );
+  // FetchData({ filter: searchFilter, id: auth.userid });
+  return (
+    <TabContent>
+      <Container>
+        <Row>
+          <Col>
+            <InputGroup className="mb-3">
+              <FormControl aria-describedby="basic-addon1" placeholder="Search" ref={searchInput} />
+              <InputGroup.Prepend>
+                <Button
+                  variant="outline-secondary"
+                  onClick={(e: any) => {
+                    e.preventDefault();
+                    setSearchFilter(searchInput.current.value);
+                  }}>
+                  <i className="fas fa-search"></i>
+                </Button>
+              </InputGroup.Prepend>
+            </InputGroup>
+          </Col>
+          <Col>
+            <Card.Title className="text-center">
+              <Button
+                variant="outline-secondary"
+                size="sm"
+                onClick={() => {
+                  window.open('/add_client', '_self');
+                }}>
+                <i className="fas fa-plus-circle"></i> Add Client
+              </Button>
+              <CreateClient
+                ref={CreateClientComponent}
+                callback={refetchQueryCallback}></CreateClient>
+            </Card.Title>
+          </Col>
+        </Row>
+      </Container>
+      <Table columns={columns} data={datatable} />
+    </TabContent>
+  );
 }
 
 export default ClientListingPage;
