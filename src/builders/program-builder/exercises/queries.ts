@@ -109,50 +109,50 @@ export const FETCH_FITNESSDISCPLINES = gql`
 `;
 
 export const GET_TABLEDATA = gql`
-  query ExercisesQuery($id: ID) {
-    exercises(pagination: { pageSize: 100 }, filters: { users_permissions_user: { id: { eq: $id } } }) {
-      data {
-        id
-        attributes {
-          updatedAt
-          exercisename
-          exerciselevel
-          exercisetext
-          exerciseurl
-          users_permissions_user {
-            data {
-              id
+query ExercisesQuery($id: ID!, $filter: String!) {
+  exercises(pagination: { pageSize: 100 }, filters: { users_permissions_user: { id: { eq: $id } }, exercisename: { containsi: $filter } }) {
+    data {
+      id
+      attributes {
+        updatedAt
+        exercisename
+        exerciselevel
+        exercisetext
+        exerciseurl
+        users_permissions_user {
+          data {
+            id
+          }
+        }
+        fitnessdisciplines {
+          data {
+            id
+            attributes {
+              disciplinename
             }
           }
-          fitnessdisciplines {
-            data {
-              id
-              attributes {
-                disciplinename
-              }
+        }
+        equipment_lists {
+          data {
+            id
+            attributes {
+              updatedAt
+              name
             }
           }
-          equipment_lists {
-            data {
-              id
-              attributes {
-                updatedAt
-                name
-              }
-            }
-          }
-          muscle_groups {
-            data {
-              id
-              attributes {
-                name
-              }
+        }
+        muscle_groups {
+          data {
+            id
+            attributes {
+              name
             }
           }
         }
       }
     }
   }
+}
 `;
 
 export const CREATE_EXERCISE = gql`
