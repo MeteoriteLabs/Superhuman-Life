@@ -1,4 +1,4 @@
-import { useMemo, useState, useContext } from "react";
+import { useMemo, useState, useContext } from 'react';
 import {
   Badge,
   Button,
@@ -7,66 +7,65 @@ import {
   FormControl,
   Container,
   Row,
-  Col,
-} from "react-bootstrap";
-import Table from "../../../components/table/leads-table";
-import ActionButton from "../../../components/actionbutton/index";
-import { useQuery, useLazyQuery } from "@apollo/client";
-import { GET_TRANSACTIONS, GET_CONTACTS, FETCH_CHANGEMAKERS } from "./queries";
-import { flattenObj } from "../../../components/utils/responseFlatten";
-import AuthContext from "../../../context/auth-context";
-import moment from "moment";
-import { useHistory } from "react-router-dom";
+  Col
+} from 'react-bootstrap';
+import Table from '../../../components/table/leads-table';
+import ActionButton from '../../../components/actionbutton/index';
+import { useQuery, useLazyQuery } from '@apollo/client';
+import { GET_TRANSACTIONS, GET_CONTACTS, FETCH_CHANGEMAKERS } from './queries';
+import { flattenObj } from '../../../components/utils/responseFlatten';
+import AuthContext from '../../../context/auth-context';
+import moment from 'moment';
+import { useHistory } from 'react-router-dom';
 
-export default function Expenses() {
+export default function Expenses(): JSX.Element {
   const auth = useContext(AuthContext);
 
   const columns = useMemo<any>(
     () => [
-      { accessor: "id", Header: "T ID" },
-      { accessor: "name", Header: "Name" },
-      { accessor: "paymentMode", Header: "Payment Mode" },
-      { accessor: "transactionDate", Header: "Transaction Date" },
-      { accessor: "remark", Header: "Remark" },
-      { accessor: "amount", Header: "Amount" },
+      { accessor: 'id', Header: 'T ID' },
+      { accessor: 'name', Header: 'Name' },
+      { accessor: 'paymentMode', Header: 'Payment Mode' },
+      { accessor: 'transactionDate', Header: 'Transaction Date' },
+      { accessor: 'remark', Header: 'Remark' },
+      { accessor: 'amount', Header: 'Amount' },
       {
-        accessor: "status",
-        Header: "Status",
+        accessor: 'status',
+        Header: 'Status',
         Cell: ({ row }: any) => {
-          let statusColor = "";
+          let statusColor = '';
           switch (row.values.status) {
-            case "Success":
-              statusColor = "success";
+            case 'Success':
+              statusColor = 'success';
               break;
 
-            case "Refund":
-              statusColor = "warning";
+            case 'Refund':
+              statusColor = 'warning';
               break;
 
-            case "Failed":
-              statusColor = "danger";
+            case 'Failed':
+              statusColor = 'danger';
               break;
           }
           return (
             <>
               <Badge
                 className="px-3 py-1"
-                style={{ fontSize: "1rem", borderRadius: "10px" }}
-                variant={statusColor}
-              >
-                {row.values.status === "Success"
-                  ? "Success"
-                  : row.values.status === "Failed"
-                  ? "Failed"
-                  : "Refund"}
+                style={{ fontSize: '1rem', borderRadius: '10px' }}
+                variant={statusColor}>
+                {row.values.status === 'Success'
+                  ? 'Success'
+                  : row.values.status === 'Failed'
+                  ? 'Failed'
+                  : 'Refund'}
               </Badge>
             </>
           );
-        },
+        }
       },
       {
-        id: "edit",
-        Header: "Actions",
+        id: 'edit',
+        Header: 'Actions',
         Cell: ({ row }: any) => {
           const history = useHistory();
           const routeChange = () => {
@@ -76,18 +75,18 @@ export default function Expenses() {
 
           const arrayAction = [
             {
-              actionName: "Receipt",
-              actionClick: routeChange,
+              actionName: 'Receipt',
+              actionClick: routeChange
             },
             {
-              actionName: "Help",
-              actionClick: routeChange,
-            },
+              actionName: 'Help',
+              actionClick: routeChange
+            }
           ];
 
           return <ActionButton arrayAction={arrayAction}></ActionButton>;
-        },
-      },
+        }
+      }
     ],
     []
   );
@@ -95,41 +94,35 @@ export default function Expenses() {
   const [datatable, setDataTable] = useState<Record<string, unknown>[]>([]);
 
   const [contacts, { data: get_contacts }] = useLazyQuery(GET_CONTACTS, {
-    onCompleted: (data) => {
-      loadData(data);
-    },
+    onCompleted: () => {
+      loadData();
+    }
   });
 
   const [users, { data: get_changemakers }] = useLazyQuery(FETCH_CHANGEMAKERS, {
-    onCompleted: (data) => {
+    onCompleted: () => {
       contacts({
         variables: {
-          id: Number(auth.userid),
-        },
+          id: Number(auth.userid)
+        }
       });
-    },
+    }
   });
 
   const { data: get_transaction } = useQuery(GET_TRANSACTIONS, {
     variables: {
-      senderId: auth.userid,
+      senderId: auth.userid
     },
-    onCompleted: (data) => {
+    onCompleted: () => {
       users({
         variables: {
-          id: Number(auth.userid),
-        },
+          id: Number(auth.userid)
+        }
       });
-    },
+    }
   });
 
-  function loadData(data: any) {
-    contacts({
-      variables: {
-        id: Number(auth.userid),
-      },
-    });
-
+  function loadData() {
     const flattenTransactionData = flattenObj({ ...get_transaction });
     const flattenChangemakerData = flattenObj({ ...get_changemakers });
     const flattenContactsData = flattenObj({ ...get_contacts });
@@ -139,7 +132,7 @@ export default function Expenses() {
         return {
           id: Detail.id,
           name:
-            Detail.ReceiverType === "Changemaker"
+            Detail.ReceiverType === 'Changemaker'
               ? flattenChangemakerData.usersPermissionsUsers.find(
                   (currentValue) => currentValue.id === Detail.ReceiverID
                 )?.First_Name
@@ -150,10 +143,8 @@ export default function Expenses() {
           amount: `${Detail.Currency} ${Detail.TransactionAmount}`,
           paymentMode: Detail.PaymentMode,
           remark: Detail.TransactionRemarks,
-          transactionDate: moment(Detail.TransactionDateTime).format(
-            "DD/MM/YYYY, hh:mm"
-          ),
-          status: Detail.TransactionStatus,
+          transactionDate: moment(Detail.TransactionDateTime).format('DD/MM/YYYY, hh:mm'),
+          status: Detail.TransactionStatus
         };
       })
     );
@@ -175,8 +166,7 @@ export default function Expenses() {
                   variant="outline-secondary"
                   onClick={(e: any) => {
                     e.preventDefault();
-                  }}
-                >
+                  }}>
                   <i className="fas fa-search"></i>
                 </Button>
               </InputGroup.Prepend>

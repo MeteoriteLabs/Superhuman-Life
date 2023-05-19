@@ -145,12 +145,6 @@ export default function Earnings(): JSX.Element {
   });
 
   function loadData() {
-    contacts({
-      variables: {
-        id: Number(auth.userid)
-      }
-    });
-
     const flattenTransactionData = flattenObj({ ...get_transaction });
     const flattenChangemakerData = flattenObj({ ...get_changemakers });
     const flattenContactsData = flattenObj({ ...get_contacts });
