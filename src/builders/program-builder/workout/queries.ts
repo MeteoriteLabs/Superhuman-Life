@@ -117,69 +117,69 @@ export const FETCH_FITNESSDISCPLINES = gql`
 `;
 
 export const GET_TABLEDATA = gql`
-  query fetchdata($id: ID) {
-    workouts(filters: { users_permissions_user: { id: { eq: $id } } }, pagination: {
-      pageSize: 100
-    }) {
-      data {
-        id
-        attributes {
-          workouttitle
-          intensity
-          level
-          updatedAt
-          About
-          Benifits
-          workout_URL
-          Workout_Video_ID
-          workout_text
-          warmup
-          cooldown
-          mainmovement
-          calories
-          users_permissions_user {
-            data {
-              id
-            }
+query fetchdata($id: ID, $filter: String!) {
+  workouts(filters: { users_permissions_user: { id: { eq: $id } }, workouttitle: {containsi:  $filter} }, pagination: {
+    pageSize: 100
+  }) {
+    data {
+      id
+      attributes {
+        workouttitle
+        intensity
+        level
+        updatedAt
+        About
+        Benifits
+        workout_URL
+        Workout_Video_ID
+        workout_text
+        warmup
+        cooldown
+        mainmovement
+        calories
+        users_permissions_user {
+          data {
+            id
           }
-          fitnessdisciplines {
-            data {
-              id
-              attributes {
-                disciplinename
-              }
-            }
-          }
-          muscle_groups {
-            data {
-              id
-              attributes {
-                name
-              }
-            }
-          }
-          equipment_lists {
-            data {
-              id
-              attributes {
-                updatedAt
-                name
-              }
+        }
+        fitnessdisciplines {
+          data {
+            id
+            attributes {
+              disciplinename
             }
           }
         }
-      }
-    }
-    fitnessdisciplines(sort: ["updatedAt"]) {
-      data {
-        id
-        attributes {
-          disciplinename
-          updatedAt
+        muscle_groups {
+          data {
+            id
+            attributes {
+              name
+            }
+          }
+        }
+        equipment_lists {
+          data {
+            id
+            attributes {
+              updatedAt
+              name
+            }
+          }
         }
       }
     }
   }
+  fitnessdisciplines(sort: ["updatedAt"]) {
+    data {
+      id
+      attributes {
+        disciplinename
+        updatedAt
+      }
+    }
+  }
+}
 `;
 
 export const CREATE_WORKOUT = gql`

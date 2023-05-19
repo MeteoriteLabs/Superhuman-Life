@@ -1,68 +1,69 @@
 import { gql } from "@apollo/client";
 
 export const GET_TABLEDATA = gql`
-  query ProgramQuery($id: ID) {
-    fitnessprograms(pagination: {
-      pageSize: 100
-    }, filters:{
-      users_permissions_user:{
-        id: { eq: $id }
-      }
-    }){
-      data{
-        id
-        attributes{
-          title
-          description
-          updatedAt
-          duration_days
-          level
-          start_date
-          end_date
-          sessions(pagination: { pageSize: 100}){
-            data{
-              id
-                attributes{
-                session_date
-                tag
-                mode
-                type
-                day_of_program
-                start_time
-                end_time
-                Is_restday
-                Is_program_template
-                activity{
-                  data{
-                    id
-                  }
-                }
-                activity_target
-                workout{
-                  data{
-                    id
-                  }
-                }
-              }
-            }
-          }
-          users_permissions_user{
-            data{
-              id
-            }
-          }
-          fitnessdisciplines{
-            data{
-              id
+query ProgramQuery($id: ID, $filter: String!) {
+  fitnessprograms(pagination: {
+    pageSize: 100
+  }, filters:{
+    users_permissions_user:{
+      id: { eq: $id }
+    }, 
+    title: {containsi: $filter}
+  }){
+    data{
+      id
+      attributes{
+        title
+        description
+        updatedAt
+        duration_days
+        level
+        start_date
+        end_date
+        sessions(pagination: { pageSize: 100}){
+          data{
+            id
               attributes{
-                disciplinename
+              session_date
+              tag
+              mode
+              type
+              day_of_program
+              start_time
+              end_time
+              Is_restday
+              Is_program_template
+              activity{
+                data{
+                  id
+                }
               }
+              activity_target
+              workout{
+                data{
+                  id
+                }
+              }
+            }
+          }
+        }
+        users_permissions_user{
+          data{
+            id
+          }
+        }
+        fitnessdisciplines{
+          data{
+            id
+            attributes{
+              disciplinename
             }
           }
         }
       }
     }
   }
+}
 `;
 
 export const GET_DATA = gql`

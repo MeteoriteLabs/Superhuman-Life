@@ -159,7 +159,6 @@ export default function EventsTab(): JSX.Element {
                   onClick={(e) => {
                     e.preventDefault();
                     searchInput.current && setSearchFilter(searchInput.current.value);
-                    refetchQueryCallback();
                   }}>
                   <i className="fas fa-search"></i>
                 </Button>
