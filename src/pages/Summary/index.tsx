@@ -1,4 +1,4 @@
-import React, { useState, Fragment, useContext } from 'react';
+import React, { useState, Fragment, useContext, useEffect } from 'react';
 import { GET_CLIENT_BOOKING, GET_OFFERING_INVENTORIES } from './queries';
 import { useQuery, useMutation, useLazyQuery } from '@apollo/client';
 import { flattenObj } from '../../components/utils/responseFlatten';
@@ -12,11 +12,11 @@ import AuthContext from '../../context/auth-context';
 import { UPDATE_BOOKING_STATUS } from '../booking/GraphQL/mutation';
 import moment from 'moment';
 import { CREATE_USER_PACKAGE } from '../booking/GraphQL/mutation';
+import axios from "axios";
 
 const Summary: React.FC = () => {
   const auth = useContext(AuthContext);
   const [packageDetails, setPackageDetails] = useState<any>();
-  const [paymentMode, setpaymentMode] = useState<string>('UPI');
   const query = window.location.search;
   const params = new URLSearchParams(query);
   const bookingId = params.get('id');
@@ -29,7 +29,7 @@ const Summary: React.FC = () => {
       setPackageDetails(flattenBookingResponse);
     }
   });
-
+console.log(packageDetails);
   // eslint-disable-next-line
   const [offeringInventory, { data: get_offering_inventories }] = useLazyQuery(
     GET_OFFERING_INVENTORIES,
@@ -116,6 +116,41 @@ const Summary: React.FC = () => {
       }
     });
   };
+
+  const url = "http://localhost:1337/api/client-booking/paymentlink";
+  const config = {
+    headers: {Authorization: `Bearer 7e1380f34b391369fb4fb62c5662abc3d956fc4842b9b9cecce1d7e81ffa9bca4f5c5c20a160eaa8a1c28de862e8c9e5bc9414bdb7da5ebf960bbd108abf032f8f762caecfeb6aa4190307b9b13a2d318e873f9bc5d9fff2cac01d01c0723814cb1197b0f9638f9fd44276e5566a6f6112b3a01d4d867b0592ac6994c044a2b7`}
+  }
+  const sendLink = (bookingId: string|null) => {
+    console.log(bookingId);
+    
+    axios.post(url, {
+      "orderId": 11,
+      "currency": "INR",
+      "amount": 1000,
+      "customerEmail": `${packageDetails.ClientUser[0].email}`,
+      "customerPhone": `${packageDetails.ClientUser[0].Phone_Number}`,
+      "customerName": `${packageDetails.ClientUser[0].First_Name} ${packageDetails.ClientUser[0].Last_Name}`,
+      "customerId": `${packageDetails.ClientUser[0].id}`
+  }, config).then((response) => {
+      console.log(response.status, response.data.token);
+      
+    });
+  }
+
+  useEffect(()=>{
+    axios.get(`http://localhost:1337/api/client-booking/getordersbypaymentlinkid/?link_id=link_id_11`, config)
+    .then((response) => {
+      console.log(response);
+      // console.log(response.data);
+      // console.log(response.status);
+      // console.log(response.statusText);
+      // console.log(response.headers);
+      // console.log(response.config);
+    });
+
+  })
+ 
 
   return (
     <Fragment>
@@ -376,31 +411,8 @@ const Summary: React.FC = () => {
         ) : (
           <div className="mt-3 col-lg-11  border p-3 bg-white">
             <h3 className="mb-3">Proceed to checkout</h3>
-            <input
-              type="radio"
-              name="paymentMode"
-              value="UPI"
-              id="upi"
-              checked={paymentMode === 'UPI'}
-              onChange={(e) => setpaymentMode(e.target.value)}
-              className="m-1"
-            />
-            <label htmlFor="upi" className="mr-3">
-              UPI
-            </label>
-
-            <input
-              type="radio"
-              name="paymentMode"
-              value="Link"
-              id="link"
-              checked={paymentMode === 'Link'}
-              onChange={(e) => setpaymentMode(e.target.value)}
-              className="m-1"
-            />
-            <label htmlFor="link">Payment thru link</label>
-            <br />
-            <Button className="mt-3">Proceed to Payment</Button>
+            <Button className="mt-3 mr-5" onClick={() => sendLink(bookingId)}>Send payment link</Button>
+            <Button className="mt-3">Book</Button>
           </div>
         )}
       </div>
