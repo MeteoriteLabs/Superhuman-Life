@@ -17,11 +17,11 @@ import { flattenObj } from '../../../components/utils/responseFlatten';
 import AuthContext from '../../../context/auth-context';
 import moment from 'moment';
 import { useHistory } from 'react-router-dom';
+import containsSubstring from '../../../components/utils/containsSubstring';
 
 export default function Earnings(): JSX.Element {
   const auth = useContext(AuthContext);
   const searchInput = useRef<HTMLInputElement | null>(null);
-  const [searchFilter, setSearchFilter] = useState('');
 
   interface Row {
     values: {
@@ -132,8 +132,7 @@ export default function Earnings(): JSX.Element {
 
   const { data: get_transaction } = useQuery(GET_TRANSACTIONS, {
     variables: {
-      receiverId: auth.userid,
-      filter: searchFilter
+      receiverId: auth.userid
     },
     onCompleted: () => {
       users({
@@ -144,31 +143,35 @@ export default function Earnings(): JSX.Element {
     }
   });
 
-  function loadData() {
+  function loadData(filterSearch?: string) {
     const flattenTransactionData = flattenObj({ ...get_transaction });
     const flattenChangemakerData = flattenObj({ ...get_changemakers });
     const flattenContactsData = flattenObj({ ...get_contacts });
 
     setDataTable(
-      [...flattenTransactionData.transactions].flatMap((Detail) => {
-        return {
-          id: Detail.id,
-          name:
-            Detail.ReceiverType === 'Changemaker'
-              ? flattenChangemakerData.usersPermissionsUsers.find(
-                  (currentValue) => currentValue.id === Detail.SenderID
-                )?.First_Name
-              : flattenContactsData.contacts.find(
-                  (currentValue) => currentValue.id === Detail.SenderID
-                )?.firstname,
+      [...flattenTransactionData.transactions]
+        .flatMap((Detail) => {
+          return {
+            id: Detail.id,
+            name:
+              Detail.ReceiverType === 'Changemaker'
+                ? flattenChangemakerData.usersPermissionsUsers.find(
+                    (currentValue) => currentValue.id === Detail.SenderID
+                  )?.First_Name
+                : flattenContactsData.contacts.find(
+                    (currentValue) => currentValue.id === Detail.SenderID
+                  )?.firstname,
 
-          amount: `${Detail.Currency} ${Detail.TransactionAmount}`,
-          remark: Detail.TransactionRemarks,
-          transactionDate: moment(Detail.TransactionDateTime).format('DD/MM/YYYY, hh:mm'),
-          status: Detail.TransactionStatus,
-          paymentMode: Detail.PaymentMode
-        };
-      })
+            amount: `${Detail.Currency} ${Detail.TransactionAmount}`,
+            remark: Detail.TransactionRemarks,
+            transactionDate: moment(Detail.TransactionDateTime).format('DD/MM/YYYY, hh:mm'),
+            status: Detail.TransactionStatus,
+            paymentMode: Detail.PaymentMode
+          };
+        })
+        .filter((currentValue) =>
+          filterSearch ? containsSubstring(currentValue.name, filterSearch) : true
+        )
     );
   }
 
@@ -178,17 +181,13 @@ export default function Earnings(): JSX.Element {
         <Row>
           <Col lg={3}>
             <InputGroup className="mb-3">
-              <FormControl
-                aria-describedby="basic-addon1"
-                placeholder="Search"
-                // ref={searchInput}
-              />
+              <FormControl aria-describedby="basic-addon1" placeholder="Search" ref={searchInput} />
               <InputGroup.Prepend>
                 <Button
                   variant="outline-secondary"
                   onClick={(e) => {
                     e.preventDefault();
-                    searchInput.current && setSearchFilter(searchInput.current.value);
+                    loadData(searchInput.current?.value);
                   }}>
                   <i className="fas fa-search"></i>
                 </Button>
