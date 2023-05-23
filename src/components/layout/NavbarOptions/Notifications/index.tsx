@@ -14,6 +14,7 @@ import moment from 'moment';
 import './style.css';
 import NoDataFound from '../../../NoDataFound';
 import Loader from '../../../Loader/Loader';
+import { set } from 'lodash';
 
 const images = {
   '/offerings': 'assets/notifications/offerings.svg',
@@ -58,7 +59,6 @@ function Notifications(): JSX.Element {
       if (flattenData.changemakerNotifications.length < 5) {
         setHasMore(false);
       }
-      // console.log(flattenData.changemakerNotifications);
     }
   });
 
@@ -68,6 +68,14 @@ function Notifications(): JSX.Element {
     changeNotificationStatus({
       variables: { id: id, IsRead: true },
       onCompleted: () => {
+        setNotifications((prev) =>
+          prev.map((notification) => {
+            if (notification.id === id) {
+              return { ...notification, IsRead: true };
+            }
+            return notification;
+          })
+        );
         refetch_changemaker_notifications();
       }
     });
@@ -79,6 +87,7 @@ function Notifications(): JSX.Element {
     deleteNotification({
       variables: { id: id },
       onCompleted: () => {
+        setNotifications((prev) => prev.filter((notification) => notification.id !== id));
         refetch_changemaker_notifications();
       }
     });
@@ -88,6 +97,14 @@ function Notifications(): JSX.Element {
     changeNotificationStatus({
       variables: { id: id, IsRead: false },
       onCompleted: () => {
+        setNotifications((prev) =>
+          prev.map((notification) => {
+            if (notification.id === id) {
+              return { ...notification, IsRead: false };
+            }
+            return notification;
+          })
+        );
         refetch_changemaker_notifications();
       }
     });
@@ -98,6 +115,14 @@ function Notifications(): JSX.Element {
       changeNotificationStatus({
         variables: { id: notifications[i].id, IsRead: true },
         onCompleted: () => {
+          setNotifications((prev) =>
+            prev.map((notification) => {
+              if (notification.id === notifications[i].id) {
+                return { ...notification, IsRead: true };
+              }
+              return notification;
+            })
+          );
           refetch_changemaker_notifications();
         }
       });
@@ -109,6 +134,9 @@ function Notifications(): JSX.Element {
       deleteNotification({
         variables: { id: notifications[i].id },
         onCompleted: () => {
+          setNotifications((prev) =>
+            prev.filter((notification) => notification.id !== notifications[i].id)
+          );
           refetch_changemaker_notifications();
         }
       });
