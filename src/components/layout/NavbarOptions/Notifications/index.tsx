@@ -14,7 +14,6 @@ import moment from 'moment';
 import './style.css';
 import NoDataFound from '../../../NoDataFound';
 import Loader from '../../../Loader/Loader';
-import { set } from 'lodash';
 
 const images = {
   '/offerings': 'assets/notifications/offerings.svg',
