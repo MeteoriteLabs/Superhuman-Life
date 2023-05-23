@@ -253,40 +253,40 @@ function Notifications(): JSX.Element {
                     </Col>
                   </Row>
                 </div>
-                {loading_notifications ? (
-                  <div
-                    className="d-flex justify-content-center mt-5 "
-                    style={{ marginRight: '20vw' }}>
-                    <Spinner animation="border" variant="secondary" />
-                  </div>
-                ) : hasMore ? (
-                  <div
-                    className="d-flex justify-content-center mt-5 "
-                    style={{ marginRight: '20vw' }}>
-                    <Button variant="outline-dark" onClick={loadMore}>
-                      Load More
-                    </Button>
-                  </div>
-                ) : (
-                  <div
-                    className="d-flex justify-content-center mt-5 "
-                    style={{ marginRight: '20vw' }}>
-                    <p
-                      style={{
-                        color: 'black',
-                        fontSize: '1.1rem',
-                        fontWeight: 'bold',
-                        fontFamily: 'sans-serif'
-                      }}>
-                      End of notifications
-                    </p>
-                  </div>
-                )}
               </>
             );
           })
         ) : (
           <NoDataFound msg={'Opps ! Notifications not found'} />
+        )}
+        {notifications && notifications.length ? (
+          <>
+            {loading_notifications ? (
+              <div className="d-flex justify-content-center mt-5 " style={{ marginRight: '20vw' }}>
+                <Spinner animation="border" variant="secondary" />
+              </div>
+            ) : hasMore ? (
+              <div className="d-flex justify-content-center mt-5 " style={{ marginRight: '20vw' }}>
+                <Button variant="outline-dark" onClick={loadMore}>
+                  Load More
+                </Button>
+              </div>
+            ) : (
+              <div className="d-flex justify-content-center mt-5 " style={{ marginRight: '20vw' }}>
+                <p
+                  style={{
+                    color: 'black',
+                    fontSize: '1.1rem',
+                    fontWeight: 'bold',
+                    fontFamily: 'sans-serif'
+                  }}>
+                  End of notifications
+                </p>
+              </div>
+            )}
+          </>
+        ) : (
+          ''
         )}
       </div>
     </div>
