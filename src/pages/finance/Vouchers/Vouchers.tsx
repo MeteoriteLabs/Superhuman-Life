@@ -1,5 +1,5 @@
 import React from 'react';
-import { Badge, Row, Col, Button } from 'react-bootstrap';
+import { Badge, Row, Col, Button, InputGroup, FormControl, Container, Card } from 'react-bootstrap';
 import { useContext, useMemo, useRef, useState } from 'react';
 import Table from '../../../components/table/index';
 import ActionButton from '../../../components/actionbutton';
@@ -8,6 +8,7 @@ import { GET_ALL_VOUCHERS } from '../graphQL/queries';
 import authContext from '../../../context/auth-context';
 import moment from 'moment';
 import VoucherAction from './VoucherAction';
+import containsSubstring from '../../../components/utils/containsSubstring';
 
 interface VoucherTs {
   TriggerForm: ({
@@ -31,30 +32,42 @@ export default function Vouchers(): JSX.Element {
   const auth = useContext(authContext);
   const [dataTable, setDataTable] = useState<Record<string, unknown>[]>([]);
   const voucherActionRef = useRef<VoucherTs>(null);
+  const searchInput = useRef<HTMLInputElement>(null);
+  const [AllVouchersData, setAllVouchersData] = useState<Record<string, unknown>>();
 
   const fetch = useQuery(GET_ALL_VOUCHERS, {
     variables: { id: auth.userid },
-    onCompleted: (data) => loadData(data)
+    onCompleted: (data) => {
+      loadData(data);
+      setAllVouchersData(data);
+    }
   });
 
-  const loadData = (data) => {
+  const loadData = (data, filter?: string) => {
     setDataTable(
-      [...data.vouchers.data].map((voucher) => {
-        const todayDate = moment(new Date());
-        const expiryDate = moment(voucher.attributes.expiry_date);
-        const diff = expiryDate.diff(todayDate);
-        return {
-          id: voucher.id,
-          voucher_name: voucher.attributes.voucher_name,
-          discount_percentage: voucher.attributes.discount_percentage,
-          expiry_date: moment(voucher.attributes.expiry_date).format('MMMM DD,YYYY'),
-          Usage_restriction: voucher.attributes.Usage_restriction,
-          Status:
-            diff <= 0 || voucher.attributes.Usage_restriction <= 0
-              ? 'Expired'
-              : voucher.attributes.Status
-        };
-      })
+      [...data.vouchers.data]
+        .map((voucher) => {
+          const todayDate = moment(new Date());
+          const expiryDate = moment(voucher.attributes.expiry_date);
+          const diff = expiryDate.diff(todayDate);
+          return {
+            id: voucher.id,
+            voucher_name: voucher.attributes.voucher_name,
+            discount_percentage: voucher.attributes.discount_percentage,
+            expiry_date: moment(voucher.attributes.expiry_date).format('MMMM DD,YYYY'),
+            Usage_restriction: voucher.attributes.Usage_restriction,
+            Status:
+              diff <= 0 || voucher.attributes.Usage_restriction <= 0
+                ? 'Expired'
+                : voucher.attributes.Status
+          };
+        })
+        .filter((voucher) => {
+          if (filter) {
+            return containsSubstring(voucher.voucher_name, filter);
+          }
+          return true;
+        })
     );
   };
 
@@ -155,16 +168,38 @@ export default function Vouchers(): JSX.Element {
 
   return (
     <div className="mt-3">
-      <div className="d-flex justify-content-end mb-3 mr-5">
-        <Button
-          variant="outline-secondary"
-          size="sm"
-          onClick={() => {
-            voucherActionRef.current?.TriggerForm({ actionType: 'create' });
-          }}>
-          <i className="fas fa-plus-circle"></i> Create Voucher
-        </Button>
-      </div>
+      <Container className="mt-3">
+        <Row>
+          <Col xs={6}>
+            <InputGroup className="mb-3">
+              <FormControl aria-describedby="basic-addon1" placeholder="Search" ref={searchInput} />
+              <InputGroup.Prepend>
+                <Button
+                  variant="outline-secondary"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    loadData(AllVouchersData, searchInput.current?.value);
+                  }}>
+                  <i className="fas fa-search"></i>
+                </Button>
+              </InputGroup.Prepend>
+            </InputGroup>
+          </Col>
+          <Col xs={6}>
+            <Card.Title className="text-right">
+              <Button
+                variant="outline-secondary"
+                size="sm"
+                onClick={() => {
+                  voucherActionRef.current?.TriggerForm({ actionType: 'create' });
+                }}>
+                <i className="fas fa-plus-circle"></i> Create Voucher
+              </Button>
+            </Card.Title>
+          </Col>
+        </Row>
+      </Container>
+
       <Row>
         <Col>
           <Table columns={columns} data={dataTable} />
