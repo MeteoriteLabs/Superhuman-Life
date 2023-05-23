@@ -180,105 +180,113 @@ function Notifications(): JSX.Element {
         {notifications && notifications.length ? (
           notifications.map((currentValue) => {
             return (
-              <div key={`${currentValue.id}`}>
-                <Row className="my-3">
-                  <Col lg={2}>
-                    <b>{moment(currentValue.DateTime).format('DD MMM YYYY')}</b>
-                  </Col>
-                </Row>
-                <Row className="mt-1">
-                  <Col lg={9} xs={10}>
-                    <Card
-                      style={{
-                        borderLeft: '5px solid black',
-                        color: 'black',
-                        textDecoration: 'none',
-                        background: `${currentValue.IsRead ? 'white' : '#f0f2f2'}`
-                      }}
-                      className="p-3">
-                      <Row>
-                        <Col lg={1} xs={4} className="pt-3">
-                          <img
-                            src={images[`${currentValue.OnClickRoute}`]}
-                            alt="users"
-                            style={{ width: '50px', height: '50px' }}
-                          />
-                        </Col>
+              <>
+                <div key={`${currentValue.id}`}>
+                  <Row className="my-3">
+                    <Col lg={2}>
+                      <b>{moment(currentValue.DateTime).format('DD MMM YYYY')}</b>
+                    </Col>
+                  </Row>
+                  <Row className="mt-1">
+                    <Col lg={9} xs={10}>
+                      <Card
+                        style={{
+                          borderLeft: '5px solid black',
+                          color: 'black',
+                          textDecoration: 'none',
+                          background: `${currentValue.IsRead ? 'white' : '#f0f2f2'}`
+                        }}
+                        className="p-3">
+                        <Row>
+                          <Col lg={1} xs={4} className="pt-3">
+                            <img
+                              src={images[`${currentValue.OnClickRoute}`]}
+                              alt="users"
+                              style={{ width: '50px', height: '50px' }}
+                            />
+                          </Col>
 
-                        <Col lg={11} xs={8}>
-                          <Link to={`${currentValue.OnClickRoute}`} className="a">
-                            <p className="ml-2 text-dark">{currentValue.Body}</p>
-                          </Link>
-                        </Col>
-                      </Row>
-                      <Row>
-                        <Col className="d-flex justify-content-end">
-                          {currentValue.IsRead ? (
-                            <div
-                              title="mark as unread"
-                              style={{ cursor: 'pointer' }}
-                              onClick={() => {
-                                markAsUnread(currentValue.id);
-                              }}>
-                              <Icons name="readeye" width={24} height={24} />
-                              <small className="ml-2">
-                                {moment(currentValue.DateTime).format('HH:mm A')}
-                              </small>
-                            </div>
-                          ) : (
-                            <div
-                              title="mark as read"
-                              style={{ cursor: 'pointer' }}
-                              onClick={() => {
-                                markAsRead(currentValue.id);
-                              }}>
-                              <Icons name="unreadeye" width={24} height={24} />
-                              <small className="ml-2">
-                                {moment(currentValue.DateTime).format('HH:mm A')}
-                              </small>
-                            </div>
-                          )}
-                        </Col>
-                      </Row>
-                    </Card>
-                  </Col>
-                  <Col lg={1} xs={1} className="py-5">
-                    <div
-                      title="delete notification"
-                      style={{ cursor: 'pointer' }}
-                      onClick={() => deleteNoti(currentValue.id)}>
-                      <Icons name="close" width={24} height={24} />
-                    </div>
-                  </Col>
-                </Row>
-              </div>
+                          <Col lg={11} xs={8}>
+                            <Link to={`${currentValue.OnClickRoute}`} className="a">
+                              <p className="ml-2 text-dark">{currentValue.Body}</p>
+                            </Link>
+                          </Col>
+                        </Row>
+                        <Row>
+                          <Col className="d-flex justify-content-end">
+                            {currentValue.IsRead ? (
+                              <div
+                                title="mark as unread"
+                                style={{ cursor: 'pointer' }}
+                                onClick={() => {
+                                  markAsUnread(currentValue.id);
+                                }}>
+                                <Icons name="readeye" width={24} height={24} />
+                                <small className="ml-2">
+                                  {moment(currentValue.DateTime).format('HH:mm A')}
+                                </small>
+                              </div>
+                            ) : (
+                              <div
+                                title="mark as read"
+                                style={{ cursor: 'pointer' }}
+                                onClick={() => {
+                                  markAsRead(currentValue.id);
+                                }}>
+                                <Icons name="unreadeye" width={24} height={24} />
+                                <small className="ml-2">
+                                  {moment(currentValue.DateTime).format('HH:mm A')}
+                                </small>
+                              </div>
+                            )}
+                          </Col>
+                        </Row>
+                      </Card>
+                    </Col>
+                    <Col lg={1} xs={1} className="py-5">
+                      <div
+                        title="delete notification"
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => deleteNoti(currentValue.id)}>
+                        <Icons name="close" width={24} height={24} />
+                      </div>
+                    </Col>
+                  </Row>
+                </div>
+                {loading_notifications ? (
+                  <div
+                    className="d-flex justify-content-center mt-5 "
+                    style={{ marginRight: '20vw' }}>
+                    <Spinner animation="border" variant="secondary" />
+                  </div>
+                ) : hasMore ? (
+                  <div
+                    className="d-flex justify-content-center mt-5 "
+                    style={{ marginRight: '20vw' }}>
+                    <Button variant="outline-dark" onClick={loadMore}>
+                      Load More
+                    </Button>
+                  </div>
+                ) : (
+                  <div
+                    className="d-flex justify-content-center mt-5 "
+                    style={{ marginRight: '20vw' }}>
+                    <p
+                      style={{
+                        color: 'black',
+                        fontSize: '1.1rem',
+                        fontWeight: 'bold',
+                        fontFamily: 'sans-serif'
+                      }}>
+                      End of notifications
+                    </p>
+                  </div>
+                )}
+              </>
             );
           })
         ) : (
           <NoDataFound msg={'Opps ! Notifications not found'} />
-        )}
-        {loading_notifications ? (
-          <div className="d-flex justify-content-center mt-5 " style={{ marginRight: '20vw' }}>
-            <Spinner animation="border" variant="secondary" />
-          </div>
-        ) : hasMore ? (
-          <div className="d-flex justify-content-center mt-5 " style={{ marginRight: '20vw' }}>
-            <Button variant="outline-dark" onClick={loadMore}>
-              Load More
-            </Button>
-          </div>
-        ) : (
-          <div className="d-flex justify-content-center mt-5 " style={{ marginRight: '20vw' }}>
-            <p
-              style={{
-                color: 'black',
-                fontSize: '1.1rem',
-                fontWeight: 'bold',
-                fontFamily: 'sans-serif'
-              }}>
-              End of notifications
-            </p>
-          </div>
         )}
       </div>
     </div>
