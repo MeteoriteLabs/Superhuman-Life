@@ -29,7 +29,9 @@ const RegisterPage = React.lazy(() => import("./pages/register"));
 const SchedulePage = React.lazy(() => import("./pages/schedule"));
 const SettingsPage = React.lazy(() => import("./pages/settings"));
 const FinancePage = React.lazy(() => import("./pages/finance"));
-const SummaryPage = React.lazy(() => import("./pages/Summary"))
+const SummaryPage = React.lazy(() => import("./pages/Summary"));
+const FailedPage = React.lazy(() => import("./pages/failed"));
+const CancelledPage = React.lazy(() => import("./pages/cancel"));
 
 const ClientHomePage = React.lazy(() => import("./builders/client-builder/clientlisting/client"));
 const PackagePage = React.lazy(() => import("./builders/package-builder"));
@@ -113,6 +115,8 @@ export default function Routes({ token }: any) {
                                    <Route path="/add_client" component={AddClient} />
                                    <Route path="/summary" component={SummaryPage} />
                                    <Route path="/success" component={SuccessfulBooking} />
+                                   <Route path="/failed" component={FailedPage} />
+                                   <Route path="/cancelled" component={CancelledPage} />
 
                                    <Route path="*" component={NoMatch} />
                               </Switch>

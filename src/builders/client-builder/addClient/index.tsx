@@ -13,6 +13,7 @@ import {
 } from '../../../components/utils/ValidationPatterns';
 import AuthContext from '../../../context/auth-context';
 import moment from 'moment';
+import { NutFill } from 'react-bootstrap-icons';
 
 const AddClient: React.FC = () => {
   const auth = useContext(AuthContext);
@@ -48,7 +49,7 @@ const AddClient: React.FC = () => {
       },
       onCompleted: (response) => {
         const flattenReponse = flattenObj({ ...response.createUsersPermissionsUser });
-        const sessionDetails = JSON.parse(frm.formData.classBasedOfferings);
+        const sessionDetails = frm.formData.offeringFilter === 'Class' ? JSON.parse(frm.formData.classBasedOfferings) : null;
         createClientBooking({
           variables: {
             data: {

@@ -12,7 +12,7 @@ import AuthContext from '../../context/auth-context';
 import { UPDATE_BOOKING_STATUS } from '../booking/GraphQL/mutation';
 import moment from 'moment';
 import { CREATE_USER_PACKAGE } from '../booking/GraphQL/mutation';
-import axios from "axios";
+import axios from 'axios';
 
 const Summary: React.FC = () => {
   const auth = useContext(AuthContext);
@@ -20,6 +20,8 @@ const Summary: React.FC = () => {
   const query = window.location.search;
   const params = new URLSearchParams(query);
   const bookingId = params.get('id');
+  const [linkId, setLinkId] = useState<string | null>(null);
+  const [linkStatus, setLinkStatus] = useState<string | null>(null);
 
   // eslint-disable-next-line
   const { data: get_client_booking } = useQuery(GET_CLIENT_BOOKING, {
@@ -29,7 +31,7 @@ const Summary: React.FC = () => {
       setPackageDetails(flattenBookingResponse);
     }
   });
-console.log(packageDetails);
+  console.log(packageDetails);
   // eslint-disable-next-line
   const [offeringInventory, { data: get_offering_inventories }] = useLazyQuery(
     GET_OFFERING_INVENTORIES,
@@ -54,9 +56,9 @@ console.log(packageDetails);
                   Duration: packageDetails && packageDetails.package_duration,
                   Effective_Date: packageDetails && packageDetails.effective_date,
                   ExpiryOfPackage: moment(packageDetails && packageDetails.effective_date).add(
-                    packageDetails && packageDetails.package_duration, 'days'
+                    packageDetails && packageDetails.package_duration,
+                    'days'
                   )
-                  
                 }
               ]
             }
@@ -117,40 +119,79 @@ console.log(packageDetails);
     });
   };
 
-  const url = "http://localhost:1337/api/client-booking/paymentlink";
+  const url = 'https://devapi.sapien.systems/api/client-booking/paymentlink';
   const config = {
-    headers: {Authorization: `Bearer 7e1380f34b391369fb4fb62c5662abc3d956fc4842b9b9cecce1d7e81ffa9bca4f5c5c20a160eaa8a1c28de862e8c9e5bc9414bdb7da5ebf960bbd108abf032f8f762caecfeb6aa4190307b9b13a2d318e873f9bc5d9fff2cac01d01c0723814cb1197b0f9638f9fd44276e5566a6f6112b3a01d4d867b0592ac6994c044a2b7`}
-  }
-  const sendLink = (bookingId: string|null) => {
+    headers: { Authorization: `Bearer ${auth.token}` }
+  };
+  const config1 = {
+    headers: {
+      Authorization:
+        'Bearer 7e1380f34b391369fb4fb62c5662abc3d956fc4842b9b9cecce1d7e81ffa9bca4f5c5c20a160eaa8a1c28de862e8c9e5bc9414bdb7da5ebf960bbd108abf032f8f762caecfeb6aa4190307b9b13a2d318e873f9bc5d9fff2cac01d01c0723814cb1197b0f9638f9fd44276e5566a6f6112b3a01d4d867b0592ac6994c044a2b7'
+    }
+  };
+
+  const sendLink = (bookingId: string | null) => {
     console.log(bookingId);
-    
-    axios.post(url, {
-      "orderId": 11,
-      "currency": "INR",
-      "amount": 1000,
-      "customerEmail": `${packageDetails.ClientUser[0].email}`,
-      "customerPhone": `${packageDetails.ClientUser[0].Phone_Number}`,
-      "customerName": `${packageDetails.ClientUser[0].First_Name} ${packageDetails.ClientUser[0].Last_Name}`,
-      "customerId": `${packageDetails.ClientUser[0].id}`
-  }, config).then((response) => {
-      console.log(response.status, response.data.token);
-      
-    });
-  }
 
-  useEffect(()=>{
-    axios.get(`http://localhost:1337/api/client-booking/getordersbypaymentlinkid/?link_id=link_id_11`, config)
-    .then((response) => {
-      console.log(response);
-      // console.log(response.data);
-      // console.log(response.status);
-      // console.log(response.statusText);
-      // console.log(response.headers);
-      // console.log(response.config);
-    });
+    axios
+      .post(
+        url,
+        {
+          orderId: '168',
+          currency: 'INR',
+          amount: 1000,
+          customerEmail: `${packageDetails.ClientUser[0].email}`,
+          customerPhone: `${packageDetails.ClientUser[0].Phone_Number}`,
+          customerName: `${packageDetails.ClientUser[0].First_Name} ${packageDetails.ClientUser[0].Last_Name}`,
+          customerId: `${packageDetails.ClientUser[0].id}`
+        },
+        config
+      )
+      .then((response) => {
+        console.log(response, response.status, response.data.token);
+        setLinkId(response.data.cfLink.linkId);
+        axios
+          .get(
+            `http://localhost:1337/api/client-booking/getpaymentlinksbylinkid/?link_id=${response.data.cfLink.linkId}`,
+            config1
+          )
+          .then((response) => {
+            console.log(response);
+            setLinkStatus(response.data.cfLink.linkStatus);
+            // console.log(response.data);
+            // console.log(response.status);
+            // console.log(response.statusText);
+            // console.log(response.headers);
+            // console.log(response.config);
+          });
+      });
+  };
 
-  })
- 
+  useEffect(() => {
+    console.log(linkId, linkStatus);
+    // if (linkId !== null && linkStatus === 'ACTIVE') {
+      axios
+        .get(
+          `http://localhost:1337/api/client-booking/getpaymentlinksbylinkid/?link_id=link_id_168`,
+          config1
+        )
+        .then((response) => {
+          if (response.data.cfLink.linkStatus === 'PAID') {
+            window.open('/success',"_self");
+          } else if (response.data.cfLink.linkStatus === 'CANCELLED') {
+            window.open('/cancelled',"_self");
+          } else if (response.data.cfLink.linkStatus === 'EXPIRED') {
+            window.open('/failed',"_self");
+          }
+          console.log(response);
+          // console.log(response.data);
+          // console.log(response.status);
+          // console.log(response.statusText);
+          // console.log(response.headers);
+          // console.log(response.config);
+        });
+    // }
+  });
 
   return (
     <Fragment>
@@ -411,7 +452,9 @@ console.log(packageDetails);
         ) : (
           <div className="mt-3 col-lg-11  border p-3 bg-white">
             <h3 className="mb-3">Proceed to checkout</h3>
-            <Button className="mt-3 mr-5" onClick={() => sendLink(bookingId)}>Send payment link</Button>
+            <Button className="mt-3 mr-5" onClick={() => sendLink(bookingId)}>
+              Send payment link
+            </Button>
             <Button className="mt-3">Book</Button>
           </div>
         )}
