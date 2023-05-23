@@ -1,18 +1,19 @@
-import { Card, Tab, Tabs } from 'react-bootstrap';
-import FitnessTab from './fitness/index';
+import { Card, Tab, Tabs } from "react-bootstrap";
+import FitnessTab from "./fitness/index";
 
-export default function ProgramPage(): JSX.Element {
+export default function ProgramPage() {
   return (
     <>
       <h2>Resources</h2>
       <Card className="shadow-sm mt-3" border="light">
         <Card.Body>
           <Tabs
-            style={{ borderBottom: '1px solid black' }}
+            style={{ borderBottom: "1px solid black" }}
             className="pb-3 cards"
             variant="pills"
             transition={false}
-            defaultActiveKey="fitness">
+            defaultActiveKey="fitness"
+          >
             <Tab eventKey="fitness" title="Fitness">
               <FitnessTab />
             </Tab>

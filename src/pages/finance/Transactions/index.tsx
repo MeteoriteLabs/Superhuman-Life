@@ -1,4 +1,4 @@
-import { useMemo, useState, useContext, useRef } from 'react';
+import { useMemo, useState, useContext } from 'react';
 import {
   Badge,
   Button,
@@ -17,20 +17,18 @@ import { flattenObj } from '../../../components/utils/responseFlatten';
 import AuthContext from '../../../context/auth-context';
 import moment from 'moment';
 import { useHistory } from 'react-router-dom';
-import containsSubstring from '../../../components/utils/containsSubstring';
 
-export default function Transactions(): JSX.Element {
+export default function Transactions() {
   const auth = useContext(AuthContext);
-  const searchInput = useRef<HTMLInputElement>(null);
 
-  const columns = useMemo(
+  const columns = useMemo<any>(
     () => [
       { accessor: 'id', Header: 'Transaction ID' },
       { accessor: 'name', Header: 'Name' },
       {
         accessor: 'type',
         Header: 'Type',
-        Cell: ({ row }: { row: { values: { type: string } } }) => {
+        Cell: ({ row }: any) => {
           let typeColor = '';
           switch (row.values.type) {
             case 'Credited':
@@ -59,21 +57,21 @@ export default function Transactions(): JSX.Element {
       {
         accessor: 'outflow',
         Header: 'Outflow',
-        Cell: ({ row }: { row: { values: { outflow: string } } }) => {
+        Cell: ({ row }: any) => {
           return <b className="text-danger">{row.values.outflow}</b>;
         }
       },
       {
         accessor: 'inflow',
         Header: 'Inflow',
-        Cell: ({ row }: { row: { values: { inflow: string } } }) => {
+        Cell: ({ row }: any) => {
           return <b className="text-success">{row.values.inflow}</b>;
         }
       },
       {
         accessor: 'status',
         Header: 'Status',
-        Cell: ({ row }: { row: { values: { status: string } } }) => {
+        Cell: ({ row }: any) => {
           let statusColor = '';
           switch (row.values.status) {
             case 'Success':
@@ -107,7 +105,7 @@ export default function Transactions(): JSX.Element {
       {
         id: 'edit',
         Header: 'Actions',
-        Cell: ({ row }: { row: { original: { id: string } } }) => {
+        Cell: ({ row }: any) => {
           const history = useHistory();
           const routeChange = () => {
             const path = `receipt/?id=${row.original.id}`;
@@ -160,7 +158,7 @@ export default function Transactions(): JSX.Element {
     }
   });
 
-  function loadData(searchFilter?: string) {
+  function loadData() {
     const flattenTransactionData = flattenObj({ ...get_transaction });
     const flattenChangemakerData = flattenObj({ ...get_changemakers });
     const flattenContactsData = flattenObj({ ...get_contacts });
@@ -172,41 +170,37 @@ export default function Transactions(): JSX.Element {
     );
 
     setDataTable(
-      [...creditAndDebitTransactions]
-        .flatMap((Detail) => {
-          return {
-            id: Detail.id,
-            name:
-              Detail.ReceiverID === auth.userid
-                ? flattenChangemakerData.usersPermissionsUsers.find(
-                    (currentValue) => currentValue.id === Detail.SenderID
-                  ).First_Name
-                : Detail.ReceiverType === 'Changemaker'
-                ? flattenChangemakerData.usersPermissionsUsers.find(
-                    (currentValue) => currentValue.id === Detail.ReceiverID
-                  )?.First_Name
-                : flattenContactsData.contacts.find(
-                    (currentValue) => currentValue.id === Detail.ReceiverID
-                  )?.firstname,
-            towards: Detail.ReceiverType,
-            amount: `${Detail.Currency} ${Detail.TransactionAmount}`,
-            inflow:
-              Detail.ReceiverID === auth.userid
-                ? `+${Detail.Currency} ${Detail.TransactionAmount}`
-                : null,
-            outflow:
-              Detail.SenderID === auth.userid
-                ? `-${Detail.Currency} ${Detail.TransactionAmount}`
-                : null,
-            remark: Detail.TransactionRemarks,
-            transactionDate: moment(Detail.TransactionDateTime).format('DD/MM/YYYY, hh:mm'),
-            status: Detail.TransactionStatus,
-            type: Detail.ReceiverID === auth.userid ? 'Credited' : 'Debited'
-          };
-        })
-        .filter((tableData) =>
-          searchFilter ? containsSubstring(tableData.name, searchFilter) : true
-        )
+      [...creditAndDebitTransactions].flatMap((Detail) => {
+        return {
+          id: Detail.id,
+          name:
+            Detail.ReceiverID === auth.userid
+              ? flattenChangemakerData.usersPermissionsUsers.find(
+                  (currentValue) => currentValue.id === Detail.SenderID
+                ).First_Name
+              : Detail.ReceiverType === 'Changemaker'
+              ? flattenChangemakerData.usersPermissionsUsers.find(
+                  (currentValue) => currentValue.id === Detail.ReceiverID
+                )?.First_Name
+              : flattenContactsData.contacts.find(
+                  (currentValue) => currentValue.id === Detail.ReceiverID
+                )?.firstname,
+          towards: Detail.ReceiverType,
+          amount: `${Detail.Currency} ${Detail.TransactionAmount}`,
+          inflow:
+            Detail.ReceiverID === auth.userid
+              ? `+${Detail.Currency} ${Detail.TransactionAmount}`
+              : null,
+          outflow:
+            Detail.SenderID === auth.userid
+              ? `-${Detail.Currency} ${Detail.TransactionAmount}`
+              : null,
+          remark: Detail.TransactionRemarks,
+          transactionDate: moment(Detail.TransactionDateTime).format('DD/MM/YYYY, hh:mm'),
+          status: Detail.TransactionStatus,
+          type: Detail.ReceiverID === auth.userid ? 'Credited' : 'Debited'
+        };
+      })
     );
   }
 
@@ -216,13 +210,16 @@ export default function Transactions(): JSX.Element {
         <Row>
           <Col lg={3}>
             <InputGroup className="mb-3">
-              <FormControl aria-describedby="basic-addon1" placeholder="Search" ref={searchInput} />
+              <FormControl
+                aria-describedby="basic-addon1"
+                placeholder="Search"
+                // ref={searchInput}
+              />
               <InputGroup.Prepend>
                 <Button
                   variant="outline-secondary"
-                  onClick={(e) => {
+                  onClick={(e: any) => {
                     e.preventDefault();
-                    loadData(searchInput.current?.value);
                   }}>
                   <i className="fas fa-search"></i>
                 </Button>

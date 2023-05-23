@@ -1,4 +1,4 @@
-import { useMemo, useState, useContext, useRef } from 'react';
+import { useMemo, useState, useContext } from 'react';
 import {
   Badge,
   Button,
@@ -17,14 +17,11 @@ import { flattenObj } from '../../../components/utils/responseFlatten';
 import AuthContext from '../../../context/auth-context';
 import moment from 'moment';
 import { useHistory } from 'react-router-dom';
-import containsSubstring from '../../../components/utils/containsSubstring';
 
 export default function Expenses(): JSX.Element {
   const auth = useContext(AuthContext);
 
-  const searchInput = useRef<HTMLInputElement>(null);
-
-  const columns = useMemo(
+  const columns = useMemo<any>(
     () => [
       { accessor: 'id', Header: 'T ID' },
       { accessor: 'name', Header: 'Name' },
@@ -35,7 +32,7 @@ export default function Expenses(): JSX.Element {
       {
         accessor: 'status',
         Header: 'Status',
-        Cell: ({ row }: { row: { values: { status: string } } }) => {
+        Cell: ({ row }: any) => {
           let statusColor = '';
           switch (row.values.status) {
             case 'Success':
@@ -69,7 +66,7 @@ export default function Expenses(): JSX.Element {
       {
         id: 'edit',
         Header: 'Actions',
-        Cell: ({ row }: { row: { original: { id: string } } }) => {
+        Cell: ({ row }: any) => {
           const history = useHistory();
           const routeChange = () => {
             const path = `receipt/?id=${row.original.id}`;
@@ -106,7 +103,7 @@ export default function Expenses(): JSX.Element {
     onCompleted: () => {
       contacts({
         variables: {
-          id: auth.userid
+          id: Number(auth.userid)
         }
       });
     }
@@ -119,41 +116,37 @@ export default function Expenses(): JSX.Element {
     onCompleted: () => {
       users({
         variables: {
-          // id: Number(auth.userid)
+          id: Number(auth.userid)
         }
       });
     }
   });
 
-  function loadData(searchFilter?: string) {
+  function loadData() {
     const flattenTransactionData = flattenObj({ ...get_transaction });
     const flattenChangemakerData = flattenObj({ ...get_changemakers });
     const flattenContactsData = flattenObj({ ...get_contacts });
 
     setDataTable(
-      [...flattenTransactionData.transactions]
-        .flatMap((Detail) => {
-          return {
-            id: Detail.id,
-            name:
-              Detail.ReceiverType === 'Changemaker'
-                ? flattenChangemakerData.usersPermissionsUsers.find(
-                    (currentValue) => currentValue.id === Detail.ReceiverID
-                  )?.First_Name
-                : flattenContactsData.contacts.find(
-                    (currentValue) => currentValue.id === Detail.ReceiverID
-                  )?.firstname,
+      [...flattenTransactionData.transactions].flatMap((Detail) => {
+        return {
+          id: Detail.id,
+          name:
+            Detail.ReceiverType === 'Changemaker'
+              ? flattenChangemakerData.usersPermissionsUsers.find(
+                  (currentValue) => currentValue.id === Detail.ReceiverID
+                )?.First_Name
+              : flattenContactsData.contacts.find(
+                  (currentValue) => currentValue.id === Detail.ReceiverID
+                )?.firstname,
 
-            amount: `${Detail.Currency} ${Detail.TransactionAmount}`,
-            paymentMode: Detail.PaymentMode,
-            remark: Detail.TransactionRemarks,
-            transactionDate: moment(Detail.TransactionDateTime).format('DD/MM/YYYY, hh:mm'),
-            status: Detail.TransactionStatus
-          };
-        })
-        .filter((tableData) =>
-          searchFilter ? containsSubstring(tableData.name, searchFilter) : true
-        )
+          amount: `${Detail.Currency} ${Detail.TransactionAmount}`,
+          paymentMode: Detail.PaymentMode,
+          remark: Detail.TransactionRemarks,
+          transactionDate: moment(Detail.TransactionDateTime).format('DD/MM/YYYY, hh:mm'),
+          status: Detail.TransactionStatus
+        };
+      })
     );
   }
 
@@ -163,13 +156,16 @@ export default function Expenses(): JSX.Element {
         <Row>
           <Col lg={3}>
             <InputGroup className="mb-3">
-              <FormControl aria-describedby="basic-addon1" placeholder="Search" ref={searchInput} />
+              <FormControl
+                aria-describedby="basic-addon1"
+                placeholder="Search"
+                // ref={searchInput}
+              />
               <InputGroup.Prepend>
                 <Button
                   variant="outline-secondary"
-                  onClick={(e) => {
+                  onClick={(e: any) => {
                     e.preventDefault();
-                    loadData(searchInput.current?.value);
                   }}>
                   <i className="fas fa-search"></i>
                 </Button>
