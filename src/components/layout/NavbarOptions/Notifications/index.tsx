@@ -45,7 +45,16 @@ function Notifications(): JSX.Element {
     variables: { id: auth.userid, start: Number(start + 5) },
     onCompleted: (data) => {
       const flattenData = flattenObj({ ...data });
-      setNotifications((prev) => [...prev, ...flattenData.changemakerNotifications]);
+
+      setNotifications((prev) =>
+        prev.concat(
+          flattenData.changemakerNotifications.filter(
+            (notification: Notification) =>
+              !prev.some((prevNoti) => prevNoti.id === notification.id)
+          )
+        )
+      );
+
       if (flattenData.changemakerNotifications.length < 5) {
         setHasMore(false);
       }
