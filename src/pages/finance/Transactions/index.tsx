@@ -7,7 +7,8 @@ import {
   FormControl,
   Container,
   Row,
-  Col
+  Col,
+  Form
 } from 'react-bootstrap';
 import Table from '../../../components/table/leads-table';
 import ActionButton from '../../../components/actionbutton/index';
@@ -22,6 +23,7 @@ import containsSubstring from '../../../components/utils/containsSubstring';
 export default function Transactions(): JSX.Element {
   const auth = useContext(AuthContext);
   const searchInput = useRef<HTMLInputElement>(null);
+  const [currentFilter, setCurrentFilter] = useState<string>('name');
 
   const columns = useMemo(
     () => [
@@ -160,7 +162,7 @@ export default function Transactions(): JSX.Element {
     }
   });
 
-  function loadData(searchFilter?: string) {
+  function loadData(filter?: string) {
     const flattenTransactionData = flattenObj({ ...get_transaction });
     const flattenChangemakerData = flattenObj({ ...get_changemakers });
     const flattenContactsData = flattenObj({ ...get_contacts });
@@ -204,9 +206,17 @@ export default function Transactions(): JSX.Element {
             type: Detail.ReceiverID === auth.userid ? 'Credited' : 'Debited'
           };
         })
-        .filter((tableData) =>
-          searchFilter ? containsSubstring(tableData.name, searchFilter) : true
-        )
+        .filter((currentValue) => {
+          if (filter) {
+            if (currentFilter === 'name') {
+              return containsSubstring(currentValue.name, filter);
+            } else {
+              return currentValue.id === filter;
+            }
+          } else {
+            return true;
+          }
+        })
     );
   }
 
@@ -214,7 +224,17 @@ export default function Transactions(): JSX.Element {
     <TabContent>
       <Container className="mt-3">
         <Row>
-          <Col lg={3}>
+          <Col lg={2}>
+            <Form.Control
+              as="select"
+              aria-label="Default select example"
+              value={currentFilter}
+              onChange={(e) => setCurrentFilter(e.target.value)}>
+              <option value="id">Id</option>
+              <option value="name">Name</option>
+            </Form.Control>
+          </Col>
+          <Col lg={4}>
             <InputGroup className="mb-3">
               <FormControl aria-describedby="basic-addon1" placeholder="Search" ref={searchInput} />
               <InputGroup.Prepend>
