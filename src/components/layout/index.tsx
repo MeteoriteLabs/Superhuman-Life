@@ -6,13 +6,19 @@ import { useLocation } from 'react-router-dom';
 import Icon from '../Icons';
 import './bottomBar.css';
 
-export default function Layout({ token, children }: any) {
+export default function Layout({
+  token,
+  children
+}: {
+  token: string;
+  children: JSX.Element;
+}): JSX.Element {
   const location = useLocation();
   const [selected, setSelected] = useState<string>(location.pathname.slice(1));
   const [collapse, setCollapse] = useState<boolean>(true);
   const [sideNavStatus, setSideNavStatus] = useState<boolean>(false);
 
-  const { pathname } = useLocation<any>();
+  const { pathname } = useLocation();
 
   useEffect(() => {
     getSideNavStatus();
