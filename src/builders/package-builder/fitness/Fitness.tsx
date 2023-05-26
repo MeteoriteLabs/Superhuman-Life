@@ -454,12 +454,12 @@ export default function FitnessTab() {
       {
         accessor: 'sessions',
         Header: 'Session',
-        Cell: (v: any) => {
+        Cell: (value: any) => {
           const sessionsObj = {};
-          const startMoment = moment(v.row.original.startDate);
-          const endMoment = moment(v.row.original.endDate).add(1, 'days');
+          const startMoment = moment(value.row.original.startDate);
+          const endMoment = moment(value.row.original.endDate).add(1, 'days');
 
-          v.row.original.sessions.map((curr) => {
+          value.row.original.sessions.map((curr) => {
             return curr.sessions.map((item) => {
               sessionsObj[item.session_date] = (sessionsObj[item.session_date] || 0) + 1;
 
@@ -471,8 +471,8 @@ export default function FitnessTab() {
 
           const differenceBetweenStartDateandEndDate = endMoment.diff(startMoment, 'days');
 
-          return v.row.original.type === 'Group Class' ||
-            v.row.original.type === 'Live Stream Channel' ? (
+          return value.row.original.type === 'Group Class' ||
+            value.row.original.type === 'Live Stream Channel' ? (
             Object.keys(sessionsObj).length === 3 ? (
               <Badge
                 className="px-3 py-1"
@@ -486,12 +486,12 @@ export default function FitnessTab() {
                 {lengthOfobject}/3 program build
               </>
             )
-          ) : v.row.original.type !== 'One-On-One' &&
-            v.row.original.type !== 'Custom Fitness' &&
-            v.row.original.type !== 'On-Demand PT' ? (
+          ) : value.row.original.type !== 'One-On-One' &&
+            value.row.original.type !== 'Custom Fitness' &&
+            value.row.original.type !== 'On-Demand PT' ? (
             <div>
-              {(v.row.original.type === 'Classic Class'
-                ? v.row.original.duration[0]
+              {(value.row.original.type === 'Classic Class'
+                ? value.row.original.duration[0]
                 : differenceBetweenStartDateandEndDate) === Object.keys(sessionsObj).length ? (
                 <Badge
                   className="px-3 py-1"
@@ -503,8 +503,8 @@ export default function FitnessTab() {
                 <>
                   <ProgressBar variant="success" now={lengthOfobject} />
                   {lengthOfobject}/
-                  {v.row.original.type === 'Classic Class'
-                    ? v.row.original.duration[0]
+                  {value.row.original.type === 'Classic Class'
+                    ? value.row.original.duration[0]
                     : differenceBetweenStartDateandEndDate}{' '}
                   program build
                 </>
@@ -512,7 +512,7 @@ export default function FitnessTab() {
             </div>
           ) : (
             <div>
-              {v.row.original.status ? (
+              {value.row.original.status ? (
                 <Badge
                   className="px-3 py-1"
                   style={{ fontSize: '1rem', borderRadius: '10px' }}

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { Card, Col } from 'react-bootstrap';
-import Icon from '../../../components/Icons';
+import { Card, Row, Button } from 'react-bootstrap';
 import moment from 'moment';
 import EditOffering from './EditOfferingDetails';
 
@@ -15,48 +14,37 @@ const OfferingDetails: React.FC<{ Offering: ClientBooking }> = ({ Offering }) =>
   const [showBookingModal, setShowBookingModal] = useState<boolean>(false);
 
   return (
-    <Col lg={3} sm={12}>
-      <Card className="border p-3 rounded mt-5" style={{ height: '60%' }}>
-        <div className="d-flex justify-content-between">
-          <h4 className="col-lg-11 col-11">Offering&apos;s details</h4>
-          <div
-            className="col-lg-11 col-sm-1"
+    <Card className="mb-2">
+      <Card.Body>
+        <Row className="justify-content-end">
+          {' '}
+          <Button
+            variant='outline-light'
             onClick={() => setShowBookingModal(true)}
-            style={{ cursor: 'pointer' }}>
-            <Icon name="edit" />
-          </div>
-        </div>
-        <table style={{ position: 'absolute', top: '50%' }}>
-          <tbody>
-            <tr>
-              <td>
-                <b>Offering Name</b>
-              </td>
-              <td>{Offering.fitnesspackages[0].packagename}</td>
-            </tr>
-            <tr>
-              <td>
-                <b>Package Duration</b>
-              </td>
-              <td>{Offering.package_duration}</td>
-            </tr>
-            <tr>
-              <td>
-                <b>Effective date</b>
-              </td>
-              <td>{moment(Offering.effective_date).format('DD/MM/YYYY,h:mm:ss a ')}</td>
-            </tr>
-          </tbody>
-        </table>
-        {showBookingModal ? (
-          <EditOffering
-            show={showBookingModal}
-            onHide={() => setShowBookingModal(false)}
-            Offering={Offering}
-          />
-        ) : null}
-      </Card>
-    </Col>
+          >
+            <img src="/assets/edit.svg" alt="edit" />
+          </Button>
+        </Row>
+        <Card.Title>Offering Details</Card.Title>
+        <Card.Text>
+          <b>Offering Name:</b>{' '}
+          {Offering.fitnesspackages[0].packagename}
+          <br />
+          <b>Package Duration:</b>{' '}
+          {Offering.package_duration}{Offering.package_duration === 1 ? ' day':' days'}
+          <br />
+          <b>Effective date:</b>{' '}
+          {moment(Offering.effective_date).format('DD/MM/YYYY,h:mm:ss a ')}
+        </Card.Text>
+      </Card.Body>
+      {showBookingModal ? (
+        <EditOffering
+          show={showBookingModal}
+          onHide={() => setShowBookingModal(false)}
+          Offering={Offering}
+        />
+      ) : null}
+    </Card>
   );
 };
 

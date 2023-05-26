@@ -1,0 +1,34 @@
+.timer-svg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    margin-top: "25%";
+  }
+  
+  .timer-circle {
+    margin-top: "40%";
+    transform: rotate(-90deg);
+  }
+  
+  .timer-circle-bg {
+    fill: none;
+    stroke: #0b9a36;
+    stroke-width: 6;
+  }
+  
+  .timer-circle-fill {
+    fill: none;
+    stroke: #8ff3b4;
+    stroke-width: 6;
+    stroke-linecap: round;
+    transition: stroke-dasharray 0.2s ease-in-out;
+  }
+  
+  .timer-text {
+    font-size: 24px;
+    font-weight: bold;
+    margin-top: 8px;
+    text-align: center;
+  }
+  
