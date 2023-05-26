@@ -1,4 +1,4 @@
-import { useMemo, useState, useContext } from 'react';
+import { useMemo, useState, useContext, useRef } from 'react';
 import {
   Badge,
   Button,
@@ -7,7 +7,8 @@ import {
   FormControl,
   Container,
   Row,
-  Col
+  Col,
+  Form
 } from 'react-bootstrap';
 import Table from '../../../components/table/leads-table';
 import ActionButton from '../../../components/actionbutton/index';
@@ -17,11 +18,15 @@ import { flattenObj } from '../../../components/utils/responseFlatten';
 import AuthContext from '../../../context/auth-context';
 import moment from 'moment';
 import { useHistory } from 'react-router-dom';
+import containsSubstring from '../../../components/utils/containsSubstring';
 
 export default function Expenses(): JSX.Element {
   const auth = useContext(AuthContext);
 
-  const columns = useMemo<any>(
+  const searchInput = useRef<HTMLInputElement>(null);
+  const [currentFilter, setCurrentFilter] = useState<string>('name');
+
+  const columns = useMemo(
     () => [
       { accessor: 'id', Header: 'T ID' },
       { accessor: 'name', Header: 'Name' },
@@ -32,7 +37,7 @@ export default function Expenses(): JSX.Element {
       {
         accessor: 'status',
         Header: 'Status',
-        Cell: ({ row }: any) => {
+        Cell: ({ row }: { row: { values: { status: string } } }) => {
           let statusColor = '';
           switch (row.values.status) {
             case 'Success':
@@ -66,7 +71,7 @@ export default function Expenses(): JSX.Element {
       {
         id: 'edit',
         Header: 'Actions',
-        Cell: ({ row }: any) => {
+        Cell: ({ row }: { row: { original: { id: string } } }) => {
           const history = useHistory();
           const routeChange = () => {
             const path = `receipt/?id=${row.original.id}`;
@@ -103,7 +108,7 @@ export default function Expenses(): JSX.Element {
     onCompleted: () => {
       contacts({
         variables: {
-          id: Number(auth.userid)
+          id: auth.userid
         }
       });
     }
@@ -116,37 +121,49 @@ export default function Expenses(): JSX.Element {
     onCompleted: () => {
       users({
         variables: {
-          id: Number(auth.userid)
+          // id: Number(auth.userid)
         }
       });
     }
   });
 
-  function loadData() {
+  function loadData(filter?: string) {
     const flattenTransactionData = flattenObj({ ...get_transaction });
     const flattenChangemakerData = flattenObj({ ...get_changemakers });
     const flattenContactsData = flattenObj({ ...get_contacts });
 
     setDataTable(
-      [...flattenTransactionData.transactions].flatMap((Detail) => {
-        return {
-          id: Detail.id,
-          name:
-            Detail.ReceiverType === 'Changemaker'
-              ? flattenChangemakerData.usersPermissionsUsers.find(
-                  (currentValue) => currentValue.id === Detail.ReceiverID
-                )?.First_Name
-              : flattenContactsData.contacts.find(
-                  (currentValue) => currentValue.id === Detail.ReceiverID
-                )?.firstname,
+      [...flattenTransactionData.transactions]
+        .flatMap((Detail) => {
+          return {
+            id: Detail.id,
+            name:
+              Detail.ReceiverType === 'Changemaker'
+                ? flattenChangemakerData.usersPermissionsUsers.find(
+                    (currentValue) => currentValue.id === Detail.ReceiverID
+                  )?.First_Name
+                : flattenContactsData.contacts.find(
+                    (currentValue) => currentValue.id === Detail.ReceiverID
+                  )?.firstname,
 
-          amount: `${Detail.Currency} ${Detail.TransactionAmount}`,
-          paymentMode: Detail.PaymentMode,
-          remark: Detail.TransactionRemarks,
-          transactionDate: moment(Detail.TransactionDateTime).format('DD/MM/YYYY, hh:mm'),
-          status: Detail.TransactionStatus
-        };
-      })
+            amount: `${Detail.Currency} ${Detail.TransactionAmount}`,
+            paymentMode: Detail.PaymentMode,
+            remark: Detail.TransactionRemarks,
+            transactionDate: moment(Detail.TransactionDateTime).format('DD/MM/YYYY, hh:mm'),
+            status: Detail.TransactionStatus
+          };
+        })
+        .filter((currentValue) => {
+          if (filter) {
+            if (currentFilter === 'name') {
+              return containsSubstring(currentValue.name, filter);
+            } else {
+              return currentValue.id === filter;
+            }
+          } else {
+            return true;
+          }
+        })
     );
   }
 
@@ -154,18 +171,25 @@ export default function Expenses(): JSX.Element {
     <TabContent>
       <Container className="mt-3">
         <Row>
-          <Col lg={3}>
+          <Col lg={2}>
+            <Form.Control
+              as="select"
+              aria-label="Default select example"
+              value={currentFilter}
+              onChange={(e) => setCurrentFilter(e.target.value)}>
+              <option value="id">Id</option>
+              <option value="name">Name</option>
+            </Form.Control>
+          </Col>
+          <Col lg={4}>
             <InputGroup className="mb-3">
-              <FormControl
-                aria-describedby="basic-addon1"
-                placeholder="Search"
-                // ref={searchInput}
-              />
+              <FormControl aria-describedby="basic-addon1" placeholder="Search" ref={searchInput} />
               <InputGroup.Prepend>
                 <Button
                   variant="outline-secondary"
-                  onClick={(e: any) => {
+                  onClick={(e) => {
                     e.preventDefault();
+                    loadData(searchInput.current?.value);
                   }}>
                   <i className="fas fa-search"></i>
                 </Button>
