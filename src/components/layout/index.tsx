@@ -28,6 +28,7 @@ export default function Layout({
     const currentSideNavStatus: boolean =
       pathname !== '/lobby' &&
       pathname !== '/website' &&
+      pathname !== '/website/templates' &&
       pathname !== '/profile' &&
       pathname !== '/insights' &&
       pathname !== '/support'
