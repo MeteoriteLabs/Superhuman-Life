@@ -127,11 +127,11 @@ export default function ModalView({
               {step < stepper.length ? (
                
                 <>
-                  Next<i className="ml-4 fas fa-arrow-right"></i>
+                  Next
                 </>
               ) : (
                 <>
-                  Create<i className="ml-4 fas fa-check"></i>
+                  Create
                 </>
               )}
             </Button>
@@ -169,7 +169,7 @@ export default function ModalView({
                   }}
                 >
                   {" "}
-                  Next<i className="ml-4 fas fa-arrow-right"></i>
+                  Next
                 </Button>
               </>
             ) : (
@@ -183,7 +183,7 @@ export default function ModalView({
                   className={actionType !== "view" ? "d-none" : ""}
                 >
                   {" "}
-                  Close<i className="ml-4 fas fa-check"></i>
+                  Close
                 </Button>
               </>
             )}

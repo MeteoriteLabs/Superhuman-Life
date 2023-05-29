@@ -327,6 +327,19 @@ export const CREATE_BOOKING_CONFIG = gql`
   }
 `;
 
+export const CREATE_TAG = gql`
+  mutation createTag(
+    $id: ID!
+    $tagName: String
+  ) {
+    createTag(data: { tag_name: $tagName, fitnesspackage: $id }) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
 export const CREATE_BOOKING_CONFIG_FOR_ONE_ON_ONE_AND_CUSTOM = gql`
   mutation createBookingconfig(
     $id: ID!

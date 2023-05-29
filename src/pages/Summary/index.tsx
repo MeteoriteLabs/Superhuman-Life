@@ -15,6 +15,7 @@ import { CREATE_USER_PACKAGE } from '../booking/GraphQL/mutation';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 import './summary.css';
+// import QRCode from 'react-qr-code';
 
 interface PackagePricing {
   mrp: string;
@@ -341,6 +342,18 @@ const Summary: React.FC = () => {
   return (
     <div className="col-lg-12">
       <h2>Summary</h2>
+
+      {/* <h4 className='text-center'>Scan and pay via UPI QR Code</h4>
+
+      <div style={{ height: "auto", margin: "0 auto", maxWidth: 74, width: "200%" }}>
+      <QRCode
+      size={356}
+      style={{ height: "auto", maxWidth: "100%", width: "100%" }}
+      value={"/png;base64,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"}
+      viewBox={`0 0 356 356`}
+      />
+      </div> */}
+
       {/* Timer after link is sent */}
       {isLinkSent ? (
         <div className="timer-svg">

@@ -4,6 +4,26 @@ import { Button } from 'react-bootstrap';
 import AuthContext from '../../context/auth-context';
 import axios from 'axios';
 
+interface PaymentDetails {
+  cfLinkId: number;
+  customerDetails: { customerPhone: string; customerEmail: string; customerName: string };
+  linkAmount: number;
+  linkAmountPaid: number;
+  linkAutoReminders: boolean;
+  linkCreatedAt: string;
+  linkCurrency: string;
+  linkExpiryTime: string;
+  linkId: string;
+  linkMeta: { upiIntent: string };
+  linkMinimumPartialAmount: null;
+  linkNotes: Record<string, never>;
+  linkNotify: { sendSms: boolean; sendEmail: boolean };
+  linkPartialPayments: boolean;
+  linkPurpose: string;
+  linkStatus: string;
+  linkUrl: string;
+}
+
 const Failed: React.FC = () => {
   const auth = useContext(AuthContext);
   const history = useHistory();
@@ -11,7 +31,7 @@ const Failed: React.FC = () => {
   const params = new URLSearchParams(query);
   const bookingId = params.get('bookingid');
   const [linkId, setLinkId] = useState<string | null>(null);
-  const [paymentDetails, setPaymentDetails] = useState<any>();
+  const [paymentDetails, setPaymentDetails] = useState<PaymentDetails>();
 
   const routeChange = () => {
     const path = `/add_client`;
@@ -31,6 +51,7 @@ const Failed: React.FC = () => {
           config
         )
         .then((response) => {
+          console.log(response.data.cfLink);
           setPaymentDetails(response.data.cfLink);
           setLinkId(response.data.cfLink.linkId);
         });

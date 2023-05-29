@@ -662,83 +662,88 @@ export default function FitnessTab() {
 
   const [dataTable, setDataTable] = useState<any>([]);
 
-   // eslint-disable-next-line
-  const { data: inventories, refetch: refetch_inventories } = useQuery(GET_INVENTORY, {
-    variables: { changemaker_id: auth.userid },
-    onCompleted: (response) => {
-      const flattenData = flattenObj({ ...response });
+  // eslint-disable-next-line
+  const [get_inventory, { data: inventories, refetch: refetch_inventories }] = useLazyQuery(
+    GET_INVENTORY,
+    {
+      fetchPolicy: 'cache-and-network',
+      onCompleted: (response) => {
+        const flattenInventoryData = flattenObj({ ...response.offeringInventories });
+        const tagsFlattenData = flattenObj({ ...get_tags });
+        const fitnessFlattenData = flattenObj({ ...get_fitness });
+        
+        setDataTable(
+          [...fitnessFlattenData?.fitnesspackages].map((item) => {
+            const inventory =
+              flattenInventoryData &&
+              flattenInventoryData.length &&
+              flattenInventoryData.find(
+                (curr) => Number(curr.fitnesspackage.id) === Number(item.id)
+              );
 
-      setInventoriesDetails(flattenData.offeringInventories);
+            return {
+              sessions: tagsFlattenData.tags.filter(
+                (currentValue) => currentValue.fitnesspackage.id === item.id
+              ),
+              inventoryId: inventory ? inventory.id : null,
+              activeBooking: inventory ? inventory.ActiveBookings : null,
+              tagId: tagsFlattenData.tags
+                .filter((currentValue) => currentValue.fitnesspackage.id === item.id)
+                .map((currentValue) => [currentValue.id]),
+              tagname: tagsFlattenData.tags
+                .filter((currentValue) => currentValue.fitnesspackage.id === item.id)
+                .map((currentValue) => [currentValue.tag_name]),
+              thumbnailId: item.Thumbnail_ID,
+              level: item.level,
+              id: item.id,
+              address: item.address,
+              packagename: item.packagename,
+              firstName: item.users_permissions_user.First_Name,
+              lastName: item.users_permissions_user.Last_Name,
+              ptonline: item.ptonline,
+              ptoffline: item.ptoffline,
+              grouponline: item.grouponline,
+              groupoffline: item.groupoffline,
+              recordedclasses: item.recordedclasses,
+              status: item.Status,
+              type: item.fitness_package_type.type,
+              details: [
+                item.ptonline,
+                item.ptoffline,
+                item.grouponline,
+                item.groupoffline,
+                item.recordedclasses,
+                item.duration,
+                item.mode
+              ],
+              duration: item.fitnesspackagepricing.map((i) => i.duration),
+              mrp: item.fitnesspackagepricing.map((i) => i.mrp),
+              Status: item.Status ? 'Active' : 'Inactive',
+              publishingDate: item.publishing_date,
+              mode: item.mode,
+              days: item.duration,
+              pricing: item.fitnesspackagepricing,
+              freeClass: item.groupinstantbooking,
+              startDate: item.Start_date,
+              endDate: item.End_date
+            };
+          })
+        );
+
+        setSelectedDuration(new Array(fitnessFlattenData.fitnesspackages.length).fill(0));
+        setCurrentIndex(new Array(fitnessFlattenData.fitnesspackages.length).fill(1));
+
+        // setInventoriesDetails(flattenData.offeringInventories);
+      }
     }
-  });
+  );
 
   // eslint-disable-next-line
   const [tags, { data: get_tags, refetch: refetch_tags }] = useLazyQuery(GET_TAGS, {
     variables: { id: auth.userid },
     fetchPolicy: 'cache-and-network',
-    onCompleted: (data) => {
-      const tagsFlattenData = flattenObj({ ...data });
-      const fitnessFlattenData = flattenObj({ ...get_fitness });
-
-      setDataTable(
-        [...fitnessFlattenData?.fitnesspackages].map((item) => {
-          return {
-            sessions: tagsFlattenData.tags.filter(
-              (currentValue) => currentValue.fitnesspackage.id === item.id
-            ),
-            inventoryId: inventoriesDetails && inventoriesDetails.length && inventoriesDetails.find((curr) => curr.fitnesspackage.id === item.id)
-              ? inventoriesDetails.find((curr) => curr.fitnesspackage.id === item.id).id
-              : null
-              ,
-            activeBooking: inventoriesDetails && inventoriesDetails.length && inventoriesDetails.find((curr) => curr.fitnesspackage.id === item.id)
-              ? inventoriesDetails.find((curr) => curr.fitnesspackage.id === item.id).ActiveBookings
-              : null
-              ,
-            tagId: tagsFlattenData.tags
-              .filter((currentValue) => currentValue.fitnesspackage.id === item.id)
-              .map((currentValue) => [currentValue.id]),
-            tagname: tagsFlattenData.tags
-              .filter((currentValue) => currentValue.fitnesspackage.id === item.id)
-              .map((currentValue) => [currentValue.tag_name]),
-            thumbnailId: item.Thumbnail_ID,
-            level: item.level,
-            id: item.id,
-            address: item.address,
-            packagename: item.packagename,
-            firstName: item.users_permissions_user.First_Name,
-            lastName: item.users_permissions_user.Last_Name,
-            ptonline: item.ptonline,
-            ptoffline: item.ptoffline,
-            grouponline: item.grouponline,
-            groupoffline: item.groupoffline,
-            recordedclasses: item.recordedclasses,
-            status: item.Status,
-            type: item.fitness_package_type.type,
-            details: [
-              item.ptonline,
-              item.ptoffline,
-              item.grouponline,
-              item.groupoffline,
-              item.recordedclasses,
-              item.duration,
-              item.mode
-            ],
-            duration: item.fitnesspackagepricing.map((i) => i.duration),
-            mrp: item.fitnesspackagepricing.map((i) => i.mrp),
-            Status: item.Status ? 'Active' : 'Inactive',
-            publishingDate: item.publishing_date,
-            mode: item.mode,
-            days: item.duration,
-            pricing: item.fitnesspackagepricing,
-            freeClass: item.groupinstantbooking,
-            startDate: item.Start_date,
-            endDate: item.End_date
-          };
-        })
-      );
-
-      setSelectedDuration(new Array(fitnessFlattenData.fitnesspackages.length).fill(0));
-      setCurrentIndex(new Array(fitnessFlattenData.fitnesspackages.length).fill(1));
+    onCompleted: () => {
+      get_inventory({ variables: { changemaker_id: auth.userid } });
     }
   });
 
@@ -835,34 +840,41 @@ export default function FitnessTab() {
               <Card.Title className="text-center">
                 <CreateEditViewChannel
                   ref={createEditViewChannelRef}
+                  refetchInventory={refetch_inventories}
                   refetchTags={refetch_tags}
                   refetchOfferings={refetchFitness}></CreateEditViewChannel>
                 <CreateEditViewCohort
                   ref={createEditViewCohortRef}
+                  refetchInventory={refetch_inventories}
                   refetchTags={refetch_tags}
                   refetchOfferings={refetchFitness}></CreateEditViewCohort>
                 <CreateEditViewPersonalTraining
                   ref={createEditViewPersonalTrainingRef}
+                  refetchInventory={refetch_inventories}
                   refetchTags={refetch_tags}
                   refetchOfferings={refetchFitness}
                 />
                 <CreateEditViewOnDemandPt
                   ref={CreateEditViewOnDemandPtRef}
+                  refetchInventory={refetch_inventories}
                   refetchTags={refetch_tags}
                   refetchOfferings={refetchFitness}
                 />
                 <CreateEditViewGroupClass
                   ref={CreateEditViewGroupClassRef}
+                  refetchInventory={refetch_inventories}
                   refetchTags={refetch_tags}
                   refetchOfferings={refetchFitness}
                 />
                 <CreateEditViewClassicClass
                   ref={CreateEditViewClassicClassRef}
+                  refetchInventory={refetch_inventories}
                   refetchTags={refetch_tags}
                   refetchOfferings={refetchFitness}
                 />
                 <CreateEditViewCustomFitness
                   ref={CreateEditViewCustomFitnessRef}
+                  refetchInventory={refetch_inventories}
                   refetchTags={refetch_tags}
                   refetchOfferings={refetchFitness}
                 />

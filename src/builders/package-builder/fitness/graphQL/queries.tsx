@@ -230,9 +230,10 @@ export const GET_FITNESS = gql`
 `;
 
 export const GET_INVENTORY = gql`
-  query offeringInventories($id: ID, $changemaker_id: String) {
+  query offeringInventories($changemaker_id: String) {
     offeringInventories(
-      filters: { changemaker_id: { eq: $changemaker_id }, fitnesspackage: { id: { eq: $id } } }
+      pagination: {pageSize: 1000},
+      filters: { changemaker_id: { eq: $changemaker_id } }
     ) {
       data {
         id

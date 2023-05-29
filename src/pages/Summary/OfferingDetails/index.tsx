@@ -18,23 +18,18 @@ const OfferingDetails: React.FC<{ Offering: ClientBooking }> = ({ Offering }) =>
       <Card.Body>
         <Row className="justify-content-end">
           {' '}
-          <Button
-            variant='outline-light'
-            onClick={() => setShowBookingModal(true)}
-          >
+          <Button variant="outline-light" onClick={() => setShowBookingModal(true)}>
             <img src="/assets/edit.svg" alt="edit" />
           </Button>
         </Row>
         <Card.Title>Offering Details</Card.Title>
         <Card.Text>
-          <b>Offering Name:</b>{' '}
-          {Offering.fitnesspackages[0].packagename}
+          <b>Offering Name:</b> {Offering.fitnesspackages[0].packagename}
           <br />
-          <b>Package Duration:</b>{' '}
-          {Offering.package_duration}{Offering.package_duration === 1 ? ' day':' days'}
+          <b>Package Duration:</b> {Offering.package_duration}
+          {Offering.package_duration === 1 ? ' day' : ' days'}
           <br />
-          <b>Effective date:</b>{' '}
-          {moment(Offering.effective_date).format('DD/MM/YYYY,h:mm:ss a ')}
+          <b>Effective date:</b> {moment(Offering.effective_date).format('DD/MM/YYYY,h:mm:ss a ')}
         </Card.Text>
       </Card.Body>
       {showBookingModal ? (

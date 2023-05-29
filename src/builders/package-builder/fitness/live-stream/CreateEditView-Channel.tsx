@@ -3,19 +3,20 @@ import { useQuery, useMutation } from '@apollo/client';
 import ModalView from '../../../../components/modal';
 import {
   CREATE_CHANNEL_PACKAGE,
-  CREATE_BOOKING_CONFIG,
+  // CREATE_BOOKING_CONFIG,
   DELETE_PACKAGE,
   UPDATE_PACKAGE_STATUS,
   UPDATE_CHANNEL_COHORT_PACKAGE,
   CREATE_NOTIFICATION,
-  DELETE_BOOKING_CONFIG,
+  // DELETE_BOOKING_CONFIG,
   CREATE_OFFERING_INVENTORY,
-  UPDATE_OFFERING_INVENTORY
+  UPDATE_OFFERING_INVENTORY,
+  CREATE_TAG
 } from '../graphQL/mutations';
 import {
   GET_FITNESS_PACKAGE_TYPE,
   GET_SINGLE_PACKAGE_BY_ID,
-  GET_BOOKINGS_CONFIG
+  // GET_BOOKINGS_CONFIG
 } from '../graphQL/queries';
 import AuthContext from '../../../../context/auth-context';
 import { schema, widgets } from './channelSchema';
@@ -52,13 +53,14 @@ function CreateEditChannel(props: any, ref: any) {
   const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
   const [isOffeeringDeleted, setisOffeeringDeleted] = useState<boolean>(false);
   const [isOfferingUpdated, setisOfferingUpdated] = useState<boolean>(false);
-  const [bookingsConfigInfo, setBookingsConfigInfo] = useState<any[]>([]);
+  // const [bookingsConfigInfo, setBookingsConfigInfo] = useState<any[]>([]);
 
   let frmDetails: any = {};
 
   const [editPackageDetails] = useMutation(UPDATE_CHANNEL_COHORT_PACKAGE, {
     onCompleted: (data) => {
       modalTrigger.next(false);
+      props.refetchInventory();
       props.refetchTags();
       props.refetchOfferings();
       setisOfferingUpdated(!isOfferingUpdated);
@@ -76,7 +78,8 @@ function CreateEditChannel(props: any, ref: any) {
   });
 
   const [updatePackageStatus] = useMutation(UPDATE_PACKAGE_STATUS, {
-    onCompleted: (data) => {
+    onCompleted: () => {
+      props.refetchInventory();
       props.refetchTags();
       props.refetchOfferings();
       setisOfferingUpdated(!isOfferingUpdated);
@@ -84,37 +87,38 @@ function CreateEditChannel(props: any, ref: any) {
   });
 
   // eslint-disable-next-line
-  const { data: get_bookings_config } = useQuery(GET_BOOKINGS_CONFIG, {
-    variables: { userId: auth.userid },
-    onCompleted: (data) => {
-      const bookingsConfigFlattenData = flattenObj({ ...data });
-      setBookingsConfigInfo(bookingsConfigFlattenData.bookingConfigs);
-    }
-  });
+  // const { data: get_bookings_config } = useQuery(GET_BOOKINGS_CONFIG, {
+  //   variables: { userId: auth.userid },
+  //   onCompleted: (data) => {
+  //     const bookingsConfigFlattenData = flattenObj({ ...data });
+  //     setBookingsConfigInfo(bookingsConfigFlattenData.bookingConfigs);
+  //   }
+  // });
 
-  const [deleteBookingConfig] = useMutation(DELETE_BOOKING_CONFIG);
+  // const [deleteBookingConfig] = useMutation(DELETE_BOOKING_CONFIG);
 
   const [deletePackage] = useMutation(DELETE_PACKAGE, {
-    onCompleted: (data) => {
+    onCompleted: () => {
       // delete booking config
-      const offeringsId = data.deleteFitnesspackage.data.id;
-      const bookingConfigId = bookingsConfigInfo.find(
-        (currentValue) => currentValue.fitnesspackage.id === offeringsId
-      );
+      // const offeringsId = data.deleteFitnesspackage.data.id;
+      // const bookingConfigId = bookingsConfigInfo.find(
+      //   (currentValue) => currentValue.fitnesspackage.id === offeringsId
+      // );
 
-      deleteBookingConfig({
-        variables: { id: bookingConfigId.id }
-      });
-
+      // deleteBookingConfig({
+      //   variables: { id: bookingConfigId.id }
+      // });
+      props.refetchInventory();
       props.refetchTags();
       props.refetchOfferings();
       setisOffeeringDeleted(!isOffeeringDeleted);
     }
   });
 
-  const [bookingConfig] = useMutation(CREATE_BOOKING_CONFIG, {
+  const [createTag] = useMutation(CREATE_TAG, {
     onCompleted: (response) => {
       modalTrigger.next(false);
+      props.refetchInventory();
       props.refetchTags();
       props.refetchOfferings();
       setIsFormSubmitted(!isFormSubmitted);
@@ -159,11 +163,9 @@ function CreateEditChannel(props: any, ref: any) {
         }
       });
 
-      bookingConfig({
+      createTag({
         variables: {
-          isAuto: true,
           id: response.createFitnesspackage.data.id,
-          is_Fillmyslots: true,
           tagName: frmDetails.channelName
         }
       });

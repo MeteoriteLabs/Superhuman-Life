@@ -1,4 +1,4 @@
-import { useContext, useState, useRef } from "react";
+import React, { useContext, useState, useRef } from "react";
 import Form from "@rjsf/core";
 import { widgets } from "../../profileSchema";
 import {
@@ -16,7 +16,7 @@ interface AccountVerificationDetail {
   Verification_ID: string;
 }
 
-export default function SocialAccount() {
+const SocialAccount: React.FC = () => {
   const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
   const formRef = useRef<any>(null);
   const accountVerificationJson: {
@@ -61,7 +61,7 @@ export default function SocialAccount() {
   });
 
   const [updateProfile] = useMutation(UPDATE_USER_PROFILE_DATA, {
-    onCompleted: (r: any) => {
+    onCompleted: () => {
       setIsFormSubmitted(!isFormSubmitted);
       fetch.refetch();
     },
@@ -118,3 +118,5 @@ export default function SocialAccount() {
     </Col>
   );
 }
+
+export default SocialAccount;

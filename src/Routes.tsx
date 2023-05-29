@@ -15,14 +15,6 @@ const LoginPage = React.lazy(() => import('./pages/login'));
 const DeactiveAccountPage = React.lazy(() => import('./pages/DeactiveAccount'));
 const ForgotPasswordPage = React.lazy(() => import('./pages/forgotPassword'));
 const ResetPasswordPage = React.lazy(() => import('./pages/resetPassword'));
-const ConfirmAccountPage = React.lazy(() => import('./pages/emailConfirmation'));
-const ChangePasswordPage = React.lazy(() => import('./pages/changePassword'));
-const ProfilePage = React.lazy(() => import('./pages/profile'));
-const RegisterPage = React.lazy(() => import('./pages/register'));
-const SchedulePage = React.lazy(() => import('./pages/schedule'));
-const SettingsPage = React.lazy(() => import('./pages/settings'));
-const FinancePage = React.lazy(() => import('./pages/finance'));
-const SummaryPage = React.lazy(() => import('./pages/Summary'));
 const ConfirmAccountPage = React.lazy(() => import("./pages/emailConfirmation"));
 const ChangePasswordPage = React.lazy(() => import("./pages/changePassword"));
 const ProfilePage = React.lazy(() => import("./pages/profile"));
@@ -129,6 +121,7 @@ export default function Routes({ token }: { token: string }): JSX.Element {
               <Route path="/add_client" component={AddClient} />
               <Route path="/summary" component={SummaryPage} />
               <Route path="/success" component={SuccessfulBooking} />
+              <Route path="/failure" component={FailedPage} />
 
               <Route path="*" component={NoMatch} />
             </Switch>

@@ -1,25 +1,25 @@
-import { Card, Tab, Tabs, Button } from "react-bootstrap";
-import { useHistory } from "react-router-dom";
+import { Card, Tab, Tabs } from "react-bootstrap";
+// import { useHistory } from "react-router-dom";
 import Movement from "./Movement/Movement";
 import Sessions from "./Sessions";
 
 export default function BookingPage() {
-  const history = useHistory();
+  // const history = useHistory();
 
-  const routeChange = () => {
-    const path = `/bookingSettings`;
-    history.push(path);
-  };
+  // const routeChange = () => {
+  //   const path = `/bookingSettings`;
+  //   history.push(path);
+  // };
 
   return (
     <div>
       <div className="d-flex justify-content-between align-items-center">
         <h2>All Bookings</h2>
-        <div className="px-5">
+        {/* <div className="px-5">
           <Button onClick={routeChange} variant="outline-dark">
             Settings
           </Button>
-        </div>
+        </div> */}
       </div>
 
       <Card className="shadow-sm mt-3" border="light">

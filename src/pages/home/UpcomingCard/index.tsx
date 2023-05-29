@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Card, Row, Col } from 'react-bootstrap';
 import { useQuery } from '@apollo/client';
 import { GET_SESSIONS } from './queries';
@@ -8,7 +8,7 @@ import moment from 'moment';
 import '../LeadCard/lead.css';
 import NoDataInCard from '../../../components/NoDataInCard';
 
-function UpcomingCard() {
+const UpcomingCard: React.FC = () => {
   const [sessionData, setSessionData] = useState<any>([]);
   const auth = useContext(AuthContext);
   const currentDate = new Date();

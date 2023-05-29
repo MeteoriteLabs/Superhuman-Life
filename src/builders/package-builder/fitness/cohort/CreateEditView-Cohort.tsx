@@ -10,7 +10,8 @@ import {
   CREATE_NOTIFICATION,
   DELETE_BOOKING_CONFIG,
   CREATE_OFFERING_INVENTORY,
-  UPDATE_OFFERING_INVENTORY
+  UPDATE_OFFERING_INVENTORY,
+  CREATE_TAG
 } from '../graphQL/mutations';
 import {
   youtubeUrlCustomFormats,
@@ -51,7 +52,7 @@ function CreateEditCohort(props: any, ref: any) {
   const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
   const [isOffeeringDeleted, setisOffeeringDeleted] = useState<boolean>(false);
   const [isOfferingUpdated, setisOfferingUpdated] = useState<boolean>(false);
-  const [bookingsConfigInfo, setBookingsConfigInfo] = useState<any[]>([]);
+  // const [bookingsConfigInfo, setBookingsConfigInfo] = useState<any[]>([]);
 
   let frmDetails: any = {};
 
@@ -73,8 +74,9 @@ function CreateEditCohort(props: any, ref: any) {
   });
 
   const [updatePackageStatus] = useMutation(UPDATE_PACKAGE_STATUS, {
-    onCompleted: (data) => {
+    onCompleted: () => {
       setStatusModalShow(false);
+      props.refetchInventory();
       props.refetchTags();
       props.refetchOfferings();
       setisOfferingUpdated(!isOfferingUpdated);
@@ -85,37 +87,39 @@ function CreateEditCohort(props: any, ref: any) {
   const [updateOfferingInventory] = useMutation(UPDATE_OFFERING_INVENTORY);
 
   // eslint-disable-next-line
-  const { data: get_bookings_config } = useQuery(GET_BOOKINGS_CONFIG, {
-    variables: { userId: auth.userid },
-    onCompleted: (data) => {
-      const bookingsConfigFlattenData = flattenObj({ ...data });
-      setBookingsConfigInfo(bookingsConfigFlattenData.bookingConfigs);
-    }
-  });
+  // const { data: get_bookings_config } = useQuery(GET_BOOKINGS_CONFIG, {
+  //   variables: { userId: auth.userid },
+  //   onCompleted: (data) => {
+  //     const bookingsConfigFlattenData = flattenObj({ ...data });
+  //     setBookingsConfigInfo(bookingsConfigFlattenData.bookingConfigs);
+  //   }
+  // });
 
-  const [deleteBookingConfig] = useMutation(DELETE_BOOKING_CONFIG);
+  // const [deleteBookingConfig] = useMutation(DELETE_BOOKING_CONFIG);
 
   const [deletePackage] = useMutation(DELETE_PACKAGE, {
-    onCompleted: (data) => {
+    onCompleted: () => {
       // delete booking config
-      const offeringsId = data.deleteFitnesspackage.data.id;
-      const bookingConfigId = bookingsConfigInfo.find(
-        (currentValue) => currentValue.fitnesspackage.id === offeringsId
-      );
+      // const offeringsId = data.deleteFitnesspackage.data.id;
+      // const bookingConfigId = bookingsConfigInfo.find(
+      //   (currentValue) => currentValue.fitnesspackage.id === offeringsId
+      // );
 
-      deleteBookingConfig({
-        variables: { id: bookingConfigId.id }
-      });
+      // deleteBookingConfig({
+      //   variables: { id: bookingConfigId.id }
+      // });
 
+      props.refetchInventory();
       props.refetchTags();
       props.refetchOfferings();
       setisOffeeringDeleted(!isOffeeringDeleted);
     }
   });
 
-  const [bookingConfig] = useMutation(CREATE_BOOKING_CONFIG, {
+  const [createTag] = useMutation(CREATE_TAG, {
     onCompleted: (response) => {
       modalTrigger.next(false);
+      props.refetchInventory();
       props.refetchTags();
       props.refetchOfferings();
       setIsFormSubmitted(!isFormSubmitted);
@@ -156,11 +160,9 @@ function CreateEditCohort(props: any, ref: any) {
         }
       });
 
-      bookingConfig({
+      createTag({
         variables: {
-          isAuto: true,
           id: response.createFitnesspackage.data.id,
-          is_Fillmyslots: true,
           tagName: frmDetails.packageName
         }
       });

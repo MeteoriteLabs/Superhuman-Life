@@ -25,11 +25,11 @@ const ClientDetailsCard: React.FC<{
         </Row>
         <Card.Title>Client Details</Card.Title>
         <Card.Text>
-          <b>Client Name:</b> {`${Client[0].First_Name} ${Client[0].Last_Name}`}
+          <b>Client Name:</b> {Client && Client.length ? `${Client[0].First_Name} ${Client[0].Last_Name}` : null}
           <br />
-          <b>Phone number:</b> {Client[0].Phone_Number}
+          <b>Phone number:</b> {Client && Client.length ? Client[0].Phone_Number : null}
           <br />
-          <b>Email:</b> {Client[0].email}
+          <b>Email:</b> {Client && Client.length ? Client[0].email : null}
         </Card.Text>
       </Card.Body>
       {showClientModal ? (
