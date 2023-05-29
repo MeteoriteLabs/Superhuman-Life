@@ -27,7 +27,7 @@ export default function SideNav({
   }, [location]);
 
   return (
-    <aside style={{ position: 'fixed', height: '100%' }} className="bg-dark">
+    <aside style={{ position: 'fixed', height: '100%', zIndex: 2 }} className="bg-dark">
       <hr />
       <Nav className="flex-column mt-4" style={{ gap: '10px' }}>
         <OverlayTrigger
