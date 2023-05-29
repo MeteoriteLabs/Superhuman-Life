@@ -17,7 +17,7 @@ import {
   GET_TAGS,
 } from "../../../builders/package-builder/fitness/graphQL/queries";
 import authContext from "../../../context/auth-context";
-import { useContext, useState, useRef } from "react";
+import React,{ useContext, useState, useRef } from "react";
 import { useQuery, useLazyQuery } from "@apollo/client";
 import { flattenObj } from "../../../components/utils/responseFlatten";
 import BookingAction from "../../booking/Movement/BookingAction";
@@ -26,7 +26,7 @@ import "./style.css";
 import { Link } from "react-router-dom";
 import NoDataInCard from "../../../components/NoDataInCard";
 
-function TaskCard() {
+const TaskCard: React.FC = () => {
   const auth = useContext(authContext);
   const [pendingBookings, setPendingBookings] = useState<any[]>([]);
   const [notPendingBookings, setNotPendingBookings] = useState<any[]>([]);
@@ -37,6 +37,7 @@ function TaskCard() {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
+  // eslint-disable-next-line
   const { data: get_booking, refetch: refetchBookings } = useQuery(GET_ALL_BOOKINGS, {
     variables: {
       id: auth.userid,
@@ -110,7 +111,7 @@ function TaskCard() {
   // eslint-disable-next-line
   const { data: get_fitness, refetch: refetchFitness } = useQuery(GET_FITNESS, {
     variables: { id: auth.userid },
-    onCompleted: (data) => {
+    onCompleted: () => {
       tags({ variables: { id: auth.userid } });
     },
   });

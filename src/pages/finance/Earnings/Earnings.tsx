@@ -58,15 +58,19 @@ export default function Earnings(): JSX.Element {
         Cell: ({ row }: { row: Row }) => {
           let statusColor = '';
           switch (row.values.status) {
-            case 'Success':
+            case 'PAID':
               statusColor = 'success';
               break;
 
-            case 'Refund':
+            case 'REFUND':
               statusColor = 'warning';
               break;
 
-            case 'Failed':
+            case 'CANCELLED':
+              statusColor = 'danger';
+              break;
+
+            case 'EXPIRED':
               statusColor = 'danger';
               break;
           }
@@ -76,11 +80,11 @@ export default function Earnings(): JSX.Element {
                 className="px-3 py-1"
                 style={{ fontSize: '1rem', borderRadius: '10px' }}
                 variant={statusColor}>
-                {row.values.status === 'Success'
-                  ? 'Success'
-                  : row.values.status === 'Failed'
-                  ? 'Failed'
-                  : 'Refund'}
+                {row.values.status === 'PAID'
+                  ? 'PAID'
+                  : (row.values.status === 'CANCELLED'
+                  ? 'CANCELLED'
+                  : (row.values.status === 'EXPIRED' ? 'EXPIRED' : 'REFUND'))}
               </Badge>
             </>
           );

@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import React,{ useState, useContext } from "react";
 import { Typeahead } from "react-bootstrap-typeahead";
 import "react-bootstrap-typeahead/css/Typeahead.css";
 import { FETCH_CHANGEMAKERS } from "./queries";
@@ -6,7 +6,7 @@ import { useQuery } from "@apollo/client";
 import { flattenObj } from "../utils/responseFlatten";
 import AuthContext from "../../context/auth-context";
 
-const Changemakers = (props: any) => {
+const Changemakers: React.FC<{value: string; onChange: (args: string|null) => void;}> = (props) => {
   const auth = useContext(AuthContext);
   function handleReturnType(value) {
     if (typeof value === "string") {
@@ -19,7 +19,8 @@ const Changemakers = (props: any) => {
   const [multiSelections, setMultiSelections] = useState<any[]>(
     props.value?.length ? handleReturnType(props.value) : []
   );
-  const [changemakerList, setChangemakerList] = useState<any[]>([]);
+  const [changemakerList, setChangemakerList] = useState<{ id: string|number;
+    username: string;}[]>([]);
 
   function FetchData() {
     useQuery(FETCH_CHANGEMAKERS, {
@@ -49,7 +50,7 @@ const Changemakers = (props: any) => {
   if (multiSelections.length) {
     props.onChange(JSON.stringify(multiSelections));
   } else {
-    props.onChange(undefined);
+    props.onChange(null);
   }
 
   FetchData();

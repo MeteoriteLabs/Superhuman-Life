@@ -74,6 +74,7 @@ function CreateEditPackage(props: any, ref: any) {
   const [bookingConfig] = useMutation(CREATE_BOOKING_CONFIG, {
     onCompleted: (response) => {
       modalTrigger.next(false);
+      props.refetchInventory();
       props.refetchTags();
       props.refetchOfferings();
       setIsFormSubmitted(!isFormSubmitted);
@@ -83,8 +84,9 @@ function CreateEditPackage(props: any, ref: any) {
 
   // eslint-disable-next-line
   const [createUserPackageSuggestion] = useMutation(ADD_SUGGESTION_NEW, {
-    onCompleted: (data) => {
+    onCompleted: () => {
       modalTrigger.next(false);
+      props.refetchInventory();
       props.refetchTags();
       props.refetchOfferings();
       setIsFormSubmitted(!isFormSubmitted);
@@ -94,6 +96,7 @@ function CreateEditPackage(props: any, ref: any) {
   const [updateBookingConfig] = useMutation(UPDATE_BOOKING_CONFIG, {
     onCompleted: () => {
       modalTrigger.next(false);
+      props.refetchInventory();
       props.refetchTags();
       props.refetchOfferings();
       setisOfferingUpdated(!isOfferingUpdated);
@@ -119,6 +122,7 @@ function CreateEditPackage(props: any, ref: any) {
    
     onCompleted: (response) => {
       modalTrigger.next(false);
+      props.refetchInventory();
       props.refetchTags();
       props.refetchOfferings();
       const flattenData = flattenObj({ ...response });
@@ -190,7 +194,8 @@ function CreateEditPackage(props: any, ref: any) {
   });
 
   const [updatePackageStatus] = useMutation(UPDATE_PACKAGE_STATUS, {
-    onCompleted: (data) => {
+    onCompleted: () => {
+      props.refetchInventory();
       props.refetchTags();
       props.refetchOfferings();
       setisOfferingUpdated(!isOfferingUpdated);
@@ -209,6 +214,7 @@ function CreateEditPackage(props: any, ref: any) {
         variables: { id: bookingConfigId.id },
       });
       
+      props.refetchInventory();
       props.refetchTags();
       props.refetchOfferings();
       setisOffeeringDeleted(!isOffeeringDeleted);

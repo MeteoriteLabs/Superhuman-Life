@@ -114,6 +114,7 @@ export const schema: any = {
   config: {
     bookingConfig: {
       "ui:widget": "ptBookingConfig",
+      readonly: true,
     },
   },
 };

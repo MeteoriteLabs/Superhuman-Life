@@ -1,30 +1,29 @@
-import { useEffect, useState } from "react";
-import { Form, Row, Col } from "react-bootstrap";
+import React, { useEffect, useState } from 'react';
+import { Form, Row, Col } from 'react-bootstrap';
 
-const BookingConfig = (props: any) => {
-  const inputDisabled = props.uiSchema.readonly;
+const BookingConfig: React.FC<{
+  value: string;
+  onChange: (args: string | null) => void;
+  uiSchema: { 'ui:widget'?: string; classNames?: string; readonly?: boolean };
+}> = (props) => {
+  const inputDisabled: boolean | null = props.uiSchema.readonly ? props.uiSchema.readonly : null;
 
-  const [fillSchedule, setFillSchedule] = useState(
+  const [fillSchedule, setFillSchedule] = useState<boolean>(
     props.value ? JSON.parse(props.value).fillSchedule : false
   );
-  const [config, setConfig] = useState(
-    props.value ? JSON.parse(props.value).config : "Manual"
+  const [config, setConfig] = useState<string>(
+    props.value ? JSON.parse(props.value).config : 'Manual'
   );
-  const [bookings, setBookings] = useState(
+  const [bookings, setBookings] = useState<number>(
     props.value ? JSON.parse(props.value).bookings : 0
   );
 
   function handleValidation() {
-    if (config !== "" && config === "Manual") {
+    if (config !== '' && config === 'Manual') {
       return true;
-    } else if (
-      config !== "Manual" &&
-      config === "Auto" &&
-      bookings !== 0 &&
-      !fillSchedule
-    ) {
+    } else if (config !== 'Manual' && config === 'Auto' && bookings !== 0 && !fillSchedule) {
       return true;
-    } else if (config === "Auto" && fillSchedule) {
+    } else if (config === 'Auto' && fillSchedule) {
       return true;
     } else {
       return false;
@@ -40,11 +39,11 @@ const BookingConfig = (props: any) => {
         JSON.stringify({
           fillSchedule: fillSchedule,
           config: config,
-          bookings: bookings,
+          bookings: bookings
         })
       );
     } else {
-      props.onChange(undefined);
+      props.onChange(null);
     }
     //eslint-disable-next-line
   }, [fillSchedule, config, bookings]);
@@ -55,9 +54,9 @@ const BookingConfig = (props: any) => {
         <Form.Check
           inline
           label="Manual"
-          value={"Manual"}
-          disabled={inputDisabled}
-          defaultChecked={config === "Manual" ? true : false}
+          value={'Manual'}
+          disabled={inputDisabled ? inputDisabled : false}
+          defaultChecked={config === 'Manual' ? true : false}
           onClick={(e: any) => setConfig(e.target.value)}
           name="group1"
           type="radio"
@@ -66,9 +65,9 @@ const BookingConfig = (props: any) => {
         <Form.Check
           inline
           label="Auto"
-          value={"Auto"}
-          disabled={inputDisabled}
-          defaultChecked={config === "Auto" ? true : false}
+          value={'Auto'}
+          disabled={inputDisabled ? inputDisabled : false}
+          defaultChecked={config === 'Auto' ? true : false}
           onClick={(e: any) => setConfig(e.target.value)}
           name="group1"
           type="radio"
@@ -78,7 +77,7 @@ const BookingConfig = (props: any) => {
           In auto it will automatically accept all bookings
         </Form.Text>
       </div>
-      {config === "Auto" && (
+      {config === 'Auto' && (
         <div className="mb-3">
           <Col>
             <Row className="mt-3">
@@ -92,7 +91,7 @@ const BookingConfig = (props: any) => {
                     id="custom-switch"
                     defaultChecked={fillSchedule}
                     onClick={() => setFillSchedule(!fillSchedule)}
-                    disabled={inputDisabled}
+                    disabled={inputDisabled ? inputDisabled : false}
                   />
                 </Form>
               </Col>
@@ -103,12 +102,12 @@ const BookingConfig = (props: any) => {
           </span>
         </div>
       )}
-      {config === "Auto" && !fillSchedule && (
+      {config === 'Auto' && !fillSchedule && (
         <div className="mt-3">
           <Form.Label>Maximum Bookings per/day*</Form.Label>
           <Form.Control
             type="number"
-            disabled={inputDisabled}
+            disabled={inputDisabled ? inputDisabled : false}
             max={12}
             min={0}
             value={bookings}

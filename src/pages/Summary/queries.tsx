@@ -16,6 +16,16 @@ export const UPDATE_CLIENT_BOOKING = gql`
   }
 `;
 
+export const CREATE_TRANSACTION = gql`
+  mutation createTransaction($data: TransactionInput!) {
+    createTransaction(data: $data) {
+      data {
+        id
+      }
+    }
+  }
+`;
+
 export const GET_CLIENT_BOOKING = gql`
   query clientBookingQuery($id: ID) {
     clientBooking(id: $id) {

@@ -448,6 +448,7 @@ const Schedular = (props: any) => {
       sessions
         .filter((itm) => itm.Is_restday === false)
         .forEach((val) => {
+          
           const startTimeHour: any = `${
             val.start_time === null ? '00' : val.start_time.split(':')[0]
           }`;

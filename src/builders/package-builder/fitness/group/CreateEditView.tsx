@@ -4,14 +4,15 @@ import ModalView from '../../../../components/modal';
 import {
   GET_SINGLE_PACKAGE_BY_ID,
   GET_FITNESS_PACKAGE_TYPES,
-  ADD_SUGGESTION_NEW,
+  // ADD_SUGGESTION_NEW,
 } from '../graphQL/queries';
 import {
   CREATE_PACKAGE,
   DELETE_PACKAGE,
   EDIT_PACKAGE,
   UPDATE_PACKAGE_STATUS,
-  CREATE_BOOKING_CONFIG,
+  CREATE_TAG,
+  // CREATE_BOOKING_CONFIG,
   CREATE_NOTIFICATION,
   CREATE_OFFERING_INVENTORY,
   UPDATE_OFFERING_INVENTORY
@@ -63,9 +64,21 @@ function CreateEditPackage(props: any, ref: any) {
     }
   });
 
-  const [createBookingConfig] = useMutation(CREATE_BOOKING_CONFIG, {
+  // const [createBookingConfig] = useMutation(CREATE_BOOKING_CONFIG, {
+  //   onCompleted: (response) => {
+  //     modalTrigger.next(false);
+  //     props.refetchInventory();
+  //     props.refetchTags();
+  //     props.refetchOfferings();
+  //     setIsFormSubmitted(!isFormSubmitted);
+  //     window.open(`group/session/scheduler/${response.createTag.data.id}`, '_self');
+  //   }
+  // });
+
+  const [createTag] = useMutation(CREATE_TAG, {
     onCompleted: (response) => {
       modalTrigger.next(false);
+      props.refetchInventory();
       props.refetchTags();
       props.refetchOfferings();
       setIsFormSubmitted(!isFormSubmitted);
@@ -73,13 +86,14 @@ function CreateEditPackage(props: any, ref: any) {
     }
   });
 
-  const [createUserPackageSuggestion] = useMutation(ADD_SUGGESTION_NEW, {
-    onCompleted: () => {
-      modalTrigger.next(false);
-      props.refetchTags();
-      props.refetchOfferings();
-    }
-  });
+  // const [createUserPackageSuggestion] = useMutation(ADD_SUGGESTION_NEW, {
+  //   onCompleted: () => {
+  //     modalTrigger.next(false);
+  //     props.refetchInventory();
+  //     props.refetchTags();
+  //     props.refetchOfferings();
+  //   }
+  // });
 
   const [createGroupNotification] = useMutation(CREATE_NOTIFICATION);
 
@@ -118,29 +132,36 @@ function CreateEditPackage(props: any, ref: any) {
         }
       });
 
-      if (window.location.href.split('/')[3] === 'client') {
-        createUserPackageSuggestion({
-          variables: {
-            id: window.location.href.split('/').pop(),
-            fitnesspackage: response.createFitnesspackage.data.id
-          }
-        });
-      } else {
-        createBookingConfig({
-          variables: {
-            isAuto: true,
-            id: response.createFitnesspackage.data.id,
-            is_Fillmyslots: true,
-            tagName: frmDetails.packagename
-          }
-        });
-      }
+      // if (window.location.href.split('/')[3] === 'client') {
+      //   createUserPackageSuggestion({
+      //     variables: {
+      //       id: window.location.href.split('/').pop(),
+      //       fitnesspackage: response.createFitnesspackage.data.id
+      //     }
+      //   });
+      // } else {
+      //   createTag({
+      //     variables: {
+      //       isAuto: true,
+      //       id: response.createFitnesspackage.data.id,
+      //       is_Fillmyslots: true,
+      //       tagName: frmDetails.packagename
+      //     }
+      //   });
+      // }
+      createTag({
+        variables: {
+          id: response.createFitnesspackage.data.id,
+          tagName: frmDetails.packagename
+        }
+      });
     }
   });
 
   const [editPackage] = useMutation(EDIT_PACKAGE, {
     onCompleted: (data) => {
       modalTrigger.next(false);
+      props.refetchInventory();
       props.refetchTags();
       props.refetchOfferings();
       setisOfferingUpdated(!isOfferingUpdated);
@@ -161,6 +182,7 @@ function CreateEditPackage(props: any, ref: any) {
 
   const [updatePackageStatus] = useMutation(UPDATE_PACKAGE_STATUS, {
     onCompleted: () => {
+      props.refetchInventory();
       props.refetchTags();
       props.refetchOfferings();
       setisOfferingUpdated(!isOfferingUpdated);
@@ -169,6 +191,7 @@ function CreateEditPackage(props: any, ref: any) {
 
   const [deletePackage] = useMutation(DELETE_PACKAGE, {
     onCompleted: () => {
+      props.refetchInventory();
       props.refetchTags();
       props.refetchOfferings();
       setisOfferingDeleted(!isOfferingDeleted);
