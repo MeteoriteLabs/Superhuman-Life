@@ -13,7 +13,6 @@ import {
 } from '../../../components/utils/ValidationPatterns';
 import AuthContext from '../../../context/auth-context';
 import moment from 'moment';
-import { NutFill } from 'react-bootstrap-icons';
 
 const AddClient: React.FC = () => {
   const auth = useContext(AuthContext);
