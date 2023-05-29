@@ -5,7 +5,6 @@ import { Search } from 'react-bootstrap-icons';
 import { FETCH_TEMPLATES } from '../queires/templates';
 import { useQuery } from '@apollo/client';
 import FetchTemplatesResponse, { WebsiteTemplate } from '../@types/websiteTemplates';
-import { Card } from '@material-ui/core';
 import CardWithImageAndFooter from '../../../components/cards/CardWithImageAndFooter';
 
 function Templates(): JSX.Element {
