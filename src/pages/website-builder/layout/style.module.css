@@ -1,0 +1,15 @@
+.templateName{
+    font-weight: 600;
+    font-size: 20px;
+    margin-bottom: 0px;
+    width: 100%;
+}
+.thumbnail{
+    object-fit: 'cover';
+    border-radius: '10px' 
+}
+.subheadings{
+    font-weight: 800;
+     font-size: 18px
+}
+

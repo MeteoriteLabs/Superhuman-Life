@@ -3,14 +3,25 @@ import Card from 'react-bootstrap/Card';
 import style from './cardStyles.module.css';
 import { Eye } from 'react-bootstrap-icons';
 import { Col, OverlayTrigger, Row, Tooltip } from 'react-bootstrap';
-function CardWithImageAndFooter({ title, imgSrc }: { title: string; imgSrc: string }): JSX.Element {
+import { WebsiteTemplate } from '../../pages/website-builder/@types/websiteTemplates';
+function CardWithImageAndFooter({
+  title,
+  imgSrc,
+  infoHandler,
+  data
+}: {
+  title: string;
+  imgSrc: string;
+  infoHandler: (data: WebsiteTemplate) => void;
+  data: WebsiteTemplate;
+}): JSX.Element {
   const renderOverlay = () => {
     return (
       <div className={style.overlayContent}>
         <Button variant="light" className={style.overlayButton}>
-          Select
+          Edit Live
         </Button>
-        <Button variant="light" className={style.overlayButton}>
+        <Button variant="light" className={style.overlayButton} onClick={() => infoHandler(data)}>
           Info
         </Button>
       </div>
