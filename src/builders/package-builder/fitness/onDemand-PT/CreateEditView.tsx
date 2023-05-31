@@ -107,7 +107,7 @@ function CreateEditOnDemadPt(props: any, ref: any) {
 
   const [updatePackageStatus] = useMutation(UPDATE_PACKAGE_STATUS, {
     onCompleted: () => {
-      props.refetchInventory();
+     
       props.refetchTags();
       props.refetchOfferings();
       setisOfferingUpdated(!isOfferingUpdated);
@@ -116,7 +116,7 @@ function CreateEditOnDemadPt(props: any, ref: any) {
 
   const [deletePackage] = useMutation(DELETE_PACKAGE, {
     onCompleted: () => {
-      props.refetchInventory();
+      
       props.refetchTags();
       props.refetchOfferings();
       setisOffeeringDeleted(!isOffeeringDeleted);
