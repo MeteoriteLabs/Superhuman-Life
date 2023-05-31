@@ -112,9 +112,9 @@ export const DELETE_PACKAGE = gql`
   }
 `;
 
-export const DELETE_BOOKING_CONFIG = gql`
-  mutation deleteBookingConfig($id: ID!) {
-    deleteBookingConfig(id: $id) {
+export const DELETE_OFFERING_INVENTORY = gql`
+  mutation deleteOfferingInventory($id: ID!) {
+    deleteOfferingInventory(id: $id) {
       data {
         id
       }
@@ -297,90 +297,12 @@ export const CREATE_BOOKING_CONFIG_AND_TAG_CHANNEL = gql`
   }
 `;
 
-export const CREATE_BOOKING_CONFIG = gql`
-  mutation createBookingconfig(
-    $id: ID!
-    $isAuto: Boolean
-    $bookings_per_day: Int
-    $bookings_per_month: Int
-    $is_Fillmyslots: Boolean
-    $tagName: String
-  ) {
-    createBookingConfig(
-      data: {
-        isAuto: $isAuto
-        bookingsPerDay: $bookings_per_day
-        fitnesspackage: $id
-        BookingsPerMonth: $bookings_per_month
-        is_Fillmyslots: $is_Fillmyslots
-      }
-    ) {
-      data {
-        id
-      }
-    }
-    createTag(data: { tag_name: $tagName, fitnesspackage: $id }) {
-      data {
-        id
-      }
-    }
-  }
-`;
-
 export const CREATE_TAG = gql`
   mutation createTag(
     $id: ID!
     $tagName: String
   ) {
     createTag(data: { tag_name: $tagName, fitnesspackage: $id }) {
-      data {
-        id
-      }
-    }
-  }
-`;
-
-export const CREATE_BOOKING_CONFIG_FOR_ONE_ON_ONE_AND_CUSTOM = gql`
-  mutation createBookingconfig(
-    $id: ID!
-    $isAuto: Boolean
-    $bookings_per_day: Int
-    $bookings_per_month: Int
-    $is_Fillmyslots: Boolean
-  ) {
-    createBookingConfig(
-      data: {
-        isAuto: $isAuto
-        bookingsPerDay: $bookings_per_day
-        fitnesspackage: $id
-        BookingsPerMonth: $bookings_per_month
-        is_Fillmyslots: $is_Fillmyslots
-      }
-    ) {
-      data {
-        id
-      }
-    }
-  }
-`;
-
-export const UPDATE_BOOKING_CONFIG = gql`
-  mutation updateBookingconfig(
-    $id: ID!
-    $isAuto: Boolean
-    $bookings_per_day: Int
-    $bookings_per_month: Int
-    $is_Fillmyslots: Boolean
-  ) {
-    updateBookingConfig(
-      id: $id
-      data: {
-        BookingsPerMonth: $bookings_per_month
-        isAuto: $isAuto
-        bookingsPerDay: $bookings_per_day
-        is_Fillmyslots: $is_Fillmyslots
-      }
-    ) {
       data {
         id
       }

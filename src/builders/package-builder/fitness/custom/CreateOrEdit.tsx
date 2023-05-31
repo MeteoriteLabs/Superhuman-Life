@@ -8,20 +8,15 @@ import { useQuery, useMutation } from "@apollo/client";
 import ModalView from "../../../../components/modal";
 import {
   GET_SINGLE_PACKAGE_BY_ID,
-  GET_FITNESS_PACKAGE_TYPES,
-  ADD_SUGGESTION_NEW,
-  // GET_BOOKINGS_CONFIG,
+  GET_FITNESS_PACKAGE_TYPES
 } from "../graphQL/queries";
 import {
   CREATE_PACKAGE,
   DELETE_PACKAGE,
   EDIT_PACKAGE,
   UPDATE_PACKAGE_STATUS,
-  // UPDATE_BOOKING_CONFIG,
   CREATE_NOTIFICATION,
-  CREATE_TAG,
-  // DELETE_BOOKING_CONFIG,
-  // CREATE_BOOKING_CONFIG_FOR_ONE_ON_ONE_AND_CUSTOM,
+  CREATE_TAG
 } from "../graphQL/mutations";
 import { Modal, Button } from "react-bootstrap";
 import AuthContext from "../../../../context/auth-context";
@@ -55,40 +50,19 @@ function CreateEditPackage(props: any, ref: any) {
   const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
   const [isOffeeringDeleted, setisOffeeringDeleted] = useState<boolean>(false);
   const [isOfferingUpdated, setisOfferingUpdated] = useState<boolean>(false);
-  // const [bookingsConfigInfo, setBookingsConfigInfo] = useState<any[]>([]);
 
   let frmDetails: any = {};
 
   useQuery(GET_FITNESS_PACKAGE_TYPES, {
     variables: { type: "Custom Fitness" },
-    onCompleted: (data: any) => {
+    onCompleted: (data) => {
       const flattenData = flattenObj({ ...data });
       setFitnessType(flattenData.fitnessPackageTypes);
     },
   });
 
-  // eslint-disable-next-line
-  // const { data: get_bookings_config } = useQuery(GET_BOOKINGS_CONFIG, {
-  //   variables: { userId: auth.userid },
-  //   onCompleted: (data) => {
-  //     const bookingsConfigFlattenData = flattenObj({ ...data });
-  //     setBookingsConfigInfo(bookingsConfigFlattenData.bookingConfigs);
-  //   },
-  // });
-
-  // const [deleteBookingConfig] = useMutation(DELETE_BOOKING_CONFIG);
-
   const [createTag] = useMutation(CREATE_TAG, {
     onCompleted: () => {
-      modalTrigger.next(false);
-      props.refetchTags();
-      props.refetchOfferings();
-      setIsFormSubmitted(!isFormSubmitted);
-    },
-  });
-
-  const [createUserPackageSuggestion] = useMutation(ADD_SUGGESTION_NEW, {
-    onCompleted: (data) => {
       modalTrigger.next(false);
       props.refetchTags();
       props.refetchOfferings();
@@ -118,28 +92,9 @@ function CreateEditPackage(props: any, ref: any) {
         },
       });
 
-      // if (window.location.href.split("/")[3] === "client") {
-      //   createUserPackageSuggestion({
-      //     variables: {
-      //       id: window.location.href.split("/").pop(),
-      //       fitnesspackage: data.createFitnesspackage.data.id,
-      //     },
-      //   });
-      // } else {
-      //   const val = JSON.parse(frmDetails.config.bookingConfig);
-      //   createTag({
-      //     variables: {
-      //       // isAuto: val.config === "Auto" ? true : false,
-      //       id: data.createFitnesspackage.data.id,
-      //       // bookings_per_month: val.bookings,
-      //     },
-      //   });
-      // }
       createTag({
         variables: {
-          // isAuto: val.config === "Auto" ? true : false,
           id: data.createFitnesspackage.data.id,
-          // bookings_per_month: val.bookings,
         },
       });
     },
@@ -151,14 +106,6 @@ function CreateEditPackage(props: any, ref: any) {
       props.refetchTags();
       props.refetchOfferings();
       setisOfferingUpdated(!isOfferingUpdated);
-      // const val = JSON.parse(frmDetails.config.bookingConfig);
-      // updateBookingConfig({
-      //   variables: {
-      //     isAuto: val.config === "Auto" ? true : false,
-      //     id: frmDetails.bookingConfigId,
-      //     bookings_per_month: val.bookings,
-      //   },
-      // });
     },
   });
 
@@ -173,30 +120,12 @@ function CreateEditPackage(props: any, ref: any) {
   const [deletePackage] = useMutation(DELETE_PACKAGE, {
     
     onCompleted: () => {
-      // delete booking config
-      // const offeringsId = data.deleteFitnesspackage.data.id;
-      // const bookingConfigId = bookingsConfigInfo.find(
-      //   (currentValue) => currentValue.fitnesspackage.id === offeringsId
-      // );
-
-      // deleteBookingConfig({
-      //   variables: { id: bookingConfigId.id },
-      // });
 
       props.refetchTags();
       props.refetchOfferings();
       setisOffeeringDeleted(!isOffeeringDeleted);
     },
   });
-
-  // const [updateBookingConfig] = useMutation(UPDATE_BOOKING_CONFIG, {
-  //   onCompleted: (data: any) => {
-  //     modalTrigger.next(false);
-  //     props.refetchTags();
-  //     props.refetchOfferings();
-  //     setisOfferingUpdated(!isOfferingUpdated);
-  //   },
-  // });
 
   const modalTrigger = new Subject();
 
@@ -282,7 +211,6 @@ function CreateEditPackage(props: any, ref: any) {
 
     const msg = flattenedData.fitnesspackages[0];
   
-    // const bookingConfig: any = {};
     const details: any = {};
     const clientAddressArray = msg.client_address ? msg.client_address.split("Km") : [];
     for (let i = 0; i < msg.fitnesspackagepricing.length; i++) {
@@ -311,10 +239,6 @@ function CreateEditPackage(props: any, ref: any) {
     details.tags = msg?.tags === null ? "" : msg.tags;
     details.user_permissions_user = msg.users_permissions_user.id;
     details.visibility = msg.is_private === true ? 1 : 0;
-    // bookingConfig.config =
-    //   msg.booking_config?.isAuto === true ? "Auto" : "Manual";
-    // bookingConfig.bookings = msg.booking_config?.BookingsPerMonth;
-    // details.config = { bookingConfig: JSON.stringify(bookingConfig) };
     details.programDetails = JSON.stringify({
       addressTag: msg.address === null ? "At Client Address" : "At My Address",
       address: [msg.address],
@@ -338,7 +262,6 @@ function CreateEditPackage(props: any, ref: any) {
       publishingDate: msg.publishing_date,
     });
     details.bookingleadday = msg.bookingleadday;
-    // details.bookingConfigId = msg.booking_config?.id;
     details.languages = JSON.stringify(msg.languages);
     setCustomDetails(details);
 

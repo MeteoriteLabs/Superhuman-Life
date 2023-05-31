@@ -4,7 +4,7 @@ import ModalView from '../../../../components/modal';
 import {
   GET_SINGLE_PACKAGE_BY_ID,
   GET_FITNESS_PACKAGE_TYPES,
-  // ADD_SUGGESTION_NEW,
+  GET_INVENTORY
 } from '../graphQL/queries';
 import {
   CREATE_PACKAGE,
@@ -12,10 +12,10 @@ import {
   EDIT_PACKAGE,
   UPDATE_PACKAGE_STATUS,
   CREATE_TAG,
-  // CREATE_BOOKING_CONFIG,
   CREATE_NOTIFICATION,
   CREATE_OFFERING_INVENTORY,
-  UPDATE_OFFERING_INVENTORY
+  UPDATE_OFFERING_INVENTORY,
+  DELETE_OFFERING_INVENTORY
 } from '../graphQL/mutations';
 import { Modal, Button } from 'react-bootstrap';
 import AuthContext from '../../../../context/auth-context';
@@ -30,10 +30,9 @@ import {
   youtubeUrlCustomFormats,
   youtubeUrlTransformErrors
 } from '../../../../components/utils/ValidationPatterns';
+import { OfferingInventory } from '../../interface/offeringInventory';
 
 interface Operation {
-  inventoryId: string|null;
-  activeBooking: number|null;
   id: string;
   type: 'create' | 'edit' | 'view' | 'toggle-status' | 'delete';
   current_status: boolean;
@@ -53,6 +52,7 @@ function CreateEditPackage(props: any, ref: any) {
   const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
   const [isOfferingDeleted, setisOfferingDeleted] = useState<boolean>(false);
   const [isOfferingUpdated, setisOfferingUpdated] = useState<boolean>(false);
+  const [offeringInventoryDetails, setOfferingInventoryDetails] = useState<OfferingInventory>({} as OfferingInventory);
 
   let frmDetails: any = {};
 
@@ -64,36 +64,37 @@ function CreateEditPackage(props: any, ref: any) {
     }
   });
 
-  // const [createBookingConfig] = useMutation(CREATE_BOOKING_CONFIG, {
-  //   onCompleted: (response) => {
-  //     modalTrigger.next(false);
-  //     props.refetchInventory();
-  //     props.refetchTags();
-  //     props.refetchOfferings();
-  //     setIsFormSubmitted(!isFormSubmitted);
-  //     window.open(`group/session/scheduler/${response.createTag.data.id}`, '_self');
-  //   }
-  // });
+  // eslint-disable-next-line
+  const { data: inventories, refetch: refetch_inventories } = useQuery(
+    GET_INVENTORY,
+
+    {
+      variables: { changemaker_id: auth.userid, fitnesspackageid: operation.id },
+      skip: !operation.id,
+      onCompleted: (response) => {
+        const flattenInventoryData = flattenObj({ ...response.offeringInventories });
+
+        if (flattenInventoryData && flattenInventoryData.length)
+          setOfferingInventoryDetails(flattenInventoryData[0]);
+
+        if (flattenInventoryData && flattenInventoryData.length && flattenInventoryData[0] && flattenInventoryData[0].ActiveBookings === 0)
+          setDeleteModalShow(true);
+        else
+          setDeleteValidationModalShow(true);
+      }
+    }
+  );
 
   const [createTag] = useMutation(CREATE_TAG, {
     onCompleted: (response) => {
       modalTrigger.next(false);
-      props.refetchInventory();
+     
       props.refetchTags();
       props.refetchOfferings();
       setIsFormSubmitted(!isFormSubmitted);
       window.open(`group/session/scheduler/${response.createTag.data.id}`, '_self');
     }
   });
-
-  // const [createUserPackageSuggestion] = useMutation(ADD_SUGGESTION_NEW, {
-  //   onCompleted: () => {
-  //     modalTrigger.next(false);
-  //     props.refetchInventory();
-  //     props.refetchTags();
-  //     props.refetchOfferings();
-  //   }
-  // });
 
   const [createGroupNotification] = useMutation(CREATE_NOTIFICATION);
 
@@ -132,23 +133,6 @@ function CreateEditPackage(props: any, ref: any) {
         }
       });
 
-      // if (window.location.href.split('/')[3] === 'client') {
-      //   createUserPackageSuggestion({
-      //     variables: {
-      //       id: window.location.href.split('/').pop(),
-      //       fitnesspackage: response.createFitnesspackage.data.id
-      //     }
-      //   });
-      // } else {
-      //   createTag({
-      //     variables: {
-      //       isAuto: true,
-      //       id: response.createFitnesspackage.data.id,
-      //       is_Fillmyslots: true,
-      //       tagName: frmDetails.packagename
-      //     }
-      //   });
-      // }
       createTag({
         variables: {
           id: response.createFitnesspackage.data.id,
@@ -161,7 +145,7 @@ function CreateEditPackage(props: any, ref: any) {
   const [editPackage] = useMutation(EDIT_PACKAGE, {
     onCompleted: (data) => {
       modalTrigger.next(false);
-      props.refetchInventory();
+      
       props.refetchTags();
       props.refetchOfferings();
       setisOfferingUpdated(!isOfferingUpdated);
@@ -170,7 +154,7 @@ function CreateEditPackage(props: any, ref: any) {
 
       updateOfferingInventory({
         variables: {
-          id: operation.inventoryId,
+          id: offeringInventoryDetails.id,
           data: {
             ClassSize: flattenData.updateFitnesspackage.classsize,
             InstantBooking: flattenData.updateFitnesspackage.groupinstantbooking
@@ -182,21 +166,27 @@ function CreateEditPackage(props: any, ref: any) {
 
   const [updatePackageStatus] = useMutation(UPDATE_PACKAGE_STATUS, {
     onCompleted: () => {
-      props.refetchInventory();
+     
       props.refetchTags();
       props.refetchOfferings();
       setisOfferingUpdated(!isOfferingUpdated);
     }
   });
 
+  const [deleteOfferingInventory] = useMutation(DELETE_OFFERING_INVENTORY);
+
   const [deletePackage] = useMutation(DELETE_PACKAGE, {
     onCompleted: () => {
-      props.refetchInventory();
+      // delete offering inventory
+      deleteOfferingInventory({ variables: { id: offeringInventoryDetails.id } });
+
       props.refetchTags();
       props.refetchOfferings();
       setisOfferingDeleted(!isOfferingDeleted);
     }
   });
+
+ 
 
   const modalTrigger = new Subject();
 
@@ -208,9 +198,11 @@ function CreateEditPackage(props: any, ref: any) {
         setStatusModalShow(true);
       }
 
-      if (msg.type === 'delete') {
-        if (msg.activeBooking === 0 ) setDeleteModalShow(true);
-        else setDeleteValidationModalShow(true);
+      if (msg.type === 'delete' && offeringInventoryDetails.ActiveBookings !== null ) {
+        if (offeringInventoryDetails.ActiveBookings === 0 )
+        setDeleteModalShow(true);
+        else
+        setDeleteValidationModalShow(true);
       }
 
       // restrict to render form if type is delete ot toggle-status
@@ -581,7 +573,7 @@ function CreateEditPackage(props: any, ref: any) {
         setStatusModalShow(true);
         break;
       case 'delete':
-        if (operation.activeBooking === 0) setDeleteModalShow(true);
+        if (offeringInventoryDetails.ActiveBookings === 0) setDeleteModalShow(true);
         else setDeleteValidationModalShow(true);
         break;
     }
@@ -628,6 +620,8 @@ function CreateEditPackage(props: any, ref: any) {
       />
 
       {/* Delete modal validation (if classAvailability is greater than zero show this dailouge box) */}
+      {
+        offeringInventoryDetails && offeringInventoryDetails.ActiveBookings > 0 ? 
       <Modal
         size="lg"
         aria-labelledby="contained-modal-title-vcenter"
@@ -657,9 +651,11 @@ function CreateEditPackage(props: any, ref: any) {
             Close
           </Button>
         </Modal.Footer>
-      </Modal>
+      </Modal> : null}
 
       {/* Delete Package modal */}
+      {
+        offeringInventoryDetails && offeringInventoryDetails.ActiveBookings === 0 ? 
       <Modal
         size="lg"
         aria-labelledby="contained-modal-title-vcenter"
@@ -691,7 +687,7 @@ function CreateEditPackage(props: any, ref: any) {
             Yes
           </Button>
         </Modal.Footer>
-      </Modal>
+      </Modal> : null}
 
       {/* Change Status Modal */}
       <Modal

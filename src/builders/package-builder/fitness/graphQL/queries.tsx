@@ -18,29 +18,6 @@ export const GET_ADDRESS = gql`
   }
 `;
 
-export const GET_BOOKINGS_CONFIG = gql`
-  query bookingConfigs($userId: ID) {
-    bookingConfigs(
-      pagination: { pageSize: 1000 }
-      filters: { fitnesspackage: { users_permissions_user: { id: { eq: $userId } } } }
-    ) {
-      data {
-        id
-        attributes {
-          fitnesspackage {
-            data {
-              id
-              attributes {
-                packagename
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-`;
-
 export const GET_FITNESS_DISCIPLINES = gql`
   query fitnessdisciplines {
     fitnessdisciplines {
@@ -158,7 +135,7 @@ export const GET_FITNESS = gql`
     fitnesspackages(
       sort: ["updatedAt"]
       filters: { users_permissions_user: { id: { eq: $id } } }
-      pagination: { pageSize: 1000 }
+      pagination: { pageSize: 1500 }
     ) {
       data {
         id
@@ -230,10 +207,10 @@ export const GET_FITNESS = gql`
 `;
 
 export const GET_INVENTORY = gql`
-  query offeringInventories($changemaker_id: String) {
+  query offeringInventories($changemaker_id: String, $fitnesspackageid: ID) {
     offeringInventories(
       pagination: {pageSize: 1000},
-      filters: { changemaker_id: { eq: $changemaker_id } }
+      filters: { changemaker_id: { eq: $changemaker_id }, fitnesspackage: {id: {eq: $fitnesspackageid}} }
     ) {
       data {
         id
@@ -459,18 +436,6 @@ export const LANGUAGES = gql`
         attributes {
           languages
         }
-      }
-    }
-  }
-`;
-
-export const ADD_SUGGESTION_NEW = gql`
-  mutation createSuggestion($id: ID, $fitnesspackage: ID) {
-    createUserPackageSuggestion(
-      data: { users_permissions_user: $id, fitnesspackage: $fitnesspackage }
-    ) {
-      data {
-        id
       }
     }
   }

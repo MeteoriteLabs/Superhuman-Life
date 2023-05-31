@@ -5,7 +5,6 @@ import EquipmentSelect from "../../../../components/customWidgets/equipmentListS
 import PtProgramDetails from "./ptProgramDetails";
 import PTPricingTable from "./ptPricingTable";
 import LanguageList from "../../../../components/customWidgets/languageSelect";
-import PTBookingConfig from "./bookingConfig";
 
 export const widgets = {
   datesConfig: DatesConfig,
@@ -13,7 +12,6 @@ export const widgets = {
   equipmentSelect: EquipmentSelect,
   ptProgramDetails: PtProgramDetails,
   ptPricingTable: PTPricingTable,
-  ptBookingConfig: PTBookingConfig,
   languageList: LanguageList,
 };
 
@@ -136,10 +134,13 @@ export const schemaView: any = {
     "ui:widget": "languageList",
     "ui:readonly": true,
   },
-  config: {
-    bookingConfig: {
-      "ui:widget": "ptBookingConfig",
-      readonly: true,
+  
+    config: {
+      "ui:widget": "radio",
+      "ui:options": {
+        inline: true,
+      },
+      "ui:readonly": true,
     },
-  },
+  
 };

@@ -15,7 +15,13 @@ import { CREATE_USER_PACKAGE } from '../booking/GraphQL/mutation';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 import './summary.css';
-// import QRCode from 'react-qr-code';
+import QRCode from 'react-qr-code';
+import API_END_POINTS from '../../components/utils/integration';
+
+
+const createPaymentLinkUrl = `${process.env.REACT_APP_URL}/api/client-booking/paymentlink`;
+const createOrderUrl =  `${process.env.REACT_APP_URL}/api/client-booking/getpaymentdetailsbyorderid/?order_id=CFPay_t4tr5clhg16g_7eh80498vp`
+const generateUPIQRCodeUrl = `${process.env.REACT_APP_URL}/api/transaction/initiatepaymentviaupiqrcode/?payment_session_id=session_WzQk5Ij1yuFjufVd_B7TgQqFysFzkwsHROQWwRHJeq2qaGlo5phPY7K7Iz_ACsJMX85ePObb2Bc4JJxyWdZzp8YihAKZOG6fJItbeMXEjLeE`
 
 interface PackagePricing {
   mrp: string;
@@ -39,6 +45,10 @@ const Summary: React.FC = () => {
   const [packagePricing, setPackagePricing] = useState<PackagePricing[]>([]);
   const history = useHistory();
 
+  const config = {
+    headers: { Authorization: `Bearer ${auth.token}` }
+  };
+
   // eslint-disable-next-line
   const { data: get_client_booking } = useQuery(GET_CLIENT_BOOKING, {
     variables: { id: bookingId },
@@ -46,6 +56,37 @@ const Summary: React.FC = () => {
       const flattenBookingResponse = flattenObj(response.clientBooking);
       setPackageDetails(flattenBookingResponse);
       setPackagePricing(flattenBookingResponse.fitnesspackages[0].fitnesspackagepricing);
+
+      const mrp = flattenBookingResponse.fitnesspackages[0].fitnesspackagepricing.find(
+        (currentValue) => currentValue.duration === flattenBookingResponse.package_duration
+      );
+
+      //create order on cashfree
+      axios
+      .post(
+        API_END_POINTS.createOrderUrl,
+        {
+          orderId: bookingId,
+          currency: 'INR',
+          amount: Number(mrp?.mrp),
+          customerEmail: `${flattenBookingResponse.ClientUser[0].email}`,
+          customerPhone: `${flattenBookingResponse.ClientUser[0].Phone_Number}`,
+          customerName: `${flattenBookingResponse.ClientUser[0].First_Name} ${flattenBookingResponse.ClientUser[0].Last_Name}`,
+          customerId: `${flattenBookingResponse.ClientUser[0].id}`
+        },
+        config
+      )
+      .then((response) => {
+        console.log(response);
+        axios
+      .get(
+        `${API_END_POINTS.generateUPIQRCodeUrl}${response.data.cfOrder.paymentSessionId}`,
+        config
+      )
+      .then((response) => {
+        console.log(response);
+      });
+      });
     }
   });
 
@@ -146,15 +187,10 @@ const Summary: React.FC = () => {
     });
   };
 
-  const url = `${process.env.REACT_APP_URL}/api/client-booking/paymentlink`;
-  const config = {
-    headers: { Authorization: `Bearer ${auth.token}` }
-  };
-
   const sendLink = (bookingId: string | null) => {
     axios
       .post(
-        url,
+        API_END_POINTS.createPaymentLinkUrl,
         {
           orderId: bookingId,
           currency: 'INR',
@@ -173,15 +209,40 @@ const Summary: React.FC = () => {
       });
   };
 
+  // const createOrder = () => {
+  //   console.log(packageDetails)
+  //   axios
+  //     .post(
+  //       API_END_POINTS.createOrderUrl,
+  //       {
+  //         orderId: bookingId,
+  //         currency: 'INR',
+  //         amount: Number(mrp?.mrp),
+  //         customerEmail: `${packageDetails.ClientUser[0].email}`,
+  //         customerPhone: `${packageDetails.ClientUser[0].Phone_Number}`,
+  //         customerName: `${packageDetails.ClientUser[0].First_Name} ${packageDetails.ClientUser[0].Last_Name}`,
+  //         customerId: `${packageDetails.ClientUser[0].id}`
+  //       },
+  //       config
+  //     )
+  //     .then((response) => {
+  //       console.log(response);
+  //     });
+  // };
+
+  // useEffect(() => {
+  //   createOrder();
+  // },[])
+
   const startTimer = () => {
     const countdown = setInterval(() => {
       setTimer((prevTimer) => prevTimer - 1);
     }, 1000);
 
-    // Clear the countdown interval and redirect when the timer reaches 0
+    // Clear the countdown interval and redirect to failure when the timer reaches 0
     if (timer <= 0) {
       clearInterval(countdown);
-      setRedirect(`/failure/?bookingid=${bookingId}`); // Redirect to timeout page
+      setRedirect(`/failure/?bookingid=${bookingId}`); // Redirect to failure page
     }
 
     // Clean up the countdown interval on component unmount
@@ -195,7 +256,7 @@ const Summary: React.FC = () => {
     const fetchData = () => {
       axios
         .get(
-          `${process.env.REACT_APP_URL}/api/client-booking/getpaymentlinksbylinkid/?link_id=${linkId}`,
+          `${API_END_POINTS.paymentDetailsViaLink}${linkId}`,
           config
         )
         .then((response) => {
