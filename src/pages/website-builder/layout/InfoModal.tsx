@@ -3,6 +3,7 @@ import { ArrowRight, CheckCircle } from 'react-bootstrap-icons';
 import { Button, Col, ListGroup, Modal, Row } from 'react-bootstrap';
 
 import style from './style.module.css';
+import { Link } from 'react-router-dom';
 
 function InfoModal({
   data,
@@ -18,19 +19,17 @@ function InfoModal({
   };
 
   return (
-    <Modal show={!!data} onHide={handleClose} dialogClassName="modal-80w">
+    <Modal show={!!data} onHide={handleClose} className={style.modal}>
       <Modal.Body>
         <Modal.Header closeButton className="mb-4">
           <h3 className={style.templateName}>{data.attributes.template_name}</h3>
         </Modal.Header>
         <div className="position-relative">
-          <div
-            className="d-flex justify-content-center overflow-hidden position-relative"
-            style={{ borderRadius: '10px' }}>
+          <div className={style.thumbnailCont}>
             <img
               src={returnImageAlternating(Number(data.id))}
               className={style.thumbnail}
-              width={500}
+              width={1200}
             />
           </div>
           <Row className="mt-3">
@@ -83,9 +82,11 @@ function InfoModal({
           </Row>
         </div>
         <div className="d-flex justify-content-end mt-5">
-          <Button variant="primary" className="py-2 px-4 " style={{}}>
-            Go to Live Editor <ArrowRight className="m-0 mb-1 ml-1" />
-          </Button>
+          <Link to={`/website/templates/liveEditor`}>
+            <Button variant="primary" className="py-2 px-4 ">
+              Go to Live Editor <ArrowRight className="m-0 mb-1 ml-1" />
+            </Button>
+          </Link>
         </div>
       </Modal.Body>
     </Modal>

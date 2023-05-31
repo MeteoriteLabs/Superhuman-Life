@@ -7,6 +7,9 @@ import PageNotFound from './pages/PageNotFound';
 const MainLobby = React.lazy(() => import('./pages/dashboard'));
 const WebsiteBuilder = React.lazy(() => import('./pages/website-builder'));
 const TemplatePage = React.lazy(() => import('./pages/website-builder/sub-page/templates'));
+const LiveEditor = React.lazy(
+  () => import('./pages/website-builder/sub-page/liveEditor/liveEditor')
+);
 const BookingPage = React.lazy(() => import('./pages/booking'));
 const BookingSetting = React.lazy(() => import('./pages/booking/BookingSetting/BookingSetting'));
 const ChatPage = React.lazy(() => import('./pages/chat'));
@@ -90,6 +93,7 @@ export default function Routes({ token }: { token: string }): JSX.Element {
               <Route path="/lobby" component={MainLobby} />
               <Route exact path="/website" component={WebsiteBuilder} />
               <Route exact path="/website/templates" component={TemplatePage} />
+              <Route exact path="/website/templates/liveEditor" component={LiveEditor} />
               <Route path="/bookings" component={BookingPage} />
               <Route exact path="/bookingSettings" component={BookingSetting} />
               <Route path="/chats" component={ChatPage} />

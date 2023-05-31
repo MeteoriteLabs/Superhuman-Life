@@ -17,10 +17,12 @@ export default function Layout({
   const [selected, setSelected] = useState<string>(location.pathname.slice(1));
   const [collapse, setCollapse] = useState<boolean>(true);
   const [sideNavStatus, setSideNavStatus] = useState<boolean>(false);
+  const [liveEditor, setLiveEditor] = useState<boolean>(false);
 
   const { pathname } = useLocation();
 
   useEffect(() => {
+    pathname === '/website/templates/liveEditor' ? setLiveEditor(true) : setLiveEditor(false);
     getSideNavStatus();
   }, [pathname]);
 
@@ -29,6 +31,7 @@ export default function Layout({
       pathname !== '/lobby' &&
       pathname !== '/website' &&
       pathname !== '/website/templates' &&
+      pathname !== '/website/templates/liveEditor' &&
       pathname !== '/profile' &&
       pathname !== '/insights' &&
       pathname !== '/support'
@@ -43,7 +46,7 @@ export default function Layout({
 
   return (
     <>
-      <header>{token ? <AuthenticatedNav /> : <UnauthenticatedNav />}</header>
+      <header>{liveEditor ? '' : token ? <AuthenticatedNav /> : <UnauthenticatedNav />}</header>
       <main>
         {token ? (
           <div>
