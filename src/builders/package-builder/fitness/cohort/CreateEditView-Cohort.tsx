@@ -3,15 +3,14 @@ import { useQuery, useMutation } from '@apollo/client';
 import ModalView from '../../../../components/modal';
 import {
   CREATE_CHANNEL_PACKAGE,
-  CREATE_BOOKING_CONFIG,
   DELETE_PACKAGE,
   UPDATE_PACKAGE_STATUS,
   UPDATE_CHANNEL_COHORT_PACKAGE,
   CREATE_NOTIFICATION,
-  DELETE_BOOKING_CONFIG,
   CREATE_OFFERING_INVENTORY,
   UPDATE_OFFERING_INVENTORY,
-  CREATE_TAG
+  CREATE_TAG,
+  DELETE_OFFERING_INVENTORY
 } from '../graphQL/mutations';
 import {
   youtubeUrlCustomFormats,
@@ -20,7 +19,7 @@ import {
 import {
   GET_FITNESS_PACKAGE_TYPE,
   GET_SINGLE_PACKAGE_BY_ID,
-  GET_BOOKINGS_CONFIG
+  GET_INVENTORY
 } from '../graphQL/queries';
 import AuthContext from '../../../../context/auth-context';
 import { schema, widgets } from './cohortSchema';
@@ -30,10 +29,9 @@ import { flattenObj } from '../../../../components/utils/responseFlatten';
 import moment from 'moment';
 import { Modal, Button } from 'react-bootstrap';
 import Toaster from '../../../../components/Toaster';
+import { OfferingInventory } from '../../interface/offeringInventory';
 
 interface Operation {
-  inventoryId: string | null;
-  activeBooking: number | null;
   id: string;
   packageType: 'Cohort' | 'Live Stream Channel';
   type: 'create' | 'edit' | 'view' | 'toggle-status' | 'delete';
@@ -52,9 +50,30 @@ function CreateEditCohort(props: any, ref: any) {
   const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
   const [isOffeeringDeleted, setisOffeeringDeleted] = useState<boolean>(false);
   const [isOfferingUpdated, setisOfferingUpdated] = useState<boolean>(false);
-  // const [bookingsConfigInfo, setBookingsConfigInfo] = useState<any[]>([]);
+  const [offeringInventoryDetails, setOfferingInventoryDetails] = useState<OfferingInventory>({} as OfferingInventory);
 
   let frmDetails: any = {};
+
+   // eslint-disable-next-line
+   const { data: inventories, refetch: refetch_inventories } = useQuery(
+    GET_INVENTORY,
+
+    {
+      variables: { changemaker_id: auth.userid, fitnesspackageid: operation.id },
+      skip: !operation.id,
+      onCompleted: (response) => {
+        const flattenInventoryData = flattenObj({ ...response.offeringInventories });
+
+        if (flattenInventoryData && flattenInventoryData.length)
+          setOfferingInventoryDetails(flattenInventoryData[0]);
+
+        if (flattenInventoryData && flattenInventoryData.length && flattenInventoryData[0] && flattenInventoryData[0].ActiveBookings === 0)
+          setDeleteModalShow(true);
+        else
+          setDeleteValidationModalShow(true);
+      }
+    }
+  );
 
   const [editPackageDetails] = useMutation(UPDATE_CHANNEL_COHORT_PACKAGE, {
     onCompleted: (data) => {
@@ -63,7 +82,7 @@ function CreateEditCohort(props: any, ref: any) {
 
       updateOfferingInventory({
         variables: {
-          id: operation.inventoryId,
+          id: offeringInventoryDetails.id,
           data: {
             ClassSize: flattenData.updateFitnesspackage.classsize,
             InstantBooking: flattenData.updateFitnesspackage.groupinstantbooking
@@ -76,7 +95,7 @@ function CreateEditCohort(props: any, ref: any) {
   const [updatePackageStatus] = useMutation(UPDATE_PACKAGE_STATUS, {
     onCompleted: () => {
       setStatusModalShow(false);
-      props.refetchInventory();
+     
       props.refetchTags();
       props.refetchOfferings();
       setisOfferingUpdated(!isOfferingUpdated);
@@ -85,31 +104,16 @@ function CreateEditCohort(props: any, ref: any) {
 
   const [createOfferingInventory] = useMutation(CREATE_OFFERING_INVENTORY);
   const [updateOfferingInventory] = useMutation(UPDATE_OFFERING_INVENTORY);
-
-  // eslint-disable-next-line
-  // const { data: get_bookings_config } = useQuery(GET_BOOKINGS_CONFIG, {
-  //   variables: { userId: auth.userid },
-  //   onCompleted: (data) => {
-  //     const bookingsConfigFlattenData = flattenObj({ ...data });
-  //     setBookingsConfigInfo(bookingsConfigFlattenData.bookingConfigs);
-  //   }
-  // });
-
-  // const [deleteBookingConfig] = useMutation(DELETE_BOOKING_CONFIG);
+  const [deleteOfferingInventory] = useMutation(DELETE_OFFERING_INVENTORY);
 
   const [deletePackage] = useMutation(DELETE_PACKAGE, {
     onCompleted: () => {
-      // delete booking config
-      // const offeringsId = data.deleteFitnesspackage.data.id;
-      // const bookingConfigId = bookingsConfigInfo.find(
-      //   (currentValue) => currentValue.fitnesspackage.id === offeringsId
-      // );
 
-      // deleteBookingConfig({
-      //   variables: { id: bookingConfigId.id }
-      // });
+      //delete offering inventory
+      deleteOfferingInventory({
+        variables: { id: offeringInventoryDetails.id },
+      });
 
-      props.refetchInventory();
       props.refetchTags();
       props.refetchOfferings();
       setisOffeeringDeleted(!isOffeeringDeleted);
@@ -119,7 +123,7 @@ function CreateEditCohort(props: any, ref: any) {
   const [createTag] = useMutation(CREATE_TAG, {
     onCompleted: (response) => {
       modalTrigger.next(false);
-      props.refetchInventory();
+      
       props.refetchTags();
       props.refetchOfferings();
       setIsFormSubmitted(!isFormSubmitted);
@@ -187,9 +191,11 @@ function CreateEditCohort(props: any, ref: any) {
         setStatusModalShow(true);
       }
 
-      if (msg.type === 'delete') {
-        if (msg.activeBooking === 0) setDeleteModalShow(true);
-        else setDeleteValidationModalShow(true);
+      if (msg.type === 'delete' && offeringInventoryDetails.ActiveBookings !== null ) {
+        if (offeringInventoryDetails.ActiveBookings === 0 )
+        setDeleteModalShow(true);
+        else
+        setDeleteValidationModalShow(true);
       }
 
       // restrict to render when type is delete or toggle status
@@ -276,7 +282,6 @@ function CreateEditCohort(props: any, ref: any) {
       oneDay:
         moment(msg.End_date).format('YYYY-MM-DD') === moment(msg.Start_date).format('YYYY-MM-DD')
     });
-    details.bookingConfigId = msg.booking_config?.id;
 
     setProgramDetails(details);
 
@@ -489,7 +494,7 @@ function CreateEditCohort(props: any, ref: any) {
         editCohort(frm);
         break;
       case 'delete':
-        if (operation.activeBooking === 0) setDeleteModalShow(true);
+        if (offeringInventoryDetails.ActiveBookings === 0) setDeleteModalShow(true);
         else setDeleteValidationModalShow(true);
         break;
       case 'toggle-status':
@@ -569,6 +574,8 @@ function CreateEditCohort(props: any, ref: any) {
       </Modal>
 
       {/* Delete modal validation (if classAvailability is greater than zero show this dailouge box) */}
+      {
+        offeringInventoryDetails && offeringInventoryDetails.ActiveBookings > 0 ? 
       <Modal
         size="lg"
         aria-labelledby="contained-modal-title-vcenter"
@@ -598,9 +605,11 @@ function CreateEditCohort(props: any, ref: any) {
             Close
           </Button>
         </Modal.Footer>
-      </Modal>
+      </Modal> : null }
 
       {/* Delete modal */}
+      {
+        offeringInventoryDetails && offeringInventoryDetails.ActiveBookings === 0 ? 
       <Modal
         size="lg"
         aria-labelledby="contained-modal-title-vcenter"
@@ -632,7 +641,7 @@ function CreateEditCohort(props: any, ref: any) {
             Yes
           </Button>
         </Modal.Footer>
-      </Modal>
+      </Modal> : null}
 
       {isFormSubmitted ? (
         <Toaster

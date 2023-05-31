@@ -12,8 +12,6 @@ import { useMutation, useQuery } from "@apollo/client";
 import {
   GET_SINGLE_PACKAGE_BY_ID,
   GET_FITNESS_PACKAGE_TYPE,
-  ADD_SUGGESTION_NEW,
-  GET_BOOKINGS_CONFIG,
 } from "./graphQL/queries";
 import ModalPreview from "./widgetCustom/Preview/FitnessPreview";
 import "./CreateEditView.css";
@@ -21,8 +19,7 @@ import {
   CREATE_PACKAGE,
   DELETE_PACKAGE,
   EDIT_PACKAGE,
-  UPDATE_PACKAGE_PRIVATE,
-  DELETE_BOOKING_CONFIG,
+  UPDATE_PACKAGE_PRIVATE
 } from "./graphQL/mutations";
 import StatusModal from "../../../components/StatusModal/StatusModal";
 import FitnessMultiSelect from "./widgetCustom/FitnessMultiSelect";
@@ -543,55 +540,18 @@ function CreateEditView(props: any, ref: any) {
     },
   }));
 
-  const [createUserPackageSuggestion] = useMutation(ADD_SUGGESTION_NEW, {
-    onCompleted: (data) => {
-      modalTrigger.next(false);
-      props.callback();
-    },
-  });
-
   const [createPackage] = useMutation(CREATE_PACKAGE, {
     variables: {
       users_permissions_user: auth.userid,
     },
-    onCompleted: (r: any) => {
-      if (window.location.href.split("/")[3] === "client") {
-        createUserPackageSuggestion({
-          variables: {
-            id: window.location.href.split("/").pop(),
-            fitnesspackage: r.createFitnesspackage.data.id,
-          },
-        });
-      }
+    onCompleted: () => {
       modalTrigger.next(false);
       props.callback();
     },
   });
 
-  // eslint-disable-next-line
-  const { data: get_bookings_config } = useQuery(GET_BOOKINGS_CONFIG, {
-    variables: { userId: auth.userid },
-    onCompleted: (data) => {
-      const bookingsConfigFlattenData = flattenObj({ ...data });
-      setBookingsConfigInfo(bookingsConfigFlattenData.bookingConfigs);
-    },
-  });
-
-  const [deleteBookingConfig] = useMutation(DELETE_BOOKING_CONFIG);
-
   const [deletePackage] = useMutation(DELETE_PACKAGE, {
-    onCompleted: (r: any) => {
-
-      // delete booking config
-      const offeringsId = r.deleteFitnesspackage.data.id;
-      const bookingConfigId = bookingsConfigInfo.find(
-        (currentValue) => currentValue.fitnesspackage.id === offeringsId
-      );
-
-      deleteBookingConfig({
-        variables: { id: bookingConfigId.id },
-      });
-
+    onCompleted: () => {
       props.callback();
     },
   });
@@ -603,7 +563,7 @@ function CreateEditView(props: any, ref: any) {
   });
 
   const [editPackage] = useMutation(EDIT_PACKAGE, {
-    onCompleted: (data: any) => {
+    onCompleted: () => {
       modalTrigger.next(false);
       props.callback();
     },

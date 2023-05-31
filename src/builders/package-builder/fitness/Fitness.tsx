@@ -24,7 +24,7 @@ import CreateEditViewClassicClass from './classic/CreateOrEdit';
 import CreateEditViewCustomFitness from './custom/CreateOrEdit';
 import CreateEditViewChannel from './live-stream/CreateEditView-Channel';
 import CreateEditViewCohort from './cohort/CreateEditView-Cohort';
-import { GET_FITNESS, GET_TAGS, GET_INVENTORY } from './graphQL/queries';
+import { GET_FITNESS, GET_TAGS } from './graphQL/queries';
 import { flattenObj } from '../../../components/utils/responseFlatten';
 import moment from 'moment';
 import Drawer from '../../../components/Drawer';
@@ -44,11 +44,8 @@ export default function FitnessTab() {
   const [currentIndex, setCurrentIndex] = useState<any>('');
   const [showDrawer, setShowDrawer] = useState<boolean>(false);
   const [triggeredDetails, setTriggeredDetails] = useState<any>({});
-  const [inventoriesDetails, setInventoriesDetails] = useState<any[]>([]);
 
   function handleModalRender(
-    inventoryId: string | null,
-    activeBooking: number | null,
     id: string | null,
     actionType: string,
     type: string,
@@ -73,8 +70,7 @@ export default function FitnessTab() {
         break;
       case 'Group Class':
         CreateEditViewGroupClassRef.current.TriggerForm({
-          inventoryId: inventoryId,
-          activeBooking: activeBooking,
+         
           id: id,
           type: actionType,
           actionType: type,
@@ -83,8 +79,7 @@ export default function FitnessTab() {
         break;
       case 'Classic Class':
         CreateEditViewClassicClassRef.current.TriggerForm({
-          inventoryId: inventoryId,
-          activeBooking: activeBooking,
+         
           id: id,
           type: actionType,
           actionType: type,
@@ -101,8 +96,7 @@ export default function FitnessTab() {
         break;
       case 'Live Stream Channel':
         createEditViewChannelRef.current.TriggerForm({
-          inventoryId: inventoryId,
-          activeBooking: activeBooking,
+          
           id: id,
           type: actionType,
           packageType: type,
@@ -111,8 +105,7 @@ export default function FitnessTab() {
         break;
       case 'Cohort':
         createEditViewCohortRef.current.TriggerForm({
-          inventoryId: inventoryId,
-          activeBooking: activeBooking,
+          
           id: id,
           type: actionType,
           packageType: type,
@@ -563,8 +556,7 @@ export default function FitnessTab() {
         Cell: ({ row }: any) => {
           const editHandler = () => {
             handleModalRender(
-              row.original.inventoryId,
-              row.original.activeBooking,
+              
               row.original.id,
               'edit',
               row.original.type
@@ -573,8 +565,7 @@ export default function FitnessTab() {
 
           const statusChangeHandler = () => {
             handleModalRender(
-              row.original.inventoryId,
-              row.original.activeBooking,
+              
               row.original.id,
               'toggle-status',
               row.original.type,
@@ -584,8 +575,7 @@ export default function FitnessTab() {
 
           const viewHandler = () => {
             handleModalRender(
-              row.original.inventoryId,
-              row.original.activeBooking,
+              
               row.original.id,
               'view',
               row.original.type
@@ -594,8 +584,7 @@ export default function FitnessTab() {
 
           const deleteHandler = () => {
             handleModalRender(
-              row.original.inventoryId,
-              row.original.activeBooking,
+             
               row.original.id,
               'delete',
               row.original.type
@@ -663,87 +652,64 @@ export default function FitnessTab() {
   const [dataTable, setDataTable] = useState<any>([]);
 
   // eslint-disable-next-line
-  const [get_inventory, { data: inventories, refetch: refetch_inventories }] = useLazyQuery(
-    GET_INVENTORY,
-    {
-      fetchPolicy: 'cache-and-network',
-      onCompleted: (response) => {
-        const flattenInventoryData = flattenObj({ ...response.offeringInventories });
-        const tagsFlattenData = flattenObj({ ...get_tags });
-        const fitnessFlattenData = flattenObj({ ...get_fitness });
-        
-        setDataTable(
-          [...fitnessFlattenData?.fitnesspackages].map((item) => {
-            const inventory =
-              flattenInventoryData &&
-              flattenInventoryData.length &&
-              flattenInventoryData.find(
-                (curr) => Number(curr.fitnesspackage.id) === Number(item.id)
-              );
-
-            return {
-              sessions: tagsFlattenData.tags.filter(
-                (currentValue) => currentValue.fitnesspackage.id === item.id
-              ),
-              inventoryId: inventory ? inventory.id : null,
-              activeBooking: inventory ? inventory.ActiveBookings : null,
-              tagId: tagsFlattenData.tags
-                .filter((currentValue) => currentValue.fitnesspackage.id === item.id)
-                .map((currentValue) => [currentValue.id]),
-              tagname: tagsFlattenData.tags
-                .filter((currentValue) => currentValue.fitnesspackage.id === item.id)
-                .map((currentValue) => [currentValue.tag_name]),
-              thumbnailId: item.Thumbnail_ID,
-              level: item.level,
-              id: item.id,
-              address: item.address,
-              packagename: item.packagename,
-              firstName: item.users_permissions_user.First_Name,
-              lastName: item.users_permissions_user.Last_Name,
-              ptonline: item.ptonline,
-              ptoffline: item.ptoffline,
-              grouponline: item.grouponline,
-              groupoffline: item.groupoffline,
-              recordedclasses: item.recordedclasses,
-              status: item.Status,
-              type: item.fitness_package_type.type,
-              details: [
-                item.ptonline,
-                item.ptoffline,
-                item.grouponline,
-                item.groupoffline,
-                item.recordedclasses,
-                item.duration,
-                item.mode
-              ],
-              duration: item.fitnesspackagepricing.map((i) => i.duration),
-              mrp: item.fitnesspackagepricing.map((i) => i.mrp),
-              Status: item.Status ? 'Active' : 'Inactive',
-              publishingDate: item.publishing_date,
-              mode: item.mode,
-              days: item.duration,
-              pricing: item.fitnesspackagepricing,
-              freeClass: item.groupinstantbooking,
-              startDate: item.Start_date,
-              endDate: item.End_date
-            };
-          })
-        );
-
-        setSelectedDuration(new Array(fitnessFlattenData.fitnesspackages.length).fill(0));
-        setCurrentIndex(new Array(fitnessFlattenData.fitnesspackages.length).fill(1));
-
-        // setInventoriesDetails(flattenData.offeringInventories);
-      }
-    }
-  );
-
-  // eslint-disable-next-line
   const [tags, { data: get_tags, refetch: refetch_tags }] = useLazyQuery(GET_TAGS, {
     variables: { id: auth.userid },
     fetchPolicy: 'cache-and-network',
     onCompleted: () => {
-      get_inventory({ variables: { changemaker_id: auth.userid } });
+      const tagsFlattenData = flattenObj({ ...get_tags });
+      const fitnessFlattenData = flattenObj({ ...get_fitness });
+
+      setDataTable(
+        [...fitnessFlattenData?.fitnesspackages].map((item) => {
+          return {
+            sessions: tagsFlattenData.tags.filter(
+              (currentValue) => currentValue.fitnesspackage.id === item.id
+            ),
+            tagId: tagsFlattenData.tags
+              .filter((currentValue) => currentValue.fitnesspackage.id === item.id)
+              .map((currentValue) => [currentValue.id]),
+            tagname: tagsFlattenData.tags
+              .filter((currentValue) => currentValue.fitnesspackage.id === item.id)
+              .map((currentValue) => [currentValue.tag_name]),
+            thumbnailId: item.Thumbnail_ID,
+            level: item.level,
+            id: item.id,
+            address: item.address,
+            packagename: item.packagename,
+            firstName: item.users_permissions_user.First_Name,
+            lastName: item.users_permissions_user.Last_Name,
+            ptonline: item.ptonline,
+            ptoffline: item.ptoffline,
+            grouponline: item.grouponline,
+            groupoffline: item.groupoffline,
+            recordedclasses: item.recordedclasses,
+            status: item.Status,
+            type: item.fitness_package_type.type,
+            details: [
+              item.ptonline,
+              item.ptoffline,
+              item.grouponline,
+              item.groupoffline,
+              item.recordedclasses,
+              item.duration,
+              item.mode
+            ],
+            duration: item.fitnesspackagepricing.map((i) => i.duration),
+            mrp: item.fitnesspackagepricing.map((i) => i.mrp),
+            Status: item.Status ? 'Active' : 'Inactive',
+            publishingDate: item.publishing_date,
+            mode: item.mode,
+            days: item.duration,
+            pricing: item.fitnesspackagepricing,
+            freeClass: item.groupinstantbooking,
+            startDate: item.Start_date,
+            endDate: item.End_date
+          };
+        })
+      );
+
+      setSelectedDuration(new Array(fitnessFlattenData.fitnesspackages.length).fill(0));
+      setCurrentIndex(new Array(fitnessFlattenData.fitnesspackages.length).fill(1));
     }
   });
 
@@ -772,13 +738,13 @@ export default function FitnessTab() {
             }>
             <Dropdown.Item
               onClick={() => {
-                handleModalRender(null, null, null, 'create', 'One-On-One');
+                handleModalRender(null, 'create', 'One-On-One');
               }}>
               Package subscription
             </Dropdown.Item>
             <Dropdown.Item
               onClick={() => {
-                handleModalRender(null, null, null, 'create', 'On-Demand PT');
+                handleModalRender(null, 'create', 'On-Demand PT');
               }}>
               On-Demand
             </Dropdown.Item>
@@ -789,7 +755,7 @@ export default function FitnessTab() {
             variant="outline-secondary"
             size="sm"
             onClick={() => {
-              handleModalRender(null, null, null, 'create', 'Group Class');
+              handleModalRender(null, 'create', 'Group Class');
             }}>
             <i className="fas fa-plus-circle"></i> Group
           </Button>
@@ -799,7 +765,7 @@ export default function FitnessTab() {
             variant="outline-secondary"
             size="sm"
             onClick={() => {
-              handleModalRender(null, null, null, 'create', 'Classic Class');
+              handleModalRender(null, 'create', 'Classic Class');
             }}>
             <i className="fas fa-plus-circle"></i> Recorded
           </Button>
@@ -809,7 +775,7 @@ export default function FitnessTab() {
             variant="outline-secondary"
             size="sm"
             onClick={() => {
-              handleModalRender(null, null, null, 'create', 'Custom Fitness');
+              handleModalRender(null, 'create', 'Custom Fitness');
             }}>
             <i className="fas fa-plus-circle"></i> Custom
           </Button>
@@ -819,7 +785,7 @@ export default function FitnessTab() {
             variant="outline-secondary"
             size="sm"
             onClick={() => {
-              handleModalRender(null, null, null, 'create', 'Live Stream Channel');
+              handleModalRender(null, 'create', 'Live Stream Channel');
             }}>
             <i className="fas fa-plus-circle"></i> Live Stream
           </Button>
@@ -829,7 +795,7 @@ export default function FitnessTab() {
             variant="outline-secondary"
             size="sm"
             onClick={() => {
-              handleModalRender(null, null, null, 'create', 'Cohort');
+              handleModalRender(null, 'create', 'Cohort');
             }}>
             <i className="fas fa-plus-circle"></i> Cohort
           </Button>
@@ -840,41 +806,34 @@ export default function FitnessTab() {
               <Card.Title className="text-center">
                 <CreateEditViewChannel
                   ref={createEditViewChannelRef}
-                  refetchInventory={refetch_inventories}
                   refetchTags={refetch_tags}
                   refetchOfferings={refetchFitness}></CreateEditViewChannel>
                 <CreateEditViewCohort
                   ref={createEditViewCohortRef}
-                  refetchInventory={refetch_inventories}
                   refetchTags={refetch_tags}
                   refetchOfferings={refetchFitness}></CreateEditViewCohort>
                 <CreateEditViewPersonalTraining
                   ref={createEditViewPersonalTrainingRef}
-                  refetchInventory={refetch_inventories}
                   refetchTags={refetch_tags}
                   refetchOfferings={refetchFitness}
                 />
                 <CreateEditViewOnDemandPt
                   ref={CreateEditViewOnDemandPtRef}
-                  refetchInventory={refetch_inventories}
                   refetchTags={refetch_tags}
                   refetchOfferings={refetchFitness}
                 />
                 <CreateEditViewGroupClass
                   ref={CreateEditViewGroupClassRef}
-                  refetchInventory={refetch_inventories}
                   refetchTags={refetch_tags}
                   refetchOfferings={refetchFitness}
                 />
                 <CreateEditViewClassicClass
                   ref={CreateEditViewClassicClassRef}
-                  refetchInventory={refetch_inventories}
                   refetchTags={refetch_tags}
                   refetchOfferings={refetchFitness}
                 />
                 <CreateEditViewCustomFitness
                   ref={CreateEditViewCustomFitnessRef}
-                  refetchInventory={refetch_inventories}
                   refetchTags={refetch_tags}
                   refetchOfferings={refetchFitness}
                 />

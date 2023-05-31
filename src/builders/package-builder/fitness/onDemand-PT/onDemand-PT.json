@@ -156,8 +156,7 @@
          "title": "Package Settings",
         "type": "object",
         "required": [
-         "visibility",
-         "config"
+         "visibility"
         ],
         "properties": {
              "visibility": {
@@ -176,15 +175,13 @@
              },
              "config": {
                 "title": "Booking Config",
-                "type": "object",
-                "required": [
-                    "bookingConfig"
-                ],
-                "properties": {
-                    "bookingConfig": {
-                        "type": "string"
-                    }
-                }
+                "type": "number",
+                 "enum": [0, 1],
+                 "enumNames": [
+                     "Manual",
+                     "Auto"    
+                 ],
+                 "default": 0 
              }
          }
      }
