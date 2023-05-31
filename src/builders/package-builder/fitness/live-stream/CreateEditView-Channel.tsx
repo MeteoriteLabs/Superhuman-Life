@@ -525,7 +525,7 @@ function CreateEditChannel(props: any, ref: any) {
     setStatusModalShow(false);
     operation.type = 'create';
   }
-  // const delayInMilliseconds = 1000; //1 second
+ 
   function OnSubmit(frm: any) {
     //bind user id
     if (frm) {
