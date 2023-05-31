@@ -2,7 +2,7 @@ import { WebsiteTemplate } from '../@types/websiteTemplates';
 import { ArrowRight, CheckCircle } from 'react-bootstrap-icons';
 import { Button, Col, ListGroup, Modal, Row } from 'react-bootstrap';
 
-import style from './style.module.css';
+import style from './info.module.css';
 import { Link } from 'react-router-dom';
 
 function InfoModal({
