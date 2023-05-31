@@ -70,7 +70,7 @@ function CreateEditChannel(props: any, ref: any) {
         if (flattenInventoryData && flattenInventoryData.length)
           setOfferingInventoryDetails(flattenInventoryData[0]);
 
-        if (flattenInventoryData && flattenInventoryData.length && flattenInventoryData[0] && flattenInventoryData[0].ActiveBookings === 0)
+        if (operation.type === "delete" && flattenInventoryData && flattenInventoryData.length && flattenInventoryData[0] && flattenInventoryData[0].ActiveBookings === 0)
           setDeleteModalShow(true);
         else
           setDeleteValidationModalShow(true);
