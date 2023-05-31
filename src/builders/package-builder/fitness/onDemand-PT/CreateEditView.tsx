@@ -98,7 +98,12 @@ function CreateEditOnDemadPt(props: any, ref: any) {
     },
   });
 
-  const [editPackage] = useMutation(EDIT_PACKAGE);
+  const [editPackage] = useMutation(EDIT_PACKAGE, {onCompleted: () => {
+    modalTrigger.next(false);
+    props.refetchTags();
+      props.refetchOfferings();
+      setisOfferingUpdated(!isOfferingUpdated);
+  }});
 
   const [updatePackageStatus] = useMutation(UPDATE_PACKAGE_STATUS, {
     onCompleted: () => {
@@ -216,6 +221,7 @@ function CreateEditOnDemadPt(props: any, ref: any) {
       distance: msg.client_address ? `${clientAddressArray[0]}Km` : null,
       clientAddress: msg.client_address ? clientAddressArray[1]  : null,
     });
+    details.config = 0;
     details.thumbnail = msg.Thumbnail_ID;
     details.Upload =
       msg.Upload_ID === null

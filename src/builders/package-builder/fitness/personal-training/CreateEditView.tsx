@@ -96,7 +96,7 @@ function CreateEditPt(props: any, ref: any) {
 
   const [editPackage] = useMutation(EDIT_PACKAGE, {
     onCompleted: () => {
-      
+      modalTrigger.next(false);
       props.refetchTags();
       props.refetchOfferings();
     },
@@ -204,7 +204,6 @@ function CreateEditPt(props: any, ref: any) {
     
     const msg = flattenedData.fitnesspackages[0];
   
-    const bookingConfig: any = {};
     const details: any = {};
     for (let i = 0; i < msg.fitnesspackagepricing.length; i++) {
       PRICING_TABLE_DEFAULT[i].mrp = msg.fitnesspackagepricing[i].mrp;
@@ -215,6 +214,7 @@ function CreateEditPt(props: any, ref: any) {
         msg.fitnesspackagepricing[i].sapienPricing;
     }
     const clientAddressArray = msg.client_address ? msg.client_address.split("Km") : [];
+    details.config = 0;
     details.About = msg.aboutpackage;
     details.Benifits = msg.benefits;
     details.packagename = msg.packagename;
@@ -233,9 +233,7 @@ function CreateEditPt(props: any, ref: any) {
     details.tags = msg?.tags === null ? "" : msg.tags;
     details.user_permissions_user = msg.users_permissions_user.id;
     details.visibility = msg.is_private ? 1 : 0;
-    bookingConfig.config = msg.booking_config?.isAuto ? "Auto" : "Manual";
-    bookingConfig.bookings = msg.booking_config?.BookingsPerMonth;
-    details.config = { bookingConfig: JSON.stringify(bookingConfig) };
+   
     details.programDetails = JSON.stringify({
       addressTag: msg.address === null ? "At Client Address" : "At My Address",
       address: [msg.address],
@@ -259,7 +257,6 @@ function CreateEditPt(props: any, ref: any) {
       ? msg.SubscriptionDuration
       : ["30 days", "90 days", "180 days", "360 days"];
     details.bookingleadday = msg.bookingleadday;
-    details.bookingConfigId = msg.booking_config?.id;
     details.languages = JSON.stringify(msg.languages);
     setPersonalTrainingDetails(details);
 
