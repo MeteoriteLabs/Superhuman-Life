@@ -1,0 +1,6 @@
+.sideNavCont{
+    position: fixed; 
+    height: 100% ;
+    z-index: 2 ;
+    background-color: #242424 ;
+}
