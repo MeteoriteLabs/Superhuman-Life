@@ -7,9 +7,7 @@ import PageNotFound from './pages/PageNotFound';
 const MainLobby = React.lazy(() => import('./pages/dashboard'));
 const WebsiteBuilder = React.lazy(() => import('./pages/website-builder'));
 const TemplatePage = React.lazy(() => import('./pages/website-builder/sub-page/templates'));
-const LiveEditor = React.lazy(
-  () => import('./pages/website-builder/sub-page/liveEditor/liveEditor')
-);
+const LiveEditor = React.lazy(() => import('./pages/liveEditor'));
 const BookingPage = React.lazy(() => import('./pages/booking'));
 const BookingSetting = React.lazy(() => import('./pages/booking/BookingSetting/BookingSetting'));
 const ChatPage = React.lazy(() => import('./pages/chat'));
