@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react';
 import { Gear, WindowFullscreen } from 'react-bootstrap-icons';
 import clsx from 'clsx';
 
-import WebsiteNav from '../websiteNav';
-import ThemeSettings from '../themeSettings';
-import GeneralSettings from '../generalSettings';
+import WebsiteNav from './websiteNav';
+import ThemeSettings from './themeSettings';
+import GeneralSettings from './generalSettings';
 
 import style from './tabs.module.css';
 function CustomTabs({
