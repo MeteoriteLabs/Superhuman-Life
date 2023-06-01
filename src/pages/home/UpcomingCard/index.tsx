@@ -45,6 +45,7 @@ const UpcomingCard: React.FC = () => {
 
         return date >= currentTime;
       });
+  
       setSessionData(nextUpcomingSessions);
     }
   });

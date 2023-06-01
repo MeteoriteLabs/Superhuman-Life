@@ -2,7 +2,11 @@
         "title": "",
         "type": "object",
         "required": [
-           
+            "voucher_name",
+            "discount_percentage",
+            "Start_date",
+            "expiry_date",
+            "Usage_restriction"
         ],
         "properties": {
             "voucher_name": {
@@ -12,6 +16,10 @@
             "discount_percentage": {
                "type": "number",
                "title": "Discount"
+            },
+            "flat_discount": {
+                "type": "number",
+                "title": "Flat discount"
             },
             "Start_date": {
                 "type": "string",

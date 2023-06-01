@@ -7,7 +7,7 @@ import { flattenObj } from "../../../components/utils/responseFlatten";
 import { Row, Col } from "react-bootstrap";
 import moment from "moment";
 
-function WeeklyClientGraph() {
+function WeeklyClientGraph(): JSX.Element {
   const [clientsData, setClientsData] = useState<{index: string; Clients: number;}[]>([]);
   const auth = useContext(AuthContext);
 

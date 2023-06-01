@@ -1,9 +1,18 @@
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { withTheme, utils } from '@rjsf/core';
 import { Theme as Bootstrap4Theme } from '@rjsf/bootstrap-4';
 import { Button, Col, Modal, Row } from 'react-bootstrap';
 
-const FinanceModal = (props: any) => {
+const FinanceModal: React.FC<{
+  modalTrigger: any;
+  formSchema: any;
+  name: string;
+  formSubmit: (args: any) => void;
+  actionType: string;
+  formData: any;
+  formUISchema?: any;
+  widgets?: any;
+}> = (props) => {
   const registry = utils.getDefaultRegistry();
   const defaultFileWidget = registry.widgets['FileWidget'];
   (Bootstrap4Theme as any).widgets['FileWidget'] = defaultFileWidget;
@@ -80,6 +89,16 @@ const FinanceModal = (props: any) => {
             }}>
             {props.actionType === 'view' ? 'Close' : 'Save'}
           </Button>
+          {props.actionType !== 'view' ?
+          <Button
+            style={{ padding: '5px 40px' }}
+            variant={props.actionType === 'view' ? 'danger' : 'success'}
+            size="sm"
+            onClick={(event) => {
+              props.modalTrigger.next(false);
+            }}>
+             Close 
+          </Button>: null}
         </Modal.Footer>
       </Modal>
     </div>

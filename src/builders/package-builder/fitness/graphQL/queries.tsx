@@ -133,7 +133,7 @@ export const GET_TAGS = gql`
 export const GET_FITNESS = gql`
   query fitnesspackages($id: ID) {
     fitnesspackages(
-      sort: ["updatedAt"]
+      sort: ["updatedAt:desc"]
       filters: { users_permissions_user: { id: { eq: $id } } }
       pagination: { pageSize: 1500 }
     ) {

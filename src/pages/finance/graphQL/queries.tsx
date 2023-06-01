@@ -30,6 +30,7 @@ export const GET_ALL_VOUCHERS = gql`
     query vouchers($id: ID){
         vouchers(
           filters:{users_permissions_user:{id:{eq:$id}}}
+          sort: ["updatedAt:desc"]
         )
     {
       data{

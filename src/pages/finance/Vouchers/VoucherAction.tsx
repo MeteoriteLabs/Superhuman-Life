@@ -4,6 +4,7 @@ import { Subject } from "rxjs";
 import FinanceModal from "../../../components/financeModal/FinanceModal";
 import StatusModal from "../../../components/StatusModal/StatusModal";
 import authContext from "../../../context/auth-context";
+import schema from "./VouchersSchema";
 import {
   CREATE_VOUCHER,
   DELETE_VOUCHER,
@@ -12,6 +13,26 @@ import {
 } from "../graphQL/mutations";
 import { GET_VOUCHERS_BY_ID } from "../graphQL/queries";
 import Toaster from "../../../components/Toaster";
+
+interface Vouchers {
+  voucher_name: string;
+  discount_percentage: number;
+  Start_date: string;
+  expiry_date: string;
+  Usage_restriction: number;
+  flat_discount: number;
+}
+
+interface VouchersForm {
+  id: string;
+  user_permissions_user: string;
+  voucher_name: string;
+  discount_percentage: number;
+  Start_date: string;
+  expiry_date: string;
+  Usage_restriction: number;
+  flat_discount: number;
+}
 
 interface Operation {
   id: string;
@@ -23,15 +44,15 @@ interface Operation {
     | "delete"
     | "bank"
     | "upi";
-  current_status: boolean;
-  rowData: any;
+  current_status: string;
+  rowData: unknown;
 }
 
-function VoucherAction(props: any, ref) {
+function VoucherAction(props: {callback: () => void}, ref): JSX.Element {
   const auth = useContext(authContext);
   const [operation, setOperation] = useState<Operation>({} as Operation);
   const modalTrigger = new Subject();
-  const [formData, setFormData] = useState<any>();
+  const [formData, setFormData] = useState<Vouchers>({} as Vouchers);
   const formSchema = require("./voucher.json");
   const [showStatusModal, setShowStatusModal] = useState<boolean>(false);
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
@@ -91,8 +112,8 @@ function VoucherAction(props: any, ref) {
       skip: !operation.id,
     });
 
-  const FillData = (data: any) => {
-    const updateFormData: any = {};
+  const FillData = (data) => {
+    const updateFormData: Vouchers = {} as Vouchers;
     updateFormData.voucher_name = data.vouchers.data[0].attributes.voucher_name;
     updateFormData.discount_percentage =
       data.vouchers.data[0].attributes.discount_percentage;
@@ -105,23 +126,24 @@ function VoucherAction(props: any, ref) {
 
     if (["edit", "view"].indexOf(operation.actionType) > -1) {
       modalTrigger.next(true);
-    } else {
-      OnSubmit(null);
     }
+    //  else {
+    //   OnSubmit(null);
+    // }
   };
 
   FetchData();
 
   // Create Voucher
   const [createVoucher] = useMutation(CREATE_VOUCHER, {
-    onCompleted: (r: any) => {
+    onCompleted: () => {
       modalTrigger.next(false);
       props.callback();
       setIsVoucherCreated(!isVoucherCreated);
     },
   });
 
-  const CreateVoucher = (form: any) => {
+  const CreateVoucher = (form: VouchersForm) => {
     createVoucher({
       variables: {
         data: {
@@ -132,6 +154,7 @@ function VoucherAction(props: any, ref) {
           Usage_restriction: form.Usage_restriction,
           Status: "Active",
           users_permissions_user: form.user_permissions_user,
+          flat_discount: form.flat_discount
         },
       },
     });
@@ -139,36 +162,36 @@ function VoucherAction(props: any, ref) {
 
   //Edit Voucher
   const [editVoucher] = useMutation(EDIT_VOUCHER, {
-    onCompleted: (r: any) => {
+    onCompleted: () => {
       modalTrigger.next(false);
       props.callback();
       setIsVoucherUpdated(!isVoucherUpdated);
     },
   });
 
-  const EditVoucher = (form: any) => editVoucher({ variables: form });
+  const EditVoucher = (form: VouchersForm) => editVoucher({ variables: form });
 
   //Delete Voucher
   const [deleteVoucher] = useMutation(DELETE_VOUCHER, {
-    onCompleted: (e: any) => {
+    onCompleted: () => {
       props.callback();
       modalTrigger.next(false);
       setIsVoucherDeleted(!isVoucherDeleted);
     },
   });
 
-  const DeleteVoucher = (id) => deleteVoucher({ variables: { id: id } });
+  const DeleteVoucher = (id: string|number) => deleteVoucher({ variables: { id: id } });
 
   //Toggle Status
   const [toggleVoucherStatus] = useMutation(TOGGLE_STATUS, {
-    onCompleted: (e: any) => {
+    onCompleted: () => {
       props.callback();
       modalTrigger.next(false);
       setIsVoucherStatusUpdated(!isVoucherStatusUpdated);
     },
   });
 
-  const ToggleVoucherStatus = (id: string, Status) => {
+  const ToggleVoucherStatus = (id: string, Status: string) => {
     toggleVoucherStatus({
       variables: {
         id: id,
@@ -179,19 +202,19 @@ function VoucherAction(props: any, ref) {
     });
   };
 
-  const OnSubmit = (frm: any) => {
+  const OnSubmit = (form: VouchersForm) => {
     //bind user id
-    if (frm) {
-      frm.id = operation.id;
-      frm.user_permissions_user = auth.userid;
+    if (form) {
+      form.id = operation.id;
+      form.user_permissions_user = auth.userid;
     }
 
     switch (operation.actionType) {
       case "create":
-        CreateVoucher(frm);
+        CreateVoucher(form);
         break;
       case "edit":
-        EditVoucher(frm);
+        EditVoucher(form);
         break;
     }
   };
@@ -200,12 +223,13 @@ function VoucherAction(props: any, ref) {
     <div>
       {/* Edit and View Modal */}
       <FinanceModal
+        formUISchema={schema}
         modalTrigger={modalTrigger}
         formSchema={formSchema}
         name={name}
-        formSubmit={(frm: any) => OnSubmit(frm)}
+        formSubmit={(form: VouchersForm) => OnSubmit(form)}
         actionType={operation.actionType}
-        formData={operation.id && formData}
+        formData={operation.actionType === "create" ? {} : operation.id && formData}
       />
 
       {/* Status Modal */}
