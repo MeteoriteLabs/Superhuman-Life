@@ -4,3 +4,15 @@
     background-color: #242424;
     height: 50px;
 }
+.svgCont{
+   margin-bottom: -15px;
+}
+.btnCont{
+    margin-bottom: 0;
+    font-size: 12px;
+}
+.topNavCol{
+    display: flex;
+    align-items: center;
+    gap: 15px
+}
