@@ -1,17 +1,18 @@
 .topTabs{
     gap: 45px;
-    border-bottom: 0.2px solid #ffffff88;
+    border-bottom: 0.2px solid #ffffff60;
     display:flex;
     text-align:center;
-    padding: 20px 50px 10px 50px;
+    padding: 15px 50px 10px 50px;
     position: relative;
 }
 .borderHeilight{
     position: absolute;
-    bottom: 0;
+    bottom: -.5px;
     left: 0;
     width: 80px;
-    height: 3px;
+    height: 2px;
+   
     background-color: #704DFF;
     transition: all 0.18s ease-in-out;
 }

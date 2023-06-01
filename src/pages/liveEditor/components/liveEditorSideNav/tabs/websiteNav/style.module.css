@@ -1,0 +1,29 @@
+.websiteNav{
+    
+    padding-block: 20px;
+}
+.websiteNav_h{
+    font-size: 14px;
+    font-weight: 600;
+    padding-inline: 35px;
+}
+.websiteNav_ul{
+    margin-top: 20px;
+    display: flex;
+    gap: 0px;
+    flex-direction: column;
+}
+
+.links{
+    color: #fff;
+    width: 100%;
+    padding-block: 9px;
+    padding-inline: 35px;
+    font-size: 13px;
+    text-decoration: none;
+}
+.links:hover{
+    background-color: #343434;
+    color: #fff;
+    text-decoration: none;
+}
