@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import LiveEditorSideNav from '../../layout/liveEditorSideNav';
+import LiveEditorSideNav from './components/liveEditorSideNav';
 import style from './style.module.css';
 
 function LiveEditor(): JSX.Element {

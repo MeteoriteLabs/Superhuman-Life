@@ -5,7 +5,7 @@ import { useLocation } from 'react-router-dom';
 import Tooltip from 'react-bootstrap/Tooltip';
 
 import style from './liveEditorSideNav.module.css';
-import CustomTabs from '../components/tabs/customTabs';
+import CustomTabs from '../tabs';
 
 export default function LiveEditorSideNav({
   collapse,
@@ -30,7 +30,7 @@ export default function LiveEditorSideNav({
   return (
     <aside className={style.sideNavCont}>
       <Nav className="flex-column"></Nav>
-      <CustomTabs setActiveTab={setActiveTab} />
+      <CustomTabs setActiveTab={setActiveTab} activeTab={activeTab} />
     </aside>
   );
 }
