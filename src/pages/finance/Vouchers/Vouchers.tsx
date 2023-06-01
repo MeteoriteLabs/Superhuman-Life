@@ -23,7 +23,7 @@ interface VoucherTs {
 }
 interface RowTs {
   row: {
-    values: { discount_percentage?: string; expiry_date?: string; Status?: string };
+    values: { discount_percentage?: string; expiry_date?: string; Status?: string; flat_discount: number; };
     original: { id: string; Status: string };
   };
 }
@@ -54,6 +54,7 @@ export default function Vouchers(): JSX.Element {
             id: voucher.id,
             voucher_name: voucher.attributes.voucher_name,
             discount_percentage: voucher.attributes.discount_percentage,
+            flat_discount: voucher.attributes.flat_discount,
             expiry_date: moment(voucher.attributes.expiry_date).format('MMMM DD,YYYY'),
             Usage_restriction: voucher.attributes.Usage_restriction,
             Status:
@@ -83,6 +84,13 @@ export default function Vouchers(): JSX.Element {
         Header: 'Discount',
         Cell: ({ row }: RowTs) => {
           return <p className="mb-0">{row.values.discount_percentage} %</p>;
+        }
+      },
+      {
+        accessor: 'flat_discount',
+        Header: 'Flat Discount',
+        Cell: ({ row }: RowTs) => {
+          return <p className="mb-0">INR {row.values.flat_discount}</p>;
         }
       },
       {

@@ -6,7 +6,7 @@ const schema: any = {
     'ui:placeholder': 'Enter discount percentage'
   },
   flat_discount: {
-    'ui:placeholder': 'Enter flat discount'
+    'ui:placeholder': 'Enter flat discount in INR'
   },
   Start_date: {
     'ui:placeholder': 'Select start date'

@@ -42,6 +42,7 @@ export const GET_ALL_VOUCHERS = gql`
           Start_date
           Usage_restriction
           Status
+          flat_discount
         }
       }
     }
