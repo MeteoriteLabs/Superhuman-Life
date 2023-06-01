@@ -277,6 +277,12 @@ export const ADDRESSES = gql`
       pagination: { start: $start, limit: $limit }
       filters: { users_permissions_user: { id: { eq: $id } } }
     ) {
+      meta{
+        pagination{
+          pageCount
+          total
+        }
+      }
       data {
         id
         attributes {
@@ -303,6 +309,12 @@ export const EDUCATIONAL_DETAILS = gql`
       pagination: { start: $start, limit: $limit }
       filters: { users_permissions_user: { id: { eq: $id } } }
     ) {
+      meta{
+        pagination{
+          pageCount
+          total
+        }
+      }
       data {
         id
         attributes {

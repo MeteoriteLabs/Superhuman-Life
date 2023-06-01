@@ -1,40 +1,52 @@
 {
-        "title": "",
-        "type": "object",
-        "required": [
-            "voucher_name",
-            "discount_percentage",
-            "Start_date",
-            "expiry_date",
-            "Usage_restriction"
-        ],
-        "properties": {
-            "voucher_name": {
-                "type": "string",
-                "title": "Voucher Name"
-            },
-            "discount_percentage": {
-               "type": "number",
-               "title": "Discount"
-            },
-            "flat_discount": {
-                "type": "number",
-                "title": "Flat discount"
-            },
-            "Start_date": {
-                "type": "string",
-                "title": "Start Date",
-                "format": "date-time"
-            },
-            "expiry_date": {
-               "type": "string",
-               "title": "Expiry Date",
-               "format": "date-time"
-            },
-           "Usage_restriction": {
-               "type": "number",
-               "title": "Usage Limit"
-           }
+    "title": "",
+    "type": "object",
+    "required": [
+        "voucher_name",
+        "Start_date",
+        "expiry_date",
+        "Usage_restriction"
+    ],
+    "properties": {
+        "voucher_name": {
+            "type": "string",
+            "title": "Voucher Name"
+        },
+        "Start_date": {
+            "type": "string",
+            "title": "Start Date",
+            "format": "date-time"
+        },
+        "expiry_date": {
+            "type": "string",
+            "title": "Expiry Date",
+            "format": "date-time"
+        },
+        "Usage_restriction": {
+            "type": "number",
+            "title": "Usage Limit"
         }
-  
+    },
+    "anyOf": [
+        {
+          "title": "Enter discount percentage",
+          "properties": {
+            "percentagediscount": {
+                "type": "number",
+                "title": "Percentage discount"
+                
+            }
+          }
+        },
+        {
+          "title": "Enter flat discount",
+          "properties": {
+            "flatdiscount": {
+              "type": "number",
+              "title": "Flat discount"
+            }
+          }
+        }
+      ]
+    
 }

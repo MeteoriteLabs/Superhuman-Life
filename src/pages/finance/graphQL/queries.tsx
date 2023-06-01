@@ -27,12 +27,19 @@ export const GET_ALL_SUGGESTED_PRICING = gql`
 `
 
 export const GET_ALL_VOUCHERS = gql`
-    query vouchers($id: ID){
+    query vouchers($id: ID, $start: Int, $limit: Int){
         vouchers(
+          pagination: { start: $start, limit: $limit }
           filters:{users_permissions_user:{id:{eq:$id}}}
           sort: ["updatedAt:desc"]
         )
     {
+      meta{
+        pagination{
+          pageCount
+          total
+        }
+      }
       data{
         id
         attributes{
@@ -44,6 +51,7 @@ export const GET_ALL_VOUCHERS = gql`
           Status
           flat_discount
         }
+        
       }
     }
 }
@@ -60,6 +68,7 @@ export const GET_VOUCHERS_BY_ID = gql`
               Start_date
               Usage_restriction
               Status
+              flat_discount
             }
           }
         }

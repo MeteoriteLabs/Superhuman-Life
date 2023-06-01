@@ -34,12 +34,15 @@ export default function Vouchers(): JSX.Element {
   const voucherActionRef = useRef<VoucherTs>(null);
   const searchInput = useRef<HTMLInputElement>(null);
   const [AllVouchersData, setAllVouchersData] = useState<Record<string, unknown>>();
+  const [page, setPage] = useState<number>(1);
+  const [totalRecords, setTotalRecords] = useState<number>(0);
 
   const fetch = useQuery(GET_ALL_VOUCHERS, {
-    variables: { id: auth.userid },
+    variables: { id: auth.userid , start: page * 10 - 10, limit: page * 10 },
     onCompleted: (data) => {
       loadData(data);
       setAllVouchersData(data);
+      setTotalRecords(data.vouchers.meta.pagination.total)
     }
   });
 
@@ -83,14 +86,14 @@ export default function Vouchers(): JSX.Element {
         accessor: 'discount_percentage',
         Header: 'Discount',
         Cell: ({ row }: RowTs) => {
-          return <p className="mb-0">{row.values.discount_percentage} %</p>;
+          return <p className="mb-0">{row.values.discount_percentage ? `${row.values.discount_percentage} %` : "N/A" } </p>;
         }
       },
       {
         accessor: 'flat_discount',
         Header: 'Flat Discount',
         Cell: ({ row }: RowTs) => {
-          return <p className="mb-0">INR {row.values.flat_discount}</p>;
+          return  <p className="mb-0">{row.values.flat_discount ? `INR ${row.values.flat_discount}`: "N/A" }</p> ;
         }
       },
       {
@@ -174,6 +177,10 @@ export default function Vouchers(): JSX.Element {
     []
   );
 
+  const pageHandler = (selectedPageNumber: number) => {
+    setPage(selectedPageNumber);
+  };
+
   return (
     <div className="mt-3">
       <Container className="mt-3">
@@ -213,7 +220,31 @@ export default function Vouchers(): JSX.Element {
           <Table columns={columns} data={dataTable} />
           <VoucherAction ref={voucherActionRef} callback={refetchQueryCallback} />
         </Col>
+       
       </Row>
+       {/* Pagination */}
+       {dataTable && dataTable.length ? (
+        <Row className="justify-content-end">
+          <Button
+            variant="outline-dark"
+            className="m-2"
+            onClick={() => pageHandler(page - 1)}
+            disabled={page === 1 ? true : false}>
+            Previous
+          </Button>
+
+          <Button
+            variant="outline-dark"
+            className="m-2"
+            onClick={() => pageHandler(page + 1)}
+            disabled={totalRecords > (page * 10 - 10 + dataTable.length) ? false : true}>
+            Next
+          </Button>
+          <span className="m-2 bold pt-2">{`${(page * 10 - 10)+1} - ${
+            page * 10 - 10 + dataTable.length
+          }`}</span>
+        </Row>
+      ) : null}
     </div>
   );
 }

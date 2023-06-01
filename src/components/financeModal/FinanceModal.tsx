@@ -78,6 +78,17 @@ const FinanceModal: React.FC<{
           </Row>
         </Modal.Body>
         <Modal.Footer className="justify-content-center">
+        {props.actionType !== 'view' ?
+          <Button
+            style={{ padding: '5px 40px' }}
+            variant={'danger'}
+            size="sm"
+            onClick={(event) => {
+              props.modalTrigger.next(false);
+            }}>
+             Close 
+          </Button>: null}
+
           <Button
             style={{ padding: '5px 40px' }}
             variant={props.actionType === 'view' ? 'danger' : 'success'}
@@ -89,16 +100,7 @@ const FinanceModal: React.FC<{
             }}>
             {props.actionType === 'view' ? 'Close' : 'Save'}
           </Button>
-          {props.actionType !== 'view' ?
-          <Button
-            style={{ padding: '5px 40px' }}
-            variant={props.actionType === 'view' ? 'danger' : 'success'}
-            size="sm"
-            onClick={(event) => {
-              props.modalTrigger.next(false);
-            }}>
-             Close 
-          </Button>: null}
+         
         </Modal.Footer>
       </Modal>
     </div>

@@ -11,6 +11,7 @@ export const CREATE_VOUCHER = gql`
           expiry_date
           Start_date
           Usage_restriction
+          flat_discount
         }
       }
     }

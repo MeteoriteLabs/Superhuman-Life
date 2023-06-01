@@ -2,10 +2,10 @@ const schema: any = {
   voucher_name: {
     'ui:placeholder': 'Enter voucher name'
   },
-  discount_percentage: {
+  percentagediscount: {
     'ui:placeholder': 'Enter discount percentage'
   },
-  flat_discount: {
+  flatdiscount: {
     'ui:placeholder': 'Enter flat discount in INR'
   },
   Start_date: {
