@@ -1,7 +1,12 @@
+import { useEffect, useState } from 'react';
 import { Gear, WindowFullscreen } from 'react-bootstrap-icons';
 import clsx from 'clsx';
-import style from './tabs.module.css';
 
+import WebsiteNav from '../websiteNav';
+import ThemeSettings from '../themeSettings';
+import GeneralSettings from '../generalSettings';
+
+import style from './tabs.module.css';
 function CustomTabs({
   activeTab,
   setActiveTab
@@ -9,6 +14,22 @@ function CustomTabs({
   activeTab: 'website' | 'theme' | 'settings';
   setActiveTab: (arg: 'website' | 'theme' | 'settings') => void;
 }): JSX.Element {
+  const [renderActiveTab, setRenderActiveTab] = useState<JSX.Element>(<WebsiteNav />);
+  useEffect(() => {
+    const renderActiveTab = (activeTab: string): JSX.Element => {
+      switch (activeTab) {
+        case 'website':
+          return <WebsiteNav />;
+        case 'theme':
+          return <ThemeSettings />;
+        case 'settings':
+          return <GeneralSettings />;
+        default:
+          return <WebsiteNav />;
+      }
+    };
+    setRenderActiveTab(renderActiveTab(activeTab));
+  }, [activeTab]);
   return (
     <div>
       <div className={style.topTabs}>
@@ -34,6 +55,7 @@ function CustomTabs({
               : style.settingsPos
           )}></div>
       </div>
+      {renderActiveTab}
     </div>
   );
 }
