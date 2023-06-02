@@ -472,7 +472,7 @@ function CreateEditPt(props: any, ref: any) {
                 OnSubmit(frm);
               }
         }
-        formData={personalTrainingDetails}
+        formData={operation.type === "view" ? {} : personalTrainingDetails}
         widgets={widgets}
         modalTrigger={modalTrigger}
         actionType={operation.type}

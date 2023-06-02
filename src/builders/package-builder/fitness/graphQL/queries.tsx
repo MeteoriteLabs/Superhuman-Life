@@ -56,8 +56,16 @@ export const GET_FITNESS_PACKAGE_TYPES = gql`
 `;
 
 export const GET_TAGS = gql`
-  query getTags($id: ID!) {
-    tags(filters: { fitnesspackage: { users_permissions_user: { id: { eq: $id } } } }) {
+  query getTags($id: ID!, $pageSize: Int) {
+    tags(
+      pagination: {pageSize: $pageSize},
+      filters: { fitnesspackage: { users_permissions_user: { id: { eq: $id } } } }) {
+      meta{
+        pagination{
+          pageCount
+          total
+        }
+      }
       data {
         id
         attributes {
@@ -131,12 +139,18 @@ export const GET_TAGS = gql`
 `;
 
 export const GET_FITNESS = gql`
-  query fitnesspackages($id: ID) {
+  query fitnesspackages($id: ID, $start: Int, $limit: Int) {
     fitnesspackages(
       sort: ["updatedAt:desc"]
       filters: { users_permissions_user: { id: { eq: $id } } }
-      pagination: { pageSize: 1500 }
+      pagination: { start: $start, limit: $limit }
     ) {
+      meta{
+        pagination{
+          pageCount
+          total
+        }
+      }
       data {
         id
         attributes {
@@ -207,9 +221,9 @@ export const GET_FITNESS = gql`
 `;
 
 export const GET_INVENTORY = gql`
-  query offeringInventories($changemaker_id: String, $fitnesspackageid: ID) {
+  query offeringInventories($changemaker_id: String, $fitnesspackageid: ID, $pageSize: Int) {
     offeringInventories(
-      pagination: {pageSize: 1000},
+      pagination: {pageSize: $pageSize},
       filters: { changemaker_id: { eq: $changemaker_id }, fitnesspackage: {id: {eq: $fitnesspackageid}} }
     ) {
       data {
@@ -430,7 +444,7 @@ export const GET_FITNESS_PACKAGE_TYPE = gql`
 
 export const LANGUAGES = gql`
   query fetchLanguages {
-    languages(pagination: { pageSize: 1000 }) {
+    languages{
       data {
         id
         attributes {
