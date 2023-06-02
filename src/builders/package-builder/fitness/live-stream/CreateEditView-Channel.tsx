@@ -37,7 +37,6 @@ interface Operation {
   packageType: 'Cohort' | 'Live Stream Channel';
   type: 'create' | 'edit' | 'view' | 'toggle-status' | 'delete';
   current_status: boolean;
-  total_records: number|null;
 }
 
 function CreateEditChannel(props: any, ref: any) {
@@ -66,7 +65,7 @@ function CreateEditChannel(props: any, ref: any) {
       variables: { changemaker_id: auth.userid, fitnesspackageid: operation.id, pageSize: props.totalRecords },
       skip: !operation.id,
       onCompleted: (response) => {
-        console.log(response);
+      
         const flattenInventoryData = flattenObj({ ...response.offeringInventories });
 
         if (flattenInventoryData && flattenInventoryData.length)
