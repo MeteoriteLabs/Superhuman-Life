@@ -116,9 +116,7 @@ function VoucherAction(props: { callback: () => void }, ref): JSX.Element {
     if (['edit', 'view'].indexOf(operation.actionType) > -1) {
       modalTrigger.next(true);
     }
-    //  else {
-    //   OnSubmit(null);
-    // }
+    
   };
 
   FetchData();

@@ -28,7 +28,6 @@ import FitnessAddress from "./widgetCustom/FitnessAddress";
 import FitnessPricingTable from "./widgetCustom/tableComponent/FitnessPricingTable";
 import FitnessDuration from "./widgetCustom/FitnessDuration";
 import FitnessMode from "./widgetCustom/FitnessMode/FitnessMode";
-import { updateform } from "./_core/UpdateForm";
 import BookingLeadday from "./widgetCustom/FitnessBooking/BookingLeadday";
 import BookingLeadTime from "./widgetCustom/FitnessBooking/BookingLeadTime";
 import { Subject } from "rxjs";

@@ -60,7 +60,7 @@ function CreateEditPackage(props: any, ref: any) {
     GET_INVENTORY,
 
     {
-      variables: { changemaker_id: auth.userid, fitnesspackageid: operation.id },
+      variables: { changemaker_id: auth.userid, fitnesspackageid: operation.id ,pageSize: props.totalRecords},
       skip: !operation.id,
       onCompleted: (response) => {
         const flattenInventoryData = flattenObj({ ...response.offeringInventories });

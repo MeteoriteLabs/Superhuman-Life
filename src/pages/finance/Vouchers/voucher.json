@@ -27,7 +27,7 @@
             "title": "Usage Limit"
         },
         "discount": {
-          "title": "",
+          "title": "Discount type",
           "type": "string",
           "enum": [
              "Percentage",

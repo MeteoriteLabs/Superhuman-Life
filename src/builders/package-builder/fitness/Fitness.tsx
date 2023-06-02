@@ -44,12 +44,14 @@ export default function FitnessTab() {
   const [currentIndex, setCurrentIndex] = useState<any>('');
   const [showDrawer, setShowDrawer] = useState<boolean>(false);
   const [triggeredDetails, setTriggeredDetails] = useState<any>({});
+  const [page, setPage] = useState<number>(1);
+  const [totalRecords, setTotalRecords] = useState<number>(0);
 
   function handleModalRender(
     id: string | null,
     actionType: string,
     type: string,
-    current_status?: boolean
+    current_status?: boolean | null
   ) {
     switch (type) {
       case 'One-On-One':
@@ -70,7 +72,6 @@ export default function FitnessTab() {
         break;
       case 'Group Class':
         CreateEditViewGroupClassRef.current.TriggerForm({
-         
           id: id,
           type: actionType,
           actionType: type,
@@ -79,7 +80,6 @@ export default function FitnessTab() {
         break;
       case 'Classic Class':
         CreateEditViewClassicClassRef.current.TriggerForm({
-         
           id: id,
           type: actionType,
           actionType: type,
@@ -96,7 +96,6 @@ export default function FitnessTab() {
         break;
       case 'Live Stream Channel':
         createEditViewChannelRef.current.TriggerForm({
-          
           id: id,
           type: actionType,
           packageType: type,
@@ -105,7 +104,6 @@ export default function FitnessTab() {
         break;
       case 'Cohort':
         createEditViewCohortRef.current.TriggerForm({
-          
           id: id,
           type: actionType,
           packageType: type,
@@ -117,7 +115,7 @@ export default function FitnessTab() {
 
   const columns = useMemo<any>(
     () => [
-      { accessor: 'packagename', Header: 'Package Name' },
+      { accessor: 'packagename', Header: 'Offering Name' },
       {
         accessor: 'type',
         Header: 'Type',
@@ -179,7 +177,7 @@ export default function FitnessTab() {
       },
       {
         accessor: 'details',
-        Header: 'Details',
+        Header: 'No. of sessions',
         Cell: ({ row }: any) => {
           return (
             <div className="d-flex justify-content-center align-items-center">
@@ -446,7 +444,7 @@ export default function FitnessTab() {
 
       {
         accessor: 'sessions',
-        Header: 'Session',
+        Header: 'Status',
         Cell: (value: any) => {
           const sessionsObj = {};
           const startMoment = moment(value.row.original.startDate);
@@ -555,17 +553,11 @@ export default function FitnessTab() {
         Header: 'Actions',
         Cell: ({ row }: any) => {
           const editHandler = () => {
-            handleModalRender(
-              
-              row.original.id,
-              'edit',
-              row.original.type
-            );
+            handleModalRender(row.original.id, 'edit', row.original.type);
           };
 
           const statusChangeHandler = () => {
             handleModalRender(
-              
               row.original.id,
               'toggle-status',
               row.original.type,
@@ -574,21 +566,11 @@ export default function FitnessTab() {
           };
 
           const viewHandler = () => {
-            handleModalRender(
-              
-              row.original.id,
-              'view',
-              row.original.type
-            );
+            handleModalRender(row.original.id, 'view', row.original.type);
           };
 
           const deleteHandler = () => {
-            handleModalRender(
-             
-              row.original.id,
-              'delete',
-              row.original.type
-            );
+            handleModalRender(row.original.id, 'delete', row.original.type);
           };
 
           const manageHandler = (id: number, length: number, type: string) => {
@@ -653,7 +635,6 @@ export default function FitnessTab() {
 
   // eslint-disable-next-line
   const [tags, { data: get_tags, refetch: refetch_tags }] = useLazyQuery(GET_TAGS, {
-    variables: { id: auth.userid },
     fetchPolicy: 'cache-and-network',
     onCompleted: () => {
       const tagsFlattenData = flattenObj({ ...get_tags });
@@ -662,6 +643,7 @@ export default function FitnessTab() {
       setDataTable(
         [...fitnessFlattenData?.fitnesspackages].map((item) => {
           return {
+            totalRecords: totalRecords,
             sessions: tagsFlattenData.tags.filter(
               (currentValue) => currentValue.fitnesspackage.id === item.id
             ),
@@ -714,11 +696,18 @@ export default function FitnessTab() {
   });
 
   const { data: get_fitness, refetch: refetchFitness } = useQuery(GET_FITNESS, {
-    variables: { id: auth.userid },
-    onCompleted: () => {
-      tags({ variables: { id: auth.userid } });
+    variables: { id: auth.userid, start: page * 10 - 10, limit: 10 },
+    onCompleted: (data) => {
+      setTotalRecords(data.fitnesspackages.meta.pagination.total);
+      tags({
+        variables: { id: auth.userid, pageSize: data.fitnesspackages.meta.pagination.total }
+      });
     }
   });
+
+  const pageHandler = (selectedPageNumber: number) => {
+    setPage(selectedPageNumber);
+  };
 
   return (
     <>
@@ -805,10 +794,12 @@ export default function FitnessTab() {
             <Col>
               <Card.Title className="text-center">
                 <CreateEditViewChannel
+                  totalRecords={totalRecords}
                   ref={createEditViewChannelRef}
                   refetchTags={refetch_tags}
                   refetchOfferings={refetchFitness}></CreateEditViewChannel>
                 <CreateEditViewCohort
+                  totalRecords={totalRecords}
                   ref={createEditViewCohortRef}
                   refetchTags={refetch_tags}
                   refetchOfferings={refetchFitness}></CreateEditViewCohort>
@@ -823,16 +814,19 @@ export default function FitnessTab() {
                   refetchOfferings={refetchFitness}
                 />
                 <CreateEditViewGroupClass
+                  totalRecords={totalRecords}
                   ref={CreateEditViewGroupClassRef}
                   refetchTags={refetch_tags}
                   refetchOfferings={refetchFitness}
                 />
                 <CreateEditViewClassicClass
+                  totalRecords={totalRecords}
                   ref={CreateEditViewClassicClassRef}
                   refetchTags={refetch_tags}
                   refetchOfferings={refetchFitness}
                 />
                 <CreateEditViewCustomFitness
+                  totalRecords={totalRecords}
                   ref={CreateEditViewCustomFitnessRef}
                   refetchTags={refetch_tags}
                   refetchOfferings={refetchFitness}
@@ -843,6 +837,30 @@ export default function FitnessTab() {
         </Container>
         <Table columns={columns} data={dataTable} />
       </TabContent>
+
+      {/* Pagination */}
+      {dataTable && dataTable.length ? (
+        <Row className="justify-content-end">
+          <Button
+            variant="outline-dark"
+            className="m-2"
+            onClick={() => pageHandler(page - 1)}
+            disabled={page === 1 ? true : false}>
+            Previous
+          </Button>
+
+          <Button
+            variant="outline-dark"
+            className="m-2"
+            onClick={() => pageHandler(page + 1)}
+            disabled={totalRecords > page * 10 - 10 + dataTable.length ? false : true}>
+            Next
+          </Button>
+          <span className="m-2 bold pt-2">{`${page * 10 - 10 + 1} - ${
+            page * 10 - 10 + dataTable.length
+          }`}</span>
+        </Row>
+      ) : null}
     </>
   );
 }
