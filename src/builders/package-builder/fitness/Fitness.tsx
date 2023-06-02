@@ -51,8 +51,7 @@ export default function FitnessTab() {
     id: string | null,
     actionType: string,
     type: string,
-    current_status?: boolean|null,
-    total_records?: number
+    current_status?: boolean | null
   ) {
     switch (type) {
       case 'One-On-One':
@@ -73,7 +72,6 @@ export default function FitnessTab() {
         break;
       case 'Group Class':
         CreateEditViewGroupClassRef.current.TriggerForm({
-         
           id: id,
           type: actionType,
           actionType: type,
@@ -82,7 +80,6 @@ export default function FitnessTab() {
         break;
       case 'Classic Class':
         CreateEditViewClassicClassRef.current.TriggerForm({
-         
           id: id,
           type: actionType,
           actionType: type,
@@ -99,12 +96,10 @@ export default function FitnessTab() {
         break;
       case 'Live Stream Channel':
         createEditViewChannelRef.current.TriggerForm({
-          
           id: id,
           type: actionType,
           packageType: type,
-          current_status: current_status,
-          total_records: total_records
+          current_status: current_status
         });
         break;
       case 'Cohort':
@@ -558,19 +553,11 @@ export default function FitnessTab() {
         Header: 'Actions',
         Cell: ({ row }: any) => {
           const editHandler = () => {
-            handleModalRender(
-              
-              row.original.id,
-              'edit',
-              row.original.type,
-              null,
-              totalRecords
-            );
+            handleModalRender(row.original.id, 'edit', row.original.type, null);
           };
 
           const statusChangeHandler = () => {
             handleModalRender(
-              
               row.original.id,
               'toggle-status',
               row.original.type,
@@ -579,21 +566,11 @@ export default function FitnessTab() {
           };
 
           const viewHandler = () => {
-            handleModalRender(
-              
-              row.original.id,
-              'view',
-              row.original.type
-            );
+            handleModalRender(row.original.id, 'view', row.original.type);
           };
 
           const deleteHandler = () => {
-            handleModalRender(
-             
-              row.original.id,
-              'delete',
-              row.original.type
-            );
+            handleModalRender(row.original.id, 'delete', row.original.type);
           };
 
           const manageHandler = (id: number, length: number, type: string) => {
@@ -660,10 +637,9 @@ export default function FitnessTab() {
   const [tags, { data: get_tags, refetch: refetch_tags }] = useLazyQuery(GET_TAGS, {
     fetchPolicy: 'cache-and-network',
     onCompleted: () => {
-     
       const tagsFlattenData = flattenObj({ ...get_tags });
       const fitnessFlattenData = flattenObj({ ...get_fitness });
-      console.log(totalRecords);
+
       setDataTable(
         [...fitnessFlattenData?.fitnesspackages].map((item) => {
           return {
@@ -720,10 +696,12 @@ export default function FitnessTab() {
   });
 
   const { data: get_fitness, refetch: refetchFitness } = useQuery(GET_FITNESS, {
-    variables: { id: auth.userid , start: page * 10 - 10, limit: 10 },
+    variables: { id: auth.userid, start: page * 10 - 10, limit: 10 },
     onCompleted: (data) => {
-      setTotalRecords(data.fitnesspackages.meta.pagination.total)
-      tags({ variables: { id: auth.userid, pageSize: data.fitnesspackages.meta.pagination.total } });
+      setTotalRecords(data.fitnesspackages.meta.pagination.total);
+      tags({
+        variables: { id: auth.userid, pageSize: data.fitnesspackages.meta.pagination.total }
+      });
     }
   });
 
@@ -875,10 +853,10 @@ export default function FitnessTab() {
             variant="outline-dark"
             className="m-2"
             onClick={() => pageHandler(page + 1)}
-            disabled={totalRecords > ((page * 10) - 10 + dataTable.length) ? false : true}>
+            disabled={totalRecords > page * 10 - 10 + dataTable.length ? false : true}>
             Next
           </Button>
-          <span className="m-2 bold pt-2">{`${(page * 10 - 10)+1} - ${
+          <span className="m-2 bold pt-2">{`${page * 10 - 10 + 1} - ${
             page * 10 - 10 + dataTable.length
           }`}</span>
         </Row>
