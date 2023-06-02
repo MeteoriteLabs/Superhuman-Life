@@ -25,7 +25,7 @@
             },
             "tags": {
                 "type": "string",
-                "title": "Tags",
+                "title": "Hash tags",
                 "description": "Use hashtags to improve your listing"
             },
             "level": {
@@ -54,7 +54,7 @@
             },
             "durationOfOffering": {
                 "type": "array",
-                "title": "Duration",
+                "title": "Choose the relevant payment durations",
                 "items": {
                   "type": "string",
                   "enum": [

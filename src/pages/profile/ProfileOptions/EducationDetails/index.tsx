@@ -16,6 +16,7 @@ const EducationDetails: React.FC = () => {
   // eslint-disable-next-line
   const [educationData, setEducationData] = useState<any>([]);
   const [page, setPage] = useState<number>(1);
+  const [totalRecords, setTotalRecords] = useState<number>(0);
 
   const {
     // eslint-disable-next-line
@@ -24,10 +25,11 @@ const EducationDetails: React.FC = () => {
     loading: loading_educational_details,
     refetch: refetch_educational_details
   } = useQuery(EDUCATIONAL_DETAILS, {
-    variables: { id: auth.userid, start: page * 10 - 10, limit: page * 10 },
+    variables: { id: auth.userid, start: page * 10 - 10, limit: 10 },
     onCompleted: (response) => {
       const flattenData = flattenObj({ ...response.educationalDetails });
       setEducationData(flattenData);
+      setTotalRecords(response.educationalDetails.meta.pagination.total);
     }
   });
 
@@ -148,10 +150,10 @@ const EducationDetails: React.FC = () => {
             variant="outline-dark"
             className="m-2"
             onClick={() => pageHandler(page + 1)}
-            disabled={educationData.length % 10 === 0 ? false : true}>
+            disabled={(totalRecords > page * 10 - 10 + educationData.length) ? false : true}>
             Next
           </Button>
-          <span className="m-2 bold pt-2">{`${page * 10 - 10} - ${
+          <span className="m-2 bold pt-2">{`${(page * 10 - 10) + 1} - ${
             page * 10 - 10 + educationData.length
           }`}</span>
         </Row>

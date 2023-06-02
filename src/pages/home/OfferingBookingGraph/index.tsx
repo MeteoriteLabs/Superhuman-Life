@@ -3,7 +3,7 @@ import MonthlyOfferingBookingGraph from "./MonthlyOfferingBookingGraph";
 import WeeklyOfferingBookingGraph from "./WeeklyOfferingBookingGraph";
 import '../Styles/navTabStyles.css';
 
-function OfferingBookingGraph() {
+function OfferingBookingGraph(): JSX.Element {
   return (
     <div>
       <Tabs defaultActiveKey="monthly" >

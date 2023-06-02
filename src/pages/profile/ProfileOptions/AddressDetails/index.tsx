@@ -15,6 +15,7 @@ const AddressDetails = () => {
   // eslint-disable-next-line
   const CreateAddressComponent = useRef<any>(null);
   const [page, setPage] = useState<number>(1);
+  const [totalRecords, setTotalRecords] = useState<number>(0);
 
   const {
     // eslint-disable-next-line
@@ -22,10 +23,11 @@ const AddressDetails = () => {
     loading: loading_address_details,
     refetch: refetch_address
   } = useQuery(ADDRESSES, {
-    variables: { id: auth.userid, start: page * 10 - 10, limit: page * 10 },
+    variables: { id: auth.userid, start: page * 10 - 10, limit: 10 },
     onCompleted: (response) => {
       const flattenData = flattenObj({ ...response.addresses });
       setAddressData(flattenData);
+      setTotalRecords(response.addresses.meta.pagination.total);
     }
   });
 
@@ -170,10 +172,10 @@ const AddressDetails = () => {
             variant="outline-dark"
             className="m-2"
             onClick={() => pageHandler(page + 1)}
-            disabled={addressData.length % 10 === 0 ? false : true}>
+            disabled={totalRecords > (page * 10 - 10 + addressData.length) ? false : true}>
             Next
           </Button>
-          <span className="m-2 bold pt-2">{`${page * 10 - 10} - ${
+          <span className="m-2 bold pt-2">{`${(page * 10 - 10)+1} - ${
             page * 10 - 10 + addressData.length
           }`}</span>
         </Row>

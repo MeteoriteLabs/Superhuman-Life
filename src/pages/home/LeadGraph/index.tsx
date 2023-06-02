@@ -9,7 +9,7 @@ import { Tabs, Tab, Row, Col } from "react-bootstrap";
 import WeeklyLeadsGraph from "./WeeklyLeadsGraph";
 import "../Styles/navTabStyles.css";
 
-function LeadGraph() {
+function LeadGraph(): JSX.Element {
   const [leadsData, setLeadData] = useState<{index: string; Leads: number;}[]>([]);
   const auth = useContext(AuthContext);
 

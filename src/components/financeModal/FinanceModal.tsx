@@ -1,9 +1,20 @@
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { withTheme, utils } from '@rjsf/core';
 import { Theme as Bootstrap4Theme } from '@rjsf/bootstrap-4';
 import { Button, Col, Modal, Row } from 'react-bootstrap';
 
-const FinanceModal = (props: any) => {
+const FinanceModal: React.FC<{
+  modalTrigger: any;
+  formSchema: any;
+  name: string;
+  formSubmit: (args: any) => void;
+  actionType: string;
+  formData: any;
+  formUISchema?: any;
+  widgets?: any;
+  showErrorList?: any;
+  transformErrors?: any;
+}> = (props) => {
   const registry = utils.getDefaultRegistry();
   const defaultFileWidget = registry.widgets['FileWidget'];
   (Bootstrap4Theme as any).widgets['FileWidget'] = defaultFileWidget;
@@ -49,6 +60,8 @@ const FinanceModal = (props: any) => {
             <Col lg={12}>
               <div style={{ height: '400px', overflowX: 'hidden', overflowY: 'auto' }}>
                 <Form
+                  showErrorList={props.showErrorList}
+                  transformErrors={props.transformErrors}
                   uiSchema={props.formUISchema}
                   disabled={
                     props.actionType === 'view' ||
@@ -69,6 +82,17 @@ const FinanceModal = (props: any) => {
           </Row>
         </Modal.Body>
         <Modal.Footer className="justify-content-center">
+        {props.actionType !== 'view' ?
+          <Button
+            style={{ padding: '5px 40px' }}
+            variant={'danger'}
+            size="sm"
+            onClick={(event) => {
+              props.modalTrigger.next(false);
+            }}>
+             Close 
+          </Button>: null}
+
           <Button
             style={{ padding: '5px 40px' }}
             variant={props.actionType === 'view' ? 'danger' : 'success'}
@@ -80,6 +104,7 @@ const FinanceModal = (props: any) => {
             }}>
             {props.actionType === 'view' ? 'Close' : 'Save'}
           </Button>
+         
         </Modal.Footer>
       </Modal>
     </div>

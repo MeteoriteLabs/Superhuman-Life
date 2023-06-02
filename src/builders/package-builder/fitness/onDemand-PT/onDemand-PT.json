@@ -25,7 +25,7 @@
              },
              "tags": {
                  "type": "string",
-                 "title": "Tags",
+                 "title": "Hash tag",
                  "description": "Use hashtags to improve your listing"
              },
              "level": {
