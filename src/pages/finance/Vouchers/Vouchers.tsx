@@ -38,7 +38,7 @@ export default function Vouchers(): JSX.Element {
   const [totalRecords, setTotalRecords] = useState<number>(0);
 
   const fetch = useQuery(GET_ALL_VOUCHERS, {
-    variables: { id: auth.userid , start: page * 10 - 10, limit: page * 10 },
+    variables: { id: auth.userid , start: page * 10 - 10, limit: 10 },
     onCompleted: (data) => {
       loadData(data);
       setAllVouchersData(data);
@@ -237,7 +237,7 @@ export default function Vouchers(): JSX.Element {
             variant="outline-dark"
             className="m-2"
             onClick={() => pageHandler(page + 1)}
-            disabled={totalRecords > (page * 10 - 10 + dataTable.length) ? false : true}>
+            disabled={totalRecords > ((page * 10) - 10 + dataTable.length) ? false : true}>
             Next
           </Button>
           <span className="m-2 bold pt-2">{`${(page * 10 - 10)+1} - ${

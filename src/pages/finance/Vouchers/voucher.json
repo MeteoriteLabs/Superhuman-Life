@@ -25,28 +25,53 @@
         "Usage_restriction": {
             "type": "number",
             "title": "Usage Limit"
-        }
-    },
-    "anyOf": [
-        {
-          "title": "Enter discount percentage",
-          "properties": {
-            "percentagediscount": {
-                "type": "number",
-                "title": "Percentage discount"
-                
-            }
-          }
         },
-        {
-          "title": "Enter flat discount",
-          "properties": {
-            "flatdiscount": {
-              "type": "number",
-              "title": "Flat discount"
+        "discount": {
+          "title": "",
+          "type": "string",
+          "enum": [
+             "Percentage",
+             "Flat"
+          ]
+       }
+    },
+    "dependencies": {
+      "discount": {
+         "oneOf": [
+            {
+               "properties": {
+                  "discount": {
+                     "title": "Percentage discount",
+                     "type": "string",
+                     "enum": [
+                        "Percentage"
+                     ]
+                  },
+                  "percentage_discount": {
+                     "type": "string"
+                     
+                  }
+                 
+               }
+            },
+            {
+               "properties": {
+                  "discount": {
+                     "title": "discount",
+                     "type": "string",
+                     "enum": [
+                        "Flat"
+                     ]
+                  },
+                  "flat_discount": {
+                     "type": "string",
+                     "title": "Flat discount"
+                  }
+               }
             }
-          }
-        }
-      ]
+         ]
+      }
+   }
+   
     
 }

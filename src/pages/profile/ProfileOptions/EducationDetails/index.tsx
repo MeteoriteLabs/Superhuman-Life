@@ -25,7 +25,7 @@ const EducationDetails: React.FC = () => {
     loading: loading_educational_details,
     refetch: refetch_educational_details
   } = useQuery(EDUCATIONAL_DETAILS, {
-    variables: { id: auth.userid, start: page * 10 - 10, limit: page * 10 },
+    variables: { id: auth.userid, start: page * 10 - 10, limit: 10 },
     onCompleted: (response) => {
       const flattenData = flattenObj({ ...response.educationalDetails });
       setEducationData(flattenData);

@@ -4,29 +4,30 @@ import { Subject } from 'rxjs';
 import FinanceModal from '../../../components/financeModal/FinanceModal';
 import StatusModal from '../../../components/StatusModal/StatusModal';
 import authContext from '../../../context/auth-context';
-import schema from './VouchersSchema';
+import {schema, widgets} from './VouchersSchema';
 import { CREATE_VOUCHER, DELETE_VOUCHER, EDIT_VOUCHER, TOGGLE_STATUS } from '../graphQL/mutations';
 import { GET_VOUCHERS_BY_ID } from '../graphQL/queries';
 import Toaster from '../../../components/Toaster';
 
 interface Vouchers {
   voucher_name: string;
-  discount_percentage: number;
+  percentage_discount: string|null;
   Start_date: string;
   expiry_date: string;
   Usage_restriction: number;
-  flatdiscount: number;
+  flat_discount: string|null;
+  discount: string;
 }
 
 interface VouchersForm {
   id: string;
   user_permissions_user: string;
   voucher_name: string;
-  percentagediscount: number;
+  percentage_discount: string;
   Start_date: string;
   expiry_date: string;
   Usage_restriction: number;
-  flatdiscount: number;
+  flat_discount: string;
 }
 
 interface Operation {
@@ -100,14 +101,15 @@ function VoucherAction(props: { callback: () => void }, ref): JSX.Element {
     });
 
   const FillData = (data) => {
+  
     const updateFormData: Vouchers = {} as Vouchers;
     updateFormData.voucher_name = data.vouchers.data[0].attributes.voucher_name;
-    updateFormData.discount_percentage = data.vouchers.data[0].attributes.discount_percentage;
+    updateFormData.percentage_discount = data.vouchers.data[0].attributes.discount_percentage ? JSON.stringify({input:data.vouchers.data[0].attributes.discount_percentage}) : null;
     updateFormData.expiry_date = data.vouchers.data[0].attributes.expiry_date;
     updateFormData.Start_date = data.vouchers.data[0].attributes.Start_date;
     updateFormData.Usage_restriction = data.vouchers.data[0].attributes.Usage_restriction;
-
-    updateFormData.flatdiscount = data.vouchers.data[0].attributes.flat_discount;
+    updateFormData.flat_discount = data.vouchers.data[0].attributes.flat_discount ? JSON.stringify({input:data.vouchers.data[0].attributes.flat_discount}) : null;
+    updateFormData.discount = data.vouchers.data[0].attributes.discount_percentage ? "Percentage" : "Flat";
 
     setFormData(updateFormData);
 
@@ -135,13 +137,13 @@ function VoucherAction(props: { callback: () => void }, ref): JSX.Element {
       variables: {
         data: {
           voucher_name: form.voucher_name,
-          discount_percentage: form.percentagediscount,
+          discount_percentage: form.percentage_discount ? JSON.parse(form.percentage_discount).input : null,
           expiry_date: form.expiry_date,
           Start_date: form.Start_date,
           Usage_restriction: form.Usage_restriction,
           Status: 'Active',
           users_permissions_user: form.user_permissions_user,
-          flat_discount: form.flatdiscount
+          flat_discount: form.flat_discount ? JSON.parse(form.flat_discount).input : null
         }
       }
     });
@@ -210,6 +212,8 @@ function VoucherAction(props: { callback: () => void }, ref): JSX.Element {
     <div>
       {/* Edit and View Modal */}
       <FinanceModal
+        widgets={widgets}
+        showErrorList={false}
         formUISchema={schema}
         modalTrigger={modalTrigger}
         formSchema={formSchema}

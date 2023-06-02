@@ -12,6 +12,8 @@ const FinanceModal: React.FC<{
   formData: any;
   formUISchema?: any;
   widgets?: any;
+  showErrorList?: any;
+  transformErrors?: any;
 }> = (props) => {
   const registry = utils.getDefaultRegistry();
   const defaultFileWidget = registry.widgets['FileWidget'];
@@ -58,6 +60,8 @@ const FinanceModal: React.FC<{
             <Col lg={12}>
               <div style={{ height: '400px', overflowX: 'hidden', overflowY: 'auto' }}>
                 <Form
+                  showErrorList={props.showErrorList}
+                  transformErrors={props.transformErrors}
                   uiSchema={props.formUISchema}
                   disabled={
                     props.actionType === 'view' ||

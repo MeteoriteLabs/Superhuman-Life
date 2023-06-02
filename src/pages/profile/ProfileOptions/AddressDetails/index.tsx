@@ -23,7 +23,7 @@ const AddressDetails = () => {
     loading: loading_address_details,
     refetch: refetch_address
   } = useQuery(ADDRESSES, {
-    variables: { id: auth.userid, start: page * 10 - 10, limit: page * 10 },
+    variables: { id: auth.userid, start: page * 10 - 10, limit: 10 },
     onCompleted: (response) => {
       const flattenData = flattenObj({ ...response.addresses });
       setAddressData(flattenData);
