@@ -553,7 +553,7 @@ export default function FitnessTab() {
         Header: 'Actions',
         Cell: ({ row }: any) => {
           const editHandler = () => {
-            handleModalRender(row.original.id, 'edit', row.original.type, null);
+            handleModalRender(row.original.id, 'edit', row.original.type);
           };
 
           const statusChangeHandler = () => {
