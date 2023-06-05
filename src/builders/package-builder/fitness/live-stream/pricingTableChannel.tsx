@@ -335,7 +335,7 @@ const PricingTable = (props: any) => {
     const flattenData = flattenObj({ ...data });
     const newValue = [...pricing];
 
-    newValue.forEach((item, index) => {
+    newValue.forEach((item) => {
       if (item.voucher !== 0 && item.price !== null) {
         item.suggestedPrice = parseInt(
           ((item.sapienPricing * 100) / (100 - item.voucher)).toFixed(2)
@@ -453,7 +453,6 @@ const PricingTable = (props: any) => {
                 {day >= 30 && <th>Monthly</th>}
                 {day >= 90 && <th>Quaterly</th>}
                 {day >= 180 && <th>Half Yearly</th>}
-                {day === 360 && <th>Yearly</th>}
                 
               </tr>
             </thead>
