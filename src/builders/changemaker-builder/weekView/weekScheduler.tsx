@@ -85,16 +85,16 @@ const WeekScheduler: React.FC<{days: number; startDate: any; assignedEvents: any
     }
     values.forEach((val) => {
       const startTimeHour: any = `${
-        val.start_time === undefined ? "0" : val.start_time.split(":")[0]
+        val.start_time === undefined ? "0" : (Number(val.start_time.split(":")[0]) < 10 ? `${Number(val.start_time.split(":")[0])}` :  val.start_time.split(":")[0])
       }`;
       const startTimeMinute: any = `${
-        val.start_time === undefined ? "0" : val.start_time.split(":")[1]
+        val.start_time === undefined ? "0" : (Number(val.start_time.split(":")[0]) < 10 ? `${Number(val.start_time.split(":")[1])}` :  val.start_time.split(":")[1])
       }`;
       const endTimeHour: any = `${
-        val.end_time === undefined ? "0" : val.end_time.split(":")[0]
+        val.end_time === undefined ? "0" : (Number(val.end_time.split(":")[0]) < 10 ? `${Number(val.end_time.split(":")[0])}` :  val.end_time.split(":")[0])
       }`;
       const endTimeMin: any = `${
-        val.end_time === undefined ? "0" : val.end_time.split(":")[1]
+        val.end_time === undefined ? "0" : (Number(val.end_time.split(":")[1]) < 10 ? `${Number(val.end_time.split(":")[1])}` :  val.end_time.split(":")[1])
       }`;
       if (
         !arr[moment(val.session_date).weekday() + 1][startTimeHour][

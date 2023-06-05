@@ -80,7 +80,7 @@ function Summary() {
     fetchPolicy: "network-only",
     nextFetchPolicy: "cache-and-network",
 
-    onCompleted: (data) => {
+    onCompleted: () => {
       const flattenExpensesTransactionsData = flattenObj({
         ...get_expenses_transaction?.transactions,
       });

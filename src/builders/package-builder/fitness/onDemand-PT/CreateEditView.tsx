@@ -280,6 +280,7 @@ function CreateEditOnDemadPt(props: any, ref: any) {
 
     createPackage({
       variables: {
+        Status: true,
         packagename: frm.packagename,
         tags: frm?.tags,
         level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],

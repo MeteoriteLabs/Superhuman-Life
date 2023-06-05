@@ -549,12 +549,12 @@ function CreateEditPackage(props: any, ref: any) {
     });
   }
 
-  function deleteChannelPackage(id: any) {
+  function deleteChannelPackage(id: string) {
     deletePackage({ variables: { id } });
     setDeleteModalShow(false);
   }
 
-  function updateChannelPackageStatus(id: any, status: any) {
+  function updateChannelPackageStatus(id: string, status: boolean) {
     updatePackageStatus({ variables: { id: id, Status: status } });
     setStatusModalShow(false);
   }

@@ -47,13 +47,13 @@ import Toaster from '../../../components/Toaster';
 
 const Schedular = (props: any) => {
   const auth = useContext(AuthContext);
-  const [show, setShow] = useState(false);
-  const [showModal, setShowModal] = useState(false);
-  const [onDragAndDrop, setOnDragAndDrop] = useState(false);
+  const [show, setShow] = useState<boolean>(false);
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [onDragAndDrop, setOnDragAndDrop] = useState<boolean>(false);
   const [currentProgram] = useState<any[]>([]);
-  const [edit, setEdit] = useState(true);
-  const [del, setDel] = useState(false);
-  const [duplicate, setDuplicate] = useState(false);
+  const [edit, setEdit] = useState<boolean>(true);
+  const [del, setDel] = useState<boolean>(false);
+  const [duplicate, setDuplicate] = useState<boolean>(false);
   const [event, setEvent] = useState<any>({});
   const [arr, setArr] = useState<any[]>([]);
   const [arr2, setarr2] = useState<any>({});
@@ -66,8 +66,8 @@ const Schedular = (props: any) => {
   const [changeMakerAvailability, setChangeMakerAvailability] = useState<any>([]);
   const [sessionIds, setSessionsIds] = useState<any>(props.sessionIds);
   const [templateSessionsIds, setTemplateSessionsIds] = useState<any>([]);
-  const [dropConflict, setDropConflict] = useState(false);
-  const [groupDropConflict, setGroupDropConflict] = useState(false);
+  const [dropConflict, setDropConflict] = useState<boolean>(false);
+  const [groupDropConflict, setGroupDropConflict] = useState<boolean>(false);
   const [sessionBookings, setSessionBooking] = useState<any>([]);
   const [clickedSessionId, setClickedSessionId] = useState('');
   const [showRestDay, setShowRestDay] = useState<boolean>(false);
@@ -161,8 +161,8 @@ const Schedular = (props: any) => {
       id: arr2.event?.import !== 'importedEvent' ? event.id : arr2.event?.id
     },
     skip: event.type !== 'workout' && arr2.event?.import !== 'importedEvent',
-    onCompleted: (r: any) => {
-      const flattenData = flattenObj({ ...r });
+    onCompleted: (response: any) => {
+      const flattenData = flattenObj({ ...response });
       setData(flattenData.workouts);
       handleShow();
       if (arr2.event?.import === 'importedEvent') {
@@ -448,15 +448,15 @@ const Schedular = (props: any) => {
       sessions
         .filter((itm) => itm.Is_restday === false)
         .forEach((val) => {
-          
+          console.log(val.start_time.split(':')[0], Number(val.start_time.split(':')[0]))
           const startTimeHour: any = `${
-            val.start_time === null ? '00' : val.start_time.split(':')[0]
+            val.start_time === null ? '0' : (Number(val.start_time.split(':')[0]) < 10 ? `${Number(val.start_time.split(':')[0])}` : val.start_time.split(':')[0])
           }`;
           const startTimeMinute: any = `${
-            val.start_time === null ? '00' : val.start_time.split(':')[1]
+            val.start_time === null ? '0' : (Number(val.start_time.split(':')[1]) < 10 ? `${Number(val.start_time.split(':')[1])}` : val.start_time.split(':')[1])
           }`;
-          const endTimeHour: any = `${val.end_time === null ? '00' : val.end_time.split(':')[0]}`;
-          const endTimeMin: any = `${val.end_time === null ? '00' : val.end_time.split(':')[1]}`;
+          const endTimeHour: any = `${val.end_time === null ? '0' : val.end_time.split(':')[0]}`;
+          const endTimeMin: any = `${val.end_time === null ? '0' : val.end_time.split(':')[1]}`;
           if (!arr[val.day_of_program][startTimeHour][startTimeMinute]) {
             arr[val.day_of_program][startTimeHour][startTimeMinute] = [];
           }
@@ -653,7 +653,7 @@ const Schedular = (props: any) => {
     const hours = timeArray[0];
     const minutes = timeArray[1];
     const timeString =
-      (parseInt(hours) < 10 && parseInt(hours) !== 0 ? '0' + hours : hours) +
+      (parseInt(hours) < 10 && parseInt(hours) !== 0 ? `0${hours}` : hours) +
       ':' +
       (parseInt(minutes) === 0 ? '0' + minutes : minutes);
     return timeString.toString();
@@ -1287,7 +1287,7 @@ const Schedular = (props: any) => {
     });
   }
 
-  const [ErrorModal, setErrorModal] = useState(false);
+  const [ErrorModal, setErrorModal] = useState<boolean>(false);
 
   // this function handles drag and drop of an even once they confirm the drop.
   function confirm() {
