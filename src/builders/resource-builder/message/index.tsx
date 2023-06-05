@@ -93,7 +93,7 @@ const MindsetPage: React.FC = () => {
     []
   );
 
-  function getDate(time: any) {
+  function getDate(time: number) {
     const dateObj = new Date(time);
     const month = dateObj.getMonth() + 1;
     const year = dateObj.getFullYear();
@@ -188,7 +188,7 @@ const MindsetPage: React.FC = () => {
       </Container>
       <Table columns={columns} data={datatable} />
     </TabContent>
-    
+
     {/* Pagination */}
     {datatable && datatable.length ? (
       <Row className="justify-content-end">
