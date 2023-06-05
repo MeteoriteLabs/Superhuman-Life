@@ -2,6 +2,7 @@ import { gql } from '@apollo/client';
 
 export const CREATE_PACKAGE = gql`
   mutation createFitnesspackage(
+    $Status: Boolean
     $SubscriptionDuration: JSON
     $packagename: String
     $tags: String
@@ -42,6 +43,7 @@ export const CREATE_PACKAGE = gql`
   ) {
     createFitnesspackage(
       data: {
+        Status: $Status
         client_address: $client_address
         SubscriptionDuration: $SubscriptionDuration
         packagename: $packagename

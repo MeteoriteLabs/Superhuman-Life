@@ -516,29 +516,29 @@ function CreateEditChannel(props: any, ref: any) {
     });
   }
 
-  function deleteChannelPackage(id: any) {
+  function deleteChannelPackage(id: string) {
     deletePackage({ variables: { id } });
     setDeleteModalShow(false);
   }
 
-  function updateChannelPackageStatus(id: any, status: any) {
+  function updateChannelPackageStatus(id: string, status: boolean) {
     updatePackageStatus({ variables: { id: id, Status: status } });
     setStatusModalShow(false);
     operation.type = 'create';
   }
  
-  function OnSubmit(frm: any) {
+  function OnSubmit(form: any) {
     //bind user id
-    if (frm) {
-      frm.user_permissions_user = auth.userid;
+    if (form) {
+      form.user_permissions_user = auth.userid;
     }
 
     switch (operation.type) {
       case 'create':
-        CreateChannelPackage(frm);
+        CreateChannelPackage(form);
         break;
       case 'edit':
-        editChannelPackege(frm);
+        editChannelPackege(form);
         break;
       case 'toggle-status':
         setStatusModalShow(true);
