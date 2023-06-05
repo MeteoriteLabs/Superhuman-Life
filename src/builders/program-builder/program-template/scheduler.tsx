@@ -448,15 +448,15 @@ const Schedular = (props: any) => {
       sessions
         .filter((itm) => itm.Is_restday === false)
         .forEach((val) => {
-          console.log(val.start_time.split(':')[0], Number(val.start_time.split(':')[0]))
+          
           const startTimeHour: any = `${
-            val.start_time === null ? '0' : (Number(val.start_time.split(':')[0]) < 10 ? `${Number(val.start_time.split(':')[0])}` : val.start_time.split(':')[0])
+            val.start_time ?  (Number(val.start_time.split(':')[0]) < 10 ? `${Number(val.start_time.split(':')[0])}` : val.start_time.split(':')[0]) : '0' 
           }`;
           const startTimeMinute: any = `${
-            val.start_time === null ? '0' : (Number(val.start_time.split(':')[1]) < 10 ? `${Number(val.start_time.split(':')[1])}` : val.start_time.split(':')[1])
+            val.start_time ? (Number(val.start_time.split(':')[1]) < 10 ? `${Number(val.start_time.split(':')[1])}` : val.start_time.split(':')[1]) :  '0' 
           }`;
-          const endTimeHour: any = `${val.end_time === null ? '0' : val.end_time.split(':')[0]}`;
-          const endTimeMin: any = `${val.end_time === null ? '0' : val.end_time.split(':')[1]}`;
+          const endTimeHour: any = `${val.end_time ?  val.end_time.split(':')[0] : '0' } `;
+          const endTimeMin: any = `${val.end_time ? val.end_time.split(':')[1] : '0'}`;
           if (!arr[val.day_of_program][startTimeHour][startTimeMinute]) {
             arr[val.day_of_program][startTimeHour][startTimeMinute] = [];
           }
