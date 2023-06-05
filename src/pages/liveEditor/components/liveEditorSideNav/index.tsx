@@ -17,11 +17,13 @@ export default function LiveEditorSideNav({
   const location = useLocation();
   const [selectedOption, setSelectedOption] = useState<string>(location.pathname.slice(1));
   const [activeTab, setActiveTab] = useState<'website' | 'theme' | 'settings'>('website');
-  const renderTooltip = (props) => (
-    <Tooltip id="button-tooltip" {...props}>
-      {props}
-    </Tooltip>
-  );
+
+  // * use when tooltip is needed
+  // const renderTooltip = (props) => (
+  //   <Tooltip id="button-tooltip" {...props}>
+  //     {props}
+  //   </Tooltip>
+  // );
 
   useEffect(() => {
     setSelectedOption(location.pathname.slice(1));
@@ -30,7 +32,6 @@ export default function LiveEditorSideNav({
   return (
     <aside className={style.sideNavCont}>
       <Nav className="flex-column"></Nav>
-
       <CustomTabs setActiveTab={setActiveTab} activeTab={activeTab} />
     </aside>
   );
