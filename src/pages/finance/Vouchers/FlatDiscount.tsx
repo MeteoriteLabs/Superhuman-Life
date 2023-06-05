@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, ChangeEvent } from 'react';
 import { InputGroup, FormControl } from 'react-bootstrap';
 
 const FlatDiscount: React.FC<{
   value?: number;
-  onChange: (args: string | null) => void;
+  onChange: (params: string | null) => void;
   uiSchema?: any;
   readonly: boolean;
 }> = ({ value, onChange, readonly }) => {
 
   const [input, setInput] = useState<number>(value ? JSON.parse(`${value}`).input : 0);
 
-  const changeHandler = (e) => {
+  const changeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     setInput(+e.target.value);
   };
 
@@ -26,7 +26,7 @@ const FlatDiscount: React.FC<{
         aria-label="Flat discount"
         aria-describedby="basic-addon1"
         value={input}
-        onChange={(e) => changeHandler(e)}
+        onChange={(e: ChangeEvent<HTMLInputElement>) => changeHandler(e)}
         disabled={readonly ? readonly : false}
       />
     </InputGroup>

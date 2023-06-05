@@ -1,4 +1,4 @@
-import { useMemo, useState, useRef, useContext } from 'react';
+import React, { useMemo, useState, useRef, useContext } from 'react';
 import Table from '../../../components/table';
 import { useQuery } from '@apollo/client';
 import AuthContext from '../../../context/auth-context';
@@ -18,11 +18,13 @@ import {
   Col
 } from 'react-bootstrap';
 
-export default function MessagePage() {
+const MessagePage: React.FC = () => {
   const auth = useContext(AuthContext);
-  const [searchFilter, setSearchFilter] = useState('');
+  const [searchFilter, setSearchFilter] = useState<string>('');
   const searchInput = useRef<any>();
   const createEditMessageComponent = useRef<any>(null);
+  const [page, setPage] = useState<number>(1);
+  const [totalRecords, setTotalRecords] = useState<number>(0);
 
   const columns = useMemo<any>(
     () => [
@@ -98,8 +100,11 @@ export default function MessagePage() {
   const [datatable, setDataTable] = useState<Record<string, unknown>[]>([]);
 
   const fetch = useQuery(GET_NOTIFICATIONS, {
-    variables: { filter: searchFilter, id: auth.userid },
-    onCompleted: loadData
+    variables: { filter: searchFilter, id: auth.userid, start: page * 10 - 10, limit: 10 },
+    onCompleted: (data) => {
+      setTotalRecords(data.notifications.meta.pagination.total);
+      loadData(data);
+    }
   });
 
   function loadData(data: any) {
@@ -122,7 +127,12 @@ export default function MessagePage() {
     fetch.refetch();
   }
 
+  const pageHandler = (selectedPageNumber: number) => {
+    setPage(selectedPageNumber);
+  };
+
   return (
+    <>
     <TabContent>
       <Container>
         <Row>
@@ -164,5 +174,32 @@ export default function MessagePage() {
       </Container>
       <Table columns={columns} data={datatable} />
     </TabContent>
+
+    {/* Pagination */}
+    {datatable && datatable.length ? (
+      <Row className="justify-content-end">
+        <Button
+          variant="outline-dark"
+          className="m-2"
+          onClick={() => pageHandler(page - 1)}
+          disabled={page === 1 ? true : false}>
+          Previous
+        </Button>
+
+        <Button
+          variant="outline-dark"
+          className="m-2"
+          onClick={() => pageHandler(page + 1)}
+          disabled={totalRecords > page * 10 - 10 + datatable.length ? false : true}>
+          Next
+        </Button>
+        <span className="m-2 bold pt-2">{`${page * 10 - 10 + 1} - ${
+          page * 10 - 10 + datatable.length
+        }`}</span>
+      </Row>
+    ) : null}
+  </>
   );
 }
+
+export default MessagePage;
