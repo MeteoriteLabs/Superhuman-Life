@@ -14,15 +14,21 @@ export const GET_TRIGGERS = gql`
 `;
 
 export const GET_MESSAGES = gql`
-  query FeedSearchQuery($filter: String!, $id: ID!) {
+  query FeedSearchQuery($filter: String!, $id: ID!, $start: Int, $limit: Int) {
     prerecordedMessages(
-      pagination: { pageSize: 100 }
-      sort: ["updatedAt"]
+      pagination: { start: $start, limit: $limit }
+      sort: ["updatedAt:desc"]
       filters: {
         Title: { containsi: $filter }
         users_permissions_user: { id: { eq: $id } }
       }
     ) {
+      meta{
+        pagination{
+          pageCount
+          total
+        }
+      }
       data {
         id
         attributes {

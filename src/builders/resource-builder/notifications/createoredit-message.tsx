@@ -29,20 +29,113 @@ interface Operation {
   current_status: boolean;
 }
 
+interface Message {
+  messageid: string;
+  minidesc: string;
+  name: string;
+  prerecordedtrigger: string;
+  prerecordedtype: string;
+  title: string;
+}
+
+interface Form {
+  messageid: string;
+  minidesc: string;
+  name: string;
+  prerecordedtrigger: string;
+  prerecordedtype: string;
+  title: string;
+  user_permissions_user: string;
+}
+
+interface Notification {
+  id: string;
+  data: {
+    attributes: {
+      description: null | string;
+      mediaurl: null | string;
+      minidescription: string;
+      prerecordedtrigger: {
+        data: {
+          attributes: {
+            name: string;
+            __typename: string;
+          };
+          id: string;
+          __typename: string;
+        };
+        __typename: string;
+      };
+      prerecordedtype: {
+        data: {
+          attributes: {
+            name: string;
+            __typename: string;
+          };
+          id: string;
+          __typename: string;
+        };
+        __typename: string;
+      };
+      status: boolean;
+      title: string;
+      updatedAt: string;
+      users_permissions_user: {
+        data: {
+          id: string;
+          __typename: string;
+        };
+        __typename: string;
+      };
+      __typename: string;
+    };
+    __typename: string;
+  };
+  length: number;
+  meta: {
+    pagination: {
+      pageCount: number;
+      total: number;
+      __typename: string;
+    };
+    __typename: string;
+  };
+  __typename: string;
+}
+
+interface PrerecordedTrigger {
+  id: string;
+  attributes: {
+    name: string;
+    __typename: string;
+  };
+  __typename: string;
+}
+
+interface PrerecordedType {
+  id: string;
+  attributes: {
+    name: string;
+    __typename: string;
+  };
+  __typename: string;
+}
+
+
 function CreateEditMessage(props: any, ref: any) {
   const auth = useContext(AuthContext);
   const messageSchema: { [name: string]: any } = require("./message.json");
-  const [messageDetails, setMessageDetails] = useState<any>({});
+  const [messageDetails, setMessageDetails] = useState<Message>({} as Message);
   const [operation, setOperation] = useState<Operation>({} as Operation);
-  const [name, setName] = useState("");
-  const [showStatusModal, setShowStatusModal] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [name, setName] = useState<string>("");
+  const [showStatusModal, setShowStatusModal] = useState<boolean>(false);
+  const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
   const [isMessageCreated, setIsMessageCreated] = useState<boolean>(false);
   const [isMessageDeleted, setIsMessageDeleted] = useState<boolean>(false);
   const [isMessageUpdated, setIsMessageUpdated] = useState<boolean>(false);
 
   const [createMessage] = useMutation(ADD_MESSAGE, {
-    onCompleted: (r: any) => {
+    onCompleted: () => {
       setIsMessageCreated(true);
       modalTrigger.next(false);
       props.callback();
@@ -50,7 +143,7 @@ function CreateEditMessage(props: any, ref: any) {
   });
 
   const [editMessage] = useMutation(UPDATE_MESSAGE, {
-    onCompleted: (r: any) => {
+    onCompleted: () => {
       modalTrigger.next(false);
       props.callback();
       setIsMessageUpdated(true);
@@ -58,8 +151,7 @@ function CreateEditMessage(props: any, ref: any) {
   });
 
   const [deleteMessage] = useMutation(DELETE_MESSAGE, {
-    refetchQueries: ["GET_TRIGGERS"],
-    onCompleted: (e: any) => {
+    onCompleted: () => {
       props.callback();
       modalTrigger.next(false);
       setIsMessageDeleted(true);
@@ -67,7 +159,7 @@ function CreateEditMessage(props: any, ref: any) {
   });
 
   const [updateStatus] = useMutation(UPDATE_STATUS, {
-    onCompleted: (e: any) => {
+    onCompleted: () => {
       props.callback();
       modalTrigger.next(false);
     },
@@ -93,7 +185,7 @@ function CreateEditMessage(props: any, ref: any) {
     },
   }));
 
-  function loadData(data: any) {
+  function loadData(data: PrerecordedTrigger[]&PrerecordedType[]) {
     const flattenData = flattenObj({ ...data });
 
     messageSchema["1"].properties.prerecordedtype.enum = [
@@ -110,75 +202,74 @@ function CreateEditMessage(props: any, ref: any) {
     ].map((n) => n.name);
   }
 
-  function FillDetails(data: any) {
-    const details: any = {};
+  function FillDetails(data: Notification) {
+    const details: Message = {} as Message;
     const flattenData = flattenObj({ ...data });
     const msg = flattenData.notifications[0];
 
-    const o = { ...operation };
-    details.name = o.type.toLowerCase();
+    const operationObject = { ...operation };
+
+    details.name = operationObject.type.toLowerCase();
     details.title = msg.title;
     details.prerecordedtype = msg.prerecordedtype?.id;
     details.prerecordedtrigger = msg.prerecordedtrigger?.id;
-    details.description = msg.description;
     details.minidesc = msg.minidescription;
-    details.mediaurl = msg.mediaurl;
     details.messageid = msg.id;
 
     setMessageDetails(details);
     setOperation({} as Operation);
 
     if (["edit", "view"].indexOf(operation.type) > -1) modalTrigger.next(true);
-    else OnSubmit(null);
+    else OnSubmit({} as Form);
   }
 
-  useQuery(GET_TRIGGERS, { onCompleted: loadData });
+  useQuery<PrerecordedTrigger[]&PrerecordedType[]>(GET_TRIGGERS, { onCompleted: loadData });
 
-  useQuery(GET_MESSAGE, {
+  useQuery<Notification>(GET_MESSAGE, {
     variables: { id: operation.id },
     skip:
       !operation.id ||
       operation.type === "toggle-status" ||
       operation.type === "delete",
-    onCompleted: (e: any) => {
-      FillDetails(e);
+    onCompleted: (response) => {
+      FillDetails(response);
     },
   });
 
-  function CreateMessage(frm: any) {
-    createMessage({ variables: frm });
+  function CreateMessage(form: Form) {
+    createMessage({ variables: form });
   }
 
-  function EditMessage(frm: any) {
-    editMessage({ variables: frm });
+  function EditMessage(form: Form) {
+    editMessage({ variables: form });
   }
 
   function ToggleMessageStatus(id: string, current_status: boolean) {
     updateStatus({ variables: { status: !current_status, messageid: id } });
   }
 
-  function DeleteMessage(id: any) {
+  function DeleteMessage(id: string) {
     deleteMessage({ variables: { id: id } });
   }
 
-  function OnSubmit(frm: any) {
-    if (frm) frm.user_permissions_user = auth.userid;
-    if (frm.name === "edit" || frm.name === "view") {
-      if (frm.name === "edit") {
-        EditMessage(frm);
+  function OnSubmit(form: Form) {
+    if (form) form.user_permissions_user = auth.userid;
+    if (form.name === "edit" || form.name === "view") {
+      if (form.name === "edit") {
+        EditMessage(form);
       }
-      if (frm.name === "view") {
+      if (form.name === "view") {
         modalTrigger.next(false);
       }
     } else {
-      CreateMessage(frm);
+      CreateMessage(form);
     }
   }
 
   useEffect(() => {
     if (operation.type === "create") {
       setName("Create New Notification");
-      setMessageDetails({});
+      setMessageDetails({} as Message);
     } else if (operation.type === "edit") {
       setName("Edit");
     } else if (operation.type === "view") {
@@ -201,8 +292,8 @@ function CreateEditMessage(props: any, ref: any) {
               ? () => {
                   modalTrigger.next(false);
                 }
-              : (frm: any) => {
-                  OnSubmit(frm);
+              : (form: Form) => {
+                  OnSubmit(form);
                 }
           }
           formData={messageDetails}

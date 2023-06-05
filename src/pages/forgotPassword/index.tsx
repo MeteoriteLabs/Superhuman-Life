@@ -5,7 +5,7 @@ import { Button, Modal, Row } from 'react-bootstrap';
 import { useMutation, gql } from '@apollo/client';
 import EmailForm from './email';
 
-export default function ForgotPassword() {
+const ForgotPassword: React.FC = () =>  {
   const [emailSent, setEmailSent] = useState<boolean>(false);
   const loginSchema: any = require('./forgotPassword.json');
   const uiSchema: any = {
@@ -112,3 +112,5 @@ export default function ForgotPassword() {
     </Modal.Dialog>
   );
 }
+
+export default ForgotPassword;

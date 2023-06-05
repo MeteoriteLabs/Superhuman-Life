@@ -22,8 +22,8 @@
                },
                "tags": {
                     "type": "string",
-                    "title": "Tags",
-                    "description": "Add keywords"
+                    "title": "Hash tags",
+                    "description": "Add keywords for hash tag"
                },
                "description": {
                     "type": "string",

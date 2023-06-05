@@ -83,8 +83,17 @@ export const UPDATE_MESSAGE = gql`
 `;
 
 export const GET_MESSAGE = gql`
-  query getmessage($id: ID!) {
-    notifications(pagination: { pageSize: 100 }, filters: { id: { eq: $id } }) {
+  query getmessage($id: ID!, $start: Int, $limit: Int) {
+    notifications(
+      pagination: { start: $start, limit: $limit },
+      sort: ["updatedAt:desc"],
+      filters: { id: { eq: $id } }) {
+        meta{
+          pagination{
+            pageCount
+            total
+          }
+        }
       data {
         id
         attributes {
@@ -141,14 +150,21 @@ export const UPDATE_STATUS = gql`
   }
 `;
 export const GET_NOTIFICATIONS = gql`
-  query FeedSearchQuery($filter: String!, $id: ID) {
+  query FeedSearchQuery($filter: String!, $id: ID, $start: Int, $limit: Int) {
     notifications(
-      sort: ["updatedAt"]
+      pagination: { start: $start, limit: $limit },
+      sort: ["updatedAt:desc"],
       filters: {
         title: { containsi: $filter }
         users_permissions_user: { id: { eq: $id } }
       }
     ) {
+      meta{
+        pagination{
+          pageCount
+          total
+        }
+      }
       data {
         id
         attributes {

@@ -24,6 +24,6 @@ export const schema: any = {
           }
      },
      mediaurl: {
-          "ui:placeholder": "Enter URL"
+          "ui:placeholder": "Enter URL eg: https://www.google.com"
      },
 };
