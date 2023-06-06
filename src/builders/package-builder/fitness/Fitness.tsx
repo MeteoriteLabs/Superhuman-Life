@@ -196,7 +196,7 @@ export default function FitnessTab() {
                       <br />
                       <p> {row.original.ptonline * currentIndex[row.index]} </p>
                     </div>
-                    <div title='one on one online sessions'>
+                    <div>
                       <img
                         src="./assets/offeringImages/group-class-online.svg"
                         alt="one on one online"
@@ -205,7 +205,7 @@ export default function FitnessTab() {
                       <br />
                       <p> {row.original.grouponline * currentIndex[row.index]} </p>
                     </div>
-                    <div title='recorded'>
+                    <div>
                       <img
                         src="./assets/offeringImages/classic-class-online.svg"
                         alt="recorded online sessions"
@@ -217,7 +217,7 @@ export default function FitnessTab() {
                   </>
                 ) : row.original.mode === 'Offline' ? (
                   <>
-                    <div title='one on one offline sessions'>
+                    <div>
                       <img
                         src="./assets/offeringImages/one-on-one-offline.svg"
                         alt="one on one offline"
@@ -226,7 +226,7 @@ export default function FitnessTab() {
                       <br />
                       <p> {row.original.ptoffline * currentIndex[row.index]} </p>
                     </div>
-                    <div title='group offline sessions'>
+                    <div>
                       <img
                         src="./assets/offeringImages/group-class-offline.svg"
                         alt="group offline"
