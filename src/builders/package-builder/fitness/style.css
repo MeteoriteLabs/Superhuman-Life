@@ -1,0 +1,11 @@
+.onHover{
+    display: none;
+    border: 1px solid #000;
+    height: 30px;
+    width: 290px;
+    margin-left: 10px;
+  }
+  
+  .images:hover+.onHover {
+    display: block;
+  }

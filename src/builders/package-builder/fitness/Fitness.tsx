@@ -30,6 +30,7 @@ import moment from 'moment';
 import Drawer from '../../../components/Drawer';
 import DrawerTrigger from '../../../components/Drawer/DrawerTrigger';
 import Backdrop from '../../../components/Drawer/Backdrop';
+import Icon from "../../../components/Icons";
 
 export default function FitnessTab() {
   const auth = useContext(AuthContext);
@@ -185,25 +186,30 @@ export default function FitnessTab() {
                 row.original.mode === 'Online' ? (
                   <>
                     <div>
+                    
                       <img
                         src="./assets/offeringImages/one-on-one-online.svg"
                         alt="one on one online"
-                      />
+                        title={`${row.original.ptonline * currentIndex[row.index]} One-on-One online sessions`}
+                        
+                      /> 
                       <br />
                       <p> {row.original.ptonline * currentIndex[row.index]} </p>
                     </div>
-                    <div>
+                    <div title='one on one online sessions'>
                       <img
                         src="./assets/offeringImages/group-class-online.svg"
                         alt="one on one online"
+                        title={`${row.original.grouponline * currentIndex[row.index]} group online sessions`}
                       />
                       <br />
                       <p> {row.original.grouponline * currentIndex[row.index]} </p>
                     </div>
-                    <div>
+                    <div title='recorded'>
                       <img
                         src="./assets/offeringImages/classic-class-online.svg"
-                        alt="recorded online"
+                        alt="recorded online sessions"
+                        title={`${row.original.recordedclasses * currentIndex[row.index]} recorded sessions`}
                       />
                       <br />
                       <p> {row.original.recordedclasses * currentIndex[row.index]} </p>
@@ -211,18 +217,20 @@ export default function FitnessTab() {
                   </>
                 ) : row.original.mode === 'Offline' ? (
                   <>
-                    <div>
+                    <div title='one on one offline sessions'>
                       <img
                         src="./assets/offeringImages/one-on-one-offline.svg"
                         alt="one on one offline"
+                        title={`${row.original.ptoffline * currentIndex[row.index]} One-on-One offline sessions`}
                       />
                       <br />
                       <p> {row.original.ptoffline * currentIndex[row.index]} </p>
                     </div>
-                    <div>
+                    <div title='group offline sessions'>
                       <img
                         src="./assets/offeringImages/group-class-offline.svg"
                         alt="group offline"
+                        title={`${row.original.groupoffline * currentIndex[row.index]} group offline sessions`}
                       />
                       <br />
                       <p> {row.original.groupoffline * currentIndex[row.index]} </p>
@@ -231,6 +239,7 @@ export default function FitnessTab() {
                       <img
                         src="./assets/offeringImages/classic-class-online.svg"
                         alt="recorded online"
+                        title={`${row.original.recordedclasses * currentIndex[row.index]} recorded sessions`}
                       />
                       <br />
                       <p> {row.original.recordedclasses * currentIndex[row.index]} </p>
@@ -242,6 +251,7 @@ export default function FitnessTab() {
                       <img
                         src="./assets/offeringImages/one-on-one-online.svg"
                         alt="one on one online"
+                        title={`${row.original.ptonline * currentIndex[row.index]} One-on-One online sessions`}
                       />
                       <br />
                       <p>{row.original.ptonline * currentIndex[row.index]}</p>
@@ -250,6 +260,7 @@ export default function FitnessTab() {
                       <img
                         src="./assets/offeringImages/one-on-one-offline.svg"
                         alt="one on one offline"
+                        title={`${row.original.ptoffline * currentIndex[row.index]} One-on-One offline sessions`}
                       />
                       <br />
                       <p> {row.original.ptoffline * currentIndex[row.index]} </p>
@@ -258,6 +269,7 @@ export default function FitnessTab() {
                       <img
                         src="./assets/offeringImages/group-class-online.svg"
                         alt="group online"
+                        title={`${row.original.grouponline * currentIndex[row.index]} group online sessions`}
                       />
                       <br />
                       <p> {row.original.grouponline * currentIndex[row.index]} </p>
@@ -266,6 +278,7 @@ export default function FitnessTab() {
                       <img
                         src="./assets/offeringImages/group-class-offline.svg"
                         alt="group offline"
+                        title={`${row.original.groupoffline * currentIndex[row.index]} group offline sessions`}
                       />
                       <br />
                       <p> {row.original.groupoffline * currentIndex[row.index]} </p>
@@ -274,6 +287,7 @@ export default function FitnessTab() {
                       <img
                         src="./assets/offeringImages/classic-class-online.svg"
                         alt="recorded online"
+                        title={`${row.original.recordedclasses * currentIndex[row.index]} recorded sessions`}
                       />
                       <br />
                       <p> {row.original.recordedclasses * currentIndex[row.index]}</p>
@@ -288,6 +302,7 @@ export default function FitnessTab() {
                       <img
                         src="./assets/offeringImages/group-class-online.svg"
                         alt="group online"
+                        title={`${row.original.grouponline * currentIndex[row.index]} group online sessions`}
                       />
                       <br />
                       <p> {row.original.grouponline * currentIndex[row.index]} </p>
@@ -299,6 +314,7 @@ export default function FitnessTab() {
                       <img
                         src="./assets/offeringImages/group-class-offline.svg"
                         alt="group offline"
+                        title={`${row.original.groupoffline * currentIndex[row.index]} group offline sessions`}
                       />
                       <br />
                       <p> {row.original.groupoffline * currentIndex[row.index]} </p>
@@ -309,6 +325,7 @@ export default function FitnessTab() {
                     <div>
                       <img
                         src="./assets/offeringImages/group-class-online.svg"
+                        title={`${row.original.grouponline * currentIndex[row.index]} group online sessions`}
                         alt="group online"
                       />
                       <br />
@@ -316,6 +333,7 @@ export default function FitnessTab() {
                     </div>
                     <div>
                       <img
+                        title={`${row.original.groupoffline * currentIndex[row.index]} group offline sessions`}
                         src="./assets/offeringImages/group-class-offline.svg"
                         alt="group offline"
                       />
@@ -329,10 +347,23 @@ export default function FitnessTab() {
                 <div>
                   <img
                     src="./assets/offeringImages/classic-class-online.svg"
+                    title={`${row.original.recordedclasses * currentIndex[row.index]} recorded sessions`}
                     alt="recorded online"
                   />
                   <br />
                   <p> {row.original.recordedclasses * currentIndex[row.index]}</p>
+                </div>
+              ) : null}
+              {row.original.type === 'Live Stream Channel' ||row.original.type === 'Cohort' ||row.original.type === 'On-Demand PT' ? (
+                <div>
+                  {/* <img
+                    src="./assets/offeringImages/classic-class-online.svg"
+                    title={`${row.original.recordedclasses * currentIndex[row.index]} recorded sessions`}
+                    alt="recorded online"
+                  /> */}
+                  <Icon name="info" style={{width: "25px" , height: "30px"}}/>
+                  <br />
+                  {/* <p> {row.original.recordedclasses * currentIndex[row.index]}</p> */}
                 </div>
               ) : null}
               {row.original.type === 'One-On-One' ? (
@@ -340,6 +371,7 @@ export default function FitnessTab() {
                   <>
                     <div>
                       <img
+                        title={`${row.original.ptonline * currentIndex[row.index]} One-on-One online sessions`}
                         src="./assets/offeringImages/one-on-one-online.svg"
                         alt="one on one online"
                       />
@@ -353,6 +385,7 @@ export default function FitnessTab() {
                       <img
                         src="./assets/offeringImages/one-on-one-offline.svg"
                         alt="one on one offline"
+                        title={`${row.original.ptoffline * currentIndex[row.index]} One-on-One offline sessions`}
                       />
                       <br />
                       <p> {row.original.ptoffline * currentIndex[row.index]} </p>
@@ -364,6 +397,7 @@ export default function FitnessTab() {
                       <img
                         src="./assets/offeringImages/one-on-one-online.svg"
                         alt="one on one online"
+                        title={`${row.original.ptonline * currentIndex[row.index]} One-on-One online sessions`}
                       />
                       <br />
                       <p>{row.original.ptonline * currentIndex[row.index]}</p>
@@ -372,6 +406,7 @@ export default function FitnessTab() {
                       <img
                         src="./assets/offeringImages/one-on-one-offline.svg"
                         alt="one on one offline"
+                        title={`${row.original.ptoffline * currentIndex[row.index]} One-on-One offline sessions`}
                       />
                       <br />
                       <p> {row.original.ptoffline * currentIndex[row.index]} </p>
