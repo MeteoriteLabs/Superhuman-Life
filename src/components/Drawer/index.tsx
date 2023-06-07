@@ -10,7 +10,7 @@ interface Details {
   level: string;
   thumbnailId: string;
   // eslint-disable-next-line
-  pricing: any;
+  pricing?: any,
   address: {
     address1: string;
     city: string;
@@ -154,7 +154,7 @@ const Drawer: React.FC<{
                                 />
                               </>
                             ) : null}
-                            {props.details?.type === 'Cohort' ? (
+                            {props.details?.type === 'Cohort' || props.details?.type === 'Event' ? (
                               <>
                                 <img
                                   loading="lazy"
@@ -213,7 +213,13 @@ const Drawer: React.FC<{
                               props.details?.type === 'Cohort') &&
                             props.details?.pricing &&
                             props.details?.pricing.length
-                              ? props.details.pricing.find((curr) => curr.duration === 1).mrp
+                              ? props.details?.pricing?.find((curr) => curr.duration === 1).mrp
+                              : null}
+                              {(
+                              props.details?.type === 'Event') &&
+                            props.details?.pricing &&
+                            props.details?.pricing.length
+                              ? props.details.pricing.find((curr) => curr.duration === 0).mrp
                               : null}
                             {(props.details?.type === 'One-On-One' ||
                               props.details?.type === 'Custom Fitness' ||

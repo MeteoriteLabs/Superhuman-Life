@@ -14,9 +14,9 @@ const PackageDateConfig = (props: any) => {
       ? moment(JSON.parse(props.value).endDate).format("YYYY-MM-DD")
       :  moment(startDate).add(1, "days").format("YYYY-MM-DD")
   );
-  const [oneDay, setOneDay] = useState(
-    props.value ? JSON.parse(props.value).oneDay : false 
-  );
+  // const [oneDay, setOneDay] = useState(
+  //   props.value ? JSON.parse(props.value).oneDay : false 
+  // );
 
   useEffect(() => {
     if (moment(startDate).isAfter(endDate)) {
@@ -24,13 +24,13 @@ const PackageDateConfig = (props: any) => {
     }
   }, [startDate]);
 
-  useEffect(() => {
-    if (oneDay === true) {
-      setEndDate(moment(startDate).format("YYYY-MM-DD"));
-    }
-  }, [oneDay]);
+  // useEffect(() => {
+  //   if (oneDay === true) {
+  //     setEndDate(moment(startDate).format("YYYY-MM-DD"));
+  //   }
+  // }, [oneDay]);
 
-  props.onChange(JSON.stringify({ startDate, endDate, oneDay }));
+  props.onChange(JSON.stringify({ startDate, endDate}));
 
   return (
     <div>
@@ -54,7 +54,7 @@ const PackageDateConfig = (props: any) => {
         </span>
       )}
       <br />
-      <Form.Check
+      {/* <Form.Check
         custom
         inline
         type="checkbox"
@@ -65,7 +65,7 @@ const PackageDateConfig = (props: any) => {
         onChange={() => {
           setOneDay(!oneDay);
         }}
-      />
+      /> */}
       <br />
       <label>{props?.title2 ? props.title2 : "Expiry Date"}</label>
       <InputGroup className="mb-3">
@@ -78,7 +78,7 @@ const PackageDateConfig = (props: any) => {
           onChange={(e) => {
             setEndDate(e.target.value);
           }}
-          disabled={inputDisabled || oneDay}
+          disabled={inputDisabled}
         />
       </InputGroup>
       {props?.title2 && (

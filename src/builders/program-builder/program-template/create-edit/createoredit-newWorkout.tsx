@@ -205,6 +205,7 @@ function CreateEditNewWorkout(props: any, ref: any) {
 
   async function updateSchedulerEvents(frm: any, workout_id: any) {
     const existingEvents = props.events === null ? [] : [...props.events];
+   
     if (frm.day) {
       frm.day = JSON.parse(frm.day);
     }

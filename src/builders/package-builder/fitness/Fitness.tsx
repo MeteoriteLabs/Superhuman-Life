@@ -24,6 +24,7 @@ import CreateEditViewClassicClass from './classic/CreateOrEdit';
 import CreateEditViewCustomFitness from './custom/CreateOrEdit';
 import CreateEditViewChannel from './live-stream/CreateEditView-Channel';
 import CreateEditViewCohort from './cohort/CreateEditView-Cohort';
+import CreateEditViewEvent from './event/CreateEditViewEvent';
 import { GET_FITNESS, GET_TAGS } from './graphQL/queries';
 import { flattenObj } from '../../../components/utils/responseFlatten';
 import moment from 'moment';
@@ -41,6 +42,7 @@ export default function FitnessTab() {
   const CreateEditViewCustomFitnessRef = useRef<any>(null);
   const createEditViewChannelRef = useRef<any>(null);
   const createEditViewCohortRef = useRef<any>(null);
+  const createEditViewEventRef = useRef<any>(null);
   const [selectedDuration, setSelectedDuration] = useState<any>('');
   const [currentIndex, setCurrentIndex] = useState<any>('');
   const [showDrawer, setShowDrawer] = useState<boolean>(false);
@@ -111,6 +113,14 @@ export default function FitnessTab() {
           current_status: current_status
         });
         break;
+        case 'Event':
+          createEditViewEventRef.current.TriggerForm({
+            id: id,
+            type: actionType,
+            packageType: type,
+            current_status: current_status
+          });
+          break;
     }
   }
 
@@ -180,6 +190,37 @@ export default function FitnessTab() {
         accessor: 'details',
         Header: 'No. of sessions',
         Cell: ({ row }: any) => {
+          const sessionsObj = {};
+          const startMoment = moment(row.original.startDate);
+          const endMoment = moment(row.original.endDate).add(1, 'days');
+
+          row.original.sessions.map((curr) => {
+            return curr.sessions.map((item) => {
+              sessionsObj[item.session_date] = (sessionsObj[item.session_date] || 0) + 1;
+
+              return sessionsObj;
+            });
+          });
+
+          const lengthOfobject = Object.keys(sessionsObj).length;
+
+          const differenceBetweenStartDateandEndDate = endMoment.diff(startMoment, 'days');
+
+          // return value.row.original.type === 'Group Class' ||
+          //   value.row.original.type === 'Live Stream Channel' ? (
+          //   Object.keys(sessionsObj).length === 3 ? (
+          //     <Badge
+          //       className="px-3 py-1"
+          //       style={{ fontSize: '1rem', borderRadius: '10px' }}
+          //       variant={'success'}>
+          //       {'Published'}
+          //     </Badge>
+          //   ) : (
+          //     <>
+          //       <ProgressBar variant="success" now={lengthOfobject} />
+          //       {lengthOfobject}/3 program build
+          //     </>
+          //   )
           return (
             <div className="d-flex justify-content-center align-items-center">
               {row.original.type === 'Custom Fitness' ? (
@@ -354,16 +395,29 @@ export default function FitnessTab() {
                   <p> {row.original.recordedclasses * currentIndex[row.index]}</p>
                 </div>
               ) : null}
-              {row.original.type === 'Live Stream Channel' ||row.original.type === 'Cohort' ||row.original.type === 'On-Demand PT' ? (
-                <div>
-                  {/* <img
-                    src="./assets/offeringImages/classic-class-online.svg"
-                    title={`${row.original.recordedclasses * currentIndex[row.index]} recorded sessions`}
-                    alt="recorded online"
-                  /> */}
+              {row.original.type === 'Cohort' || row.original.type === 'Event' ? (
+                
+                <div title={`${Object.keys(sessionsObj).length ? `Start date: ${moment(row.original.startDate).format('DD-MM-YYYY')} - End date: ${moment(row.original.endDate).format('DD-MM-YYYY')}` : `No session`}`}>
+                 
+                  <Icon name="info" style={{width: "25px" , height: "30px"}}/>
+                  
+                  
+                </div>
+              ) : null}
+              {row.original.type === 'Live Stream Channel' ? (
+                
+                  <div title={`${Object.keys(sessionsObj).length ? `${Object.keys(sessionsObj).length} sessions` : `No session`}`}>
                   <Icon name="info" style={{width: "25px" , height: "30px"}}/>
                   <br />
-                  {/* <p> {row.original.recordedclasses * currentIndex[row.index]}</p> */}
+                  </div>
+                
+              ) : null}
+              {row.original.type === 'On-Demand PT' ? (
+                <div>
+                  <div title="1 session">
+                  <Icon name="info" style={{width: "25px" , height: "30px"}}/>
+                  </div>
+                  <br />
                 </div>
               ) : null}
               {row.original.type === 'One-On-One' ? (
@@ -614,7 +668,7 @@ export default function FitnessTab() {
               name = 'classic';
             } else if (type === 'Live Stream Channel') {
               name = 'channel';
-            } else if (type === 'Cohort') {
+            } else if (type === 'Cohort'|| type === 'Event') {
               name = 'cohort';
             } else if (type === 'Group Class') {
               name = 'group';
@@ -823,6 +877,16 @@ export default function FitnessTab() {
             }}>
             <i className="fas fa-plus-circle"></i> Cohort
           </Button>
+          <Button
+            style={{ whiteSpace: 'nowrap', textAlign: 'center' }}
+            className="mx-3"
+            variant="outline-secondary"
+            size="sm"
+            onClick={() => {
+              handleModalRender(null, 'create', 'Event');
+            }}>
+            <i className="fas fa-plus-circle"></i> Event
+          </Button>
         </div>
         <Container>
           <Row>
@@ -838,6 +902,12 @@ export default function FitnessTab() {
                   ref={createEditViewCohortRef}
                   refetchTags={refetch_tags}
                   refetchOfferings={refetchFitness}></CreateEditViewCohort>
+                  <CreateEditViewEvent
+                  totalRecords={totalRecords}
+                  ref={createEditViewEventRef}
+                  refetchTags={refetch_tags}
+                  refetchOfferings={refetchFitness}></CreateEditViewEvent>
+
                 <CreateEditViewPersonalTraining
                   ref={createEditViewPersonalTrainingRef}
                   refetchTags={refetch_tags}
