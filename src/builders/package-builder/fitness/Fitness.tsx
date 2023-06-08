@@ -175,6 +175,13 @@ export default function FitnessTab() {
               ) : (
                 ''
               )}
+              {row.original.type === 'Event' ? (
+                <div>
+                  <img loading="lazy" src="./assets/offeringImages/Event.svg" alt="EventType" />
+                </div>
+              ) : (
+                ''
+              )}
               {row.original.type === 'Live Stream Channel' ? (
                 <div>
                   <img loading="lazy" src="./assets/livestream.svg" alt="live stream" />
@@ -501,6 +508,9 @@ export default function FitnessTab() {
         Cell: ({ row }: any) => {
           return (
             <>
+            {
+              row.values.duration[0] === 0 ? '1 day event' : 
+            
               <Form.Group>
                 <Form.Control
                   id={row.index}
@@ -532,6 +542,7 @@ export default function FitnessTab() {
                   })}
                 </Form.Control>
               </Form.Group>
+              }
             </>
           );
         }
