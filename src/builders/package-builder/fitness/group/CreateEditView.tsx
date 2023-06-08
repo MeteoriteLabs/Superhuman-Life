@@ -610,8 +610,8 @@ function CreateEditPackage(props: any, ref: any) {
             ? () => {
                 modalTrigger.next(false);
               }
-            : (frm: any) => {
-                OnSubmit(frm);
+            : (form: any) => {
+                OnSubmit(form);
               }
         }
         formData={groupDetails}

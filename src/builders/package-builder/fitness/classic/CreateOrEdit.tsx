@@ -422,27 +422,27 @@ function CreateEditPackage(props: any, ref: any) {
     });
   }
 
-  function deleteChannelPackage(id: any) {
+  function deleteChannelPackage(id: string) {
     deletePackage({ variables: { id } });
     setDeleteModalShow(false);
   }
 
-  function updateChannelPackageStatus(id: any, status: any) {
+  function updateChannelPackageStatus(id: string, status: boolean) {
     updatePackageStatus({ variables: { id: id, Status: status } });
     setStatusModalShow(false);
     operation.type = 'create';
   }
 
-  function OnSubmit(frm: any) {
+  function OnSubmit(form: any) {
     //bind user id
-    if (frm) frm.user_permissions_user = auth.userid;
+    if (form) form.user_permissions_user = auth.userid;
 
     switch (operation.type) {
       case 'create':
-        CreatePackage(frm);
+        CreatePackage(form);
         break;
       case 'edit':
-        EditPackage(frm);
+        EditPackage(form);
         break;
       case 'toggle-status':
         setStatusModalShow(true);
@@ -479,8 +479,8 @@ function CreateEditPackage(props: any, ref: any) {
             ? () => {
                 modalTrigger.next(false);
               }
-            : (frm: any) => {
-                OnSubmit(frm);
+            : (form: any) => {
+                OnSubmit(form);
               }
         }
         formData={classicDetails}

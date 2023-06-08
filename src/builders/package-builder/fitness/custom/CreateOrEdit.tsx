@@ -73,7 +73,7 @@ function CreateEditPackage(props: any, ref: any) {
   const [createCustomNotification] = useMutation(CREATE_NOTIFICATION);
 
   const [createPackage] = useMutation(CREATE_PACKAGE, {
-    onCompleted: (data: any) => {
+    onCompleted: (data) => {
       props.refetchTags();
       props.refetchOfferings();
       const flattenData = flattenObj({ ...data });
@@ -309,6 +309,7 @@ function CreateEditPackage(props: any, ref: any) {
 
     createPackage({
       variables: {
+        Status: true,
         client_address: `${
           frm.programDetails.distance ? frm.programDetails.distance : null
         } ${

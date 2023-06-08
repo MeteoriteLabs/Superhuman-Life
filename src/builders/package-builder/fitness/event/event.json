@@ -1,0 +1,192 @@
+{
+    "1": {
+        "title": "",
+        "type": "object",
+        "required": [
+            "packageName",
+            "discpline",
+            "equipment",
+            "intensity",
+            "dates"
+        ],
+       "properties": {
+            "packageName": {
+                "type": "string",
+                "title": "Name of Offering",
+                "description": "Enter the Title for Offering"
+            },
+            "discpline": {
+                "type": "string",
+                "description": "Choose the relevant discipline for the offering"
+            },
+            "equipment": {
+                "type": "string",
+                "description": "Add all tools required"
+            },
+            "tag": {
+                "type": "string",
+                "title": "Hash tags",
+                "description": "Use hashtags to improve your listing"
+            },
+           "level": {
+                "type": "number",
+                "title": "Level",
+                "enum": [0, 1, 2],
+                "enumNames": [
+                    "Beginner",
+                    "Intermediate",
+                    "Advanced" 
+                ],
+                "default": 0,
+                "description": "Select the appropriate difficulty"
+            },
+            "intensity": {
+                "type": "number",
+                "title": "Intensity",
+                "enum": [0, 1, 2],
+                "enumNames": [
+                    "Low",
+                    "Moderate",
+                    "High"
+                ],
+                "default": 0,
+                "description": "Set the pace of the offering"
+            },
+            "dates": {
+                "type": "string"
+            }
+            
+        }   
+    },
+    "2": {
+       "title": "",
+       "type": "object",
+       "required": [
+        "About",
+        "Benifits",
+        "languages",
+        "classSize",
+        "thumbnail",
+        "Upload"
+       ],
+       "properties": {
+            "About": {
+                "type": "string",
+                "title": "About",
+                "description": "Summarize the offering"
+            },
+            "Benifits": {
+                "type": "string",
+                "title": "Benefits",
+                "description": "List the advantages"
+            },
+            "languages": {
+                "type": "string",
+                "title": "Languages"
+            },
+            "classSize": {
+                "type": "number",
+                "title": "Class Size",
+                "minimum": 1,
+                "maximum": 200,
+                "default":1
+            },
+            "thumbnail": {
+                "type": "string",
+                "description": "This image will be seen in the listing screen"
+            },
+            "Upload": {
+                "type": "object",
+                "oneOf": [
+                    {
+                        "title": "Add Youtube URL", 
+                          "properties": {
+                            "VideoUrl": {
+                              "type": "string",
+                              "format": "youtubeurl",
+                              "description": "Add Youtube URL"
+                            }
+                          },
+                          "required": [
+                            "VideoUrl"
+                          ]
+                        },
+                    {
+                        "title": "Upload picture or video", 
+                        "properties": {
+                            "upload": {
+                                "type": "string",
+                                "description": "This image will be seen in the details screen of the offering"
+                            }
+                      },
+                      "required": [
+                        "upload"
+                      ]
+                    }
+                ]
+
+            }
+        }
+    },
+    "3": {
+        "title": "",
+       "type": "object",
+       "required": [
+            "programDetails",
+            "courseDetails"
+       ],
+       "properties": {
+           "programDetails": {
+                "type": "string"
+           },
+           "courseDetails": {
+                "title": "Course Details",
+                "type": "object",
+                "required": [
+                    "details"
+                ],
+                "properties": {
+                    "details": {
+                        "type": "string"
+                    }
+                }
+        }
+        }
+    },
+    "4": {
+        "title": "",
+       "type": "object",
+       "required": [
+        "pricing"
+       ],
+       "properties": {
+            "pricing": {
+                "type": "string"
+            }
+        }
+    },
+    "5": {
+        "title": "Package Settings",
+       "type": "object",
+       "required": [
+        "visibility",
+        "datesConfig"
+       ],
+       "properties": {
+            "visibility": {
+                "type": "number",
+                "title": "Visibility",
+                "enum": [0, 1],
+                "enumNames": [
+                    "Public",
+                    "Private"
+                ],
+                "default": 0,
+                "description": "Public: The Offering will be visible to the user as soon as it is created, Private: The offering will not ve seen by anyone until you share it with them"
+            },
+            "datesConfig": {
+                "type": "string"
+            }
+        }
+    }
+}
