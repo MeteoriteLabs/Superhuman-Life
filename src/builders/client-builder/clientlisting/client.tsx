@@ -19,18 +19,19 @@ function Client() {
      function handleRedirect() {
           window.location.href = `/clients`;
      }
-     function FetchData(_variables: Record<string, unknown> = { id: auth.userid, clientid: last }) {
-          useQuery(GET_CLIENT_DATA_NEW, { variables: _variables, onCompleted: loadData });
-     }
-     function loadData(data: any) {
-          const flattenData = flattenObj({...data});
-          [...flattenData.clientPackages].map((Detail) => {
-               setClientName(Detail.users_permissions_user?.username);
-               setClientSex(Detail.users_permissions_user?.Gender);
-               return {};
-          });
-     }
-     FetchData({ id: auth.userid, clientid: last });
+     console.log(auth, last);
+     // function FetchData(_variables: { id: auth.userid, clientid: last }) {
+     //      useQuery(GET_CLIENT_DATA_NEW, { variables: _variables, onCompleted: loadData });
+     // }
+     // function loadData(data: any) {
+     //      const flattenData = flattenObj({...data});
+     //      [...flattenData.clientPackages].map((Detail) => {
+     //           setClientName(Detail.users_permissions_user?.username);
+     //           setClientSex(Detail.users_permissions_user?.Gender);
+     //           return {};
+     //      });
+     // }
+     // FetchData({ id: auth.userid, clientid: last });
      return (
           <div>
                <div className="mb-3">
@@ -44,7 +45,7 @@ function Client() {
 
                     <h3 className="d-inline ml-3 font-weight-bold">Clients</h3>
                </div>
-               <div className="border rounded shadow-lg bg-white border-dark p-4 ">
+                <div className="border rounded shadow-lg bg-white border-dark p-4 "> 
                     <div className="container ml-1">
                          <div className="row">
                               <img src="/assets/avatar-1.jpg" height="90" className="rounded-circle" alt="avatar" />
@@ -110,7 +111,7 @@ function Client() {
                               <Tab eventKey="teamwall" title="Team Wall">
                                    <TabContent>
                                         <hr />
-                                        <Wall />
+                                        {/* <Wall /> */}
                                    </TabContent>
                               </Tab>
                               <Tab eventKey="goal" title="Goals">
@@ -122,12 +123,12 @@ function Client() {
                               <Tab eventKey="Orders" title="Bookings">
                                    <TabContent>
                                         <hr />
-                                        <Orders />
+                                        {/* <Orders /> */}
                                    </TabContent>
                               </Tab>
                          </Tabs>
                     </Card.Body>
-               </Card>
+               </Card> 
           </div>
      );
 }

@@ -299,9 +299,11 @@ const Schedular = (props: any) => {
   // this incase of the scheduler in the client page
   function handleRenderClientTable(data: any) {
     const flattenData = flattenObj({ ...data });
-    const sessionsExistingValues = [...sessionIds];
+    console.log(sessionIds);
+    // const sessionsExistingValues = [...sessionIds];
+    const sessionsExistingValues: any = [];
 
-    for (let q = 0; q < flattenData.sessionsBookings.length; q++) {
+    for (let q = 0; q < flattenData?.sessionsBookings?.length; q++) {
       sessionsExistingValues.push(flattenData.sessionsBookings[q]?.session.id);
     }
     setSessionsIds(sessionsExistingValues);

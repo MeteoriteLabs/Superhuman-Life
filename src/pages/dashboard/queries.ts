@@ -1,4 +1,6 @@
-import {gql} from '@apollo/client';
+
+
+import { gql } from "@apollo/client";
 
 export const GET_USER_ORGANIZATIONS = gql`
     query getUserOrganization($id: ID!) {

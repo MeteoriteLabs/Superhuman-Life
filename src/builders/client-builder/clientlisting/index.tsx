@@ -151,8 +151,8 @@ function ClientListingPage() {
             id: Detail.users_permissions_user.id,
             clientname: Detail.users_permissions_user.username,
             clientemail: Detail.users_permissions_user.email,
-            clientphone: Detail.users_permissions_user.Phone,
-            clientlocation: Detail.users_permissions_user?.addresses[0]?.city,
+            clientphone: Detail.users_permissions_user.Phone_Number,
+            clientlocation: Detail.users_permissions_user?.addresses && Detail.users_permissions_user?.addresses.length ? Detail.users_permissions_user?.addresses[0]?.city : 'N/A',
             bookings: [clientnamecount, Detail.users_permissions_user.username],
             status: 'Assigned'
           };

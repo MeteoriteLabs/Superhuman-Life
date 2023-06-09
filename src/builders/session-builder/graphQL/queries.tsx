@@ -463,6 +463,67 @@ export const GET_TAGS_FOR_CHANNEL = gql`
   }
 `;
 
+export const GET_TAGS_FOR_EVENT = gql`
+  query getTagsforEvent($id: ID!) {
+    tags(
+      filters: {
+        fitnesspackage: {
+          users_permissions_user: { id: { eq: $id } }
+          fitness_package_type: { type: { eq: "Event" } }
+        }
+      }
+    ) {
+      data {
+        id
+        attributes {
+          tag_name
+          sessions {
+            data {
+              id
+              attributes {
+                session_date
+                type
+              }
+            }
+          }
+          fitnesspackage {
+            data {
+              id
+              attributes {
+                packagename
+                duration
+                mode
+                Status
+                Start_date
+                End_date
+              }
+            }
+          }
+          client_packages {
+            data {
+              id
+              attributes {
+                effective_date
+                accepted_date
+                users_permissions_user {
+                  data {
+                    id
+                    attributes {
+                      username
+                      First_Name
+                      Last_Name
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
 export const GET_TAGS_FOR_COHORT = gql`
   query getTagsforCohort($id: ID!) {
     tags(
