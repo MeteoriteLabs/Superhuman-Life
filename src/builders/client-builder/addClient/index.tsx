@@ -13,6 +13,7 @@ import {
 } from '../../../components/utils/ValidationPatterns';
 import AuthContext from '../../../context/auth-context';
 import moment from 'moment';
+import { useHistory } from 'react-router-dom';
 
 const AddClient: React.FC = () => {
   const auth = useContext(AuthContext);
@@ -23,13 +24,9 @@ const AddClient: React.FC = () => {
   const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
   const formRef = useRef<any>(null);
   const addClientJson: Record<string, unknown> = require('./addClient.json');
+  const history = useHistory();
 
-  const [createClientBooking] = useMutation(CREATE_CLIENT_BOOKING, {
-    onCompleted: (response) => {
-      const flattenReponse = flattenObj({ ...response.createClientBooking });
-      window.open(`/summary/?id=${flattenReponse.id}`, '_self');
-    }
-  });
+  const [createClientBooking] = useMutation(CREATE_CLIENT_BOOKING);
 
   const [createClient] = useMutation(CREATE_CLIENT);
 
@@ -65,6 +62,10 @@ const AddClient: React.FC = () => {
             }
           },
           onCompleted: (response) => {
+            const flattenReponse = flattenObj({ ...response.createClientBooking });
+            
+            // window.open(`/summary/?id=${flattenReponse.id}`, '_self');
+            history.push(`/summary/?id=${flattenReponse.id}`);
             if (frm.formData.offeringFilter === 'Class') {
               localStorage.setItem(
                 'sessionBookingDetails',

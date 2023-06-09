@@ -180,7 +180,8 @@ function CreateEditActivity(props: any, ref: any) {
     }
 
     const sessionIds_new: any = [];
-    const sessionIds_old: string[] = [...props.sessionIds];
+    // const sessionIds_old: string[] = [...props.sessionIds];
+    const sessionIds_old: string[] = [];
     const templateIds_old: string[] = [...templateSessionsIds];
 
     function updateSessionFunc(id: any) {

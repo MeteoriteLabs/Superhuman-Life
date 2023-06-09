@@ -6,6 +6,7 @@ import Classic from "./Classic/Classic";
 import Custom from "./Custom/Custom";
 import Channel from "./Channel/channel";
 import Cohort from "./Cohort/cohort";
+import Event from "./Event/event";
 import "./fitness.css";
 
 const Fitness: React.FC = () => {
@@ -52,6 +53,9 @@ const Fitness: React.FC = () => {
             </Tab>
             <Tab eventKey="cohort" title="Cohort">
               <Cohort />
+            </Tab>
+            <Tab eventKey="event" title="Event">
+              <Event />
             </Tab>
           </Tabs>
         </Card.Body>
