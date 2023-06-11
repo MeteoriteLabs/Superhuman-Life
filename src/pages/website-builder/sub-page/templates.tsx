@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import SideNav from '../layout/sidenav';
 import { Button, Col, Container, Form, InputGroup, Row } from 'react-bootstrap';
 import { Search } from 'react-bootstrap-icons';
+
 import { FETCH_TEMPLATES } from '../queires/templates';
 import { useQuery } from '@apollo/client';
 import FetchTemplatesResponse, { WebsiteTemplate } from '../@types/websiteTemplates';

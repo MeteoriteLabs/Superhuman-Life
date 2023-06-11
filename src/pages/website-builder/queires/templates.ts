@@ -11,7 +11,7 @@ query fetchTemplates($isPublished: Boolean) {
         schema_json
         form_json
         published
-        Stepper_Title
+        Sections
         CreatedBy
         GoodFor
         Features

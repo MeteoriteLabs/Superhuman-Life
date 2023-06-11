@@ -1,5 +1,3 @@
-
-  
   export interface WebsiteTemplate {
     id: string;
     attributes: {
