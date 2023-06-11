@@ -3,7 +3,8 @@ import { ArrowRight, CheckCircle } from 'react-bootstrap-icons';
 import { Button, Col, ListGroup, Modal, Row } from 'react-bootstrap';
 
 import style from './info.module.css';
-import { Link } from 'react-router-dom';
+import { Redirect, useHistory } from 'react-router-dom';
+import { useEffect } from 'react';
 
 function InfoModal({
   data,
@@ -16,6 +17,19 @@ function InfoModal({
 }): JSX.Element {
   const handleClose = () => {
     setInfoData(null);
+  };
+
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
+  const history = useHistory();
+  const handleNavigation = () => {
+    localStorage.setItem(
+      'selectedTemplate',
+      JSON.stringify({ id: data.id, name: data.attributes.template_name })
+    );
+
+    history.push('/website/templates/liveEditor');
   };
 
   return (
@@ -54,7 +68,7 @@ function InfoModal({
                 <ListGroup.Item>
                   {' '}
                   <CheckCircle className="text-success m-0 mr-2" />
-                  Influencers
+                  Influencer&apos;s
                 </ListGroup.Item>
               </ListGroup>
             </Col>
@@ -82,11 +96,9 @@ function InfoModal({
           </Row>
         </div>
         <div className="d-flex justify-content-end mt-5">
-          <Link to={`/website/templates/liveEditor`}>
-            <Button variant="primary" className="py-2 px-4 ">
-              Go to Live Editor <ArrowRight className="m-0 mb-1 ml-1" />
-            </Button>
-          </Link>
+          <Button variant="primary" className="py-2 px-4 " onClick={handleNavigation}>
+            Go to Live Editor <ArrowRight className="m-0 mb-1 ml-1" />
+          </Button>
         </div>
       </Modal.Body>
     </Modal>

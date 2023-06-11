@@ -2,7 +2,7 @@ import { Nav } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
-import Tooltip from 'react-bootstrap/Tooltip';
+// import Tooltip from 'react-bootstrap/Tooltip';
 
 import style from './liveEditorSideNav.module.css';
 import CustomTabs from './tabs';
