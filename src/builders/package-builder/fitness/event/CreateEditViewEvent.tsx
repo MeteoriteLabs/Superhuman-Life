@@ -270,8 +270,7 @@ function CreateEditEvent(props: any, ref: any) {
       accomodationDetails: msg.Accomdation_details
     });
     details.thumbnail = msg.Thumbnail_ID;
-    details.Upload =
-      msg.Upload_ID === null ? { VideoUrl: msg?.video_URL } : { upload: msg?.Upload_ID };
+    details.VideoUrl = msg.video_URL;
     details.datesConfig = JSON.stringify({
       expiryDate: msg.expiry_date,
       publishingDate: msg.publishing_date
@@ -384,8 +383,7 @@ function CreateEditEvent(props: any, ref: any) {
         End_date: moment(frm.dates.startDate).toISOString(),
         Course_details: frm.courseDetails.details,
         thumbnail: frm.thumbnail,
-        upload: frm.Upload?.upload,
-        videoUrl: frm.Upload?.VideoUrl,
+        videoUrl: frm.VideoUrl,
         Accomdation_details: frm.programDetails.accomodationDetails
       }
     });
@@ -455,22 +453,20 @@ function CreateEditEvent(props: any, ref: any) {
           .join(', ')
           .split(', '),
         Start_date: moment(frm.dates.startDate).toISOString(),
-        // End_date: moment(frm.dates.endDate).toISOString(),
         Course_details: frm.courseDetails.details,
         thumbnail: frm.thumbnail,
-        upload: frm.Upload?.upload,
-        videoUrl: frm.Upload?.VideoUrl,
+        videoUrl: frm.VideoUrl,
         Accomdation_details: frm.programDetails.accomodationDetails
       }
     });
   }
 
-  function deleteChannelPackage(id: any) {
+  function deleteChannelPackage(id: string) {
     deletePackage({ variables: { id } });
     setDeleteModalShow(false);
   }
 
-  function updateChannelPackageStatus(id: any, status: any) {
+  function updateChannelPackageStatus(id: string, status: boolean) {
     updatePackageStatus({ variables: { id: id, Status: status } });
     setStatusModalShow(false);
     operation.type = 'create';

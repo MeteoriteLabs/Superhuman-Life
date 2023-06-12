@@ -187,8 +187,6 @@ function CreateEditPackage(props: any, ref: any) {
     }
   });
 
- 
-
   const modalTrigger = new Subject();
 
   useImperativeHandle(ref, () => ({
@@ -374,8 +372,7 @@ function CreateEditPackage(props: any, ref: any) {
       rest: msg.restdays
     });
     details.thumbnail = msg.Thumbnail_ID;
-    details.Upload =
-      msg.Upload_ID === null ? { VideoUrl: msg.video_URL } : { upload: msg.Upload_ID };
+    details.VideoUrl = msg.video_URL ;
     details.datesConfig = JSON.stringify({
       expiryDate: msg.expiry_date,
       publishingDate: msg.publishing_date
@@ -474,9 +471,8 @@ function CreateEditPackage(props: any, ref: any) {
         publishing_date: moment(frm.datesConfig?.publishingDate).toISOString(),
         expiry_date: moment(frm.datesConfig?.expiryDate).toISOString(),
         thumbnail: frm.thumbnail,
-        upload: frm?.Upload?.upload,
         equipmentList: frm.equipmentList,
-        videoUrl: frm?.Upload?.VideoUrl,
+        videoUrl: frm?.VideoUrl,
         languages: frm.languages
           .map((item: any) => item.id)
           .join(', ')
@@ -535,9 +531,9 @@ function CreateEditPackage(props: any, ref: any) {
         publishing_date: moment(frm.datesConfig?.publishingDate).toISOString(),
         expiry_date: moment(frm.datesConfig?.expiryDate).toISOString(),
         thumbnail: frm.thumbnail,
-        upload: frm?.Upload?.upload,
+        
         equipmentList: frm.equipmentList,
-        videoUrl: frm?.Upload?.VideoUrl,
+        videoUrl: frm?.VideoUrl,
         languages: frm.languages
           .map((item: any) => item.id)
           .join(', ')

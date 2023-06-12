@@ -245,10 +245,7 @@ function CreateEditPt(props: any, ref: any) {
       clientAddress: msg.client_address ? clientAddressArray[1]  : null,
     });
     details.thumbnail = msg.Thumbnail_ID;
-    details.Upload =
-      msg.Upload_ID === null
-        ? { VideoUrl: msg.video_URL }
-        : { upload: msg.Upload_ID };
+    details.VideoUrl = msg.video_URL ;
     details.datesConfig = JSON.stringify({
       expiryDate: msg.expiry_date,
       publishingDate: msg.publishing_date,
@@ -331,9 +328,8 @@ function CreateEditPt(props: any, ref: any) {
         publishing_date: moment(frm.datesConfig?.publishingDate).toISOString(),
         expiry_date: moment(frm.datesConfig?.expiry_date).toISOString(),
         thumbnail: frm.thumbnail,
-        upload: frm?.Upload?.upload,
         equipmentList: frm.equipmentList,
-        videoUrl: frm?.Upload?.VideoUrl,
+        videoUrl: frm?.VideoUrl,
         client_address: `${
           frm.programDetails.distance ? frm.programDetails.distance : null
         } ${
@@ -393,9 +389,8 @@ function CreateEditPt(props: any, ref: any) {
         publishing_date: moment(frm.datesConfig?.publishingDate).toISOString(),
         expiry_date: moment(frm.datesConfig?.expiry_date).toISOString(),
         thumbnail: frm.thumbnail,
-        upload: frm?.Upload?.upload,
         equipmentList: frm.equipmentList,
-        videoUrl: frm?.Upload?.VideoUrl,
+        videoUrl: frm?.VideoUrl,
         languages: frm.languages
           .map((item: any) => item.id)
           .join(", ")
@@ -418,7 +413,7 @@ function CreateEditPt(props: any, ref: any) {
   }
 
   function OnSubmit(frm: any) {
-    //bind user id
+
     if (frm) frm.user_permissions_user = auth.userid;
 
     switch (operation.type) {

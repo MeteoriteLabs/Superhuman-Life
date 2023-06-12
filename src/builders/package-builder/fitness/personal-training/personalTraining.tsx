@@ -74,22 +74,8 @@ export const schema: any = {
       );
     },
   },
-  Upload: {
-    upload: {
-      "ui:widget": (props: any) => {
-        return (
-          <Upload
-            allowImage={true}
-            allowVideo={true}
-            onChange={props.onChange}
-            value={props.value}
-          />
-        );
-      },
-    },
-    VideoUrl: {
-      "ui:placeholder": "https://",
-    },
+  VideoUrl: {
+    "ui:placeholder": "https://",
   },
   programDetails: {
     "ui:widget": "ptProgramDetails",

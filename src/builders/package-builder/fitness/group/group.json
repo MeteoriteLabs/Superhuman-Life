@@ -86,7 +86,7 @@
             "Benifits",
             "classsize",
             "thumbnail",
-            "Upload",
+            "VideoUrl",
             "languages"
         ],
         "properties": {
@@ -115,38 +115,12 @@
                 "type": "string",
                 "description": "This image will be seen in the listing screen"
             },
-            "Upload": {
-                "type": "object",
-                "title": "Offering Screen Image/Video",
-                "oneOf": [
-                    {
-                        "title": "Add Youtube URL", 
-                          "properties": {
-                            "VideoUrl": {
-                              "type": "string",
-                              "format": "youtubeurl",
-                              "description": "Add Youtube URL"
-                            }
-                          },
-                          "required": [
-                            "VideoUrl"
-                          ]
-                        },
-                    {
-                        "title": "Upload picture or video", 
-                        "properties": {
-                            "upload": {
-                                "type": "string",
-                                "description": "This image will be seen in the details screen of the offering"
-                            }
-                      },
-                      "required": [
-                        "upload"
-                      ]
-                    }
-                ]
-
-            }
+            "VideoUrl": {
+                "type": "string",
+                "format": "youtubeurl",
+                "description": "Add Youtube URL"
+              }
+            
         }
     },
     "3": {
