@@ -4,9 +4,9 @@
         "type": "object",
         "required": [
             "packageName",
-            "discpline",
+           
             "equipment",
-            "intensity",
+           
             "dates"
         ],
        "properties": {
@@ -15,10 +15,7 @@
                 "title": "Name of Offering",
                 "description": "Enter the Title for Offering"
             },
-            "discpline": {
-                "type": "string",
-                "description": "Choose the relevant discipline for the offering"
-            },
+            
             "equipment": {
                 "type": "string",
                 "description": "Add all tools required"
@@ -28,30 +25,7 @@
                 "title": "Hash tags",
                 "description": "Use hashtags to improve your listing"
             },
-           "level": {
-                "type": "number",
-                "title": "Level",
-                "enum": [0, 1, 2],
-                "enumNames": [
-                    "Beginner",
-                    "Intermediate",
-                    "Advanced" 
-                ],
-                "default": 0,
-                "description": "Select the appropriate difficulty"
-            },
-            "intensity": {
-                "type": "number",
-                "title": "Intensity",
-                "enum": [0, 1, 2],
-                "enumNames": [
-                    "Low",
-                    "Moderate",
-                    "High"
-                ],
-                "default": 0,
-                "description": "Set the pace of the offering"
-            },
+          
             "dates": {
                 "type": "string"
             }

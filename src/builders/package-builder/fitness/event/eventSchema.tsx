@@ -1,7 +1,7 @@
 import PricingTableChannel from "../cohort/pricingTableCohort";
 import LocationList from "../../../../components/customWidgets/locationList";
 import LanguageList from "../../../../components/customWidgets/languageSelect";
-import ProgramDetails from "../cohort/programDetails";
+import ProgramDetails from "./ProgramDetails";
 import CourseDetails from "../cohort/course_details";
 import Upload from "../../../../components/upload/upload";
 import DatesConfig from "../../../../components/customWidgets/datesConfig";
@@ -30,21 +30,6 @@ export const schema: any = {
   },
   packageName: {
     "ui:placeholder": "Enter package name",
-  },
-  level: {
-    "ui:widget": "radio",
-    "ui:options": {
-      inline: true,
-    },
-  },
-  intensity: {
-    "ui:widget": "radio",
-    "ui:options": {
-      inline: true,
-    },
-  },
-  discpline: {
-    "ui:widget": "fitnessSelect",
   },
   equipment: {
     "ui:widget": "equipmentSelect",
@@ -92,22 +77,8 @@ export const schema: any = {
       );
     },
   },
-  Upload: {
-    upload: {
-      "ui:widget": (props: any) => {
-        return (
-          <Upload
-            allowImage={true}
-            allowVideo={true}
-            onChange={props.onChange}
-            value={props.value}
-          />
-        );
-      },
-    },
-    VideoUrl: {
-      "ui:placeholder": "https://",
-    },
+  VideoUrl: {
+    "ui:placeholder": "https://",
   },
   mode: {
     "ui:widget": "radio",
