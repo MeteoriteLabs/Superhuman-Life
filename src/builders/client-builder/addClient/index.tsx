@@ -63,8 +63,6 @@ const AddClient: React.FC = () => {
           },
           onCompleted: (response) => {
             const flattenReponse = flattenObj({ ...response.createClientBooking });
-            
-            // window.open(`/summary/?id=${flattenReponse.id}`, '_self');
             history.push(`/summary/?id=${flattenReponse.id}`);
             if (frm.formData.offeringFilter === 'Class') {
               localStorage.setItem(

@@ -6,6 +6,7 @@ import EquipmentSelect from "../../../../components/customWidgets/equipmentListS
 import ChannelConfig from "./channelConfig";
 import LanguageList from "../../../../components/customWidgets/languageSelect";
 import LiveBookingConfig from "./bookingConfig";
+import ChannelPrimaryDateConfig from "./primaryDatesConfig";
 
 export const widgets = {
   pricingTableChannel: PricingTableChannel,
@@ -86,24 +87,9 @@ export const schemaView: any = {
       );
     },
   },
-  Upload: {
-    upload: {
-      "ui:widget": (props: any) => {
-        return (
-          <Upload
-            allowImage={true}
-            allowVideo={true}
-            onChange={props.onChange}
-            value={props.value}
-            readonly={true}
-          />
-        );
-      },
-    },
-    VideoUrl: {
-      "ui:placeholder": "https://",
-      "ui:readonly": true,
-    },
+  VideoUrl: {
+    "ui:placeholder": "https://",
+    "ui:readonly": true,
   },
   visibility: {
     "ui:widget": "radio",
@@ -133,5 +119,19 @@ export const schemaView: any = {
   languages: {
     "ui:widget": "liveChannelLanguageSelect",
     "ui:readonly": true,
+  },
+  dates: {
+    "ui:widget": (props: any) => {
+      return (
+        <ChannelPrimaryDateConfig
+          title1={"Start Date"}
+          title2={"End Date"}
+          value={props.value}
+          onChange={props.onChange}
+          type={"Cohort"}
+          readonly={true}
+        />
+      );
+    },
   },
 };

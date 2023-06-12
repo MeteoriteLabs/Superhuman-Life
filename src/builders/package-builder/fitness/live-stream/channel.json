@@ -8,7 +8,7 @@
             "equipment",
             "dates"
         ],
-       "properties": {
+        "properties": {
             "channelName": {
                 "type": "string",
                 "title": "Name of Offering",
@@ -27,10 +27,14 @@
                 "title": "Hash tags",
                 "description": "Use hashtags to improve your listing"
             },
-           "level": {
+            "level": {
                 "type": "number",
                 "title": "Level",
-                "enum": [0, 1, 2],
+                "enum": [
+                    0,
+                    1,
+                    2
+                ],
                 "enumNames": [
                     "Beginner",
                     "Intermediate",
@@ -46,36 +50,37 @@
                 "type": "array",
                 "title": "Duration",
                 "items": {
-                  "type": "string",
-                  "enum": [
+                    "type": "string",
+                    "enum": [
+                        "1 day",
+                        "30 days",
+                        "90 days",
+                        "180 days",
+                        "360 days"
+                    ]
+                },
+                "uniqueItems": true,
+                "default": [
                     "1 day",
                     "30 days",
                     "90 days",
                     "180 days",
                     "360 days"
-                  ]
-                },
-                "uniqueItems": true,
-                "default": ["1 day",
-                "30 days",
-                "90 days",
-                "180 days",
-                "360 days"]
-              }
-
-        }   
+                ]
+            }
+        }
     },
     "2": {
-       "title": "",
-       "type": "object",
-       "required": [
+        "title": "",
+        "type": "object",
+        "required": [
             "About",
             "Benifits",
             "thumbnail",
-            "Upload",
+            "VideoUrl",
             "languages"
-       ],
-       "properties": {
+        ],
+        "properties": {
             "About": {
                 "type": "string",
                 "title": "About",
@@ -93,36 +98,10 @@
                 "type": "string",
                 "description": "This image will be seen in the listing screen"
             },
-            "Upload": {
-                "type": "object",
-                "oneOf": [
-                    {
-                        "title": "Add Youtube URL", 
-                          "properties": {
-                            "VideoUrl": {
-                              "type": "string",
-                              "format": "youtubeurl",
-                              "description": "Add Youtube URL"
-                            }
-                          },
-                          "required": [
-                            "VideoUrl"
-                          ]
-                        },
-                    {
-                        "title": "Upload picture or video", 
-                        "properties": {
-                            "upload": {
-                                "type": "string",
-                                "description": "This image will be seen in the details screen of the offering"
-                            }
-                      },
-                      "required": [
-                        "upload"
-                      ]
-                    }
-                ]
-
+            "VideoUrl": {
+                "type": "string",
+                "format": "youtubeurl",
+                "description": "Add Youtube URL"
             }
         }
     },
@@ -136,16 +115,16 @@
             "channelinstantBooking": {
                 "type": "string",
                 "title": "Allow instant Bookings"
-              }
+            }
         }
     },
     "4": {
         "title": "",
-       "type": "object",
-       "required": [
+        "type": "object",
+        "required": [
             "pricing"
-       ],
-       "properties": {
+        ],
+        "properties": {
             "pricing": {
                 "type": "string"
             }
@@ -153,16 +132,19 @@
     },
     "5": {
         "title": "Package Settings",
-       "type": "object",
-       "required": [
-           "visibility",
-           "datesConfig"
-       ],
-       "properties": {
+        "type": "object",
+        "required": [
+            "visibility",
+            "datesConfig"
+        ],
+        "properties": {
             "visibility": {
                 "type": "number",
                 "title": "Visibility",
-                "enum": [0, 1],
+                "enum": [
+                    0,
+                    1
+                ],
                 "enumNames": [
                     "Public",
                     "Private"

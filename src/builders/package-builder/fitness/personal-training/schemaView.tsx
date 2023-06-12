@@ -91,24 +91,9 @@ export const schemaView: any = {
       );
     },
   },
-  Upload: {
-    upload: {
-      "ui:widget": (props: any) => {
-        return (
-          <Upload
-            allowImage={true}
-            allowVideo={true}
-            onChange={props.onChange}
-            value={props.value}
-            readonly={true}
-          />
-        );
-      },
-    },
-    VideoUrl: {
-      "ui:placeholder": "https://",
-      "ui:readonly": true,
-    },
+  VideoUrl: {
+    "ui:placeholder": "https://",
+    "ui:readonly": true,
   },
   programDetails: {
     "ui:widget": "ptProgramDetails",

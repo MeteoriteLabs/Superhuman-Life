@@ -337,8 +337,7 @@ function CreateEditChannel(props: any, ref: any) {
     details.user_permissions_user = msg.users_permissions_user.id;
     details.visibility = msg.is_private === true ? 1 : 0;
     details.thumbnail = msg.Thumbnail_ID;
-    details.Upload =
-      msg.Upload_ID === null ? { VideoUrl: msg.video_URL } : { upload: msg.Upload_ID };
+    details.VideoUrl = msg.video_URL;
     details.datesConfig = JSON.stringify({
       expiryDate: msg.expiry_date,
       publishingDate: msg.publishing_date
@@ -441,10 +440,10 @@ function CreateEditChannel(props: any, ref: any) {
         fitness_package_type: findPackageType(operation.packageType),
         is_private: frm.visibility === 0 ? false : true,
         thumbnail: frm.thumbnail,
-        upload: frm.Upload?.upload,
-        videoUrl: frm.Upload?.VideoUrl,
+        upload: frm.upload,
+        videoUrl: frm.VideoUrl,
         languages: frm.languages
-          .map((item: any) => item.id)
+          .map((item) => item.id)
           .join(', ')
           .split(', '),
         Start_date: moment.utc(frm.dates.startDate).format(),
@@ -504,8 +503,7 @@ function CreateEditChannel(props: any, ref: any) {
         fitness_package_type: findPackageType(operation.packageType),
         is_private: frm.visibility === 0 ? false : true,
         thumbnail: frm.thumbnail,
-        upload: frm.Upload?.upload,
-        videoUrl: frm.Upload?.VideoUrl,
+        videoUrl: frm.VideoUrl,
         languages: frm.languages
           .map((item: any) => item.id)
           .join(', ')
@@ -663,10 +661,8 @@ function CreateEditChannel(props: any, ref: any) {
         </Modal.Footer>
       </Modal>
       : null
-
       }
       
-
       {/* Change status modal */}
       <Modal
         size="lg"
