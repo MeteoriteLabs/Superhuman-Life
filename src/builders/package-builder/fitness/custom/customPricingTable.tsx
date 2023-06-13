@@ -33,7 +33,7 @@ const PricingTable: React.FC<{
   const auth = useContext(AuthContext);
   const [vouchers, setVouchers] = useState<any>([]);
   const [pricing, setPricing] = useState<any>(
-    props.value !== undefined && props.value !== 'free'
+    props.value && props.value !== 'free'
       ? handleReturnType(props.value)
       : [
           { mrp: null, suggestedPrice: null, voucher: 0, duration: 30, sapienPricing: null },
@@ -73,6 +73,7 @@ const PricingTable: React.FC<{
       setVouchers(flattenData.vouchers);
     }
   });
+
   React.useEffect(() => {
     getVouchers({
       variables: {
@@ -578,7 +579,7 @@ const PricingTable: React.FC<{
                   return <td key={index}>{item.duration} days</td>;
                 })}
               </tr>
-              <tr className="text-center">
+              {/* <tr className="text-center">
                 <td>
                   <b>Suggested</b>
                 </td>
@@ -591,7 +592,7 @@ const PricingTable: React.FC<{
                     </td>
                   );
                 })}
-              </tr>
+              </tr> */}
               <tr>
                 <td className="text-center">
                   <b>Set MRP</b>

@@ -1,4 +1,4 @@
-import PricingTableChannel from "../cohort/pricingTableCohort";
+import PricingTableChannel from "./PricingTableEvent";
 import LocationList from "../../../../components/customWidgets/locationList";
 import LanguageList from "../../../../components/customWidgets/languageSelect";
 import ProgramDetails from "./ProgramDetails";
@@ -88,12 +88,6 @@ export const schema: any = {
   },
   location: {
     "ui:widget": "locationList",
-  },
-  residential: {
-    "ui:widget": "radio",
-    "ui:options": {
-      inline: true,
-    },
   },
   description: {
     "ui:widget": "textarea",

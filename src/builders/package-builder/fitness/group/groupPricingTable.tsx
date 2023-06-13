@@ -642,7 +642,7 @@ const PricingTable = (props: any) => {
                   return <td key={index}>{item.duration} days</td>;
                 })}
               </tr>
-              <tr className="text-center">
+              {/* <tr className="text-center">
                 <td>
                   <b>Suggested</b>
                 </td>
@@ -657,7 +657,7 @@ const PricingTable = (props: any) => {
                     </td>
                   );
                 })}
-              </tr>
+              </tr> */}
               <tr>
                 <td className="text-center">
                   <b>Set MRP</b>

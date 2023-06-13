@@ -10,22 +10,81 @@ import { Col } from 'react-bootstrap';
 import { phoneCustomFormats, phoneTransformErrors } from '../../../../components/utils/ValidationPatterns';
 import UploadImageToS3WithNativeSdk from "../../../../components/upload/upload";
 
-interface UserDetails {
-    Photo_ID: string;
-    About_User: string;
-    First_Name: string;
-    Last_Name: string;
-    about_mini_description: string;
-    Website_URL: string;
-    Phone_Number: string;
+interface UsersPermissionsUser {
+  data: {
+    attributes: {
+      About_User: string;
+      Clubhouse_URL: string;
+      Document_Verified: boolean;
+      Facebook_URL: string;
+      First_Name: string;
+      Last_Name: string;
+      LinkedIn_URL: string;
+      Phone_Number: string;
+      Photo_ID: string;
+      Photo_profile_banner_ID: string;
+      Twitter_URL: string;
+      Verification_ID: string;
+      Website_URL: string;
+      Youtube_URL: string;
+      about_mini_description: string;
+    };
+    addresses: {
+      data: {
+        attributes: {
+          House_Number: string;
+          Title: string;
+          address1: string;
+          address2: string;
+          city: string;
+          country: string;
+          is_primary: boolean;
+          state: string;
+          type: string;
+          type_address: string;
+          zipcode: string;
+        };
+        id: string;
+      }[];
+    };
+    designations: {
+      data: {
+        attributes: {
+          Designation_title: string;
+          description: string;
+        };
+        id: string;
+      }[];
+    };
+    educational_details: {
+      data: {
+        attributes: {
+          Institute_Name: string;
+          Specialization: string;
+          Type_of_degree: string;
+          Year: string;
+        };
+        id: string;
+      }[];
+    };
+    email: string;
+    instagram_url: string;
+    updatedAt: string;
+  };
+  id: string;
+  __typename: string;
 }
+
+type FlattenData = {
+  usersPermissionsUser: UsersPermissionsUser;
+};
 
 const BasicProfileForm: React.FC = () => {
   const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
   const formRef = useRef<any>(null);
   const auth = useContext(AuthContext);
   const profileJson: any = require("./BasicProfile.json");
-  const [webpageDetails, setWebPageDetails] = useState<UserDetails>({} as UserDetails);
+  const [webpageDetails, setWebPageDetails] = useState<UsersPermissionsUser>({} as UsersPermissionsUser);
 
   const schema: any = {
 
@@ -79,16 +138,16 @@ const BasicProfileForm: React.FC = () => {
     }
   };
 
-  const fetch = useQuery(FETCH_USER_PROFILE_DATA, {
+  const fetch = useQuery<UsersPermissionsUser>(FETCH_USER_PROFILE_DATA, {
     variables: { id: auth.userid },
-    onCompleted: (r: any) => {
-      const flattenData = flattenObj({ ...r });
+    onCompleted: (response) => {
+      const flattenData: FlattenData = flattenObj({ ...response });
       FillDetails(flattenData.usersPermissionsUser);
     },
   });
 
   const [updateProfile] = useMutation(UPDATE_USER_PROFILE_DATA, {
-    onCompleted: (r: any) => { setIsFormSubmitted(!isFormSubmitted); fetch.refetch(); }, refetchQueries: [FETCH_USER_PROFILE_DATA]
+    onCompleted: () => { setIsFormSubmitted(!isFormSubmitted); fetch.refetch(); }, refetchQueries: [FETCH_USER_PROFILE_DATA]
   });
 
   function updateBasicDetails(frm: any) {
@@ -114,7 +173,7 @@ const BasicProfileForm: React.FC = () => {
   }
 
   //fillDetails
-  function FillDetails(data: any) {
+  function FillDetails(data: UsersPermissionsUser) {
     if (data) {
       setWebPageDetails({ ...data });
     }
@@ -127,7 +186,7 @@ const BasicProfileForm: React.FC = () => {
           uiSchema={schema}
           schema={profileJson}
           ref={formRef}
-          onSubmit={(frm: any) => { OnSubmit(frm) }}
+          onSubmit={(frm: any) => { OnSubmit(frm);}}
           formData={webpageDetails}
           widgets={widgets}
           customFormats={phoneCustomFormats}

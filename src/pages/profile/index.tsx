@@ -7,7 +7,7 @@ import ChangemakersSettings from "./ChangemakersSettings";
 import "./profile.css";
 
 const ProfilePage: React.FC = () => {
-  const [key, setKey] = useState("profile");
+  const [key, setKey] = useState<string>("profile");
 
   return (
     <Card className="shadow-sm mt-2" border="light">
@@ -18,8 +18,7 @@ const ProfilePage: React.FC = () => {
           transition={false}
           id="controlled-tab"
           activeKey={key}
-          // eslint-disable-next-line
-          onSelect={(k: any) => setKey(k)}
+          onSelect={(key: string|null) => key && setKey(key)}
           className="mb-3 mt-5 d-flex justify-content-center"
         >
           <Tab eventKey="profile" title="Profile">

@@ -249,7 +249,7 @@ const PricingTable: React.FC<{
                 </td>
                 <td>{pricing[0].duration} sessions</td>
               </tr>
-              <tr className="text-center">
+              {/* <tr className="text-center">
                 <td>
                   <b>Suggested</b>
                 </td>
@@ -258,7 +258,7 @@ const PricingTable: React.FC<{
                     ? 'Base Price Not Set'
                     : `₹ ${pricing[0].suggestedPrice}`}
                 </td>
-              </tr>
+              </tr> */}
               <tr>
                 <td className="text-center">
                   <b>Set MRP</b>

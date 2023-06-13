@@ -27,7 +27,7 @@ const PricingTable: React.FC<{
   const [vouchers, setVouchers] = useState<any>([]);
   const [show, setShow] = useState(props.value === 'free' ? true : false);
   const [pricing, setPricing] = useState<any>(
-    props.value !== undefined && props.value !== 'free'
+    props.value && props.value !== 'free'
       ? JSON.parse(props.value)
       : [
           {

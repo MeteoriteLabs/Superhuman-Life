@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import FacebookLogin from "react-facebook-login";
 import Toaster from "../../components/Toaster";
 import { GoogleOAuthProvider } from "@react-oauth/google";
@@ -12,14 +12,14 @@ const redirectUriForLinkedin = process.env.REACT_APP_LINKEDIN_REDIRECT_URI;
 const googleClientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 const facebookAppId = process.env.REACT_APP_FACEBOOK_APP_ID;
 
-const SocialLogin = (props: any) => {
-  const [login, setLogin] = useState(false);
+const SocialLogin: React.FC = () => {
+  const [login, setLogin] = useState<boolean>(false);
   const [data, setData] = useState({});
-  const [picture, setPicture] = useState("");
+  // const [picture, setPicture] = useState<string>("");
 
   //Facebook
   const responseFacebook = (response) => {
-    console.log(response);
+    
     // Login failed
     if (response.status === "unknown") {
       alert("Login failed!");
@@ -27,7 +27,7 @@ const SocialLogin = (props: any) => {
       return <Toaster type="danger" msg="Login failed" handleCallback={()=> false}/>;
     }
     setData(response);
-    setPicture(response.picture.data.url);
+    // setPicture(response.picture.data.url);
     if (response.accessToken) {
       setLogin(true);
     } else {
@@ -37,7 +37,7 @@ const SocialLogin = (props: any) => {
   const logout = () => {
     setLogin(false);
     setData({});
-    setPicture("");
+    // setPicture("");
   };
 
   //linkedin

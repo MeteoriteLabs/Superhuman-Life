@@ -48,7 +48,7 @@
             },
             "durationOfOffering": {
                 "type": "array",
-                "title": "Duration",
+                "title": "Choose the relevant payment durations",
                 "items": {
                     "type": "string",
                     "enum": [

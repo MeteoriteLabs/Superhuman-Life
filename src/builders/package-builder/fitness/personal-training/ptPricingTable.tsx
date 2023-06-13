@@ -368,7 +368,7 @@ const PricingTable: React.FC<Props> = (props) => {
                   return <td key={index}>{item.duration} days</td>;
                 })}
               </tr>
-              <tr className="text-center">
+              {/* <tr className="text-center">
                 <td>
                   <b>Suggested</b>
                 </td>
@@ -381,7 +381,7 @@ const PricingTable: React.FC<Props> = (props) => {
                     </td>
                   );
                 })}
-              </tr>
+              </tr> */}
               <tr>
                 <td className="text-center">
                   <b>Set MRP</b>
