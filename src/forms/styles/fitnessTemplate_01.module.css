@@ -11,3 +11,21 @@
 .pageTitle:hover{
    background-color: #3f3f3f;
 }
+
+.backButton{
+    margin-block: 0;
+    padding-block: .5rem;
+    margin-inline: 35px;
+    cursor: pointer;
+    font-size: 14px;
+    position: absolute;
+    bottom: 80px;
+    margin-bottom: 5px;
+    border-bottom: 1px solid #242424;
+    transition: all .1s ease-in-out;
+}
+
+.backButton:hover{
+   border-bottom: 1px solid #fff;
+}
+
