@@ -1,8 +1,8 @@
 import Cta from './home/cta';
 import Features from './home/features';
 import Hero from './home/hero';
-import Pricing from './pricing';
-import Testimonials from './testimonials';
+import Pricing from './home/pricing';
+import Testimonials from './home/testimonials';
 
 function Index({ section }: { section: string }): JSX.Element {
   const Section = {
