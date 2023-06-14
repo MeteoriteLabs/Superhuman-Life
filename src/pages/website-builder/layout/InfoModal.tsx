@@ -1,19 +1,17 @@
-import { WebsiteTemplate } from '../@types/websiteTemplates';
+import { Template } from '../@types/websiteTemplates';
 import { ArrowRight, CheckCircle } from 'react-bootstrap-icons';
 import { Button, Col, ListGroup, Modal, Row } from 'react-bootstrap';
 
 import style from './info.module.css';
-import { Redirect, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { useEffect } from 'react';
 
 function InfoModal({
   data,
-  returnImageAlternating,
   setInfoData
 }: {
-  data: WebsiteTemplate;
-  returnImageAlternating: (data: number) => string;
-  setInfoData: (data: WebsiteTemplate | null) => void;
+  data: Template;
+  setInfoData: (data: Template | null) => void;
 }): JSX.Element {
   const handleClose = () => {
     setInfoData(null);
@@ -26,7 +24,7 @@ function InfoModal({
   const handleNavigation = () => {
     localStorage.setItem(
       'selectedTemplate',
-      JSON.stringify({ id: data.id, name: data.attributes.template_name })
+      JSON.stringify({ id: data.id, name: data.attributes.templateName })
     );
 
     history.push('/website/templates/liveEditor');
@@ -36,61 +34,41 @@ function InfoModal({
     <Modal show={!!data} onHide={handleClose} className={style.modal}>
       <Modal.Body>
         <Modal.Header closeButton className="mb-4">
-          <h3 className={style.templateName}>{data.attributes.template_name}</h3>
+          <h3 className={style.templateName}>{data.attributes.templateName}</h3>
         </Modal.Header>
         <div className="position-relative">
           <div className={style.thumbnailCont}>
-            <img
-              src={returnImageAlternating(Number(data.id))}
-              className={style.thumbnail}
-              width={1200}
-            />
+            <img src={data.attributes.thumbnail} className={style.thumbnail} width={1200} />
           </div>
           <Row className="mt-3">
             <Col className="mt-3">
               <h3 className={style.subheadings}>Good For</h3>
 
               <ListGroup className="mt-3">
-                <ListGroup.Item>
-                  <CheckCircle className="text-success m-0 mr-2" />
-                  Coaches
-                </ListGroup.Item>
-                <ListGroup.Item>
-                  {' '}
-                  <CheckCircle className="text-success m-0 mr-2" />
-                  Consultants
-                </ListGroup.Item>
-                <ListGroup.Item>
-                  {' '}
-                  <CheckCircle className="text-success m-0 mr-2" />
-                  Athletes
-                </ListGroup.Item>
-                <ListGroup.Item>
-                  {' '}
-                  <CheckCircle className="text-success m-0 mr-2" />
-                  Influencer&apos;s
-                </ListGroup.Item>
+                {data.attributes.goodFor.length > 0
+                  ? data.attributes.goodFor.map((item, index) => (
+                      <ListGroup.Item key={index}>
+                        {' '}
+                        <CheckCircle className="text-success m-0 mr-2" />
+                        {item}
+                      </ListGroup.Item>
+                    ))
+                  : null}
               </ListGroup>
             </Col>
             <Col className="mt-3">
               <h3 className={style.subheadings}>Features</h3>
 
               <ListGroup className="mt-3">
-                <ListGroup.Item>
-                  {' '}
-                  <CheckCircle className="text-success m-0 mr-2" />
-                  Gallery Sections
-                </ListGroup.Item>
-                <ListGroup.Item>
-                  {' '}
-                  <CheckCircle className="text-success m-0 mr-2" />
-                  Testimonials
-                </ListGroup.Item>
-                <ListGroup.Item>
-                  {' '}
-                  <CheckCircle className="text-success m-0 mr-2" />
-                  Offerings
-                </ListGroup.Item>
+                {data.attributes.features.length > 0
+                  ? data.attributes.features.map((item, index) => (
+                      <ListGroup.Item key={index}>
+                        {' '}
+                        <CheckCircle className="text-success m-0 mr-2" />
+                        {item}
+                      </ListGroup.Item>
+                    ))
+                  : null}
               </ListGroup>
             </Col>
           </Row>
