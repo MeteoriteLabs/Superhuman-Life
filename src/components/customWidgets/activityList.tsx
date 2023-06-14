@@ -10,7 +10,7 @@ const ActivityField = (props: any) => {
 
   const FETCH_ACTIVITIES = gql`
     query activities {
-      activities(sort: ["updatedAt"]) {
+      activities(sort: ["updatedAt:desc"]) {
         data {
           id
           attributes {

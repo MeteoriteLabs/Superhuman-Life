@@ -25,6 +25,21 @@ export const widgets = {
 };
 
 export const schema: any = {
+  level: {
+    "ui:widget": "radio",
+    "ui:options": {
+      inline: true,
+    }
+  },
+  intensity: {
+    "ui:widget": "radio",
+    "ui:options": {
+      inline: true,
+    }
+  },
+  disciplines: {
+    "ui:widget": "fitnessSelect",
+  },
   tag: {
     "ui:placeholder": "Enter tag name",
   },

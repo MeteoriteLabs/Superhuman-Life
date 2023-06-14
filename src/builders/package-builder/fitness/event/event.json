@@ -25,6 +25,35 @@
                 "title": "Hash tags",
                 "description": "Use hashtags to improve your listing"
             },
+            "disciplines": {
+                "type": "string",
+                "title": "Disciplines",
+                "description": "Choose the relevant discipline for the offering"
+            },
+            "level": {
+                "type": "number",
+                "title": "Level",
+                "enum": [0, 1, 2],
+                "enumNames": [
+                    "Beginner",
+                    "Intermediate",
+                    "Advanced"
+                ],
+                "default": 0,
+                "description": "Select the appropriate difficulty"
+            },
+            "intensity": {
+                "type": "number",
+                "title": "Intensity",
+                "enum": [0, 1, 2],
+                "enumNames": [
+                    "Low",
+                    "Moderate",
+                    "High"
+                ],
+                "default": 0,
+                "description": "Set the pace of the offering"
+            },
           
             "dates": {
                 "type": "string"

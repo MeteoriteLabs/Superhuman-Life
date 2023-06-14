@@ -530,7 +530,19 @@ export const CREATE_EVENT = gql`
     ) {
       data {
         id
-        
+        attributes {
+          packagename
+          fitness_package_type{
+            data{
+              id 
+              attributes{
+                type
+              }
+            }
+          }
+          classsize
+          duration
+          groupinstantbooking
         }
       }
     }

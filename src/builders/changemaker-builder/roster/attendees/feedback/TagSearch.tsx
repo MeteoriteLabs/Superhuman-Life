@@ -24,7 +24,7 @@ const TagSearch = (props: any) => {
           workouttitle: { containsi: $filter }
           users_permissions_user: { id: { eq: $id } }
         }
-        sort: ["updatedAt"]
+        sort: ["updatedAt:desc"]
       ) {
         data {
           id

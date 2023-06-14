@@ -2,6 +2,7 @@ import React, { useContext, useImperativeHandle, useState, useEffect } from 'rea
 import { useQuery, useMutation } from '@apollo/client';
 import ModalView from '../../../../components/modal';
 import {
+  CREATE_CHANNEL_PACKAGE,
   DELETE_PACKAGE,
   UPDATE_PACKAGE_STATUS,
   UPDATE_CHANNEL_COHORT_PACKAGE,
@@ -9,8 +10,7 @@ import {
   CREATE_OFFERING_INVENTORY,
   UPDATE_OFFERING_INVENTORY,
   CREATE_TAG,
-  DELETE_OFFERING_INVENTORY,
-  CREATE_EVENT
+  DELETE_OFFERING_INVENTORY
 } from '../graphQL/mutations';
 import {
   youtubeUrlCustomFormats,
@@ -33,7 +33,7 @@ import { OfferingInventory } from '../../interface/offeringInventory';
 
 interface Operation {
   id: string;
-  packageType: 'Cohort' | 'Live Stream Channel'|'Event';
+  packageType: 'Cohort' | 'Live Stream Channel';
   type: 'create' | 'edit' | 'view' | 'toggle-status' | 'delete';
   current_status: boolean;
 }
@@ -133,7 +133,7 @@ function CreateEditEvent(props: any, ref: any) {
 
   const [createCohortNotification] = useMutation(CREATE_NOTIFICATION);
 
-  const [CreateCohortPackage] = useMutation(CREATE_EVENT, {
+  const [CreateCohortPackage] = useMutation(CREATE_CHANNEL_PACKAGE, {
     onCompleted: (response) => {
       const flattenData = flattenObj({ ...response });
 
@@ -264,13 +264,13 @@ function CreateEditEvent(props: any, ref: any) {
       address: [msg.address],
       mode: ENUM_FITNESSPACKAGE_MODE[msg.mode],
       residential:
-        msg.residential_type !== null
+        msg.residential_type 
           ? ENUM_FITNESSPACKAGE_RESIDENTIAL_TYPE[msg.residential_type]
           : null,
       accomodationDetails: msg.Accomdation_details
     });
     details.thumbnail = msg.Thumbnail_ID;
-    details.VideoUrl = msg.video_URL;
+    details.VideoUrl = msg?.video_URL;
     details.datesConfig = JSON.stringify({
       expiryDate: msg.expiry_date,
       publishingDate: msg.publishing_date
@@ -304,7 +304,7 @@ function CreateEditEvent(props: any, ref: any) {
       }
     });
   }
-  
+
   function findPackageType(creationType: any) {
     const foundType = fitnessPackageTypes.find((item) => item.type === creationType);
     return foundType.id;
@@ -327,23 +327,36 @@ function CreateEditEvent(props: any, ref: any) {
     if (frm.equipment) {
       frm.equipment = JSON.parse(frm?.equipment);
     }
-   
+    if (frm.discpline) {
+      frm.discpline = JSON.parse(frm?.discpline);
+    }
     CreateCohortPackage({
       variables: {
-        data: {
         aboutpackage: frm.About,
         benefits: frm.Benifits,
         packagename: frm.packageName,
-        // channelinstantBooking: frm.channelinstantBooking,
+        channelinstantBooking: frm.channelinstantBooking,
         expiry_date: moment(frm.datesConfig.expiryDate).toISOString(),
-        equipment_lists:
+        level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
+        Intensity: ENUM_FITNESSPACKAGE_INTENSITY[frm.intensity],
+        equipmentList:
           frm?.equipment?.length > 0
             ? frm.equipment
                 .map((x: any) => x.id)
                 .join(',')
                 .split(',')
             : [],
-        duration: 1,
+        duration:
+          frm.dates.startDate === frm.dates.endDate
+            ? 1
+            : calculateDuration(frm.dates.startDate, frm.dates.endDate),
+        fitnessdisciplines:
+          frm?.discpline?.length > 0
+            ? frm.discpline
+                .map((item: any) => item.id)
+                .join(', ')
+                .split(', ')
+            : [],
         fitnesspackagepricing:
           frm.pricing === 'free'
             ? [
@@ -370,13 +383,12 @@ function CreateEditEvent(props: any, ref: any) {
           .join(', ')
           .split(', '),
         Start_date: moment(frm.dates.startDate).toISOString(),
-        End_date: moment(frm.dates.startDate).toISOString(),
+        End_date: moment(frm.dates.endDate).toISOString(),
         Course_details: frm.courseDetails.details,
-        Thumbnail_ID: frm.thumbnail,
-        video_URL: frm.VideoUrl,
+        thumbnail: frm.thumbnail,
+        videoUrl: frm.VideoUrl,
         Accomdation_details: frm.programDetails.accomodationDetails
       }
-    }
     });
   }
 
@@ -390,15 +402,18 @@ function CreateEditEvent(props: any, ref: any) {
     if (frm.equipment) {
       frm.equipment = JSON.parse(frm?.equipment);
     }
-   
+    if (frm.discpline) {
+      frm.discpline = JSON.parse(frm?.discpline);
+    }
     editPackageDetails({
       variables: {
         id: operation.id,
         aboutpackage: frm.About,
         benefits: frm.Benifits,
         packagename: frm.packageName,
-        // channelinstantBooking: frm.channelinstantBooking,
-       
+        channelinstantBooking: frm.channelinstantBooking,
+        level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
+        Intensity: ENUM_FITNESSPACKAGE_INTENSITY[frm.intensity],
         equipmentList:
           frm?.equipment?.length > 0
             ? frm.equipment
@@ -406,26 +421,29 @@ function CreateEditEvent(props: any, ref: any) {
                 .join(',')
                 .split(',')
             : [],
-        // fitnessdisciplines:
-        //   frm?.discpline?.length > 0
-        //     ? frm.discpline
-        //         .map((item: any) => item.id)
-        //         .join(', ')
-        //         .split(', ')
-        //     : [],
+        fitnessdisciplines:
+          frm?.discpline?.length > 0
+            ? frm.discpline
+                .map((item: any) => item.id)
+                .join(', ')
+                .split(', ')
+            : [],
         fitnesspackagepricing:
           frm.pricing === 'free'
             ? [
                 {
                   mrp: 'free',
-                  duration: 1
+                  duration: calculateDuration(frm.dates.publishingDate, frm.dates.expiryDate)
                 }
               ]
             : JSON.parse(frm.pricing),
         publishing_date: moment(frm.datesConfig.publishingDate).toISOString(),
         expiry_date: moment(frm.datesConfig.expiryDate).toISOString(),
         tags: frm.tag,
-        duration: 1,
+        duration:
+          frm.dates.startDate === frm.dates.endDate
+            ? 1
+            : calculateDuration(frm.dates.startDate, frm.dates.endDate),
         users_permissions_user: frm.user_permissions_user,
         fitness_package_type: findPackageType(operation.packageType),
         is_private: frm.visibility === 0 ? false : true,
@@ -441,6 +459,7 @@ function CreateEditEvent(props: any, ref: any) {
           .join(', ')
           .split(', '),
         Start_date: moment(frm.dates.startDate).toISOString(),
+        End_date: moment(frm.dates.endDate).toISOString(),
         Course_details: frm.courseDetails.details,
         thumbnail: frm.thumbnail,
         videoUrl: frm.VideoUrl,
@@ -449,12 +468,12 @@ function CreateEditEvent(props: any, ref: any) {
     });
   }
 
-  function deleteChannelPackage(id: string) {
+  function deleteChannelPackage(id: any) {
     deletePackage({ variables: { id } });
     setDeleteModalShow(false);
   }
 
-  function updateChannelPackageStatus(id: string, status: boolean) {
+  function updateChannelPackageStatus(id: any, status: any) {
     updatePackageStatus({ variables: { id: id, Status: status } });
     setStatusModalShow(false);
     operation.type = 'create';
@@ -649,3 +668,5 @@ function CreateEditEvent(props: any, ref: any) {
 }
 
 export default React.forwardRef(CreateEditEvent);
+
+
