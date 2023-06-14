@@ -29,7 +29,7 @@ export function SideNav({ collapse, setCollapse }: any) {
         >
           {selectedOption === "home" ? (
             <NavLink
-              className="nav-link text-white"
+              className="nav-link d-flex text-white"
               to="/home"
               onClick={() => setSelectedOption(location.pathname.slice(1))}
             >
@@ -38,7 +38,7 @@ export function SideNav({ collapse, setCollapse }: any) {
             </NavLink>
           ) : (
             <NavLink
-              className="nav-link"
+              className="nav-link d-flex"
               style={{ color: "#cebaa8" }}
               to="/home"
               onClick={() => setSelectedOption(location.pathname.slice(1))}
@@ -56,7 +56,7 @@ export function SideNav({ collapse, setCollapse }: any) {
         >
           {selectedOption === "schedule" ? (
             <NavLink
-              className="nav-link text-white"
+              className="nav-link d-flex text-white"
               to="/schedule"
               onClick={() => setSelectedOption(location.pathname.slice(1))}
             >
@@ -65,7 +65,7 @@ export function SideNav({ collapse, setCollapse }: any) {
             </NavLink>
           ) : (
             <NavLink
-              className="nav-link"
+              className="nav-link d-flex "
               to="/schedule"
               onClick={() => setSelectedOption(location.pathname.slice(1))}
               style={{ color: "#cebaa8" }}
@@ -83,7 +83,7 @@ export function SideNav({ collapse, setCollapse }: any) {
         >
           {selectedOption === "session" ? (
             <NavLink
-              className="nav-link text-white"
+              className="nav-link d-flex text-white"
               to="/session"
               onClick={() => setSelectedOption(location.pathname.slice(1))}
             >
@@ -92,7 +92,7 @@ export function SideNav({ collapse, setCollapse }: any) {
             </NavLink>
           ) : (
             <NavLink
-              className="nav-link"
+              className="nav-link d-flex"
               to="/session"
               onClick={() => setSelectedOption(location.pathname.slice(1))}
               style={{ color: "#cebaa8" }}
@@ -110,7 +110,7 @@ export function SideNav({ collapse, setCollapse }: any) {
         >
           {selectedOption === "clients" ? (
             <NavLink
-              className="nav-link text-white"
+              className="nav-link d-flex text-white"
               to="/clients"
               onClick={() => setSelectedOption(location.pathname.slice(1))}
             >
@@ -119,7 +119,7 @@ export function SideNav({ collapse, setCollapse }: any) {
             </NavLink>
           ) : (
             <NavLink
-              className="nav-link"
+              className="nav-link d-flex"
               to="/clients"
               onClick={() => setSelectedOption(location.pathname.slice(1))}
               style={{ color: "#cebaa8" }}
@@ -137,7 +137,7 @@ export function SideNav({ collapse, setCollapse }: any) {
         >
           {selectedOption === "bookings" ? (
             <NavLink
-              className="nav-link text-white"
+              className="nav-link d-flex text-white"
               to="/bookings"
               onClick={() => setSelectedOption(location.pathname.slice(1))}
             >
@@ -146,7 +146,7 @@ export function SideNav({ collapse, setCollapse }: any) {
             </NavLink>
           ) : (
             <NavLink
-              className="nav-link"
+              className="nav-link d-flex"
               to="/bookings"
               onClick={() => setSelectedOption(location.pathname.slice(1))}
               style={{ color: "#cebaa8" }}
@@ -164,7 +164,7 @@ export function SideNav({ collapse, setCollapse }: any) {
         >
           {selectedOption === "offerings" ? (
             <NavLink
-              className="nav-link text-white"
+              className="nav-link d-flex text-white"
               to="/offerings"
               onClick={() => setSelectedOption(location.pathname.slice(1))}
             >
@@ -173,7 +173,7 @@ export function SideNav({ collapse, setCollapse }: any) {
             </NavLink>
           ) : (
             <NavLink
-              className="nav-link"
+              className="nav-link d-flex"
               to="/offerings"
               onClick={() => setSelectedOption(location.pathname.slice(1))}
               style={{ color: "#cebaa8" }}
@@ -191,7 +191,7 @@ export function SideNav({ collapse, setCollapse }: any) {
         >
           {selectedOption === "resources" ? (
             <NavLink
-              className="nav-link text-white"
+              className="nav-link d-flex text-white"
               to="/resources"
               onClick={() => setSelectedOption(location.pathname.slice(1))}
             >
@@ -200,7 +200,7 @@ export function SideNav({ collapse, setCollapse }: any) {
             </NavLink>
           ) : (
             <NavLink
-              className="nav-link"
+              className="nav-link d-flex"
               to="/resources"
               onClick={() => setSelectedOption(location.pathname.slice(1))}
               style={{ color: "#cebaa8" }}
@@ -218,7 +218,7 @@ export function SideNav({ collapse, setCollapse }: any) {
         >
           {selectedOption === "finance" ? (
             <NavLink
-              className="nav-link text-white"
+              className="nav-link d-flex text-white"
               to="/finance"
               onClick={() => setSelectedOption(location.pathname.slice(1))}
             >
@@ -227,7 +227,7 @@ export function SideNav({ collapse, setCollapse }: any) {
             </NavLink>
           ) : (
             <NavLink
-              className="nav-link"
+              className="nav-link d-flex"
               to="/finance"
               onClick={() => setSelectedOption(location.pathname.slice(1))}
               style={{ color: "#cebaa8" }}
@@ -245,7 +245,7 @@ export function SideNav({ collapse, setCollapse }: any) {
         >
           {selectedOption === "communication" ? (
             <NavLink
-              className="nav-link text-white"
+              className="nav-link d-flex text-white"
               to="/communication"
               onClick={() => setSelectedOption(location.pathname.slice(1))}
             >
@@ -254,7 +254,7 @@ export function SideNav({ collapse, setCollapse }: any) {
             </NavLink>
           ) : (
             <NavLink
-              className="nav-link"
+              className="nav-link d-flex"
               to="/communication"
               onClick={() => setSelectedOption(location.pathname.slice(1))}
               style={{ color: "#cebaa8" }}
@@ -272,7 +272,7 @@ export function SideNav({ collapse, setCollapse }: any) {
         >
           {selectedOption === "settings" ? (
             <NavLink
-              className="nav-link text-white"
+              className="nav-link d-flex text-white"
               to="/settings"
               onClick={() => setSelectedOption(location.pathname.slice(1))}
             >
@@ -281,7 +281,7 @@ export function SideNav({ collapse, setCollapse }: any) {
             </NavLink>
           ) : (
             <NavLink
-              className="nav-link"
+              className="nav-link d-flex"
               to="/settings"
               onClick={() => setSelectedOption(location.pathname.slice(1))}
               style={{ color: "#cebaa8" }}
@@ -295,7 +295,7 @@ export function SideNav({ collapse, setCollapse }: any) {
       <Button
         variant="dark"
         onClick={() => setCollapse(!collapse)}
-        className="mt-5 nav-link"
+        className="mt-5 nav-link d-flex"
       >
         {collapse ? (
           <i className="fas fa-angle-double-right"></i>
