@@ -1,4 +1,4 @@
-import PricingTableChannel from "../cohort/pricingTableCohort";
+import PricingTableChannel from "./pricingTable";
 import LocationList from "../../../../components/customWidgets/locationList";
 import LanguageList from "../../../../components/customWidgets/languageSelect";
 import ProgramDetails from "./ProgramDetails";

@@ -19,7 +19,7 @@ const PricingTable: React.FC<{
   function calculateDuration(sd, ed) {
     const start = moment(sd);
     const end = moment(ed);
-    const duration = end.diff(start, 'days');
+    const duration = end.diff(start, 'days') + 1;
     return duration;
   }
 
@@ -93,6 +93,7 @@ const PricingTable: React.FC<{
       setVouchers(flattenData.vouchers);
     }
   });
+
   React.useEffect(() => {
     getVouchers({
       variables: {
@@ -156,74 +157,8 @@ const PricingTable: React.FC<{
   }
 
   function handleValidation() {
-    if (parseInt(pricing[0].mrp) < pricing[0].sapienPricing) {
-      return false;
-    }
-    // here it means if the mode is not equal to residential in the previous step
-    if (
-      mode !== '2' &&
-      pricing[0].mrp !== null &&
-      parseInt(pricing[0].mrp) >= pricing[0].sapienPricing
-    ) {
+    if (parseInt(pricing[0].mrp) ) {
       return true;
-    }
-    if (accomodationType === '0' || accomodationType === '1') {
-      if (accomodationType === '1' && isNaN(pricing[0].foodPrice) && pricing[0].foodPrice === 0) {
-        return false;
-      }
-      if (
-        accomodationDetails.private &&
-        !accomodationDetails.sharing &&
-        pricing[0].privateRoomPrice > 0
-      ) {
-        return true;
-      }
-      if (accomodationDetails.sharing && !accomodationDetails.private) {
-        if (
-          accomodationDetails.twoSharingRooms !== null &&
-          accomodationDetails.threeSharingRooms !== null
-        ) {
-          if (
-            accomodationDetails.sharing &&
-            !accomodationDetails.private &&
-            pricing[0].twoSharingPrice > 0 &&
-            pricing[0].threeSharingPrice > 0
-          ) {
-            return true;
-          }
-        }
-        if (
-          accomodationDetails.twoSharingRooms !== null &&
-          accomodationDetails.threeSharingRooms === null
-        ) {
-          if (pricing[0].twoSharingPrice > 0) {
-            return true;
-          }
-        }
-        if (
-          accomodationDetails.threeSharingRooms !== null &&
-          accomodationDetails.twoSharingRooms === null
-        ) {
-          if (pricing[0].threeSharingPrice > 0) {
-            return true;
-          }
-        }
-      }
-      if (accomodationDetails.sharing && accomodationDetails.private) {
-        if (accomodationDetails.threeSharingRooms !== null) {
-          if (
-            pricing[0].privateRoomPrice > 0 &&
-            pricing[0].twoSharingPrice > 0 &&
-            pricing[0].threeSharingPrice > 0
-          ) {
-            return true;
-          }
-        } else {
-          if (pricing[0].privateRoomPrice > 0 && pricing[0].twoSharingPrice > 0) {
-            return true;
-          }
-        }
-      }
     }
   }
 
@@ -342,7 +277,7 @@ const PricingTable: React.FC<{
                 </td>
                 <td>{pricing[0].duration} days</td>
               </tr>
-              <tr className="text-center">
+              {/* <tr className="text-center">
                 <td>
                   <b>Suggested</b>
                 </td>
@@ -351,124 +286,11 @@ const PricingTable: React.FC<{
                     ? 'Base Price Not Set'
                     : `₹ ${pricing[0].suggestedPrice}`}
                 </td>
-              </tr>
-              {accomodationDetails?.private && (
-                <tr className="text-center">
-                  <td>
-                    <b>Private Room Price</b>
-                  </td>
-                  <td>
-                    <InputGroup style={{ minWidth: '200px' }}>
-                      <InputGroup.Prepend>
-                        <InputGroup.Text id="basic-addon1">{'\u20B9'}</InputGroup.Text>
-                      </InputGroup.Prepend>
-                      <FormControl
-                        aria-label="Default"
-                        type="number"
-                        min={0}
-                        disabled={inputDisabled}
-                        aria-describedby="inputGroup-sizing-default"
-                        value={pricing[0]?.privateRoomPrice}
-                        onChange={(e) => {
-                          handleAccomodationPriceUpdate(
-                            parseInt(e.target.value),
-                            0,
-                            'privateRoomPrice'
-                          );
-                        }}
-                      />
-                    </InputGroup>{' '}
-                  </td>
-                </tr>
-              )}
-              {accomodationDetails?.sharing && accomodationDetails.twoSharingRooms !== null && (
-                <>
-                  <tr className="text-center">
-                    <td>
-                      <b>Dual Occupancy Price</b>
-                    </td>
-                    <td>
-                      <InputGroup style={{ minWidth: '200px' }}>
-                        <InputGroup.Prepend>
-                          <InputGroup.Text id="basic-addon1">{'\u20B9'}</InputGroup.Text>
-                        </InputGroup.Prepend>
-                        <FormControl
-                          aria-label="Default"
-                          type="number"
-                          min={0}
-                          disabled={inputDisabled}
-                          aria-describedby="inputGroup-sizing-default"
-                          value={pricing[0]?.twoSharingPrice}
-                          onChange={(e) => {
-                            handleAccomodationPriceUpdate(
-                              parseInt(e.target.value),
-                              0,
-                              'twoSharingPrice'
-                            );
-                          }}
-                        />
-                      </InputGroup>{' '}
-                    </td>
-                  </tr>
-                  {accomodationDetails.threeSharingRooms !== null && (
-                    <tr className="text-center">
-                      <td>
-                        <b>Triple Occupancy Price</b>
-                      </td>
-                      <td>
-                        <InputGroup style={{ minWidth: '200px' }}>
-                          <InputGroup.Prepend>
-                            <InputGroup.Text id="basic-addon1">{'\u20B9'}</InputGroup.Text>
-                          </InputGroup.Prepend>
-                          <FormControl
-                            aria-label="Default"
-                            type="number"
-                            min={0}
-                            disabled={inputDisabled}
-                            aria-describedby="inputGroup-sizing-default"
-                            value={pricing[0]?.threeSharingPrice}
-                            onChange={(e) => {
-                              handleAccomodationPriceUpdate(
-                                parseInt(e.target.value),
-                                0,
-                                'threeSharingPrice'
-                              );
-                            }}
-                          />
-                        </InputGroup>{' '}
-                      </td>
-                    </tr>
-                  )}
-                </>
-              )}
-              {accomodationType === '1' && (
-                <tr className="text-center">
-                  <td>
-                    <b>Food Price</b>
-                  </td>
-                  <td>
-                    <InputGroup style={{ minWidth: '200px' }}>
-                      <InputGroup.Prepend>
-                        <InputGroup.Text id="basic-addon1">{'\u20B9'}</InputGroup.Text>
-                      </InputGroup.Prepend>
-                      <FormControl
-                        aria-label="Default"
-                        type="number"
-                        min={0}
-                        disabled={inputDisabled}
-                        aria-describedby="inputGroup-sizing-default"
-                        value={pricing[0]?.foodPrice}
-                        onChange={(e) => {
-                          handleAccomodationPriceUpdate(parseInt(e.target.value), 0, 'foodPrice');
-                        }}
-                      />
-                    </InputGroup>{' '}
-                  </td>
-                </tr>
-              )}
+              </tr> */}
+              
               <tr>
                 <td className="text-center">
-                  <b>Cohort Base Price</b>
+                  <b>Event Base Price</b>
                 </td>
                 <td>
                   <InputGroup style={{ minWidth: '200px' }}>
@@ -512,69 +334,8 @@ const PricingTable: React.FC<{
                 </label>
               </div>
               <hr className="my-0" />
-              {accomodationType === '1' && (
-                <Row className="text-center">
-                  <Col>
-                    <label>
-                      <b>
-                        Base Price + <span className="text-danger">Food</span>
-                      </b>
-                    </label>
-                    <p>₹ {parseInt(pricing[0].mrp)}</p>
-                  </Col>
-                  {accomodationDetails.private && (
-                    <Col>
-                      <label>
-                        <b>
-                          Private Room + Base Price + <span className="text-danger">Food</span>
-                        </b>
-                      </label>
-                      <p>
-                        ₹{' '}
-                        {parseInt(pricing[0].mrp) +
-                          (isNaN(pricing[0].privateRoomPrice) ? 0 : pricing[0].privateRoomPrice) +
-                          (isNaN(pricing[0].foodPrice) ? 0 : pricing[0].foodPrice)}
-                      </p>
-                    </Col>
-                  )}
-                  {accomodationDetails.sharing && accomodationDetails.twoSharingRooms !== null && (
-                    <>
-                      <Col>
-                        <label>
-                          <b>
-                            Base Price + Dual Occupancy + <span className="text-danger">Food</span>
-                          </b>
-                        </label>
-                        <p>
-                          ₹{' '}
-                          {parseInt(pricing[0].mrp) +
-                            (isNaN(pricing[0].twoSharingPrice) ? 0 : pricing[0].twoSharingPrice) +
-                            (isNaN(pricing[0].foodPrice) ? 0 : pricing[0].foodPrice)}
-                        </p>
-                      </Col>
-                      {accomodationDetails.threeSharingRooms !== null && (
-                        <Col>
-                          <label>
-                            <b>
-                              {' '}
-                              Base Price + Triple Occupancy +{' '}
-                              <span className="text-danger">Food</span>
-                            </b>
-                          </label>
-                          <p>
-                            ₹{' '}
-                            {parseInt(pricing[0].mrp) +
-                              (isNaN(pricing[0].threeSharingPrice)
-                                ? 0
-                                : pricing[0].threeSharingPrice) +
-                              (isNaN(pricing[0].foodPrice) ? 0 : pricing[0].foodPrice)}
-                          </p>
-                        </Col>
-                      )}
-                    </>
-                  )}
-                </Row>
-              )}
+              
+             
               {accomodationType !== '1' && (
                 <Row className="text-center">
                   <Col>
@@ -583,46 +344,8 @@ const PricingTable: React.FC<{
                     </label>
                     <p>₹ {parseInt(pricing[0].mrp)}</p>
                   </Col>
-                  {accomodationDetails.private && (
-                    <Col>
-                      <label>
-                        <b>Base Price + Private Room </b>
-                      </label>
-                      <p>
-                        ₹{' '}
-                        {parseInt(pricing[0].mrp) +
-                          (isNaN(pricing[0].privateRoomPrice) ? 0 : pricing[0].privateRoomPrice)}
-                      </p>
-                    </Col>
-                  )}
-                  {accomodationDetails.sharing && accomodationDetails.twoSharingRooms !== null && (
-                    <>
-                      <Col>
-                        <label>
-                          <b>Base Price + Dual Occupancy</b>
-                        </label>
-                        <p>
-                          ₹{' '}
-                          {parseInt(pricing[0].mrp) +
-                            (isNaN(pricing[0].twoSharingPrice) ? 0 : pricing[0].twoSharingPrice)}
-                        </p>
-                      </Col>
-                      {accomodationDetails.threeSharingRooms !== null && (
-                        <Col>
-                          <label>
-                            <b>+ Base Price + Triple Occupancy</b>
-                          </label>
-                          <p>
-                            ₹{' '}
-                            {parseInt(pricing[0].mrp) +
-                              (isNaN(pricing[0].threeSharingPrice)
-                                ? 0
-                                : pricing[0].threeSharingPrice)}
-                          </p>
-                        </Col>
-                      )}{' '}
-                    </>
-                  )}
+                  
+                  
                 </Row>
               )}
             </>

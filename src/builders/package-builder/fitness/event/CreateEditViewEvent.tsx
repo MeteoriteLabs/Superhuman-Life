@@ -2,7 +2,6 @@ import React, { useContext, useImperativeHandle, useState, useEffect } from 'rea
 import { useQuery, useMutation } from '@apollo/client';
 import ModalView from '../../../../components/modal';
 import {
-  CREATE_CHANNEL_PACKAGE,
   DELETE_PACKAGE,
   UPDATE_PACKAGE_STATUS,
   UPDATE_CHANNEL_COHORT_PACKAGE,
@@ -10,7 +9,8 @@ import {
   CREATE_OFFERING_INVENTORY,
   UPDATE_OFFERING_INVENTORY,
   CREATE_TAG,
-  DELETE_OFFERING_INVENTORY
+  DELETE_OFFERING_INVENTORY,
+  CREATE_EVENT
 } from '../graphQL/mutations';
 import {
   youtubeUrlCustomFormats,
@@ -133,7 +133,7 @@ function CreateEditEvent(props: any, ref: any) {
 
   const [createCohortNotification] = useMutation(CREATE_NOTIFICATION);
 
-  const [CreateCohortPackage] = useMutation(CREATE_CHANNEL_PACKAGE, {
+  const [CreateCohortPackage] = useMutation(CREATE_EVENT, {
     onCompleted: (response) => {
       const flattenData = flattenObj({ ...response });
 
@@ -144,7 +144,7 @@ function CreateEditEvent(props: any, ref: any) {
             Title: 'New offering',
             OnClickRoute: '/offerings',
             users_permissions_user: auth.userid,
-            Body: `New cohort offering ${flattenData.createFitnesspackage.packagename} has been added`,
+            Body: `New event offering ${flattenData.createFitnesspackage.packagename} has been added`,
             DateTime: moment().format(),
             IsRead: false
           }
@@ -327,19 +327,16 @@ function CreateEditEvent(props: any, ref: any) {
     if (frm.equipment) {
       frm.equipment = JSON.parse(frm?.equipment);
     }
-    if (frm.discpline) {
-      frm.discpline = JSON.parse(frm?.discpline);
-    }
+   
     CreateCohortPackage({
       variables: {
+        data: {
         aboutpackage: frm.About,
         benefits: frm.Benifits,
         packagename: frm.packageName,
-        channelinstantBooking: frm.channelinstantBooking,
+        // channelinstantBooking: frm.channelinstantBooking,
         expiry_date: moment(frm.datesConfig.expiryDate).toISOString(),
-        level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
-        Intensity: ENUM_FITNESSPACKAGE_INTENSITY[frm.intensity],
-        equipmentList:
+        equipment_lists:
           frm?.equipment?.length > 0
             ? frm.equipment
                 .map((x: any) => x.id)
@@ -347,13 +344,6 @@ function CreateEditEvent(props: any, ref: any) {
                 .split(',')
             : [],
         duration: 1,
-        fitnessdisciplines:
-          frm?.discpline?.length > 0
-            ? frm.discpline
-                .map((item: any) => item.id)
-                .join(', ')
-                .split(', ')
-            : [],
         fitnesspackagepricing:
           frm.pricing === 'free'
             ? [
@@ -382,10 +372,11 @@ function CreateEditEvent(props: any, ref: any) {
         Start_date: moment(frm.dates.startDate).toISOString(),
         End_date: moment(frm.dates.startDate).toISOString(),
         Course_details: frm.courseDetails.details,
-        thumbnail: frm.thumbnail,
-        videoUrl: frm.VideoUrl,
+        Thumbnail_ID: frm.thumbnail,
+        video_URL: frm.VideoUrl,
         Accomdation_details: frm.programDetails.accomodationDetails
       }
+    }
     });
   }
 
@@ -399,18 +390,15 @@ function CreateEditEvent(props: any, ref: any) {
     if (frm.equipment) {
       frm.equipment = JSON.parse(frm?.equipment);
     }
-    if (frm.discpline) {
-      frm.discpline = JSON.parse(frm?.discpline);
-    }
+   
     editPackageDetails({
       variables: {
         id: operation.id,
         aboutpackage: frm.About,
         benefits: frm.Benifits,
         packagename: frm.packageName,
-        channelinstantBooking: frm.channelinstantBooking,
-        level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
-        Intensity: ENUM_FITNESSPACKAGE_INTENSITY[frm.intensity],
+        // channelinstantBooking: frm.channelinstantBooking,
+       
         equipmentList:
           frm?.equipment?.length > 0
             ? frm.equipment
@@ -418,13 +406,13 @@ function CreateEditEvent(props: any, ref: any) {
                 .join(',')
                 .split(',')
             : [],
-        fitnessdisciplines:
-          frm?.discpline?.length > 0
-            ? frm.discpline
-                .map((item: any) => item.id)
-                .join(', ')
-                .split(', ')
-            : [],
+        // fitnessdisciplines:
+        //   frm?.discpline?.length > 0
+        //     ? frm.discpline
+        //         .map((item: any) => item.id)
+        //         .join(', ')
+        //         .split(', ')
+        //     : [],
         fitnesspackagepricing:
           frm.pricing === 'free'
             ? [
