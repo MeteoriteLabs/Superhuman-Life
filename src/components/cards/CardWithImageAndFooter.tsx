@@ -3,17 +3,14 @@ import Card from 'react-bootstrap/Card';
 import style from './cardStyles.module.css';
 import { Eye } from 'react-bootstrap-icons';
 import { Col, OverlayTrigger, Row, Tooltip } from 'react-bootstrap';
-import { WebsiteTemplate } from '../../pages/website-builder/@types/websiteTemplates';
+import { Template } from '../../pages/website-builder/@types/websiteTemplates';
+
 function CardWithImageAndFooter({
-  title,
-  imgSrc,
   infoHandler,
   data
 }: {
-  title: string;
-  imgSrc: string;
-  infoHandler: (data: WebsiteTemplate) => void;
-  data: WebsiteTemplate;
+  infoHandler: (data: Template) => void;
+  data: Template;
 }): JSX.Element {
   const renderOverlay = () => {
     return (
@@ -32,29 +29,31 @@ function CardWithImageAndFooter({
     <Card className={style.card}>
       <div className="position-relative">
         {renderOverlay()}
-        <Card.Img variant="top" src={imgSrc} />
+        <Card.Img variant="top" src={data.attributes.thumbnail} />
       </div>
       <Card.Body>
         <Row>
           <Col xs="10">
-            <Card.Title className={style.title}>{title}</Card.Title>
+            <Card.Title className={style.title}>{data.attributes.templateName}</Card.Title>
           </Col>
           <Col xs="1">
-            <OverlayTrigger overlay={<Tooltip id={''}>Preview</Tooltip>}>
-              <Button
-                variant="dark"
-                style={{
-                  height: 20,
-                  borderRadius: 30,
-                  width: 20,
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  padding: 3
-                }}>
-                <Eye className="mt-3" color="#fff" />
-              </Button>
-            </OverlayTrigger>
+            <a href={`https://${data.attributes.templateUrl}`} target="_blank" rel="noreferrer">
+              <OverlayTrigger overlay={<Tooltip id={''}>Preview</Tooltip>}>
+                <Button
+                  variant="dark"
+                  style={{
+                    height: 20,
+                    borderRadius: 30,
+                    width: 20,
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    padding: 3
+                  }}>
+                  <Eye className="mt-3" color="#fff" />
+                </Button>
+              </OverlayTrigger>
+            </a>
           </Col>
         </Row>
       </Card.Body>

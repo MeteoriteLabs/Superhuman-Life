@@ -5,21 +5,21 @@ import { Search } from 'react-bootstrap-icons';
 
 import { FETCH_TEMPLATES } from '../queires/templates';
 import { useQuery } from '@apollo/client';
-import FetchTemplatesResponse, { WebsiteTemplate } from '../@types/websiteTemplates';
+import { FetchedTemplates, Template } from '../@types/websiteTemplates';
 import CardWithImageAndFooter from '../../../components/cards/CardWithImageAndFooter';
 import InfoModal from '../layout/InfoModal';
 
 function Templates(): JSX.Element {
   const [collapse, setCollapse] = useState<boolean>(true);
-  const [templates, setTemplates] = useState<WebsiteTemplate[]>([]);
-  const [infoData, setInfoData] = useState<WebsiteTemplate | null>(null);
+  const [templates, setTemplates] = useState<Template[]>([]);
+  const [infoData, setInfoData] = useState<Template | null>(null);
 
   useQuery(FETCH_TEMPLATES, {
     variables: {
       isPublished: true
     },
-    onCompleted: (data: FetchTemplatesResponse) => {
-      setTemplates(data.websiteTemplates.data);
+    onCompleted: (data: FetchedTemplates) => {
+      setTemplates(data.templates.data);
     }
   });
 
@@ -27,15 +27,7 @@ function Templates(): JSX.Element {
     console.log(infoData);
   }, [infoData]);
 
-  const returnImageAlternating = (index: number): string => {
-    if (index % 2 === 0) {
-      return '/assets/@demo_templates/template-1.jpeg';
-    } else {
-      return '/assets/@demo_templates/template-2.jpeg';
-    }
-  };
-
-  const infoHandler = (data: WebsiteTemplate): void => {
+  const infoHandler = (data: Template): void => {
     setInfoData(data);
   };
 
@@ -80,14 +72,9 @@ function Templates(): JSX.Element {
           </Row>
           <Row>
             {templates.length > 0 ? (
-              templates.map((template: WebsiteTemplate) => (
-                <Col lg="4" md="6" xs="12" key={template.id} className="mt-5">
-                  <CardWithImageAndFooter
-                    imgSrc={returnImageAlternating(Number(template.id))}
-                    title={template.attributes.template_name}
-                    infoHandler={infoHandler}
-                    data={template}
-                  />
+              templates.map((template, id) => (
+                <Col lg="4" md="6" xs="12" key={id} className="mt-5">
+                  <CardWithImageAndFooter infoHandler={infoHandler} data={template} />
                 </Col>
               ))
             ) : (
@@ -97,15 +84,7 @@ function Templates(): JSX.Element {
             )}
           </Row>
         </Container>
-        {infoData ? (
-          <InfoModal
-            data={infoData}
-            returnImageAlternating={returnImageAlternating}
-            setInfoData={setInfoData}
-          />
-        ) : (
-          ''
-        )}
+        {infoData ? <InfoModal data={infoData} setInfoData={setInfoData} /> : ''}
       </div>
     </>
   );

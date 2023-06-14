@@ -1,26 +1,25 @@
 import { gql } from "@apollo/client";
 
 export const FETCH_TEMPLATES = gql`
-query fetchTemplates($isPublished: Boolean) {
-    websiteTemplates(filters: {published: {eq: $isPublished}})
- {
+query WebsiteTemplates {
+  templates {
     data{
       id
       attributes{
-        template_name
-        schema_json
-        form_json
-        published
-        Sections
+        templateName
         CreatedBy
-        GoodFor
-        Features
-        TemplateCheckList
-        updatedAt
-        createdAt
-      }  
-      
+        logo
+        thumbnail
+        description
+        features
+        goodFor
+        defaultData
+        templateUrl
+       
+            
+      }
     }
- }
+  }
 }
+
 `;
