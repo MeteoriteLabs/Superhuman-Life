@@ -70,6 +70,7 @@ export default function Layout({ token, children }: any) {
           variant="dark"
           className="d-lg-none d-sm-block mt-5">
           {selected === 'home' ? (
+            
             <Navbar.Brand href="/home" onClick={() => setSelected(location.pathname.slice(1))}>
               <Icon name="home" width={24} height={24} style={{ marginLeft: '5px' }} />
               <br />
