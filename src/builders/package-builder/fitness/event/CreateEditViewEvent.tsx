@@ -240,10 +240,10 @@ function CreateEditEvent(props: any, ref: any) {
     details.packageName = msg.packagename;
     details.channelinstantBooking = msg.groupinstantbooking;
     details.expiryDate = moment(msg.expirydate).format('YYYY-MM-DD');
-    details.level = ENUM_FITNESSPACKAGE_LEVEL[msg.level];
-    details.intensity = ENUM_FITNESSPACKAGE_INTENSITY[msg.Intensity];
+    // details.level = ENUM_FITNESSPACKAGE_LEVEL[msg.level];
+    // details.intensity = ENUM_FITNESSPACKAGE_INTENSITY[msg.Intensity];
     details.equipment = msg.equipment_lists;
-    details.discpline = msg.fitnessdisciplines;
+    // details.discpline = msg.fitnessdisciplines;
     details.pricing =
       msg.fitnesspackagepricing[0]?.mrp === 'free'
         ? 'free'
@@ -337,8 +337,8 @@ function CreateEditEvent(props: any, ref: any) {
         packagename: frm.packageName,
         channelinstantBooking: frm.channelinstantBooking,
         expiry_date: moment(frm.datesConfig.expiryDate).toISOString(),
-        level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
-        Intensity: ENUM_FITNESSPACKAGE_INTENSITY[frm.intensity],
+        // level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
+        // Intensity: ENUM_FITNESSPACKAGE_INTENSITY[frm.intensity],
         equipmentList:
           frm?.equipment?.length > 0
             ? frm.equipment
@@ -350,13 +350,13 @@ function CreateEditEvent(props: any, ref: any) {
           frm.dates.startDate === frm.dates.endDate
             ? 1
             : calculateDuration(frm.dates.startDate, frm.dates.endDate),
-        fitnessdisciplines:
-          frm?.discpline?.length > 0
-            ? frm.discpline
-                .map((item: any) => item.id)
-                .join(', ')
-                .split(', ')
-            : [],
+        // fitnessdisciplines:
+        //   frm?.discpline?.length > 0
+        //     ? frm.discpline
+        //         .map((item: any) => item.id)
+        //         .join(', ')
+        //         .split(', ')
+        //     : [],
         fitnesspackagepricing:
           frm.pricing === 'free'
             ? [
@@ -411,9 +411,9 @@ function CreateEditEvent(props: any, ref: any) {
         aboutpackage: frm.About,
         benefits: frm.Benifits,
         packagename: frm.packageName,
-        channelinstantBooking: frm.channelinstantBooking,
-        level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
-        Intensity: ENUM_FITNESSPACKAGE_INTENSITY[frm.intensity],
+        // channelinstantBooking: frm.channelinstantBooking,
+        // level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
+        // Intensity: ENUM_FITNESSPACKAGE_INTENSITY[frm.intensity],
         equipmentList:
           frm?.equipment?.length > 0
             ? frm.equipment
@@ -421,13 +421,13 @@ function CreateEditEvent(props: any, ref: any) {
                 .join(',')
                 .split(',')
             : [],
-        fitnessdisciplines:
-          frm?.discpline?.length > 0
-            ? frm.discpline
-                .map((item: any) => item.id)
-                .join(', ')
-                .split(', ')
-            : [],
+        // fitnessdisciplines:
+        //   frm?.discpline?.length > 0
+        //     ? frm.discpline
+        //         .map((item: any) => item.id)
+        //         .join(', ')
+        //         .split(', ')
+        //     : [],
         fitnesspackagepricing:
           frm.pricing === 'free'
             ? [
@@ -458,6 +458,8 @@ function CreateEditEvent(props: any, ref: any) {
           .map((item: any) => item.id)
           .join(', ')
           .split(', '),
+          startTime: frm.startTime,
+          endTime: frm.endTime,
         Start_date: moment(frm.dates.startDate).toISOString(),
         End_date: moment(frm.dates.endDate).toISOString(),
         Course_details: frm.courseDetails.details,
