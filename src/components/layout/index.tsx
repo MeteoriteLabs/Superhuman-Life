@@ -69,6 +69,7 @@ export default function Layout({ token, children }: any) {
           bg="dark"
           variant="dark"
           className="d-lg-none d-sm-block mt-5">
+            <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
           {selected === 'home' ? (
             
             <Navbar.Brand href="/home" onClick={() => setSelected(location.pathname.slice(1))}>
@@ -125,9 +126,10 @@ export default function Layout({ token, children }: any) {
               <small style={{ color: '#cebaa8' }}>Users</small>
             </Navbar.Brand>
           )}
-
+          
           {/* Toggle pop up */}
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navbar.Toggle aria-controls="basic-navbar-nav" style={{float: 'right'}} />
+          </div>
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="mr-auto ml-3">
               <Nav.Link href="/session" style={{ color: '#cebaa8' }}>
