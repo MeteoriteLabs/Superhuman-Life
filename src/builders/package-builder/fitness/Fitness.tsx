@@ -510,7 +510,7 @@ export default function FitnessTab() {
           return (
             <>
             {
-              row.values.duration[0] === 0 ? '1 day event' : 
+              row.original.type === 'Event' ? '1 day event' : 
             
               <Form.Group>
                 <Form.Control
