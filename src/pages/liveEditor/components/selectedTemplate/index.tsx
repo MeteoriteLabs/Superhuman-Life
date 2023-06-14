@@ -1,6 +1,6 @@
-import style from './selectedTemplate.module.css';
-
 function Index(): JSX.Element {
+  const template = JSON.parse(localStorage.getItem('selectedTemplate') as string);
+
   return (
     <div
       style={{
@@ -11,7 +11,7 @@ function Index(): JSX.Element {
       }}>
       <div style={{ width: '100vw', height: '89vh' }}>
         <iframe
-          src="http://localhost:8000"
+          src={`https://${template.domain}`}
           title="YouTube video player"
           allowFullScreen={true}
           style={{

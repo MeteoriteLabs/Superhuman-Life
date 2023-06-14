@@ -24,7 +24,11 @@ function InfoModal({
   const handleNavigation = () => {
     localStorage.setItem(
       'selectedTemplate',
-      JSON.stringify({ id: data.id, name: data.attributes.templateName })
+      JSON.stringify({
+        id: data.id,
+        name: data.attributes.templateName,
+        domain: data.attributes.templateUrl
+      })
     );
 
     history.push('/website/templates/liveEditor');
