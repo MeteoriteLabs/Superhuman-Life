@@ -46,7 +46,7 @@ const PricingTable: React.FC<{
           }
         ]
   );
-console.log(pricing, JSON.parse(props.formContext.dates).startDate, JSON.parse(props.formContext.dates).endDate);
+
   useEffect(() => {
     const newDuration = calculateDuration(
       JSON.parse(props.formContext.dates).startDate,
