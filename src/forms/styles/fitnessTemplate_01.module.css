@@ -18,7 +18,7 @@
     margin-inline: 35px;
     cursor: pointer;
     font-size: 14px;
-    position: absolute;
+    text-align: right;
     bottom: 80px;
     margin-bottom: 5px;
     border-bottom: 1px solid #242424;
@@ -29,3 +29,19 @@
    border-bottom: 1px solid #fff;
 }
 
+
+.sectionBackButton{
+    margin-block: 0;
+    padding-block: .5rem;
+    margin-inline: 35px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-top: 10px;
+    border-bottom: 1px solid #242424;
+    width: fit-content;
+    transition: all .1s ease-in-out;
+}
+
+.sectionBackButton:hover{
+   border-bottom: 1px solid #fff;
+}
