@@ -23,7 +23,7 @@ function FitnessTemplate_01(): JSX.Element {
       ) : (
         <>
           <SectionComponent section={section} />
-          <div onClick={() => setSection('')} className={styles.backButton}>
+          <div onClick={() => setSection('')} className={styles.sectionBackButton}>
             👈 Back
           </div>
         </>

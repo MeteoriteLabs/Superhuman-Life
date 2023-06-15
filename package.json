@@ -38,6 +38,7 @@
         "react-geocode": "^0.2.3",
         "react-google-places-autocomplete": "^3.4.0",
         "react-helmet": "^6.1.0",
+        "react-hook-form": "^7.44.3",
         "react-linkedin-login-oauth2": "^2.0.1",
         "react-phone-input-2": "^2.15.1",
         "react-rangeslider": "^2.2.0",
