@@ -307,7 +307,7 @@ const PricingTable: React.FC<{
                   return <td key={index}>{item.duration} session</td>;
                 })}
               </tr>
-              <tr className="text-center">
+              {/* <tr className="text-center">
                 <td>
                   <b>Suggested</b>
                 </td>
@@ -320,7 +320,7 @@ const PricingTable: React.FC<{
                     </td>
                   );
                 })}
-              </tr>
+              </tr> */}
               <tr>
                 <td className="text-center">
                   <b>Set MRP</b>

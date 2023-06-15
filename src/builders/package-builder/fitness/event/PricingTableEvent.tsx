@@ -19,7 +19,7 @@ const PricingTable: React.FC<{
   function calculateDuration(sd, ed) {
     const start = moment(sd);
     const end = moment(ed);
-    const duration = end.diff(start, 'days') + 1;
+    const duration = end.diff(start, 'days');
     return duration;
   }
 
@@ -27,7 +27,7 @@ const PricingTable: React.FC<{
   const [vouchers, setVouchers] = useState<any>([]);
   const [show, setShow] = useState(props.value === 'free' ? true : false);
   const [pricing, setPricing] = useState<any>(
-    props.value && props.value !== 'free'
+    props.value !== undefined && props.value !== 'free'
       ? JSON.parse(props.value)
       : [
           {
@@ -39,10 +39,7 @@ const PricingTable: React.FC<{
               JSON.parse(props.formContext.dates).endDate
             ),
             sapienPricing: null,
-            privateRoomPrice: 0,
-            twoSharingPrice: 0,
-            threeSharingPrice: 0,
-            foodPrice: 0
+           
           }
         ]
   );
@@ -93,7 +90,6 @@ const PricingTable: React.FC<{
       setVouchers(flattenData.vouchers);
     }
   });
-
   React.useEffect(() => {
     getVouchers({
       variables: {
@@ -109,7 +105,7 @@ const PricingTable: React.FC<{
     query fetchSapienPricing($id: ID!) {
       suggestedPricings(
         filters: {
-          fitness_package_type: { type: { eq: "Event" } }
+          fitness_package_type: { type: { eq: "Cohort" } }
           users_permissions_users: { id: { eq: $id } }
         }
       ) {
@@ -120,7 +116,7 @@ const PricingTable: React.FC<{
           }
         }
       }
-      sapienPricings(filters: { fitness_package_type: { type: { eq: "Event" } } }) {
+      sapienPricings(filters: { fitness_package_type: { type: { eq: "Cohort" } } }) {
         data {
           id
           attributes {
@@ -157,9 +153,13 @@ const PricingTable: React.FC<{
   }
 
   function handleValidation() {
-    if (parseInt(pricing[0].mrp) ) {
-      return true;
+    if (parseInt(pricing[0].mrp) < pricing[0].sapienPricing) {
+      return false;
     }
+    // here it means if the mode is not equal to residential in the previous step
+    
+    
+      
   }
 
   if (show) {
@@ -275,22 +275,13 @@ const PricingTable: React.FC<{
                 <td>
                   <b>Total days</b>
                 </td>
-                <td>{pricing[0].duration} days</td>
+                <td>1 day</td>
               </tr>
-              {/* <tr className="text-center">
-                <td>
-                  <b>Suggested</b>
-                </td>
-                <td>
-                  {isNaN(pricing[0].suggestedPrice)
-                    ? 'Base Price Not Set'
-                    : `₹ ${pricing[0].suggestedPrice}`}
-                </td>
-              </tr> */}
+              
               
               <tr>
                 <td className="text-center">
-                  <b>Event Base Price</b>
+                  <b>Cohort Base Price</b>
                 </td>
                 <td>
                   <InputGroup style={{ minWidth: '200px' }}>
@@ -334,9 +325,70 @@ const PricingTable: React.FC<{
                 </label>
               </div>
               <hr className="my-0" />
-              
-             
-              {accomodationType !== '1' && (
+              {/* {accomodationType === '1' && (
+                <Row className="text-center">
+                  <Col>
+                    <label>
+                      <b>
+                        Base Price + <span className="text-danger">Food</span>
+                      </b>
+                    </label>
+                    <p>₹ {parseInt(pricing[0].mrp)}</p>
+                  </Col>
+                  {accomodationDetails.private && (
+                    <Col>
+                      <label>
+                        <b>
+                          Private Room + Base Price + <span className="text-danger">Food</span>
+                        </b>
+                      </label>
+                      <p>
+                        ₹{' '}
+                        {parseInt(pricing[0].mrp) +
+                          (isNaN(pricing[0].privateRoomPrice) ? 0 : pricing[0].privateRoomPrice) +
+                          (isNaN(pricing[0].foodPrice) ? 0 : pricing[0].foodPrice)}
+                      </p>
+                    </Col>
+                  )}
+                  {accomodationDetails.sharing && accomodationDetails.twoSharingRooms !== null && (
+                    <>
+                      <Col>
+                        <label>
+                          <b>
+                            Base Price + Dual Occupancy + <span className="text-danger">Food</span>
+                          </b>
+                        </label>
+                        <p>
+                          ₹{' '}
+                          {parseInt(pricing[0].mrp) +
+                            (isNaN(pricing[0].twoSharingPrice) ? 0 : pricing[0].twoSharingPrice) +
+                            (isNaN(pricing[0].foodPrice) ? 0 : pricing[0].foodPrice)}
+                        </p>
+                      </Col>
+                      {accomodationDetails.threeSharingRooms !== null && (
+                        <Col>
+                          <label>
+                            <b>
+                              {' '}
+                              Base Price + Triple Occupancy +{' '}
+                              <span className="text-danger">Food</span>
+                            </b>
+                          </label>
+                          <p>
+                            ₹{' '}
+                            {parseInt(pricing[0].mrp) +
+                              (isNaN(pricing[0].threeSharingPrice)
+                                ? 0
+                                : pricing[0].threeSharingPrice) +
+                              (isNaN(pricing[0].foodPrice) ? 0 : pricing[0].foodPrice)}
+                          </p>
+                        </Col>
+                      )}
+                    </>
+                  )}
+                </Row>
+              )} */}
+              {/* {accomodationType !== '1' && (
                 <Row className="text-center">
                   <Col>
                     <label>
@@ -344,10 +396,48 @@ const PricingTable: React.FC<{
                     </label>
                     <p>₹ {parseInt(pricing[0].mrp)}</p>
                   </Col>
-                  
-                  
+                  {accomodationDetails.private && (
+                    <Col>
+                      <label>
+                        <b>Base Price + Private Room </b>
+                      </label>
+                      <p>
+                        ₹{' '}
+                        {parseInt(pricing[0].mrp) +
+                          (isNaN(pricing[0].privateRoomPrice) ? 0 : pricing[0].privateRoomPrice)}
+                      </p>
+                    </Col>
+                  )}
+                  {accomodationDetails.sharing && accomodationDetails.twoSharingRooms !== null && (
+                    <>
+                      <Col>
+                        <label>
+                          <b>Base Price + Dual Occupancy</b>
+                        </label>
+                        <p>
+                          ₹{' '}
+                          {parseInt(pricing[0].mrp) +
+                            (isNaN(pricing[0].twoSharingPrice) ? 0 : pricing[0].twoSharingPrice)}
+                        </p>
+                      </Col>
+                      {accomodationDetails.threeSharingRooms !== null && (
+                        <Col>
+                          <label>
+                            <b>+ Base Price + Triple Occupancy</b>
+                          </label>
+                          <p>
+                            ₹{' '}
+                            {parseInt(pricing[0].mrp) +
+                              (isNaN(pricing[0].threeSharingPrice)
+                                ? 0
+                                : pricing[0].threeSharingPrice)}
+                          </p>
+                        </Col>
+                      )}{' '}
+                    </>
+                  )}
                 </Row>
-              )}
+              )} */}
             </>
           )}
         </div>

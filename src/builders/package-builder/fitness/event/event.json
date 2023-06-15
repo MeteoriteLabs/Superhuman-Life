@@ -4,20 +4,14 @@
         "type": "object",
         "required": [
             "packageName",
-            "discpline",
             "equipment",
-            "intensity",
             "dates"
         ],
-       "properties": {
+        "properties": {
             "packageName": {
                 "type": "string",
                 "title": "Name of Offering",
                 "description": "Enter the Title for Offering"
-            },
-            "discpline": {
-                "type": "string",
-                "description": "Choose the relevant discipline for the offering"
             },
             "equipment": {
                 "type": "string",
@@ -28,48 +22,23 @@
                 "title": "Hash tags",
                 "description": "Use hashtags to improve your listing"
             },
-           "level": {
-                "type": "number",
-                "title": "Level",
-                "enum": [0, 1, 2],
-                "enumNames": [
-                    "Beginner",
-                    "Intermediate",
-                    "Advanced" 
-                ],
-                "default": 0,
-                "description": "Select the appropriate difficulty"
-            },
-            "intensity": {
-                "type": "number",
-                "title": "Intensity",
-                "enum": [0, 1, 2],
-                "enumNames": [
-                    "Low",
-                    "Moderate",
-                    "High"
-                ],
-                "default": 0,
-                "description": "Set the pace of the offering"
-            },
             "dates": {
                 "type": "string"
             }
-            
-        }   
+        }
     },
     "2": {
-       "title": "",
-       "type": "object",
-       "required": [
-        "About",
-        "Benifits",
-        "languages",
-        "classSize",
-        "thumbnail",
-        "VideoUrl"
-       ],
-       "properties": {
+        "title": "",
+        "type": "object",
+        "required": [
+            "About",
+            "Benifits",
+            "languages",
+            "classSize",
+            "thumbnail",
+            "VideoUrl"
+        ],
+        "properties": {
             "About": {
                 "type": "string",
                 "title": "About",
@@ -89,7 +58,7 @@
                 "title": "Class Size",
                 "minimum": 1,
                 "maximum": 200,
-                "default":1
+                "default": 1
             },
             "thumbnail": {
                 "type": "string",
@@ -99,21 +68,21 @@
                 "type": "string",
                 "format": "youtubeurl",
                 "description": "Add Youtube URL"
-            }  
+            }
         }
     },
     "3": {
         "title": "",
-       "type": "object",
-       "required": [
+        "type": "object",
+        "required": [
             "programDetails",
             "courseDetails"
-       ],
-       "properties": {
-           "programDetails": {
+        ],
+        "properties": {
+            "programDetails": {
                 "type": "string"
-           },
-           "courseDetails": {
+            },
+            "courseDetails": {
                 "title": "Course Details",
                 "type": "object",
                 "required": [
@@ -124,16 +93,16 @@
                         "type": "string"
                     }
                 }
-        }
+            }
         }
     },
     "4": {
         "title": "",
-       "type": "object",
-       "required": [
-        "pricing"
-       ],
-       "properties": {
+        "type": "object",
+        "required": [
+            "pricing"
+        ],
+        "properties": {
             "pricing": {
                 "type": "string"
             }
@@ -141,16 +110,19 @@
     },
     "5": {
         "title": "Package Settings",
-       "type": "object",
-       "required": [
-        "visibility",
-        "datesConfig"
-       ],
-       "properties": {
+        "type": "object",
+        "required": [
+            "visibility",
+            "datesConfig"
+        ],
+        "properties": {
             "visibility": {
                 "type": "number",
                 "title": "Visibility",
-                "enum": [0, 1],
+                "enum": [
+                    0,
+                    1
+                ],
                 "enumNames": [
                     "Public",
                     "Private"

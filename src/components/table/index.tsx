@@ -30,6 +30,7 @@ function Table({ data, columns }: any) {
               </td>
             </tr>
           )}
+          
         </thead>
         <tbody {...getTableBodyProps()}>
           {rows.map((row) => {

@@ -5,9 +5,9 @@ import Earnings from './Earnings/Earnings';
 import Expenses from './Outflow';
 // import Invoices from "./Invoices/Invoices";
 import Vouchers from './Vouchers/Vouchers';
-import PaymentMethods from './PaymentMethods/PaymentMethods';
+// import PaymentMethods from './PaymentMethods/PaymentMethods';
 // import Platform from "./Platform/Platform";
-import PricingAssist from './PricingAssist/PricingAssist';
+// import PricingAssist from './PricingAssist/PricingAssist';
 import AllTransactions from './Transactions';
 import Payee from './Payee/Payee';
 import './finance.css';
@@ -49,13 +49,13 @@ export default function index(): JSX.Element {
               <Vouchers />
             </Tab>
 
-            <Tab eventKey="pricingAssist" title="Base Price">
+            {/* <Tab eventKey="pricingAssist" title="Base Price">
               <PricingAssist />
             </Tab>
 
             <Tab eventKey="paymentMethods" title="Payment Methods">
               <PaymentMethods />
-            </Tab>
+            </Tab> */}
 
             {/* <Tab eventKey="invoices" title="Invoices">
                             <Invoices />

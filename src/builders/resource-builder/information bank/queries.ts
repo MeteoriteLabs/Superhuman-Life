@@ -77,7 +77,7 @@ export const UPDATE_MESSAGE = gql`
 export const GET_MESSAGES = gql`
   query FeedSearchQuery($filter: String!, $id: ID!) {
     informationbankmessages(
-      sort: ["updatedAt"]
+      sort: ["updatedAt:desc"]
       filters: {
         title: { containsi: $filter }
         users_permissions_user: { id: { eq: $id } }

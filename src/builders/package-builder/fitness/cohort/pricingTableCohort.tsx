@@ -19,15 +19,15 @@ const PricingTable: React.FC<{
   function calculateDuration(sd, ed) {
     const start = moment(sd);
     const end = moment(ed);
-    const duration = end.diff(start, 'days');
+    const duration = end.diff(start, 'days')+1;
     return duration;
   }
 
   const auth = useContext(AuthContext);
   const [vouchers, setVouchers] = useState<any>([]);
-  const [show, setShow] = useState(props.value === 'free' ? true : false);
+  const [show, setShow] = useState<boolean>(props.value === 'free' ? true : false);
   const [pricing, setPricing] = useState<any>(
-    props.value !== undefined && props.value !== 'free'
+    props.value && props.value !== 'free'
       ? JSON.parse(props.value)
       : [
           {
@@ -342,7 +342,7 @@ const PricingTable: React.FC<{
                 </td>
                 <td>{pricing[0].duration} days</td>
               </tr>
-              <tr className="text-center">
+              {/* <tr className="text-center">
                 <td>
                   <b>Suggested</b>
                 </td>
@@ -351,7 +351,7 @@ const PricingTable: React.FC<{
                     ? 'Base Price Not Set'
                     : `₹ ${pricing[0].suggestedPrice}`}
                 </td>
-              </tr>
+              </tr> */}
               {accomodationDetails?.private && (
                 <tr className="text-center">
                   <td>

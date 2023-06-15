@@ -520,3 +520,31 @@ export const CREATE_CHANNEL_PACKAGE = gql`
     }
   }
 `;
+
+export const CREATE_EVENT = gql`
+  mutation createEventPackage(
+    $data: FitnesspackageInput!
+  ) {
+    createFitnesspackage(
+      data: $data
+    ) {
+      data {
+        id
+        attributes {
+          packagename
+          fitness_package_type{
+            data{
+              id 
+              attributes{
+                type
+              }
+            }
+          }
+          classsize
+          duration
+          groupinstantbooking
+        }
+      }
+    }
+  }
+`;

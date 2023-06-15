@@ -32,6 +32,7 @@ import Drawer from '../../../components/Drawer';
 import DrawerTrigger from '../../../components/Drawer/DrawerTrigger';
 import Backdrop from '../../../components/Drawer/Backdrop';
 import Icon from '../../../components/Icons';
+import Loader from '../../../components/Loader/Loader';
 
 export default function FitnessTab() {
   const auth = useContext(AuthContext);
@@ -198,7 +199,9 @@ export default function FitnessTab() {
         Header: 'No. of sessions',
         Cell: ({ row }: any) => {
           const sessionsObj = {};
-  
+          const startMoment = moment(row.original.startDate);
+          const endMoment = moment(row.original.endDate).add(1, 'days');
+
           row.original.sessions.map((curr) => {
             return curr.sessions.map((item) => {
               sessionsObj[item.session_date] = (sessionsObj[item.session_date] || 0) + 1;
@@ -206,6 +209,10 @@ export default function FitnessTab() {
               return sessionsObj;
             });
           });
+
+          const lengthOfobject = Object.keys(sessionsObj).length;
+
+          const differenceBetweenStartDateandEndDate = endMoment.diff(startMoment, 'days');
 
           return (
             <div className="d-flex justify-content-center align-items-center">
@@ -417,8 +424,8 @@ export default function FitnessTab() {
                     Object.keys(sessionsObj).length
                       ? `Start date: ${moment(row.original.startDate).format(
                           'DD-MM-YYYY'
-                        )} - End date: ${moment(row.original.endDate).format('DD-MM-YYYY')}`
-                      : `No session`
+                        )} - End date: ${moment(row.original.endDate).format('DD-MM-YYYY')},${differenceBetweenStartDateandEndDate - lengthOfobject ? `${differenceBetweenStartDateandEndDate - lengthOfobject} sessions to build` : null}`
+                      : `No session, build sessions`
                   }`}>
                   <Icon name="info" style={{ width: '25px', height: '30px' }} />
                 </div>
@@ -427,8 +434,8 @@ export default function FitnessTab() {
                 <div
                   title={`${
                     Object.keys(sessionsObj).length
-                      ? `${Object.keys(sessionsObj).length} sessions`
-                      : `No session`
+                      ? `${Object.keys(sessionsObj).length} sessions build`
+                      : `No session, build sessions`
                   }`}>
                   <Icon name="info" style={{ width: '25px', height: '30px' }} />
                   <br />
@@ -509,7 +516,7 @@ export default function FitnessTab() {
           return (
             <>
             {
-              row.values.duration[0] === 0 ? '1 day event' : 
+              row.original.type === 'Event' ? '1 day event' : 
             
               <Form.Group>
                 <Form.Control
@@ -585,6 +592,24 @@ export default function FitnessTab() {
 
           const differenceBetweenStartDateandEndDate = endMoment.diff(startMoment, 'days');
 
+          const manageHandler = (id: number, length: number, type: string) => {
+            let name = '';
+            if (type === 'Classic Class') {
+              name = 'classic';
+            } else if (type === 'Live Stream Channel') {
+              name = 'channel';
+            } else if (type === 'Cohort' || type === 'Event') {
+              name = 'cohort';
+            } else if (type === 'Group Class') {
+              name = 'group';
+            }
+            if (length > 1) {
+              window.open(`${name}/session/scheduler/${id}`, '_self');
+            } else {
+              window.open(`${name}/session/scheduler/${id}`, '_self');
+            }
+          };
+
           return value.row.original.type === 'Group Class' ||
             value.row.original.type === 'Live Stream Channel' ? (
             Object.keys(sessionsObj).length === 3 ? (
@@ -596,8 +621,8 @@ export default function FitnessTab() {
               </Badge>
             ) : (
               <>
-                <ProgressBar variant="success" now={lengthOfobject} />
-                {lengthOfobject}/3 program build
+                <ProgressBar variant="success" now={(lengthOfobject*100)/differenceBetweenStartDateandEndDate} />
+                {lengthOfobject}/3 <div style={{cursor: "pointer"}} onClick={() => manageHandler(value.row.original.tagId, value.row.original.tagId.length, value.row.original.type)}>sessions to publish</div>
               </>
             )
           ) : value.row.original.type !== 'One-On-One' &&
@@ -615,12 +640,12 @@ export default function FitnessTab() {
                 </Badge>
               ) : (
                 <>
-                  <ProgressBar variant="success" now={lengthOfobject} />
+                  <ProgressBar variant="success" now={(lengthOfobject*100)/differenceBetweenStartDateandEndDate} />
                   {lengthOfobject}/
                   {value.row.original.type === 'Classic Class'
                     ? value.row.original.duration[0]
                     : differenceBetweenStartDateandEndDate}{' '}
-                  program build
+                  <div style={{cursor: "pointer"}} onClick={() => manageHandler(value.row.original.tagId, value.row.original.tagId.length, value.row.original.type)}>sessions to publish</div>
                 </>
               )}{' '}
             </div>
@@ -757,7 +782,7 @@ export default function FitnessTab() {
   const [dataTable, setDataTable] = useState<any>([]);
 
   // eslint-disable-next-line
-  const [tags, { data: get_tags, refetch: refetch_tags }] = useLazyQuery(GET_TAGS, {
+  const [tags, { data: get_tags, refetch: refetch_tags, loading: tagsLoading }] = useLazyQuery(GET_TAGS, {
     fetchPolicy: 'cache-and-network',
     onCompleted: () => {
       const tagsFlattenData = flattenObj({ ...get_tags });
@@ -818,7 +843,7 @@ export default function FitnessTab() {
     }
   });
 
-  const { data: get_fitness, refetch: refetchFitness } = useQuery(GET_FITNESS, {
+  const { data: get_fitness, refetch: refetchFitness, loading: fitnessLoading } = useQuery(GET_FITNESS, {
     variables: { id: auth.userid, start: page * 10 - 10, limit: 10 },
     onCompleted: (data) => {
       setTotalRecords(data.fitnesspackages.meta.pagination.total);
@@ -974,11 +999,18 @@ export default function FitnessTab() {
             </Col>
           </Row>
         </Container>
-        <Table columns={columns} data={dataTable} />
+        
+        {
+          fitnessLoading || tagsLoading ? <Loader msg='Fitness packages loading...' style={{marginTop: "30vh"}}/> : 
+          <Table columns={columns} data={dataTable} fitnessloading={fitnessLoading} tagsLoading={tagsLoading}/>
+        }
+        
       </TabContent>
 
       {/* Pagination */}
-      {dataTable && dataTable.length ? (
+      {
+        fitnessLoading || tagsLoading ? null :
+      dataTable && dataTable.length ? (
         <Row className="justify-content-end">
           <Button
             variant="outline-dark"

@@ -1,7 +1,7 @@
-import PricingTableChannel from "../cohort/pricingTableCohort";
+import PricingTableChannel from "./pricingTable";
 import LocationList from "../../../../components/customWidgets/locationList";
 import LanguageList from "../../../../components/customWidgets/languageSelect";
-import ProgramDetails from "../cohort/programDetails";
+import ProgramDetails from "./ProgramDetails";
 import CourseDetails from "../cohort/course_details";
 import Upload from "../../../../components/upload/upload";
 import DatesConfig from "../../../../components/customWidgets/datesConfig";
@@ -25,26 +25,26 @@ export const widgets = {
 };
 
 export const schema: any = {
-  tag: {
-    "ui:placeholder": "Enter tag name",
-  },
-  packageName: {
-    "ui:placeholder": "Enter package name",
-  },
   level: {
     "ui:widget": "radio",
     "ui:options": {
       inline: true,
-    },
+    }
   },
   intensity: {
     "ui:widget": "radio",
     "ui:options": {
       inline: true,
-    },
+    }
   },
-  discpline: {
+  disciplines: {
     "ui:widget": "fitnessSelect",
+  },
+  tag: {
+    "ui:placeholder": "Enter tag name",
+  },
+  packageName: {
+    "ui:placeholder": "Enter package name",
   },
   equipment: {
     "ui:widget": "equipmentSelect",
@@ -92,22 +92,8 @@ export const schema: any = {
       );
     },
   },
-  Upload: {
-    upload: {
-      "ui:widget": (props: any) => {
-        return (
-          <Upload
-            allowImage={true}
-            allowVideo={true}
-            onChange={props.onChange}
-            value={props.value}
-          />
-        );
-      },
-    },
-    VideoUrl: {
-      "ui:placeholder": "https://",
-    },
+  VideoUrl: {
+    "ui:placeholder": "https://",
   },
   mode: {
     "ui:widget": "radio",
@@ -117,12 +103,6 @@ export const schema: any = {
   },
   location: {
     "ui:widget": "locationList",
-  },
-  residential: {
-    "ui:widget": "radio",
-    "ui:options": {
-      inline: true,
-    },
   },
   description: {
     "ui:widget": "textarea",
