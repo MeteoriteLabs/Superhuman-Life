@@ -199,7 +199,9 @@ export default function FitnessTab() {
         Header: 'No. of sessions',
         Cell: ({ row }: any) => {
           const sessionsObj = {};
-  
+          const startMoment = moment(row.original.startDate);
+          const endMoment = moment(row.original.endDate).add(1, 'days');
+
           row.original.sessions.map((curr) => {
             return curr.sessions.map((item) => {
               sessionsObj[item.session_date] = (sessionsObj[item.session_date] || 0) + 1;
@@ -207,6 +209,10 @@ export default function FitnessTab() {
               return sessionsObj;
             });
           });
+
+          const lengthOfobject = Object.keys(sessionsObj).length;
+
+          const differenceBetweenStartDateandEndDate = endMoment.diff(startMoment, 'days');
 
           return (
             <div className="d-flex justify-content-center align-items-center">
@@ -418,7 +424,7 @@ export default function FitnessTab() {
                     Object.keys(sessionsObj).length
                       ? `Start date: ${moment(row.original.startDate).format(
                           'DD-MM-YYYY'
-                        )} - End date: ${moment(row.original.endDate).format('DD-MM-YYYY')}`
+                        )} - End date: ${moment(row.original.endDate).format('DD-MM-YYYY')},${differenceBetweenStartDateandEndDate - lengthOfobject ? `${differenceBetweenStartDateandEndDate - lengthOfobject} sessions to build` : null}`
                       : `No session, build sessions`
                   }`}>
                   <Icon name="info" style={{ width: '25px', height: '30px' }} />
@@ -428,7 +434,7 @@ export default function FitnessTab() {
                 <div
                   title={`${
                     Object.keys(sessionsObj).length
-                      ? `${Object.keys(sessionsObj).length} sessions`
+                      ? `${Object.keys(sessionsObj).length} sessions build`
                       : `No session, build sessions`
                   }`}>
                   <Icon name="info" style={{ width: '25px', height: '30px' }} />
@@ -615,7 +621,7 @@ export default function FitnessTab() {
               </Badge>
             ) : (
               <>
-                <ProgressBar variant="success" now={lengthOfobject} />
+                <ProgressBar variant="success" now={(lengthOfobject*100)/differenceBetweenStartDateandEndDate} />
                 {lengthOfobject}/3 <div style={{cursor: "pointer"}} onClick={() => manageHandler(value.row.original.tagId, value.row.original.tagId.length, value.row.original.type)}>sessions to publish</div>
               </>
             )
@@ -634,7 +640,7 @@ export default function FitnessTab() {
                 </Badge>
               ) : (
                 <>
-                  <ProgressBar variant="success" now={lengthOfobject} />
+                  <ProgressBar variant="success" now={(lengthOfobject*100)/differenceBetweenStartDateandEndDate} />
                   {lengthOfobject}/
                   {value.row.original.type === 'Classic Class'
                     ? value.row.original.duration[0]
