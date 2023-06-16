@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
-import { Form, InputGroup, Overlay, Tooltip } from 'react-bootstrap';
+import { Form, InputGroup, Tooltip, Button, OverlayTrigger } from 'react-bootstrap';
+import { useHistory } from 'react-router-dom';
 
 type WebsiteSettings = {
   subdomain: string;
@@ -18,11 +19,10 @@ function WebsiteBuilder_settings({
   //   const [showEditTemplate, setShowEditTemplate] = useState(false);
   const [edit, setEdit] = useState({
     subdomain: false,
-    domain: false,
-    selectedTemplate: false
+    domain: false
   });
+  const navigate = useHistory();
 
-  const editTemplate = useRef(null);
   return (
     <>
       <h1>Website Builder</h1>
@@ -33,7 +33,7 @@ function WebsiteBuilder_settings({
             <h4 className="mb-2" style={{ fontSize: 16, fontWeight: 600 }}>
               Community Website
             </h4>
-            <InputGroup className="mb-3">
+            <InputGroup className="mb-3" style={{ cursor: 'pointer' }}>
               <Form.Control
                 placeholder="example-domain.sapien.systems"
                 aria-label="subdomain"
@@ -43,16 +43,18 @@ function WebsiteBuilder_settings({
                   setWebsiteSettings({ ...websiteSettings, subdomain: e.target.value })
                 }
               />
-              <InputGroup.Text onClick={() => setEdit({ ...edit, subdomain: !edit.subdomain })}>
+              <Button
+                className="btn-light ml-1"
+                onClick={() => setEdit({ ...edit, subdomain: !edit.subdomain })}>
                 🖋️
-              </InputGroup.Text>
+              </Button>
             </InputGroup>
           </div>
           <div className="mb-4">
             <h4 style={{ fontSize: 16, fontWeight: 600 }} className="mb-2">
               Personal Website
             </h4>
-            <InputGroup className="mb-3">
+            <InputGroup className="mb-3" style={{ cursor: 'pointer' }}>
               <Form.Control
                 placeholder="www.example-domain.com"
                 aria-label="subdomain"
@@ -60,16 +62,18 @@ function WebsiteBuilder_settings({
                 value={websiteSettings.domain}
                 onChange={(e) => setWebsiteSettings({ ...websiteSettings, domain: e.target.value })}
               />
-              <InputGroup.Text onClick={() => setEdit({ ...edit, domain: !edit.domain })}>
+              <Button
+                className="btn-light ml-1"
+                onClick={() => setEdit({ ...edit, domain: !edit.domain })}>
                 🖋️
-              </InputGroup.Text>
+              </Button>
             </InputGroup>
           </div>
           <div className="mb-4">
             <h4 style={{ fontSize: 16, fontWeight: 600 }} className="mb-2">
               Selected Template
             </h4>
-            <InputGroup className="mb-3">
+            <InputGroup className="mb-3" style={{ cursor: 'pointer' }}>
               <Form.Control
                 placeholder="example-domain.sapien.systems"
                 aria-label="subdomain"
@@ -79,17 +83,15 @@ function WebsiteBuilder_settings({
                   setWebsiteSettings({ ...websiteSettings, selectedTemplate: e.target.value })
                 }
               />
-              <InputGroup.Text
-                onClick={() => setEdit({ ...edit, selectedTemplate: !edit.selectedTemplate })}>
-                →
-              </InputGroup.Text>
-              <Overlay target={editTemplate.current} show={edit.selectedTemplate} placement="right">
-                {(props) => (
-                  <Tooltip id="overlay-example" {...props}>
-                    My Tooltip
-                  </Tooltip>
-                )}
-              </Overlay>
+              <OverlayTrigger
+                placement="top"
+                overlay={<Tooltip id="overlay-example">Browse Templates</Tooltip>}>
+                <Button
+                  className="btn-light ml-1"
+                  onClick={() => navigate.push('/website/templates')}>
+                  →
+                </Button>
+              </OverlayTrigger>
             </InputGroup>
           </div>
         </div>
