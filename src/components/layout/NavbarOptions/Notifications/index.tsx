@@ -1,13 +1,14 @@
 import { Row, Col, Button, Card, Spinner } from 'react-bootstrap';
 import Icons from '../../../Icons';
 import { Link } from 'react-router-dom';
-import { useQuery, useMutation } from '@apollo/client';
+import { useQuery, useMutation, useLazyQuery } from '@apollo/client';
 import { useContext, useState } from 'react';
 import authContext from '../../../../context/auth-context';
 import {
   GET_CHANGEMAKER_NOTIFICATION,
   MARK_NOTIFICATION_AS_READ,
-  DELETE_NOTIFICATION
+  DELETE_NOTIFICATION,
+  GET_CHANGEMAKER_NOTIFICATION_All_RECORS
 } from './queries';
 import { flattenObj } from '../../../../components/utils/responseFlatten';
 import moment from 'moment';
@@ -34,32 +35,36 @@ interface Notification {
 function Notifications(): JSX.Element {
   const auth = useContext(authContext);
   const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [start, setStart] = useState(-5);
-  const [hasMore, setHasMore] = useState(true);
+  const [page, setPage] = useState<number>(1);
+  const [totalRecords, setTotalRecords] = useState<number>(0);
+  const [allNotifications, setAllNotifications] = useState<Notification[]>([]);
 
   const {
-    // data: get_changemaker_notifications,
-    loading: loading_notifications,
+    // loading: loading_notifications,
     refetch: refetch_changemaker_notifications
   } = useQuery(GET_CHANGEMAKER_NOTIFICATION, {
-    variables: { id: auth.userid, start: Number(start + 5) },
+    variables: { id: auth.userid, start: page * 10 - 10 },
     onCompleted: (data) => {
       const flattenData = flattenObj({ ...data });
-
-      setNotifications((prev) =>
-        prev.concat(
-          flattenData.changemakerNotifications.filter(
-            (notification: Notification) =>
-              !prev.some((prevNoti) => prevNoti.id === notification.id)
-          )
-        )
-      );
-
-      if (flattenData.changemakerNotifications.length < 5) {
-        setHasMore(false);
-      }
+      // setNotifications(flattenData.changemakerNotifications);
+      getAllNotifications({
+        variables: {
+          id: auth.userid,
+          pageSize: data.changemakerNotifications.meta.pagination.total
+        },
+        onCompleted: (data) => {
+          const flattenData = flattenObj({ ...data });
+          setTotalRecords(data.changemakerNotifications.meta.pagination.total);
+          setAllNotifications(flattenData.changemakerNotifications);
+        }
+      });
+      setNotifications(flattenData.changemakerNotifications);
     }
   });
+
+  const [getAllNotifications, { data: get_all_notifications }] = useLazyQuery(
+    GET_CHANGEMAKER_NOTIFICATION_All_RECORS
+  );
 
   const [changeNotificationStatus] = useMutation(MARK_NOTIFICATION_AS_READ);
 
@@ -110,13 +115,13 @@ function Notifications(): JSX.Element {
   }
 
   const readAll = () => {
-    for (let i = 0; i < notifications.length; i++) {
+    for (let i = 0; i < allNotifications.length; i++) {
       changeNotificationStatus({
-        variables: { id: notifications[i].id, IsRead: true },
+        variables: { id: allNotifications[i].id, IsRead: true },
         onCompleted: () => {
           setNotifications((prev) =>
             prev.map((notification) => {
-              if (notification.id === notifications[i].id) {
+              if (notification.id === allNotifications[i].id) {
                 return { ...notification, IsRead: true };
               }
               return notification;
@@ -128,48 +133,43 @@ function Notifications(): JSX.Element {
     }
   };
 
+  console.log('All notif are', allNotifications);
+
   const deleteAll = () => {
-    for (let i = 0; i < notifications.length; i++) {
+    for (let i = 0; i < allNotifications.length; i++) {
       deleteNotification({
-        variables: { id: notifications[i].id },
+        variables: { id: allNotifications[i].id },
         onCompleted: () => {
-          setNotifications((prev) =>
-            prev.filter((notification) => notification.id !== notifications[i].id)
-          );
           refetch_changemaker_notifications();
         }
       });
     }
   };
 
-  const loadMore = () => {
-    setStart((prev) => prev + 5);
+  const loadPage = (pageNumber) => {
+    setPage(pageNumber);
     refetch_changemaker_notifications();
   };
 
-  if (loading_notifications && notifications.length === 0) {
-    return <Loader msg={'Loading notifications...'} />;
-  }
-
   return (
     <div>
-      <div className="d-flex justify-content-between align-items-center">
+      <div className="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center">
         <h2>Notifications</h2>
 
-        <div className="px-5 mx-2">
+        <div className="ml-0 ml-sm-auto mt-3 mt-sm-0">
           {/* delete all button */}
-          <Button className="mx-2" variant="outline-dark" onClick={() => deleteAll()}>
+          <Button className="mx-2 mb-2 mb-sm-0" variant="outline-dark" onClick={() => deleteAll()}>
             Delete All
           </Button>
 
           {/* read all notifications */}
-          <Button className="mx-2" variant="outline-dark" onClick={() => readAll()}>
+          <Button className="mx-2 mb-2 mb-sm-0" variant="outline-dark" onClick={() => readAll()}>
             Read All
           </Button>
 
           {/* Settings */}
           <Link to="/notificationSettings">
-            <Button className="mx-2" variant="outline-dark">
+            <Button className="mx-2  mb-2 mb-sm-0" variant="outline-dark">
               Settings
             </Button>
           </Link>
@@ -196,7 +196,7 @@ function Notifications(): JSX.Element {
                           textDecoration: 'none',
                           background: `${currentValue.IsRead ? 'white' : '#f0f2f2'}`
                         }}
-                        className="p-3">
+                        className="p-3 shadow p-3 mb-5 bg-body rounded">
                         <Row>
                           <Col lg={1} xs={4} className="pt-3">
                             <img
@@ -217,24 +217,24 @@ function Notifications(): JSX.Element {
                             {currentValue.IsRead ? (
                               <div
                                 title="mark as unread"
-                                style={{ cursor: 'pointer' }}
+                                style={{ cursor: 'pointer', display: 'flex' }}
                                 onClick={() => {
                                   markAsUnread(currentValue.id);
                                 }}>
                                 <Icons name="readeye" width={24} height={24} />
-                                <small className="ml-2">
+                                <small className="ml-2 , mt-1">
                                   {moment(currentValue.DateTime).format('HH:mm A')}
                                 </small>
                               </div>
                             ) : (
                               <div
                                 title="mark as read"
-                                style={{ cursor: 'pointer' }}
+                                style={{ cursor: 'pointer', display: 'flex' }}
                                 onClick={() => {
                                   markAsRead(currentValue.id);
                                 }}>
                                 <Icons name="unreadeye" width={24} height={24} />
-                                <small className="ml-2">
+                                <small className="ml-2 , mt-1">
                                   {moment(currentValue.DateTime).format('HH:mm A')}
                                 </small>
                               </div>
@@ -259,35 +259,30 @@ function Notifications(): JSX.Element {
         ) : (
           <NoDataFound msg={'Opps ! Notifications not found'} />
         )}
+       
+        {/* Pagination */}
         {notifications && notifications.length ? (
-          <>
-            {loading_notifications ? (
-              <div className="d-flex justify-content-center mt-5 " style={{ marginRight: '20vw' }}>
-                <Spinner animation="border" variant="secondary" />
-              </div>
-            ) : hasMore ? (
-              <div className="d-flex justify-content-center mt-5 " style={{ marginRight: '20vw' }}>
-                <Button variant="outline-dark" onClick={loadMore}>
-                  Load More
-                </Button>
-              </div>
-            ) : (
-              <div className="d-flex justify-content-center mt-5 " style={{ marginRight: '20vw' }}>
-                <p
-                  style={{
-                    color: 'black',
-                    fontSize: '1.1rem',
-                    fontWeight: 'bold',
-                    fontFamily: 'sans-serif'
-                  }}>
-                  End of notifications
-                </p>
-              </div>
-            )}
-          </>
-        ) : (
-          ''
-        )}
+          <Row className="justify-content-end">
+            <Button
+              variant="outline-dark"
+              className="m-2"
+              onClick={() => loadPage(page - 1)}
+              disabled={page === 1 ? true : false}>
+              Previous
+            </Button>
+
+            <Button
+              variant="outline-dark"
+              className="m-2"
+              onClick={() => loadPage(page + 1)}
+              disabled={totalRecords > page * 10 - 10 + notifications.length ? false : true}>
+              Next
+            </Button>
+            <span className="m-2 bold pt-2">{`${page * 10 - 10 + 1} - ${
+              page * 10 - 10 + notifications.length
+            }`}</span>
+          </Row>
+        ) : null}
       </div>
     </div>
   );

@@ -240,6 +240,8 @@ export default function Leads() {
           }
         })
       );
+
+
     }
     if (searchFilter === "") {
       setDataTable(
@@ -258,6 +260,9 @@ export default function Leads() {
       );
     }
   }, [searchFilter, data, nameArr]);
+
+
+  
 
   return (
     <TabContent>
