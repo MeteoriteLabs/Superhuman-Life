@@ -3,9 +3,46 @@ import { gql } from '@apollo/client';
 export const GET_CHANGEMAKER_NOTIFICATION = gql`
   query changemakerNotifications($id: ID, $start: Int) {
     changemakerNotifications(
-      pagination: { limit: 5, start: $start }
+      pagination: { limit: 10, start: $start }
+      sort: ["createdAt:desc"]
       filters: { users_permissions_user: { id: { eq: $id } } }
     ) {
+      meta {
+        pagination {
+          pageCount
+          total
+        }
+      }
+      data {
+        id
+        attributes {
+          DateTime
+          Title
+          Body
+          OnClickRoute
+          ContactID
+          type
+          IsRead
+        }
+      }
+    }
+  }
+`;
+
+
+
+export const GET_CHANGEMAKER_NOTIFICATION_All_RECORS = gql`
+  query changemakerNotifications($id: ID, $pageSize: Int) {
+    changemakerNotifications(
+      pagination: { pageSize: $pageSize }
+      filters: { users_permissions_user: { id: { eq: $id } } }
+    ) {
+      meta {
+        pagination {
+          pageCount
+          total
+        }
+      }
       data {
         id
         attributes {

@@ -164,7 +164,7 @@ export const GET_NOTIFICATIONS = gql`
           pageCount
           total
         }
-      }
+       }
       data {
         id
         attributes {
