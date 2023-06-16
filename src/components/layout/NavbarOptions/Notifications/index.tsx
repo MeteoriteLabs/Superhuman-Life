@@ -40,7 +40,7 @@ function Notifications(): JSX.Element {
   const [allNotifications, setAllNotifications] = useState<Notification[]>([]);
 
   const {
-    // loading: loading_notifications,
+    loading: loading_notifications,
     refetch: refetch_changemaker_notifications
   } = useQuery(GET_CHANGEMAKER_NOTIFICATION, {
     variables: { id: auth.userid, start: page * 10 - 10 },
@@ -133,8 +133,6 @@ function Notifications(): JSX.Element {
     }
   };
 
-  console.log('All notif are', allNotifications);
-
   const deleteAll = () => {
     for (let i = 0; i < allNotifications.length; i++) {
       deleteNotification({
@@ -146,10 +144,14 @@ function Notifications(): JSX.Element {
     }
   };
 
-  const loadPage = (pageNumber) => {
+  const loadPage = (pageNumber: number) => {
     setPage(pageNumber);
     refetch_changemaker_notifications();
   };
+
+  if (loading_notifications && notifications.length === 0) {
+    return <Loader msg={'Loading notifications...'} />;
+  }
 
   return (
     <div>
@@ -259,7 +261,7 @@ function Notifications(): JSX.Element {
         ) : (
           <NoDataFound msg={'Opps ! Notifications not found'} />
         )}
-       
+
         {/* Pagination */}
         {notifications && notifications.length ? (
           <Row className="justify-content-end">
