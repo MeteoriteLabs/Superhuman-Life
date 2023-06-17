@@ -1,8 +1,8 @@
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import style from './cardStyles.module.css';
-import { Eye } from 'react-bootstrap-icons';
-import { Col, OverlayTrigger, Row, Tooltip } from 'react-bootstrap';
+
+import { Col, Row } from 'react-bootstrap';
 import { Template } from '../../pages/website-builder/@types/websiteTemplates';
 
 function CardWithImageAndFooter({
@@ -15,11 +15,13 @@ function CardWithImageAndFooter({
   const renderOverlay = () => {
     return (
       <div className={style.overlayContent}>
-        <Button variant="light" className={style.overlayButton}>
-          Edit Live
-        </Button>
+        <a href={`https://${data.attributes.templateUrl}`} target="_blank" rel="noreferrer">
+          <Button variant="light" className={style.overlayButton}>
+            Live Preview
+          </Button>
+        </a>
         <Button variant="light" className={style.overlayButton} onClick={() => infoHandler(data)}>
-          Info
+          Details
         </Button>
       </div>
     );
@@ -35,25 +37,6 @@ function CardWithImageAndFooter({
         <Row>
           <Col xs="10">
             <Card.Title className={style.title}>{data.attributes.templateName}</Card.Title>
-          </Col>
-          <Col xs="1">
-            <a href={`https://${data.attributes.templateUrl}`} target="_blank" rel="noreferrer">
-              <OverlayTrigger overlay={<Tooltip id={''}>Preview</Tooltip>}>
-                <Button
-                  variant="dark"
-                  style={{
-                    height: 20,
-                    borderRadius: 30,
-                    width: 20,
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    padding: 3
-                  }}>
-                  <Eye className="mt-3" color="#fff" />
-                </Button>
-              </OverlayTrigger>
-            </a>
           </Col>
         </Row>
       </Card.Body>

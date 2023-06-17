@@ -1,55 +1,21 @@
-import { useLazyQuery } from '@apollo/client';
-import { FETECH_SELECTED_TEMPLATE } from '../queries/templates';
-import { useEffect, useState } from 'react';
+import { useContext } from 'react';
 import { Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import { ChangeMakerWebsiteContext } from '../../../context/changemakerWebsite-context';
 
-type WebsiteSettings = {
-  subdomain: string;
-  domain: string;
-  selectedTemplate: string;
-  error: string;
-};
+function WebsiteBuilder_template(): JSX.Element {
+  const { changemakerWebsiteState } = useContext(ChangeMakerWebsiteContext);
 
-function WebsiteBuilder_template({
-  websiteSettings
-}: {
-  websiteSettings: WebsiteSettings;
-}): JSX.Element {
-  const [selectedTemplate, setSelectedTemplate] = useState({
-    thumbnail: '',
-    templateUrl: ''
-  });
-  const [getUserSelectedTemplate, { data, error }] = useLazyQuery(FETECH_SELECTED_TEMPLATE, {
-    variables: {
-      templateName: websiteSettings.selectedTemplate
-    },
-    onCompleted: (data) => {
-      setSelectedTemplate({
-        ...selectedTemplate,
-        thumbnail: data?.templates?.data[0]?.attributes?.thumbnail as string,
-        templateUrl: data?.templates?.data[0]?.attributes?.templateUrl as string
-      });
-    },
-    onError: () => {
-      if (error?.message) {
-        console.log(error?.message);
-      }
-    }
-  });
-
-  useEffect(() => {
-    if (websiteSettings.selectedTemplate) {
-      getUserSelectedTemplate();
-    }
-  }, [websiteSettings.selectedTemplate]);
   return (
     <div className="my-5">
       <hr />
       <div className="mb-2 mt-5 d-flex justify-content-between align-items-baseline">
         <h4 style={{ fontSize: 18, fontWeight: 600 }}>Preview</h4>
         <div className="d-flex" style={{ gap: 10 }}>
-          <a href={`https://${selectedTemplate.templateUrl}`} target="_blank" rel="noreferrer">
+          <a
+            href={`https://${changemakerWebsiteState.templateUrl}`}
+            target="_blank"
+            rel="noreferrer">
             <Button variant="outline-primary" size="sm">
               Preview
             </Button>
@@ -63,7 +29,7 @@ function WebsiteBuilder_template({
         </div>
       </div>
       <div style={{ position: 'relative' }}>
-        {selectedTemplate.thumbnail ? (
+        {changemakerWebsiteState.thumbnail ? (
           <div
             style={{
               overflow: 'hidden',
@@ -74,7 +40,7 @@ function WebsiteBuilder_template({
               top: 0
             }}>
             <img
-              src={selectedTemplate.thumbnail}
+              src={changemakerWebsiteState.thumbnail}
               alt="template"
               width={1400}
               height={900}

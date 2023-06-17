@@ -1,10 +1,8 @@
 import { Template } from '../@types/websiteTemplates';
-import { ArrowRight, CheckCircle } from 'react-bootstrap-icons';
+import { CheckCircle } from 'react-bootstrap-icons';
 import { Button, Col, ListGroup, Modal, Row } from 'react-bootstrap';
 
 import style from './info.module.css';
-import { useHistory } from 'react-router-dom';
-import { useEffect } from 'react';
 
 function InfoModal({
   data,
@@ -17,21 +15,9 @@ function InfoModal({
     setInfoData(null);
   };
 
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
-  const history = useHistory();
-  const handleNavigation = () => {
-    localStorage.setItem(
-      'selectedTemplate',
-      JSON.stringify({
-        id: data.id,
-        name: data.attributes.templateName,
-        domain: data.attributes.templateUrl
-      })
-    );
-
-    history.push('/website/templates/liveEditor');
+  const setTemplateAsSelected = () => {
+    // ! multiple templates
+    setInfoData(null);
   };
 
   return (
@@ -78,8 +64,8 @@ function InfoModal({
           </Row>
         </div>
         <div className="d-flex justify-content-end mt-5">
-          <Button variant="primary" className="py-2 px-4 " onClick={handleNavigation}>
-            Go to Live Editor <ArrowRight className="m-0 mb-1 ml-1" />
+          <Button variant="primary" className="py-2 px-4 " onClick={setTemplateAsSelected}>
+            Select Template
           </Button>
         </div>
       </Modal.Body>
