@@ -1,6 +1,8 @@
-function Index(): JSX.Element {
-  const template = JSON.parse(localStorage.getItem('selectedTemplate') as string);
+import { useContext } from 'react';
+import { ChangeMakerWebsiteContext } from '../../../../context/changemakerWebsite-context';
 
+function Index(): JSX.Element {
+  const { changemakerWebsiteState } = useContext(ChangeMakerWebsiteContext);
   return (
     <div
       style={{
@@ -11,8 +13,7 @@ function Index(): JSX.Element {
       }}>
       <div style={{ width: '100vw', height: '89vh' }}>
         <iframe
-          src={`https://${template.domain}`}
-          title="YouTube video player"
+          src={`https://${changemakerWebsiteState.subdomain}`}
           allowFullScreen={true}
           style={{
             background: 'white',

@@ -1,27 +1,18 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { Form, InputGroup, Tooltip, Button, OverlayTrigger } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
+import { ChangeMakerWebsiteContext } from '../../../context/changemakerWebsite-context';
 
-type WebsiteSettings = {
-  subdomain: string;
-  domain: string;
-  selectedTemplate: string;
-  error: string;
-};
-
-function WebsiteBuilder_settings({
-  websiteSettings,
-  setWebsiteSettings
-}: {
-  websiteSettings: WebsiteSettings;
-  setWebsiteSettings: (websiteSettings: WebsiteSettings) => void;
-}): JSX.Element {
+function WebsiteBuilder_settings(): JSX.Element {
   //   const [showEditTemplate, setShowEditTemplate] = useState(false);
   const [edit, setEdit] = useState({
     subdomain: false,
     domain: false
   });
   const navigate = useHistory();
+
+  const { setChangemakerWebsiteState, changemakerWebsiteState } =
+    useContext(ChangeMakerWebsiteContext);
 
   return (
     <>
@@ -38,9 +29,12 @@ function WebsiteBuilder_settings({
                 placeholder="example-domain.sapien.systems"
                 aria-label="subdomain"
                 disabled={!edit.subdomain}
-                value={websiteSettings.subdomain}
+                value={changemakerWebsiteState.subdomain ? changemakerWebsiteState.subdomain : ''}
                 onChange={(e) =>
-                  setWebsiteSettings({ ...websiteSettings, subdomain: e.target.value })
+                  setChangemakerWebsiteState({
+                    ...changemakerWebsiteState,
+                    subdomain: e.target.value
+                  })
                 }
               />
               <Button
@@ -59,8 +53,13 @@ function WebsiteBuilder_settings({
                 placeholder="www.example-domain.com"
                 aria-label="subdomain"
                 disabled={!edit.domain}
-                value={websiteSettings.domain}
-                onChange={(e) => setWebsiteSettings({ ...websiteSettings, domain: e.target.value })}
+                value={changemakerWebsiteState.domain ? changemakerWebsiteState.domain : ''}
+                onChange={(e) =>
+                  setChangemakerWebsiteState({
+                    ...changemakerWebsiteState,
+                    domain: e.target.value
+                  })
+                }
               />
               <Button
                 className="btn-light ml-1"
@@ -78,9 +77,16 @@ function WebsiteBuilder_settings({
                 placeholder="example-domain.sapien.systems"
                 aria-label="subdomain"
                 disabled
-                value={websiteSettings.selectedTemplate}
+                value={
+                  changemakerWebsiteState.selectedTemplate
+                    ? changemakerWebsiteState.selectedTemplate
+                    : ''
+                }
                 onChange={(e) =>
-                  setWebsiteSettings({ ...websiteSettings, selectedTemplate: e.target.value })
+                  setChangemakerWebsiteState({
+                    ...changemakerWebsiteState,
+                    selectedTemplate: e.target.value
+                  })
                 }
               />
               <OverlayTrigger

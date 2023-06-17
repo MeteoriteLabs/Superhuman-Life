@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import SideNav from '../layout/sidenav';
 import { Button, Col, Container, Form, InputGroup, Row } from 'react-bootstrap';
 import { Search } from 'react-bootstrap-icons';
@@ -9,10 +9,14 @@ import { FetchedTemplates, Template } from '../@types/websiteTemplates';
 import CardWithImageAndFooter from '../../../components/cards/CardWithImageAndFooter';
 import InfoModal from '../layout/InfoModal';
 
+import { ChangeMakerWebsiteContext } from '../../../context/changemakerWebsite-context';
+
 function Templates(): JSX.Element {
   const [collapse, setCollapse] = useState<boolean>(true);
   const [templates, setTemplates] = useState<Template[]>([]);
   const [infoData, setInfoData] = useState<Template | null>(null);
+
+  const { changemakerWebsiteState } = useContext(ChangeMakerWebsiteContext);
 
   useQuery(FETCH_TEMPLATES, {
     variables: {
@@ -22,10 +26,6 @@ function Templates(): JSX.Element {
       setTemplates(data.templates.data);
     }
   });
-
-  useEffect(() => {
-    console.log(infoData);
-  }, [infoData]);
 
   const infoHandler = (data: Template): void => {
     setInfoData(data);
@@ -39,16 +39,6 @@ function Templates(): JSX.Element {
           <h1>Templates</h1>
           <div className="d-flex justify-content-between">
             <p>Find the best templates for you requirement</p>
-            {/* <div className="d-flex" style={{ gap: 20 }}>
-              <div>
-                <Button style={{ width: 100 }}>Edit Live</Button>
-              </div>
-              <div>
-                <Button variant="outline-secondary" style={{ width: 100 }}>
-                  Preview
-                </Button>
-              </div>
-            </div> */}
           </div>
           <hr />
           <Row>
@@ -72,11 +62,23 @@ function Templates(): JSX.Element {
           </Row>
           <Row>
             {templates.length > 0 ? (
-              templates.map((template, id) => (
-                <Col lg="4" md="6" xs="12" key={id} className="mt-5">
-                  <CardWithImageAndFooter infoHandler={infoHandler} data={template} />
-                </Col>
-              ))
+              templates.map((template, id) =>
+                template.attributes.templateName === changemakerWebsiteState.selectedTemplate ? (
+                  <Col
+                    lg="4"
+                    md="6"
+                    xs="12"
+                    key={id}
+                    className="mt-5 p-0"
+                    style={{ border: '2px solid #017BFE', borderRadius: '13px' }}>
+                    <CardWithImageAndFooter infoHandler={infoHandler} data={template} />
+                  </Col>
+                ) : (
+                  <Col lg="4" md="6" xs="12" key={id} className="mt-5">
+                    <CardWithImageAndFooter infoHandler={infoHandler} data={template} />
+                  </Col>
+                )
+              )
             ) : (
               <div className="ml-4 mt-2">
                 <h4>Loading templates...</h4>
@@ -84,7 +86,7 @@ function Templates(): JSX.Element {
             )}
           </Row>
         </Container>
-        {infoData ? <InfoModal data={infoData} setInfoData={setInfoData} /> : ''}
+        {infoData !== null ? <InfoModal data={infoData} setInfoData={setInfoData} /> : ''}
       </div>
     </>
   );
