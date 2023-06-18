@@ -1,6 +1,11 @@
 import { useForm, Controller } from 'react-hook-form';
 import style from '../style.module.css';
 import { Button, Form } from 'react-bootstrap';
+import { useMutation, useQuery } from '@apollo/client';
+import { GET_WEBSITE_SECTION_ID, UPDATE_WEBSITE_SECTION } from './quries/home';
+import authContext from '../../../../../context/auth-context';
+import { useContext, useEffect, useState } from 'react';
+import { ChangeMakerWebsiteContext } from '../../../../../context/changemakerWebsite-context';
 
 type FormData = {
   title: string;
@@ -9,18 +14,69 @@ type FormData = {
 };
 
 function Hero(): JSX.Element {
+  const auth = useContext(authContext);
+  const [errorMsg, setErrorMsg] = useState<string>('');
+  const [initalValues, setInitalValues] = useState({
+    title: '',
+    description: '',
+    image: '',
+    sectionId: ''
+  });
+
+  const { setChangemakerWebsiteState, changemakerWebsiteState } =
+    useContext(ChangeMakerWebsiteContext);
+
+  useQuery(GET_WEBSITE_SECTION_ID, {
+    variables: {
+      id: auth.userid,
+      sectionPage: 'Home',
+      sectionType: 'Hero'
+    },
+    onCompleted: (data) => {
+      setInitalValues({
+        ...initalValues,
+        sectionId: data.websiteSections.data[0].id,
+        title: data.websiteSections.data[0].attributes.sectionData.title,
+        description: data.websiteSections.data[0].attributes.sectionData.description,
+        image: data.websiteSections.data[0].attributes.sectionData.image
+      });
+    }
+  });
+
   const {
     handleSubmit,
     control,
     formState: { errors }
   } = useForm<FormData>({
     defaultValues: {
-      title: '',
-      description: '',
-      image: ''
+      title: initalValues.title,
+      description: initalValues.description,
+      image: initalValues.image
     }
   });
-  const onSubmit = handleSubmit((data) => console.log(data));
+
+  const [mutateFunction, { loading, error }] = useMutation(UPDATE_WEBSITE_SECTION);
+
+  const onSubmit = handleSubmit(async (formData) => {
+    // ! Need to add image upload
+    const { title, description, image } = formData;
+
+    await mutateFunction({
+      variables: {
+        id: initalValues.sectionId,
+        title: title ? title : initalValues.title,
+        desc: description ? description : initalValues.description,
+        image: image ? image : initalValues.image
+      }
+    });
+  });
+
+  useEffect(() => {
+    loading
+      ? setChangemakerWebsiteState({ ...changemakerWebsiteState, loading: true })
+      : setChangemakerWebsiteState({ ...changemakerWebsiteState, loading: false });
+    error ? setErrorMsg(`${error.name}: ${error.message}`) : setErrorMsg('');
+  }, [loading, error]);
 
   return (
     <div className={style.form}>
@@ -77,6 +133,7 @@ function Hero(): JSX.Element {
             <Form.Control.Feedback tooltip>{errors.image.message}</Form.Control.Feedback>
           )}
         </Form.Group>
+        {errorMsg ? <p>{errorMsg}</p> : null}
         <Button
           variant="primary"
           type="submit"
