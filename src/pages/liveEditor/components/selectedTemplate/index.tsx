@@ -3,6 +3,7 @@ import { ChangeMakerWebsiteContext } from '../../../../context/changemakerWebsit
 
 function Index(): JSX.Element {
   const { changemakerWebsiteState } = useContext(ChangeMakerWebsiteContext);
+
   return (
     <div
       style={{
@@ -12,18 +13,33 @@ function Index(): JSX.Element {
         padding: '20px 20px 0 20px'
       }}>
       <div style={{ width: '100vw', height: '89vh' }}>
-        <iframe
-          src={`https://${changemakerWebsiteState.subdomain}`}
-          allowFullScreen={true}
-          style={{
-            background: 'white',
-            width: '100%',
-            height: '140%',
-            borderRadius: '10px 10px 0 0',
-            transform: 'scale(.7)',
-            transformOrigin: 'top center'
-          }}
-        />
+        {changemakerWebsiteState.loading ? (
+          <div
+            //  src={`https://${changemakerWebsiteState.subdomain}`}
+            //  allowFullScreen={true}
+            style={{
+              background: 'white',
+              width: '100%',
+              height: '140%',
+              borderRadius: '10px 10px 0 0',
+              transform: 'scale(.7)',
+              transformOrigin: 'top center'
+            }}
+          />
+        ) : (
+          <iframe
+            src={`https://${changemakerWebsiteState.subdomain}`}
+            allowFullScreen={true}
+            style={{
+              background: 'white',
+              width: '100%',
+              height: '140%',
+              borderRadius: '10px 10px 0 0',
+              transform: 'scale(.7)',
+              transformOrigin: 'top center'
+            }}
+          />
+        )}
       </div>
     </div>
   );

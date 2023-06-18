@@ -14,7 +14,8 @@ export const ChangeMakerWebsiteContext = createContext<changeMakerWebsiteTs>({
     subdomain: null,
     selectedTemplate: null,
     thumbnail: null,
-    templateUrl: null
+    templateUrl: null,
+    loading: false
   },
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   setChangemakerWebsiteState: () => {}
@@ -29,7 +30,8 @@ function ChangemakerWebsiteContextProvider({ children }: { children: ReactNode }
       subdomain: '',
       selectedTemplate: '',
       thumbnail: '',
-      templateUrl: ''
+      templateUrl: '',
+      loading: false
     }
   );
 

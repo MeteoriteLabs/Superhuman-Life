@@ -6,6 +6,7 @@ export type changeMakerWebsiteStateTs = {
     selectedTemplate: string | null;
     thumbnail: string | null;
     templateUrl: string | null;
+    loading: boolean;
   };
   export type changeMakerWebsiteTs = {
     changemakerWebsiteState: changeMakerWebsiteStateTs;
