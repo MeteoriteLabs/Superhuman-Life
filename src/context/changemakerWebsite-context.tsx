@@ -58,8 +58,10 @@ function ChangemakerWebsiteContextProvider({ children }: { children: ReactNode }
 
   //   * we fetch the queries everytime their is a change in the state of subdomain and selectedTemplate
   useEffect(() => {
-    getUserWebsite();
-  }, [changemakerWebsiteState.subdomain, changemakerWebsiteState.selectedTemplate]);
+    if (auth.userid) {
+      getUserWebsite();
+    }
+  }, [changemakerWebsiteState.subdomain, changemakerWebsiteState.selectedTemplate, auth.userid]);
 
   //   * changemaker website query ends here
 
@@ -87,8 +89,10 @@ function ChangemakerWebsiteContextProvider({ children }: { children: ReactNode }
   );
 
   useEffect(() => {
-    getUserSelectedTemplate();
-  }, [changemakerWebsiteState.selectedTemplate]);
+    if (auth.userid) {
+      getUserSelectedTemplate();
+    }
+  }, [changemakerWebsiteState.selectedTemplate, auth.userid]);
 
   //  * user selected template to get the thumbnail and templateUrl ends here
 
