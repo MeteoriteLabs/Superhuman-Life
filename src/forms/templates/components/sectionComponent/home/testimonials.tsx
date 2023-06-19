@@ -248,7 +248,6 @@ function Hero(): JSX.Element {
           variant="primary"
           type="submit"
           style={{
-            // paddingInline: 20,
             paddingBlock: 4,
             float: 'right',
             marginBlock: 20,

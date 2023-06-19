@@ -3,8 +3,8 @@ import { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
+import Icons from '../../../components/Icons';
 import WWWIcon from '../../../components/Icons/www';
-import LinkIcon from '../../../components/Icons/link';
 import MobileIcon from '../../../components/Icons/mobile';
 
 export default function SideNav({
@@ -41,7 +41,7 @@ export default function SideNav({
               onClick={() => setSelectedOption(location.pathname.slice(1))}>
               <Row>
                 <Col className="ml-4 m-0 p-0">
-                  <WWWIcon width={26} height={26} />
+                  <WWWIcon width={24} height={24} />
                 </Col>
                 {collapse ? (
                   ''
@@ -60,7 +60,7 @@ export default function SideNav({
               style={{ color: '#fff', textAlign: 'left' }}>
               <Row>
                 <Col className="ml-4 m-0 p-0">
-                  <WWWIcon width={26} height={26} />
+                  <WWWIcon width={24} height={24} />
                 </Col>
                 {collapse ? (
                   ''
@@ -129,7 +129,7 @@ export default function SideNav({
               style={{ marginTop: '-10px' }}>
               <Row>
                 <Col className="ml-4 m-0 p-0">
-                  <LinkIcon width={22} height={22} />
+                  <Icons width={22} height={22} name="linkicon" />
                 </Col>
                 {collapse ? (
                   ''
@@ -148,7 +148,7 @@ export default function SideNav({
               style={{ color: '#fff', marginTop: '-10px' }}>
               <Row>
                 <Col className="ml-4 m-0 p-0">
-                  <LinkIcon width={22} height={22} />
+                  <Icons width={22} height={22} name="linkicon" />
                 </Col>
                 {collapse ? (
                   <Col className=""></Col>

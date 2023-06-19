@@ -10,7 +10,7 @@ function Index({
 }: {
   page: string;
   section: string;
-  setSection: (arg0: string) => void;
+  setSection: (param: string) => void;
 }): JSX.Element {
   const Page = {
     home: <Home section={section} setSection={setSection} />,

@@ -3,7 +3,7 @@ function About({
   setSection
 }: {
   section: string;
-  setSection: (arg0: string) => void;
+  setSection: (param: string) => void;
 }): JSX.Element {
   return <div>About</div>;
 }

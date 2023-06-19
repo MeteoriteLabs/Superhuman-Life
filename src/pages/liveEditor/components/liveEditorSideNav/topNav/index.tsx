@@ -1,8 +1,8 @@
 import { Button, Col, Row } from 'react-bootstrap';
-import ArrowRight from '../../../../../react-svgs/arrowRight';
 
 import style from './style.module.css';
-import ArrowDown from '../../../../../react-svgs/arrowDown';
+import ArrowDown from '../../../../../components/Icons/componentIcons/arrowDown';
+import ArrowRight from '../../../../../components/Icons/componentIcons/arrowRight';
 
 function TopNav(): JSX.Element {
   return (

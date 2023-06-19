@@ -15,8 +15,6 @@ function Index(): JSX.Element {
       <div style={{ width: '100vw', height: '89vh' }}>
         {changemakerWebsiteState.loading ? (
           <div
-            //  src={`https://${changemakerWebsiteState.subdomain}`}
-            //  allowFullScreen={true}
             style={{
               background: 'white',
               width: '100%',

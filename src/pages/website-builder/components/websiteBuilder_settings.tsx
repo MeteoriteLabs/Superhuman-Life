@@ -4,7 +4,6 @@ import { useHistory } from 'react-router-dom';
 import { ChangeMakerWebsiteContext } from '../../../context/changemakerWebsite-context';
 
 function WebsiteBuilder_settings(): JSX.Element {
-  //   const [showEditTemplate, setShowEditTemplate] = useState(false);
   const [edit, setEdit] = useState({
     subdomain: false,
     domain: false
