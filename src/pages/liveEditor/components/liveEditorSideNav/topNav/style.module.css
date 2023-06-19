@@ -1,0 +1,18 @@
+.topNav{
+    padding:10px 30px;
+    border-bottom: .2px solid #ffffff60;
+    background-color: #242424;
+    height: 50px;
+}
+.svgCont{
+   margin-bottom: -15px;
+}
+.btnCont{
+    margin-bottom: 0;
+    font-size: 12px;
+}
+.topNavCol{
+    display: flex;
+    align-items: center;
+    gap: 15px
+}

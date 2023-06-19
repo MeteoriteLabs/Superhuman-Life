@@ -1,0 +1,13 @@
+/* .navContainer{
+    
+} */
+.sectionTitle{
+    margin-block: 0;
+    padding-block: .5rem;
+    padding-inline: 35px;
+    cursor: pointer;
+    font-size: 14px;
+}
+.sectionTitle:hover{
+   background-color: #3f3f3f;
+}
