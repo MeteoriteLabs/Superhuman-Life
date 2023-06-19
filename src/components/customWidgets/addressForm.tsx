@@ -15,6 +15,7 @@ const AddressForm: React.FC<{
 }> = ({value, onChange}) => {
 
   const handleChange = (e) => {
+    console.log(e, e.target);
     const { name, value } = e.target;
 
     let formValues = { ...value };
