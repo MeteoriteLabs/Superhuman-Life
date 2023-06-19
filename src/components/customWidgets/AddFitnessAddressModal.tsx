@@ -47,7 +47,6 @@ const AddFitnessAddressModal: React.FC<{ onHide: () => void; show: boolean }> = 
         getAddressFromCoordinates(lat.toString(), lng.toString());
       });
   }
-
   function getAddressFromCoordinates(lat: string, lng: string) {
     Geocode.fromLatLng(lat, lng).then(
       (response) => {
