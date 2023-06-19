@@ -214,7 +214,6 @@ export default function FitnessTab() {
 
           const differenceBetweenStartDateandEndDate = endMoment.diff(startMoment, 'days');
 
-          if (row.original.type === 'Group Class' && row.original.mode === 'Online')
             return (
               <div className="d-flex justify-content-center align-items-center">
                 {row.original.type === 'Custom Fitness' ? (
@@ -579,7 +578,7 @@ export default function FitnessTab() {
                     </Form.Control>
                   </Form.Group>
                 )
-                // )
+                
               }
             </>
           );

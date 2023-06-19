@@ -9,6 +9,7 @@ import { useMutation } from "@apollo/client";
 import { CREATE_ADDRESS } from "../../builders/package-builder/fitness/graphQL/mutations";
 import authContext from "../../context/auth-context";
 import axios from 'axios';
+import API_END_POINTS from "../../components/utils/integration";
 
 const AddFitnessAddressModal: React.FC<{onHide: () => void; show: boolean;}> = ({onHide, show}) => {
   const auth = useContext(authContext);
@@ -43,10 +44,7 @@ const AddFitnessAddressModal: React.FC<{onHide: () => void; show: boolean;}> = (
         getAddressFromCoordinates(lat.toString(), lng.toString());
       });
   }
-
-  // Geocode.setApiKey("AIzaSyDDvAlVrvbBYMW08BBosDFM_x2inY-XQ-w");
-  // Geocode.setLanguage("en");
-
+  
   function getAddressFromCoordinates(lat: string, lng: string) {
     Geocode.fromLatLng(lat, lng).then(
       (response) => {
@@ -134,29 +132,16 @@ const AddFitnessAddressModal: React.FC<{onHide: () => void; show: boolean;}> = (
 
   function handleAddressAdd() {
     validateAddress();
-    // createAddress({
-    //   variables: {
-    //     address: address1,
-    //     city: city,
-    //     state: state,
-    //     zip: zip,
-    //     country: country,
-    //     title: title,
-    //     users_permissions_user: auth.userid,
-    //     longitude: longitude,
-    //     latitude: latitude
-    //   },
-    // });
   }
 
   const validateAddress = async () => {
     try {
       const response = await axios.get(
-        'https://maps.googleapis.com/maps/api/geocode/json',
+        API_END_POINTS.googleGeoCodeValidation,
         {
           params: {
             address: `${address1},${city},${state},${country}`,
-            key: 'AIzaSyCPFfbr4BbmFZL_vUhfSL-Kw7WG8x7V-8c',
+            key: process.env.REACT_APP_GOOGLE_MAP_KEY,
           },
         }
       );

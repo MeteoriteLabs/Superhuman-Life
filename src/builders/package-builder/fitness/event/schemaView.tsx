@@ -5,7 +5,6 @@ import ProgramDetails from "./ProgramDetails";
 import CourseDetails from "../cohort/course_details";
 import Upload from "../../../../components/upload/upload";
 import DatesConfig from "../../../../components/customWidgets/datesConfig";
-import FitnessSelect from "../../../../components/customWidgets/fitnessMultiSelect";
 import EquipmentSelect from "../../../../components/customWidgets/equipmentListSelect";
 import BookingConfig from "./bookingConfig";
 import CohortDateConfig from "../cohort/cohortDateConfig";
@@ -17,16 +16,12 @@ export const widgets = {
   programDetails: ProgramDetails,
   courseDetails: CourseDetails,
   datesConfig: DatesConfig,
-  fitnessSelect: FitnessSelect,
   equipmentSelect: EquipmentSelect,
   cohortBookingConfig: BookingConfig,
   cohortDateConfig: CohortDateConfig,
 };
 
 export const schemaView: any = {
-  disciplines: {
-    "ui:widget": "fitnessSelect",
-  },
   packageName: {
     "ui:readonly": true,
   },
@@ -46,10 +41,6 @@ export const schemaView: any = {
   },
   tag: {
     "ui:readonly": true,
-  },
-  discpline: {
-    "ui:widget": "fitnessSelect",
-    readonly: true,
   },
   equipment: {
     "ui:widget": "equipmentSelect",
