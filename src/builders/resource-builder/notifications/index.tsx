@@ -23,6 +23,7 @@ const MessagePage: React.FC = () => {
   const [searchFilter, setSearchFilter] = useState<string>('');
   const searchInput = useRef<any>();
   const createEditMessageComponent = useRef<any>(null);
+  
   const [page, setPage] = useState<number>(1);
   const [totalRecords, setTotalRecords] = useState<number>(0);
 
