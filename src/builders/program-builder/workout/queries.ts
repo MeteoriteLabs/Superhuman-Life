@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 export const FETCH_DATA = gql`
   query fetchdata($id: ID) {
@@ -66,35 +66,19 @@ export const FETCH_DATA = gql`
 
 export const FETCH_FITNESS_PROGRAMS = gql`
   query checkSessionQuery($id: ID) {
-    fitnessprograms(filters:{
-      sessions:{
-        workout:{
-          id: {
-            eq: $id
-          }
-        }
-      }
-    }){
-      data{
+    fitnessprograms(filters: { sessions: { workout: { id: { eq: $id } } } }) {
+      data {
         id
-        attributes{
+        attributes {
           title
         }
       }
     }
-    
-    tags(filters: {
-      sessions: {
-        workout:{
-          id: {
-            eq: $id
-          }
-        }
-      }
-    }){
-      data{
+
+    tags(filters: { sessions: { workout: { id: { eq: $id } } } }) {
+      data {
         id
-        attributes{
+        attributes {
           tag_name
         }
       }
@@ -117,69 +101,71 @@ export const FETCH_FITNESSDISCPLINES = gql`
 `;
 
 export const GET_TABLEDATA = gql`
-query fetchdata($id: ID, $filter: String!) {
-  workouts(filters: { users_permissions_user: { id: { eq: $id } }, workouttitle: {containsi:  $filter} }, pagination: {
-    pageSize: 100
-  }) {
-    data {
-      id
-      attributes {
-        workouttitle
-        intensity
-        level
-        updatedAt
-        About
-        Benifits
-        workout_URL
-        Workout_Video_ID
-        workout_text
-        warmup
-        cooldown
-        mainmovement
-        calories
-        users_permissions_user {
-          data {
-            id
-          }
-        }
-        fitnessdisciplines {
-          data {
-            id
-            attributes {
-              disciplinename
+  query fetchdata($id: ID, $filter: String!) {
+    workouts(
+      filters: { users_permissions_user: { id: { eq: $id } }, workouttitle: { containsi: $filter } }
+      pagination: { pageSize: 100 }
+      sort: ["updatedAt:desc"]
+    ) {
+      data {
+        id
+        attributes {
+          workouttitle
+          intensity
+          level
+          updatedAt
+          About
+          Benifits
+          workout_URL
+          Workout_Video_ID
+          workout_text
+          warmup
+          cooldown
+          mainmovement
+          calories
+          users_permissions_user {
+            data {
+              id
             }
           }
-        }
-        muscle_groups {
-          data {
-            id
-            attributes {
-              name
+          fitnessdisciplines {
+            data {
+              id
+              attributes {
+                disciplinename
+              }
             }
           }
-        }
-        equipment_lists {
-          data {
-            id
-            attributes {
-              updatedAt
-              name
+          muscle_groups {
+            data {
+              id
+              attributes {
+                name
+              }
+            }
+          }
+          equipment_lists {
+            data {
+              id
+              attributes {
+                updatedAt
+                name
+              }
             }
           }
         }
       }
     }
-  }
-  fitnessdisciplines(sort: ["updatedAt"]) {
-    data {
-      id
-      attributes {
-        disciplinename
-        updatedAt
+    fitnessdisciplines(sort: ["updatedAt"]) {
+      data {
+        id
+        attributes {
+          disciplinename
+          updatedAt
+        }
       }
     }
   }
-}
 `;
 
 export const CREATE_WORKOUT = gql`
@@ -249,7 +235,7 @@ export const UPDATE_WORKOUT = gql`
     $warmup: JSON
     $mainmovement: JSON
     $cooldown: JSON
-    $Workout_Video_ID: String 
+    $Workout_Video_ID: String
   ) {
     updateWorkout(
       id: $workoutid
