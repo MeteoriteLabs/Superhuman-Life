@@ -40,9 +40,8 @@ export default function EventsTab(): JSX.Element {
   const createEditExerciseComponent = useRef<CreateEditExerciseComponentRef>();
   const [searchFilter, setSearchFilter] = useState('');
   const searchInput = useRef<HTMLInputElement>(null);
-  const [page, setPage] = useState(1); // Current page number
-  const [pageSize, setPageSize] = useState(10); // Number of items per page
-  const [totalRecords, setTotalRecords] = useState(0); // Total number of records
+  const [page, setPage] = useState<number>(1);
+  const [totalRecords, setTotalRecords] = useState<number>(0);
 
   const columns = useMemo(
     () => [
@@ -115,8 +114,11 @@ export default function EventsTab(): JSX.Element {
   }
 
   const fetch = useQuery(GET_TABLEDATA, {
-    variables: { id: auth.userid, filter: searchFilter },
-    onCompleted: loadData
+    variables: { id: auth.userid, filter: searchFilter, start: page * 10 - 10, limit: 10 },
+    onCompleted: (data) => {
+      setTotalRecords(data.exercises.meta.pagination.total);
+      loadData(data);
+    }
   });
 
   function refetchQueryCallback() {
@@ -146,18 +148,11 @@ export default function EventsTab(): JSX.Element {
         };
       })
     );
-    setTotalRecords(flattenData.exercises.length);
-  }
-  function loadPage(pageNumber: number) {
-    setPage(pageNumber);
   }
 
-  function getPaginatedData() {
-    const startIndex = (page - 1) * pageSize;
-    const endIndex = startIndex + pageSize;
-
-    return tableData.slice(startIndex, endIndex);
-  }
+  const pageHandler = (selectedPageNumber: number) => {
+    setPage(selectedPageNumber);
+  };
 
   return (
     <TabContent>
@@ -198,30 +193,28 @@ export default function EventsTab(): JSX.Element {
           </Col>
         </Row>
       </Container>
-      <Table columns={columns} data={getPaginatedData()} />
+      <Table columns={columns} data={tableData} />
 
-      {tableData.length ? (
+      {tableData && tableData.length ? (
         <Row className="justify-content-end">
           <Button
             variant="outline-dark"
             className="m-2"
-            onClick={() => loadPage(page - 1)}
-            disabled={page === 1}>
+            onClick={() => pageHandler(page - 1)}
+            disabled={page === 1 ? true : false}>
             Previous
           </Button>
 
           <Button
             variant="outline-dark"
             className="m-2"
-            onClick={() => loadPage(page + 1)}
-            disabled={tableData.length < pageSize || totalRecords <= page * pageSize}>
+            onClick={() => pageHandler(page + 1)}
+            disabled={totalRecords > page * 10 - 10 + tableData.length ? false : true}>
             Next
           </Button>
-
-          <span className="m-2 bold pt-2">{`${(page - 1) * pageSize + 1} - ${Math.min(
-            page * pageSize,
-            totalRecords
-          )}`}</span>
+          <span className="m-2 bold pt-2">{`${page * 10 - 10 + 1} - ${
+            page * 10 - 10 + tableData.length
+          }`}</span>
         </Row>
       ) : null}
     </TabContent>
