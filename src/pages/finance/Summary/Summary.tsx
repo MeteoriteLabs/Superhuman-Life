@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useLazyQuery } from "@apollo/client";
 import {
   GET_EARNINGS_TRANSACTIONS,
@@ -12,7 +12,7 @@ import FinanceGraph from "./FinanceGraph";
 import moment from "moment";
 import "./Summary.css";
 
-function Summary() {
+const Summary: React.FC = () => {
   const auth = useContext(AuthContext);
   const [totalRevenue, setTotalRevenue] = useState<number>(0);
   const [totalEarning, setTotalEarning] = useState<number>(0);

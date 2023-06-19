@@ -42,40 +42,6 @@ interface Operation {
   current_status: boolean;
 }
 
-interface Details {
-  id: string;
-      packagename: string;
-      tags: string;
-      disciplines: string;
-      fitness_package_type: string;
-      aboutpackage: string;
-      benefits: string;
-      level: number;
-      mode: string;
-      ptoffline: any;
-      ptonline: any;
-      grouponline: any;
-      groupoffline: any;
-      recordedclasses: any;
-      restdays: any;
-      fitnesspackagepricing: any;
-      bookingleadday: any;
-      bookingleadtime: any;
-      duration: any;
-      groupstarttime: any;
-      groupendtime: any;
-      groupinstantbooking: any;
-      address: any;
-      ptclasssize: any;
-      classsize: any;
-      groupdays: any;
-      introvideourl: any;
-      is_private: any;
-      Upload_ID: any;
-      Thumbnail_ID: any;
-      equipment_lists: any;
-}
-
 function CreateEditView(props: any, ref: any) {
   const auth = useContext(AuthContext);
   const [operation, setOperation] = useState<Operation>({} as Operation);

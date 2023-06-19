@@ -32,6 +32,7 @@ export default function SessionModal({
       setFormValues({ ...formValues, ...formData });
     } else {
       formSubmit(formData);
+      onHide();
     }
   }
 
@@ -123,7 +124,10 @@ export default function SessionModal({
                 size="sm"
                 onClick={(event) => {
                   formRef.current.onSubmit(event);
-                }}
+                 
+                }
+                
+              }
               >
                 {name === "View" ? "Close" : "Submit"}
               </Button>

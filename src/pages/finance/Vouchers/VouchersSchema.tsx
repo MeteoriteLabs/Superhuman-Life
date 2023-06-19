@@ -6,7 +6,7 @@ export const widgets = {
   discountPercentage: DiscountPercentage,
   flatDiscount: FlatDiscount
 };
-
+// eslint-disable-next-line
 export const schema: any = {
   voucher_name: {
     'ui:placeholder': 'Enter voucher name'

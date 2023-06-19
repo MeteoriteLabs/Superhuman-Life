@@ -24,6 +24,9 @@ export const widgets = {
 };
 
 export const schemaView: any = {
+  disciplines: {
+    "ui:widget": "fitnessSelect",
+  },
   packageName: {
     "ui:readonly": true,
   },
