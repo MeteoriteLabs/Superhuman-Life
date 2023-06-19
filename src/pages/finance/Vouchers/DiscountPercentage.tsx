@@ -4,6 +4,7 @@ import { InputGroup, FormControl } from 'react-bootstrap';
 const DiscountPercentage: React.FC<{
   value: number;
   onChange: (args: string | null) => void;
+  // eslint-disable-next-line
   uiSchema: any;
   readonly: boolean;
 }> = ({value, onChange, readonly}) => {

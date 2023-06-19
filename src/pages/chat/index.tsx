@@ -1,6 +1,6 @@
 import { useLocation } from "react-router-dom";
 
-export default function ChatPage() {
+export default function ChatPage(): JSX.Element {
   const location = useLocation();
 
   return (

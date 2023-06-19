@@ -22,7 +22,7 @@ const Event: React.FC = () =>  {
 
   const loadData = (data: any) => {
     const flattenData = flattenObj({ ...data });
-     console.log(flattenData);
+     
     setUserPackage([
       ...flattenData.tags.map((packageItem) => {
         return {

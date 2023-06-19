@@ -1,11 +1,24 @@
-import { Col, Row, Form } from "react-bootstrap";
+import React, { ChangeEvent } from 'react';
+import { Col, Row, Form } from 'react-bootstrap';
 
-function AddressForm(props) {
+const AddressForm: React.FC<{
+  value: {
+    city: string;
+    address1: string;
+    type: string;
+    address2: string;
+    state: string;
+    country: string;
+    zipcode: string;
+  };
+  onChange: (params: string | null) => void;
+}> = ({value, onChange}) => {
+
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    let formValues = { ...props.value };
-    props.onChange(JSON.stringify({ ...formValues, [name]: value }));
+    let formValues = { ...value };
+    onChange(JSON.stringify({ ...formValues, [name]: value }));
   };
 
   return (
@@ -14,7 +27,7 @@ function AddressForm(props) {
 
       <Row>
         <Col>
-          {" "}
+          {' '}
           <Form autoComplete="off">
             <Form.Group className="mb-3" controlId="typeId">
               <Form.Label>Type</Form.Label>
@@ -23,9 +36,9 @@ function AddressForm(props) {
                 autoCorrect="off"
                 type="text"
                 placeholder="Type"
-                onChange={handleChange}
+                onChange={(event: ChangeEvent<HTMLInputElement>) => handleChange(event)}
                 name="type"
-                value={props.value.type}
+                value={value.type}
               />
             </Form.Group>
           </Form>
@@ -33,7 +46,7 @@ function AddressForm(props) {
       </Row>
       <Row>
         <Col>
-          {" "}
+          {' '}
           <Form.Group className="mb-3" controlId="address1Id">
             <Form.Label>Address1</Form.Label>
             <Form.Control
@@ -41,12 +54,11 @@ function AddressForm(props) {
               type="text"
               name="address1"
               onChange={handleChange}
-              value={props.value.address1}
-            ></Form.Control>
+              value={value.address1}></Form.Control>
           </Form.Group>
         </Col>
         <Col>
-          {" "}
+          {' '}
           <Form.Group className="mb-3" controlId="address2Id">
             <Form.Label>Address2</Form.Label>
             <Form.Control
@@ -55,14 +67,14 @@ function AddressForm(props) {
               placeholder="Address2"
               onChange={handleChange}
               name="address2"
-              value={props.value.address2}
+              value={value.address2}
             />
           </Form.Group>
         </Col>
       </Row>
       <Row>
         <Col>
-          {" "}
+          {' '}
           <Form.Group className="mb-3" controlId="cityIds">
             <Form.Label>City</Form.Label>
             <Form.Control
@@ -71,12 +83,12 @@ function AddressForm(props) {
               placeholder="City"
               onChange={handleChange}
               name="city"
-              value={props.value.city}
+              value={value.city}
             />
           </Form.Group>
         </Col>
         <Col>
-          {" "}
+          {' '}
           <Form.Group className="mb-3" controlId="stateIds">
             <Form.Label>State</Form.Label>
             <Form.Control
@@ -85,12 +97,12 @@ function AddressForm(props) {
               placeholder="State"
               onChange={handleChange}
               name="state"
-              value={props.value.state}
+              value={value.state}
             />
           </Form.Group>
         </Col>
         <Col>
-          {" "}
+          {' '}
           <Form.Group className="mb-3" controlId="countryIds">
             <Form.Label>Country</Form.Label>
             <Form.Control
@@ -99,12 +111,12 @@ function AddressForm(props) {
               placeholder="Country"
               onChange={handleChange}
               name="country"
-              value={props.value.country}
+              value={value.country}
             />
           </Form.Group>
         </Col>
         <Col>
-          {" "}
+          {' '}
           <Form.Group className="mb-3" controlId="cityIds">
             <Form.Label>Zipcode</Form.Label>
             <Form.Control
@@ -113,13 +125,13 @@ function AddressForm(props) {
               placeholder="Zipcode"
               onChange={handleChange}
               name="zipcode"
-              value={props.value.zipcode}
+              value={value.zipcode}
             />
           </Form.Group>
         </Col>
       </Row>
     </>
   );
-}
+};
 
 export default AddressForm;

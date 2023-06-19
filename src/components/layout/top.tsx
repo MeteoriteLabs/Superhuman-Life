@@ -9,7 +9,7 @@ import "./topNavbar.css";
 import { GET_CHANGEMAKER_NOTIFICATION } from "./queries";
 import { flattenObj } from "../../components/utils/responseFlatten";
 
-export function AuthenticatedNav() {
+export function AuthenticatedNav(): JSX.Element {
   const auth = useContext(authContext);
   const [notifications, setNotifications] = useState<Notification[]>([]);
 

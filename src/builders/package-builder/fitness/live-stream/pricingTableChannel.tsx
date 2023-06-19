@@ -449,10 +449,10 @@ const PricingTable = (props: any) => {
               <tr className="text-center">
                 <th></th>
                 {bookingDetails.instantBooking && <th>One Day</th>}
-                {bookingDetails.instantBooking && <th>One Day</th>}
                 {day >= 30 && <th>Monthly</th>}
                 {day >= 90 && <th>Quaterly</th>}
                 {day >= 180 && <th>Half Yearly</th>}
+                {day >= 360 && <th>Yearly</th>}
                 
               </tr>
             </thead>
@@ -493,7 +493,7 @@ const PricingTable = (props: any) => {
                   <b>Total days</b>
                 </td>
                 {pricing.map((item, index: number) => {
-                  return <td key={index}>{item.duration} days</td>;
+                  return <td key={index}>{`${item.duration} ${item.duration === 1 ? `day` : `days`}`}</td>;
                 })}
               </tr>
               {/* <tr className="text-center">

@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState, ChangeEvent } from "react";
+import React, { useContext, useEffect, useState, ChangeEvent } from "react";
 import { useLazyQuery } from "@apollo/client";
 import {
   GET_EARNINGS_TRANSACTIONS,
@@ -16,7 +16,7 @@ interface ArrayType {
   y: number;
 }
 
-function FinanceGraph() {
+const FinanceGraph: React.FC = () => {
   const [earningsData, setEarningsData] = useState<ArrayType[]>([]);
   const [expensesData, setExpensesData] = useState<ArrayType[]>([]);
   const [revenueData, setRevenueData] = useState<ArrayType[]>([]);
