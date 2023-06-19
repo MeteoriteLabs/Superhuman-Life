@@ -1,8 +1,8 @@
-import { ApolloClient, ApolloLink, FetchPolicy, InMemoryCache, WatchQueryFetchPolicy, createHttpLink } from "@apollo/client";
+import {  FetchPolicy, WatchQueryFetchPolicy, createHttpLink } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
-import { onError } from "@apollo/client/link/error";
 
-const authLink = setContext((_, { headers }) => {
+
+export const authLink = setContext((_, { headers }) => {
     const token = localStorage.getItem('token');
     return {
       headers: {
@@ -12,27 +12,12 @@ const authLink = setContext((_, { headers }) => {
     };
   });
 
-  const httpLink = createHttpLink({
+export  const httpLink = createHttpLink({
     uri: `${process.env.REACT_APP_URL}/graphql`
   });
 
-const errorHandler = onError(({ graphQLErrors, networkError, operation, forward }) => {
-    if (graphQLErrors) {
-      // eslint-disable-next-line no-restricted-syntax
-      for (const err of graphQLErrors) {
-        console.log(err);
-        return forward(operation);
-      }
-    }
-    if (networkError) {
-      return forward(operation);
-    }
 
-    return forward(operation);
-  });
-
-
-  const defaultOptions: {
+ export  const defaultOptions: {
     watchQuery: {
         fetchPolicy: WatchQueryFetchPolicy | undefined
     };
@@ -48,8 +33,3 @@ const errorHandler = onError(({ graphQLErrors, networkError, operation, forward 
     }
   };
 
-export const client = new ApolloClient({
-    cache: new InMemoryCache(),
-    link: ApolloLink.from([errorHandler, authLink.concat(httpLink)]),
-    defaultOptions: defaultOptions
-  });
