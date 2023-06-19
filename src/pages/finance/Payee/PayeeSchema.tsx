@@ -5,7 +5,7 @@ export const widgets = {
   contactList: ContactList,
   changemaker: Changemaker
 };
-
+// eslint-disable-next-line
 export const schema: any = {
   PaymentCategory: {
     "ui:help": "Select payment category"

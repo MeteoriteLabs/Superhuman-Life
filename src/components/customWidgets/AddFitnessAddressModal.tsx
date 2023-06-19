@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, ChangeEvent } from "react";
 import { Form, Modal, Button } from "react-bootstrap";
 import Geocode from "react-geocode";
 import GooglePlacesAutocomplete, {
@@ -8,8 +8,9 @@ import GooglePlacesAutocomplete, {
 import { useMutation } from "@apollo/client";
 import { CREATE_ADDRESS } from "../../builders/package-builder/fitness/graphQL/mutations";
 import authContext from "../../context/auth-context";
+import axios from 'axios';
 
-const AddFitnessAddressModal = (props: any) => {
+const AddFitnessAddressModal: React.FC<{onHide: () => void; show: boolean;}> = ({onHide, show}) => {
   const auth = useContext(authContext);
   const [googleAddressShow, setGoogleAddressShow] = useState<boolean>(false);
   const [address1, setAddress1] = useState<string>("");
@@ -21,14 +22,21 @@ const AddFitnessAddressModal = (props: any) => {
   const [value, setValue] = useState<any>(null);
   const [longitude, setLongitude] = useState<string>("");
   const [latitude, setLatitude] = useState<string>("");
+  const [errors, setErrors] = useState<string>('');
 
   const [createAddress] = useMutation(CREATE_ADDRESS, {
-    onCompleted: (data: any) => {
-      props.onHide();
+    onCompleted: () => {
+      onHide();
+      setAddress1("");
+      setCity("");
+      setCountry("");
+      setZip("");
+      setTitle("");
+      setValue("");
     },
   });
 
-  if (value !== null) {
+  if (value) {
     geocodeByAddress(value.label)
       .then((results) => getLatLng(results[0]))
       .then(({ lat, lng }) => {
@@ -36,8 +44,8 @@ const AddFitnessAddressModal = (props: any) => {
       });
   }
 
-  Geocode.setApiKey("AIzaSyDDvAlVrvbBYMW08BBosDFM_x2inY-XQ-w");
-  Geocode.setLanguage("en");
+  // Geocode.setApiKey("AIzaSyDDvAlVrvbBYMW08BBosDFM_x2inY-XQ-w");
+  // Geocode.setLanguage("en");
 
   function getAddressFromCoordinates(lat: string, lng: string) {
     Geocode.fromLatLng(lat, lng).then(
@@ -90,6 +98,7 @@ const AddFitnessAddressModal = (props: any) => {
       navigator.geolocation.getCurrentPosition(success, error);
     }
   }
+
   function success(position) {
     setLatitude((position.coords.latitude).toString());
     setLongitude((position.coords.longitude).toString());
@@ -124,24 +133,66 @@ const AddFitnessAddressModal = (props: any) => {
   }
 
   function handleAddressAdd() {
-    createAddress({
-      variables: {
-        address: address1,
-        city: city,
-        state: state,
-        zip: zip,
-        country: country,
-        title: title,
-        users_permissions_user: auth.userid,
-        longitude: longitude,
-        latitude: latitude
-      },
-    });
+    validateAddress();
+    // createAddress({
+    //   variables: {
+    //     address: address1,
+    //     city: city,
+    //     state: state,
+    //     zip: zip,
+    //     country: country,
+    //     title: title,
+    //     users_permissions_user: auth.userid,
+    //     longitude: longitude,
+    //     latitude: latitude
+    //   },
+    // });
   }
+
+  const validateAddress = async () => {
+    try {
+      const response = await axios.get(
+        'https://maps.googleapis.com/maps/api/geocode/json',
+        {
+          params: {
+            address: `${address1},${city},${state},${country}`,
+            key: 'AIzaSyCPFfbr4BbmFZL_vUhfSL-Kw7WG8x7V-8c',
+          },
+        }
+      );
+
+      const { status, results } = response.data;
+
+      if (status === 'OK' && results.length > 0) {
+        // Valid address
+        createAddress({
+          variables: {
+            address: address1,
+            city: city,
+            state: state,
+            zip: zip,
+            country: country,
+            title: title,
+            users_permissions_user: auth.userid,
+            longitude: longitude,
+            latitude: latitude
+          },
+        });
+        setErrors('');
+        // Proceed with further actions, such as displaying the map
+      } else {
+        // Invalid address
+        setErrors('Invalid address, Please enter correct address');
+      }
+    } catch (error) {
+      // Handle error
+      console.log('Error occurred:', error);
+    }
+  };
 
   return (
     <Modal
-      {...props}
+      show={show} 
       size="lg"
       aria-labelledby="contained-modal-title-vcenter"
       centered
@@ -152,6 +203,7 @@ const AddFitnessAddressModal = (props: any) => {
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
+   
         <Form.Group controlId="formBasicEmail">
           <Form.Label>Address</Form.Label>
           {!googleAddressShow && (
@@ -179,7 +231,7 @@ const AddFitnessAddressModal = (props: any) => {
           <Form.Label>City</Form.Label>
           <Form.Control
             value={city}
-            onChange={(e) => setCity(e.target.value)}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => setCity(e.target.value)}
             type="text"
             placeholder=""
           />
@@ -188,7 +240,7 @@ const AddFitnessAddressModal = (props: any) => {
           <Form.Label>State</Form.Label>
           <Form.Control
             value={state}
-            onChange={(e) => setState(e.target.value)}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => setState(e.target.value)}
             type="text"
             placeholder=""
           />
@@ -197,7 +249,7 @@ const AddFitnessAddressModal = (props: any) => {
           <Form.Label>Country</Form.Label>
           <Form.Control
             value={country}
-            onChange={(e) => setCountry(e.target.value)}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => setCountry(e.target.value)}
             type="text"
             placeholder=""
           />
@@ -206,7 +258,7 @@ const AddFitnessAddressModal = (props: any) => {
           <Form.Label>Zip</Form.Label>
           <Form.Control
             value={zip}
-            onChange={(e) => setZip(e.target.value)}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => setZip(e.target.value)}
             type="text"
             placeholder=""
           />
@@ -215,7 +267,7 @@ const AddFitnessAddressModal = (props: any) => {
           <Form.Label>Address Title</Form.Label>
           <Form.Control
             value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => setTitle(e.target.value)}
             type="text"
             placeholder=""
           />
@@ -226,8 +278,11 @@ const AddFitnessAddressModal = (props: any) => {
           </span>
         )}
       </Modal.Body>
+      {
+        errors ? <p className="ml-3 text-danger">{errors}</p> : null
+      }
       <Modal.Footer>
-        <Button variant="danger" onClick={props.onHide}>
+        <Button variant="danger" onClick={onHide}>
           Close
         </Button>
         <Button
@@ -238,6 +293,7 @@ const AddFitnessAddressModal = (props: any) => {
           Add
         </Button>
       </Modal.Footer>
+      
     </Modal>
   );
 };

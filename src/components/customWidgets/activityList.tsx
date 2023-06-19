@@ -1,12 +1,31 @@
-import { useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import { InputGroup, Row, Col, Form } from "react-bootstrap";
 import { gql, useQuery } from "@apollo/client";
 import ActivityBuilder from "./activityBuilder";
 import { flattenObj } from "../utils/responseFlatten";
 
-const ActivityField = (props: any) => {
-  const [activity, setActivity] = useState<any[]>([]);
-  const [selected, setSelected] = useState<any>({});
+interface Activity{
+  id: string;
+  title: string;
+}
+
+interface Activities {
+  id: string;
+  attributes: {
+    title: string;
+  };
+  __typename: string;
+}
+
+interface ActivityEntityResponseCollection {
+  data: Activities[];
+  length: number;
+  __typename: string;
+}
+
+const ActivityField :React.FC<{onChange: (params: string|null) => void;}> = ({onChange}) => {
+  const [activity, setActivity] = useState<Activity[]>([]);
+  const [selected, setSelected] = useState<Activity>({} as Activity);
 
   const FETCH_ACTIVITIES = gql`
     query activities {
@@ -22,10 +41,10 @@ const ActivityField = (props: any) => {
   `;
 
   function FetchData() {
-    useQuery(FETCH_ACTIVITIES, { onCompleted: loadData });
+    useQuery<ActivityEntityResponseCollection>(FETCH_ACTIVITIES, { onCompleted: loadData });
   }
 
-  function loadData(data: any) {
+  function loadData(data: ActivityEntityResponseCollection) {
     const flattenedData = flattenObj({ ...data });
     setActivity(
       [...flattenedData.activities].map((activity) => {
@@ -39,18 +58,18 @@ const ActivityField = (props: any) => {
 
   FetchData();
 
-  function OnChange(data: any) {
-    if (data !== undefined) {
+  function OnChange(data: string|null) {
+    if (data) {
       const objectToString = JSON.stringify(data);
 
-      props.onChange(objectToString);
+      onChange(objectToString);
     }
   }
 
-  function handleSelect(data: any) {
+  function handleSelect(data: string) {
     const values = [...activity];
     const a = values.find((e) => e.title === data);
-    setSelected(a);
+    a && setSelected(a) ;
   }
 
   return (
@@ -63,7 +82,7 @@ const ActivityField = (props: any) => {
               as="select"
               defaultValue=""
               placeholder="Choose one Activity"
-              onChange={(e) => {
+              onChange={(e: ChangeEvent<HTMLInputElement>) => {
                 handleSelect(e.target.value);
               }}
             >

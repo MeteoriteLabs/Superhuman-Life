@@ -411,9 +411,6 @@ function CreateEditEvent(props: any, ref: any) {
         aboutpackage: frm.About,
         benefits: frm.Benifits,
         packagename: frm.packageName,
-        // channelinstantBooking: frm.channelinstantBooking,
-        // level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
-        // Intensity: ENUM_FITNESSPACKAGE_INTENSITY[frm.intensity],
         equipmentList:
           frm?.equipment?.length > 0
             ? frm.equipment
@@ -421,13 +418,6 @@ function CreateEditEvent(props: any, ref: any) {
                 .join(',')
                 .split(',')
             : [],
-        // fitnessdisciplines:
-        //   frm?.discpline?.length > 0
-        //     ? frm.discpline
-        //         .map((item: any) => item.id)
-        //         .join(', ')
-        //         .split(', ')
-        //     : [],
         fitnesspackagepricing:
           frm.pricing === 'free'
             ? [

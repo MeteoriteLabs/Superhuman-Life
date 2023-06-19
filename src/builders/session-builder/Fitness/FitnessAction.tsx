@@ -25,7 +25,7 @@ function FitnessAction(props:{callback: () => void;} , ref: any) {
   const [showDetailsModal, setShowDetailsModal] = useState<boolean>(false);
 
   const [createTag] = useMutation(CREATE_TAG, {
-    onCompleted: (data: any) => {
+    onCompleted: () => {
       // CreateProgramManager(data)
       modalTrigger.next(false);
       props.callback();

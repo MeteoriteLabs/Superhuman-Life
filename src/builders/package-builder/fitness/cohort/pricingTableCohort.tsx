@@ -93,6 +93,7 @@ const PricingTable: React.FC<{
       setVouchers(flattenData.vouchers);
     }
   });
+
   React.useEffect(() => {
     getVouchers({
       variables: {

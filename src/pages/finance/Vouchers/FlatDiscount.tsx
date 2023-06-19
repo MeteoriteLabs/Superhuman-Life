@@ -4,6 +4,7 @@ import { InputGroup, FormControl } from 'react-bootstrap';
 const FlatDiscount: React.FC<{
   value?: number;
   onChange: (params: string | null) => void;
+  // eslint-disable-next-line
   uiSchema?: any;
   readonly: boolean;
 }> = ({ value, onChange, readonly }) => {
