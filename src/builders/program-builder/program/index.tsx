@@ -35,6 +35,9 @@ export default function EventsTab(): JSX.Element {
   const [frm, setFrm] = useState<any>();
   const [searchFilter, setSearchFilter] = useState('');
   const searchInput = useRef<HTMLInputElement>(null);
+  const [page, setPage] = useState(1); // Current page number
+  const [pageSize, setPageSize] = useState(10); // Number of items per page
+  const [totalRecords, setTotalRecords] = useState(0); // Total number of records
 
   const [createProgram] = useMutation(CREATE_PROGRAM, {
     onCompleted: (e: any) => {
@@ -206,6 +209,18 @@ export default function EventsTab(): JSX.Element {
         };
       })
     );
+    setTotalRecords(flattenData.fitnessprograms.length);
+  }
+
+  function loadPage(pageNumber: number) {
+    setPage(pageNumber);
+  }
+
+  function getPaginatedData() {
+    const startIndex = (page - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+
+    return tableData.slice(startIndex, endIndex);
   }
 
   return (
@@ -271,7 +286,31 @@ export default function EventsTab(): JSX.Element {
           </Col>
         </Row>
       </Container>
-      <Table columns={columns} data={tableData} />
+      <Table columns={columns} data={getPaginatedData()} />
+      {tableData.length ? (
+        <Row className="justify-content-end">
+          <Button
+            variant="outline-dark"
+            className="m-2"
+            onClick={() => loadPage(page - 1)}
+            disabled={page === 1}>
+            Previous
+          </Button>
+
+          <Button
+            variant="outline-dark"
+            className="m-2"
+            onClick={() => loadPage(page + 1)}
+            disabled={tableData.length < pageSize || totalRecords <= page * pageSize}>
+            Next
+          </Button>
+
+          <span className="m-2 bold pt-2">{`${(page - 1) * pageSize + 1} - ${Math.min(
+            page * pageSize,
+            totalRecords
+          )}`}</span>
+        </Row>
+      ) : null}
 
       {isFormSubmitted ? (
         <Toaster
