@@ -17,7 +17,6 @@ const MultiSelect: React.FC<{ value: string; onChange: (params: string) => void 
   }
 
   function loadData(data: any) {
-    console.log(data);
     const flattenedData = flattenObj({ ...data });
     setDesignations(
       [...flattenedData.designations].map((designation) => {
