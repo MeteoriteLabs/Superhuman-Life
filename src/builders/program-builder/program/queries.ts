@@ -1,69 +1,72 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 export const GET_TABLEDATA = gql`
-query ProgramQuery($id: ID, $filter: String!) {
-  fitnessprograms(pagination: {
-    pageSize: 100
-  }, filters:{
-    users_permissions_user:{
-      id: { eq: $id }
-    }, 
-    title: {containsi: $filter}
-  }){
-    data{
-      id
-      attributes{
-        title
-        description
-        updatedAt
-        duration_days
-        level
-        start_date
-        end_date
-        sessions(pagination: { pageSize: 100}){
-          data{
-            id
-              attributes{
-              session_date
-              tag
-              mode
-              type
-              day_of_program
-              start_time
-              end_time
-              Is_restday
-              Is_program_template
-              activity{
-                data{
-                  id
+  query ProgramQuery($id: ID, $filter: String!, $start: Int, $limit: Int) {
+    fitnessprograms(
+      pagination: { start: $start, limit: $limit }
+      filters: { users_permissions_user: { id: { eq: $id } }, title: { containsi: $filter } }
+      sort: ["updatedAt:desc"]
+    ) {
+      meta {
+        pagination {
+          pageCount
+          total
+        }
+      }
+      data {
+        id
+        attributes {
+          title
+          description
+          updatedAt
+          duration_days
+          level
+          start_date
+          end_date
+          sessions(pagination: { pageSize: 100 }) {
+            data {
+              id
+              attributes {
+                session_date
+                tag
+                mode
+                type
+                day_of_program
+                start_time
+                end_time
+                Is_restday
+                Is_program_template
+                activity {
+                  data {
+                    id
+                  }
                 }
-              }
-              activity_target
-              workout{
-                data{
-                  id
+                activity_target
+                workout {
+                  data {
+                    id
+                  }
                 }
               }
             }
           }
-        }
-        users_permissions_user{
-          data{
-            id
+          users_permissions_user {
+            data {
+              id
+            }
           }
-        }
-        fitnessdisciplines{
-          data{
-            id
-            attributes{
-              disciplinename
+          fitnessdisciplines {
+            data {
+              id
+              attributes {
+                disciplinename
+              }
             }
           }
         }
       }
     }
   }
-}
 `;
 
 export const GET_DATA = gql`
@@ -111,28 +114,30 @@ export const CREATE_SESSION = gql`
     $activity: ID
     $workout: ID
     $changemaker: ID!
-  ){
-    createSession(data: {
-      session_date: $session_date,
-      tag: $tag,
-      mode: $mode,
-      type: $type,
-      day_of_program: $day_of_program,
-      start_time: $start_time,
-      end_time: $end_time,
-      Is_restday: $Is_restday,
-      Is_program_template: $Is_program_template,
-      activity: $activity,
-      workout: $workout,
-      activity_target: $activity_target,
-      changemaker: $changemaker
-    }){
-      data{
+  ) {
+    createSession(
+      data: {
+        session_date: $session_date
+        tag: $tag
+        mode: $mode
+        type: $type
+        day_of_program: $day_of_program
+        start_time: $start_time
+        end_time: $end_time
+        Is_restday: $Is_restday
+        Is_program_template: $Is_program_template
+        activity: $activity
+        workout: $workout
+        activity_target: $activity_target
+        changemaker: $changemaker
+      }
+    ) {
+      data {
         id
       }
     }
   }
-`
+`;
 
 export const CREATE_PROGRAM = gql`
   mutation createprogram(

@@ -40,6 +40,8 @@ export default function EventsTab(): JSX.Element {
   const createEditExerciseComponent = useRef<CreateEditExerciseComponentRef>();
   const [searchFilter, setSearchFilter] = useState('');
   const searchInput = useRef<HTMLInputElement>(null);
+  const [page, setPage] = useState<number>(1);
+  const [totalRecords, setTotalRecords] = useState<number>(0);
 
   const columns = useMemo(
     () => [
@@ -112,8 +114,11 @@ export default function EventsTab(): JSX.Element {
   }
 
   const fetch = useQuery(GET_TABLEDATA, {
-    variables: { id: auth.userid, filter: searchFilter },
-    onCompleted: loadData
+    variables: { id: auth.userid, filter: searchFilter, start: page * 10 - 10, limit: 10 },
+    onCompleted: (data) => {
+      setTotalRecords(data.exercises.meta.pagination.total);
+      loadData(data);
+    }
   });
 
   function refetchQueryCallback() {
@@ -144,6 +149,10 @@ export default function EventsTab(): JSX.Element {
       })
     );
   }
+
+  const pageHandler = (selectedPageNumber: number) => {
+    setPage(selectedPageNumber);
+  };
 
   return (
     <TabContent>
@@ -185,6 +194,29 @@ export default function EventsTab(): JSX.Element {
         </Row>
       </Container>
       <Table columns={columns} data={tableData} />
+
+      {tableData && tableData.length ? (
+        <Row className="justify-content-end">
+          <Button
+            variant="outline-dark"
+            className="m-2"
+            onClick={() => pageHandler(page - 1)}
+            disabled={page === 1 ? true : false}>
+            Previous
+          </Button>
+
+          <Button
+            variant="outline-dark"
+            className="m-2"
+            onClick={() => pageHandler(page + 1)}
+            disabled={totalRecords > page * 10 - 10 + tableData.length ? false : true}>
+            Next
+          </Button>
+          <span className="m-2 bold pt-2">{`${page * 10 - 10 + 1} - ${
+            page * 10 - 10 + tableData.length
+          }`}</span>
+        </Row>
+      ) : null}
     </TabContent>
   );
 }
