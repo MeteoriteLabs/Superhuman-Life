@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { Card, Row, Button } from 'react-bootstrap';
+import { Row } from 'react-bootstrap';
+import Card from 'react-bootstrap/Card';
+import Button from 'react-bootstrap/Button';
 import moment from 'moment';
 import EditOffering from './EditOfferingDetails';
 

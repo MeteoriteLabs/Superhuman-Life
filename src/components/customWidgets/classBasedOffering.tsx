@@ -222,9 +222,9 @@ const classBasedOffering: React.FC<{
 
     setOfferingList(
       [
-        ...flattenedRecordedOffering?.fitnesspackages,
-        ...flattenedLivestreamAndGroupOffering?.fitnesspackages,
-        ...flattenedOnDemandOffering?.fitnesspackages
+        ...flattenedRecordedOffering.fitnesspackages,
+        ...flattenedLivestreamAndGroupOffering.fitnesspackages,
+        ...flattenedOnDemandOffering.fitnesspackages
       ].map((currValue) => {
         return {
           id: currValue.id && currValue.id,

@@ -40,7 +40,7 @@ interface Operation {
   type: 'create' | 'edit' | 'delete';
 }
 
-function CreateAddress(props: any, ref: any) {
+function CreateAddress(props: any, ref: any): JSX.Element {
   const auth = useContext(AuthContext);
   const addressJson: any = require('./Address.json');
   const [operation, setOperation] = useState<Operation>({} as Operation);
@@ -57,7 +57,9 @@ function CreateAddress(props: any, ref: any) {
   const {
     // eslint-disable-next-line
     data: get_address,
+    // eslint-disable-next-line
     loading: loading_address_details,
+    // eslint-disable-next-line
     refetch: refetch_address
   } = useQuery(ADDRESS, {
     variables: { id: operation.id },

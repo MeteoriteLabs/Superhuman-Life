@@ -18,7 +18,7 @@ interface Operation {
   current_status: boolean;
 }
 
-function CreateChangemakerAsPayee(props: any, ref: any) {
+function CreateChangemakerAsPayee(props: any, ref: any): JSX.Element {
   const [operation, setOperation] = useState<Operation>({} as Operation);
   const auth = useContext(AuthContext);
   const payeeJson: Record<string, unknown> = require("./ChangemakerPayee.json");
@@ -33,7 +33,7 @@ function CreateChangemakerAsPayee(props: any, ref: any) {
   }));
 
   const [createPaymentSchedule] = useMutation(ADD_PAYMENT_SCHEDULE, {
-    onCompleted: (r: any) => {
+    onCompleted: () => {
       modalTrigger.next(false);
       props.refetchContacts();
       props.refetchChangemakersPaymentSchedules();

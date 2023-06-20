@@ -846,7 +846,7 @@ export default function FitnessTab() {
         const fitnessFlattenData = flattenObj({ ...get_fitness });
 
         setDataTable(
-          [...fitnessFlattenData?.fitnesspackages].map((item) => {
+          [...fitnessFlattenData.fitnesspackages].map((item) => {
             return {
               totalRecords: totalRecords,
               sessions: tagsFlattenData.tags.filter(

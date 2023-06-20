@@ -45,7 +45,7 @@ const Scheduler = () => {
   function loadTagData(data: any) {
     const flattenData = flattenObj({ ...data });
     const total = [0, 0, 0, 0, 0];
-    const values = [...flattenData?.tags[0]?.sessions];
+    const values = [...flattenData.tags[0].sessions];
     for (let i = 0; i < values.length; i++) {
       if (values[i].tag === "One-On-One" && values[i].mode === "Online") {
         total[0] += 1;
