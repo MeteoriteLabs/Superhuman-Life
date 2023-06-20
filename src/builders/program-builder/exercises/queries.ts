@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 export const FETCH_DATA = gql`
   query fetchdata($id: ID) {
@@ -51,16 +51,13 @@ export const FETCH_DATA = gql`
 
 export const FETCH_WORKOUTS = gql`
   query fetchworkouts($id: ID!) {
-    workouts(filters:{
-      users_permissions_user:{
-        id: {
-          eq: $id
-        }
-      }
-    }, pagination:{ pageSize:100 }){
-      data{
+    workouts(
+      filters: { users_permissions_user: { id: { eq: $id } } }
+      pagination: { pageSize: 100 }
+    ) {
+      data {
         id
-        attributes{
+        attributes {
           warmup
           mainmovement
           cooldown
@@ -74,10 +71,7 @@ export const FETCH_WORKOUTS = gql`
 export const GET_EXERCISELIST = gql`
   query exercisesList($id: ID!, $filter: String!) {
     exercises(
-      filters: {
-        users_permissions_user: { id: { eq: $id } }
-        exercisename: { containsi: $filter }
-      }
+      filters: { users_permissions_user: { id: { eq: $id } }, exercisename: { containsi: $filter } }
     ) {
       data {
         id
@@ -109,50 +103,60 @@ export const FETCH_FITNESSDISCPLINES = gql`
 `;
 
 export const GET_TABLEDATA = gql`
-query ExercisesQuery($id: ID!, $filter: String!) {
-  exercises(pagination: { pageSize: 100 }, filters: { users_permissions_user: { id: { eq: $id } }, exercisename: { containsi: $filter } }) {
-    data {
-      id
-      attributes {
-        updatedAt
-        exercisename
-        exerciselevel
-        exercisetext
-        exerciseurl
-        users_permissions_user {
-          data {
-            id
-          }
+  query ExercisesQuery($id: ID!, $filter: String!, $start: Int, $limit: Int) {
+    exercises(
+      pagination: { start: $start, limit: $limit }
+      filters: { users_permissions_user: { id: { eq: $id } }, exercisename: { containsi: $filter } }
+      sort: ["updatedAt:desc"]
+    ) {
+      meta {
+        pagination {
+          pageCount
+          total
         }
-        fitnessdisciplines {
-          data {
-            id
-            attributes {
-              disciplinename
+      }
+      data {
+        id
+        attributes {
+          updatedAt
+          exercisename
+          exerciselevel
+          exercisetext
+          exerciseurl
+          users_permissions_user {
+            data {
+              id
             }
           }
-        }
-        equipment_lists {
-          data {
-            id
-            attributes {
-              updatedAt
-              name
+          fitnessdisciplines {
+            data {
+              id
+              attributes {
+                disciplinename
+              }
             }
           }
-        }
-        muscle_groups {
-          data {
-            id
-            attributes {
-              name
+          equipment_lists {
+            data {
+              id
+              attributes {
+                updatedAt
+                name
+              }
+            }
+          }
+          muscle_groups {
+            data {
+              id
+              attributes {
+                name
+              }
             }
           }
         }
       }
     }
   }
-}
 `;
 
 export const CREATE_EXERCISE = gql`

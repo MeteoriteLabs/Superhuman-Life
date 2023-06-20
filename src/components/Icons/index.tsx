@@ -1,8 +1,14 @@
 import React from 'react';
 import icons from './icons.svg';
 
- // eslint-disable-next-line
-const Icon: React.FC<{ name: string; width?: number; height?: number; style?: any; onClick?: any; }> = (props) => (
+// eslint-disable-next-line
+const Icon: React.FC<{
+  name: string;
+  width?: number;
+  height?: number;
+  style?: any;
+  onClick?: any;
+}> = (props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     xmlnsXlink="http://www.w3.org/1999/xlink"

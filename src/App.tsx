@@ -1,46 +1,18 @@
 import React, { useState } from 'react';
-import {
-  ApolloClient,
-  ApolloProvider,
-  createHttpLink,
-  InMemoryCache,
-  ApolloLink
-} from '@apollo/client';
-import { onError } from '@apollo/client/link/error';
-import { setContext } from '@apollo/client/link/context';
+import { ApolloClient, ApolloLink, ApolloProvider, InMemoryCache } from '@apollo/client';
+import { authLink, defaultOptions, httpLink } from './lib/apolloClient';
 import AuthContext from './context/auth-context';
 import Routes from './Routes';
 import Toaster from '../src/components/Toaster';
 import ErrorBoundary from './components/ErrorBoundaries';
+import ChangemakerWebsiteContextProvider from './context/changemakerWebsite-context';
+import { onError } from '@apollo/client/link/error';
 
 const App: React.FC = () => {
-  const [token, setToken] = useState<any>(localStorage.getItem('token'));
-  const [username, setUsername] = useState<any>(localStorage.getItem('username'));
-  const [userid, setUserid] = useState<any>(localStorage.getItem('userid'));
+  const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
+  const [username, setUsername] = useState<string | null>(localStorage.getItem('username'));
+  const [userid, setUserid] = useState<string | null>(localStorage.getItem('userid'));
   const [errMsg, setErrMsg] = useState<string | null>();
-
-  const httpLink = createHttpLink({
-    uri: `${process.env.REACT_APP_URL}/graphql`
-  });
-
-  const authLink = setContext((_, { headers }) => {
-    const token = localStorage.getItem('token');
-    return {
-      headers: {
-        ...headers,
-        authorization: token ? `Bearer ${token}` : ''
-      }
-    };
-  });
-
-  const defaultOptions: any = {
-    watchQuery: {
-      fetchPolicy: 'no-cache'
-    },
-    query: {
-      fetchPolicy: 'no-cache'
-    }
-  };
 
   const errorHandler = onError(({ graphQLErrors, networkError, operation, forward }) => {
     if (graphQLErrors) {
@@ -56,14 +28,11 @@ const App: React.FC = () => {
 
     return forward(operation);
   });
-
   const client = new ApolloClient({
     cache: new InMemoryCache(),
     link: ApolloLink.from([errorHandler, authLink.concat(httpLink)]),
-
     defaultOptions: defaultOptions
   });
-
   return (
     <ErrorBoundary>
       <ApolloProvider client={client}>
@@ -72,7 +41,7 @@ const App: React.FC = () => {
             token: token,
             username: username,
             userid: userid,
-            login: (token: any, username: any, userid: any) => {
+            login: (token: string, username: string, userid: string) => {
               localStorage.setItem('token', token);
               localStorage.setItem('username', username);
               localStorage.setItem('userid', userid);
@@ -88,7 +57,9 @@ const App: React.FC = () => {
               window.location.assign('/login');
             }
           }}>
-          <Routes token={token} />
+          <ChangemakerWebsiteContextProvider>
+            <Routes token={token ? token : ''} />
+          </ChangemakerWebsiteContextProvider>
         </AuthContext.Provider>
       </ApolloProvider>
       {errMsg && <Toaster handleCallback={() => setErrMsg('')} type={'error'} msg={errMsg} />}

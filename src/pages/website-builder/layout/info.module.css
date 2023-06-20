@@ -1,0 +1,45 @@
+.modal > div{
+    width: 70vw !important;
+    max-width: none;
+}
+@media screen and (max-width: 600px) {
+    .modal > div{
+        width: 90% !important;
+        margin-inline: auto;
+        margin-block: 20px;
+        max-width: none;
+    }
+}
+
+.templateName{
+    font-weight: 600;
+    font-size: 20px;
+    margin-bottom: 0px;
+    width: 100%;
+}
+.thumbnailCont{
+    overflow: hidden;
+    border-radius:10px ;
+}
+.thumbnail{
+    height: 400px;
+    width: 100%;
+    object-fit: cover;
+    object-position: top;
+    border-radius: 10px
+}
+@media screen and (max-width: 1200px) {
+    .thumbnail{
+        height: 300px;
+    }
+}
+@media screen and (max-width: 600px) {
+    .thumbnail{
+        height: 200px;
+    }
+}
+.subheadings{
+    font-weight: 800;
+     font-size: 18px
+}
+

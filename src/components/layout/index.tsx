@@ -6,15 +6,23 @@ import { useLocation } from 'react-router-dom';
 import Icon from '../Icons';
 import './bottomBar.css';
 
-export default function Layout({ token, children }: any) {
+export default function Layout({
+  token,
+  children
+}: {
+  token: string;
+  children: JSX.Element;
+}): JSX.Element {
   const location = useLocation();
   const [selected, setSelected] = useState<string>(location.pathname.slice(1));
   const [collapse, setCollapse] = useState<boolean>(true);
   const [sideNavStatus, setSideNavStatus] = useState<boolean>(false);
+  const [liveEditor, setLiveEditor] = useState<boolean>(false);
 
-  const { pathname } = useLocation<any>();
+  const { pathname } = useLocation();
 
   useEffect(() => {
+    pathname === '/website/templates/liveEditor' ? setLiveEditor(true) : setLiveEditor(false);
     getSideNavStatus();
   }, [pathname]);
 
@@ -22,6 +30,8 @@ export default function Layout({ token, children }: any) {
     const currentSideNavStatus: boolean =
       pathname !== '/lobby' &&
       pathname !== '/website' &&
+      pathname !== '/website/templates' &&
+      pathname !== '/website/templates/liveEditor' &&
       pathname !== '/profile' &&
       pathname !== '/insights' &&
       pathname !== '/support'
@@ -36,7 +46,7 @@ export default function Layout({ token, children }: any) {
 
   return (
     <>
-      <header>{token ? <AuthenticatedNav /> : <UnauthenticatedNav />}</header>
+      <header>{liveEditor ? '' : token ? <AuthenticatedNav /> : <UnauthenticatedNav />}</header>
       <main>
         {token ? (
           <div>
