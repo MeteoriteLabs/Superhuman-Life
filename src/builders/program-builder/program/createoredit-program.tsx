@@ -17,7 +17,7 @@ interface Operation {
     current_status: boolean;
 }
 
-function CreateEditProgram(props: any, ref: any) {
+function CreateEditProgram(props: any, ref: any): JSX.Element {
     const auth = useContext(AuthContext);
     const programSchema: { [name: string]: any; } = require("./program.json");
     const [programDetails, setProgramDetails] = useState<any>({});
@@ -28,27 +28,27 @@ function CreateEditProgram(props: any, ref: any) {
     const [toastMessage, setToastMessage] = useState<string>('');
 
     const [createProgram] = useMutation(CREATE_PROGRAM, { 
-        onCompleted: (r: any) => { 
+        onCompleted: () => { 
             modalTrigger.next(false); 
             props.callback();
             setIsFormSubmitted(!isFormSubmitted); 
             setToastType('success');
             setToastMessage('Program details created successfully'); 
         } ,
-        onError: (e: any) => {
+        onError: () => {
             setToastType('error');
             setToastMessage('Program details has not been created'); 
         }
     });
     const [editProgram] = useMutation(UPDATE_PROGRAM, { 
-        onCompleted: (r: any) => { 
+        onCompleted: () => { 
             modalTrigger.next(false); 
             props.callback();
             setIsFormSubmitted(!isFormSubmitted); 
             setToastType('success');
             setToastMessage('Program details has been updated successfully'); 
         } ,
-        onError: (e: any) => {
+        onError: () => {
             setToastType('error');
             setToastMessage('Program details has not been updated');
         }
@@ -60,7 +60,7 @@ function CreateEditProgram(props: any, ref: any) {
             setToastType('success');
             setToastMessage('Program details has been deleted successfully'); 
         },
-        onError: (e: any) => {
+        onError: () => {
             setToastType('error');
             setToastMessage('Program details has not been deleted');
         } 

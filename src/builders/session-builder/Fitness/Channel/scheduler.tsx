@@ -1,25 +1,25 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState, useEffect, useRef, useContext } from "react";
 import {
-  GET_TABLEDATA,
-  GET_ALL_FITNESS_PACKAGE_BY_TYPE,
-  GET_ALL_CLIENT_PACKAGE,
+  // GET_TABLEDATA,
+  // GET_ALL_FITNESS_PACKAGE_BY_TYPE,
+  // GET_ALL_CLIENT_PACKAGE,
   GET_TAG_BY_ID,
 } from "../../graphQL/queries";
 import { useQuery } from "@apollo/client";
-import { Row, Col, Button, Dropdown } from "react-bootstrap";
+import { Row, Col, Dropdown } from "react-bootstrap";
 import SchedulerPage from "../../../program-builder/program-template/scheduler";
 import moment from "moment";
 import FitnessAction from "../FitnessAction";
 import AuthContext from "../../../../context/auth-context";
 import { Link } from "react-router-dom";
-import YouteubeActive from "./assets/youtube_active.svg";
+// import YoutubeActive from "./assets/youtube_active.svg";
 
 import { flattenObj } from "../../../../components/utils/responseFlatten";
 import "../Group/actionButton.css";
 import Loader from "../../../../components/Loader/Loader";
 
-const Scheduler = () => {
+const Scheduler: React.FC = () => {
   const auth = useContext(AuthContext);
   const last = window.location.pathname.split("/").reverse();
   const tagId = window.location.pathname.split("/").pop();
@@ -68,7 +68,7 @@ const Scheduler = () => {
     
     const total = [0];
     const clientValues = [...clientIds];
-    const values = [...flattenData.tags[0]?.sessions];
+    const values = [...flattenData.tags[0].sessions];
     const ids = [...sessionIds];
     for (let i = 0; i < values.length; i++) {
       ids.push(values[i].id);

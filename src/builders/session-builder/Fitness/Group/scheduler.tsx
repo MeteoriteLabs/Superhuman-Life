@@ -92,7 +92,7 @@ const Scheduler = () => {
     const flattenData = flattenObj({ ...data });
     const total = [0, 0];
     const clientValues = [...clientIds];
-    const values = [...flattenData.tags[0]?.sessions];
+    const values = [...flattenData.tags[0].sessions];
     const ids = [...sessionIds];
     for (let i = 0; i < flattenData.tags[0].client_packages.length; i++) {
       clientValues.push(
@@ -174,7 +174,7 @@ const Scheduler = () => {
     const flattenData4 = flattenObj({ ...data4 });
 
     setData(
-      [...flattenData4?.fitnessprograms].map((detail) => {
+      [...flattenData4.fitnessprograms].map((detail) => {
         return {
           id: detail.id,
           programName: detail.title,

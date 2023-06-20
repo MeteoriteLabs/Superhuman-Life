@@ -87,8 +87,8 @@ const Goals: React.FC = () => {
         </div>
         <div className="w-95 ml-5 mr-5 mt-3">
           <Slider {...settings}>
-            {goals?.userGoals?.length > 0 &&
-              [...goals?.userGoals].map((Detail, index) => {
+            {goals.userGoals.length > 0 &&
+              [...goals.userGoals].map((Detail, index) => {
                 return (
                   <GoalCard
                     key={index}
