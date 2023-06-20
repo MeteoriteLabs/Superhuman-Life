@@ -29,7 +29,7 @@ export interface LoginData {
 export interface LoginJSON {
     title: string;
     description: string;
-    type: object;
+    type: string;
     required: string[];
     properties: {
       email: {
