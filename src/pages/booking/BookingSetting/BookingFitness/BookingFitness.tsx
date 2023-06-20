@@ -25,7 +25,7 @@ export default function BookingFitness() {
   const loadData = (data) => {
     const flattenData = flattenObj({ ...data });
     setBookingPackage([
-      ...flattenData.bookingConfigs?.map((fitnessPackage) => {
+      ...flattenData.bookingConfigs.map((fitnessPackage) => {
         return {
           id: fitnessPackage.id,
           packageName: fitnessPackage.fitnesspackage.packagename,

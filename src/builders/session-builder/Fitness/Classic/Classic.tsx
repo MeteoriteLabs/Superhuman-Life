@@ -9,10 +9,10 @@ import ActionButton from "../../../../components/actionbutton";
 import { flattenObj } from "../../../../components/utils/responseFlatten";
 import moment from "moment";
 
-export default function Classic() {
+const Classic: React.FC = () => {
   const auth = useContext(AuthContext);
   const [userPackage, setUserPackage] = useState<any>([]);
-  const [showHistory, setShowHistory] = useState(false);
+  const [showHistory, setShowHistory] = useState<boolean>(false);
   const fitnessActionRef = useRef<any>(null);
 
   const mainQuery = useQuery(GET_TAGS_FOR_CLASSIC, {
@@ -190,3 +190,5 @@ export default function Classic() {
     </div>
   );
 }
+
+export default Classic;

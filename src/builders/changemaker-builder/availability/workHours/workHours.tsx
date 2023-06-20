@@ -169,8 +169,8 @@ const WorkHours = () => {
 
   function handleTodaysSlots(todaysEvents: any, changeMakerAvailability: any) {
     const currentDateWorkHours =
-      changeMakerAvailability[0]?.booking_slots?.length > 0
-        ? [...changeMakerAvailability[0]?.booking_slots]
+    changeMakerAvailability && changeMakerAvailability.length && changeMakerAvailability[0].booking_slots && changeMakerAvailability[0].booking_slots.length > 0
+        ? [...changeMakerAvailability[0].booking_slots]
         : [];
 
     const values = todaysEvents.concat(currentDateWorkHours);
