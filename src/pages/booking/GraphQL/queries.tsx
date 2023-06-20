@@ -1,14 +1,18 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 export const GET_ALL_BOOKINGS = gql`
-  query clientBookings($id: ID!) {
+  query clientBookings($id: ID!, $start: Int, $limit: Int) {
     clientBookings(
-      filters: {
-        fitnesspackages: { users_permissions_user: { id: { eq: $id } } }
-      }
-      pagination: { pageSize: 100 }
+      filters: { fitnesspackages: { users_permissions_user: { id: { eq: $id } } } }
+      pagination: { start: $start, limit: $limit }
       sort: ["booking_date"]
     ) {
+      meta {
+        pagination {
+          pageCount
+          total
+        }
+      }
       data {
         id
         attributes {
@@ -57,9 +61,7 @@ export const GET_ALL_BOOKINGS = gql`
 export const GET_TAGS = gql`
   query tags($id: ID!) {
     tags(
-      filters: {
-        fitnesspackage: { users_permissions_user: { id: { eq: $id } } }
-      }
+      filters: { fitnesspackage: { users_permissions_user: { id: { eq: $id } } } }
       pagination: { pageSize: 100 }
     ) {
       data {
@@ -109,10 +111,8 @@ export const FILTER_PACKAGES = gql`
 export const BOOKING_CONFIG = gql`
   query bookingConfigs($id: ID!) {
     bookingConfigs(
-      pagination: {pageSize: 100},
-      filters: {
-        fitnesspackage: { users_permissions_user: { id: { eq: $id } } }
-      }
+      pagination: { pageSize: 100 }
+      filters: { fitnesspackage: { users_permissions_user: { id: { eq: $id } } } }
     ) {
       data {
         id
