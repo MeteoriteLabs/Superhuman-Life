@@ -1,6 +1,7 @@
 import { useForm, Controller } from 'react-hook-form';
 import style from '../style.module.css';
-import { Button, Form } from 'react-bootstrap';
+import { Accordion, Button, Card, Form } from 'react-bootstrap';
+import BlackBgAccordian from '../../../../../components/accordian/blackBgAccordian';
 
 type FormData = {
   title: string;
@@ -13,6 +14,9 @@ type FormData = {
   feature3_title: string;
   feature3_description: string;
   feature3_image: string;
+  feature4_title: string;
+  feature4_description: string;
+  feature4_image: string;
 };
 
 function Hero(): JSX.Element {
@@ -31,9 +35,15 @@ function Hero(): JSX.Element {
       feature2_image: '',
       feature3_title: '',
       feature3_description: '',
-      feature3_image: ''
+      feature3_image: '',
+      feature4_title: '',
+      feature4_description: '',
+      feature4_image: ''
     }
   });
+
+  const emptyArray = new Array(4).fill('');
+
   const onSubmit = handleSubmit((data) => console.log(data));
 
   return (
@@ -54,151 +64,47 @@ function Hero(): JSX.Element {
           />
           {errors.title && <p>{errors.title.message}</p>}
         </Form.Group>
-        <div style={{ marginTop: 25 }}>
-          <p style={{ fontWeight: 600, marginBottom: 8 }}>FEATURE 1</p>
-          <Form.Group controlId="feature1_title">
-            <Form.Label>Title</Form.Label>
-            <Controller
-              name="feature1_title"
-              control={control}
-              render={({ field }) => (
-                <Form.Control
-                  type="text"
-                  style={{ fontSize: 14 }}
-                  as="input"
-                  {...field}></Form.Control>
-              )}
-            />
-            {errors.feature1_title && <p>{errors.feature1_title.message}</p>}
-          </Form.Group>
-          <Form.Group controlId="feature1_description">
-            <Form.Label>Description</Form.Label>
-            <Controller
-              name="feature1_description"
-              control={control}
-              render={({ field }) => (
-                <Form.Control
-                  type="text"
-                  style={{ fontSize: 14 }}
-                  as="input"
-                  {...field}></Form.Control>
-              )}
-            />
-            {errors.feature1_description && <p>{errors.feature1_description.message}</p>}
-          </Form.Group>
-          <Form.Group controlId="feature1_image">
-            <Form.Label>Image</Form.Label>
-            <Controller
-              name="feature1_image"
-              control={control}
-              render={({ field }) => (
-                <Form.Control
-                  type="file"
-                  style={{ fontSize: 14 }}
-                  as="input"
-                  {...field}></Form.Control>
-              )}
-            />
-            {errors.feature1_image && <p>{errors.feature1_image.message}</p>}
-          </Form.Group>
-        </div>
-        <div style={{ marginTop: 25 }}>
-          <p style={{ fontWeight: 600, marginBottom: 8 }}>FEATURE 2</p>
-          <Form.Group controlId="feature2_title">
-            <Form.Label>Title</Form.Label>
-            <Controller
-              name="feature2_title"
-              control={control}
-              render={({ field }) => (
-                <Form.Control
-                  type="text"
-                  style={{ fontSize: 14 }}
-                  as="input"
-                  {...field}></Form.Control>
-              )}
-            />
-            {errors.feature2_title && <p>{errors.feature2_title.message}</p>}
-          </Form.Group>
-          <Form.Group controlId="feature2_description">
-            <Form.Label>Description</Form.Label>
-            <Controller
-              name="feature2_description"
-              control={control}
-              render={({ field }) => (
-                <Form.Control
-                  type="text"
-                  style={{ fontSize: 14 }}
-                  as="input"
-                  {...field}></Form.Control>
-              )}
-            />
-            {errors.feature2_description && <p>{errors.feature2_description.message}</p>}
-          </Form.Group>
-          <Form.Group controlId="feature2_image">
-            <Form.Label>Image</Form.Label>
-            <Controller
-              name="feature2_image"
-              control={control}
-              render={({ field }) => (
-                <Form.Control
-                  type="file"
-                  style={{ fontSize: 14 }}
-                  as="input"
-                  {...field}></Form.Control>
-              )}
-            />
-            {errors.feature2_image && <p>{errors.feature2_image.message}</p>}
-          </Form.Group>
-        </div>
 
-        <div style={{ marginTop: 25 }}>
-          <p style={{ fontWeight: 600, marginBottom: 8 }}>FEATURE 3</p>
-          <Form.Group controlId="feature3_title">
-            <Form.Label>Title</Form.Label>
-            <Controller
-              name="feature3_title"
+        <Accordion>
+          <Card style={{ backgroundColor: 'transparent', border: 'none' }}>
+            <BlackBgAccordian
+              feature_title="Feature 1"
+              control_description="feature1_description"
+              control_title="feature1_title"
+              control_image="feature1_image"
               control={control}
-              render={({ field }) => (
-                <Form.Control
-                  type="text"
-                  style={{ fontSize: 14 }}
-                  as="input"
-                  {...field}></Form.Control>
-              )}
+              errors={errors}
+              eventKey="0"
             />
-            {errors.feature3_title && <p>{errors.feature3_title.message}</p>}
-          </Form.Group>
-          <Form.Group controlId="feature3_description">
-            <Form.Label>Description</Form.Label>
-            <Controller
-              name="feature3_description"
+            <BlackBgAccordian
+              feature_title="Feature 2"
+              control_description="feature2_description"
+              control_title="feature2_title"
+              control_image="feature2_image"
               control={control}
-              render={({ field }) => (
-                <Form.Control
-                  type="text"
-                  style={{ fontSize: 14 }}
-                  as="input"
-                  {...field}></Form.Control>
-              )}
+              errors={errors}
+              eventKey="1"
             />
-            {errors.feature3_description && <p>{errors.feature3_description.message}</p>}
-          </Form.Group>
-          <Form.Group controlId="feature3_image">
-            <Form.Label>Image</Form.Label>
-            <Controller
-              name="feature3_image"
+            <BlackBgAccordian
+              feature_title="Feature 3"
+              control_description="feature3_description"
+              control_title="feature3_title"
+              control_image="feature3_image"
               control={control}
-              render={({ field }) => (
-                <Form.Control
-                  type="file"
-                  style={{ fontSize: 14 }}
-                  as="input"
-                  {...field}></Form.Control>
-              )}
+              errors={errors}
+              eventKey="2"
+            />{' '}
+            <BlackBgAccordian
+              feature_title="Feature 4"
+              control_description="feature4_description"
+              control_title="feature4_title"
+              control_image="feature4_image"
+              control={control}
+              errors={errors}
+              eventKey="3"
             />
-            {errors.feature3_image && <p>{errors.feature3_image.message}</p>}
-          </Form.Group>
-        </div>
+          </Card>
+        </Accordion>
 
         <Button
           variant="primary"
