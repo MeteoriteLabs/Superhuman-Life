@@ -5,7 +5,7 @@ export const GET_ALL_BOOKINGS = gql`
     clientBookings(
       filters: { fitnesspackages: { users_permissions_user: { id: { eq: $id } } } }
       pagination: { start: $start, limit: $limit }
-      sort: ["booking_date :desc"]
+      sort: ["booking_date:desc"]
     ) {
       meta {
         pagination {
