@@ -1,6 +1,6 @@
 export interface Schema {
   password: {
-    'ui:widget': 'password';
+    'ui:widget': string;
     'ui:help': string;
     classNames: string;
   };
