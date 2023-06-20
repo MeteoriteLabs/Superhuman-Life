@@ -1,6 +1,6 @@
 import { Row, Container, Col, ListGroup } from "react-bootstrap";
 
-export default function HomeFooter() {
+const HomeFooter: React.FC = () => {
     return (
         <footer className="py-2">
             <Container fluid>
@@ -34,3 +34,5 @@ export default function HomeFooter() {
         </footer>
     )
 }
+
+export default HomeFooter;

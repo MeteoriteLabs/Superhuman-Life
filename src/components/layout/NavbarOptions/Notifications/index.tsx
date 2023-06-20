@@ -1,4 +1,4 @@
-import { Row, Col, Button, Card, Spinner } from 'react-bootstrap';
+import { Row, Col, Button, Card } from 'react-bootstrap';
 import Icons from '../../../Icons';
 import { Link } from 'react-router-dom';
 import { useQuery, useMutation, useLazyQuery } from '@apollo/client';
@@ -46,7 +46,7 @@ function Notifications(): JSX.Element {
     variables: { id: auth.userid, start: page * 10 - 10 },
     onCompleted: (data) => {
       const flattenData = flattenObj({ ...data });
-      // setNotifications(flattenData.changemakerNotifications);
+      
       getAllNotifications({
         variables: {
           id: auth.userid,

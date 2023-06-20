@@ -37,7 +37,7 @@ export default function EventsTab(): JSX.Element {
   const searchInput = useRef<HTMLInputElement>(null);
 
   const [createProgram] = useMutation(CREATE_PROGRAM, {
-    onCompleted: (e: any) => {
+    onCompleted: () => {
       refetchQueryCallback();
     }
   });

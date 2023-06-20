@@ -28,7 +28,6 @@ export function AuthenticatedNav(): JSX.Element {
 
   useEffect(()=>{
     refetch_changemaker_notifications();
-     // eslint-disable-next-line
   },[notifications]);
   
   return (

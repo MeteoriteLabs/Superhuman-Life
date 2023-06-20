@@ -28,12 +28,12 @@ const AddressForm: React.FC<{
       <Row>
         <Col>
           {' '}
-          <Form autoComplete="off">
+          <Form autoComplete="on">
             <Form.Group className="mb-3" controlId="typeId">
               <Form.Label>Type</Form.Label>
               <Form.Control
-                autoComplete="off"
-                autoCorrect="off"
+                autoComplete="on"
+                autoCorrect="on"
                 type="text"
                 placeholder="Type"
                 onChange={(event: ChangeEvent<HTMLInputElement>) => handleChange(event)}
@@ -50,7 +50,7 @@ const AddressForm: React.FC<{
           <Form.Group className="mb-3" controlId="address1Id">
             <Form.Label>Address1</Form.Label>
             <Form.Control
-              autoComplete="off"
+              autoComplete="on"
               type="text"
               name="address1"
               onChange={handleChange}
@@ -62,7 +62,7 @@ const AddressForm: React.FC<{
           <Form.Group className="mb-3" controlId="address2Id">
             <Form.Label>Address2</Form.Label>
             <Form.Control
-              autoComplete="off"
+              autoComplete="on"
               type="text"
               placeholder="Address2"
               onChange={handleChange}
@@ -78,7 +78,7 @@ const AddressForm: React.FC<{
           <Form.Group className="mb-3" controlId="cityIds">
             <Form.Label>City</Form.Label>
             <Form.Control
-              autoComplete="off"
+              autoComplete="on"
               type="text"
               placeholder="City"
               onChange={handleChange}
@@ -92,7 +92,7 @@ const AddressForm: React.FC<{
           <Form.Group className="mb-3" controlId="stateIds">
             <Form.Label>State</Form.Label>
             <Form.Control
-              autoComplete="off"
+              autoComplete="on"
               type="text"
               placeholder="State"
               onChange={handleChange}
@@ -106,7 +106,7 @@ const AddressForm: React.FC<{
           <Form.Group className="mb-3" controlId="countryIds">
             <Form.Label>Country</Form.Label>
             <Form.Control
-              autoComplete="off"
+              autoComplete="on"
               type="text"
               placeholder="Country"
               onChange={handleChange}
@@ -120,7 +120,7 @@ const AddressForm: React.FC<{
           <Form.Group className="mb-3" controlId="cityIds">
             <Form.Label>Zipcode</Form.Label>
             <Form.Control
-              autoComplete="off"
+              autoComplete="on"
               type="text"
               placeholder="Zipcode"
               onChange={handleChange}

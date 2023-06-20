@@ -654,7 +654,7 @@ export default function FitnessTab() {
               <>
                 <ProgressBar
                   variant="success"
-                  now={(lengthOfobject * 100) / differenceBetweenStartDateandEndDate}
+                  now={(lengthOfobject * 100) / 3}
                 />
                 {lengthOfobject}/3{' '}
                 <div

@@ -5,19 +5,27 @@ import { DESIGNATIONS } from './queries';
 import { useQuery } from '@apollo/client';
 import { flattenObj } from '../utils/responseFlatten';
 
+interface Designation {
+  attributes: {
+    Designation_title: string;
+    __typename: string;
+  };
+  id: string;
+  __typename: string;
+}
+
 const MultiSelect: React.FC<{ value: string; onChange: (params: string) => void }> = ({
   value,
   onChange
 }) => {
   const [multiSelections, setMultiSelections] = useState(value?.length ? JSON.parse(value) : []);
-  const [designations, setDesignations] = useState<any[]>([]);
+  const [designations, setDesignations] = useState<{id: string; title: string}[]>([]);
 
   function FetchData() {
-    useQuery(DESIGNATIONS, { onCompleted: loadData });
+    useQuery<Designation>(DESIGNATIONS, { onCompleted: loadData });
   }
 
-  function loadData(data: any) {
-    console.log(data);
+  function loadData(data: Designation) {
     const flattenedData = flattenObj({ ...data });
     setDesignations(
       [...flattenedData.designations].map((designation) => {

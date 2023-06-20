@@ -6,7 +6,7 @@ const headerStyle = {
     color: "#FFF"
 }
 
-export default function HomeTopNav() {
+const HomeTopNav: React.FC = () => {
     return (
         <Navbar fixed="top" className="shadow-sm" expand="lg" style={headerStyle}>
                 <Navbar.Brand href="/" className="text-muted">
@@ -37,3 +37,5 @@ export default function HomeTopNav() {
         </Navbar>
     );
 }
+
+export default HomeTopNav;

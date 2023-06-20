@@ -1,7 +1,9 @@
 import { Container } from "react-bootstrap";
 import HomeTopNav from "./header";
 import HomeFooter from "./footer";
-export default function HomeLayout(props: any) {
+
+const HomeLayout: React.FC = (props: any) => {
+    
     return (
         <>
             <header>
@@ -22,3 +24,5 @@ export default function HomeLayout(props: any) {
         </>
     );
 }
+
+export default HomeLayout;
