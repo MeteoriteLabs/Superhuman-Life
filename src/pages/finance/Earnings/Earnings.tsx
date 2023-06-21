@@ -24,6 +24,8 @@ export default function Earnings(): JSX.Element {
   const auth = useContext(AuthContext);
   const searchInput = useRef<HTMLInputElement | null>(null);
   const [currentFilter, setCurrentFilter] = useState<string>('name');
+  const [page, setPage] = useState<number>(1);
+  const [totalRecords, setTotalRecords] = useState<number>(0);
 
   interface Row {
     values: {
@@ -78,9 +80,9 @@ export default function Earnings(): JSX.Element {
                 variant={statusColor}>
                 {row.values.status === 'SUCCESS'
                   ? 'SUCCESS'
-                  : (row.values.status === 'FAILED'
+                  : row.values.status === 'FAILED'
                   ? 'FAILED'
-                  : 'REFUND')}
+                  : 'REFUND'}
               </Badge>
             </>
           );
@@ -121,7 +123,6 @@ export default function Earnings(): JSX.Element {
       loadData();
     }
   });
-
   const [users, { data: get_changemakers }] = useLazyQuery(FETCH_CHANGEMAKERS, {
     onCompleted: () => {
       contacts({
@@ -131,17 +132,19 @@ export default function Earnings(): JSX.Element {
       });
     }
   });
-
   const { data: get_transaction } = useQuery(GET_TRANSACTIONS, {
     variables: {
-      receiverId: auth.userid
+      receiverId: auth.userid,
+      start: page * 10 - 10,
+      limit: 10
     },
-    onCompleted: () => {
+    onCompleted: (data) => {
       users({
         variables: {
           id: Number(auth.userid)
         }
       });
+      setTotalRecords(data.transactions.meta.pagination.total);
     }
   });
 
@@ -185,6 +188,10 @@ export default function Earnings(): JSX.Element {
     );
   }
 
+  const pageHandler = (selectedPageNumber: number) => {
+    setPage(selectedPageNumber);
+  };
+
   return (
     <TabContent>
       <Container className="mt-3">
@@ -217,6 +224,28 @@ export default function Earnings(): JSX.Element {
         </Row>
       </Container>
       <Table columns={columns} data={datatable} />
+      {datatable && datatable.length ? (
+        <Row className="justify-content-end">
+          <Button
+            variant="outline-dark"
+            className="m-2"
+            onClick={() => pageHandler(page - 1)}
+            disabled={page === 1 ? true : false}>
+            Previous
+          </Button>
+
+          <Button
+            variant="outline-dark"
+            className="m-2"
+            onClick={() => pageHandler(page + 1)}
+            disabled={totalRecords > page * 10 - 10 + datatable.length ? false : true}>
+            Next
+          </Button>
+          <span className="m-2 bold pt-2">{`${page * 10 - 10 + 1} - ${
+            page * 10 - 10 + datatable.length
+          }`}</span>
+        </Row>
+      ) : null}
     </TabContent>
   );
 }

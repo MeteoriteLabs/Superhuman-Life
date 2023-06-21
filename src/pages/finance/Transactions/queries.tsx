@@ -1,8 +1,14 @@
 import { gql } from "@apollo/client";
 
 export const GET_TRANSACTIONS = gql`
-  query TransactionsQuery {
-    transactions(pagination: { pageSize: 2000 }, sort: ["TransactionDateTime:desc"]) {
+  query TransactionsQuery($start: Int, $limit: Int) {
+    transactions(pagination: { start: $start, limit: $limit }, sort: ["TransactionDateTime:desc"]) {
+      meta {
+        pagination {
+          pageCount
+          total
+        }
+      }
       data {
         id
         attributes {
