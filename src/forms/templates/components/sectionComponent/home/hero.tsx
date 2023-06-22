@@ -24,6 +24,19 @@ function Hero(): JSX.Element {
     sectionId: ''
   });
 
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+    reset
+  } = useForm<FormData>({
+    defaultValues: {
+      title: initialValues.title,
+      description: initialValues.description,
+      image: initialValues.image
+    }
+  });
+
   const { setChangemakerWebsiteState, changemakerWebsiteState } =
     useContext(ChangeMakerWebsiteContext);
 
@@ -41,18 +54,11 @@ function Hero(): JSX.Element {
         description: data.websiteSections.data[0].attributes.sectionData.description,
         image: data.websiteSections.data[0].attributes.sectionData.image
       });
-    }
-  });
-
-  const {
-    handleSubmit,
-    control,
-    formState: { errors }
-  } = useForm<FormData>({
-    defaultValues: {
-      title: initialValues.title,
-      description: initialValues.description,
-      image: initialValues.image
+      reset({
+        title: data.websiteSections.data[0].attributes.sectionData.title,
+        description: data.websiteSections.data[0].attributes.sectionData.description,
+        image: data.websiteSections.data[0].attributes.sectionData.image
+      });
     }
   });
 
