@@ -193,7 +193,6 @@ export default function Leads() {
     setData([...flattenData.websiteContactForms]);
     setDataTable(
       [...flattenData.websiteContactForms].flatMap((Detail) => {
-        console.log("lead" , Detail);
         if (!namearr.includes(Detail.Details?.leadsdetails?.name)) {
           namearr.push(Detail.Details?.leadsdetails?.name);
           namearr.push(Detail.Details?.leadsdetails?.name?.toLowerCase());
@@ -215,7 +214,6 @@ export default function Leads() {
         };
       })
     );
-    console.log("lead Data" , namearr);
     setNameArr(namearr);
   }
 

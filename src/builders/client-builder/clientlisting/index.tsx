@@ -17,7 +17,7 @@ import { GET_CLIENT_NEW } from './queries';
 import CreateClient from './addclientcomponent';
 import Table from '../../../components/table';
 import { flattenObj } from '../../../components/utils/responseFlatten';
-//import client from "./client";
+
 
 function ClientListingPage() {
   const auth = useContext(AuthContext);
@@ -99,23 +99,8 @@ function ClientListingPage() {
     []
   );
 
-  // function getDate(time: any) {
-  //      let dateObj = new Date(time);
-  //      let month = dateObj.getMonth() + 1;
-  //      let year = dateObj.getFullYear();
-  //      let date = dateObj.getDate();
-
-  //      return `${date}/${month}/${year}`;
-  // }
-  // function getRenewalDate(time: any, duration: any) {
-  //      var date = new Date(time);
-  //      date.setDate(date.getDate() + duration);
-  //      return getDate(date);
-  // }
 
   const [datatable, setDataTable] = useState<Record<string, unknown>[]>([]);
-
-  // function FetchData(_variables: {} = { filter: " ", id: auth.userid }) {
   const fetch = useQuery(GET_CLIENT_NEW, {
     variables: { filter: searchFilter, id: auth.userid, start: page * 10 - 10, limit: 10  },
     onCompleted: (data) => {
@@ -123,7 +108,7 @@ function ClientListingPage() {
       loadData(data);
     }
   });
-  // }
+ 
 
   function refetchQueryCallback() {
     fetch.refetch();
@@ -171,7 +156,7 @@ function ClientListingPage() {
     setPage(selectedPageNumber);
   };
 
-  // FetchData({ filter: searchFilter, id: auth.userid });
+
   return (
     <TabContent>
       <Container>
