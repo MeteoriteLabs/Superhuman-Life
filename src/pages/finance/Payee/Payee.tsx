@@ -45,8 +45,6 @@ export default function Payee(): JSX.Element {
   const createEditPayeeComponent = useRef<PayeeComponentTs>(null);
   const createChangemakerAsPayeeComponent = useRef<PayeeComponentTs>(null);
   const createContactAsPayeeComponent = useRef<PayeeComponentTs>(null);
-  const [page, setPage] = useState<number>(1);
-  const [totalRecords, setTotalRecords] = useState<number>(0);
 
   const columns = useMemo(
     () => [
@@ -112,7 +110,7 @@ export default function Payee(): JSX.Element {
   );
 
   const [datatable, setDataTable] = useState<Record<string, unknown>[]>([]);
-4
+  4;
   function getDate(time: string | number | Date) {
     const dateObj = new Date(time);
     const month = dateObj.getMonth() + 1;
@@ -154,8 +152,7 @@ export default function Payee(): JSX.Element {
   });
 
   const { data: get_contacts, refetch: refetch_contacts } = useQuery(GET_CONTACTS, {
-    variables: { id: auth.userid , start: page * 10 - 10,
-      limit: 10 },
+    variables: { id: auth.userid },
     onCompleted: (data) => {
       const flattenContactsData = flattenObj({ ...data });
       const contactsArray = flattenContactsData.contacts.map((currentValue) =>
@@ -169,8 +166,6 @@ export default function Payee(): JSX.Element {
           id: Number(auth.userid)
         }
       });
-      setTotalRecords(data.contacts.meta.pagination.total);
-
     }
   });
 
@@ -247,11 +242,6 @@ export default function Payee(): JSX.Element {
         )
     );
   }
-
-  const pageHandler = (selectedPageNumber: number) => {
-    setPage(selectedPageNumber);
-  };
-
 
   return (
     <TabContent>
@@ -341,28 +331,6 @@ export default function Payee(): JSX.Element {
         </Row>
       </Container>
       <Table columns={columns} data={datatable} />
-      {datatable && datatable.length ? (
-        <Row className="justify-content-end">
-          <Button
-            variant="outline-dark"
-            className="m-2"
-            onClick={() => pageHandler(page - 1)}
-            disabled={page === 1 ? true : false}>
-            Previous
-          </Button>
-
-          <Button
-            variant="outline-dark"
-            className="m-2"
-            onClick={() => pageHandler(page + 1)}
-            disabled={totalRecords > page * 10 - 10 + datatable.length ? false : true}>
-            Next
-          </Button>
-          <span className="m-2 bold pt-2">{`${page * 10 - 10 + 1} - ${
-            page * 10 - 10 + datatable.length
-          }`}</span>
-        </Row>
-      ) : null}
     </TabContent>
   );
 }
