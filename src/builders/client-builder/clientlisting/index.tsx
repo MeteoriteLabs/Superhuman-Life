@@ -24,6 +24,8 @@ function ClientListingPage() {
   const [searchFilter, setSearchFilter] = useState('');
   const searchInput = useRef<any>();
   const CreateClientComponent = useRef<any>(null);
+  const [page, setPage] = useState<number>(1);
+  const [totalRecords, setTotalRecords] = useState<number>(0);
 
   function handleRedirect(id: any) {
     window.location.href = `/client/home/${id}`;
@@ -115,8 +117,11 @@ function ClientListingPage() {
 
   // function FetchData(_variables: {} = { filter: " ", id: auth.userid }) {
   const fetch = useQuery(GET_CLIENT_NEW, {
-    variables: { filter: searchFilter, id: auth.userid },
-    onCompleted: loadData
+    variables: { filter: searchFilter, id: auth.userid, start: page * 10 - 10, limit: 10  },
+    onCompleted: (data) => {
+      setTotalRecords(data.clientPackages.meta.pagination.total);
+      loadData(data);
+    }
   });
   // }
 
@@ -162,6 +167,9 @@ function ClientListingPage() {
       })
     );
   }
+  const pageHandler = (selectedPageNumber: number) => {
+    setPage(selectedPageNumber);
+  };
 
   // FetchData({ filter: searchFilter, id: auth.userid });
   return (
@@ -201,6 +209,28 @@ function ClientListingPage() {
         </Row>
       </Container>
       <Table columns={columns} data={datatable} />
+      {datatable && datatable.length ? (
+        <Row className="justify-content-end">
+          <Button
+            variant="outline-dark"
+            className="m-2"
+            onClick={() => pageHandler(page - 1)}
+            disabled={page === 1 ? true : false}>
+            Previous
+          </Button>
+
+          <Button
+            variant="outline-dark"
+            className="m-2"
+            onClick={() => pageHandler(page + 1)}
+            disabled={totalRecords > page * 10 - 10 + datatable.length ? false : true}>
+            Next
+          </Button>
+          <span className="m-2 bold pt-2">{`${page * 10 - 10 + 1} - ${
+            page * 10 - 10 + datatable.length
+          }`}</span>
+        </Row>
+      ) : null}
     </TabContent>
   );
 }
