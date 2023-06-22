@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 
-export const GET_WEBSITE_SECTION_ID = gql`
+export const GET_WEBSITE_SECTION = gql`
 query GetWebsiteSectionId($id: ID, $sectionPage: String, $sectionType: String) {
   websiteSections(
     filters: {

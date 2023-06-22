@@ -1,48 +1,116 @@
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, Controller, useFieldArray } from 'react-hook-form';
 import style from '../style.module.css';
-import { Button, Form } from 'react-bootstrap';
-import BlackBgAccordian from '../../../../../components/accordian/blackBgAccordian';
+import { Accordion, Button, Card, Form } from 'react-bootstrap';
+import { UPDATE_WEBSITE_SECTION } from './queries/features';
+import { GET_WEBSITE_SECTION } from './queries';
+import { useContext, useEffect, useState } from 'react';
+import authContext from '../../../../../context/auth-context';
+import { ChangeMakerWebsiteContext } from '../../../../../context/changemakerWebsite-context';
+import { useMutation, useQuery } from '@apollo/client';
+import { ArrowDownShort } from 'react-bootstrap-icons';
+
+// * --------------------- Types ---------------------
 
 type FormData = {
+  sectionId: number;
   title: string;
-  feature1_title: string;
-  feature1_description: string;
-  feature1_image: string;
-  feature2_title: string;
-  feature2_description: string;
-  feature2_image: string;
-  feature3_title: string;
-  feature3_description: string;
-  feature3_image: string;
-  feature4_title: string;
-  feature4_description: string;
-  feature4_image: string;
+  features: {
+    title: string;
+    text: string;
+    icons: string;
+  }[];
 };
 
 function Hero(): JSX.Element {
+  const auth = useContext(authContext);
+  const [errorMsg, setErrorMsg] = useState<string>('');
+  const [activeKey, setActiveKey] = useState('');
+
+  const handleToggle = (val: string) => {
+    setActiveKey((prev) => (prev === val ? '' : val));
+  };
+
+  // * --------------------- Initial Values ---------------------
+
+  const [initialValues, setInitialValues] = useState<FormData>({
+    title: '',
+    sectionId: 0,
+    features: []
+  });
+
+  const { setChangemakerWebsiteState, changemakerWebsiteState } =
+    useContext(ChangeMakerWebsiteContext);
+
+  // * --------------------- Form Configuration ---------------------
+
   const {
     handleSubmit,
     control,
+    reset,
     formState: { errors }
   } = useForm<FormData>({
     defaultValues: {
       title: '',
-      feature1_title: '',
-      feature1_description: '',
-      feature1_image: '',
-      feature2_title: '',
-      feature2_description: '',
-      feature2_image: '',
-      feature3_title: '',
-      feature3_description: '',
-      feature3_image: '',
-      feature4_title: '',
-      feature4_description: '',
-      feature4_image: ''
+      features: [{}]
     }
   });
 
-  const onSubmit = handleSubmit((data) => console.log(data));
+  const { fields } = useFieldArray<FormData>({
+    control,
+    name: 'features'
+  });
+
+  // * --------------------- Get the Website Section Data ---------------------
+
+  useQuery(GET_WEBSITE_SECTION, {
+    variables: {
+      id: auth.userid,
+      sectionPage: 'Home',
+      sectionType: 'Feature'
+    },
+
+    onCompleted: (data) => {
+      if (initialValues.features.length === 0) {
+        setInitialValues({
+          ...initialValues,
+          sectionId: data.websiteSections.data[0].id,
+          title: data.websiteSections.data[0].attributes.sectionData.titile,
+          features: data.websiteSections.data[0].attributes.sectionData.features
+        });
+
+        reset({
+          title: data.websiteSections.data[0].attributes.sectionData.titile,
+          features: data.websiteSections.data[0].attributes.sectionData.features
+        });
+      }
+    }
+  });
+
+  // * --------------------- Form Submission ---------------------
+
+  const [mutateFunction, { loading, error }] = useMutation(UPDATE_WEBSITE_SECTION);
+
+  const onSubmit = handleSubmit(async (formData) => {
+    // ! Need to add image upload
+    const { title, features } = formData;
+
+    await mutateFunction({
+      variables: {
+        id: initialValues.sectionId,
+        data: JSON.stringify({
+          titile: title ? title : initialValues.title,
+          features: features.length > 0 ? features : initialValues.features
+        })
+      }
+    });
+  });
+
+  useEffect(() => {
+    loading
+      ? setChangemakerWebsiteState({ ...changemakerWebsiteState, loading: true })
+      : setChangemakerWebsiteState({ ...changemakerWebsiteState, loading: false });
+    error ? setErrorMsg(`${error.name}: ${error.message}`) : setErrorMsg('');
+  }, [loading, error]);
 
   return (
     <div className={style.formContainer}>
@@ -62,42 +130,84 @@ function Hero(): JSX.Element {
           />
           {errors.title && <p>{errors.title.message}</p>}
         </Form.Group>
-        <BlackBgAccordian
-          title="Feature 1"
-          control_description="feature1_description"
-          control_title="feature1_title"
-          control_image="feature1_image"
-          control={control}
-          errors={errors}
-          eventKey="0"
-        />
-        <BlackBgAccordian
-          title="Feature 2"
-          control_description="feature2_description"
-          control_title="feature2_title"
-          control_image="feature2_image"
-          control={control}
-          errors={errors}
-          eventKey="1"
-        />
-        <BlackBgAccordian
-          title="Feature 3"
-          control_description="feature3_description"
-          control_title="feature3_title"
-          control_image="feature3_image"
-          control={control}
-          errors={errors}
-          eventKey="2"
-        />{' '}
-        <BlackBgAccordian
-          title="Feature 4"
-          control_description="feature4_description"
-          control_title="feature4_title"
-          control_image="feature4_image"
-          control={control}
-          errors={errors}
-          eventKey="3"
-        />
+
+        {fields.length > 0
+          ? fields.map((item, index) => (
+              <Accordion style={{ padding: 0 }} key={index}>
+                <Card style={{ backgroundColor: 'transparent', border: 'none' }}>
+                  <Accordion.Toggle
+                    variant="text"
+                    as={Button}
+                    onClick={() => handleToggle(`${index}`)}
+                    className="text-left d-flex justify-content-between align-items-center"
+                    eventKey={`${index}`}
+                    style={{ padding: '8px 0px' }}>
+                    <p style={{ fontWeight: 600, marginBottom: 8, color: 'white' }}>
+                      Feature {index + 1}
+                    </p>
+
+                    <ArrowDownShort
+                      fill="#fff"
+                      size="20"
+                      style={{
+                        rotate: activeKey === `${index}` ? '180deg' : '0deg',
+                        transition: 'all .3s ease-in-out'
+                      }}
+                    />
+                  </Accordion.Toggle>
+
+                  <Accordion.Collapse eventKey={`${index}`}>
+                    <Card.Body>
+                      <Form.Group>
+                        <Form.Label>Title</Form.Label>
+                        <Controller
+                          name={`features.${index}.title`}
+                          control={control}
+                          render={({ field }) => (
+                            <Form.Control
+                              type="text"
+                              style={{ fontSize: 14 }}
+                              as="input"
+                              {...field}></Form.Control>
+                          )}
+                        />
+                      </Form.Group>
+                      <Form.Group>
+                        <Form.Label>Description</Form.Label>
+                        <Controller
+                          name={`features.${index}.text`}
+                          control={control}
+                          render={({ field }) => (
+                            <Form.Control
+                              type="text"
+                              style={{ fontSize: 14 }}
+                              as="input"
+                              {...field}></Form.Control>
+                          )}
+                        />
+                      </Form.Group>
+                      <Form.Group>
+                        {/* <Form.Label>Image</Form.Label>
+                        <Controller
+                          name={`features.${index}.icons`}
+                          control={control}
+                          render={({ field }) => (
+                            <Form.Control
+                              type="file"
+                              style={{ fontSize: 14 }}
+                              as="input"
+                              {...field}></Form.Control>
+                          )}
+                        /> */}
+                      </Form.Group>
+                    </Card.Body>
+                  </Accordion.Collapse>
+                </Card>
+              </Accordion>
+            ))
+          : null}
+
+        {errorMsg ? <p>{errorMsg}</p> : null}
         <Button variant="primary" type="submit" className={style.submitButton}>
           Submit
         </Button>

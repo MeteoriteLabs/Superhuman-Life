@@ -2,8 +2,8 @@ import { useForm, Controller } from 'react-hook-form';
 import style from '../style.module.css';
 import { Button, Form } from 'react-bootstrap';
 import { useMutation, useQuery } from '@apollo/client';
-import { UPDATE_WEBSITE_SECTION } from './quries/home';
-import { GET_WEBSITE_SECTION_ID } from './quries';
+import { UPDATE_WEBSITE_SECTION } from './queries/hero';
+import { GET_WEBSITE_SECTION } from './queries';
 import authContext from '../../../../../context/auth-context';
 import { useContext, useEffect, useState } from 'react';
 import { ChangeMakerWebsiteContext } from '../../../../../context/changemakerWebsite-context';
@@ -17,7 +17,7 @@ type FormData = {
 function Hero(): JSX.Element {
   const auth = useContext(authContext);
   const [errorMsg, setErrorMsg] = useState<string>('');
-  const [initalValues, setInitalValues] = useState({
+  const [initialValues, setInitialValues] = useState({
     title: '',
     description: '',
     image: '',
@@ -27,15 +27,15 @@ function Hero(): JSX.Element {
   const { setChangemakerWebsiteState, changemakerWebsiteState } =
     useContext(ChangeMakerWebsiteContext);
 
-  useQuery(GET_WEBSITE_SECTION_ID, {
+  useQuery(GET_WEBSITE_SECTION, {
     variables: {
       id: auth.userid,
       sectionPage: 'Home',
       sectionType: 'Hero'
     },
     onCompleted: (data) => {
-      setInitalValues({
-        ...initalValues,
+      setInitialValues({
+        ...initialValues,
         sectionId: data.websiteSections.data[0].id,
         title: data.websiteSections.data[0].attributes.sectionData.title,
         description: data.websiteSections.data[0].attributes.sectionData.description,
@@ -50,9 +50,9 @@ function Hero(): JSX.Element {
     formState: { errors }
   } = useForm<FormData>({
     defaultValues: {
-      title: initalValues.title,
-      description: initalValues.description,
-      image: initalValues.image
+      title: initialValues.title,
+      description: initialValues.description,
+      image: initialValues.image
     }
   });
 
@@ -64,10 +64,10 @@ function Hero(): JSX.Element {
 
     await mutateFunction({
       variables: {
-        id: initalValues.sectionId,
-        title: title ? title : initalValues.title,
-        desc: description ? description : initalValues.description,
-        image: image ? image : initalValues.image
+        id: initialValues.sectionId,
+        title: title ? title : initialValues.title,
+        desc: description ? description : initialValues.description,
+        image: image ? image : initialValues.image
       }
     });
   });
