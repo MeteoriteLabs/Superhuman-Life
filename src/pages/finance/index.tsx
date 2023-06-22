@@ -33,12 +33,24 @@ export default function index(): JSX.Element {
               <Earnings />
             </Tab>
 
-            <Tab eventKey="expenses" title="Expenses">
-              <Expenses />
-            </Tab>
-
-            <Tab eventKey="payee" title="Payee">
-              <Payee />
+            <Tab eventKey="expenses" title="Expenses" className="mt-3">
+              <Card className="shadow-sm mt-2" border="light">
+                <Card.Body>
+                  <Tabs
+                    style={{ borderBottom: '1px solid black' }}
+                    className="pb-3 cards"
+                    transition={false}
+                    defaultActiveKey="expenses"
+                    variant="pills">
+                    <Tab eventKey="expenses" title="Expenses">
+                      <Expenses />
+                    </Tab>
+                    <Tab eventKey="payee" title="Payee">
+                      <Payee />
+                    </Tab>
+                  </Tabs>
+                </Card.Body>
+              </Card>
             </Tab>
 
             <Tab eventKey="allTransactions" title="All Transactions">
@@ -48,22 +60,6 @@ export default function index(): JSX.Element {
             <Tab eventKey="vouchers" title="Vouchers">
               <Vouchers />
             </Tab>
-
-            {/* <Tab eventKey="pricingAssist" title="Base Price">
-              <PricingAssist />
-            </Tab>
-
-            <Tab eventKey="paymentMethods" title="Payment Methods">
-              <PaymentMethods />
-            </Tab> */}
-
-            {/* <Tab eventKey="invoices" title="Invoices">
-                            <Invoices />
-                        </Tab> */}
-
-            {/* <Tab eventKey="platform" title="Platform">
-                            <Platform />
-                        </Tab> */}
           </Tabs>
         </Card.Body>
       </Card>
