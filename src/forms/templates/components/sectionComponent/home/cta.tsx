@@ -70,8 +70,6 @@ function Hero(): JSX.Element {
     // ! Need to add image upload
     const { title, buttonText, link } = formData;
 
-    console.log(title ? title : initialValues.title);
-
     await mutateFunction({
       variables: {
         id: initialValues.sectionId,

@@ -20,7 +20,6 @@ mutation MutateWebsiteSections($id: ID!, $title: String, $buttonText: String, $l
    data {
     id
   }
-    # Include any other fields you want to retrieve after the update
   }
 }`
   
