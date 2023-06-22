@@ -126,7 +126,6 @@ export default function Contacts() {
   function refetchQueryCallback() {
     fetch.refetch();
   }
-
   function loadData(data: any) {
     const flattenData = flattenObj({ ...data });
     setDataTable(
