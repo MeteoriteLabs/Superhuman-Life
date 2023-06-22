@@ -6,9 +6,10 @@
     font-size: 14px;
     font-weight: 600;
     padding-inline: 35px;
+    padding-top: 35px;
+    
 }
 .websiteNav_ul{
-    margin-top: 20px;
     display: flex;
     gap: 0px;
     flex-direction: column;

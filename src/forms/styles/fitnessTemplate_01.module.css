@@ -1,4 +1,7 @@
 
+.navContainer{
+    position: relative;
+}
 .pageTitle{
     margin-block: 0;
     padding-block: .5rem;
@@ -42,4 +45,16 @@
 
 .sectionBackButton:hover{
    border-bottom: 1px solid #fff;
+}
+
+.breadCrumb{
+    padding-inline: 35px;
+    display: flex;
+    padding-bottom: 5px;
+}
+.breadCrumbText{
+    font-size: 16px; 
+    font-weight: 600;
+    font-style: italic;
+    cursor: pointer;
 }
