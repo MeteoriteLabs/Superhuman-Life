@@ -10,13 +10,13 @@ import { useMutation, useQuery } from '@apollo/client';
 import { ArrowDownShort } from 'react-bootstrap-icons';
 import { DataTs, FormData, InputProps } from './@types/pricingType';
 import { InputComponent } from './components/pricingComponents';
-import { SetReceivingDataAndReset } from './libs/pricing';
+import { FormatStateToServerData, SetReceivingDataAndReset } from './libs/pricing';
 
 function Hero(): JSX.Element {
   const auth = useContext(authContext);
   const [errorMsg, setErrorMsg] = useState<string>('');
   const [activeKey, setActiveKey] = useState('');
-  const [planData, setPlanData] = useState<InputProps[]>([
+  const planData: InputProps[] = [
     'actual',
     'buttonLink',
     'buttonText',
@@ -25,7 +25,7 @@ function Hero(): JSX.Element {
     'price',
     'recurring',
     'title'
-  ]);
+  ];
 
   const handleToggle = (val: string) => {
     setActiveKey((prev) => (prev === val ? '' : val));
@@ -91,7 +91,10 @@ function Hero(): JSX.Element {
         id: initialValues.sectionId,
         data: JSON.stringify({
           title: title ? title : initialValues.title,
-          plans: plans.length > 0 ? plans : initialValues.plans,
+          plans:
+            plans.length > 0
+              ? FormatStateToServerData(plans)
+              : FormatStateToServerData(initialValues.plans),
           currency: currency ? currency : initialValues.currency
         })
       }
@@ -127,7 +130,7 @@ function Hero(): JSX.Element {
         <Form.Group controlId="currency">
           <Form.Label className={style.labelText}>Currency</Form.Label>
           <Controller
-            name="title"
+            name="currency"
             control={control}
             render={({ field }) => (
               <Form.Control

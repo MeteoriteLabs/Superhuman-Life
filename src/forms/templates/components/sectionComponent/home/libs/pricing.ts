@@ -16,6 +16,20 @@ export const FormatReceivedDataToState = (plans: ServerPlansTs): ClientPlansTs[]
     });
   };
 
+  export const FormatStateToServerData = (plans: ClientPlansTs[]): ServerPlansTs  => {
+    return plans.map((plan: ClientPlansTs) => {
+      return {
+        actual: plan.actual,
+        button: {link:plan.buttonLink, text: plan.buttonText},
+        discount: plan.discount,
+        features: plan.features,
+        price: plan.price,
+        recurring: plan.recurring,
+        title: plan.title
+      };
+    });
+  };
+
  export  function SetReceivingDataAndReset({sectionData, data, initialValues, reset , setInitialValues }:{
     sectionData: SectionDataTs;
     data: DataTs;
