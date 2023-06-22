@@ -123,11 +123,7 @@ export default function Expenses(): JSX.Element {
       limit: 10
     },
     onCompleted: (data) => {
-      users({
-        variables: {
-          // id: Number(auth.userid)
-        }
-      });
+      users();
       setTotalRecords(data.transactions.meta.pagination.total);
     }
   });
