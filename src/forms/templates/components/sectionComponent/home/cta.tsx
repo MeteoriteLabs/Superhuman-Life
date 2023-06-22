@@ -144,7 +144,7 @@ function Hero(): JSX.Element {
             <Form.Control.Feedback tooltip>{errors.link.message}</Form.Control.Feedback>
           )}
         </Form.Group>
-
+        {errorMsg ? <p>{errorMsg}</p> : null}
         <Button variant="primary" type="submit" className={style.submitButton}>
           Submit
         </Button>
