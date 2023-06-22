@@ -11,7 +11,7 @@ import '../fitness.css';
 import '../Group/actionButton.css';
 import Loader from '../../../../components/Loader/Loader';
 
-const Scheduler = () => {
+const Scheduler: React.FC = () => {
   // const auth = useContext(AuthContext);
   const last = window.location.pathname.split('/').reverse();
   const tagId = window.location.pathname.split('/').pop();
@@ -49,7 +49,7 @@ const Scheduler = () => {
     setSchedulerSessions(data);
     const flattenData = flattenObj({ ...data });
     const total = [0, 0, 0, 0, 0];
-    const values = [...flattenData.tags[0]?.sessions];
+    const values = [...flattenData.tags[0].sessions];
     for (let i = 0; i < values.length; i++) {
       if (values[i].tag === 'One-On-One' && values[i].mode === 'Online') {
         total[0] += 1;

@@ -1,11 +1,8 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 export const GET_LEADS = gql`
   query Forms($id: ID) {
-    websiteContactForms(
-      sort: "updatedAt:desc"
-      where: { users_permissions_user: { id: $id } }
-    ) {
+    websiteContactForms(sort: "updatedAt:desc", where: { users_permissions_user: { id: $id } }) {
       id
       users_permissions_user {
         id
@@ -22,10 +19,18 @@ export const GET_LEADS = gql`
 `;
 
 export const GET_LEADS_NEW = gql`
-  query Forms($id: ID) {
+  query Forms($id: ID, $start: Int, $limit: Int) {
     websiteContactForms(
+      pagination: { start: $start, limit: $limit }
       filters: { users_permissions_user: { id: { eq: $id } } }
+      sort: ["updatedAt:desc"]
     ) {
+      meta {
+        pagination {
+          pageCount
+          total
+        }
+      }
       data {
         id
         attributes {
@@ -51,9 +56,7 @@ export const GET_LEADS_NEW = gql`
 
 export const ADD_LEADS = gql`
   mutation addLead($id: ID, $details: JSON) {
-    createWebsiteContactForm(
-      input: { data: { users_permissions_user: $id, details: $details } }
-    ) {
+    createWebsiteContactForm(input: { data: { users_permissions_user: $id, details: $details } }) {
       websiteContactForm {
         id
         attributes {
@@ -89,9 +92,7 @@ export const CREATE_NOTIFICATION = gql`
 
 export const ADD_LEADS_NEW = gql`
   mutation addLead($id: ID, $details: JSON) {
-    createWebsiteContactForm(
-      data: { users_permissions_user: $id, Details: $details }
-    ) {
+    createWebsiteContactForm(data: { users_permissions_user: $id, Details: $details }) {
       data {
         id
         attributes {
@@ -169,10 +170,7 @@ export const GET_LEADS_ID_NEW = gql`
 export const UPDATE_LEADS = gql`
   mutation updateleads($id: ID, $details: JSON, $messageid: ID!) {
     updateWebsiteContactForm(
-      input: {
-        data: { users_permissions_user: $id, details: $details }
-        where: { id: $messageid }
-      }
+      input: { data: { users_permissions_user: $id, details: $details }, where: { id: $messageid } }
     ) {
       websiteContactForm {
         id
@@ -196,9 +194,7 @@ export const UPDATE_LEADS_NEW = gql`
 
 export const UPDATE_SEEN = gql`
   mutation updateleads($seen: Boolean, $messageid: ID!) {
-    updateWebsiteContactForm(
-      input: { data: { isSeen: $seen }, where: { id: $messageid } }
-    ) {
+    updateWebsiteContactForm(input: { data: { isSeen: $seen }, where: { id: $messageid } }) {
       websiteContactForm {
         id
       }

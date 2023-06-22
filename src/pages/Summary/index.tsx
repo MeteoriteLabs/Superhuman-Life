@@ -2,7 +2,9 @@ import React, { useState, useContext, useEffect, ChangeEvent } from 'react';
 import { GET_CLIENT_BOOKING, GET_OFFERING_INVENTORIES, CREATE_TRANSACTION } from './queries';
 import { useQuery, useMutation, useLazyQuery } from '@apollo/client';
 import { flattenObj } from '../../components/utils/responseFlatten';
-import { Card, Col, Row, CardDeck } from 'react-bootstrap';
+import { Col, Row} from 'react-bootstrap';
+import Card from 'react-bootstrap/Card';
+import CardDeck from 'react-bootstrap/CardDeck';
 import DisplayImage from '../../components/DisplayImage';
 import { Button } from 'react-bootstrap';
 import ClientDetailsCard from './ClientDetails';
@@ -12,17 +14,11 @@ import AuthContext from '../../context/auth-context';
 import { UPDATE_BOOKING_STATUS } from '../booking/GraphQL/mutation';
 import moment from 'moment';
 import { CREATE_USER_PACKAGE } from '../booking/GraphQL/mutation';
-import axios, { AxiosResponse } from 'axios';
+import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 import './summary.css';
 import QRCode from 'react-qr-code';
 import API_END_POINTS from '../../components/utils/integration';
-import { CreateOrderResponseData } from './interfaces';
-
-console.log(API_END_POINTS.createPaymentLinkUrl, API_END_POINTS.generateUPIQRCodeUrl);
-const createPaymentLinkUrl = `${process.env.REACT_APP_URL}/api/client-booking/paymentlink`;
-const createOrderUrl = `${process.env.REACT_APP_URL}/api/client-booking/getpaymentdetailsbyorderid/?order_id=CFPay_t4tr5clhg16g_7eh80498vp`;
-const generateUPIQRCodeUrl = `${process.env.REACT_APP_URL}/api/transaction/initiatepaymentviaupiqrcode/?payment_session_id=session_WzQk5Ij1yuFjufVd_B7TgQqFysFzkwsHROQWwRHJeq2qaGlo5phPY7K7Iz_ACsJMX85ePObb2Bc4JJxyWdZzp8YihAKZOG6fJItbeMXEjLeE`;
 
 interface PackagePricing {
   mrp: string;
