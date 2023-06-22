@@ -1,8 +1,10 @@
+import React, { useState } from 'react';
 import { Accordion, Button, Card, Form } from 'react-bootstrap';
 import { Controller } from 'react-hook-form';
+import { ArrowDownShort } from 'react-bootstrap-icons';
 
 function BlackBgAccordian({
-  feature_title,
+  title,
   control_description,
   control_title,
   control_image,
@@ -10,7 +12,7 @@ function BlackBgAccordian({
   errors,
   eventKey
 }: {
-  feature_title: string;
+  title: string;
   control_description: string;
   control_title: string;
   control_image: string;
@@ -18,16 +20,32 @@ function BlackBgAccordian({
   errors: any;
   eventKey: string;
 }): JSX.Element {
+  const [activeKey, setActiveKey] = useState(false);
+
+  const handleToggle = () => {
+    setActiveKey((prev) => !prev);
+  };
+
   return (
     <Accordion style={{ padding: 0 }}>
       <Card style={{ backgroundColor: 'transparent', border: 'none' }}>
         <Accordion.Toggle
           variant="text"
           as={Button}
-          className="text-left"
+          onClick={handleToggle}
+          className="text-left d-flex justify-content-between align-items-center"
           eventKey={eventKey}
           style={{ padding: '8px 0px' }}>
-          <p style={{ fontWeight: 600, marginBottom: 8, color: 'white' }}>{feature_title}</p>
+          <p style={{ fontWeight: 600, marginBottom: 8, color: 'white' }}>{title}</p>
+
+          <ArrowDownShort
+            fill="#fff"
+            size="20"
+            style={{
+              rotate: activeKey ? '180deg' : '0deg',
+              transition: 'all .3s ease-in-out'
+            }}
+          />
         </Accordion.Toggle>
 
         <Accordion.Collapse eventKey={eventKey}>

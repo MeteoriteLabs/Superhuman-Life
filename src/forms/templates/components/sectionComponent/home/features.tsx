@@ -1,6 +1,6 @@
 import { useForm, Controller } from 'react-hook-form';
 import style from '../style.module.css';
-import { Accordion, Button, Card, Form } from 'react-bootstrap';
+import { Button, Form } from 'react-bootstrap';
 import BlackBgAccordian from '../../../../../components/accordian/blackBgAccordian';
 
 type FormData = {
@@ -42,79 +42,63 @@ function Hero(): JSX.Element {
     }
   });
 
-  const emptyArray = new Array(4).fill('');
-
   const onSubmit = handleSubmit((data) => console.log(data));
 
   return (
-    <div className={style.form}>
-      <Form onSubmit={onSubmit} style={{ width: 257 }}>
+    <div className={style.formContainer}>
+      <Form onSubmit={onSubmit} className={style.form}>
         <Form.Group controlId="title">
-          <Form.Label>Title</Form.Label>
+          <Form.Label className={style.labelText}>Title</Form.Label>
           <Controller
             name="title"
             control={control}
             render={({ field }) => (
               <Form.Control
                 type="text"
-                style={{ fontSize: 14 }}
+                className={style.inputText}
                 as="input"
                 {...field}></Form.Control>
             )}
           />
           {errors.title && <p>{errors.title.message}</p>}
         </Form.Group>
-
-        <Accordion>
-          <Card style={{ backgroundColor: 'transparent', border: 'none' }}>
-            <BlackBgAccordian
-              feature_title="Feature 1"
-              control_description="feature1_description"
-              control_title="feature1_title"
-              control_image="feature1_image"
-              control={control}
-              errors={errors}
-              eventKey="0"
-            />
-            <BlackBgAccordian
-              feature_title="Feature 2"
-              control_description="feature2_description"
-              control_title="feature2_title"
-              control_image="feature2_image"
-              control={control}
-              errors={errors}
-              eventKey="1"
-            />
-            <BlackBgAccordian
-              feature_title="Feature 3"
-              control_description="feature3_description"
-              control_title="feature3_title"
-              control_image="feature3_image"
-              control={control}
-              errors={errors}
-              eventKey="2"
-            />{' '}
-            <BlackBgAccordian
-              feature_title="Feature 4"
-              control_description="feature4_description"
-              control_title="feature4_title"
-              control_image="feature4_image"
-              control={control}
-              errors={errors}
-              eventKey="3"
-            />
-          </Card>
-        </Accordion>
-
-        <Button
-          variant="primary"
-          type="submit"
-          style={{
-            paddingBlock: 4,
-            float: 'right',
-            marginBlock: 20,
-            marginBottom: 80
-          }}>
+        <BlackBgAccordian
+          title="Feature 1"
+          control_description="feature1_description"
+          control_title="feature1_title"
+          control_image="feature1_image"
+          control={control}
+          errors={errors}
+          eventKey="0"
+        />
+        <BlackBgAccordian
+          title="Feature 2"
+          control_description="feature2_description"
+          control_title="feature2_title"
+          control_image="feature2_image"
+          control={control}
+          errors={errors}
+          eventKey="1"
+        />
+        <BlackBgAccordian
+          title="Feature 3"
+          control_description="feature3_description"
+          control_title="feature3_title"
+          control_image="feature3_image"
+          control={control}
+          errors={errors}
+          eventKey="2"
+        />{' '}
+        <BlackBgAccordian
+          title="Feature 4"
+          control_description="feature4_description"
+          control_title="feature4_title"
+          control_image="feature4_image"
+          control={control}
+          errors={errors}
+          eventKey="3"
+        />
+        <Button variant="primary" type="submit" className={style.submitButton}>
           Submit
         </Button>
       </Form>

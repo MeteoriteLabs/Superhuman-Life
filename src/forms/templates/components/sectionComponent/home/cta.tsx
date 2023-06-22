@@ -21,17 +21,17 @@ function Hero(): JSX.Element {
   const onSubmit = handleSubmit((data) => console.log(data));
 
   return (
-    <div className={style.form}>
-      <Form onSubmit={onSubmit} style={{ width: 257 }}>
+    <div className={style.formContainer}>
+      <Form onSubmit={onSubmit} className={style.form}>
         <Form.Group controlId="home_cta">
-          <Form.Label>Title</Form.Label>
+          <Form.Label className={style.labelText}>Title</Form.Label>
           <Controller
             name="title"
             control={control}
             render={({ field }) => (
               <Form.Control
                 type="text"
-                style={{ fontSize: 14 }}
+                className={style.inputText}
                 as="input"
                 {...field}></Form.Control>
             )}
@@ -47,7 +47,7 @@ function Hero(): JSX.Element {
             render={({ field }) => (
               <Form.Control
                 type="textarea"
-                style={{ fontSize: 14 }}
+                className={style.inputText}
                 as="input"
                 {...field}></Form.Control>
             )}
@@ -58,14 +58,7 @@ function Hero(): JSX.Element {
           )}
         </Form.Group>
 
-        <Button
-          variant="primary"
-          type="submit"
-          style={{
-            paddingBlock: 4,
-            float: 'right',
-            marginBlock: 20
-          }}>
+        <Button variant="primary" type="submit" className={style.submitButton}>
           Submit
         </Button>
       </Form>

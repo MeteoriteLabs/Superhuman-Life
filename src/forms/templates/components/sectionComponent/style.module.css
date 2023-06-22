@@ -1,6 +1,33 @@
-.form{
+.formContainer{
     margin-block: 0;
     padding-block: .5rem;
     padding-inline: 35px;
     font-size: 14px;
+}
+
+.form{
+    width: 257px
+}
+
+.labelText{
+    font-weight: 600;
+    margin-bottom: 8px; 
+    color: 'white'; 
+    font-size: 16px
+}
+
+.inputText{
+    font-size: 14px;
+}
+
+.breakLine{
+    color: '#fff';
+    background-color: '#fff'
+}
+
+.submitButton{
+    padding-block: 4px;
+   float: right;
+    margin-block: 20px;
+    margin-bottom: 70px
 }

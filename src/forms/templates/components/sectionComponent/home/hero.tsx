@@ -79,17 +79,17 @@ function Hero(): JSX.Element {
   }, [loading, error]);
 
   return (
-    <div className={style.form}>
-      <Form onSubmit={onSubmit} style={{ width: 257 }}>
+    <div className={style.formContainer}>
+      <Form onSubmit={onSubmit} className={style.form}>
         <Form.Group controlId="title">
-          <Form.Label>Title</Form.Label>
+          <Form.Label className={style.labelText}>Title</Form.Label>
           <Controller
             name="title"
             control={control}
             render={({ field }) => (
               <Form.Control
                 type="text"
-                style={{ fontSize: 14 }}
+                className={style.inputText}
                 as="input"
                 {...field}></Form.Control>
             )}
@@ -98,14 +98,14 @@ function Hero(): JSX.Element {
           {errors.title && <p>{errors.title.message}</p>}
         </Form.Group>
         <Form.Group controlId="description">
-          <Form.Label>Description</Form.Label>
+          <Form.Label className={style.labelText}>Description</Form.Label>
           <Controller
             name="description"
             control={control}
             render={({ field }) => (
               <Form.Control
                 type="textarea"
-                style={{ fontSize: 14 }}
+                className={style.inputText}
                 as="input"
                 {...field}></Form.Control>
             )}
@@ -116,7 +116,7 @@ function Hero(): JSX.Element {
           )}
         </Form.Group>
         <Form.Group controlId="hero image">
-          <Form.Label>Hero Image</Form.Label>
+          <Form.Label className={style.labelText}>Hero Image</Form.Label>
           <Controller
             name="image"
             control={control}
@@ -124,7 +124,7 @@ function Hero(): JSX.Element {
               <Form.Control
                 type="file"
                 accept="image/*"
-                style={{ fontSize: 14 }}
+                className={style.inputText}
                 as="input"
                 {...field}></Form.Control>
             )}
@@ -134,14 +134,7 @@ function Hero(): JSX.Element {
           )}
         </Form.Group>
         {errorMsg ? <p>{errorMsg}</p> : null}
-        <Button
-          variant="primary"
-          type="submit"
-          style={{
-            paddingBlock: 4,
-            float: 'right',
-            marginBlock: 20
-          }}>
+        <Button variant="primary" type="submit" className={style.submitButton}>
           Submit
         </Button>
       </Form>
