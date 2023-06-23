@@ -119,11 +119,7 @@ export default function Expenses(): JSX.Element {
       senderId: auth.userid
     },
     onCompleted: () => {
-      users({
-        variables: {
-          // id: Number(auth.userid)
-        }
-      });
+      users();
     }
   });
 

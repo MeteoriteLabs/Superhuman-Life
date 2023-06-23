@@ -105,6 +105,26 @@ export const GET_CLIENT_BOOKING = gql`
   }
 `;
 
+export const GET_TAG = gql`
+  query tags($fitnessPackageId: ID) {
+    tags(filters:{fitnesspackage:{id:{eq: $fitnessPackageId}}} ) {
+      data {
+        id
+        attributes{
+          fitnesspackage{
+            data{
+              id
+              attributes{
+                packagename
+              }
+            }
+          }
+        }     
+      }
+    }
+  }
+`;
+
 export const GET_OFFERING_INVENTORIES = gql`
   query offeringInventoriesQuery($changemaker_id: String, $fitnessPackage_id: ID) {
     offeringInventories(
@@ -138,6 +158,16 @@ export const GET_OFFERING_INVENTORIES = gql`
 export const CREATE_SESSION_BOOKING = gql`
   mutation createSessionsBooking($data: SessionsBookingInput!) {
     createSessionsBooking(data: $data){
+        data{
+          id
+        }
+      }
+  }
+`;
+
+export const UPDATE_TAG = gql`
+  mutation updateTag($id: ID!, $data: TagInput!) {
+    updateTag(id: $id, data: $data){
         data{
           id
         }

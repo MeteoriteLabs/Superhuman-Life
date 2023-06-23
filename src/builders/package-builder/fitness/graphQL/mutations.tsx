@@ -139,6 +139,16 @@ export const UPDATE_OFFERING_INVENTORY = gql`
     updateOfferingInventory(id: $id, data: $data) {
       data {
         id
+        attributes{
+          fitnesspackage{
+            data{
+              id
+              attributes{
+                packagename
+              }
+            }
+          }
+        }
       }
     }
   }

@@ -5,6 +5,7 @@ import Form from '@rjsf/core';
 import { UPDATE_CLIENT_BOOKING } from '../queries';
 import { useMutation } from '@apollo/client';
 import moment from 'moment';
+import {ClientUserType} from '../interface';
 
 interface ClientBooking {
   fitnesspackages: any[];
@@ -19,7 +20,7 @@ interface DefaultClientBooking {
   effectiveDate: string;
 }
 
-const EditOffering: React.FC<{ show: boolean; onHide: () => void; Offering: ClientBooking }> = ({
+const EditOffering: React.FC<{ show: boolean; onHide: () => void; Offering: ClientUserType }> = ({
   show,
   onHide,
   Offering

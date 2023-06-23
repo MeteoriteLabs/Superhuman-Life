@@ -45,8 +45,8 @@ function ChangemakerWebsiteContextProvider({ children }: { children: ReactNode }
     onCompleted: () => {
       setChangemakerWebsiteState({
         ...changemakerWebsiteState,
-        subdomain: data.changemakerWebsites.data[0].attributes.subdomain as string,
-        selectedTemplate: data.changemakerWebsites.data[0].attributes.selectedTemplate as string
+        subdomain: data.changemakerWebsites?.data[0].attributes.subdomain as string,
+        selectedTemplate: data.changemakerWebsites?.data[0].attributes.selectedTemplate as string
       });
     },
     onError: () => {

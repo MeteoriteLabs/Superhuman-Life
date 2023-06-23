@@ -4,15 +4,16 @@ import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import moment from 'moment';
 import EditOffering from './EditOfferingDetails';
+import {ClientUserType} from '../interface';
 
-interface ClientBooking {
-  fitnesspackages: any[];
-  package_duration: number;
-  effective_date: Date;
-  id: string | number;
-}
+// interface ClientBooking {
+//   fitnesspackages: any[];
+//   package_duration: number;
+//   effective_date: Date;
+//   id: string | number;
+// }
 
-const OfferingDetails: React.FC<{ Offering: ClientBooking }> = ({ Offering }) => {
+const OfferingDetails: React.FC<{ Offering: ClientUserType }> = ({ Offering }) => {
   const [showBookingModal, setShowBookingModal] = useState<boolean>(false);
 
   return (

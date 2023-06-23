@@ -232,7 +232,7 @@ export const GET_USER_WEEKLY_CONFIG = gql`
       data {
         id
         attributes {
-          Changemaker_weekly_schedule
+          
           booking_lead_time_online_mins
           booking_lead_time_offline_mins
         }
