@@ -17,13 +17,15 @@ import { GET_CLIENT_NEW } from './queries';
 import CreateClient from './addclientcomponent';
 import Table from '../../../components/table';
 import { flattenObj } from '../../../components/utils/responseFlatten';
-//import client from "./client";
+
 
 function ClientListingPage() {
   const auth = useContext(AuthContext);
   const [searchFilter, setSearchFilter] = useState('');
   const searchInput = useRef<any>();
   const CreateClientComponent = useRef<any>(null);
+  const [page, setPage] = useState<number>(1);
+  const [totalRecords, setTotalRecords] = useState<number>(0);
 
   function handleRedirect(id: any) {
     window.location.href = `/client/home/${id}`;
@@ -97,28 +99,16 @@ function ClientListingPage() {
     []
   );
 
-  // function getDate(time: any) {
-  //      let dateObj = new Date(time);
-  //      let month = dateObj.getMonth() + 1;
-  //      let year = dateObj.getFullYear();
-  //      let date = dateObj.getDate();
-
-  //      return `${date}/${month}/${year}`;
-  // }
-  // function getRenewalDate(time: any, duration: any) {
-  //      var date = new Date(time);
-  //      date.setDate(date.getDate() + duration);
-  //      return getDate(date);
-  // }
 
   const [datatable, setDataTable] = useState<Record<string, unknown>[]>([]);
-
-  // function FetchData(_variables: {} = { filter: " ", id: auth.userid }) {
   const fetch = useQuery(GET_CLIENT_NEW, {
-    variables: { filter: searchFilter, id: auth.userid },
-    onCompleted: loadData
+    variables: { filter: searchFilter, id: auth.userid, start: page * 10 - 10, limit: 10  },
+    onCompleted: (data) => {
+      setTotalRecords(data.clientPackages.meta.pagination.total);
+      loadData(data);
+    }
   });
-  // }
+ 
 
   function refetchQueryCallback() {
     fetch.refetch();
@@ -162,8 +152,11 @@ function ClientListingPage() {
       })
     );
   }
+  const pageHandler = (selectedPageNumber: number) => {
+    setPage(selectedPageNumber);
+  };
 
-  // FetchData({ filter: searchFilter, id: auth.userid });
+
   return (
     <TabContent>
       <Container>
@@ -201,6 +194,28 @@ function ClientListingPage() {
         </Row>
       </Container>
       <Table columns={columns} data={datatable} />
+      {datatable && datatable.length ? (
+        <Row className="justify-content-end">
+          <Button
+            variant="outline-dark"
+            className="m-2"
+            onClick={() => pageHandler(page - 1)}
+            disabled={page === 1 ? true : false}>
+            Previous
+          </Button>
+
+          <Button
+            variant="outline-dark"
+            className="m-2"
+            onClick={() => pageHandler(page + 1)}
+            disabled={totalRecords > page * 10 - 10 + datatable.length ? false : true}>
+            Next
+          </Button>
+          <span className="m-2 bold pt-2">{`${page * 10 - 10 + 1} - ${
+            page * 10 - 10 + datatable.length
+          }`}</span>
+        </Row>
+      ) : null}
     </TabContent>
   );
 }

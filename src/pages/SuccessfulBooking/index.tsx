@@ -39,6 +39,7 @@ const SuccessfulBooking: React.FC = () => {
   useEffect(() => {
     // Fetch data from cashfree's GET API using the link Id
     const fetchData = () => {
+      if(packageDetails?.fitnesspackages[0].fitnesspackagepricing[0].mrp !== 'free'){
       axios
         .get(
           `${process.env.REACT_APP_URL}/api/client-booking/getpaymentlinksbylinkid/?link_id=link_id_${bookingId}`,
@@ -48,8 +49,12 @@ const SuccessfulBooking: React.FC = () => {
           setPaymentDetails(response.data.cfLink);
           setLinkId(response.data.cfLink.linkId);
         });
+      }
     };
-    fetchData();
+
+    if(packageDetails?.fitnesspackages[0].fitnesspackagepricing[0].mrp !== 'free'){
+      fetchData();
+    }
   }, []);
 
   return (
@@ -76,12 +81,17 @@ const SuccessfulBooking: React.FC = () => {
         Transaction of {paymentDetails?.linkCurrency} {paymentDetails?.linkAmountPaid} is successful
         for {linkId}
       </h4>
-      <h6 className="text-center mt-2">
+      {
+        paymentDetails?.linkUrl ? 
+        <h6 className="text-center mt-2">
         <b>Link url:</b>{' '}
         <a href={paymentDetails?.linkUrl} style={{ color: 'black' }}>
           {paymentDetails?.linkUrl}
         </a>
       </h6>
+      : null
+      }
+      
       <div className="d-flex justify-content-center mt-4">
         <Button onClick={routeChange} variant="success">
           Go back to client page
@@ -95,11 +105,11 @@ const SuccessfulBooking: React.FC = () => {
 
           <Card.Body>
             <Card.Text>
-              <b className="mr-2">Name </b>: {paymentDetails?.customerDetails?.customerName}
+              <b className="mr-2">Name </b>: {paymentDetails?.customerDetails?.customerName ? paymentDetails?.customerDetails?.customerName : `${packageDetails?.ClientUser[0].First_Name} ${packageDetails?.ClientUser[0].Last_Name}`}
               <br />
-              <b className="mr-2">Phone no.</b>: {paymentDetails?.customerDetails?.customerPhone}
+              <b className="mr-2">Phone no.</b>: {paymentDetails?.customerDetails?.customerPhone ? paymentDetails?.customerDetails?.customerPhone : packageDetails?.ClientUser[0].Phone_Number }
               <br />
-              <b className="mr-2">Email</b>: {paymentDetails?.customerDetails?.customerEmail}
+              <b className="mr-2">Email</b>: {paymentDetails?.customerDetails?.customerEmail ? paymentDetails?.customerDetails?.customerEmail : packageDetails?.ClientUser[0].email}
             </Card.Text>
           </Card.Body>
         </Card>

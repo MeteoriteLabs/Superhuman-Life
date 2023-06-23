@@ -25,6 +25,8 @@ export default function Expenses(): JSX.Element {
 
   const searchInput = useRef<HTMLInputElement>(null);
   const [currentFilter, setCurrentFilter] = useState<string>('name');
+  const [page, setPage] = useState<number>(1);
+  const [totalRecords, setTotalRecords] = useState<number>(0);
 
   const columns = useMemo(
     () => [
@@ -116,10 +118,13 @@ export default function Expenses(): JSX.Element {
 
   const { data: get_transaction } = useQuery(GET_TRANSACTIONS, {
     variables: {
-      senderId: auth.userid
+      senderId: auth.userid,
+      start: page * 10 - 10,
+      limit: 10
     },
-    onCompleted: () => {
+    onCompleted: (data) => {
       users();
+      setTotalRecords(data.transactions.meta.pagination.total);
     }
   });
 
@@ -162,6 +167,9 @@ export default function Expenses(): JSX.Element {
         })
     );
   }
+  const pageHandler = (selectedPageNumber: number) => {
+    setPage(selectedPageNumber);
+  };
 
   return (
     <TabContent>
@@ -195,6 +203,28 @@ export default function Expenses(): JSX.Element {
         </Row>
       </Container>
       <Table columns={columns} data={datatable} />
+      {datatable && datatable.length ? (
+        <Row className="justify-content-end">
+          <Button
+            variant="outline-dark"
+            className="m-2"
+            onClick={() => pageHandler(page - 1)}
+            disabled={page === 1 ? true : false}>
+            Previous
+          </Button>
+
+          <Button
+            variant="outline-dark"
+            className="m-2"
+            onClick={() => pageHandler(page + 1)}
+            disabled={totalRecords > page * 10 - 10 + datatable.length ? false : true}>
+            Next
+          </Button>
+          <span className="m-2 bold pt-2">{`${page * 10 - 10 + 1} - ${
+            page * 10 - 10 + datatable.length
+          }`}</span>
+        </Row>
+      ) : null}
     </TabContent>
   );
 }
