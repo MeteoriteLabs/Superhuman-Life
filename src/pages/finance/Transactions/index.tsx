@@ -154,7 +154,7 @@ export default function Transactions(): JSX.Element {
   });
 
   const { data: get_transaction } = useQuery(GET_TRANSACTIONS, {
-    onCompleted: (data) => {
+    onCompleted: () => {
       users({
         variables: {
           id: Number(auth.userid)
