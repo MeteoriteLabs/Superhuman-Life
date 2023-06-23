@@ -247,4 +247,3 @@ export const GET_PAYMENT_SCHEDULES_FOR_CHANGEMAKER = gql`
     }
   }
 `;
-
