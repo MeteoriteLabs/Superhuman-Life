@@ -113,17 +113,17 @@ function Hero(): JSX.Element {
   }, [loading, error]);
 
   return (
-    <div className={style.formContainer}>
+    <div className={style.form_container}>
       <Form onSubmit={onSubmit} className={style.form}>
         <Form.Group controlId="title">
-          <Form.Label className={style.labelText}>Title</Form.Label>
+          <Form.Label className={style.label_text}>Title</Form.Label>
           <Controller
             name="title"
             control={control}
             render={({ field }) => (
               <Form.Control
                 type="text"
-                className={style.inputText}
+                className={style.input_text}
                 as="input"
                 {...field}></Form.Control>
             )}
@@ -208,7 +208,7 @@ function Hero(): JSX.Element {
           : null}
 
         {errorMsg ? <p>{errorMsg}</p> : null}
-        <Button variant="primary" type="submit" className={style.submitButton}>
+        <Button variant="primary" type="submit" className={style.submit_button}>
           Submit
         </Button>
       </Form>

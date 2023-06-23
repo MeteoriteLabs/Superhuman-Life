@@ -37,7 +37,7 @@ export const FormatReceivedDataToState = (plans: ServerPlansTs): ClientPlansTs[]
     reset: UseFormReset<FormData>;
     setInitialValues:  React.Dispatch<React.SetStateAction<FormData>>
   }): void {
-    if (initialValues.plans.length === 0) {
+    if (!initialValues.plans.length) {
       setInitialValues({
         ...initialValues,
         sectionId: data.websiteSections.data[0].id,

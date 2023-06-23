@@ -15,7 +15,7 @@ type FormData = {
   link: string;
 };
 
-function Hero(): JSX.Element {
+function CallToAction(): JSX.Element {
   const auth = useContext(authContext);
   const [errorMsg, setErrorMsg] = useState<string>('');
   const [initialValues, setInitialValues] = useState<FormData>({
@@ -88,17 +88,17 @@ function Hero(): JSX.Element {
   }, [loading, error]);
 
   return (
-    <div className={style.formContainer}>
+    <div className={style.form_container}>
       <Form onSubmit={onSubmit} className={style.form}>
         <Form.Group controlId="home_cta">
-          <Form.Label className={style.labelText}>Title</Form.Label>
+          <Form.Label className={style.label_text}>Title</Form.Label>
           <Controller
             name="title"
             control={control}
             render={({ field }) => (
               <Form.Control
                 type="text"
-                className={style.inputText}
+                className={style.input_text}
                 as="input"
                 {...field}></Form.Control>
             )}
@@ -114,7 +114,7 @@ function Hero(): JSX.Element {
             render={({ field }) => (
               <Form.Control
                 type="textarea"
-                className={style.inputText}
+                className={style.input_text}
                 as="input"
                 {...field}></Form.Control>
             )}
@@ -132,7 +132,7 @@ function Hero(): JSX.Element {
             render={({ field }) => (
               <Form.Control
                 type="textarea"
-                className={style.inputText}
+                className={style.input_text}
                 as="input"
                 {...field}></Form.Control>
             )}
@@ -143,7 +143,7 @@ function Hero(): JSX.Element {
           )}
         </Form.Group>
         {errorMsg ? <p>{errorMsg}</p> : null}
-        <Button variant="primary" type="submit" className={style.submitButton}>
+        <Button variant="primary" type="submit" className={style.submit_button}>
           Submit
         </Button>
       </Form>
@@ -151,4 +151,4 @@ function Hero(): JSX.Element {
   );
 }
 
-export default Hero;
+export default CallToAction;

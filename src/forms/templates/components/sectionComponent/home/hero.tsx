@@ -86,17 +86,17 @@ function Hero(): JSX.Element {
   }, [loading, error]);
 
   return (
-    <div className={style.formContainer}>
+    <div className={style.form_container}>
       <Form onSubmit={onSubmit} className={style.form}>
         <Form.Group controlId="title">
-          <Form.Label className={style.labelText}>Title</Form.Label>
+          <Form.Label className={style.label_text}>Title</Form.Label>
           <Controller
             name="title"
             control={control}
             render={({ field }) => (
               <Form.Control
                 type="text"
-                className={style.inputText}
+                className={style.input_text}
                 as="input"
                 {...field}></Form.Control>
             )}
@@ -105,14 +105,14 @@ function Hero(): JSX.Element {
           {errors.title && <p>{errors.title.message}</p>}
         </Form.Group>
         <Form.Group controlId="description">
-          <Form.Label className={style.labelText}>Description</Form.Label>
+          <Form.Label className={style.label_text}>Description</Form.Label>
           <Controller
             name="description"
             control={control}
             render={({ field }) => (
               <Form.Control
                 type="textarea"
-                className={style.inputText}
+                className={style.input_text}
                 as="input"
                 {...field}></Form.Control>
             )}
@@ -123,7 +123,7 @@ function Hero(): JSX.Element {
           )}
         </Form.Group>
         <Form.Group controlId="hero image">
-          <Form.Label className={style.labelText}>Hero Image</Form.Label>
+          <Form.Label className={style.label_text}>Hero Image</Form.Label>
           <Controller
             name="image"
             control={control}
@@ -131,7 +131,7 @@ function Hero(): JSX.Element {
               <Form.Control
                 type="file"
                 accept="image/*"
-                className={style.inputText}
+                className={style.input_text}
                 as="input"
                 {...field}></Form.Control>
             )}
@@ -140,8 +140,9 @@ function Hero(): JSX.Element {
             <Form.Control.Feedback tooltip>{errors.image.message}</Form.Control.Feedback>
           )}
         </Form.Group>
+        {/* add */}
         {errorMsg ? <p>{errorMsg}</p> : null}
-        <Button variant="primary" type="submit" className={style.submitButton}>
+        <Button variant="primary" type="submit" className={style.submit_button}>
           Submit
         </Button>
       </Form>

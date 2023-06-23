@@ -1,5 +1,6 @@
 import { useContext } from 'react';
 import { ChangeMakerWebsiteContext } from '../../../../context/changemakerWebsite-context';
+import Loader from '../../../../components/Loader/Loader';
 
 function Index(): JSX.Element {
   const { changemakerWebsiteState } = useContext(ChangeMakerWebsiteContext);
@@ -22,8 +23,9 @@ function Index(): JSX.Element {
               borderRadius: '10px 10px 0 0',
               transform: 'scale(.7)',
               transformOrigin: 'top center'
-            }}
-          />
+            }}>
+            <Loader msg={'loading....'} />
+          </div>
         ) : (
           <iframe
             src={`https://${changemakerWebsiteState.subdomain}`}
