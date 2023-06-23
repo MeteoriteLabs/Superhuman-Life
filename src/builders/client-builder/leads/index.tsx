@@ -25,6 +25,9 @@ export default function Leads() {
   const [nameArr, setNameArr] = useState<any>([]);
   const searchInput = useRef<any>();
   const createEditMessageComponent = useRef<any>(null);
+  const [page, setPage] = useState<number>(1);
+  const [totalRecords, setTotalRecords] = useState<number>(0);
+
 
   const [updateSeenStatus] = useMutation(UPDATE_SEEN_NEW, {
     onCompleted: (e: any) => {
@@ -173,8 +176,11 @@ export default function Leads() {
   const [datatable, setDataTable] = useState<Record<string, unknown>[]>([]);
 
   const fetch = useQuery(GET_LEADS_NEW, {
-    variables: { filter: searchFilter, id: auth.userid },
-    onCompleted: loadData
+    variables: { filter: searchFilter, id: auth.userid, start: page * 10 - 10, limit: 10 },
+    onCompleted: (data) => {
+      setTotalRecords(data.websiteContactForms.meta.pagination.total);
+      loadData(data);
+    }
   });
 
   function refetchQueryCallback() {
@@ -236,9 +242,9 @@ export default function Leads() {
           }
         })
       );
-
-
     }
+
+    
     if (searchFilter === '') {
       setDataTable(
         data.flatMap((Detail: any) => {
@@ -258,7 +264,9 @@ export default function Leads() {
   }, [searchFilter, data, nameArr]);
 
 
-  
+  const pageHandler = (selectedPageNumber: number) => {
+    setPage(selectedPageNumber);
+  };
 
   return (
     <TabContent>
@@ -301,6 +309,28 @@ export default function Leads() {
         </Row>
       </Container>
       <Table columns={columns} data={datatable} />
+      {datatable && datatable.length ? (
+        <Row className="justify-content-end">
+          <Button
+            variant="outline-dark"
+            className="m-2"
+            onClick={() => pageHandler(page - 1)}
+            disabled={page === 1 ? true : false}>
+            Previous
+          </Button>
+
+          <Button
+            variant="outline-dark"
+            className="m-2"
+            onClick={() => pageHandler(page + 1)}
+            disabled={totalRecords > page * 10 - 10 + datatable.length ? false : true}>
+            Next
+          </Button>
+          <span className="m-2 bold pt-2">{`${page * 10 - 10 + 1} - ${
+            page * 10 - 10 + datatable.length
+          }`}</span>
+        </Row>
+      ) : null}
     </TabContent>
   );
 }

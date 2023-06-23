@@ -40,7 +40,7 @@ const OfferingList: React.FC<{ value: string; onChange: (params: string | null) 
   function loadData(data: any) {
     const flattenedData = flattenObj({ ...data });
     setOfferingList(
-      [...flattenedData?.offeringInventories].map((currValue) => {
+      [...flattenedData.offeringInventories].map((currValue) => {
         return {
           id: currValue.fitnesspackage.id && currValue.fitnesspackage.id,
           name: currValue.fitnesspackage.packagename && currValue.fitnesspackage.packagename

@@ -13,11 +13,10 @@ import moment from "moment";
 import FitnessAction from "../FitnessAction";
 import AuthContext from "../../../../context/auth-context";
 import { Link } from "react-router-dom";
-
 import { flattenObj } from "../../../../components/utils/responseFlatten";
 import Loader from "../../../../components/Loader/Loader";
 
-const Scheduler = () => {
+const Scheduler: React.FC = () => {
 	const auth = useContext(AuthContext);
 	const last = window.location.pathname.split("/").reverse();
 	const tagId = window.location.pathname.split("/").pop();
@@ -53,7 +52,7 @@ const Scheduler = () => {
 		const flattenData = flattenObj({ ...data });
 		const total = [0];
 		const clientValues = [...clientIds];
-		const values = [...flattenData.tags[0]?.sessions];
+		const values = [...flattenData.tags[0].sessions];
 		const ids = [...sessionIds];
 		for (let i = 0; i < values.length; i++) {
 			ids.push(values[i].id);

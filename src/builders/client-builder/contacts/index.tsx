@@ -20,9 +20,9 @@ import { useHistory } from 'react-router-dom';
 import AuthContext from '../../../context/auth-context';
 
 export default function Contacts() {
-  const [searchFilter, setSearchFilter] = useState<any>(null);
-  const [data, setData] = useState<any>([]);
-  const [nameArr, setNameArr] = useState<any>([]);
+  const [searchFilter, setSearchFilter] = useState<string>('');
+  const [page, setPage] = useState<number>(1);
+  const [totalRecords, setTotalRecords] = useState<number>(0);
 
   const auth = useContext(AuthContext);
   const searchInput = useRef<any>();
@@ -116,28 +116,20 @@ export default function Contacts() {
   const [datatable, setDataTable] = useState<Record<string, unknown>[]>([]);
 
   const fetch = useQuery(GET_CONTACTS, {
-    variables: { filter: searchFilter, id: auth.userid },
-    onCompleted: loadData
+    variables: { id: auth.userid, filter: searchFilter, start: page * 10 - 10, limit: 10 },
+    onCompleted: (data) => {
+      setTotalRecords(data.contacts.meta.pagination.total);
+      loadData(data);
+    }
   });
 
   function refetchQueryCallback() {
     fetch.refetch();
   }
-
   function loadData(data: any) {
-    const namearr: any = [];
     const flattenData = flattenObj({ ...data });
-    setData([...flattenData.contacts]);
-
     setDataTable(
       [...flattenData.contacts].flatMap((Detail) => {
-        if (!namearr.includes(Detail.firstname)) {
-          namearr.push(Detail.firstname);
-          namearr.push(Detail.firstname.toLowerCase());
-        }
-        if (!namearr.includes(Detail.appDownloadStatus)) {
-          namearr.push(Detail.appDownloadStatus.toLowerCase());
-        }
         return {
           id: Detail.id,
           contactsdate: getDate(Date.parse(Detail.createdAt)),
@@ -149,50 +141,11 @@ export default function Contacts() {
         };
       })
     );
-    setNameArr(namearr);
   }
 
-  useEffect(() => {
-    if (searchFilter) {
-      setDataTable(
-        data.flatMap((Detail: any) => {
-          if (
-            (nameArr.includes(searchFilter) &&
-              Detail.firstname.toLowerCase() === searchFilter.toLowerCase()) ||
-            (nameArr.includes(searchFilter) &&
-              Detail.appDownloadStatus.toLowerCase() === searchFilter.toLowerCase())
-          ) {
-            return {
-              id: Detail.id,
-              contactsdate: getDate(Date.parse(Detail.createdAt)),
-              name: Detail.firstname + ' ' + Detail.lastname,
-              number: Detail.phone,
-              email: Detail.email,
-              type: Detail.type,
-              appStatus: Detail.appDownloadStatus
-            };
-          } else {
-            return [];
-          }
-        })
-      );
-    }
-    if (searchFilter === '') {
-      setDataTable(
-        data.flatMap((Detail: any) => {
-          return {
-            id: Detail.id,
-            contactsdate: getDate(Date.parse(Detail.createdAt)),
-            name: Detail.firstname + ' ' + Detail.lastname,
-            number: Detail.phone,
-            email: Detail.email,
-            type: Detail.type,
-            appStatus: Detail.appDownloadStatus
-          };
-        })
-      );
-    }
-  }, [searchFilter, data, nameArr]);
+  const pageHandler = (selectedPageNumber: number) => {
+    setPage(selectedPageNumber);
+  };
 
   return (
     <TabContent>
@@ -236,6 +189,28 @@ export default function Contacts() {
         </Row>
       </Container>
       <Table columns={columns} data={datatable} />
+      {datatable && datatable.length ? (
+        <Row className="justify-content-end">
+          <Button
+            variant="outline-dark"
+            className="m-2"
+            onClick={() => pageHandler(page - 1)}
+            disabled={page === 1 ? true : false}>
+            Previous
+          </Button>
+
+          <Button
+            variant="outline-dark"
+            className="m-2"
+            onClick={() => pageHandler(page + 1)}
+            disabled={totalRecords > page * 10 - 10 + datatable.length ? false : true}>
+            Next
+          </Button>
+          <span className="m-2 bold pt-2">{`${page * 10 - 10 + 1} - ${
+            page * 10 - 10 + datatable.length
+          }`}</span>
+        </Row>
+      ) : null}
     </TabContent>
   );
 }

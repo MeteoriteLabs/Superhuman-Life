@@ -25,7 +25,6 @@ export default function Transactions(): JSX.Element {
   const searchInput = useRef<HTMLInputElement>(null);
   const [currentFilter, setCurrentFilter] = useState<string>('name');
 
-
   const columns = useMemo(
     () => [
       { accessor: 'id', Header: 'Transaction ID' },
@@ -154,7 +153,7 @@ export default function Transactions(): JSX.Element {
   });
 
   const { data: get_transaction } = useQuery(GET_TRANSACTIONS, {
-    onCompleted: (data) => {
+    onCompleted: () => {
       users({
         variables: {
           id: Number(auth.userid)
@@ -220,8 +219,6 @@ export default function Transactions(): JSX.Element {
         })
     );
   }
-
-
 
   return (
     <TabContent>

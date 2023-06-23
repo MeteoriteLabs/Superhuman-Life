@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
 export const GET_CONTACTS = gql`
-  query ContactsQuery($id: ID ){
-    contacts(pagination: { pageSize: 100}, filters:{
+  query ContactsQuery($id: ID){
+    contacts(pagination: { pageSize: 100 }, filters:{
       ownedBy:{
         id: {eq: $id}
       },
@@ -10,7 +10,6 @@ export const GET_CONTACTS = gql`
         eq: true
       }
     } ) {
-      
       data {
         id
         attributes {
@@ -248,4 +247,3 @@ export const GET_PAYMENT_SCHEDULES_FOR_CHANGEMAKER = gql`
     }
   }
 `;
-

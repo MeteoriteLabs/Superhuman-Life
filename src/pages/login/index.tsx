@@ -4,13 +4,13 @@ import { Link } from 'react-router-dom';
 import { Button, Modal, Row, Col } from 'react-bootstrap';
 import authContext from '../../context/auth-context';
 import { useMutation, gql } from '@apollo/client';
+import {Schema, LoginData, FormData, LoginJSON } from "./interface";
 
 const Login: React.FC = () => {
   const auth = useContext(authContext);
-  // eslint-disable-next-line
-  const loginSchema: any = require('./login.json');
-  // eslint-disable-next-line
-  const uiSchema: any = {
+  const loginSchema: LoginJSON = require('./login.json');
+ 
+  const uiSchema: Schema = {
     password: {
       'ui:widget': 'password',
       'ui:help': 'Hint: Make it strong!',
@@ -33,7 +33,7 @@ const Login: React.FC = () => {
 
   const [login, { error }] = useMutation(LOGIN, { onCompleted: loginSuccess });
 
-  function onSubmit(formData: any) {
+  function onSubmit(formData: FormData) {
     login({
       variables: {
         identifier: formData.email,
@@ -42,8 +42,8 @@ const Login: React.FC = () => {
     });
   }
 
-  function loginSuccess(d: any) {
-    auth.login(d.login.jwt, d.login.user.username, d.login.user.id);
+  function loginSuccess(data: LoginData) {
+    auth.login(data.login.jwt, data.login.user.username, data.login.user.id);
   }
 
   return (
