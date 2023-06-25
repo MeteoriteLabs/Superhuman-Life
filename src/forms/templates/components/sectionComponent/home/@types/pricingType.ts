@@ -1,21 +1,21 @@
-export type DataTs = {
+export type Data = {
     websiteSections: {
       data: {
         id: number;
         attributes: {
-          sectionData: SectionDataTs;
+          sectionData: SectionData;
         };
       }[];
     };
   };
 
-  export type SectionDataTs = {
+  export type SectionData = {
         title: string;
-        plans: ServerPlansTs;
+        plans: ServerPlans;
         currency: string;
   }
 
-export type ServerPlansTs = {
+export type ServerPlans = {
     actual: string;
     button: { link: string; text: string };
     discount: string;
@@ -25,7 +25,7 @@ export type ServerPlansTs = {
     title: string;
   }[];
 
-export type ClientPlansTs = {
+export type ClientPlans = {
     actual: string;
     buttonLink: string;
     buttonText: string;
@@ -40,7 +40,7 @@ export type ClientPlansTs = {
     sectionId: number;
     title: string;
     currency: string;
-    plans: ClientPlansTs[];
+    plans: ClientPlans[];
   };
   
  export type InputProps =

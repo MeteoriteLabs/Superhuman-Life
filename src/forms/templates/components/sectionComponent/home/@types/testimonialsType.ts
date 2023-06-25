@@ -1,20 +1,20 @@
-export type DataTs = {
+export type Data = {
     websiteSections: {
       data: {
         id: number;
         attributes: {
-          sectionData: SectionDataTs;
+          sectionData: SectionData;
         };
       }[];
     };
   };
 
-export type SectionDataTs = {
+export type SectionData = {
         title: string;
-        testimonials: ServerTestimonialsTs;
+        testimonials: ServerTestimonials;
   }
 
-export type ServerTestimonialsTs = {
+export type ServerTestimonials = {
     name: string;
     text: string;
     image: string;
@@ -26,7 +26,7 @@ export type ServerTestimonialsTs = {
 export type FormData = {
     sectionId: number;
     title: string;
-    testimonials:  ServerTestimonialsTs;
+    testimonials:  ServerTestimonials;
   };
   
  export type InputProps =

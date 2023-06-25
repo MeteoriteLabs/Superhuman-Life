@@ -1,9 +1,9 @@
 import { UseFormReset } from "react-hook-form";
-import { DataTs, FormData, SectionDataTs } from "../@types/testimonialsType";
+import { Data, FormData, SectionData } from "../@types/testimonialsType";
 
 export  function SetReceivingDataAndReset({sectionData, data, initialValues, reset , setInitialValues }:{
-    sectionData: SectionDataTs;
-    data: DataTs;
+    sectionData: SectionData;
+    data: Data;
     initialValues:FormData;
     reset: UseFormReset<FormData>;
     setInitialValues:  React.Dispatch<React.SetStateAction<FormData>>

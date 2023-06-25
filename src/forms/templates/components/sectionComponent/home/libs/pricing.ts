@@ -1,8 +1,8 @@
 import { UseFormReset } from "react-hook-form";
-import { ClientPlansTs, DataTs, FormData, SectionDataTs, ServerPlansTs, } from "../@types/pricingType";
+import { ClientPlans, Data, FormData, SectionData, ServerPlans, } from "../@types/pricingType";
 
-export const FormatReceivedDataToState = (plans: ServerPlansTs): ClientPlansTs[]  => {
-    return plans.map((plan): ClientPlansTs => {
+export const FormatReceivedDataToState = (plans: ServerPlans): ClientPlans[]  => {
+    return plans.map((plan): ClientPlans => {
       return {
         actual: plan.actual,
         buttonLink: plan.button.link,
@@ -16,8 +16,8 @@ export const FormatReceivedDataToState = (plans: ServerPlansTs): ClientPlansTs[]
     });
   };
 
-  export const FormatStateToServerData = (plans: ClientPlansTs[]): ServerPlansTs  => {
-    return plans.map((plan: ClientPlansTs) => {
+  export const FormatStateToServerData = (plans: ClientPlans[]): ServerPlans  => {
+    return plans.map((plan: ClientPlans) => {
       return {
         actual: plan.actual,
         button: {link:plan.buttonLink, text: plan.buttonText},
@@ -31,8 +31,8 @@ export const FormatReceivedDataToState = (plans: ServerPlansTs): ClientPlansTs[]
   };
 
  export  function SetReceivingDataAndReset({sectionData, data, initialValues, reset , setInitialValues }:{
-    sectionData: SectionDataTs;
-    data: DataTs;
+    sectionData: SectionData;
+    data: Data;
     initialValues:FormData;
     reset: UseFormReset<FormData>;
     setInitialValues:  React.Dispatch<React.SetStateAction<FormData>>

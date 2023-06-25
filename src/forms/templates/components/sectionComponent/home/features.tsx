@@ -8,6 +8,7 @@ import authContext from '../../../../../context/auth-context';
 import { ChangeMakerWebsiteContext } from '../../../../../context/changemakerWebsite-context';
 import { useMutation, useQuery } from '@apollo/client';
 import { ArrowDownShort } from 'react-bootstrap-icons';
+import Toaster from '../../../../../components/Toaster';
 
 // * --------------------- Types ---------------------
 
@@ -207,7 +208,9 @@ function Hero(): JSX.Element {
             ))
           : null}
 
-        {errorMsg ? <p>{errorMsg}</p> : null}
+        {errorMsg ? (
+          <Toaster type="error" msg={errorMsg} handleCallback={() => setErrorMsg('')} />
+        ) : null}
         <Button variant="primary" type="submit" className={style.submit_button}>
           Submit
         </Button>

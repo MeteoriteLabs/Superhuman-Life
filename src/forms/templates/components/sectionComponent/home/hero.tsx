@@ -7,6 +7,7 @@ import { GET_WEBSITE_SECTION } from './queries';
 import authContext from '../../../../../context/auth-context';
 import { useContext, useEffect, useState } from 'react';
 import { ChangeMakerWebsiteContext } from '../../../../../context/changemakerWebsite-context';
+import Toaster from '../../../../../components/Toaster';
 
 type FormData = {
   title: string;
@@ -141,7 +142,9 @@ function Hero(): JSX.Element {
           )}
         </Form.Group>
         {/* add */}
-        {errorMsg ? <p>{errorMsg}</p> : null}
+        {errorMsg ? (
+          <Toaster type="error" msg={errorMsg} handleCallback={() => setErrorMsg('')} />
+        ) : null}
         <Button variant="primary" type="submit" className={style.submit_button}>
           Submit
         </Button>

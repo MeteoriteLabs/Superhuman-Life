@@ -6,11 +6,12 @@ import { useMutation, useQuery } from '@apollo/client';
 import { UPDATE_WEBSITE_SECTION } from './queries/testimonials';
 import authContext from '../../../../../context/auth-context';
 import { SetReceivingDataAndReset } from './libs/testimonials';
-import { DataTs, FormData, InputProps } from './@types/testimonialsType';
+import { Data, FormData, InputProps } from './@types/testimonialsType';
 import { ChangeMakerWebsiteContext } from '../../../../../context/changemakerWebsite-context';
 import { GET_WEBSITE_SECTION } from './queries';
-import { InputComponent } from './components/testimonialsComponents';
+import { InputComponent } from './components/TestimonialsComponents';
 import { ArrowDownShort } from 'react-bootstrap-icons';
+import Toaster from '../../../../../components/Toaster';
 
 function Hero(): JSX.Element {
   const auth = useContext(authContext);
@@ -61,7 +62,7 @@ function Hero(): JSX.Element {
       sectionType: 'Testimonials'
     },
 
-    onCompleted: (data: DataTs) => {
+    onCompleted: (data: Data) => {
       const sectionData = data.websiteSections.data[0].attributes.sectionData;
       console.log('sectionData', sectionData.testimonials[0].text);
       SetReceivingDataAndReset({ sectionData, reset, setInitialValues, data, initialValues });
@@ -157,7 +158,9 @@ function Hero(): JSX.Element {
 
         <hr className={style.break_line} />
         {/* add */}
-        {errorMsg ? <p>{errorMsg}</p> : null}
+        {errorMsg ? (
+          <Toaster type="error" msg={errorMsg} handleCallback={() => setErrorMsg('')} />
+        ) : null}
         <Button variant="primary" type="submit" className={style.submit_button}>
           Submit
         </Button>

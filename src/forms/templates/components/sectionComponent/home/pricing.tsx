@@ -8,9 +8,10 @@ import authContext from '../../../../../context/auth-context';
 import { ChangeMakerWebsiteContext } from '../../../../../context/changemakerWebsite-context';
 import { useMutation, useQuery } from '@apollo/client';
 import { ArrowDownShort } from 'react-bootstrap-icons';
-import { DataTs, FormData, InputProps } from './@types/pricingType';
-import { InputComponent } from './components/pricingComponents';
+import { Data, FormData, InputProps } from './@types/pricingType';
+import { InputComponent } from './components/PricingComponents';
 import { FormatStateToServerData, SetReceivingDataAndReset } from './libs/pricing';
+import Toaster from '../../../../../components/Toaster';
 
 function Hero(): JSX.Element {
   const auth = useContext(authContext);
@@ -72,7 +73,7 @@ function Hero(): JSX.Element {
       sectionType: 'Pricing'
     },
 
-    onCompleted: (data: DataTs) => {
+    onCompleted: (data: Data) => {
       const sectionData = data.websiteSections.data[0].attributes.sectionData;
       SetReceivingDataAndReset({ sectionData, reset, setInitialValues, data, initialValues });
     }
@@ -182,7 +183,9 @@ function Hero(): JSX.Element {
             ))
           : null}
         {/* add */}
-        {errorMsg ? <p>{errorMsg}</p> : null}
+        {errorMsg ? (
+          <Toaster type="error" msg={errorMsg} handleCallback={() => setErrorMsg('')} />
+        ) : null}
         <Button variant="primary" type="submit" className={style.submit_button}>
           Submit
         </Button>

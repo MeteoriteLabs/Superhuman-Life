@@ -7,6 +7,7 @@ import { ChangeMakerWebsiteContext } from '../../../../../context/changemakerWeb
 import { GET_WEBSITE_SECTION } from './queries';
 import { useMutation, useQuery } from '@apollo/client';
 import { UPDATE_WEBSITE_SECTION } from './queries/cta';
+import Toaster from '../../../../../components/Toaster';
 
 type FormData = {
   sectionId: number;
@@ -142,7 +143,9 @@ function CallToAction(): JSX.Element {
             <Form.Control.Feedback tooltip>{errors.link.message}</Form.Control.Feedback>
           )}
         </Form.Group>
-        {errorMsg ? <p>{errorMsg}</p> : null}
+        {errorMsg ? (
+          <Toaster type="error" msg={errorMsg} handleCallback={() => setErrorMsg('')} />
+        ) : null}
         <Button variant="primary" type="submit" className={style.submit_button}>
           Submit
         </Button>
