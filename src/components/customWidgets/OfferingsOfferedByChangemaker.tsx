@@ -37,7 +37,7 @@ const OfferingList: React.FC<{ value: string; onChange: (params: string | null) 
 
   function loadData(data: OfferingInventory) {
     const flattenedData = flattenObj({ ...data });
-    console.log(flattenedData);
+   
     setOfferingList(
       [...flattenedData.offeringInventories].map((currValue) => {
         return {
@@ -47,8 +47,6 @@ const OfferingList: React.FC<{ value: string; onChange: (params: string | null) 
       })
     );
   }
-
-  console.log(offeringList);
 
   if (offeringSelectedId) {
     onChange(offeringSelectedId);
