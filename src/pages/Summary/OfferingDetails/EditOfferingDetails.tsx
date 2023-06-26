@@ -5,27 +5,20 @@ import Form from '@rjsf/core';
 import { UPDATE_CLIENT_BOOKING } from '../queries';
 import { useMutation } from '@apollo/client';
 import moment from 'moment';
-import {ClientUserType} from '../interface';
-
-interface ClientBooking {
-  fitnesspackages: any[];
-  package_duration: number;
-  effective_date: Date;
-  id: string | number;
-}
+import { PackageDetails } from '../interface';
 
 interface DefaultClientBooking {
-  offerings: any;
+  offerings: string;
   packageDuration: number;
   effectiveDate: string;
 }
 
-const EditOffering: React.FC<{ show: boolean; onHide: () => void; Offering: ClientUserType }> = ({
+const EditOffering: React.FC<{ show: boolean; onHide: () => void; Offering: PackageDetails }> = ({
   show,
   onHide,
   Offering
 }) => {
-  
+  // eslint-disable-next-line
   const editOfferingJson: { [name: string]: any } = require('./EditOffering.json');
   const formData: DefaultClientBooking = {
     offerings: Offering.fitnesspackages[0].packagename,
@@ -35,13 +28,17 @@ const EditOffering: React.FC<{ show: boolean; onHide: () => void; Offering: Clie
 
   const [updateUser] = useMutation(UPDATE_CLIENT_BOOKING);
 
-  const onSubmit = (frm) => {
+  const onSubmit = (formData: {
+    packageDuration: number;
+    effectiveDate: string;
+    offerings: string;
+  }) => {
     updateUser({
       variables: {
         id: Offering.id,
         data: {
-          package_duration: frm.formData.packageDuration,
-          effective_date: frm.formData.effectiveDate
+          package_duration: formData.packageDuration,
+          effective_date: formData.effectiveDate
         }
       }
     });
@@ -57,8 +54,8 @@ const EditOffering: React.FC<{ show: boolean; onHide: () => void; Offering: Clie
       <Modal.Body>
         <Form
           schema={editOfferingJson}
-          onSubmit={(frm: any) => {
-            onSubmit(frm);
+          onSubmit={(form) => {
+            onSubmit(form.formData);
           }}
           widgets={widgets}
           formData={formData}

@@ -12,7 +12,7 @@ const ClientDetailsCard: React.FC<{
   }[];
 }> = ({ Client }) => {
   
-  const [showClientModal, setShowClientModal] = useState<boolean>(false);
+  const [showClientModal, setShowClientModal] = useState(false);
 
   return (
     <Card className="mb-2">

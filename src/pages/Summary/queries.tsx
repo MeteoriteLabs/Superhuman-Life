@@ -87,6 +87,7 @@ export const GET_CLIENT_BOOKING = gql`
 
                 fitnessdisciplines {
                   data {
+                    id
                     attributes {
                       disciplinename
                     }

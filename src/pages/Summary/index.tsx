@@ -25,7 +25,7 @@ import { useHistory } from 'react-router-dom';
 import './summary.css';
 // import QRCode from 'react-qr-code';
 import API_END_POINTS from '../../components/utils/integration';
-import { ClientBooking } from './interface';
+import { PackageDetails } from './interface';
 
 interface PackagePricing {
   duration: number;
@@ -39,9 +39,24 @@ interface PackagePricing {
   voucher?: number;
 }
 
+interface UserPackageResponse {
+  id: string;
+  users_permissions_user: {
+    id: string;
+    username: string;
+    __typename: string;
+  };
+  fitnesspackages: {
+    id: string;
+    packagename: string;
+    __typename: string;
+  }[];
+  __typename: string;
+}
+
 const Summary: React.FC = () => {
   const auth = useContext(AuthContext);
-  const [packageDetails, setPackageDetails] = useState<any>();
+  const [packageDetails, setPackageDetails] = useState<PackageDetails>({} as PackageDetails);
   const query = window.location.search;
   const params = new URLSearchParams(query);
   const bookingId = params.get('id');
@@ -50,7 +65,9 @@ const Summary: React.FC = () => {
   const [isLinkSent, setIsLinkSent] = useState<boolean>(false);
   const [redirect, setRedirect] = useState<string | null>(null);
   const [packagePricing, setPackagePricing] = useState<PackagePricing[]>([]);
-  const [clientPackage, setClientPackage] = useState<any>();
+  const [clientPackage, setClientPackage] = useState<UserPackageResponse>(
+    {} as UserPackageResponse
+  );
 
   const history = useHistory();
 
@@ -58,12 +75,11 @@ const Summary: React.FC = () => {
     headers: { Authorization: `Bearer ${auth.token}` }
   };
 
-  useQuery<ClientBooking>(GET_CLIENT_BOOKING, {
+  useQuery(GET_CLIENT_BOOKING, {
     variables: { id: Number(bookingId) },
     onCompleted: (response) => {
-      console.log(response);
-      const flattenBookingResponse: any = flattenObj(response.clientBooking);
-      console.log(flattenBookingResponse);
+      const flattenBookingResponse: PackageDetails = flattenObj(response.clientBooking);
+
       setPackageDetails(flattenBookingResponse);
       setPackagePricing(flattenBookingResponse.fitnesspackages[0].fitnesspackagepricing);
 
@@ -71,7 +87,7 @@ const Summary: React.FC = () => {
       //   (currentValue) => currentValue.duration === flattenBookingResponse.package_duration
       // );
 
-      //create order on cashfree
+      //create order on cashfree , paymentsessionid recieved in response pass as parameter in generate UPI QR Code API will recieve QR code in reponse can we pass in QRCode component to display QR code
       // axios
       //   .post(
       //     API_END_POINTS.createOrderUrl,
@@ -106,7 +122,7 @@ const Summary: React.FC = () => {
   const [getTag] = useLazyQuery(GET_TAG, {
     onCompleted: (tagsResponse) => {
       const flattenTagsResponse = flattenObj(tagsResponse.tags);
-      console.log(tagsResponse, flattenTagsResponse);
+
       updateTag({
         variables: {
           id: Number(flattenTagsResponse[0].id),
@@ -126,21 +142,13 @@ const Summary: React.FC = () => {
   const [updateTag] = useMutation(UPDATE_TAG);
   const [updateOfferingInventory] = useMutation(UPDATE_OFFERING_INVENTORY);
   const [updateBookingStatus] = useMutation(UPDATE_BOOKING_STATUS);
-  if (packageDetails){
-    console.log(
-      packageDetails,
-      packageDetails.fitnesspackages[0].fitness_package_type.type,
-      packageDetails.fitnesspackages[0].fitness_package_type.type !== 'On-Demand PT'
-    );
-  console.log(
-    packageDetails.fitnesspackages[0].fitness_package_type.type !== 'On-Demand PT' &&
-      packageDetails.fitnesspackages[0].fitness_package_type.type !== 'Custom Fitness' &&
-      packageDetails.fitnesspackages[0].fitness_package_type.type !== 'One-On-One'
-  );}
 
   const [createUserPackage] = useMutation(CREATE_USER_PACKAGE, {
     onCompleted: (response) => {
-      const flattenUserPackageResponse = flattenObj(response.createClientPackage);
+      const flattenUserPackageResponse: UserPackageResponse = flattenObj(
+        response.createClientPackage
+      );
+
       setClientPackage(flattenUserPackageResponse);
       updateBookingStatus({
         variables: {
@@ -153,10 +161,6 @@ const Summary: React.FC = () => {
           }${bookingId}`
         },
         onCompleted: () => {
-          console.log(
-            packageDetails.fitnesspackages[0].fitness_package_type.type,
-            packageDetails.fitnesspackages[0].fitness_package_type.type === 'On-Demand PT'
-          );
           if (
             packageDetails.fitnesspackages[0].fitness_package_type.type !== 'On-Demand PT' &&
             packageDetails.fitnesspackages[0].fitness_package_type.type !== 'Custom Fitness' &&
@@ -217,39 +221,15 @@ const Summary: React.FC = () => {
     createUserPackage({
       variables: {
         data: {
-          // users_permissions_user: flattenBookingResponse.ClientUser[0].id,
-          // fitnesspackages: flattenBookingResponse.fitnesspackages[0].id,
-          // accepted_date: flattenBookingResponse.booking_date,
-          // package_duration: flattenBookingResponse.package_duration,
-          // effective_date: flattenBookingResponse.effective_date,
           PackageMRP: 0,
           users_permissions_user: packageDetails.ClientUser[0].id,
           fitnesspackages: packageDetails.fitnesspackages[0].id,
-          accepted_date: packageDetails.booking_date,
+          accepted_date: packageDetails.booking_date ? packageDetails.booking_date : null,
           package_duration: packageDetails.package_duration,
           effective_date: packageDetails.effective_date
-          // PackageMRP: response.data.cfLink.linkAmountPaid,
-          // TransactionID: `${flattenTransactionResponse.id}`
         }
       }
     });
-
-    // updateBookingStatus({
-    //   variables: {
-    //     id: bookingId,
-    //     Booking_status: 'booked',
-    //     BookingID: `BK${
-    //       packageDetails && packageDetails.ClientUser && packageDetails.ClientUser.length
-    //         ? packageDetails.ClientUser[0].First_Name.substring(0, 3)
-    //         : null
-    //     }${bookingId}`
-    //   },
-    //     onCompleted: (response) => {
-    //       // const flattenBookingResponse = flattenObj(response.updateClientBooking);
-
-    //     }
-
-    // });
   };
 
   const sendLink = (bookingId: string | null) => {
@@ -467,7 +447,7 @@ const Summary: React.FC = () => {
 
   // Calculate the percentage of time elapsed
   const elapsedPercentage = ((300 - timer) / 300) * 100;
-  console.log(packageDetails);
+
   return (
     <div className="col-lg-12">
       <h2>Summary</h2>
@@ -508,11 +488,12 @@ const Summary: React.FC = () => {
       {/* Package Details , client details and offering details with checkout option */}
       {packageDetails && !isLinkSent ? (
         <Row>
-          {packageDetails.fitnesspackages.map(
-            (curr) =>
-              curr.fitness_package_type?.type[0] !== 'Cohort' &&
-              curr.fitness_package_type?.type[0] !== 'Classic Class'
-          )}
+          {packageDetails.fitnesspackages &&
+            packageDetails.fitnesspackages.length &&
+            packageDetails.fitnesspackages[0].fitness_package_type?.type[0] !== 'Cohort' &&
+            packageDetails.fitnesspackages &&
+            packageDetails.fitnesspackages.length &&
+            packageDetails.fitnesspackages[0].fitness_package_type?.type[0] !== 'Classic Class'}
           <Col lg={6} sm={12}>
             {/* Package details */}
             <Card className="rounded mt-5 d-flex preview__card p-3">
@@ -520,9 +501,11 @@ const Summary: React.FC = () => {
                 <Col lg={12}>
                   <DisplayImage
                     imageName={
-                      packageDetails.fitnesspackages.map((curr) =>
-                        curr.Thumbnail_ID ? curr.Thumbnail_ID : ''
-                      )[0]
+                      packageDetails.fitnesspackages && packageDetails.fitnesspackages.length
+                        ? packageDetails.fitnesspackages.map((curr) =>
+                            curr.Thumbnail_ID ? curr.Thumbnail_ID : ''
+                          )[0]
+                        : ''
                     }
                     defaultImageUrl="/assets/placeholder.svg"
                     imageCSS="rounded-lg w-100 h-10 img-fluid img-thumbnail"
@@ -532,30 +515,38 @@ const Summary: React.FC = () => {
               <Row>
                 <Col lg={12} sm={12} className="ml-1">
                   <p style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>
-                    {packageDetails.fitnesspackages.map((curr) => curr.packagename)}
+                    {packageDetails.fitnesspackages && packageDetails.fitnesspackages.length
+                      ? packageDetails.fitnesspackages.map((curr) => curr.packagename)
+                      : null}
                   </p>
                 </Col>
                 <Col lg={6}>
                   <p className="bg-secondary text-white rounded-pill text-center">
-                    {packageDetails.fitnesspackages.map((curr) => curr.level)}
+                    {packageDetails.fitnesspackages && packageDetails.fitnesspackages.length
+                      ? packageDetails.fitnesspackages.map((curr) => curr.level)
+                      : null}
                   </p>
                 </Col>
                 <Col lg={12} sm={12} className="ml-1 d-flex">
-                  {packageDetails.fitnesspackages.map((curr) =>
-                    curr.address ? (
-                      <>
-                        <img
-                          src="/assets/location.svg"
-                          alt="location"
-                          style={{ height: '1.5rem' }}
-                        />
-                        <p style={{ fontSize: '1rem' }}>{curr.address}</p>
-                      </>
-                    ) : null
-                  )}
+                  {packageDetails.fitnesspackages && packageDetails.fitnesspackages.length
+                    ? packageDetails.fitnesspackages.map((curr) =>
+                        curr.address ? (
+                          <>
+                            <img
+                              src="/assets/location.svg"
+                              alt="location"
+                              style={{ height: '1.5rem' }}
+                            />
+                            <p style={{ fontSize: '1rem' }}>{curr.address.address1}</p>
+                          </>
+                        ) : null
+                      )
+                    : null}
                 </Col>
               </Row>
-              {packageDetails.fitnesspackages.find(
+              {packageDetails.fitnesspackages &&
+              packageDetails.fitnesspackages.length &&
+              packageDetails.fitnesspackages.find(
                 (curr) => curr.fitness_package_type.type[0] === 'Classic Class'
               ) ? null : (
                 <hr />
@@ -564,8 +555,10 @@ const Summary: React.FC = () => {
                 <Col lg={6} sm={6} className="ml-1 d-flex">
                   <Row>
                     <Col lg={12} sm={12}>
-                      {packageDetails.fitnesspackages[0].fitness_package_type.type ===
-                      'Group Class' ? (
+                      {packageDetails.fitnesspackages &&
+                      packageDetails.fitnesspackages.length &&
+                      packageDetails.fitnesspackages[0].fitness_package_type.type ===
+                        'Group Class' ? (
                         <>
                           <img
                             loading="lazy"
@@ -582,7 +575,9 @@ const Summary: React.FC = () => {
                           />{' '}
                         </>
                       ) : null}
-                      {packageDetails.fitnesspackages.find(
+                      {packageDetails.fitnesspackages &&
+                      packageDetails.fitnesspackages.length &&
+                      packageDetails.fitnesspackages.find(
                         (curr) => curr.fitness_package_type.type[0] === 'Custom Fitness'
                       ) ? (
                         <>
@@ -612,12 +607,16 @@ const Summary: React.FC = () => {
                           />
                         </>
                       ) : null}
-                      {packageDetails.fitnesspackages.find(
-                        (curr) => curr.fitness_package_type.type[0] === 'One-On-One'
-                      ) ||
-                      packageDetails.fitnesspackages.find(
-                        (curr) => curr.fitness_package_type.type[0] === 'On-Demand PT'
-                      ) ? (
+                      {(packageDetails.fitnesspackages &&
+                        packageDetails.fitnesspackages.length &&
+                        packageDetails.fitnesspackages.find(
+                          (curr) => curr.fitness_package_type.type[0] === 'One-On-One'
+                        )) ||
+                      (packageDetails.fitnesspackages &&
+                        packageDetails.fitnesspackages.length &&
+                        packageDetails.fitnesspackages.find(
+                          (curr) => curr.fitness_package_type.type[0] === 'On-Demand PT'
+                        )) ? (
                         <>
                           <img
                             loading="lazy"
@@ -634,7 +633,9 @@ const Summary: React.FC = () => {
                           />
                         </>
                       ) : null}
-                      {packageDetails.fitnesspackages.find(
+                      {packageDetails.fitnesspackages &&
+                      packageDetails.fitnesspackages.length &&
+                      packageDetails.fitnesspackages.find(
                         (curr) =>
                           curr.fitness_package_type?.type === 'Cohort' ||
                           curr.fitness_package_type?.type === 'Event'
@@ -658,27 +659,37 @@ const Summary: React.FC = () => {
                         </>
                       ) : null}
                       <br />
-                      {packageDetails.fitnesspackages.find(
-                        (curr) => curr.fitness_package_type.type === 'One-On-One'
-                      ) ||
-                      packageDetails.fitnesspackages.find(
-                        (curr) => curr.fitness_package_type.type === 'On-Demand PT'
-                      ) ? (
+                      {(packageDetails.fitnesspackages &&
+                        packageDetails.fitnesspackages.length &&
+                        packageDetails.fitnesspackages.find(
+                          (curr) => curr.fitness_package_type.type === 'One-On-One'
+                        )) ||
+                      (packageDetails.fitnesspackages &&
+                        packageDetails.fitnesspackages.length &&
+                        packageDetails.fitnesspackages.find(
+                          (curr) => curr.fitness_package_type.type === 'On-Demand PT'
+                        )) ? (
                         <div className="d-flex " style={{ fontSize: '0.7rem' }}>
                           <div className="px-2">
-                            {packageDetails.fitnesspackages.map((curr) =>
-                              curr.ptoffline ? curr.ptoffline : 0
-                            )}
+                            {packageDetails.fitnesspackages &&
+                              packageDetails.fitnesspackages.length &&
+                              packageDetails.fitnesspackages.map((curr) =>
+                                curr.ptoffline ? curr.ptoffline : 0
+                              )}
                           </div>
                           <div className="px-3">
-                            {packageDetails.fitnesspackages.map((curr) =>
-                              curr.ptonline ? curr.ptonline : 0
-                            )}
+                            {packageDetails.fitnesspackages &&
+                              packageDetails.fitnesspackages.length &&
+                              packageDetails.fitnesspackages.map((curr) =>
+                                curr.ptonline ? curr.ptonline : 0
+                              )}
                           </div>
                         </div>
                       ) : null}
-                      {packageDetails.fitnesspackages[0].fitness_package_type.type ===
-                      'Group Class' ? (
+                      {packageDetails.fitnesspackages &&
+                      packageDetails.fitnesspackages.length &&
+                      packageDetails.fitnesspackages[0].fitness_package_type.type ===
+                        'Group Class' ? (
                         <div className="d-flex " style={{ fontSize: '0.7rem' }}>
                           <div className="px-2">
                             {packageDetails.fitnesspackages[0].groupoffline
@@ -686,8 +697,12 @@ const Summary: React.FC = () => {
                               : 0}
                           </div>
                           <div className="px-3">
-                            {packageDetails.fitnesspackages[0].grouponline
-                              ? packageDetails.fitnesspackages[0].grouponline
+                            {packageDetails.fitnesspackages &&
+                            packageDetails.fitnesspackages.length &&
+                            packageDetails.fitnesspackages[0].grouponline
+                              ? packageDetails.fitnesspackages &&
+                                packageDetails.fitnesspackages.length &&
+                                packageDetails.fitnesspackages[0].grouponline
                               : 0}
                           </div>
                         </div>
@@ -698,46 +713,65 @@ const Summary: React.FC = () => {
 
                 <Col lg={4} className="ml-1">
                   {packageDetails &&
+                  packageDetails.fitnesspackages &&
                   packageDetails.fitnesspackages.length &&
+                  packageDetails.fitnesspackages[0].fitnesspackagepricing &&
                   packageDetails.fitnesspackages[0].fitnesspackagepricing.length &&
                   packageDetails.fitnesspackages[0].fitnesspackagepricing[0].mrp === 'free' ? (
                     <p>Free</p>
                   ) : (
                     <p style={{ fontSize: '1rem' }}>
                       Rs.{' '}
-                      {(packageDetails &&
+                      {(packageDetails.fitnesspackages &&
                         packageDetails.fitnesspackages.length &&
                         packageDetails.fitnesspackages[0].fitness_package_type.type ===
                           'On-Demand PT') ||
-                      packageDetails.fitnesspackages[0].fitness_package_type.type ===
-                        'Classic Class' ||
-                      (packageDetails.fitnesspackages[0].fitness_package_type.type === 'Cohort' &&
+                      (packageDetails.fitnesspackages &&
+                        packageDetails.fitnesspackages.length &&
+                        packageDetails.fitnesspackages[0].fitness_package_type.type ===
+                          'Classic Class') ||
+                      (packageDetails.fitnesspackages &&
+                        packageDetails.fitnesspackages.length &&
+                        packageDetails.fitnesspackages[0].fitness_package_type.type === 'Cohort' &&
+                        packageDetails.fitnesspackages &&
+                        packageDetails.fitnesspackages.length &&
                         packageDetails.fitnesspackages[0].fitnesspackagepricing &&
                         packageDetails.fitnesspackages[0].fitnesspackagepricing.length)
-                        ? packageDetails.fitnesspackages[0].fitnesspackagepricing.find(
+                        ? packageDetails.fitnesspackages[0].fitnesspackagepricing.filter(
                             (curr) => curr.duration === 1
-                          ).mrp
+                          )[0].mrp
                         : null}
-                      {packageDetails.fitnesspackages[0].fitness_package_type.type === 'Event' &&
+                      {packageDetails.fitnesspackages &&
+                      packageDetails.fitnesspackages.length &&
+                      packageDetails.fitnesspackages[0].fitness_package_type.type === 'Event' &&
                       packageDetails.fitnesspackages[0].fitnesspackagepricing &&
                       packageDetails.fitnesspackages[0].fitnesspackagepricing.length
                         ? packageDetails.fitnesspackages[0].fitnesspackagepricing[0].mrp
-                          
                         : null}
-                      {packageDetails.fitnesspackages[0].fitness_package_type.type ===
-                        'One-On-One' ||
-                      packageDetails.fitnesspackages[0].fitness_package_type.type ===
-                        'Custom Fitness' ||
-                      packageDetails.fitnesspackages[0].fitness_package_type.type ===
-                        'Group Class' ||
-                      (packageDetails.fitnesspackages[0].fitness_package_type.type ===
-                        'Live Stream Channel' &&
+                      {(packageDetails.fitnesspackages &&
+                        packageDetails.fitnesspackages.length &&
+                        packageDetails.fitnesspackages[0].fitness_package_type.type ===
+                          'One-On-One') ||
+                      (packageDetails.fitnesspackages &&
+                        packageDetails.fitnesspackages.length &&
+                        packageDetails.fitnesspackages[0].fitness_package_type.type ===
+                          'Custom Fitness') ||
+                      (packageDetails.fitnesspackages &&
+                        packageDetails.fitnesspackages.length &&
+                        packageDetails.fitnesspackages[0].fitness_package_type.type ===
+                          'Group Class') ||
+                      (packageDetails.fitnesspackages &&
+                        packageDetails.fitnesspackages.length &&
+                        packageDetails.fitnesspackages[0].fitness_package_type.type ===
+                          'Live Stream Channel' &&
+                        packageDetails.fitnesspackages &&
+                        packageDetails.fitnesspackages.length &&
                         packageDetails.fitnesspackages[0].fitnesspackagepricing &&
                         packageDetails.fitnesspackages[0].fitnesspackagepricing.length)
                         ? `${
-                            packageDetails.fitnesspackages[0].fitnesspackagepricing.find(
+                            packageDetails.fitnesspackages[0].fitnesspackagepricing.filter(
                               (curr) => curr.duration === 30
-                            ).mrp
+                            )[0].mrp
                           } Monthly`
                         : null}
                     </p>
@@ -768,9 +802,9 @@ const Summary: React.FC = () => {
                     <Button className="mt-3" onClick={() => completeBooking()}>
                       Complete Booking
                     </Button>
-                  ) : isLinkSent === false ? (
+                  ) : !isLinkSent ? (
                     <>
-                      {/* payment options */}
+                      {/* payment options *
                       {/* <div className="form-check form-check-inline">
                         <input
                           className="form-check-input"
@@ -800,7 +834,7 @@ const Summary: React.FC = () => {
                         <label className="form-check-label" htmlFor="qrcode">
                           Pay via UPI QR Code
                         </label>
-                      </div>  */}
+                  </div>  */}
                       <div>
                         <Button className="mt-3" onClick={() => sendLink(bookingId)}>
                           {/* Proceed to payment */}
