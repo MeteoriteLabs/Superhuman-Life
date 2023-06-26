@@ -1,13 +1,16 @@
-import NewCustomColorPicker from "../../components/customWidgets/newCustomColor";
-import UploadImageToS3WithNativeSdk from "../../components/upload/upload";
+import NewCustomColorPicker from '../../components/customWidgets/newCustomColor';
+import UploadImageToS3WithNativeSdk from '../../components/upload/upload';
 
 export const widgets = {
   newCustomColorPicker: NewCustomColorPicker,
   uploadImageToS3WithNativeSdk: UploadImageToS3WithNativeSdk,
-  uploadVideoToS3WithNativeSdk: UploadImageToS3WithNativeSdk,
+  uploadVideoToS3WithNativeSdk: UploadImageToS3WithNativeSdk
 };
 
-export const UploadImageToS3WithNativeSdkComponent = (props: {value: string; onChange: (args: string) => void}): unknown => {
+export const UploadImageToS3WithNativeSdkComponent = (props: {
+  value: string;
+  onChange: (args: string) => void;
+}): JSX.Element => {
   return (
     <UploadImageToS3WithNativeSdk
       value={props.value}
@@ -19,7 +22,10 @@ export const UploadImageToS3WithNativeSdkComponent = (props: {value: string; onC
     />
   );
 };
-export const UploadVideoToS3WithNativeSdkComponent = (props: {value: string; onChange: (args: string) => void}): unknown => {
+export const UploadVideoToS3WithNativeSdkComponent = (props: {
+  value: string;
+  onChange: (args: string) => void;
+}): unknown => {
   return (
     <UploadImageToS3WithNativeSdk
       value={props.value}
