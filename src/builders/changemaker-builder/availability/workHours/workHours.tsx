@@ -136,7 +136,7 @@ const WorkHours = () => {
       setAvailability(flattenData.changemakerAvailabilties);
       const changemakerSlots =
         flattenData.changemakerAvailabilties.length > 0
-          ? flattenData.changemakerAvailabilties[0]?.booking_slots
+          ? flattenData.changemakerAvailabilties[0]?.AllSlots
           : [];
       const sessionSlots = flattenData?.sessions;
       const mergedSlots = sessionSlots?.concat(changemakerSlots);
@@ -169,8 +169,8 @@ const WorkHours = () => {
 
   function handleTodaysSlots(todaysEvents: any, changeMakerAvailability: any) {
     const currentDateWorkHours =
-    changeMakerAvailability && changeMakerAvailability.length && changeMakerAvailability[0].booking_slots && changeMakerAvailability[0].booking_slots.length > 0
-        ? [...changeMakerAvailability[0].booking_slots]
+    changeMakerAvailability && changeMakerAvailability.length && changeMakerAvailability[0].AllSlots && changeMakerAvailability[0].AllSlots.length > 0
+        ? [...changeMakerAvailability[0].AllSlots]
         : [];
 
     const values = todaysEvents.concat(currentDateWorkHours);
@@ -444,7 +444,7 @@ const WorkHours = () => {
         obj.end_time = toTime;
         obj.mode = mode;
         const userData =
-          values.booking_slots !== null ? [...values.booking_slots] : [];
+          values.AllSlots !== null ? [...values.AllSlots] : [];
         userData.push(obj);
         updateChangemakerAvailabilityWorkHour({
           variables: { id: values.id, slots: userData },
@@ -482,11 +482,11 @@ const WorkHours = () => {
   const [slotId, setSlotId]: any = useState("");
 
   function handleDeleteWorkHour(id: any) {
-    const objIndex = availability[0]?.booking_slots.findIndex(
+    const objIndex = availability[0]?.AllSlots.findIndex(
       (item: any) => item.id === id
     );
 
-    const values = [...availability[0].booking_slots];
+    const values = [...availability[0].AllSlots];
     values.splice(objIndex, 1);
 
     updateChangemakerAvailabilityWorkHour({
@@ -583,7 +583,7 @@ const WorkHours = () => {
 
     for (var i = 0; i < values?.length; i++) {
       const obj =
-        values[i]?.booking_slots !== null ? [...values[i]?.booking_slots] : [];
+        values[i]?.AllSlots !== null ? [...values[i]?.AllSlots] : [];
       if (
         moment(values[i].date).format("dddd") === daysOfWeek[dayIndex] &&
         values[i].Is_Holiday === false
@@ -672,7 +672,7 @@ const WorkHours = () => {
   function handleAddHoliday(date: any, event: any) {
     const values = availability.find((item: any) => item.date === date);
     if (values) {
-      if (values.booking_slots.length > 0) {
+      if (values.AllSlots.length > 0) {
         // set a modal to display the error
         setHolidayConflicts([values]);
         setHolidayErr(true);
@@ -778,7 +778,7 @@ const WorkHours = () => {
             );
             if (obj?.length > 0) {
               for (var y = 0; y < obj.length; y++) {
-                const oldSlots = [...obj[y].booking_slots];
+                const oldSlots = [...obj[y].AllSlots];
                 const newSlots = [
                   ...oldSlots,
                   ...newConfig[daysOfWeek[i]].slots,
