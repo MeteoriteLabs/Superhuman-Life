@@ -23,6 +23,7 @@ const EditClient: React.FC<{
     id: string | number;
   }[];
 }> = ({ show, onHide, Client }) => {
+  // eslint-disable-next-line
   const editClientJson: { [name: string]: any } = require('./EditClientJson.json');
 
   const formData: UserDetail = {
@@ -34,16 +35,16 @@ const EditClient: React.FC<{
 
   const [updateUser] = useMutation(UPDATE_USER);
 
-  const onSubmit = (frm) => {
+  const onSubmit = (formData: UserDetail) => {
     updateUser({
       variables: {
         userid: Client[0].id,
-        fname: frm.formData.firstname,
-        lname: frm.formData.lastname,
-        email: frm.formData.email,
-        password: `${frm.formData.phone}${frm.formData.firstname}`,
-        phone: frm.formData.phone,
-        uname: `${frm.formData.firstname}${frm.formData.lastname}`
+        fname: formData.firstname,
+        lname: formData.lastname,
+        email: formData.email,
+        password: `${formData.phone}${formData.firstname}`,
+        phone: formData.phone,
+        uname: `${formData.firstname}${formData.lastname}`
       }
     });
 
@@ -58,8 +59,8 @@ const EditClient: React.FC<{
       <Modal.Body>
         <Form
           schema={editClientJson}
-          onSubmit={(frm: any) => {
-            onSubmit(frm);
+          onSubmit={(form) => {
+            onSubmit(form.formData);
           }}
           formData={formData}
           uiSchema={schema}

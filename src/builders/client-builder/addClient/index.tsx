@@ -14,6 +14,7 @@ import {
 import AuthContext from '../../../context/auth-context';
 import moment from 'moment';
 import { useHistory } from 'react-router-dom';
+import { UPDATE_BOOKING_STATUS } from '../../../pages/booking/GraphQL/mutation';
 
 const AddClient: React.FC = () => {
   const auth = useContext(AuthContext);
@@ -29,6 +30,7 @@ const AddClient: React.FC = () => {
   const [createClientBooking] = useMutation(CREATE_CLIENT_BOOKING);
 
   const [createClient] = useMutation(CREATE_CLIENT);
+  const [updateBookingStatus] = useMutation(UPDATE_BOOKING_STATUS);
 
   function OnSubmit(frm: any) {
     createClient({
@@ -45,7 +47,11 @@ const AddClient: React.FC = () => {
       },
       onCompleted: (response) => {
         const flattenReponse = flattenObj({ ...response.createUsersPermissionsUser });
-        const sessionDetails = frm.formData.offeringFilter === 'Class' ? JSON.parse(frm.formData.classBasedOfferings) : null;
+        const sessionDetails =
+          frm.formData.offeringFilter === 'Class'
+            ? JSON.parse(frm.formData.classBasedOfferings)
+            : null;
+        console.log(frm.formData.offerings, frm.formData);
         createClientBooking({
           variables: {
             data: {
@@ -63,7 +69,23 @@ const AddClient: React.FC = () => {
           },
           onCompleted: (response) => {
             const flattenReponse = flattenObj({ ...response.createClientBooking });
-            history.push(`/summary/?id=${flattenReponse.id}`);
+            console.log(flattenReponse);
+            if (
+              flattenReponse.fitnesspackages[0].fitness_package_type.type === 'Custom Fitness' ||
+              flattenReponse.fitnesspackages[0].fitness_package_type.type === 'On-Demand PT' ||
+              flattenReponse.fitnesspackages[0].fitness_package_type.type === 'One-On-One'
+            ) {
+              updateBookingStatus({
+                variables: {
+                  id: flattenReponse.id,
+                  Booking_status: 'accepted'
+                },
+                onCompleted: () => {
+                  history.push(`/summary/?id=${flattenReponse.id}`);
+                }
+              });
+            } else history.push(`/summary/?id=${flattenReponse.id}`);
+
             if (frm.formData.offeringFilter === 'Class') {
               localStorage.setItem(
                 'sessionBookingDetails',

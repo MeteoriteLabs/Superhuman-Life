@@ -175,3 +175,13 @@ export const UPDATE_TAG = gql`
       }
   }
 `;
+
+export const CREATE_TAG = gql`
+  mutation createTag($data: TagInput!) {
+    createTag(data: $data){
+        data{
+          id
+        }
+      }
+  }
+`;

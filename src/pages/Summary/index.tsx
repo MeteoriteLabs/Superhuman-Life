@@ -26,6 +26,7 @@ import './summary.css';
 // import QRCode from 'react-qr-code';
 import API_END_POINTS from '../../components/utils/integration';
 import { PackageDetails } from './Interface';
+import { CREATE_TAG } from './queries';
 
 interface PackagePricing {
   duration: number;
@@ -142,6 +143,7 @@ const Summary: React.FC = () => {
   const [updateTag] = useMutation(UPDATE_TAG);
   const [updateOfferingInventory] = useMutation(UPDATE_OFFERING_INVENTORY);
   const [updateBookingStatus] = useMutation(UPDATE_BOOKING_STATUS);
+  const [createTag] = useMutation(CREATE_TAG);
 
   const [createUserPackage] = useMutation(CREATE_USER_PACKAGE, {
     onCompleted: (response) => {
@@ -209,7 +211,29 @@ const Summary: React.FC = () => {
               }
             });
           } else {
-            history.push(`/success/?bookingid=${bookingId}`);
+            createTag({
+              variables: {
+                data: {
+                  tag_name:
+                    flattenUserPackageResponse.fitnesspackages &&
+                    flattenUserPackageResponse.fitnesspackages.length
+                      ? flattenUserPackageResponse.fitnesspackages[0].packagename
+                      : null,
+                  client_packages: flattenUserPackageResponse
+                    ? flattenUserPackageResponse.id
+                    : null,
+                  fitnesspackage:
+                    flattenUserPackageResponse.fitnesspackages &&
+                    flattenUserPackageResponse.fitnesspackages.length
+                      ? flattenUserPackageResponse.fitnesspackages[0].id
+                      : null
+                }
+              },
+
+              onCompleted: () => {
+                history.push(`/success/?bookingid=${bookingId}`);
+              }
+            });
           }
         }
       });
