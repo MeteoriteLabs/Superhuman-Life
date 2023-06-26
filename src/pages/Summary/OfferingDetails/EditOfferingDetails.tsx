@@ -5,7 +5,7 @@ import Form from '@rjsf/core';
 import { UPDATE_CLIENT_BOOKING } from '../queries';
 import { useMutation } from '@apollo/client';
 import moment from 'moment';
-import { PackageDetails } from '../interface';
+import { PackageDetails } from '../Interface.tsx';
 
 interface DefaultClientBooking {
   offerings: string;

@@ -4,7 +4,7 @@ import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import moment from 'moment';
 import EditOffering from './EditOfferingDetails';
-import { PackageDetails } from '../interface';
+import { PackageDetails } from '../Interface';
 
 const OfferingDetails: React.FC<{ Offering: PackageDetails }> = ({ Offering }) => {
   const [showBookingModal, setShowBookingModal] = useState<boolean>(false);

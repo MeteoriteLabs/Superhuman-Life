@@ -25,7 +25,7 @@ import { useHistory } from 'react-router-dom';
 import './summary.css';
 // import QRCode from 'react-qr-code';
 import API_END_POINTS from '../../components/utils/integration';
-import { PackageDetails } from './interface';
+import { PackageDetails } from './Interface';
 
 interface PackagePricing {
   duration: number;
