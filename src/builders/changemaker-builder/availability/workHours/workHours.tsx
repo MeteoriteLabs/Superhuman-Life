@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
   Row,
   Col,
@@ -10,7 +10,7 @@ import {
   Alert,
   FormControl,
   InputGroup,
-  Spinner,
+  Spinner
 } from "react-bootstrap";
 import moment from "moment";
 import Calendar from "react-calendar";
@@ -34,7 +34,7 @@ import AuthContext from "../../../../context/auth-context";
 import TimePicker from "rc-time-picker";
 import "rc-time-picker/assets/index.css";
 import "./styles.css";
-
+import Toaster from '../../../../components/Toaster';
 import { flattenObj } from "../../../../components/utils/responseFlatten";
 
 const configTemplate: any = {
@@ -75,7 +75,7 @@ const configTemplate: any = {
   },
 };
 
-const WorkHours = () => {
+const WorkHours: React.FC = () => {
   const auth = useContext(AuthContext);
   const [value, onChange] = useState(new Date());
   const [holidays, setHolidays] = useState<any>([]);
@@ -108,6 +108,8 @@ const WorkHours = () => {
   const [toTime, setToTime] = useState<string>("00:00");
   const [disableAdd, setDisableAdd] = useState<boolean>(false);
   const [classMode, setClassMode] = useState<string>("");
+  const [errMsg, setErrMsg] = useState<string | null>();
+  const [slotErr, setSlotErr] = useState(false);
 
   useEffect(() => {
     setDate(moment(value).format("YYYY-MM-DD"));
@@ -136,7 +138,7 @@ const WorkHours = () => {
       setAvailability(flattenData.changemakerAvailabilties);
       const changemakerSlots =
         flattenData.changemakerAvailabilties.length > 0
-          ? flattenData.changemakerAvailabilties[0]?.booking_slots
+          ? flattenData.changemakerAvailabilties[0]?.AllSlots
           : [];
       const sessionSlots = flattenData?.sessions;
       const mergedSlots = sessionSlots?.concat(changemakerSlots);
@@ -169,8 +171,9 @@ const WorkHours = () => {
 
   function handleTodaysSlots(todaysEvents: any, changeMakerAvailability: any) {
     const currentDateWorkHours =
-    changeMakerAvailability && changeMakerAvailability.length && changeMakerAvailability[0].booking_slots && changeMakerAvailability[0].booking_slots.length > 0
-        ? [...changeMakerAvailability[0].booking_slots]
+
+    changeMakerAvailability && changeMakerAvailability.length && changeMakerAvailability[0].AllSlots && changeMakerAvailability[0].AllSlots.length > 0
+        ? [...changeMakerAvailability[0].AllSlots]
         : [];
 
     const values = todaysEvents.concat(currentDateWorkHours);
@@ -404,8 +407,6 @@ const WorkHours = () => {
     return result;
   }
 
-  const [slotErr, setSlotErr] = useState(false);
-
   function handleWorkTime(
     fromTime: any,
     toTime: any,
@@ -444,7 +445,7 @@ const WorkHours = () => {
         obj.end_time = toTime;
         obj.mode = mode;
         const userData =
-          values.booking_slots !== null ? [...values.booking_slots] : [];
+          values.AllSlots !== null ? [...values.AllSlots] : [];
         userData.push(obj);
         updateChangemakerAvailabilityWorkHour({
           variables: { id: values.id, slots: userData },
@@ -482,11 +483,11 @@ const WorkHours = () => {
   const [slotId, setSlotId]: any = useState("");
 
   function handleDeleteWorkHour(id: any) {
-    const objIndex = availability[0]?.booking_slots.findIndex(
+    const objIndex = availability[0]?.AllSlots.findIndex(
       (item: any) => item.id === id
     );
 
-    const values = [...availability[0].booking_slots];
+    const values = [...availability[0].AllSlots];
     values.splice(objIndex, 1);
 
     updateChangemakerAvailabilityWorkHour({
@@ -583,7 +584,7 @@ const WorkHours = () => {
 
     for (var i = 0; i < values?.length; i++) {
       const obj =
-        values[i]?.booking_slots !== null ? [...values[i]?.booking_slots] : [];
+        values[i]?.AllSlots !== null ? [...values[i]?.AllSlots] : [];
       if (
         moment(values[i].date).format("dddd") === daysOfWeek[dayIndex] &&
         values[i].Is_Holiday === false
@@ -672,13 +673,13 @@ const WorkHours = () => {
   function handleAddHoliday(date: any, event: any) {
     const values = availability.find((item: any) => item.date === date);
     if (values) {
-      if (values.booking_slots.length > 0) {
+      if (values.AllSlots && values.AllSlots.length) {
         // set a modal to display the error
         setHolidayConflicts([values]);
         setHolidayErr(true);
       }
     } else {
-      if (values.Is_holiday === false) {
+      if (!values.Is_holiday) {
         updateChangemakerAvailabilityHoliday({
           variables: {
             id: values.id,
@@ -778,7 +779,7 @@ const WorkHours = () => {
             );
             if (obj?.length > 0) {
               for (var y = 0; y < obj.length; y++) {
-                const oldSlots = [...obj[y].booking_slots];
+                const oldSlots = [...obj[y].AllSlots];
                 const newSlots = [
                   ...oldSlots,
                   ...newConfig[daysOfWeek[i]].slots,
@@ -1173,12 +1174,7 @@ const WorkHours = () => {
           </Row>
           <Row>
             <Col lg={{ span: 8, offset: 4 }}>
-              <div
-                className="mt-2"
-                style={{ display: `${toast ? "block" : "none"}` }}
-              >
-                <Alert variant={"success"}>Successfully Added Slot!</Alert>
-              </div>
+               { toast ?  (<Toaster handleCallback={() =>  setErrMsg("Successfully Added Slot!")} type={'success'} msg="Successfully Added Slot!" />) : null }
             </Col>
           </Row>
           <Row className="mt-4" style={{ textAlign: "start" }}>

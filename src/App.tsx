@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ApolloClient, ApolloLink, ApolloProvider, InMemoryCache } from '@apollo/client';
 import { authLink, defaultOptions, httpLink } from './lib/apolloClient';
 import AuthContext from './context/auth-context';
@@ -28,11 +28,32 @@ const App: React.FC = () => {
 
     return forward(operation);
   });
+
   const client = new ApolloClient({
     cache: new InMemoryCache(),
     link: ApolloLink.from([errorHandler, authLink.concat(httpLink)]),
     defaultOptions: defaultOptions
   });
+
+  useEffect(() => {
+    window.addEventListener('error', e => {
+      if (e.message === 'ResizeObserver loop limit exceeded' || e.message === 'Script error.') {
+        const resizeObserverErrDiv = document.getElementById(
+          'webpack-dev-server-client-overlay-div'
+        )
+        const resizeObserverErr = document.getElementById(
+          'webpack-dev-server-client-overlay'
+        )
+        if (resizeObserverErr) {
+          resizeObserverErr.setAttribute('style', 'display: none');
+        }
+        if (resizeObserverErrDiv) {
+          resizeObserverErrDiv.setAttribute('style', 'display: none');
+        }
+      }
+    })
+  }, [])
+
   return (
     <ErrorBoundary>
       <ApolloProvider client={client}>

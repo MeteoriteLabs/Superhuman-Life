@@ -4,7 +4,16 @@ export const widgets = {
   offerings: OfferingsList
 };
 
-export const schema: any = {
+interface Schema {
+  offerings: {
+    'ui:widget': string;
+  },
+  packageDuration: {
+    'ui:placeholder': string;
+  }
+}
+
+export const schema: Schema = {
   offerings: {
     'ui:widget': 'offerings'
   },

@@ -110,7 +110,6 @@ export default function Payee(): JSX.Element {
   );
 
   const [datatable, setDataTable] = useState<Record<string, unknown>[]>([]);
-
   function getDate(time: string | number | Date) {
     const dateObj = new Date(time);
     const month = dateObj.getMonth() + 1;

@@ -28,7 +28,7 @@ const HomePage: React.FC = () => {
         variant="outline-dark"
         size="sm"
         onClick={() => {
-          window.open("/add_client");
+          history.push("/add_client");
         }}
       >
         <img src="assets/home_page_images/contacts.svg" alt="add_client" /> Add

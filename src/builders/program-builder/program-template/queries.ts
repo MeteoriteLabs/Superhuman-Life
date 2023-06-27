@@ -580,7 +580,7 @@ query getAllChangeMakerAvailabilityHolidays($id: ID!, $dateUpperLimit: Date, $da
       id
       attributes{
         holiday_title
-        booking_slots
+        AllSlots
         Is_Holiday
         date
         users_permissions_user{
@@ -597,7 +597,7 @@ query getAllChangeMakerAvailabilityHolidays($id: ID!, $dateUpperLimit: Date, $da
 export const UPDATE_CHANGEMAKER_AVAILABILITY_WORKHOURS = gql`
   mutation updateCHageMakerAvailabilityWorkHour($id: ID!, $slots: JSON){
     updateChangemakerAvailabilty(id: $id, data: {
-      booking_slots: $slots
+      AllSlots: $slots
     }){
       data{
         id

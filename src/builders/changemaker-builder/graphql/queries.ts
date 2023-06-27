@@ -88,7 +88,7 @@ export const GET_ALL_CLIENT_PACKAGE_BY_TYPE = gql`
         id
         attributes{
           holiday_title
-          booking_slots
+          AllSlots
           Is_Holiday
           date
           users_permissions_user{
@@ -232,7 +232,7 @@ export const GET_USER_WEEKLY_CONFIG = gql`
       data {
         id
         attributes {
-          Changemaker_weekly_schedule
+         
           booking_lead_time_online_mins
           booking_lead_time_offline_mins
         }
@@ -254,7 +254,7 @@ export const GET_ALL_CHANGEMAKER_AVAILABILITY = gql`
         id
         attributes{
           holiday_title
-          booking_slots
+          AllSlots
           Is_Holiday
           date
           users_permissions_user{
@@ -282,7 +282,7 @@ query getAllChangeMakerAvailabilityHolidays($id: ID!, $dateUpperLimit: Date, $da
       id
       attributes{
         holiday_title
-        booking_slots
+        AllSlots
         Is_Holiday
         date
         users_permissions_user{
@@ -313,7 +313,7 @@ export const GET_ALL_CHANGEMAKER_AVAILABILITY_HOLIDAYS = gql`
         id
         attributes{
           holiday_title
-          booking_slots
+          AllSlots
           Is_Holiday
           date
           users_permissions_user{
@@ -341,7 +341,7 @@ export const GET_ALL_CHANGEMAKER_AVAILABILITY_WORKHOURS = gql`
         id
         attributes{
           holiday_title
-          booking_slots
+          AllSlots
           Is_Holiday
           date
           users_permissions_user{
@@ -391,7 +391,7 @@ query changemakerAvailabilityAndTags($id: ID!, $date: Date!, $changemakerDate: D
       id
       attributes{
         Is_Holiday
-        booking_slots
+        AllSlots
         date
         holiday_title
         users_permissions_user{
