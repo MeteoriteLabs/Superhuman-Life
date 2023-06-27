@@ -20,7 +20,6 @@ interface FitnessPackage {
 }
 
 const OfferingList: React.FC<{ value: string; onChange: (params: string | null) => void }> = ({
-  value,
   onChange
 }) => {
   const auth = useContext(AuthContext);
