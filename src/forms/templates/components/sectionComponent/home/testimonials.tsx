@@ -9,7 +9,7 @@ import { SetReceivingDataAndReset } from './libs/testimonials';
 import { Data, FormData, InputProps } from './@types/testimonialsType';
 import { ChangeMakerWebsiteContext } from '../../../../../context/changemakerWebsite-context';
 import { GET_WEBSITE_SECTION } from './queries';
-import { InputComponent } from './components/testimonialsComponents';
+import { InputComponent } from './components/TestimonialsComponents';
 import { ArrowDownShort } from 'react-bootstrap-icons';
 import Toaster from '../../../../../components/Toaster';
 
