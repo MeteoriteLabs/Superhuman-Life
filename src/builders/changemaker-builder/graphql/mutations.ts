@@ -113,7 +113,7 @@ export const DELETE_CHANGEMAKER_AVAILABILITY_HOLIDAY = gql`
 export const CREATE_CHANGEMAKER_AVAILABILITY_WORKHOURS = gql`
   mutation createChangeMakerAvailabilityWorkHours($slots: JSON, $id: ID!, $date: Date) {
     createChangemakerAvailabilty(data: {
-      booking_slots: $slots,
+      AllSlots: $slots,
       Is_Holiday: false,
       users_permissions_user: $id,
       date: $date
@@ -128,7 +128,7 @@ export const CREATE_CHANGEMAKER_AVAILABILITY_WORKHOURS = gql`
 export const UPDATE_CHANGEMAKER_AVAILABILITY_WORKHOURS = gql`
   mutation updateCHageMakerAvailabilityWorkHour($id: ID!, $slots: JSON){
     updateChangemakerAvailabilty(id: $id, data: {
-      booking_slots: $slots
+      AllSlots: $slots
     }){
       data{
         id
