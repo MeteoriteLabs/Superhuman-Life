@@ -65,7 +65,7 @@ const NotificationsSettings = React.lazy(() => import('./pages/notificationSetti
 const PrivacyPolicy = React.lazy(() => import('./pages/privacyPolicy'));
 const TermsOfService = React.lazy(() => import('./pages/termsOfService'));
 const SessionPage = React.lazy(() => import('./builders/session-builder/'));
-const AddClient = React.lazy(() => import('./builders/client-builder/AddClient'));
+const AddClient = React.lazy(() => import('./builders/client-builder/addClient'));
 const SuccessfulBooking = React.lazy(() => import('./pages/SuccessfulBooking'));
 
 //auth logins
