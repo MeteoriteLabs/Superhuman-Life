@@ -2,13 +2,7 @@
     "1": {
         "title": "",
         "type": "object",
-        "required": [
-            "packagename",
-            "disciplines",
-            "equipmentList",
-            "intensity",
-            "dates"
-        ],
+        "required": ["packagename", "disciplines", "equipmentList", "intensity", "dates"],
         "properties": {
             "packagename": {
                 "type": "string",
@@ -33,11 +27,7 @@
                 "type": "number",
                 "title": "Level",
                 "enum": [0, 1, 2],
-                "enumNames": [
-                    "Beginner",
-                    "Intermediate",
-                    "Advanced"
-                ],
+                "enumNames": ["Beginner", "Intermediate", "Advanced"],
                 "default": 0,
                 "description": "Select the appropriate difficulty"
             },
@@ -45,11 +35,7 @@
                 "type": "number",
                 "title": "Intensity",
                 "enum": [0, 1, 2],
-                "enumNames": [
-                    "Low",
-                    "Moderate",
-                    "High"
-                ],
+                "enumNames": ["Low", "Moderate", "High"],
                 "default": 0,
                 "description": "Set the pace of the offering"
             },
@@ -60,35 +46,18 @@
                 "type": "array",
                 "title": "Choose the relevant payment durations",
                 "items": {
-                  "type": "string",
-                  "enum": [
-                    "1 day",
-                    "30 days",
-                    "90 days",
-                    "180 days",
-                    "360 days"
-                  ]
+                    "type": "string",
+                    "enum": ["1 day", "30 days", "90 days", "180 days", "360 days"]
                 },
                 "uniqueItems": true,
-                "default": ["1 day",
-                "30 days",
-                "90 days",
-                "180 days",
-                "360 days"]
-              }
+                "default": ["1 day", "30 days", "90 days", "180 days", "360 days"]
+            }
         }
     },
     "2": {
         "title": "",
         "type": "object",
-        "required": [
-            "About",
-            "Benifits",
-            "classsize",
-            "thumbnail",
-            "VideoUrl",
-            "languages"
-        ],
+        "required": ["About", "Benifits", "classsize", "thumbnail", "VideoUrl", "languages"],
         "properties": {
             "About": {
                 "type": "string",
@@ -119,7 +88,7 @@
                 "type": "string",
                 "format": "youtubeurl",
                 "description": "Add Youtube URL"
-              }  
+            }
         }
     },
     "3": {
@@ -140,7 +109,7 @@
             "groupinstantbooking": {
                 "type": "string",
                 "title": "Allow Consumers to book instant Workouts"
-              }
+            }
         }
     },
     "5": {
@@ -152,25 +121,18 @@
                 "type": "string"
             }
         }
-
     },
     "6": {
         "title": "Package Settings",
-       "type": "object",
-       "required": [
-        "visibility",
-        "datesConfig"
-       ],
-       "properties": {
+        "type": "object",
+        "required": ["visibility", "datesConfig"],
+        "properties": {
             "visibility": {
                 "type": "number",
                 "title": "Visibility",
                 "enum": [0, 1],
-                "enumNames": [
-                    "Public",
-                    "Private"
-                ],
-                "default":0,
+                "enumNames": ["Public", "Private"],
+                "default": 0,
                 "description": "Public: The Offering will be visible to the user as soon as it is created, Private: The offering will not ve seen by anyone until you share it with them"
             },
             "datesConfig": {

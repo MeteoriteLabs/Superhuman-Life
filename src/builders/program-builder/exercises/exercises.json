@@ -19,16 +19,8 @@
             "level": {
                 "type": "number",
                 "title": "Level",
-                "enum": [
-                    0,
-                    1,
-                    2
-                ],
-                "enumNames": [
-                    "Beginner",
-                    "Intermediate",
-                    "Advance"
-                ]
+                "enum": [0, 1, 2],
+                "enumNames": ["Beginner", "Intermediate", "Advance"]
             },
             "discipline": {
                 "type": "string"
@@ -56,26 +48,18 @@
                     "AddExercise": {
                         "type": "string",
                         "title": "Add exercise",
-                        "enum": [
-                            "Add URL",
-                            "Text",
-                            "Upload"
-                        ],
+                        "enum": ["Add URL", "Text", "Upload"],
                         "default": "Add URL"
                     }
                 },
-                "required": [
-                    "AddExercise"
-                ],
+                "required": ["AddExercise"],
                 "dependencies": {
                     "AddExercise": {
                         "oneOf": [
                             {
                                 "properties": {
                                     "AddExercise": {
-                                        "enum": [
-                                            "Add URL"
-                                        ]
+                                        "enum": ["Add URL"]
                                     },
                                     "AddURL": {
                                         "type": "string",
@@ -84,41 +68,31 @@
                                         "description": "You can add a youtube URL. Can be  used for Group, PT, Custom and Classic offerings."
                                     }
                                 },
-                                "required": [
-                                    "AddURL"
-                                ]
+                                "required": ["AddURL"]
                             },
                             {
                                 "properties": {
                                     "AddExercise": {
-                                        "enum": [
-                                            "Text"
-                                        ]
+                                        "enum": ["Text"]
                                     },
                                     "AddText": {
                                         "type": "string",
                                         "description": "Explain in detail about the workout. Can be used for PT and Group"
                                     }
                                 },
-                                "required": [
-                                    "AddText"
-                                ]
+                                "required": ["AddText"]
                             },
                             {
                                 "properties": {
                                     "AddExercise": {
-                                        "enum": [
-                                            "Upload"
-                                        ]
+                                        "enum": ["Upload"]
                                     },
                                     "Upload": {
                                         "type": "string",
                                         "description": " You can add a youtube URL. Can be  used for Group, PT, Custom and Classic offerings."
                                     }
                                 },
-                                "required": [
-                                    "Upload"
-                                ]
+                                "required": ["Upload"]
                             }
                         ]
                     }

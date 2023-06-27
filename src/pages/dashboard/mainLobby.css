@@ -1,21 +1,21 @@
-.lobby__card{
-  transition: transform 500ms ease;
+.lobby__card {
+    transition: transform 500ms ease;
 }
 
-.lobby__card:hover{
-  transform: scale(1.05);
+.lobby__card:hover {
+    transform: scale(1.05);
 }
 
 @media screen and (min-width: 320px) and (max-width: 480px) {
-  .lobby__card{
-    padding: 30px;
-    display: none !important;
-  }
-  .lobby__card1{
-    padding: 30px;
-    width: 50vw;
-  }
-  .organisation__image >img{
-    height: 20px;
-  }
+    .lobby__card {
+        padding: 30px;
+        display: none !important;
+    }
+    .lobby__card1 {
+        padding: 30px;
+        width: 50vw;
+    }
+    .organisation__image > img {
+        height: 20px;
+    }
 }

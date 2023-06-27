@@ -1,13 +1,10 @@
 {
     "title": "",
     "type": "object",
-    "required": [
-       
-    ],
+    "required": [],
     "properties": {
         "invoices": {
             "type": "string"
         }
     }
-
 }

@@ -1,10 +1,10 @@
-import PackageSearch from "./searchpackagecomponent/searchpackage";
+import PackageSearch from './searchpackagecomponent/searchpackage'
 export const widgets = {
-     PackageSearch: PackageSearch,
-};
+    PackageSearch: PackageSearch
+}
 
 export const schema: any = {
-     packagesearch: {
-          "ui:widget": "PackageSearch",
-     },
-};
+    packagesearch: {
+        'ui:widget': 'PackageSearch'
+    }
+}

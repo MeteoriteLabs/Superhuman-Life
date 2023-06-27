@@ -1,648 +1,629 @@
-import { useMutation, useQuery } from "@apollo/client";
-import React, { useContext, useImperativeHandle, useState } from "react";
-import { Subject } from "rxjs";
-import FinanceModal from "../../../components/financeModal/FinanceModal";
-import moment from "moment";
-import StatusModal from "../../../components/StatusModal/StatusModal";
-import authContext from "../../../context/auth-context";
-import { CREATE_UPI } from "../graphQL/mutations";
-import { flattenObj } from "../../../components/utils/responseFlatten";
+import { useMutation, useQuery } from '@apollo/client'
+import React, { useContext, useImperativeHandle, useState } from 'react'
+import { Subject } from 'rxjs'
+import FinanceModal from '../../../components/financeModal/FinanceModal'
+import moment from 'moment'
+import StatusModal from '../../../components/StatusModal/StatusModal'
+import authContext from '../../../context/auth-context'
+import { CREATE_UPI } from '../graphQL/mutations'
+import { flattenObj } from '../../../components/utils/responseFlatten'
 import {
-  GET_UPI_DETAILS,
-  DELETE_UPI,
-  GET_BANK_DETAILS,
-  GET_BANK_DETAIL,
-  UPDATE_UPI,
-  CREATE_BANK_DETAIL,
-  DELETE_BANK_DETAILS,
-  UPDATE_BANK_DETAILS,
-  GET_UPI_DETAIL,
-  GET_BANK_DETAILS_IS_PRIMARY,
-  GET_UPI_DETAILS_IS_PRIMARY,
-} from "./queries";
-import Toaster from "../../../components/Toaster";
+    GET_UPI_DETAILS,
+    DELETE_UPI,
+    GET_BANK_DETAILS,
+    GET_BANK_DETAIL,
+    UPDATE_UPI,
+    CREATE_BANK_DETAIL,
+    DELETE_BANK_DETAILS,
+    UPDATE_BANK_DETAILS,
+    GET_UPI_DETAIL,
+    GET_BANK_DETAILS_IS_PRIMARY,
+    GET_UPI_DETAILS_IS_PRIMARY
+} from './queries'
+import Toaster from '../../../components/Toaster'
 
 interface Operation {
-  id: string;
-  modal_status: boolean;
-  actionType:
-    | "bank"
-    | "upi"
-    | "createUPI"
-    | "editUPI"
-    | "deleteUPI"
-    | "createBankDetails"
-    | "editBankDetails"
-    | "deleteBankDetails"
-    | "viewBankDetails"
-    | "viewUPIDetails";
+    id: string
+    modal_status: boolean
+    actionType:
+        | 'bank'
+        | 'upi'
+        | 'createUPI'
+        | 'editUPI'
+        | 'deleteUPI'
+        | 'createBankDetails'
+        | 'editBankDetails'
+        | 'deleteBankDetails'
+        | 'viewBankDetails'
+        | 'viewUPIDetails'
 }
 
 interface bankDetails {
-  Full_Name: string;
-  Account_Number: string;
-  IFSC_Code: string;
-  Is_Primary: boolean;
-  Bank_Name: string;
-  Company_Address: string;
-  Company_Name: string;
-  PAN_Number?: string;
-  GST?: string;
-  GST_Number?: string;
+    Full_Name: string
+    Account_Number: string
+    IFSC_Code: string
+    Is_Primary: boolean
+    Bank_Name: string
+    Company_Address: string
+    Company_Name: string
+    PAN_Number?: string
+    GST?: string
+    GST_Number?: string
 }
 
 interface upiDetails {
-  Full_Name: string;
-  phone_number: string;
-  UPI_ID: string;
-  users_permissions_user: string;
-  publishedAt: Date;
-  Is_Primary: boolean;
+    Full_Name: string
+    phone_number: string
+    UPI_ID: string
+    users_permissions_user: string
+    publishedAt: Date
+    Is_Primary: boolean
 }
 
 interface PrimaryUPIDetails {
-  Full_Name: string;
-  phone_number: string;
-  UPI_ID: string;
-  createdAt: Date;
-  updatedAt: Date;
-  Is_Primary: boolean;
-  id: string;
+    Full_Name: string
+    phone_number: string
+    UPI_ID: string
+    createdAt: Date
+    updatedAt: Date
+    Is_Primary: boolean
+    id: string
 }
 
 interface PrimaryBankDetails {
-  Full_Name: string;
-  updatedAt: Date;
-  Is_Primary: boolean;
-  id: string;
-  Account_Number: string;
-  IFSC_Code: string;
-  Bank_Name: string;
-  Company_Address: string;
-  Company_Name: string;
-  PAN_Number?: string;
-  GST_Number?: string;
+    Full_Name: string
+    updatedAt: Date
+    Is_Primary: boolean
+    id: string
+    Account_Number: string
+    IFSC_Code: string
+    Bank_Name: string
+    Company_Address: string
+    Company_Name: string
+    PAN_Number?: string
+    GST_Number?: string
 }
 
 function PaymentMethodsAction(props: any, ref: any) {
-  const auth = useContext(authContext);
-  const [operation, setOperation] = useState<Operation>({} as Operation);
-  const modalTrigger = new Subject();
-  const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
-  const [formBankData, setFormBankData] = useState<bankDetails>(
-    {} as bankDetails
-  );
-  const [formUPIData, setUPIFormData] = useState<upiDetails>({} as upiDetails);
-  const [isUPIDeleted, setIsUPIDeleted] = useState<boolean>(false);
-  const [isUPIUpdated, setIsUPIUpdated] = useState<boolean>(false);
-  const [isBankDetailsDeleted, setIsBankDetailsDeleted] =
-    useState<boolean>(false);
-  const [isBankDetailsUpdated, setIsBankDetailsUpdated] =
-    useState<boolean>(false);
-  const [isPrimaryBankDetails, setIsPrimaryBankDetails] = useState<
-    PrimaryBankDetails[]
-  >([]);
-  const [isPrimaryUPIDetails, setIsPrimaryUPIDetails] = useState<
-    PrimaryUPIDetails[]
-  >([]);
-  const [bankDetails, setBankDetails] = useState<PrimaryBankDetails[]>([]);
-  const [upiDetails, setUpiDetails] = useState<PrimaryUPIDetails[]>([]);
-  const [isBankDetailCreated, setIsBankDetailCreated] =
-    useState<boolean>(false);
-  const [isUPIDetailCreated, setIsUPIDetailCreated] = useState<boolean>(false);
+    const auth = useContext(authContext)
+    const [operation, setOperation] = useState<Operation>({} as Operation)
+    const modalTrigger = new Subject()
+    const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false)
+    const [formBankData, setFormBankData] = useState<bankDetails>({} as bankDetails)
+    const [formUPIData, setUPIFormData] = useState<upiDetails>({} as upiDetails)
+    const [isUPIDeleted, setIsUPIDeleted] = useState<boolean>(false)
+    const [isUPIUpdated, setIsUPIUpdated] = useState<boolean>(false)
+    const [isBankDetailsDeleted, setIsBankDetailsDeleted] = useState<boolean>(false)
+    const [isBankDetailsUpdated, setIsBankDetailsUpdated] = useState<boolean>(false)
+    const [isPrimaryBankDetails, setIsPrimaryBankDetails] = useState<PrimaryBankDetails[]>([])
+    const [isPrimaryUPIDetails, setIsPrimaryUPIDetails] = useState<PrimaryUPIDetails[]>([])
+    const [bankDetails, setBankDetails] = useState<PrimaryBankDetails[]>([])
+    const [upiDetails, setUpiDetails] = useState<PrimaryUPIDetails[]>([])
+    const [isBankDetailCreated, setIsBankDetailCreated] = useState<boolean>(false)
+    const [isUPIDetailCreated, setIsUPIDetailCreated] = useState<boolean>(false)
 
-  // eslint-disable-next-line
-  const { data: get_upi_details } = useQuery(GET_UPI_DETAILS, {
-    variables: { id: auth.userid },
-    onCompleted: (data) => {
-      const flattenUPIData = flattenObj({ ...data.upiDetailsChangemakers });
+    // eslint-disable-next-line
+    const { data: get_upi_details } = useQuery(GET_UPI_DETAILS, {
+        variables: { id: auth.userid },
+        onCompleted: (data) => {
+            const flattenUPIData = flattenObj({ ...data.upiDetailsChangemakers })
 
-      const nonPrimaryUPIDetails = flattenUPIData.filter(
-        (currentValue) => currentValue.Is_Primary === false
-      );
-      setUpiDetails(nonPrimaryUPIDetails);
-    },
-  });
-
-  // eslint-disable-next-line
-  const { data: get_bank_details } = useQuery(GET_BANK_DETAILS, {
-    variables: { id: auth.userid },
-    onCompleted: (data) => {
-      const flattenBankData = flattenObj({ ...data.bankDetails });
-
-      const nonPrimaryBankDetails = flattenBankData.filter(
-        (currentValue) => currentValue.Is_Primary === false
-      );
-
-      setBankDetails(nonPrimaryBankDetails);
-    },
-  });
-
-  useImperativeHandle(ref, () => ({
-    TriggerForm: (msg: Operation) => {
-      setOperation(msg);
-
-      //show delete modal
-      if (
-        msg.actionType === "deleteUPI" ||
-        msg.actionType === "deleteBankDetails"
-      ) {
-        setShowDeleteModal(true);
-      }
-
-      //restrict form to render on delete
-      if (
-        msg.actionType !== "deleteUPI" &&
-        msg.actionType !== "deleteBankDetails"
-      ) {
-        modalTrigger.next(true);
-      }
-    },
-  }));
-
-  // UPI
-  const [createUPI] = useMutation(CREATE_UPI, {
-    onCompleted: (r: any) => {
-      modalTrigger.next(false);
-    },
-    refetchQueries: [GET_UPI_DETAILS],
-  });
-
-  const CreateUPI = (form: any) => {
-    createUPI({
-      variables: {
-        Full_Name: form.Full_Name,
-        phone_number: form.phone_number,
-        UPI_ID: form.UPI_ID,
-        users_permissions_user: form.user_permissions_user,
-        publishedAt: moment().format(),
-        Is_Primary: form.Is_Primary ? true : false,
-      },
-      onCompleted: (data) => {
-        setIsUPIDetailCreated(!isUPIDetailCreated);
-        const flattenData = flattenObj({
-          ...data.createUpiDetailsChangemaker.data,
-        });
-
-        const isPrimary: boolean = flattenData.Is_Primary;
-        const arr: PrimaryUPIDetails[] = isPrimaryUPIDetails.splice(-1);
-
-        if (isPrimary) {
-          for (const currentValue of arr) {
-            updateUPIDetail({
-              variables: {
-                id: currentValue.id,
-                data: {
-                  Is_Primary: false,
-                },
-              },
-            });
-          }
+            const nonPrimaryUPIDetails = flattenUPIData.filter(
+                (currentValue) => currentValue.Is_Primary === false
+            )
+            setUpiDetails(nonPrimaryUPIDetails)
         }
-      },
-    });
-  };
+    })
 
-  const [updateUPIDetail] = useMutation(UPDATE_UPI, {
-    onCompleted: (data: any) => {
-      modalTrigger.next(false);
-      setIsUPIUpdated(!isUPIUpdated);
-    },
-    refetchQueries: [GET_UPI_DETAILS],
-  });
+    // eslint-disable-next-line
+    const { data: get_bank_details } = useQuery(GET_BANK_DETAILS, {
+        variables: { id: auth.userid },
+        onCompleted: (data) => {
+            const flattenBankData = flattenObj({ ...data.bankDetails })
 
-  function UpdateUPI(form: any) {
-    updateUPIDetail({
-      variables: {
-        id: operation.id,
-        data: {
-          Full_Name: form.Full_Name,
-          phone_number: form.phone_number,
-          UPI_ID: form.UPI_ID,
-          users_permissions_user: form.user_permissions_user,
-          publishedAt: moment().format(),
-          Is_Primary: form.Is_Primary ? true : false,
+            const nonPrimaryBankDetails = flattenBankData.filter(
+                (currentValue) => currentValue.Is_Primary === false
+            )
+
+            setBankDetails(nonPrimaryBankDetails)
+        }
+    })
+
+    useImperativeHandle(ref, () => ({
+        TriggerForm: (msg: Operation) => {
+            setOperation(msg)
+
+            //show delete modal
+            if (msg.actionType === 'deleteUPI' || msg.actionType === 'deleteBankDetails') {
+                setShowDeleteModal(true)
+            }
+
+            //restrict form to render on delete
+            if (msg.actionType !== 'deleteUPI' && msg.actionType !== 'deleteBankDetails') {
+                modalTrigger.next(true)
+            }
+        }
+    }))
+
+    // UPI
+    const [createUPI] = useMutation(CREATE_UPI, {
+        onCompleted: (r: any) => {
+            modalTrigger.next(false)
         },
-      },
-      onCompleted: (data) => {
-        const flattenData = flattenObj({
-          ...data.updateUpiDetailsChangemaker.data,
-        });
-        const isUpdatedUPIAlreadyPrimary = isPrimaryUPIDetails.filter(
-          (currentValue) => currentValue.id === flattenData.id
-        );
+        refetchQueries: [GET_UPI_DETAILS]
+    })
 
-        const isPrimary: boolean = flattenData.Is_Primary;
+    const CreateUPI = (form: any) => {
+        createUPI({
+            variables: {
+                Full_Name: form.Full_Name,
+                phone_number: form.phone_number,
+                UPI_ID: form.UPI_ID,
+                users_permissions_user: form.user_permissions_user,
+                publishedAt: moment().format(),
+                Is_Primary: form.Is_Primary ? true : false
+            },
+            onCompleted: (data) => {
+                setIsUPIDetailCreated(!isUPIDetailCreated)
+                const flattenData = flattenObj({
+                    ...data.createUpiDetailsChangemaker.data
+                })
 
-        if (isPrimary && isUpdatedUPIAlreadyPrimary.length !== 1) {
-          const arr: PrimaryUPIDetails[] = isPrimaryUPIDetails.filter(
-            (currentValue) => currentValue.id !== flattenData.id
-          );
-          for (const currentValue of arr) {
-            updateUPIDetail({
-              variables: {
-                id: currentValue.id,
-                data: {
-                  Is_Primary: false,
-                },
-              },
-            });
-          }
-        }
-      },
-    });
-  }
+                const isPrimary: boolean = flattenData.Is_Primary
+                const arr: PrimaryUPIDetails[] = isPrimaryUPIDetails.splice(-1)
 
-  const [deleteUPI] = useMutation(DELETE_UPI, {
-    onCompleted: (data: any) => {
-      setIsUPIDeleted(!isUPIDeleted);
+                if (isPrimary) {
+                    for (const currentValue of arr) {
+                        updateUPIDetail({
+                            variables: {
+                                id: currentValue.id,
+                                data: {
+                                    Is_Primary: false
+                                }
+                            }
+                        })
+                    }
+                }
+            }
+        })
+    }
 
-      const flattenData = flattenObj({
-        ...data.deleteUpiDetailsChangemaker.data,
-      });
-      const isPrimary: boolean = flattenData.Is_Primary;
-      const lastUPIDetailIndex: number = upiDetails.length - 1;
+    const [updateUPIDetail] = useMutation(UPDATE_UPI, {
+        onCompleted: (data: any) => {
+            modalTrigger.next(false)
+            setIsUPIUpdated(!isUPIUpdated)
+        },
+        refetchQueries: [GET_UPI_DETAILS]
+    })
 
-      if (isPrimary) {
+    function UpdateUPI(form: any) {
         updateUPIDetail({
-          variables: {
-            id: upiDetails[lastUPIDetailIndex].id,
-            data: {
-              Is_Primary: true,
+            variables: {
+                id: operation.id,
+                data: {
+                    Full_Name: form.Full_Name,
+                    phone_number: form.phone_number,
+                    UPI_ID: form.UPI_ID,
+                    users_permissions_user: form.user_permissions_user,
+                    publishedAt: moment().format(),
+                    Is_Primary: form.Is_Primary ? true : false
+                }
             },
-          },
-        });
-      }
-    },
-    refetchQueries: [GET_UPI_DETAILS],
-  });
+            onCompleted: (data) => {
+                const flattenData = flattenObj({
+                    ...data.updateUpiDetailsChangemaker.data
+                })
+                const isUpdatedUPIAlreadyPrimary = isPrimaryUPIDetails.filter(
+                    (currentValue) => currentValue.id === flattenData.id
+                )
 
-  //Bank Account
-  const [deleteBankDetails] = useMutation(DELETE_BANK_DETAILS, {
-    onCompleted: (data: any) => {
-      setIsBankDetailsDeleted(!isBankDetailsDeleted);
-      const flattenData = flattenObj({ ...data.deleteBankDetail.data });
-      const isPrimary: boolean = flattenData.Is_Primary;
-      const lastBankDetailIndex: number = bankDetails.length - 1;
+                const isPrimary: boolean = flattenData.Is_Primary
 
-      if (isPrimary) {
+                if (isPrimary && isUpdatedUPIAlreadyPrimary.length !== 1) {
+                    const arr: PrimaryUPIDetails[] = isPrimaryUPIDetails.filter(
+                        (currentValue) => currentValue.id !== flattenData.id
+                    )
+                    for (const currentValue of arr) {
+                        updateUPIDetail({
+                            variables: {
+                                id: currentValue.id,
+                                data: {
+                                    Is_Primary: false
+                                }
+                            }
+                        })
+                    }
+                }
+            }
+        })
+    }
+
+    const [deleteUPI] = useMutation(DELETE_UPI, {
+        onCompleted: (data: any) => {
+            setIsUPIDeleted(!isUPIDeleted)
+
+            const flattenData = flattenObj({
+                ...data.deleteUpiDetailsChangemaker.data
+            })
+            const isPrimary: boolean = flattenData.Is_Primary
+            const lastUPIDetailIndex: number = upiDetails.length - 1
+
+            if (isPrimary) {
+                updateUPIDetail({
+                    variables: {
+                        id: upiDetails[lastUPIDetailIndex].id,
+                        data: {
+                            Is_Primary: true
+                        }
+                    }
+                })
+            }
+        },
+        refetchQueries: [GET_UPI_DETAILS]
+    })
+
+    //Bank Account
+    const [deleteBankDetails] = useMutation(DELETE_BANK_DETAILS, {
+        onCompleted: (data: any) => {
+            setIsBankDetailsDeleted(!isBankDetailsDeleted)
+            const flattenData = flattenObj({ ...data.deleteBankDetail.data })
+            const isPrimary: boolean = flattenData.Is_Primary
+            const lastBankDetailIndex: number = bankDetails.length - 1
+
+            if (isPrimary) {
+                updateBankDetail({
+                    variables: {
+                        id: bankDetails[lastBankDetailIndex].id,
+                        data: {
+                            Is_Primary: true
+                        }
+                    }
+                })
+            }
+        },
+        refetchQueries: [GET_BANK_DETAILS]
+    })
+
+    const [createBankDetail] = useMutation(CREATE_BANK_DETAIL, {
+        onCompleted: (r: any) => {
+            modalTrigger.next(false)
+        },
+        refetchQueries: [GET_BANK_DETAILS]
+    })
+
+    const CreateBankDetail = (form: any) => {
+        createBankDetail({
+            variables: {
+                data: {
+                    Full_Name: form.Full_Name,
+                    Account_Number: form.Account_Number,
+                    Bank_Name: form.Bank_Name,
+                    IFSC_Code: form.IFSC_Code,
+                    PAN_Number: form.PAN_Number,
+                    GST_Number: form.GST_Number || '',
+                    Company_Name: form.Company_Name || '',
+                    Company_Address: form.Company_Address || '',
+                    users_permissions_user: form.user_permissions_user,
+                    Is_Primary: form.Is_Primary ? true : false
+                }
+            },
+            onCompleted: (data) => {
+                setIsBankDetailCreated(!isBankDetailCreated)
+                const flattenData = flattenObj({ ...data.createBankDetail.data })
+                const isPrimary: boolean = flattenData.Is_Primary
+
+                const arr: PrimaryBankDetails[] = isPrimaryBankDetails.splice(-1)
+
+                if (isPrimary) {
+                    for (const currentValue of arr) {
+                        updateBankDetail({
+                            variables: {
+                                id: currentValue.id,
+                                data: {
+                                    Is_Primary: false
+                                }
+                            }
+                        })
+                    }
+                }
+            }
+        })
+    }
+
+    useQuery(GET_UPI_DETAILS_IS_PRIMARY, {
+        variables: { id: auth.userid },
+        onCompleted: (data: any) => {
+            const flattenUpiDetail = flattenObj({ ...data.upiDetailsChangemakers })
+            setIsPrimaryUPIDetails(flattenUpiDetail)
+        }
+    })
+
+    useQuery(GET_BANK_DETAILS_IS_PRIMARY, {
+        variables: { id: auth.userid },
+        onCompleted: (data: any) => {
+            const flattenBankDetail = flattenObj({ ...data.bankDetails })
+            setIsPrimaryBankDetails(flattenBankDetail)
+        }
+    })
+
+    useQuery(GET_BANK_DETAIL, {
+        variables: { id: operation.id },
+        skip: !operation.id || operation.actionType === 'deleteUPI',
+        onCompleted: (e: any) => {
+            FillBankDetails(e)
+        }
+    })
+
+    function FillBankDetails(data: any) {
+        const flattenData = flattenObj({ ...data.bankDetail })
+
+        const detail = {} as bankDetails
+
+        if (flattenData) {
+            detail.Full_Name = flattenData.Full_Name
+            detail.Account_Number = flattenData.Account_Number
+            detail.IFSC_Code = flattenData.IFSC_Code
+            detail.Is_Primary = flattenData.Is_Primary
+            detail.Bank_Name = flattenData.Bank_Name
+            detail.Company_Address = flattenData.Company_Address
+            detail.Company_Name = flattenData.Company_Name
+            detail.PAN_Number = flattenData.PAN_Number
+            detail.GST = flattenData.GST_Number ? 'GST' : 'None'
+            detail.GST_Number = flattenData.GST_Number ? flattenData.GST_Number : null
+            detail.Company_Name = flattenData.Company_Name ? flattenData.Company_Name : null
+            detail.Company_Address = flattenData.Company_Address
+                ? flattenData.Company_Address
+                : null
+        }
+
+        setFormBankData(detail)
+    }
+
+    useQuery(GET_UPI_DETAIL, {
+        variables: { id: operation.id },
+        skip: !operation.id || operation.actionType === 'deleteUPI',
+        onCompleted: (e: any) => {
+            FillUPIDetails(e)
+        }
+    })
+
+    function FillUPIDetails(data: any) {
+        const flattenData = flattenObj({ ...data.upiDetailsChangemaker })
+
+        const detail = {} as upiDetails
+
+        if (flattenData) {
+            detail.Full_Name = flattenData.Full_Name
+            detail.phone_number = flattenData.phone_number
+            detail.UPI_ID = flattenData.UPI_ID
+            detail.Is_Primary = flattenData.Is_Primary
+            detail.publishedAt = flattenData.publishedAt
+            detail.users_permissions_user = flattenData.users_permissions_user
+        }
+
+        setUPIFormData(detail)
+    }
+
+    const [updateBankDetail] = useMutation(UPDATE_BANK_DETAILS, {
+        onCompleted: (data: any) => {
+            setIsBankDetailsUpdated(!isBankDetailsUpdated)
+            modalTrigger.next(false)
+        },
+        refetchQueries: [GET_BANK_DETAILS]
+    })
+
+    function UpdateBank(form: any) {
         updateBankDetail({
-          variables: {
-            id: bankDetails[lastBankDetailIndex].id,
-            data: {
-              Is_Primary: true,
+            variables: {
+                id: operation.id,
+                data: {
+                    Full_Name: form.Full_Name,
+                    Account_Number: form.Account_Number,
+                    Bank_Name: form.Bank_Name,
+                    IFSC_Code: form.IFSC_Code,
+                    PAN_Number: form.PAN_Number,
+                    GST_Number: form.GST_Number || '',
+                    Company_Name: form.Company_Name || '',
+                    Company_Address: form.Company_Address || '',
+                    users_permissions_user: form.user_permissions_user,
+                    Is_Primary: form.Is_Primary ? true : false
+                }
             },
-          },
-        });
-      }
-    },
-    refetchQueries: [GET_BANK_DETAILS],
-  });
+            onCompleted: (data) => {
+                const flattenData = flattenObj({
+                    ...data.updateBankDetail.data
+                })
 
-  const [createBankDetail] = useMutation(CREATE_BANK_DETAIL, {
-    onCompleted: (r: any) => {
-      modalTrigger.next(false);
-    },
-    refetchQueries: [GET_BANK_DETAILS],
-  });
+                const isUpdatedBankAlreadyPrimary = isPrimaryBankDetails.filter(
+                    (currentValue) => currentValue.id === flattenData.id
+                )
 
-  const CreateBankDetail = (form: any) => {
-    createBankDetail({
-      variables: {
-        data: {
-          Full_Name: form.Full_Name,
-          Account_Number: form.Account_Number,
-          Bank_Name: form.Bank_Name,
-          IFSC_Code: form.IFSC_Code,
-          PAN_Number: form.PAN_Number,
-          GST_Number: form.GST_Number || "",
-          Company_Name: form.Company_Name || "",
-          Company_Address: form.Company_Address || "",
-          users_permissions_user: form.user_permissions_user,
-          Is_Primary: form.Is_Primary ? true : false,
-        },
-      },
-      onCompleted: (data) => {
-        setIsBankDetailCreated(!isBankDetailCreated);
-        const flattenData = flattenObj({ ...data.createBankDetail.data });
-        const isPrimary: boolean = flattenData.Is_Primary;
+                const isPrimary: boolean = flattenData.Is_Primary
 
-        const arr: PrimaryBankDetails[] = isPrimaryBankDetails.splice(-1);
+                if (isPrimary && isUpdatedBankAlreadyPrimary.length !== 1) {
+                    for (const currentValue of isPrimaryBankDetails) {
+                        updateBankDetail({
+                            variables: {
+                                id: currentValue.id,
+                                data: {
+                                    Is_Primary: false
+                                }
+                            }
+                        })
+                    }
+                }
+            }
+        })
+    }
 
-        if (isPrimary) {
-          for (const currentValue of arr) {
-            updateBankDetail({
-              variables: {
-                id: currentValue.id,
-                data: {
-                  Is_Primary: false,
-                },
-              },
-            });
-          }
+    const OnSubmit = (frm: any) => {
+        //bind user id
+        if (frm) {
+            frm.user_permissions_user = auth.userid
         }
-      },
-    });
-  };
 
-  useQuery(GET_UPI_DETAILS_IS_PRIMARY, {
-    variables: { id: auth.userid },
-    onCompleted: (data: any) => {
-      const flattenUpiDetail = flattenObj({ ...data.upiDetailsChangemakers });
-      setIsPrimaryUPIDetails(flattenUpiDetail);
-    },
-  });
+        switch (operation.actionType) {
+            case 'bank':
+                CreateBankDetail(frm)
+                break
 
-  useQuery(GET_BANK_DETAILS_IS_PRIMARY, {
-    variables: { id: auth.userid },
-    onCompleted: (data: any) => {
-      const flattenBankDetail = flattenObj({ ...data.bankDetails });
-      setIsPrimaryBankDetails(flattenBankDetail);
-    },
-  });
+            case 'upi':
+                CreateUPI(frm)
+                break
 
-  useQuery(GET_BANK_DETAIL, {
-    variables: { id: operation.id },
-    skip: !operation.id || operation.actionType === "deleteUPI",
-    onCompleted: (e: any) => {
-      FillBankDetails(e);
-    },
-  });
+            case 'editUPI':
+                UpdateUPI(frm)
+                break
 
-  function FillBankDetails(data: any) {
-    const flattenData = flattenObj({ ...data.bankDetail });
-
-    const detail = {} as bankDetails;
-
-    if (flattenData) {
-      detail.Full_Name = flattenData.Full_Name;
-      detail.Account_Number = flattenData.Account_Number;
-      detail.IFSC_Code = flattenData.IFSC_Code;
-      detail.Is_Primary = flattenData.Is_Primary;
-      detail.Bank_Name = flattenData.Bank_Name;
-      detail.Company_Address = flattenData.Company_Address;
-      detail.Company_Name = flattenData.Company_Name;
-      detail.PAN_Number = flattenData.PAN_Number;
-      detail.GST = flattenData.GST_Number ? "GST" : "None";
-      detail.GST_Number = flattenData.GST_Number
-        ? flattenData.GST_Number
-        : null;
-      detail.Company_Name = flattenData.Company_Name
-        ? flattenData.Company_Name
-        : null;
-      detail.Company_Address = flattenData.Company_Address
-        ? flattenData.Company_Address
-        : null;
-    }
-
-    setFormBankData(detail);
-  }
-
-  useQuery(GET_UPI_DETAIL, {
-    variables: { id: operation.id },
-    skip: !operation.id || operation.actionType === "deleteUPI",
-    onCompleted: (e: any) => {
-      FillUPIDetails(e);
-    },
-  });
-
-  function FillUPIDetails(data: any) {
-    const flattenData = flattenObj({ ...data.upiDetailsChangemaker });
-
-    const detail = {} as upiDetails;
-
-    if (flattenData) {
-      detail.Full_Name = flattenData.Full_Name;
-      detail.phone_number = flattenData.phone_number;
-      detail.UPI_ID = flattenData.UPI_ID;
-      detail.Is_Primary = flattenData.Is_Primary;
-      detail.publishedAt = flattenData.publishedAt;
-      detail.users_permissions_user = flattenData.users_permissions_user;
-    }
-
-    setUPIFormData(detail);
-  }
-
-  const [updateBankDetail] = useMutation(UPDATE_BANK_DETAILS, {
-    onCompleted: (data: any) => {
-      setIsBankDetailsUpdated(!isBankDetailsUpdated);
-      modalTrigger.next(false);
-    },
-    refetchQueries: [GET_BANK_DETAILS],
-  });
-
-  function UpdateBank(form: any) {
-    updateBankDetail({
-      variables: {
-        id: operation.id,
-        data: {
-          Full_Name: form.Full_Name,
-          Account_Number: form.Account_Number,
-          Bank_Name: form.Bank_Name,
-          IFSC_Code: form.IFSC_Code,
-          PAN_Number: form.PAN_Number,
-          GST_Number: form.GST_Number || "",
-          Company_Name: form.Company_Name || "",
-          Company_Address: form.Company_Address || "",
-          users_permissions_user: form.user_permissions_user,
-          Is_Primary: form.Is_Primary ? true : false,
-        },
-      },
-      onCompleted: (data) => {
-        const flattenData = flattenObj({
-          ...data.updateBankDetail.data,
-        });
-
-        const isUpdatedBankAlreadyPrimary = isPrimaryBankDetails.filter(
-          (currentValue) => currentValue.id === flattenData.id
-        );
-
-        const isPrimary: boolean = flattenData.Is_Primary;
-
-        if (isPrimary && isUpdatedBankAlreadyPrimary.length !== 1) {
-          for (const currentValue of isPrimaryBankDetails) {
-            updateBankDetail({
-              variables: {
-                id: currentValue.id,
-                data: {
-                  Is_Primary: false,
-                },
-              },
-            });
-          }
+            case 'editBankDetails':
+                UpdateBank(frm)
+                break
         }
-      },
-    });
-  }
-
-  const OnSubmit = (frm: any) => {
-    //bind user id
-    if (frm) {
-      frm.user_permissions_user = auth.userid;
     }
 
+    let name = ''
+    let formSchema = {}
     switch (operation.actionType) {
-      case "bank":
-        CreateBankDetail(frm);
-        break;
-
-      case "upi":
-        CreateUPI(frm);
-        break;
-
-      case "editUPI":
-        UpdateUPI(frm);
-        break;
-
-      case "editBankDetails":
-        UpdateBank(frm);
-        break;
-    }
-  };
-
-  let name = "";
-  let formSchema = {};
-  switch (operation.actionType) {
-    case "bank": {
-      name = "Bank Account";
-      formSchema = require("./bankAccount.json");
-      break;
-    }
-    case "upi": {
-      name = "UPI";
-      formSchema = require("./upi.json");
-      break;
-    }
-    case "editUPI": {
-      name = "Update UPI Details";
-      formSchema = require("./upi.json");
-      break;
-    }
-    case "editBankDetails": {
-      name = "Update bank Details";
-      formSchema = require("./bankAccount.json");
-      break;
-    }
-    case "viewBankDetails": {
-      name = "View bank Details";
-      formSchema = require("./bankAccount.json");
-      break;
-    }
-    case "viewUPIDetails": {
-      name = "View UPI Details";
-      formSchema = require("./upi.json");
-      break;
-    }
-  }
-
-  const uiSchema: any = {
-    GST: {
-      "ui:widget": "radio",
-      "ui:options": {
-        inline: true,
-      },
-    },
-  };
-
-  function DeleteUPI(id: string) {
-    deleteUPI({ variables: { id: id } });
-  }
-
-  function DeleteBankAccountDetails(id: string) {
-    deleteBankDetails({ variables: { id: id } });
-  }
-
-  return (
-    <div>
-      <FinanceModal
-        modalTrigger={modalTrigger}
-        formSchema={formSchema}
-        name={name}
-        formSubmit={(frm: any) => OnSubmit(frm)}
-        actionType={operation.actionType}
-        formData={
-          operation.actionType === "upi" || operation.actionType === "bank"
-            ? {}
-            : operation.actionType === "editBankDetails" ||
-              operation.actionType === "viewBankDetails"
-            ? formBankData
-            : operation.actionType === "editUPI" ||
-              operation.actionType === "viewUPIDetails"
-            ? formUPIData
-            : {}
+        case 'bank': {
+            name = 'Bank Account'
+            formSchema = require('./bankAccount.json')
+            break
         }
-        formUISchema={uiSchema}
-      />
-      {/* Delete Modal */}
-      {showDeleteModal && (
-        <StatusModal
-          show={showDeleteModal}
-          onHide={() => setShowDeleteModal(false)}
-          modalTitle="Delete"
-          modalBody={
-            operation.actionType === "deleteUPI"
-              ? "Do you want to delete this UPI detail?"
-              : "Do you want to delete this bank account detail?"
-          }
-          buttonLeft="Cancel"
-          buttonRight="Yes"
-          onClick={() => {
-            operation.actionType === "deleteUPI"
-              ? DeleteUPI(operation.id)
-              : DeleteBankAccountDetails(operation.id);
-          }}
-        />
-      )}
+        case 'upi': {
+            name = 'UPI'
+            formSchema = require('./upi.json')
+            break
+        }
+        case 'editUPI': {
+            name = 'Update UPI Details'
+            formSchema = require('./upi.json')
+            break
+        }
+        case 'editBankDetails': {
+            name = 'Update bank Details'
+            formSchema = require('./bankAccount.json')
+            break
+        }
+        case 'viewBankDetails': {
+            name = 'View bank Details'
+            formSchema = require('./bankAccount.json')
+            break
+        }
+        case 'viewUPIDetails': {
+            name = 'View UPI Details'
+            formSchema = require('./upi.json')
+            break
+        }
+    }
 
-      {isUPIDeleted ? (
-        <Toaster
-          handleCallback={() => setIsUPIDeleted(!isUPIDeleted)}
-          type="success"
-          msg="UPI Detail has been deleted successfully"
-        />
-      ) : null}
+    const uiSchema: any = {
+        GST: {
+            'ui:widget': 'radio',
+            'ui:options': {
+                inline: true
+            }
+        }
+    }
 
-      {isUPIUpdated ? (
-        <Toaster
-          handleCallback={() => setIsUPIUpdated(!isUPIUpdated)}
-          type="success"
-          msg="UPI Detail has been updated successfully"
-        />
-      ) : null}
+    function DeleteUPI(id: string) {
+        deleteUPI({ variables: { id: id } })
+    }
 
-      {isUPIDetailCreated ? (
-        <Toaster
-          handleCallback={() => setIsUPIDetailCreated(!isUPIDetailCreated)}
-          type="success"
-          msg="UPI Detail has been created successfully"
-        />
-      ) : null}
+    function DeleteBankAccountDetails(id: string) {
+        deleteBankDetails({ variables: { id: id } })
+    }
 
-      {isBankDetailsDeleted ? (
-        <Toaster
-          handleCallback={() => setIsBankDetailsDeleted(!isBankDetailsDeleted)}
-          type="success"
-          msg="Bank Details has been deleted successfully"
-        />
-      ) : null}
+    return (
+        <div>
+            <FinanceModal
+                modalTrigger={modalTrigger}
+                formSchema={formSchema}
+                name={name}
+                formSubmit={(frm: any) => OnSubmit(frm)}
+                actionType={operation.actionType}
+                formData={
+                    operation.actionType === 'upi' || operation.actionType === 'bank'
+                        ? {}
+                        : operation.actionType === 'editBankDetails' ||
+                          operation.actionType === 'viewBankDetails'
+                        ? formBankData
+                        : operation.actionType === 'editUPI' ||
+                          operation.actionType === 'viewUPIDetails'
+                        ? formUPIData
+                        : {}
+                }
+                formUISchema={uiSchema}
+            />
+            {/* Delete Modal */}
+            {showDeleteModal && (
+                <StatusModal
+                    show={showDeleteModal}
+                    onHide={() => setShowDeleteModal(false)}
+                    modalTitle="Delete"
+                    modalBody={
+                        operation.actionType === 'deleteUPI'
+                            ? 'Do you want to delete this UPI detail?'
+                            : 'Do you want to delete this bank account detail?'
+                    }
+                    buttonLeft="Cancel"
+                    buttonRight="Yes"
+                    onClick={() => {
+                        operation.actionType === 'deleteUPI'
+                            ? DeleteUPI(operation.id)
+                            : DeleteBankAccountDetails(operation.id)
+                    }}
+                />
+            )}
 
-      {isBankDetailsUpdated ? (
-        <Toaster
-          handleCallback={() => setIsBankDetailsUpdated(!isBankDetailsUpdated)}
-          type="success"
-          msg="Bank Details has been updated successfully"
-        />
-      ) : null}
+            {isUPIDeleted ? (
+                <Toaster
+                    handleCallback={() => setIsUPIDeleted(!isUPIDeleted)}
+                    type="success"
+                    msg="UPI Detail has been deleted successfully"
+                />
+            ) : null}
 
-      {isBankDetailCreated ? (
-        <Toaster
-          handleCallback={() => setIsBankDetailCreated(!isBankDetailCreated)}
-          type="success"
-          msg="Bank Details has been created successfully"
-        />
-      ) : null}
-    </div>
-  );
+            {isUPIUpdated ? (
+                <Toaster
+                    handleCallback={() => setIsUPIUpdated(!isUPIUpdated)}
+                    type="success"
+                    msg="UPI Detail has been updated successfully"
+                />
+            ) : null}
+
+            {isUPIDetailCreated ? (
+                <Toaster
+                    handleCallback={() => setIsUPIDetailCreated(!isUPIDetailCreated)}
+                    type="success"
+                    msg="UPI Detail has been created successfully"
+                />
+            ) : null}
+
+            {isBankDetailsDeleted ? (
+                <Toaster
+                    handleCallback={() => setIsBankDetailsDeleted(!isBankDetailsDeleted)}
+                    type="success"
+                    msg="Bank Details has been deleted successfully"
+                />
+            ) : null}
+
+            {isBankDetailsUpdated ? (
+                <Toaster
+                    handleCallback={() => setIsBankDetailsUpdated(!isBankDetailsUpdated)}
+                    type="success"
+                    msg="Bank Details has been updated successfully"
+                />
+            ) : null}
+
+            {isBankDetailCreated ? (
+                <Toaster
+                    handleCallback={() => setIsBankDetailCreated(!isBankDetailCreated)}
+                    type="success"
+                    msg="Bank Details has been created successfully"
+                />
+            ) : null}
+        </div>
+    )
 }
 
-export default React.forwardRef(PaymentMethodsAction);
+export default React.forwardRef(PaymentMethodsAction)

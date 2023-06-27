@@ -1,40 +1,40 @@
 .changemaker {
-     width: 11%;
-     align-items: center;
-     display: flex;
-     flex-direction: column;
+    width: 11%;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
 }
 .changemakerRow {
-     display: flex;
-     flex-direction: row;
-     overflow: scroll;
+    display: flex;
+    flex-direction: row;
+    overflow: scroll;
 }
 .changemakerText {
-     align-items: center;
+    align-items: center;
 }
 .desc {
-     margin-top: -6px;
+    margin-top: -6px;
 }
 .cardBorder {
-     border-top: 2px solid lightgrey;
+    border-top: 2px solid lightgrey;
 }
 .rating1 {
-     margin-left: 90px;
-     font-weight: bold;
+    margin-left: 90px;
+    font-weight: bold;
 }
 .rating2 {
-     margin-left: 20px;
+    margin-left: 20px;
 }
 
 @media (max-width: 900px) {
-     .changemaker {
-          width: 30%;
-          margin-left: 20px;
-     }
+    .changemaker {
+        width: 30%;
+        margin-left: 20px;
+    }
 }
 @media (max-width: 450px) {
-     .rating2 {
-          margin-top: 10px;
-          margin-left: 60px;
-     }
+    .rating2 {
+        margin-top: 10px;
+        margin-left: 60px;
+    }
 }

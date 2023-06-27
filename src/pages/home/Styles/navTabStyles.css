@@ -1,10 +1,10 @@
 .nav-tabs .nav-link {
-  background-color: transparent !important;
-  color: #000 !important;
+    background-color: transparent !important;
+    color: #000 !important;
 }
 
 .nav-tabs .nav-link.active {
-  background-color: black !important;
-  color: #fff !important;
-  border-bottom: solid 4px white !important;
+    background-color: black !important;
+    color: #fff !important;
+    border-bottom: solid 4px white !important;
 }

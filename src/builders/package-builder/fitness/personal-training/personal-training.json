@@ -2,12 +2,7 @@
     "1": {
         "title": "",
         "type": "object",
-        "required": [
-            "packagename",
-            "disciplines",
-            "equipmentList",
-            "intensity"
-        ],
+        "required": ["packagename", "disciplines", "equipmentList", "intensity"],
         "properties": {
             "packagename": {
                 "type": "string",
@@ -31,32 +26,16 @@
             "level": {
                 "type": "number",
                 "title": "Level",
-                "enum": [
-                    0,
-                    1,
-                    2
-                ],
-                "enumNames": [
-                    "Beginner",
-                    "Intermediate",
-                    "Advanced"
-                ],
+                "enum": [0, 1, 2],
+                "enumNames": ["Beginner", "Intermediate", "Advanced"],
                 "default": 0,
                 "description": "Select the appropriate difficulty"
             },
             "intensity": {
                 "type": "number",
                 "title": "Intensity",
-                "enum": [
-                    0,
-                    1,
-                    2
-                ],
-                "enumNames": [
-                    "Low",
-                    "Moderate",
-                    "High"
-                ],
+                "enum": [0, 1, 2],
+                "enumNames": ["Low", "Moderate", "High"],
                 "default": 0,
                 "description": "Set the pace of the offering"
             },
@@ -65,34 +44,17 @@
                 "title": "Choose the relevant payment durations",
                 "items": {
                     "type": "string",
-                    "enum": [
-                        "30 days",
-                        "90 days",
-                        "180 days",
-                        "360 days"
-                    ]
+                    "enum": ["30 days", "90 days", "180 days", "360 days"]
                 },
                 "uniqueItems": true,
-                "default": [
-                    "30 days",
-                    "90 days",
-                    "180 days",
-                    "360 days"
-                ]
+                "default": ["30 days", "90 days", "180 days", "360 days"]
             }
         }
     },
     "2": {
         "title": "",
         "type": "object",
-        "required": [
-            "About",
-            "Benifits",
-            "languages",
-            "classSize",
-            "thumbnail",
-            "VideoUrl"
-        ],
+        "required": ["About", "Benifits", "languages", "classSize", "thumbnail", "VideoUrl"],
         "properties": {
             "About": {
                 "type": "string",
@@ -111,16 +73,8 @@
             "classSize": {
                 "type": "number",
                 "title": "PT Class Size",
-                "enum": [
-                    0,
-                    1,
-                    2
-                ],
-                "enumNames": [
-                    "Solo",
-                    "Couple",
-                    "Family"
-                ],
+                "enum": [0, 1, 2],
+                "enumNames": ["Solo", "Couple", "Family"],
                 "default": 0,
                 "description": "Solo - Single user, Couple - Two users, Family - Usually 3 - 4 users"
             },
@@ -139,9 +93,7 @@
     "3": {
         "title": "Program Details",
         "type": "object",
-        "required": [
-            "programDetails"
-        ],
+        "required": ["programDetails"],
         "properties": {
             "programDetails": {
                 "type": "string"
@@ -151,30 +103,14 @@
     "4": {
         "title": "For Programs",
         "type": "object",
-        "required": [
-            "bookingleadday"
-        ],
+        "required": ["bookingleadday"],
         "properties": {
             "bookingleadday": {
                 "type": "number",
                 "description": "The lead time will allow you to discuss, understand, request data and then build a custom program.",
                 "title": "User can choose start date, after",
-                "enum": [
-                    0,
-                    1,
-                    2,
-                    3,
-                    4,
-                    5
-                ],
-                "enumNames": [
-                    "1 day",
-                    "2 days",
-                    "3 days",
-                    "4 days",
-                    "5 days",
-                    "6 days"
-                ],
+                "enum": [0, 1, 2, 3, 4, 5],
+                "enumNames": ["1 day", "2 days", "3 days", "4 days", "5 days", "6 days"],
                 "default": 0
             }
         }
@@ -182,9 +118,7 @@
     "5": {
         "title": "Pricing Plan",
         "type": "object",
-        "required": [
-            "pricingDetail"
-        ],
+        "required": ["pricingDetail"],
         "properties": {
             "pricingDetail": {
                 "type": "string"
@@ -194,21 +128,13 @@
     "6": {
         "title": "Offering Settings",
         "type": "object",
-        "required": [
-            "visibility"
-        ],
+        "required": ["visibility"],
         "properties": {
             "visibility": {
                 "type": "number",
                 "title": "Visibility",
-                "enum": [
-                    0,
-                    1
-                ],
-                "enumNames": [
-                    "Public",
-                    "Private"
-                ],
+                "enum": [0, 1],
+                "enumNames": ["Public", "Private"],
                 "default": 0,
                 "description": "Public: The offering can be viewed by anyone to purchase, Private: The offering will not ve seen by anyone until you share it with them"
             },
@@ -218,14 +144,8 @@
             "config": {
                 "title": "Booking Config",
                 "type": "number",
-                "enum": [
-                    0,
-                    1
-                ],
-                "enumNames": [
-                    "Manual",
-                    "Auto"
-                ],
+                "enum": [0, 1],
+                "enumNames": ["Manual", "Auto"],
                 "default": 0
             }
         }

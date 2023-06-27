@@ -1,46 +1,46 @@
 {
-     "1": {
-          "type": "object",
-          "required": ["status", "source"],
-          "properties": {
-               "status": {
-                    "type": "string",
-                    "title": "Status",
-                    "enum": ["New", "Interested", "Folllow Up", "Negative", "Enrolled"]
-               },
-               "source": {
-                    "type": "string",
-                    "title": "Source",
-                    "enum": ["Website", "Application", "Social Media", "Google", "Word of Mouth"]
-               },
-               "notes": {
-                    "type": "string",
-                    "title": "Notes"
-               },
-               "leadsdetails": {
-                    "title": "Leads Details",
-                    "type": "object",
-                    "required": ["name", "phonenumber", "email"],
-                    "properties": {
-                         "name": {
-                              "type": "string",
-                              "title": "Name"
-                         },
-                         "phonenumber": {
-                              "type": "string",
-                              "title": "Phone Number",
-                              "minLength": 10
-                         },
-                         "email": {
-                              "type": "string",
-                              "title": "Email ID"
-                         },
-                         "leadsmesssage": {
-                              "type": "string",
-                              "title": "Lead's Message"
-                         }
+    "1": {
+        "type": "object",
+        "required": ["status", "source"],
+        "properties": {
+            "status": {
+                "type": "string",
+                "title": "Status",
+                "enum": ["New", "Interested", "Folllow Up", "Negative", "Enrolled"]
+            },
+            "source": {
+                "type": "string",
+                "title": "Source",
+                "enum": ["Website", "Application", "Social Media", "Google", "Word of Mouth"]
+            },
+            "notes": {
+                "type": "string",
+                "title": "Notes"
+            },
+            "leadsdetails": {
+                "title": "Leads Details",
+                "type": "object",
+                "required": ["name", "phonenumber", "email"],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "title": "Name"
+                    },
+                    "phonenumber": {
+                        "type": "string",
+                        "title": "Phone Number",
+                        "minLength": 10
+                    },
+                    "email": {
+                        "type": "string",
+                        "title": "Email ID"
+                    },
+                    "leadsmesssage": {
+                        "type": "string",
+                        "title": "Lead's Message"
                     }
-               }
-          }
-     }
+                }
+            }
+        }
+    }
 }

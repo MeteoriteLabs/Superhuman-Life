@@ -1,11 +1,11 @@
 function Contact({
-  section,
-  setSection
+    section,
+    setSection
 }: {
-  section: string;
-  setSection: (param: string) => void;
+    section: string
+    setSection: (param: string) => void
 }): JSX.Element {
-  return <div>Contact</div>;
+    return <div>Contact</div>
 }
 
-export default Contact;
+export default Contact

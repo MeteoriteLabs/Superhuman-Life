@@ -1,43 +1,43 @@
 /* Tabs styling */
 .card-body .nav-pills .nav-link.active,
 .nav-pills .show > .nav-link {
-  color: white;
-  background-color: #343a40;
-  font-weight: bold;
-  flex: nowrap;
+    color: white;
+    background-color: #343a40;
+    font-weight: bold;
+    flex: nowrap;
 }
 
 .card-body .card-body {
-  padding: 0.1rem 1.25rem 1.25rem !important;
+    padding: 0.1rem 1.25rem 1.25rem !important;
 }
 
 .card-body .card-body .nav-pills .nav-link.active,
 .nav-pills .show > .nav-link {
-  background-color: #636363;
-  border-radius: 20px;
-  color: white;
-  padding: 0.5rem 3rem;
-  transition: all 0.5s;
+    background-color: #636363;
+    border-radius: 20px;
+    color: white;
+    padding: 0.5rem 3rem;
+    transition: all 0.5s;
 }
 
 .card-body .card-body .nav-link {
-  padding: 0.5rem 1rem;
+    padding: 0.5rem 1rem;
 }
 
 .nav-pills a {
-  color: #636363;
-  white-space: nowrap !important;
-  text-align: center !important;
+    color: #636363;
+    white-space: nowrap !important;
+    text-align: center !important;
 }
 
 .scheduler-badge {
-  border: 2px solid skyblue;
-  border-radius: 20px;
+    border: 2px solid skyblue;
+    border-radius: 20px;
 }
 
-.cards{
-  flex-wrap: nowrap !important;
-  width: 100%;
-  min-width: 350px;
-  overflow-x: auto;
+.cards {
+    flex-wrap: nowrap !important;
+    width: 100%;
+    min-width: 350px;
+    overflow-x: auto;
 }

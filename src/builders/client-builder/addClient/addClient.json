@@ -4,10 +4,7 @@
         "type": {
             "title": "Is user a contact, lead or existing client?",
             "type": "string",
-            "enum": [
-                "Existing",
-                "New"
-            ],
+            "enum": ["Existing", "New"],
             "default": "New"
         }
     },
@@ -29,10 +26,7 @@
                     "offeringFilter": {
                         "title": "Filter offering based on : ",
                         "type": "string",
-                        "enum": [
-                            "Class",
-                            "Program"
-                        ],
+                        "enum": ["Class", "Program"],
                         "default": "Program"
                     },
                     "offerings": {
@@ -40,10 +34,7 @@
                         "type": "string"
                     }
                 },
-                "required": [
-                    "existingEmail",
-                    "offering"
-                ]
+                "required": ["existingEmail", "offering"]
             }
         },
         {
@@ -78,93 +69,70 @@
                     "offeringFilter": {
                         "title": "Filter offering based on : ",
                         "type": "string",
-                        "enum": [
-                            "Class",
-                            "Program"
-                        ],
+                        "enum": ["Class", "Program"],
                         "default": "Program"
                     }
-                   
-                    
                 },
                 "allOf": [
                     {
-                      "if": {
-                        "properties": {
-                          "offeringFilter": {
-                            "const": "Class"
-                          }
-                        }
-                      },
-                      "then": {
-                        "properties": {
-                            "classBasedOfferings": {
-                                "title": "Select offering",
-                                "type": "string"
-                            },
-                            "effectiveDate": {
-                                "title": "Effective Date",
-                                "type": "string",
-                                "format": "date-time"
+                        "if": {
+                            "properties": {
+                                "offeringFilter": {
+                                    "const": "Class"
+                                }
                             }
-                            
                         },
-                        "required": [
-                          "classBasedOfferings",
-                          "effectiveDate"
-                        ]
-                      }
+                        "then": {
+                            "properties": {
+                                "classBasedOfferings": {
+                                    "title": "Select offering",
+                                    "type": "string"
+                                },
+                                "effectiveDate": {
+                                    "title": "Effective Date",
+                                    "type": "string",
+                                    "format": "date-time"
+                                }
+                            },
+                            "required": ["classBasedOfferings", "effectiveDate"]
+                        }
                     },
                     {
-                      "if": {
-                        "properties": {
-                          "offeringFilter": {
-                            "const": "Program"
-                          }
-                        }
-                      },
-                      "then": {
-                        "properties": {
-                            "offerings": {
-                                "title": "Select offering",
-                                "type": "string"
-                            },
-                            "effectiveDate": {
-                                "title": "Effective Date",
-                                "type": "string",
-                                "format": "date-time"
-                            },
-                            "packageDuration": {
-                                "title": "Package Duration",
-                                "type": "number"
+                        "if": {
+                            "properties": {
+                                "offeringFilter": {
+                                    "const": "Program"
+                                }
                             }
-
                         },
-                        "required": [
-                            "offerings",
-                            "effectiveDate",
-                            "packageDuration"
-                        ]
-                      }
+                        "then": {
+                            "properties": {
+                                "offerings": {
+                                    "title": "Select offering",
+                                    "type": "string"
+                                },
+                                "effectiveDate": {
+                                    "title": "Effective Date",
+                                    "type": "string",
+                                    "format": "date-time"
+                                },
+                                "packageDuration": {
+                                    "title": "Package Duration",
+                                    "type": "number"
+                                }
+                            },
+                            "required": ["offerings", "effectiveDate", "packageDuration"]
+                        }
                     },
                     {
-                      "required": [
-                        "offeringFilter"
-                      ]
+                        "required": ["offeringFilter"]
                     }
-                  ],
-                "required": [
-                    "firstname",
-                    "lastname",
-                    "phone",
-                    "email"
-                ]
+                ],
+                "required": ["firstname", "lastname", "phone", "email"]
             }
         },
         {
-            "required": [
-                "type"
-            ]
+            "required": ["type"]
         }
     ]
 }

@@ -1,479 +1,466 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client'
 
 export const DESIGNATIONS = gql`
     query fetchDesignations {
-        designations(pagination: {pageSize:1000}){
-            data{
+        designations(pagination: { pageSize: 1000 }) {
+            data {
                 id
-                attributes{
+                attributes {
                     Designation_title
                 }
             }
         }
     }
-`;
+`
 
 export const LANGUAGES = gql`
     query fetchLanguages {
-        languages(pagination: {pageSize: 1000}){
-            data{
-              id
-              attributes{
-                languages
-              }
+        languages(pagination: { pageSize: 1000 }) {
+            data {
+                id
+                attributes {
+                    languages
+                }
             }
-          }
+        }
     }
-`;
+`
 
 export const ORGANIZATION_TYPE = gql`
     query getchOrg {
-        organizationTypes(pagination: {pageSize: 1000}){
-            data{
-            id
-            attributes{
-            Org_title_name
+        organizationTypes(pagination: { pageSize: 1000 }) {
+            data {
+                id
+                attributes {
+                    Org_title_name
+                }
             }
         }
-        }
     }
-`;
+`
 
 export const GET_PROGRAMLIST = gql`
-query programlistQuery($id: ID!, $filter: String!) {
-    fitnessprograms(
-    filters: {
-        Is_program: { eq: true }
-        users_permissions_user: { id: { eq: $id } }
-        title: { containsi: $filter }
-    }
-    ) {
-    data {
-        id
-        attributes {
-        title
-        duration_days
-        level
-        description
-        events
-        fitnessdisciplines {
-        data {
-            id
-            attributes {
-            disciplinename
+    query programlistQuery($id: ID!, $filter: String!) {
+        fitnessprograms(
+            filters: {
+                Is_program: { eq: true }
+                users_permissions_user: { id: { eq: $id } }
+                title: { containsi: $filter }
+            }
+        ) {
+            data {
+                id
+                attributes {
+                    title
+                    duration_days
+                    level
+                    description
+                    events
+                    fitnessdisciplines {
+                        data {
+                            id
+                            attributes {
+                                disciplinename
+                            }
+                        }
+                    }
+                    users_permissions_user {
+                        data {
+                            id
+                        }
+                    }
+                }
             }
         }
-        }
-        users_permissions_user {
-        data {
-            id
-        }
-        }
-        }
     }
-    }
-}
-`;
+`
 
 export const GET_FITNESSPACKAGE_DETAILS = gql`
-query fitnesspackageQuery {
-    fitnessPackageTypes(sort:["id"]){
-        data{
-          id
-          attributes{
-            type
-          }
+    query fitnesspackageQuery {
+        fitnessPackageTypes(sort: ["id"]) {
+            data {
+                id
+                attributes {
+                    type
+                }
+            }
         }
     }
-}
-`;
+`
 
 export const GET_TAGS_BY_TYPE = gql`
-query getTagByType($type: String!, $id: ID!) {
-    tags(filters: {
-        fitnesspackage: {
-        users_permissions_user: {
-            id: {
-            eq: $id
+    query getTagByType($type: String!, $id: ID!) {
+        tags(
+            filters: {
+                fitnesspackage: {
+                    users_permissions_user: { id: { eq: $id } }
+                    fitness_package_type: { type: { eq: $type } }
+                }
             }
-        },
-        fitness_package_type: {
-            type: {
-            eq: $type
+        ) {
+            data {
+                id
+                attributes {
+                    tag_name
+                }
             }
-        }
-        }
-    }){
-        data{
-        id
-        attributes{
-            tag_name
-        }
         }
     }
-}
-`;
+`
 
 export const GET_SESSIONS_BY_TAG = gql`
-query getSessionsByTag($id: ID!) {
-    tags(filters: {
-        id: {
-          eq: $id
+    query getSessionsByTag($id: ID!) {
+        tags(filters: { id: { eq: $id } }) {
+            data {
+                id
+                attributes {
+                    client_packages {
+                        data {
+                            id
+                            attributes {
+                                effective_date
+                                accepted_date
+                                users_permissions_user {
+                                    data {
+                                        id
+                                        attributes {
+                                            username
+                                            First_Name
+                                            Last_Name
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    fitnesspackage {
+                        data {
+                            id
+                            attributes {
+                                duration
+                                Start_date
+                                fitness_package_type {
+                                    data {
+                                        id
+                                        attributes {
+                                            type
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    sessions(filters: { Is_restday: { eq: false } }) {
+                        data {
+                            id
+                            attributes {
+                                tag
+                                type
+                                start_time
+                                day_of_program
+                                end_time
+                                mode
+                                activity_target
+                                Is_program_template
+                                session_date
+                                activity {
+                                    data {
+                                        id
+                                        attributes {
+                                            title
+                                        }
+                                    }
+                                }
+                                workout {
+                                    data {
+                                        id
+                                        attributes {
+                                            workouttitle
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
-      }){
-        data{
-          id
-          attributes{
-            client_packages{
-              data{
-                id
-                attributes{
-                  effective_date
-                  accepted_date
-                  users_permissions_user{
-                    data{
-                      id
-                      attributes{
-                        username
-                        First_Name
-                        Last_Name
-                      }
-                    }
-                  }
-                }
-              }
-            }
-            fitnesspackage{
-              data{
-                id
-                attributes{
-                  duration
-                  Start_date
-                  fitness_package_type{
-                    data{
-                      id
-                      attributes{
-                        type
-                      }
-                    }
-                  }
-                }
-              }
-            }
-            sessions(filters: {
-              Is_restday: {
-                eq: false
-              }
-            }){
-              data{
-                id
-                attributes{
-                  tag
-                  type
-                  start_time
-                  day_of_program
-                  end_time
-                  mode
-                  activity_target
-                  Is_program_template
-                  session_date
-                  activity{
-                    data{
-                      id
-                      attributes{
-                        title
-                      }
-                    }
-                  }
-                  workout{
-                    data{
-                      id
-                      attributes{
-                        workouttitle
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-}
+    }
 `
 
 export const GET_TIMEZONES = gql`
-query getTimezones{
-  timezones(pagination: {pageSize: 200}){
-    data{
-      id
-      attributes{
-        time
-        name
-      }
+    query getTimezones {
+        timezones(pagination: { pageSize: 200 }) {
+            data {
+                id
+                attributes {
+                    time
+                    name
+                }
+            }
+        }
     }
-  }
-}
 `
 
 export const GET_EQUIPMENTLIST = gql`
-  query equipmentListQuery{
-    equipmentLists(pagination: {
-      pageSize:100
-    }){
-      data{
-        id
-        attributes{
-          name
+    query equipmentListQuery {
+        equipmentLists(pagination: { pageSize: 100 }) {
+            data {
+                id
+                attributes {
+                    name
+                }
+            }
         }
-      }
     }
-  }
 `
 export const GET_MUSCLEGROUPS = gql`
-     query muscleGroupQuery{
-          muscleGroups(pagination: {
-            pageSize:100
-          }){
-          data {
-               id
-               attributes {
-               name
-               }
-          }
-          }
-     }
-  `;
+    query muscleGroupQuery {
+        muscleGroups(pagination: { pageSize: 100 }) {
+            data {
+                id
+                attributes {
+                    name
+                }
+            }
+        }
+    }
+`
 
 export const GET_CONTACTS = gql`
-  query ContactsQuery($id: ID){
-    contacts(pagination: { pageSize: 100 }, filters:{
-      ownedBy:{
-        id: {eq: $id}
-      },
-      isPayee:{
-        eq: false
-      }
-    } ) {
-      data {
-        id
-        attributes {
-          firstname
-          lastname
-          email
-          type
-          phone
-          createdAt
-          ownedBy{
-            data{
-              id
+    query ContactsQuery($id: ID) {
+        contacts(
+            pagination: { pageSize: 100 }
+            filters: { ownedBy: { id: { eq: $id } }, isPayee: { eq: false } }
+        ) {
+            data {
+                id
+                attributes {
+                    firstname
+                    lastname
+                    email
+                    type
+                    phone
+                    createdAt
+                    ownedBy {
+                        data {
+                            id
+                        }
+                    }
+                    appDownloadStatus
+                    paymentDetails
+                    organisationDetails
+                    isPayee
+                }
             }
-          }
-          appDownloadStatus
-          paymentDetails
-          organisationDetails
-          isPayee
         }
-      }
     }
-  }
-`;
+`
 
 export const FETCH_CHANGEMAKERS = gql`
-  query fetchUsersProfileData{
-    usersPermissionsUsers(pagination: { pageSize: 100 }  
-      ) {
-      data {
-        id
-        attributes {
-          username
-          First_Name
-          Last_Name
-          email
-          Phone_Number
-          Photo_ID
-          About_User
-          Website_URL
-          about_mini_description
-          designations{
-            data{
-              id
-              attributes{
-                Designation_title
-                description
-              }
-            }
-          }
-          instagram_url
-          Facebook_URL
-          Youtube_URL
-          LinkedIn_URL
-          Clubhouse_URL
-          Twitter_URL
-          Verification_ID
-          Photo_profile_banner_ID
-          educational_details(pagination:{pageSize:100}) {
+    query fetchUsersProfileData {
+        usersPermissionsUsers(pagination: { pageSize: 100 }) {
             data {
-              id
-              attributes {
-                Institute_Name
-                Type_of_degree
-                Specialization
-                Year
-              }
+                id
+                attributes {
+                    username
+                    First_Name
+                    Last_Name
+                    email
+                    Phone_Number
+                    Photo_ID
+                    About_User
+                    Website_URL
+                    about_mini_description
+                    designations {
+                        data {
+                            id
+                            attributes {
+                                Designation_title
+                                description
+                            }
+                        }
+                    }
+                    instagram_url
+                    Facebook_URL
+                    Youtube_URL
+                    LinkedIn_URL
+                    Clubhouse_URL
+                    Twitter_URL
+                    Verification_ID
+                    Photo_profile_banner_ID
+                    educational_details(pagination: { pageSize: 100 }) {
+                        data {
+                            id
+                            attributes {
+                                Institute_Name
+                                Type_of_degree
+                                Specialization
+                                Year
+                            }
+                        }
+                    }
+                    addresses(pagination: { pageSize: 100 }) {
+                        data {
+                            id
+                            attributes {
+                                city
+                                address1
+                                address2
+                                type
+                                zipcode
+                                country
+                                state
+                                Title
+                                type_address
+                                House_Number
+                            }
+                        }
+                    }
+                }
             }
-          }
-          addresses(pagination:{pageSize:100}) {
-            data {
-              id
-              attributes {
-                city
-                address1
-                address2
-                type
-                zipcode
-                country
-                state
-                Title
-                type_address
-                House_Number
-              }
-            }
-          }
         }
-      }
     }
-  }
-`;
+`
 export const FETCH_FITNESS_PACKAGE = gql`
-query offeringInventories($Changemakerid: String){
-  offeringInventories(filters: {changemaker_id: {eq: $Changemakerid}, ClassAvailability: {gt: 0}}){
-    data{
-      id
-      attributes{
-        ActiveBookings
-        fitnesspackage{
-          data
-          {
-            id
-            attributes{
-              packagename
+    query offeringInventories($Changemakerid: String) {
+        offeringInventories(
+            filters: { changemaker_id: { eq: $Changemakerid }, ClassAvailability: { gt: 0 } }
+        ) {
+            data {
+                id
+                attributes {
+                    ActiveBookings
+                    fitnesspackage {
+                        data {
+                            id
+                            attributes {
+                                packagename
+                            }
+                        }
+                    }
+                }
             }
-          }
         }
-      }
     }
-  }
-}
-`;
+`
 
 export const FETCH_FITNESS_PACKAGE_ON_DEMAND_PT = gql`
-query fitnessPackagesForOnDemandPT($id: ID){
-  fitnesspackages(filters: {users_permissions_user:{id: {eq: $id}}, fitness_package_type:{type: {eq: "On-Demand PT"}} }){
-    data{
-      id
-      attributes{
-        packagename
+    query fitnessPackagesForOnDemandPT($id: ID) {
+        fitnesspackages(
+            filters: {
+                users_permissions_user: { id: { eq: $id } }
+                fitness_package_type: { type: { eq: "On-Demand PT" } }
+            }
+        ) {
+            data {
+                id
+                attributes {
+                    packagename
+                }
+            }
+        }
     }
-  }
-}
-}
-`;
+`
 
 export const FETCH_FITNESS_PACKAGE_GROUP_AND_LIVESTREAM_INSTANT_BOOKING = gql`
-query fitnessPackagesForOnDemandPT($id: ID){
-  fitnesspackages(filters: {users_permissions_user:{id: {eq: $id}}, groupinstantbooking:{eq: true}, fitness_package_type:{type: {in: [ "Group Class", "Live Stream Channel"]}} }){
-    data{
-      id
-      attributes{
-        packagename
+    query fitnessPackagesForOnDemandPT($id: ID) {
+        fitnesspackages(
+            filters: {
+                users_permissions_user: { id: { eq: $id } }
+                groupinstantbooking: { eq: true }
+                fitness_package_type: { type: { in: ["Group Class", "Live Stream Channel"] } }
+            }
+        ) {
+            data {
+                id
+                attributes {
+                    packagename
+                }
+            }
+        }
     }
-  }
-}
-}
-`;
+`
 
 export const FETCH_FITNESS_PACKAGE_RECORDED_WITH_DURATION_ONE = gql`
-query fitnessPackagesForOnDemandPT($id: ID){
-  fitnesspackages(filters: {users_permissions_user:{id: {eq: $id}} , duration: {eq: 1}, recordedclasses:{eq: 1},    fitness_package_type:{type: {eq: "Classic Class"}} }){
-    data{
-      id
-      attributes{
-        packagename
+    query fitnessPackagesForOnDemandPT($id: ID) {
+        fitnesspackages(
+            filters: {
+                users_permissions_user: { id: { eq: $id } }
+                duration: { eq: 1 }
+                recordedclasses: { eq: 1 }
+                fitness_package_type: { type: { eq: "Classic Class" } }
+            }
+        ) {
+            data {
+                id
+                attributes {
+                    packagename
+                }
+            }
+        }
     }
-  }
-}
-}
-`;
+`
 
 export const FETCH_SESSIONS = gql`
-query tags($id: ID){
-  tags(filters: {fitnesspackage: {
-    id: {
-      eq: $id
-    }
-  }  }){
-    data{
-      id
-      attributes{
-        tag_name
-        sessions {
-          data {
-            id
-            attributes {
-               tag
-              start_time
-              end_time
-              session_date
+    query tags($id: ID) {
+        tags(filters: { fitnesspackage: { id: { eq: $id } } }) {
+            data {
+                id
+                attributes {
+                    tag_name
+                    sessions {
+                        data {
+                            id
+                            attributes {
+                                tag
+                                start_time
+                                end_time
+                                session_date
+                            }
+                        }
+                    }
+                }
             }
-          }
         }
     }
-  }
-}
-}
-`;
+`
 
 export const FETCH_CLIENTS = gql`
-  query clientBookingsTogetClient($id: ID){
-    clientBookings(filters: { OfferingOwner: {id: {eq: $id}}}){
-      data{
-        id
-        attributes{
-          BookingID
-          fitnesspackages{
-            data{
-              id
-              attributes{
-                classsize
-              }
+    query clientBookingsTogetClient($id: ID) {
+        clientBookings(filters: { OfferingOwner: { id: { eq: $id } } }) {
+            data {
+                id
+                attributes {
+                    BookingID
+                    fitnesspackages {
+                        data {
+                            id
+                            attributes {
+                                classsize
+                            }
+                        }
+                    }
+                    OfferingOwner {
+                        data {
+                            id
+                            attributes {
+                                email
+                            }
+                        }
+                    }
+                    ClientUser {
+                        data {
+                            id
+                            attributes {
+                                username
+                                email
+                                Phone_Number
+                            }
+                        }
+                    }
+                }
             }
-          }
-          OfferingOwner{
-            data{
-              id
-              attributes{
-                email
-              }
-            }
-          }
-          ClientUser{
-            data{
-              id
-              attributes{
-                username
-                email
-                Phone_Number
-              }
-            }
-          }
-          
         }
-      }
     }
-  }
-  
-  
-`;
-
-
+`

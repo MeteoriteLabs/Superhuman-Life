@@ -1,9 +1,9 @@
 .date__input {
-  padding: 5px;
-  border-radius: 5px;
-  border: 1px solid lightgray;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid lightgray;
 }
 
 input::-webkit-calendar-picker-indicator {
-  cursor: pointer;
+    cursor: pointer;
 }

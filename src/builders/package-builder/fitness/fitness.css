@@ -1,39 +1,39 @@
-.select-basic{
+.select-basic {
     background: transparent !important;
-    color:black !important
+    color: black !important;
 }
 
-.select-basic:hover{
+.select-basic:hover {
     background-color: transparent !important;
     background: transparent !important;
-    color:black !important
-};
+    color: black !important;
+}
 
-.discipline-tag{
+.discipline-tag {
     padding: 1rem 2rem;
-    background-color: #647A8C;
+    background-color: #647a8c;
 }
 
-.carousel-control-prev-icon{
+.carousel-control-prev-icon {
     background-image: url('https://c8.alamy.com/comp/P2D4A1/arrow-vector-icon-isolated-on-transparent-background-arrow-logo-concept-P2D4A1.jpg');
 }
 
-.carousel-control-next-icon{
+.carousel-control-next-icon {
     background-image: url('https://c8.alamy.com/comp/P2D4A1/arrow-vector-icon-isolated-on-transparent-background-arrow-logo-concept-P2D4A1.jpg');
 }
 
-.Beginner-level{
+.Beginner-level {
     background-color: #339b31;
 }
 
-.Intermediate-level{
-    background-color: #D7A72E;
+.Intermediate-level {
+    background-color: #d7a72e;
 }
 
-.Advanced-level{
+.Advanced-level {
     background-color: #d33325;
 }
 
-.All-level{
+.All-level {
     background-color: #0199ad;
 }

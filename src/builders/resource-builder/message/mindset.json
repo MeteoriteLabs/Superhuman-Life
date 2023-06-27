@@ -1,104 +1,86 @@
 {
-     "1": {
-          "type": "object",
-          "required": [
-               "title",
-               "mindsetmessagetype",
-               "minidesc",
-               "addMedia"
-          ],
-          "properties": {
-               "title": {
-                    "type": "string",
-                    "title": "Message Title",
-                    "description": "Assign a heading "
-               },
-               "mindsetmessagetype": {
-                    "type": "string",
-                    "title": "Type",
-                    "enum": [],
-                    "enumNames": [],
-                    "description": "Choose category"
-               },
-               "tags": {
-                    "type": "string",
-                    "title": "Hash tags",
-                    "description": "Add keywords for hash tag"
-               },
-               "description": {
-                    "type": "string",
-                    "title": "Description",
-                    "description": "Explain in detail"
-               },
-               "minidesc": {
-                    "type": "string",
-                    "title": "Mini Description",
-                    "description": "Write summary"
-               },
-               "addMedia": {
-                    "title": "",
-                    "$ref": "#/definitions/addmedia"
-               }
-          },
-          "definitions": {
-               "addmedia": {
-                    "title": "Add Media",
-                    "type": "object",
-                    "properties": {
-                         "AddMedia": {
-                              "type": "string",
-                              "title": "Add media",
-                              "enum": [
-                                   "Add URL",
-                                   "Upload"
-                              ],
-                              "default": "Add URL"
-                         }
-                    },
-                    "required": [
-                         "AddMedia"
-                    ],
-                    "dependencies": {
-                         "AddMedia": {
-                              "oneOf": [
-                                   {
-                                        "properties": {
-                                             "AddMedia": {
-                                                  "enum": [
-                                                       "Add URL"
-                                                  ]
-                                             },
-                                             "mediaurl": {
-                                                  "type": "string",
-                                                  "title": "Insert media",
-                                                  "format": "uri",
-                                                  "description": "Enter the URL"
-                                             }
-                                        },
-                                        "required": [
-                                             "mediaurl"
-                                        ]
-                                   },
-                                   {
-                                        "properties": {
-                                             "AddMedia": {
-                                                  "enum": [
-                                                       "Upload"
-                                                  ]
-                                             },
-                                             "upload": {
-                                                  "type": "string",
-                                                  "description": "Upload an image or video. File size cannot exceed 5Mb"
-                                             }
-                                        },
-                                        "required": [
-                                             "upload"
-                                        ]
-                                   }
-                              ]
-                         }
+    "1": {
+        "type": "object",
+        "required": ["title", "mindsetmessagetype", "minidesc", "addMedia"],
+        "properties": {
+            "title": {
+                "type": "string",
+                "title": "Message Title",
+                "description": "Assign a heading "
+            },
+            "mindsetmessagetype": {
+                "type": "string",
+                "title": "Type",
+                "enum": [],
+                "enumNames": [],
+                "description": "Choose category"
+            },
+            "tags": {
+                "type": "string",
+                "title": "Hash tags",
+                "description": "Add keywords for hash tag"
+            },
+            "description": {
+                "type": "string",
+                "title": "Description",
+                "description": "Explain in detail"
+            },
+            "minidesc": {
+                "type": "string",
+                "title": "Mini Description",
+                "description": "Write summary"
+            },
+            "addMedia": {
+                "title": "",
+                "$ref": "#/definitions/addmedia"
+            }
+        },
+        "definitions": {
+            "addmedia": {
+                "title": "Add Media",
+                "type": "object",
+                "properties": {
+                    "AddMedia": {
+                        "type": "string",
+                        "title": "Add media",
+                        "enum": ["Add URL", "Upload"],
+                        "default": "Add URL"
                     }
-               }
-          }
-     }
+                },
+                "required": ["AddMedia"],
+                "dependencies": {
+                    "AddMedia": {
+                        "oneOf": [
+                            {
+                                "properties": {
+                                    "AddMedia": {
+                                        "enum": ["Add URL"]
+                                    },
+                                    "mediaurl": {
+                                        "type": "string",
+                                        "title": "Insert media",
+                                        "format": "uri",
+                                        "description": "Enter the URL"
+                                    }
+                                },
+                                "required": ["mediaurl"]
+                            },
+                            {
+                                "properties": {
+                                    "AddMedia": {
+                                        "enum": ["Upload"]
+                                    },
+                                    "upload": {
+                                        "type": "string",
+                                        "description": "Upload an image or video. File size cannot exceed 5Mb"
+                                    }
+                                },
+                                "required": ["upload"]
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+    }
 }

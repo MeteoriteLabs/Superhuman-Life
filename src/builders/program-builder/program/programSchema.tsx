@@ -1,23 +1,23 @@
-import FitnessMultiSelect from '../../../components/customWidgets/fitnessMultiSelect';
+import FitnessMultiSelect from '../../../components/customWidgets/fitnessMultiSelect'
 
 export const widgets = {
-     fitnessSelect: FitnessMultiSelect,
-};
+    fitnessSelect: FitnessMultiSelect
+}
 
 export const schema: any = {
-     "level": {
-          "ui:widget": "radio",
-          "ui:options": {
-              "inline": true
-          }
-     },
-      "details": {
-          "ui:widget": "textarea",
-          "ui:options": {
-              "rows": 3
-          }
-     },
-     "discipline": {
-          "ui:widget": "fitnessSelect"
-     }
+    level: {
+        'ui:widget': 'radio',
+        'ui:options': {
+            inline: true
+        }
+    },
+    details: {
+        'ui:widget': 'textarea',
+        'ui:options': {
+            rows: 3
+        }
+    },
+    discipline: {
+        'ui:widget': 'fitnessSelect'
+    }
 }

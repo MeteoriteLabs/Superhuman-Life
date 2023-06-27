@@ -2,10 +2,7 @@
     "1": {
         "title": "",
         "type": "object",
-        "required": [
-            "name",
-            "cuisine"
-        ],
+        "required": ["name", "cuisine"],
         "properties": {
             "name": {
                 "type": "string",
@@ -14,12 +11,7 @@
             "cuisine": {
                 "type": "string",
                 "title": "Cuisine",
-                "enum": [
-                    "Chinese",
-                    "Italian",
-                    "Mexican",
-                    "Thai"
-                ]
+                "enum": ["Chinese", "Italian", "Mexican", "Thai"]
             },
             "tags": {
                 "type": "string",
@@ -30,10 +22,7 @@
     "2": {
         "title": "",
         "type": "object",
-        "required": [
-            "about",
-            "benefits"
-        ],
+        "required": ["about", "benefits"],
         "properties": {
             "about": {
                 "type": "string",
@@ -78,12 +67,7 @@
             "plan": {
                 "type": "string",
                 "title": "Nutrition Plan",
-                "enum": [
-                    "Monthly",
-                    "Quaterly",
-                    "Half Yearly",
-                    "Yearly"
-                ]
+                "enum": ["Monthly", "Quaterly", "Half Yearly", "Yearly"]
             },
             "price": {
                 "type": "number",

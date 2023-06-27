@@ -1,18 +1,18 @@
-import { createContext } from "react";
+import { createContext } from 'react'
 // import { SessionReducer } from '../reducers/sessionReducers';
 
 type SessionType = {
-     id: string;
-     name: string;
-     time: string;
+    id: string
+    name: string
+    time: string
 }
 
 type InitialStateType = {
-     sessions: SessionType[];
+    sessions: SessionType[]
 }
 
 const initialState = {
-     sessions: []
+    sessions: []
 }
 
 // const AppContext = createContext<{
@@ -27,4 +27,4 @@ const initialState = {
 //      session: SessionReducer(sessions, action),
 // });
 
-export default createContext<InitialStateType>(initialState);
+export default createContext<InitialStateType>(initialState)

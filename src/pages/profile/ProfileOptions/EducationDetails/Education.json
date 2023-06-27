@@ -1,37 +1,27 @@
 {
-     "1": {
-          "type": "object",
-          "required": [
-               "Institute_Name",
-               "Specialization",
-               "Type_of_degree",
-               "Year"
-          ],
-          "properties": {
-               "Institute_Name": {
-                    "type": "string",
-                    "title": "Institute Name"
-               },
-               "Specialization": {
-                    "type": "string",
-                    "title": "Specialization"
-               },
-               "Type_of_degree": {
-                    "type": "string",
-                    "title": "Type of degree",
-                    "default": "Bachelors",
-                    "enum": [
-                         "Bachelors",
-                         "Master",
-                         "Diploma",
-                         "Certification"
-                    ]
-               },
-               "Year": {
-                    "type": "string",
-                    "title": "Year",
-                    "format": "year"
-               }
-          }
-     }
+    "1": {
+        "type": "object",
+        "required": ["Institute_Name", "Specialization", "Type_of_degree", "Year"],
+        "properties": {
+            "Institute_Name": {
+                "type": "string",
+                "title": "Institute Name"
+            },
+            "Specialization": {
+                "type": "string",
+                "title": "Specialization"
+            },
+            "Type_of_degree": {
+                "type": "string",
+                "title": "Type of degree",
+                "default": "Bachelors",
+                "enum": ["Bachelors", "Master", "Diploma", "Certification"]
+            },
+            "Year": {
+                "type": "string",
+                "title": "Year",
+                "format": "year"
+            }
+        }
+    }
 }

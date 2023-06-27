@@ -1,11 +1,11 @@
 #basic-navbar-nav {
-  width: 100%;
-  position: absolute;
-  left: 0px;
+    width: 100%;
+    position: absolute;
+    left: 0px;
 }
 
 .navbar-collapse {
-  bottom: 86px;
-  background-color: #343a40;
-  border-radius: 10px 10px 0 0;
+    bottom: 86px;
+    background-color: #343a40;
+    border-radius: 10px 10px 0 0;
 }

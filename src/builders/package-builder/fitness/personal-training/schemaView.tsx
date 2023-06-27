@@ -1,131 +1,130 @@
-import Upload from "../../../../components/upload/upload";
-import DatesConfig from "../../../../components/customWidgets/datesConfig";
-import FitnessSelect from "../../../../components/customWidgets/fitnessMultiSelect";
-import EquipmentSelect from "../../../../components/customWidgets/equipmentListSelect";
-import PtProgramDetails from "./ptProgramDetails";
-import PTPricingTable from "./ptPricingTable";
-import LanguageList from "../../../../components/customWidgets/languageSelect";
+import Upload from '../../../../components/upload/upload'
+import DatesConfig from '../../../../components/customWidgets/datesConfig'
+import FitnessSelect from '../../../../components/customWidgets/fitnessMultiSelect'
+import EquipmentSelect from '../../../../components/customWidgets/equipmentListSelect'
+import PtProgramDetails from './ptProgramDetails'
+import PTPricingTable from './ptPricingTable'
+import LanguageList from '../../../../components/customWidgets/languageSelect'
 
 export const widgets = {
-  datesConfig: DatesConfig,
-  fitnessSelect: FitnessSelect,
-  equipmentSelect: EquipmentSelect,
-  ptProgramDetails: PtProgramDetails,
-  ptPricingTable: PTPricingTable,
-  languageList: LanguageList,
-};
+    datesConfig: DatesConfig,
+    fitnessSelect: FitnessSelect,
+    equipmentSelect: EquipmentSelect,
+    ptProgramDetails: PtProgramDetails,
+    ptPricingTable: PTPricingTable,
+    languageList: LanguageList
+}
 
 export const schemaView: any = {
-  durationOfOffering: {
-    "ui:widget": "checkboxes",
-    "ui:options": {
-      inline: true,
+    durationOfOffering: {
+        'ui:widget': 'checkboxes',
+        'ui:options': {
+            inline: true
+        }
     },
-  },
-  packagename: {
-    "ui:readonly": true,
-  },
-  disciplines: {
-    "ui:widget": "fitnessSelect",
-    readonly: true,
-  },
-  equipmentList: {
-    "ui:widget": "equipmentSelect",
-    readonly: true,
-  },
-  tags: {
-    "ui:readonly": true,
-  },
-  level: {
-    "ui:widget": "radio",
-    "ui:options": {
-      inline: true,
+    packagename: {
+        'ui:readonly': true
     },
-    "ui:readonly": true,
-  },
-  intensity: {
-    "ui:widget": "radio",
-    "ui:options": {
-      inline: true,
+    disciplines: {
+        'ui:widget': 'fitnessSelect',
+        readonly: true
     },
-    "ui:readonly": true,
-  },
-  classSize: {
-    "ui:widget": "radio",
-    "ui:options": {
-      inline: true,
+    equipmentList: {
+        'ui:widget': 'equipmentSelect',
+        readonly: true
     },
-    "ui:readonly": true,
-  },
-  bookingleadday: {
-    "ui:readonly": true,
-  },
-  About: {
-    "ui:widget": "textarea",
-    "ui:autofocus": true,
-    "ui:options": {
-      rows: 3,
+    tags: {
+        'ui:readonly': true
     },
-    "ui:placeholder": "About the program",
-    "ui:readonly": true,
-  },
-  Benifits: {
-    "ui:widget": "textarea",
-    "ui:options": {
-      rows: 3,
+    level: {
+        'ui:widget': 'radio',
+        'ui:options': {
+            inline: true
+        },
+        'ui:readonly': true
     },
-    "ui:placeholder": "Benifits of the program",
-    "ui:readonly": true,
-  },
-  thumbnail: {
-    "ui:widget": (props: any) => {
-      return (
-        <Upload
-          allowImage={true}
-          allowVideo={true}
-          onChange={props.onChange}
-          value={props.value}
-          title={"Thumbnail"}
-          readonly={true}
-        />
-      );
+    intensity: {
+        'ui:widget': 'radio',
+        'ui:options': {
+            inline: true
+        },
+        'ui:readonly': true
     },
-  },
-  VideoUrl: {
-    "ui:placeholder": "https://",
-    "ui:readonly": true,
-  },
-  programDetails: {
-    "ui:widget": "ptProgramDetails",
-    "ui:readonly": true,
-    "ui:help": "Sum of all sessions and rest days should be less than or equal to 30 days",
-  },
-  pricingDetail: {
-    "ui:widget": "ptPricingTable",
-    "ui:readonly": true,
-  },
-  visibility: {
-    "ui:widget": "radio",
-    "ui:options": {
-      inline: true,
+    classSize: {
+        'ui:widget': 'radio',
+        'ui:options': {
+            inline: true
+        },
+        'ui:readonly': true
     },
-    "ui:readonly": true,
-  },
-  datesConfig: {
-    "ui:widget": "datesConfig",
-    "ui:readonly": true,
-  },
-  languages: {
-    "ui:widget": "languageList",
-    "ui:readonly": true,
-  },
-  
+    bookingleadday: {
+        'ui:readonly': true
+    },
+    About: {
+        'ui:widget': 'textarea',
+        'ui:autofocus': true,
+        'ui:options': {
+            rows: 3
+        },
+        'ui:placeholder': 'About the program',
+        'ui:readonly': true
+    },
+    Benifits: {
+        'ui:widget': 'textarea',
+        'ui:options': {
+            rows: 3
+        },
+        'ui:placeholder': 'Benifits of the program',
+        'ui:readonly': true
+    },
+    thumbnail: {
+        'ui:widget': (props: any) => {
+            return (
+                <Upload
+                    allowImage={true}
+                    allowVideo={true}
+                    onChange={props.onChange}
+                    value={props.value}
+                    title={'Thumbnail'}
+                    readonly={true}
+                />
+            )
+        }
+    },
+    VideoUrl: {
+        'ui:placeholder': 'https://',
+        'ui:readonly': true
+    },
+    programDetails: {
+        'ui:widget': 'ptProgramDetails',
+        'ui:readonly': true,
+        'ui:help': 'Sum of all sessions and rest days should be less than or equal to 30 days'
+    },
+    pricingDetail: {
+        'ui:widget': 'ptPricingTable',
+        'ui:readonly': true
+    },
+    visibility: {
+        'ui:widget': 'radio',
+        'ui:options': {
+            inline: true
+        },
+        'ui:readonly': true
+    },
+    datesConfig: {
+        'ui:widget': 'datesConfig',
+        'ui:readonly': true
+    },
+    languages: {
+        'ui:widget': 'languageList',
+        'ui:readonly': true
+    },
+
     config: {
-      "ui:widget": "radio",
-      "ui:options": {
-        inline: true,
-      },
-      "ui:readonly": true,
-    },
-  
-};
+        'ui:widget': 'radio',
+        'ui:options': {
+            inline: true
+        },
+        'ui:readonly': true
+    }
+}

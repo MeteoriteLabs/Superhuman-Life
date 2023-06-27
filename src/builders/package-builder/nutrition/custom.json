@@ -2,10 +2,7 @@
     "1": {
         "title": "",
         "type": "object",
-        "required": [
-            "name",
-            "cuisine"
-        ],
+        "required": ["name", "cuisine"],
         "properties": {
             "name": {
                 "type": "string",
@@ -14,12 +11,7 @@
             "cuisine": {
                 "type": "string",
                 "title": "Cuisine",
-                "enum": [
-                    "Chinese",
-                    "Italian",
-                    "Mexican",
-                    "Thai"
-                ]
+                "enum": ["Chinese", "Italian", "Mexican", "Thai"]
             },
             "tags": {
                 "type": "string",
@@ -28,21 +20,14 @@
             "chat": {
                 "type": "string",
                 "title": "Chat Access",
-                "enum": [
-                    "Yes",
-                    "No"
-                ]
+                "enum": ["Yes", "No"]
             }
         }
     },
     "2": {
         "title": "",
         "type": "object",
-        "required": [
-            "about",
-            "benefits",
-            "consult"
-        ],
+        "required": ["about", "benefits", "consult"],
         "properties": {
             "about": {
                 "type": "string",
@@ -55,11 +40,7 @@
             "consult": {
                 "type": "string",
                 "title": "Conuslt Type",
-                "enum": [
-                    "Solo",
-                    "Couple",
-                    "Family"
-                ]
+                "enum": ["Solo", "Couple", "Family"]
             },
             "video": {
                 "type": "string",
@@ -78,27 +59,17 @@
         "title": "Program Details",
         "description": "Program to be Assigned after package purchase",
         "type": "object",
-        "required": [
-            "mode"
-        ],
+        "required": ["mode"],
         "properties": {
             "mode": {
                 "type": "string",
                 "title": "Mode",
-                "enum": [
-                    "Online",
-                    "Offline",
-                    "Hybrid"
-                ]
+                "enum": ["Online", "Offline", "Hybrid"]
             },
             "location": {
                 "type": "string",
                 "title": "Location",
-                "enum": [
-                    "Others",
-                    "At My Address",
-                    "At Client Address"
-                ]
+                "enum": ["Others", "At My Address", "At Client Address"]
             },
             "pin": {
                 "type": "string",
@@ -111,9 +82,7 @@
                     {
                         "properties": {
                             "mode": {
-                                "enum": [
-                                    "Online"
-                                ]
+                                "enum": ["Online"]
                             },
                             "consult": {
                                 "type": "object",
@@ -130,9 +99,7 @@
                     {
                         "properties": {
                             "mode": {
-                                "enum": [
-                                    "Offline"
-                                ]
+                                "enum": ["Offline"]
                             },
                             "consult": {
                                 "type": "object",
@@ -149,9 +116,7 @@
                     {
                         "properties": {
                             "mode": {
-                                "enum": [
-                                    "Hybrid"
-                                ]
+                                "enum": ["Hybrid"]
                             },
                             "consult": {
                                 "type": "object",
@@ -184,12 +149,7 @@
             "plan": {
                 "type": "string",
                 "title": "Nutrition Plan",
-                "enum": [
-                    "Monthly",
-                    "Quaterly",
-                    "Half Yearly",
-                    "Yearly"
-                ]
+                "enum": ["Monthly", "Quaterly", "Half Yearly", "Yearly"]
             },
             "price": {
                 "type": "number",

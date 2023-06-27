@@ -2,13 +2,7 @@
     "1": {
         "title": "",
         "type": "object",
-        "required": [
-            "name",
-            "typo",
-            "mode",
-            "level",
-            "status"
-        ],
+        "required": ["name", "typo", "mode", "level", "status"],
         "properties": {
             "name": {
                 "type": "string",
@@ -39,41 +33,24 @@
             "mode": {
                 "type": "string",
                 "title": "Mode",
-                "enum": [
-                    "Online",
-                    "Offline"
-                ]
+                "enum": ["Online", "Offline"]
             },
             "level": {
                 "type": "string",
                 "title": "Level",
-                "enum": [
-                    "Beginner",
-                    "Intermediate",
-                    "Advance"
-                ]
+                "enum": ["Beginner", "Intermediate", "Advance"]
             },
             "status": {
                 "type": "string",
                 "title": "Status",
-                "enum": [
-                    "Active",
-                    "Inactive",
-                    "Pending"
-                ]
+                "enum": ["Active", "Inactive", "Pending"]
             }
         }
     },
     "2": {
         "title": "",
         "type": "object",
-        "required": [
-            "summary",
-            "location",
-            "size",
-            "start",
-            "days"
-        ],
+        "required": ["summary", "location", "size", "start", "days"],
         "properties": {
             "summary": {
                 "type": "string",

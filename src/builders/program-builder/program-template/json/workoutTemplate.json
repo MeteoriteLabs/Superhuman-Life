@@ -1,11 +1,8 @@
 {
-     "1": {
-         "title": "",
-         "type": "object",
-         "required": [
-            "day",
-            "time"
-         ],
+    "1": {
+        "title": "",
+        "type": "object",
+        "required": ["day", "time"],
         "properties": {
             "day": {
                 "type": "string"
@@ -14,17 +11,15 @@
                 "type": "string"
             }
         }
-     },
-     "2": {
+    },
+    "2": {
         "title": "",
         "type": "object",
-        "required": [
-            "workoutEvent"
-        ],
+        "required": ["workoutEvent"],
         "properties": {
             "workoutEvent": {
                 "type": "string"
             }
         }
-     }
- }
+    }
+}

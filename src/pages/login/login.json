@@ -1,21 +1,18 @@
 {
-  "title": "",
-  "description": "",
-  "type": "object",
-  "required": [
-    "email",
-    "password"
-  ],
-  "properties": {
-    "email": {
-      "type": "string",
-      "format": "email",
-      "title": "Email ID"
-    },
-    "password": {
-      "type": "string",
-      "title": "Password",
-      "minLength": 8
+    "title": "",
+    "description": "",
+    "type": "object",
+    "required": ["email", "password"],
+    "properties": {
+        "email": {
+            "type": "string",
+            "format": "email",
+            "title": "Email ID"
+        },
+        "password": {
+            "type": "string",
+            "title": "Password",
+            "minLength": 8
+        }
     }
-  }
 }

@@ -1,52 +1,52 @@
 {
-     "1": {
-          "type": "object",
-          "required": [],
-          "properties": {
-               "nutrition": {
-                    "type": "string",
-                    "title": "Nutrition",
-                    "enum": ["Glucose", "Blood Glucose"]
-               },
-               "frequency": {
-                    "type": "string",
-                    "title": "Target Frequency",
-                    "enum": ["Daily", "Weekly"]
-               },
-               "protiens": {
-                    "type": "string",
-                    "title": "Protiens"
-               },
-               "fats": {
-                    "type": "string",
-                    "title": "Fats"
-               },
-               "carbohydrates": {
-                    "type": "string",
-                    "title": "Carbohydrates"
-               },
-               "fiber": {
-                    "type": "string",
-                    "title": "Fiber"
-               },
-               "unit": {
-                    "type": "string",
-                    "title": "Unit",
-                    "enum": ["g"]
-               },
-               "startdate": {
-                    "type": "string",
-                    "title": "Start Date",
-                    "format": "date"
-               },
-               "enddate": {
-                    "type": "string",
-                    "title": "End Date",
-                    "format": "date"
-               },
-               "packagesearch": {
-                    "type": "string"
-               }
-          }
-     }
+    "1": {
+        "type": "object",
+        "required": [],
+        "properties": {
+            "nutrition": {
+                "type": "string",
+                "title": "Nutrition",
+                "enum": ["Glucose", "Blood Glucose"]
+            },
+            "frequency": {
+                "type": "string",
+                "title": "Target Frequency",
+                "enum": ["Daily", "Weekly"]
+            },
+            "protiens": {
+                "type": "string",
+                "title": "Protiens"
+            },
+            "fats": {
+                "type": "string",
+                "title": "Fats"
+            },
+            "carbohydrates": {
+                "type": "string",
+                "title": "Carbohydrates"
+            },
+            "fiber": {
+                "type": "string",
+                "title": "Fiber"
+            },
+            "unit": {
+                "type": "string",
+                "title": "Unit",
+                "enum": ["g"]
+            },
+            "startdate": {
+                "type": "string",
+                "title": "Start Date",
+                "format": "date"
+            },
+            "enddate": {
+                "type": "string",
+                "title": "End Date",
+                "format": "date"
+            },
+            "packagesearch": {
+                "type": "string"
+            }
+        }
+    }
 }

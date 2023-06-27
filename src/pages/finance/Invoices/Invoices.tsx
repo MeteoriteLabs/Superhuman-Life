@@ -1,18 +1,17 @@
-import { Card, Tab, Tabs } from "react-bootstrap";
+import { Card, Tab, Tabs } from 'react-bootstrap'
 // import Event from "./Event/Event";
-import Fitness from "./Fitness/Fitness";
+import Fitness from './Fitness/Fitness'
 // import Journey from "./Journey/Journey";
 // import Nutrition from "./Nutrition/Nutrition";
-
 
 export default function Invoice() {
     return (
         <div>
-             <Card className="shadow-sm mt-2" border="light">
+            <Card className="shadow-sm mt-2" border="light">
                 <Card.Body>
-                    <Tabs  variant="pills" transition={false} defaultActiveKey="fitness">
+                    <Tabs variant="pills" transition={false} defaultActiveKey="fitness">
                         <Tab eventKey="fitness" title="Fitness">
-                            <Fitness/>
+                            <Fitness />
                         </Tab>
                         {/* <Tab eventKey="nutrition" title="Nutrition">
                             <Nutrition/>

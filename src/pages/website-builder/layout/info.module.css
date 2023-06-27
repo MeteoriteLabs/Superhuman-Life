@@ -1,9 +1,9 @@
-.modal > div{
+.modal > div {
     width: 70vw !important;
     max-width: none;
 }
 @media screen and (max-width: 600px) {
-    .modal > div{
+    .modal > div {
         width: 90% !important;
         margin-inline: auto;
         margin-block: 20px;
@@ -11,35 +11,34 @@
     }
 }
 
-.templateName{
+.templateName {
     font-weight: 600;
     font-size: 20px;
     margin-bottom: 0px;
     width: 100%;
 }
-.thumbnailCont{
+.thumbnailCont {
     overflow: hidden;
-    border-radius:10px ;
+    border-radius: 10px;
 }
-.thumbnail{
+.thumbnail {
     height: 400px;
     width: 100%;
     object-fit: cover;
     object-position: top;
-    border-radius: 10px
+    border-radius: 10px;
 }
 @media screen and (max-width: 1200px) {
-    .thumbnail{
+    .thumbnail {
         height: 300px;
     }
 }
 @media screen and (max-width: 600px) {
-    .thumbnail{
+    .thumbnail {
         height: 200px;
     }
 }
-.subheadings{
+.subheadings {
     font-weight: 800;
-     font-size: 18px
+    font-size: 18px;
 }
-

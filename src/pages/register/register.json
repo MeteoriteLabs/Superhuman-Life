@@ -11,11 +11,7 @@
     "2": {
         "title": "Sign Up",
         "type": "object",
-        "required": [
-            "email",
-            "password",
-            "confirm"
-        ],
+        "required": ["email", "password", "confirm"],
         "properties": {
             "email": {
                 "type": "string",
@@ -68,11 +64,7 @@
             "gender": {
                 "type": "string",
                 "title": "Gender",
-                "enum": [
-                    "Female",
-                    "Male",
-                    "Other"
-                ]
+                "enum": ["Female", "Male", "Other"]
             },
             "contact": {
                 "type": "string",
@@ -91,12 +83,7 @@
     "4": {
         "title": "Sign Up",
         "type": "object",
-        "required": [
-            "changemaker",
-            "education",
-            "language",
-            "aboutMe"
-        ],
+        "required": ["changemaker", "education", "language", "aboutMe"],
         "properties": {
             "changemaker": {
                 "title": "",
@@ -129,20 +116,10 @@
                         "typeOfDegree": {
                             "type": "string",
                             "title": "Type of Degree",
-                            "enum": [
-                                "Bachelors",
-                                "Master",
-                                "Diploma",
-                                "Certification"
-                            ]
+                            "enum": ["Bachelors", "Master", "Diploma", "Certification"]
                         }
                     },
-                    "required": [
-                        "instituteName",
-                        "specialization",
-                        "yearOfPassing",
-                        "typeOfDegree"
-                    ]
+                    "required": ["instituteName", "specialization", "yearOfPassing", "typeOfDegree"]
                 }
             },
             "language": {
@@ -158,22 +135,14 @@
     "5": {
         "title": "Sign Up",
         "type": "object",
-        "required": [
-            "multipleChoicesList"
-        ],
+        "required": ["multipleChoicesList"],
         "properties": {
             "multipleChoicesList": {
                 "type": "array",
                 "title": "Select the Modules (for Changemaker dashboard)",
                 "items": {
                     "type": "string",
-                    "enum": [
-                        "Fitness",
-                        "Nutrition",
-                        "Mental Health",
-                        "Activities",
-                        "Teach"
-                    ]
+                    "enum": ["Fitness", "Nutrition", "Mental Health", "Activities", "Teach"]
                 },
                 "uniqueItems": true
             }

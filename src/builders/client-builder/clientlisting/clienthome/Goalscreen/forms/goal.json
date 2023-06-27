@@ -1,21 +1,21 @@
 {
-     "1": {
-          "type": "object",
-          "required": ["startdate", "enddate"],
-          "properties": {
-               "packagesearch": {
-                    "type": "string"
-               },
-               "startdate": {
-                    "type": "string",
-                    "title": "Start Date",
-                    "format": "date"
-               },
-               "enddate": {
-                    "type": "string",
-                    "title": "End Date",
-                    "format": "date"
-               }
-          }
-     }
+    "1": {
+        "type": "object",
+        "required": ["startdate", "enddate"],
+        "properties": {
+            "packagesearch": {
+                "type": "string"
+            },
+            "startdate": {
+                "type": "string",
+                "title": "Start Date",
+                "format": "date"
+            },
+            "enddate": {
+                "type": "string",
+                "title": "End Date",
+                "format": "date"
+            }
+        }
+    }
 }

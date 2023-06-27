@@ -1,17 +1,19 @@
-.select-basic{
+.select-basic {
     background: transparent !important;
-    color:black !important
+    color: black !important;
 }
 
-.select-basic:hover{
+.select-basic:hover {
     background-color: transparent !important;
     background: transparent !important;
-    color:black !important
-};
-
-.discipline-tag{
-    padding: 1rem 2rem;
-    background-color: #647A8C;
+    color: black !important;
 }
 
-label[for="workout"] { font-weight: bold; }
+.discipline-tag {
+    padding: 1rem 2rem;
+    background-color: #647a8c;
+}
+
+label[for='workout'] {
+    font-weight: bold;
+}
