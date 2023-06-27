@@ -464,8 +464,10 @@ export const GET_TAGS_FOR_CHANNEL = gql`
 `;
 
 export const GET_TAGS_FOR_EVENT = gql`
-    query getTagsforEvent($id: ID!) {
+    query getTagsforEvent($id: ID!,$start: Int, $limit: Int ) {
         tags(
+            pagination: { start: $start, limit: $limit }
+            sort: ["updatedAt:desc"]
             filters: {
                 fitnesspackage: {
                     users_permissions_user: { id: { eq: $id } }
